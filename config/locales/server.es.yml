@@ -2403,7 +2403,7 @@ es:
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Mostrar un menú de acceso rápido a marcadores en las entradas y un nuevo modal rediseñado"
     glimmer_header_mode: "Controla si se utiliza la nueva implementación del encabezado «glimmer». Por defecto, es «auto», que se activará automáticamente cuando todos tus temas y plugins estén listos. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Activa la nueva implementación de la lista de temas «glimmer». Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
-    experimental_form_templates: "EXPERIMENTAL: Activa la función de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
+    experimental_form_templates: "EXPERIMENTAL: Activa la característica de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     admin_sidebar_enabled_groups: "Activa la navegación por la barra lateral de la interfaz del administrador para los grupos especificados, que sustituye a los botones de navegación del administrador de nivel superior."
     lazy_load_categories_groups: "EXPERIMENTAL: Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
@@ -2667,8 +2667,8 @@ es:
     already_logged_in: "¡Vaya! Esta invitación es solo para nuevos usuarios que no tengan ya una cuenta."
     second_factor_title: "Autenticación de dos factores"
     second_factor_description: "Introduce el código de autenticación desde tu aplicación:"
-    second_factor_backup_description: "Introduce uno de los códigos de respaldo:"
-    second_factor_backup_title: "Códigos de respaldo de la autenticación de dos factores"
+    second_factor_backup_description: "Introduce uno de los códigos de copia de seguridad:"
+    second_factor_backup_title: "Códigos de copia de seguridad de la autenticación de dos factores"
     invalid_second_factor_code: "Código de autenticación no válido. Cada código se puede usar solo una vez."
     invalid_security_key: "Clave de seguridad no válida."
     missing_second_factor_name: "Introduce un nombre."
@@ -3560,7 +3560,7 @@ es:
       title: "¡Eres el usuario nuevo del mes!"
       subject_template: "¡Eres el usuario nuevo del mes!"
       text_body_template: |
-        ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de%{month_year}**. :trophy:
+        ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de %{month_year}**. :trophy:
 
         Este premio solo lo ganan dos de los nuevos miembros de cada mes y será visible permanentemente en [la página de medallas](%{url}).
 

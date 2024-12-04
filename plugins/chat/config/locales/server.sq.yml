@@ -88,17 +88,82 @@ sq:
       actor_disallowed_dms: "Keni zgjedhur të bllokoni përdoruesit t'ju dërgojnë mesazhe private dhe të drejtpërdrejta, kështu që nuk mund të dërgoni mesazhe të reja të drejtpërdrejta."
       actor_preventing_target_user_from_dm: "Keni bllokuar %{username} që t'ju dërgojë mesazhe private dhe të drejtpërdrejta, kështu që nuk mund ti dërgoni mesazhe të reja të drejtpërdrejta."
       user_cannot_send_direct_messages: "Na vjen keq, nuk mund të dërgoni mesazhe të drejtpërdrejta."
+      over_chat_max_direct_message_users_allow_self: "Ju mund të krijoni vetëm një mesazh të drejtpërdrejtë."
+      over_chat_max_direct_message_users:
+        one: "Ju nuk mund të krijoni një mesazh të drejtpërdrejtë me më shumë se %{count} përdorues të tjerë."
+        other: "Nuk mund të krijoni një mesazh të drejtpërdrejtë me më shumë se %{count} përdorues të tjerë."
+      original_message_not_found: "Dërguesi i mesazhit të cilit po i përgjigjeni nuk mund të gjendet ose është fshirë."
+      thread_invalid_for_channel: "Tema nuk është pjesë e kanalit të ofruar."
+      invalid_direct_message: "Nuk ju lejohet të krijoni një mesazh të drejtpërdrejtë."
     reviewables:
+      message_already_handled: "Faleminderit, mesazhi është rishikuar tashmë dhe nuk ka nevojë të raportohet përsëri."
       actions:
+        agree:
+          title: "Pranuar"
+        agree_and_keep_message:
+          title: "Mesazhi është ruajtur"
+          description: "Kliko tek shënimi dhe ndrysho mesazhin."
+        agree_and_keep_deleted:
+          title: "Ruaj mesazhin e fshirë"
+          description: "Kliko tek shënimi dhe ruaj mesazhin e fshirë."
         agree_and_suspend:
           title: "Pezullo anëtarin"
+          description: "Kliko tek shënimi dhe bllokoni përdoruesin."
+        agree_and_silence:
+          title: "Bllokimi i përdoruesit"
+          description: "Kliko tek shënimi dhe blloko përdoruesin."
+        agree_and_restore:
+          title: "Rikthe mesazhin"
+          description: "Rikthe mesazhin që të shfaqet për përdoruesit"
+        agree_and_delete:
+          title: "Fshi Mesazhin"
+          description: "Fshi mesazhin në mënyrë që përdoruesit të mos e shohin atë."
+        delete_and_agree:
+          title: "Injoro shënimin dhe Fshi Mesazhin"
+          description: "Injoro shënimin duke e hequr atë nga radha dhe fshi mesazhin."
+        disagree_and_restore:
+          title: "Ndrysho dhe rikthe mesazhin"
         disagree:
           title: "Jo dakord"
+        ignore:
+          title: "Mos bëni asnjë veprim"
+          description: "Injoro shënimin duke e hequr atë nga radha pa ndërmarrë asnjë veprim."
+      direct_messages:
+        transcript_title: "Kopja e mesazheve të mëparshme në %{channel_name}"
+        transcript_body: "Për t'ju dhënë më shumë informacion, kemi përfshirë një kopje të mesazheve të mëparshme në këtë bisedë (deri në dhjetë):\n\n%{transcript}"
     channel:
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} dhe %{count} të tjera"
+          other: "%{comma_separated_usernames} dhe %{count} të tjerë"
     mention_warning:
       dismiss: "hiqe"
+      cannot_see: "%{first_identifier} nuk mund të hyjë në këtë kanal dhe nuk u njoftua."
+      cannot_see_multiple:
+        one: "%{first_identifier} dhe %{count} përdorues të tjerë nuk mund të hyjnë në këtë kanal dhe nuk u njoftuan."
+        other: "%{first_identifier} dhe %{count} përdoruesit e tjerë nuk mund të hyjnë në këtë kanal dhe nuk u njoftuan."
+      invitations_sent:
+        one: "Ftesa u dërgua"
+        other: "Ftesat u dërguan"
+      invite: "Fto në kanal"
+      without_membership: "%{first_identifier} nuk i është bashkuar këtij kanali."
+      without_membership_multiple:
+        one: "%{first_identifier} dhe %{count} përdorues të tjerë nuk i janë bashkuar këtij kanali."
+        other: "%{first_identifier} dhe %{count} përdorues të tjerë nuk i janë bashkuar këtij kanali."
+      group_mentions_disabled: "%{first_identifier} nuk lejon të përmenden përdorues ."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} dhe %{count} grupi tjetër nuk lejojnë të përmenden përdorues të tjerë."
+        other: "%{first_identifier} dhe %{count} grupi tjetër nuk lejojnë të përmenden përdorues të tjerë."
+      global_mentions_disallowed: "@here dhe @all mentions janë çaktivizuar në këtë kanal."
+      too_many_members: "%{first_identifier} ka shumë anëtarë. Askush nuk ka marrë asnjë njoftim."
+      too_many_members_multiple:
+        one: "%{first_identifier} dhe %{count} grupi tjetër kanë shumë anëtarë. Askush ka marrë asnjë njoftim."
+        other: "%{first_identifier} dhe %{count} grupi tjetër kanë shumë anëtarë. Askush ka marrë asnjë njoftim."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "përmban karaktere të veçanta"
   discourse_push_notifications:
     popup:
       chat_mention:

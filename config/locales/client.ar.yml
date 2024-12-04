@@ -4760,7 +4760,7 @@ ar:
       with_topics: "موضوعات %{filter}"
       with_category: "موضوعات %{filter} في %{category}"
       filter:
-        title: "المرشح"
+        title: "عامل التصفية"
         button:
           label: "المرشح"
       latest:
