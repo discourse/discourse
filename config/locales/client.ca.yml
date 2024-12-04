@@ -2619,7 +2619,6 @@ ca:
       with_topics: "%{filter} temes"
       with_category: "%{filter} %{category} temes"
       filter:
-        title: "Filtre"
         button:
           label: "Filtre"
       latest:
@@ -4236,6 +4235,7 @@ ca:
         none_selected: "Tria una insígnia per a començar"
         allow_title: Permet que es faci servir la insígnia com a títol
         multiple_grant: Pot concedir-se moltes vegades
+        visibility_heading: Visibilitat
         listable: Mostra la insígnia en la pàgina pública d'insígnies
         enabled: activat
         disabled: desactivat

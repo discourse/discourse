@@ -3190,7 +3190,6 @@ vi:
       with_topics: "%{filter} chủ đề"
       with_category: "%{filter} %{category} chủ đề"
       filter:
-        title: "Lọc"
         button:
           label: "Lọc"
       latest:
@@ -5153,6 +5152,7 @@ vi:
         none_selected: "Chọn một huy hiệu để bắt đầu"
         allow_title: Cho phép huy hiệu được sử dụng như là tên
         multiple_grant: Có thể được cấp nhiều lần
+        visibility_heading: Khả năng hiển thị
         listable: Hiện huy hiệu trên trang huy hiệu công khai
         disabled: vô hiệu hóa
         icon: Biểu tượng

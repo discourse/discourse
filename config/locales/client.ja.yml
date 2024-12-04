@@ -3823,7 +3823,6 @@ ja:
       with_topics: "%{filter} トピック"
       with_category: "%{filter} %{category} トピック"
       filter:
-        title: "フィルタ"
         button:
           label: "フィルタ"
       latest:
@@ -6469,6 +6468,7 @@ ja:
         none_selected: "開始するにはバッジを選択してください"
         allow_title: バッジをタグラインとして使用することを許可する
         multiple_grant: 何度でも付与できる
+        visibility_heading: 表示状態
         listable: バッジの公開ページにバッジを表示する
         enabled: 有効
         disabled: 無効

@@ -3722,7 +3722,6 @@ sv:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -6152,6 +6151,7 @@ sv:
         none_selected: "Välj en utmärkelse för att komma igång"
         allow_title: Tillåt att utmärkelse används som titel
         multiple_grant: Kan utfärdas flera gånger
+        visibility_heading: Synlighet
         listable: Visa utmärkelse på den offentliga utmärkelsesidan
         enabled: aktiverad
         disabled: inaktiverade

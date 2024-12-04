@@ -41,6 +41,7 @@ uk:
     default_poll_with_multiple_choices_has_invalid_parameters: "Опитування з кількома варіантами має недійсні параметри."
     named_poll_with_multiple_choices_has_invalid_parameters: "Опитування з назвою <strong>%{name}</strong> з множинним вибором має недійсні параметри."
     requires_at_least_1_valid_option: "Ви маєте обрати щонайменше 1 валідний варіант."
+    requires_that_at_least_one_option_is_ranked: "У рейтингових опитуваннях ви повинні оцінити принаймні один варіант."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Ви не можете змінити опитування після перших %{minutes} хвилин."
       cannot_edit_named_poll_with_votes: "Ви не можете змінити назву опитування <strong>${name}</strong> після перших %{minutes} хвилин."

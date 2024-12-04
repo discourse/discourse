@@ -3319,7 +3319,6 @@ el:
       with_topics: "%{filter} θέματα"
       with_category: "%{filter} %{category} θέματα"
       filter:
-        title: "Φίλτρο"
         button:
           label: "Φίλτρο"
       latest:
@@ -5228,6 +5227,7 @@ el:
         none_selected: "Διάλεξε ένα παράσημο για να ξεκινήσεις"
         allow_title: Το παράσημο μπορεί να χρησιμοποιηθεί σαν τίτλος
         multiple_grant: Μπορεί να απονεμηθεί πολλές φορές
+        visibility_heading: Ορατότητα
         listable: Εμφάνιση του παράσημου στη δημόσια σελίδα παρασήμων
         enabled: ενεργοποιημένα
         disabled: απενεργοποιημένα

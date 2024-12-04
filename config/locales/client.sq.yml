@@ -1728,7 +1728,6 @@ sq:
       with_topics: "Temat nga %{filter}"
       with_category: "Temat nga: %{filter}, %{category}"
       filter:
-        title: "Filtro"
         button:
           label: "Filtro"
       latest:

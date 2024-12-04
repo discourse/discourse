@@ -3737,7 +3737,6 @@ te:
       with_topics: "%{filter} విషయాలు"
       with_category: "%{filter} %{category} విషయాలు"
       filter:
-        title: "ఫిల్టర్ చేయండి"
         button:
           label: "ఫిల్టర్ చేయండి"
       latest:
@@ -6177,6 +6176,7 @@ te:
         none_selected: "ప్రారంభించడానికి బ్యాడ్జ్‌ని ఎంచుకోండి"
         allow_title: బ్యాడ్జ్ను శీర్షికగా ఉపయోగించడానికి అనుమతించండి
         multiple_grant: అనేక సార్లు మంజూరు చేయవచ్చు
+        visibility_heading: దృశ్యమానత
         listable: పబ్లిక్ బ్యాడ్జ్‌ల పేజీలో బ్యాడ్జ్‌ని చూపండి
         enabled: ప్రారంభించబడింది
         disabled: నిలిపివేయబడింది

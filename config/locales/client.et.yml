@@ -2362,7 +2362,6 @@ et:
       with_topics: "%{filter} teemat"
       with_category: "%{filter} %{category} teemat"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -3685,6 +3684,7 @@ et:
         none_selected: "Vali märgis, et alustada"
         allow_title: Luba märgise kasutamist tiitlina
         multiple_grant: Võib olla määratud mitmeid kordi
+        visibility_heading: Nähtavus
         listable: Näita märgist avalike märgiste lehel
         enabled: sisse lülitatud
         disabled: välja lülitatud

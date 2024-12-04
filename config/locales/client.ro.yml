@@ -530,7 +530,7 @@ ro:
         bio: "Bio"
         website: "Site web"
         username: "Nume utilizator"
-        email: "E-mail"
+        email: "Email"
         name: "Nume"
         fields: "Câmpuri"
         reject_reason: "Motiv"
@@ -797,7 +797,7 @@ ro:
           posting: Publicare
           notification: Notificare
         email:
-          title: "E-mail"
+          title: "Email"
           status: "S-au sincronizat prin IMAP %{old_emails} e-mailuri din %{total_emails} în total."
           enable_smtp: "Activează SMTP"
           enable_imap: "Activează IMAP"
@@ -1058,7 +1058,7 @@ ro:
       private_messages: "Mesaje"
       user_notifications:
         filters:
-          filter_by: "Filtrare după"
+          filter_by: "Filtrează după"
           all: "Toate"
           read: "Citite"
           unread: "Necitite"
@@ -1345,7 +1345,7 @@ ro:
         update_email: "Schimbă email"
         set_primary: "Setează e-mail principal"
         destroy: "Elimină e-mail"
-        add_email: "Adaugă e-mail alternativ"
+        add_email: "Adaugă email alternativ"
         no_secondary: "Nici un e-mail secundar"
         instructions: "Niciodată arătat publicului"
         admin_note: "Notă: Un utilizator de administrator care modifică adresa email a altui utilizator non-administrator indică faptul că utilizatorul a pierdut accesul la contul de email original, astfel încât un email de resetare a parolei va fi trimis la noua adresă. Adresa email a utilizatorului nu se va schimba până când acesta nu finalizează procesul de resetare a parolei."
@@ -1923,7 +1923,7 @@ ro:
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
       users_placeholder: "Adaugă utilizatori sau grupuri"
-      title_placeholder: "Despre ce e vorba în acest subiect - pe scurt?"
+      title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "de ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -2942,7 +2942,7 @@ ro:
       with_topics: "%{filter} subiecte"
       with_category: "%{filter} %{category} subiecte"
       filter:
-        title: "Filtru"
+        title: "Rezultate filtrate pentru %{filter}"
         button:
           label: "Filtru"
       latest:
@@ -3200,10 +3200,10 @@ ro:
     pause_notifications:
       options:
         half_hour: "30 de minute"
-        one_hour: "1 oră"
+        one_hour: "o oră"
         two_hours: "2 ore"
         tomorrow: "Până mâine"
-      set_schedule: "Setați un program de notificare"
+      set_schedule: "Setează un program de notificare"
     trust_levels:
       names:
         newuser: "utilizator nou"
@@ -3392,6 +3392,7 @@ ro:
           all: "Toate"
       new_features:
         title: "Ce este nou"
+        check_for_updates: "Verifică actualizări"
       dashboard:
         title: "Panou de control"
         version: "Versiune"
@@ -4234,6 +4235,7 @@ ro:
         invalid: "Ne pare rău, nu poți prelua acest rol."
       users:
         title: "Utilizatori"
+        description: "Vizualizare și gestionare utilizatorii."
         create: "Adaugă utilizator cu titlul de admin"
         last_emailed: "Ultimul email trimis"
         not_found: "Ne pare rău, acest nume de utilizator nu există în sistem."

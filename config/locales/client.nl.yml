@@ -4048,7 +4048,6 @@ nl:
       with_topics: "%{filter} topics"
       with_category: "%{filter} topics in %{category}"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -6748,6 +6747,7 @@ nl:
         none_selected: "Selecteer een badge om te beginnen"
         allow_title: Badge mag als titel worden gebruikt
         multiple_grant: Kan meerdere malen worden toegekend
+        visibility_heading: Zichtbaarheid
         listable: Badge weergeven op de openbare badgespagina
         enabled: ingeschakeld
         disabled: uitgeschakeld
