@@ -30,7 +30,9 @@ export default class ComposerPresenceManager extends Service {
       return;
     }
 
-    this.leave();
+    if (this._channel) {
+      this.leave();
+    }
 
     this._name = name;
     this._channel = this.presence.getChannel(name);
