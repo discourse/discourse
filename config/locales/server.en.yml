@@ -340,6 +340,7 @@ en:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       site_setting_is_hidden: "You are not allowed to change hidden settings"
+      site_setting_is_shadowed_globally: "You cannot change this setting because it is globally configured"
       site_setting_is_unconfigurable: "You are not allowed to change unconfigurable settings"
       invalid_choice:
         one: "'%{name}' is an invalid choice."
