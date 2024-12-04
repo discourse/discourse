@@ -169,9 +169,7 @@ export function selectedText() {
   div
     .querySelectorAll("div.video-placeholder-container[data-video-src]")
     .forEach((element) => {
-      element.replaceWith(
-        `<div class="video-container"><video preload="metadata" controls><source src="${element.dataset.videoSrc}"></video></div>`
-      );
+      element.replaceWith(`![|video](${element.dataset.videoSrc})`);
     });
 
   return toMarkdown(div.outerHTML);
