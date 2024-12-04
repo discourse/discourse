@@ -689,13 +689,6 @@ RSpec.configure do |config|
   end
 
   config.after :each do |example|
-    # This behaviour is enabled by default, to include gems in
-    # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
-    if example.exception && ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
-      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
-      lines << "Warning: DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE has not been enabled, gem backtrace will be excluded from the output\n"
-    end
-
     if example.exception && RspecErrorTracker.exceptions.present?
       lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
 
@@ -710,6 +703,8 @@ RSpec.configure do |config|
         framework_lines_excluded = 0
 
         ex.backtrace.each_with_index do |line, backtrace_index|
+          # This behaviour is enabled by default, to include gems in
+          # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
           if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
             if line.match?(%r{/gems/})
               framework_lines_excluded += 1
