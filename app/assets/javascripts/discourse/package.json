@@ -112,7 +112,7 @@
     "make-plural": "^7.4.0",
     "message-bus-client": "^4.3.8",
     "pretender": "^3.4.7",
-    "qunit": "^2.22.0",
+    "qunit": "^2.23.0",
     "qunit-dom": "^3.4.0",
     "sass": "^1.77.7",
     "select-kit": "workspace:1.0.0",
