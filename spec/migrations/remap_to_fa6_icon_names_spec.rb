@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require Rails.root.join("db/migrate/20241127072350_remap_fa5_icon_names_to_fa6.rb")
+require Rails.root.join("db/migrate/20241204085540_remap_to_fa6_icon_names.rb")
 
-RSpec.describe RemapFa5IconNamesToFa6 do
+RSpec.describe RemapToFa6IconNames do
   let(:migrate) { described_class.new.up }
   let(:icon_mapping) do
     {
