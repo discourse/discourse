@@ -147,8 +147,12 @@ export default class Index extends PreviewBaseComponent {
       ctx.fillText(lines[i], margin + avatarSize + margin, line);
     }
 
+    ctx.font = `${bodyFontSize}em '${font}'`;
+
     // Share Button
-    const shareButtonWidth = i18n("wizard.previews.share_button").length * 11;
+    const shareButtonWidth =
+      Math.round(ctx.measureText(i18n("wizard.previews.share_button")).width) +
+      20;
 
     ctx.beginPath();
     ctx.rect(margin, line + lineHeight, shareButtonWidth, height * 0.1);
@@ -156,8 +160,8 @@ export default class Index extends PreviewBaseComponent {
     ctx.fillStyle =
       colors.primary_low ||
       darkLightDiff(colors.primary, colors.secondary, 90, 65);
+    ctx.fill();
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
-    ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       i18n("wizard.previews.share_button"),
       margin + 10,
@@ -165,7 +169,9 @@ export default class Index extends PreviewBaseComponent {
     );
 
     // Reply Button
-    const replyButtonWidth = i18n("wizard.previews.reply_button").length * 11;
+    const replyButtonWidth =
+      Math.round(ctx.measureText(i18n("wizard.previews.reply_button")).width) +
+      20;
 
     ctx.beginPath();
     ctx.rect(
@@ -177,7 +183,6 @@ export default class Index extends PreviewBaseComponent {
     ctx.fillStyle = colors.tertiary;
     ctx.fill();
     ctx.fillStyle = colors.secondary;
-    ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       i18n("wizard.previews.reply_button"),
       shareButtonWidth + margin + 20,
