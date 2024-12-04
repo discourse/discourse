@@ -1769,7 +1769,6 @@ pt_BR:
     pending_users_reminder_delay_minutes: "Notifique os moderadores se novos(as) usuários(as) estiverem aguardando aprovação por mais de alguns minutos. Defina como -1 para desativar as notificações."
     persistent_sessions: "Os(as) usuários(as) permanecerão com a conta conectada ao fechar o navegador"
     maximum_session_age: "O(a) usuário(a) permanecerá com a conta conectada durante n horas desde o último acesso"
-    experimental_full_page_login: "Substitua o modal de login/criação de conta por um formulário em uma página completa para isso."
     ga_version: "A versão do Google Universal Analytics para usar: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "ID do código de monitoramento do Google Universal Analytics, por exemplo: UA-12345678-9; consulte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "O nome de domínio do Google Universal Analytics, por exemplo: mysite.com; consulte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1824,7 +1823,6 @@ pt_BR:
     max_favorite_badges: "Quantidade máxima de emblemas que o(a) usuário(a) pode selecionar"
     whispers_allowed_groups: "Permitir comunicação privada dentro de tópicos para membros de grupos especificados."
     hidden_post_visible_groups: "Permita que membros destes grupos visualizem postagens ocultas. Usuários(as) da equipe sempre podem ser postagens ocultas."
-    allow_index_in_robots_txt: "Especifique em robots.txt que este site tem permissão para ser indexado por mecanismos de busca da web. Em casos excepcionais, é possível <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a>."
     blocked_email_domains: "Uma lista de domínios de e-mail determinada por barras com que os usuários não têm permissão para registrar contas. Os subdomínios são tratados para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis. Exemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Uma lista de domínios de e-mail determinada por barras com que os usuários DEVEM registrar contas. Os subdomínios são tratados para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis. AVISO: usuários(as) com domínios de e-mail que não sejam os listados aqui não são permitidos(as)!"
     normalize_emails: "Verifique se o e-mail normalizado é único. E-mails normalizados removem todos os pontos do nome do(a) usuário(a) e tudo entre os símbolos + e @."
@@ -4579,8 +4577,6 @@ pt_BR:
     regular:
       name: Regular
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido(s)</a> recategorizar, renomear, links seguidos, wiki, mais curtidas
-      long_description: |
-        Este emblema é concedido quando você atinge o nível de confiança 3. Obrigado por ser uma parte constante de nossa comunidade há meses. Agora você é um dos leitores(as) mais ativos(as) e um(a) colaborador(a) confiável que torna a nossa comunidade excelente. Já é possível recategorizar e renomear tópicos, utilizar os sinalizadores de spam mais eficientes, acessar uma área de descanso privada e também aproveitar muito mais curtidas por dia.
     leader:
       name: Líder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido(s)</a> editar globalmente, fixar, fechar, arquivar, dividir e mesclar, mais curtidas

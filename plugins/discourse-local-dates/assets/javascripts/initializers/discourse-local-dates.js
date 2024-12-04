@@ -142,6 +142,7 @@ function _partitionedRanges(element) {
 }
 
 function initializeDiscourseLocalDates(api) {
+  const modal = api.container.lookup("service:modal");
   const siteSettings = api.container.lookup("service:site-settings");
   const defaultTitle = i18n("discourse_local_dates.default_title", {
     site_name: siteSettings.title,
@@ -164,25 +165,19 @@ function initializeDiscourseLocalDates(api) {
       id: "local-dates",
       group: "extras",
       icon: "calendar-days",
-      sendAction: (event) =>
-        toolbar.context.send("insertDiscourseLocalDate", event),
-    });
-  });
+      perform: (event) =>
+        modal.show(LocalDatesCreateModal, {
+          model: { insertDate: (markup) => event.addText(markup) },
+        }),
+      shortcut: "Shift+.",
+      shortcutAction: (event) => {
+        const timezone = api.getCurrentUser().user_option.timezone;
+        const time = moment().format("HH:mm:ss");
+        const date = moment().format("YYYY-MM-DD");
 
-  api.modifyClass("component:d-editor", {
-    modal: service(),
-    pluginId: "discourse-local-dates",
-    actions: {
-      insertDiscourseLocalDate(toolbarEvent) {
-        this.modal.show(LocalDatesCreateModal, {
-          model: {
-            insertDate: (markup) => {
-              toolbarEvent.addText(markup);
-            },
-          },
-        });
+        event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
       },
-    },
+    });
   });
 
   addTextDecorateCallback(function (

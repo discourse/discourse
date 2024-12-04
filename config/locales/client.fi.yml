@@ -4048,7 +4048,6 @@ fi:
       with_topics: "%{filter} ketjut"
       with_category: "%{filter} %{category} ketjut"
       filter:
-        title: "Suodatin"
         button:
           label: "Suodatin"
       latest:
@@ -6747,6 +6746,7 @@ fi:
         none_selected: "Aloita valitsemalla kunniamerkki"
         allow_title: Salli kunniamerkin käyttäminen tittelinä
         multiple_grant: Voidaan myöntää useita kertoja
+        visibility_heading: Näkyvyys
         listable: Näytä kunniamerkki julkisella kunniamerkkisivulla
         enabled: käytössä
         disabled: pois käytöstä

@@ -1424,7 +1424,6 @@ ko:
     send_old_credential_reminder_days: "며칠 후 이전 크리덴셜에 대해 알림"
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화 토큰은 (n)시간 유효합니다."
     max_favorite_badges: "사용자가 선택할 수 있는 최대 배지 수"
-    allow_index_in_robots_txt: "웹 검색 엔진에서 이 사이트의 색인을 생성할 수 있도록 robots.txt에 지정합니다. 예외적인 경우 영구적으로 <a href='%{base_path}/admin/customize/robots'>robots.txt를 오버라이드</a>할 수 있습니다."
     hide_email_address_taken: "가입하는 동안 또는 비밀번호 찾기 과정에서 제공한 이메일 주소를 사용한 계정이 존재한다는 것을 사용자에게 알리지 마세요. '비밀번호 찾기' 요청에는 전체 이메일이 필요합니다."
     log_out_strict: "로그아웃 시, 모든 디바이스에서 사용자의 모든 세션을 로그아웃합니다"
     version_checks: "버전 업데이트를 위해 Discourse Hub를 Ping하고 <a href='%{base_path}/admin' target='_blank'>/admin</a> 대시보드에 새 버전 메시지를 표시합니다"
@@ -3361,8 +3360,6 @@ ko:
     regular:
       name: 정회원
       description: 카테고리 변경, 이름 변경, 팔로우한 링크, 위키, 좋아요 수 증가 <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">부여</a>
-      long_description: |
-        이 배지는 신뢰 레벨 3에 도달하면 부여됩니다. 몇 달 동안 커뮤니티에 정기적으로 활동해 주셔서 감사합니다. 이제 가장 활동적인 독자 중 한 명이며 커뮤니티를 훌륭하게 만드는 신뢰할 수 있는 기여자가 되셨습니다. 주제의 카테고리와 이름을 변경하고, 더욱 강력한 스팸 신고, 비공개 라운지 공간 액세스 같은 기능을 누릴 수 있으며 일일 좋아요 한도가 늘어났습니다.
     leader:
       name: 지도자
       description: 전체 편집, 고정, 종료, 보관, 분할 및 병합, 좋아요 수 증가 <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">부여</a>

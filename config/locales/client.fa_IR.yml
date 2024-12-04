@@ -753,12 +753,17 @@ fa_IR:
           prefill:
             title: "از قبل پر کردن با تنظیمات برای:"
             gmail: "جی‌میل"
+            outlook: "Outlook.com"
+            office365: "مایکروسافت ۳۶۵"
           ssl_modes:
             none: "هیچ کدام"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "اطلاعات ورود"
             smtp_server: "سرور SMTP"
             smtp_port: "درگاه SMTP"
+            smtp_ssl_mode: "حالت SSL"
             imap_server: "سرور IMAP"
             imap_port: "درگاه IMAP"
             imap_ssl: "از SSL برای IMAP استفاده کنید"
@@ -3134,7 +3139,6 @@ fa_IR:
       with_topics: "%{filter} موضوعات"
       with_category: "%{filter} %{category} موضوعات"
       filter:
-        title: "فیلتر"
         button:
           label: "فیلتر"
       latest:
@@ -4748,6 +4752,7 @@ fa_IR:
         none_selected: "برای شروع یک نشان رو انتخاب کنید"
         allow_title: اجازه‌ی استفاده نشان برای عنوان
         multiple_grant: نمی توان چندین بار اعطا کرد
+        visibility_heading: قابل مشاهده
         listable: نشان دادن نشان در صفحه نشان‌های عمومی
         enabled: فعال شده
         disabled: غیرفعال شده

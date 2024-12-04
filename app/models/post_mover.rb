@@ -113,6 +113,11 @@ class PostMover
     close_topic_and_schedule_deletion if moving_all_posts
 
     destination_topic.reload
+    DiscourseEvent.trigger(
+      :posts_moved,
+      destination_topic_id: destination_topic.id,
+      original_topic_id: original_topic.id,
+    )
     destination_topic
   end
 
@@ -299,6 +304,7 @@ class PostMover
       end
 
     moved_post.attributes = update
+    moved_post.disable_rate_limits! if @options[:freeze_original]
     moved_post.save(validate: false)
 
     DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id)

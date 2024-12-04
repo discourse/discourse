@@ -1,11 +1,18 @@
-<div class="author">
-  <a href={{this.post.userPath}} data-user-card={{this.post.username}}>
-    {{avatar this.post imageSize="large"}}
-  </a>
-</div>
+<PluginOutlet
+  @name="search-results-topic-avatar-wrapper"
+  @outletArgs={{hash post=this.post}}
+>
+  <div class="author">
+    <a href={{this.post.userPath}} data-user-card={{this.post.username}}>
+      {{avatar this.post imageSize="large"}}
+    </a>
+  </div>
+
+</PluginOutlet>
 
 <div class="fps-topic" data-topic-id={{this.post.topic.id}}>
   <div class="topic">
+
     {{#if this.bulkSelectEnabled}}
       <TrackSelected
         @selectedList={{this.selected}}
@@ -55,33 +62,43 @@
     </div>
   </div>
 
-  <div class="blurb container">
-    <span class="date">
-      {{format-date this.post.created_at format="tiny"}}
-      {{#if this.post.blurb}}
-        <span class="separator">-</span>
-      {{/if}}
-    </span>
-
-    {{#if this.post.blurb}}
-      {{#if this.siteSettings.use_pg_headlines_for_excerpt}}
-        {{html-safe this.post.blurb}}
-      {{else}}
-        <HighlightSearch @highlight={{this.highlightQuery}}>
-          {{html-safe this.post.blurb}}
-        </HighlightSearch>
-      {{/if}}
-    {{/if}}
-  </div>
-
-  {{#if this.showLikeCount}}
-    {{#if this.post.like_count}}
-      <span class="like-count">
-        <span class="value">{{this.post.like_count}}</span>
-        {{d-icon "heart"}}
+  <PluginOutlet
+    @name="search-result-entry-blurb-wrapper"
+    @outletArgs={{hash post=this.post logClick=this.logClick}}
+  >
+    <div class="blurb container">
+      <span class="date">
+        {{format-date this.post.created_at format="tiny"}}
+        {{#if this.post.blurb}}
+          <span class="separator">-</span>
+        {{/if}}
       </span>
+
+      {{#if this.post.blurb}}
+        {{#if this.siteSettings.use_pg_headlines_for_excerpt}}
+          {{html-safe this.post.blurb}}
+        {{else}}
+          <HighlightSearch @highlight={{this.highlightQuery}}>
+            {{html-safe this.post.blurb}}
+          </HighlightSearch>
+        {{/if}}
+      {{/if}}
+    </div>
+  </PluginOutlet>
+
+  <PluginOutlet
+    @name="search-result-entry-stats-wrapper"
+    @outletArgs={{hash post=this.post}}
+  >
+    {{#if this.showLikeCount}}
+      {{#if this.post.like_count}}
+        <span class="like-count">
+          <span class="value">{{this.post.like_count}}</span>
+          {{d-icon "heart"}}
+        </span>
+      {{/if}}
     {{/if}}
-  {{/if}}
+  </PluginOutlet>
 </div>
 
 <PluginOutlet @name="after-search-result-entry" />

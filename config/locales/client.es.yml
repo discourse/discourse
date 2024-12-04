@@ -1492,12 +1492,12 @@ es:
         download_backup_codes: "Descargar códigos de recuperación"
         remaining_codes:
           one: "Te queda <strong>%{count}</strong> código de copia de seguridad sin usar todavía."
-          other: "Te quedan <strong>%{count}</strong> códigos de respaldo sin usar todavía."
-        use: "Usar un código de copia de seguridad"
-        enable_prerequisites: "Debes activar un método principal de dos factores antes de generar códigos de respaldo."
+          other: "Te quedan <strong>%{count}</strong> códigos de copia de seguridad sin usar todavía."
+        use: "Usar un código de recuperación"
+        enable_prerequisites: "Debes activar un método principal de dos factores antes de generar código de copia de seguridad."
         codes:
-          title: "Códigos de respaldo generados"
-          description: "Cada uno de estos códigos de respaldo se puede usar una única vez. Mantenlos en un lugar seguro pero accesible."
+          title: "Códigos de copia de seguridad generados"
+          description: "Cada uno de estos códigos de copia de seguridad se puede usar una única vez. Mantenlos en un lugar seguro pero accesible."
       second_factor:
         title: "Autenticación de dos factores"
         enable: "Gestionar la autenticación de dos factores"
@@ -1514,7 +1514,7 @@ es:
         extended_description: |
           La autenticación de dos factores añade una capa extra de seguridad a tu cuenta al pedirte un código de un solo uso además de tu contraseña. Los códigos se pueden generar en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Ten en cuenta que los inicios de sesión con redes sociales y páginas de terceros se desactivarán para tu cuenta una vez que actives la autenticación de dos factores."
-        use: "Utilizar la aplicación de autenticación"
+        use: "Usar la aplicación de autenticación"
         enforced_with_oauth_notice: "Debes activar la autenticación de dos factores. Solo se te pedirá que la utilices cuando inicies sesión con una contraseña, no con métodos de autenticación externa o de inicio de sesión con red social."
         enforced_notice: "Es obligatorio que actives la autenticación de dos factores antes de acceder al sitio web."
         disable: "Desactivar"
@@ -1655,8 +1655,8 @@ es:
         confirm_modal_title: "Conectar cuenta de %{provider}"
         confirm_description:
           disconnect: "Tu cuenta de %{provider} «%{account_description}» será desenlazada"
-          account_specific: "Tu cuenta de %{provider} «%{account_description}» se utilizará para la autenticación."
-          generic: "Tu cuenta de %{provider} se utilizará para la autenticación."
+          account_specific: "Tu cuenta de %{provider} «%{account_description}» se usará para la autenticación."
+          generic: "Tu cuenta de %{provider} se usará para la autenticación."
       activate_account:
         action: "Haz clic aquí para activar tu cuenta"
         already_done: "Lo sentimos, este enlace de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
@@ -1698,7 +1698,7 @@ es:
         title: "Código de invitación"
         instructions: "El registro de la cuenta requiere un código de invitación"
       auth_tokens:
-        title: "Dispositivos utilizados recientemente"
+        title: "Dispositivos usados recientemente"
         short_description: "Esta es una lista de los dispositivos que se han conectado recientemente a tu cuenta."
         details: "Detalles"
         log_out_all: "Cerrar sesión en todos los dispositivos"
@@ -2235,7 +2235,7 @@ es:
       second_factor_description: "Introduce el código de autenticación desde tu aplicación:"
       second_factor_backup: "Iniciar sesión utilizando un código de copia de seguridad"
       second_factor_backup_title: "Código de respaldo de la autenticación de dos factores"
-      second_factor_backup_description: "Introduce uno de los códigos de respaldo:"
+      second_factor_backup_description: "Introduce uno de los códigos de copia de seguridad:"
       second_factor: "Iniciar sesión utilizando la aplicación de autenticación"
       security_key_description: "Cuando tengas tu clave de seguridad física o tu dispositivo móvil compatible preparado, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
       security_key_alternative: "Probar de otra manera"
@@ -2794,13 +2794,13 @@ es:
           aria_label: Filtrar por etiqueta
         filters:
           label: Solo temas/publicaciones que…
-          title: coincide el título únicamente
+          title: Coincide solo en el título
           likes: me han gustado
           posted: he publicado en ellos
           created: Creado por mi
           watching: estoy vigilando
           tracking: estoy siguiendo
-          private: en mis mensajes
+          private: En mis mensajes
           bookmarks: he guardado
           first: son la primera publicación
           pinned: están anclados
@@ -4047,7 +4047,6 @@ es:
       with_topics: "%{filter} temas"
       with_category: "%{filter} Foro de %{category}"
       filter:
-        title: "Filtrar"
         button:
           label: "Filtrar"
       latest:
@@ -4326,8 +4325,8 @@ es:
         one: 'Esta etiqueta pertence al grupo: «%{tag_groups}»'
         other: "Esta etiqueta pertence a estos grupos: %{tag_groups}."
       category_restrictions:
-        one: "Solo se puede utilizar en esta categoría:"
-        other: "Solo se puede utilizar en estas categorías:"
+        one: "Solo se puede usar en esta categoría:"
+        other: "Solo se puede usar en estas categorías:"
       edit_synonyms: "Editar sinónimos"
       add_synonyms_label: "Añadir sinónimos:"
       add_synonyms: "Añadir"
@@ -5151,7 +5150,7 @@ es:
           reviewable_created: "El elemento revisable está listo"
           reviewable_updated: "Se ha actualizado el elemento revisable"
         user_badge_event:
-          group_name: "Eventos de Medalla"
+          group_name: "Eventos de medalla"
           user_badge_granted: "Se ha concedido la medalla de usuario"
           user_badge_revoked: "Se ha revocado la medalla de usuario"
         like_event:
@@ -6417,7 +6416,7 @@ es:
 
               <p><b>¡Esto no se puede deshacer!</b></p>
 
-              <p>Para continuar escribe: <code>%{text}</code></p>
+              <p>Para continuar, escribe: <code>%{text}</code></p>
             text: "eliminar publicaciones de @%{username}"
             delete: "Eliminar publicaciones de @%{username}"
             cancel: "Cancelar"
@@ -6742,10 +6741,11 @@ es:
         granted_badges: Medallas concedidas
         grant: Conceder
         no_user_badges: "%{name} no ha recibido ninguna medalla."
-        no_badges: No hay medallas que puedan ser concedidas.
+        no_badges: No hay medallas que se puedan conceder.
         none_selected: "Selecciona una medalla para empezar"
         allow_title: Permitir que se use la medalla como título
         multiple_grant: Se puede conceder varias veces
+        visibility_heading: Visibilidad
         listable: Mostrar medalla en la página pública de medallas
         enabled: activado
         disabled: desactivado
@@ -6788,8 +6788,8 @@ es:
             with_post_time: <span class="username">%{username}</span> por la publicación en %{link} a las <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> a las <span class="time">%{time}</span>
         badge_intro:
-          title: "Elige una insignia o crea una nueva"
-          description: "Empieza seleccionando una insignia existente para personalizarla, o crea una insignia totalmente nueva"
+          title: "Elige una medalla o crea una nueva"
+          description: "Empieza seleccionando una medalla existente para personalizarla, o crea una medalla totalmente nueva"
         mass_award:
           title: Conceder en masa
           description: Concede la misma medalla a muchos usuarios a la vez.

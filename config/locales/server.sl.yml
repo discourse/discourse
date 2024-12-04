@@ -1714,8 +1714,6 @@ sl:
     regular:
       name: Redni član
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Dodeljena</a> možnost menjave kategorije, preimenovanja, sledenja povezav, wiki, več všečkov
-      long_description: |
-        Ta značka vam je podeljena, ko dosežete nivo zaupanja 3. Hvala, ker ste reden udeleženec naše skupnosti že nekaj mesecev. Ste eden bolj aktivnih bralcev in zanesljiv sodelavec, ki naredi našo skupnost enkratno. Sedaj lahko menjate kategorije temam, preimenujete teme, lahko uporabljate bolj zmogljive načine prijave, dostopate do zasebne lože in podelite več všečkov vsak dan.
     leader:
       name: Vodja
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Dodeljena</a> možnost globalnega urejanja, pripenjanja, zapiranja, arhiviranja, razdruževanja in združevanja ter več všečkov

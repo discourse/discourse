@@ -1769,7 +1769,6 @@ nl:
     pending_users_reminder_delay_minutes: "Moderators informeren wanneer nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     persistent_sessions: "Gebruikers blijven aangemeld wanneer de webbrowser wordt gesloten"
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
-    experimental_full_page_login: "Vervang de aanmeldings-/registratiedialoog door een aanmeldings-/registratieformulier op een volledige pagina."
     ga_version: "Te gebruiken versie van Google Universal Analytics: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics-trackingcode-ID, bijvoorbeeld: UA-12345678-9; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics-domeinnaam, bijvoorbeeld: mijnsite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1824,7 +1823,6 @@ nl:
     max_favorite_badges: "Maximaal aantal badges dat een gebruiker kan selecteren"
     whispers_allowed_groups: "Sta privécommunicatie binnen topics toe voor leden van bepaalde groepen."
     hidden_post_visible_groups: "Sta leden van deze groepen toe om verborgen berichten te bekijken. Personeelgebruikers kunnen altijd verborgen berichten bekijken."
-    allow_index_in_robots_txt: "Geef in robots.txt op dat deze website door webzoekmachines mag worden geïndexeerd. In uitzonderlijke gevallen kun je <a href='%{base_path}/admin/customize/robots'>robots.txt</a> blijvend negeren."
     blocked_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers geen accounts mogen registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. Voorbeeld: mailinator.com|trashmail.net"
     allowed_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers een account MOETEN registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. WAARSCHUWING: gebruikers met andere e-maildomeinen dan de vermelde zijn niet toegestaan!"
     normalize_emails: "Controleren of het genormaliseerde e-mailadres uniek is. Normalisering van e-mailadressen verwijdert alle punten uit de gebruikersnaam en alles tussen de symbolen + en @."
@@ -4591,8 +4589,6 @@ nl:
     regular:
       name: Normaal
       description: Hercategoriseren, hernoemen, gevolgde links, wiki, meer likes <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">toegekend</a>
-      long_description: |
-        Deze badge wordt toegekend wanneer je vertrouwensniveau 3 wordt. Bedankt dat je gedurende een periode van maanden regelmatig deel uitmaakt van onze community. Je bent nu een van de meest actieve lezers en een betrouwbare bijdrager die onze community geweldig maakt. Je kunt nu topics hercategoriseren en hernoemen, krachtigere spammarkeringen gebruiken, je hebt toegang tot een privélounge en je krijgt ook veel meer likes per dag.
     leader:
       name: Leider
       description: Globaal bewerken, vastmaken, sluiten, archiveren, splitsen en samenvoegen, meer likes <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">toegekend</a>

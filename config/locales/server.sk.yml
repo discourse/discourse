@@ -1921,7 +1921,11 @@ sk:
     pending_users_reminder_delay_minutes: "Upozorniť moderátorov, ak noví používatelia čakajú na schválenie dlhšie ako tento počet minút. Nastavte na -1, ak chcete vypnúť upozornenia."
     persistent_sessions: "Používatelia zostanú prihlásení aj po zatvorení webového prehliadača"
     maximum_session_age: "Používateľ zostane prihlásený n hodín od poslednej návštevy"
-    experimental_full_page_login: "Nahradenie modálneho formulára na prihlásenie/registráciu celostránkovým formulárom na prihlásenie/registráciu."
+    full_page_login: "Zobraziť prihlasovacie a registračné formuláre na celej stránke (ak nie je začiarknuté, používatelia uvidia formuláre v modálnom okne). "
+    show_signup_form_email_instructions: Zobrazte e-mailové pokyny vo formulári na registráciu.
+    show_signup_form_username_instructions: Zobrazenie pokynov k používateľskému menu vo formulári na registráciu.
+    show_signup_form_full_name_instructions: Zobrazenie pokynov na celé meno vo formulári na registráciu.
+    show_signup_form_password_instructions: Zobrazenie pokynov na zadanie hesla v registračnom formulári.
     ga_version: "Verzia služby Google Universal Analytics, ktorú chcete používať: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "ID kód sledovania Google Universal Analytics, napr: UA-12345678-9; pozri <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Názov domény Google Universal Analytics, napr.: mysite.com; pozrite si <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1976,7 +1980,6 @@ sk:
     max_favorite_badges: "Maximálny počet odznakov, ktoré môže používateľ vybrať"
     whispers_allowed_groups: "Povolenie súkromnej komunikácie v rámci tém pre členov určených skupín."
     hidden_post_visible_groups: "Povoliť členom týchto skupín zobrazovať skryté príspevky. Členovia personálu môžu vždy zobraziť skryté príspevky."
-    allow_index_in_robots_txt: "V súbore robots.txt uveďte, že túto stránku môžu webové vyhľadávače indexovať. Vo výnimočných prípadoch môžete natrvalo <a href='%{base_path}/admin/customize/robots'>prepísať súbor robots.txt</a>."
     blocked_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, s ktorými si používatelia nemôžu registrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. Príklad: mailinator.com|trashmail.net"
     allowed_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, v ktorých si používatelia MUSIA zaregistrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. UPOZORNENIE: Používatelia s inými e-mailovými doménami ako sú uvedené nebudú povolení!"
     normalize_emails: "Skontroluj, či je normalizovaný e-mail jedinečný. Normalizovaný e-mail odstraňuje všetky bodky z používateľského mena a všetko medzi znakmi + a @."
@@ -4824,7 +4827,7 @@ sk:
       name: Bežné
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Poskytnuté</a> prekategorizovať, premenovať, sledované odkazy, wiki, viac likes
       long_description: |
-        Tento odznak získate, keď dosiahnete úroveň dôveryhodnosti 3. Ďakujeme, že ste boli pravidelnou súčasťou našej komunity počas niekoľkých mesiacov. Teraz patríte medzi najaktívnejších čitateľov a spoľahlivých prispievateľov, ktorí robia našu komunitu skvelou. Teraz môžete prekategorizovať a premenovať témy, využívať silnejšie príznaky spamu, získať prístup do súkromnej oddychovej zóny a tiež dostanete oveľa viac lajkov za deň.
+        Tento odznak získate, keď dosiahnete úroveň dôveryhodnosti 3. Ďakujeme, že ste boli pravidelnou súčasťou našej komunity počas niekoľkých mesiacov. Teraz patríte medzi najaktívnejších čitateľov a spoľahlivých prispievateľov, ktorí robia našu komunitu skvelou. Teraz môžete témy prekategorizovať a premenovať, využívať silnejšie príznaky spamu a tiež získate oveľa viac lajkov za deň.
     leader:
       name: Vodca
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Povolené</a> globálne úpravy, pripnutie, zatvorenie, archivácia, rozdelenie a zlúčenie, viac rád

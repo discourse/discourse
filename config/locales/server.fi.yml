@@ -1769,7 +1769,6 @@ fi:
     pending_users_reminder_delay_minutes: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta minuuttia. Aseta -1, jos haluat poistaa ilmoitukset käytöstä."
     persistent_sessions: "Käyttäjät pysyvät sisäänkirjautuneena, vaikka selain on suljettuna"
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
-    experimental_full_page_login: "Korvaa kirjautumis- ja rekisteröitymismodaali-ikkuna koko sivun kirjautumis- ja rekisteröitymislomakkeella."
     ga_version: "Käytettävä Google Universal Analytics -versio: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics -seurantakoodin tunnus, esim.: UA-12345678-9; katso <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics -verkkotunnus, esimerkiksi: mysite.com; katso <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1824,7 +1823,6 @@ fi:
     max_favorite_badges: "Enimmäismäärä kunniamerkkejä, jonka käyttäjä voi valita"
     whispers_allowed_groups: "Salli tiettyjen ryhmien jäsenten yksityinen viestintä ketjuissa."
     hidden_post_visible_groups: "Salli näiden ryhmien jäsenten tarkastella piilotettuja viestejä. Ylläpidon jäsenet voivat aina tarkastella piilotettuja viestejä."
-    allow_index_in_robots_txt: "Määritä robots.txt-tiedostossa, että hakurobotit saavat indeksoida tätä sivustoa. Poikkeuksellisissa tapauksissa voit <a href='%{base_path}/admin/customize/robots'>ohittaa robots.txt:n</a> pysyvästi."
     blocked_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjät eivät saa rekisteröidä tilejä. Määritettyjen verkkotunnusten alaverkkotunnukset käsitellään automaattisesti. Jokerimerkkisymboleita * ja ? ei tueta. Esimerkki: mailinator.com|trashmail.net"
     allowed_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjien TÄYTYY rekisteröidä tilit. Määritettyjen verkkotunnusten alaverkkotunnukset käsitellään automaattisesti. VAROITUS: käyttäjiä, joiden sähköpostiverkkotunnus ei ole luettelossa, ei sallita!"
     normalize_emails: "Tarkista, onko normalisoitu sähköpostiosoite yksilöllinen. Normalisoitu sähköpostiosoite poistaa kaikki pisteet käyttäjätunnuksesta ja kaiken +- ja @-symbolien väliltä."
@@ -4494,8 +4492,6 @@ fi:
     regular:
       name: Mestari
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Myönnetty</a> ketjujen siirto toiselle alueelle ja uudelleennimeäminen, hakukoneiden seuraamat linkit, wiki-viestit ja lisää tykkäyksiä
-      long_description: |
-        Tämä kunniamerkki myönnetään, kun nouset luottamustasolle 3. Kiitos kun olet ollut tärkeä osa yhteisöä kuukausien ajan. Olet yksi innokkaimmista lukijoista ja luotettava sisällön tuottaja, ja olet tekemässä yhteisöstä niin hienoa kuin se on. Voit nyt siirtää ketjuja alueelta toiselle ja uudelleennimetä ketjuja, roskapostiliputuksesi ovat tehokkaampia, pääset lounge-alueelle ja käytössäsi on selvästi enemmän tykkäyksiä päivää kohden.
     leader:
       name: Johtaja
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Myönnetty</a> minkä tahansa viestin muokkaaminen, kiinnittäminen, sulkeminen, arkistoiminen, pilkkominen ja yhdistäminen ja lisää tykkäyksiä

@@ -2673,7 +2673,6 @@ zh_TW:
       with_topics: "%{filter} 話題"
       with_category: "%{filter} %{category} 話題"
       filter:
-        title: "過濾"
         button:
           label: "過濾"
       latest:
@@ -4308,6 +4307,7 @@ zh_TW:
         none_selected: "選擇一個徽章開始"
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
+        visibility_heading: 能見度
         listable: 在徽章頁面上顯示徽章
         enabled: 啟用
         disabled: 停用

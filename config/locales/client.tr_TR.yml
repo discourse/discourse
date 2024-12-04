@@ -1635,7 +1635,7 @@ tr_TR:
         add_email: "Alternatif E-posta Ekle"
         auth_override_instructions: "E-posta, kimlik doğrulama sağlayıcısından güncellenebilir."
         no_secondary: "İkincil e-posta yok"
-        instructions: "Asla genele gösterilmez"
+        instructions: "Asla herkese açık şekilde gösterilmez"
         admin_note: "Not: Yönetici olmayan başka bir kullanıcının e-postasını değiştiren bir yönetici kullanıcı, kullanıcının orijinal e-posta hesabına erişimini kaybettiğini gösterir, bu nedenle yeni adresine şifre sıfırlama e-postası gönderilir. Şifre sıfırlama işlemi tamamlanana kadar kullanıcının e-postası değişmez."
         ok: "Onaylamanız için size e-posta göndereceğiz"
         required: "Lütfen bir e-posta adresi girin"
@@ -2003,7 +2003,7 @@ tr_TR:
     presence_toggle:
       online: "Çevrimiçi"
       offline: "Çevrimdışı"
-      title: "Varlık özelliklerini değiştirin"
+      title: "Varlık özelliklerine geçiş yapın"
     user_tips:
       button: "Anladım!"
       skip: "İpuçlarını atla"
@@ -4048,7 +4048,6 @@ tr_TR:
       with_topics: "%{filter} konular"
       with_category: "%{filter} %{category} konular"
       filter:
-        title: "Filtrele"
         button:
           label: "Filtrele"
       latest:
@@ -5280,7 +5279,7 @@ tr_TR:
       config_areas:
         about:
           header: "Siteniz hakkında"
-          description: "Burada bu site ve ekibiniz hakkında bilgi verin, böylece insanlar topluluğunuzun ne hakkında olduğunu, arkasında kimlerin olduğunu ve bir sorun olması durumunda size nasıl ulaşacaklarını öğrenebilirler. Sitenizin <a href=\"%{basePath}/about\">Hakkında sayfasında</a> gösterilir."
+          description: "Burada bu site ve ekibiniz hakkında bilgi verin, böylece insanlar topluluğunuzun ne hakkında olduğunu, arkasında kimlerin olduğunu ve bir sorun olması durumunda size nasıl ulaşacaklarını öğrenebilirler. Sitenizin <a href='%{basePath}/about'>Hakkında sayfasında</a> gösterilir."
           general_settings: "Genel Ayarlar"
           community_name: "Topluluk adı"
           community_name_placeholder: "Örnek Topluluk"
@@ -6748,6 +6747,7 @@ tr_TR:
         none_selected: "Başlamak için bir rozet seçin"
         allow_title: Rozetin başlık olarak kullanılmasına izin verin
         multiple_grant: Birden çok kez verilebilir
+        visibility_heading: Görünürlük
         listable: Rozeti herkese açık rozetler sayfasında gösterin
         enabled: etkin
         disabled: devre dışı

@@ -14,6 +14,10 @@ module PageObjects
         page.has_css?("#{COMPOSER_ID}.closed", visible: :all)
       end
 
+      def minimized?
+        page.has_css?("#{COMPOSER_ID}.draft")
+      end
+
       def open_composer_actions
         find(".composer-action-title .btn").click
         self

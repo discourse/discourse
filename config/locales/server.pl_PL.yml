@@ -1866,7 +1866,6 @@ pl_PL:
     max_favorite_badges: "Maksymalna liczba odznak, które użytkownik może wybrać"
     whispers_allowed_groups: "Zezwalaj na prywatną komunikację w ramach tematów członkom określonych grup."
     hidden_post_visible_groups: "Zezwól członkom tych grup na przeglądanie ukrytych postów. Użytkownicy personelu zawsze mogą przeglądać ukryte posty."
-    allow_index_in_robots_txt: "W pliku robots.txt określ, że ta witryna może być indeksowana przez wyszukiwarki internetowe. W wyjątkowych przypadkach możesz trwale <a href='%{base_path}/admin/customize/robots'>zastąpić plik robots.txt</a>."
     blocked_email_domains: "Rozdzielona pionową kreską lista domen poczty e-mail, z których użytkownicy nie mogą rejestrować kont. Subdomeny są obsługiwane automatycznie dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane. Przykład: mailinator.com|trashmail.net"
     allowed_email_domains: "Rozdzielona pionową kreską lista domen e-mail, z których użytkownicy MUSZĄ zarejestrować konta. Subdomeny są obsługiwane automatycznie dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane. OSTRZEŻENIE: Użytkownicy z domenami e-mail innymi niż wymienione nie będą mogli się zarejestrować!"
     normalize_emails: "Sprawdź, czy znormalizowany e-mail jest unikalny. Znormalizowany e-mail usuwa wszystkie kropki z nazwy użytkownika i wszystko między symbolami + i @."
@@ -4535,8 +4534,6 @@ pl_PL:
     regular:
       name: Stały bywalec
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Przyznano</a>możliwość zmiany kategorii i nazwy, tworzenie linków dofollow, wiki, więcej polubień
-      long_description: |
-        Ta odznaka jest przyznawana za zdobycie 3. poziomu zaufania. Dziękujemy za bycie stałym bywalcem naszej społeczności przez ostatnich kilka miesięcy. Jesteś jednym z najbardziej aktywnych czytelników i masz realny wkład w ulepszanie naszej społeczności. Możesz teraz rekategoryzować tematy i zmieniać ich nazwy, używać skuteczniejszych metod flagowania, korzystać z dostępu do Salonu oraz otrzymywać o wiele więcej polubień dziennie.
     leader:
       name: Weteran
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Przyznano</a> możliwość globalnej edycji, przypinania, zamykania, archiwizacji, dzielenia i scalania tematów oraz więcej polubień

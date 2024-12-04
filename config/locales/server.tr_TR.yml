@@ -596,7 +596,7 @@ tr_TR:
     default_descriptions:
       everyone: "Tüm üyeleri içeren otomatik grup"
       staff: "Yöneticiler ve moderatörler dâhil otomatik grup"
-      admins: "Tüm üye ve etkinlik verilerine erişimle, bu sitenin yapılandırılması ve bakımından sorumludur"
+      admins: "Tüm üye ve aktivite verilerine erişimle, bu sitenin yapılandırılması ve bakımından sorumludur"
       moderators: "Bayraklara yanıt vermekten, tartışmaları yönetmekten ve üyelere hesaplarında yardımcı olmaktan sorumludur"
       trust_level_0: "Topluluk normlarını ve işlevselliği öğrenmekte olan sınırlı yeteneklere sahip yeni üyeler"
       trust_level_2: "Sürekli olarak fazla mesaiyle katkıda bulunan ve tam vatandaşlık ayrıcalıkları kazanan aktif üyeler. Bu grubun tüm üyeleri aynı zamanda trust_level_1 ve trust_level_0 gruplarının da üyesidir."
@@ -1762,7 +1762,6 @@ tr_TR:
     pending_users_reminder_delay_minutes: "Yeni kullanıcılar şu kadar dakikadan uzun süredir onay bekliyorsa moderatörleri bilgilendirin. Bildirimleri devre dışı bırakmak için -1 olarak ayarlayın."
     persistent_sessions: "Web tarayıcısı kapatıldığında kullanıcıların oturumları açık kalır"
     maximum_session_age: "Kullanıcı, son ziyaretinden bu yana n saat süreyle oturum açmış durumda kalır"
-    experimental_full_page_login: "Giriş yapma/kayıt modalini tam sayfa giriş yapma/kayıt formu ile değiştirin."
     ga_version: "Kullanılacak Google Universal Analytics sürümü: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics izleme kodu kimliği, ör.: UA-12345678-9; bkz. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics alan adı, ör.: mysite.com; bkz. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1790,7 +1789,7 @@ tr_TR:
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
     top_menu: "Ana sayfa navigasyonunda hangi ögelerin hangi sırayla görüneceğini belirleyin."
-    post_menu: "Varsayılan yazı menüsü ögelerinin görünürlüğünü ve sırasını yapılandırın. Eklentiler veya temalar tarafından eklenen ek ögeler ayrı olarak yönetilir ve bu listede görünmez."
+    post_menu: "Varsayılan gönderi menüsü ögelerinin görünürlüğünü ve sırasını yapılandırın. Eklentiler veya temalar tarafından eklenen ek ögeler ayrı olarak yönetilir ve bu listede görünmez."
     post_menu_hidden_items: "Bir genişletme üçgenine tıklanmadığı sürece yazı menüsünde varsayılan olarak gizlenecek menü ögeleri. Eklentiler veya temalar tarafından eklenen ek ögeler ayrı olarak yönetilir ve bu listede görünmez."
     share_links: "Paylaş iletişim kutusunda hangi ögelerin ve hangi sırada görüneceğini belirleyin."
     allow_username_in_share_links: "Kullanıcı adlarının paylaşım bağlantılarına dahil edilmesine izin verin. Bu, benzersiz ziyaretçilere dayalı rozetleri ödüllendirmek için kullanışlıdır."
@@ -1817,7 +1816,6 @@ tr_TR:
     max_favorite_badges: "Kullanıcının seçebileceği maksimum rozet sayısı"
     whispers_allowed_groups: "Belirli grupların üyeleri için konular dahilinde özel iletişime izin verin."
     hidden_post_visible_groups: "Bu grupların üyelerinin gizli gönderileri görmesine izin verin. Personel olan kullanıcılar, gizli gönderileri her zaman görüntüleyebilir."
-    allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. İstisnai durumlarda kalıcı olarak <a href='%{base_path}/admin/customize/robots'>robots.txt'i geçersiz kılabilirsiniz</a>."
     blocked_email_domains: "Kullanıcıların hesap açmasına izin verilmeyen e-posta alan adlarının boruyla ayrılmış bir listesi. Belirtilen alan adları için alt alan adları otomatik olarak işlenir. Joker karakter sembolleri * ve ? desteklenmez. Örnek: mailinator.com|trashmail.net"
     allowed_email_domains: "Kullanıcıların hesap açmaları GEREKEN e-posta alan adlarının boruyla ayrılmış bir listesi. Belirtilen alan adları için alt alan adları otomatik olarak işlenir. Joker karakter sembolleri olan * ve ? desteklenmez. UYARI: Listelenenler dışındaki e-posta alan adlarına sahip kullanıcılara izin verilmez!"
     normalize_emails: "Normalleştirilmiş e-postanın benzersiz olup olmadığını kontrol edin. Normalleştirilmiş e-posta, kullanıcı adındaki tüm noktaları ve + ve @ sembolleri arasındaki her şeyi kaldırır."
@@ -4543,8 +4541,6 @@ tr_TR:
     regular:
       name: Normal
       description: Yeniden kategorize etme, yeniden adlandırma, takip edilen bağlantılar, wiki, daha fazla beğeni <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">verildi</a>
-      long_description: |
-        Bu rozet, güven seviyesi 3'e ulaştığınızda verilir. Aylar boyunca topluluğumuzun düzenli bir parçası olduğunuz için teşekkür ederiz. Artık en aktif okuyuculardan biri ve topluluğumuzu harika kılan güvenilir bir katılımcısınız. Artık konuları yeniden kategorize edebilir ve yeniden adlandırabilir, daha güçlü spam bayraklarından yararlanabilir, özel bir salon alanına erişebilir ve ayrıca günlük çok daha fazla beğeni alabilirsiniz.
     leader:
       name: Lider
       description: Global düzenleme, sabitleme, kapatma, arşivleme, bölme ve birleştirme, daha fazla beğeni <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">verildi</a>

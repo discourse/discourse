@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
@@ -30,6 +33,28 @@ export default class DMenu extends Component {
       this.menuInstance.destroy();
     };
   });
+
+  @action
+  registerFloatBody(element) {
+    this.body = element;
+  }
+
+  @action
+  forwardTabToContent(event) {
+    if (!this.body) {
+      return;
+    }
+
+    if (event.key === "Tab") {
+      event.preventDefault();
+
+      const firstFocusable = this.body.querySelector(
+        'button, a, input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      firstFocusable?.focus() || this.body.focus();
+    }
+  }
 
   get menuId() {
     return `d-menu-${this.menuInstance.id}`;
@@ -73,6 +98,7 @@ export default class DMenu extends Component {
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
+      {{on "keydown" this.forwardTabToContent}}
       ...attributes
     >
       {{#if (has-block "trigger")}}
@@ -122,6 +148,7 @@ export default class DMenu extends Component {
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
+          {{didInsert this.registerFloatBody}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

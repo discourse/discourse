@@ -576,7 +576,7 @@ acceptance("Composer", function (needs) {
       );
   });
 
-  test("Composer can toggle between edit and reply", async function (assert) {
+  test("Composer can toggle between edit and reply on the OP", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.edit");
@@ -586,8 +586,10 @@ acceptance("Composer", function (needs) {
         /^This is the first post\./,
         "populates the input with the post text"
       );
+
     await click(".topic-post:nth-of-type(1) button.reply");
-    assert.dom(".d-editor-input").hasNoValue("clears the input");
+    assert.dom(".d-editor-input").hasNoValue("clears the composer input");
+
     await click(".topic-post:nth-of-type(1) button.edit");
     assert
       .dom(".d-editor-input")
@@ -595,6 +597,27 @@ acceptance("Composer", function (needs) {
         /^This is the first post\./,
         "populates the input with the post text"
       );
+  });
+
+  test("Composer can toggle between edit and reply on a reply", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+
+    await click(".topic-post:nth-of-type(2) button.edit");
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^This is the second post\./,
+        "populates the input with the post text"
+      );
+
+    await click(".topic-post:nth-of-type(2) button.reply");
+    assert.dom(".d-editor-input").hasNoValue("clears the composer input");
+
+    await click(".topic-post:nth-of-type(2) button.edit");
+    assert.true(
+      query(".d-editor-input").value.startsWith("This is the second post."),
+      "populates the input with the post text"
+    );
   });
 
   test("Composer can toggle whispers when whisperer user", async function (assert) {
@@ -802,6 +825,7 @@ acceptance("Composer", function (needs) {
         i18n("post.cancel_composer.keep_editing"),
         "has keep editing button"
       );
+
     await click(".d-modal__footer button.save-draft");
     assert.dom(".d-editor-input").hasNoValue("clears the composer input");
   });
@@ -847,10 +871,9 @@ acceptance("Composer", function (needs) {
 
     assert.dom(".d-modal__body").doesNotExist("abandon popup shouldn't come");
 
-    assert.true(
-      query(".d-editor-input").value.includes(longText),
-      "entered text should still be there"
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue(longText, "entered text should still be there");
 
     assert
       .dom('.action-title a[href="/t/internationalization-localization/280"]')
@@ -1292,32 +1315,6 @@ acceptance("Composer - default category not set", function (needs) {
   });
 });
 // END: Default Composer Category tests
-
-acceptance("Composer - current time", function (needs) {
-  needs.user();
-
-  test("composer insert current time shortcut", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    await click("#topic-footer-buttons .btn.create");
-    assert.dom(".d-editor-input").exists("the composer input is visible");
-    await fillIn(".d-editor-input", "and the time now is: ");
-
-    const date = moment().format("YYYY-MM-DD");
-
-    await triggerKeyEvent(".d-editor-input", "keydown", ".", {
-      ...metaModifier,
-      shiftKey: true,
-    });
-
-    assert.true(
-      query("#reply-control .d-editor-input")
-        .value.trim()
-        .startsWith(`and the time now is: [date=${date}`),
-      "adds the current date"
-    );
-  });
-});
 
 acceptance("composer buttons API", function (needs) {
   needs.user();

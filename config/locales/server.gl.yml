@@ -1389,7 +1389,6 @@ gl:
     prioritize_username_in_ux: "Mostrar o nome de usuario primeiro na páxina de usuario, a tarxeta de usuario e nas publicacións (cando está desactivado, o nome móstrase primeiro)"
     send_old_credential_reminder_days: "Lembrar as credenciais antigas despois de días"
     email_token_valid_hours: "Os tokens para restabelecer o contrasinal ou activar a conta son válidos durante (n) horas."
-    allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sexa indexado polos motores de busca en internet. En casos excepcionais, pode <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a>permanentemente."
     log_out_strict: "Ao pechar a sesión, pechar TODAS as sesións en todos os dispositivos do usuario"
     version_checks: "Faga ping ao Discourse Hub para obter actualizacións de versións e amose mensaxes de nova versión no panel de control do<a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Enviar un correo electrónico a contact_email address cando haxa dispoñible unha nova versión de Discourse."
@@ -3253,8 +3252,6 @@ gl:
     regular:
       name: Normal
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> recategorizar, renomear, seguimento de ligazóns, wiki, máis gústame
-      long_description: |
-        Esta insignia concédese cando alcanza o nivel de confianza 3. Grazas por ser parte habitual da nosa comunidade ao longo destes meses. Vostede é agora un dos lectores máis activos e un colaborador fiable que mellora a comunidade. Agora pode recategorizar e renomear temas, as súas denuncias teñen máis peso, pode acceder á área privada da sala VIP, alén de poder dar moitos máis gústame por día.
     leader:
       name: Líder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedida</a> a edición global, fixar, pechar, arquivar, dividir e combinar, máis gústame

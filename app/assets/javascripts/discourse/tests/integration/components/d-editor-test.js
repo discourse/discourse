@@ -344,6 +344,26 @@ third line`
     assert.strictEqual(textarea.selectionEnd, 23);
   });
 
+  test("code button does not reset undo history", async function (assert) {
+    this.set("value", "existing");
+
+    await render(hbs`<DEditor @value={{this.value}} />`);
+    const textarea = query("textarea.d-editor-input");
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 8;
+
+    await click("button.code");
+    assert.strictEqual(this.value, "`existing`");
+
+    await click("button.code");
+    assert.strictEqual(this.value, "existing");
+
+    document.execCommand("undo");
+    assert.strictEqual(this.value, "`existing`");
+    document.execCommand("undo");
+    assert.strictEqual(this.value, "existing");
+  });
+
   test("code fences", async function (assert) {
     this.set("value", "");
 
@@ -614,6 +634,22 @@ third line`
     assert.strictEqual(textarea.selectionStart, 0);
     assert.strictEqual(textarea.selectionEnd, 18);
   });
+
+  testCase(
+    "list button does not reset undo history",
+    async function (assert, textarea) {
+      this.set("value", "existing");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 8;
+
+      await click("button.list");
+      assert.strictEqual(this.value, "1. existing");
+
+      document.execCommand("undo");
+
+      assert.strictEqual(this.value, "existing");
+    }
+  );
 
   test("clicking the toggle-direction changes dir from ltr to rtl and back", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;

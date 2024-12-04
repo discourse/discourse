@@ -30,13 +30,15 @@ import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-c
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 
+const CHAT_PRESENCE_KEEP_ALIVE = 5 * 1000; // 5 seconds
+
 export default class ChatComposer extends Component {
   @service capabilities;
   @service site;
   @service siteSettings;
   @service store;
   @service chat;
-  @service chatComposerPresenceManager;
+  @service composerPresenceManager;
   @service chatComposerWarningsTracker;
   @service appEvents;
   @service chatEmojiReactionStore;
@@ -256,9 +258,10 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    this.chatComposerPresenceManager.notifyState(
+    this.composerPresenceManager.notifyState(
       this.presenceChannelName,
-      !this.draft.editing && this.hasContent
+      !this.draft.editing && this.hasContent,
+      CHAT_PRESENCE_KEEP_ALIVE
     );
   }
 

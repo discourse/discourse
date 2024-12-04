@@ -985,7 +985,10 @@ ro:
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: 'Toți utilizatorii noi trebuie să aștepte aprobarea moderatorului sau a administratorului înainte de a li se permite să se conecteze. (Notă: activarea acestei setări elimină și opțiunea de invitare „ajunge la subiect”).'
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
-    experimental_full_page_login: "Înlocuiește modalul de conectare sau înregistrare cu un formular de conectare sau înregistrare pe întreaga pagină."
+    show_signup_form_email_instructions: Afișează instrucțiunile pentru email pe formularul de înscriere.
+    show_signup_form_username_instructions: Afișează instrucțiunile pentru numele de utilizator în formularul de înscriere.
+    show_signup_form_full_name_instructions: Afișează instrucțiunile pentru numele complet în formularul de înscriere.
+    show_signup_form_password_instructions: Afișează instrucțiunile pentru parolă în formularul de înscriere.
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL pentru iframe src pe care Discourse le poate permite în siguranță în mesaje"
@@ -1871,10 +1874,10 @@ ro:
       long_description: |
         Această insignă este acordată prima dată când editezi una dintre postările tale. Deși nu veți putea să vă editați postările pentru totdeauna, editarea este încurajată - puteți îmbunătăți formatarea, puteți remedia mici erori sau puteți adăuga orice ați ratat când ați postat inițial. Editați pentru a vă îmbunătăți și mai bine postările!
     basic_user:
-      name: Simplu utilizator
+      name: De bază
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Niveluri de încredere</a> toate funcțiile esențiale ale comunității
       long_description: |
-        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumesc pentru că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori; Ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, marcarea, editarea wiki și abilitatea de a posta mai multe imagini și link-uri.
+        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumim că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori, ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, semnalarea, editarea wiki și abilitatea de a publica mai multe imagini și legături.
     member:
       name: Membru
     regular:

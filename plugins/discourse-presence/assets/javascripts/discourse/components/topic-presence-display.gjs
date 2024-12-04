@@ -15,26 +15,33 @@ export default class TopicPresenceDisplay extends Component {
   @tracked whisperChannel;
 
   setupReplyChannel = helperFn((_, on) => {
-    const replyChannel = this.presence.getChannel(
-      `/discourse-presence/reply/${this.args.topic.id}`
-    );
-    replyChannel.subscribe();
-    this.replyChannel = replyChannel;
+    const { topic } = this.args;
 
-    on.cleanup(() => replyChannel.unsubscribe());
-  });
-
-  setupWhisperChannels = helperFn((_, on) => {
-    if (!this.currentUser.staff) {
+    if (!topic) {
       return;
     }
 
-    const whisperChannel = this.presence.getChannel(
-      `/discourse-presence/whisper/${this.args.topic.id}`
-    );
-    whisperChannel.subscribe();
+    const name = `/discourse-presence/reply/${topic.id}`;
+    const replyChannel = this.presence.getChannel(name);
+    this.replyChannel = replyChannel;
+
+    replyChannel.subscribe();
+    on.cleanup(() => replyChannel.unsubscribe());
+  });
+
+  setupWhisperChannel = helperFn((_, on) => {
+    const { topic } = this.args;
+    const { whisperer } = this.currentUser;
+
+    if (!topic || !whisperer) {
+      return;
+    }
+
+    const name = `/discourse-presence/whisper/${topic.id}`;
+    const whisperChannel = this.presence.getChannel(name);
     this.whisperChannel = whisperChannel;
 
+    whisperChannel.subscribe();
     on.cleanup(() => whisperChannel.unsubscribe());
   });
 
@@ -50,7 +57,7 @@ export default class TopicPresenceDisplay extends Component {
 
   <template>
     {{this.setupReplyChannel}}
-    {{this.setupWhisperChannels}}
+    {{this.setupWhisperChannel}}
 
     {{#if (gt this.users.length 0)}}
       <div class="presence-users">

@@ -811,6 +811,21 @@ RSpec.describe PostMover do
             expect(topic).to be_closed
           end
 
+          it "triggers posts_moved DiscourseEvent with correct args" do
+            events =
+              DiscourseEvent.track_events(:posts_moved) do
+                posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+                topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+              end
+
+            expect(
+              events.detect do |e|
+                e[:params] ==
+                  [{ destination_topic_id: destination_topic.id, original_topic_id: topic.id }]
+              end,
+            ).to be_present
+          end
+
           it "does not try to move small action posts" do
             small_action =
               Fabricate(
@@ -2788,6 +2803,75 @@ RSpec.describe PostMover do
 
         expect(pm_with_posts.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
         expect(pm.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
+      end
+
+      context "with rate limit" do
+        before do
+          RateLimiter.enable
+          Fabricate.times(20, :post, topic: original_topic)
+        end
+
+        it "does not rate limit when moving to a new topic" do
+          begin
+            PostMover.new(
+              original_topic,
+              Discourse.system_user,
+              original_topic.posts.map(&:id),
+              options: {
+                freeze_original: true,
+              },
+            ).to_new_topic("Hi I'm a new topic, with a copy of the old posts")
+          rescue RateLimiter::LimitExceeded
+            fail "Rate limit exceeded"
+          end
+        end
+
+        it "does not rate limit when moving to an existing topic" do
+          begin
+            PostMover.new(
+              original_topic,
+              Discourse.system_user,
+              original_topic.posts.map(&:id),
+              options: {
+                freeze_original: true,
+              },
+            ).to_topic(destination_topic.id)
+          rescue RateLimiter::LimitExceeded
+            fail "Rate limit exceeded"
+          end
+        end
+
+        it "does not rate limit when moving to a new PM" do
+          begin
+            PostMover.new(
+              original_topic,
+              Discourse.system_user,
+              original_topic.posts.map(&:id),
+              move_to_pm: true,
+              options: {
+                freeze_original: true,
+              },
+            ).to_new_topic("Hi I'm a new PM, with a copy of the old posts")
+          rescue RateLimiter::LimitExceeded
+            fail "Rate limit exceeded"
+          end
+        end
+
+        it "does not rate limit when moving to an existing PM" do
+          begin
+            PostMover.new(
+              original_topic,
+              Discourse.system_user,
+              original_topic.posts.map(&:id),
+              move_to_pm: true,
+              options: {
+                freeze_original: true,
+              },
+            ).to_topic(destination_topic.id)
+          rescue RateLimiter::LimitExceeded
+            fail "Rate limit exceeded"
+          end
+        end
       end
     end
   end

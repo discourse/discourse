@@ -99,15 +99,15 @@ RSpec.describe DraftsController do
       expect(response.status).to eq(404)
     end
 
-    it "checks for an conflict on update" do
+    it "checks for a raw conflict on update" do
       sign_in(user)
-      post = Fabricate(:post, user: user)
+      post = Fabricate(:post, user:)
 
       post "/drafts.json",
            params: {
              draft_key: "topic",
              sequence: 0,
-             data: { postId: post.id, originalText: post.raw, action: "edit" }.to_json,
+             data: { postId: post.id, original_text: post.raw, action: "edit" }.to_json,
            }
 
       expect(response.status).to eq(200)
@@ -117,12 +117,52 @@ RSpec.describe DraftsController do
            params: {
              draft_key: "topic",
              sequence: 0,
-             data: { postId: post.id, originalText: "something else", action: "edit" }.to_json,
+             data: { postId: post.id, original_text: "something else", action: "edit" }.to_json,
            }
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["conflict_user"]["id"]).to eq(post.last_editor.id)
       expect(response.parsed_body["conflict_user"]).to include("avatar_template")
+    end
+
+    it "checks for a title conflict on update" do
+      sign_in(user)
+      post = Fabricate(:post, user:)
+
+      post "/drafts.json",
+           params: {
+             draft_key: "topic",
+             sequence: 0,
+             data: {
+               postId: post.id,
+               original_text: post.raw,
+               original_title: "something else",
+               action: "edit",
+             }.to_json,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["conflict_user"]["id"]).to eq(post.last_editor.id)
+    end
+
+    it "checks for a tag conflict on update" do
+      sign_in(user)
+      post = Fabricate(:post, user:)
+
+      post "/drafts.json",
+           params: {
+             draft_key: "topic",
+             sequence: 0,
+             data: {
+               postId: post.id,
+               original_text: post.raw,
+               original_tags: %w[tag1 tag2],
+               action: "edit",
+             }.to_json,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["conflict_user"]["id"]).to eq(post.last_editor.id)
     end
 
     it "cant trivially resolve conflicts without interaction" do

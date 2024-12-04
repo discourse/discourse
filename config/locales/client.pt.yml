@@ -3181,7 +3181,6 @@ pt:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       filter:
-        title: "Filtrar"
         button:
           label: "Filtrar"
       latest:
@@ -4806,6 +4805,7 @@ pt:
         none_selected: "Selecione um crachá para começar"
         allow_title: Permitir que o crachá seja usado como título
         multiple_grant: Pode ser concedido múltiplas vezes
+        visibility_heading: Visibilidade
         listable: Mostrar crachá na página pública de crachás
         enabled: ativado
         disabled: desativado

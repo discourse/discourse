@@ -3310,7 +3310,6 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -5355,6 +5354,7 @@ da:
         none_selected: "Vælg et emblem for at komme igang"
         allow_title: Tillad at bruge dette emblem som titel
         multiple_grant: Kan tildeles flere gange
+        visibility_heading: Synlighed
         listable: Vis emblemer på den offentlige emblem side
         enabled: aktiveret
         disabled: deaktiveret

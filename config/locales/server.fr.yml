@@ -1769,7 +1769,6 @@ fr:
     pending_users_reminder_delay_minutes: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre de minutes. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur Web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
-    experimental_full_page_login: "Remplacez la fenêtre de connexion/inscription par un formulaire de connexion/inscription pleine page."
     ga_version: "Version de Google Universal Analytics à utiliser : v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics, par exemple : UA-12345678-9 ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics, par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1824,7 +1823,6 @@ fr:
     max_favorite_badges: "Nombre maximal de badges que l'utilisateur peut sélectionner"
     whispers_allowed_groups: "Autoriser la communication privée au sein des sujets pour les membres de groupes spécifiques."
     hidden_post_visible_groups: "Autorisez les membres de ces groupes à voir les messages masqués. Les responsables peuvent toujours voir les messages masqués."
-    allow_index_in_robots_txt: "Indiquer dans le fichier robots.txt que ce site peut être indexé par les moteurs de recherche Web. Dans des cas exceptionnels, vous pouvez remplacer définitivement le fichier <a href='%{base_path}/admin/customize/robots'>robots.txt</a>."
     blocked_email_domains: "Liste délimitée par des barres verticales de domaines de messagerie avec lesquels les utilisateurs ne sont pas autorisés à créer des comptes. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge. Exemple : mailinator.com|trashmail.net"
     allowed_email_domains: "Une liste délimitée par des barres verticales de domaines de messagerie avec lesquels les utilisateurs DOIVENT enregistrer des comptes. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge. AVERTISSEMENT : les utilisateurs dont les domaines de messagerie ne sont pas répertoriés ne seront pas autorisés !"
     normalize_emails: "Vérifiez que l'adresse e-mail normalisée n'est pas déjà utilisée. L'adresse normalisée s'obtient en ôtant tous les points et caractères éventuellement situés entre les symboles « + » et « @ » de l'adresse indiquée par l'utilisateur."
@@ -4598,8 +4596,6 @@ fr:
     regular:
       name: Habitué
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à la recatégorisation, au renommage, au suivi de liens, au wiki et à plus de « J'aime »
-      long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir contribué régulièrement à notre communauté pendant ces quelques mois. Vous faites partie de nos lecteurs et lectrices les plus actifs et votre contribution à ce qui rend notre communauté si belle est significative. Vous pouvez désormais recatégoriser et renommer des sujets, accéder au salon privé, signaler des spams et vous bénéficiez de nombreux « J'aime » supplémentaires à attribuer chaque jour.
     leader:
       name: Meneur
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion de sujets, et toujours plus de « J'aime »

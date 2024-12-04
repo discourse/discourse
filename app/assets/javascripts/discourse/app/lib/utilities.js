@@ -156,17 +156,21 @@ export function selectedText() {
     } else if (oneboxTest) {
       // This is a partial quote from a onebox.
       // Treat it as though the entire onebox was quoted.
-      const oneboxUrl = oneboxTest.dataset.oneboxSrc;
-      div.append(oneboxUrl);
+      div.append(oneboxTest.dataset.oneboxSrc);
     } else {
       div.append(range.cloneContents());
     }
   }
 
   div.querySelectorAll("aside.onebox[data-onebox-src]").forEach((element) => {
-    const oneboxUrl = element.dataset.oneboxSrc;
-    element.replaceWith(oneboxUrl);
+    element.replaceWith(element.dataset.oneboxSrc);
   });
+
+  div
+    .querySelectorAll("div.video-placeholder-container[data-video-src]")
+    .forEach((element) => {
+      element.replaceWith(`![|video](${element.dataset.videoSrc})`);
+    });
 
   return toMarkdown(div.outerHTML);
 }

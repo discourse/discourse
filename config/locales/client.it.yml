@@ -4048,7 +4048,6 @@ it:
       with_topics: "%{filter} argomenti"
       with_category: "%{filter} %{category} argomenti"
       filter:
-        title: "Filtro"
         button:
           label: "Filtro"
       latest:
@@ -6748,6 +6747,7 @@ it:
         none_selected: "Seleziona un distintivo per iniziare"
         allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnato più volte
+        visibility_heading: Visibilità
         listable: Mostra distintivo sulla pagina pubblica dei distintivi
         enabled: abilitato
         disabled: disabilitata

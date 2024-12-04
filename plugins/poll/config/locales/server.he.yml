@@ -41,6 +41,7 @@ he:
     default_poll_with_multiple_choices_has_invalid_parameters: "לסקר עם בחירה מרובה יש משתנים לא תקינים."
     named_poll_with_multiple_choices_has_invalid_parameters: "לסקר בשם <strong>%{name}</strong> עם בחירה מרובה יש משתנים לא תקינים."
     requires_at_least_1_valid_option: "עליך לבחור לפחות אפשרות אחת תקינה."
+    requires_that_at_least_one_option_is_ranked: "סקרי בחירה לפי דירוג, יש לדרג אפשרות אחת לפחות."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "אין לך אפשרות לשנות סקר לאחר %{minutes} הדקות הראשונות."
       cannot_edit_named_poll_with_votes: "לא ניתן לשנות את שם הסקר <strong>${name}</strong> לאחר %{minutes} הדקות הראשונות."

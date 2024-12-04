@@ -1695,7 +1695,6 @@ zh_CN:
     pending_users_reminder_delay_minutes: "如果新用户等待批准的时间超过此分钟数则通知版主。设置为 -1 可禁用通知。"
     persistent_sessions: "当网络浏览器关闭后，用户将保持登录状态"
     maximum_session_age: "自上次访问以来，用户将保持登录状态 n 小时"
-    experimental_full_page_login: "将登录/注册模式替换为整页登录/注册表单。"
     ga_version: "要使用的 Google Universal Analytics 版本：v3 (analytics.js)、v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics 跟踪代码 ID，例如：UA-12345678-9；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics 域名，例如：mysite.com；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1723,7 +1722,7 @@ zh_CN:
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
     top_menu: "确定首页导航中显示的条目，以及显示顺序。"
-    post_menu: "配置默认帖子菜单项的可见性和顺序。由插件或主题添加的其他菜单项将单独管理，不会出现在此列表中。"
+    post_menu: "配置默认帖子菜单项的公开范围和顺序。由插件或主题添加的其他菜单项将单独管理，不会出现在此列表中。"
     post_menu_hidden_items: "除非点击了扩展省略号否则默认在帖子菜单中隐藏的菜单项。由插件或主题添加的附加菜单项将单独管理，不会出现在此列表中。"
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
@@ -1750,7 +1749,7 @@ zh_CN:
     max_favorite_badges: "用户可以选择的最大徽章数"
     whispers_allowed_groups: "允许指定群组的成员在话题内进行不公开交流。"
     hidden_post_visible_groups: "允许这些群组的成员查看隐藏的帖子。管理人员始终可以查看隐藏的帖子。"
-    allow_index_in_robots_txt: "在 robots.txt 中指定此网站允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
+    allow_index_in_robots_txt: "在 robots.txt 中指定允许网络搜索引擎索引本网站。你可以<a href='%{base_path}/admin/customize/robots'>在此处覆盖 robots.txt。</a> <b>警告</b>：错误配置的规则可能导致网站无法按预期被抓取。"
     blocked_email_domains: "以竖线分隔的不允许用户用于注册帐户的电子邮件域的列表。系统会自动处理指定域的子域。不支持通配符 * 和 ?。示例：mailinator.com|trashmail.net"
     allowed_email_domains: "以竖线分隔的电子邮件域列表，用户必须使用其中的域注册帐户。系统会自动处理指定域的子域。不支持通配符 * 和 ?。警告：使用列表以外的电子邮件域的用户将不被允许！"
     normalize_emails: "检查规范化电子邮件是否唯一。规范化电子邮件移除了用户名中的所有点以及 + 和 @ 符号之间的所有内容。"
@@ -1791,7 +1790,7 @@ zh_CN:
     discourse_connect_overrides_profile_background: "使用来自 DiscourseConnect 有效负载的值替换用户个人资料背景。"
     discourse_connect_overrides_card_background: "使用来自 DiscourseConnect 有效负载的值替换用户卡片背景。"
     discourse_connect_not_approved_url: "将未经批准的 DiscourseConnect 帐户重定向到此 URL"
-    discourse_connect_allowed_redirect_domains: "对于 DiscourseConnect 提供的返回路径，限制为这些域（返回路径默认必须在当前网站）。使用 * 可以允许任何域作为返回路径。不允许使用子域通配符 (`*.foobar.com`)。"
+    discourse_connect_allowed_redirect_domains: "对于 DiscourseConnect 提供的返回路径，限制为这些网域（返回路径默认必须在当前网站）。使用 * 可以允许任何域作为返回路径。不允许使用子域通配符 (`*.foobar.com`)。"
     enable_local_logins: "启用基于本地用户名和密码登录的帐户。警告：如果禁用，并且您之前没有配置至少一种备用登录方法，您可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
@@ -1801,7 +1800,7 @@ zh_CN:
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
-    google_oauth2_hd_groups: "在进行身份验证时检索用户在托管域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关详情，请参阅 https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups: "在进行身份验证时检索用户在托管网域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关详情，请参阅 https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "属于 Google Workspace 管理员帐号的电子邮件地址。将与服务帐户凭据一起使用以获取群组信息。"
     google_oauth2_hd_groups_service_account_json: "服务帐户的 JSON 格式密钥信息。将用于获取群组信息。"
     google_oauth2_verbose_logging: "将详细的 Google OAuth2 相关诊断记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1959,7 +1958,7 @@ zh_CN:
     min_trust_level_to_allow_invite: "邀请用户所需的最低信任级别"
     invite_allowed_groups: "能够邀请用户的群组。管理员和版主始终可以邀请用户。"
     min_trust_level_to_allow_ignore: "忽略用户所需的最低信任级别"
-    ignore_allowed_groups: "能够忽略其他用户的组。管理员和版主始终可以忽略其他用户。"
+    ignore_allowed_groups: "能够忽略其他用户的群组。管理员和版主始终可以忽略其他用户。"
     allowed_link_domains: "即使用户没有适当的信任级别来发布链接，也可以链接到的网域"
     newuser_max_links: "新用户可以在帖子中添加的链接数量。"
     newuser_max_embedded_media: "新用户可以向帖子中添加的嵌入式媒体条目数量。"
@@ -2344,7 +2343,7 @@ zh_CN:
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
     enable_desktop_push_notifications: "激活桌面界面的推送通知。此功能可将实时警报从网站直接发送到您的桌面，从而增强参与度并确保用户始终获得最新信息。不过，此功能的有效性依赖于浏览器对推送通知的支持。"
     push_notification_time_window_mins: "在发送推送通知前等待 (n) 分钟。有助于避免向活跃的在线用户发送推送通知。"
-    base_font: "用于网站上大多数文本的基字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
+    base_font: "用于网站上大多数文本的基础字体。可以通过 `--font-family` CSS 自定义属性替换主题。"
     heading_font: "用于网站上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
     enable_sitemap: "为您的网站生成网站地图并将其包含在 robots.txt 文件中。"
     sitemap_page_size: "每个网站地图页面中包含的 URL 数量。最大 50.000"
@@ -4478,8 +4477,6 @@ zh_CN:
     regular:
       name: 活跃用户
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>重新分类、重命名、关注链接、Wiki、更多赞
-      long_description: |
-        当您达到信任级别 3 时，将授予此徽章。感谢您在几个月的时间里成为我们社区的活跃用户。您现在是最活跃的读者之一，并且是使我们的社区变得伟大的可靠贡献者。现在，您可以重新分类和重命名话题，利用更强大的垃圾信息举报，访问贵宾室区域，并且每天还会获得更多赞。
     leader:
       name: 领导者
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授予</a>全局编辑、置顶、关闭、归档、拆分与合并、更多赞
