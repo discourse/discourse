@@ -51,9 +51,9 @@ export default {
         return;
       }
 
-      // patched function: doesn't exist on og GlimmerManager. it corresponds to the og GlimmerManager.getComponentTemplate
-      const originalTemplate =
-        GlimmerManager.getOriginalComponentTemplate(component);
+      // patched function: Ember's OG won't return overridden templates. This version will.
+      // it's safe to call it original template here because the override wasn't set yet.
+      const originalTemplate = GlimmerManager.getComponentTemplate(component);
       const isStrictMode = originalTemplate?.()?.parsedLayout?.isStrictMode;
       const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
 
@@ -78,11 +78,8 @@ export default {
 
         const overrideTemplate = require(finalOverrideModuleName).default;
 
-        // patched function: doesn't exist on og GlimmerManager
-        GlimmerManager.setColocatedTemplateOverride(
-          component,
-          overrideTemplate
-        );
+        // patched function: Ember's OG does not allow overriding a component template
+        GlimmerManager.setComponentTemplate(overrideTemplate, component);
       }
     });
   },
@@ -110,6 +107,6 @@ export default {
 
   teardown() {
     // patched function: doesn't exist on og GlimmerManager
-    GlimmerManager.clearColocatedTemplateOverrides();
+    GlimmerManager.clearTemplateOverrides();
   },
 };

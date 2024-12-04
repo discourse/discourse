@@ -14,7 +14,7 @@ describe "JS Deprecation Handling", type: :system do
     # Trigger a deprecation, then return the console.warn calls
     warn_calls = page.execute_script <<~JS
       const { deprecate } = require('@ember/debug');
-      deprecate("Some message", false, { id: "some.id" })
+      deprecate("Some message", false, { id: "some.id", for: "discourse", since: "3.4.0", until: "3.5.0" });
       return window.intercepted_warnings
     JS
 
