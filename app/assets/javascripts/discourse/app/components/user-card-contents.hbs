@@ -69,7 +69,10 @@
                 {{if this.nameFirst 'full-name' 'username'}}"
             >
               {{#if this.contentHidden}}
-                <span id="discourse-user-card-title" class="name-username-wrapper">
+                <span
+                  id="discourse-user-card-title"
+                  class="name-username-wrapper"
+                >
                   {{if
                     this.nameFirst
                     this.user.name
@@ -86,7 +89,10 @@
                     username=this.user.username
                   }}
                 >
-                  <span id="discourse-user-card-title" class="name-username-wrapper">
+                  <span
+                    id="discourse-user-card-title"
+                    class="name-username-wrapper"
+                  >
                     {{if
                       this.nameFirst
                       this.user.name
