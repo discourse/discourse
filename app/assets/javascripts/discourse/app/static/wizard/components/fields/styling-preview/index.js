@@ -143,7 +143,7 @@ export default class Index extends PreviewBaseComponent {
       "\n"
     );
     for (let i = 0; i < lines.length; i++) {
-      line = height * 0.35 + i * lineHeight;
+      line = height * 0.4 + i * lineHeight;
       ctx.fillText(lines[i], margin + avatarSize + margin, line);
     }
 
