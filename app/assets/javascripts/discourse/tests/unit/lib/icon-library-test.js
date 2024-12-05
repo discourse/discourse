@@ -22,7 +22,7 @@ module("Unit | Utility | icon-library", function (hooks) {
   });
 
   test("convert icon names", function (assert) {
-    const faIcon = convertIconClass("fab-facebook");
+    const faIcon = convertIconClass("fab fa-facebook");
     assert.true(iconHTML(faIcon).includes("fab-facebook"), "FA syntax");
 
     const iconC = convertIconClass("  fab fa-facebook  ");
