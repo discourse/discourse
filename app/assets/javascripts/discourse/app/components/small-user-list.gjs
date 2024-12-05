@@ -35,14 +35,14 @@ export default class SmallUserList extends Component {
     >
       {{#each this.users as |user|}}
         {{#if user.unknown}}
-          {{!template-lint-ignore}}
+          {{! template-lint-disable require-context-role }}
           <div
             title={{i18n "post.unknown_user"}}
             class="unknown"
             role="listitem"
           ></div>
         {{else}}
-          {{!template-lint-ignore}}
+          {{! template-lint-disable require-context-role }}
           <a
             class="trigger-user-card"
             data-user-card={{user.username}}
