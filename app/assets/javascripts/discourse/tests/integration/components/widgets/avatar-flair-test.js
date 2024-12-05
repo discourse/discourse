@@ -8,7 +8,7 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
 
   test("avatar flair with an icon", async function (assert) {
     this.set("args", {
-      flair_url: "fa-bars",
+      flair_url: "bars",
       flair_bg_color: "CC0000",
       flair_color: "FFFFFF",
     });

@@ -5,7 +5,7 @@
   <form method="post">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <%= button_tag(type: "submit", class: "btn btn-primary") do %>
-        <%= SvgSprite.raw_svg('fa-plug') %><%= t 'login.omniauth_confirm_button' %>
+        <%= SvgSprite.raw_svg('plug') %><%= t 'login.omniauth_confirm_button' %>
     <% end %>
   </form>
 </div>

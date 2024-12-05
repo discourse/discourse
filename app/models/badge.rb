@@ -252,7 +252,7 @@ class Badge < ActiveRecord::Base
   def default_icon=(val)
     if self.image_upload_id.blank?
       self.icon ||= val
-      self.icon = val if self.icon == "fa-certificate"
+      self.icon = val if self.icon == "certificate"
     end
   end
 
@@ -353,7 +353,7 @@ end
 #  updated_at          :datetime         not null
 #  allow_title         :boolean          default(FALSE), not null
 #  multiple_grant      :boolean          default(FALSE), not null
-#  icon                :string           default("fa-certificate")
+#  icon                :string           default("certificate")
 #  listable            :boolean          default(TRUE)
 #  target_posts        :boolean          default(FALSE)
 #  query               :text
@@ -363,9 +363,9 @@ end
 #  trigger             :integer
 #  show_posts          :boolean          default(FALSE), not null
 #  system              :boolean          default(FALSE), not null
-#  show_in_post_header :boolean          default(FALSE), not null
 #  long_description    :text
 #  image_upload_id     :integer
+#  show_in_post_header :boolean          default(FALSE), not null
 #
 # Indexes
 #
