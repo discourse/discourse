@@ -337,6 +337,7 @@ class PostMover
       old_topic_id: post.topic_id,
       old_post_id: post.id,
       old_post_number: post.post_number,
+      post_user_id: post.user_id,
       new_topic_id: destination_topic.id,
       new_post_number: new_post_number,
       new_topic_title: destination_topic.title,
@@ -347,10 +348,11 @@ class PostMover
     metadata[:new_post_id] = new_post.id
     metadata[:now] = Time.zone.now
     metadata[:created_new_topic] = @creating_new_topic
+    metadata[:user_id] = @user.id
 
     DB.exec(<<~SQL, metadata)
-      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number, created_new_topic, created_at, updated_at)
-      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number, :created_new_topic, :now, :now)
+      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, post_user_id, user_id, new_topic_id, new_topic_title, new_post_id, new_post_number, created_new_topic, created_at, updated_at)
+      VALUES (:old_topic_id, :old_post_id, :old_post_number, :post_user_id, :user_id, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number, :created_new_topic, :now, :now)
     SQL
   end
 
