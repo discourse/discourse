@@ -276,7 +276,7 @@ class Reviewable < ActiveRecord::Base
     # Empty bundles can cause big issues on the client side, so we remove them
     # here. It's not valid anyway to have a bundle with no actions, but you can
     # add a bundle via actions.add_bundle and then not add any actions to it.
-    built_actions.bundles.reject! { |bundle| bundle.actions.empty? }
+    built_actions.bundles.reject!(&:empty?)
 
     built_actions
   end
