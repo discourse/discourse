@@ -11,6 +11,7 @@ class PostMover
   # freeze_original: :boolean  - if true, the original topic will be frozen but not deleted and posts will be "copied" to topic
   def initialize(original_topic, user, post_ids, move_to_pm: false, options: {})
     @original_topic = original_topic
+    @original_topic_title = original_topic.title
     @user = user
     @post_ids = post_ids
     @move_to_pm = move_to_pm
@@ -335,7 +336,6 @@ class PostMover
   def movement_metadata(post, new_post_number: nil)
     {
       old_topic_id: post.topic_id,
-      old_topic_title: post.topic.title,
       old_post_id: post.id,
       old_post_number: post.post_number,
       post_user_id: post.user_id,
@@ -349,6 +349,7 @@ class PostMover
     metadata[:new_post_id] = new_post.id
     metadata[:now] = Time.zone.now
     metadata[:created_new_topic] = @creating_new_topic
+    metadata[:old_topic_title] = @original_topic_title
     metadata[:user_id] = @user.id
 
     DB.exec(<<~SQL, metadata)
