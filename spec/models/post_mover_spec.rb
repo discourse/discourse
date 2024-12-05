@@ -2823,7 +2823,7 @@ RSpec.describe PostMover do
       describe "moved_post notifications" do
         before { Jobs.run_immediately! }
 
-        it "Notifications point to the new post and topic" do
+        it "Generates notifications pointing to the newly created post and topic" do
           PostMover.new(
             original_topic,
             Discourse.system_user,
