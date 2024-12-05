@@ -145,45 +145,73 @@ RSpec.describe "List channels | Drawer", type: :system do
         expect(drawer_page).to have_channel_at_position(dm_channel_3, 4)
       end
 
-      it "sorts channels with threads by urgency" do
-        drawer_page.visit_index
-        drawer_page.click_direct_messages
+      context "with unread threads" do
+        fab!(:message_1) do
+          Fabricate(
+            :chat_message,
+            chat_channel: dm_channel_3,
+            user: current_user,
+            use_service: true,
+          )
+        end
+        fab!(:thread_1) do
+          Fabricate(
+            :chat_thread,
+            channel: dm_channel_3,
+            original_message: message_1,
+            use_service: true,
+          )
+        end
+        fab!(:message_2) do
+          Fabricate(
+            :chat_message,
+            chat_channel: dm_channel_4,
+            user: current_user,
+            use_service: true,
+          )
+        end
+        fab!(:thread_2) do
+          Fabricate(
+            :chat_thread,
+            channel: dm_channel_4,
+            original_message: message_2,
+            use_service: true,
+          )
+        end
 
-        Fabricate(
-          :chat_thread,
-          notification_level: :watching,
-          original_message:
-            Fabricate(
-              :chat_message,
-              chat_channel: dm_channel_4,
-              user: current_user,
-              use_service: true,
-            ),
-          with_replies: 2,
-          use_service: true,
-        )
+        before do
+          dm_channel_3.membership_for(current_user).mark_read!(message_1.id)
+          dm_channel_4.membership_for(current_user).mark_read!(message_2.id)
 
-        Fabricate(
-          :chat_thread,
-          original_message:
-            Fabricate(
-              :chat_message,
-              chat_channel: dm_channel_3,
-              user: current_user,
-              use_service: true,
-            ),
-          with_replies: 2,
-          use_service: true,
-        )
+          drawer_page.visit_index
+          drawer_page.click_direct_messages
+        end
 
-        expect(drawer_page).to have_channel_at_position(dm_channel_4, 1)
-        expect(drawer_page).to have_urgent_channel(dm_channel_4)
+        it "sorts channels with unread threads by last reply" do
+          Fabricate(:chat_message, thread: thread_1, user: user_2, use_service: true)
+          Fabricate(:chat_message, thread: thread_2, user: user_3, use_service: true)
 
-        expect(drawer_page).to have_channel_at_position(dm_channel_3, 2)
-        expect(drawer_page).to have_unread_channel(dm_channel_3)
+          expect(drawer_page).to have_channel_at_position(dm_channel_4, 1)
+          expect(drawer_page).to have_unread_channel(dm_channel_4)
 
-        expect(drawer_page).to have_channel_at_position(dm_channel_1, 3)
-        expect(drawer_page).to have_channel_at_position(dm_channel_2, 4)
+          expect(drawer_page).to have_channel_at_position(dm_channel_3, 2)
+          expect(drawer_page).to have_unread_channel(dm_channel_3)
+        end
+
+        it "sorts channels with unread threads by importance" do
+          thread_1.membership_for(current_user).update!(
+            notification_level: ::Chat::NotificationLevels.all[:watching],
+          )
+
+          Fabricate(:chat_message, thread: thread_1, user: user_2, use_service: true)
+          Fabricate(:chat_message, thread: thread_2, user: user_3, use_service: true)
+
+          expect(drawer_page).to have_channel_at_position(dm_channel_3, 1)
+          expect(drawer_page).to have_urgent_channel(dm_channel_3)
+
+          expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
+          expect(drawer_page).to have_unread_channel(dm_channel_4)
+        end
       end
     end
   end
