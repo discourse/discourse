@@ -314,7 +314,8 @@ RSpec.describe PostMover do
               MovedPost.exists?(
                 new_topic: new_topic,
                 new_post_id: p2.id,
-                old_topic: topic,
+                old_topic_id: topic.id,
+                old_topic_title: topic.title,
                 old_post_id: p2.id,
                 post_user_id: p2.user_id,
                 user_id: user.id,
@@ -325,8 +326,11 @@ RSpec.describe PostMover do
               MovedPost.exists?(
                 new_topic: new_topic,
                 new_post_id: p4.id,
-                old_topic: topic,
+                old_topic_id: topic.id,
+                old_topic_title: topic.title,
                 old_post_id: p4.id,
+                post_user_id: p4.user_id,
+                user_id: user.id,
                 created_new_topic: true,
               ),
             ).to eq(true)
@@ -697,7 +701,8 @@ RSpec.describe PostMover do
               MovedPost.exists?(
                 new_topic: destination_topic,
                 new_post_id: p2.id,
-                old_topic: topic,
+                old_topic_id: topic.id,
+                old_topic_title: topic.title,
                 old_post_id: p2.id,
                 post_user_id: p2.user_id,
                 user_id: user.id,
@@ -708,7 +713,8 @@ RSpec.describe PostMover do
               MovedPost.exists?(
                 new_topic: destination_topic,
                 new_post_id: p4.id,
-                old_topic: topic,
+                old_topic_id: topic.id,
+                old_topic_title: topic.title,
                 old_post_id: p4.id,
                 post_user_id: p4.user_id,
                 user_id: user.id,
@@ -2709,6 +2715,7 @@ RSpec.describe PostMover do
         expect(
           MovedPost.exists?(
             old_topic_id: original_topic.id,
+            old_topic_title: original_topic.title,
             old_post_id: first_post.id,
             post_user_id: first_post.user_id,
             user_id: Discourse.system_user.id,
