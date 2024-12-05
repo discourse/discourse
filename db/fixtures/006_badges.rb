@@ -156,7 +156,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-user-plus"
+    b.default_icon = "user-plus"
     b.badge_type_id = type
     b.multiple_grant = false
     b.target_posts = false
@@ -339,7 +339,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = "heart"
     b.badge_type_id = level
     b.query = BadgeQueries.liked_posts(post_count, like_count)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -357,7 +357,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = "heart"
     b.badge_type_id = level
     b.query = BadgeQueries.liked_back(count, ratio)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -375,7 +375,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = "heart"
     b.badge_type_id = level
     b.query = BadgeQueries.like_rate_limit(count)
     b.default_badge_grouping_id = BadgeGrouping::Community

@@ -252,7 +252,7 @@ class Badge < ActiveRecord::Base
   def default_icon=(val)
     if self.image_upload_id.blank?
       self.icon ||= val
-      self.icon = val if self.icon == "fa-certificate"
+      self.icon = val if self.icon == "certificate"
     end
   end
 

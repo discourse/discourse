@@ -70,7 +70,7 @@ acceptance("Search - Full Page", function (needs) {
             grant_count: 0,
             allow_title: false,
             multiple_grant: false,
-            icon: "fa-certificate",
+            icon: "certificate",
             image: null,
             listable: true,
             enabled: true,
