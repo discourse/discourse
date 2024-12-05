@@ -4310,7 +4310,6 @@ cs:
       with_topics: "%{filter} témata"
       with_category: "%{filter} %{category} témata"
       filter:
-        title: "Filtr"
         button:
           label: "Filtr"
       latest:
@@ -6540,6 +6539,7 @@ cs:
         none_selected: "Vyberte odznak, abyste mohli začít"
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát
+        visibility_heading: Viditelnost
         listable: Zobrazit odznak na veřejné stránce s odzanky
         enabled: zapnuto
         disabled: vypnuto

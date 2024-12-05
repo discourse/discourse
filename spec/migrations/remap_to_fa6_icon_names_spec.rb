@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require Rails.root.join("db/migrate/20241127072350_remap_fa5_icon_names_to_fa6.rb")
+require Rails.root.join("db/migrate/20241204085540_remap_to_fa6_icon_names.rb")
 
-RSpec.describe RemapFa5IconNamesToFa6 do
+RSpec.describe RemapToFa6IconNames do
   let(:migrate) { described_class.new.up }
   let(:icon_mapping) do
     {
@@ -12,6 +12,13 @@ RSpec.describe RemapFa5IconNamesToFa6 do
       "far fa-ambulance" => "far-truck-medical",
       "fab fa-ambulance" => "fab-truck-medical",
       "fas fa-ambulance" => "truck-medical",
+      "fa-gear" => "gear",
+      "far-gear" => "far-gear",
+      "fab-gear" => "fab-gear",
+      "far fa-gear" => "far-gear",
+      "fab fa-gear" => "fab-gear",
+      "fas fa-gear" => "gear",
+      "gear" => "gear",
     }
   end
 
@@ -82,7 +89,7 @@ RSpec.describe RemapFa5IconNamesToFa6 do
   end
 
   context "when no icon names can be remapped" do
-    let(:icon_names) { ["fal fa-adjust", "heart"] }
+    let(:icon_names) { ["fal fa-adjust", "heart", "far-heart"] }
     let(:site_setting) do
       SiteSetting.create!(
         name: "svg_icon_subset",
@@ -91,11 +98,18 @@ RSpec.describe RemapFa5IconNamesToFa6 do
       )
     end
     let(:group) { Fabricate(:group, flair_icon: icon_names.first) }
+    let(:group_2) { Fabricate(:group, flair_icon: icon_names.last) }
     let(:post_action_type) { PostActionType.create!(name_key: "foo", icon: icon_names.first) }
+    let(:post_action_type_2) { PostActionType.create!(name_key: "foo", icon: icon_names.last) }
     let(:badge) { Fabricate(:badge, icon: icon_names.first) }
+    let(:badge_2) { Fabricate(:badge, icon: icon_names.last) }
     let(:sidebar_url) { Fabricate(:sidebar_url, icon: icon_names.first) }
+    let(:sidebar_url_2) { Fabricate(:sidebar_url, icon: icon_names.last) }
     let(:directory_column) do
       DirectoryColumn.create!(enabled: true, position: 1, icon: icon_names.first)
+    end
+    let(:directory_column_2) do
+      DirectoryColumn.create!(enabled: true, position: 1, icon: icon_names.last)
     end
 
     it "does not change any icon column values" do
@@ -107,6 +121,11 @@ RSpec.describe RemapFa5IconNamesToFa6 do
           badge.reload.icon,
           sidebar_url.reload.icon,
           directory_column.reload.icon,
+          group_2.reload.flair_icon,
+          post_action_type_2.reload.icon,
+          badge_2.reload.icon,
+          sidebar_url_2.reload.icon,
+          directory_column_2.reload.icon,
         ]
       }
     end

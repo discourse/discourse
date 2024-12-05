@@ -4054,7 +4054,6 @@ hu:
       with_topics: "%{filter} témák"
       with_category: "%{filter} %{category} Témák"
       filter:
-        title: "Szűrő"
         button:
           label: "Szűrő"
       latest:
@@ -6759,6 +6758,7 @@ hu:
         none_selected: "A kezdéshez válasszon egy jelvényt"
         allow_title: Jelvény címként való használatának engedélyezése
         multiple_grant: Többször is megadható
+        visibility_heading: Láthatóság
         listable: Jelvény megjelenítése a nyilvános jelvények oldalon
         enabled: engedélyezve
         disabled: kikapcsolva

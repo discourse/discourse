@@ -4505,7 +4505,7 @@ sk:
       with_topics: "%{filter} témy"
       with_category: "%{filter} %{category} témy"
       filter:
-        title: "Filter"
+        title: "Filtrované výsledky pre %{filter}"
         button:
           label: "Filter"
       latest:
@@ -5291,6 +5291,7 @@ sk:
           all: "Všetky"
       new_features:
         title: "Čo je nové"
+        check_for_updates: "Kontrola aktualizácií"
       dashboard:
         title: "Ovládací panel"
         last_updated: "Informačný panel bol aktualizovaný:"
@@ -6815,6 +6816,7 @@ sk:
         invalid: "Ľutujeme, nesmiete si privlatniť tohto používateľa."
       users:
         title: "Používatelia"
+        description: "Zobrazenie a správa používateľov."
         create: "Pridať admin používateľa"
         last_emailed: "Posledný odemailovaný"
         not_found: "Prepáčte, toto používateľské meno sa nenachádza v našom systéme."
@@ -7365,6 +7367,7 @@ sk:
         none_selected: "Vyberte odznak, aby ste mohli začať"
         allow_title: Povoliť použitie odznaku namiesto názvu
         multiple_grant: Môže byť udelené viacnásobne
+        visibility_heading: Viditeľnosť
         listable: Zobraziť odznak na stránke verejných odznakov
         enabled: povolené
         disabled: vypnuté

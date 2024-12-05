@@ -4499,7 +4499,6 @@ ru:
       with_topics: "%{filter} темы"
       with_category: "%{category} — %{filter} темы"
       filter:
-        title: "Фильтр"
         button:
           label: "Фильтр"
       latest:
@@ -7318,6 +7317,7 @@ ru:
         none_selected: "Выберите награду в списке слева"
         allow_title: Разрешить использовать название награды в качестве титула
         multiple_grant: Может быть предоставлена несколько раз
+        visibility_heading: Видимость
         listable: Отображать награду на публичной странице наград
         enabled: включён
         disabled: отключён

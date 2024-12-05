@@ -49,6 +49,10 @@ class Admin::SiteSettingsController < Admin::AdminController
       on_failed_policy(:setting_is_visible) do
         raise Discourse::InvalidParameters, I18n.t("errors.site_settings.site_setting_is_hidden")
       end
+      on_failed_policy(:setting_is_shadowed_globally) do
+        raise Discourse::InvalidParameters,
+              I18n.t("errors.site_settings.site_setting_is_shadowed_globally")
+      end
       on_failed_policy(:setting_is_configurable) do
         raise Discourse::InvalidParameters,
               I18n.t("errors.site_settings.site_setting_is_unconfigurable")

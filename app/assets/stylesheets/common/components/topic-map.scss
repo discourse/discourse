@@ -43,6 +43,7 @@ body:not(.archetype-private_message) {
     var(--topic-avatar-width) + var(--topic-body-width) +
       (var(--topic-body-width-padding) * 2)
   );
+  padding-block: 0.5em;
 
   @include breakpoint(mobile-large) {
     font-size: var(--font-down-1);
@@ -91,7 +92,6 @@ body:not(.archetype-private_message) {
   }
 
   &__contents {
-    padding-block: 0.5em;
     flex-grow: 1;
 
     .number {

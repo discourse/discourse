@@ -1298,6 +1298,9 @@ class Topic < ActiveRecord::Base
         moved_by,
         post_ids,
         move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
+        options: {
+          freeze_original: opts[:freeze_original],
+        },
       )
 
     if opts[:destination_topic_id]

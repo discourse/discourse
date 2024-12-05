@@ -2203,6 +2203,9 @@ en:
       optional: optional
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
+      select:
+        select_placeholder: "Select…"
+        none_placeholder: "None"
       errors:
         required: "Required"
         invalid_url: "Must be a valid URL"
@@ -3815,6 +3818,8 @@ en:
 
       in_reply_to: "Load parent post"
       view_all_posts: "View all posts"
+
+      badge_granted_tooltip: "%{username} earned the '%{badge_name}' badge for this post!"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -7093,6 +7098,8 @@ en:
             title: "Upload images"
         selectable_avatars:
           title: "List of avatars users can choose from"
+        table_column_heading:
+          status: "Status" 
         categories:
           all_results: "All"
           required: "Required"
@@ -7195,9 +7202,13 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        usage_heading: Usage
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
+        visibility_heading: Visibility
         listable: Show badge on the public badges page
+        show_in_post_header: Show badge on the post it was granted for
+        show_in_post_header_disabled: Requires both 'Show badge on the public badges page' and 'Show post granting badge on badge page' to be enabled.
         enabled: enabled
         disabled: disabled
         icon: Icon

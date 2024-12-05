@@ -46,7 +46,6 @@ export default class ChatThread extends Component {
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatComposerPresenceManager;
   @service chatHistory;
   @service chatDraftsManager;
   @service chatThreadComposer;

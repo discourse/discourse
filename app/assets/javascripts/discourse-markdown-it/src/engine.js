@@ -187,7 +187,7 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
       options.discourse.previewing &&
       !options.discourse.limitedSiteSettings.enableDiffhtmlPreview
     ) {
-      const origSrc = token.attrGet("data-orig-src");
+      const origSrc = token.attrGet("data-orig-src") || token.attrGet("src");
       const origSrcId = origSrc
         .substring(origSrc.lastIndexOf("/") + 1)
         .split(".")[0];

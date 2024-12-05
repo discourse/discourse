@@ -1769,7 +1769,6 @@ it:
     pending_users_reminder_delay_minutes: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di questo numero di minuti. Imposta il valore a -1 per disabilitare le notifiche."
     persistent_sessions: "Gli utenti rimarranno connessi alla chiusura del browser"
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
-    experimental_full_page_login: "Sostituisci la finestra modale di accesso/registrazione con un modulo di accesso/registrazione a pagina intera."
     ga_version: "Versione di Google Universal Analytics da usare: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "ID del codice di monitoraggio di Google Universal Analytics, ad esempio: UA-12345678-9; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nome del dominio di Google Universal Analytics, ad esempio: mysite.com; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1824,7 +1823,6 @@ it:
     max_favorite_badges: "Numero massimo di distintivi che l'utente può selezionare"
     whispers_allowed_groups: "Consenti la comunicazione privata all'interno degli argomenti per i membri di gruppi specifici."
     hidden_post_visible_groups: "Consenti ai membri di questi gruppi di visualizzare i messaggi nascosti. Gli utenti dello staff possono sempre visualizzare i messaggi nascosti."
-    allow_index_in_robots_txt: "Specifica in robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca. In casi eccezionali puoi permanentemente <a href='%{base_path}/admin/customize/robots'>ignorare robots.txt</a>."
     blocked_email_domains: "Un elenco delimitato da barre verticali di domini e-mail con cui gli utenti non sono autorizzati a registrare account. I sottodomini vengono gestiti automaticamente per i domini specificati. Simboli jolly * e ? non sono supportati. Esempio: mailinator.com|trashmail.net"
     allowed_email_domains: "Un elenco delimitato da barre verticali di domini e-mail con cui gli utenti DEVONO registrare account. I sottodomini vengono gestiti automaticamente per i domini specificati. Simboli jolly * e ? non sono supportati. ATTENZIONE: non saranno ammessi utenti con domini e-mail diversi da quelli elencati!"
     normalize_emails: "Controlla se l'email normalizzata è univoca. L'email normalizzata è il nome utente senza tutti i puntini e senza tutto ciò che è compreso tra i simboli + e @."
@@ -4191,8 +4189,6 @@ it:
     regular:
       name: Abituale
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> opzioni come cambio categoria, rinomina, seguire link, usare wiki e mettere ancora più "mi piace"
-      long_description: |
-        Questo distintivo viene assegnato quando raggiungi il livello di attendibilità 3. Grazie per essere stato parte attiva della nostra comunità per qualche mese. Ora sei uno dei lettori più attivi e un collaboratore affidabile che rende grande la nostra comunità. Ora puoi cambiare categorie e rinominare gli argomenti, usare le segnalazioni spam più potenti, accedere a un'area Lounge privata e puoi mettere un numero maggiore di "Mi piace" al giorno.
     leader:
       name: Veterano
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> modifica globale, appuntare, chiudere, archiviare, dividere e unire argomenti, e mettere più "mi piace"

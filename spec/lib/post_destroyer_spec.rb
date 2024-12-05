@@ -954,6 +954,29 @@ RSpec.describe PostDestroyer do
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
+
+    context "when custom flags" do
+      fab!(:custom_flag) { Fabricate(:flag, name: "custom flag", notify_type: true) }
+      let(:third_post) { Fabricate(:post, topic_id: post.topic_id) }
+
+      it "should send message to user with correct translation" do
+        PostActionCreator.new(
+          moderator,
+          third_post,
+          custom_flag.id,
+          is_warning: false,
+          flag_topic: true,
+        ).perform
+        PostDestroyer.new(moderator, third_post, { reviewable: Reviewable.last }).destroy
+        jobs = Jobs::SendSystemMessage.jobs
+        expect(jobs.size).to eq(1)
+
+        Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
+
+        expect(Post.last.raw).to match("custom flag")
+        custom_flag.destroy!
+      end
+    end
   end
 
   describe "user actions" do

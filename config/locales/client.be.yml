@@ -1279,7 +1279,6 @@ be:
     categories_list: "Спіс катэгорый"
     filters:
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:

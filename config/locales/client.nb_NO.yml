@@ -3934,7 +3934,6 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
-        title: "Filtrer"
         button:
           label: "Filtrer"
       latest:
@@ -5610,6 +5609,7 @@ nb_NO:
         none_selected: "Velg et merke for å komme i gang"
         allow_title: Tillat merke å bli benyttet som en tittel
         multiple_grant: Kan bli tildelt flere ganger
+        visibility_heading: Synlighet
         listable: Vis merket på den offentlige merkesiden
         enabled: aktivert
         disabled: deaktivert

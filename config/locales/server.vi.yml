@@ -1961,8 +1961,6 @@ vi:
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">cấp</a> lời mời, nhắn tin nhóm, nhiều lượt thích hơn
     regular:
       name: Thường xuyên
-      long_description: |
-        Huy hiệu này được cấp khi bạn đạt đến cấp độ tin cậy 3. Cảm ơn bạn đã trở thành thành viên thường xuyên của cộng đồng chúng tôi trong khoảng thời gian vài tháng. Giờ đây, bạn là một trong những độc giả tích cực nhất và là người đóng góp đáng tin cậy giúp cộng đồng của chúng ta trở nên tuyệt vời. Giờ đây, bạn có thể phân loại lại và đổi tên các chủ đề, tận dụng các cờ spam mạnh mẽ hơn, truy cập khu vực tiếp khách riêng và bạn cũng sẽ nhận được nhiều lượt thích hơn mỗi ngày.
     leader:
       name: Lãnh đạo
     welcome:

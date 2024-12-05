@@ -1694,7 +1694,6 @@ ja:
     pending_users_reminder_delay_minutes: "モデレーターに新しいユーザーがこの時間以上承認待ちであることを通知します。-1 に設定すると、通知は無効になります。"
     persistent_sessions: "ユーザーはブラウザが閉じられてもログインのままになる"
     maximum_session_age: "ユーザーは最後の訪問から n 時間以内はログインしたままになる"
-    experimental_full_page_login: "ログイン/登録モーダルをフルページのログイン/登録フォームに置き換えます。"
     ga_version: "使用する Google Universal Analytics のバージョン: v3 (analytics.js)、v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics トラッキングコード ID。例: UA-12345678-9。<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a> をご覧ください"
     ga_universal_domain_name: "Google Universal Analytics ドメイン名。例: mysite.com。<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a> をご覧ください"
@@ -1749,7 +1748,6 @@ ja:
     max_favorite_badges: "ユーザーが選択できるバッジの最大数"
     whispers_allowed_groups: "特定のグループのメンバーに、トピック内での非公開コミュニケーションを許可します。"
     hidden_post_visible_groups: "これらのグループのメンバーが非表示の投稿を表示できるようにします。スタッフユーザーは常に非表示の投稿を表示できます。"
-    allow_index_in_robots_txt: "このサイトがウェブ検索エンジンによるインデックス作成を許可していることを robots.txt に指定します。例外的なケースでは、永続的に <a href='%{base_path}/admin/customize/robots'>robots.txt をオーバーライド</a>できます。"
     blocked_email_domains: "ユーザーがアカウントの登録に使用できないメールドメインのパイプ区切りのリスト。サブドメインは自動的に指定されたドメインに対して処理されます。ワイルドカード記号の * と ? はサポートされていません。例: mailinator.com|trashmail.net"
     allowed_email_domains: "ユーザーがアカウントの登録に使用する必要のあるメールドメインのパイプ区切りのリスト。サブドメインは自動的に指定されたドメインに対して処理されます。ワイルドカード記号の * と ? はサポートされていません。警告: リストに含まれないメールドメインのユーザーは許可されません！"
     normalize_emails: "正規化されたメールアドレスが一意であるかをチェックします。正規化されたメールアドレスでは、ユーザー名のすべてのドットと、+ と @ 記号の間のすべてが削除されます。"
@@ -4464,8 +4462,6 @@ ja:
     regular:
       name: レギュラー
       description: カテゴリ整理、名前変更、フォローリンク、ウィキ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
-      long_description: |
-        このバッジは、信頼レベル 3 に達すると付与されます。数か月に渡り、コミュニティーに定期的に参加していただきありがとうございました。これで、最もアクティブな読者の 1 人となり、コミュニティーを素晴らしいものにしてくれる信頼ある貢献者となりました。カテゴリ整理やトピックの名前変更、より強力な迷惑通報の利用、非公開ラウンジエリアへのアクセスが可能となり、1 日当たりの「いいね！」が増えています。
     leader:
       name: リーダー
       description: グローバル編集、固定、クローズ、アーカイブ、分割とマージ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました

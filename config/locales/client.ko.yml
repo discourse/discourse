@@ -3137,7 +3137,6 @@ ko:
       with_topics: "%{filter} 주제"
       with_category: "%{filter} %{category} 주제"
       filter:
-        title: "필터"
         button:
           label: "필터"
       latest:
@@ -5084,6 +5083,7 @@ ko:
         none_selected: "시작하려면 배지를 선택하세요"
         allow_title: 배지를 타이틀로 사용하도록 허용
         multiple_grant: 중복 부여 가능
+        visibility_heading: 시계
         listable: 공개 배지 페이지에 표시
         enabled: 활성화
         disabled: 비활성

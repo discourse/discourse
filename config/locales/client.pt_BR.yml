@@ -2419,7 +2419,7 @@ pt_BR:
       more_emoji: "mais…"
       options: "Opções"
       whisper: "sussuro"
-      unlist: "não listado(a)"
+      unlist: "não listado"
       add_warning: "Esta é uma advertência oficial."
       toggle_whisper: "Alternar sussuro"
       toggle_unlisted: "Alternar não listado"
@@ -4048,7 +4048,6 @@ pt_BR:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       filter:
-        title: "Filtro"
         button:
           label: "Filtro"
       latest:
@@ -6748,6 +6747,7 @@ pt_BR:
         none_selected: "Selecione um emblema para começar"
         allow_title: Permitir que o emblema seja usado como título
         multiple_grant: Pode ser concedido várias vezes
+        visibility_heading: Visibilidade
         listable: Exibir emblema na página pública de emblemas
         enabled: ativado
         disabled: desativado

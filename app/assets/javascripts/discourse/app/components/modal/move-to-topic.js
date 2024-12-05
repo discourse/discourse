@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -144,6 +145,15 @@ export default class MoveToTopic extends Component {
         archetype: "private_message",
       };
     }
+
+    mergeOptions = applyValueTransformer(
+      "move-to-topic-merge-options",
+      mergeOptions
+    );
+    moveOptions = applyValueTransformer(
+      "move-to-topic-move-options",
+      moveOptions
+    );
 
     try {
       let result;

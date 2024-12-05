@@ -4497,7 +4497,7 @@ he:
       with_topics: "%{filter} נושאים"
       with_category: "%{filter} %{category} נושאים"
       filter:
-        title: "סינון"
+        title: "תוצאות מסוננות עבור %{filter}"
         button:
           label: "סינון"
       latest:
@@ -5283,6 +5283,7 @@ he:
           all: "הכול"
       new_features:
         title: "מה חדש"
+        check_for_updates: "חיפוש עדכונים"
       dashboard:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
@@ -6807,6 +6808,7 @@ he:
         invalid: "סליחה, אך אינך מורשה להתחזות למשתמש הזה."
       users:
         title: "משתמשים"
+        description: "הצגת וניהול משתמשים."
         create: "הוספת מנהל"
         last_emailed: "נשלח בדואר אלקטרוני לאחרונה"
         not_found: "סליחה, שם המשתמש הזה אינו קיים במערכת שלנו."
@@ -7351,6 +7353,7 @@ he:
         none_selected: "נא לבחור עיטור כדי להתחיל"
         allow_title: לאפשר להשתמש בעיטור ככותרת
         multiple_grant: יכולים להינתן מספר פעמים
+        visibility_heading: חשיפה
         listable: הצגת עיטורים בעמוד העיטורים הפומבי
         enabled: פעיל
         disabled: מושבת

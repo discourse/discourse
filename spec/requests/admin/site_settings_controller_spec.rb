@@ -634,6 +634,22 @@ RSpec.describe Admin::SiteSettingsController do
 
         expect(SiteSetting.max_category_nesting).to eq(3)
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("errors.site_settings.site_setting_is_hidden"),
+        )
+      end
+
+      it "does not allow changing of globally shadowed settings" do
+        SiteSetting.max_category_nesting = 3
+        SiteSetting.stubs(:shadowed_settings).returns(Set.new([:max_category_nesting]))
+
+        put "/admin/site_settings/max_category_nesting.json", params: { max_category_nesting: 2 }
+
+        expect(SiteSetting.max_category_nesting).to eq(3)
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("errors.site_settings.site_setting_is_shadowed_globally"),
+        )
       end
 
       context "with an plugin" do

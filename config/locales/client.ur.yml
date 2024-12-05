@@ -3178,7 +3178,6 @@ ur:
       with_topics: "%{filter} ٹاپک"
       with_category: "%{filter} %{category} ٹاپک"
       filter:
-        title: "فِلٹر"
         button:
           label: "فِلٹر"
       latest:
@@ -5112,6 +5111,7 @@ ur:
         none_selected: "شروع کرنے کے لئے ایک بَیج منتخب کریں"
         allow_title: عنوان کے طور پر بَیج وں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
+        visibility_heading: نموداری
         listable: پبلک بَیجز کے صفحے پر بَیج دکھائیں
         disabled: غیر فعال
         icon: آئیکن

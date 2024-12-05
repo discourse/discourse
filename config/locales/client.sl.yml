@@ -3212,7 +3212,6 @@ sl:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -4673,6 +4672,7 @@ sl:
         none_selected: "Izberi značko za začetek"
         allow_title: Dovoli da se značka uporablja kot naziv
         multiple_grant: Se lahko podeli večkrat
+        visibility_heading: Vidljivost
         listable: Prikaži značko na strani javnih značk
         enabled: vključeno
         disabled: onemogočeno

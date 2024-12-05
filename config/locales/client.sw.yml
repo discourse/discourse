@@ -2053,7 +2053,6 @@ sw:
       with_topics: "mada %{filter}"
       with_category: "mada %{filter}%{category}"
       filter:
-        title: "Chuja"
         button:
           label: "Chuja"
       latest:
@@ -3373,6 +3372,7 @@ sw:
         none_selected: "Chagua beji ya kuanzia"
         allow_title: Ruhusu beji iweze kutumika kama cheo
         multiple_grant: Inaweza kutolewa mara nyingi
+        visibility_heading: Uonekanaji
         listable: Onyesha beji kwenye karatasi ya beji ya umma
         enabled: imeruhusiwa
         disabled: imezuiwa

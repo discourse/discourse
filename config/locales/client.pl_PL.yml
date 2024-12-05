@@ -4338,7 +4338,6 @@ pl_PL:
       with_topics: "%{filter} tematy"
       with_category: "%{filter} tematy w %{category} "
       filter:
-        title: "Filtr"
         button:
           label: "Filtr"
       latest:
@@ -7109,6 +7108,7 @@ pl_PL:
         none_selected: "Wybierz odznakę, aby rozpocząć"
         allow_title: Pozwól wykorzystywać odznakę jako tytuł
         multiple_grant: Może być przyznana wielokrotnie
+        visibility_heading: Widoczność
         listable: Wyświetlaj odznakę na publicznych listach odznak
         enabled: włączona
         disabled: wyłączone

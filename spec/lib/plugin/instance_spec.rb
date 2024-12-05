@@ -706,9 +706,13 @@ TEXT
     it "sanitizes emojis' names" do
       Plugin::Instance.new.register_emoji("?", "/baz/bar.png", "baz")
       Plugin::Instance.new.register_emoji("?test?!!", "/foo/bar.png", "baz")
+      Plugin::Instance.new.register_emoji("+1", "/foo/bar.png", "baz")
+      Plugin::Instance.new.register_emoji("test!-1", "/foo/bar.png", "baz")
 
       expect(Emoji.custom.first.name).to eq("_")
       expect(Emoji.custom.second.name).to eq("_test_")
+      expect(Emoji.custom.third.name).to eq("+1")
+      expect(Emoji.custom.fourth.name).to eq("test_-1")
     end
   end
 

@@ -3546,6 +3546,7 @@ de:
         other: "Zeige %{count} Antworten an"
       in_reply_to: "Übergeordneten Beitrag laden"
       view_all_posts: "Alle Beiträge anzeigen"
+      badge_granted_tooltip: "%{username} hat für diesen Beitrag das Abzeichen „%{badge_name}“ erhalten!"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
@@ -4049,7 +4050,7 @@ de:
       with_topics: "%{filter}"
       with_category: "%{filter} in %{category}"
       filter:
-        title: "Filter"
+        title: "Gefilterte Ergebnisse für %{filter}"
         button:
           label: "Filter"
       latest:
@@ -4771,6 +4772,7 @@ de:
           all: "Gesamt"
       new_features:
         title: "Was ist neu?"
+        check_for_updates: "Nach Aktualisierungen suchen"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aktualisiert:"
@@ -6265,6 +6267,7 @@ de:
         invalid: "Entschuldige, du darfst nicht in die Rolle dieses Benutzers schlüpfen."
       users:
         title: "Benutzer"
+        description: "Benutzer anzeigen und verwalten."
         create: "Administrator hinzufügen"
         last_emailed: "Letzte E-Mail"
         not_found: "Entschuldige, dieser Benutzername ist im System nicht vorhanden."
@@ -6785,9 +6788,13 @@ de:
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen, die verliehen werden können.
         none_selected: "Wähle ein Abzeichen aus, um loszulegen"
+        usage_heading: Verwendung
         allow_title: Abzeichen darf als Titel verwendet werden
         multiple_grant: Kann mehrfach verliehen werden
+        visibility_heading: Sichtbarkeit
         listable: Zeige Abzeichen auf der öffentlichen Abzeichenseite an
+        show_in_post_header: Abzeichen auf dem Beitrag anzeigen, für den es gewährt wurde
+        show_in_post_header_disabled: Erfordert, dass sowohl "Abzeichen auf der Seite mit den öffentlichen Abzeichen anzeigen" als auch "Abzeichen für Beiträge auf der Seite mit den Abzeichen anzeigen" aktiviert sind.
         enabled: aktiviert
         disabled: deaktiviert
         icon: Symbol

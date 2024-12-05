@@ -4920,7 +4920,6 @@ ar:
       with_topics: "موضوعات %{filter}"
       with_category: "موضوعات %{filter} في %{category}"
       filter:
-        title: "المرشح"
         button:
           label: "المرشح"
       latest:
@@ -5770,6 +5769,7 @@ ar:
           all: "الكل"
       new_features:
         title: "ما الجديد"
+        check_for_updates: "تحقق من وجود تحديثات"
       dashboard:
         title: "لوحة المعلومات"
         last_updated: "تم تحديث لوحة المعلومات:"
@@ -6409,6 +6409,7 @@ ar:
             new_theme: "سمة جديدة"
             user_selectable: "قابلة للاختيار من قِبل المستخدم"
         user_fields:
+          field: "الحقل"
           type: "النوع"
           more_options:
             title: "المزيد من الخيارات"
@@ -7633,6 +7634,7 @@ ar:
           confirm_delete: "هل تريد بالتأكيد حذف سجل DiscourseConnect هذا؟"
       user_fields:
         title: "حقول المستخدم"
+        add: "أضف حقل المستخدم"
         untitled: "بلا لقب"
         name: "اسم الحقل"
         type: "نوع الحقل"
@@ -7836,6 +7838,7 @@ ar:
         none_selected: "تحديد شارة للبدء"
         allow_title: السماح للمستخدمين باستخدام الشارة كعنوان
         multiple_grant: يمكن منحها عدة مرات
+        visibility_heading: الرؤية
         listable: عرض الشارة في صفحة الشارات العامة
         enabled: مفعَّلة
         disabled: متوقف

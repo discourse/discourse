@@ -19,6 +19,7 @@ import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import TopicDetails from "discourse/models/topic-details";
 import { flushMap } from "discourse/services/store";
 import deprecated from "discourse-common/lib/deprecated";
 import getURL from "discourse-common/lib/get-url";
@@ -461,7 +462,13 @@ export default class Topic extends RestModel {
   }
 
   set details(value) {
-    this._details = value;
+    if (value instanceof TopicDetails) {
+      this._details = value;
+      return;
+    }
+
+    // we need to ensure that details is an instance of TopicDetails
+    this._details = this.store.createRecord("topicDetails", value);
   }
 
   @discourseComputed("visible")

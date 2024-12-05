@@ -77,4 +77,22 @@ module("Integration | Component | badge-button", function (hooks) {
 
     assert.dom(".user-badge.foo").exists();
   });
+
+  test("setting showName to false hides the name", async function (assert) {
+    this.set("badge", { name: "foo" });
+
+    await render(
+      hbs`<BadgeButton @badge={{this.badge}} @showName={{false}} />`
+    );
+
+    assert.dom(".badge-display-name").doesNotExist();
+  });
+
+  test("showName defaults to true", async function (assert) {
+    this.set("badge", { name: "foo" });
+
+    await render(hbs`<BadgeButton @badge={{this.badge}} />`);
+
+    assert.dom(".badge-display-name").exists();
+  });
 });

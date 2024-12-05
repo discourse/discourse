@@ -6,7 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse-common/utils/decorators";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
-const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
+const DIRECT_MESSAGE_CHANNELS_LIMIT = 50;
 
 /*
   The ChatChannelsManager service is responsible for managing the loaded chat channels.
@@ -263,20 +263,33 @@ export default class ChatChannelsManager extends Service {
         b.tracking.mentionCount +
         b.tracking.watchedThreadsUnreadCount;
 
-      if (aUrgent > 0 || bUrgent > 0) {
-        return aUrgent > bUrgent ? -1 : 1;
-      }
+      const aUnread = a.unreadThreadsCountSinceLastViewed;
+      const bUnread = b.unreadThreadsCountSinceLastViewed;
 
-      if (
-        a.unreadThreadsCountSinceLastViewed > 0 ||
-        b.unreadThreadsCountSinceLastViewed > 0
-      ) {
-        return a.unreadThreadsCountSinceLastViewed >
-          b.unreadThreadsCountSinceLastViewed
+      // if both channels have urgent count, sort by last message date
+      if (aUrgent > 0 && bUrgent > 0) {
+        return new Date(a.lastMessage.createdAt) >
+          new Date(b.lastMessage.createdAt)
           ? -1
           : 1;
       }
 
+      // otherwise prioritize channel with urgent count
+      if (aUrgent > 0 || bUrgent > 0) {
+        return aUrgent > bUrgent ? -1 : 1;
+      }
+
+      // if both channels have unread threads, sort by last thread reply date
+      if (aUnread > 0 && bUnread > 0) {
+        return a.lastUnreadThreadDate > b.lastUnreadThreadDate ? -1 : 1;
+      }
+
+      // otherwise prioritize channel with unread thread count
+      if (aUnread > 0 || bUnread > 0) {
+        return aUnread > bUnread ? -1 : 1;
+      }
+
+      // read channels are sorted by last message date
       return new Date(a.lastMessage.createdAt) >
         new Date(b.lastMessage.createdAt)
         ? -1

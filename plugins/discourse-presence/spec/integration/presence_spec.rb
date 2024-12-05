@@ -118,15 +118,20 @@ RSpec.describe "discourse-presence" do
     it "handles permissions for whispers" do
       c = PresenceChannel.new("/discourse-presence/whisper/#{public_topic.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        *SiteSetting.whispers_allowed_groups_map,
+      )
       expect(c.config.allowed_user_ids).to eq(nil)
     end
 
-    it "only allows staff when editing whispers" do
+    it "correctly allows whisperers when editing whispers" do
       p = Fabricate(:whisper, topic: public_topic, user: admin)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:staff],
+        *SiteSetting.whispers_allowed_groups_map,
+      )
       expect(c.config.allowed_user_ids).to eq(nil)
     end
 

@@ -1781,8 +1781,6 @@ cs:
     regular:
       name: Běžný
       description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> překategorizovat, přejmenovat, sledovat odkazy, wiki, více lajků
-      long_description: |
-        Tento odznak je udělen, když dosáhnete 3. úrovně důvěry. Díky za to, že jste byli po dobu několika měsíců součástí naší komunity. Nyní jste jedním z nejaktivnějších čtenářů a spolehlivým přispěvatelem, který dělá naši komunitu skvělou. Nyní můžete kategorizovat a přejmenovávat témata, využít výkonnějších indikátorů nevyžádané pošty, přistupovat do soukromé sekce, a také dostanete denně mnohem více lajků.
     leader:
       name: Vůdce
       description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> globální upravit, připnout, zavřít, archivovat, rozdělit a sloučit, více lajků

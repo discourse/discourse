@@ -3191,7 +3191,6 @@ lt:
       with_topics: "%{filter} temos"
       with_category: "%{filter} %{category} temos"
       filter:
-        title: "Filtruoti"
         button:
           label: "Filtruoti"
       latest:
@@ -4997,6 +4996,7 @@ lt:
         none_selected: "Pasirinkite ženklelį, kad pradėtumėt"
         allow_title: Leisti naudoti ženklelį kaip antraštę
         multiple_grant: Gali būti suteikta keleta kartų
+        visibility_heading: Matomumas
         listable: Rodyti trofėjų viešame trofėjų puslapyje
         enabled: galimas
         disabled: uždrausta
