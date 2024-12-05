@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMapLink from "discourse/components/topic-map/topic-map-link";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import TopicViews from "discourse/components/topic-map/topic-views";
@@ -302,28 +303,33 @@ export default class TopicMapSummary extends Component {
                 "topic_map.menu_titles.replies"
               }}</h3>
             <ConditionalLoadingSpinner @condition={{this.loading}}>
-              <ul>
-                {{#each this.top3LikedPosts as |post|}}
-                  <li>
-                    <a href={{this.postUrl post}}>
-                      <span class="like-section__user">
-                        {{avatar
-                          post.avatar_template
-                          "tiny"
-                          (hash title=post.username)
-                        }}
-                        {{post.username}}
-                      </span>
-                      <span class="like-section__likes">
-                        {{post.like_count}}
-                        {{dIcon "heart"}}</span>
-                      <p>
-                        {{htmlSafe (emojiUnescape post.blurb)}}
-                      </p>
-                    </a>
-                  </li>
-                {{/each}}
-              </ul>
+              <PluginOutlet
+                @name="most-liked-replies"
+                @outletArgs={{hash posts=this.top3LikedPosts}}
+              >
+                <ul>
+                  {{#each this.top3LikedPosts as |post|}}
+                    <li>
+                      <a href={{this.postUrl post}}>
+                        <span class="like-section__user">
+                          {{avatar
+                            post.avatar_template
+                            "tiny"
+                            (hash title=post.username)
+                          }}
+                          {{post.username}}
+                        </span>
+                        <span class="like-section__likes">
+                          {{post.like_count}}
+                          {{dIcon "heart"}}</span>
+                        <p>
+                          {{htmlSafe (emojiUnescape post.blurb)}}
+                        </p>
+                      </a>
+                    </li>
+                  {{/each}}
+                </ul>
+              </PluginOutlet>
             </ConditionalLoadingSpinner>
           </:content>
         </DMenu>
