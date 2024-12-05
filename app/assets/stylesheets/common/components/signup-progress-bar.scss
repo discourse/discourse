@@ -1,12 +1,24 @@
 $progress-bar-line-width: 2px;
 $progress-bar-circle-size: 1.2rem;
 $progress-bar-icon-size: 0.8rem;
+@include breakpoint(mobile-extra-large) {
+  $progress-bar-circle-size: 0.5rem;
+}
 
 .signup-progress-bar {
   width: 100%;
   display: flex;
   box-sizing: border-box;
   margin-bottom: 1.2em;
+  @include breakpoint(mobile-extra-large) {
+    width: auto;
+    margin: 1.5rem 1.2rem;
+    gap: 1rem;
+    .account-created &,
+    .activate-account & {
+      margin-inline: 0;
+    }
+  }
 
   &__segment {
     width: 100%;
@@ -14,6 +26,9 @@ $progress-bar-icon-size: 0.8rem;
     flex-direction: column;
     gap: 0.5rem;
     color: var(--primary-low-mid);
+    @include breakpoint(mobile-extra-large) {
+      width: auto;
+    }
 
     &:first-child .signup-progress-bar__circle {
       transform: translateX(50%);
@@ -80,11 +95,20 @@ $progress-bar-icon-size: 0.8rem;
     border-radius: 50%;
     border: $progress-bar-line-width solid var(--primary-low-mid);
     background-color: var(--secondary);
+    @include breakpoint("mobile-extra-large") {
+      height: $progress-bar-circle-size;
+      width: $progress-bar-circle-size;
+      transform: none !important;
+    }
 
     .--active & {
       border-color: var(--success);
       background: var(--success);
       box-shadow: 0 0 1px 5px var(--success-low);
+      @include breakpoint("mobile-extra-large") {
+        background: var(--success);
+        box-shadow: 0 0 1px 5px var(--success-low);
+      }
     }
     .--completed & {
       background-color: var(--success);
@@ -94,5 +118,12 @@ $progress-bar-icon-size: 0.8rem;
 
   &__line.--completed {
     background-color: var(--success);
+  }
+
+  &__step-text,
+  &__line {
+    @include breakpoint("mobile-extra-large") {
+      display: none;
+    }
   }
 }

@@ -392,6 +392,12 @@ body:not(.archetype-private_message) {
           background: var(--d-hover);
         }
       }
+
+      @include breakpoint("mobile-extra-large") {
+        a {
+          padding: 0;
+        }
+      }
     }
 
     .topic-link {

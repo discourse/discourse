@@ -29,6 +29,9 @@
   .directory-controls {
     display: flex;
     justify-content: space-between;
+    @include breakpoint("mobile-extra-large") {
+      display: block;
+    }
     .total-rows {
       color: var(--primary-medium);
       font-weight: normal;
@@ -39,6 +42,18 @@
     margin-bottom: 0.5em;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+    @include breakpoint("mobile-extra-large") {
+      margin-bottom: 1em;
+    }
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    .period-chooser-header h2.selected-name {
+      font-size: var(--font-up-1);
+    }
+    .filter-name {
+      width: 100%;
+    }
   }
 }
 
