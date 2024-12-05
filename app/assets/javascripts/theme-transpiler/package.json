@@ -20,7 +20,7 @@
     "handlebars": "^4.7.8",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "terser": "^5.36.0"
+    "terser": "^5.37.0"
   },
   "engines": {
     "node": ">= 18",
