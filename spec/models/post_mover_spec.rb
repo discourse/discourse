@@ -2820,6 +2820,29 @@ RSpec.describe PostMover do
         expect(pm.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
       end
 
+      describe "moved_post notifications" do
+        before { Jobs.run_immediately! }
+
+        it "Notifications point to the new post and topic" do
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            [first_post.id],
+            options: {
+              freeze_original: true,
+            },
+          ).to_topic(destination_topic.id)
+
+          notification =
+            Notification.find_by(
+              post_number: destination_topic.posts.find_by(raw: "first_post").post_number,
+              topic_id: destination_topic.id,
+              notification_type: Notification.types[:moved_post],
+            )
+          expect(notification).to be_present
+        end
+      end
+
       context "with rate limit" do
         before do
           RateLimiter.enable
