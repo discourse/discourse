@@ -151,4 +151,22 @@ module("Unit | Utility | autocomplete", function (hooks) {
     assert.dom("#ac-testing li a.selected").exists({ count: 1 });
     assert.dom("#ac-testing li a.selected").hasText("test1");
   });
+
+  test("Autocomplete doesn't reset undo history", async function (assert) {
+    const element = textArea();
+
+    $(element).autocomplete({
+      key: "@",
+      template,
+      dataSource: () => ["test1", "test2"],
+    });
+
+    await simulateKeys(element, "@t\r");
+
+    assert.strictEqual(element.value, "@test1 ");
+
+    document.execCommand("undo");
+
+    assert.strictEqual(element.value, "@t");
+  });
 });
