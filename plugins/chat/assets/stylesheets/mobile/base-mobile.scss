@@ -40,10 +40,6 @@ html.has-full-page-chat {
   grid-template-columns: 100%;
   width: 100%;
 
-  .c-navbar-container {
-    top: var(--main-outlet-offset);
-  }
-
   .btn:active,
   .btn:hover {
     .d-icon {

@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -19,6 +21,11 @@ export default class ChatFooter extends Component {
   @service currentUser;
   @service chatChannelsManager;
   @service chatStateManager;
+
+  @action
+  setChatFooterHeight(element) {
+    console.log(element.getBoundingClientRect());
+  }
 
   get includeThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
@@ -54,7 +61,7 @@ export default class ChatFooter extends Component {
 
   <template>
     {{#if this.shouldRenderFooter}}
-      <nav class="c-footer">
+      <nav class="c-footer" {{didInsert this.setChatFooterHeight}}>
         <DButton
           @route="chat.channels"
           @icon="comments"
