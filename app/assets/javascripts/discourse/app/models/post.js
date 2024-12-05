@@ -17,6 +17,7 @@ import ActionSummary from "discourse/models/action-summary";
 import Composer from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
@@ -376,6 +377,16 @@ export default class Post extends RestModel {
     }
 
     return this.likeAction && (this.liked || this.canToggleLike);
+  }
+
+  // Ensure .topic key/value pair is populated for the post
+  async ensureTopicLoaded() {
+    if (this.topic) {
+      return Promise.resolve();
+    }
+
+    const topic = await Topic.find(this.topic_id, {});
+    this.set("topic", topic);
   }
 
   afterUpdate(res) {
