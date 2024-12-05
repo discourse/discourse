@@ -38,13 +38,13 @@ class Service::StepsInspector
     end
 
     def inspect
-      "#{"  " * nesting_level}[#{inspect_type}] #{name} #{emoji} #{runtime}".rstrip
+      "#{"  " * nesting_level}[#{inspect_type}] #{name} #{emoji}#{runtime}".rstrip
     end
 
     private
 
     def runtime
-      return unless step_result.__runtime__
+      return unless step_result&.__runtime__
       " (took #{(step_result.__runtime__ * 1000).round(4)} ms)"
     end
 
@@ -102,11 +102,7 @@ class Service::StepsInspector
     end
 
     def inspect
-      "#{"  " * nesting_level}[#{inspect_type}]"
-    end
-
-    def step_result
-      nil
+      "#{"  " * nesting_level}[#{inspect_type}]#{runtime}"
     end
   end
 
@@ -118,10 +114,6 @@ class Service::StepsInspector
   class Try < Transaction
     def error
       step_result.exception.inspect
-    end
-
-    def step_result
-      result[result_key]
     end
   end
 
@@ -143,8 +135,8 @@ class Service::StepsInspector
   end
 
   # Example output:
-  #   [1/4] [model] channel ✅
-  #   [2/4] [params] default ✅
+  #   [1/4] [model] channel ✅ (took 0.02 ms)
+  #   [2/4] [params] default ✅ (took 0.1 ms)
   #   [3/4] [policy] check_channel_permission ❌
   #   [4/4] [step] change_status
   # @return [String] the steps of the result object with their state

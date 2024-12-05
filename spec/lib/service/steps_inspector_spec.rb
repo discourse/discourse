@@ -46,7 +46,7 @@ RSpec.describe Service::StepsInspector do
   end
 
   describe "#execution_flow" do
-    subject(:output) { inspector.execution_flow.strip }
+    subject(:output) { inspector.execution_flow.strip.gsub(%r{ \(took \d+\.\d+ ms\)}, "") }
 
     context "when service runs without error" do
       it "outputs all the steps of the service" do
@@ -62,6 +62,10 @@ RSpec.describe Service::StepsInspector do
         [ 9/10]   [step] might_raise ✅
         [10/10] [step] final_step ✅
         OUTPUT
+      end
+
+      it "outputs time taken by each step" do
+        expect(inspector.execution_flow).to match(/took \d+\.\d+ ms/)
       end
     end
 
@@ -334,7 +338,7 @@ RSpec.describe Service::StepsInspector do
     let(:parameter) { nil }
 
     it "outputs the service class name, the steps results and the specific error" do
-      expect(inspector.inspect).to eq(<<~OUTPUT)
+      expect(inspector.inspect.gsub(%r{ \(took \d+\.\d+ ms\)}, "")).to eq(<<~OUTPUT)
         Inspecting DummyService result object:
 
         [ 1/10] [options] default ✅
