@@ -6675,6 +6675,7 @@ en:
                 one: "Delete %{count} user"
                 other: "Delete %{count} users"
               bulk_delete_starting: "Starting bulk delete…"
+              block_ip_and_email: "Block IP addresses and emails of all selected users"
               user_delete_succeeded: "[%{position}/%{total}] Successfully deleted @%{username}"
               user_delete_failed: "[%{position}/%{total}] Failed to delete @%{username} - %{error}"
               bulk_delete_finished: "Bulk delete operation completed."

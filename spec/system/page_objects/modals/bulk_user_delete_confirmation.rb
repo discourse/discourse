@@ -9,6 +9,10 @@ module PageObjects
         within(modal) { find(".btn.confirm-delete") }
       end
 
+      def block_ip_and_email_checkbox
+        within(modal) { find("input.block-ip-and-email") }
+      end
+
       def has_confirm_button_disabled?
         within(modal) { has_css?(".btn.confirm-delete[disabled]") }
       end
