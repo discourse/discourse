@@ -1,3 +1,10 @@
+.c-user-threads {
+  overflow-y: auto;
+  @include chat-height(
+    calc(var(--chat-footer-offset) + var(--chat-header-offset, 0px))
+  );
+}
+
 .c-user-thread {
   display: flex;
   gap: 1rem;

@@ -24,7 +24,11 @@ export default class ChatFooter extends Component {
 
   @action
   setChatFooterHeight(element) {
-    console.log(element.getBoundingClientRect());
+    const height = element.getBoundingClientRect().height;
+    document.documentElement.style.setProperty(
+      "--chat-footer-offset",
+      `${height}px`
+    );
   }
 
   get includeThreads() {

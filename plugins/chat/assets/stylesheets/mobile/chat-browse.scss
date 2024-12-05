@@ -1,0 +1,4 @@
+.chat-browse-view {
+  overflow-y: auto;
+  @include chat-height(var(--chat-header-offset, 0px));
+}
