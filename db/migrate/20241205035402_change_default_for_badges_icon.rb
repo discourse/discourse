@@ -6,7 +6,7 @@ class ChangeDefaultForBadgesIcon < ActiveRecord::Migration[7.2]
     up_only { execute <<~SQL }
         UPDATE badges
         SET icon = 'certificate'
-        WHERE icon LIKE 'fa-certificate';
+        WHERE icon = 'fa-certificate';
       SQL
   end
 end
