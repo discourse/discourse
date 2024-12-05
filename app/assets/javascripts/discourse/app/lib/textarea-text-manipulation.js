@@ -15,6 +15,7 @@ import {
 } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 import { i18n } from "discourse-i18n";
 
 const INDENT_DIRECTION_LEFT = "left";
@@ -51,8 +52,11 @@ export default class TextareaTextManipulation {
   textarea;
   $textarea;
 
+  placeholder;
+
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
+    this.placeholder = new TextareaPlaceholderHandler(owner, this);
 
     this.eventPrefix = eventPrefix;
     this.textarea = textarea;
@@ -827,5 +831,136 @@ export default class TextareaTextManipulation {
 
   autocomplete() {
     return this.$textarea.autocomplete(...arguments);
+  }
+}
+
+class TextareaPlaceholderHandler {
+  @service composer;
+
+  textManipulation;
+
+  #placeholders = {};
+
+  constructor(owner, textManipulation) {
+    setOwner(this, owner);
+
+    this.textManipulation = textManipulation;
+  }
+
+  #uploadPlaceholder(file, currentMarkdown) {
+    const clipboard = i18n("clipboard");
+    const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(
+      file,
+      currentMarkdown
+    );
+    const filename = uploadFilenamePlaceholder
+      ? uploadFilenamePlaceholder
+      : clipboard;
+
+    let placeholder = `[${i18n("uploading_filename", { filename })}]()\n`;
+    if (!this.#cursorIsOnEmptyLine()) {
+      placeholder = `\n${placeholder}`;
+    }
+
+    return placeholder;
+  }
+
+  #cursorIsOnEmptyLine() {
+    const selectionStart = this.textManipulation.textarea.selectionStart;
+    return (
+      selectionStart === 0 ||
+      this.textManipulation.value.charAt(selectionStart - 1) === "\n"
+    );
+  }
+
+  #uploadFilenamePlaceholder(file, currentMarkdown) {
+    const filename = this.#filenamePlaceholder(file);
+
+    // when adding two separate files with the same filename search for matching
+    // placeholder already existing in the editor ie [Uploading: test.png…]
+    // and add order nr to the next one: [Uploading: test.png(1)…]
+    const escapedFilename = escapeRegExp(filename);
+    const regexString = `\\[${i18n("uploading_filename", {
+      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
+    })}\\]\\(\\)`;
+    const globalRegex = new RegExp(regexString, "g");
+    const matchingPlaceholder = currentMarkdown.match(globalRegex);
+    if (matchingPlaceholder) {
+      // get last matching placeholder and its consecutive nr in regex
+      // capturing group and apply +1 to the placeholder
+      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
+      const regex = new RegExp(regexString);
+      const orderNr = regex.exec(lastMatch)[1]
+        ? parseInt(regex.exec(lastMatch)[1], 10) + 1
+        : 1;
+      return `${filename}(${orderNr})`;
+    }
+
+    return filename;
+  }
+
+  #filenamePlaceholder(data) {
+    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
+  }
+
+  insert(file) {
+    const placeholder = this.#uploadPlaceholder(
+      file,
+      this.composer.model.reply
+    );
+
+    this.textManipulation.insertText(placeholder);
+
+    this.#placeholders[file.id] = { uploadPlaceholder: placeholder };
+  }
+
+  progress(file) {
+    let placeholderData = this.#placeholders[file.id];
+    placeholderData.processingPlaceholder = `[${i18n("processing_filename", {
+      filename: file.name,
+    })}]()\n`;
+
+    this.textManipulation.replaceText(
+      placeholderData.uploadPlaceholder,
+      placeholderData.processingPlaceholder
+    );
+
+    // Safari applies user-defined replacements to text inserted programmatically.
+    // One of the most common replacements is ... -> …, so we take care of the case
+    // where that transformation has been applied to the original placeholder
+    this.textManipulation.replaceText(
+      placeholderData.uploadPlaceholder.replace("...", "…"),
+      placeholderData.processingPlaceholder
+    );
+  }
+
+  progressComplete(file) {
+    let placeholderData = this.#placeholders[file.id];
+    this.textManipulation.replaceText(
+      placeholderData.processingPlaceholder,
+      placeholderData.uploadPlaceholder
+    );
+  }
+
+  cancelAll() {
+    Object.values(this.#placeholders).forEach((data) => {
+      this.textManipulation.replaceText(data.uploadPlaceholder, "");
+    });
+  }
+
+  cancel(file) {
+    if (this.#placeholders[file.id]) {
+      this.textManipulation.replaceText(
+        this.#placeholders[file.id].uploadPlaceholder,
+        ""
+      );
+    }
+  }
+
+  success(file, markdown) {
+    this.textManipulation.replaceText(
+      this.#placeholders[file.id].uploadPlaceholder.trim(),
+      markdown
+    );
   }
 }
