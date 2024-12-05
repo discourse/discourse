@@ -11,7 +11,11 @@
 
 html.has-full-page-chat,
 html.has-full-page-chat body {
-  height: 100vh;
+  --100dvh: 100%;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
+  height: var(--100dvh);
   overflow: hidden;
   position: relative;
 }

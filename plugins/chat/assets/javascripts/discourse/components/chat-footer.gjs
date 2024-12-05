@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { modifier as modifierFn } from "ember-modifier";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -22,14 +21,21 @@ export default class ChatFooter extends Component {
   @service chatChannelsManager;
   @service chatStateManager;
 
-  @action
-  setChatFooterHeight(element) {
-    const height = element.getBoundingClientRect().height;
-    document.documentElement.style.setProperty(
-      "--chat-footer-offset",
-      `${height}px`
-    );
-  }
+  setChatFooterHeight = modifierFn((element) => {
+    const resizeObserver = new ResizeObserver(() => {
+      const height = element.getBoundingClientRect().height;
+      document.documentElement.style.setProperty(
+        "--chat-footer-offset",
+        `${height}px`
+      );
+    });
+
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  });
 
   get includeThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
@@ -65,7 +71,7 @@ export default class ChatFooter extends Component {
 
   <template>
     {{#if this.shouldRenderFooter}}
-      <nav class="c-footer" {{didInsert this.setChatFooterHeight}}>
+      <nav class="c-footer" {{this.setChatFooterHeight}}>
         <DButton
           @route="chat.channels"
           @icon="comments"

@@ -7,7 +7,6 @@
   border-bottom: 1px solid var(--primary-low);
   transition: height 0.25s ease-in-out, opacity 0.25s ease-out;
   transform-origin: top center;
-  will-change: height, opacity, left;
   position: relative;
   height: 4em;
 
