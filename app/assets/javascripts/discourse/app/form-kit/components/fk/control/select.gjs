@@ -32,7 +32,7 @@ export default class FKControlSelect extends Component {
     >
       <FKControlSelectOption @value={{NO_VALUE_OPTION}}>
         {{#if this.hasSelectedValue}}
-          {{i18n "form_kit.select.unselect_placeholder"}}
+          {{i18n "form_kit.select.none_placeholder"}}
         {{else}}
           {{i18n "form_kit.select.select_placeholder"}}
         {{/if}}

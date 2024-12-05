@@ -75,7 +75,7 @@ module(
       assert
         .dom(".form-kit__control-select option:nth-child(1)")
         .hasText(
-          i18n("form_kit.select.unselect_placeholder"),
+          i18n("form_kit.select.none_placeholder"),
           "it shows a placeholder for unselection"
         );
     });
