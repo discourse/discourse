@@ -9,6 +9,13 @@
   }
 }
 
+html.has-full-page-chat,
+html.has-full-page-chat body {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
 html.has-full-page-chat {
   body #main-outlet {
     padding: 0;
@@ -32,6 +39,10 @@ html.has-full-page-chat {
 .full-page-chat {
   grid-template-columns: 100%;
   width: 100%;
+
+  .c-navbar-container {
+    top: var(--main-outlet-offset);
+  }
 
   .btn:active,
   .btn:hover {

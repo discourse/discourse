@@ -1,0 +1,5 @@
+.c-channel-info {
+  @include chat-height(var(--chat-header-offset, 0px));
+  overflow-y: auto;
+  box-sizing: border-box;
+}

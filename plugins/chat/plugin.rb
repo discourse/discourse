@@ -12,6 +12,7 @@ enabled_site_setting :chat_enabled
 
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/mixins/index.scss"
+register_asset "stylesheets/mixins/index.scss", :mobile
 register_asset "stylesheets/common/index.scss"
 register_asset "stylesheets/desktop/index.scss", :desktop
 register_asset "stylesheets/mobile/index.scss", :mobile
