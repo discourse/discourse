@@ -1,9 +1,8 @@
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import BookmarkIcon from "discourse/components/bookmark-icon";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { tomorrow } from "discourse/lib/time-utils";
-import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
@@ -11,15 +10,14 @@ module("Integration | Component | bookmark-icon", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with reminder", async function (assert) {
-    this.setProperties({
-      bookmark: Bookmark.create({
-        reminder_at: tomorrow(this.currentUser.user_option.timezone),
-        name: "some name",
-        currentUser: this.currentUser,
-      }),
+    const store = this.owner.lookup("service:store");
+    const bookmark = store.createRecord("bookmark", {
+      reminder_at: tomorrow(this.currentUser.user_option.timezone),
+      name: "some name",
+      currentUser: this.currentUser,
     });
 
-    await render(hbs`<BookmarkIcon @bookmark={{this.bookmark}} />`);
+    await render(<template><BookmarkIcon @bookmark={{bookmark}} /></template>);
 
     assert
       .dom(".d-icon-discourse-bookmark-clock.bookmark-icon__bookmarked")
@@ -28,7 +26,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
       "title",
       i18n("bookmarks.created_with_reminder_generic", {
         date: formattedReminderTime(
-          this.bookmark.reminder_at,
+          bookmark.reminder_at,
           this.currentUser.user_option.timezone
         ),
         name: "some name",
@@ -37,15 +35,13 @@ module("Integration | Component | bookmark-icon", function (hooks) {
   });
 
   test("no reminder", async function (assert) {
-    this.set(
-      "bookmark",
-      Bookmark.create({
-        name: "some name",
-        currentUser: this.currentUser,
-      })
-    );
+    const store = this.owner.lookup("service:store");
+    const bookmark = store.createRecord("bookmark", {
+      name: "some name",
+      currentUser: this.currentUser,
+    });
 
-    await render(hbs`<BookmarkIcon @bookmark={{this.bookmark}} />`);
+    await render(<template><BookmarkIcon @bookmark={{bookmark}} /></template>);
 
     assert.dom(".d-icon-bookmark.bookmark-icon__bookmarked").exists();
     assert.dom(".svg-icon-title").hasAttribute(
@@ -56,12 +52,8 @@ module("Integration | Component | bookmark-icon", function (hooks) {
     );
   });
 
-  test("null bookmark", async function (assert) {
-    this.setProperties({
-      bookmark: null,
-    });
-
-    await render(hbs`<BookmarkIcon @bookmark={{this.bookmark}} />`);
+  test("no bookmark", async function (assert) {
+    await render(<template><BookmarkIcon /></template>);
 
     assert.dom(".d-icon-bookmark.bookmark-icon").exists();
     assert
