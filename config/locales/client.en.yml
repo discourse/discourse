@@ -7095,6 +7095,8 @@ en:
             title: "Upload images"
         selectable_avatars:
           title: "List of avatars users can choose from"
+        table_column_heading:
+          status: "Status" 
         categories:
           all_results: "All"
           required: "Required"
