@@ -119,6 +119,16 @@ export default class ChatChannel {
     return this.threadsManager.unreadThreadCount;
   }
 
+  get lastUnreadThreadDate() {
+    if (this.unreadThreadsCount === 0) {
+      return this.lastMessage.createdAt;
+    }
+
+    return Array.from(this.threadsManager.unreadThreadOverview.values())
+      .sort((a, b) => b - a)
+      .pop();
+  }
+
   get watchedThreadsUnreadCount() {
     return this.threadsManager.threads.reduce((unreadCount, thread) => {
       return unreadCount + thread.tracking.watchedThreadsUnreadCount;
