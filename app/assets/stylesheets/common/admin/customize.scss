@@ -897,10 +897,16 @@
   }
 }
 
-.admin-embeddable-host-item__delete {
-  color: var(--danger);
-  svg.d-icon {
+.admin-embedding {
+  details {
+    margin-top: 1em;
+  }
+
+  .admin-embeddable-host-item__delete {
     color: var(--danger);
+    svg.d-icon {
+      color: var(--danger);
+    }
   }
 }
 
