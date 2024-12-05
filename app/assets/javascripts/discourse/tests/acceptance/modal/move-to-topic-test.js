@@ -7,15 +7,6 @@ import pretender, {
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-const openModal = async (assert) => {
-  await visit("/t/internationalization-localization/280");
-  await click(".topic-admin-menu-trigger");
-  assert.dom(".topic-admin-menu-content").exists();
-  await click(".topic-admin-menu-content .topic-admin-multi-select button");
-  await click(".select-posts .select-post");
-  await click(".selected-posts .move-to-topic");
-};
-
 acceptance("Modal - move-to-topic", function (needs) {
   needs.user({ admin: true });
 
@@ -31,9 +22,15 @@ acceptance("Modal - move-to-topic", function (needs) {
       );
     });
 
-    // Open admin menu, select a post, and open move to topic modal
-    await openModal(assert);
+    await visit("/t/internationalization-localization/280");
 
+    // Open admin menu, select a post, and open move to topic modal
+    await click(".topic-admin-menu-trigger");
+    await click(".topic-admin-menu-content .topic-admin-multi-select button");
+    await click(".select-posts .select-post");
+    await click(".selected-posts .move-to-topic");
+
+    // Choose existing topic, and pick the first topic.
     await click("input#move-to-existing-topic");
     await fillIn("input#choose-topic-title", 1);
     await click(".choose-topic-list .existing-topic input");
@@ -45,6 +42,7 @@ acceptance("Modal - move-to-topic", function (needs) {
       return response({ success: true });
     });
 
+    // Submit!
     await click(".d-modal__footer .btn-primary");
     assert.verifySteps(["request"]);
   });
