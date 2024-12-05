@@ -66,6 +66,33 @@
       }
     }
   }
+
+  .status-label {
+    --d-border-radius: var(--space-4);
+
+    display: flex;
+    flex-wrap: nowrap;
+    width: fit-content;
+    background-color: var(--primary-low);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--d-border-radius);
+
+    .status-label-indicator {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--primary-high);
+      flex-shrink: 0;
+      margin-right: var(--space-1);
+      margin-top: 0.4rem;
+    }
+
+    .status-label-text {
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 .d-admin-row__overview {

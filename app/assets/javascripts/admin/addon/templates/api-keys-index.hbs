@@ -14,13 +14,13 @@
         <th>{{i18n "admin.api.user"}}</th>
         <th>{{i18n "admin.api.created"}}</th>
         <th>{{i18n "admin.api.last_used"}}</th>
+        <th>{{i18n "admin.site_settings.table_column_heading.status"}}</th>
         <th>&nbsp;</th>
       </thead>
       <tbody>
         {{#each this.model as |k|}}
           <tr class="d-admin-row__content {{if k.revoked_at 'revoked'}}">
             <td class="d-admin-row__overview key">
-              {{#if k.revoked_at}}{{d-icon "circle-xmark"}}{{/if}}
               {{k.truncatedKey}}
             </td>
             <td class="d-admin-row__detail key-description">
@@ -55,6 +55,20 @@
                 {{format-date k.last_used_at}}
               {{else}}
                 {{i18n "admin.api.never_used"}}
+              {{/if}}
+            </td>
+            <td class="d-admin-row__detail">
+              <div class="d-admin-row__mobile-label">{{i18n
+                  "admin.site_settings.table_column_heading.status"
+                }}</div>
+              {{#if k.revoked_at}}
+                <div role="status" class="status-label">
+                  <div class="status-label-indicator">
+                  </div>
+                  <div class="status-label-text">
+                    {{i18n "admin.api.revoked"}}
+                  </div>
+                </div>
               {{/if}}
             </td>
             <td class="d-admin-row__controls key-controls">
