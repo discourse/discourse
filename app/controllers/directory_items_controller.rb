@@ -63,6 +63,7 @@ class DirectoryItemsController < ApplicationController
     user_ids = nil
     if params[:name].present?
       user_ids = UserSearch.new(params[:name], include_staged_users: true).search.pluck(:id)
+      # binding.pry
       if user_ids.present?
         # Add the current user if we have at least one other match
         user_ids << current_user.id if current_user && result.dup.where(user_id: user_ids).exists?

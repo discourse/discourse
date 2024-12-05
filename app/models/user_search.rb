@@ -47,6 +47,7 @@ class UserSearch
   end
 
   def filtered_by_term_users
+    # binding.pry
     if @term.blank?
       scoped_users
     elsif SiteSetting.enable_names? && @term !~ /[_\.-]/
