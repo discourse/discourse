@@ -14,11 +14,11 @@ describe "Wizard", type: :system do
     wizard_page.go_to_next_step
     expect(wizard_page).to be_on_step("privacy")
     wizard_page.go_to_next_step
+    expect(wizard_page).to be_on_step("styling")
+    wizard_page.go_to_next_step
     expect(wizard_page).to be_on_step("ready")
     wizard_page.click_configure_more
     expect(wizard_page).to be_on_step("branding")
-    wizard_page.go_to_next_step
-    expect(wizard_page).to be_on_step("styling")
     wizard_page.go_to_next_step
     expect(wizard_page).to be_on_step("corporate")
     wizard_page.click_jump_in

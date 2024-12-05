@@ -9,6 +9,20 @@ class Wizard
     def build
       return @wizard unless SiteSetting.wizard_enabled? && @wizard.user.try(:staff?)
 
+      append_introduction_step
+      append_privacy_step
+      append_styling_step
+      append_ready_step
+      append_branding_step
+      append_corporate_step
+
+      DiscourseEvent.trigger(:build_wizard, @wizard)
+      @wizard
+    end
+
+    protected
+
+    def append_introduction_step
       @wizard.append_step("introduction") do |step|
         step.emoji = "wave"
         step.description_vars = { base_path: Discourse.base_path }
@@ -56,7 +70,9 @@ class Wizard
           end
         end
       end
+    end
 
+    def append_privacy_step
       @wizard.append_step("privacy") do |step|
         step.emoji = "hugs"
 
@@ -93,12 +109,16 @@ class Wizard
           updater.update_setting(:must_approve_users, updater.fields[:must_approve_users] == "yes")
         end
       end
+    end
 
+    def append_ready_step
       @wizard.append_step("ready") do |step|
         # no form on this page, just info.
         step.emoji = "rocket"
       end
+    end
 
+    def append_branding_step
       @wizard.append_step("branding") do |step|
         step.emoji = "framed_picture"
         step.add_field(id: "logo", type: "image", value: SiteSetting.site_logo_url)
@@ -112,7 +132,9 @@ class Wizard
           end
         end
       end
+    end
 
+    def append_styling_step
       @wizard.append_step("styling") do |step|
         step.emoji = "art"
         default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
@@ -231,7 +253,9 @@ class Wizard
           updater.refresh_required = true
         end
       end
+    end
 
+    def append_corporate_step
       @wizard.append_step("corporate") do |step|
         step.emoji = "briefcase"
         step.description_vars = { base_path: Discourse.base_path }
@@ -259,12 +283,7 @@ class Wizard
           end
         end
       end
-
-      DiscourseEvent.trigger(:build_wizard, @wizard)
-      @wizard
     end
-
-    protected
 
     def replace_setting_value(updater, raw, field_name)
       old_value = SiteSetting.get(field_name)
