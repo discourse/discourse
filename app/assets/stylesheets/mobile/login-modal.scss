@@ -223,9 +223,12 @@
   }
 }
 
+@mixin account_activation_spacing {
+  margin-top: 3em;
+  margin-bottom: 0.75em;
+}
 .account-created,
 .activate-account {
-  height: 100%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -242,8 +245,7 @@
   .activation-controls {
     flex-direction: column;
     gap: 1em;
-    margin-top: auto;
-    margin-bottom: 0.75em;
+    @include account_activation_spacing;
 
     button {
       height: 2.5em;
@@ -251,8 +253,7 @@
   }
 
   .activate-account-button {
-    margin-top: auto;
-    margin-bottom: 0.75em;
+    @include account_activation_spacing;
     width: 100%;
     height: 2.5em;
   }
@@ -267,8 +268,7 @@
     }
 
     .continue-button {
-      margin-top: auto;
-      margin-bottom: 0.75em;
+      @include account_activation_spacing;
       width: 100%;
       height: 2.5em;
     }
