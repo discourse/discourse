@@ -2,7 +2,6 @@ import { cached } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
@@ -20,6 +19,7 @@ import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import TopicDetails from "discourse/models/topic-details";
 import { flushMap } from "discourse/services/store";
 import deprecated from "discourse-common/lib/deprecated";
 import getURL from "discourse-common/lib/get-url";
@@ -462,8 +462,6 @@ export default class Topic extends RestModel {
   }
 
   set details(value) {
-    const TopicDetails = getOwner(this).factoryFor("model:topic-details").class;
-
     if (value instanceof TopicDetails) {
       this._details = value;
       return;
