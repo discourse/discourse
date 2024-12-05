@@ -36,7 +36,10 @@
 
 {{#if this.showEmbeddingCode}}
   <div class="admin-embedding-index__code">
-    {{html-safe (i18n "admin.embedding.sample")}}
-    <HighlightedCode @code={{this.embeddingCode}} @lang="html" />
+    <details>
+      <summary>{{i18n "admin.embedding.configuration_snippet"}}</summary>
+      {{html-safe (i18n "admin.embedding.sample")}}
+      <HighlightedCode @code={{this.embeddingCode}} @lang="html" />
+    </details>
   </div>
 {{/if}}
