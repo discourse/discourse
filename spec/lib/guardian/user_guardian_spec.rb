@@ -98,44 +98,175 @@ RSpec.describe UserGuardian do
   end
 
   describe "#can_see_profile?" do
+    fab!(:tl0_user) { Fabricate(:user, trust_level: 0) }
+    fab!(:tl1_user) { Fabricate(:user, trust_level: 1) }
+    fab!(:tl2_user) { Fabricate(:user, trust_level: 2) }
+
+    before { tl2_user.user_stat.update!(post_count: 1) }
+
+    context "when viewing the profile of a user with 0 posts" do
+      before { user.user_stat.update!(post_count: 0) }
+
+      it "they can view their own profile" do
+        expect(Guardian.new(user).can_see_profile?(user)).to eq(true)
+      end
+
+      it "an anonymous user cannot view the user's profile" do
+        expect(Guardian.new.can_see_profile?(user)).to eq(false)
+      end
+
+      it "a TL0 user cannot view the user's profile" do
+        expect(Guardian.new(tl0_user).can_see_profile?(user)).to eq(false)
+      end
+
+      it "a TL1 user cannot view the user's profile" do
+        expect(Guardian.new(tl1_user).can_see_profile?(user)).to eq(false)
+      end
+
+      it "a TL2 user can view the user's profile" do
+        expect(Guardian.new(tl2_user).can_see_profile?(user)).to eq(true)
+      end
+
+      it "a moderator can view the user's profile" do
+        expect(Guardian.new(moderator).can_see_profile?(user)).to eq(true)
+      end
+
+      it "an admin can view the user's profile" do
+        expect(Guardian.new(admin).can_see_profile?(user)).to eq(true)
+      end
+
+      context "when the profile is hidden" do
+        before do
+          SiteSetting.allow_users_to_hide_profile = true
+          user.user_option.update!(hide_profile: true)
+        end
+
+        it "they can view their own profile" do
+          expect(Guardian.new(user).can_see_profile?(user)).to eq(true)
+        end
+
+        it "a TL2 user cannot view the user's profile" do
+          expect(Guardian.new(tl2_user).can_see_profile?(user)).to eq(false)
+        end
+
+        it "a moderator can view the user's profile" do
+          expect(Guardian.new(moderator).can_see_profile?(user)).to eq(true)
+        end
+
+        it "an admin can view the user's profile" do
+          expect(Guardian.new(admin).can_see_profile?(user)).to eq(true)
+        end
+      end
+    end
+
+    context "when viewing the profile of a TL0 user with more than 0 posts" do
+      before { tl0_user.user_stat.update!(post_count: 1) }
+
+      it "they can view their own profile" do
+        expect(Guardian.new(tl0_user).can_see_profile?(tl0_user)).to eq(true)
+      end
+
+      it "an anonymous user cannot view the user's profile" do
+        expect(Guardian.new.can_see_profile?(tl0_user)).to eq(false)
+      end
+
+      it "a TL0 user cannot view the user's profile" do
+        expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_see_profile?(tl0_user)).to eq(
+          false,
+        )
+      end
+
+      it "a TL1 user can view the user's profile" do
+        expect(Guardian.new(tl1_user).can_see_profile?(tl0_user)).to eq(true)
+      end
+
+      it "a TL2 user can view the user's profile" do
+        expect(Guardian.new(tl2_user).can_see_profile?(tl0_user)).to eq(true)
+      end
+
+      it "a moderator user can view the user's profile" do
+        expect(Guardian.new(moderator).can_see_profile?(tl0_user)).to eq(true)
+      end
+
+      it "an admin user can view the user's profile" do
+        expect(Guardian.new(admin).can_see_profile?(tl0_user)).to eq(true)
+      end
+
+      context "when the profile is hidden" do
+        before do
+          SiteSetting.allow_users_to_hide_profile = true
+          tl0_user.user_option.update!(hide_profile: true)
+        end
+
+        it "they can view their own profile" do
+          expect(Guardian.new(tl0_user).can_see_profile?(tl0_user)).to eq(true)
+        end
+
+        it "a TL1 user cannot view the user's profile" do
+          expect(Guardian.new(tl1_user).can_see_profile?(tl0_user)).to eq(false)
+        end
+
+        it "a TL2 user cannot view the user's profile" do
+          expect(Guardian.new(tl2_user).can_see_profile?(tl0_user)).to eq(false)
+        end
+
+        it "a moderator user can view the user's profile" do
+          expect(Guardian.new(moderator).can_see_profile?(tl0_user)).to eq(true)
+        end
+
+        it "an admin user can view the user's profile" do
+          expect(Guardian.new(admin).can_see_profile?(tl0_user)).to eq(true)
+        end
+      end
+    end
+
+    context "when the allow_users_to_hide_profile setting is false" do
+      before { SiteSetting.allow_users_to_hide_profile = false }
+
+      it "doesn't hide the profile even if the hide_profile user option is true" do
+        tl2_user.user_option.update!(hide_profile: true)
+
+        expect(Guardian.new(tl0_user).can_see_profile?(tl2_user)).to eq(true)
+        expect(Guardian.new(tl1_user).can_see_profile?(tl2_user)).to eq(true)
+        expect(Guardian.new(admin).can_see_profile?(tl2_user)).to eq(true)
+        expect(Guardian.new(moderator).can_see_profile?(tl2_user)).to eq(true)
+      end
+    end
+
+    context "when the allow_users_to_hide_profile setting is true" do
+      before { SiteSetting.allow_users_to_hide_profile = true }
+
+      it "doesn't allow non-staff users to view the user's profile if the hide_profile user option is true" do
+        tl2_user.user_option.update!(hide_profile: true)
+
+        expect(Guardian.new(tl0_user).can_see_profile?(tl2_user)).to eq(false)
+        expect(Guardian.new(tl1_user).can_see_profile?(tl2_user)).to eq(false)
+
+        expect(Guardian.new(admin).can_see_profile?(tl2_user)).to eq(true)
+        expect(Guardian.new(moderator).can_see_profile?(tl2_user)).to eq(true)
+      end
+
+      it "allows everyone to view the user's profile if the hide_profile user option is false" do
+        tl2_user.user_option.update!(hide_profile: false)
+
+        expect(Guardian.new(tl0_user).can_see_profile?(tl2_user)).to eq(true)
+        expect(Guardian.new(tl1_user).can_see_profile?(tl2_user)).to eq(true)
+
+        expect(Guardian.new(admin).can_see_profile?(tl2_user)).to eq(true)
+        expect(Guardian.new(moderator).can_see_profile?(tl2_user)).to eq(true)
+      end
+    end
+
     it "is false for no user" do
       expect(Guardian.new.can_see_profile?(nil)).to eq(false)
     end
 
-    it "is true for a user whose profile is public" do
-      expect(Guardian.new.can_see_profile?(user)).to eq(true)
-    end
+    it "is true for staff users even when they have no posts" do
+      admin.user_stat.update!(post_count: 0)
+      moderator.user_stat.update!(post_count: 0)
 
-    context "with hidden profile" do
-      # Mixing Fabricate.build() and Fabricate() could cause ID clashes, so override :user
-      fab!(:user)
-
-      let(:hidden_user) do
-        result = Fabricate(:user)
-        result.user_option.update_column(:hide_profile, true)
-        result
-      end
-
-      it "is false for another user" do
-        expect(Guardian.new(user).can_see_profile?(hidden_user)).to eq(false)
-      end
-
-      it "is false for an anonymous user" do
-        expect(Guardian.new.can_see_profile?(hidden_user)).to eq(false)
-      end
-
-      it "is true for the user themselves" do
-        expect(Guardian.new(hidden_user).can_see_profile?(hidden_user)).to eq(true)
-      end
-
-      it "is true for a staff user" do
-        expect(Guardian.new(admin).can_see_profile?(hidden_user)).to eq(true)
-      end
-
-      it "is true if hiding profiles is disabled" do
-        SiteSetting.allow_users_to_hide_profile = false
-        expect(Guardian.new(user).can_see_profile?(hidden_user)).to eq(true)
-      end
+      expect(Guardian.new.can_see_profile?(admin)).to eq(true)
+      expect(Guardian.new.can_see_profile?(moderator)).to eq(true)
     end
   end
 

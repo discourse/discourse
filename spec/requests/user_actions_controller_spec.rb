@@ -19,7 +19,10 @@ RSpec.describe UserActionsController do
       let(:actions) { response.parsed_body["user_actions"] }
       let(:post) { create_post }
 
-      before { UserActionManager.enable }
+      before do
+        UserActionManager.enable
+        post.user.user_stat.update!(post_count: 1)
+      end
 
       it "renders list correctly" do
         user_actions
