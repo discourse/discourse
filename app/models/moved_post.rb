@@ -29,6 +29,7 @@ end
 #  created_new_topic :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  old_topic_title   :string
 #  post_user_id      :integer
 #  user_id           :integer
 #
