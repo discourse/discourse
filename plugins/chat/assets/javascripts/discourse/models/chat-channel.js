@@ -120,6 +120,10 @@ export default class ChatChannel {
   }
 
   get lastUnreadThreadDate() {
+    if (this.unreadThreadsCount === 0) {
+      return this.lastMessage.createdAt;
+    }
+
     return Array.from(this.threadsManager.unreadThreadOverview.values())
       .sort((a, b) => b - a)
       .pop();
