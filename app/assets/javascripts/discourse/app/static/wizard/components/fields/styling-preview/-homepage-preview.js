@@ -300,7 +300,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       const category = this.categories()[0];
       ctx.font = `${bodyFontSize}em '${font}'`;
       const textPos = y + topicHeight * 0.45;
-      ctx.fillStyle = textColor;
+      ctx.fillStyle = colors.primary;
       this.scaleImage(
         this.avatar,
         cols[2],
@@ -320,7 +320,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       const badgeSize = topicHeight * 0.1;
       ctx.font = `Bold ${bodyFontSize * 0.5}em '${font}'`;
       ctx.rect(
-        cols[3] + margin * 0.5,
+        cols[3] + margin * 0.25,
         y + topicHeight * 0.65,
         badgeSize,
         badgeSize
@@ -330,7 +330,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.fillStyle = colors.primary;
       ctx.fillText(
         category.name,
-        cols[3] + badgeSize * 3,
+        cols[3] + badgeSize * 2,
         y + topicHeight * 0.76
       );
       y += topicHeight;
@@ -404,9 +404,10 @@ export default class HomepagePreview extends PreviewBaseComponent {
     ctx.lineWidth = 1;
     this.getTitles().forEach((title) => {
       const textPos = y + rowHeight * 0.4;
-      ctx.fillStyle = textColor;
+      ctx.fillStyle = colors.primary;
       ctx.fillText(title, cols[0], textPos);
 
+      // Category badge
       const category = this.categories()[0];
       ctx.beginPath();
       ctx.fillStyle = category.color;

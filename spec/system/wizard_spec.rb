@@ -42,7 +42,7 @@ describe "Wizard", type: :system do
 
       wizard_page.go_to_next_step
 
-      expect(wizard_page).to be_on_step("ready")
+      expect(wizard_page).to be_on_step("styling")
       expect(SiteSetting.login_required).to eq(true)
       expect(SiteSetting.invite_only).to eq(true)
       expect(SiteSetting.must_approve_users).to eq(true)
