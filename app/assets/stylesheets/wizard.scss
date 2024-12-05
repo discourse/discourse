@@ -151,6 +151,12 @@ body.wizard {
     }
   }
 
+  &__step.styling .wizard-container__field.styling-preview-field {
+    label {
+      display: none;
+    }
+  }
+
   &__field {
     margin-bottom: 1em;
   }
