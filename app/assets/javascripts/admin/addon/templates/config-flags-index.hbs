@@ -1,10 +1,11 @@
-<AdminPageHeader
+<DPageHeader
   @titleLabel="admin.config_areas.flags.header"
   @descriptionLabel="admin.config_areas.flags.subheader"
   @learnMoreUrl="https://meta.discourse.org/t/moderation-flags/325589"
   @hideTabs={{this.hideTabs}}
 >
   <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
     <DBreadcrumbsItem
       @path="/admin/config/flags"
       @label={{i18n "admin.config_areas.flags.header"}}
@@ -31,7 +32,7 @@
       class="admin-flags-tabs__flags"
     />
   </:tabs>
-</AdminPageHeader>
+</DPageHeader>
 
 <div class="admin-container admin-config-page__main-area">
   <AdminConfigAreas::Flags />

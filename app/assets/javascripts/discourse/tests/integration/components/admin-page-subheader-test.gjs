@@ -110,17 +110,17 @@ module("Integration | Component | AdminPageSubheader", function (hooks) {
 
     assert
       .dom(
-        ".admin-page-subheader__actions .admin-page-action-button.new-badge.btn.btn-small.btn-primary"
+        ".admin-page-subheader__actions .d-page-action-button.new-badge.btn.btn-small.btn-primary"
       )
       .exists();
     assert
       .dom(
-        ".admin-page-subheader__actions .admin-page-action-button.award-badge.btn.btn-small.btn-default"
+        ".admin-page-subheader__actions .d-page-action-button.award-badge.btn.btn-small.btn-default"
       )
       .exists();
     assert
       .dom(
-        ".admin-page-subheader__actions .admin-page-action-button.edit-groupings-btn.btn.btn-small.btn-danger"
+        ".admin-page-subheader__actions .d-page-action-button.edit-groupings-btn.btn.btn-small.btn-danger"
       )
       .exists();
 

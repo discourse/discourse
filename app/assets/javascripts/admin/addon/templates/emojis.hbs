@@ -1,10 +1,11 @@
 <div class="admin-emojis admin-config-page">
-  <AdminPageHeader
+  <DPageHeader
     @titleLabel="admin.emoji.title"
     @descriptionLabel="admin.emoji.description"
     @hideTabs={{this.hideTabs}}
   >
     <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
         @path="/admin/customize/emojis"
         @label={{i18n "admin.emoji.title"}}
@@ -25,7 +26,7 @@
         class="admin-emojis-tabs__emoji"
       />
     </:tabs>
-  </AdminPageHeader>
+  </DPageHeader>
 
   <div class="admin-container admin-config-page__main-area">
     {{outlet}}
