@@ -749,6 +749,8 @@ en:
       user:
         ip_address: ""
         password: "Password"
+      user_password:
+        password: "Password"
     errors:
       <<: *errors
       models:
