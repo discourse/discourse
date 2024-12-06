@@ -21,19 +21,24 @@
       </:actions>
       <:tabs>
         <NavItem
+          @route="adminEmbedding.settings"
+          @label="admin.embedding.nav.settings"
+          class="admin-embedding-tabs__settings"
+        />
+        <NavItem
           @route="adminEmbedding.index"
           @label="admin.embedding.nav.hosts"
           class="admin-embedding-tabs__hosts"
         />
         <NavItem
-          @route="adminEmbedding.settings"
-          @label="admin.embedding.nav.embedding_settings"
-          class="admin-embedding-tabs__embedding-settings"
+          @route="adminEmbedding.postsAndTopics"
+          @label="admin.embedding.nav.posts_and_topics"
+          class="admin-embedding-tabs__posts-and-topics"
         />
         <NavItem
-          @route="adminEmbedding.crawler_settings"
-          @label="admin.embedding.nav.crawler_settings"
-          class="admin-embedding-tabs__crawler-settings"
+          @route="adminEmbedding.crawlers"
+          @label="admin.embedding.nav.crawlers"
+          class="admin-embedding-tabs__crawlers"
         />
       </:tabs>
     </AdminPageHeader>

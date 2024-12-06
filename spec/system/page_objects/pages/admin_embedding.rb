@@ -8,11 +8,11 @@ module PageObjects
         self
       end
 
-      def click_embedding_settings_tab
-        find(".admin-embedding-tabs__embedding-settings").click
+      def click_posts_and_topics_tab
+        find(".admin-embedding-tabs__posts-and-topics").click
       end
 
-      def click_embedding_hosts_tab
+      def click_hosts_tab
         find(".admin-embedding-tabs__hosts").click
       end
 

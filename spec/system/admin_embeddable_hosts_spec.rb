@@ -13,7 +13,9 @@ RSpec.describe "Admin EmbeddableHost Management", type: :system do
 
   let(:admin_embedding_page) { PageObjects::Pages::AdminEmbedding.new }
   let(:admin_embedding_host_form_page) { PageObjects::Pages::AdminEmbeddingHostForm.new }
-  let(:admin_embedding_settings_page) { PageObjects::Pages::AdminEmbeddingSettings.new }
+  let(:admin_embedding_posts_and_topics_page) do
+    PageObjects::Pages::AdminEmbeddingPostsAndTopics.new
+  end
 
   it "allows admin to add, edit and delete embeddable hosts" do
     admin_embedding_page.visit
@@ -59,18 +61,18 @@ RSpec.describe "Admin EmbeddableHost Management", type: :system do
     expect(page).not_to have_css(".admin-embedding-index__code")
   end
 
-  it "allows admin to save embedding settings" do
+  it "allows admin to save posts and topics settings" do
     Fabricate(:embeddable_host)
 
     admin_embedding_page.visit
     expect(page).not_to have_content("#{author.username}")
 
-    admin_embedding_page.click_embedding_settings_tab
+    admin_embedding_page.click_posts_and_topics_tab
 
-    admin_embedding_settings_page.fill_in_embed_by_username(author)
-    admin_embedding_settings_page.click_save
+    admin_embedding_posts_and_topics_page.fill_in_embed_by_username(author)
+    admin_embedding_posts_and_topics_page.click_save
 
-    admin_embedding_page.click_embedding_hosts_tab
+    admin_embedding_page.click_hosts_tab
     expect(page).to have_content("#{author.username}")
   end
 end

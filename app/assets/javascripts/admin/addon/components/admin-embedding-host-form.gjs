@@ -3,6 +3,7 @@ import { inject as controller } from "@ember/controller";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -35,7 +36,7 @@ export default class AdminEmbeddingHostForm extends Component {
         allowed_paths: this.args.host.allowed_paths,
         category: this.args.host.category_id,
         tags: this.args.host.tags,
-        user: this.args.host.user,
+        user: isEmpty(this.args.host.user) ? null : [this.args.host.user],
       };
     } else {
       return {};

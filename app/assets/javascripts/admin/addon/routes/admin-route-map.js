@@ -105,7 +105,8 @@ export default function () {
           function () {
             this.route("index", { path: "/" });
             this.route("settings");
-            this.route("crawler_settings");
+            this.route("postsAndTopics", { path: "/posts_and_topics" });
+            this.route("crawlers");
             this.route("new");
             this.route("edit", { path: "/:id" });
           }
