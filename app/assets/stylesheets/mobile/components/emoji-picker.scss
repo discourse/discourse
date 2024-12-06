@@ -28,3 +28,15 @@
     height: 100%;
   }
 }
+
+.emoji-picker-modal {
+  .d-modal__container {
+    top: 0;
+  }
+  .d-modal__header {
+    display: none;
+  }
+  .d-modal__body {
+    padding: 0;
+  }
+}

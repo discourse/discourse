@@ -10,7 +10,7 @@ import { and, or } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import EmojiPicker from "discourse/components/emoji-picker";
+import EmojiPickerModal from "discourse/components/emoji-picker/modal";
 import concatClass from "discourse/helpers/concat-class";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
@@ -135,10 +135,10 @@ export default class ChatMessageActionsMobile extends Component {
                   />
                 {{/each}}
 
-                <EmojiPicker
-                  @context="chat"
-                  @btnClass="btn-flat react-btn"
-                  @didSelectEmoji={{this.messageInteractor.selectReaction}}
+                <DButton
+                  @icon="discourse-emojis"
+                  class="btn-flat react-btn"
+                  @action={{this.openEmojiPicker}}
                 />
               {{/if}}
 

@@ -347,6 +347,7 @@ export default class EmojiPicker extends Component {
 
   @bind
   _handleScroll(event) {
+    console.log(event);
     if (!this.scrollObserverEnabled) {
       return;
     }
@@ -374,7 +375,6 @@ export default class EmojiPicker extends Component {
       document
         .querySelector(".emoji-picker__section-btn.active")
         ?.scrollIntoView({
-          behavior: "smooth",
           block: "nearest",
           inline: "start",
         });
