@@ -1747,6 +1747,9 @@ el:
       optional: προεραιτικό
       errors_summary_title: "Αυτή η φόρμα περιέχει σφάλματα:"
       dirty_form: "Δεν έχετε υποβάλει τις αλλαγές σας! Είστε σίγουροι ότι θέλετε να αποχωρήσετε;"
+      select:
+        select_placeholder: "Επιλογή…"
+        none_placeholder: "Κανένα"
       errors:
         required: "Απαιτείται"
         invalid_url: "Πρέπει να είναι μια έγκυρη διεύθυνση URL"
@@ -5155,6 +5158,8 @@ el:
             label: "Μεταφόρτωση"
         selectable_avatars:
           title: "Λίστα των avatars που μπορούν να επιλέξουν οι χρήστες"
+        table_column_heading:
+          status: "Κατάσταση"
         categories:
           all_results: "Όλα"
           required: "Απαιτείται"

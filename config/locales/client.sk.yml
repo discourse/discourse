@@ -2275,6 +2275,9 @@ sk:
       optional: nepovinné
       errors_summary_title: "Tento formulár obsahuje chyby:"
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
+      select:
+        select_placeholder: "Vyberte…"
+        none_placeholder: "Žiadny"
       errors:
         required: "Povinné"
         invalid_url: "Musí byť platná adresa URL"
@@ -3956,6 +3959,7 @@ sk:
         other: "Prezeranie %{count} odpovede na"
       in_reply_to: "Načítať rodičovský príspevok"
       view_all_posts: "Zobraziť všetky príspevky"
+      badge_granted_tooltip: "%{username} získal za tento príspevok odznak '%{badge_name}'!"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -7262,6 +7266,8 @@ sk:
             title: "Nahrávanie obrázkov"
         selectable_avatars:
           title: "Zoznam avatarov, z ktorých si používatelia môžu vybrať"
+        table_column_heading:
+          status: "Stav"
         categories:
           all_results: "Všetky"
           required: "Povinné"
@@ -7365,10 +7371,13 @@ sk:
         no_user_badges: "Používateľovi %{name} nebol udelený žiaden odznak."
         no_badges: Nie sú žiadne odznaky, ktoré môžu byť udelené.
         none_selected: "Vyberte odznak, aby ste mohli začať"
+        usage_heading: Použitie
         allow_title: Povoliť použitie odznaku namiesto názvu
         multiple_grant: Môže byť udelené viacnásobne
         visibility_heading: Viditeľnosť
         listable: Zobraziť odznak na stránke verejných odznakov
+        show_in_post_header: Zobraziť odznak na príspevku, za ktorý bol udelený
+        show_in_post_header_disabled: Vyžaduje, aby bola povolená možnosť „Zobraziť odznak na stránke s verejnými odznakmi“ a „Zobraziť odznak po udelení príspevku na stránke s odznakom“.
         enabled: povolené
         disabled: vypnuté
         icon: Ikona

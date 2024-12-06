@@ -1389,6 +1389,8 @@ ca:
     form_kit:
       reset: Restableix
       optional: opcional
+      select:
+        none_placeholder: "Cap"
       errors:
         required: "Necessari"
     close: "Tanca"
@@ -4166,6 +4168,8 @@ ca:
             label: "Carrega"
         selectable_avatars:
           title: "Llista d'avatars que els usuaris poden triar"
+        table_column_heading:
+          status: "Estat"
         categories:
           all_results: "Tot"
           required: "Necessari"

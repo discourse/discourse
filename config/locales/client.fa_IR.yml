@@ -1681,6 +1681,9 @@ fa_IR:
     form_kit:
       reset: بازنشانی
       optional: اختیاری
+      select:
+        select_placeholder: "انتخاب…"
+        none_placeholder: "هیچ کدام"
       errors:
         required: "مورد نیاز"
     close: "بستن"
@@ -4685,6 +4688,8 @@ fa_IR:
           label: "ویرایش فهرست"
           upload:
             label: "بارگذاری"
+        table_column_heading:
+          status: "وضعیت"
         categories:
           all_results: "همه"
           required: "مورد نیاز"

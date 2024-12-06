@@ -1939,6 +1939,9 @@ ja:
       optional: オプション
       errors_summary_title: "このフォームにはエラーがあります:"
       dirty_form: "変更を送信しませんでした！終了してもよろしいですか？"
+      select:
+        select_placeholder: "選択…"
+        none_placeholder: "なし"
       errors:
         required: "必須"
         invalid_url: "有効な URL である必要があります"
@@ -6366,6 +6369,8 @@ ja:
             title: "画像のアップロード"
         selectable_avatars:
           title: "ユーザーが選択できるアバターのリスト"
+        table_column_heading:
+          status: "ステータス"
         categories:
           all_results: "すべて"
           required: "必須"

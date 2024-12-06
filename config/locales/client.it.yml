@@ -2050,6 +2050,9 @@ it:
       optional: facoltativo
       errors_summary_title: "Questo modulo contiene errori:"
       dirty_form: "Non hai caricato le modifiche! Vuoi davvero uscire?"
+      select:
+        select_placeholder: "Seleziona…"
+        none_placeholder: "Nessuna"
       errors:
         required: "Obbligatorio"
         invalid_url: "L'URL deve essere valido"
@@ -6644,6 +6647,8 @@ it:
             title: "Carica immagini"
         selectable_avatars:
           title: "Elenco degli Avatar tra cui l'utente può scegliere"
+        table_column_heading:
+          status: "Stato"
         categories:
           all_results: "Tutte"
           required: "Obbligatorie"

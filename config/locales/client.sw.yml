@@ -1039,6 +1039,8 @@ sw:
     form_kit:
       reset: Anza Upya
       optional: sio muhimu
+      select:
+        none_placeholder: "Hakuna"
       errors:
         required: "Muhimu na Inahitajika"
     close: "Funga"
