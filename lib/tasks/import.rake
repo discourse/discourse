@@ -299,13 +299,11 @@ end
 def update_user_stats
   log "Updating user stats..."
 
-  # TODO: topic_count is counting all topics you replied in as if you started the topic.
-  # TODO: post_count is counting first posts.
   DB.exec <<-SQL
     WITH X AS (
       SELECT p.user_id
-           , COUNT(p.id) posts
-           , COUNT(DISTINCT p.topic_id) topics
+           , COUNT(CASE WHEN p.post_number > 1 THEN p.id END) AS posts
+           , COUNT(CASE WHEN p.post_number = 1 THEN t.id END) AS topics
            , MIN(p.created_at) min_created_at
            , COALESCE(COUNT(DISTINCT DATE(p.created_at)), 0) days
         FROM posts p
