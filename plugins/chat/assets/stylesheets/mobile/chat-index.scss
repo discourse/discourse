@@ -1,7 +1,14 @@
 @import "common/foundation/mixins";
 
 .channels-list-container {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  @include chat-height(
+    calc(
+      var(--chat-footer-offset) + var(--chat-header-offset, 0px) -
+        env(safe-area-inset-bottom)
+    )
+  );
 
   .chat-channel-name {
     font-size: var(--font-up-1-rem);
