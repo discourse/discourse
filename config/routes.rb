@@ -223,10 +223,6 @@ Discourse::Application.routes.draw do
       get "config/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
       get "customize/embedding" => "embedding#show", :constraints => AdminConstraint.new
       put "customize/embedding" => "embedding#update", :constraints => AdminConstraint.new
-      get "customize/embedding/settings" => "embedding#settings",
-          :constraints => AdminConstraint.new
-      get "customize/embedding/crawler_settings" => "embedding#crawler_settings",
-          :constraints => AdminConstraint.new
       get "customize/embedding/:id" => "embedding#edit", :constraints => AdminConstraint.new
 
       resources :themes,

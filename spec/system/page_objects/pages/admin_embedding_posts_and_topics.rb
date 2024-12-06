@@ -2,11 +2,11 @@
 
 module PageObjects
   module Pages
-    class AdminEmbeddingSettings < PageObjects::Pages::Base
+    class AdminEmbeddingPostsAndTopics < PageObjects::Pages::Base
       def fill_in_embed_by_username(author)
         dropdown =
           PageObjects::Components::SelectKit.new(
-            ".admin-embedding-settings-form__embed_by_username",
+            ".admin-embedding-posts-and-topics-form__embed_by_username",
           )
         dropdown.expand
         dropdown.search(author.username)

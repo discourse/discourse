@@ -7333,9 +7333,9 @@ en:
         tags: "Topic Tags"
         post_author: "Post Author - Defaults to %{author}"
         add_host: "Add Host"
-        settings: "Embedding Settings"
-        crawling_settings: "Crawler Settings"
-        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        posts_and_topics: "Posts and Topics configuration"
+        crawlers: "Crawlers configuration"
+        crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
 
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
@@ -7345,8 +7345,8 @@ en:
         allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
         blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Allowed CSS class names"
-        save: "Save Embedding Settings"
-        embedding_settings_saved: "Embedding settings saved."
+        save: "Save"
+        posts_and_topics_settings_saved: "Posts and Topics settings saved."
         crawler_settings_saved: "Crawler settings saved."
         back: "Back to Embedding"
         more_options: "More options"
@@ -7357,8 +7357,9 @@ en:
           save: "Save"
         nav:
           hosts: "Hosts"
-          embedding_settings: "Embedding Settings"
-          crawler_settings: "Crawler Settings"
+          settings: "Settings"
+          posts_and_topics: "Posts and Topics"
+          crawlers: "Crawlers"
 
       permalink:
         title: "Permalinks"

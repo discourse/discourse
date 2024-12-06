@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
-export default class AdminEmbeddingCrawlerSettingsController extends Controller {
+export default class AdminEmbeddingCrawlersController extends Controller {
   @service toasts;
   @controller adminEmbedding;
 
@@ -23,7 +23,10 @@ export default class AdminEmbeddingCrawlerSettingsController extends Controller 
     const embedding = this.adminEmbedding.embedding;
 
     try {
-      await embedding.update(data);
+      await embedding.update({
+        type: "crawlers",
+        ...data,
+      });
       this.toasts.success({
         duration: 1500,
         data: { message: i18n("admin.embedding.crawler_settings_saved") },

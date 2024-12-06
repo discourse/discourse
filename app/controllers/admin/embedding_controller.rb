@@ -8,7 +8,11 @@ class Admin::EmbeddingController < Admin::AdminController
   end
 
   def update
-    Embedding.settings.each { |s| @embedding.public_send("#{s}=", params[:embedding][s]) }
+    raise InvalidAccess if !(%w[posts_and_topics crawlers].include?(params[:embedding][:type]))
+
+    Embedding
+      .send("#{params[:embedding][:type]}_settings")
+      .each { |s| @embedding.public_send("#{s}=", params[:embedding][s]) }
 
     if @embedding.save
       fetch_embedding
@@ -22,12 +26,6 @@ class Admin::EmbeddingController < Admin::AdminController
   end
 
   def edit
-  end
-
-  def settings
-  end
-
-  def crawler_settings
   end
 
   protected
