@@ -68,8 +68,8 @@
   &__scrollable-content {
     width: 100%;
     overflow-y: scroll;
-    text-transform: capitalize;
     overscroll-behavior: contain;
+    height: 100%;
   }
 
   &__no-results {
@@ -136,6 +136,8 @@
     display: flex;
     position: sticky;
     top: -1px; // to avoid an ugly sub 1px gap on retina
+    background: rgba(var(--secondary-rgb), 0.95);
+    z-index: 2;
   }
 
   &__section-title {
@@ -144,8 +146,6 @@
     color: var(--primary-high);
     font-size: var(--font-down-2);
     font-weight: 700;
-    background: rgba(var(--secondary-rgb), 0.95);
-    z-index: 1;
     width: 100%;
     box-sizing: border-box;
     text-transform: uppercase;

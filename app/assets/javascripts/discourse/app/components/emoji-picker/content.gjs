@@ -373,7 +373,11 @@ export default class EmojiPicker extends Component {
 
       document
         .querySelector(".emoji-picker__section-btn.active")
-        ?.scrollIntoView({ block: "center" });
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
+        });
     }
   }
 
