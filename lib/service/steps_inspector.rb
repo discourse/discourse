@@ -142,15 +142,21 @@ class Service::StepsInspector
   # @return [String] the steps of the result object with their state
   def execution_flow
     steps
-      .map
+      .filter_map
       .with_index do |step, index|
+        next if @encountered_error
+        @encountered_error = index + 1 if step.failure?
         "[#{format("%#{steps.size.to_s.size}s", index + 1)}/#{steps.size}] #{step.inspect}"
       end
       .join("\n")
+      .then do |output|
+        next output unless @encountered_error && (steps.size - @encountered_error).positive?
+        output + "\n\n[#{steps.size - @encountered_error} steps hidden as they were never reached]"
+      end
   end
 
   # @return [String, nil] the first available error, if any.
   def error
-    steps.detect(&:failure?)&.error
+    steps.detect(&:error)&.error
   end
 end

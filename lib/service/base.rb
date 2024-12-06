@@ -282,7 +282,7 @@ module Service
       rescue *exceptions => e
         raise e if e.is_a?(Failure)
         context[@current_step.result_key].fail(raised_exception?: true, exception: e)
-        context[result_key].fail(exception: e)
+        context[result_key][:exception] = e
         context.fail!
       end
     end
