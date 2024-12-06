@@ -278,9 +278,12 @@ class PostMover
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
 
-    # Ensure the notification generated points to the newly created post, not the old OP
-    @post_ids_after_move =
-      @post_ids_after_move.map { |post_id| post_id == post.id ? new_post.id : post_id }
+    # When freezing original, ensure the notification generated points
+    # to the newly created post, not the old OP
+    if @options[:freeze_original]
+      @post_ids_after_move =
+        @post_ids_after_move.map { |post_id| post_id == post.id ? new_post.id : post_id }
+    end
 
     DiscourseEvent.trigger(:first_post_moved, new_post, post)
     DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
