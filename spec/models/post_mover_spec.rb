@@ -314,8 +314,11 @@ RSpec.describe PostMover do
               MovedPost.exists?(
                 new_topic: new_topic,
                 new_post_id: p2.id,
-                old_topic: topic,
+                old_topic_id: topic.id,
+                old_topic_title: topic.title,
                 old_post_id: p2.id,
+                post_user_id: p2.user_id,
+                user_id: user.id,
                 created_new_topic: true,
               ),
             ).to eq(true)
@@ -323,8 +326,11 @@ RSpec.describe PostMover do
               MovedPost.exists?(
                 new_topic: new_topic,
                 new_post_id: p4.id,
-                old_topic: topic,
+                old_topic_id: topic.id,
+                old_topic_title: topic.title,
                 old_post_id: p4.id,
+                post_user_id: p4.user_id,
+                user_id: user.id,
                 created_new_topic: true,
               ),
             ).to eq(true)
@@ -695,8 +701,11 @@ RSpec.describe PostMover do
               MovedPost.exists?(
                 new_topic: destination_topic,
                 new_post_id: p2.id,
-                old_topic: topic,
+                old_topic_id: topic.id,
+                old_topic_title: topic.title,
                 old_post_id: p2.id,
+                post_user_id: p2.user_id,
+                user_id: user.id,
                 created_new_topic: false,
               ),
             ).to eq(true)
@@ -704,8 +713,11 @@ RSpec.describe PostMover do
               MovedPost.exists?(
                 new_topic: destination_topic,
                 new_post_id: p4.id,
-                old_topic: topic,
+                old_topic_id: topic.id,
+                old_topic_title: topic.title,
                 old_post_id: p4.id,
+                post_user_id: p4.user_id,
+                user_id: user.id,
                 created_new_topic: false,
               ),
             ).to eq(true)
@@ -2703,8 +2715,11 @@ RSpec.describe PostMover do
         expect(
           MovedPost.exists?(
             old_topic_id: original_topic.id,
-            new_topic_id: destination_topic.id,
+            old_topic_title: original_topic.title,
             old_post_id: first_post.id,
+            post_user_id: first_post.user_id,
+            user_id: Discourse.system_user.id,
+            new_topic_id: destination_topic.id,
           ),
         ).to eq(true)
       end
@@ -2803,6 +2818,29 @@ RSpec.describe PostMover do
 
         expect(pm_with_posts.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
         expect(pm.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
+      end
+
+      describe "moved_post notifications" do
+        before { Jobs.run_immediately! }
+
+        it "Generates notifications pointing to the newly created post and topic" do
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            [first_post.id],
+            options: {
+              freeze_original: true,
+            },
+          ).to_topic(destination_topic.id)
+
+          notification =
+            Notification.find_by(
+              post_number: destination_topic.posts.find_by(raw: "first_post").post_number,
+              topic_id: destination_topic.id,
+              notification_type: Notification.types[:moved_post],
+            )
+          expect(notification).to be_present
+        end
       end
 
       context "with rate limit" do

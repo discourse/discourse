@@ -12,6 +12,7 @@ import {
   clipboardHelpers,
   determinePostReplaceSelection,
   inCodeBlock,
+  setCaretPosition,
 } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
@@ -52,6 +53,7 @@ export default class TextareaTextManipulation {
   textarea;
   $textarea;
 
+  autocompleteHandler;
   placeholder;
 
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
@@ -61,6 +63,8 @@ export default class TextareaTextManipulation {
     this.eventPrefix = eventPrefix;
     this.textarea = textarea;
     this.$textarea = $(textarea);
+
+    this.autocompleteHandler = new TextareaAutocompleteHandler(textarea);
 
     generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
@@ -349,13 +353,7 @@ export default class TextareaTextManipulation {
   }
 
   _insertAt(start, end, text) {
-    this.textarea.setSelectionRange(start, end);
-    this.textarea.focus();
-    if (start !== end && text === "") {
-      document.execCommand("delete", false);
-    } else {
-      document.execCommand("insertText", false, text);
-    }
+    insertAtTextarea(this.textarea, start, end, text);
   }
 
   extractTable(text) {
@@ -742,7 +740,6 @@ export default class TextareaTextManipulation {
     }
   }
 
-  @bind
   async inCodeBlock() {
     return inCodeBlock(
       this.$textarea.value ?? this.$textarea.val(),
@@ -829,8 +826,57 @@ export default class TextareaTextManipulation {
     putCursorAtEnd(this.textarea);
   }
 
-  autocomplete() {
-    return this.$textarea.autocomplete(...arguments);
+  autocomplete(options) {
+    return this.$textarea.autocomplete(
+      options instanceof Object
+        ? { textHandler: this.autocompleteHandler, ...options }
+        : options
+    );
+  }
+}
+
+function insertAtTextarea(textarea, start, end, text) {
+  textarea.setSelectionRange(start, end);
+  textarea.focus();
+  if (start !== end && text === "") {
+    document.execCommand("delete", false);
+  } else {
+    document.execCommand("insertText", false, text);
+  }
+}
+
+export class TextareaAutocompleteHandler {
+  textarea;
+  $textarea;
+
+  constructor(textarea) {
+    this.textarea = textarea;
+    this.$textarea = $(textarea);
+  }
+
+  get value() {
+    return this.textarea.value;
+  }
+
+  replaceTerm({ start, end, term }) {
+    const space = this.value.substring(end + 1, end + 2) === " " ? "" : " ";
+    insertAtTextarea(this.textarea, start, end + 1, term + space);
+    setCaretPosition(this.textarea, start + 1 + term.trim().length);
+  }
+
+  getCaretPosition() {
+    return caretPosition(this.textarea);
+  }
+
+  getCaretCoords(start) {
+    return this.$textarea.caretPosition({ pos: start + 1 });
+  }
+
+  async inCodeBlock() {
+    return inCodeBlock(
+      this.$textarea.value ?? this.$textarea.val(),
+      caretPosition(this.$textarea)
+    );
   }
 }
 
