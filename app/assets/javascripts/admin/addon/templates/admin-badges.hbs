@@ -1,10 +1,11 @@
 <div class="badges">
-  <AdminPageHeader
+  <DPageHeader
     @titleLabel="admin.badges.title"
     @descriptionLabel="admin.badges.page_description"
     @learnMoreUrl="https://meta.discourse.org/t/understanding-and-using-badges/32540"
   >
     <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
         @path="/admin/badges"
         @label={{i18n "admin.badges.title"}}
@@ -35,7 +36,7 @@
         class="edit-groupings-btn"
       />
     </:actions>
-  </AdminPageHeader>
+  </DPageHeader>
 
   <div class="admin-container">
     <div class="content-list">
