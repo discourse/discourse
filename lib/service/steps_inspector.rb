@@ -9,7 +9,7 @@ class Service::StepsInspector
   class Step
     attr_reader :step, :result, :nesting_level
 
-    delegate :name, to: :step
+    delegate :name, :result_key, to: :step
     delegate :failure?, :success?, :error, :raised_exception?, to: :step_result, allow_nil: true
 
     def self.for(step, result, nesting_level: 0)
@@ -38,13 +38,18 @@ class Service::StepsInspector
     end
 
     def inspect
-      "#{"  " * nesting_level}[#{inspect_type}] '#{name}' #{emoji}".rstrip
+      "#{"  " * nesting_level}[#{inspect_type}] #{name} #{emoji}#{runtime}".rstrip
     end
 
     private
 
+    def runtime
+      return unless step_result&.__runtime__
+      " (took #{(step_result.__runtime__ * 1000).round(4)} ms)"
+    end
+
     def step_result
-      result["result.#{type}.#{name}"]
+      result[result_key]
     end
 
     def result_emoji
@@ -97,11 +102,7 @@ class Service::StepsInspector
     end
 
     def inspect
-      "#{"  " * nesting_level}[#{inspect_type}]"
-    end
-
-    def step_result
-      nil
+      "#{"  " * nesting_level}[#{inspect_type}]#{runtime}"
     end
   end
 
@@ -114,10 +115,6 @@ class Service::StepsInspector
     def error
       step_result.exception.inspect
     end
-
-    def step_result
-      result["result.#{type}.#{name}"]
-    end
   end
 
   attr_reader :steps, :result
@@ -127,24 +124,39 @@ class Service::StepsInspector
     @result = result
   end
 
-  # Inspect the provided result object.
-  # Example output:
-  #   [1/4] [model] 'channel' ✅
-  #   [2/4] [params] 'default' ✅
-  #   [3/4] [policy] 'check_channel_permission' ❌
-  #   [4/4] [step] 'change_status'
-  # @return [String] the steps of the result object with their state
   def inspect
+    output = <<~OUTPUT
+    Inspecting #{result.__service_class__} result object:
+
+    #{execution_flow}
+    OUTPUT
+    output += "\n\nWhy it failed:\n\n#{error}" if error.present?
+    output
+  end
+
+  # Example output:
+  #   [1/4] [model] channel ✅ (took 0.02 ms)
+  #   [2/4] [params] default ✅ (took 0.1 ms)
+  #   [3/4] [policy] check_channel_permission ❌
+  #   [4/4] [step] change_status
+  # @return [String] the steps of the result object with their state
+  def execution_flow
     steps
-      .map
+      .filter_map
       .with_index do |step, index|
+        next if @encountered_error
+        @encountered_error = index + 1 if step.failure?
         "[#{format("%#{steps.size.to_s.size}s", index + 1)}/#{steps.size}] #{step.inspect}"
       end
       .join("\n")
+      .then do |output|
+        next output unless @encountered_error && (steps.size - @encountered_error).positive?
+        output + "\n\n[#{steps.size - @encountered_error} steps hidden as they were never reached]"
+      end
   end
 
   # @return [String, nil] the first available error, if any.
   def error
-    steps.detect(&:failure?)&.error
+    steps.detect(&:error)&.error
   end
 end
