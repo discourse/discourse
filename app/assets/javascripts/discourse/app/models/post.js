@@ -171,14 +171,14 @@ export default class Post extends RestModel {
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
   @equal("post_number", 1) firstPost;
-  @or("deleted_at", "deletedViaTopic", "user_deleted") deleted;
+  @and("firstPost", "topic.deleted_at") deletedViaTopic; // topic was deleted
+  @or("deleted_at", "deletedViaTopic") deleted; // post is either highlighted is deleted or hidden/removed from the post stream
   @not("deleted") notDeleted;
+  @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
   @alias("topic.details.created_by.id") topicCreatedById;
 
   // Posts can show up as deleted if the topic is deleted
-  @and("firstPost", "topic.deleted_at") deletedViaTopic;
-
   constructor() {
     super(...arguments);
 
@@ -323,11 +323,11 @@ export default class Post extends RestModel {
   }
 
   get canRecover() {
-    return !this.canRecoverTopic && this.deleted && this.can_recover;
+    return !this.canRecoverTopic && this.recoverable && this.can_recover;
   }
 
   get isRecovering() {
-    return !this.isRecoveringTopic && !this.deleted && this.can_recover;
+    return !this.isRecoveringTopic && !this.recoverable && this.can_recover;
   }
 
   get canToggleLike() {

@@ -213,16 +213,30 @@ describe "Post menu", type: :system do
           expect(topic_page).to have_no_post_action_button(post, :recover)
           expect(topic_page).to have_no_post_action_button(post2, :recover)
 
-          # do not display the recover button because when `user` deletes teh post. it's just marked for deletion
-          # `user` cannot recover it.
+          #  display the recover button when the POST was user deleted
+          # `post2` is marked for deletion and displays text (post deleted by author) but `user` as the author can
+          # recover it.
           sign_in(user)
 
           topic_page.visit_topic(post.topic)
 
           expect(topic_page).to have_no_post_action_button(post, :recover)
+          expect(topic_page).to have_post_action_button(post2, :recover)
+
+          # do not display the recover button for other users when the post was USER deleted
+          sign_in(Fabricate(:user))
+          topic_page.visit_topic(post.topic)
+          expect(topic_page).to have_no_post_action_button(post, :recover)
           expect(topic_page).to have_no_post_action_button(post2, :recover)
 
-          # display the recover button for the deleted post because an admin is logged
+          # do not display the recover button even for admins when the post was USER deleted, because the action
+          # displayed for the admin is deleting the post to remove it from the post stream
+          sign_in(admin)
+          topic_page.visit_topic(post.topic)
+          expect(topic_page).to have_no_post_action_button(post, :recover)
+          expect(topic_page).to have_no_post_action_button(post2, :recover)
+
+          # display the recover button for an admin when the post was deleted
           PostDestroyer.new(admin, post).destroy
 
           sign_in(admin)
