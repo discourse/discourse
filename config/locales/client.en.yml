@@ -2044,6 +2044,7 @@ en:
           other: "Your password is too short (minimum is %{count} characters)."
         common: "That password is too common."
         same_as_username: "Your password is the same as your username."
+        same_as_name: "Your password is the same as your name."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
         instructions:
