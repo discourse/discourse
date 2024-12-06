@@ -171,7 +171,7 @@ export default class Post extends RestModel {
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
   @equal("post_number", 1) firstPost;
-  @or("deleted_at", "deletedViaTopic") deleted;
+  @or("deleted_at", "deletedViaTopic", "user_deleted") deleted;
   @not("deleted") notDeleted;
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
   @alias("topic.details.created_by.id") topicCreatedById;
@@ -314,20 +314,20 @@ export default class Post extends RestModel {
     return this.firstPost && !!this.topic.details.can_publish_page;
   }
 
-  get canRecover() {
-    return this.deleted && this.can_recover;
-  }
-
-  get isRecovering() {
-    return !this.deleted && this.can_recover;
-  }
-
   get canRecoverTopic() {
     return this.firstPost && this.deleted && this.topic.details.can_recover;
   }
 
   get isRecoveringTopic() {
     return this.firstPost && !this.deleted && this.topic.details.can_recover;
+  }
+
+  get canRecover() {
+    return !this.canRecoverTopic && this.deleted && this.can_recover;
+  }
+
+  get isRecovering() {
+    return !this.isRecoveringTopic && !this.deleted && this.can_recover;
   }
 
   get canToggleLike() {
