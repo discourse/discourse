@@ -7390,6 +7390,14 @@ en:
         homepage_preview: "Homepage preview"
 
       homepage_preview:
+        nav_buttons:
+          all_categories: "all categories"
+          new: "New"
+          unread: "Unread"
+          top: "Top"
+          latest: "Latest"
+          hot: "Hot"
+          categories: "Categories"
         topic_titles:
           what_books: "What books are you reading?"
           what_movies: "What movies have you seen recently?"
@@ -7409,3 +7417,8 @@ en:
           icebreakers: "Icebreakers"
           news: "News"
           site_feedback: "Site Feedback"
+        table_headers:
+          topic: "Topic"
+          replies: "Replies"
+          views: "Views"
+          activity: "Activity"

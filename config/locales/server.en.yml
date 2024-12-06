@@ -5423,6 +5423,8 @@ en:
             choices:
               latest:
                 label: "Latest Topics"
+              hot:
+                label: "Hot Topics"
               categories_only:
                 label: "Categories Only"
               categories_with_featured_topics:

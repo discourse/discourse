@@ -83,7 +83,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
         ]
       );
 
-      ctx.font = `Bold ${bodyFontSize * 1.3}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.3}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.textAlign = "center";
       ctx.fillText(category.name, boxStartX + boxWidth / 2, boxStartY + 25);
@@ -166,7 +166,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     // Categories
     this.categories().forEach((category, idx) => {
       const textPos = y + categoryHeight * 0.35;
-      ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.fillText(category.name, cols[0], textPos);
 
@@ -262,7 +262,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     // Categories
     this.categories().forEach((category, idx) => {
       const textPos = y + categoryHeight * 0.35;
-      ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.fillText(category.name, cols[0], textPos);
 
@@ -310,7 +310,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       );
       ctx.fillText(title, cols[3], textPos);
 
-      ctx.font = `Bold ${bodyFontSize}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize}em '${font}'`;
       ctx.fillText(Math.floor(Math.random() * 90) + 10, cols[4], textPos);
       ctx.font = `${bodyFontSize}em '${font}'`;
       ctx.fillText(`1h`, cols[4], textPos + topicHeight * 0.4);
@@ -318,7 +318,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.beginPath();
       ctx.fillStyle = category.color;
       const badgeSize = topicHeight * 0.1;
-      ctx.font = `Bold ${bodyFontSize * 0.5}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 0.5}em '${font}'`;
       ctx.rect(
         cols[3] + margin * 0.25,
         y + topicHeight * 0.65,
@@ -383,17 +383,33 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.stroke();
     };
 
-    const cols = [0.02, 0.66, 0.8, 0.87, 0.93].map((c) => c * width);
+    const cols = [0.02, 0.66, 0.75, 0.83, 0.9].map((c) => c * width);
 
     // Headings
     const headingY = height * 0.33;
 
     ctx.fillStyle = textColor;
     ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
-    ctx.fillText("Topic", cols[0], headingY);
-    ctx.fillText("Replies", cols[2], headingY);
-    ctx.fillText("Views", cols[3], headingY);
-    ctx.fillText("Activity", cols[4], headingY);
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.topic"),
+      cols[0],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.replies"),
+      cols[2],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.views"),
+      cols[3],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.activity"),
+      cols[4],
+      headingY
+    );
 
     // Topics
     let y = headingY + rowHeight / 2.6;
@@ -412,7 +428,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.beginPath();
       ctx.fillStyle = category.color;
       const badgeSize = rowHeight * 0.15;
-      ctx.font = `Bold ${bodyFontSize * 0.75}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 0.75}em '${font}'`;
       ctx.rect(cols[0] + 4, y + rowHeight * 0.6, badgeSize, badgeSize);
       ctx.fill();
 

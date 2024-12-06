@@ -2,7 +2,11 @@ import { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
-import { chooseDarker, darkLightDiff } from "../../../lib/preview";
+import {
+  chooseDarker,
+  darkLightDiff,
+  resizeTextLinesToFitRect,
+} from "../../../lib/preview";
 import HomepagePreview from "./-homepage-preview";
 import PreviewBaseComponent from "./-preview-base";
 
@@ -133,7 +137,7 @@ export default class Index extends PreviewBaseComponent {
     // Topic title
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
-    ctx.font = `bold ${titleFontSize}em '${headingFont}'`;
+    ctx.font = `700 ${titleFontSize}em '${headingFont}'`;
     ctx.fillText(i18n("wizard.previews.topic_title"), margin, height * 0.3);
 
     // Topic OP text
@@ -144,7 +148,7 @@ export default class Index extends PreviewBaseComponent {
     const topicOp = i18n("wizard.homepage_preview.topic_ops.what_books");
     const topicOpLines = topicOp.split("\n");
 
-    this.resizeTextLinesToFitRect(
+    resizeTextLinesToFitRect(
       topicOpLines,
       timelineX - leftHandTextGutter,
       ctx,
@@ -216,13 +220,14 @@ export default class Index extends PreviewBaseComponent {
 
     // Timeline post count
     const postCountY = height * 0.3 + margin + 10;
-    ctx.font = `Bold ${bodyFontSize}em ${font}`;
+    ctx.beginPath();
+    ctx.font = `700 ${bodyFontSize}em '${font}'`;
     ctx.fillStyle = colors.primary;
     ctx.fillText("1 / 20", timelineX + margin / 2, postCountY);
 
     // Timeline post date
     ctx.beginPath();
-    ctx.font = `${bodyFontSize * 0.9}em ${font}`;
+    ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
     ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 70, 65);
     ctx.fillText(
       "Nov 22",

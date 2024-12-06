@@ -138,3 +138,26 @@ export function drawHeader(ctx, colors, width, headerHeight) {
   ctx.fill();
   ctx.restore();
 }
+
+export function resizeTextLinesToFitRect(
+  textLines,
+  rectWidth,
+  ctx,
+  fontSize,
+  font,
+  renderCallback
+) {
+  const maxLengthLine = textLines.reduce((a, b) =>
+    a.length > b.length ? a : b
+  );
+
+  let fontSizeDecreaseMultiplier = 1;
+  while (ctx.measureText(maxLengthLine).width > rectWidth) {
+    fontSizeDecreaseMultiplier -= 0.1;
+    ctx.font = `${fontSize * fontSizeDecreaseMultiplier}em '${font}'`;
+  }
+
+  for (let i = 0; i < textLines.length; i++) {
+    renderCallback(textLines[i], i);
+  }
+}

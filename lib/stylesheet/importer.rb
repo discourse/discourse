@@ -222,7 +222,7 @@ module Stylesheet
             )
           contents << <<~CSS
             @font-face {
-              font-family: #{font[:name]};
+              font-family: '#{font[:name]}';
               src: #{src};
               font-weight: #{variant[:weight]};
             }
