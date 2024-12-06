@@ -16,12 +16,6 @@ export default class UserStatusPicker extends Component {
     return emojiUnescape(escapeExpression(`:${this.args.status.emoji}:`));
   }
 
-  focusEmojiButton() {
-    document
-      .querySelector(".user-status-picker .emoji-trigger-button")
-      ?.focus();
-  }
-
   @action
   blur() {
     this.isFocused = false;
@@ -30,7 +24,6 @@ export default class UserStatusPicker extends Component {
   @action
   emojiSelected(emoji) {
     this.args.status.emoji = emoji;
-    this.focusEmojiButton();
   }
 
   @action
