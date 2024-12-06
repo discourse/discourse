@@ -1137,6 +1137,7 @@ hy:
     post_undo_action_window_mins: "Րոպեների քանակը, որոնց ընթացքում օգտատերերին թույլատրվում է ետարկել գրառման վրա կատարված վերջին գործողությունները (հավանում, դրոշակավորում և այլն):"
     maximum_session_age: "Օգտատերը կմնա մուտքագրված վերջին այցելությունից n ժամ անց"
     enable_escaped_fragments: "Վերադարձ դեպի Google's Ajax-Crawling API , եթե ոչ մի ցանցային տվայլների հավաքագրիչ (webcrawler) հայտնաբերված չէ: Այցելեք <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_change_post_ownership: "Թույլատրել մոդերատորներին փոխել գրառման սեփականության իրավունքը"
     cors_origins: "Թույլատրելի origin-ներ խաչաձև origin հարցումների համար (CORS): Յուրաքանչյուր origin պետք է ներառի http:// կամ https://: DISCOURSE_ENABLE_CORS env փոփոխականը պետք է սահմանված լինի true ՝ CORS -ի միացման համար:"
     use_admin_ip_allowlist: "Ադմինները կարող են մուտք գործել, եթե միայն ունեն Ցուցադրված IP-ների ցանկում սահմանված IP հասցե (Admin > Logs > Screened Ips):"
     blocked_ip_blocks: "Մասնավոր IP արգելափակումների ցանկ, որոնք երբեք չպետք է ենթարկվեն տվյալների հավաքագրման Discourse-ի կողմից:"
@@ -2114,6 +2115,10 @@ hy:
       subject_template:
         one: "վերանայման սպասող %{count} գրառում"
         other: "վերանայման սպասող %{count} գրառում"
+      text_body_template: |
+        Բարև ձեզ,
+
+        Նոր օգտատերերի գրառումները պահվել են մոդերատորության համար և ներկայումս սպասում են վերանայման: [Հաստատեք կամ մերժեք դրանք այստեղ](%{base_url}/review?type=ReviewableQueuedPost):
   unsubscribe_link: |
     Այս էլ. հասցեների բաժանորդագրումից դուրս գալու համար [սեղմեք այստեղ](%{unsubscribe_url}):
   unsubscribe_link_and_mail: |
