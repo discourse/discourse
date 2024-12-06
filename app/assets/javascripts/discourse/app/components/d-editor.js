@@ -348,7 +348,7 @@ export default class DEditor extends Component {
 
       transformComplete: (v) => {
         if (v.code) {
-          this.emojiStore.track(v.code);
+          this.emojiStore.trackEmojiForContext(v.code, "topic");
           return `${v.code}:`;
         } else {
           this.textManipulation.autocomplete({ cancel: true });
@@ -380,9 +380,10 @@ export default class DEditor extends Component {
           }
 
           if (term === "") {
-            if (this.emojiStore.favorites.length) {
+            const favorites = this.emojiStore.favoritesForContext("topic");
+            if (favorites.length) {
               return resolve(
-                this.emojiStore.favorites
+                favorites
                   .filter((f) => !this.site.denied_emojis?.includes(f))
                   .slice(0, 5)
               );

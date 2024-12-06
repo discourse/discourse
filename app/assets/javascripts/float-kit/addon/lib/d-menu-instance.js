@@ -66,6 +66,8 @@ export default class DMenuInstance extends FloatKitInstance {
     }
 
     await this.menu.close(this);
+
+    await this.options.onClose?.(this);
   }
 
   @action

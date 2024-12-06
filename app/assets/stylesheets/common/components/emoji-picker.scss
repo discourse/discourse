@@ -11,6 +11,10 @@
 
   &__diversity-menu.fk-d-menu {
     z-index: z("modal", "dialog");
+
+    .dropdown-menu {
+      min-width: auto;
+    }
   }
 
   .emoji {
@@ -83,6 +87,7 @@
     background: var(--primary-low);
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    overscroll-behavior: contain;
   }
 
   &__sections-nav::-webkit-scrollbar {

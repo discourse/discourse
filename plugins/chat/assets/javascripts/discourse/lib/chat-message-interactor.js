@@ -33,7 +33,7 @@ export default class ChatMessageInteractor {
   @service appEvents;
   @service dialog;
   @service chat;
-  @service emojiReactionStore;
+  @service emojiStore;
   @service chatChannelComposer;
   @service chatThreadComposer;
   @service chatChannelPane;
@@ -46,6 +46,7 @@ export default class ChatMessageInteractor {
   @service capabilities;
   @service menu;
   @service toasts;
+  @service interactedChatMessage;
 
   @tracked message = null;
   @tracked context = null;
@@ -57,7 +58,7 @@ export default class ChatMessageInteractor {
 
     this.message = message;
     this.context = context;
-    this.cachedFavoritesReactions = this.emojiReactionStore.favorites;
+    this.cachedFavoritesReactions = this.emojiStore.favorites;
   }
 
   get pane() {
@@ -293,7 +294,7 @@ export default class ChatMessageInteractor {
     }
 
     if (reactAction === REACTIONS.add) {
-      this.emojiReactionStore.track(`:${emoji}:`);
+      this.emojiStore.trackEmojiForContext(emoji, "chat");
     }
 
     this.pane.reacting = true;
@@ -401,11 +402,17 @@ export default class ChatMessageInteractor {
 
   @action
   async openEmojiPicker(trigger) {
+    this.interactedChatMessage.emojiPickerOpen = true;
+
     await this.menu.show(trigger, {
       identifier: "emoji-picker",
       groupIdentifier: "emoji-picker",
       component: EmojiPickerVirtual,
+      onClose: () => {
+        this.interactedChatMessage.emojiPickerOpen = false;
+      },
       data: {
+        context: "chat",
         didSelectEmoji: (emoji) => {
           this.selectReaction(emoji);
         },
@@ -416,6 +423,7 @@ export default class ChatMessageInteractor {
   @action
   async closeEmojiPicker() {
     await this.menu.close("emoji-picker");
+    this.interactedChatMessage.emojiPickerOpen = false;
   }
 
   @bind

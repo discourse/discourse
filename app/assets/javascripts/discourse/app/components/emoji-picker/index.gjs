@@ -17,9 +17,13 @@ export default class EmojiPicker extends Component {
     return this.args.icon ?? "discourse-emojis";
   }
 
+  get context() {
+    return this.args.context ?? "topic";
+  }
+
   <template>
     <DMenu
-      @triggerClass={{concatClass @btnClass "btn-transparent"}}
+      @triggerClass={{concatClass @btnClass}}
       @contentClass="emoji-picker__menu"
       @onRegisterApi={{this.onRegisterMenu}}
       @identifier="emoji-picker"
@@ -39,6 +43,7 @@ export default class EmojiPicker extends Component {
         <EmojiPickerContent
           @close={{this.menu.close}}
           @didSelectEmoji={{@didSelectEmoji}}
+          @context={{this.context}}
         />
       </:content>
     </DMenu>

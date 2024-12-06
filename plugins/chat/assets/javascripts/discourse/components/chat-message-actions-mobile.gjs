@@ -10,7 +10,7 @@ import { and, or } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import EmojiPickerModal from "discourse/components/emoji-picker/modal";
+import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
@@ -76,7 +76,10 @@ export default class ChatMessageActionsMobile extends Component {
     this.args.closeModal();
 
     this.modal.show(EmojiPickerModal, {
-      model: { didSelectEmoji: this.messageInteractor.selectReaction },
+      model: {
+        context: "chat",
+        didSelectEmoji: this.messageInteractor.selectReaction,
+      },
     });
   }
 
@@ -132,13 +135,10 @@ export default class ChatMessageActionsMobile extends Component {
                   />
                 {{/each}}
 
-                <DButton
-                  @action={{this.openEmojiPicker}}
-                  @icon="discourse-emojis"
-                  @title="chat.react"
-                  @forwardEvent={{true}}
-                  data-id="react"
-                  class="btn-flat react-btn"
+                <EmojiPicker
+                  @context="chat"
+                  @btnClass="btn-flat react-btn"
+                  @didSelectEmoji={{this.messageInteractor.selectReaction}}
                 />
               {{/if}}
 

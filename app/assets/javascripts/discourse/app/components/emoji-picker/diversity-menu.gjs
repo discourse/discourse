@@ -18,13 +18,13 @@ export const FITZPATRICK_MODIFIERS = [
 ];
 
 export default class EmojiPicker extends Component {
-  @service emojiReactionStore;
+  @service emojiStore;
 
   fitzpatrickModifiers = FITZPATRICK_MODIFIERS;
 
   @action
   didRequestFitzpatrickScale(scale) {
-    this.emojiReactionStore.diversity = scale;
+    this.emojiStore.diversity = scale;
     this.api.close();
   }
 
@@ -40,12 +40,10 @@ export default class EmojiPicker extends Component {
       @onRegisterApi={{this.registerApi}}
     >
       <:trigger>
-        {{#if (eq this.emojiReactionStore.diversity 1)}}
+        {{#if (eq this.emojiStore.diversity 1)}}
           {{replaceEmoji ":clap:"}}
         {{else}}
-          {{replaceEmoji
-            (concat ":clap:t" this.emojiReactionStore.diversity ":")
-          }}
+          {{replaceEmoji (concat ":clap:t" this.emojiStore.diversity ":")}}
         {{/if}}
       </:trigger>
 
@@ -54,7 +52,7 @@ export default class EmojiPicker extends Component {
           {{#each this.fitzpatrickModifiers as |fitzpatrick|}}
             <dropdown.item>
               <DButton
-                class="btn-transparent"
+                class="btn-transparent emoji-picker__diversity-item"
                 @action={{fn this.didRequestFitzpatrickScale fitzpatrick.scale}}
                 data-level={{fitzpatrick.scale}}
               >

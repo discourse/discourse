@@ -7,6 +7,7 @@ const EmojiPickerModal = <template>
       <Content
         @close={{@closeModal}}
         @didSelectEmoji={{@model.didSelectEmoji}}
+        @context={{@model.context}}
       />
     </:body>
   </DModal>

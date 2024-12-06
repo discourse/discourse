@@ -13,7 +13,6 @@ import { createPopper } from "@popperjs/core";
 import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
-import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
@@ -53,14 +52,20 @@ export default class ChatMessageActionsDesktop extends Component {
     return this.size === FULL;
   }
 
+  get messageContainer() {
+    return chatMessageContainer(this.message.id, this.context);
+  }
+
+  @action
+  openEmojiPicker(_, event) {
+    event.preventDefault();
+    this.messageInteractor.openEmojiPicker(event.target);
+  }
+
   @action
   onWheel() {
     // prevents menu to stop scroll on the list of messages
     this.chat.activeMessage = null;
-  }
-
-  get messageContainer() {
-    return chatMessageContainer(this.message.id, this.context);
   }
 
   @action
@@ -147,9 +152,11 @@ export default class ChatMessageActionsDesktop extends Component {
           {{/if}}
 
           {{#if this.messageInteractor.canInteractWithMessage}}
-            <EmojiPicker
-              @didSelectEmoji={{this.messageInteractor.selectReaction}}
-              class="chat-message-reaction"
+            <DButton
+              @action={{this.openEmojiPicker}}
+              @forwardEvent={{true}}
+              @icon="discourse-emojis"
+              class="btn-flat react-btn"
             />
           {{/if}}
 

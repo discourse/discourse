@@ -5,6 +5,7 @@ const EmojiPickerVirtual = <template>
     @close={{@close}}
     @term={{@data.term}}
     @didSelectEmoji={{@data.didSelectEmoji}}
+    @context={{@data.context}}
   />
 </template>;
 

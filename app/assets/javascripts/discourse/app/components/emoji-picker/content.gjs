@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { cancel, later, schedule } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { eq, gt, includes, notEq } from "truth-helpers";
@@ -45,7 +45,6 @@ const tonableEmojiUrl = (emoji, scale) => {
 };
 
 export default class EmojiPicker extends Component {
-  @service emojiReactionStore;
   @service emojiStore;
   @service capabilities;
   @service site;
@@ -59,11 +58,15 @@ export default class EmojiPicker extends Component {
 
   prevYPosition = 0;
 
+  scrollableNode;
+
   scrollListener = modifierFn((element) => {
     element.addEventListener("scroll", this._handleScroll);
+    this.scrollableNode = element;
 
     return () => {
       element.removeEventListener("scroll", this._handleScroll);
+      this.scrollableNode = null;
     };
   });
 
@@ -81,7 +84,8 @@ export default class EmojiPicker extends Component {
 
   get groups() {
     const favorites = {
-      favorites: this.emojiReactionStore.favorites
+      favorites: this.emojiStore
+        .favoritesForContext(this.args.context)
         .filter((f) => !this.site.denied_emojis?.includes(f))
         .map((name) => {
           return {
@@ -109,8 +113,13 @@ export default class EmojiPicker extends Component {
   }
 
   @action
+  registerFilterInput(element) {
+    this.filterInput = element;
+  }
+
+  @action
   clearFavorites() {
-    this.emojiReactionStore.favorites = [];
+    this.emojiStore.resetContext(this.args.context);
   }
 
   @action
@@ -119,16 +128,11 @@ export default class EmojiPicker extends Component {
       event.stopPropagation();
     }
 
-    if (
-      event.key === "ArrowDown" &&
-      event.target.classList.contains("filter-input")
-    ) {
+    if (event.key === "ArrowDown" && event.target === this.filterInput) {
       event.stopPropagation();
       event.preventDefault();
 
-      document
-        .querySelector(`.emoji-picker__scrollable-content .emoji[tabindex="0"]`)
-        ?.focus();
+      this.scrollableNode.querySelector(`.emoji[tabindex="0"]`)?.focus();
     }
   }
 
@@ -165,13 +169,7 @@ export default class EmojiPicker extends Component {
     );
 
     schedule("afterRender", () => {
-      const scrollableContent = document.querySelector(
-        ".emoji-picker__scrollable-content"
-      );
-
-      if (scrollableContent) {
-        scrollableContent.scrollTop = 0;
-      }
+      this.scrollableNode.scrollTop = 0;
     });
   }
 
@@ -196,7 +194,7 @@ export default class EmojiPicker extends Component {
     };
     const currentSection = event.target.closest(".emoji-picker__section");
     const focusFilter = () => {
-      document.querySelector(".filter-input")?.focus();
+      this.filterInput?.focus();
     };
     const allEmojis = () => [
       ...document.querySelectorAll(
@@ -282,12 +280,12 @@ export default class EmojiPicker extends Component {
       event.stopPropagation();
       let emoji = event.target.dataset.emoji;
       const tonable = event.target.dataset.tonable;
-      const diversity = this.emojiReactionStore.diversity;
+      const diversity = this.emojiStore.diversity;
       if (tonable && diversity > 1) {
         emoji = `${emoji}:t${diversity}`;
       }
 
-      this.emojiReactionStore.track(`:${emoji}:`);
+      this.emojiStore.trackEmojiForContext(emoji, this.args.context);
 
       this.args.didSelectEmoji?.(emoji);
 
@@ -298,10 +296,6 @@ export default class EmojiPicker extends Component {
   @action
   didRequestSection(section) {
     schedule("afterRender", () => {
-      const scrollableContent = document.querySelector(
-        ".emoji-picker__scrollable-content"
-      );
-
       this.filteredEmojis = null;
 
       // we disable scroll listener during requesting section
@@ -311,30 +305,26 @@ export default class EmojiPicker extends Component {
       this.lastVisibleSection = section;
 
       // iOS hack to avoid blank div when requesting section during momentum
-      if (scrollableContent && this.capabilities.isIOS) {
-        document.querySelector(
-          ".emoji-picker__scrollable-content"
-        ).style.overflow = "hidden";
+      if (this.scrollableNode && this.capabilities.isIOS) {
+        this.scrollableNode.style.overflow = "hidden";
       }
 
       const targetEmoji = document.querySelector(
         `.emoji-picker__section[data-section="${section}"]`
       );
 
-      targetEmoji.scrollIntoView({
-        block: "start",
+      targetEmoji.scrollIntoView({ block: "start" });
+
+      next(() => {
+        schedule("afterRender", () => {
+          // iOS hack to avoid blank div when requesting section during momentum
+          if (this.scrollableNode && this.capabilities.isIOS) {
+            this.scrollableNode.style.overflow = "scroll";
+          }
+
+          this.scrollObserverEnabled = true;
+        });
       });
-
-      later(() => {
-        // iOS hack to avoid blank div when requesting section during momentum
-        if (scrollableContent && this.capabilities.isIOS) {
-          document.querySelector(
-            ".emoji-picker__scrollable-content"
-          ).style.overflow = "scroll";
-        }
-
-        this.scrollObserverEnabled = true;
-      }, 200);
     });
   }
 
@@ -422,6 +412,7 @@ export default class EmojiPicker extends Component {
         <FilterInput
           {{didInsert (if this.site.desktopView this.focusFilter (noop))}}
           {{didInsert (fn this.didInputFilter @term)}}
+          {{didInsert this.registerFilterInput}}
           @value={{@term}}
           @filterAction={{withEventValue this.didInputFilter}}
           @icons={{hash right="search"}}
@@ -473,17 +464,14 @@ export default class EmojiPicker extends Component {
                       width="32"
                       height="32"
                       class="emoji"
-                      src={{tonableEmojiUrl
-                        emoji
-                        this.emojiReactionStore.diversity
-                      }}
+                      src={{tonableEmojiUrl emoji this.emojiStore.diversity}}
                       tabindex="0"
                       data-emoji={{emoji.name}}
                       data-tonable={{if emoji.tonable "true"}}
                       alt={{emoji.name}}
                       title={{tonableEmojiTitle
                         emoji
-                        this.emojiReactionStore.diversity
+                        this.emojiStore.diversity
                       }}
                       loading="lazy"
                     />
@@ -530,17 +518,14 @@ export default class EmojiPicker extends Component {
                         width="32"
                         height="32"
                         class="emoji"
-                        src={{tonableEmojiUrl
-                          emoji
-                          this.emojiReactionStore.diversity
-                        }}
+                        src={{tonableEmojiUrl emoji this.emojiStore.diversity}}
                         tabindex="0"
                         data-emoji={{emoji.name}}
                         data-tonable={{if emoji.tonable "true"}}
                         alt={{emoji.name}}
                         title={{tonableEmojiTitle
                           emoji
-                          this.emojiReactionStore.diversity
+                          this.emojiStore.diversity
                         }}
                         loading="lazy"
                       />
@@ -556,7 +541,7 @@ export default class EmojiPicker extends Component {
                             class="emoji"
                             src={{tonableEmojiUrl
                               emoji
-                              this.emojiReactionStore.diversity
+                              this.emojiStore.diversity
                             }}
                             tabindex="-1"
                             data-emoji={{emoji.name}}
@@ -564,7 +549,7 @@ export default class EmojiPicker extends Component {
                             alt={{emoji.name}}
                             title={{tonableEmojiTitle
                               emoji
-                              this.emojiReactionStore.diversity
+                              this.emojiStore.diversity
                             }}
                             loading="lazy"
                           />

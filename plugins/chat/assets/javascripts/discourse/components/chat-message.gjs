@@ -64,6 +64,7 @@ export default class ChatMessage extends Component {
   @service router;
   @service toasts;
   @service modal;
+  @service interactedChatMessage;
 
   @tracked isActive = false;
 
@@ -304,6 +305,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
+    if (this.interactedChatMessage.emojiPickerOpen) {
+      return;
+    }
+
     if (!this.secondaryActionsIsExpanded) {
       this._onMouseEnterMessageDebouncedHandler = discourseDebounce(
         this,
@@ -323,9 +328,15 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (!this.secondaryActionsIsExpanded) {
-      this._setActiveMessage();
+    if (this.secondaryActionsIsExpanded) {
+      return;
     }
+
+    if (this.interactedChatMessage.emojiPickerOpen) {
+      return;
+    }
+
+    this._setActiveMessage();
   }
 
   @action
@@ -344,13 +355,15 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if ((event.toElement || event.relatedTarget)?.closest(".emoji-picker")) {
+    if (this.interactedChatMessage.emojiPickerOpen) {
       return;
     }
 
-    if (!this.secondaryActionsIsExpanded) {
-      this.chat.activeMessage = null;
+    if (this.secondaryActionsIsExpanded) {
+      return;
     }
+
+    this.chat.activeMessage = null;
   }
 
   @bind
@@ -659,6 +672,8 @@ export default class ChatMessage extends Component {
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
                         <EmojiPicker
                           @didSelectEmoji={{this.messageInteractor.selectReaction}}
+                          @btnClass="btn-flat react-btn"
+                          class="chat-message-reaction"
                         />
                       {{/if}}
                     </div>

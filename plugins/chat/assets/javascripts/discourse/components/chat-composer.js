@@ -43,11 +43,12 @@ export default class ChatComposer extends Component {
   @service composerPresenceManager;
   @service chatComposerWarningsTracker;
   @service appEvents;
-  @service emojiReactionStore;
+  @service emojiStore;
   @service currentUser;
   @service chatApi;
   @service chatDraftsManager;
   @service modal;
+  @service menu;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
@@ -501,6 +502,7 @@ export default class ChatComposer extends Component {
                 this.onSelectEmoji(emoji);
               },
               term: v.term,
+              context: "chat",
             },
           };
 
@@ -536,8 +538,9 @@ export default class ChatComposer extends Component {
           }
 
           if (term === "") {
-            if (this.emojiReactionStore.favorites.length) {
-              return resolve(this.emojiReactionStore.favorites.slice(0, 5));
+            const favorites = this.emojiStore.favoritesForContext("chat");
+            if (favorites.length > 0) {
+              return resolve(favorites.slice(0, 5));
             } else {
               return resolve([
                 "slight_smile",
@@ -578,7 +581,7 @@ export default class ChatComposer extends Component {
 
           const options = emojiSearch(term, {
             maxResults: 5,
-            diversity: this.emojiReactionStore.diversity,
+            diversity: this.emojiStore.diversity,
             exclude: emojiDenied,
           });
 
