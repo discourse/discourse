@@ -2598,6 +2598,7 @@ hy:
       read_more_in_category: "Ցանկանո՞ւմ եք կարդալ ավելին: Դիտեք այլ թեմաներ՝ %{categoryLink}-ում կամ <a href='%{latestLink}'>դիտեք վերջին թեմաները</a>"
       read_more: "Ցանկանու՞մ եք կարդալ ավելին: <a href='%{categoryLink}'>Դիտեք բոլոր կատեգորիաները</a> կամ <a href='%{latestLink}'>դիտեք վերջին թեմաները</a>:"
       unread_indicator: "Ոչ մի անդամ դեռ չի կարդացել այս թեմայի մինչև վերջին գրառումը: "
+      created_at: "Ստեղծվել է՝ %{date}"
       bumped_at: "Վերջինը՝ %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Թերթեք բոլոր կատեգորիաները</a> կամ <a href='%{basePath}/latest'>դիտեք վերջին թեմաները</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Թերթեք բոլոր կատեգորիաները</a>, <a href='%{basePath}/latest'>դիտեք վերջին թեմաները</a> կամ ամենահայտնիները:"
@@ -2858,7 +2859,7 @@ hy:
         publishing_settings: "Հրապարակման Կարգավորումներ"
       change_owner:
         title: "Փոխել Սեփականատիրոջը"
-        action: "Փոխել Սեփականատիրոջը"
+        action: "փոխել սեփականության իրավունքը"
         error: "Գրառումների սեփականատիրոջը փոփոխելիս տեղի է ունեցել սխալ:"
         placeholder: "նոր սեփականատիրոջ օգտանունը"
         instructions:
@@ -2979,6 +2980,7 @@ hy:
         rebake: "Վերակառուցել HTML-ը"
         publish_page: "Էջի Հրատարակում"
         unhide: "Դարձնել Տեսանելի"
+        change_owner: "Փոխել Սեփականատիրոջը..."
         lock_post: "Արգելափակել Գրառումը"
         lock_post_description: "արգելել հրապարակողին խմբագրել այս գրառումը"
         unlock_post: "Արգելաբացել Գրառումը"
@@ -3940,8 +3942,19 @@ hy:
         groups_filter_instructions: "Համապատասխան webhook-ները կգործարկվեն միայն, եթե իրադարձությունը կապված է ընտրված խմբերի հետ: Թողեք դատարկ՝ webhook-ները բոլոր խմբերի համար գործարկելու համար:"
         groups_filter: "Գործարկվող Խմբերը"
         delete_confirm: "Ջնջե՞լ այս webhook-ը:"
+        topic_event:
+          topic_created: "Թեման ստեղծված է"
+        post_event:
+          post_created: "Գրառումը ստեղծված է"
+        group_event:
+          group_created: "Խումբը ստեղծված է"
+        tag_event:
+          tag_created: "Պիտակը ստեղծված է"
+        category_event:
+          category_created: "Կատեգորիան ստեղծված է"
         user_event:
           user_confirmed_email: "Օգտագործողը հաստատել է էլ. փոստը"
+          user_created: "Օգտագործողը ստեղծված է"
         delivery_status:
           title: "Ուղարկման Կարգավիճակը"
           inactive: "Ոչ ակտիվ"
