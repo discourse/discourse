@@ -99,23 +99,6 @@
       position: relative;
     }
   }
-  #topic-progress-wrapper {
-    .topic-admin-menu-button .toggle-admin-menu {
-      border-top-right-radius: 0;
-      border-bottom-left-radius: var(--d-border-radius);
-      border-bottom-right-radius: 0;
-    }
-    #topic-progress {
-      border-radius: var(--d-border-radius);
-      overflow: hidden;
-    }
-    .topic-admin-menu-button-container + #topic-progress {
-      border-top-left-radius: 0;
-      border-top-right-radius: var(--d-border-radius);
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: var(--d-border-radius);
-    }
-  }
 }
 
 .progress-back-container {
@@ -131,85 +114,6 @@
   top: -120%; // above parent container + some extra space
   .btn {
     margin: 0;
-  }
-}
-
-#topic-progress-wrapper {
-  position: fixed;
-  bottom: 0px;
-  right: 10px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-end;
-  z-index: z("timeline");
-  .topic-admin-menu-button-container {
-    display: flex;
-    > span {
-      display: flex;
-    }
-  }
-
-  &.docked {
-    position: initial;
-  }
-
-  html:not(.footer-nav-visible) & {
-    bottom: env(safe-area-inset-bottom);
-  }
-
-  &:not(.docked) {
-    @media screen and (min-width: $reply-area-max-width) {
-      // position to right side of composer
-      right: calc(50% + 10px);
-      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
-    }
-  }
-
-  &.with-transitions {
-    transition: bottom 0.2s, margin-bottom 0.2s;
-
-    #topic-progress .bg {
-      transition: width 0.5s;
-    }
-  }
-}
-
-#topic-progress {
-  --topic-progress-height: 42px;
-  position: relative;
-  background-color: var(--secondary);
-  color: var(--tertiary);
-  border: 1px solid var(--tertiary-low);
-  width: 145px;
-  height: var(--topic-progress-height);
-
-  /* as a big ol' click target, don't let text inside be selected */
-  @include unselectable;
-
-  .nums {
-    position: relative;
-    top: 12px;
-    width: 100%;
-    text-align: center;
-    z-index: z("base");
-  }
-  h4 {
-    display: inline;
-    font-size: var(--font-up-2);
-    line-height: var(--line-height-small);
-  }
-  .d-icon {
-    position: absolute;
-    right: 8px;
-    bottom: 9px;
-    z-index: z("base");
-  }
-  .bg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: var(--progress-bg-width, 0);
-    background-color: var(--tertiary-low);
   }
 }
 

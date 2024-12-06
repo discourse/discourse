@@ -31,47 +31,6 @@
   top: -100%; // above parent container + some extra space
 }
 
-#topic-progress-expanded {
-  border: 1px solid var(--primary-low);
-  padding: 5px;
-  background: var(--secondary);
-
-  position: absolute;
-  bottom: 34px;
-  width: 135px;
-
-  button.full {
-    width: 100%;
-    margin-bottom: 5px;
-    .d-icon {
-      display: block;
-      margin-top: 2px;
-      margin-bottom: 2px;
-      font-size: var(--font-up-2);
-    }
-  }
-  .jump-form {
-    input[type="text"] {
-      float: left;
-      width: 45px;
-      height: 20px;
-      text-align: center;
-      font-size: var(--font-up-1);
-    }
-    button.btn {
-      float: right !important;
-      width: 55px;
-    }
-  }
-  button.btn.jump-prompt {
-    margin: 0;
-  }
-  button.btn.jump-bottom {
-    margin-top: 5px;
-    margin-bottom: 0;
-  }
-}
-
 .topic-error {
   padding: 18px;
   width: 90%;
@@ -127,16 +86,4 @@ sub sub {
   .topic-category {
     margin-bottom: 0.5rem;
   }
-}
-
-.topic-footer-main-buttons {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.container.posts .topic-navigation {
-  // docked progress bar on large screens using mobile view
-  grid-area: posts;
-  grid-row: 3; // after topic map
 }

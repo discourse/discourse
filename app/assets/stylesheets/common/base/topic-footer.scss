@@ -1,0 +1,129 @@
+#topic-footer-buttons {
+  display: flex;
+
+  html.anon & {
+    justify-content: end;
+  }
+
+  max-width: calc(
+    var(--topic-avatar-width) + var(--topic-body-width) +
+      var(--topic-body-width-padding) * 2
+  );
+
+  .topic-footer-main-buttons {
+    display: flex;
+    gap: 0.5rem;
+
+    &__actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .bookmark.bookmarked {
+      .d-icon-discourse-bookmark-clock,
+      .d-icon-bookmark {
+        color: var(--tertiary);
+      }
+    }
+
+    .create {
+      align-self: flex-start;
+    }
+  }
+
+  .pinned-button,
+  .topic-notifications-button {
+    .text {
+      color: var(--primary-high);
+    }
+  }
+}
+
+.topic-navigation {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  border-radius: var(--d-border-radius);
+  overflow: hidden;
+}
+
+#topic-progress-wrapper {
+  position: fixed;
+  &.docked {
+    position: initial;
+
+    .toggle-admin-menu {
+      display: none;
+    }
+  }
+
+  bottom: 0;
+  html:not(.footer-nav-visible) & {
+    bottom: env(safe-area-inset-bottom);
+  }
+
+  right: 10px;
+  z-index: z("timeline");
+  display: flex;
+  justify-content: flex-end;
+
+  border-radius: var(--d-border-radius);
+  overflow: hidden;
+
+  .btn {
+    border: 0;
+  }
+
+  &.with-transitions {
+    transition: bottom 0.2s, margin-bottom 0.2s;
+
+    #topic-progress .bg {
+      transition: width 0.5s;
+    }
+  }
+
+  &:not(.docked) {
+    @media screen and (min-width: $reply-area-max-width) {
+      right: calc(50%); // right side of composer
+      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
+    }
+  }
+
+  #topic-progress {
+    position: relative;
+    background-color: var(--secondary);
+    color: var(--tertiary);
+
+    padding: 0.35em 1em;
+    border: 1px solid var(--tertiary-low);
+
+    /* as a big ol' click target, don't let text inside be selected */
+    @include unselectable;
+
+    .nums {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+      height: 100%;
+      position: relative;
+      z-index: z("base");
+      font-weight: bold;
+    }
+    .d-icon {
+      position: absolute;
+      right: 8px;
+      bottom: 9px;
+      z-index: z("base");
+    }
+    .bg {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: var(--progress-bg-width, 0);
+      background-color: var(--tertiary-low);
+    }
+  }
+}

@@ -21,7 +21,6 @@ import icon from "discourse-common/helpers/d-icon";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
 import { i18n } from "discourse-i18n";
-import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import BackButton from "./back-button";
 import Scroller from "./scroller";
 
@@ -658,10 +657,6 @@ export default class TopicTimelineScrollArea extends Component {
             title={{i18n "topic.progress.jump_prompt_long"}}
             class="timeline-open-jump-to-post-prompt-btn jump-to-post"
           />
-        {{/if}}
-
-        {{#if this.currentUser}}
-          <TopicNotificationsButton @topic={{@model}} @expanded={{false}} />
         {{/if}}
 
         <PluginOutlet

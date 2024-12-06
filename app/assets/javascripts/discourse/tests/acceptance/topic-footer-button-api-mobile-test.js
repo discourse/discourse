@@ -1,8 +1,7 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance(
   "Topic - Plugin API - registerTopicFooterButton (mobile)",
@@ -26,9 +25,8 @@ acceptance(
       });
 
       await visit("/t/internationalization-localization/280");
-      const subject = selectKit(".topic-footer-mobile-dropdown");
-      await subject.expand();
-      await subject.selectRowByValue("foo");
+      await click(".topic-footer-mobile-dropdown-trigger");
+      await click("#topic-footer-button-foo");
 
       assert.verifySteps(["action called"]);
     });
