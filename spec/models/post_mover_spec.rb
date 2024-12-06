@@ -2668,9 +2668,9 @@ RSpec.describe PostMover do
     context "with freeze_original option" do
       fab!(:original_topic) { Fabricate(:topic) }
       fab!(:destination_topic) { Fabricate(:topic) }
-      fab!(:op) { Fabricate(:post, topic: original_topic, raw: "op of this topic") }
+      fab!(:op) { Fabricate(:post, topic: original_topic, raw: "op of original topic") }
       fab!(:op_of_destination) do
-        Fabricate(:post, topic: destination_topic, raw: "op of this topic")
+        Fabricate(:post, topic: destination_topic, raw: "op of destination topic")
       end
       fab!(:first_post) { Fabricate(:post, topic: original_topic, raw: "first_post") }
       fab!(:second_post) { Fabricate(:post, topic: original_topic, raw: "second_post") }
@@ -2836,6 +2836,25 @@ RSpec.describe PostMover do
           notification =
             Notification.find_by(
               post_number: destination_topic.posts.find_by(raw: "first_post").post_number,
+              topic_id: destination_topic.id,
+              notification_type: Notification.types[:moved_post],
+            )
+          expect(notification).to be_present
+        end
+
+        it "Generates notifications pointing to the newly created post and topic" do
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            [op.id],
+            options: {
+              freeze_original: true,
+            },
+          ).to_topic(destination_topic.id)
+
+          notification =
+            Notification.find_by(
+              post_number: destination_topic.posts.find_by(raw: op.raw).post_number,
               topic_id: destination_topic.id,
               notification_type: Notification.types[:moved_post],
             )
