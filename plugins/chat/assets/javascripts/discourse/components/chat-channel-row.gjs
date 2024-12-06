@@ -142,7 +142,7 @@ export default class ChatChannelRow extends Component {
   get channelHasUnread() {
     return (
       this.args.channel.tracking.unreadCount > 0 ||
-      this.args.channel.unreadThreadsCount > 0
+      this.args.channel.unreadThreadsCountSinceLastViewed > 0
     );
   }
 
