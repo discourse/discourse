@@ -1694,6 +1694,9 @@ da:
     form_kit:
       reset: Nulstil
       optional: valgfri
+      select:
+        select_placeholder: "Vælg…"
+        none_placeholder: "Ingen"
       errors:
         required: "Obligatoriske"
         invalid_url: "Skal være en gyldig URL"
@@ -5280,6 +5283,8 @@ da:
             label: "Overfør"
         selectable_avatars:
           title: "Liste over avatarer, som brugere kan vælge imellem"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alle"
           required: "Obligatoriske"

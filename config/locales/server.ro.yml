@@ -177,6 +177,7 @@ ro:
     embed:
       load_from_remote: "A apărut o eroare la încărcarea postării."
     site_settings:
+      site_setting_is_shadowed_globally: "Nu poți modifica această setare pentru că este configurată la nivel global"
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
       page_publishing_requirements: "Publicarea paginilor nu poate fi activată dacă este activată încărcarea securizată."
@@ -1258,7 +1259,6 @@ ro:
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
-    experimental_topics_filter: "Activează ruta de filtrare a subiectelor experimentale la /filter"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."

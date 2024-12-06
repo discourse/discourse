@@ -1688,6 +1688,8 @@ sl:
     form_kit:
       reset: Ponastavi
       optional: neobvezno
+      select:
+        none_placeholder: "Brez"
       errors:
         required: "Zahtevano"
     close: "Zapri"
@@ -4606,6 +4608,8 @@ sl:
         uploaded_image_list:
           upload:
             label: "Naloži"
+        table_column_heading:
+          status: "Stanje"
         categories:
           all_results: "Vsi"
           required: "Zahtevano"

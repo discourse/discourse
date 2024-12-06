@@ -1923,6 +1923,9 @@ hr:
     form_kit:
       reset: Resetirati
       optional: neobvezno
+      select:
+        select_placeholder: "Odaberite…"
+        none_placeholder: "Ništa"
       errors:
         required: "Potrebno"
     close: "Zatvori"
@@ -5885,6 +5888,8 @@ hr:
             label: "Učitaj"
         selectable_avatars:
           title: "Popis avatara koji korisnici mogu birati"
+        table_column_heading:
+          status: "Statust"
         categories:
           all_results: "Sve"
           required: "Potrebno"

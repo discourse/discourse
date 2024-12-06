@@ -2050,6 +2050,9 @@ es:
       optional: opcional
       errors_summary_title: "Este formulario contiene errores:"
       dirty_form: "¡No has enviado tus cambios! ¿Seguro que quieres salir?"
+      select:
+        select_placeholder: "Seleccionar…"
+        none_placeholder: "Ninguno"
       errors:
         required: "Obligatorio"
         invalid_url: "Debe ser una URL válida"
@@ -6642,6 +6645,8 @@ es:
             title: "Subir imágenes"
         selectable_avatars:
           title: "Lista de avatares que los usuarios pueden escoger"
+        table_column_heading:
+          status: "Estado"
         categories:
           all_results: "Todo"
           required: "Obligatorio"

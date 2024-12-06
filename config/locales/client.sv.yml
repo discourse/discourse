@@ -1859,6 +1859,9 @@ sv:
     form_kit:
       reset: Återställ
       optional: valfritt
+      select:
+        select_placeholder: "Välj…"
+        none_placeholder: "Ingen"
       errors:
         required: "Krävs"
         invalid_url: "Måste vara en giltig URL"
@@ -6073,6 +6076,8 @@ sv:
             label: "Ladda upp"
         selectable_avatars:
           title: "Lista på avatarer som användare kan välja från"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alla"
           required: "Krävs"

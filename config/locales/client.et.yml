@@ -1253,6 +1253,9 @@ et:
     form_kit:
       reset: Lähtesta
       optional: valikuline
+      select:
+        select_placeholder: "Vali..."
+        none_placeholder: "Pole"
       errors:
         required: "Nõutud"
     close: "Sulge"
@@ -3620,6 +3623,8 @@ et:
         uploaded_image_list:
           upload:
             label: "Lae üles"
+        table_column_heading:
+          status: "Staatus"
         categories:
           all_results: "Kõik"
           required: "Nõutud"

@@ -1173,6 +1173,8 @@ th:
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     form_kit:
       optional: ทางเลือก
+      select:
+        none_placeholder: "ไม่มี"
       errors:
         required: "ต้องการ"
     close: "ปิด"
@@ -3219,6 +3221,8 @@ th:
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
+        table_column_heading:
+          status: "สถานะ"
         categories:
           all_results: "ทั้งหมด"
           required: "ต้องการ"

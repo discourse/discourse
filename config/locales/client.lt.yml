@@ -1676,6 +1676,8 @@ lt:
     form_kit:
       reset: Atstatyti
       optional: pasirinktinai
+      select:
+        none_placeholder: "Nieko"
       errors:
         required: "Privalomi"
     close: "Uždaryti"
@@ -4926,6 +4928,8 @@ lt:
             label: "Įkelti"
         selectable_avatars:
           title: "Avatarų, kuriuos vartotojai gali pasirinkti, sąrašas"
+        table_column_heading:
+          status: "Statusas"
         categories:
           all_results: "Visi"
           required: "Privalomi"

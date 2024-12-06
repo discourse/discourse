@@ -367,6 +367,7 @@ sk:
       invalid_site_setting: "Neexistuje žiadne nastavenie s názvom '%{name}'"
       invalid_category_id: "Zadali ste kategóriu, ktorá neexistuje"
       site_setting_is_hidden: "Nie je povolené meniť skryté nastavenia"
+      site_setting_is_shadowed_globally: "Toto nastavenie nemôžete zmeniť, pretože je globálne nakonfigurované"
       site_setting_is_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia"
       invalid_choice:
         one: "'%{name}' je neplatná voľba."
@@ -1977,9 +1978,11 @@ sk:
     send_old_credential_reminder_days: "Pripomenúť staré poverenia po niekoľkých dňoch"
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoľte systém odznakov, ktorý je formou gamifikácie na posilnenie pozitívnych akcií používateľov. Viac informácií nájdete v časti <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Čo sú odznaky</a>? na stránke Discourse Meta."
+    show_badges_in_post_header: "Keď používateľ získa odznak za konkrétny príspevok, zobrazte odznak v hlavičke príspevku."
     max_favorite_badges: "Maximálny počet odznakov, ktoré môže používateľ vybrať"
     whispers_allowed_groups: "Povolenie súkromnej komunikácie v rámci tém pre členov určených skupín."
     hidden_post_visible_groups: "Povoliť členom týchto skupín zobrazovať skryté príspevky. Členovia personálu môžu vždy zobraziť skryté príspevky."
+    allow_index_in_robots_txt: "V súbore robots.txt uveďte, že túto stránku môžu webové vyhľadávače indexovať. Tu môžete <a href='%{base_path}/admin/customize/robots'>prepísať svoj súbor robots.txt.</a> <b>UPOZORNENIE</b>: Nesprávne nakonfigurované pravidlá môžu zabrániť prehľadávaniu vašej lokality podľa očakávania."
     blocked_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, s ktorými si používatelia nemôžu registrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. Príklad: mailinator.com|trashmail.net"
     allowed_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, v ktorých si používatelia MUSIA zaregistrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. UPOZORNENIE: Používatelia s inými e-mailovými doménami ako sú uvedené nebudú povolení!"
     normalize_emails: "Skontroluj, či je normalizovaný e-mail jedinečný. Normalizovaný e-mail odstraňuje všetky bodky z používateľského mena a všetko medzi znakmi + a @."
@@ -2600,7 +2603,6 @@ sk:
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
-    experimental_topics_filter: "Povolí trasu filtrovania experimentálnych tém na adrese /filter"
     enable_experimental_lightbox: "Nahraďte predvolený lightbox s obrázkami prepracovaným dizajnom."
     experimental_glimmer_topic_list_groups: "Povolenie novej implementácie zoznamu tém \"glimmer\". Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."

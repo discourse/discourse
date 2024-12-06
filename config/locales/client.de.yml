@@ -2051,6 +2051,9 @@ de:
       optional: optional
       errors_summary_title: "Dieses Formular enthält Fehler:"
       dirty_form: "Du hast deine Änderungen nicht gespeichert! Bist du sicher, dass du die Seite verlassen möchtest?"
+      select:
+        select_placeholder: "Auswählen …"
+        none_placeholder: "Keiner"
       errors:
         required: "Erforderlich"
         invalid_url: "Muss eine gültige URL sein"
@@ -6687,6 +6690,8 @@ de:
             title: "Bilder hochladen"
         selectable_avatars:
           title: "Liste von Avataren, aus der Benutzer wählen können."
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alle"
           required: "Erforderlich"

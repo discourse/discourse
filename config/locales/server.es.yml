@@ -2443,7 +2443,6 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    experimental_topics_filter: "Activa la ruta del filtro de temas experimentales en /filter"
     enable_experimental_lightbox: "Sustituye el lightbox de imágenes por defecto por el diseño renovado."
     experimental_glimmer_topic_list_groups: "Activa la nueva implementación de la lista de temas «glimmer». Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     glimmer_post_menu_mode: "Controla si se utiliza la nueva implementación del menú de la publicación 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."

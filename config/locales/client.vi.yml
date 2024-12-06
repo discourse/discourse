@@ -1608,6 +1608,9 @@ vi:
     form_kit:
       reset: Cài lại
       optional: tùy chọn
+      select:
+        select_placeholder: "Chọn…"
+        none_placeholder: "Không có gì"
       errors:
         required: "Bắt buộc"
         too_short:
@@ -5077,6 +5080,8 @@ vi:
             label: "Tải lên"
         selectable_avatars:
           title: "Danh sách ảnh đại diện mà người dùng có thể chọn"
+        table_column_heading:
+          status: "Trạng thái"
         categories:
           all_results: "Tất cả"
           required: "Bắt buộc"
