@@ -2709,7 +2709,6 @@ en:
       show_preview: "show preview"
       hide_preview: "hide preview"
 
-      quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
       bold_text: "strong text"
@@ -2728,6 +2727,7 @@ en:
       paste_code_text: "type or paste code here"
       upload_title: "Upload"
       upload_description: "enter upload description here"
+      list_title: "List"
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
