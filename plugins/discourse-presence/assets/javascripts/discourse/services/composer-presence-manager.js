@@ -9,6 +9,10 @@ export default class ComposerPresenceManager extends Service {
   @service presence;
   @service siteSettings;
 
+  _name;
+  _channel;
+  _autoLeaveTimer;
+
   notifyState(name, replying = true, keepAlive = KEEP_ALIVE) {
     if (!replying) {
       this.leave();
@@ -22,16 +26,20 @@ export default class ComposerPresenceManager extends Service {
       return;
     }
 
-    if (this._name !== name) {
+    if (name === this._name) {
+      return;
+    }
+
+    if (this._channel) {
       this.leave();
+    }
 
-      this._name = name;
-      this._channel = this.presence.getChannel(name);
-      this._channel.enter();
+    this._name = name;
+    this._channel = this.presence.getChannel(name);
+    this._channel.enter();
 
-      if (!isTesting()) {
-        this._autoLeaveTimer = debounce(this, this.leave, keepAlive);
-      }
+    if (!isTesting()) {
+      this._autoLeaveTimer = debounce(this, this.leave, keepAlive);
     }
   }
 
