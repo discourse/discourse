@@ -267,7 +267,7 @@ module PageObjects
       end
 
       def click_admin_menu_button
-        within_topic_footer_buttons { find(".topic-admin-menu-button").click }
+        within_topic_footer_buttons { find(".topic-admin-menu").click }
       end
 
       def watch_topic

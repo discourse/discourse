@@ -1,0 +1,18 @@
+html:not(.anon) #topic-footer-buttons {
+  .topic-footer-main-buttons {
+    .d-button-label {
+      display: none;
+    }
+
+    .pinned-button,
+    .topic-notifications-button {
+      .selected-name .name {
+        display: none;
+      }
+    }
+
+    .d-icon {
+      margin-right: 0;
+    }
+  }
+}
