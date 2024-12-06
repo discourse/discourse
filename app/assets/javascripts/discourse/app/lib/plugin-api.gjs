@@ -883,6 +883,7 @@ class PluginApi {
       {
         since: "v3.4.0.beta3-dev",
         id: "discourse.post-menu-widget-overrides",
+        url: "https://meta.discourse.org/t/upcoming-post-menu-changes-how-to-prepare-themes-and-plugins/341014",
       }
     );
 
@@ -961,6 +962,7 @@ class PluginApi {
       {
         since: "v3.4.0.beta3-dev",
         id: "discourse.post-menu-widget-overrides",
+        url: "https://meta.discourse.org/t/upcoming-post-menu-changes-how-to-prepare-themes-and-plugins/341014",
       }
     );
 
@@ -989,6 +991,7 @@ class PluginApi {
       {
         since: "v3.4.0.beta3-dev",
         id: "discourse.post-menu-widget-overrides",
+        url: "https://meta.discourse.org/t/upcoming-post-menu-changes-how-to-prepare-themes-and-plugins/341014",
       }
     );
 
@@ -3421,6 +3424,7 @@ class PluginApi {
         {
           since: "v3.4.0.beta3-dev",
           id: "discourse.post-menu-widget-overrides",
+          url: "https://meta.discourse.org/t/upcoming-post-menu-changes-how-to-prepare-themes-and-plugins/341014",
         }
       );
     }
