@@ -71,16 +71,15 @@ shared_examples "forgot password scenarios" do
     end
 
     context "when user only has security key configured" do
-      before do
-        @authenticator =
-          page.driver.browser.add_virtual_authenticator(
-            Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-          )
-
-        create_user_security_key(user)
+      let!(:authenticator) do
+        page.driver.browser.add_virtual_authenticator(
+          Selenium::WebDriver::VirtualAuthenticatorOptions.new,
+        )
       end
 
-      after { @authenticator.remove! }
+      before { create_user_security_key(user) }
+
+      after { authenticator.remove! }
 
       it "should allow a user to reset password with a security key" do
         visit_reset_password_link
@@ -116,16 +115,15 @@ shared_examples "forgot password scenarios" do
     context "when user has security key and backup codes configured" do
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
 
-      before do
-        @authenticator =
-          page.driver.browser.add_virtual_authenticator(
-            Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-          )
-
-        create_user_security_key(user)
+      let!(:authenticator) do
+        page.driver.browser.add_virtual_authenticator(
+          Selenium::WebDriver::VirtualAuthenticatorOptions.new,
+        )
       end
 
-      after { @authenticator.remove! }
+      before { create_user_security_key(user) }
+
+      after { authenticator.remove! }
 
       it "should allow a user to reset password with backup code instead of security key" do
         visit_reset_password_link
@@ -148,16 +146,15 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
 
-      before do
-        @authenticator =
-          page.driver.browser.add_virtual_authenticator(
-            Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-          )
-
-        create_user_security_key(user)
+      let!(:authenticator) do
+        page.driver.browser.add_virtual_authenticator(
+          Selenium::WebDriver::VirtualAuthenticatorOptions.new,
+        )
       end
 
-      after { @authenticator.remove! }
+      before { create_user_security_key(user) }
+
+      after { authenticator.remove! }
 
       it "should allow a user to toggle from security key to TOTP and between TOTP and backup codes" do
         visit_reset_password_link
@@ -179,16 +176,15 @@ shared_examples "forgot password scenarios" do
     context "when user has TOTP and security key configured but no backup codes" do
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
 
-      before do
-        @authenticator =
-          page.driver.browser.add_virtual_authenticator(
-            Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-          )
-
-        create_user_security_key(user)
+      let!(:authenticator) do
+        page.driver.browser.add_virtual_authenticator(
+          Selenium::WebDriver::VirtualAuthenticatorOptions.new,
+        )
       end
 
-      after { @authenticator.remove! }
+      before { create_user_security_key(user) }
+
+      after { authenticator.remove! }
 
       it "should allow a user to reset password with TOTP instead of security key" do
         visit_reset_password_link
