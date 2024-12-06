@@ -11,7 +11,6 @@ packages:
 - "app/assets/javascripts/discourse-plugins"
 - "app/assets/javascripts/discourse-widget-hbs"
 - "app/assets/javascripts/ember-cli-progress-ci"
-- "app/assets/javascripts/ember-production-deprecations"
 - "app/assets/javascripts/float-kit"
 - "app/assets/javascripts/pretty-text"
 - "app/assets/javascripts/select-kit"

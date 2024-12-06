@@ -36,7 +36,7 @@
     "ember-disable-prototype-extensions": "^1.1.3",
     "ember-load-initializers": "^3.0.1",
     "ember-resolver": "^13.1.0",
-    "ember-source": "~5.5.0",
+    "ember-source": "~5.12.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
     "webpack": "^5.97.1"

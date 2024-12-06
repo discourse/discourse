@@ -128,7 +128,7 @@ RSpec.describe DiscourseJsProcessor do
         */
         {
           "id": null,
-          "block": "[[[1,[34,0]]],[],false,[\\"somevalue\\"]]",
+          "block": "[[[1,[35,0]]],[],false,[\\"somevalue\\"]]",
           "moduleName": "/blah/mymodule",
           "isStrictMode": false
         });

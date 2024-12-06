@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-classes */
 
 import GlimmerComponent from "@glimmer/component";
-import ClassicComponent from "@ember/component";
+import ClassicComponent, { setComponentTemplate } from "@ember/component";
 import { action } from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
@@ -10,38 +10,42 @@ import { module, test } from "qunit";
 
 // Configure test-local Classic and Glimmer components that
 // will be immune from upgrades to actual Discourse components.
-const ExampleClassicButton = ClassicComponent.extend({
-  tagName: "button",
-  type: "button",
-  preventEventPropagation: false,
-  onClick: null,
-  onMouseDown: null,
+const ExampleClassicButton = setComponentTemplate(
+  hbs`{{! template-lint-disable no-yield-only }}{{yield}}`,
+  ClassicComponent.extend({
+    tagName: "button",
+    type: "button",
+    preventEventPropagation: false,
+    onClick: null,
+    onMouseDown: null,
 
-  click(event) {
-    event.preventDefault();
-    if (this.preventEventPropagation) {
-      event.stopPropagation();
-    }
-    this.onClick?.(event);
-  },
-});
-const exampleClassicButtonTemplate = hbs`{{! template-lint-disable no-yield-only }}{{yield}}`;
+    click(event) {
+      event.preventDefault();
+      if (this.preventEventPropagation) {
+        event.stopPropagation();
+      }
+      this.onClick?.(event);
+    },
+  })
+);
 
-class ExampleGlimmerButton extends GlimmerComponent {
-  @action
-  click(event) {
-    event.preventDefault();
-    if (this.args.preventEventPropagation) {
-      event.stopPropagation();
+const ExampleGlimmerButton = setComponentTemplate(
+  hbs`
+    <button {{on 'click' this.click}} type='button' ...attributes>
+      {{yield}}
+    </button>
+  `,
+  class extends GlimmerComponent {
+    @action
+    click(event) {
+      event.preventDefault();
+      if (this.args.preventEventPropagation) {
+        event.stopPropagation();
+      }
+      this.args.onClick?.(event);
     }
-    this.args.onClick?.(event);
   }
-}
-const exampleGlimmerButtonTemplate = hbs`
-<button {{on 'click' this.click}} type='button' ...attributes>
-  {{yield}}
-</button>
-`;
+);
 
 module("Unit | Lib | ember-events", function (hooks) {
   setupRenderingTest(hooks);
@@ -52,17 +56,8 @@ module("Unit | Lib | ember-events", function (hooks) {
       ExampleClassicButton
     );
     this.owner.register(
-      "template:components/example-classic-button",
-      exampleClassicButtonTemplate
-    );
-
-    this.owner.register(
       "component:example-glimmer-button",
       ExampleGlimmerButton
-    );
-    this.owner.register(
-      "template:components/example-glimmer-button",
-      exampleGlimmerButtonTemplate
     );
   });
 

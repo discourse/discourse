@@ -12,6 +12,7 @@ export default {
 
     registerDeprecationHandler((message, options, next) => {
       if (options.id !== "ember-this-fallback.this-property-fallback") {
+        next(message, options);
         return;
       }
 
