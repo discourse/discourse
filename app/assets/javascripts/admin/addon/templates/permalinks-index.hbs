@@ -15,7 +15,6 @@
         @route="adminPermalinks.new"
         @title="admin.permalink.add"
         @label="admin.permalink.add"
-        @icon="plus"
         class="admin-permalinks__header-add-permalink"
       />
     </:actions>
@@ -89,7 +88,7 @@
                         class="btn-small admin-permalink-item__edit"
                         @route="adminPermalinks.edit"
                         @routeModels={{pl}}
-                        @label="admin.config_areas.flags.edit"
+                        @label="admin.config_areas.permalinks.edit"
                       />
 
                       <DMenu
@@ -105,7 +104,7 @@
                                 @action={{fn this.destroyRecord pl}}
                                 @icon="trash-can"
                                 class="btn-transparent admin-permalink-item__delete"
-                                @label="admin.config_areas.flags.delete"
+                                @label="admin.config_areas.permalinks.delete"
                               />
                             </dropdown.item>
                           </DropdownMenu>
