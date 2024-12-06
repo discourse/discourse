@@ -84,3 +84,20 @@
     }
   }
 }
+
+// Always hide the "Topic Presence" in the topic timeline
+.topic-navigation.with-timeline .topic-navigation-bottom-outlet.presence {
+  display: none;
+}
+
+// Hide the "Topic Presence" in the topic footer when the timeline is hidden
+body:has(.topic-navigation.with-topic-progress)
+  .topic-above-footer-buttons-outlet.presence {
+  display: none;
+}
+
+.topic-navigation-bottom-outlet.presence {
+  margin-right: auto;
+  order: -1;
+  display: flex;
+}

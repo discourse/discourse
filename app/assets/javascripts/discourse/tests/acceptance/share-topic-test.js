@@ -2,7 +2,6 @@ import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("Share and Invite modal", function (needs) {
@@ -101,13 +100,7 @@ acceptance("Share and Invite modal - mobile", function (needs) {
   test("Topic footer mobile button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert
-      .dom("#topic-footer-button-share-and-invite")
-      .doesNotExist("the button doesn’t exist");
-
-    const subject = selectKit(".topic-footer-mobile-dropdown");
-    await subject.expand();
-    await subject.selectRowByValue("share-and-invite");
+    await click(".topic-footer-button.share-and-invite");
 
     assert.dom(".share-topic-modal").exists("shows the modal");
   });
