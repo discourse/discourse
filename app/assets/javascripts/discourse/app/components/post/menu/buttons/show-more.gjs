@@ -11,7 +11,7 @@ export default class PostMenuShowMoreButton extends Component {
       class="post-action-menu__show-more show-more-actions"
       ...attributes
       @action={{@buttonActions.showMoreActions}}
-      @icon="ellipsis-h"
+      @icon="ellipsis"
       @title="show_more"
     />
   </template>

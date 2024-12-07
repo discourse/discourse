@@ -94,7 +94,7 @@ export default class AdminChatIncomingWebhooksList extends Component {
                 >{{i18n "chat.incoming_webhooks.edit"}}</LinkTo>
 
                 <DButton
-                  @icon="trash-alt"
+                  @icon="trash-can"
                   @title="chat.incoming_webhooks.delete"
                   @action={{fn this.destroyWebhook webhook}}
                   class="btn-danger btn-small admin-chat-incoming-webhooks-delete"
