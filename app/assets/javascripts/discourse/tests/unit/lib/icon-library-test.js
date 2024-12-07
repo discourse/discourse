@@ -49,14 +49,14 @@ module("Unit | Utility | icon-library", function (hooks) {
 
   test("fa5 remaps", function (assert) {
     withSilencedDeprecations("discourse.fontawesome-6-upgrade", () => {
-      const adjustIcon = iconHTML("circle-half-stroke");
+      const adjustIcon = iconHTML("adjust");
       assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
       assert.true(
         adjustIcon.includes('href="#circle-half-stroke"'),
         "has remapped icon"
       );
 
-      const farIcon = iconHTML("far-circle-dot");
+      const farIcon = iconHTML("far-dot-circle");
       assert.true(
         farIcon.includes("d-icon-far-dot-circle"),
         "class is maintained"
