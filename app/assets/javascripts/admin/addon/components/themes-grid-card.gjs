@@ -116,7 +116,7 @@ export default class ThemeCard extends Component {
           <span
             title={{i18n "admin.customize.theme.updates_available_tooltip"}}
             class="theme-card__update-available"
-          >{{icon "info-circle"}}</span>
+          >{{icon "circle-info"}}</span>
         {{/if}}
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot_url}}
