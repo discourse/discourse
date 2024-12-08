@@ -41,7 +41,7 @@
           </div>
         {{/if}}
 
-        {{#if this.model.automatic}}
+        {{#if (and this.currentUser.admin this.model.automatic)}}
           <DTooltip class="admin-group-automatic-tooltip">
             <:trigger>
               {{d-icon "gear"}}

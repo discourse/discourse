@@ -2050,6 +2050,9 @@ nl:
       optional: optioneel
       errors_summary_title: "Dit formulier bevat fouten:"
       dirty_form: "Je hebt je wijzigingen niet verzonden! Weet je zeker dat je wilt verlaten?"
+      select:
+        select_placeholder: "Selecteren…"
+        none_placeholder: "Geen"
       errors:
         required: "Vereist"
         invalid_url: "Moet een geldige URL zijn"
@@ -6644,6 +6647,8 @@ nl:
             title: "Afbeeldingen uploaden"
         selectable_avatars:
           title: "Lijst van avatars waaruit gebruikers kunnen kiezen"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alle"
           required: "Vereist"

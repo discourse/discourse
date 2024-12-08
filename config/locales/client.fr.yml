@@ -2050,6 +2050,9 @@ fr:
       optional: facultatif
       errors_summary_title: "Ce formulaire contient des erreurs :"
       dirty_form: "Vous n'avez pas soumis vos modifications ! Voulez-vous vraiment partir ?"
+      select:
+        select_placeholder: "Sélectionnez…"
+        none_placeholder: "Jamais"
       errors:
         required: "Requis"
         invalid_url: "Doit être une URL valide"
@@ -6643,6 +6646,8 @@ fr:
             title: "Téléverser des images"
         selectable_avatars:
           title: "Liste d'avatars que les utilisateurs peuvent choisir"
+        table_column_heading:
+          status: "Statut"
         categories:
           all_results: "Toutes"
           required: "Requis"

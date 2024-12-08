@@ -1462,6 +1462,8 @@ lv:
     form_kit:
       reset: Atlikt
       optional: pēc izvēles
+      select:
+        none_placeholder: "Nav"
       errors:
         required: "Nepieciešams"
     close: "Aizvērt"
@@ -3677,6 +3679,8 @@ lv:
         uploaded_image_list:
           upload:
             label: "Augšupielādēt"
+        table_column_heading:
+          status: "Statuss"
         categories:
           all_results: "Viss"
           required: "Nepieciešams"

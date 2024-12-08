@@ -1624,6 +1624,8 @@ ur:
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
+      select:
+        none_placeholder: "کوئی نہیں"
       errors:
         required: "درکار"
     close: "بند کریں"
@@ -5040,6 +5042,8 @@ ur:
             label: "اَپ لوڈ"
         selectable_avatars:
           title: "اوتار کی فہرست جس میں سے صارفین منتخب کر سکتے ہیں"
+        table_column_heading:
+          status: "سٹیٹس"
         categories:
           all_results: "تمام"
           required: "درکار"

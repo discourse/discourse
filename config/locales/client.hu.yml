@@ -2051,6 +2051,9 @@ hu:
       optional: nem kötelező
       errors_summary_title: "Ez az űrlap hibákat tartalmaz:"
       dirty_form: "A változások nem lettek mentve! Biztos hogy el akarja hagyni a területet?"
+      select:
+        select_placeholder: "Kiválaszt..."
+        none_placeholder: "Egyik sem"
       errors:
         required: "Kötelező"
         invalid_url: "Érvényes URL-nek kell lennie"
@@ -6655,6 +6658,8 @@ hu:
             title: "Kép(ek) feltöltése"
         selectable_avatars:
           title: "A felhasználó által választható profilképek listája"
+        table_column_heading:
+          status: "Állapot"
         categories:
           all_results: "Mind"
           required: "Kötelező"

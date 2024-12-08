@@ -1443,6 +1443,8 @@ bs_BA:
     form_kit:
       reset: Resetovati
       optional: opciono
+      select:
+        none_placeholder: "Ništa"
       errors:
         required: "Required"
     close: "Zatvori"
@@ -4310,6 +4312,8 @@ bs_BA:
             label: "Učitavanje"
         selectable_avatars:
           title: "Popis avatara koje korisnici mogu izabrati"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "All"
           required: "Required"

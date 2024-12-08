@@ -1856,6 +1856,9 @@ te:
     form_kit:
       reset: రీసెట్ చేయండి
       optional: ఐచ్ఛికం
+      select:
+        select_placeholder: "ఎంచుకోండి…"
+        none_placeholder: "ఏదీ లేదు"
       errors:
         required: "అవసరం"
         invalid_url: "తప్పక చెల్లుబాటు అయ్యే URL అయి ఉండాలి"
@@ -6098,6 +6101,8 @@ te:
             label: "అప్‌లోడ్ చేయండి"
         selectable_avatars:
           title: "సభ్యులు ఎంచుకోగల అవతార్ల జాబితా"
+        table_column_heading:
+          status: "స్థితి"
         categories:
           all_results: "అన్నీ"
           required: "అవసరం"

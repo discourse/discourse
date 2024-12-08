@@ -1613,6 +1613,8 @@ ko:
     form_kit:
       reset: 리셋
       optional: 선택 사항
+      select:
+        none_placeholder: "없음"
       errors:
         required: "필수"
         too_short:
@@ -5009,6 +5011,8 @@ ko:
             label: "업로드"
         selectable_avatars:
           title: "사용자가 선택할 수있는 아바타 목록"
+        table_column_heading:
+          status: "상태"
         categories:
           all_results: "전체"
           required: "필수"

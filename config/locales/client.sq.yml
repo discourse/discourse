@@ -915,6 +915,8 @@ sq:
       close: "mbylle"
     form_kit:
       reset: Rivendos
+      select:
+        none_placeholder: "Asnjë"
       errors:
         required: "E nevojshme"
     close: "Mbyll"

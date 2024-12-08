@@ -1534,6 +1534,8 @@ gl:
     form_kit:
       reset: Restabelecer
       optional: opcional
+      select:
+        none_placeholder: "Ningunha"
       errors:
         required: "Obrigatorio"
     close: "Pechar"
@@ -4733,6 +4735,8 @@ gl:
             label: "Cargar"
         selectable_avatars:
           title: "Listaxe de avatares que os usuarios poden elixir"
+        table_column_heading:
+          status: "Estado"
         categories:
           all_results: "Todo"
           required: "Obrigatorio"

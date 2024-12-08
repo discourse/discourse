@@ -1420,6 +1420,9 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
+      select:
+        select_placeholder: "選取…"
+        none_placeholder: "無"
       errors:
         required: "必要設定"
         too_short:
@@ -4240,6 +4243,8 @@ zh_TW:
             label: "上傳"
         selectable_avatars:
           title: "使用者可選擇的頭像列表"
+        table_column_heading:
+          status: "狀態"
         categories:
           all_results: "全部"
           required: "必要設定"

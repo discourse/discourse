@@ -315,6 +315,7 @@ de:
       invalid_site_setting: "Es ist keine Einstellung mit dem Namen „%{name}“ vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
       site_setting_is_hidden: "Du darfst versteckte Einstellungen nicht ändern"
+      site_setting_is_shadowed_globally: "Du kannst diese Einstellung nicht ändern, da sie global konfiguriert ist"
       site_setting_is_unconfigurable: "Du darfst keine unkonfigurierbaren Einstellungen ändern"
       invalid_choice:
         one: "„%{name}“ ist eine ungültige Option."
@@ -2451,7 +2452,6 @@ de:
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
-    experimental_topics_filter: "Experimentelle Filterroute für Themen unter /filter aktivieren"
     enable_experimental_lightbox: "Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
     experimental_glimmer_topic_list_groups: "Aktiviert die neue Implementierung der „glimmer“-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen vorgesehen. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung abgeschlossen und angekündigt ist."
     glimmer_post_menu_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragmenüs verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
@@ -4597,7 +4597,7 @@ de:
       name: Stammgast
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung verfolgbarer Links, die Umwandlung eines Beitrags in ein Wiki sowie die Vergabe von mehr „Gefällt mir“
       long_description: |
-        Dieses Abzeichen erhältst du, wenn du die Vertrauensstufe 3 erreichst. Vielen Dank, dass du über Monate hinweg ein regelmäßiger Teil unserer Community bist. Du gehörst jetzt zu den aktivsten Lesern und leistest einen zuverlässigen Beitrag, der unsere Community großartig macht. Du kannst jetzt Themen neu kategorisieren und umbenennen, stärkere Spam-Flags nutzen und bekommst außerdem viel mehr Likes pro Tag.
+        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du für mehrere Monate regelmäßig in unserer Community aktiv warst. Du gehörst nun zu unseren aktivsten Lesern und und trägst als zuverlässiges Mitglied dazu bei, unsere Community großartig zu machen. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen und kannst noch mehr 'Gefällt mir' pro Tag vergeben.
     leader:
       name: Anführer
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Bearbeiten aller Beiträge, das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen sowie die Vergabe von mehr „Gefällt mir“

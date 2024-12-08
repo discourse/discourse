@@ -2273,6 +2273,9 @@ ru:
       optional: необязательно
       errors_summary_title: "В этой форме есть ошибки:"
       dirty_form: "Вы не отправили изменения! Действительно выйти?"
+      select:
+        select_placeholder: "Выбрать…"
+        none_placeholder: "Нет"
       errors:
         required: "Обязательное"
         invalid_url: "Требуется корректный URL-адерс"
@@ -7212,6 +7215,8 @@ ru:
             title: "Загрузка изображений"
         selectable_avatars:
           title: "Список доступных для выбора аватаров"
+        table_column_heading:
+          status: "Статус"
         categories:
           all_results: "Все"
           required: "Обязательное"
