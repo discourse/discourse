@@ -27,7 +27,7 @@
     "lefthook": "^1.8.5",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.5.1",
-    "lint-to-the-future-ember-template": "^2.0.0",
+    "lint-to-the-future-ember-template": "^3.0.0",
     "lint-to-the-future-eslint": "^2.2.0",
     "magnific-popup": "1.1.0",
     "moment": "2.30.1",
