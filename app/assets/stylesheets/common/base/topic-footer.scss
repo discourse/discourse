@@ -1,0 +1,16 @@
+#topic-footer-buttons {
+  display: flex;
+  margin: var(--below-topic-margin) 0;
+  padding: 0;
+
+  .topic-footer-main-buttons {
+    &__actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .topic-admin-menu-trigger {
+      height: 100%;
+    }
+  }
+}
