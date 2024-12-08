@@ -41,7 +41,7 @@ export default class ThemeCard extends Component {
   }
 
   get footerActionIcon() {
-    return this.args.theme.isPendingUpdates ? "sync" : "ellipsis-h";
+    return this.args.theme.isPendingUpdates ? "arrows-rotate" : "ellipsis";
   }
 
   // NOTE: inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
@@ -179,7 +179,7 @@ export default class ThemeCard extends Component {
                       @preventFocus={{true}}
                       @icon={{if
                         @theme.default
-                        "far-check-square"
+                        "far-square-check"
                         "far-square"
                       }}
                       class="theme-card__button"
