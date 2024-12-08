@@ -24,7 +24,7 @@
     "esbuild": "^0.24.0",
     "eslint": "^9.14.0",
     "jsdoc": "^4.0.4",
-    "lefthook": "^1.8.5",
+    "lefthook": "^1.9.0",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.5.1",
     "lint-to-the-future-ember-template": "^3.0.0",
