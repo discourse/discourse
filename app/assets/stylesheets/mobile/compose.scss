@@ -23,11 +23,15 @@
   }
 
   .keyboard-visible &.open {
-    top: 0px;
     height: calc(var(--composer-vh, 1vh) * 100);
     .reply-area {
       padding-bottom: 6px;
     }
+  }
+
+  .keyboard-visible body:not(.ios-safari-composer-hacks) &.open {
+    top: 0;
+    bottom: auto;
   }
 
   .reply-to {
