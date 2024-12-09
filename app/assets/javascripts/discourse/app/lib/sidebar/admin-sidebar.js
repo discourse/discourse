@@ -208,6 +208,14 @@ export function useAdminNavConfig(navMap) {
           label: "admin.advanced.sidebar_link.all_site_settings",
           icon: "gear",
         },
+        {
+          name: "admin_whats_new",
+          route: "admin.whatsNew",
+          label: "admin.account.sidebar_link.whats_new.title",
+          icon: "gift",
+          keywords: "admin.account.sidebar_link.whats_new.keywords",
+          moderator: true,
+        },
       ],
     },
   ];
