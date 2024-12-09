@@ -2008,16 +2008,21 @@ RSpec.describe PostMover do
           it "allows moving posts from multiple topics into one existing topic" do
             dest_topic = Fabricate(:topic, user: user, created_at: 5.hours.ago)
             Fabricate(:post, topic: dest_topic, created_at: 5.hours.ago)
+            create_post_timing(dest_topic.first_post, user, 500)
 
             source_1_topic = Fabricate(:topic, user: user, created_at: 4.hours.ago)
             Fabricate(:post, topic: source_1_topic, user: user, created_at: 4.hours.ago)
+            create_post_timing(source_1_topic.first_post, user, 500)
             source_1_post =
               Fabricate(:post, topic: source_1_topic, user: user, created_at: 3.hours.ago)
+            create_post_timing(source_1_topic.posts.second, user, 500)
 
             source_2_topic = Fabricate(:topic, user: user, created_at: 2.hours.ago)
             Fabricate(:post, topic: source_2_topic, user: user, created_at: 2.hours.ago)
+            create_post_timing(source_2_topic.first_post, user, 500)
             source_2_post =
               Fabricate(:post, topic: source_2_topic, user: user, created_at: 1.hours.ago)
+            create_post_timing(source_2_topic.posts.second, user, 500)
 
             moved_to =
               source_2_topic.move_posts(
@@ -2028,6 +2033,7 @@ RSpec.describe PostMover do
               )
 
             expect(moved_to).to be_present
+            dest_topic.reload
 
             moved_to_too =
               source_1_topic.move_posts(
