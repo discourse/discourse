@@ -136,7 +136,7 @@ export default class ChatChannelsManager extends Service {
   }
 
   get publicMessageChannelsByActivity() {
-    return this.#sortChannelsByActivity(this.publicMessageChannels);
+    return this.#sortChannelsByActivity([...this.publicMessageChannels]);
   }
 
   @cached
