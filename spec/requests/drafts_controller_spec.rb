@@ -20,7 +20,6 @@ RSpec.describe DraftsController do
       Draft.set(user, "xxx", 0, "{}")
       get "/drafts.json"
       expect(response.status).to eq(200)
-      parsed = response.parsed_body
       expect(response.parsed_body["drafts"].length).to eq(1)
     end
 
