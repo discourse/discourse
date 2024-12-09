@@ -2005,6 +2005,41 @@ RSpec.describe PostMover do
             expect(TopicUser.find_by(topic: destination_topic, user: user).liked).to eq(true)
           end
 
+          it "allows moving posts from multiple topics into one existing topic" do
+            dest_topic = Fabricate(:topic, user: user, created_at: 5.hours.ago)
+            Fabricate(:post, topic: dest_topic, created_at: 5.hours.ago)
+
+            source_1_topic = Fabricate(:topic, user: user, created_at: 4.hours.ago)
+            Fabricate(:post, topic: source_1_topic, user: user, created_at: 4.hours.ago)
+            source_1_post =
+              Fabricate(:post, topic: source_1_topic, user: user, created_at: 3.hours.ago)
+
+            source_2_topic = Fabricate(:topic, user: user, created_at: 2.hours.ago)
+            Fabricate(:post, topic: source_2_topic, user: user, created_at: 2.hours.ago)
+            source_2_post =
+              Fabricate(:post, topic: source_2_topic, user: user, created_at: 1.hours.ago)
+
+            moved_to =
+              source_2_topic.move_posts(
+                user,
+                [source_2_post.id],
+                destination_topic_id: dest_topic.id,
+                chronological_order: true,
+              )
+
+            expect(moved_to).to be_present
+
+            moved_to_too =
+              source_1_topic.move_posts(
+                user,
+                [source_1_post.id],
+                destination_topic_id: dest_topic.id,
+                chronological_order: true,
+              )
+
+            expect(moved_to_too).to be_present
+          end
+
           context "with read state and other stats per user" do
             def create_topic_user(user, topic, opts = {})
               notification_level = opts.delete(:notification_level) || :regular
