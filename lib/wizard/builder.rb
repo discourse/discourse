@@ -137,7 +137,7 @@ class Wizard
     def append_styling_step
       @wizard.append_step("styling") do |step|
         step.emoji = "art"
-        default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
+        default_theme = Theme.find_default
         default_theme_override = SiteSetting.exists?(name: "default_theme_id")
 
         base_scheme = default_theme&.color_scheme&.base_scheme_id

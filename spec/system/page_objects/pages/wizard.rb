@@ -82,6 +82,57 @@ class PageObjects::Pages::Wizard::BrandingStep < PageObjects::Pages::Wizard::Ste
 end
 
 class PageObjects::Pages::Wizard::StylingStep < PageObjects::Pages::Wizard::StepBase
+  def select_color_palette_option(palette)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-color-scheme .wizard-container__dropdown")
+    select_kit.expand
+    select_kit.select_row_by_value(palette)
+  end
+
+  def select_body_font_option(font)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-body-font .wizard-container__dropdown")
+    select_kit.expand
+    select_kit.select_row_by_value(font)
+  end
+
+  def select_heading_font_option(font)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-heading-font .wizard-container__dropdown")
+    select_kit.expand
+    select_kit.select_row_by_value(font)
+  end
+
+  def select_homepage_style_option(homepage)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-homepage-style .wizard-container__dropdown")
+    select_kit.expand
+    select_kit.select_row_by_value(homepage)
+  end
+
+  def has_selected_color_palette?(palette)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-color-scheme .wizard-container__dropdown")
+    select_kit.has_selected_value?(palette)
+  end
+
+  def has_selected_body_font?(font)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-body-font .wizard-container__dropdown")
+    select_kit.has_selected_value?(font)
+  end
+
+  def has_selected_heading_font?(font)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-heading-font .wizard-container__dropdown")
+    select_kit.has_selected_value?(font)
+  end
+
+  def has_selected_homepage_style?(hompage)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-homepage-style .wizard-container__dropdown")
+    select_kit.has_selected_value?(hompage)
+  end
 end
 
 class PageObjects::Pages::Wizard::CorporateStep < PageObjects::Pages::Wizard::StepBase

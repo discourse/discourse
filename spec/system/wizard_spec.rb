@@ -66,10 +66,32 @@ describe "Wizard", type: :system do
     it "lets user configure styling including fonts and colors" do
       wizard_page.go_to_step("styling")
       expect(wizard_page).to be_on_step("styling")
+
+      wizard_page.styling_step.select_color_palette_option("Dark")
+      wizard_page.styling_step.select_body_font_option("lato")
+      wizard_page.styling_step.select_heading_font_option("merriweather")
+      wizard_page.styling_step.select_homepage_style_option("categories_only")
+
+      wizard_page.go_to_next_step
+      expect(wizard_page).to be_on_step("ready")
+
+      expect(Theme.find_default.color_scheme_id).to eq(
+        ColorScheme.find_by(base_scheme_id: "Dark", via_wizard: true).id,
+      )
+      expect(SiteSetting.base_font).to eq("lato")
+      expect(SiteSetting.heading_font).to eq("merriweather")
+      expect(SiteSetting.homepage).to eq("categories")
+
+      wizard_page.go_to_step("styling")
+
+      expect(wizard_page.styling_step).to have_selected_color_palette("Dark")
+      expect(wizard_page.styling_step).to have_selected_body_font("lato")
+      expect(wizard_page.styling_step).to have_selected_heading_font("merriweather")
+      expect(wizard_page.styling_step).to have_selected_homepage_style("categories_only")
     end
   end
 
-  context "when wizard is completed" do
+  describe "Wizard Step: Ready" do
     it "redirects to latest" do
       wizard_page.go_to_step("ready")
       wizard_page.click_jump_in
@@ -86,6 +108,13 @@ describe "Wizard", type: :system do
       wizard_page.click_jump_in
 
       expect(page).to have_current_path(topic.url)
+    end
+  end
+
+  describe "Wizard Step: Corporate" do
+    it "lets user configure corporate including governing law and city for disputes" do
+      wizard_page.go_to_step("corporate")
+      expect(wizard_page).to be_on_step("corporate")
     end
   end
 end

@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Dropdown from "discourse/static/wizard/components/fields/dropdown";
 import { Choice, Field } from "discourse/static/wizard/models/wizard";
