@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -7,6 +8,7 @@ import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container"
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import {
   DangerActionListItem,
@@ -20,8 +22,23 @@ import {
 } from "admin/components/admin-page-action-button";
 import DMenu from "float-kit/components/d-menu";
 
+const HEADLESS_ACTIONS = ["new", "edit"];
+
 export default class AdminPageHeader extends Component {
   @service site;
+  @service router;
+  @tracked shouldDisplay = true;
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeDidChange", this, this.#checkIfShouldDisplay);
+    this.#checkIfShouldDisplay();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off("routeDidChange", this, this.#checkIfShouldDisplay);
+  }
 
   get title() {
     if (this.args.titleLabelTranslated) {
@@ -39,10 +56,21 @@ export default class AdminPageHeader extends Component {
     }
   }
 
-  get shouldDisplay() {
-    return this.args.shouldDisplay === undefined
-      ? true
-      : this.args.shouldDisplay;
+  @bind
+  #checkIfShouldDisplay() {
+    if (this.args.shouldDisplay !== undefined) {
+      return (this.shouldDisplay = this.args.shouldDisplay);
+    }
+
+    const currentPath = this.router._router.currentPath;
+    if (!currentPath) {
+      return (this.shouldDisplay = true);
+    }
+
+    const pathSegments = currentPath.split(".");
+    this.shouldDisplay =
+      !pathSegments.includes("admin") ||
+      !HEADLESS_ACTIONS.find((segment) => pathSegments.includes(segment));
   }
 
   <template>
