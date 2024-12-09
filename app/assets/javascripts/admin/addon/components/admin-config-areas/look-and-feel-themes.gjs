@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DPageSubheader from "discourse/components/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import AdminPageSubheader from "admin/components/admin-page-subheader";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
 
@@ -47,7 +47,7 @@ export default class AdminConfigAreasLookAndFeelThemes extends Component {
   }
 
   <template>
-    <AdminPageSubheader
+    <DPageSubheader
       @titleLabel="admin.config_areas.look_and_feel.themes.title"
       @descriptionLabel="admin.customize.theme.themes_intro_new"
       @learnMoreUrl="https://meta.discourse.org/t/93648"
@@ -60,7 +60,7 @@ export default class AdminConfigAreasLookAndFeelThemes extends Component {
           class="admin-look-and-feel__install-theme"
         />
       </:actions>
-    </AdminPageSubheader>
+    </DPageSubheader>
 
     <div class="admin-detail">
       <ThemesGrid @themes={{@themes}} />

@@ -1,4 +1,4 @@
-<AdminPageSubheader @titleLabelTranslated={{this.title}}>
+<DPageSubheader @titleLabelTranslated={{this.title}}>
   <:actions as |actions|>
     {{#if this.canCheckEmails}}
       {{#if this.showEmails}}
@@ -16,7 +16,7 @@
       {{/if}}
     {{/if}}
   </:actions>
-</AdminPageSubheader>
+</DPageSubheader>
 
 <PluginOutlet @name="admin-users-list-show-before" />
 
