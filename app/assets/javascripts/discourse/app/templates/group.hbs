@@ -41,8 +41,8 @@
           </div>
         {{/if}}
 
-        {{#if (and this.currentUser.admin this.model.automatic)}}
-          <DTooltip class="admin-group-automatic-tooltip">
+        {{#if (and this.canManageGroup this.model.automatic)}}
+          <DTooltip class="group-automatic-tooltip">
             <:trigger>
               {{d-icon "gear"}}
               {{i18n "admin.groups.manage.membership.automatic"}}

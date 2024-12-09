@@ -29,6 +29,7 @@ export default {
       is_group_owner: true,
       mentionable: false,
       messageable: true,
+      can_admin_group: false,
     },
   },
   "/groups/discourse.json": {
