@@ -115,12 +115,8 @@ export default class GroupController extends Controller {
   }
 
   @discourseComputed("model", "model.automatic")
-  canManageGroup(model, automatic) {
-    return (
-      this.currentUser &&
-      (this.currentUser.canManageGroup(model) ||
-        (model.can_admin_group && automatic))
-    );
+  canManageGroup(model) {
+    return this.currentUser?.canManageGroup(model);
   }
 
   @action
