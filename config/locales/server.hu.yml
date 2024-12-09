@@ -2431,7 +2431,6 @@ hu:
     default_navigation_menu_categories: "A kiválasztott kategóriák alapértelmezetten megjelennek a Navigációs Menü Kategóriák szekciójában."
     default_navigation_menu_tags: "A kiválasztott címkék alapértelmezetten megjelennek a Navigációs Menü Címkék szekciójában."
     experimental_new_new_view_groups: 'Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és új témákat, és az oldalsávon lévő "Minden" hivatkozást jelölje be.'
-    experimental_topics_filter: "Engedélyezi a kísérleti témák szűrési útvonalát a /filter címen"
     enable_experimental_lightbox: "Lightbox cseréje a megújult dizájnra."
     experimental_glimmer_topic_list_groups: "Az új 'ragyogó' témalista implementáció engedélyezése. Ez az implementáció aktív fejlesztés alatt áll, és nem alkalmas éles használatra. Ne fejlesszen hozzá témákat/bővítményeket, amíg az implementáció nem véglegesítődik és nem kerül bejelentésre."
     glimmer_post_menu_mode: "Szabályozhatja, hogy a rendszer használja-e az új „ragyogó” bejegyzés menü megvalósítását. Az „auto” automatikusan bekapcsol, amint minden témája és bővítménye készen áll. Ez a megvalósítás aktív fejlesztés alatt áll, és nem éles használatra készült. Ne fejlesszen hozzá témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."

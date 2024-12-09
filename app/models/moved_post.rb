@@ -6,6 +6,12 @@ class MovedPost < ActiveRecord::Base
 
   belongs_to :new_topic, class_name: "Topic", foreign_key: :new_topic_id
   belongs_to :new_post, class_name: "Post", foreign_key: :new_post_id
+
+  # The author of the moved post
+  belongs_to :posting_user, class_name: "User", foreign_key: :post_user_id
+
+  # The user who moved the post
+  belongs_to :user
 end
 
 # == Schema Information
@@ -23,12 +29,16 @@ end
 #  created_new_topic :boolean          default(FALSE), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  old_topic_title   :string
+#  post_user_id      :integer
+#  user_id           :integer
 #
 # Indexes
 #
-#  index_moved_posts_on_new_post_id      (new_post_id)
-#  index_moved_posts_on_new_topic_id     (new_topic_id)
-#  index_moved_posts_on_old_post_id      (old_post_id)
-#  index_moved_posts_on_old_post_number  (old_post_number)
-#  index_moved_posts_on_old_topic_id     (old_topic_id)
+#  index_moved_posts_on_new_post_id                    (new_post_id)
+#  index_moved_posts_on_new_topic_id                   (new_topic_id)
+#  index_moved_posts_on_new_topic_id_and_post_user_id  (new_topic_id,post_user_id)
+#  index_moved_posts_on_old_post_id                    (old_post_id)
+#  index_moved_posts_on_old_post_number                (old_post_number)
+#  index_moved_posts_on_old_topic_id                   (old_topic_id)
 #

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -172,6 +172,7 @@ export default class TopicList extends Component {
       class={{concatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header")
+        (applyValueTransformer "topic-list-class" (array) (hash topics=@topics))
       }}
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>

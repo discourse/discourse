@@ -1675,6 +1675,9 @@ ro:
     form_kit:
       reset: Resetare
       optional: opțional
+      select:
+        select_placeholder: "Selectează..."
+        none_placeholder: "Nimic"
       errors:
         required: "Necesare"
         invalid_url: "Trebuie să fie un URL valid"
@@ -4506,6 +4509,8 @@ ro:
         uploaded_image_list:
           upload:
             label: "Încarcă"
+        table_column_heading:
+          status: "Stare"
         categories:
           all_results: "Toate"
           required: "Necesare"

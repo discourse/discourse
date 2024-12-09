@@ -306,8 +306,7 @@ export default class DEditor extends Component {
         this.site.hashtag_configurations["topic-composer"],
         this.siteSettings,
         {
-          afterComplete: (value) => {
-            this.set("value", value);
+          afterComplete: () => {
             schedule(
               "afterRender",
               this.textManipulation,
@@ -327,8 +326,7 @@ export default class DEditor extends Component {
     this.textManipulation.autocomplete({
       template: findRawTemplate("emoji-selector-autocomplete"),
       key: ":",
-      afterComplete: (text) => {
-        this.set("value", text);
+      afterComplete: () => {
         schedule(
           "afterRender",
           this.textManipulation,
@@ -466,9 +464,7 @@ export default class DEditor extends Component {
       onRender: (options) => renderUserStatusHtml(options),
       key: "@",
       transformComplete: (v) => v.username || v.name,
-      afterComplete: (value) => {
-        this.set("value", value);
-
+      afterComplete: () => {
         schedule(
           "afterRender",
           this.textManipulation,

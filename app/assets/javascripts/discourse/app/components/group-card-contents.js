@@ -62,7 +62,7 @@ export default class GroupCardContents extends CardContentsBase.extend(
       this.setProperties({ group });
 
       if (!group.flair_url && !group.flair_bg_color) {
-        group.set("flair_url", "fa-users");
+        group.set("flair_url", "users");
       }
 
       if (group.can_see_members && group.members.length < maxMembersToDisplay) {

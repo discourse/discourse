@@ -327,6 +327,13 @@ export default class ChatMessageInteractor {
 
   @action
   toggleBookmark() {
+    // somehow, this works around a low-level chrome rendering issue which
+    // causes a complete browser crash when saving/deleting bookmarks in chat.
+    // Error message: "Check failed: !NeedsToUpdateCachedValues()."
+    // Internal topic: t/143485
+    // Hopefully, this can be dropped in future chrome versions
+    document.activeElement?.blur();
+
     this.modal.show(BookmarkModal, {
       model: {
         bookmark: new BookmarkFormData(

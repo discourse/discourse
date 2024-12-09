@@ -1767,6 +1767,8 @@ bg:
     form_kit:
       reset: Нулиране
       optional: по избор
+      select:
+        none_placeholder: "Без"
       errors:
         required: "Задъжителни"
     close: "Затвори"
@@ -4285,6 +4287,8 @@ bg:
         uploaded_image_list:
           upload:
             label: "Качване"
+        table_column_heading:
+          status: "Статус"
         categories:
           all_results: "Всички"
           required: "Задъжителни"

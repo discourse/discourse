@@ -24,6 +24,24 @@ acceptance("Managing Group Membership", function (needs) {
     );
   });
 
+  test("As an admin on an automatic group", async function (assert) {
+    await visit("/g/moderators");
+
+    assert
+      .dom(".admin-group-automatic-tooltip")
+      .exists("displays automatic tooltip");
+  });
+
+  test("As a non-admin user on an automatic group", async function (assert) {
+    updateCurrentUser({ admin: false });
+
+    await visit("/g/moderators");
+
+    assert
+      .dom(".admin-group-automatic-tooltip")
+      .doesNotExist("does not display automatic tooltip");
+  });
+
   test("As an admin", async function (assert) {
     updateCurrentUser({ can_create_group: true });
 

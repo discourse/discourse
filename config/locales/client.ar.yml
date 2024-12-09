@@ -2479,6 +2479,9 @@ ar:
       optional: اختياري
       errors_summary_title: "يحتوي هذا النموذج على أخطاء:"
       dirty_form: "لم ترسل التغييرات! هل تريد بالتأكيد المغادرة؟"
+      select:
+        select_placeholder: "تحديد…"
+        none_placeholder: "لا يوجد"
       errors:
         required: "مطلوب"
         invalid_url: "يجب أن يكون عنوان URL صالحًا"
@@ -7731,6 +7734,8 @@ ar:
             title: "تحميل الصور"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
+        table_column_heading:
+          status: "الحالة"
         categories:
           all_results: "الكل"
           required: "مطلوب"

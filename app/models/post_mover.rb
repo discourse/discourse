@@ -11,8 +11,12 @@ class PostMover
   # freeze_original: :boolean  - if true, the original topic will be frozen but not deleted and posts will be "copied" to topic
   def initialize(original_topic, user, post_ids, move_to_pm: false, options: {})
     @original_topic = original_topic
+    @original_topic_title = original_topic.title
     @user = user
     @post_ids = post_ids
+    # For now we store a copy of post_ids. If `freeze_original` is present, we will have new post_ids.
+    # When we create the new posts, we will pluck out post_ids out of this and replace with updated ids.
+    @post_ids_after_move = post_ids
     @move_to_pm = move_to_pm
     @options = options
   end
@@ -274,6 +278,13 @@ class PostMover
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
 
+    # When freezing original, ensure the notification generated points
+    # to the newly created post, not the old OP
+    if @options[:freeze_original]
+      @post_ids_after_move =
+        @post_ids_after_move.map { |post_id| post_id == post.id ? new_post.id : post_id }
+    end
+
     DiscourseEvent.trigger(:first_post_moved, new_post, post)
     DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
 
@@ -307,6 +318,11 @@ class PostMover
     moved_post.disable_rate_limits! if @options[:freeze_original]
     moved_post.save(validate: false)
 
+    if moved_post.id != post.id
+      @post_ids_after_move =
+        @post_ids_after_move.map { |post_id| post_id == post.id ? moved_post.id : post_id }
+    end
+
     DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id)
 
     # Move any links from the post to the new topic
@@ -337,6 +353,7 @@ class PostMover
       old_topic_id: post.topic_id,
       old_post_id: post.id,
       old_post_number: post.post_number,
+      post_user_id: post.user_id,
       new_topic_id: destination_topic.id,
       new_post_number: new_post_number,
       new_topic_title: destination_topic.title,
@@ -347,10 +364,12 @@ class PostMover
     metadata[:new_post_id] = new_post.id
     metadata[:now] = Time.zone.now
     metadata[:created_new_topic] = @creating_new_topic
+    metadata[:old_topic_title] = @original_topic_title
+    metadata[:user_id] = @user.id
 
     DB.exec(<<~SQL, metadata)
-      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number, created_new_topic, created_at, updated_at)
-      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number, :created_new_topic, :now, :now)
+      INSERT INTO moved_posts(old_topic_id, old_topic_title, old_post_id, old_post_number, post_user_id, user_id, new_topic_id, new_topic_title, new_post_id, new_post_number, created_new_topic, created_at, updated_at)
+      VALUES (:old_topic_id, :old_topic_title, :old_post_id, :old_post_number, :post_user_id, :user_id, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number, :created_new_topic, :now, :now)
     SQL
   end
 
@@ -703,7 +722,7 @@ class PostMover
   def enqueue_jobs(topic)
     @post_creator.enqueue_jobs if @post_creator
 
-    Jobs.enqueue(:notify_moved_posts, post_ids: post_ids, moved_by_id: user.id)
+    Jobs.enqueue(:notify_moved_posts, post_ids: @post_ids_after_move, moved_by_id: user.id)
 
     Jobs.enqueue(:delete_inaccessible_notifications, topic_id: topic.id)
   end

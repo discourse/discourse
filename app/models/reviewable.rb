@@ -270,8 +270,15 @@ class Reviewable < ActiveRecord::Base
 
   def actions_for(guardian, args = nil)
     args ||= {}
+    built_actions =
+      Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
 
-    Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
+    # Empty bundles can cause big issues on the client side, so we remove them
+    # here. It's not valid anyway to have a bundle with no actions, but you can
+    # add a bundle via actions.add_bundle and then not add any actions to it.
+    built_actions.bundles.reject!(&:empty?)
+
+    built_actions
   end
 
   def editable_for(guardian, args = nil)

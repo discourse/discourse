@@ -1689,6 +1689,9 @@ pt:
     form_kit:
       reset: Repor
       optional: opcional
+      select:
+        select_placeholder: "Selecionar…"
+        none_placeholder: "Nenhuma"
       errors:
         required: "Necessário"
     close: "Fechar"
@@ -4740,6 +4743,8 @@ pt:
         uploaded_image_list:
           upload:
             label: "Carregar"
+        table_column_heading:
+          status: "Estado"
         categories:
           all_results: "Todos"
           required: "Necessário"

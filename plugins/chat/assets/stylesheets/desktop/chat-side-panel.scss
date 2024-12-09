@@ -9,7 +9,7 @@
   box-sizing: border-box;
   border-left: 1px solid var(--primary-low);
   position: relative;
-  min-width: clamp(350px, 33vw, 33vw);
+  min-width: 150px;
 
   &__list {
     flex-grow: 1;

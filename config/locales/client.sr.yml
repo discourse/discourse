@@ -1006,6 +1006,8 @@ sr:
     modal:
       close: "zatvori"
     form_kit:
+      select:
+        none_placeholder: "Ništa"
       errors:
         required: "Potrebno"
     close: "Zatvori"

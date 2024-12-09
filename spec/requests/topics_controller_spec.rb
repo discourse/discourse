@@ -166,6 +166,21 @@ RSpec.describe TopicsController do
           expect(Tag.all.pluck(:name)).to include("foo", "bar")
         end
 
+        describe "with freeze_original param" do
+          it "duplicates post to new topic and keeps original post in place" do
+            expect do
+              post "/t/#{topic.id}/move-posts.json",
+                   params: {
+                     title: "Logan is a good movie",
+                     post_ids: [p2.id],
+                     freeze_original: true,
+                   }
+            end.to change { Topic.count }.by(1)
+            expect(response.status).to eq(200)
+            expect(topic.post_ids).to include(p2.id)
+          end
+        end
+
         describe "when topic has been deleted" do
           it "should still be able to move posts" do
             PostDestroyer.new(admin, topic.first_post).destroy
@@ -306,6 +321,22 @@ RSpec.describe TopicsController do
           result = response.parsed_body
           expect(result["success"]).to eq(true)
           expect(result["url"]).to be_present
+        end
+
+        describe "with freeze_original param" do
+          it "duplicates post to topic and keeps original post in place" do
+            expect do
+              post "/t/#{topic.id}/move-posts.json",
+                   params: {
+                     post_ids: [p2.id],
+                     destination_topic_id: dest_topic.id,
+                     freeze_original: true,
+                   }
+            end.to change { dest_topic.posts.count }.by(1)
+            expect(response.status).to eq(200)
+            expect(topic.post_ids).to include(p2.id)
+            expect(dest_topic.posts.find_by(raw: p2.raw)).to be_present
+          end
         end
 
         it "triggers an event on merge" do

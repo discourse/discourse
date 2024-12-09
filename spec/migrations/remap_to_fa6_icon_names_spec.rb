@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require Rails.root.join("db/migrate/20241127072350_remap_fa5_icon_names_to_fa6.rb")
+require Rails.root.join("db/migrate/20241204085540_remap_to_fa6_icon_names.rb")
 
-RSpec.describe RemapFa5IconNamesToFa6 do
+RSpec.describe RemapToFa6IconNames do
   let(:migrate) { described_class.new.up }
   let(:icon_mapping) do
     {
@@ -12,36 +12,28 @@ RSpec.describe RemapFa5IconNamesToFa6 do
       "far fa-ambulance" => "far-truck-medical",
       "fab fa-ambulance" => "fab-truck-medical",
       "fas fa-ambulance" => "truck-medical",
+      "fa-gear" => "gear",
+      "far-gear" => "far-gear",
+      "fab-gear" => "fab-gear",
+      "far fa-gear" => "far-gear",
+      "fab fa-gear" => "fab-gear",
+      "fas fa-gear" => "gear",
+      "gear" => "gear",
     }
   end
 
   context "when svg_icon_subset site setting has values to be remapped" do
-    let(:svg_icon_subset_icon_mapping) do
-      {
-        "fa-ambulance" => "truck-medical",
-        "far-ambulance" => "far-truck-medical",
-        "fab-ambulance" => "fab-truck-medical",
-        "far fa-ambulance" => "far-truck-medical",
-        "far fa-gear" => "far-gear",
-        "gear" => "gear",
-        "fab fa-ambulance" => "fab-truck-medical",
-        "fas fa-ambulance" => "truck-medical",
-      }
-    end
-
     let!(:site_setting) do
       SiteSetting.create!(
         name: "svg_icon_subset",
-        value: svg_icon_subset_icon_mapping.keys.join("|"),
+        value: icon_mapping.keys.join("|"),
         data_type: SiteSettings::TypeSupervisor.types[:list],
       )
     end
 
     it "remaps the values correctly" do
       silence_stdout { migrate }
-      expect(site_setting.reload.value.split("|")).to match_array(
-        svg_icon_subset_icon_mapping.values,
-      )
+      expect(site_setting.reload.value.split("|")).to match_array(icon_mapping.values)
     end
   end
 

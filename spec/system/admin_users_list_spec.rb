@@ -11,6 +11,11 @@ describe "Admin Users Page", type: :system do
 
   before { sign_in(current_user) }
 
+  it "show correct breadcrumbs" do
+    admin_users_page.visit
+    expect(admin_users_page).to have_correct_breadcrumbs
+  end
+
   describe "bulk user delete" do
     let(:confirmation_modal) { PageObjects::Modals::BulkUserDeleteConfirmation.new }
 

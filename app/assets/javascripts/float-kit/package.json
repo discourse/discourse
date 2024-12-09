@@ -39,7 +39,7 @@
     "ember-source": "~5.5.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.97.0"
+    "webpack": "^5.97.1"
   },
   "engines": {
     "node": ">= 18",

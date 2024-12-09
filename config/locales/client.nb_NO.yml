@@ -1979,6 +1979,9 @@ nb_NO:
       optional: valgfritt
       errors_summary_title: "Dette skjemaet inneholder feil:"
       dirty_form: "Du har ikke sendt inn endringene dine! Er du sikker på at du vil dra?"
+      select:
+        select_placeholder: "Velg…"
+        none_placeholder: "Ingen"
       errors:
         required: "Påkrevd"
         invalid_url: "Må være en gyldig URL"
@@ -5544,6 +5547,8 @@ nb_NO:
             label: "Last opp"
         selectable_avatars:
           title: "Liste over avatarer brukere kan velge mellom"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alle"
           required: "Påkrevd"

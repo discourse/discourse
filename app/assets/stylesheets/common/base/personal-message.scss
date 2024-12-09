@@ -63,6 +63,10 @@
     padding-left: calc(
       48px - var(--pm-padding)
     ); // 48px is the width of the avatar
+    display: grid;
+    grid-template-areas: "contents additional" "pm-map pm-map";
+    grid-template-columns: 1fr auto;
+
     section {
       border: none;
       background: var(--primary-very-low);
@@ -73,8 +77,22 @@
       padding-top: var(--pm-padding);
     }
 
+    &__contents,
+    &__additional-contents {
+      padding-top: var(--pm-padding);
+    }
+
+    &__contents {
+      grid-area: contents;
+    }
+
+    &__additional-contents {
+      grid-area: additional;
+    }
+
     &__private-message-map {
-      padding-bottom: var(--pm-padding);
+      grid-area: pm-map;
+      padding: 0.5em var(--pm-padding) var(--pm-padding);
     }
 
     .participants {

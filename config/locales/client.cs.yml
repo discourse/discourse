@@ -2164,6 +2164,9 @@ cs:
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
+      select:
+        select_placeholder: "Vybrat…"
+        none_placeholder: "Žádná"
       errors:
         required: "Nezbytnosti"
         too_low: "Musí být alespoň %{count}"
@@ -6453,6 +6456,8 @@ cs:
         uploaded_image_list:
           upload:
             label: "Nahrát"
+        table_column_heading:
+          status: "Stav"
         categories:
           all_results: "Všechny"
           required: "Nezbytnosti"

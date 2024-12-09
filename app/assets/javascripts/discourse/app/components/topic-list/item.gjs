@@ -185,6 +185,14 @@ export default class Item extends Component {
     }
   }
 
+  get useMobileLayout() {
+    return applyValueTransformer(
+      "topic-list-item-mobile-layout",
+      this.site.mobileView,
+      { topic: this.args.topic }
+    );
+  }
+
   <template>
     <tr
       {{! template-lint-disable no-invalid-interactive }}
@@ -210,7 +218,7 @@ export default class Item extends Component {
         (if @topic.closed "closed")
         this.tagClassNames
         (applyValueTransformer
-          "topic-list-item-class" (array) (hash topic=@topic)
+          "topic-list-item-class" (array) (hash topic=@topic index=@index)
         )
       }}
     >
@@ -218,20 +226,7 @@ export default class Item extends Component {
         @name="above-topic-list-item"
         @outletArgs={{hash topic=@topic}}
       />
-      {{#if this.site.desktopView}}
-        {{#each @columns as |entry|}}
-          <entry.value.item
-            @topic={{@topic}}
-            @bulkSelectEnabled={{@bulkSelectEnabled}}
-            @onBulkSelectToggle={{this.onBulkSelectToggle}}
-            @isSelected={{this.isSelected}}
-            @showTopicPostBadges={{@showTopicPostBadges}}
-            @hideCategory={{@hideCategory}}
-            @tagsForUser={{@tagsForUser}}
-            @expandPinned={{this.expandPinned}}
-          />
-        {{/each}}
-      {{else}}
+      {{#if this.useMobileLayout}}
         <td class="topic-list-data">
           <div class="pull-left">
             {{#if @bulkSelectEnabled}}
@@ -337,6 +332,19 @@ export default class Item extends Component {
             </div>
           </div>
         </td>
+      {{else}}
+        {{#each @columns as |entry|}}
+          <entry.value.item
+            @topic={{@topic}}
+            @bulkSelectEnabled={{@bulkSelectEnabled}}
+            @onBulkSelectToggle={{this.onBulkSelectToggle}}
+            @isSelected={{this.isSelected}}
+            @showTopicPostBadges={{@showTopicPostBadges}}
+            @hideCategory={{@hideCategory}}
+            @tagsForUser={{@tagsForUser}}
+            @expandPinned={{this.expandPinned}}
+          />
+        {{/each}}
       {{/if}}
     </tr>
   </template>
