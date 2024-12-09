@@ -405,7 +405,7 @@ class Admin::UsersController < Admin::StaffController
   def destroy_bulk
     # capture service_params outside the hijack block to avoid thread safety
     # issues
-    service_arg = service_params.merge(options: { actor_ip: current_user.ip_address })
+    service_arg = service_params
 
     hijack do
       User::BulkDestroy.call(service_arg) do

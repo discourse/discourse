@@ -198,12 +198,12 @@ describe "Admin Users Page", type: :system do
     end
 
     it "has an option to block IPs and emails" do
-      users[0].update!(ip_address: IPAddr.new("44.22.11.33"))
+      users.first.update!(ip_address: IPAddr.new("44.22.11.33"))
 
       admin_users_page.visit
       admin_users_page.bulk_select_button.click
 
-      admin_users_page.user_row(users[0].id).bulk_select_checkbox.click
+      admin_users_page.user_row(users.first.id).bulk_select_checkbox.click
       admin_users_page.bulk_actions_dropdown.expand
       admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
       confirmation_modal.fill_in_confirmation_phase(user_count: 1)
@@ -211,19 +211,19 @@ describe "Admin Users Page", type: :system do
       confirmation_modal.confirm_button.click
 
       expect(confirmation_modal).to have_successful_log_entry_for_user(
-        user: users[0],
+        user: users.first,
         position: 1,
         total: 1,
       )
       expect(
-        ScreenedIpAddress.where(
-          ip_address: users[0].ip_address,
+        ScreenedIpAddress.exists?(
+          ip_address: users.first.ip_address,
           action_type: ScreenedIpAddress.actions[:block],
         ),
-      ).to exist
+      ).to be_truthy
       expect(
-        ScreenedEmail.where(email: users[0].email, action_type: ScreenedEmail.actions[:block]),
-      ).to exist
+        ScreenedEmail.exists?(email: users.first.email, action_type: ScreenedEmail.actions[:block]),
+      ).to be_truthy
     end
   end
 end

@@ -1499,38 +1499,37 @@ RSpec.describe Admin::UsersController do
               }.by(3)
 
         expect(
-          ScreenedIpAddress.where(
+          ScreenedIpAddress.exists?(
             ip_address: "249.21.44.3",
             action_type: ScreenedIpAddress.actions[:block],
           ),
-        ).to exist
+        ).to be_truthy
         expect(
-          ScreenedIpAddress.where(
+          ScreenedIpAddress.exists?(
             ip_address: "3.1.22.88",
             action_type: ScreenedIpAddress.actions[:block],
           ),
-        ).to exist
-        # current_user's IP isn't blocked
-        expect(ScreenedIpAddress.where(ip_address: "127.189.34.11")).not_to exist
+        ).to be_truthy
+        expect(ScreenedIpAddress.exists?(ip_address: current_user.ip_address)).to be_falsey
 
         expect(
-          ScreenedEmail.where(
+          ScreenedEmail.exists?(
             email: deleted_users[0].email,
             action_type: ScreenedEmail.actions[:block],
           ),
-        ).to exist
+        ).to be_truthy
         expect(
-          ScreenedEmail.where(
+          ScreenedEmail.exists?(
             email: deleted_users[1].email,
             action_type: ScreenedEmail.actions[:block],
           ),
-        ).to exist
+        ).to be_truthy
         expect(
-          ScreenedEmail.where(
+          ScreenedEmail.exists?(
             email: deleted_users[2].email,
             action_type: ScreenedEmail.actions[:block],
           ),
-        ).to exist
+        ).to be_truthy
         expect(response.status).to eq(200)
         expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
       end
