@@ -4,6 +4,7 @@ RSpec.describe "List channels | sidebar", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
     chat_system_bootstrap
@@ -70,6 +71,24 @@ RSpec.describe "List channels | sidebar", type: :system do
         )
         expect(page.find("#sidebar-section-content-chat-channels li:nth-child(2)")).to have_css(
           ".channel-#{channel_1.id}",
+        )
+      end
+
+      it "does not change sorting order when using drawer" do
+        Fabricate(:chat_message, chat_channel: channel_1)
+        visit("/")
+
+        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
+          ".channel-#{channel_2.id}",
+        )
+
+        drawer_page.visit_index
+        drawer_page.click_channels
+
+        expect(drawer_page).to have_channel_at_position(channel_1, 1)
+
+        expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
+          ".channel-#{channel_2.id}",
         )
       end
     end
