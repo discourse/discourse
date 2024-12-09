@@ -1,31 +1,30 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { action, set } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import ColorPalettes from "select-kit/components/color-palettes";
 import ComboBox from "select-kit/components/combo-box";
 import FontSelector from "select-kit/components/font-selector";
 
 export default class Dropdown extends Component {
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
-    if (this.field.id === "color_scheme") {
-      for (let choice of this.field.choices) {
+    if (this.args.field.id === "color_scheme") {
+      for (let choice of this.args.field.choices) {
         if (choice?.data?.colors) {
           set(choice, "colors", choice.data.colors);
         }
       }
     }
 
-    // TODO (martin) Maybe add a test for this, even if it's a component one.
-    if (this.field.id === "body_font") {
-      for (let choice of this.field.choices) {
+    if (this.args.field.id === "body_font") {
+      for (let choice of this.args.field.choices) {
         set(choice, "classNames", `body-font-${choice.id.replace(/_/g, "-")}`);
       }
     }
 
-    if (this.field.id === "heading_font") {
-      for (let choice of this.field.choices) {
+    if (this.args.field.id === "heading_font") {
+      for (let choice of this.args.field.choices) {
         set(
           choice,
           "classNames",
@@ -35,9 +34,8 @@ export default class Dropdown extends Component {
     }
   }
 
-  @discourseComputed("field.id")
-  component(id) {
-    switch (id) {
+  get component() {
+    switch (this.args.field.id) {
       case "color_scheme":
         return ColorPalettes;
       case "body_font":
@@ -48,12 +46,25 @@ export default class Dropdown extends Component {
     }
   }
 
-  keyPress(e) {
-    e.stopPropagation();
+  keyPress(event) {
+    event.stopPropagation();
   }
 
   @action
   onChangeValue(value) {
     this.set("field.value", value);
   }
+
+  <template>
+    {{component
+      this.component
+      class="wizard-container__dropdown"
+      value=@field.value
+      content=@field.choices
+      nameProperty="label"
+      tabindex="9"
+      onChange=this.onChangeValug
+      options=(hash translatedNone=false)
+    }}
+  </template>
 }
