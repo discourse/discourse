@@ -49,6 +49,7 @@ function positioningWorkaround(fixedElement) {
     // - invoking emoji dropdown via : and hitting return
     // - invoking a button in the editor toolbar
     // - tapping on emoji in the emoji modal
+    // - tapping on the upload button
     // - tapping on the edit reason icon/input
 
     if (
@@ -61,6 +62,7 @@ function positioningWorkaround(fixedElement) {
           document.activeElement === lastTouchedElement) ||
         lastTouchedElement.closest(".d-editor-button-bar") ||
         lastTouchedElement.classList.contains("emoji") ||
+        lastTouchedElement.closest(".mobile-file-upload") ||
         lastTouchedElement.closest(".display-edit-reason"))
     ) {
       return;
