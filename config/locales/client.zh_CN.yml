@@ -1939,6 +1939,9 @@ zh_CN:
       optional: 可选
       errors_summary_title: "此表单包含错误："
       dirty_form: "您没有提交更改！确定要离开吗？"
+      select:
+        select_placeholder: "选择…"
+        none_placeholder: "无"
       errors:
         required: "必选"
         invalid_url: "必须是有效的 URL"
@@ -6357,6 +6360,8 @@ zh_CN:
             title: "上传图片"
         selectable_avatars:
           title: "用户可以选择的头像列表"
+        table_column_heading:
+          status: "状态"
         categories:
           all_results: "所有"
           required: "必选"

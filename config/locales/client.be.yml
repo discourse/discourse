@@ -2161,6 +2161,8 @@ be:
             label: "Загрузіць"
         selectable_avatars:
           title: "Спіс аватараў карыстальнікі могуць выбраць"
+        table_column_heading:
+          status: "Статус"
         categories:
           all_results: "усе"
           required: "абавязковыя"

@@ -2436,7 +2436,6 @@ tr_TR:
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
     experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
-    experimental_topics_filter: "/filter (filtre) konumunda deneysel konu filtrelemeyi etkinleştiririr"
     enable_experimental_lightbox: "Varsayılan görüntü ışık kutusunu yenilenen tasarımla değiştirin."
     experimental_glimmer_topic_list_groups: "Yeni \"parıltı\" konu listesi uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     glimmer_post_menu_mode: "Yeni \"parıltı\" gönderi menüsü uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"otomatik\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleştirilir. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."

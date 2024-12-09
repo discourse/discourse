@@ -1453,6 +1453,8 @@ id:
     form_kit:
       reset: Reset
       optional: opsional
+      select:
+        none_placeholder: "Tidak ada"
     close: "Tutup"
     assets_changed_confirm: "Situs ini baru saja menerima pembaruan perangkat lunak. Dapatkan versi terbaru sekarang?"
     logout: "Anda telah keluar."
@@ -2777,6 +2779,8 @@ id:
         uploaded_image_list:
           upload:
             label: "Unggah"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Semua"
           users: "Pengguna"

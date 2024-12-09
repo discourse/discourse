@@ -2442,7 +2442,6 @@ fi:
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
-    experimental_topics_filter: "Ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     enable_experimental_lightbox: "Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     experimental_glimmer_topic_list_groups: "Ota käyttöön uusi glimmer-ketjuluettelouudistus. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     glimmer_post_menu_mode: "Hallitse, käytetäänkö uutta glimmer-viestivalikkouudistusta. \"Auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."

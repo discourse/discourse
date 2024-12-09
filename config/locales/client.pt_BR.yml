@@ -2050,6 +2050,9 @@ pt_BR:
       optional: opcional
       errors_summary_title: "Este formulário contém erros:"
       dirty_form: "Você não enviou as alterações! Deseja mesmo sair?"
+      select:
+        select_placeholder: "Selecionar…"
+        none_placeholder: "Nenhum"
       errors:
         required: "Necessário(a)"
         invalid_url: "Deve ser uma URL válida"
@@ -6644,6 +6647,8 @@ pt_BR:
             title: "Enviar imagens"
         selectable_avatars:
           title: "Lista de avatares que os usuários podem escolher"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Tudo"
           required: "Necessário(a)"

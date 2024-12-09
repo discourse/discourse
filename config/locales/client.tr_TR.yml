@@ -2050,6 +2050,9 @@ tr_TR:
       optional: i̇steğe bağlı
       errors_summary_title: "Bu form hatalar içeriyor:"
       dirty_form: "Değişikliklerinizi göndermediniz! Ayrılmak istediğinizden emin misiniz?"
+      select:
+        select_placeholder: "Seç…"
+        none_placeholder: "Yok"
       errors:
         required: "Gerekli"
         invalid_url: "Geçerli bir URL olmalıdır"
@@ -6644,6 +6647,8 @@ tr_TR:
             title: "Görüntü yükle"
         selectable_avatars:
           title: "Kullanıcıların seçebileceği avatarların listesi"
+        table_column_heading:
+          status: "Durum"
         categories:
           all_results: "Tümü"
           required: "Gerekli"

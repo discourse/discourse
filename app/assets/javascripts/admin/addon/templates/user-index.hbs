@@ -10,7 +10,7 @@
     {{#if this.model.can_view_action_logs}}
       <DButton
         @action={{fn this.viewActionLogs this.model.username}}
-        @icon="far-list-alt"
+        @icon="far-rectangle-list"
         @label="admin.user.action_logs"
         class="btn-default"
       />
@@ -850,7 +850,7 @@
           {{else}}
             <DButton
               @action={{fn this.checkSsoPayload this.model}}
-              @icon="far-list-alt"
+              @icon="far-rectangle-list"
               @label="admin.users.check_sso.text"
               @title="admin.users.check_sso.title"
               class="btn-default"

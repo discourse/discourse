@@ -43,6 +43,12 @@ module PageObjects
         all(".directory-table__row").size
       end
 
+      def has_correct_breadcrumbs?
+        expect(all(".d-breadcrumbs__item").map(&:text)).to eq(
+          [I18n.t("js.admin_title"), I18n.t("admin_js.admin.users.title")],
+        )
+      end
+
       def has_users?(user_ids)
         user_ids.all? { |id| has_css?(".directory-table__row[data-user-id=\"#{id}\"]") }
       end

@@ -2273,6 +2273,9 @@ uk:
       optional: опціонально
       errors_summary_title: "Ця форма містить помилки:"
       dirty_form: "Ви не надсилали свої зміни! Ви впевнені, що хочете піти?"
+      select:
+        select_placeholder: "Виберіть…"
+        none_placeholder: "Немає"
       errors:
         required: "Обов'язкові"
         invalid_url: "Має бути дійсною URL-адресою"
@@ -7251,6 +7254,8 @@ uk:
             title: "Завантажити зображення"
         selectable_avatars:
           title: "Список аватарів, які користувачі можуть вибрати"
+        table_column_heading:
+          status: "Статус"
         categories:
           all_results: "Всі"
           required: "Обов'язкові"

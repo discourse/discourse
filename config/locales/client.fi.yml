@@ -2050,6 +2050,9 @@ fi:
       optional: valinnainen
       errors_summary_title: "Tämä lomake sisältää virheitä:"
       dirty_form: "Et lähettänyt muutoksiasi! Oletko varma, että haluat poistua?"
+      select:
+        select_placeholder: "Valitse…"
+        none_placeholder: "Ei valittu"
       errors:
         required: "Pakollinen"
         invalid_url: "Täytyy olla kelvollinen URL"
@@ -6643,6 +6646,8 @@ fi:
             title: "Lataa kuvia"
         selectable_avatars:
           title: "Avatarit, joista käyttäjä voi valita"
+        table_column_heading:
+          status: "Tila"
         categories:
           all_results: "Kaikki"
           required: "Pakolliset"

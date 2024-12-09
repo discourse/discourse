@@ -2176,6 +2176,9 @@ pl_PL:
       optional: opcjonalnie
       errors_summary_title: "Ten formularz zawiera błędy:"
       dirty_form: "Nie przesłano zmian. Czy na pewno chcesz wyjść?"
+      select:
+        select_placeholder: "Wybierz…"
+        none_placeholder: "Brak"
       errors:
         required: "Wymagane"
         invalid_url: "Musi być prawidłowym adresem URL"
@@ -7003,6 +7006,8 @@ pl_PL:
             title: "Prześlij obrazy"
         selectable_avatars:
           title: "Lista awatarów, z których użytkownicy mogą wybierać"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Wszystkie"
           required: "Wymagane"

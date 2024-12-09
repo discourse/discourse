@@ -50,8 +50,8 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   it "collapses sections by default" do
     visit("/admin")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(3)
-    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
+    expect(links.count).to eq(4)
+    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings", "What's New"])
   end
 
   context "when on mobile" do
@@ -173,8 +173,8 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   it "temporarily expands section when filter" do
     visit("/admin")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(3)
-    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
+    expect(links.count).to eq(4)
+    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings", "What's New"])
 
     filter.filter("ie")
     links = page.all(".sidebar-section-link-content-text")
@@ -183,8 +183,8 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
 
     filter.filter("")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.count).to eq(3)
-    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
+    expect(links.count).to eq(4)
+    expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings", "What's New"])
   end
 
   it "allows further filtering of site settings or users if links do not show results" do
@@ -223,9 +223,9 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(page).to have_selector(".sidebar-section-link-content-text", minimum: 50)
 
     sidebar.toggle_all_sections
-    expect(page).to have_selector(".sidebar-section-link-content-text", count: 3)
+    expect(page).to have_selector(".sidebar-section-link-content-text", count: 4)
     expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
-      ["Dashboard", "Users", "All Site Settings"],
+      ["Dashboard", "Users", "All Site Settings", "What's New"],
     )
 
     sidebar.toggle_all_sections

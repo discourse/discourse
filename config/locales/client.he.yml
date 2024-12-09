@@ -2275,6 +2275,9 @@ he:
       optional: רשות
       errors_summary_title: "הטופס הזה מכיל שגיאות:"
       dirty_form: "לא הגשת את השינויים שלך! לצאת?"
+      select:
+        select_placeholder: "בחירה…"
+        none_placeholder: "ללא"
       errors:
         required: "נדרש"
         invalid_url: "חייבת להיות כתובת תקפה"
@@ -3954,6 +3957,7 @@ he:
         other: "מוצגות %{count} תגובות אל"
       in_reply_to: "טעינת הפוסט ההורה"
       view_all_posts: "הצגת כל הפוסטים"
+      badge_granted_tooltip: "ל־%{username} יש זכאות לעיטור ‚%{badge_name}’ על הפוסט!"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -7248,6 +7252,8 @@ he:
             title: "העלאת תמונות"
         selectable_avatars:
           title: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור"
+        table_column_heading:
+          status: "מצב"
         categories:
           all_results: "הכול"
           required: "נדרש"
@@ -7351,10 +7357,12 @@ he:
         no_user_badges: "למשתמש %{name} לא הוענקו עיטורים."
         no_badges: אין עיטורים שניתן להעניק.
         none_selected: "נא לבחור עיטור כדי להתחיל"
+        usage_heading: שימוש
         allow_title: לאפשר להשתמש בעיטור ככותרת
         multiple_grant: יכולים להינתן מספר פעמים
         visibility_heading: חשיפה
         listable: הצגת עיטורים בעמוד העיטורים הפומבי
+        show_in_post_header: הצגת עיטור על הפוסט שבגינו הוענק
         enabled: פעיל
         disabled: מושבת
         icon: סמליל
