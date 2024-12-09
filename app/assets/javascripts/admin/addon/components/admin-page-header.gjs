@@ -39,87 +39,95 @@ export default class AdminPageHeader extends Component {
     }
   }
 
+  get shouldDisplay() {
+    return this.args.shouldDisplay === undefined
+      ? true
+      : this.args.shouldDisplay;
+  }
+
   <template>
-    <div class="admin-page-header">
-      <div class="admin-page-header__breadcrumbs">
-        <DBreadcrumbsContainer />
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-        {{yield to="breadcrumbs"}}
-      </div>
-
-      <div class="admin-page-header__title-row">
-        {{#if this.title}}
-          <h1 class="admin-page-header__title">{{this.title}}</h1>
-        {{/if}}
-
-        {{#if (or (has-block "actions") @headerActionComponent)}}
-          <div class="admin-page-header__actions">
-            {{#if this.site.mobileView}}
-              <DMenu
-                @identifier="admin-page-header-mobile-actions"
-                @title={{i18n "more_options"}}
-                @icon="ellipsis-vertical"
-                class="btn-small"
-              >
-                <:content>
-                  <DropdownMenu class="admin-page-header__mobile-actions">
-                    {{#let
-                      (hash
-                        Primary=PrimaryActionListItem
-                        Default=DefaultActionListItem
-                        Danger=DangerActionListItem
-                        Wrapped=WrappedActionListItem
-                      )
-                      as |actions|
-                    }}
-                      {{#if (has-block "actions")}}
-                        {{yield actions to="actions"}}
-                      {{else}}
-                        <@headerActionComponent @actions={{actions}} />
-                      {{/if}}
-                    {{/let}}
-                  </DropdownMenu>
-                </:content>
-              </DMenu>
-            {{else}}
-              {{#let
-                (hash
-                  Primary=PrimaryButton
-                  Default=DefaultButton
-                  Danger=DangerButton
-                  Wrapped=WrappedButton
-                )
-                as |actions|
-              }}
-                {{#if (has-block "actions")}}
-                  {{yield actions to="actions"}}
-                {{else}}
-                  <@headerActionComponent @actions={{actions}} />
-                {{/if}}
-              {{/let}}
-            {{/if}}
-          </div>
-        {{/if}}
-      </div>
-
-      {{#if this.description}}
-        <p class="admin-page-header__description">
-          {{htmlSafe this.description}}
-          {{#if @learnMoreUrl}}
-            <span class="admin-page-header__learn-more">{{htmlSafe
-                (i18n "learn_more_with_link" url=@learnMoreUrl)
-              }}</span>
-          {{/if}}
-        </p>
-      {{/if}}
-
-      {{#unless @hideTabs}}
-        <div class="admin-nav-submenu">
-          <HorizontalOverflowNav class="admin-nav-submenu__tabs">
-            {{yield to="tabs"}}
-          </HorizontalOverflowNav>
+    {{#if this.shouldDisplay}}
+      <div class="admin-page-header">
+        <div class="admin-page-header__breadcrumbs">
+          <DBreadcrumbsContainer />
+          <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+          {{yield to="breadcrumbs"}}
         </div>
-      {{/unless}}
-    </div>
+
+        <div class="admin-page-header__title-row">
+          {{#if this.title}}
+            <h1 class="admin-page-header__title">{{this.title}}</h1>
+          {{/if}}
+
+          {{#if (or (has-block "actions") @headerActionComponent)}}
+            <div class="admin-page-header__actions">
+              {{#if this.site.mobileView}}
+                <DMenu
+                  @identifier="admin-page-header-mobile-actions"
+                  @title={{i18n "more_options"}}
+                  @icon="ellipsis-vertical"
+                  class="btn-small"
+                >
+                  <:content>
+                    <DropdownMenu class="admin-page-header__mobile-actions">
+                      {{#let
+                        (hash
+                          Primary=PrimaryActionListItem
+                          Default=DefaultActionListItem
+                          Danger=DangerActionListItem
+                          Wrapped=WrappedActionListItem
+                        )
+                        as |actions|
+                      }}
+                        {{#if (has-block "actions")}}
+                          {{yield actions to="actions"}}
+                        {{else}}
+                          <@headerActionComponent @actions={{actions}} />
+                        {{/if}}
+                      {{/let}}
+                    </DropdownMenu>
+                  </:content>
+                </DMenu>
+              {{else}}
+                {{#let
+                  (hash
+                    Primary=PrimaryButton
+                    Default=DefaultButton
+                    Danger=DangerButton
+                    Wrapped=WrappedButton
+                  )
+                  as |actions|
+                }}
+                  {{#if (has-block "actions")}}
+                    {{yield actions to="actions"}}
+                  {{else}}
+                    <@headerActionComponent @actions={{actions}} />
+                  {{/if}}
+                {{/let}}
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+
+        {{#if this.description}}
+          <p class="admin-page-header__description">
+            {{htmlSafe this.description}}
+            {{#if @learnMoreUrl}}
+              <span class="admin-page-header__learn-more">{{htmlSafe
+                  (i18n "learn_more_with_link" url=@learnMoreUrl)
+                }}</span>
+            {{/if}}
+          </p>
+        {{/if}}
+
+        {{#unless @hideTabs}}
+          <div class="admin-nav-submenu">
+            <HorizontalOverflowNav class="admin-nav-submenu__tabs">
+              {{yield to="tabs"}}
+            </HorizontalOverflowNav>
+          </div>
+        {{/unless}}
+      </div>
+    {{/if}}
   </template>
 }
