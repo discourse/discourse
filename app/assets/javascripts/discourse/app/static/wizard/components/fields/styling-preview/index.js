@@ -2,19 +2,17 @@ import { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
-import { chooseDarker, darkLightDiff } from "../../../lib/preview";
+import {
+  chooseDarker,
+  darkLightDiff,
+  resizeTextLinesToFitRect,
+} from "../../../lib/preview";
 import HomepagePreview from "./-homepage-preview";
 import PreviewBaseComponent from "./-preview-base";
 
-const LOREM = `
-Lorem ipsum dolor sit amet, consectetur adipiscing.
-Nullam eget sem non elit tincidunt rhoncus. Fusce
-velit nisl, porttitor sed nisl ac, consectetur interdum
-metus. Fusce in consequat augue, vel facilisis felis.`;
-
 export default class Index extends PreviewBaseComponent {
-  width = 628;
-  height = 322;
+  width = 630;
+  height = 380;
   logo = null;
   avatar = null;
   previewTopic = true;
@@ -117,79 +115,94 @@ export default class Index extends PreviewBaseComponent {
   }
 
   paint({ ctx, colors, font, headingFont, width, height }) {
-    const headerHeight = height * 0.3;
-
     this.drawFullHeader(colors, headingFont, this.logo);
 
     const margin = 20;
-    const avatarSize = height * 0.15;
+    const avatarSize = height * 0.1 + 5;
     const lineHeight = height / 14;
+    const leftHandTextGutter = margin + avatarSize + margin;
+    const timelineX = width * 0.86;
 
     // Draw a fake topic
     this.scaleImage(
       this.avatar,
       margin,
-      headerHeight + height * 0.09,
+      this.headerHeight + height * 0.22,
       avatarSize,
       avatarSize
     );
 
-    const titleFontSize = headerHeight / 55;
+    const titleFontSize = this.headerHeight / 30;
 
+    // Topic title
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
-    ctx.font = `bold ${titleFontSize}em '${headingFont}'`;
+    ctx.font = `700 ${titleFontSize}em '${headingFont}'`;
     ctx.fillText(i18n("wizard.previews.topic_title"), margin, height * 0.3);
 
-    const bodyFontSize = height / 330.0;
+    // Topic OP text
+    const bodyFontSize = 1;
     ctx.font = `${bodyFontSize}em '${font}'`;
 
-    let line = 0;
-    const lines = LOREM.split("\n");
-    for (let i = 0; i < 5; i++) {
-      line = height * 0.35 + i * lineHeight;
-      ctx.fillText(lines[i], margin + avatarSize + margin, line);
-    }
+    let verticalLinePos = 0;
+    const topicOp = i18n("wizard.homepage_preview.topic_ops.what_books");
+    const topicOpLines = topicOp.split("\n");
 
-    // Share Button
-    const shareButtonWidth = i18n("wizard.previews.share_button").length * 11;
+    resizeTextLinesToFitRect(
+      topicOpLines,
+      timelineX - leftHandTextGutter,
+      ctx,
+      bodyFontSize,
+      font,
+      (textLine, idx) => {
+        verticalLinePos = height * 0.4 + idx * lineHeight;
+        ctx.fillText(textLine, leftHandTextGutter, verticalLinePos);
+      }
+    );
+
+    ctx.font = `${bodyFontSize}em '${font}'`;
+
+    // Share button
+    const shareButtonWidth =
+      Math.round(ctx.measureText(i18n("wizard.previews.share_button")).width) +
+      margin;
 
     ctx.beginPath();
-    ctx.rect(margin, line + lineHeight, shareButtonWidth, height * 0.1);
+    ctx.rect(margin, verticalLinePos, shareButtonWidth, height * 0.1);
     // accounts for hard-set color variables in solarized themes
     ctx.fillStyle =
       colors.primary_low ||
       darkLightDiff(colors.primary, colors.secondary, 90, 65);
+    ctx.fill();
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
-    ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       i18n("wizard.previews.share_button"),
       margin + 10,
-      line + lineHeight * 1.9
+      verticalLinePos + lineHeight * 0.9
     );
 
-    // Reply Button
-    const replyButtonWidth = i18n("wizard.previews.reply_button").length * 11;
+    // Reply button
+    const replyButtonWidth =
+      Math.round(ctx.measureText(i18n("wizard.previews.reply_button")).width) +
+      margin;
 
     ctx.beginPath();
     ctx.rect(
       shareButtonWidth + margin + 10,
-      line + lineHeight,
+      verticalLinePos,
       replyButtonWidth,
       height * 0.1
     );
     ctx.fillStyle = colors.tertiary;
     ctx.fill();
     ctx.fillStyle = colors.secondary;
-    ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       i18n("wizard.previews.reply_button"),
-      shareButtonWidth + margin + 20,
-      line + lineHeight * 1.9
+      shareButtonWidth + margin * 2,
+      verticalLinePos + lineHeight * 0.9
     );
 
-    // Draw Timeline
-    const timelineX = width * 0.86;
+    // Draw timeline
     ctx.beginPath();
     ctx.strokeStyle = colors.tertiary;
     ctx.lineWidth = 0.5;
@@ -197,17 +210,30 @@ export default class Index extends PreviewBaseComponent {
     ctx.lineTo(timelineX, height * 0.7);
     ctx.stroke();
 
-    // Timeline
+    // Timeline handle
     ctx.beginPath();
     ctx.strokeStyle = colors.tertiary;
-    ctx.lineWidth = 2;
-    ctx.moveTo(timelineX, height * 0.3);
+    ctx.lineWidth = 3;
+    ctx.moveTo(timelineX, height * 0.3 + 10);
     ctx.lineTo(timelineX, height * 0.4);
     ctx.stroke();
 
-    ctx.font = `Bold ${bodyFontSize}em ${font}`;
+    // Timeline post count
+    const postCountY = height * 0.3 + margin + 10;
+    ctx.beginPath();
+    ctx.font = `700 ${bodyFontSize}em '${font}'`;
     ctx.fillStyle = colors.primary;
-    ctx.fillText("1 / 20", timelineX + margin, height * 0.3 + margin * 1.5);
+    ctx.fillText("1 / 20", timelineX + margin / 2, postCountY);
+
+    // Timeline post date
+    ctx.beginPath();
+    ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
+    ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 70, 65);
+    ctx.fillText(
+      "Nov 22",
+      timelineX + margin / 2,
+      postCountY + lineHeight * 0.75
+    );
   }
 
   @action
