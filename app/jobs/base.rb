@@ -44,7 +44,6 @@ module Jobs
     class JobInstrumenter
       def initialize(job_class:, opts:, db:, jid:)
         return unless enabled?
-
         self.class.mutex.synchronize do
           @data = {}
 
@@ -76,7 +75,6 @@ module Jobs
 
       def stop(exception:)
         return unless enabled?
-
         self.class.mutex.synchronize do
           profile = MethodProfiler.stop
 
@@ -104,15 +102,30 @@ module Jobs
       end
 
       def self.raw_log(message)
-        begin
-          logger << message
-        rescue => e
-          Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
-        end
-      end
+        @@logger ||=
+          begin
+            f = File.open "#{Rails.root}/log/sidekiq.log", "a"
+            f.sync = true
+            Logger.new f
+          end
 
-      def self.logger
-        @@logger ||= Logger.new("#{Rails.root}/log/sidekiq.log")
+        @@log_queue ||= Queue.new
+
+        if !defined?(@@log_thread) || !@@log_thread.alive?
+          @@log_thread =
+            Thread.new do
+              loop do
+                @@logger << @@log_queue.pop
+              rescue Exception => e
+                Discourse.warn_exception(
+                  e,
+                  message: "Exception encountered while logging Sidekiq job",
+                )
+              end
+            end
+        end
+
+        @@log_queue.push(message)
       end
 
       def current_duration
@@ -246,7 +259,6 @@ module Jobs
           requeued = true
           return
         end
-
         parent_thread = Thread.current
         cluster_concurrency_redis_key = self.class.cluster_concurrency_redis_key
 
@@ -331,7 +343,6 @@ module Jobs
         keepalive_thread.join
         self.class.clear_cluster_concurrency_lock!
       end
-
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
   end
