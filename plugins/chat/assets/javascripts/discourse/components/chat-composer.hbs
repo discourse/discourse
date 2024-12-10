@@ -73,11 +73,7 @@
               class="-{{button.id}}"
               disabled={{or this.disabled button.disabled}}
               tabindex={{if button.disabled -1 0}}
-              {{on
-                "click"
-                (fn this.handleInlineButtonAction button.action)
-                bubbles=false
-              }}
+              {{on "click" (fn this.handleInlineButtonAction button.action)}}
               {{on "focus" (fn this.computeIsFocused true)}}
               {{on "blur" (fn this.computeIsFocused false)}}
             />
