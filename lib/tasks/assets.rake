@@ -258,6 +258,10 @@ def log_task_duration(task_description, &task)
   STDERR.puts
 end
 
+def s3_assets_helper
+  @s3_assets_helper ||= S3AssetsHelper.new
+end
+
 task "assets:precompile:compress_js": "environment" do
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
@@ -276,6 +280,7 @@ task "assets:precompile:compress_js": "environment" do
           .select { |k, v| k =~ /\.js\z/ }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
+
             _file =
               (
                 if (d = File.dirname(file)) == "."
@@ -284,10 +289,16 @@ task "assets:precompile:compress_js": "environment" do
                   "#{d}/_#{File.basename(file)}"
                 end
               )
+
             _path = "#{assets_path}/#{_file}"
+
             max_compress = max_compress?(info["logical_path"], locales)
+
             if File.exist?(_path)
               STDERR.puts "Skipping: #{file} already compressed"
+            elsif ENV["PRECOMPILE_SKIP_COMPRESSING_JS_ALREADY_ON_S3"] && GlobalSetting.use_s3? &&
+                  s3_assets_helper.asset_on_s3?(File.join("assets", file).to_s)
+              STDERR.puts "Skipping: #{file} already on S3"
             elsif file.include? "discourse/tests"
               STDERR.puts "Skipping: #{file}"
             else
