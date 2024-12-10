@@ -3344,20 +3344,12 @@ experimental:
     refresh: true
   glimmer_post_menu_mode:
     client: true
-    hidden: true
     type: enum
     choices:
       - disabled
       - auto
       - enabled
-    default: disabled
-  glimmer_post_menu_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+    default: auto
   enable_experimental_lightbox:
     default: false
     client: true
