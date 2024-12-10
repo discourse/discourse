@@ -22,10 +22,6 @@ export default class NotificationsButtonRow extends DropdownSelectBoxRowComponen
 
   @computed("_start")
   get description() {
-    if (this.site && this.site.mobileView) {
-      return null;
-    }
-
     return escapeExpression(i18n(`${this._start}.description`));
   }
 

@@ -21,11 +21,11 @@
   style={{html-safe this.progressStyle}}
 >
   <div class="nums">
-    <h4>{{this.progressPosition}}</h4>
-    <span class={{if this.hugeNumberOfPosts "hidden"}}>
-      <span>/</span>
-      <h4>{{this.postStream.filteredPostsCount}}</h4>
-    </span>
+    <span>{{this.progressPosition}}</span>
+    <span class={{if this.hugeNumberOfPosts "hidden"}}>/</span>
+    <span
+      class={{if this.hugeNumberOfPosts "hidden"}}
+    >{{this.postStream.filteredPostsCount}}</span>
   </div>
   <div class="bg"></div>
 </nav>

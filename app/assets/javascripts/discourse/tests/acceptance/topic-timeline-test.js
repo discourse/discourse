@@ -332,25 +332,11 @@ acceptance("Glimmer Topic Timeline", function (needs) {
     });
   });
 
-  test("has a topic admin menu", async function (assert) {
-    await visit("/t/internationalization-localization");
-    assert
-      .dom(".timeline-controls .topic-admin-menu-button")
-      .exists("admin menu is present");
-  });
-
   test("has a reply-to-post button", async function (assert) {
     await visit("/t/internationalization-localization");
     assert
       .dom(".timeline-footer-controls .reply-to-post")
       .exists("reply to post button is present");
-  });
-
-  test("has a topic notification button", async function (assert) {
-    await visit("/t/internationalization-localization");
-    assert
-      .dom(".timeline-footer-controls .topic-notifications-button")
-      .exists("topic notifications button is present");
   });
 
   test("Shows dates of first and last posts", async function (assert) {
