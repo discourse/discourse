@@ -30,10 +30,6 @@
     }
   }
 
-  .keyboard-visible body:not(.ios-safari-composer-hacks) &.open {
-    bottom: auto;
-  }
-
   .reply-to {
     justify-content: space-between;
     margin-bottom: 6px;
