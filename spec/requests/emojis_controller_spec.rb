@@ -1,13 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::EmojisController do
+RSpec.describe EmojisController do
   fab!(:user_1) { Fabricate(:user) }
 
-  before do
-    SiteSetting.chat_enabled = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    sign_in(user_1)
-  end
+  before { sign_in(user_1) }
 
   describe "#index" do
     before do
@@ -22,7 +18,7 @@ RSpec.describe Chat::EmojisController do
     end
 
     it "returns the emojis list" do
-      get "/chat/emojis.json"
+      get "/emojis.json"
 
       expect(response.status).to eq(200)
       expect(response.parsed_body.keys).to eq(
