@@ -27,4 +27,10 @@ describe "Admin Permalinks Page", type: :system do
 
     expect(admin_permalinks_page).to have_no_permalinks
   end
+
+  it "allows admin to go to permalink settings page" do
+    admin_permalinks_page.visit
+    admin_permalinks_page.click_tab("settings")
+    expect(admin_permalinks_page).to have_active_tab("settings")
+  end
 end
