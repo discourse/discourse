@@ -116,11 +116,6 @@ blockquote {
 
 // Special elements
 
-#main-outlet-wrapper {
-  margin-left: unset;
-  margin-right: unset;
-}
-
 #main-outlet {
   padding-top: 1.25em;
   &:after {
@@ -129,8 +124,4 @@ blockquote {
     opacity: 0;
     transition: opacity 0.2s;
   }
-}
-
-#main {
-  position: relative;
 }

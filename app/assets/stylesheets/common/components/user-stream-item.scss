@@ -126,6 +126,9 @@
     font-size: var(--font-0);
     max-width: 400px;
     @include ellipsis;
+    @include breakpoint("mobile-extra-large") {
+      vertical-align: middle;
+    }
   }
 
   .edit-reason {
@@ -159,6 +162,11 @@
 
   .group-member-info {
     display: flex;
+    @include breakpoint("mobile-extra-large") {
+      .name {
+        vertical-align: inherit;
+      }
+    }
   }
 }
 

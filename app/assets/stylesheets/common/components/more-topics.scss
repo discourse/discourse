@@ -6,6 +6,10 @@
   .nav {
     margin-block: 0;
     top: 2px;
+    @include breakpoint(mobile-extra-large) {
+      margin-block: 0 7px;
+      border-bottom: 1px solid var(--primary-low);
+    }
     li {
       .btn {
         color: var(--primary);
@@ -69,5 +73,20 @@
   .more-topics__list-title,
   .more-topics__browse-more {
     padding-left: 0.5em;
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    .more-content-topics {
+      padding: 15px 0 15px 0;
+
+      .badge-category,
+      .badge-category-parent {
+        font-size: var(--font-down-1);
+        vertical-align: top;
+      }
+      .suggested-topics-message {
+        margin-top: 1em;
+      }
+    }
   }
 }

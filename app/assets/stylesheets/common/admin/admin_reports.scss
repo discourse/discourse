@@ -7,6 +7,29 @@
       margin-bottom: 1em;
       border-bottom: 1px solid var(--primary-low);
     }
+
+    @include breakpoint(mobile-extra-large) {
+      .body {
+        flex-direction: column;
+
+        .filters {
+          order: 0;
+          margin: 0;
+          width: 100%;
+        }
+
+        .main {
+          order: 2;
+        }
+
+        .report-alert {
+          margin: 0;
+          order: 1;
+          flex: 1 0 0px;
+          padding: 1em;
+        }
+      }
+    }
   }
 
   .admin-report-chart .chart-canvas-container .chart-canvas {
