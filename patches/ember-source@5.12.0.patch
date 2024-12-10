@@ -1,16 +1,26 @@
 diff --git a/dist/ember-template-compiler.js b/dist/ember-template-compiler.js
-index 01999af0c4c125af3c713318db7eb85fa492f72d..3edcfd7ca66cfd31d6acde6eff84dcce8d4f0866 100644
+index 01999af0c4c125af3c713318db7eb85fa492f72d..edadab049d4e5959b4d33ddcbe59bcaec9641e61 100644
 --- a/dist/ember-template-compiler.js
 +++ b/dist/ember-template-compiler.js
-@@ -9485,10 +9485,10 @@ var define, require;
+@@ -9485,10 +9485,20 @@ var define, require;
                    return Object.defineProperty(node, "escaped", {
                      enumerable: !1,
                      get() {
 -                      return deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), !this.trusting;
++                      // when upgrading Ember check if this patch is still necessary
++                      // Ember 5.12 still shipped with the template-compiler generating a ton of warnings but the fix is already commited
++                      // to glimmervm/syntax
++                      // See https://github.com/glimmerjs/glimmer-vm/commit/02313376f21a606841b00a7789fd6128a1b292af
++                      // return deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), !this.trusting;
 +                      return !this.trusting;
                      },
                      set(value) {
 -                      deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), this.trusting = !value;
++                      // when upgrading Ember check if this patch is still necessary
++                      // Ember 5.12 still shipped with the template-compiler generating a ton of warnings but the fix is already commited
++                      // to glimmervm/syntax
++                      // See https://github.com/glimmerjs/glimmer-vm/commit/02313376f21a606841b00a7789fd6128a1b292af
++                      // deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), this.trusting = !value;
 +                      this.trusting = !value;
                      }
                    }), node;
