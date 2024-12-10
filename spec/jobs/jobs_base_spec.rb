@@ -148,4 +148,43 @@ RSpec.describe ::Jobs::Base do
       expect(common_state).to eq(%w[job_2_started job_2_finished job_1_executed])
     end
   end
+
+  context "when `Discourse.enable_sidekiq_logging?` is `true`" do
+    let(:tmp_log_file) { Tempfile.new("sidekiq.log") }
+
+    before do
+      Discourse.enable_sidekiq_logging
+      described_class::JobInstrumenter.set_log_path(tmp_log_file.path)
+    end
+
+    after do
+      Discourse.disable_sidekiq_logging
+      described_class::JobInstrumenter.reset_log_path
+      tmp_log_file.close
+    end
+
+    it "should log the job in the sidekiq log file" do
+      job = GoodJob.new
+      job.perform({ some_param: "some_value" })
+
+      parsed_logline = JSON.parse(File.read(tmp_log_file.path).split("\n").first)
+
+      expect(parsed_logline["hostname"]).to be_present
+      expect(parsed_logline["pid"]).to be_present
+      expect(parsed_logline["database"]).to eq(RailsMultisite::ConnectionManagement.current_db)
+      expect(parsed_logline["job_name"]).to eq("GoodJob")
+      expect(parsed_logline["job_type"]).to eq("regular")
+      expect(parsed_logline["status"]).to eq("success")
+      expect(JSON.parse(parsed_logline["opts"])).to eq("some_param" => "some_value")
+      expect(parsed_logline["duration"]).to be_present
+      expect(parsed_logline["sql_duration"]).to eq(0)
+      expect(parsed_logline["sql_calls"]).to eq(0)
+      expect(parsed_logline["redis_duration"]).to eq(0)
+      expect(parsed_logline["redis_calls"]).to eq(0)
+      expect(parsed_logline["net_duration"]).to eq(0)
+      expect(parsed_logline["net_calls"]).to eq(0)
+      expect(parsed_logline["live_slots_finish"]).to be_present
+      expect(parsed_logline["live_slots"]).to be_present
+    end
+  end
 end

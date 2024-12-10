@@ -44,6 +44,7 @@ module Jobs
     class JobInstrumenter
       def initialize(job_class:, opts:, db:, jid:)
         return unless enabled?
+
         self.class.mutex.synchronize do
           @data = {}
 
@@ -75,6 +76,7 @@ module Jobs
 
       def stop(exception:)
         return unless enabled?
+
         self.class.mutex.synchronize do
           profile = MethodProfiler.stop
 
@@ -102,30 +104,35 @@ module Jobs
       end
 
       def self.raw_log(message)
+        begin
+          logger << message
+        rescue => e
+          Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
+        end
+      end
+
+      # For test environment only
+      def self.set_log_path(path)
+        @@log_path = path
+        @@logger = nil
+      end
+
+      # For test environment only
+      def self.reset_log_path
+        @@log_path = nil
+        @@logger = nil
+      end
+
+      def self.log_path
+        @@log_path ||= "#{Rails.root}/log/sidekiq.log"
+      end
+
+      def self.logger
         @@logger ||=
           begin
-            f = File.open "#{Rails.root}/log/sidekiq.log", "a"
-            f.sync = true
-            Logger.new f
+            File.touch(log_path) if !File.exist?(log_path)
+            Logger.new(log_path)
           end
-
-        @@log_queue ||= Queue.new
-
-        if !defined?(@@log_thread) || !@@log_thread.alive?
-          @@log_thread =
-            Thread.new do
-              loop do
-                @@logger << @@log_queue.pop
-              rescue Exception => e
-                Discourse.warn_exception(
-                  e,
-                  message: "Exception encountered while logging Sidekiq job",
-                )
-              end
-            end
-        end
-
-        @@log_queue.push(message)
       end
 
       def current_duration
@@ -259,6 +266,7 @@ module Jobs
           requeued = true
           return
         end
+
         parent_thread = Thread.current
         cluster_concurrency_redis_key = self.class.cluster_concurrency_redis_key
 
@@ -343,6 +351,7 @@ module Jobs
         keepalive_thread.join
         self.class.clear_cluster_concurrency_lock!
       end
+
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
   end
