@@ -573,6 +573,7 @@ en:
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
+      filtered_flagged_by: "Flagged by"
       explain:
         why: "explain why this item ended up in the queue"
         title: "Reviewable Scoring"
@@ -7101,7 +7102,7 @@ en:
         selectable_avatars:
           title: "List of avatars users can choose from"
         table_column_heading:
-          status: "Status" 
+          status: "Status"
         categories:
           all_results: "All"
           required: "Required"

@@ -32,9 +32,16 @@ class ReviewablesController < ApplicationController
       additional_filters: additional_filters.reject { |_, v| v.blank? },
     }
 
-    %i[priority username reviewed_by from_date to_date type sort_order].each do |filter_key|
-      filters[filter_key] = params[filter_key]
-    end
+    %i[
+      priority
+      username
+      reviewed_by
+      from_date
+      to_date
+      type
+      sort_order
+      flagged_by
+    ].each { |filter_key| filters[filter_key] = params[filter_key] }
 
     total_rows = Reviewable.list_for(current_user, **filters).count
     reviewables =
