@@ -1158,6 +1158,7 @@ cs:
       queue_size: "Počet čekajících úloh je %{queue_size}, což je příliš mnoho. Mohlo by to indikovat problém se službou Sidekiq, nebo je zapotřebí spustit více Sidekiq worker procesů."
       ram: "Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti."
       out_of_date_themes: "Pro následující motivy jsou k dispozici aktualizace:%{themes_list}"
+      unreachable_themes: "Nebyli jsme schopni zkontrolovat aktualizace následujících motivů: %{themes_list}"
   site_settings:
     disabled: "vypnuto"
     default_locale: "Výchozí jazyk této instance Discourse. Text kategorií a témat generovaných systémem můžete nahradit v nabídce <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Přizpůsobit / Text</a>."
@@ -1450,8 +1451,94 @@ cs:
 
       %{notes}
   system_messages:
+    reviewables_reminder:
+      subject_template: "Ve frontě revizí čekají položky, které je třeba zkontrolovat"
+      text_body_template:
+        one: "%{mentions} Položky byly odeslány před %{count} hodinou. [Zrevidujte je, prosím](%{base_url}/review)."
+        few: "%{mentions} Položky byly odeslány před %{count} hodinami. [Zrevidujte je, prosím](%{base_url}/review)."
+        many: "%{mentions} Položky byly odeslány před %{count} hodinami. [Zrevidujte je, prosím](%{base_url}/review)."
+        other: "%{mentions} Položky byly odeslány před %{count} hodinami. [Zrevidujte je, prosím](%{base_url}/review)."
+    private_topic_title: "Téma #%{id}"
+    contents_hidden: "Navštivte příspěvek a podívejte se na jeho obsah."
+    post_hidden:
+      title: "Skrytý příspěvek"
+      subject_template: "Příspěvek skrytý nahlášeními komunity"
+      text_body_template: |
+        Dobrý den,
+
+        Toto je automatická zpráva od %{site_name} , která vás informuje, že váš příspěvek byl skrytý.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Tento příspěvek byl skryt z důvodu nahlášení z komunity, proto prosím zvažte, jak byste jej mohli upravit aby váš příspěvek odrážel jejich zpětnou vazbu. **Svůj příspěvek můžete upravit po %{edit_delay} minutách a automaticky se zobrazí.**
+
+        Pokud však příspěvek skryje komunita podruhé, zůstane skrytý, dokud jej nezpracuje redakce.
+
+        Další pokyny naleznete v našich [pravidlech komunity](%{base_url}/guidelines).
+    reviewable_queued_post_revise_and_reject:
+      title: "Zpětná vazba na váš příspěvek"
+      subject_template: "Zpětná vazba na váš příspěvek v %{topic_title}"
+      text_body_template: |
+        Ahoj %{username},
+
+        Váš příspěvek jsme zkontrolovali v [%{topic_title}] (%{topic_url}) a máme pro vás nějakou zpětnou vazbu.
+
+        Důvod: %{reason}
+
+        Zpětná vazba: %{feedback}
+
+        Níže můžete upravit a znovu odeslat svůj původní příspěvek, abyste provedli navrhované změny. Pokud máte nějaké dotazy, odpovězte na tuto zprávu.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Díky,
+        %{site_name} Moderátoři
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Zpětná vazba na vaše téma"
+      subject_template: 'Zpětná vazba k novému tématu s názvem "%{topic_title}"'
+      text_body_template: |
+        Ahoj %{username},
+
+        Zkontrolovali jsme vaše nové téma s názvem „%{topic_title}“ a máme pro vás zpětnou vazbu.
+
+        Důvod: %{reason}
+
+        Zpětná vazba: %{feedback}
+
+        Níže můžete upravit a znovu odeslat původní příspěvek svého tématu, abyste provedli navrhované změny. Pokud máte nějaké dotazy, odpovězte na tuto zprávu.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Díky,
+        %{site_name} Moderátoři
+    post_hidden_again:
+      title: "Příspěvek byl opět skryt"
+      subject_template: "Příspěvek skryt nahlášeními komunity, redakce byla upozorněna"
+      text_body_template: |
+        Dobrý den,
+
+        Toto je automatická zpráva z %{site_name} , která vás informuje, že váš příspěvek byl znovu skryt.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        Komunita nahlásila tento příspěvek a nyní je skrytý. **Protože tento příspěvek byl skryt vícekrát, váš příspěvek nyní zůstane skrytý, dokud nebude zpracován členem redakce.**
+
+        Další pokyny najdete v našich [pravidlech komunity](%{base_url}/guidelines).
     queued_by_staff:
       title: "Příspěvek potřebuje schválení"
+      subject_template: "Příspěvek skrytý redakcí, čeká na schválení"
     usage_tips:
       text_body_template: |
         Několik rychlých tipů, jak začít jako nový uživatel, najdete v tomto příspěvku na české komunitě (https://meta.discourse.cz/t/tipy-a-triky-pro-nove-uzivatele-discourse/28/4) nebo v originále na blogu (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
