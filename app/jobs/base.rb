@@ -130,7 +130,7 @@ module Jobs
       def self.logger
         @@logger ||=
           begin
-            File.touch(log_path) if !File.exist?(log_path)
+            FileUtils.touch(log_path) if !File.exist?(log_path)
             Logger.new(log_path)
           end
       end
