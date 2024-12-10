@@ -3,6 +3,8 @@
 RSpec.describe UserSerializer do
   fab!(:user) { Fabricate(:user, trust_level: 0) }
 
+  before { user.user_stat.update!(post_count: 1) }
+
   context "with a TL0 user seen as anonymous" do
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }

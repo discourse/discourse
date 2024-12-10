@@ -30,6 +30,12 @@ export default class TopicPresenceDisplay extends Component {
   });
 
   setupWhisperChannel = helperFn((_, on) => {
+    // NOTE: this is here to prevent some flakes in tests
+    // For some random reasons, this component is being rendered even though `currentUser` is `null`
+    if (!this.currentUser) {
+      return;
+    }
+
     const { topic } = this.args;
     const { whisperer } = this.currentUser;
 

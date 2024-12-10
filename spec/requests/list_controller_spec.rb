@@ -905,7 +905,10 @@ RSpec.describe ListController do
     fab!(:topic2) { Fabricate(:topic, user: user) }
     fab!(:user2) { Fabricate(:user) }
 
-    before { sign_in(user2) }
+    before do
+      user.user_stat.update!(post_count: 1)
+      sign_in(user2)
+    end
 
     it "should respond with a list" do
       get "/topics/created-by/#{user.username}.json"

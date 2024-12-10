@@ -6,9 +6,11 @@ describe "Admin User Fields", type: :system do
   before { sign_in(current_user) }
 
   let(:user_fields_page) { PageObjects::Pages::AdminUserFields.new }
+  let(:admin_header) { PageObjects::Components::AdminHeader.new }
 
   it "correctly saves user fields" do
     user_fields_page.visit
+    expect(admin_header).to be_visible
     user_fields_page.add_field(name: "Occupation", description: "What you do for work")
 
     expect(user_fields_page).to have_user_field("Occupation")
@@ -29,6 +31,8 @@ describe "Admin User Fields", type: :system do
   it "makes sure new required fields are editable after signup" do
     user_fields_page.visit
     user_fields_page.click_add_field
+
+    expect(admin_header).to be_hidden
 
     form = page.find(".user-field")
     editable_label = I18n.t("admin_js.admin.user_fields.editable.title")
@@ -68,6 +72,8 @@ describe "Admin User Fields", type: :system do
       form = page.find(".user-field")
 
       form.find(".user-field-name").fill_in(with: "Favourite Transformer")
+
+      expect(admin_header).to be_hidden
 
       form.find(".btn-primary").click
 

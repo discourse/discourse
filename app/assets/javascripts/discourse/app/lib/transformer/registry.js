@@ -15,6 +15,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "more-topics-tabs",
   "move-to-topic-merge-options",
   "move-to-topic-move-options",
+  "navigation-bar-dropdown-mode",
+  "navigation-bar-dropdown-icon",
   "parent-category-row-class-mobile",
   "parent-category-row-class",
   "post-menu-buttons",
