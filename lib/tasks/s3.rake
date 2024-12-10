@@ -194,7 +194,10 @@ task "s3:ensure_cors_rules" => :environment do
 end
 
 task "s3:upload_assets" => [:environment, "s3:ensure_cors_rules"] do
-  assets.each { |asset| upload(*asset) }
+  pool = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
+  assets.each { |asset| pool.post { upload(*asset) } }
+  pool.shutdown
+  pool.wait_for_termination
 end
 
 task "s3:expire_missing_assets" => :environment do
