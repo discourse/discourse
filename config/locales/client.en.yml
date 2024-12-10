@@ -7352,6 +7352,9 @@ en:
         back: "Back to Permalinks"
         more_options: "More options"
         copy_success: "Permalink copied to clipboard"
+        nav:
+          settings: "Settings"
+          permalinks: "Permalinks"
         form:
           label: "New:"
           add_header: "Add permalink"

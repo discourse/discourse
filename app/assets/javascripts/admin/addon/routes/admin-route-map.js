@@ -91,6 +91,8 @@ export default function () {
           { path: "/permalinks", resetNamespace: true },
           function () {
             this.route("new");
+            this.route("index", { path: "/" });
+            this.route("settings");
             this.route("edit", { path: "/:permalink_id" });
           }
         );

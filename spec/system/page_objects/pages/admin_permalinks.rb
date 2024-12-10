@@ -49,6 +49,15 @@ module PageObjects
       def has_closed_permalink_menu?
         has_no_css?(".permalink-menu-content")
       end
+
+      def click_tab(tab)
+        has_css?(".admin-permalinks-tabs__#{tab}")
+        find(".admin-permalinks-tabs__#{tab}").click
+      end
+
+      def has_active_tab?(tab)
+        has_css?(".admin-permalinks-tabs__#{tab} .active")
+      end
     end
   end
 end
