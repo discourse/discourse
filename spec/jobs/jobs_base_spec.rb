@@ -150,24 +150,24 @@ RSpec.describe ::Jobs::Base do
   end
 
   context "when `Discourse.enable_sidekiq_logging?` is `true`" do
-    let(:tmp_log_file) { Tempfile.new("sidekiq.log") }
+    let(:tmp_log_file_path) { "#{Rails.root}/tmp/sidekiq_test_log.log" }
 
     before do
       Discourse.enable_sidekiq_logging
-      described_class::JobInstrumenter.set_log_path(tmp_log_file.path)
+      described_class::JobInstrumenter.set_log_path(tmp_log_file_path)
     end
 
     after do
       Discourse.disable_sidekiq_logging
       described_class::JobInstrumenter.reset_log_path
-      tmp_log_file.close
+      FileUtils.rm(tmp_log_file_path)
     end
 
     it "should log the job in the sidekiq log file" do
       job = GoodJob.new
       job.perform({ some_param: "some_value" })
 
-      parsed_logline = JSON.parse(File.read(tmp_log_file.path).split("\n").first)
+      parsed_logline = JSON.parse(File.read(tmp_log_file_path).split("\n").first)
 
       expect(parsed_logline["hostname"]).to be_present
       expect(parsed_logline["pid"]).to be_present
