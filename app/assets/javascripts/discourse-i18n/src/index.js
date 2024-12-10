@@ -387,7 +387,7 @@ export class I18n {
     }
   }
 
-  verboseTranslate(scope, options) {
+  _verboseTranslate(scope, options) {
     const result = this._translate(scope, options);
     let i = this.verboseIndicies.get(scope);
     if (!i) {
