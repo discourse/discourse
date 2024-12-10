@@ -127,6 +127,7 @@ RSpec.describe CookedPostProcessor do
 
       describe "internal links" do
         fab!(:topic)
+        fab!(:topic_post) { Fabricate(:post, topic: topic) }
         fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: "Hello #{topic.url}") }
         let(:url) { topic.url }
 
@@ -153,6 +154,7 @@ RSpec.describe CookedPostProcessor do
             "a",
             with: {
               href: UrlHelper.cook_url(url),
+              "data-author": topic_post.user.username,
             },
             without: {
               class: "inline-onebox-loading",
