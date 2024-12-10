@@ -1,48 +1,46 @@
 <div class="admin-embedding admin-config-page">
-  {{#if this.showHeader}}
-    <AdminPageHeader
-      @titleLabel="admin.embedding.title"
-      @descriptionLabel="admin.embedding.description"
-      @learnMoreUrl="https://meta.discourse.org/t/embed-discourse-comments-on-another-website-via-javascript/31963"
-    >
-      <:breadcrumbs>
-        <DBreadcrumbsItem
-          @path="/admin/customize/embedding"
-          @label={{i18n "admin.embedding.title"}}
-        />
-      </:breadcrumbs>
-      <:actions as |actions|>
-        <actions.Primary
-          @route="adminEmbedding.new"
-          @title="admin.embedding.add_host"
-          @label="admin.embedding.add_host"
-          class="admin-embedding__header-add-host"
-        />
-      </:actions>
-      <:tabs>
-        <NavItem
-          @route="adminEmbedding.settings"
-          @label="admin.embedding.nav.settings"
-          class="admin-embedding-tabs__settings"
-        />
-        <NavItem
-          @route="adminEmbedding.index"
-          @label="admin.embedding.nav.hosts"
-          class="admin-embedding-tabs__hosts"
-        />
-        <NavItem
-          @route="adminEmbedding.postsAndTopics"
-          @label="admin.embedding.nav.posts_and_topics"
-          class="admin-embedding-tabs__posts-and-topics"
-        />
-        <NavItem
-          @route="adminEmbedding.crawlers"
-          @label="admin.embedding.nav.crawlers"
-          class="admin-embedding-tabs__crawlers"
-        />
-      </:tabs>
-    </AdminPageHeader>
-  {{/if}}
+  <AdminPageHeader
+    @titleLabel="admin.embedding.title"
+    @descriptionLabel="admin.embedding.description"
+    @learnMoreUrl="https://meta.discourse.org/t/embed-discourse-comments-on-another-website-via-javascript/31963"
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem
+        @path="/admin/customize/embedding"
+        @label={{i18n "admin.embedding.title"}}
+      />
+    </:breadcrumbs>
+    <:actions as |actions|>
+      <actions.Primary
+        @route="adminEmbedding.new"
+        @title="admin.embedding.add_host"
+        @label="admin.embedding.add_host"
+        class="admin-embedding__header-add-host"
+      />
+    </:actions>
+    <:tabs>
+      <NavItem
+        @route="adminEmbedding.settings"
+        @label="admin.embedding.nav.settings"
+        class="admin-embedding-tabs__settings"
+      />
+      <NavItem
+        @route="adminEmbedding.index"
+        @label="admin.embedding.nav.hosts"
+        class="admin-embedding-tabs__hosts"
+      />
+      <NavItem
+        @route="adminEmbedding.postsAndTopics"
+        @label="admin.embedding.nav.posts_and_topics"
+        class="admin-embedding-tabs__posts-and-topics"
+      />
+      <NavItem
+        @route="adminEmbedding.crawlers"
+        @label="admin.embedding.nav.crawlers"
+        class="admin-embedding-tabs__crawlers"
+      />
+    </:tabs>
+  </AdminPageHeader>
 
   <div class="admin-container admin-config-page__main-area">
     {{outlet}}
