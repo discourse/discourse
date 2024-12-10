@@ -139,25 +139,27 @@ export default class Info extends Component {
               )
             }}
               <div class="categories-wrapper">
-                {{#if @topicInfo.category.parentCategory}}
-                  {{#if
-                    (and
-                      @topicInfo.category.parentCategory.parentCategory
-                      this.site.desktopView
-                    )
-                  }}
+                <PluginOutlet @name="header-categories-wrapper">
+                  {{#if @topicInfo.category.parentCategory}}
+                    {{#if
+                      (and
+                        @topicInfo.category.parentCategory.parentCategory
+                        this.site.desktopView
+                      )
+                    }}
+                      {{categoryLink
+                        @topicInfo.category.parentCategory.parentCategory
+                        (hash hideParent="true")
+                      }}
+                    {{/if}}
+
                     {{categoryLink
-                      @topicInfo.category.parentCategory.parentCategory
+                      @topicInfo.category.parentCategory
                       (hash hideParent="true")
                     }}
                   {{/if}}
-
-                  {{categoryLink
-                    @topicInfo.category.parentCategory
-                    (hash hideParent="true")
-                  }}
-                {{/if}}
-                {{categoryLink @topicInfo.category (hash hideParent="true")}}
+                  {{categoryLink @topicInfo.category (hash hideParent="true")}}
+                </PluginOutlet>
               </div>
             {{/if}}
 
