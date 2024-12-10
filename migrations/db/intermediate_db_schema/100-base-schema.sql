@@ -1,37 +1,38 @@
-/*
- This file is auto-generated from the Discourse core database schema. Instead of editing it directly,
- please update the `schema.yml` configuration file and re-run the `generate_schema` script to update it.
-*/
+-- This file is auto-generated from the IntermediateDB schema. To make changes, update
+-- the "config/intermediate_db.yml" configuration file and then run `cli schema generate` to
+-- regenerate this file.
 
 CREATE TABLE users
 (
-    id                        INTEGER  NOT NULL PRIMARY KEY,
-    active                    BOOLEAN  NOT NULL,
-    admin                     BOOLEAN  NOT NULL,
-    approved                  BOOLEAN  NOT NULL,
-    created_at                DATETIME NOT NULL,
-    staged                    BOOLEAN  NOT NULL,
-    trust_level               INTEGER  NOT NULL,
-    username                  TEXT     NOT NULL,
-    views                     INTEGER  NOT NULL,
+    id                        NUMERIC  NOT NULL PRIMARY KEY,
+    active                    BOOLEAN,
+    admin                     BOOLEAN,
+    approved                  BOOLEAN,
     approved_at               DATETIME,
-    approved_by_id            INTEGER,
+    approved_by_id            NUMERIC,
+    created_at                DATETIME NOT NULL,
     date_of_birth             DATE,
     first_seen_at             DATETIME,
-    flair_group_id            INTEGER,
+    flair_group_id            NUMERIC,
     group_locked_trust_level  INTEGER,
-    ip_address                TEXT,
+    ip_address                INET_TEXT,
     last_seen_at              DATETIME,
     locale                    TEXT,
     manual_locked_trust_level INTEGER,
     moderator                 BOOLEAN,
     name                      TEXT,
     previous_visit_at         DATETIME,
-    primary_group_id          INTEGER,
-    registration_ip_address   TEXT,
+    primary_group_id          NUMERIC,
+    registration_ip_address   INET_TEXT,
+    required_fields_version   INTEGER,
     silenced_till             DATETIME,
+    staged                    BOOLEAN,
     suspended_at              DATETIME,
     suspended_till            DATETIME,
     title                     TEXT,
-    uploaded_avatar_id        TEXT
+    trust_level               INTEGER  NOT NULL,
+    uploaded_avatar_id        TEXT,
+    username                  TEXT     NOT NULL,
+    views                     INTEGER
 );
+
