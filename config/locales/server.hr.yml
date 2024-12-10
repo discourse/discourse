@@ -435,6 +435,8 @@ hr:
         bio_raw: "O meni"
       user:
         password: "Lozinka"
+      user_password:
+        password: "Lozinka"
     errors:
       models:
         topic:

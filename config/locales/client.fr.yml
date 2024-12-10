@@ -4797,8 +4797,7 @@ fr:
           experiment_disabled: "Vous avez désactivé la fonctionnalité expérimentale."
           experiment_toggled_too_fast: "Vous avez activé la fonctionnalité expérimentale trop rapidement. Veuillez patienter quelques secondes avant de réessayer."
           experiment_tooltip:
-            title: "Essayez notre fonctionnalité expérimentale"
-            content: "Essayez notre nouvelle fonctionnalité en cours de développement ! Étant donné qu'elle est encore en phase expérimentale, nous sommes susceptibles de la supprimer à tout moment. Vous pouvez vous désinscrire à tout moment."
+            title_disabled: "Essayez notre fonctionnalité expérimentale"
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."

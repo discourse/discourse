@@ -678,6 +678,8 @@ pt_BR:
         bio_raw: "Sobre mim"
       user:
         password: "Senha"
+      user_password:
+        password: "Senha"
     errors:
       models:
         topic:

@@ -368,6 +368,8 @@ zh_TW:
         bio_raw: "關於我"
       user:
         password: "密碼"
+      user_password:
+        password: "密碼"
     errors:
       models:
         topic:

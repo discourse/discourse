@@ -377,6 +377,8 @@ ca:
         bio_raw: "Quant a mi"
       user:
         password: "Contrasenya"
+      user_password:
+        password: "Contrasenya"
     errors:
       models:
         topic:

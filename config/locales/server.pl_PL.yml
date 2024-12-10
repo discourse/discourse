@@ -687,6 +687,8 @@ pl_PL:
         bio_raw: "O mnie"
       user:
         password: "Hasło"
+      user_password:
+        password: "Hasło"
     errors:
       models:
         topic:

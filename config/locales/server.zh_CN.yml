@@ -633,6 +633,8 @@ zh_CN:
         bio_raw: "自我介绍"
       user:
         password: "密码"
+      user_password:
+        password: "密码"
     errors:
       models:
         topic:

@@ -4527,8 +4527,10 @@ zh_CN:
           experiment_disabled: "您已禁用实验性功能。"
           experiment_toggled_too_fast: "您切换实验性功能的频率过快。请稍等几秒钟后再试。"
           experiment_tooltip:
-            title: "试用我们的实验性功能"
-            content: "试试我们最新开发的功能！该功能仍处于实验阶段，因此我们可能随时将其移除。您可以随时选择退出。"
+            title_disabled: "试用我们的实验性功能"
+            title_enabled: "关闭实验性功能"
+            content_disabled: "试用一下我们最新开发的功能！它仍处于试验阶段，因此我们可能随时将其移除。您可以随时选择退出。<br/><br/>更改此项将为所有用户启用该功能。"
+            content_enabled: "更改此项将会为所有用户禁用该功能。"
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题。"
@@ -5994,6 +5996,7 @@ zh_CN:
             confirmation_modal:
               close: "关闭"
               confirm: "删除"
+              block_ip_and_email: "屏蔽所有选定用户的 IP 地址和电子邮件"
         nav:
           new: "新"
           active: "活跃"

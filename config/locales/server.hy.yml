@@ -352,6 +352,8 @@ hy:
         bio_raw: "Իմ Մասին"
       user:
         password: "Գաղտնաբառ"
+      user_password:
+        password: "Գաղտնաբառ"
     errors:
       models:
         topic:
