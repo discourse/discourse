@@ -486,6 +486,8 @@ id:
         bio_raw: "Tentang Saya"
       user:
         password: "Kata sandi"
+      user_password:
+        password: "Kata sandi"
     errors:
       models:
         topic:

@@ -373,6 +373,8 @@ el:
         bio_raw: "Σχετικά με εμένα"
       user:
         password: "Κωδικός Πρόσβασης"
+      user_password:
+        password: "Κωδικός Πρόσβασης"
     errors:
       models:
         topic:

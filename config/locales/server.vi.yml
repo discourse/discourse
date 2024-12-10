@@ -423,6 +423,8 @@ vi:
         bio_raw: "GIới thiệu bản thân"
       user:
         password: "Mật khẩu"
+      user_password:
+        password: "Mật khẩu"
     errors:
       models:
         topic:

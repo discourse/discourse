@@ -115,6 +115,8 @@ th:
         category_id: "หมวดหมู่"
       user:
         password: "รหัสผ่าน"
+      user_password:
+        password: "รหัสผ่าน"
     errors:
       <<: *errors
   general_category_name: "ทั่วไป"

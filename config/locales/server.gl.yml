@@ -468,6 +468,8 @@ gl:
         bio_raw: "Acerca de min"
       user:
         password: "Contrasinal"
+      user_password:
+        password: "Contrasinal"
     errors:
       models:
         topic:

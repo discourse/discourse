@@ -564,6 +564,8 @@ sv:
         bio_raw: "Om mig"
       user:
         password: "Lösenord"
+      user_password:
+        password: "Lösenord"
     errors:
       models:
         topic:

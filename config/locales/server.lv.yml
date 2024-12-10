@@ -127,6 +127,8 @@ lv:
         bio_raw: "Par Mani"
       user:
         password: "Parole"
+      user_password:
+        password: "Parole"
     errors:
       <<: *errors
   general_category_name: "Vispārīgi"

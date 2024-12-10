@@ -631,6 +631,8 @@ ja:
         bio_raw: "自己紹介"
       user:
         password: "パスワード"
+      user_password:
+        password: "パスワード"
     errors:
       models:
         topic:

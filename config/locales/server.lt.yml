@@ -413,6 +413,8 @@ lt:
         bio_raw: "Apie mane"
       user:
         password: "Slaptažodis"
+      user_password:
+        password: "Slaptažodis"
     errors:
       models:
         topic:

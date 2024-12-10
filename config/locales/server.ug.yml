@@ -676,6 +676,8 @@ ug:
         bio_raw: "ھەققىمدە"
       user:
         password: "ئىم"
+      user_password:
+        password: "ئىم"
     errors:
       models:
         topic:

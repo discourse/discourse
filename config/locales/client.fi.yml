@@ -4798,8 +4798,7 @@ fi:
           experiment_disabled: "Olet poistanut kokeellisen ominaisuuden käytöstä."
           experiment_toggled_too_fast: "Olet ottanut kokeellisen ominaisuuden käyttöön ja poistanut sen käytöstä liian nopeasti. Odota muutama sekunti ennen kuin yrität uudelleen."
           experiment_tooltip:
-            title: "Kokeile kokeellista ominaisuuttamme"
-            content: "Kokeile uusinta kehitysvaiheessa olevaa ominaisuuttamme! Se on vielä kokeiluvaiheessa, joten voimme poistaa sen milloin tahansa. Voit poistaa sen käytöstä milloin tahansa."
+            title_disabled: "Kokeile kokeellista ominaisuuttamme"
         last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
         no_problems: "Ongelmia ei löytynyt."

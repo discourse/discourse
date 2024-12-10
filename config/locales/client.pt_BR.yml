@@ -4798,8 +4798,7 @@ pt_BR:
           experiment_disabled: "Você desativou o recurso experimental."
           experiment_toggled_too_fast: "Você alternou o recurso experimental rápido demais. Aguarde um pouco e tente novamente."
           experiment_tooltip:
-            title: "Teste nosso recurso experimental"
-            content: "Dê uma chance para o nosso recurso mais recente que ainda está em desenvolvimento! Por estar em fase experimental, ele poderá ser removido a qualquer momento. Você pode decidir que não quando quiser."
+            title_disabled: "Teste nosso recurso experimental"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema foi encontrado."

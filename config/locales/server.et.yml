@@ -254,6 +254,8 @@ et:
         bio_raw: "Minust"
       user:
         password: "Parool"
+      user_password:
+        password: "Parool"
     errors:
       models:
         topic:

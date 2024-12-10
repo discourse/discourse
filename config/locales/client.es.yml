@@ -4797,8 +4797,7 @@ es:
           experiment_disabled: "Has desactivado la característica experimental."
           experiment_toggled_too_fast: "Has activado la característica experimental demasiado rápido. Espera unos segundos antes de volver a intentarlo."
           experiment_tooltip:
-            title: "Prueba nuestra característica experimental"
-            content: "¡Prueba nuestra nueva característica en desarrollo! Aún está en fase experimental, por lo que podríamos eliminarla en cualquier momento. Puedes darte de baja cuando quieras."
+            title_disabled: "Prueba nuestra característica experimental"
         last_checked: "Ultima comprobación"
         refresh_problems: "Volver a cargar"
         no_problems: "No se ha encontrado ningún problema."

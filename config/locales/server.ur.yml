@@ -492,6 +492,8 @@ ur:
         bio_raw: "میرے بارے میں"
       user:
         password: "پاسورڈ"
+      user_password:
+        password: "پاسورڈ"
     errors:
       models:
         topic:

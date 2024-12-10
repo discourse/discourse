@@ -259,6 +259,8 @@ bg:
         bio_raw: "За мен"
       user:
         password: "Парола"
+      user_password:
+        password: "Парола"
     errors:
       models:
         topic:

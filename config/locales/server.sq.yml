@@ -189,6 +189,8 @@ sq:
         bio_raw: "Rreth Meje"
       user:
         password: "Fjalëkalimi"
+      user_password:
+        password: "Fjalëkalimi"
     errors:
       models:
         topic:

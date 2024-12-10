@@ -867,6 +867,8 @@ ar:
         bio_raw: "نبذة عني"
       user:
         password: "كلمة المرور"
+      user_password:
+        password: "كلمة المرور"
     errors:
       models:
         topic:
