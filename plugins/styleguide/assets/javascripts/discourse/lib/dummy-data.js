@@ -47,6 +47,7 @@ export function createData(store) {
       website_name: "My Website is Discourse",
       location: "Toronto",
       suspend_reason: "Some reason",
+      suspended_till: moment().add(30, "days"),
       groups: [{ name: "Group 1" }, { name: "Group 2" }],
       created_at: moment().subtract(10, "days"),
       last_posted_at: moment().subtract(3, "days"),
@@ -288,7 +289,7 @@ export function createData(store) {
 
     toggleSwitchState: true,
 
-    navItems: ["latest", "categories", "top"].map((name) => {
+    navItems: ["latest", "categories", "hot"].map((name) => {
       let item = NavItem.fromText(name);
 
       // item.set("href", "#");
