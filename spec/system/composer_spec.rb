@@ -12,7 +12,6 @@ describe "Composer", type: :system do
     expect(composer).to be_opened
 
     composer.fill_content("@#{user.username}")
-    # binding.pry
     composer.preview.find("a.mention").click
 
     page.has_css?("#user-card")
