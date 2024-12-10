@@ -1,4 +1,4 @@
-<AdminPageSubheader @titleLabel="admin.backups.files_title">
+<DPageSubheader @titleLabel="admin.backups.files_title">
   <:actions as |actions|>
     <actions.Wrapped as |wrapped|>
       {{#if this.localBackupStorage}}
@@ -15,7 +15,7 @@
       {{/if}}
     </actions.Wrapped>
   </:actions>
-</AdminPageSubheader>
+</DPageSubheader>
 
 {{#if this.status.restoreDisabled}}
   <div class="backup-message alert alert-info">
