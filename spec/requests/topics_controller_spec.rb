@@ -2968,39 +2968,40 @@ RSpec.describe TopicsController do
         json["post_stream"]["posts"].map { |post| post["id"] }
       end
 
+      let(:post_ids) { topic.posts.pluck(:id) }
+
       before do
         TopicView.stubs(:chunk_size).returns(2)
-        @post_ids = topic.posts.pluck(:id)
-        3.times { @post_ids << Fabricate(:post, user: post_author1, topic: topic).id }
+        3.times { post_ids << Fabricate(:post, user: post_author1, topic: topic).id }
       end
 
       it "grabs the correct set of posts" do
         get "/t/#{topic.slug}/#{topic.id}.json"
         expect(response.status).to eq(200)
-        expect(extract_post_stream).to eq(@post_ids[0..1])
+        expect(extract_post_stream).to eq(post_ids[0..1])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
         expect(response.status).to eq(200)
-        expect(extract_post_stream).to eq(@post_ids[0..1])
+        expect(extract_post_stream).to eq(post_ids[0..1])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
         expect(response.status).to eq(200)
-        expect(extract_post_stream).to eq(@post_ids[2..3])
+        expect(extract_post_stream).to eq(post_ids[2..3])
 
         post_number = topic.posts.pluck(:post_number).sort[3]
         get "/t/#{topic.slug}/#{topic.id}/#{post_number}.json"
         expect(response.status).to eq(200)
-        expect(extract_post_stream).to eq(@post_ids[-2..-1])
+        expect(extract_post_stream).to eq(post_ids[-2..-1])
 
         TopicView.stubs(:chunk_size).returns(3)
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
         expect(response.status).to eq(200)
-        expect(extract_post_stream).to eq(@post_ids[0..2])
+        expect(extract_post_stream).to eq(post_ids[0..2])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
         expect(response.status).to eq(200)
-        expect(extract_post_stream).to eq(@post_ids[3..3])
+        expect(extract_post_stream).to eq(post_ids[3..3])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 3 }
         expect(response.status).to eq(404)
@@ -3009,7 +3010,7 @@ RSpec.describe TopicsController do
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 1 }
         expect(response.status).to eq(200)
-        expect(extract_post_stream).to eq(@post_ids[0..3])
+        expect(extract_post_stream).to eq(post_ids[0..3])
 
         get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
         expect(response.status).to eq(404)
