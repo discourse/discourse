@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { and, not } from "truth-helpers";
 import CookText from "discourse/components/cook-text";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -127,12 +128,22 @@ export default class DiscourseNewFeatureItem extends Component {
                   <div class="admin-new-feature-item__tooltip">
                     <div class="admin-new-feature-item__tooltip-header">
                       {{i18n
-                        "admin.dashboard.new_features.experiment_tooltip.title"
+                        (if
+                          this.experimentEnabled
+                          "admin.dashboard.new_features.experiment_tooltip.title_enabled"
+                          "admin.dashboard.new_features.experiment_tooltip.title_disabled"
+                        )
                       }}
                     </div>
                     <div class="admin-new-feature-item__tooltip-content">
-                      {{i18n
-                        "admin.dashboard.new_features.experiment_tooltip.content"
+                      {{htmlSafe
+                        (i18n
+                          (if
+                            this.experimentEnabled
+                            "admin.dashboard.new_features.experiment_tooltip.content_enabled"
+                            "admin.dashboard.new_features.experiment_tooltip.content_disabled"
+                          )
+                        )
                       }}
                     </div>
                   </div>
