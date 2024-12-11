@@ -3554,7 +3554,7 @@ en:
 
       flag_topic:
         title: "Flag"
-        help: "flag this topic for moderator attention or send a personal message about it"
+        help: "privately flag this topic for attention or send a personal message about it"
         success_message: "You successfully flagged this topic."
       make_public:
         title: "Convert to Public Topic"
@@ -3862,7 +3862,7 @@ en:
         edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag_action: "Flag"
-        flag: "flag this post for moderator attention or send a personal message about it"
+        flag: "privately flag this post for attention or send a personal message about it"
         delete_action: "Delete post"
         delete: "delete this post"
         undelete_action: "Undelete post"
@@ -4212,10 +4212,10 @@ en:
       yes_delete_spammer: "Yes, Delete Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
-      submit_tooltip: "Submit the flag"
+      submit_tooltip: "Submit the private flag"
       take_action_tooltip: "Reach the flag threshold immediately, hide the post, and agree with all pending flags"
       cant: "Sorry, you can't flag this post at this time."
-      notify_staff: "Notify staff"
+      notify_staff: "Notify staff privately"
       formatted_name:
         off_topic: "It's Off-Topic"
         inappropriate: "It's Inappropriate"
