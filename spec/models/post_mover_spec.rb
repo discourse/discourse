@@ -351,6 +351,42 @@ RSpec.describe PostMover do
             expect(topic.closed).to eq(true)
           end
 
+          it "records full_move=true in MovedPost records when all posts are moved" do
+            post_ids = [p1.id, p2.id, p3.id, p4.id]
+            new_topic =
+              topic.move_posts(
+                user,
+                [p1.id, p2.id, p3.id, p4.id],
+                title: "new testing topic name",
+                category_id: category.id,
+              )
+            expect(
+              MovedPost.where(
+                old_post_id: post_ids,
+                new_topic_id: new_topic.id,
+                full_move: true,
+              ).count,
+            ).to eq(4)
+          end
+
+          it "records full_move=true in MovedPost records when all posts are moved" do
+            post_ids = [p3.id, p4.id]
+            new_topic =
+              topic.move_posts(
+                user,
+                [p3.id, p4.id],
+                title: "new testing topic name",
+                category_id: category.id,
+              )
+            expect(
+              MovedPost.where(
+                old_post_id: post_ids,
+                new_topic_id: new_topic.id,
+                full_move: false,
+              ).count,
+            ).to eq(2)
+          end
+
           it "does not move posts that do not belong to the existing topic" do
             new_topic =
               topic.move_posts(user, [p2.id, p3.id, p5.id], title: "Logan is a pretty good movie")
@@ -2780,6 +2816,43 @@ RSpec.describe PostMover do
         expect(moderator_post).to be_present
         expect(moderator_post.post_type).to eq(Post.types[:small_action])
         expect(moderator_post.action_code).to eq("split_topic")
+      end
+
+      context "with `post_mover_create_moderator_post` modifier" do
+        fab!(:topic_1) { Fabricate(:topic) }
+        fab!(:topic_2) { Fabricate(:topic) }
+        fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+        fab!(:user)
+
+        before { SiteSetting.delete_merged_stub_topics_after_days = 0 }
+        let(:modifier_block) { Proc.new { |continue, _| false } }
+
+        it "does not create small action post when modifier returns false" do
+          plugin_instance = Plugin::Instance.new
+          plugin_instance.register_modifier(:post_mover_create_moderator_post, &modifier_block)
+
+          expect {
+            PostMover.new(
+              original_topic,
+              Discourse.system_user,
+              [first_post.id, second_post.id],
+              options: {
+                freeze_original: true,
+              },
+            ).to_topic(destination_topic.id)
+          }.not_to change {
+            original_topic
+              .posts
+              .where(post_type: Post.types[:small_action], action_code: "split_topic")
+              .count
+          }
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :post_mover_create_moderator_post,
+            &modifier_block
+          )
+        end
       end
 
       it "keeps posts when moving all posts to a new topic" do
