@@ -23,10 +23,21 @@
   }
 
   .keyboard-visible &.open {
-    top: 0px;
+    height: 100%; // Android: Reduces composer jumpiness when the keyboard toggles
+  }
+
+  .keyboard-visible body.ios-safari-composer-hacks &.open {
     height: calc(var(--composer-vh, 1vh) * 100);
     .reply-area {
       padding-bottom: 6px;
+    }
+  }
+
+  // Firefox for Android hack
+  @supports (-moz-appearance: none) {
+    .keyboard-visible #reply-control.open {
+      position: sticky;
+      height: calc(100vh - var(--header-offset, 4em));
     }
   }
 
