@@ -120,6 +120,7 @@ export const DEFAULT_LIST = [
   "a.mention-group",
   "a.onebox",
   `a.inline-onebox`,
+  `a.inline-onebox[data-author]`,
   `a.inline-onebox-loading`,
   "a[data-bbcode]",
   "a[data-word]",
