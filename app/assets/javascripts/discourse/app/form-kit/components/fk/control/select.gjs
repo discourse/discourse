@@ -21,6 +21,7 @@ export default class FKControlSelect extends Component {
       disabled={{@field.disabled}}
       @value={{@field.value}}
       @onChange={{@field.set}}
+      ...attributes
     >
       {{yield (hash Option=(component SelectOption selected=@field.value))}}
     </DSelect>
