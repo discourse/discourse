@@ -639,7 +639,6 @@ body:not(.ios-safari-composer-hacks) {
       min-height: calc(var(--min-height) - 4em);
     }
     padding-bottom: var(--composer-ipad-padding);
-    padding-bottom: calc(10px + env(keyboard-inset-height));
     box-sizing: border-box;
   }
 }
