@@ -10,7 +10,7 @@ module("Integration | Component | DPageSubheader", function (hooks) {
 
   test("@titleLabel", async function (assert) {
     await render(<template>
-      <DPageSubheader @titleLabel="admin.title" />
+      <DPageSubheader @titleLabel={{i18n "admin.title"}} />
     </template>);
     assert
       .dom(".d-page-subheader__title")
@@ -18,39 +18,19 @@ module("Integration | Component | DPageSubheader", function (hooks) {
       .hasText(i18n("admin.title"));
   });
 
-  test("@titleLabelTranslated", async function (assert) {
-    await render(<template>
-      <DPageSubheader @titleLabelTranslated="Wow so cool" />
-    </template>);
-    assert.dom(".d-page-subheader__title").exists().hasText("Wow so cool");
-  });
-
-  test("no @descriptionLabel and no @descriptionLabelTranslated", async function (assert) {
+  test("no @descriptionLabel", async function (assert) {
     await render(<template><DPageSubheader /></template>);
     assert.dom(".d-page-subheader__description").doesNotExist();
   });
 
   test("@descriptionLabel", async function (assert) {
     await render(<template>
-      <DPageSubheader @descriptionLabel="admin.badges.description" />
+      <DPageSubheader @descriptionLabel={{i18n "admin.badges.description"}} />
     </template>);
     assert
       .dom(".d-page-subheader__description")
       .exists()
       .hasText(i18n("admin.badges.description"));
-  });
-
-  test("@descriptionLabelTranslated", async function (assert) {
-    await render(<template>
-      <DPageSubheader
-        @descriptionLabelTranslated="Some description which supports <strong>HTML</strong>"
-      />
-    </template>);
-    assert
-      .dom(".d-page-subheader__description")
-      .exists()
-      .hasText("Some description which supports HTML");
-    assert.dom(".d-page-subheader__description strong").exists();
   });
 
   test("no @learnMoreUrl", async function (assert) {
@@ -61,7 +41,7 @@ module("Integration | Component | DPageSubheader", function (hooks) {
   test("@learnMoreUrl", async function (assert) {
     await render(<template>
       <DPageSubheader
-        @descriptionLabel="admin.badges.description"
+        @descriptionLabel={{i18n "admin.badges.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/96331"
       />
     </template>);

@@ -48,8 +48,8 @@ export default class AdminConfigAreasLookAndFeelThemes extends Component {
 
   <template>
     <DPageSubheader
-      @titleLabel="admin.config_areas.look_and_feel.themes.title"
-      @descriptionLabel="admin.customize.theme.themes_intro_new"
+      @titleLabel={{i18n "admin.config_areas.look_and_feel.themes.title"}}
+      @descriptionLabel={{i18n "admin.customize.theme.themes_intro_new"}}
       @learnMoreUrl="https://meta.discourse.org/t/93648"
     >
       <:actions as |actions|>

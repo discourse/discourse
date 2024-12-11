@@ -18,26 +18,10 @@ import DMenu from "float-kit/components/d-menu";
 export default class DPageSubheader extends Component {
   @service site;
 
-  get title() {
-    if (this.args.titleLabelTranslated) {
-      return this.args.titleLabelTranslated;
-    } else if (this.args.titleLabel) {
-      return i18n(this.args.titleLabel);
-    }
-  }
-
-  get description() {
-    if (this.args.descriptionLabelTranslated) {
-      return this.args.descriptionLabelTranslated;
-    } else if (this.args.descriptionLabel) {
-      return i18n(this.args.descriptionLabel);
-    }
-  }
-
   <template>
     <div class="d-page-subheader">
       <div class="d-page-subheader__title-row">
-        <h2 class="d-page-subheader__title">{{this.title}}</h2>
+        <h2 class="d-page-subheader__title">{{@titleLabel}}</h2>
         {{#if (has-block "actions")}}
           <div class="d-page-subheader__actions">
             {{#if this.site.mobileView}}
@@ -76,9 +60,9 @@ export default class DPageSubheader extends Component {
         {{/if}}
       </div>
 
-      {{#if this.description}}
+      {{#if @descriptionLabel}}
         <p class="d-page-subheader__description">
-          {{htmlSafe this.description}}
+          {{htmlSafe @descriptionLabel}}
           {{#if @learnMoreUrl}}
             <span class="d-page-subheader__learn-more">
               {{htmlSafe
