@@ -61,7 +61,7 @@ def assets
       Rails.application.config.assets.manifest,
     )
 
-  results = []
+  results = Set.new
 
   manifest.assets.each do |_, path|
     fullpath = (Rails.root + "public/assets/#{path}").to_s
@@ -69,6 +69,7 @@ def assets
     # Ignore files we can't find the mime type of, like yarn.lock
     content_type = MiniMime.lookup_by_filename(fullpath)&.content_type
     content_type ||= "application/json" if fullpath.end_with?(".map")
+
     if content_type
       asset_path = "assets/#{path}"
       results << [fullpath, asset_path, content_type]
@@ -87,7 +88,7 @@ def assets
     end
   end
 
-  results
+  results.to_a
 end
 
 def asset_paths
