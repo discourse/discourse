@@ -680,6 +680,8 @@ de:
         bio_raw: "Über mich"
       user:
         password: "Passwort"
+      user_password:
+        password: "Passwort"
     errors:
       models:
         topic:

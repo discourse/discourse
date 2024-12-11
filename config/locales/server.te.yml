@@ -368,6 +368,8 @@ te:
         bio_raw: "నా గురించి"
       user:
         password: "సంకేతపదం"
+      user_password:
+        password: "సంకేతపదం"
     errors:
       models:
         topic:

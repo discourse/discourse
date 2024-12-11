@@ -41,7 +41,17 @@ module("Integration | Component | DPageHeader", function (hooks) {
     assert.dom(".d-page-header__title").exists().hasText("Wow so cool");
   });
 
-  test("renders yielded <:breadcrumbs>", async function (assert) {
+  test("@shouldDisplay", async function (assert) {
+    await render(<template>
+      <DPageHeader
+        @titleLabelTranslated="Wow so cool"
+        @shouldDisplay={{false}}
+      />
+    </template>);
+    assert.dom(".admin-page-header").doesNotExist();
+  });
+
+  test("renders base breadcrumbs and yielded <:breadcrumbs>", async function (assert) {
     await render(<template>
       <DPageHeader @titleLabel="admin.titile">
         <:breadcrumbs>

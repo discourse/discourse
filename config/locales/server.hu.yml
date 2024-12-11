@@ -315,6 +315,7 @@ hu:
       invalid_site_setting: "Nem létezik „%{name}” nevű beállítás"
       invalid_category_id: "Olyan kategóriát adott meg, amely nem létezik"
       site_setting_is_hidden: "Nem módosíthatja a rejtett beállításokat"
+      site_setting_is_shadowed_globally: "Ez a beállítás nem módosítható, mert globálisan van konfigurálva"
       site_setting_is_unconfigurable: "Nem változtathatja meg a nem konfigurálható beállításokat."
       invalid_choice:
         one: "'%{name}' érvénytelen választás."
@@ -599,6 +600,7 @@ hu:
       admins: "Felelős az oldal konfigurálásért és karbantartásáért, hozzáfér minden taghoz és tevékenységi adathoz."
       moderators: "Felelős a megjelölések megválaszolásáért, a beszélgetések moderálásáért és a tagoknak a fiókjaikkal kapacsolatos segítségnyújtásért."
       trust_level_0: "Korlátozott képességekkel rendelkező új tagok, akik tanulják a közösségi normákat és funkciókat."
+      trust_level_1: "A nagyobb bizalommal rendelkező tagok, akik kezdeti elkötelezettséget mutattak olvasásukkal most több funkcióhoz férhetnek hozzá. E csoport minden tagja egyben a bizalmi_szint_0 csoport tagja is."
       trust_level_2: "Aktív tagok, akik folyamatos hozzájárulásaik révén teljes állampolgári jogokat szereztek. Ennek a csoportnak minden tagja a bizalmi_szint_1 és a bizalmi_szint_0 csoportok tagja is."
       trust_level_3: "Magasan elkötelezett, hosszú távú hozzájárulók, akik a közösség gerincét alkotják, és korlátozott moderátori jogosultságokat szereztek. Ennek a csoportnak minden tagja a bizalmi_szint_2, bizalmi_szint_1 és bizalmi_szint_0 csoportok tagja is."
       trust_level_4: "Manuálisan előléptetett tagok, akiket példamutató hozzájárulásaik alapján ismertek el, és további moderátori jogosultságokkal ruháztak fel. Ennek a csoportnak minden tagja a bizalmi_szint_3, bizalmi_szint_2, bizalmi_szint_1 és bizalmi_szint_0 csoportok tagja is."
@@ -668,6 +670,8 @@ hu:
       user_profile:
         bio_raw: "Bemutatkozás"
       user:
+        password: "Jelszó"
+      user_password:
         password: "Jelszó"
     errors:
       models:
@@ -1601,7 +1605,7 @@ hu:
       poll_pop3_timeout: "A kapcsolat a POP3 szerverrel időtúllépésbe ütközött. A bejövő e-mailek nem tölthetők le. Kérem, ellenőrizze a <a href='%{base_path}/admin/site_settings/category/email'>POP3 beállításait</a> és a szolgáltatót."
       poll_pop3_auth_error: "A kapcsolat a POP3 szerverrel hitelesítési hiba miatt megszakadt. Kérem, ellenőrizze a <a href='%{base_path}/admin/site_settings/category/email'>POP3 beállításaiit</a>."
       force_https: "Az Ön weboldala SSL-t használ. De a <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a> még nincs engedélyezve az oldal beállításaiban."
-      out_of_date_themes: "Frissítések érhetők el a következő témákhoz: %{themes_list}"
+      out_of_date_themes: "Frissítések érhetőek a következőkhöz: %{themes_list}"
       unreachable_themes: "Nem tudtuk ellenőrizni a frissítéseket a következő témáknál: %{themes_list}"
       watched_words: "A %{action} figyelt szavakhoz tartozó reguláris kifejezés érvénytelen. Kérjük, ellenőrizze a <a href='%{base_path}/admin/customize/watched_words'>Figyelt szavak beállításait</a>, vagy kapcsolja ki a 'figyelt szavak reguláris kifejezései' oldal beállítást."
       google_analytics_version: "A Discourse jelenleg a Google Analytics 3-at használja, amely 2023 júliusa után már nem kap támogatást. <a href='https://meta.discourse.org/t/260498'>Frissítsen most a Google Analytics 4-re</a> , hogy továbbra is értékes betekintést és elemzést kapjon webhelye teljesítményéről."
@@ -1760,6 +1764,11 @@ hu:
     pending_users_reminder_delay_minutes: "Értesítse a moderátorokat, ha az új felhasználók ennél több perce várnak jóváhagyásra. Állítsa -1-re az értesítések kikapcsolásához."
     persistent_sessions: "A felhasználók bejelentkezve maradnak a böngésző bezárásakor"
     maximum_session_age: "A felhasználó bejelentkezve marad n órán keresztül az utolsó látogatása óta"
+    full_page_login: "Jelenítse meg a bejelentkezési és regisztrációs űrlapokat egy teljes oldalon (ha nincs bejelölve, a felhasználók modálisan látják az űrlapokat). "
+    show_signup_form_email_instructions: Jelenítse meg az e-mailes utasításokat a regisztrációs űrlapon.
+    show_signup_form_username_instructions: A felhasználónévre vonatkozó utasítások megjelenítése a regisztrációs űrlapon.
+    show_signup_form_full_name_instructions: Mutassa meg a teljes névre vonatkozó utasításokat a regisztrációs űrlapon.
+    show_signup_form_password_instructions: Jelszóra vonatkozó utasítások megjelenítése a regisztrációs űrlapon.
     ga_version: "A használandó Google Universal Analytics verziója: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics követőkód azonosítója, pl.: UA-12345678-9; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain név, pl.: mysite.com; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1811,9 +1820,11 @@ hu:
     send_old_credential_reminder_days: "Napok múlva emlékeztessen a régi hitelesítő adatokra"
     email_token_valid_hours: "Elfelejtett jelszó / fiókaktiválási tokenek (n) óráig érvényesek."
     enable_badges: "Engedélyezze a jelvényrendszert, amely a gamifikáció egy formája a pozitív felhasználói tevékenységek megerősítésére. További információért lásd <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Mik azok a Kitűzők?</a> című cikket a Discourse Meta oldalon."
+    show_badges_in_post_header: "Ha egy felhasználó jelvényt kap egy adott bejegyzésért, jelenítse meg a jelvényt a bejegyzés fejlécében."
     max_favorite_badges: "A felhasználó által választható jelvények maximális száma"
     whispers_allowed_groups: "Privát kommunikáció engedélyezése a témákon belül meghatározott csoportok tagjai számára."
     hidden_post_visible_groups: "Engedélyezze e csoportok tagjainak a rejtett bejegyzések megtekintését. A személyzet felhasználói mindig megtekinthetik a rejtett bejegyzéseket."
+    allow_index_in_robots_txt: "Adja meg a robots.txt fájlban, hogy ezt a webhelyet a webes keresőmotorok indexelhetik. Itt <a href='%{base_path}/admin/customize/robots'>felülírhatja a robots.txt fájlt.</a> <b>FIGYELMEZTETÉS</b>: A rosszul konfigurált szabályok megakadályozhatják a webhely várt feltérképezését."
     blocked_email_domains: "Függőleges vonallal elválasztott lista azokról az e-mail domainek-ről, amelyekkel a felhasználók nem regisztrálhatnak fiókot. Az aldomainek automatikusan kezelve vannak a megadott domainekhez. A * és ? helyettesítő karakterek nem támogatottak. Példa: mailinator.com|trashmail.net"
     allowed_email_domains: "Függőleges vonallal elválasztott lista azokról az e-mail domainek-ről, amelyekkel a felhasználóknak KÖTELEZŐ regisztrálniuk fiókot. Az aldomainek automatikusan kezelve vannak a megadott domainekhez. A * és ? helyettesítő karakterek nem támogatottak. FIGYELMEZTETÉS: A felsorolásban nem szereplő e-mail domainnel rendelkező felhasználók regisztrációja nem lesz engedélyezve!"
     normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
@@ -2752,6 +2763,7 @@ hu:
     cannot_delete_has_posts:
       one: "A %{username} felhasználónak %{count} bejegyzése van nyilvános témában vagy személyes üzenetben, ezért nem törölhetők."
       other: "A %{username} felhasználónak %{count} bejegyzése van nyilvános témában vagy személyes üzenetben, ezért nem törölhetők."
+    cannot_bulk_delete: "Egy vagy több felhasználót nem lehet törölni, mert adminisztrátorok, túl sok, vagy nagyon régi bejegyzésük van."
   unsubscribe_mailer:
     title: "Leiratkozás a levelezőről"
     subject_template: "Erősítsd meg, hogy a továbbiakban nem szeretnél e-mailes frissítéseket kapni a %{site_title} oldalról."
@@ -4524,6 +4536,8 @@ hu:
     regular:
       name: Rendes tag
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Engedélyezve</a> átsorolás, átnevezés, követett linkek, wiki, több kedvelés
+      long_description: |
+        Ezt a jelvényt akkor kapja meg, amikor eléri a 3. bizalmi szintet. Köszönjük, hogy hónapok óta rendszeresen részt vesz a közösségünk építésében. Az egyik legaktívabb olvasónk és megbízható közreműködő, aki nagyszerűvé teszi közösségünket. Mostantól kategorizálhatja és átnevezheti a témákat, használhatja az erősebb spamzászlókat és naponta sokkal több kedvelést szerezhet.
     leader:
       name: Vezető
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Engedélyezve</a> globális szerkesztés, kitűzés, lezárás, archiválás, szétválasztás és összevonás, több kedvelés
@@ -4978,6 +4992,7 @@ hu:
         other: "Automatikusan visszavont, több mint %{count} nappal ezelőtt létrehozva."
       revoked: Visszavonva
       restored: Visszaállított
+    bulk_user_delete: "tömeges törlési művelettel törölve"
   reviewables:
     already_handled: "Köszönjük, de már átnéztük ezt a bejegyzést, és úgy döntöttünk, hogy nem kell újra megjelölni."
     already_handled_and_user_not_exist: "Köszönjük, de valaki már felülvizsgálta, és ez a felhasználó már nem létezik."

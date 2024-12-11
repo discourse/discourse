@@ -34,9 +34,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   get channelList() {
-    return this.args.sortByActivity === true
-      ? this.chatChannelsManager.publicMessageChannelsByActivity
-      : this.chatChannelsManager.publicMessageChannels;
+    return this.chatChannelsManager.publicMessageChannelsByActivity;
   }
 
   @action

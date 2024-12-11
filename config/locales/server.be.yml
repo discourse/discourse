@@ -279,6 +279,8 @@ be:
         bio_raw: "Пра мяне"
       user:
         password: "Пароль"
+      user_password:
+        password: "Пароль"
     errors:
       models:
         topic:

@@ -4541,8 +4541,7 @@ ja:
           experiment_disabled: "実験的機能を無効にしました。"
           experiment_toggled_too_fast: "実験的機能の切り替え操作が速すぎます。数秒待ってから、もう一度お試しください。"
           experiment_tooltip:
-            title: "実験的機能をお試しください"
-            content: "開発中の最新の機能をぜひお試しください！実験段階であるため、いつか削除される可能性があります。いつでもオプトアウトできます。"
+            title_disabled: "実験的機能をお試しください"
         last_checked: "最終チェック"
         refresh_problems: "更新"
         no_problems: "問題は見つかりませんでした。"

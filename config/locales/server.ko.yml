@@ -478,6 +478,8 @@ ko:
         bio_raw: "내 정보"
       user:
         password: "비밀번호"
+      user_password:
+        password: "비밀번호"
     errors:
       models:
         topic:

@@ -165,10 +165,31 @@ sq:
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "përmban karaktere të veçanta"
+        is_already_in_use: "është tashmë në përdorim"
+    bookmarkable:
+      notification_title: "mesazh në %{channel_name}"
+    personal_chat: "bisedë private"
+    onebox:
+      inline_to_message: "Mesazhi #%{message_id} nga %{username} – #%{chat_channel}"
+      inline_to_channel: "Biseda #%{chat_channel}"
+      inline_to_topic_channel: "Biseda për Temën %{topic_title}"
+      thread_title_connector: "në"
+      x_members:
+        one: "%{count} anëtar"
+        other: "%{count} anëtarët"
+      and_x_others:
+        one: "dhe %{count} të tjera"
+        other: "dhe %{count} të tjerë"
+    transcript:
+      split_thread_range: "mesazhe %{start} tek %{end} nga %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
         direct: '%{username} ju përmendi në "%{channel}"'
+        other_type: '%{username} përmendi %{identifier} në "%{channel}”'
+      direct_message_chat_mention:
+        direct: "%{username} ju përmendi në bisedë private"
+      new_chat_message: '%{username} dërgoi një mesazh në "%{channel}"'
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

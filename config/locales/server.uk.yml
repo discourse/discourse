@@ -774,6 +774,8 @@ uk:
         bio_raw: "Про мене"
       user:
         password: "Пароль"
+      user_password:
+        password: "Пароль"
     errors:
       models:
         topic:

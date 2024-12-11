@@ -4798,8 +4798,7 @@ nl:
           experiment_disabled: "Je hebt de experimentele functie uitgeschakeld."
           experiment_toggled_too_fast: "Je hebt de experimentele functie te snel geschakeld. Wacht een paar seconden voordat je het opnieuw probeert."
           experiment_tooltip:
-            title: "Probeer onze experimentele functie"
-            content: "Probeer onze nieuwste in ontwikkeling zijnde functie eens! Hij is nog in de experimentele fase, dus we kunnen hem op elk moment verwijderen. Je kunt je afmelden wanneer je maar wilt."
+            title_disabled: "Probeer onze experimentele functie"
         last_checked: "Laatst gecontroleerd"
         refresh_problems: "Vernieuwen"
         no_problems: "Er zijn geen problemen gevonden."

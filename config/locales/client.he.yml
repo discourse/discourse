@@ -5314,8 +5314,9 @@ he:
           experiment_disabled: "השבתת את היכולת הניסיונית."
           experiment_toggled_too_fast: "החלפת את המצב של היכולת הניסיונית מהר מדי. נא להמתין כמה שניות בטרם ניסיון חוזר."
           experiment_tooltip:
-            title: "התנסות ביכולת הניסיונית שלנו"
-            content: "מזמינים אותך לעשות סיבוב על היכולת החדשה שאנו מפתחים! היא עדיין בשלבי ניסוי, לכן יכול להיות שנסיר אותה בכל רגע נתון. אפשר לכבות אותה בכל רגע נתון."
+            title_disabled: "התנסות ביכולת הניסיונית שלנו"
+            title_enabled: "כיבוי יכולת ניסיונית"
+            content_enabled: "שינוי מצב ההגדרה הזאת ישבית את היכולת לכל המשתמשים."
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
         no_problems: "לא נמצאו בעיות."
@@ -6851,6 +6852,7 @@ he:
                 many: "מחיקת %{count} משתמשים"
                 other: "מחיקת %{count} משתמשים"
               bulk_delete_starting: "התחלת מחיקה במרוכז…"
+              block_ip_and_email: "חסימת כתובות IP והודעות דוא״ל של כל המשתמשים הנבחרים"
               user_delete_succeeded: "[%{position}/%{total}] ‎@%{username} נמחק בהצלחה"
               user_delete_failed: "[%{position}/%{total}] המחיקה של ‎@%{username} נכשלה - %{error}"
               bulk_delete_finished: "פעולה המחיקה במרוכז הושלמה."
@@ -7363,6 +7365,7 @@ he:
         visibility_heading: חשיפה
         listable: הצגת עיטורים בעמוד העיטורים הפומבי
         show_in_post_header: הצגת עיטור על הפוסט שבגינו הוענק
+        show_in_post_header_disabled: דורש שגם ‚הצגת עיטור בעמוד העיטורים הציבוריים’ וגם ‚הצגת הפוסט שהעניק את העיטור בעמוד העיטורים’ יהיו פעילים.
         enabled: פעיל
         disabled: מושבת
         icon: סמליל

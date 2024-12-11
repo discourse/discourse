@@ -330,6 +330,8 @@ fa_IR:
         bio_raw: "درباره من"
       user:
         password: "رمزعبور"
+      user_password:
+        password: "رمزعبور"
     errors:
       models:
         topic:

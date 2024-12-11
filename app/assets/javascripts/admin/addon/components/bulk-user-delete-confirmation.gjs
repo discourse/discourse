@@ -22,6 +22,7 @@ export default class BulkUserDeleteConfirmation extends Component {
   failedUsernames = [];
 
   callAfterBulkDelete = false;
+  blockIpAndEmail = false;
 
   constructor() {
     super(...arguments);
@@ -117,7 +118,10 @@ export default class BulkUserDeleteConfirmation extends Component {
     try {
       await ajax("/admin/users/destroy-bulk.json", {
         type: "DELETE",
-        data: { user_ids: this.args.model.userIds },
+        data: {
+          user_ids: this.args.model.userIds,
+          block_ip_and_email: this.blockIpAndEmail,
+        },
       });
       this.callAfterBulkDelete = true;
     } catch (err) {
@@ -132,6 +136,11 @@ export default class BulkUserDeleteConfirmation extends Component {
     if (this.callAfterBulkDelete) {
       this.args.model?.afterBulkDelete();
     }
+  }
+
+  @action
+  toggleBlockIpAndEmail(event) {
+    this.blockIpAndEmail = event.target.checked;
   }
 
   <template>
@@ -169,6 +178,16 @@ export default class BulkUserDeleteConfirmation extends Component {
             placeholder={{this.confirmDeletePhrase}}
             {{on "input" this.onPromptInput}}
           />
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              class="block-ip-and-email"
+              {{on "change" this.toggleBlockIpAndEmail}}
+            />
+            {{i18n
+              "admin.users.bulk_actions.delete.confirmation_modal.block_ip_and_email"
+            }}
+          </label>
         {{/if}}
       </:body>
       <:footer>

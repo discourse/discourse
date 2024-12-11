@@ -504,7 +504,9 @@ class PostMover
   end
 
   def move_post_timings
-    DB.exec <<~SQL
+    params = { post_ids: @post_ids_after_move }
+
+    DB.exec(<<~SQL, params)
       UPDATE post_timings pt
       SET topic_id    = mp.new_topic_id,
           post_number = mp.new_post_number
@@ -513,6 +515,7 @@ class PostMover
         AND pt.post_number = mp.old_post_number
         AND mp.old_post_id = mp.new_post_id
         AND mp.old_topic_id <> mp.new_topic_id
+        AND mp.new_post_id IN (:post_ids)
     SQL
   end
 

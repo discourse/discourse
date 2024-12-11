@@ -4798,8 +4798,7 @@ it:
           experiment_disabled: "Hai disattivato la funzionalità sperimentale."
           experiment_toggled_too_fast: "Hai attivato la funzionalità sperimentale troppo velocemente. Attendi qualche secondo prima di riprovare."
           experiment_tooltip:
-            title: "Prova la nostra funzionalità sperimentale"
-            content: "Prova la nostra nuova funzionalità in fase di sviluppo! È ancora in fase sperimentale, quindi potremmo rimuoverla in qualsiasi momento. Puoi disattivarla quando vuoi."
+            title_disabled: "Prova la nostra funzionalità sperimentale"
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."

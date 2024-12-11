@@ -406,7 +406,11 @@ class Middleware::RequestTracker
 
   def log_later(data)
     Scheduler::Defer.later("Track view") do
-      self.class.log_request(data) unless Discourse.pg_readonly_mode?
+      begin
+        self.class.log_request(data) unless Discourse.pg_readonly_mode?
+      rescue ActiveRecord::ReadOnlyError
+        # Just noop if ActiveRecord is preventing writes
+      end
     end
   end
 

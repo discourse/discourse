@@ -518,6 +518,7 @@ de:
       order_by: "Sortieren nach"
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
+      filtered_flagged_by: "Markiert von"
       explain:
         why: "erkläre, warum dieses Element in der Warteschlange gelandet ist"
         title: "Überprüfbares Scoring"
@@ -1906,6 +1907,7 @@ de:
           other: "Dein Passwort ist zu kurz (Minimum: %{count} Zeichen)."
         common: "Das Passwort wird zu häufig verwendet."
         same_as_username: "Dein Passwort entspricht deinem Benutzernamen."
+        same_as_name: "Dein Passwort entspricht deinem Namen."
         same_as_email: "Dein Passwort entspricht deiner E-Mail-Adresse."
         ok: "Dein Passwort sieht in Ordnung aus."
         instructions:
@@ -4802,8 +4804,10 @@ de:
           experiment_disabled: "Du hast die experimentelle Funktion deaktiviert."
           experiment_toggled_too_fast: "Du hast die experimentelle Funktion zu schnell umgeschaltet. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
           experiment_tooltip:
-            title: "Probiere unsere experimentelle Funktion aus"
-            content: "Teste unsere neueste Funktion, die sich gerade in der Entwicklung befindet! Sie ist noch im Experimentierstadium und kann daher wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst."
+            title_disabled: "Probiere unsere experimentelle Funktion aus"
+            title_enabled: "Experimentelle Funktion ausschalten"
+            content_disabled: "Teste unsere neueste Funktion, die sich gerade in der Entwicklung befindet! Sie ist noch im Experimentierstadium und kann daher wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiv."
+            content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."
@@ -6301,6 +6305,7 @@ de:
                 one: "%{count} Benutzer löschen"
                 other: "%{count} Benutzer löschen"
               bulk_delete_starting: "Start der Massenlöschung…"
+              block_ip_and_email: "Blockiere IP-Adressen und E-Mails aller ausgewählten Benutzer"
               user_delete_succeeded: "[%{position}/%{total}] Erfolgreich gelöscht @%{username}"
               user_delete_failed: "[%{position}/%{total}] Löschen fehlgeschlagen @%{username} - %{error}"
               bulk_delete_finished: "Massenlöschvorgang abgeschlossen."

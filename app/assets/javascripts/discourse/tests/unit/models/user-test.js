@@ -53,12 +53,6 @@ module("Unit | Model | user", function (hooks) {
     const user = store.createRecord("user", { admin: true });
     const group = store.createRecord("group", { automatic: true });
 
-    assert.false(
-      user.canManageGroup(group),
-      "automatic groups cannot be managed."
-    );
-
-    group.set("automatic", false);
     group.setProperties({ can_admin_group: true });
 
     assert.true(

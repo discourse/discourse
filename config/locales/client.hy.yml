@@ -4176,6 +4176,7 @@ hy:
           files: "Ֆայլեր"
           other_options: "Այլ"
           search: "Որոնում"
+          all_site_settings: "Կայքի Բոլոր Կարգավորումները"
       backups:
         title: "Պահուստներ"
         menu:

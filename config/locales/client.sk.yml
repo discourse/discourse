@@ -5322,8 +5322,7 @@ sk:
           experiment_disabled: "Experimentálnu funkciu ste zakázali."
           experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
           experiment_tooltip:
-            title: "Vyskúšajte našu experimentálnu funkciu"
-            content: "Vyskúšajte našu najnovšiu funkciu vo vývoji! Zatiaľ je v experimentálnej fáze, takže ju môžeme kedykoľvek odstrániť. Odhlásiť sa môžete, kedykoľvek budete chcieť."
+            title_disabled: "Vyskúšajte našu experimentálnu funkciu"
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -6859,6 +6858,7 @@ sk:
                 many: "Odstrániť %{count} používateľov"
                 other: "Odstrániť %{count} používateľov"
               bulk_delete_starting: "Spúšťa sa hromadné odstraňovanie…"
+              block_ip_and_email: "Blokovať IP adresy a e-maily všetkých vybraných používateľov"
               user_delete_succeeded: "[%{position}/%{total}] Úspešne odstránené @%{username}"
               user_delete_failed: "[%{position}/%{total}] Nepodarilo sa odstrániť @%{username} - %{error}"
               bulk_delete_finished: "Operácia hromadného odstránenia bola dokončená."
