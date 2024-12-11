@@ -472,7 +472,6 @@ class PostMover
             ON mp.old_topic_id = pt.topic_id
               AND mp.old_post_number = pt.post_number
               AND mp.old_topic_id = mp.new_topic_id
-              AND mp.new_post_number IN (:post_ids)
         )
     SQL
   end
@@ -480,7 +479,7 @@ class PostMover
   def copy_shifted_post_timings_from_temp
     DB.exec <<~SQL
       INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
-      SELECT topic_id, user_id, post_number, msecs FROM temp_post_timings
+      SELECT DISTINCT topic_id, user_id, post_number, msecs FROM temp_post_timings
     SQL
   end
 
@@ -493,7 +492,7 @@ class PostMover
       FROM post_timings pt
       JOIN moved_posts mp ON (pt.topic_id = mp.old_topic_id AND pt.post_number = mp.old_post_number)
       WHERE mp.old_post_id <> mp.new_post_id
-        AND mp.new_post_number IN (:post_ids)
+        AND mp.old_post_id IN (:post_ids)
       ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
         SET msecs = GREATEST(post_timings.msecs, excluded.msecs)
     SQL

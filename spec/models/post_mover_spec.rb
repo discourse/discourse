@@ -2008,18 +2008,18 @@ RSpec.describe PostMover do
           it "allows moving posts from multiple topics into one existing topic" do
             dest_topic = Fabricate(:topic, user: user, created_at: 5.hours.ago)
             Fabricate(:post, topic: dest_topic, created_at: 5.hours.ago)
-            create_post_timing(dest_topic.first_post, user, 500)
+            create_post_timing(dest_topic.first_post, user, 100)
 
             source_1_topic = Fabricate(:topic, user: user, created_at: 4.hours.ago)
             Fabricate(:post, topic: source_1_topic, user: user, created_at: 4.hours.ago)
-            create_post_timing(source_1_topic.first_post, user, 500)
+            create_post_timing(source_1_topic.first_post, user, 200)
             source_1_post =
               Fabricate(:post, topic: source_1_topic, user: user, created_at: 3.hours.ago)
-            create_post_timing(source_1_topic.posts.second, user, 500)
+            create_post_timing(source_1_topic.posts.second, user, 300)
 
             source_2_topic = Fabricate(:topic, user: user, created_at: 2.hours.ago)
             Fabricate(:post, topic: source_2_topic, user: user, created_at: 2.hours.ago)
-            create_post_timing(source_2_topic.first_post, user, 500)
+            create_post_timing(source_2_topic.first_post, user, 400)
             source_2_post =
               Fabricate(:post, topic: source_2_topic, user: user, created_at: 1.hours.ago)
             create_post_timing(source_2_topic.posts.second, user, 500)
@@ -2044,9 +2044,13 @@ RSpec.describe PostMover do
               )
 
             expect(moved_to_too).to be_present
+
+            expect(
+              PostTiming.where(topic_id: dest_topic.id).pluck(:post_number, :msecs),
+            ).to contain_exactly([1, 100], [2, 300], [3, 500])
           end
 
-          it "handles moving two older first posts that've been frozen into a newer destination" do
+          it "handles moving two older first posts into a newer destination" do
             source_1_topic = Fabricate(:topic, user: user, created_at: 5.hours.ago)
             Fabricate(:post, topic: source_1_topic, user: user, created_at: 5.hours.ago)
             create_post_timing(source_1_topic.first_post, user, 500)
@@ -2065,7 +2069,6 @@ RSpec.describe PostMover do
                 [source_2_topic.first_post.id],
                 destination_topic_id: dest_topic.id,
                 chronological_order: true,
-                frozen: true,
               )
 
             expect(moved_to).to be_present
@@ -2076,7 +2079,6 @@ RSpec.describe PostMover do
                 [source_1_topic.first_post.id],
                 destination_topic_id: dest_topic.id,
                 chronological_order: true,
-                frozen: true,
               )
 
             expect(moved_to_too).to be_present
@@ -2085,7 +2087,7 @@ RSpec.describe PostMover do
           it "handles moving an older second post, then the first post, into a newer destination" do
             source_1_topic = Fabricate(:topic, user: user, created_at: 5.hours.ago)
             Fabricate(:post, topic: source_1_topic, user: user, created_at: 5.hours.ago)
-            create_post_timing(source_1_topic.first_post, user, 500)
+            create_post_timing(source_1_topic.first_post, user, 400)
 
             source_1_post =
               Fabricate(:post, topic: source_1_topic, user: user, created_at: 4.hours.ago)
@@ -2093,7 +2095,7 @@ RSpec.describe PostMover do
 
             dest_topic = dest_topic = Fabricate(:topic, user: user, created_at: 3.hours.ago)
             Fabricate(:post, topic: dest_topic, created_at: 3.hours.ago)
-            create_post_timing(dest_topic.first_post, user, 500)
+            create_post_timing(dest_topic.first_post, user, 600)
 
             moved_to =
               source_1_topic.move_posts(
