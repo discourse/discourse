@@ -201,15 +201,14 @@ def gzip(path)
 end
 
 # different brotli versions use different parameters
-def brotli_command(path, max_compress)
-  compression_quality =
-    max_compress ? "11" : (ENV["DISCOURSE_ASSETS_PRECOMPILE_DEFAULT_BROTLI_QUALITY"] || "6")
+def brotli_command(path)
+  compression_quality = ENV["DISCOURSE_ASSETS_PRECOMPILE_DEFAULT_BROTLI_QUALITY"] || "6"
   "brotli -f --quality=#{compression_quality} #{path} --output=#{path}.br"
 end
 
-def brotli(path, max_compress)
-  STDERR.puts brotli_command(path, max_compress)
-  STDERR.puts `#{brotli_command(path, max_compress)}`
+def brotli(path)
+  STDERR.puts brotli_command(path)
+  STDERR.puts `#{brotli_command(path)}`
   raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
   STDERR.puts `chmod +r #{path}.br`.strip
   raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
@@ -303,7 +302,7 @@ task "assets:precompile:compress_js": "environment" do
                   info["size"] = File.size(path)
                   info["mtime"] = File.mtime(path).iso8601
                   gzip(path)
-                  brotli(path, max_compress)
+                  brotli(path)
                 end
               end
             end
