@@ -26,6 +26,7 @@ module(
         </Form>
       </template>);
 
+      await pauseTest();
       assert.deepEqual(data, { foo: "option-2" });
       assert.form().field("foo").hasValue("option-2");
 
