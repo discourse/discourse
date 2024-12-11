@@ -139,7 +139,10 @@ export default class Info extends Component {
               )
             }}
               <div class="categories-wrapper">
-                <PluginOutlet @name="header-categories-wrapper">
+                <PluginOutlet
+                  @name="header-categories-wrapper"
+                  @outletArgs={{hash category=@topicInfo.category}}
+                >
                   {{#if @topicInfo.category.parentCategory}}
                     {{#if
                       (and
