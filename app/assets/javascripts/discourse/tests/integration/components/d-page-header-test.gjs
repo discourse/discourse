@@ -22,38 +22,28 @@ const DPageHeaderActionsTestComponent = <template>
 module("Integration | Component | DPageHeader", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("no @titleLabel or @titleLabelTranslated", async function (assert) {
+  test("no @titleLabel", async function (assert) {
     await render(<template><DPageHeader /></template>);
     assert.dom(".d-page-header__title").doesNotExist();
   });
 
   test("@titleLabel", async function (assert) {
     await render(<template>
-      <DPageHeader @titleLabel="admin.title" />
+      <DPageHeader @titleLabel={{i18n "admin.title"}} />
     </template>);
     assert.dom(".d-page-header__title").exists().hasText(i18n("admin.title"));
   });
 
-  test("@titleLabelTranslated", async function (assert) {
-    await render(<template>
-      <DPageHeader @titleLabelTranslated="Wow so cool" />
-    </template>);
-    assert.dom(".d-page-header__title").exists().hasText("Wow so cool");
-  });
-
   test("@shouldDisplay", async function (assert) {
     await render(<template>
-      <DPageHeader
-        @titleLabelTranslated="Wow so cool"
-        @shouldDisplay={{false}}
-      />
+      <DPageHeader @titleLabel="Wow so cool" @shouldDisplay={{false}} />
     </template>);
     assert.dom(".admin-page-header").doesNotExist();
   });
 
   test("renders base breadcrumbs and yielded <:breadcrumbs>", async function (assert) {
     await render(<template>
-      <DPageHeader @titleLabel="admin.titile">
+      <DPageHeader @titleLabel={{i18n "admin.titile"}}>
         <:breadcrumbs>
           <DBreadcrumbsItem
             @path="/admin/badges"
@@ -71,32 +61,19 @@ module("Integration | Component | DPageHeader", function (hooks) {
       .hasText(i18n("admin.badges.title"));
   });
 
-  test("no @descriptionLabel and no @descriptionLabelTranslated", async function (assert) {
+  test("no @descriptionLabel", async function (assert) {
     await render(<template><DPageHeader /></template>);
     assert.dom(".d-page-header__description").doesNotExist();
   });
 
   test("@descriptionLabel", async function (assert) {
     await render(<template>
-      <DPageHeader @descriptionLabel="admin.badges.description" />
+      <DPageHeader @descriptionLabel={{i18n "admin.badges.description"}} />
     </template>);
     assert
       .dom(".d-page-header__description")
       .exists()
       .hasText(i18n("admin.badges.description"));
-  });
-
-  test("@descriptionLabelTranslated", async function (assert) {
-    await render(<template>
-      <DPageHeader
-        @descriptionLabelTranslated="Some description which supports <strong>HTML</strong>"
-      />
-    </template>);
-    assert
-      .dom(".d-page-header__description")
-      .exists()
-      .hasText("Some description which supports HTML");
-    assert.dom(".d-page-header__description strong").exists();
   });
 
   test("no @learnMoreUrl", async function (assert) {
@@ -107,7 +84,7 @@ module("Integration | Component | DPageHeader", function (hooks) {
   test("@learnMoreUrl", async function (assert) {
     await render(<template>
       <DPageHeader
-        @descriptionLabel="admin.badges.description"
+        @descriptionLabel={{i18n "admin.badges.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/96331"
       />
     </template>);

@@ -42,8 +42,8 @@ export default class AdminPluginConfigPage extends Component {
   <template>
     <div class="admin-plugin-config-page">
       <DPageHeader
-        @titleLabelTranslated={{@plugin.nameTitleized}}
-        @descriptionLabelTranslated={{@plugin.about}}
+        @titleLabel={{@plugin.nameTitleized}}
+        @descriptionLabel={{@plugin.about}}
         @learnMoreUrl={{@plugin.linkUrl}}
         @headerActionComponent={{this.headerActionComponent}}
       >

@@ -93,22 +93,8 @@ export const WrappedActionListItem = <template>
   </li>
 </template>;
 
-// It is not a mistake that `btn-default` is used here, in a list
+// It is not a mistake that there is no PrimaryActionListItem here, in a list
 // there is no need for blue text.
-export const PrimaryActionListItem = <template>
-  <DPageActionListItem
-    class="btn-default"
-    ...attributes
-    @action={{@action}}
-    @route={{@route}}
-    @routeModels={{@routeModels}}
-    @label={{@label}}
-    @title={{@title}}
-    @icon={{@icon}}
-    @isLoading={{@isLoading}}
-  />
-</template>;
-
 export const DefaultActionListItem = <template>
   <DPageActionListItem
     class="btn-default"

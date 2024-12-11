@@ -7,7 +7,6 @@ import {
   DangerButton,
   DefaultActionListItem,
   DefaultButton,
-  PrimaryActionListItem,
   PrimaryButton,
   WrappedActionListItem,
   WrappedButton,
@@ -52,7 +51,7 @@ export default class DPageSubheader extends Component {
                   <DropdownMenu class="d-page-subheader__mobile-actions">
                     {{yield
                       (hash
-                        Primary=PrimaryActionListItem
+                        Primary=DefaultActionListItem
                         Default=DefaultActionListItem
                         Danger=DangerActionListItem
                         Wrapped=WrappedActionListItem

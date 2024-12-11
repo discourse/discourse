@@ -10,7 +10,6 @@ import {
   DangerButton,
   DefaultActionListItem,
   DefaultButton,
-  PrimaryActionListItem,
   PrimaryButton,
   WrappedActionListItem,
   WrappedButton,
@@ -37,22 +36,6 @@ export default class DPageHeader extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.router.off("routeDidChange", this, this.#checkIfShouldDisplay);
-  }
-
-  get title() {
-    if (this.args.titleLabelTranslated) {
-      return this.args.titleLabelTranslated;
-    } else if (this.args.titleLabel) {
-      return i18n(this.args.titleLabel);
-    }
-  }
-
-  get description() {
-    if (this.args.descriptionLabelTranslated) {
-      return this.args.descriptionLabelTranslated;
-    } else if (this.args.descriptionLabel) {
-      return i18n(this.args.descriptionLabel);
-    }
   }
 
   @bind
@@ -84,8 +67,8 @@ export default class DPageHeader extends Component {
         </div>
 
         <div class="d-page-header__title-row">
-          {{#if this.title}}
-            <h1 class="d-page-header__title">{{this.title}}</h1>
+          {{#if @titleLabel}}
+            <h1 class="d-page-header__title">{{@titleLabel}}</h1>
           {{/if}}
 
           {{#if (or (has-block "actions") @headerActionComponent)}}
@@ -101,7 +84,7 @@ export default class DPageHeader extends Component {
                     <DropdownMenu class="d-page-header__mobile-actions">
                       {{#let
                         (hash
-                          Primary=PrimaryActionListItem
+                          Primary=DefaultActionListItem
                           Default=DefaultActionListItem
                           Danger=DangerActionListItem
                           Wrapped=WrappedActionListItem
@@ -138,9 +121,9 @@ export default class DPageHeader extends Component {
           {{/if}}
         </div>
 
-        {{#if this.description}}
+        {{#if @descriptionLabel}}
           <p class="d-page-header__description">
-            {{htmlSafe this.description}}
+            {{htmlSafe @descriptionLabel}}
             {{#if @learnMoreUrl}}
               <span class="d-page-header__learn-more">{{htmlSafe
                   (i18n "learn_more_with_link" url=@learnMoreUrl)

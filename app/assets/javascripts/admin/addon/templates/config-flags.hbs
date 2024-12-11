@@ -1,9 +1,10 @@
 <DPageHeader
-  @titleLabel="admin.config_areas.flags.header"
-  @descriptionLabel="admin.config_areas.flags.subheader"
+  @titleLabel={{i18n "admin.config_areas.flags.header"}}
+  @descriptionLabel={{i18n "admin.config_areas.flags.subheader"}}
   @learnMoreUrl="https://meta.discourse.org/t/moderation-flags/325589"
 >
   <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
     <DBreadcrumbsItem
       @path="/admin/config/flags"
       @label={{i18n "admin.config_areas.flags.header"}}
