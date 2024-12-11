@@ -34,9 +34,9 @@ def upload(path, remote_path, content_type, content_encoding = nil, logger:)
   options[:content_encoding] = content_encoding if content_encoding
 
   if should_skip?(remote_path)
-    logger << "Skipping: #{remote_path}"
+    logger << "Skipping: #{remote_path}\n"
   else
-    logger << "Uploading: #{remote_path}"
+    logger << "Uploading: #{remote_path}\n"
 
     File.open(path) { |file| helper.upload(file, remote_path, options) }
   end
