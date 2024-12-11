@@ -24,7 +24,7 @@ def should_skip?(path)
   existing_assets.include?(prefix_s3_path(path))
 end
 
-def upload(path, remote_path, content_type, content_encoding = nil)
+def upload(path, remote_path, content_type, content_encoding = nil, logger:)
   options = {
     cache_control: "max-age=31556952, public, immutable",
     content_type: content_type,
@@ -34,9 +34,9 @@ def upload(path, remote_path, content_type, content_encoding = nil)
   options[:content_encoding] = content_encoding if content_encoding
 
   if should_skip?(remote_path)
-    puts "Skipping: #{remote_path}"
+    logger << "Skipping: #{remote_path}"
   else
-    puts "Uploading: #{remote_path}"
+    logger << "Uploading: #{remote_path}"
 
     File.open(path) { |file| helper.upload(file, remote_path, options) }
   end
@@ -200,7 +200,8 @@ task "s3:upload_assets" => [:environment, "s3:ensure_cors_rules"] do
       ENV["DISCOURSE_S3_UPLOAD_ASSETS_RAKE_THREAD_POOL_SIZE"] || Concurrent.processor_count,
     )
 
-  assets.each { |asset| pool.post { upload(*asset) } }
+  logger = Logger.new(STDOUT)
+  assets.each { |asset| pool.post { upload(*asset, logger:) } }
 
   pool.shutdown
   pool.wait_for_termination
