@@ -813,11 +813,12 @@ class BulkImport::Generic < BulkImport::Base
 
       poll_details = query(<<~SQL, { post_id: row["id"] })
         SELECT p.*, ROW_NUMBER() OVER (PARTITION BY p.post_id, p.name ORDER BY p.id) AS seq,
-               JSON_GROUP_ARRAY(DISTINCT TRIM(po.text)) AS options
+               JSON_GROUP_ARRAY(DISTINCT TRIM(po.text) ORDER BY po.position, po.id) AS options
           FROM polls p
                JOIN poll_options po ON p.id = po.poll_id
          WHERE p.post_id = :post_id
-         ORDER BY p.id, po.position, po.id
+         GROUP BY p.id
+         ORDER BY p.id
       SQL
 
       poll_details.each do |poll|
@@ -1015,9 +1016,21 @@ class BulkImport::Generic < BulkImport::Base
     text << " close=#{auto_close.utc.iso8601}" if auto_close
     text << "]\n"
     text << "# #{title}\n" if title.present?
-    text << options.map { |o| "* #{o}" }.join("\n") if options.present? && !number_type
+    if options.present? && !number_type
+      text << options.map { |o| "* #{escape_poll_option_text(o)}" }.join("\n")
+    end
     text << "\n[/poll]\n"
     text
+  end
+
+  def escape_poll_option_text(option_text)
+    option_text
+      .strip
+      .gsub(/^(\d+)([.)])(\s|$)/) { "#{$1}\\#{$2}#{$3}" }
+      .gsub(/^\[([\w\s]+\]:)/) { "\\[#{$1}" }
+      .gsub(/^>/, "\\>")
+      .gsub(/^([*+\-](?:\s|$))/) { "\\#{$1}" }
+      .gsub(/^(#+(?:\s|$))/) { "\\#{$1}" }
   end
 
   def event_bbcode(event)
@@ -1152,12 +1165,35 @@ class BulkImport::Generic < BulkImport::Base
 
     puts "", "Importing poll options..."
 
-    poll_options = query(<<~SQL)
+    sql = <<~SQL
       SELECT poll_id, TRIM(text) AS text, MIN(created_at) AS created_at, GROUP_CONCAT(id) AS option_ids
         FROM poll_options
        GROUP BY 1, 2
        ORDER BY poll_id, position, id
     SQL
+
+    poll_options =
+      Enumerator.new do |y|
+        query_batch(sql) do |rows|
+          poll_raw = <<~TEXT
+            [poll]
+            #{rows.map { |row| "* #{row["text"]}" }.join("\n")}
+            [/poll]
+          TEXT
+
+          # we don't care about the topic ID
+          options = DiscoursePoll::Poll.extract(poll_raw, 1).first["options"]
+
+          raise "Poll option mismatch" if rows.size != options.size
+
+          rows.each_with_index do |row, index|
+            option = options[index]
+            row["html"] = option["html"]
+            row["digest"] = option["id"]
+            y.yield(row)
+          end
+        end
+      end
 
     create_poll_options(poll_options) do |row|
       poll_id = poll_id_from_original_id(row["poll_id"])
@@ -1169,7 +1205,8 @@ class BulkImport::Generic < BulkImport::Base
       {
         original_ids: option_ids,
         poll_id: poll_id,
-        html: row["text"],
+        html: row["html"],
+        digest: row["digest"],
         created_at: to_datetime(row["created_at"]),
       }
     end
@@ -2993,6 +3030,23 @@ class BulkImport::Generic < BulkImport::Base
     else
       result_set
     end
+  end
+
+  def query_batch(sql, *bind_vars, db: @source_db, batch_size: 1000)
+    rows = []
+    result = nil
+
+    query(sql, *bind_vars, db:).each do |row|
+      rows << row
+
+      if rows.size == 1000
+        result = yield rows
+        rows.clear
+      end
+    end
+
+    result = yield rows if rows.any?
+    result
   end
 
   def to_date(text)

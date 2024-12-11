@@ -1804,8 +1804,6 @@ class BulkImport::Base
     poll_option[:updated_at] ||= NOW
     poll_option[:anonymous_votes] ||= nil
 
-    poll_option[:digest] = Digest::MD5.hexdigest([poll_option[:html]].to_json)
-
     poll_option[:original_ids]
       .map(&:to_s)
       .each do |original_id|
