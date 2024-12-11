@@ -14,7 +14,9 @@ export default class DiscourseChatIncomingWebhooksEdit extends DiscourseRoute {
     }
 
     try {
-      const model = await ajax(`/admin/plugins/chat/hooks/${params.id}.json`);
+      const model = await ajax(
+        `/admin/plugins/chat/hooks/${params.id}/edit.json`
+      );
 
       model.webhook = EmberObject.create(model.webhook);
       model.webhook.chat_channel = ChatChannel.create(
