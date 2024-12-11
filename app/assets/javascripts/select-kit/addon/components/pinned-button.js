@@ -9,6 +9,7 @@ import { pluginApiIdentifiers } from "select-kit/components/select-kit";
 @pluginApiIdentifiers("pinned-button")
 export default class PinnedButton extends Component {
   descriptionKey = "help";
+  appendReason = true;
 
   @discourseComputed("topic.pinned_globally", "pinned")
   reasonText(pinnedGlobally, pinned) {
