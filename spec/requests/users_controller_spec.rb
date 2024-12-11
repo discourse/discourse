@@ -699,15 +699,16 @@ RSpec.describe UsersController do
       params
     end
 
+    let(:user) { Fabricate.build(:user, email: "foobar@example.com", password: "strongpassword") }
+
     before do
       UsersController.any_instance.stubs(:honeypot_value).returns(nil)
       UsersController.any_instance.stubs(:challenge_value).returns(nil)
       SiteSetting.allow_new_registrations = true
-      @user = Fabricate.build(:user, email: "foobar@example.com", password: "strongpassword")
     end
 
     let(:post_user_params) do
-      { name: @user.name, username: @user.username, password: "strongpassword", email: @user.email }
+      { name: user.name, username: user.username, password: "strongpassword", email: user.email }
     end
 
     def post_user(extra_params = {})
@@ -718,8 +719,8 @@ RSpec.describe UsersController do
       it "should raise the right error" do
         post "/u.json",
              params: {
-               name: @user.name,
-               username: @user.username,
+               name: user.name,
+               username: user.username,
                password: "testing12352343",
              }
         expect(response.status).to eq(400)
@@ -753,7 +754,7 @@ RSpec.describe UsersController do
         SiteSetting.default_locale = "en"
         I18n.stubs(:locale).returns(:fr)
         post_user
-        expect(User.find_by(username: @user.username).locale).to eq("fr")
+        expect(User.find_by(username: user.username).locale).to eq("fr")
       end
 
       it "requires invite code when specified" do
@@ -777,7 +778,7 @@ RSpec.describe UsersController do
         it "sets the timezone" do
           post_user(timezone: "Australia/Brisbane")
           expect(response.status).to eq(200)
-          expect(User.find_by(username: @user.username).user_option.timezone).to eq(
+          expect(User.find_by(username: user.username).user_option.timezone).to eq(
             "Australia/Brisbane",
           )
         end
@@ -1376,7 +1377,7 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["success"]).to eq(true)
-      expect(User.find_by(username: @user.username).active).to eq(false)
+      expect(User.find_by(username: user.username).active).to eq(false)
     end
 
     shared_examples "honeypot fails" do
@@ -1400,10 +1401,10 @@ RSpec.describe UsersController do
       before { UsersController.any_instance.stubs(:honeypot_value).returns("abc") }
       let(:create_params) do
         {
-          name: @user.name,
-          username: @user.username,
+          name: user.name,
+          username: user.username,
           password: "strongpassword",
-          email: @user.email,
+          email: user.email,
           password_confirmation: "wrong",
         }
       end
@@ -1414,10 +1415,10 @@ RSpec.describe UsersController do
       before { UsersController.any_instance.stubs(:challenge_value).returns("abc") }
       let(:create_params) do
         {
-          name: @user.name,
-          username: @user.username,
+          name: user.name,
+          username: user.username,
           password: "strongpassword",
-          email: @user.email,
+          email: user.email,
           challenge: "abc",
         }
       end
@@ -1428,12 +1429,7 @@ RSpec.describe UsersController do
       before { SiteSetting.invite_only = true }
 
       let(:create_params) do
-        {
-          name: @user.name,
-          username: @user.username,
-          password: "strongpassword",
-          email: @user.email,
-        }
+        { name: user.name, username: user.username, password: "strongpassword", email: user.email }
       end
 
       include_examples "honeypot fails"
@@ -1458,7 +1454,7 @@ RSpec.describe UsersController do
 
     context "when password is blank" do
       let(:create_params) do
-        { name: @user.name, username: @user.username, password: "", email: @user.email }
+        { name: user.name, username: user.username, password: "", email: user.email }
       end
       include_examples "failed signup"
     end
@@ -1466,23 +1462,23 @@ RSpec.describe UsersController do
     context "when password is too long" do
       let(:create_params) do
         {
-          name: @user.name,
-          username: @user.username,
+          name: user.name,
+          username: user.username,
           password: "x" * (User.max_password_length + 1),
-          email: @user.email,
+          email: user.email,
         }
       end
       include_examples "failed signup"
     end
 
     context "when password param is missing" do
-      let(:create_params) { { name: @user.name, username: @user.username, email: @user.email } }
+      let(:create_params) { { name: user.name, username: user.username, email: user.email } }
       include_examples "failed signup"
     end
 
     context "with a reserved username" do
       let(:create_params) do
-        { name: @user.name, username: "Reserved", email: @user.email, password: "strongpassword" }
+        { name: user.name, username: "Reserved", email: user.email, password: "strongpassword" }
       end
       before { SiteSetting.reserved_usernames = "a|reserved|b" }
       include_examples "failed signup"
@@ -1491,9 +1487,9 @@ RSpec.describe UsersController do
     context "with a username that matches a user route" do
       let(:create_params) do
         {
-          name: @user.name,
+          name: user.name,
           username: "account-created",
-          email: @user.email,
+          email: user.email,
           password: "strongpassword",
         }
       end
@@ -1501,7 +1497,7 @@ RSpec.describe UsersController do
     end
 
     context "with a missing username" do
-      let(:create_params) { { name: @user.name, email: @user.email, password: "x" * 20 } }
+      let(:create_params) { { name: user.name, email: user.email, password: "x" * 20 } }
 
       it "should not create a new User" do
         expect { post "/u.json", params: create_params }.to_not change { User.count }
@@ -1513,12 +1509,7 @@ RSpec.describe UsersController do
       before { User.any_instance.stubs(:save).raises(ActiveRecord::StatementInvalid.new("Oh no")) }
 
       let(:create_params) do
-        {
-          name: @user.name,
-          username: @user.username,
-          password: "strongpassword",
-          email: @user.email,
-        }
+        { name: user.name, username: user.username, password: "strongpassword", email: user.email }
       end
 
       include_examples "failed signup"
@@ -1531,7 +1522,7 @@ RSpec.describe UsersController do
 
       context "without a value for the fields" do
         let(:create_params) do
-          { name: @user.name, password: "watwatwat", username: @user.username, email: @user.email }
+          { name: user.name, password: "watwatwat", username: user.username, email: user.email }
         end
         include_examples "failed signup"
       end
@@ -1676,10 +1667,10 @@ RSpec.describe UsersController do
 
         let(:create_params) do
           {
-            name: @user.name,
+            name: user.name,
             password: "suChS3cuRi7y",
-            username: @user.username,
-            email: @user.email,
+            username: user.username,
+            email: user.email,
             user_fields: {
               user_field.id.to_s => "value1",
               another_field.id.to_s => "value2",
@@ -1690,7 +1681,7 @@ RSpec.describe UsersController do
         it "should succeed without the optional field" do
           post "/u.json", params: create_params
           expect(response.status).to eq(200)
-          inserted = User.find_by_email(@user.email)
+          inserted = User.find_by_email(user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq("value1")
@@ -1702,7 +1693,7 @@ RSpec.describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = "value3"
           post "/u.json", params: create_params.merge(create_params)
           expect(response.status).to eq(200)
-          inserted = User.find_by_email(@user.email)
+          inserted = User.find_by_email(user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to eq("value1")
@@ -1714,7 +1705,7 @@ RSpec.describe UsersController do
           create_params[:user_fields][optional_field.id.to_s] = ("x" * 3000)
           post "/u.json", params: create_params.merge(create_params)
           expect(response.status).to eq(200)
-          inserted = User.find_by_email(@user.email)
+          inserted = User.find_by_email(user.email)
 
           val = inserted.custom_fields["user_field_#{optional_field.id}"]
           expect(val.length).to eq(UserField.max_length)
@@ -1727,18 +1718,13 @@ RSpec.describe UsersController do
 
       context "without values for the fields" do
         let(:create_params) do
-          {
-            name: @user.name,
-            password: "suChS3cuRi7y",
-            username: @user.username,
-            email: @user.email,
-          }
+          { name: user.name, password: "suChS3cuRi7y", username: user.username, email: user.email }
         end
 
         it "should succeed" do
           post "/u.json", params: create_params
           expect(response.status).to eq(200)
-          inserted = User.find_by_email(@user.email)
+          inserted = User.find_by_email(user.email)
           expect(inserted).to be_present
           expect(inserted.custom_fields).not_to be_present
           expect(inserted.custom_fields["user_field_#{user_field.id}"]).to be_blank

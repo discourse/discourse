@@ -1308,56 +1308,55 @@ RSpec.describe SessionController do
     end
 
     describe "local attribute override from SSO payload" do
+      fab!(:user)
+
+      let!(:sso) { get_sso("/hello/world") }
+      let(:reversed_username) { user.username.reverse }
+      let(:suggested_username) { UserNameSuggester.suggest(sso.username || sso.name || sso.email) }
+      let(:suggested_name) { User.suggest_name(sso.name || sso.username || sso.email) }
+
       before do
         SiteSetting.email_editable = false
         SiteSetting.auth_overrides_email = true
         SiteSetting.auth_overrides_username = true
         SiteSetting.auth_overrides_name = true
 
-        @user = Fabricate(:user)
+        sso.external_id = "997"
+        sso.username = reversed_username
+        sso.email = "#{reversed_username}@garbage.org"
+        sso.name = user.name.reverse
 
-        @sso = get_sso("/hello/world")
-        @sso.external_id = "997"
-
-        @reversed_username = @user.username.reverse
-        @sso.username = @reversed_username
-        @sso.email = "#{@reversed_username}@garbage.org"
-        @reversed_name = @user.name.reverse
-        @sso.name = @reversed_name
-
-        @suggested_username = UserNameSuggester.suggest(@sso.username || @sso.name || @sso.email)
-        @suggested_name = User.suggest_name(@sso.name || @sso.username || @sso.email)
-        @user.create_single_sign_on_record(external_id: "997", last_payload: "")
+        user.create_single_sign_on_record(external_id: "997", last_payload: "")
       end
 
       it "stores the external attributes" do
-        get "/session/sso_login", params: Rack::Utils.parse_query(@sso.payload), headers: headers
-        @user.single_sign_on_record.reload
-        expect(@user.single_sign_on_record.external_username).to eq(@sso.username)
-        expect(@user.single_sign_on_record.external_email).to eq(@sso.email)
-        expect(@user.single_sign_on_record.external_name).to eq(@sso.name)
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        user.single_sign_on_record.reload
+        expect(user.single_sign_on_record.external_username).to eq(sso.username)
+        expect(user.single_sign_on_record.external_email).to eq(sso.email)
+        expect(user.single_sign_on_record.external_name).to eq(sso.name)
       end
 
       it "overrides attributes" do
-        get "/session/sso_login", params: Rack::Utils.parse_query(@sso.payload), headers: headers
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        expect(logged_on_user.username).to eq(@suggested_username)
-        expect(logged_on_user.email).to eq("#{@reversed_username}@garbage.org")
-        expect(logged_on_user.name).to eq(@sso.name)
+        expect(logged_on_user.username).to eq(suggested_username)
+        expect(logged_on_user.email).to eq("#{reversed_username}@garbage.org")
+        expect(logged_on_user.name).to eq(sso.name)
       end
 
       it "does not change matching attributes for an existing account" do
-        @sso.username = @user.username
-        @sso.name = @user.name
-        @sso.email = @user.email
+        sso.username = user.username
+        sso.name = user.name
+        sso.email = user.email
 
-        get "/session/sso_login", params: Rack::Utils.parse_query(@sso.payload), headers: headers
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        expect(logged_on_user.username).to eq(@user.username)
-        expect(logged_on_user.name).to eq(@user.name)
-        expect(logged_on_user.email).to eq(@user.email)
+        expect(logged_on_user.username).to eq(user.username)
+        expect(logged_on_user.name).to eq(user.name)
+        expect(logged_on_user.email).to eq(user.email)
       end
     end
 
@@ -1373,9 +1372,11 @@ RSpec.describe SessionController do
   end
 
   describe "#sso_provider" do
+    fab!(:user) { Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true) }
+
     let(:headers) { { host: Discourse.current_hostname } }
     let(:logo_fixture) { "http://#{Discourse.current_hostname}/uploads/logo.png" }
-    fab!(:user) { Fabricate(:user, password: "myfrogs123ADMIN", active: true, admin: true) }
+    let(:sso) { DiscourseConnectProvider.new }
 
     before do
       stub_request(:any, %r{#{Discourse.current_hostname}/uploads}).to_return(
@@ -1395,35 +1396,33 @@ RSpec.describe SessionController do
         somewhere.over.rainbow|newSecretForOverRainbow
       ].join("\n")
 
-      @sso = DiscourseConnectProvider.new
-      @sso.nonce = "mynonce"
-      @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
+      sso.nonce = "mynonce"
+      sso.return_sso_url = "http://somewhere.over.rainbow/sso"
 
-      @user = user
       group = Fabricate(:group)
-      group.add(@user)
+      group.add(user)
 
-      @user.create_user_avatar!
-      UserAvatar.import_url_for_user(logo_fixture, @user)
-      UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: false)
-      UserProfile.import_url_for_user(logo_fixture, @user, is_card_background: true)
+      user.create_user_avatar!
+      UserAvatar.import_url_for_user(logo_fixture, user)
+      UserProfile.import_url_for_user(logo_fixture, user, is_card_background: false)
+      UserProfile.import_url_for_user(logo_fixture, user, is_card_background: true)
 
-      @user.reload
-      @user.user_avatar.reload
-      @user.user_profile.reload
+      user.reload
+      user.user_avatar.reload
+      user.user_profile.reload
       EmailToken.update_all(confirmed: true)
     end
 
     describe "can act as an SSO provider" do
       it "successfully logs in and redirects user to return_sso_url when the user is not logged in" do
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
         expect(response).to redirect_to("/login")
 
         post "/session.json",
              params: {
-               login: @user.username,
+               login: user.username,
                password: "myfrogs123ADMIN",
              },
              xhr: true,
@@ -1436,13 +1435,13 @@ RSpec.describe SessionController do
         payload = location.split("?")[1]
         sso2 = DiscourseConnectProvider.parse(payload)
 
-        expect(sso2.email).to eq(@user.email)
-        expect(sso2.name).to eq(@user.name)
-        expect(sso2.username).to eq(@user.username)
-        expect(sso2.external_id).to eq(@user.id.to_s)
+        expect(sso2.email).to eq(user.email)
+        expect(sso2.name).to eq(user.name)
+        expect(sso2.username).to eq(user.username)
+        expect(sso2.external_id).to eq(user.id.to_s)
         expect(sso2.admin).to eq(true)
         expect(sso2.moderator).to eq(false)
-        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
+        expect(sso2.groups).to eq(user.groups.pluck(:name).join(","))
 
         expect(sso2.avatar_url.blank?).to_not eq(true)
         expect(sso2.profile_background_url.blank?).to_not eq(true)
@@ -1456,10 +1455,10 @@ RSpec.describe SessionController do
       end
 
       it "correctly logs in for secondary domain secrets" do
-        sign_in @user
+        sign_in user
 
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("newSecretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("newSecretForOverRainbow"))
         expect(response.status).to eq(302)
         redirect_uri = URI.parse(response.location)
         expect(redirect_uri.host).to eq("somewhere.over.rainbow")
@@ -1469,7 +1468,7 @@ RSpec.describe SessionController do
         expect(redirect_query["sig"][0]).to eq(expected_sig)
 
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("oldSecretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("oldSecretForOverRainbow"))
         expect(response.status).to eq(302)
         redirect_uri = URI.parse(response.location)
         expect(redirect_uri.host).to eq("somewhere.over.rainbow")
@@ -1481,7 +1480,7 @@ RSpec.describe SessionController do
 
       it "fails to log in if secret is wrong" do
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
+            params: Rack::Utils.parse_query(sso.payload("secretForRandomSite"))
         expect(response.status).to eq(422)
       end
 
@@ -1502,10 +1501,10 @@ RSpec.describe SessionController do
       end
 
       it "successfully redirects user to return_sso_url when the user is logged in" do
-        sign_in(@user)
+        sign_in(user)
 
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
@@ -1513,13 +1512,13 @@ RSpec.describe SessionController do
         payload = location.split("?")[1]
         sso2 = DiscourseConnectProvider.parse(payload)
 
-        expect(sso2.email).to eq(@user.email)
-        expect(sso2.name).to eq(@user.name)
-        expect(sso2.username).to eq(@user.username)
-        expect(sso2.external_id).to eq(@user.id.to_s)
+        expect(sso2.email).to eq(user.email)
+        expect(sso2.name).to eq(user.name)
+        expect(sso2.username).to eq(user.username)
+        expect(sso2.external_id).to eq(user.id.to_s)
         expect(sso2.admin).to eq(true)
         expect(sso2.moderator).to eq(false)
-        expect(sso2.groups).to eq(@user.groups.pluck(:name).join(","))
+        expect(sso2.groups).to eq(user.groups.pluck(:name).join(","))
 
         expect(sso2.avatar_url.blank?).to_not eq(true)
         expect(sso2.profile_background_url.blank?).to_not eq(true)
@@ -1533,10 +1532,10 @@ RSpec.describe SessionController do
       end
 
       it "fails with a nice error message if `prompt` parameter has an invalid value" do
-        @sso.prompt = "xyzpdq"
+        sso.prompt = "xyzpdq"
 
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
         expect(response.status).to eq(400)
         expect(response.body).to eq(
@@ -1545,10 +1544,10 @@ RSpec.describe SessionController do
       end
 
       it "redirects browser to return_sso_url with auth failure when prompt=none is requested and the user is not logged in" do
-        @sso.prompt = "none"
+        sso.prompt = "none"
 
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
@@ -1586,7 +1585,7 @@ RSpec.describe SessionController do
           },
         )
 
-        @user.create_user_avatar!
+        user.create_user_avatar!
         upload =
           Fabricate(
             :upload,
@@ -1602,29 +1601,28 @@ RSpec.describe SessionController do
           url: "//s3-upload-bucket.s3.amazonaws.com/something/else",
         )
 
-        @user.update_columns(uploaded_avatar_id: upload.id)
+        user.update_columns(uploaded_avatar_id: upload.id)
 
         upload1 = Fabricate(:upload_s3)
         upload2 = Fabricate(:upload_s3)
 
-        @user.user_profile.update!(
+        user.user_profile.update!(
           profile_background_upload: upload1,
           card_background_upload: upload2,
         )
 
-        @user.reload
-        @user.user_avatar.reload
-        @user.user_profile.reload
+        user.reload
+        user.user_avatar.reload
+        user.user_profile.reload
 
-        sign_in(@user)
+        sign_in(user)
 
         stub_request(:get, "http://cdn.com/something/else").to_return(
           body: lambda { |request| File.new(Rails.root + "spec/fixtures/images/logo.png") },
         )
 
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
-
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
         location = response.header["Location"]
         # javascript code will handle redirection of user to return_sso_url
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
@@ -1644,11 +1642,11 @@ RSpec.describe SessionController do
       end
 
       it "successfully logs out and redirects user to return_sso_url when the user is logged in" do
-        sign_in(@user)
+        sign_in(user)
 
-        @sso.logout = true
+        sso.logout = true
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso$})
@@ -1659,9 +1657,9 @@ RSpec.describe SessionController do
       end
 
       it "successfully logs out and redirects user to return_sso_url when the user is not logged in" do
-        @sso.logout = true
+        sso.logout = true
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso$})
@@ -1674,12 +1672,12 @@ RSpec.describe SessionController do
 
     describe "can act as a 2FA provider" do
       fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }
-      before { @sso.require_2fa = true }
+      before { sso.require_2fa = true }
 
       it "requires the user to confirm 2FA before they are redirected to the SSO return URL" do
         sign_in(user)
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
         uri = URI(response.location)
         expect(uri.hostname).to eq(Discourse.current_hostname)
         expect(uri.path).to eq("/session/2fa")
@@ -1696,7 +1694,7 @@ RSpec.describe SessionController do
         # attempt no. 2 to bypass 2fa
         get "/session/sso_provider",
             params: { second_factor_nonce: nonce }.merge(
-              Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")),
+              Rack::Utils.parse_query(sso.payload("secretForOverRainbow")),
             )
         expect(response.status).to eq(401)
         expect(response.parsed_body["error"]).to eq(
@@ -1732,7 +1730,7 @@ RSpec.describe SessionController do
         backup_codes = user.generate_backup_codes
         sign_in(user)
         get "/session/sso_provider",
-            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+            params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
         uri = URI(response.location)
         expect(uri.hostname).to eq(Discourse.current_hostname)
         expect(uri.path).to eq("/session/2fa")
@@ -1762,7 +1760,7 @@ RSpec.describe SessionController do
         it "redirects the user back to the SSO return url and indicates in the payload that they do not have 2fa methods" do
           sign_in(user)
           get "/session/sso_provider",
-              params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+              params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
           expect(response.status).to eq(302)
           redirect_url = response.location
@@ -1778,14 +1776,14 @@ RSpec.describe SessionController do
       context "when there is no logged in user" do
         it "redirects the user to login first" do
           get "/session/sso_provider",
-              params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+              params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
           expect(response.status).to eq(302)
           expect(response.location).to eq("http://#{Discourse.current_hostname}/login")
         end
 
         it "doesn't make the user confirm 2fa twice if they've just logged in and confirmed 2fa while doing so" do
           get "/session/sso_provider",
-              params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+              params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
           post "/session.json",
                params: {
@@ -1811,7 +1809,7 @@ RSpec.describe SessionController do
           user_totp.destroy!
           user.reload
           get "/session/sso_provider",
-              params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+              params: Rack::Utils.parse_query(sso.payload("secretForOverRainbow"))
 
           post "/session.json",
                params: {
