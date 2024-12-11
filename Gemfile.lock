@@ -299,8 +299,9 @@ GEM
     omniauth (1.9.2)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
-    omniauth-facebook (9.0.0)
-      omniauth-oauth2 (~> 1.2)
+    omniauth-facebook (10.0.0)
+      bigdecimal
+      omniauth-oauth2 (>= 1.2, < 3)
     omniauth-github (1.4.0)
       omniauth (~> 1.5)
       omniauth-oauth2 (>= 1.4.0, < 2.0)
