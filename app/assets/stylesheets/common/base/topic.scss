@@ -260,11 +260,14 @@
       min-width: 0;
       .private-message-glyph {
         position: absolute;
+        z-index: 1;
         left: 0.75em;
-        top: 0.7em;
+        top: 1.2em;
+        .mobile-view & {
+          top: 1.1em;
+        }
       }
       #edit-title {
-        width: calc(100% - 50px);
         padding-left: 2.25em;
       }
       .mini-tag-chooser {
