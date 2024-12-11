@@ -814,7 +814,7 @@ class PostsController < ApplicationController
           .order(created_at: :desc)
       end
 
-    if guardian.user.moderator?
+    if guardian.user.moderator? && !guardian.user.admin?
       # Awful hack, but you can't seem to remove the `default_scope` when joining
       # So instead I grab the topics separately
       topic_ids = posts.dup.pluck(:topic_id)
