@@ -14,7 +14,6 @@ export class DSelectOption extends Component {
   }
 
   <template>
-    {{log "option" @value}}
     {{! https://github.com/emberjs/ember.js/issues/19115 }}
     {{#if (eq @selected @value)}}
       <option
