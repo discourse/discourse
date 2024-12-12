@@ -1,11 +1,15 @@
 <form>
   <div class="control-group">
-    <ComboBox
-      @onChange={{@onChangeStatusType}}
-      @content={{@timerTypes}}
+    <DSelect
       @value={{this.statusType}}
       class="timer-type"
-    />
+      @onChange={{@onChangeStatusType}}
+      as |select|
+    >
+      {{#each @timerTypes as |timer|}}
+        <select.Option @value={{timer.id}}>{{timer.name}}</select.Option>
+      {{/each}}
+    </DSelect>
   </div>
 
   {{#if this.publishToCategory}}

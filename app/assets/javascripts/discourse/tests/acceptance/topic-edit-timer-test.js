@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
+import dselect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
   fakeTime,
@@ -48,7 +49,6 @@ acceptance("Topic - Edit timer", function (needs) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-
     await click("#tap_tile_start_of_next_business_week");
 
     assert
@@ -62,7 +62,6 @@ acceptance("Topic - Edit timer", function (needs) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-
     await click("#tap_tile_start_of_next_business_week");
 
     assert
@@ -76,13 +75,13 @@ acceptance("Topic - Edit timer", function (needs) {
       .dom(".edit-topic-timer-modal .topic-timer-info")
       .matchesText(/will automatically close in/);
 
-    const timerType = selectKit(".select-kit.timer-type");
-    await timerType.expand();
-    await timerType.selectRowByValue("close_after_last_post");
+    const timerType = dselect(".timer-type");
+    await timerType.selectOption("close_after_last_post");
 
     const interval = selectKit(".select-kit.relative-time-intervals");
     await interval.expand();
     await interval.selectRowByValue("hours");
+
     assert.strictEqual(interval.header().label(), "hours");
     await fillIn(".relative-time-duration", "2");
 
@@ -115,15 +114,12 @@ acceptance("Topic - Edit timer", function (needs) {
 
   test("close temporarily", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const timerType = selectKit(".select-kit.timer-type");
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-
-    await timerType.expand();
-    await timerType.selectRowByValue("open");
-
+    const timerType = dselect(".timer-type");
+    await timerType.selectOption("open");
     await click("#tap_tile_start_of_next_business_week");
 
     assert
@@ -140,15 +136,13 @@ acceptance("Topic - Edit timer", function (needs) {
 
   test("schedule publish to category - visible for a PM", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const timerType = selectKit(".select-kit.timer-type");
-    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     await visit("/t/pm-for-testing/12");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-
-    await timerType.expand();
-    await timerType.selectRowByValue("publish_to_category");
+    const timerType = dselect(".timer-type");
+    await timerType.selectOption("publish_to_category");
+    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     assert.strictEqual(categoryChooser.header().label(), "category…");
     assert.strictEqual(categoryChooser.header().value(), null);
@@ -174,16 +168,14 @@ acceptance("Topic - Edit timer", function (needs) {
 
   test("schedule publish to category - visible for a private category", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const timerType = selectKit(".select-kit.timer-type");
-    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     // has private category id 24 (shared drafts)
     await visit("/t/some-topic/9");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-
-    await timerType.expand();
-    await timerType.selectRowByValue("publish_to_category");
+    const timerType = dselect(".timer-type");
+    await timerType.selectOption("publish_to_category");
+    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     assert.strictEqual(categoryChooser.header().label(), "category…");
     assert.strictEqual(categoryChooser.header().value(), null);
@@ -209,8 +201,6 @@ acceptance("Topic - Edit timer", function (needs) {
 
   test("schedule publish to category - visible for an unlisted public topic", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const timerType = selectKit(".select-kit.timer-type");
-    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     await visit("/t/internationalization-localization/280");
 
@@ -221,8 +211,9 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    await timerType.expand();
-    await timerType.selectRowByValue("publish_to_category");
+    const timerType = dselect(".timer-type");
+    await timerType.selectOption("publish_to_category");
+    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     assert.strictEqual(categoryChooser.header().label(), "category…");
     assert.strictEqual(categoryChooser.header().value(), null);
@@ -278,17 +269,17 @@ acceptance("Topic - Edit timer", function (needs) {
 
   test("schedule publish to category - does not show for a public topic", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const timerType = selectKit(".select-kit.timer-type");
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    await timerType.expand();
-    assert.false(
-      timerType.rowByValue("publish_to_category").exists(),
-      "publish to category is not shown for a public topic"
-    );
+    assert
+      .dselect(".timer-type")
+      .hasNoOption(
+        "publish_to_category",
+        "publish to category is not shown for a public topic"
+      );
   });
 
   test("TL4 can't auto-delete", async function (assert) {
@@ -298,11 +289,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    const timerType = selectKit(".select-kit.timer-type");
-
-    await timerType.expand();
-
-    assert.false(timerType.rowByValue("delete").exists());
+    assert.dselect(".timer-type").hasNoOption("delete");
   });
 
   test("Category Moderator can auto-delete replies", async function (assert) {
@@ -312,11 +299,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    const timerType = selectKit(".select-kit.timer-type");
-
-    await timerType.expand();
-
-    assert.true(timerType.rowByValue("delete_replies").exists());
+    assert.dselect(".timer-type").hasOption("delete_replies");
   });
 
   test("TL4 can't auto-delete replies", async function (assert) {
@@ -326,11 +309,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    const timerType = selectKit(".select-kit.timer-type");
-
-    await timerType.expand();
-
-    assert.false(timerType.rowByValue("delete_replies").exists());
+    assert.dselect(".timer-type").hasNoOption("delete_replies");
   });
 
   test("Category Moderator can auto-delete", async function (assert) {
@@ -340,24 +319,17 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    const timerType = selectKit(".select-kit.timer-type");
-
-    await timerType.expand();
-
-    assert.true(timerType.rowByValue("delete").exists());
+    assert.dselect(".timer-type").hasOption("delete");
   });
 
   test("auto delete", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const timerType = selectKit(".select-kit.timer-type");
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-
-    await timerType.expand();
-    await timerType.selectRowByValue("delete");
-
+    const timerType = dselect(".timer-type");
+    await timerType.selectOption("delete");
     await click("#tap_tile_two_weeks");
 
     assert
@@ -413,9 +385,8 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    const timerType = selectKit(".select-kit.timer-type");
-    await timerType.expand();
-    await timerType.selectRowByValue("close_after_last_post");
+    const timerType = dselect(".timer-type");
+    await timerType.selectOption("close_after_last_post");
 
     assert.dom(".topic-timer-heading").doesNotExist();
   });
