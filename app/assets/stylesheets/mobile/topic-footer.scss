@@ -1,10 +1,17 @@
+.container.posts .topic-navigation {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 html:not(.anon) #topic-footer-buttons {
   .topic-footer-main-buttons {
     width: 100%;
     justify-content: space-between;
     gap: 0.75rem;
 
-    button {
+    button,
+    .topic-notifications-button,
+    .pinned-button {
       font-size: var(--font-up-1);
     }
 
@@ -20,10 +27,6 @@ html:not(.anon) #topic-footer-buttons {
     .topic-notifications-button {
       .selected-name .name {
         display: none;
-      }
-      .pinned-options,
-      .topic-notifications-options {
-        height: 100%;
       }
     }
 
