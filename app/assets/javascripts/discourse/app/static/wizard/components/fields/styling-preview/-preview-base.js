@@ -6,17 +6,8 @@ import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import PreloadStore from "discourse/lib/preload-store";
 import getUrl from "discourse-common/lib/get-url";
+import { i18n } from "discourse-i18n";
 import { darkLightDiff, drawHeader } from "../../../lib/preview";
-
-export const LOREM = `
-Lorem ipsum dolor sit amet,
-consectetur adipiscing elit.
-Nullam eget sem non elit
-tincidunt rhoncus. Fusce
-velit nisl, porttitor sed
-nisl ac, consectetur interdum
-metus. Fusce in consequat
-augue, vel facilisis felis.`;
 
 const scaled = {};
 
@@ -125,7 +116,7 @@ export default class PreviewBase extends Component {
         });
       });
 
-      Promise.all(
+      return Promise.all(
         fontFaces.map((fontFace) =>
           fontFace.load().then((loadedFont) => {
             document.fonts.add(loadedFont);
@@ -144,7 +135,7 @@ export default class PreviewBase extends Component {
           this.loadingFontVariants = false;
         });
     } else if (this.loadedFonts.has(font.id)) {
-      this.triggerRepaint();
+      return Promise.resolve(this.triggerRepaint());
     }
   }
 
@@ -171,8 +162,14 @@ export default class PreviewBase extends Component {
 
   reload() {
     Promise.all([this.loadFonts(), this.loadImages()]).then(() => {
-      this.loaded = true;
-      this.triggerRepaint();
+      // NOTE: This must be done otherwise the "bold" variant of the body font
+      // will not be loaded for some reason before rendering the canvas.
+      //
+      // The header font does not suffer from this issue.
+      this.loadFontVariants(this.wizard.font).then(() => {
+        this.loaded = true;
+        this.triggerRepaint();
+      });
     });
   }
 
@@ -219,9 +216,18 @@ export default class PreviewBase extends Component {
 
   categories() {
     return [
-      { name: "consecteteur", color: "#652D90" },
-      { name: "ultrices", color: "#3AB54A" },
-      { name: "placerat", color: "#25AAE2" },
+      {
+        name: i18n("wizard.homepage_preview.category_names.icebreakers"),
+        color: "#652D90",
+      },
+      {
+        name: i18n("wizard.homepage_preview.category_names.news"),
+        color: "#3AB54A",
+      },
+      {
+        name: i18n("wizard.homepage_preview.category_names.site_feedback"),
+        color: "#25AAE2",
+      },
     ];
   }
 
@@ -248,17 +254,20 @@ export default class PreviewBase extends Component {
     ctx.drawImage(scaled[key], x, y, w, h);
   }
 
+  get headerHeight() {
+    return this.height * 0.15;
+  }
+
   drawFullHeader(colors, font, logo) {
     const { ctx } = this;
 
-    const headerHeight = this.height * 0.15;
-    drawHeader(ctx, colors, this.width, headerHeight);
+    drawHeader(ctx, colors, this.width, this.headerHeight);
 
     const avatarSize = this.height * 0.1;
-    const headerMargin = headerHeight * 0.2;
+    const headerMargin = this.headerHeight * 0.2;
 
     if (logo) {
-      const logoHeight = headerHeight - headerMargin * 2;
+      const logoHeight = this.headerHeight - headerMargin * 2;
 
       const ratio = logoHeight / logo.height;
       this.scaleImage(
@@ -280,17 +289,16 @@ export default class PreviewBase extends Component {
       avatarSize,
       avatarSize
     );
+
     // accounts for hard-set color variables in solarized themes
     ctx.fillStyle =
       colors.primary_low_mid ||
       darkLightDiff(colors.primary, colors.secondary, 45, 55);
 
-    const pathScale = headerHeight / 1200;
-    // search icon SVG path
+    const pathScale = this.headerHeight / 1200;
     const searchIcon = new Path2D(
       "M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
     );
-    // hamburger icon
     const hamburgerIcon = new Path2D(
       "M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
     );
@@ -318,77 +326,100 @@ export default class PreviewBase extends Component {
 
     const { ctx } = this;
 
-    const categoriesSize = headerHeight * 2;
-    const badgeHeight = categoriesSize * 0.25;
+    const badgeHeight = headerHeight * 2 * 0.25;
     const headerMargin = headerHeight * 0.2;
+    const fontSize = Math.round(badgeHeight * 0.5);
+    ctx.font = `${fontSize}px '${font}'`;
 
+    const allCategoriesText = i18n(
+      "wizard.homepage_preview.nav_buttons.all_categories"
+    );
+    const categoriesWidth = ctx.measureText(allCategoriesText).width;
+    const categoriesBoxWidth = categoriesWidth + headerMargin * 2;
+
+    // Box around "all categories >"
     ctx.beginPath();
     ctx.strokeStyle = colors.primary;
     ctx.lineWidth = 0.5;
     ctx.rect(
       headerMargin,
       headerHeight + headerMargin,
-      categoriesSize,
+      categoriesBoxWidth,
       badgeHeight
     );
     ctx.stroke();
 
-    const fontSize = Math.round(badgeHeight * 0.5);
-
-    ctx.font = `${fontSize}px '${font}'`;
     ctx.fillStyle = colors.primary;
     ctx.fillText(
-      "all categories",
+      allCategoriesText,
       headerMargin * 1.5,
       headerHeight + headerMargin * 1.4 + fontSize
     );
 
+    // Caret (>) at the end of "all categories" box
     const pathScale = badgeHeight / 1000;
-    // caret icon
     const caretIcon = new Path2D(
       "M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
     );
 
     ctx.save();
     ctx.translate(
-      categoriesSize - headerMargin / 4,
+      categoriesBoxWidth,
       headerHeight + headerMargin + badgeHeight / 4
     );
     ctx.scale(pathScale, pathScale);
     ctx.fill(caretIcon);
     ctx.restore();
 
-    const text = opts.categories ? "Categories" : "Latest";
+    // First top menu item
+    const firstTopMenuItemText = opts.categories
+      ? i18n("wizard.homepage_preview.nav_buttons.categories")
+      : i18n("wizard.homepage_preview.nav_buttons.latest");
+    const newText = i18n("wizard.homepage_preview.nav_buttons.new");
+    const unreadText = i18n("wizard.homepage_preview.nav_buttons.unread");
+    const topText = i18n("wizard.homepage_preview.nav_buttons.top");
+    const hotText = i18n("wizard.homepage_preview.nav_buttons.hot");
 
-    const activeWidth = categoriesSize * (opts.categories ? 0.8 : 0.55);
     ctx.beginPath();
     ctx.fillStyle = colors.tertiary;
     ctx.rect(
-      headerMargin * 2 + categoriesSize,
+      categoriesBoxWidth + headerMargin * 2,
       headerHeight + headerMargin,
-      activeWidth,
+      ctx.measureText(firstTopMenuItemText).width + headerMargin * 2,
       badgeHeight
     );
     ctx.fill();
 
     ctx.font = `${fontSize}px '${font}'`;
     ctx.fillStyle = colors.secondary;
-    let x = headerMargin * 3.0 + categoriesSize;
+    const pillButtonTextY = headerHeight + headerMargin * 1.4 + fontSize;
+    const firstTopMenuItemX = headerMargin * 3.0 + categoriesBoxWidth;
     ctx.fillText(
-      text,
-      x - headerMargin * 0.1,
-      headerHeight + headerMargin * 1.5 + fontSize
+      firstTopMenuItemText,
+      firstTopMenuItemX,
+      pillButtonTextY,
+      ctx.measureText(firstTopMenuItemText).width
     );
 
     ctx.fillStyle = colors.primary;
-    x += categoriesSize * (opts.categories ? 0.8 : 0.6);
-    ctx.fillText("New", x, headerHeight + headerMargin * 1.5 + fontSize);
 
-    x += categoriesSize * 0.4;
-    ctx.fillText("Unread", x, headerHeight + headerMargin * 1.5 + fontSize);
+    const newTextX =
+      firstTopMenuItemX +
+      ctx.measureText(firstTopMenuItemText).width +
+      headerMargin * 2.0;
+    ctx.fillText(newText, newTextX, pillButtonTextY);
 
-    x += categoriesSize * 0.6;
-    ctx.fillText("Top", x, headerHeight + headerMargin * 1.5 + fontSize);
+    const unreadTextX =
+      newTextX + ctx.measureText(newText).width + headerMargin * 2.0;
+    ctx.fillText(unreadText, unreadTextX, pillButtonTextY);
+
+    const topTextX =
+      unreadTextX + ctx.measureText(unreadText).width + headerMargin * 2.0;
+    ctx.fillText(topText, topTextX, pillButtonTextY);
+
+    const hotTextX =
+      topTextX + ctx.measureText(topText).width + headerMargin * 2.0;
+    ctx.fillText(hotText, hotTextX, pillButtonTextY);
   }
 }
 

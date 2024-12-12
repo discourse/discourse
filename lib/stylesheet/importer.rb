@@ -86,7 +86,7 @@ module Stylesheet
           .body-font-#{font[:key].tr("_", "-")} {
             font-family: #{font[:stack]};
           }
-          .heading-font-#{font[:key].tr("_", "-")} h2 {
+          .heading-font-#{font[:key].tr("_", "-")} {
             font-family: #{font[:stack]};
           }
         CSS
@@ -222,7 +222,7 @@ module Stylesheet
             )
           contents << <<~CSS
             @font-face {
-              font-family: #{font[:name]};
+              font-family: '#{font[:name]}';
               src: #{src};
               font-weight: #{variant[:weight]};
             }
