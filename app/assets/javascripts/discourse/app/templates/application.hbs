@@ -65,7 +65,11 @@
         />
       </div>
 
-      {{outlet}}
+      {{#if this.showLoginRequiredPage}}
+        <LoginRequired />
+      {{else}}
+        {{outlet}}
+      {{/if}}
 
       <CardContainer />
       <PluginOutlet

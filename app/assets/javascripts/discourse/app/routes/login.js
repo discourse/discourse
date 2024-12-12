@@ -1,7 +1,6 @@
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
-import StaticPage from "discourse/models/static-page";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class LoginRoute extends DiscourseRoute {
@@ -21,12 +20,6 @@ export default class LoginRoute extends DiscourseRoute {
     }
   }
 
-  model() {
-    if (this.siteSettings.login_required) {
-      return StaticPage.find("login");
-    }
-  }
-
   setupController(controller) {
     super.setupController(...arguments);
 
@@ -34,9 +27,5 @@ export default class LoginRoute extends DiscourseRoute {
     controller.set("canSignUp", canSignUp);
     controller.set("flashType", "");
     controller.set("flash", "");
-
-    if (this.siteSettings.login_required) {
-      controller.set("showLogin", false);
-    }
   }
 }
