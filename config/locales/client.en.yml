@@ -2905,8 +2905,8 @@ en:
         quoted: "quoted"
         edited: "edited"
         liked: "new like"
-        private_message: "new private message"
-        invited_to_private_message: "invited to private message"
+        private_message: "new personal message"
+        invited_to_private_message: "invited to personal message"
         invitee_accepted: "invite accepted"
         posted: "new post"
         watching_category_or_tag: "new post"
@@ -3559,7 +3559,7 @@ en:
 
       flag_topic:
         title: "Flag"
-        help: "privately flag this topic for attention or send a private notification about it"
+        help: "privately flag this topic for attention or send a personal message about it"
         success_message: "You successfully flagged this topic."
       make_public:
         title: "Convert to Public Topic"
@@ -3869,7 +3869,7 @@ en:
         edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag_action: "Flag"
-        flag: "privately flag this post for attention or send a private notification about it"
+        flag: "privately flag this post for attention or send a personal message about it"
         delete_action: "Delete post"
         delete: "delete this post"
         undelete_action: "Undelete post"
@@ -4566,7 +4566,7 @@ en:
         print: "%{shortcut} Print topic"
         defer: "%{shortcut} Mark topic as unread"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
-        archive_private_message: "%{shortcut} Toggle archive private message"
+        archive_private_message: "%{shortcut} Toggle archive personal message"
       search_menu:
         title: "Search Menu"
         prev_next: "%{shortcut} Move selection up and down"
@@ -5676,7 +5676,7 @@ en:
             A staff username to send all automated messages from. If left blank, the default System account will be used.
           site_contact_group: "Site contact group"
           site_contact_group_help: |
-            The group that gets invited to all automatically sent private messages.
+            The group that gets invited to all automatically sent personal messages.
           your_organization: "Your organization"
           your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
           company_name: "Name"

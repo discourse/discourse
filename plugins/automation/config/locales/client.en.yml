@@ -161,10 +161,10 @@ en:
               description: Optional, will trigger only if the post's topic is in this category
             restricted_group:
               label: Group
-              description: Optional, will trigger only if the post's topic is a private message in this group's inbox
+              description: Optional, will trigger only if the post's topic is a personal message in this group's inbox
             restricted_groups:
               label: Groups
-              description: Optional, will trigger only if the post's topic is a private message in one of the group inboxes
+              description: Optional, will trigger only if the post's topic is a personal message in one of the group inboxes
             ignore_group_members:
               label: Ignore group members
               description: Skip the trigger if sender is a member of the Group specified above
