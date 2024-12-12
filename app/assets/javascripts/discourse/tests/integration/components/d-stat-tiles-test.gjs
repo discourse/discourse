@@ -9,10 +9,9 @@ module("Integration | Component | DStatTiles", function (hooks) {
 
   test("formats the @value in a readable way with the raw number as the title attr", async function (assert) {
     await render(<template>
-      <DStatTiles as |tiles|><tiles.Tile
-          @value="12555999"
-          @label={{i18n "bootstrap_mode"}}
-        /></DStatTiles>
+      <DStatTiles as |tiles|>
+        <tiles.Tile @value="12555999" @label={{i18n "bootstrap_mode"}} />
+      </DStatTiles>
     </template>);
 
     assert
@@ -25,10 +24,9 @@ module("Integration | Component | DStatTiles", function (hooks) {
 
   test("renders the @label", async function (assert) {
     await render(<template>
-      <DStatTiles as |tiles|><tiles.Tile
-          @value="12555999"
-          @label={{i18n "bootstrap_mode"}}
-        /></DStatTiles>
+      <DStatTiles as |tiles|>
+        <tiles.Tile @value="12555999" @label={{i18n "bootstrap_mode"}} />
+      </DStatTiles>
     </template>);
 
     assert
@@ -38,11 +36,13 @@ module("Integration | Component | DStatTiles", function (hooks) {
 
   test("renders the optional @tooltip", async function (assert) {
     await render(<template>
-      <DStatTiles as |tiles|><tiles.Tile
+      <DStatTiles as |tiles|>
+        <tiles.Tile
           @value="12555999"
           @label={{i18n "bootstrap_mode"}}
           @tooltip={{i18n "bootstrap_mode"}}
-        /></DStatTiles>
+        />
+      </DStatTiles>
     </template>);
 
     assert.dom(".d-stat-tile__tooltip").exists();
@@ -52,11 +52,13 @@ module("Integration | Component | DStatTiles", function (hooks) {
 
   test("wraps the value in a link if @url is provided", async function (assert) {
     await render(<template>
-      <DStatTiles as |tiles|><tiles.Tile
+      <DStatTiles as |tiles|>
+        <tiles.Tile
           @value="12555999"
           @label={{i18n "bootstrap_mode"}}
           @url="https://meta.discourse.org"
-        /></DStatTiles>
+        />
+      </DStatTiles>
     </template>);
 
     assert
