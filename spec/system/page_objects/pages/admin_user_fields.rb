@@ -19,7 +19,7 @@ module PageObjects
       end
 
       def click_add_field
-        page.find(".admin-page-header__actions .btn-primary").click
+        page.find(".d-page-header__actions .btn-primary").click
       end
 
       def click_edit

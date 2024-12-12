@@ -1,12 +1,12 @@
 {{#if this.showTopNav}}
-  <div class="admin-page-header">
+  <div class="d-page-header">
     <DBreadcrumbsContainer />
     <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
     <DBreadcrumbsItem
       @path="/admin/plugins"
       @label={{i18n "admin.plugins.title"}}
     />
-    <div class="admin-nav-submenu">
+    <div class="d-nav-submenu">
       <HorizontalOverflowNav class="main-nav nav plugin-nav">
         <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
         {{#each this.adminRoutes as |route|}}

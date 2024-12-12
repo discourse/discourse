@@ -1,10 +1,11 @@
 <div class="admin-permalinks admin-config-page">
-  <AdminPageHeader
-    @titleLabel="admin.permalink.title"
-    @descriptionLabel="admin.permalink.description"
+  <DPageHeader
+    @titleLabel={{i18n "admin.permalink.title"}}
+    @descriptionLabel={{i18n "admin.permalink.description"}}
     @learnMoreUrl="https://meta.discourse.org/t/redirect-old-forum-urls-to-new-discourse-urls/20930"
   >
     <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
         @path="/admin/customize/permalinks"
         @label={{i18n "admin.permalink.title"}}
@@ -19,7 +20,7 @@
         class="admin-permalinks__header-add-permalink"
       />
     </:actions>
-  </AdminPageHeader>
+  </DPageHeader>
   <div class="admin-container admin-config-page__main-area">
     <ConditionalLoadingSpinner @condition={{this.loading}}>
       <div class="permalink-search">

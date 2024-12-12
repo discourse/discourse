@@ -1,10 +1,11 @@
-<AdminPageHeader
-  @titleLabel="admin.dashboard.new_features.title"
-  @descriptionLabel="admin.dashboard.new_features.subtitle"
+<DPageHeader
+  @titleLabel={{i18n "admin.dashboard.new_features.title"}}
+  @descriptionLabel={{i18n "admin.dashboard.new_features.subtitle"}}
   @learnMoreUrl="https://meta.discourse.org/tags/c/announcements/67/release-notes"
   @hideTabs={{true}}
 >
   <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
     <DBreadcrumbsItem
       @path="/admin/whats-new"
       @label={{i18n "admin.dashboard.new_features.title"}}
@@ -16,7 +17,7 @@
       @action={{this.checkForUpdates}}
     />
   </:actions>
-</AdminPageHeader>
+</DPageHeader>
 
 <div class="admin-container admin-config-page__main-area">
   <div class="admin-config-area">

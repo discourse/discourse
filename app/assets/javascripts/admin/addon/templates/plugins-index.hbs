@@ -1,11 +1,12 @@
 <div class="admin-plugins-list-container">
 
-  <AdminPageHeader
-    @titleLabel="admin.plugins.installed"
-    @descriptionLabel="admin.plugins.description"
+  <DPageHeader
+    @titleLabel={{i18n "admin.plugins.installed"}}
+    @descriptionLabel={{i18n "admin.plugins.description"}}
     @learnMoreUrl="https://www.discourse.org/plugins"
   >
     <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
         @path="/admin/plugins"
         @label={{i18n "admin.plugins.title"}}
@@ -32,7 +33,7 @@
         {{/if}}
       {{/each}}
     </:tabs>
-  </AdminPageHeader>
+  </DPageHeader>
 
   <div class="alert alert-info -top-margin admin-plugins-howto">
     {{dIcon "circle-info"}}

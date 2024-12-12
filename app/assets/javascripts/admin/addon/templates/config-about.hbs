@@ -1,6 +1,6 @@
-<AdminPageHeader
-  @titleLabel="admin.config_areas.about.header"
-  @descriptionLabelTranslated={{i18n
+<DPageHeader
+  @titleLabel={{i18n "admin.config_areas.about.header"}}
+  @descriptionLabel={{i18n
     "admin.config_areas.about.description"
     (hash basePath=(base-path))
   }}
@@ -8,12 +8,13 @@
   @learnMoreUrl="https://meta.discourse.org/t/understanding-and-customizing-the-about-page/332161"
 >
   <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
     <DBreadcrumbsItem
       @path="/admin/config/about"
       @label={{i18n "admin.config_areas.about.header"}}
     />
   </:breadcrumbs>
-</AdminPageHeader>
+</DPageHeader>
 
 <div class="admin-container admin-config-page__main-area">
   <AdminConfigAreas::About @data={{this.model.site_settings}} />

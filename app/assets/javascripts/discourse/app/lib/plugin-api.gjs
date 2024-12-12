@@ -3340,7 +3340,7 @@ class PluginApi {
   }
 
   /**
-   * Registers a component class that will be rendered within the AdminPageHeader component
+   * Registers a component class that will be rendered within the DPageHeader component
    * only on plugins using the AdminPluginConfigPage and the new plugin "show" route.
    *
    * This component will be passed an `@actions` argument, with Primary, Default, Danger,

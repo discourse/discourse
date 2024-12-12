@@ -1,11 +1,11 @@
 <div class="admin-backups admin-config-page">
-
-  <AdminPageHeader
-    @titleLabel="admin.backups.title"
-    @descriptionLabel="admin.backups.description"
+  <DPageHeader
+    @titleLabel={{i18n "admin.backups.title"}}
+    @descriptionLabel={{i18n "admin.backups.description"}}
     @learnMoreUrl="https://meta.discourse.org/t/create-download-and-restore-a-backup-of-your-discourse-database/122710"
   >
     <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
         @path="/admin/backups"
         @label={{i18n "admin.backups.title"}}
@@ -32,7 +32,7 @@
       />
       <PluginOutlet @name="downloader" @connectorTagName="div" />
     </:tabs>
-  </AdminPageHeader>
+  </DPageHeader>
 
   <PluginOutlet @name="before-backup-list" @connectorTagName="div" />
 

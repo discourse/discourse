@@ -806,6 +806,7 @@
 .admin-permalinks {
   @include breakpoint(tablet) {
     .admin-page-subheader,
+    .d-page-subheader,
     .admin-config-area,
     .admin-config-area__primary-content,
     .loading-container {
