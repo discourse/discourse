@@ -369,7 +369,7 @@ RSpec.describe PostMover do
             ).to eq(4)
           end
 
-          it "records full_move=true in MovedPost records when all posts are moved" do
+          it "records full_move=false in MovedPost records when only some posts" do
             post_ids = [p3.id, p4.id]
             new_topic =
               topic.move_posts(
