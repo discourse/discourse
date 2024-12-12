@@ -550,11 +550,15 @@ createWidget("post-contents", {
 
     if (
       this.siteSettings.glimmer_post_menu_mode === "enabled" ||
-      ((this.siteSettings.glimmer_post_menu_mode === "auto" ||
-        this.currentUser?.use_auto_glimmer_post_menu) &&
+      (this.siteSettings.glimmer_post_menu_mode === "auto" &&
         !postMenuWidgetExtensionsAdded)
     ) {
       if (!postMenuConsoleWarningLogged) {
+        if (!isTesting()) {
+          // eslint-disable-next-line no-console
+          console.log("✅  Using the new 'glimmer' post menu!");
+        }
+
         if (postMenuWidgetExtensionsAdded) {
           postMenuConsoleWarningLogged = true;
 
@@ -567,12 +571,6 @@ createWidget("post-contents", {
               // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
             ].join("\n- ")
           );
-        } else if (this.currentUser?.use_auto_glimmer_post_menu) {
-          // TODO (glimmer-post-menu): remove this else if block when removing the site setting glimmer_post_menu_groups
-          postMenuConsoleWarningLogged = true;
-
-          // eslint-disable-next-line no-console
-          console.log("✅  Using the new 'glimmer' post menu!");
         }
       }
 
@@ -617,8 +615,7 @@ createWidget("post-contents", {
       );
     } else {
       if (
-        (this.siteSettings.glimmer_post_menu_mode !== "disabled" ||
-          this.currentUser?.use_auto_glimmer_post_menu) &&
+        this.siteSettings.glimmer_post_menu_mode !== "disabled" &&
         postMenuWidgetExtensionsAdded &&
         !postMenuConsoleWarningLogged
       ) {
@@ -1019,15 +1016,16 @@ createWidget("post-article", {
     return new RenderGlimmer(
       this,
       "div.topic-map.--op",
-      hbs`<TopicMap
-        @model={{@data.model}}
-        @topicDetails={{@data.topicDetails}}
-        @postStream={{@data.postStream}}
-        @showPMMap={{@data.showPMMap}}
-        @showInvite={{@data.showInvite}}
-        @removeAllowedGroup={{@data.removeAllowedGroup}}
-        @removeAllowedUser={{@data.removeAllowedUser}}
-      />`,
+      hbs`
+        <TopicMap
+          @model={{@data.model}}
+          @topicDetails={{@data.topicDetails}}
+          @postStream={{@data.postStream}}
+          @showPMMap={{@data.showPMMap}}
+          @showInvite={{@data.showInvite}}
+          @removeAllowedGroup={{@data.removeAllowedGroup}}
+          @removeAllowedUser={{@data.removeAllowedUser}}
+        />`,
       {
         model: attrs.topic,
         topicDetails: attrs.topic.get("details"),
