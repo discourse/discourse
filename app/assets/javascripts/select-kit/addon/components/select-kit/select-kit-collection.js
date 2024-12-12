@@ -16,16 +16,6 @@ export default class SelectKitCollection extends Component {
       return;
     }
 
-    // when opened a modal will disable all scroll but itself
-    // this code is whitelisting the collection to ensure it can be scrolled in this case
-    // however we only want to do this if the modal is open to avoid breaking the scroll on the page
-    // eg: opening a combobox under a topic shouldn't prevent you to scroll the topic page
-    const isModalOpen =
-      document.documentElement.classList.contains("modal-open");
-    if (!isModalOpen) {
-      return;
-    }
-
     disableBodyScroll(element);
 
     return () => {
