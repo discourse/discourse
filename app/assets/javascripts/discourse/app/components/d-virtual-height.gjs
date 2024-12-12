@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { clearAllBodyScrollLocks, disableBodyScroll } from "discourse/lib/body-scroll-lock";
+import {
+  clearAllBodyScrollLocks,
+  disableBodyScroll,
+} from "discourse/lib/body-scroll-lock";
 import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
