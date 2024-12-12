@@ -19,9 +19,10 @@ html.footer-nav-visible {
     padding-bottom: 0px;
   }
 
-  #topic-progress-wrapper:not(.docked) {
-    margin-bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
+  .with-topic-progress {
+    bottom: var(--footer-nav-height);
   }
+
   .posts-filtered-notice {
     transition: all linear 0.1s;
     bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));

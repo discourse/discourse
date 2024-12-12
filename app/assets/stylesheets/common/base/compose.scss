@@ -1,9 +1,10 @@
-html.composer-open {
+html.composer-open.not-mobile-device {
   #main-outlet {
     padding-bottom: var(--composer-height);
     transition: padding-bottom 250ms ease;
   }
 }
+
 #reply-control {
   position: fixed;
   display: flex;
@@ -69,10 +70,6 @@ html.composer-open {
 
   &.open {
     height: var(--composer-height);
-  }
-
-  &.closed {
-    height: 0 !important;
   }
 
   &.draft,
@@ -613,36 +610,6 @@ div.ac-wrap {
   }
 }
 
-body.ios-safari-composer-hacks {
-  #main-outlet,
-  header,
-  .grippie,
-  html:not(.fullscreen-composer) & .toggle-fullscreen {
-    display: none;
-  }
-
-  #reply-control {
-    top: 0px;
-    &.open {
-      height: calc(var(--composer-vh, 1vh) * 100);
-    }
-  }
-}
-
-body:not(.ios-safari-composer-hacks) {
-  #reply-control.open {
-    --min-height: 255px;
-    min-height: var(--min-height);
-    max-height: calc(100vh - var(--header-offset, 4em));
-    &.composer-action-reply {
-      // we can let the reply composer get a little shorter
-      min-height: calc(var(--min-height) - 4em);
-    }
-    padding-bottom: var(--composer-ipad-padding);
-    box-sizing: border-box;
-  }
-}
-
 .toggle-preview {
   margin-left: auto;
   transition: all 0.33s ease-out;
@@ -658,4 +625,29 @@ body:not(.ios-safari-composer-hacks) {
 
 .draft-error {
   color: var(--danger);
+}
+
+@keyframes blink_input_opacity_to_prevent_scrolling_when_focus {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// When an element (input, textearea) gets focus, iOS Safari tries to put it in the center
+// by scrolling and zooming. We handle zooming with a meta tag. We used to handle scrolling
+// using a complicated JS hack.
+//
+// However, iOS Safari doesn't scroll when the input has opacity of 0 or is clipped.
+// We use this quirk and temporarily hide the element on scroll and quickly show it again
+//
+// Source https://gist.github.com/kiding/72721a0553fa93198ae2bb6eefaa3299
+
+.ios-device #reply-control {
+  input:focus,
+  textarea:focus {
+    animation: blink_input_opacity_to_prevent_scrolling_when_focus 0.01s;
+  }
 }

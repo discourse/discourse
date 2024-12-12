@@ -117,6 +117,12 @@
   }
 }
 
+.with-topic-progress {
+  position: sticky;
+  bottom: 0px;
+  z-index: z("timeline");
+}
+
 .topic-status-info,
 .topic-timer-info {
   border-top: 1px solid var(--primary-low);

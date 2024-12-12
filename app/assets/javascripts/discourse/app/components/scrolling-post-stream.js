@@ -2,7 +2,6 @@ import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
 import offsetCalculator from "discourse/lib/offset-calculator";
-import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import DiscourseURL from "discourse/lib/url";
 import { cloak, uncloak } from "discourse/widgets/post-stream";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -64,11 +63,7 @@ export default class ScrollingPostStream extends MountWidget {
       return;
     }
 
-    if (
-      isWorkaroundActive() ||
-      document.webkitFullscreenElement ||
-      document.fullscreenElement
-    ) {
+    if (document.webkitFullscreenElement || document.fullscreenElement) {
       return;
     }
 
