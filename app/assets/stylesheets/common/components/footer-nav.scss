@@ -20,7 +20,10 @@ html.footer-nav-visible {
   }
 
   .with-topic-progress {
-    bottom: var(--footer-nav-height);
+    bottom: calc(
+      var(--footer-nav-height) + env(safe-area-inset-bottom) +
+        var(--composer-height, 0px)
+    );
   }
 
   .posts-filtered-notice {
@@ -87,12 +90,12 @@ html.footer-nav-ipad {
     padding-bottom: 0; // resets safe-area-inset-bottom
   }
 
-  #reply-control,
-  #reply-control.fullscreen {
-    z-index: z("ipad-header-nav") + 1;
+  .d-header-wrap {
+    top: var(--footer-nav-height);
   }
 
-  .d-header-wrap {
+  #reply-control.open {
+    height: calc(var(--composer-vh, 1vh) * 100 - var(--footer-nav-height));
     top: var(--footer-nav-height);
   }
 }
