@@ -368,7 +368,7 @@ module Jobs
     extend MiniScheduler::Schedule
 
     def perform(*args)
-      super if (::Jobs::Heartbeat === self) || !Discourse.readonly_mode?
+      super if !Discourse.readonly_mode?
     end
   end
 
