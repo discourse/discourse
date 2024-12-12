@@ -36,9 +36,13 @@ export default Mixin.create({
         userField.field.required &&
         (!userField.value || isEmpty(userField.value))
       ) {
+        const reasonKey =
+          userField.field.field_type === "confirm"
+            ? "user_fields.required_checkbox"
+            : "user_fields.required";
         validation = EmberObject.create({
           failed: true,
-          reason: i18n("user_fields.required", {
+          reason: i18n(reasonKey, {
             name: userField.field.name,
           }),
           element: userField.field.element,
