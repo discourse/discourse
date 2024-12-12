@@ -18,6 +18,8 @@ class DSelect {
 
     this.context.dom(option).exists(assertionMessage);
     this.context.dom(option).hasText(label, assertionMessage);
+
+    return this;
   }
 
   hasNoOption(value, assertionMessage) {
@@ -26,6 +28,8 @@ class DSelect {
     );
 
     this.context.dom(option).doesNotExist(assertionMessage);
+
+    return this;
   }
 
   hasSelectedOption({ value, label }, assertionMessage) {
@@ -34,6 +38,8 @@ class DSelect {
       .hasText(label, assertionMessage);
 
     this.context.dom(this.element).hasValue(value, assertionMessage);
+
+    return this;
   }
 
   hasNoSelectedOption({ value, label }, assertionMessage) {
@@ -42,6 +48,8 @@ class DSelect {
       .hasNoText(label, assertionMessage);
 
     this.context.dom(this.element).hasNoValue(value, assertionMessage);
+
+    return this;
   }
 }
 
