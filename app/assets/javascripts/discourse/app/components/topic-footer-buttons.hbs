@@ -59,7 +59,22 @@
     {{/each}}
 
     {{#if this.site.mobileView}}
-      {{#if this.dropdownButtons}}
+      {{#if this.loneDropdownButton}}
+        <DButton
+          @action={{this.loneDropdownButton.action}}
+          @icon={{this.loneDropdownButton.icon}}
+          @translatedLabel={{this.loneDropdownButton.label}}
+          @translatedTitle={{this.loneDropdownButton.title}}
+          @translatedAriaLabel={{this.loneDropdownButton.ariaLabel}}
+          @disabled={{this.loneDropdownButton.disabled}}
+          id={{concat "topic-footer-button-" this.loneDropdownButton.id}}
+          class={{concat-class
+            "btn-default"
+            "topic-footer-button"
+            this.loneDropdownButton.classNames
+          }}
+        />
+      {{else if (gt this.dropdownButtons.length 1)}}
         <DMenu
           @modalForMobile={{true}}
           @identifier="topic-footer-mobile-dropdown"
