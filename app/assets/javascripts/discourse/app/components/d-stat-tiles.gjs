@@ -1,6 +1,4 @@
-import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { service } from "@ember/service";
 import { number } from "discourse/lib/formatter";
 import DTooltip from "float-kit/components/d-tooltip";
 
@@ -26,12 +24,10 @@ const DStatTile = <template>
   </div>
 </template>;
 
-export default class DStatTiles extends Component {
-  @service currentUser;
+const DStatTiles = <template>
+  <div class="d-stat-tiles" ...attributes>
+    {{yield (hash Tile=DStatTile)}}
+  </div>
+</template>;
 
-  <template>
-    <div class="d-stat-tiles" ...attributes>
-      {{yield (hash Tile=DStatTile)}}
-    </div>
-  </template>
-}
+export default DStatTiles;
