@@ -630,9 +630,10 @@ class PostMover
         true,
         user: user,
         post_type: post_type,
+        post_ids: @post_ids_after_move,
         full_move: @full_move,
         original_topic: original_topic,
-        topic_link: topic_link,
+        destination_topic: destination_topic,
         first_post_number_moved: @first_post_number_moved,
       )
     return if !continue
