@@ -1,0 +1,18 @@
+[data-identifier="toolbar-menu__more"][data-content],
+[data-identifier="toolbar-menu__list"][data-content] {
+  z-index: z("composer", "dropdown") + 1;
+
+  .d-button-label {
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .shortcut {
+    border: none;
+    background: var(--primary-200);
+    font-size: var(--font-down-2);
+    color: var(--primary-high);
+    margin-left: 1.8rem;
+  }
+}
