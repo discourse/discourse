@@ -855,9 +855,9 @@ RSpec.describe Middleware::RequestTracker do
         middleware = Middleware::RequestTracker.new(app)
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("id_60_secs_limit")
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("user_60_secs_limit")
         expect(response.first).to include("too many requests from this user")
-        expect(response.first).to include("Error code: id_60_secs_limit.")
+        expect(response.first).to include("Error code: user_60_secs_limit.")
       end
       expect(called).to eq(3)
     end
