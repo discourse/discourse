@@ -40,7 +40,14 @@
   }
 }
 
+.with-topic-progress {
+  position: sticky;
+  bottom: 0px;
+  z-index: z("timeline");
+}
+
 #topic-progress-wrapper {
+  padding-bottom: env(safe-area-inset-bottom);
   &.docked {
     .toggle-admin-menu {
       display: none;
@@ -48,7 +55,6 @@
   }
 
   right: 10px;
-  z-index: z("timeline");
   display: flex;
   justify-content: flex-end;
   overflow: hidden;
