@@ -1,22 +1,36 @@
-{{#if this.field.name}}
-  <label class="control-label">
-    {{this.field.name}}
-    {{~#unless this.field.required}} {{i18n "user_fields.optional"}}{{/unless~}}
-  </label>
-{{/if}}
+<PluginOutlet
+  @name="confirm-title-wrapper"
+  @outletArgs={{hash field=this.field}}
+>
 
-<div class="controls">
-  <label class="control-label checkbox-label">
-    <Input
-      id={{concat "user-" this.elementId}}
-      @checked={{this.value}}
-      @type="checkbox"
-    />
-    <span>
-      {{html-safe this.field.description}}
-      {{#unless this.field.name}}{{#if this.field.required}}<span
-            class="required"
-          >*</span>{{/if}}{{/unless}}
-    </span>
-  </label>
-</div>
+  {{#if this.field.name}}
+    <label class="control-label">
+      {{this.field.name}}
+      {{~#unless this.field.required}}
+        {{i18n "user_fields.optional"}}{{/unless~}}
+    </label>
+  {{/if}}
+
+</PluginOutlet>
+
+<PluginOutlet
+  @name="confirm-checkbox-label-wrapper"
+  @connectorTagName="div"
+  @outletArgs={{hash elementId=this.elementId}}
+>
+  <div class="controls">
+    <label class="control-label checkbox-label">
+      <Input
+        id={{concat "user-" this.elementId}}
+        @checked={{this.value}}
+        @type="checkbox"
+      />
+      <span>
+        {{html-safe this.field.description}}
+        {{#unless this.field.name}}{{#if this.field.required}}<span
+              class="required"
+            >*</span>{{/if}}{{/unless}}
+      </span>
+    </label>
+  </div>
+</PluginOutlet>
