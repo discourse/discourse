@@ -554,14 +554,14 @@ createWidget("post-contents", {
         !postMenuWidgetExtensionsAdded)
     ) {
       if (!postMenuConsoleWarningLogged) {
+        postMenuConsoleWarningLogged = true;
+
         if (!isTesting()) {
           // eslint-disable-next-line no-console
           console.log("✅  Using the new 'glimmer' post menu!");
         }
 
         if (postMenuWidgetExtensionsAdded) {
-          postMenuConsoleWarningLogged = true;
-
           // eslint-disable-next-line no-console
           console.warn(
             [
