@@ -21,7 +21,7 @@
     {{topic-link this.topic}}
     {{~#if this.topic.featured_link}}
       &nbsp;{{topic-featured-link this.topic}}
-    {{/if}}{{! intentionally inline 
+    {{/if}}{{! intentionally inline
     to avoid whitespace}}<TopicPostBadges
       @unreadPosts={{this.topic.unread_posts}}
       @unseen={{this.topic.unseen}}
@@ -33,6 +33,11 @@
       this.topic
       mode="list"
     }}{{! intentionally inline to avoid whitespace}}
+    <PluginOutlet
+      @name="below-latest-topic-list-item-bottom-row"
+      @connectorTagName="span"
+      @outletArgs={{hash topic=this.topic}}
+    />
   </div>
 </div>
 <div class="topic-stats">
