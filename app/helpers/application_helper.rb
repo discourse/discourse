@@ -679,7 +679,13 @@ module ApplicationHelper
   end
 
   def discourse_color_scheme_meta_tag
-    scheme = dark_scheme_id == -1 ? "light" : "light dark"
+    scheme = if dark_scheme_id == -1
+      # no automatic client-side switching
+      dark_color_scheme? ? "dark" : "light"
+    else
+      # auto-switched based on browser setting
+      "light dark"
+    end
     <<~HTML.html_safe
         <meta name="color-scheme" content="#{scheme}">
       HTML
