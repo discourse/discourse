@@ -130,7 +130,7 @@ class LikeCount extends Component {
           (if @post.yours "my-likes" "regular-likes")
         }}
         ...attributes
-        @ariaPressed={{@state.isWhoReadVisible}}
+        @ariaPressed={{@state.isWhoLikedVisible}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"
           count=@post.likeCount
