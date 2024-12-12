@@ -11,6 +11,12 @@ class Theme < ActiveRecord::Base
   class SettingsMigrationError < StandardError
   end
 
+  class InvalidFieldTargetError < StandardError
+  end
+
+  class InvalidFieldTypeError < StandardError
+  end
+
   attr_accessor :child_components
   attr_accessor :skip_child_components_update
 
@@ -575,11 +581,13 @@ class Theme < ActiveRecord::Base
     name = name.to_s
 
     target_id = Theme.targets[target.to_sym]
-    raise "Unknown target #{target} passed to set field" unless target_id
+    if target_id.blank?
+      raise InvalidFieldTargetError.new("Unknown target #{target} passed to set field")
+    end
 
     type_id ||=
       type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name: name, target: target)
-    raise "Unknown type #{type} passed to set field" unless type_id
+    raise InvalidFieldTypeError.new("Unknown type #{type} passed to set field") if type_id.blank?
 
     value ||= ""
 
