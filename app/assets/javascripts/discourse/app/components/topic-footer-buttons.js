@@ -48,6 +48,11 @@ export default class TopicFooterButtons extends Component {
     return inlineButtons.filter((button) => button.dropdown);
   }
 
+  @discourseComputed("dropdownButtons.[]")
+  loneDropdownButton(dropdownButtons) {
+    return dropdownButtons.length === 1 ? dropdownButtons[0] : null;
+  }
+
   @discourseComputed("topic.isPrivateMessage")
   showNotificationsButton(isPM) {
     return !isPM || this.canSendPms;
