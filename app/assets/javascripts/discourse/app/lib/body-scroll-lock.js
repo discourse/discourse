@@ -41,7 +41,7 @@ const isIosDevice =
   (/iP(ad|hone|od)/.test(window.navigator.platform) ||
     (window.navigator.platform === "MacIntel" &&
       window.navigator.maxTouchPoints > 1));
-let locks = [];
+export let locks = [];
 let locksIndex = /* @__PURE__ */ new Map();
 let documentListenerAdded = false;
 let initialClientY = -1;

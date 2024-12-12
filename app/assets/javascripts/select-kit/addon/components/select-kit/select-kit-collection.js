@@ -5,6 +5,7 @@ import { modifier } from "ember-modifier";
 import {
   disableBodyScroll,
   enableBodyScroll,
+  locks,
 } from "discourse/lib/body-scroll-lock";
 
 @tagName("")
@@ -16,10 +17,18 @@ export default class SelectKitCollection extends Component {
       return;
     }
 
-    disableBodyScroll(element);
+    const isChildOfLock = locks.some((lock) =>
+      lock.targetElement.contains(element)
+    );
+
+    if (isChildOfLock) {
+      disableBodyScroll(element);
+    }
 
     return () => {
-      enableBodyScroll(element);
+      if (isChildOfLock) {
+        enableBodyScroll(element);
+      }
     };
   });
 }
