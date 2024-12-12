@@ -468,6 +468,7 @@ ro:
       order_by: "Ordonează după"
       date_filter: "Publicat între"
       in_reply_to: "ca răspuns la"
+      filtered_flagged_by: "Semnalat de"
       explain:
         why: "explică de ce acest element a ajuns în coada de așteptare"
         title: "Scor ce poate fi revizuit"
@@ -1557,6 +1558,7 @@ ro:
         title: "Parolă"
         common: "Această parolă este prea comună."
         same_as_username: "Parolă identică cu numele de utilizator"
+        same_as_name: "Parola ta este aceeași nu numele tău de utilizator."
         same_as_email: "Parolă identică cu adresa de email"
         ok: "Parola dumneavoastră este OK."
         instructions:
@@ -3417,8 +3419,9 @@ ro:
           experiment_disabled: "Ai dezactivat funcționalitatea experimentală."
           experiment_toggled_too_fast: "Ai comutat prea repede funcționalitatea experimentală. Te rugăm să aștepți câteva secunde înainte de a încerca din nou."
           experiment_tooltip:
-            title: "Încearcă funcționalitatea noastră experimentală"
-            content: "Dă o tură celei mai noi funcționalități în curs de dezvoltare! Este încă în stadiu experimental, așa că am putea să o eliminăm oricând. Poți renunța oricând vrei."
+            title_disabled: "Încearcă funcționalitatea noastră experimentală"
+            title_enabled: "Dezactivează funcționalitatea experimentală"
+            content_enabled: "Modificând aceasta va dezactiva funcționalitatea pentru toți utilizatorii."
         last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
         no_problems: "Nu a apărut nicio problemă."
@@ -4250,6 +4253,7 @@ ro:
             confirmation_modal:
               close: "Închide sondajul"
               confirm: "Șterge"
+              block_ip_and_email: "Blochează adresele IP și emailurile tuturor utilizatorilor selectați"
         nav:
           new: "Noi"
           active: "Activi"

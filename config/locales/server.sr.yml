@@ -139,6 +139,8 @@ sr:
         bio_raw: "O meni"
       user:
         password: "Šifra"
+      user_password:
+        password: "Šifra"
     errors:
       models:
         user:

@@ -678,6 +678,8 @@ fi:
         bio_raw: "Tietoa minusta"
       user:
         password: "Salasana"
+      user_password:
+        password: "Salasana"
     errors:
       models:
         topic:

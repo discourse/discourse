@@ -773,6 +773,8 @@ ru:
         bio_raw: "Обо мне"
       user:
         password: "Пароль"
+      user_password:
+        password: "Пароль"
     errors:
       models:
         topic:

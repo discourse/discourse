@@ -133,12 +133,7 @@ def is_date?(string)
 end
 
 def create_updater
-  ignore_tables = %w[
-    user_second_factors
-    discourse_voting_topic_vote_count
-    discourse_voting_votes
-    discourse_voting_category_settings
-  ]
+  ignore_tables = %w[user_second_factors]
   TimestampsUpdater.new "public", ignore_tables
 end
 

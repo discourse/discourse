@@ -19,6 +19,7 @@ export default class ReviewIndexController extends Controller {
     "to_date",
     "sort_order",
     "additional_filters",
+    "flagged_by",
   ];
 
   type = null;
@@ -30,6 +31,7 @@ export default class ReviewIndexController extends Controller {
   filtersExpanded = this.site.desktopView;
   username = "";
   reviewed_by = "";
+  flagged_by = "";
   from_date = null;
   to_date = null;
   sort_order = null;
@@ -161,6 +163,7 @@ export default class ReviewIndexController extends Controller {
       category_id: this.filterCategoryId,
       username: this.filterUsername,
       reviewed_by: this.filterReviewedBy,
+      flagged_by: this.filterFlaggedBy,
       from_date: isPresent(this.filterFromDate)
         ? this.filterFromDate.toISOString(true).split("T")[0]
         : null,
@@ -187,6 +190,11 @@ export default class ReviewIndexController extends Controller {
   @action
   updateFilterReviewedBy(selected) {
     this.set("filterReviewedBy", selected.firstObject);
+  }
+
+  @action
+  updateFilterFlaggedBy(selected) {
+    this.set("filterFlaggedBy", selected.firstObject);
   }
 
   @action

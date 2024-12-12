@@ -370,7 +370,7 @@
   align-items: baseline;
   color: var(--d-sidebar-link-color);
   width: calc(
-    var(--d-sidebar-width) - 2 * var(--d-sidebar-row-horizontal-padding) + 2px
+    var(--d-sidebar-width) * var(--d-sidebar-row-horizontal-padding) + 2px
   );
 }
 

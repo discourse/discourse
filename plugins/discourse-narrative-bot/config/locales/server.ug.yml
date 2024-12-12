@@ -173,6 +173,19 @@ ug:
           ```text
           مەن # ئارقىلىق سەھىپە ئۇلانمىسى قۇرالايمەن.
       poll:
+        instructions: |-
+          خالىغان يازمىغا راي سىناش قوشالايدىغانلىقىىڭىزنى بىلەمتىڭىز؟ تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> چىشلىق چاقنى ئىشلىتىپ **راي سىناش قۇر**ۇڭ.
+        not_found: |-
+          ئاپلا! جاۋابىڭىزدا ھېچقانداق راي سىناش يوق.
+
+          تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> چىشلىق چاق سىنبەلگىنى ئىشىلىتىڭ ياكى كېيىنكى جاۋابىڭىزدا بۇ راي سىناشنى كۆچۈرۈپ چاپلاڭ:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           ھەي، ياخشى بىلەت تاشلاش! قاراڭ سىزگە قانداق ئۆگەتتىم؟
 

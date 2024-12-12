@@ -108,8 +108,15 @@ class DraftsController < ApplicationController
 
           if post.post_number == 1
             conflict ||= original_title.present? && original_title != post.topic.title
-            conflict ||=
-              original_tags.present? && original_tags.sort != post.topic.tags.pluck(:name).sort
+
+            # Since the topic might have hidden tags the current editor can't see,
+            # we need to check for conflicts even though there might not be any visible tags in the editor
+            if !conflict
+              original_tags = (original_tags || []).map(&:downcase).to_set
+              current_tags = post.topic.tags.pluck(:name).to_set
+              hidden_tags = DiscourseTagging.hidden_tag_names(@guardian).to_set
+              conflict = original_tags != (current_tags - hidden_tags)
+            end
           end
 
           if conflict

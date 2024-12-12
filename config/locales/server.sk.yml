@@ -775,6 +775,8 @@ sk:
         bio_raw: "O mne"
       user:
         password: "Heslo"
+      user_password:
+        password: "Heslo"
     errors:
       models:
         topic:

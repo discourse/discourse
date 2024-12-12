@@ -6,6 +6,11 @@
 
 hu:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás
       create: Létrehozás
@@ -14,6 +19,8 @@ hu:
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
       confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
+      no_automation_yet: Még nem hozott létre automatizálást. A kezdéshez válasszon az alábbi lehetőségek közül.
+      filter_placeholder: Szűrés név vagy leírás alapján...
       edit_automation:
         trigger_section:
           forced: Ez az aktiválót a parancsfájl kényszeríti ki.
@@ -389,6 +396,7 @@ hu:
           fields:
             custom_field_name:
               label: "Felhasználó egyéni mező neve"
+      unnamed_automation: "Névtelen automatizálás"
       models:
         script:
           name:

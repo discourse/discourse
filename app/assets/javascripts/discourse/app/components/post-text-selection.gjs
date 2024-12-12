@@ -190,6 +190,7 @@ export default class PostTextSelection extends Component {
         quoteState.buffer.length === 0 ||
         quoteState.buffer.includes("|") || // tables are too complex
         quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+        quoteState.buffer.match(/[‚‘’„“”«»‹›™±…→←↔¶]/g) || // typopgraphic characters are too complex
         matches?.length !== 1 // duplicates are too complex
       ) {
         supportsFastEdit = false;

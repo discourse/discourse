@@ -131,9 +131,12 @@ before_fork do |server, worker|
           tmp = @timeout - diff
 
           # START MONKEY PATCH
-          if tmp < 2
-            logger.error "worker=#{worker.nr} PID:#{wpid} running too long " \
-                           "(#{diff}s), sending USR2 to dump thread backtraces"
+          if tmp < 2 && !worker.instance_variable_get(:@timing_out_logged)
+            logger.error do
+              "worker=#{worker.nr} PID:#{wpid} running too long (#{diff}s), sending USR2 to dump thread backtraces"
+            end
+
+            worker.instance_variable_set(:@timing_out_logged, true)
             kill_worker(:USR2, wpid)
           end
           # END MONKEY PATCH

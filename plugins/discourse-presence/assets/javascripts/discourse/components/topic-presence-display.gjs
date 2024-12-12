@@ -56,30 +56,32 @@ export default class TopicPresenceDisplay extends Component {
   }
 
   <template>
-    {{this.setupReplyChannel}}
-    {{this.setupWhisperChannel}}
+    {{#if this.currentUser}}
+      {{this.setupReplyChannel}}
+      {{this.setupWhisperChannel}}
 
-    {{#if (gt this.users.length 0)}}
-      <div class="presence-users">
-        <div class="presence-avatars">
-          {{#each this.users as |user|}}
-            <UserLink @user={{user}}>
-              {{avatar user imageSize="small"}}
-            </UserLink>
-          {{/each}}
+      {{#if (gt this.users.length 0)}}
+        <div class="presence-users">
+          <div class="presence-avatars">
+            {{#each this.users as |user|}}
+              <UserLink @user={{user}}>
+                {{avatar user imageSize="small"}}
+              </UserLink>
+            {{/each}}
+          </div>
+
+          <span class="presence-text">
+            <span class="description">
+              {{i18n "presence.replying_to_topic" count=this.users.length}}
+            </span>
+            <span class="wave">
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+            </span>
+          </span>
         </div>
-
-        <span class="presence-text">
-          <span class="description">
-            {{i18n "presence.replying_to_topic" count=this.users.length}}
-          </span>
-          <span class="wave">
-            <span class="dot">.</span>
-            <span class="dot">.</span>
-            <span class="dot">.</span>
-          </span>
-        </span>
-      </div>
+      {{/if}}
     {{/if}}
   </template>
 }

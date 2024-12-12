@@ -357,6 +357,8 @@ ro:
         bio_raw: "Despre mine"
       user:
         password: "Parolă"
+      user_password:
+        password: "Parolă"
     errors:
       models:
         topic:

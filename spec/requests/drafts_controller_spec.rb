@@ -20,7 +20,6 @@ RSpec.describe DraftsController do
       Draft.set(user, "xxx", 0, "{}")
       get "/drafts.json"
       expect(response.status).to eq(200)
-      parsed = response.parsed_body
       expect(response.parsed_body["drafts"].length).to eq(1)
     end
 
@@ -163,6 +162,39 @@ RSpec.describe DraftsController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["conflict_user"]["id"]).to eq(post.last_editor.id)
+    end
+
+    it "handles hidden tags when checking for tag conflict" do
+      sign_in(user)
+
+      regular_tag = Fabricate(:tag)
+      admin_only_tag_one = Fabricate(:tag)
+      admin_only_tag_two = Fabricate(:tag)
+
+      admin_only_tag_group = Fabricate(:tag_group)
+      admin_only_tag_group.tags = [admin_only_tag_one, admin_only_tag_two]
+      admin_only_tag_group.permissions = [
+        [Group::AUTO_GROUPS[:admins], TagGroupPermission.permission_types[:full]],
+      ]
+      admin_only_tag_group.save!
+
+      post = Fabricate(:post, user:)
+      post.topic.tags = [regular_tag, admin_only_tag_one]
+
+      post "/drafts.json",
+           params: {
+             draft_key: "topic",
+             sequence: 0,
+             data: {
+               postId: post.id,
+               original_text: post.raw,
+               original_tags: [regular_tag.name],
+               action: "edit",
+             }.to_json,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["conflict_user"]).to eq(nil)
     end
 
     it "cant trivially resolve conflicts without interaction" do

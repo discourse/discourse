@@ -207,3 +207,10 @@ input[type="submit"] {
     }
   }
 }
+
+// Inputs
+// --------------------------------------------------
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--tertiary);
+}

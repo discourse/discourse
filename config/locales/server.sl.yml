@@ -265,6 +265,8 @@ sl:
         category_id: "Kategorija"
       user:
         password: "Geslo"
+      user_password:
+        password: "Geslo"
     errors:
       models:
         user:

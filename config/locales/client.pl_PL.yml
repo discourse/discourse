@@ -5151,8 +5151,7 @@ pl_PL:
           experiment_disabled: "Wyłączono funkcję eksperymentalną."
           experiment_toggled_too_fast: "Przełączyłeś funkcję eksperymentalną zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
           experiment_tooltip:
-            title: "Wypróbuj naszą eksperymentalną funkcję"
-            content: "Wypróbuj naszą najnowszą funkcję! Jest ona wciąż w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz z niej zrezygnować, kiedy tylko zechcesz."
+            title_disabled: "Wypróbuj naszą eksperymentalną funkcję"
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."

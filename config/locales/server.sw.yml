@@ -276,6 +276,8 @@ sw:
         bio_raw: "Kuhusu Mimi"
       user:
         password: "Nywila"
+      user_password:
+        password: "Nywila"
     errors:
       models:
         topic:

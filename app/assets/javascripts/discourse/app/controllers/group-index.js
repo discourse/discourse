@@ -64,7 +64,7 @@ export default class GroupIndexController extends Controller {
 
   @discourseComputed("model")
   canManageGroup(model) {
-    return this.currentUser && this.currentUser.canManageGroup(model);
+    return this.currentUser?.canManageGroup(model);
   }
 
   @discourseComputed

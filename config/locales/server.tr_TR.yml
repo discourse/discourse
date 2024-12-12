@@ -671,6 +671,8 @@ tr_TR:
         bio_raw: "Hakkımda"
       user:
         password: "Şifre"
+      user_password:
+        password: "Şifre"
     errors:
       models:
         topic:

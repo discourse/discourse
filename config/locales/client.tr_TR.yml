@@ -4798,8 +4798,7 @@ tr_TR:
           experiment_disabled: "Deneysel özelliği devre dışı bıraktınız."
           experiment_toggled_too_fast: "Deneysel özelliğe çok hızlı geçiş yaptınız. Lütfen tekrar denemeden önce birkaç saniye bekleyin."
           experiment_tooltip:
-            title: "Deneysel özelliğimizi deneyin"
-            content: "Geliştirme aşamasındaki en yeni özelliğimizi deneyin! Henüz deneysel aşamada olduğu için her an kaldırabiliriz. Dilediğiniz zaman devre dışı bırakabilirsiniz."
+            title_disabled: "Deneysel özelliğimizi deneyin"
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Hiçbir sorun bulunamadı."

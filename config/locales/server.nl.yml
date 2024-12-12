@@ -678,6 +678,8 @@ nl:
         bio_raw: "Over mij"
       user:
         password: "Wachtwoord"
+      user_password:
+        password: "Wachtwoord"
     errors:
       models:
         topic:

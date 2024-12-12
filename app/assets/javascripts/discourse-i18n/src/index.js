@@ -21,10 +21,16 @@ export class I18n {
   extras = null;
   noFallbacks = false;
   testing = false;
+  verbose = false;
+  verboseIndicies = new Map();
 
   pluralizationRules = Cardinals;
 
-  translate = (scope, options) => this._translate(scope, options);
+  translate = (scope, options) => {
+    return this.verbose
+      ? this._verboseTranslate(scope, options)
+      : this._translate(scope, options);
+  };
 
   // shortcut
   t = this.translate;
@@ -45,25 +51,8 @@ export class I18n {
   }
 
   enableVerboseLocalization() {
-    let counter = 0;
-    let keys = {};
-
     this.noFallbacks = true;
-
-    this.t = this.translate = (scope, options) => {
-      let current = keys[scope];
-      if (!current) {
-        current = keys[scope] = ++counter;
-        let message = "Translation #" + current + ": " + scope;
-        if (options && Object.keys(options).length > 0) {
-          message += ", parameters: " + JSON.stringify(options);
-        }
-        // eslint-disable-next-line no-console
-        console.info(message);
-      }
-
-      return this._translate(scope, options) + " (#" + current + ")";
-    };
+    this.verbose = true;
   }
 
   enableVerboseLocalizationSession() {
@@ -396,6 +385,22 @@ export class I18n {
     } catch (err) {
       return err.message;
     }
+  }
+
+  _verboseTranslate(scope, options) {
+    const result = this._translate(scope, options);
+    let i = this.verboseIndicies.get(scope);
+    if (!i) {
+      i = this.verboseIndicies.size + 1;
+      this.verboseIndicies.set(scope, i);
+    }
+    let message = `Translation #${i}: ${scope}`;
+    if (options && Object.keys(options).length > 0) {
+      message += `, parameters: ${JSON.stringify(options)}`;
+    }
+    // eslint-disable-next-line no-console
+    console.info(message);
+    return `${result} (#${i})`;
   }
 }
 

@@ -264,7 +264,7 @@ en:
         instructions: |-
           If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this personal message**. If you do, there may be a :gift: in your future!
         reply: |-
-          Excellent! Now you can easily find your way back to our private conversation any time, right from [the bookmarks tab on your profile](%{bookmark_url}). Just select your profile picture at the upper right &#8599;
+          Excellent! Now you can easily find your way back to our conversation any time, right from [the bookmarks tab on your profile](%{bookmark_url}). Just select your profile picture at the upper right &#8599;
         not_found: |-
           Uh oh, I don’t see any bookmarks in this topic. Did you find the bookmark under each post? Use the show more <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal additional actions if needed.
 
@@ -302,7 +302,7 @@ en:
 
       flag:
         instructions: |-
-          We like our discussions friendly, and we need your help to [keep things civilized](%{guidelines_url}). If you see a problem, please flag to privately let the author or [our helpful staff](%{about_url}) know about it. There are many reasons you might want to flag a post, ranging from an innocuous topic-splitting suggestion to a clear-cut community standards violation. If you select **Something Else**, you'll start a private message discussion with the moderators where you can ask further questions.
+          We like our discussions friendly, and we need your help to [keep things civilized](%{guidelines_url}). If you see a problem, please flag to let the author or [our helpful staff](%{about_url}) know about it. There are many reasons you might want to flag a post, ranging from an innocuous topic-splitting suggestion to a clear-cut community standards violation. If you select **Something Else**, you'll start a personal message discussion with the moderators where you can ask further questions.
 
           > :imp: I wrote something nasty here
 
@@ -414,7 +414,7 @@ en:
         instructions: |-
           Every topic has a notification level. It starts at 'normal', which means you’ll normally only be notified when someone is speaking directly to you.
 
-          By default, the notification level for a private message is set to the highest level of 'watching', which means you’ll be notified of every new reply. But you can override the notification level for _any_ topic to 'watch', 'tracking' or 'muted'.
+          By default, the notification level for a personal message is set to the highest level of 'watching', which means you’ll be notified of every new reply. But you can override the notification level for _any_ topic to 'watch', 'tracking' or 'muted'.
 
           Let’s try changing the notification level for this topic. At the bottom of the topic, you’ll find a button which shows that you’re **watching** this topic. Can you change the notification level to **tracking**?
         not_found: |-

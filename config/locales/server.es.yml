@@ -678,6 +678,8 @@ es:
         bio_raw: "Acerca de mí"
       user:
         password: "Contraseña"
+      user_password:
+        password: "Contraseña"
     errors:
       models:
         topic:
