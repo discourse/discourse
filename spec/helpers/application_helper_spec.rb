@@ -903,4 +903,30 @@ RSpec.describe ApplicationHelper do
       HTML
     end
   end
+
+  describe "#discourse_color_scheme_meta_tag" do
+    before do
+      light = Fabricate(:color_scheme)
+      light.save!
+      helper.request.cookies["color_scheme_id"] = light.id
+    end
+
+    it "renders a 'light' color-scheme if no dark scheme is set" do
+      SiteSetting.default_dark_mode_color_scheme_id = -1
+
+      expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
+        <meta name="color-scheme" content="light">
+      HTML
+    end
+
+    it "renders a 'light dark' color-scheme if a dark scheme is set" do
+      dark = Fabricate(:color_scheme)
+      dark.save!
+      helper.request.cookies["dark_scheme_id"] = dark.id
+
+      expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
+        <meta name="color-scheme" content="light dark">
+      HTML
+    end
+  end
 end

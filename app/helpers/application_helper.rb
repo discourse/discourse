@@ -678,6 +678,13 @@ module ApplicationHelper
     result.html_safe
   end
 
+  def discourse_color_scheme_meta_tag
+    scheme = dark_scheme_id == -1 ? "light" : "light dark"
+    <<~HTML.html_safe
+        <meta name="color-scheme" content="#{scheme}">
+      HTML
+  end
+
   def dark_color_scheme?
     return false if scheme_id.blank?
     ColorScheme.find_by_id(scheme_id)&.is_dark?
