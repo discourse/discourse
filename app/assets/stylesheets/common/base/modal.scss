@@ -16,10 +16,6 @@
     position: relative;
   }
 
-  html.keyboard-visible body.ios-safari-composer-hacks & {
-    height: calc(var(--composer-vh, 1vh) * 100);
-  }
-
   &__container {
     display: flex;
     flex-direction: column;

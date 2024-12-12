@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
+import { clearAllBodyScrollLocks, disableBodyScroll } from "discourse/lib/body-scroll-lock";
 import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 
-const KEYBOARD_DETECT_THRESHOLD = 150;
+const FF_KEYBOARD_DETECT_THRESHOLD = 150;
 
 export default class DVirtualHeight extends Component {
   @service site;
@@ -95,6 +95,7 @@ export default class DVirtualHeight extends Component {
   @bind
   onViewportResize() {
     this.setVH();
+    const docEl = document.documentElement;
 
     let keyboardVisible = false;
     if ("virtualKeyboard" in navigator) {
@@ -106,7 +107,7 @@ export default class DVirtualHeight extends Component {
         Math.abs(
           this.windowInnerHeight -
             Math.min(window.innerHeight, window.visualViewport.height)
-        ) > KEYBOARD_DETECT_THRESHOLD
+        ) > FF_KEYBOARD_DETECT_THRESHOLD
       ) {
         keyboardVisible = true;
       }
@@ -121,7 +122,7 @@ export default class DVirtualHeight extends Component {
       // adds bottom padding when using a hardware keyboard and the accessory bar is visible
       // accessory bar height is 55px, using 75 allows a small buffer
       if (this.capabilities.isIpadOS) {
-        document.documentElement.style.setProperty(
+        docEl.style.setProperty(
           "--composer-ipad-padding",
           `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
         );
@@ -130,11 +131,20 @@ export default class DVirtualHeight extends Component {
 
     this.appEvents.trigger("keyboard-visibility-change", keyboardVisible);
 
-    keyboardVisible
-      ? document.documentElement.classList.add("keyboard-visible")
-      : document.documentElement.classList.remove("keyboard-visible");
+    if (keyboardVisible) {
+      docEl.classList.add("keyboard-visible");
+
+      // disable body scroll in mobile composer
+      // we have to do this because we're positioning the composer with
+      // position: fixed and top: 0 and scrolling would move the composer halfway out of the viewport
+      // we can't use bottom: 0, it is very unreliable with keyboard visible
+      if (docEl.classList.contains("composer-open")) {
+        disableBodyScroll(document.querySelector("#reply-control"));
+      }
+    }
 
     if (!keyboardVisible) {
+      docEl.classList.remove("keyboard-visible");
       clearAllBodyScrollLocks();
     }
   }

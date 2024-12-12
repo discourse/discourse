@@ -7,7 +7,16 @@
 }
 
 #reply-control {
-  z-index: z("mobile-composer");
+  // We override values set in base/compose.scss so that on mobile, the composer is top-anchored.
+  // This is not ideal, but it is much better than bottom-anchoring.
+  // Mobile browsers (especially Safari and Firefox/Android) do not handle well
+  // a bottom/fixed-positioned element, especially while the software keyboard is visible.
+  top: 0;
+  // With height and z-index: -1, the composer jitters a lot less
+  height: 100%;
+  z-index: -1;
+  max-height: unset;
+  min-height: unset;
 
   .reply-area {
     padding: 6px;
@@ -16,15 +25,12 @@
   }
 
   &.open {
-    height: 250px;
-    &.edit-title {
-      height: 100%;
-    }
+    display: flex;
+    z-index: z("mobile-composer");
+    height: calc(var(--composer-vh, 1vh) * 100);
   }
 
   .keyboard-visible &.open {
-    top: 0px;
-    height: calc(var(--composer-vh, 1vh) * 100);
     .reply-area {
       padding-bottom: 6px;
     }
@@ -64,6 +70,7 @@
   }
 
   &.draft {
+    top: calc(100% - 40px);
     z-index: z("footer-nav") + 1;
     padding-bottom: env(safe-area-inset-bottom);
 
