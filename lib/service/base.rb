@@ -443,6 +443,7 @@ module Service
         Context.build(
           initial_context.merge(__steps__: self.class.steps, __service_class__: self.class),
         )
+      initialize_params
     end
 
     # @!visibility private
@@ -462,6 +463,23 @@ module Service
       step_name = caller_locations(1, 1)[0].base_label
       context["result.step.#{step_name}"].fail(error: message)
       context.fail!
+    end
+
+    private
+
+    def initialize_params
+      return unless context[:params]
+      klass =
+        Data.define(*context[:params].keys) do
+          alias to_hash to_h
+
+          delegate :slice, :merge, to: :to_h
+
+          def method_missing(*)
+            nil
+          end
+        end
+      context[:params] = klass[*context[:params].values]
     end
   end
 end
