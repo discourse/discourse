@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { NO_VALUE_OPTION } from "discourse/form-kit/lib/constants";
+import { i18n } from "discourse-i18n";
 import FKControlSelectOption from "./select/option";
 
 export default class FKControlSelect extends Component {
@@ -17,15 +18,29 @@ export default class FKControlSelect extends Component {
     );
   }
 
+  get hasSelectedValue() {
+    return this.args.field.value && this.args.field.value !== NO_VALUE_OPTION;
+  }
+
   <template>
     <select
-      value={{@value}}
-      disabled={{@disabled}}
+      value={{@field.value}}
+      disabled={{@field.disabled}}
       ...attributes
       class="form-kit__control-select"
       {{on "input" this.handleInput}}
     >
-      {{yield (hash Option=(component FKControlSelectOption selected=@value))}}
+      <FKControlSelectOption @value={{NO_VALUE_OPTION}}>
+        {{#if this.hasSelectedValue}}
+          {{i18n "form_kit.select.none_placeholder"}}
+        {{else}}
+          {{i18n "form_kit.select.select_placeholder"}}
+        {{/if}}
+      </FKControlSelectOption>
+
+      {{yield
+        (hash Option=(component FKControlSelectOption selected=@field.value))
+      }}
     </select>
   </template>
 }

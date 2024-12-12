@@ -599,7 +599,6 @@ fr:
       admins: "Responsable de la configuration et de la maintenance de ce site, avec accès à toutes les données des membres et des activités"
       moderators: "Responsable de répondre aux signalements, de modérer les discussions et d'aider les membres avec leurs comptes"
       trust_level_0: "Nouveaux membres aux capacités limitées, qui apprennent les normes et les fonctionnalités de la communauté"
-      trust_level_1: "Les membres bénéficiant d'une plus grande confiance, qui ont fait preuve d'un engagement initial en lisant, peuvent maintenant accéder à davantage de fonctions. Tous les membres de ce groupe sont également membres du groupe de niveau de confiance 0."
       trust_level_2: "Membres actifs qui ont régulièrement fait des heures supplémentaires et obtenu tous les privilèges de citoyenneté. Tous les membres de ce groupe sont également membres des groupes trust_level_1 et trust_level_0."
       trust_level_3: "Contributeurs très engagés et de longue date, qui constituent l'épine dorsale de la communauté et qui ont obtenu des privilèges de modération limités. Tous les membres de ce groupe sont également membres des groupes trust_level_2, trust_level_1 et trust_level_0."
       trust_level_4: "Membres promus manuellement, reconnus pour leurs contributions exemplaires et dotés de privilèges de modération supplémentaires. Tous les membres de ce groupe sont également membres des groupes trust_level_3, trust_level_2, trust_level_1 et trust_level_0."
@@ -678,6 +677,8 @@ fr:
       user_profile:
         bio_raw: "À propos de moi"
       user:
+        password: "Mot de passe"
+      user_password:
         password: "Mot de passe"
     errors:
       models:
@@ -1770,7 +1771,6 @@ fr:
     pending_users_reminder_delay_minutes: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre de minutes. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur Web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
-    experimental_full_page_login: "Remplacez la fenêtre de connexion/inscription par un formulaire de connexion/inscription pleine page."
     ga_version: "Version de Google Universal Analytics à utiliser : v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics, par exemple : UA-12345678-9 ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics, par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1825,7 +1825,6 @@ fr:
     max_favorite_badges: "Nombre maximal de badges que l'utilisateur peut sélectionner"
     whispers_allowed_groups: "Autoriser la communication privée au sein des sujets pour les membres de groupes spécifiques."
     hidden_post_visible_groups: "Autorisez les membres de ces groupes à voir les messages masqués. Les responsables peuvent toujours voir les messages masqués."
-    allow_index_in_robots_txt: "Indiquer dans le fichier robots.txt que ce site peut être indexé par les moteurs de recherche Web. Dans des cas exceptionnels, vous pouvez remplacer définitivement le fichier <a href='%{base_path}/admin/customize/robots'>robots.txt</a>."
     blocked_email_domains: "Liste délimitée par des barres verticales de domaines de messagerie avec lesquels les utilisateurs ne sont pas autorisés à créer des comptes. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge. Exemple : mailinator.com|trashmail.net"
     allowed_email_domains: "Une liste délimitée par des barres verticales de domaines de messagerie avec lesquels les utilisateurs DOIVENT enregistrer des comptes. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge. AVERTISSEMENT : les utilisateurs dont les domaines de messagerie ne sont pas répertoriés ne seront pas autorisés !"
     normalize_emails: "Vérifiez que l'adresse e-mail normalisée n'est pas déjà utilisée. L'adresse normalisée s'obtient en ôtant tous les points et caractères éventuellement situés entre les symboles « + » et « @ » de l'adresse indiquée par l'utilisateur."
@@ -2277,7 +2276,7 @@ fr:
     default_code_lang: "Coloration syntaxique par défaut du langage de programmation appliquée aux blocs de code markdown (auto, text, ruby, python, etc.). Cette valeur doit également être présente dans le paramètre de site « highlighted languages »."
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse remonte à plusieurs jours, un avertissement sera affiché. Désactivez la fonctionnalité en indiquant 0."
     autohighlight_all_code: "Appliquez la coloration syntaxique aux blocs &lt;code&gt; créés en HTML, même s'ils ne spécifient pas de langue. Pour configurer des blocs de code créés par Markdown, utilisez le paramètre « default code lang »."
-    highlighted_languages: "Règles de mise en évidence de la syntaxe incluses. (Attention : inclure trop de langues peut avoir un impact sur les performances). Consultez <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pour obtenir une démonstration"
+    highlighted_languages: "Règles de surlignage de la syntaxe incluses. (Attention : inclure trop de langues peut avoir un impact sur les performances). Consultez <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pour obtenir une démonstration"
     show_copy_button_on_codeblocks: "Afficher un bouton dans les blocs de mise en forme de type « code » permettant de copier le contenu du bloc vers le presse-papier de l'utilisateur."
     embed_any_origin: "Autoriser le contenu intégré, quelle que soit son origine. Cela est nécessaire pour les applications mobiles utilisant du HTML statique."
     embed_topics_list: "Activez l'intégration des listes de sujets au format HTML. Ce paramètre vous permet d'intégrer des listes de sujets de votre forum dans d'autres sites Web de manière compatible et facile à utiliser."
@@ -2293,7 +2292,7 @@ fr:
     notify_about_reviewable_item_after: "Si certains éléments susceptibles d'être révisés n'ont pas été traités après ces nombreuses heures, envoyez un message personnel aux modérateurs. Réglez l'option sur 0 pour la désactiver."
     delete_drafts_older_than_n_days: "Supprimez les brouillons qui n'ont pas été modifiés depuis plus de (n) jours."
     delete_merged_stub_topics_after_days: "Délai en jours avant la suppression automatique des sujets brouillon entièrement fusionnés. Réglez ce paramètre sur -1 pour ne jamais supprimer. Réglez-le sur 0 pour supprimer immédiatement."
-    bootstrap_mode_min_users: 'Nombre minimal d''utilisateurs requis pour désactiver le mode bootstrap et supprimer le bouton de démarrage (défini sur 0 pour désactiver, peut prendre jusqu''à 24 heures). Consultez <a target="_blank" href="https://meta.discourse.org/t/-/322876">le sujet du mode bootstrap sur Meta</a> pour obtenir plus de détails.'
+    bootstrap_mode_min_users: 'Nombre minimal d''utilisateurs requis pour désactiver le mode bootstrap et supprimer le bouton de démarrage (défini sur 0 pour désactiver, peut prendre jusqu''à 24 heures). Consultez <a target="_blank" href="https://meta.discourse.org/t/-/322876">le sujet du mode d''amorçage sur Meta</a> pour obtenir plus de détails.'
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
     secure_uploads_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les e-mails, si leur taille est inférieure à la valeur du paramètre « secure uploads max email embed image size kb »."
@@ -2446,7 +2445,6 @@ fr:
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
-    experimental_topics_filter: "Active la route de filtrage des sujets expérimentaux vers /filter"
     enable_experimental_lightbox: "Remplacez la lightbox d'image par défaut par l'apparence remaniée."
     experimental_glimmer_topic_list_groups: "Activez la nouvelle implémentation de la liste de sujets « glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
     glimmer_post_menu_mode: "Contrôlez si la nouvelle implémentation du menu de publication « glimmer » est utilisée. « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
@@ -4599,8 +4597,6 @@ fr:
     regular:
       name: Habitué
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à la recatégorisation, au renommage, au suivi de liens, au wiki et à plus de « J'aime »
-      long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir contribué régulièrement à notre communauté pendant ces quelques mois. Vous faites partie de nos lecteurs et lectrices les plus actifs et votre contribution à ce qui rend notre communauté si belle est significative. Vous pouvez désormais recatégoriser et renommer des sujets, accéder au salon privé, signaler des spams et vous bénéficiez de nombreux « J'aime » supplémentaires à attribuer chaque jour.
     leader:
       name: Meneur
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion de sujets, et toujours plus de « J'aime »

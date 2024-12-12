@@ -564,6 +564,8 @@ sv:
         bio_raw: "Om mig"
       user:
         password: "Lösenord"
+      user_password:
+        password: "Lösenord"
     errors:
       models:
         topic:
@@ -1628,7 +1630,6 @@ sv:
     max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
     whispers_allowed_groups: "Tillåt privat kommunikation inom ämnen för medlemmar i specificerade grupper."
     hidden_post_visible_groups: "Tillåt medlemmar i dessa grupper att se dolda inlägg. Personalanvändare kan alltid se dolda inlägg."
-    allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     blocked_email_domains: "En lista över e-postdomäner, avgränsade med vertikalstreck, som användare inte får registrera konton med. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte. Exempel: mailinator.com|trashmail.net"
     allowed_email_domains: "En lista över e-postdomäner, avgränsade med vertikalstreck, som användare MÅSTE registrera konton med. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
     normalize_emails: "Kontrollera om normaliserad e-post är unik. Normaliserad e-post tar bort alla punkter från användarnamnet och allt mellan symbolerna + och @."
@@ -3932,8 +3933,6 @@ sv:
     regular:
       name: Regelbunden
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Beviljad</a> möjligheten att omkategorisera, döpa om, följda länkar, wiki, samt fler gillningar
-      long_description: |
-        Den här utmärkelsen beviljas när du når förtroendenivå 3. Tack för att du regelbundet har varit en del av forumet de senaste månaderna. Du är nu en av våra mest aktiva läsare och en tillförlitlig bidragsgivare som gör vårt forum fantastiskt. Du kan nu omkategorisera och döpa om ämnen, dra fördel av kraftfullare flaggningar av skräppost, få tillgång till ett privat delforum och du får också massor av fler gillningar att dela ut varje dag.
     leader:
       name: Ledare
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Beviljad</a> möjligheten att utföra globala redigeringar, klistra, stänga, arkivera, dela eller sammanfoga, samt fler gillningar

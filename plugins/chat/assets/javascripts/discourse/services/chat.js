@@ -273,9 +273,7 @@ export default class Chat extends Service {
   }
 
   getDocumentTitleCount() {
-    return this.chatNotificationManager.shouldCountChatInDocTitle()
-      ? this.chatTrackingStateManager.allChannelUrgentCount
-      : 0;
+    return this.chatTrackingStateManager.allChannelUrgentCount;
   }
 
   switchChannelUpOrDown(direction, unreadOnly = false) {

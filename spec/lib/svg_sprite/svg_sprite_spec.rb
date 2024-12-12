@@ -26,13 +26,12 @@ RSpec.describe SvgSprite do
   end
 
   it "can search for a specific FA icon" do
-    expect(SvgSprite.search("fa-heart")).to match(/heart/)
     expect(SvgSprite.search("poo-storm")).to match(/poo-storm/)
     expect(SvgSprite.search("this-is-not-an-icon")).to eq(false)
   end
 
   it "can get a raw SVG for an icon" do
-    expect(SvgSprite.raw_svg("fa-heart")).to match(/svg.*svg/) # SVG inside SVG
+    expect(SvgSprite.raw_svg("heart")).to match(/svg.*svg/) # SVG inside SVG
     expect(SvgSprite.raw_svg("this-is-not-an-icon")).to eq("")
   end
 

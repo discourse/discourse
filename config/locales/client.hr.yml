@@ -1923,6 +1923,9 @@ hr:
     form_kit:
       reset: Resetirati
       optional: neobvezno
+      select:
+        select_placeholder: "Odaberite…"
+        none_placeholder: "Ništa"
       errors:
         required: "Potrebno"
     close: "Zatvori"
@@ -3838,7 +3841,6 @@ hr:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -4811,6 +4813,9 @@ hr:
         look_and_feel:
           themes:
             title: "Teme"
+        user_fields:
+          type: "Tip"
+          delete: "Pobriši"
       plugins:
         title: "Dodaci"
         name: "Naziv"
@@ -5535,6 +5540,11 @@ hr:
         status: "Statust"
         show_emails: "Pokaži emailove"
         hide_emails: "Sakrij e-poštu"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Pobriši"
         nav:
           new: "Novo"
           active: "Aktivno"
@@ -5807,8 +5817,6 @@ hr:
           confirm_delete: "Jeste li sigurni da želite izbrisati ovaj DiscourSeconnect zapis?"
       user_fields:
         title: "Korisnička polja"
-        help: "Dodaj polja koja korisnici mogu popuniti."
-        create: "Stvori korisnička polja"
         untitled: "Nenaslovljeno"
         name: "Ime polja"
         type: "Tip polja"
@@ -5829,22 +5837,15 @@ hr:
             title: "Neobvezno"
         editable:
           title: "Izmijenjivo nakon registracije"
-          enabled: "izmijenjivo"
-          disabled: "nije izmijenjivo"
         show_on_profile:
           title: "Prikaži na javnom profilu"
-          enabled: "prikazano na profilu"
-          disabled: "nije prikazano na profilu"
         show_on_user_card:
           title: "Prikaži na korisničkoj kartici"
-          enabled: "prikaži na korisničkoj kartici"
-          disabled: "nije prikazano na korisničkoj kartici"
         searchable:
           title: "Može se pretraživati"
-          enabled: "može se pretraživati"
-          disabled: "nije moguće pretraživati"
+          enabled: "Može se pretraživati"
         field_types:
-          text: "Tekst polje"
+          text: "Tekst"
           confirm: "Potvrda"
           dropdown: "Padajući izbornik"
           multiselect: "Višestruki odabir"
@@ -5887,6 +5888,8 @@ hr:
             label: "Učitaj"
         selectable_avatars:
           title: "Popis avatara koji korisnici mogu birati"
+        table_column_heading:
+          status: "Statust"
         categories:
           all_results: "Sve"
           required: "Potrebno"
@@ -5958,6 +5961,7 @@ hr:
         none_selected: "Odaberite značku da počnete"
         allow_title: Dopusti da se značka koristi kao titula
         multiple_grant: Može biti dodijeljena više puta
+        visibility_heading: Vidljivost
         listable: Prikaži značku na javnoj stranici sa značkama
         enabled: omogućeno
         disabled: onemogućen
@@ -6011,6 +6015,7 @@ hr:
           grant_existing_holders: Dodijelite dodatne značke postojećim nositeljima bedževa
       emoji:
         title: "Emoji"
+        delete: "Pobriši"
         uploading: "Prijenos…"
         name: "Ime"
         group: "Grupa"

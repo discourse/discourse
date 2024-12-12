@@ -166,6 +166,21 @@ RSpec.describe TopicsController do
           expect(Tag.all.pluck(:name)).to include("foo", "bar")
         end
 
+        describe "with freeze_original param" do
+          it "duplicates post to new topic and keeps original post in place" do
+            expect do
+              post "/t/#{topic.id}/move-posts.json",
+                   params: {
+                     title: "Logan is a good movie",
+                     post_ids: [p2.id],
+                     freeze_original: true,
+                   }
+            end.to change { Topic.count }.by(1)
+            expect(response.status).to eq(200)
+            expect(topic.post_ids).to include(p2.id)
+          end
+        end
+
         describe "when topic has been deleted" do
           it "should still be able to move posts" do
             PostDestroyer.new(admin, topic.first_post).destroy
@@ -306,6 +321,22 @@ RSpec.describe TopicsController do
           result = response.parsed_body
           expect(result["success"]).to eq(true)
           expect(result["url"]).to be_present
+        end
+
+        describe "with freeze_original param" do
+          it "duplicates post to topic and keeps original post in place" do
+            expect do
+              post "/t/#{topic.id}/move-posts.json",
+                   params: {
+                     post_ids: [p2.id],
+                     destination_topic_id: dest_topic.id,
+                     freeze_original: true,
+                   }
+            end.to change { dest_topic.posts.count }.by(1)
+            expect(response.status).to eq(200)
+            expect(topic.post_ids).to include(p2.id)
+            expect(dest_topic.posts.find_by(raw: p2.raw)).to be_present
+          end
         end
 
         it "triggers an event on merge" do
@@ -1681,6 +1712,28 @@ RSpec.describe TopicsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["basic_topic"]).to be_present
+        end
+
+        it "prevents conflicts when title was changed" do
+          put "/t/#{topic.slug}/#{topic.id}.json",
+              params: {
+                title: "brand new title",
+                original_title: "another title",
+              }
+
+          expect(response.status).to eq(409)
+          expect(response.parsed_body["errors"].first).to eq(I18n.t("edit_conflict"))
+        end
+
+        it "prevents conflicts when tags were changed" do
+          put "/t/#{topic.slug}/#{topic.id}.json",
+              params: {
+                tags: %w[tag1 tag2],
+                original_tags: %w[tag3 tag4],
+              }
+
+          expect(response.status).to eq(409)
+          expect(response.parsed_body["errors"].first).to eq(I18n.t("edit_conflict"))
         end
 
         it "throws an error if it could not be saved" do

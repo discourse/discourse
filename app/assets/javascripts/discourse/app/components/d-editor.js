@@ -21,7 +21,6 @@ import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import { getHead } from "discourse/lib/textarea-text-manipulation";
 import userSearch from "discourse/lib/user-search";
 import {
   destroyUserStatuses,
@@ -35,8 +34,6 @@ import { getRegister } from "discourse-common/lib/get-owner";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
-
-const FOUR_SPACES_INDENT = "4-spaces-indent";
 
 let _createCallbacks = [];
 
@@ -145,8 +142,6 @@ export default class DEditor extends Component {
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
-    keymap[`${PLATFORM_KEY_MODIFIER}+shift+.`] = () =>
-      this.send("insertCurrentTime");
 
     return keymap;
   }
@@ -311,8 +306,7 @@ export default class DEditor extends Component {
         this.site.hashtag_configurations["topic-composer"],
         this.siteSettings,
         {
-          afterComplete: (value) => {
-            this.set("value", value);
+          afterComplete: () => {
             schedule(
               "afterRender",
               this.textManipulation,
@@ -332,8 +326,7 @@ export default class DEditor extends Component {
     this.textManipulation.autocomplete({
       template: findRawTemplate("emoji-selector-autocomplete"),
       key: ":",
-      afterComplete: (text) => {
-        this.set("value", text);
+      afterComplete: () => {
         schedule(
           "afterRender",
           this.textManipulation,
@@ -471,9 +464,7 @@ export default class DEditor extends Component {
       onRender: (options) => renderUserStatusHtml(options),
       key: "@",
       transformComplete: (v) => v.username || v.name,
-      afterComplete: (value) => {
-        this.set("value", value);
-
+      afterComplete: () => {
         schedule(
           "afterRender",
           this.textManipulation,
@@ -483,34 +474,6 @@ export default class DEditor extends Component {
       triggerRule: async () => !(await this.textManipulation.inCodeBlock()),
       onClose: destroyUserStatuses,
     });
-  }
-
-  _applyList(sel, head, exampleKey, opts) {
-    if (sel.value.includes("\n")) {
-      this.textManipulation.applySurround(sel, head, "", exampleKey, opts);
-    } else {
-      const [hval, hlen] = getHead(head);
-      if (sel.start === sel.end) {
-        sel.value = i18n(`composer.${exampleKey}`);
-      }
-
-      const trimmedPre = sel.pre.trim();
-      const number = sel.value.startsWith(hval)
-        ? sel.value.slice(hlen)
-        : `${hval}${sel.value}`;
-      const preLines = trimmedPre.length ? `${trimmedPre}\n\n` : "";
-
-      const trimmedPost = sel.post.trim();
-      const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
-
-      this.set("value", `${preLines}${number}${post}`);
-      this.textManipulation.selectText(preLines.length, number.length);
-    }
-  }
-
-  _applySurround(head, tail, exampleKey, opts) {
-    const selected = this.textManipulation.getSelected();
-    this.textManipulation.applySurround(selected, head, tail, exampleKey, opts);
   }
 
   @action
@@ -559,6 +522,27 @@ export default class DEditor extends Component {
     }
   }
 
+  /**
+   * Represents a toolbar event object passed to toolbar buttons.
+   *
+   * @typedef {Object} ToolbarEvent
+   * @property {function} applySurround - Applies surrounding text
+   * @property {function} formatCode - Formats as code
+   * @property {function} replaceText - Replaces text
+   * @property {function} selectText - Selects a range of text
+   * @property {function} toggleDirection - Toggles text direction
+   * @property {function} getText - Gets the text
+   * @property {function} addText - Adds text
+   * @property {function} applyList - Applies a list format
+   * @property {*} selected - The current selection
+   */
+
+  /**
+   * Creates a new toolbar event object
+   *
+   * @param {boolean} trimLeading - Whether to trim leading whitespace
+   * @returns {ToolbarEvent} An object with toolbar event actions
+   */
   newToolbarEvent(trimLeading) {
     const selected = this.textManipulation.getSelected(trimLeading);
     return {
@@ -574,8 +558,8 @@ export default class DEditor extends Component {
           opts
         ),
       applyList: (head, exampleKey, opts) =>
-        this._applyList(selected, head, exampleKey, opts),
-      formatCode: (...args) => this.send("formatCode", args),
+        this.textManipulation.applyList(selected, head, exampleKey, opts),
+      formatCode: () => this.textManipulation.formatCode(),
       addText: (text) => this.textManipulation.addText(selected, text),
       getText: () => this.value,
       toggleDirection: () => this.textManipulation.toggleDirection(),
@@ -629,71 +613,6 @@ export default class DEditor extends Component {
   }
 
   @action
-  formatCode() {
-    if (this.disabled) {
-      return;
-    }
-
-    const sel = this.textManipulation.getSelected("", { lineVal: true });
-    const selValue = sel.value;
-    const hasNewLine = selValue.includes("\n");
-    const isBlankLine = sel.lineVal.trim().length === 0;
-    const isFourSpacesIndent =
-      this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT;
-
-    if (!hasNewLine) {
-      if (selValue.length === 0 && isBlankLine) {
-        if (isFourSpacesIndent) {
-          const example = i18n(`composer.code_text`);
-          this.set("value", `${sel.pre}    ${example}${sel.post}`);
-          return this.textManipulation.selectText(
-            sel.pre.length + 4,
-            example.length
-          );
-        } else {
-          return this.textManipulation.applySurround(
-            sel,
-            "```\n",
-            "\n```",
-            "paste_code_text"
-          );
-        }
-      } else {
-        return this.textManipulation.applySurround(sel, "`", "`", "code_title");
-      }
-    } else {
-      if (isFourSpacesIndent) {
-        return this.textManipulation.applySurround(
-          sel,
-          "    ",
-          "",
-          "code_text"
-        );
-      } else {
-        const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
-        const postNewline = sel.post[0] !== "\n" ? "\n" : "";
-        return this.textManipulation.addText(
-          sel,
-          `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
-        );
-      }
-    }
-  }
-
-  @action
-  insertCurrentTime() {
-    const sel = this.textManipulation.getSelected("", { lineVal: true });
-    const timezone = this.currentUser.user_option.timezone;
-    const time = moment().format("HH:mm:ss");
-    const date = moment().format("YYYY-MM-DD");
-
-    this.textManipulation.addText(
-      sel,
-      `[date=${date} time=${time} timezone="${timezone}"]`
-    );
-  }
-
-  @action
   handleFocusIn() {
     this.set("isEditorFocused", true);
   }
@@ -715,6 +634,8 @@ export default class DEditor extends Component {
     this._applyHashtagAutocomplete();
     this._applyMentionAutocomplete();
 
+    const destroyEditor = this.onSetup?.(textManipulation);
+
     scheduleOnce("afterRender", this, this._readyNow);
 
     return () => {
@@ -723,6 +644,8 @@ export default class DEditor extends Component {
       this.element?.removeEventListener("paste", textManipulation.paste);
 
       textManipulation.autocomplete("destroy");
+
+      destroyEditor?.();
     };
   }
 
@@ -741,7 +664,11 @@ export default class DEditor extends Component {
         textManipulation,
         "replaceText"
       );
-      this.appEvents.on("composer:apply-surround", this, "_applySurround");
+      this.appEvents.on(
+        "composer:apply-surround",
+        textManipulation,
+        "applySurroundSelection"
+      );
       this.appEvents.on(
         "composer:indent-selected-text",
         textManipulation,
@@ -764,7 +691,11 @@ export default class DEditor extends Component {
           textManipulation,
           "replaceText"
         );
-        this.appEvents.off("composer:apply-surround", this, "_applySurround");
+        this.appEvents.off(
+          "composer:apply-surround",
+          textManipulation,
+          "applySurroundSelection"
+        );
         this.appEvents.off(
           "composer:indent-selected-text",
           textManipulation,

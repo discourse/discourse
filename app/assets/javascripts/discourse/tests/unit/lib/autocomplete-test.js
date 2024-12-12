@@ -53,7 +53,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     await simulateKeys(element, "a :)\r");
 
-    assert.strictEqual(element.value, "a :sad: ");
+    assert.dom(element).hasValue("a :sad: ");
     assert.strictEqual(element.selectionStart, 8);
     assert.strictEqual(element.selectionEnd, 8);
   });
@@ -70,24 +70,24 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     await simulateKeys(element, "@\r");
 
-    assert.strictEqual(element.value, "@test1 ");
+    assert.dom(element).hasValue("@test1 ");
     assert.strictEqual(element.selectionStart, 7);
     assert.strictEqual(element.selectionEnd, 7);
 
     await simulateKeys(element, "@2\r");
 
-    assert.strictEqual(element.value, "@test1 @test2 ");
+    assert.dom(element).hasValue("@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 14);
     assert.strictEqual(element.selectionEnd, 14);
 
     await setCaretPosition(element, 6);
     await simulateKeys(element, "\b\b");
 
-    assert.strictEqual(element.value, "@tes @test2 ");
+    assert.dom(element).hasValue("@tes @test2 ");
 
     await simulateKey(element, "\r");
 
-    assert.strictEqual(element.value, "@test1 @test2 ");
+    assert.dom(element).hasValue("@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 7);
     assert.strictEqual(element.selectionEnd, 7);
 
@@ -133,7 +133,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     await simulateKeys(element, "@jane d\r");
 
-    assert.strictEqual(element.value, "@jd ");
+    assert.dom(element).hasValue("@jd ");
   });
 
   test("Autocomplete can render on @", async function (assert) {
@@ -150,5 +150,23 @@ module("Unit | Utility | autocomplete", function (hooks) {
     assert.dom("#ac-testing ul li").exists({ count: 2 });
     assert.dom("#ac-testing li a.selected").exists({ count: 1 });
     assert.dom("#ac-testing li a.selected").hasText("test1");
+  });
+
+  test("Autocomplete doesn't reset undo history", async function (assert) {
+    const element = textArea();
+
+    $(element).autocomplete({
+      key: "@",
+      template,
+      dataSource: () => ["test1", "test2"],
+    });
+
+    await simulateKeys(element, "@t\r");
+
+    assert.strictEqual(element.value, "@test1 ");
+
+    document.execCommand("undo");
+
+    assert.strictEqual(element.value, "@t");
   });
 });

@@ -4,8 +4,6 @@ import { isTesting } from "discourse-common/config/environment";
 import deprecated from "discourse-common/lib/deprecated";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
-const COLOCATED_TEMPLATE_OVERRIDES = new Map();
-
 let THROW_GJS_ERROR = isTesting();
 
 /** For use in tests/integration/component-templates-test only */
@@ -13,16 +11,9 @@ export function overrideThrowGjsError(value) {
   THROW_GJS_ERROR = value;
 }
 
+// We're using a patched version of Ember with a modified GlimmerManager to make the code below work.
 // This patch is not ideal, but Ember does not allow us to change a component template after initial association
 // https://github.com/glimmerjs/glimmer-vm/blob/03a4b55c03/packages/%40glimmer/manager/lib/public/template.ts#L14-L20
-const originalGetTemplate = GlimmerManager.getComponentTemplate;
-// eslint-disable-next-line no-import-assign
-GlimmerManager.getComponentTemplate = (component) => {
-  return (
-    COLOCATED_TEMPLATE_OVERRIDES.get(component) ??
-    originalGetTemplate(component)
-  );
-};
 
 export default {
   after: ["populate-template-map", "mobile"],
@@ -60,7 +51,9 @@ export default {
         return;
       }
 
-      const originalTemplate = originalGetTemplate(component);
+      // patched function: Ember's OG won't return overridden templates. This version will.
+      // it's safe to call it original template here because the override wasn't set yet.
+      const originalTemplate = GlimmerManager.getComponentTemplate(component);
       const isStrictMode = originalTemplate?.()?.parsedLayout?.isStrictMode;
       const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
 
@@ -85,7 +78,8 @@ export default {
 
         const overrideTemplate = require(finalOverrideModuleName).default;
 
-        COLOCATED_TEMPLATE_OVERRIDES.set(component, overrideTemplate);
+        // patched function: Ember's OG does not allow overriding a component template
+        GlimmerManager.setComponentTemplate(overrideTemplate, component);
       }
     });
   },
@@ -112,6 +106,7 @@ export default {
   },
 
   teardown() {
-    COLOCATED_TEMPLATE_OVERRIDES.clear();
+    // patched function: doesn't exist on og GlimmerManager
+    GlimmerManager.clearTemplateOverrides();
   },
 };

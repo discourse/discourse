@@ -1089,9 +1089,7 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   canManageGroup(group) {
-    return group.get("automatic")
-      ? false
-      : group.get("can_admin_group") || group.get("is_group_owner");
+    return group.get("can_admin_group") || group.get("is_group_owner");
   }
 
   @discourseComputed("groups.@each.title", "badges.[]")

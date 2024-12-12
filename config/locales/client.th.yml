@@ -1173,6 +1173,8 @@ th:
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     form_kit:
       optional: ทางเลือก
+      select:
+        none_placeholder: "ไม่มี"
       errors:
         required: "ต้องการ"
     close: "ปิด"
@@ -2730,6 +2732,9 @@ th:
         look_and_feel:
           themes:
             title: "ธีม"
+        user_fields:
+          type: "ชนิด"
+          delete: "ลบ"
       plugins:
         title: "ปลั้กอิน"
         name: "ชื่อ"
@@ -3041,6 +3046,11 @@ th:
         status: "สถานะ"
         show_emails: "แสดงอีเมล"
         hide_emails: "ซ่อนอีเมล"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "ปิด"
+              confirm: "ลบ"
         nav:
           new: "ใหม่"
           active: "ใช้งานอยู่"
@@ -3161,8 +3171,6 @@ th:
           external_avatar_url: "URL ของรูปโปรไฟล์"
       user_fields:
         title: "ช่องข้อมูลผู้ใช้"
-        help: "เพิ่มช่องที่คุณสามารถใส่ข้อมูลเพิ่มได้"
-        create: "สร้างช่องข้อมูลผู้ใช้"
         untitled: "ไม่ได้ตั้งชื่อ"
         name: "ชื่อช่อง"
         type: "ประเภทช่อง"
@@ -3181,18 +3189,10 @@ th:
         requirement:
           optional:
             title: "ทางเลือก"
-        editable:
-          enabled: "แก้ไขได้"
-          disabled: "แก้ไขไม่ได้"
         show_on_profile:
           title: "แสดงในข้อมูลสาธารณะ"
-          enabled: "แสดงแสดงในข้อมูลส่วนตัว"
-          disabled: "ไม่แสดงในข้อมูลส่วนตัว"
-        show_on_user_card:
-          enabled: "แสดงบนการ์ดผู้ใช้"
-          disabled: "ไม่แสดงบนการ์ดผู้ใช้"
         field_types:
-          text: "ช่องข้อความ"
+          text: "ข้อความ"
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:
@@ -3221,6 +3221,8 @@ th:
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
+        table_column_heading:
+          status: "สถานะ"
         categories:
           all_results: "ทั้งหมด"
           required: "ต้องการ"
@@ -3296,6 +3298,7 @@ th:
           replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้
       emoji:
         title: "อีโมจิ"
+        delete: "ลบ"
         name: "ชื่อ"
         group: "กลุ่ม"
         image: "ภาพ"

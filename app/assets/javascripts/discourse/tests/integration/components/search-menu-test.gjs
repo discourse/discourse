@@ -46,11 +46,12 @@ module("Integration | Component | search-menu", function (hooks) {
 
     await fillIn("#search-term", "test");
 
-    assert.strictEqual(
-      query(".label-suffix").textContent.trim(),
-      i18n("search.in_topics_posts"),
-      "search label reflects context of search"
-    );
+    assert
+      .dom(".label-suffix")
+      .hasText(
+        i18n("search.in_topics_posts"),
+        "search label reflects context of search"
+      );
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 

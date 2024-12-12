@@ -6,7 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse-common/utils/decorators";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
-const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
+const DIRECT_MESSAGE_CHANNELS_LIMIT = 50;
 
 /*
   The ChatChannelsManager service is responsible for managing the loaded chat channels.
@@ -136,7 +136,7 @@ export default class ChatChannelsManager extends Service {
   }
 
   get publicMessageChannelsByActivity() {
-    return this.#sortChannelsByActivity(this.publicMessageChannels);
+    return this.#sortChannelsByActivity([...this.publicMessageChannels]);
   }
 
   @cached
@@ -210,12 +210,12 @@ export default class ChatChannelsManager extends Service {
         a: {
           urgent:
             a.tracking.mentionCount + a.tracking.watchedThreadsUnreadCount,
-          unread: a.tracking.unreadCount + a.threadsManager.unreadThreadCount,
+          unread: a.tracking.unreadCount + a.unreadThreadsCountSinceLastViewed,
         },
         b: {
           urgent:
             b.tracking.mentionCount + b.tracking.watchedThreadsUnreadCount,
-          unread: b.tracking.unreadCount + b.threadsManager.unreadThreadCount,
+          unread: b.tracking.unreadCount + b.unreadThreadsCountSinceLastViewed,
         },
       };
 
@@ -253,26 +253,43 @@ export default class ChatChannelsManager extends Service {
         return -1;
       }
 
-      if (
-        a.tracking.unreadCount + a.tracking.watchedThreadsUnreadCount > 0 ||
-        b.tracking.unreadCount + b.tracking.watchedThreadsUnreadCount > 0
-      ) {
-        return a.tracking.unreadCount + a.tracking.watchedThreadsUnreadCount >
-          b.tracking.unreadCount + b.tracking.watchedThreadsUnreadCount
+      const aUrgent =
+        a.tracking.unreadCount +
+        a.tracking.mentionCount +
+        a.tracking.watchedThreadsUnreadCount;
+
+      const bUrgent =
+        b.tracking.unreadCount +
+        b.tracking.mentionCount +
+        b.tracking.watchedThreadsUnreadCount;
+
+      const aUnread = a.unreadThreadsCountSinceLastViewed;
+      const bUnread = b.unreadThreadsCountSinceLastViewed;
+
+      // if both channels have urgent count, sort by last message date
+      if (aUrgent > 0 && bUrgent > 0) {
+        return new Date(a.lastMessage.createdAt) >
+          new Date(b.lastMessage.createdAt)
           ? -1
           : 1;
       }
 
-      if (
-        a.threadsManager.unreadThreadCount > 0 ||
-        b.threadsManager.unreadThreadCount > 0
-      ) {
-        return a.threadsManager.unreadThreadCount >
-          b.threadsManager.unreadThreadCount
-          ? -1
-          : 1;
+      // otherwise prioritize channel with urgent count
+      if (aUrgent > 0 || bUrgent > 0) {
+        return aUrgent > bUrgent ? -1 : 1;
       }
 
+      // if both channels have unread threads, sort by last thread reply date
+      if (aUnread > 0 && bUnread > 0) {
+        return a.lastUnreadThreadDate > b.lastUnreadThreadDate ? -1 : 1;
+      }
+
+      // otherwise prioritize channel with unread thread count
+      if (aUnread > 0 || bUnread > 0) {
+        return aUnread > bUnread ? -1 : 1;
+      }
+
+      // read channels are sorted by last message date
       return new Date(a.lastMessage.createdAt) >
         new Date(b.lastMessage.createdAt)
         ? -1

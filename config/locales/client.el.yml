@@ -145,6 +145,7 @@ el:
       last_item: "και"
     action_codes:
       public_topic: "Έκανε αυτό το θέμα δημόσιο στις %{when}"
+      open_topic: "Μετατράπηκε σε θέμα %{when}"
       private_topic: "Έκανε αυτό το θέμα ένα προσωπικό μήνυμα στις %{when}"
       split_topic: "Διαχώρισε αυτό το θέμα στις %{when}"
       invited_user: "Προσκάλεσε τον/την %{who} στις %{when}"
@@ -251,6 +252,7 @@ el:
     now: "μόλις τώρα"
     read_more: "διαβάστε περισσότερα"
     more: "Περισσότερα"
+    more_options: "Περισσότερες επιλογές"
     x_more:
       one: "%{count} Περισσότερο"
       other: "%{count} Περισσότερο"
@@ -295,7 +297,12 @@ el:
       post_count: "Αναρτήσεις"
       user_count: "Εγγραφές"
       active_user_count: "Ενεργοί χρήστες"
+      visitor_count: "Επισκέπτες"
+      eu_visitor_count: "Επισκέπτες από την Ευρωπαϊκή Ένωση"
       contact: "Επικοινωνήστε μαζί μας"
+      site_activity: "Δραστηριότητα ιστότοπου"
+      view_more: "Δείτε περισσότερα"
+      view_less: "Δείτε λιγότερα"
       activities:
         topics:
           one: "%{formatted_number} θέμα"
@@ -303,9 +310,23 @@ el:
         posts:
           one: "%{formatted_number} ανάρτηση"
           other: "%{formatted_number} αναρτήσεις"
+        active_users:
+          one: "%{formatted_number} ενεργός χρήστης"
+          other: "%{formatted_number} ενεργοί χρήστες"
+        sign_ups:
+          one: "%{formatted_number} εγγραφή"
+          other: "%{formatted_number} εγγραφές"
         likes:
           one: "%{formatted_number} «μου αρέσει»"
           other: "%{formatted_number} «μου αρέσει»"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} επισκέπτης}
+            other {{total_formatted_number} επισκέπτες}
+          }, περίπου { eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } από την ΕΕ
         periods:
           last_7_days: "τις τελευταίες 7 ημέρες"
           today: "σήμερα"
@@ -574,6 +595,7 @@ el:
       scores:
         about: "Αυτή η βαθμολογία υπολογίζεται με βάση το επίπεδο εμπιστοσύνης του αναφέροντα, την ακρίβεια των προηγούμενων αναφορών του και την προτεραιότητα του αντικειμένου που αναφέρεται."
         score: "Βαθμολογία"
+        date: "Ημερομηνία αναφοράς"
         type: "Αιτία"
         status: "Κατάσταση"
         submitted_by: "Αναφέρθηκε από"
@@ -663,6 +685,7 @@ el:
       never: "Ποτέ"
       last_custom: "Τελευταία προσαρμοσμένη ημερομηνία"
       custom: "Προσαρμοσμένη ημερομηνία και ώρα"
+      more_options: "Περισσότερες επιλογές…"
       select_timeframe: "Επιλέξτε χρονικό περιθώριο"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ανάρτησε <a href='%{topicUrl}'>το θέμα</a>"
@@ -1724,6 +1747,9 @@ el:
       optional: προεραιτικό
       errors_summary_title: "Αυτή η φόρμα περιέχει σφάλματα:"
       dirty_form: "Δεν έχετε υποβάλει τις αλλαγές σας! Είστε σίγουροι ότι θέλετε να αποχωρήσετε;"
+      select:
+        select_placeholder: "Επιλογή…"
+        none_placeholder: "Κανένα"
       errors:
         required: "Απαιτείται"
         invalid_url: "Πρέπει να είναι μια έγκυρη διεύθυνση URL"
@@ -3296,7 +3322,6 @@ el:
       with_topics: "%{filter} θέματα"
       with_category: "%{filter} %{category} θέματα"
       filter:
-        title: "Φίλτρο"
         button:
           label: "Φίλτρο"
       latest:
@@ -4181,6 +4206,9 @@ el:
         look_and_feel:
           themes:
             title: "Θέματα"
+        user_fields:
+          type: "Τύπος"
+          delete: "Σβήσιμο"
       plugins:
         title: "Plugins"
         name: "Όνομα"
@@ -4844,6 +4872,11 @@ el:
         status: "Κατάσταση"
         show_emails: "Προβολή Emails"
         hide_emails: "Απόκρυψη emails"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Κλείσιμο"
+              confirm: "Σβήσιμο"
         nav:
           new: "Νέα"
           active: "Ενεργοί"
@@ -5067,8 +5100,6 @@ el:
           external_avatar_url: "URL Εικόνας Προφίλ"
       user_fields:
         title: "Πεδία Χρήστη"
-        help: "Προσθέστε πεδία που οι χρήστες μπορουν να συμπληρώσουν."
-        create: "Δημιούργησε πεδίο χρήστη"
         untitled: "Χωρίς τίτλο"
         name: "Όνομα πεδίου"
         type: "Τύπος πεδίου"
@@ -5086,21 +5117,11 @@ el:
         requirement:
           optional:
             title: "Προεραιτικό"
-        editable:
-          enabled: "επεξεργάσιμο"
-          disabled: "μη επεξεργάσιμο"
-        show_on_profile:
-          enabled: "εμφάνιση στο προφίλ"
-          disabled: "να μην εμφανίζεται στο προφίλ"
-        show_on_user_card:
-          enabled: "να εμφανίζεται στην κάρτα του χρήστη"
-          disabled: "να μην εμφανίζεται στην κάρτα του χρήστη"
         searchable:
           title: "Αναζητήσιμο"
-          enabled: "αναζητήσιμο"
-          disabled: "μη αναζητήσιμο"
+          enabled: "Αναζητήσιμο"
         field_types:
-          text: "Πεδίο κειμένου"
+          text: "Κείμενο"
           confirm: "Επιβεβαίωση"
           dropdown: "Dropdown"
           multiselect: "Πολλαπλή επιλογή"
@@ -5137,6 +5158,8 @@ el:
             label: "Μεταφόρτωση"
         selectable_avatars:
           title: "Λίστα των avatars που μπορούν να επιλέξουν οι χρήστες"
+        table_column_heading:
+          status: "Κατάσταση"
         categories:
           all_results: "Όλα"
           required: "Απαιτείται"
@@ -5209,6 +5232,7 @@ el:
         none_selected: "Διάλεξε ένα παράσημο για να ξεκινήσεις"
         allow_title: Το παράσημο μπορεί να χρησιμοποιηθεί σαν τίτλος
         multiple_grant: Μπορεί να απονεμηθεί πολλές φορές
+        visibility_heading: Ορατότητα
         listable: Εμφάνιση του παράσημου στη δημόσια σελίδα παρασήμων
         enabled: ενεργοποιημένα
         disabled: απενεργοποιημένα
@@ -5258,6 +5282,7 @@ el:
           replace_owners: Αφαιρέστε το σήμα από προηγούμενους κατόχους
       emoji:
         title: "Emoji"
+        delete: "Σβήσιμο"
         uploading: "Μεταφορτώνεται…"
         name: "Όνομα"
         group: "Ομάδα"

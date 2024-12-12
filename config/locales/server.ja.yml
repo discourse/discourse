@@ -75,6 +75,10 @@ ja:
     import_error:
       generic: テーマをインポート中にエラーが発生しました
       upload: "アップロードアセットの作成中にエラーが発生しました: %{name}。%{errors}"
+      screenshot: "テーマのスクリーンショットをインポート中にエラーが発生しました。%{errors}"
+      screenshot_invalid_type: "テーマのスクリーンショットは次のいずれかの形式である必要があります: %{accepted_formats}。スクリーンショット %{file_name} の形式は無効です。"
+      screenshot_invalid_size: "テーマのスクリーンショットは %{max_size} 未満である必要があります。スクリーンショット %{file_name} は大きすぎます。"
+      screenshot_invalid_dimensions: "テーマのスクリーンショットは最大 %{max_width}x%{max_height} である必要があります。スクリーンショット %{file_name} はこれを超えています。その寸法は %{width}x%{height} です。"
       about_json: "インポートエラー: about.json が存在しないか無効です。これは Discourseテーマですか？"
       about_json_too_big: "インポートエラー: about.json は %{limit} の制限を超えています。"
       about_json_values: "about.json に無効な値が含まれます: %{errors}"
@@ -517,6 +521,8 @@ ja:
       bulk_add:
         other: "%{count} 人のユーザーがグループに追加されました。"
     errors:
+      default_notification_level_users_limit:
+        other: "%{count} 人以上のユーザーがいるグループにデフォルトの通知レベルを設定できません。間違ったグループ: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' は有効な信頼レベルではありません。"
       can_not_modify_automatic: "自動グループを変更することはできません"
       member_already_exist:
@@ -542,6 +548,15 @@ ja:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_descriptions:
+      everyone: "すべてのメンバーを含む自動グループ"
+      staff: "管理者とモデレーターを含む自動グループ"
+      admins: "このサイトの構成と管理を担当し、すべてのメンバーとアクティビティデータにアクセスできます"
+      moderators: "通報への対応、ディスカッションのモデレーション、アカウントに関するメンバーのサポートを担当します"
+      trust_level_0: "コミュニティーの規範や機能を学習中で、機能に制限のある新規メンバー"
+      trust_level_2: "長い間継続的に貢献し、完全な市民権を獲得したアクティブメンバー。このグループのすべてのメンバーは、trust_level_1 および trust_level_0 グループのメンバーでもあります。"
+      trust_level_3: "コミュニティーの中核を成し、限定的なモデレーション権限を獲得した、非常に積極的な長期貢献者。このグループのすべてのメンバーは、trust_level_2、trust_level_1、および trust_level_0 グループのメンバーでもあります。"
+      trust_level_4: "模範的な貢献が認められ、追加のモデレーション権限が委任されている、手動昇格メンバー。このグループのすべてのメンバーは、trust_level_3、trust_level_2、trust_level_1、および trust_level_0 グループのメンバーでもあります。"
     request_membership_pm:
       title: "@%{group_name} のメンバーシップリクエスト"
     request_accepted_pm:
@@ -616,6 +631,8 @@ ja:
         bio_raw: "自己紹介"
       user:
         password: "パスワード"
+      user_password:
+        password: "パスワード"
     errors:
       models:
         topic:
@@ -628,6 +645,7 @@ ja:
               reply_by_email_disabled: "メールでの返信は無効になっています。"
               send_to_email_disabled: "メールに個人メッセージを送信することはできません。"
               target_user_not_found: "このメッセージの宛先の 1 人が見つかりませんでした。"
+              too_large_group: "グループ: %{group_name} のメッセージを受信できるユーザー数が多すぎます。制限は %{limit} です。"
               unable_to_update: "トピックを更新中にエラーが発生しました。"
               unable_to_tag: "トピックにタグ付け中にエラーが発生しました。"
               unable_to_unlist: "非表示のトピックを作成することはできません。"
@@ -1091,6 +1109,7 @@ ja:
       wrong_move: "通報を移動できません"
       system: "システム通報を更新または削除できません。"
       used: "通報はすでに使用されているため、更新または削除できません。"
+      unique_name: "通報名は一意である必要があります"
   reports:
     default:
       labels:
@@ -1165,12 +1184,14 @@ ja:
       yaxis: "日"
       description: "この期間に信頼レベルが上がったユーザーの数。"
     consolidated_page_views:
+      title: "レガシー統合ページビュー"
       title_legacy: "統合ページビュー"
       xaxis:
         page_view_crawler: "クローラー"
         page_view_anon: "匿名ユーザー"
         page_view_logged_in: "ログインユーザー"
       yaxis: "日"
+      description: "ログインユーザー、匿名ユーザー、およびクローラーのページビュー数を表示するレガシーレポート。これは、「サイトトラフィック」レポートに置き換えられました。"
       description_legacy: "ログインユーザー、匿名ユーザー、およびクローラーのページビュー。"
       labels:
         post: 投稿
@@ -1193,8 +1214,17 @@ ja:
         page_view_crawler: "既知のクローラー"
         page_view_other: "その他のページビュー"
       yaxis: "日"
+      description: "ログインユーザー、匿名ユーザー、既知のクローラーなどのページビュー。この実験的レポートは、ログイン/匿名リクエストが実際のブラウザから送信されたことを確認してからカウントします。このレポートの履歴データは使用できません。履歴データについては、「レガシー統合ページビュー」レポートを確認してください。"
+      description_legacy: "ログインユーザー、匿名ユーザー、既知のクローラーなどのページビュー。この実験的レポートは、ログイン/匿名リクエストが実際のブラウザから送信されたことを確認してからカウントします。このレポートの履歴データは使用できません。履歴データについては、「統合ページビュー」レポートを確認してください。"
     site_traffic:
+      title: "サイトトラフィック"
+      xaxis:
+        page_view_anon_browser: "ページビュー (匿名)"
+        page_view_logged_in_browser: "ページビュー (ログイン)"
+        page_view_crawler: "既知のクローラー"
+        page_view_other: "その他のトラフィック"
       yaxis: "日"
+      description: "ログインユーザー、匿名ユーザー、既知のクローラー、およびその他のトラフィックのページビュー。"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
@@ -1346,8 +1376,10 @@ ja:
       yaxis: "合計ページビュー"
       description: "全訪問者による新しいページビュー数。"
     page_view_legacy_total_reqs:
+      title: "レガシーページビュー"
       xaxis: "日"
       yaxis: "合計ページビュー"
+      description: "すべての訪問者からの新しいページビュー数を示すレガシーレポート。"
     page_view_logged_in_mobile_reqs:
       title: "ログインユーザーのページビュー"
       xaxis: "日"
@@ -1657,6 +1689,7 @@ ja:
     markdown_linkify_tlds: "リンクとして自動的に処理されるトップレベルドメインのリスト"
     markdown_typographer_quotation_marks: "二重引用符と一重引用符の置換ペアのリスト"
     post_undo_action_window_mins: "投稿に対する最近の操作 (「いいね!」、通報等) の取り消しを許可する時間 (分)"
+    must_approve_users: 'すべての新規ユーザーは、モデレーターまたは管理者から承認を受けてからログインできます。(注意: この設定では「トピックに到着」招待オプションも削除されます)'
     invite_code: "ユーザーはこのコードを入力してアカウント登録の許可を得る必要があります。空の場合は無視されます (大文字と小文字は区別されません)"
     approve_suspect_users: "不審なユーザーをレビューキューに追加します。不審なユーザーは略歴/ウェブサイトにアクセスしましたが閲覧アクティビティはありません。"
     review_every_post: "すべての新規投稿をレビューキューに送信し、モデレーションを行います。投稿は引き続き即時に公開され、すべてのユーザーに表示されます。警告！レビューが必要な投稿が大量に発生する可能性があるため、トラフィックの多いサイトには推奨されません。"
@@ -1676,6 +1709,7 @@ ja:
     blocked_ip_blocks: "Discourse によって決してクロールされない非公開 IP ブロックリスト"
     allowed_internal_hosts: "Discourse がワンボックスやその他の目的で安全にクロールできる内部ホストのリスト"
     allowed_onebox_iframes: "ワンボックス埋め込みを介して許可される iframe src ドメインのリスト。`*` はすべてのデフォルトのワンボックスエンジンを許可します。"
+    allowed_iframes: "Discourse が投稿で安全に許可できる iframe src URL プレフィックスのリスト"
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
     slow_down_crawler_user_agents: '"slow down crawler rate" 設定の構成のとおりに速度の制限が必要なウェブクローラーのユーザーエージェント。各値の長さは 3 文字以上です。'
@@ -1689,6 +1723,8 @@ ja:
     include_secure_categories_in_tag_counts: "有効にすると、タグのトピック数には、すべてのユーザーに対して読み取りが制限されたカテゴリにあるトピックが含まれます。無効にすると、通常のユーザーは、すべてのトピックが公開カテゴリにあるタグのトピック数のみが表示されます。"
     display_personal_messages_tag_counts: "有効にすると、指定されたタグが付けられた個人メッセージの数が表示されます。"
     top_menu: "ホームページのナビゲーションにどの項目がどの順序で表示されるかを指定します。"
+    post_menu: "デフォルトの投稿メニュー項目の表示状態と順序を構成します。プラグインまたはテーマによって追加される追加項目は個別に管理されるため、このリストには表示されません。"
+    post_menu_hidden_items: "展開記号がクリックされない限り投稿メニューでデフォルトで非表示になるメニュー項目。プラグインまたはテーマによって追加される追加項目は個別に管理されるため、このリストには表示されません。"
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
     allow_username_in_share_links: "ユーザー名を共有リンクに含めることを許可します。これは、ユニークビジター数に応じてバッジを与えるのに役立ちます。"
     site_contact_username: "自動送信メールの from に使用される有効なスタッフのユーザー名。空欄の場合デフォルトのシステムアカウントが使用されます。"
@@ -1707,13 +1743,13 @@ ja:
     top_page_default_timeframe: "匿名ユーザーのデフォルトのトップページ期間 (ログインユーザーの場合は最終アクセスに基づいて自動的に調整されます)。"
     moderators_view_emails: "モデレーターによるユーザーのメールアドレスの閲覧を許可します。"
     prioritize_username_in_ux: "ユーザーページ、ユーザーカード、および投稿の最初にユーザー名を表示する (無効にすると先に名前が表示されます)"
+    enable_rich_text_paste: "テキストをコンポーザーに貼り付ける際に、HTML からマークダウンへの自動変換を有効にする。"
     send_old_credential_reminder_days: "日数後に古い資格情報についてリマインダーする"
     email_token_valid_hours: "「パスワードを忘れました」またはアカウントアクティベーションのトークンを有効にする時間 (n)"
     enable_badges: "バッジシステムを有効にします。これは、ユーザーの肯定的な行動を強化するゲーミフィケーションの一形態です。詳細については、Discourse Meta の「<a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>バッジとは？</a>」をご覧ください。"
     max_favorite_badges: "ユーザーが選択できるバッジの最大数"
     whispers_allowed_groups: "特定のグループのメンバーに、トピック内での非公開コミュニケーションを許可します。"
     hidden_post_visible_groups: "これらのグループのメンバーが非表示の投稿を表示できるようにします。スタッフユーザーは常に非表示の投稿を表示できます。"
-    allow_index_in_robots_txt: "このサイトがウェブ検索エンジンによるインデックス作成を許可していることを robots.txt に指定します。例外的なケースでは、永続的に <a href='%{base_path}/admin/customize/robots'>robots.txt をオーバーライド</a>できます。"
     blocked_email_domains: "ユーザーがアカウントの登録に使用できないメールドメインのパイプ区切りのリスト。サブドメインは自動的に指定されたドメインに対して処理されます。ワイルドカード記号の * と ? はサポートされていません。例: mailinator.com|trashmail.net"
     allowed_email_domains: "ユーザーがアカウントの登録に使用する必要のあるメールドメインのパイプ区切りのリスト。サブドメインは自動的に指定されたドメインに対して処理されます。ワイルドカード記号の * と ? はサポートされていません。警告: リストに含まれないメールドメインのユーザーは許可されません！"
     normalize_emails: "正規化されたメールアドレスが一意であるかをチェックします。正規化されたメールアドレスでは、ユーザー名のすべてのドットと、+ と @ 記号の間のすべてが削除されます。"
@@ -1764,8 +1800,10 @@ ja:
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアントシークレット"
     google_oauth2_prompt: "認証サーバーがユーザーに再認証と同意を促すかどうかを指定する文字列のスペース区切りリスト (オプション)。使用できる値については、<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> をご覧ください。"
     google_oauth2_hd: "サインインが制限される Google Apps Hosted ドメイン (オプション)。詳細については、<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> をご覧ください。"
+    google_oauth2_hd_groups: "認証時に、ホストされたドメイン上のユーザーの Google グループを取得します。取得された Google グループを使って、Discourse の自動グループメンバーシップを付与することができます (グループ設定を参照)。詳細については、https://meta.discourse.org/t/226850 をご覧ください。"
     google_oauth2_hd_groups_service_account_admin_email: "Google Workspace 管理者アカウントに属するメールアドレス。グループ情報を取得するために、サービスアカウントの資格情報とともに使用されます。"
     google_oauth2_hd_groups_service_account_json: "サービスアカウントの JSON 形式のキー情報。グループ情報の取得に使用されます。"
+    google_oauth2_verbose_logging: "詳細な Google OAuth2 関連診断を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
     enable_twitter_logins: "Twitter 認証を有効にする。twitter_consumer_key と twitter_consumer_secret が必要です。「<a href='https://meta.discourse.org/t/13395' target='_blank'>Discourse で Twitter ログイン (およびリッチの埋め込み) を構成する</a>」をご覧ください。"
     twitter_consumer_key: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a> で登録されている Twitter 認証のコンシューマーキー。"
     twitter_consumer_secret: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a> で登録されている Twitter 認証のコンシューマーシークレット。"
@@ -1977,6 +2015,7 @@ ja:
     tos_url: "使用する利用規約が他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     privacy_policy_url: "使用するプライバシーポリシーが他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     log_anonymizer_details: "匿名化された後に、ユーザーの詳細をログに保持するかどうか。"
+    display_eu_visitor_stats: "世界および EU の訪問者数を /about ページに表示する。この設定をオンにしてから統計が表示されるまで数分かかることがあります。"
     newuser_spam_host_threshold: "`newuser_spam_host_threshold` 投稿内で新規ユーザーが迷惑とみなされる前に、同じホストにリンクを投稿できる回数。"
     allowed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザーはこれらのドメインへのリンクを使って投稿を作成することができます。"
     staff_like_weight: "スタッフの「いいね！」に与えられる重み (スタッフ以外の「いいね！」には 1 の重みがあります。)"
@@ -2033,6 +2072,7 @@ ja:
     reset_bounce_score_after_days: "X 日後にバウンススコアを自動的にリセットする。"
     blocked_attachment_content_types: "コンテンツタイプに基づいて添付ファイルをブロックするために使用されるキーワードのリスト。"
     blocked_attachment_filenames: "ファイル名に基づいて添付ファイルをブロックするために使用されるキーワードのリスト。"
+    forwarded_emails_behaviour: "Discourse への転送メールの処理方法。<a href='https://meta.discourse.org/t/-/62977' target='_blank'>詳細</a>"
     always_show_trimmed_content: "受信メールのトリミングされた部分を常に表示する。警告: メールアドレスが表示される可能性があります。"
     trim_incoming_emails: "受信メールの関連性のない部分をトリミングする。"
     private_email: "投稿またはトピックのコンテンツをメールの件名または本文に含めない。注意: ダイジェストメールも無効にします。"
@@ -2151,6 +2191,7 @@ ja:
     auto_handle_queued_age: "この日数後に、レビュー待ちのレコードを自動的に処理する。通報は無視されます。キューに入れられた投稿とユーザーは拒否されます。0 に設定するとこの機能は無効になります。"
     penalty_step_hours: "ユーザーの投稿禁止または凍結に使用されるデフォルトのペナルティ (時間)。最初の違反はデフォルトで最初の値になり、2 番目の違反はデフォルトで 2 番目の値になります。"
     penalty_include_post_message: "ユーザーを投稿禁止または凍結する際に、メールメッセージのテンプレートに問題のある投稿メッセージを自動的に含めます。"
+    svg_icon_subset: "アセットに含める追加の FontAwesome アイコンを追加する。ソリッドアイコンには 'fa-'、通常のアイコンには 'far-'、ブランドアイコンには 'fab-' のプレフィックスを使用します。"
     max_prints_per_hour_per_user: "/print ページの最大インプレッション数 (0 に設定すると出力が無効になります)"
     full_name_required: "ユーザープロファイルのフルネームを必須にします。"
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームはすべての場所で非表示になります。"
@@ -2160,6 +2201,7 @@ ja:
     default_code_lang: "Markdown コードブロックに適用されるデフォルトのプログラミング言語構文ハイライト (auto、text、ruby、python など)。この値は、`highlighted languages` サイト設定にも含まれている必要があります。"
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "HTMLで作成された &lt;code&gt; ブロックに言語が指定されていない場合でも構文ハイライトを適用します。Markdown で作成されたコードブロックを構成するには、'デフォルトのコード言語' 設定を使用してください。"
+    highlighted_languages: "構文ハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> をご覧ください。"
     show_copy_button_on_codeblocks: "コードブロックに、ブロックのコンテンツをユーザーのクリップボードにコピーするボタンを追加します。"
     embed_any_origin: "オリジンに関係なく、埋め込み可能なコンテンツを許可する。これは静的 HTML を使用するモバイルアプリに必要です。"
     embed_topics_list: "HTML 形式でのトピックリストの埋め込みを有効にします。この設定により、フォーラムのトピックのリストを互換性のある使いやすい方法で他のウェブサイトに組み込むことができます。"
@@ -2175,6 +2217,7 @@ ja:
     notify_about_reviewable_item_after: "この時間の経過後に未処理のレビュー待ち項目がある場合、モデレーターに個人メッセージを送信します。無効にするには 0 に設定します。"
     delete_drafts_older_than_n_days: "(n) 日以上変更されていない下書きを削除します。"
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまでに待機する日数。-1 に設定すると削除されません。0 に設定すると直ちに削除されます。"
+    bootstrap_mode_min_users: 'ブートストラップモードを無効にして「はじめに」ボタンを削除するために必要な最低ユーザー数 (0 に設定すると無効になります。最長 24 時間かかる場合があります)。詳細は、<a target="_blank" href="https://meta.discourse.org/t/-/322876">Meta のブートストラップモードに関するトピック</a>をご覧ください。'
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
     secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
     secure_uploads_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure uploads max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可します。"
@@ -2223,11 +2266,14 @@ ja:
     disable_mailing_list_mode: "ユーザーによるメーリングリストモードの有効化を禁止する (メーリングリストのメールは送信されなくなります)。"
     default_email_previous_replies: "デフォルトでメールに以前の返信を含めます。"
     default_email_in_reply_to: "デフォルトで、投稿への返信の抜粋をメールに含める。"
+    default_hide_profile: "ユーザーの公開プロファイルをデフォルトで非表示にする。"
+    default_hide_presence: "プレゼンス機能をデフォルトで無効化する。"
     default_other_new_topic_duration_minutes: "トピックが新規とみなされるグローバルのデフォルト条件。"
     default_other_auto_track_topics_after_msecs: "トピックが自動的に追跡されるまでのグローバルのデフォルト時間。"
     default_other_notification_level_when_replying: "ユーザーがトピックに返信する際のグローバルのデフォルト通知レベル。"
     default_other_external_links_in_new_tab: "デフォルトで、外部リンクを新しいタブで開く。"
     default_other_enable_quoting: "デフォルトで、選択したテキストを引用して返信する。"
+    default_other_enable_smart_lists: "コンポーザーに入力する際にスマートリストをデフォルトで有効にする。"
     default_other_enable_defer: "デフォルトで、トピックの延期機能を有効にする。"
     default_other_dynamic_favicon: "デフォルトで、ブラウザアイコンに新規/更新されたトピック数を表示する。"
     default_other_skip_new_user_tips: "新規ユーザーオンボーディングのヒントとバッジをスキップします。"
@@ -2284,6 +2330,7 @@ ja:
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
     force_lowercase_tags: "すべての新しいタグが完全に小文字になるように強制する。"
+    create_post_for_category_and_tag_changes: "トピックのカテゴリまたはタグが変更されたときにささやき投稿を作成する。ささやき投稿を有効にする必要があります。"
     automatically_clean_unused_tags: "どのトピックやプライベートメッセージにも使用されていないタグを毎日自動的に削除します。"
     watched_precedence_over_muted: "ミュートしているものも含むウォッチ中のカテゴリまたはタグ内のトピックについて通知する"
     company_name: "会社または組織の名前。空白のままにすると、定型の利用規約またはプライバシーに関する通知は提供されません。"
@@ -2300,6 +2347,7 @@ ja:
     heading_font: "サイトの見出しに使用されるフォント。テーマは `--heading-font-family` CSS カスタムプロパティを介してオーバーライドできます。"
     enable_sitemap: "サイトのサイトマップを生成し、robots.txt ファイルに含めます。"
     sitemap_page_size: "各サイトマップページに含める URL の数。最大 50,000"
+    enable_user_status: "ユーザーがカスタムステータスメッセージ (絵文字 + 説明) を設定できるようにする。"
     enable_user_tips: "重要な機能をユーザーに説明する新しいユーザーヒントを有効にする"
     short_title: "短いタイトルはユーザーのホーム画面、ランチャー、またはスペースが限られている場所に使用されます。12 文字に制限する必要があります。"
     dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
@@ -2321,9 +2369,17 @@ ja:
     navigation_menu: "サイトのメインナビゲーションメニューとして、サイドバーかヘッダーのドロップダウンを指定します。推奨はサイドバーです。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
+    experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
+    enable_experimental_lightbox: "デフォルトの画像ライトボックスを改良されたデザインに置き換える。"
+    experimental_glimmer_topic_list_groups: "新しい 'glimmer' トピックリストの実装を有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
+    glimmer_post_menu_mode: "新しい 'glimmer' 投稿メニューの実装が使用されるかどうかを制御する。'auto' はすべてのテーマとプラグインの準備ができると自動的に有効化します。この実装は活動的に開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
+    glimmer_post_menu_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
+    experimental_form_templates: "フォームのテンプレート機能を有効にする。<b>有効にした後</b>は、<a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> でテンプレートを管理します。"
     admin_sidebar_enabled_groups: "指定したグループの管理者 UI のサイドバーナビゲーションを有効にします。これは、トップレベル管理者ナビゲーションボタンを置き換えます。"
+    lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     show_user_menu_avatars: "ユーザーメニューにユーザーアバターを表示する"
+    about_page_hidden_groups: "/about ページに特定のグループのメンバーを表示しない。"
     view_raw_email_allowed_groups: "受信メールで作成された場合に、投稿の生のメールコンテンツを表示できるグループ。これには、メールのヘッダーやその他の技術情報が含まれます。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
@@ -2388,6 +2444,10 @@ ja:
       delete_rejected_email_after_days: "この設定は delete_email_logs_after_days 設定より小さいか %{max} より大きく設定することはできません。"
       invalid_uncategorized_category_setting: '「未分類トピックを許可」が有効でない場合、「未分類」カテゴリを選択できません。'
       invalid_search_ranking_weights: "search_ranking_weights サイト設定の値が無効です。例: '{0.1,0.2,0.3,1.0}'。各重みの最大値は 1.0 であることに注意してください。"
+    keywords:
+      clean_up_inactive_users_after_days: "有効化解除|非アクティブ|未有効化"
+      purge_unactivated_users_grace_period_days: "有効化解除|非アクティブ|未有効化"
+      navigation_menu: "サイドバー|ヘッダードロップダウン"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4403,8 +4463,6 @@ ja:
     regular:
       name: レギュラー
       description: カテゴリ整理、名前変更、フォローリンク、ウィキ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
-      long_description: |
-        このバッジは、信頼レベル 3 に達すると付与されます。数か月に渡り、コミュニティーに定期的に参加していただきありがとうございました。これで、最もアクティブな読者の 1 人となり、コミュニティーを素晴らしいものにしてくれる信頼ある貢献者となりました。カテゴリ整理やトピックの名前変更、より強力な迷惑通報の利用、非公開ラウンジエリアへのアクセスが可能となり、1 日当たりの「いいね！」が増えています。
     leader:
       name: リーダー
       description: グローバル編集、固定、クローズ、アーカイブ、分割とマージ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました

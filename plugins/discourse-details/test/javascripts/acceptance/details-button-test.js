@@ -2,7 +2,7 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 acceptance("Details Button", function (needs) {
   needs.user();
@@ -19,13 +19,14 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByName(i18n("details.title"));
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      `\n[details="${i18n("composer.details_title")}"]\n${i18n(
-        "composer.details_text"
-      )}\n[/details]\n`,
-      "it should contain the right output"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `\n[details="${i18n("composer.details_title")}"]\n${i18n(
+          "composer.details_text"
+        )}\n[/details]\n`,
+        "contains the right output"
+      );
 
     await fillIn(".d-editor-input", "This is my title");
 
@@ -36,13 +37,14 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByName(i18n("details.title"));
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      `\n[details="${i18n(
-        "composer.details_title"
-      )}"]\nThis is my title\n[/details]\n`,
-      "it should contain the right selected output"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `\n[details="${i18n(
+          "composer.details_title"
+        )}"]\nThis is my title\n[/details]\n`,
+        "contains the right selected output"
+      );
 
     assert.strictEqual(
       textarea.selectionStart,
@@ -63,13 +65,14 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByName(i18n("details.title"));
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      `Before \n[details="${i18n(
-        "composer.details_title"
-      )}"]\nsome text in between\n[/details]\n After`,
-      "it should contain the right output"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `Before \n[details="${i18n(
+          "composer.details_title"
+        )}"]\nsome text in between\n[/details]\n After`,
+        "contains the right output"
+      );
 
     assert.strictEqual(
       textarea.selectionStart,
@@ -90,13 +93,14 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByName(i18n("details.title"));
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      `Before \n\n[details="${i18n(
-        "composer.details_title"
-      )}"]\nsome text in between\n[/details]\n\n After`,
-      "it should contain the right output"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `Before \n\n[details="${i18n(
+          "composer.details_title"
+        )}"]\nsome text in between\n[/details]\n\n After`,
+        "contains the right output"
+      );
 
     assert.strictEqual(
       textarea.selectionStart,
@@ -128,12 +132,13 @@ acceptance("Details Button", function (needs) {
     await popupMenu.expand();
     await popupMenu.selectRowByName(i18n("details.title"));
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      `\n[details="${i18n(
-        "composer.details_title"
-      )}"]\n${multilineInput}\n[/details]\n`,
-      "it should contain the right output"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `\n[details="${i18n(
+          "composer.details_title"
+        )}"]\n${multilineInput}\n[/details]\n`,
+        "contains the right output"
+      );
   });
 });

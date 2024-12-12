@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
@@ -35,10 +35,11 @@ acceptance("Search - Mobile", function (needs) {
 
     await click("#search-button");
 
-    assert.strictEqual(
-      query("input.full-page-search").value,
-      "discourse",
-      "it does not reset input when hitting search icon again"
-    );
+    assert
+      .dom("input.full-page-search")
+      .hasValue(
+        "discourse",
+        "does not reset input when hitting search icon again"
+      );
   });
 });

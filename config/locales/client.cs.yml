@@ -1959,7 +1959,7 @@ cs:
                 many {# dnů}
               other {# dnů}
             }.
-          edit_link_options: "Upravit možnosti odkazu."
+          edit_link_options: "Upravte možnosti odkazu nebo odešlete e-mail."
           show_advanced: "Zobrazit pokročilé možnosti"
           hide_advanced: "Skrýt pokročilé možnosti"
           restrict: "Omezit na"
@@ -2165,6 +2165,9 @@ cs:
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
+      select:
+        select_placeholder: "Vybrat…"
+        none_placeholder: "Žádná"
       errors:
         required: "Nezbytnosti"
         too_low: "Musí být alespoň %{count}"
@@ -3936,7 +3939,7 @@ cs:
             title: "Rozdíli mezi vykreslenými příspěveky vedle sebe"
             button: "HTML"
           side_by_side_markdown:
-            title: "Show the raw source diffs side-by-side"
+            title: "Zobrazení rozdílů zdrojového kódu vedle sebe"
             button: "původní"
       raw_email:
         displays:
@@ -4311,7 +4314,6 @@ cs:
       with_topics: "%{filter} témata"
       with_category: "%{filter} %{category} témata"
       filter:
-        title: "Filtr"
         button:
           label: "Filtr"
       latest:
@@ -4854,7 +4856,7 @@ cs:
           links:
             inbox: "Přijaté zprávy"
             sent: "Odeslané"
-            new: "Nová"
+            new: "Nové"
             new_with_count: "Nové (%{count})"
             unread: "Nepřečtené"
             unread_with_count: "Nepřečtené (%{count})"
@@ -5014,7 +5016,7 @@ cs:
         no_records_found: "Nebyly nalezeny žádné záznamy"
         show: "Zobrazit"
         entries: "položky"
-        about: "O fóru"
+        about: "O aplikaci"
         prompts:
           delete_selected_rows: "Opravdu chcete odstranit vybrané řádky?"
           delete_selected_cols: "Opravdu chcete odstranit vybrané sloupce?"
@@ -5061,6 +5063,7 @@ cs:
           all: "Vše"
       new_features:
         title: "Co je nového"
+        check_for_updates: "Zkontrolovat aktualizace"
       dashboard:
         title: "Nástěnka"
         last_updated: "Nástěnka aktualizována:"
@@ -5541,6 +5544,11 @@ cs:
         look_and_feel:
           themes:
             title: "Motivy"
+        user_fields:
+          type: "Typ"
+          more_options:
+            title: "Další možnosti"
+          delete: "Smazat"
       plugins:
         title: "Pluginy"
         name: "Název"
@@ -5702,6 +5710,10 @@ cs:
           search_placeholder: "pište pro vyhledávání…"
           theme_name: "Název motivu"
           component_name: "Název komponenty"
+          themes_intro: "Začněte výběrem existujícího motivu nebo nainstalujte nový"
+          themes_intro_new: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
+          themes_intro_img_alt: "Nový zástupný symbol motivu"
+          beginners_guide_title: "Průvodce pro začátečníky k používání motivů Discourse"
           developers_guide_title: "Návod vývojáře k motivům Discourse"
           browse_themes: "Procházet komunitní motivy"
           customize_desc: "Přizpůsobit:"
@@ -5713,6 +5725,8 @@ cs:
           long_title: "Změnit barvy, CSS a HTML obsahy na vaší stránce"
           edit: "Upravit"
           edit_confirm: "Toto je vzdálené téma, pokud upravíš CSS/HTML tvoje změny budou vymazány při dalším updatu motivu."
+          update_confirm: "Tyto místní změny budou aktualizací vymazány. Opravdu chcete pokračovat?"
+          update_confirm_yes: "Ano, pokračovat v aktualizaci"
           common: "Společné"
           desktop: "Desktop"
           mobile: "Mobilní verze"
@@ -5720,10 +5734,17 @@ cs:
           translations: "Překlady"
           extra_scss: "Extra SCSS"
           extra_files: "Další soubory"
+          extra_files_upload: "Chcete-li tyto soubory zobrazit, exportujte motiv."
+          extra_files_remote: "Chcete-li tyto soubory zobrazit, exportujte motiv nebo zkontrolujte úložiště git."
           preview: "Náhled"
           settings_editor: "Editor nastavení"
+          show_advanced: "Zobrazit pokročilá pole"
+          hide_advanced: "Skrýt pokročilá pole"
+          hide_unused_fields: "Skrýt nepoužívaná pole"
           is_default: "Motiv je ve výchozím nastavení povolený"
           user_selectable: "Motiv může být zvolen uživatelem"
+          color_scheme_user_selectable: "Barevné schéma může být vybráno uživateli"
+          auto_update: "Automaticky aktualizovat při aktualizaci Discourse"
           color_scheme: "Paleta barev"
           edit_color_scheme: "Upravit paletu barev"
           default_light_scheme: "Světlé (výchozí)"
@@ -5732,53 +5753,112 @@ cs:
           theme_components: "Komponenty motivu"
           add_all_themes: "Přidat všechna témata"
           convert: "Převést"
+          convert_component_alert: "Opravdu chcete převést tuto komponentu na motiv? Bude odstraněna jako komponenta z %{relatives}."
+          convert_component_tooltip: "Převést tuto komponentu na motiv"
+          convert_component_alert_generic: "Jste si jisti, že chcete převést tuto komponentu na motiv?"
+          convert_theme_alert: "Opravdu chcete tento motiv převést na komponentu? Bude odebrán jako předek z %{relatives}."
+          convert_theme_alert_generic: "Opravdu chcete tento motiv převést na komponentu?"
+          convert_theme_tooltip: "Převést tento motiv na komponentu"
+          inactive_themes: "Neaktivní motivy:"
+          set_default_theme: "Nastavit výchozí"
+          default_theme: "Výchozí motiv"
+          set_default_success: "Výchozí motiv nastaven na %{theme}"
+          install_success: "%{theme} úspěšně nainstalován!"
+          inactive_components: "Nepoužité komponenty:"
           selected:
             one: "%{count} vybráno"
             few: "%{count} vybráno"
             many: "%{count} vybráno"
             other: "%{count} vybráno"
           cancel: "Zrušit"
+          broken_theme_tooltip: "Tento motiv obsahuje chyby v CSS, HTML nebo YAML"
+          broken_theme: "Deaktivovat nefunkční motiv"
+          disabled_component_tooltip: "Tato komponenta byla deaktivována"
+          default_theme_tooltip: "Tento motiv je výchozím motivem webu"
           updates_available_tooltip: "Pro tento motiv jsou k dispozici aktualizace"
+          and_x_more:
+            one: "%{count} navíc."
+            few: "%{count} navíc."
+            many: "%{count} navíc."
+            other: "%{count} navíc."
           collapse: Sbalit
           uploads: "Nahrané soubory"
           no_uploads: "Můžete nahrát prostředky spojené s vaším motivem jako jsou fonty a obrázky."
           add_upload: "Nahrát soubor"
           upload_file_tip: "Vybrat položku k nahrání (png, woff2, atd...)"
           variable_name: "Název SCSS var:"
+          variable_name_invalid: "Neplatný název proměnné. Povoleny jsou pouze alfanumerické znaky. Musí začínat písmenem. Musí být jedinečný."
           variable_name_error:
             invalid_syntax: "Neplatné variabilní jméno. Povoleny jsou pouze alfanumerické znaky. Musí začínat písmenem."
+            no_overwrite: "Neplatný název proměnné. Nesmí přepsat existující proměnnou."
+            must_be_unique: "Neplatný název proměnné. Musí být jedinečný."
           upload: "Nahrát"
           select_component: "Vyberte komponentu…"
+          unsaved_changes_alert: "Ještě jste neuložili své změny, chcete je zahodit a pokračovat?"
+          unsaved_parent_themes: "Nepřiřadili jste komponentu k žádným motivům, chcete pokračovat?"
           discard: "Zahodit"
           css_html: "Vlastní CSS/HTML"
           edit_css_html: "Upravit CSS/HTML"
           edit_css_html_help: "Neupravili jste žádné CSS nebo HTML"
           delete_upload_confirm: "Smazat toto nahrávání? (Motiv CSS by mohl přestat fungovat!)"
+          component_on_themes: "Zahrnout komponentu do těchto motivů"
+          included_components: "Zahrnuté komponenty"
+          add_all: "Přidat vše"
           import_web_tip: "Úložiště obsahující motiv"
+          direct_install_tip: "Opravdu chcete nainstalovat <strong>%{name}</strong> z níže uvedeného repozitáře?"
           import_web_advanced: "Pokročilé…"
+          import_file_tip: "Soubor .tar.gz, .zip nebo .dcstyle.json obsahující motiv"
           is_private: "Motiv je v soukromém git úložišti"
-          remote_branch: "Název pobočky (nepovinné)"
+          finish_install: "Dokončit instalaci motivu"
+          last_attempt: "Proces instalace nebyl dokončen, poslední pokus:"
+          remote_branch: "Název větve (nepovinné)"
           public_key: "Udělte následujícímu veřejnému klíči přístup k repozitáři:"
           install: "Instalovat"
           installed: "Nainstalováno"
           install_popular: "Populární"
-          about_theme: "O fóru"
+          install_upload: "Z vašeho zařízení"
+          install_git_repo: "Z git repozitáře"
+          install_create: "Vytvořit nový"
+          installing_message: "Instalace motivu, může to trvat několik minut..."
+          duplicate_remote_theme: "Komponenta „%{name}“ je již nainstalována, jste si jisti, že chcete nainstalovat další kopii?"
+          force_install: "Motiv nelze nainstalovat, protože repozitář Git je nepřístupný. Opravdu chcete pokračovat v instalaci?"
+          create_placeholder: "Vytvořit zástupný symbol"
+          about_theme: "O motivu"
           license: "Licence"
           version: "Verze Discourse:"
+          authors: "Autor:"
+          creator: "Vytvořeno:"
+          source_url: "Zdrojový kód"
           enable: "Zapnout"
           disable: "Vypnout"
+          disabled: "Tato komponenta byla deaktivována."
+          disabled_by: "Tato komponenta byla deaktivována uživatelem"
+          required_version:
+            error: "Tento motiv byl automaticky deaktivován, protože není kompatibilní s touto verzí Discourse."
+            minimum: "Vyžaduje Discourse verze %{version} nebo vyšší."
+            maximum: "Vyžaduje verzi Discourse %{version} nebo nižší."
           update_to_latest: "Aktualizovat na nejnovější"
-          check_for_updates: "kontrola aktualizací"
+          check_for_updates: "Zkontrolovat aktualizace"
           updating: "Probíhá aktualizace…"
+          update_success: "Aktualizace %{theme} dokončena"
           up_to_date: "Motiv je aktuální, naposledy zkontrolováno: "
+          has_overwritten_history: "Aktuální verze motivu již neexistuje, protože historie Git byla přepsána pomocí force push."
           add: "Přidat"
           theme_settings: "Nastavení motivu"
+          edit_objects_theme_setting: "Editor nastavení objektů"
+          overriden_settings_explanation: "Přepsaná nastavení jsou označena tečkou a mají zvýrazněnou barvu. Chcete-li obnovit tato nastavení na výchozí hodnotu, stiskněte vedle ní tlačítko Obnovit."
           no_settings: "Tento motiv nemá nastavení"
+          theme_translations: "Překlady motivů"
+          empty: "Žádné položky"
           commits_behind:
-            one: "Motiv je %{count} zavázaný!"
-            few: "Motiv je %{count} zavázaný!"
-            many: "Motivy jsou %{count} zavázané!"
-            other: "Motivy jsou %{count} zavázané!"
+            one: "Tento motiv je %{count} commit pozadu!"
+            few: "Tento motiv je %{count} commity pozadu!"
+            many: "Tento motiv je %{count} commitů pozadu!"
+            other: "Tento motiv je %{count} commitů pozadu!"
+          compare_commits: "(viz nové commity)"
+          remote_theme_edits: "Pokud chcete tento motiv upravit, musíte <a href='%{repoURL}' target='_blank'>odeslat změnu do jeho repozitáře</a>"
+          repo_unreachable: "Nelze kontaktovat Git repozitář tohoto motivu. Chybová zpráva:"
+          imported_from_archive: "Tento motiv byl importován ze souboru .zip"
           scss:
             text: "CSS"
             title: "Vložit vlastní CSS, akceptujeme všechny platné CSS a SCSS styly."
@@ -5794,18 +5874,65 @@ cs:
           embedded_scss:
             text: "Vložené CSS"
             title: "Zadejte vlastní CSS pro doručení s vloženou verzí komentářů"
+          embedded_header:
+            text: "Vložené záhlaví"
+            title: "Zadejte HTML pro zobrazení nad embedded verzí komentářů"
+          color_definitions:
+            text: "Definice barev"
+            title: "Zadejte vlastní definice barev (pouze pokročilí uživatelé)"
+            placeholder: |2-
+
+              Pomocí této šablony stylů můžete přidat vlastní barvy do seznamu custom properties CSS.
+
+              Příklad:
+
+              %{example}
+
+              Důrazně se doporučuje umístit před názvy vlastností předpony, aby se předešlo konfliktům s pluginy a/nebo jádrem.
+          head_tag:
+            text: "Head"
+            title: "HTML, který bude vložen před značku head"
           body_tag:
             text: "Tělo"
+            title: "HTML, který bude vložen před značku body"
           yaml:
             text: "YAML"
             title: "Definovat nastavení motivu ve formátu YAML"
+          scss_color_variables_warning: 'Použití základních barevných proměnných SCSS v motivech je zastaralé. Místo toho použijte custom properties CSS. Další podrobnosti najdete v <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">této příručce</a> .'
+          scss_warning_inline: "Používání základních barevných proměnných SCSS v motivech je zastaralé."
           all_filter: "Vše"
           active_filter: "Aktivní"
           inactive_filter: "Neaktivní"
           updates_available_filter: "Dostupné aktualizace"
           schema:
+            title: "Upravit nastavení %{name}"
+            back_button: "Zpět na %{name}"
             fields:
               required: "*nezbytnosti"
+              groups:
+                at_least:
+                  one: "je vyžadována alespoň %{count} skupina"
+                  few: "jsou vyžadovány alespoň %{count} skupiny"
+                  many: "je vyžadováno alespoň %{count} skupin"
+                  other: "je vyžadováno alespoň %{count} skupin"
+              categories:
+                at_least:
+                  one: "je vyžadována alespoň %{count} kategorie"
+                  few: "jsou vyžadovány alespoň %{count} kategorie"
+                  many: "je vyžadováno alespoň %{count} kategorií"
+                  other: "je vyžadováno alespoň %{count} kategorií"
+              tags:
+                at_least:
+                  one: "je vyžadován alespoň %{count} štítek"
+                  few: "jsou vyžadovány alespoň %{count} štítky"
+                  many: "je vyžadováno alespoň %{count} štítků"
+                  other: "je vyžadováno alespoň %{count} štítků"
+              string:
+                too_short:
+                  one: "musí mít alespoň %{count} znak"
+                  few: "musí mít alespoň %{count} znaky"
+                  many: "musí mít alespoň %{count} znaků"
+                  other: "musí mít alespoň %{count} znaků"
               number:
                 too_small: "musí být větší nebo rovno %{count}"
                 too_large: "musí být menší nebo roven %{count}"
@@ -6140,6 +6267,11 @@ cs:
         id_not_found: "Bohužel uživatel s tímto id není v našem systému."
         status: "Stav"
         show_emails: "Ukázat emailové adresy"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zavřít"
+              confirm: "Smazat"
         nav:
           new: "Noví"
           active: "Aktivní"
@@ -6379,8 +6511,8 @@ cs:
           confirm_delete: "Opravdu chcete smazat tento záznam DiscourseConnect?"
       user_fields:
         title: "Uživatelská pole"
-        help: "Přidej fields, které tvoji uživatelé mohou vyplnit."
-        create: "Vytvořit rozšíření"
+        add: "Přidat uživatelské pole"
+        new_header: "Přidat uživatelské pole"
         untitled: "Untitled"
         name: "Field Name"
         type: "Field Type"
@@ -6401,16 +6533,10 @@ cs:
             title: "Volitelné"
         editable:
           title: "Editovatelné po registraci"
-          enabled: "editovatelné"
-          disabled: "není editovatelné"
         show_on_profile:
           title: "Zveřejnit na uživatelském profilu"
-          enabled: "zveřejněno na profilu"
-          disabled: "nezveřejněno na profilu"
         show_on_user_card:
           title: "Zobrazit na kartě uživatele"
-          enabled: "zobrazeno na kartě uživatele"
-          disabled: "Nezobrazeno na kartě uživatele"
         field_types:
           text: "Text"
           confirm: "Potvrzení"
@@ -6428,7 +6554,6 @@ cs:
         show_overriden: "Zobrazit pouze změněné"
         show_outdated: "Zobrazit pouze zastaralé/neplatné"
         show_untranslated: "Zobrazit pouze nepřeložené"
-        only_show_selected_locale: "Zobrazit výsledky pouze ve vybraném jazyce"
         locale: "Jazyk:"
         more_than_50_results: "K dispozici je více než 50 výsledků. Zpřesněte prosím vyhledávání."
         no_results: "Nebyly nalezeny žádné odpovídající texty"
@@ -6454,6 +6579,8 @@ cs:
         uploaded_image_list:
           upload:
             label: "Nahrát"
+        table_column_heading:
+          status: "Stav"
         categories:
           all_results: "Všechny"
           required: "Nezbytnosti"
@@ -6540,6 +6667,7 @@ cs:
         none_selected: "Vyberte odznak, abyste mohli začít"
         allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát
+        visibility_heading: Viditelnost
         listable: Zobrazit odznak na veřejné stránce s odzanky
         enabled: zapnuto
         disabled: vypnuto
@@ -6608,6 +6736,7 @@ cs:
           grant_existing_holders: Udělit další odznaky stávajícím držitelům odznaků.
       emoji:
         title: "Emoji"
+        delete: "Smazat"
         uploading: "Nahrávání…"
         name: "Název"
         group: "Skupina"

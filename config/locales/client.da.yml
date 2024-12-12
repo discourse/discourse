@@ -1694,6 +1694,9 @@ da:
     form_kit:
       reset: Nulstil
       optional: valgfri
+      select:
+        select_placeholder: "Vælg…"
+        none_placeholder: "Ingen"
       errors:
         required: "Obligatoriske"
         invalid_url: "Skal være en gyldig URL"
@@ -3310,7 +3313,6 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -4209,6 +4211,12 @@ da:
         look_and_feel:
           themes:
             title: "Temaer"
+        user_fields:
+          type: "Type"
+          more_options:
+            move_up: "Flyt op"
+            move_down: "Flyt ned"
+          delete: "Slet"
       plugins:
         title: "Udvidelser"
         name: "Navn"
@@ -4945,6 +4953,11 @@ da:
         status: "Status"
         show_emails: "Vis Emails"
         hide_emails: "Skjul emails"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Luk"
+              confirm: "Slet"
         nav:
           new: "Ny"
           active: "Aktiv"
@@ -5197,8 +5210,6 @@ da:
           confirm_delete: "Er du sikker på at, du vil slette dette DiscourseConect-Indlæg?"
       user_fields:
         title: "Bruger felter"
-        help: "Tilføj felter, som dine brugere kan udfylde"
-        create: "Opret brugerfelt"
         untitled: "Ingen titel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5219,22 +5230,15 @@ da:
             title: "Valgfri"
         editable:
           title: "Kan rettes efter registrering"
-          enabled: "redigerbar"
-          disabled: "ikke redigerbar"
         show_on_profile:
           title: "Vis i offentlig profil"
-          enabled: "vist i profil"
-          disabled: "ikke vist i profil"
         show_on_user_card:
           title: "Vis på brugers profilkort"
-          enabled: "vist på brugerens profilkort"
-          disabled: "ikke vist på brugerens profilkort"
         searchable:
           title: "Søgbar"
-          enabled: "søgbar"
-          disabled: "ikke søgbar"
+          enabled: "Søgbar"
         field_types:
-          text: "Tekstfelt"
+          text: "Tekst"
           confirm: "Bekræft"
           dropdown: "Rulleboks"
           multiselect: "Multivælg"
@@ -5279,6 +5283,8 @@ da:
             label: "Overfør"
         selectable_avatars:
           title: "Liste over avatarer, som brugere kan vælge imellem"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alle"
           required: "Obligatoriske"
@@ -5353,6 +5359,7 @@ da:
         none_selected: "Vælg et emblem for at komme igang"
         allow_title: Tillad at bruge dette emblem som titel
         multiple_grant: Kan tildeles flere gange
+        visibility_heading: Synlighed
         listable: Vis emblemer på den offentlige emblem side
         enabled: aktiveret
         disabled: deaktiveret
@@ -5405,6 +5412,7 @@ da:
           grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:
         title: "Humørikon"
+        delete: "Slet"
         uploading: "Overfører…"
         name: "Navn"
         group: "Gruppe"

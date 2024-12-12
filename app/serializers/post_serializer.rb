@@ -38,6 +38,7 @@ class PostSerializer < BasicPostSerializer
              :flair_bg_color,
              :flair_color,
              :flair_group_id,
+             :badges_granted,
              :version,
              :can_edit,
              :can_delete,
@@ -221,6 +222,18 @@ class PostSerializer < BasicPostSerializer
 
   def flair_group_id
     object.user&.flair_group_id
+  end
+
+  def badges_granted
+    return [] unless SiteSetting.enable_badges && SiteSetting.show_badges_in_post_header
+
+    if @topic_view
+      user_badges = @topic_view.post_user_badges[object.id] || []
+    else
+      user_badges = UserBadge.for_post_header_badges([object])
+    end
+
+    user_badges.map { |user_badge| BasicUserBadgeSerializer.new(user_badge, scope: scope).as_json }
   end
 
   def link_counts

@@ -7,9 +7,9 @@ module("Unit | Model | invite", function (hooks) {
 
   test("create", function (assert) {
     const store = getOwner(this).lookup("service:store");
-    assert.ok(
-      store.createRecord("invite"),
-      "it can be created without arguments"
+    assert.true(
+      !!store.createRecord("invite"),
+      "can be created without arguments"
     );
   });
 });

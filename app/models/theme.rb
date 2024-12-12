@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 85
+  BASE_COMPILER_VERSION = 86
 
   class SettingsMigrationError < StandardError
   end
@@ -863,7 +863,7 @@ class Theme < ActiveRecord::Base
   end
 
   def migrate_settings(start_transaction: true, fields: nil, allow_out_of_sequence_migration: false)
-    block = -> do
+    block = ->(*) do
       runner = ThemeSettingsMigrationsRunner.new(self)
       results =
         runner.run(fields:, raise_error_on_out_of_sequence: !allow_out_of_sequence_migration)

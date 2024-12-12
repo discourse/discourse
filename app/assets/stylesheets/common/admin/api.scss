@@ -45,19 +45,15 @@ table.web-hooks.grid {
 
 // Api keys
 
-table.api-keys {
+.d-admin-table.api-keys {
   margin-bottom: 0.25em;
 
   tr.revoked {
-    color: var(--primary-medium);
+    color: var(--primary-high);
   }
 
   .d-admin-row__overview.key {
-    width: 30%;
-  }
-
-  .d-admin-row__content td {
-    vertical-align: middle;
+    width: 20%;
   }
 }
 

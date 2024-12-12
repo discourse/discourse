@@ -3,6 +3,7 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
 import toMarkdown from "discourse/lib/to-markdown";
@@ -11,9 +12,11 @@ import {
   clipboardHelpers,
   determinePostReplaceSelection,
   inCodeBlock,
+  setCaretPosition,
 } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 import { i18n } from "discourse-i18n";
 
 const INDENT_DIRECTION_LEFT = "left";
@@ -27,6 +30,8 @@ const OP = {
   REMOVED: 1,
   ADDED: 2,
 };
+
+const FOUR_SPACES_INDENT = "4-spaces-indent";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -42,17 +47,24 @@ export default class TextareaTextManipulation {
   @service appEvents;
   @service siteSettings;
   @service capabilities;
+  @service currentUser;
 
   eventPrefix;
   textarea;
   $textarea;
 
+  autocompleteHandler;
+  placeholder;
+
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
+    this.placeholder = new TextareaPlaceholderHandler(owner, this);
 
     this.eventPrefix = eventPrefix;
     this.textarea = textarea;
     this.$textarea = $(textarea);
+
+    this.autocompleteHandler = new TextareaAutocompleteHandler(textarea);
 
     generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
@@ -178,6 +190,10 @@ export default class TextareaTextManipulation {
         newSelection.end - newSelection.start
       );
     }
+  }
+
+  applySurroundSelection(head, tail, exampleKey, opts) {
+    this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
   }
 
   applySurround(sel, head, tail, exampleKey, opts) {
@@ -337,13 +353,7 @@ export default class TextareaTextManipulation {
   }
 
   _insertAt(start, end, text) {
-    this.textarea.setSelectionRange(start, end);
-    this.textarea.focus();
-    if (start !== end && text === "") {
-      document.execCommand("delete", false);
-    } else {
-      document.execCommand("insertText", false, text);
-    }
+    insertAtTextarea(this.textarea, start, end, text);
   }
 
   extractTable(text) {
@@ -737,6 +747,7 @@ export default class TextareaTextManipulation {
     );
   }
 
+  @bind
   toggleDirection() {
     let currentDir = this.$textarea.attr("dir")
         ? this.$textarea.attr("dir")
@@ -746,7 +757,256 @@ export default class TextareaTextManipulation {
     this.$textarea.attr("dir", newDir).focus();
   }
 
-  autocomplete() {
-    return this.$textarea.autocomplete(...arguments);
+  @bind
+  applyList(sel, head, exampleKey, opts) {
+    if (sel.value.includes("\n")) {
+      this.applySurround(sel, head, "", exampleKey, opts);
+    } else {
+      const [hval, hlen] = getHead(head);
+      if (sel.start === sel.end) {
+        sel.value = i18n(`composer.${exampleKey}`);
+      }
+
+      const number = sel.value.startsWith(hval)
+        ? sel.value.slice(hlen)
+        : `${hval}${sel.value}`;
+
+      const preNewlines = sel.pre.trim() && "\n\n";
+      const postNewlines = sel.post.trim() && "\n\n";
+
+      const textToInsert = `${preNewlines}${number}${postNewlines}`;
+
+      const preChars = sel.pre.length - sel.pre.trimEnd().length;
+      const postChars = sel.post.length - sel.post.trimStart().length;
+
+      this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
+      this.selectText(
+        sel.start + (preNewlines.length - preChars),
+        number.length
+      );
+    }
+  }
+
+  @bind
+  formatCode() {
+    const sel = this.getSelected("", { lineVal: true });
+    const selValue = sel.value;
+    const hasNewLine = selValue.includes("\n");
+    const isBlankLine = sel.lineVal.trim().length === 0;
+    const isFourSpacesIndent =
+      this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT;
+
+    if (!hasNewLine) {
+      if (selValue.length === 0 && isBlankLine) {
+        if (isFourSpacesIndent) {
+          const example = i18n(`composer.code_text`);
+          this._insertAt(sel.start, sel.end, `    ${example}`);
+          return this.selectText(sel.pre.length + 4, example.length);
+        } else {
+          return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
+        }
+      } else {
+        return this.applySurround(sel, "`", "`", "code_title");
+      }
+    } else {
+      if (isFourSpacesIndent) {
+        return this.applySurround(sel, "    ", "", "code_text");
+      } else {
+        const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
+        const postNewline = sel.post[0] !== "\n" ? "\n" : "";
+        return this.addText(
+          sel,
+          `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
+        );
+      }
+    }
+  }
+
+  putCursorAtEnd() {
+    putCursorAtEnd(this.textarea);
+  }
+
+  autocomplete(options) {
+    return this.$textarea.autocomplete(
+      options instanceof Object
+        ? { textHandler: this.autocompleteHandler, ...options }
+        : options
+    );
+  }
+}
+
+function insertAtTextarea(textarea, start, end, text) {
+  textarea.setSelectionRange(start, end);
+  textarea.focus();
+  if (start !== end && text === "") {
+    document.execCommand("delete", false);
+  } else {
+    document.execCommand("insertText", false, text);
+  }
+}
+
+export class TextareaAutocompleteHandler {
+  textarea;
+  $textarea;
+
+  constructor(textarea) {
+    this.textarea = textarea;
+    this.$textarea = $(textarea);
+  }
+
+  get value() {
+    return this.textarea.value;
+  }
+
+  replaceTerm({ start, end, term }) {
+    const space = this.value.substring(end + 1, end + 2) === " " ? "" : " ";
+    insertAtTextarea(this.textarea, start, end + 1, term + space);
+    setCaretPosition(this.textarea, start + 1 + term.trim().length);
+  }
+
+  getCaretPosition() {
+    return caretPosition(this.textarea);
+  }
+
+  getCaretCoords(start) {
+    return this.$textarea.caretPosition({ pos: start + 1 });
+  }
+
+  async inCodeBlock() {
+    return inCodeBlock(
+      this.$textarea.value ?? this.$textarea.val(),
+      caretPosition(this.$textarea)
+    );
+  }
+}
+
+class TextareaPlaceholderHandler {
+  @service composer;
+
+  textManipulation;
+
+  #placeholders = {};
+
+  constructor(owner, textManipulation) {
+    setOwner(this, owner);
+
+    this.textManipulation = textManipulation;
+  }
+
+  #uploadPlaceholder(file, currentMarkdown) {
+    const clipboard = i18n("clipboard");
+    const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(
+      file,
+      currentMarkdown
+    );
+    const filename = uploadFilenamePlaceholder
+      ? uploadFilenamePlaceholder
+      : clipboard;
+
+    let placeholder = `[${i18n("uploading_filename", { filename })}]()\n`;
+    if (!this.#cursorIsOnEmptyLine()) {
+      placeholder = `\n${placeholder}`;
+    }
+
+    return placeholder;
+  }
+
+  #cursorIsOnEmptyLine() {
+    const selectionStart = this.textManipulation.textarea.selectionStart;
+    return (
+      selectionStart === 0 ||
+      this.textManipulation.value.charAt(selectionStart - 1) === "\n"
+    );
+  }
+
+  #uploadFilenamePlaceholder(file, currentMarkdown) {
+    const filename = this.#filenamePlaceholder(file);
+
+    // when adding two separate files with the same filename search for matching
+    // placeholder already existing in the editor ie [Uploading: test.png…]
+    // and add order nr to the next one: [Uploading: test.png(1)…]
+    const escapedFilename = escapeRegExp(filename);
+    const regexString = `\\[${i18n("uploading_filename", {
+      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
+    })}\\]\\(\\)`;
+    const globalRegex = new RegExp(regexString, "g");
+    const matchingPlaceholder = currentMarkdown.match(globalRegex);
+    if (matchingPlaceholder) {
+      // get last matching placeholder and its consecutive nr in regex
+      // capturing group and apply +1 to the placeholder
+      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
+      const regex = new RegExp(regexString);
+      const orderNr = regex.exec(lastMatch)[1]
+        ? parseInt(regex.exec(lastMatch)[1], 10) + 1
+        : 1;
+      return `${filename}(${orderNr})`;
+    }
+
+    return filename;
+  }
+
+  #filenamePlaceholder(data) {
+    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
+  }
+
+  insert(file) {
+    const placeholder = this.#uploadPlaceholder(
+      file,
+      this.composer.model.reply
+    );
+
+    this.textManipulation.insertText(placeholder);
+
+    this.#placeholders[file.id] = { uploadPlaceholder: placeholder };
+  }
+
+  progress(file) {
+    let placeholderData = this.#placeholders[file.id];
+    placeholderData.processingPlaceholder = `[${i18n("processing_filename", {
+      filename: file.name,
+    })}]()\n`;
+
+    this.textManipulation.replaceText(
+      placeholderData.uploadPlaceholder,
+      placeholderData.processingPlaceholder
+    );
+
+    // Safari applies user-defined replacements to text inserted programmatically.
+    // One of the most common replacements is ... -> …, so we take care of the case
+    // where that transformation has been applied to the original placeholder
+    this.textManipulation.replaceText(
+      placeholderData.uploadPlaceholder.replace("...", "…"),
+      placeholderData.processingPlaceholder
+    );
+  }
+
+  progressComplete(file) {
+    let placeholderData = this.#placeholders[file.id];
+    this.textManipulation.replaceText(
+      placeholderData.processingPlaceholder,
+      placeholderData.uploadPlaceholder
+    );
+  }
+
+  cancelAll() {
+    Object.values(this.#placeholders).forEach((data) => {
+      this.textManipulation.replaceText(data.uploadPlaceholder, "");
+    });
+  }
+
+  cancel(file) {
+    if (this.#placeholders[file.id]) {
+      this.textManipulation.replaceText(
+        this.#placeholders[file.id].uploadPlaceholder,
+        ""
+      );
+    }
+  }
+
+  success(file, markdown) {
+    this.textManipulation.replaceText(
+      this.#placeholders[file.id].uploadPlaceholder.trim(),
+      markdown
+    );
   }
 }

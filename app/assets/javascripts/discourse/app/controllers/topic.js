@@ -848,12 +848,7 @@ export default class TopicController extends Controller.extend(
       return false;
     }
 
-    const composer = this.composer;
-    let topic = this.model;
-    const composerModel = composer.get("model");
-    let editingFirst =
-      composerModel &&
-      (post.get("firstPost") || composerModel.get("editingFirstPost"));
+    const topic = this.model;
 
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
@@ -872,22 +867,14 @@ export default class TopicController extends Controller.extend(
       opts.destinationCategoryId = topic.get("destination_category_id");
     }
 
-    // Reopen the composer if we're editing the same post
-    const editingExisting =
-      post.id === composerModel?.post?.id &&
-      opts?.action === Composer.EDIT &&
-      composerModel?.draftKey === opts.draftKey;
-    if (editingExisting) {
-      composer.unshrink();
-      return;
-    }
+    const { composer } = this;
+    const composerModel = composer.get("model");
+    const editingSamePost =
+      opts.post.id === composerModel?.post?.id &&
+      opts.action === composerModel?.action &&
+      opts.draftKey === composerModel?.draftKey;
 
-    // Cancel and reopen the composer for the first post
-    if (editingFirst) {
-      composer.cancelComposer(opts).then(() => composer.open(opts));
-    } else {
-      composer.open(opts);
-    }
+    return editingSamePost ? composer.unshrink() : composer.open(opts);
   }
 
   @action

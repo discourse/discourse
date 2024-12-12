@@ -129,7 +129,7 @@ zh_CN:
       header_indicator_preference:
         title: "在标题中显示活动指示器"
         all_new: "所有新消息"
-        dm_and_mentions: "直接消息、提及和关注的消息串"
+        dm_and_mentions: "直接消息、提及和关注的对话"
         only_mentions: "仅限提及"
         never: "永不"
       separate_sidebar_mode:
@@ -570,13 +570,13 @@ zh_CN:
         notifications:
           regular:
             title: "正常"
-            description: "当有人在此消息串中提及您时获得通知。"
+            description: "当有人在此对话中提及您时获得通知。"
           tracking:
             title: "跟踪"
-            description: "当有人在此消息串中提及您时获得通知，并在消息串列表中看到新回复的数量。"
+            description: "当有人在此对话中提及您时获得通知，并在对话列表中看到新回复的数量。"
           watching:
-            title: "关注"
-            description: "获得关于此消息串的所有回复的通知，并在消息串列表中看到新回复的数量。"
+            title: "正在关注"
+            description: "获得关于此对话中的所有回复的通知，并在对话列表中看到新回复的数量。"
         participants_other_count:
           other: "+%{count}"
       thread_title_toast:
@@ -617,10 +617,10 @@ zh_CN:
         chat_message: "新的聊天消息"
         chat_quoted: "%{username} 引用了您的聊天消息"
       titles:
-        chat_mention: "聊天提及"
-        chat_invitation: "聊天邀请"
-        chat_quoted: "已引用聊天"
-        chat_watched_thread: "关注聊天的消息串"
+        chat_mention: "聊天中提到"
+        chat_invitation: "受邀加入聊天频道"
+        chat_quoted: "引用聊天信息"
+        chat_watched_thread: "已查看聊天话题"
     action_codes:
       chat:
         enabled: '%{who} 于 %{when} 启用了<button class="btn-link open-chat">聊天</button>'

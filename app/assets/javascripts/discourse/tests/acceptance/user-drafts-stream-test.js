@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("User Drafts", function (needs) {
   needs.user();
@@ -30,19 +30,15 @@ acceptance("User Drafts", function (needs) {
     assert.dom(".user-stream-item").exists("has drafts");
 
     await click(".user-stream-item .resume-draft");
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      "A fun new topic for testing drafts."
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(/A fun new topic for testing drafts./);
   });
 
   test("Stream - has excerpt", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
     assert.dom(".user-stream-item").exists("has drafts");
-    assert.strictEqual(
-      query(".user-stream-item:nth-child(3) .category").textContent,
-      "meta"
-    );
+    assert.dom(".user-stream-item:nth-child(3) .category").hasText("meta");
     assert
       .dom(".user-stream-item:nth-child(3) .excerpt")
       .hasHtml(

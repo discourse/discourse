@@ -367,6 +367,7 @@ sk:
       invalid_site_setting: "Neexistuje žiadne nastavenie s názvom '%{name}'"
       invalid_category_id: "Zadali ste kategóriu, ktorá neexistuje"
       site_setting_is_hidden: "Nie je povolené meniť skryté nastavenia"
+      site_setting_is_shadowed_globally: "Toto nastavenie nemôžete zmeniť, pretože je globálne nakonfigurované"
       site_setting_is_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia"
       invalid_choice:
         one: "'%{name}' je neplatná voľba."
@@ -689,7 +690,7 @@ sk:
       admins: "Zodpovednosť za konfiguráciu a údržbu tejto stránky s prístupom ku všetkým údajom o členoch a aktivitách"
       moderators: "Zodpovedá za odpovede na príznaky, moderovanie diskusií a pomoc členom s ich účtami."
       trust_level_0: "Noví členovia s obmedzenými schopnosťami, ktorí sa učia normám a funkčnosti komunity"
-      trust_level_1: "Členovia s väčšou dôverou, ktorí preukázali počiatočnú angažovanosť čítaním rukou, majú teraz prístup k viacerým funkciám. Všetci členovia tejto skupiny sú zároveň členmi skupiny trust_level_0."
+      trust_level_1: "Členovia s väčšou dôverou, ktorí preukázali počiatočnú angažovanosť čítaním a teraz majú prístup k viacerým funkciám. Všetci členovia tejto skupiny sú zároveň členmi skupiny trust_level_0."
       trust_level_2: "Aktívni členovia, ktorí sústavne prispievali nadčasmi a získali plné občianske práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_1 a trust_level_0."
       trust_level_3: "Vysoko angažovaní, dlhodobí prispievatelia, ktorí tvoria základ komunity a získali obmedzené moderátorské práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_2, trust_level_1 a trust_level_0."
       trust_level_4: "Ručne povýšení členovia, ktorí boli ocenení svojimi príkladnými príspevkami a ktorým boli zverené ďalšie moderátorské práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_3, trust_level_2, trust_level_1 a trust_level_0."
@@ -773,6 +774,8 @@ sk:
       user_profile:
         bio_raw: "O mne"
       user:
+        password: "Heslo"
+      user_password:
         password: "Heslo"
     errors:
       models:
@@ -1921,7 +1924,11 @@ sk:
     pending_users_reminder_delay_minutes: "Upozorniť moderátorov, ak noví používatelia čakajú na schválenie dlhšie ako tento počet minút. Nastavte na -1, ak chcete vypnúť upozornenia."
     persistent_sessions: "Používatelia zostanú prihlásení aj po zatvorení webového prehliadača"
     maximum_session_age: "Používateľ zostane prihlásený n hodín od poslednej návštevy"
-    experimental_full_page_login: "Nahradenie modálneho formulára na prihlásenie/registráciu celostránkovým formulárom na prihlásenie/registráciu."
+    full_page_login: "Zobraziť prihlasovacie a registračné formuláre na celej stránke (ak nie je začiarknuté, používatelia uvidia formuláre v modálnom okne). "
+    show_signup_form_email_instructions: Zobrazte e-mailové pokyny vo formulári na registráciu.
+    show_signup_form_username_instructions: Zobrazenie pokynov k používateľskému menu vo formulári na registráciu.
+    show_signup_form_full_name_instructions: Zobrazenie pokynov na celé meno vo formulári na registráciu.
+    show_signup_form_password_instructions: Zobrazenie pokynov na zadanie hesla v registračnom formulári.
     ga_version: "Verzia služby Google Universal Analytics, ktorú chcete používať: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "ID kód sledovania Google Universal Analytics, napr: UA-12345678-9; pozri <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Názov domény Google Universal Analytics, napr.: mysite.com; pozrite si <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1973,10 +1980,11 @@ sk:
     send_old_credential_reminder_days: "Pripomenúť staré poverenia po niekoľkých dňoch"
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoľte systém odznakov, ktorý je formou gamifikácie na posilnenie pozitívnych akcií používateľov. Viac informácií nájdete v časti <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Čo sú odznaky</a>? na stránke Discourse Meta."
+    show_badges_in_post_header: "Keď používateľ získa odznak za konkrétny príspevok, zobrazte odznak v hlavičke príspevku."
     max_favorite_badges: "Maximálny počet odznakov, ktoré môže používateľ vybrať"
     whispers_allowed_groups: "Povolenie súkromnej komunikácie v rámci tém pre členov určených skupín."
     hidden_post_visible_groups: "Povoliť členom týchto skupín zobrazovať skryté príspevky. Členovia personálu môžu vždy zobraziť skryté príspevky."
-    allow_index_in_robots_txt: "V súbore robots.txt uveďte, že túto stránku môžu webové vyhľadávače indexovať. Vo výnimočných prípadoch môžete natrvalo <a href='%{base_path}/admin/customize/robots'>prepísať súbor robots.txt</a>."
+    allow_index_in_robots_txt: "V súbore robots.txt uveďte, že túto stránku môžu webové vyhľadávače indexovať. Tu môžete <a href='%{base_path}/admin/customize/robots'>prepísať svoj súbor robots.txt.</a> <b>UPOZORNENIE</b>: Nesprávne nakonfigurované pravidlá môžu zabrániť prehľadávaniu vašej lokality podľa očakávania."
     blocked_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, s ktorými si používatelia nemôžu registrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. Príklad: mailinator.com|trashmail.net"
     allowed_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, v ktorých si používatelia MUSIA zaregistrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. UPOZORNENIE: Používatelia s inými e-mailovými doménami ako sú uvedené nebudú povolení!"
     normalize_emails: "Skontroluj, či je normalizovaný e-mail jedinečný. Normalizovaný e-mail odstraňuje všetky bodky z používateľského mena a všetko medzi znakmi + a @."
@@ -2597,7 +2605,6 @@ sk:
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
-    experimental_topics_filter: "Povolí trasu filtrovania experimentálnych tém na adrese /filter"
     enable_experimental_lightbox: "Nahraďte predvolený lightbox s obrázkami prepracovaným dizajnom."
     experimental_glimmer_topic_list_groups: "Povolenie novej implementácie zoznamu tém \"glimmer\". Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
@@ -2971,6 +2978,7 @@ sk:
       few: "Používateľ %{username} má %{count} príspevkov vo verejnej téme alebo osobnej správe, takže ich nemožno odstrániť."
       many: "Používateľ %{username} má %{count} príspevkov vo verejnej téme alebo osobnej správe, takže ich nemožno odstrániť."
       other: "Používateľ %{username} má %{count} príspevky vo verejných témach alebo osobných správach, takže ich nemožno vymazať."
+    cannot_bulk_delete: "Jedného alebo viacerých používateľov nemožno odstrániť, pretože sú správcom, majú príliš veľa príspevkov alebo majú veľmi starý príspevok."
   unsubscribe_mailer:
     title: "Odhlásenie mailerov"
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z %{site_title}"
@@ -4823,7 +4831,7 @@ sk:
       name: Bežné
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Poskytnuté</a> prekategorizovať, premenovať, sledované odkazy, wiki, viac likes
       long_description: |
-        Tento odznak získate, keď dosiahnete úroveň dôveryhodnosti 3. Ďakujeme, že ste boli pravidelnou súčasťou našej komunity počas niekoľkých mesiacov. Teraz patríte medzi najaktívnejších čitateľov a spoľahlivých prispievateľov, ktorí robia našu komunitu skvelou. Teraz môžete prekategorizovať a premenovať témy, využívať silnejšie príznaky spamu, získať prístup do súkromnej oddychovej zóny a tiež dostanete oveľa viac lajkov za deň.
+        Tento odznak získate, keď dosiahnete úroveň dôveryhodnosti 3. Ďakujeme, že ste boli pravidelnou súčasťou našej komunity počas niekoľkých mesiacov. Teraz patríte medzi najaktívnejších čitateľov a spoľahlivých prispievateľov, ktorí robia našu komunitu skvelou. Teraz môžete témy prekategorizovať a premenovať, využívať silnejšie príznaky spamu a tiež získate oveľa viac lajkov za deň.
     leader:
       name: Vodca
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Povolené</a> globálne úpravy, pripnutie, zatvorenie, archivácia, rozdelenie a zlúčenie, viac rád
@@ -5293,6 +5301,7 @@ sk:
         other: "Automaticky odvolané, vytvorené pred viac ako %{count} dňami"
       revoked: Odvolané
       restored: Obnovené
+    bulk_user_delete: "odstránené v operácii hromadného vymazania"
   reviewables:
     already_handled: "Ďakujeme, ale tento príspevok sme už preskúmali a rozhodli sme, že ho netreba znova označiť."
     already_handled_and_user_not_exist: "Ďakujem, ale niekto to už preskúmal a tento používateľ už neexistuje."

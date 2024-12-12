@@ -30,13 +30,13 @@ RSpec.describe EmailStyle do
       let(:invite_mail) { InviteMailer.send_invite(invite) }
 
       it "applies customizations" do
-        expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+        expect(mail_html.scan('<h1 style="color:red">FOR YOU</h1>').count).to eq(1)
         expect(mail_html).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
       end
 
       it "applies customizations if compiled is missing" do
         SiteSetting.remove_override!(:email_custom_css_compiled)
-        expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+        expect(mail_html.scan('<h1 style="color:red">FOR YOU</h1>').count).to eq(1)
         expect(mail_html).to match("#{Discourse.base_url}/invites/#{invite.invite_key}")
       end
 
@@ -71,10 +71,10 @@ RSpec.describe EmailStyle do
       it "customizations are applied to html part of emails" do
         SiteSetting.default_email_in_reply_to = true
 
-        expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+        expect(mail_html.scan('<h1 style="color:red">FOR YOU</h1>').count).to eq(1)
         matches = mail_html.match(/<div style="([^"]+)" dm=\"body\">#{post.raw}/)
-        expect(matches[1]).to include("color: #FAB;") # custom
-        expect(matches[1]).to include("padding-top:5px;") # div.body
+        expect(matches[1]).to include("color:#FAB") # custom
+        expect(matches[1]).to include("padding-top:5px") # div.body
       end
 
       # TODO: translation override
@@ -86,7 +86,7 @@ RSpec.describe EmailStyle do
       let(:signup_mail) { UserNotifications.signup(Fabricate(:user)) }
 
       it "customizations are applied to html part of emails" do
-        expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+        expect(mail_html.scan('<h1 style="color:red">FOR YOU</h1>').count).to eq(1)
         expect(mail_html).to include("activate-account")
       end
 
@@ -107,7 +107,7 @@ RSpec.describe EmailStyle do
         end
 
         it "applies customizations when translation override exists" do
-          expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+          expect(mail_html.scan('<h1 style="color:red">FOR YOU</h1>').count).to eq(1)
           expect(mail_html.scan("CLICK THAT LINK").count).to eq(1)
         end
       end
@@ -135,13 +135,13 @@ RSpec.describe EmailStyle do
       let(:summary_email) { UserNotifications.digest(Fabricate(:user)) }
 
       it "customizations are applied to html part of emails" do
-        expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
+        expect(mail_html.scan('<h1 style="color:red">FOR YOU</h1>').count).to eq(1)
         expect(mail_html).to include(popular_topic.title)
       end
 
       it "doesn't apply customizations if apply_custom_styles_to_digest is disabled" do
         SiteSetting.apply_custom_styles_to_digest = false
-        expect(mail_html).to_not include('<h1 style="color: red;">FOR YOU</h1>')
+        expect(mail_html).to_not include('<h1 style="color:red">FOR YOU</h1>')
         expect(mail_html).to_not include("FOR YOU")
         expect(mail_html).to include(popular_topic.title)
       end

@@ -2,26 +2,6 @@
   --pm-border-radius: 0;
   --pm-padding: 1.25em;
 
-  @keyframes current-user-background-fade-highlight {
-    0% {
-      background-color: var(--secondary);
-      border-color: var(--primary-low);
-    }
-    100% {
-      background-color: var(--tertiary-very-low);
-      border-color: transparent;
-    }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .topic-body.highlighted {
-      animation: none;
-      .regular.contents {
-        animation: background-fade-highlight 2.5s ease-out;
-      }
-    }
-  }
-
   .topic-post {
     margin-bottom: 0.5em;
     &:last-child {
@@ -83,6 +63,10 @@
     padding-left: calc(
       48px - var(--pm-padding)
     ); // 48px is the width of the avatar
+    display: grid;
+    grid-template-areas: "contents additional" "pm-map pm-map";
+    grid-template-columns: 1fr auto;
+
     section {
       border: none;
       background: var(--primary-very-low);
@@ -93,8 +77,22 @@
       padding-top: var(--pm-padding);
     }
 
+    &__contents,
+    &__additional-contents {
+      padding-top: var(--pm-padding);
+    }
+
+    &__contents {
+      grid-area: contents;
+    }
+
+    &__additional-contents {
+      grid-area: additional;
+    }
+
     &__private-message-map {
-      padding-bottom: var(--pm-padding);
+      grid-area: pm-map;
+      padding: 0.5em var(--pm-padding) var(--pm-padding);
     }
 
     .participants {
@@ -159,13 +157,6 @@
       background: var(--tertiary-very-low);
       border-color: var(--tertiary-very-low);
     }
-    @media (prefers-reduced-motion: no-preference) {
-      .topic-body.highlighted {
-        .regular.contents {
-          animation: current-user-background-fade-highlight 2.5s ease-out;
-        }
-      }
-    }
     .embedded-posts {
       .topic-body .cooked {
         background: transparent;
@@ -197,9 +188,6 @@
 
     &.current-user-post .topic-body .regular.contents {
       border: 2px dashed var(--tertiary-low);
-      @media (prefers-reduced-motion: no-preference) {
-        animation: background-fade-highlight 2.5s ease-out;
-      }
     }
   }
 

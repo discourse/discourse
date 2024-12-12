@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { array, concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -20,6 +20,7 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
@@ -184,6 +185,14 @@ export default class Item extends Component {
     }
   }
 
+  get useMobileLayout() {
+    return applyValueTransformer(
+      "topic-list-item-mobile-layout",
+      this.site.mobileView,
+      { topic: this.args.topic }
+    );
+  }
+
   <template>
     <tr
       {{! template-lint-disable no-invalid-interactive }}
@@ -208,26 +217,16 @@ export default class Item extends Component {
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
         this.tagClassNames
+        (applyValueTransformer
+          "topic-list-item-class" (array) (hash topic=@topic index=@index)
+        )
       }}
     >
       <PluginOutlet
         @name="above-topic-list-item"
         @outletArgs={{hash topic=@topic}}
       />
-      {{#if this.site.desktopView}}
-        {{#each @columns as |entry|}}
-          <entry.value.item
-            @topic={{@topic}}
-            @bulkSelectEnabled={{@bulkSelectEnabled}}
-            @onBulkSelectToggle={{this.onBulkSelectToggle}}
-            @isSelected={{this.isSelected}}
-            @showTopicPostBadges={{@showTopicPostBadges}}
-            @hideCategory={{@hideCategory}}
-            @tagsForUser={{@tagsForUser}}
-            @expandPinned={{this.expandPinned}}
-          />
-        {{/each}}
-      {{else}}
+      {{#if this.useMobileLayout}}
         <td class="topic-list-data">
           <div class="pull-left">
             {{#if @bulkSelectEnabled}}
@@ -333,6 +332,19 @@ export default class Item extends Component {
             </div>
           </div>
         </td>
+      {{else}}
+        {{#each @columns as |entry|}}
+          <entry.value.item
+            @topic={{@topic}}
+            @bulkSelectEnabled={{@bulkSelectEnabled}}
+            @onBulkSelectToggle={{this.onBulkSelectToggle}}
+            @isSelected={{this.isSelected}}
+            @showTopicPostBadges={{@showTopicPostBadges}}
+            @hideCategory={{@hideCategory}}
+            @tagsForUser={{@tagsForUser}}
+            @expandPinned={{this.expandPinned}}
+          />
+        {{/each}}
       {{/if}}
     </tr>
   </template>

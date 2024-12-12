@@ -5,24 +5,10 @@
   box-sizing: border-box;
   display: flex;
   z-index: z("composer", "content") - 1;
-  padding: 0 1rem;
+  padding: 0 0.67em;
 
   &.-clickable {
     cursor: pointer;
-  }
-
-  &.-full-title {
-    .c-navbar__title {
-      min-height: var(--chat-header-offset);
-    }
-
-    .c-navbar__title,
-    .c-navbar__title-text {
-      height: auto;
-      overflow: visible;
-      white-space: normal;
-      text-overflow: unset;
-    }
   }
 }
 
@@ -35,7 +21,6 @@
   container-type: inline-size;
 
   .is-collapsed & {
-    margin-left: 1rem;
     &__title {
       margin-left: 0 !important;
     }
@@ -46,7 +31,7 @@
           content: "";
           position: absolute;
           height: 100%;
-          left: 0;
+          left: -1rem;
           width: calc(100cqw - 2.3em + 1rem);
         }
 
@@ -64,16 +49,11 @@
   .single-select-header {
     padding: 0.3675rem 0.584rem;
   }
-
-  > .c-navbar__title:first-child {
-    .chat-drawer & {
-      margin-left: 1rem;
-    }
-  }
 }
 
 .c-navbar__back-button {
   height: var(--chat-header-offset);
+  padding: 0.5rem 0.8rem 0.5rem 0.25rem;
 }
 
 .c-navbar__channel-title {

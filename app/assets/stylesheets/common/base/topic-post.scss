@@ -257,6 +257,24 @@
 
   .names {
     margin-right: auto;
+
+    .first {
+      flex-shrink: 0;
+    }
+  }
+
+  .user-badge-buttons {
+    display: flex;
+    flex-shrink: 0;
+
+    a {
+      background: none;
+    }
+
+    .user-badge {
+      background: none;
+      border: none;
+    }
   }
 
   .post-infos {
@@ -265,8 +283,9 @@
     align-items: center;
   }
 
-  .user-status-message {
+  .user-status-message-wrap {
     display: flex;
+    flex-shrink: 0;
 
     img.emoji {
       width: 1em;
@@ -831,17 +850,6 @@ aside.quote {
   .group-request {
     border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .topic-body.highlighted,
-  .small-action-desc.highlighted {
-    animation: background-fade-highlight 2.5s ease-out;
-  }
-  // Disable animation so deleted status is visible immediately
-  .deleted .topic-body.highlighted {
-    animation: none;
   }
 }
 
@@ -1414,70 +1422,6 @@ span.mention {
     width: var(--topic-avatar-width);
     color: var(--primary-high);
     margin-right: var(--topic-body-width-padding);
-  }
-}
-
-html.anon #topic-footer-buttons {
-  display: flex;
-  justify-content: end;
-}
-
-#topic-footer-buttons {
-  margin: var(--below-topic-margin) 0;
-  padding: 0;
-
-  .topic-footer-main-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch; // aligns items by making them the same height
-    button,
-    details {
-      margin-right: 0.54em;
-    }
-
-    > * {
-      margin-bottom: 0.5em; // all immediate children should have a bottom margin in case of wrapping
-    }
-
-    .topic-admin-menu-button-container {
-      display: inline-flex;
-
-      .topic-admin-menu-button {
-        display: flex; // to make this button match siblings behavior, all of its parents need to be flex
-      }
-    }
-  }
-
-  .pinned-button:not(.is-hidden) + .topic-notifications-button {
-    margin-top: 0;
-  }
-
-  .pinned-button,
-  .topic-notifications-button {
-    margin: 0.5em 0 1em;
-
-    .reason {
-      color: var(--primary-high);
-      display: inline-flex;
-      margin: 0;
-      align-items: center;
-
-      .dropdown-select-box {
-        .select-kit-selected-name {
-          width: 100%;
-          overflow: hidden;
-        }
-
-        .name {
-          @include ellipsis;
-        }
-      }
-
-      .text {
-        margin-left: 0.5em;
-        line-height: var(--line-height-medium);
-      }
-    }
   }
 }
 

@@ -67,7 +67,7 @@ class DiscourseLogstashLogger < Logger
       "pid" => PROCESS_PID,
       "type" => @type.to_s,
       "host" => HOST,
-      "git_version" => GitUtils.git_version,
+      "git_version" => GIT_VERSION,
     }
 
     # Only log backtrace and env for Logger::WARN and above.

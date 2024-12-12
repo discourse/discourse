@@ -1453,6 +1453,8 @@ id:
     form_kit:
       reset: Reset
       optional: opsional
+      select:
+        none_placeholder: "Tidak ada"
     close: "Tutup"
     assets_changed_confirm: "Situs ini baru saja menerima pembaruan perangkat lunak. Dapatkan versi terbaru sekarang?"
     logout: "Anda telah keluar."
@@ -2045,7 +2047,6 @@ id:
       with_topics: "%{filter} topik"
       with_category: "%{filter} %{category} topik"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -2452,6 +2453,9 @@ id:
             post: "post"
             require_message: "Minta pengguna untuk memberikan alasan tambahan"
             require_message_description: "Saat tanda ini dipilih, kolom teks akan ditampilkan bagi pengguna untuk memberikan detail tambahan tentang alasan mereka menandai konten"
+        user_fields:
+          type: "Tipe"
+          delete: "Hapus"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"
@@ -2667,6 +2671,11 @@ id:
         last_emailed: "Terakhir Surel Dikirimkan"
         not_found: "Maaf, username tersebut tidak ada ditemukan."
         status: "Status"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Tutup"
+              confirm: "Hapus"
         nav:
           new: "Baru"
           active: "Aktif"
@@ -2770,6 +2779,8 @@ id:
         uploaded_image_list:
           upload:
             label: "Unggah"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Semua"
           users: "Pengguna"
@@ -2800,6 +2811,7 @@ id:
         disabled: dinonaktifkan
         select_an_icon: "Pilih ikon"
       emoji:
+        delete: "Hapus"
         uploading: "Mengunggah…"
         name: "Nama"
         settings: "Pengaturan"

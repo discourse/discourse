@@ -1420,6 +1420,9 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
+      select:
+        select_placeholder: "選取…"
+        none_placeholder: "無"
       errors:
         required: "必要設定"
         too_short:
@@ -2673,7 +2676,6 @@ zh_TW:
       with_topics: "%{filter} 話題"
       with_category: "%{filter} %{category} 話題"
       filter:
-        title: "過濾"
         button:
           label: "過濾"
       latest:
@@ -3370,6 +3372,9 @@ zh_TW:
         look_and_feel:
           themes:
             title: "佈景主題"
+        user_fields:
+          type: "類型"
+          delete: "刪除"
       plugins:
         title: "外掛"
         name: "名稱"
@@ -3971,6 +3976,11 @@ zh_TW:
         status: "狀態"
         show_emails: "顯示電子郵件"
         hide_emails: "隱藏 email"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "關閉"
+              confirm: "刪除"
         nav:
           new: "新使用者"
           active: "啟用的"
@@ -4168,8 +4178,6 @@ zh_TW:
           external_avatar_url: "個人資料圖片 URL"
       user_fields:
         title: "使用者欄位"
-        help: "增加欄位讓你的使用者可以填寫"
-        create: "建立使用者欄位"
         untitled: "未命名"
         name: "欄位名稱"
         type: "欄位類別"
@@ -4190,21 +4198,15 @@ zh_TW:
             title: "選擇性"
         editable:
           title: "註冊後可以修改"
-          enabled: "可編輯"
-          disabled: "不可編輯"
         show_on_profile:
           title: "顯示在公開的基本資料裡"
-          enabled: "在基本資料裡顯示"
-          disabled: "不在基本資料裡顯示"
         show_on_user_card:
           title: "在使用者卡片上顯示"
-          enabled: "在使用者卡片上顯示"
-          disabled: "在使用者卡片上隱藏"
         searchable:
           title: "可搜尋"
           enabled: "可搜尋"
         field_types:
-          text: "文字區域"
+          text: "文字"
           confirm: "確認"
           dropdown: "下拉"
       site_text:
@@ -4241,6 +4243,8 @@ zh_TW:
             label: "上傳"
         selectable_avatars:
           title: "使用者可選擇的頭像列表"
+        table_column_heading:
+          status: "狀態"
         categories:
           all_results: "全部"
           required: "必要設定"
@@ -4308,6 +4312,7 @@ zh_TW:
         none_selected: "選擇一個徽章開始"
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
+        visibility_heading: 能見度
         listable: 在徽章頁面上顯示徽章
         enabled: 啟用
         disabled: 停用
@@ -4347,6 +4352,7 @@ zh_TW:
             with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "刪除"
         name: "名稱"
         group: "群組"
         image: "圖片"

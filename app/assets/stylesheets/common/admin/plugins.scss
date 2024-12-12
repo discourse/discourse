@@ -7,10 +7,21 @@
     }
   }
 
-  .admin-plugins-list {
-    .plugin-version {
+  .d-admin-table.admin-plugins-list {
+    .admin-plugins-list__version {
+      width: 14%;
+
       @include breakpoint("tablet") {
         text-align: right;
+        width: auto;
+      }
+    }
+
+    .d-admin-row__controls {
+      width: 10%;
+
+      @include breakpoint("tablet") {
+        width: auto;
       }
     }
 

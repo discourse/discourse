@@ -599,7 +599,6 @@ es:
       admins: "Responsable de configurar y mantener este sitio, con acceso a todos los datos de miembros y actividades."
       moderators: "Responsable de responder a los avisos, moderar los debates y ayudar a los miembros con sus cuentas"
       trust_level_0: "Nuevos miembros con capacidades limitadas, que están aprendiendo las normas y la funcionalidad de la comunidad"
-      trust_level_1: "Los miembros con más confianza, que han demostrado un compromiso inicial al leer, ahora pueden acceder a más funciones. Todos los miembros de este grupo también son miembros del grupo trust_level_0."
       trust_level_2: "Miembros activos que han contribuido consistentemente con el tiempo y han ganado privilegios completos de ciudadanía. Todos los miembros de este grupo también son miembros de los grupos trust_level_1 y trust_level_0."
       trust_level_3: "Contribuyentes altamente comprometidos y de largo plazo, que forman la columna vertebral de la comunidad y han obtenido privilegios limitados de moderación. Todos los miembros de este grupo también son miembros de los grupos trust_level_2, trust_level_1 y trust_level_0."
       trust_level_4: "Miembros promocionados manualmente, reconocidos por sus contribuciones ejemplares y a quienes se les han confiado privilegios adicionales de moderación. Todos los miembros de este grupo también son miembros de los grupos trust_level_3, trust_level_2, trust_level_1 y trust_level_0."
@@ -678,6 +677,8 @@ es:
       user_profile:
         bio_raw: "Acerca de mí"
       user:
+        password: "Contraseña"
+      user_password:
         password: "Contraseña"
     errors:
       models:
@@ -1770,7 +1771,6 @@ es:
     pending_users_reminder_delay_minutes: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de minutos. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
-    experimental_full_page_login: "Sustituye el modal de inicio de sesión/registro por un formulario de inicio de sesión/registro de página completa."
     ga_version: "Versión de Google Universal Analytics a usar: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "ID de código de seguimiento de Google Universal Analytics, ej.: UA-12345678-9. Ver <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nombre de dominio para Google Universal Analytics. Ver <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1798,8 +1798,8 @@ es:
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
     top_menu: "Determina qué elementos aparecen en la navegación de la página de inicio y en qué orden."
-    post_menu: "Configura la visibilidad y el orden de los elementos predeterminados del menú de la entrada. Los elementos adicionales añadidos por plugins o temas se gestionan por separado y no aparecerán en esta lista."
-    post_menu_hidden_items: "Los elementos del menú que se ocultarán por defecto en el menú de la entrada a menos que se haga clic en una elipsis de expansión. Los elementos adicionales añadidos por plugins o temas se gestionan por separado y no aparecerán en esta lista."
+    post_menu: "Configura la visibilidad y el orden de los elementos predeterminados del menú de la publicación. Los elementos adicionales añadidos por plugins o temas se gestionan por separado y no aparecerán en esta lista."
+    post_menu_hidden_items: "Los elementos del menú que se ocultarán por defecto en el menú de la publicación a menos que se haga clic en una elipsis de expansión. Los elementos adicionales añadidos por plugins o temas se gestionan por separado y no aparecerán en esta lista."
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
     allow_username_in_share_links: "Permitir que los nombres de usuario se incluyan en los enlaces compartidos. Esto es útil para premiar medallas basadas en visitantes únicos."
     site_contact_username: "Nombre de usuario de miembro del equipo desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
@@ -1825,7 +1825,6 @@ es:
     max_favorite_badges: "Número máximo de medallas que el usuario puede seleccionar"
     whispers_allowed_groups: "Permitir la comunicación privada dentro de los temas para los miembros de los grupos especificados."
     hidden_post_visible_groups: "Permitir a los miembros de estos grupos ver los mensajes ocultos. Los usuarios del personal siempre pueden ver los mensajes ocultos."
-    allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     blocked_email_domains: "Una lista delimitada por barras de dominios de correo electrónico en los que los usuarios no pueden registrar cuentas. Los subdominios se gestionan automáticamente para los dominios especificados. No se admiten los símbolos comodín * y ? Ejemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Una lista delimitada por barras de dominios de correo electrónico en los que los usuarios DEBEN registrar cuentas. Los subdominios se gestionan automáticamente para los dominios especificados. No se admiten los símbolos comodín * y ? ADVERTENCIA: ¡No se permitirán usuarios con dominios de correo electrónico distintos de los indicados!"
     normalize_emails: "Comprobar si la dirección de correo normalizada es única. Para normalizar las direcciones se eliminan los puntos y todo lo que haya entre los caracteres + y @."
@@ -1876,7 +1875,7 @@ es:
     google_oauth2_client_secret: "Secreto del cliente de tu aplicación de Google."
     google_oauth2_prompt: "Una lista opcional delimitada por valores de cadena que especifica si el servidor de autorizaciones solicita al usuario la reautenticación y el consentimiento. Ver <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para los valores posibles."
     google_oauth2_hd: "Un dominio opcional hospedado por Google Apps limitará el inicio de sesión. Ver <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para más detalles."
-    google_oauth2_hd_groups: "Recupera los grupos de Google de los usuarios en el dominio alojado al autenticarse. Los grupos de Google recuperados pueden utilizarse para conceder la pertenencia automática a grupos de Discourse (consulta la configuración de grupos). Para más información, consulta https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups: "Recupera los grupos de Google de los usuarios en el dominio alojado al autenticarse. Los grupos de Google recuperados pueden utilizarse para conceder la pertenencia automática a grupos de Discourse (consulta los ajustes de grupos). Para más información, consulta https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Una dirección de correo electrónico perteneciente a una cuenta de administrador de Google Workspace. Se utilizará con las credenciales de la cuenta de servicio para obtener la información del grupo."
     google_oauth2_hd_groups_service_account_json: "Información clave con formato JSON para la cuenta de servicio. Se utilizará para obtener la información del grupo."
     google_oauth2_verbose_logging: "Registra diagnósticos detallados relacionados con Google OAuth2 en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2293,7 +2292,7 @@ es:
     notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después de estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
     delete_drafts_older_than_n_days: "Elimina los borradores que no se hayan modificado en más de (n) días."
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Establece -1 para no eliminar nunca. Establece 0 para eliminar inmediatamente."
-    bootstrap_mode_min_users: 'Número mínimo de usuarios necesarios para desactivar el modo bootstrap y eliminar el botón de Inicio (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas). Consulta <a target=«_blank» href=«https://meta.discourse.org/t/-/322876»>el tema sobre el modo bootstrap en Meta</a> para más detalles.'
+    bootstrap_mode_min_users: 'Número mínimo de usuarios necesarios para desactivar el modo de arranque y eliminar el botón de Inicio (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas). Consulta <a target="_blank" href="https://meta.discourse.org/t/-/322876">el tema sobre el modo de arranque en Meta</a> para más detalles.'
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si se activa la opción de «inicio de sesión obligatorio», solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas de medios en los mensajes privados y en las categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere un profundo conocimiento administrativo. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema de subidas seguras en Meta</a> para más detalles.'
     secure_uploads_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente estarían redactadas en los correos electrónicos, si su tamaño es menor que el ajuste de «tamaño máximo de la imagen incrustada en el correo electrónico»."
@@ -2406,7 +2405,7 @@ es:
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
-    create_post_for_category_and_tag_changes: "Crear un mensaje de susurro cuando cambie la categoría o las etiquetas de un tema, requiere que los mensajes de susurro estén activados."
+    create_post_for_category_and_tag_changes: "Crear una publicación de susurro cuando cambie la categoría o las etiquetas de un tema, requiere que las publicaciones de susurro estén activadas."
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se estén utilizando en ningún tema o mensaje privado diariamente."
     watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy observando y que también pertenezcan a una que haya silenciado"
     company_name: "Nombre de tu empresa u organización. Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad."
@@ -2446,12 +2445,11 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    experimental_topics_filter: "Activa la ruta del filtro de temas experimentales en /filter"
     enable_experimental_lightbox: "Sustituye el lightbox de imágenes por defecto por el diseño renovado."
     experimental_glimmer_topic_list_groups: "Activa la nueva implementación de la lista de temas «glimmer». Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
-    glimmer_post_menu_mode: "Controla si se utiliza la nueva implementación del menú de post 'glimmer'. auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
-    glimmer_post_menu_groups: "Activa la nueva implementación del menú de post «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
-    experimental_form_templates: "Activa la función de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
+    glimmer_post_menu_mode: "Controla si se utiliza la nueva implementación del menú de la publicación 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
+    glimmer_post_menu_groups: "Activa la nueva implementación del menú de la publicación «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
+    experimental_form_templates: "EXPERIMENTAL: Activa la característica de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     admin_sidebar_enabled_groups: "Activa la navegación por la barra lateral de la interfaz del administrador para los grupos especificados, que sustituye a los botones de navegación del administrador de nivel superior."
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
@@ -2685,8 +2683,8 @@ es:
     already_logged_in: "¡Vaya! Esta invitación es solo para nuevos usuarios que no tengan ya una cuenta."
     second_factor_title: "Autenticación de dos factores"
     second_factor_description: "Introduce el código de autenticación desde tu aplicación:"
-    second_factor_backup_description: "Introduce uno de los códigos de respaldo:"
-    second_factor_backup_title: "Códigos de respaldo de la autenticación de dos factores"
+    second_factor_backup_description: "Introduce uno de los códigos de copia de seguridad:"
+    second_factor_backup_title: "Códigos de copia de seguridad de la autenticación de dos factores"
     invalid_second_factor_code: "Código de autenticación no válido. Cada código se puede usar solo una vez."
     invalid_security_key: "Clave de seguridad no válida."
     missing_second_factor_name: "Introduce un nombre."
@@ -3578,7 +3576,7 @@ es:
       title: "¡Eres el usuario nuevo del mes!"
       subject_template: "¡Eres el usuario nuevo del mes!"
       text_body_template: |
-        ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de%{month_year}**. :trophy:
+        ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de %{month_year}**. :trophy:
 
         Este premio solo lo ganan dos de los nuevos miembros de cada mes y será visible permanentemente en [la página de medallas](%{url}).
 
@@ -4589,8 +4587,6 @@ es:
     regular:
       name: Habitual
       description: '<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Acceso</a> a las funciones: recategorizar, renombrar, publicar enlaces sin el tag no-follow y dar más me gusta'
-      long_description: |
-        Esta medalla se concede al llegar a nivel de confianza 3. Gracias por ser una parte constante de nuestra comunidad durante estos meses. Ahora eres uno de nuestros lectores más activos y una fuente de confianza que hace nuestra comunidad mejor. Ahora puedes recategorizar y renombrar temas, tus denuncias tienen más peso y tienes acceso a una categoría especial privada, además de poder dar muchos más me gusta al día.
     leader:
       name: Líder
       description: '<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Acceso</a> a las funciones: editar, destacar, cerrar, archivar, dividir y combinar temas globalmente'

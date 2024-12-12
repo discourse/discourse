@@ -77,6 +77,21 @@
 
       <div class="reviewable-filter topic-filter">
         <label class="filter-label">
+          {{i18n "review.filtered_flagged_by"}}
+        </label>
+        <EmailGroupUserChooser
+          @value={{this.filterFlaggedBy}}
+          @onChange={{action "updateFilterFlaggedBy"}}
+          @options={{hash
+            maximum=1
+            excludeCurrentUser=false
+            fullWidthWrap=true
+          }}
+        />
+      </div>
+
+      <div class="reviewable-filter topic-filter">
+        <label class="filter-label">
           {{i18n "review.filtered_reviewed_by"}}
         </label>
         <EmailGroupUserChooser

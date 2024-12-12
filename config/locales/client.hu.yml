@@ -1857,7 +1857,7 @@ hu:
                 one {# napon belül lejár}
               other {# nap}
             }.
-          edit_link_options: "Link opciók szerkesztése"
+          edit_link_options: "Szerkessze a linkbeállításokat, vagy küldje el e-mailben."
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
           restrict: "Korlátozás a következőkre:"
@@ -2052,6 +2052,9 @@ hu:
       optional: nem kötelező
       errors_summary_title: "Ez az űrlap hibákat tartalmaz:"
       dirty_form: "A változások nem lettek mentve! Biztos hogy el akarja hagyni a területet?"
+      select:
+        select_placeholder: "Kiválaszt..."
+        none_placeholder: "Egyik sem"
       errors:
         required: "Kötelező"
         invalid_url: "Érvényes URL-nek kell lennie"
@@ -2602,6 +2605,7 @@ hu:
         new_reviewable:
           one: "%{count} új felülvizsgálandó"
           other: "%{count} új felülvizsgálandó"
+      paused: "Az értesítések szünetelnek"
       title: "értesítések a @név megemlítésekről, a hozzászólásaira adott válaszokról, üzenetekről stb."
       none: "Jelenleg nem lehet betölteni az értesítéseket."
       empty: "Nem található értesítés."
@@ -3546,6 +3550,7 @@ hu:
         other: "%{count} megnézése és válaszolás"
       in_reply_to: "Szülőbejegyzés betöltése"
       view_all_posts: "Az összes válasz megtekintése"
+      badge_granted_tooltip: "%{username} megkapta a „%{badge_name}” jelvényt ezért a bejegyzésért!"
       errors:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
@@ -4055,7 +4060,7 @@ hu:
       with_topics: "%{filter} témák"
       with_category: "%{filter} %{category} Témák"
       filter:
-        title: "Szűrő"
+        title: "Szűrt eredmények: %{filter}"
         button:
           label: "Szűrő"
       latest:
@@ -4175,6 +4180,7 @@ hu:
       shortcut_delimiter_or: "%{shortcut1} vagy %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Billentyűkombinációk"
       short_title: "Rövidítések"
       jump_to:
@@ -4776,6 +4782,7 @@ hu:
           all: "Összes"
       new_features:
         title: "Újdonságok"
+        check_for_updates: "Frissítések keresése"
       dashboard:
         title: "Vezérlőpult"
         last_updated: "Az irányítópult frissítve:"
@@ -4785,7 +4792,7 @@ hu:
         critical_available: "Egy fontos frissítés érhető el!"
         updates_available: "Frissítések érhetőek el!"
         please_update: "Kérünk frissíts!"
-        no_check_performed: "Nem volt ellenőrizve, hogy van-e új frissítés. Győződjön meg arról hogy a Sidekiq fut."
+        no_check_performed: "A frissítések ellenőrzése nem történt meg. Győződjön meg arról, hogy a Sidekiq fut."
         stale_data: "Rég nem volt ellenőrizve hogy van-e új frissítés. Győződjön meg arról hogy a sidekiq fut."
         version_check_pending: "Úgy nézik nem rég frissítettél. Fantasztikus!"
         installed_version: "Telepítve"
@@ -4802,9 +4809,8 @@ hu:
           experiment_disabled: "Letiltotta a kísérleti funkciót."
           experiment_toggled_too_fast: "Túl gyorsan váltotta a kísérleti funkciót. Kérjük, várjon néhány másodpercet, mielőtt újra próbálkozna."
           experiment_tooltip:
-            title: "Próbálja ki kísérleti funkciónkat"
-            content: "Próbálja ki legújabb fejlesztés alatt álló funkciónkat! Még kísérleti stádiumban van, így bármikor eltávolíthatjuk. Bármikor leiratkozhat."
-        last_checked: "Utoljára ellenőrizve:"
+            title_disabled: "Próbálja ki kísérleti funkciónkat"
+        last_checked: "Utoljára ellenőrizve"
         refresh_problems: "Újratöltés"
         no_problems: "Nem találtunk semmilyen problémát."
         moderators: "Moderátorok: "
@@ -5386,6 +5392,16 @@ hu:
             themes_description: "A témák kiterjedt testreszabások, amelyek megváltoztatják a fórum stílusának több elemét, és gyakran további kezelőfelület-szolgáltatásokat is tartalmaznak."
             new_theme: "Új téma"
             user_selectable: "Felhasználó által választható"
+        user_fields:
+          field: "Mező"
+          type: "Típus"
+          more_options:
+            title: "További lehetőségek"
+            move_up: "Mozgatás fel"
+            move_down: "Mozgatás le"
+          delete: "Törlés"
+          delete_successful: "Felhasználói mező törölve."
+          save_successful: "Felhasználói mező mentve."
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"
@@ -5546,7 +5562,7 @@ hu:
           filter_by: "Szűrés:"
           theme: "Téma"
           component: "Összetevő"
-          components: "Összetevő"
+          components: "Összetevők"
           search_placeholder: "írj be a kereséshez…"
           theme_name: "A téma neve"
           component_name: "Összetevő neve"
@@ -5688,7 +5704,7 @@ hu:
           theme_translations: "Téma fordítások"
           empty: "Nincsenek elemek"
           commits_behind:
-            one: "%{count} commit-al régebbi!"
+            one: "%{count} verzióval régebbi!"
             other: "A téma %{count} verzióval le van maradva!"
           compare_commits: "(Változások megtekintése)"
           remote_theme_edits: "Ha szerkeszteni szeretnéd ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójában</a>"
@@ -6260,6 +6276,7 @@ hu:
         invalid: "Sajnáljuk, nem adhatja meg magát ennek a felhasználónak."
       users:
         title: "Felhasználók"
+        description: "Felhasználók megtekintése és kezelése."
         create: "Admin felhasználó hozzáadása"
         last_emailed: "Utolsó levélküldés"
         not_found: "Sajnos ez a felhasználónév nem létezik."
@@ -6268,6 +6285,32 @@ hu:
         status: "Állapot"
         show_emails: "E-mailek megjelenítése"
         hide_emails: "E-mailek elrejtése"
+        bulk_actions:
+          title: "Csoportos műveletek"
+          admin_cant_be_deleted: "Ez a felhasználó nem törölhető, mert rendszergazda"
+          too_many_or_old_posts: "Ezt a felhasználót nem lehet törölni, mert túl sok, vagy nagyon régi bejegyzése van"
+          too_many_selected_users:
+            one: "Elérte a tömeges törlés felhasználói korlátját: %{count} "
+            other: "Elérte a tömeges törlés felhasználói korlátját: %{count} "
+          delete:
+            label: "Felhasználó törlése"
+            confirmation_modal:
+              prompt_text:
+                one: '%{count} felhasználó végleges törlésére készül. A folytatáshoz írja be a következőt: "%{confirmation_phrase}":'
+                other: '%{count} felhasználó végleges törlésére készül. A folytatáshoz írja be a következőt: "%{confirmation_phrase}":'
+              confirmation_phrase:
+                one: "%{count} felhasználó törlése"
+                other: "%{count} felhasználó törlése"
+              close: "Lezárás"
+              confirm: "Törlés"
+              title:
+                one: "%{count} Felhasználó törlése"
+                other: "%{count} Felhasználó törlése"
+              bulk_delete_starting: "Tömeges törlés indítása"
+              user_delete_succeeded: "[%{position}/%{total}] Sikeresen törölve @%{username}"
+              user_delete_failed: "[%{position}/%{total}] Nem sikerült törölni @%{username} - %{error}"
+              bulk_delete_finished: "Tömeges törlési művelet befejeződött."
+              failed_to_delete_users: "A következő felhasználók törlése nem sikerült:"
         nav:
           new: "Új"
           active: "Aktív"
@@ -6553,8 +6596,12 @@ hu:
           confirm_delete: "Biztos, hogy törölni szeretné ezt a DiscourseConnect rekordot?"
       user_fields:
         title: "Felhasználói mezők"
-        help: "Adj hozzá olyan mezőket, amelyeket a felhasználók kitölthetnek."
-        create: "Felhasználói mező létrehozása"
+        help: "Hozzon létre egyéni felhasználói mezőket, hogy további részleteket gyűjthessen a közösség tagjairól. Kiválaszthatja, hogy milyen adatokra van szükség a regisztráció során, mi jelenjen meg a profilokon, és mit frissíthetnek a felhasználók."
+        no_user_fields: "Még nincs egyéni felhasználói mező."
+        add: "Felhasználói mező hozzáadása"
+        back: "Vissza a felhasználói mezőkhöz"
+        edit_header: "Felhasználói mező szerkesztése"
+        new_header: "Felhasználói mező hozzáadása"
         untitled: "Névtelen"
         name: "Mező neve"
         type: "Mező típusa"
@@ -6583,22 +6630,22 @@ hu:
           confirmation: "Megkéri a meglévő felhasználókat, hogy töltsék ki ezt a mezőt, és addig nem tehetnek mást az Ön webhelyén, amíg a mezőt ki nem töltik. Folytassa?"
         editable:
           title: "Bejelentkezés után szerkeszthető"
-          enabled: "szerkeszthető"
-          disabled: "nem szerkeszthető"
+          enabled: "Szerkeszthető"
+          disabled: "Nem szerkeszthető"
         show_on_profile:
           title: "Megjelenjen a nyilvános profilon"
-          enabled: "látható a profiljában"
-          disabled: "nem látható a profiljában"
+          enabled: "Látható a profiljában"
+          disabled: "Nem látható a profiljában"
         show_on_user_card:
           title: "Megjelenítés a felhasználói kártyán"
-          enabled: "megjelenítés a felhasználói kártyán"
-          disabled: "nem látható a felhasználói kártyán"
+          enabled: "Látható a felhasználói kártyán"
+          disabled: "Nem látható a felhasználói kártyán"
         searchable:
           title: "Kereshető"
-          enabled: "kereshető"
-          disabled: "nem kereshető"
+          enabled: "Kereshető"
+          disabled: "Nem kereshető"
         field_types:
-          text: "Szöveges mező"
+          text: "Szöveg"
           confirm: "Megerősítés"
           dropdown: "Legördülő menü"
           multiselect: "Többszörös kiválasztás"
@@ -6655,6 +6702,8 @@ hu:
             title: "Kép(ek) feltöltése"
         selectable_avatars:
           title: "A felhasználó által választható profilképek listája"
+        table_column_heading:
+          status: "Állapot"
         categories:
           all_results: "Mind"
           required: "Kötelező"
@@ -6756,9 +6805,13 @@ hu:
         no_user_badges: "%{name} még nem kapott jelvényt."
         no_badges: Nincsenek adományozható jelvények.
         none_selected: "A kezdéshez válasszon egy jelvényt"
+        usage_heading: Használat
         allow_title: Jelvény címként való használatának engedélyezése
         multiple_grant: Többször is megadható
+        visibility_heading: Láthatóság
         listable: Jelvény megjelenítése a nyilvános jelvények oldalon
+        show_in_post_header: Jelvény megjelenítése azon a bejegyzésen, amelyre megadták
+        show_in_post_header_disabled: Engedélyezni kell a „Jelvény megjelenítése a nyilvános jelvények oldalán” és a „Kijegyzést kiadó jelvény megjelenítése a jelvény oldalon” lehetőséget is.
         enabled: engedélyezve
         disabled: kikapcsolva
         icon: Ikon
@@ -6820,6 +6873,12 @@ hu:
           grant_existing_holders: Adjon további jelvényeket a meglévő jelvénytulajdonosoknak
       emoji:
         title: "Emodzsi"
+        description: "Adjon hozzá új hangulatjeleket, amelyek mindenki számára elérhetőek lesznek. Válasszon ki több fájlt hangulatjelek létrehozásához a fájlnevük alapján. A kiválasztott csoport az összes egyidejűleg hozzáadott fájlhoz használható lesz."
+        no_emoji: "Még nincs egyéni hangulatjeled."
+        add: "Hangulatjel hozzáadása"
+        delete: "Törlés"
+        back: "Vissza a hanguletjelhez"
+        choose_files: "Fájlok kiválasztása"
         uploading: "Feltöltés..."
         name: "Név"
         group: "Csoport"
@@ -6876,6 +6935,7 @@ hu:
         destination: "Rendeltetési hely"
         copy_to_clipboard: "Másolja az állandó hivatkozást a vágólapra"
         delete_confirm: Biztos, hogy törli ezt az állandó hivatkozást?
+        no_permalinks: "Még nincsenek állandó hivatkozások."
         add: "Permalink hozzáadás"
         back: "Vissza a permalinkekhez"
         more_options: "További lehetőségek"

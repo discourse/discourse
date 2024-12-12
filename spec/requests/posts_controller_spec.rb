@@ -547,7 +547,7 @@ RSpec.describe PostsController do
       end
 
       it "checks for an edit conflict" do
-        update_params[:post][:raw_old] = "old body"
+        update_params[:post][:original_text] = "old body"
         put "/posts/#{post.id}.json", params: update_params
 
         expect(response.status).to eq(409)
@@ -726,7 +726,6 @@ RSpec.describe PostsController do
             params: {
               post: {
                 raw: "this is a random post",
-                raw_old: post.raw,
                 random_number: 244,
               },
             }
@@ -2579,6 +2578,8 @@ RSpec.describe PostsController do
   end
 
   describe "#user_posts_feed" do
+    before { user.user_stat.update!(post_count: 1) }
+
     it "returns public posts rss feed" do
       public_post
       private_post

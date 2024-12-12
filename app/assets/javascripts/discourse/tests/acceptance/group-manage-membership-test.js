@@ -1,11 +1,13 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Site from "discourse/models/site";
+import groupFixtures from "discourse/tests/fixtures/group-fixtures";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Managing Group Membership", function (needs) {
   needs.user();
@@ -164,3 +166,49 @@ acceptance("Managing Group Membership", function (needs) {
       .isDisabled("disables group allow_membership_request input");
   });
 });
+
+acceptance(
+  "Automatic Group Tooltip - can_admin_group is true",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/groups/moderators.json", () => {
+        const cloned = cloneJSON(groupFixtures["/groups/moderators.json"]);
+        cloned.group.can_admin_group = true;
+        cloned.group.is_group_owner = false;
+        return helper.response(200, cloned);
+      });
+    });
+
+    test("the current user can see the tooltip because they can manage the group", async function (assert) {
+      await visit("/g/moderators");
+
+      assert
+        .dom(".group-automatic-tooltip")
+        .exists("displays automatic tooltip");
+    });
+  }
+);
+
+acceptance(
+  "Automatic Group Tooltip - can_admin_group is false",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/groups/moderators.json", () => {
+        const cloned = cloneJSON(groupFixtures["/groups/moderators.json"]);
+        cloned.group.can_admin_group = false;
+        cloned.group.is_group_owner = false;
+        return helper.response(200, cloned);
+      });
+    });
+
+    test("the current user cannot see the tooltip because they cannot manage the group", async function (assert) {
+      await visit("/g/moderators");
+
+      assert
+        .dom(".group-automatic-tooltip")
+        .doesNotExist("does not display automatic tooltip");
+    });
+  }
+);

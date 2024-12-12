@@ -33,7 +33,11 @@ acceptance("Personal Message", function (needs) {
     await click(".archive-topic");
 
     assert.strictEqual(currentURL(), "/u/eviltrout/messages");
-    assert.notOk(getCachedTopicList(session), "topic list cached is cleared");
+    assert.strictEqual(
+      getCachedTopicList(session),
+      undefined,
+      "topic list cached is cleared"
+    );
   });
 });
 

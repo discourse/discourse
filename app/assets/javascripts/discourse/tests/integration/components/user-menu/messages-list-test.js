@@ -5,7 +5,7 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -213,44 +213,32 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 6);
 
-    assert.strictEqual(
-      items[0].textContent.trim(),
+    assert.dom(items[0]).hasText(
       i18n("notifications.group_message_summary", {
         count: 13,
         group_name: "jokers",
       })
     );
 
-    assert.strictEqual(
-      items[1].textContent.trim().replaceAll(/\s+/g, " "),
-      "mixtape Test Topic 0003"
-    );
+    assert.dom(items[1]).hasText("mixtape Test Topic 0003");
 
-    assert.strictEqual(
-      items[2].textContent.trim(),
+    assert.dom(items[2]).hasText(
       i18n("notifications.group_message_summary", {
         count: 12,
         group_name: "jokers",
       })
     );
 
-    assert.strictEqual(
-      items[3].textContent.trim().replaceAll(/\s+/g, " "),
-      "mixtape Test Topic 0002"
-    );
+    assert.dom(items[3]).hasText("mixtape Test Topic 0002");
 
-    assert.strictEqual(
-      items[4].textContent.trim(),
+    assert.dom(items[4]).hasText(
       i18n("notifications.group_message_summary", {
         count: 11,
         group_name: "jokers",
       })
     );
 
-    assert.strictEqual(
-      items[5].textContent.trim().replaceAll(/\s+/g, " "),
-      "mixtape Test Topic 0001"
-    );
+    assert.dom(items[5]).hasText("mixtape Test Topic 0001");
   });
 
   test("show all button for message notifications", async function (assert) {
@@ -270,11 +258,11 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     });
     await render(template);
 
-    const dismiss = query(".panel-body-bottom .notifications-dismiss");
-    assert.ok(
-      dismiss,
-      "dismiss button is shown if the user has unread private_message notifications"
-    );
+    assert
+      .dom(".panel-body-bottom .notifications-dismiss")
+      .exists(
+        "dismiss button is shown if the user has unread private_message notifications"
+      );
     assert
       .dom(".panel-body-bottom .notifications-dismiss")
       .hasAttribute(
@@ -304,11 +292,9 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     await render(template);
 
-    assert.strictEqual(
-      query(".empty-state-title").textContent.trim(),
-      i18n("user.no_messages_title"),
-      "empty state title is shown"
-    );
+    assert
+      .dom(".empty-state-title")
+      .hasText(i18n("user.no_messages_title"), "empty state title is shown");
     assert
       .dom(".empty-state-body svg.d-icon-envelope")
       .exists("icon is correctly rendered in the empty state body");

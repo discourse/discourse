@@ -44,6 +44,7 @@ module Jobs
     class JobInstrumenter
       def initialize(job_class:, opts:, db:, jid:)
         return unless enabled?
+
         self.class.mutex.synchronize do
           @data = {}
 
@@ -75,6 +76,7 @@ module Jobs
 
       def stop(exception:)
         return unless enabled?
+
         self.class.mutex.synchronize do
           profile = MethodProfiler.stop
 
@@ -88,6 +90,7 @@ module Jobs
           @data["net_duration"] = profile.dig(:net, :duration) || 0 # Redis Duration (s)
           @data["net_calls"] = profile.dig(:net, :calls) || 0 # Redis commands
           @data["live_slots_finish"] = GC.stat[:heap_live_slots]
+          @data["live_slots"] = @data["live_slots_finish"] - @data["live_slots_start"]
 
           if exception.present?
             @data["exception"] = exception # Exception - if job fails a json encoded exception
@@ -101,30 +104,35 @@ module Jobs
       end
 
       def self.raw_log(message)
+        begin
+          logger << message
+        rescue => e
+          Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
+        end
+      end
+
+      # For test environment only
+      def self.set_log_path(path)
+        @@log_path = path
+        @@logger = nil
+      end
+
+      # For test environment only
+      def self.reset_log_path
+        @@log_path = nil
+        @@logger = nil
+      end
+
+      def self.log_path
+        @@log_path ||= "#{Rails.root}/log/sidekiq.log"
+      end
+
+      def self.logger
         @@logger ||=
           begin
-            f = File.open "#{Rails.root}/log/sidekiq.log", "a"
-            f.sync = true
-            Logger.new f
+            FileUtils.touch(log_path) if !File.exist?(log_path)
+            Logger.new(log_path)
           end
-
-        @@log_queue ||= Queue.new
-
-        if !defined?(@@log_thread) || !@@log_thread.alive?
-          @@log_thread =
-            Thread.new do
-              loop do
-                @@logger << @@log_queue.pop
-              rescue Exception => e
-                Discourse.warn_exception(
-                  e,
-                  message: "Exception encountered while logging Sidekiq job",
-                )
-              end
-            end
-        end
-
-        @@log_queue.push(message)
       end
 
       def current_duration
@@ -136,25 +144,10 @@ module Jobs
         @data["@timestamp"] = Time.now
         @data["duration"] = current_duration if @data["status"] == "pending"
         self.class.raw_log("#{@data.to_json}\n")
-
-        if live_slots_limit > 0 && @data["live_slots_start"].present? &&
-             @data["live_slots_finish"].present?
-          live_slots = @data["live_slots_finish"] - @data["live_slots_start"]
-
-          if live_slots >= live_slots_limit
-            Rails.logger.warn(
-              "Sidekiq Job '#{@data["job_name"]}' allocated #{live_slots} objects in the heap: #{@data.inspect}",
-            )
-          end
-        end
       end
 
       def enabled?
         Discourse.enable_sidekiq_logging?
-      end
-
-      def live_slots_limit
-        @live_slots_limit ||= ENV["DISCOURSE_LIVE_SLOTS_SIDEKIQ_LIMIT"].to_i
       end
 
       def self.mutex
@@ -273,6 +266,7 @@ module Jobs
           requeued = true
           return
         end
+
         parent_thread = Thread.current
         cluster_concurrency_redis_key = self.class.cluster_concurrency_redis_key
 
@@ -357,6 +351,7 @@ module Jobs
         keepalive_thread.join
         self.class.clear_cluster_concurrency_lock!
       end
+
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
   end

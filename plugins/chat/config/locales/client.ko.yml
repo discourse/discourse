@@ -325,10 +325,6 @@ ko:
       chat_quoted: "<span>%{username}</span> %{description} "
       popup:
         chat_message: "새 채팅 메시지"
-      titles:
-        chat_mention: "채팅 멘션"
-        chat_invitation: "채팅 초대"
-        chat_quoted: "인용된 채팅"
     discourse_automation:
       scriptables:
         send_chat_message:

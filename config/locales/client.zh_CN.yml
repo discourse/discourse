@@ -32,10 +32,10 @@ zh_CN:
       timeline_date: "YYYY 年 MMM"
       long_no_year: "MMM D 日 HH:mm"
       long_no_year_no_time: "MMM D 日"
-      full_no_year_no_time: "MMMM Do 日"
+      full_no_year_no_time: "MMMM D 日"
       long_with_year: "YYYY 年 MMM D 日 HH:mm"
       long_with_year_no_time: "YYYY 年 MMM D 日"
-      full_with_year_no_time: "YYYY 年 MMMM Do 日"
+      full_with_year_no_time: "YYYY 年 MMMM D 日"
       long_date_with_year: "YYYY 年 MMM D 日 LT"
       long_date_without_year: "MMM D 日 LT"
       long_date_with_year_without_time: "YYYY 年 MMM D 日"
@@ -171,7 +171,7 @@ zh_CN:
       broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
       error_caused_by: "由 '%{name}' 引起。<a target='blank' href='%{path}'>点击此处</a>进行更新、重新配置或禁用。"
       only_admins: "（此消息仅向网站管理员显示）"
-    broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发错误。"
+    broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发了错误。"
     broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发者工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
@@ -1117,7 +1117,7 @@ zh_CN:
       preferences:
         title: "偏好设置"
         profile:
-          enforced_required_fields: "在继续使用本网站之前，您需要提供更多信息。"
+          enforced_required_fields: "您需要提供更多信息才能继续使用本网站。"
       feature_topic_on_profile:
         open_search: "选择一个新话题"
         title: "选择一个话题"
@@ -1419,7 +1419,7 @@ zh_CN:
         oauth_enabled_warning: "请注意，一旦您为帐户启用双重身份验证，社交登录将被禁用。"
         use: "使用身份验证器应用"
         enforced_with_oauth_notice: "您需要启用双重身份验证。只有在使用密码登录时，您才会被提示使用此验证方式，而使用外部身份验证或社交登录方式时则不需要。"
-        enforced_notice: "在访问此网站之前，您需要启用双重身份验证。"
+        enforced_notice: "您需要启用双重身份验证才能访问此网站。"
         disable: "禁用"
         disable_confirm: "确定要禁用双重身份验证吗？"
         delete: "删除"
@@ -1538,7 +1538,7 @@ zh_CN:
         add_email: "添加备用电子邮件"
         auth_override_instructions: "可以通过身份验证服务提供商更新电子邮件。"
         no_secondary: "没有辅助电子邮件"
-        instructions: "绝不会公开展示"
+        instructions: "绝不会向公众显示"
         admin_note: "注意：管理员用户更改非管理员用户的电子邮件，则说明后者无法访问其原始电子邮件帐户，因此将向后者的新地址发送一封重置密码的电子邮件。在用户完成密码重置流程之前，其电子邮件不会更改。"
         ok: "我们将向您发送电子邮件以确认"
         required: "请输入一个电子邮件地址"
@@ -1563,7 +1563,7 @@ zh_CN:
         action: "点击此处激活您的帐户"
         already_done: "抱歉，此帐户确认链接不再有效。也许您的帐户已经处于有效状态？"
         please_continue: "您的新帐户已确认；您将被重定向到首页。"
-        continue_button: "结束!"
+        continue_button: "完成！"
         welcome_to: "欢迎来到 %{site_name}！"
         approval_required: "版主必须手动批准您的新帐户，然后您才可以访问此论坛。当您的帐户获得批准时，您会收到一封电子邮件！"
       name:
@@ -1744,18 +1744,17 @@ zh_CN:
           edit_title: "编辑邀请"
           expires_in_time: "于 %{time}过期"
           expired_at_time: "过期时间为 %{time}"
-          create_link_to_invite: "创建一个可共享的链接，以立即授予对该站点的访问权限。"
-          copy_link_and_share_it: "复制下面的链接并分享，即可立即授予访问该网站的权限。"
+          create_link_to_invite: "创建一个可分享的链接，以立即授予对此网站的访问权限。"
+          copy_link_and_share_it: "复制下面的链接并分享，即可立即授予此网站的访问权限。"
           copy_link: "复制链接"
           link_copied: "链接已复制！"
           share_link: "分享链接"
           link_validity_MF: |
-            链接可用于 { user_count, plural,
+            链接最多可用于 { user_count, plural,
                 other {# 个用户}
-            }，有效期 { duration_days, plural,
+            }，并且将在 { duration_days, plural,
                 other {# 天}
-            }.
-          edit_link_options: "编辑链接选项。"
+            }后到期。
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           restrict: "限制为"
@@ -1765,10 +1764,10 @@ zh_CN:
           max_redemptions_allowed: "最大使用次数"
           add_to_groups: "添加到群组"
           invite_to_topic: "直达话题"
-          expires_at: "有效期至"
-          expires_after: "过期时间"
+          expires_at: "到期时间"
+          expires_after: "有效截止时间"
           custom_message: "自定义消息"
-          custom_message_placeholder: "在你的邀请中添加个人备注"
+          custom_message_placeholder: "在您的邀请中添加个人备注"
           send_invite_email: "保存并发送电子邮件"
           send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请电子邮件"
           update_invite: "更新"
@@ -1940,6 +1939,9 @@ zh_CN:
       optional: 可选
       errors_summary_title: "此表单包含错误："
       dirty_form: "您没有提交更改！确定要离开吗？"
+      select:
+        select_placeholder: "选择…"
+        none_placeholder: "无"
       errors:
         required: "必选"
         invalid_url: "必须是有效的 URL"
@@ -1959,8 +1961,8 @@ zh_CN:
     home: "首页"
     read_only_mode:
       enabled: "此网站处于只读模式。您可以继续浏览，但是回复、点赞和其他操作暂时被禁用。"
-      login_disabled: "当网站处于只读模式时，登录被禁用。"
-      logout_disabled: "当网站处于只读模式时，退出被禁用。"
+      login_disabled: "网站处于只读模式时登录被禁用。"
+      logout_disabled: "网站处于只读模式时退出登录被禁用。"
     staff_writes_only_mode:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
     logs_error_rate_notice:
@@ -2050,7 +2052,7 @@ zh_CN:
       associate: "已经有帐户？<a href='%{associate_link}'>登录</a>以关联您的 %{provider} 帐户。"
       activation_title: "激活您的帐户"
       already_have_account: "已经有帐户？"
-      no_account_yet: "没有账户？"
+      no_account_yet: "没有帐户？"
       progress_bar:
         signup: "注册"
         activate: "激活"
@@ -2341,8 +2343,8 @@ zh_CN:
       edit_reason_placeholder: "编辑原因"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
       remove_featured_link: "从话题中移除链接。"
-      reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行格式化。拖动或粘贴图片。"
-      reply_placeholder_no_images: "在此处输入。使用 Markdown、BBCode 或 HTML 进行格式化。"
+      reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行排版。拖放或粘贴图片以插入。"
+      reply_placeholder_no_images: "在此处输入。使用 Markdown、BBCode 或 HTML 排版。"
       reply_placeholder_choose_category: "先选择一个类别，然后在此处输入。"
       view_new_post: "查看您的新帖子。"
       saving: "正在保存"
@@ -2444,6 +2446,7 @@ zh_CN:
           other: "%{count} 条新消息通知"
         new_reviewable:
           other: "%{count} 个新的可审核条目"
+      paused: "通知已暂停"
       title: "提及 (@) 您的用户名、回复您的帖子和话题、消息等的通知"
       none: "目前无法加载通知。"
       empty: "找不到通知。"
@@ -2489,7 +2492,7 @@ zh_CN:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
-      admin_problems: "网站信息中心的新建议"
+      admin_problems: "网站信息中心有新建议"
       dismiss_confirmation:
         body:
           default:
@@ -2816,7 +2819,7 @@ zh_CN:
         filter: "没有更多话题了。"
     topic_bulk_actions:
       dismiss:
-        name: "关闭"
+        name: "忽略"
       close_topics:
         name: "关闭"
         note: "备注"
@@ -2935,7 +2938,7 @@ zh_CN:
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
       jump_reply: "跳到帖子的原始位置"
-      jump_reply_aria: "跳到 @%{username} 帖子的原始位置"
+      jump_reply_aria: "跳到 @%{username} 的帖子的原始位置"
       jump_reply_button: "跳到帖子"
       deleted: "该话题已被删除"
       slow_mode_update:
@@ -3166,7 +3169,7 @@ zh_CN:
         to_topic_username: "您输入了一个用户名。我们将向其发送通知，其中包含邀请他们加入此话题的链接。"
         to_username: "输入您想邀请的人的用户名。我们将向其发送通知，其中包含邀请他们加入此话题的链接。"
         email_placeholder: "name@example.com"
-        success_email: "我们已向 <b>%{invitee}</b> 发送邀请。在邀请被确认后，我们将通知您。查看您的用户页面上的邀请标签页以跟踪邀请进度。"
+        success_email: "我们已向 <b>%{invitee}</b> 发送邀请。在邀请被接受后，我们将通知您。查看您的用户页面上的邀请标签页以跟踪邀请进度。"
         success_username: "我们已邀请该用户加入此话题。"
         error: "抱歉，我们无法邀请此人。也许 Ta 已经被邀请了？（邀请次数受限）"
         success_existing_email: "电子邮件为 <b>%{emailOrUsername}</b> 的用户已存在。我们已邀请该用户加入此话题。"
@@ -3809,7 +3812,6 @@ zh_CN:
       with_topics: "%{filter}话题"
       with_category: "%{filter}%{category}话题"
       filter:
-        title: "筛选器"
         button:
           label: "筛选"
       latest:
@@ -4180,7 +4182,7 @@ zh_CN:
       dismiss: "忽略"
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
-    theme_preview_notice: "您当前正在预览主题，请关闭此浏览器选项卡或窗口以返回到正常的网站配置。"
+    theme_preview_notice: "您当前正在预览主题，请关闭此浏览器标签页或窗口以返回到正常网站配置。"
     image_removed: "（图片被移除）"
     pause_notifications:
       title: "暂停通知…"
@@ -4514,7 +4516,7 @@ zh_CN:
         installed_version: "已安装"
         latest_version: "最新"
         problems_found: "基于您当前网站设置的一些建议"
-        dismiss_notice: "关闭"
+        dismiss_notice: "忽略"
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
@@ -4525,8 +4527,10 @@ zh_CN:
           experiment_disabled: "您已禁用实验性功能。"
           experiment_toggled_too_fast: "您切换实验性功能的频率过快。请稍等几秒钟后再试。"
           experiment_tooltip:
-            title: "试用我们的实验性功能"
-            content: "试试我们最新开发的功能！该功能仍处于实验阶段，因此我们可能随时将其移除。您可以随时选择退出。"
+            title_disabled: "试用我们的实验性功能"
+            title_enabled: "关闭实验性功能"
+            content_disabled: "试用一下我们最新开发的功能！它仍处于试验阶段，因此我们可能随时将其移除。您可以随时选择退出。<br/><br/>更改此项将为所有用户启用该功能。"
+            content_enabled: "更改此项将会为所有用户禁用该功能。"
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题。"
@@ -4643,7 +4647,7 @@ zh_CN:
             publish_read_state: "在群组消息中发布群组阅读状态"
           membership:
             automatic: 自动
-            automatic_tooltip: "此群组是自动创建的，你无法删除它，并且成员会自动添加和删除"
+            automatic_tooltip: "此群组是自动创建的，您无法将其删除，并且成员会自动添加和删除"
             trust_levels_title: "当用户加入时自动授予其信任级别："
             effects: 影响
             trust_levels_none: "无"
@@ -4905,7 +4909,7 @@ zh_CN:
         events:
           none: "没有相关事件。"
           redeliver: "重新传送"
-          redeliver_failed: "重新递送失败"
+          redeliver_failed: "重新递送失败的事件"
           incoming:
             other: "有 %{count} 个新事件。"
           completed_in:
@@ -4995,21 +4999,21 @@ zh_CN:
           title: "帐户"
           backups:
             title: "备份"
-            description: "备份你的网站数据"
+            description: "备份您的网站数据"
           whats_new:
             title: "最新变化"
-            description: "发现 Discourse 的新版本和改进之处"
+            description: "发现 Discourse 的新版本和改进"
       config_areas:
         about:
           header: "关于您的网站"
-          description: "在这里提供有关此网站和您团队的信息，以便人们可以了解您的社区、幕后人员，以及在出现问题时如何联系您。显示在您网站的<a href='%{basePath}/about'>关于页面</a>上。"
+          description: "在这里提供有关此网站和您团队的信息，以便人们可以了解您的社区、幕后人员，以及在出现问题时如何联系您。显示在您网站的<a href='%{basePath}/about'>“关于”页面</a>上。"
           general_settings: "常规设置"
           community_name: "社区名称"
           community_name_placeholder: "示例社区"
           community_summary: "社区摘要"
           community_description: "社区描述"
           community_title: "社区标题"
-          community_title_help: "浏览器选项卡中显示的类别和话题列表等关键页面的简短描述。"
+          community_title_help: "浏览器标签页中显示的类别和话题列表等关键页面的简短描述。"
           banner_image: "横幅图片"
           banner_image_help: |
             这将用于您的“关于”页面。推荐大小：1100x300 像素。接受的类型：JPG、PNG 和 SVG，最大为 10MB。
@@ -5025,7 +5029,7 @@ zh_CN:
           contact_url: "联系 URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            如果存在，则取代 /about 上的联系人电子邮件地址，它对公共网站上的匿名用户可见。
+            如果存在，则取代 /about 上的联系人电子邮件地址，对公共网站上的匿名用户可见。
           site_contact_name: "网站联系人名称"
           site_contact_name_help: |
             用于发送所有自动消息的管理人员用户名。如果留空，将使用默认的系统帐户。
@@ -5033,7 +5037,7 @@ zh_CN:
           site_contact_group_help: |
             收到所有自动发送的私信邀请的群组。
           your_organization: "您的组织"
-          your_organization_description: "我们将在《服务条款》或《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
+          your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
           company_name_placeholder: "Acme 组织"
           company_name_warning: |
@@ -5041,7 +5045,7 @@ zh_CN:
           governing_law: "适用法律"
           governing_law_placeholder: "省、州或国家/地区"
           governing_law_help: |
-            指定此网站法律条款的管辖管辖区，通常是公司注册地或运营地。
+            指定网站法律条款的司法管辖区，通常是公司注册地或运营地。
           city_for_disputes: "争议城市"
           city_for_disputes_placeholder: "城市"
           city_for_disputes_help: |
@@ -5085,7 +5089,7 @@ zh_CN:
             non_deletable: "您无法删除此举报，因为它是系统举报或已在审核系统中使用，但您仍然可以将其禁用。"
             require_message: "提示用户提供更多原因"
             require_message_description: "选择此举报后，将显示一个文本字段，供用户提供更多详细信息来说明举报内容的原因"
-            auto_action_type: "自动隐藏标记内容"
+            auto_action_type: "自动隐藏被举报的内容"
           more_options:
             title: "更多选项"
             move_up: "上移"
@@ -5095,13 +5099,20 @@ zh_CN:
           description: "自定义并品牌化您的 Discourse 网站，赋予其独特的风格。"
           themes:
             title: "主题"
-            themes_intro: "安装新主题以开始使用，或使用这些资源从头开始创建自己的主题。"
+            themes_intro: "安装新主题以开始，或使用这些资源从头开始创建自己的主题。"
             themes_intro_img_alt: "新主题占位符"
-            set_default_theme: "设置默认值"
+            set_default_theme: "设为默认"
             default_theme: "默认主题"
             themes_description: "主题是扩展性的自定义，可以改变您的论坛设计风格中的多种元素，通常还包括额外的前端功能。"
             new_theme: "新主题"
             user_selectable: "用户可选"
+        user_fields:
+          type: "类型"
+          more_options:
+            title: "更多选项"
+            move_up: "上移"
+            move_down: "下移"
+          delete: "删除"
       plugins:
         title: "插件"
         installed: "安装的插件"
@@ -5267,7 +5278,7 @@ zh_CN:
           theme_name: "主题名称"
           component_name: "组件名称"
           themes_intro: "选择现有主题或安装新主题以开始"
-          themes_intro_new: "安装新主题以开始使用，或使用这些资源从头开始创建自己的主题。"
+          themes_intro_new: "安装新主题以开始，或使用这些资源从头开始创建自己的主题。"
           themes_intro_img_alt: "新主题占位符"
           beginners_guide_title: "Discourse 主题初学者使用指南"
           developers_guide_title: "Discourse 主题开发者指南"
@@ -5316,7 +5327,7 @@ zh_CN:
           convert_theme_alert_generic: "确定要将此主题转换为组件吗？"
           convert_theme_tooltip: "将此主题转换为组件"
           inactive_themes: "停用主题："
-          set_default_theme: "设置默认值"
+          set_default_theme: "设为默认"
           default_theme: "默认主题"
           set_default_success: "默认主题设置为 %{theme}"
           install_success: "%{theme} 安装成功！"
@@ -5536,7 +5547,7 @@ zh_CN:
         robots:
           title: "替换您的网站的 robots.txt 文件："
           warning: "这将永久替换任何相关的网站设置。"
-          overridden: 您的网站的默认 robots.txt 文件已被覆盖。
+          overridden: 您的网站的默认 robots.txt 文件已被替换。
         email_style:
           title: "电子邮件样式"
           heading: "自定义电子邮件样式"
@@ -5968,6 +5979,7 @@ zh_CN:
         invalid: "抱歉，您不能模拟该用户。"
       users:
         title: "用户"
+        description: "查看和管理用户。"
         create: "添加管理员用户"
         last_emailed: "最后一次发送电子邮件"
         not_found: "抱歉，该用户名在我们的系统中不存在。"
@@ -5976,6 +5988,15 @@ zh_CN:
         status: "状态"
         show_emails: "显示电子邮件"
         hide_emails: "隐藏电子邮件"
+        bulk_actions:
+          title: "批量操作"
+          admin_cant_be_deleted: "无法删除此用户，因为他们是管理员"
+          too_many_or_old_posts: "无法删除此用户，因为他们发帖太多或发帖时间太长"
+          delete:
+            confirmation_modal:
+              close: "关闭"
+              confirm: "删除"
+              block_ip_and_email: "屏蔽所有选定用户的 IP 地址和电子邮件"
         nav:
           new: "新"
           active: "活跃"
@@ -6103,9 +6124,9 @@ zh_CN:
         time_read: "阅读时间"
         post_edits_count: "帖子编辑"
         anonymize: "对用户进行匿名化处理"
-        anonymize_confirm: "你确定要匿名化此帐户吗？这将更改用户名和电子邮件，并重置所有个人资料信息。"
-        delete_associated_accounts_confirm: "你确定要删除此账户的所有关联账户吗？如果用户的电子邮件发生变化，则可能无法登录。"
-        disable_second_factor_confirm: "你确定要为此帐户禁用双重身份验证吗？"
+        anonymize_confirm: "确定要匿名化此帐户吗？这将更改用户名和电子邮件地址，并重置所有个人资料信息。"
+        delete_associated_accounts_confirm: "确定要删除此帐户的所有关联帐户吗？如果用户的电子邮件地址发生变化，则可能无法登录。"
+        disable_second_factor_confirm: "确定要为此帐户禁用双重身份验证吗？"
         anonymize_yes: "是，对此帐户进行匿名化处理"
         anonymize_failed: "对帐户进行匿名化处理时出现问题。"
         delete: "删除用户"
@@ -6159,7 +6180,7 @@ zh_CN:
           other: "无法删除所有帖子。某些帖子的存在时间超过 %{count} 天。（delete_user_max_post_age 设置。）"
         cant_delete_all_too_many_posts:
           other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
-        delete_confirm_title: "你确定要删除此用户吗？这是永久性的！"
+        delete_confirm_title: "确定要删除此用户吗？此操作无法撤消！"
         delete_confirm: "通常最好将用户匿名而不是删除他们，以避免从现有讨论中移除内容。"
         delete_and_block: "删除并<b>禁止</b>该电子邮件和 IP 地址"
         delete_dont_block: "仅删除"
@@ -6250,8 +6271,6 @@ zh_CN:
           confirm_delete: "确定要删除此 DiscourseConnect 记录吗？"
       user_fields:
         title: "用户字段"
-        help: "添加您的用户可以填写的字段。"
-        create: "创建用户字段"
         untitled: "无标题"
         name: "字段名称"
         type: "字段类型"
@@ -6280,22 +6299,15 @@ zh_CN:
           confirmation: "这将提示现有用户填写此字段，并且在填写该字段之前不允许他们在网站上执行任何其他操作。是否继续？"
         editable:
           title: "注册后可以编辑"
-          enabled: "可编辑"
-          disabled: "不可编辑"
         show_on_profile:
           title: "在公开个人资料中显示"
-          enabled: "在个人资料中显示"
-          disabled: "不在个人资料中显示"
         show_on_user_card:
           title: "在用户卡片上显示"
-          enabled: "在用户卡片上显示"
-          disabled: "不在用户卡片上显示"
         searchable:
           title: "可搜索"
           enabled: "可搜索"
-          disabled: "不可搜索"
         field_types:
-          text: "文本字段"
+          text: "文本"
           confirm: "确认"
           dropdown: "下拉菜单"
           multiselect: "多选"
@@ -6311,7 +6323,7 @@ zh_CN:
         show_overriden: "只显示被替换"
         show_outdated: "仅显示过期/无效"
         show_untranslated: "只显示未翻译的内容"
-        only_show_selected_locale: "仅显示所选区域中的结果"
+        only_show_selected_locale: "仅显示所选语言的结果"
         locale: "语言："
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
         no_results: "找不到匹配的网站文本"
@@ -6329,7 +6341,7 @@ zh_CN:
         none: "无"
         save: "保存"
         cancel: "取消"
-        unmask: "取消输入掩码"
+        unmask: "取消屏蔽输入"
       site_settings:
         emoji_list:
           invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"
@@ -6351,6 +6363,8 @@ zh_CN:
             title: "上传图片"
         selectable_avatars:
           title: "用户可以选择的头像列表"
+        table_column_heading:
+          status: "状态"
         categories:
           all_results: "所有"
           required: "必选"
@@ -6430,7 +6444,7 @@ zh_CN:
         description: 描述
         long_description: 详细描述
         badge_type: 徽章类型
-        group_settings: 组设置
+        group_settings: 群组设置
         badge_grouping: 组
         badge_groupings:
           modal_title: 徽章组
@@ -6453,6 +6467,7 @@ zh_CN:
         none_selected: "选择一个徽章以开始"
         allow_title: 允许将徽章用作头衔
         multiple_grant: 可以多次授予
+        visibility_heading: 公开范围
         listable: 在公共徽章页面上显示徽章
         enabled: 已启用
         disabled: 已禁用
@@ -6495,7 +6510,7 @@ zh_CN:
             with_time: <span class="username">%{username}</span>，在 <span class="time">%{time}</span>
         badge_intro:
           title: "选择徽章或创建新徽章"
-          description: "从选择现有徽章进行自定义或者创建全新的徽章开始"
+          description: "选择现有徽章进行自定义，或者创建全新徽章"
         mass_award:
           title: 批量授予
           description: 一次将同一个徽章授予多个用户。
@@ -6512,10 +6527,11 @@ zh_CN:
           grant_existing_holders: 向现有徽章持有者授予额外的徽章
       emoji:
         title: "表情符号"
-        description: "添加可供所有人使用的新 emoji 表情符号。选择多个文件，使用其文件名创建表情符号。所选组将用于同时添加的所有文件。"
-        no_emoji: "你还没有任何自定义 emoji 表情符号。"
-        add: "添加 emoji"
-        back: "返回 emoji"
+        description: "添加可供所有人使用的新表情符号。选择多个文件，使用其文件名创建表情符号。所选群组将用于同时添加的所有文件。"
+        no_emoji: "您还没有任何自定义表情符号。"
+        add: "添加表情符号"
+        delete: "删除"
+        back: "返回到表情符号"
         choose_files: "选择文件"
         uploading: "正在上传…"
         name: "名称"
@@ -6573,6 +6589,7 @@ zh_CN:
         destination: "目标"
         copy_to_clipboard: "将永久链接复制到剪贴板"
         delete_confirm: 确定要删除此永久链接吗？
+        no_permalinks: "您还没有任何永久链接。"
         add: "添加永久链接"
         back: "返回到永久链接"
         more_options: "更多选项"

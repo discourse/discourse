@@ -24,7 +24,7 @@ register_svg_icon "clipboard"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
-register_svg_icon "stop-circle"
+register_svg_icon "circle-stop"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat", use_new_show_route: true
@@ -331,17 +331,6 @@ after_initialize do
     nil
   end
 
-  register_presence_channel_prefix("chat-user") do |channel_name|
-    if user_id = channel_name[%r{/chat-user/(chat|core)/(\d+)}, 2]
-      user = User.find(user_id)
-      config = PresenceChannel::Config.new
-      config.allowed_user_ids = [user.id]
-      config
-    end
-  rescue ActiveRecord::RecordNotFound
-    nil
-  end
-
   register_push_notification_filter do |user, payload|
     if user.user_option.only_chat_push_notifications && user.user_option.chat_enabled
       payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
@@ -420,8 +409,8 @@ after_initialize do
         :constraints => StaffConstraint.new
     get "/admin/plugins/chat/hooks/new" => "chat/admin/incoming_webhooks#new",
         :constraints => StaffConstraint.new
-    get "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
-          "chat/admin/incoming_webhooks#show",
+    get "/admin/plugins/chat/hooks/:incoming_chat_webhook_id/edit" =>
+          "chat/admin/incoming_webhooks#edit",
         :constraints => StaffConstraint.new
     delete "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
              "chat/admin/incoming_webhooks#destroy",

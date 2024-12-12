@@ -2060,7 +2060,7 @@ sk:
                 many {# dní}
               other {# dní}
             }.
-          edit_link_options: "Možnosti úpravy odkazu."
+          edit_link_options: "Upravte možnosti prepojenia alebo pošlite e-mailom."
           show_advanced: "Zobraziť rozšírené možnosti"
           hide_advanced: "Skryť rozšírené možnosti"
           restrict: "Obmedziť na"
@@ -2275,6 +2275,9 @@ sk:
       optional: nepovinné
       errors_summary_title: "Tento formulár obsahuje chyby:"
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
+      select:
+        select_placeholder: "Vyberte…"
+        none_placeholder: "Žiadny"
       errors:
         required: "Povinné"
         invalid_url: "Musí byť platná adresa URL"
@@ -2895,6 +2898,7 @@ sk:
           few: "%{count} nových recenzovateľných"
           many: "%{count} nových recenzovateľných"
           other: "%{count} nové recenzovateľné"
+      paused: "Pozastavenie oznámení"
       title: "oznámenia o zmienkach pomocou @meno, odpovede na Vaše príspevky a témy, správy, atď."
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
@@ -3955,6 +3959,7 @@ sk:
         other: "Prezeranie %{count} odpovede na"
       in_reply_to: "Načítať rodičovský príspevok"
       view_all_posts: "Zobraziť všetky príspevky"
+      badge_granted_tooltip: "%{username} získal za tento príspevok odznak '%{badge_name}'!"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -4504,7 +4509,7 @@ sk:
       with_topics: "%{filter} témy"
       with_category: "%{filter} %{category} témy"
       filter:
-        title: "Filter"
+        title: "Filtrované výsledky pre %{filter}"
         button:
           label: "Filter"
       latest:
@@ -5290,6 +5295,7 @@ sk:
           all: "Všetky"
       new_features:
         title: "Čo je nové"
+        check_for_updates: "Kontrola aktualizácií"
       dashboard:
         title: "Ovládací panel"
         last_updated: "Informačný panel bol aktualizovaný:"
@@ -5316,8 +5322,7 @@ sk:
           experiment_disabled: "Experimentálnu funkciu ste zakázali."
           experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
           experiment_tooltip:
-            title: "Vyskúšajte našu experimentálnu funkciu"
-            content: "Vyskúšajte našu najnovšiu funkciu vo vývoji! Zatiaľ je v experimentálnej fáze, takže ju môžeme kedykoľvek odstrániť. Odhlásiť sa môžete, kedykoľvek budete chcieť."
+            title_disabled: "Vyskúšajte našu experimentálnu funkciu"
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -5914,6 +5919,16 @@ sk:
             themes_description: "Témy sú rozsiahle úpravy, ktoré menia viaceré prvky štýlu dizajnu fóra a často obsahujú aj ďalšie funkcie predného konca."
             new_theme: "Nová téma"
             user_selectable: "Voliteľné používateľom"
+        user_fields:
+          field: "Pole"
+          type: "Typ"
+          more_options:
+            title: "Ďalšie možnosti"
+            move_up: "Posunúť sa nahor"
+            move_down: "Posunúť sa nadol"
+          delete: "Odstrániť"
+          delete_successful: "Používateľské pole odstránené."
+          save_successful: "Používateľské pole uložené."
       plugins:
         title: "Pluginy"
         installed: "Nainštalované doplnky"
@@ -6804,6 +6819,7 @@ sk:
         invalid: "Ľutujeme, nesmiete si privlatniť tohto používateľa."
       users:
         title: "Používatelia"
+        description: "Zobrazenie a správa používateľov."
         create: "Pridať admin používateľa"
         last_emailed: "Posledný odemailovaný"
         not_found: "Prepáčte, toto používateľské meno sa nenachádza v našom systéme."
@@ -6812,6 +6828,41 @@ sk:
         status: "Stav"
         show_emails: "Ukázať Emaily"
         hide_emails: "Skryť e-maily"
+        bulk_actions:
+          title: "Hromadné akcie"
+          admin_cant_be_deleted: "Tento používateľ nemôže byť odstránený, pretože je správcom"
+          too_many_or_old_posts: "Tento používateľ nemôže byť odstránený, má príliš veľa príspevkov alebo veľmi starý príspevok"
+          too_many_selected_users:
+            one: "Dosiahli ste limit %{count} používateľa na hromadné odstránenie"
+            few: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
+            many: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
+            other: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
+          delete:
+            label: "Odstrániť používateľov…"
+            confirmation_modal:
+              prompt_text:
+                one: 'Chystáte sa natrvalo odstrániť %{count} používateľa. Ak chcete pokračovať, zadajte „%{confirmation_phrase}“ nižšie:'
+                few: 'Chystáte sa natrvalo odstrániť %{count} používateľov. Ak chcete pokračovať, zadajte „%{confirmation_phrase}“ nižšie:'
+                many: 'Chystáte sa natrvalo odstrániť %{count} používateľov. Ak chcete pokračovať, zadajte „%{confirmation_phrase}“ nižšie:'
+                other: 'Chystáte sa natrvalo odstrániť %{count} používateľov. Ak chcete pokračovať, zadajte „%{confirmation_phrase}“ nižšie:'
+              confirmation_phrase:
+                one: "odstrániť %{count} používateľa"
+                few: "odstrániť %{count} používateľov"
+                many: "odstrániť %{count} používateľov"
+                other: "odstrániť %{count} používateľov"
+              close: "Zavrieť"
+              confirm: "Odstrániť"
+              title:
+                one: "Odstrániť %{count} používateľa"
+                few: "Odstrániť %{count} používateľov"
+                many: "Odstrániť %{count} používateľov"
+                other: "Odstrániť %{count} používateľov"
+              bulk_delete_starting: "Spúšťa sa hromadné odstraňovanie…"
+              block_ip_and_email: "Blokovať IP adresy a e-maily všetkých vybraných používateľov"
+              user_delete_succeeded: "[%{position}/%{total}] Úspešne odstránené @%{username}"
+              user_delete_failed: "[%{position}/%{total}] Nepodarilo sa odstrániť @%{username} - %{error}"
+              bulk_delete_finished: "Operácia hromadného odstránenia bola dokončená."
+              failed_to_delete_users: "Nasledujúcich používateľov sa nepodarilo odstrániť:"
         nav:
           new: "Nový"
           active: "Aktívny"
@@ -7107,8 +7158,12 @@ sk:
           confirm_delete: "Ste si istí, že chcete odstrániť tento záznam DiscourseConnect?"
       user_fields:
         title: "Používateľské polia"
-        help: "Pridaj polia, ktoré môžu užívatelia vyplniť"
-        create: "Vytvor používateľske pole"
+        help: "Vytvorte si vlastné používateľské polia na zhromažďovanie ďalších podrobností o členoch komunity. Môžete si vybrať, aké informácie sa vyžadujú pri registrácii, čo sa zobrazí v profiloch a čo môžu používatelia aktualizovať."
+        no_user_fields: "Zatiaľ nemáte žiadne vlastné používateľské polia."
+        add: "Pridať pole používateľa"
+        back: "Späť na používateľské polia"
+        edit_header: "Upraviť pole používateľa"
+        new_header: "Pridať pole používateľa"
         untitled: "Bez názvu"
         name: "Názov poľa"
         type: "Typ poľa"
@@ -7137,22 +7192,22 @@ sk:
           confirmation: "To vyzve existujúcich používateľov, aby toto pole vyplnili, a nedovolí im robiť na stránke nič iné, kým pole nevyplnia. Pokračovať?"
         editable:
           title: "Upravovateľné po registrácii"
-          enabled: "upravovateľné "
-          disabled: "neupravovateľné "
+          enabled: "Upraviteľné"
+          disabled: "Nedá sa upravovať"
         show_on_profile:
           title: "Ukázať na verejnom profile"
-          enabled: "zobrazené na profile"
-          disabled: "nezobrazené na profile"
+          enabled: "Zobrazené v profile"
+          disabled: "Nezobrazuje sa v profile"
         show_on_user_card:
           title: "Zobraziť na karte používateľa"
-          enabled: "uvedené na karte používateľa"
-          disabled: "nie je uvedené na karte používateľa"
+          enabled: "Zobrazené na karte používateľa"
+          disabled: "Nezobrazuje sa na karte používateľa"
         searchable:
           title: "Vyhľadávateľné"
-          enabled: "vyhľadateľné"
-          disabled: "nie je možné vyhľadať"
+          enabled: "Vyhľadávateľné"
+          disabled: "Nedá sa vyhľadať"
         field_types:
-          text: "Textové pole"
+          text: "Text"
           confirm: "Potvrdenie"
           dropdown: "Zoznam"
           multiselect: "Viacnásobný výber"
@@ -7211,6 +7266,8 @@ sk:
             title: "Nahrávanie obrázkov"
         selectable_avatars:
           title: "Zoznam avatarov, z ktorých si používatelia môžu vybrať"
+        table_column_heading:
+          status: "Stav"
         categories:
           all_results: "Všetky"
           required: "Povinné"
@@ -7314,9 +7371,13 @@ sk:
         no_user_badges: "Používateľovi %{name} nebol udelený žiaden odznak."
         no_badges: Nie sú žiadne odznaky, ktoré môžu byť udelené.
         none_selected: "Vyberte odznak, aby ste mohli začať"
+        usage_heading: Použitie
         allow_title: Povoliť použitie odznaku namiesto názvu
         multiple_grant: Môže byť udelené viacnásobne
+        visibility_heading: Viditeľnosť
         listable: Zobraziť odznak na stránke verejných odznakov
+        show_in_post_header: Zobraziť odznak na príspevku, za ktorý bol udelený
+        show_in_post_header_disabled: Vyžaduje, aby bola povolená možnosť „Zobraziť odznak na stránke s verejnými odznakmi“ a „Zobraziť odznak po udelení príspevku na stránke s odznakom“.
         enabled: povolené
         disabled: vypnuté
         icon: Ikona
@@ -7384,7 +7445,12 @@ sk:
           grant_existing_holders: Udeliť ďalšie odznaky existujúcim držiteľom odznakov
       emoji:
         title: "Emoji"
+        description: "Pridajte nové emotikony, ktoré budú dostupné pre všetkých. Vyberte viacero súborov a vytvorte emotikony pomocou ich názvov. Vybraná skupina sa použije pre všetky súčasne pridané súbory."
+        no_emoji: "Zatiaľ nemáte žiadne vlastné emoji."
         add: "Pridanie emoji"
+        delete: "Odstrániť"
+        back: "Späť na emoji"
+        choose_files: "Výber súborov"
         uploading: "Nahrávanie..."
         name: "Meno"
         group: "Skupina"
@@ -7441,6 +7507,7 @@ sk:
         destination: "Destinácia"
         copy_to_clipboard: "Kopírovať trvalý odkaz do schránky"
         delete_confirm: Ste si istý, že chcete zmazať tento trvalý odkaz?
+        no_permalinks: "Zatiaľ nemáte žiadne trvalé odkazy."
         add: "Pridať permalink"
         back: "Späť na Trvalé odkazy"
         more_options: "Ďalšie možnosti"

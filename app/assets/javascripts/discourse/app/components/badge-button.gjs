@@ -10,6 +10,10 @@ export default class BadgeButton extends Component {
     }
   }
 
+  get showName() {
+    return this.args.showName ?? true;
+  }
+
   <template>
     <span
       title={{this.title}}
@@ -20,7 +24,9 @@ export default class BadgeButton extends Component {
       ...attributes
     >
       {{iconOrImage @badge}}
-      <span class="badge-display-name">{{@badge.name}}</span>
+      {{#if this.showName}}
+        <span class="badge-display-name">{{@badge.name}}</span>
+      {{/if}}
       {{yield}}
     </span>
   </template>

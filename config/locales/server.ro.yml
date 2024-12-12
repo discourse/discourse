@@ -177,6 +177,7 @@ ro:
     embed:
       load_from_remote: "A apărut o eroare la încărcarea postării."
     site_settings:
+      site_setting_is_shadowed_globally: "Nu poți modifica această setare pentru că este configurată la nivel global"
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
       page_publishing_requirements: "Publicarea paginilor nu poate fi activată dacă este activată încărcarea securizată."
@@ -318,6 +319,7 @@ ro:
       admins: "Responsabil pentru configurarea și întreținerea acestui site, cu acces la toate datele privind membrii și activitățile"
       moderators: "Responsabil pentru a răspunde la semnalări, a modera discuțiile și a ajuta membrii cu conturile lor"
       trust_level_0: "Membrii noi cu abilități limitate, care învață normele și funcționalitatea comunității"
+      trust_level_1: "Membri cu mai multă încredere, care au demonstrat un angajament inițial prin lectură și pot accesa acum mai multe funcții. Toți membrii acestui grup sunt, de asemenea, membri ai grupului trust_level_0."
   education:
     until_posts:
       one: "o postare"
@@ -354,6 +356,8 @@ ro:
       user_profile:
         bio_raw: "Despre mine"
       user:
+        password: "Parolă"
+      user_password:
         password: "Parolă"
     errors:
       models:
@@ -984,7 +988,10 @@ ro:
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: 'Toți utilizatorii noi trebuie să aștepte aprobarea moderatorului sau a administratorului înainte de a li se permite să se conecteze. (Notă: activarea acestei setări elimină și opțiunea de invitare „ajunge la subiect”).'
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
-    experimental_full_page_login: "Înlocuiește modalul de conectare sau înregistrare cu un formular de conectare sau înregistrare pe întreaga pagină."
+    show_signup_form_email_instructions: Afișează instrucțiunile pentru email pe formularul de înscriere.
+    show_signup_form_username_instructions: Afișează instrucțiunile pentru numele de utilizator în formularul de înscriere.
+    show_signup_form_full_name_instructions: Afișează instrucțiunile pentru numele complet în formularul de înscriere.
+    show_signup_form_password_instructions: Afișează instrucțiunile pentru parolă în formularul de înscriere.
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL pentru iframe src pe care Discourse le poate permite în siguranță în mesaje"
@@ -1254,7 +1261,6 @@ ro:
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
-    experimental_topics_filter: "Activează ruta de filtrare a subiectelor experimentale la /filter"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -1870,10 +1876,10 @@ ro:
       long_description: |
         Această insignă este acordată prima dată când editezi una dintre postările tale. Deși nu veți putea să vă editați postările pentru totdeauna, editarea este încurajată - puteți îmbunătăți formatarea, puteți remedia mici erori sau puteți adăuga orice ați ratat când ați postat inițial. Editați pentru a vă îmbunătăți și mai bine postările!
     basic_user:
-      name: Simplu utilizator
+      name: De bază
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Niveluri de încredere</a> toate funcțiile esențiale ale comunității
       long_description: |
-        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumesc pentru că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori; Ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, marcarea, editarea wiki și abilitatea de a posta mai multe imagini și link-uri.
+        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumim că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori, ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, semnalarea, editarea wiki și abilitatea de a publica mai multe imagini și legături.
     member:
       name: Membru
     regular:

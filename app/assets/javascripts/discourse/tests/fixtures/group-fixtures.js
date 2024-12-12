@@ -29,6 +29,7 @@ export default {
       is_group_owner: true,
       mentionable: false,
       messageable: true,
+      can_admin_group: false,
     },
   },
   "/groups/discourse.json": {
@@ -42,7 +43,7 @@ export default {
       visible: true,
       public_admission: true,
       public_exit: false,
-      flair_url: "fa-circle-half-stroke",
+      flair_url: "circle-half-stroke",
       is_group_owner: true,
       mentionable: true,
       messageable: true,
@@ -66,7 +67,7 @@ export default {
       visible: true,
       public_admission: true,
       public_exit: false,
-      flair_url: "fa-circle-half-stroke",
+      flair_url: "circle-half-stroke",
       is_group_owner: true,
       mentionable: true,
       messageable: true,
@@ -260,7 +261,7 @@ export default {
     },
   },
   "/groups/discourse/posts.json": {
-    "posts": [
+    posts: [
       {
         id: 94607,
         cooked:
@@ -1319,8 +1320,8 @@ export default {
           avatar_template:
             "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
         },
-      }
-    ]
+      },
+    ],
   },
   "/groups/alternative-group.json": {
     group: {
@@ -1334,7 +1335,7 @@ export default {
       has_messages: true,
       public_admission: true,
       public_exit: false,
-      flair_url: "fa-circle-half-stroke",
+      flair_url: "circle-half-stroke",
       is_group_owner: true,
       mentionable: true,
       messageable: true,

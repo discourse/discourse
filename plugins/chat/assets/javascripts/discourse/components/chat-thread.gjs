@@ -38,6 +38,7 @@ import Message from "./chat-message";
 import ChatMessagesContainer from "./chat-messages-container";
 import ChatMessagesScroller from "./chat-messages-scroller";
 import ChatSkeleton from "./chat-skeleton";
+import ChatThreadHeading from "./chat-thread-heading";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatThread extends Component {
@@ -45,7 +46,6 @@ export default class ChatThread extends Component {
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatComposerPresenceManager;
   @service chatHistory;
   @service chatDraftsManager;
   @service chatThreadComposer;
@@ -143,7 +143,6 @@ export default class ChatThread extends Component {
       (state.distanceToBottom.pixels > 250 && !state.atBottom);
     this.isScrolling = false;
     this.atBottom = state.atBottom;
-    this.args.setFullTitle?.(state.atTop);
 
     if (state.atBottom) {
       this.fetchMoreMessages({ direction: FUTURE });
@@ -569,6 +568,8 @@ export default class ChatThread extends Component {
             {{/if}}
           {{/unless}}
         </ChatMessagesContainer>
+
+        <ChatThreadHeading @thread={{@thread}} />
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow

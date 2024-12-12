@@ -336,6 +336,8 @@ nb_NO:
         bio_raw: "Om meg"
       user:
         password: "Passord"
+      user_password:
+        password: "Passord"
     errors:
       models:
         topic:

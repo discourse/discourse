@@ -16,6 +16,7 @@ function silenceMobileAndOverrideDeprecations(hooks) {
     const promise = new Promise((resolve) => (unsilenceCallback = resolve));
     withSilencedDeprecationsAsync(
       [
+        "component-template-resolving", // silence ember's template resolving deprecation
         "discourse.mobile-templates",
         "discourse.resolver-template-overrides",
         "discourse.component-template-overrides",

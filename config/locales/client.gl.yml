@@ -1534,6 +1534,8 @@ gl:
     form_kit:
       reset: Restabelecer
       optional: opcional
+      select:
+        none_placeholder: "Ningunha"
       errors:
         required: "Obrigatorio"
     close: "Pechar"
@@ -2978,7 +2980,6 @@ gl:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       filter:
-        title: "Filtro"
         button:
           label: "Filtro"
       latest:
@@ -3748,6 +3749,9 @@ gl:
         look_and_feel:
           themes:
             title: "Temas"
+        user_fields:
+          type: "Tipo"
+          delete: "Eliminar"
       plugins:
         title: "Complementos"
         name: "Nome"
@@ -4423,6 +4427,11 @@ gl:
         status: "Estado"
         show_emails: "Amosar correos"
         hide_emails: "Agochar correos"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Pechar"
+              confirm: "Eliminar"
         nav:
           new: "Novo"
           active: "Activo"
@@ -4663,8 +4672,6 @@ gl:
           confirm_delete: "Confirma que quere eliminar este rexistro do DiscourseConnect?"
       user_fields:
         title: "Campos do usuario"
-        help: "Engade campos que os usuarios poidan encher."
-        create: "Crear un campo de usuario"
         untitled: "Sen título"
         name: "Nome do campo"
         type: "TIpo de campo"
@@ -4685,18 +4692,12 @@ gl:
             title: "Opcional"
         editable:
           title: "Editábel despois do rexistro"
-          enabled: "editábel"
-          disabled: "non editábel"
         show_on_profile:
           title: "Amosar no perfil público"
-          enabled: "amosado no perfil"
-          disabled: "non amosado no perfil"
         show_on_user_card:
           title: "Amosar na tarxeta de usuario"
-          enabled: "amosado na tarxeta de usuario"
-          disabled: "non amosado na tarxeta de usuario"
         field_types:
-          text: "Campo de texto"
+          text: "Texto"
           confirm: "Confirmación"
           dropdown: "Despregábel"
       site_text:
@@ -4734,6 +4735,8 @@ gl:
             label: "Cargar"
         selectable_avatars:
           title: "Listaxe de avatares que os usuarios poden elixir"
+        table_column_heading:
+          status: "Estado"
         categories:
           all_results: "Todo"
           required: "Obrigatorio"
@@ -4806,6 +4809,7 @@ gl:
         none_selected: "Seleccione unha insignia para comezar"
         allow_title: Permitir que se use a insignia como un título
         multiple_grant: Pode concederse múltiples veces
+        visibility_heading: Visibilidade
         listable: Amosar a insignia na páxina de insignias públicas
         enabled: activado
         disabled: desactivado
@@ -4856,6 +4860,7 @@ gl:
           replace_owners: Retirar a insignia dos propietarios anteriores
       emoji:
         title: "Emoji"
+        delete: "Eliminar"
         name: "Nome"
         group: "Grupo"
         image: "Imaxe"

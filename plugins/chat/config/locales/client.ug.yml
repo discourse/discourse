@@ -406,6 +406,7 @@ ug:
         auto_join_users_info: "ئاخىرقى 3 ئايدىكى ئاكتىپ ئىشلەتكۈچىنى ھەر سائەتتە بىر تەكشۈرىدۇ. ئەگەر ئۇلار %{category} سەھىپىنى زىيارەت قىلالىسا، ئۇنى مەزكۇر قانالغا قوشۇڭ."
         auto_join_users_info_no_category: "ئاخىرقى 3 ئايدىكى ئاكتىپ ئىشلەتكۈچىنى ھەر سائەتتە بىر تەكشۈرىدۇ. ئەگەر ئۇلار تاللانغان سەھىپىنى زىيارەت قىلالىسا، ئۇنى مەزكۇر قانالغا قوشۇڭ."
         auto_join_users_warning: "بۇ قانالنىڭ ئەزاسى ئەمەس ھەمدە %{category} سەھىپىنى زىيارەت قىلالايدىغان ئىشلەتكۈچىنىڭ ھەممىسى قوشۇلىدۇ. جەزملەمسىز؟"
+        notification_level: "ئىتتىرىش ئۇقتۇرۇشى يوللايدۇ"
         follow: "قوشۇل"
         followed: "قوشۇلدى"
         mute: "قانالنى ئۈنسىزلە"
@@ -601,10 +602,10 @@ ug:
         chat_message: "يېڭى سۆھبەت ئۇچۇرى"
         chat_quoted: "سۆھبەت ئۇچۇرىڭىزنى %{username} نەقىل ئالدى"
       titles:
-        chat_mention: "سۆھبەتتە ئاتاش"
-        chat_invitation: "سۆھبەت تەكلىپى"
-        chat_quoted: "سۆھبەت نەقىل ئېلىندى"
-        chat_watched_thread: "كۆزەتتىكى تېما سۆھبىتى"
+        chat_mention: "سۆھبەتتە تىلغا ئالغان"
+        chat_invitation: "سۆھبەت قانىلىغا تەكلىپ قىلىنغان"
+        chat_quoted: "سۆھبەت ئۇچۇرى نەقىل ئېلىنغان"
+        chat_watched_thread: "سۆھبەت تېمىسى كۆزىتىلگەن"
     action_codes:
       chat:
         enabled: '%{when} دە %{who} <button class="btn-link open-chat">سۆھبەت</button>نى قوزغاتتى'
@@ -635,6 +636,7 @@ ug:
         title: "سۆھبەت"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} قانال ئالماشتۇر"
+          switch__unread_channel_arrows: "%{shortcut} ئوقۇلمىغان قانالغا ئالماشتۇرىدۇ"
           open_quick_channel_selector: "%{shortcut} تېز قانال تاللىغۇچنى ئاچ"
           open_insert_link_modal: "%{shortcut} ئۇلانما قىستۇر (كىرگۈزۈش كۆزنىكىلا)"
           composer_bold: "%{shortcut} توم (كىرگۈزۈش كۆزنىكىلا)"

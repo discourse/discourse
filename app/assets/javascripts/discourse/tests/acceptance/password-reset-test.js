@@ -100,7 +100,7 @@ acceptance("Password Reset", function (needs) {
     await fillIn(".password-reset input", "perf3ctly5ecur3");
     sinon.stub(DiscourseURL, "redirectTo");
     await click(".password-reset form button[type='submit']");
-    assert.ok(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
+    assert.true(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
   });
 
   test("Password Reset Page With Second Factor", async function (assert) {
@@ -133,7 +133,7 @@ acceptance("Password Reset", function (needs) {
 
     sinon.stub(DiscourseURL, "redirectTo");
     await click(".password-reset form button[type='submit']");
-    assert.ok(
+    assert.true(
       DiscourseURL.redirectTo.calledWith("/"),
       "it redirects after submitting form"
     );

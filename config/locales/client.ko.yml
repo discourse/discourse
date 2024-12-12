@@ -1613,6 +1613,8 @@ ko:
     form_kit:
       reset: 리셋
       optional: 선택 사항
+      select:
+        none_placeholder: "없음"
       errors:
         required: "필수"
         too_short:
@@ -3137,7 +3139,6 @@ ko:
       with_topics: "%{filter} 주제"
       with_category: "%{filter} %{category} 주제"
       filter:
-        title: "필터"
         button:
           label: "필터"
       latest:
@@ -3982,6 +3983,9 @@ ko:
         look_and_feel:
           themes:
             title: "테마"
+        user_fields:
+          type: "유형"
+          delete: "삭제하기"
       plugins:
         title: "플러그인"
         name: "이름"
@@ -4678,6 +4682,11 @@ ko:
         status: "상태"
         show_emails: "이메일 표시"
         hide_emails: "이메일 숨기기"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "닫기"
+              confirm: "삭제하기"
         nav:
           new: "신규"
           active: "활성"
@@ -4931,8 +4940,6 @@ ko:
           confirm_delete: "이 DiscourseConnect 기록을 삭제할까요?"
       user_fields:
         title: "사용자 필드"
-        help: "사용자가 입력할 수 있는 필드를 추가합니다."
-        create: "사용자 필드 생성"
         untitled: "무제"
         name: "필드 이름"
         type: "필드 유형"
@@ -4953,22 +4960,15 @@ ko:
             title: "선택 사항"
         editable:
           title: "가입 후 편집 가능"
-          enabled: "편집 가능"
-          disabled: "편집 불가"
         show_on_profile:
           title: "다른 사람이 프로필을 볼수 있게할까요"
-          enabled: "프로필에 표시"
-          disabled: "프로필에 표시하지 않기"
         show_on_user_card:
           title: "사용자 카드에 표시할까요"
-          enabled: "사용자 카드에 표시"
-          disabled: "사용자 카드에 표시하지 않기"
         searchable:
           title: "검색 가능한가요"
-          enabled: "검색 가능"
-          disabled: "검색 불가"
+          enabled: "검색 가능한가요"
         field_types:
-          text: "텍스트 필드"
+          text: "텍스트"
           confirm: "확인"
           dropdown: "드롭다운"
           multiselect: "다중 선택"
@@ -5011,6 +5011,8 @@ ko:
             label: "업로드"
         selectable_avatars:
           title: "사용자가 선택할 수있는 아바타 목록"
+        table_column_heading:
+          status: "상태"
         categories:
           all_results: "전체"
           required: "필수"
@@ -5085,6 +5087,7 @@ ko:
         none_selected: "시작하려면 배지를 선택하세요"
         allow_title: 배지를 타이틀로 사용하도록 허용
         multiple_grant: 중복 부여 가능
+        visibility_heading: 시계
         listable: 공개 배지 페이지에 표시
         enabled: 활성화
         disabled: 비활성
@@ -5138,6 +5141,7 @@ ko:
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
+        delete: "삭제하기"
         name: "이름"
         group: "그룹"
         image: "이미지"

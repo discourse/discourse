@@ -105,6 +105,7 @@ ja:
         doc: 複数の PM を 1 人のユーザーに送信できるようにします。各 PM は遅延を受け入れます。
       suspend_user_by_email:
         title: メールでユーザーを凍結する
+        description: メールアドレスに基づいてアカウントを自動的に凍結します
       user_global_notice:
         title: ユーザーのグローバル通知
         description: ユーザーのグローバル通知を表示できるようにします
@@ -141,6 +142,13 @@ ja:
         button_text: 完了
       add_user_to_group_through_custom_field:
         title: "ユーザーカスタムフィールドを介してグループにユーザーを追加する"
+        description: "ログイン時または定期的なチェック時にユーザーをグループに自動的に追加します"
       group_category_notification_default:
         title: "グループカテゴリ通知のデフォルト"
         description: "グループのメンバーに対するカテゴリのデフォルトの通知レベルを設定します"
+      send_chat_message:
+        title: "チャットメッセージの送信"
+        description: "チャンネルにカスタムチャットメッセージを送信します"
+      random_assign:
+        title: "ランダム割り当て"
+        description: "グループにトピックをランダムに割り当てます"

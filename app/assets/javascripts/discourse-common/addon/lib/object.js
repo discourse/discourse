@@ -53,6 +53,8 @@ export function deepEqual(obj1, obj2) {
       }
     }
     return true;
+  } else {
+    return false;
   }
 }
 

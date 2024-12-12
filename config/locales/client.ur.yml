@@ -1624,6 +1624,8 @@ ur:
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
+      select:
+        none_placeholder: "کوئی نہیں"
       errors:
         required: "درکار"
     close: "بند کریں"
@@ -3178,7 +3180,6 @@ ur:
       with_topics: "%{filter} ٹاپک"
       with_category: "%{filter} %{category} ٹاپک"
       filter:
-        title: "فِلٹر"
         button:
           label: "فِلٹر"
       latest:
@@ -4032,6 +4033,9 @@ ur:
         look_and_feel:
           themes:
             title: "تِھیمز"
+        user_fields:
+          type: "قِسم"
+          delete: "مٹائیں"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
@@ -4718,6 +4722,11 @@ ur:
         status: "سٹیٹس"
         show_emails: "اِیمیل دکھائیں"
         hide_emails: "ای میلز چھپائیں"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "بند کریں"
+              confirm: "مٹائیں"
         nav:
           new: "نیا"
           active: "فعال"
@@ -4972,8 +4981,6 @@ ur:
           confirm_delete: "کیا آپ واقعی اس DiscourseConnect ریکارڈ کو حذف کرنا چاہیں گے؟"
       user_fields:
         title: "صارف کے لیے دیئے گئے خانے"
-        help: "خانے شامل کریں جو آپ کے صارفین پُر کر سکیں۔"
-        create: "صارفین سے پُر ہونے والے خانے بنائیں۔"
         untitled: "بلاعنوان"
         name: "فیلڈ کا نام"
         type: "فیلڈ کی قسم"
@@ -4991,20 +4998,8 @@ ur:
         requirement:
           optional:
             title: "اختیاری"
-        editable:
-          enabled: "قابلِ ترمیم"
-          disabled: "ناقابلِ ترمیم"
-        show_on_profile:
-          enabled: "پروفائل پر دکھائیں؟"
-          disabled: "پروفائل پر نہیں دکھایا؟"
-        show_on_user_card:
-          enabled: "صارف کارڈ پر دکھایا گیا"
-          disabled: "صارف کارڈ پر نہیں دکھایا گیا"
-        searchable:
-          enabled: "قابل تلاش؟"
-          disabled: "قابل تلاش نہیں"
         field_types:
-          text: "ٹَیکسٹ کی جگہ"
+          text: "ٹیکسٹ"
           confirm: "تصدیق"
           dropdown: "ڈراپ ڈاؤن"
           multiselect: "کثیر الانتخاب"
@@ -5047,6 +5042,8 @@ ur:
             label: "اَپ لوڈ"
         selectable_avatars:
           title: "اوتار کی فہرست جس میں سے صارفین منتخب کر سکتے ہیں"
+        table_column_heading:
+          status: "سٹیٹس"
         categories:
           all_results: "تمام"
           required: "درکار"
@@ -5118,6 +5115,7 @@ ur:
         none_selected: "شروع کرنے کے لئے ایک بَیج منتخب کریں"
         allow_title: عنوان کے طور پر بَیج وں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
+        visibility_heading: نموداری
         listable: پبلک بَیجز کے صفحے پر بَیج دکھائیں
         disabled: غیر فعال
         icon: آئیکن
@@ -5169,6 +5167,7 @@ ur:
           grant_existing_holders: موجودہ بیج ہولڈرز کو اضافی بیجز دیں
       emoji:
         title: "اِیمَوجی"
+        delete: "مٹائیں"
         name: "نام"
         group: "گروپ"
         image: "تصویر"

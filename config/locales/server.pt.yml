@@ -406,6 +406,8 @@ pt:
         bio_raw: "Sobre Mim"
       user:
         password: "Palavra-passe"
+      user_password:
+        password: "Palavra-passe"
     errors:
       models:
         topic:

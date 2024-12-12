@@ -165,7 +165,7 @@ es:
 
           - Solo soy un robot, pero [nuestro amable personal](%{base_uri}/about) también está aquí para ayudarte si necesitas comunicarte con una persona.
 
-          - Por razones de seguridad, limitamos temporalmente lo que los nuevos usuarios pueden hacer. Obtendrás [nuevas habilidades](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (e [medallas](%{base_uri}/badges)) a medida que te conozcamos.
+          - Por razones de seguridad, limitamos temporalmente lo que los nuevos usuarios pueden hacer. Obtendrás [nuevas habilidades](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (y [medallas](%{base_uri}/badges)) a medida que te conozcamos.
 
           - Creemos en [el comportamiento de una comunidad civilizada](%{base_uri}/guidelines) en todo momento.
       onebox:

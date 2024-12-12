@@ -24,7 +24,7 @@ def should_skip?(path)
   existing_assets.include?(prefix_s3_path(path))
 end
 
-def upload(path, remote_path, content_type, content_encoding = nil)
+def upload(path, remote_path, content_type, content_encoding = nil, logger:)
   options = {
     cache_control: "max-age=31556952, public, immutable",
     content_type: content_type,
@@ -34,9 +34,9 @@ def upload(path, remote_path, content_type, content_encoding = nil)
   options[:content_encoding] = content_encoding if content_encoding
 
   if should_skip?(remote_path)
-    puts "Skipping: #{remote_path}"
+    logger << "Skipping: #{remote_path}\n"
   else
-    puts "Uploading: #{remote_path}"
+    logger << "Uploading: #{remote_path}\n"
 
     File.open(path) { |file| helper.upload(file, remote_path, options) }
   end
@@ -61,7 +61,7 @@ def assets
       Rails.application.config.assets.manifest,
     )
 
-  results = []
+  results = Set.new
 
   manifest.assets.each do |_, path|
     fullpath = (Rails.root + "public/assets/#{path}").to_s
@@ -69,6 +69,7 @@ def assets
     # Ignore files we can't find the mime type of, like yarn.lock
     content_type = MiniMime.lookup_by_filename(fullpath)&.content_type
     content_type ||= "application/json" if fullpath.end_with?(".map")
+
     if content_type
       asset_path = "assets/#{path}"
       results << [fullpath, asset_path, content_type]
@@ -87,7 +88,7 @@ def assets
     end
   end
 
-  results
+  results.to_a
 end
 
 def asset_paths
@@ -194,7 +195,16 @@ task "s3:ensure_cors_rules" => :environment do
 end
 
 task "s3:upload_assets" => [:environment, "s3:ensure_cors_rules"] do
-  assets.each { |asset| upload(*asset) }
+  pool =
+    Concurrent::FixedThreadPool.new(
+      ENV["DISCOURSE_S3_UPLOAD_ASSETS_RAKE_THREAD_POOL_SIZE"] || Concurrent.processor_count,
+    )
+
+  logger = Logger.new(STDOUT)
+  assets.each { |asset| pool.post { upload(*asset, logger:) } }
+
+  pool.shutdown
+  pool.wait_for_termination
 end
 
 task "s3:expire_missing_assets" => :environment do

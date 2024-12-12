@@ -37,6 +37,7 @@ hu:
     default_poll_with_multiple_choices_has_invalid_parameters: "A többválasztós szavazás érvénytelen paraméterekkel rendelkezik."
     named_poll_with_multiple_choices_has_invalid_parameters: "A(z) <strong>%{name}</strong> többválasztós szavazás érvénytelen paraméterekkel rendelkezik."
     requires_at_least_1_valid_option: "Legalább 1 érvényes lehetőséget kell kiválasztania."
+    requires_that_at_least_one_option_is_ranked: "A rangsorolt szavazások során legalább egy lehetőséget rangsorolni kell."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "%{minutes} perc után nem lehet módosítani a szavazást."
       cannot_edit_named_poll_with_votes: "Az első %{minutes} perc után nem módosíthatja a(z) <strong>${name}</strong> szavazás nevét."

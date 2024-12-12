@@ -1979,6 +1979,9 @@ nb_NO:
       optional: valgfritt
       errors_summary_title: "Dette skjemaet inneholder feil:"
       dirty_form: "Du har ikke sendt inn endringene dine! Er du sikker på at du vil dra?"
+      select:
+        select_placeholder: "Velg…"
+        none_placeholder: "Ingen"
       errors:
         required: "Påkrevd"
         invalid_url: "Må være en gyldig URL"
@@ -3934,7 +3937,6 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
-        title: "Filtrer"
         button:
           label: "Filtrer"
       latest:
@@ -4684,6 +4686,11 @@ nb_NO:
         look_and_feel:
           themes:
             title: "Drakter"
+        user_fields:
+          type: "Type"
+          more_options:
+            title: "Flere valg"
+          delete: "Slett"
       plugins:
         title: "Utvidelser"
         name: "Navn"
@@ -5278,6 +5285,11 @@ nb_NO:
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
         status: "Status"
         show_emails: "Vis e-poster"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Lukk"
+              confirm: "Slett"
         nav:
           new: "Ny"
           active: "Aktiv"
@@ -5476,8 +5488,6 @@ nb_NO:
           external_avatar_url: "Profilbilde URL"
       user_fields:
         title: "Brukerfelter"
-        help: "Legg til felter som dine brukere kan fylle ut."
-        create: "Opprett brukerfelt"
         untitled: "Uten tittel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5498,18 +5508,12 @@ nb_NO:
             title: "Valgfritt"
         editable:
           title: "Kan det endres etter registrering"
-          enabled: "kan endres"
-          disabled: "kan ikke endres"
         show_on_profile:
           title: "Vis på offentlig profil"
-          enabled: "vises på profil"
-          disabled: "vises ikke på profil"
         show_on_user_card:
           title: "Vis på brukerkort"
-          enabled: "vist på brukerkort"
-          disabled: "ikke vist på brukerkort"
         field_types:
-          text: "Tekstfelt"
+          text: "Tekst"
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:
@@ -5543,6 +5547,8 @@ nb_NO:
             label: "Last opp"
         selectable_avatars:
           title: "Liste over avatarer brukere kan velge mellom"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alle"
           required: "Påkrevd"
@@ -5608,6 +5614,7 @@ nb_NO:
         none_selected: "Velg et merke for å komme i gang"
         allow_title: Tillat merke å bli benyttet som en tittel
         multiple_grant: Kan bli tildelt flere ganger
+        visibility_heading: Synlighet
         listable: Vis merket på den offentlige merkesiden
         enabled: aktivert
         disabled: deaktivert
@@ -5647,6 +5654,7 @@ nb_NO:
             with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "Slett"
         uploading: "Laster opp…"
         name: "Navn"
         group: "Gruppe"

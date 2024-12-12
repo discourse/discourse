@@ -1279,7 +1279,6 @@ be:
     categories_list: "Спіс катэгорый"
     filters:
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -1679,6 +1678,9 @@ be:
             invalid_applies_to: "абавязковыя"
             topic: "тэмы"
             post: "паведамленняў"
+        user_fields:
+          type: "Тып"
+          delete: "выдаляць"
       plugins:
         title: "Плагіны"
         name: "Назва"
@@ -2006,6 +2008,11 @@ be:
         id_not_found: "Выбачайце, карыстальніка з такім нумарам няма ў нашай сістэме."
         status: "Статус"
         show_emails: "Паказаць емейл"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "зачыніць"
+              confirm: "выдаляць"
         nav:
           new: "Новыя"
           active: "актыўныя"
@@ -2129,7 +2136,6 @@ be:
         required:
           enabled: "абавязковыя"
         field_types:
-          text: "тэкставае поле"
           confirm: "пацвярджэнне"
           dropdown: "Выпадаючы спіс"
       site_text:
@@ -2155,6 +2161,8 @@ be:
             label: "Загрузіць"
         selectable_avatars:
           title: "Спіс аватараў карыстальнікі могуць выбраць"
+        table_column_heading:
+          status: "Статус"
         categories:
           all_results: "усе"
           required: "абавязковыя"
@@ -2224,6 +2232,7 @@ be:
           sample: "Прыклад:"
       emoji:
         title: "Абразкі"
+        delete: "выдаляць"
         name: "Імя"
         group: "Група"
         image: "Выява"

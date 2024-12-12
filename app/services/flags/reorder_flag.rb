@@ -10,10 +10,12 @@ class Flags::ReorderFlag
     validates :flag_id, presence: true
     validates :direction, inclusion: { in: %w[up down] }
   end
+
   model :flag
   policy :invalid_access
   model :all_flags
   policy :invalid_move
+
   transaction do
     step :move
     step :log

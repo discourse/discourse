@@ -3,7 +3,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -18,7 +18,7 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/general",
-      "it jumps to the correct screen"
+      "jumps to the correct screen"
     );
 
     assert.dom(".category-breadcrumb .badge-category").hasText("bug");
@@ -35,7 +35,7 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/general",
-      "it stays on the edit screen"
+      "stays on the edit screen"
     );
 
     await visit("/c/bug/edit/settings");
@@ -47,13 +47,13 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
-      "it stays on the edit screen"
+      "stays on the edit screen"
     );
 
     sinon.stub(DiscourseURL, "routeTo");
 
     await click(".edit-category-security a");
-    assert.ok(
+    assert.true(
       DiscourseURL.routeTo.calledWith("/c/bug/edit/security"),
       "tab routing works"
     );
@@ -141,8 +141,8 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
 
     const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
-    assert.ok(names.includes("(no category)"));
-    assert.notOk(names.includes("Uncategorized"));
+    assert.true(names.includes("(no category)"));
+    assert.false(names.includes("Uncategorized"));
   });
 
   test("Editing parent category (enabled Uncategorized)", async function (assert) {
@@ -156,8 +156,8 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
 
     const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
-    assert.ok(names.includes("(no category)"));
-    assert.notOk(names.includes("Uncategorized"));
+    assert.true(names.includes("(no category)"));
+    assert.false(names.includes("Uncategorized"));
   });
 
   test("Index Route", async function (assert) {
@@ -165,7 +165,7 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/general",
-      "it redirects to the general tab"
+      "redirects to the general tab"
     );
   });
 
@@ -174,7 +174,7 @@ acceptance("Category Edit", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/c/1-category/edit/general",
-      "it goes to the general tab"
+      "goes to the general tab"
     );
     assert.dom("input.category-name").hasValue("bug");
   });
@@ -184,8 +184,7 @@ acceptance("Category Edit", function (needs) {
     await fillIn(".email-in", "duplicate@example.com");
     await click("#save-category");
 
-    assert.strictEqual(
-      query(".dialog-body").textContent.trim(),
+    assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
         error: "duplicate email",
       })
@@ -204,8 +203,7 @@ acceptance("Category Edit", function (needs) {
 
     await click("#save-category");
 
-    assert.strictEqual(
-      query(".dialog-body").textContent.trim(),
+    assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
         error: "subcategory nested under another subcategory",
       })

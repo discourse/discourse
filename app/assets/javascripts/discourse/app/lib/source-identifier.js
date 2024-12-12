@@ -1,4 +1,4 @@
-import DEBUG from "@glimmer/env";
+import { DEBUG } from "@glimmer/env";
 import PreloadStore from "discourse/lib/preload-store";
 import getURL from "discourse-common/lib/get-url";
 

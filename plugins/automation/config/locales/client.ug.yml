@@ -6,6 +6,11 @@
 
 ug:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: ئاپتوماتلاشتۇرۇشنى ئۆچۈر
     discourse_automation:
       title: ئاپتوماتلاشتۇرۇش
       create: قۇر
@@ -14,6 +19,8 @@ ug:
       select_trigger: قوزغاتقۇچ تاللاڭ
       confirm_automation_reset: بۇ مەشغۇلات قوليازما ۋە قوزغاتقۇچ تاللانمىسىنى ئەسلىگە قايتۇرىدۇ، يېڭى ھالەت ساقلىنىدۇ، داۋاملاشتۇرامسىز؟
       confirm_automation_trigger: بۇ مەشغۇلات ئاپتوماتلاشتۇرۇشنى قوزغىتىدۇ، داۋاملاشتۇرامسىز؟
+      no_automation_yet: سىز تېخى ھېچقانداق ئاپتوماتلاشتۇرۇشنى قۇرمىدىڭىز. باشلاش ئۈچۈن تۆۋەندىكى تاللانمىنى تاللاڭ.
+      filter_placeholder: ئات ياكى چۈشەندۈرۈش بويىچە سۈزىدۇ…
       edit_automation:
         trigger_section:
           forced: بۇ قوزغاتقۇچنى قوليازما مەجبۇرىي ئىجرا قىلىدۇ.
@@ -228,6 +235,9 @@ ug:
             watching_tags:
               label: كۆزەتتىكى بەلگە
               description: ئەگەر تېمىدا مۇشۇبەلگىنىڭ بىرى بولغاندىلا قوزغىتىلىدۇ
+            trigger_with_pms:
+              label: شەخسىي ئۇچۇردا قوزغىتىدۇ
+              description: شەخسىي ئۇچۇردىكى بەلگە ئۆزگەرگەن تەقدىردىمۇ قوزغايدۇ
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -386,6 +396,7 @@ ug:
           fields:
             custom_field_name:
               label: "ئىشلەتكۈچى ئىختىيارى بۆلەك ئىسمى"
+      unnamed_automation: "ئاتسىز ئاپتوماتلاشتۇرۇش"
       models:
         script:
           name:

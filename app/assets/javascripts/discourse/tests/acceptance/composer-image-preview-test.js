@@ -1,7 +1,7 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Image Preview", function (needs) {
   needs.user({});
@@ -26,11 +26,9 @@ acceptance("Composer - Image Preview", function (needs) {
   });
 
   const assertImageResized = (assert, uploads) => {
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      uploads.join("\n"),
-      "it resizes uploaded image"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(uploads.join("\n"), "resizes uploaded image");
   };
 
   test("Image resizing buttons", async function (assert) {
@@ -147,10 +145,8 @@ acceptance("Composer - Image Preview", function (needs) {
   test("Editing alt text (with enter key) for single image in preview updates alt text in composer", async function (assert) {
     const scaleButtonContainer = ".scale-btn-container";
 
-    const readonlyAltText = ".alt-text";
     const editAltTextButton = ".alt-text-edit-btn";
 
-    const altTextInput = ".alt-text-input";
     const altTextEditOk = ".alt-text-edit-ok";
     const altTextEditCancel = ".alt-text-edit-cancel";
 
@@ -159,10 +155,10 @@ acceptance("Composer - Image Preview", function (needs) {
     await click("#create-topic");
     await fillIn(".d-editor-input", `![zorro|200x200](upload://zorro.png)`);
 
-    assert.equal(query(readonlyAltText).innerText, "zorro", "correct alt text");
-    assert.dom(readonlyAltText).isVisible("alt text is visible");
+    assert.dom(".alt-text").hasText("zorro", "correct alt text");
+    assert.dom(".alt-text").isVisible("alt text is visible");
     assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
-    assert.dom(altTextInput).isNotVisible("alt text input is hidden");
+    assert.dom(".alt-text-input").isNotVisible("alt text input is hidden");
     assert.dom(altTextEditOk).isNotVisible("alt text edit ok button is hidden");
     assert
       .dom(altTextEditCancel)
@@ -171,40 +167,32 @@ acceptance("Composer - Image Preview", function (needs) {
     await click(editAltTextButton);
 
     assert.dom(scaleButtonContainer).isNotVisible("scale buttons are hidden");
-    assert.dom(readonlyAltText).isNotVisible("alt text is hidden");
+    assert.dom(".alt-text").isNotVisible("alt text is hidden");
     assert
       .dom(editAltTextButton)
       .isNotVisible("alt text edit button is hidden");
-    assert.dom(altTextInput).isVisible("alt text input is visible");
+    assert.dom(".alt-text-input").isVisible("alt text input is visible");
     assert.dom(altTextEditOk).isVisible("alt text edit ok button is visible");
     assert.dom(altTextEditCancel).isVisible("alt text edit cancel is hidden");
-    assert.equal(
-      query(altTextInput).value,
-      "zorro",
-      "correct alt text in input"
-    );
+    assert
+      .dom(".alt-text-input")
+      .hasValue("zorro", "correct alt text in input");
 
-    await triggerKeyEvent(altTextInput, "keypress", "[");
-    await triggerKeyEvent(altTextInput, "keypress", "]");
-    assert.equal(query(altTextInput).value, "zorro", "does not input [ ] keys");
+    await triggerKeyEvent(".alt-text-input", "keypress", "[");
+    await triggerKeyEvent(".alt-text-input", "keypress", "]");
+    assert.dom(".alt-text-input").hasValue("zorro", "does not input [ ] keys");
 
-    await fillIn(altTextInput, "steak");
-    await triggerKeyEvent(altTextInput, "keypress", 13);
+    await fillIn(".alt-text-input", "steak");
+    await triggerKeyEvent(".alt-text-input", "keypress", 13);
 
-    assert.equal(
-      query(".d-editor-input").value,
-      "![steak|200x200](upload://zorro.png)",
-      "alt text updated"
-    );
-    assert.equal(
-      query(readonlyAltText).innerText,
-      "steak",
-      "shows the alt text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("![steak|200x200](upload://zorro.png)", "alt text updated");
+    assert.dom(".alt-text").hasText("steak", "shows the alt text");
     assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
     assert.dom(scaleButtonContainer).isVisible("scale buttons are visible");
     assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
-    assert.dom(altTextInput).isNotVisible("alt text input is hidden");
+    assert.dom(".alt-text-input").isNotVisible("alt text input is hidden");
     assert.dom(altTextEditOk).isNotVisible("alt text edit ok button is hidden");
     assert
       .dom(altTextEditCancel)
@@ -213,7 +201,6 @@ acceptance("Composer - Image Preview", function (needs) {
 
   test("Editing alt text (with check button) in preview updates alt text in composer", async function (assert) {
     const scaleButtonContainer = ".scale-btn-container";
-    const readonlyAltText = ".alt-text";
     const editAltTextButton = ".alt-text-edit-btn";
 
     const altTextInput = ".alt-text-input";
@@ -230,16 +217,10 @@ acceptance("Composer - Image Preview", function (needs) {
     await fillIn(altTextInput, "steak");
     await click(altTextEditOk);
 
-    assert.equal(
-      query(".d-editor-input").value,
-      "![steak|200x200](upload://zorro.png)",
-      "alt text updated"
-    );
-    assert.equal(
-      query(readonlyAltText).innerText,
-      "steak",
-      "shows the alt text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("![steak|200x200](upload://zorro.png)", "alt text updated");
+    assert.dom(".alt-text").hasText("steak", "shows the alt text");
 
     assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
     assert.dom(scaleButtonContainer).isVisible("scale buttons are visible");
@@ -254,7 +235,6 @@ acceptance("Composer - Image Preview", function (needs) {
   test("Cancel alt text edit in preview does not update alt text in composer", async function (assert) {
     const scaleButtonContainer = ".scale-btn-container";
 
-    const readonlyAltText = ".alt-text";
     const editAltTextButton = ".alt-text-edit-btn";
 
     const altTextInput = ".alt-text-input";
@@ -271,16 +251,10 @@ acceptance("Composer - Image Preview", function (needs) {
     await fillIn(altTextInput, "steak");
     await click(altTextEditCancel);
 
-    assert.equal(
-      query(".d-editor-input").value,
-      "![zorro|200x200](upload://zorro.png)",
-      "alt text not updated"
-    );
-    assert.equal(
-      query(readonlyAltText).innerText,
-      "zorro",
-      "shows the unedited alt text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("![zorro|200x200](upload://zorro.png)", "alt text not updated");
+    assert.dom(".alt-text").hasText("zorro", "shows the unedited alt text");
 
     assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
     assert.dom(scaleButtonContainer).isVisible("scale buttons are visible");
@@ -308,15 +282,15 @@ acceptance("Composer - Image Preview", function (needs) {
     await fillIn(altTextInput, "tomtom");
     await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
-    assert.equal(
-      query(".d-editor-input").value,
-      `![tomtom|200x200](upload://zorro.png) ![not-zorro|200x200](upload://not-zorro.png)`,
-      "the correct image's alt text updated"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `![tomtom|200x200](upload://zorro.png) ![not-zorro|200x200](upload://not-zorro.png)`,
+        "the correct image's alt text updated"
+      );
   });
 
   test("Deleting alt text for image empties alt text in composer and allows further modification", async function (assert) {
-    const altText = ".alt-text";
     const editAltTextButton = ".alt-text-edit-btn";
     const altTextInput = ".alt-text-input";
 
@@ -330,23 +304,19 @@ acceptance("Composer - Image Preview", function (needs) {
     await fillIn(altTextInput, "");
     await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
-    assert.equal(
-      query(".d-editor-input").value,
-      "![|200x200](upload://zorro.png)",
-      "alt text updated"
-    );
-    assert.equal(query(altText).innerText, "", "shows the alt text");
+    assert
+      .dom(".d-editor-input")
+      .hasValue("![|200x200](upload://zorro.png)", "alt text updated");
+    assert.dom(".alt-text").hasText("", "shows the alt text");
 
     await click(editAltTextButton);
 
     await fillIn(altTextInput, "tomtom");
     await triggerKeyEvent(altTextInput, "keypress", "Enter");
 
-    assert.equal(
-      query(".d-editor-input").value,
-      "![tomtom|200x200](upload://zorro.png)",
-      "alt text updated"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("![tomtom|200x200](upload://zorro.png)", "alt text updated");
   });
 
   test("Image delete button", async function (assert) {
@@ -365,23 +335,17 @@ acceptance("Composer - Image Preview", function (needs) {
     //click on the remove button of the first image
     await click(".button-wrapper[data-image-index='0'] .delete-image-button");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      uploads.join("\n"),
-      "Image should be removed from the editor"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(uploads.join("\n"), "Image should be removed from the editor");
 
-    assert.equal(
-      query(".d-editor-input").value.includes("image_example_0"),
-      false,
-      "It shouldn't have the first image"
-    );
+    assert
+      .dom(".d-editor-input")
+      .doesNotIncludeValue("image_example_0", "does not have the first image");
 
-    assert.equal(
-      query(".d-editor-input").value.includes("image_example_1"),
-      true,
-      "It should have the second image"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(/image_example_1/, "has the second image");
   });
 });
 
@@ -426,10 +390,11 @@ acceptance("Composer - Image Preview - Plugin API", function (needs) {
 
     await click(".custom-button-class");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "custom button change",
-      "The custom button changes the editor input"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "custom button change",
+        "The custom button changes the editor input"
+      );
   });
 });

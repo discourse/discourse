@@ -1039,6 +1039,8 @@ sw:
     form_kit:
       reset: Anza Upya
       optional: sio muhimu
+      select:
+        none_placeholder: "Hakuna"
       errors:
         required: "Muhimu na Inahitajika"
     close: "Funga"
@@ -2053,7 +2055,6 @@ sw:
       with_topics: "mada %{filter}"
       with_category: "mada %{filter}%{category}"
       filter:
-        title: "Chuja"
         button:
           label: "Chuja"
       latest:
@@ -2592,6 +2593,9 @@ sw:
         look_and_feel:
           themes:
             title: "Mandhari"
+        user_fields:
+          type: "Aina"
+          delete: "Futa"
       plugins:
         title: "Programu-jalizi"
         name: "Jina"
@@ -3058,6 +3062,11 @@ sw:
         not_found: "Samahani, jina la mtumiaji halipo kwenye mfupo wetu."
         id_not_found: "Samahani, utambulisho wa mtumiaji haupo kwenye mfumo wetu."
         show_emails: "Onyesha Barua Pepe"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Funga"
+              confirm: "Futa"
         nav:
           new: "Mpya"
           active: "Mara kwa Mara"
@@ -3245,8 +3254,6 @@ sw:
           external_avatar_url: "Linki au kiungo cha Picha ya Mtumiaji"
       user_fields:
         title: "Sehemu za Watumiaji"
-        help: "Ongeza sehemu za taarifa ambazo watumiaji wanahitaji kujaza."
-        create: "Tengeneza Sehemu za Taarifa za Mtumiaji"
         untitled: "Hakuna Kichwa cha Taarifa"
         name: "Jina la Sehemu ya Taarifa"
         type: "Aina ya Taarifa"
@@ -3267,18 +3274,12 @@ sw:
             title: "Sio muhimu"
         editable:
           title: "Inaweza kufanyiwa uhariri baada ya kujiunga"
-          enabled: "inaweza kufanyiwa uhariri"
-          disabled: "haiwezi kufanyiwa uhariri"
         show_on_profile:
           title: "Imeonyeshwa kwenye maelezo mafupi ya mtumiaji yanayo onwa na umma"
-          enabled: "imeonyeshwa kwenye maelezo mafupi ya mtumiaji"
-          disabled: "haijaonyeshwa kwenye maelezo mafupi ya mtumiaji"
         show_on_user_card:
           title: "Onyesha kwenye kadi ya mtumiaji"
-          enabled: "onyesha kwenye kadi ya mtumiaji"
-          disabled: "usioneshe kwenye kadi ya mtumiaji"
         field_types:
-          text: "Sehemu ya kuweka Taarifa"
+          text: "Neno"
           confirm: "Uhakikisho"
           dropdown: "Shusha Chini"
       site_text:
@@ -3373,6 +3374,7 @@ sw:
         none_selected: "Chagua beji ya kuanzia"
         allow_title: Ruhusu beji iweze kutumika kama cheo
         multiple_grant: Inaweza kutolewa mara nyingi
+        visibility_heading: Uonekanaji
         listable: Onyesha beji kwenye karatasi ya beji ya umma
         enabled: imeruhusiwa
         disabled: imezuiwa
@@ -3405,6 +3407,7 @@ sw:
             with_time: <span class="username">%{username}</span> kwenye %{time}<span class="time">
       emoji:
         title: "Emoji"
+        delete: "Futa"
         name: "Jina"
         group: "Kikundi"
         image: "Picha"

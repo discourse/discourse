@@ -7,7 +7,7 @@ import { bind } from "discourse-common/utils/decorators";
 
 const STORE_LOADING_TIMES = 5;
 const DEFAULT_LOADING_TIME = 0.3;
-const MIN_LOADING_TIME = 0.1;
+const MIN_LOADING_TIME = 0.2;
 
 const STILL_LOADING_DURATION = 2;
 

@@ -327,6 +327,6 @@ class Emoji
   end
 
   def self.sanitize_emoji_name(name)
-    name.gsub(/[^a-z0-9]+/i, "_").gsub(/_{2,}/, "_").downcase
+    name.gsub(/[^a-z0-9\+\-]+/i, "_").gsub(/_{2,}/, "_").downcase
   end
 end

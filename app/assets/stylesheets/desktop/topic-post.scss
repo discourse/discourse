@@ -452,34 +452,6 @@ pre.codeblock-buttons:hover {
   }
 }
 
-#topic-footer-buttons {
-  max-width: calc(
-    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-      var(--topic-avatar-width)
-  );
-
-  @media screen and (max-width: 924px) {
-    .topic-footer-main-buttons {
-      margin-top: 1em; // some extra space for the docked progress bar
-    }
-  }
-
-  .bookmark {
-    .d-icon-bookmark.bookmarked {
-      color: var(--tertiary);
-    }
-  }
-
-  .bookmark.bookmarked .d-icon-bookmark,
-  .bookmark.bookmarked .d-icon-discourse-bookmark-clock {
-    color: var(--tertiary);
-  }
-
-  .feature-on-profile.featured-on-profile .d-icon-id-card {
-    color: var(--tertiary);
-  }
-}
-
 span.post-count {
   background: var(--primary);
   color: var(--secondary);
@@ -617,6 +589,7 @@ blockquote {
   float: left;
   z-index: z("base") + 1;
   height: 100%;
+  overflow-anchor: none;
 }
 
 .gap {

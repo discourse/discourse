@@ -1676,6 +1676,8 @@ lt:
     form_kit:
       reset: Atstatyti
       optional: pasirinktinai
+      select:
+        none_placeholder: "Nieko"
       errors:
         required: "Privalomi"
     close: "Uždaryti"
@@ -3191,7 +3193,6 @@ lt:
       with_topics: "%{filter} temos"
       with_category: "%{filter} %{category} temos"
       filter:
-        title: "Filtruoti"
         button:
           label: "Filtruoti"
       latest:
@@ -3992,6 +3993,9 @@ lt:
         look_and_feel:
           themes:
             title: "Temos"
+        user_fields:
+          type: "Tipas"
+          delete: "Pašalinti"
       plugins:
         title: "Plugins"
         name: "Vardas"
@@ -4624,6 +4628,11 @@ lt:
         status: "Statusas"
         show_emails: "Rodyti el. pašto adresus"
         hide_emails: "Slėpti laiškus"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Uždaryti"
+              confirm: "Pašalinti"
         nav:
           new: "Nauji"
           active: "Aktyvūs"
@@ -4850,8 +4859,6 @@ lt:
           confirm_delete: "Ar tikrai norite ištrinti šį „DiscourseConnect“ įrašą?"
       user_fields:
         title: "Vartotojo laukeliai"
-        help: "Pridėti lauką, kurį vartotojai gali užpildyti"
-        create: "Pridėti Vartotojo Lauką"
         untitled: "Be pavadinimo"
         name: "Lauko Pavadinimas"
         type: "Lauko Tema"
@@ -4872,21 +4879,13 @@ lt:
             title: "Pasirinktinai"
         editable:
           title: "Gali keisti po registracijos"
-          enabled: "redaguojama"
-          disabled: "neredaguojama"
-        show_on_profile:
-          enabled: "Rodyti paskyroje"
-          disabled: "Nerodyti paskyroje"
         show_on_user_card:
           title: "Rodyti vartotojo kortelėje"
-          enabled: "rodoma vartotojo kortelėje"
-          disabled: "nerodomas vartotojo kortelėje"
         searchable:
           title: "Ieškoma"
-          enabled: "ieškoma"
-          disabled: "negalima ieškoti"
+          enabled: "Ieškoma"
         field_types:
-          text: "Teksto Laukelis"
+          text: "Tekstas"
           confirm: "Patvirtinimas"
           dropdown: "Išskleidimas"
           multiselect: "Daugialypis pasirinkimas"
@@ -4929,6 +4928,8 @@ lt:
             label: "Įkelti"
         selectable_avatars:
           title: "Avatarų, kuriuos vartotojai gali pasirinkti, sąrašas"
+        table_column_heading:
+          status: "Statusas"
         categories:
           all_results: "Visi"
           required: "Privalomi"
@@ -4999,6 +5000,7 @@ lt:
         none_selected: "Pasirinkite ženklelį, kad pradėtumėt"
         allow_title: Leisti naudoti ženklelį kaip antraštę
         multiple_grant: Gali būti suteikta keleta kartų
+        visibility_heading: Matomumas
         listable: Rodyti trofėjų viešame trofėjų puslapyje
         enabled: galimas
         disabled: uždrausta
@@ -5050,6 +5052,7 @@ lt:
           grant_existing_holders: Suteikite papildomų ženklelių esamiems ženklelių savininkams
       emoji:
         title: "Šypsenėlės"
+        delete: "Pašalinti"
         name: "Vardas"
         group: "Grupė"
         image: "Paveiksliukas"

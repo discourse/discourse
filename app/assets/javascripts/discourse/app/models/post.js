@@ -10,6 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -20,8 +21,49 @@ import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
+const pluginTrackedProperties = new Set();
+const trackedPropertiesForPostUpdate = new Set();
+
+/**
+ * @internal
+ * Adds a tracked property to the post model.
+ *
+ * Intended to be used only in the plugin API.
+ *
+ * @param {string} propertyKey - The key of the property to track.
+ */
+export function _addTrackedPostProperty(propertyKey) {
+  pluginTrackedProperties.add(propertyKey);
+}
+
+/**
+ * Clears all tracked properties added using the API
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function clearAddedTrackedPostProperties() {
+  pluginTrackedProperties.clear();
+}
+
+/**
+ * Decorator to mark a property as post property as tracked.
+ *
+ * It extends the standard Ember @tracked behavior to also keep track of the fields
+ * that need to be copied when using `post.updateFromPost`.
+ *
+ * @param {Object} target - The target object.
+ * @param {string} propertyKey - The key of the property to track.
+ * @param {PropertyDescriptor} descriptor - The property descriptor.
+ * @returns {PropertyDescriptor} The updated property descriptor.
+ */
+function trackedPostProperty(target, propertyKey, descriptor) {
+  trackedPropertiesForPostUpdate.add(propertyKey);
+  return tracked(target, propertyKey, descriptor);
+}
+
 export default class Post extends RestModel {
   static munge(json) {
+    json.likeAction ??= null;
     if (json.actions_summary) {
       const lookup = EmberObject.create();
 
@@ -107,30 +149,43 @@ export default class Post extends RestModel {
   @service currentUser;
   @service site;
 
-  @tracked bookmarked;
-  @tracked can_delete;
-  @tracked can_edit;
-  @tracked can_permanently_delete;
-  @tracked can_recover;
-  @tracked deleted_at;
-  @tracked likeAction;
-  @tracked post_type;
-  @tracked user_deleted;
-  @tracked user_id;
-  @tracked yours;
+  // Use @trackedPostProperty here instead of Glimmer's @tracked because we need to know which properties are tracked
+  // in order to correctly update the post in the updateFromPost method. Currently this is not possible using only
+  // the standard tracked method because these properties are added to the class prototype and are not enumarated by
+  // object.keys().
+  // See https://github.com/emberjs/ember.js/issues/18220
+  @trackedPostProperty bookmarked;
+  @trackedPostProperty can_delete;
+  @trackedPostProperty can_edit;
+  @trackedPostProperty can_permanently_delete;
+  @trackedPostProperty can_recover;
+  @trackedPostProperty deleted_at;
+  @trackedPostProperty likeAction;
+  @trackedPostProperty post_type;
+  @trackedPostProperty user_deleted;
+  @trackedPostProperty user_id;
+  @trackedPostProperty yours;
 
   customShare = null;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
   @equal("post_number", 1) firstPost;
-  @or("deleted_at", "deletedViaTopic") deleted;
+  @and("firstPost", "topic.deleted_at") deletedViaTopic; // mark fist post as deleted if topic was deleted
+  @or("deleted_at", "deletedViaTopic") deleted; // post is either highlighted as deleted or hidden/removed from the post stream
   @not("deleted") notDeleted;
+  @or("deleted_at", "user_deleted") recoverable; // post or content still can be recovered
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
   @alias("topic.details.created_by.id") topicCreatedById;
 
-  // Posts can show up as deleted if the topic is deleted
-  @and("firstPost", "topic.deleted_at") deletedViaTopic;
+  constructor() {
+    super(...arguments);
+
+    // adds tracked properties defined by plugin to the instance
+    pluginTrackedProperties.forEach((propertyKey) => {
+      defineTrackedProperty(this, propertyKey);
+    });
+  }
 
   @discourseComputed("url", "customShare")
   shareUrl(url) {
@@ -258,20 +313,20 @@ export default class Post extends RestModel {
     return this.firstPost && !!this.topic.details.can_publish_page;
   }
 
-  get canRecover() {
-    return this.deleted && this.can_recover;
-  }
-
-  get isRecovering() {
-    return !this.deleted && this.can_recover;
-  }
-
   get canRecoverTopic() {
     return this.firstPost && this.deleted && this.topic.details.can_recover;
   }
 
   get isRecoveringTopic() {
     return this.firstPost && !this.deleted && this.topic.details.can_recover;
+  }
+
+  get canRecover() {
+    return !this.canRecoverTopic && this.recoverable && this.can_recover;
+  }
+
+  get isRecovering() {
+    return !this.isRecoveringTopic && !this.recoverable && this.can_recover;
   }
 
   get canToggleLike() {
@@ -466,11 +521,15 @@ export default class Post extends RestModel {
   }
 
   /**
-   Updates a post from another's attributes. This will normally happen when a post is loading but
-   is already found in an identity map.
+   * Updates a post from another's attributes. This will normally happen when a post is loading but
+   * is already found in an identity map.
    **/
   updateFromPost(otherPost) {
-    Object.keys(otherPost).forEach((key) => {
+    [
+      ...Object.keys(otherPost),
+      ...trackedPropertiesForPostUpdate,
+      ...pluginTrackedProperties,
+    ].forEach((key) => {
       let value = otherPost[key],
         oldValue = this[key];
 

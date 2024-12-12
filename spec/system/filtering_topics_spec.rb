@@ -6,29 +6,21 @@ describe "Filtering topics", type: :system do
   let(:topic_query_filter) { PageObjects::Components::TopicQueryFilter.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  before { SiteSetting.experimental_topics_filter = true }
-
   it "updates the input field when the query string is changed" do
     sidebar_section = Fabricate(:sidebar_section, user: user)
 
-    sidebar_section_link_1 =
-      Fabricate(
-        :sidebar_section_link,
-        sidebar_section: sidebar_section,
-        linkable: Fabricate(:sidebar_url, name: "filter tags", value: "/filter?q=tag%3Atag1"),
-      )
+    Fabricate(
+      :sidebar_section_link,
+      sidebar_section: sidebar_section,
+      linkable: Fabricate(:sidebar_url, name: "filter tags", value: "/filter?q=tag%3Atag1"),
+    )
 
-    sidebar_section_link_2 =
-      Fabricate(
-        :sidebar_section_link,
-        sidebar_section: sidebar_section,
-        linkable:
-          Fabricate(
-            :sidebar_url,
-            name: "filter categories",
-            value: "/filter?q=category%3Acategory1",
-          ),
-      )
+    Fabricate(
+      :sidebar_section_link,
+      sidebar_section: sidebar_section,
+      linkable:
+        Fabricate(:sidebar_url, name: "filter categories", value: "/filter?q=category%3Acategory1"),
+    )
 
     sign_in(user)
 

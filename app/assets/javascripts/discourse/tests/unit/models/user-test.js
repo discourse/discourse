@@ -13,13 +13,13 @@ module("Unit | Model | user", function (hooks) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", { id: 1, username: "eviltrout" });
 
-    assert.ok(!user.staff, "user is not staff");
+    assert.strictEqual(user.staff, undefined, "user is not staff");
 
     user.toggleProperty("moderator");
-    assert.ok(user.staff, "moderators are staff");
+    assert.true(user.staff, "moderators are staff");
 
     user.setProperties({ moderator: false, admin: true });
-    assert.ok(user.staff, "admins are staff");
+    assert.true(user.staff, "admins are staff");
   });
 
   test("searchContext", function (assert) {
@@ -36,13 +36,13 @@ module("Unit | Model | user", function (hooks) {
   test("isAllowedToUploadAFile", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", { trust_level: 0, admin: true });
-    assert.ok(
+    assert.true(
       user.isAllowedToUploadAFile("image"),
       "admin can always upload a file"
     );
 
     user.setProperties({ admin: false, moderator: true });
-    assert.ok(
+    assert.true(
       user.isAllowedToUploadAFile("image"),
       "moderator can always upload a file"
     );
@@ -53,27 +53,18 @@ module("Unit | Model | user", function (hooks) {
     const user = store.createRecord("user", { admin: true });
     const group = store.createRecord("group", { automatic: true });
 
-    assert.strictEqual(
-      user.canManageGroup(group),
-      false,
-      "automatic groups cannot be managed."
-    );
-
-    group.set("automatic", false);
     group.setProperties({ can_admin_group: true });
 
-    assert.strictEqual(
+    assert.true(
       user.canManageGroup(group),
-      true,
       "an admin should be able to manage the group"
     );
 
     user.set("admin", false);
     group.setProperties({ is_group_owner: true });
 
-    assert.strictEqual(
+    assert.true(
       user.canManageGroup(group),
-      true,
       "a group owner should be able to manage the group"
     );
   });
@@ -114,7 +105,7 @@ module("Unit | Model | user", function (hooks) {
 
     User.createCurrent();
 
-    assert.ok(spyMomentGuess.notCalled);
+    assert.false(spyMomentGuess.called);
   });
 
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {

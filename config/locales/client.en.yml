@@ -573,6 +573,7 @@ en:
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
+      filtered_flagged_by: "Flagged by"
       explain:
         why: "explain why this item ended up in the queue"
         title: "Reviewable Scoring"
@@ -2044,6 +2045,7 @@ en:
           other: "Your password is too short (minimum is %{count} characters)."
         common: "That password is too common."
         same_as_username: "Your password is the same as your username."
+        same_as_name: "Your password is the same as your name."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
         instructions:
@@ -2203,6 +2205,9 @@ en:
       optional: optional
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
+      select:
+        select_placeholder: "Select…"
+        none_placeholder: "None"
       errors:
         required: "Required"
         invalid_url: "Must be a valid URL"
@@ -2900,8 +2905,8 @@ en:
         quoted: "quoted"
         edited: "edited"
         liked: "new like"
-        private_message: "new private message"
-        invited_to_private_message: "invited to private message"
+        private_message: "new personal message"
+        invited_to_private_message: "invited to personal message"
         invitee_accepted: "invite accepted"
         posted: "new post"
         watching_category_or_tag: "new post"
@@ -3554,7 +3559,7 @@ en:
 
       flag_topic:
         title: "Flag"
-        help: "privately flag this topic for attention or send a private notification about it"
+        help: "privately flag this topic for attention or send a personal message about it"
         success_message: "You successfully flagged this topic."
       make_public:
         title: "Convert to Public Topic"
@@ -3816,6 +3821,8 @@ en:
       in_reply_to: "Load parent post"
       view_all_posts: "View all posts"
 
+      badge_granted_tooltip: "%{username} earned the '%{badge_name}' badge for this post!"
+
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -3862,7 +3869,7 @@ en:
         edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag_action: "Flag"
-        flag: "privately flag this post for attention or send a private notification about it"
+        flag: "privately flag this post for attention or send a personal message about it"
         delete_action: "Delete post"
         delete: "delete this post"
         undelete_action: "Undelete post"
@@ -4352,7 +4359,7 @@ en:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       filter:
-        title: "Filter"
+        title: "Filtered results for %{filter}"
         button:
           label: "Filter"
       latest:
@@ -4559,7 +4566,7 @@ en:
         print: "%{shortcut} Print topic"
         defer: "%{shortcut} Mark topic as unread"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
-        archive_private_message: "%{shortcut} Toggle archive private message"
+        archive_private_message: "%{shortcut} Toggle archive personal message"
       search_menu:
         title: "Search Menu"
         prev_next: "%{shortcut} Move selection up and down"
@@ -5115,6 +5122,7 @@ en:
 
       new_features:
         title: "What's new"
+        check_for_updates: "Check for updates"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -5141,8 +5149,10 @@ en:
           experiment_disabled: "You have disabled the experimental feature."
           experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
           experiment_tooltip:
-            title: "Try our experimental feature"
-            content: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like."
+            title_disabled: "Try our experimental feature"
+            title_enabled: "Turn off experimental feature"
+            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like.<br/><br/>Changing this will enable the feature for all users."
+            content_enabled: "Changing this will disable the feature for all users."
 
         last_checked: "Last checked"
         refresh_problems: "Refresh"
@@ -5666,7 +5676,7 @@ en:
             A staff username to send all automated messages from. If left blank, the default System account will be used.
           site_contact_group: "Site contact group"
           site_contact_group_help: |
-            The group that gets invited to all automatically sent private messages.
+            The group that gets invited to all automatically sent personal messages.
           your_organization: "Your organization"
           your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
           company_name: "Name"
@@ -6641,6 +6651,7 @@ en:
 
       users:
         title: "Users"
+        description: "View and manage users."
         create: "Add Admin User"
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
@@ -6671,6 +6682,7 @@ en:
                 one: "Delete %{count} user"
                 other: "Delete %{count} users"
               bulk_delete_starting: "Starting bulk delete…"
+              block_ip_and_email: "Block IP addresses and emails of all selected users"
               user_delete_succeeded: "[%{position}/%{total}] Successfully deleted @%{username}"
               user_delete_failed: "[%{position}/%{total}] Failed to delete @%{username} - %{error}"
               bulk_delete_finished: "Bulk delete operation completed."
@@ -7091,6 +7103,8 @@ en:
             title: "Upload images"
         selectable_avatars:
           title: "List of avatars users can choose from"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "All"
           required: "Required"
@@ -7193,9 +7207,13 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        usage_heading: Usage
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
+        visibility_heading: Visibility
         listable: Show badge on the public badges page
+        show_in_post_header: Show badge on the post it was granted for
+        show_in_post_header_disabled: Requires both 'Show badge on the public badges page' and 'Show post granting badge on badge page' to be enabled.
         enabled: enabled
         disabled: disabled
         icon: Icon
@@ -7261,6 +7279,7 @@ en:
         description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
         no_emoji: "You don't have any custom emoji yet."
         add: "Add emoji"
+        delete: "Delete"
         back: "Back to emoji"
         choose_files: "Choose files"
         uploading: "Uploading…"

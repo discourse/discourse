@@ -72,7 +72,9 @@ export default class TopicList extends Component.extend(LoadMore) {
   // for the classNameBindings
   @dependentKeyCompat
   get bulkSelectEnabled() {
-    return this.bulkSelectHelper?.bulkSelectEnabled;
+    return (
+      this.get("canBulkSelect") && this.bulkSelectHelper?.bulkSelectEnabled
+    );
   }
 
   get toggleInTitle() {

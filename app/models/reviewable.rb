@@ -103,6 +103,7 @@ class Reviewable < ActiveRecord::Base
     payload: nil,
     reviewable_by_moderator: false,
     potential_spam: true,
+    potentially_illegal: false,
     target_created_by: nil
   )
     reviewable =
@@ -113,6 +114,7 @@ class Reviewable < ActiveRecord::Base
         reviewable_by_moderator: reviewable_by_moderator,
         payload: payload,
         potential_spam: potential_spam,
+        potentially_illegal: potentially_illegal,
         target_created_by: target_created_by,
       )
     reviewable.created_new!
@@ -136,12 +138,14 @@ class Reviewable < ActiveRecord::Base
         id: target.id,
         type: target.class.polymorphic_name,
         potential_spam: potential_spam == true ? true : nil,
+        potentially_illegal: potentially_illegal == true ? true : nil,
       }
 
       row = DB.query_single(<<~SQL, update_args)
         UPDATE reviewables
         SET status = :status,
-          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam)
+          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam),
+          potentially_illegal = COALESCE(:potentially_illegal, reviewables.potentially_illegal)
         FROM reviewables AS old_reviewables
         WHERE reviewables.target_id = :id
           AND reviewables.target_type = :type
@@ -266,8 +270,15 @@ class Reviewable < ActiveRecord::Base
 
   def actions_for(guardian, args = nil)
     args ||= {}
+    built_actions =
+      Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
 
-    Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
+    # Empty bundles can cause big issues on the client side, so we remove them
+    # here. It's not valid anyway to have a bundle with no actions, but you can
+    # add a bundle via actions.add_bundle and then not add any actions to it.
+    built_actions.bundles.reject!(&:empty?)
+
+    built_actions
   end
 
   def editable_for(guardian, args = nil)
@@ -437,7 +448,8 @@ class Reviewable < ActiveRecord::Base
     to_date: nil,
     additional_filters: {},
     preload: true,
-    include_claimed_by_others: true
+    include_claimed_by_others: true,
+    flagged_by: nil
   )
     order =
       case sort_order
@@ -455,18 +467,27 @@ class Reviewable < ActiveRecord::Base
       user_id = User.find_by_username(username)&.id
       return none if user_id.blank?
     end
-
     return none if user.blank?
-    result = viewable_by(user, order: order, preload: preload)
 
+    result = viewable_by(user, order: order, preload: preload)
     result = by_status(result, status)
     result = result.where(id: ids) if ids
-
     result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name) if type
     result = result.where("reviewables.category_id = ?", category_id) if category_id
     result = result.where("reviewables.topic_id = ?", topic_id) if topic_id
     result = result.where("reviewables.created_at >= ?", from_date) if from_date
     result = result.where("reviewables.created_at <= ?", to_date) if to_date
+
+    if flagged_by
+      flagged_by_id = User.find_by_username(flagged_by)&.id
+      return none if flagged_by_id.nil?
+      result = result.where(<<~SQL, flagged_by_id: flagged_by_id)
+        EXISTS(
+          SELECT 1 FROM reviewable_scores
+          WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.user_id = :flagged_by_id
+        )
+      SQL
+    end
 
     if reviewed_by
       reviewed_by_id = User.find_by_username(reviewed_by)&.id
@@ -776,6 +797,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #

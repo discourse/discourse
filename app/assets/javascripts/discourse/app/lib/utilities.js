@@ -80,23 +80,20 @@ export function highlightPost(postNumber) {
   }
 
   const element = container.querySelector(".topic-body, .small-action-desc");
-  if (!element || element.classList.contains("highlighted")) {
+  if (!element) {
     return;
   }
 
-  element.classList.add("highlighted");
-
   if (postNumber > 1) {
+    // Transport screenreader to correct post by focusing it
     element.setAttribute("tabindex", "0");
+    element.addEventListener(
+      "focusin",
+      () => element.removeAttribute("tabindex"),
+      { once: true }
+    );
     element.focus();
   }
-
-  const removeHighlighted = function () {
-    element.classList.remove("highlighted");
-    element.removeAttribute("tabindex");
-    element.removeEventListener("animationend", removeHighlighted);
-  };
-  element.addEventListener("animationend", removeHighlighted);
 }
 
 export function emailValid(email) {
@@ -159,17 +156,21 @@ export function selectedText() {
     } else if (oneboxTest) {
       // This is a partial quote from a onebox.
       // Treat it as though the entire onebox was quoted.
-      const oneboxUrl = oneboxTest.dataset.oneboxSrc;
-      div.append(oneboxUrl);
+      div.append(oneboxTest.dataset.oneboxSrc);
     } else {
       div.append(range.cloneContents());
     }
   }
 
   div.querySelectorAll("aside.onebox[data-onebox-src]").forEach((element) => {
-    const oneboxUrl = element.dataset.oneboxSrc;
-    element.replaceWith(oneboxUrl);
+    element.replaceWith(element.dataset.oneboxSrc);
   });
+
+  div
+    .querySelectorAll("div.video-placeholder-container[data-video-src]")
+    .forEach((element) => {
+      element.replaceWith(`![|video](${element.dataset.videoSrc})`);
+    });
 
   return toMarkdown(div.outerHTML);
 }

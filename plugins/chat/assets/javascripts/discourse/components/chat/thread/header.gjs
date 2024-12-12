@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import icon from "discourse-common/helpers/d-icon";
@@ -69,8 +71,6 @@ export default class ChatThreadHeader extends Component {
     ) {
       return () =>
         this.modal.show(ThreadSettingsModal, { model: this.args.thread });
-    } else {
-      return noop;
     }
   }
 
@@ -91,7 +91,9 @@ export default class ChatThreadHeader extends Component {
 
       <navbar.Title
         @title={{replaceEmoji this.headerTitle}}
-        @openThreadTitleModal={{this.openThreadTitleModal}}
+        {{on "click" (or this.openThreadTitleModal noop)}}
+        role={{if this.openThreadTitleModal "button"}}
+        class={{if this.openThreadTitleModal "clickable"}}
       />
       <navbar.Actions as |action|>
         <action.ThreadTrackingDropdown @thread={{@thread}} />

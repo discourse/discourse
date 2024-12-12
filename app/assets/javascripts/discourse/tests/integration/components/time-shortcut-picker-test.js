@@ -2,11 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  fakeTime,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | time-shortcut-picker", function (hooks) {
@@ -140,11 +136,9 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       .dom("#tap_tile_start_of_next_business_week .tap-tile-title")
       .hasText("Next Monday");
 
-    assert.strictEqual(
-      query("div#tap_tile_start_of_next_business_week div.tap-tile-date")
-        .innerText,
-      "Feb 1, 8:00 am"
-    );
+    assert
+      .dom("div#tap_tile_start_of_next_business_week div.tap-tile-date")
+      .hasText("Feb 1, 8:00 am");
   });
 
   test("shows 'Next Monday' instead of 'Monday' on Mondays", async function (assert) {
@@ -157,11 +151,9 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
       .dom("#tap_tile_start_of_next_business_week .tap-tile-title")
       .hasText("Next Monday");
 
-    assert.strictEqual(
-      query("div#tap_tile_start_of_next_business_week div.tap-tile-date")
-        .innerText,
-      "Feb 1, 8:00 am"
-    );
+    assert
+      .dom("div#tap_tile_start_of_next_business_week div.tap-tile-date")
+      .hasText("Feb 1, 8:00 am");
   });
 
   test("the 'Next Month' option points to the first day of the next month", async function (assert) {

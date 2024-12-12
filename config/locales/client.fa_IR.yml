@@ -753,12 +753,17 @@ fa_IR:
           prefill:
             title: "از قبل پر کردن با تنظیمات برای:"
             gmail: "جی‌میل"
+            outlook: "Outlook.com"
+            office365: "مایکروسافت ۳۶۵"
           ssl_modes:
             none: "هیچ کدام"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "اطلاعات ورود"
             smtp_server: "سرور SMTP"
             smtp_port: "درگاه SMTP"
+            smtp_ssl_mode: "حالت SSL"
             imap_server: "سرور IMAP"
             imap_port: "درگاه IMAP"
             imap_ssl: "از SSL برای IMAP استفاده کنید"
@@ -1519,7 +1524,6 @@ fa_IR:
                 one {# روز}
               other {# روز}
             } دیگر منقضی می‌شود.
-          edit_link_options: "گزینه‌های پیوند را ویرایش کنید."
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
           restrict: "محدود کردن به"
@@ -1677,6 +1681,9 @@ fa_IR:
     form_kit:
       reset: بازنشانی
       optional: اختیاری
+      select:
+        select_placeholder: "انتخاب…"
+        none_placeholder: "هیچ کدام"
       errors:
         required: "مورد نیاز"
     close: "بستن"
@@ -3135,7 +3142,6 @@ fa_IR:
       with_topics: "%{filter} موضوعات"
       with_category: "%{filter} %{category} موضوعات"
       filter:
-        title: "فیلتر"
         button:
           label: "فیلتر"
       latest:
@@ -3603,8 +3609,7 @@ fa_IR:
           experiment_disabled: "شما ویژگی آزمایشی را غیرفعال کرده‌اید."
           experiment_toggled_too_fast: "شما ویژگی آزمایشی را خیلی سریع تغییر داده‌اید. لطفا چند ثانیه منتظر بمانید و دوباره تلاش کنید."
           experiment_tooltip:
-            title: "ویژگی آزمایشی ما را امتحان کنید."
-            content: "ویژگی جدید ما را امتحان کنید! این ویژگی همچنان در مرحله آزمایشی است، بنابراین ممکن است در هر زمانی حذف شود. شما می‌توانید هر زمان که خواستید از آن انصراف دهید."
+            title_disabled: "ویژگی آزمایشی ما را امتحان کنید."
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."
@@ -3905,6 +3910,9 @@ fa_IR:
         look_and_feel:
           themes:
             title: "قالب‌ها"
+        user_fields:
+          type: "نوع"
+          delete: "حذف"
       plugins:
         title: "افزونه‌ها"
         name: "نام"
@@ -4439,6 +4447,11 @@ fa_IR:
         status: "وضعیت"
         show_emails: "ایمیل ها را نشان بده"
         hide_emails: "مخفی کردن رایانامه‌ها"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "بستن"
+              confirm: "حذف"
         nav:
           new: "جدید"
           active: "فعال"
@@ -4614,8 +4627,6 @@ fa_IR:
           external_avatar_url: "نشانی اینترنتی تصویر پروفایل"
       user_fields:
         title: "زمینه‌های کاربر"
-        help: "زمینه‌هایی را که کاربرانتان می‌توانند پر کنند اضافه کنید."
-        create: "ساخت زمینه برای کاربر"
         untitled: "بدون عنوان"
         name: "نام زمینه"
         type: "نوع زمینه"
@@ -4635,20 +4646,8 @@ fa_IR:
             title: "اختیاری"
           on_signup:
             title: "هنگام ثبت‌نام"
-        editable:
-          enabled: "قابل ویرایش"
-          disabled: "غیر قابل ویرایش"
-        show_on_profile:
-          enabled: "نمایش در نمایه"
-          disabled: "در نمایه نشان ندهد"
-        show_on_user_card:
-          enabled: "در کارت کاربر نمایش داده شده"
-          disabled: "در کارت کاربر نمایش داده نشده"
-        searchable:
-          enabled: "قابل جستجو"
-          disabled: "قابل جستجو نیست"
         field_types:
-          text: "زمینه متنی"
+          text: "متن"
           confirm: "تاییدیه"
           dropdown: "کرکره‌ای"
       site_text:
@@ -4688,6 +4687,8 @@ fa_IR:
           label: "ویرایش فهرست"
           upload:
             label: "بارگذاری"
+        table_column_heading:
+          status: "وضعیت"
         categories:
           all_results: "همه"
           required: "مورد نیاز"
@@ -4755,6 +4756,7 @@ fa_IR:
         none_selected: "برای شروع یک نشان رو انتخاب کنید"
         allow_title: اجازه‌ی استفاده نشان برای عنوان
         multiple_grant: نمی توان چندین بار اعطا کرد
+        visibility_heading: قابل مشاهده
         listable: نشان دادن نشان در صفحه نشان‌های عمومی
         enabled: فعال شده
         disabled: غیرفعال شده
@@ -4794,6 +4796,7 @@ fa_IR:
             with_time: <span class="username">%{username}</span> در <span class="time">%{time}</span>
       emoji:
         title: "شکلک"
+        delete: "حذف"
         uploading: "در حال بارگذاری…"
         name: "نام"
         group: "گروه"

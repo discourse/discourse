@@ -144,7 +144,7 @@ it:
       close: "chiudi"
       twitter: "Condividi su X"
       facebook: "Condividi su Facebook"
-      email: "Invia per email"
+      email: "Invia per e-mail"
       url: "Copia e condividi l'URL"
     word_connector:
       comma: ", "
@@ -183,7 +183,7 @@ it:
       banner:
         enabled: "Lo ha reso un banner il %{when}. Apparirà in cima a ogni pagina finché non verrà chiuso dall'utente."
         disabled: "Ha rimosso questo banner il %{when}. Non apparirà più in cima a ogni pagina."
-      forwarded: "Ha inoltrato l'email sopra"
+      forwarded: "Ha inoltrato l'e-mail sopra"
     topic_admin_menu: "azioni argomento"
     skip_to_main_content: "Passa al contenuto principale"
     skip_user_nav: "Passa al contenuto del profilo"
@@ -1856,7 +1856,6 @@ it:
                 one {# giorno}
               other {# giorni}
             }.
-          edit_link_options: "Modifica le opzioni del link."
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
           restrict: "Limita a"
@@ -1873,12 +1872,12 @@ it:
           send_invite_email: "Salva e invia Email"
           send_invite_email_instructions: "Limita l'invito alle e-mail per inviare un'e-mail di invito"
           update_invite: "Aggiorna"
-          update_invite_and_send_email: "Aggiorna e invia email"
+          update_invite_and_send_email: "Aggiorna e invia e-mail"
           cancel: "Annulla"
           create_link: "Crea link"
-          create_link_and_send_email: "Crea un link e invia email"
+          create_link_and_send_email: "Crea un link e invia e-mail"
           invite_saved_without_sending_email: "Invito salvato. Copia il link sottostante e condividilo per concedere immediatamente l'accesso a questo sito."
-          invite_saved_with_sending_email: "L'email di invito è stata inviata. Puoi anche copiare il link qui sotto e condividerlo per concedere immediatamente l'accesso a questo sito."
+          invite_saved_with_sending_email: "L'e-mail di invito è stata inviata. Puoi anche copiare il link qui sotto e condividerlo per concedere immediatamente l'accesso a questo sito."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -2051,6 +2050,9 @@ it:
       optional: facoltativo
       errors_summary_title: "Questo modulo contiene errori:"
       dirty_form: "Non hai caricato le modifiche! Vuoi davvero uscire?"
+      select:
+        select_placeholder: "Seleziona…"
+        none_placeholder: "Nessuna"
       errors:
         required: "Obbligatorio"
         invalid_url: "L'URL deve essere valido"
@@ -3590,7 +3592,7 @@ it:
         flag: "segnala privatamente questo messaggio o invia una notifica privata"
         delete_action: "Elimina messaggio"
         delete: "cancella questo messaggio"
-        undelete_action: "Ripristina post"
+        undelete_action: "Ripristina messaggio"
         undelete: "recupera questo messaggio"
         share_action: "Condividi"
         share: "condividi un collegamento a questo messaggio"
@@ -4049,7 +4051,6 @@ it:
       with_topics: "%{filter} argomenti"
       with_category: "%{filter} %{category} argomenti"
       filter:
-        title: "Filtro"
         button:
           label: "Filtro"
       latest:
@@ -4797,8 +4798,7 @@ it:
           experiment_disabled: "Hai disattivato la funzionalità sperimentale."
           experiment_toggled_too_fast: "Hai attivato la funzionalità sperimentale troppo velocemente. Attendi qualche secondo prima di riprovare."
           experiment_tooltip:
-            title: "Prova la nostra funzionalità sperimentale"
-            content: "Prova la nostra nuova funzionalità in fase di sviluppo! È ancora in fase sperimentale, quindi potremmo rimuoverla in qualsiasi momento. Puoi disattivarla quando vuoi."
+            title_disabled: "Prova la nostra funzionalità sperimentale"
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."
@@ -5300,11 +5300,11 @@ it:
           contact_email: "Email di contatto"
           contact_email_placeholder: "contatto@mario-rossi.com"
           contact_email_help: |
-            Email utilizzata per le notifiche critiche e visualizzata anche su /about. Visibile agli utenti anonimi sui siti pubblici.
+            E-mail utilizzata per le notifiche critiche e visualizzata anche su /about. Visibile agli utenti anonimi sui siti pubblici.
           contact_url: "URL di contatto"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            Se presente, sostituisce l'indirizzo email di contatto su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
+            Se presente, sostituisce l'indirizzo e-mail di contatto su /about. Risulta visibile agli utenti anonimi sui siti pubblici.
           site_contact_name: "Nome contatto del sito"
           site_contact_name_help: |
             Nome utente appartenente a un membro dello staff da cui inviare tutti i messaggi automatici. Se non compilato, verrà usato l'account predefinito di sistema.
@@ -5381,6 +5381,13 @@ it:
             themes_description: "I temi sono ampie personalizzazioni che modificano più elementi dello stile del design del tuo forum e spesso includono anche funzionalità front-end aggiuntive."
             new_theme: "Nuovo tema"
             user_selectable: "Selezionabile dall'utente"
+        user_fields:
+          type: "Tipo"
+          more_options:
+            title: "Altre opzioni"
+            move_up: "Sposta su"
+            move_down: "Sposta giù"
+          delete: "Elimina"
       plugins:
         title: "Plugin"
         installed: "Plugin installati"
@@ -6263,6 +6270,11 @@ it:
         status: "Stato"
         show_emails: "Mostra email"
         hide_emails: "Nascondi email"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Chiudi"
+              confirm: "Elimina"
         nav:
           new: "Nuovi"
           active: "Attivi"
@@ -6390,8 +6402,8 @@ it:
         time_read: "Tempo di lettura"
         post_edits_count: "Modifiche Messaggio"
         anonymize: "Rendi Anonimo Utente "
-        anonymize_confirm: "Vuoi davvero rendere anonimo questo account? Il nome utente e l'indirizzo email saranno modificati e saranno reimpostate tutte le informazioni del profilo."
-        delete_associated_accounts_confirm: "Vuoi davvero eliminare tutti gli account associati da questo account? L'utente potrebbe non riuscire ad accedere se la sua email è cambiata."
+        anonymize_confirm: "Vuoi davvero rendere anonimo questo account? Il nome utente e l'indirizzo e-mail saranno modificati e saranno reimpostate tutte le informazioni del profilo."
+        delete_associated_accounts_confirm: "Vuoi davvero eliminare tutti gli account associati da questo account? L'utente potrebbe non riuscire ad accedere se la sua e-mail è cambiata."
         disable_second_factor_confirm: "Vuoi davvero disattivare l'autenticazione a due fattori per questo account?"
         anonymize_yes: "Sì, rendi anonimo questo account"
         anonymize_failed: "Si è verificato un problema nel rendere anonimo l'account."
@@ -6542,8 +6554,6 @@ it:
           confirm_delete: "Sei sicuro di voler eliminare questo record DiscourseConnect?"
       user_fields:
         title: "Campi Utente"
-        help: "Tutti i campi che i tuoi utenti possono compilare."
-        create: "Crea Campo Utente"
         untitled: "Senza nome"
         name: "Nome Campo"
         type: "Tipo Campo"
@@ -6572,22 +6582,15 @@ it:
           confirmation: "Agli utenti già iscritti verrà richiesto di compilare il campo e non potranno intraprendere altre azioni sul sito finché non avranno eseguito. Intendi procedere?"
         editable:
           title: "Modificabile dopo l'iscrizione"
-          enabled: "modificabile"
-          disabled: "non modificabile"
         show_on_profile:
           title: "Mostrare nel profilo pubblico"
-          enabled: "mostrato nel profilo"
-          disabled: "non mostrato nel profilo"
         show_on_user_card:
           title: "Mostrare sulla scheda utente"
-          enabled: "mostrato sulla scheda utente"
-          disabled: "non mostrato sulla scheda utente"
         searchable:
           title: "Ricercabile"
-          enabled: "ricercabile"
-          disabled: "non ricercabile"
+          enabled: "Ricercabile"
         field_types:
-          text: "Campo Testo"
+          text: "Testo"
           confirm: "Conferma"
           dropdown: "A discesa"
           multiselect: "Selezione multipla"
@@ -6603,7 +6606,6 @@ it:
         show_overriden: "Mostra solo le opzioni sovrascritte"
         show_outdated: "Mostra solo obsoleti/non validi"
         show_untranslated: "Mostra solo non tradotti"
-        only_show_selected_locale: "Mostra solo i risultati nella lingua selezionata"
         locale: "Lingua:"
         more_than_50_results: "Ci sono più di 50 risultati. Restringi i criteri di ricerca."
         no_results: "Nessun testo corrispondente trovato nel sito"
@@ -6644,6 +6646,8 @@ it:
             title: "Carica immagini"
         selectable_avatars:
           title: "Elenco degli Avatar tra cui l'utente può scegliere"
+        table_column_heading:
+          status: "Stato"
         categories:
           all_results: "Tutte"
           required: "Obbligatorie"
@@ -6747,6 +6751,7 @@ it:
         none_selected: "Seleziona un distintivo per iniziare"
         allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnato più volte
+        visibility_heading: Visibilità
         listable: Mostra distintivo sulla pagina pubblica dei distintivi
         enabled: abilitato
         disabled: disabilitata
@@ -6812,6 +6817,7 @@ it:
         description: "Aggiungi nuove emoji che saranno disponibili a tutti. Seleziona più file per creare emoji usando i loro nomi file. Il gruppo selezionato verrà usato per tutti i file che vengono aggiunti contemporaneamente."
         no_emoji: "Non hai ancora nessuna emoji personalizzata."
         add: "Aggiungi emoji"
+        delete: "Elimina"
         back: "Torna alle emoji"
         choose_files: "Scegli file"
         uploading: "Caricamento…"

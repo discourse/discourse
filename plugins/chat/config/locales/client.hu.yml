@@ -603,10 +603,10 @@ hu:
         chat_message: "Új csevegőüzenet"
         chat_quoted: "%{username} idézte a csevegési üzenetet"
       titles:
-        chat_mention: "Csevegési megemlítés"
-        chat_invitation: "Csevegési meghívó"
-        chat_quoted: "Csevegés idézve"
-        chat_watched_thread: "Figyelt csevegés téma"
+        chat_mention: "A chatben megemlítve"
+        chat_invitation: "Meghívás a chat-csatornára"
+        chat_quoted: "Idézett csevegőüzenet"
+        chat_watched_thread: "Látott csevegés"
     action_codes:
       chat:
         enabled: '%{who} engedélyezte a <button class="btn-link open-chat">csevegést</button> %{when}'
@@ -637,6 +637,7 @@ hu:
         title: "Csevegés"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Csatorna váltása"
+          switch__unread_channel_arrows: "%{shortcut} Olvasatlan csatornára váltás"
           open_quick_channel_selector: "%{shortcut} Gyors csatornaválasztó megnyitása"
           open_insert_link_modal: "%{shortcut} Hiperhivatkozás beillesztése (csak a szerkesztőben)"
           composer_bold: "%{shortcut} Félkövér (csak a szerkesztőben)"

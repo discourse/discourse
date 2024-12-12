@@ -47,7 +47,7 @@
                     pl.key
                   }}
                 >
-                  <td>
+                  <td class="d-admin-row__overview">
                     <FlatButton
                       @title="admin.permalink.copy_to_clipboard"
                       @icon="far-clipboard"
@@ -59,7 +59,7 @@
                       title={{pl.url}}
                     >{{pl.url}}</span>
                   </td>
-                  <td class="destination">
+                  <td class="d-admin-row__detail destination">
                     {{#if pl.topic_id}}
                       <a href={{pl.topic_url}}>{{pl.topic_title}}</a>
                     {{/if}}

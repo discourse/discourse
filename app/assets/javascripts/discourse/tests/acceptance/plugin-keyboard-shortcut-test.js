@@ -20,10 +20,9 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await triggerKeyEvent(document, "keypress", "]".charCodeAt(0));
 
-    assert.ok(
-      document.querySelector("#added-element"),
-      "the keyboard shortcut callback fires successfully"
-    );
+    assert
+      .dom("#added-element", document.body)
+      .exists("the keyboard shortcut callback fires successfully");
   });
 });
 
@@ -37,7 +36,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
       });
     });
 
-    assert.ok(
+    assert.true(
       spy.calledWith("test-path", "]"),
       "bindToPath is called due to options provided"
     );

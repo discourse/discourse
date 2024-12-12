@@ -48,10 +48,6 @@ class ReviewableFlaggedPost < Reviewable
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
-    if potential_spam? && guardian.can_delete_user?(target_created_by)
-      delete_user_actions(actions, agree_bundle)
-    end
-
     if !post.user_deleted? && !post.hidden?
       build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree_bundle)
     end
@@ -83,6 +79,10 @@ class ReviewableFlaggedPost < Reviewable
       end
     end
 
+    if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
+      delete_user_actions(actions, agree_bundle)
+    end
+
     if guardian.can_suspend?(target_created_by)
       build_action(
         actions,
@@ -109,6 +109,13 @@ class ReviewableFlaggedPost < Reviewable
       build_action(actions, :disagree, icon: "thumbs-down")
     end
 
+    post_visible_or_system_user = !post.hidden? || guardian.user.is_system_user?
+    can_delete_post_or_topic = guardian.can_delete_post_or_topic?(post)
+
+    # We must return early in this case otherwise we can end up with a bundle
+    # with no associated actions, which is not valid on the client.
+    return if !can_delete_post_or_topic && !post_visible_or_system_user
+
     ignore =
       actions.add_bundle(
         "#{id}-ignore",
@@ -116,10 +123,10 @@ class ReviewableFlaggedPost < Reviewable
         label: "reviewables.actions.ignore.title",
       )
 
-    if !post.hidden? || guardian.user.is_system_user?
+    if post_visible_or_system_user
       build_action(actions, :ignore_and_do_nothing, icon: "up-right-from-square", bundle: ignore)
     end
-    if guardian.can_delete_post_or_topic?(post)
+    if can_delete_post_or_topic
       build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: ignore)
       if post.reply_count > 0
         build_action(
@@ -409,6 +416,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #

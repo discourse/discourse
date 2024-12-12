@@ -1253,6 +1253,9 @@ et:
     form_kit:
       reset: Lähtesta
       optional: valikuline
+      select:
+        select_placeholder: "Vali..."
+        none_placeholder: "Pole"
       errors:
         required: "Nõutud"
     close: "Sulge"
@@ -2362,7 +2365,6 @@ et:
       with_topics: "%{filter} teemat"
       with_category: "%{filter} %{category} teemat"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -2937,6 +2939,9 @@ et:
         look_and_feel:
           themes:
             title: "Kujundused"
+        user_fields:
+          type: "Tüüp"
+          delete: "Kustuta"
       plugins:
         title: "Plugin"
         name: "Nimi"
@@ -3385,6 +3390,11 @@ et:
         active: "Aktiveeritud"
         status: "Staatus"
         show_emails: "Näita meile"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Sulge"
+              confirm: "Kustuta"
         nav:
           new: "Uus"
           active: "Aktiivne"
@@ -3558,8 +3568,6 @@ et:
           external_avatar_url: "Profiili pildi URL"
       user_fields:
         title: "Kasutajaväljad"
-        help: "Lisa välju, mida kasutajad saavad täita."
-        create: "Loo kasutajaväli"
         untitled: "Tiitlita"
         name: "Välja nimi"
         type: "Välja tüüp"
@@ -3580,18 +3588,12 @@ et:
             title: "Valikuline"
         editable:
           title: "Muudetav pärast registreerumist"
-          enabled: "muudetav"
-          disabled: "ei ole muudetav"
         show_on_profile:
           title: "Näidata avalikul profiilil"
-          enabled: "näidatav profiilil"
-          disabled: "ei ole näidatav profiilil"
         show_on_user_card:
           title: "Kuva kasutaja profiilil"
-          enabled: "kuvatud kasutaja profiilil"
-          disabled: "ei kuvata kasutaja profiilil"
         field_types:
-          text: "Tekstiväli"
+          text: "Tekst"
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:
@@ -3621,6 +3623,8 @@ et:
         uploaded_image_list:
           upload:
             label: "Lae üles"
+        table_column_heading:
+          status: "Staatus"
         categories:
           all_results: "Kõik"
           required: "Nõutud"
@@ -3685,6 +3689,7 @@ et:
         none_selected: "Vali märgis, et alustada"
         allow_title: Luba märgise kasutamist tiitlina
         multiple_grant: Võib olla määratud mitmeid kordi
+        visibility_heading: Nähtavus
         listable: Näita märgist avalike märgiste lehel
         enabled: sisse lülitatud
         disabled: välja lülitatud
@@ -3724,6 +3729,7 @@ et:
             with_time: <span class="username">%{username}</span> ajal <span class="time">%{time}</span>
       emoji:
         title: "Emotikon"
+        delete: "Kustuta"
         uploading: "Laen üles..."
         name: "Nimi"
         group: "Grupp"

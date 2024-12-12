@@ -315,6 +315,7 @@ de:
       invalid_site_setting: "Es ist keine Einstellung mit dem Namen „%{name}“ vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
       site_setting_is_hidden: "Du darfst versteckte Einstellungen nicht ändern"
+      site_setting_is_shadowed_globally: "Du kannst diese Einstellung nicht ändern, da sie global konfiguriert ist"
       site_setting_is_unconfigurable: "Du darfst keine unkonfigurierbaren Einstellungen ändern"
       invalid_choice:
         one: "„%{name}“ ist eine ungültige Option."
@@ -678,6 +679,8 @@ de:
       user_profile:
         bio_raw: "Über mich"
       user:
+        password: "Passwort"
+      user_password:
         password: "Passwort"
     errors:
       models:
@@ -1770,7 +1773,11 @@ de:
     pending_users_reminder_delay_minutes: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Minuten auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben n Stunden nach ihrem letzten Besuch angemeldet"
-    experimental_full_page_login: "Ersetze den Modal-Dialog für die Anmeldung/Registrierung durch ein ganzseitiges Formular dafür."
+    full_page_login: "Zeige die Anmelde- und Registrierungsformulare auf einer ganzen Seite an (wenn diese Option nicht aktiviert ist, werden die Formulare in einem Modal angezeigt). "
+    show_signup_form_email_instructions: Zeige die E-Mail-Anweisungen auf dem Anmeldeformular an.
+    show_signup_form_username_instructions: Zeige die Anweisungen für den Benutzernamen auf dem Anmeldeformular an.
+    show_signup_form_full_name_instructions: Zeige die vollständigen Anweisungen zum Namen auf dem Anmeldeformular an.
+    show_signup_form_password_instructions: Zeige die Anweisungen zum Passwort auf dem Anmeldeformular an.
     ga_version: "Zu verwendende Version von Google Universal Analytics: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1822,10 +1829,11 @@ de:
     send_old_credential_reminder_days: "An alte Anmeldedaten erinnern (nach Tagen)"
     email_token_valid_hours: "Tokens zur Passwort-Wiederherstellung/Aktivierung eines Kontos sind für (n) Stunden gültig."
     enable_badges: "Aktiviere das Abzeichen-System, das eine Form der Gamification ist, um positive Aktionen der Benutzer zu belohnen. Siehe <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Was sind Abzeichen?</a> auf Discourse Meta für weitere Informationen."
+    show_badges_in_post_header: "Wenn ein Benutzer für einen bestimmten Beitrag ein Abzeichen erhält, wird das Abzeichen in der Kopfzeile des Beitrags angezeigt."
     max_favorite_badges: "Maximale Anzahl von Abzeichen, die der Benutzer auswählen kann"
     whispers_allowed_groups: "Private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen erlauben."
     hidden_post_visible_groups: "Erlaube Mitgliedern dieser Gruppen, ausgeblendete Beiträge aufzurufen. Team-Mitglieder können jederzeit ausgeblendete Beiträge aufrufen."
-    allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
+    allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Seite von Suchmaschinen indiziert werden darf. Du kannst <a href='%{base_path}/admin/customize/robots'>deine robots.txt hier überschreiben.</a> <b>WARNUNG</b>: Falsch konfigurierte Regeln können verhindern, dass deine Website wie erwartet gecrawlt wird."
     blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, mit denen Benutzer keine Konten registrieren dürfen. Subdomains werden automatisch für die angegebenen Domains behandelt. Die Wildcard-Symbole * und ? werden nicht unterstützt. Beispiel: mailinator.com|trashmail.net"
     allowed_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, mit denen Benutzer Konten registrieren MÜSSEN. Subdomains werden automatisch für die angegebenen Domains behandelt. Die Wildcard-Symbole * und ? werden nicht unterstützt. WARNUNG: Benutzer mit anderen als den aufgeführten E-Mail-Domains sind nicht zugelassen!"
     normalize_emails: "Überprüfen, ob normalisierte E-Mail-Adressen einzigartig sind. Bei normalisierten E-Mail-Adressen werden alle Punkte aus dem Benutzernamen und alles zwischen + und @ Symbolen entfernt."
@@ -2446,7 +2454,6 @@ de:
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
-    experimental_topics_filter: "Experimentelle Filterroute für Themen unter /filter aktivieren"
     enable_experimental_lightbox: "Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
     experimental_glimmer_topic_list_groups: "Aktiviert die neue Implementierung der „glimmer“-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen vorgesehen. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung abgeschlossen und angekündigt ist."
     glimmer_post_menu_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragmenüs verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
@@ -2768,6 +2775,7 @@ de:
     cannot_delete_has_posts:
       one: "Benutzer %{username} hat %{count} Beitrag in einem öffentlichen Thema oder einer persönlichen Nachricht verfasst. Löschen nicht möglich."
       other: "Benutzer %{username} hat %{count} Beiträge in öffentlichen Themen oder persönlichen Nachrichten verfasst. Löschen nicht möglich."
+    cannot_bulk_delete: "Ein oder mehrere Benutzer können nicht gelöscht werden, weil sie entweder ein Admin sind, zu viele Beiträge haben oder einen sehr alten Beitrag haben."
   unsubscribe_mailer:
     title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."
@@ -4591,7 +4599,7 @@ de:
       name: Stammgast
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung verfolgbarer Links, die Umwandlung eines Beitrags in ein Wiki sowie die Vergabe von mehr „Gefällt mir“
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du in unserer Community über mehrere Monate ein Stammgast gewesen bist. Du bist nun einer unserer aktivsten Leser und ein zuverlässiges Mitglied, das diese Community großartig macht. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen, eine private Lounge nutzen und kannst viel mehr „Gefällt mir“ pro Tag erhalten.
+        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du für mehrere Monate regelmäßig in unserer Community aktiv warst. Du gehörst nun zu unseren aktivsten Lesern und und trägst als zuverlässiges Mitglied dazu bei, unsere Community großartig zu machen. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen und kannst noch mehr 'Gefällt mir' pro Tag vergeben.
     leader:
       name: Anführer
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Bearbeiten aller Beiträge, das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen sowie die Vergabe von mehr „Gefällt mir“
@@ -5046,6 +5054,7 @@ de:
         other: "Automatisch widerrufen, erstellt vor mehr als %{count} Tagen"
       revoked: Widerrufen
       restored: Wiederhergestellt
+    bulk_user_delete: "bei einem Massenlöschvorgang gelöscht"
   reviewables:
     already_handled: "Vielen Dank, aber wir haben diesen Beitrag bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
     already_handled_and_user_not_exist: "Danke, aber jemand hat es bereits überprüft und dieser Benutzer existiert nicht mehr."

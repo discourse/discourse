@@ -413,6 +413,8 @@ lt:
         bio_raw: "Apie mane"
       user:
         password: "Slaptažodis"
+      user_password:
+        password: "Slaptažodis"
     errors:
       models:
         topic:
@@ -2348,8 +2350,6 @@ lt:
         Šis ženklelis suteikiamas pasiekus 2 pasitikėjimo lygį. Dėkojame, kad dalyvavote kelias savaites ir tikrai prisijungėte prie mūsų bendruomenės. Dabar galite siųsti kvietimus iš savo vartotojo puslapio ar atskirų temų, kurti asmenines grupės žinutes ir sulaukti daugiau patikimų per dieną.
     regular:
       name: Nuolatinės
-      long_description: |
-        Šis ženklelis suteikiamas pasiekus 3 patikimumo lygį. Dėkojame, kad jau kelis mėnesius esate nuolatinė mūsų bendruomenės dalis. Dabar esate vienas aktyviausių skaitytojų ir patikimas bendradarbis, dėl to mūsų bendruomenė tampa puikia. Dabar galite perskirstyti ir pervardyti temas, pasinaudoti galingesnėmis nepageidaujamo pašto vėliavėlėmis, pasiekti privačią poilsio zoną ir per dieną sulauksite daug daugiau mygtukų „Patinka“.
     leader:
       name: Lyderis
       long_description: |

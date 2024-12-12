@@ -1859,6 +1859,9 @@ sv:
     form_kit:
       reset: Återställ
       optional: valfritt
+      select:
+        select_placeholder: "Välj…"
+        none_placeholder: "Ingen"
       errors:
         required: "Krävs"
         invalid_url: "Måste vara en giltig URL"
@@ -3722,7 +3725,6 @@ sv:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -4895,6 +4897,9 @@ sv:
           title: "Utseende och känsla"
           themes:
             title: "Teman"
+        user_fields:
+          type: "Typ"
+          delete: "Radera"
       plugins:
         title: "Tillägg"
         name: "Namn"
@@ -5713,6 +5718,11 @@ sv:
         status: "Status"
         show_emails: "Visa e-post"
         hide_emails: "Dölj e-post"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Stäng"
+              confirm: "Radera"
         nav:
           new: "Ny"
           active: "Aktiv"
@@ -5985,8 +5995,6 @@ sv:
           confirm_delete: "Är du säker på att du vill radera denna DiscourseConnect-post?"
       user_fields:
         title: "Användarfält"
-        help: "Lägg till fält som dina användare kan fylla i."
-        create: "Skapa ett användarfält"
         untitled: "Namnlös"
         name: "Fältnamn"
         type: "Fälttyp"
@@ -6007,22 +6015,15 @@ sv:
             title: "Valfritt"
         editable:
           title: "Redigerbar efter registrering"
-          enabled: "redigerbar"
-          disabled: "ej redigerbar"
         show_on_profile:
           title: "Visa på offentlig profil"
-          enabled: "visas på profil"
-          disabled: "visas ej på profil"
         show_on_user_card:
           title: "Ska visas på användarkort"
-          enabled: "visas på användarkort"
-          disabled: "visas inte på användarkort"
         searchable:
           title: "Sökbart"
-          enabled: "sökbart"
-          disabled: "inte sökbart"
+          enabled: "Sökbart"
         field_types:
-          text: "Textfält"
+          text: "Text"
           confirm: "Bekräftelse"
           dropdown: "Rullgardinsmeny"
           multiselect: "Multival"
@@ -6075,6 +6076,8 @@ sv:
             label: "Ladda upp"
         selectable_avatars:
           title: "Lista på avatarer som användare kan välja från"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alla"
           required: "Krävs"
@@ -6153,6 +6156,7 @@ sv:
         none_selected: "Välj en utmärkelse för att komma igång"
         allow_title: Tillåt att utmärkelse används som titel
         multiple_grant: Kan utfärdas flera gånger
+        visibility_heading: Synlighet
         listable: Visa utmärkelse på den offentliga utmärkelsesidan
         enabled: aktiverad
         disabled: inaktiverade
@@ -6205,6 +6209,7 @@ sv:
           grant_existing_holders: Utfärda ytterligare utmärkelser till befintliga utmärkelseinnehavare
       emoji:
         title: "Emoji"
+        delete: "Radera"
         uploading: "Laddar upp…"
         name: "Namn"
         group: "Grupp"

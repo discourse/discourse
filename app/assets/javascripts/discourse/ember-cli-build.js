@@ -128,6 +128,7 @@ module.exports = function (defaults) {
     .slice(0, 8);
 
   const appTree = compatBuild(app, Webpack, {
+    staticEmberSource: true,
     splitAtRoutes: ["wizard"],
     staticAppPaths: ["static"],
     packagerOptions: {

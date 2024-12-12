@@ -27,7 +27,7 @@ nl:
         millions: "%{number}M"
     dates:
       time: "HH.mm"
-      time_short: "h:mm"
+      time_short: "h.mm"
       time_with_zone: "HH.mm (z)"
       time_short_day: "ddd, HH.mm"
       timeline_date: "MMM YYYY"
@@ -142,6 +142,7 @@ nl:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "bericht %{postNumber} van @%{username}"
       close: "sluiten"
+      twitter: "Delen op X"
       facebook: "Delen op Facebook"
       email: "Verzenden via e-mail"
       url: "URL kopiëren en delen"
@@ -316,6 +317,14 @@ nl:
       active_user_count: "Actieve gebruikers"
       visitor_count: "Bezoekers"
       eu_visitor_count: "Bezoekers uit de Europese Unie"
+      traffic_info_footer_MF: |
+        De afgelopen 6 maanden heeft deze site maandelijks content geleverd aan naar schatting { total_visitors, plural,
+            one {# persoon}
+          other {# personen}
+        }, waarvan naar schatting { eu_visitors, plural,
+            one {# persoon}
+          other {# personen}
+        } uit de Europese Unie.
       contact: "Contact"
       contact_info: "Neem in het geval van een kritieke kwestie of dringende vraagstukken in verband met deze website contact op via %{contact_info}."
       site_activity: "Siteactiviteit"
@@ -1266,6 +1275,7 @@ nl:
       allow_private_messages: "Andere gebruikers mogen mij persoonlijke berichten sturen"
       external_links_in_new_tab: "Alle externe links openen op een nieuw tabblad"
       enable_quoting: "Antwoorden met citaat inschakelen voor gemarkeerde tekst"
+      enable_smart_lists: "Schakel slimme lijsten in bij schrijven in de editor"
       enable_defer: "Als gelezen markeren van topics inschakelen"
       experimental_sidebar:
         enable: "Zijbalk inschakelen"
@@ -1656,6 +1666,7 @@ nl:
         approval_required: "Voordat je toegang hebt tot dit forum, moet een moderator je nieuwe account handmatig goedkeuren. Je ontvangt een e-mail zodra je account is goedgekeurd!"
       name:
         title: "Naam"
+        title_optional: "Naam (optioneel)"
         instructions: "Je volledige naam (optioneel)"
         instructions_required: "Je volledige naam"
         required: "Voer een naam in"
@@ -1709,6 +1720,7 @@ nl:
       location: "Locatie"
       website: "Website"
       email_settings: "E-mailadres"
+      hide_profile: "Mijn openbare profiel verbergen"
       enable_physical_keyboard: "Ondersteuning voor fysiek toetsenbord op iPad inschakelen"
       text_size:
         title: "Tekstgrootte"
@@ -1825,11 +1837,25 @@ nl:
           title: "Uitnodigingslink"
           success: "Uitnodigingslink gegenereerd!"
           error: "Er is een fout opgetreden bij het genereren van de uitnodigingslink"
+        cannot_invite_to_forum: "Je hebt geen toestemming om uitnodigingen te maken. Neem contact op met een beheerder om je toestemming te geven om uitnodigingen te maken."
         invite:
+          new_title: "Leden uitnodigen"
+          edit_title: "Uitnodiging bewerken"
           expires_in_time: "Verloopt over %{time}"
           expired_at_time: "Verlopen om %{time}"
+          create_link_to_invite: "Maak een link die kan worden gedeeld om direct toegang te geven tot deze site."
+          copy_link_and_share_it: "Kopieer de link hieronder en deel deze om direct toegang te geven tot deze site."
           copy_link: "Link kopiëren"
           link_copied: "Link gekopieerd!"
+          share_link: "Deellink"
+          link_validity_MF: |
+            De link is geldig voor maximaal { user_count, plural,
+                one {# gebruiker}
+              other {# gebruikers}
+            } en verloopt na { duration_days, plural,
+                one {# dag}
+              other {# dagen}
+            }.
           show_advanced: "Geavanceerde opties weergeven"
           hide_advanced: "Geavanceerde opties verbergen"
           restrict: "Beperken tot"
@@ -1838,12 +1864,20 @@ nl:
           email_or_domain_placeholder: "naam@voorbeeld.com of voorbeeld.com"
           max_redemptions_allowed: "Max. gebruiken"
           add_to_groups: "Toevoegen aan groepen"
-          invite_to_topic: "Kom bij topic"
+          invite_to_topic: "Binnenkomen bij topic"
+          expires_at: "Verloopt op"
           expires_after: "Verloopt na"
+          custom_message: "Aangepast bericht"
+          custom_message_placeholder: "Voeg een persoonlijke noot toe aan je uitnodiging"
           send_invite_email: "E-mail opslaan en verzenden"
           send_invite_email_instructions: "Beperk uitnodiging tot e-mail om een uitnodigings-e-mail te sturen"
           update_invite: "Bijwerken"
+          update_invite_and_send_email: "E-mail bijwerken en verzenden"
           cancel: "Annuleren"
+          create_link: "Link maken"
+          create_link_and_send_email: "Link maken en e-mail verzenden"
+          invite_saved_without_sending_email: "Uitnodiging opgeslagen. Kopieer de link hieronder en deel deze om direct toegang te geven tot deze site."
+          invite_saved_with_sending_email: "Uitnodigings-e-mail is verzonden. Je kunt ook de link hieronder kopiëren en delen om direct toegang te geven tot deze site."
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
           text: "Bulkuitnodiging"
@@ -1958,12 +1992,18 @@ nl:
         sent_by: "Verzonden door"
         private_message: "bericht"
         the_topic: "het topic"
+      card: "Gebruikerskaart"
+      profile_link: "%{username}, profiel bezoeken"
     user_status:
       save: "Opslaan"
       set_custom_status: "Aangepaste status instellen"
       what_are_you_doing: "Wat doe je?"
       pause_notifications: "Meldingen pauzeren"
       remove_status: "Status verwijderen"
+    presence_toggle:
+      online: "Online"
+      offline: "Offline"
+      title: "Aanwezigheidsfuncties in-/uitschakelen"
     user_tips:
       button: "Begrepen!"
       skip: "Tips overslaan"
@@ -2010,6 +2050,9 @@ nl:
       optional: optioneel
       errors_summary_title: "Dit formulier bevat fouten:"
       dirty_form: "Je hebt je wijzigingen niet verzonden! Weet je zeker dat je wilt verlaten?"
+      select:
+        select_placeholder: "Selecteren…"
+        none_placeholder: "Geen"
       errors:
         required: "Vereist"
         invalid_url: "Moet een geldige URL zijn"
@@ -2147,8 +2190,10 @@ nl:
       associate: "Heb je al een account? <a href='%{associate_link}'>Meld je aan</a> om je %{provider}-account te koppelen."
       activation_title: "Activeer je account"
       already_have_account: "Heb je al een account?"
+      no_account_yet: "Heb je geen account?"
       progress_bar:
         signup: "Registreren"
+        activate: "Activeren"
         approve: "Goedkeuren"
         login: "Aanmelden"
     forgot_password:
@@ -2558,6 +2603,7 @@ nl:
         new_reviewable:
           one: "%{count} nieuw beoordeelbaar item"
           other: "%{count} nieuwe beoordeelbare items"
+      paused: "Meldingen gepauzeerd"
       title: "meldingen van @naamvermeldingen, antwoorden op je berichten en topics, berichten, enz."
       none: "Meldingen kunnen momenteel niet worden geladen."
       empty: "Geen meldingen gevonden."
@@ -3454,7 +3500,9 @@ nl:
       show_hidden: "Genegeerde inhoud weergeven."
       deleted_by_author_simple: "(bericht verwijderd door auteur)"
       collapse: "samenvouwen"
+      load_more_replies: "meer antwoorden laden"
       sr_collapse_replies: "Ingesloten antwoorden samenvouwen"
+      sr_load_more_replies: "Meer ingesloten antwoorden laden"
       sr_date: "Plaatsingsdatum"
       sr_expand_replies:
         one: "Dit bericht heeft %{count} antwoord"
@@ -3467,6 +3515,9 @@ nl:
         one: "%{count} verborgen antwoord weergeven"
         other: "%{count} verborgen antwoorden weergeven"
       sr_reply_to: "Antwoord op bericht %{post_number} van @%{username}"
+      link_clicked:
+        one: "link %{count} keer aangeklikt"
+        other: "link %{count} keer aangeklikt"
       notice:
         new_user: "Dit is de eerste keer dat %{user} iets heeft geplaatst, laten we hem/haar welkom heten in onze community!"
         returning_user: "Het is al even geleden dat we %{user} hebben gezien, het laatste bericht is van %{time}."
@@ -3528,7 +3579,7 @@ nl:
       few_likes_left: "Bedankt voor je steun! Je kunt vandaag nog maar een paar likes uitdelen."
       controls:
         reply: "begin met opstellen van een antwoord op dit bericht"
-        like_action: "Leuk"
+        like_action: "Liken"
         like: "dit bericht liken"
         has_liked: "je hebt dit bericht geliket"
         read_indicator: "leden die dit bericht hebben gelezen"
@@ -3541,6 +3592,7 @@ nl:
         flag: "geef dit topic een privémarkering of stuur een privébericht erover"
         delete_action: "Bericht verwijderen"
         delete: "dit bericht verwijderen"
+        undelete_action: "Verwijderen van bericht ongedaan maken"
         undelete: "dit bericht herstellen"
         share_action: "Delen"
         share: "deel een link naar dit bericht"
@@ -3734,6 +3786,8 @@ nl:
       badge_colors: "Badgekleuren"
       background_color: "Achtergrondkleur"
       foreground_color: "Voorgrondkleur"
+      color_used: "Kleur in gebruik"
+      predefined_colors: "Voorgedefinieerde kleuropties"
       name_placeholder: "Maximaal een of twee woorden"
       color_placeholder: "Elke webkleur"
       delete_confirm: "Weet je zeker dat je deze categorie wilt verwijderen?"
@@ -3997,7 +4051,6 @@ nl:
       with_topics: "%{filter} topics"
       with_category: "%{filter} topics in %{category}"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -4117,6 +4170,7 @@ nl:
       shortcut_delimiter_or: "%{shortcut1} of %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Sneltoetsen"
       short_title: "Sneltoetsen"
       jump_to:
@@ -4387,6 +4441,7 @@ nl:
       dismiss: "Sluiten"
     safe_mode:
       enabled: "Veilige modus is ingeschakeld; sluit dit browservenster om de veilige modus te verlaten"
+    theme_preview_notice: "Je bekijkt momenteel een themavoorbeeld. Sluit dit browsertabblad of -venster om terug te gaan naar je normale siteconfiguratie."
     image_removed: "(afbeelding verwijderd)"
     pause_notifications:
       title: "Meldingen pauzeren voor…"
@@ -4583,6 +4638,7 @@ nl:
                 other: "%{count} wachtend"
             invite:
               content: "Uitnodigen"
+              title: "Nieuwe leden uitnodigen"
         global_section: "Algemene sectie, voor iedereen zichtbaar"
       panels:
         forum:
@@ -4738,6 +4794,11 @@ nl:
           previous_announcements: "Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Meer informatie..."
           experimental: "Experimenteel"
+          experiment_enabled: "Je hebt de experimentele functie ingeschakeld."
+          experiment_disabled: "Je hebt de experimentele functie uitgeschakeld."
+          experiment_toggled_too_fast: "Je hebt de experimentele functie te snel geschakeld. Wacht een paar seconden voordat je het opnieuw probeert."
+          experiment_tooltip:
+            title_disabled: "Probeer onze experimentele functie"
         last_checked: "Laatst gecontroleerd"
         refresh_problems: "Vernieuwen"
         no_problems: "Er zijn geen problemen gevonden."
@@ -4855,6 +4916,7 @@ nl:
             publish_read_state: "Bij groepsberichten leesstatus van groep publiceren"
           membership:
             automatic: Automatisch
+            automatic_tooltip: "Deze groep is automatisch, je kunt hem niet verwijderen en leden worden automatisch toegevoegd en verwijderd"
             trust_levels_title: "Vertrouwensniveau dat automatisch aan nieuwe gebruikers wordt toegekend:"
             effects: Effecten
             trust_levels_none: "Geen"
@@ -5105,6 +5167,8 @@ nl:
           group_name: "Groepgebruikersgebeurtenissen"
           user_added_to_group: "Een gebruiker wordt toegevoegd aan een groep"
           user_removed_from_group: "Een gebruiker wordt verwijderd uit een groep"
+        custom_event:
+          group_name: "Aangepaste gebeurtenissen"
         user_promoted_event:
           group_name: "Gebruikerspromotiegebeurtenissen"
           user_promoted: "Een gebruiker wordt gepromoveerd"
@@ -5202,39 +5266,65 @@ nl:
           screened_ips: "Gecontroleerde IP-adressen"
           screened_urls: "Gecontroleerde URL's"
           search_logs: "Zoeken in logs"
+          security: "Beveiligingsinstellingen"
+          spam: "Spaminstellingen"
           staff_action_logs: "Actielogs personeel"
       section_landing_pages:
         account:
           title: "Account"
           backups:
             title: "Back-ups"
+            description: "Maak een back-up van de gegevens van uw site"
           whats_new:
             title: "Wat is er nieuw"
+            description: "Ontdek nieuwe releases en verbeteringen voor Discourse"
       config_areas:
         about:
           header: "Over je site"
+          description: "Geef hier informatie over deze site en je team, zodat mensen te weten kunnen komen waar je community over gaat, wie erachter zit en hoe men je kan bereiken in geval van problemen. Dit wordt weergegeven op de <a href='%{basePath}/about'>Over-pagina</a> van je site."
           general_settings: "Algemene instellingen"
           community_name: "Communitynaam"
           community_name_placeholder: "Voorbeeldcommunity"
           community_summary: "Samenvatting van de community"
           community_description: "Beschrijving van de community"
+          community_title: "Communitytitel"
+          community_title_help: "Korte beschrijving, weergegeven in het browsertabblad, voor belangrijke pagina's zoals categorieën en topiclijsten."
           banner_image: "Bannerafbeelding"
+          banner_image_help: |
+            Deze wordt gebruikt op je Over-pagina. Aanbevolen grootte: 1100x300 pixels. Geaccepteerde bestandstypen: JPG, PNG en SVG tot 10 MB.
           contact_information: "Contactgegevens"
           community_owner: "Communityeigenaar"
           community_owner_placeholder: "Piet Jansen"
+          community_owner_help: |
+            Naam voor kritieke meldingen, wordt ook weergegeven op de /over-pagina. Zichtbaar voor anonieme gebruiker op openbare sites.
           contact_email: "E-mailadres contactpersoon"
           contact_email_placeholder: "contact@piet-jansen.com"
+          contact_email_help: |
+            E-mailadres voor kritieke meldingen, wordt ook weergegeven op de /over-pagina. Zichtbaar voor anonieme gebruiker op openbare sites.
           contact_url: "Contact-URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_help: |
+            Vervangt, indien aanwezig, het contact-e-mailadres op /over en is zichtbaar voor anonieme gebruikers op openbare sites.
           site_contact_name: "Contactnaam site"
+          site_contact_name_help: |
+            Een gebruikersnaam van een medewerker die wordt gebruikt als afzender voor alle automatische berichten. Als dit leeg wordt gelaten, wordt het standaardaccount van het systeem gebruikt.
           site_contact_group: "Contactgroep site"
+          site_contact_group_help: |
+            De groep die wordt uitgenodigd voor alle automatisch gestuurde privéberichten.
           your_organization: "Je organisatie"
+          your_organization_description: "We gebruiken deze informatie in de Gebruiksvoorwaarden en Privacyverklaring om aan te geven wie de site beheert en in welk rechtsgebied."
           company_name: "Naam"
           company_name_placeholder: "Acme-organisatie"
           company_name_warning: |
             Als dit leeg wordt gelaten worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt.
           governing_law: "Toepasselijk recht"
+          governing_law_placeholder: "Provincie, staat of land"
+          governing_law_help: |
+            Geef aan onder welk rechtsgebied de juridische voorwaarden van de site vallen. Dit is doorgaans het rechtsgebied waar het bedrijf is gevestigd of actief is.
           city_for_disputes: "Plaats voor geschillen"
+          city_for_disputes_placeholder: "Plaats"
+          city_for_disputes_help: |
+            Geef de plaats op waar juridische geschillen met betrekking tot dit forum worden afgehandeld.
           optional: "(optioneel)"
           update: "Bijwerken"
           toasts:
@@ -5244,6 +5334,7 @@ nl:
           saved: "opgeslagen!"
         flags:
           header: "Moderatiemarkeringen"
+          edit_header: "Markering bewerken"
           subheader: "Het markeringssysteem in Discourse helpt jou en je moderatorteam bij het beheren van content en gebruikersgedrag, om je community respectvol en gezond te houden. De standaardinstellingen zijn geschikt voor de meeste community's en je hoeft deze niet te wijzigen. Als je site echter bepaalde vereisten heeft, kun je markeringen die je niet nodig hebt uitschakelen en je eigen aangepaste markeringen toevoegen."
           description: "Beschrijving"
           enabled: "Ingeschakeld?"
@@ -5253,6 +5344,7 @@ nl:
           delete: "Verwijderen"
           delete_confirm: 'Weet je zeker dat je ''%{name}'' wilt verwijderen?'
           flags_tab: "Markeringen"
+          settings: "Vlaginstellingen"
           form:
             add_header: "Markering toevoegen"
             edit_header: "Markering bewerken"
@@ -5272,16 +5364,34 @@ nl:
             non_deletable: "Je kunt deze markering niet verwijderen, omdat deze een systeemmarkering is of al is gebruikt in het beoordelingssysteem, maar je kunt hem wel uitschakelen."
             require_message: "Gebruikers vragen om aanvullende redenen te geven"
             require_message_description: "Als deze markering wordt geselecteerd, wordt er een tekstveld weergegeven waarin de gebruiker meer informatie kan geven over waarom deze de content markeert."
+            auto_action_type: "Gemarkeerde content automatisch verbergen"
           more_options:
             title: "Meer opties"
             move_up: "Omhoog verplaatsen"
             move_down: "Omlaag verplaatsen"
         look_and_feel:
           title: "Look en feel"
+          description: "Pas je Discourse-site aan en geef hem een eigen stijl volgens jouw merk."
           themes:
             title: "Thema's"
+            themes_intro: "Installeer een nieuw thema om te beginnen of maak je eigen thema met behulp van deze bronnen."
+            themes_intro_img_alt: "Plaatsaanduiding voor nieuw thema"
+            set_default_theme: "Als standaard instellen"
+            default_theme: "Standaardthema"
+            themes_description: "Thema's zijn uitgebreide aanpassingen die meerdere elementen van de stijl van je forumontwerp wijzigen en vaak ook extra functies aan de voorkant bevatten."
+            new_theme: "Nieuw thema"
+            user_selectable: "Door gebruiker te selecteren"
+        user_fields:
+          type: "Type"
+          more_options:
+            title: "Meer opties"
+            move_up: "Omhoog verplaatsen"
+            move_down: "Omlaag verplaatsen"
+          delete: "Verwijderen"
       plugins:
         title: "Plug-ins"
+        installed: "Geïnstalleerde plug-ins"
+        description: "Alle Discourse-plug-ins die je hebt geïnstalleerd, of plug-ins die vooraf zijn geïnstalleerd bij Discourse-hosting, worden in deze lijst weergegeven."
         name: "Naam"
         none_installed: "Je hebt geen plug-ins geïnstalleerd."
         version: "Versie"
@@ -5443,6 +5553,8 @@ nl:
           theme_name: "Themanaam"
           component_name: "Onderdeelnaam"
           themes_intro: "Selecteer een bestaand of installeer een nieuw thema om te beginnen"
+          themes_intro_new: "Installeer een nieuw thema om te beginnen of maak je eigen thema met behulp van deze bronnen."
+          themes_intro_img_alt: "Plaatsaanduiding voor nieuw thema"
           beginners_guide_title: "Beginnersgids voor het gebruik van Discourse-thema's"
           developers_guide_title: "Ontwikkelaarsgids voor Discourse-thema's"
           browse_themes: "Communitythema's bekijken"
@@ -5490,12 +5602,17 @@ nl:
           convert_theme_alert_generic: "Weet je zeker dat je dit thema naar een onderdeel wilt converteren?"
           convert_theme_tooltip: "Dit thema naar een onderdeel converteren"
           inactive_themes: "Inactieve thema's:"
+          set_default_theme: "Als standaard instellen"
+          default_theme: "Standaardthema"
+          set_default_success: "Standaardthema ingesteld op %{theme}"
+          install_success: "%{theme} geïnstalleerd!"
           inactive_components: "Ongebruikte onderdelen:"
           selected:
             one: "%{count} geselecteerd"
             other: "%{count} geselecteerd"
           cancel: "Annuleren"
           broken_theme_tooltip: "Dit thema bevat fouten in de CSS, HTML of YAML ervan"
+          broken_theme: "Defect thema uitschakelen"
           disabled_component_tooltip: "Dit onderdeel is uitgeschakeld"
           default_theme_tooltip: "Dit thema is het standaardthema van de website"
           updates_available_tooltip: "Er zijn updates voor dit thema beschikbaar"
@@ -5562,6 +5679,7 @@ nl:
           update_to_latest: "Bijwerken naar nieuwste"
           check_for_updates: "Controleren op updates"
           updating: "Bijwerken…"
+          update_success: "Bijwerken van %{theme} voltooid"
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
           has_overwritten_history: "De huidige themaversie bestaat niet meer, omdat de Git-geschiedenis door een afgedwongen push is overschreven."
           add: "Toevoegen"
@@ -5953,6 +6071,10 @@ nl:
             custom_emoji_destroy: "aangepaste emoji verwijderen"
             delete_post_permanently: "bericht permanent verwijderen"
             delete_topic_permanently: "topic permanent verwijderen"
+            tag_group_create: "taggroep maken"
+            tag_group_destroy: "taggroep verwijderen"
+            tag_group_change: "taggroep wijzigen"
+            delete_associated_accounts: "gekoppelde accounts verwijderen"
         screened_emails:
           title: "Gecontroleerde e-mails"
           description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd."
@@ -6148,6 +6270,11 @@ nl:
         status: "Status"
         show_emails: "E-mailadressen weergeven"
         hide_emails: "E-mailadressen verbergen"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Sluiten"
+              confirm: "Verwijderen"
         nav:
           new: "Nieuw"
           active: "Actief"
@@ -6178,6 +6305,9 @@ nl:
         check_sso:
           title: "SSO-payload weergeven"
           text: "Weergeven"
+        delete_associated_accounts:
+          title: "Verwijder alle gekoppelde accounts voor deze gebruiker"
+          text: "Gekoppelde accounts verwijderen"
       user:
         suspend_failed: "Er is iets misgegaan bij het schorsen van deze gebruiker: %{error}"
         unsuspend_failed: "Er is iets misgegaan bij het opheffen van de schorsing van deze gebruiker: %{error}"
@@ -6272,6 +6402,9 @@ nl:
         time_read: "Leestijd"
         post_edits_count: "Berichtbewerkingen"
         anonymize: "Gebruiker anonimiseren"
+        anonymize_confirm: "Weet je zeker dat je dit account wilt anonimiseren? Hierdoor worden de gebruikersnaam en het e-mailadres gewijzigd en worden alle profielgegevens gereset."
+        delete_associated_accounts_confirm: "Weet je zeker dat je alle gekoppelde accounts van dit account wilt verwijderen? De gebruiker kan zich mogelijk niet aanmelden als het e-mailadres is gewijzigd."
+        disable_second_factor_confirm: "Weet je zeker dat je tweeledige verificatie wilt uitschakelen voor dit account?"
         anonymize_yes: "Ja, dit account anonimiseren"
         anonymize_failed: "Er is een probleem opgetreden bij het anonimiseren van het account."
         delete: "Gebruiker verwijderen"
@@ -6328,6 +6461,7 @@ nl:
         cant_delete_all_too_many_posts:
           one: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} bericht heeft geplaatst. (delete_all_posts_max)"
           other: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} berichten heeft geplaatst. (delete_all_posts_max)"
+        delete_confirm_title: "Weet je zeker dat je deze gebruiker wilt verwijderen? Dit is permanent!"
         delete_confirm: "Het verdient over het algemeen de voorkeur om gebruikers te anonimiseren in plaats van ze te verwijderen, om te voorkomen dat inhoud uit bestaande discussies wordt verwijderd."
         delete_and_block: "Dit e-mail- en IP-adres verwijderen en <b>blokkeren</b>"
         delete_dont_block: "Alleen verwijderen"
@@ -6420,8 +6554,6 @@ nl:
           confirm_delete: "Weet je zeker dat je dit DiscourseConnect-record wilt verwijderen?"
       user_fields:
         title: "Gebruikersvelden"
-        help: "Voeg velden toe die je gebruikers kunnen invullen."
-        create: "Gebruikersveld maken"
         untitled: "Geen titel"
         name: "Veldnaam"
         type: "Veldtype"
@@ -6450,22 +6582,15 @@ nl:
           confirmation: "Hierdoor worden bestaande gebruikers gevraagd om dit veld in te vullen en kunnen ze niets doen op je site totdat het veld is ingevuld. Doorgaan?"
         editable:
           title: "Bewerkbaar na registratie"
-          enabled: "bewerkbaar"
-          disabled: "niet bewerkbaar"
         show_on_profile:
           title: "Weergeven in openbaar profiel"
-          enabled: "weergegeven in profiel"
-          disabled: "niet weergegeven in profiel"
         show_on_user_card:
           title: "Weergeven in gebruikerskaart"
-          enabled: "weergegeven op gebruikerskaart"
-          disabled: "niet weergegeven op gebruikerskaart"
         searchable:
           title: "Doorzoekbaar"
-          enabled: "doorzoekbaar"
-          disabled: "niet doorzoekbaar"
+          enabled: "Doorzoekbaar"
         field_types:
-          text: "Tekstveld"
+          text: "Tekst"
           confirm: "Bevestiging"
           dropdown: "Vervolgkeuzelijst"
           multiselect: "Meervoudige selectie"
@@ -6498,6 +6623,7 @@ nl:
         none: "geen"
         save: "opslaan"
         cancel: "annuleren"
+        unmask: "invoer demaskeren"
       site_settings:
         emoji_list:
           invalid_input: "Emojilijst mag alleen geldige emojinamen bevatten, bijvoorbeeld: knuffels"
@@ -6520,6 +6646,8 @@ nl:
             title: "Afbeeldingen uploaden"
         selectable_avatars:
           title: "Lijst van avatars waaruit gebruikers kunnen kiezen"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alle"
           required: "Vereist"
@@ -6591,6 +6719,7 @@ nl:
       badges:
         status: Status
         title: Badges
+        page_description: Badges belonen gebruikers voor hun activiteit, bijdragen en prestaties om positief gedrag en betrokkenheid binnen de community te erkennen, te valideren en aan te moedigen.
         new_badge: Nieuwe badge
         new: Nieuw
         name: Naam
@@ -6599,6 +6728,7 @@ nl:
         description: Beschrijving
         long_description: Lange beschrijving
         badge_type: Badgetype
+        group_settings: Groepsinstellingen
         badge_grouping: Groep
         badge_groupings:
           modal_title: Badgegroeperingen
@@ -6621,6 +6751,7 @@ nl:
         none_selected: "Selecteer een badge om te beginnen"
         allow_title: Badge mag als titel worden gebruikt
         multiple_grant: Kan meerdere malen worden toegekend
+        visibility_heading: Zichtbaarheid
         listable: Badge weergeven op de openbare badgespagina
         enabled: ingeschakeld
         disabled: uitgeschakeld
@@ -6662,6 +6793,9 @@ nl:
             with_post: <span class="username">%{username}</span> voor bericht in %{link}
             with_post_time: <span class="username">%{username}</span> voor bericht in %{link} om <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> om <span class="time">%{time}</span>
+        badge_intro:
+          title: "Kies een badge of maak een nieuwe"
+          description: "Begin door een bestaande badge te selecteren om deze aan te passen, of maak een geheel nieuwe badge."
         mass_award:
           title: Bulktoekenning
           description: Dezelfde badge aan meerdere gebruikers tegelijk toekennen.
@@ -6680,9 +6814,16 @@ nl:
           grant_existing_holders: Extra badges toekennen aan bestaande badgehouders
       emoji:
         title: "Emoji"
+        description: "Voeg een nieuwe emoji toe die voor iedereen beschikbaar is. Selecteer meerdere bestanden om emoji's te maken op basis van hun bestandsnaam. De geselecteerde groep wordt gebruikt voor alle bestanden die tegelijk worden toegevoegd."
+        no_emoji: "Je hebt nog geen aangepaste emoji's."
+        add: "Emoji toevoegen"
+        delete: "Verwijderen"
+        back: "Terug naar emoji's"
+        choose_files: "Bestanden kiezen"
         uploading: "Uploaden…"
         name: "Naam"
         group: "Groep"
+        created_by: "Gemaakt door"
         image: "Afbeelding"
         alt: "voorbeeld van aangepaste emoji"
         delete_confirm: "Weet je zeker dat je de emoji :%{name}: wilt verwijderen?"
@@ -6735,10 +6876,18 @@ nl:
         destination: "Bestemming"
         copy_to_clipboard: "Permalink kopiëren naar klembord"
         delete_confirm: Weet je zeker dat je deze permalink wilt verwijderen?
+        no_permalinks: "Je hebt nog geen permalinks."
+        add: "Permalink toevoegen"
+        back: "Terug naar permalinks"
         more_options: "Meer opties"
+        copy_success: "Permalink gekopieerd naar klembord"
         form:
           label: "Nieuw:"
+          add_header: "Permalink toevoegen"
+          edit_header: "Permalink bewerken"
+          filter: "Zoek-URL of bestemmings-URL"
           url: "URL"
+          permalink_type: "Type permalink"
           save: "Opslaan"
       reseed:
         action:

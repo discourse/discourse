@@ -8,7 +8,7 @@ import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class AdminChatIncomingWebhooksList extends Component {
@@ -88,13 +88,13 @@ export default class AdminChatIncomingWebhooksList extends Component {
             >
               <div class="d-admin-row__controls-options">
                 <LinkTo
-                  @route="adminPlugins.show.discourse-chat-incoming-webhooks.show"
+                  @route="adminPlugins.show.discourse-chat-incoming-webhooks.edit"
                   @model={{webhook.id}}
                   class="btn btn-small admin-chat-incoming-webhooks-edit"
                 >{{i18n "chat.incoming_webhooks.edit"}}</LinkTo>
 
                 <DButton
-                  @icon="trash-alt"
+                  @icon="trash-can"
                   @title="chat.incoming_webhooks.delete"
                   @action={{fn this.destroyWebhook webhook}}
                   class="btn-danger btn-small admin-chat-incoming-webhooks-delete"

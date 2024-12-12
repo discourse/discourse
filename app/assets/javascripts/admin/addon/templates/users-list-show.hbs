@@ -1,27 +1,29 @@
+<AdminPageSubheader @titleLabelTranslated={{this.title}}>
+  <:actions as |actions|>
+    {{#if this.canCheckEmails}}
+      {{#if this.showEmails}}
+        <actions.Default
+          @action={{this.toggleEmailVisibility}}
+          @label="admin.users.hide_emails"
+          class="admin-users__subheader-hide-emails"
+        />
+      {{else}}
+        <actions.Default
+          @action={{this.toggleEmailVisibility}}
+          @label="admin.users.show_emails"
+          class="admin-users__subheader-show-emails"
+        />
+      {{/if}}
+    {{/if}}
+  </:actions>
+</AdminPageSubheader>
+
 <PluginOutlet @name="admin-users-list-show-before" />
 
-<div class="admin-title">
-  <h2>{{this.title}}</h2>
-  {{#if this.canCheckEmails}}
-    {{#if this.showEmails}}
-      <DButton
-        @action={{this.toggleEmailVisibility}}
-        @label="admin.users.hide_emails"
-        class="hide-emails btn-default"
-      />
-    {{else}}
-      <DButton
-        @action={{this.toggleEmailVisibility}}
-        @label="admin.users.show_emails"
-        class="show-emails btn-default"
-      />
-    {{/if}}
-  {{/if}}
-</div>
-
-<div class="admin-users-list__controls">
-  <div class="username">
+<div class="d-admin-filter admin-users-list__controls">
+  <div class="admin-filter__input-container admin-users-list__search">
     <input
+      class="admin-filter__input"
       type="text"
       dir="auto"
       placeholder={{this.searchHint}}
@@ -64,7 +66,7 @@
 >
   {{#if this.users}}
     <ResponsiveTable
-      @className="users-list"
+      @className={{concat-class "users-list" this.query}}
       @aria-label={{this.title}}
       @style={{html-safe
         (concat

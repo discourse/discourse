@@ -368,6 +368,8 @@ zh_TW:
         bio_raw: "關於我"
       user:
         password: "密碼"
+      user_password:
+        password: "密碼"
     errors:
       models:
         topic:
@@ -2600,8 +2602,6 @@ zh_TW:
     regular:
       name: 活躍使用者
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授與</a>重新分類、重新命名，點擊連結、維基（Wiki）功能、點擊更多的讚
-      long_description: |
-        該徽章授與給達到使用者信任等級 3 的你。感謝你在這幾個月持續地參與社群。你現在是我們之中最活躍的讀者之一了，你持續的貢獻極大地幫助了我們的社群，你真正融入到了社群中。你現在可以重新分類或者重新命名討論主題、使用更強大的垃圾投訴功能以及有權限查看隱藏的貴賓室分類了。而且每天你可以點更多次讚了。
     leader:
       name: 資深
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授與</a>全域編輯、置頂、關閉、存檔、分割和合併、更多的讚

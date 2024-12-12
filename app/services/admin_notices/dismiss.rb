@@ -4,12 +4,15 @@ class AdminNotices::Dismiss
   include Service::Base
 
   policy :invalid_access
+
   params do
     attribute :id, :integer
 
     validates :id, presence: true
   end
+
   model :admin_notice, optional: true
+
   transaction do
     step :destroy
     step :reset_problem_check

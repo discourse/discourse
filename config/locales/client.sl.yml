@@ -1688,6 +1688,8 @@ sl:
     form_kit:
       reset: Ponastavi
       optional: neobvezno
+      select:
+        none_placeholder: "Brez"
       errors:
         required: "Zahtevano"
     close: "Zapri"
@@ -3212,7 +3214,6 @@ sl:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
@@ -3985,6 +3986,9 @@ sl:
         look_and_feel:
           themes:
             title: "Videzi"
+        user_fields:
+          type: "Tip"
+          delete: "Izbriši"
       plugins:
         title: "Vtičniki"
         name: "Ime"
@@ -4354,6 +4358,11 @@ sl:
         status: "Stanje"
         show_emails: "Pokaži e-naslove"
         hide_emails: "Skrij e-naslove"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zapri"
+              confirm: "Izbriši"
         nav:
           new: "Novi"
           active: "Aktivni"
@@ -4544,7 +4553,6 @@ sl:
           confirm_delete: "Ali ste prepričani, da želite izbrisati ta zapis DiscourseConnect?"
       user_fields:
         title: "Podatki uporabnika"
-        create: "Dodaj podatek uporabnika"
         name: "Ime polja"
         type: "Vrsta polja"
         description: "Opis polja"
@@ -4564,18 +4572,12 @@ sl:
             title: "Neobvezno"
         editable:
           title: "Uredljivo po prijavi"
-          enabled: "uredljivo"
-          disabled: "ni uredljivo"
         show_on_profile:
           title: "Prikaži na javnem profilu"
-          enabled: "prikazano na profilu"
-          disabled: "ni prikazano na profilu"
         show_on_user_card:
           title: "Prikaži na uporabnikovi izkaznici"
-          enabled: "prikazano na uporabnikovi izkaznici"
-          disabled: "ni prikazano na uporabnikovi izkaznici"
         field_types:
-          text: "Besedilno polje"
+          text: "Besedilo"
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:
@@ -4606,6 +4608,8 @@ sl:
         uploaded_image_list:
           upload:
             label: "Naloži"
+        table_column_heading:
+          status: "Stanje"
         categories:
           all_results: "Vsi"
           required: "Zahtevano"
@@ -4672,6 +4676,7 @@ sl:
         none_selected: "Izberi značko za začetek"
         allow_title: Dovoli da se značka uporablja kot naziv
         multiple_grant: Se lahko podeli večkrat
+        visibility_heading: Vidljivost
         listable: Prikaži značko na strani javnih značk
         enabled: vključeno
         disabled: onemogočeno
@@ -4707,6 +4712,7 @@ sl:
             with_time: <span class="username">%{username}</span> ob <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "Izbriši"
         uploading: "Nalagam..."
         name: "Ime"
         group: "Skupina"

@@ -96,14 +96,9 @@ acceptance("User menu", function (needs) {
     await visit("/");
     await click(".d-header-icons .current-user button");
 
-    let repliesBadgeNotification = query(
-      "#user-menu-button-replies .badge-notification"
-    );
-    assert.strictEqual(
-      repliesBadgeNotification.textContent.trim(),
-      "2",
-      "badge shows the right count"
-    );
+    assert
+      .dom("#user-menu-button-replies .badge-notification")
+      .hasText("2", "badge shows the right count");
 
     await click(".user-menu ul li.replied a");
 
@@ -114,14 +109,9 @@ acceptance("User menu", function (needs) {
     );
 
     await click(".d-header-icons .current-user button");
-    repliesBadgeNotification = query(
-      "#user-menu-button-replies .badge-notification"
-    );
-    assert.strictEqual(
-      repliesBadgeNotification.textContent.trim(),
-      "1",
-      "badge shows count reduced by one"
-    );
+    assert
+      .dom("#user-menu-button-replies .badge-notification")
+      .hasText("1", "badge shows count reduced by one");
   });
 
   test("clicking on user menu items", async function (assert) {
@@ -131,13 +121,12 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-review-queue");
 
-    assert.strictEqual(
-      query(
-        "#user-menu-button-review-queue .badge-notification"
-      ).textContent.trim(),
-      "8",
-      "updates user's reviewable count based on request's response"
-    );
+    assert
+      .dom("#user-menu-button-review-queue .badge-notification")
+      .hasText(
+        "8",
+        "updates user's reviewable count based on request's response"
+      );
 
     await click("#quick-access-review-queue li.reviewable.pending a");
 
@@ -317,21 +306,13 @@ acceptance("User menu", function (needs) {
       "#user-menu-button-custom-tab-1 .badge-notification"
     );
 
-    assert.strictEqual(
-      customTab1Bubble.textContent.trim(),
-      "73",
-      "bubble shows the right count"
-    );
+    assert.dom(customTab1Bubble).hasText("73", "bubble shows the right count");
 
     const customTab2Bubble = query(
       "#user-menu-button-custom-tab-2 .badge-notification"
     );
 
-    assert.strictEqual(
-      customTab2Bubble.textContent.trim(),
-      "29",
-      "bubble shows the right count"
-    );
+    assert.dom(customTab2Bubble).hasText("29", "bubble shows the right count");
 
     await publishToMessageBus(`/notification/${loggedInUser().id}`, {
       unread_high_priority_notifications: 18,
@@ -341,11 +322,12 @@ acceptance("User menu", function (needs) {
       "#user-menu-button-custom-tab-1 .badge-notification"
     );
 
-    assert.strictEqual(
-      customTab1Bubble.textContent.trim(),
-      "18",
-      "displayed bubble count updates when the value is changed"
-    );
+    assert
+      .dom(customTab1Bubble)
+      .hasText(
+        "18",
+        "displayed bubble count updates when the value is changed"
+      );
 
     await click("#user-menu-button-custom-tab-1");
 
@@ -375,14 +357,12 @@ acceptance("User menu", function (needs) {
     const notifications = queryAll(
       "#quick-access-all-notifications ul li.notification"
     );
-    assert.strictEqual(
-      notifications[0].textContent.replace(/\s+/g, " ").trim(),
-      "velesin pluginNotificationTransformer 0 edited topic 443"
-    );
-    assert.strictEqual(
-      notifications[1].textContent.replace(/\s+/g, " ").trim(),
-      "velesin pluginNotificationTransformer 1 some title"
-    );
+    assert
+      .dom(notifications[0])
+      .hasText("velesin pluginNotificationTransformer 0 edited topic 443");
+    assert
+      .dom(notifications[1])
+      .hasText("velesin pluginNotificationTransformer 1 some title");
   });
 
   test("bookmarks tab applies model transformations registered by plugins", async function (assert) {
@@ -400,11 +380,9 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-bookmarks");
 
-    const bookmarks = queryAll("#quick-access-bookmarks ul li.bookmark");
-    assert.strictEqual(
-      bookmarks[0].textContent.replace(/\s+/g, " ").trim(),
-      "osama pluginBookmarkTransformer Test poll topic hello world"
-    );
+    assert
+      .dom("#quick-access-bookmarks ul li.bookmark")
+      .hasText("osama pluginBookmarkTransformer Test poll topic hello world");
   });
 
   test("messages tab applies model transformations registered by plugins", async function (assert) {
@@ -427,11 +405,11 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-messages");
 
-    const messages = queryAll("#quick-access-messages ul li.message");
-    assert.strictEqual(
-      messages[0].textContent.replace(/\s+/g, " ").trim(),
-      "mixtape pluginTransformer#2 pluginTransformer#1 BUG: Can not render emoji properly"
-    );
+    assert
+      .dom("#quick-access-messages ul li.message")
+      .hasText(
+        "mixtape pluginTransformer#2 pluginTransformer#1 BUG: Can not render emoji properly"
+      );
   });
 
   test("the profile tab", async function (assert) {
@@ -444,49 +422,43 @@ acceptance("User menu", function (needs) {
     await click("#user-menu-button-profile");
 
     const summaryLink = query("#quick-access-profile ul li.summary a");
-    assert.ok(
+    assert.true(
       summaryLink.href.endsWith("/u/eviltrout/summary"),
       "has a link to the summary page of the user"
     );
-    assert.strictEqual(
-      summaryLink.textContent.trim(),
-      i18n("user.summary.title"),
-      "summary link has the right label"
-    );
-    assert.ok(
-      summaryLink.querySelector(".d-icon-user"),
-      "summary link has the right icon"
-    );
+    assert
+      .dom(summaryLink)
+      .hasText(i18n("user.summary.title"), "summary link has the right label");
+    assert
+      .dom(".d-icon-user", summaryLink)
+      .exists("summary link has the right icon");
 
     const activityLink = query("#quick-access-profile ul li.activity a");
-    assert.ok(
+    assert.true(
       activityLink.href.endsWith("/u/eviltrout/activity"),
       "has a link to the activity page of the user"
     );
-    assert.strictEqual(
-      activityLink.textContent.trim(),
-      i18n("user.activity_stream"),
-      "activity link has the right label"
-    );
-    assert.ok(
-      activityLink.querySelector(".d-icon-bars-staggered"),
-      "activity link has the right icon"
-    );
+    assert
+      .dom(activityLink)
+      .hasText(
+        i18n("user.activity_stream"),
+        "activity link has the right label"
+      );
+    assert
+      .dom(".d-icon-bars-staggered", activityLink)
+      .exists("activity link has the right icon");
 
     const invitesLink = query("#quick-access-profile ul li.invites a");
-    assert.ok(
+    assert.true(
       invitesLink.href.endsWith("/u/eviltrout/invited"),
       "has a link to the invites page of the user"
     );
-    assert.strictEqual(
-      invitesLink.textContent.trim(),
-      i18n("user.invited.title"),
-      "invites link has the right label"
-    );
-    assert.ok(
-      invitesLink.querySelector(".d-icon-user-plus"),
-      "invites link has the right icon"
-    );
+    assert
+      .dom(invitesLink)
+      .hasText(i18n("user.invited.title"), "invites link has the right label");
+    assert
+      .dom(".d-icon-user-plus", invitesLink)
+      .exists("invites link has the right icon");
 
     await clickOutside();
     updateCurrentUser({ can_invite_to_forum: false });
@@ -499,50 +471,47 @@ acceptance("User menu", function (needs) {
       .doesNotExist("invites link not shown when the user can't invite");
 
     const draftsLink = query("#quick-access-profile ul li.drafts a");
-    assert.ok(
+    assert.true(
       draftsLink.href.endsWith("/u/eviltrout/activity/drafts"),
       "has a link to the drafts page of the user"
     );
-    assert.strictEqual(
-      draftsLink.textContent.trim(),
-      i18n("drafts.label_with_count", { count: 13 }),
-      "drafts link has the right label with count of the user's drafts"
-    );
-    assert.ok(
-      draftsLink.querySelector(".d-icon-user_menu\\.drafts"),
-      "drafts link has the right icon"
-    );
+    assert
+      .dom(draftsLink)
+      .hasText(
+        i18n("drafts.label_with_count", { count: 13 }),
+        "drafts link has the right label with count of the user's drafts"
+      );
+    assert
+      .dom(".d-icon-user_menu\\.drafts", draftsLink)
+      .exists("drafts link has the right icon");
 
     const preferencesLink = query("#quick-access-profile ul li.preferences a");
-    assert.ok(
+    assert.true(
       preferencesLink.href.endsWith("/u/eviltrout/preferences"),
       "has a link to the preferences page of the user"
     );
-    assert.strictEqual(
-      preferencesLink.textContent.trim(),
-      i18n("user.preferences.title"),
-      "preferences link has the right label"
-    );
-    assert.ok(
-      preferencesLink.querySelector(".d-icon-gear"),
-      "preferences link has the right icon"
-    );
+    assert
+      .dom(preferencesLink)
+      .hasText(
+        i18n("user.preferences.title"),
+        "preferences link has the right label"
+      );
+    assert
+      .dom(".d-icon-gear", preferencesLink)
+      .exists("preferences link has the right icon");
 
     let doNotDisturbButton = query(
       "#quick-access-profile ul li.do-not-disturb .btn"
     );
-    assert.strictEqual(
-      doNotDisturbButton.textContent
-        .replaceAll(/\s+/g, " ")
-        .replaceAll(/\u200B/g, "")
-        .trim(),
-      i18n("pause_notifications.label"),
-      "Do Not Disturb button has the right label"
-    );
-    assert.ok(
-      doNotDisturbButton.querySelector(".d-icon-toggle-off"),
-      "Do Not Disturb button has the right icon"
-    );
+    assert
+      .dom(doNotDisturbButton)
+      .hasText(
+        i18n("pause_notifications.label"),
+        "Do Not Disturb button has the right label"
+      );
+    assert
+      .dom(".d-icon-toggle-off", doNotDisturbButton)
+      .exists("Do Not Disturb button has the right icon");
 
     await clickOutside();
     const date = new Date();
@@ -554,18 +523,17 @@ acceptance("User menu", function (needs) {
     doNotDisturbButton = query(
       "#quick-access-profile ul li.do-not-disturb .btn"
     );
-    assert.strictEqual(
-      doNotDisturbButton.textContent
-        .replaceAll(/\s+/g, " ")
-        .replaceAll(/\u200B/g, "")
-        .trim(),
-      `${i18n("pause_notifications.label")} 2h`,
-      "Do Not Disturb button has the right label when Do Not Disturb is enabled"
-    );
-    assert.ok(
-      doNotDisturbButton.querySelector(".d-icon-toggle-on"),
-      "Do Not Disturb button has the right icon when Do Not Disturb is enabled"
-    );
+    assert
+      .dom(doNotDisturbButton)
+      .hasText(
+        `${i18n("pause_notifications.label")} 2h`,
+        "Do Not Disturb button has the right label when Do Not Disturb is enabled"
+      );
+    assert
+      .dom(".d-icon-toggle-on", doNotDisturbButton)
+      .exists(
+        "Do Not Disturb button has the right icon when Do Not Disturb is enabled"
+      );
 
     assert
       .dom("#quick-access-profile ul li.enable-anonymous .btn")
@@ -573,18 +541,17 @@ acceptance("User menu", function (needs) {
     let toggleAnonButton = query(
       "#quick-access-profile ul li.enable-anonymous .btn"
     );
-    assert.strictEqual(
-      toggleAnonButton.textContent
-        .replaceAll(/\s+/g, " ")
-        .replaceAll(/\u200B/g, "")
-        .trim(),
-      i18n("switch_to_anon"),
-      "toggle anonymous button has the right label when the user isn't anonymous"
-    );
-    assert.ok(
-      toggleAnonButton.querySelector(".d-icon-user-secret"),
-      "toggle anonymous button has the right icon when the user isn't anonymous"
-    );
+    assert
+      .dom(toggleAnonButton)
+      .hasText(
+        i18n("switch_to_anon"),
+        "toggle anonymous button has the right label when the user isn't anonymous"
+      );
+    assert
+      .dom(".d-icon-user-secret", toggleAnonButton)
+      .exists(
+        "toggle anonymous button has the right icon when the user isn't anonymous"
+      );
 
     await clickOutside();
     updateCurrentUser({ is_anonymous: true });
@@ -594,18 +561,17 @@ acceptance("User menu", function (needs) {
     toggleAnonButton = query(
       "#quick-access-profile ul li.disable-anonymous .btn"
     );
-    assert.strictEqual(
-      toggleAnonButton.textContent
-        .replaceAll(/\s+/g, " ")
-        .replaceAll(/\u200B/g, "")
-        .trim(),
-      i18n("switch_from_anon"),
-      "toggle anonymous button has the right label when the user is anonymous"
-    );
-    assert.ok(
-      toggleAnonButton.querySelector(".d-icon-ban"),
-      "toggle anonymous button has the right icon when the user is anonymous"
-    );
+    assert
+      .dom(toggleAnonButton)
+      .hasText(
+        i18n("switch_from_anon"),
+        "toggle anonymous button has the right label when the user is anonymous"
+      );
+    assert
+      .dom(".d-icon-ban", toggleAnonButton)
+      .exists(
+        "toggle anonymous button has the right icon when the user is anonymous"
+      );
 
     await clickOutside();
     updateCurrentUser({
@@ -693,18 +659,12 @@ acceptance("User menu", function (needs) {
       );
 
     const logoutButton = query("#quick-access-profile ul li.logout .btn");
-    assert.strictEqual(
-      logoutButton.textContent
-        .replaceAll(/\s+/g, " ")
-        .replaceAll(/\u200B/g, "")
-        .trim(),
-      i18n("user.log_out"),
-      "logout button has the right label"
-    );
-    assert.ok(
-      logoutButton.querySelector(".d-icon-right-from-bracket"),
-      "logout button has the right icon"
-    );
+    assert
+      .dom(logoutButton)
+      .hasText(i18n("user.log_out"), "logout button has the right label");
+    assert
+      .dom(".d-icon-right-from-bracket", logoutButton)
+      .exists("logout button has the right icon");
   });
 
   test("Extra items added to profile tab via plugin API are rendered properly", async function (assert) {
@@ -729,22 +689,20 @@ acceptance("User menu", function (needs) {
 
     const item1 = query("#quick-access-profile ul li.test-1-item");
 
-    assert.ok(
-      item1.querySelector(".d-icon-wrench"),
-      "The first item's icon is rendered"
-    );
-    assert.ok(
+    assert
+      .dom(".d-icon-wrench", item1)
+      .exists("The first item's icon is rendered");
+    assert.true(
       item1.querySelector("a").href.endsWith("/test_1_path"),
       "The first item's link is present with correct href"
     );
 
     const item2 = query("#quick-access-profile ul li.test-2-item");
 
-    assert.notOk(
-      item2.querySelector(".d-icon"),
-      "The second item doesn't have an icon"
-    );
-    assert.ok(
+    assert
+      .dom(".d-icon", item2)
+      .doesNotExist("The second item doesn't have an icon");
+    assert.true(
       item2.querySelector("a").href.endsWith("/test_2_path"),
       "The second item's link is present with correct href"
     );
@@ -949,31 +907,28 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".d-header-icons .current-user button");
 
     await click(".user-menu .notifications-dismiss");
-    assert.strictEqual(
-      query(
-        ".dismiss-notification-confirmation .d-modal__body"
-      ).textContent.trim(),
-      i18n("notifications.dismiss_confirmation.body.default", { count: 10 }),
-      "confirmation modal is shown when there are unread high pri notifications"
-    );
+    assert
+      .dom(".dismiss-notification-confirmation .d-modal__body")
+      .hasText(
+        i18n("notifications.dismiss_confirmation.body.default", { count: 10 }),
+        "confirmation modal is shown when there are unread high pri notifications"
+      );
 
     await click(".d-modal__footer .btn-default"); // click cancel on the dismiss modal
-    assert.notOk(markRead, "mark-read request isn't sent");
+    assert.false(markRead, "mark-read request isn't sent");
 
     await click(".user-menu .notifications-dismiss");
     await click(".d-modal__footer .btn-primary"); // click confirm on the dismiss modal
-    assert.ok(markRead, "mark-read request is sent");
+    assert.true(markRead, "mark-read request is sent");
   });
 
   test("shows confirmation modal for the bookmarks list", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
 
-    assert.strictEqual(
-      query("#user-menu-button-bookmarks .badge-notification").textContent,
-      "103",
-      "bookmarks tab has bubble with count"
-    );
+    assert
+      .dom("#user-menu-button-bookmarks .badge-notification")
+      .hasText("103", "bookmarks tab has bubble with count");
 
     await click("#user-menu-button-bookmarks");
     assert
@@ -985,16 +940,13 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click(".user-menu .notifications-dismiss");
 
-    assert.strictEqual(
-      query(
-        ".dismiss-notification-confirmation .d-modal__body"
-      ).textContent.trim(),
+    assert.dom(".dismiss-notification-confirmation .d-modal__body").hasText(
       i18n("notifications.dismiss_confirmation.body.bookmarks", {
         count: 103,
       }),
       "confirmation modal is shown when there are unread bookmark reminder notifications"
     );
-    assert.notOk(markRead, "mark-read request isn't sent");
+    assert.false(markRead, "mark-read request isn't sent");
 
     await click(".d-modal__footer .btn-primary"); // confirm dismiss on the dismiss modal
 
@@ -1007,7 +959,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     assert
       .dom("#user-menu-button-bookmarks .badge-notification")
       .doesNotExist("bookmarks tab no longer has bubble");
-    assert.ok(markRead, "mark-read request is sent");
+    assert.true(markRead, "mark-read request is sent");
     assert.strictEqual(
       markReadRequestBody,
       "dismiss_types=bookmark_reminder",
@@ -1020,11 +972,9 @@ acceptance("User menu - Dismiss button", function (needs) {
     await visit("/");
     await click(".d-header-icons .current-user button");
 
-    assert.strictEqual(
-      query("#user-menu-button-messages .badge-notification").textContent,
-      "89",
-      "messages tab has bubble with count"
-    );
+    assert
+      .dom("#user-menu-button-messages .badge-notification")
+      .hasText("89", "messages tab has bubble with count");
 
     await click("#user-menu-button-messages");
     assert
@@ -1036,16 +986,13 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click(".user-menu .notifications-dismiss");
 
-    assert.strictEqual(
-      query(
-        ".dismiss-notification-confirmation .d-modal__body"
-      ).textContent.trim(),
+    assert.dom(".dismiss-notification-confirmation .d-modal__body").hasText(
       i18n("notifications.dismiss_confirmation.body.messages", {
         count: 89,
       }),
       "confirmation modal is shown when there are unread messages notifications"
     );
-    assert.notOk(markRead, "mark-read request isn't sent");
+    assert.false(markRead, "mark-read request isn't sent");
 
     await click(".d-modal__footer .btn-primary"); // confirm dismiss on the dismiss modal
 
@@ -1058,7 +1005,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     assert
       .dom("#user-menu-button-messages .badge-notification")
       .doesNotExist("messages tab no longer has bubble");
-    assert.ok(markRead, "mark-read request is sent");
+    assert.true(markRead, "mark-read request is sent");
     assert.strictEqual(
       markReadRequestBody,
       "dismiss_types=private_message%2Cgroup_message_summary",
@@ -1073,7 +1020,7 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click("#user-menu-button-likes");
     await click(".user-menu .notifications-dismiss");
-    assert.ok(
+    assert.true(
       markRead,
       "mark-read request is sent without a confirmation modal"
     );
@@ -1087,18 +1034,16 @@ acceptance("User menu - Dismiss button", function (needs) {
     let othersBadgeNotification = query(
       "#user-menu-button-other-notifications .badge-notification"
     );
-    assert.strictEqual(
-      othersBadgeNotification.textContent.trim(),
-      "4",
-      "badge shows the right count"
-    );
+    assert
+      .dom(othersBadgeNotification)
+      .hasText("4", "badge shows the right count");
 
     await click(".user-menu .notifications-dismiss");
 
     assert
       .dom("#user-menu-button-other-notifications .badge-notification")
       .doesNotExist();
-    assert.ok(
+    assert.true(
       markRead,
       "mark-read request is sent without a confirmation modal"
     );
@@ -1112,14 +1057,14 @@ acceptance("User menu - avatars", function (needs) {
     show_user_menu_avatars: true,
   });
 
-  test("It shows user avatars for various notifications on all notifications pane", async function (assert) {
+  test("shows user avatars for various notifications on all notifications pane", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
     assert.dom("li.notification.edited .icon-avatar").exists();
     assert.dom("li.notification.replied .icon-avatar").exists();
   });
 
-  test("It shows user avatars for messages", async function (assert) {
+  test("shows user avatars for messages", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-messages");
@@ -1128,7 +1073,7 @@ acceptance("User menu - avatars", function (needs) {
     assert.dom("li.message .icon-avatar").exists();
   });
 
-  test("It shows user avatars for bookmark items and bookmark reminder notification items", async function (assert) {
+  test("shows user avatars for bookmark items and bookmark reminder notification items", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-bookmarks");

@@ -105,7 +105,7 @@ it:
         doc: Consente di inviare più messaggi personali a un utente. Ogni MP può essere inviato con un ritardo.
       suspend_user_by_email:
         title: Sospendi utente per e-mail
-        description: Sospendi automaticamente un account in base all'indirizzo email
+        description: Sospendi automaticamente un account in base all'indirizzo e-mail
       user_global_notice:
         title: Avviso globale agli utenti
         description: Consente di visualizzare un avviso globale per un utente

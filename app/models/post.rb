@@ -658,6 +658,7 @@ class Post < ActiveRecord::Base
             "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
             locale: SiteSetting.default_locale,
             base_path: Discourse.base_path,
+            default: PostActionType.names[post_action_type_id],
           ),
       }
 

@@ -1970,7 +1970,6 @@ pl_PL:
                 many {# dni}
               other {# dni}
             }.
-          edit_link_options: "Edytuj opcje łącza."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
           restrict: "Ogranicz do"
@@ -2177,6 +2176,9 @@ pl_PL:
       optional: opcjonalnie
       errors_summary_title: "Ten formularz zawiera błędy:"
       dirty_form: "Nie przesłano zmian. Czy na pewno chcesz wyjść?"
+      select:
+        select_placeholder: "Wybierz…"
+        none_placeholder: "Brak"
       errors:
         required: "Wymagane"
         invalid_url: "Musi być prawidłowym adresem URL"
@@ -4339,7 +4341,6 @@ pl_PL:
       with_topics: "%{filter} tematy"
       with_category: "%{filter} tematy w %{category} "
       filter:
-        title: "Filtr"
         button:
           label: "Filtr"
       latest:
@@ -5150,8 +5151,7 @@ pl_PL:
           experiment_disabled: "Wyłączono funkcję eksperymentalną."
           experiment_toggled_too_fast: "Przełączyłeś funkcję eksperymentalną zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
           experiment_tooltip:
-            title: "Wypróbuj naszą eksperymentalną funkcję"
-            content: "Wypróbuj naszą najnowszą funkcję! Jest ona wciąż w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz z niej zrezygnować, kiedy tylko zechcesz."
+            title_disabled: "Wypróbuj naszą eksperymentalną funkcję"
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -5722,6 +5722,13 @@ pl_PL:
             set_default_theme: "Ustaw domyślne"
             default_theme: "Motyw domyślny"
             new_theme: "Nowy motyw"
+        user_fields:
+          type: "Typ"
+          more_options:
+            title: "Więcej opcji"
+            move_up: "Przenieś wyżej"
+            move_down: "Przenieś niżej"
+          delete: "Usuń"
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"
@@ -6615,6 +6622,11 @@ pl_PL:
         status: "Status"
         show_emails: "Pokaż e-maile"
         hide_emails: "Ukryj e-maile"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zamknij"
+              confirm: "Usuń"
         nav:
           new: "Nowi"
           active: "Aktywni"
@@ -6900,8 +6912,6 @@ pl_PL:
           confirm_delete: "Czy na pewno chcesz usunąć ten rekord DiscourseConnect?"
       user_fields:
         title: "Pola użytkownika"
-        help: "Dodaj pola które użytkownicy mogą wypełnić."
-        create: "Dodaj pole użytkownika"
         untitled: "Bez tytułu"
         name: "Nazwa pola"
         type: "Typ pola"
@@ -6930,22 +6940,15 @@ pl_PL:
           confirmation: "Spowoduje to wyświetlenie istniejącym użytkownikom monitu o wypełnienie tego pola i nie pozwoli im na wykonanie żadnych innych czynności w Twojej witrynie, dopóki pole to nie zostanie wypełnione. Kontynuować?"
         editable:
           title: "Edytowalne po rejestracji"
-          enabled: "edytowalne"
-          disabled: "nieedytowalne"
         show_on_profile:
           title: "Widoczne w publicznym profilu"
-          enabled: "widoczne w profilu"
-          disabled: "niewidoczne w profilu"
         show_on_user_card:
           title: "Pokaż na karcie użytkownika"
-          enabled: "wyświetlane na karcie użytkownika"
-          disabled: "nie pokazany na karcie użytkownika"
         searchable:
           title: "Możliwe do wyszukania"
-          enabled: "możliwe do wyszukania"
-          disabled: "nie można wyszukiwać"
+          enabled: "Możliwe do wyszukania"
         field_types:
-          text: "Pole tekstowe"
+          text: "Tekst"
           confirm: "Potwierdzenie"
           dropdown: "Lista rozwijana"
           multiselect: "Wielokrotny wybór"
@@ -6961,7 +6964,6 @@ pl_PL:
         show_overriden: "Pokaż tylko nadpisane"
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
         show_untranslated: "Pokazuj tylko nieprzetłumaczone"
-        only_show_selected_locale: "Pokaż wyniki tylko w wybranej lokalizacji"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         no_results: "Nie znaleziono pasujących tekstów witryny"
@@ -7003,6 +7005,8 @@ pl_PL:
             title: "Prześlij obrazy"
         selectable_avatars:
           title: "Lista awatarów, z których użytkownicy mogą wybierać"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Wszystkie"
           required: "Wymagane"
@@ -7108,6 +7112,7 @@ pl_PL:
         none_selected: "Wybierz odznakę, aby rozpocząć"
         allow_title: Pozwól wykorzystywać odznakę jako tytuł
         multiple_grant: Może być przyznana wielokrotnie
+        visibility_heading: Widoczność
         listable: Wyświetlaj odznakę na publicznych listach odznak
         enabled: włączona
         disabled: wyłączone
@@ -7176,6 +7181,7 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
+        delete: "Usuń"
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"

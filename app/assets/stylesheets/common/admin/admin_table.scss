@@ -27,8 +27,6 @@
 
   td {
     vertical-align: middle;
-    padding-top: var(--space-3);
-    padding-bottom: var(--space-3);
 
     @include breakpoint("tablet") {
       display: block;
@@ -42,8 +40,6 @@
     }
 
     &.d-admin-row__overview {
-      width: 55%;
-
       @include breakpoint("tablet") {
         width: auto;
         border-top: 0;
@@ -59,13 +55,42 @@
 
     &.d-admin-row__controls {
       text-align: right;
+      width: auto;
 
       @include breakpoint("tablet") {
         position: absolute;
         top: -3px;
         right: 0;
         border-top: 0;
+        width: auto;
       }
+    }
+  }
+
+  .status-label {
+    --d-border-radius: var(--space-4);
+
+    display: flex;
+    flex-wrap: nowrap;
+    width: fit-content;
+    background-color: var(--primary-low);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--d-border-radius);
+
+    .status-label-indicator {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--primary-high);
+      flex-shrink: 0;
+      margin-right: var(--space-1);
+      margin-top: 0.4rem;
+    }
+
+    .status-label-text {
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
     }
   }
 }

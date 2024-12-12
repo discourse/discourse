@@ -99,23 +99,6 @@
       position: relative;
     }
   }
-  #topic-progress-wrapper {
-    .topic-admin-menu-button .toggle-admin-menu {
-      border-top-right-radius: 0;
-      border-bottom-left-radius: var(--d-border-radius);
-      border-bottom-right-radius: 0;
-    }
-    #topic-progress {
-      border-radius: var(--d-border-radius);
-      overflow: hidden;
-    }
-    .topic-admin-menu-button-container + #topic-progress {
-      border-top-left-radius: 0;
-      border-top-right-radius: var(--d-border-radius);
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: var(--d-border-radius);
-    }
-  }
 }
 
 .progress-back-container {
@@ -131,85 +114,6 @@
   top: -120%; // above parent container + some extra space
   .btn {
     margin: 0;
-  }
-}
-
-#topic-progress-wrapper {
-  position: fixed;
-  bottom: 0px;
-  right: 10px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-end;
-  z-index: z("timeline");
-  .topic-admin-menu-button-container {
-    display: flex;
-    > span {
-      display: flex;
-    }
-  }
-
-  &.docked {
-    position: initial;
-  }
-
-  html:not(.footer-nav-visible) & {
-    bottom: env(safe-area-inset-bottom);
-  }
-
-  &:not(.docked) {
-    @media screen and (min-width: $reply-area-max-width) {
-      // position to right side of composer
-      right: calc(50% + 10px);
-      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
-    }
-  }
-
-  &.with-transitions {
-    transition: bottom 0.2s, margin-bottom 0.2s;
-
-    #topic-progress .bg {
-      transition: width 0.5s;
-    }
-  }
-}
-
-#topic-progress {
-  --topic-progress-height: 42px;
-  position: relative;
-  background-color: var(--secondary);
-  color: var(--tertiary);
-  border: 1px solid var(--tertiary-low);
-  width: 145px;
-  height: var(--topic-progress-height);
-
-  /* as a big ol' click target, don't let text inside be selected */
-  @include unselectable;
-
-  .nums {
-    position: relative;
-    top: 12px;
-    width: 100%;
-    text-align: center;
-    z-index: z("base");
-  }
-  h4 {
-    display: inline;
-    font-size: var(--font-up-2);
-    line-height: var(--line-height-small);
-  }
-  .d-icon {
-    position: absolute;
-    right: 8px;
-    bottom: 9px;
-    z-index: z("base");
-  }
-  .bg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: var(--progress-bg-width, 0);
-    background-color: var(--tertiary-low);
   }
 }
 
@@ -249,9 +153,6 @@
 .title-wrapper {
   display: flex;
   flex-wrap: wrap;
-  button {
-    margin: 0 0.5em 0 0;
-  }
   .topic-statuses {
     line-height: 1.2;
     .d-icon {
@@ -268,7 +169,9 @@
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
-    width: 90%;
+    @media screen and (min-width: 925px) {
+      width: 90%; // topic title isn't full-width on wide screens
+    }
   }
   h1 {
     margin-bottom: 0;
@@ -282,35 +185,65 @@
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
+    gap: 0.5em;
+    width: 100%;
     max-width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width)
     );
-    #edit-title {
-      flex: 1 1 100%;
-    }
-    .category-chooser,
-    .mini-tag-chooser {
-      flex: 1 1 35%;
-      margin: 0 0 9px 0;
-      @media all and (max-width: 500px) {
-        flex: 1 1 100%;
-      }
-    }
-    .mini-tag-chooser {
-      flex: 1 1 54%;
-      margin: 0 0 9px 0;
-      margin-left: 1%; // category at 40%, tag chooser at 58%
-      @media all and (max-width: 500px) {
-        margin-left: 0;
-      }
-    }
-    .edit-controls {
-      flex: 1 1 100%;
-    }
     .select-kit .category-row {
       max-width: unset;
     }
+  }
+
+  .edit-title__wrapper {
+    flex: 1 1 100%;
+    #edit-title {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  .edit-category__wrapper {
+    flex: 1 1 5%;
+    @include breakpoint(tablet) {
+      min-width: 0; // allows category name to shrink to fit narrow screens
+    }
+    .select-kit.combo-box.category-chooser {
+      width: 100%;
+    }
+  }
+
+  .edit-tags__wrapper {
+    flex: 1 1 33%;
+    @include breakpoint(tablet) {
+      flex: 1 1 100%; // force full row on narrow screens
+    }
+
+    .mini-tag-chooser {
+      width: 100%;
+    }
+    .select-kit-header--filter {
+      flex-wrap: nowrap; // forces the whole input to wrap if needed, rather than individual tags
+      min-width: 0;
+      @include breakpoint(tablet) {
+        flex-wrap: wrap; // individual tags will need to wrap on narrow screens
+      }
+      button {
+        min-width: 0;
+      }
+    }
+
+    .multi-select-filter {
+      flex-shrink: 0;
+      min-width: 2em; // always provide a minimal space for input
+    }
+  }
+
+  .edit-controls {
+    display: flex;
+    width: 100%;
+    gap: 0.5em;
   }
 }
 
@@ -327,11 +260,14 @@
       min-width: 0;
       .private-message-glyph {
         position: absolute;
+        z-index: 1;
         left: 0.75em;
-        top: 0.7em;
+        top: 1.2em;
+        .mobile-view & {
+          top: 1.1em;
+        }
       }
       #edit-title {
-        width: calc(100% - 50px);
         padding-left: 2.25em;
       }
       .mini-tag-chooser {

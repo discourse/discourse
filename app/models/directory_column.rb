@@ -4,7 +4,7 @@ class DirectoryColumn < ActiveRecord::Base
   self.ignored_columns = ["automatic"] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   self.inheritance_column = nil
 
-  enum type: { automatic: 0, user_field: 1, plugin: 2 }, _scopes: false
+  enum :type, { automatic: 0, user_field: 1, plugin: 2 }, scopes: false
 
   def self.automatic_column_names
     @automatic_column_names ||= %i[

@@ -55,19 +55,16 @@
             <label class="alt-placeholder" for="new-account-email">
               {{i18n "user.email.title"}}
             </label>
-            {{#if
-              (or
-                this.emailValidation.ok
-                (and this.emailValidationVisible this.emailValidation.reason)
-              )
-            }}
+            {{#if this.showEmailValidation}}
               <InputTip
                 @validation={{this.emailValidation}}
                 id="account-email-validation"
               />
             {{else}}
               <span class="more-info" id="account-email-validation-more-info">
-                {{i18n "user.email.instructions"}}
+                {{#if this.siteSettings.show_signup_form_email_instructions}}
+                  {{i18n "user.email.instructions"}}
+                {{/if}}
               </span>
             {{/if}}
           </div>
@@ -89,10 +86,17 @@
               {{i18n "user.username.title"}}
             </label>
 
-            <InputTip
-              @validation={{this.usernameValidation}}
-              id="username-validation"
-            />
+            {{#if this.showUsernameInstructions}}
+              <span class="more-info" id="username-validation-more-info">
+                {{i18n "user.username.instructions"}}
+              </span>
+
+            {{else}}
+              <InputTip
+                @validation={{this.usernameValidation}}
+                id="username-validation"
+              />
+            {{/if}}
           </div>
 
           {{#if this.fullnameRequired}}
@@ -120,7 +124,7 @@
           <div class="input-group create-account__password">
             {{#if this.passwordRequired}}
               <PasswordField
-                {{on "focusout" this.showPasswordValidation}}
+                {{on "focusout" this.togglePasswordValidation}}
                 {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.accountPassword}}
                 @capsLockOn={{this.capsLockOn}}
@@ -137,19 +141,17 @@
 
               <div class="create-account__password-info">
                 <div class="create-account__password-tip-validation">
-                  {{#if
-                    (or
-                      this.passwordValidation.ok
-                      (and
-                        this.passwordValidationVisible
-                        this.passwordValidation.reason
-                      )
-                    )
-                  }}
+                  {{#if this.showPasswordValidation}}
                     <InputTip
                       @validation={{this.passwordValidation}}
                       id="password-validation"
                     />
+                  {{else if
+                    this.siteSettings.show_signup_form_password_instructions
+                  }}
+                    <span class="more-info" id="password-validation-more-info">
+                      {{this.passwordInstructions}}
+                    </span>
                   {{/if}}
                   <div
                     class={{concat-class

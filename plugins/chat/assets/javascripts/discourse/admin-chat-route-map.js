@@ -7,7 +7,7 @@ export default {
       { path: "hooks" },
       function () {
         this.route("new");
-        this.route("show", { path: "/:id" });
+        this.route("edit", { path: "/:id/edit" });
       }
     );
   },

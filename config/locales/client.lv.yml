@@ -1462,6 +1462,8 @@ lv:
     form_kit:
       reset: Atlikt
       optional: pēc izvēles
+      select:
+        none_placeholder: "Nav"
       errors:
         required: "Nepieciešams"
     close: "Aizvērt"
@@ -2519,7 +2521,6 @@ lv:
       with_topics: "%{filter} tēmas"
       with_category: "%{filter} Sadaļas %{category} tēmas"
       filter:
-        title: "Filtrs"
         button:
           label: "Filtrs"
       latest:
@@ -3062,6 +3063,9 @@ lv:
         look_and_feel:
           themes:
             title: "Dizaini"
+        user_fields:
+          type: "Tips"
+          delete: "Dzēst"
       plugins:
         title: "Spraudņi"
         name: "Nosaukums"
@@ -3449,6 +3453,11 @@ lv:
         id_not_found: "Piedod, šāds lietotāja ID neeksistē mūsu sistēmā."
         status: "Statuss"
         show_emails: "Parādīt E-pastus"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Aizvērt"
+              confirm: "Dzēst"
         nav:
           new: "Jauns"
           active: "Aktīvi"
@@ -3615,8 +3624,6 @@ lv:
           external_avatar_url: "Profila attēla URL"
       user_fields:
         title: "Lietotāja lauki"
-        help: "Pievienot lauku, kuru lietotāji var aizpildīt."
-        create: "Izveidot Lietotāja lauku"
         untitled: "Bez nosaukuma"
         name: "Lauka nosaukums"
         type: "Lauka veids"
@@ -3637,18 +3644,12 @@ lv:
             title: "Pēc izvēles"
         editable:
           title: "Labot pēc pierakstīšanās"
-          enabled: "labojams"
-          disabled: "nav labojams"
         show_on_profile:
           title: "Rādīt publiskajā profilā"
-          enabled: "redzams profilā"
-          disabled: "nav redzams profilā"
         show_on_user_card:
           title: "Parādīt leitotāja kartē"
-          enabled: "redzams lietotāja kartē"
-          disabled: "nav redzams lietotāja kartē"
         field_types:
-          text: "Teksta lauks"
+          text: "Teksts"
           confirm: "Apstiprinājums"
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:
@@ -3678,6 +3679,8 @@ lv:
         uploaded_image_list:
           upload:
             label: "Augšupielādēt"
+        table_column_heading:
+          status: "Statuss"
         categories:
           all_results: "Viss"
           required: "Nepieciešams"
@@ -3783,6 +3786,7 @@ lv:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
       emoji:
         title: "Smaidiņi"
+        delete: "Dzēst"
         name: "Nosaukums"
         group: "Grupa"
         image: "Attēls"

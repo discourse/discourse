@@ -215,7 +215,7 @@ export default class AboutPage extends Component {
     {{#if this.currentUser.admin}}
       <p>
         <LinkTo class="edit-about-page" @route="adminConfig.about">
-          {{dIcon "pencil-alt"}}
+          {{dIcon "pencil"}}
           <span>{{i18n "about.edit"}}</span>
         </LinkTo>
       </p>

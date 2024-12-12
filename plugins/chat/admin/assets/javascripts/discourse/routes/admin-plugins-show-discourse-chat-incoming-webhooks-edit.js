@@ -5,7 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
-export default class DiscourseChatIncomingWebhooksShow extends DiscourseRoute {
+export default class DiscourseChatIncomingWebhooksEdit extends DiscourseRoute {
   @service currentUser;
 
   async model(params) {
@@ -14,7 +14,9 @@ export default class DiscourseChatIncomingWebhooksShow extends DiscourseRoute {
     }
 
     try {
-      const model = await ajax(`/admin/plugins/chat/hooks/${params.id}.json`);
+      const model = await ajax(
+        `/admin/plugins/chat/hooks/${params.id}/edit.json`
+      );
 
       model.webhook = EmberObject.create(model.webhook);
       model.webhook.chat_channel = ChatChannel.create(

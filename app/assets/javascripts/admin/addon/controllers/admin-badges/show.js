@@ -27,6 +27,7 @@ const FORM_FIELDS = [
   "badge_grouping_id",
   "trigger",
   "badge_type_id",
+  "show_in_post_header",
 ];
 
 export default class AdminBadgesShowController extends Controller {
@@ -40,8 +41,6 @@ export default class AdminBadgesShowController extends Controller {
   @tracked model;
   @tracked previewLoading = false;
   @tracked selectedGraphicType = null;
-  @tracked userBadges;
-  @tracked userBadgesAll;
 
   @cached
   get formData() {
@@ -78,6 +77,17 @@ export default class AdminBadgesShowController extends Controller {
 
   get readOnly() {
     return this.model.system;
+  }
+
+  @action
+  postHeaderDescription(data) {
+    return this.disableBadgeOnPosts(data) && !data.system;
+  }
+
+  @action
+  disableBadgeOnPosts(data) {
+    const { listable, show_posts } = data;
+    return !listable || !show_posts;
   }
 
   setup() {

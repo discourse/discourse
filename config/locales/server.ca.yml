@@ -377,6 +377,8 @@ ca:
         bio_raw: "Quant a mi"
       user:
         password: "Contrasenya"
+      user_password:
+        password: "Contrasenya"
     errors:
       models:
         topic:
@@ -1242,7 +1244,6 @@ ca:
     topics_per_period_in_top_page: "Nombre de temes principals que es mostren en els temes principals expandits amb \"mostra'n més\"."
     prioritize_username_in_ux: "Mostra el nom d'usuari primer en la pàgina d'usuari, targeta d'usuari i publicacions (si està desactivat, el nom es mostra primer)"
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
-    allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
     version_checks: "Fes ping al Discourse Hub per a actualitzacions de versions i per a mostrar missatges de versió nova en el tauler <a href='%{base_path}/admin' target='_blank'>/admin</a>."
     new_version_emails: "Envia un correu a contact_email address quan hi hagi una nova versió del Discourse disponible."
@@ -2549,8 +2550,6 @@ ca:
     regular:
       name: Habitual
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedit permís</a> per a recategoritzar, reanomenar, enllaços seguits, wiki, més 'M'agrada'
-      long_description: |
-        Aquesta insígnia es concedeix quan arribeu al nivell de confiança 3. Gràcies per formar part habitualment de la comunitat des de fa mesos. Ara sou un dels lectors més actius i un col·laborador fiable que feu que la comunitat sigui fantàstica. Ara podeu recategoritzar i canviar el nom de temes, aprofitar les banderes més potents de brossa, accedir a una sala privada i, a més, obtindreu molts més 'M'agrada' al dia.
     leader:
       name: Líder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">S'ha concedit</a> permís per a editar globalment, destacar, tancar, arxivar, dividir i combinar, més 'M'agrada'.

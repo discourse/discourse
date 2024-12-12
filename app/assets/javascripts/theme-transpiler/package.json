@@ -7,20 +7,20 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "dependencies": {
-    "@babel/standalone": "^7.26.2",
+    "@babel/standalone": "^7.26.4",
     "@zxing/text-encoding": "^0.9.0",
     "babel-plugin-ember-template-compilation": "^2.3.0",
-    "content-tag": "^2.0.3",
-    "decorator-transforms": "^2.2.2",
+    "content-tag": "^3.0.0",
+    "decorator-transforms": "^2.3.0",
     "discourse-common": "workspace:1.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-source": "~5.5.0",
+    "ember-source": "~5.12.0",
     "ember-this-fallback": "^0.4.0",
     "handlebars": "^4.7.8",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "terser": "^5.36.0"
+    "terser": "^5.37.0"
   },
   "engines": {
     "node": ">= 18",

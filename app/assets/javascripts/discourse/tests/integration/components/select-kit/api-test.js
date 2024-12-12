@@ -3,7 +3,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit, {
   DEFAULT_CONTENT,
   setDefaultState,
@@ -46,12 +45,12 @@ module("Integration | Component | select-kit/api", function (hooks) {
     assert.strictEqual(this.comboBox.rows().length, 4);
 
     const appendedRow = this.comboBox.rowByIndex(3);
-    assert.ok(appendedRow.exists());
+    assert.true(appendedRow.exists());
     assert.strictEqual(appendedRow.value(), "alpaca");
 
     await this.comboBox.collapse();
 
-    assert.notOk(this.singleSelect.rowByValue("alpaca").exists());
+    assert.false(this.singleSelect.rowByValue("alpaca").exists());
   });
 
   test("modifySelectKit(identifier).prependContent", async function (assert) {
@@ -76,12 +75,12 @@ module("Integration | Component | select-kit/api", function (hooks) {
     assert.strictEqual(this.comboBox.rows().length, 4);
 
     const prependedRow = this.comboBox.rowByIndex(0);
-    assert.ok(prependedRow.exists());
+    assert.true(prependedRow.exists());
     assert.strictEqual(prependedRow.value(), "alpaca");
 
     await this.comboBox.collapse();
 
-    assert.notOk(this.singleSelect.rowByValue("alpaca").exists());
+    assert.false(this.singleSelect.rowByValue("alpaca").exists());
   });
 
   test("modifySelectKit(identifier).onChange", async function (assert) {
@@ -89,7 +88,7 @@ module("Integration | Component | select-kit/api", function (hooks) {
 
     withPluginApi("0.8.43", (api) => {
       api.modifySelectKit("combo-box").onChange((component, value, item) => {
-        query("#test").innerText = item.name;
+        document.querySelector("#test").innerText = item.name;
       });
     });
 
@@ -125,11 +124,11 @@ module("Integration | Component | select-kit/api", function (hooks) {
     assert.strictEqual(this.comboBox.rows().length, 1);
 
     const replacementRow = this.comboBox.rowByIndex(0);
-    assert.ok(replacementRow.exists());
+    assert.true(replacementRow.exists());
     assert.strictEqual(replacementRow.value(), "alpaca");
 
     await this.comboBox.collapse();
 
-    assert.notOk(this.singleSelect.rowByValue("alpaca").exists());
+    assert.false(this.singleSelect.rowByValue("alpaca").exists());
   });
 });

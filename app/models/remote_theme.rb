@@ -417,7 +417,7 @@ class RemoteTheme < ActiveRecord::Base
       self.commits_behind = 0
     end
 
-    transaction_block = -> do
+    transaction_block = ->(*) do
       # Destroy fields that no longer exist in the remote theme
       field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
       ThemeField.where(id: field_ids_to_destroy).destroy_all
