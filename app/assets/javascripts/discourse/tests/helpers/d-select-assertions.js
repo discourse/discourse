@@ -11,16 +11,37 @@ class DSelect {
     }
   }
 
-  hasOption(value, assertionMessage) {
-    this.context
-      .dom(this.element.querySelector(`.d-select__option[value="${value}"]`))
-      .exists(assertionMessage);
+  hasOption({ value, label }, assertionMessage) {
+    const option = this.element.querySelector(
+      `.d-select__option[value="${value}"]`
+    );
+
+    this.context.dom(option).exists(assertionMessage);
+    this.context.dom(option).hasText(label, assertionMessage);
   }
 
   hasNoOption(value, assertionMessage) {
+    const option = this.element.querySelector(
+      `.d-select__option[value="${value}"]`
+    );
+
+    this.context.dom(option).doesNotExist(assertionMessage);
+  }
+
+  hasSelectedOption({ value, label }, assertionMessage) {
     this.context
-      .dom(this.element.querySelector(`.d-select__option[value="${value}"]`))
-      .doesNotExist(assertionMessage);
+      .dom(this.element.options[this.element.selectedIndex])
+      .hasText(label, assertionMessage);
+
+    this.context.dom(this.element).hasValue(value, assertionMessage);
+  }
+
+  hasNoSelectedOption({ value, label }, assertionMessage) {
+    this.context
+      .dom(this.element.options[this.element.selectedIndex])
+      .hasNoText(label, assertionMessage);
+
+    this.context.dom(this.element).hasNoValue(value, assertionMessage);
   }
 }
 

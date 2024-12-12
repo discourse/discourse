@@ -299,7 +299,10 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    assert.dselect(".timer-type").hasOption("delete_replies");
+    assert.dselect(".timer-type").hasOption({
+      value: "delete_replies",
+      label: i18n("topic.auto_delete_replies.title"),
+    });
   });
 
   test("TL4 can't auto-delete replies", async function (assert) {
@@ -319,7 +322,9 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    assert.dselect(".timer-type").hasOption("delete");
+    assert
+      .dselect(".timer-type")
+      .hasOption({ value: "delete", label: i18n("topic.auto_delete.title") });
   });
 
   test("auto delete", async function (assert) {
