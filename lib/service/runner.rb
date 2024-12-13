@@ -97,7 +97,7 @@ class Service::Runner
     },
     on_exceptions: {
       condition: ->(*exceptions) do
-        next unless failure_for?("result.try.default")
+        next unless result["result.try.default"]&.exception
         next true if exceptions.empty?
         exceptions.any? { result["result.try.default"].exception.is_a?(_1) }
       end,

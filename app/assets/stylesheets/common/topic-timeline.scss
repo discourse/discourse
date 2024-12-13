@@ -112,11 +112,7 @@
         bottom: 20px;
         left: 10px;
 
-        .topic-admin-menu-button-container {
-          display: flex;
-        }
-
-        .topic-admin-menu-button {
+        .topic-admin-menu {
           display: flex;
         }
       }
@@ -171,7 +167,7 @@
     touch-action: none;
     min-width: 6em;
 
-    .topic-admin-menu-button .btn {
+    .topic-admin-menu .btn {
       height: 100%;
     }
 

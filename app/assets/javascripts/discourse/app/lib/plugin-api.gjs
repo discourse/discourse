@@ -171,6 +171,12 @@ const DEPRECATED_POST_MENU_WIDGETS = [
   "small-user-list",
 ];
 
+const POST_MENU_DEPRECATION_OPTIONS = {
+  since: "v3.4.0.beta3-dev",
+  id: "discourse.post-menu-widget-overrides",
+  url: "https://meta.discourse.org/t/341014",
+};
+
 const appliedModificationIds = new WeakMap();
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
@@ -880,10 +886,7 @@ class PluginApi {
   addPostMenuButton(name, callback) {
     deprecated(
       "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     apiExtraButtons[name] = callback;
@@ -958,10 +961,7 @@ class PluginApi {
   removePostMenuButton(name, callback) {
     deprecated(
       "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     removeButton(name, callback);
@@ -986,10 +986,7 @@ class PluginApi {
   replacePostMenuButton(name, widget) {
     deprecated(
       "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     replaceButton(name, widget);
@@ -3418,10 +3415,7 @@ class PluginApi {
     if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
       deprecated(
         `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.post-menu-widget-overrides",
-        }
+        POST_MENU_DEPRECATION_OPTIONS
       );
     }
   }

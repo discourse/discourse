@@ -1144,7 +1144,13 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         new_post = Post.last
 
         expected_raw = <<~RAW
-          #{I18n.t("discourse_narrative_bot.new_user_narrative.flag.reply", base_uri: "")}
+          #{
+          I18n.t(
+            "discourse_narrative_bot.new_user_narrative.flag.reply",
+            base_uri: "",
+            group_url: Group.find(Group::AUTO_GROUPS[:staff]).full_url,
+          )
+        }
 
           #{I18n.t("discourse_narrative_bot.new_user_narrative.search.instructions", base_uri: "")}
         RAW

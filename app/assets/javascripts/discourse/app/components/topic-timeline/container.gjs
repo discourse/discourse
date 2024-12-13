@@ -660,7 +660,7 @@ export default class TopicTimelineScrollArea extends Component {
           />
         {{/if}}
 
-        {{#if this.currentUser}}
+        {{#if (and this.currentUser this.site.desktopView)}}
           <TopicNotificationsButton @topic={{@model}} @expanded={{false}} />
         {{/if}}
 

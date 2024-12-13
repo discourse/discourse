@@ -409,8 +409,8 @@ after_initialize do
         :constraints => StaffConstraint.new
     get "/admin/plugins/chat/hooks/new" => "chat/admin/incoming_webhooks#new",
         :constraints => StaffConstraint.new
-    get "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
-          "chat/admin/incoming_webhooks#show",
+    get "/admin/plugins/chat/hooks/:incoming_chat_webhook_id/edit" =>
+          "chat/admin/incoming_webhooks#edit",
         :constraints => StaffConstraint.new
     delete "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
              "chat/admin/incoming_webhooks#destroy",
@@ -450,7 +450,7 @@ after_initialize do
         )
 
       if creator.failure?
-        Rails.logger.warn "[discourse-automation] Chat message failed to send:\n#{creator.inspect_steps.inspect}\n#{creator.inspect_steps.error}"
+        Rails.logger.warn "[discourse-automation] Chat message failed to send:\n#{creator.inspect_steps}"
       end
     end
   end

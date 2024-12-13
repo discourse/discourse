@@ -70,7 +70,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
 
         this.router
           .transitionTo(
-            "adminPlugins.show.discourse-chat-incoming-webhooks.show",
+            "adminPlugins.show.discourse-chat-incoming-webhooks.edit",
             webhook
           )
           .then(() => {
