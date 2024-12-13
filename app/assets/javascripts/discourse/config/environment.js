@@ -17,6 +17,7 @@ module.exports = function (environment) {
         Date: false,
         String: false,
       },
+      LOG_STACKTRACE_ON_DEPRECATION: false,
     },
     exportApplicationGlobal: true,
 
