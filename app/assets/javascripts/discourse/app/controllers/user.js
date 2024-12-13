@@ -209,12 +209,12 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
 
   @action
   collapseProfile() {
-    this.set("forceExpand", false);
+    this.toggleProperty("forceExpand");
   }
 
   @action
   expandProfile() {
-    this.set("forceExpand", true);
+    this.toggleProperty("forceExpand");
   }
 
   @action
