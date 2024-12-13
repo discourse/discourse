@@ -84,7 +84,7 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
       ariaLabel: this.collapsedInfo
         ? "user.sr_expand_profile"
         : "user.sr_collapse_profile",
-      action: this.collapsedInfo ? "expandProfile" : "collapseProfile",
+      action: "toggleProfile",
     };
   }
 
@@ -208,12 +208,7 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
   }
 
   @action
-  collapseProfile() {
-    this.toggleProperty("forceExpand");
-  }
-
-  @action
-  expandProfile() {
+  toggleProfile() {
     this.toggleProperty("forceExpand");
   }
 
