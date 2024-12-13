@@ -1,5 +1,5 @@
+import { find } from "@ember/test-helpers";
 import QUnit from "qunit";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 class DSelect {
   constructor(selector, context) {
@@ -7,7 +7,7 @@ class DSelect {
     if (selector instanceof HTMLElement) {
       this.element = selector;
     } else {
-      this.element = query(selector);
+      this.element = find(selector);
     }
   }
 
