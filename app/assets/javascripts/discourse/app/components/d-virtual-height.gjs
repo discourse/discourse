@@ -1,10 +1,6 @@
 import Component from "@glimmer/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import {
-  clearAllBodyScrollLocks,
-  disableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
 import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
@@ -79,7 +75,7 @@ export default class DVirtualHeight extends Component {
     }
 
     if (this.previousHeight && Math.abs(this.previousHeight - height) <= 1) {
-      return;
+      return false;
     }
 
     this.previousHeight = height;
@@ -97,7 +93,12 @@ export default class DVirtualHeight extends Component {
 
   @bind
   onViewportResize() {
-    this.setVH();
+    const setVHresult = this.setVH();
+
+    if (setVHresult === false) {
+      return;
+    }
+
     const docEl = document.documentElement;
 
     let keyboardVisible = false;
@@ -125,24 +126,8 @@ export default class DVirtualHeight extends Component {
 
     this.appEvents.trigger("keyboard-visibility-change", keyboardVisible);
 
-    // disable body scroll in mobile composer
-    // we have to do this because we're positioning the composer with
-    // position: fixed and top: 0 and scrolling would move the composer halfway out of the viewport
-    // we can't use bottom: 0, it is very unreliable with keyboard visible
-    if (docEl.classList.contains("composer-open")) {
-      disableBodyScroll(document.querySelector("#reply-control"), {
-        reserveScrollBarGap: true,
-        allowTouchMove: (el) =>
-          el.tagName === "TEXTAREA" || el.tagName === "LI" || el.closest(".d-editor-preview-wrapper"),
-      });
-    }
-
     keyboardVisible
       ? docEl.classList.add("keyboard-visible")
       : docEl.classList.remove("keyboard-visible");
-
-    if (!keyboardVisible) {
-      clearAllBodyScrollLocks();
-    }
   }
 }
