@@ -26,26 +26,26 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
     const homepageStyle = this.getHomepageStyle();
 
-    if (homepageStyle === "latest") {
-      this.drawPills(colors, font, height * 0.15);
-      this.renderLatest(ctx, colors, font, width, height);
+    if (homepageStyle === "latest" || homepageStyle === "hot") {
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
+      this.renderNonCategoryHomepage(ctx, colors, font, width, height);
     } else if (
       ["categories_only", "categories_with_featured_topics"].includes(
         homepageStyle
       )
     ) {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       this.renderCategories(ctx, colors, font, width, height);
     } else if (
       ["categories_boxes", "categories_boxes_with_topics"].includes(
         homepageStyle
       )
     ) {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       const topics = homepageStyle === "categories_boxes_with_topics";
       this.renderCategoriesBoxes(ctx, colors, font, width, height, { topics });
     } else {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       this.renderCategoriesWithTopics(ctx, colors, font, width, height);
     }
   }
@@ -360,7 +360,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     ];
   }
 
-  renderLatest(ctx, colors, font, width, height) {
+  renderNonCategoryHomepage(ctx, colors, font, width, height) {
     const rowHeight = height / 6.6;
     // accounts for hard-set color variables in solarized themes
     const textColor =

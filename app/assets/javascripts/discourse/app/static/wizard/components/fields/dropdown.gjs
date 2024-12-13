@@ -4,6 +4,7 @@ import { action, set } from "@ember/object";
 import ColorPalettes from "select-kit/components/color-palettes";
 import ComboBox from "select-kit/components/combo-box";
 import FontSelector from "select-kit/components/font-selector";
+import HomepageStyleSelector from "select-kit/components/homepage-style-selector";
 
 export default class Dropdown extends Component {
   constructor() {
@@ -41,6 +42,8 @@ export default class Dropdown extends Component {
       case "body_font":
       case "heading_font":
         return FontSelector;
+      case "homepage_style":
+        return HomepageStyleSelector;
       default:
         return ComboBox;
     }

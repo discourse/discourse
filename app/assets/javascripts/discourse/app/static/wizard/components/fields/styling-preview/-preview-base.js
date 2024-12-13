@@ -371,14 +371,27 @@ export default class PreviewBase extends Component {
     ctx.fill(caretIcon);
     ctx.restore();
 
+    const categoryHomepage =
+      opts.homepageStyle !== "hot" && opts.homepageStyle !== "latest";
+
     // First top menu item
-    const firstTopMenuItemText = opts.categories
+    let otherHomepageText;
+    switch (opts.homepageStyle) {
+      case "hot":
+        otherHomepageText = i18n("wizard.homepage_preview.nav_buttons.hot");
+        break;
+      case "latest":
+        otherHomepageText = i18n("wizard.homepage_preview.nav_buttons.latest");
+        break;
+    }
+
+    const firstTopMenuItemText = categoryHomepage
       ? i18n("wizard.homepage_preview.nav_buttons.categories")
-      : i18n("wizard.homepage_preview.nav_buttons.latest");
+      : otherHomepageText;
+
     const newText = i18n("wizard.homepage_preview.nav_buttons.new");
     const unreadText = i18n("wizard.homepage_preview.nav_buttons.unread");
     const topText = i18n("wizard.homepage_preview.nav_buttons.top");
-    const hotText = i18n("wizard.homepage_preview.nav_buttons.hot");
 
     ctx.beginPath();
     ctx.fillStyle = colors.tertiary;
@@ -416,10 +429,6 @@ export default class PreviewBase extends Component {
     const topTextX =
       unreadTextX + ctx.measureText(unreadText).width + headerMargin * 2.0;
     ctx.fillText(topText, topTextX, pillButtonTextY);
-
-    const hotTextX =
-      topTextX + ctx.measureText(topText).width + headerMargin * 2.0;
-    ctx.fillText(hotText, hotTextX, pillButtonTextY);
   }
 }
 

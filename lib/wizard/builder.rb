@@ -206,7 +206,11 @@ class Wizard
             show_in_sidebar: true,
           )
         style.add_choice("latest")
-        CategoryPageStyle.values.each { |page| style.add_choice(page[:value]) }
+        style.add_choice("hot")
+
+        # Subset of CategoryPageStyle, we don't want to show all the options here.
+        style.add_choice("categories_and_latest_topics")
+        style.add_choice("categories_boxes")
 
         step.add_field(id: "styling_preview", type: "styling-preview")
 
