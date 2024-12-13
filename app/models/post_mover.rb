@@ -323,7 +323,11 @@ class PostMover
         @post_ids_after_move.map { |post_id| post_id == post.id ? moved_post.id : post_id }
     end
 
-    DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id)
+    if @options[:freeze_original]
+      DiscourseEvent.trigger(:post_duplicated, moved_post, post)
+    else
+      DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id)
+    end
 
     # Move any links from the post to the new topic
     moved_post.topic_links.update_all(topic_id: destination_topic.id)
