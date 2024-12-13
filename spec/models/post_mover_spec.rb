@@ -2722,9 +2722,33 @@ RSpec.describe PostMover do
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
       fab!(:post_2) { Fabricate(:post, topic: topic_1) }
 
+      def move_posts_to_new_topic(
+        original_topic:,
+        destination_topic:,
+        post_ids:,
+        freeze_original: false
+      )
+        post_mover =
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            post_ids,
+            options: {
+              freeze_original: freeze_original,
+            },
+          )
+        post_mover.to_topic(destination_topic.id)
+      end
+
       it "receives 2 post moved event triggers for the first post" do
-        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_1.id])
-        events = DiscourseEvent.track_events { post_mover.to_topic(topic_2.id) }
+        events =
+          DiscourseEvent.track_events do
+            move_posts_to_new_topic(
+              original_topic: topic_1,
+              destination_topic: topic_2,
+              post_ids: [post_1.id],
+            )
+          end
         filtered_events =
           events.filter { |e| %i[first_post_moved post_moved].include? e[:event_name] }
 
@@ -2732,8 +2756,14 @@ RSpec.describe PostMover do
       end
 
       it "uses first_post_moved trigger for first post" do
-        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_1.id])
-        events = DiscourseEvent.track_events(:first_post_moved) { post_mover.to_topic(topic_2.id) }
+        events =
+          DiscourseEvent.track_events(:first_post_moved) do
+            move_posts_to_new_topic(
+              original_topic: topic_1,
+              destination_topic: topic_2,
+              post_ids: [post_1.id],
+            )
+          end
         expect(events.size).to eq(1)
 
         new_post = Post.find_by(topic_id: topic_2.id, post_number: 1)
@@ -2745,8 +2775,14 @@ RSpec.describe PostMover do
       end
 
       it "uses post_moved trigger for other posts" do
-        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_2.id])
-        events = DiscourseEvent.track_events(:post_moved) { post_mover.to_topic(topic_2.id) }
+        events =
+          DiscourseEvent.track_events(:post_moved) do
+            move_posts_to_new_topic(
+              original_topic: topic_1,
+              destination_topic: topic_2,
+              post_ids: [post_2.id],
+            )
+          end
         expect(events.size).to eq(1)
 
         event = events.first
@@ -2757,16 +2793,15 @@ RSpec.describe PostMover do
 
       context "with freeze_original option" do
         it "receives 2 post moved event triggers for the first post" do
-          post_mover =
-            PostMover.new(
-              topic_1,
-              Discourse.system_user,
-              [post_1.id],
-              options: {
+          events =
+            DiscourseEvent.track_events do
+              move_posts_to_new_topic(
+                original_topic: topic_1,
+                destination_topic: topic_2,
+                post_ids: [post_1.id],
                 freeze_original: true,
-              },
-            )
-          events = DiscourseEvent.track_events { post_mover.to_topic(topic_2.id) }
+              )
+            end
           filtered_events =
             events.filter { |e| %i[first_post_moved post_duplicated].include? e[:event_name] }
 
@@ -2774,17 +2809,15 @@ RSpec.describe PostMover do
         end
 
         it "uses first_post_moved trigger for first post" do
-          post_mover =
-            PostMover.new(
-              topic_1,
-              Discourse.system_user,
-              [post_1.id],
-              options: {
-                freeze_original: true,
-              },
-            )
           events =
-            DiscourseEvent.track_events(:first_post_moved) { post_mover.to_topic(topic_2.id) }
+            DiscourseEvent.track_events(:first_post_moved) do
+              move_posts_to_new_topic(
+                original_topic: topic_1,
+                destination_topic: topic_2,
+                post_ids: [post_1.id],
+                freeze_original: true,
+              )
+            end
           expect(events.size).to eq(1)
 
           new_post = Post.find_by(topic_id: topic_2.id, post_number: 1)
@@ -2796,16 +2829,15 @@ RSpec.describe PostMover do
         end
 
         it "uses post_duplicated trigger for other posts" do
-          post_mover =
-            PostMover.new(
-              topic_1,
-              Discourse.system_user,
-              [post_2.id],
-              options: {
+          events =
+            DiscourseEvent.track_events(:post_duplicated) do
+              move_posts_to_new_topic(
+                original_topic: topic_1,
+                destination_topic: topic_2,
+                post_ids: [post_2.id],
                 freeze_original: true,
-              },
-            )
-          events = DiscourseEvent.track_events(:post_duplicated) { post_mover.to_topic(topic_2.id) }
+              )
+            end
           expect(events.size).to eq(1)
 
           moved_post = MovedPost.includes(:new_post).find_by(old_post_id: post_2.id)
