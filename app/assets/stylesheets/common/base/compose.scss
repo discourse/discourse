@@ -81,11 +81,13 @@ html.composer-open.not-mobile-device {
       display: none;
     }
 
-    .submit-panel {
+    .submit-panel,
+    .composer-fields,
+    .d-editor-button-bar,
+    textarea:placeholder-shown {
       // don't allow scrolling in the submit panel
       // this prevents bubbling to browser, i.e. accidental scrolls
       touch-action: none;
-      background-color: pink;
     }
   }
 
