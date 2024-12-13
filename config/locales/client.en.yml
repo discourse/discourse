@@ -548,6 +548,9 @@ en:
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
 
+    select_placeholder: "Select…"
+    none_placeholder: "None"
+
     banner:
       close: "Dismiss this banner"
       edit: "Edit"
@@ -2206,9 +2209,6 @@ en:
       optional: optional
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
-      select:
-        select_placeholder: "Select…"
-        none_placeholder: "None"
       errors:
         required: "Required"
         invalid_url: "Must be a valid URL"
