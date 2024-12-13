@@ -83,9 +83,7 @@ html.composer-open.not-mobile-device {
 
     .submit-panel,
     .composer-fields,
-    .d-editor-button-bar,
-    textarea:placeholder-shown {
-      // don't allow scrolling in the submit panel
+    .d-editor-button-bar {
       // this prevents bubbling to browser, i.e. accidental scrolls
       touch-action: none;
     }
