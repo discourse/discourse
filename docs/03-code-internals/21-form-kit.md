@@ -947,6 +947,64 @@ To customize the `Submit` button further, you can pass additional parameters as 
 <form.Submit @translatedLabel="Send" />
 ```
 
+# Object
+
+The object component allows to handle an object in your form.
+
+**Example**
+
+```hbs
+<Form @data={{hash foo=(hash bar=1 baz=2)}} as |form|>
+  <form.Object @name="foo" as |object name|>
+    <object.Field @name={{name}} @title={{name}} as |field|>
+      <field.Input />
+    </object.Field>
+  </form.Object>
+</Form>
+```
+
+## @name
+
+An object must have a unique name. This name is used as a prefix for the underlying fields.
+
+**Example**
+
+```hbs
+<form.Collection @name="foo" />
+```
+
+## Nesting
+
+An object can accept a nested Object or Collection.
+
+**Example**
+
+```hbs
+<Form @data={{hash foo=(hash bar=(hash baz=1 bol=2))}} as |form|>
+  <form.Object @name="foo" as |parentObject|>
+    <parentObject.Object @name="bar" as |childObject name|>
+      <childObject.Field @name={{name}} @title={{name}} as |field|>
+        <field.Input />
+      </childObject.Field>
+    </parentObject.Object>
+  </form.Object>
+</Form>
+
+<Form @data={{hash foo=(hash bar=(array (hash baz=1) (hash baz=2)))}} as |form|>
+  <form.Object @name="foo" as |parentObject|>
+    <parentObject.Collection @name="bar" as |collection index|>
+      <collection.Field @name="baz" @title="baz" as |field|>
+        <field.Input />
+      </collection.Field>
+      <form.Button
+        class={{concat "remove-" index}}
+        @action={{fn collection.remove index}}
+      >Remove</form.Button>
+    </parentObject.Collection>
+  </form.Object>
+</Form>
+```
+
 # Collection
 
 The collection component allows to handle array of objects in your form.
@@ -973,6 +1031,52 @@ For example, if collection has the name "foo", the 2nd field of the collection w
 
 ```hbs
 <form.Collection @name="foo" />
+```
+
+## @tagName
+
+A collection will by default render as a `<div class="form-kit__collection>`, you can alter this behavior by setting a `@tagName`.
+
+**Example**
+
+```hbs
+<form.Collection @name="foo" @tagName="tr" />
+```
+
+## Nesting
+
+A collection can accept a nested Object or Collection.
+
+**Example**
+
+```hbs
+<Form
+  @data={{hash foo=(array (hash bar=(hash baz=1)) (hash bar=(hash baz=2)))}}
+  as |form|
+>
+  <form.Collection @name="foo" as |collection|>
+    <collection.Object @name="bar" as |object|>
+      <object.Field @name="baz" @title="Baz" as |field|>
+        <field.Input />
+      </object.Field>
+    </collection.Object>
+  </form.Collection>
+</Form>
+
+<Form
+  @data={{hash
+    foo=(array (hash bar=(array (hash baz=1))) (hash bar=(array (hash baz=2))))
+  }}
+  as |form|
+>
+  <form.Collection @name="foo" as |parent parentIndex|>
+    <parent.Collection @name="bar" as |child childIndex|>
+      <child.Field @name="baz" @title="Baz" as |field|>
+        <field.Input />
+      </child.Field>
+    </parent.Collection>
+  </form.Collection>
+</Form>
 ```
 
 ## Add an item to the collection
