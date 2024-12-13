@@ -5,6 +5,22 @@ html.composer-open.not-mobile-device {
   }
 }
 
+html.composer-open.mobile-device,
+html.composer-open.ipados-device {
+  // this goes together with the ipados/mobile device overrides below
+  // this is an alternative to scroll locking the body
+  // here we make the main content transparent while the composer is open
+  // in these UAs, the composer takes up 100% of viewport
+  // but users can still scroll the body underneath, which feels weird
+  // composer moves up and halfway out of the viewport
+  // making the content disappear removes the incentive to scroll
+
+  #main-outlet-wrapper {
+    opacity: 0;
+    transition: opacity 0s linear 0.5s; // delay
+  }
+}
+
 #reply-control {
   position: fixed;
   display: flex;
@@ -54,11 +70,8 @@ html.composer-open.not-mobile-device {
     z-index: -1;
     max-height: unset;
     min-height: unset;
-    visibility: hidden;
-    touch-action: manipulation; // slightly faster single-tap actions on iOS
     &.open,
     &.fullscreen {
-      visibility: visible;
       z-index: z("mobile-composer");
       height: calc(var(--composer-vh, 1vh) * 100);
     }
