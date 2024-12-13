@@ -10,6 +10,10 @@ import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import {
+  disableBodyScroll,
+  enableBodyScroll,
+} from "discourse/lib/body-scroll-lock";
+import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
 } from "discourse/lib/hashtag-decorator";
@@ -214,11 +218,23 @@ export default class ComposerEditor extends Component {
       this.textManipulation.putCursorAtEnd();
     }
 
+    const reply = document.querySelector(".reply-area");
+
+    // disable body scroll in mobile composer
+    // we have to do this because we're positioning the composer with
+    // position: fixed and top: 0 and scrolling would move the composer halfway out of the viewport
+    // we can't use bottom: 0, it is very unreliable with keyboard visible
+    disableBodyScroll(reply, { reserveScrollBarGap: true });
+    disableBodyScroll(input, { reserveScrollBarGap: true });
+
     return () => {
       input?.removeEventListener(
         "scroll",
         this._throttledSyncEditorAndPreviewScroll
       );
+
+      enableBodyScroll(reply);
+      enableBodyScroll(input);
     };
   }
 

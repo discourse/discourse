@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
-import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import deprecated from "discourse-common/lib/deprecated";
@@ -88,11 +87,6 @@ export default class ModalService extends Service {
   }
 
   close(data) {
-    // modal shouldn't override the composer's body scroll lock
-    // a bit of a workaround, ideally we'd implement a stack here
-    if (!document.documentElement.classList.contains("composer-open")) {
-      clearAllBodyScrollLocks();
-    }
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;
     this.opts = {};
