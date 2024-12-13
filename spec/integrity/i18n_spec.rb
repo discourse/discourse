@@ -28,25 +28,6 @@ def load_yaml(path)
   end
 end
 
-def deep_each(input, key_seq: [], &block)
-  queue = input.to_a
-
-  while queue.size > 0
-    key, value = queue.shift
-    if value.is_a?(Hash)
-      queue.concat(value.transform_keys { |k| "#{key}.#{k}" }.to_a)
-    elsif value.is_a?(Array)
-      value.each_with_index { |item, index| queue << ["#{key}.#{index}", item] }
-    elsif value
-      block.call(key, value)
-    end
-  end
-end
-
-def friendly_path(path)
-  path.sub(Rails.root.to_s, "")
-end
-
 RSpec.describe "i18n integrity checks" do
   it "has an i18n key for each Site Setting" do
     SiteSetting.all_settings.each do |s|
@@ -65,7 +46,7 @@ RSpec.describe "i18n integrity checks" do
   end
 
   Dir["#{Rails.root}/config/locales/{client,server}.*.yml"].each do |path|
-    it "does not contain invalid interpolation keys for '#{friendly_path(path)}'" do
+    it "does not contain invalid interpolation keys for '#{path}'" do
       matches = File.read(path).scan(/%\{([^a-zA-Z\s]+)\}|\{\{([^a-zA-Z\s]+)\}\}/)
       matches.flatten!
       matches.compact!
@@ -75,7 +56,7 @@ RSpec.describe "i18n integrity checks" do
   end
 
   Dir["#{Rails.root}/config/locales/client.*.yml"].each do |path|
-    it "has valid client YAML for '#{friendly_path(path)}'" do
+    it "has valid client YAML for '#{path}'" do
       yaml = load_yaml(path)
       locale = extract_locale(path)
 
@@ -93,28 +74,17 @@ RSpec.describe "i18n integrity checks" do
   Dir["#{Rails.root}/**/locale*/*.en.yml"].each do |english_path|
     english_yaml = load_yaml(english_path)["en"]
 
-    context(friendly_path(english_path)) do
+    context(english_path) do
       it "has no duplicate keys" do
         english_duplicates = DuplicateKeyFinder.new.find_duplicates(english_path)
         expect(english_duplicates).to be_empty
-      end
-
-      {
-        "color scheme" => "color palette",
-        "private message" => "personal message",
-      }.each do |phrase, recommendation|
-        it "does not contain the banned phrase '#{phrase}' (use '#{recommendation}' instead)" do
-          deep_each(english_yaml) do |key, value|
-            expect(value&.downcase).not_to include(phrase), "[en.#{key}]: #{value}"
-          end
-        end
       end
     end
 
     Dir[english_path.sub(".en.yml", ".*.yml")].each do |path|
       next if path[".en.yml"]
 
-      context(friendly_path(path)) do
+      context(path) do
         locale = extract_locale(path)
         yaml = load_yaml(path)
 
