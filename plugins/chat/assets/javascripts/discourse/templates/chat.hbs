@@ -1,28 +1,22 @@
 <div id="chat-progress-bar-container"></div>
 
-{{#if this.chat.sidebarActive}}
-  <div class="full-page-chat teams-sidebar-on">
-    {{outlet}}
-  </div>
-{{else}}
-  <div
-    class={{concat-class
-      "full-page-chat"
-      (if this.shouldUseCoreSidebar "full-page-chat-sidebar-enabled")
-    }}
-  >
-    {{#if this.shouldUseChatSidebar}}
-      <ChannelsList />
-    {{/if}}
+<div
+  class={{concat-class
+    "full-page-chat"
+    (if this.shouldUseCoreSidebar "full-page-chat-sidebar-enabled")
+  }}
+>
+  {{#if this.shouldUseChatSidebar}}
+    <ChannelsList />
+  {{/if}}
 
-    <div
-      id="main-chat-outlet"
-      class={{concat-class "main-chat-outlet" this.mainOutletModifierClasses}}
-    >
-      {{outlet}}
-      {{#if this.shouldUseChatFooter}}
-        <ChatFooter />
-      {{/if}}
-    </div>
+  <div
+    id="main-chat-outlet"
+    class={{concat-class "main-chat-outlet" this.mainOutletModifierClasses}}
+  >
+    {{outlet}}
+    {{#if this.shouldUseChatFooter}}
+      <ChatFooter />
+    {{/if}}
   </div>
-{{/if}}
+</div>
