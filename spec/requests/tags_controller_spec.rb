@@ -144,6 +144,16 @@ RSpec.describe TagsController do
           expect(serialized_tag["count"]).to eq(0)
           expect(serialized_tag["pm_count"]).to eq(1)
         end
+
+        it "doesn't allow users to see other users' PMs" do
+          non_admin_user = Fabricate(:trust_level_1)
+
+          SiteSetting.pm_tags_allowed_for_groups = "1|2|3|11"
+          sign_in(non_admin_user)
+
+          get "/u/#{admin.username}/messages/tags/#{test_tag.name}.json"
+          expect(response.status).to eq(404)
+        end
       end
 
       context "when disabled" do
