@@ -134,9 +134,21 @@
               <label class="alt-placeholder" for="new-account-password">
                 {{i18n "user.password.title"}}
               </label>
-
+              <TogglePasswordMask
+                @maskPassword={{this.maskPassword}}
+                @togglePasswordMask={{this.togglePasswordMask}}
+              />
               <div class="create-account__password-info">
-                <div class="create-account__password-tip-validation">
+                <div
+                  class="create-account__password-tip-validation
+                    {{if
+                      (or
+                        this.showPasswordValidation
+                        this.siteSettings.show_signup_form_password_instructions
+                      )
+                      'validation-shown'
+                    }}"
+                >
                   {{#if this.showPasswordValidation}}
                     <InputTip
                       @validation={{this.passwordValidation}}
@@ -159,10 +171,6 @@
                     {{i18n "login.caps_lock_warning"}}
                   </div>
                 </div>
-                <TogglePasswordMask
-                  @maskPassword={{this.maskPassword}}
-                  @togglePasswordMask={{this.togglePasswordMask}}
-                />
               </div>
             {{/if}}
 

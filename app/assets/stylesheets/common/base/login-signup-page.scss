@@ -62,6 +62,7 @@ body.signup-page {
 
     &__existing-account,
     &__no-account-yet {
+      font-size: var(--font-down-1);
       color: var(--primary-medium);
     }
 
@@ -122,7 +123,6 @@ body.signup-page {
 
     span.more-info {
       color: var(--primary-medium);
-      // min-height: 1.4em; // prevents height increase due to tips
       overflow-wrap: anywhere;
     }
 
@@ -137,7 +137,7 @@ body.signup-page {
       left: 1em;
       top: 13px;
       box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
-      transition: 0.2s ease all;
+      transition: 0.25s ease all;
     }
 
     .user-field.text label.control-label,
@@ -168,6 +168,17 @@ body.signup-page {
       font-size: var(--font-down-1);
     }
 
+    .more-info {
+      opacity: 0;
+      max-height: 0;
+      transition: opacity 0.25s, max-height 0.25s;
+    }
+
+    input:focus + label + span.more-info {
+      opacity: 1;
+      max-height: 1.4em;
+    }
+
     input.alt-placeholder:invalid {
       color: var(--primary);
     }
@@ -180,11 +191,13 @@ body.signup-page {
     }
 
     #email-login-link {
-      transition: opacity 0.5s;
+      transition: opacity 0.25s, max-height 0.25s;
+      max-height: 25px; // arbitrary number, but allows for smooth transition
 
       &.no-login-filled {
         opacity: 0;
         visibility: hidden;
+        max-height: 0;
       }
     }
 
@@ -219,6 +232,7 @@ body.signup-page {
 
     .btn-social {
       border: 1px solid var(--primary-low);
+      padding: 0.75em 0.77em; // matches input padding
     }
   }
 
@@ -232,10 +246,16 @@ body.signup-page {
 
   .tip {
     font-size: var(--font-down-1);
-    // min-height: 1.4em;
+    max-height: 0;
+    opacity: 0;
     display: block;
+    transition: opacity 0.25s, max-height 0.25s;
     &.bad {
       color: var(--danger);
+    }
+    &.has-tip {
+      max-height: 1.4em;
+      opacity: 1;
     }
   }
 
@@ -262,6 +282,13 @@ body.signup-page {
     justify-content: space-between;
     .create-account__password-tip-validation {
       display: flex;
+      max-height: 0;
+      opacity: 0;
+      transition: opacity 0.25s, max-height 0.25s;
+      &.validation-shown {
+        max-height: 1.4em;
+        opacity: 1;
+      }
     }
   }
 
