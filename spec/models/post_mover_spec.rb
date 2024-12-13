@@ -2753,6 +2753,31 @@ RSpec.describe PostMover do
         expect(event[:event_name]).to eq(:post_moved)
         expect(event[:params][0]).to eq(post_2)
         expect(event[:params][1]).to eq(topic_1.id)
+        expect(event[:params][2]).to eq(post_2)
+      end
+
+      context "with 'freeze_original' option" do
+        it "passes the new post as the first argument and old post as third argument" do
+          post_mover =
+            PostMover.new(
+              topic_1,
+              Discourse.system_user,
+              [post_2.id],
+              options: {
+                freeze_original: true,
+              },
+            )
+          events = DiscourseEvent.track_events(:post_moved) { post_mover.to_topic(topic_2.id) }
+          expect(events.size).to eq(1)
+
+          moved_post = MovedPost.includes(:new_post).find_by(old_post: post_2)
+
+          event = events.first
+          expect(event[:event_name]).to eq(:post_moved)
+          expect(event[:params][0]).to eq(moved_post.new_post)
+          expect(event[:params][1]).to eq(topic_1.id)
+          expect(event[:params][2]).to eq(post_2)
+        end
       end
     end
 
