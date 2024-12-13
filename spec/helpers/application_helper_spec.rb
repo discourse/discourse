@@ -903,4 +903,45 @@ RSpec.describe ApplicationHelper do
       HTML
     end
   end
+
+  describe "#discourse_color_scheme_meta_tag" do
+    fab!(:color_scheme)
+
+    before { SiteSetting.default_dark_mode_color_scheme_id = -1 }
+
+    it "renders a 'light' color-scheme if no dark scheme is set and the current scheme is light" do
+      ColorSchemeRevisor.revise(
+        color_scheme,
+        colors: [{ name: "primary", hex: "333333" }, { name: "secondary", hex: "DDDDDD" }],
+      )
+
+      helper.request.cookies["color_scheme_id"] = color_scheme.id
+
+      expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
+        <meta name="color-scheme" content="light">
+      HTML
+    end
+
+    it "renders a 'dark' color-scheme if no dark scheme is set and the default scheme is dark" do
+      ColorSchemeRevisor.revise(
+        color_scheme,
+        colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }],
+      )
+      @scheme_id = color_scheme.id
+
+      expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
+        <meta name="color-scheme" content="dark">
+      HTML
+    end
+
+    it "renders a 'light dark' color-scheme if a dark scheme is set" do
+      dark = Fabricate(:color_scheme)
+      dark.save!
+      helper.request.cookies["dark_scheme_id"] = dark.id
+
+      expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
+        <meta name="color-scheme" content="light dark">
+      HTML
+    end
+  end
 end
