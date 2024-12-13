@@ -27,8 +27,7 @@ module Jobs
       if !SiteSetting.automatically_download_gravatars ||
            !UserAvatar
              .joins(user: :user_emails)
-             .where(user_emails: { primary: true })
-             .where(last_gravatar_download_attempt: nil)
+             .where(user_emails: { primary: true }, last_gravatar_download_attempt: nil)
              .exists?
         problems = Post.rebake_old(SiteSetting.rebake_old_posts_count, priority: :ultra_low)
         problems.each do |hash|
