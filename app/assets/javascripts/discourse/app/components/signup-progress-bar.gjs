@@ -22,10 +22,6 @@ export default class SignupProgressBar extends Component {
     }
   }
 
-  stepText(step) {
-    return i18n(`create_account.progress_bar.${step}`);
-  }
-
   get currentStepIndex() {
     return this.steps.findIndex((step) => step === this.args.step);
   }
@@ -63,13 +59,7 @@ export default class SignupProgressBar extends Component {
                   {{/if}}
                 {{/if}}
               </div>
-              {{#unless (eq index this.lastStepIndex)}}
-                <span class="signup-progress-bar__line"></span>
-              {{/unless}}
             </div>
-            <span class="signup-progress-bar__step-text">
-              {{this.stepText step}}
-            </span>
           </div>
         {{/each}}
       </div>

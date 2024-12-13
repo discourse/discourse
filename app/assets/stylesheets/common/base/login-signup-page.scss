@@ -12,9 +12,22 @@
 body.login-page,
 body.signup-page,
 body.invite-page {
-  & ~ .powered-by-discourse,
+  .powered-by-discourse,
   .above-main-container-outlet {
     display: none;
+  }
+  #main-outlet {
+    padding: 0;
+  }
+  .d-header {
+    box-shadow: none;
+    border: none;
+  }
+  .d-header .home-logo-wrapper-outlet {
+    width: 100%;
+  }
+  .d-header .title a {
+    margin: 0 auto;
   }
 }
 
@@ -109,7 +122,7 @@ body.signup-page {
 
     span.more-info {
       color: var(--primary-medium);
-      min-height: 1.4em; // prevents height increase due to tips
+      // min-height: 1.4em; // prevents height increase due to tips
       overflow-wrap: anywhere;
     }
 
@@ -118,7 +131,6 @@ body.signup-page {
     .user-field.dropdown label.control-label,
     .user-field.multiselect label.control-label {
       color: var(--primary-medium);
-      font-size: 16px;
       font-weight: normal;
       position: absolute;
       pointer-events: none;
@@ -220,7 +232,7 @@ body.signup-page {
 
   .tip {
     font-size: var(--font-down-1);
-    min-height: 1.4em;
+    // min-height: 1.4em;
     display: block;
     &.bad {
       color: var(--danger);
