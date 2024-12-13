@@ -179,6 +179,17 @@ body.signup-page {
       max-height: 1.4em;
     }
 
+    .instructions {
+      opacity: 0;
+      max-height: 0;
+      transition: opacity 0.25s, max-height 0.25s;
+    }
+
+    input:focus + label + .tip + .instructions {
+      opacity: 1;
+      max-height: 1.4em;
+    }
+
     input.alt-placeholder:invalid {
       color: var(--primary);
     }
