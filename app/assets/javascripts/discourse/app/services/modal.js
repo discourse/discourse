@@ -88,11 +88,7 @@ export default class ModalService extends Service {
   }
 
   close(data) {
-    // modal shouldn't override the composer's body scroll lock
-    // a bit of a workaround, ideally we'd implement a stack here
-    if (!document.documentElement.classList.contains("composer-open")) {
-      clearAllBodyScrollLocks();
-    }
+    clearAllBodyScrollLocks();
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;
     this.opts = {};

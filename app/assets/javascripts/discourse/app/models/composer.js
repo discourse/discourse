@@ -8,10 +8,6 @@ import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
-import {
-  clearAllBodyScrollLocks,
-  disableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
@@ -333,7 +329,6 @@ export default class Composer extends RestModel {
     if (this.composeState === OPEN) {
       this.set("composerOpened", oldOpen || new Date());
       elem.classList.add("composer-open");
-      this.lockBodyScroll();
     } else {
       if (oldOpen) {
         const oldTotal = this.composerTotalOpened || 0;
@@ -341,34 +336,7 @@ export default class Composer extends RestModel {
       }
       this.set("composerOpened", null);
       elem.classList.remove("composer-open");
-      clearAllBodyScrollLocks();
     }
-  }
-
-  lockBodyScroll() {
-    if (!window.visualViewport) {
-      return;
-    }
-
-    if (!this.capabilities.isIpadOS && this.site.desktopView) {
-      return;
-    }
-
-    // disable body scroll in mobile composer
-    // we have to do this because we're positioning the composer with
-    // position: fixed and top: 0 and scrolling would move the composer halfway out of the viewport
-    // we can't use bottom: 0, it is very unreliable with keyboard visible
-    disableBodyScroll(document.querySelector("#reply-control"), {
-      // reduces flickering by keeping scrollbar dimensions the same
-      reserveScrollBarGap: true,
-      // this feels finicky, if a new element needs scrolling, it needs registering
-      // it is hard to do this correctly though, if we use the parent, then the body scroll gets invoked
-      // too easily
-      allowTouchMove: (el) =>
-        el.tagName === "TEXTAREA" ||
-        el.tagName === "LI" ||
-        el.closest(".d-editor-preview-wrapper"),
-    });
   }
 
   get composerTime() {
