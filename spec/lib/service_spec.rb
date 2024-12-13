@@ -38,6 +38,36 @@ RSpec.describe Service do
           expect { service_class.call }.to raise_error(/In policy 'my_policy': default values/)
         end
       end
+
+      context "when providing a class which delegates its `#call` method" do
+        before do
+          service_class.class_eval do
+            class MyPolicy < Service::PolicyBase
+              class MyStrategy
+                def call
+                end
+
+                def reason
+                end
+              end
+
+              attr_reader :strategy
+
+              delegate :call, :reason, to: :strategy
+
+              def initialize(*)
+                @strategy = MyStrategy.new
+              end
+            end
+
+            policy :my_policy, class_name: MyPolicy
+          end
+        end
+
+        it "does not raise an error" do
+          expect { service_class.call }.not_to raise_error
+        end
+      end
     end
 
     describe "Generic step" do
