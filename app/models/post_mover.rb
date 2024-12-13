@@ -278,15 +278,17 @@ class PostMover
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
 
+    DiscourseEvent.trigger(:first_post_moved, new_post, post)
+
     # When freezing original, ensure the notification generated points
     # to the newly created post, not the old OP
     if @options[:freeze_original]
       @post_ids_after_move =
         @post_ids_after_move.map { |post_id| post_id == post.id ? new_post.id : post_id }
+      DiscourseEvent.trigger(:post_duplicated, new_post, post)
+    else
+      DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
     end
-
-    DiscourseEvent.trigger(:first_post_moved, new_post, post)
-    DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
 
     # we don't want to keep the old topic's OP bookmarked when we are
     # moving it into a new topic
@@ -318,12 +320,11 @@ class PostMover
     moved_post.disable_rate_limits! if @options[:freeze_original]
     moved_post.save(validate: false)
 
-    if moved_post.id != post.id
+    # If we froze original, we duplicated the post, which means we need to swap out
+    # the post ID for notifications.
+    if @options[:freeze_original]
       @post_ids_after_move =
         @post_ids_after_move.map { |post_id| post_id == post.id ? moved_post.id : post_id }
-    end
-
-    if @options[:freeze_original]
       DiscourseEvent.trigger(:post_duplicated, moved_post, post)
     else
       DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id)

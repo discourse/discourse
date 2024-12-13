@@ -2754,6 +2754,68 @@ RSpec.describe PostMover do
         expect(event[:params][0]).to eq(post_2)
         expect(event[:params][1]).to eq(topic_1.id)
       end
+
+      context "with freeze_original option" do
+        it "receives 2 post moved event triggers for the first post" do
+          post_mover =
+            PostMover.new(
+              topic_1,
+              Discourse.system_user,
+              [post_1.id],
+              options: {
+                freeze_original: true,
+              },
+            )
+          events = DiscourseEvent.track_events { post_mover.to_topic(topic_2.id) }
+          filtered_events =
+            events.filter { |e| %i[first_post_moved post_duplicated].include? e[:event_name] }
+
+          expect(filtered_events.size).to eq(2)
+        end
+
+        it "uses first_post_moved trigger for first post" do
+          post_mover =
+            PostMover.new(
+              topic_1,
+              Discourse.system_user,
+              [post_1.id],
+              options: {
+                freeze_original: true,
+              },
+            )
+          events =
+            DiscourseEvent.track_events(:first_post_moved) { post_mover.to_topic(topic_2.id) }
+          expect(events.size).to eq(1)
+
+          new_post = Post.find_by(topic_id: topic_2.id, post_number: 1)
+
+          event = events.first
+          expect(event[:event_name]).to eq(:first_post_moved)
+          expect(event[:params][0]).to eq(new_post)
+          expect(event[:params][1]).to eq(post_1)
+        end
+
+        it "uses post_duplicated trigger for other posts" do
+          post_mover =
+            PostMover.new(
+              topic_1,
+              Discourse.system_user,
+              [post_2.id],
+              options: {
+                freeze_original: true,
+              },
+            )
+          events = DiscourseEvent.track_events(:post_duplicated) { post_mover.to_topic(topic_2.id) }
+          expect(events.size).to eq(1)
+
+          moved_post = MovedPost.includes(:new_post).find_by(old_post_id: post_2.id)
+
+          event = events.first
+          expect(event[:event_name]).to eq(:post_duplicated)
+          expect(event[:params][0]).to eq(moved_post.new_post)
+          expect(event[:params][1]).to eq(post_2)
+        end
+      end
     end
 
     context "with modifier" do
