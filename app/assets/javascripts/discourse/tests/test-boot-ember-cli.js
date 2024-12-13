@@ -25,8 +25,6 @@ document.addEventListener("discourse-init", () => {
   const testingCore = !testingTheme && (!target || target === "core");
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
 
-  window.EmberENV.LOG_STACKTRACE_ON_DEPRECATION = false;
-
   document.body.insertAdjacentHTML(
     "afterbegin",
     `
