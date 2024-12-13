@@ -134,20 +134,21 @@ export default class DVirtualHeight extends Component {
 
     this.appEvents.trigger("keyboard-visibility-change", keyboardVisible);
 
-    if (keyboardVisible) {
-      docEl.classList.add("keyboard-visible");
-
-      // disable body scroll in mobile composer
-      // we have to do this because we're positioning the composer with
-      // position: fixed and top: 0 and scrolling would move the composer halfway out of the viewport
-      // we can't use bottom: 0, it is very unreliable with keyboard visible
-      if (docEl.classList.contains("composer-open")) {
-        disableBodyScroll(document.querySelector("#reply-control"));
-      }
+    // disable body scroll in mobile composer
+    // we have to do this because we're positioning the composer with
+    // position: fixed and top: 0 and scrolling would move the composer halfway out of the viewport
+    // we can't use bottom: 0, it is very unreliable with keyboard visible
+    if (docEl.classList.contains("composer-open")) {
+      disableBodyScroll(document.querySelector("#reply-control"), {
+        reserveScrollBarGap: true,
+        allowTouchMove: (el) => el.closest("#reply-control"),
+      });
     }
+    keyboardVisible
+      ? docEl.classList.add("keyboard-visible")
+      : docEl.classList.remove("keyboard-visible");
 
     if (!keyboardVisible) {
-      docEl.classList.remove("keyboard-visible");
       clearAllBodyScrollLocks();
     }
   }
