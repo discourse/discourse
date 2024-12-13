@@ -25,7 +25,11 @@ module Jobs
 
       # Forces rebake of old posts where needed, as long as no system avatars need updating
       if !SiteSetting.automatically_download_gravatars ||
-           !UserAvatar.where("last_gravatar_download_attempt IS NULL").limit(1).first
+           !UserAvatar
+             .joins(user: :user_emails)
+             .where(user_emails: { primary: true })
+             .where(last_gravatar_download_attempt: nil)
+             .exists?
         problems = Post.rebake_old(SiteSetting.rebake_old_posts_count, priority: :ultra_low)
         problems.each do |hash|
           post_id = hash[:post].id
