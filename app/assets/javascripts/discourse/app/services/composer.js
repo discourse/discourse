@@ -15,7 +15,6 @@ import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
-import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import prepareFormTemplateData, {
   getFormTemplateObject,
@@ -1849,7 +1848,6 @@ export default class ComposerService extends Service {
     const elem = document.documentElement;
     elem.classList.remove("fullscreen-composer");
     elem.classList.remove("composer-open");
-    clearAllBodyScrollLocks();
 
     document.activeElement?.blur();
     document.documentElement.style.removeProperty("--composer-height");
