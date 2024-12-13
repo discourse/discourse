@@ -41,8 +41,10 @@ class User::UpdateUsername
     validates :id, presence: true
     validates :username, presence: true, format: { with: /\A[a-zA-Z0-9]+\z/ }
   end
+
   model :user
   policy :can_update_username
+
   transaction do
     step :update
     step :log
@@ -249,12 +251,14 @@ Failures:
 
        Expected policy 'can_update_username' (key: 'result.policy.can_update_username') to fail but it succeeded.
 
-       [1/6] [params] 'default' ✅
-       [2/6] [model] 'user' ✅
-       [3/6] [policy] 'can_update_username' ✅ ⚠️  <= expected to return false but got true instead
-       [4/6] [transaction]
-       [5/6]   [step] 'update' ✅
-       [6/6]   [step] 'log' ✅
+       Inspecting User::UpdateUsername result object:
+
+       [1/6] [params] default (0.1152 ms) ✅
+       [2/6] [model] user (1.7147 ms) ✅
+       [3/6] [policy] can_update_username (0.0093 ms) ✅ ⚠️  <= expected to return false but got true instead
+       [4/6] [transaction] (2.5952 ms)
+       [5/6]   [step] update (2.4038 ms) ✅
+       [6/6]   [step] log (0.0054 ms) ✅
      # ./spec/services/update_username_spec.rb:39:in `block (6 levels) in <main>'
      # ./spec/rails_helper.rb:497:in `block (2 levels) in <top (required)>'
      # /home/discourse/.bundle/gems/ruby/3.3.0/gems/webmock-3.23.1/lib/webmock/rspec.rb:39:in `block (2 levels) in <top (required)>'
@@ -510,6 +514,10 @@ Some methods have been added to the contract object to make your life a bit easi
 - `#slice` and `#merge` are available.
 - `#to_hash` has been implemented, so the contract object will be automatically cast as a hash by Ruby depending on the context. For example, with an ActiveRecord model, you can do this: `user.update(**params)`.
 
+## Parameters
+
+Parameters provided to the service through the `params` key are accessible like `params.my_param` (not `params[:my_param]`). Parameters are available even if they're not processed by a contract.
+
 ## Policy objects
 
 When a policy starts becoming complex or when you’d like to provide more context on why it can fail, then it’s time to use a policy object instead of a simple policy.
@@ -611,15 +619,15 @@ The main tool to help debugging a service is the steps inspector. However, it’
 This small tool is very useful to debug the outcome of a service. The `Service::StepsInspector` class is not meant to be used directly, as there’s a shortcut available directly on any result object.
 Call `#inspect_steps` on a result object, and it will output all the steps of the service with their current state. This is how it looks like for the `User::UpdateUsername` service we’re using in our examples:
 ```
-[1/6] [params] 'default' ✅
-[2/6] [model] 'user' ✅
-[3/6] [policy] 'can_update_username' ❌
-[4/6] [transaction]
-[5/6]   [step] 'update'
-[6/6]   [step] 'log'
+Inspecting User::UpdateUsername result object:
+
+[1/6] [params] default (0.3581 ms) ✅
+[2/6] [model] user (68.9291 ms) ✅
+[3/6] [policy] can_update_username ❌
+
+(3 more steps not shown as the execution flow was stopped before reaching them)
 ```
-Here we can see each step is numbered to track the execution order easily. Then the type of the step is outputted, followed by its name. Finally, there’s either a checkmark or a cross, depending on the step outcome.
-You can see here that the `update` and `log` steps don’t have any status. That’s because the policy failed, so the execution stopped at that point, those steps were never reached.
+Here we can see each step is numbered to track the execution order easily. Then the type of the step is outputted, followed by its name and how much time the step took to run. Finally, there’s either a checkmark or a cross, depending on the step outcome.
 
 So, we can see the `can_update_username` policy failed, and since it’s a simple policy it’s easy to see that the problem lies with the user not having enough permissions (through `guardian`).
 The policy is defined as:
@@ -629,17 +637,25 @@ def can_update_username(guardian:, user:)
 end
 ```
 
-In the case of a more complex result object, like with a contract, it could be tedious to easily understand what went wrong. The steps inspector provides a method to output the error from the failing step.
+In the case of a more complex result object, like with a contract, the steps inspector provides the error from the failing step.
 Let’s say we call our `User::UpdateUsername` service without providing any parameters. It would then fail at the `params` step.
-Calling `#error` on the inspector (`result.inspect_steps.error`) now outputs this:
+The inspector now outputs this:
 ```
+Inspecting User::UpdateUsername result object:
+
+[1/6] [params] default ❌
+
+(5 more steps not shown as the execution flow was stopped before reaching them)
+
+Why it failed:
+
 #<ActiveModel::Errors [#<ActiveModel::Error attribute=id, type=blank, options={}>, #<ActiveModel::Error attribute=username, type=blank, options={}>, #<ActiveModel::Error attribute=username, type=invalid, options={:value=>nil}>]>
 
-Provided parameters: {"id"=>nil, "username"=>nil}}]>
+Provided parameters: {"id"=>nil, "username"=>nil}
 ```
 Here we can see `ActiveModel` errors, telling us `id` and `username` were blank. The provided parameters are also outputted to help debugging.
 
-Here’s a recap of what will output `#error` for the different steps:
+Here’s a recap of what errors will be outputted for the different steps:
 - *model*: when the model is an `ActiveRecord` one, it outputs its validation errors. Otherwise, it outputs the reason why it failed, probably a `Model not found` error.
 - *params*: outputs the validation errors followed by the provided parameters.
 - *policy*: doesn’t output anything for a simple policy. When a policy object is used, then it outputs its `reason`.
