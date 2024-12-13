@@ -1,7 +1,6 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, select, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import dselect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
   fakeTime,
@@ -75,8 +74,7 @@ acceptance("Topic - Edit timer", function (needs) {
       .dom(".edit-topic-timer-modal .topic-timer-info")
       .matchesText(/will automatically close in/);
 
-    const timerType = dselect(".timer-type");
-    await timerType.selectOption("close_after_last_post");
+    await select(".timer-type", "close_after_last_post");
 
     const interval = selectKit(".select-kit.relative-time-intervals");
     await interval.expand();
@@ -118,8 +116,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    const timerType = dselect(".timer-type");
-    await timerType.selectOption("open");
+    await select(".timer-type", "open");
     await click("#tap_tile_start_of_next_business_week");
 
     assert
@@ -140,8 +137,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await visit("/t/pm-for-testing/12");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    const timerType = dselect(".timer-type");
-    await timerType.selectOption("publish_to_category");
+    await select(".timer-type", "publish_to_category");
     const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     assert.strictEqual(categoryChooser.header().label(), "category…");
@@ -173,8 +169,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await visit("/t/some-topic/9");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    const timerType = dselect(".timer-type");
-    await timerType.selectOption("publish_to_category");
+    await select(".timer-type", "publish_to_category");
     const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     assert.strictEqual(categoryChooser.header().label(), "category…");
@@ -211,8 +206,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
 
-    const timerType = dselect(".timer-type");
-    await timerType.selectOption("publish_to_category");
+    await select(".timer-type", "publish_to_category");
     const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     assert.strictEqual(categoryChooser.header().label(), "category…");
@@ -333,8 +327,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-    const timerType = dselect(".timer-type");
-    await timerType.selectOption("delete");
+    await select(".timer-type", "delete");
     await click("#tap_tile_two_weeks");
 
     assert
@@ -389,9 +382,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
-
-    const timerType = dselect(".timer-type");
-    await timerType.selectOption("close_after_last_post");
+    await select(".timer-type", "close_after_last_post");
 
     assert.dom(".topic-timer-heading").doesNotExist();
   });

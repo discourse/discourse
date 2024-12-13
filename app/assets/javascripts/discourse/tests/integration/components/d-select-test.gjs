@@ -1,8 +1,7 @@
-import { render } from "@ember/test-helpers";
+import { render, select } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DSelect, { NO_VALUE_OPTION } from "discourse/components/d-select";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import dselectHelper from "discourse/tests/helpers/d-select-helper";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | d-select", function (hooks) {
@@ -14,12 +13,12 @@ module("Integration | Component | d-select", function (hooks) {
     };
 
     await render(<template>
-      <DSelect @onChange={{handleChange}} as |select|><select.Option
-          @value="foo"
-        >foo</select.Option></DSelect>
+      <DSelect @onChange={{handleChange}} as |s|>
+        <s.Option @value="foo">The real foo</s.Option>
+      </DSelect>
     </template>);
 
-    await dselectHelper().selectOption("foo");
+    await select(".d-select", "foo");
 
     assert.verifySteps(["foo"]);
   });
@@ -35,9 +34,9 @@ module("Integration | Component | d-select", function (hooks) {
 
   test("selected value", async function (assert) {
     await render(<template>
-      <DSelect @value="foo" as |select|><select.Option
-          @value="foo"
-        >Foo</select.Option></DSelect>
+      <DSelect @value="foo" as |s|>
+        <s.Option @value="foo">The real foo</s.Option>
+      </DSelect>
     </template>);
 
     assert.dselect().hasOption({
@@ -47,7 +46,7 @@ module("Integration | Component | d-select", function (hooks) {
 
     assert.dselect().hasSelectedOption({
       value: "foo",
-      label: "Foo",
+      label: "The real foo",
     });
   });
 
@@ -59,10 +58,9 @@ module("Integration | Component | d-select", function (hooks) {
 
   test("option attributes", async function (assert) {
     await render(<template>
-      <DSelect as |select|><select.Option
-          @value="foo"
-          class="test"
-        >Foo</select.Option></DSelect>
+      <DSelect as |s|>
+        <s.Option @value="foo" class="test">The real foo</s.Option>
+      </DSelect>
     </template>);
 
     assert.dom(".d-select__option.test").exists();
