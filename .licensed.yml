@@ -19,6 +19,7 @@ ignored:
     - cgi # Ruby (default gem)
     - date # Ruby (default gem)
     - digest # Ruby (default gem)
+    - io-console # Ruby (default gem)
     - io-wait # Ruby (default gem)
     - irb # Ruby (default gem)
     - json # Ruby (default gem)
