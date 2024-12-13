@@ -25,19 +25,25 @@
       margin-bottom: 0.5rem;
       text-align: center;
       width: 100%;
-      &::before {
-        content: " ";
-        display: block;
-        height: 1px;
-        width: 100%;
-        background-color: var(--primary-low);
-        margin-block: 1rem;
-      }
+      margin-top: 1rem;
     }
   }
 
   #login-buttons {
     height: 100%;
+  }
+
+  .login-right-side {
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 1px;
+      height: 80%;
+      transform: translateY(-50%);
+      background-color: var(--primary-low);
+    }
   }
 
   @media screen and (max-width: 767px) {
@@ -60,6 +66,7 @@
       .login-right-side {
         padding: 1em;
         max-width: unset;
+
         &::before {
           height: 1px;
           width: calc(100% - 2em);
