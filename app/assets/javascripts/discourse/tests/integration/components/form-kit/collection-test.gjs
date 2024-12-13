@@ -96,36 +96,45 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
     await render(<template>
       <Form
         @data={{hash
-          foo=(array
-            (hash bar=(array (hash baz=1))) (hash bar=(array (hash baz=2)))
+          one=(array
+            (hash two=(array (hash three=(array (hash foo=1) (hash foo=2)))))
           )
         }}
         as |form|
       >
-        <form.Collection @name="foo" as |parent parentIndex|>
-          <parent.Collection @name="bar" as |child childIndex|>
-            <child.Field @name="baz" @title="Baz" as |field|>
-              <field.Input />
-              <form.Button
-                class={{concat "remove-" parentIndex "-" childIndex}}
-                @action={{fn child.remove childIndex}}
-              >Remove</form.Button>
-            </child.Field>
-          </parent.Collection>
+        <form.Collection @name="one" as |first firstIndex|>
+          <first.Collection @name="two" as |second secondIndex|>
+            <second.Collection @name="three" as |third thirdIndex|>
+              <third.Field @name="foo" @title="Foo" as |field|>
+                <field.Input />
+                <form.Button
+                  class={{concat
+                    "remove-"
+                    firstIndex
+                    "-"
+                    secondIndex
+                    "-"
+                    thirdIndex
+                  }}
+                  @action={{fn third.remove thirdIndex}}
+                >Remove</form.Button>
+              </third.Field>
+            </second.Collection>
+          </first.Collection>
         </form.Collection>
       </Form>
     </template>);
 
-    assert.form().field("foo.0.bar.0.baz").hasValue("1");
-    assert.form().field("foo.1.bar.0.baz").hasValue("2");
+    assert.form().field("one.0.two.0.three.0.foo").hasValue("1");
+    assert.form().field("one.0.two.0.three.1.foo").hasValue("2");
 
-    await click(".remove-1-0");
+    await click(".remove-0-0-1");
 
-    assert.form().field("foo.0.bar.0.baz").hasValue("1");
-    assert.form().field("foo.1.bar.0.baz").doesNotExist();
+    assert.form().field("one.0.two.0.three.0.foo").hasValue("1");
+    assert.form().field("one.0.two.0.three.1.foo").doesNotExist();
 
-    await formKit().field("foo.0.bar.0.baz").fillIn("2");
+    await formKit().field("one.0.two.0.three.0.foo").fillIn("2");
 
-    assert.form().field("foo.0.bar.0.baz").hasValue("2");
+    assert.form().field("one.0.two.0.three.0.foo").hasValue("2");
   });
 });
