@@ -36,13 +36,6 @@
               @outletArgs={{hash createAccount=this.createAccount}}
             />
           </WelcomeHeader>
-          {{#if this.showLoginButtons}}
-            <LoginButtons
-              @externalLogin={{this.externalLoginAction}}
-              @passkeyLogin={{this.passkeyLogin}}
-              @context="login"
-            />
-          {{/if}}
         {{/if}}
 
         {{#if this.canLoginLocal}}
@@ -125,6 +118,13 @@
             @showSecondFactor={{this.showSecondFactor}}
           />
         {{/unless}}
+        {{#if this.showLoginButtons}}
+          <LoginButtons
+            @externalLogin={{this.externalLoginAction}}
+            @passkeyLogin={{this.passkeyLogin}}
+            @context="login"
+          />
+        {{/if}}
       {{/if}}
     </div>
   </div>
