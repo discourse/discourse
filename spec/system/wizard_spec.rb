@@ -70,7 +70,7 @@ describe "Wizard", type: :system do
       wizard_page.styling_step.select_color_palette_option("Dark")
       wizard_page.styling_step.select_body_font_option("lato")
       wizard_page.styling_step.select_heading_font_option("merriweather")
-      wizard_page.styling_step.select_homepage_style_option("categories_only")
+      wizard_page.styling_step.select_homepage_style_option("hot")
 
       wizard_page.go_to_next_step
       expect(wizard_page).to be_on_step("ready")
@@ -80,14 +80,14 @@ describe "Wizard", type: :system do
       )
       expect(SiteSetting.base_font).to eq("lato")
       expect(SiteSetting.heading_font).to eq("merriweather")
-      expect(SiteSetting.homepage).to eq("categories")
+      expect(SiteSetting.homepage).to eq("hot")
 
       wizard_page.go_to_step("styling")
 
       expect(wizard_page.styling_step).to have_selected_color_palette("Dark")
       expect(wizard_page.styling_step).to have_selected_body_font("lato")
       expect(wizard_page.styling_step).to have_selected_heading_font("merriweather")
-      expect(wizard_page.styling_step).to have_selected_homepage_style("categories_only")
+      expect(wizard_page.styling_step).to have_selected_homepage_style("hot")
     end
   end
 

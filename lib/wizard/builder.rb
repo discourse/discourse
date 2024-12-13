@@ -191,10 +191,10 @@ class Wizard
 
         current =
           (
-            if SiteSetting.top_menu_map.first == "categories"
+            if SiteSetting.homepage == "categories"
               SiteSetting.desktop_category_page_style
             else
-              "latest"
+              SiteSetting.homepage
             end
           )
         style =
@@ -219,9 +219,10 @@ class Wizard
           updater.update_setting(:heading_font, updater.fields[:heading_font])
 
           top_menu = SiteSetting.top_menu_map
-          if updater.fields[:homepage_style] == "latest" && top_menu.first != "latest"
-            top_menu.delete("latest")
-            top_menu.insert(0, "latest")
+          if %w[latest hot].include?(updater.fields[:homepage_style]) &&
+               top_menu.first != updater.fields[:homepage_style]
+            top_menu.delete(updater.fields[:homepage_style])
+            top_menu.insert(0, updater.fields[:homepage_style])
           elsif updater.fields[:homepage_style] != "latest"
             top_menu.delete("categories")
             top_menu.insert(0, "categories")
