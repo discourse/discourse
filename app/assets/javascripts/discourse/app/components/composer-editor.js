@@ -282,7 +282,9 @@ export default class ComposerEditor extends Component {
   }
 
   _textareaTouchMove(event) {
-    // TODO: should we limit this to mobile + ipad?
+    // This is an alternative to locking up the body
+    // Since it targets touch devices, it is essentially limited to
+    // mobile and tablets (iPads in particular are relevant)
     if (event.target) {
       const notScrollable =
         event.target.scrollHeight <= event.target.clientHeight;
