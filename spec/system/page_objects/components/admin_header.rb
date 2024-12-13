@@ -9,11 +9,11 @@ module PageObjects
       end
 
       def visible?
-        has_css?(".admin-page-header")
+        has_css?(".d-page-header")
       end
 
       def hidden?
-        has_no_css?(".admin-page-header")
+        has_no_css?(".d-page-header")
       end
     end
   end
