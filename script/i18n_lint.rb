@@ -111,7 +111,7 @@ class LocaleFileValidator
       end
 
       BANNED_PHRASES.keys.each do |banned|
-        @errors["banned_phrase_#{banned}"] << key if value.include?(banned)
+        @errors["banned_phrase_#{banned}"] << key if value.downcase.include?(banned.downcase)
       end
     end
   end
