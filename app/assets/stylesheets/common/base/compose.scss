@@ -38,26 +38,28 @@ html.composer-open.not-mobile-device {
     min-width: 0;
   }
   z-index: z("composer", "content");
-  transition: height 250ms ease, background 250ms ease, transform 250ms ease,
-    max-width 250ms ease, padding-bottom 250ms ease, bottom 250ms ease;
+  transition: height 150ms ease, transform 150ms ease, max-width 150ms ease,
+    padding-bottom 150ms ease, bottom 150ms ease;
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
 
-  .touch & {
-    // We override values set in base/compose.scss so that on mobile/tablet, the composer is top-anchored.
-    // This is not ideal, but it is much better than bottom-anchoring.
-    // Safari in iOS/iPad and Firefox/Android do not handle well a bottom/fixed-positioned element,
-    // especially while the software keyboard is visible.
+  // We override values set above so that on mobile + iPad, the composer is top-anchored.
+  // This is not ideal, but it is much better than bottom-anchoring.
+  // Safari in iOS/iPad and Firefox/Android do not handle well a bottom/fixed-positioned element,
+  // especially while the software keyboard is visible.
+  .ipados-device &,
+  .mobile-device & {
     top: 0;
     height: 100%;
     z-index: -1;
     max-height: unset;
     min-height: unset;
     visibility: hidden;
+    touch-action: manipulation; // slightly faster single-tap actions on iOS
     &.open,
     &.fullscreen {
       visibility: visible;
-      z-index: z("ipad-header-nav") + 1;
+      z-index: z("mobile-composer");
       height: calc(var(--composer-vh, 1vh) * 100);
     }
 

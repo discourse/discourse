@@ -117,18 +117,9 @@ export default class DVirtualHeight extends Component {
     } else {
       let viewportWindowDiff =
         this.windowInnerHeight - window.visualViewport.height;
-      const IPAD_HARDWARE_KEYBOARD_TOOLBAR_HEIGHT = 71.5;
-      if (viewportWindowDiff > IPAD_HARDWARE_KEYBOARD_TOOLBAR_HEIGHT) {
+      const MIN_THRESHOLD = 20;
+      if (viewportWindowDiff > MIN_THRESHOLD) {
         keyboardVisible = true;
-      }
-
-      // adds bottom padding when using a hardware keyboard and the accessory bar is visible
-      // accessory bar height is 55px, using 75 allows a small buffer
-      if (this.capabilities.isIpadOS) {
-        docEl.style.setProperty(
-          "--composer-ipad-padding",
-          `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
-        );
       }
     }
 
@@ -141,9 +132,11 @@ export default class DVirtualHeight extends Component {
     if (docEl.classList.contains("composer-open")) {
       disableBodyScroll(document.querySelector("#reply-control"), {
         reserveScrollBarGap: true,
-        allowTouchMove: (el) => el.closest("#reply-control"),
+        allowTouchMove: (el) =>
+          el.tagName === "TEXTAREA" || el.tagName === "LI" || el.closest(".d-editor-preview-wrapper"),
       });
     }
+
     keyboardVisible
       ? docEl.classList.add("keyboard-visible")
       : docEl.classList.remove("keyboard-visible");
