@@ -1876,9 +1876,27 @@ RSpec.describe UsersController do
         SiteSetting.reserved_usernames = "reserved"
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
-        body = response.parsed_body
 
-        expect(body["errors"].first).to include(I18n.t("login.reserved_username"))
+        expect(response.parsed_body["errors"].first).to include(I18n.t("login.reserved_username"))
+      end
+
+      it "allows admins to change a username to one in the reserved list" do
+        sign_in(admin)
+        SiteSetting.reserved_usernames = "reserved"
+
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+
+        expect(response.parsed_body["username"]).to eq("reserved")
+      end
+
+      it "does not allow admins to change a username to one in the reserved list if that user already exists" do
+        sign_in(admin)
+        SiteSetting.reserved_usernames = "reserved"
+        Fabricate(:user, username: "reserved")
+
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+
+        expect(response.parsed_body["errors"].first).to include("Username must be unique")
       end
 
       it "should fail if the user is old" do
@@ -1970,6 +1988,32 @@ RSpec.describe UsersController do
     context "when username is unavailable" do
       before { get "/u/check_username.json", params: { username: user1.username } }
       include_examples "when username is unavailable"
+    end
+
+    describe "reserved usernames" do
+      before { SiteSetting.reserved_usernames = SiteSetting.reserved_usernames + "|reserved" }
+
+      context "when checking a reserved username" do
+        before { get "/u/check_username.json", params: { username: "reserved" } }
+        include_examples "when username is unavailable"
+      end
+
+      context "when checking a reserved username as an admin" do
+        before { sign_in(admin) }
+
+        context "when user already exists" do
+          before do
+            Fabricate(:user, username: "reserved")
+            get "/u/check_username.json", params: { username: "reserved" }
+          end
+          include_examples "when username is unavailable"
+        end
+
+        context "when user does not exist" do
+          before { get "/u/check_username.json", params: { username: "reserved" } }
+          include_examples "when username is available"
+        end
+      end
     end
 
     shared_examples "checking an invalid username" do
