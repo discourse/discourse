@@ -139,19 +139,17 @@
                     @togglePasswordMask={{this.togglePasswordMask}}
                     @parentController="invites-show"
                   />
-                  <div class="create-account__password-info">
-                    <div class="create-account__password-tip-validation">
-                      <InputTip
-                        @validation={{this.passwordValidation}}
-                        id="password-validation"
-                      />
-                      <div
-                        class="caps-lock-warning
-                          {{unless this.capsLockOn 'hidden'}}"
-                      >
-                        {{d-icon "triangle-exclamation"}}
-                        {{i18n "login.caps_lock_warning"}}
-                      </div>
+                  <div class="create-account__password-tip-validation">
+                    <InputTip
+                      @validation={{this.passwordValidation}}
+                      id="password-validation"
+                    />
+                    <div
+                      class="caps-lock-warning
+                        {{unless this.capsLockOn 'hidden'}}"
+                    >
+                      {{d-icon "triangle-exclamation"}}
+                      {{i18n "login.caps_lock_warning"}}
                     </div>
                   </div>
                 </div>
