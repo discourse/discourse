@@ -6,9 +6,21 @@
     margin-bottom: 0;
   }
 
+  .invited-by {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 1em 0;
+  }
+
+  .invited-by p {
+    margin: 0;
+  }
+
   .user-info {
     align-items: center;
     gap: 0.5em;
+    margin: 0;
   }
 
   .avatar {
