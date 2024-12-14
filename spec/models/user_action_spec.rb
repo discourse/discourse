@@ -188,31 +188,30 @@ RSpec.describe UserAction do
   end
 
   describe "when user likes" do
-    fab!(:post)
-    let(:likee) { post.user }
-    fab!(:liker) { coding_horror }
-
     def likee_stream
       UserAction.stream(user_id: likee.id, guardian: Guardian.new)
     end
 
-    before { @old_count = likee_stream.count }
+    fab!(:post)
+    fab!(:liker) { coding_horror }
+
+    let(:likee) { post.user }
+    let!(:old_count) { likee_stream.count }
 
     it "creates a new stream entry" do
       PostActionCreator.like(liker, post)
-      expect(likee_stream.count).to eq(@old_count + 1)
+      expect(likee_stream.count).to eq(old_count + 1)
     end
 
     context "with successful like" do
-      before do
-        PostActionCreator.like(liker, post)
-        @liker_action = liker.user_actions.find_by(action_type: UserAction::LIKE)
-        @likee_action = likee.user_actions.find_by(action_type: UserAction::WAS_LIKED)
-      end
+      fab!(:pac_like) { PostActionCreator.like(liker, post) }
+
+      let!(:liker_action) { liker.user_actions.find_by(action_type: UserAction::LIKE) }
+      let!(:likee_action) { likee.user_actions.find_by(action_type: UserAction::WAS_LIKED) }
 
       it "should result in correct data assignment" do
-        expect(@liker_action).not_to eq(nil)
-        expect(@likee_action).not_to eq(nil)
+        expect(liker_action).not_to eq(nil)
+        expect(likee_action).not_to eq(nil)
         expect(likee.user_stat.reload.likes_received).to eq(1)
         expect(liker.user_stat.reload.likes_given).to eq(1)
 
@@ -227,9 +226,9 @@ RSpec.describe UserAction do
         let(:liker) { post.topic.topic_allowed_users.last.user }
 
         it "should not increase user stats" do
-          expect(@liker_action).not_to eq(nil)
+          expect(liker_action).not_to eq(nil)
           expect(liker.user_stat.reload.likes_given).to eq(0)
-          expect(@likee_action).not_to eq(nil)
+          expect(likee_action).not_to eq(nil)
           expect(likee.user_stat.reload.likes_received).to eq(0)
 
           PostActionDestroyer.destroy(liker, post, :like)
@@ -244,61 +243,59 @@ RSpec.describe UserAction do
 
       it "doesn't add the entry to the stream" do
         PostActionCreator.like(liker, post)
-        expect(likee_stream.count).not_to eq(@old_count + 1)
+        expect(likee_stream.count).not_to eq(old_count + 1)
       end
     end
   end
 
   describe "when a user posts a new topic" do
-    before do
-      freeze_time(100.days.ago) do
-        @post = create_post
-        PostAlerter.post_created(@post)
-      end
-    end
+    include ActiveSupport::Testing::TimeHelpers
+
+    fab!(:post) { travel_to(100.days.ago) { create_post } }
+
+    before { travel_to(100.days.ago) { PostAlerter.post_created(post) } }
 
     describe "topic action" do
-      it "should exist" do
-        @action = @post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC)
+      let(:action) { post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC) }
 
-        expect(@action).not_to eq(nil)
-        expect(@action.created_at).to eq_time(@post.topic.created_at)
+      it "should exist" do
+        expect(action).not_to eq(nil)
+        expect(action.created_at).to eq_time(post.topic.created_at)
       end
     end
 
     it "should not log a post user action" do
-      expect(@post.user.user_actions.find_by(action_type: UserAction::REPLY)).to eq(nil)
+      expect(post.user.user_actions.find_by(action_type: UserAction::REPLY)).to eq(nil)
     end
 
     describe "when another user posts on the topic" do
-      before do
-        @other_user = coding_horror
-        @mentioned = Fabricate(:admin)
+      fab!(:mentioned) { Fabricate(:admin) }
 
-        @response =
-          PostCreator.new(
-            @other_user,
-            reply_to_post_number: 1,
-            topic_id: @post.topic_id,
-            raw: "perhaps @#{@mentioned.username} knows how this works?",
-          ).create
-
-        PostAlerter.post_created(@response)
+      let(:other_user) { coding_horror }
+      let(:response) do
+        PostCreator.new(
+          other_user,
+          reply_to_post_number: 1,
+          topic_id: post.topic_id,
+          raw: "perhaps @#{mentioned.username} knows how this works?",
+        ).create
       end
 
+      before { PostAlerter.post_created(response) }
+
       it "should log user actions correctly" do
-        expect(@response.user.user_actions.find_by(action_type: UserAction::REPLY)).not_to eq(nil)
-        expect(@post.user.user_actions.find_by(action_type: UserAction::RESPONSE)).not_to eq(nil)
-        expect(@mentioned.user_actions.find_by(action_type: UserAction::MENTION)).not_to eq(nil)
+        expect(response.user.user_actions.find_by(action_type: UserAction::REPLY)).not_to eq(nil)
+        expect(post.user.user_actions.find_by(action_type: UserAction::RESPONSE)).not_to eq(nil)
+        expect(mentioned.user_actions.find_by(action_type: UserAction::MENTION)).not_to eq(nil)
         expect(
-          @post.user.user_actions.joins(:target_post).where("posts.post_number = 2").count,
+          post.user.user_actions.joins(:target_post).where("posts.post_number = 2").count,
         ).to eq(1)
       end
 
       it "should not log a double notification for a post edit" do
-        @response.raw = "here it goes again"
-        @response.save!
-        expect(@response.user.user_actions.where(action_type: UserAction::REPLY).count).to eq(1)
+        response.raw = "here it goes again"
+        response.save!
+        expect(response.user.user_actions.where(action_type: UserAction::REPLY).count).to eq(1)
       end
     end
   end
