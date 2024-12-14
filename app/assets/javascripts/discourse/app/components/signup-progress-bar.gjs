@@ -52,11 +52,6 @@ export default class SignupProgressBar extends Component {
           >
             <div class="signup-progress-bar__step">
               <div class="signup-progress-bar__circle">
-                {{#if this.site.desktopView}}
-                  {{#if (eq (this.getStepState index) "completed")}}
-                    {{dIcon "check"}}
-                  {{/if}}
-                {{/if}}
               </div>
             </div>
           </div>
