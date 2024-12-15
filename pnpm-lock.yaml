@@ -95,8 +95,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1(patch_hash=55h346kvblvnigtrwrsh4hpona)
       lint-to-the-future:
-        specifier: ^2.5.1
-        version: 2.5.1(encoding@0.1.13)
+        specifier: ^2.6.1
+        version: 2.6.1(encoding@0.1.13)
       lint-to-the-future-ember-template:
         specifier: ^3.0.0
         version: 3.0.0(ember-template-lint@6.0.0)
@@ -5986,8 +5986,8 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
 
-  lint-to-the-future@2.5.1:
-    resolution: {integrity: sha512-1FcINOtRDptSEJQaX4rYRl5lfDzyz3ciXlBmBK4woepEqQ79joCZbXQ1tkm9Vja6JgajWUuclplTmhkXzCJw2A==}
+  lint-to-the-future@2.6.1:
+    resolution: {integrity: sha512-BRjkKzN0ivVp4eEYybpQR+I9dCeNrulQlbYQtUb3J9RFLN5DZ9GgcCIRicSBepZ7VHpiqrqy7AV2RNjhIf1OIw==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -7749,6 +7749,12 @@ packages:
   temp@0.9.4:
     resolution: {integrity: sha512-yYrrsWnrXMcdsnu/7YMYAofM1ktpL5By7vZhf15CrXijWWrEYZks5AXBudalfSWJLlnen/QUJUB5aoB0kqZUGA==}
     engines: {node: '>=6.0.0'}
+
+  temporal-polyfill@0.2.5:
+    resolution: {integrity: sha512-ye47xp8Cb0nDguAhrrDS1JT1SzwEV9e26sSsrWzVu+yPZ7LzceEcH0i2gci9jWfOfSCCgM3Qv5nOYShVUUFUXA==}
+
+  temporal-spec@0.2.4:
+    resolution: {integrity: sha512-lDMFv4nKQrSjlkHKAlHVqKrBG4DyFfa9F74cmBZ3Iy3ed8yvWnlWSIdi4IKfSqwmazAohBNwiN64qGx4y5Q3IQ==}
 
   terser-webpack-plugin@5.3.10:
     resolution: {integrity: sha512-BKFPWlPDndPs+NGGCr1U59t0XScL5317Y0UReNrHaw9/FwhPENlq6bfgs+4yPfyP51vqC1bQ4rp1EfXW5ZSH9w==}
@@ -14799,12 +14805,13 @@ snapshots:
       semver: 7.6.3
       walk-sync: 3.0.0
 
-  lint-to-the-future@2.5.1(encoding@0.1.13):
+  lint-to-the-future@2.6.1(encoding@0.1.13):
     dependencies:
       commander: 9.5.0
       fs-extra: 7.0.1
       import-cwd: 3.0.0
       node-fetch: 2.6.12(encoding@0.1.13)
+      temporal-polyfill: 0.2.5
     transitivePeerDependencies:
       - encoding
 
@@ -16717,6 +16724,12 @@ snapshots:
     dependencies:
       mkdirp: 0.5.6
       rimraf: 2.6.3
+
+  temporal-polyfill@0.2.5:
+    dependencies:
+      temporal-spec: 0.2.4
+
+  temporal-spec@0.2.4: {}
 
   terser-webpack-plugin@5.3.10(@swc/core@1.10.1)(esbuild@0.24.0)(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)):
     dependencies:
