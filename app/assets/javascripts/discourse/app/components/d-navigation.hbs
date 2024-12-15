@@ -104,6 +104,11 @@
     @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
   />
 
+  <TopicDraftsDropdown
+    @showDraftsMenu={{this.showDraftsMenu}}
+    @otherDrafts={{this.otherDraftCount}}
+  />
+
   <PluginOutlet
     @name="after-create-topic-button"
     @outletArgs={{hash

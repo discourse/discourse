@@ -1,0 +1,26 @@
+// Styles for the topic drafts dropdown menu
+
+.topic-drafts-menu-trigger {
+  margin-left: -0.3em;
+}
+
+.topic-drafts-menu-content {
+  margin-top: -0.4em;
+}
+
+.topic-drafts-menu-content .dropdown-menu {
+  max-width: 300px;
+
+  .btn .d-button-label {
+    @include ellipsis;
+  }
+
+  .view-all-drafts {
+    display: flex;
+    justify-content: space-between;
+
+    span:first-child {
+      color: var(--primary-high);
+    }
+  }
+}
