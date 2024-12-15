@@ -116,7 +116,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    css_parser (1.20.0)
+    css_parser (1.21.0)
       addressable
     csv (3.3.0)
     date (3.4.1)
