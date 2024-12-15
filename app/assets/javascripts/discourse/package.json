@@ -28,7 +28,7 @@
     "ember-route-template": "^1.0.3",
     "ember-tracked-storage-polyfill": "^1.0.0",
     "handlebars": "^4.7.8",
-    "highlight.js": "^11.10.0",
+    "highlight.js": "^11.11.0",
     "immer": "^10.1.1",
     "jspreadsheet-ce": "^4.15.0",
     "morphlex": "^0.0.16",
