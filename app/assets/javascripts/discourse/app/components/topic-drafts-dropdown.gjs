@@ -19,7 +19,9 @@ export default class TopicDraftsDropdown extends Component {
   }
 
   get otherDraftsCount() {
-    return this.args.otherDrafts > 0 ? `+${this.args.otherDrafts} other drafts` : "";
+    return this.args.otherDrafts > 0
+      ? `+${this.args.otherDrafts} other drafts`
+      : "";
   }
 
   @action
@@ -47,7 +49,7 @@ export default class TopicDraftsDropdown extends Component {
         draft,
         draftKey: draft.draft_key,
         draftSequence: draft.sequence,
-        ...draft.data
+        ...draft.data,
       });
     }
   }
