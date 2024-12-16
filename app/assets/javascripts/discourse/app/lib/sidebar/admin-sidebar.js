@@ -203,6 +203,13 @@ export function useAdminNavConfig(navMap) {
           moderator: true,
         },
         {
+          name: "admin_groups",
+          route: "groups",
+          label: "admin.community.sidebar_link.groups",
+          icon: "user-group",
+          moderator: true,
+        },
+        {
           name: "admin_all_site_settings",
           route: "adminSiteSettings",
           label: "admin.advanced.sidebar_link.all_site_settings",

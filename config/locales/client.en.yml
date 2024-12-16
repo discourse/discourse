@@ -5588,6 +5588,7 @@ en:
           permalinks: "Permalinks"
           trust_levels: "Trust Levels"
           users: "Users"
+          groups: "Groups"
           user_fields: "User Fields"
           watched_words: "Watched Words"
           legal: "Legal"
