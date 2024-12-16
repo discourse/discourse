@@ -209,7 +209,7 @@ class ThemeJavascriptCompiler
   end
 
   def raw_template_name(name)
-    name = name.sub(/\.(raw|hbr)\z/, "")
+    name.sub(/\.(raw|hbr)\z/, "")
   end
 
   def append_raw_template(name, hbs_template)
