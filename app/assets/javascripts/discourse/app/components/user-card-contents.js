@@ -7,7 +7,7 @@ import {
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import { observes } from "@ember-decorators/object";
+import { observes, on } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
 import { setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
@@ -16,7 +16,6 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import CleansUp from "discourse/mixins/cleans-up";
 import User from "discourse/models/user";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -33,8 +32,7 @@ import { i18n } from "discourse-i18n";
 )
 @attributeBindings("ariaLabel:aria-label")
 export default class UserCardContents extends CardContentsBase.extend(
-  CanCheckEmails,
-  CleansUp
+  CanCheckEmails
 ) {
   elementId = "user-card";
   avatarSelector = "[data-user-card]";
@@ -203,6 +201,16 @@ export default class UserCardContents extends CardContentsBase.extend(
   @discourseComputed("user.profile_hidden", "user.inactive")
   contentHidden(profileHidden, inactive) {
     return profileHidden || inactive;
+  }
+
+  @on("didInsertElement")
+  _inserted() {
+    this.appEvents.on("dom:clean", this, this.cleanUp);
+  }
+
+  @on("didDestroyElement")
+  _destroyed() {
+    this.appEvents.off("dom:clean", this, this.cleanUp);
   }
 
   async _showCallback(username) {
