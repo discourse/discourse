@@ -58,4 +58,38 @@ RSpec.describe Service do
       end
     end
   end
+
+  describe "Parameters handling" do
+    subject(:result) { service_class.call(**args) }
+
+    context "when calling the service without any params" do
+      let(:args) { {} }
+
+      it "instantiate a default params object" do
+        expect(result[:params]).not_to be_nil
+      end
+    end
+
+    context "when calling the service with params" do
+      let(:args) { { params: { param1: "one" } } }
+
+      context "when there is no `params` step defined" do
+        it "allows accessing `params` through methods" do
+          expect(result[:params].param1).to eq("one")
+        end
+
+        it "returns nothing for a non-existent key" do
+          expect(result[:params].non_existent_key).to be_nil
+        end
+      end
+
+      context "when there is a `params` step defined" do
+        before { service_class.class_eval { params { attribute :param1 } } }
+
+        it "returns the contract as the params object" do
+          expect(result[:params]).to be_a(Service::ContractBase)
+        end
+      end
+    end
+  end
 end

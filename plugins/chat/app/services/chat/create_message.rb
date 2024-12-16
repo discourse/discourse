@@ -92,7 +92,7 @@ module Chat
     private
 
     def accept_blocks(guardian:, params:)
-      params[:blocks] ? guardian.user.bot? : true
+      params.blocks ? guardian.user.bot? : true
     end
 
     def no_silenced_user(guardian:)
