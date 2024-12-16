@@ -5,22 +5,6 @@ html.composer-open.not-mobile-device {
   }
 }
 
-// html.composer-open.mobile-device,
-// html.composer-open.ipados-device {
-//   // this goes together with the ipados/mobile device overrides below
-//   // this is an alternative to scroll locking the body
-//   // here we make the main content transparent while the composer is open
-//   // in these UAs, the composer takes up 100% of viewport
-//   // but users can still scroll the body underneath, which feels weird
-//   // composer moves up and halfway out of the viewport
-//   // making the content disappear removes the incentive to scroll
-
-//   #main-outlet-wrapper {
-//     opacity: 0;
-//     transition: opacity 0s linear 0.5s; // delay
-//   }
-// }
-
 #reply-control {
   position: fixed;
   display: flex;
@@ -58,36 +42,6 @@ html.composer-open.not-mobile-device {
     padding-bottom 150ms ease, bottom 150ms ease;
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
-
-  // We override values set above so that on mobile + iPad, the composer is top-anchored.
-  // This is not ideal, but it is much better than bottom-anchoring.
-  // Safari in iOS/iPad and Firefox/Android do not handle well a bottom/fixed-positioned element,
-  // especially while the software keyboard is visible.
-  .ipados-device &,
-  .mobile-device & {
-    top: 0;
-    height: 100%;
-    z-index: -1;
-    max-height: unset;
-    min-height: unset;
-    &.open,
-    &.fullscreen {
-      z-index: z("mobile-composer");
-      height: calc(var(--composer-vh, 1vh) * 100);
-    }
-
-    .grippie,
-    .toggle-fullscreen {
-      display: none;
-    }
-
-    .submit-panel,
-    .composer-fields,
-    .d-editor-button-bar {
-      // this prevents bubbling to browser, i.e. accidental scrolls
-      touch-action: none;
-    }
-  }
 
   .reply-area {
     display: flex;
@@ -690,16 +644,43 @@ div.ac-wrap {
   }
 }
 
-// When an element (input, textearea) gets focus, iOS Safari tries to put it in the center
-// by scrolling and zooming. We handle zooming with a meta tag. We used to handle scrolling
-// using a complicated JS hack.
-//
-// However, iOS Safari doesn't scroll when the input has opacity of 0 or is clipped.
-// We use this quirk and temporarily hide the element on scroll and quickly show it again
-//
-// Source https://gist.github.com/kiding/72721a0553fa93198ae2bb6eefaa3299
+// We override values set above so that on mobile + iPad, the composer is top-anchored.
+// This is not ideal, but it is much better than bottom-anchoring.
+// Safari in iOS/iPad and Firefox/Android do not handle well a bottom/fixed-positioned element,
+// especially while the software keyboard is visible.
+.ipados-device #reply-control,
+.mobile-device #reply-control {
+  top: 0;
+  height: 100%;
+  z-index: -1;
+  max-height: unset;
+  min-height: unset;
+  &.open,
+  &.fullscreen {
+    z-index: z("mobile-composer");
+    height: calc(var(--composer-vh, 1vh) * 100);
+  }
 
-.ios-device #reply-control {
+  .grippie,
+  .toggle-fullscreen {
+    display: none;
+  }
+
+  .submit-panel,
+  .composer-fields,
+  .d-editor-button-bar {
+    // this prevents touch events bubbling up to the browser, i.e. accidental scrolls
+    touch-action: none;
+  }
+
+  // When an element (input, textearea) gets focus, iOS Safari tries to put it in the center
+  // by scrolling and zooming. We handle zooming with a meta tag. We used to handle scrolling
+  // using a complicated JS hack.
+  //
+  // However, iOS Safari doesn't scroll when the input has opacity of 0 or is clipped.
+  // We use this quirk and temporarily hide the element on scroll and quickly show it again
+  //
+  // Source https://gist.github.com/kiding/72721a0553fa93198ae2bb6eefaa3299
   input:focus,
   textarea:focus {
     animation: blink_input_opacity_to_prevent_scrolling_when_focus 0.01s;
