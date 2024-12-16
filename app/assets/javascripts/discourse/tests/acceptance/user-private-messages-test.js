@@ -592,7 +592,7 @@ acceptance(
         .exists({ count: 2 }, "displays the right topic list");
 
       assert
-        .dom(".group-notifications-button")
+        .dom(".group-notifications-tracking")
         .exists("displays the group notifications button");
     });
 

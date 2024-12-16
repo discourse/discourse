@@ -1,0 +1,43 @@
+.notifications-tracking-trigger-btn {
+  display: flex;
+  gap: 0.25em;
+}
+
+.notifications-tracking-btn {
+  display: flex;
+  flex: 1 0 auto;
+  box-sizing: border-box;
+  align-items: center;
+
+  &__icons {
+    display: flex;
+    align-self: flex-start;
+    margin-right: 0.75em;
+  }
+
+  &__texts {
+    line-height: var(--line-height-medium);
+    flex: 1 1 0%;
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  &__label {
+    flex: 1 1 auto;
+    font-weight: bold;
+    font-size: var(--font-0);
+    color: var(--primary);
+    max-width: 100%;
+    @include ellipsis;
+  }
+
+  &__description {
+    flex: 1 1 auto;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    white-space: normal;
+    text-align: left;
+  }
+}
