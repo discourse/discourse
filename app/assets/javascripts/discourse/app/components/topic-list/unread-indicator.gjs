@@ -26,12 +26,8 @@ export default class UnreadIndicator extends Component {
     return `/private-messages/unread-indicator/${this.args.topic.id}`;
   }
 
-  get isUnread() {
-    return typeof this.args.topic.get("unread_by_group_member") !== "undefined";
-  }
-
   <template>
-    {{~#if this.isUnread~}}
+    {{~#if @topic.unread_by_group_member~}}
       &nbsp;<span
         title={{i18n "topic.unread_indicator"}}
         class="badge badge-notification unread-indicator"

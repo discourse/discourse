@@ -22,23 +22,19 @@ module PageObjects
 
       def notifications_button
         @notifications_button ||=
-          PageObjects::Components::SelectKit.new(".thread-notifications-button")
+          PageObjects::Components::NotificationsTracking.new(".thread-notifications-tracking")
       end
 
       def notification_level=(level)
-        notifications_button.expand
-        notifications_button.select_row_by_value(
+        notifications_button.toggle
+        notifications_button.select_level_id(
           ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
         )
-        notifications_button.has_selected_value?(
-          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
-        )
+        has_notification_level?(level)
       end
 
       def has_notification_level?(level)
-        select_kit =
-          PageObjects::Components::SelectKit.new(".c-navbar__thread-tracking-dropdown.-persisted")
-        select_kit.has_selected_value?(
+        notifications_button.has_selected_level_id?(
           ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
         )
       end

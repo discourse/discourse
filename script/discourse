@@ -154,7 +154,14 @@ class DiscourseCLI < Thor
   end
 
   desc "restore", "Restore a Discourse backup"
-  option :disable_emails, type: :boolean, default: true
+  option :disable_emails,
+         type: :boolean,
+         default: true,
+         desc: "Disable outgoing emails for non-staff users after restore"
+  option :pause,
+         type: :boolean,
+         default: false,
+         desc: "Pause before migrating database and restoring uploads"
   option :location, type: :string, enum: %w[local s3], desc: "Override the backup location"
   def restore(filename = nil)
     load_rails
@@ -179,6 +186,7 @@ class DiscourseCLI < Thor
           disable_emails: options[:disable_emails],
           location: options[:location],
           factory: BackupRestore::Factory.new(user_id: Discourse.system_user.id),
+          interactive: options[:pause],
         )
       restorer.run
       puts "Restore done."

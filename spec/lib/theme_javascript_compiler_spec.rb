@@ -8,15 +8,15 @@ RSpec.describe ThemeJavascriptCompiler do
       template = "<h1>hello</h1>"
       name = "/path/to/templates1"
       compiler.append_raw_template("#{name}.raw", template)
-      expect(compiler.raw_content.to_s).to include("addRawTemplate(\"#{name}\"")
+      expect(compiler.raw_content.to_s).to include("addRawTemplate)(\"#{name}\"")
 
       name = "/path/to/templates2"
       compiler.append_raw_template("#{name}.hbr", template)
-      expect(compiler.raw_content.to_s).to include("addRawTemplate(\"#{name}\"")
+      expect(compiler.raw_content.to_s).to include("addRawTemplate)(\"#{name}\"")
 
       name = "/path/to/templates3"
       compiler.append_raw_template("#{name}.hbs", template)
-      expect(compiler.raw_content.to_s).to include("addRawTemplate(\"#{name}.hbs\"")
+      expect(compiler.raw_content.to_s).to include("addRawTemplate)(\"#{name}.hbs\"")
     end
   end
 

@@ -119,11 +119,14 @@
     {{#unless this.tag}}
       {{! don't show category notification menu on tag pages }}
       {{#if this.showCategoryNotifications}}
-        <CategoryNotificationsButton
-          @value={{this.categoryNotificationLevel}}
-          @category={{this.category}}
-          @onChange={{action "changeCategoryNotificationLevel"}}
-        />
+        {{#unless this.category.deleted}}
+          <CategoryNotificationsTracking
+            @levelId={{this.categoryNotificationLevel}}
+            @showFullTitle={{false}}
+            @showCaret={{false}}
+            @onChange={{this.changeCategoryNotificationLevel}}
+          />
+        {{/unless}}
       {{/if}}
     {{/unless}}
   {{/if}}
@@ -132,9 +135,9 @@
     {{#unless this.category}}
       {{! don't show tag notification menu on category pages }}
       {{#if this.showTagNotifications}}
-        <TagNotificationsButton
+        <TagNotificationsTracking
           @onChange={{this.changeTagNotificationLevel}}
-          @value={{this.tagNotification.notification_level}}
+          @levelId={{this.tagNotification.notification_level}}
         />
       {{/if}}
     {{/unless}}

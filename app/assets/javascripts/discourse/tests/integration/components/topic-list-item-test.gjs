@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import TopicListItem from "discourse/components/topic-list/item";
+import TopicList from "discourse/components/topic-list/list";
 import HbrTopicListItem from "discourse/components/topic-list-item";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -57,5 +58,29 @@ module("Integration | Component | topic-list-item", function (hooks) {
     assert
       .dom(".topic-list-item[data-topic-id='1235']")
       .doesNotHaveClass("bar");
+  });
+
+  test("shows unread-by-group-member indicator", async function (assert) {
+    const store = this.owner.lookup("service:store");
+    const topics = [
+      store.createRecord("topic", { id: 1234 }),
+      store.createRecord("topic", {
+        id: 1235,
+        unread_by_group_member: true,
+      }),
+      store.createRecord("topic", {
+        id: 1236,
+        unread_by_group_member: false,
+      }),
+    ];
+
+    await render(<template><TopicList @topics={{topics}} /></template>);
+
+    assert
+      .dom(".badge.badge-notification.unread-indicator")
+      .exists({ count: 1 });
+    assert
+      .dom(".topic-list-item[data-topic-id='1235'] .unread-indicator")
+      .exists();
   });
 });

@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
+import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import DiscourseURL from "discourse/lib/url";
-import CleansUp from "discourse/mixins/cleans-up";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -33,7 +33,7 @@ function entranceDate(dt, showTime) {
 }
 
 @classNameBindings("visible::hidden")
-export default class TopicEntrance extends Component.extend(CleansUp) {
+export default class TopicEntrance extends Component {
   @service router;
   @service session;
   @service historyStore;
@@ -72,9 +72,15 @@ export default class TopicEntrance extends Component.extend(CleansUp) {
     return entranceDate(bumpedDate, showTime);
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
+  @on("didInsertElement")
+  _inserted() {
     this.appEvents.on("topic-entrance:show", this, "_show");
+    this.appEvents.on("dom:clean", this, this.cleanUp);
+  }
+
+  @on("didDestroyElement")
+  _destroyed() {
+    this.appEvents.off("dom:clean", this, this.cleanUp);
   }
 
   _setCSS() {
