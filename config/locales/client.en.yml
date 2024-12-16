@@ -2516,6 +2516,9 @@ en:
       name_label: "Name"
       password_label: "Password"
 
+    login_required:
+      welcome_message: "# [Welcome to %{title}](#welcome)"
+
     password_reset:
       continue: "Continue to %{site_name}"
 
