@@ -279,12 +279,14 @@ describe Chat::ChannelFetcher do
     end
 
     it "ensures limit has a max value" do
-      over_limit = Chat::ChannelFetcher::MAX_PUBLIC_CHANNEL_RESULTS + 1
-      over_limit.times { Fabricate(:category_channel) }
+      stub_const(Chat::ChannelFetcher, "MAX_PUBLIC_CHANNEL_RESULTS", 5) do
+        limit = Chat::ChannelFetcher::MAX_PUBLIC_CHANNEL_RESULTS + 1
+        limit.times { Fabricate(:category_channel) }
 
-      expect(described_class.secured_public_channels(guardian, limit: over_limit).length).to eq(
-        Chat::ChannelFetcher::MAX_PUBLIC_CHANNEL_RESULTS,
-      )
+        expect(described_class.secured_public_channels(guardian, limit:).size).to eq(
+          Chat::ChannelFetcher::MAX_PUBLIC_CHANNEL_RESULTS,
+        )
+      end
     end
 
     it "does not show the user category channels they cannot access" do
@@ -411,6 +413,26 @@ describe Chat::ChannelFetcher do
       target_membership.update!(muted: true)
       result = described_class.tracking_state([direct_message_channel1.id], guardian)
       expect(result.channel_tracking[target_membership.chat_channel_id][:unread_count]).to eq(0)
+    end
+
+    it "limits the number of results returned" do
+      stub_const(Chat::ChannelFetcher, "MAX_DM_CHANNEL_RESULTS", 5) do
+        (Chat::ChannelFetcher::MAX_DM_CHANNEL_RESULTS + 1).times do
+          chat_channel = Fabricate(:direct_message_channel)
+          Fabricate(
+            :user_chat_channel_membership_for_dm,
+            chat_channel:,
+            user: user1,
+            following: true,
+          )
+          Chat::DirectMessageUser.create!(direct_message: chat_channel.chatable, user: user1)
+          Fabricate(:chat_message, chat_channel:, user: user2)
+        end
+
+        expect(described_class.secured_direct_message_channels(user1.id, guardian).size).to eq(
+          Chat::ChannelFetcher::MAX_DM_CHANNEL_RESULTS,
+        )
+      end
     end
   end
 
