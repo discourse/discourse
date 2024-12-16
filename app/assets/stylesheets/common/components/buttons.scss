@@ -200,11 +200,8 @@
 .btn-social {
   color: #000;
   background: #fff;
-  border: 1px solid transparent;
   border-radius: var(--d-border-radius);
-  &:hover,
   &:focus {
-    box-shadow: var(--shadow-card);
     outline: 1px solid #000;
   }
   &[href] {

@@ -165,7 +165,7 @@ body.signup-page {
 
     input:focus + label + span.more-info {
       opacity: 1;
-      max-height: 1.4em;
+      max-height: 50px;
     }
 
     .instructions {
@@ -176,7 +176,7 @@ body.signup-page {
 
     input:focus + label + .tip + .instructions {
       opacity: 1;
-      max-height: 1.4em;
+      max-height: 50px;
     }
 
     input.alt-placeholder:invalid {
@@ -192,7 +192,7 @@ body.signup-page {
 
     #email-login-link {
       transition: opacity 0.25s, max-height 0.25s;
-      max-height: 25px; // arbitrary number, but allows for smooth transition
+      max-height: 50px; // arbitrary number, but allows for smooth transition
 
       &.no-login-filled {
         opacity: 0;
@@ -254,7 +254,7 @@ body.signup-page {
       color: var(--danger);
     }
     &.has-tip {
-      max-height: 1.4em;
+      max-height: 50px;
       opacity: 1;
     }
   }
@@ -286,7 +286,7 @@ body.signup-page {
       opacity: 0;
       transition: opacity 0.25s, max-height 0.25s;
       &.validation-shown {
-        max-height: 1.4em;
+        max-height: 50px;
         opacity: 1;
       }
     }
