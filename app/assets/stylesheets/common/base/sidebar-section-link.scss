@@ -15,6 +15,15 @@
     font-size: var(--font-down-1-rem);
   }
 
+  .sidebar-section-link-prefix {
+    .prefix-image {
+      border: 1px solid transparent;
+    }
+    &.active .prefix-image {
+      box-shadow: 0px 0px 0px 1px var(--success);
+    }
+  }
+
   .sidebar-section-link {
     display: inline-flex;
     width: 100%;
