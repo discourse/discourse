@@ -1,3 +1,4 @@
+import { hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
@@ -50,7 +51,10 @@ module("Integration | Component | TopicTracking", function (hooks) {
 
   test("PM topic notification level descriptions", async function (assert) {
     await render(<template>
-      <TopicNotificationsTracking @levelId={{1}} />
+      <TopicNotificationsTracking
+        @levelId={{1}}
+        @topic={{hash archetype="private_message"}}
+      />
     </template>);
 
     await click(".notifications-tracking-trigger");

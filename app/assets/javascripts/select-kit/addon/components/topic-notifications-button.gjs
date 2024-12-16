@@ -111,10 +111,6 @@ export default class TopicNotificationsButton extends Component {
     }
   }
 
-  get suffix() {
-    return this.args.topic.archetype === "private_message" ? "_pm" : "";
-  }
-
   <template>
     <div class="topic-notifications-button" ...attributes>
       <this.conditionalWrapper>
@@ -123,7 +119,7 @@ export default class TopicNotificationsButton extends Component {
           @onChange={{this.changeTopicNotificationLevel}}
           @showFullTitle={{@expanded}}
           @showCaret={{@expanded}}
-          @suffix={{this.suffix}}
+          @topic={{@topic}}
         />
 
         {{#if @expanded}}
