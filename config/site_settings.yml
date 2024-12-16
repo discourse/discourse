@@ -621,7 +621,7 @@ login:
     list_type: simple
   hide_email_address_taken:
     client: true
-    default: false
+    default: true
   log_out_strict: false
   pending_users_reminder_delay_minutes:
     min: -1
