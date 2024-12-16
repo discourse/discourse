@@ -15,7 +15,7 @@ export default class FloatKitCloseOnEscape extends Modifier {
     this.closeFn = closeFn;
     this.element = element;
 
-    document.addEventListener("keydown", this.check);
+    document.addEventListener("keydown", this.check, { capture: true });
   }
 
   @bind
@@ -28,6 +28,6 @@ export default class FloatKitCloseOnEscape extends Modifier {
   }
 
   cleanup() {
-    document.removeEventListener("keydown", this.check);
+    document.removeEventListener("keydown", this.check, { capture: true });
   }
 }
