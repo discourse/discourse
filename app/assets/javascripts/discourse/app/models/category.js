@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
@@ -10,7 +11,7 @@ import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { settable } from "discourse-common/utils/decorators";
 import { MultiCache } from "discourse-common/utils/multi-cache";
 
 const STAFF_GROUP_NAME = "staff";
@@ -450,6 +451,9 @@ export default class Category extends RestModel {
   }
 
   @service currentUser;
+
+  @settable @tracked name;
+  @settable @tracked slug;
 
   permissions = null;
 

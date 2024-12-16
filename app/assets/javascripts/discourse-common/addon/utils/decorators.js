@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { observer } from "@ember/object";
 import {
   alias as EmberAlias,
@@ -32,6 +33,7 @@ import {
 import CoreObject from "@ember/object/core";
 import { on as emberOn } from "@ember/object/evented";
 import { bind as emberBind, schedule } from "@ember/runloop";
+import { classify } from "@ember/string";
 import {
   observes as emberObservesDecorator,
   on as emberOnDecorator,
@@ -154,6 +156,29 @@ export function observes(...observeParams) {
       )(...observeParams)(...arguments);
     }
   };
+}
+
+export function settable(self, prop, descriptor) {
+  const setterFunctionName = `set${classify(prop)}`;
+
+  Object.defineProperty(self, setterFunctionName, {
+    configurable: true,
+    get() {
+      const bound = emberBind(this, function (event) {
+        assert(
+          `\`${setterFunctionName}\` should only receive an Event object as argument. Use it to set the value of \`${prop}\` when using the \`on\` modifier, e.g. \`{{on "input" this.${setterFunctionName}}}\``,
+          event instanceof Event
+        );
+        this[prop] = event.target.value;
+      });
+
+      Object.defineProperty(this, `set${classify(prop)}`, { value: bound });
+
+      return bound;
+    },
+  });
+
+  return descriptor;
 }
 
 export const alias = macroAlias(EmberAlias);
