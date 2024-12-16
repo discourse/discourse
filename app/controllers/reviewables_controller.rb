@@ -45,6 +45,7 @@ class ReviewablesController < ApplicationController
       type
       sort_order
       flagged_by
+      score_type
     ].each { |filter_key| filters[filter_key] = params[filter_key] }
 
     total_rows = Reviewable.list_for(current_user, **filters).count
@@ -73,6 +74,8 @@ class ReviewablesController < ApplicationController
           total_rows_reviewables: total_rows,
           types: meta_types,
           reviewable_types: Reviewable.types,
+          score_types:
+            ReviewableScore.types.map { |k, v| { id: v, name: ReviewableScore.type_title(k) } },
           reviewable_count: current_user.reviewable_count,
           unseen_reviewable_count: Reviewable.unseen_reviewable_count(current_user),
         ),

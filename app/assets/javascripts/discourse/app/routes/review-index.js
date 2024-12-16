@@ -39,6 +39,7 @@ export default class ReviewIndex extends DiscourseRoute {
       filterCategoryId: meta.category_id,
       filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
+      scoreTypes: meta.score_types,
       filterUsername: meta.username,
       filterReviewedBy: meta.reviewed_by,
       filterFlaggedBy: meta.flagged_by,

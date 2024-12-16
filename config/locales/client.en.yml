@@ -689,6 +689,9 @@ en:
         refresh: "Refresh"
         status: "Status"
         category: "Category"
+        score_type:
+          title: "Reason"
+          all: "(all reasons)"
         orders:
           score: "Score"
           score_asc: "Score (reverse)"

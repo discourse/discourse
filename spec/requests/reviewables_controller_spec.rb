@@ -130,6 +130,31 @@ RSpec.describe ReviewablesController do
         end
       end
 
+      it "supports filtering by flag reason" do
+        # this is not flagged by the user
+        reviewable = Fabricate(:reviewable)
+        reviewable.reviewable_scores.create!(
+          user: admin,
+          score: 1000,
+          status: "pending",
+          reviewable_score_type: 1,
+        )
+
+        reviewable = Fabricate(:reviewable)
+        user = Fabricate(:user)
+        reviewable.reviewable_scores.create!(
+          user: user,
+          score: 1000,
+          status: "pending",
+          reviewable_score_type: 2,
+        )
+
+        get "/review.json?score_type=1"
+        expect(response.code).to eq("200")
+        json = response.parsed_body
+        expect(json["reviewables"].length).to eq(1)
+      end
+
       it "supports filtering by flagged_by" do
         # this is not flagged by the user
         reviewable = Fabricate(:reviewable)
