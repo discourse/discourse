@@ -11,7 +11,8 @@
 
 body.login-page,
 body.signup-page,
-body.invite-page {
+body.invite-page,
+body.password-reset-page {
   .powered-by-discourse,
   .above-main-container-outlet {
     display: none;
@@ -39,7 +40,8 @@ body.signup-page {
 
 .login-fullpage,
 .signup-fullpage,
-.invites-show {
+.invites-show,
+.password-reset-page {
   .signup-body,
   .login-body {
     display: flex;
@@ -402,3 +404,12 @@ body.signup-page {
     }
   }
 }
+
+// .invite-error {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   .error-image {
+//     margin-bottom: 1em;
+//   }
+// }

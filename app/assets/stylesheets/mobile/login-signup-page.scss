@@ -11,7 +11,8 @@
 
 .login-fullpage,
 .signup-fullpage,
-.invites-show {
+.invites-show,
+.password-reset-page {
   justify-content: flex-start;
 
   html.keyboard-visible:not(.ios-device) & {
@@ -214,5 +215,11 @@
 
   #login-form {
     padding-bottom: 0;
+  }
+}
+
+.password-reset-page {
+  .login-left-side {
+    padding: 1rem;
   }
 }

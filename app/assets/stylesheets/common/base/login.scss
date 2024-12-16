@@ -33,30 +33,27 @@ body.invite-page {
   // the second button can wrap in some locales, and this helps alignment
 }
 
-.password-reset {
-  .instructions {
-    label {
-      color: var(--primary-medium);
-    }
-  }
-  #new-account-password {
-    width: 15em;
-  }
-  .tip {
-    margin: 0 0 0.5em;
-  }
-  .toggle-password-mask {
-    margin-left: 0.25em;
-  }
-}
-
 .password-reset-page {
   .caps-lock-warning {
     display: inline;
   }
   .change-password-form {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    input {
+      padding: 0.75em 0.77em;
+      min-width: 250px;
+      margin-bottom: 0.25em;
+      width: 100%;
+    }
+    .input {
+      position: relative;
+    }
     .tip {
       display: block;
+      margin: 0 0 0.5em;
     }
   }
 }
