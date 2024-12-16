@@ -5429,7 +5429,7 @@ en:
                 label: "Hot"
                 description: "Surfaces trending topics by blending recent and overall popularity, showcases what members are talking about in your community right now"
               categories_and_latest_topics:
-                label: "Categories with latest Topics"
+                label: "Categories with latest topics"
                 description: "Combines the recently active topics across all categories with a list of categories, their description, and total topics"
               categories_boxes:
                 label: "Category boxes"
