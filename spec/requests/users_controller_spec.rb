@@ -1827,7 +1827,7 @@ RSpec.describe UsersController do
 
       it "raises an error without a new_username param" do
         put "/u/#{user.username}/preferences/username.json", params: { username: user.username }
-        expect(response.status).to eq(400)
+        expect(response).to be_bad_request
         expect(user.reload.username).to eq(old_username)
       end
 
@@ -1843,7 +1843,7 @@ RSpec.describe UsersController do
       it "raises an error when change_username fails" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "@" }
 
-        expect(response.status).to eq(422)
+        expect(response).to be_unprocessable
 
         body = response.parsed_body
 
@@ -1857,7 +1857,7 @@ RSpec.describe UsersController do
       it "should succeed in normal circumstances" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(200)
+        expect(response).to be_successful
         expect(user.reload.username).to eq(new_username)
       end
 
@@ -1876,6 +1876,7 @@ RSpec.describe UsersController do
         SiteSetting.reserved_usernames = "reserved"
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+        expect(response).to be_unprocessable
 
         expect(response.parsed_body["errors"].first).to include(I18n.t("login.reserved_username"))
       end
@@ -1885,6 +1886,7 @@ RSpec.describe UsersController do
         SiteSetting.reserved_usernames = "reserved"
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+        expect(response).to be_successful
 
         expect(response.parsed_body["username"]).to eq("reserved")
       end
@@ -1895,6 +1897,7 @@ RSpec.describe UsersController do
         Fabricate(:user, username: "reserved")
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+        expect(response).to be_unprocessable
 
         expect(response.parsed_body["errors"].first).to include("Username must be unique")
       end
@@ -1920,7 +1923,7 @@ RSpec.describe UsersController do
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(200)
+        expect(response).to be_successful
         expect(
           UserHistory.where(
             action: UserHistory.actions[:change_username],
@@ -1946,7 +1949,7 @@ RSpec.describe UsersController do
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(422)
+        expect(response).to be_unprocessable
         expect(response.parsed_body["errors"].first).to include(
           I18n.t("errors.messages.auth_overrides_username"),
         )
@@ -2002,10 +2005,8 @@ RSpec.describe UsersController do
         before { sign_in(admin) }
 
         context "when user already exists" do
-          before do
-            Fabricate(:user, username: "reserved")
-            get "/u/check_username.json", params: { username: "reserved" }
-          end
+          fab!(:user) { Fabricate(:user, username: "reserved") }
+          before { get "/u/check_username.json", params: { username: "reserved" } }
           include_examples "when username is unavailable"
         end
 

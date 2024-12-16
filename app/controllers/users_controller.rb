@@ -268,8 +268,11 @@ class UsersController < ApplicationController
   def username
     params.require(:new_username)
 
-    if clashing_with_existing_route?(params[:new_username]) ||
-         (User.reserved_username?(params[:new_username]) && !current_user.admin?)
+    availability =
+      UsernameCheckerService.new(
+        allow_reserved_username: current_user&.admin?,
+      ).check_username_availability(params[:new_username], nil)
+    if clashing_with_existing_route?(params[:new_username]) || !availability[:available]
       return render_json_error(I18n.t("login.reserved_username"))
     end
 
@@ -677,8 +680,8 @@ class UsersController < ApplicationController
       return fail_with("login.wrong_invite_code")
     end
 
-    if clashing_with_existing_route?(params[:username]) ||
-         User.reserved_username?(params[:username])
+    availability = UsernameCheckerService.new.check_username_availability(params[:username], nil)
+    if clashing_with_existing_route?(params[:username]) || !availability[:available]
       return fail_with("login.reserved_username")
     end
 
