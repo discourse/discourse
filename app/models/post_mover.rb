@@ -462,7 +462,7 @@ class PostMover
 
     # copy post_timings for shifted posts to a temp table using the new_post_number
     # they'll be copied back after delete_invalid_post_timings makes room for them
-    DB.exec(<<~SQL, post_ids: @post_ids_after_move)
+    DB.exec <<~SQL
       CREATE TEMPORARY TABLE temp_post_timings ON COMMIT DROP
         AS (
           SELECT pt.topic_id, mp.new_post_number as post_number, pt.user_id, pt.msecs
@@ -479,6 +479,8 @@ class PostMover
     DB.exec <<~SQL
       INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
       SELECT DISTINCT topic_id, user_id, post_number, msecs FROM temp_post_timings
+      ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
+        SET msecs = GREATEST(post_timings.msecs, excluded.msecs)
     SQL
   end
 
