@@ -215,18 +215,6 @@
   &.btn:hover .d-icon {
     color: #000;
   }
-  &.google_oauth2 {
-    background: var(--google);
-    color: #333;
-    // non-FA SVG icon for Google in login-buttons.hbs
-    .d-icon {
-      opacity: 0.9;
-    }
-    &:hover,
-    &:focus {
-      color: inherit;
-    }
-  }
 
   &.cas {
     .d-icon {
