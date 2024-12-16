@@ -33,7 +33,7 @@ module Email
       existing = node["style"]
       if existing.present?
         # merge styles
-        node["style"] = "#{existing}; #{new_styles}"
+        node["style"] = "#{new_styles}; #{existing}"
       else
         node["style"] = new_styles
       end
