@@ -8,6 +8,10 @@ class ReviewablesController < ApplicationController
   before_action :version_required, only: %i[update perform]
   before_action :ensure_can_see, except: [:destroy]
 
+  around_action :with_deleted_content,
+                only: %i[index show],
+                if: ->(controller) { controller.guardian.is_staff? }
+
   def index
     offset = params[:offset].to_i
 
@@ -317,5 +321,9 @@ class ReviewablesController < ApplicationController
 
   def ensure_can_see
     Guardian.new(current_user).ensure_can_see_review_queue!
+  end
+
+  def with_deleted_content
+    Post.unscoped { Topic.unscoped { PostAction.unscoped { yield } } }
   end
 end

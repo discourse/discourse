@@ -75,6 +75,61 @@ RSpec.describe ReviewablesController do
         expect(json["meta"]["status"]).to eq("pending")
       end
 
+      context "with trashed topics and posts" do
+        fab!(:post1) { Fabricate(:post) }
+        fab!(:reviewable) do
+          Fabricate(
+            :reviewable,
+            target_id: post1.id,
+            target_type: "Post",
+            topic: post1.topic,
+            type: "ReviewableFlaggedPost",
+            category: post1.topic.category,
+          )
+        end
+        fab!(:moderator)
+        let(:topic) { post1.topic }
+
+        fab!(:category_mod) { Fabricate(:user) }
+        fab!(:group)
+        fab!(:group_user) { GroupUser.create!(group_id: group.id, user_id: category_mod.id) }
+        fab!(:mod_group) do
+          CategoryModerationGroup.create!(category_id: post1.topic.category.id, group_id: group.id)
+        end
+
+        it "supports returning information for trashed topics and posts to staff" do
+          sign_in(moderator)
+
+          topic.trash!
+          post1.trash!
+
+          get "/review.json"
+          expect(response.code).to eq("200")
+          json = response.parsed_body
+
+          reviewable_json = json["reviewables"].find { |r| r["id"] == reviewable.id }
+          topic_json = json["topics"].find { |t| t["id"] == topic.id }
+
+          expect(reviewable_json["raw"]).to eq(post1.raw)
+          expect(reviewable_json["deleted_at"]).to be_present
+          expect(topic_json["title"]).to eq(topic.title)
+        end
+
+        it "does not return information for trashed topics and posts to category mods" do
+          SiteSetting.enable_category_group_moderation = true
+          sign_in(category_mod)
+          post1.trash!
+          topic.trash!
+
+          get "/review.json"
+          expect(response.code).to eq("200")
+          json = response.parsed_body
+
+          reviewable_json = json["reviewables"].find { |r| r["id"] == reviewable.id }
+          expect(reviewable_json["raw"]).to be_blank
+        end
+      end
+
       it "supports filtering by flagged_by" do
         # this is not flagged by the user
         reviewable = Fabricate(:reviewable)
