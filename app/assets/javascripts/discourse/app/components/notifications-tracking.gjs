@@ -103,6 +103,7 @@ export default class NotificationsTracking extends Component {
       }}
       @onRegisterApi={{this.registerDmenuApi}}
       @title={{@title}}
+      @autofocus={{false}}
       data-level-id={{this.selectedLevel.id}}
       data-level-name={{this.selectedLevel.key}}
       ...attributes
