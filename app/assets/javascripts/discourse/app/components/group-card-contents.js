@@ -54,12 +54,12 @@ export default class GroupCardContents extends CardContentsBase {
 
   @on("didInsertElement")
   _inserted() {
-    this.appEvents.on("dom:clean", this, this.cleanUp);
+    this.appEvents.on("dom:clean", this, this._close);
   }
 
   @on("didDestroyElement")
   _destroyed() {
-    this.appEvents.off("dom:clean", this, this.cleanUp);
+    this.appEvents.off("dom:clean", this, this._close);
   }
 
   async _showCallback(username) {
@@ -87,10 +87,6 @@ export default class GroupCardContents extends CardContentsBase {
     this.set("group", null);
 
     super._close(...arguments);
-  }
-
-  cleanUp() {
-    this._close();
   }
 
   @action
