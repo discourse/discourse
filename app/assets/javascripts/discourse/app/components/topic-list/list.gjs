@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { array, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -166,13 +166,19 @@ export default class TopicList extends Component {
     return lastVisitedTopic;
   }
 
+  get additionalClasses() {
+    return applyValueTransformer("topic-list-class", [], {
+      topics: this.args.topics,
+    });
+  }
+
   <template>
     {{! template-lint-disable table-groups }}
     <table
       class={{concatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header")
-        (applyValueTransformer "topic-list-class" (array) (hash topics=@topics))
+        this.additionalClasses
       }}
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
