@@ -32,7 +32,7 @@ export default class SmallUserList extends Component {
     {{#if this.users}}
       <PluginOutlet
         @name="small-user-list-internal"
-        @outletArgs={{hash data=this.args}}
+        @outletArgs={{hash data=@data}}
       >
         <div class="clearfix small-user-list" ...attributes>
           <span
