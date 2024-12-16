@@ -22,6 +22,7 @@ module Jobs
         CategoryTagStat,
         User,
         UserAvatar,
+        UserEmail,
         Category,
         TopicThumbnail,
       ].each do |klass|
