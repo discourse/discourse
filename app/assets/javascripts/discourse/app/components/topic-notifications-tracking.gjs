@@ -12,6 +12,7 @@ const TopicNotificationsTracking = <template>
     @title={{i18n "topic.notifications.title"}}
     class="topic-notifications-tracking"
     @levels={{topicLevels}}
+    @suffix={{@suffix}}
   />
 </template>;
 

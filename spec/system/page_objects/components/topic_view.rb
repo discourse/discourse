@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def has_tracking_status?(name)
-        find("#topic-footer-buttons .topic-tracking-trigger[data-level-name='#{name}']")
+        find("#topic-footer-buttons .notifications-tracking-trigger[data-level-name='#{name}']")
       end
     end
   end

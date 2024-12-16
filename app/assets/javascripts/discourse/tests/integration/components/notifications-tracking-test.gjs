@@ -1,6 +1,6 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import NotificationsTracking from "discourse/components/notifications-tracking";
+import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
@@ -22,7 +22,9 @@ module("Integration | Component | TopicTracking", function (hooks) {
   setupRenderingTest(hooks);
 
   test("regular topic notification level descriptions", async function (assert) {
-    await render(<template><NotificationsTracking @levelId={{1}} /></template>);
+    await render(<template>
+      <TopicNotificationsTracking @levelId={{1}} />
+    </template>);
 
     await click(".notifications-tracking-trigger");
 
@@ -47,7 +49,9 @@ module("Integration | Component | TopicTracking", function (hooks) {
   });
 
   test("PM topic notification level descriptions", async function (assert) {
-    await render(<template><NotificationsTracking @levelId={{1}} /></template>);
+    await render(<template>
+      <TopicNotificationsTracking @levelId={{1}} />
+    </template>);
 
     await click(".notifications-tracking-trigger");
 

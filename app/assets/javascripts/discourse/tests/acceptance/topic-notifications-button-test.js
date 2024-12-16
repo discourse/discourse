@@ -1,5 +1,6 @@
-import { click, visit } from "@ember/test-helpers";
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import notificationsTracking from "discourse/tests/helpers/notifications-tracking-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Topic Notifications button", function (needs) {
@@ -13,11 +14,14 @@ acceptance("Topic Notifications button", function (needs) {
 
   test("Updating topic notification level", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-tracking-trigger");
-    await click(".topic-tracking-btn[data-level-id='3']");
+
+    await notificationsTracking().selectLevelId(3);
 
     assert
-      .dom(".topic-tracking-trigger")
-      .hasText("Watching", "displays the right notification level");
+      .notificationsTracking()
+      .hasSelectedLevelName(
+        "watching",
+        "displays the right notification level"
+      );
   });
 });
