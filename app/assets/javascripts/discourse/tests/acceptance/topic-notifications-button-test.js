@@ -1,7 +1,6 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Topic Notifications button", function (needs) {
   needs.user();
@@ -13,24 +12,12 @@ acceptance("Topic Notifications button", function (needs) {
   });
 
   test("Updating topic notification level", async function (assert) {
-    const notificationOptions = selectKit(
-      "#topic-footer-buttons .topic-notifications-options"
-    );
-
     await visit("/t/internationalization-localization/280");
+    await click(".topic-tracking-trigger");
+    await click(".topic-tracking-btn[data-level-id='3']");
 
-    assert.true(
-      notificationOptions.exists(),
-      "displays the notification options button in the topic's footer"
-    );
-
-    await notificationOptions.expand();
-    await notificationOptions.selectRowByValue("3");
-
-    assert.strictEqual(
-      notificationOptions.header().label(),
-      "Watching",
-      "displays the right notification level"
-    );
+    assert
+      .dom(".topic-tracking-trigger")
+      .hasText("Watching", "displays the right notification level");
   });
 });

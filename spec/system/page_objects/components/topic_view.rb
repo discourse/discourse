@@ -12,11 +12,7 @@ module PageObjects
       end
 
       def has_tracking_status?(name)
-        select_kit =
-          PageObjects::Components::SelectKit.new(
-            "#topic-footer-buttons .topic-notifications-options",
-          )
-        expect(select_kit).to have_selected_name(name)
+        find("#topic-footer-buttons .topic-tracking-trigger[data-level-name='#{name}']")
       end
     end
   end
