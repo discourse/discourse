@@ -1,7 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostList from "discourse/components/post-list";
-import { configureEyeline } from "discourse/lib/eyeline";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import postModel from "../../fixtures/post-list";
 
