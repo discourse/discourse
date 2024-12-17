@@ -2,11 +2,11 @@
   <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
 </span>
 
-<AdminPageHeader @hideTabs={{true}}>
+<DPageHeader @hideTabs={{true}}>
   <:breadcrumbs>
     <DBreadcrumbsItem @path="/admin" @label={{i18n "admin.dashboard.title"}} />
   </:breadcrumbs>
-</AdminPageHeader>
+</DPageHeader>
 
 {{#if this.showVersionChecks}}
   <div class="section-top">
