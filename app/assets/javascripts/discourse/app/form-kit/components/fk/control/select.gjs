@@ -15,12 +15,17 @@ const SelectOption = <template>
 export default class FKControlSelect extends Component {
   static controlType = "select";
 
+  get includeNone() {
+    return this.args.field.validation !== "required";
+  }
+
   <template>
     <DSelect
       class="form-kit__control-select"
       disabled={{@field.disabled}}
       @value={{@field.value}}
       @onChange={{@field.set}}
+      @includeNone={{this.includeNone}}
       ...attributes
     >
       {{yield (hash Option=(component SelectOption selected=@field.value))}}
