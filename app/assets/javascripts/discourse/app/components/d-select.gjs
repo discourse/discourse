@@ -46,6 +46,10 @@ export default class DSelect extends Component {
     return this.args.value && this.args.value !== NO_VALUE_OPTION;
   }
 
+  get includeNone() {
+    return this.args.includeNone ?? true;
+  }
+
   <template>
     <select
       value={{@value}}
@@ -53,13 +57,15 @@ export default class DSelect extends Component {
       class="d-select"
       {{on "input" this.handleInput}}
     >
-      <DSelectOption @value={{NO_VALUE_OPTION}}>
-        {{#if this.hasSelectedValue}}
-          {{i18n "none_placeholder"}}
-        {{else}}
-          {{i18n "select_placeholder"}}
-        {{/if}}
-      </DSelectOption>
+      {{#if this.includeNone}}
+        <DSelectOption @value={{NO_VALUE_OPTION}}>
+          {{#if this.hasSelectedValue}}
+            {{i18n "none_placeholder"}}
+          {{else}}
+            {{i18n "select_placeholder"}}
+          {{/if}}
+        </DSelectOption>
+      {{/if}}
 
       {{yield (hash Option=(component DSelectOption selected=@value))}}
     </select>

@@ -1,14 +1,14 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import AdminPageHeader from "admin/components/admin-page-header";
 
-const AdminPageHeaderActionsTestComponent = <template>
-  <div class="admin-page-header-actions-test-component">
+const DPageHeaderActionsTestComponent = <template>
+  <div class="d-page-header-actions-test-component">
     <@actions.Default
       @route="adminBadges.award"
       @routeModels="new"
@@ -19,125 +19,96 @@ const AdminPageHeaderActionsTestComponent = <template>
   </div>
 </template>;
 
-module("Integration | Component | AdminPageHeader", function (hooks) {
+module("Integration | Component | DPageHeader", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("no @titleLabel or @titleLabelTranslated", async function (assert) {
-    await render(<template><AdminPageHeader /></template>);
-    assert.dom(".admin-page-header__title").doesNotExist();
+  test("no @titleLabel", async function (assert) {
+    await render(<template><DPageHeader /></template>);
+    assert.dom(".d-page-header__title").doesNotExist();
   });
 
   test("@titleLabel", async function (assert) {
     await render(<template>
-      <AdminPageHeader @titleLabel="admin.title" />
+      <DPageHeader @titleLabel={{i18n "admin.title"}} />
     </template>);
-    assert
-      .dom(".admin-page-header__title")
-      .exists()
-      .hasText(i18n("admin.title"));
-  });
-
-  test("@titleLabelTranslated", async function (assert) {
-    await render(<template>
-      <AdminPageHeader @titleLabelTranslated="Wow so cool" />
-    </template>);
-    assert.dom(".admin-page-header__title").exists().hasText("Wow so cool");
+    assert.dom(".d-page-header__title").exists().hasText(i18n("admin.title"));
   });
 
   test("@shouldDisplay", async function (assert) {
     await render(<template>
-      <AdminPageHeader
-        @titleLabelTranslated="Wow so cool"
-        @shouldDisplay={{false}}
-      />
+      <DPageHeader @titleLabel="Wow so cool" @shouldDisplay={{false}} />
     </template>);
     assert.dom(".admin-page-header").doesNotExist();
   });
 
   test("renders base breadcrumbs and yielded <:breadcrumbs>", async function (assert) {
     await render(<template>
-      <AdminPageHeader @titleLabel="admin.titile">
+      <DPageHeader @titleLabel={{i18n "admin.titile"}}>
         <:breadcrumbs>
           <DBreadcrumbsItem
             @path="/admin/badges"
             @label={{i18n "admin.badges.title"}}
           />
         </:breadcrumbs>
-      </AdminPageHeader>
+      </DPageHeader>
     </template>);
 
     assert
-      .dom(".admin-page-header__breadcrumbs .d-breadcrumbs__item")
-      .exists({ count: 2 });
+      .dom(".d-page-header__breadcrumbs .d-breadcrumbs__item")
+      .exists({ count: 1 });
     assert
-      .dom(".admin-page-header__breadcrumbs .d-breadcrumbs__item")
-      .hasText(i18n("admin_title"));
-    assert
-      .dom(".admin-page-header__breadcrumbs .d-breadcrumbs__item:last-child")
+      .dom(".d-page-header__breadcrumbs .d-breadcrumbs__item:last-child")
       .hasText(i18n("admin.badges.title"));
   });
 
-  test("no @descriptionLabel and no @descriptionLabelTranslated", async function (assert) {
-    await render(<template><AdminPageHeader /></template>);
-    assert.dom(".admin-page-header__description").doesNotExist();
+  test("no @descriptionLabel", async function (assert) {
+    await render(<template><DPageHeader /></template>);
+    assert.dom(".d-page-header__description").doesNotExist();
   });
 
   test("@descriptionLabel", async function (assert) {
     await render(<template>
-      <AdminPageHeader @descriptionLabel="admin.badges.description" />
+      <DPageHeader @descriptionLabel={{i18n "admin.badges.description"}} />
     </template>);
     assert
-      .dom(".admin-page-header__description")
+      .dom(".d-page-header__description")
       .exists()
       .hasText(i18n("admin.badges.description"));
   });
 
-  test("@descriptionLabelTranslated", async function (assert) {
-    await render(<template>
-      <AdminPageHeader
-        @descriptionLabelTranslated="Some description which supports <strong>HTML</strong>"
-      />
-    </template>);
-    assert
-      .dom(".admin-page-header__description")
-      .exists()
-      .hasText("Some description which supports HTML");
-    assert.dom(".admin-page-header__description strong").exists();
-  });
-
   test("no @learnMoreUrl", async function (assert) {
-    await render(<template><AdminPageHeader /></template>);
-    assert.dom(".admin-page-header__learn-more").doesNotExist();
+    await render(<template><DPageHeader /></template>);
+    assert.dom(".d-page-header__learn-more").doesNotExist();
   });
 
   test("@learnMoreUrl", async function (assert) {
     await render(<template>
-      <AdminPageHeader
-        @descriptionLabel="admin.badges.description"
+      <DPageHeader
+        @descriptionLabel={{i18n "admin.badges.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/96331"
       />
     </template>);
-    assert.dom(".admin-page-header__learn-more").exists();
+    assert.dom(".d-page-header__learn-more").exists();
     assert
-      .dom(".admin-page-header__learn-more a")
+      .dom(".d-page-header__learn-more a")
       .hasText("Learn more…")
       .hasAttribute("href", "https://meta.discourse.org/t/96331");
   });
 
   test("renders nav tabs in yielded <:tabs>", async function (assert) {
     await render(<template>
-      <AdminPageHeader>
+      <DPageHeader>
         <:tabs>
           <NavItem
             @route="admin.backups.settings"
             @label="settings"
-            class="admin-backups-tabs__settings"
+            class="d-backups-tabs__settings"
           />
         </:tabs>
-      </AdminPageHeader>
+      </DPageHeader>
     </template>);
     assert
-      .dom(".admin-nav-submenu__tabs .admin-backups-tabs__settings")
+      .dom(".d-nav-submenu__tabs .d-backups-tabs__settings")
       .exists()
       .hasText(i18n("settings"));
   });
@@ -149,7 +120,7 @@ module("Integration | Component | AdminPageHeader", function (hooks) {
     };
 
     await render(<template>
-      <AdminPageHeader>
+      <DPageHeader>
         <:actions as |actions|>
           <actions.Primary
             @route="adminBadges.show"
@@ -175,22 +146,22 @@ module("Integration | Component | AdminPageHeader", function (hooks) {
             class="edit-groupings-btn"
           />
         </:actions>
-      </AdminPageHeader>
+      </DPageHeader>
     </template>);
 
     assert
       .dom(
-        ".admin-page-header__actions .admin-page-action-button.new-badge.btn.btn-small.btn-primary"
+        ".d-page-header__actions .d-page-action-button.new-badge.btn.btn-small.btn-primary"
       )
       .exists();
     assert
       .dom(
-        ".admin-page-header__actions .admin-page-action-button.award-badge.btn.btn-small.btn-default"
+        ".d-page-header__actions .d-page-action-button.award-badge.btn.btn-small.btn-default"
       )
       .exists();
     assert
       .dom(
-        ".admin-page-header__actions .admin-page-action-button.edit-groupings-btn.btn.btn-small.btn-danger"
+        ".d-page-header__actions .d-page-action-button.edit-groupings-btn.btn.btn-small.btn-danger"
       )
       .exists();
 
@@ -200,18 +171,14 @@ module("Integration | Component | AdminPageHeader", function (hooks) {
 
   test("@headerActionComponent is rendered with actions arg", async function (assert) {
     await render(<template>
-      <AdminPageHeader
-        @headerActionComponent={{AdminPageHeaderActionsTestComponent}}
-      />
+      <DPageHeader @headerActionComponent={{DPageHeaderActionsTestComponent}} />
     </template>);
 
-    assert
-      .dom(".admin-page-header-actions-test-component .award-badge")
-      .exists();
+    assert.dom(".d-page-header-actions-test-component .award-badge").exists();
   });
 });
 
-module("Integration | Component | AdminPageHeader | Mobile", function (hooks) {
+module("Integration | Component | DPageHeader | Mobile", function (hooks) {
   hooks.beforeEach(function () {
     forceMobile();
   });
@@ -220,7 +187,7 @@ module("Integration | Component | AdminPageHeader | Mobile", function (hooks) {
 
   test("action buttons become a dropdown on mobile", async function (assert) {
     await render(<template>
-      <AdminPageHeader>
+      <DPageHeader>
         <:actions as |actions|>
           <actions.Primary
             @route="adminBadges.show"
@@ -238,19 +205,19 @@ module("Integration | Component | AdminPageHeader | Mobile", function (hooks) {
             class="award-badge"
           />
         </:actions>
-      </AdminPageHeader>
+      </DPageHeader>
     </template>);
 
     assert
       .dom(
-        ".admin-page-header__actions .fk-d-menu__trigger.admin-page-header-mobile-actions-trigger"
+        ".d-page-header__actions .fk-d-menu__trigger.d-page-header-mobile-actions-trigger"
       )
       .exists();
 
-    await click(".admin-page-header-mobile-actions-trigger");
+    await click(".d-page-header-mobile-actions-trigger");
 
     assert
-      .dom(".dropdown-menu.admin-page-header__mobile-actions .new-badge")
+      .dom(".dropdown-menu.d-page-header__mobile-actions .new-badge")
       .exists();
   });
 });

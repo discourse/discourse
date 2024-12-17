@@ -19,6 +19,8 @@ RSpec.describe UsersController do
   # late for fab! to work.
   let(:user_deferred) { Fabricate(:user, refresh_auto_groups: true) }
 
+  before { SiteSetting.hide_email_address_taken = false }
+
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
       get "/session/hp.json"

@@ -29,6 +29,7 @@ export default class PasswordResetController extends Controller.extend(
   requiresApproval = false;
   redirected = false;
   maskPassword = true;
+  passwordValidationVisible = false;
 
   lockImageUrl = getURL("/images/lock.svg");
 
@@ -63,6 +64,30 @@ export default class PasswordResetController extends Controller.extend(
   @discourseComputed("redirectTo")
   redirectHref(redirectTo) {
     return getURL(redirectTo || "/");
+  }
+
+  @discourseComputed(
+    "passwordValidation.ok",
+    "passwordValidation.reason",
+    "passwordValidationVisible"
+  )
+  showPasswordValidation(
+    passwordValidationOk,
+    passwordValidationReason,
+    passwordValidationVisible
+  ) {
+    return (
+      passwordValidationOk ||
+      (passwordValidationReason && passwordValidationVisible)
+    );
+  }
+
+  @action
+  togglePasswordValidation() {
+    this.set(
+      "passwordValidationVisible",
+      Boolean(this.passwordValidation.reason)
+    );
   }
 
   @action

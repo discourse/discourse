@@ -20,6 +20,30 @@ RSpec.describe TopicQuery do
   fab!(:moderator)
   fab!(:admin)
 
+  before do
+    @plugin_instance = Plugin::Instance.new
+    @validator_blk =
+      lambda do |topics, options, query|
+        # this is notable, we do not send in a relation for suggested
+        # it would force us to completely rewrite SuggestedTopicsBuilder
+        expect(topics.is_a?(ActiveRecord::Relation)).to eq(true) if options[:filter] != :suggested
+        topics
+      end
+    DiscoursePluginRegistry.register_modifier(
+      @plugin_instance,
+      :topic_query_create_list_topics,
+      &@validator_blk
+    )
+  end
+
+  after do
+    DiscoursePluginRegistry.unregister_modifier(
+      @plugin_instance,
+      :topic_query_create_list_topics,
+      &@validator_blk
+    )
+  end
+
   describe "secure category" do
     it "filters categories out correctly" do
       category = Fabricate(:category_with_definition)
@@ -2228,22 +2252,28 @@ RSpec.describe TopicQuery do
     fab!(:topic1) { Fabricate(:topic, created_at: 3.days.ago, bumped_at: 1.hour.ago) }
     fab!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hour.ago) }
 
-    after { DiscoursePluginRegistry.clear_modifiers! }
-
     it "allows changing" do
       original_topic_query = TopicQuery.new(user)
-
-      Plugin::Instance
-        .new
-        .register_modifier(:topic_query_create_list_topics) do |topics, options, topic_query|
+      plugin_instance = Plugin::Instance.new
+      blk =
+        lambda do |topics, options, topic_query|
           expect(topic_query).to eq(topic_query)
           topic_query.options[:order] = "created"
           topics
         end
 
+      DiscoursePluginRegistry.register_modifier(
+        plugin_instance,
+        :topic_query_create_list_topics,
+        &blk
+      )
       expect(original_topic_query.list_latest.topics.map(&:id)).to eq([topic1, topic2].map(&:id))
 
-      DiscoursePluginRegistry.clear_modifiers!
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :topic_query_create_list_topics,
+        &blk
+      )
 
       expect(original_topic_query.list_latest.topics.map(&:id)).to eq([topic2, topic1].map(&:id))
     end

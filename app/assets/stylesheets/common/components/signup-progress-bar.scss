@@ -1,15 +1,22 @@
-$progress-bar-line-width: 2px;
-$progress-bar-circle-size: 1.2rem;
-$progress-bar-icon-size: 0.8rem;
+:root {
+  --progress-bar-line-width: 1px;
+  --progress-bar-circle-size: 0.5rem;
+  --progress-bar-icon-size: 0.25rem;
+}
 
 .signup-progress-bar {
-  width: 100%;
+  width: auto;
   display: flex;
   box-sizing: border-box;
   margin-bottom: 1.2em;
+  gap: 1rem;
+  .account-created &,
+  .activate-account & {
+    margin-inline: 0;
+  }
 
   &__segment {
-    width: 100%;
+    width: auto;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -21,7 +28,7 @@ $progress-bar-icon-size: 0.8rem;
     }
 
     &:last-child {
-      width: $progress-bar-circle-size;
+      width: var(--progress-bar-circle-size);
       .signup-progress-bar__circle {
         transform: translateX(-50%);
         z-index: 1;
@@ -33,66 +40,29 @@ $progress-bar-icon-size: 0.8rem;
     display: flex;
   }
 
-  &__step-text {
-    color: var(--primary-high);
-    white-space: nowrap;
-    width: fit-content;
-    transform: translateX(calc(calc($progress-bar-circle-size / 2) - 50%));
-
-    .signup-progress-bar__segment:first-child & {
-      transform: translateX(0%);
-    }
-
-    .signup-progress-bar__segment:last-child & {
-      transform: translateX(
-        calc(calc($progress-bar-circle-size + $progress-bar-line-width) - 100%)
-      );
-    }
-
-    .--active & {
-      font-weight: bold;
-      color: var(--primary);
-    }
-  }
-
-  &__line {
-    transform: translateY(
-      calc(calc($progress-bar-circle-size + $progress-bar-line-width) / 2)
-    );
-    height: $progress-bar-line-width;
-    width: 100%;
-    background-color: var(--primary-low-mid);
-
-    .--completed & {
-      background-color: var(--success);
-    }
-  }
-
   &__circle {
     flex-shrink: 0;
-    font-size: $progress-bar-icon-size;
+    font-size: var(--progress-bar-icon-size);
     color: var(--secondary);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: $progress-bar-circle-size;
-    width: $progress-bar-circle-size;
+    height: var(--progress-bar-circle-size);
+    width: var(--progress-bar-circle-size);
+    transform: none;
     border-radius: 50%;
-    border: $progress-bar-line-width solid var(--primary-low-mid);
+    border: var(--progress-bar-line-width) solid var(--primary-low-mid);
     background-color: var(--secondary);
 
     .--active & {
+      background-color: var(--success);
       border-color: var(--success);
-      background: var(--success);
-      box-shadow: 0 0 1px 5px var(--success-low);
+      box-shadow: 0 0 1px calc(var(--progress-bar-circle-size) / 2)
+        var(--success-low);
     }
     .--completed & {
       background-color: var(--success);
       border-color: var(--success);
     }
-  }
-
-  &__line.--completed {
-    background-color: var(--success);
   }
 }

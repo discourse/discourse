@@ -3275,6 +3275,7 @@ en:
         other: "%{count} posts in topic"
       create: "New Topic"
       create_disabled_category: "You're not allowed to create topics in this category"
+      create_disabled_tag: "You're not allowed to create topics with this tag"
       create_long: "Create a new Topic"
       open_draft: "Open Draft"
       private_message: "Start a message"

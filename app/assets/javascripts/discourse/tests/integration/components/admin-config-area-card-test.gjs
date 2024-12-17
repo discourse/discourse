@@ -4,7 +4,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 
 module("Integration | Component | AdminConfigAreaCard", function (hooks) {
-  hooks.beforeEach(function () {});
   setupRenderingTest(hooks);
 
   test("renders admin config area card without toggle button", async function (assert) {

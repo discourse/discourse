@@ -33,7 +33,7 @@ module("Integration | Component | webhook-status", function (hooks) {
     assert.dom().hasText("Failed");
   });
 
-  test("iconName", async function (assert) {
+  test("statusLabelClass", async function (assert) {
     const webhook = new CoreFabricators(getOwner(this)).webhook();
     await render(<template>
       <WebhookStatus
@@ -42,30 +42,18 @@ module("Integration | Component | webhook-status", function (hooks) {
       />
     </template>);
 
-    assert.dom(".d-icon-far-circle").exists();
+    assert.dom(".status-label").hasClass("--inactive");
 
     webhook.set("last_delivery_status", 2);
-
     await rerender();
+    assert.dom(".status-label").hasClass("--critical");
 
-    assert.dom(".d-icon-circle-xmark").exists();
-  });
-
-  test("iconClass", async function (assert) {
-    const webhook = new CoreFabricators(getOwner(this)).webhook();
-    await render(<template>
-      <WebhookStatus
-        @deliveryStatuses={{DELIVERY_STATUSES}}
-        @webhook={{webhook}}
-      />
-    </template>);
-
-    assert.dom(".d-icon").hasClass("text-muted");
-
-    webhook.set("last_delivery_status", 2);
-
+    webhook.set("last_delivery_status", 3);
     await rerender();
+    assert.dom(".status-label").hasClass("--success");
 
-    assert.dom(".d-icon").hasClass("text-danger");
+    webhook.set("last_delivery_status", 4);
+    await rerender();
+    assert.dom(".status-label").hasClass("--inactive");
   });
 });
