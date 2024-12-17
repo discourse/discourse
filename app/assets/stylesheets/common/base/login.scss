@@ -61,13 +61,17 @@ body.invite-page {
   }
 }
 
+.signup-fullpage .input-group input[type="password"] {
+  padding-right: 3em;
+}
+
 .toggle-password-mask {
-  align-self: start;
-  line-height: 1.4; // aligns with input description text
+  position: absolute;
+  right: 0;
+  padding: 0.75em 0.77em; // alligns with input padding
   .ios-device & {
     // reset form-item-sizing mixin styles
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: 0.7em;
     font-size: var(--font-0);
   }
 }
