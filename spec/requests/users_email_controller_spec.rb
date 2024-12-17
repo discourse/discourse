@@ -208,6 +208,8 @@ RSpec.describe UsersEmailController do
         fab!(:other_user) { Fabricate(:user, email: "case.insensitive@gmail.com") }
 
         context "when hiding taken e-mails" do
+          before { SiteSetting.hide_email_address_taken = true }
+
           it "raises an error" do
             put "/u/#{user.username}/preferences/email.json",
                 params: {
