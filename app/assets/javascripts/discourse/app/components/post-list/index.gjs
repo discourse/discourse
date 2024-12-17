@@ -1,3 +1,24 @@
+/**
+ * A component that renders a list of posts
+ *
+ * @component PostList
+ *
+ * @args {Array<Object>} posts - The array of post objects to display
+ * @args {Function} fetchMorePosts - A function that fetches more posts. Must return a Promise that resolves to an array of new posts.
+ * @args {String} emptyText (optional) - Custom text to display when there are no posts
+ * @args {String|Array} additionalItemClasses (optional) - Additional classes to add to each post list item
+ * @args {String} titleAriaLabel (optional) - Custom Aria label for the post title
+ *
+ * @template Usage Example:
+ * ```
+ * <PostList
+ *    @posts={{this.posts}}
+ *    @fetchMorePosts={{this.loadMorePosts}}
+ *    @emptyText={{i18n "custom_identifier.empty"}}
+ *    @additionalItemClasses="custom-class"
+ * />
+ * ```
+ */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
