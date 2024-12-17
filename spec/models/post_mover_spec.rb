@@ -2898,7 +2898,7 @@ RSpec.describe PostMover do
         ).to eq(true)
       end
 
-      it "creates the moderator message in the correct position" do
+      it "creates the moderator message in the correct position for partial move" do
         PostMover.new(
           original_topic,
           Discourse.system_user,
@@ -2908,11 +2908,34 @@ RSpec.describe PostMover do
           },
         ).to_topic(destination_topic.id)
 
-        moderator_post =
-          original_topic.reload.ordered_posts.find_by(post_number: second_post.post_number + 1) # the next post
-        expect(moderator_post).to be_present
-        expect(moderator_post.post_type).to eq(Post.types[:small_action])
-        expect(moderator_post.action_code).to eq("split_topic")
+        # Moderator post is right after the second_post since it was the last post moved
+        expect(
+          original_topic.ordered_posts.find_by(
+            post_number: second_post.post_number + 1,
+            post_type: Post.types[:small_action],
+            action_code: "split_topic",
+          ),
+        ).to be_present
+      end
+
+      it "creates the moderator message in the correct position for full move" do
+        small_action = Fabricate(:small_action, topic: original_topic)
+        PostMover.new(
+          original_topic,
+          Discourse.system_user,
+          [op.id, first_post.id, second_post.id, third_post.id],
+          options: {
+            freeze_original: true,
+          },
+        ).to_topic(destination_topic.id)
+
+        expect(
+          original_topic.ordered_posts.find_by(
+            post_number: small_action.post_number + 1,
+            post_type: Post.types[:small_action],
+            action_code: "split_topic",
+          ),
+        ).to be_present
       end
 
       context "with `post_mover_create_moderator_post` modifier" do
