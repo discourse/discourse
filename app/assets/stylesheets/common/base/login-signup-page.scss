@@ -13,9 +13,23 @@ body.login-page,
 body.signup-page,
 body.invite-page,
 body.password-reset-page {
-  & ~ .powered-by-discourse,
+  .powered-by-discourse,
   .above-main-container-outlet {
     display: none;
+  }
+  #main-outlet {
+    padding: 0;
+  }
+  .d-header {
+    box-shadow: none;
+    border: none;
+    background-color: var(--secondary);
+  }
+  .d-header .home-logo-wrapper-outlet {
+    width: 100%;
+  }
+  .d-header .title a {
+    margin: 0 auto;
   }
 }
 
@@ -51,6 +65,7 @@ body.signup-page {
 
     &__existing-account,
     &__no-account-yet {
+      font-size: var(--font-down-1);
       color: var(--primary-medium);
     }
 
@@ -209,6 +224,7 @@ body.signup-page {
 
     .btn-social {
       border: 1px solid var(--primary-low);
+      padding: 0.75em 0.77em; // matches input padding
     }
   }
 

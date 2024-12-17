@@ -200,11 +200,8 @@
 .btn-social {
   color: #000;
   background: #fff;
-  border: 1px solid transparent;
   border-radius: var(--d-border-radius);
-  &:hover,
   &:focus {
-    box-shadow: var(--shadow-card);
     outline: 1px solid #000;
   }
   &[href] {
@@ -218,19 +215,6 @@
   &.btn:hover .d-icon {
     color: #000;
   }
-  &.google_oauth2 {
-    background: var(--google);
-    color: #333;
-    // non-FA SVG icon for Google in login-buttons.hbs
-    .d-icon {
-      opacity: 0.9;
-    }
-    &:hover,
-    &:focus {
-      color: inherit;
-    }
-  }
-
   &.cas {
     .d-icon {
       color: var(--cas);
