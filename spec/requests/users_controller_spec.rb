@@ -19,6 +19,8 @@ RSpec.describe UsersController do
   # late for fab! to work.
   let(:user_deferred) { Fabricate(:user, refresh_auto_groups: true) }
 
+  before { SiteSetting.hide_email_address_taken = false }
+
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
       get "/session/hp.json"
@@ -1013,8 +1015,6 @@ RSpec.describe UsersController do
     end
 
     context "when creating as active" do
-      before { SiteSetting.hide_email_address_taken = false }
-
       it "won't create the user as active" do
         post "/u.json", params: post_user_params.merge(active: true)
         expect(response.status).to eq(200)
@@ -2044,8 +2044,6 @@ RSpec.describe UsersController do
   end
 
   describe "#check_email" do
-    before { SiteSetting.hide_email_address_taken = false }
-
     it "returns success if hide_email_address_taken is true" do
       SiteSetting.hide_email_address_taken = true
 
