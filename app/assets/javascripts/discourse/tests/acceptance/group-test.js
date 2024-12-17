@@ -29,7 +29,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     await click(".nav-pills li a[title='Activity']");
 
-    assert.dom(".user-stream-item").exists("lists stream items");
+    assert.dom(".post-list-item").exists("lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
@@ -38,14 +38,14 @@ acceptance("Group - Anonymous", function (needs) {
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
-    assert.dom(".user-stream-item").exists("lists stream items");
+    assert.dom(".post-list-item").exists("lists stream items");
     assert
       .dom(".nav-pills li a[title='Edit Group']")
       .doesNotExist("does not show messages tab if user is not admin");
     assert
       .dom(".nav-pills li a[title='Logs']")
       .doesNotExist("does not show Logs tab if user is not admin");
-    assert.dom(".user-stream-item").exists("lists stream items");
+    assert.dom(".post-list-item").exists("lists stream items");
 
     const groupDropdown = selectKit(".group-dropdown");
     await groupDropdown.expand();
@@ -268,7 +268,7 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g/discourse/activity/posts");
 
     assert
-      .dom(".user-stream-item a.avatar-link")
+      .dom(".post-list-item a.avatar-link")
       .hasAttribute(
         "href",
         "/u/awesomerobot",

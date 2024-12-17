@@ -76,7 +76,7 @@ export default class PostList extends Component {
             @titleAriaLabel={{@titleAriaLabel}}
           />
         {{else}}
-          <div>{{this.emptyText}}</div>
+          <div class="post-list__empty-text">{{this.emptyText}}</div>
         {{/each}}
       </div>
       <ConditionalLoadingSpinner @condition={{this.loading}} />
