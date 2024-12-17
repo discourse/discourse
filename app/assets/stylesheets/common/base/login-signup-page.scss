@@ -256,7 +256,8 @@ body.signup-page {
     &.bad {
       color: var(--danger);
     }
-    &.has-tip {
+    &.good,
+    &.bad {
       max-height: 50px;
       opacity: 1;
     }
