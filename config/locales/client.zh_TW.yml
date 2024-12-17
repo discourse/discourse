@@ -346,6 +346,8 @@ zh_TW:
     continue: "繼續"
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
+    select_placeholder: "選取…"
+    none_placeholder: "無"
     banner:
       close: "關閉此橫幅"
       edit: "編輯"
@@ -456,6 +458,8 @@ zh_TW:
         refresh: "重新整理"
         status: "狀態"
         category: "分類"
+        score_type:
+          title: "原因"
         orders:
           score: "分數"
           score_asc: "分數 (反向)"
@@ -944,16 +948,14 @@ zh_TW:
       skip_new_user_tips:
         description: "跳過新使用者登入時的提示和徽章"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
-      color_scheme: "色彩配置"
+      color_scheme: "調色盤"
       color_schemes:
         default_description: "預設佈景主題"
-        dark_instructions: "您可以透過切換您設備的深色模式來預覽深色模式的配色方案。"
         undo: "重置"
         regular: "普通"
         dark: "夜間模式"
         default_dark_scheme: "(網站預設值)"
       dark_mode: "夜間模式"
-      dark_mode_enable: "啟用自動深色模式色彩配置"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
@@ -1420,9 +1422,6 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
-      select:
-        select_placeholder: "選取…"
-        none_placeholder: "無"
       errors:
         required: "必要設定"
         too_short:
@@ -2175,7 +2174,6 @@ zh_TW:
         help: "打開此討論話題列印友善的版本"
       flag_topic:
         title: "檢舉"
-        help: "檢舉此話題，或以私訊通知管理員"
         success_message: "已檢舉此話題。"
       feature_topic:
         title: "擁有這個話題"
@@ -2367,7 +2365,6 @@ zh_TW:
         edit_action: "編輯"
         edit_anonymous: "抱歉，您必須登入以修改貼文。"
         flag_action: "檢舉"
-        flag: "檢舉此貼文或傳送私人通知"
         delete: "刪除此貼文"
         undelete: "復原此貼文"
         share_action: "分享"
@@ -3312,12 +3309,14 @@ zh_TW:
           permalinks: "固定連結"
           trust_levels: "信任等級"
           users: "使用者"
+          groups: "群組"
           user_fields: "使用者欄位"
           watched_words: "已關注的文字"
           legal: "法律"
       appearance:
         title: "外觀"
         sidebar_link:
+          color_schemes: "調色盤"
           emoji: "Emoji"
           navigation: "導覽"
           themes: "佈景主題"

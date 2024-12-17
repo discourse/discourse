@@ -216,8 +216,6 @@ vi:
     failed_to_invite: "Người dùng không thể được mời vào chủ đề này nếu không có tư cách thành viên nhóm ở một trong các nhóm sau: %{group_names}."
     user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
     muted_topic: "Xin lỗi, người dùng đó đã ẩn chủ đề này."
-    receiver_does_not_allow_pm: "Xin lỗi, người dùng đó không cho phép bạn gửi tin nhắn riêng tư cho họ."
-    sender_does_not_allow_pm: "Xin lỗi, bạn không cho phép người dùng đó gửi tin nhắn riêng tư cho bạn."
     user_cannot_see_topic: "%{username} không thể xem chủ đề."
   backup:
     operation_already_running: "Một tiến trình đang được thực hiện. Không thể bắt đầu một tiến trình mới ngay bây giờ."
@@ -861,12 +859,10 @@ vi:
       title: "Thông báo ban quản trị"
       xaxis: "Ngày"
       yaxis: "Số lượng tin nhắn"
-      description: "Số lần người điều hành đã được thông báo riêng bằng một lá cờ."
     notify_user_private_messages:
       title: "Thông báo người dùng"
       xaxis: "Ngày"
       yaxis: "Số lượng tin nhắn"
-      description: "Số lần Thành viên đã được thông báo riêng bởi một lá cờ."
     top_referrers:
       title: "Giới thiệu hàng đầu"
       xaxis: "Người dùng"
@@ -2166,6 +2162,7 @@ vi:
       quoted: '%{username} trích lời bạn trong "%{topic}" - %{site_title}'
       replied: '%{username} trả lời cho bạn trong "%{topic}" - %{site_title}'
       posted: '%{username} gửi bài trong "%{topic}" - %{site_title}'
+      private_message: '%{username} đã gửi cho bạn một tin nhắn cá nhân trong "%{topic}" - %{site_title}'
       linked: '%{username} liên quan đến bài viết của bạn từ "%{topic}" - %{site_title}'
       watching_first_post: '%{username} đã tạo một chủ đề mới "%{topic}" - %{site_title}'
       confirm_title: "Đã bật thông báo - %{site_title}"

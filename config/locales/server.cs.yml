@@ -272,7 +272,6 @@ cs:
     error: "Nastala chyba při nahrávání souboru. Prosím opakujte akci později."
   topic_invite:
     failed_to_invite: "Uživatele nelze pozvat do tohoto tématu, aniž by byl členem jedné z následujících skupin: %{group_names}."
-    not_pm: "Můžete zvát pouze do soukromých zpráv."
     user_exists: "Omlouváme se, uživatel byl již pozván. K tématu můžete pozvat uživatele jen jednou."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
@@ -2166,6 +2165,7 @@ cs:
       quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
       replied: '%{username} vám odpověděl v "%{topic}" - %{site_title}'
       posted: '%{username} přispěl/a do "%{topic}" - %{site_title}'
+      private_message: '%{username} vám poslal soukromou zprávu v "%{topic}" - %{site_title}'
       linked: '%{username} odkázal na vás příspěvek v "%{topic}" - %{site_title}'
       watching_first_post: '%{username} vytvořil nové téma "%{topic}" - %{site_title}'
       confirm_title: "Upozornění zapnuta - %{site_title}"

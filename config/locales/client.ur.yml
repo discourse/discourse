@@ -364,6 +364,7 @@ ur:
     continue: "جاری رکھی"
     switch_to_anon: "گمنام موڈ میں داخل ہوں"
     switch_from_anon: "گمنام موڈ سے باہر نکلیں"
+    none_placeholder: "کوئی نہیں"
     banner:
       close: "اس بینر کو مسترد کریں"
       edit: "ترمیم"
@@ -487,6 +488,8 @@ ur:
         refresh: "رِیفریش"
         status: "سٹیٹس"
         category: "زمرہ"
+        score_type:
+          title: "وجہ"
         orders:
           score: "اسکور"
           score_asc: "اسکور (ریورس)"
@@ -1046,17 +1049,15 @@ ur:
       skip_new_user_tips:
         description: "نئے صارف آن بورڈنگ تجاویز اور بیجز کو چھوڑ دیں"
       theme_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ تھیم بنائیں"
-      color_scheme: "رنگ کی سکیم"
+      color_scheme: "رنگ پیلیٹ"
       color_schemes:
         default_description: "تھیم ڈیفالٹ"
         disable_dark_scheme: "باقاعدہ طور پر"
-        dark_instructions: "آپ اپنے آلے کے ڈارک موڈ کو ٹوگل کرکے ڈارک موڈ کلر سکیم کا جائزہ لے سکتے ہیں۔"
         undo: "رِی سَیٹ"
         regular: "معمولی"
         dark: "ڈارک موڈ"
         default_dark_scheme: "(سائٹ ڈیفالٹ)"
       dark_mode: "سیاہ موڈ"
-      dark_mode_enable: "خودکار ڈارک موڈ کلر سکیم کو فعال کریں۔"
       text_size_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ ٹیکسٹ سائز بنائیں"
       allow_private_messages: "دوسرے صارفین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں"
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
@@ -1624,8 +1625,6 @@ ur:
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
-      select:
-        none_placeholder: "کوئی نہیں"
       errors:
         required: "درکار"
     close: "بند کریں"
@@ -2086,8 +2085,6 @@ ur:
         quoted: "اقتباس کردہ"
         edited: "ترمیم کردہ"
         liked: "نیا لائیک"
-        private_message: "نیا ذاتی پیغام"
-        invited_to_private_message: "ذاتی پیغام کیلئے دعوت دی گئی"
         invitee_accepted: "دعوت قبول کر لی گئی"
         posted: "نئی پوسٹ"
         watching_category_or_tag: "نئی پوسٹ"
@@ -2551,7 +2548,6 @@ ur:
         help: "اس ٹاپک کا \"پرنٹر فرینڈلی\" ورژن کھولیں"
       flag_topic:
         title: "فلَیگ"
-        help: "اس ٹاپک پر توجہ کے لئے نجی طور پر اِسے فلَیگ کریں یا اس کے بارے میں ایک نجی نوٹیفکیشن بھیجیں"
         success_message: "آپ نے کامیابی سے اِس ٹاپک کو فلَیگ کیا"
       make_public:
         title: "پبلک ٹاپک میں تبدیل کریں"
@@ -2795,7 +2791,6 @@ ur:
         edit_action: "ترمیم"
         edit_anonymous: "معذرت، اِس پوسٹ کو ترمیم کرنے کیلیے آپ کا لاگ اِن ہونا ضروری ہے۔"
         flag_action: "فلَیگ"
-        flag: "اس پوسٹ پر توجہ کے لئے اِسے نجی طور پر فلَیگ کریں یا اس کے بارے میں ایک نجی نوٹیفکیشن بھیجیں"
         delete: "اِس پوسٹ کومٹائیں"
         undelete: "اس پوسٹ کو غیر حذف کریں"
         share_action: "شیئر"
@@ -3974,12 +3969,14 @@ ur:
           permalinks: "دائمی لِنکس"
           trust_levels: "ٹرسٹ لَیول"
           users: "صارفین"
+          groups: "گروپس"
           user_fields: "صارف کے لیے دیئے گئے خانے"
           watched_words: "نظر رکھے ہوئے الفاظ"
           legal: "قانونی"
       appearance:
         title: "ظاہری شکل"
         sidebar_link:
+          color_schemes: "رنگ پیلیٹ"
           emoji: "اِیمَوجی"
           navigation: "نیویگیشن"
           themes: "تِھیمز"
@@ -4188,7 +4185,6 @@ ur:
           hide_unused_fields: "اَیڈوانسڈ غیر استعمال شدہ چھپائیں"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
           user_selectable: "صارفین تِھیم کو منتخب کرسکتے ہیں"
-          color_scheme_user_selectable: "رنگ کی سکیم کو صارفین کی طرف سے منتخب کیا جا سکتا ہے"
           auto_update: "ڈسکورس اپ ڈیٹ ہونے پر آٹو اپ ڈیٹ"
           color_scheme: "رنگ پیلیٹ"
           default_light_scheme: "ہلکا (ڈیفالٹ)"

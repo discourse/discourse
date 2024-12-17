@@ -27,7 +27,6 @@ cs:
     errors:
       draft_too_long: "Koncept je příliš dlouhý."
       not_accepting_dms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
-      actor_disallowed_dms: "Rozhodli jste se zabránit uživatelům v zasílání soukromých a přímých zpráv, takže nemůžete vytvářet nové přímé zprávy."
     reviewables:
       actions:
         agree_and_suspend:

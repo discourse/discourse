@@ -497,6 +497,8 @@ nl:
     continue: "Doorgaan"
     switch_to_anon: "Anonieme modus starten"
     switch_from_anon: "Anonieme modus verlaten"
+    select_placeholder: "Selecteren…"
+    none_placeholder: "Geen"
     banner:
       close: "Deze banner sluiten"
       edit: "Bewerken"
@@ -627,6 +629,8 @@ nl:
         refresh: "Vernieuwen"
         status: "Status"
         category: "Categorie"
+        score_type:
+          title: "Reden"
         orders:
           score: "Score"
           score_asc: "Score (omgekeerd)"
@@ -1136,7 +1140,7 @@ nl:
     user_fields:
       none: "(selecteer een optie)"
       required: 'Voer een waarde in voor ''%{name}'''
-      same_as_password: "Je wachtwoord mag niet worden herhaald in andere velden."
+      same_as_password: "Je wachtwoord mag niet worden herhaald in andere velden"
       optional: (optioneel)
     user:
       said: "%{username}:"
@@ -1259,18 +1263,15 @@ nl:
         description: "Introductietips en badges voor nieuwe gebruikers overslaan"
       reset_seen_user_tips: "Gebruikerstips opnieuw weergeven"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
-      color_scheme_default_on_all_devices: "Standaard kleurenschema instellen op al mijn apparaten"
-      color_scheme: "Kleurenschema"
+      color_scheme: "Kleurenpalet"
       color_schemes:
         default_description: "Standaard voor thema"
         disable_dark_scheme: "Hetzelfde als normaal"
-        dark_instructions: "Je kunt een voorbeeld van het kleurenschema van de donkere modus bekijken door de donkere modus van je apparaat in te schakelen."
         undo: "Resetten"
         regular: "Normaal"
         dark: "Donkere modus"
         default_dark_scheme: "(standaard voor website)"
       dark_mode: "Donkere modus"
-      dark_mode_enable: "Automatisch kleurenschema voor donkere modus inschakelen"
       text_size_default_on_all_devices: "Dit de standaard tekstgrootte maken op al mijn apparaten"
       allow_private_messages: "Andere gebruikers mogen mij persoonlijke berichten sturen"
       external_links_in_new_tab: "Alle externe links openen op een nieuw tabblad"
@@ -2050,9 +2051,6 @@ nl:
       optional: optioneel
       errors_summary_title: "Dit formulier bevat fouten:"
       dirty_form: "Je hebt je wijzigingen niet verzonden! Weet je zeker dat je wilt verlaten?"
-      select:
-        select_placeholder: "Selecteren…"
-        none_placeholder: "Geen"
       errors:
         required: "Vereist"
         invalid_url: "Moet een geldige URL zijn"
@@ -2690,8 +2688,6 @@ nl:
         quoted: "geciteerd"
         edited: "bewerkt"
         liked: "nieuwe like"
-        private_message: "nieuw privébericht"
-        invited_to_private_message: "uitgenodigd voor privébericht"
         invitee_accepted: "uitnodiging geaccepteerd"
         posted: "nieuw bericht"
         watching_category_or_tag: "nieuw bericht"
@@ -3313,7 +3309,6 @@ nl:
         help: "Open een printervriendelijke versie van dit topic"
       flag_topic:
         title: "Markeren"
-        help: "geef dit topic een privémarkering om de aandacht erop te vestigen of stuur een privébericht erover"
         success_message: "Je hebt dit topic gemarkeerd."
       make_public:
         title: "Converteren naar openbaar topic"
@@ -3589,7 +3584,6 @@ nl:
         edit_action: "Bewerken"
         edit_anonymous: "Sorry, je moet aangemeld zijn om dit bericht te bewerken."
         flag_action: "Markeren"
-        flag: "geef dit topic een privémarkering of stuur een privébericht erover"
         delete_action: "Bericht verwijderen"
         delete: "dit bericht verwijderen"
         undelete_action: "Verwijderen van bericht ongedaan maken"
@@ -4249,7 +4243,6 @@ nl:
         print: "%{shortcut} Topic afdrukken"
         defer: "%{shortcut} Topic markeren als ongelezen"
         topic_admin_actions: "%{shortcut} Beheeracties voor topic openen"
-        archive_private_message: "%{shortcut} Schakelaar privébericht archiveren"
       search_menu:
         title: "Zoekmenu"
         prev_next: "%{shortcut} Selectie omhoog en omlaag verplaatsen"
@@ -5227,6 +5220,7 @@ nl:
           permalinks: "Permalinks"
           trust_levels: "Vertrouwensniveaus"
           users: "Gebruikers"
+          groups: "Groepen"
           user_fields: "Gebruikersvelden"
           watched_words: "Geobserveerde woorden"
           legal: "Juridisch"
@@ -5236,7 +5230,7 @@ nl:
         sidebar_link:
           font_style: "Tekenstijl"
           site_logo: "Sitelogo"
-          color_schemes: "Kleurenschema's"
+          color_schemes: "Kleurenpaletten"
           emoji: "Emoji"
           navigation: "Navigatie"
           themes: "Thema's"
@@ -5309,8 +5303,6 @@ nl:
           site_contact_name_help: |
             Een gebruikersnaam van een medewerker die wordt gebruikt als afzender voor alle automatische berichten. Als dit leeg wordt gelaten, wordt het standaardaccount van het systeem gebruikt.
           site_contact_group: "Contactgroep site"
-          site_contact_group_help: |
-            De groep die wordt uitgenodigd voor alle automatisch gestuurde privéberichten.
           your_organization: "Je organisatie"
           your_organization_description: "We gebruiken deze informatie in de Gebruiksvoorwaarden en Privacyverklaring om aan te geven wie de site beheert en in welk rechtsgebied."
           company_name: "Naam"
@@ -5585,7 +5577,6 @@ nl:
           hide_unused_fields: "Ongebruikte velden verbergen"
           is_default: "Thema is standaard ingeschakeld"
           user_selectable: "Thema kan door gebruikers worden geselecteerd"
-          color_scheme_user_selectable: "Kleurenschema kan door gebruikers worden geselecteerd"
           auto_update: "Automatisch bijwerken wanneer Discourse wordt bijgewerkt"
           color_scheme: "Kleurenpalet"
           edit_color_scheme: "Kleurenpalet bewerken"

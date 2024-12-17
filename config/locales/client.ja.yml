@@ -442,6 +442,8 @@ ja:
     continue: "続行"
     switch_to_anon: "匿名モードを開始"
     switch_from_anon: "匿名モードを終了"
+    select_placeholder: "選択…"
+    none_placeholder: "なし"
     banner:
       close: "このバナーを閉じる"
       edit: "編集"
@@ -565,6 +567,8 @@ ja:
         refresh: "更新"
         status: "ステータス"
         category: "カテゴリ"
+        score_type:
+          title: "理由"
         orders:
           score: "スコア"
           score_asc: "スコア (昇順)"
@@ -1057,7 +1061,6 @@ ja:
     user_fields:
       none: "(オプションを選択)"
       required: '"%{name}" の値を入力してください'
-      same_as_password: "他のフィールドでパスワードを繰り返し入力してはいけません。"
       optional: (オプション)
     user:
       said: "%{username}:"
@@ -1180,18 +1183,15 @@ ja:
         description: "新規ユーザー向けオンボーディングのヒントとバッジをスキップする"
       reset_seen_user_tips: "ユーザーヒントをもう一度表示する"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトのテーマにする"
-      color_scheme_default_on_all_devices: "デフォルトの色スキームをすべてのデバイスに設定する"
-      color_scheme: "色スキーム"
+      color_scheme: "色パレット"
       color_schemes:
         default_description: "デフォルトのテーマ"
         disable_dark_scheme: "通常と同じ"
-        dark_instructions: "デバイスをダークモードに切り替えると、ダークモードの色スキームをプレビューできます。"
         undo: "リセット"
         regular: "通常"
         dark: "ダークモード"
         default_dark_scheme: "(サイトのデフォルト)"
       dark_mode: "ダークモード"
-      dark_mode_enable: "ダークモードの色スキームを自動的に有効にする"
       text_size_default_on_all_devices: "これをすべてのデバイスのデフォルトのテキストサイズにする"
       allow_private_messages: "ほかのユーザーが私に個人メッセージを送信することを許可する"
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
@@ -1939,9 +1939,6 @@ ja:
       optional: オプション
       errors_summary_title: "このフォームにはエラーがあります:"
       dirty_form: "変更を送信しませんでした！終了してもよろしいですか？"
-      select:
-        select_placeholder: "選択…"
-        none_placeholder: "なし"
       errors:
         required: "必須"
         invalid_url: "有効な URL である必要があります"
@@ -2538,8 +2535,6 @@ ja:
         quoted: "引用"
         edited: "編集"
         liked: "新しい「いいね！」"
-        private_message: "新しい個人メッセージ"
-        invited_to_private_message: "個人メッセージに招待"
         invitee_accepted: "招待が承諾されました"
         posted: "新しい投稿"
         watching_category_or_tag: "新しい投稿"
@@ -3129,7 +3124,6 @@ ja:
         help: "このトピックの印刷バージョンを開く"
       flag_topic:
         title: "通報"
-        help: "このトピックを非公開に通報するか、または非公開の通知を送信する"
         success_message: "このトピックを通報しました。"
       make_public:
         title: "公開トピックに変換"
@@ -3383,7 +3377,6 @@ ja:
         edit_action: "編集"
         edit_anonymous: "この投稿を編集するには、ログインする必要があります。"
         flag_action: "通報"
-        flag: "この投稿を非公開に通報するか、または非公開の通知を送信する"
         delete_action: "投稿を削除"
         delete: "この投稿を削除する"
         undelete_action: "投稿の削除を取り消す"
@@ -4018,7 +4011,6 @@ ja:
         print: "%{shortcut} トピックを印刷"
         defer: "%{shortcut} トピックを未読としてマーク"
         topic_admin_actions: "%{shortcut} トピックの管理者操作を開く"
-        archive_private_message: "%{shortcut} プライベートメッセージのアーカイブ操作を切り替える"
       search_menu:
         title: "検索メニュー"
         prev_next: "%{shortcut} 選択を上下に移動"
@@ -4963,6 +4955,7 @@ ja:
           permalinks: "パーマリンク"
           trust_levels: "信頼レベル"
           users: "ユーザー"
+          groups: "グループ"
           user_fields: "ユーザーフィールド"
           watched_words: "ウォッチ中の語"
           legal: "法関連"
@@ -4972,7 +4965,7 @@ ja:
         sidebar_link:
           font_style: "フォントスタイル"
           site_logo: "サイトのロゴ"
-          color_schemes: "色スキーム"
+          color_schemes: "色パレット"
           emoji: "絵文字"
           navigation: "ナビゲーション"
           themes: "テーマ"
@@ -5045,8 +5038,6 @@ ja:
           site_contact_name_help: |
             自動送信メールの from に使用されるスタッフのユーザー名。空欄の場合、デフォルトのシステムアカウントが使用されます。
           site_contact_group: "サイトの連絡先グループ"
-          site_contact_group_help: |
-            自動的に送信されるすべてのプライベートメッセージに招待されるグループ。
           your_organization: "あなたの組織"
           your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
@@ -5321,7 +5312,6 @@ ja:
           hide_unused_fields: "未使用のフィールドを非表示"
           is_default: "テーマはデフォルトで有効"
           user_selectable: "ユーザーがテーマを選択できる"
-          color_scheme_user_selectable: "ユーザーが色スキームを選択できる"
           auto_update: "Discourse が更新された時に自動更新する"
           color_scheme: "色パレット"
           edit_color_scheme: "色パレットを編集"

@@ -472,6 +472,8 @@ hr:
     continue: "Nastavi"
     switch_to_anon: "Uđi u anonimni mod"
     switch_from_anon: "Napusti neimenovani način"
+    select_placeholder: "Odaberite…"
+    none_placeholder: "Ništa"
     banner:
       close: "Sakrij ovaj element"
       edit: "Izmijeni"
@@ -609,6 +611,8 @@ hr:
         refresh: "Osvježi"
         status: "Status"
         category: "Kategorija"
+        score_type:
+          title: "Razlog"
         orders:
           score: "Ocjena"
           score_asc: "Rezultat (obrnuto)"
@@ -1121,7 +1125,7 @@ hr:
     user_fields:
       none: "(odaberi opciju)"
       required: 'Unesi vrijednost za "%{name}"'
-      same_as_password: "Vaša lozinka ne smije se ponavljati u drugim poljima."
+      same_as_password: "Vaša lozinka ne smije se ponavljati u drugim poljima"
       optional: (opcionalno)
     user:
       said: "%{username}:"
@@ -1240,17 +1244,15 @@ hr:
         description: "Preskoči savjete i značke novog korisnika"
       reset_seen_user_tips: "Ponovno prikaži savjete za korisnike"
       theme_default_on_all_devices: "Postavi ovu temu kao zadanu na svim mojim uređajima"
-      color_scheme: "Shema boja"
+      color_scheme: "Paleta boja"
       color_schemes:
         default_description: "Zadana tema"
         disable_dark_scheme: "Isto kao obična tema"
-        dark_instructions: "Shemu boja tamnog načina možete pregledati prebacivanjem tamnog načina rada uređaja."
         undo: "Resetirati"
         regular: "Stalni član"
         dark: "Tamni način rada"
         default_dark_scheme: "(zadana web lokacija)"
       dark_mode: "Tamni način rada"
-      dark_mode_enable: "Omogućite automatsku shemu boja u tamnom načinu"
       text_size_default_on_all_devices: "Postavi ovu veličinu teksta kao zadanu na svim mojim uređajima"
       allow_private_messages: "Dopustite drugim korisnicima da mi šalju osobne poruke"
       external_links_in_new_tab: "Otvori sve vanjske poveznice u novoj kartici"
@@ -1923,9 +1925,6 @@ hr:
     form_kit:
       reset: Resetirati
       optional: neobvezno
-      select:
-        select_placeholder: "Odaberite…"
-        none_placeholder: "Ništa"
       errors:
         required: "Potrebno"
     close: "Zatvori"
@@ -2526,8 +2525,6 @@ hr:
         quoted: "citirano"
         edited: "uredio"
         liked: "novo sviđanje"
-        private_message: "nova privatna poruka"
-        invited_to_private_message: "pozvan na privatnu poruku"
         invitee_accepted: "poziv prihvaćen"
         posted: "novi post"
         watching_category_or_tag: "novi post"
@@ -3149,7 +3146,6 @@ hr:
         help: "Otvorite verziju ove teme za pisač"
       flag_topic:
         title: "Označi zastavicom"
-        help: "privatno označi ovu temu za pozornost, ili pošalji privatnu obavijest o njoj"
         success_message: "Uspješno ste označili ovu temu zastavicom"
       make_public:
         title: "Pretvori u javnu temu"
@@ -3427,7 +3423,6 @@ hr:
         edit_action: "Izmijeni"
         edit_anonymous: "Žao nam je, morate biti prijavljeni da bi ste izmjenili ovu objavu."
         flag_action: "Označi zastavicom"
-        flag: "privatno označi objavu za pozornost ili pošalji privatnu obavijest o njoj"
         delete: "obriši ovu objavu"
         undelete: "poništi brisanje objave"
         share_action: "Podijelite"
@@ -4751,12 +4746,14 @@ hr:
           permalinks: "Poveznice"
           trust_levels: "Razine povjerenja"
           users: "Korisnika"
+          groups: "Grupe"
           user_fields: "Korisnička polja"
           watched_words: "Gledane riječi"
           legal: "Legalno"
       appearance:
         title: "Izgled"
         sidebar_link:
+          color_schemes: "Palete boja"
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Teme"
@@ -4978,7 +4975,6 @@ hr:
           hide_unused_fields: "Sakrij neiskorištena polja"
           is_default: "Tema je omogućena prema zadanim postavkama"
           user_selectable: "Temu mogu odabrati korisnici"
-          color_scheme_user_selectable: "Shemu boja mogu odabrati korisnici"
           auto_update: "Automatsko ažuriranje kada se diskurs ažurira"
           color_scheme: "Paleta boja"
           default_light_scheme: "Svjetlo (zadano)"

@@ -374,6 +374,8 @@ vi:
     continue: "Tiếp tục"
     switch_to_anon: "Vào chế độ Ẩn danh"
     switch_from_anon: "Thoát chế độ Ẩn danh"
+    select_placeholder: "Chọn…"
+    none_placeholder: "Không có gì"
     banner:
       close: "Ẩn banner này"
       edit: "Sửa"
@@ -492,6 +494,8 @@ vi:
         refresh: "Tải lại"
         status: "Trạng thái"
         category: "Danh mục"
+        score_type:
+          title: "Lý do"
         orders:
           score: "Điểm số"
           score_asc: "Điểm (ngược lại)"
@@ -1039,17 +1043,15 @@ vi:
       skip_new_user_tips:
         description: "Bỏ qua các mẹo và huy hiệu giới thiệu người dùng mới"
       theme_default_on_all_devices: "Đặt giao diện này là mặc định trên tất cả các thiết bị của tôi"
-      color_scheme: "Sơ đồ màu"
+      color_scheme: "Bảng màu"
       color_schemes:
         default_description: "Chủ đề mặc định"
         disable_dark_scheme: "Giống như thông thường"
-        dark_instructions: "Bạn có thể xem trước bảng màu ở chế độ tối bằng cách chuyển sang chế độ tối của thiết bị."
         undo: "Cài lại"
         regular: "Thường xuyên"
         dark: "Chế độ tối"
         default_dark_scheme: "(trang web mặc định)"
       dark_mode: "Chế độ tối"
-      dark_mode_enable: "Bật bảng màu chế độ tối tự động"
       text_size_default_on_all_devices: "Đặt đây làm kích thước văn bản mặc định trên tất cả các thiết bị của tôi"
       allow_private_messages: "Cho phép người dùng khác gửi tin nhắn cá nhân cho tôi"
       external_links_in_new_tab: "Mở tất cả liên kết bên ngoài trong thẻ mới"
@@ -1608,9 +1610,6 @@ vi:
     form_kit:
       reset: Cài lại
       optional: tùy chọn
-      select:
-        select_placeholder: "Chọn…"
-        none_placeholder: "Không có gì"
       errors:
         required: "Bắt buộc"
         too_short:
@@ -2089,8 +2088,6 @@ vi:
         quoted: "trích dẫn"
         edited: "đã chỉnh sửa"
         liked: "lượt thích mới"
-        private_message: "tin nhắn riêng mới"
-        invited_to_private_message: "được mời vào tin nhắn riêng tư"
         invitee_accepted: "lời mời được chấp nhận"
         posted: "bài viết mới"
         watching_category_or_tag: "bài viết mới"
@@ -2584,7 +2581,6 @@ vi:
         help: "Mở phiên bản thân thiện với máy in của chủ đề này"
       flag_topic:
         title: "Gắn cờ"
-        help: "đánh dấu riêng tư chủ đề này cho sự chú ý hoặc gửi một thông báo riêng về nó"
         success_message: "Bạn đã đánh dấu thành công chủ đề này"
       make_public:
         title: "Chuyển đổi sang chủ đề công khai"
@@ -2819,7 +2815,6 @@ vi:
         edit_action: "Sửa"
         edit_anonymous: "Xin lỗi, nhưng bạn cần đăng nhập để sửa bài viết này."
         flag_action: "Gắn cờ"
-        flag: "đánh dấu bài viết này để tạo chú ý hoặc gửi một thông báo riêng về nó"
         delete: "xóa bài viết này"
         undelete: "hủy xóa bài viết này"
         share_action: "Chia sẻ"
@@ -4031,12 +4026,14 @@ vi:
           permalinks: "Liên kết cố định"
           trust_levels: "Độ tin tưởng"
           users: "Thành viên"
+          groups: "Nhóm"
           user_fields: "Trường tài khoản"
           watched_words: "Từ đã xem"
           legal: "Legal"
       appearance:
         title: "Ngoại hình"
         sidebar_link:
+          color_schemes: "Bảng màu"
           emoji: "Emoji"
           navigation: "Điều hướng"
           themes: "Themes"
@@ -4255,7 +4252,6 @@ vi:
           hide_unused_fields: "Ẩn các trường không sử dụng"
           is_default: "Themes được bật theo mặc định"
           user_selectable: "Themes có thể được lựa chọn bởi người dùng"
-          color_scheme_user_selectable: "Người dùng có thể lựa chọn bảng màu"
           auto_update: "Tự động cập nhật khi Discourse được cập nhật"
           color_scheme: "Bảng màu"
           default_light_scheme: "Ánh sáng (mặc định)"

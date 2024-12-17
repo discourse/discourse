@@ -429,6 +429,8 @@ te:
     continue: "కొనసాగించండి"
     switch_to_anon: "అనామక మోడ్‌ను నమోదు చేయండి"
     switch_from_anon: "అనామక మోడ్ నుండి నిష్క్రమించండి"
+    select_placeholder: "ఎంచుకోండి…"
+    none_placeholder: "ఏదీ లేదు"
     banner:
       close: "ఈ బ్యానర్‌ని తీసివేయండి"
       edit: "సవరించండి"
@@ -559,6 +561,8 @@ te:
         refresh: "తాజా పరుచు"
         status: "స్థితి"
         category: "వర్గం"
+        score_type:
+          title: "కారణం"
         orders:
           score: "స్కోర్"
           score_asc: "స్కోర్ (రివర్స్)"
@@ -1055,7 +1059,6 @@ te:
     user_fields:
       none: "(ఒక ఎంపికను ఎంచుకోండి)"
       required: 'దయచేసి "%{name}" కోసం విలువను నమోదు చేయండి'
-      same_as_password: "మీ పాస్‌వర్డ్ ఇతర ఫీల్డ్‌లలో పునరావృతం కాకూడదు."
       optional: (ఐచ్ఛికం)
     user:
       said: "%{username}:"
@@ -1173,17 +1176,15 @@ te:
         description: "కొత్త సభ్యుడి ఆన్‌బోర్డింగ్ చిట్కాలు మరియు బ్యాడ్జ్‌లను దాటవేయండి"
       reset_seen_user_tips: "సభ్యుడి చిట్కాలను మళ్లీ చూపండి"
       theme_default_on_all_devices: "నా అన్ని పరికరాలలో దీన్ని డిఫాల్ట్ థీమ్‌గా చేయండి"
-      color_scheme: "రంగు పథకం"
+      color_scheme: "రంగుల పాలెట్"
       color_schemes:
         default_description: "థీమ్ డిఫాల్ట్"
         disable_dark_scheme: "రెగ్యులర్ మాదిరిగానే"
-        dark_instructions: "మీరు మీ పరికరం యొక్క డార్క్ మోడ్‌ను టోగుల్ చేయడం ద్వారా డార్క్ మోడ్ కలర్ స్కీమ్‌ని ప్రివ్యూ చేయవచ్చు."
         undo: "రీసెట్ చేయండి"
         regular: "రెగ్యులరు"
         dark: "డార్క్ మోడ్"
         default_dark_scheme: "(సైట్ డిఫాల్ట్)"
       dark_mode: "డార్క్ మోడ్"
-      dark_mode_enable: "ఆటోమేటిక్ డార్క్ మోడ్ రంగు పథకాన్ని ప్రారంభించండి"
       text_size_default_on_all_devices: "నా అన్ని పరికరాలలో దీన్ని డిఫాల్ట్ వచన పరిమాణంగా చేయండి"
       allow_private_messages: "నాకు వ్యక్తిగత సందేశాలను పంపడానికి ఇతర సభ్యులను అనుమతించండి"
       external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరవండి"
@@ -1856,9 +1857,6 @@ te:
     form_kit:
       reset: రీసెట్ చేయండి
       optional: ఐచ్ఛికం
-      select:
-        select_placeholder: "ఎంచుకోండి…"
-        none_placeholder: "ఏదీ లేదు"
       errors:
         required: "అవసరం"
         invalid_url: "తప్పక చెల్లుబాటు అయ్యే URL అయి ఉండాలి"
@@ -2433,8 +2431,6 @@ te:
         quoted: "కోట్ చేయబడింది"
         edited: "సవరించబడింది"
         liked: "కొత్త ఇష్టం"
-        private_message: "కొత్త ప్రైవేట్ సందేశం"
-        invited_to_private_message: "ప్రైవేట్ సందేశానికి ఆహ్వానించారు"
         invitee_accepted: "ఆహ్వానం ఆమోదించబడింది"
         posted: "కొత్త పోస్ట్"
         watching_category_or_tag: "కొత్త పోస్ట్"
@@ -3037,7 +3033,6 @@ te:
         help: "ఈ విషయం యొక్క ప్రింటర్ అనుకూల సంస్కరణను తెరవండి"
       flag_topic:
         title: "ఫిర్యాదు"
-        help: "ఈ విషయాన్ని ప్రైవేటుగా ఫిర్యాదు చెయ్యండి లేదా ప్రైవేటు నోటిఫికేషన్ పంపండి"
         success_message: "ఈ విషయాన్ని మీరు ఫిర్యాదు చేసారు"
       make_public:
         title: "పబ్లిక్ విషయం గా మార్చండి"
@@ -3308,7 +3303,6 @@ te:
         edit_action: "సవరించండి"
         edit_anonymous: "క్షమించండి, కానీ మీరు ఈ పోస్ట్‌ను సవరించడానికి లాగిన్ అయి ఉండాలి."
         flag_action: "ఫిర్యాదు"
-        flag: "ఈ పోస్ట్‌పై ప్రైవేట్‌గా ఫిర్యాదు చేయండి లేదా దాని గురించి ప్రైవేట్ నోటిఫికేషన్‌ను పంపండి"
         delete_action: "పోస్ట్ తొలగించండి"
         delete: "ఈ పోస్ట్‌ని తొలగించండి"
         undelete: "ఈ పోస్ట్‌ని పునస్తాపించండి"
@@ -3931,7 +3925,6 @@ te:
         mark_watching: "%{shortcut} విషయాన్ని అనుసరించండి"
         print: "%{shortcut} ప్రింట్ విషయం"
         topic_admin_actions: "%{shortcut} విషయం అడ్మిన్ చర్యలను తెరవండి"
-        archive_private_message: "%{shortcut} ప్రైవేట్ సందేశాన్ని ఆర్కైవ్ చేయడాన్ని టోగుల్ చేయండి"
       search_menu:
         title: "శోధన మెను"
         prev_next: "%{shortcut} ఎంపికను పైకి క్రిందికి తరలించండి"
@@ -4849,12 +4842,14 @@ te:
           permalinks: "శాశ్వత లింక్‌లు"
           trust_levels: "నమ్మకపు స్థాయిలు"
           users: "సభ్యులు"
+          groups: "సమూహాలు"
           user_fields: "సభ్య క్షేత్రాలు"
           watched_words: "అనుసరిస్తున్న పదాలు"
           legal: "చట్టపరమైన"
       appearance:
         title: "స్వరూపం"
         sidebar_link:
+          color_schemes: "రంగు పాలెట్లు"
           emoji: "ఇమోజి"
           navigation: "నావిగేషన్"
           themes: "థీమ్స్"
@@ -5101,7 +5096,6 @@ te:
           hide_unused_fields: "ఉపయోగించని ఫీల్డ్‌లను దాచండి"
           is_default: "థీమ్ డిఫాల్ట్‌గా ప్రారంభించబడింది"
           user_selectable: "థీమ్‌ను సభ్యులు ఎంచుకోవచ్చు"
-          color_scheme_user_selectable: "రంగు పథకం సభ్యులు ఎంచుకోవచ్చు"
           auto_update: "డిస్కర్స్ నవీకరించబడినప్పుడు ఆటో నవీకరణ"
           color_scheme: "రంగుల పాలెట్"
           edit_color_scheme: "రంగుల పాలెట్‌ని సవరించండి"

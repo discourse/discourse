@@ -238,8 +238,6 @@ nb_NO:
       bookmark:
         instructions: |-
           Hvis du ønsker å lære mer, velg <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> under og <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bokmerke denne personlige meldingen**. Hvis du gjør dette, venter det kanskje en :gift: på deg i fremtiden!
-        reply: |-
-          Utmerket! Nå kan du enkelt finne din vei tilbake til vår private samtale når som helst, rett fra [bokmerkene fanen på din profil](%{bookmark_url}). Bare velg profilbildet ditt øverst til høyre &#8599;
         not_found: |-
           Øh, jeg ser ingen bokmerker noe sted i dette emnet. Fant du bokmerket under hvert innlegg? Bruk "vis mer" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> knappen for å vise flere handlinger ved behov.
       emoji:
@@ -273,14 +271,6 @@ nb_NO:
 
           (Og ja, brukernavnet mitt er stavet _disco_, som i 1970s farsott på dansegulvet. Jeg er en stor [fan av nattelivet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Vi liker våre diskusjoner vennlig, og vi trenger din hjelp til [hold sivilised] (%{guidelines_url}). Hvis du ser et problem, vennligst flagg for privat la forfatteren eller [vår hjelpsomme ansatte] (%{about_url}) vite om det. Det er mange grunner til at du kanskje vil flagge en post, alt fra en uhyggelig emarkerende sak til et tydelig-kuttende samfunnsstandarder brudd. Hvis du velger **Noe Else**, vil du starte en privat meldingsdiskusjon med moderatorer der du kan stille ytterligere spørsmål.
-
-          > :imp: jeg skrev noe stygt her,
-
-          Gå videre og **marker innlegget** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> og velg **Det er upassende ** som grunn!
-        reply: |-
-          [Our staff](%{base_uri}/groups/staff) vil bli varslet privat om ditt flagg. Hvis nok medlemmer markerer et innlegg, vil det automatisk bli skjult som en forholdsregler. (Jeg skrev faktisk ikke et stygt innlegg :angel:, jeg har gått foran og fjernet flagget for nå)
         not_found: |-
           Å nei, det ekkel innlegget mitt har ikke blitt markert som upassende ennå. :worried: Kan du markere det som upassende ved å bruke ** flagget ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ikke glem å bruke Vis mer knapp <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> å avsløre flere handlinger for hvert innlegg.
       search:
@@ -360,12 +350,6 @@ nb_NO:
         reply: |-
           Genialt! Husk at dette fungerer både med kategorier _og_ stikkord, hvis stikkord er aktivert.
       change_topic_notification_level:
-        instructions: |-
-          Alle emner har et varslingsnivå. Det starter på 'normal', som betyr at du normalt bare vil bli varslet om noen snakker direkte til deg.
-
-          Som standard er varslingsnivået på private meldinger satt til det høyeste nivået 'følger', som betyr at du vil få en varsel på alle nye svar. Men du kan overstyre varslingsnivået for _hva du vil_ til 'følger', 'overvåker' eller 'ignorert'.
-
-          La oss prøve å endre varslingsnivået på dette emnet. I bunnen av emnet vil du finne en knapp som viser at du **følger** dette emnet. Kan du endre varslingsnivået til **overvåker**?
         not_found: |-
           Det ser ut til at du fremdeles følger :eyes: dette emnet! Hvis du har problemer med å finne knappen så er den helt i bunnen av dette emnet under de andre knappene.
         reply: |-

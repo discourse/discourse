@@ -234,6 +234,8 @@ be:
         refresh: "абнавіць"
         status: "Статус"
         category: "катэгорыя"
+        score_type:
+          title: "прычына"
         orders:
           score: "кошт"
       scores:
@@ -1099,7 +1101,6 @@ be:
         title: "друк"
       flag_topic:
         title: "Пазначыць"
-        help: "прыватна пазначце гэтую тэму для ўвагі альбо адпраўце асабістае апавяшчэнне пра яе"
         success_message: "privately flag this topic for attention or send a private notification about it..."
       invite_private:
         group_name: "назва групы"
@@ -1637,6 +1638,7 @@ be:
           permalinks: "Сталыя спасылкі"
           trust_levels: "ўзроўні даверу"
           users: "карыстальнікаў"
+          groups: "групы"
           legal: "Legal"
       appearance:
         sidebar_link:

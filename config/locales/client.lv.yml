@@ -330,6 +330,7 @@ lv:
     continue: "Turpināt"
     switch_to_anon: "Ieiet anonīmajā režīmā"
     switch_from_anon: "Iziet no anonīmā režīma"
+    none_placeholder: "Nav"
     banner:
       close: "Aizvērt šo baneri"
       edit: "Labot"
@@ -438,6 +439,8 @@ lv:
         refresh: "Pārlādēt"
         status: "Statuss"
         category: "Sadaļa"
+        score_type:
+          title: "Iemesls"
         orders:
           score: "Rezultāts"
           score_asc: "Rezultāts (otrādi)"
@@ -949,17 +952,14 @@ lv:
       skip_new_user_tips:
         description: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti"
       theme_default_on_all_devices: "Padarīt to par noklusējuma motīvu visās manās ierīcēs"
-      color_scheme: "Krāsu shēma"
       color_schemes:
         default_description: "Tēma pēc noklusējuma"
         disable_dark_scheme: "Tāds pats kā parasts"
-        dark_instructions: "Varat priekšskatīt tumšā režīma krāsu shēmu, pārslēdzot ierīces tumšo režīmu."
         undo: "Atlikt"
         regular: "Regulārs"
         dark: "Tumšais režīms"
         default_dark_scheme: "(vietnes noklusējums)"
       dark_mode: "Tumšais režīms"
-      dark_mode_enable: "Iespējot automātisko tumšā režīma krāsu shēmu"
       text_size_default_on_all_devices: "Padarīt to par noklusējuma teksta izmēru visās manās ierīcēs"
       allow_private_messages: "Atļaut citiem lietotājiem sūtīt man personiskas ziņas"
       external_links_in_new_tab: "Atvērt visas saites jaunā cilnē"
@@ -1462,8 +1462,6 @@ lv:
     form_kit:
       reset: Atlikt
       optional: pēc izvēles
-      select:
-        none_placeholder: "Nav"
       errors:
         required: "Nepieciešams"
     close: "Aizvērt"
@@ -1754,8 +1752,6 @@ lv:
         quoted: "citēts"
         edited: "rediģēts"
         liked: "jauns \"patīk\""
-        private_message: "jauna privāta ziņa"
-        invited_to_private_message: "aicināti uz privātu ziņu"
         invitee_accepted: "ielūgums apstiprināts"
         posted: "jauna ziņa"
         watching_category_or_tag: "jauna ziņa"
@@ -2099,7 +2095,6 @@ lv:
         help: "Atvērt šīs tēmas drukas versiju"
       flag_topic:
         title: "Ziņot"
-        help: "privāti atzīmēt šo tēmu vai nosūtīt privāti ziņojumu par to"
         success_message: "Jūs veiksmīgi ziņojāt par šo tēmu."
       feature_topic:
         title: "Novietot šo tēmu augšgalā"
@@ -2268,7 +2263,6 @@ lv:
         edit_action: "Rediģēt"
         edit_anonymous: "Atvainojiet, bet jums jāienāk forumā, lai rediģētu šo ierakstu."
         flag_action: "Sūdzība"
-        flag: "privāti ziņot par šo ierakstu vai nosūtīt privātu paziņojumu par to"
         delete: "dzēst šo ierakstu"
         undelete: "atcelt šī ieraksta dzēšanu"
         share_action: "Dalīties"
@@ -3015,6 +3009,7 @@ lv:
           permalinks: "Patstāvīgā saite"
           trust_levels: "Uzticības Līmenis"
           users: "Lietotāji"
+          groups: "Grupas"
           user_fields: "Lietotāja lauki"
           watched_words: "Vārdi, kas tiek novēroti"
           legal: "Jurid."

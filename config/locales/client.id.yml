@@ -384,6 +384,7 @@ id:
     continue: "Lanjutkan"
     switch_to_anon: "Masuki Mode Anonim"
     switch_from_anon: "Keluar Mode Anonim"
+    none_placeholder: "Tidak ada"
     banner:
       close: "Abaikan banner ini"
       edit: "Ubah"
@@ -506,6 +507,8 @@ id:
         refresh: "Segarkan"
         status: "Status"
         category: "Kategori"
+        score_type:
+          title: "Alasan"
         orders:
           score: "Skor"
           score_asc: "Skor (dalam urutan terbalik)"
@@ -1034,17 +1037,14 @@ id:
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
       no_messages_title: "Anda tidak memiliki pesan apa pun"
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
-      color_scheme: "Skema warna"
       color_schemes:
         default_description: "Default tema"
         disable_dark_scheme: "Sama seperti reguler"
-        dark_instructions: "Anda dapat melihat pratinjau skema warna mode gelap dengan mengaktifkan mode gelap perangkat Anda."
         undo: "Reset"
         regular: "Umum"
         dark: "Mode gelap"
         default_dark_scheme: "(bawaan situs)"
       dark_mode: "Mode Gelap"
-      dark_mode_enable: "Aktifkan skema warna mode gelap otomatis"
       text_size_default_on_all_devices: "Jadikan ini ukuran teks default di semua perangkat saya"
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
@@ -1453,8 +1453,6 @@ id:
     form_kit:
       reset: Reset
       optional: opsional
-      select:
-        none_placeholder: "Tidak ada"
     close: "Tutup"
     assets_changed_confirm: "Situs ini baru saja menerima pembaruan perangkat lunak. Dapatkan versi terbaru sekarang?"
     logout: "Anda telah keluar."
@@ -1710,7 +1708,6 @@ id:
         replied: "balasan baru"
         quoted: "dikutip"
         liked: "suka baru"
-        private_message: "pesan pribadi baru"
         posted: "tulisan baru"
         watching_category_or_tag: "tulisan baru"
         moved_post: "tulisan dipindahkan"
@@ -2116,7 +2113,6 @@ id:
       actions:
         title: "Aksi"
         defer: "%{shortcut} Tandai topik sebagai belum dibaca"
-        archive_private_message: "%{shortcut} Alihkan arsipkan pesan pribadi"
     badges:
       others_count:
         other: "Diberi kepada orang lain %{count} kali"
@@ -2415,6 +2411,7 @@ id:
         sidebar_link:
           notifications: "Pemberitahuan"
           users: "Pengguna"
+          groups: "Grup"
           moderation_flags: "Bendera Moderasi"
       appearance:
         sidebar_link:

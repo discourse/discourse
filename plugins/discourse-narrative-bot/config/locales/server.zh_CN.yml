@@ -249,8 +249,6 @@ zh_CN:
       bookmark:
         instructions: |-
           如果你想了解更多信息，请选择下面的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 和 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **将此个人消息加入书签**。如果这样做，你未来可能会获得 :gift:！
-        reply: |-
-          太棒了！现在，你可以随时轻松地从[你个人资料上的“书签”标签页](%{bookmark_url})返回我们的不公开对话。只需在右上角 &#8599; 选择你的个人资料照片
         not_found: |-
           哎呀，我没有在此话题中看到任何书签。你看到每个帖子下方的“加入书签”按钮了吗？如果需要，使用“显示更多”<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示更多操作。
       emoji:
@@ -284,14 +282,6 @@ zh_CN:
 
           （是的，我的用户名是 _disco_，和 1970 年流行的舞蹈同名。我[喜欢夜生活](https://www.youtube.com/watch?v=B_wGI3_sGf8)！:dancer:）
       flag:
-        instructions: |-
-          我们都喜欢友善的讨论，我们也需要您的帮助来[一起保持文明](%{guidelines_url})。如果您发现问题，请通过举报来私下告诉作者，或者通知[我们乐于助人的管理人员](%{about_url})。您可能想要举报帖子的原因有很多，从无害的话题拆分建议到明确的社区标准违规。如果您选择 **其他内容**，您将开始与版主的私信讨论，您可以在其中提出更多问题。
-
-          > :imp: 我在这写了些脏话
-
-          **举报此帖子** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 并选择 **不当言论** 作为原因！
-        reply: |-
-          [我们的管理人员](%{base_uri}/groups/staff)将单独收到你的举报通知。如果有足够的社区成员举报帖子，作为预防措施，它也会被自动隐藏。（因为我实际上并没有写一篇讨厌的帖子:angel:，我现在已经移除了举报。）
         not_found: |-
           哦不，我讨厌的帖子还没有被举报为不当言论。:worried: 你可以使用**举报** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 将其举报为不当言论吗？不要忘记使用“显示更多”按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示每个帖子的更多操作。
       search:
@@ -385,12 +375,6 @@ zh_CN:
         reply: |-
           漂亮！记住，这对类别_和_标签（如果已启用）都适用。
       change_topic_notification_level:
-        instructions: |-
-          每个话题都有一个通知级别。默认为“常规”，表示只有别人直接回复你时才会通知你。
-
-          默认情况下，私信中的通知级别被设为最高级别“关注”，即你将收到每个新回复的通知。但是，你可以将任意一个话题的通知级别更改为“关注”、“跟踪”或“已设为免打扰”。
-
-          让我们尝试更改这个话题的通知级别。在话题底部，你可以看到一个表示你正在**关注**此话题的按钮。你可以将通知级别改成**跟踪**吗？
         not_found: |-
           看起来你仍在关注 :eyes: 这个话题！如果你找不到，通知级别按钮位于话题底部。
         reply: |-

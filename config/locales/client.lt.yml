@@ -438,6 +438,7 @@ lt:
     continue: "Tęsti"
     switch_to_anon: "Pasirinkti slaptumo būseną"
     switch_from_anon: "Išjunkti slaptumo būseną"
+    none_placeholder: "Nieko"
     banner:
       close: "Atmesti šį banerį"
       edit: "Redaguoti"
@@ -551,6 +552,8 @@ lt:
         refresh: "Atnaujinti"
         status: "Statusas"
         category: "Kategorija"
+        score_type:
+          title: "Priežastis"
         orders:
           score: "Rezultatas"
           score_asc: "Rezultatas (atvirkščiai)"
@@ -1019,7 +1022,7 @@ lt:
     user_fields:
       none: "(pasirink nustatymą)"
       required: 'Prašome įvesti reikšmę "%{name}”'
-      same_as_password: "Jūsų slaptažodis neturėtų kartotis kituose laukuose."
+      same_as_password: "Jūsų slaptažodis neturėtų kartotis kituose laukuose"
       optional: (pasoronktinai)
     user:
       said: "%{username}:"
@@ -1115,17 +1118,15 @@ lt:
       skip_new_user_tips:
         description: "Praleiskite naujų naudotojų patarimus ir ženklelius"
       theme_default_on_all_devices: "Padarykite tai kaip numatytąją temą visuose mano įrenginiuose"
-      color_scheme: "Spalvų schema"
+      color_scheme: "Spalvų paletė"
       color_schemes:
         default_description: "Tema numatytoji"
         disable_dark_scheme: "Toks pat kaip įprastas"
-        dark_instructions: "Galite peržiūrėti tamsaus režimo spalvų schemą perjungdami įrenginio tamsų režimą."
         undo: "Atstatyti"
         regular: "Nuolatinės"
         dark: "Tamsus režimas"
         default_dark_scheme: "(numatytoji svetainė)"
       dark_mode: "Tamsus režimas"
-      dark_mode_enable: "Įgalinti automatinę tamsaus režimo spalvų schemą"
       text_size_default_on_all_devices: "Padarykite tai numatytuoju teksto dydžiu visuose mano įrenginiuose"
       allow_private_messages: "Leisti kitiems vartotojams siųsti man asmeninius pranešimus"
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
@@ -1676,8 +1677,6 @@ lt:
     form_kit:
       reset: Atstatyti
       optional: pasirinktinai
-      select:
-        none_placeholder: "Nieko"
       errors:
         required: "Privalomi"
     close: "Uždaryti"
@@ -2118,8 +2117,6 @@ lt:
         quoted: "cituojamas"
         edited: "taisytas"
         liked: "naujas patinka"
-        private_message: "nauja privati žinutė"
-        invited_to_private_message: "pakviesti į privačią žinutę"
         invitee_accepted: "kvietimas priimtas"
         posted: "naujas įrašas"
         watching_category_or_tag: "naujas įrašas"
@@ -2573,7 +2570,6 @@ lt:
         help: "Atverti spausdinimui draugišką šios temos versiją"
       flag_topic:
         title: "Uždėk vėliavą"
-        help: "Uždėk temai vėliavą privačiai arba išsiųsk privatų pranešimą apie tai"
         success_message: "Tu sėkmingai uždėjai temai vėliavą."
       make_public:
         title: "Konvertuoti į viešą temą"
@@ -2814,7 +2810,6 @@ lt:
         edit_action: "Redaguoti"
         edit_anonymous: "Apgailestaujame, bet jūs turite būti prisijungęs, kad redaguotumėte šį įrašą."
         flag_action: "Pranešti"
-        flag: "Uždėk įrašui privačią vėliavą arba išsiųsk privatų pranešimą"
         delete: "ištrinti įrašą"
         undelete: "anuliuoti įrašo ištrinimą"
         share_action: "Dalintis"
@@ -3935,12 +3930,14 @@ lt:
           permalinks: "Laikinos Nuorodos"
           trust_levels: "Pasitikėjimo lygiai"
           users: "Vartotojai"
+          groups: "Grupės"
           user_fields: "Vartotojo laukeliai"
           watched_words: "Peržiūrėti Žodžiai"
           legal: "Naudojimosi taisyklės"
       appearance:
         title: "išvaizda"
         sidebar_link:
+          color_schemes: "Spalvų paletės"
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Temos"
@@ -4147,7 +4144,6 @@ lt:
           hide_unused_fields: "Slėpti nenaudojamus laukus"
           is_default: "Tema įgalinta pagal nutylėjimą"
           user_selectable: "Temą gali pasirinkti vartotojai"
-          color_scheme_user_selectable: "Spalvų schemą gali pasirinkti vartotojai"
           auto_update: "Automatinis naujinimas, kai Discourse atnaujinamas"
           color_scheme: "Spalvų paletė"
           default_light_scheme: "Šviesus (numatytasis)"

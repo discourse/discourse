@@ -298,11 +298,8 @@ sv:
     max_redemptions_limit: "bör vara mellan 2 och %{max_limit}."
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
-    not_pm: "Du kan bara bjuda in till privata meddelanden."
     user_exists: "Tyvärr har den användaren redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
     muted_topic: "Tyvärr tystade den användaren detta ämne."
-    receiver_does_not_allow_pm: "Tyvärr tillåter inte den användaren att du skickar privata meddelanden till dem."
-    sender_does_not_allow_pm: "Tyvärr tillåter du inte den användaren att skicka privata meddelanden till dig."
     user_cannot_see_topic: "%{username} kan inte se ämnet."
   backup:
     operation_already_running: "En operation är redan igång och därför kan inte ett nytt jobb snartas just nu."
@@ -1240,12 +1237,10 @@ sv:
       title: "Avisera moderatorer"
       xaxis: "Dag"
       yaxis: "Antal meddelanden"
-      description: "Antal gånger moderatorer har aviserats privat med en flagga."
     notify_user_private_messages:
       title: "Avisera användare"
       xaxis: "Dag"
       yaxis: "Antal meddelanden"
-      description: "Antal gånger användare har aviserats privat med en flagga."
     top_referrers:
       title: "Toppreferenter"
       xaxis: "Användare"
@@ -1612,7 +1607,6 @@ sv:
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     allow_username_in_share_links: "Tillåt att användarnamn omfattas i delningslänkar. Detta är användbart för att tilldela utmärkelser baserat på unika besökare."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om det lämnas tomt används standard-System-kontot."
-    site_contact_group_name: "Ett giltigt gruppnamn som ska bjudas in för alla automatiserade meddelanden."
     send_welcome_message: "Skicka ett välkomstmeddelande till alla nya användare tillsammans med en snabbstartsguide."
     send_tl1_welcome_message: "Skicka nya användare på förtroendenivå 1 ett välkomstmeddelande."
     send_tl2_promotion_message: "Skicka ett meddelande om uppgradering till nya Förtroendenivå 2-användare."
@@ -1837,7 +1831,6 @@ sv:
     title_fancy_entities: "Konvertera vanliga ASCII-tecken till häftiga HTML-enheter i ämnesrubriker, à la SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>http://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
-    default_dark_mode_color_scheme_id: "Färgschemat som används i mörkt läge."
     dark_mode_none: "Inga"
     max_image_size_kb: "Högsta bilduppladdningsstorlek. Konfiguration krävs också i nginx (client_max_body_size) / apache eller proxy. Bilder större än detta eller mindre än client_max_body_size kommer vid uppladdning att ändras i storlek för att passa."
     max_attachment_size_kb: "Högsta storlek på uppladdad bilaga. Konfigurering krävs i nginx (client_max_body_size) / apache eller proxy också."
@@ -2043,7 +2036,6 @@ sv:
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     notify_about_reviewable_item_after: "Om det finns granskningsbara objekt som inte har hanterats efter så många timmar, skicka ett personligt meddelande till moderatorer. Ställ in på 0 för att inaktivera."
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
-    secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
     secure_uploads_max_email_embed_image_size_kb: "Storleksbegränsningen för säkra bilder som kommer att bäddas in i e-postmeddelanden om inställningen för att tillåta inbäddningar för säkra uppladdningar i e-post är aktiverad, 'secure uploads allow embed in emails' . Om inställningen inte är aktiverad har den här inställningen ingen effekt."
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
@@ -2130,7 +2122,6 @@ sv:
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
-    automatically_clean_unused_tags: "Ta dagligen och automatiskt bort taggar som inte används i några ämnen eller privata meddelanden."
     watched_precedence_over_muted: "Avisera mig om ämnen i kategorier eller taggar som jag bevakar och också tillhör ett som jag har tystat"
     company_name: "Namn på ditt företag eller organisation. Om det lämnas tomt tillhandahålls inte användarvillkor eller integritetsmeddelande."
     shared_drafts_category: "Aktivera funktionen Delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin undantas från ämneslistor för personalanvändare."
@@ -4251,8 +4242,6 @@ sv:
       styling:
         title: "Utseende och känsla"
         fields:
-          color_scheme:
-            label: "Färgschema"
           body_font:
             label: "Typsnitt för brödtext"
           heading_font:

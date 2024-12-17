@@ -167,10 +167,8 @@ fi:
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_group:
               label: Ryhmä
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti tämän ryhmän postilaatikossa
             restricted_groups:
               label: Ryhmät
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti jossakin ryhmän postilaatikoista
             ignore_group_members:
               label: Ohita ryhmän jäsenet
               description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen

@@ -250,8 +250,6 @@ nl:
       bookmark:
         instructions: |-
           Als je meer wilt weten, selecteer dan hieronder <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **maak een bladwijzer voor dit privébericht**. Als je dat doet, ligt er misschien een :gift: voor je in het verschiet!
-        reply: |-
-          Uitstekend! Je kunt nu gemakkelijk je weg terug vinden naar ons privégesprek, rechtstreeks vanaf [het bladwijzertabblad in je profiel](%{bookmark_url}). Selecteer simpelweg je profielfoto rechtsboven &#8599;
         not_found: |-
           Oh oh, ik zie geen bladwijzers in dit topic. Heb je de bladwijzer onder elk bericht gevonden? Gebruik Meer weergeven <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> om indien nodig aanvullende acties te onthullen.
       emoji:
@@ -285,14 +283,6 @@ nl:
 
           (En ja, mijn gebruikersnaam spel je _disco_, zoals in de dansgekte van de jaren '70. Ik [hou van het nachtleven!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          We houden van vriendelijke discussies en we hebben je hulp nodig om [het beschaafd te houden](%{guidelines_url}). Als je een probleem ziet, markeer het dan om de auteur of [onze behulpzame medewerkers](%{about_url}) hiervan privé op de hoogte te stellen. Er zijn veel redenen waarom je een bericht zou willen markeren, variërend van een onschuldige suggestie om topics op te splitsen tot een duidelijke schending van de communitynormen. Als je **Iets anders** selecteert, start je een discussie over privéberichten met de moderators waar je verdere vragen kunt stellen.
-
-          > :imp: Ik heb hier iets smerigs geschreven
-
-          Ga je gang en **markeer dit bericht** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> en selecteer **Het is ongepast** als reden!
-        reply: |-
-          [Onze medewerkers](%{base_uri}/groups/staff) worden privé op de hoogte gebracht van je markering. Als genoeg communityleden een bericht markeren, wordt het uit voorzorg ook automatisch verborgen. (Omdat ik eigenlijk geen vervelend bericht :angel: heb geschreven, heb ik de markering voorlopig verwijderd.)
         not_found: |-
           Oh nee, mijn nare bericht is nog niet gemarkeerd als ongepast. :worried: Kun je het als ongepast markeren met behulp van de **markering** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergeet niet om de knop Meer weergeven <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> te gebruiken om meer acties te onthullen voor elk bericht.
       search:
@@ -386,12 +376,6 @@ nl:
         reply: |-
           Uitstekend! Onthoud dat dit werkt voor categorieën _en_ tags, als tags zijn ingeschakeld.
       change_topic_notification_level:
-        instructions: |-
-          Elk topic heeft een meldingsniveau. Het begint bij 'normaal', wat betekent dat je normaal gesproken alleen een melding krijgt als iemand je rechtstreeks aanspreekt.
-
-          Het meldingsniveau voor een privébericht is standaard ingesteld op het hoogste niveau , 'observeren', wat betekent dat je op de hoogte wordt gesteld van elk nieuw antwoord. Maar je kunt het meldingsniveau voor _elk_ topic overschrijven naar 'observeren', 'volgen' of 'gedempt'.
-
-          Laten we proberen het meldingsniveau voor dit topic te wijzigen. Onderaan het topic vind je een knop die aangeeft dat je dit onderwerp **observeert**. Kun je het meldingsniveau wijzigen in **volgen**?
         not_found: |-
           Het lijkt erop dat je dit topic nog steeds :eyes:! Als je moeite hebt het te vinden, de knop voor het meldingsniveau bevindt zich onderaan het topic.
         reply: |-

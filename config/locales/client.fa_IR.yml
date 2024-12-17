@@ -393,6 +393,8 @@ fa_IR:
     continue: "ادامه"
     switch_to_anon: "ورود به حالت ناشناس"
     switch_from_anon: "خروج از حالت ناشناس"
+    select_placeholder: "انتخاب…"
+    none_placeholder: "هیچ کدام"
     banner:
       close: "این بنر را ببند"
       edit: "ویرایش"
@@ -523,6 +525,8 @@ fa_IR:
         refresh: "تازه کردن"
         status: "وضعیت"
         category: "دسته‌بندی"
+        score_type:
+          title: "دلیل"
         orders:
           score: "امتیاز"
           score_asc: "امتیاز (معکوس)"
@@ -988,7 +992,7 @@ fa_IR:
       copied: "کپی شده"
     user_fields:
       none: "(یک گزینه انتخاب کنید)"
-      same_as_password: "رمز عبور شما نباید در قسمت‌های دیگر تکرار شود."
+      same_as_password: "رمز عبور شما نباید در قسمت‌های دیگر تکرار شود"
       optional: (اختیاری)
     user:
       said: "%{username}:"
@@ -1083,7 +1087,6 @@ fa_IR:
       no_notifications_page_title: "شما هنوز هیچ آگاه‌سازی ندارید"
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
-      color_scheme: "طرح رنگ"
       color_schemes:
         default_description: "تم پیش‌فرض"
         undo: "بازنشانی"
@@ -1681,9 +1684,6 @@ fa_IR:
     form_kit:
       reset: بازنشانی
       optional: اختیاری
-      select:
-        select_placeholder: "انتخاب…"
-        none_placeholder: "هیچ کدام"
       errors:
         required: "مورد نیاز"
     close: "بستن"
@@ -2157,8 +2157,6 @@ fa_IR:
         quoted: "نقل قول"
         edited: "ویرایش شده"
         liked: "پسندیده جدید"
-        private_message: "پیام جدید"
-        invited_to_private_message: "به پیام دعوت شده"
         invitee_accepted: "پذیرفتن دعوت"
         posted: "پاسخ جدید"
         watching_category_or_tag: "نوشته جدید"
@@ -2602,7 +2600,6 @@ fa_IR:
         help: "باز کردن حالت قابل چاپ موضوع"
       flag_topic:
         title: "پرچم"
-        help: "پرچم خصوصی برای این موضوع جهت توجه یا برای ارسال آگاه سازی شخصی در باره آن."
         success_message: "شما باموفقیت این موضوع را پرچم زدید"
       make_public:
         title: "تبدیل به مبحث عمومی"
@@ -2812,7 +2809,6 @@ fa_IR:
         edit_action: "ویرایش"
         edit_anonymous: "با عرض پوزش، اما شما برای ویرایش این نوشته باید وارد سیستم شوید."
         flag_action: "پرچم"
-        flag: "پرچم خصوصی این نوشته برا رسیدگی یا ارسال پیام خصوصی در باره آن"
         delete_action: "حذف نوشته"
         delete: "حذف این نوشته"
         undelete: "بازگردانی این نوشته"
@@ -3840,6 +3836,7 @@ fa_IR:
           permalinks: " پیوند دائمی"
           trust_levels: "سطوح اعتماد"
           users: "کاربران"
+          groups: "گروه‌ها"
           user_fields: "زمینه‌های کاربر"
           watched_words: "کلمات تماشا شده"
           legal: "حقوقی"
@@ -3848,7 +3845,6 @@ fa_IR:
         sidebar_link:
           font_style: "نوع قلم"
           site_logo: "آرم سایت"
-          color_schemes: "طرح‌های رنگ"
           emoji: "شکلک"
           navigation: "ناوبری"
           themes: "قالب‌ها"

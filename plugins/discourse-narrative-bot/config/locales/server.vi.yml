@@ -63,8 +63,6 @@ vi:
       bookmark:
         instructions: |-
           Nếu bạn muốn tìm hiểu thêm, hãy chọn nút <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> bên dưới và chọn <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> để **đánh dấu tin nhắn cá nhân này**. Nếu bạn làm như vậy, bạn có thể có một :gift: trong tương lai!
-        reply: |-
-          Tuyệt vời! Giờ đây, bạn có thể dễ dàng tìm đường quay lại cuộc trò chuyện riêng tư của chúng tôi bất kỳ lúc nào, ngay từ [tab dấu trang trên hồ sơ của bạn](%{bookmark_url}). Chỉ cần chọn ảnh hồ sơ của bạn ở phía trên bên phải &#8599;
         not_found: |-
           Rất tiếc, tôi không thấy bất kỳ dấu trang nào trong chủ đề này. Bạn có tìm thấy dấu trang dưới mỗi bài viết không? Sử dụng hiển thị thêm <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> để hiển thị các hành động bổ sung nếu cần.
       emoji:
@@ -97,13 +95,6 @@ vi:
           Tôi không thấy tên mình ở đâu cả :frowning: Bạn có thể thử nhắc lại tôi là `@%{discobot_username}` được không?
 
           (Và vâng, tên người dùng của tôi được đánh vần là _disco_, như trong cơn sốt khiêu vũ của những năm 1970. Tôi [yêu cuộc sống về đêm!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
-      flag:
-        instructions: |-
-          Chúng tôi thích các cuộc thảo luận của chúng tôi thân thiện và chúng tôi cần sự giúp đỡ của bạn để [giữ cho mọi thứ trở nên văn minh](%{guidelines_url}). Nếu bạn thấy vấn đề, vui lòng gắn cờ để cho tác giả hoặc [nhân viên hữu ích của chúng tôi](%{about_url}) biết về vấn đề đó một cách riêng tư. Có nhiều lý do bạn có thể muốn gắn cờ một bài đăng, từ một đề xuất tách chủ đề vô ích đến vi phạm tiêu chuẩn cộng đồng rõ ràng. Nếu bạn chọn **Cái gì đó khác**, bạn sẽ bắt đầu một cuộc thảo luận tin nhắn riêng tư với những người kiểm duyệt, nơi bạn có thể đặt thêm câu hỏi.
-
-          > :imp: Tôi đã viết điều gì đó khó chịu ở đây
-
-          Hãy tiếp tục và **gắn cờ bài đăng này** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> và chọn **Nó không phù hợp** làm lý do!
       search:
         reply: |-
           Bạn có thể tìm thấy nó :tada:

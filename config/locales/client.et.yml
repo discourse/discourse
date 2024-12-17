@@ -344,6 +344,8 @@ et:
     continue: "Jätka"
     switch_to_anon: "Sisene anonüümsesse režiimi"
     switch_from_anon: "Välju anonüümsest režiimist"
+    select_placeholder: "Vali..."
+    none_placeholder: "Pole"
     banner:
       close: "Sulge see bänner"
       edit: "Muuda"
@@ -410,6 +412,8 @@ et:
         refresh: "Värskenda"
         status: "Staatus"
         category: "Foorum"
+        score_type:
+          title: "Põhjus"
         orders:
           score: "Skoor"
           score_asc: "Skoor (vastupidine)"
@@ -830,7 +834,7 @@ et:
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"
       dynamic_favicon: "Kuva arvu brauseri ikoonil"
       theme_default_on_all_devices: "Määra see kõikides minu seadmetes vaiketeemaks"
-      color_scheme: "Värviskeem"
+      color_scheme: "Värvipalett"
       color_schemes:
         default_description: "Teema vaikimisi"
         undo: "Lähtesta"
@@ -1253,9 +1257,6 @@ et:
     form_kit:
       reset: Lähtesta
       optional: valikuline
-      select:
-        select_placeholder: "Vali..."
-        none_placeholder: "Pole"
       errors:
         required: "Nõutud"
     close: "Sulge"
@@ -1872,7 +1873,6 @@ et:
         help: "Ava selle teema prindikõlblik versioon"
       flag_topic:
         title: "Tähista"
-        help: "tähista see teema privaatselt meelespidamiseks või saada selle kohta privaatsõnum"
         success_message: "Tähistasid selle teema edukalt."
       feature_topic:
         title: "Kajasta seda teemat"
@@ -2079,7 +2079,6 @@ et:
         edit_action: "Muuda"
         edit_anonymous: "Vabandame, kuid selle postituse muutmiseks pead olema sisse logitud."
         flag_action: "Tähis"
-        flag: "tähista see postitus privaatselt kui tähelepanu vajav või saada selle kohta privaatne teavitus"
         delete: "kustuta see postitus"
         undelete: "ennista see postitus"
         share_action: "Jaga"
@@ -2884,11 +2883,13 @@ et:
           permalinks: "Püsiviited"
           trust_levels: "Usaldustasemed"
           users: "Kasutajad"
+          groups: "Grupid"
           user_fields: "Kasutajaväljad"
           watched_words: "Vaadatud sõnad"
           legal: "Õiguslik"
       appearance:
         sidebar_link:
+          color_schemes: "Värvipaletid"
           emoji: "Emotikon"
           navigation: "Navigatsioon"
           themes: "Kujundused"

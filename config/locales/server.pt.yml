@@ -222,8 +222,6 @@ pt:
     failed_to_invite: "O usuário não pode ser convidado para este tópico sem uma associação de grupo em um dos seguintes grupos: %{group_names}."
     user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
     muted_topic: "Desculpe, esse usuário silenciou este tópico."
-    receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você lhe envie mensagens privadas."
-    sender_does_not_allow_pm: "Desculpe, você não permite que esse usuário lhe envie mensagens privadas."
     user_cannot_see_topic: "%{username} não pode ver o tópico."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
@@ -2093,6 +2091,7 @@ pt:
       quoted: '%{username} citou-o em "%{topic}" - %{site_title}'
       replied: '%{username} respondeu-lhe em "%{topic}" - %{site_title}'
       posted: '%{username} publicou em "%{topic}" - %{site_title}'
+      private_message: '%{username} enviou-lhe uma mensagem privada em "%{topic}" - %{site_title}'
       linked: '%{username} ligou à sua publicação de "%{topic}" - %{site_title}'
       watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
       confirm_title: "Notificações ativas - %{site_title}"

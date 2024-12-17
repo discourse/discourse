@@ -1546,12 +1546,12 @@ he:
       title: "התראה למפקחים"
       xaxis: "יום"
       yaxis: "מספר ההודעות"
-      description: "מספר הפעמים שנודע למפקחים באופן פרטי דרך דגל."
+      description: "מספר הפעמים שמפקחים קיבלו הודעות אישיות עם פרטים נוספים על הסימון."
     notify_user_private_messages:
       title: "הודעה למשתמש"
       xaxis: "יום"
       yaxis: "מספר ההודעות"
-      description: "מספר הפעמים שמשתמשים עודכנו באופן אישי על ידי דגל."
+      description: "מספר הפעמים שנשלחו למשתמשים הודעות פרטיות באמצעות תיבת הסימון."
     top_referrers:
       title: "מיטב המפנים"
       xaxis: "משתמש"
@@ -1960,7 +1960,7 @@ he:
     share_links: "החליטו אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     allow_username_in_share_links: "לאפשר לכלול שמות משתמש בקישורי שיתוף. שימושי להענקת עיטורים לפי מבקרים מסוימים."
     site_contact_username: "שם משתמש תקין של חבר סגל ממנו יישלחו כל ההודעות האוטומטיות. במקרה של העדר בחירה, ייעשה שימוש בחשבון בררת המחדל של המערכת."
-    site_contact_group_name: "שם קבוצה תקני להזמנה לכל ההודעות האוטומטיות."
+    site_contact_group_name: "שם תקף של קבוצה שתוזמן לכל ההודעות הפרטיות שנשלחות."
     send_welcome_message: "לשלוח לכל המשתמשים החדשים הודעת „ברוך בואך” עם הדרכה ראשונית כיצד להתחיל."
     send_tl1_welcome_message: "שליחת הודעת קבלת פנים למשתמשים חדשים בדרגת אמון 1."
     send_tl2_promotion_message: "לשלוח למשתמשים חדשים בדרגת אמון 2 הודעה על קידום."
@@ -5238,7 +5238,7 @@ he:
       quoted: 'צוטטת על ידי %{username} בנושא „%{topic}” - %{site_title}'
       replied: 'קיבלת תגובה מאת %{username} בנושא „%{topic}” - %{site_title}'
       posted: 'פרסום חדש של %{username} בנושא „%{topic}” - %{site_title}'
-      private_message: 'נשלחה אליך הודעה פרטית מאת %{username} בנושא „%{topic}” - %{site_title}'
+      private_message: 'נשלחה אליך הודעה פרטית מאת %{username} ב־„%{topic}” - %{site_title}'
       linked: 'הפוסט שלך קושר על ידי %{username} בנושא „%{topic}” - %{site_title}'
       watching_first_post: 'נוצר נושא חדש „%{topic}” על ידי %{username} - %{site_title}'
       confirm_title: "התראות הופעלו - %{site_title}"

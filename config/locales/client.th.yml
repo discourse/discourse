@@ -311,6 +311,7 @@ th:
     continue: "ดำเนินการต่อ"
     switch_to_anon: "เข้าสู่โหมดไม่ระบุชื่อ"
     switch_from_anon: "ออกจากโหมดไม่ระบุชื่อ"
+    none_placeholder: "ไม่มี"
     banner:
       edit: "แก้ไข"
     pwa:
@@ -386,6 +387,8 @@ th:
         refresh: "รีเฟรช"
         status: "สถานะ"
         category: "หมวดหมู่"
+        score_type:
+          title: "เหตุผล"
         orders:
           score: "คะแนน"
           created_at: "ถูกสร้างเมื่อ"
@@ -1173,8 +1176,6 @@ th:
       dismiss_error: "ละทิ้งข้อผิดพลาด"
     form_kit:
       optional: ทางเลือก
-      select:
-        none_placeholder: "ไม่มี"
       errors:
         required: "ต้องการ"
     close: "ปิด"
@@ -1508,8 +1509,6 @@ th:
         quoted: "ถูกอ้างอิงถึง"
         edited: "ถูกแก้ไข"
         liked: "การถูกใจใหม่"
-        private_message: "ข้อความส่วนตัวใหม่"
-        invited_to_private_message: "ถูกเชิญไปยังข้อความส่วนตัว"
         invitee_accepted: "คำเชิญถูกยอมรับ"
         posted: "โพสต์ใหม่"
         watching_category_or_tag: "โพสต์ใหม่"
@@ -1813,7 +1812,6 @@ th:
         title: "พิมพ์เอกสาร"
       flag_topic:
         title: "ธง"
-        help: "ปังธงกระทู้นี้เพื่อติดตามหรือรับการแจ้งเตือนเกี่ยวกับกระทู้"
         success_message: "คุณปักธงกระทู้นี้แล้ว"
       make_public:
         choose_category: "กรุณาเลือกหมวดหมู่สำหรับกระทู้สาธารณะ:"
@@ -2689,6 +2687,7 @@ th:
           permalinks: "ลิงค์ถาวร"
           trust_levels: "ระดับความไว้ใจ"
           users: "ผู้ใช้"
+          groups: "กลุ่ม"
           user_fields: "ช่องข้อมูลผู้ใช้"
           legal: "กฎ"
       appearance:

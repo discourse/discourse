@@ -22,6 +22,7 @@ ro:
             kb: KO
             mb: MO
             tb: TO
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -447,6 +448,8 @@ ro:
     continue: "Continuă"
     switch_to_anon: "Intră în modul anonim"
     switch_from_anon: "Ieși din modul anonim"
+    select_placeholder: "Selectează..."
+    none_placeholder: "Nimic"
     banner:
       close: "Respinge acest banner"
       edit: "Editează"
@@ -580,6 +583,9 @@ ro:
         refresh: "Reîmprospătează"
         status: "Stare"
         category: "Categorie"
+        score_type:
+          title: "Motiv"
+          all: "(toate motivele)"
         orders:
           score: "Scor"
           score_asc: "Scor (invers)"
@@ -1048,6 +1054,8 @@ ro:
     user_fields:
       none: "(alege o opțiune)"
       required: 'Te rog introdu o valoare pentru "%{name}"'
+      required_checkbox: 'Câmpul „%{name}” este obligatoriu'
+      same_as_password: "Parola ta nu trebuie repetată în alte câmpuri"
       optional: (opțional)
     user:
       said: "%{username}:"
@@ -1135,15 +1143,17 @@ ro:
       skip_new_user_tips:
         description: "Omite sfaturi și insigne de înscriere pentru utilizatori noi"
       theme_default_on_all_devices: "Faceți ca aceasta să fie tema implicită pe toate dispozitivele mele"
-      color_scheme: "Schema de culori"
+      color_scheme_default_on_all_devices: "Setează paleta de culori implicită pe toate dispozitivele mele"
+      color_scheme: "Paletă de culori"
       color_schemes:
         default_description: "Tema implicită"
         disable_dark_scheme: "La fel ca de obicei"
-        dark_instructions: "Poți previzualiza schema de culori a modului întunecat prin comutarea în modul întunecat al dispozitivului."
+        dark_instructions: "Poți previzualiza paleta de culori a modului întunecat prin comutarea în modul întunecat al dispozitivului."
         undo: "Resetare"
         regular: "Utilizator frecvent"
         dark: "Mod întunecat"
       dark_mode: "Mod întunecat"
+      dark_mode_enable: "Activează paleta de culori automată pentru modul întunecat"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
       external_links_in_new_tab: "Deschide toate legăturile externe într-o filă nouă"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
@@ -1677,9 +1687,6 @@ ro:
     form_kit:
       reset: Resetare
       optional: opțional
-      select:
-        select_placeholder: "Selectează..."
-        none_placeholder: "Nimic"
       errors:
         required: "Necesare"
         invalid_url: "Trebuie să fie un URL valid"
@@ -2431,7 +2438,6 @@ ro:
         help: "Deschide o versiune pentru imprimare a acestui subiect"
       flag_topic:
         title: "Semnalare"
-        help: "semnalează în mod privat acest subiect pentru a atrage atenția administratorilor sau a le trimite o notificare privată despre el"
         success_message: "Ai semnalat cu succes acest subiect."
       feature_topic:
         title: "Promovează acest subiect"
@@ -2618,7 +2624,6 @@ ro:
         edit_action: "Modifică"
         edit_anonymous: "Ne pare rău, dar trebuie să fii autentificat pentru a edita această postare."
         flag_action: "Semnalează"
-        flag: "semnalează în mod privat acest articol pentru a atrage atenția administratorilor sau a le trimite o notificare privată despre el"
         delete: "șterge această postare"
         undelete: "restaurează această postare"
         share_action: "Partajează"
@@ -3614,6 +3619,7 @@ ro:
           permalinks: "Legături permanente"
           trust_levels: "Niveluri de încredere"
           users: "Utilizatori"
+          groups: "Grupuri"
           user_fields: "Câmpuri utilizator"
           watched_words: "Cuvinte urmărite"
           legal: "Legal"
@@ -3622,7 +3628,7 @@ ro:
         sidebar_link:
           font_style: "Stil font"
           site_logo: "Logo site"
-          color_schemes: "Scheme de culori"
+          color_schemes: "Palete de culori"
           emoji: "Emoticon"
           navigation: "Navigare"
           themes: "Teme"
@@ -3676,8 +3682,6 @@ ro:
             Atunci când este prezentă, înlocuiește adresa de email de contact din /despre și este vizibilă pentru utilizatorii anonimi de pe site-urile publice.
           site_contact_name_help: |
             Un nume de utilizator al personalului de la care se trimit toate mesajele automate. Dacă este lăsat gol, va fi utilizat contul de sistem implicit.
-          site_contact_group_help: |
-            Grupul care este invitat la toate mesajele private trimise automat.
           your_organization_description: "Vom utiliza aceste informații în Termenele serviciului și în Notificarea privind confidențialitatea pentru a arăta cine operează site-ul și sub ce jurisdicție."
           company_name: "Nume"
           company_name_placeholder: "Organizația Acme"
@@ -3869,6 +3873,7 @@ ro:
           preview: "Previzualizează"
           is_default: "Tema este activată implicit"
           user_selectable: "Tema poate fi aleasă de către utilizatori"
+          color_scheme_user_selectable: "Paleta de culori poate fi selectată de utilizatori"
           edit_color_scheme: "Editează paleta de culori"
           color_scheme_select: "Alege culorile folosite de către temă"
           custom_sections: "Secțiuni personalizate:"

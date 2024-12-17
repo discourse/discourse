@@ -441,6 +441,7 @@ sl:
     continue: "Nadaljuj"
     switch_to_anon: "Vklopi anonimni način"
     switch_from_anon: "Izklopi anonimni način"
+    none_placeholder: "Brez"
     banner:
       close: "Opusti ta oglasni trak"
       edit: "Uredi"
@@ -540,6 +541,8 @@ sl:
         refresh: "Osveži"
         status: "Stanje"
         category: "Kategorija"
+        score_type:
+          title: "Razlog"
         orders:
           score: "Ocena"
           created_at: "Ustvarjeno"
@@ -1109,16 +1112,13 @@ sl:
       skip_new_user_tips:
         description: "Preskoči namige in značke za nove uporabnike"
       theme_default_on_all_devices: "Nastavi kot privzeti videz na vseh mojih napravah"
-      color_scheme: "Barvna shema"
       color_schemes:
         disable_dark_scheme: "Enako kot običajna"
-        dark_instructions: "Barvno shemo temnega načina si lahko ogledate tako, da napravo preklopite v temni način."
         undo: "Ponastavi"
         regular: "Običajna"
         dark: "Temni način"
         default_dark_scheme: "(privzeto za mesto)"
       dark_mode: "Temni način"
-      dark_mode_enable: "Omogoči barvno shemo samodejnega temnega načina"
       text_size_default_on_all_devices: "Nastavi kot privzeto velikost besedila na vseh mojih napravah"
       allow_private_messages: "Dovoli drugim uporabnikom da mi pošiljajo zasebna sporočila."
       external_links_in_new_tab: "Odpri vse zunanje povezave v novem zavihku"
@@ -1688,8 +1688,6 @@ sl:
     form_kit:
       reset: Ponastavi
       optional: neobvezno
-      select:
-        none_placeholder: "Brez"
       errors:
         required: "Zahtevano"
     close: "Zapri"
@@ -2166,8 +2164,6 @@ sl:
         quoted: "citiran"
         edited: "urejen"
         liked: "nov všeček"
-        private_message: "novo zasebno sporočilo"
-        invited_to_private_message: "povabljen v zasebno sporočilo"
         invitee_accepted: "povabilo sprejeto"
         posted: "nov prispevek"
         watching_category_or_tag: "nov prispevek"
@@ -2586,7 +2582,6 @@ sl:
         help: "Odpri tiskalniku prilagojeno verzijo te teme"
       flag_topic:
         title: "Prijavi"
-        help: "prijavi to temo moderatorjem ali pošlji opozorilo avtorju"
         success_message: "Uspešno ste prijavili to temo."
       make_public:
         title: "Pretvori v javno temo"
@@ -2839,7 +2834,6 @@ sl:
         edit_action: "Uredi"
         edit_anonymous: "Oprostite vendar morate biti prijavljeni, da lahko uredite ta prispevek."
         flag_action: "Prijavi"
-        flag: "prijavi ta prispevek moderatorjem ali pošlji opozorilo avtorju"
         delete: "izbriši prispevek"
         undelete: "razveljavi izbris prispevka"
         share_action: "Deli"
@@ -3934,6 +3928,7 @@ sl:
           permalinks: "Trajne povezave"
           trust_levels: "Nivo zaupanja"
           users: "Uporabniki"
+          groups: "Skupine"
           user_fields: "Podatki uporabnika"
           watched_words: "Nadzorovane besede"
           legal: "Pravno"

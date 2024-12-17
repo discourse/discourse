@@ -402,6 +402,8 @@ pt:
     continue: "Continuar"
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
+    select_placeholder: "Selecionar…"
+    none_placeholder: "Nenhuma"
     banner:
       close: "Marcar esta faixa como vista"
       edit: "Editar"
@@ -531,6 +533,8 @@ pt:
         refresh: "Atualizar"
         status: "Estado"
         category: "Categoria"
+        score_type:
+          title: "Motivo"
         orders:
           score: "Pontuação"
           score_asc: "Pontuação (reverso)"
@@ -1104,17 +1108,15 @@ pt:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
       reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
-      color_scheme: "Esquema de Cores"
+      color_scheme: "Paleta de Cores"
       color_schemes:
         default_description: "Tema padrão"
         disable_dark_scheme: "Igual ao normal"
-        dark_instructions: "Pode pré-visualizar o esquema de cores do modo escuro ativando o modo escuro do seu dispositivo."
         undo: "Repor"
         regular: "Habitual"
         dark: "Modo escuro"
         default_dark_scheme: "(padrão do site)"
       dark_mode: "Modo Escuro"
-      dark_mode_enable: "Ativar automaticamente o esquema de cores do modo escuro"
       text_size_default_on_all_devices: "Usar este tamanho de texto por defeito em todos os meus dispositivos"
       allow_private_messages: "Permitir que outros utilizadores me enviem mensagens diretamente"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
@@ -1689,9 +1691,6 @@ pt:
     form_kit:
       reset: Repor
       optional: opcional
-      select:
-        select_placeholder: "Selecionar…"
-        none_placeholder: "Nenhuma"
       errors:
         required: "Necessário"
     close: "Fechar"
@@ -2147,8 +2146,6 @@ pt:
         quoted: "citado"
         edited: "editado"
         liked: "novo like"
-        private_message: "nova mensagem particular"
-        invited_to_private_message: "convidado para mensagem particular"
         invitee_accepted: "convite aceito"
         posted: "novo post"
         watching_category_or_tag: "novo post"
@@ -2599,7 +2596,6 @@ pt:
         help: "Abrir uma versão para impressão deste tópico"
       flag_topic:
         title: "Denunciar"
-        help: "denunciar privadamente este tópico para consideração ou enviar uma notificação privada sobre o mesmo"
         success_message: "Denunciou este tópico com sucesso."
       make_public:
         title: "Converter para Tópico Público"
@@ -2835,7 +2831,6 @@ pt:
         edit_action: "Editar"
         edit_anonymous: "Pedimos desculpa, mas necessita de ter sessão iniciada para editar esta publicação."
         flag_action: "Denunciar"
-        flag: "sinalizar privadamente esta mensagem para moderação ou enviar uma notificação privada sobre a mesma"
         delete: "eliminar esta publicação"
         undelete: "restaurar esta mensagem"
         share_action: "Partilhar"
@@ -3890,12 +3885,14 @@ pt:
           permalinks: "Hiperligações Permanentes"
           trust_levels: "Níveis de Confiança"
           users: "Utilizadores"
+          groups: "Grupos"
           user_fields: "Campos de utilizador"
           watched_words: "Palavras Vigiadas"
           legal: "Legal"
       appearance:
         title: "Aparência"
         sidebar_link:
+          color_schemes: "Paletas de Cores"
           emoji: "Emoji"
           navigation: "Navegação"
           themes: "Temas"
@@ -4109,7 +4106,6 @@ pt:
           hide_unused_fields: "Ocultar campos não utilizados"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
-          color_scheme_user_selectable: "O esquema de cores pode ser selecionado pelos usuários"
           auto_update: "Atualização automática quando o Discourse é atualizado"
           color_scheme: "Paleta de Cores"
           default_light_scheme: "Light (padrão)"

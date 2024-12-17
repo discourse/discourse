@@ -167,10 +167,8 @@ hu:
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
             restricted_group:
               label: Csoport
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoport postafiókjában
             restricted_groups:
               label: Csoportok
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoportok egyikében
             ignore_group_members:
               label: Csoporttagok figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja

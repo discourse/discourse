@@ -607,6 +607,8 @@ he:
     continue: "המשך"
     switch_to_anon: "מעבר למצב אלמוני"
     switch_from_anon: "יציאה ממצב אלמוני"
+    select_placeholder: "בחירה…"
+    none_placeholder: "ללא"
     banner:
       close: "התעלמות מהכרזה"
       edit: "עריכה"
@@ -628,6 +630,7 @@ he:
       order_by: "סידור לפי"
       date_filter: "פורסם בין"
       in_reply_to: "בתגובה ל"
+      filtered_flagged_by: "סומן על ידי"
       explain:
         why: "נא להסביר למה הפריט הזה הגיע לתור"
         title: "ניקוד שניתן לסקירה"
@@ -751,6 +754,9 @@ he:
         refresh: "רענון"
         status: "מצב"
         category: "קטגוריה"
+        score_type:
+          title: "סיבה"
+          all: "(כל הסיבות)"
         orders:
           score: "ניקוד"
           score_asc: "ניקוד (הפוך)"
@@ -1294,7 +1300,8 @@ he:
     user_fields:
       none: "(יש לבחור אפשרות)"
       required: 'נא למלא ערך עבור „%{name}”'
-      same_as_password: "אין לחזור על הסיסמה שלך בשדות אחרים."
+      required_checkbox: 'השדה „%{name}” הוא חובה'
+      same_as_password: "אין לחזור על הסיסמה שלך בשדות אחרים"
       optional: (רשות)
     user:
       said: "%{username}:"
@@ -1418,7 +1425,7 @@ he:
       reset_seen_user_tips: "הצגת עצות למשתמש שוב"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
       color_scheme_default_on_all_devices: "הגדרת ערכת צבעים כברירת מחדל לכל המכשירים שלי"
-      color_scheme: "ערכת צבעים"
+      color_scheme: "לוח צבעים"
       color_schemes:
         default_description: "ברירת המחדל לערכת העיצוב"
         disable_dark_scheme: "כמו הרגילה"
@@ -2112,6 +2119,7 @@ he:
           other: "הסיסמה שלך קצרה מדי (%{count} תווים לפחות)."
         common: "הסיסמה הזו נפוצה מידי."
         same_as_username: "הסיסמה שלך זהה לשם המשתמש/ת שלך."
+        same_as_name: "הסיסמה שלך זהה לשם שלך."
         same_as_email: "הסיסמה שלך זהה לכתובת הדוא״ל שלך."
         ok: "הסיסמה שלך נראית טוב."
         instructions:
@@ -2275,9 +2283,6 @@ he:
       optional: רשות
       errors_summary_title: "הטופס הזה מכיל שגיאות:"
       dirty_form: "לא הגשת את השינויים שלך! לצאת?"
-      select:
-        select_placeholder: "בחירה…"
-        none_placeholder: "ללא"
       errors:
         required: "נדרש"
         invalid_url: "חייבת להיות כתובת תקפה"
@@ -2998,7 +3003,7 @@ he:
         edited: "נערך"
         liked: "לייק חדש"
         private_message: "הודעה פרטית חדשה"
-        invited_to_private_message: "הוזמנת להודעה פרטית"
+        invited_to_private_message: "הזמנה להודעה פרטית"
         invitee_accepted: "ההזמנה התקבלה"
         posted: "פוסט חדש"
         watching_category_or_tag: "פוסט חדש"
@@ -3680,7 +3685,7 @@ he:
         help: "פתיחת גרסה ידידותית להדפסה של נושא זה"
       flag_topic:
         title: "דגל"
-        help: "סימון הנושא הזה להגברת תשומת הלב או לשלוח התראה פרטית לגביו"
+        help: "לסמן את הנושא הזה בדגל באופן פרטי להסבת תשומת לב או לשלוח הודעה פרטית לגביו"
         success_message: "דיגלתם נושא זה בהצלחה."
       make_public:
         title: "המרה לנושא ציבורי"
@@ -4001,7 +4006,7 @@ he:
         edit_action: "עריכה"
         edit_anonymous: "עליך להיכנס כדי לערוך פוסט זה, עמך הסליחה."
         flag_action: "סימון"
-        flag: "סימון הנושא הזה להגברת תשומת הלב או לשלוח התראה פרטית לגביו"
+        flag: "לסמן את ההודעה הזאת בדגל באופן פרטי להסבת תשומת לב או לשלוח הודעה פרטית לגביו"
         delete_action: "מחיקת פוסט"
         delete: "מחק פוסט זה"
         undelete_action: "שחזור פוסט ממחיקה"
@@ -5316,6 +5321,7 @@ he:
           experiment_tooltip:
             title_disabled: "התנסות ביכולת הניסיונית שלנו"
             title_enabled: "כיבוי יכולת ניסיונית"
+            content_disabled: "מזמינים אותך לעשות סיבוב על היכולת החדשה שאנו מפתחים! היא עדיין בשלבי ניסוי, לכן יכול להיות שנסיר אותה בכל רגע נתון. אפשר לכבות אותה בכל רגע נתון.<br/><br/>שינוי ההגדרה הזאת יפעיל את היכולת לכל המשתמשים."
             content_enabled: "שינוי מצב ההגדרה הזאת ישבית את היכולת לכל המשתמשים."
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
@@ -5759,6 +5765,7 @@ he:
           permalinks: "קישורים קבועים"
           trust_levels: "דרגת אמון"
           users: "משתמשים"
+          groups: "קבוצות"
           user_fields: "שדות משתמש"
           watched_words: "מילים במעקב"
           legal: "משפטי"
@@ -5768,7 +5775,7 @@ he:
         sidebar_link:
           font_style: "סגנון גופן"
           site_logo: "לוגו האתר"
-          color_schemes: "ערכות צבעים"
+          color_schemes: "לוחות צבעים"
           emoji: "אמוג׳י"
           navigation: "ניווט"
           themes: "תמות"

@@ -497,6 +497,8 @@ fi:
     continue: "Jatka"
     switch_to_anon: "Siirry anonyymitilaan"
     switch_from_anon: "Poistu anonyymitilasta"
+    select_placeholder: "Valitse…"
+    none_placeholder: "Ei valittu"
     banner:
       close: "Sulje tämä banneri"
       edit: "Muokkaa"
@@ -627,6 +629,8 @@ fi:
         refresh: "Päivitä"
         status: "Tila"
         category: "Alue"
+        score_type:
+          title: "Syy"
         orders:
           score: "Arvo"
           score_asc: "Arvo (käänteinen)"
@@ -1136,7 +1140,7 @@ fi:
     user_fields:
       none: "(valitse vaihtoehto)"
       required: '"%{name}" on pakollinen'
-      same_as_password: "Salasanaasi ei tulisi toistaa muissa kentissä."
+      same_as_password: "Salasanaasi ei tulisi toistaa muissa kentissä"
       optional: (valinnainen)
     user:
       said: "%{username}:"
@@ -1259,18 +1263,15 @@ fi:
         description: "Ohita uuden käyttäjän aloittamisvinkit ja kunniamerkit"
       reset_seen_user_tips: "Näytä käyttäjävinkkejä uudelleen"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
-      color_scheme_default_on_all_devices: "Aseta oletusvärimalli kaikille laitteilleni"
-      color_scheme: "Värimalli"
+      color_scheme: "Väripaletti"
       color_schemes:
         default_description: "Teeman oletus"
         disable_dark_scheme: "Sama kuin oletus"
-        dark_instructions: "Voit esikatsella tumman tilan värimallia aktivoimalla laitteesi tumman tilan asetuksen."
         undo: "Nollaa"
         regular: "Tavallinen"
         dark: "Tumma tila"
         default_dark_scheme: "(sivuston oletus)"
       dark_mode: "Tumma tila"
-      dark_mode_enable: "Ota käyttöön automaattinen tumman tilan värimalli"
       text_size_default_on_all_devices: "Tee tästä oletusfonttikoko kaikille laitteilleni"
       allow_private_messages: "Salli toisten käyttäjien lähettää minulle yksityisviestejä"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
@@ -2050,9 +2051,6 @@ fi:
       optional: valinnainen
       errors_summary_title: "Tämä lomake sisältää virheitä:"
       dirty_form: "Et lähettänyt muutoksiasi! Oletko varma, että haluat poistua?"
-      select:
-        select_placeholder: "Valitse…"
-        none_placeholder: "Ei valittu"
       errors:
         required: "Pakollinen"
         invalid_url: "Täytyy olla kelvollinen URL"
@@ -2690,8 +2688,6 @@ fi:
         quoted: "lainasi"
         edited: "muokkasi"
         liked: "uusi tykkäys"
-        private_message: "uusi yksityisviesti"
-        invited_to_private_message: "kutsuttiin yksityiskeskusteluun"
         invitee_accepted: "kutsu hyväksyttiin"
         posted: "uusi viesti"
         watching_category_or_tag: "uusi viesti"
@@ -3313,7 +3309,6 @@ fi:
         help: "Avaa tulostettava versio tästä ketjusta"
       flag_topic:
         title: "Liputa"
-        help: "liputa tämä ketju tai lähetä siitä yksityinen ilmoitus valvojalle"
         success_message: "Ketjun liputus onnistui."
       make_public:
         title: "Muuta julkiseksi ketjuksi"
@@ -3589,7 +3584,6 @@ fi:
         edit_action: "Muokkaa"
         edit_anonymous: "Sinun täytyy ensin kirjautua sisään, jotta voit muokata tätä viestiä."
         flag_action: "Liputa"
-        flag: "liputa tämä viesti tai lähetä käyttäjälle yksityisesti siihen liittyvä huomio"
         delete_action: "Poista viesti"
         delete: "poista tämä viesti"
         undelete_action: "Kumoa viestin poisto"
@@ -4249,7 +4243,6 @@ fi:
         print: "%{shortcut} Tulosta ketju"
         defer: "%{shortcut} Merkitse ketju lukemattomaksi"
         topic_admin_actions: "%{shortcut} Avaa ketjun ylläpitotyökalut"
-        archive_private_message: "%{shortcut} Vaihda yksityisviestin arkistointi"
       search_menu:
         title: "Hakuvalikko"
         prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
@@ -5226,6 +5219,7 @@ fi:
           permalinks: "Pysyvät linkit"
           trust_levels: "Luottamustasot"
           users: "Käyttäjät"
+          groups: "Ryhmät"
           user_fields: "Käyttäjäkentät"
           watched_words: "Tarkkaillut sanat"
           legal: "Oikeudelliset tiedot"
@@ -5235,7 +5229,7 @@ fi:
         sidebar_link:
           font_style: "Kirjasimen tyyli"
           site_logo: "Sivuston logo"
-          color_schemes: "Värimallit"
+          color_schemes: "Väripaletit"
           emoji: "Emojit"
           navigation: "Navigointi"
           themes: "Teemat"
@@ -5308,8 +5302,6 @@ fi:
           site_contact_name_help: |
             Henkilökunnan käyttäjänimi, jonka nimissä kaikki automaattiset viestit lähetetään. Jos tämä jätetään tyhjäksi, oletuksena on oletusjärjestelmätili.
           site_contact_group: "Sivuston yhteysryhmä"
-          site_contact_group_help: |
-            Ryhmän nimi, joka saa kutsun kaikkiin automaattisesti lähetettyihin yksityisviesteihin.
           your_organization: "Organisaatiosi"
           your_organization_description: "Käytämme näitä tietoja käyttöehdoissa ja tietosuojailmoituksessa näyttääksemme, kuka ylläpitää sivustoa ja millä lainkäyttöalueella."
           company_name: "Nimi"
@@ -5584,7 +5576,6 @@ fi:
           hide_unused_fields: "Piilota tyhjät kentät"
           is_default: "Teema on käytössä oletuksena"
           user_selectable: "Teema on tarjolla käyttäjille"
-          color_scheme_user_selectable: "Käyttäjä voi valita värimallin"
           auto_update: "Päivitä automaattisesti, kun Discourse päivitetään"
           color_scheme: "Väripaletti"
           edit_color_scheme: "Muokkaa väripalettia"
