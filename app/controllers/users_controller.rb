@@ -268,11 +268,8 @@ class UsersController < ApplicationController
   def username
     params.require(:new_username)
 
-    availability =
-      UsernameCheckerService.new(
-        allow_reserved_username: current_user&.admin?,
-      ).check_username_availability(params[:new_username], nil)
-    if clashing_with_existing_route?(params[:new_username]) || !availability[:available]
+    if clashing_with_existing_route?(params[:new_username]) ||
+         (User.reserved_username?(params[:new_username]) && !current_user.admin?)
       return render_json_error(I18n.t("login.reserved_username"))
     end
 

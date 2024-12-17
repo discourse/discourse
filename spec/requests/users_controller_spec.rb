@@ -1899,7 +1899,7 @@ RSpec.describe UsersController do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
         expect(response).to be_unprocessable
 
-        expect(response.parsed_body["errors"].first).to include(I18n.t("login.reserved_username"))
+        expect(response.parsed_body["errors"].first).to include("Username must be unique")
       end
 
       it "should fail if the user is old" do
