@@ -135,7 +135,7 @@ export default class AdminUserIndexController extends Controller {
   }
 
   get canAdminCheckEmails() {
-    return this.canCheckEmailsHelper.canCheckEmails;
+    return this.canCheckEmailsHelper.canAdminCheckEmails;
   }
 
   groupAdded(added) {
