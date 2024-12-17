@@ -221,7 +221,10 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
   end
 
   context "when the email domain is blocked" do
-    before { SiteSetting.blocked_email_domains = "example.com" }
+    before do
+      SiteSetting.hide_email_address_taken = false
+      SiteSetting.blocked_email_domains = "example.com"
+    end
 
     it "cannot signup" do
       signup_form

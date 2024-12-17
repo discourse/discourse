@@ -5,6 +5,8 @@ RSpec.describe EmailUpdater do
   let(:new_email) { "new.email@example.com" }
 
   it "provides better error message when a staged user has the same email" do
+    SiteSetting.hide_email_address_taken = false
+
     Fabricate(:user, staged: true, email: new_email)
 
     user = Fabricate(:user, email: old_email)
