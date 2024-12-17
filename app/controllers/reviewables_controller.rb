@@ -75,7 +75,10 @@ class ReviewablesController < ApplicationController
           types: meta_types,
           reviewable_types: Reviewable.types,
           score_types:
-            ReviewableScore.types.map { |k, v| { id: v, name: ReviewableScore.type_title(k) } },
+            ReviewableScore
+              .types
+              .filter { |k, v| k != :notify_user }
+              .map { |k, v| { id: v, name: ReviewableScore.type_title(k) } },
           reviewable_count: current_user.reviewable_count,
           unseen_reviewable_count: Reviewable.unseen_reviewable_count(current_user),
         ),
