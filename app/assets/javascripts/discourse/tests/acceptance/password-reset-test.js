@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
@@ -71,6 +71,7 @@ acceptance("Password Reset", function (needs) {
     assert.dom(".password-reset .tip.good").exists("input looks good");
 
     await fillIn(".password-reset input", "123");
+    await triggerKeyEvent(".password-reset input", "keyup", 9);
     assert.dom(".password-reset .tip.bad").exists("input is not valid");
     assert.dom(".password-reset .tip.bad").includesHtml(
       i18n("user.password.too_short", {
