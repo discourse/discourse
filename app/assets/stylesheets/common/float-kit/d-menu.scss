@@ -104,6 +104,10 @@
       justify-content: flex-start;
       background: rgba(0, 0, 0, 0);
 
+      &.-selected {
+        background: var(--d-hover);
+      }
+
       &.btn-danger {
         color: var(--danger);
 

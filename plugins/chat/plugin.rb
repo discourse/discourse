@@ -450,7 +450,7 @@ after_initialize do
         )
 
       if creator.failure?
-        Rails.logger.warn "[discourse-automation] Chat message failed to send:\n#{creator.inspect_steps.inspect}\n#{creator.inspect_steps.error}"
+        Rails.logger.warn "[discourse-automation] Chat message failed to send:\n#{creator.inspect_steps}"
       end
     end
   end

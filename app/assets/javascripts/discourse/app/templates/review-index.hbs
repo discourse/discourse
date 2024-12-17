@@ -55,6 +55,18 @@
 
       <div class="reviewable-filter">
         <label class="filter-label">
+          {{i18n "review.filters.score_type.title"}}
+        </label>
+        <ComboBox
+          @value={{this.filterScoreType}}
+          @content={{this.allScoreTypes}}
+          @onChange={{fn (mut this.filterScoreType)}}
+          @options={{hash none="review.filters.score_type.all"}}
+        />
+      </div>
+
+      <div class="reviewable-filter">
+        <label class="filter-label">
           {{i18n "review.filters.priority.title"}}
         </label>
         <ComboBox

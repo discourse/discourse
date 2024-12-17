@@ -548,6 +548,9 @@ en:
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
 
+    select_placeholder: "Select…"
+    none_placeholder: "None"
+
     banner:
       close: "Dismiss this banner"
       edit: "Edit"
@@ -686,6 +689,9 @@ en:
         refresh: "Refresh"
         status: "Status"
         category: "Category"
+        score_type:
+          title: "Reason"
+          all: "(all reasons)"
         orders:
           score: "Score"
           score_asc: "Score (reverse)"
@@ -1212,7 +1218,8 @@ en:
     user_fields:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
-      same_as_password: "Your password should not be repeated in other fields."
+      required_checkbox: 'The field "%{name}" is required'
+      same_as_password: "Your password should not be repeated in other fields"
       optional: (optional)
 
     user:
@@ -1343,18 +1350,18 @@ en:
         description: "Skip new user onboarding tips and badges"
       reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
-      color_scheme_default_on_all_devices: "Set default color scheme on all my devices"
-      color_scheme: "Color Scheme"
+      color_scheme_default_on_all_devices: "Set default color palette on all my devices"
+      color_scheme: "Color Palette"
       color_schemes:
         default_description: "Theme default"
         disable_dark_scheme: "Same as regular"
-        dark_instructions: "You can preview the dark mode color scheme by toggling your device's dark mode."
+        dark_instructions: "You can preview the dark mode color palette by toggling your device's dark mode."
         undo: "Reset"
         regular: "Regular"
         dark: "Dark mode"
         default_dark_scheme: "(site default)"
       dark_mode: "Dark Mode"
-      dark_mode_enable: "Enable automatic dark mode color scheme"
+      dark_mode_enable: "Enable automatic dark mode color palette"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
@@ -2205,9 +2212,6 @@ en:
       optional: optional
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
-      select:
-        select_placeholder: "Select…"
-        none_placeholder: "None"
       errors:
         required: "Required"
         invalid_url: "Must be a valid URL"
@@ -5587,6 +5591,7 @@ en:
           permalinks: "Permalinks"
           trust_levels: "Trust Levels"
           users: "Users"
+          groups: "Groups"
           user_fields: "User Fields"
           watched_words: "Watched Words"
           legal: "Legal"
@@ -5597,7 +5602,7 @@ en:
         sidebar_link:
           font_style: "Font Style"
           site_logo: "Site Logo"
-          color_schemes: "Color Schemes"
+          color_schemes: "Color Palettes"
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
@@ -5961,7 +5966,7 @@ en:
           hide_unused_fields: "Hide unused fields"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
-          color_scheme_user_selectable: "Color scheme can be selected by users"
+          color_scheme_user_selectable: "Color palette can be selected by users"
           auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
           edit_color_scheme: "Edit Color Palette"

@@ -40,7 +40,7 @@
     </div>
     {{~raw-plugin-outlet name="topic-list-after-main-link"}}
     {{~plugin-outlet name="topic-list-after-main-link" outletArgs=(raw-hash topic=topic)}}
-    <div class='pull-right'>  
+    <div class='pull-right'>
       {{raw "list/post-count-or-badges" topic=topic postBadgesEnabled=showTopicPostBadges}}
     </div>
     <div class="topic-item-stats clearfix">
@@ -57,6 +57,7 @@
             href="{{topic.lastPostUrl}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
         </span>
       </div>
+      {{~plugin-outlet name="topic-list-after-topic-item-stats" outletArgs=(raw-hash topic=topic)}}
   </div>
   {{~raw-plugin-outlet name="topic-list-after-columns"}}
 </td>

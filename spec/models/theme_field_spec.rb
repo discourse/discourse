@@ -257,7 +257,7 @@ HTML
     expect(theme.javascript_cache.content).to include(
       "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", ",
     )
-    expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
+    expect(theme.javascript_cache.content).to include('addRawTemplate)("discovery"')
     expect(theme.javascript_cache.content).to include(
       "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery\"",
     )
@@ -283,8 +283,8 @@ HTML
       "discourse/controllers/discovery.blah",
       "discourse/controllers/discovery.js",
       "discourse/templates/discovery.js",
-      "discovery.js",
-      "other_discovery.js",
+      "raw-templates/discovery.js",
+      "raw-templates/other_discovery.js",
     )
     expect(map["sourceRoot"]).to eq("theme-#{theme.id}/")
     expect(map["sourcesContent"].length).to eq(6)

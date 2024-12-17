@@ -111,6 +111,7 @@ export default class DMenu extends Component {
         <DModal
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
+          @autofocus={{this.options.autofocus}}
           class={{concatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")

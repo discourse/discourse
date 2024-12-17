@@ -108,6 +108,10 @@ export default class DModal extends Component {
     }
   }
 
+  get autofocus() {
+    return this.args.autofocus ?? true;
+  }
+
   shouldTriggerClickOnEnter(event) {
     if (this.args.submitOnEnter === false) {
       return false;
@@ -277,7 +281,7 @@ export default class DModal extends Component {
         ...attributes
         {{didInsert this.setupModal}}
         {{willDestroy this.cleanupModal}}
-        {{trapTab preventScroll=false}}
+        {{trapTab preventScroll=false autofocus=this.autofocus}}
       >
         <div class="d-modal__container" {{this.registerModalContainer}}>
           {{yield to="aboveHeader"}}

@@ -47,7 +47,7 @@ module ChatSystemHelpers
           },
         )
 
-      raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
+      raise creator.inspect_steps if creator.failure?
       last_message = creator.message_instance
     end
 
@@ -64,7 +64,7 @@ end
 module ChatSpecHelpers
   def service_failed!(result)
     raise RSpec::Expectations::ExpectationNotMetError.new(
-            "Service failed, see below for step details:\n\n" + result.inspect_steps.inspect,
+            "Service failed, see below for step details:\n\n" + result.inspect_steps,
           )
   end
 

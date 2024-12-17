@@ -583,6 +583,7 @@ export default class PostMenu extends Component {
       @outletArgs={{hash post=@post state=this.state}}
     >
       <nav
+        {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}
         class={{concatClass
           "post-controls"
           "glimmer-post-menu"
@@ -662,7 +663,11 @@ export default class PostMenu extends Component {
           @users={{this.likedUsers}}
         />
       {{/if}}
-      {{#if this.collapsedButtons}}
+      {{#if
+        (this.showMoreButton.shouldRender
+          (hash post=this.post state=this.state)
+        )
+      }}
         <UserTip
           @id="post_menu"
           @triggerSelector=".post-controls .actions .show-more-actions"

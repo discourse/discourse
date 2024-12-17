@@ -2239,7 +2239,7 @@ en:
 
     desktop_category_page_style: "This setting determines the visual layout of the /categories page on desktop. It includes options such as displaying subcategories with featured topics, showing the latest topics, or presenting top topics. The chosen style will influence how users interact and navigate through categories on the site."
     category_colors: "A list of hexadecimal color values allowed for categories."
-    default_dark_mode_color_scheme_id: "The color scheme used when in dark mode."
+    default_dark_mode_color_scheme_id: "The color palette used when in dark mode."
     dark_mode_none: "None"
 
     max_image_size_kb: "The maximum image upload size. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."

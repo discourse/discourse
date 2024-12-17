@@ -103,7 +103,9 @@ import { resetNeedsHbrTopicList } from "discourse-common/lib/raw-templates";
 import { clearResolverOptions } from "discourse-common/resolver";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
+import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
+import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 
 export function currentUser() {
@@ -483,6 +485,8 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 setupFormKitAssertions();
+setupDSelectAssertions();
+setupNotificationsTrackingAssertions();
 
 export async function selectDate(selector, date) {
   const elem = document.querySelector(selector);

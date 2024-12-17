@@ -114,7 +114,7 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
     if result.failure?
       raise RSpec::Expectations::ExpectationNotMetError.new(
               "Service `#{resolved_class}` failed, see below for step details:\n\n" +
-                result.inspect_steps.inspect,
+                result.inspect_steps,
             )
     end
 

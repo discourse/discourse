@@ -32,6 +32,7 @@ end
 #  old_topic_title   :string
 #  post_user_id      :integer
 #  user_id           :integer
+#  full_move         :boolean
 #
 # Indexes
 #
