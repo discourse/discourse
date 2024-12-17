@@ -4,7 +4,8 @@ import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, simulateKey } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Password Reset", function (needs) {
   needs.pretender((server, helper) => {
@@ -68,6 +69,17 @@ acceptance("Password Reset", function (needs) {
 
     await fillIn(".password-reset input", "perf3ctly5ecur3");
     assert.dom(".password-reset .tip.good").exists("input looks good");
+
+    await fillIn(".password-reset input", "123");
+    await simulateKey(".password-reset input", "\t");
+
+    assert.dom(".password-reset .tip.bad").exists("input is not valid");
+    assert.dom(".password-reset .tip.bad").includesHtml(
+      i18n("user.password.too_short", {
+        count: this.siteSettings.min_password_length,
+      }),
+      "password too short"
+    );
 
     await fillIn(".password-reset input", "jonesyAlienSlayer");
     await click(".password-reset form button[type='submit']");
