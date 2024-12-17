@@ -548,7 +548,7 @@ export default function (options) {
     const key = options.textHandler.value[cp - 1];
 
     // only continue if the caret is at the end of a word, like #line|<-
-    if (me[0].value[cp]?.trim()) {
+    if (options.textHandler.value[cp]?.trim()) {
       return;
     }
 
