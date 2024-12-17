@@ -12,7 +12,7 @@ module Onebox
       include Onebox::Mixins::GithubBody
       include Onebox::Mixins::GithubAuthHeader
 
-      matches_regexp(%r{^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/commit/})
+      matches_regexp(%r{^https?://(?:www\.)?github\.com/[\w\-]+/[\w\-]+/commit/[a-f0-9]{40}$})
       always_https
 
       def url

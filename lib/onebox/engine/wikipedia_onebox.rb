@@ -7,7 +7,7 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches_regexp(%r{^https?://.*\.wikipedia\.(com|org)})
+      matches_regexp(%r{^https?://(?:[a-z]{2}\.)?wikipedia\.(com|org)(/|$)})
       always_https
 
       private

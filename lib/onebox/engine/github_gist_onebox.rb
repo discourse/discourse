@@ -9,7 +9,7 @@ module Onebox
 
       MAX_FILES = 3
 
-      matches_regexp(%r{^http(?:s)?://gist\.(?:(?:\w)+\.)?(github)\.com(?:/)?})
+      matches_regexp(%r{^https?://gist\.github\.com/[\w\-]+/[a-f0-9]+(/|$)})
       always_https
 
       def url

@@ -8,7 +8,7 @@ module Onebox
       include LayoutSupport
 
       matches_regexp(
-        %r{^https?://(?:www\.)?(?:instagram\.com|instagr\.am)/?(?:.*)/(?:p|tv)/[a-zA-Z\d_-]+},
+        %r{^https?://(?:www\.)?(instagram\.com|instagr\.am)(?:/[\w\-]+)?/(?:p|tv)/[a-zA-Z\d_-]+/?(?:\?.*)?$},
       )
       always_https
       requires_iframe_origins "https://www.instagram.com"
