@@ -1,10 +1,10 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { blur, click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
-import { acceptance, simulateKey } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Password Reset", function (needs) {
@@ -71,7 +71,7 @@ acceptance("Password Reset", function (needs) {
     assert.dom(".password-reset .tip.good").exists("input looks good");
 
     await fillIn(".password-reset input", "123");
-    await simulateKey(".password-reset input", "\t");
+    await blur(".password-reset input");
 
     assert.dom(".password-reset .tip.bad").exists("input is not valid");
     assert.dom(".password-reset .tip.bad").includesHtml(
