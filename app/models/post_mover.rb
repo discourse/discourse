@@ -478,7 +478,9 @@ class PostMover
   def copy_shifted_post_timings_from_temp
     DB.exec <<~SQL
       INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
-      SELECT DISTINCT topic_id, user_id, post_number, msecs FROM temp_post_timings
+      SELECT DISTINCT ON (topic_id, post_number, user_id) topic_id, user_id, post_number, msecs
+      FROM temp_post_timings
+      ORDER BY topic_id, post_number, user_id, msecs DESC
       ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
         SET msecs = GREATEST(post_timings.msecs, excluded.msecs)
     SQL
