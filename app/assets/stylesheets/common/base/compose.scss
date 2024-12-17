@@ -15,7 +15,6 @@ html.composer-open.not-mobile-device {
   left: 0;
   margin-left: auto;
   margin-right: auto;
-  box-sizing: border-box;
   max-width: $reply-area-max-width;
   width: 100%;
 
@@ -70,6 +69,7 @@ html.composer-open.not-mobile-device {
   }
 
   &.open {
+    box-sizing: border-box;
     height: var(--composer-height);
     --min-height: 255px;
     min-height: var(--min-height);
@@ -105,19 +105,12 @@ html.composer-open.not-mobile-device {
     }
   }
 
-  .touch &.draft,
-  .touch &.saving {
-    top: auto;
-    z-index: z("ipad-header-nav") + 1;
-    padding-bottom: env(safe-area-inset-bottom);
-    visibility: visible;
-  }
-
   &.draft {
     cursor: pointer;
     display: flex;
     .draft-text {
       display: block;
+      @include ellipsis;
     }
     .grippie,
     .saving-text {
@@ -668,6 +661,15 @@ div.ac-wrap {
   &.fullscreen {
     z-index: z("mobile-composer");
     height: calc(var(--composer-vh, 1vh) * 100);
+    min-height: unset;
+    max-height: unset;
+  }
+
+  &.draft,
+  &.saving {
+    top: auto;
+    z-index: z("ipad-header-nav") + 1;
+    padding-bottom: env(safe-area-inset-bottom);
     min-height: unset;
     max-height: unset;
   }

@@ -59,10 +59,6 @@
     .toggle-minimize {
       top: 6px;
     }
-    .draft-text {
-      width: calc(100% - 40px);
-      @include ellipsis;
-    }
   }
 
   #reply-title {
