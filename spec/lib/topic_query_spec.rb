@@ -26,9 +26,7 @@ RSpec.describe TopicQuery do
       lambda do |topics, options, query|
         # this is notable, we do not send in a relation for suggested
         # it would force us to completely rewrite SuggestedTopicsBuilder
-        if options[:filter] = !"suggested"
-          expect(topics.is_a?(ActiveRecord::Relation)).to eq(true)
-        end
+        expect(topics.is_a?(ActiveRecord::Relation)).to eq(true) if options[:filter] != :suggested
         topics
       end
     DiscoursePluginRegistry.register_modifier(
