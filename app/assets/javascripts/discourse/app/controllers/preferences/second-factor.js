@@ -20,7 +20,6 @@ export default class SecondFactorController extends Controller {
   @service dialog;
   @service modal;
   @service siteSettings;
-  @service currentUser;
 
   loading = false;
   dirty = false;

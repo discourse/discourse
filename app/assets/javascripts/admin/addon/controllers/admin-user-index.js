@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -30,9 +30,9 @@ export default class AdminUserIndexController extends Controller {
   userTitleValue = null;
   ssoExternalEmail = null;
   ssoLastPayload = null;
-  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   @setting("enable_badges") showBadges;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
   @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
 
   @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
@@ -130,12 +130,22 @@ export default class AdminUserIndexController extends Controller {
     return { editor: username };
   }
 
+  @computed("model.id", "currentUser.id")
   get canCheckEmails() {
-    return this.canCheckEmailsHelper.canCheckEmails;
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
   }
 
+  @computed("model.id", "currentUser.id")
   get canAdminCheckEmails() {
-    return this.canCheckEmailsHelper.canAdminCheckEmails;
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canAdminCheckEmails;
   }
 
   groupAdded(added) {

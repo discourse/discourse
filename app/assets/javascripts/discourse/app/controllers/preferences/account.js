@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { alias, gt, not, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -17,11 +17,11 @@ import { i18n } from "discourse-i18n";
 export default class AccountController extends Controller {
   @service dialog;
   @service modal;
-
   @controller user;
 
   @setting("enable_names") canEditName;
   @setting("enable_user_status") canSelectUserStatus;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @alias("user.viewingSelf") canDownloadPosts;
   @not("currentUser.can_delete_account") cannotDeleteAccount;
@@ -36,7 +36,6 @@ export default class AccountController extends Controller {
   newPrimaryGroupInput = null;
   newStatus = null;
   revoking = null;
-  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   init() {
     super.init(...arguments);
@@ -55,8 +54,13 @@ export default class AccountController extends Controller {
     this.set("passwordProgress", null);
   }
 
-  canCheckEmails() {
-    return this.canCheckEmailsHelper.canCheckEmails;
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
   }
 
   @discourseComputed()

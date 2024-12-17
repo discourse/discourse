@@ -37,11 +37,11 @@ export default class UserCardContents extends CardContentsBase {
   avatarDataAttrKey = "userCard";
   mentionSelector = "a.mention";
   ariaLabel = i18n("user.card");
-  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   @setting("allow_profile_backgrounds") allowBackgrounds;
   @setting("enable_badges") showBadges;
   @setting("display_local_time_in_user_card") showUserLocalTime;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @alias("topic.postStream") postStream;
 
@@ -55,7 +55,7 @@ export default class UserCardContents extends CardContentsBase {
   @and("viewingAdmin", "showName", "user.canBeDeleted") showDelete;
   @not("user.isBasic") linkWebsite;
   @or("user.suspend_reason", "user.bio_excerpt") isSuspendedOrHasBio;
-  @and("user.staged", "canCheckEmailsHelper.canCheckEmails") showCheckEmail;
+  @and("user.staged", "canCheckEmails") showCheckEmail;
 
   user = null;
 
@@ -71,6 +71,15 @@ export default class UserCardContents extends CardContentsBase {
   @computed("user.name", "user.username")
   get showName() {
     return this.user.name !== this.user.username;
+  }
+
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
   }
 
   @discourseComputed("user")

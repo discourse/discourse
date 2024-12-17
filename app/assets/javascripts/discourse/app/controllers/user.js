@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
+import { setting } from "discourse/lib/computed";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import getURL from "discourse-common/lib/get-url";
@@ -18,6 +19,7 @@ export default class UserController extends Controller {
   @optionalService adminTools;
 
   @controller("user-notifications") userNotifications;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @equal("router.currentRouteName", "user.summary") isSummaryRoute;
   @or("model.can_ignore_user", "model.can_mute_user") canMuteOrIgnoreUser;
@@ -46,8 +48,6 @@ export default class UserController extends Controller {
   @not("model.isBasic") linkWebsite;
   @and("model.can_be_deleted", "model.can_delete_all_posts") canDeleteUser;
   @readOnly("router.currentRoute.parent.name") currentParentRoute;
-
-  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   @discourseComputed("model.username")
   viewingSelf(username) {
@@ -192,8 +192,13 @@ export default class UserController extends Controller {
     /* noop */
   }
 
+  @computed("model.id", "currentUser.id")
   get canCheckEmails() {
-    return this.canCheckEmailsHelper.canCheckEmails;
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
   }
 
   get displayTopLevelAdminButton() {

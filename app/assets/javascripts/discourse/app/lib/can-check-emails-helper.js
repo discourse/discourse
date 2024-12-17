@@ -1,13 +1,8 @@
-import { getOwner, setOwner } from "@ember/owner";
-import { service } from "@ember/service";
-import User from "discourse/models/user";
-
 export default class CanCheckEmailsHelper {
-  @service siteSettings;
-  @service currentUser;
-
-  constructor(context) {
-    setOwner(this, getOwner(context));
+  constructor(model, can_moderators_view_emails, currentUser) {
+    this.model = model;
+    this.can_moderators_view_emails = can_moderators_view_emails;
+    this.currentUser = currentUser;
   }
 
   get canAdminCheckEmails() {
@@ -19,11 +14,10 @@ export default class CanCheckEmailsHelper {
       return false;
     }
 
-    const userId = this.model instanceof User ? this.model.id : null;
     const canStaffCheckEmails =
-      this.siteSettings.moderators_view_emails && this.currentUser.staff;
+      this.can_moderators_view_emails && this.currentUser.staff;
     return (
-      userId === this.currentUser.id ||
+      this.model.id === this.currentUser.id ||
       this.canAdminCheckEmails ||
       canStaffCheckEmails
     );
