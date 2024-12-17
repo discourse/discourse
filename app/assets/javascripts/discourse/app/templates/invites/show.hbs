@@ -134,6 +134,11 @@
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "invites.password_label"}}
                   </label>
+                  <TogglePasswordMask
+                    @maskPassword={{this.maskPassword}}
+                    @togglePasswordMask={{this.togglePasswordMask}}
+                    @parentController="invites-show"
+                  />
                   <div class="create-account__password-info">
                     <div class="create-account__password-tip-validation">
                       <InputTip
@@ -148,11 +153,6 @@
                         {{i18n "login.caps_lock_warning"}}
                       </div>
                     </div>
-                    <TogglePasswordMask
-                      @maskPassword={{this.maskPassword}}
-                      @togglePasswordMask={{this.togglePasswordMask}}
-                      @parentController="invites-show"
-                    />
                   </div>
                 </div>
               {{/unless}}
