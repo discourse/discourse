@@ -19,7 +19,6 @@ const ACTION_AS_STRING_DEPRECATION_ARGS = [
 
 export default class DButton extends GlimmerComponentWithDeprecatedParentView {
   @service router;
-  @service capabilities;
 
   @notEmpty("args.icon") btnIcon;
 
@@ -103,15 +102,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
 
   @action
   click(event) {
-    if (this.capabilities.isIOS) {
-      // iOS needs actions to be undelayed
-      // especially important for the composer,
-      // otherwise focus isn't set properly
-      return this._triggerAction(event);
-    } else {
-      // Using `next()` to optimise INP
-      next(() => this._triggerAction(event));
-    }
+    return this._triggerAction(event);
   }
 
   @action
@@ -138,11 +129,19 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
             );
           }
         } else if (typeof actionVal === "object" && actionVal.value) {
-          forwardEvent
-            ? actionVal.value(actionParam, event)
-            : actionVal.value(actionParam);
+          // Using `next()` to optimise INP
+          next(() =>
+            forwardEvent
+              ? actionVal.value(actionParam, event)
+              : actionVal.value(actionParam)
+          );
         } else if (typeof actionVal === "function") {
-          forwardEvent ? actionVal(actionParam, event) : actionVal(actionParam);
+          // Using `next()` to optimise INP
+          next(() =>
+            forwardEvent
+              ? actionVal(actionParam, event)
+              : actionVal(actionParam)
+          );
         }
       } else if (route) {
         if (routeModels) {
