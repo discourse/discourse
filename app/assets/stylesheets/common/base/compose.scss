@@ -653,12 +653,14 @@ div.ac-wrap {
   top: 0;
   height: 100%;
   z-index: -1;
-  max-height: unset;
   min-height: unset;
+  max-height: 0;
+
   &.open,
   &.fullscreen {
     z-index: z("mobile-composer");
     height: calc(var(--composer-vh, 1vh) * 100);
+    max-height: unset;
   }
 
   .grippie,
