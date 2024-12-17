@@ -11,7 +11,8 @@
 
 body.login-page,
 body.signup-page,
-body.invite-page {
+body.invite-page,
+body.password-reset-page {
   & ~ .powered-by-discourse,
   .above-main-container-outlet {
     display: none;
@@ -25,7 +26,8 @@ body.signup-page {
 
 .login-fullpage,
 .signup-fullpage,
-.invites-show {
+.invites-show,
+.password-reset-page {
   .signup-body,
   .login-body {
     display: flex;
@@ -241,8 +243,6 @@ body.signup-page {
   .caps-lock-warning {
     color: var(--danger);
     font-size: var(--font-down-1);
-    font-weight: bold;
-    margin-top: 0.5em;
   }
 
   .create-account__password-info {
