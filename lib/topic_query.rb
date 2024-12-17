@@ -422,7 +422,7 @@ class TopicQuery
 
   def list_new_in_category(category)
     create_list(:new_in_category, unordered: true, category: category.id) do |list|
-      list.by_newest.first(25)
+      list.by_newest.limit(25)
     end
   end
 
