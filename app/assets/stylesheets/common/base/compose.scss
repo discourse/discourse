@@ -15,6 +15,7 @@ html.composer-open.not-mobile-device {
   left: 0;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
   max-width: $reply-area-max-width;
   width: 100%;
 
@@ -70,6 +71,14 @@ html.composer-open.not-mobile-device {
 
   &.open {
     height: var(--composer-height);
+    --min-height: 255px;
+    min-height: var(--min-height);
+    max-height: calc(100vh - var(--header-offset, 4em));
+    &.composer-action-reply {
+      // we can let the reply composer get a little shorter
+      min-height: calc(var(--min-height) - 4em);
+    }
+    padding-bottom: var(--composer-ipad-padding);
   }
 
   &.draft,
@@ -653,13 +662,13 @@ div.ac-wrap {
   top: 0;
   height: 100%;
   z-index: -1;
-  min-height: unset;
   max-height: 0;
 
   &.open,
   &.fullscreen {
     z-index: z("mobile-composer");
     height: calc(var(--composer-vh, 1vh) * 100);
+    min-height: unset;
     max-height: unset;
   }
 
