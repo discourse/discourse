@@ -14,6 +14,12 @@ class ReviewableScore < ActiveRecord::Base
     @types ||= PostActionType.flag_types.merge(PostActionType.score_types)
   end
 
+  def self.type_title(type)
+    I18n.t("post_action_types.#{type}.title", default: nil) ||
+      I18n.t("reviewable_score_types.#{type}.title", default: nil) ||
+      PostActionType.names[types[type]]
+  end
+
   # When extending post action flags, we need to call this method in order to
   # get the latests flags.
   def self.reload_types
