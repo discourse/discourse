@@ -5,61 +5,42 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { ajax } from "discourse/lib/ajax";
-import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
+import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import AdminFilteredSiteSettings from "admin/components/admin-filtered-site-settings";
 import SiteSetting from "admin/models/site-setting";
 
-export default class AreaSettings extends Component {
+export default class AdminAreaSettings extends Component {
   @service siteSettings;
   @service router;
   @tracked settings = [];
   @tracked filter = "";
 
   @bind
-  loadSettings() {
-    ajax("/admin/config/site_settings.json", {
+  async loadSettings() {
+    this.filter = this.args.filter;
+    const result = await ajax("/admin/config/site_settings.json", {
       data: {
         filter_area: this.args.area,
         plugin: this.args.plugin,
         categories: this.args.categories,
       },
-    }).then((result) => {
-      this.settings = [
-        {
-          name: "All",
-          nameKey: "all_results",
-          siteSettings: result.site_settings.map((setting) =>
-            SiteSetting.create(setting)
-          ),
-        },
-      ];
     });
-    // check if isTesting is required because there is a conflict with the filter query parameter of Qunit
-    if (!isTesting()) {
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-      if (params.has("filter")) {
-        this.filter = params.get("filter");
-      }
-    }
+    this.settings = [
+      {
+        name: "All",
+        nameKey: "all_results",
+        siteSettings: result.site_settings.map((setting) =>
+          SiteSetting.create(setting)
+        ),
+      },
+    ];
   }
 
   @action
   filterChangedCallback(filterData) {
-    // check if isTesting is required because there is a conflict with the filter query parameter of Qunit
-    if (!isTesting()) {
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-      if (filterData.filter) {
-        params.set("filter", filterData.filter);
-      } else {
-        params.delete("filter");
-      }
-      url.search = params.toString();
-      window.history.pushState({}, "", url);
-    }
+    this.args.filterChangedCallback(filterData.filter);
   }
 
   <template>
@@ -74,6 +55,10 @@ export default class AreaSettings extends Component {
           @initialFilter={{this.filter}}
           @onFilterChanged={{this.filterChangedCallback}}
           @settings={{this.settings}}
+        />
+      {{else}}
+        <AdminConfigAreaEmptyList
+          @emptyLabelTranslated={{i18n "admin.settings.not_found"}}
         />
       {{/if}}
     </div>

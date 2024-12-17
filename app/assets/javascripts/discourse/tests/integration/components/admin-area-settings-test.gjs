@@ -2,7 +2,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import AreaSettings from "admin/components/area-settings";
+import AdminAreaSettings from "admin/components/admin-area-settings";
 
 module("Integration | Component | AdminAreaSettings", function (hooks) {
   hooks.beforeEach(function () {
@@ -65,7 +65,14 @@ module("Integration | Component | AdminAreaSettings", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders area settings and allows to filter", async function (assert) {
-    await render(<template><AreaSettings @area="flags" /></template>);
+    const callback = () => {};
+    await render(<template>
+      <AdminAreaSettings
+        @area="flags"
+        @filterChangedCallback={{callback}}
+        @filter=""
+      />
+    </template>);
 
     assert.dom(".admin-site-settings-filter-controls").exists();
     assert.dom(".setting-label").exists({ count: 2 });

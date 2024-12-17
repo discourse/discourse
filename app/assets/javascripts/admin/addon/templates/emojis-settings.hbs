@@ -1,1 +1,6 @@
-<AreaSettings @area="emojis" @path="/admin/customize/emojis/settings" />
+<AdminAreaSettings
+  @area="emojis"
+  @path="/admin/customize/emojis/settings"
+  @filter={{this.filter}}
+  @filterChangedCallback={{this.filterChangedCallback}}
+/>

@@ -1,1 +1,6 @@
-<AreaSettings @area="flags" @path="/admin/config/flags/settings" />
+<AdminAreaSettings
+  @area="flags"
+  @path="/admin/config/flags/settings"
+  @filter={{this.filter}}
+  @filterChangedCallback={{this.filterChangedCallback}}
+/>
