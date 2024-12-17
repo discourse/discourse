@@ -4489,7 +4489,7 @@ hu:
           configure_defaults: "Alapértelmezések beállítása"
         community:
           edit_section:
-            sidebar: "Szabd testre ezt a részt"
+            sidebar: "Testreszabás"
             header_dropdown: "Személyre szabás"
           links:
             about:

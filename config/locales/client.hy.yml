@@ -2552,6 +2552,8 @@ hy:
         name: "Փոխարինել Պիտակները"
       delete_topics:
         name: "Ջնջել"
+      update_category:
+        name: "Թարմացնել Կատեգորիան"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -2607,6 +2609,7 @@ hy:
       deleted: "Թեման ջնջվել է"
       slow_mode_update:
         enable: "Միացնել"
+        update: "Թարմացնել"
         remove: "Անջատել"
         durations:
           1_hour: "1 ժամ"
@@ -2899,6 +2902,8 @@ hy:
       edit_reason: "Պատճառը՝ "
       post_number: "գրառում %{number}"
       ignored: "Անտեսված բովանդակություն"
+      last_edited_on: "գրառումը վերջին անգամ խմբագրվել է %{dateTime}-ին"
+      edit_history: "գրառման խմբագրման պատմությունը"
       reply_as_new_topic: "Պատասխանել որպես հղված թեմա"
       reply_as_new_private_message: "Պատասխանել որպես հաղորդագրություն նույն ստացողներին"
       continue_discussion: "Շարունակելով %{postLink} քննարկումը՝ "
@@ -3286,6 +3291,8 @@ hy:
       one: "օգտատեր"
       other: "օգտատերեր"
     category_title: "Կատեգորիա"
+    history_capped_revisions: "Պատմություն, վերջին 100 վերանայումները"
+    history: "Պատմություն"
     raw_email:
       title: "Մուտքային Էլ. նամակ"
       not_available: "Հասանելի չէ!"
