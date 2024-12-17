@@ -16,6 +16,8 @@ RSpec.describe SessionController do
     end
   end
 
+  before { SiteSetting.hide_email_address_taken = false }
+
   describe "#email_login_info" do
     let(:email_token) do
       Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
