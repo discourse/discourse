@@ -22,6 +22,7 @@ DiscourseAutomation::Scriptable.add(
 
       # mapping of group full_names to ids for quick lookup
       group_ids_by_name = Group.where.not(full_name: [nil, ""]).pluck(:full_name, :id).to_h
+      groups_by_id = {}
 
       # find users with the custom field who aren't in their designated group
       User
@@ -37,7 +38,7 @@ DiscourseAutomation::Scriptable.add(
         .find_each do |user|
           next unless group_id = group_ids_by_name[user.group_name]
 
-          group = Group.find(group_id)
+          group = groups_by_id[group_id] ||= Group.find(group_id)
           group.add(user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
         end
