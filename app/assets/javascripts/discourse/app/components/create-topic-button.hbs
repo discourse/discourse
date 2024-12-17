@@ -12,10 +12,7 @@
     </:button>
     <:tooltip>
       {{#if @disabled}}
-        <DTooltip
-          @icon="circle-info"
-          @content={{i18n "topic.create_disabled_category"}}
-        />
+        <DTooltip @icon="circle-info" @content={{i18n this.disallowedReason}} />
       {{/if}}
     </:tooltip>
   </DButtonTooltip>
