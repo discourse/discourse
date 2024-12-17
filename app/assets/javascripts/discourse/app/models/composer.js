@@ -191,8 +191,6 @@ export default class Composer extends RestModel {
   }
 
   @service dialog;
-  @service capabilities;
-  @service site;
 
   @tracked topic;
   @tracked post;
