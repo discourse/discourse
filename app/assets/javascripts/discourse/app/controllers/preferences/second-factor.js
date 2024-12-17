@@ -34,7 +34,7 @@ export default class SecondFactorController extends Controller {
   security_keys = [];
 
   get isCurrentUser() {
-    return this.currentUser.id === this.model.id;
+    return this.currentUser?.id === this.model.id;
   }
 
   @discourseComputed

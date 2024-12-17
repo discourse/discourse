@@ -35,7 +35,7 @@ export default class SecurityController extends Controller {
   }
 
   get isCurrentUser() {
-    return this.currentUser.id === this.model.id;
+    return this.currentUser?.id === this.model.id;
   }
 
   get canUsePasskeys() {

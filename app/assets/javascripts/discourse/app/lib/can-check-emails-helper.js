@@ -15,6 +15,10 @@ export default class CanCheckEmailsHelper {
   }
 
   get canCheckEmails() {
+    if (!this.currentUser) {
+      return false;
+    }
+
     const userId = this.model instanceof User ? this.model.id : null;
     const canStaffCheckEmails =
       this.siteSettings.moderators_view_emails && this.currentUser.staff;
