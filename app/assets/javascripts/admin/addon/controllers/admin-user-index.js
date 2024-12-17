@@ -5,9 +5,9 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
@@ -18,9 +18,7 @@ import MergeUsersConfirmationModal from "../components/modal/merge-users-confirm
 import MergeUsersProgressModal from "../components/modal/merge-users-progress";
 import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
 
-export default class AdminUserIndexController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class AdminUserIndexController extends Controller {
   @service router;
   @service dialog;
   @service adminTools;
@@ -32,6 +30,7 @@ export default class AdminUserIndexController extends Controller.extend(
   userTitleValue = null;
   ssoExternalEmail = null;
   ssoLastPayload = null;
+  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   @setting("enable_badges") showBadges;
   @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
@@ -129,6 +128,14 @@ export default class AdminUserIndexController extends Controller.extend(
   @discourseComputed("model.username")
   postEditsByEditorFilter(username) {
     return { editor: username };
+  }
+
+  get canCheckEmails() {
+    return this.canCheckEmailsHelper.canCheckEmails;
+  }
+
+  get canAdminCheckEmails() {
+    return this.canCheckEmailsHelper.canCheckEmails;
   }
 
   groupAdded(added) {

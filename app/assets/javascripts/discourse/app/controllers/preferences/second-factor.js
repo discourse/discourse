@@ -11,18 +11,16 @@ import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
 import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
-export default class SecondFactorController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class SecondFactorController extends Controller {
   @service dialog;
   @service modal;
   @service siteSettings;
+  @service currentUser;
 
   loading = false;
   dirty = false;
@@ -34,6 +32,10 @@ export default class SecondFactorController extends Controller.extend(
   secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
   totps = [];
   security_keys = [];
+
+  get isCurrentUser() {
+    return this.currentUser.id === this.model.id;
+  }
 
   @discourseComputed
   hasOAuth() {

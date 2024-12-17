@@ -2,8 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { computedI18n } from "discourse/lib/computed";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
@@ -13,9 +13,7 @@ import AdminUser from "admin/models/admin-user";
 
 const MAX_BULK_SELECT_LIMIT = 100;
 
-export default class AdminUsersListShowController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class AdminUsersListShowController extends Controller {
   @service dialog;
   @service modal;
   @service toasts;
@@ -33,6 +31,7 @@ export default class AdminUsersListShowController extends Controller.extend(
   refreshing = false;
   listFilter = null;
   lastSelected = null;
+  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   @computedI18n("search_hint") searchHint;
 
@@ -58,6 +57,14 @@ export default class AdminUsersListShowController extends Controller.extend(
     }
 
     return colCount;
+  }
+
+  get canCheckEmails() {
+    return this.canCheckEmailsHelper.canCheckEmails;
+  }
+
+  get canAdminCheckEmails() {
+    return this.canCheckEmailsHelper.canCheckEmails;
   }
 
   resetFilters() {

@@ -6,29 +6,37 @@ import ConfirmSession from "discourse/components/dialog-messages/confirm-session
 import AuthTokenModal from "discourse/components/modal/auth-token";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
-export default class SecurityController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class SecurityController extends Controller {
   @service modal;
   @service dialog;
   @service router;
+  @service currentUser;
 
   passwordProgress = null;
   subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;
+  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   @gt("model.user_auth_tokens.length", DEFAULT_AUTH_TOKENS_COUNT)
   canShowAllAuthTokens;
+
+  get canCheckEmails() {
+    return this.canCheckEmailsHelper.canCheckEmails;
+  }
+
+  get isCurrentUser() {
+    return this.currentUser.id === this.model.id;
+  }
 
   get canUsePasskeys() {
     return (

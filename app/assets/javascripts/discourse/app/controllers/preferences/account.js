@@ -5,18 +5,16 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import DiscourseURL from "discourse/lib/url";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { findAll } from "discourse/models/login-method";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
-export default class AccountController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class AccountController extends Controller {
   @service dialog;
   @service modal;
 
@@ -38,6 +36,7 @@ export default class AccountController extends Controller.extend(
   newPrimaryGroupInput = null;
   newStatus = null;
   revoking = null;
+  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   init() {
     super.init(...arguments);
@@ -54,6 +53,10 @@ export default class AccountController extends Controller.extend(
 
   reset() {
     this.set("passwordProgress", null);
+  }
+
+  canCheckEmails() {
+    return this.canCheckEmailsHelper.canCheckEmails;
   }
 
   @discourseComputed()

@@ -4,14 +4,14 @@ import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
-export default class UserController extends Controller.extend(CanCheckEmails) {
+export default class UserController extends Controller {
   @service currentUser;
   @service router;
   @service dialog;
@@ -46,6 +46,8 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
   @not("model.isBasic") linkWebsite;
   @and("model.can_be_deleted", "model.can_delete_all_posts") canDeleteUser;
   @readOnly("router.currentRoute.parent.name") currentParentRoute;
+
+  canCheckEmailsHelper = new CanCheckEmailsHelper(this);
 
   @discourseComputed("model.username")
   viewingSelf(username) {
@@ -188,6 +190,10 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
 
   set userNotificationLevel(value) {
     /* noop */
+  }
+
+  get canCheckEmails() {
+    return this.canCheckEmailsHelper.canCheckEmails;
   }
 
   get displayTopLevelAdminButton() {
