@@ -128,4 +128,17 @@ describe "glimmer topic list", type: :system do
       end
     end
   end
+
+  it "unpins globally pinned topics on click" do
+    topic = Fabricate(:topic, pinned_globally: true, pinned_at: Time.current)
+    visit("/latest")
+
+    expect(page).to have_css(".topic-list-item .d-icon-thumbtack:not(.unpinned)")
+
+    find(".topic-list-item .d-icon-thumbtack").click
+    expect(page).to have_css(".topic-list-item .d-icon-thumbtack.unpinned")
+
+    wait_for { TopicUser.exists?(topic:, user:) }
+    expect(TopicUser.find_by(topic:, user:).cleared_pinned_at).to_not be_nil
+  end
 end
