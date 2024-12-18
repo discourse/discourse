@@ -9,7 +9,6 @@ export default function () {
   this.route("about", { resetNamespace: true });
 
   this.route("post", { path: "/p/:id" });
-  this.route("posts");
 
   // Topic routes
   this.route(

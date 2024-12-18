@@ -1050,7 +1050,7 @@ Discourse::Application.routes.draw do
           extension: /[a-z0-9\._]+/i,
         }
 
-    get "posts" => "posts#latest", :id => "latest_posts"
+    get "posts" => "posts#latest", :id => "latest_posts", :constraints => { format: /(json|rss)/ }
     get "private-posts" => "posts#latest",
         :id => "private_posts",
         :constraints => {
