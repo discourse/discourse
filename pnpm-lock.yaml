@@ -11,9 +11,9 @@ patchedDependencies:
   babel-plugin-debug-macros@0.3.4:
     hash: wki6cycbrrm5sscamn5w4cujby
     path: patches/babel-plugin-debug-macros@0.3.4.patch
-  content-tag@3.0.0:
+  content-tag@3.1.0:
     hash: lgdkxhmahesfzwpl4vwprolz5m
-    path: patches/content-tag@3.0.0.patch
+    path: patches/content-tag@3.1.0.patch
   ember-source@5.12.0:
     hash: xx7mvsb7nmshqkkqhmf45r3hse
     path: patches/ember-source@5.12.0.patch
@@ -89,8 +89,8 @@ importers:
         specifier: ^4.0.4
         version: 4.0.4
       lefthook:
-        specifier: ^1.9.2
-        version: 1.9.2
+        specifier: ^1.9.3
+        version: 1.9.3
       licensee:
         specifier: ^11.1.1
         version: 11.1.1(patch_hash=55h346kvblvnigtrwrsh4hpona)
@@ -119,8 +119,8 @@ importers:
         specifier: ^2.8.8
         version: 2.8.8
       puppeteer-core:
-        specifier: ^23.10.4
-        version: 23.10.4
+        specifier: ^23.11.0
+        version: 23.11.0
       squoosh:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
@@ -285,8 +285,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       ace-builds:
-        specifier: ^1.36.5
-        version: 1.36.5
+        specifier: ^1.37.0
+        version: 1.37.0
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.0)
@@ -744,7 +744,7 @@ importers:
         version: 4.2.0
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(rsvp@4.8.5))
     devDependencies:
       ember-cli:
         specifier: ~6.0.1
@@ -1068,8 +1068,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       content-tag:
-        specifier: ^3.0.0
-        version: 3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+        specifier: ^3.1.0
+        version: 3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.0)
@@ -1087,7 +1087,7 @@ importers:
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(rsvp@4.8.5))
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
@@ -2872,8 +2872,8 @@ packages:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
     engines: {node: '>= 0.6'}
 
-  ace-builds@1.36.5:
-    resolution: {integrity: sha512-mZ5KVanRT6nLRDLqtG/1YQQLX/gZVC/v526cm1Ru/MTSlrbweSmqv2ZT0d2GaHpJq035MwCMIrj+LgDAUnDXrg==}
+  ace-builds@1.37.0:
+    resolution: {integrity: sha512-OzYp9YXOIY25jar1y27qIalmvMAW5ePAJbywC47l/Whte+/eDpjcDAKCGowW72C7Q405doSjycm9jSeTGgLF9g==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -3553,8 +3553,8 @@ packages:
     resolution: {integrity: sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==}
     engines: {node: '>=6.0'}
 
-  chromium-bidi@0.8.0:
-    resolution: {integrity: sha512-uJydbGdTw0DEUjhoogGveneJVWX/9YuqkWePzMmkBYwtdAqo5d3J/ovNKFr+/2hWXYmYCr6it8mSSTIj6SS6Ug==}
+  chromium-bidi@0.11.0:
+    resolution: {integrity: sha512-6CJWHkNRoyZyjV9Rwv2lYONZf1Xm0IuDyNq97nwSsxxP3wf5Bwy15K5rOvVKMtJ127jJBmxFUanSAOjgFRxgrA==}
     peerDependencies:
       devtools-protocol: '*'
 
@@ -3913,6 +3913,9 @@ packages:
 
   content-tag@3.0.0:
     resolution: {integrity: sha512-HxWPmF9hzehv5PV7TSK7QSzlVBhmwQA8NgBrXmL+fqXfM3L1r3ResAPzeiGbxra3Zw6U3gdhw3cIDJADQnuCVQ==}
+
+  content-tag@3.1.0:
+    resolution: {integrity: sha512-gSESx+fia81/vKjorui0V6wY7IBpuitd84LcQnaPVF9Xe9ctLAf4saHwbUi3SAhYfi9kxs5ODfAVnm5MmjojCQ==}
 
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
@@ -5882,58 +5885,58 @@ packages:
     resolution: {integrity: sha512-M6T051+5QCGLBQb8id3hdvIW8+zeFV2FyBGFS9IEK5H9Wt4MueD4bW1eWikpHgZp+5xR3l5c8pZUkQsIA0BFZg==}
     engines: {node: '>=8'}
 
-  lefthook-darwin-arm64@1.9.2:
-    resolution: {integrity: sha512-kWcSqAdGu5MAtxdLBpxg8H+p4d/pO7tA7+3Q1Cj9NM+c0L3R2ZefGNStGF6Ftbu8grkpz9/jCD588O9PHjsVfw==}
+  lefthook-darwin-arm64@1.9.3:
+    resolution: {integrity: sha512-6vtZlpf53jQxKLTeAgGGBBpgtI3TI0B1lgC1r+6mxZuMuvdvhWcPzWkNazm4xz+wMvXLeaStLNsmsTvdsHZ5ow==}
     cpu: [arm64]
     os: [darwin]
 
-  lefthook-darwin-x64@1.9.2:
-    resolution: {integrity: sha512-M4zspEhp0uXaIEVkcPFYayxElFzFhhSfEk29FMhxZOfbmZYPUSYaSsTHgb7oeR0O0/zcMTVDk4nNWsBp2Jpx5A==}
+  lefthook-darwin-x64@1.9.3:
+    resolution: {integrity: sha512-LTdj4m2MvFEQtCVeTFmCDb7QrwWfirdXhQwKrj0qn99fY6Awk5zKwimRvyzynlb2oSCPUw2DSEUd8FiewgJNuw==}
     cpu: [x64]
     os: [darwin]
 
-  lefthook-freebsd-arm64@1.9.2:
-    resolution: {integrity: sha512-7Grb+wdY99Iuorw9aUu+zYKdkEaQs6OVGn4jgav+AyBSxJA0WZmXgdmZqd6+LuRVYn8JRO8bER8Tu4QUa1fSxg==}
+  lefthook-freebsd-arm64@1.9.3:
+    resolution: {integrity: sha512-4UZhmiLpGZ6ITyd4VKf1SGYZ+TkiTjr4tyiBhX4M6LGI6A6T7U2bbM4Y59eEYcGtkY8b+TE/g0JOWc25JnLkSw==}
     cpu: [arm64]
     os: [freebsd]
 
-  lefthook-freebsd-x64@1.9.2:
-    resolution: {integrity: sha512-tMBN//hqHMUJ9v7k9W3l9aMEBw//enEX+2eQLcvDJSuEE+J3AUbNg9YA5kTpVsDuafg10ziJXAuGD0kYh2ubww==}
+  lefthook-freebsd-x64@1.9.3:
+    resolution: {integrity: sha512-2IGHR8An85mi0ZRbGHldBw9OabpYVam3fazC1gaPkfiZg1aLdQS4O9aiK/9Ehl5zH6qujXAhkephgrPqF2smGg==}
     cpu: [x64]
     os: [freebsd]
 
-  lefthook-linux-arm64@1.9.2:
-    resolution: {integrity: sha512-U16CUCaQSRQTbjqvrsJrwppCK4d/IQjMimfC/SwAEreXr7WkBiekV+Gv+fytEnVHJTCSb5MajJTV+WpBsg6jGg==}
+  lefthook-linux-arm64@1.9.3:
+    resolution: {integrity: sha512-bx731z+HtKXLQjinq59MRtWjr7gMH3pOzvDbyWxA05SNPTh7gM/jwUCBBF7aLXMFh2qrm8cJcxklONkST+I5ng==}
     cpu: [arm64]
     os: [linux]
 
-  lefthook-linux-x64@1.9.2:
-    resolution: {integrity: sha512-lkEes30MquDhiIrNQ61CfNvGLCN39d8PZ2S/dwLMJBtTH7qfVqXu8UR3KhKEDD1h43cEb4pnIeO2BJUZyn/FNw==}
+  lefthook-linux-x64@1.9.3:
+    resolution: {integrity: sha512-ajkDpabjKsIcJt1QhWW8QUqpWowymw2JuWTRTCQ8rRa7E8AeYiYYLb9HUrOndBUvNKS8WuM+FU7dDdcSsTDDFQ==}
     cpu: [x64]
     os: [linux]
 
-  lefthook-openbsd-arm64@1.9.2:
-    resolution: {integrity: sha512-UJKcL8Iiga8GetYqXqGXy6OeIhtNGim8PHQZH4nfR70s6TPvTvBEGvf48mvfwRyXt8t6aUvz1oyVvRQSdXETug==}
+  lefthook-openbsd-arm64@1.9.3:
+    resolution: {integrity: sha512-oqiK9NiaSDUPaCkIrgIFo7nnJFuZlyJQDVuy4agYPSdBVmJAJaigg1avLKvwtJvUMQJDnPTg0T/4rpMGQbty+g==}
     cpu: [arm64]
     os: [openbsd]
 
-  lefthook-openbsd-x64@1.9.2:
-    resolution: {integrity: sha512-CLS119Fn91mZ2U7ug3fjYMfM7rvwB7gwpDUbuQlEPnVsHJOtaIpu+cmhnKKtU6b4B6r5ETMwhc5dDt/tS5curQ==}
+  lefthook-openbsd-x64@1.9.3:
+    resolution: {integrity: sha512-gs+QXcSRtIXldGJ8KjtZzlhFckvkyahim7QdEKO6xnv95pnnY8TTZ3bYEIq69F/l+43PIMQGUOIrbA7cD0BvVQ==}
     cpu: [x64]
     os: [openbsd]
 
-  lefthook-windows-arm64@1.9.2:
-    resolution: {integrity: sha512-MlN2EnYNF6RUMTGX4csJnHq/J+werlerQsUcYfZrs+TruXCm4MLjwO9Q7vShTws3bsCoeDZnacNTVESQpZG6Lg==}
+  lefthook-windows-arm64@1.9.3:
+    resolution: {integrity: sha512-l2OUYoPGcIgK934R5WS+y7YRXfn6DWm/otr4N87J/RBAe5SJ+sCHyteJUGL8QoPfNsjtlnDRP7w9zvN7sNcjDg==}
     cpu: [arm64]
     os: [win32]
 
-  lefthook-windows-x64@1.9.2:
-    resolution: {integrity: sha512-7gl1L3qj6xWsqsYJ/ACRDUJruMWLqIRGcI66RiAEnQ3aSnnk0FLCVxIyMwecgW3IWY1O2C69EXV4Og7/0l9JVQ==}
+  lefthook-windows-x64@1.9.3:
+    resolution: {integrity: sha512-QyNY7epLimf7w7GzWnX/sYXhPZ05WKtI4dppuPtUE0pjuDY9PgeQFkDkfwdnDfitZ8Ywa1Uo+oiXn588c6+7ow==}
     cpu: [x64]
     os: [win32]
 
-  lefthook@1.9.2:
-    resolution: {integrity: sha512-boUWdXdT6MUPghZuuX64xXbG7u69fcgkD6vNEjoxh3Gll6o6MfY/ITpj/HrRAUVym1jWXB0Z298qL789OD+dZw==}
+  lefthook@1.9.3:
+    resolution: {integrity: sha512-3YKc6emZx/w3tQYysqzz0Xi5S8zjPvP7+nyAI4ZO6T5mXUfrn/v5G3yC0J9ysFxnxGGSizdn6yOEfqQzie291g==}
     hasBin: true
 
   levn@0.4.1:
@@ -6997,8 +7000,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@23.10.4:
-    resolution: {integrity: sha512-pQAY7+IFAndWDkDodsQGguW1/ifV5OMlGXJDspwtK49Asb7poJZ/V5rXJxVSpq57bWrJasjQBZ1X27z1oWVq4Q==}
+  puppeteer-core@23.11.0:
+    resolution: {integrity: sha512-fr5Xp8KeZGRiLrYmosAxPAObi1vmb09vmwak9lqS7KvKMbcN+mk+bDpnDKXPd7QN9b7b/mb9Fgp0A6+024XbVA==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -8041,9 +8044,6 @@ packages:
   urix@0.1.0:
     resolution: {integrity: sha512-Am1ousAhSLBeB9cG/7k7r2R0zj50uDRlZHPGbazid5s9rlF1F/QKYObEKSIunSjIOkJZqwRRLpvewjEkM7pSqg==}
     deprecated: Please see https://github.com/lydell/urix#deprecated
-
-  urlpattern-polyfill@10.0.0:
-    resolution: {integrity: sha512-H/A06tKD7sS1O1X2SshBVeA5FLycRpjqiBeqGKmBwBDBy28EnRjORxTNe269KSSr5un5qyWi1iL61wLxpd+ZOg==}
 
   use@3.1.1:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
@@ -10674,7 +10674,7 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
-  ace-builds@1.36.5: {}
+  ace-builds@1.37.0: {}
 
   acorn-jsx@5.3.2(acorn@8.14.0):
     dependencies:
@@ -11676,11 +11676,10 @@ snapshots:
 
   chrome-trace-event@1.0.4: {}
 
-  chromium-bidi@0.8.0(devtools-protocol@0.0.1367902):
+  chromium-bidi@0.11.0(devtools-protocol@0.0.1367902):
     dependencies:
       devtools-protocol: 0.0.1367902
       mitt: 3.0.1
-      urlpattern-polyfill: 10.0.0
       zod: 3.23.8
 
   ci-info@3.9.0: {}
@@ -11873,7 +11872,9 @@ snapshots:
 
   content-tag@2.0.3: {}
 
-  content-tag@3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m): {}
+  content-tag@3.0.0: {}
+
+  content-tag@3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m): {}
 
   content-type@1.0.5: {}
 
@@ -12815,7 +12816,7 @@ snapshots:
   ember-template-imports@4.2.0:
     dependencies:
       broccoli-stew: 3.0.0
-      content-tag: 3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.0.0
       ember-cli-version-checker: 5.1.2
     transitivePeerDependencies:
       - supports-color
@@ -12867,7 +12868,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))):
+  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(rsvp@4.8.5)):
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-plugin-ember-template-compilation: 2.2.5
@@ -14658,48 +14659,48 @@ snapshots:
     dependencies:
       invert-kv: 3.0.1
 
-  lefthook-darwin-arm64@1.9.2:
+  lefthook-darwin-arm64@1.9.3:
     optional: true
 
-  lefthook-darwin-x64@1.9.2:
+  lefthook-darwin-x64@1.9.3:
     optional: true
 
-  lefthook-freebsd-arm64@1.9.2:
+  lefthook-freebsd-arm64@1.9.3:
     optional: true
 
-  lefthook-freebsd-x64@1.9.2:
+  lefthook-freebsd-x64@1.9.3:
     optional: true
 
-  lefthook-linux-arm64@1.9.2:
+  lefthook-linux-arm64@1.9.3:
     optional: true
 
-  lefthook-linux-x64@1.9.2:
+  lefthook-linux-x64@1.9.3:
     optional: true
 
-  lefthook-openbsd-arm64@1.9.2:
+  lefthook-openbsd-arm64@1.9.3:
     optional: true
 
-  lefthook-openbsd-x64@1.9.2:
+  lefthook-openbsd-x64@1.9.3:
     optional: true
 
-  lefthook-windows-arm64@1.9.2:
+  lefthook-windows-arm64@1.9.3:
     optional: true
 
-  lefthook-windows-x64@1.9.2:
+  lefthook-windows-x64@1.9.3:
     optional: true
 
-  lefthook@1.9.2:
+  lefthook@1.9.3:
     optionalDependencies:
-      lefthook-darwin-arm64: 1.9.2
-      lefthook-darwin-x64: 1.9.2
-      lefthook-freebsd-arm64: 1.9.2
-      lefthook-freebsd-x64: 1.9.2
-      lefthook-linux-arm64: 1.9.2
-      lefthook-linux-x64: 1.9.2
-      lefthook-openbsd-arm64: 1.9.2
-      lefthook-openbsd-x64: 1.9.2
-      lefthook-windows-arm64: 1.9.2
-      lefthook-windows-x64: 1.9.2
+      lefthook-darwin-arm64: 1.9.3
+      lefthook-darwin-x64: 1.9.3
+      lefthook-freebsd-arm64: 1.9.3
+      lefthook-freebsd-x64: 1.9.3
+      lefthook-linux-arm64: 1.9.3
+      lefthook-linux-x64: 1.9.3
+      lefthook-openbsd-arm64: 1.9.3
+      lefthook-openbsd-x64: 1.9.3
+      lefthook-windows-arm64: 1.9.3
+      lefthook-windows-x64: 1.9.3
 
   levn@0.4.1:
     dependencies:
@@ -14745,7 +14746,7 @@ snapshots:
 
   lint-to-the-future-ember-template@3.0.0(ember-template-lint@6.0.0):
     dependencies:
-      content-tag: 3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
       ember-template-lint: 6.0.0
       walk-sync: 2.2.0
 
@@ -15810,10 +15811,10 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@23.10.4:
+  puppeteer-core@23.11.0:
     dependencies:
       '@puppeteer/browsers': 2.6.1
-      chromium-bidi: 0.8.0(devtools-protocol@0.0.1367902)
+      chromium-bidi: 0.11.0(devtools-protocol@0.0.1367902)
       debug: 4.4.0(supports-color@8.1.1)
       devtools-protocol: 0.0.1367902
       typed-query-selector: 2.12.0
@@ -17080,8 +17081,6 @@ snapshots:
       punycode: 2.3.1
 
   urix@0.1.0: {}
-
-  urlpattern-polyfill@10.0.0: {}
 
   use@3.1.1: {}
 

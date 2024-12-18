@@ -2291,6 +2291,7 @@ fa_IR:
       quoted: '%{username} از شما در "%{topic}" - %{site_title} نقل قول کرد '
       replied: '%{username} در "%{topic}" - %{site_title} به شما پاسخ داد'
       posted: '%{username} در "%{topic}" - %{site_title} مطلبی نوشت'
+      private_message: '%{username} برای شما یک پیام خصوصی در "%{topic}" - %{site_title} ارسال کرد'
       linked: '%{username} در "%{topic}" - %{site_title} به نوشته‌ی شما پیوندی قرار داد'
       watching_first_post: '%{username} یک مبحث جدید در "%{topic}" - %{site_title} ساخته'
       confirm_title: "آگاه‌سازی فعال شد - %{site_title}"

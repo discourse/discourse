@@ -1655,7 +1655,7 @@ bg:
       quoted: '%{username} ви цитира в "%{topic}" - %{site_title}'
       replied: '%{username} ви отговори в "%{topic}" - %{site_title}'
       posted: '%{username} публикува в "%{topic}" - %{site_title}'
-      private_message: '%{username} ви изпрати лично съобщение "%{topic}" - %{site_title}'
+      private_message: '%{username} ви изпрати лично съобщение в "%{topic}" - %{site_title}'
       linked: '%{username} е сложил връзка към вашата публикация в "%{topic}" - %{site_title}'
       confirm_title: "Включени известявания - %{site_title}"
       confirm_body: "Успех! Известяването е включено."

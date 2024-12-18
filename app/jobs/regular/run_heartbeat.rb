@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
+# This job is deprecated and will be removed in the future. The only reason it exists is for clean up purposes.
 module Jobs
   class RunHeartbeat < ::Jobs::Base
-    sidekiq_options queue: "critical"
-
     def self.heartbeat_key
       "heartbeat_last_run"
     end
 
     def execute(args)
-      Discourse.redis.set(self.class.heartbeat_key, Time.now.to_i.to_s)
-    end
-
-    def self.last_heartbeat
-      Discourse.redis.get(heartbeat_key).to_i
+      Discourse.redis.del(self.class.heartbeat_key)
     end
   end
 end

@@ -167,10 +167,8 @@ tr_TR:
               description: İsteğe bağlı, yalnızca gönderinin konusu bu kategorideyse tetiklenir
             restricted_group:
               label: Grup
-              description: İsteğe bağlı, yalnızca gönderinin konusu bu grubun gelen kutusundaki bir özel mesajsa tetiklenir
             restricted_groups:
               label: Grup
-              description: İsteğe bağlı, yalnızca gönderinin konusu grup gelen kutularından birinde bulunan bir özel mesajsa tetiklenir
             ignore_group_members:
               label: Grup üyelerini yok say
               description: Gönderen yukarıda belirtilen Grubun bir üyesiyse tetikleyiciyi atla

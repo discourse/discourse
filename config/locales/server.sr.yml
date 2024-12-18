@@ -14,6 +14,7 @@ sr:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
       no_day: "%Y %B"
   date:
     month_names:
@@ -44,7 +45,12 @@ sr:
   remove_posts_deleted_by_author: "Izbrisano od strane autora"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  components:
+    enabled_filter: "Omogućeno"
+    disabled_filter: "Onemogući"
+    updates_available_filter: "Ažuriranje je dostupno"
   themes:
+    other_error: "Nešto nije pošlo kako treba pri suspenziji ovog korisnika"
     settings_errors:
       objects:
         not_valid_integer_value: "mora biti ceo broj"

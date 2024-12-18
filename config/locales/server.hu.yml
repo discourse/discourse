@@ -395,11 +395,8 @@ hu:
     max_redemptions_limit: "2 és %{max_limit}között kell lennie."
   topic_invite:
     failed_to_invite: "A felhasználó nem hívható meg ebbe a témába, ha nincs csoporttagsága a következő csoportok egyikében: %{group_names}."
-    not_pm: "Csak privát üzenetekre hívhatsz meg."
     user_exists: "Sajnáljuk, ezt a felhasználót már meghívták. Egy felhasználót csak egyszer hívhat meg egy témába."
     muted_topic: "Elnézést, ez a felhasználó elnémította ezt a témát."
-    receiver_does_not_allow_pm: "Sajnáljuk, de a felhasználó nem engedélyezi, hogy privát üzeneteket küldj nekik."
-    sender_does_not_allow_pm: "Sajnáljuk, nem engedélyezed, hogy a felhasználó személyes üzeneteket küldjön neked."
     user_cannot_see_topic: "%{username} nem láthatja ezt a témát."
   backup:
     operation_already_running: "Egy művelet jelenleg is fut. Most nem indítható új feladat."
@@ -1389,12 +1386,10 @@ hu:
       title: "Moderátorok értesítése"
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
-      description: "Azon alkalmak száma, amikor a moderátorokat privát módon értesítették."
     notify_user_private_messages:
       title: "Felhasználó értesítése"
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
-      description: "Azon alkalmak száma, amikor a moderátorokat privát módon értesítették."
     top_referrers:
       title: "Legnépszerűbb hivatkozók"
       xaxis: "Felhasználó"
@@ -1801,7 +1796,6 @@ hu:
     share_links: "Határozza meg, mely elemek jelenjenek meg a megosztási párbeszédablakban, és milyen sorrendben."
     allow_username_in_share_links: "Engedélyezze, hogy a felhasználónevek szerepeljenek a megosztási linkekben. Ez hasznos a jelvények jutalmazásához egyedi látogatók alapján."
     site_contact_username: "Stábtag felhasználónév, amelyről minden automatikus levél küldésre kerül. Ha üresen hagyja, akkor az alapértelmezett rendszerfiók kerül felhasználásra."
-    site_contact_group_name: "Egy olyan csoport neve, amely meghívást kap minden automatikusan elküldött privát üzenetre."
     send_welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak."
     send_tl1_welcome_message: "Küldjön üdvözlő üzenetet az új 1-es megbízhatósági szintű felhasználóknak."
     send_tl2_promotion_message: "Küldjön üzenetet az új 2-es megbízhatósági szintű felhasználóknak az előléptetésükről."
@@ -2062,7 +2056,6 @@ hu:
     min_title_similar_length: "A cím minimális hossza, mielőtt ellenőrzésre kerülne hasonló témák szempontjából."
     desktop_category_page_style: "Ez a beállítás határozza meg a /categories oldal vizuális elrendezését az asztalon. Olyan lehetőségeket tartalmaz, mint az alkategóriák megjelenítése kiemelt témákkal, a legújabb témák megjelenítése vagy a legnépszerűbb témák bemutatása. A választott stílus befolyásolja a felhasználók interakcióját és a kategóriák közötti navigálást a webhelyen."
     category_colors: "A kategóriákhoz engedélyezett hexadecimális színértékek listája."
-    default_dark_mode_color_scheme_id: "A sötét módban használt színséma."
     dark_mode_none: "Egyik sem"
     max_image_size_kb: "A maximális kép feltöltési méret. Ezt konfigurálni kell az nginx-ben (client_max_body_size) / apache-ban vagy proxy-ban is. Az ennél nagyobb, de a client_max_body_size-nál kisebb képek átméretezésre kerülnek, hogy megfeleljenek feltöltéskor."
     max_attachment_size_kb: "A csatolt fájlok maximális feltöltési mérete. Ezt az nginxben (client_max_body_size) / apache-ban vagy proxyban is be kell állítani."
@@ -2294,7 +2287,6 @@ hu:
     delete_merged_stub_topics_after_days: "A napok száma, ameddig várni kell a teljesen összeolvasztott csonka témák automatikus törlése előtt. Állítsa -1-re, ha soha nem akarja törölni. Állítsa 0-ra az azonnali törléshez."
     bootstrap_mode_min_users: 'A felhasználók minimális száma, amely szükséges a bootstrap mód kikapcsolásához és a Kezdeti lépések gomb eltávolításához (állítsa 0-ra a kikapcsoláshoz, akár 24 órát is igénybe vehet). Részletekért lásd <a target="_blank" href="https://meta.discourse.org/t/-/322876">a bootstrap módról szóló témát a Meta oldalon</a>.'
     prevent_anons_from_downloading_files: "Akadályozza meg, hogy névtelen felhasználók letöltsék a mellékleteket."
-    secure_uploads: 'Korlátozza a hozzáférést MINDEN feltöltéshez (képek, videók, hanganyagok, szövegek, pdf-ek, zip fájlok és egyebek). Ha a "bejelentkezés szükséges" engedélyezve van, csak bejelentkezett felhasználók férhetnek hozzá a feltöltésekhez. Ellenkező esetben a hozzáférés csak a privát üzenetekben és privát kategóriákban lévő média feltöltésekre lesz korlátozva. FIGYELMEZTETÉS: Ez a beállítás összetett és mély adminisztrátori megértést igényel. Részletekért lásd <a target="_blank" href="https://meta.discourse.org/t/-/140017">a biztonságos feltöltésekről szóló témát a Meta oldalon</a>.'
     secure_uploads_allow_embed_images_in_emails: "Lehetővé teszi a biztonságos képek beágyazását az e-mailekbe, amelyek normál esetben kitakarásra kerülnének, ha méretük kisebb, mint a 'biztonságos feltöltések maximális e-mail beágyazási képmérete kilobájtban' beállítás értéke."
     secure_uploads_max_email_embed_image_size_kb: "A biztonságos képek méretkorlátja, amelyek beágyazásra kerülnek az e-mailekbe, ha a 'biztonságos feltöltések e-mail beágyazásának engedélyezése' beállítás be van kapcsolva. Ha az a beállítás nincs engedélyezve, ennek a beállításnak nincs hatása."
     slug_generation_method: "Válasszon egy keresőbarát URL (slug) generálási módszert. Az 'encoded' százalékos kódolású karakterláncot generál. A 'none' teljesen kikapcsolja a keresőbarát URL-t."
@@ -2403,7 +2395,6 @@ hu:
     remove_muted_tags_from_latest: "Ne jelenjenek meg a csak némított címkékkel ellátott témák a legújabb témák listájában."
     force_lowercase_tags: "Az összes új címke kisbetűsre kényszerítése."
     create_post_for_category_and_tag_changes: "Suttogó hozzászólás létrehozása, amikor egy téma kategóriája vagy címkéi megváltoznak, a suttogó hozzászólások engedélyezése szükséges."
-    automatically_clean_unused_tags: "Naponta automatikusan törölje azokat a címkéket, amelyeket nem használ semmilyen témában vagy privát üzenetben."
     watched_precedence_over_muted: "Értesítést kérek az általam némított kategóriákba vagy címkékbe tartozó témákról, amelyek szintén egy olyanhoz tartoznak, amelyet elnémítottam"
     company_name: "Cége vagy szervezete neve. Ha üresen hagyja, akkor a szolgáltatási feltételek vagy az adatvédelmi nyilatkozat nem jelenik meg."
     governing_law: "Adja meg azt a joghatóságot, amely szabályozza a webhely jogi vonatkozásait, beleértve a Szolgáltatási feltételeket és az Adatvédelmi irányelveket. Ez általában az az ország vagy állam, ahol a webhelyet üzemeltető vállalat be van jegyezve vagy üzleti tevékenységet folytat."
@@ -4870,8 +4861,6 @@ hu:
       styling:
         title: "Megjelenés és élmény"
         fields:
-          color_scheme:
-            label: "Színséma"
           body_font:
             label: "Törzs betűtípus"
           heading_font:
@@ -4970,7 +4959,7 @@ hu:
       quoted: '%{username} idézett itt: "%{topic}" - %{site_title}'
       replied: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
       posted: '%{username} hozzászólt itt: "%{topic}" - %{site_title}'
-      private_message: '%{username} küldött egy személyes üzenetet itt: "%{topic}" - %{site_title}'
+      private_message: '%{username} személyes üzenetet küldött itt: „%{topic}” – %{site_title}'
       linked: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
       watching_first_post: '%{username} új témát hozott létre: "%{topic}" - %{site_title}'
       confirm_title: "Értesítések bekapcsolva – %{site_title}"

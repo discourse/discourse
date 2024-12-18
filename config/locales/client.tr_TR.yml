@@ -497,6 +497,8 @@ tr_TR:
     continue: "Devam et"
     switch_to_anon: "Anonim Moda Gir"
     switch_from_anon: "Anonim Moddan Çık"
+    select_placeholder: "Seç…"
+    none_placeholder: "Yok"
     banner:
       close: "Bu banner'ı kapat"
       edit: "Düzenle"
@@ -627,6 +629,8 @@ tr_TR:
         refresh: "Yenile"
         status: "Durum"
         category: "Kategori"
+        score_type:
+          title: "Sebep"
         orders:
           score: "Puan"
           score_asc: "Puan (ters)"
@@ -1136,7 +1140,7 @@ tr_TR:
     user_fields:
       none: "(bir seçenek belirleyin)"
       required: 'Lütfen "%{name}" için bir değer girin'
-      same_as_password: "Şifreniz diğer alanlarda tekrarlanmamalıdır."
+      same_as_password: "Şifreniz diğer alanlarda tekrarlanmamalıdır"
       optional: (isteğe bağlı)
     user:
       said: "%{username}:"
@@ -1259,18 +1263,15 @@ tr_TR:
         description: "Yeni kullanıcı ipuçlarını ve rozetlerini atla"
       reset_seen_user_tips: "Kullanıcı ipuçlarını tekrar göster"
       theme_default_on_all_devices: "Bu temayı bütün cihazlarımda varsayılan yap"
-      color_scheme_default_on_all_devices: "Tüm cihazlarımda varsayılan renk düzenini ayarla"
-      color_scheme: "Renk Düzeni"
+      color_scheme: "Renk Paleti"
       color_schemes:
         default_description: "Tema varsayılanı"
         disable_dark_scheme: "Normal ile aynı"
-        dark_instructions: "Cihazınızın koyu moduna geçerek koyu mod renk düzenini ön izleyebilirsiniz."
         undo: "Sıfırla"
         regular: "Normal"
         dark: "Koyu mod"
         default_dark_scheme: "(site varsayılanı)"
       dark_mode: "Koyu Mod"
-      dark_mode_enable: "Otomatik koyu mod renk düzenini etkinleştir"
       text_size_default_on_all_devices: "Bunu bütün cihazlarımda varsayılan metin boyutu yap"
       allow_private_messages: "Diğer kullanıcıların bana kişisel mesaj göndermesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
@@ -2050,9 +2051,6 @@ tr_TR:
       optional: i̇steğe bağlı
       errors_summary_title: "Bu form hatalar içeriyor:"
       dirty_form: "Değişikliklerinizi göndermediniz! Ayrılmak istediğinizden emin misiniz?"
-      select:
-        select_placeholder: "Seç…"
-        none_placeholder: "Yok"
       errors:
         required: "Gerekli"
         invalid_url: "Geçerli bir URL olmalıdır"
@@ -2690,8 +2688,6 @@ tr_TR:
         quoted: "alıntı yapıldı"
         edited: "düzenlendi"
         liked: "yeni beğeni"
-        private_message: "yeni özel mesaj"
-        invited_to_private_message: "özel mesaja davet edildi"
         invitee_accepted: "davet kabul edildi"
         posted: "yeni gönderi"
         watching_category_or_tag: "yeni gönderi"
@@ -3313,7 +3309,6 @@ tr_TR:
         help: "Bu konunun yazıcı dostu versiyonunu aç"
       flag_topic:
         title: "Bayrak ekle"
-        help: "kontrol edilmesi için bu konuya özel olarak bayrak ekleyin veya bununla ilgili özel bir bildirim gönderin"
         success_message: "Bu konuya başarıyla bayrak eklediniz."
       make_public:
         title: "Herkese Açık Konuya dönüştür"
@@ -3589,7 +3584,6 @@ tr_TR:
         edit_action: "Düzenle"
         edit_anonymous: "Üzgünüz, ancak bu gönderiyi düzenleyebilmek için giriş yapmalısınız."
         flag_action: "Bayrak ekle"
-        flag: "bu gönderinin incelenmesi için özel olarak bayrak ekleyin veya bununla ilgili özel bir bildirim gönderin"
         delete_action: "Gönderiyi sil"
         delete: "bu gönderiyi sil"
         undelete_action: "Silinen gönderiyi geri al"
@@ -4249,7 +4243,6 @@ tr_TR:
         print: "%{shortcut} Konuyu yazdır"
         defer: "%{shortcut} Konuyu okunmamış olarak işaretle"
         topic_admin_actions: "%{shortcut} Açık konu yönetici işlemleri"
-        archive_private_message: "%{shortcut} Özel mesajı arşivle seçeneğini aç/kapat"
       search_menu:
         title: "Arama Menüsü"
         prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
@@ -5227,6 +5220,7 @@ tr_TR:
           permalinks: "Kalıcı Bağlantılar"
           trust_levels: "Güven Seviyeleri"
           users: "Kullanıcılar"
+          groups: "Grup"
           user_fields: "Kullanıcı Alanları"
           watched_words: "İzlenen Kelimeler"
           legal: "Yasal"
@@ -5236,7 +5230,7 @@ tr_TR:
         sidebar_link:
           font_style: "Yazı Tipi Stili"
           site_logo: "Site Logosu"
-          color_schemes: "Renk Düzenleri"
+          color_schemes: "Renk Paletleri"
           emoji: "Emoji"
           navigation: "Navigasyon"
           themes: "Temalar"
@@ -5309,8 +5303,6 @@ tr_TR:
           site_contact_name_help: |
             Tüm otomatik mesajların gönderileceği bir personel kullanıcı adı. Boş bırakılırsa varsayılan Sistem hesabı kullanılır.
           site_contact_group: "Site iletişim grubu"
-          site_contact_group_help: |
-            Otomatik olarak gönderilen tüm özel mesajlara davet edilen grup.
           your_organization: "Organizasyonunuz"
           your_organization_description: "Bu bilgileri, siteyi kimin işlettiğini ve hangi yargı yetkisi kapsamında işlettiğini göstermek için Hizmet Koşulları ve Gizlilik Bildiriminde kullanırız."
           company_name: "Ad"
@@ -5585,7 +5577,6 @@ tr_TR:
           hide_unused_fields: "Kullanılmayan alanları gizle"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
-          color_scheme_user_selectable: "Renk düzeni kullanıcılar tarafından seçilebilir"
           auto_update: "Discourse güncellendiğinde otomatik olarak güncelle"
           color_scheme: "Renk Paleti"
           edit_color_scheme: "Renk Paletini Düzenle"

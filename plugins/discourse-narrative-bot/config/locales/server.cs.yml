@@ -247,8 +247,6 @@ cs:
       bookmark:
         instructions: |-
           Pokud by ses chtěl dozvědět víc, klikni na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> níže a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ulož si tuto soukromou zprávu do záložek**. Pokud to uděláš, je možné, že tam v budoucnu najdeš :gift:!
-        reply: |-
-          Výborně! Nyní můžeš kdykoli snadno najít cestu zpět k naší soukromé konverzaci přímo ze [záložky na svém profilu](%{bookmark_url}). Stačí vybrat svůj profilový obrázek v pravém horním rohu &#8599;.
         not_found: |-
           Uf, nevidím v tomto tématu žádné záložky. Vidíš záložku pod každým příspěvkem? V případě potřeby zobraz další akce pomocí tlačítka Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> .
       emoji:
@@ -282,14 +280,6 @@ cs:
 
           (A ano, moje uživatelské jméno se píše _disco_, stejně jako taneční šílenství 70. let. Mám [rád noční život!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Máme rádi přátelské diskuse a potřebujeme tvoji pomoc, abychom je [udrželi civilizované](%{guidelines_url}). Pokud vidíš nějaký problém, označ jej prosím, a dej tak o něm soukromě vědět autorovi nebo [naší ochotné redakci](%{about_url}). Existuje mnoho důvodů, proč bys mohl/a chtít příspěvek označit, od neškodného návrhu na rozdělení tématu až po jasné porušení komunitních standardů. Pokud vybereš možnost **Něco jiného**, zahájíš diskusi s moderátory v soukromé zprávě, kde můžeš položit další otázky.
-
-          > :imp: Napsal jsem tu něco nepěkného
-
-          Klidně tento příspěvek **označ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> a jako důvod vyber **Je to nevhodné**!
-        reply: |-
-          [Naše redakce](%{base_uri}/groups/staff) bude soukromě informována o tvé vlajce. Pokud příspěvek označí dostatečný počet členů komunity, bude z preventivních důvodů také automaticky skryt. (Protože jsem ve skutečnosti žádný ošklivý příspěvek nenapsal :angel:, tak jsem si dovolil vlaječku odstranit.)
         not_found: |-
           Ale ne, můj ošklivý příspěvek ještě nebyl označen jako nevhodný. :worried: Můžeš to označit jako nevhodné pomocí **vlajky** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeň použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , abys odhalil/a více akcí pro každý příspěvek.
       search:
@@ -383,12 +373,6 @@ cs:
         reply: |-
           Skvěle! Nezapomeň, že to funguje jak pro kategorie, tak pro štítky (pokud jsou povoleny).
       change_topic_notification_level:
-        instructions: |-
-          Každé téma má úroveň oznámení. Začíná na "normální", což znamená, že budeš obvykle upozorněn/a pouze tehdy, když někdo mluví přímo k tobě.
-
-          Ve výchozím nastavení je úroveň oznámení pro soukromou zprávu nastavena na nejvyšší úroveň "sledování", což znamená, že budeš upozorněn/a na každou novou odpověď. Úroveň oznámení pro _jakékoli_ téma však můžeš změnit na "hlídat", "sledovat" nebo "ztlumit".
-
-          Zkusme změnit úroveň oznámení pro toto téma. V dolní části tématu najdi tlačítko, které ukazuje, že toto téma **hlídáš**. Můžeš změnit úroveň oznámení na **sledování**?
         not_found: |-
           Vypadá to, že tohle téma pořád hlídáš :eyes:! Pokud máš problém s jeho nalezením, tlačítko úrovně oznámení se nachází v dolní části tématu.
         reply: |-

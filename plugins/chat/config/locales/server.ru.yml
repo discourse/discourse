@@ -93,8 +93,6 @@ ru:
       not_accepting_dms: "%{username} в данный момент не принимает сообщения."
       actor_ignoring_target_user: "Вы игнорируете %{username}, поэтому не можете отправлять им личные сообщения."
       actor_muting_target_user: "Вы отключили все уведомления от %{username}, поэтому вы не можете отправлять им личные сообщения."
-      actor_disallowed_dms: "Вы решили запретить пользователям отправлять вам личные и прямые сообщения чата, поэтому вы не можете создавать новые прямые сообщения."
-      actor_preventing_target_user_from_dm: "Вы решили запретить %{username} отправлять вам личные и прямые сообщения чата, поэтому вы не можете создавать для них новые прямые сообщения."
       user_cannot_send_direct_messages: "Вы не можете отправлять прямые сообщения."
       over_chat_max_direct_message_users_allow_self: "Создать прямое сообщение с собой нельзя."
       over_chat_max_direct_message_users:

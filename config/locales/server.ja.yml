@@ -365,11 +365,8 @@ ja:
     max_redemptions_limit: "は、2 と %{max_limit} の間である必要があります。"
   topic_invite:
     failed_to_invite: "次のいずれかのグループのグループメンバーシップがない場合、ユーザーをこのトピックに招待できません: %{group_names}。"
-    not_pm: "プライベートメッセージにのみ招待できます。"
     user_exists: "そのユーザーはすでに招待されています。ユーザーを一度しかトピックに招待できません。"
     muted_topic: "そのユーザーはこのトピックをミュートしています。"
-    receiver_does_not_allow_pm: "そのユーザーは、あなたがプライベートメッセージを送信することを許可していません。"
-    sender_does_not_allow_pm: "そのユーザーがプライベートメッセージを送信することを許可していません。"
     user_cannot_see_topic: "%{username} はトピックを閲覧できません。"
   backup:
     operation_already_running: "作業を実行中です。新しいジョブを開始できません。"
@@ -1322,12 +1319,10 @@ ja:
       title: "モデレーターに通知"
       xaxis: "日"
       yaxis: "メッセージ件数"
-      description: "モデレーターが通報によって非公開に通知された回数。"
     notify_user_private_messages:
       title: "ユーザーに通知"
       xaxis: "日"
       yaxis: "メッセージ件数"
-      description: "ユーザーが通報によって非公開で通知された回数。"
     top_referrers:
       title: "上位リファラー"
       xaxis: "ユーザー"
@@ -1728,7 +1723,6 @@ ja:
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
     allow_username_in_share_links: "ユーザー名を共有リンクに含めることを許可します。これは、ユニークビジター数に応じてバッジを与えるのに役立ちます。"
     site_contact_username: "自動送信メールの from に使用される有効なスタッフのユーザー名。空欄の場合デフォルトのシステムアカウントが使用されます。"
-    site_contact_group_name: "すべての自動メッセージに招待される有効なグループ名。"
     send_welcome_message: "すべての新規ユーザーにクイックスタートガイド付きのようこそメッセージを送信する。"
     send_tl1_welcome_message: "新しい信頼レベル 1 のユーザーにようこそメッセージを送信します。"
     send_tl2_promotion_message: "新しい信頼レベル 2 ユーザーに昇格に関するメッセージを送信します。"
@@ -1987,7 +1981,6 @@ ja:
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"
     desktop_category_page_style: "この設定により、デスクトップ上の /categories ページの視覚的なレイアウトが決定します。注目のトピックを含むサブカテゴリの表示、最新のトピックの表示、トップトピックの紹介などのオプションが含まれます。スタイルの選択は、ユーザーがサイトのカテゴリをどのように操作して移動するかに影響します。"
     category_colors: "カテゴリに利用可能な 16 進数の色値のリスト"
-    default_dark_mode_color_scheme_id: "ダークモードで使用される色スキーム。"
     dark_mode_none: "なし"
     max_image_size_kb: "最大画像アップロードサイズ。これは、nginx (client_max_body_size) / apache またはプロキシでも構成されている必要があります。これより大きいか、client_max_body_size より小さい画像は、アップロード時にフィットするようにサイズ変更されます。"
     max_attachment_size_kb: "添付ファイルの最大アップロードサイズ。nginx (client_max_body_size) / apache または proxy でも設定する必要があります。"
@@ -2219,7 +2212,6 @@ ja:
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまでに待機する日数。-1 に設定すると削除されません。0 に設定すると直ちに削除されます。"
     bootstrap_mode_min_users: 'ブートストラップモードを無効にして「はじめに」ボタンを削除するために必要な最低ユーザー数 (0 に設定すると無効になります。最長 24 時間かかる場合があります)。詳細は、<a target="_blank" href="https://meta.discourse.org/t/-/322876">Meta のブートストラップモードに関するトピック</a>をご覧ください。'
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
-    secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
     secure_uploads_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure uploads max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可します。"
     secure_uploads_max_email_embed_image_size_kb: "'secure uploads allow embed in emails' 設定が有効である場合にメールに埋め込まれるセキュリティで保護された画像のサイズのカットオフ。その設定が有効でない場合、この設定の効果はありません。"
     slug_generation_method: "スラッグ生成方法を選択します。'encode' はパーセントエンコード文字列を生成します。'none'は、スラッグを無効にします。"
@@ -2331,7 +2323,6 @@ ja:
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
     force_lowercase_tags: "すべての新しいタグが完全に小文字になるように強制する。"
     create_post_for_category_and_tag_changes: "トピックのカテゴリまたはタグが変更されたときにささやき投稿を作成する。ささやき投稿を有効にする必要があります。"
-    automatically_clean_unused_tags: "どのトピックやプライベートメッセージにも使用されていないタグを毎日自動的に削除します。"
     watched_precedence_over_muted: "ミュートしているものも含むウォッチ中のカテゴリまたはタグ内のトピックについて通知する"
     company_name: "会社または組織の名前。空白のままにすると、定型の利用規約またはプライバシーに関する通知は提供されません。"
     governing_law: "利用規約やプライバシーポリシーなど、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。"
@@ -4789,8 +4780,6 @@ ja:
       styling:
         title: "外観"
         fields:
-          color_scheme:
-            label: "色スキーム"
           body_font:
             label: "本文のフォント"
           heading_font:
@@ -4889,7 +4878,7 @@ ja:
       quoted: '%{username} が「%{topic}」であなたを引用しました - %{site_title}'
       replied: '%{username} が「%{topic}」であなたに返信しました - %{site_title}'
       posted: '%{username} が「%{topic}」に投稿しました - %{site_title}'
-      private_message: '"%{topic}" で %{username} があなたにプライベートメッセージを送信しました - %{site_title}'
+      private_message: '「%{topic}」で %{username} があなたに個人メッセージを送信しました - %{site_title}'
       linked: '%{username} が「%{topic}」のあなたの投稿にリンクしました - %{site_title}'
       watching_first_post: '%{username} が新規トピック「%{topic}」を作成しました - %{site_title}'
       confirm_title: "通知を有効にしました - %{site_title}"

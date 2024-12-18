@@ -62,6 +62,7 @@ body.invite-page {
 .toggle-password-mask {
   position: absolute;
   right: 0;
+  top: 0;
   padding: 0.75em 0.77em; // alligns with input padding
   .ios-device & {
     // reset form-item-sizing mixin styles

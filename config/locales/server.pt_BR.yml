@@ -394,11 +394,8 @@ pt_BR:
     max_redemptions_limit: "deve estar entre 2 e %{max_limit}."
   topic_invite:
     failed_to_invite: "O(a) usuário(a) não pode ser convidado(a) para este tópico sem uma associação de grupo em um dos seguintes grupos: %{group_names}."
-    not_pm: "Você só pode convidar para mensagens privadas."
     user_exists: "Desculpe, este(a) usuário(a) já foi convidado(a). Você pode convidar um(a) usuário(a) para um tópico apenas uma vez."
     muted_topic: "Desculpe, este(a) usuário(a) silenciou este tópico."
-    receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você envie mensagens privadas."
-    sender_does_not_allow_pm: "Desculpe, você não permite que o(a) usuário(a) envie mensagens privadas."
     user_cannot_see_topic: "%{username} não pode visualizar o tópico."
   backup:
     operation_already_running: "Uma operação está sendo executada. Não é possível iniciar um novo trabalho agora."
@@ -1396,12 +1393,10 @@ pt_BR:
       title: "Notificar moderadores(as)"
       xaxis: "Dia"
       yaxis: "Quantidade de mensagens"
-      description: "Quantidade de vezes que os moderadores foram notificados em particular por um sinalizador."
     notify_user_private_messages:
       title: "Notificar usuário(a)"
       xaxis: "Dia"
       yaxis: "Quantidade de mensagens"
-      description: "Quantidade de vezes que os(as) usuários(as) foram notificados(as) em particular por um sinalizador."
     top_referrers:
       title: "Melhores referenciadores"
       xaxis: "Usuário(a)"
@@ -1803,7 +1798,6 @@ pt_BR:
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento e em qual ordem."
     allow_username_in_share_links: "Permitir que nomes de usuário sejam incluídos em links de compartilhamento. Isso é útil para recompensar emblemas com base em visitantes únicos."
     site_contact_username: "Um nome de usuário(a) válido da equipe do qual enviar todas as mensagens automáticas. Se for deixado em branco, a conta padrão do sistema será utilizada."
-    site_contact_group_name: "Um nome de grupo válido para ser convidado para todas as mensagens automáticas."
     send_welcome_message: "Envie aos(às) novos(as) usuários(as) uma mensagem de boas-vindas com um guia de início rápido."
     send_tl1_welcome_message: "Envie aos(às) novos(as) usuários(as) do nível de confiança 1 uma mensagem de boas-vindas."
     send_tl2_promotion_message: "Envie a usuários(as) de nível de confiança 2 uma mensagem sobre promoção."
@@ -2062,7 +2056,6 @@ pt_BR:
     min_title_similar_length: "O tamanho mínimo de um título antes que seja verificado para tópicos semelhantes."
     desktop_category_page_style: "Esta configuração determina o layout do visual da página /categories no desktop. Inclui várias opções, como exibição de subcategorias com tópicos em destaque, exibição dos tópicos mais recentes ou apresentação dos melhores tópicos. O estilo escolhido influencia na maneira como os(as) usuários(as) interagem e acessam as categorias no site."
     category_colors: "Uma lista de valores hexadecimais de cor permitidos para categorias."
-    default_dark_mode_color_scheme_id: "O esquema de cores usado no modo escuro."
     dark_mode_none: "Nenhum"
     max_image_size_kb: "O tamanho de envio de imagem máximo. Deve ser configurado em nginx (client_max_body_size)/apache ou proxy também. Imagens maiores do que esta e menores do que client_max_body_size serão redimensionadas para o tamanho do envio."
     max_attachment_size_kb: "O tamanho máximo de envio de arquivos anexos. Precisa ser configurado no nginx (client_max_body_size)/apache ou proxy também."
@@ -2294,7 +2287,6 @@ pt_BR:
     delete_merged_stub_topics_after_days: "Quantidade de dias para aguardar antes de excluir automaticamente tópicos de stub totalmente mesclados. Defina para 0 para excluir imediatamente."
     bootstrap_mode_min_users: 'Quantidade mínima de usuários(as) necessários(as) para desativar o modo de inicialização e remover o botão Começar (defina como 0 para desativar, pode levar até 24 horas). Confira o <a target="_blank" href="https://meta.discourse.org/t/-/322876">tópico sobre o modo de inicialização no Meta</a> para obter detalhes.'
     prevent_anons_from_downloading_files: "Impeça que usuários(as) anônimos(as) baixem anexos."
-    secure_uploads: 'Limita acesso a TODOS os envios (imagens, vídeo, áudio, texto, pdfs, zips e muito mais). Se “É necessário entrar com a conta” estiver ativado, apenas usuários(as) que entraram com a conta podem acessar os envios. Caso contrário, o acesso será limitado apenas a envios de mídias em mensagens e categorias privadas. AVISO: esta configuração é complexa e requer conhecimento de administração. Para mais detalhes, consulte <a target="_blank" href="https://meta.discourse.org/t/-/140017">o tópico de envios seguros em Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Permite incorporação de imagens seguras que geralmente seriam escritas em e-mails, caso o tamanho seja menor do que a configuração 'tamanho máx. de imagem de envio incorporada no e-mail, em KB\"."
     secure_uploads_max_email_embed_image_size_kb: "A redução de tamanho para imagens seguras que serão incorporadas nos e-mails se a configuração 'Permissão de incorporação de envios seguros no e-mail'. Caso não esteja ativada, esta configuração não terá efeito."
     slug_generation_method: "Escolha um método para geração de slug. \"Codificado\" irá gerar linhas com \"%\". 'Nenhum\" irá desativar a geração de slugs."
@@ -2406,7 +2398,6 @@ pt_BR:
     remove_muted_tags_from_latest: "Não mostrar tópicos etiquetados apenas com etiquetas silenciadas na lista de tópicos mais recentes."
     force_lowercase_tags: "Obrigar todas as novas etiquetas a ficar totalmente em minúsculas."
     create_post_for_category_and_tag_changes: "Criar postagem de sussurro quando a categoria ou etiquetas do tópico for alterada. É preciso ativar as publicações de sussurros."
-    automatically_clean_unused_tags: "Exclua automaticamente etiquetas que não estão sendo utilizadas em tópicos ou mensagens privadas todos os dias."
     watched_precedence_over_muted: "Quero receber notificações sobre tópicos em categorias ou etiquetas que estou acompanhando que também pertencem a alguém que eu silenciei"
     company_name: "O nome da sua empresa ou organização. Se ficar vazio, não serão fornecidos Termos de Serviço nem Aviso de Privacidade clichês."
     governing_law: "Especifique a jurisdição que rege os aspectos legais do site, inclusive os Termos de Serviço e a Política de Privacidade. Geralmente é o país onde a empresa que opera o site está registrada ou faz negócios"
@@ -4910,8 +4901,6 @@ pt_BR:
       styling:
         title: "Aspecto e estilo"
         fields:
-          color_scheme:
-            label: "Esquema de cores"
           body_font:
             label: "Fonte do corpo"
           heading_font:
@@ -5010,7 +4999,7 @@ pt_BR:
       quoted: 'Você foi citado(a) por %{username} em "%{topic}" - %{site_title}'
       replied: '%{username} respondeu em "%{topic}" - %{site_title}'
       posted: '%{username} postou em "%{topic}" - %{site_title}'
-      private_message: '%{username} enviou uma mensagem privada em "%{topic}" - %{site_title}'
+      private_message: '%{username} enviou uma mensagem pessoal em "%{topic}" - %{site_title}'
       linked: '%{username} vinculou sua postagem em "%{topic}" - %{site_title}'
       watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
       confirm_title: "Notificações ativadas - %{site_title}"

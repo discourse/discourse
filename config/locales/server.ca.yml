@@ -950,12 +950,10 @@ ca:
       title: "Notifica els moderadors"
       xaxis: "Dia"
       yaxis: "Nombre de missatges"
-      description: "Nombre de vegades que els moderadors han estat notificats privadament per una bandera."
     notify_user_private_messages:
       title: "Notifica l'usuari"
       xaxis: "Dia"
       yaxis: "Nombre de missatges"
-      description: "Nombre de vegades que els usuaris han estat notificats de manera privada per una bandera."
     top_referrers:
       title: "Referidors principals"
       xaxis: "Usuari"
@@ -1233,7 +1231,6 @@ ca:
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
-    site_contact_group_name: "Nom de grup vàlid per a ser convidat a tots els missatges automatitzats."
     send_welcome_message: "Envia a tots els usuaris nous un missatge de benvinguda amb la guia ràpida d'inici."
     send_tl1_welcome_message: "Envieu als nous usuaris de nivell de confiança 1 un missatge de benvinguda."
     suppress_reply_directly_below: "No mostris el recompte de respostes desplegable en una publicació quan només hi hagi una resposta directa sota la publicació."
@@ -2865,7 +2862,7 @@ ca:
       quoted: '%{username} us ha citat en "%{topic}" - %{site_title}'
       replied: '%{username} us ha respost en "%{topic}" - %{site_title}'
       posted: '%{username} publicat en "%{topic}" - %{site_title}'
-      private_message: '%{username} us ha enviat un missatge privat en "%{topic}" - %{site_title}'
+      private_message: '%{username} us ha enviat un missatge personal en "%{topic}" - %{site_title}'
       linked: '%{username} ha enllaçat a la vostra publicació des de "%{topic}" - %{site_title}'
       watching_first_post: '%{username} ha creat un tema nou "%{topic}" - %{site_title}'
       confirm_title: "Notificacions activades - %{site_title}"

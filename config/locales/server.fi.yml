@@ -394,11 +394,8 @@ fi:
     max_redemptions_limit: "tulisi olla välillä 2–%{max_limit}."
   topic_invite:
     failed_to_invite: "Käyttäjää ei voi kutsua ketjuun, jollei hän ole jonkun näistä ryhmistä jäsen: %{group_names}."
-    not_pm: "Voit kutsua vain yksityisviesteihin."
     user_exists: "Pahoittelut, tämä käyttäjä on jo kutsuttu. Voit kutsua toisen käyttäjän ketjuun vain yhden kerran."
     muted_topic: "Valitettavasti käyttäjä on vaimentanut tämän ketjun."
-    receiver_does_not_allow_pm: "Tämä käyttäjä ei salli sinun lähettää hänelle yksityisviestejä."
-    sender_does_not_allow_pm: "Et salli tämän käyttäjän lähettää sinulle yksityisviestejä."
     user_cannot_see_topic: "%{username} ei näe tätä ketjua."
   backup:
     operation_already_running: "Tehtävä on parhaillaan käynnissä. Uutta tehtävää ei voi aloittaa juuri nyt."
@@ -1396,12 +1393,10 @@ fi:
       title: "Ilmoita valvojille"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monta kertaa valvojia on yksityisesti huomautettu lipuista."
     notify_user_private_messages:
       title: "Ilmoita käyttäjälle"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monesti käyttäjiä huomautettiin yksityisesti lipuista."
     top_referrers:
       title: "Parhaat viittaajat"
       xaxis: "Käyttäjä"
@@ -1803,7 +1798,6 @@ fi:
     share_links: "Mitkä kohteet näytetään jakamisvalintaikkunassa ja missä järjestyksessä."
     allow_username_in_share_links: "Salli käyttäjätunnusten sisällyttäminen jakolinkkeihin. Tämä on hyödyllistä kunniamerkkien antamiseksi yksilöllisten vierailijoiden perusteella."
     site_contact_username: "Henkilökuntaan kuuluvan käyttäjä, jonka nimissä kaikki automaattiset viestit lähetetään. Jos jätetty tyhjäksi, oletuksena on oletusjärjestelmätili."
-    site_contact_group_name: "Kelvollinen ryhmän nimi, joka kutsutaan kaikkiin automaattisesti luotuihin viesteihin."
     send_welcome_message: "Lähetä kaikille uusille käyttäjille tervetuloviesti, jossa on pika-aloitusopas."
     send_tl1_welcome_message: "Lähetä luottamustason 1 saavuttaville käyttäjille yksityinen tervetuloviesti."
     send_tl2_promotion_message: "Lähetä uusille luottamustason 2 käyttäjille viesti ylennyksestä."
@@ -2062,7 +2056,6 @@ fi:
     min_title_similar_length: "Ketjun otsikon minimipituus, kunnes sitä verrataan muihin samankaltaisiin ketjuihin."
     desktop_category_page_style: "Tämä asetus määrittää /categories-sivun visuaalisen asettelun työpöytälaitteilla. Se sisältää vaihtoehtoja, kuten alaluokkien näyttämisen esiteltyjen ketjujen kanssa, uusimpien ketjujen näyttämisen tai suosituimpien ketjujen esittämisen. Valittu tyyli vaikuttaa siihen, miten käyttäjät ovat vuorovaikutuksessa ja siirtyvät sivuston alueiden välillä."
     category_colors: "Luettelo alueiden sallituista väriarvoista heksadesimaaleina."
-    default_dark_mode_color_scheme_id: "Värimalli, jota käytetään tummassa tilassa."
     dark_mode_none: "Ei valittu"
     max_image_size_kb: "Suurin palvelimeen ladattavan kuvan koko. Tämä on määritettävä myös nginxissä, (client_max_body_size), apachessa tai välityspalvelimessa. Tätä suurempien ja client_max_body_sizea pienempien kuvien kokoa muutetaan latauksen yhteydessä."
     max_attachment_size_kb: "Liitetyn tiedoston suurin sallittu koko. Tämä täytyy asettaa myös nginxin (client_max_body_size) / apachen tai välityspalvelimen asetuksissa."
@@ -2294,7 +2287,6 @@ fi:
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 1, tynkäketjuja ei poisteta koskaan. Jos arvo on 0, ne poistetaan välittömästi."
     bootstrap_mode_min_users: 'Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen käytöstä ja Aloittaminen-painikkeen poistamiseen (poista käytöstä arvolla 0, voi kestää jopa 24 tuntia) Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/322876">aloitustilan ketjusta Metassa</a>.'
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
-    secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
     secure_uploads_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure uploads max email embed image size kb\" -asetus."
     secure_uploads_max_email_embed_image_size_kb: "Sähköposteihin upotettavien turvallisten kuvien kokoraja, jos \"secure uploads allow embed in emails\" -asetus on käytössä. Ilman kyseistä asetusta tällä asetuksella ei ole vaikutusta."
     slug_generation_method: "Valitse polkutunnuksen luomisen metodi, 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkutunnukset käytöstä."
@@ -2405,7 +2397,6 @@ fi:
     remove_muted_tags_from_latest: "Jos ketjulla on vain vaimennettuja tunnisteita, älä näytä ketjua Tuoreimmat-ketjuluettelossa."
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
     create_post_for_category_and_tag_changes: "Luo kuiskausviesti, kun ketjun alue tai tunnisteet muuttuvat. Edellyttää, että kuiskausviestit ovat käytössä."
-    automatically_clean_unused_tags: "Poista automaattisesti tunnisteet, joita ei käytetä missään aiheissa tai yksityisviesteissä päivittäin."
     watched_precedence_over_muted: "Ilmoita minulle ketjuista alueilla tai tunnisteissa, joita tarkkailen, jotka kuuluvat myös sellaiseen, jonka olen vaimentanut"
     company_name: "Yrityksesi tai organisaatiosi nimi. Jos tyhjä, ei yleisiä palveluehtojen ja tietosuojailmoituksen pohjaa tarjota."
     governing_law: "Määritä lainkäyttöalue, joka sääntelee sivuston oikeudellisia aspekteja, kuten käyttöehtoja ja tietosuojaselostetta. Tämä on yleensä maa tai osavaltio, jossa sivustoa ylläpitävä yritys on rekisteröity tai jossa se harjoittaa liiketoimintaa."
@@ -4825,8 +4816,6 @@ fi:
       styling:
         title: "Ulkoasu ja tuntuma"
         fields:
-          color_scheme:
-            label: "Värimalli"
           body_font:
             label: "Leipätekstin fontti"
           heading_font:
@@ -4925,7 +4914,7 @@ fi:
       quoted: '%{username} lainasi sinua ketjussa "%{topic}" – %{site_title}'
       replied: '%{username} vastasi sinulle ketjussa "%{topic}" – %{site_title}'
       posted: '%{username} lähetti viestin ketjuun "%{topic}" – %{site_title}'
-      private_message: '%{username} lähetti sivulle yksityisviestin keskustelussa "%{topic}" – %{site_title}'
+      private_message: '%{username} lähetti sinulle yksityisviestin ketjussa "%{topic}" – %{site_title}'
       linked: '%{username} linkitti viestiisi ketjusta "%{topic}" – %{site_title}'
       watching_first_post: '%{username} loi uuden ketjun "%{topic}" – %{site_title}'
       confirm_title: "Ilmoitukset käytössä – %{site_title}"

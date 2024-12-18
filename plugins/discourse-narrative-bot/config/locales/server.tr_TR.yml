@@ -250,8 +250,6 @@ tr_TR:
       bookmark:
         instructions: |-
           Daha fazla bilgi edinmek isterseniz aşağıdan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> metnini seçin ve <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bu kişisel mesaja yer imi ekleyin**. Bunu yaparsanız geleceğinizde bir :gift: olabilir!
-        reply: |-
-          Mükemmel! Artık özel konuşmamıza istediğiniz zaman, doğrudan [profilinizdeki yer imleri sekmesinden](%{bookmark_url}) kolayca geri dönebilirsiniz. Sağ üstteki profil resminizi seçmeniz yeterli &#8599;
         not_found: |-
           Hay aksi, bu konuda herhangi bir yer imi göremiyorum. Her gönderinin altında yer imi buldunuz mu? Gerekirse ek eylemleri göstermek için daha fazla göster <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> özelliğini kullanın.
       emoji:
@@ -285,14 +283,6 @@ tr_TR:
 
           (Ayrıca evet, kullanıcı adım 1970'lerin dans çılgınlığında olduğu gibi _disco_ şeklinde yazılıyor. [Gece hayatına bayılıyorum!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Tartışmalarımızın dostça olmasını istiyoruz ve [medeni bir şekilde devam etmesi](%{guidelines_url}) için yardımınıza ihtiyacımız var. Bir sorun görürseniz lütfen yazara veya [yardımcı personelimize](%{about_url}) özel olarak bildirmek için bayrak ekleyin. Bir gönderiye bayrak eklemek istemeniz için zararsız bir konu bölme önerisinden açık bir topluluk standartları ihlaline kadar birçok neden vardır. **Başka Bir Şey** seçeneğini belirlerseniz moderatörlerle daha fazla soru sorabileceğiniz bir özel mesaj tartışması başlatabilirsiniz.
-
-          > :imp: Buraya kötü bir şey yazdım
-
-          Hadi **bu gönderiye bayrak ekleyin** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ve neden olarak **Uygunsuz** seçeneğini belirleyin!
-        reply: |-
-          [Personelimiz](%{base_uri}/groups/staff) bayrağınız hakkında özel olarak bilgilendirilecek. Yeterli sayıda topluluk üyesi bir gönderiye bayrak eklerse önlem olarak otomatikman gizlenir. (Aslında kötü bir gönderi yazmadığım için :angel: şimdilik bayrağı kaldırdım).
         not_found: |-
           Olamaz, kötü gönderime henüz uygunsuz bayrağı eklenmemiş. :worried: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">**Bayrağı** kullanarak uygunsuz bayrağı ekleyebilir misiniz? Her gönderi için daha fazla eylem göstermek için daha fazla göster düğmesini <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> kullanmayı unutmayın.
       search:
@@ -386,12 +376,6 @@ tr_TR:
         reply: |-
           Mükemmel! Etiketler etkinleştirilmişse bunun hem kategoriler _hem de_ etiketler için kullanılabildiğini unutmayın.
       change_topic_notification_level:
-        instructions: |-
-          Her konunun bir bildirim seviyesi vardır. Bu seviye "normal" ile başlar, yani normalde yalnızca biri sizinle doğrudan konuştuğunda bildirim alırsınız.
-
-          Varsayılan olarak, bir özel mesaj için bildirim seviyesi en yüksek seviye olan "izleniyor"' olarak ayarlanmıştır, bu da her yeni yanıttan haberdar olacağınız anlamına gelir. Ancak _herhangi_ bir konu için bildirim düzeyini "izleniyor", "takip ediliyor" veya "sessize alındı" olarak geçersiz kılabilirsiniz.
-
-          Bu konu için bildirim seviyesini değiştirmeyi deneyelim. Konunun altında, bu konuyu **izlediğinizi** gösteren bir düğme bulacaksınız. Bildirim seviyesini **takip ediliyor** olarak değiştirebilir misiniz?
         not_found: |-
           Görünüşe göre hâlâ bu konuyu izliyorsunuz :eyes:! Bulmakta zorlanıyorsanız bildirim seviyesi düğmesini konunun alt kısmında bulabilirsiniz.
         reply: |-

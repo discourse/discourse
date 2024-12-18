@@ -497,6 +497,8 @@ de:
     continue: "Weiter"
     switch_to_anon: "Anonymen Modus aktivieren"
     switch_from_anon: "Anonymen Modus deaktivieren"
+    select_placeholder: "Auswählen …"
+    none_placeholder: "Keiner"
     banner:
       close: "Dieses Banner ausblenden"
       edit: "Bearbeiten"
@@ -518,7 +520,7 @@ de:
       order_by: "Sortieren nach"
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
-      filtered_flagged_by: "Markiert von"
+      filtered_flagged_by: "Gemeldet von"
       explain:
         why: "erkläre, warum dieses Element in der Warteschlange gelandet ist"
         title: "Überprüfbares Scoring"
@@ -628,6 +630,9 @@ de:
         refresh: "Aktualisieren"
         status: "Status"
         category: "Kategorie"
+        score_type:
+          title: "Grund"
+          all: "(alle Gründe)"
         orders:
           score: "Score"
           score_asc: "Score (umgekehrt)"
@@ -1137,7 +1142,8 @@ de:
     user_fields:
       none: "(wähle eine Option aus)"
       required: 'Bitte gib einen Wert für „%{name}“ ein'
-      same_as_password: "Dein Passwort sollte nicht in anderen Feldern wiederholt werden."
+      required_checkbox: 'Das Feld "%{name}" ist erforderlich'
+      same_as_password: "Dein Passwort sollte nicht in anderen Feldern wiederholt werden"
       optional: (optional)
     user:
       said: "%{username}:"
@@ -1260,18 +1266,18 @@ de:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
       reset_seen_user_tips: "Benutzertipps erneut anzeigen"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
-      color_scheme_default_on_all_devices: "Standard-Farbschema auf allen meinen Geräten festlegen"
-      color_scheme: "Farbschema"
+      color_scheme_default_on_all_devices: "Standard-Farbpalette auf allen meinen Geräten festlegen"
+      color_scheme: "Farbpalette"
       color_schemes:
         default_description: "Theme-Standard"
         disable_dark_scheme: "Gleich wie regulär"
-        dark_instructions: "Du kannst das dunkle Farbschema ausprobieren, indem du den dunklen Modus auf deinem Gerät einschaltest."
+        dark_instructions: "Du kannst die dunkle Farbpalette ausprobieren, indem du den dunklen Modus auf deinem Gerät einschaltest."
         undo: "Zurücksetzen"
         regular: "Regulär"
         dark: "Dunkler Modus"
         default_dark_scheme: "(Website-Standard)"
       dark_mode: "Dunkler Modus"
-      dark_mode_enable: "Dunkles Farbschema automatisch aktivieren"
+      dark_mode_enable: "Dunkle Farbpalette automatisch aktivieren"
       text_size_default_on_all_devices: "Mache diese Schriftgröße zum Standard für alle meine Geräte"
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
@@ -2053,9 +2059,6 @@ de:
       optional: optional
       errors_summary_title: "Dieses Formular enthält Fehler:"
       dirty_form: "Du hast deine Änderungen nicht gespeichert! Bist du sicher, dass du die Seite verlassen möchtest?"
-      select:
-        select_placeholder: "Auswählen …"
-        none_placeholder: "Keiner"
       errors:
         required: "Erforderlich"
         invalid_url: "Muss eine gültige URL sein"
@@ -2693,8 +2696,8 @@ de:
         quoted: "zitiert"
         edited: "bearbeitet"
         liked: "neue „Gefällt mir“-Angabe"
-        private_message: "neue private Nachricht"
-        invited_to_private_message: "zu einer privaten Nachricht eingeladen"
+        private_message: "neue persönliche Nachricht"
+        invited_to_private_message: "zu einer persönlichen Nachricht eingeladen"
         invitee_accepted: "Einladung angenommen"
         posted: "neuer Beitrag"
         watching_category_or_tag: "neuer Beitrag"
@@ -3316,7 +3319,7 @@ de:
         help: "Öffne eine druckfreundliche Version dieses Themas"
       flag_topic:
         title: "Melden"
-        help: "Dieses Thema den Moderatoren melden oder eine Nachricht senden."
+        help: "Dieses Thema den Moderatoren melden oder eine persönliche Nachricht senden."
         success_message: "Du hast dieses Thema erfolgreich gemeldet."
       make_public:
         title: "In öffentliches Thema umwandeln"
@@ -3593,7 +3596,7 @@ de:
         edit_action: "Bearbeiten"
         edit_anonymous: "Entschuldige, du musst angemeldet sein, um diesen Beitrag zu bearbeiten."
         flag_action: "Melden"
-        flag: "Diesen Beitrag den Moderatoren melden oder eine Nachricht senden."
+        flag: "Diesen Beitrag den Moderatoren melden oder eine persönliche Nachricht senden."
         delete_action: "Beitrag löschen"
         delete: "diesen Beitrag löschen"
         undelete_action: "Beitrag wiederherstellen"
@@ -4254,7 +4257,7 @@ de:
         print: "%{shortcut} Thema ausdrucken"
         defer: "%{shortcut} Thema als ungelesen markieren"
         topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
-        archive_private_message: "%{shortcut} Archivierung privater Nachricht umschalten"
+        archive_private_message: "%{shortcut} Persönliche Nachricht archivieren/entarchivieren"
       search_menu:
         title: "Suchmenü"
         prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
@@ -5236,6 +5239,7 @@ de:
           permalinks: "Permalinks"
           trust_levels: "Vertrauensstufen"
           users: "Benutzer"
+          groups: "Gruppen"
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
@@ -5245,7 +5249,7 @@ de:
         sidebar_link:
           font_style: "Schriftart"
           site_logo: "Website-Logo"
-          color_schemes: "Farbschemas"
+          color_schemes: "Farbpaletten"
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
@@ -5319,7 +5323,7 @@ de:
             Ein Benutzername eines Team-Mitglieds, von dem alle automatisierten Nachrichten gesendet werden. Wenn dieses Feld leer gelassen wird, wird das Standardsystemkonto verwendet.
           site_contact_group: "Website-Ansprechpartner-Gruppe"
           site_contact_group_help: |
-            Die Gruppe, die zu allen automatisch versendeten privaten Nachrichten eingeladen wird.
+            Die Gruppe, die zu allen automatisch versendeten, persönlichen Nachrichten eingeladen wird.
           your_organization: "Deine Organisation"
           your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Website betreibt und unter welcher Gerichtsbarkeit."
           company_name: "Name"
@@ -5597,7 +5601,7 @@ de:
           hide_unused_fields: "Unbenutzte Felder verbergen"
           is_default: "Theme ist standardmäßig aktiviert"
           user_selectable: "Theme kann von Benutzern ausgewählt werden"
-          color_scheme_user_selectable: "Farbschema kann von Benutzern ausgewählt werden"
+          color_scheme_user_selectable: "Farbpalette kann von Benutzern ausgewählt werden"
           auto_update: "Automatisch aktualisieren, wenn Discourse aktualisiert wird"
           color_scheme: "Farbpalette"
           edit_color_scheme: "Farbpalette bearbeiten"

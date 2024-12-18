@@ -218,8 +218,6 @@ ca:
       bookmark:
         instructions: |-
           Si voleu saber-ne més, seleccioneu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a sota i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marqueu com a preferit aquest missatge privat**. Si ho feu, potser tindreu un :gift: més avant!
-        reply: |-
-          Fantàstic! Ara podeu trobar fàcilment com tornar a la nostra conversa privada en qualsevol moment, des de [la pestanya de favorits del vostre perfil](%{bookmark_url}). Només heu de seleccionar la vostra imatge de perfil dalt a la dreta &#8599;
         not_found: |-
           Ui, no veig cap favorit marcat en aquest tema. ¿Heu trobat el marcador de favorits a sota de cada publicació? Utilitzeu "mostra'n més" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per a mostrar accions addicionals si calen.
       emoji:
@@ -252,9 +250,6 @@ ca:
           No veig el meu nom enlloc :frowning: Podeu mencionar-me com `@%{discobot_username}` una altra vegada?
 
           (Doncs sí, el meu nom d'usuari és _disco_, com en les discos de moda dels anys 70. [M'encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
-      flag:
-        reply: |-
-          [El nostre equip responsable](%{base_uri}/groups/staff) serà notificat de manera privada sobre la vostra bandera. Si hi ha prou membres de la comunitat que marquen amb bandera una publicació, també serà amagada automàticament per precaució. (Com que no he escrit un missatge desagradable :angel:, he tirat avant i de moment he eliminat la bandera.)
       search:
         hidden_message: |-
           Com heu pogut oblidar aquest capibara? :wink:
@@ -330,12 +325,6 @@ ca:
         reply: |-
           Genial! Recordeu que això funciona per a categories _i_ per a etiquetes, si les etiquetes estan activades.
       change_topic_notification_level:
-        instructions: |-
-          Tots els temes tenen un nivell de notificació. Comença en 'normal', que significa que normalment sols se us notificarà quan algú us parli directament.
-
-          De manera predeterminada, el nivell de notificació d'un missatge privat és establert al nivell més alt de 'vigilant', cosa que significa que se us notificarà cada resposta nova. Però podeu sobreescriure el nivell de notificació de _qualsevol_ tema a "vigilat", "seguint" o "silenciat".
-
-          Intentem canviar el nivell de notificació del tema. A la part inferior del tema, trobareu un botó que mostra que esteu **vigilant** el tema. ¿Podeu canviar el nivell de notificació a **seguint**?
         not_found: |-
           Sembla que encara esteu vigilant :eyes: aquest tema! Si teniu problemes per a trobar-lo, el botó de nivell de notificació és a la part inferior del tema.
         reply: |-

@@ -453,11 +453,11 @@ sk:
     max_redemptions_limit: "by mala byť medzi 2 a %{max_limit}."
   topic_invite:
     failed_to_invite: "Používateľ nemôže byť pozvaný do tejto témy bez členstva v jednej z nasledujúcich skupín: %{group_names}."
-    not_pm: "Pozývať môžete len do súkromných správ."
+    not_pm: "Môžete pozvať iba na osobné správy."
     user_exists: "Je nám ľúto, tento používateľ už bol pozvaný. Používateľa môžete do témy pozvať len raz."
     muted_topic: "Ospravedlňujeme sa, ale tento používateľ túto tému stlmil."
-    receiver_does_not_allow_pm: "Je nám ľúto, ale tento používateľ vám neumožňuje posielať súkromné správy."
-    sender_does_not_allow_pm: "Je nám ľúto, ale tomuto používateľovi nie je povolené posielať vám súkromné správy."
+    receiver_does_not_allow_pm: "Ľutujeme, tento používateľ vám neumožňuje posielať osobné správy."
+    sender_does_not_allow_pm: "Ľutujeme, tomuto používateľovi nepovoľujete posielať vám osobné správy."
     user_cannot_see_topic: "%{username} nevidí tému."
   backup:
     operation_already_running: "Prebieha spracovanie inej operácie. Momentálne sa nová úloha nedá spustiť. "
@@ -1547,12 +1547,12 @@ sk:
       title: "Upozorniť moderátora"
       xaxis: "Deň"
       yaxis: "Počet správ"
-      description: "Počet prípadov, kedy boli moderátori súkromne upozornení prostredníctvom označenia."
+      description: "Počet, koľkokrát moderátori dostali osobné správy s ďalšími podrobnosťami o príznaku."
     notify_user_private_messages:
       title: "Upozorniť používateľa"
       xaxis: "Deň"
       yaxis: "Počet správ"
-      description: "Počet prípadov, keď boli používatelia súkromne upozornení prostredníctvom označenia."
+      description: "Počet odoslaní osobných správ používateľom pomocou dialógového okna príznaku."
     top_referrers:
       title: "Najlepší referenti"
       xaxis: "Používateľ"
@@ -1961,7 +1961,7 @@ sk:
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
     allow_username_in_share_links: "Povolenie uvádzania používateľských mien v prepojeniach na zdieľanie. Je to užitočné na odmeňovanie odznakov na základe jedinečných návštevníkov."
     site_contact_username: "Platné používateľské meno obsluhy, ktorá bude posielať automatizované správy. Pokiaľ je vynechané, použije sa východzí systémový účet. "
-    site_contact_group_name: "Platný názov skupiny, ktorá je pozývaná do všetkých automaticky odosielaných súkromných správ."
+    site_contact_group_name: "Platný názov skupiny, ktorá bude pozvaná na všetky automaticky odoslané osobné správy."
     send_welcome_message: "Poslať všetkým novým používateľom uvítaciu správu s návodom ako začať. "
     send_tl1_welcome_message: "Odoslanie uvítacej správy novým používateľom úrovne dôveryhodnosti 1."
     send_tl2_promotion_message: "Odoslanie správy o povýšení novým používateľom na úrovni dôveryhodnosti 2."
@@ -2222,7 +2222,7 @@ sk:
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     desktop_category_page_style: "Toto nastavenie určuje vizuálne rozloženie stránky /kategórie na ploche. Zahŕňa možnosti, ako je zobrazenie podkategórií s odporúčanými témami, zobrazenie najnovších tém alebo prezentácia top tém. Zvolený štýl ovplyvní spôsob interakcie používateľov a navigácie v kategóriách na stránke."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
-    default_dark_mode_color_scheme_id: "Farebná schéma používaná v tmavom režime."
+    default_dark_mode_color_scheme_id: "Paleta farieb používaná v tmavom režime."
     dark_mode_none: "Žiadny"
     max_image_size_kb: "Maximálna veľkosť nahraného obrázka. Táto hodnota musí byť nakonfigurovaná v nginx (client_max_body_size) / apache alebo proxy. Obrázky väčšie ako táto veľkosť a menšie ako client_max_body_size sa pri odosielaní zmenšia tak, aby sa zmestili."
     max_attachment_size_kb: "Maximálna veľkosť nahraných súborov prílohy. Táto hodnota musí byť nakonfigurovaná v nginx (client_max_body_size) / apache alebo proxy."
@@ -2454,7 +2454,7 @@ sk:
     delete_merged_stub_topics_after_days: "Počet dní, ktoré treba čakať pred automatickým odstránením úplne zlúčených tém. Nastavte na hodnotu -1, aby ste nikdy neodstránili. Nastavte na 0 na okamžité odstránenie."
     bootstrap_mode_min_users: 'Minimálny počet používateľov potrebný na vypnutie režimu bootstrap a odstránenie tlačidla Začíname (pre vypnutie nastavte hodnotu 0, môže to trvať až 24 hodín). Podrobnosti nájdete v <a target="_blank" href="https://meta.discourse.org/t/-/322876">téme Režim bootstrap na stránke Meta</a>.'
     prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom v preberaní príloh."
-    secure_uploads: "### Preklad\n\n**Obmedzuje prístup ku VŠETKÝM nahratým súborom** (obrázky, videá, audio, texty, PDF, ZIP a ďalšie). Ak je povolené \"vyžaduje sa prihlásenie\", nahraté súbory môžu byť prístupné iba prihláseným používateľom. Inak bude prístup obmedzený iba pre médiá nahraté v súkromných správach a súkromných kategóriách. UPOZORNENIE: Toto nastavenie je zložité a vyžaduje hlboké administratívne porozumenie. Podrobnosti nájdete v téme <a target=\"_blank\" href=\"https://meta.discourse.org/t/-/140017\">zabezpečené nahrávanie na Meta</a>."
+    secure_uploads: 'Obmedzuje prístup ku VŠETKÝM nahraným materiálom (obrázky, video, zvuk, text, pdf, zips a ďalšie). Ak je povolené „potrebné prihlásenie“, prístup k nahrávkam majú iba prihlásení používatelia. V opačnom prípade bude prístup obmedzený len pre nahrávanie médií v osobných správach a súkromných kategóriách. VAROVANIE: Toto nastavenie je zložité a vyžaduje si hlboké administratívne porozumenie. Podrobnosti nájdete v téme <a target="_blank" href="https://meta.discourse.org/t/-/140017">v téme bezpečného nahrávania na Meta</a> .'
     secure_uploads_allow_embed_images_in_emails: "Umožňuje vkladanie zabezpečených obrázkov, ktoré by sa za normálnych okolností v e-mailoch redigovali, ak je ich veľkosť menšia ako nastavenie \"secure uploads max email embed image size kb\"."
     secure_uploads_max_email_embed_image_size_kb: "Hranica veľkosti zabezpečených obrázkov, ktoré sa budú vkladať do e-mailov, ak je povolené nastavenie \"bezpečné nahrávanie umožňuje vkladanie do e-mailov\". Bez zapnutia tohto nastavenia nemá toto nastavenie žiadny účinok."
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
@@ -2566,7 +2566,7 @@ sk:
     remove_muted_tags_from_latest: "V zozname najnovších tém nezobrazujte témy označené iba tlmenými značkami."
     force_lowercase_tags: "Vynútiť, aby všetky nové značky boli písané výhradne malými písmenami."
     create_post_for_category_and_tag_changes: "Vytvorenie šepkaného príspevku pri zmene kategórie alebo značky témy, vyžaduje, aby boli povolené šepkané príspevky."
-    automatically_clean_unused_tags: "Automaticky denne odstraňovať značky, ktoré sa nepoužívajú pri žiadnych témach alebo súkromných správach."
+    automatically_clean_unused_tags: "Automaticky odstráňte značky, ktoré sa nepoužívajú na žiadne témy alebo osobné správy na dennej báze."
     watched_precedence_over_muted: "Upozorniť ma na témy v kategóriách alebo značkách, ktoré sledujem a ktoré tiež patria do tých, ktoré som stlmil"
     company_name: "Názov vašej spoločnosti alebo organizácie. Ak pole ponecháte prázdne, neposkytnú sa žiadne všeobecné zmluvné podmienky ani oznámenie o ochrane osobných údajov."
     governing_law: "Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a zásad ochrany osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká."
@@ -5176,7 +5176,7 @@ sk:
         title: "Pozri a cíť"
         fields:
           color_scheme:
-            label: "Farebná schéma"
+            label: "Paleta farieb"
           body_font:
             label: "Písmo tela"
           heading_font:
@@ -5275,7 +5275,7 @@ sk:
       quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
       replied: '%{username} vám odpovedal v "%{topic}" - %{site_title}'
       posted: '%{username} prispel v "%{topic}" - %{site_title}'
-      private_message: '%{username} poslal vám súkromnú správu v "%{topic}" - %{site_title}'
+      private_message: '%{username} vám poslal osobnú správu v "%{topic}" - %{site_title}'
       linked: '%{username} odkázal na váš príspevok z "%{topic}" - %{site_title}'
       watching_first_post: '%{username} vytvoril novú tému "%{topic}" - %{site_title}'
       confirm_title: "Upozornenia sú povolené - %{site_title}"

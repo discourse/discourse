@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 const OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 0, rank: 0 },

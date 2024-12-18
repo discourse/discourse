@@ -2435,6 +2435,7 @@ el:
       quoted: '%{username} σε παράθεσε στο "%{topic}" - %{site_title}'
       replied: '%{username} σου απάντησε στο "%{topic}" - %{site_title}'
       posted: '%{username} ανάρτησε στο "%{topic}" - %{site_title}'
+      private_message: 'Ο/Η %{username} σας έστειλε ένα προσωπικό μήνυμα στο "%{topic}" - %{site_title}'
       linked: '%{username} έκανε μια σύνδεση στην ανάρτηση που έκανες στο νήμα "%{topic}" - %{site_title}'
       watching_first_post: 'Ο/Η %{username} δημιούργησε ένα νέο θέμα "%{topic}" - %{site_title}'
       confirm_title: "Ενεργοποιημένες ειδοποιήσεις - %{site_title}"

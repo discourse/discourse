@@ -497,6 +497,8 @@ it:
     continue: "Continua"
     switch_to_anon: "Avvia Modalità Anonima"
     switch_from_anon: "Esci da Modalità Anonima"
+    select_placeholder: "Seleziona…"
+    none_placeholder: "Nessuna"
     banner:
       close: "Ignora questo banner"
       edit: "Modifica"
@@ -627,6 +629,8 @@ it:
         refresh: "Aggiorna"
         status: "Stato"
         category: "Categoria"
+        score_type:
+          title: "Motivo"
         orders:
           score: "Punteggio"
           score_asc: "Punteggio (inverso)"
@@ -1136,7 +1140,7 @@ it:
     user_fields:
       none: "(scegli un'opzione)"
       required: 'Inserisci un valore per "%{name}"'
-      same_as_password: "La tua password non deve essere ripetuta in altri campi."
+      same_as_password: "La tua password non deve essere ripetuta in altri campi"
       optional: (opzionale)
     user:
       said: "%{username}:"
@@ -1259,18 +1263,15 @@ it:
         description: "Salta i suggerimenti e i distintivi per l'inserimento dei nuovi utenti"
       reset_seen_user_tips: "Mostra di nuovo i suggerimenti per gli utenti"
       theme_default_on_all_devices: "Rendi questo il tema predefinito su tutti i miei dispositivi."
-      color_scheme_default_on_all_devices: "Imposta questo schema colori predefinito su tutti i miei dispositivi"
-      color_scheme: "Combinazione di colori"
+      color_scheme: "Tavolozza dei colori"
       color_schemes:
         default_description: "Tema predefinito"
         disable_dark_scheme: "Come di norma"
-        dark_instructions: "Puoi provare i colori del tema scuro attivandolo sul tuo dispositivo."
         undo: "Annulla"
         regular: "Normale"
         dark: "Modalità scura"
         default_dark_scheme: "(predefinito del sito)"
       dark_mode: "Modalità scura"
-      dark_mode_enable: "Attiva lo schema di colori automatico della modalità scura"
       text_size_default_on_all_devices: "Rendi questa la dimensione del testo predefinita su tutti i miei dispositivi"
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi personali"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
@@ -2050,9 +2051,6 @@ it:
       optional: facoltativo
       errors_summary_title: "Questo modulo contiene errori:"
       dirty_form: "Non hai caricato le modifiche! Vuoi davvero uscire?"
-      select:
-        select_placeholder: "Seleziona…"
-        none_placeholder: "Nessuna"
       errors:
         required: "Obbligatorio"
         invalid_url: "L'URL deve essere valido"
@@ -2690,8 +2688,6 @@ it:
         quoted: "citato"
         edited: "modificato"
         liked: "nuovo \"mi piace\""
-        private_message: "nuovo messaggio privato"
-        invited_to_private_message: "invitato ad un Messaggio Privato"
         invitee_accepted: "invito accettato"
         posted: "nuovo messaggio"
         watching_category_or_tag: "nuovo messaggio"
@@ -3313,7 +3309,6 @@ it:
         help: "Apri una versione facilmente stampabile di questo argomento"
       flag_topic:
         title: "Segnala"
-        help: "segnala questo argomento o invia una notifica privata"
         success_message: "Hai segnalato questo argomento con successo."
       make_public:
         title: "Converti in argomento pubblico"
@@ -3589,7 +3584,6 @@ it:
         edit_action: "Modifica"
         edit_anonymous: "Spiacenti, devi effettuare l'accesso per poter modificare questo messaggio."
         flag_action: "Segnala"
-        flag: "segnala privatamente questo messaggio o invia una notifica privata"
         delete_action: "Elimina messaggio"
         delete: "cancella questo messaggio"
         undelete_action: "Ripristina messaggio"
@@ -4249,7 +4243,6 @@ it:
         print: "%{shortcut} Stampa argomento"
         defer: "%{shortcut} Contrassegna argomento come non letto"
         topic_admin_actions: "%{shortcut} Apri azioni amministrative sull'argomento"
-        archive_private_message: "%{shortcut} Attiva/disattiva l'archiviazione del messaggio privato"
       search_menu:
         title: "Menu Cerca"
         prev_next: "%{shortcut} Sposta la selezione su e giù"
@@ -5227,6 +5220,7 @@ it:
           permalinks: "Collegamenti permanenti"
           trust_levels: "Livelli di attendibilità"
           users: "Utenti"
+          groups: "Gruppi"
           user_fields: "Campi utente"
           watched_words: "Parole osservate"
           legal: "Informazioni legali"
@@ -5236,7 +5230,7 @@ it:
         sidebar_link:
           font_style: "Stile carattere"
           site_logo: "Logo del sito"
-          color_schemes: "Schemi colori"
+          color_schemes: "Tavolozze dei colori"
           emoji: "Emoji"
           navigation: "Navigazione"
           themes: "Temi"
@@ -5309,8 +5303,6 @@ it:
           site_contact_name_help: |
             Nome utente appartenente a un membro dello staff da cui inviare tutti i messaggi automatici. Se non compilato, verrà usato l'account predefinito di sistema.
           site_contact_group: "Gruppo contatto del sito"
-          site_contact_group_help: |
-            Il gruppo che riceve inviti per tutti i messaggi privati inviati automaticamente.
           your_organization: "La tua organizzazione"
           your_organization_description: "Utilizzeremo queste informazioni nei Termini di servizio e nell'Informativa sulla privacy per indicare chi gestisce il sito e sotto quale giurisdizione."
           company_name: "Nome"
@@ -5585,7 +5577,6 @@ it:
           hide_unused_fields: "Nascondi campi inutilizzati"
           is_default: "Il tema è abilitato per impostazione predefinita"
           user_selectable: "Il tema può essere selezionato dagli utenti"
-          color_scheme_user_selectable: "Lo schema di colori può essere selezionato dagli utenti"
           auto_update: "Aggiorna automaticamente quando Discourse viene aggiornato"
           color_scheme: "Tavolozza dei colori"
           edit_color_scheme: "Modifica la tavolozza dei colori"

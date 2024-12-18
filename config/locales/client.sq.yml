@@ -245,6 +245,7 @@ sq:
     disable: "Çaktivizo"
     switch_to_anon: "Filloni sesionin anonim"
     switch_from_anon: "Shkëputu nga sesioni anonim"
+    none_placeholder: "Asnjë"
     banner:
       close: "Hiq këtë banderolë"
       edit: "Redakto"
@@ -286,6 +287,8 @@ sq:
           title: "Lloji"
         refresh: "Rifresko"
         category: "Kategori"
+        score_type:
+          title: "Arsye"
       scores:
         type: "Arsye"
       statuses:
@@ -915,8 +918,6 @@ sq:
       close: "mbylle"
     form_kit:
       reset: Rivendos
-      select:
-        none_placeholder: "Asnjë"
       errors:
         required: "E nevojshme"
     close: "Mbyll"
@@ -1359,7 +1360,6 @@ sq:
         invite_users: "Fto"
       flag_topic:
         title: "Sinjalizo"
-        help: "sinjalizo privatisht këtë temë ose dërgo një njoftim privat"
         success_message: "Sinjalizimi juaj i kësaj teme u krye me sukses. "
       feature_topic:
         title: "Temë në plan të parë"
@@ -1508,7 +1508,6 @@ sq:
         edit_action: "Redakto"
         edit_anonymous: "Na vjen keq, ju duhet të jeni të identifikuar për të redaktuar këtë postim. "
         flag_action: "Sinjalizoni"
-        flag: "sinjalizojeni privatisht këtë postim për të tërhequr vëmendjen e adminëve"
         delete: "fshini këtë postim"
         undelete: "anuloni fshirjen e postimit"
         share_action: "Shpërndaje"
@@ -2163,6 +2162,7 @@ sq:
           permalinks: "Permalinks"
           trust_levels: "Nivelet e besimit"
           users: "Users"
+          groups: "Grupet"
           user_fields: "Fushat e përdoruesit"
           legal: "Legale"
       appearance:

@@ -394,11 +394,8 @@ it:
     max_redemptions_limit: "dovrebbe essere compreso tra 2 e %{max_limit}."
   topic_invite:
     failed_to_invite: "L'utente non può essere invitato in questo argomento senza essere membro di uno dei seguenti gruppi: %{group_names}."
-    not_pm: "Puoi invitare solo a messaggi privati."
     user_exists: "Spiacenti, l'utente è stato già invitato. Puoi invitare un utente ad uno stesso argomento solo una volta."
     muted_topic: "Spiacenti, quell'utente ha silenziato questo argomento."
-    receiver_does_not_allow_pm: "Spiacenti, quell'utente non ti permette di inviargli messaggi privati."
-    sender_does_not_allow_pm: "Spiacenti, non permetti a quell'utente di inviarti messaggi privati."
     user_cannot_see_topic: "%{username} non può vedere l'argomento."
   backup:
     operation_already_running: "Un'operazione è attualmente in esecuzione. Non è possibile avviarne una nuova adesso."
@@ -1396,12 +1393,10 @@ it:
       title: "Notifiche ai Moderatori"
       xaxis: "Giorno"
       yaxis: "Numero di messaggi"
-      description: "Numero di volte in cui i moderatori sono stati notificati privatamente tramite segnalazioni."
     notify_user_private_messages:
       title: "Notifiche Utente"
       xaxis: "Giorno"
       yaxis: "Numero di messaggi"
-      description: "Numero di volte in cui gli utenti sono stati notificati privatamente tramite segnalazioni."
     top_referrers:
       title: "Migliori Referrer"
       xaxis: "Utente"
@@ -1803,7 +1798,6 @@ it:
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
     allow_username_in_share_links: "Consenti ai nomi utente di essere inclusi nei link di condivisione. Questo permette di assegnare i distintivi in base ai visitatori unici."
     site_contact_username: "Un utente dello staff valido da cui inviare tutti i messaggi automatici. Se lasciato vuoto verrà usato l'account predefinito di Sistema."
-    site_contact_group_name: "Un nome di gruppo valido che sarà invitato alla ricezione di tutti i messaggi automatici."
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     send_tl1_welcome_message: "Invia ai nuovi utenti del livello di attendibilità 1 un messaggio di benvenuto."
     send_tl2_promotion_message: "Invia ai nuovi utenti del livello di attendibilità 2 un messaggio sulla promozione."
@@ -2062,7 +2056,6 @@ it:
     min_title_similar_length: "Lunghezza minima di un titolo che attiva il controllo su argomenti simili."
     desktop_category_page_style: "Questa impostazione determina il layout visualizzato per la pagina /categories su desktop. Include opzioni come mostrare sottocategorie con argomenti in primo piano, gli argomenti più recenti o gli argomenti di punta. Lo stile selezionato influenza il modo in cui l'utente naviga attraverso il sito e interagisce con le varie categorie."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
-    default_dark_mode_color_scheme_id: "Lo schema di colori usato in modalità scura."
     dark_mode_none: "Nessuno"
     max_image_size_kb: "La dimensione massima di un'immagine caricata. Deve essere configurato anche in nginx (client_max_body_size) / apache o proxy. Le immagini più grandi di questa e più piccole di client_max_body_size verranno ridimensionate per adattarsi al caricamento."
     max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare. Configura il limite anche in nginx (client_max_body_size) / apache o nel proxy."
@@ -2294,7 +2287,6 @@ it:
     delete_merged_stub_topics_after_days: "Numero di giorni di attesa prima di eliminare automaticamente gli argomenti stub completamente uniti. Imposta su -1 per non eliminare mai. Imposta su 0 per eliminare immediatamente."
     bootstrap_mode_min_users: 'Numero minimo di utenti richiesto per disabilitare la modalità bootstrap e rimuovere il pulsante Per iniziare (imposta a 0 per disattivare, può richiedere fino a 24 ore). Per maggiori dettagli, consulta <a target="_blank" href="https://meta.discourse.org/t/-/322876">l''argomento sulla modalità bootstrap su Meta</a>.'
     prevent_anons_from_downloading_files: "Impedisci agli utenti anonimi di scaricare allegati."
-    secure_uploads: 'Limita l''accesso a TUTTI i caricamenti (immagini, video, audio, testo, pdf, zip, ecc.). Se l''opzione “accesso richiesto” è attivata, solo gli utenti registrati possono accedere ai caricamenti. In caso contrario, l''accesso sarà limitato solo per i media caricati in messaggi privati e categorie private. ATTENZIONE: Questa impostazione è complessa e richiede una profonda competenza amministrativa. Per maggiori dettagli visita <a target="_blank" href="https://meta.discourse.org/t/-/140017">l''argomento sui caricamenti sicuri su Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Consente l'integrazione di immagini sicure che normalmente verrebbero oscurate nelle e-mail, se la loro dimensione è inferiore al valore dell'i'impostazione 'dimensione max in kb immagini da integrare nelle email per caricamenti protetti'."
     secure_uploads_max_email_embed_image_size_kb: "Limite di dimensione per le immagini protette che verranno incorporate nelle e-mail se l'impostazione \"secure upload allow embed in emails\" è abilitata. Se tale impostazione non è abilitata, anche questa non avrà alcun effetto."
     slug_generation_method: "Scegli un metodo di generazione delle abbreviazioni. 'encoded' genererà la stringa di codifica percentuale. 'none' disattiverà completamente le abbreviazioni."
@@ -2406,7 +2398,6 @@ it:
     remove_muted_tags_from_latest: "Non mostrare argomenti etichettati solo con etichette silenziate nell'elenco degli argomenti più recenti."
     force_lowercase_tags: "Forza tutte le nuove Etichette interamente in minuscolo."
     create_post_for_category_and_tag_changes: "Crea un sussurro quando la categoria o i tag di un argomento cambiano. Richiede che i sussurri siano abilitati."
-    automatically_clean_unused_tags: "Elimina automaticamente quotidianamente le etichette che non vengono utilizzate su argomenti o messaggi privati."
     watched_precedence_over_muted: "Inviami notifiche sugli argomenti nelle categorie o nei tag che sto osservando anche se appartengono a un oggetto silenziato"
     company_name: "Nome della tua azienda o organizzazione. Se lasciato vuoto, non verranno forniti Termini di servizio o Informativa sulla privacy."
     governing_law: "Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività."
@@ -4522,8 +4513,6 @@ it:
       styling:
         title: "Aspetto e feeling"
         fields:
-          color_scheme:
-            label: "Schema colori"
           body_font:
             label: "Carattere del corpo"
           heading_font:
@@ -4622,7 +4611,7 @@ it:
       quoted: '%{username} ti ha citato in ''%{topic}'' - %{site_title}'
       replied: '%{username} ti ha risposto in ''%{topic}'' - %{site_title}'
       posted: '%{username} ha pubblicato in ''%{topic}'' - %{site_title}'
-      private_message: '%{username} ti ha inviato un messaggio privato in ''%{topic}'' - %{site_title}'
+      private_message: '%{username} ti ha inviato un messaggio personale in "%{topic}" - %{site_title}'
       linked: '%{username} ha collegato il tuo messaggio da ''%{topic}'' - %{site_title}'
       watching_first_post: '%{username} ha creato un nuovo Argomento ''%{topic}'' - %{site_title}'
       confirm_title: "Notifiche abilitate - %{site_title}"

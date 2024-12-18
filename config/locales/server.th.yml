@@ -526,6 +526,7 @@ th:
       quoted: '%{username} อ้างอิงถึงคุณใน "%{topic}" - %{site_title}'
       replied: '%{username} ตอบคุณใน "%{topic}" - %{site_title}'
       posted: '%{username} โพสท์ใน "%{topic}" - %{site_title}'
+      private_message: '%{username}ได้ส่งข้อความส่วนตัวไปหาคุณใน "%{topic}"-%{site_title}'
       linked: '%{username} ลิงค์โพสของคุณจาก "%{topic}" - %{site_title}'
       watching_first_post: '%{username}ได้สร้างกระทู้ใหม่ "%{topic}"-%{site_title}'
       confirm_title: "เปิดการแจ้งเตือนแล้ว - %{site_title}"

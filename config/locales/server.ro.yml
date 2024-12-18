@@ -1104,6 +1104,7 @@ ro:
     allow_uppercase_posts: "Permite toate caracterele majuscule în titlul subiectului sau în conținutul postării."
     min_title_similar_length: "Lungimea minimă a unui titlu înainte să fie verificat pentru subiecte similare."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
+    default_dark_mode_color_scheme_id: "Paleta de culori utilizată în modul întunecat."
     dark_mode_none: "Nimeni"
     max_image_size_kb: "Dimensiunea maximă de încărcare imagini. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea. Imaginile mai mari decât aceasta și mai mici decât client_max_body_size vor fi redimensionate pentru a se potrivi la încărcare."
     max_attachment_size_kb: "Dimensiunea maximă de încărcare a fișierelor atașate. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea."
@@ -2084,6 +2085,8 @@ ro:
                 label: "Privat"
       styling:
         fields:
+          color_scheme:
+            label: "Paletă de culori"
           styling_preview:
             label: "Previzualizează"
           homepage_style:
@@ -2117,7 +2120,6 @@ ro:
       quoted: '%{username} te-a citat în discuția "%{topic}" - %{site_title}'
       replied: '%{username} ți-a răspuns în discuția "%{topic}" - %{site_title}'
       posted: '%{username} a postat în discuția "%{topic}" - %{site_title}'
-      private_message: '%{username} ți-a trimis un mesaj privat în discuția "%{topic}" - %{site_title}'
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
   staff_action_logs:
     json_too_long: "Valorile nu au fost înregistrate pentru că depășesc limitele lungimii coloanei"

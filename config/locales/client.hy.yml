@@ -495,6 +495,8 @@ hy:
     continue: "Շարունակել"
     switch_to_anon: "Սկսել Անանուն Ռեժիմը"
     switch_from_anon: "Ավարտել Անանուն Ռեժիմը"
+    select_placeholder: "Ընտրել..."
+    none_placeholder: "Ոչ մի"
     banner:
       close: "Փակել այս բաները"
       edit: "Խմբագրել"
@@ -625,6 +627,8 @@ hy:
         refresh: "Թարմացնել"
         status: "Ստատուս"
         category: "Կատեգորիա"
+        score_type:
+          title: "Պատճառ"
         orders:
           score: "Միավոր"
           score_asc: "Միավոր (հակառակ)"
@@ -1134,7 +1138,6 @@ hy:
     user_fields:
       none: "(ընտրել)"
       required: 'Խնդրում ենք մուտքագրել արժեք «%{name}»-ի համար'
-      same_as_password: "Ձեր գաղտնաբառը չպետք է կրկնվի այլ դաշտերում:"
       optional: (ընտրովի)
     user:
       said: "%{username} ՝"
@@ -1249,11 +1252,10 @@ hy:
         description: "Բաց թողնել նոր օգտատերերի միանալու խորհուրդներն ու կրծքանշանները"
       reset_seen_user_tips: "Կրկին ցուցադրել օգտատերերի խորհուրդները"
       theme_default_on_all_devices: "Դարձնել սա լռելյայն թեմա իմ բոլոր սարքավորումների համար"
-      color_scheme: "Գունային սխեման"
+      color_scheme: "Գունապնակ"
       color_schemes:
         default_description: "Լռելյայն թեման"
         disable_dark_scheme: "Սովորական"
-        dark_instructions: "Դուք կարող եք դիտել մութ ռեժիմ գունային սխեման է` միացնելով Ձեր սարքի մութ ռեժիմը"
         undo: "Զրոյացնել"
         regular: "Սովորական"
         dark: "Մութ ռեժիմ"
@@ -1976,9 +1978,6 @@ hy:
     form_kit:
       reset: Զրոյացնել
       optional: ընտրովի
-      select:
-        select_placeholder: "Ընտրել..."
-        none_placeholder: "Ոչ մի"
       errors:
         required: "Պարտադիր"
         too_short:
@@ -2414,8 +2413,6 @@ hy:
         quoted: "մեջբերված"
         edited: "խմբագրվել է"
         liked: "նոր հավանում"
-        private_message: "նոր անձնական հաղորդագրություն"
-        invited_to_private_message: "Հրավիրված է անձնական հաղորդագրության "
         invitee_accepted: "հրավերը ընդունված է"
         posted: "Նոր Գրառում"
         watching_category_or_tag: "Նոր Գրառում"
@@ -2632,6 +2629,8 @@ hy:
         name: "Փոխարինել Պիտակները"
       delete_topics:
         name: "Ջնջել"
+      update_category:
+        name: "Թարմացնել Կատեգորիան"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -2687,6 +2686,7 @@ hy:
       deleted: "Թեման ջնջվել է"
       slow_mode_update:
         enable: "Միացնել"
+        update: "Թարմացնել"
         remove: "Անջատել"
         durations:
           1_hour: "1 ժամ"
@@ -2822,7 +2822,6 @@ hy:
         help: "Բացել այս թեմայի տպման հարմար նախատեսված տարբերակը"
       flag_topic:
         title: "Բողոքել"
-        help: "Գաղտնի կերպով բողոքել այս թեման կամ ուղարկել դրա մասին գաղտնի ծանուցում"
         success_message: "Դուք հաջողությամբ բողոքել եք այս թեման:"
       make_public:
         title: "Փոխարկել Հրապարակային Թեմայի"
@@ -2979,6 +2978,8 @@ hy:
       edit_reason: "Պատճառը՝ "
       post_number: "գրառում %{number}"
       ignored: "Անտեսված բովանդակություն"
+      last_edited_on: "գրառումը վերջին անգամ խմբագրվել է %{dateTime}-ին"
+      edit_history: "գրառման խմբագրման պատմությունը"
       reply_as_new_topic: "Պատասխանել որպես հղված թեմա"
       reply_as_new_private_message: "Պատասխանել որպես հաղորդագրություն նույն ստացողներին"
       continue_discussion: "Շարունակելով %{postLink} քննարկումը՝ "
@@ -3039,7 +3040,6 @@ hy:
         edit_action: "Խմբագրել"
         edit_anonymous: "Ներողություն, Դուք պետք է մուտք գործեք՝ այս գրառումը խմբագրելու համար:"
         flag_action: "Բողոքել"
-        flag: "Գաղտնի կերպով բողոքել այս գրառումը կամ ուղարկել դրա մասին գաղտնի ծանուցում"
         delete: "ջնջել այս գրառումը"
         undelete: "վերականգնել այս գրառումը"
         share_action: "Կիսվել"
@@ -3371,6 +3371,8 @@ hy:
       one: "օգտատեր"
       other: "օգտատերեր"
     category_title: "Կատեգորիա"
+    history_capped_revisions: "Պատմություն, վերջին 100 վերանայումները"
+    history: "Պատմություն"
     raw_email:
       title: "Մուտքային Էլ. նամակ"
       not_available: "Հասանելի չէ!"
@@ -4086,12 +4088,14 @@ hy:
           permalinks: "Մշտահղումներ"
           trust_levels: "Վստահության Մակարդակներ"
           users: "Օգտատերեր"
+          groups: "Խմբեր"
           user_fields: "Օգտատիրոջ Դաշտերը"
           watched_words: "Դիտված Բառեր"
           legal: "Օրինական"
       appearance:
         title: "Արտաքին տեսք"
         sidebar_link:
+          color_schemes: "Գունապնակներ"
           emoji: "Էմոջի"
           navigation: "Նավիգացիա"
           themes: "Թեմաներ"
