@@ -166,15 +166,6 @@ export default class Item extends Component {
       this.navigateToTopic(this.args.topic, this.args.topic.lastUnreadUrl);
       return;
     }
-
-    if (
-      e.target.classList.contains("d-icon-thumbtack") &&
-      e.target.closest("a.topic-status")
-    ) {
-      e.preventDefault();
-      this.args.topic.togglePinnedForUser();
-      return;
-    }
   }
 
   @action
