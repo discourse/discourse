@@ -22,7 +22,7 @@
     }
     &__existing-account,
     &__no-account-yet {
-      font-size: var(--font-down);
+      font-size: var(--font-down-1);
       margin-bottom: 0.5rem;
       text-align: center;
       width: 100%;
@@ -34,6 +34,10 @@
         background-color: var(--primary-low);
         margin-block: 1rem;
       }
+    }
+    &__disclaimer {
+      font-size: var(--font-down-1);
+      margin-bottom: 0.5rem;
     }
   }
 
