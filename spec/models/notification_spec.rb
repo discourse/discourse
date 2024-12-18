@@ -831,15 +831,24 @@ RSpec.describe Notification do
     end
 
     it "Sets the acting_user correctly for each notification" do
+      SiteSetting.enable_names = true
       Notification.populate_acting_user(
         [notification1, notification2, notification3, notification4, notification5],
       )
-
       expect(notification1.acting_user).to eq(user1)
       expect(notification2.acting_user).to eq(user2)
       expect(notification3.acting_user).to eq(user3)
       expect(notification4.acting_user).to eq(user4)
       expect(notification5.acting_user).to eq(user5)
+      expect(notification5.data_hash[:original_name]).to eq "Bruce Wayne"
+    end
+
+    context "with SiteSettings.enable_names=false" do
+      SiteSetting.enable_names = false
+      it "doesn't set the :original_name property" do
+        Notification.populate_acting_user([notification6])
+        expect(notification6.data_hash[:original_name]).to be_nil
+      end
     end
   end
 end

@@ -379,7 +379,9 @@ class Notification < ActiveRecord::Base
     users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
     notifications.each do |notification|
       notification.acting_user = users[notification.acting_username]
-      notification.data_hash[:original_name] = notification.acting_user&.name
+      notification.data_hash[
+        :original_name
+      ] = notification.acting_user&.name if SiteSetting.enable_names
     end
 
     notifications
