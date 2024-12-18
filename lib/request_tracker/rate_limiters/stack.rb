@@ -34,6 +34,7 @@ module RequestTracker
           rate_limiter = rate_limiter_klass.new(request, cookie)
           return rate_limiter if rate_limiter.active?
         end
+        nil
       end
 
       private

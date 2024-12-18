@@ -467,6 +467,7 @@ class Middleware::RequestTracker
     return if STATIC_IP_SKIPPER&.any? { |entry| entry.include?(ip) }
 
     rate_limiter = self.class.rate_limiters_stack.active_rate_limiter(request, cookie)
+    return nil if rate_limiter.nil?
     rate_limit_key = rate_limiter.rate_limit_key
     rate_limit_key_description = rate_limiter.rate_limit_key_description
     error_code_identifier = rate_limiter.error_code_identifier
