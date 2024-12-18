@@ -9,13 +9,13 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -31,9 +31,7 @@ import { i18n } from "discourse-i18n";
   "primaryGroup"
 )
 @attributeBindings("ariaLabel:aria-label")
-export default class UserCardContents extends CardContentsBase.extend(
-  CanCheckEmails
-) {
+export default class UserCardContents extends CardContentsBase {
   elementId = "user-card";
   avatarSelector = "[data-user-card]";
   avatarDataAttrKey = "userCard";
@@ -43,6 +41,7 @@ export default class UserCardContents extends CardContentsBase.extend(
   @setting("allow_profile_backgrounds") allowBackgrounds;
   @setting("enable_badges") showBadges;
   @setting("display_local_time_in_user_card") showUserLocalTime;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @alias("topic.postStream") postStream;
 
@@ -72,6 +71,15 @@ export default class UserCardContents extends CardContentsBase.extend(
   @computed("user.name", "user.username")
   get showName() {
     return this.user.name !== this.user.username;
+  }
+
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
   }
 
   @discourseComputed("user")

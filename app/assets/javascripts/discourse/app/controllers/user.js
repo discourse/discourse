@@ -4,20 +4,22 @@ import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
+import { setting } from "discourse/lib/computed";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
-export default class UserController extends Controller.extend(CanCheckEmails) {
+export default class UserController extends Controller {
   @service currentUser;
   @service router;
   @service dialog;
   @optionalService adminTools;
 
   @controller("user-notifications") userNotifications;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @equal("router.currentRouteName", "user.summary") isSummaryRoute;
   @or("model.can_ignore_user", "model.can_mute_user") canMuteOrIgnoreUser;
@@ -188,6 +190,15 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
 
   set userNotificationLevel(value) {
     /* noop */
+  }
+
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
   }
 
   get displayTopLevelAdminButton() {

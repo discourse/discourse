@@ -1,9 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
-import { computedI18n } from "discourse/lib/computed";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
+import { computedI18n, setting } from "discourse/lib/computed";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
@@ -13,9 +13,7 @@ import AdminUser from "admin/models/admin-user";
 
 const MAX_BULK_SELECT_LIMIT = 100;
 
-export default class AdminUsersListShowController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class AdminUsersListShowController extends Controller {
   @service dialog;
   @service modal;
   @service toasts;
@@ -24,6 +22,7 @@ export default class AdminUsersListShowController extends Controller.extend(
   @tracked displayBulkActions = false;
   @tracked bulkSelectedUserIdsSet = new Set();
   @tracked bulkSelectedUsersMap = {};
+  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   query = null;
   order = null;
@@ -58,6 +57,24 @@ export default class AdminUsersListShowController extends Controller.extend(
     }
 
     return colCount;
+  }
+
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
+  }
+
+  @computed("model.id", "currentUser.id")
+  get canAdminCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canAdminCheckEmails;
   }
 
   resetFilters() {

@@ -1,29 +1,27 @@
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { alias, gt, not, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import DiscourseURL from "discourse/lib/url";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { findAll } from "discourse/models/login-method";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
-export default class AccountController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class AccountController extends Controller {
   @service dialog;
   @service modal;
-
   @controller user;
 
   @setting("enable_names") canEditName;
   @setting("enable_user_status") canSelectUserStatus;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @alias("user.viewingSelf") canDownloadPosts;
   @not("currentUser.can_delete_account") cannotDeleteAccount;
@@ -54,6 +52,15 @@ export default class AccountController extends Controller.extend(
 
   reset() {
     this.set("passwordProgress", null);
+  }
+
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
   }
 
   @discourseComputed()
