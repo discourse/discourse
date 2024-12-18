@@ -28,9 +28,9 @@
       }
     }
 
-    .automations__status {
+    .d-admin-row__detail.automations__status {
       @include breakpoint("tablet") {
-        order: 2;
+        order: 2; // move below the name to avoid empty spacing
       }
     }
 
