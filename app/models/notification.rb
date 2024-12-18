@@ -369,10 +369,10 @@ class Notification < ActiveRecord::Base
       notifications.map do |notification|
         notification.acting_username =
           (
-            notification.data_hash[:username] || notification.data_hash[:original_username]
-            notification.data_hash[:display_username] ||
+            notification.data_hash[:username] || notification.data_hash[:display_username] ||
               notification.data_hash[:mentioned_by_username] ||
-              notification.data_hash[:invited_by_username]
+              notification.data_hash[:invited_by_username] ||
+              notification.data_hash[:original_username]
           )&.downcase
       end
 
