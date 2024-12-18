@@ -40,8 +40,9 @@ module RequestTracker
       private
 
       def get_rate_limiter_index(rate_limiter_klass)
-        @rate_limiter_klasses.index { |klass| klass == rate_limiter_klass }
+        index = @rate_limiter_klasses.index { |klass| klass == rate_limiter_klass }
         raise "Rate limiter #{rate_limiter_klass} not found" if index.nil?
+        index
       end
     end
   end
