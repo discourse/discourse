@@ -46,6 +46,10 @@ module PageObjects
       def fill_field(field_type, field_id, value)
         find_field(field_type, field_id).fill_in(with: value)
       end
+
+      def has_field_with_value?(field_type, field_id, value)
+        find_field(field_type, field_id).find("input").value == value
+      end
     end
   end
 end
@@ -79,6 +83,13 @@ class PageObjects::Pages::Wizard::ReadyStep < PageObjects::Pages::Wizard::StepBa
 end
 
 class PageObjects::Pages::Wizard::BrandingStep < PageObjects::Pages::Wizard::StepBase
+  def click_upload_button(field_id)
+    wizard.find_field("image", field_id).find(".wizard-container__button-upload").click
+  end
+
+  def has_upload?(field_id)
+    wizard.find_field("image", field_id).has_css?(".wizard-container__button-upload.has-upload")
+  end
 end
 
 class PageObjects::Pages::Wizard::StylingStep < PageObjects::Pages::Wizard::StepBase

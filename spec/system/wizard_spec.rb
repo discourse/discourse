@@ -56,9 +56,23 @@ describe "Wizard", type: :system do
   end
 
   describe "Wizard Step: Branding" do
-    it "lets user configure logos and other branding" do
+    let(:file_path_1) { file_from_fixtures("logo.png", "images").path }
+    let(:file_path_2) { file_from_fixtures("logo.jpg", "images").path }
+
+    it "lets user configure logos" do
       wizard_page.go_to_step("branding")
       expect(wizard_page).to be_on_step("branding")
+      attach_file(file_path_1) { wizard_page.branding_step.click_upload_button("logo") }
+      expect(wizard_page.branding_step).to have_upload("logo")
+      attach_file(file_path_2) { wizard_page.branding_step.click_upload_button("logo-small") }
+      expect(wizard_page.branding_step).to have_upload("logo-small")
+      wizard_page.go_to_next_step
+      expect(wizard_page).to be_on_step("corporate")
+
+      expect(SiteSetting.logo).to eq(Upload.find_by(original_filename: File.basename(file_path_1)))
+      expect(SiteSetting.logo_small).to eq(
+        Upload.find_by(original_filename: File.basename(file_path_2)),
+      )
     end
   end
 
@@ -115,6 +129,26 @@ describe "Wizard", type: :system do
     it "lets user configure corporate including governing law and city for disputes" do
       wizard_page.go_to_step("corporate")
       expect(wizard_page).to be_on_step("corporate")
+      wizard_page.fill_field("text", "company-name", "ACME")
+      wizard_page.fill_field("text", "governing-law", "California")
+      wizard_page.fill_field("text", "contact-url", "https://ac.me")
+      wizard_page.fill_field("text", "city-for-disputes", "San Francisco")
+      wizard_page.fill_field("text", "contact-email", "coyote@ac.me")
+      wizard_page.click_jump_in
+      expect(page).to have_current_path("/latest")
+
+      expect(SiteSetting.company_name).to eq("ACME")
+      expect(SiteSetting.governing_law).to eq("California")
+      expect(SiteSetting.city_for_disputes).to eq("San Francisco")
+      expect(SiteSetting.contact_url).to eq("https://ac.me")
+      expect(SiteSetting.contact_email).to eq("coyote@ac.me")
+
+      wizard_page.go_to_step("corporate")
+      expect(wizard_page).to have_field_with_value("text", "company-name", "ACME")
+      expect(wizard_page).to have_field_with_value("text", "governing-law", "California")
+      expect(wizard_page).to have_field_with_value("text", "contact-url", "https://ac.me")
+      expect(wizard_page).to have_field_with_value("text", "city-for-disputes", "San Francisco")
+      expect(wizard_page).to have_field_with_value("text", "contact-email", "coyote@ac.me")
     end
   end
 end
