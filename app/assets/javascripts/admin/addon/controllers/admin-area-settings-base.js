@@ -7,7 +7,7 @@ export default class AdminAreaSettingsBaseController extends Controller {
   queryParams = ["filter"];
 
   @action
-  filterChangedCallback(filter) {
+  adminSettingsFilterChangedCallback(filter) {
     this.filter = filter;
   }
 }

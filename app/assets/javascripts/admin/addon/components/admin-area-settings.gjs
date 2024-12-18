@@ -43,8 +43,8 @@ export default class AdminAreaSettings extends Component {
   }
 
   @action
-  filterChangedCallback(filterData) {
-    this.args.filterChangedCallback(filterData.filter);
+  adminSettingsFilterChangedCallback(filterData) {
+    this.args.adminSettingsFilterChangedCallback(filterData.filter);
   }
 
   <template>
@@ -56,7 +56,7 @@ export default class AdminAreaSettings extends Component {
       {{#if this.settings}}
         <AdminFilteredSiteSettings
           @initialFilter={{this.filter}}
-          @onFilterChanged={{this.filterChangedCallback}}
+          @onFilterChanged={{this.adminSettingsFilterChangedCallback}}
           @settings={{this.settings}}
         />
       {{else}}

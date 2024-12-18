@@ -69,7 +69,7 @@ module("Integration | Component | AdminAreaSettings", function (hooks) {
     await render(<template>
       <AdminAreaSettings
         @area="flags"
-        @filterChangedCallback={{callback}}
+        @adminSettingsFilterChangedCallback={{callback}}
         @filter=""
       />
     </template>);
