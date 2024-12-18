@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.39.0";
+export const PLUGIN_API_VERSION = "1.39.1";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -823,18 +823,34 @@ class PluginApi {
    *
    **/
   includePostAttributes(...attributes) {
+    deprecated(
+      "`api.includePostAttributes` has been deprecated. Use api.addTrackedPostProperties instead.",
+      {
+        id: "discourse.api.include-post-attributes",
+        since: "v3.4.0.beta3-dev",
+        dropFrom: "v3.5.0",
+      }
+    );
+
     includeAttributes(...attributes);
   }
 
   /**
-   * Adds a tracked property to the post model.
+   * Adds tracked properties to the post model.
    *
-   * This method is used to mark a property as tracked for post updates.
+   * This method is used to mark properties as tracked for post updates.
    *
-   * @param {string} name - The name of the property to track.
+   * It will also add the properties to the list of Post's attributes passed to
+   * widgets.
+   *
+   * You'll need to do this if you've added properties to a Post and want to use
+   * them when you're rendering.
+   *
+   * @param {...string} names - The names of the properties to be tracked.
    */
-  addTrackedPostProperty(name) {
-    _addTrackedPostProperty(name);
+  addTrackedPostProperties(...names) {
+    names.forEach((name) => _addTrackedPostProperty(name));
+    includeAttributes(...names); // compatibility with widget's attributes
   }
 
   /**
