@@ -11,9 +11,9 @@ patchedDependencies:
   babel-plugin-debug-macros@0.3.4:
     hash: wki6cycbrrm5sscamn5w4cujby
     path: patches/babel-plugin-debug-macros@0.3.4.patch
-  content-tag@3.0.0:
+  content-tag@3.1.0:
     hash: lgdkxhmahesfzwpl4vwprolz5m
-    path: patches/content-tag@3.0.0.patch
+    path: patches/content-tag@3.1.0.patch
   ember-source@5.12.0:
     hash: xx7mvsb7nmshqkkqhmf45r3hse
     path: patches/ember-source@5.12.0.patch
@@ -1068,8 +1068,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       content-tag:
-        specifier: ^3.0.0
-        version: 3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+        specifier: ^3.1.0
+        version: 3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.0)
@@ -3913,6 +3913,9 @@ packages:
 
   content-tag@3.0.0:
     resolution: {integrity: sha512-HxWPmF9hzehv5PV7TSK7QSzlVBhmwQA8NgBrXmL+fqXfM3L1r3ResAPzeiGbxra3Zw6U3gdhw3cIDJADQnuCVQ==}
+
+  content-tag@3.1.0:
+    resolution: {integrity: sha512-gSESx+fia81/vKjorui0V6wY7IBpuitd84LcQnaPVF9Xe9ctLAf4saHwbUi3SAhYfi9kxs5ODfAVnm5MmjojCQ==}
 
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
@@ -11873,7 +11876,9 @@ snapshots:
 
   content-tag@2.0.3: {}
 
-  content-tag@3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m): {}
+  content-tag@3.0.0: {}
+
+  content-tag@3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m): {}
 
   content-type@1.0.5: {}
 
@@ -12815,7 +12820,7 @@ snapshots:
   ember-template-imports@4.2.0:
     dependencies:
       broccoli-stew: 3.0.0
-      content-tag: 3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.0.0
       ember-cli-version-checker: 5.1.2
     transitivePeerDependencies:
       - supports-color
@@ -14745,7 +14750,7 @@ snapshots:
 
   lint-to-the-future-ember-template@3.0.0(ember-template-lint@6.0.0):
     dependencies:
-      content-tag: 3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
       ember-template-lint: 6.0.0
       walk-sync: 2.2.0
 
