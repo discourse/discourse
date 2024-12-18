@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 acceptance(
   "Local Dates - Download calendar without default calendar option set",
