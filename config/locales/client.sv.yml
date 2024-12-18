@@ -428,6 +428,8 @@ sv:
     continue: "Fortsätt"
     switch_to_anon: "Starta anonymt läge"
     switch_from_anon: "Avsluta anonymt läge"
+    select_placeholder: "Välj…"
+    none_placeholder: "Ingen"
     banner:
       close: "Avfärda denna banderoll"
       edit: "Redigera"
@@ -558,6 +560,8 @@ sv:
         refresh: "Uppdatera"
         status: "Status"
         category: "Kategori"
+        score_type:
+          title: "Anledning"
         orders:
           score: "Poäng"
           score_asc: "Poäng (omvänt)"
@@ -1054,7 +1058,7 @@ sv:
     user_fields:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
-      same_as_password: "Upprepa inte ditt lösenord i andra fält."
+      same_as_password: "Upprepa inte ditt lösenord i andra fält"
       optional: (valfri)
     user:
       said: "%{username}:"
@@ -1172,17 +1176,15 @@ sv:
         description: "Hoppa över nybörjartips och utmärkelser för ny användare"
       reset_seen_user_tips: "Visa användartips igen"
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
-      color_scheme: "Färgschema"
+      color_scheme: "Färgpalett"
       color_schemes:
         default_description: "Temat Standard"
         disable_dark_scheme: "Samma som vanlig"
-        dark_instructions: "Du kan förhandsgranska färgschemat för mörkt läge genom att växla dina enheters mörka läge."
         undo: "Återställ"
         regular: "Vanlig"
         dark: "Mörkt läge"
         default_dark_scheme: "(standard för webbplatsen)"
       dark_mode: "Mörkt läge"
-      dark_mode_enable: "Aktivera automatiskt färgschema för mörkt läge"
       text_size_default_on_all_devices: "Gör detta till standardstorlek för text på alla mina enheter"
       allow_private_messages: "Tillåt andra användare att skicka mig personliga meddelanden"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
@@ -1859,9 +1861,6 @@ sv:
     form_kit:
       reset: Återställ
       optional: valfritt
-      select:
-        select_placeholder: "Välj…"
-        none_placeholder: "Ingen"
       errors:
         required: "Krävs"
         invalid_url: "Måste vara en giltig URL"
@@ -2434,8 +2433,6 @@ sv:
         quoted: "citerad"
         edited: "redigerad"
         liked: "ny gillning"
-        private_message: "nytt privat meddelande"
-        invited_to_private_message: "inbjuden till privat meddelande"
         invitee_accepted: "inbjudan accepterad"
         posted: "nytt inlägg"
         watching_category_or_tag: "nytt inlägg"
@@ -3028,7 +3025,6 @@ sv:
         help: "Öppna en utskriftsvänlig version av det här ämnet"
       flag_topic:
         title: "Flagga"
-        help: "flagga privat detta ämne för uppmärksamhet eller skicka en privat avisering om det"
         success_message: "Du flaggade framgångsrikt detta ämne."
       make_public:
         title: "Konvertera till offentligt ämne"
@@ -3299,7 +3295,6 @@ sv:
         edit_action: "Redigera"
         edit_anonymous: "Tyvärr måste du vara inloggad för att kunna redigera det här inlägget."
         flag_action: "Flagga"
-        flag: "flagga detta inlägg privat för uppmärksamhet eller skicka en privat påminnelse om det"
         delete_action: "Radera inlägg"
         delete: "radera detta inlägg"
         undelete: "återställ detta inlägg"
@@ -3915,7 +3910,6 @@ sv:
         mark_watching: "%{shortcut} Bevaka ämne"
         print: "%{shortcut} Skriv ut ämne"
         topic_admin_actions: "%{shortcut} Öppna administratörsåtgärder för ämne"
-        archive_private_message: "%{shortcut} Växla arkivering av privat meddelande"
       search_menu:
         title: "Sökmeny"
         prev_next: "%{shortcut} Flytta markering upp eller ner"
@@ -4829,12 +4823,14 @@ sv:
           permalinks: "Permalänkar"
           trust_levels: "Förtroendenivåer"
           users: "Användare"
+          groups: "Grupper"
           user_fields: "Användarfält"
           watched_words: "Bevakade ord"
           legal: "Juridik"
       appearance:
         title: "Utseende"
         sidebar_link:
+          color_schemes: "Färgpaletter"
           emoji: "Emoji"
           navigation: "Navigering"
           themes: "Teman"
@@ -5084,7 +5080,6 @@ sv:
           hide_unused_fields: "Dölj oanvända fält"
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
-          color_scheme_user_selectable: "Färgschema kan väljas av användare"
           auto_update: "Uppdatera automatiskt när Discourse uppdateras"
           color_scheme: "Färgpalett"
           edit_color_scheme: "Ändra färgpalett"

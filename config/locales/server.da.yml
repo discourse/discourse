@@ -234,8 +234,6 @@ da:
     failed_to_invite: "Brugeren kan ikke inviteres til dette emne uden et gruppemedlemskab i en af følgende grupper: %{group_names}."
     user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
     muted_topic: "Beklager, denne bruger ønsker tavshed i dette emne."
-    receiver_does_not_allow_pm: "Beklager, denne bruger tillader dig ikke at sende private beskeder til sig."
-    sender_does_not_allow_pm: "Beklager, du tillader ikke denne bruger sender dig private beskeder."
     user_cannot_see_topic: "%{username} kan ikke se emnet."
   backup:
     operation_already_running: "En handling kører i øjeblikket. Kan ikke starte et nyt job lige nu."
@@ -1080,12 +1078,10 @@ da:
       title: "Underret moderatorer"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange moderatorer er blevet underrettet privat af en anmeldelse."
     notify_user_private_messages:
       title: "Giv brugeren besked"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange, brugere har fået privat besked af en anmeldelse."
     top_referrers:
       title: "Top henvisere"
       xaxis: "Bruger"
@@ -1482,7 +1478,6 @@ da:
     title_fancy_entities: "Konverter almindelige ASCII-tegn til smarte HTML-entiteter i emnetitler, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimumslængden af en titel før den vil blive kontrolleret for lignende emner."
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
-    default_dark_mode_color_scheme_id: "Farveskemaet der bruges ved mørk tilstand."
     dark_mode_none: "Ingen"
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."

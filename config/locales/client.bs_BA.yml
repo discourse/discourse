@@ -361,6 +361,7 @@ bs_BA:
     continue: "Nastavi"
     switch_to_anon: "Uđi u privatni način rada"
     switch_from_anon: "Izađi iz privatnog načina rada"
+    none_placeholder: "Ništa"
     banner:
       close: "Odkaži ovu zastavicu"
       edit: "Izmijeni"
@@ -485,6 +486,8 @@ bs_BA:
         refresh: "Osvježi"
         status: "Status"
         category: "Kategorija"
+        score_type:
+          title: "Reason"
         orders:
           score: "bodovi"
           score_asc: "Rezultat (obrnuto)"
@@ -945,11 +948,11 @@ bs_BA:
       skip_new_user_tips:
         description: "Isključi savjete i upute za novoregistrirane korisnike"
       theme_default_on_all_devices: "Postavi ovu temu kao zadanu na svim mojim uređajima"
+      color_scheme: "Paleta boja"
       color_schemes:
         undo: "Resetovati"
         regular: "Redovne"
       dark_mode: "Tamni način"
-      dark_mode_enable: "Omogućite automatski tamnu šemu boja"
       text_size_default_on_all_devices: "Učinite ovo standardnom veličinom teksta na svim mojim uređajima"
       allow_private_messages: "Dozvoli drugim korisnicima da mi šalju privatne poruke"
       external_links_in_new_tab: "Otvori sve eksterne linkove u novom tab-u"
@@ -1443,8 +1446,6 @@ bs_BA:
     form_kit:
       reset: Resetovati
       optional: opciono
-      select:
-        none_placeholder: "Ništa"
       errors:
         required: "Required"
     close: "Zatvori"
@@ -1825,8 +1826,6 @@ bs_BA:
         quoted: "citirano"
         edited: "promjenjeno"
         liked: "novi like"
-        private_message: "nova privatna poruka"
-        invited_to_private_message: "pozvan u privatnu poruku"
         invitee_accepted: "poziv prihvaćen"
         posted: "novi post"
         watching_category_or_tag: "novi post"
@@ -2171,7 +2170,6 @@ bs_BA:
         help: "Otvori printersku verziju ove teme"
       flag_topic:
         title: "Prijavi"
-        help: "anonimno prijavi ovu temu ili pošalji privatnu notifikaciju"
         success_message: "Uspješno ste prijavili ovu temu."
       make_public:
         title: "Pretvori u javnu temu"
@@ -2385,7 +2383,6 @@ bs_BA:
         edit_action: "Izmijeni"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag_action: "Prijavi"
-        flag: "anonimno prijavi ovaj post ili pošalji privatnu notifikaciju"
         delete: "obriši ovaj post"
         undelete: "povrati obrisan post"
         share_action: "Dijeli"
@@ -3394,12 +3391,14 @@ bs_BA:
           permalinks: "Permalink-ovi"
           trust_levels: "Trust Levels"
           users: "Korisnici"
+          groups: "Groups"
           user_fields: "User Fields"
           watched_words: "Pogledane Rijeći"
           legal: "Legal"
       appearance:
         title: "Izgled"
         sidebar_link:
+          color_schemes: "Palete boja"
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Teme"

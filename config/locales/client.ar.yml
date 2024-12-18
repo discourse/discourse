@@ -713,6 +713,8 @@ ar:
     continue: "متابعة"
     switch_to_anon: "دخول وضع التخفي"
     switch_from_anon: "الخروج من وضع التخفي"
+    select_placeholder: "تحديد…"
+    none_placeholder: "لا يوجد"
     banner:
       close: "تجاهل هذا البانر"
       edit: "تعديل"
@@ -871,6 +873,8 @@ ar:
         refresh: "تحديث"
         status: "الحالة"
         category: "الفئة"
+        score_type:
+          title: "السبب"
         orders:
           score: "النقاط"
           score_asc: "النقاط (عكسية)"
@@ -1448,7 +1452,7 @@ ar:
     user_fields:
       none: "(تحديد خيار)"
       required: 'يُرجى إدخال قيمة لـ "%{name}"'
-      same_as_password: "ينبغي عدم تكرار كلمة مرورك في الحقول الأخرى."
+      same_as_password: "ينبغي عدم تكرار كلمة مرورك في الحقول الأخرى"
       optional: (اختياري)
     user:
       said: "%{username}:"
@@ -1571,18 +1575,15 @@ ar:
         description: "تخطي نصائح وشارات تهيئة المستخدم الجديد"
       reset_seen_user_tips: "عرض نصائح المستخدم مرة أخرى"
       theme_default_on_all_devices: "جعل هذه السمة الافتراضية على كل أجهزتي"
-      color_scheme_default_on_all_devices: "تعيين نظام الألوان الافتراضي على جميع أجهزتي"
-      color_scheme: "نظام الألوان"
+      color_scheme: "لوحة الألوان"
       color_schemes:
         default_description: "السمة الافتراضية"
         disable_dark_scheme: "مثل العادي"
-        dark_instructions: "يمكنك معاينة نظام ألوان الوضع الداكن عن طريق تفعيل الوضع الداكن لجهازك."
         undo: "إعادة التعيين"
         regular: "العادي"
         dark: "الوضع الداكن"
         default_dark_scheme: "(الوضع الافتراضي للموقع)"
       dark_mode: "الوضع الداكن"
-      dark_mode_enable: "تفعيل نظام الألوان في الوضع الداكن تلقائيًا"
       text_size_default_on_all_devices: "جعل هذا الحجم الافتراضي للنص على جميع أجهزتي"
       allow_private_messages: "السماح للمستخدمين الآخرين بإرسال رسائل خاصة إليَّ"
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
@@ -2479,9 +2480,6 @@ ar:
       optional: اختياري
       errors_summary_title: "يحتوي هذا النموذج على أخطاء:"
       dirty_form: "لم ترسل التغييرات! هل تريد بالتأكيد المغادرة؟"
-      select:
-        select_placeholder: "تحديد…"
-        none_placeholder: "لا يوجد"
       errors:
         required: "مطلوب"
         invalid_url: "يجب أن يكون عنوان URL صالحًا"
@@ -3275,8 +3273,6 @@ ar:
         quoted: "تم اقتباس لكلامك"
         edited: "تم التعديل"
         liked: "مرة إعجاب جديدة"
-        private_message: "رسالة خاصة جديدة"
-        invited_to_private_message: "تمت دعوتك إلى رسالة خاصة"
         invitee_accepted: "تم قبول الدعوة"
         posted: "منشور جديد"
         watching_category_or_tag: "منشور جديد"
@@ -4022,7 +4018,6 @@ ar:
         help: "فتح نسخة ملائمة للطباعة من هذا الموضوع"
       flag_topic:
         title: "إبلاغ"
-        help: "الإبلاغ عن هذا الموضوع بشكلٍٍ خاص للفت الانتباه إليه، أو إرسال إشعار خاص بشأنه."
         success_message: "لقد أبلغت عن هذا الموضوع بنجاح."
       make_public:
         title: "التحويل إلى موضوع عام"
@@ -4386,7 +4381,6 @@ ar:
         edit_action: "تعديل"
         edit_anonymous: "عذرًا، لكنك بحاجة إلى تسجيل الدخول لتعديل هذا المنشور."
         flag_action: "إبلاغ"
-        flag: "الإبلاغ عن هذا المنشور بشكلٍٍ خاص للفت الانتباه إليه، أو إرسال إشعار خاص بشأنه."
         delete_action: "حذف المنشور"
         delete: "حذف هذا المنشور"
         undelete_action: "إلغاء حذف المنشور"
@@ -5145,7 +5139,6 @@ ar:
         print: "%{shortcut} طباعة الموضوع"
         defer: "%{shortcut} وضع علامة على الموضوع كغير مقروء"
         topic_admin_actions: "%{shortcut} فتح إجراءات المشرف على الموضوع"
-        archive_private_message: "%{shortcut} تبديل أرشفة الرسائل الخاصة"
       search_menu:
         title: "قائمة البحث"
         prev_next: "%{shortcut} نقل التحديد لأعلى ولأسفل"
@@ -6256,6 +6249,7 @@ ar:
           permalinks: "الروابط الثابتة"
           trust_levels: "مستويات الثقة"
           users: "المستخدمون"
+          groups: "مجموعتان"
           user_fields: "حقول المستخدم"
           watched_words: "الكلمات المُراقَبة"
           legal: "المسائل القانونية"
@@ -6265,7 +6259,7 @@ ar:
         sidebar_link:
           font_style: "نمط الخط"
           site_logo: "شعار الموقع"
-          color_schemes: "أنظمة الألوان"
+          color_schemes: "لوحات الألوان"
           emoji: "الرمز التعبيري"
           navigation: "التنقل"
           themes: "السمات"
@@ -6338,8 +6332,6 @@ ar:
           site_contact_name_help: |
             اسم مستخدم للموظفين لإرسال جميع الرسائل الآلية منه. إذا تُرك فارغًا، فسيتم استخدام حساب النظام الافتراضي.
           site_contact_group: "مجموعة جهات الاتصال للموقع"
-          site_contact_group_help: |
-            المجموعة التي تتم دعوتها إلى جميع الرسائل الخاصة التي يتم إرسالها تلقائيًا.
           your_organization: "مؤسستك"
           your_organization_description: "سنستخدم هذه المعلومات في شروط الخدمة وإشعار الخصوصية لتوضيح المسؤول عن تشغيل الموقع وتحت أي ولاية قضائية."
           company_name: "الاسم"
@@ -6615,7 +6607,6 @@ ar:
           hide_unused_fields: "إخفاء الحقول غير المستخدمة"
           is_default: "السمة مفعَّلة بشكلٍٍ افتراضي"
           user_selectable: "يمكن للمستخدمين تحديد السمة"
-          color_scheme_user_selectable: "يمكن تحديد نظام الألوان بواسطة المستخدمين"
           auto_update: "التحديث التلقائي عند تحديث Discourse"
           color_scheme: "لوحة الألوان"
           edit_color_scheme: "تعديل لوحة الألوان"

@@ -607,6 +607,8 @@ sk:
     continue: "Pokračovať"
     switch_to_anon: "Vstúpiť do anonymného režimu"
     switch_from_anon: "Opustiť anonymný režim"
+    select_placeholder: "Vyberte…"
+    none_placeholder: "Žiadny"
     banner:
       close: "Zamietnuť tento banner"
       edit: "Upraviť"
@@ -628,6 +630,7 @@ sk:
       order_by: "Zoradiť podľa"
       date_filter: "Uverejnené medzi"
       in_reply_to: "v odpovedi na"
+      filtered_flagged_by: "Označené používateľom"
       explain:
         why: "vysvetlite, prečo sa táto položka skončila vo fronte"
         title: "Kontrolovateľné bodovanie"
@@ -751,6 +754,8 @@ sk:
         refresh: "Obnoviť"
         status: "Stav"
         category: "Kategória"
+        score_type:
+          title: "Dôvod"
         orders:
           score: "Skóre"
           score_asc: "Skóre (opačne)"
@@ -1294,7 +1299,8 @@ sk:
     user_fields:
       none: "(vyberte možnosť)"
       required: 'Zadajte hodnotu pre „%{name}“'
-      same_as_password: "Vaše heslo by sa nemalo opakovať v iných poliach."
+      required_checkbox: 'Pole "%{name}" je povinné'
+      same_as_password: "Vaše heslo by sa nemalo opakovať v iných poliach"
       optional: (nepovinné)
     user:
       said: "%{username}:"
@@ -1417,18 +1423,18 @@ sk:
         description: "Preskočiť tipy a odznaky na registráciu nového používateľa"
       reset_seen_user_tips: "Znova zobraziť tipy používateľov"
       theme_default_on_all_devices: "Nastaviť túto tému ako predvolenú na všetkých mojich zariadeniach"
-      color_scheme_default_on_all_devices: "Nastaviť predvolenú farebnú schému na všetkých mojich zariadeniach"
-      color_scheme: "Farebná schéma"
+      color_scheme_default_on_all_devices: "Nastavenie predvolenej palety farieb na všetkých mojich zariadeniach"
+      color_scheme: "Paleta farieb"
       color_schemes:
         default_description: "Predvolená téma"
         disable_dark_scheme: "Rovnaké ako bežné"
-        dark_instructions: "Farebnú schému tmavého režimu si môžete zobraziť prepnutím tmavého režimu zariadenia."
+        dark_instructions: "Môžete si prezrieť paletu farieb tmavého režimu prepnutím tmavého režimu zariadenia."
         undo: "Resetovať"
         regular: "Bežné"
         dark: "Tmavý režim"
         default_dark_scheme: "(predvolené nastavenie stránky)"
       dark_mode: "Tmavý režim"
-      dark_mode_enable: "Povoliť automatickú farebnú schému tmavého režimu"
+      dark_mode_enable: "Povoliť automatickú farebnú paletu tmavého režimu"
       text_size_default_on_all_devices: "Nastaviť ako predvolenú veľkosť textu na všetkých mojich zariadeniach"
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
@@ -2112,6 +2118,7 @@ sk:
           other: "Vaše heslo je príliš krátke (minimum sú %{count} znaky)."
         common: "Toto heslo je príliš časté."
         same_as_username: "Vaše heslo je rovnaké ako používateľské meno."
+        same_as_name: "Vaše heslo je rovnaké ako vaše meno."
         same_as_email: "Vaše heslo je rovnaké ako e-mail."
         ok: "Vaše heslo je v poriadku."
         instructions:
@@ -2275,9 +2282,6 @@ sk:
       optional: nepovinné
       errors_summary_title: "Tento formulár obsahuje chyby:"
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
-      select:
-        select_placeholder: "Vyberte…"
-        none_placeholder: "Žiadny"
       errors:
         required: "Povinné"
         invalid_url: "Musí byť platná adresa URL"
@@ -3003,8 +3007,8 @@ sk:
         quoted: "citované"
         edited: "upravené"
         liked: "nové ako"
-        private_message: "nová súkromná správa"
-        invited_to_private_message: "pozvaný do súkromnej správy"
+        private_message: "nová osobná správa"
+        invited_to_private_message: "pozvaný do osobnej správy"
         invitee_accepted: "pozvánka prijatá"
         posted: "nový príspevok"
         watching_category_or_tag: "nový príspevok"
@@ -3682,7 +3686,7 @@ sk:
         help: "Otvoriť tlačiteľnú verziu tohto témy."
       flag_topic:
         title: "Označ"
-        help: "súkromne označiť túto tému do pozornosti, alebo na ňu poslať súkromne upozornenie"
+        help: "súkromne označte túto tému alebo o nej pošlite osobnú správu"
         success_message: "Úspešne ste označili tému."
       make_public:
         title: "Previesť na verejnú tému"
@@ -4003,7 +4007,7 @@ sk:
         edit_action: "Upraviť"
         edit_anonymous: "Ľutujeme, ale pre úpravu príspevku je potrebné sa prihlásiť."
         flag_action: "Označenie"
-        flag: "súkromne označiť tento príspevok do pozornosti, alebo naň poslať súkromne upozornenie"
+        flag: "súkromne označte tento príspevok alebo o ňom pošlite osobnú správu"
         delete_action: "Odstrániť príspevok"
         delete: "odstrániť tento príspevok"
         undelete_action: "Obnoviť odstránený príspevok"
@@ -4720,7 +4724,7 @@ sk:
         print: "%{shortcut} Vytlačiť tému"
         defer: "%{shortcut} Označiť tému ako neprečítanú"
         topic_admin_actions: "%{shortcut} Akcie správcu otvorenej témy"
-        archive_private_message: "%{shortcut} Prepnúť archiváciu súkromnej správy"
+        archive_private_message: "%{shortcut} Prepnúť archiváciu osobnej správy"
       search_menu:
         title: "Ponuka vyhľadávania"
         prev_next: "%{shortcut} Presun výberu nahor a nadol"
@@ -5323,6 +5327,9 @@ sk:
           experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
           experiment_tooltip:
             title_disabled: "Vyskúšajte našu experimentálnu funkciu"
+            title_enabled: "Vypnutie experimentálnej funkcie"
+            content_disabled: "Vyskúšajte našu najnovšiu funkciu vo vývoji! Je stále v experimentálnom štádiu, takže ho môžeme kedykoľvek odstrániť. Odhlásiť sa môžete kedykoľvek budete chcieť.<br/><br/>Zmenou tohto povolíte túto funkciu pre všetkých používateľov."
+            content_enabled: "Zmenou tejto funkcie zakážete túto funkciu pre všetkých používateľov."
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -5765,6 +5772,7 @@ sk:
           permalinks: "Trvalé odkazy"
           trust_levels: "Stupne dôvery"
           users: "Používatelia"
+          groups: "Skupiny"
           user_fields: "Používateľské polia"
           watched_words: "Sledované slová"
           legal: "Právne záležitosti"
@@ -5774,7 +5782,7 @@ sk:
         sidebar_link:
           font_style: "Štýl písma"
           site_logo: "Logo stránky"
-          color_schemes: "Farebné schémy"
+          color_schemes: "Palety farieb"
           emoji: "Emoji"
           navigation: "Navigácia"
           themes: "Témy"
@@ -5848,7 +5856,7 @@ sk:
             Používateľské meno člena personálu, z ktorého sa budú odosielať všetky automatické správy. Ak zostane prázdne, použije sa predvolené systémové konto.
           site_contact_group: "Kontaktná skupina stránky"
           site_contact_group_help: |
-            Skupina, ktorá dostane pozvánku do všetkých automaticky odoslaných súkromných správ.
+            Skupina, ktorá dostane pozvánku na všetky automaticky odoslané osobné správy.
           your_organization: "Vaša organizácia"
           your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
@@ -6126,7 +6134,7 @@ sk:
           hide_unused_fields: "Skryť nepoužívané polia"
           is_default: "Téma je predvolene povolená"
           user_selectable: "Tému si môžu vybrať používatelia"
-          color_scheme_user_selectable: "Farebnú schému si môžu vybrať používatelia"
+          color_scheme_user_selectable: "Farebná paleta môže byť vybraná používateľmi"
           auto_update: "Automatická aktualizácia pri aktualizácii Discourse"
           color_scheme: "Paleta farieb"
           edit_color_scheme: "Úprava palety farieb"

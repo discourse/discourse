@@ -366,11 +366,8 @@ zh_CN:
     max_redemptions_limit: "应介于 2 和 %{max_limit} 之间。"
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入此话题：%{group_names}。"
-    not_pm: "您只能邀请加入私信。"
     user_exists: "抱歉，该用户已被邀请。您一次只可以邀请一个用户加入话题。"
     muted_topic: "抱歉，该用户已将此话题设为免打扰。"
-    receiver_does_not_allow_pm: "抱歉，该用户不允许您向他们发送私信。"
-    sender_does_not_allow_pm: "抱歉，您不允许该用户向您发送私信。"
     user_cannot_see_topic: "%{username} 无法看到该话题。"
   backup:
     operation_already_running: "一个操作正在运行。目前无法开始新的作业。"
@@ -1324,12 +1321,10 @@ zh_CN:
       title: "通知版主"
       xaxis: "天"
       yaxis: "消息数量"
-      description: "版主通过举报被私下通知的次数。"
     notify_user_private_messages:
       title: "通知用户"
       xaxis: "天"
       yaxis: "消息数量"
-      description: "用户通过举报被私下通知的次数。"
     top_referrers:
       title: "热门推荐人"
       xaxis: "用户"
@@ -1730,7 +1725,6 @@ zh_CN:
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
     site_contact_username: "用于发送所有自动消息的有效管理人员用户名。如果留空，将使用默认系统帐户。"
-    site_contact_group_name: "要被邀请到所有自动消息的有效群组名称。"
     send_welcome_message: "向所有新用户发送带有快速入门指南的欢迎消息。"
     send_tl1_welcome_message: "向新的信任级别 1 用户发送欢迎消息。"
     send_tl2_promotion_message: "向新的信任级别 2 用户发送有关升级的消息。"
@@ -1990,7 +1984,6 @@ zh_CN:
     min_title_similar_length: "检查有无类似话题之前的标题的最小长度。"
     desktop_category_page_style: "此设置决定桌面版 /categories 页面的视觉布局。其中包括显示带有精选话题的子类别、显示最新话题或呈现热门话题等选项。所选样式将影响用户在网站上类别间的互动和导航方式。"
     category_colors: "设置类别允许的十六进制颜色值列表。"
-    default_dark_mode_color_scheme_id: "在深色模式下使用的配色方案。"
     dark_mode_none: "无"
     max_image_size_kb: "上传的最大图片尺寸。也必须在 nginx (client_max_body_size) /apache 或代理中配置此设置。大于此值或小于 client_max_body_size 的图片在上传时将被调整大小。"
     max_attachment_size_kb: "上传的最大附件文件大小。也必须在 nginx (client_max_body_size) / apache 或代理中配置此设置。"
@@ -2222,7 +2215,6 @@ zh_CN:
     delete_merged_stub_topics_after_days: "自动删除完全合并的存根话题之前等待的天数。设置为 -1 不会删除。设置为 0 将立即删除。"
     bootstrap_mode_min_users: '禁用引导模式并移除“使用入门”按钮所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/322876">Meta 上的引导模式话题</a>以了解详细信息。'
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
-    secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
     secure_uploads_max_email_embed_image_size_kb: "如果启用了 'secure uploads allow embed in emails' 设置，将被嵌入到电子邮件的安全图片的大小限制；如果不启用，则此设置无效。"
     slug_generation_method: "选择一种缩略名生成方法。'encoded' 将生成百分比编码字符串。'none' 将完全禁用缩略名。"
@@ -2334,7 +2326,6 @@ zh_CN:
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
     force_lowercase_tags: "强制所有新标签完全小写。"
     create_post_for_category_and_tag_changes: "当一个话题的类别或标签发生更改时，创建密语帖子，需要启用密语帖子。"
-    automatically_clean_unused_tags: "每天自动删除未在任何主题或私信中使用的标签。"
     watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已设为免打扰的话题，请通知我。"
     company_name: "您的公司或组织的名称。如果留空，将不会提供样板《服务条款》或《隐私声明》。"
     governing_law: "指定管辖网站法律方面（包括《服务条款》和《隐私政策》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。"
@@ -4805,8 +4796,6 @@ zh_CN:
       styling:
         title: "外观"
         fields:
-          color_scheme:
-            label: "配色方案"
           body_font:
             label: "正文字体"
           heading_font:
@@ -4905,7 +4894,7 @@ zh_CN:
       quoted: '%{username} 在“%{topic}”中引用了您的帖子 - %{site_title}'
       replied: '%{username} 在“%{topic}”中回复了您 - %{site_title}'
       posted: '%{username} 在“%{topic}”中发布了帖子 - %{site_title}'
-      private_message: '%{username} 在“%{topic}”中向您发送了私信 - %{site_title}'
+      private_message: '%{username} 在“%{topic}”中向您发送了个人消息 - %{site_title}'
       linked: '%{username} 链接到您在“%{topic}”中的帖子 - %{site_title}'
       watching_first_post: '%{username} 创建了新话题“%{topic}”- %{site_title}'
       confirm_title: "已启用通知 - %{site_title}"

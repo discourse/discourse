@@ -582,6 +582,8 @@ cs:
     continue: "Pokračovat"
     switch_to_anon: "Vstoupit do anonymního módu"
     switch_from_anon: "Opustit anonymní mód"
+    select_placeholder: "Vybrat…"
+    none_placeholder: "Žádná"
     banner:
       close: "Odmítnout tento banner"
       edit: "Upravit"
@@ -705,6 +707,8 @@ cs:
         refresh: "Obnovit"
         status: "Stav"
         category: "Kategorie"
+        score_type:
+          title: "Reason"
         orders:
           score: "Skóre"
           score_asc: "Skóre (obráceně)"
@@ -1233,7 +1237,7 @@ cs:
     user_fields:
       none: "(vyberte možnost)"
       required: 'Zadejte hodnotu pro "%{name}"'
-      same_as_password: "Vaše heslo by se v jiných polích nemělo opakovat."
+      same_as_password: "Vaše heslo by se v jiných polích nemělo opakovat"
       optional: (volitelné)
     user:
       said: "%{username}:"
@@ -1356,18 +1360,15 @@ cs:
         description: "Přeskočit tipy po registraci nového uživatele"
       reset_seen_user_tips: "Znovu zobrazit tipy uživatele"
       theme_default_on_all_devices: "Nastavit výchozí motiv na všech mých zařízeních"
-      color_scheme_default_on_all_devices: "Nastavit výchozí barevná schémata na všech mých zařízeních"
-      color_scheme: "Barevné schéma"
+      color_scheme: "Paleta barev"
       color_schemes:
         default_description: "Výchozí z motivu"
         disable_dark_scheme: "Stejné jako běžné"
-        dark_instructions: "Náhled barevného schématu tmavého režimu můžete zobrazit přepínáním tmavého režimu vašeho zařízení."
         undo: "obnovit výchozí"
         regular: "Běžný"
         dark: "Tmavý režim"
         default_dark_scheme: "(výchozí nastavení webu)"
       dark_mode: "Tmavý režim"
-      dark_mode_enable: "Povolit automatické barevné schéma tmavého režimu"
       text_size_default_on_all_devices: "Nastavit tuto výchozí velikost textu na všech mých zařízeních"
       allow_private_messages: "Povolit ostatním uživatelům, aby mi mohli zasílat osobní zprávy"
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
@@ -2165,9 +2166,6 @@ cs:
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
-      select:
-        select_placeholder: "Vybrat…"
-        none_placeholder: "Žádná"
       errors:
         required: "Nezbytnosti"
         too_low: "Musí být alespoň %{count}"
@@ -2837,8 +2835,6 @@ cs:
         quoted: "citováno"
         edited: "upraveno"
         liked: "nový lajk"
-        private_message: "nová soukromá zpráva"
-        invited_to_private_message: "pozvánka do soukromé zprávy"
         invitee_accepted: "pozvánka přijata"
         posted: "nový příspěvek"
         watching_category_or_tag: "nový příspěvek"
@@ -3515,7 +3511,6 @@ cs:
         help: "Otevři verzi tématu určenou k tisku"
       flag_topic:
         title: "Nahlásit"
-        help: "Soukromě nahlásit tento příspěvek moderátorům"
         success_message: "Téma úspěšně nahlášeno."
       make_public:
         title: "Převést na veřejné téma"
@@ -3823,7 +3818,6 @@ cs:
         edit_action: "Upravit"
         edit_anonymous: "Omlouváme se, ale pro editaci tohoto příspěvku musíte být přihlášení."
         flag_action: "Nahlášení"
-        flag: "nahlásit příspěvek moderátorovi"
         delete: "smazat příspěvek"
         undelete: "obnovit příspěvek"
         share_action: "Sdílet"
@@ -4523,7 +4517,6 @@ cs:
         print: "%{shortcut} Vytiskni téma"
         defer: "%{shortcut} Označit téma jako nepřečtené"
         topic_admin_actions: "%{shortcut} Otevřít akce správce tématu"
-        archive_private_message: "%{shortcut} Přepnout archivaci soukromé zprávy"
       search_menu:
         title: "Nabídka vyhledávání"
         prev_next: "%{shortcut} posunout výběr nahoru a dolů"
@@ -5468,6 +5461,7 @@ cs:
           permalinks: "Trvalé odkazy"
           trust_levels: "Úrovně důvěry"
           users: "Uživatelé"
+          groups: "Skupiny"
           user_fields: "Uživatelská pole"
           watched_words: "Sledovaná slova"
           legal: "Právní záležitosti"
@@ -5477,7 +5471,6 @@ cs:
         sidebar_link:
           font_style: "Styl písma"
           site_logo: "Logo webu"
-          color_schemes: "Barevná schémata"
           emoji: "Emoji"
           navigation: "Navigace"
           themes: "Motivy"
@@ -5743,7 +5736,6 @@ cs:
           hide_unused_fields: "Skrýt nepoužívaná pole"
           is_default: "Motiv je ve výchozím nastavení povolený"
           user_selectable: "Motiv může být zvolen uživatelem"
-          color_scheme_user_selectable: "Barevné schéma může být vybráno uživateli"
           auto_update: "Automaticky aktualizovat při aktualizaci Discourse"
           color_scheme: "Paleta barev"
           edit_color_scheme: "Upravit paletu barev"

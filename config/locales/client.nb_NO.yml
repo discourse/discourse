@@ -476,6 +476,8 @@ nb_NO:
     continue: "Fortsett"
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
+    select_placeholder: "Velg…"
+    none_placeholder: "Ingen"
     banner:
       close: "Fjern dette banneret"
       edit: "Rediger"
@@ -606,6 +608,8 @@ nb_NO:
         refresh: "Last inn på nytt"
         status: "Status"
         category: "Kategori"
+        score_type:
+          title: "Begrunnelse"
         orders:
           score: "Poeng"
           score_asc: "Resultat (omvendt)"
@@ -1101,7 +1105,7 @@ nb_NO:
     user_fields:
       none: "(velg et alternativ)"
       required: 'Skriv inn en verdi for "%{name}'
-      same_as_password: "Passordet ditt skal ikke gjentas i andre felt."
+      same_as_password: "Passordet ditt skal ikke gjentas i andre felt"
       optional: (valgfritt)
     user:
       said: "%{username}:"
@@ -1224,18 +1228,15 @@ nb_NO:
         description: "Hopp over nye brukeropplæringstips og merker"
       reset_seen_user_tips: "Vis brukaropplæringstips igjen"
       theme_default_on_all_devices: "Gjør dette standardtemaet til alle mine enheter"
-      color_scheme_default_on_all_devices: "Angi standard fargeskjema på alle enhetene mine"
-      color_scheme: "Fargeskjema"
+      color_scheme: "Farge Palett"
       color_schemes:
         default_description: "Tema standard"
         disable_dark_scheme: "Samme som vanlig"
-        dark_instructions: "Du kan forhåndsvise den mørke modusen ved å endre på enhetens mørke modus."
         undo: "Tilbakestill"
         regular: "Aktivt medlem"
         dark: "Mørk modus"
         default_dark_scheme: "(nettstedsstandard)"
       dark_mode: "Mørk Modus"
-      dark_mode_enable: "Aktivere automatisk fargevalg i mørk modus"
       text_size_default_on_all_devices: "Gjør denne standardtekststørrelsen på alle mine enheter"
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
@@ -1979,9 +1980,6 @@ nb_NO:
       optional: valgfritt
       errors_summary_title: "Dette skjemaet inneholder feil:"
       dirty_form: "Du har ikke sendt inn endringene dine! Er du sikker på at du vil dra?"
-      select:
-        select_placeholder: "Velg…"
-        none_placeholder: "Ingen"
       errors:
         required: "Påkrevd"
         invalid_url: "Må være en gyldig URL"
@@ -2615,8 +2613,6 @@ nb_NO:
         quoted: "sitert"
         edited: "redigert"
         liked: "ny som"
-        private_message: "ny privat melding"
-        invited_to_private_message: "invitert til privat melding"
         invitee_accepted: "invitasjonen akseptert"
         posted: "nytt innlegg"
         watching_category_or_tag: "nytt innlegg"
@@ -3233,7 +3229,6 @@ nb_NO:
         help: "Åpne en utskriftsvennlig utgave av dette emnet"
       flag_topic:
         title: "Rapporter"
-        help: "rapporter dette innlegget privat eller send et privat varsel om det"
         success_message: "Du har rapportert dette emnet."
       make_public:
         title: "Konverter til offentlig emne"
@@ -3504,7 +3499,6 @@ nb_NO:
         edit_action: "Rediger"
         edit_anonymous: "Beklager, du må være innlogget for å endre dette innlegget."
         flag_action: "Flagg"
-        flag: "rapporter dette innlegget privat eller send et privat varsel om det"
         delete: "slett dette innlegget"
         undelete: "gjenopprett dette innlegget"
         share_action: "Del"
@@ -4626,6 +4620,7 @@ nb_NO:
           permalinks: "Permalenker"
           trust_levels: "Tillitsnivå"
           users: "Brukere"
+          groups: "Grupper"
           user_fields: "Brukerfelter"
           watched_words: "Ord som holdes oppsyn med"
           legal: "Juridisk"
@@ -4846,7 +4841,6 @@ nb_NO:
           hide_unused_fields: "Skjul ubrukte felter"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
-          color_scheme_user_selectable: "Fargeskjema kan velges av brukere"
           auto_update: "Automatisk oppdatering når Discourse er oppdatert"
           color_scheme: "Farge Palett"
           default_light_scheme: "Lys (standard)"

@@ -382,6 +382,8 @@ da:
     continue: "Fortsæt"
     switch_to_anon: "Gå i anonym tilstand"
     switch_from_anon: "Afslut anonym tilstand"
+    select_placeholder: "Vælg…"
+    none_placeholder: "Ingen"
     banner:
       close: "Fjern dette banner"
       edit: "Rediger"
@@ -506,6 +508,8 @@ da:
         refresh: "Opdatér"
         status: "Status"
         category: "Kategori"
+        score_type:
+          title: "Begrundelse"
         orders:
           score: "Score"
           score_asc: "Score (omvendt)"
@@ -992,7 +996,7 @@ da:
     user_fields:
       none: "(vælg en indstilling)"
       required: 'Indtast venligst en værdi for "%{name}"'
-      same_as_password: "Din adgangskode bør ikke gentages i andre felter."
+      same_as_password: "Din adgangskode bør ikke gentages i andre felter"
       optional: (valgfri)
     user:
       said: "%{username}:"
@@ -1096,17 +1100,15 @@ da:
         description: "Spring nye bruger-onboarding tips og emblemer over"
       reset_seen_user_tips: "Vis brugertips igen"
       theme_default_on_all_devices: "Gør dette til standard temaet på alle mine enheder"
-      color_scheme: "Farveskema"
+      color_scheme: "Farvepalet"
       color_schemes:
         default_description: "Tema standard"
         disable_dark_scheme: "Samme som almindelig"
-        dark_instructions: "Du kan forhåndsvise farvesammensætningen for mørk tilstand ved at skifte din enheds mørke tilstand."
         undo: "Nulstil"
         regular: "Almindelig"
         dark: "Mørk tilstand"
         default_dark_scheme: "(standard for websted)"
       dark_mode: "Mørk Tilstand"
-      dark_mode_enable: "Aktivér automatisk farveskema i mørk tilstand"
       text_size_default_on_all_devices: "Gør dette til standard tekststørrelse på alle mine enheder"
       allow_private_messages: "Tillad andre brugere at sende mig personlige beskeder"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
@@ -1694,9 +1696,6 @@ da:
     form_kit:
       reset: Nulstil
       optional: valgfri
-      select:
-        select_placeholder: "Vælg…"
-        none_placeholder: "Ingen"
       errors:
         required: "Obligatoriske"
         invalid_url: "Skal være en gyldig URL"
@@ -2195,8 +2194,6 @@ da:
         quoted: "citeret"
         edited: "redigeret"
         liked: "nyt 'synes godt om'"
-        private_message: "ny privat besked"
-        invited_to_private_message: "inviteret til privat besked"
         invitee_accepted: "invitation accepteret"
         posted: "nyt indlæg"
         watching_category_or_tag: "nyt indlæg"
@@ -2669,7 +2666,6 @@ da:
         help: "Åbn en printervenlig udgave at emnet"
       flag_topic:
         title: "Rapportér indlæg"
-        help: "gør moderator opmærksom på dette indlæg"
         success_message: "Du har nu rapporteret dette emne til administrator."
       make_public:
         title: "Konverter til offentligt emne"
@@ -2916,7 +2912,6 @@ da:
         edit_action: "Rediger"
         edit_anonymous: "Beklager, du skal være logget ind for at redigere dette indlæg."
         flag_action: "Rapportér"
-        flag: "gør moderator opmærksom på dette indlæg"
         delete: "slet dette indlæg"
         undelete: "annullér sletning"
         share_action: "Del"
@@ -4149,12 +4144,14 @@ da:
           permalinks: "Permalinks"
           trust_levels: "Tillidsniveauer"
           users: "Brugere"
+          groups: "Grupper"
           user_fields: "Bruger felter"
           watched_words: "Overvågede ord"
           legal: "Jura"
       appearance:
         title: "Udseende"
         sidebar_link:
+          color_schemes: "Farvepaletter"
           emoji: "Humørikon"
           navigation: "Navigation"
           themes: "Temaer"
@@ -4380,7 +4377,6 @@ da:
           hide_unused_fields: "Skjul ubrugte felter"
           is_default: "Tema er slået til som standard"
           user_selectable: "Tema kan vælges af brugerne"
-          color_scheme_user_selectable: "Farveskema kan vælges af brugere"
           auto_update: "Opdater automatisk når Discourse er blevet opdateret"
           color_scheme: "Farvepalet"
           default_light_scheme: "Lys (standard)"

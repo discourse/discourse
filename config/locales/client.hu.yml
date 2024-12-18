@@ -497,6 +497,8 @@ hu:
     continue: "Folytatás"
     switch_to_anon: "Anonim módba lépés"
     switch_from_anon: "Kilépés az anonim módból"
+    select_placeholder: "Kiválaszt..."
+    none_placeholder: "Egyik sem"
     banner:
       close: "Kiemelés eltávolítása"
       edit: "Szerkesztés"
@@ -627,6 +629,8 @@ hu:
         refresh: "Frissítés"
         status: "Állapot"
         category: "Kategória"
+        score_type:
+          title: "Ok"
         orders:
           score: "Pontszám"
           score_asc: "Pontszám (fordított)"
@@ -1136,7 +1140,7 @@ hu:
     user_fields:
       none: "(válasszon egy lehetőséget)"
       required: 'Adja meg a(z) „%{name}” értékét'
-      same_as_password: "A jelszavát nem szabad megismételnie más mezőkben."
+      same_as_password: "A jelszavát nem szabad megismételnie más mezőkben"
       optional: (nem kötelező)
     user:
       said: "%{username}:"
@@ -1259,18 +1263,15 @@ hu:
         description: "Új felhasználói belépési tippek és jelvények kihagyása"
       reset_seen_user_tips: "Felhasználói tippek ismételt megjelenítése"
       theme_default_on_all_devices: "Legyen ez az alapértelmezett téma az összes eszközén"
-      color_scheme_default_on_all_devices: "Alapértelmezett színsémák beállítása az összes eszközömön"
-      color_scheme: "Színséma"
+      color_scheme: "Színpaletta"
       color_schemes:
         default_description: "Téma alapértelmezése"
         disable_dark_scheme: "Ugyanaz, mint a szokásos"
-        dark_instructions: "A sötét mód színsémájának előnézetét az eszköz sötét módjának bekapcsolásával tekintheti meg."
         undo: "Visszaállítás"
         regular: "Átlagos"
         dark: "Sötét mód"
         default_dark_scheme: "(webhely alapértelmezése)"
       dark_mode: "Sötét mód"
-      dark_mode_enable: "Automatikus sötét módú színséma engedélyezése"
       text_size_default_on_all_devices: "Legyen ez az alapértelmezett szövegméret az összes eszközén"
       allow_private_messages: "Engedélyezés a többi felhasználónak, hogy privát üzenetet küldjenek Önnek"
       external_links_in_new_tab: "Az összes külső hivatkozás megnyitása új lapon"
@@ -2052,9 +2053,6 @@ hu:
       optional: nem kötelező
       errors_summary_title: "Ez az űrlap hibákat tartalmaz:"
       dirty_form: "A változások nem lettek mentve! Biztos hogy el akarja hagyni a területet?"
-      select:
-        select_placeholder: "Kiválaszt..."
-        none_placeholder: "Egyik sem"
       errors:
         required: "Kötelező"
         invalid_url: "Érvényes URL-nek kell lennie"
@@ -2692,8 +2690,6 @@ hu:
         quoted: "idézve"
         edited: "szerkesztve"
         liked: "új kedvelés"
-        private_message: "új személyes üzenet"
-        invited_to_private_message: "privát üzenetre meghívva"
         invitee_accepted: "meghívás elfogadva"
         posted: "új bejegyzés"
         watching_category_or_tag: "új bejegyzés"
@@ -3315,7 +3311,6 @@ hu:
         help: "A téma nyomtatóbarát változatának megnyitása"
       flag_topic:
         title: "Megjelölés"
-        help: "jelölje meg ezt a témát privát figyelemfelhívásra, vagy küldjön róla privát értesítést."
         success_message: "Sikeresen megjelölte ezt a témát."
       make_public:
         title: "Átalakítás nyilvános témává"
@@ -3592,7 +3587,6 @@ hu:
         edit_action: "Szerkesztés"
         edit_anonymous: "Sajnos be kell jelentkeznie, hogy szerkeszthesse ezt a bejegyzést."
         flag_action: "Jelölés"
-        flag: "a bejegyzés titkos megjelölése, hogy felhívja rá a moderátorok figyelmét, vagy privát értesítést küldjön róla"
         delete_action: "Bejegyzés törlése"
         delete: "bejegyzés törlése"
         undelete_action: "Bejegyzés visszavonása"
@@ -4259,7 +4253,6 @@ hu:
         print: "%{shortcut} Téma nyomtatása"
         defer: "%{shortcut} Téma megjelölése olvasatlanként"
         topic_admin_actions: "%{shortcut} Nyitott téma admin tevékenységek"
-        archive_private_message: "%{shortcut} Archív privát üzenet be- és kikapcsolása"
       search_menu:
         title: "Keresés menü"
         prev_next: "%{shortcut} A kijelölés mozgatása felfelé és lefelé"
@@ -4605,7 +4598,7 @@ hu:
           configure_defaults: "Alapértelmezések beállítása"
         community:
           edit_section:
-            sidebar: "Szabd testre ezt a részt"
+            sidebar: "Testreszabás"
             header_dropdown: "Személyre szabás"
           links:
             about:
@@ -5238,6 +5231,7 @@ hu:
           permalinks: "Közvetlen hivatkozás"
           trust_levels: "Bizalmi szintek"
           users: "Felhasználók"
+          groups: "Csoportok"
           user_fields: "Felhasználói mezők"
           watched_words: "Figyelt szavak"
           legal: "Jogszabály"
@@ -5247,7 +5241,7 @@ hu:
         sidebar_link:
           font_style: "Betűstílus"
           site_logo: "Webhely logó"
-          color_schemes: "Színséma"
+          color_schemes: "Színpaletták"
           emoji: "Emoji"
           navigation: "Navigáció"
           themes: "Témák"
@@ -5320,8 +5314,6 @@ hu:
           site_contact_name_help: |
             Stábtag felhasználónév, amelyről minden automatikus levél küldésre kerül. Ha üresen hagyja, akkor az alapértelmezett rendszerfiók kerül felhasználásra.
           site_contact_group: "Webhely kapcsolattartó csoportja"
-          site_contact_group_help: |
-            Egy olyan csoport, amely meghívást kap minden automatikusan elküldött privát üzenetre.
           your_organization: "Az Ön szervezete"
           your_organization_description: "Az Általános Szerződési Feltételekben és az Adatvédelmi közleményben szereplő információkat arra használjuk, hogy megmutassuk, ki üzemelteti a webhelyet, és milyen joghatóság alatt."
           company_name: "Név"
@@ -5599,7 +5591,6 @@ hu:
           hide_unused_fields: "Nem használt mezők elrejtése"
           is_default: "Ez a téma alapértelmezetten van bekapcsolva."
           user_selectable: "A téma a felhasználók által választható"
-          color_scheme_user_selectable: "A színséma a felhasználók által választható"
           auto_update: "Automatikus frissítés a Discourse frissítésekor"
           color_scheme: "Színpaletta"
           edit_color_scheme: "Színpaletták szerkesztése"

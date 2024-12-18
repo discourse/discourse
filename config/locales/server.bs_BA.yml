@@ -116,7 +116,6 @@ bs_BA:
     confirm_email: "<p>Skoro ste gotovi! Na vašu e-adresu poslali smo aktivacijski mail. Slijedite upute u pošti da biste aktivirali svoj račun.</p><p>Ako ne stigne, provjerite svoju mapu neželjene pošte.</p>"
   topic_invite:
     muted_topic: "Žao nam je, navedeni korisnik je utišao ovu temu."
-    receiver_does_not_allow_pm: "Žao nam je, navedeni korisnik vam ne dozvoljava da mu šaljete privatne poruke."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -1055,6 +1054,7 @@ bs_BA:
       quoted: '%{username} vas je citirao/la u "%{topic}" - %{site_title}'
       replied: '%{username} vam je odgovorio/la u "%{topic}" - %{site_title}'
       posted: '%{username} je objavio/la "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslao/la poruku u "%{topic}" - %{site_title}'
       linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
       watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti uključene - %{site_title}"

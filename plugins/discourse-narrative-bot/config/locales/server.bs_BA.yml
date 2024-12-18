@@ -182,8 +182,6 @@ bs_BA:
       bookmark:
         instructions: |-
           Ako želite da saznate više, izaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ispod i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> ** označi ovu osobnu poruku **. Ako to učinite, možda postoji: dar: u vašoj budućnosti!
-        reply: |-
-          Izvrsno! Sada možete lako pronaći svoj put natrag u naš privatni razgovor u bilo kojem trenutku, izravno s [kartice zabilješki na vašem profilu] (%{bookmark_url}). Samo odaberite sliku profila u gornjem desnom uglu &#8599;
         not_found: |-
           Uh oh, ne vidim oznake u ovoj temi. Da li ste pronašli oznaku ispod svakog posta? Koristite show više <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da otkrije dodatne akcije ako je potrebno.
       emoji:
@@ -201,8 +199,6 @@ bs_BA:
         not_found: |-
           Ne vidim svoje ime tamo negdje: namršteno: Možete li pokušati spomenuti mene kao `@ %{discobot_username}` opet? (I da, moje korisničko ime je napisano _disco_, kao u plesnoj ludosti sedamdesetih godina. Ja [volim noćni život!] (Https://www.youtube.com/watch?v=B_wGI3_sGf8): plesač :)
       flag:
-        reply: |-
-          [Naše osoblje] (%{base_uri} / grupe / osoblje) će biti privatno obaviješteno o vašoj zastavi. Ako dovoljan broj članova zajednice označi post, on će se automatski sakriti kao mjera opreza. (Budući da nisam napisao gadan post: angel:, otišao sam naprijed i uklonio zastavu za sada.)
         not_found: |-
           Oh ne, moj gadni post još nije označen kao neprikladan. :worried: Možete li to označiti neprimjerenim upotrebom ** zastave ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne zaboravite da upotrijebite dugme Prikaži više <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da biste otkrili više mogućnosti za svaki post.
       search:
@@ -254,8 +250,6 @@ bs_BA:
         reply: |-
           Odlično! Zapamtite ovo radi za obje kategorije _i_ oznake, ako su oznake omogućene.
       change_topic_notification_level:
-        instructions: |-
-          Svaka tema ima nivo obaveštenja. Počinje na 'normalnom', što znači da ćete obično biti obaviješteni samo kada netko govori izravno vama. Podrazumevano, nivo obaveštenja za privatnu poruku postavljen je na najviši nivo 'gledanja', što znači da ćete biti obaviješteni o svakom novom odgovoru. Ali možete pregaziti nivo obavijesti za _any_ temu da biste 'gledali', 'pratili' ili 'isključili'. Pokušajmo da promenimo nivo obaveštenja za ovu temu. Na dnu teme naći ćete dugme koje pokazuje da ** gledate ** ovu temu. Možete li promijeniti nivo obavijesti na ** praćenje **?
         not_found: |-
           Izgleda da i dalje gledate: oči: ova tema! Ako imate problema sa pronalaženjem, dugme nivoa obaveštenja nalazi se na dnu teme.
         reply: |-

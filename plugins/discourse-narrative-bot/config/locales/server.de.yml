@@ -251,7 +251,7 @@ de:
         instructions: |-
           Wenn du gerne mehr darüber erfahren möchtest, wähle unten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> aus und klicke auf <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **Lesezeichen für diese Nachricht**. Wenn du das machst, wird es demnächst vielleicht ein :gift: geben!
         reply: |-
-          Ausgezeichnet! Jetzt kannst du jederzeit leicht zu unserer privaten Unterhaltung zurückfinden, direkt über [die Lesezeichen-Registerkarte auf deinem Profil](%{bookmark_url}). Wähle einfach dein Profilbild oben rechts aus &#8599;
+          Ausgezeichnet! Jetzt kannst du über [die Lesezeichen-Registerkarte auf deinem Profil](%{bookmark_url}) jederzeit leicht zu unserer Unterhaltung zurückfinden. Wähle einfach dein Profilbild oben rechts aus &#8599;
         not_found: |-
           Oh je, ich sehe keine Lesezeichen in diesem Thema. Hast du das Lesezeichen unter jedem Beitrag gefunden? Verwende das „Mehr anzeigen“-Symbol <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, um bei Bedarf weitere Aktionen anzuzeigen.
       emoji:
@@ -286,13 +286,13 @@ de:
           (Und ja, mein Benutzername wird wirklich _disco_ geschrieben. Genau wie die Tanzmusik aus den 1970er Jahren. Ich [liebe das Nachtleben!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Wir legen viel Wert auf freundliche Diskussionen und wir brauchen deine Hilfe, um [sie zivilisiert zu halten](%{guidelines_url}). Wenn du ein Problem siehst, melde es bitte, um den Verfasser oder [unser hilfsbereites Team](%{about_url}) privat darüber zu informieren. Es gibt viele Gründe, einen Beitrag zu melden – von einem harmlosen Vorschlag zur Aufteilung des Themas bis hin zu einem eindeutigen Verstoß gegen die Community-Standards. Wenn du **Sonstiges** auswählst, beginnst du eine private Unterhaltung mit den Moderatoren, im Rahmen derer du weitere Fragen stellen kannst.
+          Wir legen viel Wert auf freundliche Diskussionen und wir brauchen deine Hilfe, um [sie zivilisiert zu halten](%{guidelines_url}). Wenn du ein Problem siehst, melde es bitte, um den Verfasser oder [unser hilfsbereites Team](%{about_url}) darüber zu informieren. Es gibt viele Gründe, einen Beitrag zu melden – von einem harmlosen Vorschlag zur Aufteilung des Themas bis hin zu einem eindeutigen Verstoß gegen die Community-Standards. Wenn du **Sonstiges** auswählst, beginnst du eine persönliche Unterhaltung mit den Moderatoren, im Rahmen derer du weitere Fragen stellen kannst.
 
           > :imp: Ich habe hier etwas Böses geschrieben
 
           Nur zu: **Melde diesen Beitrag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> und wähle **Unangemessen** als Grund aus!
         reply: |-
-          [Unser Team](%{base_uri}/groups/staff) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
+          [Unser Team](%{group_url}) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
         not_found: |-
           Oh nein, mein anstößiger Beitrag wurde noch nicht gemeldet. :worried: Kannst du ihn als unangemessen **melden** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergiss nicht, die „Mehr anzeigen“-Schaltfläche <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zu verwenden, um weitere Aktionen für den jeweiligen Beitrag einzublenden.
       search:
@@ -389,7 +389,7 @@ de:
         instructions: |-
           Jedes Thema hat eine Benachrichtigungsstufe. Es beginnt bei „Normal“, was bedeutet, dass du normalerweise nur benachrichtigt wirst, wenn dich jemand direkt anspricht.
 
-          Standardmäßig ist die Benachrichtigungsstufe für private Nachrichten auf die höchste Stufe „Beobachten“ gesetzt, was bedeutet, dass du über jede Antwort informiert wirst. Aber du kannst die Benachrichtigungsstufe für _jedes_ Thema auf „Beobachten“, „Verfolgen“ oder „Stummgeschaltet“ setzen.
+          Standardmäßig ist die Benachrichtigungsstufe für persönliche Nachrichten auf die höchste Stufe „Beobachten“ gesetzt, was bedeutet, dass du über jede Antwort informiert wirst. Aber du kannst die Benachrichtigungsstufe für _jedes_ Thema auf „Beobachten“, „Verfolgen“ oder „Stummgeschaltet“ setzen.
 
           Lass uns versuchen, die Benachrichtigungsstufe für dieses Thema zu ändern. Am Ende des Themas wirst du eine Schaltfläche finden, die „Beobachten“ anzeigt. Kannst du die Benachrichtigungsstufe auf **Verfolgen** ändern?
         not_found: |-

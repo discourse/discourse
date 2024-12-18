@@ -358,6 +358,7 @@ ca:
     continue: "Continua"
     switch_to_anon: "Entra en el mode anònim"
     switch_from_anon: "Surt del mode anònim"
+    none_placeholder: "Cap"
     banner:
       close: "Descarta aquesta bandera"
       edit: "Edita"
@@ -477,6 +478,8 @@ ca:
         refresh: "Actualitza"
         status: "Estat"
         category: "Categoria"
+        score_type:
+          title: "Motiu"
         orders:
           score: "Puntuació"
           score_asc: "Puntuació (inversa)"
@@ -915,15 +918,14 @@ ca:
       dismiss_notifications_tooltip: "Marca totes les notificacions no llegides com a llegides"
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
+      color_scheme: "Paleta de colors"
       color_schemes:
         disable_dark_scheme: "Igual que habitualment"
-        dark_instructions: "Podeu previsualitzar l’esquema de colors del mode fosc alternant el mode fosc del dispositiu."
         undo: "Restableix"
         regular: "Habitual"
         dark: "Mode fosc"
         default_dark_scheme: "(lloc predeterminat)"
       dark_mode: "Mode fosc"
-      dark_mode_enable: "Activa l'esquema de colors automàtic en mode fosc"
       text_size_default_on_all_devices: "Fes que aquesta sigui la mida de text predeterminada en tots els meus dispositius"
       allow_private_messages: "Permet a altres usuaris d'enviar-me missatges personals"
       external_links_in_new_tab: "Obre tots els enllaços externs en una pestanya nova"
@@ -1389,8 +1391,6 @@ ca:
     form_kit:
       reset: Restableix
       optional: opcional
-      select:
-        none_placeholder: "Cap"
       errors:
         required: "Necessari"
     close: "Tanca"
@@ -1766,8 +1766,6 @@ ca:
         quoted: "citat"
         edited: "editat"
         liked: "nou 'm'agrada'"
-        private_message: "nou missatge privat"
-        invited_to_private_message: "convidat a missatge privat"
         invitee_accepted: "invitació acceptada"
         posted: "publicació nova"
         watching_category_or_tag: "publicació nova"
@@ -2106,7 +2104,6 @@ ca:
         help: "Obre una versió imprimible d'aquest tema"
       flag_topic:
         title: "Bandera"
-        help: "posa bandera en privat a aquest tema per a parar-hi atenció o envia'n una notificació privada"
         success_message: "Heu posat amb èxit la bandera a aquest tema."
       make_public:
         title: "Converteix en tema públic"
@@ -2308,7 +2305,6 @@ ca:
         edit_action: "Edita"
         edit_anonymous: "Ho sentim, però heu d'iniciar la sessió per a editar aquesta publicació."
         flag_action: "Bandera"
-        flag: "posa bandera en privat a aquesta publicació per a destacar-la o envia una notificació privada sobre això"
         delete: "suprimeix aquesta publicació"
         undelete: "restaura aquesta publicació"
         share_action: "Comparteix"
@@ -3237,12 +3233,14 @@ ca:
           permalinks: "Enllaços permanents"
           trust_levels: "Nivells de confiança"
           users: "Usuaris"
+          groups: "Grups"
           user_fields: "Camps d'usuari"
           watched_words: "Paraules vigilades"
           legal: "Legal"
       appearance:
         title: "Aparença"
         sidebar_link:
+          color_schemes: "Paletes de colors"
           emoji: "Emoji"
           navigation: "Navegació"
           themes: "Aparences"

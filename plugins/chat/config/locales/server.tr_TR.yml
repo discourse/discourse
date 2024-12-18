@@ -89,8 +89,6 @@ tr_TR:
       not_accepting_dms: "Üzgünüz, %{username} şu anda mesaj kabul etmiyor."
       actor_ignoring_target_user: "%{username} adlı kullanıcıyı yok sayıyorsunuz, bu nedenle ona mesaj gönderemezsiniz."
       actor_muting_target_user: "%{username} adlı kullanıcıyı sessize aldınız, bu nedenle ona mesaj gönderemezsiniz."
-      actor_disallowed_dms: "Kullanıcıların size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla yeni doğrudan mesaj oluşturamazsınız."
-      actor_preventing_target_user_from_dm: "%{username} adlı kullanıcının size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla ona yeni doğrudan mesaj oluşturamazsınız."
       user_cannot_send_direct_messages: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
       over_chat_max_direct_message_users_allow_self: "Yalnızca kendinize doğrudan mesaj oluşturabilirsiniz."
       over_chat_max_direct_message_users:

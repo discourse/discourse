@@ -497,6 +497,8 @@ pt_BR:
     continue: "Continuar"
     switch_to_anon: "Entrar no Modo anônimo"
     switch_from_anon: "Sair do Modo anônimo"
+    select_placeholder: "Selecionar…"
+    none_placeholder: "Nenhum"
     banner:
       close: "Descarte este banner"
       edit: "Editar"
@@ -627,6 +629,8 @@ pt_BR:
         refresh: "Atualizar"
         status: "Status"
         category: "Categoria"
+        score_type:
+          title: "Motivo"
         orders:
           score: "Pontuação"
           score_asc: "Pontuação (reversa)"
@@ -1136,7 +1140,7 @@ pt_BR:
     user_fields:
       none: "(selecione uma opção)"
       required: 'Digite um valor para "%{name}"'
-      same_as_password: "Sua senha não deve ser repetida em outros campos."
+      same_as_password: "Sua senha não deve ser repetida em outros campos"
       optional: (opcional)
     user:
       said: "%{username}:"
@@ -1259,18 +1263,15 @@ pt_BR:
         description: "Pular emblemas e dicas de integração de novo(a) usuário(a)"
       reset_seen_user_tips: "Mostrar dicas do(a) usuário(a) novamente"
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
-      color_scheme_default_on_all_devices: "Definir esquema de cores padrão em todos os meus dispositivos"
-      color_scheme: "Esquema de cores"
+      color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Tema padrão"
         disable_dark_scheme: "O mesmo que o normal"
-        dark_instructions: "É possível pré-visualizar o esquema de cores do modo escuro ao ativar/desativar o modo escuro do seu dispositivo."
         undo: "Redefinir"
         regular: "Normal"
         dark: "Modo escuro"
         default_dark_scheme: "(padrão do site)"
       dark_mode: "Modo escuro"
-      dark_mode_enable: "Ativar o esquema de cores do modo escuro automaticamente"
       text_size_default_on_all_devices: "Definir este tamanho de texto como padrão em todos os meus dispositivos"
       allow_private_messages: "Permitir que outros(as) usuários(as) me enviem mensagens pessoais"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
@@ -2050,9 +2051,6 @@ pt_BR:
       optional: opcional
       errors_summary_title: "Este formulário contém erros:"
       dirty_form: "Você não enviou as alterações! Deseja mesmo sair?"
-      select:
-        select_placeholder: "Selecionar…"
-        none_placeholder: "Nenhum"
       errors:
         required: "Necessário(a)"
         invalid_url: "Deve ser uma URL válida"
@@ -2690,8 +2688,6 @@ pt_BR:
         quoted: "citados(as)"
         edited: "editado(a)"
         liked: "nova curtida"
-        private_message: "nova mensagem privada"
-        invited_to_private_message: "convidado(a) para mensagem privada"
         invitee_accepted: "convite aceito"
         posted: "nova postagem"
         watching_category_or_tag: "nova postagem"
@@ -3313,7 +3309,6 @@ pt_BR:
         help: "Abrir uma versão imprimível deste tópico"
       flag_topic:
         title: "Sinalizar"
-        help: "sinalize este tópico de forma privada para chamar atenção ou notificar sobre isto"
         success_message: "Você sinalizou com êxito este tópico."
       make_public:
         title: "Converter para o tópico público"
@@ -3589,7 +3584,6 @@ pt_BR:
         edit_action: "Editar"
         edit_anonymous: "Você precisa estar conectado(a) para editar esta postagem."
         flag_action: "Sinalização"
-        flag: "sinalize esta postagem de forma privada para chamar atenção ou notificar sobre isto"
         delete_action: "Excluir postagem"
         delete: "excluir esta postagem"
         undelete_action: "Cancelar exclusão da postagem"
@@ -4249,7 +4243,6 @@ pt_BR:
         print: "%{shortcut} Imprimir tópico"
         defer: "%{shortcut} Marcar tópico como não lido"
         topic_admin_actions: "%{shortcut} Abrir ações de administração de tópico"
-        archive_private_message: "%{shortcut} Alternar mensagem privada de arquivo"
       search_menu:
         title: "Menu de pesquisa"
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
@@ -5227,6 +5220,7 @@ pt_BR:
           permalinks: "Links permanentes"
           trust_levels: "Níveis de confiança"
           users: "Usuários(as)"
+          groups: "Grupos"
           user_fields: "Campos de usuário(a)"
           watched_words: "Palavras em acompanhamento"
           legal: "Jurídico"
@@ -5236,7 +5230,7 @@ pt_BR:
         sidebar_link:
           font_style: "Estilo de Fonte"
           site_logo: "Logotipo do site"
-          color_schemes: "Esquemas de cores"
+          color_schemes: "Paletas de cores"
           emoji: "Emoji"
           navigation: "Navegação"
           themes: "Temas"
@@ -5309,8 +5303,6 @@ pt_BR:
           site_contact_name_help: |
             Um nome de usuário(a) da equipe para ser usado ao enviar mensagens automáticas. Se for deixado em branco, a conta padrão do sistema será utilizada.
           site_contact_group: "Grupo de contato do site"
-          site_contact_group_help: |
-            O grupo convidado para todas as mensagens privadas enviadas automaticamente.
           your_organization: "Sua organização"
           your_organization_description: "Essas informações serão usadas nos Termos de Serviço e Contrato de Privacidade para mostrar que administra o site e a jurisdição em que isso acontece."
           company_name: "Nome"
@@ -5585,7 +5577,6 @@ pt_BR:
           hide_unused_fields: "Ocultar campos não usados"
           is_default: "O tema está ativado por padrão"
           user_selectable: "O tema pode ser selecionado pelos(as) usuários(as)"
-          color_scheme_user_selectable: "O esquema de cores pode ser selecionado pelos(as) usuários(as)"
           auto_update: "Atualizar automaticamente quando o Discourse for atualizado"
           color_scheme: "Paleta de cores"
           edit_color_scheme: "Editar paleta de cores"

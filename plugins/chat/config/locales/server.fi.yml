@@ -89,8 +89,6 @@ fi:
       not_accepting_dms: "%{username} ei ota vastaan viestejä tällä hetkellä."
       actor_ignoring_target_user: "Ohitat käyttäjän %{username} tällä hetkellä, joten et voi lähettää hänelle viestejä."
       actor_muting_target_user: "Olet vaimentanut käyttäjän %{username}, joten et voi lähettää hänelle viestejä."
-      actor_disallowed_dms: "Olet päättänyt estää käyttäjiä lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä."
-      actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä hänelle."
       user_cannot_send_direct_messages: "Valitettavasti et voi lähettää yksityisviestejä."
       over_chat_max_direct_message_users_allow_self: "Voit luoda yksityisviestin vain itsellesi."
       over_chat_max_direct_message_users:

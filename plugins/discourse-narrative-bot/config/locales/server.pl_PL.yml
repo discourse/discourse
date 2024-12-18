@@ -254,7 +254,7 @@ pl_PL:
         instructions: |-
           Jeśli chcesz dowiedzieć się więcej, wybierz <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">poniżej i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **dodaj tę wiadomość prywatną do zakładek**. Jeśli to zrobisz, możesz otrzymać :gift: w przyszłości!
         reply: |-
-          Doskonały! Teraz możesz łatwo znaleźć drogę do naszej prywatnej rozmowy w dowolnym momencie, bezpośrednio z [zakładki zakładek w swoim profilu] (%{bookmark_url}). Wystarczy wybrać zdjęcie profilowe w prawym górnym rogu ↗
+          Doskonale! Teraz możesz łatwo wrócić do naszej rozmowy w dowolnym momencie, bezpośrednio z [menu zakładek na swoim profilu](%{bookmark_url}). Wystarczy wybrać swoje zdjęcie profilowe w prawym górnym rogu &#8599;.
         not_found: |-
           Ups, nie widzę żadnych zakładek w tym temacie. Czy widzisz przycisk zakładki pod każdym wpisem? Użyj przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, żeby wyświetlić więcej akcji, jeśli to potrzebne.
       emoji:
@@ -289,14 +289,6 @@ pl_PL:
           (Tak, moja nazwa użytkownika pisana jest _disco_, tak jak w popularna w latach 90 muzyka. Naprawdę [kocham życie nocne!]
           (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Lubimy, gdy nasze dyskusje są przyjazne i potrzebujemy Twojej pomocy, aby [zachować cywilizowane wypowiedzi](%{guidelines_url}). Jeśli zauważysz problem, zgłoś go w prywatnej wiadomości autorowi lub [naszemu pomocnemu personelowi](%{about_url}). Istnieje wiele powodów, dla których chcesz oznaczyć post, począwszy od nieszkodliwej sugestii dotyczącej podziału tematów aż po wyraźne naruszenie standardów społeczności. Jeśli wybierzesz **coś innego**, rozpoczniesz prywatną dyskusję z moderatorami, gdzie możesz zadawać dodatkowe pytania.
-
-          > :imp: napisałem tutaj coś nieprzyjemnego
-
-          Idąc dalej, **oflaguj ten post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> i wybierz **to niewłaściwe** jako powód!
-        reply: |-
-          [Nasz zespół](%{base_uri}/groups/staff) zostanie prywatnie poinformowany o Twojej fladze. W przypadku, gdy wystarczająca liczba członków społeczności oflaguje ten sam wpis, zostanie on automatycznie ukryty ze względów ostrożności (Jako żę tak naprawdę nie napisałem niczego nieodpowiedniego :angel:, po prostu usunąłem flagę ze swojego wpisu),
         not_found: |-
           O nie, mój nieodpowiedni wpis nie został jeszcze oflagowany. :worried: Czy możesz oznaczyć post jako nieodpowiedni, używając flagi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nie zapomnij użyć przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, by wyświetlić więcej opcji przy dla danego wpisu.
       search:
@@ -390,12 +382,6 @@ pl_PL:
         reply: |-
           Wspaniale! Pamiętaj, że działa to zarówno dla kategorii _i_ tagów, jeśli taka możliwość jest dostępna.
       change_topic_notification_level:
-        instructions: |-
-          Każdy wątek ma swój poziom powiadomień. Zaczyna z poziomem „normalnym”, co oznacza, że zostaniesz powiadomiony tylko wówczas, gdy ktoś odezwie się bezpośrednio do Ciebie.
-
-          Domyślnie, poziom powiadomień prywatnych wiadomości ustawiony jest na najwyższy możliwy – „obserwowanie”. Możesz zmienić poziom powiadomień dla _każdego_ wątku na „obserwowanie”, „śledzenie” lub „wyciszenie”.
-
-          Spróbujmy zmienić poziom powiadomień w tym wątku. Na dole znajdziesz przycisk, który mówi o tym, że **obserwujesz** wątek. Czy mógłbyś zmienić poziom powiadomień na **śledzenie***?
         not_found: |-
           Wygląda na to, że ciągle obserwujesz :eyes: ten temat! Jeśli masz problem w znalezieniu, przycisk poziomu notyfikacji znajduję się na dole tego tematu.
         reply: |-

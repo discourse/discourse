@@ -901,12 +901,10 @@ zh_TW:
       title: "板主通知"
       xaxis: "天"
       yaxis: "訊息數量"
-      description: "版主已被私人通知投訴的次數"
     notify_user_private_messages:
       title: "使用者通知"
       xaxis: "天"
       yaxis: "訊息數量"
-      description: "通過標記私下通知使用者的次數"
     top_referrers:
       title: "最高引用"
       xaxis: "使用者"
@@ -1175,7 +1173,6 @@ zh_TW:
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
-    site_contact_group_name: "有效的群組名稱將自動被加入到所有自動發送的訊息。"
     send_welcome_message: "給所有使用者發送快速開始指導的消息"
     send_tl1_welcome_message: "向新使用者（信任級別1）發送歡迎消息。"
     suppress_reply_directly_below: "當貼文只有一個回覆時，不顯示貼文的回覆數量。"
@@ -2917,7 +2914,7 @@ zh_TW:
       quoted: '%{username}在 "%{topic}" 引用您的內容 - %{site_title}'
       replied: '%{username}在"%{topic}" 回覆了您 - %{site_title}'
       posted: '%{username} 在"%{topic}" 中發文 - %{site_title}'
-      private_message: '%{username}在"%{topic}" 中傳了私人訊息給您 - %{site_title}'
+      private_message: '%{username} 在 "%{topic}" 中私訊了你- %{site_title}'
       linked: '%{username}從"%{topic}"連到了您的貼文 - %{site_title}'
       watching_first_post: '%{username}建立了新的討論話題「%{topic}- %{site_title}」'
       confirm_title: "通知已啟用 - %{site_title}"

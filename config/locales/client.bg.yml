@@ -401,6 +401,7 @@ bg:
     continue: "Напред"
     switch_to_anon: "Влез в Анонимен режим. "
     switch_from_anon: "Излез от Анонимен режим."
+    none_placeholder: "Без"
     banner:
       close: "Отхвърляне на този банер"
       edit: "Редактирай"
@@ -529,6 +530,8 @@ bg:
         refresh: "Опресни"
         status: "Статус"
         category: "Категория"
+        score_type:
+          title: "Причина"
         orders:
           score: "Точки"
           score_asc: "Резултат (обратен)"
@@ -1011,7 +1014,7 @@ bg:
     user_fields:
       none: "(изберете опция)"
       required: 'Моля, попълнете "%{name}"'
-      same_as_password: "Вашата парола не трябва да се повтаря в други полета."
+      same_as_password: "Вашата парола не трябва да се повтаря в други полета"
       optional: (по избор)
     user:
       said: "%{username}:"
@@ -1126,18 +1129,14 @@ bg:
         description: "Пропуснете съвети и значки за въвеждане на нови потребители"
       reset_seen_user_tips: "Показване на потребителски съвети отново"
       theme_default_on_all_devices: "Направи тази тема стандарт на всичките ми устройства"
-      color_scheme_default_on_all_devices: "Задаване на цветова схема по подразбиране на всички мои устройства"
-      color_scheme: "Цветова схема"
       color_schemes:
         default_description: "Темата по подразбиране"
         disable_dark_scheme: "Същото като обикновения"
-        dark_instructions: "Можете да прегледате цветовата схема на тъмния режим, като превключите тъмния режим на вашето устройство."
         undo: "Нулиране"
         regular: "Редовен"
         dark: "Тъмен режим"
         default_dark_scheme: "(сайт по подразбиране)"
       dark_mode: "Тъмен режим"
-      dark_mode_enable: "Активирайте цветовата схема за автоматичен тъмен режим"
       text_size_default_on_all_devices: "Направете това размерът на текста по подразбиране на всички мои устройства"
       allow_private_messages: "Позволете на други потребители да ми изпращат лични съобщения"
       external_links_in_new_tab: "Отваряй всички външни връзки в нов раздел."
@@ -1767,8 +1766,6 @@ bg:
     form_kit:
       reset: Нулиране
       optional: по избор
-      select:
-        none_placeholder: "Без"
       errors:
         required: "Задъжителни"
     close: "Затвори"
@@ -2238,8 +2235,6 @@ bg:
         confirm_body: "Успех! Известяването е включено."
       titles:
         liked: "ново харесване"
-        private_message: "ново лично съобщение"
-        invited_to_private_message: "поканени на лично съобщение"
         invitee_accepted: "поканата е приета"
         posted: "нова публикация"
         watching_category_or_tag: "нова публикация"
@@ -2615,7 +2610,6 @@ bg:
         title: "Печат"
       flag_topic:
         title: "Сигнал"
-        help: "скрито сигнализирайте за публикацията, за да ѝ бъде обърнато внимание или изпратете скрито известие за нея"
         success_message: "Успешно сигнализирахте за тази тема."
       feature_topic:
         title: "Фокусирай тази тема"
@@ -2836,7 +2830,6 @@ bg:
         edit_action: "Редактирай"
         edit_anonymous: "Съжаляваме, но трябва да сте логнат, за да редактирате. "
         flag_action: "Сигнализиране"
-        flag: "скрито сигнализирайте за публикацията, за да ѝ бъде обърнато внимание или изпратете скрито известие за нея"
         delete_action: "Изтрий публикацията"
         delete: "изтрий тази публикация"
         undelete: "възстановете тази публикация"
@@ -3573,6 +3566,7 @@ bg:
           permalinks: "Постоянни адреси"
           trust_levels: "Нива на доверие"
           users: "Потребители"
+          groups: "Групи"
           user_fields: "User Fields"
           watched_words: "Наблюдавани думи"
           legal: "Правни"

@@ -352,6 +352,7 @@ ko:
     continue: "계속하기"
     switch_to_anon: "익명 모드 시작"
     switch_from_anon: "익명 모드 종료"
+    none_placeholder: "없음"
     banner:
       close: "이 배너 닫기"
       edit: "편집"
@@ -468,6 +469,8 @@ ko:
         refresh: "새로고침"
         status: "상태"
         category: "카테고리"
+        score_type:
+          title: "이유"
         orders:
           score: "점수"
           score_asc: "점수(역순)"
@@ -924,7 +927,7 @@ ko:
     user_fields:
       none: "(옵션 선택)"
       required: '''%{name}''에 대한 값을 입력하세요'
-      same_as_password: "비밀번호를 다른 필드에 반복해서 입력해서는 안 됩니다."
+      same_as_password: "비밀번호를 다른 필드에 반복해서 입력해서는 안 됩니다"
       optional: (선택 사항)
     user:
       said: "%{username}:"
@@ -1022,17 +1025,15 @@ ko:
         description: "새 사용자 온보딩 팁 및 배지 건너뛰기"
       reset_seen_user_tips: "사용자 팁 다시 보기"
       theme_default_on_all_devices: "이 테마를 모든 디바이스에서 디폴트 테마로 설정"
-      color_scheme: "색상 구성표"
+      color_scheme: "색상 팔레트"
       color_schemes:
         default_description: "디폴트 테마"
         disable_dark_scheme: "일반과 동일"
-        dark_instructions: "디바이스의 다크 모드를 전환하여 다크 모드 색상 구성표를 미리 볼 수 있습니다."
         undo: "리셋"
         regular: "일반"
         dark: "다크 모드"
         default_dark_scheme: "(사이트 디폴트)"
       dark_mode: "다크 모드"
-      dark_mode_enable: "다크 모드 색상 구성표 자동 활성화"
       text_size_default_on_all_devices: "모든 디바이스에서 디폴트 텍스트 크기로 설정"
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
@@ -1613,8 +1614,6 @@ ko:
     form_kit:
       reset: 리셋
       optional: 선택 사항
-      select:
-        none_placeholder: "없음"
       errors:
         required: "필수"
         too_short:
@@ -2067,8 +2066,6 @@ ko:
         quoted: "인용됨"
         edited: "편집됨"
         liked: "새 좋아요"
-        private_message: "새 비공개 메시지"
-        invited_to_private_message: "비공개 메시지에 초대됨"
         invitee_accepted: "초대 수락됨"
         posted: "새 게시물"
         watching_category_or_tag: "새 글"
@@ -2539,7 +2536,6 @@ ko:
         help: "이 주제를 인쇄하기 좋은 버전으로 열기"
       flag_topic:
         title: "신고하기"
-        help: "이 주제에 주의를 주거나 비공개로 알림을 보내기 위해 비공개로 신고합니다"
         success_message: "주제를 신고했습니다"
       make_public:
         title: "공개 주제로 변환"
@@ -2765,7 +2761,6 @@ ko:
         edit_action: "편집"
         edit_anonymous: "이 게시물을 편집하려면 로그인이 필요합니다."
         flag_action: "신고"
-        flag: "이 게시물에 주의를 주거나 비공개로 알림을 보내기 위해 비공개로 신고합니다"
         delete: "이 게시물 삭제"
         undelete: "이 글 삭제를 취소합니다."
         share_action: "공유하기"
@@ -3923,12 +3918,14 @@ ko:
           permalinks: "고유링크"
           trust_levels: "회원등급"
           users: "사용자들"
+          groups: "그룹"
           user_fields: "사용자 필드"
           watched_words: "검열 단어"
           legal: "법률조항"
       appearance:
         title: "외관"
         sidebar_link:
+          color_schemes: "컬러 팔레트"
           emoji: "이모티콘"
           navigation: "내비게이션"
           themes: "테마"
@@ -4141,7 +4138,6 @@ ko:
           hide_unused_fields: "사용하지 않는 필드 숨기기"
           is_default: "디폴트로 테마가 활성화되었습니다"
           user_selectable: "사용자가 테마를 선택할 수 있습니다"
-          color_scheme_user_selectable: "사용자가 색상 구성표를 선택할 수 있습니다"
           auto_update: "Discourse 업데이트 시 자동 업데이트"
           color_scheme: "색상 팔레트"
           default_light_scheme: "라이트(디폴트)"

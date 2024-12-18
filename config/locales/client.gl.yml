@@ -341,6 +341,7 @@ gl:
     continue: "Continuar"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
+    none_placeholder: "Ningunha"
     banner:
       close: "Desbotar este báner"
       edit: "Editar"
@@ -462,6 +463,8 @@ gl:
         refresh: "Actualizar"
         status: "Estado"
         category: "Categoría"
+        score_type:
+          title: "Motivo"
         orders:
           score: "Puntuación"
           score_asc: "Puntuación (inversa)"
@@ -976,17 +979,15 @@ gl:
       skip_new_user_tips:
         description: "Saltar consellos e insignias na entrada dos novos usuarios"
       theme_default_on_all_devices: "Facer que este sexa o tema predeterminado en todos os meus dispositivos"
-      color_scheme: "Esquema de cor"
+      color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Predeterminado"
         disable_dark_scheme: "O mesmo que o normal"
-        dark_instructions: "Pode visualizar o esquema do modo escuro trocando no seu dispositivo a modo escuro."
         undo: "Restabelecer"
         regular: "Normal"
         dark: "Modo escuro"
         default_dark_scheme: "(predeterminado do sitio)"
       dark_mode: "Modo escuro"
-      dark_mode_enable: "Activar o esquema de cores automático en modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
@@ -1534,8 +1535,6 @@ gl:
     form_kit:
       reset: Restabelecer
       optional: opcional
-      select:
-        none_placeholder: "Ningunha"
       errors:
         required: "Obrigatorio"
     close: "Pechar"
@@ -1966,8 +1965,6 @@ gl:
         quoted: "citado"
         edited: "editado"
         liked: "novo gústame"
-        private_message: "nova mensaxe privada"
-        invited_to_private_message: "convidado a unha mensaxe privada"
         invitee_accepted: "convite aceptado"
         posted: "nova publicación"
         watching_category_or_tag: "nova publicación"
@@ -2370,7 +2367,6 @@ gl:
         help: "Abrir unha versión imprimíbel deste tema"
       flag_topic:
         title: "Sinalar"
-        help: "sinalar privadamente este tema para revisalo ou enviar unha notificación privada sobre el"
         success_message: "Sinalou o tema correctamente."
       make_public:
         title: "Converter en tema público"
@@ -2610,7 +2606,6 @@ gl:
         edit_action: "Editar"
         edit_anonymous: "Sentímolo pero debe iniciar sesión para editar esta publicación."
         flag_action: "Sinalar"
-        flag: "sinalar privadamente esta publicación ou enviar unha notificación privada sobre ela"
         delete: "eliminar esta publicación"
         undelete: "recuperar esta publicación"
         share_action: "Compartir"
@@ -3690,12 +3685,14 @@ gl:
           permalinks: "Ligazóns permanentes"
           trust_levels: "Niveis de confianza"
           users: "Usuarios"
+          groups: "Grupos"
           user_fields: "Campos do usuario"
           watched_words: "Palabras observadas"
           legal: "Legal"
       appearance:
         title: "Aparencia"
         sidebar_link:
+          color_schemes: "Paletas de cores"
           emoji: "Emoji"
           navigation: "Navegación"
           themes: "Temas"
@@ -3906,7 +3903,6 @@ gl:
           hide_unused_fields: "Agochar campos non usados"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
-          color_scheme_user_selectable: "O esquema de cor pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
           color_scheme: "Paleta de cores"
           default_light_scheme: "Claro (predeterminado)"

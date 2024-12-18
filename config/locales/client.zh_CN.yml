@@ -442,6 +442,8 @@ zh_CN:
     continue: "继续"
     switch_to_anon: "进入匿名模式"
     switch_from_anon: "退出匿名模式"
+    select_placeholder: "选择…"
+    none_placeholder: "无"
     banner:
       close: "忽略此横幅"
       edit: "编辑"
@@ -565,6 +567,9 @@ zh_CN:
         refresh: "刷新"
         status: "状态"
         category: "类别"
+        score_type:
+          title: "原因"
+          all: "(所有原因)"
         orders:
           score: "分数"
           score_asc: "分数（倒序）"
@@ -1057,7 +1062,6 @@ zh_CN:
     user_fields:
       none: "（选择一个选项）"
       required: '请为“%{name}”输入一个值。'
-      same_as_password: "您的密码不应重复出现在其他字段中。"
       optional: '（可选）'
     user:
       said: "%{username}："
@@ -1180,18 +1184,15 @@ zh_CN:
         description: "跳过新用户入门提示和徽章"
       reset_seen_user_tips: "再次显示用户提示"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
-      color_scheme_default_on_all_devices: "在我的所有设备上设置默认配色方案"
-      color_scheme: "配色方案"
+      color_scheme: "调色板"
       color_schemes:
         default_description: "默认主题"
         disable_dark_scheme: "与常规相同"
-        dark_instructions: "您可以通过切换设备的深色模式来预览深色模式配色方案。"
         undo: "重置"
         regular: "常规"
         dark: "深色模式"
         default_dark_scheme: "（网站默认）"
       dark_mode: "深色模式"
-      dark_mode_enable: "启用自动深色模式配色方案"
       text_size_default_on_all_devices: "将其设为我所有设备上的默认文本大小"
       allow_private_messages: "允许其他用户向我发送个人消息"
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
@@ -1939,9 +1940,6 @@ zh_CN:
       optional: 可选
       errors_summary_title: "此表单包含错误："
       dirty_form: "您没有提交更改！确定要离开吗？"
-      select:
-        select_placeholder: "选择…"
-        none_placeholder: "无"
       errors:
         required: "必选"
         invalid_url: "必须是有效的 URL"
@@ -2524,8 +2522,8 @@ zh_CN:
         quoted: "被引用"
         edited: "被编辑"
         liked: "新赞"
-        private_message: "新私信"
-        invited_to_private_message: "被邀请加入私信"
+        private_message: "新个人消息"
+        invited_to_private_message: "受邀加入个人消息"
         invitee_accepted: "邀请已被接受"
         posted: "新帖子"
         watching_category_or_tag: "新帖子"
@@ -3115,7 +3113,6 @@ zh_CN:
         help: "打开此话题易于打印的版本"
       flag_topic:
         title: "举报"
-        help: "以私密方式举报此话题以引起注意，或发送一个关于它的不公开通知"
         success_message: "您已成功举报此话题。"
       make_public:
         title: "转换为公开话题"
@@ -3369,7 +3366,6 @@ zh_CN:
         edit_action: "编辑"
         edit_anonymous: "抱歉，您需要登录才能编辑此帖子。"
         flag_action: "举报"
-        flag: "以私密方式举报此帖子以引起注意，或发送一个关于它的不公开通知"
         delete_action: "删除帖子"
         delete: "删除此帖子"
         undelete_action: "取消删除帖子"
@@ -4004,7 +4000,6 @@ zh_CN:
         print: "%{shortcut} 打印话题"
         defer: "%{shortcut} 将话题记为未读"
         topic_admin_actions: "%{shortcut} 打开话题管理员操作"
-        archive_private_message: "%{shortcut} 切换归档私信"
       search_menu:
         title: "搜索菜单"
         prev_next: "%{shortcut} 上下移动所选内容"
@@ -4952,6 +4947,7 @@ zh_CN:
           permalinks: "永久链接"
           trust_levels: "信任级别"
           users: "用户"
+          groups: "群组"
           user_fields: "用户字段"
           watched_words: "关注词"
           legal: "法律信息"
@@ -4961,7 +4957,7 @@ zh_CN:
         sidebar_link:
           font_style: "字体样式"
           site_logo: "网站徽标"
-          color_schemes: "配色方案"
+          color_schemes: "调色板"
           emoji: "表情符号"
           navigation: "导航"
           themes: "主题"
@@ -5034,8 +5030,6 @@ zh_CN:
           site_contact_name_help: |
             用于发送所有自动消息的管理人员用户名。如果留空，将使用默认的系统帐户。
           site_contact_group: "网站联系群组"
-          site_contact_group_help: |
-            收到所有自动发送的私信邀请的群组。
           your_organization: "您的组织"
           your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
@@ -5310,7 +5304,6 @@ zh_CN:
           hide_unused_fields: "隐藏未使用的字段"
           is_default: "主题默认启用"
           user_selectable: "用户可以选择主题"
-          color_scheme_user_selectable: "配色方案可由用户选择"
           auto_update: "当 Discourse 更新时自动更新"
           color_scheme: "调色板"
           edit_color_scheme: "编辑调色板"
