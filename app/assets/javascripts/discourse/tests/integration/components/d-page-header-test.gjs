@@ -38,7 +38,7 @@ module("Integration | Component | DPageHeader", function (hooks) {
     await render(<template>
       <DPageHeader @titleLabel="Wow so cool" @shouldDisplay={{false}} />
     </template>);
-    assert.dom(".admin-page-header").doesNotExist();
+    assert.dom(".d-page-header").doesNotExist();
   });
 
   test("renders base breadcrumbs and yielded <:breadcrumbs>", async function (assert) {
