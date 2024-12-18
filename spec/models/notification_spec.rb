@@ -814,6 +814,7 @@ RSpec.describe Notification do
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) }
     fab!(:user5) { Fabricate(:user) }
+    fab!(:user6) { Fabricate(:user) }
     fab!(:notification1) do
       Fabricate(:notification, user: user, data: { username: user1.username }.to_json)
     end
@@ -829,6 +830,9 @@ RSpec.describe Notification do
     fab!(:notification5) do
       Fabricate(:notification, user: user, data: { original_username: user5.username }.to_json)
     end
+    fab!(:notification6) do
+      Fabricate(:notification, user: user, data: { original_username: user6.username }.to_json)
+    end
 
     it "Sets the acting_user correctly for each notification" do
       SiteSetting.enable_names = true
@@ -840,7 +844,7 @@ RSpec.describe Notification do
       expect(notification3.acting_user).to eq(user3)
       expect(notification4.acting_user).to eq(user4)
       expect(notification5.acting_user).to eq(user5)
-      expect(notification5.data_hash[:original_name]).to eq "Bruce Wayne"
+      expect(notification5.data_hash[:original_name]).to eq user5.name
     end
 
     context "with SiteSettings.enable_names=false" do
