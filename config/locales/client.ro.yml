@@ -22,6 +22,7 @@ ro:
             kb: KO
             mb: MO
             tb: TO
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"

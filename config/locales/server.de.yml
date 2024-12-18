@@ -1002,8 +1002,8 @@ de:
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Schreibe @%{username} eine Nachricht"
-      description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
-      short_description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
+      description: "Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden."
+      short_description: "Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden."
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -2199,7 +2199,7 @@ de:
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit, zur vollständigen Website zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Fully-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihren Avatar ändern können."
-    pm_warn_user_last_seen_months_ago: "Benutzer beim Erstellen einer neuen privaten Nachricht warnen, wenn der Empfänger seit mehr als n Monaten nicht gesehen wurde."
+    pm_warn_user_last_seen_months_ago: "Benutzer beim Erstellen einer neuen PN warnen, wenn der Empfänger seit mehr als n Monaten nicht gesehen wurde."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für nicht kategorisierte Themen in der Themenliste."
     header_dropdown_category_count: "Wie viele Kategorien im Header-Drop-down-Menü angezeigt werden können."
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw., um Teilausdrücke zu verwenden"
@@ -3693,7 +3693,7 @@ de:
 
         %{respond_instructions}
     user_replied_pm:
-      title: "Benutzer hat auf private Nachricht geantwortet"
+      title: "Benutzer hat auf PN geantwortet"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3737,7 +3737,7 @@ de:
 
         %{respond_instructions}
     user_mentioned_pm:
-      title: "Benutzer wurde in privater Nachricht erwähnt"
+      title: "Benutzer wurde in PN erwähnt"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3759,7 +3759,7 @@ de:
 
         %{respond_instructions}
     user_group_mentioned_pm:
-      title: "Gruppe wurde in privater Nachricht erwähnt"
+      title: "Gruppe wurde in PN erwähnt"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}

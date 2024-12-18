@@ -60,9 +60,9 @@ sr:
           few: "%{count} мин."
           other: "%{count} мин."
         about_x_hours:
-          one: "%{count} ч."
-          few: "%{count} ч."
-          other: "%{count} ч."
+          one: "%{count} č."
+          few: "%{count} č."
+          other: "%{count} č."
         x_days:
           one: "%{count} д."
           few: "%{count} д."
@@ -153,8 +153,11 @@ sr:
       facebook: "Подели на Фејсбуку"
       email: "Пошаљи е-поштом"
       url: "Копирај и подели линк"
+    word_connector:
+      last_item: "i"
     action_codes:
       public_topic: "Објављује ову тему %{when}"
+      open_topic: "Konvertovao sam ovo u temu %{when}"
       private_topic: "Претвара ову тему у приватну поруку %{when}"
       split_topic: "Раздваја ову тему %{when}"
       invited_user: "Позива групу %{who} %{when}"
@@ -173,24 +176,30 @@ sr:
         enabled: "Архивира %{when}"
         disabled: "Деархивира %{when}"
       pinned:
-        enabled: "Закачи %{when}"
-        disabled: "Откачи %{when}"
+        enabled: "Zakači %{when}"
+        disabled: "Otkači%{when}"
       pinned_globally:
-        enabled: "Глобално закачи %{when}"
-        disabled: "Откачи %{when}"
+        enabled: "Globalno zakači %{when}"
+        disabled: "Otkači %{when}"
       visible:
-        enabled: "Укључује %{when}"
-        disabled: "Искључује %{when}"
+        enabled: "Uključuje %{when}"
+        disabled: "Isključuje %{when}"
       banner:
         enabled: "Прави транспарент %{when}. Транспарент ће бити приказан на врху сваке странице док га корисник не одбаци."
         disabled: "Уклања овај транспарент %{when}. Транспарент више неће бити приказан на врху сваке странице."
+      forwarded: "Je prosledio/la navedenu e-poštu"
     topic_admin_menu: "радње око теме"
+    skip_to_main_content: "Predji na glavni sadržaj"
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     software_update_prompt:
       dismiss: "Одбаци"
+    bootstrap_mode: "Početak"
     back_button: "Nazad"
     themes:
       default_description: "Подразумевано"
+      broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta  ima greške. Onemogućite je putem linka."
+    critical_deprecation:
+      id: "Vaš forum možda neće raditi jer tema / komponenta  ima greške. Onemogućite je putem linka."
     s3:
       regions:
         ap_northeast_1: "Азија-Пацифик (Токио)"
@@ -2035,7 +2044,7 @@ sr:
             topic: "teme"
             post: "poruke"
       plugins:
-        title: "Dodatci"
+        title: "Dodaci"
         name: "Ime foruma"
         version: "Verzija"
         enabled: "Omgućeno"
@@ -2547,7 +2556,7 @@ sr:
           uncategorized: "Ostalo"
           backups: "Sigurnosne kopije"
           login: "Prijava"
-          plugins: "Dodatci"
+          plugins: "Dodaci"
           search: "Pretraži"
           groups: "Grupe"
           dashboard: "Komandna Tabla"
