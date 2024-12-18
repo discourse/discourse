@@ -1,6 +1,3 @@
-import Controller from "@ember/controller";
-import SettingsFilter from "admin/mixins/settings-filter";
+import AdminAreaSettingsBaseController from "admin/controllers/admin-area-settings-base";
 
-export default class AdminPluginsShowSettingsController extends Controller.extend(
-  SettingsFilter
-) {}
+export default class AdminPluginsShowSettingsController extends AdminAreaSettingsBaseController {}

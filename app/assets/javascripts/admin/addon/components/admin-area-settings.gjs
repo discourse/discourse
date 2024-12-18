@@ -17,8 +17,13 @@ export default class AdminAreaSettings extends Component {
   @tracked settings = [];
   @tracked filter = "";
 
+  constructor() {
+    super(...arguments);
+    this.#loadSettings();
+  }
+
   @bind
-  async loadSettings() {
+  async #loadSettings() {
     this.filter = this.args.filter;
     const result = await ajax("/admin/config/site_settings.json", {
       data: {
@@ -48,7 +53,6 @@ export default class AdminAreaSettings extends Component {
 
     <div
       class="content-body admin-config-area__settings admin-detail pull-left"
-      {{didInsert this.loadSettings}}
     >
       {{#if this.settings}}
         <AdminFilteredSiteSettings

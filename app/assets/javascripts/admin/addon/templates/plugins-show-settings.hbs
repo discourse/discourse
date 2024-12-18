@@ -3,7 +3,7 @@
 >
   <AdminAreaSettings
     @plugin={{@model.plugin.id}}
-    @path={{concat "/admin/plugins/" @model.plugin.name "/settings"}}
+    @path="/admin/plugins/{{@model.plugin.name}}/settings"
     @filter={{this.filter}}
     @filterChangedCallback={{this.filterChangedCallback}}
   />
