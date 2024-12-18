@@ -813,10 +813,11 @@
       width: 100%;
     }
   }
-  .permalink-search input {
-    width: 100%;
-  }
 }
+.admin-config-area__settings-no-results {
+  padding-left: 18px;
+}
+
 .admin-permalink-item {
   &__delete.btn,
   &__delete.btn:hover {

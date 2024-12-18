@@ -1,9 +1,6 @@
-<DBreadcrumbsItem @path="/admin/backups/settings" @label={{i18n "settings"}} />
-
-<div class="content-body admin-config-area__settings admin-detail pull-left">
-  <AdminFilteredSiteSettings
-    @initialFilter={{@model.initialFilter}}
-    @settings={{@model.settings}}
-    @onFilterChanged={{this.filterChanged}}
-  />
-</div>
+<AdminAreaSettings
+  @categories="backups"
+  @path="/admin/backups/settings"
+  @filter={{this.filter}}
+  @adminSettingsFilterChangedCallback={{this.adminSettingsFilterChangedCallback}}
+/>

@@ -1,0 +1,39 @@
+<div class="admin-permalinks admin-config-page">
+  <DPageHeader
+    @titleLabel={{i18n "admin.permalink.title"}}
+    @descriptionLabel={{i18n "admin.permalink.description"}}
+    @learnMoreUrl="https://meta.discourse.org/t/20930"
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path="/admin/customize/permalinks"
+        @label={{i18n "admin.permalink.title"}}
+      />
+    </:breadcrumbs>
+    <:actions as |actions|>
+      <actions.Primary
+        @route="adminPermalinks.new"
+        @title="admin.permalink.add"
+        @label="admin.permalink.add"
+        @icon="plus"
+        class="admin-permalinks__header-add-permalink"
+      />
+    </:actions>
+    <:tabs>
+      <NavItem
+        @route="adminPermalinks.settings"
+        @label="admin.permalink.nav.settings"
+        class="admin-permalinks-tabs__settings"
+      />
+      <NavItem
+        @route="adminPermalinks.index"
+        @label="admin.permalink.nav.permalinks"
+        class="admin-permalins-permalinks"
+      />
+    </:tabs>
+  </DPageHeader>
+  <div class="admin-container admin-config-page__main-area">
+    {{outlet}}
+  </div>
+</div>

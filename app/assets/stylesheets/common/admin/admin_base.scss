@@ -424,20 +424,6 @@ $mobile-breakpoint: 700px;
     color: var(--primary-medium);
   }
 }
-.admin-users-list {
-  &__search {
-    @media screen and (max-width: 500px) {
-      width: 100%;
-    }
-    input {
-      min-width: 15em;
-      @media screen and (max-width: 500px) {
-        box-sizing: border-box;
-        width: 100%;
-      }
-    }
-  }
-}
 
 .ip-lookup {
   position: relative;

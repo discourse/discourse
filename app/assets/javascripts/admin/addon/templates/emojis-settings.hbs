@@ -1,4 +1,6 @@
-<AdminConfigAreas::EmojisSettings
-  @onFilterChanged={{this.filterChangedCallback}}
-  @initialFilter={{this.filter}}
+<AdminAreaSettings
+  @area="emojis"
+  @path="/admin/customize/emojis/settings"
+  @filter={{this.filter}}
+  @adminSettingsFilterChangedCallback={{this.adminSettingsFilterChangedCallback}}
 />
