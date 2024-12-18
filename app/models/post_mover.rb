@@ -746,7 +746,12 @@ class PostMover
   end
 
   def enqueue_jobs(topic)
-    @post_creator.enqueue_jobs if @post_creator
+    enqueue_post_creator_jobs =
+      DiscoursePluginRegistry.apply_modifier(
+        :post_mover_enqueue_post_creator_jobs,
+        @post_creator.present?,
+      )
+    @post_creator.enqueue_jobs if enqueue_post_creator_jobs
 
     Jobs.enqueue(:notify_moved_posts, post_ids: @post_ids_after_move, moved_by_id: user.id)
 

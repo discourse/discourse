@@ -3169,5 +3169,44 @@ RSpec.describe PostMover do
         end
       end
     end
+
+    describe "#enqueue_jobs" do
+      fab!(:admin)
+      fab!(:original_topic) { Fabricate(:topic) }
+      fab!(:post_1) { Fabricate(:post, topic: original_topic) }
+      fab!(:post_2) { Fabricate(:post, topic: original_topic) }
+      fab!(:destination_topic) { Fabricate(:topic) }
+
+      it "calls enqueue jobs for PostCreator when @post_creator is present" do
+        post_mover = PostMover.new(original_topic, admin, [post_1, post_2])
+
+        PostCreator.any_instance.expects(:enqueue_jobs).once
+
+        post_mover.instance_variable_set(:@post_creator, PostCreator.new(admin, {}))
+        post_mover.send(:enqueue_jobs, destination_topic)
+      end
+
+      context "with post_mover_enqueue_post_creator_jobs modifier" do
+        let(:modifier_block) { Proc.new { |_| false } }
+
+        it "skips enqueuing jobs when the modifier returns false" do
+          plugin_instance = Plugin::Instance.new
+          plugin_instance.register_modifier(:post_mover_enqueue_post_creator_jobs, &modifier_block)
+
+          post_mover = PostMover.new(original_topic, admin, [post_1, post_2])
+
+          PostCreator.any_instance.expects(:enqueue_jobs).never
+
+          post_mover.instance_variable_set(:@post_creator, PostCreator.new(admin, {}))
+          post_mover.send(:enqueue_jobs, destination_topic)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :post_mover_enqueue_post_creator_jobs,
+            &modifier_block
+          )
+        end
+      end
+    end
   end
 end
