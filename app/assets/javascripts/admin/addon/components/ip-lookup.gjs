@@ -22,6 +22,7 @@ export default class IpLookup extends Component {
 
   @tracked location;
   @tracked otherAccounts;
+  @tracked loading = false;
   @tracked otherAccountsLoading = false;
   @tracked totalOthersWithSameIP;
 
@@ -36,6 +37,7 @@ export default class IpLookup extends Component {
 
   @action
   async lookup() {
+    this.loading = true;
     try {
       if (!this.location && this.args.ip) {
         const loc = await ajax("/admin/users/ip-info", {
@@ -64,6 +66,8 @@ export default class IpLookup extends Component {
       }
     } catch (error) {
       popupAjaxError(error);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -145,6 +149,7 @@ export default class IpLookup extends Component {
       @onShow={{this.lookup}}
       @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
+      @isLoading={{this.loading}}
     >
       <:content>
         <div class="location-box">

@@ -97,6 +97,7 @@ export default class DMenu extends Component {
       @translatedLabel={{@label}}
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
+      @isLoading={{@isLoading}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       {{on "keydown" this.forwardTabToContent}}
       ...attributes
