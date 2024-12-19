@@ -28,4 +28,27 @@ module("Integration | Component | da-choices-field", function (hooks) {
 
     assert.strictEqual(this.field.metadata.value, 1);
   });
+
+  test("can have a default value", async function (assert) {
+    this.field = new AutomationFabricators(getOwner(this)).field({
+      component: "choices",
+      extra: {
+        content: [
+          { name: "Zero", id: 0 },
+          { name: "One", id: 1 },
+        ],
+        default_value: 0,
+      },
+    });
+    await render(
+      hbs` <AutomationField @automation={{this.automation}} @field={{this.field}} />`
+    );
+
+    assert.strictEqual(this.field.metadata.value, 0);
+
+    await selectKit().expand();
+    await selectKit().selectRowByValue(1);
+
+    assert.strictEqual(this.field.metadata.value, 1);
+  });
 });
