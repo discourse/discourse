@@ -10,6 +10,7 @@ export default class CanCheckEmailsHelper {
   }
 
   get canCheckEmails() {
+    // Anonymous users can't check emails
     if (!this.currentUser) {
       return false;
     }
@@ -17,7 +18,7 @@ export default class CanCheckEmailsHelper {
     const canStaffCheckEmails =
       this.can_moderators_view_emails && this.currentUser.staff;
     return (
-      this.model.id === this.currentUser.id ||
+      this.model?.id === this.currentUser.id ||
       this.canAdminCheckEmails ||
       canStaffCheckEmails
     );
