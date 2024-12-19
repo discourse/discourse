@@ -6,16 +6,15 @@ class Embedding < OpenStruct
   include HasErrors
 
   def self.settings
-    %i[
-      embed_by_username
-      embed_post_limit
-      embed_title_scrubber
-      embed_truncate
-      embed_unlisted
-      allowed_embed_selectors
-      blocked_embed_selectors
-      allowed_embed_classnames
-    ]
+    posts_and_topics_settings | crawlers_settings
+  end
+
+  def self.posts_and_topics_settings
+    %i[embed_by_username embed_post_limit embed_title_scrubber embed_truncate embed_unlisted]
+  end
+
+  def self.crawlers_settings
+    %i[allowed_embed_selectors blocked_embed_selectors allowed_embed_classnames]
   end
 
   def base_url
