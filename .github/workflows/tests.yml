@@ -29,7 +29,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-22.04-8core') || 'debian-12' }}
+    runs-on: debian-12
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
     timeout-minutes: 20
 
@@ -361,7 +361,7 @@ jobs:
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-22.04-8core') || 'debian-12' }}
+    runs-on: debian-12
     container:
       image: discourse/discourse_test:slim-browsers
       options: --user discourse
