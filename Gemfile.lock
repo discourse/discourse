@@ -135,7 +135,7 @@ GEM
     drb (2.2.1)
     dry-initializer (3.1.1)
     email_reply_trimmer (0.2.0)
-    erubi (1.13.0)
+    erubi (1.13.1)
     excon (1.2.2)
     execjs (2.10.0)
     exifr (1.4.0)
