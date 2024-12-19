@@ -7346,7 +7346,7 @@ en:
         blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Allowed CSS class names"
         save: "Save"
-        posts_and_topics_settings_saved: "Posts and Topics settings saved."
+        posts_and_topics_settings_saved: "Posts and Topics settings saved"
         crawler_settings_saved: "Crawler settings saved."
         back: "Back to Embedding"
         more_options: "More options"
