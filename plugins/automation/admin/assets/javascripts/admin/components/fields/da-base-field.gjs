@@ -6,7 +6,7 @@ export default class BaseField extends Component {
     super(...arguments);
 
     if (
-      this.args.field.extra &&
+      this.args.field?.extra &&
       Object.keys(this.args.field.extra).includes("default_value")
     ) {
       this.args.field.metadata.value = this.args.field.extra.default_value;
