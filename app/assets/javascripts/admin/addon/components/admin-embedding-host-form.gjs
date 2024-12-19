@@ -30,17 +30,15 @@ export default class AdminEmbeddingHostForm extends Component {
   }
 
   get formData() {
-    if (this.isUpdate) {
-      return {
+    if (!this.editing) { return {} }
+    
+    return {
         host: this.args.host.host,
         allowed_paths: this.args.host.allowed_paths,
         category: this.args.host.category_id,
         tags: this.args.host.tags,
         user: isEmpty(this.args.host.user) ? null : [this.args.host.user],
       };
-    } else {
-      return {};
-    }
   }
 
   @action
