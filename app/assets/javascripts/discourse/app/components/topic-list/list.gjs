@@ -143,7 +143,10 @@ export default class TopicList extends Component {
 
     // work backwards
     // this is more efficient cause we keep appending to list
-    const start = topics.findIndex((topic) => !topic.get("pinned"));
+    const start = Math.max(
+      topics.findIndex((topic) => !topic.get("pinned")),
+      0
+    );
     let lastVisitedTopic, topic;
 
     for (let i = topics.length - 1; i >= start; i--) {
