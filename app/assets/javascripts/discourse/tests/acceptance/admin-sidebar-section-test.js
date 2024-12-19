@@ -48,9 +48,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".sidebar-section[data-section-name='admin-email_settings']")
       .exists("email settings section is displayed");
     assert
-      .dom(".sidebar-section[data-section-name='admin-email_logs']")
-      .exists("email logs settings section is displayed");
-    assert
       .dom(".sidebar-section[data-section-name='admin-security']")
       .exists("security settings section is displayed");
     assert

@@ -5123,7 +5123,7 @@ en:
         meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
         sidebar_title: "Reports"
         sidebar_link:
-          all: "All"
+          all: "All reports"
 
       new_features:
         title: "What's new?"
