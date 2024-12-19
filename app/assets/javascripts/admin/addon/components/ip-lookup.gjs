@@ -235,18 +235,18 @@ export default class IpLookup extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {{#each this.otherAccounts as |a|}}
+                        {{#each this.otherAccounts as |account|}}
                           <tr>
                             <td class="user">
-                              <LinkTo @route="adminUser" @model={{a}}>
-                                {{avatar a imageSize="tiny"}}
-                                <span>{{a.username}}</span>
+                              <LinkTo @route="adminUser" @model={{account}}>
+                                {{avatar account imageSize="tiny"}}
+                                <span>{{account.username}}</span>
                               </LinkTo>
                             </td>
-                            <td>{{a.trustLevel.id}}</td>
-                            <td>{{a.time_read}}</td>
-                            <td>{{a.topics_entered}}</td>
-                            <td>{{a.post_count}}</td>
+                            <td>{{account.trustLevel.id}}</td>
+                            <td>{{account.time_read}}</td>
+                            <td>{{account.topics_entered}}</td>
+                            <td>{{account.post_count}}</td>
                           </tr>
                         {{/each}}
                       </tbody>
