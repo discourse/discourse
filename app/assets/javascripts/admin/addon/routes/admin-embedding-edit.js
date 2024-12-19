@@ -4,7 +4,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminEmbeddingEditRoute extends DiscourseRoute {
   async model(params) {
     const embedding = await this.store.find("embedding");
-    return embedding.embeddable_hosts.findBy("id", parseInt(params.id, 10));
+    return embedding.embeddable_hosts.find((host) => host.id === parseInt(params.id, 10));
   }
 
   titleToken() {
