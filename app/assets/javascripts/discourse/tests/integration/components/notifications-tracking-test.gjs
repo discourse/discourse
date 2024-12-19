@@ -78,4 +78,22 @@ module("Integration | Component | TopicTracking", function (hooks) {
       );
     });
   });
+
+  test("caret", async function (assert) {
+    await render(<template><TopicNotificationsTracking /></template>);
+
+    assert.dom(".notifications-tracking-btn__caret").exists();
+  });
+});
+
+module("Integration | Component | TopicTracking - Mobile", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("no caret", async function (assert) {
+    this.site.desktopView = false;
+
+    await render(<template><TopicNotificationsTracking /></template>);
+
+    assert.dom(".notifications-tracking-btn__caret").doesNotExist();
+  });
 });
