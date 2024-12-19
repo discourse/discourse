@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ColorScheme < ActiveRecord::Base
-  CUSTOM_SCHEMES = {
+  BUILT_IN_SCHEMES = {
     Dark: {
       "primary" => "dddddd",
       "secondary" => "222222",
@@ -286,7 +286,7 @@ class ColorScheme < ActiveRecord::Base
 
     list = [{ id: LIGHT_THEME_ID, colors: base_with_hash }]
 
-    CUSTOM_SCHEMES.each do |k, v|
+    BUILT_IN_SCHEMES.each do |k, v|
       colors = []
       v.each { |name, color| colors << { name: name, hex: "#{color}" } }
       list.push(id: k.to_s, colors: colors)
@@ -385,7 +385,7 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme.user_selectable = true
 
     colors =
-      CUSTOM_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
+      BUILT_IN_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
         { name: name, hex: hex }
       end if params[:base_scheme_id]
     colors ||= base.colors_hashes
@@ -439,7 +439,7 @@ class ColorScheme < ActiveRecord::Base
 
   def base_colors
     colors = nil
-    colors = CUSTOM_SCHEMES[base_scheme_id.to_sym] if base_scheme_id && base_scheme_id != "Light"
+    colors = BUILT_IN_SCHEMES[base_scheme_id.to_sym] if base_scheme_id && base_scheme_id != "Light"
     colors || ColorScheme.base_colors
   end
 
