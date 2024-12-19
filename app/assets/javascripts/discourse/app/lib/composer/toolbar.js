@@ -133,6 +133,7 @@ export default class Toolbar {
       className: buttonAttrs.className || buttonAttrs.id,
       label: buttonAttrs.label,
       icon: buttonAttrs.icon,
+      component: buttonAttrs.component,
       action: (button) => {
         buttonAttrs.action
           ? buttonAttrs.action(button)

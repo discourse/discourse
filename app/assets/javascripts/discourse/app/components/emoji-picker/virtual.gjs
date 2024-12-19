@@ -1,0 +1,12 @@
+import EmojiPickerContent from "discourse/components/emoji-picker/content";
+
+const EmojiPickerVirtual = <template>
+  <EmojiPickerContent
+    @close={{@close}}
+    @term={{@data.term}}
+    @didSelectEmoji={{@data.didSelectEmoji}}
+    @context={{@data.context}}
+  />
+</template>;
+
+export default EmojiPickerVirtual;

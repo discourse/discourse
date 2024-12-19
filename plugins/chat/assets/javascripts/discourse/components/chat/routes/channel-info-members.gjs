@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import FilterInput from "discourse/components/filter-input";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import autoFocus from "discourse/modifiers/auto-focus";
@@ -16,7 +17,6 @@ import { i18n } from "discourse-i18n";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
 import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
-import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
 
 export default class ChatRouteChannelInfoMembers extends Component {
   @service appEvents;
@@ -144,7 +144,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
         />
       {{else}}
         <div class="c-channel-members">
-          <DcFilterInput
+          <FilterInput
             {{autoFocus}}
             @filterAction={{this.mutFilter}}
             @icons={{hash right="magnifying-glass"}}
