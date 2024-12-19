@@ -3,8 +3,6 @@
 require "demon/base"
 
 class Demon::Sidekiq < ::Demon::Base
-  HOSTNAME = Socket.gethostname
-
   def self.prefix
     "sidekiq"
   end
