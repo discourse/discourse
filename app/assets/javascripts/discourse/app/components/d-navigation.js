@@ -20,6 +20,8 @@ export default class DNavigation extends Component {
 
   @setting("fixed_category_positions") fixedCategoryPositions;
 
+  createTopicLabel = "topic.create";
+
   @dependentKeyCompat
   get filterType() {
     return filterTypeForMode(this.filterMode);
@@ -111,9 +113,14 @@ export default class DNavigation extends Component {
     return classNames.join(" ");
   }
 
-  @discourseComputed("hasDraft")
-  createTopicLabel(hasDraft) {
-    return hasDraft ? "topic.open_draft" : "topic.create";
+  @discourseComputed("draftCount")
+  showDraftsMenu(draftCount) {
+    return draftCount > 0;
+  }
+
+  @discourseComputed("draftCount")
+  otherDraftCount(draftCount) {
+    return draftCount > 4 ? draftCount - 4 : 0;
   }
 
   @discourseComputed("category.can_edit")
