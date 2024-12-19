@@ -18,7 +18,7 @@ class NotificationsTracking {
   }
 
   hasSelectedLevelId(id, message) {
-    this.context.dom(this.element).hasAttribute("data-level-id", name, message);
+    this.context.dom(this.element).hasAttribute("data-level-id", id, message);
   }
 }
 

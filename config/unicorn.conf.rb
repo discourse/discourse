@@ -134,7 +134,7 @@ before_fork do |server, worker|
 
           if enable_email_sync_demon
             Demon::EmailSync.ensure_running
-            check_email_sync_heartbeat
+            Demon::EmailSync.check_email_sync_heartbeat
           end
 
           DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
@@ -179,60 +179,6 @@ before_fork do |server, worker|
           kill_worker(:KILL, wpid) # take no prisoners for timeout violations
         end
         next_sleep <= 0 ? 1 : next_sleep
-      end
-
-      def max_email_sync_rss
-        return 0 if Demon::EmailSync.demons.empty?
-
-        email_sync_pids = Demon::EmailSync.demons.map { |uid, demon| demon.pid }
-        return 0 if email_sync_pids.empty?
-
-        rss =
-          `ps -eo pid,rss,args | grep '#{email_sync_pids.join("|")}' | grep -v grep | awk '{print $2}'`.split(
-            "\n",
-          )
-            .map(&:to_i)
-            .max
-
-        (rss || 0) * 1024
-      end
-
-      def max_allowed_email_sync_rss
-        [ENV["UNICORN_EMAIL_SYNC_MAX_RSS"].to_i, 500].max.megabytes
-      end
-
-      def check_email_sync_heartbeat
-        # Skip first check to let process warm up
-        @email_sync_next_heartbeat_check ||= (Time.now + Demon::EmailSync::HEARTBEAT_INTERVAL).to_i
-
-        return if @email_sync_next_heartbeat_check > Time.now.to_i
-        @email_sync_next_heartbeat_check = (Time.now + Demon::EmailSync::HEARTBEAT_INTERVAL).to_i
-
-        restart = false
-
-        # Restart process if it does not respond anymore
-        last_heartbeat_ago =
-          Time.now.to_i - Discourse.redis.get(Demon::EmailSync::HEARTBEAT_KEY).to_i
-        if last_heartbeat_ago > Demon::EmailSync::HEARTBEAT_INTERVAL.to_i
-          Rails.logger.warn(
-            "EmailSync heartbeat test failed (last heartbeat was #{last_heartbeat_ago}s ago), restarting",
-          )
-
-          restart = true
-        end
-
-        # Restart process if memory usage is too high
-        email_sync_rss = max_email_sync_rss
-        if email_sync_rss > max_allowed_email_sync_rss
-          Rails.logger.warn(
-            "EmailSync is consuming too much memory (using: %0.2fM) for '%s', restarting" %
-              [(email_sync_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]],
-          )
-
-          restart = true
-        end
-
-        Demon::EmailSync.restart if restart
       end
     end
   end

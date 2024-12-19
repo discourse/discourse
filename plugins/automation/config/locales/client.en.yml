@@ -408,6 +408,8 @@ en:
             label: Script
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Enabled
           disabled:
