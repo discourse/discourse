@@ -550,7 +550,7 @@ GEM
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
-    test-prof (1.4.2)
+    test-prof (1.4.3)
     thor (1.3.2)
     timeout (0.4.3)
     trilogy (2.9.0)
