@@ -131,6 +131,8 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
     /* eslint-enable no-console */
 
     this.#glimmerTopicDecision = decision;
+
+    return decision;
   }
 
   @computed("categories.[]")
