@@ -3,7 +3,6 @@ import { cancel, schedule, throttle } from "@ember/runloop";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import positioningWorkaround from "discourse/lib/safari-hacks";
 import { isiPad } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -66,13 +65,6 @@ export default class ComposerBody extends Component {
       }
       this.appEvents.trigger("composer:find-similar");
     }, 1000);
-  }
-
-  @observes("composeState")
-  disableFullscreen() {
-    if (this.composeState !== Composer.OPEN && positioningWorkaround.blur) {
-      positioningWorkaround.blur();
-    }
   }
 
   setupComposerResizeEvents() {
@@ -184,8 +176,6 @@ export default class ComposerBody extends Component {
         triggerOpen();
       }
     });
-
-    positioningWorkaround(this.element);
   }
 
   willDestroyElement() {

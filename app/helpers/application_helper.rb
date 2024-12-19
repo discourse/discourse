@@ -175,7 +175,6 @@ module ApplicationHelper
     list = []
     list << (mobile_view? ? "mobile-view" : "desktop-view")
     list << (mobile_device? ? "mobile-device" : "not-mobile-device")
-    list << "ios-device" if ios_device?
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
@@ -444,10 +443,6 @@ module ApplicationHelper
 
   def mobile_device?
     MobileDetection.mobile_device?(request.user_agent)
-  end
-
-  def ios_device?
-    MobileDetection.ios_device?(request.user_agent)
   end
 
   def customization_disabled?
