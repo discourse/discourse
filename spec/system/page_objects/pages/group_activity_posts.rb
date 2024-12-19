@@ -9,12 +9,12 @@ module PageObjects
       end
 
       def has_user_stream_item?(count:)
-        has_css?(".user-stream-item", count: count)
+        has_css?(".post-list-item", count: count)
       end
 
       def scroll_to_last_item
         page.execute_script <<~JS
-          document.querySelector('.user-stream-item:last-of-type').scrollIntoView(true);
+          document.querySelector('.post-list-item:last-of-type').scrollIntoView(true);
         JS
       end
     end

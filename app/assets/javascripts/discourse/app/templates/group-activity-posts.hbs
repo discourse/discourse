@@ -1,14 +1,5 @@
-{{#if this.canLoadMore}}
-  {{hide-application-footer}}
-{{/if}}
-
-<LoadMore @selector=".user-stream-item" @action={{action "loadMore"}}>
-  <div class="user-stream">
-    {{#each this.model as |post|}}
-      <GroupPost @post={{post}} />
-    {{else}}
-      <div>{{i18n this.emptyText}}</div>
-    {{/each}}
-  </div>
-  <ConditionalLoadingSpinner @condition={{this.loading}} />
-</LoadMore>
+<PostList
+  @posts={{this.model}}
+  @fetchMorePosts={{this.fetchMorePosts}}
+  @emptyText={{i18n "groups.empty.posts"}}
+/>

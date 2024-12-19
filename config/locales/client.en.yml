@@ -1008,13 +1008,13 @@ en:
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
       empty:
-        posts: "There are no posts by members of this group."
-        members: "There are no members in this group."
-        requests: "There are no membership requests for this group."
-        mentions: "There are no mentions of this group."
-        messages: "There are no messages for this group."
-        topics: "There are no topics by members of this group."
-        logs: "There are no logs for this group."
+        posts: "There are no posts by members of this group"
+        members: "There are no members in this group"
+        requests: "There are no membership requests for this group"
+        mentions: "There are no mentions of this group"
+        messages: "There are no messages for this group"
+        topics: "There are no topics by members of this group"
+        logs: "There are no logs for this group"
       add: "Add"
       join: "Join"
       leave: "Leave"
@@ -3746,6 +3746,10 @@ en:
           one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>%{count}</b> posts."
       deleted_by_author_simple: "(topic deleted by author)"
+
+    post_list:
+      empty: "There are no posts"
+      aria_post_number: "%{title} - post #%{postNumber}"
 
     post:
       confirm_delete: "Are you sure you want to delete this post?"
