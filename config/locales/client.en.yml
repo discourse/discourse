@@ -7328,7 +7328,7 @@ en:
         description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
         host: "Allowed Hosts"
         allowed_paths: "Path Allowlist"
-        edit: "edit"
+        edit: "Edit"
         category: "Post to Category"
         tags: "Topic Tags"
         post_author: "Post Author - Defaults to %{author}"
@@ -7349,7 +7349,6 @@ en:
         posts_and_topics_settings_saved: "Posts and Topics settings saved"
         crawler_settings_saved: "Crawler settings saved."
         back: "Back to Embedding"
-        more_options: "More options"
         configuration_snippet: "Configuration snippet"
         host_form:
           add_header: "Add host"

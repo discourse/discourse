@@ -54,7 +54,6 @@ RSpec.describe "Admin EmbeddableHost Management", type: :system do
     expect(page).to have_content("#{category_2.name}")
     expect(page).to have_content("#{author_2.username}")
 
-    admin_embedding_page.open_embedding_host_menu
     admin_embedding_page.click_delete
     admin_embedding_page.confirm_delete
 

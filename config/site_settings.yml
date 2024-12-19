@@ -1235,7 +1235,7 @@ posting:
     area: "embedding"
   allowed_embed_selectors:
     default: ""
-    hidden: true
+    area: "embedding"
   allowed_href_schemes:
     client: true
     default: ""

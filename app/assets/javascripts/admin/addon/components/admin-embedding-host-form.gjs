@@ -24,21 +24,23 @@ export default class AdminEmbeddingHostForm extends Component {
   }
 
   get header() {
-    return this.isUpdate
+    return this.isEditing
       ? "admin.embedding.host_form.edit_header"
       : "admin.embedding.host_form.add_header";
   }
 
   get formData() {
-    if (!this.editing) { return {} }
-    
+    if (!this.isEditing) {
+      return {};
+    }
+
     return {
-        host: this.args.host.host,
-        allowed_paths: this.args.host.allowed_paths,
-        category: this.args.host.category_id,
-        tags: this.args.host.tags,
-        user: isEmpty(this.args.host.user) ? null : [this.args.host.user],
-      };
+      host: this.args.host.host,
+      allowed_paths: this.args.host.allowed_paths,
+      category: this.args.host.category_id,
+      tags: this.args.host.tags,
+      user: isEmpty(this.args.host.user) ? null : [this.args.host.user],
+    };
   }
 
   @action
@@ -51,7 +53,7 @@ export default class AdminEmbeddingHostForm extends Component {
         user: data.user?.at(0),
         category_id: data.category,
       });
-      if (!this.isUpdate) {
+      if (!this.isEditing) {
         this.adminEmbedding.embedding.embeddable_hosts.push(host);
       }
       this.router.transitionTo("adminEmbedding");

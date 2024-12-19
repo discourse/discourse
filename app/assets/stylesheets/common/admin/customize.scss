@@ -903,9 +903,13 @@
   }
 
   .admin-embeddable-host-item__delete {
-    color: var(--danger);
+    &:hover {
+      svg.d-icon {
+        color: var(--primary-medium);
+      }
+    }
     svg.d-icon {
-      color: var(--danger);
+      color: var(--primary-low-mid);
     }
   }
 }
