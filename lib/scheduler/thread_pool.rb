@@ -17,7 +17,10 @@ module Scheduler
     class ShutdownError < StandardError
     end
 
-    def initialize(min_threads:, max_threads:, idle_time:)
+    def initialize(min_threads:, max_threads:, idle_time: nil)
+      # this is there just for cases where people want to use this as
+      # a fixed size thread pool
+      idle_time ||= 30
       raise ArgumentError, "min_threads must be 0 or larger" if min_threads < 0
       raise ArgumentError, "max_threads must be 1 or larger" if max_threads < 1
       raise ArgumentError, "max_threads must be >= min_threads" if max_threads < min_threads
