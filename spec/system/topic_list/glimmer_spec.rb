@@ -7,7 +7,7 @@ describe "glimmer topic list", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    SiteSetting.experimental_glimmer_topic_list_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.glimmer_topic_list_mode = "enabled"
     sign_in(user)
   end
 

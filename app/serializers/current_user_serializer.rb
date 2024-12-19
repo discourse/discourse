@@ -75,7 +75,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :new_new_view_enabled?,
              :use_admin_sidebar,
              :can_view_raw_email,
-             :use_glimmer_topic_list?,
              :login_method,
              :has_unseen_features
 
@@ -320,10 +319,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_view_raw_email
     scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
-  end
-
-  def use_glimmer_topic_list?
-    scope.user.in_any_groups?(SiteSetting.experimental_glimmer_topic_list_groups_map)
   end
 
   def do_not_disturb_channel_position
