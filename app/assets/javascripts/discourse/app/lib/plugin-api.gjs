@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.39.1";
+export const PLUGIN_API_VERSION = "1.39.2";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -823,15 +823,6 @@ class PluginApi {
    *
    **/
   includePostAttributes(...attributes) {
-    deprecated(
-      "`api.includePostAttributes` has been deprecated. Use api.addTrackedPostProperties instead.",
-      {
-        id: "discourse.api.include-post-attributes",
-        since: "v3.4.0.beta3-dev",
-        dropFrom: "v3.5.0",
-      }
-    );
-
     includeAttributes(...attributes);
   }
 
