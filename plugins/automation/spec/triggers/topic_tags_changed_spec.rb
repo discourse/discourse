@@ -328,5 +328,75 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
         end
       expect(list.length).to eq(1)
     end
+
+    it "should only fire if tag is added if TAGS_ADDED is set" do
+      automation.upsert_field!(
+        "trigger_on",
+        "choices",
+        { value: DiscourseAutomation::Triggers::TopicTagsChanged::TriggerOn::TAGS_ADDED },
+        target: "trigger",
+      )
+
+      topic_0 = Fabricate(:topic, user: user, tags: [])
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag.name])
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should only fire if tag is removed if TAGS_REMOVED is set" do
+      automation.upsert_field!(
+        "trigger_on",
+        "choices",
+        { value: DiscourseAutomation::Triggers::TopicTagsChanged::TriggerOn::TAGS_REMOVED },
+        target: "trigger",
+      )
+
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag])
+
+      list =
+        capture_contexts { DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), []) }
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should not fire if tag is removed and TAGS_ADDED  is set" do
+      automation.upsert_field!(
+        "trigger_on",
+        "choices",
+        { value: DiscourseAutomation::Triggers::TopicTagsChanged::TriggerOn::TAGS_ADDED },
+        target: "trigger",
+      )
+
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag])
+
+      list =
+        capture_contexts { DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), []) }
+
+      expect(list.length).to eq(0)
+    end
+
+    it "should not fire if tag is added and TAGS_REMOVED is set" do
+      automation.upsert_field!(
+        "trigger_on",
+        "choices",
+        { value: DiscourseAutomation::Triggers::TopicTagsChanged::TriggerOn::TAGS_REMOVED },
+        target: "trigger",
+      )
+
+      topic_0 = Fabricate(:topic, user: user, tags: [])
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag.name])
+        end
+
+      expect(list.length).to eq(0)
+    end
   end
 end
