@@ -312,6 +312,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
       [
         "Dashboard",
         "Users",
+        "Groups",
         "What's New",
         "All",
         "Watched Words",
