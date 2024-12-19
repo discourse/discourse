@@ -5126,7 +5126,7 @@ en:
           all: "All"
 
       new_features:
-        title: "What's new"
+        title: "What's new?"
         check_for_updates: "Check for updates"
       dashboard:
         title: "Dashboard"
@@ -5145,7 +5145,7 @@ en:
         problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Dismiss"
         new_features:
-          title: "What's new"
+          title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
@@ -5238,7 +5238,7 @@ en:
             type_of_web_hook_event:
               label: "Type of event"
       flags:
-        title: "Moderation Flags"
+        title: "Moderation"
         description: "Description"
         enabled: "Enabled?"
         more_options:
@@ -5579,66 +5579,57 @@ en:
         sidebar_link:
           backups: "Backups"
           whats_new:
-            title: "What's New"
+            title: "What's new?"
             keywords: "changelog|feature|release"
 
       community:
         title: "Community"
         sidebar_link:
-          about_your_site: "About Your Site"
+          about_your_site: "About your site"
           badges: "Badges"
-          login_and_authentication: "Login & Authentication"
+          login_and_authentication: "Login & authentication"
           notifications: "Notifications"
           permalinks: "Permalinks"
-          trust_levels: "Trust Levels"
+          trust_levels: "Trust levels"
           users: "Users"
           groups: "Groups"
-          user_fields: "User Fields"
-          watched_words: "Watched Words"
+          user_fields: "User fields"
+          watched_words: "Watched words"
           legal: "Legal"
-          moderation_flags: "Moderation Flags"
+          moderation_flags:
+            title: "Moderation"
+            keywords: "flag|review"
 
       appearance:
         title: "Appearance"
         sidebar_link:
-          font_style: "Font Style"
-          site_logo: "Site Logo"
-          color_schemes: "Color Palettes"
+          font_style: "Font style"
+          site_logo: "Site logo"
+          color_schemes: "Color palettes"
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
           components:
             title: "Components"
             keywords: "theme|extension"
-          site_texts: "Site Texts"
+          site_texts: "Site texts"
 
       email_settings:
         title: "Email Settings"
         sidebar_link:
           appearance: "Appearance"
-          preview_summary: "Preview Summary"
-          server_setup: "Server Setup"
-
-      email_logs:
-        title: "Email Logs"
-        sidebar_link:
-          sent: "Sent"
-          skipped: "Skipped"
-          bounced: "Bounced"
-          received: "Received"
-          rejected: "Rejected"
+          server_setup:
+            title: "Server setup"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
 
       security:
         title: "Security"
         sidebar_link:
-          error_logs: "Error Logs"
-          screened_emails: "Screened Emails"
-          screened_ips: "Screened IPs"
-          screened_urls: "Screened URLs"
-          search_logs: "Search Logs"
           security: "Security settings"
           spam: "Spam settings"
-          staff_action_logs: "Staff Action Logs"
+          staff_action_logs:
+            title: "Staff action logs"
+            keywords: "error logs|screened emails|screened ips|screened urls|search logs"
 
       section_landing_pages:
         account:
@@ -5647,7 +5638,7 @@ en:
             title: "Backups"
             description: "Take a backup of your site's data"
           whats_new:
-            title: "What's New"
+            title: "What's new?"
             description: "Discover new releases and improvements to Discourse"
 
       config_areas:
@@ -5705,7 +5696,7 @@ en:
             your_organization_saved: "Your organization saved"
           saved: "saved!"
         flags:
-          header: "Moderation Flags"
+          header: "Moderation"
           edit_header: "Edit Flag"
           subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
@@ -5787,18 +5778,19 @@ en:
       advanced:
         title: "Advanced"
         sidebar_link:
-          api_keys: "API keys"
+          api_keys:
+            title: "API keys"
+            keywords: "token|webhook"
           developer: "Developer"
           embedding: "Embedding"
-          rate_limits: "Rate Limits"
+          rate_limits: "Rate limits"
           user_api: "User API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Files"
           other_options: "Other"
           search: "Search"
           experimental: "Experimental"
-          all_site_settings: "All Site Settings"
+          all_site_settings: "All site settings"
 
       navigation_menu:
         sidebar: "Sidebar"
