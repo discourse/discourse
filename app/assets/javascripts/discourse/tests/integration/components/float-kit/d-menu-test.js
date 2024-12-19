@@ -47,11 +47,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     this.site.mobileView = true;
 
     await render(
-      hbs`<DMenu @inline={{true}} @modalForMobile={{true}} @content="content" />`
+      hbs`<DMenu @identifier="foo" @inline={{true}} @modalForMobile={{true}} @content="content" />`
     );
     await open();
 
-    assert.dom(".fk-d-menu-modal").hasText("content");
+    assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
   });
 
   test("@onRegisterApi", async function (assert) {
