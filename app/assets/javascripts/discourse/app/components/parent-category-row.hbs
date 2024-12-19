@@ -187,7 +187,7 @@
         {{#if this.showTopics}}
           <td class="latest">
             {{#each this.category.featuredTopics as |t|}}
-              {{#if this.currentUser.canUseGlimmerTopicList}}
+              {{#if this.site.useGlimmerTopicList}}
                 <TopicList::FeaturedTopic @topic={{t}} />
               {{else}}
                 <FeaturedTopic @topic={{t}} />

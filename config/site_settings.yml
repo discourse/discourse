@@ -3335,13 +3335,14 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
-  experimental_glimmer_topic_list_groups:
+  glimmer_topic_list_mode:
     client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: disabled
   glimmer_post_menu_mode:
     client: true
     type: enum
