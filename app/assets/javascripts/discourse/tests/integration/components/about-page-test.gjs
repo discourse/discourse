@@ -11,12 +11,16 @@ function createModelObject({
   moderators = [],
   stats = {},
 }) {
-  return {
-    title,
-    admins,
-    moderators,
-    stats,
-  };
+  const model = arguments[0] || {};
+  return Object.assign(
+    {
+      title,
+      admins,
+      moderators,
+      stats,
+    },
+    model
+  );
 }
 
 module("Integration | Component | about-page", function (hooks) {
@@ -96,6 +100,46 @@ module("Integration | Component | about-page", function (hooks) {
           total_formatted_number: "33",
           eu_formatted_number: "13",
         })
+      );
+  });
+
+  test("contact URL", async function (assert) {
+    let model = createModelObject({
+      contact_url: "www.example.com",
+    });
+
+    await render(<template><AboutPage @model={{model}} /></template>);
+
+    assert
+      .dom(".about__contact-info a")
+      .hasAttribute(
+        "href",
+        "//www.example.com",
+        "appends a double slash if the value doesn't start with a slash or a protocol"
+      );
+
+    model.contact_url = "/u/somebody";
+
+    await render(<template><AboutPage @model={{model}} /></template>);
+
+    assert
+      .dom(".about__contact-info a")
+      .hasAttribute(
+        "href",
+        "/u/somebody",
+        "doesn't append a double slash if the value starts with a slash"
+      );
+
+    model.contact_url = "https://example.com";
+
+    await render(<template><AboutPage @model={{model}} /></template>);
+
+    assert
+      .dom(".about__contact-info a")
+      .hasAttribute(
+        "href",
+        "https://example.com",
+        "doesn't append a double slash if the value starts with a protocol"
       );
   });
 });
