@@ -9,7 +9,8 @@ module Scheduler
     end
 
     def initialize(min_threads:, max_threads:, idle_time:)
-      raise ArgumentError, "min_threads must be positive" if min_threads <= 0
+      raise ArgumentError, "min_threads must be 0 or larger" if min_threads < 0
+      raise ArgumentError, "max_threads must be 1 or larger" if max_threads < 1
       raise ArgumentError, "max_threads must be >= min_threads" if max_threads < min_threads
       raise ArgumentError, "idle_time must be positive" if idle_time <= 0
 
@@ -17,7 +18,8 @@ module Scheduler
       @max_threads = max_threads
       @idle_time = idle_time
 
-      @threads = []
+      @threads = Set.new
+
       @queue = Queue.new
       @mutex = Mutex.new
       @new_work = ConditionVariable.new
@@ -35,21 +37,23 @@ module Scheduler
 
       @mutex.synchronize do
         @queue << wrapped_block
+
+        spawn_thread if @queue.length > 1 && @threads.length < @max_threads
+
         @new_work.signal
-        spawn_thread if @threads.size < @max_threads
       end
     end
 
     def shutdown(timeout: 30)
       @mutex.synchronize do
+        return if @shutdown
         @shutdown = true
-        @threads.size.times { @queue << :shutdown }
+        @threads.length.times { @queue << :shutdown }
         @new_work.broadcast
       end
 
-      # Copy threads array to avoid concurrent modification
       threads_to_join = nil
-      @mutex.synchronize { threads_to_join = @threads.dup }
+      @mutex.synchronize { threads_to_join = @threads.to_a }
 
       failed_to_shutdown = false
 
@@ -58,7 +62,7 @@ module Scheduler
         remaining_time = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
         break if remaining_time <= 0
         if !thread.join(remaining_time)
-          Rails.logger.error "ThreadPool: Failed to join thread within timeout"
+          Rails.logger.error "ThreadPool: Failed to join thread within timeout\n#{thread.backtrace.join("\n")}"
           failed_to_shutdown = true
         end
       end
@@ -67,13 +71,13 @@ module Scheduler
     end
 
     def shutdown?
-      @shutdown
+      @mutex.synchronize { @shutdown }
     end
 
     def stats
       @mutex.synchronize do
         {
-          active_threads: @threads.size,
+          thread_count: @threads.size,
           queued_tasks: @queue.size,
           shutdown: @shutdown,
           min_threads: @min_threads,
@@ -106,20 +110,17 @@ module Scheduler
           @new_work.wait(@mutex, @idle_time)
 
           if @queue.empty?
-            if @threads.size > @min_threads
-              @threads.delete(Thread.current)
-              done = true
-              break
-            end
+            done = @threads.count > @min_threads
           else
             work = @queue.pop
 
             if work == :shutdown
-              @threads.delete(Thread.current)
+              work = nil
               done = true
-              break
             end
           end
+
+          @threads.delete(Thread.current) if done
         end
 
         # could be nil if the thread just needs to idle
@@ -127,11 +128,11 @@ module Scheduler
       end
     end
 
-    # note this is called from inside a mutex, no need to synchronize
+    # Outside of constructor usage this is called from a synchronized block
+    # we are already synchronized
     def spawn_thread
       thread = Thread.new { thread_loop }
       thread.abort_on_exception = true
-
       @threads << thread
     end
   end

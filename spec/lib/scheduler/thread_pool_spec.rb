@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Scheduler::ThreadPool do
+RSpec.describe Scheduler::ThreadPool, type: :multisite do
   let(:min_threads) { 2 }
   let(:max_threads) { 4 }
   let(:idle_time) { 0.1 }
@@ -9,26 +9,20 @@ RSpec.describe Scheduler::ThreadPool do
     described_class.new(min_threads: min_threads, max_threads: max_threads, idle_time: idle_time)
   end
 
-  after do
-    begin
-      pool.shutdown
-    rescue StandardError
-      nil
-    end
-  end
+  after { pool.shutdown(timeout: 1) }
 
   describe "initialization" do
     it "creates the minimum number of threads and validates parameters" do
-      expect(pool.stats[:active_threads]).to eq(min_threads)
+      expect(pool.stats[:thread_count]).to eq(min_threads)
       expect(pool.stats[:min_threads]).to eq(min_threads)
       expect(pool.stats[:max_threads]).to eq(max_threads)
       expect(pool.stats[:shutdown]).to be false
     end
 
     it "raises ArgumentError for invalid parameters" do
-      expect { described_class.new(min_threads: 0, max_threads: 2, idle_time: 1) }.to raise_error(
+      expect { described_class.new(min_threads: -1, max_threads: 2, idle_time: 1) }.to raise_error(
         ArgumentError,
-        "min_threads must be positive",
+        "min_threads must be 0 or larger",
       )
 
       expect { described_class.new(min_threads: 2, max_threads: 1, idle_time: 1) }.to raise_error(
@@ -55,19 +49,13 @@ RSpec.describe Scheduler::ThreadPool do
     end
 
     it "maintains database connection context" do
-      current_db = "default"
       completion_queue = Queue.new
 
-      allow(RailsMultisite::ConnectionManagement).to receive(:current_db).and_return(current_db)
-      allow(RailsMultisite::ConnectionManagement).to receive(:with_connection).with(
-        current_db,
-      ) do |&block|
-        completion_queue << current_db
-        block.call
+      test_multisite_connection("second") do
+        pool.post { completion_queue << RailsMultisite::ConnectionManagement.current_db }
       end
 
-      pool.post { true }
-      expect(completion_queue.pop).to eq(current_db)
+      expect(completion_queue.pop).to eq("second")
     end
 
     it "scales up threads when work increases" do
@@ -82,7 +70,7 @@ RSpec.describe Scheduler::ThreadPool do
         end
       end
 
-      expect(pool.stats[:active_threads]).to eq(max_threads)
+      expect(pool.stats[:thread_count]).to eq(max_threads)
       (max_threads + 1).times { blocker_queue << :continue }
 
       results = Array.new(max_threads + 1) { completion_queue.pop }
@@ -103,14 +91,41 @@ RSpec.describe Scheduler::ThreadPool do
     end
 
     it "completes pending tasks before shutting down" do
-      completion_queue = Queue.new
-      3.times { |i| pool.post { completion_queue << i } }
+      blocker_queue1 = Queue.new
+      completion_queue1 = Queue.new
 
-      results = Array.new(3) { completion_queue.pop }
-      pool.shutdown
+      blocker_queue2 = Queue.new
+      completion_queue2 = Queue.new
 
-      expect(results.size).to eq(3)
-      expect(results.sort).to eq([0, 1, 2])
+      3.times do |i|
+        pool.post do
+          blocker_queue1.pop
+          completion_queue1 << i
+          blocker_queue2.pop
+          completion_queue2 << i
+        end
+      end
+
+      3.times { blocker_queue1 << :continue }
+      results1 = Array.new(3) { completion_queue1.pop }
+
+      # this is not perfect, but it close enough
+      # usually spawing the thread will take longer than making the call to shutdown
+      # even if it does not it does not really matter that much
+      results2 = nil
+
+      Thread.new do
+        3.times { blocker_queue2 << :continue }
+        results2 = Array.new(3) { completion_queue2.pop }
+      end
+
+      pool.shutdown(timeout: 1)
+
+      expect(results1.size).to eq(3)
+      expect(results1.sort).to eq([0, 1, 2])
+
+      expect(results2.size).to eq(3)
+      expect(results2.sort).to eq([0, 1, 2])
     end
   end
 
@@ -124,7 +139,7 @@ RSpec.describe Scheduler::ThreadPool do
 
       # If the error handling works, this second task should complete
       expect(completion_queue.pop).to eq(:completed)
-      expect(pool.stats[:active_threads]).to eq(min_threads)
+      expect(pool.stats[:thread_count]).to eq(min_threads)
     end
   end
 
