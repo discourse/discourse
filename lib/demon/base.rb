@@ -5,6 +5,8 @@ end
 
 # intelligent fork based demonizer
 class Demon::Base
+  HOSTNAME = Socket.gethostname
+
   def self.demons
     @demons
   end
