@@ -56,8 +56,7 @@ class Discourse extends Application {
 
   ready() {
     performance.mark("discourse-ready");
-    const event = new CustomEvent("discourse-ready");
-    document.dispatchEvent(event);
+    document.querySelector("#d-splash")?.remove();
   }
 }
 
