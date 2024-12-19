@@ -55,7 +55,7 @@ document.addEventListener("discourse-init", () => {
   }
 
   loader.shouldLoadModule = function (name) {
-    if (!/\-test/.test(name)) {
+    if (!/[-_]test$/.test(name)) {
       return false;
     }
 
