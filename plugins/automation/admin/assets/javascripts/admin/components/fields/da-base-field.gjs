@@ -5,7 +5,10 @@ export default class BaseField extends Component {
   constructor() {
     super(...arguments);
 
-    if (this.args.field.extra?.default_value) {
+    if (
+      this.args.field.extra &&
+      Object.keys(this.args.field.extra).includes("default_value")
+    ) {
       this.args.field.metadata.value = this.args.field.extra.default_value;
     }
   }
