@@ -193,7 +193,9 @@
     <div class="value">{{this.model.ip_address}}</div>
     <div class="controls">
       {{#if this.currentUser.staff}}
-        <IpLookup @ip={{this.model.ip_address}} @userId={{this.model.id}} />
+        {{#if this.model.ip_address}}
+          <IpLookup @ip={{this.model.ip_address}} @userId={{this.model.id}} />
+        {{/if}}
       {{/if}}
     </div>
   </div>
@@ -203,10 +205,12 @@
     <div class="value">{{this.model.registration_ip_address}}</div>
     <div class="controls">
       {{#if this.currentUser.staff}}
-        <IpLookup
-          @ip={{this.model.registration_ip_address}}
-          @userId={{this.model.id}}
-        />
+        {{#if this.model.registration_ip_address}}
+          <IpLookup
+            @ip={{this.model.registration_ip_address}}
+            @userId={{this.model.id}}
+          />
+        {{/if}}
       {{/if}}
     </div>
   </div>
