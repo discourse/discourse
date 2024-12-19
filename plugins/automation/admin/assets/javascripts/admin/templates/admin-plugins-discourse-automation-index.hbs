@@ -59,10 +59,10 @@
               {{on "click" (fn this.editAutomation automation)}}
             >
               {{if
-                  automation.name
-                  automation.name
-                  (i18n "discourse_automation.unnamed_automation")
-                }}
+                automation.name
+                automation.name
+                (i18n "discourse_automation.unnamed_automation")
+              }}
             </td>
             <td
               class="d-admin-row__detail automations__script"
@@ -82,11 +82,14 @@
               <div class="d-admin-row__mobile-label">
                 {{i18n "discourse_automation.models.automation.script.label"}}
               </div>
-              {{automation.script.name}} (v{{automation.script.version}})
+              {{automation.script.name}}
+              (v{{automation.script.version}})
             </td>
             <td class="d-admin-row__detail automations__updated-by">
               <div class="d-admin-row__mobile-label">
-                {{i18n "discourse_automation.models.automation.last_updated_by.label"}}
+                {{i18n
+                  "discourse_automation.models.automation.last_updated_by.label"
+                }}
               </div>
               <div class="automations__user-timestamp">
                 <a
