@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -21,12 +22,14 @@ function constructKey(prefix, level, suffix, key) {
 }
 
 class NotificationsTrackingTrigger extends Component {
+  @service site;
+
   get showFullTitle() {
     return this.args.showFullTitle ?? true;
   }
 
   get showCaret() {
-    return this.args.showCaret ?? true;
+    return this.site.desktopView && (this.args.showCaret ?? true);
   }
 
   get title() {
@@ -48,7 +51,7 @@ class NotificationsTrackingTrigger extends Component {
     {{/if}}
 
     {{#if this.showCaret}}
-      {{icon "angle-down"}}
+      {{icon "angle-down" class="notifications-tracking-btn__caret"}}
     {{/if}}
   </template>
 }

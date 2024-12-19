@@ -97,6 +97,7 @@ export default class DMenu extends Component {
       @translatedLabel={{@label}}
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
+      @isLoading={{@isLoading}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       {{on "keydown" this.forwardTabToContent}}
       ...attributes
@@ -119,7 +120,7 @@ export default class DMenu extends Component {
             @class
           }}
           @inline={{(isTesting)}}
-          data-identifier={{@instance.options.identifier}}
+          data-identifier={{this.options.identifier}}
           data-content
         >
           <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>

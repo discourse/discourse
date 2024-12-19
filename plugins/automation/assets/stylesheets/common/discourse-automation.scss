@@ -13,6 +13,46 @@
     }
   }
 
+  .d-admin-table.automations {
+    .d-admin-row__content {
+      @include breakpoint("tablet") {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, auto);
+      }
+    }
+
+    .d-admin-row__overview {
+      @include breakpoint("tablet") {
+        order: 1;
+      }
+    }
+
+    .d-admin-row__detail.automations__status {
+      @include breakpoint("tablet") {
+        order: 2; // move below the name to avoid empty spacing
+      }
+    }
+
+    .d-admin-row__detail.automations__script {
+      @include breakpoint("tablet") {
+        order: 3;
+      }
+    }
+
+    .d-admin-row__detail.automations__version {
+      @include breakpoint("tablet") {
+        order: 4;
+      }
+    }
+
+    .d-admin-row__detail.automations__updated-by {
+      @include breakpoint("tablet") {
+        order: 5;
+      }
+    }
+  }
+
   .admin-section-landing__header {
     display: flex;
     align-items: center;
