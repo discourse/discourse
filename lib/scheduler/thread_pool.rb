@@ -4,6 +4,14 @@ module Scheduler
   # ThreadPool manages a pool of worker threads that process tasks from a queue.
   # It maintains a minimum number of threads and can scale up to a maximum number
   # when there's more work to be done.
+  #
+  # Usage:
+  #  pool = ThreadPool.new(min_threads: 0, max_threads: 4, idle_time: 0.1)
+  #  pool.post { do_something }
+  #
+  #  (optional)
+  #  pool.shutdown
+
   class ThreadPool
     class ShutdownError < StandardError
     end
