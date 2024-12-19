@@ -439,37 +439,96 @@ $mobile-breakpoint: 700px;
   }
 }
 
-.ip-lookup {
-  position: relative;
-  display: inline-block;
+.ip-lookup-content {
   .location-box {
-    position: absolute;
-    width: 460px;
-    right: 0;
-    z-index: z("dropdown");
-    box-shadow: var(--shadow-card);
-    margin-top: -2px;
-    background-color: var(--secondary);
-    padding: 12px 12px 5px;
+    padding: 1em;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    .title {
+      font-weight: bold;
+      font-size: var(--font-up-1);
+      display: flex;
+      align-items: center;
+    }
+
+    &__controls {
+      display: flex;
+      margin-left: auto;
+
+      align-items: center;
+    }
+
     .powered-by {
       font-size: var(--font-down-1);
-      position: absolute;
-      bottom: -10px;
-      left: 10px;
+      color: var(--primary-high);
     }
-    .other-accounts {
-      margin: 5px 0 0;
-      max-height: 200px;
-      overflow: auto;
-      width: 455px;
-      ul {
-        margin: 0;
+
+    .loading-container {
+      max-width: 100%;
+    }
+
+    dl {
+      margin-bottom: 0;
+    }
+
+    dt {
+      font-weight: bold;
+      &.other-accounts {
+        display: flex;
+        align-items: center;
+        font-weight: normal;
+        font-size: var(--font-down-1);
+
+        .btn {
+          margin-left: auto;
+        }
+        .count {
+          font-weight: bold;
+          margin-left: 0.25em;
+          color: var(--danger);
+        }
       }
-      li {
-        list-style: none;
-      }
-      tr td:first-of-type {
-        width: 130px;
+    }
+
+    dd {
+      margin: 0.25em 0 1em;
+      &.other-accounts {
+        margin: 1em 0 0 0;
+        max-height: 13em;
+        overflow: auto;
+        font-size: var(--font-down-1);
+        padding-right: 0.25em;
+
+        thead {
+          position: sticky;
+          top: 0;
+          line-height: 1.2;
+          background: var(--secondary);
+          th {
+            padding: 0.25em;
+          }
+        }
+
+        ul {
+          margin: 0;
+        }
+        li {
+          list-style: none;
+        }
+
+        td {
+          padding: 0.25em 0.25em 0.25em 0;
+        }
+
+        td.user {
+          white-space: nowrap;
+
+          img {
+            width: 1.25em;
+            height: 1.25em;
+          }
+        }
       }
     }
   }
