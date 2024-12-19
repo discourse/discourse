@@ -19,7 +19,7 @@ export default class AdminEmbeddingHostForm extends Component {
   @service store;
   @controller adminEmbedding;
 
-  get isUpdate() {
+  get isEditing() {
     return this.args.host;
   }
 
