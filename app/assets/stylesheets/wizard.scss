@@ -1,3 +1,6 @@
+$blob-bg: absolute-image-url("/branded-background.svg");
+$blob-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
+
 @keyframes bump {
   0% {
     transform: scale(1);
@@ -13,7 +16,12 @@
 }
 
 body.wizard {
-  background-color: var(--primary-50);
+  background-color: var(--secondary);
+  background-image: $blob-bg;
+  background-size: 110vw 110vh; // crops better than cover at various viewport sizes
+  background-repeat: no-repeat;
+  background-position: bottom;
+
   color: var(--primary-very-high);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
@@ -22,12 +30,18 @@ body.wizard {
     max-width: 100%;
   }
 
+  @include breakpoint("mobile-extra-large") {
+    background: $blob-mobile-bg;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+
   #wizard-main {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 1.5em;
-    background-image: absolute-image-url("/bubbles-bg.png");
     height: 100%;
   }
 
@@ -137,6 +151,12 @@ body.wizard {
     }
   }
 
+  &__step.styling .wizard-container__field.styling-preview-field {
+    label {
+      display: none;
+    }
+  }
+
   &__field {
     margin-bottom: 1em;
   }
@@ -165,12 +185,18 @@ body.wizard {
     }
   }
 
+  &__field.dropdown-field.dropdown-homepage-style {
+    .wizard-container__dropdown {
+      height: auto;
+    }
+  }
+
   &__step-form {
     display: flex;
   }
 
   &__sidebar {
-    width: 170px;
+    width: 230px;
     box-sizing: border-box;
     margin-right: 1em;
 
@@ -307,7 +333,6 @@ body.wizard {
 
   &__step-text {
     display: inline;
-    margin-right: 0.25em;
     @media only screen and (max-width: 568px) {
       display: none;
     }
@@ -539,6 +564,7 @@ body.wizard {
 
   &__dropdown {
     width: 100%;
+    height: 38px;
   }
 
   &__dropdown .select-kit-header:not(.btn) {
@@ -551,6 +577,19 @@ body.wizard {
   &__dropdown.color-palettes .select-kit-row.color-palettes-row .palettes {
     flex: 1 1 70%;
     overflow: hidden;
+  }
+
+  &__dropdown.homepage-style-selector {
+    .select-kit-row {
+      .name {
+        font-weight: bold;
+      }
+
+      .desc {
+        display: block;
+        margin-top: 0.1em;
+      }
+    }
   }
 
   &__field.checkbox-field .wizard-container__label {

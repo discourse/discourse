@@ -372,6 +372,10 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def self.find_default
+    find_by(id: SiteSetting.default_theme_id)
+  end
+
   def self.lookup_field(theme_id, target, field, skip_transformation: false, csp_nonce: nil)
     return "" if theme_id.blank?
 

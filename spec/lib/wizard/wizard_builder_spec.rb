@@ -92,12 +92,12 @@ RSpec.describe Wizard::Builder do
 
   describe "styling" do
     let(:styling_step) { wizard.steps.find { |s| s.id == "styling" } }
-    let(:font_field) { styling_step.fields[1] }
+    let(:font_field) { styling_step.fields.find { |f| f.id == "body_font" } }
     fab!(:theme)
     let(:colors_field) { styling_step.fields.first }
 
-    it "has the full list of available fonts" do
-      expect(font_field.choices.size).to eq(DiscourseFonts.fonts.size)
+    it "has the full list of available fonts in alphabetical order" do
+      expect(font_field.choices.map(&:label)).to eq(DiscourseFonts.fonts.map { |f| f[:name] }.sort)
     end
 
     context "with colors" do
