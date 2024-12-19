@@ -1,6 +1,3 @@
-import getURL from "discourse-common/lib/get-url";
-
-export const LOGS_SCREENED_EMAILS_LINK_KEY = "admin_logs_screened_emails";
 export const ADMIN_NAV_MAP = [
   {
     name: "account",
@@ -97,7 +94,8 @@ export const ADMIN_NAV_MAP = [
       {
         name: "admin_moderation_flags",
         route: "adminConfig.flags",
-        label: "admin.community.sidebar_link.moderation_flags",
+        label: "admin.community.sidebar_link.moderation_flags.title",
+        keywords: "admin.community.sidebar_link.moderation_flags.keywords",
         icon: "flag",
       },
     ],
@@ -171,58 +169,17 @@ export const ADMIN_NAV_MAP = [
     label: "admin.email_settings.title",
     links: [
       {
+        name: "admin_server_setup",
+        route: "adminEmail.index",
+        label: "admin.email_settings.sidebar_link.server_setup.title",
+        icon: "gear",
+        keywords: "admin.email_settings.sidebar_link.server_setup.keywords",
+      },
+      {
         name: "admin_appearance",
         route: "adminCustomizeEmailStyle",
         label: "admin.email_settings.sidebar_link.appearance",
         icon: "envelope",
-      },
-      {
-        name: "admin_preview_summary",
-        route: "adminEmail.previewDigest",
-        label: "admin.email_settings.sidebar_link.preview_summary",
-        icon: "notification.private_message",
-      },
-      {
-        name: "admin_server_setup",
-        route: "adminEmail.index",
-        label: "admin.email_settings.sidebar_link.server_setup",
-        icon: "gear",
-      },
-    ],
-  },
-  {
-    name: "email_logs",
-    label: "admin.email_logs.title",
-    links: [
-      {
-        name: "admin_email_sent",
-        route: "adminEmail.sent",
-        label: "admin.email_logs.sidebar_link.sent",
-        icon: "arrow-right",
-      },
-      {
-        name: "admin_email_skipped",
-        route: "adminEmail.skipped",
-        label: "admin.email_logs.sidebar_link.skipped",
-        icon: "angles-right",
-      },
-      {
-        name: "admin_email_bounced",
-        route: "adminEmail.bounced",
-        label: "admin.email_logs.sidebar_link.bounced",
-        icon: "xmark",
-      },
-      {
-        name: "admin_email_received",
-        route: "adminEmail.received",
-        label: "admin.email_logs.sidebar_link.received",
-        icon: "inbox",
-      },
-      {
-        name: "admin_email_rejected",
-        route: "adminEmail.rejected",
-        label: "admin.email_logs.sidebar_link.rejected",
-        icon: "ban",
       },
     ],
   },
@@ -230,40 +187,6 @@ export const ADMIN_NAV_MAP = [
     name: "security",
     label: "admin.security.title",
     links: [
-      {
-        name: "admin_logs_error_logs",
-        href: getURL("/logs"),
-        label: "admin.security.sidebar_link.error_logs",
-        icon: "up-right-from-square",
-      },
-      {
-        name: LOGS_SCREENED_EMAILS_LINK_KEY,
-        route: "adminLogs.screenedEmails",
-        label: "admin.security.sidebar_link.screened_emails",
-        icon: "envelope",
-        moderator: true,
-      },
-      {
-        name: "admin_logs_screened_ip_addresses",
-        route: "adminLogs.screenedIpAddresses",
-        label: "admin.security.sidebar_link.screened_ips",
-        icon: "globe",
-        moderator: true,
-      },
-      {
-        name: "admin_logs_screened_urls",
-        route: "adminLogs.screenedUrls",
-        label: "admin.security.sidebar_link.screened_urls",
-        icon: "globe",
-        moderator: true,
-      },
-      {
-        name: "admin_logs_search_logs",
-        route: "adminSearchLogs",
-        label: "admin.security.sidebar_link.search_logs",
-        icon: "magnifying-glass",
-        moderator: true,
-      },
       {
         name: "admin_security",
         route: "adminSiteSettingsCategory",
@@ -283,7 +206,8 @@ export const ADMIN_NAV_MAP = [
       {
         name: "admin_logs_staff_action_logs",
         route: "adminLogs.staffActionLogs",
-        label: "admin.security.sidebar_link.staff_action_logs",
+        label: "admin.security.sidebar_link.staff_action_logs.title",
+        keywords: "admin.security.sidebar_link.staff_action_logs.keywords",
         icon: "user-shield",
         moderator: true,
       },
@@ -309,7 +233,8 @@ export const ADMIN_NAV_MAP = [
         name: "admin_api_keys",
         route: "adminApiKeys",
         icon: "key",
-        label: "admin.advanced.sidebar_link.api_keys",
+        label: "admin.advanced.sidebar_link.api_keys.title",
+        keywords: "admin.advanced.sidebar_link.api_keys.keywords",
       },
       {
         name: "admin_developer",
@@ -340,12 +265,6 @@ export const ADMIN_NAV_MAP = [
         query: { filter: "" },
         label: "admin.advanced.sidebar_link.user_api",
         icon: "shuffle",
-      },
-      {
-        name: "admin_api_web_hooks",
-        route: "adminWebHooks",
-        label: "admin.advanced.sidebar_link.web_hooks",
-        icon: "globe",
       },
       {
         name: "admin_onebox",
