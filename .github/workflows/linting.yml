@@ -88,3 +88,9 @@ jobs:
       - name: Glint
         if: ${{ !cancelled() }}
         run: pnpm glint -p jsconfig.json
+
+      - name: Check for changes
+        if: ${{ !cancelled() }}
+        run: |
+          git diff --exit-code
+          git diff --cached --exit-code
