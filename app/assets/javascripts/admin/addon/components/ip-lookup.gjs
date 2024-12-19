@@ -69,32 +69,33 @@ export default class IpLookup extends Component {
 
   @action
   async copy() {
-    let text = `IP: ${this.args.ip}\n`;
     const { location } = this;
+    let text = `IP: ${this.args.ip}`;
 
     if (location) {
       if (location.hostname) {
-        text += `${i18n("ip_lookup.hostname")}: ${location.hostname}\n`;
+        text += "\n" + `${i18n("ip_lookup.hostname")}: ${location.hostname}`;
       }
 
-      text += i18n("ip_lookup.location");
+      text += "\n" + i18n("ip_lookup.location");
       text += location.location
-        ? `: ${location.location}\n`
-        : `: ${i18n("ip_lookup.location_not_found")}\n`;
+        ? `: ${location.location}`
+        : `: ${i18n("ip_lookup.location_not_found")}`;
 
       if (location.organization) {
-        text += `${i18n("ip_lookup.organisation")}: ${location.organization}\n`;
+        text +=
+          "\n" + `${i18n("ip_lookup.organisation")}: ${location.organization}`;
       }
     }
 
     try {
       await clipboardCopy(text.trim());
       this.toasts.success({
-      duration: 3000,
-      data: {
-        message: i18n("ip_lookup.copied"),
-      },
-    });
+        duration: 3000,
+        data: {
+          message: i18n("ip_lookup.copied"),
+        },
+      });
     } catch (err) {
       popupAjaxError(err);
     }
@@ -146,98 +147,114 @@ export default class IpLookup extends Component {
       @onRegisterApi={{this.onRegisterApi}}
     >
       <:content>
-      <div class="location-box">
-        <div class="location-box__content">
-          <div class="title">
-            {{i18n "ip_lookup.title"}}
-            <div class="location-box__controls">
-              <DButton @action={{this.copy}} @icon="copy" class="btn-transparent" />
-              {{#if this.site.mobileView}}
-              <DButton @action={{this.close}}  @icon="xmark" class="btn-transparent" />
-              {{/if}}
-
-            </div>
-        </div>
-          <dl>
-            {{#if this.location}}
-              {{#if this.location.hostname}}
-                <dt>{{i18n "ip_lookup.hostname"}}</dt>
-                <dd>{{this.location.hostname}}</dd>
-              {{/if}}
-
-              <dt>{{i18n "ip_lookup.location"}}</dt>
-              <dd>
-                {{#if this.location.location}}
-                  <a
-                    href="https://maps.google.com/maps?q={{this.location.latitude}},{{this.location.longitude}}"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {{this.location.location}}
-                  </a>
-                {{else}}
-                  {{i18n "ip_lookup.location_not_found"}}
-                {{/if}}
-              </dd>
-
-              {{#if this.location.organization}}
-                <dt>{{i18n "ip_lookup.organisation"}}</dt>
-                <dd>{{this.location.organization}}</dd>
-              {{/if}}
-            {{else}}
-              {{loadingSpinner size="small"}}
-            {{/if}}
-
-            <dt class="other-accounts">
-              {{i18n "ip_lookup.other_accounts"}}
-              <span class="count">{{this.totalOthersWithSameIP}}</span>
-              {{#if this.otherAccounts}}
+        <div class="location-box">
+          <div class="location-box__content">
+            <div class="title">
+              {{i18n "ip_lookup.title"}}
+              <div class="location-box__controls">
                 <DButton
-                  @action={{this.deleteOtherAccounts}}
-                  @icon="triangle-exclamation"
-                  @translatedLabel={{i18n "ip_lookup.delete_other_accounts" count=this.otherAccountsToDelete}}
-                  class="btn-danger pull-right"
+                  @action={{this.copy}}
+                  @icon="copy"
+                  class="btn-transparent"
                 />
-              {{/if}}
-            </dt>
+                {{#if this.site.mobileView}}
+                  <DButton
+                    @action={{this.close}}
+                    @icon="xmark"
+                    class="btn-transparent"
+                  />
+                {{/if}}
 
-            <ConditionalLoadingSpinner @size="small" @condition={{this.otherAccountsLoading}}>
-              {{#if this.otherAccounts}}
-                <dd class="other-accounts">
-                  <table class="table table-condensed table-hover">
-                    <thead>
-                      <tr>
-                        <th>{{i18n "ip_lookup.username"}}</th>
-                        <th>{{i18n "ip_lookup.trust_level"}}</th>
-                        <th>{{i18n "ip_lookup.read_time"}}</th>
-                        <th>{{i18n "ip_lookup.topics_entered"}}</th>
-                        <th>{{i18n "ip_lookup.post_count"}}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each this.otherAccounts as |a|}}
-                        <tr>
-                          <td class="user">
-                            <LinkTo @route="adminUser" @model={{a}}>
-                              {{avatar a imageSize="tiny"}}
-                              <span>{{a.username}}</span>
-                            </LinkTo>
-                          </td>
-                          <td>{{a.trustLevel.id}}</td>
-                          <td>{{a.time_read}}</td>
-                          <td>{{a.topics_entered}}</td>
-                          <td>{{a.post_count}}</td>
-                        </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
+              </div>
+            </div>
+            <dl>
+              {{#if this.location}}
+                {{#if this.location.hostname}}
+                  <dt>{{i18n "ip_lookup.hostname"}}</dt>
+                  <dd>{{this.location.hostname}}</dd>
+                {{/if}}
+
+                <dt>{{i18n "ip_lookup.location"}}</dt>
+                <dd>
+                  {{#if this.location.location}}
+                    <a
+                      href="https://maps.google.com/maps?q={{this.location.latitude}},{{this.location.longitude}}"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {{this.location.location}}
+                    </a>
+                  {{else}}
+                    {{i18n "ip_lookup.location_not_found"}}
+                  {{/if}}
                 </dd>
+
+                {{#if this.location.organization}}
+                  <dt>{{i18n "ip_lookup.organisation"}}</dt>
+                  <dd>{{this.location.organization}}</dd>
+                {{/if}}
+              {{else}}
+                {{loadingSpinner size="small"}}
               {{/if}}
-            </ConditionalLoadingSpinner>
-          </dl>
-          <div class="powered-by">{{htmlSafe (i18n "ip_lookup.powered_by")}}</div>
+
+              <dt class="other-accounts">
+                {{i18n "ip_lookup.other_accounts"}}
+                <span class="count">{{this.totalOthersWithSameIP}}</span>
+                {{#if this.otherAccounts}}
+                  <DButton
+                    @action={{this.deleteOtherAccounts}}
+                    @icon="triangle-exclamation"
+                    @translatedLabel={{i18n
+                      "ip_lookup.delete_other_accounts"
+                      count=this.otherAccountsToDelete
+                    }}
+                    class="btn-danger pull-right"
+                  />
+                {{/if}}
+              </dt>
+
+              <ConditionalLoadingSpinner
+                @size="small"
+                @condition={{this.otherAccountsLoading}}
+              >
+                {{#if this.otherAccounts}}
+                  <dd class="other-accounts">
+                    <table class="table table-condensed table-hover">
+                      <thead>
+                        <tr>
+                          <th>{{i18n "ip_lookup.username"}}</th>
+                          <th>{{i18n "ip_lookup.trust_level"}}</th>
+                          <th>{{i18n "ip_lookup.read_time"}}</th>
+                          <th>{{i18n "ip_lookup.topics_entered"}}</th>
+                          <th>{{i18n "ip_lookup.post_count"}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {{#each this.otherAccounts as |a|}}
+                          <tr>
+                            <td class="user">
+                              <LinkTo @route="adminUser" @model={{a}}>
+                                {{avatar a imageSize="tiny"}}
+                                <span>{{a.username}}</span>
+                              </LinkTo>
+                            </td>
+                            <td>{{a.trustLevel.id}}</td>
+                            <td>{{a.time_read}}</td>
+                            <td>{{a.topics_entered}}</td>
+                            <td>{{a.post_count}}</td>
+                          </tr>
+                        {{/each}}
+                      </tbody>
+                    </table>
+                  </dd>
+                {{/if}}
+              </ConditionalLoadingSpinner>
+            </dl>
+            <div class="powered-by">{{htmlSafe
+                (i18n "ip_lookup.powered_by")
+              }}</div>
+          </div>
         </div>
-      </div>
       </:content>
     </DMenu>
   </template>
