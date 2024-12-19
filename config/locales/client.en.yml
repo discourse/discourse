@@ -7350,7 +7350,7 @@ en:
         crawler_settings_saved: "Crawler settings saved."
         back: "Back to Embedding"
         more_options: "More options"
-        configuration_snippet: "Configuration Snippet"
+        configuration_snippet: "Configuration snippet"
         host_form:
           add_header: "Add host"
           edit_header: "Edit host"
