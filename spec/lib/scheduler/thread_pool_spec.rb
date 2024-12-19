@@ -9,7 +9,10 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
     described_class.new(min_threads: min_threads, max_threads: max_threads, idle_time: idle_time)
   end
 
-  after { pool.shutdown(timeout: 1) }
+  after do
+    pool.shutdown
+    pool.wait_for_termination(timeout: 1)
+  end
 
   describe "initialization" do
     it "creates the minimum number of threads and validates parameters" do
@@ -70,7 +73,12 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
         end
       end
 
+      # we spin up threads in the thread loop, so it can take
+      # a bit of time to react to work pressure
+      wait_for { pool.stats[:thread_count] == max_threads }
+
       expect(pool.stats[:thread_count]).to eq(max_threads)
+
       (max_threads + 1).times { blocker_queue << :continue }
 
       results = Array.new(max_threads + 1) { completion_queue.pop }
@@ -119,7 +127,8 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
         results2 = Array.new(3) { completion_queue2.pop }
       end
 
-      pool.shutdown(timeout: 1)
+      pool.shutdown
+      pool.wait_for_termination(timeout: 1)
 
       expect(results1.size).to eq(3)
       expect(results1.sort).to eq([0, 1, 2])
@@ -162,6 +171,24 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
 
       results = Array.new(2) { completion_queue.pop }
       expect(results).to eq([1, 2])
+    end
+  end
+
+  describe "when thread pool has zero min threads" do
+    it "can quickly process tasks" do
+      # setting idle time to 1000 to ensure that there are maximal delays waiting
+      # for jobs
+      pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 5, idle_time: 1000)
+
+      done = Queue.new
+      pool.post { done << :done }
+
+      # should happen in less than 1 second
+      Timeout.timeout(1) { expect(done.pop).to eq(:done) }
+
+      pool.shutdown
+      pool.wait_for_termination
+      expect(pool.stats[:thread_count]).to eq(0)
     end
   end
 
