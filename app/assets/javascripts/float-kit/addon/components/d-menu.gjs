@@ -34,10 +34,13 @@ export default class DMenu extends Component {
     };
   });
 
-  @action
-  registerFloatBody(element) {
+  registerFloatBody = modifier((element) => {
     this.body = element;
-  }
+
+    return () => {
+      this.body = null;
+    };
+  });
 
   @action
   forwardTabToContent(event) {
@@ -149,7 +152,7 @@ export default class DMenu extends Component {
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
-          {{didInsert this.registerFloatBody}}
+          {{this.registerFloatBody}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

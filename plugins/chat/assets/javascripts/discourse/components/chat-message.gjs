@@ -13,6 +13,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { eq, lt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
@@ -57,14 +58,13 @@ export default class ChatMessage extends Component {
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
   @service chatChannelPane;
   @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
   @service toasts;
   @service modal;
+  @service interactedChatMessage;
 
   @tracked isActive = false;
 
@@ -305,6 +305,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
+    if (this.interactedChatMessage.emojiPickerOpen) {
+      return;
+    }
+
     if (!this.secondaryActionsIsExpanded) {
       this._onMouseEnterMessageDebouncedHandler = discourseDebounce(
         this,
@@ -324,9 +328,15 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (!this.secondaryActionsIsExpanded) {
-      this._setActiveMessage();
+    if (this.secondaryActionsIsExpanded) {
+      return;
     }
+
+    if (this.interactedChatMessage.emojiPickerOpen) {
+      return;
+    }
+
+    this._setActiveMessage();
   }
 
   @action
@@ -344,9 +354,16 @@ export default class ChatMessage extends Component {
     ) {
       return;
     }
-    if (!this.secondaryActionsIsExpanded) {
-      this.chat.activeMessage = null;
+
+    if (this.interactedChatMessage.emojiPickerOpen) {
+      return;
     }
+
+    if (this.secondaryActionsIsExpanded) {
+      return;
+    }
+
+    this.chat.activeMessage = null;
   }
 
   @bind
@@ -368,6 +385,8 @@ export default class ChatMessage extends Component {
     if (!this.args.message.expanded) {
       return;
     }
+
+    this.messageInteractor.closeEmojiPicker();
 
     this.chat.activeMessage = {
       model: this.args.message,
@@ -651,12 +670,10 @@ export default class ChatMessage extends Component {
                       {{/each}}
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
-                        <DButton
-                          @action={{this.messageInteractor.openEmojiPicker}}
-                          @icon="discourse-emojis"
-                          @title="chat.react"
-                          @forwardEvent={{true}}
-                          class="chat-message-react-btn"
+                        <EmojiPicker
+                          @didSelectEmoji={{this.messageInteractor.selectReaction}}
+                          @btnClass="btn-flat react-btn"
+                          class="chat-message-reaction"
                         />
                       {{/if}}
                     </div>
