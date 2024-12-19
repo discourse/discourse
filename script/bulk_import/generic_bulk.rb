@@ -2972,16 +2972,17 @@ class BulkImport::Generic < BulkImport::Base
 
       user_id = user_id_from_imported_id(row["user_id"])
       post_id = post_id_from_imported_id(row["post_id"])
+      reaction_id = discourse_reaction_id_from_original_id(row["reaction_id"])
 
-      next if post_id.blank? || user_id.blank?
-      next unless existing_reaction_users.add?([row["reaction_id"], user_id, post_id])
+      next if post_id.blank? || user_id.blank? || reaction_id.blank?
+      next unless existing_reaction_users.add?([reaction_id, user_id, post_id])
 
       {
-        reaction_id: row["reaction_id"],
-        user_id: user_id,
+        reaction_id:,
+        user_id:,
         created_at: to_datetime(row["created_at"]),
         updated_at: to_datetime(row["updated_at"]),
-        post_id: post_id,
+        post_id:,
       }
     end
 
@@ -3014,7 +3015,7 @@ class BulkImport::Generic < BulkImport::Base
       next unless existing_reactions.add?([post_id, row["reaction_value"]])
 
       {
-        id: row["id"],
+        original_id: row["id"],
         post_id: post_id,
         reaction_type: reaction_type_id,
         reaction_value: row["reaction_value"],

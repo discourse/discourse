@@ -120,6 +120,7 @@ class BulkImport::Base
       chat_channel: 6,
       chat_thread: 7,
       chat_message: 8,
+      discourse_reactions_reaction: 9,
     )
 
   def create_migration_mappings_table
@@ -309,6 +310,10 @@ class BulkImport::Base
 
     @chat_message_mapping = load_index(MAPPING_TYPES[:chat_message])
     @last_chat_message_id = last_id(Chat::Message)
+
+    puts "Loading reaction indexes..."
+    @discourse_reaction_mapping = load_index(MAPPING_TYPES[:discourse_reactions_reaction])
+    @last_discourse_reaction_id = last_id(DiscourseReactions::Reaction)
   end
 
   def use_bbcode_to_md?
@@ -388,6 +393,11 @@ class BulkImport::Base
     if @last_chat_message_id > 0
       @raw_connection.exec(
         "SELECT setval('#{Chat::Message.sequence_name}', #{@last_chat_message_id})",
+      )
+    end
+    if @last_discourse_reaction_id > 0
+      @raw_connection.exec(
+        "SELECT setval('#{DiscourseReactions::Reaction.sequence_name}', #{@last_discourse_reaction_id})",
       )
     end
   end
@@ -473,6 +483,10 @@ class BulkImport::Base
 
   def chat_message_id_from_original_id(id)
     @chat_message_mapping[id.to_s]&.to_i
+  end
+
+  def discourse_reaction_id_from_original_id(id)
+    @discourse_reaction_mapping[id.to_s]&.to_i
   end
 
   GROUP_COLUMNS = %i[
@@ -1174,7 +1188,7 @@ class BulkImport::Base
   end
 
   def create_reactions(rows, &block)
-    create_records(rows, "discourse_reactions_reaction", REACTION_COLUMNS, &block)
+    create_records_with_mapping(rows, "discourse_reactions_reaction", REACTION_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1989,9 +2003,14 @@ class BulkImport::Base
   end
 
   def process_discourse_reactions_reaction(reaction)
+    reaction[:id] = @last_discourse_reaction_id += 1
     reaction[:created_at] ||= NOW
     reaction[:updated_at] ||= NOW
     reaction[:reaction_users_count] ||= 0
+
+    @imported_records[reaction[:original_id].to_s] = reaction[:id]
+    @discourse_reaction_mapping[reaction[:original_id].to_s] = reaction[:id]
+
     reaction
   end
 
