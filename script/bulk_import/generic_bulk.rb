@@ -126,8 +126,9 @@ class BulkImport::Generic < BulkImport::Base
     update_chat_threads
     update_chat_membership_metadata
 
-    import_reaction_users
     import_reactions
+    import_reaction_users
+    import_reaction_shadow_likes
 
     import_upload_references
   end
@@ -2961,7 +2962,7 @@ class BulkImport::Generic < BulkImport::Base
     reaction_users = query(<<~SQL)
       SELECT *
       FROM discourse_reactions_reaction_users
-      ORDER BY post_id
+      ORDER BY post_id, user_id
     SQL
 
     existing_reaction_users =
@@ -3000,7 +3001,7 @@ class BulkImport::Generic < BulkImport::Base
     reactions = query(<<~SQL)
       SELECT *
       FROM discourse_reactions_reactions
-      ORDER BY post_id
+      ORDER BY post_id, reaction_value
     SQL
 
     reaction_type_id = DiscourseReactions::Reaction.reaction_types["emoji"]
@@ -3026,6 +3027,50 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     reactions.close
+  end
+
+  def import_reaction_shadow_likes
+    unless defined?(::DiscourseReactions)
+      puts "",
+           "Skipping reaction shadow likes import, because the Discourse Reactions plugin is not installed."
+      return
+    end
+
+    puts "", "Importing reaction shadow likes..."
+
+    reactions = query(<<~SQL)
+      SELECT u.post_id, u.user_id, r.reaction_value, u.created_at
+        FROM discourse_reactions_reactions r
+             JOIN discourse_reactions_reaction_users u ON r.id = u.reaction_id
+       ORDER BY u.post_id, u.user_id
+    SQL
+
+    post_action_type_id = PostActionType.types[:like]
+    existing_likes =
+      PostAction.where(post_action_type_id: post_action_type_id).pluck(:post_id, :user_id).to_set
+
+    create_post_actions(reactions) do |row|
+      next if reaction_excluded_from_like?(row["reaction_value"])
+
+      post_id = post_id_from_imported_id(row["post_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next unless post_id && user_id
+      next unless existing_likes.add?([post_id, user_id])
+
+      {
+        post_id: post_id,
+        user_id: user_id,
+        post_action_type_id: post_action_type_id,
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    reactions.close
+  end
+
+  def reaction_excluded_from_like?(reaction_value)
+    DiscourseReactions::Reaction.reactions_excluded_from_like.include?(reaction_value)
   end
 
   def calculate_external_url(row)
