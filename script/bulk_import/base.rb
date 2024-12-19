@@ -925,6 +925,18 @@ class BulkImport::Base
 
   CHAT_MENTION_COLUMNS = %i[chat_message_id target_id type created_at updated_at]
 
+  REACTION_USER_COLUMNS = %i[reaction_id user_id created_at updated_at post_id]
+
+  REACTION_COLUMNS = %i[
+    id
+    post_id
+    reaction_type
+    reaction_value
+    reaction_users_count
+    created_at
+    updated_at
+  ]
+
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
   end
@@ -1155,6 +1167,14 @@ class BulkImport::Base
 
   def create_chat_mentions(rows, &block)
     create_records(rows, "chat_mention", CHAT_MENTION_COLUMNS, &block)
+  end
+
+  def create_reaction_users(rows, &block)
+    create_records(rows, "discourse_reactions_reaction_user", REACTION_USER_COLUMNS, &block)
+  end
+
+  def create_reactions(rows, &block)
+    create_records(rows, "discourse_reactions_reaction", REACTION_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1960,6 +1980,19 @@ class BulkImport::Base
     mention[:updated_at] ||= NOW
 
     mention
+  end
+
+  def process_discourse_reactions_reaction_user(reaction_user)
+    reaction_user[:created_at] ||= NOW
+    reaction_user[:updated_at] ||= NOW
+    reaction_user
+  end
+
+  def process_discourse_reactions_reaction(reaction)
+    reaction[:created_at] ||= NOW
+    reaction[:updated_at] ||= NOW
+    reaction[:reaction_users_count] ||= 0
+    reaction
   end
 
   def create_records(all_rows, name, columns, &block)
