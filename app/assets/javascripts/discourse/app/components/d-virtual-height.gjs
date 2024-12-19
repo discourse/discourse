@@ -84,6 +84,8 @@ export default class DVirtualHeight extends Component {
       "--composer-vh",
       `${height / 100}px`
     );
+
+    document.documentElement.style.setProperty("--vvh", `${height}px`);
   }
 
   @bind
