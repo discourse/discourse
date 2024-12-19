@@ -6,9 +6,9 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://soundcloud\.com})
-      requires_iframe_origins "https://w.soundcloud.com"
+      matches_domain("soundcloud.com", "www.soundcloud.com")
       always_https
+      requires_iframe_origins "https://w.soundcloud.com"
 
       def to_html
         oembed = get_oembed

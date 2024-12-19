@@ -10,6 +10,7 @@ module Onebox
       REGEX = %r{^https?://news\.ycombinator\.com/item\?id=(?<item_id>\d+)}
 
       matches_regexp(REGEX)
+      always_https
 
       # This is their official API: https://blog.ycombinator.com/hacker-news-api/
       def url

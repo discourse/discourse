@@ -23,4 +23,16 @@ RSpec.describe Onebox::Engine::RedditMediaOnebox do
   it "includes description" do
     expect(html).to include("Literally nothing black edition")
   end
+
+  describe ".===" do
+    it "matches valid Reddit URL" do
+      valid_url = URI(link)
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "does not match invalid Reddit URL" do
+      invalid_url = URI("https://www.reddit.com.somedomain.com/r/colors/comments/b4d5xm/")
+      expect(described_class === invalid_url).to eq(false)
+    end
+  end
 end
