@@ -1,3 +1,4 @@
+import { triggerKeyEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { compile } from "handlebars";
 import $ from "jquery";
@@ -168,5 +169,35 @@ module("Unit | Utility | autocomplete", function (hooks) {
     document.execCommand("undo");
 
     assert.strictEqual(element.value, "@t");
+  });
+
+  test("Autocomplete does not trigger with right-left arrow keys", async function (assert) {
+    const element = textArea();
+
+    $(element).autocomplete({
+      key: ":",
+      template,
+      transformComplete: (e) => e.slice(1),
+      dataSource: () => [":smile:"],
+    });
+
+    await simulateKeys(element, ":smi\t");
+
+    assert.dom(element).hasValue(":smile: ");
+
+    ["ArrowLeft", "ArrowLeft", "ArrowLeft"].forEach((key) =>
+      ["keydown", "keyup"].forEach(async (event) => {
+        await triggerKeyEvent(element, event, key, { code: key });
+      })
+    );
+
+    assert.strictEqual(element.selectionStart, 5);
+
+    assert.dom("#ac-testing").doesNotExist();
+
+    await simulateKey(element, "\b");
+
+    assert.dom(element).hasValue(":smil");
+    assert.dom("#ac-testing").exists();
   });
 });
