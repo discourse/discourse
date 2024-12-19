@@ -4,7 +4,7 @@ module RequestTracker
   module RateLimiters
     class IP < Base
       def rate_limit_key
-        @request.ip
+        "ip/#{@request.ip}"
       end
 
       def rate_limit_key_description

@@ -4,7 +4,7 @@ module RequestTracker
   module RateLimiters
     class User < Base
       def rate_limit_key
-        @cookie[:user_id]
+        "user/#{@cookie[:user_id]}"
       end
 
       def rate_limit_key_description
