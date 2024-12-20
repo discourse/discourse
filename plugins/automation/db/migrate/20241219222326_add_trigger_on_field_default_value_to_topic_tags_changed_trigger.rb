@@ -26,7 +26,21 @@ class AddTriggerOnFieldDefaultValueToTopicTagsChangedTrigger < ActiveRecord::Mig
       )
     end
   end
+
   def down
-    raise ActiveRecord::IrreversibleMigration
+    trigger_on_fields = DB.query <<~SQL
+    SELECT discourse_automation_fields.*
+    FROM discourse_automation_fields
+    JOIN discourse_automation_automations
+    ON discourse_automation_fields.automation_id = discourse_automation_automations.id
+    WHERE discourse_automation_automations.trigger = 'topic_tags_changed'
+    AND discourse_automation_automations.enabled = TRUE
+    AND discourse_automation_fields.name = 'trigger_on'
+    SQL
+
+    trigger_on_fields.each { |field| DB.exec(<<~SQL, field_id: field.id) }
+          DELETE FROM discourse_automation_fields
+          WHERE id = :field_id
+        SQL
   end
 end
