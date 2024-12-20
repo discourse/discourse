@@ -1,6 +1,9 @@
 import { SVG_NAMESPACE } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
+const TIMEOUT = 2500;
+const TRANSITION_BUFFER = 250;
+
 export default function postActionFeedback({
   postId,
   actionClass,
@@ -58,8 +61,7 @@ function createAlert(message, postId, actionBtn) {
 
   actionBtn.appendChild(alertDiv);
 
-  setTimeout(() => alertDiv.classList.add("slide-out"), 1000);
-  setTimeout(() => removeElement(alertDiv), 2500);
+  setTimeout(() => removeElement(alertDiv), TIMEOUT);
 }
 
 function createCheckmark(btn, actionClass, postId) {
@@ -67,13 +69,16 @@ function createCheckmark(btn, actionClass, postId) {
   const checkmark = makeCheckmarkSvg(postId, actionClass, svgId);
   btn.appendChild(checkmark.content);
 
-  setTimeout(() => checkmark.classList.remove("is-visible"), 3000);
-  setTimeout(() => removeElement(document.getElementById(svgId)), 3500);
+  setTimeout(() => removeElement(document.getElementById(svgId)), TIMEOUT);
 }
 
 function styleBtn(btn) {
-  btn.classList.add("is-copied");
-  setTimeout(() => btn.classList.remove("is-copied"), 3200);
+  btn.classList.add("--activated", "--transition");
+  setTimeout(
+    () => btn.classList.remove("--activated"),
+    TIMEOUT - TRANSITION_BUFFER
+  );
+  setTimeout(() => btn.classList.remove("--transition"), TIMEOUT);
 }
 
 function makeCheckmarkSvg(postId, actionClass, svgId) {
