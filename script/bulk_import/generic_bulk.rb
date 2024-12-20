@@ -2988,6 +2988,15 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     reaction_users.close
+
+    puts "", "Updating reaction counts..."
+
+    ActiveRecord::Base.transaction do
+      DiscourseReactions::Reaction.find_each do |reaction|
+        actual_count = DiscourseReactions::ReactionUser.where(reaction_id: reaction.id).count
+        reaction.update_column(:reaction_users_count, actual_count)
+      end
+    end
   end
 
   def import_reactions
