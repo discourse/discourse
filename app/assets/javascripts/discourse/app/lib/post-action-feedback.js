@@ -2,6 +2,7 @@ import { SVG_NAMESPACE } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 const TIMEOUT = 2500;
+const TRANSITION_BUFFER = 250;
 
 export default function postActionFeedback({
   postId,
@@ -73,7 +74,10 @@ function createCheckmark(btn, actionClass, postId) {
 
 function styleBtn(btn) {
   btn.classList.add("--activated", "--transition");
-  setTimeout(() => btn.classList.remove("--activated"), TIMEOUT - 250); // gives transition time to complete
+  setTimeout(
+    () => btn.classList.remove("--activated"),
+    TIMEOUT - TRANSITION_BUFFER
+  );
   setTimeout(() => btn.classList.remove("--transition"), TIMEOUT);
 }
 
