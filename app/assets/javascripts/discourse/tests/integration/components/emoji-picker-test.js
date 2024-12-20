@@ -122,7 +122,7 @@ module("Discourse Chat | Component | emoji-picker-content", function (hooks) {
       );
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
-    await this.pauseTest();
+
     assert
       .dom(document.activeElement)
       .hasAttribute(
