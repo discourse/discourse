@@ -7347,7 +7347,7 @@ en:
         allowed_embed_classnames: "Allowed CSS class names"
         save: "Save"
         posts_and_topics_settings_saved: "Posts and Topics settings saved"
-        crawler_settings_saved: "Crawler settings saved."
+        crawler_settings_saved: "Crawler settings saved"
         back: "Back to Embedding"
         configuration_snippet: "Configuration snippet"
         host_form:
