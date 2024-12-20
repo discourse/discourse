@@ -1,4 +1,18 @@
 {{#if this.embedding.embeddable_hosts}}
+
+  <AdminConfigAreaCard
+    @heading="admin.embedding.configuration_snippet"
+    @collapsable={{true}}
+    @collapsed={{true}}
+  >
+    <:content>
+      <div class="admin-embedding-index__code">
+        {{html-safe (i18n "admin.embedding.sample")}}
+        <HighlightedCode @code={{this.embeddingCode}} @lang="html" />
+      </div>
+    </:content>
+  </AdminConfigAreaCard>
+
   <table class="d-admin-table">
     <thead>
       <th>{{i18n "admin.embedding.host"}}</th>
@@ -7,7 +21,7 @@
       <th>{{i18n "admin.embedding.tags"}}</th>
       {{#if this.embedding.embed_by_username}}
         <th>{{i18n
-            "admin.embedding.post_author"
+            "admin.embedding.post_author_with_default"
             author=this.embedding.embed_by_username
           }}</th>
       {{else}}
@@ -33,13 +47,3 @@
   @name="after-embeddable-hosts-table"
   @outletArgs={{hash embedding=this.embedding}}
 />
-
-{{#if this.showEmbeddingCode}}
-  <div class="admin-embedding-index__code">
-    <details>
-      <summary>{{i18n "admin.embedding.configuration_snippet"}}</summary>
-      {{html-safe (i18n "admin.embedding.sample")}}
-      <HighlightedCode @code={{this.embeddingCode}} @lang="html" />
-    </details>
-  </div>
-{{/if}}
