@@ -15,13 +15,6 @@ export class UppyPluginBase extends BasePlugin {
     }
   }
 
-  _consoleDebug(msg) {
-    if (this.siteSettings?.enable_upload_debug_mode) {
-      // eslint-disable-next-line no-console
-      console.log(`[${this.id}] ${msg}`);
-    }
-  }
-
   _getFile(fileId) {
     return this.uppy.getFile(fileId);
   }
