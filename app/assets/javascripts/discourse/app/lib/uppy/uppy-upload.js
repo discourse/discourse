@@ -465,7 +465,7 @@ export default class UppyUpload {
 
   #xhrUploadUrl() {
     const uploadUrl = this.config.uploadUrl || this.config.uploadRootPath;
-    return getUrl(uploadUrl) + ".json?client_id=" + this.messageBus?.clientId;
+    return getUrl(uploadUrl) + ".json?client_id=" + this.messageBus.clientId;
   }
 
   #bindFileInputChange() {
