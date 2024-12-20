@@ -26,6 +26,11 @@ module PageObjects
           visible: false,
         )
       end
+
+      def has_content?(content)
+        editor_content = all(".ace_line").map(&:text).join("\n")
+        editor_content == content
+      end
     end
   end
 end
