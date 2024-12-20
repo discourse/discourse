@@ -2382,6 +2382,7 @@ rate_limits:
     default: 3
     min: 1
     max: 10
+    hidden: true
 
 developer:
   force_hostname:
