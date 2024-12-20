@@ -1,7 +1,7 @@
 <div class="admin-embedding admin-config-page">
-  <AdminPageHeader
-    @titleLabel="admin.embedding.title"
-    @descriptionLabel="admin.embedding.description"
+  <DPageHeader
+    @titleLabel={{i18n "admin.embedding.title"}}
+    @descriptionLabel={{i18n "admin.embedding.description"}}
     @learnMoreUrl="https://meta.discourse.org/t/embed-discourse-comments-on-another-website-via-javascript/31963"
   >
     <:breadcrumbs>
@@ -40,7 +40,7 @@
         class="admin-embedding-tabs__crawlers"
       />
     </:tabs>
-  </AdminPageHeader>
+  </DPageHeader>
 
   <div class="admin-container admin-config-page__main-area">
     {{outlet}}
