@@ -38,21 +38,11 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get name() {
-    return "my-posts";
+    return "my-drafts";
   }
 
   get route() {
-    if (this._hasDraft) {
-      return "userActivity.drafts";
-    } else {
-      return "userActivity.index";
-    }
-  }
-
-  get currentWhen() {
-    if (this._hasDraft) {
-      return "userActivity.index userActivity.drafts";
-    }
+    return "userActivity.drafts";
   }
 
   get model() {
@@ -60,24 +50,11 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    if (this._hasDraft) {
-      return i18n("sidebar.sections.community.links.my_posts.title_drafts");
-    } else {
-      return i18n("sidebar.sections.community.links.my_posts.title");
-    }
+    return i18n("sidebar.sections.community.links.my_posts.title_drafts");
   }
 
   get text() {
-    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
-      return i18n("sidebar.sections.community.links.my_posts.content_drafts");
-    } else {
-      return i18n(
-        `sidebar.sections.community.links.${this.overridenName
-          .toLowerCase()
-          .replace(" ", "_")}.content`,
-        { defaultValue: this.overridenName }
-      );
-    }
+    return i18n("sidebar.sections.community.links.my_posts.content_drafts");
   }
 
   get badgeText() {
@@ -98,13 +75,6 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     return this.draftCount > 0;
   }
 
-  get defaultPrefixValue() {
-    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
-      return "pencil";
-    }
-    return "user";
-  }
-
   get suffixCSSClass() {
     return "unread";
   }
@@ -120,6 +90,10 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get shouldDisplay() {
-    return this.currentUser;
+    return this.currentUser && this._hasDraft;
+  }
+
+  get defaultPrefixValue() {
+    return "pencil";
   }
 }
