@@ -1,5 +1,5 @@
 .topic-above-footer-buttons-outlet.presence {
-  min-height: 1.8em; // height of the avatars, prevents layout shift
+  min-height: 2.5em; // height of the avatars, prevents layout shift
   margin: var(--below-topic-margin) 0;
 }
 
@@ -7,6 +7,9 @@
   background-color: var(--secondary);
   color: var(--primary-medium);
   display: flex;
+  padding: 0.5em;
+  padding-left: 0;
+  border-radius: var(--d-border-radius);
 
   span.presence-text {
     align-items: center;
@@ -97,7 +100,8 @@ body:has(.topic-navigation.with-topic-progress)
 }
 
 .topic-navigation-bottom-outlet.presence {
-  margin: var(--below-topic-margin) auto 0 0;
+  margin-right: auto;
+  margin-top: 0.2em;
   min-height: 1.8em; // height of the avatars, prevents layout shift
   order: -1;
 }

@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
 import isZoomed from "discourse/lib/zoom-check";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 
-const KEYBOARD_DETECT_THRESHOLD = 150;
+const FF_KEYBOARD_DETECT_THRESHOLD = 150;
 
 export default class DVirtualHeight extends Component {
   @service site;
@@ -76,7 +75,7 @@ export default class DVirtualHeight extends Component {
     }
 
     if (this.previousHeight && Math.abs(this.previousHeight - height) <= 1) {
-      return;
+      return false;
     }
 
     this.previousHeight = height;
@@ -85,6 +84,8 @@ export default class DVirtualHeight extends Component {
       "--composer-vh",
       `${height / 100}px`
     );
+
+    document.documentElement.style.setProperty("--vvh", `${height}px`);
   }
 
   @bind
@@ -94,7 +95,13 @@ export default class DVirtualHeight extends Component {
 
   @bind
   onViewportResize() {
-    this.setVH();
+    const setVHresult = this.setVH();
+
+    if (setVHresult === false) {
+      return;
+    }
+
+    const docEl = document.documentElement;
 
     let keyboardVisible = false;
     if ("virtualKeyboard" in navigator) {
@@ -106,36 +113,23 @@ export default class DVirtualHeight extends Component {
         Math.abs(
           this.windowInnerHeight -
             Math.min(window.innerHeight, window.visualViewport.height)
-        ) > KEYBOARD_DETECT_THRESHOLD
+        ) > FF_KEYBOARD_DETECT_THRESHOLD
       ) {
         keyboardVisible = true;
       }
     } else {
       let viewportWindowDiff =
         this.windowInnerHeight - window.visualViewport.height;
-      const IPAD_HARDWARE_KEYBOARD_TOOLBAR_HEIGHT = 71.5;
-      if (viewportWindowDiff > IPAD_HARDWARE_KEYBOARD_TOOLBAR_HEIGHT) {
+      const MIN_THRESHOLD = 20;
+      if (viewportWindowDiff > MIN_THRESHOLD) {
         keyboardVisible = true;
-      }
-
-      // adds bottom padding when using a hardware keyboard and the accessory bar is visible
-      // accessory bar height is 55px, using 75 allows a small buffer
-      if (this.capabilities.isIpadOS) {
-        document.documentElement.style.setProperty(
-          "--composer-ipad-padding",
-          `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
-        );
       }
     }
 
     this.appEvents.trigger("keyboard-visibility-change", keyboardVisible);
 
     keyboardVisible
-      ? document.documentElement.classList.add("keyboard-visible")
-      : document.documentElement.classList.remove("keyboard-visible");
-
-    if (!keyboardVisible) {
-      clearAllBodyScrollLocks();
-    }
+      ? docEl.classList.add("keyboard-visible")
+      : docEl.classList.remove("keyboard-visible");
   }
 }
