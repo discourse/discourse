@@ -1,6 +1,6 @@
 import EmojiPickerContent from "discourse/components/emoji-picker/content";
 
-const EmojiPickerVirtual = <template>
+const EmojiPickerDetached = <template>
   <EmojiPickerContent
     @close={{@close}}
     @term={{@data.term}}
@@ -9,4 +9,4 @@ const EmojiPickerVirtual = <template>
   />
 </template>;
 
-export default EmojiPickerVirtual;
+export default EmojiPickerDetached;

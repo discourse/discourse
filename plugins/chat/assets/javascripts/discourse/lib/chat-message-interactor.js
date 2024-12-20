@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import EmojiPickerVirtual from "discourse/components/emoji-picker/virtual";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -410,7 +410,7 @@ export default class ChatMessageInteractor {
     await this.menu.show(trigger, {
       identifier: "emoji-picker",
       groupIdentifier: "emoji-picker",
-      component: EmojiPickerVirtual,
+      component: EmojiPickerDetached,
       onClose: () => {
         this.interactedChatMessage.emojiPickerOpen = false;
       },

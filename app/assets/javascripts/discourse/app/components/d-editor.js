@@ -10,7 +10,7 @@ import { translations } from "pretty-text/emoji/data";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
-import EmojiPickerVirtual from "discourse/components/emoji-picker/virtual";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
@@ -355,7 +355,7 @@ export default class DEditor extends Component {
 
           const menuOptions = {
             identifier: "emoji-picker",
-            component: EmojiPickerVirtual,
+            component: EmojiPickerDetached,
             data: {
               didSelectEmoji: (emoji) => {
                 this.textManipulation.emojiSelected(emoji);

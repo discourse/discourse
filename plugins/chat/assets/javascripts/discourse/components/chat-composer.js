@@ -9,7 +9,7 @@ import $ from "jquery";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
-import EmojiPickerVirtual from "discourse/components/emoji-picker/virtual";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
 import {
@@ -496,7 +496,7 @@ export default class ChatComposer extends Component {
           const menuOptions = {
             identifier: "emoji-picker",
             groupIdentifier: "emoji-picker",
-            component: EmojiPickerVirtual,
+            component: EmojiPickerDetached,
             data: {
               didSelectEmoji: (emoji) => {
                 this.onSelectEmoji(emoji);
