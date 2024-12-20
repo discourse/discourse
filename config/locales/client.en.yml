@@ -5108,7 +5108,7 @@ en:
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     # This is a text input placeholder, keep the translation short
-    type_to_filter: "type to filter…"
+    type_to_filter: "Type to filter…"
     settings: "Settings"
 
     admin:
