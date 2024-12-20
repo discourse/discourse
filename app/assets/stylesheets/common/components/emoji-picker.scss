@@ -74,6 +74,12 @@
 
   &__no-results {
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-weight: 700;
+    padding: 2em;
   }
 
   &__sections-nav {

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -386,8 +386,6 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    this.messageInteractor.closeEmojiPicker();
-
     this.chat.activeMessage = {
       model: this.args.message,
       context: this.args.context,
@@ -671,6 +669,7 @@ export default class ChatMessage extends Component {
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
                         <EmojiPicker
+                          @context={{concat "channel_" @message.channel.id}}
                           @didSelectEmoji={{this.messageInteractor.selectReaction}}
                           @btnClass="btn-flat react-btn"
                           class="chat-message-reaction"

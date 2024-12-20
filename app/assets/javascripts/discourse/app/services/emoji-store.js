@@ -9,11 +9,6 @@ export const USER_EMOJIS_STORE_KEY = "emojiUsage";
 export const MAX_DISPLAYED_EMOJIS = 20;
 export const MAX_TRACKED_EMOJIS = MAX_DISPLAYED_EMOJIS * 2;
 
-const CONTEXTS = {
-  topic: "topic",
-  chat: "chat",
-};
-
 export default class EmojiStore extends Service {
   @service siteSettings;
 
@@ -21,23 +16,9 @@ export default class EmojiStore extends Service {
 
   store = new KeyValueStore(STORE_NAMESPACE);
 
-  contexts;
+  contexts = new TrackedObject();
 
   @tracked _diversity;
-
-  constructor() {
-    super(...arguments);
-
-    const contexts = new TrackedObject();
-
-    Object.keys(CONTEXTS).forEach((context) => {
-      contexts[context] = new TrackedArray(
-        this.#storedContextForContext(context) ?? this.#defaultEmojis
-      );
-    });
-
-    this.contexts = contexts;
-  }
 
   get diversity() {
     return this._diversity ?? this.store.getObject(SKIN_TONE_STORE_KEY) ?? 1;
@@ -56,15 +37,20 @@ export default class EmojiStore extends Service {
   }
 
   favoritesForContext(context) {
-    const recentEmojis = this.contexts[CONTEXTS[context]] ?? [];
-    return this.#sortEmojisByFrequences(recentEmojis).slice(
+    return this.#sortEmojisByFrequences(this.contexts[context]).slice(
       0,
       MAX_DISPLAYED_EMOJIS
     );
   }
 
+  registerContext(context) {
+    this.contexts[context] = new TrackedArray(
+      this.#storedContextForContext(context) ?? this.#defaultEmojis
+    );
+  }
+
   reset() {
-    Object.keys(CONTEXTS).forEach((context) => {
+    Object.keys(this.contexts).forEach((context) => {
       this.resetContext(context);
     });
     this.diversity = 1;
@@ -80,9 +66,8 @@ export default class EmojiStore extends Service {
   }
 
   #addEmojiToContext(emoji, context) {
-    const normalizedCode = this.#normalizeEmojiCode(emoji);
     const recentEmojis = this.contexts[context];
-    recentEmojis.unshift(normalizedCode);
+    recentEmojis.unshift(this.#normalizeEmojiCode(emoji));
     recentEmojis.length = Math.min(recentEmojis.length, MAX_TRACKED_EMOJIS);
     return recentEmojis;
   }

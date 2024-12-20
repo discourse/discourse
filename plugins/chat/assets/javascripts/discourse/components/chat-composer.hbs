@@ -83,7 +83,7 @@
 
         <PluginOutlet
           @name="chat-composer-inline-buttons"
-          @outletArgs={{hash composer=this}}
+          @outletArgs={{hash composer=this channel=@channel}}
         />
 
         {{#if this.site.desktopView}}

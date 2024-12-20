@@ -293,10 +293,6 @@ export default class ChatMessageInteractor {
       this.chat.activeMessage = null;
     }
 
-    if (reactAction === REACTIONS.add) {
-      this.emojiStore.trackEmojiForContext(emoji, "chat");
-    }
-
     this.pane.reacting = true;
 
     this.message.react(

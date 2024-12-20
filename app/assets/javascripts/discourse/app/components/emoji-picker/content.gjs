@@ -4,7 +4,6 @@ import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
@@ -115,6 +114,11 @@ export default class EmojiPicker extends Component {
   @action
   registerFilterInput(element) {
     this.filterInput = element;
+  }
+
+  @action
+  registerContext() {
+    this.emojiStore.registerContext(this.args.context);
   }
 
   @action
@@ -347,7 +351,6 @@ export default class EmojiPicker extends Component {
 
   @bind
   _handleScroll(event) {
-    console.log(event);
     if (!this.scrollObserverEnabled) {
       return;
     }
@@ -406,9 +409,9 @@ export default class EmojiPicker extends Component {
     {{! template-lint-disable no-pointer-down-event-binding }}
     <div
       class={{concatClass "emoji-picker"}}
+      {{didInsert this.registerContext}}
       {{didInsert this.loadEmojis}}
       {{didInsert (if @didInsert @didInsert (noop))}}
-      {{willDestroy (if @willDestroy @willDestroy (noop))}}
       {{on "keydown" this.trapKeyDownEvents}}
       ...attributes
     >
@@ -419,7 +422,7 @@ export default class EmojiPicker extends Component {
           {{didInsert this.registerFilterInput}}
           @value={{@term}}
           @filterAction={{withEventValue this.didInputFilter}}
-          @icons={{hash right="search"}}
+          @icons={{hash right="magnifying-glass"}}
           @containerClass="emoji-picker__filter"
           autofocus={{true}}
           placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
@@ -482,86 +485,92 @@ export default class EmojiPicker extends Component {
                   {{else}}
                     <p class="emoji-picker__no-results">
                       {{i18n "chat.emoji_picker.no_results"}}
+                      {{replaceEmoji ":crying_cat_face:"}}
                     </p>
                   {{/each}}
                 </div>
               {{/if}}
 
               {{#each-in this.groups as |section emojis|}}
-                <div
-                  class={{concatClass
-                    "emoji-picker__section"
-                    (if (notEq this.filteredEmojis null) "hidden")
-                  }}
-                  data-section={{section}}
-                  role="region"
-                  aria-label={{i18n
-                    (concat "chat.emoji_picker." section)
-                    translatedFallback=section
-                  }}
-                >
-                  <div class="emoji-picker__section-title-container">
-                    <h2 class="emoji-picker__section-title">
-                      {{i18n
-                        (concat "chat.emoji_picker." section)
-                        translatedFallback=section
-                      }}
-                    </h2>
-                    {{#if (eq section "favorites")}}
-                      <DButton
-                        @icon="trash-alt"
-                        class="btn-transparent"
-                        @action={{this.clearFavorites}}
-                      />
-                    {{/if}}
-                  </div>
-                  <div class="emoji-picker__section-emojis">
-                    {{! we always want the first emoji for tabbing}}
-                    {{#let (get emojis "0") as |emoji|}}
-                      <img
-                        width="32"
-                        height="32"
-                        class="emoji"
-                        src={{tonableEmojiUrl emoji this.emojiStore.diversity}}
-                        tabindex="0"
-                        data-emoji={{emoji.name}}
-                        data-tonable={{if emoji.tonable "true"}}
-                        alt={{emoji.name}}
-                        title={{tonableEmojiTitle
-                          emoji
-                          this.emojiStore.diversity
+                {{#if emojis}}
+                  <div
+                    class={{concatClass
+                      "emoji-picker__section"
+                      (if (notEq this.filteredEmojis null) "hidden")
+                    }}
+                    data-section={{section}}
+                    role="region"
+                    aria-label={{i18n
+                      (concat "chat.emoji_picker." section)
+                      translatedFallback=section
+                    }}
+                  >
+                    <div class="emoji-picker__section-title-container">
+                      <h2 class="emoji-picker__section-title">
+                        {{i18n
+                          (concat "chat.emoji_picker." section)
+                          translatedFallback=section
                         }}
-                        loading="lazy"
-                      />
-                    {{/let}}
+                      </h2>
+                      {{#if (eq section "favorites")}}
+                        <DButton
+                          @icon="trash-can"
+                          class="btn-transparent"
+                          @action={{this.clearFavorites}}
+                        />
+                      {{/if}}
+                    </div>
+                    <div class="emoji-picker__section-emojis">
+                      {{! we always want the first emoji for tabbing}}
+                      {{#let (get emojis "0") as |emoji|}}
+                        <img
+                          width="32"
+                          height="32"
+                          class="emoji"
+                          src={{tonableEmojiUrl
+                            emoji
+                            this.emojiStore.diversity
+                          }}
+                          tabindex="0"
+                          data-emoji={{emoji.name}}
+                          data-tonable={{if emoji.tonable "true"}}
+                          alt={{emoji.name}}
+                          title={{tonableEmojiTitle
+                            emoji
+                            this.emojiStore.diversity
+                          }}
+                          loading="lazy"
+                        />
+                      {{/let}}
 
-                    {{#if (includes this.visibleSections section)}}
-                      {{#each emojis as |emoji index|}}
-                        {{! first emoji has already been rendered, we don't want to re render or would lose focus}}
-                        {{#if (gt index 0)}}
-                          <img
-                            width="32"
-                            height="32"
-                            class="emoji"
-                            src={{tonableEmojiUrl
-                              emoji
-                              this.emojiStore.diversity
-                            }}
-                            tabindex="-1"
-                            data-emoji={{emoji.name}}
-                            data-tonable={{if emoji.tonable "true"}}
-                            alt={{emoji.name}}
-                            title={{tonableEmojiTitle
-                              emoji
-                              this.emojiStore.diversity
-                            }}
-                            loading="lazy"
-                          />
-                        {{/if}}
-                      {{/each}}
-                    {{/if}}
+                      {{#if (includes this.visibleSections section)}}
+                        {{#each emojis as |emoji index|}}
+                          {{! first emoji has already been rendered, we don't want to re render or would lose focus}}
+                          {{#if (gt index 0)}}
+                            <img
+                              width="32"
+                              height="32"
+                              class="emoji"
+                              src={{tonableEmojiUrl
+                                emoji
+                                this.emojiStore.diversity
+                              }}
+                              tabindex="-1"
+                              data-emoji={{emoji.name}}
+                              data-tonable={{if emoji.tonable "true"}}
+                              alt={{emoji.name}}
+                              title={{tonableEmojiTitle
+                                emoji
+                                this.emojiStore.diversity
+                              }}
+                              loading="lazy"
+                            />
+                          {{/if}}
+                        {{/each}}
+                      {{/if}}
+                    </div>
                   </div>
-                </div>
+                {{/if}}
               {{/each-in}}
             </div>
           </div>
