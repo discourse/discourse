@@ -28,7 +28,7 @@ export default class History extends Component {
 
   @tracked loading;
   @tracked postRevision;
-  @tracked viewMode = this.site?.mobileView ? "inline" : "side_by_side";
+  @tracked viewMode = this.site.mobileView ? "inline" : "side_by_side";
   @tracked bodyDiff;
   @tracked initialLoad = true;
 

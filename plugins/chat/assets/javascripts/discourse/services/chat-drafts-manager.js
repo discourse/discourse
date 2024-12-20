@@ -7,7 +7,8 @@ export default class ChatDraftsManager extends Service {
   drafts = {};
 
   willDestroy() {
-    cancel(this?._persistHandler);
+    super.willDestroy(...arguments);
+    cancel(this._persistHandler);
   }
 
   async add(message, channelId, threadId) {
