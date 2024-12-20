@@ -59,15 +59,25 @@ class Middleware::RequestTracker
     @@ip_skipper
   end
 
-  DEFAULT_RATE_LIMITERS = [RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP]
+  if Rails.env.test?
+    def self.reset_rate_limiters_stack
+      @@stack =
+        begin
+          # Update the documentation for the `add_request_rate_limiters` plugin API if this list changes.
+          default_rate_limiters = [
+            RequestTracker::RateLimiters::User,
+            RequestTracker::RateLimiters::IP,
+          ]
+
+          stack = RequestTracker::RateLimiters::Stack.new
+          default_rate_limiters.each { |limiter| stack.append(limiter) }
+          stack
+        end
+    end
+  end
 
   def self.rate_limiters_stack
-    @@stack ||=
-      begin
-        stack = RequestTracker::RateLimiters::Stack.new
-        DEFAULT_RATE_LIMITERS.each { |limiter| stack.use(limiter) }
-        stack
-      end
+    @@stack ||= reset_rate_limiters_stack
   end
 
   def initialize(app, settings = {})

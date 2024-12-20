@@ -8,12 +8,20 @@ module RequestTracker
         @rate_limiter_klasses = []
       end
 
+      def to_s
+        @rate_limiter_klasses.map { |klass| klass.to_s }.join(", ")
+      end
+
       def include?(reference_klass)
         @rate_limiter_klasses.include?(reference_klass)
       end
 
       def prepend(rate_limiter_klass)
         @rate_limiter_klasses.prepend(rate_limiter_klass)
+      end
+
+      def append(rate_limiter_klass)
+        @rate_limiter_klasses.append(rate_limiter_klass)
       end
 
       def insert_before(existing_rate_limiter_klass, new_rate_limiter_klass)
@@ -37,6 +45,14 @@ module RequestTracker
         end
 
         nil
+      end
+
+      def method_missing(method_name, *args, &block)
+        if @rate_limiter_klasses.respond_to?(method_name)
+          @rate_limiter_klasses.send(method_name, *args, &block)
+        else
+          super
+        end
       end
 
       private
