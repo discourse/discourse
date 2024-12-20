@@ -22,12 +22,15 @@ module Jobs
         )
       end
 
-      # Re-schedule the job in the future to allow all GrantBadge jobs to start
-      # and thus ensuring this job runs only once after all badges scheduled by
-      # GrantAllBadges have been granted.
-      DistributedMutex.synchronize("ensure_badge_consistency") do
-        Jobs.cancel_scheduled_job(:ensure_badge_consistency)
-        Jobs.enqueue_in(5.minutes, :ensure_badge_consistency)
+      # If this instance is among the last few jobs to be processed, consider
+      # rescheduling the EnsureBadgeConsistency job. This ensures the job is
+      # scheduled only once after all badges scheduled by GrantAllBadges have
+      # been granted.
+      if Sidekiq::Queue.new.count { |job| job.klass =~ /GrantBadge/ } == 0
+        DistributedMutex.synchronize("ensure_badge_consistency") do
+          Jobs.cancel_scheduled_job(:ensure_badge_consistency)
+          Jobs.enqueue_in(1.minute, :ensure_badge_consistency)
+        end
       end
     end
   end
