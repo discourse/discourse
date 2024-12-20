@@ -29,8 +29,6 @@ export default class FormTemplateFieldMultiSelect extends Component {
         </span>
       {{/if}}
 
-      {{! TODO(@keegan): Update implementation to use <MultiSelect/> instead }}
-      {{! Current using <select multiple> as it integrates easily with FormData (will update in v2) }}
       <select
         name={{@id}}
         required={{if @validations.required "required" ""}}
