@@ -10,6 +10,10 @@ export default class AdminEmbeddingIndexController extends Controller {
   @controller adminEmbedding;
   @alias("adminEmbedding.embedding") embedding;
 
+  get showEmbeddingCode() {
+    return !this.site.isMobileDevice;
+  }
+
   @discourseComputed("embedding.base_url")
   embeddingCode(baseUrl) {
     const html = `<div id='discourse-comments'></div>

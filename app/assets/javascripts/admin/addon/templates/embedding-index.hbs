@@ -1,17 +1,17 @@
 {{#if this.embedding.embeddable_hosts}}
-
-  <AdminConfigAreaCard
-    @heading="admin.embedding.configuration_snippet"
-    @collapsable={{true}}
-    @collapsed={{true}}
-  >
-    <:content>
-      <div class="admin-embedding-index__code">
+  {{#if this.showEmbeddingCode}}
+    <AdminConfigAreaCard
+      @heading="admin.embedding.configuration_snippet"
+      @collapsable={{true}}
+      @collapsed={{true}}
+      class="admin-embedding-index__code"
+    >
+      <:content>
         {{html-safe (i18n "admin.embedding.sample")}}
         <HighlightedCode @code={{this.embeddingCode}} @lang="html" />
-      </div>
-    </:content>
-  </AdminConfigAreaCard>
+      </:content>
+    </AdminConfigAreaCard>
+  {{/if}}
 
   <table class="d-admin-table">
     <thead>
