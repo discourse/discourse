@@ -32,7 +32,12 @@
 .emoji-picker-modal {
   .d-modal__container {
     top: 0;
+
+    html.keyboard-visible.mobile-view & {
+      height: auto;
+    }
   }
+
   .d-modal__header {
     display: none;
   }

@@ -16,6 +16,10 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+} from "discourse/lib/body-scroll-lock";
 import { emojiUrlFor } from "discourse/lib/text";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -59,13 +63,23 @@ export default class EmojiPicker extends Component {
 
   scrollableNode;
 
+  setupSectionsNavScroll = modifierFn((element) => {
+    disableBodyScroll(element);
+
+    return () => {
+      enableBodyScroll(element);
+    };
+  });
+
   scrollListener = modifierFn((element) => {
+    disableBodyScroll(element);
     element.addEventListener("scroll", this._handleScroll);
     this.scrollableNode = element;
 
     return () => {
       element.removeEventListener("scroll", this._handleScroll);
       this.scrollableNode = null;
+      enableBodyScroll(element);
     };
   });
 
@@ -431,7 +445,7 @@ export default class EmojiPicker extends Component {
       </div>
 
       <div class="emoji-picker__content">
-        <div class="emoji-picker__sections-nav">
+        <div class="emoji-picker__sections-nav" {{this.setupSectionsNavScroll}}>
           {{#each-in this.groups as |section emojis|}}
             <DButton
               class={{concatClass
