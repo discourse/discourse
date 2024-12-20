@@ -961,7 +961,7 @@ RSpec.describe Middleware::RequestTracker do
       MSG
     end
 
-    context "`add_request_rate_limiter` plugin API" do
+    context "for `add_request_rate_limiter` plugin API" do
       after { described_class.reset_rate_limiters_stack }
 
       it "can be used to add a custom rate limiter" do

@@ -1283,13 +1283,13 @@ class Plugin::Instance
   #
   # @param before [Class, nil] The rate limiter class before which the new rate limiter should be added.
   #
-  # @example Adding a rate limiter that rate limits all requests from Googlebot in the same rate limit bucket.
+  # @example Adding a rate limiter that rate limits all requests based on the country of the IP address
   #
-  #  add_request_rate_limiter(
-  #    identifier: :crawlers,
-  #    key: ->(request) { "crawlers" },
-  #    activate_when: ->(request) { request.user_agent&.include?("Googlebot") },
-  #  )
+  #   add_request_rate_limiter(
+  #     identifier: :country,
+  #     key: ->(request) { "country/#{DiscourseIpInfo.get(request.ip)[:country]}" },
+  #     activate_when: ->(request) { DiscourseIpInfo.get(request.ip)[:country].present? },
+  #   )
   def add_request_rate_limiter(
     identifier:,
     key:,

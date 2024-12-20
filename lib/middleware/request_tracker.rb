@@ -59,21 +59,19 @@ class Middleware::RequestTracker
     @@ip_skipper
   end
 
-  if Rails.env.test?
-    def self.reset_rate_limiters_stack
-      @@stack =
-        begin
-          # Update the documentation for the `add_request_rate_limiters` plugin API if this list changes.
-          default_rate_limiters = [
-            RequestTracker::RateLimiters::User,
-            RequestTracker::RateLimiters::IP,
-          ]
+  def self.reset_rate_limiters_stack
+    @@stack =
+      begin
+        # Update the documentation for the `add_request_rate_limiter` plugin API if this list changes.
+        default_rate_limiters = [
+          RequestTracker::RateLimiters::User,
+          RequestTracker::RateLimiters::IP,
+        ]
 
-          stack = RequestTracker::RateLimiters::Stack.new
-          default_rate_limiters.each { |limiter| stack.append(limiter) }
-          stack
-        end
-    end
+        stack = RequestTracker::RateLimiters::Stack.new
+        default_rate_limiters.each { |limiter| stack.append(limiter) }
+        stack
+      end
   end
 
   def self.rate_limiters_stack
@@ -521,7 +519,7 @@ class Middleware::RequestTracker
     if !limiter_assets10.can_perform?
       if warn
         Discourse.warn(
-          "Global asset rate limit exceeded for #{rate_limiter.class.name}: #{ip}: 10 second rate limit",
+          "Global asset rate limit exceeded for #{rate_limiter.class.name}: #{rate_limit_key}: 10 second rate limit",
           uri: request.env["REQUEST_URI"],
         )
       end
@@ -540,7 +538,7 @@ class Middleware::RequestTracker
     rescue RateLimiter::LimitExceeded => e
       if warn
         Discourse.warn(
-          "Global rate limit exceeded for #{rate_limiter.class.name}: #{ip}: #{type} second rate limit",
+          "Global rate limit exceeded for #{rate_limiter.class.name}: #{rate_limit_key}: #{type} second rate limit",
           uri: request.env["REQUEST_URI"],
         )
       end
