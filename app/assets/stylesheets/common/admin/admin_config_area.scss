@@ -92,14 +92,19 @@
   }
 
   &__settings {
-    .admin-site-settings-filter-controls {
-      background: var(--primary-very-low);
-      margin-bottom: 1em;
-    }
-
     .setting-label {
       margin-left: 18px;
     }
+  }
+}
+
+.admin-site-settings-filter-controls {
+  background: var(--primary-very-low);
+  margin-bottom: 1em;
+
+  .controls,
+  .search.controls {
+    background: var(--primary-very-low);
   }
 }
 
