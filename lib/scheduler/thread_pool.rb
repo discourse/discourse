@@ -77,7 +77,7 @@ module Scheduler
 
         if failed_to_shutdown
           @mutex.synchronize { @threads.each(&:kill) }
-          raise ShutdownError, "Failed to shutdown ThreadPool within timeout" if failed_to_shutdown
+          raise ShutdownError, "Failed to shutdown ThreadPool within timeout"
         end
       end
     end
