@@ -17,7 +17,7 @@
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
     "@glimmer/syntax": "^0.93.1",
-    "@highlightjs/cdn-assets": "^11.11.0",
+    "@highlightjs/cdn-assets": "11.10.0",
     "@json-editor/json-editor": "2.15.2",
     "@messageformat/core": "^3.4.0",
     "@messageformat/runtime": "^3.0.1",
@@ -28,7 +28,7 @@
     "ember-route-template": "^1.0.3",
     "ember-tracked-storage-polyfill": "^1.0.0",
     "handlebars": "^4.7.8",
-    "highlight.js": "^11.11.0",
+    "highlight.js": "11.10.0",
     "immer": "^10.1.1",
     "jspreadsheet-ce": "^4.15.0",
     "morphlex": "^0.0.16",
