@@ -18,8 +18,10 @@ module Scheduler
     end
 
     def initialize(min_threads:, max_threads:, idle_time: nil)
-      # this is there just for cases where people want to use this as
-      # a fixed size thread pool
+      # 30 seconds is a reasonable default for idle time
+      # it is particularly useful for the use case of:
+      # ThreadPool.new(min_threads: 4, max_threads: 4)
+      # operators would get confused about idle time cause why does it matter
       idle_time ||= 30
       raise ArgumentError, "min_threads must be 0 or larger" if min_threads < 0
       raise ArgumentError, "max_threads must be 1 or larger" if max_threads < 1

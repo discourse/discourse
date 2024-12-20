@@ -175,7 +175,7 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
   end
 
   describe "when thread pool has zero min threads" do
-    it "can quickly process tasks" do
+    it "can quickly process and can be cleanly terminated" do
       # setting idle time to 1000 to ensure that there are maximal delays waiting
       # for jobs
       pool = Scheduler::ThreadPool.new(min_threads: 0, max_threads: 5, idle_time: 1000)
