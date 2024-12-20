@@ -9,8 +9,8 @@
     position: relative;
     height: 100%;
 
-    &.is-copied,
-    &.is-copied:hover {
+    &.--activated,
+    &.--activated:hover {
       .d-icon-d-post-share {
         color: var(--success);
       }
@@ -25,11 +25,6 @@
     display: block;
     stroke: var(--success);
     opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-
-    &.is-visible {
-      opacity: 1;
-    }
 
     path {
       stroke: var(--success);
