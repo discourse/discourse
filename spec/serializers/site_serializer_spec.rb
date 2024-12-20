@@ -214,8 +214,8 @@ RSpec.describe SiteSerializer do
 
     it "is not included in the serialised object when user is not anonymous" do
       guardian = Guardian.new(user)
-
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized).not_to have_key(:anonymous_sidebar_sections)
     end
 
     it "includes only public sidebar sections serialised object when user is anonymous" do

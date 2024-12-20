@@ -34,9 +34,7 @@ export default class SidebarCustomSection extends Component {
 
     if (this.args.sectionData.section_type !== "community") {
       return new Section(opts);
-    }
-
-    if (this.currentUser?.admin) {
+    } else if (this.currentUser?.admin) {
       return new AdminCommunitySection(opts);
     } else {
       return new CommonCommunitySection(opts);
@@ -89,7 +87,7 @@ export default class SidebarCustomSection extends Component {
               @text={{this.section.moreSectionButtonText}}
             />
           {{/if}}
-        {{else if this.section.moreLinks}}
+        {{else}}
           <MoreSectionLinks
             @sectionLinks={{this.section.moreLinks}}
             @moreButtonAction={{this.section.moreSectionButtonAction}}
