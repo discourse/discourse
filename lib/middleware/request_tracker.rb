@@ -59,12 +59,13 @@ class Middleware::RequestTracker
     @@ip_skipper
   end
 
+  DEFAULT_RATE_LIMITERS = [RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP]
+
   def self.rate_limiters_stack
     @@stack ||=
       begin
         stack = RequestTracker::RateLimiters::Stack.new
-        stack.use(RequestTracker::RateLimiters::User)
-        stack.use(RequestTracker::RateLimiters::IP)
+        DEFAULT_RATE_LIMITERS.each { |limiter| stack.use(limiter) }
         stack
       end
   end
@@ -330,10 +331,10 @@ class Middleware::RequestTracker
     cookie = find_auth_cookie(env)
 
     if error_details = rate_limit(request, cookie)
-      available_in, error_code, description = error_details
+      available_in, error_code = error_details
 
       message = <<~TEXT
-        Slow down, too many requests from this #{description}.
+        Slow down, you're making too many requests.
         Please retry again in #{available_in} seconds.
         Error code: #{error_code}.
       TEXT
@@ -469,7 +470,6 @@ class Middleware::RequestTracker
     rate_limiter = self.class.rate_limiters_stack.active_rate_limiter(request, cookie)
     return nil if rate_limiter.nil?
     rate_limit_key = rate_limiter.rate_limit_key
-    rate_limit_key_description = rate_limiter.rate_limit_key_description
     error_code_identifier = rate_limiter.error_code_identifier
     global = rate_limiter.rate_limit_globally?
 
@@ -511,18 +511,12 @@ class Middleware::RequestTracker
     if !limiter_assets10.can_perform?
       if warn
         Discourse.warn(
-          "Global asset rate limit exceeded for #{rate_limit_key_description}: #{ip}: 10 second rate limit",
+          "Global asset rate limit exceeded for #{rate_limiter.class.name}: #{ip}: 10 second rate limit",
           uri: request.env["REQUEST_URI"],
         )
       end
 
-      if block
-        return [
-          limiter_assets10.seconds_to_wait(Time.now.to_i),
-          limiter_assets10.error_code,
-          rate_limit_key_description
-        ]
-      end
+      return limiter_assets10.seconds_to_wait(Time.now.to_i), limiter_assets10.error_code if block
     end
 
     begin
@@ -536,13 +530,13 @@ class Middleware::RequestTracker
     rescue RateLimiter::LimitExceeded => e
       if warn
         Discourse.warn(
-          "Global rate limit exceeded for #{rate_limit_key_description}: #{ip}: #{type} second rate limit",
+          "Global rate limit exceeded for #{rate_limiter.class.name}: #{ip}: #{type} second rate limit",
           uri: request.env["REQUEST_URI"],
         )
       end
 
       if block
-        [e.available_in, e.error_code, rate_limit_key_description]
+        [e.available_in, e.error_code]
       else
         nil
       end

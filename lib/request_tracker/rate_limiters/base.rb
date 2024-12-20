@@ -23,13 +23,6 @@ module RequestTracker
 
       # This method is meant to be implemented in subclasses.
       #
-      # @return [String] A humanized description of the rate limit key.
-      def rate_limit_key_description
-        raise NotImplementedError
-      end
-
-      # This method is meant to be implemented in subclasses.
-      #
       # @return [Boolean] Indicates if the rate limiter should be used for the request.
       def active?
         raise NotImplementedError

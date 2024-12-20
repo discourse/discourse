@@ -7,10 +7,6 @@ module RequestTracker
         "ip/#{@request.ip}"
       end
 
-      def rate_limit_key_description
-        "IP address"
-      end
-
       def rate_limit_globally?
         true
       end

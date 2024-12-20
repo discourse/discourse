@@ -1410,4 +1410,62 @@ class Plugin::Instance
   def register_permitted_bulk_action_parameter(name)
     DiscoursePluginRegistry.register_permitted_bulk_action_parameter(name, self)
   end
+
+  # This is an experimental API and may be changed or removed in the future without depreciation.
+  #
+  # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
+  # first rate limiter in the stack that is active is used.
+  #
+  # @param key [Proc] A lambda/proc that defines the `rate_limit_key`.
+  #   - Receives `request` (An instance of `Rack::Request`) as argument.
+  #   - Should return a string representing the rate limit key.
+  #
+  # @param activate_when [Proc] A lambda/proc that defines when the rate limiter should be used for a request.
+  #   - Receives `request` (An instance of `Rack::Request`) as argument.
+  #   - Should return `true` if the rate limiter is active, otherwise `false`.
+  #
+  # @param global [Boolean] Whether the rate limiter applies globally across all sites. Defaults to `false`.
+  #   - Ignored if `klass` is provided.
+  #
+  # @param after [Class, nil] The rate limiter class after which the new rate limiter should be added.
+  #
+  # @param before [Class, nil] The rate limiter class before which the new rate limiter should be added.
+  #
+  # @example Adding a rate limiter that rate limits all requests from Googlebot in the same rate limit bucket.
+  #
+  #  add_request_rate_limiters(
+  #    key: ->(request) { "crawlers" },
+  #    activate_when: ->(request) { request.user_agent&.include?("Googlebot") },
+  #  )
+  def add_request_rate_limiters(
+    key:,
+    activate_when:,
+    global: false,
+    after: nil,
+    before: nil,
+  )
+    raise ArgumentError, "block is required" if !block_given?
+    raise ArgumentError, "only one of `after` or `before` can be provided" if after && before
+
+    stack = Middleware::RequestTracker.rate_limiters_stack
+
+    if reference_klass = (after || before)
+      raise ArgumentError, "#{reference_klass} not found in the stack" if !stack.include?(klass)
+    end
+
+    klass =
+      Class.new(RequestTracker::RateLimiters::Base) do
+        define_method(:rate_limit_key) { key.call(@request) }
+        define_method(:rate_limit_globally?) { global }
+        define_method(:active?) { activate_when.call(@request) }
+      end
+
+    if after
+      stack.insert_after(klass, after)
+    elsif before
+      stack.insert_before(klass, before)
+    else
+      stack.append(klass)
+    end
+  end
 end

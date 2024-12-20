@@ -2,17 +2,18 @@
 
 module RequestTracker
   module RateLimiters
+    # :nodoc:
     class Stack
       def initialize
         @rate_limiter_klasses = []
       end
 
-      def use(rate_limiter_klass)
-        @rate_limiter_klasses << rate_limiter_klass
+      def include?(reference_klass)
+        @rate_limiter_klasses.include?(reference_klass)
       end
 
-      def delete(rate_limiter_klass)
-        @rate_limiter_klasses.delete_at(get_rate_limiter_index(rate_limiter_klass))
+      def prepend(rate_limiter_klass)
+        @rate_limiter_klasses.prepend(rate_limiter_klass)
       end
 
       def insert_before(existing_rate_limiter_klass, new_rate_limiter_klass)
@@ -34,6 +35,7 @@ module RequestTracker
           rate_limiter = rate_limiter_klass.new(request, cookie)
           return rate_limiter if rate_limiter.active?
         end
+
         nil
       end
 

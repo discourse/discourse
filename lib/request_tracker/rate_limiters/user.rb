@@ -7,10 +7,6 @@ module RequestTracker
         "user/#{@cookie[:user_id]}"
       end
 
-      def rate_limit_key_description
-        "user"
-      end
-
       def rate_limit_globally?
         false
       end
