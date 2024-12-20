@@ -4281,10 +4281,10 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
       end
 
-      it "returns 403 for anonymous users" do
+      it "returns 404 for anonymous users" do
         get "/u/#{user.username_lower}/summary.json"
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
 
@@ -4669,10 +4669,10 @@ RSpec.describe UsersController do
         expect(response).to have_http_status(:forbidden)
       end
 
-      it "should 403 correctly for crawlers when profiles are hidden" do
+      it "should 404 correctly for crawlers when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}", headers: { "User-Agent" => "Googlebot" }
-        expect(response).to have_http_status(:forbidden)
+        expect(response).to have_http_status(:not_found)
         expect(response.body).to have_tag("body.crawler")
         expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
@@ -4883,7 +4883,7 @@ RSpec.describe UsersController do
       it "should have http status 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}/card.json"
-        expect(response).to have_http_status(:forbidden)
+        expect(response).to have_http_status(:not_found)
       end
     end
 
@@ -4957,7 +4957,7 @@ RSpec.describe UsersController do
     it "should have http status 403 for anonymous user when profiles are hidden" do
       SiteSetting.hide_user_profiles_from_public = true
       get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(:not_found)
     end
 
     context "when `hide_profile` user option is checked" do
