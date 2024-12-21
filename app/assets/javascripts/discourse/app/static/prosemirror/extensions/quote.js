@@ -3,8 +3,9 @@ export default {
     quote: {
       content: "block+",
       group: "block",
-      defining: true,
       inline: false,
+      selectable: true,
+      isolating: true,
       attrs: {
         username: {},
         postNumber: { default: null },
@@ -14,6 +15,7 @@ export default {
       parseDOM: [
         {
           tag: "aside.quote",
+          contentElement: "blockquote",
           getAttrs(dom) {
             return {
               username: dom.getAttribute("data-username"),
@@ -32,25 +34,22 @@ export default {
         attrs["data-topic"] = topicId;
         attrs["data-full"] = full ? "true" : "false";
 
-        return ["aside", attrs, 0];
-      },
-    },
-    quote_title: {
-      content: "inline*",
-      group: "block",
-      inline: false,
-      parseDOM: [{ tag: "aside[data-username] > div.title" }],
-      atom: true,
-      draggable: false,
-      selectable: false,
-      toDOM() {
-        return ["div", { class: "title" }, 0];
+        const quoteTitle = ["div", { class: "title" }, `${username}:`];
+
+        return ["aside", attrs, quoteTitle, ["blockquote", 0]];
       },
     },
   },
 
   parse: {
-    quote_header: { block: "quote_title" },
+    quote_header_open(state, token, tokens, i) {
+      // removing the text child, this depends on the current token order:
+      // quote_header_open quote_controls_open quote_controls_close text quote_header_close
+      // otherwise it's hard to get a "quote_title" node to behave the way we need
+      // (a contentEditable=false node breaks the keyboard nav, among other issues)
+      tokens[i + 3].content = "";
+    },
+    quote_header_close() {},
     quote_controls: { ignore: true },
     bbcode(state, token) {
       if (token.tag === "aside") {
@@ -60,11 +59,6 @@ export default {
           topicId: token.attrGet("data-topic"),
           full: token.attrGet("data-full"),
         });
-        return true;
-      }
-
-      if (token.tag === "blockquote") {
-        state.openNode(state.schema.nodes.blockquote);
         return true;
       }
     },
@@ -78,13 +72,28 @@ export default {
       const topicId = node.attrs.topicId ? `, topic:${node.attrs.topicId}` : "";
 
       state.write(`[quote="${node.attrs.username}${postNumber}${topicId}"]\n`);
-      node.forEach((n) => {
-        if (n.type.name === "blockquote") {
-          state.renderContent(n);
-        }
-      });
+      state.renderContent(node);
       state.write("[/quote]\n\n");
     },
-    quote_title() {},
+  },
+  plugins({ Plugin, NodeSelection }) {
+    return new Plugin({
+      props: {
+        handleClickOn(view, pos, node, nodePos, event) {
+          if (
+            node.type.name === "quote" &&
+            event.target.classList.contains("title")
+          ) {
+            view.dispatch(
+              view.state.tr.setSelection(
+                NodeSelection.create(view.state.doc, nodePos)
+              )
+            );
+
+            return true;
+          }
+        },
+      },
+    });
   },
 };

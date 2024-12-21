@@ -58,6 +58,7 @@ export default class DEditor extends Component {
   @service modal;
 
   @tracked editorComponent;
+  /** @type TextManipulation */
   @tracked textManipulation;
 
   ready = false;
@@ -637,6 +638,12 @@ export default class DEditor extends Component {
     this.set("isEditorFocused", false);
   }
 
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
   @action
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;

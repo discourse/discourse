@@ -1,4 +1,4 @@
-const INLINE_NODES = ["inline_spoiler", "spoiler"];
+const SPOILER_NODES = ["inline_spoiler", "spoiler"];
 
 export default {
   nodeSpec: {
@@ -6,7 +6,6 @@ export default {
       attrs: { blurred: { default: true } },
       group: "block",
       content: "block+",
-      defining: true,
       parseDOM: [{ tag: "div.spoiled" }],
       toDOM: (node) => [
         "div",
@@ -51,8 +50,8 @@ export default {
   },
   plugins: {
     props: {
-      handleClickOn(view, pos, node, nodePos, event, direct) {
-        if (INLINE_NODES.includes(node.type.name)) {
+      handleClickOn(view, pos, node, nodePos) {
+        if (SPOILER_NODES.includes(node.type.name)) {
           view.dispatch(
             view.state.tr.setNodeMarkup(nodePos, null, {
               blurred: !node.attrs.blurred,

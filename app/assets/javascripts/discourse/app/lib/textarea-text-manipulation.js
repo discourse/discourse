@@ -43,6 +43,7 @@ function getHead(head, prev) {
   }
 }
 
+/** @implements {TextManipulation} */
 export default class TextareaTextManipulation {
   @service appEvents;
   @service siteSettings;
@@ -831,7 +832,7 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    return this.$textarea.autocomplete(
+    this.$textarea.autocomplete(
       options instanceof Object
         ? { textHandler: this.autocompleteHandler, ...options }
         : options
@@ -849,6 +850,7 @@ function insertAtTextarea(textarea, start, end, text) {
   }
 }
 
+/** @implements {AutocompleteHandler} */
 export class TextareaAutocompleteHandler {
   textarea;
   $textarea;
@@ -858,11 +860,11 @@ export class TextareaAutocompleteHandler {
     this.$textarea = $(textarea);
   }
 
-  get value() {
+  getValue() {
     return this.textarea.value;
   }
 
-  replaceTerm({ start, end, term }) {
+  replaceTerm(start, end, term) {
     const space = this.value.substring(end + 1, end + 2) === " " ? "" : " ";
     insertAtTextarea(this.textarea, start, end + 1, term + space);
     setCaretPosition(this.textarea, start + 1 + term.trim().length);
@@ -884,9 +886,11 @@ export class TextareaAutocompleteHandler {
   }
 }
 
+/** @implements {PlaceholderHandler} */
 class TextareaPlaceholderHandler {
   @service composer;
 
+  /** @type {TextareaTextManipulation} */
   textManipulation;
 
   #placeholders = {};

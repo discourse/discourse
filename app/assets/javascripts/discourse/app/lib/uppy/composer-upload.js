@@ -52,6 +52,7 @@ export default class UppyComposerUpload {
   uploadPreProcessors;
   uploadHandlers;
 
+  /** @type {TextManipulation} */
   textManipulation;
 
   #inProgressUploads = [];

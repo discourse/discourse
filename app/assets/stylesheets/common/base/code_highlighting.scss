@@ -52,6 +52,12 @@ pre > code {
   color: var(--hljs-number);
 }
 
+.hljs-tag,
+.hljs-tag .hljs-title {
+  color: var(--hljs-tag);
+  font-weight: normal;
+}
+
 .hljs-string,
 .hljs-tag .hljs-string,
 .hljs-template-tag,
@@ -62,10 +68,6 @@ pre > code {
 
 .hljs-title {
   color: var(--hljs-title);
-}
-
-.hljs-name {
-  color: var(--hljs-name);
 }
 
 .hljs-quote,
@@ -85,10 +87,8 @@ pre > code {
   color: var(--hljs-title);
 }
 
-.hljs-tag,
-.hljs-tag .hljs-title {
-  color: var(--hljs-tag);
-  font-weight: normal;
+.hljs-name {
+  color: var(--hljs-name);
 }
 
 .hljs-punctuation {

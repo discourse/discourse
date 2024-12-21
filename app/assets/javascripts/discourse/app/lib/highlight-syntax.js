@@ -58,7 +58,7 @@ export default async function highlightSyntax(elem, siteSettings, session) {
   });
 }
 
-async function ensureHighlightJs(langFile) {
+export async function ensureHighlightJs(langFile) {
   try {
     if (!hljsLoadPromise) {
       hljsLoadPromise = loadHighlightJs(langFile);

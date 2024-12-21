@@ -196,6 +196,12 @@ export default class ComposerEditor extends Component {
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
   }
 
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
   @bind
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;

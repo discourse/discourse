@@ -115,6 +115,7 @@ export default {
         apply(tr, value) {
           let updated = value.slice();
 
+          // we should only track the changes
           tr.doc.descendants((node, pos) => {
             if (node.type.name === "image" && node.attrs["data-orig-src"]) {
               if (node.attrs.src === PLACEHOLDER_IMG) {
@@ -140,7 +141,6 @@ export default {
 
             const unresolvedUrls = shortUrlResolver.getState(view.state);
 
-            // Process only unresolved URLs
             for (const unresolved of unresolvedUrls) {
               const cachedUrl = lookupCachedUploadUrl(unresolved.src).url;
               const url =

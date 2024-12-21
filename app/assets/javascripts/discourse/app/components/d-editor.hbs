@@ -47,6 +47,7 @@
 
       <ConditionalLoadingSpinner @condition={{this.loading}} />
       <this.editorComponent
+        @class="d-editor-input"
         @onSetup={{this.setupEditor}}
         @markdownOptions={{this.markdownOptions}}
         @keymap={{this.keymap}}
