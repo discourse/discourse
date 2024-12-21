@@ -4,7 +4,7 @@ import loadPluginFeatures from "./features";
 import MentionsParser from "./mentions-parser";
 import buildOptions from "./options";
 
-function buildEngine(options) {
+export function buildEngine(options) {
   return DiscourseMarkdownIt.withCustomFeatures(
     loadPluginFeatures()
   ).withOptions(buildOptions(options));

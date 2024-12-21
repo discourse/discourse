@@ -1,4 +1,5 @@
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   markSpec: {
     underline: {
       toDOM() {
@@ -21,3 +22,5 @@ export default {
     },
   },
 };
+
+export default extension;

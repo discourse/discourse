@@ -1,5 +1,6 @@
-export default {
-  plugins({ Plugin, PluginKey }) {
+/** @type {RichEditorExtension} */
+const extension = {
+  plugins({ pmState: { Plugin, PluginKey } }) {
     const plugin = new PluginKey("trailing-paragraph");
 
     return new Plugin({
@@ -16,16 +17,29 @@ export default {
       },
       state: {
         init(_, state) {
-          return state.doc.lastChild.type !== state.schema.nodes.paragraph;
+          return !isLastChildEmptyParagraph(state);
         },
         apply(tr, value) {
           if (!tr.docChanged) {
             return value;
           }
 
-          return tr.doc.lastChild.type !== tr.doc.type.schema.nodes.paragraph;
+          return !isLastChildEmptyParagraph(tr);
         },
       },
     });
   },
 };
+
+function isLastChildEmptyParagraph(state) {
+  const { doc } = state;
+  const lastChild = doc.lastChild;
+
+  return (
+    lastChild.type.name === "paragraph" &&
+    lastChild.nodeSize === 2 &&
+    lastChild.content.size === 0
+  );
+}
+
+export default extension;

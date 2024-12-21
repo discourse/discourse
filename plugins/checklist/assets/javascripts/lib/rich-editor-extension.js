@@ -1,4 +1,5 @@
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   // TODO(renato): make the checkbox clickable
   // TODO(renato): auto-continue checkbox list on ENTER
   // TODO(renato): apply .has-checkbox style to the <li> to avoid :has
@@ -65,3 +66,5 @@ const CHECKED_REGEX = /\bchecked\b/;
 function hasCheckedClass(className) {
   return CHECKED_REGEX.test(className);
 }
+
+export default extension;

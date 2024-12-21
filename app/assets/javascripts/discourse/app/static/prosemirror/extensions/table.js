@@ -10,13 +10,16 @@
 // | git status   | git status     | git status    |
 // | git diff     | git diff       | git diff      |
 
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   nodeSpec: {
     table: {
       content: "table_head table_body",
       group: "block",
       tableRole: "table",
       isolating: true,
+      selectable: true,
+      draggable: true,
       parseDOM: [{ tag: "table" }],
       toDOM() {
         return ["table", 0];
@@ -32,7 +35,7 @@ export default {
       },
     },
     table_body: {
-      content: "table_row*",
+      content: "table_row+",
       tableRole: "body",
       isolating: true,
       parseDOM: [{ tag: "tbody" }],
@@ -41,7 +44,7 @@ export default {
       },
     },
     table_row: {
-      content: "(table_header_cell | table_cell)*",
+      content: "(table_cell | table_header_cell)+",
       tableRole: "row",
       parseDOM: [{ tag: "tr" }],
       toDOM() {
@@ -124,9 +127,12 @@ export default {
     table(state, node) {
       state.flushClose(1);
 
-      let headerBuffer = state.delim && state.atBlank() ? state.delim : "";
+      let headerBuffer = state.delim;
       const prevInTable = state.inTable;
       state.inTable = true;
+
+      // leading newline, it seems to have issues in a line just below a > blockquote otherwise
+      state.out += "\n";
 
       // group is table_head or table_body
       node.forEach((group, groupOffset, groupIndex) => {
@@ -182,3 +188,5 @@ export default {
     table_cell() {},
   },
 };
+
+export default extension;
