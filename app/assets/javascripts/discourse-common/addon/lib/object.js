@@ -14,10 +14,7 @@ export function deepMerge(...objects) {
       if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
         target[key] = targetValue.concat(sourceValue);
       } else if (isObject(targetValue) && isObject(sourceValue)) {
-        target[key] = deepMergeInner(
-          Object.assign({}, targetValue),
-          sourceValue
-        );
+        target[key] = deepMergeInner({ ...targetValue }, sourceValue);
       } else {
         target[key] = sourceValue;
       }

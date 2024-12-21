@@ -558,17 +558,13 @@ export default class ChatChannel extends Component {
     }
 
     try {
-      const params = {
+      await this.chatApi.sendMessage(this.args.channel.id, {
         message: message.message,
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-      };
-
-      await this.chatApi.sendMessage(
-        this.args.channel.id,
-        Object.assign({}, params, extractCurrentTopicInfo(this))
-      );
+        ...extractCurrentTopicInfo(this),
+      });
 
       if (!this.capabilities.isIOS) {
         this.scrollToLatestMessage();

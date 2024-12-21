@@ -275,9 +275,7 @@ export default {
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
     // like `z z` are valid for ItsATrap
-    shortcut = shortcut.trim();
-    let newBinding = Object.assign({ handler: callback }, opts);
-    this.bindKey(shortcut, newBinding);
+    this.bindKey(shortcut.trim(), { handler: callback, ...opts });
     if (opts.help) {
       addExtraKeyboardShortcutHelp(opts.help);
     }

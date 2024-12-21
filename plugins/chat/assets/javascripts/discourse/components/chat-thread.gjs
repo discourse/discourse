@@ -442,17 +442,16 @@ export default class ChatThread extends Component {
     }
 
     try {
-      const params = {
-        message: message.message,
-        in_reply_to_id: null,
-        staged_id: message.id,
-        upload_ids: message.uploads.map((upload) => upload.id),
-        thread_id: message.thread.id,
-      };
-
       const response = await this.chatApi.sendMessage(
         this.args.thread.channel.id,
-        Object.assign({}, params, extractCurrentTopicInfo(this))
+        {
+          message: message.message,
+          in_reply_to_id: null,
+          staged_id: message.id,
+          upload_ids: message.uploads.map((upload) => upload.id),
+          thread_id: message.thread.id,
+          ...extractCurrentTopicInfo(this),
+        }
       );
 
       this.args.thread.currentUserMembership ??=
