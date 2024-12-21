@@ -1,19 +1,31 @@
-.d-editor__container {
-  margin: 0;
-  overscroll-behavior: contain;
-  overflow-anchor: none;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  height: 100%;
-}
+.d-editor {
+  &__container {
+    margin: 0;
+    overscroll-behavior: contain;
+    overflow-anchor: none;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    height: 100%;
+  }
 
-.d-editor__editable {
-  outline: 0;
-  padding: 0 0.625rem;
+  &__editable {
+    outline: 0;
+    padding: 0 0.625rem;
 
-  a {
+    > div:first-child,
+    > details:first-child {
+      // This is hacky, but helps having the leading gapcursor at the right position
+      &.ProseMirror-gapcursor {
+        position: relative;
+        display: block;
+      }
+      margin-top: 0.5rem;
+    }
+  }
+
+  a[href] {
     pointer-events: none;
   }
 
@@ -43,7 +55,7 @@
 
   img {
     display: inline-block;
-    margin: 0 auto;
+    //margin: 0 auto;
     max-width: 100%;
 
     &[data-placeholder="true"] {
@@ -119,21 +131,44 @@
     display: inline;
     padding-top: 0.2rem;
   }
-}
 
-.d-editor__code-block {
-  position: relative;
-}
+  &__onebox-wrapper {
+    white-space: normal;
 
-.d-editor__code-lang-select {
-  position: absolute;
-  right: 0.25rem;
-  top: -0.6rem;
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
-  background-color: var(--primary-very-low);
-  color: var(--primary-medium);
-  font-size: var(--font-down-1-rem);
+    a[href] {
+      pointer-events: all;
+    }
+  }
+
+  &__code-block {
+    position: relative;
+  }
+
+  &__code-lang-select {
+    position: absolute;
+    right: 0.25rem;
+    top: -0.6rem;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    background-color: var(--primary-very-low);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__html-block {
+    position: relative;
+    border: 1px dashed var(--primary-low-mid);
+
+    &::after {
+      position: absolute;
+      right: 0;
+      top: 0;
+      content: "HTML";
+      font-size: var(--font-down-2-rem);
+      color: var(--primary-low-mid);
+      z-index: 1;
+    }
+  }
 }
 
 /*
@@ -199,8 +234,38 @@ li.ProseMirror-selectednode:after {
 
 /* Protect against generic img rules */
 
-img.ProseMirror-separator {
+.ProseMirror-separator {
   display: inline !important;
   border: none !important;
   margin: 0 !important;
+}
+
+/*
+ Everything below was copied from prosemirror-gapcursor/style/gapcursor.css
+ */
+
+.ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+}
+
+.ProseMirror-gapcursor:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 1px solid var(--primary);
+  animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes ProseMirror-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
 }

@@ -32,7 +32,7 @@ const MULTIPLE_ALLOWED = { span: true, wrap_bbcode: false, bbcode: true };
  *   Markdown-it token parse definition
  * @property {Array<RichPlugin>} [plugins]
  *    ProseMirror plugins
- * @property {Object<string, import('prosemirror-view').NodeView>} [nodeViews]
+ * @property {Object<string, import('prosemirror-view').NodeViewConstructor>} [nodeViews]
  */
 
 /**
@@ -132,22 +132,25 @@ function generateMultipleParser(tokenName, list, isOpenClose) {
           return;
         }
 
+        state[`skip${tokenName}CloseStack`] ??= [];
+
+        let handled = false;
         for (let parser of list) {
           if (parser(state, token, tokens, i)) {
-            return;
+            handled = true;
+            break;
           }
         }
 
-        // No support for nested missing definitions
-        state[`skip${tokenName}Close`] ??= [];
+        state[`skip${tokenName}CloseStack`].push(!handled);
       },
       [`${tokenName}_close`](state) {
-        if (!list) {
+        if (!list || !state[`skip${tokenName}CloseStack`]) {
           return;
         }
 
-        if (state[`skip${tokenName}Close`]) {
-          state[`skip${tokenName}Close`] = false;
+        const skipCurrentLevel = state[`skip${tokenName}CloseStack`].pop();
+        if (skipCurrentLevel) {
           return;
         }
 

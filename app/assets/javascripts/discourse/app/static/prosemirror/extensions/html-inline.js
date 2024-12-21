@@ -28,6 +28,7 @@ export default {
     html_inline: {
       group: "inline",
       inline: true,
+      isolating: true,
       content: "inline*",
       attrs: { tag: {} },
       parseDOM: ALLOWED_INLINE.map((tag) => ({ tag })),
@@ -37,8 +38,8 @@ export default {
   parse: {
     // TODO(renato): it breaks if it's missing an end tag
     html_inline: (state, token) => {
-      const openMatch = token.content.match(/^<([a-z]+)>$/u);
-      const closeMatch = token.content.match(/^<\/([a-z]+)>$/u);
+      const openMatch = token.content.match(/^<([a-z]+)>$/);
+      const closeMatch = token.content.match(/^<\/([a-z]+)>$/);
 
       if (openMatch) {
         const tagName = openMatch[1];
@@ -49,7 +50,7 @@ export default {
         }
 
         if (ALLOWED_INLINE.includes(tagName)) {
-          state.openNode(state.schema.nodeType.html_inline, {
+          state.openNode(state.schema.nodes.html_inline, {
             tag: tagName,
           });
         }

@@ -1,7 +1,9 @@
 import { buildEmojiUrl, emojiExists, isCustomEmoji } from "pretty-text/emoji";
+import { translations } from "pretty-text/emoji/data";
 import { emojiOptions } from "discourse/lib/text";
+import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 
-// TODO(renato): we need to avoid the invalid text:emoji: state (reminder to use isPunctChar to avoid deleting the space)
 export default {
   nodeSpec: {
     emoji: {
@@ -52,6 +54,18 @@ export default {
       },
       options: { undoable: false },
     },
+    {
+      match: new RegExp(
+        `(?<=^|\\W)(${Object.keys(translations).map(escapeRegExp).join("|")})$`
+      ),
+      handler: (state, match, start, end) => {
+        return state.tr.replaceWith(
+          start,
+          end,
+          state.schema.nodes.emoji.create({ code: translations[match[1]] })
+        );
+      },
+    },
   ],
 
   parse: {
@@ -64,7 +78,11 @@ export default {
   },
 
   serializeNode: {
-    emoji: (state, node) => {
+    emoji(state, node) {
+      if (!isBoundary(state.out, state.out.length - 1)) {
+        state.write(" ");
+      }
+
       state.write(`:${node.attrs.code}:`);
     },
   },

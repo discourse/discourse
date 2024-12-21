@@ -6,7 +6,6 @@ import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class TextManipulation {
-  markdownOptions;
   /** @type {import("prosemirror-model").Schema} */
   schema;
   /** @type {import("prosemirror-view").EditorView} */
@@ -15,9 +14,8 @@ export default class TextManipulation {
   placeholder;
   autocompleteHandler;
 
-  constructor(owner, { markdownOptions, schema, view }) {
+  constructor(owner, { schema, view }) {
     setOwner(this, owner);
-    this.markdownOptions = markdownOptions;
     this.schema = schema;
     this.view = view;
     this.$editorElement = $(view.dom);
@@ -102,7 +100,7 @@ export default class TextManipulation {
   }
 
   addText(sel, text, options) {
-    const doc = convertFromMarkdown(this.schema, text, this.markdownOptions);
+    const doc = convertFromMarkdown(this.schema, text);
 
     // assumes it returns a single block node
     const content =

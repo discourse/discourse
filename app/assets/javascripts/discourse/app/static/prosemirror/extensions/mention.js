@@ -1,6 +1,5 @@
-// TODO(renato): similar to emoji, avoid joining anything@mentions, as it's invalid markdown
-
 import { mentionRegex } from "pretty-text/mentions";
+import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 
 export default {
   nodeSpec: {
@@ -58,8 +57,18 @@ export default {
   },
 
   serializeNode: {
-    mention: (state, node) => {
+    mention: (state, node, parent, index) => {
+      if (!isBoundary(state.out, state.out.length - 1)) {
+        state.write(" ");
+      }
+
       state.write(`@${node.attrs.name}`);
+
+      const nextSibling =
+        parent.childCount > index + 1 ? parent.child(index + 1) : null;
+      if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
+        state.write(" ");
+      }
     },
   },
 };

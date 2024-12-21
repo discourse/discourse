@@ -1,3 +1,5 @@
+import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+
 export default {
   nodeSpec: {
     hashtag: {
@@ -30,7 +32,7 @@ export default {
 
   inputRules: [
     {
-      match: /(?<=^|\W)#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101}) $/,
+      match: /(?<=^|\W)#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})\s$/,
       handler: (state, match, start, end) =>
         state.selection.$from.nodeBefore?.type !== state.schema.nodes.hashtag &&
         state.tr.replaceWith(start, end, [
@@ -42,7 +44,7 @@ export default {
   ],
 
   parse: {
-    span: (state, token, tokens, i) => {
+    span(state, token, tokens, i) {
       if (token.attrGet("class") === "hashtag-raw") {
         state.openNode(state.schema.nodes.hashtag, {
           name: tokens[i + 1].content.slice(1),
@@ -53,8 +55,18 @@ export default {
   },
 
   serializeNode: {
-    hashtag: (state, node) => {
+    hashtag(state, node, parent, index) {
+      if (!isBoundary(state.out, state.out.length - 1)) {
+        state.write(" ");
+      }
+
       state.write(`#${node.attrs.name}`);
+
+      const nextSibling =
+        parent.childCount > index + 1 ? parent.child(index + 1) : null;
+      if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
+        state.write(" ");
+      }
     },
   },
 };

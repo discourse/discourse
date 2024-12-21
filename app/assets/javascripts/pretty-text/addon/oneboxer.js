@@ -54,7 +54,7 @@ function _handleLoadingOneboxImages() {
   this.removeEventListener("load", _handleLoadingOneboxImages);
 }
 
-function loadNext(ajax) {
+export function loadNext(ajax) {
   if (loadingQueue.length === 0) {
     timeout = null;
     return;
@@ -62,7 +62,8 @@ function loadNext(ajax) {
 
   let timeoutMs = 150;
   let removeLoading = true;
-  const { url, refresh, elem, categoryId, topicId } = loadingQueue.shift();
+  const { url, refresh, elem, categoryId, topicId, onResolve } =
+    loadingQueue.shift();
 
   // Retrieve the onebox
   return ajax("/onebox", {
@@ -78,6 +79,7 @@ function loadNext(ajax) {
       (template) => {
         const node = domFromString(template)[0];
         setLocalCache(normalize(url), node);
+        onResolve?.(template);
         elem.replaceWith(node);
         applySquareGenericOnebox(node);
       },
@@ -154,4 +156,18 @@ export function load({
   } else {
     timeout = timeout || discourseLater(() => loadNext(ajax), 150);
   }
+}
+
+export function addToLoadingQueue({
+  url,
+  elem = {
+    replaceWith() {},
+    classList: { remove() {}, add() {} },
+    dataset: {},
+  },
+  categoryId,
+  topicId,
+  onResolve,
+}) {
+  loadingQueue.push({ url, elem, categoryId, topicId, onResolve });
 }

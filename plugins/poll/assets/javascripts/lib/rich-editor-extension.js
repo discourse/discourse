@@ -2,19 +2,22 @@ export default {
   nodeSpec: {
     poll: {
       attrs: {
-        type: {},
-        results: {},
-        public: {},
+        type: { default: null },
+        results: { default: null },
+        public: { default: null },
         name: {},
-        chartType: {},
+        chartType: { default: null },
         close: { default: null },
         groups: { default: null },
         max: { default: null },
         min: { default: null },
       },
-      content: "poll_container poll_info",
+      content: "heading? bullet_list poll_info?",
       group: "block",
       draggable: true,
+      selectable: true,
+      isolating: true,
+      defining: true,
       parseDOM: [
         {
           tag: "div.poll",
@@ -48,17 +51,10 @@ export default {
         0,
       ],
     },
-    poll_container: {
-      content: "heading? bullet_list",
-      group: "block",
-      parseDOM: [{ tag: "div.poll-container" }],
-      toDOM: () => ["div", { class: "poll-container" }, 0],
-    },
     poll_info: {
       content: "inline*",
-      group: "block",
-      atom: true,
       selectable: false,
+      isolating: true,
       parseDOM: [{ tag: "div.poll-info" }],
       toDOM: () => ["div", { class: "poll-info", contentEditable: false }, 0],
     },
@@ -78,13 +74,16 @@ export default {
         min: token.attrGet("data-poll-min"),
       }),
     },
-    poll_container: { block: "poll_container" },
+    poll_container: { ignore: true },
     poll_title: { block: "heading" },
     poll_info: { block: "poll_info" },
     poll_info_counts: { ignore: true },
     poll_info_counts_count: { ignore: true },
     poll_info_number: { ignore: true },
-    poll_info_label: { ignore: true },
+    poll_info_label_open(state) {
+      state.addText(" ");
+    },
+    poll_info_label_close() {},
   },
   serializeNode: {
     poll(state, node) {
@@ -95,9 +94,6 @@ export default {
       state.write(`[poll${attrs}]\n`);
       state.renderContent(node);
       state.write("[/poll]\n\n");
-    },
-    poll_container(state, node) {
-      state.renderContent(node);
     },
     poll_info() {},
   },
