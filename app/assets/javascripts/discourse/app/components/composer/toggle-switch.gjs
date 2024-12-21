@@ -11,7 +11,7 @@ const ComposerToggleSwitch = <template>
 
     {{! template-lint-disable no-redundant-role }}
     <button
-      class="composer-toggle-switch__checkbox"
+      class="composer-toggle-switch__button"
       type="button"
       role="switch"
       aria-pressed={{if @state "true" "false"}}
@@ -19,7 +19,7 @@ const ComposerToggleSwitch = <template>
     >
       {{! template-lint-enable no-redundant-role }}
 
-      <span class="composer-toggle-switch__checkbox-slider">
+      <span class="composer-toggle-switch__slider" focusable="false">
         <span
           class={{concatClass
             "composer-toggle-switch__left-icon"
