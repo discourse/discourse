@@ -1,146 +1,94 @@
 .composer-toggle-switch {
-  $root: &;
-
-  --toggle-switch-width: 48px;
+  --toggle-switch-width: 40px;
   --toggle-switch-height: 24px;
 
+  height: 100%;
   grid-column: span 2;
   justify-content: center;
-
-  &:focus {
-    &__checkbox-slider {
-      outline: 2px solid var(--tertiary);
-      outline-offset: 2px;
-    }
-  }
-
-  &:hover {
-    &__checkbox-slider {
-      background-color: var(--primary-high);
-    }
-
-    &__checkbox[aria-checked="true"]:not([disabled])
-      + #{$root}__checkbox-slider {
-      background-color: var(--tertiary-hover);
-    }
-  }
-
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 
-  &__label {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    margin: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+
+  &:focus-visible {
+    outline: none;
   }
-
-  &__checkbox {
-    position: absolute;
-    border: 0;
-    padding: 0;
-    background: transparent;
-
-    &:focus {
-      + #{$root}__checkbox-slider {
-        outline: 2px solid var(--tertiary);
-        outline-offset: 2px;
-      }
-
-      // Outline should show only when tabbing, not clicking
-      &:not(:focus-visible) {
-        + #{$root}__checkbox-slider {
-          outline: none;
-        }
-      }
-    }
-  }
-
-  &__checkbox[aria-checked="true"] + &__checkbox-slider::before {
-    left: calc(var(--toggle-switch-width) - var(--toggle-switch-height));
-  }
-
-  &__checkbox[disabled] + &__checkbox-slider {
+  &[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-
-    &::before {
-      cursor: not-allowed;
-    }
   }
 
-  &__checkbox-slider {
+  &__slider {
     display: inline-block;
-    cursor: pointer;
-    background: var(--primary-low-mid);
+    background: var(--primary-low);
     width: var(--toggle-switch-width);
     height: var(--toggle-switch-height);
     position: relative;
     vertical-align: middle;
-    transition: background 0.25s;
-  }
+    border-radius: 0.25em;
 
-  &__left-icon {
-    opacity: 0;
-    transition: opacity 0.25s;
-
-    @media (prefers-reduced-motion: reduce) {
-      transition-duration: 0ms;
+    :focus-visible & {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
     }
 
-    &.--active {
-      opacity: 1;
-    }
-
-    & .d-icon {
-      font-size: var(--font-down-1);
-      color: var(--primary);
-      left: 5px;
-      top: 6px;
+    &:before {
+      content: "";
+      display: block;
       position: absolute;
+      background-color: var(--tertiary-low);
+      width: calc(var(--toggle-switch-height) - 2px);
+      height: calc(var(--toggle-switch-height) - 4px);
+      top: 2px;
+      transition: left 0.25s, right 0.25s;
+      border-radius: 0.25em;
+      box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+
+      .--markdown & {
+        left: 2px;
+      }
+
+      .--rte & {
+        right: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition-duration: 0ms;
+      }
     }
   }
 
+  &__left-icon,
   &__right-icon {
+    display: inline-block;
+    position: absolute;
     opacity: 0;
-    transition: opacity 0.25s;
+    transition: opacity 0.25s left 0.25s, right 0.25s;
+    height: 100%;
+    width: calc(var(--toggle-switch-height) - 2px);
 
     @media (prefers-reduced-motion: reduce) {
       transition-duration: 0ms;
     }
 
-    & .d-icon {
-      font-size: var(--font-down-1);
-      color: var(--primary);
-      right: 5px;
-      top: 6px;
-      position: absolute;
+    .--markdown & {
+      left: 2px;
+    }
+
+    .--rte & {
+      right: 2px;
     }
 
     &.--active {
       opacity: 1;
     }
-  }
 
-  &__checkbox-slider::before,
-  &__checkbox-slider::after {
-    content: "";
-    display: block;
-    position: absolute;
-    cursor: pointer;
-  }
-
-  &__checkbox-slider::before {
-    background-color: var(--tertiary-low);
-    width: var(--toggle-switch-height);
-    height: var(--toggle-switch-height);
-    top: 0;
-    left: 0;
-    transition: left 0.25s;
-
-    @media (prefers-reduced-motion: reduce) {
-      transition-duration: 0ms;
+    .d-icon {
+      font-size: var(--font-down-1);
+      color: var(--primary);
+      vertical-align: text-bottom;
     }
   }
 }
