@@ -1,6 +1,9 @@
 <label
-  class="wizard-container__button wizard-container__button-upload
-    {{if this.uploading 'disabled'}}"
+  class={{concatClass
+    "wizard-container__button wizard-container__button-upload"
+    (if this.uploading "disabled")
+    (if this.hasUpload "has-upload")
+  }}
 >
   {{#if this.uploading}}
     {{i18n "wizard.uploading"}}
