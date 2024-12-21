@@ -1,5 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import {
   acceptance,
   publishToMessageBus,
@@ -14,8 +15,8 @@ async function openUserStatusModal() {
 
 async function pickEmoji(emoji) {
   await click(".btn-emoji");
-  await fillIn(".emoji-picker-content .filter", emoji);
-  await click(".results .emoji");
+  await emojiPicker().fill(emoji);
+  await emojiPicker().select(emoji);
 }
 
 async function setDoNotDisturbMode() {
@@ -259,7 +260,8 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
     await fillIn(".user-status-description", "another status");
-    await pickEmoji("cold_face"); // another emoji
+
+    await pickEmoji("grinning"); // another emoji
     await click(".d-modal-cancel");
     await openUserStatusModal();
 

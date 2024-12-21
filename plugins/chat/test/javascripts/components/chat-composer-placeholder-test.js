@@ -13,7 +13,7 @@ module(
     setupRenderingTest(hooks);
 
     test("direct message to self shows Jot something down", async function (assert) {
-      pretender.get("/chat/emojis.json", () => [200, [], {}]);
+      pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.currentUser.set("id", 1);
       this.channel = ChatChannel.create({
@@ -31,8 +31,8 @@ module(
       );
     });
 
-    test("direct message to multiple folks shows their names when not a group", async function (assert) {
-      pretender.get("/chat/emojis.json", () => [200, [], {}]);
+    test("direct message to multiple folks shows their names  when not a group", async function (assert) {
+      pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
         chatable_type: "DirectMessage",
@@ -79,7 +79,7 @@ module(
     });
 
     test("message to channel shows send message to channel name", async function (assert) {
-      pretender.get("/chat/emojis.json", () => [200, [], {}]);
+      pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
         chatable_type: "Category",

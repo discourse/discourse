@@ -189,20 +189,6 @@ task "javascript:update_constants" => :environment do
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS
-
-  groups_json = JSON.parse(File.read("lib/emoji/groups.json"))
-
-  emoji_buttons = groups_json.map { |group| <<~HTML }
-			<button type="button" data-section="#{group["name"]}" {{on "click" (fn this.onCategorySelection "#{group["name"]}")}} class="btn btn-default category-button emoji">
-				 {{replace-emoji ":#{group["tabicon"]}:"}}
-			</button>
-    HTML
-
-  emoji_sections = groups_json.map { |group| html_for_section(group) }
-
-  components_dir = "discourse/app/components"
-  write_hbs_template("#{components_dir}/emoji-group-buttons.hbs", task_name, emoji_buttons.join)
-  write_hbs_template("#{components_dir}/emoji-group-sections.hbs", task_name, emoji_sections.join)
 end
 
 task "javascript:update" => "clean_up" do

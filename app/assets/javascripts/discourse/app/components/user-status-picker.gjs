@@ -2,9 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { scheduleOnce } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
 import { emojiUnescape } from "discourse/lib/text";
@@ -14,14 +11,9 @@ import { i18n } from "discourse-i18n";
 
 export default class UserStatusPicker extends Component {
   @tracked isFocused = false;
-  @tracked emojiPickerIsActive = false;
 
   get emojiHtml() {
     return emojiUnescape(escapeExpression(`:${this.args.status.emoji}:`));
-  }
-
-  focusEmojiButton() {
-    document.querySelector(".user-status-picker .btn-emoji")?.focus();
   }
 
   @action
@@ -32,9 +24,6 @@ export default class UserStatusPicker extends Component {
   @action
   emojiSelected(emoji) {
     this.args.status.emoji = emoji;
-    this.emojiPickerIsActive = false;
-
-    scheduleOnce("afterRender", this, this.focusEmojiButton);
   }
 
   @action
@@ -43,19 +32,9 @@ export default class UserStatusPicker extends Component {
   }
 
   @action
-  onEmojiPickerOutsideClick() {
-    this.emojiPickerIsActive = false;
-  }
-
-  @action
   updateDescription(event) {
     this.args.status.description = event.target.value;
     this.args.status.emoji ||= "speech_balloon";
-  }
-
-  @action
-  toggleEmojiPicker() {
-    this.emojiPickerIsActive = !this.emojiPickerIsActive;
   }
 
   <template>
@@ -66,13 +45,10 @@ export default class UserStatusPicker extends Component {
           (if this.isFocused "focused")
         }}
       >
-        <DButton
-          {{on "focus" this.focus}}
-          {{on "blur" this.blur}}
-          @action={{this.toggleEmojiPicker}}
-          @icon={{unless @status.emoji "discourse-emojis"}}
-          @translatedLabel={{if @status.emoji (htmlSafe this.emojiHtml)}}
-          class="btn-emoji btn-transparent"
+        <EmojiPicker
+          @icon={{@status.emoji}}
+          @didSelectEmoji={{this.emojiSelected}}
+          @btnClass="btn-emoji"
         />
 
         <input
@@ -88,12 +64,5 @@ export default class UserStatusPicker extends Component {
         />
       </div>
     </div>
-
-    <EmojiPicker
-      @isActive={{this.emojiPickerIsActive}}
-      @emojiSelected={{this.emojiSelected}}
-      @onEmojiPickerClose={{this.onEmojiPickerOutsideClick}}
-      @placement="bottom"
-    />
   </template>
 }

@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -32,8 +33,7 @@ export default class ChatMessageInteractor {
   @service appEvents;
   @service dialog;
   @service chat;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
+  @service emojiStore;
   @service chatChannelComposer;
   @service chatThreadComposer;
   @service chatChannelPane;
@@ -44,7 +44,9 @@ export default class ChatMessageInteractor {
   @service router;
   @service modal;
   @service capabilities;
+  @service menu;
   @service toasts;
+  @service interactedChatMessage;
 
   @tracked message = null;
   @tracked context = null;
@@ -56,7 +58,7 @@ export default class ChatMessageInteractor {
 
     this.message = message;
     this.context = context;
-    this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
+    this.cachedFavoritesReactions = this.emojiStore.favorites;
   }
 
   get pane() {
@@ -291,10 +293,6 @@ export default class ChatMessageInteractor {
       this.chat.activeMessage = null;
     }
 
-    if (reactAction === REACTIONS.add) {
-      this.chatEmojiReactionStore.track(`:${emoji}:`);
-    }
-
     this.pane.reacting = true;
 
     this.message.react(
@@ -406,13 +404,29 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  openEmojiPicker(_, { target }) {
-    const pickerState = {
-      didSelectEmoji: this.selectReaction,
-      trigger: target,
-      context: "chat-channel-message",
-    };
-    this.chatEmojiPickerManager.open(pickerState);
+  async openEmojiPicker(trigger) {
+    this.interactedChatMessage.emojiPickerOpen = true;
+
+    await this.menu.show(trigger, {
+      identifier: "emoji-picker",
+      groupIdentifier: "emoji-picker",
+      component: EmojiPickerDetached,
+      onClose: () => {
+        this.interactedChatMessage.emojiPickerOpen = false;
+      },
+      data: {
+        context: "chat",
+        didSelectEmoji: (emoji) => {
+          this.selectReaction(emoji);
+        },
+      },
+    });
+  }
+
+  @action
+  async closeEmojiPicker() {
+    await this.menu.close("emoji-picker");
+    this.interactedChatMessage.emojiPickerOpen = false;
   }
 
   @bind
