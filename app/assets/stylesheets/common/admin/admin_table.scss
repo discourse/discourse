@@ -94,6 +94,13 @@
       color: var(--primary-high);
       font-size: var(--font-down-1);
     }
+    &__badge {
+      background-color: var(--primary-low);
+      border-radius: var(--d-border-radius);
+      font-size: var(--font-down-1);
+      margin-left: var(--space-1);
+      padding: var(--space-2);
+    }
   }
 
   // Success badge
