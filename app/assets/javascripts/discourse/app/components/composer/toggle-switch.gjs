@@ -2,16 +2,21 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 
 const ComposerToggleSwitch = <template>
-  <div class="composer-toggle-switch">
-    <label class="composer-toggle-switch__label">
-      {{! template-lint-disable no-redundant-role }}
-      <button
-        class="composer-toggle-switch__checkbox"
-        type="button"
-        role="switch"
-        aria-checked={{if @state "true" "false"}}
-        ...attributes
-      ></button>
+  <div
+    class="{{concatClass
+        'composer-toggle-switch'
+        (if @state '--rte' '--markdown')
+      }}"
+  >
+
+    {{! template-lint-disable no-redundant-role }}
+    <button
+      class="composer-toggle-switch__checkbox"
+      type="button"
+      role="switch"
+      aria-pressed={{if @state "true" "false"}}
+      ...attributes
+    >
       {{! template-lint-enable no-redundant-role }}
 
       <span class="composer-toggle-switch__checkbox-slider">
@@ -20,15 +25,20 @@ const ComposerToggleSwitch = <template>
             "composer-toggle-switch__left-icon"
             (unless @state "--active")
           }}
+          aria-hidden="true"
+          focusable="false"
         >{{icon "fab-markdown"}}</span>
         <span
           class={{concatClass
             "composer-toggle-switch__right-icon"
             (if @state "--active")
           }}
+          aria-hidden="true"
+          focusable="false"
         >{{icon "a"}}</span>
       </span>
-    </label>
+    </button>
+
   </div>
 </template>;
 
