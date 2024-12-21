@@ -7,7 +7,8 @@ import {
 
 // TODO(renato): should respect `enable_markdown_typographer`
 
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   inputRules: [
     {
       match: new RegExp(`(${RARE_RE.source})$`),
@@ -31,3 +32,5 @@ export default {
     },
   ],
 };
+
+export default extension;

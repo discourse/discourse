@@ -1,8 +1,6 @@
 import {
   chainCommands,
   exitCode,
-  joinDown,
-  joinUp,
   lift,
   selectParentNode,
   setBlockType,
@@ -48,8 +46,6 @@ export function buildKeymap(schema, initialKeymap = {}, suppressKeys) {
     bind("Mod-y", redo);
   }
 
-  bind("Alt-ArrowUp", joinUp);
-  bind("Alt-ArrowDown", joinDown);
   bind("Mod-BracketLeft", lift);
   bind("Escape", selectParentNode);
 

@@ -1,4 +1,5 @@
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   nodeSpec: {
     heading: {
       attrs: { level: { default: 1 } },
@@ -20,3 +21,5 @@ export default {
     },
   },
 };
+
+export default extension;

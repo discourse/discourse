@@ -518,8 +518,9 @@ div.poll-outer {
   }
 }
 
-.d-editor__editable {
+.ProseMirror {
   .poll {
+    margin-bottom: 1rem;
     ul {
       list-style-type: none;
       padding: 0;
@@ -593,7 +594,7 @@ body.crawler {
   }
 }
 
-.d-editor__editable .poll {
+.ProseMirror .poll {
   border: 1px solid var(--primary-low);
   border-radius: var(--d-border-radius);
   padding: 1rem;

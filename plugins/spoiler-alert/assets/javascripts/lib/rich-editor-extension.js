@@ -1,18 +1,14 @@
-const INLINE_NODES = ["inline_spoiler", "spoiler"];
+const SPOILER_NODES = ["inline_spoiler", "spoiler"];
 
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   nodeSpec: {
     spoiler: {
       attrs: { blurred: { default: true } },
       group: "block",
       content: "block+",
-      defining: true,
       parseDOM: [{ tag: "div.spoiled" }],
-      toDOM: (node) => [
-        "div",
-        { class: `spoiled ${node.attrs.blurred ? "spoiler-blurred" : ""}` },
-        0,
-      ],
+      toDOM: () => ["div", { class: "spoiled" }, 0],
     },
     inline_spoiler: {
       attrs: { blurred: { default: true } },
@@ -20,11 +16,7 @@ export default {
       inline: true,
       content: "inline*",
       parseDOM: [{ tag: "span.spoiled" }],
-      toDOM: (node) => [
-        "span",
-        { class: `spoiled ${node.attrs.blurred ? "spoiler-blurred" : ""}` },
-        0,
-      ],
+      toDOM: () => ["span", { class: "spoiled" }, 0],
     },
   },
   parse: {
@@ -32,8 +24,10 @@ export default {
     wrap_bbcode(state, token) {
       if (token.nesting === 1 && token.attrGet("class") === "spoiler") {
         state.openNode(state.schema.nodes.spoiler);
-      } else if (token.nesting === -1) {
+        return true;
+      } else if (token.nesting === -1 && state.top().type.name === "spoiler") {
         state.closeNode();
+        return true;
       }
     },
   },
@@ -49,18 +43,42 @@ export default {
       state.write("[/spoiler]");
     },
   },
-  plugins: {
-    props: {
-      handleClickOn(view, pos, node, nodePos, event, direct) {
-        if (INLINE_NODES.includes(node.type.name)) {
-          view.dispatch(
-            view.state.tr.setNodeMarkup(nodePos, null, {
-              blurred: !node.attrs.blurred,
-            })
-          );
-          return true;
-        }
+  plugins({ pmState: { Plugin }, pmView: { Decoration, DecorationSet } }) {
+    return new Plugin({
+      props: {
+        decorations(state) {
+          return this.getState(state);
+        },
+        handleClickOn(view, pos, node, nodePos) {
+          if (SPOILER_NODES.includes(node.type.name)) {
+            const decoSet = this.getState(view.state) || DecorationSet.empty;
+
+            const isBlurred =
+              decoSet.find(nodePos, nodePos + node.nodeSize).length > 0;
+
+            const newDeco = isBlurred
+              ? decoSet.remove(decoSet.find(nodePos, nodePos + node.nodeSize))
+              : decoSet.add(view.state.doc, [
+                  Decoration.node(nodePos, nodePos + node.nodeSize, {
+                    class: "spoiler-blurred",
+                  }),
+                ]);
+
+            view.dispatch(view.state.tr.setMeta(this, newDeco));
+            return true;
+          }
+        },
       },
-    },
+      state: {
+        init() {
+          return DecorationSet.empty;
+        },
+        apply(tr, set) {
+          return tr.getMeta(this) || set.map(tr.mapping, tr.doc);
+        },
+      },
+    });
   },
 };
+
+export default extension;

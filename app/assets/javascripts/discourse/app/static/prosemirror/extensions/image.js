@@ -10,7 +10,8 @@ const PLACEHOLDER_IMG = "/images/transparent.png";
 const ALT_TEXT_REGEX =
   /^(.*?)(?:\|(\d{1,4}x\d{1,4}))?(?:,\s*(\d{1,3})%)?(?:\|(.*))?$/;
 
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   nodeSpec: {
     image: {
       inline: true,
@@ -106,7 +107,7 @@ export default {
     },
   },
 
-  plugins: ({ Plugin }) => {
+  plugins({ pmState: { Plugin } }) {
     const shortUrlResolver = new Plugin({
       state: {
         init() {
@@ -115,6 +116,7 @@ export default {
         apply(tr, value) {
           let updated = value.slice();
 
+          // we should only track the changes
           tr.doc.descendants((node, pos) => {
             if (node.type.name === "image" && node.attrs["data-orig-src"]) {
               if (node.attrs.src === PLACEHOLDER_IMG) {
@@ -140,7 +142,6 @@ export default {
 
             const unresolvedUrls = shortUrlResolver.getState(view.state);
 
-            // Process only unresolved URLs
             for (const unresolved of unresolvedUrls) {
               const cachedUrl = lookupCachedUploadUrl(unresolved.src).url;
               const url =
@@ -168,3 +169,5 @@ export default {
     return shortUrlResolver;
   },
 };
+
+export default extension;

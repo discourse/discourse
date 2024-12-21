@@ -1,12 +1,15 @@
 import { setOwner } from "@ember/owner";
+import { next } from "@ember/runloop";
 import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
+import { bind } from "discourse/lib/decorators";
 import { convertFromMarkdown } from "discourse/static/prosemirror/lib/parser";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
-export default class TextManipulation {
-  markdownOptions;
+/** @implements {TextManipulation} */
+export default class ProsemirrorTextManipulation {
+  allowPreview = false;
+
   /** @type {import("prosemirror-model").Schema} */
   schema;
   /** @type {import("prosemirror-view").EditorView} */
@@ -15,25 +18,17 @@ export default class TextManipulation {
   placeholder;
   autocompleteHandler;
 
-  constructor(owner, { markdownOptions, schema, view }) {
+  constructor(owner, { schema, view }) {
     setOwner(this, owner);
-    this.markdownOptions = markdownOptions;
     this.schema = schema;
     this.view = view;
     this.$editorElement = $(view.dom);
 
-    this.placeholder = new PlaceholderHandler({ schema, view });
-    this.autocompleteHandler = new AutocompleteHandler({ schema, view });
-  }
-
-  /**
-   * The textual value of the selected text block
-   * @returns {string}
-   */
-  get value() {
-    const parent = this.view.state.selection.$head.parent;
-
-    return parent.textBetween(0, parent.nodeSize - 2, " ", " ");
+    this.placeholder = new ProsemirrorPlaceholderHandler({ schema, view });
+    this.autocompleteHandler = new ProsemirrorAutocompleteHandler({
+      schema,
+      view,
+    });
   }
 
   getSelected(trimLeading, opts) {
@@ -58,15 +53,12 @@ export default class TextManipulation {
   }
 
   putCursorAtEnd() {
-    // this.view.dispatch(
-    //   this.view.state.tr.setSelection(
-    //     TextSelection.create(this.view.state.doc, 0)
-    //   )
-    // );
+    this.focus();
+    next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
   }
 
   autocomplete(options) {
-    return this.$editorElement.autocomplete(
+    this.$editorElement.autocomplete(
       options instanceof Object
         ? { textHandler: this.autocompleteHandler, ...options }
         : options
@@ -102,7 +94,7 @@ export default class TextManipulation {
   }
 
   addText(sel, text, options) {
-    const doc = convertFromMarkdown(this.schema, text, this.markdownOptions);
+    const doc = convertFromMarkdown(this.schema, text);
 
     // assumes it returns a single block node
     const content =
@@ -194,7 +186,9 @@ export default class TextManipulation {
 
   @bind
   emojiSelected(code) {
-    const text = this.value.slice(0, this.getCaretPosition());
+    const text = this.autocompleteHandler
+      .getValue()
+      .slice(0, this.getCaretPosition());
     const captures = text.match(/\B:(\w*)$/);
 
     if (!captures) {
@@ -262,9 +256,33 @@ export default class TextManipulation {
 
     return $anchor.pos - $anchor.start();
   }
+
+  indentSelection(direction) {
+    const command = direction === "right" ? wrapIn : lift;
+
+    command(this.schema.nodes.blockquote)(this.view.state, this.view.dispatch);
+  }
+
+  insertText(text) {
+    this.view.dispatch(
+      this.view.state.tr.insertText(text, this.view.state.selection.from)
+    );
+  }
+
+  replaceText(oldValue, newValue, opts) {
+    // this method should be deprecated, this is not very reliable:
+    // we're converting the current document to markdown, replacing it, and setting its result
+    // as the new document content
+    // TODO
+  }
+
+  toggleDirection() {
+    this.view.dom.dir = this.view.dom.dir === "rtl" ? "ltr" : "rtl";
+  }
 }
 
-class AutocompleteHandler {
+/** @implements {AutocompleteHandler} */
+class ProsemirrorAutocompleteHandler {
   /** @type {import("prosemirror-view").EditorView} */
   view;
   /** @type {import("prosemirror-model").Schema} */
@@ -279,8 +297,11 @@ class AutocompleteHandler {
    * The textual value of the selected text block
    * @returns {string}
    */
-  get value() {
-    return this.view.state.selection.$head.nodeBefore?.textContent ?? "";
+  getValue() {
+    return (
+      (this.view.state.selection.$head.nodeBefore?.textContent ?? "") +
+        (this.view.state.selection.$head.nodeAfter?.textContent ?? "") || " "
+    );
   }
 
   /**
@@ -292,7 +313,7 @@ class AutocompleteHandler {
    * @param {number} end
    * @param {String} term
    */
-  replaceTerm({ start, end, term }) {
+  replaceTerm(start, end, term) {
     const node = this.view.state.selection.$head.nodeBefore;
     const from = this.view.state.selection.from - node.nodeSize + start;
     const to = this.view.state.selection.from - node.nodeSize + end + 1;
@@ -339,13 +360,6 @@ class AutocompleteHandler {
     return node.nodeSize;
   }
 
-  /**
-   * Gets the caret coordinates within the selected text block
-   *
-   * @param {number} start
-   *
-   * @returns {{top: number, left: number}}
-   */
   getCaretCoords(start) {
     const node = this.view.state.selection.$head.nodeBefore;
     const pos = this.view.state.selection.from - node.nodeSize + start;
@@ -359,7 +373,7 @@ class AutocompleteHandler {
     };
   }
 
-  inCodeBlock() {
+  async inCodeBlock() {
     return (
       this.view.state.selection.$from.parent.type ===
       this.schema.nodes.code_block
@@ -367,7 +381,8 @@ class AutocompleteHandler {
   }
 }
 
-class PlaceholderHandler {
+/** @implements {PlaceholderHandler} */
+class ProsemirrorPlaceholderHandler {
   view;
   schema;
 

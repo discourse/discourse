@@ -1,7 +1,8 @@
 import { convertFromMarkdown } from "../lib/parser";
 
-export default {
-  plugins({ Plugin, Fragment, Slice }) {
+/** @type {RichEditorExtension} */
+const extension = {
+  plugins({ pmState: { Plugin }, pmModel: { Fragment, Slice } }) {
     return new Plugin({
       props: {
         clipboardTextParser(text, $context, plain, view) {
@@ -13,3 +14,5 @@ export default {
     });
   },
 };
+
+export default extension;

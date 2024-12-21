@@ -27,6 +27,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import loadRichEditor from "discourse/lib/load-rich-editor";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
@@ -61,6 +62,7 @@ export default class DEditor extends Component {
   @service menu;
 
   @tracked editorComponent;
+  /** @type {TextManipulation} */
   @tracked textManipulation;
 
   ready = false;
@@ -84,7 +86,7 @@ export default class DEditor extends Component {
       this.siteSettings.experimental_rich_editor &&
       this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
     ) {
-      this.editorComponent = await this.loadProsemirrorEditor();
+      this.editorComponent = await loadRichEditor();
     } else {
       this.editorComponent = TextareaEditor;
     }
@@ -645,6 +647,12 @@ export default class DEditor extends Component {
     this.set("isEditorFocused", false);
   }
 
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
   @action
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;
@@ -676,20 +684,12 @@ export default class DEditor extends Component {
   async toggleRichEditor() {
     this.editorComponent = this.isRichEditorEnabled
       ? TextareaEditor
-      : await this.loadProsemirrorEditor();
-    scheduleOnce("afterRender", this, this.focus);
+      : await loadRichEditor();
 
     this.keyValueStore.set({
       key: "d-editor-prefers-rich-editor",
       value: this.isRichEditorEnabled,
     });
-  }
-
-  async loadProsemirrorEditor() {
-    this.prosemirrorEditorClass ??= (
-      await import("discourse/static/prosemirror/components/prosemirror-editor")
-    ).default;
-    return this.prosemirrorEditorClass;
   }
 
   focus() {
@@ -703,7 +703,7 @@ export default class DEditor extends Component {
   }
 
   get isRichEditorEnabled() {
-    return this.editorComponent === this.prosemirrorEditorClass;
+    return this.editorComponent !== TextareaEditor;
   }
 
   setupEvents() {

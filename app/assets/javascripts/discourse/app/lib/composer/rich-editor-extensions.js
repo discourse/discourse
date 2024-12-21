@@ -7,32 +7,59 @@ const CUSTOM_NODE_VIEW = {};
 const CUSTOM_INPUT_RULES = [];
 const CUSTOM_PLUGINS = [];
 
-const MULTIPLE_ALLOWED = { span: true, wrap_bbcode: false, bbcode: true };
+/**
+ * Node names to be processed allowing multiple occurrences, with its respective `noCloseToken` boolean definition
+ * @type {Record<string, boolean>}
+ */
+const MULTIPLE_ALLOWED = { span: false, wrap_bbcode: true, bbcode: false };
+
+/** @typedef {import('prosemirror-state').PluginSpec} PluginSpec */
+/** @typedef {((params: PluginParams) => PluginSpec)} RichPluginFn */
+/** @typedef {PluginSpec | RichPluginFn} RichPlugin */
 
 /**
- * @typedef {import('prosemirror-state').PluginSpec} PluginSpec
- * @typedef {((pluginClass: typeof import('prosemirror-state').Plugin) => PluginSpec)} RichPluginFn
- * @typedef {PluginSpec | RichPluginFn} RichPlugin
- *
+ * @typedef InputRuleObject
+ * @property {RegExp} match
+ * @property {string | ((state: import('prosemirror-state').EditorState, match: RegExpMatchArray, start: number, end: number) => import('prosemirror-state').Transaction | null)} handler
+ * @property {{ undoable?: boolean, inCode?: boolean | "only" }} [options]
+ */
+
+/**
+ * @typedef InputRuleParams
+ * @property {import('prosemirror-model').Schema} schema
+ * @property {Function} markInputRule
+ */
+
+/** @typedef {((params: InputRuleParams) => InputRuleObject) | InputRuleObject} RichInputRule */
+
+/** @typedef {import("markdown-it").Token} MarkdownItToken */
+/** @typedef {(state: unknown, token: MarkdownItToken, tokenStream: MarkdownItToken[], index: number) => boolean | void} ParseFunction */
+/** @typedef {import("prosemirror-markdown").ParseSpec | ParseFunction} RichParseSpec */
+
+/**
+ * @typedef {(state: import("prosemirror-markdown").MarkdownSerializerState, node: import("prosemirror-model").Node, parent: import("prosemirror-model").Node, index: number) => void} SerializeNodeFn
+ */
+
+/**
  * @typedef {Object} RichEditorExtension
- * @property {Object<string, import('prosemirror-model').NodeSpec>} [nodeSpec]
+ * @property {Record<string, import('prosemirror-model').NodeSpec>} [nodeSpec]
  *   Map containing Prosemirror node spec definitions, each key being the node name
  *   See https://prosemirror.net/docs/ref/#model.NodeSpec
- * @property {Object<string, import('prosemirror-model').MarkSpec>} [markSpec]
+ * @property {Record<string, import('prosemirror-model').MarkSpec>} [markSpec]
  *   Map containing Prosemirror mark spec definitions, each key being the mark name
  *   See https://prosemirror.net/docs/ref/#model.MarkSpec
- * @property {Array<typeof import("prosemirror-inputrules").InputRule>} [inputRules]
+ * @property {RichInputRule | Array<RichInputRule>} [inputRules]
  *   Prosemirror input rules. See https://prosemirror.net/docs/ref/#inputrules.InputRule
  *   can be a function returning an array or an array of input rules
- * @property {Object<string, import('prosemirror-markdown').NodeSerializerSpec>} [serializeNode]
+ * @property {Record<string, SerializeNodeFn>} [serializeNode]
  *   Node serialization definition
- * @property {Object<string, import('prosemirror-markdown').MarkSerializerSpec>} [serializeMark]
+ * @property {Record<string, import('prosemirror-markdown').MarkSerializerSpec>} [serializeMark]
  *   Mark serialization definition
- * @property {Object<string, import('prosemirror-markdown').ParseSpec>} [parse]
+ * @property {Record<string, RichParseSpec>} [parse]
  *   Markdown-it token parse definition
- * @property {Array<RichPlugin>} [plugins]
+ * @property {RichPlugin | Array<RichPlugin>} [plugins]
  *    ProseMirror plugins
- * @property {Object<string, import('prosemirror-view').NodeView>} [nodeViews]
+ * @property {Record<string, import('prosemirror-view').NodeViewConstructor>} [nodeViews]
  */
 
 /**
@@ -124,37 +151,8 @@ export function getPlugins() {
   return CUSTOM_PLUGINS;
 }
 
-function generateMultipleParser(tokenName, list, isOpenClose) {
-  if (isOpenClose) {
-    return {
-      [`${tokenName}_open`](state, token, tokens, i) {
-        if (!list) {
-          return;
-        }
-
-        for (let parser of list) {
-          if (parser(state, token, tokens, i)) {
-            return;
-          }
-        }
-
-        // No support for nested missing definitions
-        state[`skip${tokenName}Close`] ??= [];
-      },
-      [`${tokenName}_close`](state) {
-        if (!list) {
-          return;
-        }
-
-        if (state[`skip${tokenName}Close`]) {
-          state[`skip${tokenName}Close`] = false;
-          return;
-        }
-
-        state.closeNode();
-      },
-    };
-  } else {
+function generateMultipleParser(tokenName, list, noCloseToken) {
+  if (noCloseToken) {
     return {
       [tokenName](state, token, tokens, i) {
         if (!list) {
@@ -162,10 +160,48 @@ function generateMultipleParser(tokenName, list, isOpenClose) {
         }
 
         for (let parser of list) {
+          // Stop once a parse function returns true
           if (parser(state, token, tokens, i)) {
             return;
           }
         }
+        throw new Error(
+          `No parser to process ${tokenName} token. Tag: ${
+            token.tag
+          }, attrs: ${JSON.stringify(token.attrs)}`
+        );
+      },
+    };
+  } else {
+    return {
+      [`${tokenName}_open`](state, token, tokens, i) {
+        if (!list) {
+          return;
+        }
+
+        state[`skip${tokenName}CloseStack`] ??= [];
+
+        let handled = false;
+        for (let parser of list) {
+          if (parser(state, token, tokens, i)) {
+            handled = true;
+            break;
+          }
+        }
+
+        state[`skip${tokenName}CloseStack`].push(!handled);
+      },
+      [`${tokenName}_close`](state) {
+        if (!list || !state[`skip${tokenName}CloseStack`]) {
+          return;
+        }
+
+        const skipCurrentLevel = state[`skip${tokenName}CloseStack`].pop();
+        if (skipCurrentLevel) {
+          return;
+        }
+
+        state.closeNode();
       },
     };
   }
@@ -182,11 +218,11 @@ function addParser(token, parse) {
 
 export function getParsers() {
   const parsers = { ...CUSTOM_PARSER };
-  for (let [token, isOpenClose] of Object.entries(MULTIPLE_ALLOWED)) {
-    delete parsers[token];
+  for (const [tokenName, noCloseToken] of Object.entries(MULTIPLE_ALLOWED)) {
+    delete parsers[tokenName];
     Object.assign(
       parsers,
-      generateMultipleParser(token, CUSTOM_PARSER[token], isOpenClose)
+      generateMultipleParser(tokenName, CUSTOM_PARSER[tokenName], noCloseToken)
     );
   }
 

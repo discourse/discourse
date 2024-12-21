@@ -5,7 +5,6 @@
 
 export const PLUGIN_API_VERSION = "2.1.0";
 
-import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -67,6 +66,7 @@ import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";

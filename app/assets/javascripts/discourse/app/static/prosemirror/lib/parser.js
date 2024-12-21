@@ -1,8 +1,6 @@
 import { defaultMarkdownParser, MarkdownParser } from "prosemirror-markdown";
 import { getParsers } from "discourse/lib/composer/rich-editor-extensions";
-import { parse as markdownItParse } from "discourse/static/markdown-it";
-import loadPluginFeatures from "discourse/static/markdown-it/features";
-import defaultFeatures from "discourse-markdown-it/features/index";
+import { parse } from "./markdown-it";
 
 // TODO(renato): We need a workaround for this parsing issue:
 //   https://github.com/ProseMirror/prosemirror-markdown/issues/82
@@ -19,13 +17,14 @@ const postParseTokens = {
   softbreak: (state) => state.addNode(state.schema.nodes.hard_break),
 };
 
-let parseOptions;
-function initializeParser() {
-  if (parseOptions) {
+let initialized;
+function ensureCustomParsers() {
+  if (initialized) {
     return;
   }
 
   for (const [key, value] of Object.entries(getParsers())) {
+    // Not a ParseSpec
     if (typeof value === "function") {
       postParseTokens[key] = value;
     } else {
@@ -33,24 +32,20 @@ function initializeParser() {
     }
   }
 
-  const featuresOverride = [...defaultFeatures, ...loadPluginFeatures()]
-    .map(({ id }) => id)
-    // Avoid oneboxing when parsing, we'll handle that separately
-    .filter((id) => id !== "onebox");
-
-  parseOptions = { featuresOverride };
+  initialized = true;
 }
 
 export function convertFromMarkdown(schema, text) {
-  initializeParser();
+  ensureCustomParsers();
 
-  const tokens = markdownItParse(text, parseOptions);
+  const tokens = parse(text);
 
   console.log("Converting tokens", tokens);
 
   const dummyTokenizer = { parse: () => tokens };
   const parser = new MarkdownParser(schema, dummyTokenizer, parseTokens);
 
+  // Adding function parse handlers directly
   for (const [key, callback] of Object.entries(postParseTokens)) {
     parser.tokenHandlers[key] = callback;
   }

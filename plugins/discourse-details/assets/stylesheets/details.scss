@@ -4,7 +4,7 @@ details {
   .topic-body .cooked &,
   .d-editor-preview,
   &.details__boxed,
-  .d-editor__editable & {
+  .ProseMirror & {
     background-color: var(--primary-very-low);
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.5rem;

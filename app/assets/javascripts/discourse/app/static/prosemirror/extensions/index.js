@@ -19,7 +19,6 @@ import underline from "./underline";
 
 const defaultExtensions = [
   emoji,
-  // image must be after emoji
   image,
   hashtag,
   mention,
@@ -27,16 +26,16 @@ const defaultExtensions = [
   underline,
   htmlInline,
   htmlBlock,
+  onebox,
   link,
   heading,
   codeBlock,
   quote,
-  onebox,
   trailingParagraph,
   typographerReplacements,
   markdownPaste,
 
-  // table must  be last
+  // table last
   table,
 ];
 

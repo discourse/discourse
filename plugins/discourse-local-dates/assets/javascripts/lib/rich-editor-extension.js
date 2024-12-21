@@ -1,4 +1,5 @@
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   // TODO(renato): the rendered date needs to be localized to better match the cooked content
   nodeSpec: {
     local_date: {
@@ -110,7 +111,12 @@ export default {
     },
   },
   serializeNode: {
-    local_date: (state, node) => {
+    local_date(state, node, parent, index) {
+      // TODO isBoundary
+      // if (!isBoundary(state.out, state.out.length - 1)) {
+      //   state.write(" ");
+      // }
+
       const optionalTime = node.attrs.time ? ` time=${node.attrs.time}` : "";
       const optionalTimezone = node.attrs.timezone
         ? ` timezone="${node.attrs.timezone}"`
@@ -119,14 +125,30 @@ export default {
       state.write(
         `[date=${node.attrs.date}${optionalTime}${optionalTimezone}]`
       );
+
+      // TODO isBoundary
+      // const nextSibling =
+      //   parent.childCount > index + 1 ? parent.child(index + 1) : null;
+      // if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
+      //   state.write(" ");
+      // }
     },
-    local_date_range: (state, node) => {
+    local_date_range(state, node, parent, index) {
       const optionalTimezone = node.attrs.timezone
         ? ` timezone="${node.attrs.timezone}"`
         : "";
       state.write(
         `[date-range from=${node.attrs.from} to=${node.attrs.to}${optionalTimezone}]`
       );
+
+      // TODO isBoundary
+      // const nextSibling =
+      //   parent.childCount > index + 1 ? parent.child(index + 1) : null;
+      // if (nextSibling?.isText && !isBoundary(nextSibling.text, 0)) {
+      //   state.write(" ");
+      // }
     },
   },
 };
+
+export default extension;

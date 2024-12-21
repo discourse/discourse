@@ -1,10 +1,15 @@
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   nodeSpec: {
     details: {
+      allowGapCursor: true,
       attrs: { open: { default: true } },
       content: "summary block+",
       group: "block",
+      draggable: true,
+      selectable: true,
       defining: true,
+      isolating: true,
       parseDOM: [{ tag: "details" }],
       toDOM: (node) => ["details", { open: node.attrs.open || undefined }, 0],
     },
@@ -36,6 +41,9 @@ export default {
     },
     summary(state, node, parent) {
       state.write('[details="');
+      if (node.content.childCount === 0) {
+        state.text(" ");
+      }
       node.content.forEach(
         (child) =>
           child.text &&
@@ -60,3 +68,5 @@ export default {
     },
   },
 };
+
+export default extension;

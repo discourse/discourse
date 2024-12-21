@@ -1,4 +1,5 @@
-export default {
+/** @type {RichEditorExtension} */
+const extension = {
   markSpec: {
     strikethrough: {
       parseDOM: [
@@ -30,3 +31,5 @@ export default {
     },
   },
 };
+
+export default extension;
