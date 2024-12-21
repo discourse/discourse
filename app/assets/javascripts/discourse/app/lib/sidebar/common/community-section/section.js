@@ -77,7 +77,8 @@ export default class CommunitySection {
 
         return filtered;
       }, [])
-      .concat(this.apiPrimaryLinks);
+      .concat(this.apiPrimaryLinks)
+      .filter((link) => link.shouldDisplay);
 
     this.moreLinks = this.section.links
       .reduce((filtered, link) => {
@@ -91,7 +92,8 @@ export default class CommunitySection {
 
         return filtered;
       }, [])
-      .concat(this.apiSecondaryLinks);
+      .concat(this.apiSecondaryLinks)
+      .filter((link) => link.shouldDisplay);
   }
 
   teardown() {
