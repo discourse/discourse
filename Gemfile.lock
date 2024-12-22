@@ -319,7 +319,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    openssl (3.2.1)
+    openssl (3.3.0)
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.2.0)
