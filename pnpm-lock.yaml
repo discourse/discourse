@@ -306,8 +306,8 @@ importers:
         specifier: ^4.7.8
         version: 4.7.8
       highlight.js:
-        specifier: 11.10.0
-        version: 11.10.0
+        specifier: 11.11.0
+        version: 11.11.0
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -5296,8 +5296,8 @@ packages:
   heimdalljs@0.2.6:
     resolution: {integrity: sha512-o9bd30+5vLBvBtzCPwwGqpry2+n0Hi6H1+qwt6y+0kwRHGGF8TFIhJPmnuM0xO97zaKrDZMwO/V56fAnn8m/tA==}
 
-  highlight.js@11.10.0:
-    resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
+  highlight.js@11.11.0:
+    resolution: {integrity: sha512-6ErL7JlGu2CNFHyRQEuDogOyGPNiqcuWdt4iSSFUPyferNTGlNTPFqeV36Y/XwA4V/TJ8l0sxp6FTnxud/mf8g==}
     engines: {node: '>=12.0.0'}
 
   homedir-polyfill@1.0.3:
@@ -14068,7 +14068,7 @@ snapshots:
     dependencies:
       rsvp: 3.2.1
 
-  highlight.js@11.10.0: {}
+  highlight.js@11.11.0: {}
 
   homedir-polyfill@1.0.3:
     dependencies:
