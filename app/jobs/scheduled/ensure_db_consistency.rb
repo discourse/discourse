@@ -8,23 +8,26 @@ module Jobs
     def execute(args)
       start_measure
 
+      # we don't want to have a situation where Jobs::Badge or stuff like that is attempted to be run
+      # so we always prefix with :: to ensure we are running models
+
       [
-        UserVisit,
-        Group,
-        Notification,
-        TopicFeaturedUsers,
-        PostRevision,
-        Topic,
-        Badge,
-        CategoryUser,
-        UserOption,
-        Tag,
-        CategoryTagStat,
-        User,
-        UserAvatar,
-        UserEmail,
-        Category,
-        TopicThumbnail,
+        ::UserVisit,
+        ::Group,
+        ::Notification,
+        ::TopicFeaturedUsers,
+        ::PostRevision,
+        ::Topic,
+        ::Badge,
+        ::CategoryUser,
+        ::UserOption,
+        ::Tag,
+        ::CategoryTagStat,
+        ::User,
+        ::UserAvatar,
+        ::UserEmail,
+        ::Category,
+        ::TopicThumbnail,
       ].each do |klass|
         klass.ensure_consistency!
         measure(klass)
