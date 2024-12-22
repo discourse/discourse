@@ -66,7 +66,7 @@ updates:
       - dependency-name: "pikaday"
       - dependency-name: "moment"
       - dependency-name: "moment-timezone"
-      - dependency-name: "@discourse/moment-timezon-names-translations"
+      - dependency-name: "@discourse/moment-timezone-names-translations"
       - dependency-name: "squoosh"
     groups:
       babel:
@@ -75,6 +75,10 @@ updates:
       embroider:
         patterns:
           - "@embroider*"
+      highlightjs:
+        patterns:
+          - "@highlightjs/cdn-assets"
+          - "highlight.js"
       types:
         patterns:
           - "@types/*"
