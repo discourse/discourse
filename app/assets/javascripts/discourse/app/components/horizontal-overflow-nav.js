@@ -12,7 +12,8 @@ export default class HorizontalOverflowNav extends Component {
   scrollInterval;
 
   @bind
-  scrollToActive(element) {
+  scrollToActive(entries) {
+    const element = entries[0].target;
     const activeElement = element.querySelector("a.active");
 
     activeElement?.scrollIntoView({
