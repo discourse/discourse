@@ -17,7 +17,7 @@ export default class DiscourseBanner extends Component {
   @tracked hide = false;
 
   get banner() {
-    return this.site.banner;
+    return this.site.get("banner");
   }
 
   get content() {
