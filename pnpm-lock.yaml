@@ -273,8 +273,8 @@ importers:
         specifier: ^0.93.1
         version: 0.93.1
       '@highlightjs/cdn-assets':
-        specifier: 11.10.0
-        version: 11.10.0
+        specifier: 11.11.0
+        version: 11.11.0
       '@json-editor/json-editor':
         specifier: 2.15.2
         version: 2.15.2
@@ -2315,8 +2315,8 @@ packages:
   '@handlebars/parser@2.0.0':
     resolution: {integrity: sha512-EP9uEDZv/L5Qh9IWuMUGJRfwhXJ4h1dqKTT4/3+tY0eu7sPis7xh23j61SYUnNF4vqCQvvUXpDo9Bh/+q1zASA==}
 
-  '@highlightjs/cdn-assets@11.10.0':
-    resolution: {integrity: sha512-vWXpu+Rdm0YMJmugFdUiL/9DmgYjEiV+d5DBqlXdApnGPSIeo6+LRS5Hpx6fvVsKkvR4RsLYD9rQ6DOLkj7OKA==}
+  '@highlightjs/cdn-assets@11.11.0':
+    resolution: {integrity: sha512-RxvBfEQPriVv9cJ9oXtBPv8ailOKt+ceWssMQ0i0yRdvCT9zaOOqOZj+4WWyooLMngQWtsi9Bbl7WR2Ky33jPQ==}
     engines: {node: '>=12.0.0'}
 
   '@humanfs/core@0.19.1':
@@ -9991,7 +9991,7 @@ snapshots:
 
   '@handlebars/parser@2.0.0': {}
 
-  '@highlightjs/cdn-assets@11.10.0': {}
+  '@highlightjs/cdn-assets@11.11.0': {}
 
   '@humanfs/core@0.19.1': {}
 
