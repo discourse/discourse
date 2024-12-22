@@ -157,7 +157,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
+        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.0)
@@ -370,8 +370,8 @@ importers:
         specifier: ^2.1.8
         version: 2.1.8(@embroider/core@3.4.20(@glint/template@1.5.0))
       '@embroider/webpack':
-        specifier: ^4.0.8
-        version: 4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))
+        specifier: ^4.0.9
+        version: 4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))
       '@floating-ui/dom':
         specifier: ^1.6.12
         version: 1.6.12
@@ -630,7 +630,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
+        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.0)
@@ -776,7 +776,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
+        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.0)
@@ -848,7 +848,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
+        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.0)
@@ -927,7 +927,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
+        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.0)
@@ -1006,7 +1006,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
+        version: 4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.0)
@@ -1946,11 +1946,11 @@ packages:
       '@embroider/webpack':
         optional: true
 
-  '@embroider/webpack@4.0.8':
-    resolution: {integrity: sha512-5i1v6+eH1gMHOqtaCzkFX6JPekmapN1+Clacxu+lxiv/piufuJV6bkugyPxIqqGBWjF8bOQA12ncM9BgpLae8A==}
+  '@embroider/webpack@4.0.9':
+    resolution: {integrity: sha512-4pRnY6fC8sdGrhD+Tk8ilblmHbwzlsy1BrA0r1dYGd23TpmGOgrit/CIv3C2ffRQ4EaiZh1XYO0KDVNTMYUFAw==}
     engines: {node: 12.* || 14.* || >= 16}
     peerDependencies:
-      '@embroider/core': ^3.4.19
+      '@embroider/core': ^3.4.20
       webpack: ^5.0.0
 
   '@esbuild/aix-ppc64@0.24.0':
@@ -9565,16 +9565,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/test-setup@4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))':
+  '@embroider/test-setup@4.0.0(@embroider/compat@3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0))(@embroider/core@3.4.20(@glint/template@1.5.0))(@embroider/webpack@4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0)))':
     dependencies:
       lodash: 4.17.21
       resolve: 1.22.8
     optionalDependencies:
       '@embroider/compat': 3.7.1(@embroider/core@3.4.20(@glint/template@1.5.0))(@glint/template@1.5.0)
       '@embroider/core': 3.4.20(@glint/template@1.5.0)
-      '@embroider/webpack': 4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))
+      '@embroider/webpack': 4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))
 
-  '@embroider/webpack@4.0.8(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))':
+  '@embroider/webpack@4.0.9(@embroider/core@3.4.20(@glint/template@1.5.0))(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))':
     dependencies:
       '@babel/core': 7.26.0(supports-color@8.1.1)
       '@babel/preset-env': 7.25.3(@babel/core@7.26.0)(supports-color@8.1.1)
@@ -9587,7 +9587,7 @@ snapshots:
       babel-loader: 8.3.0(@babel/core@7.26.0)(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))
       css-loader: 5.2.7(webpack@5.97.1(@swc/core@1.10.1)(esbuild@0.24.0))
       csso: 4.2.0
-      debug: 4.3.7(supports-color@8.1.1)
+      debug: 4.4.0(supports-color@8.1.1)
       escape-string-regexp: 4.0.0
       fs-extra: 9.1.0
       jsdom: 25.0.1(supports-color@8.1.1)
