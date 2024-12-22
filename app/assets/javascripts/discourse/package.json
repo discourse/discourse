@@ -96,7 +96,6 @@
     "ember-exam": "^9.0.0",
     "ember-load-initializers": "^3.0.1",
     "ember-modifier": "^4.2.0",
-    "ember-on-resize-modifier": "^2.0.2",
     "ember-qunit": "^9.0.1",
     "ember-source": "~5.12.0",
     "ember-template-imports": "^4.2.0",

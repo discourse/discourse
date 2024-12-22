@@ -2,7 +2,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { cancel, throttle } from "@ember/runloop";
 import Modifier from "ember-modifier";
 
-export default class ChatOnResize extends Modifier {
+export default class OnResize extends Modifier {
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
