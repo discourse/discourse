@@ -2125,7 +2125,6 @@ security:
     hidden: true
   suppress_secured_categories_from_admin:
     default: false
-    hidden: true
   include_secure_categories_in_tag_counts:
     default: false
   display_personal_messages_tag_counts:
