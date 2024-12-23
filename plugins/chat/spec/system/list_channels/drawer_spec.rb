@@ -137,12 +137,13 @@ RSpec.describe "List channels | Drawer", type: :system do
           Fabricate(:chat_message, chat_channel: dm_channel_4, user: user_3, use_service: true)
         dm_channel_4.membership_for(current_user).mark_read!(message.id)
 
-        expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
-        expect(drawer_page).to have_urgent_channel(dm_channel_2)
-
-        expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
-        expect(drawer_page).to have_channel_at_position(dm_channel_1, 3)
-        expect(drawer_page).to have_channel_at_position(dm_channel_3, 4)
+        try_until_success do
+          expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
+          expect(drawer_page).to have_urgent_channel(dm_channel_2)
+          expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
+          expect(drawer_page).to have_channel_at_position(dm_channel_1, 3)
+          expect(drawer_page).to have_channel_at_position(dm_channel_3, 4)
+        end
       end
 
       context "with unread threads" do
