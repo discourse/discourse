@@ -94,8 +94,8 @@
 
     &.active {
       position: relative;
-
       --arrow-thickness: 8px;
+      background: var(--d-selected);
 
       &::after {
         position: absolute;
