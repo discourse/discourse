@@ -1,14 +1,9 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 
 const MAX_UNREAD_COUNT = 99;
 
 export default class ChatChannelUnreadIndicator extends Component {
-  @service chat;
-  @service site;
-  @service currentUser;
-
   get showUnreadIndicator() {
     return (
       this.args.channel.tracking.unreadCount +

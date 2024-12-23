@@ -92,6 +92,7 @@
     text-overflow: ellipsis;
     cursor: inherit;
     @include chat-scrollbar();
+    white-space: pre-wrap !important;
 
     &[disabled] {
       background: none;
