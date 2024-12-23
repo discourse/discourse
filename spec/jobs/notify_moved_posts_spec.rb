@@ -29,6 +29,12 @@ RSpec.describe Jobs::NotifyMovedPosts do
       }.to change(moved_post_notifications, :count).by(2)
     end
 
+    it "notifies on the post with lowest post number" do
+      Jobs::NotifyMovedPosts.new.execute(post_ids: [p1.id, p3.id], moved_by_id: admin.id)
+
+      expect(moved_post_notifications.last.post_number).to eq(p1.post_number)
+    end
+
     context "when moved by one of the posters" do
       it "create one notifications, because the poster is the mover" do
         expect {
