@@ -5,6 +5,17 @@
 {{body-class "search-page"}}
 
 <section class="search-container">
+  <PluginOutlet
+    @name="full-page-search-above-search-header"
+    @connectorTagName="div"
+    @outletArgs={{hash
+      search=this.searchTerm
+      type=this.search_type
+      model=this.model
+      addSearchResults=this.addSearchResults
+      sortOrder=this.sortOrder
+    }}
+  />
   <div class="search-header" role="search">
     <h1 class="search-page-heading">
       {{#if this.hasResults}}
@@ -56,13 +67,26 @@
       {{/if}}
 
       <div class="search-filters">
-        <SearchAdvancedOptions
-          @searchTerm={{readonly this.searchTerm}}
-          @onChangeSearchTerm={{fn (mut this.searchTerm)}}
-          @search={{action "search" (hash collapseFilters=true)}}
-          @searchButtonDisabled={{this.searchButtonDisabled}}
-          @expandFilters={{this.expandFilters}}
-        />
+        <PluginOutlet @name="full-page-search-search-filters"
+          @outletArgs={{hash
+            searchTerm=(readonly this.searchTerm)
+            onChangeSearchTerm=(fn (mut this.searchTerm))
+            search=(action "search" (hash collapseFilters=true))
+            searchButtonDisabled=this.searchButtonDisabled
+            expandFilters=this.expandFilters
+            sortOrder=this.sortOrder
+            sortOrderOptions=this.sortOrders
+            setSortOrder=this.setSortOrder
+          }}
+        >
+          <SearchAdvancedOptions
+            @searchTerm={{readonly this.searchTerm}}
+            @onChangeSearchTerm={{fn (mut this.searchTerm)}}
+            @search={{action "search" (hash collapseFilters=true)}}
+            @searchButtonDisabled={{this.searchButtonDisabled}}
+            @expandFilters={{this.expandFilters}}
+          />
+        </PluginOutlet>
       </div>
     {{/if}}
 
