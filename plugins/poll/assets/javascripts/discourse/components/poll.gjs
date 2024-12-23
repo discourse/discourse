@@ -479,7 +479,7 @@ export default class PollComponent extends Component {
       voters = preloadedVoters;
     }
 
-    this.preloadedVoters = Object.assign({}, preloadedVoters);
+    this.preloadedVoters = { ...preloadedVoters };
     const votersCount = voters?.length;
 
     return ajax("/polls/voters.json", {
@@ -535,7 +535,7 @@ export default class PollComponent extends Component {
         if (optionId) {
           preloadedVoters[optionId].loading = false;
         }
-        this.preloadedVoters = Object.assign({}, preloadedVoters);
+        this.preloadedVoters = { ...preloadedVoters };
       });
   }
 

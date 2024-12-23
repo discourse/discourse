@@ -118,7 +118,7 @@ GEM
     crass (1.0.6)
     css_parser (1.21.0)
       addressable
-    csv (3.3.1)
+    csv (3.3.2)
     date (3.4.1)
     debug_inspector (1.2.0)
     diff-lcs (1.5.1)
@@ -263,7 +263,7 @@ GEM
     mustache (1.1.1)
     net-http (0.6.0)
       uri
-    net-imap (0.5.2)
+    net-imap (0.5.3)
       date
       net-protocol
     net-pop (0.1.2)

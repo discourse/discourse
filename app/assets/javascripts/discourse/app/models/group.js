@@ -429,7 +429,7 @@ export default class Group extends RestModel {
   save(opts = {}) {
     return ajax(`/groups/${this.id}`, {
       type: "PUT",
-      data: Object.assign({ group: this.asJSON() }, opts),
+      data: { group: this.asJSON(), ...opts },
     });
   }
 
