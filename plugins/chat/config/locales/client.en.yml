@@ -33,10 +33,6 @@ en:
       chat_messages_count: "Chat messages"
       chat_channels_count: "Chat channels"
       chat_users_count: "Chat users"
-      activities:
-        chat_messages:
-          one: "%{formatted_number} chat message"
-          other: "%{formatted_number} chat messages"
 
     chat:
       text_copied: Text copied to clipboard
