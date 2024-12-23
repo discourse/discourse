@@ -22,13 +22,14 @@ export default class HorizontalOverflowNav extends Component {
   }
 
   @bind
-  checkScroll(event) {
+  onResize(entries) {
     if (this.site.mobileView) {
       return;
     }
 
-    this.watchScroll(event);
-    this.hasScroll = event.target.scrollWidth > event.target.offsetWidth;
+    const element = entries[0].target;
+    this.watchScroll(element);
+    this.hasScroll = element.scrollWidth > element.offsetWidth;
   }
 
   @bind
@@ -37,22 +38,23 @@ export default class HorizontalOverflowNav extends Component {
   }
 
   @bind
-  watchScroll(event) {
+  onScroll(event) {
     if (this.site.mobileView) {
       return;
     }
 
-    if (
-      event.target.offsetWidth + event.target.scrollLeft ===
-      event.target.scrollWidth
-    ) {
+    this.watchScroll(event.target);
+  }
+
+  watchScroll(element) {
+    if (element.offsetWidth + element.scrollLeft === element.scrollWidth) {
       this.hideRightScroll = true;
       clearInterval(this.scrollInterval);
     } else {
       this.hideRightScroll = false;
     }
 
-    if (event.target.scrollLeft === 0) {
+    if (element.scrollLeft === 0) {
       this.hideLeftScroll = true;
       clearInterval(this.scrollInterval);
     } else {
