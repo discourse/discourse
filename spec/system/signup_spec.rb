@@ -273,6 +273,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 
     if page.has_css?(".d-modal.login-modal", wait: 0)
       if page.has_css?("html.mobile-view", wait: 0)
+        expect(page).to have_css(".d-modal.is-animating")
         expect(page).to have_css(".d-modal:not(.is-animating)")
       end
       find(".d-modal .modal-close").click
