@@ -8,29 +8,16 @@ import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-au
 import { i18n } from "discourse-i18n";
 
 export default class DirectoryTable extends Component {
-  _table;
+  table;
 
   @action
-  setTable(element) {
-    this._table = element.querySelector(".directory-table");
+  setupTable(element) {
+    this.table = element.querySelector(".directory-table");
     const columnCount = this.args.showTimeRead
       ? this.args.columns.length + 1
       : this.args.columns.length;
 
-    this._table.style.gridTemplateColumns = `minmax(15em, 3fr) repeat(${columnCount}, minmax(max-content, 1fr))`;
-  }
-
-  @action
-  setActiveHeader(header) {
-    // After render, scroll table left to ensure the order by column is visible
-    this._table ||= document.querySelector(".directory-table");
-
-    const scrollPixels =
-      header.offsetLeft + header.offsetWidth + 10 - this._table.offsetWidth;
-
-    if (scrollPixels > 0) {
-      this._table.scrollLeft = scrollPixels;
-    }
+    this.table.style.gridTemplateColumns = `minmax(15em, 3fr) repeat(${columnCount}, minmax(max-content, 1fr))`;
   }
 
   @action
@@ -40,7 +27,7 @@ export default class DirectoryTable extends Component {
   }
 
   <template>
-    <ResponsiveTable {{didInsert this.setTable}}>
+    <ResponsiveTable {{didInsert this.setupTable}}>
       <:header>
         <TableHeaderToggle @field="username" @order={{@order}} @asc={{@asc}} />
         {{#each @columns as |column|}}
@@ -52,7 +39,6 @@ export default class DirectoryTable extends Component {
             @asc={{@asc}}
             @automatic={{directoryColumnIsAutomatic column=column}}
             @translated={{column.user_field_id}}
-            @onActiveRender={{this.setActiveHeader}}
           />
         {{/each}}
 
