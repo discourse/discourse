@@ -2492,6 +2492,21 @@ RSpec.describe PostsController do
         expect(data.length).to eq(0)
       end
 
+      it "returns PMs for admins who are also moderators" do
+        admin.update!(moderator: true)
+
+        pm_post = Fabricate(:private_message_post)
+        PostDestroyer.new(admin, pm_post).destroy
+
+        sign_in(admin)
+
+        get "/posts/#{pm_post.user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.size).to eq(1)
+        expect(response.parsed_body.first["id"]).to eq(pm_post.id)
+      end
+
       it "only shows posts deleted by other users" do
         create_post(user: user)
         post_deleted_by_user = create_post(user: user)
