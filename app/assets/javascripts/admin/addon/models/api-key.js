@@ -21,6 +21,19 @@ export default class ApiKey extends RestModel {
     }
   }
 
+  @computed("_created_by")
+  get createdBy() {
+    return this._created_by;
+  }
+
+  set created_by(value) {
+    if (value && !(value instanceof AdminUser)) {
+      this.set("_created_by", AdminUser.create(value));
+    } else {
+      this.set("_created_by", value);
+    }
+  }
+
   @discourseComputed("description")
   shortDescription(description) {
     if (!description || description.length < 40) {

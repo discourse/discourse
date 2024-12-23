@@ -73,6 +73,9 @@ export default class ApiKeysList extends Component {
         {{/if}}
       </td>
       <td class="d-admin-row__detail key-created">
+        <LinkTo @route="adminUser" @model={{this.apiKey.createdBy}}>
+          {{avatar this.apiKey.createdBy imageSize="small"}}
+        </LinkTo>
         <div class="d-admin-row__mobile-label">{{i18n
             "admin.api.created"
           }}</div>

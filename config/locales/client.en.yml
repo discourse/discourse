@@ -5417,10 +5417,10 @@ en:
         title: "API"
         key: "Key"
         keys: "Keys"
-        created: Created
+        created: Created by
         updated: Updated
-        last_used: Last Used
-        never_used: (never)
+        last_used: Last used
+        never_used: Never
         generate: "Generate"
         undo_revoke: "Undo revoke"
         revoke: "Revoke"
