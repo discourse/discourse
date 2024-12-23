@@ -1347,12 +1347,10 @@ acceptance("composer buttons API", function (needs) {
     const editor = document.querySelector(".d-editor-input");
     editor.setSelectionRange(6, 9); // select the text input in the composer
 
-    await triggerKeyEvent(
-      ".d-editor-input",
-      "keydown",
-      "B",
-      Object.assign({ altKey: true }, metaModifier)
-    );
+    await triggerKeyEvent(".d-editor-input", "keydown", "B", {
+      altKey: true,
+      ...metaModifier,
+    });
 
     assert
       .dom(".d-editor-input")
@@ -1401,12 +1399,10 @@ acceptance("composer buttons API", function (needs) {
     await click(".post-controls button.reply");
 
     const editor = document.querySelector(".d-editor-input");
-    await triggerKeyEvent(
-      ".d-editor-input",
-      "keydown",
-      "S",
-      Object.assign({ altKey: true }, metaModifier)
-    );
+    await triggerKeyEvent(".d-editor-input", "keydown", "S", {
+      altKey: true,
+      ...metaModifier,
+    });
 
     assert.dom(editor).hasValue(":smile: from keyboard");
   });
