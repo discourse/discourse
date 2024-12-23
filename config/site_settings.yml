@@ -423,6 +423,9 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
+  adobe_analytics_tags_url:
+    default: ""
+    regex: "assets.adobedtm.com"
   extended_site_description:
     default: ""
     max: 10_000
@@ -446,6 +449,7 @@ basic:
     default: false
     hidden: true
     client: true
+
 login:
   invite_only:
     refresh: true
