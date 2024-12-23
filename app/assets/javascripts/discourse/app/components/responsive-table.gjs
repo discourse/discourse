@@ -52,7 +52,7 @@ export default class ResponsiveTable extends Component {
   }
 
   <template>
-    <div {{this.setup}} class="directory-table-container">
+    <div {{this.setup}} class="directory-table-container" ...attributes>
       <div
         {{on
           "scroll"
