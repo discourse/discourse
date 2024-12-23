@@ -6,9 +6,6 @@
   &.full-page-chat-sidebar-enabled {
     grid-template-columns: 1fr;
     overflow: inherit;
-    .chat-channel {
-      border-radius: var(--full-page-border-radius);
-    }
   }
 
   .chat-channel {
