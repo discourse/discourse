@@ -1,15 +1,14 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { isTesting } from "discourse-common/config/environment";
 import { makeArray } from "discourse-common/lib/helpers";
+import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 
-const TRANSITION_TIME = isTesting() ? 0 : 125; // CSS transition time
+const TRANSITION_TIME = 125; // CSS transition time
 const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
 const DEFAULT_LAST_SECTION = "favorites";
 
@@ -39,7 +38,7 @@ export default class ChatEmojiPickerManager extends Service {
   close() {
     this.closing = true;
 
-    later(() => {
+    discourseLater(() => {
       if (this.isDestroyed || this.isDestroying) {
         return;
       }
