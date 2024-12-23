@@ -64,7 +64,7 @@ module PageObjects
       end
 
       def has_content?(content)
-        composer_input.value == content
+        composer_input.has_value?(content)
       end
 
       def has_popup_content?(content)
