@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { next, throttle } from "@ember/runloop";
+import { throttle } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -49,11 +49,8 @@ export default class ScrollDirection extends Service {
     // User hasn't scrolled yet on this route
     this.lastScrollDirection = UNSCROLLED;
 
-    // Wait for the initial DOM render to be done
-    next(() => {
-      // Then allow a bit of extra time for any DOM shifts to settle
-      discourseDebounce(this.unpause, PAUSE_AFTER_TRANSITION_MS);
-    });
+    // Allow a bit of extra time for any DOM shifts to settle
+    discourseDebounce(this.unpause, PAUSE_AFTER_TRANSITION_MS);
   }
 
   @bind

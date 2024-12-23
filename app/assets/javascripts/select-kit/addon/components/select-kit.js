@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { bind, cancel, next, schedule, throttle } from "@ember/runloop";
+import { bind, cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isNone, isPresent } from "@ember/utils";
 import {
@@ -760,13 +760,11 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
 
   _safeAfterRender(fn) {
     next(() => {
-      schedule("afterRender", () => {
-        if (!this.element || this.isDestroyed || this.isDestroying) {
-          return;
-        }
+      if (!this.element || this.isDestroyed || this.isDestroying) {
+        return;
+      }
 
-        fn();
-      });
+      fn();
     });
   }
 
