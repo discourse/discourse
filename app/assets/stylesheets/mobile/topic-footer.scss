@@ -9,10 +9,10 @@ html:not(.anon) #topic-footer-buttons {
     justify-content: space-between;
     gap: 0.75rem;
 
-    button,
-    .topic-notifications-button,
-    .pinned-button {
-      font-size: var(--font-up-1);
+    .btn,
+    .topic-notifications-button .btn,
+    .pinned-button .btn {
+      font-size: var(--font-up-1-rem);
     }
 
     &__actions {
