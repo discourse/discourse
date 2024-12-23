@@ -273,12 +273,14 @@ RSpec.describe "Create channel", type: :system do
           chat_page.visit_browse
           chat_page.new_channel_button.click
           channel_modal.select_category(category_1)
+
           expect(channel_modal).to have_name_prefilled(category_1.name)
 
           channel_modal.fill_description("All kind of cute cats")
           channel_modal.click_primary_button
 
-          expect(page).to have_content(category_1.name)
+          expect(channel_modal).to be_closed
+
           created_channel = Chat::Channel.find_by(chatable_id: category_1.id)
           expect(page).to have_current_path(
             chat.channel_path(created_channel.slug, created_channel.id),
