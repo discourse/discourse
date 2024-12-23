@@ -3,11 +3,10 @@ import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { classNameBindings } from "@ember-decorators/component";
-import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
-const CSS_TRANSITION_DELAY = isTesting() ? 0 : 500;
+const CSS_TRANSITION_DELAY = 500;
 
 @classNameBindings("docked", "withTransitions")
 export default class TopicProgress extends Component {
