@@ -64,7 +64,7 @@ module PageObjects
       end
 
       def has_content?(content)
-        has_field(COMPOSER_ID, with: content)
+        has_field?(COMPOSER_ID, with: content)
       end
 
       def has_popup_content?(content)
