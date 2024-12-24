@@ -3,10 +3,6 @@
 RSpec.describe Jobs::GrantBadge do
   subject(:job) { described_class.new }
 
-  let(:scheduled_jobs) { Sidekiq::ScheduledSet.new }
-
-  before { scheduled_jobs.clear }
-
   it "schedules a EnsureBadgeConsistency job" do
     # Keep only 2 enabled badges to be fast
     badge_ids = Badge.enabled.limit(2).pluck(:id)
