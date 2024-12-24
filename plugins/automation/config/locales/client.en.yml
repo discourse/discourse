@@ -225,7 +225,7 @@ en:
           trigger_on_modes:
             tags_added_or_removed: Tags added or removed
             tags_added: Tags added
-            tags_removed:  Tags removed
+            tags_removed: Tags removed
           fields:
             watching_categories:
               label: Watching categories
