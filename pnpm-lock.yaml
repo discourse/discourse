@@ -273,8 +273,8 @@ importers:
         specifier: ^0.93.1
         version: 0.93.1
       '@highlightjs/cdn-assets':
-        specifier: 11.10.0
-        version: 11.10.0
+        specifier: 11.11.0
+        version: 11.11.0
       '@json-editor/json-editor':
         specifier: 2.15.2
         version: 2.15.2
@@ -306,8 +306,8 @@ importers:
         specifier: ^4.7.8
         version: 4.7.8
       highlight.js:
-        specifier: 11.10.0
-        version: 11.10.0
+        specifier: 11.11.0
+        version: 11.11.0
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -2318,8 +2318,8 @@ packages:
   '@handlebars/parser@2.0.0':
     resolution: {integrity: sha512-EP9uEDZv/L5Qh9IWuMUGJRfwhXJ4h1dqKTT4/3+tY0eu7sPis7xh23j61SYUnNF4vqCQvvUXpDo9Bh/+q1zASA==}
 
-  '@highlightjs/cdn-assets@11.10.0':
-    resolution: {integrity: sha512-vWXpu+Rdm0YMJmugFdUiL/9DmgYjEiV+d5DBqlXdApnGPSIeo6+LRS5Hpx6fvVsKkvR4RsLYD9rQ6DOLkj7OKA==}
+  '@highlightjs/cdn-assets@11.11.0':
+    resolution: {integrity: sha512-RxvBfEQPriVv9cJ9oXtBPv8ailOKt+ceWssMQ0i0yRdvCT9zaOOqOZj+4WWyooLMngQWtsi9Bbl7WR2Ky33jPQ==}
     engines: {node: '>=12.0.0'}
 
   '@humanfs/core@0.19.1':
@@ -5291,8 +5291,8 @@ packages:
   heimdalljs@0.2.6:
     resolution: {integrity: sha512-o9bd30+5vLBvBtzCPwwGqpry2+n0Hi6H1+qwt6y+0kwRHGGF8TFIhJPmnuM0xO97zaKrDZMwO/V56fAnn8m/tA==}
 
-  highlight.js@11.10.0:
-    resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
+  highlight.js@11.11.0:
+    resolution: {integrity: sha512-6ErL7JlGu2CNFHyRQEuDogOyGPNiqcuWdt4iSSFUPyferNTGlNTPFqeV36Y/XwA4V/TJ8l0sxp6FTnxud/mf8g==}
     engines: {node: '>=12.0.0'}
 
   homedir-polyfill@1.0.3:
@@ -9989,7 +9989,7 @@ snapshots:
 
   '@handlebars/parser@2.0.0': {}
 
-  '@highlightjs/cdn-assets@11.10.0': {}
+  '@highlightjs/cdn-assets@11.11.0': {}
 
   '@humanfs/core@0.19.1': {}
 
@@ -14046,7 +14046,7 @@ snapshots:
     dependencies:
       rsvp: 3.2.1
 
-  highlight.js@11.10.0: {}
+  highlight.js@11.11.0: {}
 
   homedir-polyfill@1.0.3:
     dependencies:
