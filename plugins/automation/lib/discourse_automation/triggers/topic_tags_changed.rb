@@ -37,10 +37,9 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::TOPIC_TAGS_C
         component: :choices,
         extra: {
           content: DiscourseAutomation::Triggers::TopicTagsChanged::TriggerOn::MODES,
-          default_value:
-            DiscourseAutomation::Triggers::TopicTagsChanged::TriggerOn::TAGS_ADDED_OR_REMOVED,
         },
-        required: true
+        required: true,
+        default_value: DiscourseAutomation::Triggers::TopicTagsChanged::TriggerOn::TAGS_ADDED_OR_REMOVED,
 
   field :trigger_with_pms, component: :boolean
 
