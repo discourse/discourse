@@ -67,7 +67,7 @@
   {{#if this.users}}
     <ResponsiveTable
       @className={{concat-class "users-list" this.query}}
-      @aria-label={{this.title}}
+      @ariaLabel={{this.title}}
       @style={{html-safe
         (concat
           "grid-template-columns: minmax(min-content, 2fr) repeat("
