@@ -16,6 +16,9 @@ import { MAX_UNOPTIMIZED_CATEGORIES } from "discourse/lib/constants";
 const mobileCompatibleViews = [
   "categories_with_featured_topics",
   "subcategories_with_featured_topics",
+  "categories_boxes",
+  "categories_boxes_with_topics",
+  "categories_only",
 ];
 
 const subcategoryComponents = {
