@@ -66,7 +66,7 @@ export default class AccountController extends Controller {
   @discourseComputed()
   nameInstructions() {
     return i18n(
-      this.siteSettings.full_name_required
+      this.site.full_name_required_for_signup
         ? "user.name.instructions_required"
         : "user.name.instructions"
     );

@@ -48,6 +48,8 @@ class SiteSerializer < ApplicationSerializer
     :system_user_avatar_template,
     :lazy_load_categories,
     :valid_flag_applies_to_types,
+    :full_name_required_for_signup,
+    :full_name_visible_in_signup,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -379,6 +381,14 @@ class SiteSerializer < ApplicationSerializer
 
   def include_valid_flag_applies_to_types?
     scope.is_admin?
+  end
+
+  def full_name_required_for_signup
+    SiteSetting.full_name_requirement == "required_at_signup"
+  end
+
+  def full_name_visible_in_signup
+    SiteSetting.full_name_requirement != "hidden_at_signup"
   end
 
   private

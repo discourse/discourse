@@ -6,14 +6,8 @@ import TextField from "discourse/components/text-field";
 import valueEntered from "discourse/helpers/value-entered";
 import { i18n } from "discourse-i18n";
 
-export default class SidebarEditNavigationMenuTagsModal extends Component {
+export default class FullnameInput extends Component {
   @service siteSettings;
-
-  get showFullname() {
-    return (
-      this.siteSettings.full_name_required || this.siteSettings.enable_names
-    );
-  }
 
   get showFullnameInstructions() {
     return (

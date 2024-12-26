@@ -95,7 +95,7 @@
             {{/if}}
           </div>
 
-          {{#if this.fullnameRequired}}
+          {{#if (and this.showFullname this.fullnameRequired)}}
             <FullnameInput
               @nameValidation={{this.nameValidation}}
               @nameTitle={{this.nameTitle}}
