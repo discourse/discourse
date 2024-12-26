@@ -104,6 +104,50 @@ RSpec.describe "Chat composer", type: :system do
 
       expect(channel_page.composer.value).to eq("bb")
     end
+
+    context "when pressing enter" do
+      it "sends the message" do
+        chat_page.visit_channel(channel_1)
+
+        channel_page.composer.fill_in(with: "testenter").enter_shortcut
+
+        expect(channel_page.messages).to have_message(text: "testenter")
+      end
+
+      context "when user preference is set to send on shift+enter" do
+        before { current_user.user_option.update!(chat_send_shortcut: 1) }
+
+        it "adds a linebreak" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.fill_in(with: "testenter").enter_shortcut
+
+          expect(channel_page.composer.value).to eq("testenter\n")
+        end
+      end
+    end
+
+    context "when pressing shift_enter" do
+      it "adds a linebreak" do
+        chat_page.visit_channel(channel_1)
+
+        channel_page.composer.fill_in(with: "testenter").shift_enter_shortcut
+
+        expect(channel_page.composer.value).to eq("testenter\n")
+      end
+
+      context "when user preference is set to send on shift+enter" do
+        before { current_user.user_option.update!(chat_send_shortcut: 1) }
+
+        it "sends the message" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.fill_in(with: "testenter").shift_enter_shortcut
+
+          expect(channel_page.messages).to have_message(text: "testenter")
+        end
+      end
+    end
   end
 
   context "when editing a message with no length" do

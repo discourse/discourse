@@ -309,7 +309,6 @@ export default class ChatComposer extends Component {
     if (
       this.site.mobileView ||
       event.altKey ||
-      event.metaKey ||
       this.#isAutocompleteDisplayed()
     ) {
       return;
@@ -320,18 +319,22 @@ export default class ChatComposer extends Component {
     }
 
     if (event.key === "Enter") {
-      if (event.shiftKey) {
-        // Shift+Enter: insert newline
+      // if we are inside a code block just insert newline
+      const { pre } = this.composer.textarea.getSelected({ lineVal: true });
+      if (this.composer.textarea.isInside(pre, /(^|\n)```/g)) {
         return;
       }
 
-      // Ctrl+Enter, plain Enter: send
-      if (!event.ctrlKey) {
-        // if we are inside a code block just insert newline
-        const { pre } = this.composer.textarea.getSelected({ lineVal: true });
-        if (this.composer.textarea.isInside(pre, /(^|\n)```/g)) {
-          return;
-        }
+      const shortcutPreference =
+        this.currentUser.user_option.chat_send_shortcut;
+      const send =
+        event.metaKey || shortcutPreference === "enter"
+          ? !event.shiftKey
+          : event.shiftKey;
+
+      if (!send) {
+        // insert newline
+        return;
       }
 
       this.onSend();

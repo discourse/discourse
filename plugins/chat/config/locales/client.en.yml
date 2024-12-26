@@ -136,6 +136,10 @@ en:
         never: "Never"
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
+      send_shortcut:
+        title: "Shortcut used to send a message"
+        enter: "<kbd>Enter</kbd>"
+        shift_enter: "<kbd>Shift</kbd> <span>+</span> <kbd>Enter</kbd>"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"
