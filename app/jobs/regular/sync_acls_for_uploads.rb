@@ -5,6 +5,8 @@ module Jobs
   # is enabled), and since it takes ~1s per upload to update the ACL, this is
   # best spread out over many jobs instead of having to do the whole thing serially.
   class SyncAclsForUploads < ::Jobs::Base
+    sidekiq_options queue: "low"
+
     def execute(args)
       return if !Discourse.store.external?
       return if !args.key?(:upload_ids)
