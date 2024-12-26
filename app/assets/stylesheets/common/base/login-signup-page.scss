@@ -16,7 +16,8 @@ body.password-reset-page,
 body.activate-account-page {
   .powered-by-discourse,
   .above-main-container-outlet,
-  .before-header-panel-outlet {
+  .before-header-panel-outlet,
+  .below-site-header-outlet {
     display: none;
   }
   #main-outlet {
