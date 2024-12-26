@@ -30,6 +30,12 @@
             />
           {{/each}}
         </div>
+
+        <PluginOutlet
+          @name="user-menu-tabs-after"
+          @connectorTagName="span"
+          @outletArgs={{hash plugin=@plugin}}
+        />
       </div>
       <div
         id={{concat "quick-access-" this.currentTabId}}
