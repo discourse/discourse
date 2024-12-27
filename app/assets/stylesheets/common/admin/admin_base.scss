@@ -778,14 +778,17 @@ $mobile-breakpoint: 700px;
 
     a.active {
       color: var(--primary);
-      background-color: initial;
+      background-color: var(--d-sidebar-admin-background);
       font-weight: 700;
-      border-right: 4px solid var(--d-nav-color--active);
 
       &::after {
-        display: none; // Hides the arrow
+        border-left-color: var(--primary-medium);
       }
     }
+  }
+
+  .admin-site-settings-category-nav__item:hover {
+    background: var(--d-sidebar-highlight-background);
   }
 }
 
