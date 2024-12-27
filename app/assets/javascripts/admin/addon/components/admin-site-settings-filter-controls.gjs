@@ -54,11 +54,6 @@ export default class AdminSiteSettingsFilterControls extends Component {
     this.args.onToggleMenu();
   }
 
-  @action
-  bodyClass() {
-    return this.isMenuOpen ? "menu-open" : "";
-  }
-
   <template>
     <div
       class="admin-controls admin-site-settings-filter-controls"
