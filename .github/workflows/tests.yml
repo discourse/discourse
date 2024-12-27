@@ -61,9 +61,6 @@ jobs:
             target: themes
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-        include:
-          - build_type: system
-            target: chat
 
     steps:
       - name: Set working directory owner
@@ -278,16 +275,8 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          GLOBIGNORE="plugins/chat/*";
           LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
-        timeout-minutes: 30
-
-      - name: Chat System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'chat'
-        env:
-          CHECKOUT_TIMEOUT: 10
-        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
         timeout-minutes: 30
 
       - name: Theme System Tests
