@@ -26,6 +26,7 @@ $mobile-breakpoint: 700px;
   &__experimental {
     .sidebar-section-link.active[data-link-name="admin_all_site_settings"] {
       background-color: unset;
+      font-weight: unset;
     }
     .admin-controls .controls:not(.search),
     .admin-site-settings-category-nav {
