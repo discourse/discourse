@@ -29,8 +29,8 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-22.04-8core') || 'debian-12' }}
-    container: discourse/discourse_test:${{ (github.repository == 'discourse/discourse' && 'release') || format('slim{0}', (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '') }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
     timeout-minutes: 20
 
     env:
@@ -109,16 +109,9 @@ jobs:
           echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Bundler cache
-        uses: actions/cache@v4
-        if: github.repository != 'discourse/discourse'
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
-
-      - name: Copy gems to vendor/bundle
-        if: github.repository == 'discourse/discourse'
-        run: cp -r /var/www/discourse/vendor/bundle vendor/bundle
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
         run: |
@@ -136,15 +129,24 @@ jobs:
         if: matrix.target == 'plugins'
         run: bin/rake plugin:install_all_official
 
+      - name: Symlinking plugin gems from image
+        if: matrix.target == 'plugins'
+        run: |
+          for dir in /var/www/discourse/plugins/*/gems; do
+            plugin_name=$(basename "$(dirname "$dir")")
+            dest="plugins/$plugin_name/gems"
+
+            if [ -d "$dest" ]; then
+              echo "Skipping $plugin_name: Source gems directory exists"
+            else
+              echo "Symlinking $dir to $dest"
+              ln -s "$dir" "$dest"
+            fi
+          done
+
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
         run: bin/rake plugin:pull_compatible_all
-
-      - name: Plugin gems cache
-        uses: actions/cache@v4
-        with:
-          path: plugins/*/gems
-          key: ${{ runner.os }}-plugin-gems-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-${{ hashFiles('plugins/*/plugin.rb') }}
 
       - name: Checkout official themes
         if: matrix.target == 'themes'
@@ -256,13 +258,6 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
-      - name: Minio cache
-        if: matrix.build_type == 'system' && matrix.target == 'core'
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.MINIO_RUNNER_INSTALL_DIR }}
-          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-
       - name: Ensure latest minio binary installed for Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: bundle exec ruby script/install_minio_binaries.rb
@@ -366,9 +361,9 @@ jobs:
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-22.04-8core') || 'debian-12' }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
     container:
-      image: discourse/discourse_test:slim-browsers
+      image: discourse/discourse_test:release
       options: --user discourse
 
     timeout-minutes: 35
