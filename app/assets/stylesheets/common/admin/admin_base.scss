@@ -24,9 +24,18 @@ $mobile-breakpoint: 700px;
   &__developer,
   &__rate_limits,
   &__experimental {
+    .sidebar-section-link.active[data-link-name="admin_all_site_settings"] {
+      background-color: unset;
+    }
     .admin-controls .controls:not(.search),
     .admin-site-settings-category-nav {
       display: none;
+    }
+    .admin-site-settings-filter-controls {
+      background-color: var(--secondary);
+      .controls.search {
+        background-color: var(--secondary);
+      }
     }
     .admin-detail.pull-left {
       border: 0;
