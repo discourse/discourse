@@ -5628,6 +5628,7 @@ en:
 
       security:
         title: "Security"
+        description: "Security settings"
         sidebar_link:
           security: "Security settings"
           spam: "Spam settings"
@@ -7276,6 +7277,34 @@ en:
             other: "There were %{count} entries in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
           replace_owners: Remove the badge from previous owners
           grant_existing_holders: Grant additional badges to existing badge holders
+      
+      login:
+        title: "Login & authentication"
+        description: "Site settings for login and authentication."
+
+      notifications:
+        title: "Notifications"
+        description: "Customize the notifications your users receive."
+
+      trust:
+        title: "Trust Levels"
+        description: "Customize trust level permissions."
+      
+      legal:
+        title: "Legal"
+        description: "Customize settings the url for your tos, privacy policy, faq, and more."
+      
+      font:
+        title: "Fonts"
+        description: "Customize the fonts & icons used on your site."
+
+      branding:
+        title: "Branding"
+        description: "Customize the logos used on your site."
+
+      navigation:
+        title: "Navigation"
+        description: "Customize the menu bar on topic lists and other site navigation."
 
       emoji:
         title: "Emoji"

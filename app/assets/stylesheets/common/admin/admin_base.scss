@@ -24,6 +24,9 @@ $mobile-breakpoint: 700px;
   &__developer,
   &__rate_limits,
   &__experimental {
+    .d-page-header {
+      margin-bottom: var(--space-4);
+    }
     .sidebar-section-link.active[data-link-name="admin_all_site_settings"] {
       background-color: unset;
       font-weight: unset;
@@ -34,8 +37,15 @@ $mobile-breakpoint: 700px;
     }
     .admin-site-settings-filter-controls {
       background-color: var(--secondary);
+      width: 82%;
       .controls.search {
         background-color: var(--secondary);
+        padding: 0;
+        justify-content: center;
+      }
+      .controls.search label {
+        font-weight: normal;
+        font-size: 12px;
       }
     }
     .admin-detail.pull-left {

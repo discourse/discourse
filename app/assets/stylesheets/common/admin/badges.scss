@@ -26,15 +26,13 @@
     .admin-badge-list {
       height: 70vh;
       overflow-y: scroll;
-      border-right: 1px solid var(--primary-low);
-      border-left: 1px solid var(--primary-low);
-      border-bottom: 1px solid var(--primary-low);
+      border: 1px solid var(--primary-low);
       .admin-badge-list-item {
         &:first-child {
           border-top: none;
         }
         &:last-child {
-          border-top: none;
+          border-bottom: none;
         }
       }
       .list-badge {

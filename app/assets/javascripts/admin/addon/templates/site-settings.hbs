@@ -1,4 +1,19 @@
-{{body-class this.adminBodyClass}}
+{{body-class this.adminPageData.bodyClass}}
+
+{{#if this.adminPageData.headerTitleLabel}}
+  <DPageHeader
+    @titleLabel={{i18n this.adminPageData.headerTitleLabel}}
+    @descriptionLabel={{i18n this.adminPageData.descriptionLabel}}
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path=""
+        @label={{i18n this.adminPageData.headerTitleLabel}}
+      />
+    </:breadcrumbs>
+  </DPageHeader>
+{{/if}}
 
 <AdminSiteSettingsFilterControls
   @initialFilter={{this.filter}}

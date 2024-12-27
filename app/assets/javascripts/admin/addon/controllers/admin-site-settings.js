@@ -16,25 +16,38 @@ export default class AdminSiteSettingsController extends Controller {
   visibleSiteSettings = null;
   siteSettingFilter = null;
   adminBodyClass = null;
+  headerTitleLabel = null;
+  descriptionLabel = null;
+  adminPageData = null;
 
-  getAdminBodyClass(filterName, category) {
+  getAdminPageData(filterName, category) {
     let bodyClass = "admin-site-settings__";
+    let headerTitleLabel = "";
+    let descriptionLabel = "";
+
     if (category !== "all_results") {
       bodyClass += `${category}`;
+      headerTitleLabel = `admin.${category}.title`;
+      descriptionLabel = `admin.${category}.description`;
     }
 
     if (filterName) {
       bodyClass += `${filterName}`;
+      headerTitleLabel = `admin.${filterName}.title`;
+      descriptionLabel = `admin.${filterName}.description`;
     }
-    return bodyClass;
+
+    this.set("adminPageData", {
+      bodyClass,
+      headerTitleLabel,
+      descriptionLabel,
+    });
   }
 
   filterContentNow(filterData, category) {
     this.siteSettingFilter ??= new SiteSettingFilter(this.allSiteSettings);
-    this.set(
-      "adminBodyClass",
-      this.getAdminBodyClass(filterData.filter, category)
-    );
+    this.getAdminPageData(filterData.filter, category);
+    this.set("isLoading", false);
     if (isEmpty(this.allSiteSettings)) {
       return;
     }
