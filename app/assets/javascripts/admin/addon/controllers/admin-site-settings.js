@@ -15,10 +15,26 @@ export default class AdminSiteSettingsController extends Controller {
   filter = "";
   visibleSiteSettings = null;
   siteSettingFilter = null;
+  adminBodyClass = null;
+
+  getAdminBodyClass(filterName, category) {
+    let bodyClass = "admin-site-settings__";
+    if (category !== "all_results") {
+      bodyClass += `${category}`;
+    }
+
+    if (filterName) {
+      bodyClass += `${filterName}`;
+    }
+    return bodyClass;
+  }
 
   filterContentNow(filterData, category) {
     this.siteSettingFilter ??= new SiteSettingFilter(this.allSiteSettings);
-
+    this.set(
+      "adminBodyClass",
+      this.getAdminBodyClass(filterData.filter, category)
+    );
     if (isEmpty(this.allSiteSettings)) {
       return;
     }

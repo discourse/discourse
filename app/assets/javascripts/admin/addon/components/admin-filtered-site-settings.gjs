@@ -58,6 +58,7 @@ export default class AdminFilteredSiteSettings extends Component {
     <AdminSiteSettingsFilterControls
       @onChangeFilter={{this.filterChanged}}
       @initialFilter={{@initialFilter}}
+      @bodyClass={{this.bodyClass}}
     />
 
     <ConditionalLoadingSpinner @condition={{this.loading}}>

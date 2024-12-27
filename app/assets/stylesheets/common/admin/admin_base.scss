@@ -12,6 +12,37 @@ $mobile-breakpoint: 700px;
   --space-6: calc(0.25rem * 6);
 }
 
+.admin-site-settings {
+  &__login,
+  &__notifications,
+  &__trust,
+  &__legal,
+  &__font,
+  &__branding,
+  &__navigation,
+  &__security,
+  &__developer,
+  &__rate_limits,
+  &__experimental {
+    .admin-controls .controls:not(.search),
+    .admin-site-settings-category-nav {
+      display: none;
+    }
+    .admin-detail.pull-left {
+      border: 0;
+      padding: 0;
+      float: unset;
+    }
+  }
+
+  .admin-detail.pull-left .form-horizontal.settings {
+    padding: 20px 5px 20px 20px;
+    border: 1px solid var(--primary-low);
+    border-radius: 2px;
+    background-color: var(--secondary);
+  }
+}
+
 // Common admin styles
 
 .admin-main-nav {
