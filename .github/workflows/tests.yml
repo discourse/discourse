@@ -67,7 +67,9 @@ jobs:
 
     steps:
       - name: Set working directory owner
-        run: chown root:root .
+        run: |
+          chown root:root .
+          chown root:root /var/www/discourse
 
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
@@ -109,16 +111,18 @@ jobs:
           echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
         shell: bash
 
+      - name: Populate dependencies from image
+        if: github.repository == 'discourse/discourse'
+        run: |
+          cp -r /var/www/discourse/vendor/bundle vendor/bundle
+          cp -r /var/www/discourse/node_modules node_modules
+
       - name: Bundler cache
         uses: actions/cache@v4
         if: github.repository != 'discourse/discourse'
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
-
-      - name: Copy gems to vendor/bundle
-        if: github.repository == 'discourse/discourse'
-        run: cp -r /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
         run: |
@@ -257,7 +261,7 @@ jobs:
         run: bin/ember-cli --build
 
       - name: Minio cache
-        if: matrix.build_type == 'system' && matrix.target == 'core'
+        if: matrix.build_type == 'system' && matrix.target == 'core' && github.repository != 'discourse/discourse'
         uses: actions/cache@v4
         with:
           path: ${{ env.MINIO_RUNNER_INSTALL_DIR }}
