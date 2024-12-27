@@ -104,12 +104,14 @@ const ACRONYMS = new Set([
   "imap",
   "ip",
   "jpg",
+  "json",
   "kb",
   "mb",
   "oidc",
   "pm",
   "png",
   "pop3",
+  "s3",
   "smtp",
   "svg",
   "tl",
@@ -124,54 +126,32 @@ const ACRONYMS = new Set([
   "ux",
 ]);
 
-const SPECIAL_CASE = {
-  github: "GitHub",
-  ios: "iOS",
-  linkedin: "LinkedIn",
-  oauth2: "OAuth2",
-  opengraph: "OpenGraph",
-  tiktok: "TikTok",
-  tos: "ToS",
-  wordpress: "WordPress",
-  youtube: "YouTube",
-};
-
-const SMALL_WORDS = new Set([
-  "a",
-  "an",
-  "and",
-  "as",
-  "at",
-  "but",
-  "by",
-  "en",
-  "for",
-  "if",
-  "iframe",
-  "iframes",
-  "in",
-  "gzip",
-  "n",
-  "nor",
-  "of",
-  "on",
-  "or",
-  "over",
-  "per",
-  "so",
-  "some",
-  "src",
-  "than",
-  "that",
-  "the",
-  "to",
-  "upon",
-  "v",
-  "via",
-  "vs",
-  "when",
-  "with",
-  "yet",
+const MIXED_CASE = new Map([
+  ["adobe analytics", "Adobe Analytics"],
+  ["android", "Android"],
+  ["chinese", "Chinese"],
+  ["discord", "Discord"],
+  ["discourse", "Discourse"],
+  ["discourse connect", "Discourse Connect"],
+  ["discourse discover", "Discourse Discover"],
+  ["discourse narrative bot", "Discourse Narrative Bot"],
+  ["facebook", "Facebook"],
+  ["github", "GitHub"],
+  ["google", "Google"],
+  ["gravatar", "Gravatar"],
+  ["gravatars", "Gravatars"],
+  ["ios", "iOS"],
+  ["japanese", "Japanese"],
+  ["linkedin", "LinkedIn"],
+  ["oauth2", "OAuth2"],
+  ["opengraph", "OpenGraph"],
+  ["powered by discourse", "Powered by Discourse"],
+  ["tiktok", "TikTok"],
+  ["tos", "ToS"],
+  ["twitter", "Twitter"],
+  ["vimeo", "Vimeo"],
+  ["wordpress", "WordPress"],
+  ["youtube", "YouTube"],
 ]);
 
 export default Mixin.create({
@@ -238,23 +218,24 @@ export default Mixin.create({
     const label = this.setting?.label;
     const name = label || setting.replace(/\_/g, " ");
 
-    return name
+    const formattedName = (name.charAt(0).toUpperCase() + name.slice(1))
       .split(" ")
-      .map((word) => (ACRONYMS.has(word) ? word.toUpperCase() : word))
+      .map((word) =>
+        ACRONYMS.has(word.toLowerCase()) ? word.toUpperCase() : word
+      )
       .map((word) => {
         if (word.endsWith("s")) {
-          const singular = word.slice(0, -1);
+          const singular = word.slice(0, -1).toLowerCase();
           return ACRONYMS.has(singular) ? singular.toUpperCase() + "s" : word;
         }
         return word;
       })
-      .map((word) =>
-        SMALL_WORDS.has(word)
-          ? word
-          : word.charAt(0).toUpperCase() + word.slice(1)
-      )
-      .map((word) => SPECIAL_CASE[word.toLowerCase()] || word)
       .join(" ");
+
+    return MIXED_CASE[Symbol.iterator]().reduce(
+      (acc, [key, value]) => acc.replaceAll(new RegExp(key, "gi"), value),
+      formattedName
+    );
   }),
 
   componentType: computed("type", function () {
