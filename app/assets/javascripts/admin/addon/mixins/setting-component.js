@@ -81,6 +81,99 @@ const DEFAULT_USER_PREFERENCES = [
   "default_sidebar_show_count_of_new_items",
 ];
 
+const ACRONYMS = new Set([
+  "acl",
+  "ai",
+  "api",
+  "bg",
+  "cdn",
+  "cors",
+  "cta",
+  "dm",
+  "eu",
+  "faq",
+  "fg",
+  "ga",
+  "gb",
+  "gtm",
+  "hd",
+  "http",
+  "https",
+  "iam",
+  "id",
+  "imap",
+  "ip",
+  "jpg",
+  "kb",
+  "mb",
+  "oidc",
+  "pm",
+  "png",
+  "pop3",
+  "smtp",
+  "svg",
+  "tl",
+  "tl0",
+  "tl1",
+  "tl2",
+  "tl3",
+  "tl4",
+  "tld",
+  "txt",
+  "url",
+  "ux",
+]);
+
+const SPECIAL_CASE = {
+  github: "GitHub",
+  ios: "iOS",
+  linkedin: "LinkedIn",
+  oauth2: "OAuth2",
+  opengraph: "OpenGraph",
+  tiktok: "TikTok",
+  tos: "ToS",
+  wordpress: "WordPress",
+  youtube: "YouTube",
+};
+
+const SMALL_WORDS = new Set([
+  "a",
+  "an",
+  "and",
+  "as",
+  "at",
+  "but",
+  "by",
+  "en",
+  "for",
+  "if",
+  "iframe",
+  "iframes",
+  "in",
+  "gzip",
+  "n",
+  "nor",
+  "of",
+  "on",
+  "or",
+  "over",
+  "per",
+  "so",
+  "some",
+  "src",
+  "than",
+  "that",
+  "the",
+  "to",
+  "upon",
+  "v",
+  "via",
+  "vs",
+  "when",
+  "with",
+  "yet",
+]);
+
 export default Mixin.create({
   modal: service(),
   router: service(),
@@ -143,7 +236,25 @@ export default Mixin.create({
   settingName: computed("setting.setting", "setting.label", function () {
     const setting = this.setting?.setting;
     const label = this.setting?.label;
-    return label || setting.replace(/\_/g, " ");
+    const name = label || setting.replace(/\_/g, " ");
+
+    return name
+      .split(" ")
+      .map((word) => (ACRONYMS.has(word) ? word.toUpperCase() : word))
+      .map((word) => {
+        if (word.endsWith("s")) {
+          const singular = word.slice(0, -1);
+          return ACRONYMS.has(singular) ? singular.toUpperCase() + "s" : word;
+        }
+        return word;
+      })
+      .map((word) =>
+        SMALL_WORDS.has(word)
+          ? word
+          : word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .map((word) => SPECIAL_CASE[word.toLowerCase()] || word)
+      .join(" ");
   }),
 
   componentType: computed("type", function () {
