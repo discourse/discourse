@@ -8,19 +8,14 @@ export default class DComposerPosition extends Component {
   constructor() {
     super(...arguments);
 
-    if (!window.visualViewport) {
-      return;
-    }
-
     const html = document.documentElement;
 
     if (
-      html.classList.contains("ios-device") ||
+      html.classList.contains("mobile-device") ||
       html.classList.contains("ipados-device")
     ) {
       window.addEventListener("scroll", this._correctScrollPosition);
       this._correctScrollPosition();
-
       const editor = document.querySelector(".d-editor-input");
       editor?.addEventListener("touchmove", this._textareaTouchMove);
     }
@@ -28,10 +23,6 @@ export default class DComposerPosition extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-
-    if (!window.visualViewport) {
-      return;
-    }
 
     const html = document.documentElement;
 
@@ -69,7 +60,7 @@ export default class DComposerPosition extends Component {
 
   _textareaTouchMove(event) {
     // This is an alternative to locking up the body
-    // It stops scrolls from bubbling up to the body
+    // It stops scrolling in the given element from bubbling up to the body
     // when the textarea does not have any content to scroll
     if (event.target) {
       const notScrollable =
