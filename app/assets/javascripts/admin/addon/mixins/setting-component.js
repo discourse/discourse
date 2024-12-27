@@ -126,7 +126,7 @@ const ACRONYMS = new Set([
   "ux",
 ]);
 
-const MIXED_CASE = new Map([
+const MIXED_CASE = [
   ["adobe analytics", "Adobe Analytics"],
   ["android", "Android"],
   ["chinese", "Chinese"],
@@ -152,7 +152,7 @@ const MIXED_CASE = new Map([
   ["vimeo", "Vimeo"],
   ["wordpress", "WordPress"],
   ["youtube", "YouTube"],
-]);
+];
 
 export default Mixin.create({
   modal: service(),
@@ -232,7 +232,7 @@ export default Mixin.create({
       })
       .join(" ");
 
-    return MIXED_CASE[Symbol.iterator]().reduce(
+    return MIXED_CASE.reduce(
       (acc, [key, value]) => acc.replaceAll(new RegExp(key, "gi"), value),
       formattedName
     );
