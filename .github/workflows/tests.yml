@@ -230,6 +230,11 @@ jobs:
             exit 1
           fi
 
+      - name: Enable YJIT
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+        run: |
+          echo "RUBY_YJIT_ENABLE=1" >> $GITHUB_ENV
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50

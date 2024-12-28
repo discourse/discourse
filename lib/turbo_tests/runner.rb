@@ -207,6 +207,10 @@ module TurboTests
 
         env["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"] = "1" if @profile
 
+        if enable_yjit = ENV["RUBY_YJIT_ENABLE"]
+          env["RUBY_YJIT_ENABLE"] = enable_yjit
+        end
+
         command_string = [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].join(" ")
 
         if @verbose
