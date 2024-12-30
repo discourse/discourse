@@ -2381,6 +2381,11 @@ rate_limits:
   max_uploads_per_minute:
     default: 10
     hidden: true
+  user_api_key_clients_create_per_day:
+    default: 3
+    min: 1
+    max: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -3167,6 +3172,10 @@ user_api:
   unused_registered_user_api_key_clients_days:
     default: 30
     max: 36500
+    hidden: true
+  create_user_api_key_client_ip_rate_limit_override_ips:
+    default: ""
+    type: list
     hidden: true
 
 tags:
