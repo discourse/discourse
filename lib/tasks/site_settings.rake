@@ -101,6 +101,8 @@ task "site_settings:add_keyword_translation_keys" => :environment do
 
   new_keywords = {}
 
+  added = 0
+
   yml["en"]["site_settings"].each do |key, value|
     next if !value.is_a?(String)
 
@@ -108,13 +110,19 @@ task "site_settings:add_keyword_translation_keys" => :environment do
       new_keywords[key] = yml["en"]["site_settings"]["keywords"][key]
     else
       new_keywords[key] = ""
+      added += 1
     end
   end
 
+  removed = yml["en"]["site_settings"]["keywords"].length - new_keywords.length - added
+
   new_text = ""
-  new_keywords.each { |key, value| new_text += "      #{key}: \"#{value}\"\n" }
+  new_keywords.keys.sort.each { |key| new_text += "      #{key}: \"#{new_keywords[key]}\"\n" }
 
   text.gsub!(/(# BEGIN KEYWORDS\n)(.*)(      # END KEYWORDS)/m, "\\1#{new_text}\\3")
 
   File.write(filename, text)
+
+  puts "Keyword entries added: #{added}"
+  puts "Keyword entries removed: #{removed}"
 end
