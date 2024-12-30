@@ -123,6 +123,21 @@ RSpec.describe UserGuardian do
         expect(Guardian.new(tl1_user).can_see_profile?(user)).to eq(false)
       end
 
+      it "an anonymous user can view the user's profile if allow_low_trust_levels_to_view_user_profiles is true" do
+        SiteSetting.allow_low_trust_levels_to_view_user_profiles = true
+        expect(Guardian.new.can_see_profile?(user)).to eq(true)
+      end
+
+      it "a TL0 user can view the user's profile if allow_low_trust_levels_to_view_user_profiles is true" do
+        SiteSetting.allow_low_trust_levels_to_view_user_profiles = true
+        expect(Guardian.new(tl0_user).can_see_profile?(user)).to eq(true)
+      end
+
+      it "a TL1 user can view the user's profile if allow_low_trust_levels_to_view_user_profiles is true" do
+        SiteSetting.allow_low_trust_levels_to_view_user_profiles = true
+        expect(Guardian.new(tl1_user).can_see_profile?(user)).to eq(true)
+      end
+
       it "a TL2 user can view the user's profile" do
         expect(Guardian.new(tl2_user).can_see_profile?(user)).to eq(true)
       end
@@ -173,6 +188,18 @@ RSpec.describe UserGuardian do
       it "a TL0 user cannot view the user's profile" do
         expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_see_profile?(tl0_user)).to eq(
           false,
+        )
+      end
+
+      it "an anonymous user can view the user's profile if allow_low_trust_levels_to_view_user_profiles is true" do
+        SiteSetting.allow_low_trust_levels_to_view_user_profiles = true
+        expect(Guardian.new.can_see_profile?(tl0_user)).to eq(true)
+      end
+
+      it "a TL0 user can view the user's profile if allow_low_trust_levels_to_view_user_profiles is true" do
+        SiteSetting.allow_low_trust_levels_to_view_user_profiles = true
+        expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_see_profile?(tl0_user)).to eq(
+          true,
         )
       end
 

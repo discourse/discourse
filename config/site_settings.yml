@@ -2282,6 +2282,9 @@ spam:
     default: "Duplicate|Does not meet posting guidelines"
     type: list
     client: true
+  allow_low_trust_levels_to_view_user_profiles:
+    default: false
+    hidden: true
 
 rate_limits:
   unique_posts_mins: 5

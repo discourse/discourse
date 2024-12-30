@@ -134,11 +134,13 @@ module UserGuardian
 
     return true if user.staff? && !profile_hidden
 
-    if user.user_stat.blank? || user.user_stat.post_count == 0
+    if !SiteSetting.allow_low_trust_levels_to_view_user_profiles &&
+         (user.user_stat.blank? || user.user_stat.post_count == 0)
       return false if anonymous? || !@user.has_trust_level?(TrustLevel[2])
     end
 
-    if anonymous? || !@user.has_trust_level?(TrustLevel[1])
+    if !SiteSetting.allow_low_trust_levels_to_view_user_profiles &&
+         (anonymous? || !@user.has_trust_level?(TrustLevel[1]))
       return user.has_trust_level?(TrustLevel[1]) && !profile_hidden
     end
 
