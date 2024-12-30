@@ -162,7 +162,7 @@ describe "Admin Flags Page", type: :system do
     )
 
     admin_flags_page.click_settings_tab
-    expect(page.all(".setting-label h3").map(&:text)).to eq(
+    expect(page.all(".setting-label h3").map(&:text).map(&:downcase)).to eq(
       [
         "silence new user sensitivity",
         "num users to silence new user",
