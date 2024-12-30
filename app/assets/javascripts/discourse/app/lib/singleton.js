@@ -2,12 +2,6 @@
  * @decorator
  * Ensures only one instance of a class exists and provides global access to it.
  *
- * Features:
- * - Static `current()` method to access the singleton instance
- * - Static `currentProp()` method for getting/setting properties
- * - Static `resetCurrent()` method to reset the singleton instance
- * - Customizable instance creation via `createCurrent()`
- *
  * @example
  * ```
  * @singleton
@@ -40,7 +34,7 @@ export default function singleton(target) {
     }
 
     static createCurrent() {
-      return this.create({});
+      return this.create();
     }
 
     static currentProp(property, value) {
@@ -50,11 +44,9 @@ export default function singleton(target) {
       }
 
       if (typeof value !== "undefined") {
-        // instance.set(property, value);
         instance[property] = value;
         return value;
       }
-      // return instance.get(property);
       return instance[property];
     }
 
