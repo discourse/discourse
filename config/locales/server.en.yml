@@ -3173,7 +3173,7 @@ en:
       force_https: ""
       force_lowercase_tags: ""
       forwarded_emails_behaviour: ""
-      full_name_required: ""
+      full_name_requirement: ""
       full_page_login: ""
       ga_universal_auto_link_domains: ""
       ga_universal_domain_name: ""
