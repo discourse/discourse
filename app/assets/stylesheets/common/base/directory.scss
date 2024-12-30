@@ -123,7 +123,9 @@
   &__header,
   &__body,
   &__row {
-    display: contents; // we'll be able to remove this with subgrid support
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
   }
 
   &__column-header,
