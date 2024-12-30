@@ -707,9 +707,10 @@ users:
   logout_redirect:
     client: true
     default: ""
-  full_name_required:
-    client: true
-    default: false
+  full_name_requirement:
+    type: enum
+    default: hidden_at_signup
+    enum: "FullNameRequirement"
   enable_names:
     client: true
     default: true

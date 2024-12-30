@@ -2517,7 +2517,7 @@ en:
     svg_icon_subset: "Add additional FontAwesome icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable printing)"
 
-    full_name_required: "Full name is a required field of a user's profile."
+    full_name_requirement: "Make the full name field a required, optional, or optional but hidden field in the signup form."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."

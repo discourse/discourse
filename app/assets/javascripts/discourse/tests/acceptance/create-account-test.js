@@ -2,6 +2,7 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import LoginMethod from "discourse/models/login-method";
+import Site from "discourse/models/site";
 import pretender, {
   parsePostData,
   response,
@@ -135,10 +136,12 @@ acceptance("Create Account", function () {
   });
 });
 
-acceptance("Create Account - full_name_required", function (needs) {
-  needs.settings({ full_name_required: true });
+acceptance("Create Account - full name requirement", function () {
+  test("full name required", async function (assert) {
+    const site = Site.current();
+    site.set("full_name_required_for_signup", true);
+    site.set("full_name_visible_in_signup", true);
 
-  test("full_name_required", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
 
@@ -155,6 +158,68 @@ acceptance("Create Account - full_name_required", function (needs) {
       assert.step("request");
       const data = parsePostData(request.requestBody);
       assert.strictEqual(data.name, "Full Name");
+      assert.strictEqual(data.password, "cool password bro");
+      assert.strictEqual(data.email, "z@z.co");
+      assert.strictEqual(data.username, "good-tuna");
+      return response({ success: true });
+    });
+
+    await click(".d-modal__footer .btn-primary");
+    assert
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("create account is disabled");
+
+    assert.verifySteps(["request"]);
+  });
+
+  test("full name hidden at signup", async function (assert) {
+    const site = Site.current();
+    site.set("full_name_required_for_signup", false);
+    site.set("full_name_visible_in_signup", false);
+
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert.dom("#new-account-name").doesNotExist();
+
+    await fillIn("#new-account-email", "z@z.co");
+    await fillIn("#new-account-username", "good-tuna");
+    await fillIn("#new-account-password", "cool password bro");
+
+    pretender.post("/u", (request) => {
+      assert.step("request");
+      const data = parsePostData(request.requestBody);
+      assert.strictEqual(data.password, "cool password bro");
+      assert.strictEqual(data.email, "z@z.co");
+      assert.strictEqual(data.username, "good-tuna");
+      return response({ success: true });
+    });
+
+    await click(".d-modal__footer .btn-primary");
+    assert
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("create account is disabled");
+
+    assert.verifySteps(["request"]);
+  });
+
+  test("full name optional at signup", async function (assert) {
+    const site = Site.current();
+    site.set("full_name_required_for_signup", false);
+    site.set("full_name_visible_in_signup", true);
+
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert.dom("#new-account-name").exists();
+
+    await fillIn("#new-account-email", "z@z.co");
+    await fillIn("#new-account-username", "good-tuna");
+    await fillIn("#new-account-password", "cool password bro");
+
+    pretender.post("/u", (request) => {
+      assert.step("request");
+      const data = parsePostData(request.requestBody);
       assert.strictEqual(data.password, "cool password bro");
       assert.strictEqual(data.email, "z@z.co");
       assert.strictEqual(data.username, "good-tuna");

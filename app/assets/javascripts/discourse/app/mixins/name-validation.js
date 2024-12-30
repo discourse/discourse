@@ -6,7 +6,7 @@ import { i18n } from "discourse-i18n";
 export default Mixin.create({
   get nameTitle() {
     return i18n(
-      this.siteSettings.full_name_required
+      this.site.full_name_required_for_signup
         ? "user.name.title"
         : "user.name.title_optional"
     );
@@ -15,7 +15,7 @@ export default Mixin.create({
   // Validate the name.
   nameValidation: computed("accountName", "forceValidationReason", function () {
     const { accountName, forceValidationReason } = this;
-    if (this.siteSettings.full_name_required && isEmpty(accountName)) {
+    if (this.site.full_name_required_for_signup && isEmpty(accountName)) {
       return EmberObject.create({
         failed: true,
         ok: false,
