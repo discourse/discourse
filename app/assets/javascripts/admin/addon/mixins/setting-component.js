@@ -233,7 +233,8 @@ export default Mixin.create({
       .join(" ");
 
     return MIXED_CASE.reduce(
-      (acc, [key, value]) => acc.replaceAll(new RegExp(key, "gi"), value),
+      (acc, [key, value]) =>
+        acc.replaceAll(new RegExp(`\\b${key}\\b`, "gi"), value),
       formattedName
     );
   }),
