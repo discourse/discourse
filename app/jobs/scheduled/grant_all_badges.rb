@@ -7,10 +7,8 @@ module Jobs
     def execute(args)
       return unless SiteSetting.enable_badges
 
-      enabled_badges = Badge.enabled
-
-      Discourse.redis.set("grant_badge_remaining", enabled_badges.count)
-      enabled_badges.find_each { |b| Jobs.enqueue(:grant_badge, badge_id: b.id) }
+      job_ids = Badge.enabled.map { |b| Jobs.enqueue(:grant_badge, badge_id: b.id) }
+      Jobs.enqueue_after(job_ids, :ensure_badge_consistency)
     end
   end
 end
