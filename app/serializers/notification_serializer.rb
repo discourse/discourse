@@ -61,7 +61,7 @@ class NotificationSerializer < ApplicationSerializer
     object.acting_user.name
   end
 
-  def include_acting_user_full_name?
+  def include_acting_user_name?
     object.acting_user.present?
   end
 end
