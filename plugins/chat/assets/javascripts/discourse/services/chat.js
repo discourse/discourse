@@ -35,7 +35,6 @@ export default class Chat extends Service {
 
   cook = null;
   presenceChannel = null;
-  sidebarActive = false;
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
