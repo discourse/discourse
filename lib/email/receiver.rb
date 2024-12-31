@@ -568,7 +568,7 @@ module Email
       reply = doc.css("div[name='messageReplySection']")
       body = doc.css("div[name='messageBodySection']")
 
-    if reply.present? && body.present?
+      if reply.present? && body.present?
         elided = doc.css("div[name='messageReplySection']").remove
         body = doc.css("div[name='messageBodySection']")
         to_markdown(body.to_html, elided.to_html)
