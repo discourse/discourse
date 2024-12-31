@@ -1,5 +1,6 @@
 import { registerEmoji } from "pretty-text/emoji";
 import EmojiPicker from "discourse/components/emoji-picker";
+import EmojiPickerModal from "discourse/components/emoji-picker/modal";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
 
@@ -13,16 +14,42 @@ const EmojiPickerWrapper = <template>
 export default {
   initialize(owner) {
     const siteSettings = owner.lookup("service:site-settings");
+
     if (!siteSettings.enable_emoji) {
       return;
     }
 
     withPluginApi("0.1", (api) => {
+      api.registerChatComposerButton({
+        label: "chat.emoji",
+        id: "emoji",
+        class: "chat-emoji-btn",
+        icon: "discourse-emojis",
+        position: "dropdown",
+        displayed: owner.lookup("service:site").mobileView,
+        action(context) {
+          const didSelectEmoji = (emoji) => {
+            const composer = owner.lookup(`service:chat-${context}-composer`);
+            composer.textarea.addText(
+              composer.textarea.getSelected(),
+              `:${emoji}:`
+            );
+          };
+
+          owner.lookup("service:modal").show(EmojiPickerModal, {
+            model: {
+              context: "chat",
+              didSelectEmoji,
+            },
+          });
+        },
+      });
+
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "far-face-smile",
+          icon: "discourse-emojis",
           action: (emoji) => {
             toolbar.context.textManipulation.emojiSelected(emoji);
           },
