@@ -281,10 +281,11 @@ module BadgeQueries
     end_date = end_date.iso8601(6)
 
     <<~SQL
-      SELECT u.id
+      SELECT u.id, MIN(ub.granted_at)
         FROM users AS u
         JOIN posts AS p ON p.user_id = u.id
         JOIN topics AS t ON p.topic_id = t.id
+        LEFT JOIN user_badges AS ub ON ub.user_id = u.id AND ub.badge_id = #{Badge::Anniversary}
        WHERE u.id > 0
          AND u.active
          AND NOT u.staged
@@ -297,7 +298,7 @@ module BadgeQueries
          AND t.visible
          AND t.archetype <> 'private_message'
          AND t.deleted_at IS NULL
-         AND NOT EXISTS (SELECT 1 FROM user_badges AS ub WHERE ub.user_id = u.id AND ub.badge_id = #{Badge::Anniversary} AND ub.granted_at BETWEEN '#{start_date}' AND '#{end_date}')
+         AND (ub.id IS NULL OR ub.granted_at < '#{start_date}')
          AND NOT EXISTS (SELECT 1 FROM anonymous_users AS au WHERE au.user_id = u.id)
        GROUP BY u.id
       HAVING COUNT(p.id) > 0
