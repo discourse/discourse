@@ -415,9 +415,43 @@ RSpec.describe Email::Receiver do
     it "automatically elides gmail quotes" do
       SiteSetting.always_show_trimmed_content = true
       expect { process(:gmail_html_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq(
-        "This is a **GMAIL** reply ;)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n\nThis is the *elided* part!\n\n</details>",
-      )
+      expect(topic.posts.last.raw).to eq <<~MD.strip
+        This is a **GMAIL** reply ;)
+        
+        <details class='elided'>
+        <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
+        
+        This is the *elided* part!
+        
+        </details>
+      MD
+    end
+
+    it "correctly extracts body from exchange emails" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:exchange_html_body) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is the **body** of the email.")
+    end
+
+    it "correctly extracts reply from exchange emails" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:exchange_html_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is the **body !!** of the email.")
+    end
+
+    it "correctly extracts body & reply from exchange emails" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:exchange_html_body_and_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq <<~MD.strip
+        This is the **body** of the email.
+
+        <details class='elided'>
+        <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
+
+        This is the *reply*!
+
+        </details>
+      MD
     end
 
     it "doesn't process email with same message-id more than once" do
