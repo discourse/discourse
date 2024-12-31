@@ -92,65 +92,69 @@ export default class DiscourseNewFeatureItem extends Component {
           {{/if}}
         </div>
 
-        {{#if @item.screenshot_url}}
-          <img
-            src={{@item.screenshot_url}}
-            class="admin-new-feature-item__screenshot"
-            alt={{@item.title}}
-          />
-        {{/if}}
-
-        <div class="admin-new-feature-item__body">
-          <div class="admin-new-feature-item__feature-description">
-            <CookText @rawText={{@item.description}} />
-
-            {{#if @item.link}}
-              <a
-                href={{@item.link}}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="admin-new-feature-item__learn-more"
-              >
-                {{i18n "admin.dashboard.new_features.learn_more"}}
-              </a>
-            {{/if}}
-          </div>
-          {{#if @item.experiment_setting}}
-            <div class="admin-new-feature-item__feature-toggle">
-              <DTooltip>
-                <:trigger>
-                  <DToggleSwitch
-                    @state={{this.experimentEnabled}}
-                    {{on "click" this.toggleExperiment}}
-                  />
-                </:trigger>
-                <:content>
-                  <div class="admin-new-feature-item__tooltip">
-                    <div class="admin-new-feature-item__tooltip-header">
-                      {{i18n
-                        (if
-                          this.experimentEnabled
-                          "admin.dashboard.new_features.experiment_tooltip.title_enabled"
-                          "admin.dashboard.new_features.experiment_tooltip.title_disabled"
-                        )
-                      }}
-                    </div>
-                    <div class="admin-new-feature-item__tooltip-content">
-                      {{htmlSafe
-                        (i18n
-                          (if
-                            this.experimentEnabled
-                            "admin.dashboard.new_features.experiment_tooltip.content_enabled"
-                            "admin.dashboard.new_features.experiment_tooltip.content_disabled"
-                          )
-                        )
-                      }}
-                    </div>
-                  </div>
-                </:content>
-              </DTooltip>
+        <div class="admin-new-feature-item__body-wrapper">
+          {{#if @item.screenshot_url}}
+            <div class="admin-new-feature-item__img-container">
+              <img
+                src={{@item.screenshot_url}}
+                class="admin-new-feature-item__screenshot"
+                alt={{@item.title}}
+              />
             </div>
           {{/if}}
+
+          <div class="admin-new-feature-item__body">
+            <div class="admin-new-feature-item__feature-description">
+              <CookText @rawText={{@item.description}} />
+
+              {{#if @item.link}}
+                <a
+                  href={{@item.link}}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="admin-new-feature-item__learn-more"
+                >
+                  {{i18n "admin.dashboard.new_features.learn_more"}}
+                </a>
+              {{/if}}
+            </div>
+            {{#if @item.experiment_setting}}
+              <div class="admin-new-feature-item__feature-toggle">
+                <DTooltip>
+                  <:trigger>
+                    <DToggleSwitch
+                      @state={{this.experimentEnabled}}
+                      {{on "click" this.toggleExperiment}}
+                    />
+                  </:trigger>
+                  <:content>
+                    <div class="admin-new-feature-item__tooltip">
+                      <div class="admin-new-feature-item__tooltip-header">
+                        {{i18n
+                          (if
+                            this.experimentEnabled
+                            "admin.dashboard.new_features.experiment_tooltip.title_enabled"
+                            "admin.dashboard.new_features.experiment_tooltip.title_disabled"
+                          )
+                        }}
+                      </div>
+                      <div class="admin-new-feature-item__tooltip-content">
+                        {{htmlSafe
+                          (i18n
+                            (if
+                              this.experimentEnabled
+                              "admin.dashboard.new_features.experiment_tooltip.content_enabled"
+                              "admin.dashboard.new_features.experiment_tooltip.content_disabled"
+                            )
+                          )
+                        }}
+                      </div>
+                    </div>
+                  </:content>
+                </DTooltip>
+              </div>
+            {{/if}}
+          </div>
         </div>
       </div>
     </div>
