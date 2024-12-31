@@ -17,8 +17,6 @@ export default class ChatIncomingWebhookEditForm extends Component {
   @service toasts;
   @service router;
 
-  @tracked emojiPickerIsActive = false;
-
   get formData() {
     return {
       name: this.args.webhook?.name,
@@ -32,7 +30,6 @@ export default class ChatIncomingWebhookEditForm extends Component {
   @action
   emojiSelected(setData, emoji) {
     setData("emoji", `:${emoji}:`);
-    this.emojiPickerIsActive = false;
   }
 
   @action
@@ -83,7 +80,11 @@ export default class ChatIncomingWebhookEditForm extends Component {
   }
 
   <template>
-    <Form @data={{this.formData}} @onSubmit={{this.save}} as |form|>
+    <Form
+      @data={{this.formData}}
+      @onSubmit={{this.save}}
+      as |form transientData|
+    >
       <form.Field
         @name="name"
         @title={{i18n "chat.incoming_webhooks.name"}}
@@ -129,6 +130,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @name="emoji"
         @title={{i18n "chat.incoming_webhooks.emoji"}}
         @description={{i18n "chat.incoming_webhooks.emoji_instructions"}}
+        @size="large"
         as |field|
       >
         <field.Custom>
@@ -140,32 +142,19 @@ export default class ChatIncomingWebhookEditForm extends Component {
             </span>
           {{/if}}
 
-          <EmojiPicker
-            @isActive={{this.emojiPickerIsActive}}
-            @isEditorFocused={{true}}
-            @emojiSelected={{fn this.emojiSelected form.set}}
-          />
-
-          {{#unless this.emojiPickerIsActive}}
-            <form.Row as |row|>
-              <row.Col @size={{6}}>
-                <DButton
-                  @label="chat.incoming_webhooks.select_emoji"
-                  @action={{fn (mut this.emojiPickerIsActive) true}}
-                  class="btn-primary admin-chat-webhooks-select-emoji"
-                />
-              </row.Col>
-              <row.Col @size={{6}}>
-                <DButton
-                  @label="chat.incoming_webhooks.reset_emoji"
-                  @action={{fn this.resetEmoji form.set}}
-                  @disabled={{not field.value}}
-                  class="admin-chat-webhooks-clear-emoji"
-                />
-              </row.Col>
-            </form.Row>
-          {{/unless}}
-
+          <form.Row as |row|>
+            <row.Col @size={{2}}>
+              <EmojiPicker @didSelectEmoji={{fn this.emojiSelected form.set}} />
+            </row.Col>
+            <row.Col @size={{6}}>
+              <DButton
+                @label="chat.incoming_webhooks.reset_emoji"
+                @action={{fn this.resetEmoji form.set}}
+                @disabled={{not field.value}}
+                class="admin-chat-webhooks-clear-emoji"
+              />
+            </row.Col>
+          </form.Row>
         </field.Custom>
       </form.Field>
 
