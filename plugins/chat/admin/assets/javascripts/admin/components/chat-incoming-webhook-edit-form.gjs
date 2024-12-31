@@ -144,7 +144,6 @@ export default class ChatIncomingWebhookEditForm extends Component {
             @isActive={{this.emojiPickerIsActive}}
             @isEditorFocused={{true}}
             @emojiSelected={{fn this.emojiSelected form.set}}
-            @onEmojiPickerClose={{fn (mut this.emojiPickerIsActive) false}}
           />
 
           {{#unless this.emojiPickerIsActive}}

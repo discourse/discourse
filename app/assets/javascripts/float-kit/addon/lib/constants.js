@@ -71,6 +71,7 @@ export const MENU = {
     modalForMobile: false,
     inline: null,
     groupIdentifier: null,
+    parentIdentifier: null,
     triggerClass: null,
     contentClass: null,
     class: null,
