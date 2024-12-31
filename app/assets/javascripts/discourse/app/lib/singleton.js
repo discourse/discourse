@@ -64,10 +64,10 @@ export default function singleton(targetKlass) {
     }
 
     if (typeof value !== "undefined") {
-      instance[property] = value;
+      instance.set(property, value);
       return value;
     }
-    return instance[property];
+    return instance.get(property);
   };
 
   targetKlass.resetCurrent = function (val) {
