@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -15,9 +15,12 @@ export default class AdminSiteSettingsController extends Controller {
   filter = "";
   visibleSiteSettings = null;
   siteSettingFilter = null;
-  adminBodyClass = null;
 
-  getAdminBodyClass(filterName, category) {
+  @computed("filter", "categoryNameKey")
+  get adminBodyClass() {
+    const filterName = this.filter;
+    const category = this.categoryNameKey;
+
     let bodyClass = "admin-site-settings__";
     if (category !== "all_results") {
       bodyClass += `${category}`;
@@ -26,15 +29,12 @@ export default class AdminSiteSettingsController extends Controller {
     if (filterName) {
       bodyClass += `${filterName}`;
     }
+
     return bodyClass;
   }
 
   filterContentNow(filterData, category) {
     this.siteSettingFilter ??= new SiteSettingFilter(this.allSiteSettings);
-    this.set(
-      "adminBodyClass",
-      this.getAdminBodyClass(filterData.filter, category)
-    );
     if (isEmpty(this.allSiteSettings)) {
       return;
     }
@@ -60,7 +60,9 @@ export default class AdminSiteSettingsController extends Controller {
     );
 
     if (!categoryMatches || categoryMatches.count === 0) {
-      category = "all_results";
+      if (!filterData.onlyOverridden) {
+        category = "all_results";
+      }
     }
 
     this.set("visibleSiteSettings", matchesGroupedByCategory);
