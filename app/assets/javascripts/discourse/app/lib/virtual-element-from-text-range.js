@@ -5,13 +5,24 @@ class VirtualElementFromTextRange {
 
   updateRect() {
     const selection = document.getSelection();
-    this.range = selection && selection.rangeCount && selection.getRangeAt(0);
+
+    this.range = selection?.rangeCount && selection?.getRangeAt?.(0);
 
     if (!this.range) {
       return;
     }
 
-    this.rect = this.range.getBoundingClientRect();
+    // Create a fake element if range is collapsed
+    if (this.range.collapsed) {
+      const tempSpan = document.createElement("span");
+      tempSpan.textContent = "\u200B"; // Zero-width space
+      this.range.insertNode(tempSpan);
+      this.rect = tempSpan.getBoundingClientRect();
+      tempSpan.parentNode.removeChild(tempSpan);
+    } else {
+      this.rect = this.range.getBoundingClientRect();
+    }
+
     return this.rect;
   }
 

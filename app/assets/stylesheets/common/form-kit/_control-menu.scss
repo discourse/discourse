@@ -1,4 +1,15 @@
-.form-kit__control-menu {
+.form-kit__control-menu-trigger {
   @include default-input;
   justify-content: space-between;
+}
+
+.form-kit__control-menu-content {
+  .dropdown-menu {
+    min-width: 200px;
+  }
+  .dropdown-menu__item {
+    &:hover {
+      background: var(--d-hover);
+    }
+  }
 }

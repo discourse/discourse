@@ -959,6 +959,10 @@ posting:
   max_emojis_in_title:
     default: 1
     area: "emojis"
+  default_emoji_reactions:
+    type: emoji_list
+    default: +1|heart|tada
+    client: true
   allow_uncategorized_topics:
     client: true
     default: false

@@ -137,16 +137,6 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
     color: var(--primary-high);
     font-size: var(--font-down-2);
   }
-
-  .emoji-picker {
-    position: fixed;
-  }
-
-  &:hover {
-    .chat-.chat-message-react-btn {
-      display: inline-block;
-    }
-  }
 }
 
 .chat-emoji-avatar {

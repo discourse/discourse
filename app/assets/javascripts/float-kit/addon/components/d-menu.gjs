@@ -3,8 +3,6 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
@@ -35,10 +33,13 @@ export default class DMenu extends Component {
     };
   });
 
-  @action
-  registerFloatBody(element) {
+  registerFloatBody = modifier((element) => {
     this.body = element;
-  }
+
+    return () => {
+      this.body = null;
+    };
+  });
 
   @action
   teardownFloatBody() {
@@ -156,8 +157,7 @@ export default class DMenu extends Component {
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
-          {{didInsert this.registerFloatBody}}
-          {{willDestroy this.teardownFloatBody}}
+          {{this.registerFloatBody}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

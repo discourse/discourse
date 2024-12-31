@@ -123,7 +123,21 @@ module PageObjects
       end
 
       def hover_message(message)
-        message_by_id(message.id).hover
+        message = message_by_id(message.id)
+        # Scroll to top of message so that the actions are not hidden
+        page.scroll_to(message, align: :top)
+        message.hover
+        message
+      end
+
+      def react_to_message(message, emoji_name = nil)
+        message = hover_message(message)
+
+        if emoji_name
+          message.find(".react-btn").click
+        else
+          message.find(".chat-message-actions [data-emoji-name=\"#{emoji_name}\"]").click
+        end
       end
 
       def message_by_id(id)

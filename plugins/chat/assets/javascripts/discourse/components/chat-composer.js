@@ -9,6 +9,7 @@ import $ from "jquery";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
 import {
@@ -23,6 +24,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { cloneJSON } from "discourse-common/lib/object";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { i18n } from "discourse-i18n";
@@ -41,12 +43,12 @@ export default class ChatComposer extends Component {
   @service composerPresenceManager;
   @service chatComposerWarningsTracker;
   @service appEvents;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
+  @service emojiStore;
   @service currentUser;
   @service chatApi;
   @service chatDraftsManager;
   @service modal;
+  @service menu;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
@@ -375,14 +377,10 @@ export default class ChatComposer extends Component {
 
   @action
   onSelectEmoji(emoji) {
-    const code = `:${emoji}:`;
-    this.chatEmojiReactionStore.track(code);
     this.composer.textarea.emojiSelected(emoji);
 
     if (this.site.desktopView) {
       this.composer.focus();
-    } else {
-      this.chatEmojiPickerManager.close();
     }
   }
 
@@ -492,14 +490,26 @@ export default class ChatComposer extends Component {
       },
       transformComplete: (v) => {
         if (v.code) {
-          this.chatEmojiReactionStore.track(v.code);
           return `${v.code}:`;
         } else {
+          const menuOptions = {
+            identifier: "emoji-picker",
+            groupIdentifier: "emoji-picker",
+            component: EmojiPickerDetached,
+            context: `channel_${this.args.channel.id}`,
+            modalForMobile: true,
+            data: {
+              didSelectEmoji: (emoji) => {
+                this.onSelectEmoji(emoji);
+              },
+              term: v.term,
+              context: "chat",
+            },
+          };
+
+          const virtualElement = virtualElementFromTextRange();
+          this.menuInstance = this.menu.show(virtualElement, menuOptions);
           $textarea.autocomplete({ cancel: true });
-          this.chatEmojiPickerManager.open({
-            context: this.context,
-            initialFilter: v.term,
-          });
           return "";
         }
       },
@@ -529,8 +539,9 @@ export default class ChatComposer extends Component {
           }
 
           if (term === "") {
-            if (this.chatEmojiReactionStore.favorites.length) {
-              return resolve(this.chatEmojiReactionStore.favorites.slice(0, 5));
+            const favorites = this.emojiStore.favoritesForContext("chat");
+            if (favorites.length > 0) {
+              return resolve(favorites.slice(0, 5));
             } else {
               return resolve([
                 "slight_smile",
@@ -571,7 +582,7 @@ export default class ChatComposer extends Component {
 
           const options = emojiSearch(term, {
             maxResults: 5,
-            diversity: this.chatEmojiReactionStore.diversity,
+            diversity: this.emojiStore.diversity,
             exclude: emojiDenied,
           });
 
