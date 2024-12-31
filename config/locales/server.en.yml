@@ -3213,6 +3213,7 @@ en:
       hide_suspension_reasons: ""
       hide_user_activity_tab: ""
       hide_user_profiles_from_public: ""
+      hide_new_user_profiles: ""
       high_trust_flaggers_auto_hide_posts: ""
       highlighted_languages: ""
       history_hours_high: ""
