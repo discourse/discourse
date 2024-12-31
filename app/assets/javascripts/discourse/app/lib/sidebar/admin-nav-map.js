@@ -299,8 +299,7 @@ export const ADMIN_NAV_MAP = [
       {
         name: "admin_experimental",
         route: "adminSiteSettingsCategory",
-        routeModels: ["all_results"],
-        query: { filter: "experimental" },
+        routeModels: ["experimental"],
         label: "admin.advanced.sidebar_link.experimental",
         icon: "discourse-sparkles",
       },
