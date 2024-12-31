@@ -16,6 +16,17 @@ module("Unit | Lib | DAGMap", function (hooks) {
     assert.deepEqual(sorted, ["key1", "key2", "key3"]);
   });
 
+  test("Items are positioned correctly when all items have hints", function (assert) {
+    const dagMap = new DAGMap();
+    dagMap.add("key1", null, { after: "key2" });
+    dagMap.add("key2", null, { before: "key3" });
+    dagMap.add("key3", null, { before: "key1" });
+
+    const sorted = dagMap.sort();
+
+    assert.deepEqual(sorted, ["key2", "key3", "key1"]);
+  });
+
   test("Items are positioned just after the specified item", function (assert) {
     const dagMap = new DAGMap();
     dagMap.add("key1");

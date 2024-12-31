@@ -6,7 +6,6 @@ export default class DAGMap {
   #nodes = new Map();
   #incomingEdges = new Map();
   #outgoingEdges = new Map();
-
   #staged = new Map();
 
   add(key, value, { before, after } = {}) {
@@ -37,17 +36,19 @@ export default class DAGMap {
   }
 
   sort() {
-    const firstPass = this.#topologicalSort(
+    let result = this.#topologicalSort(
       this.#incomingEdges,
       this.#outgoingEdges
     );
 
     if (this.#staged.size === 0) {
-      return firstPass;
+      return result;
     }
 
     const secondPassIncomingEdges = new Map(this.#incomingEdges.entries());
     const secondPassOutgoingEdges = new Map(this.#outgoingEdges.entries());
+
+    result = result.filter((key) => !this.#staged.has(key));
 
     Array.from(this.#staged.entries()).forEach(([key, beforeConstraints]) => {
       // we need to get the leftmost node before the constraints
@@ -55,7 +56,7 @@ export default class DAGMap {
 
       beforeConstraints.forEach((b) => {
         this.#addEdge(key, b, secondPassIncomingEdges, secondPassOutgoingEdges);
-        const bIndex = firstPass.indexOf(b);
+        const bIndex = result.indexOf(b);
 
         if (leftMostNode === null || leftMostNode > bIndex) {
           leftMostNode = bIndex - 1;
@@ -66,17 +67,17 @@ export default class DAGMap {
       //   "leftMostNode for",
       //   key,
       //   leftMostNode,
-      //   firstPass[leftMostNode]
+      //   result[leftMostNode]
       // );
 
       if (
         leftMostNode !== null &&
         leftMostNode >= 0 &&
-        !this.#staged.has(key)
+        !this.#staged.has(leftMostNode)
       ) {
         // this adds an additional constraint forcing the item to be placed after the leftmost node
         this.#addEdge(
-          firstPass[leftMostNode],
+          result[leftMostNode],
           key,
           secondPassIncomingEdges,
           secondPassOutgoingEdges

@@ -279,7 +279,7 @@ module("Unit | Lib | DAG", function (hooks) {
     const dag = new DAG();
     dag.add("key1", "value1");
     dag.add("key2", "value2", { before: "key1" });
-    dag.add("key3", "value3");
+    dag.add("key3", "value3", { after: "key1" });
 
     dag.delete("key1");
 

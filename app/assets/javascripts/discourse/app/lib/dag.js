@@ -1,5 +1,5 @@
-import DAGMap from "dag-map";
-// import DAGMap from "discourse/lib/dag-map";
+// import DAGMap from "dag-map";
+import DAGMap from "discourse/lib/dag-map";
 import { makeArray } from "discourse-common/lib/helpers";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -215,17 +215,17 @@ export default class DAG {
    */
   #addHandlingCycles(dag, key, value, before, after) {
     if (this.#throwErrorOnCycle) {
-      dag.add(key, value, before, after);
+      dag.add(key, value, { before, after });
     } else {
       try {
-        dag.add(key, value, before, after);
+        dag.add(key, value, { before, after });
       } catch (e) {
         if (e.message.match(/cycle/i)) {
           const { before: newBefore, after: newAfter } =
             this.#defaultPositionForKey(key);
 
           // if even the default position causes a cycle, an error will be thrown
-          dag.add(key, value, newBefore, newAfter);
+          dag.add(key, value, { newBefore, newAfter });
         }
       }
     }
