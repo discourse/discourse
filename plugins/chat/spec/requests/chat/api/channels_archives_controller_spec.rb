@@ -22,7 +22,6 @@ RSpec.describe Chat::Api::ChannelsArchivesController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    SiteSetting.chat_duplicate_message_sensitivity = 0
   end
 
   describe "#create" do
