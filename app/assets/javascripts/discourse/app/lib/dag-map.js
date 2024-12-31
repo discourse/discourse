@@ -7,6 +7,8 @@ export default class DAGMap {
   #incomingEdges = new Map();
   #outgoingEdges = new Map();
 
+  #staged = new Map();
+
   add(key, value, { before, after } = {}) {
     this.#addVertex(key, value);
 
@@ -20,7 +22,9 @@ export default class DAGMap {
       return;
     }
 
-    makeArray(before).forEach((b) => this.#addEdge(key, b));
+    if (before) {
+      this.#staged.set(key, makeArray(before));
+    }
     makeArray(after).forEach((a) => this.#addEdge(a, key));
   }
 
@@ -33,15 +37,69 @@ export default class DAGMap {
   }
 
   sort() {
+    const firstPass = this.#topologicalSort(
+      this.#incomingEdges,
+      this.#outgoingEdges
+    );
+
+    if (this.#staged.size === 0) {
+      return firstPass;
+    }
+
+    const secondPassIncomingEdges = new Map(this.#incomingEdges.entries());
+    const secondPassOutgoingEdges = new Map(this.#outgoingEdges.entries());
+
+    Array.from(this.#staged.entries()).forEach(([key, beforeConstraints]) => {
+      // we need to get the leftmost node before the constraints
+      let leftMostNode = null;
+
+      beforeConstraints.forEach((b) => {
+        this.#addEdge(key, b, secondPassIncomingEdges, secondPassOutgoingEdges);
+        const bIndex = firstPass.indexOf(b);
+
+        if (leftMostNode === null || leftMostNode > bIndex) {
+          leftMostNode = bIndex - 1;
+        }
+      });
+
+      // console.log(
+      //   "leftMostNode for",
+      //   key,
+      //   leftMostNode,
+      //   firstPass[leftMostNode]
+      // );
+
+      if (
+        leftMostNode !== null &&
+        leftMostNode >= 0 &&
+        !this.#staged.has(key)
+      ) {
+        // this adds an additional constraint forcing the item to be placed after the leftmost node
+        this.#addEdge(
+          firstPass[leftMostNode],
+          key,
+          secondPassIncomingEdges,
+          secondPassOutgoingEdges
+        );
+      }
+    });
+
+    return this.#topologicalSort(
+      secondPassIncomingEdges,
+      secondPassOutgoingEdges
+    );
+  }
+
+  #topologicalSort(incomingEdges, outgoingEdges) {
     const indegrees = {}; // object to store the indegrees of each node
     const queue = []; // queue of items to be added to the result
 
     [
-      ...Array.from(this.#incomingEdges.keys()), // enumerate all edge targets
+      ...Array.from(incomingEdges.keys()), // enumerate all edge targets
       ...this.#implicitNodes, // enumerate all implicit nodes to ensure the order is preserved
       ...this.#nodes.keys(), // enumerate all existing nodes
     ].forEach((key) => {
-      const values = this.#incomingEdges.get(key);
+      const values = incomingEdges.get(key);
       indegrees[key] = values?.length ?? indegrees[key] ?? 0;
 
       // if the node is a root node (indegree = 0), add it to the queue
@@ -59,7 +117,7 @@ export default class DAGMap {
         topologicalOrder.push(node);
       }
 
-      const destinationNodes = this.#outgoingEdges.get(node) || [];
+      const destinationNodes = outgoingEdges.get(node) || [];
 
       // decrease the indegrees of the destinationNodes as the current node is already in topological order
       for (const destinationNode of destinationNodes) {
@@ -77,7 +135,7 @@ export default class DAGMap {
     // check for cycles
     if (result.length !== this.#nodes.size) {
       // eslint-disable-next-line no-console
-      console.log("Graph contains cycle!: " + topologicalOrder.join(" -> "));
+      console.log("Graph contains cycle!");
       return [];
     }
 
@@ -88,9 +146,14 @@ export default class DAGMap {
     return this.sort().map((key) => [key, this.#nodes.get(key)]);
   }
 
-  #addEdge(from, to) {
-    this.#addLink(this.#outgoingEdges, from, to);
-    this.#addLink(this.#incomingEdges, to, from);
+  #addEdge(
+    from,
+    to,
+    incomingEdges = this.#incomingEdges,
+    outgoingEdges = this.#outgoingEdges
+  ) {
+    this.#addLink(outgoingEdges, from, to);
+    this.#addLink(incomingEdges, to, from);
   }
 
   #addLink(map, from, to) {

@@ -1,5 +1,5 @@
-// import DAGMap from "dag-map";
-import DAGMap from "discourse/lib/dag-map";
+import DAGMap from "dag-map";
+// import DAGMap from "discourse/lib/dag-map";
 import { makeArray } from "discourse-common/lib/helpers";
 import { bind } from "discourse-common/utils/decorators";
 
