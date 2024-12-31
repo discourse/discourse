@@ -68,7 +68,7 @@ end
 Fabricator(:chat_message_without_service, class_name: "Chat::Message") do
   user
   chat_channel
-  message { Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length) }
+  message { Faker::Alphanumeric.alpha(number: [10, SiteSetting.chat_minimum_message_length].max) }
 
   after_build { |message, attrs| message.cook }
   after_create { |message, attrs| message.upsert_mentions }
