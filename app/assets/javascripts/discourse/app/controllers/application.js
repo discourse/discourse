@@ -58,6 +58,16 @@ export default class ApplicationController extends Controller {
     return this.siteSettings.login_required && !this.currentUser;
   }
 
+  get showLoginRequiredPage() {
+    const excludedRoutes = ["login", "signup", "invites"];
+    const currentRoute = this.router.currentRouteName;
+
+    return (
+      this.loginRequired &&
+      !excludedRoutes.some((route) => currentRoute.startsWith(route))
+    );
+  }
+
   @discourseComputed
   showFooterNav() {
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
