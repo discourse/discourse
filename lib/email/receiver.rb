@@ -564,10 +564,22 @@ module Email
     end
 
     def extract_from_exchange(doc)
-      # Exchange is using the 'messageReplySection' class for forwarded emails
-      # And 'messageBodySection' for the actual email
-      elided = doc.css("div[name='messageReplySection']").remove
-      to_markdown(doc.css("div[name='messageReplySection']").to_html, elided.to_html)
+      # Exchange is using 'messageReplySection' for forwarded emails and 'messageBodySection' for the actual email
+      reply = doc.css("div[name='messageReplySection']")
+      body = doc.css("div[name='messageBodySection']")
+
+      if reply.blank? && body.blank?
+        # should not be possible
+        to_markdown(doc.to_html, "")
+      elsif reply.blank? && body.present?
+        to_markdown(body.to_html, "")
+      elsif reply.present? && body.blank?
+        to_markdown(reply.to_html, "")
+      else
+        elided = doc.css("div[name='messageReplySection']").remove
+        body = doc.css("div[name='messageBodySection']")
+        to_markdown(body.to_html, elided.to_html)
+      end
     end
 
     def extract_from_apple_mail(doc)
