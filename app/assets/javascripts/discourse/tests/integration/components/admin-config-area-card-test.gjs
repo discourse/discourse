@@ -36,6 +36,20 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
     assert.dom(".admin-config-area-card__content").exists();
   });
 
+  test("renders admin config area card with toggle button and collapsed by default", async function (assert) {
+    await render(<template>
+      <AdminConfigAreaCard
+        @translatedHeading="test heading"
+        @collapsable={{true}}
+        @collapsed={{true}}
+      ><:content>test</:content></AdminConfigAreaCard>
+    </template>);
+
+    assert.dom(".admin-config-area-card__title").exists();
+    assert.dom(".admin-config-area-card__toggle-button").exists();
+    assert.dom(".admin-config-area-card__content").doesNotExist();
+  });
+
   test("renders admin config area card with header action", async function (assert) {
     await render(<template>
       <AdminConfigAreaCard
