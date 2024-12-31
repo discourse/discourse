@@ -123,9 +123,13 @@
   &__header,
   &__body,
   &__row {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: subgrid;
+    display: contents;
+
+    @supports (grid-template-rows: subgrid) {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+    }
   }
 
   &__column-header,
