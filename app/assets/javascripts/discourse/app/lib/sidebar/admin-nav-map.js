@@ -42,9 +42,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_login_and_authentication",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["login"],
-        query: { filter: "" },
+        route: "adminConfig.loginAndAuthentication.settings",
         label: "admin.community.sidebar_link.login_and_authentication",
         icon: "unlock",
       },

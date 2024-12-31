@@ -237,6 +237,11 @@ export default function () {
         });
 
         this.route("about");
+        this.route("loginAndAuthentication", { path: "/" }, function () {
+          this.route("settings", {
+            path: "/login-and-authentication",
+          });
+        });
         this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
           this.route("themes");
         });
