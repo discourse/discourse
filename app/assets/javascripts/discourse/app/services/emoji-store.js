@@ -37,7 +37,7 @@ export default class EmojiStore extends Service {
   }
 
   favoritesForContext(context) {
-    return this.#sortEmojisByFrequences(this.contexts[context]).slice(
+    return this.#sortEmojisByFrequency(this.contexts[context]).slice(
       0,
       MAX_DISPLAYED_EMOJIS
     );
@@ -89,7 +89,7 @@ export default class EmojiStore extends Service {
     return `${context}_${USER_EMOJIS_STORE_KEY}`;
   }
 
-  #sortEmojisByFrequences(emojis = []) {
+  #sortEmojisByFrequency(emojis = []) {
     const counters = emojis.reduce((obj, val) => {
       obj[val] = (obj[val] || 0) + 1;
       return obj;
