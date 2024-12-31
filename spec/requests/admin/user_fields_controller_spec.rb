@@ -11,7 +11,7 @@ RSpec.describe Admin::UserFieldsController do
 
       it "creates a user field" do
         expect {
-          post "/admin/customize/user_fields.json",
+          post "/admin/config/user-fields.json",
                params: {
                  user_field: {
                    name: "hello",
@@ -27,7 +27,7 @@ RSpec.describe Admin::UserFieldsController do
 
       it "creates a user field with options" do
         expect do
-          post "/admin/customize/user_fields.json",
+          post "/admin/config/user-fields.json",
                params: {
                  user_field: {
                    name: "hello",
@@ -48,7 +48,7 @@ RSpec.describe Admin::UserFieldsController do
     shared_examples "user field creation not allowed" do
       it "prevents creation with a 404 response" do
         expect do
-          post "/admin/customize/user_fields.json",
+          post "/admin/config/user-fields.json",
                params: {
                  user_field: {
                    name: "hello",
@@ -83,7 +83,7 @@ RSpec.describe Admin::UserFieldsController do
       before { sign_in(admin) }
 
       it "returns a list of user fields" do
-        get "/admin/customize/user_fields.json"
+        get "/admin/config/user-fields.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["user_fields"]).to be_present
@@ -92,7 +92,7 @@ RSpec.describe Admin::UserFieldsController do
 
     shared_examples "user fields inaccessible" do
       it "denies access with a 404 response" do
-        get "/admin/customize/user_fields.json"
+        get "/admin/config/user-fields.json"
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -121,7 +121,7 @@ RSpec.describe Admin::UserFieldsController do
 
       it "deletes the user field" do
         expect {
-          delete "/admin/customize/user_fields/#{user_field.id}.json"
+          delete "/admin/config/user-fields/#{user_field.id}.json"
           expect(response.status).to eq(200)
         }.to change(UserField, :count).by(-1)
       end
@@ -129,7 +129,7 @@ RSpec.describe Admin::UserFieldsController do
 
     shared_examples "user field deletion not allowed" do
       it "prevents deletion with a 404 response" do
-        expect do delete "/admin/customize/user_fields/#{user_field.id}.json" end.not_to change {
+        expect do delete "/admin/config/user-fields/#{user_field.id}.json" end.not_to change {
           UserField.count
         }
 
@@ -158,7 +158,7 @@ RSpec.describe Admin::UserFieldsController do
       before { sign_in(admin) }
 
       it "updates the user field" do
-        put "/admin/customize/user_fields/#{user_field.id}.json",
+        put "/admin/config/user-fields/#{user_field.id}.json",
             params: {
               user_field: {
                 name: "fraggle",
@@ -177,7 +177,7 @@ RSpec.describe Admin::UserFieldsController do
       end
 
       it "updates the user field options" do
-        put "/admin/customize/user_fields/#{user_field.id}.json",
+        put "/admin/config/user-fields/#{user_field.id}.json",
             params: {
               user_field: {
                 name: "fraggle",
@@ -195,7 +195,7 @@ RSpec.describe Admin::UserFieldsController do
       end
 
       it "keeps options when updating the user field" do
-        put "/admin/customize/user_fields/#{user_field.id}.json",
+        put "/admin/config/user-fields/#{user_field.id}.json",
             params: {
               user_field: {
                 name: "fraggle",
@@ -210,7 +210,7 @@ RSpec.describe Admin::UserFieldsController do
         user_field.reload
         expect(user_field.user_field_options.size).to eq(2)
 
-        put "/admin/customize/user_fields/#{user_field.id}.json",
+        put "/admin/config/user-fields/#{user_field.id}.json",
             params: {
               user_field: {
                 name: "fraggle",
@@ -234,7 +234,7 @@ RSpec.describe Admin::UserFieldsController do
           position: next_position,
         )
         expect {
-          put "/admin/customize/user_fields/#{user_field.id}.json",
+          put "/admin/config/user-fields/#{user_field.id}.json",
               params: {
                 user_field: {
                   show_on_profile: false,
@@ -251,7 +251,7 @@ RSpec.describe Admin::UserFieldsController do
         user_field.reload
         original_name = user_field.name
 
-        put "/admin/customize/user_fields/#{user_field.id}.json",
+        put "/admin/config/user-fields/#{user_field.id}.json",
             params: {
               user_field: {
                 name: "fraggle",

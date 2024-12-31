@@ -44,7 +44,7 @@ export default class AdminEmojis extends Service {
 
   async #fetchEmojis() {
     try {
-      const data = await ajax("/admin/customize/emojis.json");
+      const data = await ajax("/admin/config/emoji.json");
       this.emojis = data.map((emoji) => EmberObject.create(emoji));
     } catch (err) {
       popupAjaxError(err);
@@ -63,7 +63,7 @@ export default class AdminEmojis extends Service {
 
   async #destroyEmoji(emoji) {
     try {
-      await ajax("/admin/customize/emojis/" + emoji.get("name"), {
+      await ajax("/admin/config/emoji/" + emoji.get("name"), {
         type: "DELETE",
       });
       this.emojis.removeObject(emoji);

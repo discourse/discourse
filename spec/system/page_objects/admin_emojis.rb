@@ -4,16 +4,16 @@ module PageObjects
   module Pages
     class AdminEmojis < PageObjects::Pages::Base
       def visit_page
-        page.visit "/admin/customize/emojis"
+        page.visit "/admin/config/emoji"
         self
       end
 
       def click_tab(tab_name)
         case tab_name
         when "settings"
-          find(".admin-emojis-tabs__settings").click
+          find(".admin-emoji-tabs__settings").click
         when "index"
-          find(".admin-emojis-tabs__emoji").click
+          find(".admin-emoji-tabs__emoji").click
         end
       end
 

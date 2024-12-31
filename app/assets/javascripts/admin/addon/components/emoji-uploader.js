@@ -12,7 +12,7 @@ export default class EmojiUploader extends Component {
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "emoji-uploader",
     type: "emoji",
-    uploadUrl: "/admin/customize/emojis",
+    uploadUrl: "/admin/config/emoji",
     preventDirectS3Uploads: true,
     validateUploadedFilesOptions: {
       imagesOnly: true,

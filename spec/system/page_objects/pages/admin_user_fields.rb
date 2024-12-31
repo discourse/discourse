@@ -4,7 +4,7 @@ module PageObjects
   module Pages
     class AdminUserFields < PageObjects::Pages::Base
       def visit
-        page.visit "admin/customize/user_fields"
+        page.visit "admin/config/user-fields"
         self
       end
 

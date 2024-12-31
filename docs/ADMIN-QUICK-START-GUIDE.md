@@ -71,7 +71,7 @@ To customize the look and feel of your community beyond what you configured in t
 - [Font styles](%{base_url}/admin/site_settings/category/all_results?filter=font)
 - [Site theme](%{base_url}/admin/customize/themes)
 - [Navigation menu](%{base_url}/admin/site_settings/category/navigation)
-- [Custom user fields](%{base_url}/admin/customize/user_fields)
+- [Custom user fields](%{base_url}/admin/config/user-fields)
 - [Terms of service and privacy policies](%{base_url}/admin/site_settings/category/legal)
 
 [details="Advanced options"]

@@ -90,7 +90,7 @@ export default class AdminConfigAreasEmojisList extends Component {
       <AdminConfigAreaEmptyList
         @ctaLabel="admin.emoji.add"
         @ctaRoute="adminEmojis.new"
-        @ctaClass="admin-emojis__add-emoji"
+        @ctaClass="admin-emoji__add-emoji"
         @emptyLabel="admin.emoji.no_emoji"
       />
     {{/if}}
