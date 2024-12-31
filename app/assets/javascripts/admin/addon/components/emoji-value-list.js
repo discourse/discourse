@@ -1,12 +1,18 @@
 import Component from "@ember/component";
-import { action, setProperties } from "@ember/object";
+import { action, set, setProperties } from "@ember/object";
+import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { emojiUrlFor } from "discourse/lib/text";
+import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings(":value-list", ":emoji-list")
 export default class EmojiValueList extends Component {
+  @service menu;
+
   values = null;
 
   @discourseComputed("values")
@@ -18,6 +24,8 @@ export default class EmojiValueList extends Component {
       .filter(Boolean)
       .map((value) => {
         return {
+          isEditable: true,
+          isEditing: false,
           value,
           emojiUrl: emojiUrlFor(value),
         };
@@ -35,6 +43,7 @@ export default class EmojiValueList extends Component {
       setProperties(item, {
         value: code,
         emojiUrl: emojiUrlFor(code),
+        isEditing: false,
       });
 
       this._saveValues();
@@ -42,6 +51,8 @@ export default class EmojiValueList extends Component {
       const newCollectionValue = {
         value: code,
         emojiUrl: emojiUrlFor(code),
+        isEditable: true,
+        isEditing: false,
       };
       this.collection.addObject(newCollectionValue);
       this._saveValues();
@@ -58,7 +69,13 @@ export default class EmojiValueList extends Component {
       const emojiList = [];
       const emojis = values.split("|").filter(Boolean);
       emojis.forEach((emojiName) => {
-        const emoji = { value: emojiName, emojiUrl: emojiUrlFor(emojiName) };
+        const emoji = {
+          isEditable: true,
+          isEditing: false,
+        };
+        emoji.value = emojiName;
+        emoji.emojiUrl = emojiUrlFor(emojiName);
+
         emojiList.push(emoji);
       });
 
@@ -69,9 +86,32 @@ export default class EmojiValueList extends Component {
   }
 
   @action
+  editValue(index, event) {
+    schedule("afterRender", () => {
+      if (parseInt(index, 10) >= 0) {
+        const item = this.collection[index];
+        if (item.isEditable) {
+          set(item, "isEditing", true);
+        }
+      }
+
+      this.menu.show(event.target, {
+        identifier: "emoji-picker",
+        groupIdentifier: "emoji-picker",
+        component: EmojiPickerDetached,
+        data: {
+          context: "chat",
+          didSelectEmoji: (emoji) => {
+            this._replaceValue(index, emoji);
+          },
+        },
+      });
+    });
+  }
+
+  @action
   removeValue(value) {
-    this.collection.removeObject(value);
-    this._saveValues();
+    this._removeValue(value);
   }
 
   @action
@@ -101,6 +141,20 @@ export default class EmojiValueList extends Component {
 
     this.setValidationMessage(null);
     return true;
+  }
+
+  _removeValue(value) {
+    this.collection.removeObject(value);
+    this._saveValues();
+  }
+
+  _replaceValue(index, newValue) {
+    const item = this.collection[index];
+    if (item.value === newValue) {
+      return;
+    }
+    set(item, "value", newValue);
+    this._saveValues();
   }
 
   _saveValues() {

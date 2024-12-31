@@ -5,10 +5,17 @@
         <DButton
           @action={{fn this.removeValue data}}
           @icon="xmark"
+          @disabled={{not data.isEditable}}
           class="remove-value-btn btn-small"
         />
 
-        <div class="value-input emoji-details" role="button">
+        <div
+          class="value-input emoji-details
+            {{if data.isEditable 'can-edit'}}
+            {{if data.isEditing 'd-editor-textarea-wrapper'}}"
+          {{on "click" (fn this.editValue index)}}
+          role="button"
+        >
           <img
             height="15px"
             width="15px"
