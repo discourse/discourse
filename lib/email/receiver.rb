@@ -568,17 +568,16 @@ module Email
       reply = doc.css("div[name='messageReplySection']")
       body = doc.css("div[name='messageBodySection']")
 
-      if reply.blank? && body.blank?
-        # should not be possible
-        to_markdown(doc.to_html, "")
-      elsif reply.blank? && body.present?
-        to_markdown(body.to_html, "")
-      elsif reply.present? && body.blank?
-        to_markdown(reply.to_html, "")
-      else
+    if reply.present? && body.present?
         elided = doc.css("div[name='messageReplySection']").remove
         body = doc.css("div[name='messageBodySection']")
         to_markdown(body.to_html, elided.to_html)
+      elsif reply.present?
+        to_markdown(reply.to_html, "")
+      elsif body.present?
+        to_markdown(body.to_html, "")
+      else
+        to_markdown(doc.to_html, "") 
       end
     end
 
