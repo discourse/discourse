@@ -37,7 +37,12 @@ export default class EmojiPicker extends Component {
         {{else}}
           {{icon "discourse-emojis"}}
         {{/if}}
-        &#8203;
+
+        {{#if @label}}
+          <span class="d-button-label">{{@label}}</span>
+        {{else}}
+          &#8203;
+        {{/if}}
       </:trigger>
 
       <:content>

@@ -2,6 +2,12 @@
   z-index: z("modal", "dialog");
 }
 
+.emoji-picker-trigger {
+  .d-icon + .d-button-label {
+    margin-left: 0.25em;
+  }
+}
+
 .emoji-picker {
   display: flex;
   flex-direction: column;
