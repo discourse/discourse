@@ -108,6 +108,7 @@ class PostMover
       end
     end
 
+    create_temp_table
     move_each_post
     handle_moved_references
 
@@ -127,6 +128,24 @@ class PostMover
       original_topic_id: original_topic.id,
     )
     destination_topic
+  end
+
+  def create_temp_table
+    DB.exec("DROP TABLE IF EXISTS temp_moved_posts") if Rails.env.test?
+
+    DB.exec <<~SQL
+      CREATE TEMPORARY TABLE temp_moved_posts (
+        old_topic_id INTEGER,
+        old_post_id INTEGER,
+        old_post_number INTEGER,
+        new_topic_id INTEGER,
+        new_topic_title VARCHAR,
+        new_post_id INTEGER,
+        new_post_number INTEGER
+      ) ON COMMIT DROP;
+      CREATE INDEX moved_posts_old_post_number ON temp_moved_posts(old_post_number);
+      CREATE INDEX moved_posts_old_post_id ON temp_moved_posts(old_post_id);
+    SQL
   end
 
   def handle_moved_references
@@ -373,6 +392,10 @@ class PostMover
     metadata[:full_move] = @full_move
 
     DB.exec(<<~SQL, metadata)
+      INSERT INTO temp_moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number)
+      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number)
+    SQL
+    DB.exec(<<~SQL, metadata)
       INSERT INTO moved_posts(old_topic_id, old_topic_title, old_post_id, old_post_number, post_user_id, user_id, full_move, new_topic_id, new_topic_title, new_post_id, new_post_number, created_new_topic, created_at, updated_at)
       VALUES (:old_topic_id, :old_topic_title, :old_post_id, :old_post_number, :post_user_id, :user_id, :full_move, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number, :created_new_topic, :now, :now)
     SQL
@@ -387,7 +410,7 @@ class PostMover
       UPDATE incoming_emails ie
       SET topic_id = mp.new_topic_id,
           post_id = mp.new_post_id
-      FROM moved_posts mp
+      FROM temp_moved_posts mp
       WHERE ie.topic_id = mp.old_topic_id AND ie.post_id = mp.old_post_id
         AND mp.old_topic_id <> mp.new_topic_id
     SQL
@@ -410,7 +433,7 @@ class PostMover
                                       ELSE mp.new_topic_title END
                 )
             )) :: JSON
-      FROM moved_posts mp
+      FROM temp_moved_posts mp
       WHERE n.topic_id = mp.old_topic_id AND n.post_number = mp.old_post_number
         AND n.notification_type <> #{Notification.types[:watching_first_post]}
     SQL
@@ -422,7 +445,7 @@ class PostMover
       SET reply_count = GREATEST(0, reply_count - x.moved_reply_count)
       FROM (
         SELECT r.post_id, mp.new_topic_id, COUNT(1) AS moved_reply_count
-        FROM moved_posts mp
+        FROM temp_moved_posts mp
                JOIN post_replies r ON (mp.old_post_id = r.reply_post_id)
         GROUP BY r.post_id, mp.new_topic_id
       ) x
@@ -437,7 +460,7 @@ class PostMover
                         ', post:' || mp.old_post_number || ', topic:' || mp.old_topic_id,
                         ', post:' || mp.new_post_number || ', topic:' || mp.new_topic_id),
           baked_version = NULL
-      FROM moved_posts mp, quoted_posts qp
+      FROM temp_moved_posts mp, quoted_posts qp
       WHERE p.id = qp.post_id AND mp.old_post_id = qp.quoted_post_id
     SQL
   end
@@ -446,15 +469,15 @@ class PostMover
     DB.exec <<~SQL
       UPDATE post_replies pr
       SET post_id = mp.new_post_id
-      FROM moved_posts mp
+      FROM temp_moved_posts mp
       WHERE mp.old_post_id <> mp.new_post_id AND pr.post_id = mp.old_post_id AND
-        EXISTS (SELECT 1 FROM moved_posts mr WHERE mr.new_post_id = pr.reply_post_id)
+        EXISTS (SELECT 1 FROM temp_moved_posts mr WHERE mr.new_post_id = pr.reply_post_id)
     SQL
   end
 
   def delete_post_replies
     DB.exec <<~SQL
-      DELETE FROM post_replies pr USING moved_posts mp
+      DELETE FROM post_replies pr USING temp_moved_posts mp
       WHERE (SELECT topic_id FROM posts WHERE id = pr.post_id) <>
             (SELECT topic_id FROM posts WHERE id = pr.reply_post_id)
         AND (pr.reply_post_id = mp.old_post_id OR pr.post_id = mp.old_post_id)
@@ -471,7 +494,7 @@ class PostMover
         AS (
           SELECT pt.topic_id, mp.new_post_number as post_number, pt.user_id, pt.msecs
           FROM post_timings pt
-          JOIN moved_posts mp
+          JOIN temp_moved_posts mp
             ON mp.old_topic_id = pt.topic_id
               AND mp.old_post_number = pt.post_number
               AND mp.old_topic_id = mp.new_topic_id
@@ -495,7 +518,7 @@ class PostMover
       INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
       SELECT mp.new_topic_id, pt.user_id, mp.new_post_number, pt.msecs
       FROM post_timings pt
-      JOIN moved_posts mp ON (pt.topic_id = mp.old_topic_id AND pt.post_number = mp.old_post_number)
+      JOIN temp_moved_posts mp ON (pt.topic_id = mp.old_topic_id AND pt.post_number = mp.old_post_number)
       WHERE mp.old_post_id <> mp.new_post_id
         AND mp.old_post_id IN (:post_ids)
       ON CONFLICT (topic_id, post_number, user_id) DO UPDATE
@@ -507,7 +530,7 @@ class PostMover
     DB.exec <<~SQL
       DELETE
       FROM post_timings pt
-      USING moved_posts mp
+      USING temp_moved_posts mp
       WHERE pt.topic_id = mp.new_topic_id
         AND pt.post_number = mp.new_post_number
     SQL
@@ -518,7 +541,7 @@ class PostMover
       UPDATE post_timings pt
       SET topic_id    = mp.new_topic_id,
           post_number = mp.new_post_number
-      FROM moved_posts mp
+      FROM temp_moved_posts mp
       WHERE pt.topic_id = mp.old_topic_id
         AND pt.post_number = mp.old_post_number
         AND mp.old_post_id = mp.new_post_id
@@ -550,14 +573,14 @@ class PostMover
                )                                         AS posted,
              (
                SELECT MAX(lr.new_post_number)
-               FROM moved_posts lr
+               FROM temp_moved_posts lr
                WHERE lr.old_topic_id = tu.topic_id
                  AND lr.old_post_number <= tu.last_read_post_number
                  AND lr.old_topic_id <> lr.new_topic_id
              )                                           AS last_read_post_number,
              (
                SELECT MAX(le.new_post_number)
-               FROM moved_posts le
+               FROM temp_moved_posts le
                WHERE le.old_topic_id = tu.topic_id
                  AND le.old_post_number <= tu.last_emailed_post_number
                  AND le.old_topic_id <> le.new_topic_id
@@ -573,7 +596,7 @@ class PostMover
         AND GREATEST(
                 tu.last_read_post_number,
                 tu.last_emailed_post_number
-              ) >= (SELECT MIN(mp.old_post_number) FROM moved_posts mp WHERE mp.old_topic_id <> mp.new_topic_id)
+              ) >= (SELECT MIN(mp.old_post_number) FROM temp_moved_posts mp WHERE mp.old_topic_id <> mp.new_topic_id)
       ON CONFLICT (topic_id, user_id) DO UPDATE
         SET posted                   = excluded.posted,
             last_read_post_number    = CASE
