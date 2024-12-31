@@ -6,14 +6,15 @@ Discourse is a powerful and flexible platform with many options for customizatio
 
 To get started, we recommend you follow the sections below for each of the following:
 
-- [ ] [Test your email configuration](#email-test-your-email-configuration-2)
-- [ ] [Complete the setup wizard](#magic_wand-complete-the-setup-wizard-3)
-- [ ] [Invite a few people to join you](#handshake-invite-a-few-people-to-join-you-4)
-- [ ] [Discuss ideas with your community](#thought_balloon-discuss-ideas-with-your-community-5)
-- [ ] [Update your welcome topic and guidelines](#wave-update-your-welcome-topic-and-guidelines-6)
-- [ ] [Adjust other customizations](#art-adjust-other-customizations-7)
-- [ ] [Repeat!](#arrows_clockwise-repeat-8)
-- [ ] [Launch your community](#rocket-launch-your-community-9)
+- [ ] [Test your email configuration](#email-test-your-email-configuration)
+- [ ] [Complete the setup wizard](#magic_wand-complete-the-setup-wizard)
+- [ ] [Invite a few people to join you](#handshake-invite-a-few-people-to-join-you)
+- [ ] [Discuss ideas with your community](#thought_balloon-discuss-ideas-with-your-community)
+- [ ] [Update your welcome topic and guidelines](#wave-update-your-welcome-topic-and-guidelines)
+- [ ] [Adjust other customizations](#art-adjust-other-customizations)
+- [ ] [Repeat!](#arrows_clockwise-repeat)
+- [ ] [Launch your community](#rocket-launch-your-community)
+- [ ] [Learn more](#books-learn-more)
 
 > :bulb: If you need to get back here later, scroll to the top of any page and click the <kbd>Getting started</kbd> button.
 
@@ -74,7 +75,7 @@ To customize the look and feel of your community beyond what you configured in t
 - [Custom user fields](%{base_url}/admin/customize/user_fields)
 - [Terms of service and privacy policies](%{base_url}/admin/site_settings/category/legal)
 
-[details="Advanced options"]
+### Advanced options
 
 Discourse is very configurable and there is a great deal programmers and web designers can do to customize it, integrate it into other platforms, or address any use case. Users going down this route are highly encouraged to join meta.discourse.org, our support community, to learn from what others have done and to give and get advice.
 
@@ -84,7 +85,6 @@ Discourse is very configurable and there is a great deal programmers and web des
 - [Build your own login method](https://meta.discourse.org/t/login-to-discourse-with-custom-oauth2-provider/14717)
 - [Create your own theme](https://meta.discourse.org/docs?topic=93648)
 - [Interact with Discourse from other applications using the API](https://meta.discourse.org/t/create-and-configure-an-api-key/230124?u=tobiaseigen)
-[/details]
 
 ## :arrows_clockwise: Repeat!
 
@@ -119,7 +119,7 @@ Here are some additional resources from [the Discourse blog](http://blog.discour
 - [Moderation documentation topics](https://meta.discourse.org/tags/c/documentation/10/moderation)
 - [Using Discourse documentation topics](https://meta.discourse.org/c/-/126)
 
-[details="Additional resources for maintaining your server"]
+### Additional resources for maintaining your server
 
 - One CPU and 1GB of memory, with swap, is the minimum for a basic Discourse community. As your community grows you may need more memory or CPU resources.
 - [Our Docker container install](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
@@ -137,8 +137,6 @@ Here are some additional resources from [the Discourse blog](http://blog.discour
 - [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc](https://github.com/discourse/discourse/tree/main/script/import_scripts)
 - [Configure a firewall on your server](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
 - [A user friendly offline page when rebuilding or upgrading](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
-
-[/details]
 
 ----
 
