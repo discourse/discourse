@@ -577,7 +577,7 @@ module Email
       elsif body.present?
         to_markdown(body.to_html, "")
       else
-        to_markdown(doc.to_html, "") 
+        to_markdown(doc.to_html, "")
       end
     end
 
