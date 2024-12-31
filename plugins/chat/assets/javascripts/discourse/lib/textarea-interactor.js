@@ -116,4 +116,8 @@ export default class TextareaInteractor extends EmberObject {
   isInside() {
     return this.textManipulation.isInside(...arguments);
   }
+
+  emojiSelected(code) {
+    this.textManipulation.emojiSelected(code);
+  }
 }
