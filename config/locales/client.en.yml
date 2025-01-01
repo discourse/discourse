@@ -5133,6 +5133,11 @@ en:
         sidebar_link:
           all: "All reports"
 
+      config:
+        login_and_authentication:
+          title: "Login and authentication"
+          header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more."
+
       new_features:
         title: "What's new?"
         check_for_updates: "Check for updates"
