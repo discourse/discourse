@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::EmojisController < Admin::AdminController
+class Admin::EmojiController < Admin::AdminController
   def index
     render_serialized(Emoji.custom, EmojiSerializer, root: false)
   end

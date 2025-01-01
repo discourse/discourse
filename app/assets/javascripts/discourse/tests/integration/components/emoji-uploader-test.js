@@ -17,7 +17,7 @@ module("Integration | Component | emoji-uploader", function (hooks) {
       emojiGroups: ["default", "cool-emojis"],
     });
 
-    pretender.post("/admin/customize/emojis.json", () => {
+    pretender.post("/admin/config/emoji.json", () => {
       requestNumber++;
 
       if (requestNumber === 1) {

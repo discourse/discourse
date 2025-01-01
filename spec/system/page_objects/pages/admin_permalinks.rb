@@ -4,7 +4,7 @@ module PageObjects
   module Pages
     class AdminPermalinks < PageObjects::Pages::Base
       def visit
-        page.visit("/admin/customize/permalinks")
+        page.visit("/admin/config/permalinks")
         self
       end
 
