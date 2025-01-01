@@ -226,7 +226,7 @@ GEM
       request_store (~> 1.0)
     logstash-event (1.2.02)
     logster (2.20.0)
-    loofah (2.23.1)
+    loofah (2.24.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     lru_redux (1.1.0)
