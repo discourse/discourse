@@ -2237,6 +2237,7 @@ en:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
 
     desktop_category_page_style: "This setting determines the visual layout of the /categories page on desktop. It includes options such as displaying subcategories with featured topics, showing the latest topics, or presenting top topics. The chosen style will influence how users interact and navigate through categories on the site."
+    mobile_category_page_style: "This setting determines the visual layout of the /categories page on mobile."
     category_colors: "A list of hexadecimal color values allowed for categories."
     default_dark_mode_color_scheme_id: "The color palette used when in dark mode."
     dark_mode_none: "None"

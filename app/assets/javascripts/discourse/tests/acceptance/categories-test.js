@@ -127,6 +127,30 @@ acceptance(
   }
 );
 
+acceptance(
+  "Categories - 'categories_boxes_with_topics' (mobile)",
+  function (needs) {
+    needs.mobileView();
+    needs.settings({
+      mobile_category_page_style: "categories_boxes_with_topics",
+    });
+
+    test("basic functionality", async function (assert) {
+      await visit("/categories");
+      assert
+        .dom(
+          "div.category-box-inner .category-box-heading a.parent-box-link[href='/c/dev/7']"
+        )
+        .exists("shows boxes for top-level category");
+      assert
+        .dom(
+          "div.category-box-inner .featured-topics li[data-topic-id='11994']"
+        )
+        .exists("shows featured topics in boxes");
+    });
+  }
+);
+
 acceptance("Categories - preloadStore handling", function () {
   const styles = [
     "categories_only",

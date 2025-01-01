@@ -13,11 +13,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
 import { MAX_UNOPTIMIZED_CATEGORIES } from "discourse/lib/constants";
 
-const mobileCompatibleViews = [
-  "categories_with_featured_topics",
-  "subcategories_with_featured_topics",
-];
-
 const subcategoryComponents = {
   boxes_with_featured_topics: CategoriesBoxesWithTopics,
   boxes: CategoriesBoxes,
@@ -57,8 +52,8 @@ export default class CategoriesDisplay extends Component {
 
   get style() {
     let style = this.siteSettings.desktop_category_page_style;
-    if (this.site.mobileView && !mobileCompatibleViews.includes(style)) {
-      style = mobileCompatibleViews[0];
+    if (this.site.mobileView) {
+      style = this.siteSettings.mobile_category_page_style;;
     }
     if (this.site.categories.length > MAX_UNOPTIMIZED_CATEGORIES) {
       style = "categories_only";
