@@ -6264,23 +6264,17 @@ en:
             label: "Homepage style"
             choices:
               latest:
-                label: "Latest Topics"
-              categories_only:
-                label: "Categories Only"
-              categories_with_featured_topics:
-                label: "Categories with Featured Topics"
+                label: "Latest"
+                description: "Displays the most recently active topics in all categories, helping members stay up-to-date with discussions they care about"
+              hot:
+                label: "Hot"
+                description: "Surfaces trending topics by blending recent and overall popularity, showcases what members are talking about in your community right now"
               categories_and_latest_topics:
-                label: "Categories and Latest Topics"
-              categories_and_latest_topics_created_date:
-                label: "Categories and Latest Topics (sort by topic created date)"
-              categories_and_top_topics:
-                label: "Categories and Top Topics"
+                label: "Categories with latest topics"
+                description: "Combines the recently active topics across all categories with a list of categories, their description, and total topics"
               categories_boxes:
-                label: "Categories Boxes"
-              categories_boxes_with_topics:
-                label: "Categories Boxes with Topics"
-              subcategories_with_featured_topics:
-                label: "Subcategories with Featured Topics"
+                label: "Category boxes"
+                description: "Displays the categories and their description in a grid, ideal for members to see an overview of the sub-communities of your site"
 
       branding:
         title: "Site logo"

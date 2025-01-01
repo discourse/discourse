@@ -27,6 +27,14 @@ export default class Image extends Component {
     this.setupUploads();
   }
 
+  @discourseComputed("uploading", "field.value")
+  hasUpload() {
+    return (
+      !this.uploading &&
+      !this.field.value.includes("discourse-logo-sketch-small.png")
+    );
+  }
+
   setupUploads() {
     const id = this.field.id;
     this._uppyInstance = new Uppy({
