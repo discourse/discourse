@@ -53,7 +53,7 @@ export default class CategoriesDisplay extends Component {
   get style() {
     let style = this.siteSettings.desktop_category_page_style;
     if (this.site.mobileView) {
-      style = this.siteSettings.mobile_category_page_style;;
+      style = this.siteSettings.mobile_category_page_style;
     }
     if (this.site.categories.length > MAX_UNOPTIMIZED_CATEGORIES) {
       style = "categories_only";

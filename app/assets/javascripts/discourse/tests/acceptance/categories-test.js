@@ -107,7 +107,7 @@ acceptance(
   function (needs) {
     needs.mobileView();
     needs.settings({
-      desktop_category_page_style: "subcategories_with_featured_topics",
+      mobile_category_page_style: "subcategories_with_featured_topics",
     });
 
     test("basic functionality", async function (assert) {

@@ -3018,6 +3018,7 @@ en:
       delete_user_max_post_age: ""
       delete_user_self_max_post_count: ""
       desktop_category_page_style: ""
+      mobile_category_page_style: ""
       detailed_404: ""
       detect_custom_avatars: ""
       digest_logo: ""
