@@ -68,7 +68,7 @@ export default class DMenuInstance extends FloatKitInstance {
     await this.menu.close(this);
 
     if (options.focusTrigger) {
-      this.trigger?.focus();
+      this.trigger?.focus?.();
     }
   }
 
