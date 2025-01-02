@@ -782,7 +782,7 @@ $mobile-breakpoint: 700px;
       font-weight: 700;
 
       &::after {
-        border-left-color: var(--primary-medium);
+        display: none; // Hides the arrow
       }
     }
   }
