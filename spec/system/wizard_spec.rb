@@ -59,6 +59,11 @@ describe "Wizard", type: :system do
     let(:file_path_1) { file_from_fixtures("logo.png", "images").path }
     let(:file_path_2) { file_from_fixtures("logo.jpg", "images").path }
 
+    before do
+      SiteSetting.logo = nil
+      SiteSetting.logo_small = nil
+    end
+
     it "lets user configure logos" do
       wizard_page.go_to_step("branding")
       expect(wizard_page).to be_on_step("branding")
