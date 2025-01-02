@@ -8,9 +8,7 @@
   <PluginOutlet
     @name="full-page-search-above-search-header"
     @connectorTagName="div"
-    @outletArgs={{hash
-      searchTerm=this.searchTerm
-    }}
+    @outletArgs={{hash searchTerm=this.searchTerm}}
   />
   <div class="search-header" role="search">
     <h1 class="search-page-heading">
@@ -63,7 +61,8 @@
       {{/if}}
 
       <div class="search-filters">
-        <PluginOutlet @name="full-page-search-filters"
+        <PluginOutlet
+          @name="full-page-search-filters"
           @outletArgs={{hash
             searchTerm=(readonly this.searchTerm)
             onChangeSearchTerm=(fn (mut this.searchTerm))
