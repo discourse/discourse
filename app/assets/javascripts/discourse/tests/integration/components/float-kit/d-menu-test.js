@@ -366,10 +366,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await triggerKeyEvent(document.activeElement, "keydown", "Tab");
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
 
-    assert.strictEqual(
-      document.activeElement,
-      document.querySelector(".fk-d-menu__trigger")
-    );
+    assert.dom(".fk-d-menu__trigger").isFocused();
   });
 
   test("focusTrigger=false on close", async function (assert) {
@@ -387,6 +384,6 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await triggerKeyEvent(document.activeElement, "keydown", "Tab");
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
 
-    assert.strictEqual(document.activeElement, document.body);
+    assert.dom(document.body).isFocused();
   });
 });
