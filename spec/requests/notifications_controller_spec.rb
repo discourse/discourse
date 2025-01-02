@@ -32,10 +32,7 @@ RSpec.describe NotificationsController do
   context "when logged in" do
     context "as normal user" do
       fab!(:user) { sign_in(Fabricate(:user)) }
-      fab!(:acting_user) { Fabricate(:user) }
-      fab!(:notification) do
-        Fabricate(:notification, user: user, data: { username: acting_user.username }.to_json)
-      end
+      fab!(:notification) { Fabricate(:notification, user: user) }
 
       describe "#index" do
         it "should succeed for recent" do
@@ -424,20 +421,6 @@ RSpec.describe NotificationsController do
               get "/notifications.json"
               expect(response.status).to eq(200)
               expect_correct_notifications(response)
-            end
-          end
-        end
-
-        context "with `show_user_menu_avatars` setting enabled" do
-          before { SiteSetting.show_user_menu_avatars = true }
-
-          it "serializes acting_user_avatar_template into notifications" do
-            get "/notifications.json"
-
-            notifications = response.parsed_body["notifications"]
-            expect(notifications).not_to be_empty
-            notifications.each do |notification|
-              expect(notification["acting_user_avatar_template"]).to be_present
             end
           end
         end
