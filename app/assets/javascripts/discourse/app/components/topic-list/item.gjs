@@ -62,11 +62,11 @@ export default class Item extends Component {
       (this.site.desktopView && !this.siteSettings.show_pinned_excerpt_desktop)
     ) {
       expandPinned = false;
+    } else {
+      expandPinned =
+        (this.args.expandGloballyPinned && this.args.topic.pinned_globally) ||
+        this.args.expandAllPinned;
     }
-
-    expandPinned =
-      (this.args.expandGloballyPinned && this.args.topic.pinned_globally) ||
-      this.args.expandAllPinned;
 
     return applyValueTransformer(
       "topic-list-item-expand-pinned",

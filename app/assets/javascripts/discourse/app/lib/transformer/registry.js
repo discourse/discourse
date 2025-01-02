@@ -25,6 +25,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-header-sortable-column",
   "topic-list-class",
   "topic-list-item-class",
-  "topic-list-item-mobile-layout",
   "topic-list-item-expand-pinned",
+  "topic-list-item-mobile-layout",
 ]);
