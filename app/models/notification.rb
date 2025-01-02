@@ -5,9 +5,6 @@ class Notification < ActiveRecord::Base
     :old_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
   ]
 
-  attr_accessor :acting_user
-  attr_accessor :acting_username
-
   belongs_to :user
   belongs_to :topic
 
@@ -364,27 +361,13 @@ class Notification < ActiveRecord::Base
     end
   end
 
-  def self.populate_acting_user(notifications)
-    usernames =
-      notifications.map do |notification|
-        notification.acting_username =
-          (
-            notification.data_hash[:username] || notification.data_hash[:display_username] ||
-              notification.data_hash[:mentioned_by_username] ||
-              notification.data_hash[:invited_by_username] ||
-              notification.data_hash[:original_username]
-          )&.downcase
-      end
-
-    users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
-    notifications.each do |notification|
-      notification.acting_user = users[notification.acting_username]
-      notification.data_hash[
-        :original_name
-      ] = notification.acting_user&.name if SiteSetting.enable_names
-    end
-
-    notifications
+  def acting_username
+    # This is a technical debt that we need to address. There should be a standard key to obtain the acting user's username from
+    # `Notification#data_hash`. Currently, we have to check for multiple keys to obtain the acting user's username.
+    (
+      data_hash[:username] || data_hash[:display_username] || data_hash[:mentioned_by_username] ||
+        data_hash[:invited_by_username] || data_hash[:original_username]
+    )&.downcase
   end
 
   def unread_high_priority?

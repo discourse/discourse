@@ -33,4 +33,32 @@ RSpec.describe NotificationSerializer do
       expect(json[:notification][:external_id]).to eq("12345")
     end
   end
+
+  describe "#acting_user_avatar_template" do
+    fab!(:acting_user) { Fabricate(:user) }
+
+    fab!(:notification) do
+      Fabricate(:notification, data: { username: acting_user.username }.to_json)
+    end
+
+    describe "when `show_user_menu_avatars` site setting is enabled" do
+      before { SiteSetting.show_user_menu_avatars = true }
+
+      it "should return the notification's acting user's avatar template" do
+        json = described_class.new(notification, root: false).as_json
+
+        expect(json[:acting_user_avatar_template]).to eq(acting_user.avatar_template_url)
+      end
+    end
+
+    describe "when `show_user_menu_avatars` site setting is disabled" do
+      before { SiteSetting.show_user_menu_avatars = false }
+
+      it "should return the notification's acting user's avatar template" do
+        json = described_class.new(notification, root: false).as_json
+
+        expect(json[:acting_user_avatar_template]).to eq(nil)
+      end
+    end
+  end
 end

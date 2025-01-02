@@ -1927,9 +1927,6 @@ class UsersController < ApplicationController
     end
 
     if reminder_notifications.present?
-      if SiteSetting.show_user_menu_avatars
-        Notification.populate_acting_user(reminder_notifications)
-      end
       serialized_notifications =
         ActiveModel::ArraySerializer.new(
           reminder_notifications,
@@ -2000,7 +1997,6 @@ class UsersController < ApplicationController
     end
 
     if unread_notifications.present?
-      Notification.populate_acting_user(unread_notifications) if SiteSetting.show_user_menu_avatars
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -2012,6 +2008,7 @@ class UsersController < ApplicationController
     if messages_list
       serialized_messages =
         serialize_data(messages_list, TopicListSerializer, scope: guardian, root: false)[:topics]
+
       serialized_users =
         if SiteSetting.show_user_menu_avatars
           users = messages_list.topics.map { |t| t.posters.last.user }.flatten.compact.uniq(&:id)
@@ -2022,7 +2019,6 @@ class UsersController < ApplicationController
     end
 
     if read_notifications.present?
-      Notification.populate_acting_user(read_notifications) if SiteSetting.show_user_menu_avatars
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,
