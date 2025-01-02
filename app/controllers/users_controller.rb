@@ -1908,6 +1908,13 @@ class UsersController < ApplicationController
 
     reminder_notifications =
       BookmarkQuery.new(user: current_user).unread_notifications(limit: USER_MENU_LIST_LIMIT)
+
+    # reminder_notifications returns an array, not a relation, so we can't call `.includes()` on it
+    ActiveRecord::Associations::Preloader.new(
+      records: reminder_notifications,
+      associations: [:acting_user],
+    ).call
+
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids =
         reminder_notifications.filter_map { |notification| notification.data_hash[:bookmark_id] }
@@ -1927,9 +1934,6 @@ class UsersController < ApplicationController
     end
 
     if reminder_notifications.present?
-      if SiteSetting.show_user_menu_avatars
-        Notification.populate_acting_user(reminder_notifications)
-      end
       serialized_notifications =
         ActiveModel::ArraySerializer.new(
           reminder_notifications,
@@ -1972,6 +1976,7 @@ class UsersController < ApplicationController
             Notification.types[:group_message_summary],
           ],
         )
+        .includes(:acting_user)
         .to_a
 
     if unread_notifications.size < USER_MENU_LIST_LIMIT
@@ -1996,11 +2001,11 @@ class UsersController < ApplicationController
         Notification
           .for_user_menu(current_user.id, limit: limit)
           .where(read: true, notification_type: Notification.types[:group_message_summary])
+          .includes(:acting_user)
           .to_a
     end
 
     if unread_notifications.present?
-      Notification.populate_acting_user(unread_notifications) if SiteSetting.show_user_menu_avatars
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -2022,7 +2027,6 @@ class UsersController < ApplicationController
     end
 
     if read_notifications.present?
-      Notification.populate_acting_user(read_notifications) if SiteSetting.show_user_menu_avatars
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,

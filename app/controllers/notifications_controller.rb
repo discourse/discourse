@@ -56,9 +56,10 @@ class NotificationsController < ApplicationController
       end
 
       notifications =
-        Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
-      notifications =
-        Notification.populate_acting_user(notifications) if SiteSetting.show_user_menu_avatars
+        Notification.includes(:acting_user).filter_inaccessible_topic_notifications(
+          current_user.guardian,
+          notifications,
+        )
 
       json = {
         notifications: serialize_data(notifications, NotificationSerializer),
@@ -78,7 +79,11 @@ class NotificationsController < ApplicationController
       offset = params[:offset].to_i
 
       notifications =
-        Notification.where(user_id: user.id).visible.includes(:topic).order(created_at: :desc)
+        Notification
+          .where(user_id: user.id)
+          .visible
+          .includes(:topic, :acting_user)
+          .order(created_at: :desc)
 
       notifications = notifications.where(read: true) if params[:filter] == "read"
 
@@ -88,8 +93,6 @@ class NotificationsController < ApplicationController
       notifications = notifications.offset(offset).limit(limit)
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
-      notifications =
-        Notification.populate_acting_user(notifications) if SiteSetting.show_user_menu_avatars
       render_json_dump(
         notifications: serialize_data(notifications, NotificationSerializer),
         total_rows_notifications: total_rows,

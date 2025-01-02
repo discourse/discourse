@@ -37,7 +37,10 @@ class NotificationSerializer < ApplicationSerializer
   end
 
   def data
-    object.data_hash
+    object.data_hash.tap do |hash|
+      hash[:original_name] = object.acting_user.name if SiteSetting.enable_names &&
+        object.acting_user.present?
+    end
   end
 
   def external_id

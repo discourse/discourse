@@ -5,11 +5,14 @@ class Notification < ActiveRecord::Base
     :old_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
   ]
 
-  attr_accessor :acting_user
-  attr_accessor :acting_username
-
   belongs_to :user
   belongs_to :topic
+  belongs_to :acting_user,
+             ->(notification) do
+               unscope(:where).where(username_lower: notification.acting_username_lower)
+             end,
+             foreign_key: :id, # This is unscoped later, but we have to pass a real column name
+             class_name: "User"
 
   has_one :shelved_notification
 
@@ -364,35 +367,27 @@ class Notification < ActiveRecord::Base
     end
   end
 
-  def self.populate_acting_user(notifications)
-    usernames =
-      notifications.map do |notification|
-        notification.acting_username =
-          (
-            notification.data_hash[:username] || notification.data_hash[:display_username] ||
-              notification.data_hash[:mentioned_by_username] ||
-              notification.data_hash[:invited_by_username] ||
-              notification.data_hash[:original_username]
-          )&.downcase
-      end
-
-    users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
-    notifications.each do |notification|
-      notification.acting_user = users[notification.acting_username]
-      notification.data_hash[
-        :original_name
-      ] = notification.acting_user&.name if SiteSetting.enable_names
-    end
-
-    notifications
-  end
-
   def unread_high_priority?
     self.high_priority? && !read
   end
 
   def post_id
     Post.where(topic: topic_id, post_number: post_number).pick(:id)
+  end
+
+  def acting_username
+    %w[
+      username
+      display_username
+      mentioned_by_username
+      invited_by_username
+      original_username
+    ].each { |field| return data_hash[field] if data_hash[field].present? }
+    nil
+  end
+
+  def acting_username_lower
+    acting_username&.downcase
   end
 
   protected
