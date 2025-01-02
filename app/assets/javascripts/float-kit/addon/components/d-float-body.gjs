@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
@@ -70,7 +70,9 @@ export default class DFloatBody extends Component {
         {{(if
           this.supportsCloseOnClickOutside
           (modifier
-            closeOnClickOutside @instance.close (hash target=this.content)
+            closeOnClickOutside
+            (fn @instance.close (hash focusTrigger=false))
+            (hash target=this.content)
           )
         )}}
         {{(if
