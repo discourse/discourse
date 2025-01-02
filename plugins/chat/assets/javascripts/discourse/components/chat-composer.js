@@ -377,7 +377,7 @@ export default class ChatComposer extends Component {
   onSelectEmoji(emoji) {
     const code = `:${emoji}:`;
     this.chatEmojiReactionStore.track(code);
-    this.composer.textarea.addText(this.composer.textarea.getSelected(), code);
+    this.composer.textarea.emojiSelected(emoji);
 
     if (this.site.desktopView) {
       this.composer.focus();
