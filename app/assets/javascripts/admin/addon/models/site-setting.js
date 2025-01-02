@@ -1,10 +1,11 @@
 import EmberObject from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
-import Setting from "admin/mixins/setting-object";
+import SettingObjectHelper from "admin/lib/setting-object-helper";
 
-export default class SiteSetting extends EmberObject.extend(Setting) {
+export default class SiteSetting extends EmberObject {
   static findAll(params = {}) {
     return ajax("/admin/site_settings", { data: params }).then(function (
       settings
@@ -37,6 +38,18 @@ export default class SiteSetting extends EmberObject.extend(Setting) {
     }
 
     return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });
+  }
+
+  @alias("settingObjectHelper.overridden") overridden;
+  @alias("settingObjectHelper.computedValueProperty") computedValueProperty;
+  @alias("settingObjectHelper.computedNameProperty") computedNameProperty;
+  @alias("settingObjectHelper.validValues") validValues;
+  @alias("settingObjectHelper.allowsNone") allowsNone;
+  @alias("settingObjectHelper.anyValue") anyValue;
+
+  constructor() {
+    super(...arguments);
+    this.settingObjectHelper = new SettingObjectHelper(this);
   }
 
   @discourseComputed("setting")
