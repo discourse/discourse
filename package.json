@@ -19,7 +19,7 @@
     "chartjs-plugin-datalabels": "2.2.0",
     "chrome-launcher": "^1.1.2",
     "chrome-remote-interface": "^0.33.2",
-    "concurrently": "^9.1.0",
+    "concurrently": "^9.1.2",
     "ember-template-lint": "^6.0.0",
     "esbuild": "^0.24.2",
     "eslint": "^9.14.0",
