@@ -9,11 +9,7 @@
     @name="full-page-search-above-search-header"
     @connectorTagName="div"
     @outletArgs={{hash
-      search=this.searchTerm
-      type=this.search_type
-      model=this.model
-      addSearchResults=this.addSearchResults
-      sortOrder=this.sortOrder
+      searchTerm=this.searchTerm
     }}
   />
   <div class="search-header" role="search">
@@ -67,7 +63,7 @@
       {{/if}}
 
       <div class="search-filters">
-        <PluginOutlet @name="full-page-search-search-filters"
+        <PluginOutlet @name="full-page-search-filters"
           @outletArgs={{hash
             searchTerm=(readonly this.searchTerm)
             onChangeSearchTerm=(fn (mut this.searchTerm))
@@ -77,6 +73,8 @@
             sortOrder=this.sortOrder
             sortOrderOptions=this.sortOrders
             setSortOrder=this.setSortOrder
+            type=this.search_type
+            addSearchResults=this.addSearchResults
           }}
         >
           <SearchAdvancedOptions
