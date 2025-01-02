@@ -1,167 +1,161 @@
-// This is executed in mini_racer to provide the JS logic for lib/discourse_js_processor.rb
+// import { JSDOM } from "jsdom";
+import "core-js/actual/url";
+import patch from "./text-decoder-shim";
+patch();
 
-/* global rails */
-
+import { rollup } from "/Users/david/discourse/rollup/browser/dist/es/rollup.browser.js";
 const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
-globalThis.window = {};
+// globalThis.window = {};
+
+const oldConsole = globalThis.console;
 globalThis.console = {
   log(...args) {
-    rails.logger.info(CONSOLE_PREFIX + args.join(" "));
+    globalThis.rails?.logger.info(CONSOLE_PREFIX + args.join(" "));
+    oldConsole.log(...args);
   },
   warn(...args) {
-    rails.logger.warn(CONSOLE_PREFIX + args.join(" "));
+    globalThis.rails?.logger.warn(CONSOLE_PREFIX + args.join(" "));
+    oldConsole.warn(...args);
   },
   error(...args) {
-    rails.logger.error(CONSOLE_PREFIX + args.join(" "));
+    globalThis.rails?.logger.error(CONSOLE_PREFIX + args.join(" "));
+    oldConsole.error(...args);
   },
 };
 
-import { transform as babelTransform } from "@babel/standalone";
-import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
-import { Preprocessor } from "content-tag";
-import DecoratorTransforms from "decorator-transforms";
-import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
-import { precompile } from "ember-source/dist/ember-template-compiler";
-import EmberThisFallback from "ember-this-fallback";
-// A sub-dependency of content-tag (getrandom) needs `getRandomValues`
-// so we polyfill it
-import getRandomValues from "polyfill-crypto.getrandomvalues";
-import { minify as terserMinify } from "terser";
-import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
-globalThis.crypto = { getRandomValues };
-import "./postcss";
-import { browsers } from "../discourse/config/targets";
+globalThis.crypto = {
+  getRandomValues() {
+    // todo... not much random going on here
+    console.log("getRandomValues");
+  },
+};
 
-const thisFallbackPlugin = EmberThisFallback._buildPlugin({
-  enableLogging: false,
-  isTheme: true,
-}).plugin;
+// console.log(TextDecoder);
+import BindingsWasm from "/Users/david/discourse/rollup/browser/dist/bindings_wasm_bg.wasm";
+// import BindingsWasm from "./node_modules/@rollup/wasm-node/dist/wasm-node/bindings_wasm_bg.wasm";
+// import BindingsWasm from "./memory.wasm";
+// console.log(BindingsWasm);
+// new WebAssembly.instantiate(BindingsWasm, );
+// console.log(BindingsWasm);
 
-function manipulateAstNodeForTheme(node, themeId) {
-  // Magically add theme id as the first param for each of these helpers)
-  if (
-    node.path.parts &&
-    ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])
-  ) {
-    if (node.params.length === 1) {
-      node.params.unshift({
-        type: "NumberLiteral",
-        value: themeId,
-        original: themeId,
-        loc: { start: {}, end: {} },
-      });
+const oldInstantiate = WebAssembly.instantiate;
+WebAssembly.instantiate = async function (bytes, bindings) {
+  for (let [key, value] of Object.entries(bindings.wbg)) {
+    // bindings.wbg[key] = (...args) => {
+    //   console.log("called", key);
+    //   return value.apply(bindings, args);
+    // };
+  }
+  console.log("instantiated", Object.keys(bindings.wbg));
+  if (bytes === BindingsWasm) {
+    const mod = new WebAssembly.Module(bytes);
+    // console.log("returning");
+    const instance = new WebAssembly.Instance(mod, bindings);
+    console.log("returning instance");
+    return instance;
+  } else {
+    return oldInstantiate(...arguments);
+  }
+  // console.log(bindings);
+
+  // return new Promise((resolve) => resolve({}));
+};
+
+console.log("trying...");
+// const memory = new WebAssembly.Memory({
+//   initial: 10,
+//   maximum: 100,
+// });
+// const importObject = {
+//   my_namespace: { imported_func: (arg) => console.log(arg) },
+// };
+// const mod = new WebAssembly.Module(BindingsWasm);
+// const wasm = new WebAssembly.Instance(mod, { js: { mem: memory } });
+// const summands = new DataView(memory.buffer);
+
+// for (let i = 0; i < 10; i++) {
+//   summands.setUint32(i * 4, i, true); // WebAssembly is little endian
+// }
+// const sum = wasm.exports.accumulate(0, 10);
+// console.log(sum);
+
+// console.log(wasmInstance);
+// WebAssembly.instantiate(BindingsWasm, {})
+//   .then((result) => {
+//     console.log("result", result);
+//   })
+//   .catch((error) => console.error("error: ", error));
+
+globalThis.fetch = function (url) {
+  // console.log(url);
+  if (url.toString() === "http://example.com/bindings_wasm_bg.wasm") {
+    // console.log("stubbing fetch");
+    console.log("FETCH");
+    return new Promise((resolve) => resolve(BindingsWasm));
+  }
+  console.error("fetch not implemented");
+  throw "fetch not implemented";
+};
+
+// WebAssembly.instantiate = console.log;
+
+// const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+
+// globalThis.window = dom.window.window;
+// globalThis.document = dom.window.document;
+
+const modules = {
+  "main.js": `import foo from 'foo.js'; console.log(foo); {
+    @test
+    someProp(){
+      console.log("prop");
     }
-  }
-}
-
-function buildEmberTemplateManipulatorPlugin(themeId) {
-  return function () {
-    return {
-      name: "theme-template-manipulator",
-      visitor: {
-        SubExpression: (node) => manipulateAstNodeForTheme(node, themeId),
-        MustacheStatement: (node) => manipulateAstNodeForTheme(node, themeId),
-      },
-    };
-  };
-}
-
-function buildTemplateCompilerBabelPlugins({ extension, themeId }) {
-  const compiler = { precompile };
-
-  if (themeId && extension !== "gjs") {
-    compiler.precompile = (src, opts) => {
-      return precompile(src, {
-        ...opts,
-        plugins: {
-          ast: [
-            buildEmberTemplateManipulatorPlugin(themeId),
-            thisFallbackPlugin,
-          ],
-        },
-      });
-    };
-  }
-
-  return [
-    colocatedBabelPlugin,
-    WidgetHbsCompiler,
-    [
-      HTMLBarsInlinePrecompile,
-      {
-        compiler,
-        enableLegacyModules: [
-          "ember-cli-htmlbars",
-          "ember-cli-htmlbars-inline-precompile",
-          "htmlbars-inline-precompile",
-        ],
-      },
-    ],
-  ];
-}
-
-globalThis.transpile = function (source, options = {}) {
-  const { moduleId, filename, extension, skipModule, themeId } = options;
-
-  if (extension === "gjs") {
-    const preprocessor = new Preprocessor();
-    source = preprocessor.process(source).code;
-  }
-
-  const plugins = [];
-  plugins.push(...buildTemplateCompilerBabelPlugins({ extension, themeId }));
-  if (moduleId && !skipModule) {
-    plugins.push(["transform-modules-amd", { noInterop: true }]);
-  }
-  plugins.push([DecoratorTransforms, { runEarly: true }]);
-
-  try {
-    return babelTransform(source, {
-      moduleId,
-      filename,
-      ast: false,
-      plugins,
-      presets: [
-        [
-          "env",
-          {
-            modules: false,
-            targets: {
-              browsers,
-            },
-          },
-        ],
-      ],
-    }).code;
-  } catch (error) {
-    // Workaround for https://github.com/rubyjs/mini_racer/issues/262
-    error.message = JSON.stringify(error.message);
-    throw error;
-  }
+    
+  `,
+  "foo.js": "export default 42;",
 };
 
-// mini_racer doesn't have native support for getting the result of an async operation.
-// To work around that, we provide a getMinifyResult which can be used to fetch the result
-// in a followup method call.
-let lastMinifyError, lastMinifyResult;
+const rollupResult = rollup({
+  input: "main.js",
+  logLevel: "info",
+  onLog(level, message) {
+    console.log(level, message);
+  },
+  plugins: [
+    {
+      name: "loader",
+      resolveId(source) {
+        console.log("resolveid");
+        if (modules.hasOwnProperty(source)) {
+          return source;
+        }
+      },
+      load(id) {
+        if (modules.hasOwnProperty(id)) {
+          return modules[id];
+        }
+      },
+    },
+  ],
+});
 
-globalThis.minify = async function (sources, options) {
-  lastMinifyError = lastMinifyResult = null;
-  try {
-    lastMinifyResult = await terserMinify(sources, options);
-  } catch (e) {
-    lastMinifyError = e;
-  }
-};
+rollupResult
+  .then((bundle) => {
+    console.log("Hello 1");
+    return bundle.generate({ format: "es" });
+  })
+  .then(({ output }) => console.log("result", output[0].code))
+  .catch((error) => console.error("error: ", error, error.stack));
 
-globalThis.getMinifyResult = function () {
-  const error = lastMinifyError;
-  const result = lastMinifyResult;
-
-  lastMinifyError = lastMinifyResult = null;
-
-  if (error) {
-    throw error.toString();
-  }
+let result;
+globalThis.getResult = function () {
   return result;
 };
+
+globalThis.doSomething = async function doSomething() {
+  await new Promise((resolve) => resolve());
+  console.log("returned");
+  return "thing";
+};
+
+// console.log("done eval", rollupResult);

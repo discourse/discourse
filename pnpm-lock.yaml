@@ -1024,6 +1024,15 @@ importers:
       '@csstools/postcss-light-dark-function':
         specifier: ^2.0.8
         version: 2.0.8(postcss@8.5.3)
+      '@rollup/browser':
+        specifier: ^4.29.1
+        version: 4.29.1
+      '@rollup/wasm-node':
+        specifier: ^4.29.1
+        version: 4.29.1
+      '@swc/wasm-web':
+        specifier: ^1.10.4
+        version: 1.10.4
       '@zxing/text-encoding':
         specifier: ^0.9.0
         version: 0.9.0
@@ -1057,6 +1066,15 @@ importers:
       ember-this-fallback:
         specifier: ^0.4.0
         version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
+      fastestsmallesttextencoderdecoder:
+        specifier: ^1.0.22
+        version: 1.0.22
+      handlebars:
+        specifier: ^4.7.8
+        version: 4.7.8
+      jsdom:
+        specifier: ^25.0.1
+        version: 25.0.1(supports-color@8.1.1)
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1078,6 +1096,12 @@ importers:
       terser:
         specifier: ^5.39.0
         version: 5.39.0
+      url-polyfill:
+        specifier: ^1.1.12
+        version: 1.1.12
+      url-shim:
+        specifier: ^1.0.1
+        version: 1.0.1
 
   app/assets/javascripts/truth-helpers:
     dependencies:
@@ -2466,6 +2490,14 @@ packages:
     peerDependencies:
       prettier: 3.x
 
+  '@rollup/browser@4.29.1':
+    resolution: {integrity: sha512-CsDzu5HTqbY9++9B/jk6Ue/QzozVCnHqSau9ziD/x8nzxEfFsRniycDshZWaSGpHIqHn67PJbwFea83Nu6FQfQ==}
+
+  '@rollup/wasm-node@4.29.1':
+    resolution: {integrity: sha512-AOtO2Y+XzElJfmJgAECOgbutmKAK5XcKH7CipGDQDBMfLY04ezEoCHWEpmoX5L7/WH3k17rXMCClNiwDbWW+mw==}
+    engines: {node: '>=18.0.0', npm: '>=8.0.0'}
+    hasBin: true
+
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
@@ -2590,6 +2622,9 @@ packages:
   '@swc/types@0.1.21':
     resolution: {integrity: sha512-2YEtj5HJVbKivud9N4bpPBAyZhj4S2Ipe5LkUG94alTpr7in/GU/EARgPAd3BwU+YOmFVJC2+kjqhGRi3r0ZpQ==}
 
+  '@swc/wasm-web@1.10.4':
+    resolution: {integrity: sha512-BWikGSYvlaOfEvoeMg+9FLrzV8jl5swd8iVvTIVMV5P7HtKDkc+QY3HCUCpQHUWhfNT0uN+MUvA3EsLJUPrq3Q==}
+
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
@@ -2633,6 +2668,9 @@ packages:
 
   '@types/eslint@9.6.1':
     resolution: {integrity: sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag==}
+
+  '@types/estree@1.0.6':
+    resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
   '@types/estree@1.0.7':
     resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
@@ -4899,6 +4937,9 @@ packages:
   fastest-levenshtein@1.0.16:
     resolution: {integrity: sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==}
     engines: {node: '>= 4.9.1'}
+
+  fastestsmallesttextencoderdecoder@1.0.22:
+    resolution: {integrity: sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==}
 
   fastq@1.18.0:
     resolution: {integrity: sha512-QKHXPW0hD8g4UET03SdOdunzSouc9N4AuHdsX8XNcTsuz+yYFILVNIX4l9yHABMhiEI9Db0JTTIpu0wB+Y1QQw==}
@@ -8494,6 +8535,13 @@ packages:
     resolution: {integrity: sha512-Am1ousAhSLBeB9cG/7k7r2R0zj50uDRlZHPGbazid5s9rlF1F/QKYObEKSIunSjIOkJZqwRRLpvewjEkM7pSqg==}
     deprecated: Please see https://github.com/lydell/urix#deprecated
 
+  url-polyfill@1.1.12:
+    resolution: {integrity: sha512-mYFmBHCapZjtcNHW0MDq9967t+z4Dmg5CJ0KqysK3+ZbyoNOWQHksGCTWwDhxGXllkWlOc10Xfko6v4a3ucM6A==}
+
+  url-shim@1.0.1:
+    resolution: {integrity: sha512-8nwZkCP7pbI8ifcifTZSLRO3W+CWuh/mafPvc7utPRqgxAORnsZIzQ5K8LUsHiQ4mTtJrKRAJmW2ZHxQk0rKUA==}
+    engines: {node: '>= 6'}
+
   use@3.1.1:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
     engines: {node: '>=0.10.0'}
@@ -10702,6 +10750,16 @@ snapshots:
       prettier: 3.5.3
       rxjs: 6.6.7
 
+  '@rollup/browser@4.29.1':
+    dependencies:
+      '@types/estree': 1.0.6
+
+  '@rollup/wasm-node@4.29.1':
+    dependencies:
+      '@types/estree': 1.0.6
+    optionalDependencies:
+      fsevents: 2.3.2
+
   '@rtsao/scc@1.1.0': {}
 
   '@sigstore/bundle@2.3.2':
@@ -10812,6 +10870,8 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
+  '@swc/wasm-web@1.10.4': {}
+
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
   '@transloadit/prettier-bytes@0.3.4': {}
@@ -10860,6 +10920,8 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.7
       '@types/json-schema': 7.0.15
+
+  '@types/estree@1.0.6': {}
 
   '@types/estree@1.0.7': {}
 
@@ -14036,6 +14098,8 @@ snapshots:
   fast-uri@3.0.6: {}
 
   fastest-levenshtein@1.0.16: {}
+
+  fastestsmallesttextencoderdecoder@1.0.22: {}
 
   fastq@1.18.0:
     dependencies:
@@ -18139,6 +18203,10 @@ snapshots:
       punycode: 2.3.1
 
   urix@0.1.0: {}
+
+  url-polyfill@1.1.12: {}
+
+  url-shim@1.0.1: {}
 
   use@3.1.1: {}
 

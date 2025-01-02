@@ -2,6 +2,8 @@
 require "execjs"
 require "mini_racer"
 
+# MiniRacer::Platform.set_flags!(:trace_wasm_memory)
+
 class DiscourseJsProcessor
   class TranspileError < StandardError
   end
@@ -28,12 +30,15 @@ class DiscourseJsProcessor
 
     def self.build_theme_transpiler
       FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
-      Discourse::Utils.execute_command(
-        "pnpm",
-        "-C=app/assets/javascripts/theme-transpiler",
-        "node",
-        "build.js",
-      )
+      result =
+        Discourse::Utils.execute_command(
+          "pnpm",
+          "-C=app/assets/javascripts/theme-transpiler",
+          "node",
+          "build.js",
+        )
+      File.write("app/assets/javascripts/theme-transpiler/theme-transpiler.js", result)
+      result
     end
 
     def self.build_production_theme_transpiler
@@ -50,12 +55,14 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
-      source =
-        if Rails.env.production?
-          File.read(TRANSPILER_PATH)
-        else
-          @processor_mutex.synchronize { build_theme_transpiler }
-        end
+      # source =
+      #   if Rails.env.production?
+      #     File.read(TRANSPILER_PATH)
+      #   else
+      #     @processor_mutex.synchronize { build_theme_transpiler }
+      #   end
+
+      source = File.read("app/assets/javascripts/theme-transpiler/theme-transpiler.js")
 
       ctx.eval(source, filename: "theme-transpiler.js")
 
