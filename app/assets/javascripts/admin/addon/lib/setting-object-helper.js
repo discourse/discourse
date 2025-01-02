@@ -1,20 +1,17 @@
-import { computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { isPresent } from "@ember/utils";
 import { deepEqual } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 export default class SettingObjectHelper {
-  @readOnly("settingObj.allow_any") anyValue;
-
   constructor(settingObj) {
     this.settingObj = settingObj;
   }
 
-  @computed("settingObj.value", "settingObj.default")
+  @dependentKeyCompat
   get overridden() {
-    let val = this.settingObj.value;
-    let defaultVal = this.settingObj.default;
+    let val = this.settingObj.get("value");
+    let defaultVal = this.settingObj.get("default");
 
     if (val === null) {
       val = "";
@@ -26,10 +23,10 @@ export default class SettingObjectHelper {
     return !deepEqual(val, defaultVal);
   }
 
-  @computed("settingObj.valueProperty", "validValues.[]")
+  @dependentKeyCompat
   get computedValueProperty() {
-    if (isPresent(this.settingObj.valueProperty)) {
-      return this.settingObj.valueProperty;
+    if (isPresent(this.settingObj.get("valueProperty"))) {
+      return this.settingObj.get("valueProperty");
     }
 
     if (isPresent(this.validValues.get("firstObject.value"))) {
@@ -38,10 +35,10 @@ export default class SettingObjectHelper {
     return null;
   }
 
-  @computed("settingObj.nameProperty", "validValues.[]")
+  @dependentKeyCompat
   get computedNameProperty() {
-    if (isPresent(this.settingObj.nameProperty)) {
-      return this.settingObj.nameProperty;
+    if (isPresent(this.settingObj.get("nameProperty"))) {
+      return this.settingObj.get("nameProperty");
     }
 
     if (isPresent(this.validValues.get("firstObject.name"))) {
@@ -50,9 +47,9 @@ export default class SettingObjectHelper {
     return null;
   }
 
-  @computed("settingObj.valid_values")
+  @dependentKeyCompat
   get validValues() {
-    const originalValidValues = this.settingObj.valid_values;
+    const originalValidValues = this.settingObj.get("valid_values");
     const values = [];
     const translateNames = this.settingObj.translate_names;
 
@@ -66,11 +63,16 @@ export default class SettingObjectHelper {
     return values;
   }
 
-  @computed("settingObj.valid_values")
+  @dependentKeyCompat
   get allowsNone() {
-    if (this.settingObj.valid_values?.includes("")) {
+    if (this.settingObj.get("valid_values")?.includes("")) {
       return "admin.settings.none";
     }
     return undefined;
+  }
+
+  @dependentKeyCompat
+  get anyValue() {
+    return this.settingObj.get("allow_any");
   }
 }
