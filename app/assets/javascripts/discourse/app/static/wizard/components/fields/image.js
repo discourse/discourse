@@ -31,6 +31,7 @@ export default class Image extends Component {
   hasUpload() {
     return (
       !this.uploading &&
+      this.field.value &&
       !this.field.value.includes("discourse-logo-sketch-small.png")
     );
   }
