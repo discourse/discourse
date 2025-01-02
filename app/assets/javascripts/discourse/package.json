@@ -53,7 +53,7 @@
     "@embroider/router": "^2.1.8",
     "@embroider/webpack": "^4.0.9",
     "@floating-ui/dom": "^1.6.12",
-    "@glimmer/component": "^1.1.2",
+    "@glimmer/component": "^2.0.0",
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",
     "@swc/core": "^1.10.4",
