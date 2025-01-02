@@ -253,7 +253,7 @@ class NewPostManager
   end
 
   # Enqueue this post
-  def enqueue(reason = nil)
+  def enqueue(reason = nil, creator_opts: {})
     result = NewPostResult.new(:enqueued)
     payload = { raw: @args[:raw], tags: @args[:tags] }
     %w[typing_duration_msecs composer_open_duration_msecs reply_to_post_number].each do |a|
@@ -277,7 +277,7 @@ class NewPostManager
     reviewable.category_id = args[:category] if args[:category].present?
     reviewable.created_new!
 
-    create_options = reviewable.create_options
+    create_options = reviewable.create_options.merge(creator_opts)
 
     creator =
       (
