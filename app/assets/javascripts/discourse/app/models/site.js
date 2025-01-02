@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import PreloadStore from "discourse/lib/preload-store";
-import Singleton from "discourse/mixins/singleton";
+import singleton from "discourse/lib/singleton";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
@@ -16,7 +16,8 @@ import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default class Site extends RestModel.extend().reopenClass(Singleton) {
+@singleton
+export default class Site extends RestModel {
   static createCurrent() {
     const store = getOwnerWithFallback(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
