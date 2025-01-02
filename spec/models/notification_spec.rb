@@ -806,52 +806,21 @@ RSpec.describe Notification do
         )
       expect(notification.shelved_notification).to be_nil
     end
-  end
 
-  describe ".populate_acting_user" do
-    SiteSetting.enable_names = true
+    describe ".acting_user" do
+      fab!(:users) { Fabricate.times(6, :user) }
+      fab!(:notifications) do
+        [
+          { username: users[0].username },
+          { display_username: users[1].username },
+          { mentioned_by_username: users[2].username },
+          { invited_by_username: users[3].username },
+          { original_username: users[4].username },
+        ].map { |data| Fabricate(:notification, user: user, data: data.to_json) }
+      end
 
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
-    fab!(:user5) { Fabricate(:user) }
-    fab!(:user6) { Fabricate(:user) }
-    fab!(:notification1) do
-      Fabricate(:notification, user: user, data: { username: user1.username }.to_json)
-    end
-    fab!(:notification2) do
-      Fabricate(:notification, user: user, data: { display_username: user2.username }.to_json)
-    end
-    fab!(:notification3) do
-      Fabricate(:notification, user: user, data: { mentioned_by_username: user3.username }.to_json)
-    end
-    fab!(:notification4) do
-      Fabricate(:notification, user: user, data: { invited_by_username: user4.username }.to_json)
-    end
-    fab!(:notification5) do
-      Fabricate(:notification, user: user, data: { original_username: user5.username }.to_json)
-    end
-    fab!(:notification6) do
-      Fabricate(:notification, user: user, data: { original_username: user6.username }.to_json)
-    end
-
-    it "Sets the acting_user correctly for each notification" do
-      # TODO: remove this spec
-      expect(notification1.acting_user).to eq(user1)
-      expect(notification2.acting_user).to eq(user2)
-      expect(notification3.acting_user).to eq(user3)
-      expect(notification4.acting_user).to eq(user4)
-      expect(notification5.acting_user).to eq(user5)
-      expect(notification5.data_hash[:original_name]).to eq user5.name
-    end
-
-    context "with SiteSettings.enable_names=false" do
-      it "doesn't set the :original_name property" do
-        SiteSetting.enable_names = false
-        # todo: refactor spec
-        expect(notification6.data_hash[:original_name]).to be_nil
-        SiteSetting.enable_names = true
+      it "sets the acting_user correctly for each notification" do
+        5.times { |i| expect(notifications[i].acting_user).to eq(users[i]) }
       end
     end
   end

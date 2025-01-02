@@ -3,7 +3,14 @@
 RSpec.describe NotificationSerializer do
   describe "#as_json" do
     fab!(:user)
-    let(:notification) { Fabricate(:notification, user: user) }
+    fab!(:acting_user) { Fabricate(:user) }
+    fab!(:notification) do
+      Fabricate(
+        :notification,
+        user: user,
+        data: { original_username: acting_user.username }.to_json,
+      )
+    end
     let(:serializer) { NotificationSerializer.new(notification) }
     let(:json) { serializer.as_json }
 
@@ -13,6 +20,16 @@ RSpec.describe NotificationSerializer do
 
     it "does not include external_id when sso is disabled" do
       expect(json[:notification].key?(:external_id)).to eq(false)
+    end
+
+    it "includes original_name when enable_names=true" do
+      SiteSetting.enable_names = true
+      expect(json.dig(:notification, :data, :original_name)).to eq(acting_user.name)
+    end
+
+    it "excludes original_name when enable_names=false" do
+      SiteSetting.enable_names = false
+      expect(json.dig(:notification, :data, :original_name)).to be_nil
     end
   end
 
