@@ -24,6 +24,7 @@ export default class ChatDrawer extends Component {
   rafTimer = null;
   hasUnreadMessages = false;
   drawerStyle = null;
+  drawerContainer = document.querySelector(".chat-drawer-outlet-container");
 
   didInsertElement() {
     super.didInsertElement(...arguments);
@@ -31,6 +32,9 @@ export default class ChatDrawer extends Component {
     if (!this.chat.userCanChat) {
       return;
     }
+
+    this.drawerContainer?.addEventListener("click", this.handleDrawerClick);
+    document.addEventListener("click", this.handleOutsideClick);
 
     this._checkSize();
     this.appEvents.on("chat:open-url", this, "openURL");
@@ -56,6 +60,11 @@ export default class ChatDrawer extends Component {
     if (!this.chat.userCanChat) {
       return;
     }
+    document
+      .querySelector(".chat-drawer-outlet-container")
+      ?.removeEventListener("click", this.handleDrawerClick);
+
+    document.removeEventListener("click", this.handleOutsideClick);
 
     window.removeEventListener("resize", this._checkSize);
 
@@ -216,6 +225,22 @@ export default class ChatDrawer extends Component {
     this.computeDrawerStyle();
     this.chatStateManager.didCloseDrawer();
     this.chat.activeChannel = null;
+  }
+
+  @action
+  handleDrawerClick() {
+    if (this.drawerContainer) {
+      // this.drawerContainer.style.setProperty("z-index", "1000"); //TODO needs to be calc(var("composer", "dropdown") + 1)
+      this.drawerContainer.classList.add("--active");
+    }
+  }
+
+  @action
+  handleOutsideClick(event) {
+    if (this.drawerContainer && !this.drawerContainer.contains(event.target)) {
+      // this.drawerContainer.style.setProperty("z-index", "400");
+      this.drawerContainer.classList.remove("--active");
+    }
   }
 
   @action
