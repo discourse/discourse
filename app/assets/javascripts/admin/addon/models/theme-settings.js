@@ -1,9 +1,22 @@
 import EmberObject from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import Setting from "admin/mixins/setting-object";
+import SettingObjectHelper from "admin/lib/setting-object-helper";
 
-export default class ThemeSettings extends EmberObject.extend(Setting) {
+export default class ThemeSettings extends EmberObject {
+  @alias("settingObjectHelper.overridden") overridden;
+  @alias("settingObjectHelper.computedValueProperty") computedValueProperty;
+  @alias("settingObjectHelper.computedNameProperty") computedNameProperty;
+  @alias("settingObjectHelper.validValues") validValues;
+  @alias("settingObjectHelper.allowsNone") allowsNone;
+  @alias("settingObjectHelper.anyValue") anyValue;
+
+  constructor() {
+    super(...arguments);
+    this.settingObjectHelper = new SettingObjectHelper(this);
+  }
+
   updateSetting(themeId, newValue) {
     if (this.objects_schema) {
       newValue = JSON.stringify(newValue);
