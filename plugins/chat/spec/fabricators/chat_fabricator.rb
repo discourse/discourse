@@ -54,6 +54,10 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
   end
 end
 
+def fake_chat_message
+  Faker::Alphanumeric.alpha(number: [15, SiteSetting.chat_minimum_message_length].max)
+end
+
 Fabricator(:chat_message, class_name: "Chat::Message") do
   transient use_service: false
 
@@ -68,7 +72,7 @@ end
 Fabricator(:chat_message_without_service, class_name: "Chat::Message") do
   user
   chat_channel
-  message { Faker::Alphanumeric.alpha(number: [10, SiteSetting.chat_minimum_message_length].max) }
+  message { fake_chat_message }
 
   after_build { |message, attrs| message.cook }
   after_create { |message, attrs| message.upsert_mentions }
@@ -96,9 +100,7 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
       resolved_class.call(
         params: {
           chat_channel_id: channel.id,
-          message:
-            transients[:message] ||
-              Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+          message: transients[:message].presence || fake_chat_message,
           thread_id: transients[:thread]&.id,
           in_reply_to_id: transients[:in_reply_to]&.id,
           upload_ids: transients[:upload_ids],
