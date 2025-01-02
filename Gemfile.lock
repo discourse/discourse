@@ -133,7 +133,7 @@ GEM
       literate_randomizer
     docile (1.4.1)
     drb (2.2.1)
-    dry-initializer (3.1.1)
+    dry-initializer (3.2.0)
     email_reply_trimmer (0.2.0)
     erubi (1.13.1)
     excon (1.2.2)
