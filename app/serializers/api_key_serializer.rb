@@ -11,6 +11,7 @@ class ApiKeySerializer < ApplicationSerializer
              :revoked_at
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
+  has_one :created_by, serializer: BasicUserSerializer, embed: :objects
   has_many :api_key_scopes, serializer: ApiKeyScopeSerializer, embed: :objects
 
   def include_user_id?
