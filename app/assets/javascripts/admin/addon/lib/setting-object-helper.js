@@ -26,25 +26,25 @@ export default class SettingObjectHelper {
     return !deepEqual(val, defaultVal);
   }
 
-  @computed("settingObj.valueProperty", "settingObj.validValues.[]")
+  @computed("settingObj.valueProperty", "validValues.[]")
   get computedValueProperty() {
     if (isPresent(this.settingObj.valueProperty)) {
       return this.settingObj.valueProperty;
     }
 
-    if (isPresent(this.settingObj.validValues.get("firstObject.value"))) {
+    if (isPresent(this.validValues.get("firstObject.value"))) {
       return "value";
     }
     return null;
   }
 
-  @computed("settingObj.nameProperty", "settingObj.validValues.[]")
+  @computed("settingObj.nameProperty", "validValues.[]")
   get computedNameProperty() {
     if (isPresent(this.settingObj.nameProperty)) {
       return this.settingObj.nameProperty;
     }
 
-    if (isPresent(this.settingObj.validValues.get("firstObject.name"))) {
+    if (isPresent(this.validValues.get("firstObject.name"))) {
       return "name";
     }
     return null;
@@ -52,11 +52,11 @@ export default class SettingObjectHelper {
 
   @computed("settingObj.valid_values")
   get validValues() {
-    const validValues = this.settingObj.valid_values;
+    const originalValidValues = this.settingObj.valid_values;
     const values = [];
     const translateNames = this.settingObj.translate_names;
 
-    (validValues || []).forEach((v) => {
+    (originalValidValues || []).forEach((v) => {
       if (v.name && v.name.length > 0 && translateNames) {
         values.addObject({ name: i18n(v.name), value: v.value });
       } else {
