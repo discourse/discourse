@@ -381,6 +381,10 @@ module Chat
       new_mentions = parsed_mentions.direct_mentions.pluck(:id)
       delete_mentions("Chat::UserMention", old_mentions - new_mentions)
       insert_mentions("Chat::UserMention", new_mentions - old_mentions)
+
+      # add users to threads when they are mentioned to track read status
+      return if new_mentions.empty? || !in_thread?
+      User.where(id: new_mentions).each { |user| thread.add(user, notification_level: :normal) }
     end
   end
 end

@@ -226,10 +226,13 @@ describe Chat::ChannelUnreadsQuery do
       end
 
       it "includes thread messages with mentions in the channel mention count" do
+        thread.add(current_user)
+
         thread_message_1 = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         thread_message_2 = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         create_mention(thread_message_1, channel_1)
         create_mention(thread_message_2, channel_1)
+
         expect(query.first).to eq(
           {
             mention_count: 2,

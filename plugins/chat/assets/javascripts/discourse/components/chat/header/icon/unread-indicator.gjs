@@ -69,7 +69,7 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   get urgentCountLabel() {
-    let totalCount = this.onlyMentions ? this.mentionCount : this.urgentCount;
+    const totalCount = this.onlyMentions ? this.mentionCount : this.urgentCount;
     return totalCount > MAX_UNREAD_COUNT ? `${MAX_UNREAD_COUNT}+` : totalCount;
   }
 
