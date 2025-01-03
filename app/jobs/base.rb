@@ -461,6 +461,45 @@ module Jobs
     enqueue_in(secs, job_name, opts)
   end
 
+  @@enqueue_after = []
+
+  def self.process_enqueue_after
+    @@enqueue_after.filter! do |job_ids, job_name, opts|
+      pending_job_ids = Set.new
+
+      Sidekiq::Queue.all.each do |queue|
+        queue.each { |job| pending_job_ids << job.jid if job_ids.include?(job.jid) }
+      end
+
+      if pending_job_ids.empty?
+        enqueue(job_name, opts)
+        false
+      else
+        true
+      end
+    end
+  end
+
+  def self.ensure_enqueue_after_thread!
+    @enqueue_after_thread ||=
+      Thread.new do
+        loop do
+          process_enqueue_after
+          sleep 10
+        end
+      end
+  end
+
+  def self.enqueue_after(job_ids, job_name, opts = {})
+    @@enqueue_after << [Set.new(job_ids), job_name, opts]
+
+    if run_immediately?
+      process_enqueue_after
+    else
+      ensure_enqueue_after_thread!
+    end
+  end
+
   def self.cancel_scheduled_job(job_name, opts = {})
     scheduled_for(job_name, opts).each(&:delete)
   end
