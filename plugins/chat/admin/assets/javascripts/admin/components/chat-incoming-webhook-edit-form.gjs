@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -80,11 +79,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
   }
 
   <template>
-    <Form
-      @data={{this.formData}}
-      @onSubmit={{this.save}}
-      as |form|
-    >
+    <Form @data={{this.formData}} @onSubmit={{this.save}} as |form|>
       <form.Field
         @name="name"
         @title={{i18n "chat.incoming_webhooks.name"}}
