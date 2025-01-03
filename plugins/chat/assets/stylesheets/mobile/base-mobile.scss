@@ -9,6 +9,17 @@
   }
 }
 
+html.has-full-page-chat,
+html.has-full-page-chat body {
+  --100dvh: 100%;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
+  height: var(--100dvh);
+  overflow: hidden;
+  position: relative;
+}
+
 html.has-full-page-chat {
   body #main-outlet {
     padding: 0;

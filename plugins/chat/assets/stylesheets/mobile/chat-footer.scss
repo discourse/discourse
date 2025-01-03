@@ -14,6 +14,8 @@
 }
 
 .c-footer {
+  z-index: 3; // over channel row
+
   &__item {
     .c-unread-indicator,
     .c-unread-indicator.-urgent {
