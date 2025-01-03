@@ -6,7 +6,6 @@ end
 module SiteSettings::DeprecatedSettings
   SETTINGS = [
     # [<old setting>, <new_setting>, <override>, <version to drop>]
-    ["search_tokenize_chinese_japanese_korean", "search_tokenize_chinese", true, "2.9"],
     ["default_categories_regular", "default_categories_normal", true, "3.0"],
     ["anonymous_posting_min_trust_level", "anonymous_posting_allowed_groups", false, "3.3"],
     ["shared_drafts_min_trust_level", "shared_drafts_allowed_groups", false, "3.3"],
