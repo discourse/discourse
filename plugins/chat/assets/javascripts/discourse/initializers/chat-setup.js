@@ -1,5 +1,6 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { number } from "discourse/lib/formatter";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -57,6 +58,37 @@ class ChatSetupInit {
       });
 
       api.registerHashtagType("channel", new ChannelHashtagType(owner));
+
+      if (this.siteSettings.enable_emoji) {
+        api.registerChatComposerButton({
+          label: "chat.emoji",
+          id: "emoji",
+          class: "chat-emoji-btn",
+          icon: "discourse-emojis",
+          position: "dropdown",
+          displayed: owner.lookup("service:site").mobileView,
+          action(context) {
+            const didSelectEmoji = (emoji) => {
+              const composer = owner.lookup(`service:chat-${context}-composer`);
+              composer.textarea.addText(
+                composer.textarea.getSelected(),
+                `:${emoji}:`
+              );
+            };
+
+            owner.lookup("service:menu").show(event.target, {
+              identifier: "emoji-picker",
+              groupIdentifier: "emoji-picker",
+              component: EmojiPickerDetached,
+              modalForMobile: true,
+              data: {
+                context: "chat",
+                didSelectEmoji,
+              },
+            });
+          },
+        });
+      }
 
       api.registerChatComposerButton({
         id: "chat-upload-btn",

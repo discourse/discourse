@@ -43,12 +43,6 @@ export default class EmojiStore extends Service {
     );
   }
 
-  registerContext(context) {
-    this.contexts[context] = new TrackedArray(
-      this.#storedContextForContext(context) ?? this.#defaultEmojis
-    );
-  }
-
   reset() {
     Object.keys(this.contexts).forEach((context) => {
       this.resetContext(context);
@@ -66,7 +60,7 @@ export default class EmojiStore extends Service {
   }
 
   #addEmojiToContext(emoji, context) {
-    const recentEmojis = this.contexts[context] ?? [];
+    const recentEmojis = this.contexts[context] ?? this.#defaultEmojis;
     recentEmojis.unshift(this.#normalizeEmojiCode(emoji));
     recentEmojis.length = Math.min(recentEmojis.length, MAX_TRACKED_EMOJIS);
     return recentEmojis;

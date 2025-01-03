@@ -12,35 +12,6 @@ export default {
     }
 
     withPluginApi("0.1", (api) => {
-      api.registerChatComposerButton({
-        label: "chat.emoji",
-        id: "emoji",
-        class: "chat-emoji-btn",
-        icon: "discourse-emojis",
-        position: "dropdown",
-        displayed: owner.lookup("service:site").mobileView,
-        action(context) {
-          const didSelectEmoji = (emoji) => {
-            const composer = owner.lookup(`service:chat-${context}-composer`);
-            composer.textarea.addText(
-              composer.textarea.getSelected(),
-              `:${emoji}:`
-            );
-          };
-
-          owner.lookup("service:menu").show(event.target, {
-            identifier: "emoji-picker",
-            groupIdentifier: "emoji-picker",
-            component: EmojiPickerDetached,
-            modalForMobile: true,
-            data: {
-              context: "chat",
-              didSelectEmoji,
-            },
-          });
-        },
-      });
-
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "emoji",

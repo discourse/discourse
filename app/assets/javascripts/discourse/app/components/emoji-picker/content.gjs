@@ -131,11 +131,6 @@ export default class EmojiPicker extends Component {
   }
 
   @action
-  registerContext() {
-    this.emojiStore.registerContext(this.args.context);
-  }
-
-  @action
   clearFavorites() {
     this.emojiStore.resetContext(this.args.context);
   }
@@ -423,7 +418,6 @@ export default class EmojiPicker extends Component {
     {{! template-lint-disable no-pointer-down-event-binding }}
     <div
       class={{concatClass "emoji-picker"}}
-      {{didInsert this.registerContext}}
       {{didInsert this.loadEmojis}}
       {{didInsert (if @didInsert @didInsert (noop))}}
       {{on "keydown" this.trapKeyDownEvents}}
