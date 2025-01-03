@@ -23,7 +23,7 @@ cs:
       name: Licencován(a)
       description: "Dokončil(a) náš výukový kurz pro pokročilé uživatele"
       long_description: |
-        Tento odznak se uděluje po úspěšném absolvování interaktivního kurzu pro pokročilé uživatele. Zvládli jste pokročilé diskusní nástroje - a nyní máte plnou licenci!
+        Tento odznak se uděluje po úspěšném absolvování interaktivního kurzu pro pokročilé uživatele. Zvládli jste pokročilé diskusní nástroje – a nyní máte plnou licenci!
   discourse_narrative_bot:
     bio: "Ahoj, nejsem skutečná osoba. Jsem bot, který tě může naučit něco o tomto webu. Chceš-li se mnou komunikovat, pošli mi zprávu nebo mě zmiň mým jménem."
     tl2_promotion_message:
@@ -45,6 +45,11 @@ cs:
       trigger: "hodit"
       invalid: |-
         Omlouvám se, ale je matematicky nemožné hodit tuto kombinaci kostek. :confounded:
+      not_enough_dice:
+        one: "Mám pouze %{count} kostku. Ostuda, já vím!"
+        few: "Mám pouze %{count} kostky. Ostuda, já vím!"
+        many: "Mám pouze %{count} kostek. Ostuda, já vím!"
+        other: "Mám pouze %{count} kostek. Ostuda, já vím!"
       out_of_range: |-
         Víš, že [maximální počet stěn](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pro matematicky férovou kostku je 120?
       results: |-
@@ -289,9 +294,9 @@ cs:
 
           Klidně tento příspěvek **označ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> a jako důvod vyber **Je to nevhodné**!
         reply: |-
-          [Naše redakce](%{base_uri}/groups/staff) bude soukromě informována o tvé vlajce. Pokud příspěvek označí dostatečný počet členů komunity, bude z preventivních důvodů také automaticky skryt. (Protože jsem ve skutečnosti žádný ošklivý příspěvek nenapsal :angel:, tak jsem si dovolil vlaječku odstranit.)
+          [Naše redakce](%{base_uri}/groups/staff) bude soukromě informována o tvém nahlášení. Pokud příspěvek nahlásí dostatečný počet členů komunity, bude z preventivních důvodů také automaticky skryt. (Protože jsem ve skutečnosti žádný ošklivý příspěvek nenapsal :angel:, tak jsem si dovolil nahlášení odstranit.)
         not_found: |-
-          Ale ne, můj ošklivý příspěvek ještě nebyl označen jako nevhodný. :worried: Můžeš to označit jako nevhodné pomocí **vlajky** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeň použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , abys odhalil/a více akcí pro každý příspěvek.
+          Ale ne, můj ošklivý příspěvek ještě nebyl nahlášen jako nevhodný. :worried: Můžeš jej označit jako nevhodný pomocí **nahlášení** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeň použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, abys odhalil/a více akcí pro každý příspěvek.
       search:
         instructions: |-
           _psst_ … V tomto tématu jsem ukryl překvapení. Pokud tuto výzvu přijímáte, **zvolte ikonu vyhledávání** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> vpravo nahoře &#8599;, vyberte "v tomto tématu" a pak ho zkuste najít.

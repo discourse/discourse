@@ -2849,6 +2849,7 @@ he:
     omniauth_confirm_button: "המשך"
     authenticator_error_no_valid_email: "אף אחת מהכתובת שמשויכות אל %{account} אינה מורשית. ייתכן שיהיה עליך להגדיר את החשבון שלך עם כתובת דוא״ל אחרת."
     new_registrations_disabled: "הוספת חשבונות חדשים אינה מותרת בעת זו."
+    new_registrations_disabled_discourse_connect: "רישום חשבונות חדשים מותר רק דרך Discourse Connect."
     password_too_long: "סיסמאות מוגבלות ל-200 תווים."
     email_too_long: "כתובת הדוא״ל שסיפקת ארוכה מדי. שמות תיבות דוא״ל לא יכולים לעלות על 254 תווים ושם התחום חייב להיות קצר מ־253 תווים."
     wrong_invite_code: "קוד ההזמנה שהקלדת שגוי."

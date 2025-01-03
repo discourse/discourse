@@ -10,16 +10,23 @@ cs:
       title: "Průvodce styly"
       welcome: "Pro začátek, vyberte položku z menu po levé straně."
       categories:
+        syntax: Syntaxe
         atoms: Atomy
         molecules: Molekuly
         organisms: Organismy
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Typografie"
           example: "Vítejte v Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Kromě sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "Vstupy data/času"
+        menus:
+          title: "Menu"
+        toasts:
+          title: "Přípitky"
         font_scale:
           title: "Systém písem"
         colors:
@@ -27,6 +34,8 @@ cs:
         icons:
           title: "Ikony"
           full_list: "Podívejte se na úplný seznam Font Awesome Icons"
+        forms:
+          title: "Formuláře"
         buttons:
           title: "Tlačítka"
         dropdowns:
@@ -86,6 +95,7 @@ cs:
         empty_state:
           title: "Prázdný stav"
         tooltips:
+          title: "Bublinová nápověda"
           description: "Popis"
           header: "Hlavička"
           hover_to_see: "Přejetím zobrazit popisek"

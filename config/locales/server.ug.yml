@@ -2138,6 +2138,8 @@ ug:
     enable_user_directory: "كۆز يۈگۈرتۈش ئۈچۈن ئىشلەتكۈچى مۇندەرىجىسى تەمىنلەيدۇ"
     enable_group_directory: "كۆز يۈگۈرتۈش ئۈچۈن گۇرۇپپا مۇندەرىجىسى تەمىنلەيدۇ"
     enable_category_group_moderation: "گۇرۇپپىنىڭ مۇئەييەن سەھىپىدىكى مەزمۇننى تەستىقلىشىغا يول قويىدۇ"
+    anonymous_posting_min_trust_level: "نامسىز يازما يوللاشنى قوزغىتىشقا زۆرۈر ئەڭ تۆۋەن ئىشەنچ دەرىجىسى"
+    anonymous_posting_allowed_groups: "نامسىز يازما يوللاشنى قوزغىتىشقا يول قويىدىغان گۇرۇپپا"
     anonymous_account_duration_minutes: "نامسىز ئىشلەتكۈچىنى قوغداش ئۈچۈن، ھەر N مىنۇتتا ھەر بىر ئىشلەتكۈچى ئۈچۈن بىر يېڭى نامسىز ھېسابات قۇرىدۇ. مىسال: ئەگەر 600 گە تەڭشەلسە، ئالدىنقى قېتىم يازما يوللىغانغا 600 مىنۇت بولۇپ نامسىز ئىشلەتكۈچى ھالىتىگە ئالماشقاندا، يېڭى بىر نامسىز ئىشلەتكۈچى قۇرىدۇ."
     hide_user_profiles_from_public: "نامسىز ئىشلەتكۈچىنىڭ ئىشلەتكۈچى كارتىسى، ئىشلەتكۈچى تەرجىمىھالى ۋە ئىشلەتكۈچى مۇندەرىجىسىنى چەكلەيدۇ."
     allow_users_to_hide_profile: "ئىشلەتكۈچىنىڭ تەرجىمىھالى ۋە ھالىتىنى يوشۇرۇشقا يول قويىدۇ"
@@ -2174,12 +2176,14 @@ ug:
     automatically_unpin_topics: "ئىشلەتكۈچى ئاستىغا يەتكەندە چوققىلانغان تېما ئۆزلۈكىدىن چوققىلانمايدۇ."
     read_time_word_count: "ئوقۇش ۋاقتىنى مۆلچەرلەشكە ئىشلىتىلىدىغان ھەر مىنۇتتا ئوقۇيالايدىغان سۆز سانى."
     topic_page_title_includes_category: "تېما بەت <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>ماۋزۇ بەلگە</a> سەھىپە ئىسمىنى ئۆز ئىچىگە ئالىدۇ."
+    svg_icon_subset: "مال-مۈلۈكلىرىڭىزگە قوشماقچى بولغان قوشۇمچە FontAwesome 5 سىنبەلگىسىنى قوشىدۇ. ئۇيۇل سىنبەلگە ئالدىغا «fa-»، ئادەتتىكى سىنبەلگىگە «far-»، ماركا سىنبەلگىگە «fab-» ئىشلىتىلىدۇ."
     full_name_required: "تولۇق ئىسىم ئىشلەتكۈچى تەرجىمىھالىنىڭ تولدۇرۇش زۆرۈر بۆلىكى."
     enable_names: "ئىشلەتكۈچىنىڭ تەرجىمىھالىدا ئىشلەتكۈچىنىڭ تولۇق ئىسمى، ئىشلەتكۈچى كارتىسى ۋە ئېلخەتنى كۆرسىتىدۇ. چەكلەنسە تولۇق ئىسىمنى ھەممە جايدا يوشۇرىدۇ."
     display_name_on_posts: "يازمىدا ئىشلەتكۈچىنىڭ تولۇق ئىسمى ۋە ئۇنىڭ ئىشلەتكۈچى ئاتى يەنى @username نى كۆرسىتىدۇ."
     show_time_gap_days: "ئەگەر ئىككى يازما ئارىسىدىكى ۋاقىت بۇ كۈن سانىغا تەڭ بولسا، تېمىدا ۋاقىت ئارىلىقىنى كۆرسىتىدۇ."
     short_progress_text_threshold: "بىر تېمىدىكى يازمىنىڭ سانى بۇ ساندىن ئېشىپ كەتكەندىن كېيىن، ئىلگىرىلەش بالداقتا پەقەت نۆۋەتتىكى يازما نومۇرىنىلا كۆرسىتىدۇ. ئەگەر ئىلگىرىلەش بالدىقىنىڭ كەڭلىكىنى ئۆزگەرتسىڭىز، بۇ قىممەتنى ئۆزگەرتىشىڭىز كېرەك بولۇشى مۇمكىن."
     default_code_lang: "markdown كود بۆلىكى (auto، text، ruby، python قاتارلىق) كۆڭۈلدىكى پىروگرامما تىللىرىنىڭ گىرامماتىكىسى يورۇتۇلىدۇ. بۇ قىممەت چوقۇم «highlighted languages» بېكەت تەڭشىكىدە بولۇشى كېرەك."
+    highlighted_languages: "گىرامماتېكىنى يورۇتۇش قائىدىسىنى ئۆز ئىچىگە ئالىدۇ. (ئاگاھلاندۇرۇش: كۆپ تىلنى ئۆز ئىچىگە ئالسا ئۈنۈمىگە تەسىر كۆرسىتىشى مۇمكىن) <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> كۆرگەزمىنى كۆرۈڭ"
     embed_unlisted: "ئىشلەتكۈچى جاۋاب قايتۇرمىغۇچە سىڭدۈرمە تېما ئاشكارىلانمايدۇ."
     import_embed_unlisted: "ئىشلەتكۈچى جاۋاب قايتۇرمىغۇچە ئەكىرگەن سىڭدۈرمە تېما ئاشكارىلانمايدۇ (ھەتتا بېكەت تەڭشىكىدىكى «embed unlisted» تاللانمىغان تەقدىردىمۇ)."
     embed_support_markdown: "سىڭدۈرمە يازمىنىڭ Markdown پىچىمىنى قوللايدۇ."
@@ -2232,6 +2236,7 @@ ug:
     default_tags_watching: "كۆڭۈلدىكى ئەھۋالدا كۆزىتىدىغان بەلگە تىزىمى."
     default_tags_tracking: "كۆڭۈلدىكى ئەھۋالدا ئىزلايدىغان بەلگە تىزىمى."
     default_tags_muted: "كۆڭۈلدىكى ئەھۋالدا ئۈنسىزلەيدىغان بەلگە تىزىمى."
+    default_tags_watching_first_post: "ھەر بىر يېڭى تېمىدىكى تۇنجى يازمىنىڭ بەلگە تىزىمى كۆڭۈلدىكى ئەھۋالدا كۆزىتىلىدۇ."
     default_sidebar_link_to_filtered_list: "كۆڭۈلدىكى ئەھۋالدا يولباشچى تىزىملىك ئۇلانمىسىنى سۈزۈلگەندىن كېيىنكى تىزىملىككە باغلايدۇ."
     default_sidebar_show_count_of_new_items: "كۆڭۈلدىكى ئەھۋالدا يولباشچى تىزىملىك ئۇلانمىسىدا تارتۇق سانىنىڭ ئورنىغا يېڭى تېما سانىنى كۆرسىتىدۇ."
     default_sidebar_switch_panel_position: "سۆھبەتكە ئالمىشىشقا ئىشلىتىدىغان يان بالداقتىكى توپچىنىڭ ئورنى"
@@ -2668,8 +2673,53 @@ ug:
     search_button: "ئىزدە"
   upload:
     unauthorized: "كەچۈرۈڭ، سىز يۈكلەشنى سىناۋاتقان ھۆججەتكە يول قويۇلمايدۇ (يول قويىدىغان كېڭەيتىلمىسى: %{authorized_extensions})."
+    optimize_failure_message: "يۈكلەنگەن سۈرەتنى ئەلالاشتۇرۇۋاتقاندا خاتالىق كۆرۈلدى."
+    download_failure: "ھۆججەتنى سىرتقى تەمىنلىگۈچىدىن چۈشۈرەلمىدى."
+    size_mismatch_failure: "ھۆججەتنىڭ S3 يۈكلەيدىغان چوڭلۇقى بىلەن سىرتقى يۈكلەيدىغان مۆلچەردىكى چوڭلۇقى بىلەن ماس كەلمىدى. %{additional_detail}"
+    create_multipart_failure: "سىرتقى ساقلىغۇچتا كۆپ پارچە يۈكلەشنى قۇرالمىدى."
+    abort_multipart_failure: "سىرتقى ساقلىغۇچتا كۆپ پارچە يۈكلەشتىن چېكىنەلمىدى."
+    complete_multipart_failure: "سىرتقى ساقلىغۇچتا كۆپ پارچە يۈكلەشنى تاماملىيالمىدى."
+    external_upload_not_found: "سىرتقى ساقلىغۇچتا يۈكلە تېپىلمىدى. %{additional_detail}"
+    checksum_mismatch_failure: "سىز يۈكلىگەن ھۆججەتنىڭ تەكشۈرۈش يىغىندىسى ماس كەلمىدى. ھۆججەت يۈكلەنگەندە ئۆزگەرتىلگەن بولۇشى مۇمكىن. قايتا سىناڭ."
+    cannot_promote_failure: "يۈكلەشنى تاماملىيالمىدى، ئۇ تاماملانغان بولۇشى ياكى ئىلگىرى مەغلۇپ بولغان بولۇشى مۇمكىن."
     size_zero_failure: "كەچۈرۈڭ، قارىغاندا چاتاق چىققاندەك قىلىدۇ، يۈكلىمەكچى بولغان ھۆججەت 0 بايت. قايتا سىناڭ."
+    attachments:
+      too_large: "كەچۈرۈڭ، سىز يۈكلەشنى سىنىماقچى بولغان ھۆججەت بەك چوڭ (چوڭلۇق چېكى %{max_size_kb}KB)"
+      too_large_humanized: "كەچۈرۈڭ، سىز يۈكلەشنى سىنىماقچى بولغان ھۆججەت بەك چوڭ (چوڭلۇق چېكى %{max_size})"
+    images:
+      too_large: "كەچۈرۈڭ، سىز يۈكلىمەكچى بولغان سۈرەتنىڭ سىغىمى بەك چوڭ (ئەڭ يۇقىرى چېكى KB%{max_size_kb})، چوڭلۇقىنى ئۆزگەرتىپ ئاندىن قايتا سىناڭ."
+      too_large_humanized: "كەچۈرۈڭ، سىز يۈكلىمەكچى بولغان سۈرەتنىڭ سىغىمى بەك چوڭ (ئەڭ يۇقىرى چېكى %{max_size})، چوڭلۇقىنى ئۆزگەرتىپ ئاندىن قايتا سىناڭ."
+      larger_than_x_megapixels: "كەچۈرۈڭ، سىز يۈكلىمەكچى بولغان سۈرەت بەك چوڭ (ئەڭ يۇقىرى ئۆلچىمى %{max_image_megapixels} مېگاپىكسېل)، چوڭلۇقىنى ئۆزگەرتىپ ئاندىن قايتا سىناڭ."
+      size_not_found: "كەچۈرۈڭ، سۈرەتنىڭ چوڭلۇقىنى ئېنىقلىيالمىدۇق. سۈرىتىڭىز بۇزۇلغان بولۇشى مۇمكىنمۇ؟"
+    placeholders:
+      too_large: "(سۈرەت KB%{max_size_kb} دىن چوڭ)"
+      too_large_humanized: "(سۈرەت KB%{max_size} دىن چوڭ)"
+  avatar:
+    missing: "كەچۈرۈڭ، ئۇ ئېلخەت ئادرىسىغا مۇناسىۋەت ھېچقانداق سىمانى تاپالمىدۇق. ئۇنى قايتا يۈكلەمسىز؟"
+  flag_reason:
+    sockpuppet: "بىر يېڭى ئىشلەتكۈچى بىر تېما قۇردى، ئوخشاش IP ئادرېس (%{ip_address}) تىن يەنە بىر يېڭى ئىشلەتكۈچى جاۋاب قايتۇردى. <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> تور بېكەت تەڭشىكىنى كۆرۈڭ."
+    spam_hosts: "بۇ ئىشلەتكۈچى ئوخشاش بىرتور دائىرىسىنىڭ ئۇلانمىسى بار كۆپ يازما قۇرۇشقا ئۇرۇندى. بۇ ئىشلەتكۈچى يوللىغان ئۇلانما بار يازمىنىڭ ھەممىسىنى تەكشۈرۈش كېرەك. تور بېكەت تەڭشىكى <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> دىن كۆرۈڭ."
   skipped_email_log:
+    exceeded_emails_limit: "max_emails_per_day_per_user دىن ئاشتى"
+    exceeded_bounces_limit: "Bounce_score_threshold دىن ئاشتى"
+    mailing_list_no_echo_mode: "ئىشلەتكۈچىنىڭ ئۆزىنىڭ يازمىسى ئۈچۈن ئېلخەت تىزىمى ئۇقتۇرۇشى چەكلىنىدۇ"
+    user_email_no_user: "كىملىكى %{user_id} بولغان ئىشلەتكۈچىنى تاپالمىدى"
+    user_email_post_not_found: "كىملىكى %{post_id} بولغان يازمىنى تاپالمىدى"
+    user_email_anonymous_user: "ئىشلەتكۈچى نامسىز"
+    user_email_user_suspended_not_pm: "ئىشلەتكۈچى توختىتىلغان، ئۇچۇر ئەمەس"
+    user_email_seen_recently: "ئىشلەتكۈچى يېقىندا كۆرۈلدى"
+    user_email_notification_already_read: "بۇ ئېلخەتكە مۇناسىۋەتلىك ئۇقتۇرۇش ئوقۇلغان"
+    user_email_notification_topic_nil: "post.topic بوش"
+    user_email_post_user_deleted: "يازمىنى يازغان ئىشلەتكۈچى ئۆچۈرۈلگەن."
+    user_email_post_deleted: "يازمىنى يازغۇچى ئۆچۈرگەن"
+    user_email_user_suspended: "ئىشلەتكۈچى توختىتىلغان"
+    user_email_already_read: "ئىشلەتكۈچى بۇ يازمىنى ئوقۇپ بولغان"
+    user_email_access_denied: "ئىشلەتكۈچىنىڭ بۇ يازمىنى كۆرۈشىگە ئىجازەت بېرىلمىگەن"
+    user_email_no_email: "كىملىكى %{user_id} بولغان ئىشلەتكۈچىگە مۇناسىۋەتلىك ئېلخەت يوق"
+    sender_message_blank: "ئۇچۇر بوش"
+    sender_message_to_blank: "message.to بوش"
+    sender_text_part_body_blank: "text_part.body بوش"
+    sender_body_blank: "مەزمۇنى بوش"
     sender_post_deleted: "يازما ئۆچۈرۈلگەن"
     sender_message_to_invalid: "تاپشۇرۇۋالغۇچىنىڭ ئېلخەت ئادرېسى ئىناۋەتسىز"
     sender_topic_deleted: "تېما ئۆچۈرۈلگەن"
@@ -2688,6 +2738,8 @@ ug:
     dark_rose: "توق قىزىل"
     wcag: "ئوچۇق WCAG"
     wcag_theme_name: "ئوچۇق WCAG"
+    dracula: "دراكۇلا"
+    dracula_theme_name: "دراكۇلا"
     solarized_light: "قۇياش نۇرى يورۇق"
     solarized_light_theme_name: "قۇياش نۇرى يورۇق"
     solarized_dark: "قۇياش نۇرى قاراڭغۇ"
@@ -2707,6 +2759,9 @@ ug:
   csv_export:
     boolean_yes: "ھەئە"
     boolean_no: "ياق"
+    rate_limit_error: "يازمىنى كۈندە بىر قېتىم چۈشۈرگىلى بولىدۇ، ئەتە قايتا سىناڭ."
+  static_topic_first_reply: |
+    بۇ %{page_name} بەتتىكى مەزمۇننى ئۆزگەرتىش ئۈچۈن مەزكۇر تېمىدىكى تۇنجى يازمىنى تەھرىرلەش كېرەك.
   guidelines_topic:
     title: "كۆپ سورالغان سوئال/كۆرسەتمە"
     guidelines_title: "كۆرسەتمە"
@@ -2717,6 +2772,7 @@ ug:
   badges:
     mass_award:
       errors:
+        invalid_csv: بىز %{line_number}-قۇرىدا خاتالىققا يولۇقتۇق. CSV نىڭ ھەر بىر قۇرىدا بىردىن ئېلخەت بولۇشىنى جەزملەڭ.
         too_many_csv_entries:
           one: بۇ CSV ھۆججەتتىكى تۈر بەك كۆپ. تۈر سانى %{count} ئاشمىغان CSV ھۆججىتىنى تەمىنلەڭ.
           other: بۇ CSV ھۆججەتتىكى تۈر بەك كۆپ. تۈر سانى %{count} ئاشمىغان CSV ھۆججىتىنى تەمىنلەڭ.
@@ -2780,6 +2836,8 @@ ug:
     great_post:
       name: قالتىس جاۋاب
       description: جاۋاب 50 قېتىم ياقتۇرۇلدى
+      long_description: |
+        جاۋابىڭىزنى 50 ياقتۇرۇشقا ئېرىشكەندە بۇ تارتۇق بېرىلىدۇ، ۋاھ! جاۋابىڭىز كىشىنى تەسىرلەندۈرىدىغان، جەلپ قىلارلىق، قىزىقارلىق ياكى چۈشىنىشلىك بولۇپ، جامائەت ئۇنى ياقتۇردى!
     nice_topic:
       name: بەلەن تېما
       description: تېما 10 قېتىم ياقتۇرۇلدى
@@ -2850,8 +2908,10 @@ ug:
       name: مۇھەببەتتىن
       description: بىر كۈندە %{max_likes_per_day} ياقتۇرۇش ئىشلەتتى
     higher_love:
+      name: كۆپرەك مۇھەببەت
       description: بىر كۈندە %{max_likes_per_day} ياقتۇرۇش ئىشلىتىپ 5 قېتىمغا يەتتى
     crazy_in_love:
+      name: مەجنۇن
       description: بىر كۈندە %{max_likes_per_day} ياقتۇرۇش ئىشلىتىپ 20 قېتىمغا يەتتى
       long_description: |
         بۇ تارتۇق بىر كۈندە %{max_likes_per_day} ياقتۇرۇش ئىشلىتىپ 20 كۈنگە يەتكەندە بېرىلىدۇ، قالتىس! سىز جامائەت ئەزالىرىنى رىغبەتلەندۈرۈشنىڭ ئۈلگىسى ئىكەنسىز!
@@ -2969,9 +3029,11 @@ ug:
           default_locale:
             label: "تىل"
       privacy:
+        title: "ئەزا زىيارىتى"
         fields:
           login_required:
             label: "كۆرۈنۈشچانلىقى"
+            description: "جامائىتىڭىز ئاشكارىمۇ ياكى شەخسىيمۇ؟"
             choices:
               public:
                 label: "ئاممىۋى"
