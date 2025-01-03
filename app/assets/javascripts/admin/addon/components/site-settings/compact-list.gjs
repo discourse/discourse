@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 import ListSetting from "select-kit/components/list-setting";
 
@@ -9,7 +9,6 @@ export default class CompactList extends Component {
   @tracked createdChoices = null;
   tokenSeparator = "|";
 
-  @computed("args.value")
   get settingValue() {
     return this.args.value
       .toString()
@@ -17,7 +16,6 @@ export default class CompactList extends Component {
       .filter(Boolean);
   }
 
-  @computed("settingValue", "setting.choices.[]", "createdChoices.[]")
   get settingChoices() {
     return [
       ...new Set([

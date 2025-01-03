@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { action, computed } from "@ember/object";
 import ColorInput from "admin/components/color-input";
 
 function RGBToHex(rgb) {
@@ -26,7 +25,6 @@ function RGBToHex(rgb) {
 }
 
 export default class Color extends Component {
-  @computed("value")
   get valid() {
     let value = this.args.value.toLowerCase();
 
@@ -47,18 +45,13 @@ export default class Color extends Component {
     return testColor.color && hexifiedColor === value;
   }
 
-  @action
-  onChangeColor(color) {
-    this.args.changeValueCallback(color);
-  }
-
   <template>
     <ColorInput
       @hexValue={{readonly @value}}
       @valid={{@valid}}
       @onlyHex={{false}}
       @styleSelection={{false}}
-      @onChangeColor={{this.onChangeColor}}
+      @onChangeColor={{@changeValueCallback}}
     />
   </template>
 }
