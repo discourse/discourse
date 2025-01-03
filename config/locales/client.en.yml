@@ -5217,6 +5217,8 @@ en:
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
+          percent_change_tooltip: "%{percent} change."
+          percent_change_tooltip_previous_value: "Was %{previousValue} %{previousPeriod}."
           today: "Today"
           yesterday: "Yesterday"
           last_7_days: "Last 7"
