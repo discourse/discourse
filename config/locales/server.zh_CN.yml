@@ -2561,6 +2561,7 @@ zh_CN:
     omniauth_confirm_button: "继续"
     authenticator_error_no_valid_email: "不允许与 %{account} 关联的电子邮件地址。您可能需要使用不同的电子邮件地址配置您的帐户。"
     new_registrations_disabled: "目前不允许注册新帐户。"
+    new_registrations_disabled_discourse_connect: "仅允许通过 Discourse Connect 注册新帐户。"
     password_too_long: "密码不得超过 200 个字符。"
     email_too_long: "您提供的电子邮件过长。邮箱名称不得超过 254 个字符，域名不得超过 253 个字符。"
     wrong_invite_code: "您输入的邀请码不正确。"

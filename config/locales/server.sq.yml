@@ -1385,6 +1385,12 @@ sq:
                 label: "Kategoritë dhe temat e zgjedhura"
               categories_and_latest_topics:
                 label: "Kategoritë dhe temat e fundit"
+              categories_and_latest_topics_created_date:
+                label: "Kategoritë dhe temat më të fundit (rendit sipas datës së krijimit të temës)"
+              categories_and_top_topics:
+                label: "Kategoritë dhe Temat kryesore"
+              subcategories_with_featured_topics:
+                label: "Nënkategoritë me tema të veçuara"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'

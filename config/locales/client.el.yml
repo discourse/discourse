@@ -179,6 +179,7 @@ el:
       forwarded: "Προωθήθηκε το παραπάνω email"
     topic_admin_menu: "ρυθμίσεις θέματος"
     skip_to_main_content: "Μετάβαση στο κύριο περιεχόμενο"
+    skip_user_nav: "Μετάβαση στο περιεχόμενο του προφίλ"
     emails_are_disabled: "Όλα τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί καμία ειδοποίηση email."
     emails_are_disabled_non_staff: "Τα εξερχόμενα email έχουν απενεργοποιηθεί για χρήστες εκτός του προσωπικού."
     software_update_prompt:
@@ -312,6 +313,8 @@ el:
       edit_bookmark: "Επεξεργασία Σελιδοδείκτη"
       clear_bookmarks: "Καθαρισμός σελιδοδεικτών"
       help:
+        bookmark: "Κάντε κλικ για να βάλετε σελιδοδείκτη σε αυτό το θέμα"
+        edit_bookmark: "Κάντε κλικ για να επεξεργαστείτε τον σελιδοδείκτη σε μια δημοσίευση σε αυτό το θέμα"
         edit_bookmark_for_topic: "Κάντε κλικ για να επεξεργαστείτε τον σελιδοδείκτη για αυτό το θέμα"
         unbookmark: "Πατήστε εδώ για να αφαιρεθούν όλοι οι σελιδοδείκτες από αυτό το θέμα."
         unbookmark_with_reminder: "Κάντε κλικ για να αφαιρέσετε όλους τους σελιδοδείκτες και τις υπενθυμίσεις σε αυτό το θέμα"
@@ -1675,11 +1678,19 @@ el:
     user_status:
       save: "Αποθήκευση"
       set_custom_status: "Ορισμός προσαρμοσμένης κατάστασης"
+      what_are_you_doing: "Τι κάνετε;"
       pause_notifications: "Παύση ειδοποιήσεων"
+      remove_status: "Αφαίρεση κατάστασης"
     user_tips:
+      button: "Το κατάλαβα!"
+      skip: "Παράλειψη συμβουλών"
       first_notification:
         title: "Η πρώτη σας ειδοποίηση!"
         content: "Οι ειδοποιήσεις χρησιμοποιούνται για να σας κρατούν ενήμερους για το τι συμβαίνει στην κοινότητα."
+      topic_timeline:
+        title: "Χρονολόγιο θέματος"
+      post_menu:
+        title: "Μενού δημοσίευσης"
       topic_notification_levels:
         title: "Τώρα παρακολουθείτε αυτό το θέμα"
       suggested_topics:
@@ -1768,9 +1779,22 @@ el:
         one: "Υπάρχει <b>%{count}</b> απάντηση."
         other: "Υπάρχουν <b>%{count}</b> απαντήσεις."
       buttons:
+        hide: "Απόκρυψη περίληψης"
+        generate: "Συνοψίστε"
         regenerate: "Αναδημιουγία"
+      description_time_MF: |
+        Υπάρχ{ replyCount, plural,
+            one {ει <b>#</b> απάντηση}
+          other {ουν <b>#</b> απαντήσεις}
+        } με εκτιμώμενο χρόνο ανάγνωσης <b>{ readingTime, plural,
+            one {# λεπτό}
+          other {# λεπτά}
+        }</b>.
+      enable: "Εμφάνιση κορυφαίων απαντήσεων"
       disable: "Εμφάνιση όλων των αναρτήσεων"
+      short_label: "Κορυφαίες απαντήσεις"
       show_all_label: "Εμφάνιση όλων"
+      short_title: "Εμφάνιση κορυφαίων απαντήσεων σε αυτό το θέμα: οι πιο ενδιαφέρουσες αναρτήσεις όπως καθορίζονται από την κοινότητα"
     deleted_filter:
       enabled_description: "Αυτό το θέμα περιέχει σβησμένες αναρτήσεις, οι οποίες αποκρύπτονται."
       disabled_description: "Σε αυτό το θέμα εμφανίζονται oι σβησμένες αναρτήσεις."
@@ -1778,6 +1802,9 @@ el:
       disable: "Εμφάνισε τις σβησμένες αναρτήσεις"
     private_message_info:
       title: "Μήνυμα"
+      invite: "Προσκαλέστε άλλους…"
+      edit: "Προσθέστε ή αφαιρέστε…"
+      remove: "Αφαιρέστε…"
       add: "Προσθήκη…"
       leave_message: "Σίγουρα θελετε να αφήσετε αυτό το μήνυμα;"
       remove_allowed_user: "Θέλεις σίγουρα να αφαιρέσεις τον/την %{name} από αυτή τη συζήτηση;"
@@ -1799,12 +1826,14 @@ el:
       title: "Εγγραφή"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
       associate: "Έχετε ήδη λογαριασμό; <a href='%{associate_link}'>Συνδεθείτε</a> για να συνδέσετε τον λογαριασμό σας %{provider}."
+      activation_title: "Ενεργοποιήστε τον λογαριασμό σας"
       already_have_account: "Έχετε ήδη λογαριασμό;"
     forgot_password:
       title: "Επαναφορά Κωδικού"
       action: "Ξέχασα τον κωδικό πρόσβασής μου"
       invite: "Δώσε το όνομα χρήστη σου ή την διεύθυνση email σου και θα σου στείλουμε ένα email για να ορίσεις νέο κωδικό πρόσβασης."
       invite_no_username: "Εισάγετε τη διεύθυνση email σας και θα σας στείλουμε ένα email επαναφοράς κωδικού πρόσβασης."
+      email-username: "Email ή όνομα χρήστη"
       reset: "Επαναφορά Κωδικού Πρόσβασης"
       complete_username: "Αν βρεθεί λογαριασμός με το όνομα χρήστη <b>%{username}</b>, σύντομα θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
       complete_email: "Αν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>, σε λίγο θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
@@ -1841,6 +1870,7 @@ el:
       second_factor_title: "Έλεγχος Ταυτότητας Δύο Παραγόντων"
       second_factor_description: "Παρακαλώ εισαγάγετε τον κωδικό ελέγχου ταυτότητας από την εφαρμογή σας:"
       second_factor_backup: "Συνδεθείτε χρησιμοποιώντας έναν εφεδρικό κωδικό"
+      second_factor_backup_title: "Αντίγραφα ασφαλείας δύο παραγόντων"
       second_factor_backup_description: "Παρακαλώ εισαγάγετε έναν από τους εφεδρικούς κωδικούς σας:"
       second_factor: "Συνδεθείτε χρησιμοποιώντας την εφαρμογή Authenticator"
       security_key_alternative: "Δοκιμάστε με έναν άλλο τρόπο"
@@ -2145,6 +2175,7 @@ el:
       post_approved: "Η ανάρτησή σας εγκρίθηκε"
       reviewable_items: "στοιχεία που απαιτούν αναθεώρηση"
       watching_first_post_label: "Νέο Θέμα"
+      user_moved_post: "%{username} μετακίνησε"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2155,6 +2186,9 @@ el:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username} και %{count} άλλος</span> %{description}"
+        other: "<span class='multi-user'>%{username} και %{count} άλλοι</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
         one: "%{username} και %{count} ακόμη"
@@ -2226,6 +2260,7 @@ el:
         watching_first_post: "νέο θέμα"
         topic_reminder: "υπενθύμιση θέματος"
         liked_consolidated: "νέα «μου αρέσει»"
+        linked_consolidated: "νέοι σύνδεσμοι"
         post_approved: "η ανάρτηση εγκρίθηκε"
         membership_request_consolidated: "νέα αιτήματα συμμετοχής"
         reaction: "νέα αντίδραση"
@@ -2272,6 +2307,7 @@ el:
       in_messages: "σε μηνύματα"
       in_topics_posts: "σε όλα τα θέματα και τις αναρτήσεις"
       enter_hint: "ή πατήστε Enter"
+      in_posts_by: "σε δημοσιεύσεις από %{username}"
       browser_tip: "%{modifier} + f"
       recent: "Πρόσφατες Αναζητήσεις"
       clear_recent: "Εκκαθάριση Πρόσφατων Αναζητήσεων"
@@ -2303,6 +2339,7 @@ el:
           label: Με ετικέτα
           aria_label: Φιλτράρισμα με ετικέτες
         filters:
+          label: Επέστρεψε μόνο θέματα/αναρτήσεις…
           title: Ταιριάζει μόνο στον τίτλο
           likes: μου άρεσαν
           posted: απάντησα
@@ -2316,6 +2353,7 @@ el:
           seen: Διάβασα
           unseen: δεν διάβασα
           wiki: ' είναι βίκι'
+          images: περιλαμβάνουν εικόνες
           all_tags: Όλες οι παραπάνω ετικέτες
         statuses:
           label: Όπου τα θέματα
@@ -2364,11 +2402,16 @@ el:
           one: "Σελιδοδείκτες - %{count} αδιάβαστος σελιδοδείκτης"
           other: "Σελιδοδείκτες - %{count} αδιάβαστοι σελιδοδείκτες"
         other_notifications: "Άλλες ειδοποιήσεις"
+        other_notifications_with_unread:
+          one: "Άλλες ειδοποιήσεις - %{count} μη αναγνωσμένη ειδοποίηση"
+          other: "Άλλες ειδοποιήσεις - %{count} μη αναγνωσμένες ειδοποιήσεις"
         profile: "Προφίλ"
       reviewable:
         queue: "Ουρά"
         deleted_user: "(διαγραμμένος χρήστης)"
         deleted_post: "(διαγραμμένη ανάρτηση)"
+        post_number_with_topic_title: "δημοσίευση #%{post_number} - %{title}"
+        new_post_in_topic: "νέα δημοσίευση στο %{title}"
     topics:
       new_messages_marker: "τελευταία επίσκεψη"
       bulk:
@@ -2398,13 +2441,20 @@ el:
           untrack: "Σταμάτα να παρακολουθείς αυτά τα θέματα ώστε να σταματήσουν να εμφανίζονται στη λίστα νέων μου"
         toggle: "εναλλαγή μαζικής επιλογής νημάτων"
         actions: "Μαζικές Ενέργειες"
+        change_category: "Ορισμός κατηγορίας…"
         close_topics: "Κλείσιμο Νημάτων"
         archive_topics: "Αρχειοθέτηση Νημάτων"
         move_messages_to_inbox: "Μετακίνηση στα Εισερχόμενα"
+        archive_messages: "Μετακίνηση στο Αρχείο"
+        notification_level: "Ειδοποιήσεις…"
+        change_notification_level: "Αλλαγή επιπέδου ειδοποίησης"
         choose_new_category: "Επιλέξτε τη νέα κατηγορία για τα θέματα:"
         selected:
           one: "Έχεις διαλέξει <b>%{count}</b> θέμα."
           other: "Έχετε επιλέξει <b>%{count}</b> θέματα."
+        selected_sole_category:
+          one: "Έχεις επιλέξει <b>%{count}</b> θέμα από την κατηγορία:"
+          other: "Έχεις επιλέξει <b>%{count}</b> θέματα από την κατηγορία:"
         selected_count:
           one: "%{count} επιλεγμένα"
           other: "%{count} επιλεγμένα"
@@ -2414,30 +2464,46 @@ el:
         choose_append_tags: "Επιλογή νέων ετικετών για την προσάρτηση τους σε αυτά τα θέματα:"
         changed_tags: "Οι ετικέτες αυτών των νημάτων έχουν αλλάξει."
         remove_tags: "Αφαίρεση Όλων των Ετικετών"
+        confirm_remove_tags:
+          one: "Όλες οι ετικέτες θα αφαιρεθούν από αυτό το θέμα. Είσαι σίγουρος;"
+          other: "Όλες οι ετικέτες θα αφαιρεθούν από %{count} θέματα. Είσαι σίγουρος;"
+        progress:
+          one: "Πρόοδος: <strong>%{count}</strong> θέμα"
+          other: "Πρόοδος: <strong>%{count}</strong> θέματα"
       none:
         unread: "Έχεις διαβάσει όλα τα θέματα."
+        unseen: "Δεν έχεις αδιάβαστα θέματα."
         new: "Δεν υπάρχουν νέα θέματα."
         read: "Δεν έχεις διαβάσει κανένα θέμα ακόμη."
         posted: "Δεν έχεις αναρτήσει σε κάποιο θέμα ακόμη."
+        latest: "Τα έχετε διαβάσει όλα!"
         bookmarks: "Δεν έχεις βάλει σελιδοδείκτη σε κανένα θέμα ακόμα."
         category: "Δεν υπάρχουν θέματα στην κατηγορία %{category}."
         top: "Δεν υπάρχουν κορυφαία θέματα."
+        hot: "Δεν υπάρχουν καυτά θέματα."
+        filter: "Δεν υπάρχουν θέματα."
       bottom:
         latest: "Δεν υπάρχουν άλλα πρόσφατα θέματα."
         posted: "Δεν υπάρχουν άλλα αναρτημένα θέματα."
         read: "Δεν υπάρχουν άλλα διαβασμένα θέματα."
         new: "Δεν υπάρχουν άλλα νέα θέματα."
         unread: "Δεν υπάρχουν άλλα αδιάβαστα θέματα."
+        unseen: "Δεν υπάρχουν άλλα αδιάβαστα θέματα."
         category: "Δεν υπάρχουν άλλα θέματα στην κατηγορία %{category}."
         tag: "Δεν υπάρχουν άλλα θέματα με ετικέτα %{tag}."
         top: "Δεν υπάρχουν άλλα δημοφιλή θέματα."
+        hot: "Δεν υπάρχουν άλλα καυτά θέματα."
         bookmarks: "Δεν υπάρχουν άλλα θέματα με σελιδοδείκτη."
+        filter: "Δεν υπάρχουν άλλα θέματα."
     topic_bulk_actions:
       close_topics:
         name: "Κλείσιμο"
+        note: "Σημείωση"
         optional: (προεραιτικό)
       archive_topics:
         name: "Αρχείο"
+      archive_messages:
+        name: "Μετακίνηση στο Αρχείο"
       move_messages_to_inbox:
         name: "Μετακίνηση στα Εισερχόμενα"
       append_tags:
@@ -2446,6 +2512,10 @@ el:
         name: "Αντικατάσταση Ετικετών "
       delete_topics:
         name: "Σβήσιμο"
+      update_category:
+        name: "Ενημέρωση Κατηγορίας"
+      update_notifications:
+        name: "Ενημέρωση Ειδοποιήσεων"
     topic:
       filter_to:
         one: "%{count} δημοσίευση σε θέμα"
@@ -2591,12 +2661,12 @@ el:
         title: "Αυτόματη διαγραφή απαντήσεων"
       status_update_notice:
         auto_open: "Αυτό το θέμα θα ανοίξει αυτόματα %{timeLeft}."
-        auto_close: "Αυτό το θέμα θα κλείσει αυτόματα σε %{timeLeft}."
+        auto_close: "Αυτό το θέμα θα κλείσει αυτόματα %{timeLeft}."
         auto_publish_to_category: "Αυτό το θέμα θα αναρτηθεί στην κατηγορία <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_after_last_post: "Αυτό το θέμα θα κλείσει σε %{duration} μετά την τελευταία απάντηση."
-        auto_delete: "Αυτό το θέμα θα διαγραφεί αυτόματα σε %{timeLeft}."
+        auto_delete: "Αυτό το θέμα θα διαγραφεί αυτόματα %{timeLeft}."
         auto_bump: "Αυτό το θέμα θα ωθηθεί αυτόματα %{timeLeft}."
-        auto_reminder: "Θα λάβεις υπενθύμιση σχετικά με αυτό το θέμα σε %{timeLeft}."
+        auto_reminder: "Θα λάβεις υπενθύμιση σχετικά με αυτό το θέμα %{timeLeft}."
         auto_delete_replies: "Οι απαντήσεις σε αυτό το θέμα διαγράφονται αυτόματα μετά από %{duration}."
       auto_close_title: "Ρυθμίσεις για το αυτόματο κλείσιμο"
       auto_close_immediate:
@@ -2624,7 +2694,7 @@ el:
           "2_8_stale": "Θα βλέπεις έναν μετρητή νέων απαντήσεων επειδή παρακολουθούσες αυτήν την κατηγορία στο παρελθόν."
           "2_4": "Θα βλέπεις έναν μετρητή νέων απαντήσεων επειδή απάντησες σε αυτό το θέμα."
           "2_2": "Θα βλέπεις έναν μετρητή νέων απαντήσεων επειδή παρακολουθείς αυτό το θέμα."
-          "2": 'Θα βλέπεις έναν μετρητή νέων απαντήσεων επειδή <a href="%{basePath}/u/%{username}/preferences/notifications">παρακολουθείς αυτό το θέμα.</a>.'
+          "2": 'Θα βλέπεις έναν μετρητή νέων απαντήσεων επειδή <a href="%{basePath}/u/%{username}/preferences/notifications">παρακολουθείς αυτό το θέμα</a>.'
           "1_2": "Θα λαμβάνεις ειδοποιήσεις εάν κάποιος αναφέρει το @όνομα σου ή απαντήσει σε εσένα."
           "1": "Θα λαμβάνεις ειδοποιήσεις εάν κάποιος αναφέρει το @όνομα σου ή απαντήσει σε εσένα."
           "0_7": "Αγνοείς όλες τις ειδοποιήσεις αυτής της κατηγορίας."

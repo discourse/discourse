@@ -345,6 +345,7 @@ hr:
       active_user_count: "Aktivni korisnici"
       contact: "Kontaktirajte nas"
       contact_info: "U slučaju kritičnog problema ili hitnosti koje utječu na rad stranice, kontaktirajte nas na %{contact_info}."
+      report_inappropriate_content: "Ako naiđete na neki neprikladan sadržaj, ne ustručavajte se započeti razgovor s našim moderatorima i administratorima. Ne zaboravite se prijaviti prije nego što se obratite."
     bookmarked:
       title: "Zabilješka"
       edit_bookmark: "Uredi oznaku"
@@ -356,7 +357,10 @@ hr:
         unbookmark: "Klikni za uklananje svih oznaka u ovoj temi"
         unbookmark_with_reminder: "Kliknite da biste uklonili sve oznake i podsjetnike u ovoj temi"
     bookmarks:
+      also_set_reminder: "Također postaviti podsjetnik?"
       bookmarked_success: "Označeno!"
+      deleted_bookmark_success: "Oznaka izbrisana!"
+      reminder_set_success: "Podsjetnik postavljen!"
       created: "Označili ste ovu objavu %{name}"
       created_generic: "Označili ste ovo. %{name}"
       create: "Stvori oznaku"
@@ -379,10 +383,14 @@ hr:
         when_reminder_sent: "Izbriši oznaku"
         on_owner_reply: "Obriši oznaku čim odgovorim"
         clear_reminder: "Zadržite oznaku i očisti podsjetnik"
+        after_reminder_label: "Nakon što vas podsjetimo, trebali bismo..."
+        after_reminder_checkbox: "Postavite ovo kao zadano za sve buduće podsjetnike za oznake"
       search_placeholder: "Pretraživanje oznaka po nazivu, naslovu teme ili sadržaju posta"
       search: "Pretraži"
       bookmark: "Zabilješka"
       bulk:
+        delete_completed: "Oznake uspješno izbrisane."
+        reminders_cleared: "Podsjetnici za oznake uspješno izbrisani."
         select_all: "Odaberi sve"
         clear_all: "Obriši sve"
         selected_count:
@@ -1407,7 +1415,7 @@ hr:
           Dvofaktorna provjera autentičnosti dodaje dodatnu sigurnost vašem računu tako da uz lozinku zahtijeva jednokratni token. Tokeni se mogu generirati na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> uređajima.
         oauth_enabled_warning: "Imajte na umu da će prijave na društvene mreže biti onemogućene nakon što je omogućena dva faktora autentifikacije na vašem računu."
         use: "Korištenje aplikacije Authenticator"
-        enforced_notice: "Prije pristupanja ovoj stranici morate omogućiti autentifikaciju dva faktora."
+        enforced_notice: "Morate omogućiti dvofaktorsku autentifikaciju prije pristupa ovoj stranici."
         disable: "Onemogući"
         disable_confirm: "Jeste li sigurni da želite onemogućiti dvofaktorsku provjeru autentičnosti?"
         delete: "Izbriši"
@@ -2767,7 +2775,7 @@ hr:
           one: "Odbaci novo (%{count})"
           few: "Odbaci novo (%{count})"
           other: "Odbaci novo (%{count})"
-        toggle: "uključi/isključi grupni odabir tema"
+        toggle: "uključi/isključi skupni odabir tema"
         actions: "Grupne aktivnosti"
         change_category: "Postavi kategoriju…"
         close_topics: "Zatvori teme"
@@ -3057,8 +3065,8 @@ hr:
           "2_4": "Vidjet ćete broj novih odgovora jer ste objavili odgovor na ovu temu."
           "2_2": "Vidjet ćete broj novih odgovora jer pratite ovu temu."
           "2": 'Vidjet ćete broj novih odgovora jer ste <a href="%{basePath}/u/%{username}/preferences/notifications">pročitali ovu temu</a>.'
-          "1_2": "Obavijestit ćete se ako netko spomene vaše @ime ili vam odgovori."
-          "1": "Obavijestit ćete se ako netko spomene vaše @ime ili vam odgovori."
+          "1_2": "Bit ćete obaviješteni ako netko spomene vaše @ime ili vam odgovori."
+          "1": "Bit ćete obaviješteni ako netko spomene vaše @ime ili vam odgovori."
           "0_7": "Ignorirate sve obavijesti iz ove kategorije."
           "0_2": "Ignorirate sve obavijesti iz ove teme."
           "0": "Ignorirate sve obavijesti iz ove teme."
@@ -3073,13 +3081,13 @@ hr:
           description: "Broj novih odgovora biti će prikazan za ovu poruku. Biti ćete objaviješteni ako vas netko spomene koristeći @ime ili vam odgovori."
         tracking:
           title: "Praćeno"
-          description: "Na ovu će temu biti prikazan broj novih odgovora. Obavijestit ćete se ako netko spomene vaše @ime ili vam odgovori."
+          description: "Za ovu će temu biti prikazan broj novih odgovora. Bit ćete obaviješteni ako netko spomene vaše @ime ili vam odgovori."
         regular:
           title: "Normalno"
-          description: "Obavijestit ćete se ako netko spomene vaše @ime ili vam odgovori."
+          description: "Bit ćete obaviješteni ako netko spomene vaše @ime ili vam odgovori."
         regular_pm:
           title: "Normalno"
-          description: "Obavijestit ćete se ako netko spomene vaše @ime ili vam odgovori."
+          description: "Bit ćete obaviješteni ako netko spomene vaše @ime ili vam odgovori."
         muted_pm:
           title: "Utišano"
           description: "Nikada nećete dobiti obavijesti o ovoj poruci."
@@ -3955,6 +3963,8 @@ hr:
         show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
         search: "%{shortcut} Traži"
         help: "%{shortcut} Otvori pomoć tipkovnice"
+        toggle_bulk_select: "%{shortcut} Uključi/isključi skupni odabir"
+        x: "%{shortcut} Uključi/isključi odabir (u načinu skupnog odabira)"
         log_out: "%{shortcut} Odjava"
       composing:
         title: "Sastavljanje"

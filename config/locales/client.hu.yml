@@ -322,7 +322,7 @@ hu:
       moderator_count:
         one: "%{formatted_number} Moderátor"
         other: "%{formatted_number} Moderátor"
-      report_inappropriate_content: "Ha bármilyen nem megfelelő tartalommal találkozik, ne habozzon kapcsolatba lépni moderátorainkkal és adminjainkkal. Ne felejtsen el bejelentkezni, mielőtt kapcsolatba lépne."
+      report_inappropriate_content: "Ha bármilyen nem megfelelő tartalommal találkozik, ne habozzon kapcsolatba lépni moderátorainkkal és adminjainkkal. Ne felejtsen el bejelentkezni, mielőtt felvenné velünka a kapcsolatot."
     bookmarked:
       title: "Könyvjelző"
       edit_bookmark: "Könyvjelző szerkesztése"
@@ -3012,11 +3012,11 @@ hu:
             { UNREAD, plural,
                  =0 {}
                 one {Van <a href="{basePath}/unread"># olvasatlan</a> téma hátra}
-              other {Van<a href="{basePath}/unread"># olvasatlan</a> téma hátra,}
+              other {Van <a href="{basePath}/unread"># olvasatlan</a> téma hátra,}
             }
             { NEW, plural,
                  =0 {}
-                one {Van<a href="{basePath}/new"># új</a> téma hátra,}
+                one {Van <a href="{basePath}/new"># új</a> téma hátra,}
               other {Van <a href="{basePath}/new"># új</a> téma hátra,}
             }
           }
@@ -5266,7 +5266,7 @@ hu:
           other_options: "Egyéb"
           search: "Keresés"
           experimental: "Kísérleti"
-          all_site_settings: "Minden webhelybeállítás"
+          all_site_settings: "Webhelybeállítások"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"

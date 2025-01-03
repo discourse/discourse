@@ -37,13 +37,15 @@ sr:
   posts: "poruke"
   views: "pregledi"
   loading: "Učitavanje"
-  sign_up: "Registrujte se"
+  sign_up: "Registruj se"
   log_in: "Prijava"
   submit: "Potvrdi"
+  purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"
   disable_remote_images_download_reason: "Daljinske slike za download je onemogućeno zato što nije bilo dovoljno slobodnog prostora na disku."
   anonymous: "Anonimno"
   remove_posts_deleted_by_author: "Izbrisano od strane autora"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
   components:
     enabled_filter: "Omogućeno"
@@ -73,6 +75,8 @@ sr:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
+  invite:
+    confirm_email: "<p>Skoro ste gotovi! Na vašu e-adresu poslali smo aktivacioni mail. Sledite uputstva u mailu da biste aktivirali svoj nalog.</p><p>Ako ne stigne, proverite spam folder.</p>"
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:
@@ -155,6 +159,7 @@ sr:
       <<: *errors
   general_category_name: "Opšti"
   staff_category_name: "Osoblje"
+  admin_quick_start_title: "Administratorski vodič: Početak"
   trust_levels:
     admin: "Admin"
     staff: "Osoblje"
@@ -231,6 +236,7 @@ sr:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
   activation:
     welcome_to: "Добро дошли на пројекат %{site_name}!"
+    activated: "Žao nam je, ovaj korisnički račun je već aktiviran."
   reviewable_score_types:
     needs_approval:
       title: "Potrebno odobrenje"
@@ -268,6 +274,7 @@ sr:
     user_flagging_ratio:
       labels:
         user: Korisnik
+        score: Rezultat
     moderators_activity:
       labels:
         moderator: Moderator
@@ -362,6 +369,8 @@ sr:
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
     send_welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike."
+    auth_skip_create_confirm: Kada se prijavljujete putem spoljne autorizacije, preskočite popup prozor za kreiranje računa. Najbolje se upotrebljava uz auth_overrides_email, auth_overrides_username i auth_overrides_name.
+    purge_unactivated_users_grace_period_days: "Period odlaganja (u danima) pre brisanja korisnika koji nije aktivirao svoj nalog. Postavite na 0 da nikada ne brišete neaktivirane korisnike."
     dark_mode_none: "Ništa"
     topic_views_heat_low: "Nakon ovoliko pregleda, polje pregleda je blago označeno."
     topic_views_heat_medium: "Nakon ovoliko pregleda, polje pregleda je umereno označeno."
@@ -391,7 +400,9 @@ sr:
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
     warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
+    bootstrap_mode_min_users: "Minimalni broj korisnika koji je potreban za onemogućavanje režima pokretanja i uklanjanje dugmeta Početak rada (podesite na 0 da biste onemogućili, može potrajati do 24 sata)"
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"
+    auto_close_topics_create_linked_topic: "Kreirajte novu povezanu temu kada je tema automatski zatvorena na temelju postavke 'automatsko zatvaranje tema za postove'"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
@@ -405,6 +416,7 @@ sr:
     slug_errors:
       invalid: "sadrži nevažeće karaktere."
   login:
+    wait_approval: "Hvala vam što ste se prijavili. Obavestićemo vas kada vaš nalog bude odobren."
     admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
     not_available: "Nije dostupno. Pokušajte %{suggestion}?"
     omniauth_confirm_button: "Nastavi"
@@ -414,11 +426,18 @@ sr:
   system_messages:
     queued_by_staff:
       title: "Potrebno odobrenje"
+    usage_tips:
+      text_body_template: |
+        Za nekoliko brzih saveta o tome kako da počnete kao novi korisnik, [pogledajte ovaj post na blogu](https://blog.discourse.org/2016/12/discourse-nev-user-tips-and-tricks/).
+
+        Dok budete učestvovali ovde, mi ćemo vas upoznati, a privremena nova korisnička ograničenja će biti ukinuta. Vremenom ćete steći [nivoe poverenja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) koji uključuju posebne sposobnosti koje nam pomažu da zajedno upravljamo zajednicom.
     welcome_user:
       subject_template: "Dobrodošao na %{site_name}!"
     welcome_invite:
       subject_template: "Dobrodošao na %{site_name}!"
   user_notifications:
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
     digest:
       liked_received: "Primljeno Lajkova"
       new_users: "Novi Korisnici"
@@ -479,6 +498,8 @@ sr:
     first_flag:
       name: Prva Zastava
       description: Označio poruku
+    champion:
+      description: Pozovi 5 članova
     first_share:
       name: Prva Podela
       description: Podelio poruku
@@ -498,6 +519,18 @@ sr:
             placeholder: "Milenino mesto za bleju"
           site_description:
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
+      styling:
+        fields:
+          homepage_style:
+            choices:
+              categories_with_featured_topics:
+                label: "Kategorije sa istaknutim temama"
+              categories_and_latest_topics:
+                label: "Kategorije i najnovije teme"
+              categories_and_latest_topics_created_date:
+                label: "Kategorije i najnovije teme (poredjaj po datumu kreiranja teme)"
+              categories_and_top_topics:
+                label: "Kategorije i glavne teme"
       finished:
         title: "Vaš Discource je spreman!"
   staff_action_logs:

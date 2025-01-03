@@ -63,6 +63,12 @@ cs:
           many: "Přesouváte <strong>%{count}</strong> zpráv. Vyberte cílový kanál. V kanálu <strong>%{channelTitle}</strong> se vytvoří zástupná zpráva, která označuje, že tato zpráva byla přesunuta. Upozorňujeme, že řetězce odpovědí nebudou v novém kanálu zachovány a zprávy ve starém kanálu se již nebudou zobrazovat jako odpovědi na přesunuté zprávy."
           other: "Přesouváte <strong>%{count}</strong> zpráv. Vyberte cílový kanál. V kanálu <strong>%{channelTitle}</strong> se vytvoří zástupná zpráva, která označuje, že tato zpráva byla přesunuta. Upozorňujeme, že řetězce odpovědí nebudou v novém kanálu zachovány a zprávy ve starém kanálu se již nebudou zobrazovat jako odpovědi na přesunuté zprávy."
         confirm_move: "Přesunout zprávy"
+      delete_messages:
+        confirm:
+          one: "Jste si jisti, že chcete odstranit tuto zprávu?"
+          few: "Jste si jisti, že chcete odstranit tyto %{count} zprávy?"
+          many: "Jste si jisti, že chcete odstranit těchto %{count} zpráv?"
+          other: "Jste si jisti, že chcete odstranit těchto %{count} zpráv?"
       channel_settings:
         title: "Nastavení kanálu"
         edit: "Upravit"
@@ -77,6 +83,7 @@ cs:
         join: "Přidat se ke skupině"
         leave: "Opustit skupinu"
       channel_archive:
+        instructions: "<p>Archivace kanálu jej přepne do režimu pouze pro čtení a přesune všechny zprávy z kanálu do nového nebo existujícího tématu. Nelze odesílat nové zprávy a stávající zprávy nelze upravovat ani mazat.</p><p>Jste si jisti, že chcete archivovat kanál <strong>%{channelTitle}</strong>?</p>"
         process_started: "Proces archivace byl zahájen. Toto okno se brzy uzavře a po dokončení procesu archivace obdržíte osobní zprávu."
         retry: "Zkuste znovu"
       channel_open:
@@ -85,6 +92,7 @@ cs:
         title: "Zavřít kanál"
       channel_delete:
         title: "Odstranit kanál"
+        instructions: "<p>Odstraní kanál <strong>%{name}</strong> a historii chatu. Všechny zprávy a související data, jako jsou reakce a nahrané soubory, budou trvale odstraněny. Pokud chcete historii kanálu zachovat a vyřadit jej z provozu, můžete kanál raději archivovat.</p> <p>Jste si jisti, že chcete kanál <strong>trvale odstranit</strong>? Pro potvrzení zadejte název kanálu do pole níže.</p>"
       channels_list_popup:
         browse: "Procházet kanály"
         create: "Nový kanál"
@@ -131,14 +139,19 @@ cs:
       close_full_page: "Zavřít chat na celé obrazovce"
       placeholder_channel: "Pište v %{channelName}"
       placeholder_users: "Pište si s %{commaSeparatedNames}"
+      placeholder_silenced: "V tuto chvíli nemůžete odesílat zprávy."
       react: "Reagovat pomocí emoji"
       reply: "Odpověď"
       edit: "Upravit"
       copy_link: "Kopírovat odkaz"
       rebake_message: "Obnovit HTML"
+      retry_staged_message:
+        title: "Chyba sítě"
+        action: "Poslat znovu?"
       unreliable_network: "Síť je nespolehlivá, odesílání zpráv a ukládání konceptů nemusí fungovat."
       bookmark_message: "Založit"
       bookmark_message_edit: "Upravit záložku"
+      restore: "Obnovit smazanou zprávu"
       save: "Uložit"
       select: "Vybrat"
       return_to_list: "Zpět na seznam kanálů"
@@ -204,6 +217,8 @@ cs:
           many: "%{count} členů"
           other: "%{count} členů"
       create_channel:
+        choose_category:
+          none: "vyberte jednu..."
         title: "Nový kanál"
         type: "Typ"
         types:
@@ -236,8 +251,10 @@ cs:
       settings:
         auto_join_users_info: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup do kategorie %{category}."
         auto_join_users_info_no_category: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup ke zvolené kategorii."
+        desktop_notification_level: "Oznámení na desktopu"
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
+        mobile_notification_level: "Mobilní push notifikace"
         threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
         notifications: "Upozornění"
@@ -266,6 +283,8 @@ cs:
         title: "Kanály"
       incoming_webhooks:
         back: "Zpět"
+        channel_placeholder: "Vyberte kanál"
+        confirm_destroy: "Jste si jisti, že chcete odstranit tento příchozí webhook? Toto nelze zrušit."
         description: "Popis"
         delete: "Smazat"
         emoji: "Smajlíky :)"
@@ -277,13 +296,35 @@ cs:
         username: "Uživatelské jméno"
       selection:
         cancel: "Zrušit"
+        quote_selection: "Citovat v tématu"
         copy: "Kopírovat"
+        delete: "Smazat (%{selectionCount}/%{totalCount})"
+        move_selection_to_channel: "Přesunout do kanálu"
+        error: "Při přesunutí zpráv chatu došlo k chybě"
+        title: "Přesunout chat do tématu"
         new_topic:
           title: "Rozdělit téma"
+          instructions:
+            one: "Chystáte se vytvořit nové téma a naplnit ho vybranou zprávou chatu."
+            few: "Chystáte se vytvořit nové téma a naplnit ho <b>%{count}</b> vybranými zprávami chatu."
+            many: "Chystáte se vytvořit nové téma a naplnit ho <b>%{count}</b> vybranými zprávami chatu."
+            other: "Chystáte se vytvořit nové téma a naplnit ho <b>%{count}</b> vybranými zprávami chatu."
+          instructions_channel_archive: "Chystáte se vytvořit nové téma a archivovat do něj zprávy kanálu."
         existing_topic:
           title: "Sloučit téma"
+          instructions:
+            one: "Zvolte prosím téma, do kterého chcete tuto zprávu chatu přesunout."
+            few: "Zvolte prosím téma, do kterého chcete přesunout tyto <b>%{count}</b> zprávy chatu."
+            many: "Zvolte prosím téma, do kterého chcete přesunout těchto <b>%{count}</b> zpráv chatu."
+            other: "Zvolte prosím téma, do kterého chcete přesunout těchto <b>%{count}</b> zpráv chatu."
+          instructions_channel_archive: "Vyberte téma, do kterého chcete zprávy kanálu archivovat."
         new_message:
           title: "Přesunout do nové zprávy"
+          instructions:
+            one: "Chystáte se vytvořit novou zprávu a vyplnit ji vybranou zprávou v chatu."
+            few: "Chystáte se vytvořit novou zprávu a vyplnit ji <b>%{count}</b> vybranými zprávami v chatu."
+            many: "Chystáte se vytvořit novou zprávu a vyplnit ji <b>%{count}</b> vybranými zprávami v chatu."
+            other: "Chystáte se vytvořit novou zprávu a vyplnit ji <b>%{count}</b> vybranými zprávami v chatu."
       retention_reminders:
         indefinitely_long: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly po neomezenou dobu."
         short:
@@ -297,7 +338,12 @@ cs:
           many: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
           other: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
       flags:
+        off_topic: "Tato zpráva není relevantní pro aktuální diskusi, definovanou názvem kanálu, a pravděpodobně by měla být přesunuta jinam."
+        inappropriate: "Tato zpráva obsahuje obsah, který by rozumný člověk mohl považovat za urážlivý, zneužívající nebo porušující <a href=\"%{basePath}/guidelines\">naše pravidla komunity</a>."
+        illegal: "Tento příspěvek vyžaduje pozornost členů redakce, protože se domnívám, že obsahuje nezákonný obsah."
+        spam: "Tato zpráva je reklamou nebo vandalismem. Není užitečná ani relevantní pro aktuální kanál."
         notify_user: "Chci s touto osobou mluvit o jejich zprávě přímo a osobně."
+        notify_moderators: "Tato zpráva vyžaduje pozornost členů redakce z jiného důvodu, který není uveden výše."
       emoji_picker:
         objects: "Objekty"
         activities: "Aktivity"
@@ -318,8 +364,10 @@ cs:
         notifications:
           regular:
             title: "Normální"
+            description: "Budete upozorněni, pokud někdo zmíní vaše @jméno v tomto vlákně."
           tracking:
             title: "Sledované"
+            description: "Počet nových odpovědí na toto vlákno se zobrazí v seznamu vláken a v kanálu. Budete upozorněni, pokud někdo v tomto vlákně zmíní vaše @jméno."
       thread_title_modal:
         input_placeholder: "Řekněte ostatním, o čem je tato konverzace..."
         discourse_ai:
@@ -337,6 +385,10 @@ cs:
           direct_html: "<span>%{username}</span> <span>vás zmínil/a v osobním chatu</span>"
           other_plain: "zmínil/a %{identifier} v osobním chatu"
           other_html: "<span>%{username}</span> <span>zmínil/a %{identifier} v osobním chatu</span>"
+      titles:
+        chat_mention: "Zmínka v chatu"
+        chat_invitation: "Pozvánka do chatu"
+        chat_quoted: "Citovaný chat"
     discourse_automation:
       scriptables:
         send_chat_message:
@@ -351,7 +403,11 @@ cs:
       chat:
         title: "Chat"
         keyboard_shortcuts:
+          open_quick_channel_selector: "%{shortcut} Otevřít rychlý výběr kanálů"
           mark_all_channels_read: "%{shortcut} Označit všechny kanály jako přečtené"
+    topic_statuses:
+      chat:
+        help: "Pro toto téma je povolen chat"
     user:
       allow_private_messages: "Povolit ostatním uživatelům posílat mi osobní zprávy a přímé zprávy v chatu"
       muted_users_instructions: "Potlačit všechna oznámení, osobní zprávy a přímé zprávy z chatu od těchto uživatelů."

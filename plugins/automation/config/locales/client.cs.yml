@@ -9,6 +9,9 @@ cs:
     discourse_automation:
       create: Vytvoř
       update: Aktualizovat
+      no_automation_yet: Ještě jste nevytvořili žádnou automatizaci.
+      destroy_automation:
+        confirm: "Jste si jisti, že chcete odstranit `%{name}`?"
       fields:
         user:
           label: Uživatel
@@ -64,6 +67,7 @@ cs:
               label: Kategorie
             restricted_group:
               label: Skupina
+              description: Nepovinné, spustí se pouze v případě, že téma příspěvku je soukromá zpráva ve schránce této skupiny.
           created: Vytvořený
         category_created_edited:
           fields:
@@ -110,8 +114,13 @@ cs:
               label: Odznak
         suspend_user_by_email:
           fields:
+            suspend_until:
+              label: Pozastavit do (výchozí)
+            reason:
+              label: Důvod (výchozí)
             actor:
               label: Uživatel
+              description: "Uživatel odpovědný za pozastavení (výchozí: systém)"
         pin_topic:
           fields:
             pinnable_topic:

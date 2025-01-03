@@ -6476,7 +6476,7 @@ pl_PL:
           active: "Aktywni"
           staff: "Zespół"
           suspended: "Zawieszeni"
-          silenced: "Wyciszony"
+          silenced: "Wyciszeni"
           staged: "Etapowi"
         approved: "Zatwierdzony?"
         titles:

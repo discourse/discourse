@@ -12,6 +12,8 @@ cs:
     poll_minimum_trust_level_to_create: "Nastav minimální úroveň důvěry pro vytvoření hlasování."
     poll_create_allowed_groups: "Skupiny, které mají povoleno vytvářet hlasování."
     poll_groupable_user_fields: "Sada názvů uživatelských polí, které lze použít k seskupování a filtrování výsledků hlasování."
+    poll_export_data_explorer_query_id: "ID dotazu data explorer, který se má použít pro export výsledků průzkumu (0 pro deaktivaci)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID dotazu data explorer, který se má použít k exportu výsledků preferenčního hlasování."
     poll_default_public: "Při vytváření nového hlasování povolit ve výchozím nastavení možnost \"zobrazit, kdo hlasoval\"."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
@@ -58,8 +60,13 @@ cs:
       few: Pro toto hlasování jsou potřeba minimálně %{count} hlasy.
       many: Pro toto hlasování je potřeba minimálně %{count} hlasů.
       other: Pro toto hlasování je potřeba minimálně %{count} hlasů.
+    ranked_choice:
+      vote_options_mismatch: "V případě preferenčního hlasování musí počet voleb v hlasování odpovídat počtu možností.  Počet možností je %{count} a počet provedených voleb byl %{provided}."
+      no_group_results_support: "Neplatný typ hlasování, ranked_choice nepodporuje seskupené výsledky."
     topic_must_be_open_to_toggle_status: "Téma musí být otevřené, aby bylo možné změnit status."
     only_staff_or_op_can_toggle_status: "Pouze člen redakce nebo tvůrce původního příspěvku může změnit status hlasování."
+    errors:
+      poll_not_found: "Anketa nebyla nalezena, potvrďte prosím parametry."
     insufficient_rights_to_create: "Nemáte oprávnění k vytvoření hlasování."
     email:
       link_to_poll: "Klikněte pro zobrazení hlasování."

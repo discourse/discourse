@@ -2263,6 +2263,8 @@ fa_IR:
                 label: "دسته‌بندی‌ها و آخرین موضوعات «مرتب‌سازی بر اساس تاریخ ایجاد موضوع»"
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
+              subcategories_with_featured_topics:
+                label: "زیر دسته‌بندی‌هایی با موضوعات ویژه"
       branding:
         title: "لوگوی سایت"
         fields:

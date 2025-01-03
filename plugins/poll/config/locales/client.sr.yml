@@ -10,7 +10,7 @@ sr:
       voters:
         one: "glasač"
         few: "glasača"
-        other: "гласача"
+        other: "glsača"
       total_votes:
         one: "ukupno glasova"
         few: "ukupno glasova"
@@ -100,7 +100,7 @@ sr:
         poll_public:
           label: Prikaži ko je glasao
         poll_title:
-          label: Naslov (opcionalno)
+          label: Naslov (opciono)
         poll_options:
           label: Опције (по једна у реду)
           add: Додај опцију

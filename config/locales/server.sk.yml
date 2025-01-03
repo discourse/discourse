@@ -2850,6 +2850,7 @@ sk:
     omniauth_confirm_button: "Pokračovať"
     authenticator_error_no_valid_email: "Nie sú povolené žiadne e-mailové adresy spojené s %{account} . Možno budete musieť nakonfigurovať svoje konto s inou e-mailovou adresou."
     new_registrations_disabled: "Registrácia nových účtov momentálne nie je povolená."
+    new_registrations_disabled_discourse_connect: "Registrácia nového účtu je povolená len prostredníctvom služby Discourse Connect."
     password_too_long: "Dĺžka hesla je obmedzená na 200 znakov. "
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     wrong_invite_code: "Zadaný kód pozvánky bol nesprávny."

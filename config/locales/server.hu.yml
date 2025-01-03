@@ -2645,6 +2645,7 @@ hu:
     omniauth_confirm_button: "Folytatás"
     authenticator_error_no_valid_email: "A %{account} fiókhoz társított e-mail címek egyike sem engedélyezett. Lehet, hogy másik e-mail címmel kell konfigurálnia a fiókját."
     new_registrations_disabled: "Az új fiókok létrehozása jelenleg nem engedélyezett."
+    new_registrations_disabled_discourse_connect: "Új fiókok regisztrációja csak a Discourse Connecten keresztül engedélyezett."
     password_too_long: "A jelszavak legfeljebb 200 karakter hosszúak lehetnek."
     email_too_long: "Az Ön által megadott e-mail túl hosszú. A postafiók neve nem lehet hosszabb 254 karakternél, a tartománynév pedig 253 karakternél."
     wrong_invite_code: "A megadott meghívókód helytelen."
