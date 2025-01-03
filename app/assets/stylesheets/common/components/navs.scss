@@ -95,16 +95,8 @@
     &.active {
       position: relative;
       --arrow-thickness: 8px;
-      background: var(--d-selected);
-
-      &::after {
-        position: absolute;
-        right: 0;
-        top: calc(50% - var(--arrow-thickness));
-        content: " ";
-        border: var(--arrow-thickness) solid transparent;
-        border-left-color: var(--secondary);
-      }
+      background-color: var(--d-sidebar-admin-background);
+      font-weight: bold;
     }
   }
 
