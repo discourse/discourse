@@ -1026,9 +1026,7 @@ class PluginApi {
    * Add a new button in the composer's toolbar options popup menu.
    *
    * @callback action
-   * @param {Object} toolbarEvent - A toolbar event object.
-   * @param {function} toolbarEvent.applySurround - Surrounds the selected text with the given text.
-   * @param {function} toolbarEvent.addText - Append the given text to the selected text in the composer.
+   * @param {ToolbarEvent} toolbarEvent - A toolbar event object.
    *
    * @callback condition
    * @param {Object} composer - The composer service object.
