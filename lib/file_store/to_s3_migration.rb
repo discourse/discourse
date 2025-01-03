@@ -255,7 +255,7 @@ module FileStore
           end
 
           options[:acl] = "private" if upload&.secure
-        elsif !FileHelper.is_inline_image?(name)
+        elsif !FileHelper.is_svg?(name)
           upload = Upload.find_by(url: "/#{file}")
           options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
             disposition: "attachment",
