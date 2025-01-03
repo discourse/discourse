@@ -2,7 +2,7 @@
 
 class SitemapController < ApplicationController
   layout false
-  skip_before_action :preload_json, :check_xhr
+  skip_before_action :check_xhr
   before_action :check_sitemap_enabled
 
   def index

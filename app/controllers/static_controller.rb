@@ -4,7 +4,6 @@ class StaticController < ApplicationController
   skip_before_action :check_xhr, :redirect_to_login_if_required, :redirect_to_profile_if_required
   skip_before_action :verify_authenticity_token,
                      only: %i[cdn_asset enter favicon service_worker_asset]
-  skip_before_action :preload_json, only: %i[cdn_asset enter favicon service_worker_asset]
   skip_before_action :handle_theme, only: %i[cdn_asset enter favicon service_worker_asset]
 
   before_action :apply_cdn_headers, only: %i[cdn_asset enter favicon service_worker_asset]

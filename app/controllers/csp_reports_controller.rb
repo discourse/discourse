@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class CspReportsController < ApplicationController
-  skip_before_action :check_xhr, :preload_json, :verify_authenticity_token, only: [:create]
+  skip_before_action :check_xhr, :verify_authenticity_token, only: [:create]
 
   def create
     raise Discourse::NotFound unless report_collection_enabled?

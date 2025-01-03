@@ -2,7 +2,7 @@
 class UserApiKeyClientsController < ApplicationController
   layout "no_ember"
 
-  skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
+  skip_before_action :check_xhr, :verify_authenticity_token
 
   def show
     params.require(:client_id)

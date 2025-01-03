@@ -698,8 +698,9 @@ module ApplicationHelper
   end
 
   def preloaded_json
-    return "{}" if @preloaded.blank?
-    @preloaded.transform_values { |value| escape_unicode(value) }.to_json
+    preloaded_data = @application_layout_preloader.preloaded_data
+    return "{}" if preloaded_data.blank?
+    preloaded_data.transform_values { |value| escape_unicode(value) }.to_json
   end
 
   def client_side_setup_data

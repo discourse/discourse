@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
                    test_email_settings
                  ]
 
-  skip_before_action :preload_json, :check_xhr, only: %i[posts_feed mentions_feed]
+  skip_before_action :check_xhr, only: %i[posts_feed mentions_feed]
   skip_before_action :check_xhr, only: [:show]
   after_action :add_noindex_header
 

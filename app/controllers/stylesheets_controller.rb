@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class StylesheetsController < ApplicationController
-  skip_before_action :preload_json,
-                     :redirect_to_login_if_required,
+  skip_before_action :redirect_to_login_if_required,
                      :redirect_to_profile_if_required,
                      :check_xhr,
                      :verify_authenticity_token,

@@ -3,7 +3,7 @@
 class EmbedController < ApplicationController
   include TopicQueryParams
 
-  skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
+  skip_before_action :check_xhr, :verify_authenticity_token
 
   before_action :prepare_embeddable, except: [:info]
   before_action :ensure_api_request, only: [:info]

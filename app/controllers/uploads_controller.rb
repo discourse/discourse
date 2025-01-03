@@ -8,8 +8,7 @@ class UploadsController < ApplicationController
 
   requires_login except: %i[show show_short _show_secure_deprecated show_secure]
 
-  skip_before_action :preload_json,
-                     :check_xhr,
+  skip_before_action :check_xhr,
                      :redirect_to_login_if_required,
                      :redirect_to_profile_if_required,
                      only: %i[show show_short _show_secure_deprecated show_secure]

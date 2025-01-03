@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExportCsvController < ApplicationController
-  skip_before_action :preload_json, :check_xhr, only: [:show]
+  skip_before_action :check_xhr, only: [:show]
 
   def export_entity
     guardian.ensure_can_export_entity!(export_params[:entity])

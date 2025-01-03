@@ -5,7 +5,7 @@ class SafeModeController < ApplicationController
   before_action :ensure_safe_mode_enabled
   before_action :force_safe_mode_for_route
 
-  skip_before_action :preload_json, :check_xhr
+  skip_before_action :check_xhr
 
   def index
   end

@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class FinishInstallationController < ApplicationController
-  skip_before_action :check_xhr,
-                     :preload_json,
-                     :redirect_to_login_if_required,
-                     :redirect_to_profile_if_required
+  skip_before_action :check_xhr, :redirect_to_login_if_required, :redirect_to_profile_if_required
+
   layout "finish_installation"
 
   before_action :ensure_no_admins, except: %w[confirm_email resend_email]
@@ -71,7 +69,6 @@ class FinishInstallationController < ApplicationController
   end
 
   def ensure_no_admins
-    preload_anonymous_data
     raise Discourse::InvalidAccess.new unless SiteSetting.has_login_hint?
   end
 end

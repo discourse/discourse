@@ -4,7 +4,6 @@ class PageviewController < ApplicationController
   skip_before_action :check_xhr,
                      :redirect_to_login_if_required,
                      :redirect_to_profile_if_required,
-                     :preload_json,
                      :verify_authenticity_token
 
   def index
