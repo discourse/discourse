@@ -816,13 +816,13 @@ bg:
       public_admission: "Разрешено е на потребителите да се присъединяват към групата свободно (Изисква се публично видима група)"
       public_exit: "Разрешено е на потребителите да напуската групата свободно"
       empty:
-        posts: "Няма публикации от членове на тази група."
-        members: "Няма членове в тази група."
-        requests: "Няма заявки за членство в тази група."
-        mentions: "Няма споменавания на тази група."
-        messages: "Няма съобщения за тази група."
-        topics: "Няма теми от членове на тази група."
-        logs: "Няма журнал за тази група."
+        posts: "Няма публикации от членове на тази група"
+        members: "Няма членове в тази група"
+        requests: "Няма заявки за членство в тази група"
+        mentions: "Няма споменавания на тази група"
+        messages: "Няма съобщения за тази група"
+        topics: "Няма теми от членове на тази група"
+        logs: "Няма журнал за тази група"
       add: "Добави"
       join: "Влизане"
       leave: "Напусни"
@@ -1004,10 +1004,10 @@ bg:
         one: "Изтрий %{count}"
         other: "Изтрий %{count}"
       username: "Потребителско име"
-      trust_level: "TL"
+      trust_level: "ниво на доверие"
       read_time: "Време за прочитане"
       topics_entered: "добавени теми"
-      post_count: "# публикации"
+      post_count: "публикации"
       confirm_delete_other_accounts: "Сигурни ли сте, че искате да изтриете тези профили?"
       powered_by: "с <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "копирано"
@@ -1981,6 +1981,8 @@ bg:
       categories_boxes: "Кутии с подкатегории"
       categories_boxes_with_topics: "Кутии с избрани теми"
       subcategories_with_featured_topics: "Подкатегории с избрани теми"
+    full_name_requirement:
+      required_at_signup: "Да се изисква при регистрация"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2747,6 +2749,8 @@ bg:
           one: Вие избрахте <b>%{count}</b> публикация.
           other: "Вие избрахте <b>%{count}</b> публикации. "
       deleted_by_author_simple: "(темата е изтрита от автора)"
+    post_list:
+      aria_post_number: "%{title} - публикация #%{postNumber}"
     post:
       quote_reply: "Цитат"
       quote_edit: "Редактирай"
@@ -3430,9 +3434,9 @@ bg:
         remove_muted_tags_from_latest:
           always: "винаги"
           never: "никога"
-      reports:
-        sidebar_link:
-          all: "Всички"
+      config:
+        notifications:
+          title: "Известия"
       dashboard:
         title: "Работен плот"
         version: "Версия"
@@ -3564,33 +3568,15 @@ bg:
           badges: "Значки"
           notifications: "Известия"
           permalinks: "Постоянни адреси"
-          trust_levels: "Нива на доверие"
           users: "Потребители"
           groups: "Групи"
-          user_fields: "User Fields"
-          watched_words: "Наблюдавани думи"
           legal: "Правни"
       appearance:
         sidebar_link:
           emoji: "Емотикони"
           navigation: "Навигация"
-      email_settings:
-        sidebar_link:
-          preview_summary: "Преглед на справочника"
-      email_logs:
-        sidebar_link:
-          sent: "Изпрати"
-          skipped: "Пропусни"
-          received: "Получени"
-          rejected: "Отхвърлени"
       security:
         title: "Сигурност"
-        sidebar_link:
-          error_logs: "Логове с грешки"
-          screened_emails: "Проверени имейли"
-          screened_ips: "Проверени IP-та"
-          screened_urls: "Проверени URL-та"
-          search_logs: "Търсене в логовете"
       section_landing_pages:
         account:
           title: "Профил"
@@ -3636,7 +3622,6 @@ bg:
         sidebar_link:
           developer: "Разработчик"
           embedding: "Ембедване"
-          rate_limits: "Лимити"
           onebox: "Onebox"
           files: "Файлове"
           other_options: "Други"
@@ -4431,6 +4416,9 @@ bg:
         user_title: "Потребител"
         username: "Потребителско име"
         delete_confirm: Сигурни ли сте, че искате да изриете този постоянен адрес?
+        nav:
+          settings: "Настройки"
+          permalinks: "Постоянни адреси"
         form:
           label: "Нов:"
           url: "URL"
@@ -4455,3 +4443,18 @@ bg:
       previews:
         share_button: "Споделяне"
         reply_button: "Отговорете"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "всички категории"
+          new: "Нова"
+          unread: "Непрочетени"
+          top: "Топ"
+          latest: "Последни"
+          categories: "Категории"
+        category_names:
+          site_feedback: "Заявка към сайта"
+        table_headers:
+          topic: "Тема"
+          replies: "Отговори"
+          views: "Прегледи"
+          activity: "Активност"

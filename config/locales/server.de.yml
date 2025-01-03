@@ -1730,8 +1730,6 @@ de:
     summary_percent_filter: "Zeige die Top-% der Beiträge eines Themas in der „Dieses Thema zusammenfassen“-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge in der „Dieses Thema zusammenfassen“-Ansicht"
     summary_timeline_button: "Schaltfläche „Zusammenfassen“ in der Zeitleiste anzeigen"
-    summarization_strategy: "Zusätzliche Möglichkeiten, von Plug-ins registrierte Inhalte zusammenzufassen"
-    custom_summarization_allowed_groups: "Gruppen, die Inhalte mit `summarization_strategy` zusammenfassen dürfen."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
     personal_message_enabled_groups: "Erlaube den Benutzern in diesen Gruppen, persönliche Nachrichten zu ERSTELLEN. WICHTIG: 1) Alle Benutzer können auf Nachrichten ANTWORTEN. 2) Administratoren und Moderatoren können Nachrichten an jeden Benutzer ERSTELLEN. 3) Vertrauensstufengruppen beinhalten höhere Stufen; wähle Vertrauensstufe_1, um VS1, VS2, VS3, VS4 zuzulassen, nicht aber VS0. 4) Gruppeninteraktionseinstellungen überschreiben diese Einstellung für Nachrichten an bestimmte Gruppen."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
@@ -1802,6 +1800,7 @@ de:
     content_security_policy_frame_ancestors: "Schränke ein, wer diese Website in iframes über CSP einbetten kann. Kontrolliere erlaubte Hosts unter <a href='%{base_path}/admin/customize/embedding'>Einbettung</a>"
     content_security_policy_script_src: "Zusätzliche Skript-Quellen auf der Erlaubnisliste. Der aktuelle Host und das CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minderung von XSS-Angriffen mit Content Security Policy</a> (CSP). Host-Quellen werden ignoriert, wenn content_security_policy_strict_dynamic aktiviert ist."
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
+    suppress_secured_categories_from_admin: "Unterdrücke private Themen und PMs in einigen Teilen der Benutzeroberfläche für Administratoren. Der Inhalt ist an einigen Stellen weiterhin sichtbar. Dies ist keine Sicherheitsfunktion: Administratoren können immer auf alle Inhalte der Site zugreifen."
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
     top_menu: "Lege fest, welche Elemente in der Homepage-Navigation erscheinen und in welcher Reihenfolge."
@@ -2231,6 +2230,7 @@ de:
     anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
+    hide_new_user_profiles: "Verstecke Benutzerprofile der Vertrauensstufe 1 oder niedriger vor der Öffentlichkeit und bei Benutzern der Vertrauensstufe 1, bis sie zum ersten Mal posten. Diese Funktion ist auf must_approve_users und invite_only-Sites bedingungslos deaktiviert."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
     hide_user_activity_tab: "Blende die Registerkarte „Aktivität“ in Benutzerprofilen (außer für Administratoren und den Benutzer selbst) aus."
     delete_associated_accounts_on_password_reset: "Entferne verknüpfte Konten, wenn der Benutzer sein Passwort ändert."
@@ -2277,7 +2277,7 @@ de:
     penalty_include_post_message: "Füge automatisch die Nachricht des beanstandeten Beitrags in die E-Mail-Vorlage ein, wenn du einen Benutzer stummschaltest oder sperrst"
     svg_icon_subset: "Füge zusätzliche FontAwesome-Symbole hinzu, die du in deine Assets aufnehmen möchtest. Verwende das Präfix „fa-“ für ausgefüllte Icons, „far-“ für normale Icons und „fab-“ für Markensymbole."
     max_prints_per_hour_per_user: "Maximale Anzahl von /print-Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
-    full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
+    full_name_requirement: "Mache das Feld mit dem vollständigen Namen zu einem erforderlichen, optionalen oder optionalen, aber versteckten Feld im Anmeldeformular."
     enable_names: "Zeige den vollständigen Namen des Benutzers in seinem Profil, auf der Benutzerkarte und in E-Mails an. Deaktivieren, um den vollständigen Namen überall auszublenden."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
@@ -2455,7 +2455,7 @@ de:
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
     enable_experimental_lightbox: "Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
-    experimental_glimmer_topic_list_groups: "Aktiviert die neue Implementierung der „glimmer“-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen vorgesehen. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung abgeschlossen und angekündigt ist."
+    glimmer_topic_list_mode: "Legt fest, ob die neue „glimmer“-Kopfzeilen-Implementierung verwendet wird. „auto“ wird die Implementierung automatisch aktivieren, sobald alle deine Themes und Plug-ins bereit sind. Siehe https://meta.discourse.org/t/343404 für weitere Informationen."
     glimmer_post_menu_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragmenüs verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     glimmer_post_menu_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     experimental_form_templates: "Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast</b>, verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
@@ -2464,6 +2464,7 @@ de:
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
+    adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
@@ -2533,8 +2534,8 @@ de:
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
     keywords:
       clean_up_inactive_users_after_days: "deaktiviert|inaktiv|nicht aktiviert"
-      purge_unactivated_users_grace_period_days: "deaktiviert|inaktiv|nicht aktiviert"
       navigation_menu: "Seitenleiste|Kopfzeilen-Drop-down"
+      purge_unactivated_users_grace_period_days: "deaktiviert|inaktiv|nicht aktiviert"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2682,6 +2683,7 @@ de:
     omniauth_confirm_button: "Weiter"
     authenticator_error_no_valid_email: "E-Mail-Adressen mit Bezug zu %{account} sind nicht erlaubt. Du musst möglicherweise dein Konto mit einer anderen E-Mail-Adresse einrichten."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
+    new_registrations_disabled_discourse_connect: "Neue Kontoregistrierungen sind nur über Discourse Connect zulässig."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
     email_too_long: "Die von dir eingegebene E-Mail-Adresse ist zu lang. Der Teil vor dem @ darf maximal 254 Zeichen lang sein und Domain-Namen maximal 253 Zeichen."
     wrong_invite_code: "Der von dir eingegebene Einladungscode war falsch."
@@ -4944,23 +4946,17 @@ de:
             label: "Homepage-Stil"
             choices:
               latest:
-                label: "Aktuelle Themen"
-              categories_only:
-                label: "Nur Kategorien"
-              categories_with_featured_topics:
-                label: "Kategorien mit hervorgehobenen Themen"
+                label: "Aktuelle"
+                description: "Zeigt die zuletzt aktiven Themen in allen Kategorien an, damit die Mitglieder über die Diskussionen, die sie interessieren, auf dem Laufenden bleiben"
+              hot:
+                label: "Heiß"
+                description: "Zeigt aktuelle Themen an, indem es die aktuelle und allgemeine Popularität mischt, und zeigt, worüber die Mitglieder in deiner Community gerade sprechen."
               categories_and_latest_topics:
-                label: "Kategorien und aktuelle Themen"
-              categories_and_latest_topics_created_date:
-                label: "Kategorien und neueste Themen (sortiert nach Datum der Themenerstellung)"
-              categories_and_top_topics:
-                label: "Kategorien und angesagte Themen"
+                label: "Kategorien mit aktuellen Themen"
+                description: "Kombiniert die zuletzt aktiven Themen über alle Kategorien hinweg mit einer Liste der Kategorien, ihrer Beschreibung und der Gesamtzahl der Themen"
               categories_boxes:
                 label: "Kategorie-Boxen"
-              categories_boxes_with_topics:
-                label: "Kategorie-Boxen mit Themen"
-              subcategories_with_featured_topics:
-                label: "Unterkategorien mit hervorgehobenen Themen"
+                description: "Zeigt die Kategorien und ihre Beschreibung in einem Raster an, ideal für Mitglieder, um einen Überblick über die Untergemeinschaften deiner Seite zu erhalten"
       branding:
         title: "Website-Logo"
         fields:

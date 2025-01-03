@@ -685,14 +685,6 @@ zh_TW:
         title: "權限"
       public_admission: "允許使用者自由加入群組（需要將群組設為公開瀏覽）"
       public_exit: "允許使用者自由離開群組"
-      empty:
-        posts: "沒有來自該群組成員的貼文。"
-        members: "群組內無成員。"
-        requests: "群組內無任何成員發出請求"
-        mentions: "群組未曾被提及"
-        messages: "無該群組的訊息。"
-        topics: "沒有來自該群組成員的話題。"
-        logs: "無該群組的日誌。"
       add: "新增"
       join: "加入"
       leave: "離開"
@@ -849,10 +841,10 @@ zh_TW:
       delete_other_accounts:
         other: "刪除 %{count} 個"
       username: "使用者名稱"
-      trust_level: "TL"
+      trust_level: "信任等級"
       read_time: "閱讀時間"
       topics_entered: "已閱讀的話題"
-      post_count: "# 貼文"
+      post_count: "貼文"
       confirm_delete_other_accounts: "你確定要刪除這些帳號？"
       powered_by: "使用 <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "已複製"
@@ -1595,6 +1587,8 @@ zh_TW:
       categories_and_top_topics: "分類與熱門話題"
       categories_boxes: "子分類欄"
       categories_boxes_with_topics: "精選話題欄"
+    full_name_requirement:
+      required_at_signup: "在註冊時必填"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3082,7 +3076,10 @@ zh_TW:
         title: "可見報告列表"
         sidebar_title: "報告"
         sidebar_link:
-          all: "全部"
+          all: "所有報告"
+      config:
+        notifications:
+          title: "通知"
       dashboard:
         title: "控制台"
         version: "版本"
@@ -3166,6 +3163,7 @@ zh_TW:
             category:
               label: 分類
       flags:
+        title: "管理"
         description: "簡述"
         enabled: "啟用?"
       groups:
@@ -3307,16 +3305,14 @@ zh_TW:
           badges: "徽章"
           notifications: "通知"
           permalinks: "固定連結"
-          trust_levels: "信任等級"
           users: "使用者"
           groups: "群組"
-          user_fields: "使用者欄位"
-          watched_words: "已關注的文字"
           legal: "法律"
+          moderation_flags:
+            title: "管理"
       appearance:
         title: "外觀"
         sidebar_link:
-          color_schemes: "調色盤"
           emoji: "Emoji"
           navigation: "導覽"
           themes: "佈景主題"
@@ -3325,22 +3321,8 @@ zh_TW:
       email_settings:
         sidebar_link:
           appearance: "外觀"
-          preview_summary: "預覽文摘"
-      email_logs:
-        sidebar_link:
-          sent: "送出"
-          skipped: "跳過"
-          bounced: "退回"
-          received: "收到"
-          rejected: "拒絶"
       security:
         title: "安全性"
-        sidebar_link:
-          error_logs: "錯誤紀錄"
-          screened_emails: "過濾的電子郵件地址"
-          screened_ips: "過濾的 IP 位址"
-          screened_urls: "過濾的網址"
-          search_logs: "搜尋紀錄"
       section_landing_pages:
         account:
           title: "帳號"
@@ -3354,6 +3336,7 @@ zh_TW:
           update: "更新"
           saved: "儲存完畢!"
         flags:
+          header: "管理"
           description: "簡述"
           enabled: "啟用?"
           edit: "編輯"
@@ -3392,9 +3375,7 @@ zh_TW:
         sidebar_link:
           developer: "開發人員"
           embedding: "嵌入"
-          rate_limits: "評等限制"
           user_api: "使用者 API"
-          web_hooks: "Webhooks"
           onebox: "單一框"
           files: "檔案"
           other_options: "其他"
@@ -4390,6 +4371,9 @@ zh_TW:
         user_title: "使用者"
         username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
+        nav:
+          settings: "設定"
+          permalinks: "固定連結"
         form:
           label: "新增："
           url: "網址"
@@ -4424,3 +4408,19 @@ zh_TW:
       previews:
         share_button: "分享"
         reply_button: "回覆"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "所有分類"
+          new: "新使用者"
+          unread: "未讀"
+          top: "精選"
+          latest: "最新版本"
+          hot: "熱門"
+          categories: "分類"
+        category_names:
+          site_feedback: "站點回饋"
+        table_headers:
+          topic: "話題"
+          replies: "回覆"
+          views: "觀看"
+          activity: "活動"

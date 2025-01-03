@@ -1216,7 +1216,6 @@ pt:
     disable_system_edit_notifications: "Desativa as notificações de edição pelo utilizador do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
-    full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
@@ -2064,15 +2063,7 @@ pt:
           homepage_style:
             choices:
               latest:
-                label: "Tópicos recentes"
-              categories_only:
-                label: "Apenas Categorias"
-              categories_with_featured_topics:
-                label: "Categorias com Tópicos Destacados"
-              categories_and_latest_topics:
-                label: "Categorias e Tópicos Recentes"
-              categories_and_top_topics:
-                label: "Categorias e Melhores Tópicos"
+                label: "Recente"
       corporate:
         fields:
           contact_url:

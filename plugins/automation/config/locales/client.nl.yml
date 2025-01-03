@@ -411,6 +411,8 @@ nl:
             label: Script
           version:
             label: Versie
+          status:
+            label: Status
           enabled:
             label: Ingeschakeld
           disabled:

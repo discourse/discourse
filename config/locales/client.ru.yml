@@ -1072,13 +1072,13 @@ ru:
       public_admission: "Разрешать пользователям свободно присоединяться к группе (требуется общедоступная группа)"
       public_exit: "Разрешать пользователям свободно покидать группу"
       empty:
-        posts: "Участниками этой группы не создано ни одного сообщения."
-        members: "Нет участников в этой группе."
-        requests: "Для этой группы нет запросов на участие."
-        mentions: "Нет упоминаний этой группы."
-        messages: "Нет сообщений для этой группы."
-        topics: "Нет тем от участников этой группы."
-        logs: "Нет журналов для этой группы."
+        posts: "Участниками этой группы не создано ни одного сообщения"
+        members: "Нет участников в этой группе"
+        requests: "Для этой группы нет запросов на участие"
+        mentions: "Нет упоминаний этой группы"
+        messages: "Нет сообщений для этой группы"
+        topics: "Нет тем от участников этой группы"
+        logs: "Нет журналов для этой группы"
       add: "Добавить"
       join: "Вступить"
       leave: "Покинуть"
@@ -1291,7 +1291,7 @@ ru:
       trust_level: "Уровень доверия"
       read_time: "время чтения"
       topics_entered: "посещено тем"
-      post_count: "Кол-во сообщений"
+      post_count: "публикации"
       confirm_delete_other_accounts: "Действительно удалить эти аккаунты?"
       powered_by: "данные получены с помощью <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "скопировано"
@@ -2591,6 +2591,8 @@ ru:
       categories_boxes: "Блоки с подкатегориями"
       categories_boxes_with_topics: "Блоки с избранными темами"
       subcategories_with_featured_topics: "Подкатегории с избранными темами"
+    full_name_requirement:
+      required_at_signup: "Обязательное при регистрации"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3863,6 +3865,8 @@ ru:
           many: "Вы выбрали <b>%{count}</b> сообщений."
           other: "Вы выбрали <b>%{count}</b> сообщения."
       deleted_by_author_simple: "(тема удалена автором)"
+    post_list:
+      aria_post_number: "%{title} — сообщение #%{postNumber}"
     post:
       confirm_delete: "Действительно удалить сообщение?"
       quote_reply: "Ответить с цитированием"
@@ -5277,9 +5281,12 @@ ru:
         meta_doc: "Ознакомьтесь с нашей <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>документацией</a> для подробного обзора отчетов."
         sidebar_title: "Отчеты"
         sidebar_link:
-          all: "Все настройки"
+          all: "Все отчёты"
+      config:
+        notifications:
+          title: "Уведомления"
       new_features:
-        title: "Что нового"
+        title: "Что нового?"
       dashboard:
         title: "Панель управления"
         last_updated: "Панель управления обновлена:"
@@ -5297,7 +5304,7 @@ ru:
         problems_found: "Несколько советов по текущим настройкам сайта"
         dismiss_notice: "Закрыть"
         new_features:
-          title: "Что нового"
+          title: "Что нового?"
           subtitle: "Мы регулярно выпускаем обновления с новыми функциями и улучшениями. На этой странице перечислены ключевые моменты, а полный список доступен по ссылке «Подробнее»."
           previous_announcements: "Вы можете увидеть предыдущие анонсы новых функций на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Подробнее…"
@@ -5387,7 +5394,7 @@ ru:
             type_of_web_hook_event:
               label: "Тип события"
       flags:
-        title: "Метки модерации"
+        title: "Модерация"
         description: "Описание"
         enabled: "Включено?"
         more_options:
@@ -5737,61 +5744,39 @@ ru:
         sidebar_link:
           backups: "Резервные копии"
           whats_new:
-            title: "Что нового"
+            title: "Что нового?"
             keywords: "журнал изменений|функция|версия"
       community:
         title: "Сообщество"
         sidebar_link:
           about_your_site: "О вашем сайте"
           badges: "Награды"
-          login_and_authentication: "Вход и аутентификация"
           notifications: "Уведомления"
           permalinks: "Постоянные ссылки"
-          trust_levels: "Уровни доверия"
           users: "Пользователи"
           groups: "Группы"
-          user_fields: "Поля пользователя"
-          watched_words: "Контролируемые слова"
           legal: "Юридическое"
-          moderation_flags: "Метки модерации"
+          moderation_flags:
+            title: "Модерация"
       appearance:
         title: "Внешний вид"
         sidebar_link:
-          font_style: "Стиль шрифта"
           site_logo: "Логотип сайта"
-          color_schemes: "Цветовые палитры"
           emoji: "Эмодзи"
           navigation: "Навигация"
           themes: "Темы"
           components:
             title: "Компоненты"
             keywords: "тема|расширение"
-          site_texts: "Тексты сайта"
       email_settings:
         title: "Настройки электронной почты"
         sidebar_link:
           appearance: "Внешний вид"
-          preview_summary: "Предпросмотр сводки"
-          server_setup: "Настройка сервера"
-      email_logs:
-        title: "Журналы электронной почты"
-        sidebar_link:
-          sent: "Отправленные"
-          skipped: "Пропущено"
-          bounced: "Возвращено"
-          received: "Получено"
-          rejected: "Отклонено"
       security:
         title: "Безопасность"
         sidebar_link:
-          error_logs: "Журнал ошибок"
-          screened_emails: "Проверяемые адреса электронной почты"
-          screened_ips: "Проверяемые IP-адреса"
-          screened_urls: "Проверяемые ссылки"
-          search_logs: "Журналы поиска"
           security: "Настройки безопасности"
           spam: "Настройки спама"
-          staff_action_logs: "Журналы действий персонала"
       section_landing_pages:
         account:
           title: "Аккаунт"
@@ -5799,7 +5784,7 @@ ru:
             title: "Резервные копии"
             description: "Создает резервную копию данных вашего сайта"
           whats_new:
-            title: "Что нового"
+            title: "Что нового?"
             description: "Узнавайте о новых версиях и функциях в Discourse"
       config_areas:
         about:
@@ -5854,7 +5839,7 @@ ru:
             your_organization_saved: "Данные организации сохранены"
           saved: "сохранено!"
         flags:
-          header: "Метки модерации"
+          header: "Модерация"
           edit_header: "Изменение метки"
           subheader: "Система меток в Discourse поможет вам и вашей команде модераторов работать с контентом и реагировать на поведение пользователей, что позволит обеспечить уважительное и здоровое взаимодействие в сообществе. Настройки по умолчанию подходят для большинства сообществ — их можно не менять. Однако если у вас особые требования к сайту, вы можете отключить ненужные метки и добавить собственные."
           description: "Описание"
@@ -5932,18 +5917,16 @@ ru:
       advanced:
         title: "Дополнительно"
         sidebar_link:
-          api_keys: "API-ключи"
+          api_keys:
+            title: "API-ключи"
           developer: "Разработчикам"
           embedding: "Встраивание"
-          rate_limits: "Ограничения"
           user_api: "Пользовательский API"
-          web_hooks: "Вебхуки"
           onebox: "OneBox"
           files: "Файлы"
           other_options: "Разное"
           search: "Поиск"
           experimental: "Экспериментально"
-          all_site_settings: "Все настройки сайта"
       navigation_menu:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"
@@ -7448,6 +7431,9 @@ ru:
         back: "Вернуться к постоянным ссылкам"
         more_options: "Другие варианты"
         copy_success: "Постоянная ссылка скопирована в буфер обмена"
+        nav:
+          settings: "Настройки"
+          permalinks: "Постоянные ссылки"
         form:
           label: "Новая постоянная ссылка:"
           add_header: "Добавление постоянной ссылки"
@@ -7491,8 +7477,23 @@ ru:
           moderator: "Модератор"
           regular: "Обычный пользователь"
       previews:
-        topic_title: "Заголовок темы"
         share_button: "Поделиться"
         reply_button: "Ответить"
         topic_preview: "Предпросмотр темы"
         homepage_preview: "Предпросмотр главной страницы"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "все категории"
+          new: "Новые"
+          unread: "Непрочитанные"
+          top: "Обсуждаемые"
+          latest: "Последние"
+          hot: "Горячие"
+          categories: "Категории"
+        category_names:
+          site_feedback: "Отзывы по сайту"
+        table_headers:
+          topic: "Перенаправление в тему"
+          replies: "Ответы"
+          views: "Просмотров"
+          activity: "Активность"

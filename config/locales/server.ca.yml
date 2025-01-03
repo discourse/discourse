@@ -1507,7 +1507,6 @@ ca:
     app_association_android: "Contingut del punt final (endpoint) <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilitzat per a l’API de Digital Asset Links de Google."
     app_association_ios: "Contingut del punt final (endpoint) <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilitzat per a crear enllaços universals entre aquest lloc i les aplicacions iOS."
     auto_handle_queued_age: "Tracta automàticament els registres que esperen ser revisats després d'aquest nombre de dies. Les banderes s'ignoraran. Les publicacions en cua i els usuaris seran rebutjats. Poseu-ho a 0 per a desactivar la funció."
-    full_name_required: "El nom complet és un camp obligatori del perfil d'usuari."
     enable_names: "Mostra el nom complet de l'usuari en el seu perfil, la seva targeta d'usuari i els seus correus. Desactiveu-ho per a amagar el nom complet a tot arreu."
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
@@ -2825,15 +2824,7 @@ ca:
           homepage_style:
             choices:
               latest:
-                label: "Temes més recents"
-              categories_only:
-                label: "Només categories"
-              categories_with_featured_topics:
-                label: "Categories amb temes destacats"
-              categories_and_latest_topics:
-                label: "Categories i temes més recents"
-              categories_and_top_topics:
-                label: "Categories i temes principals"
+                label: "Més recents"
       corporate:
         fields:
           governing_law:

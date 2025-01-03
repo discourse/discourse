@@ -410,6 +410,8 @@ ja:
             label: スクリプト
           version:
             label: バージョン
+          status:
+            label: ステータス
           enabled:
             label: 有効
           disabled:

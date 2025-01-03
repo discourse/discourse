@@ -1074,13 +1074,13 @@ he:
       public_admission: "אפשרו למשתמשים להצטרף לקבוצה בחופשיות (דורש קבוצה פומבית)"
       public_exit: "אפשרו למשתמשים לעזוב את הקבוצה בחופשיות"
       empty:
-        posts: "אין פוסטים של חברי קבוצה זו."
-        members: "אין חברים בקבוצה זו."
-        requests: "אין בקשות חברות בקבוצה זו."
-        mentions: "אין איזכורים של קבוצה זו."
-        messages: "אין הודעות לקבוצה זו."
-        topics: "אין נושאים שנוצרו על ידי חברים של קבוצה זו."
-        logs: "אין יומנים עבור קבוצה זו."
+        posts: "אין פוסטים של חברי קבוצה זו"
+        members: "אין חברים בקבוצה זו"
+        requests: "אין בקשות חברות בקבוצה זו"
+        mentions: "אין איזכורים של קבוצה זו"
+        messages: "אין הודעות לקבוצה זו"
+        topics: "אין נושאים שנוצרו על ידי חברים של קבוצה זו"
+        logs: "אין יומנים עבור קבוצה זו"
       add: "הוספה"
       join: "הצטרף"
       leave: "עזוב"
@@ -1290,10 +1290,10 @@ he:
         many: "מחיקה %{count}"
         other: "מחיקה %{count}"
       username: "שם משתמש"
-      trust_level: "דרגת-אמון"
+      trust_level: "דרגת אמון"
       read_time: "זמן צפייה"
       topics_entered: "כניסות לנושאים"
-      post_count: "# פוסטים"
+      post_count: "פוסטים"
       confirm_delete_other_accounts: "להסיר חשבונות אלו?"
       powered_by: "משתמש <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "הועתק"
@@ -2600,6 +2600,10 @@ he:
       categories_boxes: "תיבות עם תתי קטגוריות"
       categories_boxes_with_topics: "תיבות עם נושאים מומלצים"
       subcategories_with_featured_topics: "תת־קטגוריות עם נושאים מובילים"
+    full_name_requirement:
+      required_at_signup: "נדרש בעת הרשמה"
+      optional_at_signup: "כרשות עם ההרשמה"
+      hidden_at_signup: "מוסתר בהרשמה"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3397,6 +3401,7 @@ he:
         other: "%{count} פוסטים בנושא"
       create: "נושא חדש"
       create_disabled_category: "אסור לך ליצור נושאים בקטגוריה הזאת"
+      create_disabled_tag: "אסור לך ליצור נושאים עם התגית הזאת"
       create_long: "יצירת נושא חדש"
       open_draft: "פתח טיוטה"
       private_message: "תחילת הודעה"
@@ -3871,6 +3876,9 @@ he:
           many: "בחרתם <b>%{count}</b> פוסטים."
           other: "בחרתם <b>%{count}</b> פוסטים."
       deleted_by_author_simple: "(הנושא נמחק על ידי הכותב)"
+    post_list:
+      empty: "אין פוסטים"
+      aria_post_number: "%{title} - פוסט מס׳ %{postNumber}"
     post:
       confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
@@ -5289,9 +5297,12 @@ he:
         meta_doc: "אפשר לעיין ב<a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>תיעוד</a> שלנו לסקירה מפורטת של הדוחות."
         sidebar_title: "דוחות"
         sidebar_link:
-          all: "הכול"
+          all: "כל הדיווחים"
+      config:
+        notifications:
+          title: "התראות"
       new_features:
-        title: "מה חדש"
+        title: "מה חדש?"
         check_for_updates: "חיפוש עדכונים"
       dashboard:
         title: "לוח בקרה"
@@ -5310,7 +5321,7 @@ he:
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
         dismiss_notice: "התעלמות"
         new_features:
-          title: "מה חדש"
+          title: "מה חדש?"
           subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
           previous_announcements: "אפשר לצפות בהכרזות הקודמות על יכולות ב־<a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "מידע נוסף…"
@@ -5403,7 +5414,7 @@ he:
             type_of_web_hook_event:
               label: "סוג אירוע"
       flags:
-        title: "סימוני פיקוח"
+        title: "פיקוח"
         description: "תיאור"
         enabled: "מאופשר?"
         more_options:
@@ -5753,7 +5764,7 @@ he:
         sidebar_link:
           backups: "גיבויים"
           whats_new:
-            title: "מה חדש"
+            title: "מה חדש?"
             keywords: "יומן שינויים|יכולת|מהדורה"
       community:
         title: "קהילה"
@@ -5763,19 +5774,21 @@ he:
           login_and_authentication: "כניסה ואימות"
           notifications: "התראות"
           permalinks: "קישורים קבועים"
-          trust_levels: "דרגת אמון"
+          trust_levels: "דרגות אמון"
           users: "משתמשים"
           groups: "קבוצות"
           user_fields: "שדות משתמש"
           watched_words: "מילים במעקב"
           legal: "משפטי"
-          moderation_flags: "סימוני פיקוח"
+          moderation_flags:
+            title: "פיקוח"
+            keywords: "סימון|סקירה"
       appearance:
         title: "מראה"
         sidebar_link:
           font_style: "סגנון גופן"
           site_logo: "לוגו האתר"
-          color_schemes: "לוחות צבעים"
+          color_schemes: "ערכות צבעים"
           emoji: "אמוג׳י"
           navigation: "ניווט"
           themes: "תמות"
@@ -5787,27 +5800,17 @@ he:
         title: "הגדרות דוא״ל"
         sidebar_link:
           appearance: "מראה"
-          preview_summary: "תצוגה מקדימה של תמצית"
-          server_setup: "הגדרת שרת"
-      email_logs:
-        title: "יומני דוא״ל"
-        sidebar_link:
-          sent: "נשלח"
-          skipped: "דולג"
-          bounced: "הוחזר"
-          received: "התקבל"
-          rejected: "נדחה"
+          server_setup:
+            title: "הגדרת שרת"
+            keywords: "דוא״ל|דוא\"ל|דואל|מייל|אימייל|smtp|mailgun|sendgrid|sent|דולג|נפסח|הוקפץ|הוחזר|התקבל|התקבלה|נדחה|נדחתה|יומני דוא״ל|תקציר תצוגה מקדימה"
       security:
         title: "אבטחה"
         sidebar_link:
-          error_logs: "יומני שגיאות"
-          screened_emails: "הודעות דואר מסוננות"
-          screened_ips: "כתובות IP מפוקחות"
-          screened_urls: "כתובות מפוקחות"
-          search_logs: "חיפוש ביומנים"
           security: "הגדרות אבטחה"
           spam: "הגדרות ספאם"
-          staff_action_logs: "יומני פעולות סגל"
+          staff_action_logs:
+            title: "יומני פעולות סגל"
+            keywords: "יומני שגיאות|הודעות במעקב|IP במעקב|יומני חיפוש"
       section_landing_pages:
         account:
           title: "חשבון"
@@ -5815,7 +5818,7 @@ he:
             title: "גיבויים"
             description: "גיבוי נתוני האתר שלך"
           whats_new:
-            title: "מה חדש"
+            title: "מה חדש?"
             description: "חשיפת מהדורות חדשות ושיפורים ב־Discourse"
       config_areas:
         about:
@@ -5872,7 +5875,7 @@ he:
             your_organization_saved: "הארגון שלך נשמר"
           saved: "נשמר!"
         flags:
-          header: "סימוני פיקוח"
+          header: "פיקוח"
           edit_header: "עריכת סימון"
           subheader: "מערכת הסימון ב־Discourse מסייעת לך ולצוות הפיקוח שלך לנהל את התוכן ואת התנהגות המשתמשים ומעניקה לך כלים לשמור על קהילה מכבדת ובריאה. ברירות המחדל מתאימות לרוב הקהילות ואין צורך לשנות אותן. עם זאת, אם לאתר שלך יש דרישות מסוימות אפשר לבטל סוגי סימון שאינם נחוצים ולהוסיף סוגי סימון משלך."
           description: "תיאור"
@@ -5953,12 +5956,13 @@ he:
       advanced:
         title: "מתקדם"
         sidebar_link:
-          api_keys: "מפתחות API"
+          api_keys:
+            title: "מפתחות API"
+            keywords: "אסימון|התליה|ובהוק|webhook"
           developer: "מפתחים"
           embedding: "שילוב (embedding)"
           rate_limits: "מגבלות קצב"
           user_api: "API של משתמש"
-          web_hooks: "Webhooks"
           onebox: "תיבת תחימה"
           files: "קבצים"
           other_options: "אחר"
@@ -7237,6 +7241,7 @@ he:
         save: "שמירה"
         cancel: "ביטול"
         unmask: "ביטול מיסוך קלט"
+        not_found: "אי אפשר למצוא את ההגדרות"
       site_settings:
         emoji_list:
           invalid_input: "רשימות האמוג׳י אמורה להכיל רק שמות סימני אמוג׳י תקניים, למשל: hugs (חיבוקים)"
@@ -7507,6 +7512,9 @@ he:
         back: "חזרה לקישורים הקבועים"
         more_options: "אפשרויות נוספות"
         copy_success: "קישור קבוע הועתק ללוח הגזירים"
+        nav:
+          settings: "הגדרות"
+          permalinks: "קישורים קבועים"
         form:
           label: "חדש:"
           add_header: "הוספת קישור קבוע"
@@ -7550,8 +7558,23 @@ he:
           moderator: "מפקח"
           regular: "משתמש רגיל"
       previews:
-        topic_title: "כותרת נושא דיון"
         share_button: "לשתף"
         reply_button: "להגיב"
         topic_preview: "תצוגה מקדימה של נושא"
         homepage_preview: "תצוגה מקדימה של עמוד הבית"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "כל הקטגוריות"
+          new: "חדשות"
+          unread: "טרם נקראו"
+          top: "מובילים"
+          latest: "אחרונות"
+          hot: "חמים"
+          categories: "קטגוריות"
+        category_names:
+          site_feedback: "משוב על האתר"
+        table_headers:
+          topic: "נושא"
+          replies: "תשובות"
+          views: "צפיות"
+          activity: "פעילות"

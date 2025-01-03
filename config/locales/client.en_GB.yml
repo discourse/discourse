@@ -127,7 +127,6 @@ en_GB:
               anonymize: Anonymise user accounts.
       appearance:
         sidebar_link:
-          color_schemes: "Colour palettes"
           navigation: "Navigation"
       config_areas:
         flags:
@@ -217,4 +216,9 @@ en_GB:
         post_title: "Post"
       reseed:
         modal:
+          categories: "Categories"
+  wizard_js:
+    wizard:
+      homepage_preview:
+        nav_buttons:
           categories: "Categories"

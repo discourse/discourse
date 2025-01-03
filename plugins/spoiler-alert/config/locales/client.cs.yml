@@ -6,5 +6,9 @@
 
 cs:
   js:
+    spoiler:
+      title: Rozostření spoileru
+      label:
+        show: "Zobrazit skrytý obsah"
     composer:
       spoiler_text: "Tento text bude rozmazaný"

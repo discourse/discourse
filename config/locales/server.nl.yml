@@ -1723,8 +1723,6 @@ nl:
     summary_percent_filter: "Wanneer een gebruiker op 'Dit topic samenvatten' klikt, de top % van berichten weergeven"
     summary_max_results: "Maximale aantal weergegeven berichten door 'Dit topic samenvatten'"
     summary_timeline_button: "Toon een knop 'Samenvatten' in de tijdlijn"
-    summarization_strategy: "Aanvullende manieren om door plug-ins geregistreerde content samen te vatten"
-    custom_summarization_allowed_groups: "Groepen mogen content samenvatten met behulp van de 'summarization_strategy'."
     enable_personal_messages: "VEROUDERD, gebruik in plaats daarvan de instelling 'groepen waarvoor persoonlijke berichten zijn ingeschakeld'. Geef gebruikers met vertrouwensniveau 1 (configureerbaar via minimaal vertrouwen om berichten te verzenden) de mogelijkheid om berichten te maken en berichten te beantwoorden. Houd er rekening mee dat medewerkers altijd berichten kunnen sturen, wat er ook gebeurt."
     personal_message_enabled_groups: "Sta gebruikers in deze groepen toe om persoonlijke berichten te MAKEN. BELANGRIJK: 1) alle gebruikers kunnen ANTWOORDEN op berichten. 2) Beheerders en moderators kunnen berichten aan elke gebruiker maken. 3) Vertrouwensniveaugroepen omvatten hogere niveaus; kies trust_level_1 om TL1, TL2, TL3, TL4 toe te staan maar niet TL0. 4) Groepsinteractie-instellingen overschrijven deze instelling voor het sturen van berichten naar specifieke groepen."
     enable_system_message_replies: "Toestaan dat gebruikers op systeemberichten kunnen antwoorden, zelfs als persoonlijke berichten zijn uitgeschakeld"
@@ -2261,7 +2259,6 @@ nl:
     penalty_include_post_message: "Beledigend bericht automatisch opnemen in e-mailberichtsjabloon bij dempen of schorsen van een gebruiker"
     svg_icon_subset: "Voeg extra FontAwesome-pictogrammen toe die je in je assets wilt opnemen. Gebruik het voorvoegsel 'fa-' voor effen pictogrammen, 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen."
     max_prints_per_hour_per_user: "Maximale aantal /print-pagina-impressies (stel dit in op 0 om afdrukken uit te schakelen)"
-    full_name_required: "Volledige naam is een verplicht veld van een gebruikersprofiel."
     enable_names: "Volledige naam van gebruiker weergeven op profiel, gebruikerskaart en e-mails. Schakel dit uit om de volledige naam overal te verbergen."
     display_name_on_posts: "Volledige naam van een gebruiker weergeven bij berichten, naast de @gebruikersnaam."
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
@@ -2437,7 +2434,6 @@ nl:
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
     enable_experimental_lightbox: "Vervangt de standaard afbeeldingslightbox door het vernieuwde ontwerp."
-    experimental_glimmer_topic_list_groups: "Schakel de nieuwe 'glimmer'-implementatie voor topiclijsten in. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     glimmer_post_menu_mode: "Bepaal of de nieuwe 'glimmer'-implementatie voor het plaatsingsmenu wordt gebruikt. 'Auto' wordt automatisch ingeschakeld wanneer al je thema's en plug-ins gereed zijn. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     glimmer_post_menu_groups: "Schakel de nieuwe 'glimmer'-implementatie voor het plaatsingsmenu in de 'auto'-modus in voor specifieke gebruikersgroepen. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     experimental_form_templates: "Schakel de functie Formuliersjablonen in. <b>Nadat je deze functie hebt ingeschakeld,</b> kun je de sjablonen beheren via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
@@ -2515,8 +2511,8 @@ nl:
       invalid_search_ranking_weights: "Waarde is ongeldig voor site-instelling search_ranking_weights. Voorbeeld: '{0.1,0.2,0.3,1.0}'. Merk op dat de maximale waarde voor elk gewicht 1,0 is."
     keywords:
       clean_up_inactive_users_after_days: "gedeactiveerd|inactief|niet geactiveerd"
-      purge_unactivated_users_grace_period_days: "gedeactiveerd|inactief|niet geactiveerd"
       navigation_menu: "vervolgkeuzelijst zijbalk|koptekst"
+      purge_unactivated_users_grace_period_days: "gedeactiveerd|inactief|niet geactiveerd"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4923,23 +4919,9 @@ nl:
             label: "Stijl startpagina"
             choices:
               latest:
-                label: "Nieuwste topics"
-              categories_only:
-                label: "Alleen categorieën"
-              categories_with_featured_topics:
-                label: "Categorieën met uitgelichte topics"
-              categories_and_latest_topics:
-                label: "Categorieën en nieuwste topics"
-              categories_and_latest_topics_created_date:
-                label: "Categorieën en nieuwste topics (sorteren op aanmaakdatum van topics)"
-              categories_and_top_topics:
-                label: "Categorieën en toptopics"
-              categories_boxes:
-                label: "Categorievakken"
-              categories_boxes_with_topics:
-                label: "Categorievakken met topics"
-              subcategories_with_featured_topics:
-                label: "Subcategorieën met uitgelichte topics"
+                label: "Nieuwste"
+              hot:
+                label: "Veelgelezen"
       branding:
         title: "Sitelogo"
         fields:

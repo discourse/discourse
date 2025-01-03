@@ -855,13 +855,8 @@ sv:
       public_admission: "Tillåt användare att fritt gå med i grupp (Kräver offentligt synlig grupp)"
       public_exit: "Tillåt användare att fritt lämna grupp"
       empty:
-        posts: "Det är inga kommentarer från medlemmar i denna grupp"
-        members: "Det finns inga medlemmar i denna grupp"
-        requests: "Det finns inga medlemsansökningar för denna grupp."
-        mentions: "Det finns inga omnämnanden av denna grupp"
-        messages: "Det finns inga meddelanden för denna grupp."
-        topics: "Det finns inga trådar från medlemmar i denna grupp"
-        logs: "Det finns inga loggar för denna grupp"
+        requests: "Det finns inga medlemsansökningar för denna grupp"
+        messages: "Det finns inga meddelanden för denna grupp"
       add: "Lägg till"
       join: "Gå med"
       leave: "Lämna"
@@ -1048,10 +1043,10 @@ sv:
         one: "Ta bort %{count}"
         other: "Ta bort %{count}"
       username: "användarnamn"
-      trust_level: "TL"
+      trust_level: "förtroendenivå"
       read_time: "lästid"
       topics_entered: "besökta ämnen"
-      post_count: "# inlägg"
+      post_count: "inlägg"
       confirm_delete_other_accounts: "Är du säker på att du vill ta bort dessa här konton?"
       powered_by: "använd <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopierad"
@@ -2099,6 +2094,8 @@ sv:
       categories_boxes: "Boxar med underkategorier"
       categories_boxes_with_topics: "Boxar med utvalda ämnen"
       subcategories_with_featured_topics: "Underkategorier med utvalda ämnen"
+    full_name_requirement:
+      required_at_signup: "Krävs vid registrering"
     shortcut_modifier_key:
       shift: "Skift"
       ctrl: "Ctrl"
@@ -3188,6 +3185,8 @@ sv:
           one: Du har markerat <b>%{count}</b> inlägg.
           other: "Du har markerat <b>%{count}</b> inlägg."
       deleted_by_author_simple: "(ämne raderat av författaren)"
+    post_list:
+      aria_post_number: "%{title} - inlägg #%{postNumber}"
     post:
       confirm_delete: "Är du säker på att du vill radera det här inlägget?"
       quote_reply: "Citat"
@@ -4386,7 +4385,7 @@ sv:
           paste: "Klistra in..."
           save: "Spara som..."
   admin_js:
-    type_to_filter: "skriv för att filtrera…"
+    type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
     admin:
       title: "Discourse-administratör"
@@ -4402,9 +4401,10 @@ sv:
         meta_doc: "Utforska vår <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentation</a> för att se en detaljerad översikt över rapporterna."
         sidebar_title: "Rapporter"
         sidebar_link:
-          all: "Alla"
-      new_features:
-        title: "Vad är nytt?"
+          all: "Alla rapporter"
+      config:
+        notifications:
+          title: "Aviseringar"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4420,7 +4420,6 @@ sv:
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Avfärda"
         new_features:
-          title: "Vad är nytt?"
           previous_announcements: "Du kan se tidigare meddelanden om nya funktioner på <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Läs mer..."
         last_checked: "Senast kollad"
@@ -4499,6 +4498,7 @@ sv:
             include_subcategories:
               label: "Inkludera underkategorier"
       flags:
+        title: "Moderering"
         description: "Beskrivning"
         enabled: "Aktiverad?"
       groups:
@@ -4818,19 +4818,19 @@ sv:
       community:
         title: "Community"
         sidebar_link:
+          about_your_site: "Om din webbplats"
           badges: "Utmärkelser"
           notifications: "Aviseringar"
           permalinks: "Permalänkar"
-          trust_levels: "Förtroendenivåer"
           users: "Användare"
           groups: "Grupper"
-          user_fields: "Användarfält"
-          watched_words: "Bevakade ord"
           legal: "Juridik"
+          moderation_flags:
+            title: "Moderering"
       appearance:
         title: "Utseende"
         sidebar_link:
-          color_schemes: "Färgpaletter"
+          site_logo: "Webbplatsens logotyp"
           emoji: "Emoji"
           navigation: "Navigering"
           themes: "Teman"
@@ -4840,22 +4840,8 @@ sv:
         title: "E-postinställningar"
         sidebar_link:
           appearance: "Utseende"
-          preview_summary: "Förhandsgranska sammandrag"
-      email_logs:
-        sidebar_link:
-          sent: "Skickade"
-          skipped: "Överhoppade"
-          bounced: "Studsade"
-          received: "Mottagna"
-          rejected: "Avvisade"
       security:
         title: "Säkerhet"
-        sidebar_link:
-          error_logs: "Felprotokoll"
-          screened_emails: "Kontrollerade e-postadresser"
-          screened_ips: "Granskade IP-adresser"
-          screened_urls: "Granskade URL:er"
-          search_logs: "Söklogg"
       section_landing_pages:
         account:
           title: "Konto"
@@ -4875,6 +4861,7 @@ sv:
           update: "Uppdatera"
           saved: "sparat!"
         flags:
+          header: "Moderering"
           description: "Beskrivning"
           enabled: "Aktiverad?"
           edit: "Redigera"
@@ -4918,9 +4905,7 @@ sv:
         sidebar_link:
           developer: "Utvecklare"
           embedding: "Inbäddning"
-          rate_limits: "Begränsningar"
           user_api: "Användar-API"
-          web_hooks: "Webhookar"
           onebox: "Onebox"
           files: "Filer"
           other_options: "Övrigt"
@@ -6258,6 +6243,9 @@ sv:
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?
+        nav:
+          settings: "Inställningar"
+          permalinks: "Permalänkar"
         form:
           label: "Ny:"
           url: "URL"
@@ -6295,8 +6283,23 @@ sv:
           moderator: "Moderator"
           regular: "Regelbunden användare"
       previews:
-        topic_title: "En diskussionsämnesrubrik"
         share_button: "Dela"
         reply_button: "Svara"
         topic_preview: "Ämnesförhandsgranskning"
         homepage_preview: "Förhandsgranskning av hemsida"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alla kategorier"
+          new: "Nya"
+          unread: "Olästa"
+          top: "Topp"
+          latest: "Senaste"
+          hot: "Hett"
+          categories: "Kategorier"
+        category_names:
+          site_feedback: "Feedback om webbplatsen"
+        table_headers:
+          topic: "Ämne"
+          replies: "Svar"
+          views: "Visningar"
+          activity: "Aktivitet"

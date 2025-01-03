@@ -1648,8 +1648,6 @@ ja:
     summary_percent_filter: "「このトピックを要約」をクリックしたとき表示される上位投稿の割合%"
     summary_max_results: "'このトピックを要約' が返す最大投稿数"
     summary_timeline_button: "タイムラインに '要約' ボタンを表示する"
-    summarization_strategy: "プラグインによって登録されたコンテンツを要約する他の方法"
-    custom_summarization_allowed_groups: "`summarization_strategy` を使ってコンテンツを要約できるグループ。"
     enable_personal_messages: "非推奨。代わりに 'personal message enabled groups' 設定を使用してください。信頼レベル 1 (メッセージを送信できる最低信頼レベルで構成可能) ユーザーに、メッセージの作成とメッセージへの返信を許可します。それにも関わらず、スタッフは常にメッセージを送信できることに注意してください。"
     personal_message_enabled_groups: "これらのグループのユーザーが個人メッセージを作成できるようにします。重要: 1) すべてのユーザーはメッセージに返信できます。2) 管理者とモデレーターは任意のユーザー宛てのメッセージを作成できます。3) 信頼レベルグループには上位レベルが含まれます。信頼レベル 1 の場合は TL1、TL2、TL3、TL4 を含みますが TL0 は含まれません。4) 特定のグループへのメッセージ送信の場合、グループの対話設定がこの設定より優先されます。"
     enable_system_message_replies: "個人メッセージが無効である場合でも、ユーザーによるシステムメッセージへの返信を許可する"
@@ -2186,7 +2184,6 @@ ja:
     penalty_include_post_message: "ユーザーを投稿禁止または凍結する際に、メールメッセージのテンプレートに問題のある投稿メッセージを自動的に含めます。"
     svg_icon_subset: "アセットに含める追加の FontAwesome アイコンを追加する。ソリッドアイコンには 'fa-'、通常のアイコンには 'far-'、ブランドアイコンには 'fab-' のプレフィックスを使用します。"
     max_prints_per_hour_per_user: "/print ページの最大インプレッション数 (0 に設定すると出力が無効になります)"
-    full_name_required: "ユーザープロファイルのフルネームを必須にします。"
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームはすべての場所で非表示になります。"
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
@@ -2362,7 +2359,6 @@ ja:
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
     enable_experimental_lightbox: "デフォルトの画像ライトボックスを改良されたデザインに置き換える。"
-    experimental_glimmer_topic_list_groups: "新しい 'glimmer' トピックリストの実装を有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     glimmer_post_menu_mode: "新しい 'glimmer' 投稿メニューの実装が使用されるかどうかを制御する。'auto' はすべてのテーマとプラグインの準備ができると自動的に有効化します。この実装は活動的に開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     glimmer_post_menu_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     experimental_form_templates: "フォームのテンプレート機能を有効にする。<b>有効にした後</b>は、<a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> でテンプレートを管理します。"
@@ -2437,8 +2433,8 @@ ja:
       invalid_search_ranking_weights: "search_ranking_weights サイト設定の値が無効です。例: '{0.1,0.2,0.3,1.0}'。各重みの最大値は 1.0 であることに注意してください。"
     keywords:
       clean_up_inactive_users_after_days: "有効化解除|非アクティブ|未有効化"
-      purge_unactivated_users_grace_period_days: "有効化解除|非アクティブ|未有効化"
       navigation_menu: "サイドバー|ヘッダードロップダウン"
+      purge_unactivated_users_grace_period_days: "有効化解除|非アクティブ|未有効化"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4790,23 +4786,9 @@ ja:
             label: "ホームページのスタイル"
             choices:
               latest:
-                label: "最新のトピック"
-              categories_only:
-                label: "カテゴリのみ"
-              categories_with_featured_topics:
-                label: "注目のトピックのカテゴリ"
-              categories_and_latest_topics:
-                label: "カテゴリと最新トピック"
-              categories_and_latest_topics_created_date:
-                label: "カテゴリと最新のトピック (トピック作成日順)"
-              categories_and_top_topics:
-                label: "カテゴリと人気トピック"
-              categories_boxes:
-                label: "カテゴリボックス"
-              categories_boxes_with_topics:
-                label: "トピック付きのカテゴリボックス"
-              subcategories_with_featured_topics:
-                label: "注目のトピックを含むサブカテゴリ"
+                label: "最新"
+              hot:
+                label: "ホット"
       branding:
         title: "サイトのロゴ"
         fields:

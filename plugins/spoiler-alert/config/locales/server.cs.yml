@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    spoiler_enabled: 'Povolení pluginu spoiler. Pokud toto změníte, musíte znovu upéct všechny příspěvky s: "rake posts:rebake".'
+  spoiler_alert:
+    excerpt_spoiler: "spoiler"

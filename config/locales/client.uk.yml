@@ -756,6 +756,7 @@ uk:
         category: "Розділ"
         score_type:
           title: "Причина"
+          all: "(усі причини)"
         orders:
           score: "Бал"
           score_asc: "Бал (зворотний порядок)"
@@ -1073,13 +1074,13 @@ uk:
       public_admission: "Дозволити користувачам вільно приєднуватися до групи (потрібна публічна видимість групи)"
       public_exit: "Дозволити користувачам вільно покидати групу"
       empty:
-        posts: "Немає дописів від членів цієї групи."
-        members: "Немає учасників у цій групі."
-        requests: "Немає запитів на членство у цій групі."
-        mentions: "Немає згадок про цю групу."
-        messages: "Немає повідомлень для цієї групи."
-        topics: "Немає тем від учасників цієї групи."
-        logs: "Немає журналів у цій групі."
+        posts: "Немає дописів від членів цієї групи"
+        members: "Немає учасників у цій групі"
+        requests: "Немає запитів на членство у цій групі"
+        mentions: "Немає згадок про цю групу"
+        messages: "Немає повідомлень для цієї групи"
+        topics: "Немає тем від учасників цієї групи"
+        logs: "Немає журналів у цій групі"
       add: "Додати"
       join: "Приєднатися"
       leave: "Покинути"
@@ -1289,10 +1290,10 @@ uk:
         many: "Видалити %{count}"
         other: "Видалити %{count}"
       username: "Імʼя користувача"
-      trust_level: "РД"
+      trust_level: "рівень довіри"
       read_time: "час читання"
       topics_entered: "створено тем"
-      post_count: "# дописів"
+      post_count: "дописи"
       confirm_delete_other_accounts: "Ви впевнені, що хочете видалити цих користувачів?"
       powered_by: "використовується <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "скопійовано"
@@ -1423,15 +1424,18 @@ uk:
         description: "Пропустити поради щодо створення користувача та значків"
       reset_seen_user_tips: "Знову показати поради користувача"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
+      color_scheme_default_on_all_devices: "Встановити палітру кольорів за замовчуванням на всіх моїх пристроях"
       color_scheme: "Колірна палітра"
       color_schemes:
         default_description: "Типова тема"
         disable_dark_scheme: "Те саме, що і звичайне"
+        dark_instructions: "Ви можете переглянути палітру кольорів темного режиму, увімкнувши темний режим вашого пристрою."
         undo: "Скинути"
         regular: "Звичайний"
         dark: "Темний режим"
         default_dark_scheme: "(типово для сайту)"
       dark_mode: "Темний режим"
+      dark_mode_enable: "Увімкнути автоматичну палітру кольорів темного режиму"
       text_size_default_on_all_devices: "Зробити цей розмір тексту базовим для всіх моїх пристроїв"
       allow_private_messages: "Дозволити іншим користувачам надсилати мені особисті повідомлення"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
@@ -2594,6 +2598,10 @@ uk:
       categories_boxes: "Блоки з підрозділів"
       categories_boxes_with_topics: "Блоки з Обраними Темами"
       subcategories_with_featured_topics: "Підрозділи з обраними темами"
+    full_name_requirement:
+      required_at_signup: "Обов’язкове під час реєстрації"
+      optional_at_signup: "Необов'язково при реєстрації"
+      hidden_at_signup: "Приховано при реєстрації"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3391,6 +3399,7 @@ uk:
         other: "%{count} дописів в темі"
       create: "Нова тема"
       create_disabled_category: "Ви не можете створювати теми в цій категорії"
+      create_disabled_tag: "Ви не можете створювати теми з цим тегом"
       create_long: "Створити нову тему"
       open_draft: "Відкрити чернетку"
       private_message: "Нове приватне повідомлення"
@@ -3869,6 +3878,9 @@ uk:
           many: "Ви виділили <b>%{count}</b> дописів."
           other: "Ви виділили <b>%{count}</b> дописів."
       deleted_by_author_simple: "(тема, видалена автором)"
+    post_list:
+      empty: "Немає повідомлень"
+      aria_post_number: "%{title} - допис #%{postNumber}"
     post:
       confirm_delete: "Ви справді бажаєте вилучити цей допис?"
       quote_reply: "Цитата"
@@ -5271,7 +5283,7 @@ uk:
           save: "Зберегти як..."
     powered_by_discourse: "Працює на Discourse"
   admin_js:
-    type_to_filter: "текст для пошуку…"
+    type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
     admin:
       title: "Адміністратор Discourse"
@@ -5287,9 +5299,15 @@ uk:
         meta_doc: "Ознайомтеся з нашою документацією <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> для детального огляду звітів."
         sidebar_title: "Звіти"
         sidebar_link:
-          all: "Все"
+          all: "Всі звіти"
+      config:
+        login_and_authentication:
+          title: "Вхід і аутентифікація"
+          header_description: "Налаштуйте спосіб входу та автентифікації користувачів, секрети та ключі, постачальники OAuth2 тощо."
+        notifications:
+          title: "Сповіщення"
       new_features:
-        title: "Що нового"
+        title: "Що нового?"
         check_for_updates: "Перевірте наявність оновлень"
       dashboard:
         title: "Майстерня"
@@ -5308,7 +5326,7 @@ uk:
         problems_found: "Кілька порад по вашим поточним налаштуванням сайту"
         dismiss_notice: "Відкласти"
         new_features:
-          title: "Що нового"
+          title: "Що нового?"
           subtitle: "Ми постійно випускаємо нові функції та вдосконалення. На цій сторінці ви знайдете найголовніші з них, але ви можете натиснути \"Дізнатися більше\", щоб переглянути докладнішу інформацію про випуск."
           previous_announcements: "Ви можете побачити анонси про нові функції на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Дізнатися більше…"
@@ -5401,7 +5419,7 @@ uk:
             type_of_web_hook_event:
               label: "Тип заходу"
       flags:
-        title: "Прапори модерації"
+        title: "Модерація"
         description: "Опис"
         enabled: "Включено?"
         more_options:
@@ -5751,29 +5769,31 @@ uk:
         sidebar_link:
           backups: "Резервні копії"
           whats_new:
-            title: "Що нового"
+            title: "Що нового?"
             keywords: "журнал змін|функція|випуск"
       community:
         title: "Спільнота"
         sidebar_link:
           about_your_site: "Про ваш сайт"
           badges: "Нагороди"
-          login_and_authentication: "Вхід та аутентифікація"
+          login_and_authentication: "Вхід та автентифікація"
           notifications: "Сповіщення"
           permalinks: "Постійні посилання"
           trust_levels: "Рівні довіри"
           users: "Користувачі"
           groups: "Групи"
           user_fields: "Поля користувача"
-          watched_words: "Відслідковувані слова"
+          watched_words: "Слова які відстежуються"
           legal: "Legal"
-          moderation_flags: "Прапори модерації"
+          moderation_flags:
+            title: "Модерація"
+            keywords: "flag|review"
       appearance:
         title: "Зовнішній вигляд"
         sidebar_link:
           font_style: "Стиль шрифту"
           site_logo: "Логотип сайту"
-          color_schemes: "кольорові палітри"
+          color_schemes: "Палітри кольорів"
           emoji: "Смайли"
           navigation: "Навігація"
           themes: "Стилі"
@@ -5785,27 +5805,17 @@ uk:
         title: "Налаштування електронної пошти"
         sidebar_link:
           appearance: "Зовнішній вигляд"
-          preview_summary: "Стислий виклад новин"
-          server_setup: "Налаштування сервера"
-      email_logs:
-        title: "Журнал електронної пошти"
-        sidebar_link:
-          sent: "Надіслані"
-          skipped: "Пропущено"
-          bounced: "Повернено"
-          received: "Отримано"
-          rejected: "Відхилено"
+          server_setup:
+            title: "Налаштування сервера"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
       security:
         title: "Безпека"
         sidebar_link:
-          error_logs: "Журнал помилок"
-          screened_emails: "Screened Emails"
-          screened_ips: "IP адреси"
-          screened_urls: "Посилання"
-          search_logs: "Логи пошуку"
           security: "Налаштування безпеки"
           spam: "Налаштування спаму"
-          staff_action_logs: "Журнали дій персоналу"
+          staff_action_logs:
+            title: "Журнали дій персоналу"
+            keywords: "error logs|screened emails|screened ips|screened urls|search logs"
       section_landing_pages:
         account:
           title: "Обліковий запис"
@@ -5813,7 +5823,7 @@ uk:
             title: "Резервні копії"
             description: "Зробити резервну копію даних вашого сайту"
           whats_new:
-            title: "Що нового"
+            title: "Що нового?"
             description: "Відкрийте для себе нові випуски та вдосконалення Discourse"
       config_areas:
         about:
@@ -5870,7 +5880,7 @@ uk:
             your_organization_saved: "Вашу організацію збережено"
           saved: "збережено!"
         flags:
-          header: "Прапори модерації"
+          header: "Модерація"
           edit_header: "Редагувати прапорець"
           subheader: "Система позначок у Дискурсі допомагає вам і вашій команді модераторів керувати контентом і поведінкою користувачів, підтримуючи у спільноті атмосферу поваги і здоров'я. Значення за замовчуванням підходять для більшості спільнот, і вам не потрібно їх змінювати. Однак, якщо ваш сайт має особливі вимоги, ви можете вимкнути непотрібні вам прапорці і додати власні прапорці."
           description: "Опис"
@@ -5951,18 +5961,19 @@ uk:
       advanced:
         title: "Розширений"
         sidebar_link:
-          api_keys: "Ключі API"
+          api_keys:
+            title: "Ключі API"
+            keywords: "token|webhook"
           developer: "Для розробників"
           embedding: "Взаємодія"
-          rate_limits: "Обмеження швидкості"
+          rate_limits: "Обмеження оцінок"
           user_api: "API користувача"
-          web_hooks: "Вебгуки"
           onebox: "Розумна вставка"
           files: "Файли"
           other_options: "Інше"
           search: "Пошук"
           experimental: "Експериментальний"
-          all_site_settings: "Усі налаштування сайту"
+          all_site_settings: "Всі налаштування сайту"
       navigation_menu:
         sidebar: "Бічна панель"
         header_dropdown: "Випадаючий заголовок"
@@ -6125,6 +6136,7 @@ uk:
           hide_unused_fields: "Приховати невикористовувані поля"
           is_default: "Активувати за замовчуванням"
           user_selectable: "Користувачі можуть вибирати стиль"
+          color_scheme_user_selectable: "Кольорова палітра може бути обрана користувачами"
           auto_update: "Автоматичне оновлення при оновленні Discourse"
           color_scheme: "Колірна палітра"
           edit_color_scheme: "Редагувати палітру кольорів"
@@ -7234,6 +7246,7 @@ uk:
         save: "зберегти"
         cancel: "скасувати"
         unmask: "демаскувати вхід"
+        not_found: "Налаштування не знайдено"
       site_settings:
         emoji_list:
           invalid_input: "Список емодзі повинен містити лише дійсні імена емодзі, наприклад: hugs"
@@ -7504,6 +7517,9 @@ uk:
         back: "Назад до постійних посилань"
         more_options: "Більше опцій"
         copy_success: "Постійне посилання скопійовано в буфер обміну"
+        nav:
+          settings: "Налаштування"
+          permalinks: "Постійні посилання"
         form:
           label: "Новий:"
           add_header: "Додати постійне посилання"
@@ -7547,8 +7563,37 @@ uk:
           moderator: "Модератор"
           regular: "Звичайний користувач"
       previews:
-        topic_title: "Заголовок теми"
+        topic_title: "Які книги ви читаєте?"
         share_button: "Поширити"
         reply_button: "Відповісти"
         topic_preview: "Попередній перегляд теми"
         homepage_preview: "Попередній перегляд головної сторінки"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "усі розділи"
+          new: "Нові"
+          unread: "Непрочитані"
+          top: "Топ"
+          latest: "Остання"
+          hot: "Гаряче"
+          categories: "Розділи"
+        topic_titles:
+          what_books: "Які книги ви читаєте?"
+          what_movies: "Які фільми ви дивилися останнім часом?"
+          random_fact: "Випадковий факт дня"
+          tv_show: "Порекомендуйте телешоу"
+        topic_ops:
+          what_books: "Ми всі любимо читати, давайте використаємо цю тему, \nщоб поділитися нашими поточними чи останніми читаннями. \nЯ фанат фентезі, і я в 100-й раз перечитав «Володаря кілець».\nА як щодо вас?\n"
+        category_descriptions:
+          icebreakers: "Познайомтеся з іншими членами спільноти за допомогою веселих запитань."
+          news: "Обговорити останні новини та події."
+          site_feedback: "Поділіться своїми думками про спільноту та запропонуйте покращення."
+        category_names:
+          icebreakers: "Криголам"
+          news: "Новини"
+          site_feedback: "Зворотній зв’язок"
+        table_headers:
+          topic: "Тема"
+          replies: "Відповіді"
+          views: "Перегляди"
+          activity: "Активність"

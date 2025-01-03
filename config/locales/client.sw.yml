@@ -457,12 +457,12 @@ sw:
       public_admission: "ruhusu watumiaji wajiunge kwenye kikundi bure (kikundi kinabidi kionwe na umma)"
       public_exit: "ruhusu watumiaji waache kikundi bure"
       empty:
-        posts: "Hakuna machapisho ya wanachama wa kikundi hiki."
-        members: "Hakuna wanachama kwenye kikundi hiki."
-        mentions: "Hakuna waliotajwa kwenye kikundi hiki."
-        messages: "Hakuna ujumbe kwenye kikundi hiki."
-        topics: "Hakuna mada za wanachama wa kikundi hiki."
-        logs: "Hakuna batli za kikundi hiki."
+        posts: "Hakuna machapisho ya wanachama wa kikundi hiki"
+        members: "Hakuna wanachama kwenye kikundi hiki"
+        mentions: "Hakuna waliotajwa kwenye kikundi hiki"
+        messages: "Hakuna ujumbe kwenye kikundi hiki"
+        topics: "Hakuna mada za wanachama wa kikundi hiki"
+        logs: "Hakuna batli za kikundi hiki"
       add: "Ongeza"
       join: "Jiunge"
       leave: "Ondoka"
@@ -595,10 +595,9 @@ sw:
         one: "Futa %{count}"
         other: "Futa %{count}"
       username: "jinalamtumiaji"
-      trust_level: "Kiwango cha Uaminifu"
       read_time: "mda wa kusoma"
       topics_entered: "mada zilizoingizwa"
-      post_count: "# machapisho"
+      post_count: "machapisho"
       confirm_delete_other_accounts: "Una uhakika unataka kufuta hizi akaunti?"
       powered_by: "inatumia <a href='https://maxmind.com'>MaxMindDB</a>"
     user_fields:
@@ -1184,6 +1183,8 @@ sw:
       categories_with_featured_topics: "Makundi yenye post shilikishi"
       categories_and_latest_topics: "Kategoria na Mada za Hivi Karibuni"
       categories_and_top_topics: "Kategoria na Mada za Juu"
+    full_name_requirement:
+      required_at_signup: "Inahitajika wakati wa kujiunga"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2362,7 +2363,10 @@ sw:
       reports:
         title: "Orodha ya ripoti zilizopo"
         sidebar_link:
-          all: "Vyote"
+          all: "Ripoti zote"
+      config:
+        notifications:
+          title: "Taarifa"
       dashboard:
         title: "Ubao"
         version: "Toleo"
@@ -2537,35 +2541,16 @@ sw:
           badges: "Beji"
           notifications: "Taarifa"
           permalinks: "Anwani za mtandao"
-          trust_levels: "Viwango vya Uaminifu"
           users: "Watumiaji"
           groups: "Makundi"
-          user_fields: "Sehemu za Watumiaji"
-          watched_words: "Maneno yanayoangaliwa"
           legal: "Halali"
       appearance:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Abiri"
           themes: "Mandhari"
-      email_settings:
-        sidebar_link:
-          preview_summary: "Kihakiki Jarida"
-      email_logs:
-        sidebar_link:
-          sent: "Imetumwa"
-          skipped: "Imerukwa"
-          bounced: "Haijafika"
-          received: "Imepokelewa"
-          rejected: "Imekataliwa"
       security:
         title: "Ulinzi"
-        sidebar_link:
-          error_logs: "Batli ya Hitilafu"
-          screened_emails: "barua pepe zilizochunguzwa"
-          screened_ips: "Anwani za mtandao zinazoruhusiwa au kukatazwa"
-          screened_urls: "Anwani za tovuti zinazoruhusiwa au kukatazwa"
-          search_logs: "Batli ya Utafiti"
       section_landing_pages:
         account:
           title: "Akaunti"
@@ -2614,7 +2599,6 @@ sw:
         sidebar_link:
           developer: "Mtengenezaji"
           embedding: "Ambatanisha"
-          rate_limits: "Kikomo cha Viwango "
           user_api: "API ya Mtumiaji"
           onebox: "Onebox"
           files: "Mafaili"
@@ -3442,6 +3426,9 @@ sw:
         user_title: "Mtumiaji"
         username: "Jina la mtumiaji"
         delete_confirm: Una uhakika unataka kufuta hii link kiungo?
+        nav:
+          settings: "Mipangilio"
+          permalinks: "Anwani za mtandao"
         form:
           label: "Mpya:"
           url: "Anwani ya mtandao"
@@ -3467,3 +3454,18 @@ sw:
       previews:
         share_button: "Shirikisha"
         reply_button: "Jibu"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "kategoria zote"
+          new: "Mpya"
+          unread: "Haijasomwa"
+          top: "Juu"
+          latest: "Hivi Karibuni"
+          categories: "Kategoria"
+        category_names:
+          site_feedback: "Majibu ya Mtandao"
+        table_headers:
+          topic: "Mada"
+          replies: "Majibu"
+          views: "Imeonwa"
+          activity: "Kitendo"
