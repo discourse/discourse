@@ -5,7 +5,7 @@ class UserApiKeyClientScope < ActiveRecord::Base
 
   validates :name,
             inclusion: {
-              in: UserApiKeyScope.all_scopes.keys.map(&:to_s),
+              in: -> { UserApiKeyScope.all_scopes.keys.map(&:to_s) },
               message: "%{value} is not a valid scope",
             }
 
