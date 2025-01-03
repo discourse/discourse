@@ -314,6 +314,8 @@ nav.post-controls {
 
   color: var(--primary-low-mid);
 
+  @include user-select(none);
+
   .actions {
     display: inline-flex;
     text-align: right;

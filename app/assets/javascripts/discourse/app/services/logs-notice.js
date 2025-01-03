@@ -1,5 +1,5 @@
 import { readOnly } from "@ember/object/computed";
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -11,6 +11,11 @@ import I18n from "discourse-i18n";
 const LOGS_NOTICE_KEY = "logs-notice-text";
 
 export default class LogsNoticeService extends Service {
+  @service siteSettings;
+  @service currentUser;
+  @service keyValueStore;
+  @service messageBus;
+
   text = "";
 
   @readOnly("currentUser.admin") isAdmin;

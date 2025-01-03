@@ -1,114 +1,4 @@
-<%- unless customization_disabled? %>
 <section id="d-splash">
-  <template class="splash-svg-template">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      version="1.1"
-    >
-      <style>
-        :root {
-          --animation-state: paused;
-        }
-
-        /* user picked a theme where the "regular" scheme is dark */
-        <%- if dark_color_scheme? %>
-        :root {
-          --primary: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
-          --secondary: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
-          --tertiary: #<%= ColorScheme.hex_for_name("tertiary", scheme_id) %>;
-          --highlight: #<%= ColorScheme.hex_for_name("highlight", scheme_id) %>;
-          --success: #<%= ColorScheme.hex_for_name("success", scheme_id) %>;
-        }
-        <%- else %>
-        /* user picked a theme a light scheme and also enabled a dark scheme */
-
-        /* deal with light scheme first */
-        @media (prefers-color-scheme: light) {
-          :root {
-            --primary: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
-            --secondary: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
-            --tertiary: #<%= ColorScheme.hex_for_name("tertiary", scheme_id) %>;
-            --highlight: #<%= ColorScheme.hex_for_name("highlight", scheme_id) %>;
-            --success: #<%= ColorScheme.hex_for_name("success", scheme_id) %>;
-          }
-        }
-
-        /* then deal with dark scheme */
-        @media (prefers-color-scheme: dark) {
-          :root {
-            --primary: #<%= ColorScheme.hex_for_name("primary", dark_scheme_id) %>;
-            --secondary: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
-            --tertiary: #<%= ColorScheme.hex_for_name("tertiary", dark_scheme_id) %>;
-            --highlight: #<%= ColorScheme.hex_for_name("highlight", dark_scheme_id) %>;
-            --success: #<%= ColorScheme.hex_for_name("success", dark_scheme_id) %>;
-          }
-        }
-        <%- end %>
-
-        /* these styles need to live here because the SVG has a different scope */
-        .dots {
-          animation-name: loader;
-          animation-timing-function: ease-in-out;
-          animation-duration: 3s;
-          animation-iteration-count: infinite;
-          animation-play-state: var(--animation-state);
-          stroke: #fff;
-          stroke-width: 0.5px;
-          transform-origin: center;
-          opacity: 0;
-          r: max(1vw, 11px);
-          cy: 50%;
-          filter: saturate(2) opacity(0.85);
-          fill: var(--tertiary);
-        }
-
-        .dots:nth-child(2) {
-          animation-delay: 0.15s;
-        }
-
-        .dots:nth-child(3) {
-          animation-delay: 0.3s;
-        }
-
-        .dots:nth-child(4) {
-          animation-delay: 0.45s;
-        }
-
-        .dots:nth-child(5) {
-          animation-delay: 0.6s;
-        }
-
-        @keyframes loader {
-          0% {
-            opacity: 0;
-            transform: scale(1);
-          }
-          45% {
-            opacity: 1;
-            transform: scale(0.7);
-          }
-          65% {
-            opacity: 1;
-            transform: scale(0.7);
-          }
-          100% {
-            opacity: 0;
-            transform: scale(1);
-          }
-        }
-      </style>
-
-      <g class="container">
-        <circle class="dots" cx="30vw" />
-        <circle class="dots" cx="40vw" />
-        <circle class="dots" cx="50vw" />
-        <circle class="dots" cx="60vw" />
-        <circle class="dots" cx="70vw" />
-      </g>
-    </svg>
-  </template>
-
   <style>
     html {
       overflow-y: hidden !important;
@@ -116,81 +6,58 @@
 
     /* user picked a theme where the "regular" scheme is dark */
     <%- if dark_color_scheme? %>
-    html {
-      background-color: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
-    }
-
-    #d-splash .preloader-text-wrapper {
-      color: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
-    }
-    <%- else %>
-    /* user picked a theme a light scheme and also enabled a dark scheme */
-
-    /* deal with light scheme first */
-    @media (prefers-color-scheme: light) {
       html {
         background-color: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
       }
 
-      #d-splash .preloader-text-wrapper {
-        color: #<%= ColorScheme.hex_for_name("primary", scheme_id) %>;
+      #d-splash  {
+        --dot-color: #<%= ColorScheme.hex_for_name("tertiary", scheme_id) %>;
       }
-    }
+    <%- else %>
+      /* user picked a theme a light scheme and also enabled a dark scheme */
 
-    /* then deal with dark scheme */
-    @media (prefers-color-scheme: dark) {
-      html {
-        background-color: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
+      /* deal with light scheme first */
+      @media (prefers-color-scheme: light) {
+        html {
+          background-color: #<%= ColorScheme.hex_for_name("secondary", scheme_id) %>;
+        }
+
+        #d-splash {
+          --dot-color: #<%= ColorScheme.hex_for_name("tertiary", scheme_id) %>;
+        }
       }
 
-      #d-splash .preloader-text-wrapper {
-        color: #<%= ColorScheme.hex_for_name("primary", dark_scheme_id) %>;
+      /* then deal with dark scheme */
+      @media (prefers-color-scheme: dark) {
+        html {
+          background-color: #<%= ColorScheme.hex_for_name("secondary", dark_scheme_id) %>;
+        }
+
+        #d-splash {
+          --dot-color: #<%= ColorScheme.hex_for_name("tertiary", dark_scheme_id) %>;
+        }
       }
-    }
     <%- end %>
 
     #d-splash {
       display: grid;
       place-items: center;
-      backface-visibility: hidden;
       position: absolute;
       left: 0;
       top: 0;
-      width: 100%;
+      width: 100vw;
       z-index: 1001;
-      --animation-state: paused;
     }
 
     #d-splash .preloader-image {
-      max-width: 100%;
+      --splash-dot-size: max(1vw, 25px);
+      --splash-dot-spacing: calc(var(--splash-dot-size) * 1.5);
+      width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
       height: 100vh;
+      background-size: cover;
     }
 
-    #d-splash .preloader-text-wrapper {
-      font-family: sans-serif;
-      position: absolute;
-      opacity: 0;
-      animation: fade-in 0.5s ease-in-out;
-      animation-delay: 1s;
-      animation-fill-mode: forwards;
-      animation-play-state: var(--animation-state);
-      margin-bottom: -4em;
-    }
-
-    #d-splash .preloader-text:after {
-      animation: loading-text 3s infinite;
-      content: "";
-      position: absolute;
-      margin: 0 0.1em;
-      left: 100%;
-    }
-
-    .rtl #d-splash .preloader-text:after {
-      left: 0;
-      right: 100%;
-    }
-
-    @keyframes fade-in {
+    @keyframes d-splash-fade-in {
       0% {
         opacity: 0;
       }
@@ -199,31 +66,59 @@
       }
     }
 
-    @keyframes loading-text {
+    .dots {
+      animation-name: d-splash-loader;
+      animation-timing-function: ease-in-out;
+      animation-duration: 3s;
+      animation-iteration-count: infinite;
+      animation-delay: calc(var(--n) * 0.15s);
+
+      position: absolute;
+      top: calc(50% - var(--splash-dot-size) / 2);
+      left: calc((50% - var(--splash-dot-size) / 2) + (var(--n) * var(--splash-dot-spacing)));
+      transform-origin: calc((var(--splash-dot-spacing) * var(--n) * -1) + var(--splash-dot-size)/2) center;
+
+      width: var(--splash-dot-size);
+      height: var(--splash-dot-size);
+      border-radius: 50%;
+
+      border: 0.5px solid #fff;
+      background-color: var(--dot-color);
+      filter: saturate(2) opacity(0.85);
+      opacity: 0;
+    }
+
+    @keyframes d-splash-loader {
       0% {
-        content: "";
+        opacity: 0;
+        transform: scale(1);
       }
-      25% {
-        content: ".";
+      45% {
+        opacity: 1;
+        transform: scale(0.7);
       }
-      50% {
-        content: "..";
+      65% {
+        opacity: 1;
+        transform: scale(0.7);
       }
-      75% {
-        content: "...";
+      100% {
+        opacity: 0;
+        transform: scale(1);
       }
     }
   </style>
 
-  <img
-    class="preloader-image"
-    src="data:image/svg;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    alt="<%=SiteSetting.title%>"
-  />
-
-  <div class="preloader-text-wrapper">
-    <div class="preloader-text"><%= I18n.t("js.preloader_text") %></div>
+  <div class="preloader-image" elementtiming="discourse-splash-visible">
+    <div class="dots" style="--n:-2;"></div>
+    <div class="dots" style="--n:-1;"></div>
+    <div class="dots" style="--n:0;"></div>
+    <div class="dots" style="--n:1;"></div>
+    <div class="dots" style="--n:2;"></div>
   </div>
+  <script nonce="<%= csp_nonce_placeholder %>">
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><!-- LCP candidate image ${".".repeat(5000)} --></svg>`;
+    document.querySelector("#d-splash .preloader-image").style.backgroundImage = `url('data:image/svg+xml,${svg}')`
+  </script>
 
   <noscript>
     <style>
@@ -236,9 +131,4 @@
       }
     </style>
   </noscript>
-
-  <script nonce="<%= csp_nonce_placeholder %>">
-    <%= SplashScreenHelper.raw_js %>
-  </script>
 </section>
-<%- end %>

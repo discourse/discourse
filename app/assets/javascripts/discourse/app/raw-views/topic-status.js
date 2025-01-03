@@ -1,8 +1,33 @@
 import EmberObject from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends EmberObject {
+  static reopen() {
+    deprecated(
+      "Modifying raw-view:topic-status with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
+
+    return super.reopen(...arguments);
+  }
+
+  static reopenClass() {
+    deprecated(
+      "Modifying raw-view:topic-status with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
+
+    return super.reopenClass(...arguments);
+  }
+
   showDefault = null;
 
   @discourseComputed("defaultIcon")

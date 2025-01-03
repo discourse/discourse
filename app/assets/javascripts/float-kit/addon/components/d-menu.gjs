@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
@@ -37,6 +38,11 @@ export default class DMenu extends Component {
   @action
   registerFloatBody(element) {
     this.body = element;
+  }
+
+  @action
+  teardownFloatBody() {
+    this.body = null;
   }
 
   @action
@@ -151,6 +157,7 @@ export default class DMenu extends Component {
           @role="dialog"
           @inline={{this.options.inline}}
           {{didInsert this.registerFloatBody}}
+          {{willDestroy this.teardownFloatBody}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

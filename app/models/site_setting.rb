@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SiteSetting < ActiveRecord::Base
-  VALID_AREAS = %w[flags about emojis permalinks]
+  VALID_AREAS = %w[flags about emojis permalinks notifications]
 
   extend GlobalPath
   extend SiteSettingExtension
@@ -72,7 +72,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.top_menu_items
-    top_menu.split("|").map { |menu_item| TopMenuItem.new(menu_item) }
+    top_menu_map.map { |menu_item| TopMenuItem.new(menu_item) }
   end
 
   def self.homepage

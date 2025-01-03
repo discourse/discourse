@@ -135,7 +135,7 @@ export default class SwipeModifier extends Modifier {
       enableBodyScroll(this.element);
     }
 
-    this.onDidCancelSwipe?.(event.detail);
+    this.onDidCancelSwipeCallback?.(event.detail);
   }
 
   /**

@@ -64,6 +64,11 @@ export default class MoreTopics extends Component {
     });
   }
 
+  @action
+  isActiveTab(tab) {
+    return tab?.id === this.selectedTab?.id;
+  }
+
   <template>
     <div class="more-topics__container">
       {{#if (gt this.tabs.length 1)}}
@@ -76,7 +81,8 @@ export default class MoreTopics extends Component {
                   @translatedLabel={{tab.name}}
                   @translatedTitle={{tab.name}}
                   @icon={{tab.icon}}
-                  class={{if (eq tab.id this.activeTab.id) "active"}}
+                  class={{if (this.isActiveTab tab) "active"}}
+                  tabindex={{if (this.isActiveTab tab) -1 0}}
                 />
               </li>
             {{/each}}

@@ -64,7 +64,7 @@ export default class NotificationsTracking extends Component {
 
   @action
   async setNotificationLevel(level) {
-    await this.dmenuApi.close();
+    await this.dmenuApi.close({ focusTrigger: true });
     this.args.onChange?.(level);
   }
 

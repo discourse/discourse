@@ -48,7 +48,6 @@ export default function () {
         this.route("colors", function () {
           this.route("show", { path: "/:scheme_id" });
         });
-
         this.route(
           "adminCustomizeThemes",
           { path: "/:type", resetNamespace: true },
@@ -59,41 +58,11 @@ export default function () {
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
           }
         );
-
         this.route(
           "adminSiteText",
           { path: "/site_texts", resetNamespace: true },
           function () {
             this.route("edit", { path: "/:id" });
-          }
-        );
-
-        this.route(
-          "adminUserFields",
-          { path: "/user_fields", resetNamespace: true },
-          function () {
-            this.route("new");
-            this.route("edit", { path: "/:id/edit" });
-            this.route("index", { path: "/" });
-          }
-        );
-        this.route(
-          "adminEmojis",
-          { path: "/emojis", resetNamespace: true },
-          function () {
-            this.route("new");
-            this.route("index", { path: "/" });
-            this.route("settings");
-          }
-        );
-        this.route(
-          "adminPermalinks",
-          { path: "/permalinks", resetNamespace: true },
-          function () {
-            this.route("new");
-            this.route("index", { path: "/" });
-            this.route("settings");
-            this.route("edit", { path: "/:permalink_id" });
           }
         );
         this.route("adminEmbedding", {
@@ -237,9 +206,51 @@ export default function () {
         });
 
         this.route("about");
+        this.route(
+          "loginAndAuthentication",
+          { path: "/login-and-authentication" },
+          function () {
+            this.route("settings", {
+              path: "/",
+            });
+          }
+        );
+        this.route("notifications", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
           this.route("themes");
         });
+        this.route(
+          "adminPermalinks",
+          { path: "/permalinks", resetNamespace: true },
+          function () {
+            this.route("new");
+            this.route("index", { path: "/" });
+            this.route("settings");
+            this.route("edit", { path: "/:permalink_id" });
+          }
+        );
+        this.route(
+          "adminUserFields",
+          { path: "/user-fields", resetNamespace: true },
+          function () {
+            this.route("new");
+            this.route("edit", { path: "/:id/edit" });
+            this.route("index", { path: "/" });
+          }
+        );
+        this.route(
+          "adminEmojis",
+          { path: "/emoji", resetNamespace: true },
+          function () {
+            this.route("new");
+            this.route("index", { path: "/" });
+            this.route("settings");
+          }
+        );
       }
     );
 
