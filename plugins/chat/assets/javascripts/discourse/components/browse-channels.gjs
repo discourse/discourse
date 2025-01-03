@@ -93,7 +93,6 @@ export default class BrowseChannels extends Component {
           {{didInsert this.focusFilterInput}}
           @filterAction={{this.setFilter}}
           @icons={{hash right="magnifying-glass"}}
-          @containerClass="filter-input"
           placeholder={{i18n "chat.browse.filter_input_placeholder"}}
         />
       </div>
