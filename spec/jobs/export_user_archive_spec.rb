@@ -8,7 +8,7 @@ RSpec.describe Jobs::ExportUserArchive do
   let(:extra) { {} }
   let(:job) do
     j = Jobs::ExportUserArchive.new
-    j.current_user = user
+    j.archive_for_user = user
     j.extra = extra
     j
   end
