@@ -22,8 +22,8 @@ RSpec.describe Admin::BackupsController do
   end
 
   def map_preloaded
-    controller
-      .instance_variable_get("@preloaded")
+    JSON
+      .parse(Nokogiri.HTML5(response.body).at_css("[data-preloaded]")["data-preloaded"])
       .map { |key, value| [key, JSON.parse(value)] }
       .to_h
   end
@@ -53,9 +53,11 @@ RSpec.describe Admin::BackupsController do
           expect(response.status).to eq(200)
 
           preloaded = map_preloaded
+
           expect(preloaded["operations_status"].symbolize_keys).to eq(
             BackupRestore.operations_status,
           )
+
           expect(preloaded["logs"].size).to eq(BackupRestore.logs.size)
         end
       end
