@@ -4,7 +4,7 @@ describe Chat::DuplicateMessageValidator do
   let(:message) { "goal!" }
   fab!(:category_channel) { Fabricate(:chat_channel) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   def message_blocked?(message:, chat_channel:, user:)
     chat_message = Fabricate.build(:chat_message, user:, message:, chat_channel:)
