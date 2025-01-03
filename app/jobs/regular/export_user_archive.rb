@@ -118,6 +118,14 @@ module Jobs
 
     def execute(args)
       @current_user = User.find_by(id: args[:user_id])
+
+      @requesting_user = User.find_by(id: args[:requesting_user_id]) || @current_user
+      if !(@requesting_user&.admin? || @requesting_user == @current_user)
+        raise Discourse::InvalidParameters.new(
+                "requesting_user_id: can only be admins when specified",
+              )
+      end
+
       @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
 
@@ -170,37 +178,17 @@ module Jobs
         FileUtils.rm_rf(dirname)
       end
 
-      # create upload
-      upload = nil
+      begin
+        # create upload
+        upload = create_upload_for_user(user_export, zip_filename)
+      ensure
+        post = notify_user(upload, export_title)
 
-      if File.exist?(zip_filename)
-        File.open(zip_filename) do |file|
-          upload =
-            UploadCreator.new(
-              file,
-              File.basename(zip_filename),
-              type: "csv_export",
-              for_export: "true",
-            ).create_for(@current_user.id)
-
-          if upload.persisted?
-            user_export.update_columns(upload_id: upload.id)
-          else
-            Rails.logger.warn(
-              "Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}",
-            )
-          end
+        if user_export.present? && post.present?
+          topic = post.topic
+          user_export.update_columns(topic_id: topic.id)
+          topic.update_status("closed", true, Discourse.system_user)
         end
-
-        File.delete(zip_filename)
-      end
-    ensure
-      post = notify_user(upload, export_title)
-
-      if user_export.present? && post.present?
-        topic = post.topic
-        user_export.update_columns(topic_id: topic.id)
-        topic.update_status("closed", true, Discourse.system_user)
       end
     end
 
@@ -512,6 +500,32 @@ module Jobs
 
     private
 
+    def create_upload_for_user(user_export, zip_filename)
+      upload = nil
+      if File.exist?(zip_filename)
+        File.open(zip_filename) do |file|
+          upload =
+            UploadCreator.new(
+              file,
+              File.basename(zip_filename),
+              type: "csv_export",
+              for_export: "true",
+            ).create_for(@requesting_user.id)
+
+          if upload.persisted?
+            user_export.update_columns(upload_id: upload.id)
+          else
+            Rails.logger.warn(
+              "Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}",
+            )
+          end
+        end
+
+        File.delete(zip_filename)
+      end
+      upload
+    end
+
     def guardian
       @guardian ||= Guardian.new(@current_user)
     end
@@ -608,17 +622,17 @@ module Jobs
     def notify_user(upload, export_title)
       post = nil
 
-      if @current_user
+      if @requesting_user
         post =
           if upload.persisted?
             SystemMessage.create_from_system_user(
-              @current_user,
+              @requesting_user,
               :csv_export_succeeded,
               download_link: UploadMarkdown.new(upload).attachment_markdown,
               export_title: export_title,
             )
           else
-            SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
+            SystemMessage.create_from_system_user(@requesting_user, :csv_export_failed)
           end
       end
 
