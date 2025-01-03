@@ -70,6 +70,8 @@ export default class DMenuInstance extends FloatKitInstance {
     if (options.focusTrigger) {
       this.trigger?.focus?.();
     }
+
+    await this.options.onClose?.(this);
   }
 
   @action
