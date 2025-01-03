@@ -66,7 +66,7 @@ export default class EmojiStore extends Service {
   }
 
   #addEmojiToContext(emoji, context) {
-    const recentEmojis = this.contexts[context];
+    const recentEmojis = this.contexts[context] ?? [];
     recentEmojis.unshift(this.#normalizeEmojiCode(emoji));
     recentEmojis.length = Math.min(recentEmojis.length, MAX_TRACKED_EMOJIS);
     return recentEmojis;
