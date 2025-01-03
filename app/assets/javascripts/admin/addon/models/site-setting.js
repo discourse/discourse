@@ -40,17 +40,14 @@ export default class SiteSetting extends EmberObject {
     return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });
   }
 
+  settingObjectHelper = new SettingObjectHelper(this);
+
   @alias("settingObjectHelper.overridden") overridden;
   @alias("settingObjectHelper.computedValueProperty") computedValueProperty;
   @alias("settingObjectHelper.computedNameProperty") computedNameProperty;
   @alias("settingObjectHelper.validValues") validValues;
   @alias("settingObjectHelper.allowsNone") allowsNone;
   @alias("settingObjectHelper.anyValue") anyValue;
-
-  constructor() {
-    super(...arguments);
-    this.settingObjectHelper = new SettingObjectHelper(this);
-  }
 
   @discourseComputed("setting")
   staffLogFilter(setting) {
