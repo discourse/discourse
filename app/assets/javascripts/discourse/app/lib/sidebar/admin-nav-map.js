@@ -48,9 +48,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_notifications",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["all_results"],
-        query: { filter: "notifications" },
+        route: "adminConfig.notifications.settings",
         label: "admin.community.sidebar_link.notifications",
         icon: "bell",
       },

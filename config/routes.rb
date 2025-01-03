@@ -391,9 +391,9 @@ Discourse::Application.routes.draw do
       end
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
-        resources :login_and_authentication, only: %i[index]
 
         get "login-and-authentication" => "site_settings#index"
+        get "notifications" => "site_settings#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"

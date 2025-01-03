@@ -114,6 +114,7 @@ chat:
     default: 5
     max: 10
     min: 0
+    area: "notifications"
   max_chat_draft_length:
     default: 50_000
     hidden: true
