@@ -83,7 +83,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
     <Form
       @data={{this.formData}}
       @onSubmit={{this.save}}
-      as |form transientData|
+      as |form|
     >
       <form.Field
         @name="name"
