@@ -1,6 +1,6 @@
 import { registerEmoji } from "pretty-text/emoji";
 import EmojiPicker from "discourse/components/emoji-picker";
-import EmojiPickerModal from "discourse/components/emoji-picker/modal";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
 
@@ -36,8 +36,12 @@ export default {
             );
           };
 
-          owner.lookup("service:modal").show(EmojiPickerModal, {
-            model: {
+          owner.lookup("service:menu").show(event.target, {
+            identifier: "emoji-picker",
+            groupIdentifier: "emoji-picker",
+            component: EmojiPickerDetached,
+            modalForMobile: true,
+            data: {
               context: "chat",
               didSelectEmoji,
             },

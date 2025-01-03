@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { emojiUrlFor } from "discourse/lib/text";
-import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 

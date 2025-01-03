@@ -10,7 +10,7 @@ import { and, or } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import EmojiPickerModal from "discourse/components/emoji-picker/modal";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import concatClass from "discourse/helpers/concat-class";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
@@ -21,6 +21,7 @@ export default class ChatMessageActionsMobile extends Component {
   @service site;
   @service capabilities;
   @service modal;
+  @service menu;
 
   @tracked hasExpandedReply = false;
 
@@ -72,11 +73,15 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   @action
-  openEmojiPicker() {
-    this.args.closeModal();
+  async openEmojiPicker(_, event) {
+    await this.args.closeModal();
 
-    this.modal.show(EmojiPickerModal, {
-      model: {
+    await this.menu.show(event.target, {
+      identifier: "emoji-picker",
+      groupIdentifier: "emoji-picker",
+      component: EmojiPickerDetached,
+      modalForMobile: true,
+      data: {
         context: "chat",
         didSelectEmoji: this.messageInteractor.selectReaction,
       },
@@ -139,6 +144,7 @@ export default class ChatMessageActionsMobile extends Component {
                   @icon="discourse-emojis"
                   class="btn-flat react-btn"
                   @action={{this.openEmojiPicker}}
+                  @forwardEvent={{true}}
                 />
               {{/if}}
 
