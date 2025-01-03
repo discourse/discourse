@@ -899,13 +899,13 @@ nb_NO:
       public_admission: "Tillat brukere å ta del i gruppen fritt (krever offentlig synlig gruppe)"
       public_exit: "Tillat brukere å fritt forlate gruppen"
       empty:
-        posts: "Det finnes ingen innlegg av medlemmer i denne gruppen."
-        members: "Det finnes ingen medlemmer av denne gruppen."
-        requests: "Det er ingen medlemsforespørsler for denne gruppen."
-        mentions: "Denne gruppen har aldri blitt nevnt."
-        messages: "Det finnes ingen meldinger til denne gruppen."
-        topics: "Det finnes ingen emner opprettet av medlemmer av denne gruppen."
-        logs: "Det finnes ingen logger for denne gruppen."
+        posts: "Det finnes ingen innlegg av medlemmer i denne gruppen"
+        members: "Det finnes ingen medlemmer av denne gruppen"
+        requests: "Det er ingen medlemsforespørsler for denne gruppen"
+        mentions: "Denne gruppen har aldri blitt nevnt"
+        messages: "Det finnes ingen meldinger til denne gruppen"
+        topics: "Det finnes ingen emner opprettet av medlemmer av denne gruppen"
+        logs: "Det finnes ingen logger for denne gruppen"
       add: "Legg til"
       join: "Bli medlem"
       leave: "Forlat"
@@ -1095,10 +1095,10 @@ nb_NO:
         one: "Slett %{count}"
         other: "Slett %{count}"
       username: "brukernavn"
-      trust_level: "TN"
+      trust_level: "tillitsnivå"
       read_time: "lesetid"
       topics_entered: "emner åpnet"
-      post_count: "# innlegg"
+      post_count: "innlegg"
       confirm_delete_other_accounts: "Er du sikker på at du vil slette disse kontoene?"
       powered_by: "bruker <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopiert"
@@ -2268,6 +2268,8 @@ nb_NO:
       categories_boxes: "Bokser med underkategorier"
       categories_boxes_with_topics: "Bokser med håndplukket emner"
       subcategories_with_featured_topics: "Underkategorier med utvalgte emner"
+    full_name_requirement:
+      required_at_signup: "Nødvendig ved registrering"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3392,6 +3394,8 @@ nb_NO:
           one: Du har valgt <b>%{count}</b> innlegg.
           other: "Du har valgt <b>%{count}</b> innlegg."
       deleted_by_author_simple: "(emne slettet av forfatter)"
+    post_list:
+      aria_post_number: "%{title} - innlegg #%{postNumber}"
     post:
       confirm_delete: "Er du sikker på at du vil slette dette innlegget?"
       quote_reply: "Sitat"
@@ -4364,7 +4368,7 @@ nb_NO:
         show: "Vis"
         about: "Om"
   admin_js:
-    type_to_filter: "skriv for å filtrere…"
+    type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
     admin:
       title: "Discourse-admin"
@@ -4379,7 +4383,10 @@ nb_NO:
         title: "Liste over tilgjengelige rapporter"
         sidebar_title: "Rapporter"
         sidebar_link:
-          all: "Alle"
+          all: "Alle rapporter"
+      config:
+        notifications:
+          title: "Varsler"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"
@@ -4471,6 +4478,7 @@ nb_NO:
             include_subcategories:
               label: "Inkluder underkategorier"
       flags:
+        title: "Moderering"
         description: "Beskrivelse"
         enabled: "Aktivert?"
         more_options:
@@ -4618,12 +4626,11 @@ nb_NO:
           badges: "Merker"
           notifications: "Varsler"
           permalinks: "Permalenker"
-          trust_levels: "Tillitsnivå"
           users: "Brukere"
           groups: "Grupper"
-          user_fields: "Brukerfelter"
-          watched_words: "Ord som holdes oppsyn med"
           legal: "Juridisk"
+          moderation_flags:
+            title: "Moderering"
       appearance:
         title: "Utseende"
         sidebar_link:
@@ -4635,22 +4642,8 @@ nb_NO:
       email_settings:
         sidebar_link:
           appearance: "Utseende"
-          preview_summary: "Forhåndsvis oppsummering"
-      email_logs:
-        sidebar_link:
-          sent: "Sendt"
-          skipped: "Hoppet over"
-          bounced: "Tilbakesendt"
-          received: "Mottatt"
-          rejected: "Avvist"
       security:
         title: "Sikkerhet"
-        sidebar_link:
-          error_logs: "Feillogg"
-          screened_emails: "Kontrollerte e-poster"
-          screened_ips: "Kontrollerte IP-er"
-          screened_urls: "Kontrollerte URL-er"
-          search_logs: "Søkelogger"
       section_landing_pages:
         account:
           title: "Konto"
@@ -4663,6 +4656,7 @@ nb_NO:
           update: "Oppdater"
           saved: "lagret!"
         flags:
+          header: "Moderering"
           description: "Beskrivelse"
           enabled: "Aktivert?"
           edit: "Endre"
@@ -4704,9 +4698,7 @@ nb_NO:
         sidebar_link:
           developer: "Utvikler"
           embedding: "Innbygging"
-          rate_limits: "Frekvensbegresninger"
           user_api: "Bruker-API"
-          web_hooks: "Webhooker"
           onebox: "Onebox"
           files: "Filer"
           other_options: "Annet"
@@ -5687,6 +5679,9 @@ nb_NO:
         username: "Brukernavn"
         delete_confirm: Er du sikker på at du vil slette denne permalenken?
         more_options: "Flere valg"
+        nav:
+          settings: "Instillinger"
+          permalinks: "Permalenker"
         form:
           label: "Ny:"
           url: "URL"
@@ -5716,3 +5711,18 @@ nb_NO:
       previews:
         share_button: "Del"
         reply_button: "Svar"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alle kategorier"
+          new: "Ny"
+          unread: "Uleste"
+          top: "Aktive"
+          latest: "Siste"
+          categories: "Kategorier"
+        category_names:
+          site_feedback: "Tilbakemeldinger"
+        table_headers:
+          topic: "Emne"
+          replies: "Svar"
+          views: "Visninger"
+          activity: "Aktivitet"

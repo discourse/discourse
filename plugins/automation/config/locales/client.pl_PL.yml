@@ -366,6 +366,8 @@ pl_PL:
             label: Skrypt
           version:
             label: Wersja
+          status:
+            label: Status
           enabled:
             label: Włączona
           disabled:

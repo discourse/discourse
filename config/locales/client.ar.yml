@@ -1206,13 +1206,13 @@ ar:
       public_admission: "السماح للمستخدمين بالانضمام إلى المجموعة بحرية (يلزم أن تكون المجموعة عامة)"
       public_exit: "السماح للمستخدمين بمغادرة المجموعة بحرية"
       empty:
-        posts: "لا توجد منشورات من أعضاء هذه المجموعة."
-        members: "لا يوجد أعضاء في هذه المجموعة."
-        requests: "لا توجد طلبات عضوية لهذه المجموعة."
-        mentions: "لا توجد إشارات إلى هذه المجموعة."
-        messages: "لا توجد رسائل لهذه المجموعة."
-        topics: "لا توجد موضوعات من أعضاء هذه المجموعة."
-        logs: "لا توجد سجلات لهذه المجموعة."
+        posts: "لا توجد منشورات من أعضاء هذه المجموعة"
+        members: "لا يوجد أعضاء في هذه المجموعة"
+        requests: "لا توجد طلبات عضوية لهذه المجموعة"
+        mentions: "لا توجد إشارات إلى هذه المجموعة"
+        messages: "لا توجد رسائل لهذه المجموعة"
+        topics: "لا توجد موضوعات من أعضاء هذه المجموعة"
+        logs: "لا توجد سجلات لهذه المجموعة"
       add: "إضافة"
       join: "انضمام"
       leave: "مغادرة"
@@ -1445,7 +1445,7 @@ ar:
       trust_level: "مستوى الثقة"
       read_time: "وقت القراءة"
       topics_entered: "الموضوعات المدخلة"
-      post_count: "# منشور"
+      post_count: "المنشورات"
       confirm_delete_other_accounts: "هل تريد بالتأكيد حذف هذه الحسابات؟"
       powered_by: "باستخدام <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "تم النسخ"
@@ -2815,6 +2815,8 @@ ar:
       categories_boxes: "المربعات ذات الفئات الفرعية"
       categories_boxes_with_topics: "مربعات بالموضوعات المميَّزة"
       subcategories_with_featured_topics: "الفئات الفرعية ذات الموضوعات المميَّزة"
+    full_name_requirement:
+      required_at_signup: "مطلوب عند التسجيل"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4225,6 +4227,8 @@ ar:
           many: "لقد حدَّدت <b>%{count}</b> منشورًا."
           other: "لقد حدَّدت <b>%{count}</b> منشور."
       deleted_by_author_simple: "(تم حذف الموضوع بواسطة الكاتب)"
+    post_list:
+      aria_post_number: "%{title} - المنشور #%{postNumber}"
     post:
       confirm_delete: "هل تريد بالتأكيد حذف هذا المنشور؟"
       quote_reply: "اقتباس"
@@ -5762,9 +5766,12 @@ ar:
         meta_doc: "استكشف <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>وثائقنا</a> للحصول على نظرة عامة مفصَّلة عن التقارير."
         sidebar_title: "التقارير"
         sidebar_link:
-          all: "الكل"
+          all: "جميع التقارير"
+      config:
+        notifications:
+          title: "الإشعارات"
       new_features:
-        title: "ما الجديد"
+        title: "ما الجديد?"
         check_for_updates: "تحقق من وجود تحديثات"
       dashboard:
         title: "لوحة المعلومات"
@@ -5783,7 +5790,7 @@ ar:
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         dismiss_notice: "تجاهل"
         new_features:
-          title: "ما الجديد"
+          title: "ما الجديد?"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
           previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
@@ -5875,7 +5882,7 @@ ar:
             type_of_web_hook_event:
               label: "نوع الحدث"
       flags:
-        title: "بلاغات الإشراف"
+        title: "الإشراف"
         description: "الوصف"
         enabled: "مفعَّلة؟"
         more_options:
@@ -6237,61 +6244,39 @@ ar:
         sidebar_link:
           backups: "النسخ الاحتياطية"
           whats_new:
-            title: "ما الجديد"
+            title: "ما الجديد?"
             keywords: "سجل التغييرات|الميزة|الإصدار"
       community:
         title: "المجتمع"
         sidebar_link:
           about_your_site: "نبذة عن موقعك"
           badges: "الشارات"
-          login_and_authentication: "تسجيل الدخول والمصادقة"
           notifications: "الإشعارات"
           permalinks: "الروابط الثابتة"
-          trust_levels: "مستويات الثقة"
           users: "المستخدمون"
           groups: "مجموعتان"
-          user_fields: "حقول المستخدم"
-          watched_words: "الكلمات المُراقَبة"
           legal: "المسائل القانونية"
-          moderation_flags: "بلاغات الإشراف"
+          moderation_flags:
+            title: "الإشراف"
       appearance:
         title: "المظهر"
         sidebar_link:
-          font_style: "نمط الخط"
           site_logo: "شعار الموقع"
-          color_schemes: "لوحات الألوان"
           emoji: "الرمز التعبيري"
           navigation: "التنقل"
           themes: "السمات"
           components:
             title: "المكوِّنات"
             keywords: "الموضوع|الامتداد"
-          site_texts: "نصوص الموقع"
       email_settings:
         title: "إعدادات البريد الإلكتروني"
         sidebar_link:
           appearance: "المظهر"
-          preview_summary: "ملخص المعاينة"
-          server_setup: "إعداد الخادم"
-      email_logs:
-        title: "سجلات البريد الإلكتروني"
-        sidebar_link:
-          sent: "المُرسَلة"
-          skipped: "المتخطاة"
-          bounced: "المرتدة"
-          received: "المتلقاة"
-          rejected: "المرفوضة"
       security:
         title: "الأمان"
         sidebar_link:
-          error_logs: "سجلات الأخطاء"
-          screened_emails: "عناوين البريد الإلكتروني الخاضعة للمراقبة"
-          screened_ips: "عناوين IP الخاضعة للمراقبة"
-          screened_urls: "عناوين URL الخاضعة للمراقبة"
-          search_logs: "سجلات البحث"
           security: "إعدادات الأمان"
           spam: "إعدادات البريد العشوائي"
-          staff_action_logs: "سجلات إجراءات الموظفين"
       section_landing_pages:
         account:
           title: "الحساب"
@@ -6299,7 +6284,7 @@ ar:
             title: "النسخ الاحتياطية"
             description: "قم بعمل نسخة احتياطية من بيانات موقعك"
           whats_new:
-            title: "ما الجديد"
+            title: "ما الجديد?"
             description: "اكتشف الإصدارات الجديدة والتحسينات في Discourse"
       config_areas:
         about:
@@ -6354,7 +6339,7 @@ ar:
             your_organization_saved: "تم حفظ مؤسستك"
           saved: "تم الحفظ!"
         flags:
-          header: "بلاغات الإشراف"
+          header: "الإشراف"
           edit_header: "تعديل البلاغ"
           subheader: "يساعدك نظام البلاغات في Discourse وفريق المشرفين لديك على إدارة المحتوى وسلوك المستخدم، والحفاظ على مجتمعك محترمًا وصحيًا. الإعدادات الافتراضية مناسبة لمعظم المجتمعات ولا يتعين عليك تغييرها. ومع ذلك، إذا كان موقعك يحتوي على متطلبات معيَّنة، يمكنك إيقاف البلاغات التي لا تحتاج إليها وإضافة بلاغاتك المخصَّصة."
           description: "الوصف"
@@ -6433,18 +6418,16 @@ ar:
       advanced:
         title: "متقدمة"
         sidebar_link:
-          api_keys: "مفاتيح واجهة برمجة التطبيقات"
+          api_keys:
+            title: "مفاتيح واجهة برمجة التطبيقات"
           developer: "المطور"
           embedding: "التضمين"
-          rate_limits: "حدود المعدلات"
           user_api: "واجهة برمجة التطبيقات للمستخدم"
-          web_hooks: "خطافات الويب"
           onebox: "لوحة المعاينة"
           files: "الملفات"
           other_options: "أخرى"
           search: "البحث"
           experimental: "تجريبي"
-          all_site_settings: "جميع إعدادات الموقع"
       navigation_menu:
         sidebar: "الشريط الجانبي"
         header_dropdown: "القائمة المنسدلة للرأس"
@@ -7975,6 +7958,9 @@ ar:
         back: "العودة إلى الروابط الدائمة"
         more_options: "خيارات إضافية"
         copy_success: "تم نسخ الرابط الدائم إلى الحافظة"
+        nav:
+          settings: "الإعدادات"
+          permalinks: "الروابط الثابتة"
         form:
           label: "جديد:"
           add_header: "إضافة رابط دائم"
@@ -8020,8 +8006,23 @@ ar:
           moderator: "مشرف"
           regular: "مستخدم منتظم"
       previews:
-        topic_title: "عنوان موضوع المناقشة"
         share_button: "مشاركة"
         reply_button: "الرد"
         topic_preview: "معاينة الموضوع"
         homepage_preview: "معاينة الصفحة الرئيسية"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "كل الفئات"
+          new: "الجديدة"
+          unread: "غير المقروءة"
+          top: "الأكثر نشاطًا"
+          latest: "الحديثة"
+          hot: "ساخن"
+          categories: "الفئات"
+        category_names:
+          site_feedback: "التعليقات على الموقع"
+        table_headers:
+          topic: "الموضوع"
+          replies: "الردود"
+          views: "مرات العرض"
+          activity: "النشاط"

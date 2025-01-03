@@ -413,6 +413,8 @@ ru:
             label: Скрипт
           version:
             label: Версия
+          status:
+            label: Статус
           enabled:
             label: Включено
           disabled:

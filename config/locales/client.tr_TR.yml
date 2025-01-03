@@ -934,13 +934,13 @@ tr_TR:
       public_admission: "Kullanıcıların gruba özgürce olarak katılmalarına izin ver (Grubun herkese açık olması gerekiyor)"
       public_exit: "Kullanıcıların gruptan özgürce ayrılmalarına izin ver"
       empty:
-        posts: "Bu grubun üyeleri henüz gönderi yapmamış."
-        members: "Bu grupta henüz üye bulunmuyor."
-        requests: "Bu grup için üyelik talebi yok."
-        mentions: "Bu gruptan bahsedilmemiş."
-        messages: "Bu grup için mesaj bulunmuyor."
-        topics: "Bu grubun üyeleri tarafından oluşturulmuş konu bulunmuyor."
-        logs: "Bu grup için herhangi bir günlük bulunmuyor."
+        posts: "Bu grubun üyeleri henüz gönderi yapmamış"
+        members: "Bu grupta henüz üye bulunmuyor"
+        requests: "Bu grup için üyelik talebi yok"
+        mentions: "Bu gruptan bahsedilmemiş"
+        messages: "Bu grup için mesaj bulunmuyor"
+        topics: "Bu grubun üyeleri tarafından oluşturulmuş konu bulunmuyor"
+        logs: "Bu grup için herhangi bir günlük bulunmuyor"
       add: "Ekle"
       join: "Katıl"
       leave: "Ayrıl"
@@ -1130,10 +1130,10 @@ tr_TR:
         one: "%{count} tanesini sil"
         other: "%{count} tanesini sil"
       username: "kullanıcı adı"
-      trust_level: "GS"
+      trust_level: "güven seviyesi"
       read_time: "okuma süresi"
       topics_entered: "girilen konular"
-      post_count: "# gönderi"
+      post_count: "gönderiler"
       confirm_delete_other_accounts: "Bu hesapları silmek isteğinize emin misiniz?"
       powered_by: "<a href='https://maxmind.com'>MaxMindDB</a> kullanıyor"
       copied: "kopyalandı"
@@ -2342,6 +2342,8 @@ tr_TR:
       categories_boxes: "Alt Kategorili Kutular"
       categories_boxes_with_topics: "Öne Çıkan Konuları içeren Kutular"
       subcategories_with_featured_topics: "Öne Çıkan Konular içeren Alt Kategoriler"
+    full_name_requirement:
+      required_at_signup: "Kayıt sırasında gerekli"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3472,6 +3474,8 @@ tr_TR:
           one: <b>%{count}</b> gönderi seçtiniz.
           other: "<b>%{count}</b> gönderi seçtiniz."
       deleted_by_author_simple: "(konu, yazar tarafından silindi)"
+    post_list:
+      aria_post_number: "%{title} - gönderi #%{postNumber}"
     post:
       confirm_delete: "Bu gönderiyi silmek istediğinize emin misiniz?"
       quote_reply: "Alıntı"
@@ -4746,7 +4750,7 @@ tr_TR:
           save: "Farklı kaydet..."
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
   admin_js:
-    type_to_filter: "filtrelemek için yazın…"
+    type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
     admin:
       title: "Discourse Yöneticisi"
@@ -4762,9 +4766,12 @@ tr_TR:
         meta_doc: "Raporlara ayrıntılı bir genel bakış için <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>belgelerimizi</a> keşfedin."
         sidebar_title: "Raporlar"
         sidebar_link:
-          all: "Tümü"
+          all: "Tüm raporlar"
+      config:
+        notifications:
+          title: "Bildirimler"
       new_features:
-        title: "Yenilikler"
+        title: "Yenilikler?"
       dashboard:
         title: "Pano"
         last_updated: "Pano güncellendi:"
@@ -4782,7 +4789,7 @@ tr_TR:
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
         dismiss_notice: "Kapat"
         new_features:
-          title: "Yenilikler"
+          title: "Yenilikler?"
           subtitle: "Sürekli olarak yeni özellikler ve geliştirmeler yayınlıyoruz. Bu sayfa önemli noktaları kapsıyor, ancak kapsamlı sürüm notlarını görmek için \"Daha fazla bilgi edinin\" seçeneğine tıklayabilirsiniz."
           previous_announcements: "Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta'da</a> görebilirsiniz"
           learn_more: "Daha fazla bilgi edinin..."
@@ -4870,7 +4877,7 @@ tr_TR:
             type_of_web_hook_event:
               label: "Etkinlik türü"
       flags:
-        title: "Moderasyon Bayrakları"
+        title: "Moderasyon"
         description: "Açıklama"
         enabled: "Etkin mi?"
         more_options:
@@ -5208,61 +5215,39 @@ tr_TR:
         sidebar_link:
           backups: "Yedeklemeler"
           whats_new:
-            title: "Yenilikler"
+            title: "Yenilikler?"
             keywords: "değişiklik günlüğü|özellik|yayın"
       community:
         title: "Topluluk"
         sidebar_link:
           about_your_site: "Siteniz hakkında"
           badges: "Rozetler"
-          login_and_authentication: "Giriş Yapma ve Kimlik Doğrulama"
           notifications: "Bildirimler"
           permalinks: "Kalıcı Bağlantılar"
-          trust_levels: "Güven Seviyeleri"
           users: "Kullanıcılar"
           groups: "Grup"
-          user_fields: "Kullanıcı Alanları"
-          watched_words: "İzlenen Kelimeler"
           legal: "Yasal"
-          moderation_flags: "Moderasyon Bayrakları"
+          moderation_flags:
+            title: "Moderasyon"
       appearance:
         title: "Görünüm"
         sidebar_link:
-          font_style: "Yazı Tipi Stili"
-          site_logo: "Site Logosu"
-          color_schemes: "Renk Paletleri"
+          site_logo: "Site logosu"
           emoji: "Emoji"
           navigation: "Navigasyon"
           themes: "Temalar"
           components:
             title: "Bileşenler"
             keywords: "tema|uzantı"
-          site_texts: "Site Metinleri"
       email_settings:
         title: "E-posta Ayarları"
         sidebar_link:
           appearance: "Görünüm"
-          preview_summary: "Ön İzleme Özeti"
-          server_setup: "Sunucu Kurulumu"
-      email_logs:
-        title: "E-posta Günlükleri"
-        sidebar_link:
-          sent: "Gönderilen"
-          skipped: "Atlandı"
-          bounced: "Geri Döndü"
-          received: "Alındı"
-          rejected: "Reddedildi"
       security:
         title: "Güvenlik"
         sidebar_link:
-          error_logs: "Hata Kayıtları"
-          screened_emails: "Taranan E-postalar"
-          screened_ips: "Taranan IP'ler"
-          screened_urls: "Taranan URL'ler"
-          search_logs: "Arama Günlükleri"
           security: "Güvenlik ayarları"
           spam: "Spam ayarları"
-          staff_action_logs: "Personel Eylemi Günlükleri"
       section_landing_pages:
         account:
           title: "Hesap"
@@ -5270,7 +5255,7 @@ tr_TR:
             title: "Yedeklemeler"
             description: "Sitenizin verilerinin yedeğini alın"
           whats_new:
-            title: "Yenilikler"
+            title: "Yenilikler?"
             description: "Discourse'taki yeni yayınları ve iyileştirmeleri keşfedin"
       config_areas:
         about:
@@ -5325,7 +5310,7 @@ tr_TR:
             your_organization_saved: "Kuruluşunuz kaydedildi"
           saved: "kaydedildi!"
         flags:
-          header: "Moderasyon Bayrakları"
+          header: "Moderasyon"
           edit_header: "Bayrağı düzenle"
           subheader: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
           description: "Açıklama"
@@ -5403,18 +5388,16 @@ tr_TR:
       advanced:
         title: "Gelişmiş"
         sidebar_link:
-          api_keys: "API anahtarları"
+          api_keys:
+            title: "API anahtarları"
           developer: "Geliştirici"
           embedding: "Gömme"
-          rate_limits: "Oran Limitleri"
           user_api: "Kullanıcı API'si"
-          web_hooks: "Web Kancaları"
           onebox: "Onebox"
           files: "Dosyalar"
           other_options: "Diğer"
           search: "Ara"
           experimental: "Deneysel"
-          all_site_settings: "Tüm Site Ayarları"
       navigation_menu:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"
@@ -6872,6 +6855,9 @@ tr_TR:
         back: "Kalıcı Bağlantılara geri dön"
         more_options: "Daha fazla seçenek"
         copy_success: "Kalıcı bağlantı panoya kopyalandı"
+        nav:
+          settings: "Ayarlar"
+          permalinks: "Kalıcı Bağlantılar"
         form:
           label: "Yeni:"
           add_header: "Kalıcı bağlantı ekle"
@@ -6913,8 +6899,23 @@ tr_TR:
           moderator: "Moderatör"
           regular: "Normal Kullanıcı"
       previews:
-        topic_title: "Tartışma konusu başlığı"
         share_button: "Paylaş"
         reply_button: "Yanıtla"
         topic_preview: "Konu ön izlemesi"
         homepage_preview: "Ana sayfa ön izlemesi"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "tüm kategoriler"
+          new: "Yeni"
+          unread: "Okunmadı"
+          top: "Popüler"
+          latest: "En son"
+          hot: "Popüler"
+          categories: "Kategoriler"
+        category_names:
+          site_feedback: "Site Geri Bildirimi"
+        table_headers:
+          topic: "Konu"
+          replies: "Yanıtlar"
+          views: "Görüntülemeler"
+          activity: "Aktivite"

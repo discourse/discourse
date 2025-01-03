@@ -2352,18 +2352,8 @@ hr:
             label: "Pregled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije s istaknutim temama"
-              categories_and_latest_topics:
-                label: "Kategorije i najnovije teme"
-              categories_and_latest_topics_created_date:
-                label: "Kategorije i najnovije teme (poredaj po datumu kreiranja teme)"
-              categories_and_top_topics:
-                label: "Kategorije i glavne teme"
-              subcategories_with_featured_topics:
-                label: "Potkategorije s istaknutim temama"
+              latest:
+                label: "Posljednje"
       corporate:
         fields:
           contact_url:

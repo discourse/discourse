@@ -755,14 +755,6 @@ ur:
         description: "اس گروپ کے ممبران ان کیٹگریز تک رسائی حاصل کرسکتے ہیں"
       public_admission: "صارفین کو آزادی سے گروپ میں شمولیت اختیار کرنے کی اجازت دیں (گروپ کا عوامی طور پر ظاہر ہونا لاذمی ہو)"
       public_exit: "صارفین کو آزادانہ طور پر گروپ چھوڑنے کی اجازت دیں"
-      empty:
-        posts: "اس گروپ کے ارکان کی طرف سے کوئی پوسٹس نہیں ہیں۔"
-        members: "اس گروپ میں کوئی ارکان ہیں۔"
-        requests: "اس گروپ کے لئے فی الحال کوئی رکنیت کی درخواستیں نہیں ہیں۔"
-        mentions: "اس گروپ کے کوئی تذکرے موجود نہیں ہیں۔"
-        messages: "اس گروپ کے لئے فی الحال کوئی پیغامات نہیں ہیں۔"
-        topics: "اِس گروپ کے ارکان کی طرف سے کوئی ٹاپک نہیں ہیں۔"
-        logs: "اس گروپ کے لئے کوئی لاگز موجود نہیں ہیں۔"
       add: "شامل کریں"
       join: "شمولیت اختیار کریں"
       leave: "چھوڑ دیں"
@@ -944,10 +936,10 @@ ur:
         one: "%{count} حذف کریں"
         other: "%{count} حذف کریں"
       username: "صارف کا نام"
-      trust_level: "TL"
+      trust_level: "ٹرسٹ لَیول"
       read_time: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
       topics_entered: "درج کردہ موضوعات"
-      post_count: "# پوسٹ"
+      post_count: "پوسٹ`"
       confirm_delete_other_accounts: "کیا آپ واقعی یہ اکاؤنٹس مٹانا چاہتے ہیں؟"
       powered_by: "<a href='https://maxmind.com'>MaxMindDB</a>کا استعمال کرتے ہوئے"
       copied: "کاپی کر لیا"
@@ -3658,7 +3650,10 @@ ur:
         title: "دستیاب رپورٹوں کی فہرست"
         sidebar_title: "رپورٹیں"
         sidebar_link:
-          all: "تمام"
+          all: "تمام رپورٹیں"
+      config:
+        notifications:
+          title: "اطلاعات"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈَیش بورڈ اَپ ڈیٹ کیا گیا:"
@@ -3750,6 +3745,7 @@ ur:
             include_subcategories:
               label: "ذیلی زمرہ جات شامل کریں۔"
       flags:
+        title: "ماڈریٹر کا کام"
         description: "تفصیل"
         enabled: "فعال؟"
       groups:
@@ -3967,16 +3963,14 @@ ur:
           badges: "بَیج"
           notifications: "اطلاعات"
           permalinks: "دائمی لِنکس"
-          trust_levels: "ٹرسٹ لَیول"
           users: "صارفین"
           groups: "گروپس"
-          user_fields: "صارف کے لیے دیئے گئے خانے"
-          watched_words: "نظر رکھے ہوئے الفاظ"
           legal: "قانونی"
+          moderation_flags:
+            title: "ماڈریٹر کا کام"
       appearance:
         title: "ظاہری شکل"
         sidebar_link:
-          color_schemes: "رنگ پیلیٹ"
           emoji: "اِیمَوجی"
           navigation: "نیویگیشن"
           themes: "تِھیمز"
@@ -3985,22 +3979,8 @@ ur:
       email_settings:
         sidebar_link:
           appearance: "ظاہری شکل"
-          preview_summary: "ڈائجسٹ کا مشاہدہ کریں"
-      email_logs:
-        sidebar_link:
-          sent: "بھیجا جا چکا"
-          skipped: "چھوڑا گیا"
-          bounced: "لوٹا دی گئی"
-          received: "موصول ہو گئی"
-          rejected: "مسترد کر دی گئی"
       security:
         title: "سیکورٹی"
-        sidebar_link:
-          error_logs: "خرابیوں کے لاگز"
-          screened_emails: "سکرین کی گئی اِیمیلز"
-          screened_ips: "سکرین کیے گئے IP"
-          screened_urls: "سکرین کیے گئے یو.آر.ایل."
-          search_logs: "لاگز سرچ کریں"
       section_landing_pages:
         account:
           title: "اکاؤنٹ"
@@ -4014,6 +3994,7 @@ ur:
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
         flags:
+          header: "ماڈریٹر کا کام"
           description: "تفصیل"
           enabled: "فعال؟"
           edit: "ترمیم کریں"
@@ -4051,9 +4032,7 @@ ur:
         sidebar_link:
           developer: "ڈیولپر"
           embedding: "اَیمبَیڈ کرنا"
-          rate_limits: "رَیٹ لِمِٹس"
           user_api: "یُوزَر API"
-          web_hooks: "وَیب ھُوک٘س٘"
           onebox: "وَن باکس"
           files: "فائلیں"
           other_options: "دیگر"
@@ -5209,6 +5188,9 @@ ur:
         destination: "منزل"
         copy_to_clipboard: "پرمالنک کو کلپ بورڈ میں کاپی کریں"
         delete_confirm: کیا آپ واقعی اِس دائمی لِنک کو حذف کرنا چاہتے ہیں؟
+        nav:
+          settings: "ترتیبات"
+          permalinks: "دائمی لِنکس"
         form:
           label: "نیا:"
           url: "URL"
@@ -5241,8 +5223,22 @@ ur:
           moderator: "ماڈریٹر"
           regular: "رَیگولر صارف"
       previews:
-        topic_title: "ایک بحث کےموضوع کی سرخی"
         share_button: "شیئر"
         reply_button: "جواب"
         topic_preview: "موضوع دکھائیں"
         homepage_preview: "ہوم پیج دکھائیں"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "تمام زُمرَہ جات"
+          new: "نئی"
+          unread: "بغیر پڑھے"
+          top: "سب سے اوپر"
+          latest: "تازہ ترین"
+          categories: "اقسام"
+        category_names:
+          site_feedback: "سائٹ کیلئے رائے"
+        table_headers:
+          topic: "ٹاپک"
+          replies: "جوابات"
+          views: "وِیوز"
+          activity: "سرگرمی"

@@ -135,6 +135,8 @@ ca:
             label: Disparador
           version:
             label: Versió
+          status:
+            label: Estat
           enabled:
             label: Activat
           disabled:

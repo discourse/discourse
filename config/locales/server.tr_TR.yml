@@ -1716,8 +1716,6 @@ tr_TR:
     summary_percent_filter: "Bir kullanıcı \"Bu Konuyu Özetleyin\" seçeneğine tıkladığında, gönderilerin en popüler %'sini gösterin"
     summary_max_results: "\"Bu Konuyu Özetle\" ile döndürülen maksimum gönderi sayısı"
     summary_timeline_button: "Zaman çizelgesinde bir \"Özetle\" düğmesi gösterin"
-    summarization_strategy: "Eklentiler tarafından kaydedilen içeriği özetlemenin diğer yolları"
-    custom_summarization_allowed_groups: "`summarization_strategy` kullanarak içerikleri özetlemesine izin verilen gruplar."
     enable_personal_messages: "KALDIRILDI, bunun yerine \"kişisel mesaj etkin gruplar\" ayarını kullanın. Güven seviyesi 1 (mesaj göndermek için minimum güven ile yapılandırılabilir) kullanıcıların mesaj oluşturmasına ve mesajlara yanıt vermesine izin verin. Personelin ne olursa olsun her zaman mesaj gönderebileceğini unutmayın."
     personal_message_enabled_groups: "Bu gruplardaki kullanıcıların kişisel mesajlar OLUŞTURMALARINA izin verin. ÖNEMLİ: 1) tüm kullanıcılar mesajlara YANIT verebilir. 2) Yöneticiler ve modlar herhangi bir kullanıcıya mesaj OLUŞTURABİLİR. 3) Güven seviyesi grupları daha yüksek seviyeleri içerir; GS1, GS2, GS3, GS4'e izin vermek ancak GS0'a izin vermemek için Trust_level_1'i seçin. 4) Grup etkileşimi ayarları, belirli gruplara mesaj göndermek için bu ayarı geçersiz kılar."
     enable_system_message_replies: "Kişisel mesajlar devre dışı bırakılmış olsa bile kullanıcıların sistem mesajlarını yanıtlayabilmesine izin verir"
@@ -2254,7 +2252,6 @@ tr_TR:
     penalty_include_post_message: "Bir kullanıcıyı sustururken veya askıya alırken rahatsız edici gönderi mesajını otomatik olarak e-posta mesajı şablonuna ekleyin"
     svg_icon_subset: "Varlıklarınıza dâhil etmek istediğiniz ek FontAwesome simgelerini ekleyin. Katı simgeler için \"fa-\", normal simgeler için \"far-\" ve marka simgeleri için \"fab-\" ön ekini kullanın."
     max_prints_per_hour_per_user: "Maksimum /print sayfa gösterim sayısı (yazdırmayı devre dışı bırakmak için 0 olarak ayarlayın)"
-    full_name_required: "Tam ad, kullanıcı profilinin gerekli bir alanıdır."
     enable_names: "Kullanıcının tam adını profilinde, kullanıcı kartında ve e-postalarında gösterin. Tam adı her yerde gizlemek için devre dışı bırakın."
     display_name_on_posts: "Bir kullanıcının @kullanıcı adına ek olarak gönderilerinde tam adını gösterin."
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
@@ -2430,7 +2427,6 @@ tr_TR:
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
     experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_experimental_lightbox: "Varsayılan görüntü ışık kutusunu yenilenen tasarımla değiştirin."
-    experimental_glimmer_topic_list_groups: "Yeni \"parıltı\" konu listesi uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     glimmer_post_menu_mode: "Yeni \"parıltı\" gönderi menüsü uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"otomatik\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleştirilir. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     glimmer_post_menu_groups: "Belirtilen kullanıcı grupları için \"otomatik\" modda yeni \"parıltı\" gönderi menüsü uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     experimental_form_templates: "Form şablonları özelliğini etkinleştirin. <b>Etkinleştirdikten sonra,</b> şablonları <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> (özelleştir / şablonlar) bölümünden yönetin."
@@ -2508,8 +2504,8 @@ tr_TR:
       invalid_search_ranking_weights: "Değer, search_ranking_weights site ayarı için geçersiz. Örnek: \"{0.1,0.2,0.3,1.0}\". Her ağırlık için maksimum değerin 1,0 olduğunu unutmayın."
     keywords:
       clean_up_inactive_users_after_days: "devre dışı|etkin değil|etkinliği kaldırıldı"
-      purge_unactivated_users_grace_period_days: "devre dışı|etkin değil|etkinliği kaldırıldı"
       navigation_menu: "kenar çubuğu|başlık açılır menüsü"
+      purge_unactivated_users_grace_period_days: "devre dışı|etkin değil|etkinliği kaldırıldı"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ornek.com"
@@ -4875,23 +4871,9 @@ tr_TR:
             label: "Ana sayfa stili"
             choices:
               latest:
-                label: "En Son Konular"
-              categories_only:
-                label: "Yalnızca Kategoriler"
-              categories_with_featured_topics:
-                label: "Öne Çıkan Konuları içeren Kategoriler"
-              categories_and_latest_topics:
-                label: "Kategoriler ve En Son Konular"
-              categories_and_latest_topics_created_date:
-                label: "Kategoriler ve En Son Konular (konu oluşturulma tarihine göre sıralayın)"
-              categories_and_top_topics:
-                label: "Kategoriler ve Popüler Konular"
-              categories_boxes:
-                label: "Kategoriler Kutuları"
-              categories_boxes_with_topics:
-                label: "Konu içeren Kategoriler Kutuları"
-              subcategories_with_featured_topics:
-                label: "Öne Çıkan Konular içeren Alt Kategoriler"
+                label: "En son"
+              hot:
+                label: "Popüler"
       branding:
         title: "Site logosu"
         fields:

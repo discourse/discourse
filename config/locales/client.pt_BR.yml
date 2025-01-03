@@ -934,13 +934,13 @@ pt_BR:
       public_admission: "Permitir que os(as) usuários(as) entrem no grupo livremente (Requer grupo publicamente visível)"
       public_exit: "Permitir que os(as) usuários(as) saiam do grupo livremente"
       empty:
-        posts: "Não há publicações de membros deste grupo."
-        members: "Não há membros neste grupo."
-        requests: "Não há pedidos de associação para este grupo."
-        mentions: "Não há menções a este grupo."
-        messages: "Não há mensagens para este grupo."
-        topics: "Não há tópicos de membros deste grupo."
-        logs: "Não há registros para este grupo."
+        posts: "Não há publicações de membros deste grupo"
+        members: "Não há membros neste grupo"
+        requests: "Não há pedidos de associação para este grupo"
+        mentions: "Não há menções a este grupo"
+        messages: "Não há mensagens para este grupo"
+        topics: "Não há tópicos de membros deste grupo"
+        logs: "Não há registros para este grupo"
       add: "Adicionar"
       join: "Ingressar"
       leave: "Sair"
@@ -1130,10 +1130,10 @@ pt_BR:
         one: "Excluir %{count}"
         other: "Excluir %{count}"
       username: "nome do(a) usuário(a)"
-      trust_level: "NC"
+      trust_level: "nível de confiança"
       read_time: "tempo de leitura"
       topics_entered: "tópicos inseridos"
-      post_count: "# postagens"
+      post_count: "postagens"
       confirm_delete_other_accounts: "Tem certeza de que deseja excluir estas contas?"
       powered_by: "usando <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
@@ -2342,6 +2342,8 @@ pt_BR:
       categories_boxes: "Caixas de seleção com subcategorias"
       categories_boxes_with_topics: "Caixas de seleção com tópicos em destaque"
       subcategories_with_featured_topics: "Subcategorias com Tópicos em Destaque"
+    full_name_requirement:
+      required_at_signup: "Necessário para cadastro"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3472,6 +3474,8 @@ pt_BR:
           one: <b>%{count}</b> resposta selecionada.
           other: "<b>%{count}</b> respostas selecionadas."
       deleted_by_author_simple: "(tópico excluído pelo(a) autor(a))"
+    post_list:
+      aria_post_number: "%{title} - postagem #%{postNumber}"
     post:
       confirm_delete: "Tem certeza de que deseja excluir esta postagem?"
       quote_reply: "Citação"
@@ -4762,9 +4766,12 @@ pt_BR:
         meta_doc: "Explore nossa <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentação</a> para uma visão detalhada dos relatórios."
         sidebar_title: "Relatórios"
         sidebar_link:
-          all: "Tudo"
+          all: "Todos os relatórios"
+      config:
+        notifications:
+          title: "Notificações"
       new_features:
-        title: "Novidades"
+        title: "Novidades?"
       dashboard:
         title: "Painel de controle"
         last_updated: "Painel de controle atualizado:"
@@ -4782,7 +4789,7 @@ pt_BR:
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
         dismiss_notice: "Descartar"
         new_features:
-          title: "Novidades"
+          title: "Novidades?"
           subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
           previous_announcements: "Confira os anúncios de recursos novos no <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saiba mais..."
@@ -4870,7 +4877,7 @@ pt_BR:
             type_of_web_hook_event:
               label: "Tipo de evento"
       flags:
-        title: "Sinalizadores de Moderação"
+        title: "Moderação"
         description: "Descrição"
         enabled: "Ativado(a)?"
         more_options:
@@ -5208,61 +5215,39 @@ pt_BR:
         sidebar_link:
           backups: "Backups"
           whats_new:
-            title: "Novidades"
+            title: "Novidades?"
             keywords: "registro de alterações|recurso|lançamento"
       community:
         title: "Comunidade"
         sidebar_link:
           about_your_site: "Sobre seu site"
           badges: "Emblemas"
-          login_and_authentication: "Acesso e autenticação"
           notifications: "Notificações"
           permalinks: "Links permanentes"
-          trust_levels: "Níveis de confiança"
           users: "Usuários(as)"
           groups: "Grupos"
-          user_fields: "Campos de usuário(a)"
-          watched_words: "Palavras em acompanhamento"
           legal: "Jurídico"
-          moderation_flags: "Sinalizadores de moderação"
+          moderation_flags:
+            title: "Moderação"
       appearance:
         title: "Aparência"
         sidebar_link:
-          font_style: "Estilo de Fonte"
           site_logo: "Logotipo do site"
-          color_schemes: "Paletas de cores"
           emoji: "Emoji"
           navigation: "Navegação"
           themes: "Temas"
           components:
             title: "Componentes"
             keywords: "tema|extensão"
-          site_texts: "Textos do site"
       email_settings:
         title: "Configurações de e-mail"
         sidebar_link:
           appearance: "Aparência"
-          preview_summary: "Pré-visualizar resumo"
-          server_setup: "Configurações do servidor"
-      email_logs:
-        title: "Registros de e-mail"
-        sidebar_link:
-          sent: "Enviado(a)"
-          skipped: "Ignorado(a)"
-          bounced: "Devolvido(a)"
-          received: "Recebido(a)"
-          rejected: "Rejeitado(a)"
       security:
         title: "Segurança"
         sidebar_link:
-          error_logs: "Registro de erros"
-          screened_emails: "E-mails filtrados"
-          screened_ips: "IPs filtrados"
-          screened_urls: "URLs filtradas"
-          search_logs: "Registros de pesquisa"
           security: "Configurações de segurança"
           spam: "Configurações de spam"
-          staff_action_logs: "Registros de ações da equipe"
       section_landing_pages:
         account:
           title: "Conta"
@@ -5270,7 +5255,7 @@ pt_BR:
             title: "Backups"
             description: "Faça cópia de segurança dos dados do seu site"
           whats_new:
-            title: "Novidades"
+            title: "Novidades?"
             description: "Descubra melhorias e lançamentos novos no Discourse"
       config_areas:
         about:
@@ -5325,7 +5310,7 @@ pt_BR:
             your_organization_saved: "Sua organização salva"
           saved: "salvou!"
         flags:
-          header: "Sinalizadores de moderação"
+          header: "Moderação"
           edit_header: "Editar sinalização"
           subheader: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
           description: "Descrição"
@@ -5403,18 +5388,16 @@ pt_BR:
       advanced:
         title: "Avançado"
         sidebar_link:
-          api_keys: "Chaves de API"
+          api_keys:
+            title: "Chaves de API"
           developer: "Desenvolvedor"
           embedding: "Incorporar"
-          rate_limits: "Limites de taxa"
           user_api: "API de usuário(a)"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Arquivos"
           other_options: "Outros(as)"
           search: "Pesquisar"
           experimental: "Experimental"
-          all_site_settings: "Todas as configurações do site"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"
@@ -6872,6 +6855,9 @@ pt_BR:
         back: "Voltar para permalinks"
         more_options: "Mais opções"
         copy_success: "Permalink copiado para área de transferência"
+        nav:
+          settings: "Configurações"
+          permalinks: "Links permanentes"
         form:
           label: "Novo:"
           add_header: "Adicionar permalink"
@@ -6913,8 +6899,23 @@ pt_BR:
           moderator: "Moderador(a)"
           regular: "Usuário regular"
       previews:
-        topic_title: "Um cabeçalho de tópico de discussão"
         share_button: "Compartilhar"
         reply_button: "Responder"
         topic_preview: "Pré-visualização do tópico"
         homepage_preview: "Pré-visualização da página inicial"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "todas as categorias"
+          new: "Novo"
+          unread: "Não lidos(as)"
+          top: "Melhores"
+          latest: "Últimos"
+          hot: "Em alta"
+          categories: "Categorias"
+        category_names:
+          site_feedback: "Feedback do site"
+        table_headers:
+          topic: "Tópico"
+          replies: "Respostas"
+          views: "Visualizações"
+          activity: "Atividade"

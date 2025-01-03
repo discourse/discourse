@@ -734,13 +734,13 @@ ko:
       public_admission: "사용자가 그룹에 자유롭게 가입하도록 허용(공개 그룹이어야 함)"
       public_exit: "사용자가 자유롭게 그룹에서 탈퇴하도록 허용"
       empty:
-        posts: "이 그룹의 회원이 작성한 게시물이 없습니다."
-        members: "이 그룹에는 회원이 없습니다."
-        requests: "이 그룹에 대한 멤버십 요청이 없습니다."
-        mentions: "이 그룹에 대한 멘션이 없습니다."
-        messages: "이 그룹에 대한 메시지가 없습니다."
-        topics: "이 그룹의 회원이 작성한 주제가 없습니다."
-        logs: "이 그룹에 대한 로그가 없습니다."
+        posts: "이 그룹에는 아직 회원들이 글을 작성하지 않았습니다"
+        members: "이 그룹에는 회원이 없습니다"
+        requests: "이 그룹에 대한 멤버십 요청이 없습니다"
+        mentions: "이 그룹에 대한 언급이 없습니다"
+        messages: "이 그룹에 대한 메시지가 없습니다"
+        topics: "이 그룹의 회원이 작성한 글이 없습니다"
+        logs: "이 그룹에 대한 로그가 없습니다"
       add: "추가"
       join: "가입"
       leave: "탈퇴"
@@ -917,10 +917,10 @@ ko:
       delete_other_accounts:
         other: "%{count}개 삭제"
       username: "사용자명"
-      trust_level: "TL"
+      trust_level: "회원 레벨"
       read_time: "읽은 시간"
       topics_entered: "참여한 주제"
-      post_count: "게시물 수"
+      post_count: "포스트"
       confirm_delete_other_accounts: "이 계정들을 삭제할까요?"
       powered_by: "<a href='https://maxmind.com'>MaxMindDB</a> 사용"
       copied: "복사됨"
@@ -1807,6 +1807,8 @@ ko:
       categories_boxes: "서브카테고리가 있는 박스"
       categories_boxes_with_topics: "추천 주제의 박스"
       subcategories_with_featured_topics: "추천 글이 포함된 하위 카테고리"
+    full_name_requirement:
+      required_at_signup: "회원가입시 필수항목"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3612,7 +3614,10 @@ ko:
         title: "사용 가능한 리포트 목록"
         sidebar_title: "보고서"
         sidebar_link:
-          all: "전체"
+          all: "모든 보고서"
+      config:
+        notifications:
+          title: "알림"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"
@@ -3703,6 +3708,7 @@ ko:
             include_subcategories:
               label: "서브카테고리 포함"
       flags:
+        title: "관리"
         description: "내용"
         enabled: "활성화?"
       groups:
@@ -3916,16 +3922,14 @@ ko:
           badges: "배지"
           notifications: "알림"
           permalinks: "고유링크"
-          trust_levels: "회원등급"
           users: "사용자들"
           groups: "그룹"
-          user_fields: "사용자 필드"
-          watched_words: "검열 단어"
           legal: "법률조항"
+          moderation_flags:
+            title: "관리"
       appearance:
         title: "외관"
         sidebar_link:
-          color_schemes: "컬러 팔레트"
           emoji: "이모티콘"
           navigation: "내비게이션"
           themes: "테마"
@@ -3934,22 +3938,8 @@ ko:
       email_settings:
         sidebar_link:
           appearance: "외관"
-          preview_summary: "요약 미리보기"
-      email_logs:
-        sidebar_link:
-          sent: "보낸 편지함"
-          skipped: "생략됨"
-          bounced: "반송됨"
-          received: "받음"
-          rejected: "거부됨"
       security:
         title: "보안"
-        sidebar_link:
-          error_logs: "에러 로그"
-          screened_emails: "블락된 이메일들"
-          screened_ips: "노출된 IP들"
-          screened_urls: "노출된 URL들"
-          search_logs: "검색 로그"
       section_landing_pages:
         account:
           title: "계정"
@@ -3964,6 +3954,7 @@ ko:
           update: "업데이트"
           saved: "저장되었습니다!"
         flags:
+          header: "관리"
           description: "내용"
           enabled: "활성화?"
           edit: "편집"
@@ -4001,9 +3992,7 @@ ko:
         sidebar_link:
           developer: "개발자"
           embedding: "삽입(Embedding)"
-          rate_limits: "제한"
           user_api: "사용자 API"
-          web_hooks: "Webhook"
           onebox: "Onebox"
           files: "파일"
           other_options: "기타"
@@ -5183,6 +5172,9 @@ ko:
         destination: "대상"
         copy_to_clipboard: "고정 링크를 클립보드에 복사"
         delete_confirm: 이 고정 링크를 삭제할까요?
+        nav:
+          settings: "설정"
+          permalinks: "고유링크"
         form:
           label: "신규:"
           url: "URL"
@@ -5216,8 +5208,22 @@ ko:
           moderator: "운영자"
           regular: "정회원"
       previews:
-        topic_title: "토론 주제 제목"
         share_button: "공유"
         reply_button: "댓글 달기"
         topic_preview: "주제 미리보기"
         homepage_preview: "홈페이지 미리보기"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "모든 카테고리"
+          new: "신규"
+          unread: "읽지 않음"
+          top: "인기글"
+          latest: "최신"
+          categories: "카테고리"
+        category_names:
+          site_feedback: "사이트 피드백"
+        table_headers:
+          topic: "글"
+          replies: "댓글"
+          views: "조회"
+          activity: "활동"

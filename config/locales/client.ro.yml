@@ -883,13 +883,13 @@ ro:
       public_admission: "Permite utilizatorilor să se alăture grupului în mod liber (necesită ca grupul să fie vizibil)"
       public_exit: "Permite utilizatorilor să părăsească grupul în mod liber."
       empty:
-        posts: "Nu există articole ale membrilor acestui grup."
-        members: "Nu există nici un membru în acest grup."
-        requests: "Nu există cereri de înscriere în acest grup."
-        mentions: "Nu există nicio menționare în acest grup."
-        messages: "Nu există niciun mesaj în acest grup."
-        topics: "Nu există nici un subiect creat de vreun membru al acestui grup."
-        logs: "Nu există niciun jurnal pentru acest grup."
+        posts: "Nu există postări ale membrilor acestui grup"
+        members: "Nu există nici un membru în acest grup"
+        requests: "Nu există cereri de înscriere în acest grup"
+        mentions: "Nu există nicio menționare în acest grup"
+        messages: "Nu există niciun mesaj în acest grup"
+        topics: "Nu există nici un subiect creat de vreun membru al acestui grup"
+        logs: "Nu există niciun jurnal pentru acest grup"
       add: "Adaugă"
       join: "Alătură-te"
       leave: "Părăsește"
@@ -1045,10 +1045,10 @@ ro:
         few: "Șterge %{count}"
         other: "Șterge %{count}"
       username: "Nume de utilizator"
-      trust_level: "NÎ"
+      trust_level: "nivel de încredere"
       read_time: "Durată vizită pe site"
       topics_entered: "Subiecte la care particip"
-      post_count: "# postări"
+      post_count: "Postări"
       confirm_delete_other_accounts: "Ești sigur că vrei să ștergi aceste conturi?"
       copied: "copiat"
     user_fields:
@@ -1861,6 +1861,8 @@ ro:
       categories_and_top_topics: "Categorii și discuții în top"
       categories_boxes: "Cutii cu subcategorii"
       categories_boxes_with_topics: "Cutii cu subiecte recomandate"
+    full_name_requirement:
+      required_at_signup: "Necesar la înregistrare"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2252,6 +2254,7 @@ ro:
         few: "%{count} postări în subiect"
         other: "%{count} de postări în subiect"
       create: "Subiect nou"
+      create_disabled_tag: "Nu ai voie să creezi subiecte cu această etichetă"
       create_long: "Creează un subiect nou"
       open_draft: "Deschide schiță"
       private_message: "Scrie un mesaj."
@@ -3386,6 +3389,7 @@ ro:
           save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
   admin_js:
+    type_to_filter: "Tastează pentru a filtra…"
     settings: "Opțiuni"
     admin:
       title: "Admin Discourse"
@@ -3398,10 +3402,11 @@ ro:
       reports:
         meta_doc: "Explorează <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentația</a> pentru o prezentare generală detaliată a rapoartelor."
         sidebar_title: "Rapoarte"
-        sidebar_link:
-          all: "Toate"
+      config:
+        notifications:
+          title: "Notificări"
       new_features:
-        title: "Ce este nou"
+        title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
       dashboard:
         title: "Panou de control"
@@ -3415,7 +3420,7 @@ ro:
         latest_version: "Ultima"
         dismiss_notice: "Respinge"
         new_features:
-          title: "Ce este nou"
+          title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
           previous_announcements: "Poți vedea anunțurile anterioare privind noile caracteristici pe <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Află mai multe..."
@@ -3609,55 +3614,31 @@ ro:
         sidebar_link:
           backups: "Copii de siguranță"
           whats_new:
-            title: "Ce este nou"
+            title: "Ce este nou?"
       community:
         title: "Comunitate"
         sidebar_link:
-          about_your_site: "Despre site-ul tău"
           badges: "Insigne"
           notifications: "Notificări"
           permalinks: "Legături permanente"
-          trust_levels: "Niveluri de încredere"
           users: "Utilizatori"
           groups: "Grupuri"
-          user_fields: "Câmpuri utilizator"
-          watched_words: "Cuvinte urmărite"
           legal: "Legal"
       appearance:
         title: "Aspect"
         sidebar_link:
-          font_style: "Stil font"
-          site_logo: "Logo site"
-          color_schemes: "Palete de culori"
           emoji: "Emoticon"
           navigation: "Navigare"
           themes: "Teme"
-          site_texts: "Texte site"
       email_settings:
         title: "Setări email"
         sidebar_link:
           appearance: "Aspect"
-          preview_summary: "Rezumat previzualizare"
-          server_setup: "Inițializare server"
-      email_logs:
-        title: "Jurnale email"
-        sidebar_link:
-          sent: "Trimise"
-          skipped: "Omise"
-          bounced: "Ricoșate"
-          received: "Primite"
-          rejected: "Respinse"
       security:
         title: "Securitate"
         sidebar_link:
-          error_logs: "Jurnal erori"
-          screened_emails: "Email-uri filtrate"
-          screened_ips: "IP-uri filtrate"
-          screened_urls: "URL-uri filtrate"
-          search_logs: "Caută jurnale"
           security: "Setări de securitate"
           spam: "Setări spam"
-          staff_action_logs: "Jurnal de acțiuni ale personalului"
       section_landing_pages:
         account:
           title: "Cont"
@@ -3665,7 +3646,7 @@ ro:
             title: "Copii de siguranță"
             description: "Fă o copie de siguranță a datelor site-ului tău"
           whats_new:
-            title: "Ce este nou"
+            title: "Ce este nou?"
             description: "Descoperă noile versiuni și îmbunătățiri ale Discourse"
       config_areas:
         about:
@@ -3753,18 +3734,16 @@ ro:
       advanced:
         title: "Avansat"
         sidebar_link:
-          api_keys: "Chei API"
+          api_keys:
+            title: "Chei API"
           developer: "Dezvoltator"
           embedding: "Înglobare"
-          rate_limits: "Limite"
           user_api: "API utilizator"
-          web_hooks: "Cârlige web"
           onebox: "Onebox"
           files: "Fișiere"
           other_options: "Altele"
           search: "Caută"
           experimental: "Experimental"
-          all_site_settings: "Toate setările site-ului"
       navigation_menu:
         sidebar: "Bară laterală"
       backups:
@@ -4509,6 +4488,7 @@ ro:
         none: "Niciuna"
         save: "salvare"
         cancel: "Anulează"
+        not_found: "Setările nu au putut fi găsite"
       site_settings:
         title: "Setări"
         no_results: "Nu s-au găsit rezultate."
@@ -4687,6 +4667,9 @@ ro:
         back: "Înapoi la legături permanente"
         more_options: "Mai multe opțiuni"
         copy_success: "Legătură permanentă copiată în clipboard"
+        nav:
+          settings: "Setări"
+          permalinks: "Legături permanente"
         form:
           label: "Nou:"
           add_header: "Adaugă legătură permanentă"
@@ -4720,3 +4703,18 @@ ro:
       previews:
         share_button: "Distribuie"
         reply_button: "Răspunde"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "Toate categoriile"
+          new: "Nou"
+          unread: "Necitite"
+          top: "Top"
+          latest: "Ultima"
+          categories: "Categorii"
+        category_names:
+          site_feedback: "Feedback la site"
+        table_headers:
+          topic: "Discuție"
+          replies: "Răspunsuri"
+          views: "Afișări"
+          activity: "Activitate"

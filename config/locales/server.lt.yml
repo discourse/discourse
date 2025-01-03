@@ -1399,7 +1399,6 @@ lt:
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
     automatically_unpin_topics: "Automatiškai atsegti temas, kai vartotojas pasiekia apačią."
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
-    full_name_required: "Pilnas vardas yra būtinas vartotojo profilio laukas."
     enable_names: "Rodyti visą vartotojo vardą jo profilyje, vartotojo kortelėje ir el. laiškuose. Išjungti, kad visur paslėptumėte visą vardą."
     display_name_on_posts: "Rodyti visą vartotojo vardą jo įrašuose, be @naudotojo vardo."
     short_progress_text_threshold: "Kai pranešimų skaičius temoje viršys šį skaičių, eigos juostoje bus rodomas tik dabartinis įrašo numeris. Jei pakeisite eigos juostos plotį, gali tekti pakeisti šią reikšmę."
@@ -2610,15 +2609,7 @@ lt:
             label: "Pagrindinio puslapio stilius"
             choices:
               latest:
-                label: "Naujausios temos"
-              categories_only:
-                label: "Tiktai Kategorijos"
-              categories_with_featured_topics:
-                label: "Kategorijos su populiariomis temomis"
-              categories_and_latest_topics:
-                label: "Kategorijos su paskutinėmis temomis"
-              categories_and_top_topics:
-                label: "Kategorijos ir Top temos"
+                label: "Naujausia"
       corporate:
         fields:
           governing_law:

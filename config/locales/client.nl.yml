@@ -934,13 +934,13 @@ nl:
       public_admission: "Gebruikers toestaan de groep te verlaten (vereist openbaar zichtbare groep)"
       public_exit: "Gebruikers toestaan de groep te verlaten"
       empty:
-        posts: "Er zijn geen berichten van leden van deze groep."
-        members: "Er zijn geen leden in deze groep."
-        requests: "Er zijn geen lidmaatschapsverzoeken voor deze groep."
-        mentions: "Er zijn geen vermeldingen van deze groep."
-        messages: "Er zijn geen berichten voor deze groep."
-        topics: "Er zijn geen topics van leden van deze groep."
-        logs: "Er zijn geen logs voor deze groep."
+        posts: "Er zijn geen berichten van leden van deze groep"
+        members: "Er zijn geen leden in deze groep"
+        requests: "Er zijn geen lidmaatschapsverzoeken voor deze groep"
+        mentions: "Er zijn geen vermeldingen van deze groep"
+        messages: "Er zijn geen berichten voor deze groep"
+        topics: "Er zijn geen topics van leden van deze groep"
+        logs: "Er zijn geen logs voor deze groep"
       add: "Toevoegen"
       join: "Deelnemen"
       leave: "Verlaten"
@@ -1130,10 +1130,10 @@ nl:
         one: "%{count} verwijderen"
         other: "%{count} verwijderen"
       username: "gebruikersnaam"
-      trust_level: "TL"
+      trust_level: "vertrouwensniveau"
       read_time: "leestijd"
       topics_entered: "topics ingevoerd"
-      post_count: "Aantal berichten"
+      post_count: "berichten"
       confirm_delete_other_accounts: "Weet je zeker dat je deze accounts wilt verwijderen?"
       powered_by: "met <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "gekopieerd"
@@ -2342,6 +2342,8 @@ nl:
       categories_boxes: "Vakken met subcategorieën"
       categories_boxes_with_topics: "Vakken met uitgelichte topics"
       subcategories_with_featured_topics: "Subcategorieën met uitgelichte topics"
+    full_name_requirement:
+      required_at_signup: "Vereist bij registratie"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3472,6 +3474,8 @@ nl:
           one: Je hebt <b>%{count}</b> bericht geselecteerd.
           other: "Je hebt <b>%{count}</b> berichten geselecteerd."
       deleted_by_author_simple: "(topic verwijderd door auteur)"
+    post_list:
+      aria_post_number: "%{title} - bericht %{postNumber}"
     post:
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"
@@ -4746,7 +4750,7 @@ nl:
           save: "Opslaan als..."
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
   admin_js:
-    type_to_filter: "typ om te filteren…"
+    type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
     admin:
       title: "Discourse-beheerder"
@@ -4762,9 +4766,12 @@ nl:
         meta_doc: "Bekijk onze <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentatie</a> voor een gedetailleerd overzicht van de rapporten."
         sidebar_title: "Rapporten"
         sidebar_link:
-          all: "Alles"
+          all: "Alle rapporten"
+      config:
+        notifications:
+          title: "Meldingen"
       new_features:
-        title: "Wat is er nieuw"
+        title: "Wat is er nieuw?"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard bijgewerkt:"
@@ -4782,7 +4789,7 @@ nl:
         problems_found: "Advies op basis van je huidige website-instellingen"
         dismiss_notice: "Sluiten"
         new_features:
-          title: "Wat is er nieuw"
+          title: "Wat is er nieuw?"
           subtitle: "We brengen voortdurend nieuwe functies en verbeteringen uit. Deze pagina behandelt de belangrijkste punten, maar je kunt op 'Meer informatie' klikken om uitgebreide releaseopmerkingen te bekijken."
           previous_announcements: "Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Meer informatie..."
@@ -4870,7 +4877,7 @@ nl:
             type_of_web_hook_event:
               label: "Type gebeurtenis"
       flags:
-        title: "Moderatiemarkeringen"
+        title: "Moderatie"
         description: "Beschrijving"
         enabled: "Ingeschakeld?"
         more_options:
@@ -5208,61 +5215,39 @@ nl:
         sidebar_link:
           backups: "Back-ups"
           whats_new:
-            title: "Wat is er nieuw"
+            title: "Wat is er nieuw?"
             keywords: "veranderingslog|functie|release"
       community:
         title: "Community"
         sidebar_link:
           about_your_site: "Over je site"
           badges: "Badges"
-          login_and_authentication: "Aanmelden en verificatie"
           notifications: "Meldingen"
           permalinks: "Permalinks"
-          trust_levels: "Vertrouwensniveaus"
           users: "Gebruikers"
           groups: "Groepen"
-          user_fields: "Gebruikersvelden"
-          watched_words: "Geobserveerde woorden"
           legal: "Juridisch"
-          moderation_flags: "Moderatiemarkeringen"
+          moderation_flags:
+            title: "Moderatie"
       appearance:
         title: "Vormgeving"
         sidebar_link:
-          font_style: "Tekenstijl"
           site_logo: "Sitelogo"
-          color_schemes: "Kleurenpaletten"
           emoji: "Emoji"
           navigation: "Navigatie"
           themes: "Thema's"
           components:
             title: "Onderdelen"
             keywords: "thema|extensie"
-          site_texts: "Siteteksten"
       email_settings:
         title: "E-mailinstellingen"
         sidebar_link:
           appearance: "Vormgeving"
-          preview_summary: "Voorbeeld van samenvatting"
-          server_setup: "Serverconfiguratie"
-      email_logs:
-        title: "E-maillogs"
-        sidebar_link:
-          sent: "Verzonden"
-          skipped: "Overgeslagen"
-          bounced: "Gebouncet"
-          received: "Ontvangen"
-          rejected: "Geweigerd"
       security:
         title: "Beveiliging"
         sidebar_link:
-          error_logs: "Foutenlogs"
-          screened_emails: "Gecontroleerde e-mailadressen"
-          screened_ips: "Gecontroleerde IP-adressen"
-          screened_urls: "Gecontroleerde URL's"
-          search_logs: "Zoeken in logs"
           security: "Beveiligingsinstellingen"
           spam: "Spaminstellingen"
-          staff_action_logs: "Actielogs personeel"
       section_landing_pages:
         account:
           title: "Account"
@@ -5270,7 +5255,7 @@ nl:
             title: "Back-ups"
             description: "Maak een back-up van de gegevens van uw site"
           whats_new:
-            title: "Wat is er nieuw"
+            title: "Wat is er nieuw?"
             description: "Ontdek nieuwe releases en verbeteringen voor Discourse"
       config_areas:
         about:
@@ -5325,7 +5310,7 @@ nl:
             your_organization_saved: "Je organisatie is opgeslagen"
           saved: "opgeslagen!"
         flags:
-          header: "Moderatiemarkeringen"
+          header: "Moderatie"
           edit_header: "Markering bewerken"
           subheader: "Het markeringssysteem in Discourse helpt jou en je moderatorteam bij het beheren van content en gebruikersgedrag, om je community respectvol en gezond te houden. De standaardinstellingen zijn geschikt voor de meeste community's en je hoeft deze niet te wijzigen. Als je site echter bepaalde vereisten heeft, kun je markeringen die je niet nodig hebt uitschakelen en je eigen aangepaste markeringen toevoegen."
           description: "Beschrijving"
@@ -5403,18 +5388,16 @@ nl:
       advanced:
         title: "Geavanceerd"
         sidebar_link:
-          api_keys: "API-sleutels"
+          api_keys:
+            title: "API-sleutels"
           developer: "Ontwikkelaar"
           embedding: "Insluiting"
-          rate_limits: "Frequentielimieten"
           user_api: "Gebruikers-API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Bestanden"
           other_options: "Overig"
           search: "Zoeken"
           experimental: "Experimenteel"
-          all_site_settings: "Alle site-instellingen"
       navigation_menu:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"
@@ -6872,6 +6855,9 @@ nl:
         back: "Terug naar permalinks"
         more_options: "Meer opties"
         copy_success: "Permalink gekopieerd naar klembord"
+        nav:
+          settings: "Instellingen"
+          permalinks: "Permalinks"
         form:
           label: "Nieuw:"
           add_header: "Permalink toevoegen"
@@ -6913,8 +6899,23 @@ nl:
           moderator: "Moderator"
           regular: "Vaste gebruiker"
       previews:
-        topic_title: "Een kop van een discussietopic"
         share_button: "Delen"
         reply_button: "Antwoorden"
         topic_preview: "Topicvoorbeeld"
         homepage_preview: "Startpaginavoorbeeld"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alle categorieën"
+          new: "Nieuw"
+          unread: "Ongelezen"
+          top: "Top"
+          latest: "Nieuwste"
+          hot: "Veelgelezen"
+          categories: "Categorieën"
+        category_names:
+          site_feedback: "Feedback op website"
+        table_headers:
+          topic: "Topic"
+          replies: "Antwoorden"
+          views: "Weergaven"
+          activity: "Activiteit"

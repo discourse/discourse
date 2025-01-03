@@ -1206,7 +1206,6 @@ ro:
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
     svg_icon_subset: "Adaugă pictograme FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru pictograme solide, „far-” pentru pictograme obișnuite și „fab-” pentru pictograme de marcă."
-    full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
@@ -1287,8 +1286,8 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
     keywords:
       clean_up_inactive_users_after_days: "dezactivat|inactiv|neactivat"
-      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
       navigation_menu: "bară laterală|listă derulantă din antet"
+      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -2092,15 +2091,7 @@ ro:
           homepage_style:
             choices:
               latest:
-                label: "Subiecte recente"
-              categories_only:
-                label: "Numai categorii"
-              categories_with_featured_topics:
-                label: "Categorii cu subiecte promovate"
-              categories_and_latest_topics:
-                label: "Categorii și subiecte recente"
-              categories_and_top_topics:
-                label: "Categorii și discuții în top"
+                label: "Ultima"
       corporate:
         fields:
           contact_url:

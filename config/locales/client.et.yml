@@ -592,13 +592,13 @@ et:
       public_admission: "Luba kasutajatel grupiga vabalt liituda (nõuab avalikult nähtavat gruppi)"
       public_exit: "Luba kasutajatel vabalt grupist lahkuda"
       empty:
-        posts: "Selle grupi liikmetelt ei ole postitusi."
-        members: "Sellel grupil liikmed puuduvad."
-        requests: "Selle grupi jaoks pole liikmeks astumise taotlusi."
-        mentions: "Seda gruppi pole mainitud."
-        messages: "Sellele grupile teated puuduvad."
-        topics: "Selle grupi liikmetelt ei ole teemasid."
-        logs: "Sellele grupile logid puuduvad."
+        posts: "Selle grupi liikmetelt ei ole postitusi"
+        members: "Sellel grupil liikmed puuduvad"
+        requests: "Selle grupi jaoks pole liikmeks astumise taotlusi"
+        mentions: "Seda gruppi pole mainitud"
+        messages: "Sellele grupile teated puuduvad"
+        topics: "Selle grupi liikmetelt ei ole teemasid"
+        logs: "Sellele grupile logid puuduvad"
       add: "Lisa"
       join: "Liitu"
       leave: "Lahku"
@@ -768,10 +768,9 @@ et:
         one: "Kustuta %{count}"
         other: "Kustuta %{count}"
       username: "kasutajanimi"
-      trust_level: "UT"
       read_time: "lugemise aeg"
       topics_entered: "külastatud teemasid"
-      post_count: "# postitust"
+      post_count: "postitused"
       confirm_delete_other_accounts: "Kindel, et soovid need kontod kustutada?"
       copied: "kopeeritud"
     user_fields:
@@ -1387,6 +1386,8 @@ et:
       categories_only: "Ainult foorumid"
       categories_with_featured_topics: "Foorumid esiletõstetud teemadega"
       categories_and_latest_topics: "Foorumid ja viimased teemad"
+    full_name_requirement:
+      required_at_signup: "Nõutud registreerumisel"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2686,7 +2687,10 @@ et:
           never: "mitte kunagi"
       reports:
         sidebar_link:
-          all: "Kõik"
+          all: "Kõik aruanded"
+      config:
+        notifications:
+          title: "Teavitus"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
@@ -2748,6 +2752,7 @@ et:
             category:
               label: Foorum
       flags:
+        title: "Modereerimine"
         description: "Kirjeldus"
         enabled: "Sisse lülitatud?"
       groups:
@@ -2881,38 +2886,20 @@ et:
           badges: "Märgised"
           notifications: "Teavitus"
           permalinks: "Püsiviited"
-          trust_levels: "Usaldustasemed"
           users: "Kasutajad"
           groups: "Grupid"
-          user_fields: "Kasutajaväljad"
-          watched_words: "Vaadatud sõnad"
           legal: "Õiguslik"
+          moderation_flags:
+            title: "Modereerimine"
       appearance:
         sidebar_link:
-          color_schemes: "Värvipaletid"
           emoji: "Emotikon"
           navigation: "Navigatsioon"
           themes: "Kujundused"
           components:
             title: "Komponendid"
-      email_settings:
-        sidebar_link:
-          preview_summary: "Saadetise eelvaatlus"
-      email_logs:
-        sidebar_link:
-          sent: "Saadetud"
-          skipped: "Üle hüpatud"
-          bounced: "Välja visatud"
-          received: "Saadud"
-          rejected: "Tagasi lükatud"
       security:
         title: "Turve"
-        sidebar_link:
-          error_logs: "Vealogid"
-          screened_emails: "Varjestatud meilid"
-          screened_ips: "Varjestatud IP-aadressid"
-          screened_urls: "Varjestatud URL-d"
-          search_logs: "Otsingu logid"
       section_landing_pages:
         account:
           title: "Konto"
@@ -2925,6 +2912,7 @@ et:
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:
+          header: "Modereerimine"
           description: "Kirjeldus"
           enabled: "Sisse lülitatud?"
           edit: "Muuda"
@@ -2961,9 +2949,7 @@ et:
         sidebar_link:
           developer: "Arendaja"
           embedding: "Sängitamine"
-          rate_limits: "Kiiruspiirangud"
           user_api: "Kasutaja API"
-          web_hooks: "Veebihaagid"
           onebox: "Onebox"
           files: "Failid"
           other_options: "Muu"
@@ -3768,6 +3754,9 @@ et:
         user_title: "Kasutaja"
         username: "Kasutajanimi"
         delete_confirm: Oled Sa kindel, et soovid seda püsiviidet kustutada?
+        nav:
+          settings: "Sätted"
+          permalinks: "Püsiviited"
         form:
           label: "Uus"
           url: "URL"
@@ -3794,3 +3783,18 @@ et:
       previews:
         share_button: "Jaga"
         reply_button: "Vasta"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "kõik foorumid"
+          new: "Uus"
+          unread: "Lugemata"
+          top: "Juhtivad"
+          latest: "Värskeimad"
+          categories: "Liigid"
+        category_names:
+          site_feedback: "Saidi tagasiside."
+        table_headers:
+          topic: "Teema"
+          replies: "Vastused"
+          views: "Vaatamisi"
+          activity: "Aktiivsus"

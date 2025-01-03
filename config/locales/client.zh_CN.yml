@@ -865,14 +865,6 @@ zh_CN:
         description: "此群组的成员可以访问这些类别"
       public_admission: "允许用户自由加入群组（要求群组公开可见）"
       public_exit: "允许用户自由离开群组"
-      empty:
-        posts: "此群组的成员没有发布帖子。"
-        members: "此群组没有成员。"
-        requests: "没有加入此群组的成员资格请求。"
-        mentions: "此群组从未被提及。"
-        messages: "此群组没有消息。"
-        topics: "此群组的成员从未发表话题。"
-        logs: "此群组没有日志。"
       add: "添加"
       join: "加入"
       leave: "离开"
@@ -1055,7 +1047,7 @@ zh_CN:
       trust_level: "信任级别"
       read_time: "阅读时间"
       topics_entered: "参与的话题"
-      post_count: "帖子数量"
+      post_count: "帖子"
       confirm_delete_other_accounts: "确定要删除这些帐户吗？"
       powered_by: "使用 <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "已复制"
@@ -2204,6 +2196,10 @@ zh_CN:
       categories_boxes: "带子类别的框"
       categories_boxes_with_topics: "带精选话题的框"
       subcategories_with_featured_topics: "包含精选话题的子类别"
+    full_name_requirement:
+      required_at_signup: "注册时需要"
+      optional_at_signup: "注册时可选"
+      hidden_at_signup: "注册时隐藏"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2857,6 +2853,7 @@ zh_CN:
         other: "话题中的 %{count} 个帖子"
       create: "新建话题"
       create_disabled_category: "您无权在此类别中创建话题"
+      create_disabled_tag: "你不能创建带有此标签的主题"
       create_long: "创建新话题"
       open_draft: "打开草稿"
       private_message: "开始消息"
@@ -3265,6 +3262,8 @@ zh_CN:
         description:
           other: "您已选择 <b>%{count}</b> 个帖子。"
       deleted_by_author_simple: "（话题已被作者删除）"
+    post_list:
+      aria_post_number: "%{title} - 帖子 #%{postNumber}"
     post:
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
@@ -4493,9 +4492,15 @@ zh_CN:
         meta_doc: "浏览我们的 <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>文档</a>，了解举报的详细概述。"
         sidebar_title: "举报"
         sidebar_link:
-          all: "所有"
+          all: "所有报告"
+      config:
+        login_and_authentication:
+          title: "登录和身份验证"
+          header_description: "配置用户登录和验证方式、密钥、OAuth2 提供商等。"
+        notifications:
+          title: "通知"
       new_features:
-        title: "最新变化"
+        title: "最新变化?"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："
@@ -4513,7 +4518,7 @@ zh_CN:
         problems_found: "基于您当前网站设置的一些建议"
         dismiss_notice: "忽略"
         new_features:
-          title: "最新变化"
+          title: "最新变化?"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
           previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
           learn_more: "了解详情…"
@@ -4603,7 +4608,7 @@ zh_CN:
             type_of_web_hook_event:
               label: "事件类型"
       flags:
-        title: "审核举报"
+        title: "审核"
         description: "描述"
         enabled: "已启用？"
         more_options:
@@ -4935,61 +4940,39 @@ zh_CN:
         sidebar_link:
           backups: "备份"
           whats_new:
-            title: "最新变化"
+            title: "最新变化?"
             keywords: "更新日志|功能|发布"
       community:
         title: "社区"
         sidebar_link:
           about_your_site: "关于您的网站"
           badges: "徽章"
-          login_and_authentication: "登录与身份验证"
           notifications: "通知"
           permalinks: "永久链接"
-          trust_levels: "信任级别"
           users: "用户"
           groups: "群组"
-          user_fields: "用户字段"
-          watched_words: "关注词"
           legal: "法律信息"
-          moderation_flags: "审核举报"
+          moderation_flags:
+            title: "审核"
       appearance:
         title: "外观"
         sidebar_link:
-          font_style: "字体样式"
           site_logo: "网站徽标"
-          color_schemes: "调色板"
           emoji: "表情符号"
           navigation: "导航"
           themes: "主题"
           components:
             title: "组件"
             keywords: "主题|扩展"
-          site_texts: "网站文本"
       email_settings:
         title: "电子邮件设置"
         sidebar_link:
           appearance: "外观"
-          preview_summary: "预览摘要"
-          server_setup: "服务器设置"
-      email_logs:
-        title: "电子邮件日志"
-        sidebar_link:
-          sent: "已发送"
-          skipped: "已跳过"
-          bounced: "已退回"
-          received: "已收到"
-          rejected: "已拒绝"
       security:
         title: "安全性"
         sidebar_link:
-          error_logs: "错误日志"
-          screened_emails: "已屏蔽的电子邮件地址"
-          screened_ips: "已屏蔽的 IP"
-          screened_urls: "已屏蔽的 URL"
-          search_logs: "搜索日志"
           security: "安全设置"
           spam: "垃圾信息设置"
-          staff_action_logs: "管理人员操作日志"
       section_landing_pages:
         account:
           title: "帐户"
@@ -4997,7 +4980,7 @@ zh_CN:
             title: "备份"
             description: "备份您的网站数据"
           whats_new:
-            title: "最新变化"
+            title: "最新变化?"
             description: "发现 Discourse 的新版本和改进"
       config_areas:
         about:
@@ -5052,7 +5035,7 @@ zh_CN:
             your_organization_saved: "您的组织已保存"
           saved: "已保存！"
         flags:
-          header: "审核举报"
+          header: "审核"
           edit_header: "编辑举报"
           subheader: "Discourse 中的举报系统可帮助您和您的版主团队管理内容和用户行为，使您的社区保持尊重和健康。默认设置适用于大多数社区，您无需更改它们。但是，如果您的网站有特殊要求，您可以禁用不需要的举报并添加您自己的自定义举报。"
           description: "描述"
@@ -5130,18 +5113,17 @@ zh_CN:
       advanced:
         title: "高级"
         sidebar_link:
-          api_keys: "API 密钥"
+          api_keys:
+            title: "API 密钥"
+            keywords: "token|webhook"
           developer: "开发者"
           embedding: "嵌入"
-          rate_limits: "频率限制"
           user_api: "用户 API"
-          web_hooks: "网络钩子"
           onebox: "Onebox"
           files: "文件"
           other_options: "其他"
           search: "搜索"
           experimental: "实验性"
-          all_site_settings: "所有网站设置"
       navigation_menu:
         sidebar: "边栏"
         header_dropdown: "标题下拉菜单"
@@ -6335,6 +6317,7 @@ zh_CN:
         save: "保存"
         cancel: "取消"
         unmask: "取消屏蔽输入"
+        not_found: "找不到设置"
       site_settings:
         emoji_list:
           invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"
@@ -6587,6 +6570,9 @@ zh_CN:
         back: "返回到永久链接"
         more_options: "更多选项"
         copy_success: "永久链接已复制到剪贴板"
+        nav:
+          settings: "设置"
+          permalinks: "永久链接"
         form:
           label: "新："
           add_header: "添加永久链接"
@@ -6627,8 +6613,23 @@ zh_CN:
           moderator: "版主"
           regular: "普通用户"
       previews:
-        topic_title: "讨论话题标题"
         share_button: "分享"
         reply_button: "回复"
         topic_preview: "话题预览"
         homepage_preview: "首页预览"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "所有类别"
+          new: "新"
+          unread: "未读"
+          top: "热门"
+          latest: "最新"
+          hot: "热议"
+          categories: "类别"
+        category_names:
+          site_feedback: "网站反馈"
+        table_headers:
+          topic: "话题"
+          replies: "回复"
+          views: "浏览量"
+          activity: "活动"

@@ -934,13 +934,13 @@ fr:
       public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
       public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:
-        posts: "Aucun message n'a été envoyé par les membres de ce groupe."
-        members: "Il n' y a aucun membre dans ce groupe."
-        requests: "Il n'y a aucune demande pour rejoindre ce groupe."
-        mentions: "Il n'y a aucune mention de ce groupe."
-        messages: "Il n'y a aucun message pour ce groupe."
-        topics: "Aucun sujet n'a été créé par les membres de ce groupe."
-        logs: "Il n'y a aucun journal pour ce groupe."
+        posts: "Aucun message n'a été envoyé par les membres de ce groupe"
+        members: "Il n' y a aucun membre dans ce groupe"
+        requests: "Il n'y a aucune demande pour rejoindre ce groupe"
+        mentions: "Il n'y a aucune mention de ce groupe"
+        messages: "Il n'y a aucun message pour ce groupe"
+        topics: "Aucun sujet n'a été créé par les membres de ce groupe"
+        logs: "Il n'y a aucun journal pour ce groupe"
       add: "Ajouter"
       join: "Rejoindre"
       leave: "Quitter"
@@ -1133,7 +1133,7 @@ fr:
       trust_level: "niveau de confiance"
       read_time: "temps de lecture"
       topics_entered: "sujets visités"
-      post_count: "# messages"
+      post_count: "publications"
       confirm_delete_other_accounts: "Voulez-vous vraiment supprimer ces comptes ?"
       powered_by: "Informations fournies par <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copié"
@@ -2342,6 +2342,8 @@ fr:
       categories_boxes: "Boîtes avec sous-catégories"
       categories_boxes_with_topics: "Boîtes avec sujets à la une"
       subcategories_with_featured_topics: "Sous-catégories avec sujets en vedette"
+    full_name_requirement:
+      required_at_signup: "Obligatoire à l'inscription "
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -3471,6 +3473,8 @@ fr:
           one: vous avez sélectionné <b>%{count}</b> message.
           other: "Vous avez sélectionné <b>%{count}</b> messages."
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
+    post_list:
+      aria_post_number: "%{title} - message #%{postNumber}"
     post:
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"
@@ -4745,7 +4749,7 @@ fr:
           save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
   admin_js:
-    type_to_filter: "commencez votre saisie pour filtrer…"
+    type_to_filter: "Filtrer les paramètres…"
     settings: "Paramètres"
     admin:
       title: "Administrateur Discourse"
@@ -4761,9 +4765,12 @@ fr:
         meta_doc: "Explorez notre <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> pour obtenir un aperçu détaillé des rapports."
         sidebar_title: "Rapports"
         sidebar_link:
-          all: "Tout"
+          all: "Tous les rapports"
+      config:
+        notifications:
+          title: "Notifications"
       new_features:
-        title: "Nouveautés"
+        title: "Nouveautés?"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"
@@ -4781,7 +4788,7 @@ fr:
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         dismiss_notice: "Rejeter"
         new_features:
-          title: "Nouveautés"
+          title: "Nouveautés?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
           previous_announcements: "Vous pouvez voir les annonces précédentes de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "En savoir plus…"
@@ -4869,7 +4876,7 @@ fr:
             type_of_web_hook_event:
               label: "Type d'événement"
       flags:
-        title: "Signalements de modération"
+        title: "Modération"
         description: "Description"
         enabled: "Activé ?"
         more_options:
@@ -5207,61 +5214,39 @@ fr:
         sidebar_link:
           backups: "Sauvegardes"
           whats_new:
-            title: "Nouveautés"
+            title: "Nouveautés?"
             keywords: "journal des modifications|fonctionnalité|version"
       community:
         title: "Communauté"
         sidebar_link:
           about_your_site: "À propos de votre site"
           badges: "Badges"
-          login_and_authentication: "Connexion et authentification"
           notifications: "Notifications"
           permalinks: "Permaliens"
-          trust_levels: "Niveaux de confiance"
           users: "Utilisateurs"
           groups: "Groupes"
-          user_fields: "Champs utilisateurs"
-          watched_words: "Mots surveillés"
           legal: "Mentions légales"
-          moderation_flags: "Signalements de modération"
+          moderation_flags:
+            title: "Modération"
       appearance:
         title: "Apparence"
         sidebar_link:
-          font_style: "Style de police"
           site_logo: "Logo du site"
-          color_schemes: "Palettes de couleurs"
           emoji: "Émoji"
           navigation: "Navigation"
           themes: "Thèmes"
           components:
             title: "Composants"
             keywords: "thème|extension"
-          site_texts: "Textes du site"
       email_settings:
         title: "Paramètres de messagerie"
         sidebar_link:
           appearance: "Apparence"
-          preview_summary: "Aperçu du résumé"
-          server_setup: "Configuration du serveur"
-      email_logs:
-        title: "Journaux des e-mails"
-        sidebar_link:
-          sent: "Envoyés"
-          skipped: "Ignorés"
-          bounced: "Non délivrés"
-          received: "Reçus"
-          rejected: "Rejetés"
       security:
         title: "Sécurité"
         sidebar_link:
-          error_logs: "Journaux d'erreurs"
-          screened_emails: "E-mails filtrés"
-          screened_ips: "IP sous surveillance"
-          screened_urls: "URL sous surveillance"
-          search_logs: "Journaux de recherche"
           security: "Paramètres de sécurité"
           spam: "Paramètres anti-spam"
-          staff_action_logs: "Journaux d'action du personnel"
       section_landing_pages:
         account:
           title: "Compte"
@@ -5269,7 +5254,7 @@ fr:
             title: "Sauvegardes"
             description: "Effectuez une sauvegarde des données de votre site"
           whats_new:
-            title: "Nouveautés"
+            title: "Nouveautés?"
             description: "Découvrez les nouvelles versions et améliorations de Discourse"
       config_areas:
         about:
@@ -5324,7 +5309,7 @@ fr:
             your_organization_saved: "Votre organisation enregistrée"
           saved: "enregistré !"
         flags:
-          header: "Signalements de modération"
+          header: "Modération"
           edit_header: "Modifier le signalement"
           subheader: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
           description: "Description"
@@ -5402,18 +5387,16 @@ fr:
       advanced:
         title: "Avancé"
         sidebar_link:
-          api_keys: "Clés d'API"
+          api_keys:
+            title: "Clés d'API"
           developer: "Développeur"
           embedding: "Intégration"
-          rate_limits: "Limites d'utilisation"
           user_api: "API utilisateur"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Fichiers"
           other_options: "Autre"
           search: "Recherche"
           experimental: "Expérimental"
-          all_site_settings: "Tous les paramètres du site"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
@@ -6866,6 +6849,9 @@ fr:
         back: "Retour aux permaliens"
         more_options: "Plus d'options"
         copy_success: "Permalien copié dans le presse-papiers"
+        nav:
+          settings: "Paramètres"
+          permalinks: "Permaliens"
         form:
           label: "Nouveau :"
           add_header: "Ajouter un permalien"
@@ -6907,8 +6893,23 @@ fr:
           moderator: "Modérateur"
           regular: "Utilisateur normal"
       previews:
-        topic_title: "Titre d'un sujet de discussion"
         share_button: "Partager"
         reply_button: "Répondre"
         topic_preview: "Aperçu du sujet"
         homepage_preview: "Aperçu de la page d'accueil"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "toutes les catégories"
+          new: "Nouveaux"
+          unread: "Non lus"
+          top: "Top"
+          latest: "Récents"
+          hot: "Populaire"
+          categories: "Catégories"
+        category_names:
+          site_feedback: "Commentaires sur le site"
+        table_headers:
+          topic: "Sujet"
+          replies: "Réponses"
+          views: "Vues"
+          activity: "Activité"

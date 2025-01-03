@@ -411,6 +411,8 @@ tr_TR:
             label: Komut dosyası
           version:
             label: Sürüm
+          status:
+            label: Durum
           enabled:
             label: Etkin
           disabled:

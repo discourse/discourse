@@ -551,13 +551,6 @@ th:
           from: "จาก"
           to: "ถึง"
       public_exit: "อนุญาตให้ผู้ใช้ออกจากกลุ่มอย่างอิสระ"
-      empty:
-        posts: "ไม่มีโพสต์โดยสมาชิกของกลุ่มนี้"
-        members: "ไม่มีสมาชิกในกลุ่มนี้"
-        requests: "ไม่มีคำร้องขอเป็นสมาชิกของกลุ่มนี้"
-        mentions: "ไม่มีการกล่าวถึงของกลุ่มนี้"
-        messages: "ไม่มีข้อความสำหรับกลุ่มนี้"
-        topics: "ไม่มีกระทู้โดยสมาชิกของกลุ่มนี้"
       add: "เพิ่ม"
       join: "เข้าร่วม"
       leave: "ออก"
@@ -699,10 +692,10 @@ th:
       delete_other_accounts:
         other: "ลบ %{count}"
       username: "ชื่อผู้ใช้"
-      trust_level: "TL"
+      trust_level: "ระดับความไว้ใจ"
       read_time: "เวลาที่อ่าน"
       topics_entered: "กระทู้ที่เข้า"
-      post_count: "# โพสต์"
+      post_count: "โพสต์"
       confirm_delete_other_accounts: "คุณแน่ใจแล้วหรือว่าจะลบบัญชีเหล่านี้"
       copied: "คัดลอกแล้ว"
     user_fields:
@@ -1311,6 +1304,8 @@ th:
       categories_with_featured_topics: "หมวดหมู่พร้อมด้วยกระทู้เด่น"
       categories_and_latest_topics: "หมวดหมู่และกระทู้ล่าสุด"
       categories_and_top_topics: "หมวดหมู่และกระทู้ยอดนิยม"
+    full_name_requirement:
+      required_at_signup: "ต้องการเมื่อลงทะเบียน"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2535,9 +2530,9 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
-      reports:
-        sidebar_link:
-          all: "ทั้งหมด"
+      config:
+        notifications:
+          title: "การแจ้งเตือน"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -2685,22 +2680,14 @@ th:
           badges: "เหรียญ"
           notifications: "การแจ้งเตือน"
           permalinks: "ลิงค์ถาวร"
-          trust_levels: "ระดับความไว้ใจ"
           users: "ผู้ใช้"
           groups: "กลุ่ม"
-          user_fields: "ช่องข้อมูลผู้ใช้"
           legal: "กฎ"
       appearance:
         sidebar_link:
           emoji: "Emoji"
           navigation: "การนำทาง"
           themes: "ธีม"
-      email_logs:
-        sidebar_link:
-          sent: "ส่ง"
-          skipped: "ข้าม"
-          received: "รับ"
-          rejected: "ถูกปฏิเสธ"
       security:
         title: "ความปลอดภัย"
       section_landing_pages:
@@ -2751,7 +2738,6 @@ th:
         sidebar_link:
           developer: "นักพัฒนา"
           embedding: "ฝั่ง"
-          rate_limits: "ข้อจำกัด"
           files: "ไฟล์"
           other_options: "อื่นๆ"
           search: "ค้นหา"
@@ -3325,6 +3311,9 @@ th:
         user_title: "ผู้ใช้"
         username: "ชื่อผู้ใช้"
         delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
+        nav:
+          settings: "การตั้งค่า"
+          permalinks: "ลิงค์ถาวร"
         form:
           label: "ใหม่:"
           url: "URL"
@@ -3350,3 +3339,16 @@ th:
       previews:
         share_button: "แบ่งปัน"
         reply_button: "ตอบ"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "ทุกหมวดหมู่"
+          new: "ใหม่"
+          unread: "ยังไม่อ่าน"
+          top: "บน"
+          latest: "ล่าสุด"
+          categories: "หมวดหมู่"
+        table_headers:
+          topic: "หัวข้อ"
+          replies: "ตอบ"
+          views: "ดู"
+          activity: "กิจกรรม"

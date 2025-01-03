@@ -758,13 +758,9 @@ vi:
       public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
       public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
       empty:
-        posts: "Không có bài viết nào của các thành viên trong nhóm này"
-        members: "Không có thành viên nào trong nhóm này"
-        requests: "Không có yêu cầu gia nhập nào cho nhóm này."
-        mentions: "Group này chưa được nhắc tới lần nào."
-        messages: "Không có tin nhắn nào của nhóm này"
-        topics: "Không có chủ đề nào được gửi bởi thành viên của nhóm này."
-        logs: "Không có bản ghi nào dành cho nhóm này"
+        requests: "Không có yêu cầu gia nhập nào cho nhóm này"
+        mentions: "Group này chưa được nhắc tới lần nào"
+        topics: "Không có chủ đề nào được gửi bởi thành viên của nhóm này"
       add: "Thêm"
       join: "Tham gia"
       leave: "Rời nhóm"
@@ -937,10 +933,10 @@ vi:
       delete_other_accounts:
         other: "Xoá %{count}"
       username: "tên đăng nhập"
-      trust_level: "TL"
+      trust_level: "mức độ tin cậy"
       read_time: "thời gian đọc"
       topics_entered: "chủ để đã xem"
-      post_count: "# bài viết"
+      post_count: "bài viết"
       confirm_delete_other_accounts: "Bạn có muốn xóa những tài khoản này không?"
       powered_by: "sử dụng <a href='https://maxmind.com'> MaxMindDB </a>"
       copied: "đã sao chép"
@@ -1811,6 +1807,8 @@ vi:
       categories_boxes: "Hộp có Danh mục con"
       categories_boxes_with_topics: "Hộp có Chủ đề Nổi bật"
       subcategories_with_featured_topics: "Danh mục con với các chủ đề nổi bật"
+    full_name_requirement:
+      required_at_signup: "Bắt buộc lúc đăng ký"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3663,7 +3661,7 @@ vi:
         show: "Hiển thị"
         about: "Giới thiệu"
   admin_js:
-    type_to_filter: "gõ vào bộ lọc…"
+    type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
     admin:
       title: "Quản trị Diễn đàn"
@@ -3678,7 +3676,10 @@ vi:
         title: "Danh sách các báo cáo có sẵn"
         sidebar_title: "Báo cáo"
         sidebar_link:
-          all: "All"
+          all: "Tất cả các báo cáo"
+      config:
+        notifications:
+          title: "Thông báo"
       dashboard:
         title: "Bảng điều khiển"
         last_updated: "Đã cập nhật trang tổng quan:"
@@ -3769,6 +3770,7 @@ vi:
             include_subcategories:
               label: "Bao gồm các danh mục phụ"
       flags:
+        title: "Người kiểm duyệt"
         description: "Mô tả"
         enabled: "Kích hoạt"
       groups:
@@ -4024,16 +4026,14 @@ vi:
           badges: "Huy hiệu"
           notifications: "Thông báo"
           permalinks: "Liên kết cố định"
-          trust_levels: "Độ tin tưởng"
           users: "Thành viên"
           groups: "Nhóm"
-          user_fields: "Trường tài khoản"
-          watched_words: "Từ đã xem"
           legal: "Legal"
+          moderation_flags:
+            title: "Người kiểm duyệt"
       appearance:
         title: "Ngoại hình"
         sidebar_link:
-          color_schemes: "Bảng màu"
           emoji: "Emoji"
           navigation: "Điều hướng"
           themes: "Themes"
@@ -4042,22 +4042,8 @@ vi:
       email_settings:
         sidebar_link:
           appearance: "Ngoại hình"
-          preview_summary: "Xem trước tập san"
-      email_logs:
-        sidebar_link:
-          sent: "Đã gửi"
-          skipped: "Đã bỏ qua"
-          bounced: "Bị trả lại"
-          received: "Đã nhận"
-          rejected: "Từ chối"
       security:
         title: "Bảo mật"
-        sidebar_link:
-          error_logs: "Log lỗi"
-          screened_emails: "Screened Emails"
-          screened_ips: "Screened IPs"
-          screened_urls: "Screened URLs"
-          search_logs: "Nhật ký tìm kiếm"
       section_landing_pages:
         account:
           title: "Tài khoản"
@@ -4071,6 +4057,7 @@ vi:
           update: "Cập nhật"
           saved: "đã lưu"
         flags:
+          header: "Người kiểm duyệt"
           description: "Mô tả"
           enabled: "Kích hoạt"
           edit: "Sửa"
@@ -4109,9 +4096,7 @@ vi:
         sidebar_link:
           developer: "Nhà phát triển"
           embedding: "Nhúng"
-          rate_limits: "Rate Limits"
           user_api: "API người dùng"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Tập tin"
           other_options: "Khác"
@@ -5254,6 +5239,9 @@ vi:
         destination: "Điểm đến"
         copy_to_clipboard: "Sao chép Permalink vào Clipboard"
         delete_confirm: Bạn có chắc chắn muốn xóa liên kết tĩnh này?
+        nav:
+          settings: "Cài đặt"
+          permalinks: "Liên kết cố định"
         form:
           label: "Mới:"
           url: "URL"
@@ -5289,8 +5277,22 @@ vi:
           moderator: "Điều hành"
           regular: "Người sử dụng thường xuyên"
       previews:
-        topic_title: "Tiêu đề chủ đề thảo luận"
         share_button: "Chia sẻ"
         reply_button: "Trả lời "
         topic_preview: "Xem trước chủ đề"
         homepage_preview: "Xem trước trang chủ"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "tất cả chuyên mục"
+          new: "Mới"
+          unread: "Chưa đọc"
+          top: "Top"
+          latest: "Mới nhất"
+          categories: "Danh mục"
+        category_names:
+          site_feedback: "Phản hồi"
+        table_headers:
+          topic: "Chủ đề"
+          replies: "Trả lời"
+          views: "Lượt xem"
+          activity: "Hoạt động"

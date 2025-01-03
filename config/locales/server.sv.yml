@@ -1540,8 +1540,6 @@ sv:
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
-    summarization_strategy: "Ytterligare sätt att sammanfatta innehåll som registrerats av plugins"
-    custom_summarization_allowed_groups: "Grupper som tillåts att sammanfatta innehåll med hjälp av `summarization_strategy`."
     enable_personal_messages: "UTFASAT, använd inställningen \"personal message enabled groups\" istället. Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
@@ -2017,7 +2015,6 @@ sv:
     auto_handle_queued_age: "Hantera automatiskt inlägg som väntar på att granskas efter detta antal dagar. Flaggor ignoreras. Inlägg och användare i kö avvisas. Ställ in till 0 för att inaktivera den här funktionen."
     penalty_step_hours: "Standardtid, uttryckt i timmar, under vilken användare bestraffas genom att tystas eller stängas av. Det första värdet är standard för deras första överträdelse, det andra värdet är standard för deras andra överträdelse etc."
     max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera utskrifter)"
-    full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
@@ -4252,23 +4249,9 @@ sv:
             label: "Hemsidans stil"
             choices:
               latest:
-                label: "Senaste ämnen"
-              categories_only:
-                label: "Endast kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med utvalda ämnen"
-              categories_and_latest_topics:
-                label: "Kategorier med senaste ämnen"
-              categories_and_latest_topics_created_date:
-                label: "Kategorier och senaste ämnen (sorteras efter datumet då ämnet skapades)"
-              categories_and_top_topics:
-                label: "Kategorier och toppämnen"
-              categories_boxes:
-                label: "Kategoriboxar"
-              categories_boxes_with_topics:
-                label: "Kategoriboxar med ämnen"
-              subcategories_with_featured_topics:
-                label: "Underkategorier med utvalda ämnen"
+                label: "Senaste"
+              hot:
+                label: "Hett"
       branding:
         title: "Webbplatsens logotyp"
         fields:

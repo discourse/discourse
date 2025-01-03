@@ -411,6 +411,8 @@ hu:
             label: Szkript
           version:
             label: Verzió
+          status:
+            label: Állapot
           enabled:
             label: Engedélyezed
           disabled:

@@ -703,13 +703,13 @@ gl:
       public_admission: "Permitir que os usuarios se unan ao grupo libremente (require un grupo visíbel ao público)"
       public_exit: "Permitir que os usuarios abandonen o grupo libremente"
       empty:
-        posts: "Non hai publicacións de membros deste grupo."
-        members: "Non hai membros neste grupo."
-        requests: "Non hai petición de incorporación a este grupo."
-        mentions: "Non hai mencións neste grupo."
-        messages: "Non hai mensaxes para este grupo."
-        topics: "Non hai temas de membros deste grupo."
-        logs: "Non hai rexistros deste grupo."
+        posts: "Non hai publicacións de membros deste grupo"
+        members: "Non hai membros neste grupo"
+        requests: "Non hai petición de incorporación a este grupo"
+        mentions: "Non hai mencións neste grupo"
+        messages: "Non hai mensaxes para este grupo"
+        topics: "Non hai temas de membros deste grupo"
+        logs: "Non hai rexistros deste grupo"
       add: "Engadir"
       join: "Participar"
       leave: "Abandonar"
@@ -889,10 +889,10 @@ gl:
         one: "Eliminar %{count}"
         other: "Eliminar %{count}"
       username: "nome de usuario"
-      trust_level: "NdeC"
+      trust_level: "nivel de fiabilidade"
       read_time: "tempo de lectura"
       topics_entered: "temas introducidos"
-      post_count: "# publicacións"
+      post_count: "publicacións"
       confirm_delete_other_accounts: "Confirma que quere eliminar estas contas?"
       powered_by: "utitlízase <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
@@ -1710,6 +1710,8 @@ gl:
       categories_and_top_topics: "Categorías e temas destacados"
       categories_boxes: "Caixas con subcategorías"
       categories_boxes_with_topics: "Caixas con temas destacados"
+    full_name_requirement:
+      required_at_signup: "Requirido para rexistrarse"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -3402,7 +3404,10 @@ gl:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
         sidebar_link:
-          all: "Todas"
+          all: "Todos os informes"
+      config:
+        notifications:
+          title: "Notificacións"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -3493,6 +3498,7 @@ gl:
             include_subcategories:
               label: "Incluír subcategorías"
       flags:
+        title: "Moderación"
         description: "Descrición"
         enabled: "Activado?"
       groups:
@@ -3683,16 +3689,14 @@ gl:
           badges: "Insignias"
           notifications: "Notificacións"
           permalinks: "Ligazóns permanentes"
-          trust_levels: "Niveis de confianza"
           users: "Usuarios"
           groups: "Grupos"
-          user_fields: "Campos do usuario"
-          watched_words: "Palabras observadas"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderación"
       appearance:
         title: "Aparencia"
         sidebar_link:
-          color_schemes: "Paletas de cores"
           emoji: "Emoji"
           navigation: "Navegación"
           themes: "Temas"
@@ -3701,22 +3705,8 @@ gl:
       email_settings:
         sidebar_link:
           appearance: "Aparencia"
-          preview_summary: "Visualización do compendio"
-      email_logs:
-        sidebar_link:
-          sent: "Enviada"
-          skipped: "Saltada"
-          bounced: "Rebotada"
-          received: "Recibidas"
-          rejected: "Rexeitada"
       security:
         title: "Seguranza"
-        sidebar_link:
-          error_logs: "Rexistros de erros"
-          screened_emails: "Correos controlados"
-          screened_ips: "IP controlados"
-          screened_urls: "URL controlados"
-          search_logs: "Buscar rexistros"
       section_landing_pages:
         account:
           title: "Conta"
@@ -3730,6 +3720,7 @@ gl:
           update: "Actualizar"
           saved: "gardado!"
         flags:
+          header: "Moderación"
           description: "Descrición"
           enabled: "Activado?"
           edit: "Editar"
@@ -3767,9 +3758,7 @@ gl:
         sidebar_link:
           developer: "Desenvolvedor"
           embedding: "Incorporando"
-          rate_limits: "Límites de frecuencia"
           user_api: "API de usuario"
-          web_hooks: "Enganches de web (webhooks)"
           onebox: "Onebox"
           files: "Ficheiros"
           other_options: "Outro"
@@ -4902,6 +4891,9 @@ gl:
         destination: "Destino"
         copy_to_clipboard: "Copiar a ligazón permanente ao portapapeis"
         delete_confirm: Confirma a eliminación desta ligazón permanente?
+        nav:
+          settings: "Configuración"
+          permalinks: "Ligazóns permanentes"
         form:
           label: "Novo:"
           url: "URL"
@@ -4936,3 +4928,18 @@ gl:
       previews:
         share_button: "Compartir"
         reply_button: "Responder"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "todas as categorías"
+          new: "Novo"
+          unread: "Pendentes de lectura"
+          top: "Destacados"
+          latest: "Últimos"
+          categories: "Categorías"
+        category_names:
+          site_feedback: "Opinións sobre o sitio"
+        table_headers:
+          topic: "Tema"
+          replies: "Réplicas"
+          views: "Visualizacións"
+          activity: "Actividade"
