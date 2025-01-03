@@ -12,7 +12,7 @@ class UserApiKeyClientsController < ApplicationController
   end
 
   def create
-    rate_limit
+    rate_limit unless skip_rate_limit?
     require_params
     validate_params
     ensure_new_client
@@ -34,8 +34,20 @@ class UserApiKeyClientsController < ApplicationController
     end
   end
 
+  def skip_rate_limit?
+    SiteSetting
+      .create_user_api_key_client_ip_rate_limit_override_ips
+      .split("|")
+      .include?(request.remote_ip)
+  end
+
   def rate_limit
-    RateLimiter.new(nil, "user-api-key-clients-#{request.remote_ip}", 1, 24.hours).performed!
+    RateLimiter.new(
+      nil,
+      "user-api-key-clients-#{request.remote_ip}",
+      SiteSetting.user_api_key_clients_create_per_day,
+      24.hours,
+    ).performed!
   end
 
   def require_params

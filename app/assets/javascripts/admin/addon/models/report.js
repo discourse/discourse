@@ -407,12 +407,21 @@ export default class Report extends EmberObject {
 
   changeTitle(valAtT1, valAtT2, prevPeriodString) {
     const change = this.percentChangeString(valAtT1, valAtT2);
-    let title = "";
+    const title = [];
     if (change) {
-      title += `${change} change. `;
+      title.push(
+        i18n("admin.dashboard.reports.percent_change_tooltip", {
+          percent: change,
+        })
+      );
     }
-    title += `Was ${number(valAtT1)} ${prevPeriodString}.`;
-    return title;
+    title.push(
+      i18n("admin.dashboard.reports.percent_change_tooltip_previous_value", {
+        previousValue: number(valAtT1),
+        previousPeriod: prevPeriodString,
+      })
+    );
+    return title.join(" ");
   }
 
   @discourseComputed("yesterdayCount")

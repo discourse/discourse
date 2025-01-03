@@ -55,17 +55,23 @@ export default class Item extends Component {
   }
 
   get expandPinned() {
+    let expandPinned;
     if (
       !this.args.topic.pinned ||
       (this.site.mobileView && !this.siteSettings.show_pinned_excerpt_mobile) ||
       (this.site.desktopView && !this.siteSettings.show_pinned_excerpt_desktop)
     ) {
-      return false;
+      expandPinned = false;
+    } else {
+      expandPinned =
+        (this.args.expandGloballyPinned && this.args.topic.pinned_globally) ||
+        this.args.expandAllPinned;
     }
 
-    return (
-      (this.args.expandGloballyPinned && this.args.topic.pinned_globally) ||
-      this.args.expandAllPinned
+    return applyValueTransformer(
+      "topic-list-item-expand-pinned",
+      expandPinned,
+      { topic: this.args.topic, mobileView: this.site.mobileView }
     );
   }
 

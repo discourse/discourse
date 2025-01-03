@@ -1,5 +1,5 @@
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import ColorInput from "admin/components/color-input";
 
 function RGBToHex(rgb) {
   // Choose correct separator
@@ -25,9 +25,8 @@ function RGBToHex(rgb) {
 }
 
 export default class Color extends Component {
-  @computed("value")
   get valid() {
-    let value = this.value.toLowerCase();
+    let value = this.args.value.toLowerCase();
 
     let testColor = new Option().style;
     testColor.color = value;
@@ -46,8 +45,13 @@ export default class Color extends Component {
     return testColor.color && hexifiedColor === value;
   }
 
-  @action
-  onChangeColor(color) {
-    this.set("value", color);
-  }
+  <template>
+    <ColorInput
+      @hexValue={{readonly @value}}
+      @valid={{@valid}}
+      @onlyHex={{false}}
+      @styleSelection={{false}}
+      @onChangeColor={{@changeValueCallback}}
+    />
+  </template>
 }

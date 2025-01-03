@@ -367,8 +367,16 @@ module Jobs
   class Scheduled < Base
     extend MiniScheduler::Schedule
 
+    def self.perform_when_readonly
+      @perform_when_readonly = true
+    end
+
+    def self.perform_when_readonly?
+      @perform_when_readonly || false
+    end
+
     def perform(*args)
-      super if !Discourse.readonly_mode?
+      super if self.class.perform_when_readonly? || !Discourse.readonly_mode?
     end
   end
 

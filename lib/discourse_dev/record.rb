@@ -37,7 +37,7 @@ module DiscourseDev
         raise 'To run this rake task in a production site, set the value of `ALLOW_DEV_POPULATE` environment variable to "1"'
       end
 
-      unless ignore_current_count || @ignore_current_count
+      if !ignore_current_count && !@ignore_current_count
         if current_count >= @count
           puts "Already have #{current_count} #{type} records"
 

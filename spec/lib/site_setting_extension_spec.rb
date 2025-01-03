@@ -1046,6 +1046,14 @@ RSpec.describe SiteSettingExtension do
       )
     end
 
+    it "has a keyword entry for all settings" do
+      SiteSetting.all_settings.each do |s|
+        next if s[:plugin] == SiteSetting::SAMPLE_TEST_PLUGIN.name
+        expect(I18n.exists?("site_settings.keywords.#{s[:setting]}")).to eq(true),
+        "Missing keyword entry for #{s[:setting]}"
+      end
+    end
+
     context "when a setting also has an alias after renaming" do
       before { SiteSetting.stubs(:deprecated_setting_alias).returns("some_old_setting") }
 

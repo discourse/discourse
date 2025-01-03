@@ -113,6 +113,7 @@ export default class PostMenu extends Component {
       showDeleteTopicModal: this.showDeleteTopicModal,
       showFlags: this.args.showFlags,
       showMoreActions: this.showMoreActions,
+      showLogin: this.args.showLogin,
       toggleReplies: this.args.toggleReplies,
       toggleWhoLiked: this.toggleWhoLiked,
       toggleWhoRead: this.toggleWhoRead,

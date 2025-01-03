@@ -861,6 +861,12 @@
     },
     "navigation_menu_site_top_tags": {
       "type": "array"
+    },
+    "full_name_required_for_signup": {
+      "type": "boolean"
+    },
+    "full_name_visible_in_signup": {
+      "type": "boolean"
     }
   },
   "required": [
@@ -893,6 +899,8 @@
     "categories",
     "archetypes",
     "user_fields",
-    "auth_providers"
+    "auth_providers",
+    "full_name_required_for_signup",
+    "full_name_visible_in_signup"
   ]
 }

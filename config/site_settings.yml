@@ -53,7 +53,7 @@ required:
   contact_email:
     default: ""
     type: email
-    area: "about"
+    area: "about|notifications"
   contact_url:
     default: ""
     area: "about"
@@ -369,15 +369,19 @@ basic:
   push_notifications_prompt:
     default: true
     client: true
+    area: "notifications"
   push_notifications_icon:
     default: ""
     type: upload
+    area: "notifications"
   enable_desktop_push_notifications:
     default: true
     client: true
+    area: "notifications"
   push_notification_time_window_mins:
     default: 1
     min: 0
+    area: "notifications"
   short_title:
     default: ""
     max: 12
@@ -423,6 +427,9 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
+  adobe_analytics_tags_url:
+    default: ""
+    regex: "assets.adobedtm.com"
   extended_site_description:
     default: ""
     max: 10_000
@@ -446,6 +453,7 @@ basic:
     default: false
     hidden: true
     client: true
+
 login:
   invite_only:
     refresh: true
@@ -703,9 +711,10 @@ users:
   logout_redirect:
     client: true
     default: ""
-  full_name_required:
-    client: true
-    default: false
+  full_name_requirement:
+    type: enum
+    default: hidden_at_signup
+    enum: "FullNameRequirement"
   enable_names:
     client: true
     default: true
@@ -774,6 +783,8 @@ users:
   hide_user_profiles_from_public:
     default: false
     client: true
+  hide_new_user_profiles:
+    default: true
   allow_featured_topic_on_user_profiles:
     default: true
     client: true
@@ -810,6 +821,7 @@ users:
   max_notifications_per_user:
     default: 10000
     hidden: true
+    area: "notifications"
   gravatar_name:
     default: Gravatar
     client: true
@@ -1027,12 +1039,17 @@ posting:
   enable_mentions:
     default: true
     client: true
-  max_mentions_per_post: 10
+  max_mentions_per_post:
+    default: 10
+    area: "notifications"
   max_users_notified_per_group_mention:
     default: 100
     client: true
+    area: "notifications"
   newuser_max_replies_per_topic: 3
-  newuser_max_mentions_per_post: 2
+  newuser_max_mentions_per_post:
+    default: 2
+    area: "notifications"
   here_mention:
     default: "here"
     validator: "NotUsernameValidator"
@@ -1181,6 +1198,7 @@ posting:
     type: float
     default: 24
     min: 0
+    area: "notifications"
   auto_close_messages_post_count:
     default: 500
   auto_close_topics_post_count:
@@ -2377,6 +2395,11 @@ rate_limits:
   max_uploads_per_minute:
     default: 10
     hidden: true
+  user_api_key_clients_create_per_day:
+    default: 3
+    min: 1
+    max: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -2820,25 +2843,32 @@ uncategorized:
   enable_listing_suspended_users_on_search:
     default: false
 
-  disable_system_edit_notifications: true
+  disable_system_edit_notifications:
+    default: true
+    area: "notifications"
 
   disable_category_edit_notifications:
     default: false
+    area: "notifications"
 
   disable_tags_edit_notifications:
     default: false
+    area: "notifications"
 
   notification_consolidation_threshold:
     default: 3
     min: 0
+    area: "notifications"
 
   likes_notification_consolidation_window_mins:
     default: 120
     min: 1
+    area: "notifications"
 
   linked_notification_consolidation_window_mins:
     default: 120
     min: 1
+    area: "notifications"
 
   delete_drafts_older_than_n_days:
     default: 180
@@ -3038,6 +3068,7 @@ user_preferences:
   default_other_notification_level_when_replying:
     enum: "NotificationLevelWhenReplyingSiteSetting"
     default: 2
+    area: "notifications"
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
   default_other_enable_defer: false
@@ -3047,6 +3078,7 @@ user_preferences:
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
     default: 1
+    area: "notifications"
 
   default_topics_automatic_unpin:
     default: true
@@ -3163,6 +3195,10 @@ user_api:
   unused_registered_user_api_key_clients_days:
     default: 30
     max: 36500
+    hidden: true
+  create_user_api_key_client_ip_rate_limit_override_ips:
+    default: ""
+    type: list
     hidden: true
 
 tags:

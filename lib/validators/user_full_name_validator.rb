@@ -2,6 +2,8 @@
 
 class UserFullNameValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors.add(attribute, :blank) if SiteSetting.full_name_required && !record.name.present?
+    if SiteSetting.full_name_requirement == "required_at_signup" && !record.name.present?
+      record.errors.add(attribute, :blank)
+    end
   end
 end

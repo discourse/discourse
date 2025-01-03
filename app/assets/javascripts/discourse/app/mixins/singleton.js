@@ -1,53 +1,66 @@
 /**
-  This mixin allows a class to return a singleton, as well as a method to quickly
-  read/write attributes on the singleton.
+ This mixin allows a class to return a singleton, as well as a method to quickly
+ read/write attributes on the singleton.
 
 
-  Example usage:
+ Example usage:
 
-  ```javascript
+ ```javascript
 
-    // Define your class and apply the Mixin
-    User = EmberObject.extend({});
-    User.reopenClass(Singleton);
+ // Define your class and apply the Mixin
+ User = EmberObject.extend({});
+ User.reopenClass(Singleton);
 
-    // Retrieve the current instance:
-    var instance = User.current();
+ // Retrieve the current instance:
+ var instance = User.current();
 
-  ```
+ ```
 
-  Commonly you want to read or write a property on the singleton. There's a
-  helper method which is a little nicer than `.current().get()`:
+ Commonly you want to read or write a property on the singleton. There's a
+ helper method which is a little nicer than `.current().get()`:
 
-  ```javascript
+ ```javascript
 
-    // Sets the age to 34
-    User.currentProp('age', 34);
+ // Sets the age to 34
+ User.currentProp('age', 34);
 
-    console.log(User.currentProp('age')); // 34
+ console.log(User.currentProp('age')); // 34
 
-  ```
+ ```
 
-  If you want to customize how the singleton is created, redefine the `createCurrent`
-  method:
+ If you want to customize how the singleton is created, redefine the `createCurrent`
+ method:
 
-  ```javascript
+ ```javascript
 
-    // Define your class and apply the Mixin
-    Foot = EmberObject.extend({});
-    Foot.reopenClass(Singleton, {
-      createCurrent() {
-        return Foot.create({ toes: 5 });
-      }
-    });
+ // Define your class and apply the Mixin
+ Foot = EmberObject.extend({});
+ Foot.reopenClass(Singleton, {
+ createCurrent() {
+ return Foot.create({ toes: 5 });
+ }
+ });
 
-    console.log(Foot.currentProp('toes')); // 5
+ console.log(Foot.currentProp('toes')); // 5
 
-  ```
-**/
+ ```
+ **/
 import Mixin from "@ember/object/mixin";
+import deprecated from "discourse-common/lib/deprecated";
 
 const Singleton = Mixin.create({
+  init() {
+    this._super(...arguments);
+
+    deprecated(
+      "Singleton mixin is deprecated. Use the singleton class decorator from discourse/lib/singleton instead.",
+      {
+        id: "discourse.singleton-mixin",
+        since: "v3.4.0.beta4-dev",
+      }
+    );
+  },
+
   current() {
     if (!this._current) {
       this._current = this.createCurrent();
@@ -56,11 +69,11 @@ const Singleton = Mixin.create({
   },
 
   /**
-    How the singleton instance is created. This can be overridden
-    with logic for creating (or even returning null) your instance.
+   How the singleton instance is created. This can be overridden
+   with logic for creating (or even returning null) your instance.
 
-    By default it just calls `create` with an empty object.
-  **/
+   By default it just calls `create` with an empty object.
+   **/
   createCurrent() {
     return this.create({});
   },
