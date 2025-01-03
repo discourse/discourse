@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "nokogiri/xml/parse_options"
 RSpec::Matchers.define :match_html do |expected|
   match { |actual| make_canonical_html(expected).eql? make_canonical_html(actual) }
 
@@ -13,11 +12,7 @@ RSpec::Matchers.define :match_html do |expected|
   end
 
   def make_canonical_html(html)
-    doc =
-      Nokogiri.HTML5(html) do |config|
-        config[:options] = Nokogiri::XML::ParseOptions::NOBLANKS |
-          Nokogiri::XML::ParseOptions::COMPACT
-      end
+    doc = Nokogiri.HTML5(html)
 
     doc.traverse do |node|
       node.content = node.content.gsub(/\s+/, " ").strip if node.node_name&.downcase == "text"
