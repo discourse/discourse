@@ -378,7 +378,6 @@ export default class ChatComposer extends Component {
   @action
   onSelectEmoji(emoji) {
     const code = `:${emoji}:`;
-    this.chatEmojiReactionStore.track(code);
     this.composer.textarea.emojiSelected(emoji);
 
     if (this.site.desktopView) {
@@ -498,6 +497,7 @@ export default class ChatComposer extends Component {
             identifier: "emoji-picker",
             groupIdentifier: "emoji-picker",
             component: EmojiPickerDetached,
+            context: `channel_${this.args.channel.id}`,
             data: {
               didSelectEmoji: (emoji) => {
                 this.onSelectEmoji(emoji);
