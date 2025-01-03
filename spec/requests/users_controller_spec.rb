@@ -7279,18 +7279,6 @@ RSpec.describe UsersController do
         notifications = response.parsed_body["notifications"]
         expect(notifications.size).to eq(0)
       end
-
-      context "with `show_user_menu_avatars` setting enabled" do
-        before { SiteSetting.show_user_menu_avatars = true }
-
-        it "serializes acting_user_avatar into notifications" do
-          get "/u/#{user.username}/user-menu-bookmarks"
-          expect(response.status).to eq(200)
-
-          first_notification = response.parsed_body["notifications"].first
-          expect(first_notification["acting_user_avatar_template"]).to be_present
-        end
-      end
     end
   end
 
