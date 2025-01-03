@@ -8,3 +8,7 @@ category1:
     default: 2
     enum: "TrustLevelAndStaffSetting"
     hidden: true
+  old_one:
+    default: false
+  new_one:
+    default: false
