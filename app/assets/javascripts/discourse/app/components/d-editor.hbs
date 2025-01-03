@@ -21,8 +21,6 @@
                   @options={{hash icon=b.icon focusAfterOnChange=false}}
                   class={{b.className}}
                 />
-              {{else if b.component}}
-                <b.component @button={{b}} />
               {{else}}
                 <DButton
                   @action={{fn (action b.action) b}}
