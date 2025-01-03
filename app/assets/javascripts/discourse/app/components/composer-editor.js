@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { next, schedule, throttle } from "@ember/runloop";
+import { schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
@@ -804,13 +804,11 @@ export default class ComposerEditor extends Component {
 
     this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
 
-    next(() => {
-      // need to wait a bit for the "slide down" transition of the composer
-      discourseLater(
-        () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
-        400
-      );
-    });
+    // need to wait a bit for the "slide down" transition of the composer
+    discourseLater(
+      () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
+      400
+    );
 
     preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
     preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
