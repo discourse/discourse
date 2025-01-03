@@ -117,9 +117,17 @@ task "site_settings:add_keyword_translation_keys" => :environment do
   removed = yml["en"]["site_settings"]["keywords"].length - new_keywords.length - added
 
   new_text = ""
-  new_keywords.keys.sort.each { |key| new_text += "      #{key}: \"#{new_keywords[key]}\"\n" }
+  new_keywords.keys.sort.each do |key|
+    # Add additional context for translators
+    new_text += <<-TEXT
+      # This is a pipe "|" separated list of keywords that are used to search through site settings in the admin panel.
+      # English keywords will always be recognised, if there are relevant keywords in your language, please include them here.
+      # For additional context, the description of this site setting is "#{yml["en"]["site_settings"][key].dump}"
+      #{key}: "#{new_keywords[key]}"
+    TEXT
+  end
 
-  text.gsub!(/(# BEGIN KEYWORDS\n)(.*)(      # END KEYWORDS)/m, "\\1#{new_text}\\3")
+  text.gsub!(/(# BEGIN KEYWORDS)(.*)(# END KEYWORDS)/m, "\\1\n\n#{new_text}\n      \\3")
 
   File.write(filename, text)
 
