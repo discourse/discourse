@@ -12,8 +12,8 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
     chat_system_bootstrap
   end
 
-  def create_message(channel, text: "this is fine", user: Fabricate(:user))
-    Fabricate(:chat_message_with_service, chat_channel: channel, message: text, user: user)
+  def create_message(chat_channel, message: nil, user: Fabricate(:user))
+    Fabricate(:chat_message_with_service, chat_channel:, message:, user:)
   end
 
   context "as a user" do
@@ -98,7 +98,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               create_message(
                 channel_1,
                 user: user_1,
-                text: "hello @#{current_user.username} what's up?",
+                message: "hello @#{current_user.username} what's up?",
               )
 
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator")
@@ -113,7 +113,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               create_message(
                 channel_1,
                 user: user_1,
-                text: "Are you busy @#{current_user.username}?",
+                message: "Are you busy @#{current_user.username}?",
               )
 
               3.times { create_message(channel_1, user: user_1) }
