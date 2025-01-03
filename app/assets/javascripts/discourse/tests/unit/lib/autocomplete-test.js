@@ -185,19 +185,30 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     assert.dom(element).hasValue(":smile: ");
 
-    ["ArrowLeft", "ArrowLeft", "ArrowLeft"].forEach((key) =>
-      ["keydown", "keyup"].forEach(async (event) => {
-        await triggerKeyEvent(element, event, key, { code: key });
-      })
-    );
+    await triggerArrowKey(element, "ArrowLeft");
+    await triggerArrowKey(element, "ArrowLeft");
+    await triggerArrowKey(element, "ArrowLeft");
+    await triggerArrowKey(element, "ArrowRight");
 
-    assert.strictEqual(element.selectionStart, 5);
+    assert.strictEqual(element.selectionStart, 6);
 
+    // This is passing, but it's a false positive
+    // triggerArrowKey isn't triggering the event the autocomplete listens to
     assert.dom("#ac-testing").doesNotExist();
 
+    await triggerArrowKey(element, "ArrowRight");
     await simulateKey(element, "\b");
 
-    assert.dom(element).hasValue(":smil");
+    assert.dom(element).hasValue(":smile ");
     assert.dom("#ac-testing").exists();
   });
 });
+
+async function triggerArrowKey(element, key) {
+  await triggerKeyEvent(element, "keydown", key, { code: key });
+  await triggerKeyEvent(element, "keyup", key, { code: key });
+
+  const pos = element.selectionStart;
+  const direction = key === "ArrowLeft" ? -1 : 1;
+  element.setSelectionRange(pos + 1 * direction, pos + 1 * direction);
+}

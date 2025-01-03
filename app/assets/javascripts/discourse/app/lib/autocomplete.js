@@ -478,7 +478,11 @@ export default function (options) {
     }
 
     prevTerm = term;
-    if (term.length !== 0 && term.trim().length === 0) {
+    if (
+      (term.length !== 0 && term.trim().length === 0) ||
+      // close unless the caret is at the end of a word, like #line|<-
+      options.textHandler.value[options.textHandler.getCaretPosition()]?.trim()
+    ) {
       closeAutocomplete();
       return null;
     } else {
@@ -546,11 +550,6 @@ export default function (options) {
 
     let cp = options.textHandler.getCaretPosition();
     const key = options.textHandler.value[cp - 1];
-
-    // only continue if the caret is at the end of a word, like #line|<-
-    if (options.textHandler.value[cp]?.trim()) {
-      return;
-    }
 
     if (options.key) {
       if (options.onKeyUp && key !== options.key) {
