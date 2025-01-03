@@ -19,7 +19,7 @@ code {
   color: var(--primary-very-high);
   background: var(--hljs-bg);
   border-radius: var(--d-button-border-radius);
-  font-size: 14px;
+  font-size: 0.875em;
   line-height: calc((13 + 4) / 13);
 }
 
@@ -27,15 +27,6 @@ pre > code {
   display: block;
   padding: 12px;
   max-height: 500px;
-}
-
-h1 code,
-h2 code,
-h3 code,
-h4 code,
-h5 code,
-h6 code {
-  font-size: inherit;
 }
 
 .hljs-comment,
