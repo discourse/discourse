@@ -19,8 +19,9 @@
     .prefix-image {
       border: 1px solid transparent;
     }
+
     &.active .prefix-image {
-      box-shadow: 0px 0px 0px 1px var(--success);
+      box-shadow: 0 0 0 1px var(--success);
     }
   }
 
@@ -35,6 +36,7 @@
     &:hover {
       background: var(--d-sidebar-highlight-background);
       outline: none;
+
       .prefix-text {
         background: var(--d-sidebar-highlight-prefix-background);
       }
@@ -50,6 +52,7 @@
           color: var(--d-sidebar-highlight-color);
         }
       }
+
       .sidebar-section-link-hover:hover .sidebar-section-hover-button {
         background-color: var(--d-selected);
       }
@@ -57,9 +60,11 @@
 
     &--muted {
       opacity: 0.5;
+
       .sidebar-section-link-prefix.icon .d-icon {
         color: var(--primary-medium);
       }
+
       &.active {
         .sidebar-section-link-prefix.icon .d-icon {
           color: var(--primary-high);
@@ -81,6 +86,7 @@
     .sidebar-section-link-suffix {
       margin-left: 1em;
       font-size: var(--font-down-4);
+
       &.icon {
         &.urgent svg {
           color: var(--success);
@@ -184,6 +190,7 @@
         margin-right: -0.2em;
       }
     }
+
     .prefix-span {
       width: 0.8em;
       height: 0.8em;

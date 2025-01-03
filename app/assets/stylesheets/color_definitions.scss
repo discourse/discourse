@@ -1,7 +1,6 @@
 // This file maps all SCSS color variables to CSS custom properties.
 // It is compiled to CSS separately from the rest of the app.
 // The source variables come from color_transformations.scss and variables.scss
-
 :root {
   --scheme-type: #{schemeType()};
   --primary: #{$primary};
@@ -16,7 +15,6 @@
   --love: #{$love};
   --d-selected: #{$selected};
   --d-hover: #{$hover};
-
   --always-black-rgb: 0, 0, 0;
   --primary-rgb: #{hexToRGB($primary)};
   --primary-low-rgb: #{hexToRGB($primary-low)};
@@ -26,14 +24,12 @@
   --tertiary-rgb: #{hexToRGB($tertiary)};
   --highlight-rgb: #{hexToRGB($highlight)};
   --success-rgb: #{hexToRGB($success)};
-
   --primary-very-low: #{$primary-very-low};
   --primary-low: #{$primary-low};
   --primary-low-mid: #{$primary-low-mid};
   --primary-medium: #{$primary-medium};
   --primary-high: #{$primary-high};
   --primary-very-high: #{$primary-very-high};
-
   --primary-50: #{$primary-50};
   --primary-100: #{$primary-100};
   --primary-200: #{$primary-200};
@@ -44,25 +40,20 @@
   --primary-700: #{$primary-700};
   --primary-800: #{$primary-800};
   --primary-900: #{$primary-900};
-
   --header_primary-low: #{$header_primary-low};
   --header_primary-low-mid: #{$header_primary-low-mid};
-
   --header_primary-medium: #{$header_primary-medium};
   --header_primary-high: #{$header_primary-high};
   --header_primary-very-high: #{$header_primary-very-high};
-
   --secondary-low: #{$secondary-low};
   --secondary-medium: #{$secondary-medium};
   --secondary-high: #{$secondary-high};
   --secondary-very-high: #{$secondary-very-high};
-
   --tertiary-very-low: #{$tertiary-very-low};
   --tertiary-low: #{$tertiary-low};
   --tertiary-medium: #{$tertiary-medium};
   --tertiary-high: #{$tertiary-high};
   --tertiary-hover: #{$tertiary-hover};
-
   --tertiary-50: #{$tertiary-50};
   --tertiary-100: #{$tertiary-100};
   --tertiary-200: #{$tertiary-200};
@@ -73,26 +64,20 @@
   --tertiary-700: #{$tertiary-700};
   --tertiary-800: #{$tertiary-800};
   --tertiary-900: #{$tertiary-900};
-
   --quaternary-low: #{$quaternary-low};
-
   --highlight-bg: #{$highlight-bg};
   --highlight-low: #{$highlight-low};
   --highlight-medium: #{$highlight-medium};
   --highlight-high: #{$highlight-high};
-
   --danger-low: #{$danger-low};
   --danger-low-mid: #{$danger-low-mid};
   --danger-medium: #{$danger-medium};
   --danger-hover: #{$danger-hover};
-
   --success-low: #{$success-low};
   --success-medium: #{$success-medium};
   --success-hover: #{$success-hover};
-
   --love-low: #{$love-low};
   --wiki: #{$wiki};
-
   --blend-primary-secondary-5: #{$blend-primary-secondary-5};
   --primary-med-or-secondary-med: #{$primary-med-or-secondary-med};
   --primary-med-or-secondary-high: #{$primary-med-or-secondary-high};
@@ -108,7 +93,6 @@
   --tertiary-or-white: #{$tertiary-or-white};
   --facebook-or-white: #{$facebook-or-white};
   --twitter-or-white: #{$twitter-or-white};
-
   --hljs-attr: #{$hljs-attr};
   --hljs-attribute: #{$hljs-attribute};
   --hljs-addition: #{$hljs-addition};
@@ -123,7 +107,6 @@
   --hljs-symbol: #{$hljs-symbol};
   --hljs-variable: #{$hljs-variable};
   --hljs-string: #{$hljs-string};
-
   --google: #{$google};
   --google-hover: #{$google-hover};
   --instagram: #{$instagram};
@@ -136,11 +119,9 @@
   --github-hover: #{$github-hover};
   --discord: #{$discord};
   --discord-hover: #{$discord-hover};
-
   --gold: #{$gold};
   --silver: #{$silver};
   --bronze: #{$bronze};
-
   --shadow-modal: 0 8px 60px rgba(0, 0, 0, #{$shadow-opacity-modal});
   --shadow-composer: 0 -1px 40px rgba(0, 0, 0, #{$shadow-opacity-composer});
   --shadow-menu-panel: 0 8px 12px rgba(0, 0, 0, #{$shadow-opacity-menu-panel});
@@ -149,7 +130,6 @@
   --shadow-header: 0 0 0 1px var(--primary-low);
   --shadow-footer-nav: 0 0 2px 0 rgba(0, 0, 0, #{$shadow-opacity-footer-nav});
   --shadow-focus-danger: 0 0 6px 0 var(--danger);
-
   --float-kit-arrow-stroke-color: var(--primary-low);
   --float-kit-arrow-fill-color: var(--secondary);
 }

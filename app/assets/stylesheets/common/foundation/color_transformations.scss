@@ -21,7 +21,6 @@ $primary-600: dark-light-diff($primary, $secondary, 50%, -35%) !default;
 $primary-700: dark-light-diff($primary, $secondary, 38%, -30%) !default;
 $primary-800: dark-light-diff($primary, $secondary, 30%, -25%) !default;
 $primary-900: dark-light-diff($primary, $secondary, 15%, -10%) !default;
-
 $header_primary-low: blend-header-primary-background(10%) !default;
 $header_primary-low-mid: blend-header-primary-background(35%) !default;
 $header_primary-medium: blend-header-primary-background(55%) !default;
@@ -104,56 +103,44 @@ $wiki: green !default;
 
 //blended variants
 $blend-primary-secondary-5: blend-two-colors($primary, $secondary, 5%) !default;
-
 $primary-med-or-secondary-med: dark-light-choose(
   $primary-medium,
   $secondary-medium
 ) !default;
-
 $primary-med-or-secondary-high: dark-light-choose(
   $primary-medium,
   $secondary-high
 ) !default;
-
 $primary-high-or-secondary-low: dark-light-choose(
   $primary-high,
   $secondary-low
 ) !default;
-
 $primary-low-mid-or-secondary-high: dark-light-choose(
   $primary-low-mid,
   $secondary-high
 ) !default;
-
 $primary-low-mid-or-secondary-low: dark-light-choose(
   $primary-low-mid,
   $secondary-low
 ) !default;
-
 $primary-or-primary-low-mid: dark-light-choose(
   $primary,
   $primary-low-mid
 ) !default;
-
 $highlight-low-or-medium: dark-light-choose(
   $highlight-low,
   $highlight-medium
 ) !default;
-
 $tertiary-or-tertiary-low: dark-light-choose($tertiary, $tertiary-low) !default;
-
 $tertiary-low-or-tertiary-high: dark-light-choose(
   $tertiary-low,
   $tertiary-high
 ) !default;
-
 $tertiary-med-or-tertiary: dark-light-choose(
   $tertiary-medium,
   $tertiary
 ) !default;
-
 $secondary-or-primary: dark-light-choose($secondary, $primary) !default;
-
 $tertiary-or-white: dark-light-choose($tertiary, unquote("#fff")) !default;
 $facebook-or-white: dark-light-choose($facebook, unquote("#fff")) !default;
 $twitter-or-white: dark-light-choose($twitter, unquote("#fff")) !default;
@@ -172,7 +159,7 @@ $hljs-deletion: dark-light-choose(#c02d2e, #de7176) !default;
 $hljs-keyword: dark-light-choose(#015692, #88aece) !default;
 $hljs-title: dark-light-choose(#b75501, #f08d49) !default;
 $hljs-name: dark-light-choose(#b75501, #f08d49) !default;
-$hljs-punctuation: dark-light-choose(#535a60, #cccccc) !default;
+$hljs-punctuation: dark-light-choose(#535a60, #ccc) !default;
 $hljs-symbol: dark-light-choose(#54790d, #b5bd68) !default;
 $hljs-variable: dark-light-choose(#54790d, #b5bd68) !default;
 $hljs-string: dark-light-choose(#54790d, #b5bd68) !default;

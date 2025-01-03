@@ -54,7 +54,8 @@
     height: 100%;
     overflow-y: scroll;
     text-transform: capitalize;
-    @include chat-scrollbar();
+
+    @include chat-scrollbar;
     margin: 1px;
   }
 

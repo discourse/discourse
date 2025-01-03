@@ -3,6 +3,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+
     #create-topic {
       box-sizing: border-box;
       display: flex;
@@ -40,9 +41,11 @@
         margin-left: 0.5em;
       }
     }
+
     > li {
       margin-right: 0;
     }
+
     > li > a {
       line-height: var(--line-height-large);
       display: flex;

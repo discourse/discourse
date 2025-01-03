@@ -28,7 +28,7 @@ $pd-day-disabled-color: var(--primary) !default;
 $pd-week-color: var(--primary) !default;
 
 // Font
-$pd-font-family: Arial, sans-serif !default;
+$pd-font-family: arial, sans-serif !default;
 
 
 .pika-single {
@@ -54,13 +54,13 @@ $pd-font-family: Arial, sans-serif !default;
 // clear child float (pika-lendar), using the famous micro clearfix hack
 // http://nicolasgallagher.com/micro-clearfix-hack/
 .pika-single {
-    &:before,
-    &:after {
+    &::before,
+    &::after {
         content: " ";
         display: table;
     }
 
-    &:after { clear: both }
+    &::after { clear: both }
 }
 
 .pika-lendar {
@@ -130,10 +130,6 @@ $pd-font-family: Arial, sans-serif !default;
 .pika-prev,
 .is-rtl .pika-next {
     float: left;
-    -webkit-mask: svg-uri(
-        '<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 192 512"><path d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"></path></svg>'
-      )
-      no-repeat 50% 50%;
     mask: svg-uri(
         '<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 192 512"><path d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"></path></svg>'
       )
@@ -143,10 +139,6 @@ $pd-font-family: Arial, sans-serif !default;
 .pika-next,
 .is-rtl .pika-prev {
     float: right;
-    -webkit-mask: svg-uri(
-        '<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 192 512"><path d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>'
-      )
-      no-repeat 50% 50%;
     mask: svg-uri(
         '<svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 192 512"><path d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>'
       )
@@ -186,7 +178,6 @@ $pd-font-family: Arial, sans-serif !default;
 .pika-button {
     cursor: pointer;
     display: block;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     outline: none;
     border: 0;

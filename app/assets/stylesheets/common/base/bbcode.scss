@@ -1,15 +1,17 @@
 // Support for BBCode styles like colors and font sizes
-
 span {
   &.bbcode-b {
     font-weight: bold;
   }
+
   &.bbcode-i {
     font-style: italic;
   }
+
   &.bbcode-u {
     text-decoration: underline;
   }
+
   &.bbcode-s {
     text-decoration: line-through;
   }

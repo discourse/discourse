@@ -4,6 +4,7 @@
   background: var(--secondary);
   box-shadow: var(--shadow-card);
   width: 133px;
+
   @include unselectable;
 
   &:not(.--glimmer) {

@@ -25,6 +25,7 @@
     width: 100%;
     overflow-x: scroll;
     border-top: 1px solid var(--primary-low);
+
     thead {
       tr {
         display: flex;
@@ -41,6 +42,7 @@
         display: flex;
         flex-direction: column;
       }
+
       tr {
         border: 0;
       }

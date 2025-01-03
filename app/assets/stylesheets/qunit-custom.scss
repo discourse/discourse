@@ -83,7 +83,7 @@ body {
   }
 
   #qunit-tests b.failed {
-    color: #ff7777;
+    color: #f77;
   }
 
   #qunit-tests b.passed {
@@ -125,7 +125,7 @@ body {
   #qunit-tests li li.fail {
     background-color: #222;
     border-color: #7e2121;
-    color: #ff7777;
+    color: #f77;
   }
 
   .qunit-assert-list {
@@ -155,12 +155,12 @@ body {
   // Hardcode "dark" theme vars for now
   :root {
     --scheme-type: dark;
-    --primary: #dddddd;
-    --secondary: #222222;
+    --primary: #ddd;
+    --secondary: #222;
     --tertiary: #0f82af;
     --quaternary: #c14924;
-    --header_background: #111111;
-    --header_primary: #dddddd;
+    --header_background: #111;
+    --header_primary: #ddd;
     --highlight: #a87137;
     --danger: #e45735;
     --success: #1ca551;
@@ -241,7 +241,7 @@ body {
     --tertiary-or-tertiary-low: #052e3d;
     --tertiary-low-or-tertiary-high: #0b6283;
     --tertiary-med-or-tertiary: #0f82af;
-    --secondary-or-primary: #dddddd;
+    --secondary-or-primary: #ddd;
     --tertiary-or-white: #fff;
     --facebook-or-white: #fff;
     --twitter-or-white: #fff;
@@ -254,7 +254,7 @@ body {
     --hljs-symbol: #fbe;
     --hljs-bg: #333;
     --hljs-builtin-name: #14aeea;
-    --google: #ffffff;
+    --google: #fff;
     --google-hover: #f2f2f2;
     --instagram: #e1306c;
     --instagram-hover: #ac194b;

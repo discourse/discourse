@@ -36,7 +36,6 @@
 
   .selected-user {
     list-style: none;
-    padding: 0;
     margin: 1px 0.25rem 0.25rem 1px;
     padding: 0.25rem 0.5rem 0.25rem 0.25rem;
     background: var(--primary-very-low);
@@ -166,6 +165,7 @@
 
     .btn {
       padding: 0.25em;
+
       &:last-child {
         margin: 0;
       }

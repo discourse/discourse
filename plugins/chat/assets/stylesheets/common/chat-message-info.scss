@@ -20,6 +20,7 @@
 .chat-message-info__username__name {
   color: var(--secondary-low);
   font-weight: 700;
+
   @include ellipsis;
   max-width: 180px;
 }
@@ -92,6 +93,7 @@
       height: 0.9em;
       width: 0.9em;
     }
+
     &__restricted-category-icon {
       background: var(--tertiary-very-low);
       height: 0.355em;
@@ -99,6 +101,7 @@
       margin-right: 0.4em;
       padding: 1px 1px 2px 1px;
     }
+
     &:has(.--users-count) {
       display: none;
     }

@@ -3,10 +3,12 @@
     width: 100%;
   }
 }
+
 .sidebar__edit-navigation-menu__filter {
   display: flex;
   gap: 0.5em;
   padding: 1rem 0.66em 0;
+
   @include breakpoint("tablet", min-width) {
     padding: 1rem 1.5rem 0;
   }
@@ -37,6 +39,7 @@
     width: 100%;
     position: relative;
     flex: 1 1 70%;
+
     input {
       margin: 0;
     }
@@ -48,6 +51,7 @@
 
     .select-kit {
       width: 100%;
+
       summary {
         height: 100%;
       }
@@ -70,7 +74,7 @@
       border-color: var(--tertiary);
       outline: none;
       outline-offset: 0;
-      box-shadow: inset 0px 0px 0px 1px var(--tertiary);
+      box-shadow: inset 0 0 0 1px var(--tertiary);
     }
   }
 }

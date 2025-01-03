@@ -5,19 +5,24 @@
   .face {
     font-size: 4.286em;
   }
+
   .reason {
     font-size: var(--font-up-4);
   }
+
   .url {
     font-style: italic;
     font-size: var(--font-down-1);
   }
+
   .desc {
     margin-top: 16px;
+
     .d-icon-circle-check {
       color: var(--success);
     }
   }
+
   .buttons {
     align-items: center;
     display: inline-flex;

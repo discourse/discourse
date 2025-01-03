@@ -74,6 +74,7 @@
   }
 
   --100dvh: 100vh;
+
   @supports (height: 100dvh) {
     --100dvh: 100dvh;
   }
@@ -91,7 +92,8 @@
     margin: 5px 0;
     text-overflow: ellipsis;
     cursor: inherit;
-    @include chat-scrollbar();
+
+    @include chat-scrollbar;
     white-space: pre-wrap !important;
 
     &[disabled] {

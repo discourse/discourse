@@ -10,6 +10,7 @@
   box-sizing: border-box;
   margin-bottom: 1.2em;
   gap: 1rem;
+
   .account-created &,
   .activate-account & {
     margin-inline: 0;
@@ -29,6 +30,7 @@
 
     &:last-child {
       width: var(--progress-bar-circle-size);
+
       .signup-progress-bar__circle {
         transform: translateX(-50%);
         z-index: 1;
@@ -60,6 +62,7 @@
       box-shadow: 0 0 1px calc(var(--progress-bar-circle-size) / 2)
         var(--success-low);
     }
+
     .--completed & {
       background-color: var(--success);
       border-color: var(--success);
