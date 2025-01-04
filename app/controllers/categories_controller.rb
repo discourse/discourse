@@ -621,15 +621,19 @@ class CategoriesController < ApplicationController
       end
 
     include_topics =
-      view_context.mobile_view? || params[:include_topics] ||
+      params[:include_topics] ||
         (parent_category && parent_category.subcategory_list_includes_topics?) ||
         SiteSetting.desktop_category_page_style == "categories_with_featured_topics" ||
         SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
         SiteSetting.desktop_category_page_style == "categories_boxes_with_topics" ||
-        SiteSetting.desktop_category_page_style == "categories_with_top_topics"
+        SiteSetting.desktop_category_page_style == "categories_with_top_topics" ||
+        SiteSetting.mobile_category_page_style == "categories_with_featured_topics" ||
+        SiteSetting.mobile_category_page_style == "categories_boxes_with_topics" ||
+        SiteSetting.mobile_category_page_style == "subcategories_with_featured_topics"
 
     include_subcategories =
       SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
+        SiteSetting.mobile_category_page_style == "subcategories_with_featured_topics" ||
         params[:include_subcategories] == "true"
 
     category_options = {
