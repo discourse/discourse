@@ -467,7 +467,7 @@ GEM
       parser (>= 3.3.1.0)
     rubocop-capybara (2.21.0)
       rubocop (~> 1.41)
-    rubocop-discourse (3.9.0)
+    rubocop-discourse (3.9.1)
       activesupport (>= 6.1)
       rubocop (>= 1.59.0)
       rubocop-capybara (>= 2.0.0)

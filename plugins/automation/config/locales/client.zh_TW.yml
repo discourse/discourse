@@ -141,6 +141,8 @@ zh_TW:
             label: 觸發
           version:
             label: 版本
+          status:
+            label: 狀態
           enabled:
             label: 啟用
           disabled:

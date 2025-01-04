@@ -1723,8 +1723,6 @@ pt_BR:
     summary_percent_filter: "Quando um(a) usuário(a) clicar em \"Resuma este tópico\", exiba as % melhores postagens"
     summary_max_results: "Quantidade máxima de postagens retornadas por \"Resumir este tópico\""
     summary_timeline_button: "Exibir um botão \"Resumir\" na linha do tempo"
-    summarization_strategy: "Formas adicionais para resumir o conteúdo registrado pelos plugins"
-    custom_summarization_allowed_groups: "Grupos com permissão para resumir conteúdos usando a \"summarization_strategy\"."
     enable_personal_messages: "PRETERIDO, use a configuração \"grupos habilitados para mensagens pessoais\". Permitir que usuários de nível de confiança 1 (configurável por meio de confiança mínima para enviar mensagens) criem e respondam a mensagens. Observe que a equipe sempre pode enviar mensagens, não importa como."
     personal_message_enabled_groups: "Permita que os(as) usuários(as) nestes grupos CRIEM mensagens pessoais. IMPORTANTE: 1) Todos os(as) usuários(as) podem RESPONDER a mensagens. 2) Administradores(as) e moderadores(as) podem CRIAR mensagens para qualquer usuário(a). 3) Os grupos de nível de confiança incluem níveis mais altos; escolha trust_level_1 para permitir TL1, TL2, TL3, TL4, mas não permitir TL0. 4) Esta configuração é substituída pelas configurações de interação de grupo para a troca de mensagens de grupos específicos."
     enable_system_message_replies: "Permite que os(as) usuários(as) respondam às mensagens do sistema, mesmo se as mensagens pessoais estiverem desativadas"
@@ -2261,7 +2259,6 @@ pt_BR:
     penalty_include_post_message: "Incluir automaticamente a mensagem de postagem ofensiva no modelo de mensagem de e-mail ao silenciar ou suspender um(a) usuário(a)"
     svg_icon_subset: "Adicione mais ícones FontAwesome que você gostaria de incluir em seus ativos. Use o prefixo \"fa-\" para ícones consolidados, \"far-\" para ícones regulares e \"fab-\" para ícones de marca."
     max_prints_per_hour_per_user: "Quantidade máxima de impressões de páginas (defina como 0 para desativar impressão)"
-    full_name_required: "O nome completo é um campo obrigatório do perfil do(a) usuário(a)."
     enable_names: "Mostrar o nome completo do(a) usuário(a) em seu perfil, cartão de usuário(a) e e-mails. Desative para ocultar o nome completo em todos os lugares."
     display_name_on_posts: "Exibir o nome completo do(a) usuário(a) em suas postagens, além de seu(sua) @username."
     show_time_gap_days: "Se duas postagens forem feitas com tantos dias de intervalo, mostre o intervalo de tempo no tópico."
@@ -2437,7 +2434,6 @@ pt_BR:
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
     experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
     enable_experimental_lightbox: "Substitua a lightbox da imagem padrão pelo design renovado."
-    experimental_glimmer_topic_list_groups: "Ative a implementação da nova lista de tópicos \"glimme\". Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
     glimmer_post_menu_mode: "Controle se a implementação do novo menu de postagem \"glimmer\" é usada. O modo \"automático\" será ativado automaticamente quando os temas e plugins estiverem prontos. Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
     glimmer_post_menu_groups: "Ative a implementação do novo menu de postagem \"glimmer\" no modo \"automático\" para grupos de usuários(as) específicos. Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
     experimental_form_templates: "Ative o recurso de modelo de formulário. <b>Quando ativado</b>, gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Personalizar/Modelos</a>."
@@ -2515,8 +2511,8 @@ pt_BR:
       invalid_search_ranking_weights: "O valor é inválido para a configuração do site search_ranking_weights. Exemplo: '{0.1,0.2,0.3,1.0}'. Observe que o valor máximo para cada peso é 1,0."
     keywords:
       clean_up_inactive_users_after_days: "desativados(as)|inativos(as)|não ativados(as)"
-      purge_unactivated_users_grace_period_days: "desativados(as)|inativos(as)|não ativados(as)"
       navigation_menu: "barra lateral|menu suspenso do cabeçalho"
+      purge_unactivated_users_grace_period_days: "desativados(as)|inativos(as)|não ativados(as)"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exemplo.com.br"
@@ -4911,23 +4907,9 @@ pt_BR:
             label: "Estilo da página inicial"
             choices:
               latest:
-                label: "Tópicos mais recentes"
-              categories_only:
-                label: "Apenas categorias"
-              categories_with_featured_topics:
-                label: "Categorias com tópicos em destaque"
-              categories_and_latest_topics:
-                label: "Categorias e últimos tópicos"
-              categories_and_latest_topics_created_date:
-                label: "Categorias e Tópicos Mais Recentes (ordenar por data de criação do tópico)"
-              categories_and_top_topics:
-                label: "Categorias e melhores tópicos"
-              categories_boxes:
-                label: "Caixas de Categorias"
-              categories_boxes_with_topics:
-                label: "Caixas de Categorias com Tópicos"
-              subcategories_with_featured_topics:
-                label: "Subcategorias com tópicos em destaque"
+                label: "Últimos"
+              hot:
+                label: "Em alta"
       branding:
         title: "Logotipo do site"
         fields:

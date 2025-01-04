@@ -2305,15 +2305,7 @@ be:
           homepage_style:
             choices:
               latest:
-                label: "апошнія тэмы"
-              categories_only:
-                label: "Толькі катэгорыі"
-              categories_with_featured_topics:
-                label: "Катэгорыі з Выбранымі Тэмамі"
-              categories_and_latest_topics:
-                label: "Катэгорыі і Апошнія тэмы"
-              categories_and_top_topics:
-                label: "Катэгорыі і асноўныя тэмы"
+                label: "апошняя"
       corporate:
         fields:
           governing_law:

@@ -1723,8 +1723,6 @@ it:
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
     summary_max_results: "Messaggi massimi restituiti da 'Riassumi questo argomento'."
     summary_timeline_button: "Mostra un pulsante \"Riassumi\" nella timeline"
-    summarization_strategy: "Altri modi per riassumere i contenuti registrati dai plugin"
-    custom_summarization_allowed_groups: "Gruppi autorizzati a riassumere i contenuti utilizzando la `summarization_strategy`."
     enable_personal_messages: "Impostazione DEPRECATA, usare l'impostazione 'personal message enabled groups' al suo posto. Autorizza gli utenti con livello di attendibilità 1 (configurabile attraverso l'opzione \"min livello di attendibilità per l'invio di messaggi\") a creare e rispondere ai messaggi. Nota che lo staff può inviare messaggi in ogni caso."
     personal_message_enabled_groups: "Consente all'utente nei gruppi indicati di CREARE messaggi personali. IMPORTANTE: 1) Ogni utente può RISPONDERE ai messaggi. 2) Amministratori e moderatori possono CREARE messaggi indirizzati a qualsiasi utente. 3) I gruppi per livello di attendibilità includono i livelli più alti; scegli trust_level_1 per consentire TL1, TL2, TL3, TL4 ma non TL0. 4) Nei messaggi verso gruppi specifici, le impostazioni delle interazioni di gruppo hanno la precedenza su questa impostazione."
     enable_system_message_replies: "Consente agli utenti di rispondere ai messaggi di sistema, anche se i messaggi personali sono disabilitati"
@@ -2261,7 +2259,6 @@ it:
     penalty_include_post_message: "Quando si silenzia o si sospende un utente, il messaggio offensivo pubblicato viene incluso automaticamente nel modello email"
     svg_icon_subset: "Aggiungi ulteriori icone FontAwesome che desideri includere nelle tue risorse. Usa il prefisso 'fa-' per le icone solide, 'far-' per le icone regolari e 'fab-' per le icone di marchi."
     max_prints_per_hour_per_user: "Numero massimo di pagine da stampare (imposta a 0 per disattivare stampa)"
-    full_name_required: "Il nome completo è un campo obbligatorio del profilo utente."
     enable_names: "Mostra il nome completo dell'utente su profilo, scheda utente e email. Disabilita per nascondere il nome completo ovunque."
     display_name_on_posts: "Mostra il nome completo dell'utente sui messaggi oltre allo @username."
     show_time_gap_days: "Se due messaggi vengono creati dopo tale numero di giorni, mostrare l'intervallo di tempo nell'argomento."
@@ -2437,7 +2434,6 @@ it:
     default_navigation_menu_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette del menu di navigazione."
     experimental_new_new_view_groups: 'Abilita un nuovo elenco di argomenti che combini argomenti non letti e nuovi e crea il link "Tutto" nella barra laterale a esso.'
     enable_experimental_lightbox: "Sostituisci la lightbox dell'immagine predefinita con il design rinnovato."
-    experimental_glimmer_topic_list_groups: "Abilita l'implementazione del nuovo elenco argomenti \"glimmer\". Questa implementazione è ancora in corso di sviluppo e non è destinata alla fase di produzione. Non sviluppare temi o plugin per questa implementazione fino a quando non sarà finalizzata e annunciata."
     glimmer_post_menu_mode: "Controlla se viene utilizzata la nuova implementazione del menu dei messaggi \"glimmer\". \"automatica\" verrà abilitato automaticamente una volta che tutti i tuoi temi e plugin saranno pronti. Questa implementazione è in fase di sviluppo attivo e non è pensata per l'uso in produzione. Non sviluppare temi/plugin con essa finché l'implementazione non sarà finalizzata e annunciata."
     glimmer_post_menu_groups: "Abilita la nuova implementazione del menu dei messaggi \"glimmer\" in modalità \"automatica\" per i gruppi di utenti specificati. Questa implementazione è in fase di sviluppo attivo e non è destinata all'uso in produzione. Non sviluppare temi/plugin con essa finché l'implementazione non sarà finalizzata e annunciata."
     experimental_form_templates: "Abilita la funzionalità dei modelli di modulo. <b>Dopo l'abilitazione,</b> gestisci i modelli in <a href='%{base_path}/admin/customize/form-templates'>Personalizza / Modelli</a>."
@@ -2515,8 +2511,8 @@ it:
       invalid_search_ranking_weights: "Il valore non è valido per l'impostazione del sito search_ranking_weights. Esempio: '{0.1,0.2,0.3,1.0}'. Si noti che il valore massimo per ciascun peso è 1,0."
     keywords:
       clean_up_inactive_users_after_days: "disattivato|inattivo|non attivato"
-      purge_unactivated_users_grace_period_days: "disattivato|inattivo|non attivato"
       navigation_menu: "barra laterale|menu a discesa dell'intestazione"
+      purge_unactivated_users_grace_period_days: "disattivato|inattivo|non attivato"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4523,23 +4519,9 @@ it:
             label: "Stile homepage"
             choices:
               latest:
-                label: "Ultimi Argomenti"
-              categories_only:
-                label: "Solo Categorie"
-              categories_with_featured_topics:
-                label: "Categorie con argomenti in evidenza"
-              categories_and_latest_topics:
-                label: "Categorie e Argomenti Recenti"
-              categories_and_latest_topics_created_date:
-                label: "Categorie e argomenti recenti (in ordine di data di creazione)"
-              categories_and_top_topics:
-                label: "Categorie e Argomenti Popolari"
-              categories_boxes:
-                label: "Riquadri Categorie"
-              categories_boxes_with_topics:
-                label: "Riquadri Categorie con Argomenti"
-              subcategories_with_featured_topics:
-                label: "Sottocategorie con argomenti in evidenza"
+                label: "Più recenti"
+              hot:
+                label: "Novità"
       branding:
         title: "Logo del sito"
         fields:

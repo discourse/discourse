@@ -1546,7 +1546,6 @@ da:
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
-    full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
@@ -3173,15 +3172,7 @@ da:
           homepage_style:
             choices:
               latest:
-                label: "Seneste emner"
-              categories_only:
-                label: "Kun Kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med Fremhævede Emner"
-              categories_and_latest_topics:
-                label: "Kategorier og Seneste Emner"
-              categories_and_top_topics:
-                label: "Kategorier og top emner"
+                label: "Seneste"
       corporate:
         fields:
           governing_law:

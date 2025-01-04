@@ -71,6 +71,20 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
     end
 
+    it "cannot signup with a common password" do
+      signup_form
+        .open
+        .fill_email("johndoe@example.com")
+        .fill_username("john")
+        .fill_password("0123456789")
+      expect(signup_form).to have_valid_fields
+
+      signup_form.click_create_account
+      expect(signup_form).to have_content(
+        I18n.t("activerecord.errors.models.user_password.attributes.password.common"),
+      )
+    end
+
     context "with invite code" do
       before { SiteSetting.invite_code = "cupcake" }
 

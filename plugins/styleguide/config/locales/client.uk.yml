@@ -74,6 +74,10 @@ uk:
           title: "Сповіщення теми"
         post:
           title: "Допис"
+        post_list:
+          title: "Список публікацій"
+          empty_example: "<PostList /> порожній стан"
+          populated_example: "<PostList /> заповнений стан"
         topic_map:
           title: "Карта теми"
         site_header:

@@ -811,13 +811,13 @@ sl:
       public_admission: "Dovoli uporabnikom, da se sami pridružijo skupini (skupina mora biti javna)"
       public_exit: "Dovoli uporabnikom da sami zapustijo skupino"
       empty:
-        posts: "Ni prispevkov članov skupine."
-        members: "Ta skupina nima članov."
-        requests: "Ni nobenih zahtevkov po članstvu v tej skupini."
-        mentions: "Ta skupina ni bila nikjer omenjena."
-        messages: "Ni sporočil za to skupino."
-        topics: "Člani te skupine nimajo nobene teme."
-        logs: "Dnevnik za to skupino je prazen."
+        posts: "Ni prispevkov članov skupine"
+        members: "Ta skupina nima članov"
+        requests: "Ni nobenih zahtevkov po članstvu v tej skupini"
+        mentions: "Ta skupina ni bila nikjer omenjena"
+        messages: "Ni sporočil za to skupino"
+        topics: "Člani te skupine nimajo nobene teme"
+        logs: "Dnevnik za to skupino je prazen"
       add: "Dodaj"
       join: "Pridruži se"
       leave: "Zapusti"
@@ -1016,10 +1016,10 @@ sl:
         few: "Izbriši %{count}"
         other: "Izbriši %{count}"
       username: "uporabniško ime"
-      trust_level: "TL"
+      trust_level: "nivo zaupanja"
       read_time: "čas prebiranja"
       topics_entered: "vstop v teme"
-      post_count: "# prispevkov"
+      post_count: "prispevkov"
       confirm_delete_other_accounts: "Ste prepričani, da želite izbrisati te račune?"
       powered_by: "s pomočjo <a href='https://maxmind.com'>MaxMindB</a>"
       copied: "skopirano"
@@ -1909,6 +1909,8 @@ sl:
       categories_and_top_topics: "Kategorije in najboljše teme"
       categories_boxes: "Škatle s podkategorijami"
       categories_boxes_with_topics: "Škatle z izpostavljenimi temami"
+    full_name_requirement:
+      required_at_signup: "Zahtevano ob prijavi"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3711,7 +3713,10 @@ sl:
         title: "Seznam poročil"
         sidebar_title: "Poročila"
         sidebar_link:
-          all: "Vse"
+          all: "Vsa poročila"
+      config:
+        notifications:
+          title: "Obvestila"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
@@ -3801,6 +3806,7 @@ sl:
             category:
               label: Kategorija
       flags:
+        title: "Moderiranje"
         description: "Opis"
         enabled: "Vključeno?"
       groups:
@@ -3926,12 +3932,11 @@ sl:
           badges: "Značke"
           notifications: "Obvestila"
           permalinks: "Trajne povezave"
-          trust_levels: "Nivo zaupanja"
           users: "Uporabniki"
           groups: "Skupine"
-          user_fields: "Podatki uporabnika"
-          watched_words: "Nadzorovane besede"
           legal: "Pravno"
+          moderation_flags:
+            title: "Moderiranje"
       appearance:
         title: "Videz"
         sidebar_link:
@@ -3941,19 +3946,8 @@ sl:
       email_settings:
         sidebar_link:
           appearance: "Videz"
-      email_logs:
-        sidebar_link:
-          sent: "Poslano"
-          received: "Prejeto"
-          rejected: "Zavrnjeno"
       security:
         title: "Varnost"
-        sidebar_link:
-          error_logs: "Dnevnik napak"
-          screened_emails: "Nadzorovani e-naslovi"
-          screened_ips: "Nadzorovani IPji"
-          screened_urls: "Nadzorovani URLji"
-          search_logs: "Dnevnik iskanj"
       section_landing_pages:
         account:
           title: "Račun"
@@ -3965,6 +3959,7 @@ sl:
           optional: "(neobvezno)"
           saved: "shranjeno!"
         flags:
+          header: "Moderiranje"
           description: "Opis"
           enabled: "Vključeno?"
           edit: "Uredi"
@@ -4002,7 +3997,6 @@ sl:
         sidebar_link:
           developer: "Razvijalci"
           embedding: "Vdelovanje"
-          rate_limits: "Omejitve"
           user_api: "Uporabniški API"
           onebox: "Onebox"
           files: "Datoteke"
@@ -4731,6 +4725,9 @@ sl:
         user_title: "Uporabnik"
         username: "Uporabniško ime"
         delete_confirm: Ali ste prepričani, da želite odstraniti trajno povezavo?
+        nav:
+          settings: "Nastavitve"
+          permalinks: "Trajne povezave"
         form:
           label: "Novo:"
           url: "URL"
@@ -4763,3 +4760,18 @@ sl:
       previews:
         share_button: "Deli"
         reply_button: "Odgovori"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "vse kategorije"
+          new: "Nova"
+          unread: "Neprebrane"
+          top: "Najboljše"
+          latest: "Najnovejše"
+          categories: "Kategorije"
+        category_names:
+          site_feedback: "Povratne informacije spletnega mesta"
+        table_headers:
+          topic: "Tema"
+          replies: "Odgovori"
+          views: "Ogledov"
+          activity: "Aktivnost"

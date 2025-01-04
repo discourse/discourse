@@ -10,6 +10,9 @@ cs:
     chat_enabled: "Povolit chat."
     chat_channel_retention_days: "Zprávy chatu v běžných kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
     chat_dm_retention_days: "Zprávy chatu v osobních kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
+    chat_auto_silence_duration: "Počet minut, po které budou uživatelé ztišeni, pokud překročí limit rychlosti vytváření zpráv chatu. Nastavením na hodnotu \"0\" automatické ztišování vypnete."
+    chat_silence_user_sensitivity: "Pravděpodobnost, že uživatel nahlášený v chatu bude automaticky ztišen."
+    chat_auto_silence_from_flags_duration: "Počet minut, po které budou uživatelé ztišeni, když jsou automaticky ztišeni kvůli nahlášeným zprávám chatu."
   system_messages:
     chat_channel_archive_complete:
       subject_template: "Archivace kanálů chatu byla úspěšně dokončena"
@@ -25,6 +28,7 @@ cs:
   chat:
     deleted_chat_username: smazáno
     errors:
+      auto_silence_from_flags: "Zpráva v chatu nahlášená dostatečně vysokým skóre, aby uživatele ztišila."
       draft_too_long: "Koncept je příliš dlouhý."
       not_accepting_dms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
     reviewables:
@@ -87,7 +91,7 @@ cs:
     chat_summary:
       deleted_user: "Smazaný uživatel"
       unsubscribe: "Tento souhrn chatu je odeslán z %{site_link}, když jste pryč. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení."
-      unsubscribe_no_link: "Tento přehled chatu je odeslán z %{site_link}, když jste pryč. Změňte své %{email_preferences_link}."
+      unsubscribe_no_link: "Tento souhrn chatu je odesílán ze stránky %{site_link}, když jste pryč. Změňte svůj %{email_preferences_link}."
   unsubscribe:
     chat_summary:
       never: Nikdy

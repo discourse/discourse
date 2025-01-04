@@ -55,7 +55,7 @@ describe UsersController do
   end
 
   describe "#show_card" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:another_user) { Fabricate(:user) }
 
     before do

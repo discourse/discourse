@@ -6,6 +6,9 @@
 
 sr:
   discourse_narrative_bot:
+    dice:
+      out_of_range: |-
+        Da li ste znali da [maksimalan broj strana](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematički ispravan ishod je 120?
     magic_8_ball:
       answers:
         "9": "Da"

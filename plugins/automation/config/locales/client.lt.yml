@@ -143,6 +143,8 @@ lt:
             label: Pritaikyti
           version:
             label: Versija
+          status:
+            label: Statusas
           enabled:
             label: Galimas
           disabled:

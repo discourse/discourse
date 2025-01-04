@@ -238,13 +238,12 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       it "works for deprecated settings" do
-        put "/admin/site_settings/search_tokenize_chinese_japanese_korean.json",
-            params: {
-              search_tokenize_chinese_japanese_korean: true,
-            }
+        stub_deprecated_settings!(override: true) do
+          put "/admin/site_settings/old_one.json", params: { old_one: true }
 
-        expect(response.status).to eq(200)
-        expect(SiteSetting.search_tokenize_chinese).to eq(true)
+          expect(response.status).to eq(200)
+          expect(SiteSetting.new_one).to eq(true)
+        end
       end
 
       it "throws an error when the parameter is not a configurable site setting" do

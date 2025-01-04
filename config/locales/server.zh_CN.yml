@@ -1650,8 +1650,6 @@ zh_CN:
     summary_percent_filter: "当用户点击“总结此话题”时，显示前百分之几的帖子"
     summary_max_results: "“总结此话题”返回的最大帖子数量"
     summary_timeline_button: "在时间线中显示“摘要”按钮"
-    summarization_strategy: "总结插件注册的内容的其他方法"
-    custom_summarization_allowed_groups: "允许使用 `summarization_strategy` 总结内容的群组。"
     enable_personal_messages: "已弃用，请改用 'personal message enabled groups' 设置。允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。请注意，管理人员不受限制。"
     personal_message_enabled_groups: "允许这些群组中的用户创建个人消息。重要信息：1) 所有用户都可以回复消息。2) 管理员和版主可以给任何用户创建消息。3) 信任级别群组包括更高级别；选择 trust_level_1 允许 TL1、TL2、TL3、TL4，但不允许 TL0。4) 群组交互设置可以替换此设置，用于向特定群组发送消息。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
@@ -2143,6 +2141,7 @@ zh_CN:
     anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
+    hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户配置文件，并隐藏信任级别 1 的用户，直到他们首次发布信息。此功能在必须批准用户和仅限邀请用户的网站上无条件禁用。"
     allow_users_to_hide_profile: "允许用户隐藏他们的个人资料和状态"
     hide_user_activity_tab: "隐藏用户个人资料中的活动标签页，管理员和自己除外。"
     delete_associated_accounts_on_password_reset: "当用户更改密码时，删除用户关联帐户。"
@@ -2189,7 +2188,7 @@ zh_CN:
     penalty_include_post_message: "禁止或暂停用户权限时，自动将违规帖子消息包含在电子邮件消息模板中"
     svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 图标。使用前缀 'fa-' 表示实心图标，使用 'far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
-    full_name_required: "全名是用户个人资料的必填字段。"
+    full_name_requirement: "将全名字段设为注册表单中的必填字段、可选字段或可选但隐藏的字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
@@ -2365,7 +2364,6 @@ zh_CN:
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
     experimental_new_new_view_groups: '启用新的话题列表，将未读话题与新话题合并，并使边栏中的“一切”链接指向该列表。'
     enable_experimental_lightbox: "将默认图片灯箱替换为全新设计。"
-    experimental_glimmer_topic_list_groups: "启用新的 'glimmer' 话题列表实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     glimmer_post_menu_mode: "控制是否使用新的 'glimmer' 帖子菜单实现。当您的所有主题和插件都准备就绪后，'auto' 将自动启用。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     glimmer_post_menu_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     experimental_form_templates: "启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
@@ -2440,8 +2438,8 @@ zh_CN:
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
     keywords:
       clean_up_inactive_users_after_days: "已停用|闲置|未激活"
-      purge_unactivated_users_grace_period_days: "已停用|闲置|未激活"
       navigation_menu: "边栏|标题下拉菜单"
+      purge_unactivated_users_grace_period_days: "已停用|闲置|未激活"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2570,6 +2568,7 @@ zh_CN:
     omniauth_confirm_button: "继续"
     authenticator_error_no_valid_email: "不允许与 %{account} 关联的电子邮件地址。您可能需要使用不同的电子邮件地址配置您的帐户。"
     new_registrations_disabled: "目前不允许注册新帐户。"
+    new_registrations_disabled_discourse_connect: "仅允许通过 Discourse Connect 注册新帐户。"
     password_too_long: "密码不得超过 200 个字符。"
     email_too_long: "您提供的电子邮件过长。邮箱名称不得超过 254 个字符，域名不得超过 253 个字符。"
     wrong_invite_code: "您输入的邀请码不正确。"
@@ -4806,23 +4805,9 @@ zh_CN:
             label: "首页样式"
             choices:
               latest:
-                label: "最新话题"
-              categories_only:
-                label: "仅类别"
-              categories_with_featured_topics:
-                label: "包含精选话题的类别"
-              categories_and_latest_topics:
-                label: "类别和最新话题"
-              categories_and_latest_topics_created_date:
-                label: "类别和最新话题（按话题创建日期排序）"
-              categories_and_top_topics:
-                label: "类别和热门话题"
-              categories_boxes:
-                label: "类别框"
-              categories_boxes_with_topics:
-                label: "包含话题的类别框"
-              subcategories_with_featured_topics:
-                label: "包含精选话题的子类别"
+                label: "最新"
+              hot:
+                label: "热议"
       branding:
         title: "网站徽标"
         fields:

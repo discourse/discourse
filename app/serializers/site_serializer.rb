@@ -384,11 +384,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def full_name_required_for_signup
-    SiteSetting.full_name_requirement == "required_at_signup"
+    SiteSetting.enable_names && SiteSetting.full_name_requirement == "required_at_signup"
   end
 
   def full_name_visible_in_signup
-    SiteSetting.full_name_requirement != "hidden_at_signup"
+    SiteSetting.enable_names && SiteSetting.full_name_requirement != "hidden_at_signup"
   end
 
   private

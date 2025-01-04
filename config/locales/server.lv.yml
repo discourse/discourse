@@ -510,14 +510,8 @@ lv:
             label: "Priekšskatījums"
           homepage_style:
             choices:
-              categories_only:
-                label: "Tikai sadaļas"
-              categories_with_featured_topics:
-                label: "Sadaļas un to labākās tēmas"
-              categories_and_latest_topics:
-                label: "Sadaļas un jaunākās tēmas"
-              categories_and_top_topics:
-                label: "Kategorijas un populārākās tēmas"
+              latest:
+                label: "Pēdējais"
   onebox:
     github:
       closed: "slēgts"
