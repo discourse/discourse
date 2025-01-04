@@ -401,7 +401,7 @@ class SearchIndexer
         end
 
       html_scrubber = new
-      Nokogiri::HTML::SAX::Parser.new(html_scrubber).parse(document.to_html)
+      Nokogiri::HTML4::SAX::Parser.new(html_scrubber).parse(document.to_html)
       html_scrubber.scrubbed.squish
     end
 
