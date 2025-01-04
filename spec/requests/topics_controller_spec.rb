@@ -32,8 +32,7 @@ RSpec.describe TopicsController do
     end
   end
 
-  fab!(:group_user) { Fabricate(:group_user, user: Fabricate(:user, refresh_auto_groups: true)) }
-
+  fab!(:group_user) { Fabricate(:group_user, user:) }
   fab!(:tag)
 
   before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
@@ -253,9 +252,8 @@ RSpec.describe TopicsController do
         Fabricate(:category_moderation_group, category:, group: group_user.group)
       end
       fab!(:topic) { Fabricate(:topic, category: category) }
-      fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
-      fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
-      let!(:user) { group_user.user }
+      fab!(:p1) { Fabricate(:post, user: user, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: topic) }
 
       before do
         sign_in(user)
@@ -427,10 +425,8 @@ RSpec.describe TopicsController do
         Fabricate(:category_moderation_group, category:, group: group_user.group)
       end
       fab!(:topic) { Fabricate(:topic, category: category) }
-      fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
-      fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
-
-      let!(:user) { group_user.user }
+      fab!(:p1) { Fabricate(:post, user: user, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: topic) }
 
       before do
         sign_in(user)
@@ -482,15 +478,8 @@ RSpec.describe TopicsController do
       end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) do
-        Fabricate(
-          :post,
-          user: group_user.user,
-          topic: topic,
-          created_at: dest_topic.created_at - 1.hour,
-        )
+        Fabricate(:post, user: user, topic: topic, created_at: dest_topic.created_at - 1.hour)
       end
-
-      let!(:user) { group_user.user }
 
       before do
         sign_in(user)
@@ -764,7 +753,7 @@ RSpec.describe TopicsController do
       fab!(:p2) { Fabricate(:post, user: post_author2, post_number: 2, topic: topic) }
 
       before do
-        sign_in(group_user.user)
+        sign_in(user)
         SiteSetting.enable_category_group_moderation = true
       end
 
@@ -820,7 +809,7 @@ RSpec.describe TopicsController do
       end
 
       before do
-        sign_in(group_user.user)
+        sign_in(user)
         SiteSetting.enable_category_group_moderation = true
       end
 
@@ -984,6 +973,7 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(403)
         end
       end
+
       describe "admin signed in" do
         let!(:editor) { sign_in(admin) }
 
@@ -1205,7 +1195,7 @@ RSpec.describe TopicsController do
       fab!(:topic) { Fabricate(:topic, category: category) }
 
       before do
-        sign_in(group_user.user)
+        sign_in(user)
         SiteSetting.enable_category_group_moderation = true
       end
 
