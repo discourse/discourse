@@ -975,6 +975,23 @@ def has_trigger?(trigger_name)
   SQL
 end
 
+def stub_deprecated_settings!(override:)
+  SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
+
+  stub_const(
+    SiteSettings::DeprecatedSettings,
+    "SETTINGS",
+    [["old_one", "new_one", override, "0.0.1"]],
+  ) do
+    SiteSetting.setup_deprecated_methods
+    yield
+  end
+
+  defaults = SiteSetting.defaults.instance_variable_get(:@defaults)
+  defaults.each { |_, hash| hash.delete(:old_one) }
+  defaults.each { |_, hash| hash.delete(:new_one) }
+end
+
 def silence_stdout
   STDOUT.stubs(:write)
   yield
