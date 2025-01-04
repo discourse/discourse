@@ -277,7 +277,7 @@ class DiscourseDiff
 
     def self.tokenize(html)
       me = new
-      parser = Nokogiri::HTML4::SAX::Parser.new(me)
+      parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8)
       parser.parse("<html><body>#{html}</body></html>")
       me.tokens
     end
