@@ -134,9 +134,7 @@ export default class CreateAccount extends Component.extend(
 
   @discourseComputed
   showFullname() {
-    return (
-      this.siteSettings.enable_names && this.site.full_name_visible_in_signup
-    );
+    return this.site.full_name_visible_in_signup;
   }
 
   @discourseComputed
