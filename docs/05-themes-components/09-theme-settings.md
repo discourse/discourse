@@ -47,8 +47,8 @@ There are 8 types of settings:
 4. `bool` (for boolean)
 5. `list`
 6. `enum`
-7. `json_schema`
-8. upload (for images)
+7. `objects` (replacement for `json_schema`)
+8. `upload` (for images)
 
 And you can specify type by adding a `type` attribute to your setting like this:
 
@@ -94,82 +94,9 @@ You can see a real-world use case for list settings here: https://meta.discourse
 
 > :loudspeaker:  **Note**: Pay attention to indentation when working with YAML because YAML is very picky about spaces and will throw a syntax error if your code indentation is incorrect.
 
-### `json_schema` type
-The <abbr title="JavaScript Object Notation">JSON</abbr> Schema type setting is a new and unique setting type that allows you to accomplish a lot of complex settings. [^json]
+### `objects` type
 
-[^json]: JSON stands for JavaScript Object Notation. For more information on JSON see this [article](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON).
-
-
-#### Creating the Setting:
-Unlike other settings where you defined the type of setting using the `type` keyword, the JSON Schema type setting has its own keyword (`json_schema`) where you build out a JSON object instead. This type of setting also **requires** a default value in order to work correctly.
-
-Here's how the [setting](https://github.com/discourse/discourse-welcome-link-banner/blob/9e869a6ad21d9fb4704e856f5541e75eab6b7be4/settings.yml#L10-L15) is built in the welcome link banner component:
-
-```yaml
-banner_links:
-  default: >-
-    [{"icon":"info-circle","text":"about this site","url":"/faq"},
-    {"icon":"users","text":"meet our staff","url":"/about"},
-    {"icon":"star","text":"your preferences","url":"/my/preferences"}]
-  json_schema: '{
-    "type": "array",
-    "format": "table",
-    "uniqueItems": true,
-    "items": {
-    "type": "object",
-    "properties": {
-    "icon": {
-    "type": "string",
-    "minLength": 1
-    },
-    },
-    "text": {
-    "type": "string",
-    "minLength": 1
-    },
-    "url": {
-    "type": "string"
-    }
-    },
-    "additionalProperties": false
-    }}'
-
-```
-The JSON Schema builder is developed using the `json-editor` library. For more information on how to define schemas and understanding what properties and values are available, click [here](https://github.com/json-editor/json-editor#json-schema-support).
-
-#### How the Setting Appears in the UI:
-Once the JSON structure is built, you will see a <kbd> :pencil2: Launch Editor</kbd> button in your theme's settings page.
-
-Clicking on this button will bring up a modal which will allow admins to edit, remove, add, duplicate, and re-order custom fields for the parameters you defined in JSON.
-
-![json-setting|681x500, 50%](/assets/theme-settings-3.png)
-
-#### Using the setting's values in your templates
-To make use of the setting's values inside your theme-component, you will first need to parse the JSON using the `JSON.parse()` method.
-
-For example, you might create a Glimmer Component with a getter to parse your setting's JSON like so:
-
-```javascript
-import Component from "@glimmer/component";
-
-export default class PracticeComponent extends Component {
-  get bannerLinks() {
-    return JSON.parse(settings.banner_links);
-  }
-}
-```
-
-You can then reference your getter inside your template file and loop through the array's contents to output the data like so:
-
-```handlebars
-{{#each bannerLinks as |link|}}
-  <div class="header-dropdown-toggle">
-    <a class="icon" href={{link.url}} tabindex="0">
-      <h3 title={{link.icon}}>{{d-icon link.icon}}</h3>
-    </a>
-  </div>
-{{/each}}
-```
+The `objects` setting type is a special type that allows you to accomplish advanced settings with custom structure and validations. We have a [separate documentation](https://meta.discourse.org/t/objects-type-for-theme-setting/305009) for this type.
 
 ## :capital_abcd: Setting description and localizations
 
