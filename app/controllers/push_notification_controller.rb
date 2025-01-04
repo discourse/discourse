@@ -3,7 +3,6 @@
 class PushNotificationController < ApplicationController
   layout false
   before_action :ensure_logged_in
-  skip_before_action :preload_json
 
   def subscribe
     PushNotificationPusher.subscribe(current_user, push_params, params[:send_confirmation])

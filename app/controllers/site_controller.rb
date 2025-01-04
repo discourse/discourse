@@ -2,30 +2,10 @@
 
 class SiteController < ApplicationController
   layout false
-  skip_before_action :preload_json, :check_xhr
+  skip_before_action :check_xhr
   skip_before_action :redirect_to_login_if_required,
                      :redirect_to_profile_if_required,
                      only: %w[basic_info statistics]
-
-  def site
-    render json: Site.json_for(guardian)
-  end
-
-  def settings
-    render json: SiteSetting.client_settings_json
-  end
-
-  def custom_html
-    render json: custom_html_json
-  end
-
-  def banner
-    render json: banner_json
-  end
-
-  def emoji
-    render json: custom_emoji
-  end
 
   def basic_info
     results = {

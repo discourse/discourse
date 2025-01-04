@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
   before_action :redirect_to_profile_if_required
-  before_action :preload_json
+  before_action :initialize_application_layout_preloader
   before_action :check_xhr
   after_action :add_readonly_header
   after_action :perform_refresh_session
@@ -424,31 +424,6 @@ class ApplicationController < ActionController::Base
     I18n.with_locale(locale) { yield }
   end
 
-  def store_preloaded(key, json)
-    @preloaded ||= {}
-    # I dislike that there is a gsub as opposed to a gsub!
-    #  but we can not be mucking with user input, I wonder if there is a way
-    #  to inject this safety deeper in the library or even in AM serializer
-    @preloaded[key] = json.gsub("</", "<\\/")
-  end
-
-  # If we are rendering HTML, preload the session data
-  def preload_json
-    # We don't preload JSON on xhr or JSON request
-    return if request.xhr? || request.format.json?
-
-    # if we are posting in makes no sense to preload
-    return if request.method != "GET"
-
-    # TODO should not be invoked on redirection so this should be further deferred
-    preload_anonymous_data
-
-    if current_user
-      current_user.sync_notification_channel_position
-      preload_current_user_data
-    end
-  end
-
   def set_mobile_view
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
@@ -608,109 +583,28 @@ class ApplicationController < ActionController::Base
   end
 
   def login_method
-    return if current_user.anonymous?
+    return if !current_user || current_user.anonymous?
     current_user.authenticated_with_oauth ? Auth::LOGIN_METHOD_OAUTH : Auth::LOGIN_METHOD_LOCAL
   end
 
   private
 
-  def preload_anonymous_data
-    store_preloaded("site", Site.json_for(guardian))
-    store_preloaded("siteSettings", SiteSetting.client_settings_json)
-    store_preloaded("customHTML", custom_html_json)
-    store_preloaded("banner", banner_json)
-    store_preloaded("customEmoji", custom_emoji)
-    store_preloaded("isReadOnly", get_or_check_readonly_mode.to_json)
-    store_preloaded("isStaffWritesOnly", get_or_check_staff_writes_only_mode.to_json)
-    store_preloaded("activatedThemes", activated_themes_json)
+  def preload_json
+    # TODO: Deprecate this method
   end
 
-  def preload_current_user_data
-    store_preloaded(
-      "currentUser",
-      MultiJson.dump(
-        CurrentUserSerializer.new(
-          current_user,
-          scope: guardian,
-          root: false,
-          login_method: login_method,
-        ),
-      ),
-    )
-
-    report = TopicTrackingState.report(current_user)
-    serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
-
-    hash = serializer.as_json
-
-    store_preloaded("topicTrackingStates", MultiJson.dump(hash[:data]))
-    store_preloaded("topicTrackingStateMeta", MultiJson.dump(hash[:meta]))
-
-    if current_user.admin?
-      # This is used in the wizard so we can preload fonts using the FontMap JS API.
-      store_preloaded("fontMap", MultiJson.dump(load_font_map))
-
-      # Used to show plugin-specific admin routes in the sidebar.
-      store_preloaded(
-        "visiblePlugins",
-        MultiJson.dump(
-          Discourse
-            .plugins_sorted_by_name(enabled_only: false)
-            .map do |plugin|
-              {
-                name: plugin.name.downcase,
-                admin_route: plugin.full_admin_route,
-                enabled: plugin.enabled?,
-              }
-            end,
-        ),
+  def initialize_application_layout_preloader
+    @application_layout_preloader =
+      ApplicationLayoutPreloader.new(
+        guardian:,
+        theme_id: @theme_id,
+        theme_target: view_context.mobile_view? ? :mobile : :desktop,
+        login_method:,
       )
-    end
   end
 
-  def custom_html_json
-    target = view_context.mobile_view? ? :mobile : :desktop
-
-    data =
-      if @theme_id.present?
-        {
-          top: Theme.lookup_field(@theme_id, target, "after_header"),
-          footer: Theme.lookup_field(@theme_id, target, "footer"),
-        }
-      else
-        {}
-      end
-
-    data.merge! DiscoursePluginRegistry.custom_html if DiscoursePluginRegistry.custom_html
-
-    DiscoursePluginRegistry.html_builders.each do |name, _|
-      if name.start_with?("client:")
-        data[name.sub(/\Aclient:/, "")] = DiscoursePluginRegistry.build_html(name, self)
-      end
-    end
-
-    MultiJson.dump(data)
-  end
-
-  def self.banner_json_cache
-    @banner_json_cache ||= DistributedCache.new("banner_json")
-  end
-
-  def banner_json
-    return "{}" if !current_user && SiteSetting.login_required?
-
-    ApplicationController
-      .banner_json_cache
-      .defer_get_set("json") do
-        topic = Topic.where(archetype: Archetype.banner).first
-        banner = topic.present? ? topic.banner : {}
-        MultiJson.dump(banner)
-      end
-  end
-
-  def custom_emoji
-    serializer = ActiveModel::ArraySerializer.new(Emoji.custom, each_serializer: EmojiSerializer)
-    MultiJson.dump(serializer)
+  def store_preloaded(key, json)
+    @application_layout_preloader.store_preloaded(key, json)
   end
 
   # Render action for a JSON error.
@@ -946,7 +840,6 @@ class ApplicationController < ActionController::Base
 
   def build_not_found_page(opts = {})
     if SiteSetting.bootstrap_error_pages?
-      preload_json
       opts[:layout] = "application" if opts[:layout] == "no_ember"
     end
 
@@ -1063,13 +956,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def activated_themes_json
-    id = @theme_id
-    return "{}" if id.blank?
-    ids = Theme.transform_ids(id)
-    Theme.where(id: ids).pluck(:id, :name).to_h.to_json
-  end
-
   def run_second_factor!(action_class, action_data: nil, target_user: current_user)
     if current_user && target_user != current_user
       # Anon can run 2fa against another target, but logged-in users should not.
@@ -1114,20 +1000,6 @@ class ApplicationController < ActionController::Base
 
   def spa_boot_request?
     request.get? && !(request.format && request.format.json?) && !request.xhr?
-  end
-
-  def load_font_map
-    DiscourseFonts
-      .fonts
-      .each_with_object({}) do |font, font_map|
-        next if !font[:variants]
-        font_map[font[:key]] = font[:variants].map do |v|
-          {
-            url: "#{Discourse.base_url}/fonts/#{v[:filename]}?v=#{DiscourseFonts::VERSION}",
-            weight: v[:weight],
-          }
-        end
-      end
   end
 
   def fetch_limit_from_params(params: self.params, default:, max:)

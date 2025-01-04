@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ClicksController < ApplicationController
-  skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
+  skip_before_action :check_xhr, :verify_authenticity_token
 
   def track
     params.require(%i[url post_id topic_id])

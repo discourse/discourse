@@ -23,8 +23,7 @@ class PostsController < ApplicationController
                    user_posts_feed
                  ]
 
-  skip_before_action :preload_json,
-                     :check_xhr,
+  skip_before_action :check_xhr,
                      only: %i[markdown_id markdown_num short_link latest user_posts_feed]
 
   MARKDOWN_TOPIC_PAGE_SIZE = 100

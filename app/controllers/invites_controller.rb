@@ -14,7 +14,6 @@ class InvitesController < ApplicationController
                  ]
 
   skip_before_action :check_xhr, except: [:perform_accept_invitation]
-  skip_before_action :preload_json, except: [:show]
   skip_before_action :redirect_to_login_if_required
   skip_before_action :redirect_to_profile_if_required
 

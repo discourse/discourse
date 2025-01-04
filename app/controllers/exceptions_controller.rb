@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExceptionsController < ApplicationController
-  skip_before_action :check_xhr, :preload_json
+  skip_before_action :check_xhr
 
   def not_found
     # centralize all rendering of 404 into app controller
