@@ -483,6 +483,8 @@ module PrettyText
   end
 
   def self.excerpt(html, max_length, options = {})
+    return "" if !html
+
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
