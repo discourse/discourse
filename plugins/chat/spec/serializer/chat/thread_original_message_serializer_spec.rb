@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::ThreadOriginalMessageSerializer do
   describe "#user" do
-    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user_status)
     fab!(:user) { Fabricate(:user, user_status: user_status) }
     fab!(:message) { Fabricate(:chat_message, user: user) }
 
@@ -26,7 +26,7 @@ RSpec.describe Chat::ThreadOriginalMessageSerializer do
   end
 
   context "with mentions" do
-    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user_status)
     fab!(:mentioned_user) { Fabricate(:user, user_status: user_status) }
     fab!(:message) do
       Fabricate(
