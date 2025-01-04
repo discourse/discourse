@@ -483,7 +483,7 @@ module PrettyText
   end
 
   def self.excerpt(html, max_length, options = {})
-    return "" if !html
+    return "" if html.blank?
 
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML5.fragment(html)

@@ -27,6 +27,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def self.get_excerpt(html, length, options)
+    return "" if html.blank?
+
     length = html.length if html.include?("excerpt") && CUSTOM_EXCERPT_REGEX === html
     me = self.new(length, options)
     parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8)
