@@ -9,14 +9,14 @@ RSpec.describe DiscourseAutomation::Destroy do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:user) { Fabricate(:admin) }
-    fab!(:automation) { Fabricate(:automation) }
+    fab!(:automation)
 
     let(:guardian) { user.guardian }
     let(:params) { { automation_id: automation.id } }
     let(:dependencies) { { guardian: } }
 
     context "when user can't destroy the automation" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       it { is_expected.to fail_a_policy(:can_destroy_automation) }
     end
