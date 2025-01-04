@@ -238,9 +238,7 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       it "works for deprecated settings" do
-        SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
-
-        override_deprecated_settings!(["old_one", "new_one", true, "3.0"]) do
+        stub_deprecated_settings!(override: true) do
           put "/admin/site_settings/old_one.json", params: { old_one: true }
 
           expect(response.status).to eq(200)
