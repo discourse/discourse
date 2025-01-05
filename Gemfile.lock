@@ -153,7 +153,7 @@ GEM
     faraday-retry (2.2.1)
       faraday (~> 2.0)
     fast_blank (1.0.1)
-    fastimage (2.3.1)
+    fastimage (2.4.0)
     ffi (1.17.1-aarch64-linux-gnu)
     ffi (1.17.1-arm64-darwin)
     ffi (1.17.1-x86_64-darwin)
