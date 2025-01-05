@@ -136,7 +136,7 @@ GEM
     dry-initializer (3.2.0)
     email_reply_trimmer (0.2.0)
     erubi (1.13.1)
-    excon (1.2.2)
+    excon (1.2.3)
     execjs (2.10.0)
     exifr (1.4.0)
     extralite-bundle (2.8.2)
