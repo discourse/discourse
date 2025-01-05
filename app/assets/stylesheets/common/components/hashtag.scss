@@ -66,7 +66,7 @@ a.hashtag {
     max-height: inherit;
     overflow-y: auto;
 
-    &:after {
+    &::after {
       content: "";
       position: absolute;
       bottom: 0;

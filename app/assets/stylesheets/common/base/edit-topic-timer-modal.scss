@@ -2,26 +2,32 @@
   .select-kit.combo-box {
     width: 100%;
   }
+
   .radios {
     margin-bottom: 10px;
   }
+
   label {
     display: inline-flex;
     padding-right: 5px;
     align-items: center;
+
     input {
       margin-top: 0;
     }
   }
+
   .topic-timer-duration {
     width: 100%;
   }
+
   .pika-single {
     position: absolute !important; /* inline JS styles */
   }
 
   .modal-topic-timer-info {
     margin-top: 1rem;
+
     .topic-timer-info {
       border-top: 0;
     }

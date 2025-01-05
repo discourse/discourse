@@ -43,7 +43,6 @@
       .collection-header {
         a {
           white-space: nowrap;
-          color: var(--primary);
           line-height: var(--line-height-medium);
           font-weight: bold;
           display: block;
@@ -62,6 +61,7 @@
         background: var(--primary-low);
         border-color: var(--primary-low-mid);
         color: var(--primary-medium);
+
         .d-icon {
           color: var(--primary-medium);
         }

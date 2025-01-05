@@ -115,6 +115,7 @@
           color: inherit;
         }
       }
+
       &:hover,
       &:focus {
         background: var(--d-hover);
@@ -137,6 +138,6 @@
   }
 
   &__divider {
-    margin: 0rem;
+    margin: 0;
   }
 }

@@ -4,7 +4,6 @@
   html.anon & {
     justify-content: end;
   }
-
   max-width: calc(
     var(--topic-avatar-width) + var(--topic-body-width) +
       var(--topic-body-width-padding) * 2
@@ -42,6 +41,7 @@
 
 #topic-progress-wrapper {
   position: fixed;
+
   &.docked {
     position: initial;
 
@@ -49,12 +49,11 @@
       display: none;
     }
   }
-
   bottom: 0;
+
   html:not(.footer-nav-visible) & {
     bottom: env(safe-area-inset-bottom);
   }
-
   right: 10px;
   z-index: z("timeline");
   display: flex;
@@ -84,7 +83,6 @@
     position: relative;
     background-color: var(--secondary);
     color: var(--tertiary);
-
     padding: 0.5rem 1em;
     border: 1px solid var(--tertiary-low);
 
@@ -101,12 +99,14 @@
       font-size: var(--font-up-1);
       font-weight: bold;
     }
+
     .d-icon {
       position: absolute;
       right: 8px;
       bottom: 9px;
       z-index: z("base");
     }
+
     .bg {
       position: absolute;
       top: 0;

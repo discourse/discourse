@@ -14,7 +14,6 @@
 
 // Category badges
 // --------------------------------------------------
-
 .badge-category__wrapper {
   color: var(--primary-high);
   overflow: hidden;
@@ -32,7 +31,7 @@
     color: var(--primary-high);
     min-width: 0;
 
-    &:before {
+    &::before {
       content: "";
       background: var(--category-badge-color);
       flex: 0 0 auto;
@@ -41,14 +40,14 @@
     }
 
     &__name {
-      color: currentColor;
+      color: currentcolor;
       text-overflow: ellipsis;
       overflow: hidden;
       min-width: 0;
     }
 
     &.--has-parent {
-      &:before {
+      &::before {
         background: linear-gradient(
           90deg,
           var(--parent-category-badge-color) 50%,
@@ -71,7 +70,6 @@
 
 // Notification badge
 // --------------------------------------------------
-
 .badge-notification {
   @extend %badge;
   position: relative;
@@ -83,6 +81,7 @@
   line-height: var(--line-height-small);
   text-align: center;
   background-color: var(--primary-low-mid-or-secondary-low);
+
   &[href] {
     color: var(--secondary);
   }
@@ -92,7 +91,6 @@
   }
 
   // Unread posts
-
   &.unread-posts {
     background-color: var(--tertiary-med-or-tertiary);
     color: var(--secondary);
@@ -116,11 +114,11 @@
 
 // Posts badge
 // --------------------------------------------------
-
 .badge-posts {
   font-weight: normal;
   font-size: var(--font-0);
   line-height: var(--line-height-small);
+
   &[href] {
     color: var(--primary-med-or-secondary-med);
   }
@@ -128,7 +126,6 @@
 
 // Group badge
 // --------------------------------------------------
-
 .badge-group {
   @extend %badge;
   padding: 2px 5px;

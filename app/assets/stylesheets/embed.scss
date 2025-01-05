@@ -19,6 +19,7 @@ article.post {
   .quote .title {
     border-left: 5px solid var(--primary-very-low);
     padding: 10px 10px 0 12px;
+
     .avatar {
       margin-right: 7px;
     }
@@ -33,9 +34,11 @@ article.post {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
     border-left: 5px solid var(--primary-very-low);
+
     p {
       margin: 0 0 10px 0;
     }
+
     p:last-of-type {
       margin-bottom: 0;
     }
@@ -67,10 +70,12 @@ article.post {
     pre {
       white-space: pre-wrap;
     }
+
     img {
       max-width: 100%;
       height: auto;
     }
+
     p {
       margin: 0 0 1em 0;
     }
@@ -93,6 +98,7 @@ article.post {
   a {
     color: var(--primary-high);
   }
+
   a.staff {
     background-color: var(--highlight-bg);
   }
@@ -135,7 +141,6 @@ header.discourse {
   padding-bottom: 8px;
   font-size: var(--font-up-2);
   border-bottom: 3px solid var(--primary-low);
-
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -154,6 +159,7 @@ header.discourse {
 footer {
   font-size: var(--font-up-2);
   margin-top: 0.5em;
+
   .button {
     color: white;
     padding: 6px 8px;
@@ -174,6 +180,7 @@ footer {
 // which we will now clean up
 aside.onebox {
   margin-bottom: 20px;
+
   p {
     margin-bottom: 0 !important;
   }

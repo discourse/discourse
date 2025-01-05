@@ -25,6 +25,7 @@
   .chat-message-container {
     transition: transform 400ms;
     transform: scale(1);
+
     @media (prefers-reduced-motion: no-preference) {
       &.-active {
         animation: scale-animation 400ms;
@@ -36,9 +37,11 @@
     0% {
       transform: scale(1);
     }
+
     80% {
       transform: scale(0.95);
     }
+
     100% {
       transform: scale(1);
     }

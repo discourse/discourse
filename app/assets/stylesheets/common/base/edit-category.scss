@@ -27,6 +27,7 @@ div.edit-category {
   .edit-category-nav {
     grid-area: sidebar;
     grid-row: 2 / span 3;
+
     .nav-stacked {
       background-color: var(--secondary);
     }
@@ -75,6 +76,7 @@ div.edit-category {
       margin-top: 10px;
       padding: 5px 10px;
       position: relative;
+
       .arrow-div {
         border: solid transparent;
         content: " ";
@@ -90,18 +92,22 @@ div.edit-category {
       list-style: none;
       margin: 0 0 30px;
       padding: 0;
+
       .name {
         margin-right: 20px;
         display: inline-block;
         min-width: 100px;
       }
+
       .permission {
         margin-left: 20px;
       }
+
       .d-icon-circle-xmark {
         margin-left: 5px;
         color: var(--danger);
       }
+
       li {
         margin-bottom: 10px;
       }
@@ -122,6 +128,7 @@ div.edit-category {
     label {
       max-width: $category-settings-width;
     }
+
     input[type="number"] {
       width: $number-input-width;
     }
@@ -178,7 +185,6 @@ div.edit-category {
       input[type="number"] {
         width: 4em;
       }
-
       margin-bottom: 1em;
     }
   }
@@ -198,35 +204,42 @@ div.edit-category {
   .permission-row {
     border-bottom: 1px solid var(--primary-low);
     display: flex;
+
     &.row-header {
       font-weight: bold;
       border-bottom: 2px solid var(--primary-low);
     }
+
     .group-name,
     .options {
       display: flex;
       box-sizing: border-box;
       text-align: center;
       width: 50%;
-      margin: 0px;
+      margin: 0;
       align-items: center;
     }
+
     .group-name {
       text-align: left;
       padding: 0.5em;
       padding-left: 0;
+
       .group-name-label {
         @include ellipsis;
       }
     }
+
     .cell,
     .btn-flat {
       width: 33%;
       padding: 0.5em;
     }
+
     .btn-flat:hover {
       background-color: transparent;
     }
+
     .btn-flat .d-icon-square-check,
     .btn-flat:hover .d-icon-square-check {
       color: var(--success);
@@ -256,6 +269,7 @@ div.edit-category {
 
   .add-group {
     margin: 1em 0;
+
     .group-name {
       width: 100%;
     }

@@ -1,22 +1,17 @@
 .loading-indicator-container {
   --loading-width: 0.8;
   --still-loading-width: 0.9;
-
   --still-loading-duration: 10s;
   --done-duration: 0.4s;
   --fade-out-duration: 0.4s;
-
   position: fixed;
   top: 0;
   left: 0;
   z-index: z("header") + 1;
-
   height: 3px;
   width: 100%;
-
   opacity: 0;
   transition: opacity var(--fade-out-duration) ease var(--done-duration);
-
   background-color: var(--primary-low);
 
   .loading-indicator {

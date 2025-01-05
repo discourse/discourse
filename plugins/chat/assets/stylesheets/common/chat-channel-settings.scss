@@ -3,6 +3,7 @@
 
   .c-channel-settings__slug {
     max-width: 250px;
+
     @include ellipsis;
   }
 

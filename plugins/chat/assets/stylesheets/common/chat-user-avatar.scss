@@ -6,8 +6,8 @@
   &.is-online {
     .avatar {
       padding: 2px;
-      box-shadow: inset 0px 0px 0px 1px var(--success),
-        inset 0px 0px 0px 2px var(--secondary);
+      box-shadow: inset 0 0 0 1px var(--success),
+        inset 0 0 0 2px var(--secondary);
     }
   }
 
@@ -22,8 +22,8 @@
       .chat-message & {
         width: 10px;
         height: 10px;
-        right: 0px;
-        bottom: 0px;
+        right: 0;
+        bottom: 0;
       }
 
       .chat-channel-title & {

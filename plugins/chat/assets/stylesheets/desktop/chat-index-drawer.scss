@@ -27,10 +27,12 @@
 
     &.--threads {
       margin-top: 0.25rem;
+
       .c-unread-indicator {
         width: 8px;
         height: 8px;
       }
+
       .chat-channel-title {
         gap: 0.5rem;
         color: var(--primary);
