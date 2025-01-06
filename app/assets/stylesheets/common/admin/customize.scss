@@ -817,17 +817,6 @@
   padding-left: 18px;
 }
 
-.admin-permalink-item {
-  &__delete.btn,
-  &__delete.btn:hover {
-    border-top: 1px solid var(--primary-low);
-    color: var(--danger);
-    svg {
-      color: var(--danger);
-    }
-  }
-}
-
 // embedding
 .embeddable-hosts {
   margin-bottom: 2em;
@@ -893,19 +882,6 @@
       td.controls {
         text-align: left;
       }
-    }
-  }
-}
-
-.admin-embedding {
-  .admin-embeddable-host-item__delete {
-    &:hover {
-      svg.d-icon {
-        color: var(--primary-medium);
-      }
-    }
-    svg.d-icon {
-      color: var(--primary-low-mid);
     }
   }
 }

@@ -7383,7 +7383,6 @@ en:
         no_permalinks: "You don't have any permalinks yet."
         add: "Add permalink"
         back: "Back to Permalinks"
-        more_options: "More options"
         copy_success: "Permalink copied to clipboard"
         nav:
           settings: "Settings"
