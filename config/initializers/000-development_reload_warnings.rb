@@ -29,6 +29,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
   Listen
     .to(
       *paths,
+      # Aside from .rb files, this will also match site_settings.yml, as well as any plugin settings.yml files.
       only: /(\.rb|settings.yml)$/,
       ignore: [/node_modules/],
     ) do |modified, added, removed|
