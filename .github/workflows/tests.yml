@@ -411,7 +411,7 @@ jobs:
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
-    runs-on: debian-12
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Merge Artifacts
