@@ -750,6 +750,8 @@ class Group < ActiveRecord::Base
   def self.group_id_from_param(group_param)
     return group_param.id if group_param.is_a?(Group)
     return group_param if group_param.is_a?(Integer)
+    return Group[group_param].id if group_param.is_a?(Symbol)
+    return group_param.to_i if group_param.to_i.to_s == group_param
 
     # subtle, using Group[] ensures the group exists in the DB
     Group[group_param.to_sym].id
