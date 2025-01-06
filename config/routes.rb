@@ -244,12 +244,9 @@ Discourse::Application.routes.draw do
       end
 
       scope "/customize", constraints: AdminConstraint.new do
-        resources :site_settings, only: %i[index]
         resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates" do
           collection { get "preview" => "form_templates#preview" }
         end
-
-        get "font" => "site_settings#index"
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
@@ -396,6 +393,7 @@ Discourse::Application.routes.draw do
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
 
+        get "fonts" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
         get "notifications" => "site_settings#index"
 

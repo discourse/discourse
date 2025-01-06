@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SiteSetting < ActiveRecord::Base
-  VALID_AREAS = %w[about embedding emojis flags notifications permalinks font]
+  VALID_AREAS = %w[about embedding emojis flags fonts notifications permalinks]
 
   extend GlobalPath
   extend SiteSettingExtension

@@ -48,9 +48,6 @@ export default function () {
         this.route("colors", function () {
           this.route("show", { path: "/:scheme_id" });
         });
-        this.route("font", function () {
-          this.route("settings", { path: "/" });
-        });
         this.route(
           "adminCustomizeThemes",
           { path: "/:type", resetNamespace: true },
@@ -265,6 +262,9 @@ export default function () {
             this.route("settings");
           }
         );
+        this.route("fonts", function () {
+          this.route("settings", { path: "/" });
+        });
       }
     );
 
