@@ -66,8 +66,8 @@ export default class EmbeddableHost extends Component {
           />
           <DButton
             @action={{this.delete}}
-            @icon="trash-can"
-            class="btn-transparent admin-embeddable-host-item__delete"
+            @label="admin.embedding.delete"
+            class="btn-default btn-small admin-embeddable-host-item__delete"
           />
         </div>
       </td>
