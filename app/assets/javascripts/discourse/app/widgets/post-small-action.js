@@ -73,6 +73,7 @@ const icons = {
   removed_user: "circle-minus",
   removed_group: "circle-minus",
   public_topic: "comment",
+  open_topic: "comment",
   private_topic: "envelope",
   autobumped: "hand-point-right",
 };
