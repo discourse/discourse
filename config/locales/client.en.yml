@@ -5756,6 +5756,8 @@ en:
         embeddable_host:
           edit: "Edit"
           delete: "Delete"
+          more_options:
+            title: "More options"
         look_and_feel:
           title: "Look and feel"
           description: "Customize and brand your Discourse site, giving it a distinctive style."
