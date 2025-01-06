@@ -1212,14 +1212,30 @@ posting:
     choices:
       - code-fences
       - 4-spaces-indent
-  embed_any_origin: false
-  embed_topics_list: false
-  embed_set_canonical_url: false
-  embed_unlisted: false
-  import_embed_unlisted: true
-  embed_truncate: true
-  embed_support_markdown: false
-  allowed_embed_selectors: ""
+  embed_any_origin:
+    default: false
+    area: "embedding"
+  embed_topics_list:
+    default: false
+    area: "embedding"
+  embed_set_canonical_url:
+    default: false
+    area: "embedding"
+  embed_unlisted:
+    default: false
+    area: "embedding"
+  import_embed_unlisted:
+    default: true
+    area: "embedding"
+  embed_truncate:
+    default: true
+    area: "embedding"
+  embed_support_markdown:
+    default: false
+    area: "embedding"
+  allowed_embed_selectors:
+    default: ""
+    area: "embedding"
   allowed_href_schemes:
     client: true
     default: ""

@@ -5750,6 +5750,12 @@ en:
             title: "More options"
             move_up: "Move up"
             move_down: "Move down"
+        permalinks:
+          edit: "Edit"
+          delete: "Delete"
+        embeddable_host:
+          edit: "Edit"
+          delete: "Delete"
         look_and_feel:
           title: "Look and feel"
           description: "Customize and brand your Discourse site, giving it a distinctive style."
@@ -7310,6 +7316,7 @@ en:
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
+        delete: "Delete"
         confirm_delete: "Are you sure you want to delete that host?"
         sample: |
           <p>Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>EMBED_URL</b> with the canonical URL of the page you are embedding it on.</p>
@@ -7318,16 +7325,18 @@ en:
 
           <p>Replace <b>DISCOURSE_USERNAME</b> with the Discourse username of the author that should create the topic. Discourse will automatically lookup the user by the <code>content</code> attribute of the <code>&lt;meta&gt;</code> tags with <code>name</code> attribute set to <code>discourse-username</code> or <code>author</code>. The <code>discourseUserName</code> parameter has been deprecated and will be removed in Discourse 3.2.</p>
         title: "Embedding"
-        host: "Allowed Hosts"
-        allowed_paths: "Path Allowlist"
-        edit: "edit"
-        category: "Post to Category"
-        tags: "Topic Tags"
-        post_author: "Post Author - Defaults to %{author}"
-        add_host: "Add Host"
-        settings: "Embedding Settings"
-        crawling_settings: "Crawler Settings"
-        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
+        host: "Allowed hosts"
+        allowed_paths: "Path allowlist"
+        edit: "Edit"
+        category: "Post to category"
+        tags: "Topic tags"
+        post_author: "Post author"
+        post_author_with_default: "Post author (defaults to %{author})"
+        add_host: "Add host"
+        posts_and_topics: "Posts and Topics configuration"
+        crawlers: "Crawlers configuration"
+        crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
 
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
@@ -7337,7 +7346,20 @@ en:
         allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
         blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Allowed CSS class names"
-        save: "Save Embedding Settings"
+        save: "Save"
+        posts_and_topics_settings_saved: "Posts and Topics settings saved"
+        crawler_settings_saved: "Crawler settings saved"
+        back: "Back to Embedding"
+        configuration_snippet: "Configuration snippet"
+        host_form:
+          add_header: "Add host"
+          edit_header: "Edit host"
+          save: "Save"
+        nav:
+          hosts: "Hosts"
+          settings: "Settings"
+          posts_and_topics: "Posts and Topics"
+          crawlers: "Crawlers"
 
       permalink:
         title: "Permalinks"
