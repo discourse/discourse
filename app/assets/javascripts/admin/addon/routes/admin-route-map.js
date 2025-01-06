@@ -231,6 +231,11 @@ export default function () {
             path: "/",
           });
         });
+        this.route("search", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
           this.route("themes");
         });
