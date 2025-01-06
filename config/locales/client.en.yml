@@ -2540,9 +2540,9 @@ en:
       categories_boxes_with_topics: "Boxes with Featured Topics"
       subcategories_with_featured_topics: "Subcategories with Featured Topics"
     full_name_requirement:
-      required_at_signup: "Required at signup"
-      optional_at_signup: "Optional at signup"
-      hidden_at_signup: "Hidden at signup"
+      required_at_signup: "Required"
+      optional_at_signup: "Optional"
+      hidden_at_signup: "Optional, hidden at signup"
 
     shortcut_modifier_key:
       shift: "Shift"
