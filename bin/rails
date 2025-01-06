@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
+load File.expand_path("spring", __dir__)
 
 if !ENV["RAILS_ENV"] && (ARGV[0] == "s" || ARGV[0] == "server") && Process.respond_to?(:fork)
   ENV["UNICORN_PORT"] ||= "3000"
