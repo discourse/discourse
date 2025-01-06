@@ -35,6 +35,10 @@ module PageObjects
         has_selector?(".admin-flag-item__#{action}[disabled]")
       end
 
+      def has_disabled_delete_action?
+        has_selector?(".admin-item__delete[disabled]")
+      end
+
       def has_item_action?(action)
         has_selector?(".admin-flag-item__#{action}")
       end
@@ -97,7 +101,7 @@ module PageObjects
 
       def click_delete_flag(key)
         find(".#{key} .flag-menu-trigger").click
-        find(".admin-flag-item__delete").click
+        find(".admin-item__delete").click
         self
       end
 

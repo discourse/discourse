@@ -3,9 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import categoryBadge from "discourse/helpers/category-badge";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
+import DMenu from "float-kit/components/d-menu";
 
 export default class EmbeddableHost extends Component {
   @service dialog;
@@ -64,11 +66,25 @@ export default class EmbeddableHost extends Component {
             @routeModels={{this.host}}
             @label="admin.embedding.edit"
           />
-          <DButton
-            @action={{this.delete}}
-            @label="admin.embedding.delete"
-            class="btn-default btn-small admin-embeddable-host-item__delete"
-          />
+          <DMenu
+            @identifier="embedding-host-menu"
+            @title={{i18n "admin.embedding.more_options.title"}}
+            @icon="ellipsis-vertical"
+            @onRegisterApi={{this.onRegisterApi}}
+          >
+            <:content>
+              <DropdownMenu as |dropdown|>
+                <dropdown.item>
+                  <DButton
+                    @action={{this.delete}}
+                    @label="admin.embedding.delete"
+                    @icon="trash-can"
+                    class="btn-transparent admin-item__delete"
+                  />
+                </dropdown.item>
+              </DropdownMenu>
+            </:content>
+          </DMenu>
         </div>
       </td>
     </tr>

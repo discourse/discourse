@@ -26,7 +26,7 @@ module PageObjects
 
       def click_delete_permalink(url)
         open_permalink_menu(url)
-        find(".admin-permalink-item__delete").click
+        find(".admin-item__delete").click
         find(".dialog-footer .btn-primary").click
         expect(page).to have_no_css(".dialog-body")
         has_closed_permalink_menu?

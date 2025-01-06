@@ -228,7 +228,7 @@ describe "Admin Flags Page", type: :system do
 
   it "does not allow to system flag to be deleted" do
     admin_flags_page.visit.open_flag_menu("notify_moderators")
-    expect(admin_flags_page).to have_disabled_item_action("delete")
+    expect(admin_flags_page).to have_disabled_delete_action
   end
 
   it "does not allow top flag to move up" do
