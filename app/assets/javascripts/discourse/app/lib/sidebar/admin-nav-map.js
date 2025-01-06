@@ -60,9 +60,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_trust_levels",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["trust"],
-        query: { filter: "" },
+        route: "adminConfig.trustLevels.settings",
         label: "admin.community.sidebar_link.trust_levels",
         icon: "user-shield",
       },
@@ -81,9 +79,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_legal",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["legal"],
-        query: { filter: "" },
+        route: "adminConfig.legal.settings",
         label: "admin.community.sidebar_link.legal",
         icon: "gavel",
       },
