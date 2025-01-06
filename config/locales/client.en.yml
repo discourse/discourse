@@ -5664,7 +5664,7 @@ en:
         sidebar_link:
           appearance: "Appearance"
           server_setup:
-            title: "Server setup"
+            title: "Server setup & logs"
             keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
 
       security:
@@ -5673,8 +5673,8 @@ en:
           security: "Security settings"
           spam: "Spam settings"
           staff_action_logs:
-            title: "Staff action logs"
-            keywords: "error logs|screened emails|screened ips|screened urls|search logs"
+            title: "Logs & screening"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
 
       section_landing_pages:
         account:
