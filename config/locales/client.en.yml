@@ -5152,6 +5152,9 @@ en:
         trust_levels:
           title: "Trust levels"
           header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum."
+        group_permissions:
+          title: "Group permissions"
+          header_description: "All group-based app permissions are managed here, which control access to various features within Discourse."
 
       new_features:
         title: "What's new?"
@@ -5621,6 +5624,7 @@ en:
           notifications: "Notifications"
           permalinks: "Permalinks"
           trust_levels: "Trust levels"
+          group_permissions: "Group permissions"
           users: "Users"
           groups: "Groups"
           user_fields: "User fields"
