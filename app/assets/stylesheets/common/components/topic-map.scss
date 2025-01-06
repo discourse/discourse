@@ -44,6 +44,7 @@ body:not(.archetype-private_message) {
       (var(--topic-body-width-padding) * 2)
   );
   padding-block: 0.5em;
+  overflow-anchor: none;
 
   @include breakpoint(mobile-large) {
     font-size: var(--font-down-1);
