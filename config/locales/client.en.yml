@@ -5149,6 +5149,9 @@ en:
         legal:
           title: "Legal"
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."
+        trust_levels:
+          title: "Trust levels"
+          header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum."
 
       new_features:
         title: "What's new?"
