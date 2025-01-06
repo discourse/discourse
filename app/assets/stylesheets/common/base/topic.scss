@@ -40,6 +40,10 @@
     Without this those themes would render topics unreadable. */
   }
 
+  .topic-navigation {
+    overflow-anchor: none;
+  }
+
   // timeline
   @media screen and (min-width: 925px) {
     // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
