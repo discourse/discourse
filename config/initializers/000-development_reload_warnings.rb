@@ -29,7 +29,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
   Listen
     .to(
       *paths,
-      only: /\.rb|site_settings.yml$/,
+      only: /(\.rb|settings.yml)$/,
       ignore: [/node_modules/],
     ) do |modified, added, removed|
       supervisor_pid = UNICORN_DEV_SUPERVISOR_PID
