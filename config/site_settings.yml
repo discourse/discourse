@@ -283,6 +283,10 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
+  mobile_category_page_style:
+    client: true
+    enum: "MobileCategoryPageStyle"
+    default: "categories_with_featured_topics"
   category_colors:
     client: true
     type: list
@@ -402,10 +406,12 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+    area: "fonts"
   heading_font:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+    area: "fonts"
   enable_sitemap:
     default: true
   sitemap_page_size:
@@ -3140,6 +3146,7 @@ user_preferences:
       - normal
       - larger
       - largest
+    area: "fonts"
 
   default_title_count_mode:
     type: enum
