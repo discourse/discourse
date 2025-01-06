@@ -5143,6 +5143,9 @@ en:
         logo:
           title: "Site logo"
           header_description: "Customize the variations of your site logo."
+        navigation:
+          title: "Navigation"
+          header_description: "Configure the navigation links and menu items for your site. This includes the location and behaviour of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar."
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation."

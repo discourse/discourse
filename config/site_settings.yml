@@ -216,6 +216,7 @@ basic:
       - posted
       - bookmarks
       - hot
+    area: "navigation"
   post_menu:
     client: true
     type: list
@@ -283,10 +284,12 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
+    area: "navigation"
   mobile_category_page_style:
     client: true
     enum: "MobileCategoryPageStyle"
     default: "categories_with_featured_topics"
+    area: "navigation"
   category_colors:
     client: true
     type: list
@@ -427,6 +430,7 @@ basic:
     choices:
       - spinner
       - slider
+    area: "navigation"
   show_user_menu_avatars:
     client: true
     default: false
@@ -2504,6 +2508,7 @@ developer:
     default: "1|2"
     allow_any: false
     refresh: true
+    area: "navigation"
   warn_critical_js_deprecations:
     default: true
     client: true
@@ -2523,14 +2528,17 @@ navigation:
     default: "sidebar"
     type: enum
     enum: "NavigationMenuSiteSetting"
+    area: "navigation"
   default_navigation_menu_categories:
     type: category_list
     default: ""
     client: true
+    area: "navigation"
   default_navigation_menu_tags:
     type: tag_list
     default: ""
     client: true
+    area: "navigation"
   default_sidebar_switch_panel_position:
     default: "bottom"
     type: enum
@@ -2538,6 +2546,7 @@ navigation:
     choices:
       - "top"
       - "bottom"
+    area: "navigation"
 
 embedding:
   embed_by_username:
@@ -2734,6 +2743,7 @@ uncategorized:
   header_dropdown_category_count:
     client: true
     default: 8
+    area: "navigation"
 
   slug_generation_method:
     default: "ascii"
@@ -3162,8 +3172,12 @@ user_preferences:
   enable_offline_indicator:
     default: false
     client: true
-  default_sidebar_link_to_filtered_list: false
-  default_sidebar_show_count_of_new_items: false
+  default_sidebar_link_to_filtered_list:
+    default: false
+    area: "navigation"
+  default_sidebar_show_count_of_new_items:
+    default: false
+    area: "navigation"
 
 api:
   retain_web_hook_events_period_days:
@@ -3386,6 +3400,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
+    area: "navigation"
   glimmer_topic_list_mode:
     client: true
     type: enum

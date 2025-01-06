@@ -1,3 +1,3 @@
 import AdminAreaSettingsBaseController from "admin/controllers/admin-area-settings-base";
 
-export default class AdminConfigFontsController extends AdminAreaSettingsBaseController {}
+export default class AdminConfigFontsSettingsController extends AdminAreaSettingsBaseController {}
