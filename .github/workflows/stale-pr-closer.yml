@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   stale:
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/stale@v9
         with:
