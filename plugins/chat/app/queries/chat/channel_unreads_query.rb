@@ -46,7 +46,7 @@ module Chat
           AND notifications.user_id = :user_id
           AND notifications.notification_type = :notification_type_mention
           AND (data::json->>'chat_channel_id')::bigint = memberships.chat_channel_id
-          AND ((chat_messages.thread_id IS NULL OR chat_messages.id = chat_threads.original_message_id AND chat_messages.id > COALESCE(uccm.last_read_message_id, 0))
+          AND (((chat_messages.thread_id IS NULL OR chat_messages.id = chat_threads.original_message_id) AND chat_messages.id > COALESCE(uccm.last_read_message_id, 0))
           OR (chat_messages.thread_id IS NOT NULL AND uctm.id IS NOT NULL AND chat_messages.id > COALESCE(uctm.last_read_message_id, 0)))
         ) AS mention_count,
         (
