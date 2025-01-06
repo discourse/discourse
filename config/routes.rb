@@ -397,6 +397,7 @@ Discourse::Application.routes.draw do
         get "login-and-authentication" => "site_settings#index"
         get "logo" => "site_settings#index"
         get "notifications" => "site_settings#index"
+        get "search" => "site_settings#index"
         get "legal" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
 

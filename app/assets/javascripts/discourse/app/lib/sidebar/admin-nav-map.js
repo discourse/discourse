@@ -280,9 +280,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_search",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["search"],
-        query: { filter: "" },
+        route: "adminConfig.search.settings",
         label: "admin.advanced.sidebar_link.search",
         icon: "magnifying-glass",
       },

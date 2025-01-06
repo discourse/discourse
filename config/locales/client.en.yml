@@ -5146,6 +5146,9 @@ en:
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation."
+        search:
+          title: "Search"
+          header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages."
         legal:
           title: "Legal"
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."

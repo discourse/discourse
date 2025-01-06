@@ -231,6 +231,11 @@ export default function () {
             path: "/",
           });
         });
+        this.route("search", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("legal", function () {
           this.route("settings", {
             path: "/",
