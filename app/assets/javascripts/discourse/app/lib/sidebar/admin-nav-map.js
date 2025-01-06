@@ -128,9 +128,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_navigation",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["all_results"],
-        query: { filter: "navigation" },
+        route: "adminConfig.navigation.settings",
         label: "admin.appearance.sidebar_link.navigation",
         icon: "diagram-project",
       },
@@ -286,9 +284,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_search",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["search"],
-        query: { filter: "" },
+        route: "adminConfig.search.settings",
         label: "admin.advanced.sidebar_link.search",
         icon: "magnifying-glass",
       },

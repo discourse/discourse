@@ -231,6 +231,11 @@ export default function () {
             path: "/",
           });
         });
+        this.route("search", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("legal", function () {
           this.route("settings", {
             path: "/",
@@ -285,6 +290,9 @@ export default function () {
           this.route("settings", { path: "/" });
         });
         this.route("logo", function () {
+          this.route("settings", { path: "/" });
+        });
+        this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
       }

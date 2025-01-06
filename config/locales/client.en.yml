@@ -2540,9 +2540,9 @@ en:
       categories_boxes_with_topics: "Boxes with Featured Topics"
       subcategories_with_featured_topics: "Subcategories with Featured Topics"
     full_name_requirement:
-      required_at_signup: "Required at signup"
-      optional_at_signup: "Optional at signup"
-      hidden_at_signup: "Hidden at signup"
+      required_at_signup: "Required"
+      optional_at_signup: "Optional"
+      hidden_at_signup: "Optional, hidden at signup"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -5143,9 +5143,15 @@ en:
         logo:
           title: "Site logo"
           header_description: "Customize the variations of your site logo."
+        navigation:
+          title: "Navigation"
+          header_description: "Configure the navigation links and menu items for your site. This includes the location and behaviour of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar."
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation."
+        search:
+          title: "Search"
+          header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages."
         legal:
           title: "Legal"
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."

@@ -787,6 +787,22 @@ describe Chat::Message do
         expect(message.user_mentions.pluck(:target_id)).to match_array(already_mentioned)
         expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
       end
+
+      it "creates thread memberships for mentioned users when replying to a thread" do
+        thread = Fabricate(:chat_thread)
+        thread_message =
+          Fabricate(
+            :chat_message,
+            chat_channel: thread.channel,
+            thread: thread,
+            message: "cc @#{user3.username} and @#{user4.username}",
+          )
+
+        thread_message.cook
+        thread_message.upsert_mentions
+
+        expect(thread.user_chat_thread_memberships.pluck(:user_id)).to include(user3.id, user4.id)
+      end
     end
 
     context "with group mentions" do

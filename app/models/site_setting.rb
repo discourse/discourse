@@ -9,6 +9,7 @@ class SiteSetting < ActiveRecord::Base
     fonts
     group_permissions
     legal
+    navigation
     notifications
     permalinks
     trust_levels
