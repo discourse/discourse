@@ -108,9 +108,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_site_logo",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["branding"],
-        query: { filter: "" },
+        route: "adminConfig.logo.settings",
         label: "admin.appearance.sidebar_link.site_logo",
         icon: "fab-discourse",
       },

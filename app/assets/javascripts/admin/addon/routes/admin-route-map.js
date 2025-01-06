@@ -265,6 +265,9 @@ export default function () {
         this.route("fonts", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("logo", function () {
+          this.route("settings", { path: "/" });
+        });
       }
     );
 

@@ -1,0 +1,21 @@
+<DPageHeader
+  @titleLabel={{i18n "admin.config.logo.title"}}
+  @descriptionLabel={{i18n "admin.config.logo.header_description"}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+    <DBreadcrumbsItem
+      @path="/admin/config/logo"
+      @label={{i18n "admin.config.logo.title"}}
+    />
+  </:breadcrumbs>
+</DPageHeader>
+
+<div class="admin-config-page__main-area">
+  <AdminAreaSettings
+    @categories="branding"
+    @path="/admin/config/logo"
+    @filter={{this.filter}}
+    @adminSettingsFilterChangedCallback={{this.adminSettingsFilterChangedCallback}}
+  />
+</div>
