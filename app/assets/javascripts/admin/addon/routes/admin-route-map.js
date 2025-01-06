@@ -236,6 +236,16 @@ export default function () {
             path: "/",
           });
         });
+        this.route("legal", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
+        this.route("trustLevels", { path: "/trust-levels" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
           this.route("themes");
         });

@@ -53,10 +53,10 @@ required:
   contact_email:
     default: ""
     type: email
-    area: "about|notifications"
+    area: "about|notifications|legal"
   contact_url:
     default: ""
-    area: "about"
+    area: "about|legal"
   notification_email:
     default: "noreply@unconfigured.discourse.org"
     type: email
@@ -75,13 +75,13 @@ required:
     list_type: simple
   company_name:
     default: ""
-    area: "about"
+    area: "about|legal"
   governing_law:
     default: ""
-    area: "about"
+    area: "about|legal"
   city_for_disputes:
     default: ""
-    area: "about"
+    area: "about|legal"
 
 branding:
   logo:
@@ -2564,17 +2564,22 @@ legal:
   tos_url:
     client: true
     default: ""
+    area: "legal"
   privacy_policy_url:
     client: true
     default: ""
+    area: "legal"
   faq_url:
     client: true
     default: ""
+    area: "legal"
   log_anonymizer_details:
     default: true
+    area: "legal"
   display_eu_visitor_stats:
     default: false
     client: true
+    area: "legal"
 
 backups:
   enable_backups:
