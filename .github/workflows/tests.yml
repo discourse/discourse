@@ -314,7 +314,7 @@ jobs:
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
-        if: always() && github.repository == 'discourse/discourse' && ${{ env.DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS == '1' }}
+        if: github.repository == 'discourse/discourse' && env.DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS == '1'
         run: |
           if [ -f tmp/turbo_rspec_flaky_tests.json ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
@@ -325,18 +325,18 @@ jobs:
 
       - name: Fetch Job ID
         id: fetch-job-id
-        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        if: steps.check-flaky-spec-report.outputs.exists == 'true'
         run: |
           job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}')
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
 
       - name: Create flaky tests report artifact
-        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        if: steps.check-flaky-spec-report.outputs.exists == 'true'
         run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Upload flaky tests report
         uses: actions/upload-artifact@v4
-        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        if: steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
