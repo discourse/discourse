@@ -68,10 +68,21 @@ export default function () {
             this.route("edit", { path: "/:id" });
           }
         );
-        this.route("adminEmbedding", {
-          path: "/embedding",
-          resetNamespace: true,
-        });
+        this.route(
+          "adminEmbedding",
+          {
+            path: "/embedding",
+            resetNamespace: true,
+          },
+          function () {
+            this.route("index", { path: "/" });
+            this.route("settings");
+            this.route("postsAndTopics", { path: "/posts_and_topics" });
+            this.route("crawlers");
+            this.route("new");
+            this.route("edit", { path: "/:id" });
+          }
+        );
         this.route(
           "adminCustomizeEmailTemplates",
           { path: "/email_templates", resetNamespace: true },
