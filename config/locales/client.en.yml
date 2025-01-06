@@ -5137,6 +5137,9 @@ en:
         login_and_authentication:
           title: "Login and authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more."
+        logo:
+          title: "Site Logo"
+          header_description: "Customize the variations of your site logo."
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation."

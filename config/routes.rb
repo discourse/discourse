@@ -394,6 +394,7 @@ Discourse::Application.routes.draw do
         resources :site_settings, only: %i[index]
 
         get "login-and-authentication" => "site_settings#index"
+        get "logo" => "site_settings#index"
         get "notifications" => "site_settings#index"
 
         resources :flags, only: %i[index new create update destroy] do
