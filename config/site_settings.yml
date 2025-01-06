@@ -402,10 +402,12 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+    area: "font"
   heading_font:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+    area: "font"
   enable_sitemap:
     default: true
   sitemap_page_size:
@@ -3124,6 +3126,7 @@ user_preferences:
       - normal
       - larger
       - largest
+    area: "font"
 
   default_title_count_mode:
     type: enum

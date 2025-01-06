@@ -6237,6 +6237,9 @@ en:
           reset_confirm: "Are you sure you want to reset to the default %{fieldName} and lose all your changes?"
           save_error_with_reason: "Your changes were not saved. %{error}"
           instructions: "Customize the template in which all html emails are rendered, and style using CSS."
+        font_style:
+          title: "Font Style"
+          header_description: "Customize the font styles used by your themes."
 
       email:
         title: "Emails"
