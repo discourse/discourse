@@ -39,7 +39,7 @@ export default class ChatChannelUnreadIndicator extends Component {
   }
 
   get urgentBadgeCount() {
-    let totalCount = this.urgentCount;
+    const totalCount = this.urgentCount;
     return totalCount > MAX_UNREAD_COUNT ? `${MAX_UNREAD_COUNT}+` : totalCount;
   }
 
