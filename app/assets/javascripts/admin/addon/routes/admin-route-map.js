@@ -262,6 +262,9 @@ export default function () {
             this.route("settings");
           }
         );
+        this.route("fonts", function () {
+          this.route("settings", { path: "/" });
+        });
       }
     );
 

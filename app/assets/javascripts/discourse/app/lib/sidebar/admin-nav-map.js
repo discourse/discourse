@@ -102,9 +102,7 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_font_style",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["all_results"],
-        query: { filter: "font" },
+        route: "adminConfig.fonts.settings",
         label: "admin.appearance.sidebar_link.font_style",
         icon: "italic",
       },
