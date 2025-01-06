@@ -268,6 +268,9 @@ export default function () {
         this.route("logo", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("navigation", function () {
+          this.route("settings", { path: "/" });
+        });
       }
     );
 
