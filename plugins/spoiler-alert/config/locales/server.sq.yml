@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    spoiler_enabled: 'Aktivizo shtojcën e artikullit. Nëse e ndryshoni këtë, duhet të ndryshoni të gjitha postimet me: "rake posts:ribake".'
+  spoiler_alert:
+    excerpt_spoiler: "artikull"

@@ -14,7 +14,7 @@ cs:
         title: Témata
     scriptables:
       pin_topic:
-        title: Připevnit téma
+        title: Připnout téma
       suspend_user_by_email:
         title: Pozastavit uživatele podle e-mailu
       suspend_user_by_email_with_api_call:
