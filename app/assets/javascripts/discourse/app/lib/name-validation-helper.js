@@ -5,6 +5,20 @@ import { i18n } from "discourse-i18n";
 export default class NameValidationHelper {
   constructor(owner) {
     this.owner = owner;
+    this._setupObservers();
+  }
+
+  _setupObservers() {
+    this.owner.addObserver("accountName", this, this._invalidateCache);
+    this.owner.addObserver(
+      "forceValidationReason",
+      this,
+      this._invalidateCache
+    );
+  }
+
+  _invalidateCache() {
+    this.owner.notifyPropertyChange("nameValidation");
   }
 
   @dependentKeyCompat
@@ -18,8 +32,8 @@ export default class NameValidationHelper {
 
   @dependentKeyCompat
   get nameValidation() {
-    const accountName = this.owner.get("accountName");
-    const forceValidationReason = this.owner.get("forceValidationReason");
+    const accountName = this.owner.accountName;
+    const forceValidationReason = this.owner.forceValidationReason;
 
     if (this.owner.site.full_name_required_for_signup && isEmpty(accountName)) {
       return {
