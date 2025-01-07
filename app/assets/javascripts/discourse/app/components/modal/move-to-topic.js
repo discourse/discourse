@@ -19,7 +19,7 @@ export default class MoveToTopic extends Component {
   @tracked participants = [];
   @tracked chronologicalOrder = false;
   @tracked selection = "new_topic";
-  @tracked selectedTopicId;
+  @tracked selectedTopic;
   @tracked flash;
 
   constructor() {
@@ -49,7 +49,7 @@ export default class MoveToTopic extends Component {
 
   get buttonDisabled() {
     return (
-      this.saving || (isEmpty(this.selectedTopicId) && isEmpty(this.topicName))
+      this.saving || (isEmpty(this.selectedTopic) && isEmpty(this.topicName))
     );
   }
 
@@ -110,7 +110,7 @@ export default class MoveToTopic extends Component {
 
     if (type === "existingTopic") {
       mergeOptions = {
-        destination_topic_id: this.selectedTopicId,
+        destination_topic_id: this.selectedTopic.id,
         chronological_order: this.chronologicalOrder,
       };
       moveOptions = {
@@ -119,7 +119,7 @@ export default class MoveToTopic extends Component {
       };
     } else if (type === "existingMessage") {
       mergeOptions = {
-        destination_topic_id: this.selectedTopicId,
+        destination_topic_id: this.selectedTopic.id,
         participants: this.participants.join(","),
         archetype: "private_message",
         chronological_order: this.chronologicalOrder,
@@ -190,6 +190,6 @@ export default class MoveToTopic extends Component {
 
   @action
   newTopicSelected(topic) {
-    this.selectedTopicId = topic.id;
+    this.selectedTopic = topic.id;
   }
 }
