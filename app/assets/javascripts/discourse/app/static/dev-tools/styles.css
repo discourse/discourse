@@ -106,10 +106,14 @@
     background: none;
     border: none;
     padding: 5px;
-    color: var(--primary-500);
+    color: var(--primary-medium);
 
     &:hover {
       background-color: var(--primary-very-low);
+    }
+
+    &.--active {
+      color: var(--success);
     }
   }
 }
