@@ -817,14 +817,12 @@
   padding-left: 18px;
 }
 
-.admin-permalink-item {
+.admin-user_field-item,
+.backup-item-row,
+.admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
     border-top: 1px solid var(--primary-low);
-    color: var(--danger);
-    svg {
-      color: var(--danger);
-    }
   }
 }
 

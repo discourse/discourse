@@ -5793,6 +5793,8 @@ en:
         embeddable_host:
           edit: "Edit"
           delete: "Delete"
+          more_options:
+            title: "More options"
         look_and_feel:
           title: "Look and feel"
           description: "Customize and brand your Discourse site, giving it a distinctive style."
@@ -5907,7 +5909,7 @@ en:
             title: "Send email with download link"
             alert: "A link to download this backup has been emailed to you"
           destroy:
-            title: "Remove the backup"
+            title: "Delete"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
