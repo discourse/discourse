@@ -241,6 +241,15 @@ export default function () {
             path: "/",
           });
         });
+        this.route(
+          "groupPermissions",
+          { path: "/group-permissions" },
+          function () {
+            this.route("settings", {
+              path: "/",
+            });
+          }
+        );
         this.route("trustLevels", { path: "/trust-levels" }, function () {
           this.route("settings", {
             path: "/",

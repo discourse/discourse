@@ -5142,16 +5142,16 @@ en:
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."
         login_and_authentication:
           title: "Login and authentication"
-          header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more."
+          header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
         logo:
           title: "Site logo"
-          header_description: "Customize the variations of your site logo."
+          header_description: "Customize the variations of your site logo"
         navigation:
           title: "Navigation"
           header_description: "Configure the navigation links and menu items for your site. This includes the location and behaviour of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar."
         notifications:
           title: "Notifications"
-          header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation."
+          header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
         search:
           title: "Search"
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages."
@@ -5160,7 +5160,10 @@ en:
           header_description: "Configure security settings, including two-factor authentication, moderator priviledges, and content security policies."
         trust_levels:
           title: "Trust levels"
-          header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum."
+          header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum"
+        group_permissions:
+          title: "Group permissions"
+          header_description: "All group-based app permissions are managed here, which control access to various features within Discourse"
 
       new_features:
         title: "What's new?"
@@ -5639,6 +5642,7 @@ en:
           notifications: "Notifications"
           permalinks: "Permalinks"
           trust_levels: "Trust levels"
+          group_permissions: "Group permissions"
           users: "Users"
           groups: "Groups"
           user_fields: "User fields"
