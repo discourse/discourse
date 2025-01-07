@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "fastimage"
-
 class UploadCreator
   TYPES_TO_CROP = %w[avatar card_background custom_emoji profile_background].each(&:freeze)
 
