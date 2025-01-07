@@ -244,9 +244,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_user_api",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["user_api"],
-        query: { filter: "" },
+        route: "adminConfig.user-api.settings",
         label: "admin.advanced.sidebar_link.user_api",
         icon: "shuffle",
       },
