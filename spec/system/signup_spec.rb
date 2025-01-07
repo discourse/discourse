@@ -296,6 +296,57 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
   end
+
+  describe "full name field" do
+    context "when full_name_requirement is optional_at_signup" do
+      before { SiteSetting.full_name_requirement = "optional_at_signup" }
+
+      context "when login_required is true" do
+        before { SiteSetting.login_required = true }
+
+        it "displays the name field" do
+          signup_form.open
+          expect(signup_form).to have_name_input
+        end
+      end
+
+      context "when enable_names is false" do
+        before { SiteSetting.enable_names = false }
+
+        it "hides the name field" do
+          signup_form.open
+          expect(signup_form).to have_no_name_input
+        end
+      end
+    end
+
+    context "when full_name_requirement is hidden_at_signup" do
+      before { SiteSetting.full_name_requirement = "hidden_at_signup" }
+
+      it "hides the name field" do
+        signup_form.open
+        expect(signup_form).to have_no_name_input
+      end
+    end
+
+    context "when full_name_requirement is required_at_signup" do
+      before { SiteSetting.full_name_requirement = "required_at_signup" }
+
+      it "displays the name field" do
+        signup_form.open
+        expect(signup_form).to have_name_input
+      end
+
+      context "when enable_names is false" do
+        before { SiteSetting.enable_names = false }
+
+        it "hides the name field" do
+          signup_form.open
+          expect(signup_form).to have_no_name_input
+        end
+      end
+    end
+  end
 end
 
 describe "Signup", type: :system do
