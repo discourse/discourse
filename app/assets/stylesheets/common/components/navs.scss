@@ -99,8 +99,7 @@
     &.active {
       position: relative;
       color: var(--primary);
-      // background-color: var(--d-selected);
-      background: var(--d-sidebar-admin-background);
+      background-color: var(--d-selected);
       font-weight: bold;
     }
   }
