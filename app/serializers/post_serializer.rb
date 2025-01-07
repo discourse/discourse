@@ -17,6 +17,7 @@ class PostSerializer < BasicPostSerializer
 
   attributes :post_number,
              :post_type,
+             :posts_count,
              :updated_at,
              :reply_count,
              :reply_to_post_number,
@@ -30,6 +31,7 @@ class PostSerializer < BasicPostSerializer
              :topic_slug,
              :topic_title,
              :topic_html_title,
+             :url,
              :category_id,
              :display_username,
              :primary_group_name,
@@ -84,6 +86,7 @@ class PostSerializer < BasicPostSerializer
              :last_wiki_edit,
              :locked,
              :excerpt,
+             :truncated,
              :reviewable_id,
              :reviewable_score_count,
              :reviewable_score_pending_count,
@@ -119,12 +122,24 @@ class PostSerializer < BasicPostSerializer
     @add_excerpt
   end
 
+  def include_truncated?
+    @add_excerpt
+  end
+
+  def truncated
+    true
+  end
+
   def topic_title
     topic&.title
   end
 
   def topic_html_title
     topic&.fancy_title
+  end
+
+  def posts_count
+    topic&.posts_count
   end
 
   def category_id

@@ -8,21 +8,25 @@ import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class PostListItemDetails extends Component {
+  get topicTitle() {
+    return this.args.post?.topic_html_title || this.args.post?.topic_title;
+  }
+
   get titleAriaLabel() {
     return (
       this.args.titleAriaLabel ||
       i18n("post_list.aria_post_number", {
-        title: this.args.post.title,
+        title: this.args.post.topic_title,
         postNumber: this.args.post.post_number,
       })
     );
   }
 
   get posterName() {
-    if (prioritizeNameInUx(this.args.post.user.name)) {
-      return this.args.post.user.name;
+    if (prioritizeNameInUx(this.args.user.name)) {
+      return this.args.user.name;
     }
-    return this.args.post.user.username;
+    return this.args.user.username;
   }
 
   <template>
@@ -32,7 +36,7 @@ export default class PostListItemDetails extends Component {
           <a
             href={{getURL @post.url}}
             aria-label={{this.titleAriaLabel}}
-          >{{htmlSafe @post.topic.fancyTitle}}</a>
+          >{{htmlSafe this.topicTitle}}</a>
         </span>
       </div>
 
@@ -40,26 +44,26 @@ export default class PostListItemDetails extends Component {
         {{categoryLink @post.category}}
       </div>
 
-      {{#if @post.user}}
+      {{#if @user}}
         <div class="post-member-info names">
           <span class="name">{{this.posterName}}</span>
 
-          {{#if @post.user.title}}
-            <span class="user-title">{{@post.user.title}}</span>
+          {{#if @user.title}}
+            <span class="user-title">{{@user.user_title}}</span>
           {{/if}}
 
           <PluginOutlet
             @name="post-list-additional-member-info"
-            @outletArgs={{hash user=@post.user}}
+            @outletArgs={{hash user=@user}}
           />
 
           {{!
-                Deprecated Outlet:
-                Please use: "post-list-additional-member-info" instead
-              }}
+            Deprecated Outlet:
+            Please use: "post-list-additional-member-info" instead
+          }}
           <PluginOutlet
             @name="group-post-additional-member-info"
-            @outletArgs={{hash user=@post.user}}
+            @outletArgs={{hash user=@user}}
           />
         </div>
       {{/if}}

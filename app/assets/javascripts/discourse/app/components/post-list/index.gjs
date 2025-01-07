@@ -74,7 +74,11 @@ export default class PostList extends Component {
             @post={{post}}
             @additionalItemClasses={{@additionalItemClasses}}
             @titleAriaLabel={{@titleAriaLabel}}
-          />
+          >
+            <:belowPostItem>
+              {{yield to="belowPostItem"}}
+            </:belowPostItem>
+          </PostListItem>
         {{else}}
           <div class="post-list__empty-text">{{this.emptyText}}</div>
         {{/each}}

@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import DButton from "discourse/components/d-button";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
@@ -23,6 +25,17 @@ export default class PostListItem extends Component {
     }
   }
 
+  get user() {
+    return {
+      id: this.args.post.user_id,
+      name: this.args.post.name,
+      username: this.args.post.username,
+      avatar_template: this.args.post.avatar_template,
+      title: this.args.post.user_title,
+      primary_group_name: this.args.post.primary_group_name,
+    };
+  }
+
   <template>
     <div
       class="post-list-item
@@ -34,12 +47,12 @@ export default class PostListItem extends Component {
     >
       <div class="post-list-item__header info">
         <a
-          href={{userPath @post.user.username}}
-          data-user-card={{@post.user.username}}
+          href={{userPath this.user.username}}
+          data-user-card={{this.user.username}}
           class="avatar-link"
         >
           {{avatar
-            @post.user
+            this.user
             imageSize="large"
             extraClasses="actor"
             ignoreTitle="true"
@@ -49,6 +62,7 @@ export default class PostListItem extends Component {
         <PostListItemDetails
           @post={{@post}}
           @titleAriaLabel={{@titleAriaLabel}}
+          @user={{this.user}}
         />
         <ExpandPost @item={{@post}} />
         <div class="time">{{formatDate @post.created_at leaveAgo="true"}}</div>
@@ -61,6 +75,8 @@ export default class PostListItem extends Component {
           {{htmlSafe @post.excerpt}}
         {{/if}}
       </div>
+
+      {{yield to="belowPostItem"}}
     </div>
   </template>
 }
