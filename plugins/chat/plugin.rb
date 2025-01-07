@@ -512,6 +512,10 @@ after_initialize do
   # When we eventually allow secure_uploads in chat, this will need to be
   # removed. Depending on the channel, uploads may end up being secure.
   UploadSecurity.register_custom_public_type("chat-composer")
+
+  if Rails.env.local?
+    DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  end
 end
 
 if Rails.env == "test"

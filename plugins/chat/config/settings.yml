@@ -12,6 +12,7 @@ chat:
     mandatory_values: "1|2" # @admins, @moderators
     allow_any: false
     refresh: true
+    area: "group_permissions"
   chat_threads_enabled:
     client: true
     default: false
@@ -101,13 +102,14 @@ chat:
     allow_any: false
     refresh: true
     validator: "Chat::DirectMessageEnabledGroupsValidator"
+    area: "group_permissions"
   chat_message_flag_allowed_groups:
     default: "1|2|11" # @admins, @moderators, @trust_level_1
     mandatory_values: "1|2" # @admins, @moderators
     type: group_list
     allow_any: false
     refresh: true
-    area: "flags"
+    area: "flags|group_permissions"
   max_mentions_per_chat_message:
     client: true
     type: integer
@@ -123,6 +125,7 @@ chat:
     default: "never"
     type: enum
     enum: "Chat::SeparateSidebarModeSiteSetting"
+    area: "navigation"
   chat_editing_grace_period:
     client: true
     type: integer

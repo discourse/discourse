@@ -817,14 +817,12 @@
   padding-left: 18px;
 }
 
-.admin-permalink-item {
+.admin-user_field-item,
+.backup-item-row,
+.admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
     border-top: 1px solid var(--primary-low);
-    color: var(--danger);
-    svg {
-      color: var(--danger);
-    }
   }
 }
 
@@ -897,26 +895,17 @@
   }
 }
 
-.embedding-secondary {
-  h3 {
-    margin: 1em 0;
-  }
-  margin-bottom: 2em;
-  .embed-setting {
-    input[type="text"] {
-      width: 50%;
+.admin-embedding {
+  .admin-embeddable-host-item__delete {
+    &:hover {
+      svg.d-icon {
+        color: var(--primary-medium);
+      }
     }
-    margin: 0.75em 0;
+    svg.d-icon {
+      color: var(--primary-low-mid);
+    }
   }
-  p.description {
-    color: var(--primary-medium);
-    margin-bottom: 1em;
-    max-width: 700px;
-  }
-}
-
-.embedding td input {
-  margin-bottom: 0;
 }
 
 .user-fields {

@@ -68,12 +68,12 @@
                     class="btn-small admin-permalink-item__edit"
                     @route="adminPermalinks.edit"
                     @routeModels={{pl}}
-                    @label="admin.config_areas.flags.edit"
+                    @label="admin.config_areas.permalinks.edit"
                   />
 
                   <DMenu
                     @identifier="permalink-menu"
-                    @title={{i18n "admin.permalinks.more_options"}}
+                    @title={{i18n "admin.permalink.more_options"}}
                     @icon="ellipsis-vertical"
                     @onRegisterApi={{this.onRegisterApi}}
                   >
@@ -83,8 +83,8 @@
                           <DButton
                             @action={{fn this.destroyRecord pl}}
                             @icon="trash-can"
-                            class="btn-transparent admin-permalink-item__delete"
-                            @label="admin.config_areas.flags.delete"
+                            class="btn-transparent btn-danger admin-permalink-item__delete"
+                            @label="admin.config_areas.permalinks.delete"
                           />
                         </dropdown.item>
                       </DropdownMenu>

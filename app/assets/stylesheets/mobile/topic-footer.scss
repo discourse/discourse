@@ -1,8 +1,14 @@
-.container.posts .topic-navigation {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.container.posts {
+  grid-template-areas: "posts";
+  .topic-navigation {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    grid-area: posts;
+    grid-row: 3;
+  }
 }
+
 html:not(.anon) #topic-footer-buttons {
   .topic-footer-main-buttons {
     width: 100%;

@@ -29,20 +29,6 @@
         padding-left: 1.4em;
       }
     }
-
-    a {
-      color: var(--primary-medium);
-
-      &.active {
-        color: var(--primary);
-        font-weight: bold;
-        background-color: transparent;
-
-        &:after {
-          display: none;
-        }
-      }
-    }
   }
 
   .select-kit + .messages-nav {

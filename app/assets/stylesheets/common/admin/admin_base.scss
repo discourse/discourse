@@ -472,7 +472,9 @@ $mobile-breakpoint: 700px;
         .count {
           font-weight: bold;
           margin-left: 0.25em;
-          color: var(--danger);
+          &.--nonzero {
+            color: var(--danger);
+          }
         }
       }
     }
@@ -778,12 +780,6 @@ $mobile-breakpoint: 700px;
 
     a.active {
       color: var(--primary);
-      background-color: var(--d-sidebar-admin-background);
-      font-weight: 700;
-
-      &::after {
-        display: none; // Hides the arrow
-      }
     }
   }
 
@@ -1141,7 +1137,6 @@ a.inline-editable-field {
 @import "common/admin/badges";
 @import "common/admin/emails";
 @import "common/admin/flags";
-@import "common/admin/user_fields";
 @import "common/admin/json_schema_editor";
 @import "common/admin/schema_field";
 @import "common/admin/staff_logs";
