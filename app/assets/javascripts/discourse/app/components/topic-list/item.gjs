@@ -35,7 +35,8 @@ export default class Item extends Component {
       next(() => this.historyStore.delete("lastTopicIdViewed"));
 
       if (this.shouldFocusLastVisited) {
-        element.querySelector(".main-link .title")?.focus();
+        // Using next() so it always runs after clean-dom
+        next(() => element.querySelector(".main-link .title")?.focus());
       }
     } else if (this.args.topic.get("highlight")) {
       // highlight new topics that have been loaded from the server or the one we just created
