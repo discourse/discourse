@@ -238,9 +238,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_rate_limits",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["rate_limits"],
-        query: { filter: "" },
+        route: "adminConfig.rate-limits.settings",
         label: "admin.advanced.sidebar_link.rate_limits",
         icon: "rocket",
       },
