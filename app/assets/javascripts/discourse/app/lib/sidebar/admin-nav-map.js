@@ -175,9 +175,7 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_security",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["security"],
-        query: { filter: "" },
+        route: "adminConfig.security.settings",
         label: "admin.security.sidebar_link.security",
         icon: "lock",
       },

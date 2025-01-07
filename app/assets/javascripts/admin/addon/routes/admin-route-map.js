@@ -286,6 +286,9 @@ export default function () {
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("security", function () {
+          this.route("settings", { path: "/" });
+        });
       }
     );
 

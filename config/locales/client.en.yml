@@ -5137,6 +5137,9 @@ en:
         font_style:
           title: "Font style"
           header_description: "Customize the font styles used by your themes."
+        legal:
+          title: "Legal"
+          header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."
         login_and_authentication:
           title: "Login and authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more."
@@ -5152,9 +5155,9 @@ en:
         search:
           title: "Search"
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages."
-        legal:
-          title: "Legal"
-          header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."
+        security:
+          title: "Security"
+          header_description: "Configure security settings, including two-factor authentication, moderator priviledges, and content security policies."
         trust_levels:
           title: "Trust levels"
           header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum."
