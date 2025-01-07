@@ -241,6 +241,11 @@ export default function () {
             path: "/",
           });
         });
+        this.route("experimental", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route(
           "groupPermissions",
           { path: "/group-permissions" },
