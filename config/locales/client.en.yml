@@ -5136,7 +5136,7 @@ en:
       config:
         developer:
           title: "Developer"
-          header_description: "Developer settings to help with development and debugging"
+          header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
         experimental:
           title: "Experimental"
           header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
