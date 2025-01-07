@@ -190,6 +190,6 @@ export default class MoveToTopic extends Component {
 
   @action
   newTopicSelected(topic) {
-    this.selectedTopic = topic.id;
+    this.selectedTopic = topic;
   }
 }
