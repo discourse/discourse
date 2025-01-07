@@ -134,7 +134,8 @@ export default class Item extends Component {
   click(e) {
     if (
       e.target.classList.contains("raw-topic-link") ||
-      e.target.classList.contains("post-activity")
+      e.target.classList.contains("post-activity") ||
+      e.target.classList.contains("badge-posts")
     ) {
       if (wantsNewWindow(e)) {
         return;
@@ -164,7 +165,11 @@ export default class Item extends Component {
 
   @action
   keyDown(e) {
-    if (e.key === "Enter" && e.target.classList.contains("post-activity")) {
+    if (
+      e.key === "Enter" &&
+      (e.target.classList.contains("post-activity") ||
+        e.target.classList.contains("badge-posts"))
+    ) {
       e.preventDefault();
       this.navigateToTopic(this.args.topic, e.target.href);
     }
