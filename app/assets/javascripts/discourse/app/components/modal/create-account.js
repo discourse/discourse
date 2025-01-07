@@ -9,9 +9,9 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import NameValidationHelper from "discourse/lib/name-validation-helper";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
@@ -24,7 +24,6 @@ import { i18n } from "discourse-i18n";
 export default class CreateAccount extends Component.extend(
   PasswordValidation,
   UsernameValidation,
-  NameValidation,
   UserFieldsValidation
 ) {
   @service site;
@@ -41,6 +40,7 @@ export default class CreateAccount extends Component.extend(
   maskPassword = true;
   passwordValidationVisible = false;
   emailValidationVisible = false;
+  nameValidationHelper = new NameValidationHelper(this);
 
   @notEmpty("model.authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -52,6 +52,8 @@ export default class CreateAccount extends Component.extend(
   @alias("model.accountUsername") accountUsername;
   // For NameValidation mixin
   @alias("model.accountName") accountName;
+  @alias("nameValidationHelper.nameTitle") nameTitle;
+  @alias("nameValidationHelper.nameValidation") nameValidation;
 
   init() {
     super.init(...arguments);

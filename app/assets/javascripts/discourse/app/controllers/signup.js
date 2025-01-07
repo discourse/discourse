@@ -1,7 +1,7 @@
 import { A } from "@ember/array";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
+import { alias, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -9,9 +9,9 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import NameValidationHelper from "discourse/lib/name-validation-helper";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
@@ -24,7 +24,6 @@ import { i18n } from "discourse-i18n";
 export default class SignupPageController extends Controller.extend(
   PasswordValidation,
   UsernameValidation,
-  NameValidation,
   UserFieldsValidation
 ) {
   @service site;
@@ -41,10 +40,13 @@ export default class SignupPageController extends Controller.extend(
   maskPassword = true;
   passwordValidationVisible = false;
   emailValidationVisible = false;
+  nameValidationHelper = new NameValidationHelper(this);
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
+  @alias("nameValidationHelper.nameTitle") nameTitle;
+  @alias("nameValidationHelper.nameValidation") nameValidation;
 
   init() {
     super.init(...arguments);
