@@ -2020,6 +2020,9 @@ el:
       categories_boxes: "Κουτιά με υποκατηγορίες"
       categories_boxes_with_topics: "Κουτιά με προτεινόμενα θέματα"
       subcategories_with_featured_topics: "Υποκατηγορίες με Προτεινόμενα Θέματα"
+    full_name_requirement:
+      required_at_signup: "Απαιτείται"
+      optional_at_signup: "Προεραιτικό"
     shortcut_modifier_key:
       shift: " Shift"
       ctrl: "Ctrl"
@@ -3953,8 +3956,30 @@ el:
         sidebar_link:
           all: "Όλες οι αναφορές"
       config:
+        developer:
+          title: "Developer"
+        experimental:
+          title: "Πειραματικό"
+        files:
+          title: "Αρχεία"
+        legal:
+          title: "Νομικά"
+        navigation:
+          title: "Πλοήγηση"
         notifications:
           title: "Ειδοποιήσεις"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Άλλα"
+        search:
+          title: "Αναζήτηση"
+        security:
+          title: "Ασφάλεια"
+        spam:
+          title: "Ανεπιθύμητα"
+        user_api:
+          title: "User API"
       dashboard:
         title: "Πίνακας ελέγχου"
         last_updated: "Το ταμπλό ενημερώθηκε:"
@@ -4278,6 +4303,14 @@ el:
             invalid_applies_to: "Απαιτείται"
             topic: "θέματα"
             post: "αναρτήσεις"
+        permalinks:
+          edit: "Επεξεργασία"
+          delete: "Σβήσιμο"
+        embeddable_host:
+          edit: "Επεξεργασία"
+          delete: "Σβήσιμο"
+          more_options:
+            title: "Περισσότερες επιλογές"
         look_and_feel:
           themes:
             title: "Θέματα"
@@ -4350,7 +4383,7 @@ el:
             title: "Αποστολή email με σύνδεσμο λήψης"
             alert: "Σας στάλθηκε με email ένας σύνδεσμος για να κάνετε λήψη αυτού του αντιγράφου ασφαλείας"
           destroy:
-            title: "Διαγραφή αντιγράφου ασφαλείας"
+            title: "Σβήσιμο"
             confirm: "Είσαι σίγουρος ότι θέλεις να σβήσεις αυτό το αντίγραφο ασφαλείας;"
           restore:
             label: "Επαναφορά"
@@ -5364,16 +5397,11 @@ el:
         settings: "Ρυθμίσεις"
       embedding:
         get_started: "Εάν θέλεις να ενσωματώσεις το Discourse σε μια άλλη ιστοσελίδα, ξεκίνα με το να προσθέσεις το host του."
+        delete: "Σβήσιμο"
         confirm_delete: "Είσαι βέβαιος πως θέλεις να διαγράψεις το host;"
         title: "Ενσωμάτωση"
-        host: "Επιτρεπόμενα hosts"
-        allowed_paths: "Λίστα επιτρεπόμενων διαδρομών"
-        edit: "επεξεργασία"
-        category: "Ανάρτηση στην Κατηγορία"
-        add_host: "Προσθήκη host"
-        settings: "Ρυθμίσεις Ενσωμάτωσης"
-        crawling_settings: "Ρυθμίσεις Crawler "
-        crawling_description: "Όταν η ιστοσελίδα δημιουργεί θέματα για τις αναρτήσεις σου, αν δεν υπάρχει RSS/ATOM τροφοδότηση θα προσπαθήσει να αναλύσει το περιεχόμενο της HTML σου. Κάποιες φορές μπορεί να αποτελεί πρόκληση το να εξάγει το περιεχόμενο σου, έτσι σου παρέχουμε την ικανότητα να προσδιορίσεις τους κανόνες CSS για να κάνεις την εξαγωγή ευκολότερη."
+        edit: "Επεξεργασία"
+        crawlers_description: "Όταν η ιστοσελίδα δημιουργεί θέματα για τις αναρτήσεις σου, αν δεν υπάρχει RSS/ATOM τροφοδότηση θα προσπαθήσει να αναλύσει το περιεχόμενο της HTML σου. Κάποιες φορές μπορεί να αποτελεί πρόκληση το να εξάγει το περιεχόμενο σου, έτσι σου παρέχουμε την ικανότητα να προσδιορίσεις τους κανόνες CSS για να κάνεις την εξαγωγή ευκολότερη."
         embed_by_username: "Όνομα χρήστη για δημιουργία θέματος"
         embed_post_limit: "Μέγιστος αριθμός αναρτήσεων για συγχώνευση"
         embed_title_scrubber: "Regular expression που χρησιμοποιείται για την λήψη των τίτλων των αναρτήσεων"
@@ -5382,7 +5410,11 @@ el:
         allowed_embed_selectors: "CSS selector για στοιχεία που επιτρέπονται στις ενσωματώσεις"
         blocked_embed_selectors: "CSS selector για στοιχεία που έχουν αφαιρεθεί από τις ενσωματώσεις"
         allowed_embed_classnames: "Επιτρεπόμενα CSS class names"
-        save: "Αποθήκευση των ρυθμίσεων Embedding "
+        save: "Αποθήκευση"
+        host_form:
+          save: "Αποθήκευση"
+        nav:
+          settings: "Ρυθμίσεις"
       permalink:
         title: "Permalinks"
         description: "Ανακατευθύνσεις προς εφαρμογή σε διευθύνσεις URL που δεν είναι γνωστές στο forum."

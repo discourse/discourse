@@ -2460,7 +2460,8 @@ pl_PL:
       categories_boxes_with_topics: "Pudełka z polecanymi tematami"
       subcategories_with_featured_topics: "Podkategorie z polecanymi tematami"
     full_name_requirement:
-      required_at_signup: "Wymagane przy rejestracji"
+      required_at_signup: "Wymagane"
+      optional_at_signup: "Opcjonalnie"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -5139,8 +5140,32 @@ pl_PL:
         sidebar_link:
           all: "Wszystkie zgłoszenia"
       config:
+        developer:
+          title: "Deweloperskie"
+        experimental:
+          title: "Eksperymentalne"
+        files:
+          title: "Pliki"
+        legal:
+          title: "Prawne"
+        logo:
+          title: "Logo witryny"
+        navigation:
+          title: "Nawigacja"
         notifications:
           title: "Powiadomienia"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Inne"
+        search:
+          title: "Szukaj"
+        security:
+          title: "Bezpieczeństwo"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API użytkownika"
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
@@ -5714,6 +5739,14 @@ pl_PL:
             title: "Więcej opcji"
             move_up: "Przenieś wyżej"
             move_down: "Przenieś niżej"
+        permalinks:
+          edit: "Edytuj"
+          delete: "Usuń"
+        embeddable_host:
+          edit: "Edytuj"
+          delete: "Usuń"
+          more_options:
+            title: "Więcej opcji"
         look_and_feel:
           title: "Wygląd i odczucia"
           themes:
@@ -5816,7 +5849,7 @@ pl_PL:
             title: "Wyślij e-mail z linkiem do pobrania"
             alert: "Link do pobrania tej kopii zapasowej został wysłany do ciebie emailem"
           destroy:
-            title: "Usuń kopię zapasową"
+            title: "Usuń"
             confirm: "Czy na pewno chcesz zniszczyć tę kopię zapasową?"
           restore:
             is_disabled: "Przywracanie jest obecnie wyłączone. Aby je włączyć, przejdź do <a href='%{url}'>ustawień witryny</a>."
@@ -7230,6 +7263,7 @@ pl_PL:
         settings: "Ustawienia"
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
+        delete: "Usuń"
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
         sample: |
           <p>Wklej następujący kod HTML do swojej witryny, aby utworzyć i osadzić tematy Discourse. Zastąp <b>EMBED_URL</b> kanonicznym adresem URL strony, na której chcesz go osadzić.</p>
@@ -7238,16 +7272,9 @@ pl_PL:
 
           <p>Zastąp <b>DISCOURSE_USERNAME</b> nazwą użytkownika Discourse autora, który powinien utworzyć temat. Discourse automatycznie wyszuka użytkownika według atrybutu <code>content</code> tagów <code>&lt;meta&gt;</code> z atrybutem <code>name</code> ustawionym na <code>discourse-username</code> lub <code>autor</code>. Parametr <code>discourseUserName</code> został wycofany i zostanie usunięty w Discourse 3.2.</p>
         title: "Osadzanie"
-        host: "Dozwolone hosty"
-        allowed_paths: "Lista dozwolonych ścieżek"
-        edit: "edytuj"
-        category: "Publikuj w kategorii"
+        edit: "Edytuj"
         tags: "Tagi tematu"
-        post_author: "Autor postu — domyślnie %{author}"
-        add_host: "Dodaj host"
-        settings: "Ustawienia osadzania"
-        crawling_settings: "Ustawienia crawlera"
-        crawling_description: "Gdy Discourse tworzy tematy reprezentujące twoje wpisy, a kanał RSS/ATOM nie został podany, treść będzie pobierana poprzez parsowanie HTML. Proces ten może okazać się trudny dlatego umożliwiamy podanie dodatkowych reguł CSS, które usprawniają proces parsowania."
+        crawlers_description: "Gdy Discourse tworzy tematy reprezentujące twoje wpisy, a kanał RSS/ATOM nie został podany, treść będzie pobierana poprzez parsowanie HTML. Proces ten może okazać się trudny dlatego umożliwiamy podanie dodatkowych reguł CSS, które usprawniają proces parsowania."
         embed_by_username: "Użytkownik tworzący tematy"
         embed_post_limit: "Maksymalna ilość osadzanych wpisów "
         embed_title_scrubber: "Wyrażenie regularne używane do czyszczenia tytułu postów"
@@ -7257,6 +7284,11 @@ pl_PL:
         blocked_embed_selectors: "Selektor CSS dla elementów, które są usuwane z osadzonych"
         allowed_embed_classnames: "Dozwolone nazwy klas CSS"
         save: "Zapisz"
+        host_form:
+          save: "Zapisz"
+        nav:
+          settings: "Ustawienia"
+          crawlers: "Botów indeksujących"
       permalink:
         title: "Permalinki"
         description: "Przekierowania ubiegania się o adresy URL nieznane na forum."

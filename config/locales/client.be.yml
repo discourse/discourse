@@ -849,6 +849,8 @@ be:
       categories_with_featured_topics: "Катэгорыі з Выбранымі Тэмамі"
       categories_and_latest_topics: "Катэгорыі і Апошнія тэмы"
       categories_and_top_topics: "Катэгорыі і асноўныя тэмы"
+    full_name_requirement:
+      required_at_signup: "абавязковыя"
     select_kit:
       delete_item: "Выдаліць %{name}"
       components:
@@ -1506,8 +1508,24 @@ be:
       reports:
         sidebar_title: "Справаздачы"
       config:
+        developer:
+          title: "для распрацоўшчыкаў"
+        files:
+          title: "файлы"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "рух"
         notifications:
           title: "Натыфікацыі"
+        other:
+          title: "іншае"
+        search:
+          title: "Пошук"
+        security:
+          title: "Бяспека"
+        spam:
+          title: "Спам"
       dashboard:
         title: "Галоўная панэль"
         last_updated: "Адноўлена:"
@@ -1671,6 +1689,12 @@ be:
             invalid_applies_to: "абавязковыя"
             topic: "тэмы"
             post: "паведамленняў"
+        permalinks:
+          edit: "рэдагаваць"
+          delete: "выдаляць"
+        embeddable_host:
+          edit: "рэдагаваць"
+          delete: "выдаляць"
         user_fields:
           type: "Тып"
           delete: "выдаляць"
@@ -1719,7 +1743,7 @@ be:
           download:
             label: "спампаваць"
           destroy:
-            title: "Remove the backup"
+            title: "выдаляць"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             label: "Restore"
@@ -2230,16 +2254,20 @@ be:
         image: "Выява"
         settings: "Налады"
       embedding:
+        delete: "выдаляць"
         confirm_delete: "Вы ўпэўненыя, што жадаеце выдаліць гэты хост?"
         title: "узаемадзеянне"
-        host: "дазволеныя Госты"
-        edit: "правіць"
-        category: "Паведамленне ў Катэгорыю"
-        add_host: "дадаць Хост"
+        edit: "рэдагаваць"
         embed_by_username: "Імя карыстальніка для стварэння тэмы"
         embed_post_limit: "Максімальную колькасць паведамленняў для ўстаўкі"
         embed_truncate: "Абрэзаць укаранёныя паведамленні"
         allowed_embed_classnames: "Дазволеныя імёны класаў CSS"
+        save: "Захаваць"
+        host_form:
+          save: "Захаваць"
+        nav:
+          settings: "Налады"
+          crawlers: "Краўлеры пошукавых сістэм"
       permalink:
         title: "Сталыя спасылкі"
         url: "URL спасылка"

@@ -1808,7 +1808,8 @@ vi:
       categories_boxes_with_topics: "Hộp có Chủ đề Nổi bật"
       subcategories_with_featured_topics: "Danh mục con với các chủ đề nổi bật"
     full_name_requirement:
-      required_at_signup: "Bắt buộc lúc đăng ký"
+      required_at_signup: "Bắt buộc"
+      optional_at_signup: "Tùy chọn"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3678,8 +3679,28 @@ vi:
         sidebar_link:
           all: "Tất cả các báo cáo"
       config:
+        developer:
+          title: "Nhà phát triển"
+        files:
+          title: "Tập tin"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Điều hướng"
         notifications:
           title: "Thông báo"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Khác"
+        search:
+          title: "Tìm kiếm"
+        security:
+          title: "Bảo mật"
+        spam:
+          title: "Rác"
+        user_api:
+          title: "API người dùng"
       dashboard:
         title: "Bảng điều khiển"
         last_updated: "Đã cập nhật trang tổng quan:"
@@ -4071,6 +4092,12 @@ vi:
             invalid_applies_to: "Bắt buộc"
             topic: "các chủ đề"
             post: "bài viết"
+        permalinks:
+          edit: "Sửa"
+          delete: "Xóa"
+        embeddable_host:
+          edit: "Sửa"
+          delete: "Xóa"
         look_and_feel:
           themes:
             title: "Themes"
@@ -4145,7 +4172,7 @@ vi:
             title: "Gửi email với liên kết tải xuống"
             alert: "Một liên kết để tải xuống bản sao lưu này đã được gửi qua email cho bạn"
           destroy:
-            title: "Xóa bản sao lưu này"
+            title: "Xóa"
             confirm: "Bạn muốn hủy bản sao lưu này?"
           restore:
             label: "Khôi phục"
@@ -5203,16 +5230,11 @@ vi:
         settings: "Cài đặt"
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
+        delete: "Xóa"
         confirm_delete: "Bạn muốn xóa host này?"
         title: "Nhúng"
-        host: "Cho phép Host"
-        allowed_paths: "Danh sách cho phép đường dẫn"
-        edit: "sửa"
-        category: "Đăng vào Danh mục"
-        add_host: "Thêm Host"
-        settings: "Thiết lập nhúng"
-        crawling_settings: "Cấu hình Crawler"
-        crawling_description: "Khi Discourse tạo chủ đề cho các bài viết của bạn, nếu không có RSS/ATOM thì hệ thống sẽ thử phân tích nội dung HTML. Đôi khi có thể gặp khó khăn khi trích xuất nội dung, vì vậy hệ thống cung cấp khả năng chỉ định quy tắc CSS để giúp quá trình trích xuất dễ dàng hơn."
+        edit: "Sửa"
+        crawlers_description: "Khi Discourse tạo chủ đề cho các bài viết của bạn, nếu không có RSS/ATOM thì hệ thống sẽ thử phân tích nội dung HTML. Đôi khi có thể gặp khó khăn khi trích xuất nội dung, vì vậy hệ thống cung cấp khả năng chỉ định quy tắc CSS để giúp quá trình trích xuất dễ dàng hơn."
         embed_by_username: "Tên thành viên để tạo chủ đề"
         embed_post_limit: "Số lượng tối đa bài viết được nhúng"
         embed_title_scrubber: "Biểu thức chính quy được sử dụng để xóa tiêu đề của bài đăng"
@@ -5221,7 +5243,12 @@ vi:
         allowed_embed_selectors: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng"
         blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Tên lớp CSS được phép"
-        save: "Lưu thiết lập nhúng"
+        save: "Lưu lại"
+        host_form:
+          save: "Lưu lại"
+        nav:
+          settings: "Cài đặt"
+          crawlers: "Trình thu thập thông tin"
       permalink:
         title: "Liên kết cố định"
         description: "Chuyển hướng để áp dụng cho các URL mà diễn đàn không biết."

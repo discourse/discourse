@@ -2347,6 +2347,9 @@ fa_IR:
       categories_boxes: "باکس هایی با زیر دسته بندی ها"
       categories_boxes_with_topics: "باکس هایی با مباحث ویژه"
       subcategories_with_featured_topics: "زیر دسته‌بندی‌هایی با موضوعات ویژه"
+    full_name_requirement:
+      required_at_signup: "مورد نیاز"
+      optional_at_signup: "اختیاری"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4553,8 +4556,32 @@ fa_IR:
         sidebar_link:
           all: "تمامی گزارشات"
       config:
+        developer:
+          title: "توسعه دهنده"
+        experimental:
+          title: "آزمایشی"
+        files:
+          title: "فایل ها"
+        legal:
+          title: "حقوقی"
+        logo:
+          title: "لوگوی سایت"
+        navigation:
+          title: "ناوبری"
         notifications:
           title: "اعلان‌ها"
+        onebox:
+          title: "جعبه‌ی پیوند"
+        other:
+          title: "دیگر"
+        search:
+          title: "جستجو"
+        security:
+          title: "امنیت"
+        spam:
+          title: "هرز‌نامه"
+        user_api:
+          title: "API کاربر"
       dashboard:
         title: "پیشخوان"
         last_updated: "داشبورد بروزرسانی شد:"
@@ -4853,6 +4880,14 @@ fa_IR:
             invalid_applies_to: "مورد نیاز"
             topic: "موضوعات"
             post: "فرسته‌ها"
+        permalinks:
+          edit: "ویرایش"
+          delete: "حذف"
+        embeddable_host:
+          edit: "ویرایش"
+          delete: "حذف"
+          more_options:
+            title: "گزینه های بیشتر"
         look_and_feel:
           themes:
             title: "قالب‌ها"
@@ -4927,7 +4962,7 @@ fa_IR:
             title: "ارسال ایمیل با لینک دانلود"
             alert: "لینک دانلود نسخه پشتیبان به ایمیل شما ارسال شد"
           destroy:
-            title: "پاک کردن پشتیبان"
+            title: "حذف"
             confirm: "آیا مطمئنید که می‌خواهید پشتیبان را از بین ببرید؟"
           restore:
             label: "بازیابی"
@@ -5749,15 +5784,11 @@ fa_IR:
         settings: "تنظیمات"
       embedding:
         get_started: "اگر مایل هستید که Discourse را بر روی یک وبسایت دیگر جاساز کنید, با اضافه کردن میزبان یا همان هاست آن وبسایت شروع کنید."
+        delete: "حذف"
         confirm_delete: "آیا مطمئن هستید که میخواهید آن میزبان را حذف کنید؟"
         title: "جاسازی"
-        host: "میزبان های مجاز"
         edit: "ویرایش"
-        category: "ارسال به دسته بندی"
-        add_host: "اضافه کردن میزبان"
-        settings: "تنظیمات جاسازی"
-        crawling_settings: "تنظیمات خزنده"
-        crawling_description: "وقتی که Discourse موضوعاتی برای ارسال های شما ایجاد میکند, اگر هیچ خوراک RSS/ATOM موجود نبود سعی میکند که محتوای شما را از HTML تان تجزیه کند. گاهی اوقات استخراج محتوای شما سخت است, برای همین ما قابلیت تعیین قوانین CSS را میدهیم که استخراج را آسان تر میکند."
+        crawlers_description: "وقتی که Discourse موضوعاتی برای ارسال های شما ایجاد میکند, اگر هیچ خوراک RSS/ATOM موجود نبود سعی میکند که محتوای شما را از HTML تان تجزیه کند. گاهی اوقات استخراج محتوای شما سخت است, برای همین ما قابلیت تعیین قوانین CSS را میدهیم که استخراج را آسان تر میکند."
         embed_by_username: "نام‌کاربری برای ایجاد موضوع"
         embed_post_limit: "حداکثر تعداد نوشته‌هایی که میتوان جاساز کرد"
         embed_title_scrubber: "regular expression‌ی که برای بهینه‌سازی عنوان نوشته استفاده می‌شود"
@@ -5765,7 +5796,11 @@ fa_IR:
         allowed_embed_selectors: "انتخاب کننده CSS برای المان هایی که اجازه دارند جاسازی شوند"
         blocked_embed_selectors: "انتخاب کننده CSS برای المان هایی که از جاسازی پاک شده اند"
         allowed_embed_classnames: " دسترسی به کلاس های CSS"
-        save: "ذخیره تنظیمات کدهای جاساز"
+        save: "ذخیره"
+        host_form:
+          save: "ذخیره"
+        nav:
+          settings: "تنظیمات"
       permalink:
         title: " پیوند دائمی"
         url: "آدرس"

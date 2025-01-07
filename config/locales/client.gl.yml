@@ -1711,7 +1711,8 @@ gl:
       categories_boxes: "Caixas con subcategorías"
       categories_boxes_with_topics: "Caixas con temas destacados"
     full_name_requirement:
-      required_at_signup: "Requirido para rexistrarse"
+      required_at_signup: "Obrigatorio"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -3406,8 +3407,28 @@ gl:
         sidebar_link:
           all: "Todos os informes"
       config:
+        developer:
+          title: "Desenvolvedor"
+        files:
+          title: "Ficheiros"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navegación"
         notifications:
           title: "Notificacións"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Outro"
+        search:
+          title: "Buscar"
+        security:
+          title: "Seguranza"
+        spam:
+          title: "Lixo"
+        user_api:
+          title: "API de usuario"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -3734,6 +3755,12 @@ gl:
             invalid_applies_to: "Obrigatorio"
             topic: "temas"
             post: "publicacións"
+        permalinks:
+          edit: "Editar"
+          delete: "Eliminar"
+        embeddable_host:
+          edit: "Editar"
+          delete: "Eliminar"
         look_and_feel:
           themes:
             title: "Temas"
@@ -3801,7 +3828,7 @@ gl:
             title: "Enviar correo electrónico coa ligazón de descarga"
             alert: "Recibiu un correo electrónico coa ligazón para descargar esta copia de seguranza"
           destroy:
-            title: "Eliminar a copia de seguranza"
+            title: "Eliminar"
             confirm: "Confirma a destrución desta copia de seguranza?"
           restore:
             label: "Restabelecer"
@@ -4854,16 +4881,11 @@ gl:
         settings: "Configuración"
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
+        delete: "Eliminar"
         confirm_delete: "Confirma a eliminación deste servidor?"
         title: "Incorporando"
-        host: "Servidores permitidos"
-        allowed_paths: "Lista de camiños admitidos"
-        edit: "editar"
-        category: "Publicación na categoría"
-        add_host: "Engadir servidor"
-        settings: "Configuración da incorporación"
-        crawling_settings: "Configuración do extractor"
-        crawling_description: "Cando o Discourse crea temas para as súas publicacións, se non existe unha fonte RSS/ATOM, tentará procesar o contido do seu HTML. Ás veces pode ser difícil extraer o contido, por iso dámoslle a posibilidade de especificar as regras do CSS para facilitar a extracción."
+        edit: "Editar"
+        crawlers_description: "Cando o Discourse crea temas para as súas publicacións, se non existe unha fonte RSS/ATOM, tentará procesar o contido do seu HTML. Ás veces pode ser difícil extraer o contido, por iso dámoslle a posibilidade de especificar as regras do CSS para facilitar a extracción."
         embed_by_username: "Nome do usuario para crear o tema"
         embed_post_limit: "Número máximo de publicacións que incorporar"
         embed_title_scrubber: "Expresión regular empregada para limpar o título das publicacións"
@@ -4872,7 +4894,12 @@ gl:
         allowed_embed_selectors: "Selector CSS para elementos permitidos nas incorporacións"
         blocked_embed_selectors: "Selector CSS para elementos retirados das incorporacións"
         allowed_embed_classnames: "Nomes permitidos de clases CSS"
-        save: "Gardar a configuración da incorporación"
+        save: "Gardar"
+        host_form:
+          save: "Gardar"
+        nav:
+          settings: "Configuración"
+          crawlers: "Rastrexadores"
       permalink:
         title: "Ligazóns permanentes"
         description: "Redireccións que se lle aplicarán a URL non coñecidos polo foro."

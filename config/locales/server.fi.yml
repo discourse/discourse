@@ -2435,7 +2435,6 @@ fi:
     enable_experimental_lightbox: "Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     glimmer_post_menu_mode: "Hallitse, käytetäänkö uutta glimmer-viestivalikkouudistusta. \"Auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     glimmer_post_menu_groups: "Ota käyttöön uusi glimmer-viestivalikkouudistus \"auto\"-tilassa määritetyille käyttäjäryhmille. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
-    experimental_form_templates: "Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     admin_sidebar_enabled_groups: "Ota käyttöön sivupalkkinavigointi ylläpitäjän käyttöliittymässä määritetyille ryhmille, mikä korvaa ylätason ylläpitäjän navigointipainikkeet."
     lazy_load_categories_groups: "Käytä laiskaa latausta alueen tietoihin vain näiden ryhmien käyttäjille. Tämä parantaa suorituskykyä sivustoilla, joilla on useita alueita."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."

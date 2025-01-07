@@ -2209,7 +2209,8 @@ hr:
       categories_boxes_with_topics: "Kutije s istaknutim temama"
       subcategories_with_featured_topics: "Potkategorije s istaknutim temama"
     full_name_requirement:
-      required_at_signup: "Potrebno pri registraciji"
+      required_at_signup: "Potrebno"
+      optional_at_signup: "Neobvezno"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4467,8 +4468,28 @@ hr:
         sidebar_link:
           all: "Sva izvješća"
       config:
+        developer:
+          title: "Programer"
+        files:
+          title: "Datoteke"
+        legal:
+          title: "Legalno"
+        navigation:
+          title: "Navigacija"
         notifications:
           title: "Obavijest"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Ostalo"
+        search:
+          title: "Pretraživanje"
+        security:
+          title: "Sigurnost"
+        spam:
+          title: "Nepoželjno"
+        user_api:
+          title: "Korisnički API"
       new_features:
         title: "Što je novo?"
       dashboard:
@@ -4848,6 +4869,14 @@ hr:
             invalid_applies_to: "Potrebno"
             topic: "tema"
             post: "objave"
+        permalinks:
+          edit: "Uredi"
+          delete: "Pobriši"
+        embeddable_host:
+          edit: "Uredi"
+          delete: "Pobriši"
+          more_options:
+            title: "Više opcija"
         look_and_feel:
           themes:
             title: "Teme"
@@ -4921,7 +4950,7 @@ hr:
             title: "Pošaljite e-poštu s vezom za preuzimanje"
             alert: "Veza za preuzimanje ove sigurnosne kopije poslana vam je e-poštom"
           destroy:
-            title: "Ukloni kopiju"
+            title: "Pobriši"
             confirm: "Jeste li sigurni da želite uništiti ovu sigurnosnu kopiju?"
           restore:
             label: "Obnovi"
@@ -6060,16 +6089,11 @@ hr:
         settings: "Postavke"
       embedding:
         get_started: "Ako želite ugraditi Discourse na drugu web-stranicu, počnite dodavanjem njegovog hosta."
+        delete: "Pobriši"
         confirm_delete: "Jeste li sigurni da želite izbrisati tog hosta?"
         title: "Ugrađivanje"
-        host: "Dopušteni hostovi"
-        allowed_paths: "Dopuštane putanje"
-        edit: "izmijeni"
-        category: "Post u kategoriju"
-        add_host: "Dodaj host"
-        settings: "Postavke ugrađivanja"
-        crawling_settings: "Postavke alata za indeksiranje"
-        crawling_description: "Kada Discourse kreira teme za vaše postove, ako RSS/ATOM feed nije prisutan, pokušat će raščlaniti vaš sadržaj iz vašeg HTML-a. Ponekad može biti izazovno izdvojiti svoj sadržaj, pa nudimo mogućnost određivanja CSS pravila kako bismo olakšali ekstrakciju."
+        edit: "Uredi"
+        crawlers_description: "Kada Discourse kreira teme za vaše postove, ako RSS/ATOM feed nije prisutan, pokušat će raščlaniti vaš sadržaj iz vašeg HTML-a. Ponekad može biti izazovno izdvojiti svoj sadržaj, pa nudimo mogućnost određivanja CSS pravila kako bismo olakšali ekstrakciju."
         embed_by_username: "Korisničko ime za kreiranje teme"
         embed_post_limit: "Maksimalan broj postova za ugradnju"
         embed_title_scrubber: "Redoviti izraz koji se koristi za pročišćavanje naslova postova"
@@ -6078,7 +6102,11 @@ hr:
         allowed_embed_selectors: "CSS selektor za elemente koji su dopušteni u ugrađivanje"
         blocked_embed_selectors: "CSS selektor za elemente koji su uklonjeni iz ugrađivača"
         allowed_embed_classnames: "Dopušteni nazivi CSS klasa"
-        save: "Spremi postavke ugrađivanja"
+        save: "Spremi"
+        host_form:
+          save: "Spremi"
+        nav:
+          settings: "Postavke"
       permalink:
         title: "Poveznice"
         description: "Preusmjeravanja za prijavu za URL-ove koje forum ne zna."

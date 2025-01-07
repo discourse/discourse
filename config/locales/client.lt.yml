@@ -1866,7 +1866,8 @@ lt:
       categories_and_latest_topics: "Kategorijos su paskutinėmis temomis"
       categories_and_top_topics: "Kategorijos ir Top temos"
     full_name_requirement:
-      required_at_signup: "Privaloma per prisijungimą"
+      required_at_signup: "Privalomi"
+      optional_at_signup: "Pasirinktinai"
     shortcut_modifier_key:
       shift: "t"
       ctrl: "Ctrl"
@@ -3663,8 +3664,28 @@ lt:
         sidebar_link:
           all: "Visi pranešimai"
       config:
+        developer:
+          title: "Programuotojams"
+        files:
+          title: "Failai"
+        legal:
+          title: "Naudojimosi taisyklės"
+        navigation:
+          title: "Navigacija"
         notifications:
           title: "Pranešimai"
+        onebox:
+          title: "Laukelio nustatymai"
+        other:
+          title: "Kiti"
+        search:
+          title: "Paieška"
+        security:
+          title: "Apsauga"
+        spam:
+          title: "Šlamštas"
+        user_api:
+          title: "Nario API"
       dashboard:
         title: "Apžvalga"
         last_updated: "Informacijos suvestinė atnaujinta:"
@@ -3979,6 +4000,12 @@ lt:
             invalid_applies_to: "Privalomi"
             topic: "temos"
             post: "žinutės"
+        permalinks:
+          edit: "Redaguoti"
+          delete: "Pašalinti"
+        embeddable_host:
+          edit: "Redaguoti"
+          delete: "Pašalinti"
         look_and_feel:
           themes:
             title: "Temos"
@@ -4046,7 +4073,7 @@ lt:
             title: "Siųsti laišką su atsisiuntimo nuoroda"
             alert: "Šios atsarginės kopijos atsisiuntimo nuoroda jums buvo išsiųsta el. paštu"
           destroy:
-            title: "Ištrinti atsarginę kopiją"
+            title: "Pašalinti"
             confirm: "Ar tikrai norite ištrinti šią atsarginę kopiją?"
           restore:
             label: "Atkurti"
@@ -5047,15 +5074,11 @@ lt:
         settings: "Nustatymai"
       embedding:
         get_started: "Norėčiau pridėti Discourse prie kito puslapio. Pradėk tiesiog pridėdamas valdytoją."
+        delete: "Pašalinti"
         confirm_delete: "Ar tikrai nori ištrinti šį šeimininką?"
         title: "Įterpimai"
-        host: "Šeimininkai"
-        edit: "redaguoti"
-        category: "Rašyti Kategorijoje"
-        add_host: "Pridėti Šeimininką"
-        settings: "Įterpti Nustatymus"
-        crawling_settings: "Crawler Nustatymai"
-        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        edit: "Redaguoti"
+        crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
         embed_by_username: "Vartotojo vardas skirtas temų sukūrimui"
         embed_post_limit: "Maskimalus įterpiamų įrašų skaičius"
         embed_truncate: "Truncate the embedded posts"
@@ -5063,7 +5086,11 @@ lt:
         allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
         blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Leidžiamos CSS klasės"
-        save: "Išsaugoti Įterpimo Nustatymus"
+        save: "Išsaugoti"
+        host_form:
+          save: "Išsaugoti"
+        nav:
+          settings: "Nustatymai"
       permalink:
         title: "Laikinos Nuorodos"
         description: "Peradresavimai taikyti URL, kurių forumas nežino."

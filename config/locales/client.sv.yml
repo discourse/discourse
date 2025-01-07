@@ -2095,7 +2095,8 @@ sv:
       categories_boxes_with_topics: "Boxar med utvalda ämnen"
       subcategories_with_featured_topics: "Underkategorier med utvalda ämnen"
     full_name_requirement:
-      required_at_signup: "Krävs vid registrering"
+      required_at_signup: "Krävs"
+      optional_at_signup: "Valfritt"
     shortcut_modifier_key:
       shift: "Skift"
       ctrl: "Ctrl"
@@ -4403,8 +4404,30 @@ sv:
         sidebar_link:
           all: "Alla rapporter"
       config:
+        developer:
+          title: "Utvecklare"
+        files:
+          title: "Filer"
+        legal:
+          title: "Juridik"
+        logo:
+          title: "Webbplatsens logotyp"
+        navigation:
+          title: "Navigering"
         notifications:
           title: "Aviseringar"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Övrigt"
+        search:
+          title: "Sök"
+        security:
+          title: "Säkerhet"
+        spam:
+          title: "Skräppost"
+        user_api:
+          title: "Användar-API"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4876,6 +4899,12 @@ sv:
             topic: "ämnen"
             post: "inlägg"
             chat_message: "chattmeddelanden"
+        permalinks:
+          edit: "Redigera"
+          delete: "Radera"
+        embeddable_host:
+          edit: "Redigera"
+          delete: "Radera"
         look_and_feel:
           title: "Utseende och känsla"
           themes:
@@ -4959,7 +4988,7 @@ sv:
             title: "Skicka mail med nedladdningslänk"
             alert: "En länk för nedladdning av denna säkerhetskopia har skickats till dig via e-post"
           destroy:
-            title: "Ta bort säkerhetskopian"
+            title: "Radera"
             confirm: "Är du säker på att du vill förstöra denna säkerhetskopia?"
           restore:
             label: "Återställ"
@@ -6199,6 +6228,7 @@ sv:
         settings: "Inställningar"
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
+        delete: "Radera"
         confirm_delete: "Är du säker på att du vill ta bort värden?"
         sample: |
           <p>Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Ersätt <b>EMBED_URL</b> med den kanoniska webbadressen till sidan du bäddar in den på.</p>
@@ -6207,14 +6237,8 @@ sv:
 
           <p>Ersätt <b>DISCOURSE_USERNAME</b> med Discourse-användarnamnet för författaren som ska skapa ämnet. Discourse kommer automatiskt att söka efter användaren med <code>&lt;meta&gt;</code> taggarnas <code>innehåll</code> sattribut med <code>namn</code>attributet inställt på <code>discourse-användarnamn</code> eller <code>författare</code>. Parametern <code>discourseUserName</code> har fasats ut och kommer att tas bort i Discourse 3.2.</p>
         title: "Inbäddning"
-        host: "Tillåtna värdar"
-        allowed_paths: "Sökväg till vitlista"
-        edit: "ändra"
-        category: "Inlägg till kategori"
-        add_host: "Lägg till värd"
-        settings: "Inbäddningsinställningar"
-        crawling_settings: "Inställningar för sökrobotar"
-        crawling_description: "När Discourse skapar ämnen för dina inlägg, om det inte finns något RSS/ATOM-flöde närvarande så kommer det att försöka parsa ditt innehåll från din HTML. Ibland är det utmanande att extrahera ditt innehåll, så vi tillhandahåller möjligheten att specificera CSS-reglerna för att göra extraheringen enklare."
+        edit: "Redigera"
+        crawlers_description: "När Discourse skapar ämnen för dina inlägg, om det inte finns något RSS/ATOM-flöde närvarande så kommer det att försöka parsa ditt innehåll från din HTML. Ibland är det utmanande att extrahera ditt innehåll, så vi tillhandahåller möjligheten att specificera CSS-reglerna för att göra extraheringen enklare."
         embed_by_username: "Användarnamn för skapandet av ämne"
         embed_post_limit: "Högsta tillåtna antal inlägg att bädda in"
         embed_title_scrubber: "Reguljära uttryck som används för att hitta och korrigera fel i inläggsrubriken"
@@ -6223,7 +6247,12 @@ sv:
         allowed_embed_selectors: "CSS-väljare för element som är tillåtna i inbäddningar"
         blocked_embed_selectors: "CSS-väljare för element som tas bort från inbäddningar"
         allowed_embed_classnames: "Tillåtna CSS-klassnamn"
-        save: "Spara inbäddningsinställningar"
+        save: "Spara"
+        host_form:
+          save: "Spara"
+        nav:
+          settings: "Inställningar"
+          crawlers: "Sökrobotar"
       permalink:
         title: "Permalänkar"
         description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet."

@@ -1387,7 +1387,8 @@ et:
       categories_with_featured_topics: "Foorumid esiletõstetud teemadega"
       categories_and_latest_topics: "Foorumid ja viimased teemad"
     full_name_requirement:
-      required_at_signup: "Nõutud registreerumisel"
+      required_at_signup: "Nõutud"
+      optional_at_signup: "Valikuline"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2689,8 +2690,28 @@ et:
         sidebar_link:
           all: "Kõik aruanded"
       config:
+        developer:
+          title: "Arendaja"
+        files:
+          title: "Failid"
+        legal:
+          title: "Õiguslik"
+        navigation:
+          title: "Navigatsioon"
         notifications:
           title: "Teavitus"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Muu"
+        search:
+          title: "Otsi"
+        security:
+          title: "Turve"
+        spam:
+          title: "Spämm"
+        user_api:
+          title: "Kasutaja API"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
@@ -2925,6 +2946,12 @@ et:
             invalid_applies_to: "Nõutud"
             topic: "teemasid"
             post: "postitused"
+        permalinks:
+          edit: "Muuda"
+          delete: "Kustuta"
+        embeddable_host:
+          edit: "Muuda"
+          delete: "Kustuta"
         look_and_feel:
           themes:
             title: "Kujundused"
@@ -2990,7 +3017,7 @@ et:
           download:
             label: "Lae alla"
           destroy:
-            title: "Eemalda varukoopia"
+            title: "Kustuta"
             confirm: "Oled kindel, et soovid selle varukoopia hävitada?"
           restore:
             label: "Taasta"
@@ -3725,15 +3752,11 @@ et:
         settings: "Sätted"
       embedding:
         get_started: "Kui Sa soovid lisada Discourse teise veebisaidi sisse ehk sängitada, alusta lisades oma teenusepakkuja"
+        delete: "Kustuta"
         confirm_delete: "Oled Sa kindel, et soovid kustutada selle teenusepakkuja?"
         title: "Sängitamine"
-        host: "Lubatud hostid"
-        edit: "muuda"
-        category: "Postita foorumisse"
-        add_host: "Lisa host"
-        settings: "Sängitamise sätted"
-        crawling_settings: "Ämbliku sätted"
-        crawling_description: "Kui Discourse loob Sinu postitustele teemasid ja RSS/ATOM voogu ei ole, üritab ta sisu Sinu HTML-st välja sõeluda. Mõnikord on sisu eraldamine raskendatud, mistõttu pakume sisu eraldamise hõlbustamiseks võimalust CSS-i reeglid ette anda."
+        edit: "Muuda"
+        crawlers_description: "Kui Discourse loob Sinu postitustele teemasid ja RSS/ATOM voogu ei ole, üritab ta sisu Sinu HTML-st välja sõeluda. Mõnikord on sisu eraldamine raskendatud, mistõttu pakume sisu eraldamise hõlbustamiseks võimalust CSS-i reeglid ette anda."
         embed_by_username: "Kasutajanimi teema loomiseks"
         embed_post_limit: "Maksimaalne postituste arv, mida sängitada"
         embed_title_scrubber: "Regex postituste päiste puhastamiseks"
@@ -3741,7 +3764,11 @@ et:
         allowed_embed_selectors: "CSS valik elementidele, mida lubada sängitamistes"
         blocked_embed_selectors: "CSS valik elementidele, mida eemaldada sängitamistes"
         allowed_embed_classnames: "CSS klasside lubatud nimed"
-        save: "Salvesta sängitamise sätted"
+        save: "Salvesta"
+        host_form:
+          save: "Salvesta"
+        nav:
+          settings: "Sätted"
       permalink:
         title: "Püsiviited"
         url: "URL"

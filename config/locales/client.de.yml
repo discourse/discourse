@@ -2351,9 +2351,9 @@ de:
       categories_boxes_with_topics: "Spalten mit hervorgehobenen Themen"
       subcategories_with_featured_topics: "Unterkategorien mit hervorgehobenen Themen"
     full_name_requirement:
-      required_at_signup: "Bei Registrierung erforderlich"
-      optional_at_signup: "Optional bei der Anmeldung"
-      hidden_at_signup: "Bei der Anmeldung versteckt"
+      required_at_signup: "Erforderlich"
+      optional_at_signup: "Optional"
+      hidden_at_signup: "Optional, bei der Anmeldung ausgeblendet"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -4787,12 +4787,60 @@ de:
         sidebar_link:
           all: "Alle Berichte"
       config:
+        developer:
+          title: "Entwickler"
+          header_description: "Entwicklereinstellungen zur Steuerung von Ratenlimits, Multiplikatoren und Berechnungen, dem abgesicherten Modus und anderen erweiterten Funktionen"
+        experimental:
+          title: "Experimentell"
+          header_description: "Schalte experimentelle Funktionen für deine Website ein oder aus, die meisten davon können auf Gruppenbasis gesteuert werden"
+        font_style:
+          title: "Schriftart"
+          header_description: "Passe die von deinen Themes verwendeten Schriftstile an"
+        files:
+          title: "Dateien"
+          header_description: "Einstellungen, die Dateigrößen und -typen, Avatargrößen und -quellen, Dateispeicherung, Bildqualität und -kompression und mehr steuern"
+        legal:
+          title: "Rechtliches"
+          header_description: "Konfiguriere rechtliche Einstellungen, wie z.B. Nutzungsbedingungen, Datenschutzrichtlinien, Kontaktinformationen und EU-spezifische Überlegungen"
         login_and_authentication:
           title: "Anmeldung und Authentifizierung"
-          header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr."
+          header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
+        logo:
+          title: "Website-Logo"
+          header_description: "Passe die Variationen deines Website-Logos an"
+        navigation:
+          title: "Navigation"
+          header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Admin-Seitenleiste."
         notifications:
           title: "Benachrichtigungen"
-          header_description: "Konfiguriere, wie Benachrichtigungen für Nutzer verwaltet und zugestellt werden, einschließlich E-Mail-Einstellungen, Push-Benachrichtigungen, Erwähnungsgrenzen und Benachrichtigungskonsolidierung."
+          header_description: "Konfiguriere, wie Benachrichtigungen für Nutzer verwaltet und zugestellt werden, einschließlich E-Mail-Einstellungen, Push-Benachrichtigungen, Erwähnungsgrenzen und Benachrichtigungskonsolidierung"
+        onebox:
+          title: "Onebox"
+          header_description: "Konfiguriere, wie Onebox-Vorschauen für deine Website erstellt und angezeigt werden"
+        other:
+          title: "Sonstiges"
+          header_description: "Einstellungen, die in keine andere Kategorie passen"
+        rate_limits:
+          title: "Ratenbegrenzungen"
+          header_description: "Konfiguriere, wie oft Benutzer bestimmte Aktionen ausführen können, wie das Erstellen von Themen, das Senden von Nachrichten und das Posten von Antworten"
+        search:
+          title: "Suche"
+          header_description: "Konfiguriere Sucheinstellungen einschließlich Protokollierung und Tokenisierung für chinesische und japanische Sprachen"
+        security:
+          title: "Sicherheit"
+          header_description: "Konfiguriere die Sicherheitseinstellungen, einschließlich Zwei-Faktor-Authentifizierung, Moderatorenrechte und Sicherheitsrichtlinien für Inhalte"
+        spam:
+          title: "Spam"
+          header_description: "Konfiguriere, wie das System das Registrierungs- und Postingverhalten der Nutzer analysiert, um Spam schnell zu erkennen und zu blockieren"
+        trust_levels:
+          title: "Vertrauensstufen"
+          header_description: "Mit den Einstellungen für die Vertrauensstufe kannst du die Anforderungen und Benachrichtigungen für das Fortschrittssystem deiner Community feinabstimmen, das Benutzern automatisch in höhere Vertrauensstufen befördert, wenn sie beständiges, positives Engagement in deinem Forum zeigen"
+        user_api:
+          title: "Benutzer-API"
+          header_description: "Konfiguriere, welche Benutzergruppen auf die API zugreifen können und welche Bereiche erlaubt sind"
+        group_permissions:
+          title: "Gruppenberechtigungen"
+          header_description: "Hier werden alle gruppenbasierten App-Berechtigungen verwaltet, die den Zugriff auf verschiedene Funktionen innerhalb von Discourse steuern"
       new_features:
         title: "Was ist neu?"
         check_for_updates: "Nach Aktualisierungen suchen"
@@ -4868,7 +4916,16 @@ de:
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           percent_change_tooltip: "%{percent} ändern."
-          percent_change_tooltip_previous_value: "War %{previousValue} %{previousPeriod}."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "War %{count} vor zwei Tagen."
+              other: "War %{count} vor zwei Tagen."
+            two_weeks_ago:
+              one: "War %{count} vor zwei Wochen."
+              other: "War %{count} vor zwei Wochen."
+            thirty_days_ago:
+              one: "War %{count} in den letzten 30 Tagen."
+              other: "War %{count} in den letzten 30 Tagen."
           today: "Heute"
           yesterday: "Gestern"
           last_7_days: "Letzte 7"
@@ -5255,6 +5312,7 @@ de:
           notifications: "Benachrichtigungen"
           permalinks: "Permalinks"
           trust_levels: "Vertrauensstufen"
+          group_permissions: "Gruppenberechtigungen"
           users: "Benutzer"
           groups: "Gruppen"
           user_fields: "Benutzerfelder"
@@ -5281,7 +5339,7 @@ de:
         sidebar_link:
           appearance: "Erscheinungsbild"
           server_setup:
-            title: "Server-Einrichtung"
+            title: "Server Einrichtung & Protokolle"
             keywords: "E-Mail|SMTP|Mailgun|Sendgrid|Gesendet|Übersprungen|Zurückgewiesen|Empfangen|Abgelehnt|E-Mail-Protokolle|Vorschau-Zusammenfassung"
       security:
         title: "Sicherheit"
@@ -5289,8 +5347,8 @@ de:
           security: "Sicherheitseinstellungen"
           spam: "Spam-Einstellungen"
           staff_action_logs:
-            title: "Team-Aktionen-Protokolle"
-            keywords: "Fehlerprotokolle|geprüfte E-Mails|geprüfte IPs|geprüfte URLs|Suchprotokolle"
+            title: "Protokolle und Screening"
+            keywords: "Fehlerprotokolle|Mitarbeiteraktionen|Geprüfte E-Mails|Geprüfte URLs|Suchprotokolle"
       section_landing_pages:
         account:
           title: "Konto"
@@ -5391,6 +5449,14 @@ de:
             title: "Mehr Optionen"
             move_up: "Nach oben"
             move_down: "Nach unten"
+        permalinks:
+          edit: "Bearbeiten"
+          delete: "Löschen"
+        embeddable_host:
+          edit: "Bearbeiten"
+          delete: "Löschen"
+          more_options:
+            title: "Mehr Optionen"
         look_and_feel:
           title: "Look and Feel"
           description: "Passe deine Discourse-Website an und verleihe ihr einen unverwechselbaren Stil."
@@ -5501,7 +5567,7 @@ de:
             title: "Sende E-Mail mit Download-Link"
             alert: "Ein Link zum Download dieses Backups wurde dir per E-Mail geschickt"
           destroy:
-            title: "Das Backup löschen"
+            title: "Löschen"
             confirm: "Möchtest du wirklich das Backup löschen?"
           restore:
             is_disabled: "Die Wiederherstellung ist derzeit deaktiviert. Um sie zu aktivieren, besuche die <a href='%{url}'>Website-Einstellungen</a>."
@@ -6897,6 +6963,7 @@ de:
         settings: "Einstellungen"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
+        delete: "Löschen"
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
         sample: |
           <p>Füge den folgenden HTML-Code in deiner Website ein, um Themen in Discourse zu erstellen und diese daraus einzubetten. Ersetze <b>EMBED_URL</b> durch die kanonische URL der Seite, auf der du sie einbettest.</p>
@@ -6905,16 +6972,18 @@ de:
 
           <p>Ersetze <b>DISCOURSE_USERNAME</b> durch den Discourse-Benutzernamen des Autors, der das Thema erstellen soll. Discourse sucht den Benutzer automatisch anhand des <code>content</code>-Attributes in den <code>&lt;meta&gt;</code>-Schlagwörtern, wenn das Attribut <code>name</code> den Wert <code>discourse-username</code> oder <code>author</code> hat. Der Parameter <code>discourseUserName</code> ist veraltet und wird in Discourse 3.2 entfernt.</p>
         title: "Einbettung"
+        description: "Discourse bietet die Möglichkeit, die Kommentare eines Themas auf einer entfernten Website einzubetten. Dazu wird eine Javascript-API verwendet, die einen IFRAME erstellt"
         host: "Erlaubte Hosts"
         allowed_paths: "Pfad-Positivliste"
-        edit: "bearbeiten"
+        edit: "Bearbeiten"
         category: "In Kategorie posten"
         tags: "Schlagwörter des Themas"
-        post_author: "Verfasser des Beitrags – standardmäßig %{author}"
+        post_author: "Autor des Beitrags"
+        post_author_with_default: "Autor des Beitrags (standardmäßig %{author})"
         add_host: "Host hinzufügen"
-        settings: "Einbettungseinstellungen"
-        crawling_settings: "Crawler-Einstellungen"
-        crawling_description: "Wenn Discourse Themen für deine Beiträge erstellt, wird es – falls kein RSS-/ATOM-Feed verfügbar ist – versuchen, den Inhalt aus dem HTML-Code zu extrahieren. Dies ist teilweise schwierig, weshalb hier CSS-Regeln angegeben werden können, die die Extraktion erleichtern."
+        posts_and_topics: "Konfiguration der Beiträge und Themen"
+        crawlers: "Konfiguration der Crawler"
+        crawlers_description: "Wenn Discourse Themen für deine Beiträge erstellt, wird es – falls kein RSS-/ATOM-Feed verfügbar ist – versuchen, den Inhalt aus dem HTML-Code zu extrahieren. Dies ist teilweise schwierig, weshalb hier CSS-Regeln angegeben werden können, die die Extraktion erleichtern."
         embed_by_username: "Benutzername für Themenerstellung"
         embed_post_limit: "Maximale Anzahl der Beiträge, welche eingebettet werden"
         embed_title_scrubber: "Regulärer Ausdruck (Regex), um den Titel eines Beitrags zu bereinigen"
@@ -6923,7 +6992,20 @@ de:
         allowed_embed_selectors: "CSS-Selektor für Elemente, die in Einbettungen erlaubt sind."
         blocked_embed_selectors: "CSS-Selektor für Elemente, die in Einbettungen entfernt werden."
         allowed_embed_classnames: "Erlaubte CSS-Klassennamen"
-        save: "Einbettungseinstellungen speichern"
+        save: "Speichern"
+        posts_and_topics_settings_saved: "Einstellungen für Beiträge und Themen gespeichert"
+        crawler_settings_saved: "Crawler-Einstellungen gespeichert"
+        back: "Zurück zu Einbetten"
+        configuration_snippet: "Konfigurationsausschnitt"
+        host_form:
+          add_header: "Host hinzufügen"
+          edit_header: "Host bearbeiten"
+          save: "Speichern"
+        nav:
+          hosts: "Hosts"
+          settings: "Einstellungen"
+          posts_and_topics: "Beiträge und Themen"
+          crawlers: "Crawler"
       permalink:
         title: "Permalinks"
         description: "Weiterleitungen für URLs, die dem Forum nicht bekannt sind."
@@ -7011,6 +7093,10 @@ de:
           what_movies: "Welche Filme hast du in letzter Zeit gesehen?"
           random_fact: "Zufällige Tatsache des Tages"
           tv_show: "Eine Fernsehsendung empfehlen"
+          what_hobbies: "Was sind deine Hobbys?"
+          what_music: "Was hörst du gerade?"
+          funniest_thing: "Das Lustigste, was du heute gesehen hast"
+          share_art: "Teile deine Kunst!"
         topic_ops:
           what_books: |
             Wir alle lieben es zu lesen, also lasst uns dieses Thema nutzen, um unsere
