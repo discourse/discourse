@@ -25,6 +25,7 @@
     "decorator-transforms": "^2.3.0",
     "discourse-hbr": "workspace:1.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",
+    "ember-curry-component": "^0.1.0",
     "ember-route-template": "^1.0.3",
     "ember-tracked-storage-polyfill": "^1.0.0",
     "handlebars": "^4.7.8",
