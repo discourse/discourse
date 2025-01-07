@@ -246,6 +246,16 @@ export default function () {
             path: "/",
           });
         });
+        this.route("other", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
+        this.route("files", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route(
           "groupPermissions",
           { path: "/group-permissions" },
@@ -303,6 +313,9 @@ export default function () {
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("onebox", function () {
+          this.route("settings", { path: "/" });
+        });
         this.route("rate-limits", function () {
           this.route("settings", { path: "/" });
         });
@@ -310,6 +323,9 @@ export default function () {
           this.route("settings", { path: "/" });
         });
         this.route("spam", function () {
+          this.route("settings", { path: "/" });
+        });
+        this.route("user-api", function () {
           this.route("settings", { path: "/" });
         });
       }

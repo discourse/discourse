@@ -5143,6 +5143,9 @@ en:
         font_style:
           title: "Font style"
           header_description: "Customize the font styles used by your themes"
+        files:
+          title: "Files"
+          header_description: "Settings that control file size and type limits, avatar sizes and sources, file storage, image quality and compression, and more"
         legal:
           title: "Legal"
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations"
@@ -5158,6 +5161,12 @@ en:
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
+        onebox:
+          title: "Onebox"
+          header_description: "Configure how onebox previews are generated and displayed for your site"
+        other:
+          title: "Other"
+          header_description: "Settings which do not fit into any other category"
         rate_limits:
           title: "Rate limits"
           header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
@@ -5173,6 +5182,9 @@ en:
         trust_levels:
           title: "Trust levels"
           header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum"
+        user_api:
+          title: "User API"
+          header_description: "Configure which user groups can access the API, as well as which scopes are allowed"
         group_permissions:
           title: "Group permissions"
           header_description: "All group-based app permissions are managed here, which control access to various features within Discourse"
