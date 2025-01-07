@@ -160,6 +160,11 @@ ug:
     advanced_user_narrative:
       reset_trigger: "ئالىي دەرسلىك"
       title: ":arrow_up: ئالىي ئىشلەتكۈچى ئىقتىدارى"
+      edit:
+        not_found: |-
+          قارىغاندا مەن سىزگە قۇرۇپ بەرگەن [يازما](%{url}) نى تېخى تەھرىرلىمەپسىز. قايتا سىناپ باقامسىز؟
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> سىنبەلگىنى ئىشلىتىپ تەھرىرلىگۈچنى ئېچىڭ.
       recover:
         deleted_post_raw: "@%{discobot_username} نېمە ئۈچۈن يازمامنى ئۆچۈردى؟ :anguished:"
       category_hashtag:

@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    enable_markdown_footnotes: aktivizo treguesin e shënimit në këtë faqe
+    display_footnotes_inline: aktivizo zgjerimin e brendshëm të shënimeve

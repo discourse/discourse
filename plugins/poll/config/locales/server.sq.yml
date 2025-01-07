@@ -6,10 +6,24 @@
 
 sq:
   site_settings:
+    poll_enabled: "Lejo sondazhe?"
     poll_maximum_options: "Numri maksimal i opsioneve të lejuara në një sondazh."
     poll_edit_window_mins: "Numri i minutave pas krijimit të postimit gjatë të cilave sondazhet mund të ndryshohen."
+    poll_minimum_trust_level_to_create: "Përcakto nivelin minimal të konfidencialitetit të nevojshëm për të krijuar sondazhe."
+    poll_create_allowed_groups: "Grupet që lejohen të krijojnë sondazhe."
+    poll_groupable_user_fields: "Një grup emrash të fushave të përdoruesve që mund të përdoren për të grupuar dhe filtruar rezultatet e sondazhit."
+    poll_export_data_explorer_query_id: "ID-ja e pyetjes së kërkuesit të të dhënave për t'u përdorur për shpërndarjen e rezultateve të sondazhit (0 për ta çaktivizuar)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID-ja e pyetjes së kërkuesit të të dhënave për t'u përdorur për shpërndarjen e rezultateve të sondazhit të menjëhershëm të përzgjedhjes."
+    poll_default_public: "Kur krijoni një sondazh të ri, aktivizoni si parazgjedhje opsionin \"shfaq kush votoi\"."
+  keywords:
+    poll_create_allowed_groups: "kërkoni nivelin minimum_të të besueshëm_për të krijuar"
   poll:
+    poll: "sondazh"
+    invalid_argument: "Vlera e pavlefshme '%{value}' për argumentin '%{argument}'."
+    multiple_polls_without_name: "Kur krijoni sondazhe të shumta, përfshini emra specifik duke shtuar emri <code>=shembull</code> te etiketat tuaja <code>[sondazh]</code> ."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
+    default_poll_must_have_at_least_1_option: "Sondazhi 1 duhet të ketë të paktën opsion."
+    named_poll_must_have_at_least_1_option: "Sondazhi me emrin <strong>%{name}</strong> duhet të ketë të paktën 1 opsion."
     default_poll_must_have_less_options:
       one: "Sondazhi duhet të ketë të paktën %{count} opsion."
       other: "Sondazhi duhet të ketë më pak se %{count} opsione."
@@ -18,14 +32,32 @@ sq:
       other: "Sondazhi <strong>%{name}</strong> duhet të kete më pak se %{count} opsione."
     default_poll_must_have_different_options: "Sondazh duhet të ketë opsione të ndryshme."
     named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
+    default_poll_must_not_have_any_empty_options: "Sondazhi nuk duhet të ketë asnjë opsion bosh."
+    named_poll_must_not_have_any_empty_options: "Sondazhi me emrin <strong>%{name}</strong> nuk duhet të ketë asnjë opsion bosh."
     default_poll_with_multiple_choices_has_invalid_parameters: "Sondazhi me zgjedhje ka disa parametra të pavlefshme."
     named_poll_with_multiple_choices_has_invalid_parameters: "Poll named <strong>%{name}</strong> with multiple choice has invalid parameters."
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Nuk mund të ndryshoni një sondazh pas %{minutes} minutave të para."
+      cannot_edit_named_poll_with_votes: "Nuk mund ta ndryshoni sondazhin me emrin <strong>${name}</strong> pas %{minutes} minutave të para."
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
     post_is_deleted: "S'mund të veproj në një postim të fshirë."
+    user_cant_post_in_topic: "Nuk mund të votoni sepse nuk mund të postoni në këtë temë."
     topic_must_be_open_to_vote: "Tema duhet të jetë e hapur për të votuar."
     poll_must_be_open_to_vote: "Sondazhi duhet të jetë i hapur për të votuar."
+    one_vote_per_user: "Për këtë sondazh lejohet vetëm 1 votë."
+    max_vote_per_user:
+      one: Për këtë sondazh lejohet vetëm %{count} votë.
+      other: Për këtë sondazh lejohen maksimumi %{count} vota.
+    ranked_choice:
+      vote_options_mismatch: "Për përzgjedhjen e menjëhershme, numri i zgjedhjeve të bëra në një votim duhet të përputhet me numrin e opsioneve. Numri i opsioneve është %{count} dhe numri i zgjedhjeve të bëra ishte %{provided}."
+      no_group_results_support: "Lloji i pavlefshëm i sondazhit, zgjedhja_e renditur nuk i mbështet rezultatet e grupuara."
     topic_must_be_open_to_toggle_status: "Tema duhet të jetë e hapur për të ndryshuar statusin."
     only_staff_or_op_can_toggle_status: "Vetëm stafi ose autori temës mund të ndryshoje statusin e sondazhit."
+    errors:
+      poll_not_found: "Sondazhi nuk u gjet, ju lutemi konfirmoni parametrat."
+    insufficient_rights_to_create: "Nuk ju lejohet të krijoni sondazhe."
     email:
       link_to_poll: "Kliko për të shfaqur sondazhin."
+    user_field:
+      no_data: "Nuk ka të dhëna"
