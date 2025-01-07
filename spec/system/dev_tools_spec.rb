@@ -35,7 +35,7 @@ describe "Discourse dev tools", type: :system do
 
     # Check reloaded successfully
     expect(page).not_to have_css(".dev-tools-toolbar")
-    expect(page).to have("#site-logo")
+    expect(page).to have_css("#site-logo")
     expect(page).not_to have_css(".dev-tools-toolbar")
   end
 end
