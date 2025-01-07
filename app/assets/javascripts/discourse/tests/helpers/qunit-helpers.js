@@ -28,7 +28,6 @@ import { resetDecorators as resetPluginOutletDecorators } from "discourse/compon
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetQuickSearchRandomTips } from "discourse/components/search-menu/results/random-quick-tip";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
-import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
@@ -208,7 +207,6 @@ export function testCleanup(container, app) {
   resetDecorators();
   resetPostCookedDecorators();
   resetPluginOutletDecorators();
-  resetTopicTitleDecorators();
   resetUsernameDecorators();
   resetOneboxCache();
   resetCustomPostMessageCallbacks();

@@ -11,7 +11,6 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
-import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
@@ -128,17 +127,6 @@ export default class TopicListItem extends Component {
     if (this.includeUnreadIndicator) {
       this.messageBus.subscribe(this.unreadIndicatorChannel, this.onMessage);
     }
-
-    schedule("afterRender", () => {
-      if (this.element && !this.isDestroying && !this.isDestroyed) {
-        const rawTopicLink = this.element.querySelector(".raw-topic-link");
-
-        rawTopicLink &&
-          topicTitleDecorators.forEach((cb) =>
-            cb(this.topic, rawTopicLink, "topic-list-item-title")
-          );
-      }
-    });
   }
 
   willDestroyElement() {

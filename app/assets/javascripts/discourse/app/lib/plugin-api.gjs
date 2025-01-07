@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.39.2";
+export const PLUGIN_API_VERSION = "2.0.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -41,7 +41,6 @@ import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
-import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
@@ -2064,33 +2063,6 @@ class PluginApi {
    **/
   setDesktopTopicTimelineScrollAreaHeight(height) {
     setDesktopScrollAreaHeight(height);
-  }
-
-  /**
-   * Allows altering the topic title in the topic list, and in the topic view
-   *
-   * topicTitleType can be `topic-title` or `topic-list-item-title`
-   *
-   * For example, to replace the topic title:
-   *
-   * ```
-   * api.decorateTopicTitle((topicModel, node, topicTitleType) => {
-   *   node.innerText = "my new topic title";
-   * });
-   * ```
-   *
-   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead
-   **/
-  decorateTopicTitle(callback) {
-    deprecated(
-      "decorateTopicTitle is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead",
-      {
-        id: "discourse.decorate-topic-title",
-        since: "3.2",
-        dropFrom: "3.3",
-      }
-    );
-    addTopicTitleDecorator(callback);
   }
 
   /**
