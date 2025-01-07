@@ -395,6 +395,7 @@ Discourse::Application.routes.draw do
 
         get "developer" => "site_settings#index"
         get "fonts" => "site_settings#index"
+        get "files" => "site_settings#index"
         get "legal" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
         get "logo" => "site_settings#index"
@@ -402,6 +403,7 @@ Discourse::Application.routes.draw do
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
         get "onebox" => "site_settings#index"
+        get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
         get "spam" => "site_settings#index"
