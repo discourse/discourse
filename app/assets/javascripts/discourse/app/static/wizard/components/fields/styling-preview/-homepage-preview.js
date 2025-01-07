@@ -98,7 +98,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
       if (opts.topics) {
         let startY = boxStartY + 60;
-        this.getTitleSetA().forEach((title) => {
+        this.getTitles().forEach((title) => {
           ctx.font = `${bodyFontSize * 1}em '${font}'`;
           ctx.fillStyle = colors.tertiary;
           startY +=
@@ -132,7 +132,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const margin = height * 0.03;
     const bodyFontSize = height / 440.0;
-    const titles = this.getTitleSetA();
+    const titles = this.getTitles();
     let categoryHeight = height / 6;
 
     const drawLine = (x, y) => {
@@ -264,7 +264,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     drawLine(width / 2, y);
 
     const categoryHeight = height / 6;
-    const titles = this.getTitleSetA();
+    const titles = this.getTitles();
 
     // Categories
     this.categories().forEach((category, idx) => {
@@ -350,7 +350,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     return this.step.valueFor("homepage_style");
   }
 
-  getTitleSetA() {
+  getTitles() {
     return [
       i18n("wizard.homepage_preview.topic_titles.what_books"),
       i18n("wizard.homepage_preview.topic_titles.what_movies"),
@@ -359,7 +359,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     ];
   }
 
-  getTitleSetB() {
+  getHotTitles() {
     return [
       i18n("wizard.homepage_preview.topic_titles.what_hobbies"),
       i18n("wizard.homepage_preview.topic_titles.what_music"),
@@ -436,7 +436,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     ctx.lineWidth = 1;
 
     const titles =
-      homepageStyle === "hot" ? this.getTitleSetB() : this.getTitleSetA();
+      homepageStyle === "hot" ? this.getHotTitles() : this.getTitles();
     titles.forEach((title) => {
       const textPos = y + rowHeight * 0.4;
       ctx.fillStyle = colors.primary;
