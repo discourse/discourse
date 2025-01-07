@@ -513,7 +513,9 @@ after_initialize do
   # removed. Depending on the channel, uploads may end up being secure.
   UploadSecurity.register_custom_public_type("chat-composer")
 
-  DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  if Rails.env.local?
+    DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  end
 end
 
 if Rails.env == "test"
