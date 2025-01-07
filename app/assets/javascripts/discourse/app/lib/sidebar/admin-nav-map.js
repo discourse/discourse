@@ -250,9 +250,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_onebox",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["onebox"],
-        query: { filter: "" },
+        route: "adminConfig.onebox.settings",
         label: "admin.advanced.sidebar_link.onebox",
         icon: "far-square",
       },
