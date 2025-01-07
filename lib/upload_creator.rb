@@ -181,7 +181,7 @@ class UploadCreator
       @upload.extension = image_type || File.extname(@filename)[1..10]
 
       if is_image && !external_upload_too_big
-        if @image_info.type.to_s == "svg"
+        if @image_info.type == :svg
           w, h = [0, 0]
 
           # identify can behave differently depending on how it's compiled and
