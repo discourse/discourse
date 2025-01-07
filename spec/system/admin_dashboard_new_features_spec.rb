@@ -88,7 +88,7 @@ describe "Admin New Features Page", type: :system do
     expect(new_features_page).to have_no_screenshot
   end
 
-  it "displays experimental feature toggle" do
+  it "displays experimental feature toggle and has the correct state" do
     DiscourseUpdates.stubs(:new_features).returns(
       [
         {
@@ -103,11 +103,12 @@ describe "Admin New Features Page", type: :system do
           "created_at" => "2023-11-10T02:52:41.462Z",
           "updated_at" => "2023-11-10T04:28:47.020Z",
           "experiment_setting" => "experimental_form_templates",
+          "experiment_enabled" => true,
         },
       ],
     )
     new_features_page.visit
-    expect(new_features_page).to have_toggle_experiment_button
+    expect(new_features_page).to have_toggle_experiment_button(true)
   end
 
   it "displays experimental text next to feature title when feature is experimental" do
@@ -125,6 +126,7 @@ describe "Admin New Features Page", type: :system do
           "created_at" => "2023-11-10T02:52:41.462Z",
           "updated_at" => "2023-11-10T04:28:47.020Z",
           "experiment_setting" => "experimental_form_templates",
+          "experiment_enabled" => true,
         },
       ],
     )
