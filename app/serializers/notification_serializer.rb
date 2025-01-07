@@ -49,24 +49,10 @@ class NotificationSerializer < ApplicationSerializer
   end
 
   def acting_user_avatar_template
-    acting_user_avatar_template_lazy
+    object.acting_user.avatar_template_url
   end
 
   def include_acting_user_avatar_template?
     SiteSetting.show_user_menu_avatars
-  end
-
-  private
-
-  def acting_user_avatar_template_lazy
-    BatchLoader
-      .for(object)
-      .batch do |notifications, loader|
-        acting_usernames = notifications.map { |notification| notification.acting_username }
-        users = User.where(username_lower: acting_usernames.compact.uniq).index_by(&:username_lower)
-        notifications.each do |notification|
-          loader.call(notification, users[notification.acting_username].avatar_template_url)
-        end
-      end
   end
 end

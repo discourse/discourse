@@ -48,7 +48,6 @@ gem "redis-namespace"
 # are long term goal here is to fork this gem so we have a
 # better maintained living fork
 gem "active_model_serializers", "~> 0.8.3"
-gem "batch-loader"
 
 gem "http_accept_language", require: false
 
@@ -290,3 +289,4 @@ end
 gem "dry-initializer", "~> 3.1"
 
 gem "parallel"
+gem "goldiloader"

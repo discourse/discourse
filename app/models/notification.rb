@@ -370,6 +370,12 @@ class Notification < ActiveRecord::Base
     )&.downcase
   end
 
+  def acting_user
+    goldiload(key: :acting_username) do |acting_usernames|
+      User.where(username_lower: acting_usernames.compact.uniq).index_by(&:username_lower)
+    end
+  end
+
   def unread_high_priority?
     self.high_priority? && !read
   end

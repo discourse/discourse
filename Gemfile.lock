@@ -76,7 +76,6 @@ GEM
     aws-sigv4 (1.8.0)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.2.0)
-    batch-loader (2.0.5)
     benchmark (0.4.0)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
@@ -162,6 +161,9 @@ GEM
     fspath (3.1.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    goldiloader (5.4.0)
+      activerecord (>= 6.1, < 8.1)
+      activesupport (>= 6.1, < 8.1)
     google-protobuf (4.29.2-aarch64-linux)
       bigdecimal
       rake (>= 13)
@@ -615,7 +617,6 @@ DEPENDENCIES
   annotate
   aws-sdk-s3
   aws-sdk-sns
-  batch-loader
   better_errors
   binding_of_caller
   bootsnap
@@ -647,6 +648,7 @@ DEPENDENCIES
   faraday-retry
   fast_blank
   fastimage
+  goldiloader
   highline
   htmlentities
   http_accept_language
