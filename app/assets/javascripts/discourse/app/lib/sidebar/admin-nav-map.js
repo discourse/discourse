@@ -65,6 +65,12 @@ export const ADMIN_NAV_MAP = [
         icon: "user-shield",
       },
       {
+        name: "admin_group_permissions",
+        route: "adminConfig.groupPermissions.settings",
+        label: "admin.community.sidebar_link.group_permissions",
+        icon: "user-gear",
+      },
+      {
         name: "admin_user_fields",
         route: "adminUserFields",
         label: "admin.community.sidebar_link.user_fields",
