@@ -3,6 +3,10 @@
 module Chat
   class ChannelMembershipManager
     def self.all_for_user(user)
+      override = DiscoursePluginRegistry.apply_modifier(:list_user_channels_modifier, nil, user)
+
+      return override if !override.nil?
+
       Chat::UserChatChannelMembership.where(user: user)
     end
 
@@ -23,6 +27,18 @@ module Chat
       membership =
         find_for_user(user) ||
           Chat::UserChatChannelMembership.new(user: user, chat_channel: channel, following: true)
+
+      override =
+        DiscoursePluginRegistry.apply_modifier(
+          :follow_modifier,
+          nil,
+          channel,
+          user,
+          membership,
+          self,
+        )
+
+      return override if !override.nil?
 
       ActiveRecord::Base.transaction do
         if membership.new_record?

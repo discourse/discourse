@@ -4,6 +4,28 @@ RSpec.describe Chat::ChannelMembershipManager do
   fab!(:user)
   fab!(:channel1) { Fabricate(:category_channel) }
   fab!(:channel2) { Fabricate(:category_channel) }
+  let!(:plugin) { Plugin::Instance.new }
+  let!(:deny_block) { Proc.new { false } }
+  let!(:allow_block) { Proc.new { true } }
+
+  describe "#all_for_user" do
+    it "works with plugin modifier" do
+      DiscoursePluginRegistry.register_modifier(plugin, :list_user_channels_modifier, &deny_block)
+      action = described_class.all_for_user(user)
+      expect(action).to eq(false)
+
+      DiscoursePluginRegistry.register_modifier(plugin, :list_user_channels_modifier, &allow_block)
+      action = described_class.all_for_user(user)
+      expect(action).to eq(true)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :list_user_channels_modifier, &deny_block)
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :list_user_channels_modifier,
+        &allow_block
+      )
+    end
+  end
 
   describe ".find_for_user" do
     let!(:membership) do
@@ -61,6 +83,21 @@ RSpec.describe Chat::ChannelMembershipManager do
         Chat::UserChatChannelMembership.count
       }
       expect(membership.reload.following).to eq(true)
+    end
+
+    it "works with plugin modifier" do
+      DiscoursePluginRegistry.register_modifier(plugin, :follow_modifier, &deny_block)
+
+      action = described_class.new(channel1).follow(user)
+      expect(action).to eq(false)
+
+      DiscoursePluginRegistry.register_modifier(plugin, :follow_modifier, &allow_block)
+      action = described_class.new(channel1).follow(user)
+
+      expect(action).to eq(true)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :follow_modifier, &deny_block)
+      DiscoursePluginRegistry.unregister_modifier(plugin, :follow_modifier, &allow_block)
     end
   end
 
