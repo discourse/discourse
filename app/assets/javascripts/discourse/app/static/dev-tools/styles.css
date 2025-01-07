@@ -106,6 +106,7 @@
     background: none;
     border: none;
     padding: 5px;
+    color: var(--primary-500);
 
     &:hover {
       background-color: var(--primary-very-low);
