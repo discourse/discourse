@@ -246,6 +246,16 @@ export default function () {
             path: "/",
           });
         });
+        this.route("other", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
+        this.route("files", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
         this.route(
           "groupPermissions",
           { path: "/group-permissions" },
