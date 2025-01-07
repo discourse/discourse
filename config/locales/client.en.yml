@@ -7503,6 +7503,10 @@ en:
           what_movies: "What movies have you seen recently?"
           random_fact: "Random fact of the day"
           tv_show: "Recommend a TV show"
+          what_hobbies: "What are your hobbies?"
+          what_music: "What are you listening to right now?"
+          funniest_thing: "Funniest thing you've seen today"
+          share_art: "Share your art!"
         topic_ops:
           what_books: |
             We all love to read, let's use this topic to share our
