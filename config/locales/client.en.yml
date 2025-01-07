@@ -5139,10 +5139,10 @@ en:
           header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
         font_style:
           title: "Font style"
-          header_description: "Customize the font styles used by your themes."
+          header_description: "Customize the font styles used by your themes"
         legal:
           title: "Legal"
-          header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."
+          header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations"
         login_and_authentication:
           title: "Login and authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
@@ -5151,16 +5151,16 @@ en:
           header_description: "Customize the variations of your site logo"
         navigation:
           title: "Navigation"
-          header_description: "Configure the navigation links and menu items for your site. This includes the location and behaviour of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar."
+          header_description: "Configure the navigation links and menu items for your site. This includes the location and behaviour of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
         search:
           title: "Search"
-          header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages."
+          header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
         security:
           title: "Security"
-          header_description: "Configure security settings, including two-factor authentication, moderator priviledges, and content security policies."
+          header_description: "Configure security settings, including two-factor authentication, moderator priviledges, and content security policies"
         trust_levels:
           title: "Trust levels"
           header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum"
