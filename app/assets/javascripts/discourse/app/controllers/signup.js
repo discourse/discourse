@@ -117,9 +117,7 @@ export default class SignupPageController extends Controller.extend(
 
   @discourseComputed
   showFullname() {
-    return (
-      this.siteSettings.enable_names && this.site.full_name_visible_in_signup
-    );
+    return this.site.full_name_visible_in_signup;
   }
 
   @discourseComputed
@@ -456,11 +454,7 @@ export default class SignupPageController extends Controller.extend(
           ) {
             this.rejectedEmails.pushObject(result.values.email);
           }
-          if (
-            result.errors &&
-            result.errors.password &&
-            result.errors.password.length > 0
-          ) {
+          if (result.errors?.["user_password.password"]?.length > 0) {
             this.rejectedPasswords.pushObject(attrs.accountPassword);
           }
           this.set("formSubmitted", false);

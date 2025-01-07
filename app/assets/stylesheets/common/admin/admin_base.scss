@@ -472,7 +472,9 @@ $mobile-breakpoint: 700px;
         .count {
           font-weight: bold;
           margin-left: 0.25em;
-          color: var(--danger);
+          &.--nonzero {
+            color: var(--danger);
+          }
         }
       }
     }

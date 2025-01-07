@@ -13,6 +13,7 @@ import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
@@ -243,6 +244,17 @@ export default class TopicListItem extends Component {
 
   @discourseComputed
   expandPinned() {
+    return applyValueTransformer(
+      "topic-list-item-expand-pinned",
+      this._expandPinned,
+      {
+        topic: this.topic,
+        mobileView: this.site.mobileView,
+      }
+    );
+  }
+
+  get _expandPinned() {
     const pinned = this.get("topic.pinned");
     if (!pinned) {
       return false;

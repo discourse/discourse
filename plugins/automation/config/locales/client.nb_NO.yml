@@ -143,6 +143,8 @@ nb_NO:
             label: Utløser
           version:
             label: Versjon
+          status:
+            label: Status
           enabled:
             label: Aktivert
           disabled:

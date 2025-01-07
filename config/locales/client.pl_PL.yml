@@ -743,6 +743,7 @@ pl_PL:
         category: "Kategoria"
         score_type:
           title: "Powód"
+          all: "(wszystkie powody)"
         orders:
           score: "Wynik"
           score_asc: "Wynik (odwrotny)"
@@ -1060,12 +1061,12 @@ pl_PL:
       public_admission: "Zezwól wszystkim użytkownikom na dołączanie do tej grupy (widoczność grupy musi być ustawiona na publiczną)"
       public_exit: "Zezwól wszystkim użytkownikom na opuszczanie tej grupy"
       empty:
-        posts: "Członkowie tej grupy nie napisali żadnych postów."
+        posts: "Członkowie tej grupy nie napisali żadnych postów"
         members: "Nie ma użytkowników w tej grupie"
-        requests: "Są prośby o dołączenie do tej grupy."
-        mentions: "Nie ma wspomnień tej grupy"
-        messages: "Nie ma wiadomości dla tej grupy"
-        topics: "Nie ma wątków stworzonych przez użytkowników tej grupy"
+        requests: "Są prośby o dołączenie do tej grupy"
+        mentions: "Nie ma wzmianek o tej grupie"
+        messages: "Brak wiadomości dla tej grupy"
+        topics: "Nie ma tematów napisanych przez członków tej grupy"
         logs: "Nie ma logów dla tej grupy"
       add: "Dodaj"
       join: "Dołącz"
@@ -1276,10 +1277,10 @@ pl_PL:
         many: "Usuń %{count}"
         other: "Usuń %{count}"
       username: "nazwa użytkownika"
-      trust_level: "TL"
+      trust_level: "Poziom zaufania"
       read_time: "czas czytania:"
       topics_entered: "wprowadzone tematy:"
-      post_count: "# postów"
+      post_count: "wpisy"
       confirm_delete_other_accounts: "Czy na pewno chcesz usunąć wybrane konta?"
       powered_by: "używa <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "skopiowano"
@@ -2458,6 +2459,8 @@ pl_PL:
       categories_boxes: "Pudełka z podkategoriami"
       categories_boxes_with_topics: "Pudełka z polecanymi tematami"
       subcategories_with_featured_topics: "Podkategorie z polecanymi tematami"
+    full_name_requirement:
+      required_at_signup: "Wymagane przy rejestracji"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3731,6 +3734,8 @@ pl_PL:
           many: "Wybrano <b>%{count}</b> wpisów."
           other: "Wybrano <b>%{count}</b> wpisów."
       deleted_by_author_simple: "(temat usunięty przez autora)"
+    post_list:
+      aria_post_number: "%{title} - post #%{postNumber}"
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
@@ -5116,7 +5121,7 @@ pl_PL:
           save: "Zapisz jako..."
     powered_by_discourse: "Obsługiwane przez Discourse"
   admin_js:
-    type_to_filter: "pisz, aby filtrować…"
+    type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
     admin:
       title: "Administrator Discourse"
@@ -5132,9 +5137,12 @@ pl_PL:
         meta_doc: "Zapoznaj się z naszą <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentacją</a>, aby uzyskać szczegółowy przegląd raportów."
         sidebar_title: "Zgłoszenia"
         sidebar_link:
-          all: "Wszystkie"
+          all: "Wszystkie zgłoszenia"
+      config:
+        notifications:
+          title: "Powiadomienia"
       new_features:
-        title: "Co nowego"
+        title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
       dashboard:
         title: "Panel"
@@ -5153,7 +5161,7 @@ pl_PL:
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         dismiss_notice: "Odrzuć"
         new_features:
-          title: "Co nowego"
+          title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
           previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Dowiedz się więcej..."
@@ -5244,7 +5252,7 @@ pl_PL:
             type_of_web_hook_event:
               label: "Rodzaj zdarzenia"
       flags:
-        title: "Flagi moderacji"
+        title: "Moderacja"
         description: "Opis"
         enabled: "Włączona?"
         more_options:
@@ -5593,61 +5601,39 @@ pl_PL:
         sidebar_link:
           backups: "Kopie zapasowe"
           whats_new:
-            title: "Co nowego"
+            title: "Co nowego?"
             keywords: "dziennik zmian|funkcja|wydanie"
       community:
         title: "Społeczność"
         sidebar_link:
           about_your_site: "O Twojej witrynie"
           badges: "Odznaki"
-          login_and_authentication: "Logowanie i uwierzytelnianie"
           notifications: "Powiadomienia"
           permalinks: "Permalinki"
-          trust_levels: "Poziomy zaufania"
           users: "Użytkownicy"
           groups: "Grupy"
-          user_fields: "Pola użytkownika"
-          watched_words: "Obserwowane słowa"
           legal: "Prawne"
-          moderation_flags: "Flagi moderacji"
+          moderation_flags:
+            title: "Moderacja"
       appearance:
         title: "Wygląd"
         sidebar_link:
-          font_style: "Styl czcionki"
           site_logo: "Logo witryny"
-          color_schemes: "Palety kolorów"
           emoji: "Emoji"
           navigation: "Nawigacja"
           themes: "Motywy"
           components:
             title: "Komponenty"
             keywords: "motyw|rozszerzenie"
-          site_texts: "Teksty witryny"
       email_settings:
         title: "Ustawienia e-mail"
         sidebar_link:
           appearance: "Wygląd"
-          preview_summary: "Pokaż zestawienie aktywności"
-          server_setup: "Konfiguracja serwera"
-      email_logs:
-        title: "Dzienniki e-mail"
-        sidebar_link:
-          sent: "Wysłane"
-          skipped: "Pominięte"
-          bounced: "Odbite"
-          received: "Otrzymane"
-          rejected: "Odrzucone"
       security:
         title: "Bezpieczeństwo"
         sidebar_link:
-          error_logs: "Logi błędów"
-          screened_emails: "Ekranowane e-maile"
-          screened_ips: "Ekranowane adresy IP"
-          screened_urls: "Ekranowane URLe"
-          search_logs: "Logi wyszukiwań"
           security: "Ustawienia zabezpieczeń"
           spam: "Ustawienia spamu"
-          staff_action_logs: "Dzienniki działań personelu"
       section_landing_pages:
         account:
           title: "Konto"
@@ -5655,7 +5641,7 @@ pl_PL:
             title: "Kopie zapasowe"
             description: "Wykonaj kopię zapasową danych swojej witryny"
           whats_new:
-            title: "Co nowego"
+            title: "Co nowego?"
             description: "Odkryj nowe wydania i ulepszenia w Discourse"
       config_areas:
         about:
@@ -5693,7 +5679,7 @@ pl_PL:
             your_organization_saved: "Twoja organizacja została zapisana"
           saved: "zapisano!"
         flags:
-          header: "Flagi moderacji"
+          header: "Moderacja"
           edit_header: "Edytuj flagę"
           subheader: "System flagowania w Discourse pomaga Tobie i Twojemu zespołowi moderatorów zarządzać treściami i zachowaniem użytkowników, utrzymując Twoją społeczność w szacunku i zdrowiu. Domyślne ustawienia są odpowiednie dla większości społeczności i nie musisz ich zmieniać. Jeśli jednak Twoja witryna ma szczególne wymagania, możesz wyłączyć flagi, których nie potrzebujesz i dodać własne niestandardowe flagi."
           description: "Opis"
@@ -5768,18 +5754,16 @@ pl_PL:
       advanced:
         title: "Zaawansowane"
         sidebar_link:
-          api_keys: "Klucze API"
+          api_keys:
+            title: "Klucze API"
           developer: "Deweloperskie"
           embedding: "Osadzanie"
-          rate_limits: "Limity"
           user_api: "API użytkownika"
-          web_hooks: "Webhooki"
           onebox: "Onebox"
           files: "Pliki"
           other_options: "Inne"
           search: "Szukaj"
           experimental: "Eksperymentalne"
-          all_site_settings: "Wszystkie ustawienia witryny"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -6665,7 +6649,7 @@ pl_PL:
           active: "Aktywni"
           staff: "Zespół"
           suspended: "Zawieszeni"
-          silenced: "Wyciszony"
+          silenced: "Wyciszeni"
           staged: "Etapowi"
         approved: "Zatwierdzony?"
         titles:
@@ -7297,6 +7281,9 @@ pl_PL:
         back: "Powrót do linków trwałych"
         more_options: "Więcej opcji"
         copy_success: "Link stały skopiowany do schowka"
+        nav:
+          settings: "Ustawienia"
+          permalinks: "Permalinki"
         form:
           label: "Nowy:"
           add_header: "Dodaj link stały"
@@ -7339,8 +7326,23 @@ pl_PL:
           moderator: "Moderatorzy"
           regular: "Zwykli użytkownicy"
       previews:
-        topic_title: "Nagłówek tematu dyskusji"
         share_button: "Udostępnij"
         reply_button: "Odpowiedz"
         topic_preview: "Podgląd tematu"
         homepage_preview: "Podgląd strony głównej"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "wszystkie kategorie"
+          new: "Nowa"
+          unread: "Nieprzeczytane"
+          top: "Popularne"
+          latest: "Najnowsza"
+          hot: "Gorące"
+          categories: "Kategorie"
+        category_names:
+          site_feedback: "Dyskusje o serwisie"
+        table_headers:
+          topic: "Temat"
+          replies: "Odpowiedzi"
+          views: "Odsłony"
+          activity: "Aktywność"

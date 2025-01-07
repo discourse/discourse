@@ -1098,7 +1098,15 @@ RSpec.describe Search do
       end
 
       it "works in Chinese" do
-        SiteSetting.search_tokenize_chinese_japanese_korean = true
+        SiteSetting.search_tokenize_chinese = true
+        post = new_post("I am not in English 你今天怎麼樣")
+
+        results = Search.execute("你今天", search_context: post.topic)
+        expect(results.posts.map(&:id)).to eq([post.id])
+      end
+
+      it "works in Japanese" do
+        SiteSetting.search_tokenize_japanese = true
         post = new_post("I am not in English 何点になると思いますか")
 
         results = Search.execute("何点になると思", search_context: post.topic)

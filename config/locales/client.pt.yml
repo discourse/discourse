@@ -812,13 +812,13 @@ pt:
       public_admission: "Permitir entrada livre no grupo (Requer grupo publicamente visível)"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
-        posts: "Não existem publicações por membros deste grupo."
-        members: "Não existem membros neste grupo."
-        requests: "Não existem pedidos de adesão para este grupo."
-        mentions: "Não existem menções deste grupo."
-        messages: "Não existem mensagens para este grupo."
-        topics: "Não existem tópicos por membros deste grupo."
-        logs: "Não existem registos para este grupo."
+        posts: "Não existem publicações por membros deste grupo"
+        members: "Não existem membros neste grupo"
+        requests: "Não existem pedidos de adesão para este grupo"
+        mentions: "Não existem menções deste grupo"
+        messages: "Não existem mensagens para este grupo"
+        topics: "Não existem tópicos por membros deste grupo"
+        logs: "Não existem registos para este grupo"
       add: "Adicionar"
       join: "Entrar"
       leave: "Sair"
@@ -1000,10 +1000,10 @@ pt:
         one: "Apagar %{count}"
         other: "Apagar %{count}"
       username: "nome de utilizador"
-      trust_level: "TL"
+      trust_level: "nível de confiança"
       read_time: "tempo de leitura"
       topics_entered: "tópicos inseridos"
-      post_count: "# publicações"
+      post_count: "mensagens"
       confirm_delete_other_accounts: "Tem a certeza que quer apagar estas contas?"
       powered_by: "usando <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
@@ -1876,6 +1876,8 @@ pt:
       categories_and_top_topics: "Categorias e Melhores Tópicos"
       categories_boxes: "Caixas com Subcategorias"
       categories_boxes_with_topics: "Caixas com Tópicos em Destaque"
+    full_name_requirement:
+      required_at_signup: "Obrigatório na inscrição"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3611,7 +3613,10 @@ pt:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
         sidebar_link:
-          all: "Tudo"
+          all: "Todos os relatórios"
+      config:
+        notifications:
+          title: "Notificações"
       dashboard:
         title: "Painel de Administração"
         last_updated: "Painel atualizado:"
@@ -3700,6 +3705,7 @@ pt:
             include_subcategories:
               label: "Incluir Subcategorias"
       flags:
+        title: "Moderação"
         description: "Descrição"
         enabled: "Ativado?"
       groups:
@@ -3883,16 +3889,14 @@ pt:
           badges: "Crachás"
           notifications: "Notificações"
           permalinks: "Hiperligações Permanentes"
-          trust_levels: "Níveis de Confiança"
           users: "Utilizadores"
           groups: "Grupos"
-          user_fields: "Campos de utilizador"
-          watched_words: "Palavras Vigiadas"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderação"
       appearance:
         title: "Aparência"
         sidebar_link:
-          color_schemes: "Paletas de Cores"
           emoji: "Emoji"
           navigation: "Navegação"
           themes: "Temas"
@@ -3901,22 +3905,8 @@ pt:
       email_settings:
         sidebar_link:
           appearance: "Aparência"
-          preview_summary: "Pré-visualizar Resumo"
-      email_logs:
-        sidebar_link:
-          sent: "Enviado"
-          skipped: "Ignorado"
-          bounced: "Redirecionado"
-          received: "Recebido"
-          rejected: "Rejeitado"
       security:
         title: "Segurança"
-        sidebar_link:
-          error_logs: "Registo de Erros em Logs"
-          screened_emails: "Emails Filtrados"
-          screened_ips: "IPs Filtrados"
-          screened_urls: "URLs Filtrados"
-          search_logs: "Logs de Pesquisa"
       section_landing_pages:
         account:
           title: "Conta"
@@ -3930,6 +3920,7 @@ pt:
           update: "Atualização"
           saved: "guardado!"
         flags:
+          header: "Moderação"
           description: "Descrição"
           enabled: "Ativado?"
           edit: "Editar"
@@ -3967,9 +3958,7 @@ pt:
         sidebar_link:
           developer: "Desenvolvedor"
           embedding: "Incorporação"
-          rate_limits: "Limites de Classificação"
           user_api: "API de Utlizador"
-          web_hooks: "Webhooks"
           onebox: "Caixa Única"
           files: "Ficheiros"
           other_options: "Outro"
@@ -4885,6 +4874,9 @@ pt:
         user_title: "Utilizador"
         username: "Nome de Utilizador"
         delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
+        nav:
+          settings: "Configurações"
+          permalinks: "Hiperligações Permanentes"
         form:
           label: "Novo:"
           url: "URL"
@@ -4911,3 +4903,18 @@ pt:
       previews:
         share_button: "Partilhar"
         reply_button: "Responder"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "todas as categorias"
+          new: "Novo"
+          unread: "Não Lido"
+          top: "Os Melhores"
+          latest: "Recente"
+          categories: "Categorias"
+        category_names:
+          site_feedback: "Comentários sobre o Sítio"
+        table_headers:
+          topic: "Tópico"
+          replies: "Respostas"
+          views: "Vistas"
+          activity: "Actividade"

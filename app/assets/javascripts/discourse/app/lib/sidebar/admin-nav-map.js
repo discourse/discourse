@@ -60,9 +60,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_trust_levels",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["trust"],
-        query: { filter: "" },
+        route: "adminConfig.trustLevels.settings",
         label: "admin.community.sidebar_link.trust_levels",
         icon: "user-shield",
       },
@@ -81,9 +79,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_legal",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["legal"],
-        query: { filter: "" },
+        route: "adminConfig.legal.settings",
         label: "admin.community.sidebar_link.legal",
         icon: "gavel",
       },
@@ -102,17 +98,13 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_font_style",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["all_results"],
-        query: { filter: "font" },
+        route: "adminConfig.fonts.settings",
         label: "admin.appearance.sidebar_link.font_style",
         icon: "italic",
       },
       {
         name: "admin_site_logo",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["branding"],
-        query: { filter: "" },
+        route: "adminConfig.logo.settings",
         label: "admin.appearance.sidebar_link.site_logo",
         icon: "fab-discourse",
       },
@@ -130,9 +122,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_navigation",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["all_results"],
-        query: { filter: "navigation" },
+        route: "adminConfig.navigation.settings",
         label: "admin.appearance.sidebar_link.navigation",
         icon: "diagram-project",
       },
@@ -288,9 +278,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_search",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["search"],
-        query: { filter: "" },
+        route: "adminConfig.search.settings",
         label: "admin.advanced.sidebar_link.search",
         icon: "magnifying-glass",
       },

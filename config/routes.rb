@@ -223,6 +223,7 @@ Discourse::Application.routes.draw do
       get "config/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
       get "customize/embedding" => "embedding#show", :constraints => AdminConstraint.new
       put "customize/embedding" => "embedding#update", :constraints => AdminConstraint.new
+      get "customize/embedding/:id" => "embedding#edit", :constraints => AdminConstraint.new
 
       resources :themes,
                 only: %i[index create show update destroy],
@@ -392,8 +393,14 @@ Discourse::Application.routes.draw do
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
 
+        get "fonts" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
+        get "logo" => "site_settings#index"
+        get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
+        get "search" => "site_settings#index"
+        get "legal" => "site_settings#index"
+        get "trust-levels" => "site_settings#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"

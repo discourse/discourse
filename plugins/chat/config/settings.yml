@@ -123,6 +123,7 @@ chat:
     default: "never"
     type: enum
     enum: "Chat::SeparateSidebarModeSiteSetting"
+    area: "navigation"
   chat_editing_grace_period:
     client: true
     type: integer

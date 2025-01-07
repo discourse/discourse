@@ -411,6 +411,8 @@ pt_BR:
             label: Script
           version:
             label: Versão
+          status:
+            label: Status
           enabled:
             label: Ativada
           disabled:

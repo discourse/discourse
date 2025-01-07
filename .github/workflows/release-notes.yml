@@ -20,7 +20,7 @@ permissions:
 jobs:
   build:
     name: run
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
+    runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
     timeout-minutes: 10
     env:

@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { gt } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/avatar";
@@ -204,7 +205,12 @@ export default class IpLookup extends Component {
 
               <dt class="other-accounts">
                 {{i18n "ip_lookup.other_accounts"}}
-                <span class="count">{{this.totalOthersWithSameIP}}</span>
+                <span
+                  class="count
+                    {{if (gt this.totalOthersWithSameIP 0) '--nonzero'}}"
+                >
+                  {{this.totalOthersWithSameIP}}
+                </span>
                 {{#if this.otherAccounts}}
                   <DButton
                     @action={{this.deleteOtherAccounts}}

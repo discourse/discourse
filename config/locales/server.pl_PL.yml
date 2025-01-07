@@ -1769,8 +1769,6 @@ pl_PL:
     summary_percent_filter: "Gdy użytkownik kliknie na 'Podsumowaniu tematu', pokaż % najlepszych wpisów"
     summary_max_results: "Maksymalna liczba wpisów zwróconych przez „Podsumuj ten temat”"
     summary_timeline_button: "Pokaż przycisk „Podsumuj” na osi czasu"
-    summarization_strategy: "Dodatkowe sposoby podsumowywania treści zarejestrowanych przez wtyczki"
-    custom_summarization_allowed_groups: "Grupy, które mogą podsumowywać zawartość za pomocą `summarization_strategy`."
     enable_personal_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Zezwalaj użytkownikom na poziomie zaufania 1 (konfigurowalnym za pomocą minimalnego zaufania do wysyłania wiadomości) na tworzenie wiadomości i odpowiadanie na wiadomości. Pamiętaj, że personel zawsze może wysyłać wiadomości bez względu na wszystko."
     personal_message_enabled_groups: "Zezwól użytkownikom w tych grupach na TWORZENIE wiadomości osobistych. WAŻNE: 1) Wszyscy użytkownicy mogą ODPOWIADAĆ na wiadomości. 2) Administratorzy i moderatorzy mogą TWORZYĆ wiadomości do dowolnego użytkownika. 3) Grupy poziomu zaufania obejmują wyższe poziomy; wybierz trust_level_1, aby zezwolić na TL1, TL2, TL3, TL4, ale nie zezwalać na TL0. 4) Ustawienia interakcji grupy zastępują to ustawienie w przypadku wysyłania wiadomości do określonych grup."
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
@@ -2302,7 +2300,6 @@ pl_PL:
     penalty_include_post_message: "Automatycznie dołączaj obraźliwą wiadomość do szablonu wiadomości e-mail podczas wyciszania lub zawieszania użytkownika."
     svg_icon_subset: "Dodaj dodatkowe ikony FontAwesome, które chcesz uwzględnić w swoich zasobach. Użyj przedrostka \"fa-\" dla ikon jednolitych, \"far-\" dla ikon zwykłych i \"fab-\" dla ikon marki."
     max_prints_per_hour_per_user: "Maksymalna liczba wyświetleń strony /print (ustaw na 0, aby wyłączyć drukowanie)"
-    full_name_required: "Pełna nazwa jest wymaganym polem profilu użytkownika."
     enable_names: "Pokaż pełną nazwę użytkownika w jego profilu, karcie użytkownika i w e-mailach. Wyłącz, aby ukryć pełną nazwę użytkownika wszędzie."
     display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego wpisach, a także jego @nazwę użytkownika."
     show_time_gap_days: "Jeśli dwa wpisy zostały dodane w dużej przerwie, wyświetl okres w temacie."
@@ -4887,23 +4884,9 @@ pl_PL:
             label: "Styl strony głównej"
             choices:
               latest:
-                label: "Ostatnie Tematy"
-              categories_only:
-                label: "Tylko kategorie"
-              categories_with_featured_topics:
-                label: "Kategorie z wybranymi tematami"
-              categories_and_latest_topics:
-                label: "Kategorie i ostatnie tematy"
-              categories_and_latest_topics_created_date:
-                label: "Kategorie i najnowsze tematy (sortuj według daty utworzenia tematu)"
-              categories_and_top_topics:
-                label: "Kategorie i najlepsze tematy"
-              categories_boxes:
-                label: "Bloki kategorii"
-              categories_boxes_with_topics:
-                label: "Bloki kategorii z tematami"
-              subcategories_with_featured_topics:
-                label: "Podkategorie z polecanymi tematami"
+                label: "Najnowsza"
+              hot:
+                label: "Gorące"
       branding:
         title: "Logo witryny"
         fields:

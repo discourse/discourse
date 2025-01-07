@@ -774,13 +774,13 @@ id:
       public_admission: "Izinkan pengguna untuk bergabung dengan grup secara bebas (Membutuhkan grup yang dapat dilihat oleh umum)"
       public_exit: "Izinkan pengguna untuk meninggalkan grup dengan bebas"
       empty:
-        posts: "Tidak ada pos oleh anggota grup ini."
-        members: "Tidak ada anggota dalam kelompok ini."
-        requests: "Tidak ada permintaan keanggotaan untuk grup ini."
-        mentions: "Tidak ada penyebutan untuk grup ini."
-        messages: "Tidak ada pesan untuk kelompok ini."
-        topics: "Tidak ada topik oleh anggota kelompok ini."
-        logs: "Tidak ada log untuk grup ini."
+        posts: "Tidak ada pos oleh anggota grup ini"
+        members: "Tidak ada anggota dalam kelompok ini"
+        requests: "Tidak ada permintaan keanggotaan untuk grup ini"
+        mentions: "Tidak ada penyebutan untuk grup ini"
+        messages: "Tidak ada pesan untuk kelompok ini"
+        topics: "Tidak ada topik oleh anggota kelompok ini"
+        logs: "Tidak ada log untuk grup ini"
       add: "Menambahkan"
       join: "Gabung"
       leave: "Keluar"
@@ -941,10 +941,10 @@ id:
       delete_other_accounts:
         other: "Hapus %{count}"
       username: "username"
-      trust_level: "TL"
+      trust_level: "tingkat kepercayaan"
       read_time: "waktu baca"
       topics_entered: "memasuki topik"
-      post_count: "# post"
+      post_count: "post"
       confirm_delete_other_accounts: "Apakah Anda yakin untuk menghapus akun ini?"
       powered_by: "menggunakan <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "disalin"
@@ -2307,9 +2307,9 @@ id:
         remove_muted_tags_from_latest:
           always: "selalu"
           never: "tidak pernah"
-      reports:
-        sidebar_link:
-          all: "Semua"
+      config:
+        notifications:
+          title: "Pemberitahuan"
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
@@ -2339,7 +2339,6 @@ id:
             category:
               label: Kategori
       flags:
-        title: "Bendera Moderasi"
         description: "Deskripsi"
         enabled: "Diaktifkan?"
       groups:
@@ -2412,15 +2411,9 @@ id:
           notifications: "Pemberitahuan"
           users: "Pengguna"
           groups: "Grup"
-          moderation_flags: "Bendera Moderasi"
       appearance:
         sidebar_link:
           navigation: "Navigasi"
-      email_logs:
-        sidebar_link:
-          sent: "Mengirim"
-          received: "Menerima"
-          rejected: "Ditolak"
       section_landing_pages:
         account:
           title: "Akun"
@@ -2436,7 +2429,6 @@ id:
             your_organization_saved: "Organisasi Anda disimpan"
           saved: "tersimpan!"
         flags:
-          header: "Bendera Moderasi"
           description: "Deskripsi"
           enabled: "Diaktifkan?"
           edit: "Ubah"
@@ -2822,6 +2814,8 @@ id:
         category_title: "Kategori"
         user_title: "Pengguna"
         username: "Nama Pengguna"
+        nav:
+          settings: "Pengaturan"
         form:
           label: "Baru:"
           save: "Simpan"
@@ -2840,3 +2834,16 @@ id:
           moderator: "Moderator"
       previews:
         reply_button: "Balas"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "Semua kategori"
+          new: "New"
+          unread: "Belum dibaca"
+          latest: "Terbaru"
+          categories: "Kategori"
+        category_names:
+          site_feedback: "Umpan Balik Situs"
+        table_headers:
+          topic: "Topik"
+          replies: "balasan"
+          activity: "Activity"

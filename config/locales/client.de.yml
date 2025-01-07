@@ -936,13 +936,13 @@ de:
       public_admission: "Erlaube Benutzern, die Gruppe eigenständig zu betreten (erfordert, dass die Gruppe öffentlich sichtbar ist)"
       public_exit: "Erlaube Benutzern, die Gruppe eigenständig zu verlassen"
       empty:
-        posts: "Es gibt keine Beiträge von Mitgliedern dieser Gruppe."
-        members: "Es gibt keine Mitglieder in dieser Gruppe."
-        requests: "Keine Mitgliedschaftsanfragen für diese Gruppe."
-        mentions: "Es gibt keine Erwähnungen dieser Gruppe."
-        messages: "Es gibt keine Nachrichten für diese Gruppe."
-        topics: "Es gibt keine Themen von Mitgliedern dieser Gruppe."
-        logs: "Es gibt keine Protokolle für diese Gruppe."
+        posts: "Es gibt keine Beiträge von Mitgliedern dieser Gruppe"
+        members: "Es gibt keine Mitglieder in dieser Gruppe"
+        requests: "Keine Mitgliedschaftsanfragen für diese Gruppe"
+        mentions: "Es gibt keine Erwähnungen dieser Gruppe"
+        messages: "Es gibt keine Nachrichten für diese Gruppe"
+        topics: "Es gibt keine Themen von Mitgliedern dieser Gruppe"
+        logs: "Es gibt keine Protokolle für diese Gruppe"
       add: "Hinzufügen"
       join: "Beitreten"
       leave: "Verlassen"
@@ -1132,10 +1132,10 @@ de:
         one: "%{count} löschen"
         other: "%{count} löschen"
       username: "Benutzername"
-      trust_level: "VS"
+      trust_level: "Vertrauensstufe"
       read_time: "Lesezeit"
       topics_entered: "betrachtete Themen"
-      post_count: "# Beiträge"
+      post_count: "Beiträgen"
       confirm_delete_other_accounts: "Bist du sicher, dass du diese Konten löschen willst?"
       powered_by: "verwendet <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopiert"
@@ -2350,6 +2350,10 @@ de:
       categories_boxes: "Boxen mit Unterkategorien"
       categories_boxes_with_topics: "Spalten mit hervorgehobenen Themen"
       subcategories_with_featured_topics: "Unterkategorien mit hervorgehobenen Themen"
+    full_name_requirement:
+      required_at_signup: "Bei Registrierung erforderlich"
+      optional_at_signup: "Optional bei der Anmeldung"
+      hidden_at_signup: "Bei der Anmeldung versteckt"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -3051,6 +3055,7 @@ de:
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
       create_disabled_category: "Du darfst keine Themen in dieser Kategorie erstellen"
+      create_disabled_tag: "Du darfst keine Themen mit diesem Schlagwort erstellen"
       create_long: "Ein neues Thema erstellen"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
@@ -3483,6 +3488,9 @@ de:
           one: Du hast <b>%{count}</b> Beitrag ausgewählt.
           other: "Du hast <b>%{count}</b> Beiträge ausgewählt."
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
+    post_list:
+      empty: "Es gibt keine Beiträge"
+      aria_post_number: "%{title} – Beitrag #%{postNumber}"
     post:
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
@@ -4761,7 +4769,7 @@ de:
           save: "Speichern als …"
     powered_by_discourse: "Bereitgestellt von Discourse"
   admin_js:
-    type_to_filter: "zum Filtern hier eingeben …"
+    type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
     admin:
       title: "Discourse-Administrator"
@@ -4777,7 +4785,14 @@ de:
         meta_doc: "Schau dir unsere <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>Dokumentation</a> an, um einen detaillierten Überblick über die Berichte zu erhalten."
         sidebar_title: "Berichte"
         sidebar_link:
-          all: "Gesamt"
+          all: "Alle Berichte"
+      config:
+        login_and_authentication:
+          title: "Anmeldung und Authentifizierung"
+          header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr."
+        notifications:
+          title: "Benachrichtigungen"
+          header_description: "Konfiguriere, wie Benachrichtigungen für Nutzer verwaltet und zugestellt werden, einschließlich E-Mail-Einstellungen, Push-Benachrichtigungen, Erwähnungsgrenzen und Benachrichtigungskonsolidierung."
       new_features:
         title: "Was ist neu?"
         check_for_updates: "Nach Aktualisierungen suchen"
@@ -4852,6 +4867,8 @@ de:
         custom_date_range: Benutzerdefinierter Datumsbereich
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
+          percent_change_tooltip: "%{percent} ändern."
+          percent_change_tooltip_previous_value: "War %{previousValue} %{previousPeriod}."
           today: "Heute"
           yesterday: "Gestern"
           last_7_days: "Letzte 7"
@@ -4889,7 +4906,7 @@ de:
             type_of_web_hook_event:
               label: "Art des Ereignisses"
       flags:
-        title: "Moderationsmeldungen"
+        title: "Moderation"
         description: "Beschreibung"
         enabled: "Aktiviert?"
         more_options:
@@ -5243,7 +5260,9 @@ de:
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
-          moderation_flags: "Moderationsmeldungen"
+          moderation_flags:
+            title: "Moderation"
+            keywords: "Meldungen|Überprüfung"
       appearance:
         title: "Erscheinungsbild"
         sidebar_link:
@@ -5261,27 +5280,17 @@ de:
         title: "E-Mail-Einstellungen"
         sidebar_link:
           appearance: "Erscheinungsbild"
-          preview_summary: "Vorschau der Zusammenfassung"
-          server_setup: "Server-Einrichtung"
-      email_logs:
-        title: "E-Mail-Protokolle"
-        sidebar_link:
-          sent: "Gesendet"
-          skipped: "Übersprungen"
-          bounced: "Unzustellbar"
-          received: "Empfangen"
-          rejected: "Abgelehnt"
+          server_setup:
+            title: "Server-Einrichtung"
+            keywords: "E-Mail|SMTP|Mailgun|Sendgrid|Gesendet|Übersprungen|Zurückgewiesen|Empfangen|Abgelehnt|E-Mail-Protokolle|Vorschau-Zusammenfassung"
       security:
         title: "Sicherheit"
         sidebar_link:
-          error_logs: "Fehlerprotokolle"
-          screened_emails: "Gefilterte E-Mails"
-          screened_ips: "Gefilterte IPs"
-          screened_urls: "Gefilterte URLs"
-          search_logs: "Suchprotokolle"
           security: "Sicherheitseinstellungen"
           spam: "Spam-Einstellungen"
-          staff_action_logs: "Team-Aktionen-Protokolle"
+          staff_action_logs:
+            title: "Team-Aktionen-Protokolle"
+            keywords: "Fehlerprotokolle|geprüfte E-Mails|geprüfte IPs|geprüfte URLs|Suchprotokolle"
       section_landing_pages:
         account:
           title: "Konto"
@@ -5346,7 +5355,7 @@ de:
             your_organization_saved: "Deine Organisation wurde gespeichert"
           saved: "gespeichert!"
         flags:
-          header: "Moderationsmeldungen"
+          header: "Moderation"
           edit_header: "Meldungsgrund bearbeiten"
           subheader: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Website jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
           description: "Beschreibung"
@@ -5427,12 +5436,13 @@ de:
       advanced:
         title: "Erweitert "
         sidebar_link:
-          api_keys: "API-Schlüssel"
+          api_keys:
+            title: "API-Schlüssel"
+            keywords: "Token|Webhook"
           developer: "Entwickler"
           embedding: "Einbettung"
           rate_limits: "Ratenbegrenzungen"
           user_api: "Benutzer-API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Dateien"
           other_options: "Sonstiges"
@@ -6677,6 +6687,7 @@ de:
         save: "speichern"
         cancel: "abbrechen"
         unmask: "Eingabe demaskieren"
+        not_found: "Einstellungen konnten nicht gefunden werden"
       site_settings:
         emoji_list:
           invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
@@ -6937,6 +6948,9 @@ de:
         back: "Zurück zu Permalinks"
         more_options: "Mehr Optionen"
         copy_success: "Permalink in die Zwischenablage kopiert"
+        nav:
+          settings: "Einstellungen"
+          permalinks: "Permalinks"
         form:
           label: "Neu:"
           add_header: "Permalink hinzufügen"
@@ -6978,8 +6992,41 @@ de:
           moderator: "Moderator"
           regular: "Normaler Benutzer"
       previews:
-        topic_title: "Überschrift eines Diskussionsthemas"
+        topic_title: "Welche Bücher liest du gerade?"
         share_button: "Teilen"
         reply_button: "Antworten"
         topic_preview: "Themenvorschau"
         homepage_preview: "Vorschau der Homepage"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alle Kategorien"
+          new: "Neu"
+          unread: "Ungelesen"
+          top: "Angesagt"
+          latest: "Aktuelle"
+          hot: "Heiß"
+          categories: "Kategorien"
+        topic_titles:
+          what_books: "Welche Bücher liest du gerade?"
+          what_movies: "Welche Filme hast du in letzter Zeit gesehen?"
+          random_fact: "Zufällige Tatsache des Tages"
+          tv_show: "Eine Fernsehsendung empfehlen"
+        topic_ops:
+          what_books: |
+            Wir alle lieben es zu lesen, also lasst uns dieses Thema nutzen, um unsere
+            aktuellen oder kürzlich gelesenen Bücher zu teilen. Ich bin ein Fantasy-Fan und habe
+            zum 100. Mal "Der Herr der Ringe" neu gelesen.
+            Was ist mit dir?
+        category_descriptions:
+          icebreakers: "Lerne deine Community-Mitglieder mit lustigen Fragen kennen."
+          news: "Diskutiere die neuesten Nachrichten und Ereignisse."
+          site_feedback: "Teile deine Meinung über die Community mit und schlage Verbesserungen vor."
+        category_names:
+          icebreakers: "Eisbrecher"
+          news: "Nachrichten"
+          site_feedback: "Feedback"
+        table_headers:
+          topic: "Thema"
+          replies: "Antworten"
+          views: "Aufrufe"
+          activity: "Aktivität"

@@ -691,13 +691,13 @@ ca:
       public_admission: "Permet als usuaris d'unir-se al grup lliurement (cal que el grup sigui visible públicament)"
       public_exit: "Permet que els usuaris abandonin el grup lliurement"
       empty:
-        posts: "No hi ha publicacions de membres d'aquest grup."
-        members: "No hi ha membres en aquest grup."
-        requests: "No hi ha sol·licituds d'afiliació per a aquest grup."
-        mentions: "No hi ha mencions d'aquest grup."
-        messages: "No hi ha missatges per a aquest grup."
-        topics: "No hi ha temes de membres d'aquest grup."
-        logs: "No hi ha registres (logs) per a aquest grup."
+        posts: "No hi ha publicacions de membres d'aquest grup"
+        members: "No hi ha membres en aquest grup"
+        requests: "No hi ha sol·licituds d'afiliació per a aquest grup"
+        mentions: "No hi ha mencions d'aquest grup"
+        messages: "No hi ha missatges per a aquest grup"
+        topics: "No hi ha temes de membres d'aquest grup"
+        logs: "No hi ha registres (logs) per a aquest grup"
       add: "Afegeix"
       join: "Registre"
       leave: "Abandona"
@@ -852,7 +852,7 @@ ca:
       trust_level: "nivell de confiança"
       read_time: "temps de lectura"
       topics_entered: "temes introduïts"
-      post_count: "nre. de publicacions"
+      post_count: "publicacions"
       confirm_delete_other_accounts: "Esteu segur que voleu suprimir aquests comptes?"
       powered_by: "utilitzant <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiat"
@@ -1553,6 +1553,8 @@ ca:
       categories_and_top_topics: "Categories i temes principals"
       categories_boxes: "Caixes amb subcategories"
       categories_boxes_with_topics: "Caixes amb temes destacats"
+    full_name_requirement:
+      required_at_signup: "Necessari en identificar-se"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -2986,7 +2988,10 @@ ca:
         title: "Llista de reports disponibles"
         sidebar_title: "Reports"
         sidebar_link:
-          all: "Tot"
+          all: "Tots els reports"
+      config:
+        notifications:
+          title: "Notificacions"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
@@ -3074,6 +3079,7 @@ ca:
             category:
               label: Categoria
       flags:
+        title: "Moderació"
         description: "Descripció"
         enabled: "Activat?"
       groups:
@@ -3231,16 +3237,14 @@ ca:
           badges: "Insígnies"
           notifications: "Notificacions"
           permalinks: "Enllaços permanents"
-          trust_levels: "Nivells de confiança"
           users: "Usuaris"
           groups: "Grups"
-          user_fields: "Camps d'usuari"
-          watched_words: "Paraules vigilades"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderació"
       appearance:
         title: "Aparença"
         sidebar_link:
-          color_schemes: "Paletes de colors"
           emoji: "Emoji"
           navigation: "Navegació"
           themes: "Aparences"
@@ -3249,22 +3253,8 @@ ca:
       email_settings:
         sidebar_link:
           appearance: "Aparença"
-          preview_summary: "Previsualitza el resum"
-      email_logs:
-        sidebar_link:
-          sent: "Enviat"
-          skipped: "Saltat"
-          bounced: "Rebotat"
-          received: "Rebut"
-          rejected: "Rebutjat"
       security:
         title: "Seguretat"
-        sidebar_link:
-          error_logs: "Error de registres (logs)"
-          screened_emails: "Correus sota supervisió"
-          screened_ips: "IPs sota supervisió"
-          screened_urls: "URLs sota supervisió"
-          search_logs: "Cerca els registres (logs)"
       section_landing_pages:
         account:
           title: "Compte"
@@ -3277,6 +3267,7 @@ ca:
           optional: "(opcional)"
           saved: "desat!"
         flags:
+          header: "Moderació"
           description: "Descripció"
           enabled: "Activat?"
           edit: "Edita"
@@ -3314,9 +3305,7 @@ ca:
         sidebar_link:
           developer: "Desenvolupador"
           embedding: "Incrustant"
-          rate_limits: "Límits de freqüència"
           user_api: "API d'usuari"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Fitxers"
           other_options: "Altres"
@@ -4313,6 +4302,9 @@ ca:
         user_title: "Usuari"
         username: "Nom d'usuari "
         delete_confirm: Esteu segur que voleu suprimir l'enllaç permanent?
+        nav:
+          settings: "Configuració"
+          permalinks: "Enllaços permanents"
         form:
           label: "Nou:"
           url: "URL"
@@ -4347,3 +4339,18 @@ ca:
       previews:
         share_button: "Comparteix"
         reply_button: "Respon"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "totes les categories"
+          new: "Nou"
+          unread: "No llegits"
+          top: "Principals"
+          latest: "Més recents"
+          categories: "Categories"
+        category_names:
+          site_feedback: "Comentaris sobre el lloc web"
+        table_headers:
+          topic: "Tema"
+          replies: "Respostes"
+          views: "Vistes"
+          activity: "Activitat"

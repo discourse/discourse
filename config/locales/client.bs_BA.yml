@@ -701,13 +701,13 @@ bs_BA:
       public_admission: "Omogući korisnicima da se mogu slobodno učlaniti u grupu (zahtjeva da grupa bude javno otvorena)"
       public_exit: "Omogući korisnicima da mogu slobodno napustiti grupu"
       empty:
-        posts: "Ne postoje postovi člana ove grupe."
-        members: "Nema članova u grupi."
-        requests: "Za ovu grupu nema zahtjeva za članstvo."
-        mentions: "Nema spominjanja u grupi."
-        messages: "Nema novih poruka za ovu grupu."
-        topics: "Nema novih tema od strane članova ove grupe."
-        logs: "Nema novih logova za ovu grupu."
+        posts: "Ne postoje postovi člana ove grupe"
+        members: "Nema članova u grupi"
+        requests: "Za ovu grupu nema zahtjeva za članstvo"
+        mentions: "Nema spominjanja u grupi"
+        messages: "Nema novih poruka za ovu grupu"
+        topics: "Nema novih tema od strane članova ove grupe"
+        logs: "Nema novih logova za ovu grupu"
       add: "Dodaj"
       join: "Učlani se"
       leave: "Napusti"
@@ -869,10 +869,10 @@ bs_BA:
         few: "Izbriši %{count}"
         other: "Izbriši %{count}"
       username: "korisničko ime"
-      trust_level: "NP"
+      trust_level: "nivo povjerenja"
       read_time: "vrijeme čitanja"
       topics_entered: "pogledano tema"
-      post_count: "# postova"
+      post_count: "objave"
       confirm_delete_other_accounts: "Jeste sigurni da želite da izbrišete ove račune?"
       powered_by: "koristeći <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "koprian"
@@ -1610,6 +1610,8 @@ bs_BA:
       categories_and_top_topics: "Kategorije i top teme"
       categories_boxes: "Kutije sa podkategorijama"
       categories_boxes_with_topics: "Kutije sa istaknutim temama"
+    full_name_requirement:
+      required_at_signup: "Required at signup"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3138,7 +3140,10 @@ bs_BA:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
         sidebar_link:
-          all: "All"
+          all: "Svi izvještaji"
+      config:
+        notifications:
+          title: "Obavijest"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
@@ -3230,6 +3235,7 @@ bs_BA:
             include_subcategories:
               label: "Uključi potkategorije"
       flags:
+        title: "Moderacija"
         description: "Opis"
         enabled: "Omogućen?"
       groups:
@@ -3389,16 +3395,14 @@ bs_BA:
           badges: "Bedž"
           notifications: "Obavijest"
           permalinks: "Permalink-ovi"
-          trust_levels: "Trust Levels"
           users: "Korisnici"
           groups: "Groups"
-          user_fields: "User Fields"
-          watched_words: "Pogledane Rijeći"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderacija"
       appearance:
         title: "Izgled"
         sidebar_link:
-          color_schemes: "Palete boja"
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Teme"
@@ -3407,22 +3411,8 @@ bs_BA:
       email_settings:
         sidebar_link:
           appearance: "Izgled"
-          preview_summary: "Pregled Sajta"
-      email_logs:
-        sidebar_link:
-          sent: "Poslano"
-          skipped: "Skipped"
-          bounced: "Vraćeni"
-          received: "Primljeno"
-          rejected: "Odbijeni"
       security:
         title: "Security"
-        sidebar_link:
-          error_logs: "Error Logs"
-          screened_emails: "Screened Emails"
-          screened_ips: "Screened IPs"
-          screened_urls: "Screened URLs"
-          search_logs: "Logovi pretrage"
       section_landing_pages:
         account:
           title: "Račun"
@@ -3435,6 +3425,7 @@ bs_BA:
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
+          header: "Moderacija"
           description: "Opis"
           enabled: "Omogućen?"
           edit: "Edit"
@@ -3472,9 +3463,7 @@ bs_BA:
         sidebar_link:
           developer: "Developer"
           embedding: "Embedding"
-          rate_limits: "Rate Limits"
           user_api: "Korisnički API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Files"
           other_options: "Other"
@@ -4457,6 +4446,9 @@ bs_BA:
         user_title: "User"
         username: "Nadimak"
         delete_confirm: Jeste li sigurni da želite izbrisati ovaj permalink?
+        nav:
+          settings: "Postavke"
+          permalinks: "Permalink-ovi"
         form:
           label: "Novo:"
           url: "URL"
@@ -4484,3 +4476,16 @@ bs_BA:
       previews:
         share_button: "Podijeli"
         reply_button: "Odgovori"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "Sve kategorije"
+          new: "Novi"
+          unread: "Nepročitano"
+          top: "Top teme"
+          latest: "Zadnje"
+          categories: "Kategorije"
+        table_headers:
+          topic: "Topic"
+          replies: "Odgovori"
+          views: "Pregledi"
+          activity: "Activity"

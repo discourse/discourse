@@ -1,10 +1,5 @@
 category1:
-  use_https: true
-  min_trust_level_to_allow_invite:
-    default: 2
-    enum: "TrustLevelSetting"
-    hidden: true
-  min_trust_level_to_allow_invite_tl_and_staff:
-    default: 2
-    enum: "TrustLevelAndStaffSetting"
-    hidden: true
+  old_one:
+    default: false
+  new_one:
+    default: false

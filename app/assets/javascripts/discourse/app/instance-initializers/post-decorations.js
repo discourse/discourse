@@ -119,7 +119,7 @@ export default {
           "btn-default",
           "btn",
           "btn-icon",
-          ...(props.label ? ["no-text"] : []),
+          ...(props.label ? [] : ["no-text"]),
         ];
 
         openPopupBtn.classList.add(...defaultClasses);
@@ -197,7 +197,6 @@ export default {
           const tableEditorBtn = _createButton({
             classes: ["btn-edit-table"],
             title: "table_builder.edit.btn_edit",
-            label: "table_builder.edit.btn_edit",
             icon: {
               name: "pencil",
               class: "edit-table-icon",
@@ -208,6 +207,7 @@ export default {
           table.parentNode.classList.add("fullscreen-table-wrapper");
 
           if (attrs.canEdit) {
+            table.parentNode.classList.add("--editable");
             buttonWrapper.append(tableEditorBtn);
             tableEditorBtn.addEventListener(
               "click",
@@ -228,6 +228,8 @@ export default {
           if (site.isMobileDevice) {
             return;
           }
+
+          table.parentNode.classList.add("--has-overflow");
 
           const expandTableBtn = _createButton({
             classes: ["btn-expand-table"],

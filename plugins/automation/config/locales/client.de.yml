@@ -413,6 +413,8 @@ de:
             label: Skript
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Aktiviert
           disabled:

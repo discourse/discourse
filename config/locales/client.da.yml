@@ -797,13 +797,13 @@ da:
       public_admission: "Tillad brugere frit at tilmelde sig gruppen (Kræver at det er en offentlig synlig gruppe)"
       public_exit: "Tillad brugere frit at forlade gruppen"
       empty:
-        posts: "Der er ingen indlæg skrevet af medlemmer i denne gruppe."
-        members: "Der er ingen medlemmer i denne gruppe."
-        requests: "Der er ingen anmodninger om medlemskab for denne gruppe."
-        mentions: "Denne gruppe bliver ikke nævnt nogen steder."
-        messages: "Der er ingen beskeder til denne gruppe."
-        topics: "Der er ingen emner skrevet af medlemmer i denne gruppe."
-        logs: "Der er ingen logs for denne gruppe."
+        posts: "Der er ingen indlæg skrevet af medlemmer i denne gruppe"
+        members: "Der er ingen medlemmer i denne gruppe"
+        requests: "Der er ingen anmodninger om medlemskab for denne gruppe"
+        mentions: "Denne gruppe bliver ikke nævnt nogen steder"
+        messages: "Der er ingen beskeder til denne gruppe"
+        topics: "Der er ingen emner skrevet af medlemmer i denne gruppe"
+        logs: "Der er ingen logs for denne gruppe"
       add: "Tilføj"
       join: "Tilslut"
       leave: "Forlad"
@@ -986,10 +986,10 @@ da:
         one: "Slet %{count}"
         other: "Slet %{count}"
       username: "brugernavn"
-      trust_level: "TN"
+      trust_level: "tillidsniveau"
       read_time: "læse tid"
       topics_entered: "emner besøgt"
-      post_count: "# indlæg"
+      post_count: "indlæg"
       confirm_delete_other_accounts: "Er du sikker på, at du vil slette disse konti?"
       powered_by: "bruger <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopieret"
@@ -1914,6 +1914,8 @@ da:
       categories_and_top_topics: "Kategorier og top emner"
       categories_boxes: "Kasser med underkategorier"
       categories_boxes_with_topics: "Kasser med udvalgte emner"
+    full_name_requirement:
+      required_at_signup: "Krævet ved registrering"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2828,6 +2830,8 @@ da:
           one: Du har valgt <b>%{count}</b> indlæg.
           other: "Du har valgt <b>%{count}</b> indlæg."
       deleted_by_author_simple: "(emne slettet af forfatteren)"
+    post_list:
+      aria_post_number: "%{title} - indlæg #%{postNumber}"
     post:
       confirm_delete: "Er du sikker på, at du vil slette dette indlæg?"
       quote_reply: "Citér"
@@ -3819,7 +3823,7 @@ da:
           save: "Gem som..."
     powered_by_discourse: "Drevet af Discourse"
   admin_js:
-    type_to_filter: "skriv for at filtrere…"
+    type_to_filter: "Skriv for at filtrere…"
     settings: "Indstillinger"
     admin:
       title: "Discourse Admin"
@@ -3834,9 +3838,12 @@ da:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
         sidebar_link:
-          all: "Alle"
+          all: "Alle rapporter"
+      config:
+        notifications:
+          title: "Notifikationer"
       new_features:
-        title: "Hvad er nyt"
+        title: "Hvad er nyt?"
       dashboard:
         title: "Dashboard"
         last_updated: "instrumentbræt opdateret:"
@@ -3854,7 +3861,7 @@ da:
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         dismiss_notice: "Ignorer Alle"
         new_features:
-          title: "Hvad er nyt"
+          title: "Hvad er nyt?"
           learn_more: "Lær mere..."
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
@@ -3931,6 +3938,7 @@ da:
             include_subcategories:
               label: "Inkludér Underkategorier"
       flags:
+        title: "Moderation"
         description: "Beskrivelse"
         enabled: "Aktiveret?"
         more_options:
@@ -4136,22 +4144,22 @@ da:
         title: "Konto"
         sidebar_link:
           backups: "Backups"
+          whats_new:
+            title: "Hvad er nyt?"
       community:
         title: "Fællesskab"
         sidebar_link:
           badges: "Emblemer"
           notifications: "Notifikationer"
           permalinks: "Permalinks"
-          trust_levels: "Tillidsniveauer"
           users: "Brugere"
           groups: "Grupper"
-          user_fields: "Bruger felter"
-          watched_words: "Overvågede ord"
           legal: "Jura"
+          moderation_flags:
+            title: "Moderation"
       appearance:
         title: "Udseende"
         sidebar_link:
-          color_schemes: "Farvepaletter"
           emoji: "Humørikon"
           navigation: "Navigation"
           themes: "Temaer"
@@ -4160,27 +4168,15 @@ da:
       email_settings:
         sidebar_link:
           appearance: "Udseende"
-          preview_summary: "Forhåndsvisning af sammendrag"
-      email_logs:
-        sidebar_link:
-          sent: "Sendt"
-          skipped: "Droppet"
-          bounced: "Bounced"
-          received: "Modtaget"
-          rejected: "Afvist"
       security:
         title: "Sikkerhed"
-        sidebar_link:
-          error_logs: "Fejl beskeder"
-          screened_emails: "Blokerede e-mails"
-          screened_ips: "Blokerede IPer"
-          screened_urls: "Blokerede URLer"
-          search_logs: "Søgnings logs"
       section_landing_pages:
         account:
           title: "Konto"
           backups:
             title: "Backups"
+          whats_new:
+            title: "Hvad er nyt?"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4189,6 +4185,7 @@ da:
           update: "Opdater"
           saved: "gemt!"
         flags:
+          header: "Moderation"
           description: "Beskrivelse"
           enabled: "Aktiveret?"
           edit: "Rediger"
@@ -4233,9 +4230,7 @@ da:
         sidebar_link:
           developer: "Udvikler"
           embedding: "Indlejring"
-          rate_limits: "Begrænsninger"
           user_api: "Bruger API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Filer"
           other_options: "Andre"
@@ -5455,6 +5450,9 @@ da:
         destination: "Destination"
         copy_to_clipboard: "Kopier Permalink til udklipsholder"
         delete_confirm: Er du sikker på at du vil slette dette permalink?
+        nav:
+          settings: "Indstillinger"
+          permalinks: "Permalinks"
         form:
           label: "Ny:"
           url: "URL"
@@ -5494,3 +5492,18 @@ da:
         share_button: "Del"
         reply_button: "Svar"
         topic_preview: "Forhåndsvisning af emne"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alle kategorier"
+          new: "Nye"
+          unread: "Ulæste"
+          top: "Top"
+          latest: "Seneste"
+          categories: "Kategorier"
+        category_names:
+          site_feedback: "Site Feedback"
+        table_headers:
+          topic: "Emne"
+          replies: "Svar"
+          views: "Visninger"
+          activity: "Aktivitet"

@@ -126,6 +126,8 @@ et:
             label: Päästik
           version:
             label: Versioon
+          status:
+            label: Staatus
           enabled:
             label: Sisse lülitatud
           disabled:

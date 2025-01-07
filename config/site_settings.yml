@@ -53,10 +53,10 @@ required:
   contact_email:
     default: ""
     type: email
-    area: "about|notifications"
+    area: "about|notifications|legal"
   contact_url:
     default: ""
-    area: "about"
+    area: "about|legal"
   notification_email:
     default: "noreply@unconfigured.discourse.org"
     type: email
@@ -75,13 +75,13 @@ required:
     list_type: simple
   company_name:
     default: ""
-    area: "about"
+    area: "about|legal"
   governing_law:
     default: ""
-    area: "about"
+    area: "about|legal"
   city_for_disputes:
     default: ""
-    area: "about"
+    area: "about|legal"
 
 branding:
   logo:
@@ -216,6 +216,7 @@ basic:
       - posted
       - bookmarks
       - hot
+    area: "navigation"
   post_menu:
     client: true
     type: list
@@ -283,6 +284,12 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
+    area: "navigation"
+  mobile_category_page_style:
+    client: true
+    enum: "MobileCategoryPageStyle"
+    default: "categories_with_featured_topics"
+    area: "navigation"
   category_colors:
     client: true
     type: list
@@ -402,10 +409,12 @@ basic:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+    area: "fonts"
   heading_font:
     default: "arial"
     enum: "BaseFontSetting"
     refresh: true
+    area: "fonts"
   enable_sitemap:
     default: true
   sitemap_page_size:
@@ -421,6 +430,7 @@ basic:
     choices:
       - spinner
       - slider
+    area: "navigation"
   show_user_menu_avatars:
     client: true
     default: false
@@ -1212,14 +1222,30 @@ posting:
     choices:
       - code-fences
       - 4-spaces-indent
-  embed_any_origin: false
-  embed_topics_list: false
-  embed_set_canonical_url: false
-  embed_unlisted: false
-  import_embed_unlisted: true
-  embed_truncate: true
-  embed_support_markdown: false
-  allowed_embed_selectors: ""
+  embed_any_origin:
+    default: false
+    area: "embedding"
+  embed_topics_list:
+    default: false
+    area: "embedding"
+  embed_set_canonical_url:
+    default: false
+    area: "embedding"
+  embed_unlisted:
+    default: false
+    area: "embedding"
+  import_embed_unlisted:
+    default: true
+    area: "embedding"
+  embed_truncate:
+    default: true
+    area: "embedding"
+  embed_support_markdown:
+    default: false
+    area: "embedding"
+  allowed_embed_selectors:
+    default: ""
+    area: "embedding"
   allowed_href_schemes:
     client: true
     default: ""
@@ -2482,6 +2508,7 @@ developer:
     default: "1|2"
     allow_any: false
     refresh: true
+    area: "navigation"
   warn_critical_js_deprecations:
     default: true
     client: true
@@ -2501,14 +2528,17 @@ navigation:
     default: "sidebar"
     type: enum
     enum: "NavigationMenuSiteSetting"
+    area: "navigation"
   default_navigation_menu_categories:
     type: category_list
     default: ""
     client: true
+    area: "navigation"
   default_navigation_menu_tags:
     type: tag_list
     default: ""
     client: true
+    area: "navigation"
   default_sidebar_switch_panel_position:
     default: "bottom"
     type: enum
@@ -2516,6 +2546,7 @@ navigation:
     choices:
       - "top"
       - "bottom"
+    area: "navigation"
 
 embedding:
   embed_by_username:
@@ -2542,17 +2573,22 @@ legal:
   tos_url:
     client: true
     default: ""
+    area: "legal"
   privacy_policy_url:
     client: true
     default: ""
+    area: "legal"
   faq_url:
     client: true
     default: ""
+    area: "legal"
   log_anonymizer_details:
     default: true
+    area: "legal"
   display_eu_visitor_stats:
     default: false
     client: true
+    area: "legal"
 
 backups:
   enable_backups:
@@ -2707,6 +2743,7 @@ uncategorized:
   header_dropdown_category_count:
     client: true
     default: 8
+    area: "navigation"
 
   slug_generation_method:
     default: "ascii"
@@ -3124,6 +3161,7 @@ user_preferences:
       - normal
       - larger
       - largest
+    area: "fonts"
 
   default_title_count_mode:
     type: enum
@@ -3134,8 +3172,12 @@ user_preferences:
   enable_offline_indicator:
     default: false
     client: true
-  default_sidebar_link_to_filtered_list: false
-  default_sidebar_show_count_of_new_items: false
+  default_sidebar_link_to_filtered_list:
+    default: false
+    area: "navigation"
+  default_sidebar_show_count_of_new_items:
+    default: false
+    area: "navigation"
 
 api:
   retain_web_hook_events_period_days:
@@ -3358,6 +3400,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
+    area: "navigation"
   glimmer_topic_list_mode:
     client: true
     type: enum

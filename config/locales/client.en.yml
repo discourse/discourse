@@ -2540,9 +2540,9 @@ en:
       categories_boxes_with_topics: "Boxes with Featured Topics"
       subcategories_with_featured_topics: "Subcategories with Featured Topics"
     full_name_requirement:
-      required_at_signup: "Required at signup"
-      optional_at_signup: "Optional at signup"
-      hidden_at_signup: "Hidden at signup"
+      required_at_signup: "Required"
+      optional_at_signup: "Optional"
+      hidden_at_signup: "Optional, hidden at signup"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -5134,12 +5134,30 @@ en:
           all: "All reports"
 
       config:
+        font_style:
+          title: "Font style"
+          header_description: "Customize the font styles used by your themes."
         login_and_authentication:
           title: "Login and authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more."
+        logo:
+          title: "Site logo"
+          header_description: "Customize the variations of your site logo."
+        navigation:
+          title: "Navigation"
+          header_description: "Configure the navigation links and menu items for your site. This includes the location and behaviour of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar."
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation."
+        search:
+          title: "Search"
+          header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages."
+        legal:
+          title: "Legal"
+          header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."
+        trust_levels:
+          title: "Trust levels"
+          header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum."
 
       new_features:
         title: "What's new?"
@@ -5218,7 +5236,16 @@ en:
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           percent_change_tooltip: "%{percent} change."
-          percent_change_tooltip_previous_value: "Was %{previousValue} %{previousPeriod}."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "Was %{count} two days ago."
+              other: "Was %{count} two days ago."
+            two_weeks_ago:
+              one: "Was %{count} two weeks ago."
+              other: "Was %{count} two weeks ago."
+            thirty_days_ago:
+              one: "Was %{count} in the previous 30 day period."
+              other: "Was %{count} in the previous 30 day period."
           today: "Today"
           yesterday: "Yesterday"
           last_7_days: "Last 7"
@@ -5637,7 +5664,7 @@ en:
         sidebar_link:
           appearance: "Appearance"
           server_setup:
-            title: "Server setup"
+            title: "Server setup & logs"
             keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
 
       security:
@@ -5646,8 +5673,8 @@ en:
           security: "Security settings"
           spam: "Spam settings"
           staff_action_logs:
-            title: "Staff action logs"
-            keywords: "error logs|screened emails|screened ips|screened urls|search logs"
+            title: "Logs & screening"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
 
       section_landing_pages:
         account:
@@ -5750,6 +5777,12 @@ en:
             title: "More options"
             move_up: "Move up"
             move_down: "Move down"
+        permalinks:
+          edit: "Edit"
+          delete: "Delete"
+        embeddable_host:
+          edit: "Edit"
+          delete: "Delete"
         look_and_feel:
           title: "Look and feel"
           description: "Customize and brand your Discourse site, giving it a distinctive style."
@@ -7310,6 +7343,7 @@ en:
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
+        delete: "Delete"
         confirm_delete: "Are you sure you want to delete that host?"
         sample: |
           <p>Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>EMBED_URL</b> with the canonical URL of the page you are embedding it on.</p>
@@ -7318,16 +7352,18 @@ en:
 
           <p>Replace <b>DISCOURSE_USERNAME</b> with the Discourse username of the author that should create the topic. Discourse will automatically lookup the user by the <code>content</code> attribute of the <code>&lt;meta&gt;</code> tags with <code>name</code> attribute set to <code>discourse-username</code> or <code>author</code>. The <code>discourseUserName</code> parameter has been deprecated and will be removed in Discourse 3.2.</p>
         title: "Embedding"
-        host: "Allowed Hosts"
-        allowed_paths: "Path Allowlist"
-        edit: "edit"
-        category: "Post to Category"
-        tags: "Topic Tags"
-        post_author: "Post Author - Defaults to %{author}"
-        add_host: "Add Host"
-        settings: "Embedding Settings"
-        crawling_settings: "Crawler Settings"
-        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
+        host: "Allowed hosts"
+        allowed_paths: "Path allowlist"
+        edit: "Edit"
+        category: "Post to category"
+        tags: "Topic tags"
+        post_author: "Post author"
+        post_author_with_default: "Post author (defaults to %{author})"
+        add_host: "Add host"
+        posts_and_topics: "Posts and Topics configuration"
+        crawlers: "Crawlers configuration"
+        crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
 
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
@@ -7337,7 +7373,20 @@ en:
         allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
         blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Allowed CSS class names"
-        save: "Save Embedding Settings"
+        save: "Save"
+        posts_and_topics_settings_saved: "Posts and Topics settings saved"
+        crawler_settings_saved: "Crawler settings saved"
+        back: "Back to Embedding"
+        configuration_snippet: "Configuration snippet"
+        host_form:
+          add_header: "Add host"
+          edit_header: "Edit host"
+          save: "Save"
+        nav:
+          hosts: "Hosts"
+          settings: "Settings"
+          posts_and_topics: "Posts and Topics"
+          crawlers: "Crawlers"
 
       permalink:
         title: "Permalinks"

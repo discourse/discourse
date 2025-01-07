@@ -1723,8 +1723,6 @@ fi:
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     summary_max_results: "Maksimimäärä viestejä, jotka näytetään ketjun tiivistelmässä"
     summary_timeline_button: "Näytä yhteenvetopainike aikajanalla"
-    summarization_strategy: "Muita tapoja tehdä yhteenveto lisäosien rekisteröimästä sisällöstä"
-    custom_summarization_allowed_groups: "Ryhmät voivat tehdä yhteenvetoja sisällöistä käyttämällä \"summarization_strategy\"-asetusta."
     enable_personal_messages: "VANHENTUNUT, käytä tämän sijaan \"personal message enabled groups\" -asetusta. Salli luottamustason 1 (määritettävissä viestien lähettämiseen vaadittavan vähimmäisluottamustason kautta) käyttäjien luoda viestejä ja vastata viesteihin. Henkilökunta voi aina lähettää viestejä asetuksista riippumatta."
     personal_message_enabled_groups: "Salli näiden ryhmien käyttäjien LUODA yksityisviestejä. TÄRKEÄÄ: 1) kaikki käyttäjät voivat VASTATA viesteihin. 2) Ylläpitäjät ja valvojat voivat LUODA viestejä kenelle tahansa käyttäjälle. 3) Luottamustasoryhmät sisältävät korkeammat tasot; trust_level_1:n valitseminen sallii luottamustasot TL1, TL2, TL3, TL4, mutta ei TL0:aa. 4) Ryhmän vuorovaikutusasetukset ohittavat tämän asetuksen lähetettäessä viestejä tietyille ryhmille."
     enable_system_message_replies: "Sallii käyttäjien vastata järjestelmän viesteihin, vaikka yksityisviestit eivät olisikaan käytössä"
@@ -2261,7 +2259,6 @@ fi:
     penalty_include_post_message: "Sisällytä loukkaava viesti automaattisesti sähköpostiviestimalliin, kun käyttäjä hiljennetään tai hyllytetään"
     svg_icon_subset: "Lisää ylimääräisiä FontAwesome-kuvakkeita, jotka haluat sisällyttää käytettäviisi. Käytä etuliitettä \"fa-\", kun haluat täytetyn kuvakkeen, \"far-\", kun haluat tavallisen ja \"fab-\", kun haluat brändikuvakkeen."
     max_prints_per_hour_per_user: "Tulostuspyyntöjen (/print) enimmäismäärä (aseta 0 poistaaksesi tulostuksen käytöstä)"
-    full_name_required: "Koko nimi on käyttäjäprofiilin pakollinen kenttä."
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
     display_name_on_posts: "Näytä käyttäjän koko nimi viesteissä @käyttäjätunnuksen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
@@ -2436,7 +2433,6 @@ fi:
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
     enable_experimental_lightbox: "Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
-    experimental_glimmer_topic_list_groups: "Ota käyttöön uusi glimmer-ketjuluettelouudistus. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     glimmer_post_menu_mode: "Hallitse, käytetäänkö uutta glimmer-viestivalikkouudistusta. \"Auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     glimmer_post_menu_groups: "Ota käyttöön uusi glimmer-viestivalikkouudistus \"auto\"-tilassa määritetyille käyttäjäryhmille. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     experimental_form_templates: "Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
@@ -2514,8 +2510,8 @@ fi:
       invalid_search_ranking_weights: "Arvo on virheellinen search_ranking_weights-sivustoasetukselle. Esimerkki: '{0.1,0.2,0.3,1.0}'. Huomaa, että kunkin painon enimmäisarvo on 1.0."
     keywords:
       clean_up_inactive_users_after_days: "poistettu käytöstä|inactive|aktivoimaton"
-      purge_unactivated_users_grace_period_days: "poistettu käytöstä|inactive|aktivoimaton"
       navigation_menu: "sivupalkki|yläpalkin avattava valikko"
+      purge_unactivated_users_grace_period_days: "poistettu käytöstä|inactive|aktivoimaton"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4826,23 +4822,9 @@ fi:
             label: "Aloitussivun tyyli"
             choices:
               latest:
-                label: "Tuoreimmat ketjut"
-              categories_only:
-                label: "Vain alueet"
-              categories_with_featured_topics:
-                label: "Alueet, joissa on esiteltyjä ketjuja"
-              categories_and_latest_topics:
-                label: "Alueet ja tuoreimmat ketjut"
-              categories_and_latest_topics_created_date:
-                label: "Alueet ja tuoreimmat ketjut (lajiteltuna ketjun luomispäivän mukaan)"
-              categories_and_top_topics:
-                label: "Alueet ja suosittuja ketjuja"
-              categories_boxes:
-                label: "Alueet laatikoissa"
-              categories_boxes_with_topics:
-                label: "Alueet laatikoissa, joissa ketjuja"
-              subcategories_with_featured_topics:
-                label: "Ala-alueet, joissa on esiteltyjä ketjuja"
+                label: "Tuoreimmat"
+              hot:
+                label: "Suosittu"
       branding:
         title: "Sivuston logo"
         fields:

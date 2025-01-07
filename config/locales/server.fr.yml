@@ -1723,8 +1723,6 @@ fr:
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximal de messages inclus dans le résultat de « Résumer ce sujet »"
     summary_timeline_button: "Afficher un bouton « Résumer » dans la chronologie de chaque sujet"
-    summarization_strategy: "Autres moyens de résumer le contenu enregistré par les extensions"
-    custom_summarization_allowed_groups: "Groupes autorisés à résumer le contenu à l'aide de la « summarization_strategy »."
     enable_personal_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages personnels ». Autorisez les utilisateurs de niveau de confiance 1 (configurable via une confiance minimale pour envoyer des messages) à créer des messages et à y répondre. Notez que les responsables peuvent toujours envoyer des messages quoi qu'il arrive."
     personal_message_enabled_groups: "Autorisez les utilisateurs de ces groupes à CRÉER des messages personnels. IMPORTANT : 1) Tous les utilisateurs peuvent RÉPONDRE aux messages. 2) Les administrateurs et les modérateurs peuvent CRÉER des messages pour n'importe quel utilisateur. 3) Les groupes de niveaux de confiance incluent des niveaux plus élevés ; choisissez trust_level_1 pour autoriser TL1, TL2, TL3, TL4 mais pas TL0. 4) Les paramètres d'interaction de groupe annulent ce paramètre pour la messagerie de groupes spécifiques."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
@@ -2261,7 +2259,6 @@ fr:
     penalty_include_post_message: "Incluez automatiquement la publication incriminée dans le modèle de message électronique lors de la mise en sourdine ou de la suspension d'un utilisateur"
     svg_icon_subset: "Ajoutez des icônes FontAwesome supplémentaires que vous souhaitez inclure dans vos ressources. Utilisez le préfixe « fa- » pour les icônes pleines, « far- » pour les icônes normales et « fab- » pour les icônes de marque."
     max_prints_per_hour_per_user: "Nombre maximal d'impressions de pages (défini sur 0 pour désactiver l'impression)"
-    full_name_required: "Le nom complet est requis dans le profil utilisateur."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les e-mails. Décocher pour masquer les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son nom d'utilisateur."
     show_time_gap_days: "Si deux messages sont publiés avec ce nombre de jours d'écart, afficher cette durée dans le sujet."
@@ -2437,7 +2434,6 @@ fr:
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
     enable_experimental_lightbox: "Remplacez la lightbox d'image par défaut par l'apparence remaniée."
-    experimental_glimmer_topic_list_groups: "Activez la nouvelle implémentation de la liste de sujets « glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
     glimmer_post_menu_mode: "Contrôlez si la nouvelle implémentation du menu de publication « glimmer » est utilisée. « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
     glimmer_post_menu_groups: "Activez la nouvelle implémentation du menu de publication « glimmer » en mode « auto » pour les groupes d'utilisateurs spécifiés. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
     experimental_form_templates: "Activez la fonctionnalité de modèles de formulaire. <b>Après activation,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser / Modèles</a>."
@@ -2515,8 +2511,8 @@ fr:
       invalid_search_ranking_weights: "La valeur n'est pas valide pour le paramètre du site search_ranking_weights. Exemple : « {0.1,0.2,0.3,1.0} ». Notez que la valeur maximale pour chaque pondération est de 1,0."
     keywords:
       clean_up_inactive_users_after_days: "désactivé|inactif|non activé"
-      purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
       navigation_menu: "barre latérale|menu déroulant d'en-tête"
+      purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4930,23 +4926,9 @@ fr:
             label: "Style de la page d'accueil"
             choices:
               latest:
-                label: "Sujets récents"
-              categories_only:
-                label: "Catégories uniquement"
-              categories_with_featured_topics:
-                label: "Catégories avec sujets à la une"
-              categories_and_latest_topics:
-                label: "Catégories et sujets récents"
-              categories_and_latest_topics_created_date:
-                label: "Catégories et derniers sujets (triés par date de création du sujet)"
-              categories_and_top_topics:
-                label: "Catégories et meilleurs sujets"
-              categories_boxes:
-                label: "Boîtes de catégories"
-              categories_boxes_with_topics:
-                label: "Boîtes de catégories avec sujets"
-              subcategories_with_featured_topics:
-                label: "Sous-catégories avec sujets en vedette"
+                label: "Récents"
+              hot:
+                label: "Populaire"
       branding:
         title: "Logo du site"
         fields:

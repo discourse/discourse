@@ -1032,14 +1032,8 @@ bs_BA:
             label: "Pregled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije s istaknutim temama"
-              categories_and_latest_topics:
-                label: "Kategorije i zadnje teme"
-              categories_and_top_topics:
-                label: "Kategorije i top teme"
+              latest:
+                label: "Zadnje"
       corporate:
         fields:
           contact_url:

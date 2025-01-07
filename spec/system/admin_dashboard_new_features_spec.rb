@@ -56,7 +56,6 @@ describe "Admin New Features Page", type: :system do
       expect(new_features_page).to have_learn_more_link
       expect(new_features_page).to have_no_emoji
       expect(new_features_page).to have_date("November 2023")
-      expect(new_features_page).to have_version("3.3.0.beta4")
     end
 
     within find(".admin-config-area-card:last-child") do
@@ -64,7 +63,6 @@ describe "Admin New Features Page", type: :system do
       expect(new_features_page).to have_learn_more_link
       expect(new_features_page).to have_no_emoji
       expect(new_features_page).to have_date("August 2023")
-      expect(new_features_page).to have_version("3.3.0.beta3")
     end
   end
 

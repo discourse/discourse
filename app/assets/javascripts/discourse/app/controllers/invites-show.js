@@ -157,9 +157,7 @@ export default class InvitesShowController extends Controller.extend(
 
   @discourseComputed
   showFullname() {
-    return (
-      this.siteSettings.enable_names && this.site.full_name_visible_in_signup
-    );
+    return this.site.full_name_visible_in_signup;
   }
 
   @discourseComputed
@@ -338,15 +336,11 @@ export default class InvitesShowController extends Controller.extend(
           ) {
             this.rejectedEmails.pushObject(result.values.email);
           }
-          if (
-            result.errors &&
-            result.errors.password &&
-            result.errors.password.length > 0
-          ) {
+          if (result.errors?.["user_password.password"]?.length > 0) {
             this.rejectedPasswords.pushObject(this.accountPassword);
             this.rejectedPasswordsMessages.set(
               this.accountPassword,
-              result.errors.password[0]
+              result.errors["user_password.password"][0]
             );
           }
           if (result.message) {

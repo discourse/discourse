@@ -5,7 +5,7 @@ RSpec.describe Chat::UpdateChannel do
 
   fab!(:channel) { Fabricate(:chat_channel) }
   fab!(:current_user) { Fabricate(:admin) }
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload)
 
   let(:guardian) { Guardian.new(current_user) }
   let(:params) do

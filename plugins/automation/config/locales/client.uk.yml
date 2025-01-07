@@ -415,6 +415,8 @@ uk:
             label: Скрипт
           version:
             label: Версія
+          status:
+            label: Статус
           enabled:
             label: Включено
           disabled:
