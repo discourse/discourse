@@ -400,6 +400,7 @@ Discourse::Application.routes.draw do
         get "notifications" => "site_settings#index"
         get "search" => "site_settings#index"
         get "legal" => "site_settings#index"
+        get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
 

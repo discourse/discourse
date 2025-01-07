@@ -5134,6 +5134,9 @@ en:
           all: "All reports"
 
       config:
+        experimental:
+          title: "Experimental"
+          header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
         font_style:
           title: "Font style"
           header_description: "Customize the font styles used by your themes"
