@@ -24,7 +24,7 @@ module RetrieveTitle
 
     doc = nil
     begin
-      doc = Nokogiri.HTML5(html, nil, encoding)
+      doc = Nokogiri.HTML5(html, encoding:)
     rescue ArgumentError
       # invalid HTML (Eg: too many attributes, status tree too deep) - ignore
       # Error in nokogumbo is not specialized, uses generic ArgumentError
