@@ -85,11 +85,6 @@ export default class DiscourseNewFeatureItem extends Component {
               </span>
             {{/if}}
           </h3>
-          {{#if @item.discourse_version}}
-            <div class="admin-new-feature-item__new-feature-version">
-              {{@item.discourse_version}}
-            </div>
-          {{/if}}
         </div>
 
         <div class="admin-new-feature-item__body-wrapper">
