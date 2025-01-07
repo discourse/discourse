@@ -87,7 +87,9 @@ export default class AdminFlagsForm extends Component {
         permalink_type: data.permalinkType,
         permalink_type_value: this.valueForPermalinkType(data),
       });
-      this.adminPermalinks.model.unshift(Permalink.create(result.payload));
+      this.adminPermalinks.model.allLinks.unshift(
+        Permalink.create(result.payload)
+      );
       this.router.transitionTo("adminPermalinks");
     } catch (error) {
       popupAjaxError(error);
@@ -106,10 +108,12 @@ export default class AdminFlagsForm extends Component {
           permalink_type_value: this.valueForPermalinkType(data),
         }
       );
-      const index = this.adminPermalinks.model.findIndex(
+      const index = this.adminPermalinks.model.allLinks.findIndex(
         (permalink) => permalink.id === this.args.permalink.id
       );
-      this.adminPermalinks.model[index] = Permalink.create(result.payload);
+      this.adminPermalinks.model.allLinks[index] = Permalink.create(
+        result.payload
+      );
       this.router.transitionTo("adminPermalinks");
     } catch (error) {
       popupAjaxError(error);
