@@ -509,10 +509,16 @@ export default class CreateAccount extends Component.extend(
     this.login.externalLogin(provider, { signup: true });
   }
 
+  #setForceValidationReason(value) {
+    this.set("forceValidationReason", value);
+    this.nameValidationHelper.forceValidationReason = value;
+    this.notifyPropertyChange("nameValidation");
+  }
+
   @action
   createAccount() {
     this.set("flash", "");
-    this.set("forceValidationReason", true);
+    this.#setForceValidationReason(true);
     this.set("emailValidationVisible", true);
     this.set("passwordValidationVisible", true);
 
@@ -540,7 +546,7 @@ export default class CreateAccount extends Component.extend(
       return;
     }
 
-    this.set("forceValidationReason", false);
+    this.#setForceValidationReason(false);
     this.performAccountCreation();
   }
 }

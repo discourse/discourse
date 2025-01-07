@@ -501,10 +501,16 @@ export default class SignupPageController extends Controller.extend(
     this.login.externalLogin(provider, { signup: true });
   }
 
+  #setForceValidationReason(value) {
+    this.set("forceValidationReason", value);
+    this.nameValidationHelper.forceValidationReason = value;
+    this.notifyPropertyChange("nameValidation");
+  }
+
   @action
   createAccount() {
     this.set("flash", "");
-    this.set("forceValidationReason", true);
+    this.#setForceValidationReason(true);
     this.set("emailValidationVisible", true);
     this.set("passwordValidationVisible", true);
 
@@ -532,7 +538,7 @@ export default class SignupPageController extends Controller.extend(
       return;
     }
 
-    this.set("forceValidationReason", false);
+    this.#setForceValidationReason(false);
     this.performAccountCreation();
   }
 }

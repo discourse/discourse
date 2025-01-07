@@ -1,8 +1,11 @@
+import { tracked } from "@glimmer/tracking";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { isEmpty } from "@ember/utils";
 import { i18n } from "discourse-i18n";
 
 export default class NameValidationHelper {
+  @tracked forceValidationReason = false;
+
   constructor(owner) {
     this.owner = owner;
   }
@@ -18,15 +21,15 @@ export default class NameValidationHelper {
 
   @dependentKeyCompat
   get nameValidation() {
-    const accountName = this.owner.get("accountName");
-    const forceValidationReason = this.owner.get("forceValidationReason");
-
-    if (this.owner.site.full_name_required_for_signup && isEmpty(accountName)) {
+    if (
+      this.owner.site.full_name_required_for_signup &&
+      isEmpty(this.owner.get("accountName"))
+    ) {
       return {
         failed: true,
         ok: false,
         message: i18n("user.name.required"),
-        reason: forceValidationReason ? i18n("user.name.required") : null,
+        reason: this.forceValidationReason ? i18n("user.name.required") : null,
         element: document.querySelector("#new-account-name"),
       };
     }
