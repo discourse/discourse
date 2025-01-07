@@ -291,6 +291,9 @@ export default function () {
             this.route("settings");
           }
         );
+        this.route("developer", function () {
+          this.route("settings", { path: "/" });
+        });
         this.route("fonts", function () {
           this.route("settings", { path: "/" });
         });

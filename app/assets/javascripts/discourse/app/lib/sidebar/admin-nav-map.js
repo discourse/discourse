@@ -226,9 +226,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_developer",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["developer"],
-        query: { filter: "" },
+        route: "adminConfig.developer.settings",
         label: "admin.advanced.sidebar_link.developer",
         icon: "keyboard",
       },
