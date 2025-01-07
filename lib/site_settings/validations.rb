@@ -267,6 +267,14 @@ module SiteSettings::Validations
     validate_error :twitter_summary_large_image_no_svg
   end
 
+  def validate_allow_tl0_and_anonymous_users_to_flag_illegal_content(new_val)
+    return if new_val == "f"
+    return if SiteSetting.contact_email.present?
+    return if SiteSetting.email_address_to_report_illegal_content.present?
+
+    validate_error :tl0_and_anonymous_flag
+  end
+
   private
 
   def validate_bucket_setting(setting_name, upload_bucket, backup_bucket)

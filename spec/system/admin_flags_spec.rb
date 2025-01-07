@@ -164,6 +164,8 @@ describe "Admin Flags Page", type: :system do
     admin_flags_page.click_settings_tab
     expect(page.all(".setting-label h3").map(&:text).map(&:downcase)).to eq(
       [
+        "allow tl0 and anonymous users to flag illegal content",
+        "email address to report illegal content",
         "silence new user sensitivity",
         "num users to silence new user",
         "flag sockpuppets",

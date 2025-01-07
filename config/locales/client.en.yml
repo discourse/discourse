@@ -3890,6 +3890,7 @@ en:
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag_action: "Flag"
         flag: "privately flag this post for attention or send a personal message about it"
+        anonymous_flag: "send an email to staff to flag this post"
         delete_action: "Delete post"
         delete: "delete this post"
         undelete_action: "Undelete post"
@@ -4206,6 +4207,11 @@ en:
         all: "all topics"
         none: "no subcategories"
       colors_disabled: "You can’t select colors because you have a category style of none."
+
+    anonymous_flagging:
+      title: "Report illegal content"
+      description: "To report illegal content, please contact %{contact_info}."
+      illegal_content: "Illegal content: "
 
     flagging:
       title: "Thanks for keeping our community civil!"

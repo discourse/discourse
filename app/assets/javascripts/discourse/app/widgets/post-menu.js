@@ -211,20 +211,30 @@ registerButton("flag-count", (attrs) => {
   };
 });
 
-registerButton("flag", (attrs) => {
-  if (attrs.reviewableId || (attrs.canFlag && !attrs.hidden)) {
-    let button = {
-      action: "showFlags",
-      title: "post.controls.flag",
-      icon: "flag",
-      className: "create-flag",
-    };
-    if (attrs.reviewableId) {
-      button.before = "flag-count";
+registerButton(
+  "flag",
+  (attrs, _state, siteSettings, _postMenuSettings, currentUser) => {
+    if (
+      attrs.reviewableId ||
+      (attrs.canFlag && !attrs.hidden) ||
+      (siteSettings.allow_tl0_and_anonymous_users_to_flag_illegal_content &&
+        !currentUser)
+    ) {
+      let button = {
+        action: "showFlags",
+        title: currentUser
+          ? "post.controls.flag"
+          : "post.controls.anonymous_flag",
+        icon: "flag",
+        className: "create-flag",
+      };
+      if (attrs.reviewableId) {
+        button.before = "flag-count";
+      }
+      return button;
     }
-    return button;
   }
-});
+);
 
 registerButton("edit", (attrs) => {
   if (attrs.canEdit) {

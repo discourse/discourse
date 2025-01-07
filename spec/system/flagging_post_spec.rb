@@ -8,9 +8,9 @@ describe "Flagging post", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
 
-  before { sign_in(current_user) }
-
   describe "Using Take Action" do
+    before { sign_in(current_user) }
+
     it "can select the default action to hide the post, agree with other flags, and reach the flag threshold" do
       other_flag = Fabricate(:flag_post_action, post: post_to_flag, user: Fabricate(:moderator))
       other_flag_reviewable =
@@ -34,6 +34,8 @@ describe "Flagging post", type: :system do
   end
 
   describe "As Illegal" do
+    before { sign_in(current_user) }
+
     it do
       topic_page.visit_topic(post_to_flag.topic)
       topic_page.expand_post_actions(post_to_flag)
@@ -48,6 +50,55 @@ describe "Flagging post", type: :system do
       flag_modal.confirm_flag
 
       expect(page).to have_content(I18n.t("js.post.actions.by_you.illegal"))
+    end
+  end
+
+  context "when tl0" do
+    fab!(:tl0_user) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    before { sign_in(tl0_user) }
+
+    it "does not allow to mark posts as illegal" do
+      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.expand_post_actions(post_to_flag)
+      expect(topic_page).to have_no_flag_button
+    end
+
+    it "allows to mark posts as illegal when allow_tl0_and_anonymous_users_to_flag_illegal_content setting is enabled" do
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
+      topic_page.visit_topic(post_to_flag.topic).open_flag_topic_modal
+      expect(flag_modal).to have_choices("It's Illegal")
+    end
+  end
+
+  context "when anonymous" do
+    let(:anonymous_flag_modal) { PageObjects::Modals::AnonymousFlag.new }
+
+    it "does not allow to mark posts as illegal" do
+      topic_page.visit_topic(post_to_flag.topic)
+      expect(topic_page).to have_no_post_more_actions(post_to_flag)
+    end
+
+    it "allows to mark posts as illegal when allow_tl0_and_anonymous_users_to_flag_illegal_content setting is enabled" do
+      SiteSetting.contact_email = "contact@example.com"
+      SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
+
+      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.expand_post_actions(post_to_flag)
+      topic_page.find_post_action_button(post_to_flag, :flag).click
+
+      expect(anonymous_flag_modal.body).to have_content(
+        I18n.t("js.anonymous_flagging.description", { contact_info: "contact@example.com" }),
+      )
+
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.expand_post_actions(post_to_flag)
+      topic_page.find_post_action_button(post_to_flag, :flag).click
+
+      expect(anonymous_flag_modal.body).to have_content(
+        I18n.t("js.anonymous_flagging.description", { contact_info: "illegal@example.com" }),
+      )
     end
   end
 end
