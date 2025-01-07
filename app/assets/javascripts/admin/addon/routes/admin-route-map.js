@@ -312,6 +312,9 @@ export default function () {
         this.route("spam", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("user-api", function () {
+          this.route("settings", { path: "/" });
+        });
       }
     );
 
