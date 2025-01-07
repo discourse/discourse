@@ -11,6 +11,8 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import NavItem from "discourse/models/nav-item";
 import discourseComputed from "discourse-common/utils/decorators";
 
+const DRAFTS_MENU_LIMIT = 4;
+
 @tagName("")
 export default class DNavigation extends Component {
   @service router;
@@ -120,7 +122,11 @@ export default class DNavigation extends Component {
 
   @discourseComputed("draftCount")
   otherDraftCount(draftCount) {
-    return draftCount > 4 ? draftCount - 4 : 0;
+    return draftCount > DRAFTS_MENU_LIMIT ? draftCount - DRAFTS_MENU_LIMIT : 0;
+  }
+
+  get draftLimit() {
+    return DRAFTS_MENU_LIMIT;
   }
 
   @discourseComputed("category.can_edit")

@@ -35,7 +35,7 @@ export default class TopicDraftsDropdown extends Component {
     draftsStream.reset();
 
     await draftsStream.findItems(this.site);
-    this.drafts = draftsStream.content;
+    this.drafts = draftsStream.content.slice(0, this.args.draftLimit);
   }
 
   @action
@@ -85,7 +85,7 @@ export default class TopicDraftsDropdown extends Component {
                 @model={{this.currentUser}}
                 class="btn-link view-all-drafts"
               >
-                <span>{{this.otherDraftsCount}}</span>
+                <span data-other-drafts="{{this.args.otherDrafts}}">{{this.otherDraftsCount}}</span>
                 <span>view all</span>
               </DButton>
             </dropdown.item>
