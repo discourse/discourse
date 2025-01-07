@@ -109,6 +109,10 @@ body.wizard {
     &.styling {
       max-width: 100%;
       width: auto;
+
+      @include breakpoint("mobile-extra-large") {
+        width: 95%;
+      }
     }
   }
 
@@ -201,7 +205,7 @@ body.wizard {
     margin-right: 1em;
 
     @media only screen and (max-width: 925px) {
-      width: 80%;
+      width: 100%;
       margin-left: auto;
       margin-right: auto;
     }
@@ -297,6 +301,10 @@ body.wizard {
   &__step-contents {
     min-height: 37em;
     margin-bottom: 2em;
+
+    @include breakpoint("mobile-extra-large") {
+      min-height: 30em;
+    }
   }
 
   &__step-form {
