@@ -62,15 +62,19 @@ class UploadCreator
       return @upload
     end
 
-    @image_info =
-      begin
-        FastImage.new(@file)
-      rescue StandardError
-        nil
-      end
-    is_image = FileHelper.is_supported_image?(@filename)
-    is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
-    is_image = false if @opts[:for_theme]
+    @image_info = FastImage.new(@file)
+    begin
+      @image_info.fetch
+    rescue StandardError
+    end
+
+    if @opts[:for_theme]
+      is_image = false
+    else
+      is_image = FileHelper.is_supported_image?(@filename)
+      is_image ||= @image_info.type && FileHelper.is_supported_image?("test.#{@image_info.type}")
+    end
+
     is_thumbnail = SiteSetting.video_thumbnails_enabled && @opts[:type] == "thumbnail"
 
     # If this is present then it means we are creating an upload record from
@@ -287,15 +291,14 @@ class UploadCreator
   end
 
   def extract_image_info!
-    @image_info =
-      begin
-        FastImage.new(@file)
-      rescue StandardError
-        nil
-      end
+    @image_info = FastImage.new(@file)
+    begin
+      @image_info.fetch
+    rescue StandardError
+    end
     @file.rewind
 
-    if @image_info.nil?
+    if !@image_info.type
       @upload.errors.add(:base, I18n.t("upload.images.not_supported_or_corrupted"))
     elsif filesize <= 0
       @upload.errors.add(:base, I18n.t("upload.empty"))
