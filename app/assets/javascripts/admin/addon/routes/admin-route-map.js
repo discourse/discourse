@@ -303,6 +303,9 @@ export default function () {
         this.route("security", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("spam", function () {
+          this.route("settings", { path: "/" });
+        });
       }
     );
 

@@ -187,9 +187,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_spam",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["spam"],
-        query: { filter: "" },
+        route: "adminConfig.spam.settings",
         label: "admin.security.sidebar_link.spam",
         icon: "robot",
       },

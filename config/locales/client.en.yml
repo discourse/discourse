@@ -5151,7 +5151,7 @@ en:
           header_description: "Customize the variations of your site logo"
         navigation:
           title: "Navigation"
-          header_description: "Configure the navigation links and menu items for your site. This includes the location and behaviour of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
+          header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
@@ -5161,6 +5161,9 @@ en:
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator priviledges, and content security policies"
+        spam:
+          title: "Spam"
+          header_description: "Configure how user registration and posting behavior analyzed by the system to quickly identify and block spam"
         trust_levels:
           title: "Trust levels"
           header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum"
