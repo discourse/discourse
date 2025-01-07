@@ -5158,6 +5158,9 @@ en:
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
+        onebox:
+          title: "Onebox"
+          header_description: "Configure how onebox previews are generated and displayed for your site"
         rate_limits:
           title: "Rate limits"
           header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
