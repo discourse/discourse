@@ -250,6 +250,8 @@ hu:
       bookmark:
         instructions: |-
           Ha többet szeretne megtudni, kattintson erre a gombra: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , és <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **jelölje meg könyvjelzővel ezt az üzenetet**. Ha megteszi, akkor lehet, hogy hamarosan :gift: vár Önre!
+        reply: |-
+          Kitűnő! Mostantól bármikor könnyedén visszatérhet a beszélgetésünkhöz, közvetlenül a [profilján lévő könyvjelzők lapról](%{bookmark_url}). Csak válassza ki a profilképét a jobb felső sarokban &#8599;
         not_found: |-
           Sajnos nem látok könyvjelzőket ebben a témában. Megtalálta a könyvjelzőt minden egyes bejegyzés alatt? Használja a több megjelenítése gombot <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, hogy további lehetőségeket jelenítsen meg, ha szükséges.
       emoji:
@@ -283,6 +285,14 @@ hu:
 
           (És igen, _disco_ van a nevemben, mint a 70-es évekbeli táncőrület. Tényleg [imádom az éjszakai életet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          Mi a barátságos vitákat részesítjük előnyben, és az Ön segítségére is szükségünk van, hogy a légkör civilizált maradjon(%{guidelines_url}). Ha problémát észlel, kérjük, jelezze, hogy a szerző vagy segítőkész csapatunk (%{about_url}) tudomást szerezzen róla. Sokféle okból jelezhet egy bejegyzést, kezdve egy ártalmatlan témafelosztási javaslattól egészen a közösségi irányelvek egyértelmű megsértéséig. Ha az Egyéb lehetőséget választja, személyes üzenetben indíthat megbeszélést a moderátorokkal, ahol további kérdéseket tehet fel.
+
+          :imp: Ide valami csúnya dolgot írtam
+
+          Továbbá, nyugodtan jelölje meg ezt a bejegyzést <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">, és válassza az Ez nem megfelelő indokot!
+        reply: |-
+          A csapatunk (%{group_url}) privát értesítést kap az Ön jelzéséről. Ha elegendő közösségi tag jelöl meg egy bejegyzést, az óvintézkedésként automatikusan el lesz rejtve. (Mivel valójában nem írtam csúnya bejegyzést :angel:, most eltávolítottam a jelzést.)
         not_found: |-
           Ó jaj, a csúnya bejegyzésem még nem lett ide nem illőként jelentve. :worried: Tudja jelenteni ide nem illőként a **jelentés** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> gombbal? Ne feledje, hogy használnia kell a továbbiak megjelenítése <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> gombot, hogy megjelenítése a további műveleteket a bejegyzéseknél.
       search:
@@ -376,6 +386,12 @@ hu:
         reply: |-
           Kiváló! Ne feledje, hogy ez a kategóriákkal _és_ címkékkel is működik, ha a címkék engedélyezettek.
       change_topic_notification_level:
+        instructions: |-
+          Minden témának van egy értesítési szintje. Ez a "normál" szinten kezdődik, ami azt jelenti, hogy általában csak akkor kap értesítést, ha valaki közvetlenül Önhöz beszél.
+
+          Alapértelmezés szerint a személyes üzenetek értesítési szintje a legmagasabb, "figyelés" szintre van állítva, ami azt jelenti, hogy minden új válaszról értesítést kap. De felülbírálhatja az értesítési szintet _minden_ téma esetében "figyelésre", "követésre" vagy "némításra".
+
+          Próbáljuk meg megváltoztatni ennek a témának az értesítési szintjét. A téma alján találsz van egy gomb, amely azt mutatja, hogy **figyeled** ezt a témát. Meg tudodja változtatni az értesítési szintet **követésre**?
         not_found: |-
           Új néz ki, hogy még mindig figyeli :eyes: ezt a témát! Ha nem találja, akkor az értesítési szint gombja a téma alján található.
         reply: "Nagyszerű munka! Remélem, hogy nem némította le ezt a témát, sajnos néha kicsit fecsegős vagyok :grin:. \n\nNe feledje, hogy amikor egy témára válaszol, vagy egy témát néhány percnél tovább olvas, akkor azt automatikusan elkezdi követni is. Ezt megváltoztathatja a [felhasználói beállításokban](%{base_uri}/my/preferences)."

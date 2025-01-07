@@ -1799,6 +1799,9 @@ ur:
       categories_boxes: "ذیلی زمرے والے خانے"
       categories_boxes_with_topics: "نمایاں ٹاپک والے خانے"
       subcategories_with_featured_topics: "نمایاں عنوانات کے ساتھ ذیلی زمرہ جات"
+    full_name_requirement:
+      required_at_signup: "درکار"
+      optional_at_signup: "اختیاری"
     shortcut_modifier_key:
       shift: "شفٹ"
       ctrl: "Ctrl"
@@ -3652,8 +3655,28 @@ ur:
         sidebar_link:
           all: "تمام رپورٹیں"
       config:
+        developer:
+          title: "ڈیولپر"
+        files:
+          title: "فائلیں"
+        legal:
+          title: "قانونی"
+        navigation:
+          title: "نیویگیشن"
         notifications:
           title: "اطلاعات"
+        onebox:
+          title: "وَن باکس"
+        other:
+          title: "دیگر"
+        search:
+          title: "تلاش کریں"
+        security:
+          title: "سیکورٹی"
+        spam:
+          title: "سپَیم"
+        user_api:
+          title: "یُوزَر API"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈَیش بورڈ اَپ ڈیٹ کیا گیا:"
@@ -4008,6 +4031,12 @@ ur:
             invalid_applies_to: "درکار"
             topic: "ٹاپک"
             post: "پوسٹ`"
+        permalinks:
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
+        embeddable_host:
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
         look_and_feel:
           themes:
             title: "تِھیمز"
@@ -4073,7 +4102,7 @@ ur:
             label: "ڈاؤن لوڈ"
             title: "ڈاؤن لوڈ لنک کے ساتھ اِیمیل بھیجیں"
           destroy:
-            title: "بیک اَپ کو ہٹائیں"
+            title: "مٹائیں"
             confirm: "کیا آپ واقعی اِس بیک اَپ کو ختم کرنا چاہتے ہیں؟"
           restore:
             label: "رِیسٹور"
@@ -5151,16 +5180,11 @@ ur:
         settings: "ترتیبات"
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
+        delete: "مٹائیں"
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
         title: "اَیمبَیڈ کرنا"
-        host: "اجازت یافتہ ہَوسٹ"
-        allowed_paths: "پاتھ کی اجازت کی فہرست"
-        edit: "ترمیم"
-        category: "زمرہ میں پوسٹ کریں"
-        add_host: "ہَوسٹ شامل کریں"
-        settings: "اَیمبَیڈ کرنے کی سیٹِنگ"
-        crawling_settings: "کرالر کی سیٹِنگ"
-        crawling_description: "جب ڈِسکورس آپ کی پوسٹس کیلئے ٹاپک بناتا ہے، اگر کوئی RSS/ATOM فِیڈ موجود نہ ہو تو وہ آپ کا مواد آپ کے HTML سے پارس کرنے کی کوشش کرے گا۔ کبھی کبھار آپ کا مواد نکالنا دشوار ہو سکتا ہے، اِس لیے ہم اِس نکالنے کو آسان بنانے کیلئے CSS اصولوں کی وضاحت کرنے کی صلاحیت فراہم کرتے ہیں۔"
+        edit: "ترمیم کریں"
+        crawlers_description: "جب ڈِسکورس آپ کی پوسٹس کیلئے ٹاپک بناتا ہے، اگر کوئی RSS/ATOM فِیڈ موجود نہ ہو تو وہ آپ کا مواد آپ کے HTML سے پارس کرنے کی کوشش کرے گا۔ کبھی کبھار آپ کا مواد نکالنا دشوار ہو سکتا ہے، اِس لیے ہم اِس نکالنے کو آسان بنانے کیلئے CSS اصولوں کی وضاحت کرنے کی صلاحیت فراہم کرتے ہیں۔"
         embed_by_username: "ٹاپک کی تخلیق کیلئے صارف نام"
         embed_post_limit: "پعسٹس اَیمبَیڈ کرنے کی زیادہ سے زیادہ تعداد۔"
         embed_title_scrubber: "پوسٹس کے عنوان صاف کرنے کیلئے استعمال ہونے والا رَیگولَر اَیکسپرَیشن"
@@ -5169,7 +5193,12 @@ ur:
         allowed_embed_selectors: "عناصر کیلئے CSS سلیکٹر جن کی اَیمبَیڈ میں اجازت ہے"
         blocked_embed_selectors: "عناصر کیلئے CSS سلیکٹر جن کو اَیمبَیڈ سے ہٹایا گیا ہے"
         allowed_embed_classnames: "اجازت یافتہ CSS کلاسوں کے نام"
-        save: "اَیمبَیڈ کرنے کی سیٹِنگ محفوظ کریں"
+        save: "محفوظ کریں"
+        host_form:
+          save: "محفوظ کریں"
+        nav:
+          settings: "ترتیبات"
+          crawlers: "کرالرز"
       permalink:
         title: "دائمی لِنکس"
         description: "URLs جو فورم کو معلوم نہیں, کے لیے دوبارہ ہدایات لاگو کریں۔"

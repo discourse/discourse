@@ -1554,7 +1554,8 @@ ca:
       categories_boxes: "Caixes amb subcategories"
       categories_boxes_with_topics: "Caixes amb temes destacats"
     full_name_requirement:
-      required_at_signup: "Necessari en identificar-se"
+      required_at_signup: "Necessari"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -2990,8 +2991,28 @@ ca:
         sidebar_link:
           all: "Tots els reports"
       config:
+        developer:
+          title: "Desenvolupador"
+        files:
+          title: "Fitxers"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navegació"
         notifications:
           title: "Notificacions"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Altres"
+        search:
+          title: "Cerca"
+        security:
+          title: "Seguretat"
+        spam:
+          title: "Brossa"
+        user_api:
+          title: "API d'usuari"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
@@ -3281,6 +3302,12 @@ ca:
             invalid_applies_to: "Necessari"
             topic: "temes"
             post: "publicacions"
+        permalinks:
+          edit: "Edita"
+          delete: "Suprimeix"
+        embeddable_host:
+          edit: "Edita"
+          delete: "Suprimeix"
         look_and_feel:
           themes:
             title: "Aparences"
@@ -3348,7 +3375,7 @@ ca:
             title: "Envia correu amb enllaç de descàrrega"
             alert: "Us hem enviat per correu un enllaç per a descarregar aquesta còpia de seguretat"
           destroy:
-            title: "Elimina la còpia de seguretat"
+            title: "Suprimeix"
             confirm: "Esteu segur que voleu destruir aquesta còpia de seguretat?"
           restore:
             label: "Restaura"
@@ -4273,15 +4300,11 @@ ca:
         settings: "Configuració"
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
+        delete: "Suprimeix"
         confirm_delete: "Esteu segur que voleu suprimir aquest amfitrió?"
         title: "Incrustant"
-        host: "Amfitrions permesos"
-        edit: "edita"
-        category: "Publica en la categoria"
-        add_host: "Afegeix amfitrió"
-        settings: "Configuració d'incrustacions"
-        crawling_settings: "Configuració del rastrejador"
-        crawling_description: "Quan Discourse crea temes per a les vostres publicacions, si no hi ha sindicació RSS/ATOM, es provarà d'analitzar-ne els continguts a partir del vostre HTML. A vegades pot ser complicat extraure el vostre contingut, i per això oferim la possibilitat d'especificar regles CSS per a fer més fàcil l'extracció."
+        edit: "Edita"
+        crawlers_description: "Quan Discourse crea temes per a les vostres publicacions, si no hi ha sindicació RSS/ATOM, es provarà d'analitzar-ne els continguts a partir del vostre HTML. A vegades pot ser complicat extraure el vostre contingut, i per això oferim la possibilitat d'especificar regles CSS per a fer més fàcil l'extracció."
         embed_by_username: "Nom d'usuari per a crear un tema"
         embed_post_limit: "Nombre màxim de publicacions que s'incrusten "
         embed_title_scrubber: "Expressió regular emprada per a depurar el títol de les publicacions"
@@ -4289,7 +4312,12 @@ ca:
         allowed_embed_selectors: "Selector de CSS per a elements permesos en les incrustacions"
         blocked_embed_selectors: "Selector de CSS per a elements que han estat eliminats de les incrustacions"
         allowed_embed_classnames: "Noms permesos de classes de CSS"
-        save: "Desa la configuració d'incrustacions"
+        save: "Desa"
+        host_form:
+          save: "Desa"
+        nav:
+          settings: "Configuració"
+          crawlers: "Rastrejadors"
       permalink:
         title: "Enllaços permanents"
         url: "URL"

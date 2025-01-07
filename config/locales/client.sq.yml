@@ -2350,7 +2350,8 @@ sq:
       categories_boxes_with_topics: "Kutitë me tema të veçuara"
       subcategories_with_featured_topics: "Nënkategoritë me tema të veçuara"
     full_name_requirement:
-      required_at_signup: "Required at signup"
+      required_at_signup: "E nevojshme"
+      optional_at_signup: "Opsionale"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3972,8 +3973,28 @@ sq:
           always: "gjithmonë"
           never: "asnjëherë"
       config:
+        developer:
+          title: "Developer"
+        files:
+          title: "Skedarë"
+        legal:
+          title: "Legale"
+        navigation:
+          title: "Shfletimi"
         notifications:
           title: "Njoftimet"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Të tjerë"
+        search:
+          title: "Kërko"
+        security:
+          title: "Siguria"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API e përdoruesit"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
@@ -4129,6 +4150,14 @@ sq:
             invalid_applies_to: "E nevojshme"
             topic: "topics"
             post: "postime"
+        permalinks:
+          edit: "Redaktoni"
+          delete: "Fshij"
+        embeddable_host:
+          edit: "Redaktoni"
+          delete: "Fshij"
+          more_options:
+            title: "Më shumë mundësi"
         user_fields:
           type: "Lloji"
           delete: "Fshij"
@@ -4190,7 +4219,7 @@ sq:
           download:
             label: "Shkarko"
           destroy:
-            title: "Remove the backup"
+            title: "Fshij"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             label: "Rikthe"
@@ -4815,10 +4844,16 @@ sq:
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Rregullimet"
       embedding:
+        delete: "Fshij"
         title: "Embedding"
-        edit: "redakto"
+        edit: "Redaktoni"
         embed_post_limit: "Maximum number of posts to embed"
         embed_truncate: "Truncate the embedded posts"
+        save: "Ruani"
+        host_form:
+          save: "Ruani"
+        nav:
+          settings: "Rregullimet"
       permalink:
         title: "Permalinks"
         url: "URL"

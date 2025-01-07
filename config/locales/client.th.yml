@@ -1305,7 +1305,8 @@ th:
       categories_and_latest_topics: "หมวดหมู่และกระทู้ล่าสุด"
       categories_and_top_topics: "หมวดหมู่และกระทู้ยอดนิยม"
     full_name_requirement:
-      required_at_signup: "ต้องการเมื่อลงทะเบียน"
+      required_at_signup: "ต้องการ"
+      optional_at_signup: "ทางเลือก"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2531,8 +2532,24 @@ th:
           always: "เสมอ"
           never: "ไม่เลย"
       config:
+        developer:
+          title: "นักพัฒนา"
+        files:
+          title: "ไฟล์"
+        legal:
+          title: "กฎ"
+        navigation:
+          title: "การนำทาง"
         notifications:
           title: "การแจ้งเตือน"
+        other:
+          title: "อื่นๆ"
+        search:
+          title: "ค้นหา"
+        security:
+          title: "ความปลอดภัย"
+        spam:
+          title: "ขยะ"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -2715,6 +2732,12 @@ th:
             invalid_applies_to: "ต้องการ"
             topic: "หัวข้อ"
             post: "โพสต์"
+        permalinks:
+          edit: "แก้ไข"
+          delete: "ลบ"
+        embeddable_host:
+          edit: "แก้ไข"
+          delete: "ลบ"
         look_and_feel:
           themes:
             title: "ธีม"
@@ -2757,6 +2780,8 @@ th:
           download:
             label: "ดาวน์โหลด"
             title: "ส่งอีเมลพร้อมลิงก์ดาวน์โหลด"
+          destroy:
+            title: "ลบ"
         location:
           s3: "S3"
       export_csv:
@@ -3290,14 +3315,15 @@ th:
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
         settings: "การตั้งค่า"
       embedding:
+        delete: "ลบ"
         confirm_delete: "คุณแน่ใจหรือว่าจะลบโพสนั้น?"
         title: "ฝั่ง"
-        host: "อนุญาตโฮส"
         edit: "แก้ไข"
-        category: "โพสต์ไปยังหมวดหมู่"
-        add_host: "เพิ่มโฮส"
-        settings: "การตั้งการการฝั่ง"
-        save: "บันทึกการตั้งค่าการฝั่ง"
+        save: "บันทึก"
+        host_form:
+          save: "บันทึก"
+        nav:
+          settings: "การตั้งค่า"
       permalink:
         title: "ลิงค์ถาวร"
         url: "URL"

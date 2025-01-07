@@ -167,8 +167,10 @@ hu:
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
             restricted_group:
               label: Csoport
+              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoport postafiókjában
             restricted_groups:
               label: Csoportok
+              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
             ignore_group_members:
               label: Csoporttagok figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
@@ -226,6 +228,10 @@ hu:
               label: Érvényes bizalmi szintek
               description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Címkék hozzáadva vagy eltávolítva
+            tags_added: Címkék hozzáadva
+            tags_removed: Címkék eltávolítva
           fields:
             watching_categories:
               label: Figyelt kategóriák
@@ -233,6 +239,8 @@ hu:
             watching_tags:
               label: Figyelt címkék
               description: Csak akkor aktiválódik, ha a témakör rendelkezik ezen címkék bármelyikével
+            trigger_on:
+              label: Trigger bekapcsolva
             trigger_with_pms:
               label: Aktiválás PÜ-el
               description: Akkor is aktiválódik, ha a címkéket PÜ-ben módosították

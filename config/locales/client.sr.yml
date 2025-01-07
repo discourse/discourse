@@ -1207,7 +1207,8 @@ sr:
       categories_and_top_topics: "Kategorije i glavne teme"
       categories_boxes_with_topics: "Kutije sa istaknutim temama"
     full_name_requirement:
-      required_at_signup: "Potrebno pri registraciji"
+      required_at_signup: "Potrebno"
+      optional_at_signup: "Opciono"
     shortcut_modifier_key:
       alt: "Alt"
     select_kit:
@@ -2088,8 +2089,26 @@ sr:
           always: "uvek"
           never: "nikada"
       config:
+        developer:
+          title: "Programer"
+        files:
+          title: "Datoteke"
+        legal:
+          title: "Legalno"
+        navigation:
+          title: "Navigacija"
         notifications:
           title: "Obaveštenja"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Ostalo"
+        search:
+          title: "Pretraži"
+        security:
+          title: "Sigurnost"
+        spam:
+          title: "Nepoželjno"
       dashboard:
         title: "Komandna Tabla"
         version: "Verzija"
@@ -2235,6 +2254,12 @@ sr:
             invalid_applies_to: "Potrebno"
             topic: "teme"
             post: "poruke"
+        permalinks:
+          edit: "Izmeni"
+          delete: "Obriši"
+        embeddable_host:
+          edit: "Izmeni"
+          delete: "Obriši"
         user_fields:
           type: "Tip"
           delete: "Obriši"
@@ -2287,7 +2312,7 @@ sr:
           download:
             label: "Preuzmi"
           destroy:
-            title: "Ukloni kopiju"
+            title: "Obriši"
             confirm: "Jeste li sigurni da želite uništiti ovu sigurnosnu kopiju?"
           restore:
             label: "Obnovi"
@@ -2837,8 +2862,14 @@ sr:
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Podešavanja"
       embedding:
+        delete: "Obriši"
         title: "Ugrađivanje"
-        edit: "izmeni"
+        edit: "Izmeni"
+        save: "Sačuvaj"
+        host_form:
+          save: "Sačuvaj"
+        nav:
+          settings: "Podešavanja"
       permalink:
         url: "URL"
         topic_id: "ID Teme"

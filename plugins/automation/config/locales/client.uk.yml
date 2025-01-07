@@ -230,6 +230,10 @@ uk:
               label: Доступні рівні довіри
               description: Спрацьовує лише якщо допис створено користувачем із зазначеним рівнем довіри, за замовчуванням - будь-який рівень довіри
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Теги додано або видалено
+            tags_added: Теги додано
+            tags_removed: Теги видалено
           fields:
             watching_categories:
               label: Перегляд категорій
@@ -237,6 +241,8 @@ uk:
             watching_tags:
               label: Перегляд тегів
               description: Запускатиметься лише в тому випадку, якщо тема містить будь-який з цих тегів
+            trigger_on:
+              label: Тригер увімкнено
             trigger_with_pms:
               label: Запуск з ПП
               description: Буде спрацьовувати, навіть якщо мітки були змінені в ПП

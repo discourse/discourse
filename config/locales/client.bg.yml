@@ -1982,7 +1982,8 @@ bg:
       categories_boxes_with_topics: "Кутии с избрани теми"
       subcategories_with_featured_topics: "Подкатегории с избрани теми"
     full_name_requirement:
-      required_at_signup: "Да се изисква при регистрация"
+      required_at_signup: "Задъжителни"
+      optional_at_signup: "По избор"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3435,8 +3436,26 @@ bg:
           always: "винаги"
           never: "никога"
       config:
+        developer:
+          title: "Разработчик"
+        files:
+          title: "Файлове"
+        legal:
+          title: "Правни"
+        navigation:
+          title: "Навигация"
         notifications:
           title: "Известия"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Други"
+        search:
+          title: "Търсене"
+        security:
+          title: "Сигурност"
+        spam:
+          title: "Спам"
       dashboard:
         title: "Работен плот"
         version: "Версия"
@@ -3601,6 +3620,12 @@ bg:
             invalid_applies_to: "Задъжителни"
             topic: "теми"
             post: "публикации"
+        permalinks:
+          edit: "Редактирай"
+          delete: "Изтрий"
+        embeddable_host:
+          edit: "Редактирай"
+          delete: "Изтрий"
         user_fields:
           type: "Тип"
           delete: "Изтрий"
@@ -3664,7 +3689,7 @@ bg:
           download:
             label: "Изтегли"
           destroy:
-            title: "Премахни бекъпа"
+            title: "Изтрий"
             confirm: "Сигурни ли сте, че искате да унищожите бекъпа?"
           restore:
             label: "Възстанови "
@@ -4383,6 +4408,7 @@ bg:
         settings: "Настройки"
       embedding:
         get_started: "Ако искате да внедрите Discourse в друг сайт, започнете с добавянето на хоста му."
+        delete: "Изтрий"
         confirm_delete: "Сигурни ли сте, че искате да изтриете този хост?"
         sample: |
           <p>Поставете следния HTML код във вашия сайт, за да създадете и вградите теми за Discourse. Заменете <b>EMBED_URL</b> с каноничния URL адрес на страницата, в която го вграждате.</p>
@@ -4391,19 +4417,18 @@ bg:
 
           <p>Заменете <b>DISCOURSE_USERNAME</b> с потребителското име на Discourse на автора, който трябва да създаде темата. Discourse автоматично ще търси потребителя по атрибута <code>content</code> на етикетите <code>&lt;meta&gt;</code> с атрибут <code>name</code> , зададен на <code>discourse-username</code> или <code>author</code>. Параметърът <code>discourseUserName</code> е отменен и ще бъде премахнат в Discourse 3.2.</p>
         title: "Ембедване"
-        host: "Позволени хостове"
-        edit: "редактирай"
-        category: "Пост в Категорията"
-        add_host: "Добави Хост"
-        settings: "Настройки за Ембедване"
-        crawling_settings: "Crawler настройки"
-        crawling_description: "Когато Discourse създаде теми за вашите мнения и ако RSS / ATOM емисия не присъства, тя ще се опита да направи разбор на съдържанието от вашия HTML. Понякога това може да бъде предизвикателство за извличане на съдържанието ви, така че ние предоставяме възможността да се определи като CSS правила и да се направи екстракцията по-лесно."
+        edit: "Редактирай"
+        crawlers_description: "Когато Discourse създаде теми за вашите мнения и ако RSS / ATOM емисия не присъства, тя ще се опита да направи разбор на съдържанието от вашия HTML. Понякога това може да бъде предизвикателство за извличане на съдържанието ви, така че ние предоставяме възможността да се определи като CSS правила и да се направи екстракцията по-лесно."
         embed_by_username: "Потребител за създаване на темата"
         embed_post_limit: "Максимален брой публикации за вграждане."
         embed_truncate: "Изтрий вградените постове"
         allowed_embed_selectors: "Избор на CSS елементи които са разрешени за вграждане"
         blocked_embed_selectors: "Избор на CSS елементи които не са разрешени за вграждане"
-        save: "Запамети настройките за вграждане"
+        save: "Запази "
+        host_form:
+          save: "Запази "
+        nav:
+          settings: "Настройки"
       permalink:
         title: "Постоянни адреси"
         url: "URL"

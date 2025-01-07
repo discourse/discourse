@@ -1915,7 +1915,8 @@ da:
       categories_boxes: "Kasser med underkategorier"
       categories_boxes_with_topics: "Kasser med udvalgte emner"
     full_name_requirement:
-      required_at_signup: "Krævet ved registrering"
+      required_at_signup: "Obligatoriske"
+      optional_at_signup: "Valgfri"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3840,8 +3841,28 @@ da:
         sidebar_link:
           all: "Alle rapporter"
       config:
+        developer:
+          title: "Udvikler"
+        files:
+          title: "Filer"
+        legal:
+          title: "Jura"
+        navigation:
+          title: "Navigation"
         notifications:
           title: "Notifikationer"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Andre"
+        search:
+          title: "Søg"
+        security:
+          title: "Sikkerhed"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Bruger API"
       new_features:
         title: "Hvad er nyt?"
       dashboard:
@@ -4202,6 +4223,12 @@ da:
           more_options:
             move_up: "Flyt op"
             move_down: "Flyt ned"
+        permalinks:
+          edit: "Rediger"
+          delete: "Slet"
+        embeddable_host:
+          edit: "Rediger"
+          delete: "Slet"
         look_and_feel:
           themes:
             title: "Temaer"
@@ -4279,7 +4306,7 @@ da:
             title: "Send e-mail med downloadlink"
             alert: "Et link til download af denne backup er blevet e-mailet til dig"
           destroy:
-            title: "Sletter backuppen"
+            title: "Slet"
             confirm: "Er du sikker på du vil fjerne denne backup?"
           restore:
             label: "Genetabler"
@@ -5413,16 +5440,11 @@ da:
         settings: "Indstillinger"
       embedding:
         get_started: "Hvis du vil indlejre Discourse på et andet website, skal du starte med at tilføje dets server."
+        delete: "Slet"
         confirm_delete: "Er du sikker på at du vil slette denne server?"
         title: "Indlejring"
-        host: "Tilladte servere"
-        allowed_paths: "Sti Tilladelsesliste"
-        edit: "redigér"
-        category: "Opret i kategorien"
-        add_host: "Tilføj server"
-        settings: "Indlejrings-indstillinger"
-        crawling_settings: "Robot-indstillinger"
-        crawling_description: "Når Discourse opretter emner for dine indlæg, og der ikke er noget RSS/ATOM-feed, vil den forsøge at parse dit indhold ud fra din HTML. Det kan nogengange være en udfordring at udtrække dit indhold, så vi giver mulighed for at specificere CSS-regler for at gøre udtræk lettere."
+        edit: "Rediger"
+        crawlers_description: "Når Discourse opretter emner for dine indlæg, og der ikke er noget RSS/ATOM-feed, vil den forsøge at parse dit indhold ud fra din HTML. Det kan nogengange være en udfordring at udtrække dit indhold, så vi giver mulighed for at specificere CSS-regler for at gøre udtræk lettere."
         embed_by_username: "Brugernavn for oprettelse af emne"
         embed_post_limit: "Maksimalt antal indlæg der kan indlejres."
         embed_title_scrubber: "Regular expression er brugt til at gøre titler pæne på indlæg"
@@ -5431,7 +5453,12 @@ da:
         allowed_embed_selectors: "CSS-selektorer for elementer der er tilladte i indlejringer"
         blocked_embed_selectors: "CSS-selektorer for elementer der fjernes fra indlejringer"
         allowed_embed_classnames: "Tilladte CSS-klassenavne"
-        save: "Gem indlejrings-indstillinger"
+        save: "Gem"
+        host_form:
+          save: "Gem"
+        nav:
+          settings: "Indstillinger"
+          crawlers: "Crawlere"
       permalink:
         title: "Permalinks"
         description: "Omdirigeringer der skal anvendes for URL'er der ikke er kendt af forummet."

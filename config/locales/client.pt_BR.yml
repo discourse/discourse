@@ -2343,7 +2343,8 @@ pt_BR:
       categories_boxes_with_topics: "Caixas de seleção com tópicos em destaque"
       subcategories_with_featured_topics: "Subcategorias com Tópicos em Destaque"
     full_name_requirement:
-      required_at_signup: "Necessário para cadastro"
+      required_at_signup: "Necessário(a)"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4768,8 +4769,32 @@ pt_BR:
         sidebar_link:
           all: "Todos os relatórios"
       config:
+        developer:
+          title: "Desenvolvedor"
+        experimental:
+          title: "Experimental"
+        files:
+          title: "Arquivos"
+        legal:
+          title: "Jurídico"
+        logo:
+          title: "Logotipo do site"
+        navigation:
+          title: "Navegação"
         notifications:
           title: "Notificações"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Outros(as)"
+        search:
+          title: "Pesquisar"
+        security:
+          title: "Segurança"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API de usuário(a)"
       new_features:
         title: "Novidades?"
       dashboard:
@@ -5346,6 +5371,14 @@ pt_BR:
             title: "Mais opções"
             move_up: "Mover para cima"
             move_down: "Mover para baixo"
+        permalinks:
+          edit: "Editar"
+          delete: "Excluir"
+        embeddable_host:
+          edit: "Editar"
+          delete: "Excluir"
+          more_options:
+            title: "Mais opções"
         look_and_feel:
           title: "Aspecto e estilo"
           description: "Personalize sua marca no site do Discourse com um estilo especial."
@@ -5450,7 +5483,7 @@ pt_BR:
             title: "Enviar e-mail com link para download"
             alert: "Um link para fazer o download deste backup foi enviado por e-mail"
           destroy:
-            title: "Remover o backup"
+            title: "Excluir"
             confirm: "Tem certeza de que quer desfazer este backup?"
           restore:
             is_disabled: "Restauração desativada neste momento. Para ativar, acesse as <a href='%{url}'>configurações do site</a>."
@@ -6804,6 +6837,7 @@ pt_BR:
         settings: "Configurações"
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
+        delete: "Excluir"
         confirm_delete: "Você tem certeza que deseja excluir este host?"
         sample: |
           <p>Cole o seguinte código HTML em seu site para criar e incorporar tópicos do Discourse. Substitua <b>EMBED_URL</b> pelo URL canônico da página na qual você o está incorporando.</p>
@@ -6812,16 +6846,9 @@ pt_BR:
 
           <p>Substitua <b>DISCOURSE_USERNAME</b> pelo nome de usuário do Discourse do autor que deve criar o tópico. O Discourse procurará automaticamente o usuário pelo atributo <code>content</code> das etiquetas <code>&lt;meta&gt;</code> com atributo <code>name</code> definido como <code>discourse-username</code> ou <code>author</code>. O parâmetro <code>discourseUserName</code> foi preterido e será removido no Discourse 3.2.</p>
         title: "Incorporar"
-        host: "Hosts permitidos"
-        allowed_paths: "Caminho Allowlist"
-        edit: "editar"
-        category: "Postar na categoria"
+        edit: "Editar"
         tags: "Etiquetas de tópico"
-        post_author: "Autor(a) da postagem - padrão para %{author}"
-        add_host: "Adicionar host"
-        settings: "Configurações de incorporação"
-        crawling_settings: "Configurações de rastreador"
-        crawling_description: "Quando Discourse cria tópicos para suas postagens, se nenhum feed RSS/ATOM estiver presente, será realizada uma tentativa de recuperar o conteúdo do seu HTML. Algumas vezes, isso pode ser um desafio, por isso conferimos a capacidade de especificar as regras de CSS para facilitar a extração."
+        crawlers_description: "Quando Discourse cria tópicos para suas postagens, se nenhum feed RSS/ATOM estiver presente, será realizada uma tentativa de recuperar o conteúdo do seu HTML. Algumas vezes, isso pode ser um desafio, por isso conferimos a capacidade de especificar as regras de CSS para facilitar a extração."
         embed_by_username: "Nome de usuário(a) para criação do tópico"
         embed_post_limit: "Quantidade máxima de postagens para incorporar"
         embed_title_scrubber: "Expressão regular usada para remover o título das postagens"
@@ -6830,7 +6857,12 @@ pt_BR:
         allowed_embed_selectors: "Seletor de CSS para elementos que são permitidos na incorporação"
         blocked_embed_selectors: "Seletor de CSS para elementos que são removidos da incorporação"
         allowed_embed_classnames: "Nomes de classes CSS permitidos"
-        save: "Salvar configurações de incorporação"
+        save: "Salvar"
+        host_form:
+          save: "Salvar"
+        nav:
+          settings: "Configurações"
+          crawlers: "Rastreadores"
       permalink:
         title: "Links permanentes"
         description: "Redirecionamentos para aplicar nas URLs que não são conhecidas pelo fórum."

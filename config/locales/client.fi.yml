@@ -2343,7 +2343,8 @@ fi:
       categories_boxes_with_topics: "Laatikot, joissa esiteltyjä ketjuja"
       subcategories_with_featured_topics: "Ala-alueet, joissa on esiteltyjä ketjuja"
     full_name_requirement:
-      required_at_signup: "Pakollinen rekisteröidyttäessä"
+      required_at_signup: "Pakollinen"
+      optional_at_signup: "Valinnainen"
     shortcut_modifier_key:
       shift: "Vaihto"
       ctrl: "Ctrl"
@@ -4768,8 +4769,32 @@ fi:
         sidebar_link:
           all: "Kaikki raportit"
       config:
+        developer:
+          title: "Kehittäjä"
+        experimental:
+          title: "Kokeellinen"
+        files:
+          title: "Tiedostot"
+        legal:
+          title: "Oikeudelliset tiedot"
+        logo:
+          title: "Sivuston logo"
+        navigation:
+          title: "Navigointi"
         notifications:
           title: "Ilmoitukset"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Muut"
+        search:
+          title: "Hae"
+        security:
+          title: "Tietoturva"
+        spam:
+          title: "Roskaposti"
+        user_api:
+          title: "Käyttäjä-API"
       new_features:
         title: "Mitä uutta?"
       dashboard:
@@ -5345,6 +5370,14 @@ fi:
             title: "Lisää vaihtoehtoja"
             move_up: "Siirrä ylös"
             move_down: "Siirrä alas"
+        permalinks:
+          edit: "Muokkaa"
+          delete: "Poista"
+        embeddable_host:
+          edit: "Muokkaa"
+          delete: "Poista"
+          more_options:
+            title: "Lisää vaihtoehtoja"
         look_and_feel:
           title: "Ulkoasu ja tuntuma"
           description: "Mukauta ja brändää Discourse-sivustoasi ja antamalla sille erityinen tyyli."
@@ -5449,7 +5482,7 @@ fi:
             title: "Lähetä sähköposti, jossa on latauslinkki"
             alert: "Varmuuskopion latauslinkki on lähetetty sähköpostiisi"
           destroy:
-            title: "Poista varmuuskopio"
+            title: "Poista"
             confirm: "Oletko varma, että haluat tuhota tämän varmuuskopion?"
           restore:
             is_disabled: "Palautus ei ole tällä hetkellä käytössä. Ota se käyttöön <a href='%{url}'>sivuston asetuksissa</a>."
@@ -6803,6 +6836,7 @@ fi:
         settings: "Asetukset"
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
+        delete: "Poista"
         confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"
         sample: |
           <p>Liitä seuraava HTML-koodi sivustollesi luodaksesi ja upottaaksesi Discourse-ketjuja. Korvaa <b>EMBED_URL</b> sen sivun kanonisella URL-osoitteella, jolle upotat sen.</p>
@@ -6811,16 +6845,9 @@ fi:
 
           <p>Korvaa <b>DISCOURSE_USERNAME</b> sen kirjoittajan Discourse-käyttäjätunnuksella, jonka tulisi luoda ketju. Discourse etsii automaattisesti käyttäjän <code>&lt;meta&gt;</code>-tunnisteiden <code>content</code>-määritteen mukaan, jossa <code>name</code>-määritteeksi on asetettu <code>discourse-username</code> tai <code>author</code>. <code>discourseUserName</code>-parametri on vanhentunut ja poistetaan Discourse 3.2:ssa.</p>
         title: "Upottaminen"
-        host: "Sallitut isännät"
-        allowed_paths: "Sallittu polkulistaus"
-        edit: "muokkaa"
-        category: "Julkaise alueelle"
+        edit: "Muokkaa"
         tags: "Ketjutunnisteet"
-        post_author: "Viestin kirjoittaja – oletus on %{author}"
-        add_host: "Lisää isäntä"
-        settings: "Upotusasetukset"
-        crawling_settings: "Hakurobottiasetukset"
-        crawling_description: "Kun Discourse aloittaa ketjuja viesteistäsi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS-/ATOM-syötettä ei ole tarjolla. Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS-sääntöjä sen helpottamiseksi."
+        crawlers_description: "Kun Discourse aloittaa ketjuja viesteistäsi, se yrittää jäsentää kirjoitustesi sisältöä HTML:stä, jos RSS-/ATOM-syötettä ei ole tarjolla. Joskus kirjoitusten sisällön poimiminen on haastavaa, joten tarjoamme mahdollisuuden määrittää CSS-sääntöjä sen helpottamiseksi."
         embed_by_username: "Käyttäjätunnus, jonka nimissä ketjut aloitetaan"
         embed_post_limit: "Upotettavien viestien maksimimäärä"
         embed_title_scrubber: "Säännöllinen lauseke, jolla riisutaan viestien otsikkoja"
@@ -6829,7 +6856,12 @@ fi:
         allowed_embed_selectors: "CSS-valitsin elementeille, jotka ovat sallittuja upotuksissa"
         blocked_embed_selectors: "CSS-valitsin elementeille, jotka poistetaan upotuksista"
         allowed_embed_classnames: "Sallitut CSS-luokkien nimet"
-        save: "Tallenna upotusasetukset"
+        save: "Tallenna"
+        host_form:
+          save: "Tallenna"
+        nav:
+          settings: "Asetukset"
+          crawlers: "Hakurobotit"
       permalink:
         title: "Pysyvät linkit"
         description: "Aseta uudelleenohjauksia URL-osoitteille, joita sivusto ei tunne."

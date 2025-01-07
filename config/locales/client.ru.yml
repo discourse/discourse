@@ -2592,7 +2592,8 @@ ru:
       categories_boxes_with_topics: "Блоки с избранными темами"
       subcategories_with_featured_topics: "Подкатегории с избранными темами"
     full_name_requirement:
-      required_at_signup: "Обязательное при регистрации"
+      required_at_signup: "Обязательное"
+      optional_at_signup: "Опционально"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -5283,8 +5284,32 @@ ru:
         sidebar_link:
           all: "Все отчёты"
       config:
+        developer:
+          title: "Разработчикам"
+        experimental:
+          title: "Экспериментальная функция"
+        files:
+          title: "Файлы"
+        legal:
+          title: "Юридическое"
+        logo:
+          title: "Логотип сайта"
+        navigation:
+          title: "Навигация"
         notifications:
           title: "Уведомления"
+        onebox:
+          title: "OneBox"
+        other:
+          title: "Разное"
+        search:
+          title: "Найти"
+        security:
+          title: "Безопасность"
+        spam:
+          title: "Спам"
+        user_api:
+          title: "Пользовательский API"
       new_features:
         title: "Что нового?"
       dashboard:
@@ -5875,6 +5900,14 @@ ru:
             title: "Другие варианты"
             move_up: "Вверх"
             move_down: "Вниз"
+        permalinks:
+          edit: "Отредактировать"
+          delete: "Удалить"
+        embeddable_host:
+          edit: "Отредактировать"
+          delete: "Удалить"
+          more_options:
+            title: "Другие варианты"
         look_and_feel:
           title: "Оформление"
           description: "Сделайте ваш сайт Discourse уникальным, настроив и оформив его под ваш бренд."
@@ -5979,7 +6012,7 @@ ru:
             title: "Отправить письмо со ссылкой для скачивания"
             alert: "Вам была отправлена ссылка для скачивания резервной копии"
           destroy:
-            title: "Удалить резервную копию"
+            title: "Удалить"
             confirm: "Действительно удалить резервную копию?"
           restore:
             is_disabled: "Восстановление в данный момент отключено. Чтобы включить его, зайдите в <a href='%{url}'>настройки сайта</a>."
@@ -7380,6 +7413,7 @@ ru:
         settings: "Настройки"
       embedding:
         get_started: "Для встраивания на другой сайт необходимо добавить соответствующий хост."
+        delete: "Удалить"
         confirm_delete: "Действительно удалить этот хост?"
         sample: |
           <p>Используйте следующий HTML-код на своем сайте для создания и встраивания тем Discourse. Замените <b>EMBED_URL</b> каноническим URL-адресом страницы, в которую производится встраивание.</p>
@@ -7388,16 +7422,9 @@ ru:
 
           <p>Замените <b>DISCOURSE_USERNAME</b> на имя пользователя Discourse автора, который должен создать тему. Discourse будет автоматически искать пользователя по атрибуту <code>content</code> тегов <code>&lt;meta&gt;</code> с атрибутом <code>name</code>, для которого задано значение <code>discourse-username</code> или <code>author</code>. Параметр <code>discourseUserName</code> устарел и будет удален в Discourse 3.2.</p>
         title: "Встраивание"
-        host: "Разрешённые хосты"
-        allowed_paths: "Список разрешённых путей"
-        edit: "изменить"
-        category: "Опубликовать в категории"
-        tags: "Теги тем"
-        post_author: "Автор публикации — по умолчанию %{author}"
-        add_host: "Добавить хост"
-        settings: "Настройки встраивания"
-        crawling_settings: "Настройки поискового робота"
-        crawling_description: "Если RSS/ATOM не поддерживается, то при создании тем Discourse попытается проанализировать содержимое из HTML. В некоторых случаях извлечение содержимого оказывается сложным, поэтому мы предоставляем возможность задавать правила CSS, чтобы сделать извлечение проще."
+        edit: "Отредактировать"
+        tags: "Теги темы"
+        crawlers_description: "Если RSS/ATOM не поддерживается, то при создании тем Discourse попытается проанализировать содержимое из HTML. В некоторых случаях извлечение содержимого оказывается сложным, поэтому мы предоставляем возможность задавать правила CSS, чтобы сделать извлечение проще."
         embed_by_username: "Имя пользователя, которое будет использоваться при создании темы"
         embed_post_limit: "Максимальное количество встроенных сообщений"
         embed_title_scrubber: "Регулярное выражение, используемое для очистки заголовка сообщений"
@@ -7406,7 +7433,12 @@ ru:
         allowed_embed_selectors: "CSS-селектор для элементов, разрешенных во встраивании"
         blocked_embed_selectors: "CSS-селектор для элементов, удаленных из встраивания"
         allowed_embed_classnames: "Разрешённые имена классов CSS"
-        save: "Сохранить настройки встраивания"
+        save: "Сохранить"
+        host_form:
+          save: "Сохранить"
+        nav:
+          settings: "Настройки"
+          crawlers: "Поисковые роботы"
       permalink:
         title: "Постоянные ссылки"
         description: "Перенаправления, применяемые для URL, не известных форуму."

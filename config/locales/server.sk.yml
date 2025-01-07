@@ -1951,6 +1951,7 @@ sk:
     content_security_policy_frame_ancestors: "Obmedziť, kto môže túto stránku vložiť do iframe prostredníctvom CSP. Kontrola povolených hostiteľov pri <a href='%{base_path}/admin/customize/embedding'>vkladaní</a>"
     content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Ostatné zdroje hostiteľa sú ignorované, pretože je povolená funkcia strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Účty administrátorov, ktorí nenavštívili stránku počas tohto počtu dní, budú musieť pred prihlásením znovu overiť svoju e-mailovú adresu. Nastavte na 0, aby ste to zakázali."
+    suppress_secured_categories_from_admin: "Potlačenie súkromných tém a PM v niektorých častiach používateľského rozhrania pre administrátorov. Obsah bude na niektorých miestach stále viditeľný. Toto nie je bezpečnostná funkcia: administrátori majú vždy prístup ku všetkému obsahu na stránke."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
     top_menu: "Určite, ktoré položky a v akom poradí sa zobrazia v navigácii na domovskej stránke."
@@ -2605,10 +2606,8 @@ sk:
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
     enable_experimental_lightbox: "Nahraďte predvolený lightbox s obrázkami prepracovaným dizajnom."
-    glimmer_topic_list_mode: "Kontrola, či sa používa nová implementácia zoznamu tém \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Viac informácií nájdete na stránke https://meta.discourse.org/t/343404."
     glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    experimental_form_templates: "Povoliť funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
@@ -5189,8 +5188,16 @@ sk:
             choices:
               latest:
                 label: "Najnovšie"
+                description: "Zobrazuje posledné aktívne témy vo všetkých kategóriách, čím pomáha členom zostať v obraze diskusií, ktoré ich zaujímajú."
               hot:
                 label: "Horúce"
+                description: "Zobrazuje trendové témy zmiešaním nedávnej a celkovej popularity, ukazuje, o čom členovia vo vašej komunite práve hovoria."
+              categories_and_latest_topics:
+                label: "Kategórie s najnovšími témami"
+                description: "Kombinuje nedávno aktívne témy vo všetkých kategóriách so zoznamom kategórií, ich popisom a celkovým počtom tém."
+              categories_boxes:
+                label: "Kategória boxy"
+                description: "Zobrazuje kategórie a ich popis v mriežke, čo je ideálne pre členov, aby videli prehľad podkomunít na vašej stránke."
       branding:
         title: "Logo stránky"
         fields:

@@ -2351,7 +2351,9 @@ hu:
       categories_boxes_with_topics: "Dobozok kiemelt témákkal"
       subcategories_with_featured_topics: "Alkategóriák kiemelt témákkal"
     full_name_requirement:
-      required_at_signup: "Bejelentkezéskor kötelező"
+      required_at_signup: "Kötelező"
+      optional_at_signup: "Nem kötelező"
+      hidden_at_signup: "Opcionális, regisztrációkor rejtve"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4791,8 +4793,60 @@ hu:
         sidebar_link:
           all: "Összes bejelentés"
       config:
+        developer:
+          title: "Fejlesztő"
+          header_description: "Fejlesztői beállítások a sebességkorlátok, a szorzók és a számítások, a biztonságos üzemmód és egyéb speciális funkciók szabályozásához"
+        experimental:
+          title: "Kísérleti"
+          header_description: "Kapcsolja be vagy ki a kísérleti funkciókat webhelyén, ezek többsége csoportosan vezérelhető"
+        font_style:
+          title: "Betűstílus"
+          header_description: "Szabja testre a témák által használt betűstílusokat"
+        files:
+          title: "Fájlok"
+          header_description: "Beállítások, amelyek a fájlméret- és típushatárokat, az avatarok méretét és forrásait, a fájltárolást, a képminőséget és tömörítést stb. szabályozzák."
+        legal:
+          title: "Jogszabály"
+          header_description: "Jogi beállítások konfigurálása, például a szolgáltatási feltételek, adatvédelmi irányelvek, elérhetőségek és EU-specifikus szempontok."
+        login_and_authentication:
+          title: "Bejelentkezés és hitelesítés"
+          header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
+        logo:
+          title: "Webhely logó"
+          header_description: "Szabja testre webhelye logójának változatait"
+        navigation:
+          title: "Navigáció"
+          header_description: "Konfigurálja a navigációs hivatkozásokat és a menüelemeket a webhelyéhez. Ide tartozik az elsődleges navigációs menü helye és viselkedése, a kezdőlap tetején található gyorshivatkozások, valamint az adminisztrátori oldalsáv"
         notifications:
           title: "Értesítések"
+          header_description: "Konfigurálja az értesítések kezelését és kézbesítését a felhasználók számára, beleértve az e-mail beállításokat, a push értesítéseket, az említési korlátokat és az értesítések összevonását"
+        onebox:
+          title: "Onebox"
+          header_description: "Állítsa be, hogy a Onebox előnézetek hogyan jönnek létre és jelenjenek meg a webhelyen"
+        other:
+          title: "Egyéb"
+          header_description: "Más kategóriába nem illő beállítások"
+        rate_limits:
+          title: "Korlátozások"
+          header_description: "Állítsa be, hogy a felhasználók milyen gyakran hajthatnak végre bizonyos műveleteket, például témákat hozhatnak létre, üzeneteket küldhetnek és válaszokat küldhetnek"
+        search:
+          title: "Keresés"
+          header_description: "Konfigurálja a keresési beállításokat, beleértve a naplózást és a tokenizálást kínai és japán nyelvekhez"
+        security:
+          title: "Biztonság"
+          header_description: "Konfigurálja a biztonsági beállításokat, beleértve a kétfaktoros hitelesítést, a moderátorjogokat és a tartalombiztonsági házirendeket"
+        spam:
+          title: "Szemét"
+          header_description: "Állítsa be, hogy a rendszer hogyan elemezze a felhasználók regisztrációját és közzétételi viselkedését a spam gyors azonosítása és blokkolása érdekében"
+        trust_levels:
+          title: "Bizalmi szintek"
+          header_description: "A bizalmi szint beállításai lehetővé teszik a közösség előrehaladási rendszerének követelményeinek és értesítéseinek finomhangolását, ami automatikusan magasabb bizalmi szintre emeli a felhasználókat, amint következetes, pozitív elkötelezettséget mutatnak a fórummal."
+        user_api:
+          title: "Felhasználói API"
+          header_description: "Konfigurálja, hogy mely felhasználói csoportok férhetnek hozzá az API-hoz, és mely hatókörök engedélyezettek"
+        group_permissions:
+          title: "Csoportengedélyek"
+          header_description: "Itt kezelik az összes csoportalapú alkalmazásengedélyt, amelyek szabályozzák a Discourse különféle funkcióihoz való hozzáférést"
       new_features:
         title: "Újdonságok?"
         check_for_updates: "Frissítések keresése"
@@ -4867,6 +4921,16 @@ hu:
         custom_date_range: Egyéni dátumtartomány
         reports:
           trend_title: "%{percent} megváltoztatni. Jelenlegi %{current}, volt %{prev} az előző időszakban"
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "Két napja %{count} volt."
+              other: "Két napja %{count} volt."
+            two_weeks_ago:
+              one: "Két hete %{count} volt."
+              other: "Két hete %{count} volt."
+            thirty_days_ago:
+              one: "%{count} volt az előző 30 napos időszakban."
+              other: "%{count} volt az előző 30 napos időszakban."
           today: "Ma"
           yesterday: "Tegnap"
           last_7_days: "Utolsó 7"
@@ -5253,6 +5317,7 @@ hu:
           notifications: "Értesítések"
           permalinks: "Közvetlen hivatkozás"
           trust_levels: "Bizalmi szintek"
+          group_permissions: "Csoportengedélyek"
           users: "Felhasználók"
           groups: "Csoportok"
           user_fields: "Felhasználói mezők"
@@ -5279,7 +5344,7 @@ hu:
         sidebar_link:
           appearance: "Megjelenés"
           server_setup:
-            title: "Kiszolgáló beállítása"
+            title: "Szerverbeállítások és naplók"
             keywords: "email|smtp|mailgun|sendgrid|elküldve|kihagyva|visszapattant|kapott|elutasítva|e-mail naplók|előzetes összefoglaló"
       security:
         title: "Biztonság"
@@ -5287,8 +5352,8 @@ hu:
           security: "Biztonsági beállítások"
           spam: "Spam beállítások"
           staff_action_logs:
-            title: "A személyzet tevékenységi naplói"
-            keywords: "hibanaplók|ellenőrzött e-mailek|ellenőrzött ip-k|ellenőrzött URL-ek|keresési naplók"
+            title: "Naplók és szűrés"
+            keywords: "hibanaplók|személyzeti műveletek|ellenőrzött e-mailek|ellenőrzött ip-k|ellenőrzött URL-ek|keresési naplók"
       section_landing_pages:
         account:
           title: "Fiók"
@@ -5389,6 +5454,14 @@ hu:
             title: "További lehetőségek"
             move_up: "Mozgatás fel"
             move_down: "Mozgatás le"
+        permalinks:
+          edit: "Szerkesztés"
+          delete: "Törlés"
+        embeddable_host:
+          edit: "Szerkesztés"
+          delete: "Törlés"
+          more_options:
+            title: "További lehetőségek"
         look_and_feel:
           title: "Megjelenés és élmény"
           description: "Szabja testre Discourse webhelyét, egyedi stílust adva neki."
@@ -5499,7 +5572,7 @@ hu:
             title: "Letöltési hivatkozás küldése e-mailben"
             alert: "A biztonsági mentés letöltéséhez szükséges linket e-mailben küldtük el Önnek"
           destroy:
-            title: "Biztonsági mentés törlése"
+            title: "Törlés"
             confirm: "Biztosan törölni szeretnéd ezt a biztonsági mentést?"
           restore:
             is_disabled: "A visszaállítás jelenleg le van tiltva. Engedélyezéséhez látogasson el a <a href='%{url}'>webhely beállításaihoz</a>."
@@ -6901,6 +6974,7 @@ hu:
         settings: "Beállítások"
       embedding:
         get_started: "Ha a Discourse-ot egy másik weboldalba akarja ágyazni, akkor kezdje a gépnév megadásával."
+        delete: "Törlés"
         confirm_delete: "Biztos hogy törlöd ezt a host-ot?"
         sample: |
           <p>A Discourse témák létrehozásához és beágyazásához illeszd be az alábbi HTML kódot a webhelyre. Az <b>EMBED_URL-t</b> helyettesítse annak az oldalnak a kanonikus URL-ével, amelyre beágyazza.</p>
@@ -6909,16 +6983,17 @@ hu:
 
           <p>A <b>DISCOURSE_USERNAME-t</b> helyettesítse a témát létrehozó szerző Discourse felhasználónevével. A Discourse automatikusan megkeresi a felhasználót a <code>&lt;meta&gt;</code> címkék <code>tartalmi</code> attribútuma alapján, ha a <code>name</code> attribútum <code>discourse-username</code> vagy <code>author</code> értékre van állítva. A <code>discourseUserName</code> paraméter elavult, és a Discourse 3.2-ben el lesz távolítva.</p>
         title: "Beágyazás"
+        description: "A Discourse képes beágyazni egy téma hozzászólásait egy távoli webhelyre egy Javascript API segítségével, amely létrehoz egy IFRAME-t."
         host: "Engedélyezett gazdagépek"
         allowed_paths: "Útvonal engedélyezési lista"
-        edit: "szerkesztés"
+        edit: "Szerkesztés"
         category: "Hozzászólás a kategóriához"
-        tags: "Téma címkék"
-        post_author: "Bejegyzés szerzője - Alapértelmezetten: %{author}"
+        tags: "Témacímkék"
+        post_author: "Hozzászólás szerzője"
+        post_author_with_default: "Bejegyzés szerzője (Alapértelmezetten: %{author})"
         add_host: "Gazdagép hozzáadása"
-        settings: "Beágyazás beállításai"
-        crawling_settings: "Crawler beállítások"
-        crawling_description: "Amikor a Discourse témákat hoz létre a bejegyzéseidhez, ha nincs RSS/ATOM feed, akkor megpróbálja a HTML-edből elemezni a tartalmat. Néha kihívást jelenthet a tartalom kinyerése, ezért lehetőséget biztosítunk a CSS szabályok megadására, hogy megkönnyítsük a kinyerést."
+        posts_and_topics: "Bejegyzések és témák beállítása"
+        crawlers_description: "Amikor a Discourse témákat hoz létre a bejegyzéseidhez, ha nincs RSS/ATOM feed, akkor megpróbálja a HTML-edből elemezni a tartalmat. Néha kihívást jelenthet a tartalom kinyerése, ezért lehetőséget biztosítunk a CSS szabályok megadására, hogy megkönnyítsük a kinyerést."
         embed_by_username: "Felhasználónév a téma létrehozáshoz"
         embed_post_limit: "Beágyazott bejegyzések legnagyobb száma"
         embed_title_scrubber: "A hozzászólások címének tisztítására használt reguláris kifejezés"
@@ -6927,7 +7002,19 @@ hu:
         allowed_embed_selectors: "CSS szelektor a beágyazásokban engedélyezett elemekhez"
         blocked_embed_selectors: "CSS szelektor a beágyazásokból eltávolított elemekhez"
         allowed_embed_classnames: "Engedélyezett CSS-osztálynevek"
-        save: "Beágyazási beállítások mentése"
+        save: "Mentés"
+        posts_and_topics_settings_saved: "A bejegyzések és témák beállításai mentve"
+        back: "Vissza a beágyazáshoz"
+        configuration_snippet: "Konfigurációs kódrészlet"
+        host_form:
+          add_header: "Gazdagép hozzáadása"
+          edit_header: "Gazdagép szerkesztése"
+          save: "Mentés"
+        nav:
+          hosts: "Gazdagépek"
+          settings: "Beállítások"
+          posts_and_topics: "Bejegyzések és témák"
+          crawlers: "Keresőrobotok"
       permalink:
         title: "Közvetlen hivatkozás"
         description: "A fórum által nem ismert URL címekre történő átirányítás."
@@ -6996,6 +7083,7 @@ hu:
           moderator: "Moderátor"
           regular: "Felhasználó"
       previews:
+        topic_title: "Milyen könyveket olvasol?"
         share_button: "Megosztás"
         reply_button: "Válasz"
         topic_preview: "Téma előnézet"
@@ -7009,6 +7097,25 @@ hu:
           latest: "Legutóbbi"
           hot: "Felkapott"
           categories: "Kategóriák"
+        topic_titles:
+          what_books: "Milyen könyveket olvasol?"
+          what_movies: "Milyen filmeket láttál mostanában?"
+          random_fact: "A nap véletlenszerű ténye"
+          tv_show: "Ajánlj egy tévéműsort"
+          what_hobbies: "Mi a hobbija?"
+          what_music: "Mit hallgatsz most?"
+          funniest_thing: "A legviccesebb dolog, amit ma láttál"
+          share_art: "Oszd meg a művészeted!"
+        topic_ops:
+          what_books: |
+            Mindannyian szeretünk olvasni, használjuk ezt a témát arra, hogy megosszuk a
+            aktuális vagy nemrégiben olvasott könyveinket. Én fantasy rajongó vagyok, és a
+            A Gyűrűk Urát olvastam újra, immár 100. alkalommal.
+            És ti?
+        category_descriptions:
+          icebreakers: "Ismerd meg a közösség tagjait szórakoztató kérdésekkel."
+          news: "Beszélje meg a legfrissebb híreket és eseményeket."
+          site_feedback: "Ossza meg gondolatait a közösséggel kapcsolatban, és javasoljon fejlesztéseket."
         category_names:
           icebreakers: "Jégtörők"
           news: "Hírek"
