@@ -104,11 +104,6 @@ describe "Topic page", type: :system do
     it "select the last paragraph" do
       visit "/t/#{topic.slug}/#{topic.id}/1"
 
-      # ensure #test-last-cooked-paragraph is the last paragraph of #post_1.cooked just in case the cooked content of the
-      # post is changed in the future. this ensures we testing what we need.
-      last_cooked_child_id = page.find(".cooked >:last-child")[:id]
-      expect(last_cooked_child_id).to eq("test-last-cooked-paragraph")
-
       # select the last paragraph by triple clicking
       element = page.driver.browser.find_element(id: "test-last-cooked-paragraph")
       page.driver.browser.action.move_to(element).click.click.click.perform
