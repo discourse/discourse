@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DiscourseURL from "discourse/lib/url";
-import DMenu from "float-kit/components/d-menu";
 import { i18n } from "discourse-i18n";
+import DMenu from "float-kit/components/d-menu";
 
 export default class TopicDraftsDropdown extends Component {
   @service currentUser;
@@ -86,7 +86,9 @@ export default class TopicDraftsDropdown extends Component {
                 @model={{this.currentUser}}
                 class="btn-link view-all-drafts"
               >
-                <span data-other-drafts="{{@otherDrafts}}">{{this.otherDraftsCount}}</span>
+                <span
+                  data-other-drafts="{{@otherDrafts}}"
+                >{{this.otherDraftsCount}}</span>
                 <span>{{i18n "drafts.dropdown.view_all"}}</span>
               </DButton>
             </dropdown.item>
