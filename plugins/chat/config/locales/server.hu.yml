@@ -89,6 +89,8 @@ hu:
       not_accepting_dms: "Sajnáljuk, %{username} jelenleg nem fogad üzeneteket."
       actor_ignoring_target_user: "%{username} felhasználót figyelmen kívül hagyja, ezért nem küldhet neki üzeneteket."
       actor_muting_target_user: "%{username} felhasználót némította, ezért nem küldhet neki üzeneteket."
+      actor_disallowed_dms: "Ön úgy döntött, hogy megakadályozza a felhasználókat abban, hogy személyes vagy közvetlen üzeneteket küldjenek, ezért nem hozhat létre új közvetlen üzeneteket."
+      actor_preventing_target_user_from_dm: "Úgy döntött, hogy megakadályozza, hogy %{username} személyes vagy közvetlen üzeneteket küldjön Önnek, ezért nem hozhat létre új közvetlen üzeneteket számára."
       user_cannot_send_direct_messages: "Sajnos nem tud közvetlen üzeneteket küldeni."
       over_chat_max_direct_message_users_allow_self: "Csak saját magadnak tudsz közvetlen üzenetet létrehozni."
       over_chat_max_direct_message_users:

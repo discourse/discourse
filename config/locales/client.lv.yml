@@ -1635,7 +1635,8 @@ lv:
       categories_boxes: "Kastes ar apakškategorijām"
       categories_boxes_with_topics: "Kastes ar piedāvātajām tēmām"
     full_name_requirement:
-      required_at_signup: "Nepieciešams pierakstoties"
+      required_at_signup: "Nepieciešams"
+      optional_at_signup: "Pēc izvēles"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2845,8 +2846,28 @@ lv:
           always: "vienmēr"
           never: "nekad"
       config:
+        developer:
+          title: "Izstrādātājs"
+        files:
+          title: "Faili"
+        legal:
+          title: "Jurid."
+        navigation:
+          title: "Pārvietošanās"
         notifications:
           title: "Paziņojumi"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Citi"
+        search:
+          title: "Meklēt"
+        security:
+          title: "Drošība"
+        spam:
+          title: "Spams"
+        user_api:
+          title: "Lietotāja API"
       dashboard:
         title: "Administrācijas panelis"
         version: "Versija"
@@ -3042,6 +3063,12 @@ lv:
             invalid_applies_to: "Nepieciešams"
             topic: "tēmas"
             post: "raksti"
+        permalinks:
+          edit: "Rediģēt"
+          delete: "Dzēst"
+        embeddable_host:
+          edit: "Rediģēt"
+          delete: "Dzēst"
         look_and_feel:
           themes:
             title: "Dizaini"
@@ -3107,7 +3134,7 @@ lv:
             title: "Nosūtīt e-pastu ar lejuplādes saiti"
             alert: "Saite, kas ļauj lejuplādēt šo rezerves kopiju, ir nosūtīta uz jūsu e-pastu"
           destroy:
-            title: "Izdzēst rezerves kopiju"
+            title: "Dzēst"
             confirm: "Vai jūs esat drošs, ka vēlaties iznīcināt šo rezerves kopiju?"
           restore:
             label: "Atjaunot"
@@ -3775,15 +3802,11 @@ lv:
         settings: "Iestatījumi"
       embedding:
         get_started: "Ja tu vēlies ieguldīt Discourse citā mājas lapā, sāc ar \"hosta\" pievienošanu.\n\nIf you'd like to embed Discourse on another website, begin by adding its host."
+        delete: "Dzēst"
         confirm_delete: "Vai tiešām vēlies dzēst šo?"
         title: "Ieguldīšana"
-        host: "Atļautie lietotāji"
-        edit: "labot"
-        category: "Ieraksti kategorijā"
-        add_host: "Pievienot lietotāju"
-        settings: "Ierakstu iestatījumi"
-        crawling_settings: "(Crawler Settings)"
-        crawling_description: "(Kad diskurss rada tēmas par savu amatu, ja nav RSS / ATOM padeves ir klāt tā mēģinās parsēt jūsu saturu no jūsu HTML. Dažreiz tas var būt grūti, lai iegūtu savu saturu, tāpēc mēs piedāvājam iespēju noteikt CSS noteikumus, lai padarītu ieguve vieglāk.)"
+        edit: "Rediģēt"
+        crawlers_description: "(Kad diskurss rada tēmas par savu amatu, ja nav RSS / ATOM padeves ir klāt tā mēģinās parsēt jūsu saturu no jūsu HTML. Dažreiz tas var būt grūti, lai iegūtu savu saturu, tāpēc mēs piedāvājam iespēju noteikt CSS noteikumus, lai padarītu ieguve vieglāk.)"
         embed_by_username: "Lietotājvārds tēmas radīšanai"
         embed_post_limit: "Maksimālais iegulto ierakstu skaits"
         embed_title_scrubber: "(Regular expression used to scrub the title of posts)"
@@ -3791,7 +3814,11 @@ lv:
         allowed_embed_selectors: "(CSS selector for elements that are allowed in embeds)"
         blocked_embed_selectors: "(CSS selector for elements that are removed from embeds)"
         allowed_embed_classnames: "Atļautie CSS nosaukumi (Allowed CSS class names)"
-        save: "Saglabāt iegulšanas iestatījumus"
+        save: "Saglabāt"
+        host_form:
+          save: "Saglabāt"
+        nav:
+          settings: "Iestatījumi"
       permalink:
         title: "Patstāvīgā saite"
         url: "URL"

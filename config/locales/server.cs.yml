@@ -42,7 +42,7 @@ cs:
   views: "zobrazení"
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
-  sign_up: "Registrovat se"
+  sign_up: "Zaregistrujte se"
   log_in: "Přihlásit se"
   submit: "Odeslat"
   purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
@@ -475,14 +475,14 @@ cs:
       no_invites_without_local_logins: "Pokud je zakázáno místní přihlášování, můžete zvát pouze registrované uživatele"
     default_names:
       everyone: "kdokoliv"
-      admins: "administrátoři"
-      moderators: "moderátoři"
-      staff: "redaktoři"
-      trust_level_0: "úřoveň_důvěry_0"
-      trust_level_1: "úřoveň_důvěry_1"
-      trust_level_2: "úřoveň_důvěry_2"
-      trust_level_3: "úřoveň_důvěry_3"
-      trust_level_4: "úřoveň_důvěry_4"
+      admins: "administratori"
+      moderators: "moderatori"
+      staff: "redakce"
+      trust_level_0: "uroven_duvery_0"
+      trust_level_1: "uroven_duvery_1"
+      trust_level_2: "uroven_duvery_2"
+      trust_level_3: "uroven_duvery_3"
+      trust_level_4: "uroven_duvery_4"
     default_descriptions:
       everyone: "Automatická skupina zahrnující všechny členy"
       staff: "Automatická skupina včetně administrátorů a moderátorů"
@@ -677,7 +677,7 @@ cs:
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
     uncategorized_description: "Témata bez kategorií, případně která nepasují do stávajících kategorií."
   trust_levels:
-    admin: "Administrace"
+    admin: "Administrátor"
     staff: "Redakce"
     change_failed_explanation: "Pokusili jste se snížit úroveň důvěry uživatele %{user_name} na '%{new_trust_level}'. Nicméně jeho aktuální úroveň už je '%{current_trust_level}'. Uživatel %{user_name} zůstane na úrovni '%{current_trust_level}'. Pokud chcete snížit úroveň důvěry uživatele, zamkněte nejdříve úroveň."
   post:
@@ -697,7 +697,7 @@ cs:
       many_posts: "Toto téma obsahuje obnovené příspěvky. Před trvalým odstraněním tohoto tématu je prosím trvale smažte."
   rate_limiter:
     slow_down: "Tuto akci jste provedli příliš mnohokrát, zkuste to prosím znovu později."
-    too_many_requests: "Tuto akci jste provedli příliš mnohokrát. Počkejte prosím %{time_left} , než to zkusíte znovu."
+    too_many_requests: "Tuto akci jste provedli příliš mnohokrát. Počkejte prosím %{time_left}, než to zkusíte znovu."
     by_type:
       first_day_replies_per_day: "Vážíme si vašeho nadšení, jen tak dál! Toto znamená, že v rámci zabezpečení naší komunity jste dosáhli maximálního počtu odpovědí, které může nový uživatel vytvořit během prvního dne. Počkejte prosím %{time_left} a budete moci vytvářet další odpovědi."
       first_day_topics_per_day: "Vážíme si vašeho nadšení! Toto znamená, že v rámci zabezpečení naší komunity jste dosáhli maximálního počtu témat, která může nový uživatel vytvořit první den. Počkejte prosím %{time_left} a budete moci vytvářet další nová témata."
@@ -1134,7 +1134,7 @@ cs:
       labels:
         type: Typ
       xaxis_labels:
-        admin: Administrace
+        admin: Administrátor
         moderator: Moderátor
         suspended: Zakázaní
         silenced: Ztišení
@@ -1266,7 +1266,7 @@ cs:
     suspicious_logins:
       labels:
         user: Uživatel
-        location: Lokace
+        location: Poloha
     staff_logins:
       labels:
         user: Uživatel
@@ -1377,6 +1377,7 @@ cs:
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zrušte, pokud chcete používat vlastní plně responzivní kaskádový styl."
     penalty_step_hours: "Výchozí sankce pro ztišení nebo pozastavení uživatelů v hodinách. První přestupek se rovná první hodnotě, druhý přestupek druhé hodnotě, atd."
     penalty_include_post_message: "Automatické zahrnutí zprávy s urážlivým příspěvkem do šablony e-mailové zprávy při ztišení nebo pozastavení uživatele."
+    full_name_requirement: "Nastavení celého jména jako povinného, nepovinného nebo nepovinného, ale skrytého v registračním formuláři."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata budou skryta, dokud uživatel neodpoví."
     import_embed_unlisted: "Importovaná vložená témata budou skryta, dokud uživatel neodpoví (i když není zaškrtnuto nastavení webu `embed unlisted`)."
@@ -2684,10 +2685,12 @@ cs:
       long_description: |
         Tento odznak je udělen, když dosáhnete 2. úrovně důvěry. Děkujeme, že se účastníte po dobu několika týdnů a skutečně se připojujete k naší komunitě. Nyní můžete posílat pozvánky ze svého profilu nebo jednotlivých témat, vytvářet skupinové osobní zprávy a mít více lajků za den.
     regular:
-      name: Běžný
+      name: Stálý
       description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> překategorizovat, přejmenovat, sledovat odkazy, wiki, více lajků
+      long_description: |
+        Tento odznak je udělen, když dosáhnete 3. úrovně důvěry. Díky za to, že jste byli po dobu několika měsíců součástí naší komunity. Nyní jste jedním z nejaktivnějších čtenářů a spolehlivým přispěvatelem, který dělá naši komunitu skvělou. Nyní můžete přejmenovávat témata a měnit jejich kategorie, využít výkonnějších indikátorů nevyžádané pošty, a také dostanete denně mnohem více lajků.
     leader:
-      name: Vůdce
+      name: Leader
       description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> globální upravit, připnout, zavřít, archivovat, rozdělit a sloučit, více lajků
       long_description: |
         Tento odznak je udělen, když dosáhnete 4. úrovně důvěry. Redakce vás označila jako leadera této komunity. Zbytku komunity jdete pozitivním příkladem ve svých činech a slovech. Máte možnost upravovat všechny příspěvky, provádět běžné akce moderátorů témat, jako je připínání, zavírání, skrývání, archivace, rozdělování a slučování.

@@ -5134,30 +5134,60 @@ en:
           all: "All reports"
 
       config:
+        developer:
+          title: "Developer"
+          header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
+        experimental:
+          title: "Experimental"
+          header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
         font_style:
           title: "Font style"
-          header_description: "Customize the font styles used by your themes."
-        login_and_authentication:
-          title: "Login and authentication"
-          header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more."
-        logo:
-          title: "Site logo"
-          header_description: "Customize the variations of your site logo."
-        navigation:
-          title: "Navigation"
-          header_description: "Configure the navigation links and menu items for your site. This includes the location and behaviour of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar."
-        notifications:
-          title: "Notifications"
-          header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation."
-        search:
-          title: "Search"
-          header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages."
+          header_description: "Customize the font styles used by your themes"
+        files:
+          title: "Files"
+          header_description: "Settings that control file size and type limits, avatar sizes and sources, file storage, image quality and compression, and more"
         legal:
           title: "Legal"
-          header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations."
+          header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations"
+        login_and_authentication:
+          title: "Login and authentication"
+          header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
+        logo:
+          title: "Site logo"
+          header_description: "Customize the variations of your site logo"
+        navigation:
+          title: "Navigation"
+          header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
+        notifications:
+          title: "Notifications"
+          header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
+        onebox:
+          title: "Onebox"
+          header_description: "Configure how onebox previews are generated and displayed for your site"
+        other:
+          title: "Other"
+          header_description: "Settings which do not fit into any other category"
+        rate_limits:
+          title: "Rate limits"
+          header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
+        search:
+          title: "Search"
+          header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
+        security:
+          title: "Security"
+          header_description: "Configure security settings, including two-factor authentication, moderator priviledges, and content security policies"
+        spam:
+          title: "Spam"
+          header_description: "Configure how user registration and posting behavior analyzed by the system to quickly identify and block spam"
         trust_levels:
           title: "Trust levels"
-          header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum."
+          header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum"
+        user_api:
+          title: "User API"
+          header_description: "Configure which user groups can access the API, as well as which scopes are allowed"
+        group_permissions:
+          title: "Group permissions"
+          header_description: "All group-based app permissions are managed here, which control access to various features within Discourse"
 
       new_features:
         title: "What's new?"
@@ -5236,7 +5266,16 @@ en:
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
           percent_change_tooltip: "%{percent} change."
-          percent_change_tooltip_previous_value: "Was %{previousValue} %{previousPeriod}."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "Was %{count} two days ago."
+              other: "Was %{count} two days ago."
+            two_weeks_ago:
+              one: "Was %{count} two weeks ago."
+              other: "Was %{count} two weeks ago."
+            thirty_days_ago:
+              one: "Was %{count} in the previous 30 day period."
+              other: "Was %{count} in the previous 30 day period."
           today: "Today"
           yesterday: "Yesterday"
           last_7_days: "Last 7"
@@ -5627,6 +5666,7 @@ en:
           notifications: "Notifications"
           permalinks: "Permalinks"
           trust_levels: "Trust levels"
+          group_permissions: "Group permissions"
           users: "Users"
           groups: "Groups"
           user_fields: "User fields"
@@ -5655,7 +5695,7 @@ en:
         sidebar_link:
           appearance: "Appearance"
           server_setup:
-            title: "Server setup"
+            title: "Server setup & logs"
             keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
 
       security:
@@ -5664,8 +5704,8 @@ en:
           security: "Security settings"
           spam: "Spam settings"
           staff_action_logs:
-            title: "Staff action logs"
-            keywords: "error logs|screened emails|screened ips|screened urls|search logs"
+            title: "Logs & screening"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
 
       section_landing_pages:
         account:
@@ -5774,6 +5814,8 @@ en:
         embeddable_host:
           edit: "Edit"
           delete: "Delete"
+          more_options:
+            title: "More options"
         look_and_feel:
           title: "Look and feel"
           description: "Customize and brand your Discourse site, giving it a distinctive style."
@@ -5888,7 +5930,7 @@ en:
             title: "Send email with download link"
             alert: "A link to download this backup has been emailed to you"
           destroy:
-            title: "Remove the backup"
+            title: "Delete"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
@@ -7473,6 +7515,10 @@ en:
           what_movies: "What movies have you seen recently?"
           random_fact: "Random fact of the day"
           tv_show: "Recommend a TV show"
+          what_hobbies: "What are your hobbies?"
+          what_music: "What are you listening to right now?"
+          funniest_thing: "Funniest thing you've seen today"
+          share_art: "Share your art!"
         topic_ops:
           what_books: |
             We all love to read, let's use this topic to share our

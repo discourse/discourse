@@ -2343,7 +2343,8 @@ tr_TR:
       categories_boxes_with_topics: "Öne Çıkan Konuları içeren Kutular"
       subcategories_with_featured_topics: "Öne Çıkan Konular içeren Alt Kategoriler"
     full_name_requirement:
-      required_at_signup: "Kayıt sırasında gerekli"
+      required_at_signup: "Gerekli"
+      optional_at_signup: "İsteğe bağlı"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4768,8 +4769,32 @@ tr_TR:
         sidebar_link:
           all: "Tüm raporlar"
       config:
+        developer:
+          title: "Geliştirici"
+        experimental:
+          title: "Deneysel"
+        files:
+          title: "Dosyalar"
+        legal:
+          title: "Yasal"
+        logo:
+          title: "Site logosu"
+        navigation:
+          title: "Gezinti"
         notifications:
           title: "Bildirimler"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Diğer"
+        search:
+          title: "Ara"
+        security:
+          title: "Güvenlik"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Kullanıcı API'si"
       new_features:
         title: "Yenilikler?"
       dashboard:
@@ -5346,6 +5371,14 @@ tr_TR:
             title: "Daha fazla seçenek"
             move_up: "Yukarı taşı"
             move_down: "Aşağı taşı"
+        permalinks:
+          edit: "Düzenle"
+          delete: "Sil"
+        embeddable_host:
+          edit: "Düzenle"
+          delete: "Sil"
+          more_options:
+            title: "Daha fazla seçenek"
         look_and_feel:
           title: "Görünüm ve his"
           description: "Discourse sitenizi özelleştirip markalaştırarak ona ayırt edici bir stil kazandırın."
@@ -5450,7 +5483,7 @@ tr_TR:
             title: "İndirme bağlantısını içeren e-posta gönder"
             alert: "Bu yedeklemeyi indirmek için bir bağlantı size e-posta ile gönderildi"
           destroy:
-            title: "Yedeklemeyi kaldır"
+            title: "Sil"
             confirm: "Bu yedeklemeyi yok etmek istediğinizden emin misiniz?"
           restore:
             is_disabled: "Geri yükleme şu anda devre dışı. Etkinleştirmek için <a href='%{url}'>site ayarlarını</a> ziyaret edin."
@@ -6804,6 +6837,7 @@ tr_TR:
         settings: "Ayarlar"
       embedding:
         get_started: "Discourse'u başka bir web sitesine yerleştirmek istiyorsanız bu sitenin sunucusunu eklemekle işe başlayın."
+        delete: "Sil"
         confirm_delete: "Bu sunucuyu silmek istediğinizden emin misiniz?"
         sample: |
           <p>Discourse konuları oluşturmak ve gömmek için aşağıdaki HTML kodunu sitenize yapıştırın. <b>EMBED_URL</b> yerine bunu gömdüğünüz sayfanın kanonik URL'sini yazın.</p>
@@ -6812,16 +6846,9 @@ tr_TR:
 
           <p> <b>DISCOURSE_USERNAME</b> yerine konuyu oluşturacak yazarın Discourse kullanıcı adını yazın. Discourse kullanıcıyı otomatik olarak <code>name</code> niteliği <code>discourse-username</code> veya <code>author</code>olarak ayarlanmış <code>&lt;meta&gt;</code> etiketlerinin <code>content</code> niteliğine göre arayacaktır. <code>discourseUserName</code> parametresi kullanımdan kaldırıldı ve Discourse 3.2'de kaldırılacaktır.</p>
         title: "Yerleştirme"
-        host: "İzin Verilen Sunucular"
-        allowed_paths: "Yol İzin Verilenler Listesi"
-        edit: "düzenle"
-        category: "Kategoriye Gönder"
-        tags: "Konu Etiketleri"
-        post_author: "Gönderi Yazarı - Varsayılan olarak %{author}"
-        add_host: "Sunucu Ekle"
-        settings: "Yerleştirme Ayarları"
-        crawling_settings: "Gezgin Ayarları"
-        crawling_description: "Discourse gönderileriniz için bir konu oluşturduğunuzda bir RSS/ATOM beslemesi yoksa içeriği HTML'den ayrıştırmaya çalışacaktır. Bazen içeriğinizi çıkartmak zor olabilir. İçeriğinizi kolayca çıkartabilmeniz için CSS kuralları belirtme özelliği sağlıyoruz."
+        edit: "Düzenle"
+        tags: "Konu etiketleri"
+        crawlers_description: "Discourse gönderileriniz için bir konu oluşturduğunuzda bir RSS/ATOM beslemesi yoksa içeriği HTML'den ayrıştırmaya çalışacaktır. Bazen içeriğinizi çıkartmak zor olabilir. İçeriğinizi kolayca çıkartabilmeniz için CSS kuralları belirtme özelliği sağlıyoruz."
         embed_by_username: "Konu oluşturmak için kullanıcı adı"
         embed_post_limit: "Gömmek için en fazla gönderi sayısı"
         embed_title_scrubber: "Gönderilerin başlığını temizlemek için kullanılan normal ifade"
@@ -6830,7 +6857,12 @@ tr_TR:
         allowed_embed_selectors: "Gömülü olarak izin verilen ögeler için CSS seçici"
         blocked_embed_selectors: "Gömülü ögelerden kaldırılan ögeler için CSS seçici"
         allowed_embed_classnames: "İzin verilen CSS sınıfı adları"
-        save: "Gömme Ayarlarını Kaydet"
+        save: "Kaydet"
+        host_form:
+          save: "Kaydet"
+        nav:
+          settings: "Ayarlar"
+          crawlers: "Veri Gezginleri"
       permalink:
         title: "Kalıcı Bağlantılar"
         description: "Forum tarafından bilinmeyen URL'lere başvurmak için olan yönlendirmeler"

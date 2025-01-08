@@ -1585,6 +1585,8 @@ id:
       categories_and_top_topics: "Kategori dan Topik Teratas"
       categories_boxes: "Kotak dengan Subkategori"
       categories_boxes_with_topics: "Kotak dengan Topik Unggulan"
+    full_name_requirement:
+      optional_at_signup: "Opsional"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2308,8 +2310,18 @@ id:
           always: "selalu"
           never: "tidak pernah"
       config:
+        navigation:
+          title: "Navigasi"
         notifications:
           title: "Pemberitahuan"
+        other:
+          title: "Lainnya"
+        search:
+          title: "Cari"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API Pengguna"
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
@@ -2442,6 +2454,12 @@ id:
             post: "post"
             require_message: "Minta pengguna untuk memberikan alasan tambahan"
             require_message_description: "Saat tanda ini dipilih, kolom teks akan ditampilkan bagi pengguna untuk memberikan detail tambahan tentang alasan mereka menandai konten"
+        permalinks:
+          edit: "Ubah"
+          delete: "Hapus"
+        embeddable_host:
+          edit: "Ubah"
+          delete: "Hapus"
         user_fields:
           type: "Tipe"
           delete: "Hapus"
@@ -2468,6 +2486,8 @@ id:
           backup:
             include_uploads: "sertakan semua unggahan"
             s3_upload_warning: 'Ini hanya untuk cadangan basis data. Unggahan tidak akan disertakan, artinya semua gambar dan file lain yang diunggah bisa hilang jika cadangan dikembalikan ke pengaturan hosting lain. <b>Untuk mengaktifkan pencadangan penuh termasuk unggahan S3 Anda, silakan lihat <a href="https://meta.discourse.org/t/-/276535" target="_blank">panduan ini</a>.</b>'
+          destroy:
+            title: "Hapus"
       export_csv:
         button_text: "Ekspor"
       export_json:
@@ -2805,9 +2825,14 @@ id:
         name: "Nama"
         settings: "Pengaturan"
       embedding:
-        edit: "ubah"
-        tags: "Tag Topik"
-        post_author: "Penulis Post - Bawaannya adalah %{author}"
+        delete: "Hapus"
+        edit: "Ubah"
+        save: "Simpan"
+        host_form:
+          save: "Simpan"
+        nav:
+          settings: "Pengaturan"
+          crawlers: "Perayap"
       permalink:
         topic_title: "Topik"
         post_title: "Postingan"

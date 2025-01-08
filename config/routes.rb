@@ -393,14 +393,24 @@ Discourse::Application.routes.draw do
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
 
+        get "developer" => "site_settings#index"
         get "fonts" => "site_settings#index"
+        get "files" => "site_settings#index"
+        get "legal" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
         get "logo" => "site_settings#index"
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
+        get "rate-limits" => "site_settings#index"
+        get "onebox" => "site_settings#index"
+        get "other" => "site_settings#index"
         get "search" => "site_settings#index"
-        get "legal" => "site_settings#index"
+        get "security" => "site_settings#index"
+        get "spam" => "site_settings#index"
+        get "user-api" => "site_settings#index"
+        get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
+        get "group-permissions" => "site_settings#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"

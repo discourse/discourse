@@ -43,6 +43,14 @@ module PageObjects
         has_no_css?("#new-account-password")
       end
 
+      def has_name_input?
+        has_css?("#new-account-name")
+      end
+
+      def has_no_name_input?
+        has_no_css?("#new-account-name")
+      end
+
       def fill_input(selector, text)
         if page.has_css?("html.mobile-view", wait: 0)
           expect(page).to have_css(".d-modal:not(.is-animating)")

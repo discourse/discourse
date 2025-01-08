@@ -1808,7 +1808,8 @@ ko:
       categories_boxes_with_topics: "추천 주제의 박스"
       subcategories_with_featured_topics: "추천 글이 포함된 하위 카테고리"
     full_name_requirement:
-      required_at_signup: "회원가입시 필수항목"
+      required_at_signup: "필수"
+      optional_at_signup: "선택 사항"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3616,8 +3617,28 @@ ko:
         sidebar_link:
           all: "모든 보고서"
       config:
+        developer:
+          title: "개발자"
+        files:
+          title: "파일"
+        legal:
+          title: "법률조항"
+        navigation:
+          title: "내비게이션"
         notifications:
           title: "알림"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "기타"
+        search:
+          title: "검색"
+        security:
+          title: "보안"
+        spam:
+          title: "스팸"
+        user_api:
+          title: "사용자 API"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"
@@ -3968,6 +3989,12 @@ ko:
             invalid_applies_to: "필수"
             topic: "글"
             post: "포스트"
+        permalinks:
+          edit: "편집"
+          delete: "삭제하기"
+        embeddable_host:
+          edit: "편집"
+          delete: "삭제하기"
         look_and_feel:
           themes:
             title: "테마"
@@ -4036,7 +4063,7 @@ ko:
             label: "다운로드"
             title: "다운로드 링크와 함께 이메일 전송"
           destroy:
-            title: "백업 삭제"
+            title: "삭제하기"
             confirm: "이 백업을 제거할까요?"
           restore:
             label: "복구"
@@ -5135,16 +5162,11 @@ ko:
         settings: "설정"
       embedding:
         get_started: "다른 웹사이트에 Discourse를 임베드하려면 먼저 호스트를 추가하세요."
+        delete: "삭제하기"
         confirm_delete: "호스트를 삭제할까요?"
         title: "임베딩"
-        host: "허용 Host"
-        allowed_paths: "경로 허용 목록"
         edit: "편집"
-        category: "카테고리에 게시"
-        add_host: "호스트 추가"
-        settings: "임베딩 설정"
-        crawling_settings: "크롤러 설정"
-        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
         embed_by_username: "주제 생성에 사용할 아이디"
         embed_post_limit: "임베드할 최대 게시물 수"
         embed_title_scrubber: "게시물의 제목을 스크럽하기 위해 사용된 정규식"
@@ -5153,7 +5175,12 @@ ko:
         allowed_embed_selectors: "임베드에서 허용한 요소에 대한 CSS 선택기"
         blocked_embed_selectors: "임베드에서 제거한 요소에 대한 CSS 선택기"
         allowed_embed_classnames: "허용되는 CSS 클래스 이름"
-        save: "임베딩 설정 저장"
+        save: "저장"
+        host_form:
+          save: "저장"
+        nav:
+          settings: "설정"
+          crawlers: "겉옷"
       permalink:
         title: "고정 링크"
         description: "포럼에서 알려지지 않은 URL에 적용할 리디렉션"

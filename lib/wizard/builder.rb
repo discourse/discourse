@@ -219,10 +219,11 @@ class Wizard
           updater.update_setting(:heading_font, updater.fields[:heading_font])
 
           top_menu = SiteSetting.top_menu_map
-          if %w[latest hot].include?(updater.fields[:homepage_style]) &&
-               top_menu.first != updater.fields[:homepage_style]
-            top_menu.delete(updater.fields[:homepage_style])
-            top_menu.insert(0, updater.fields[:homepage_style])
+          if %w[latest hot].include?(updater.fields[:homepage_style])
+            if top_menu.first != updater.fields[:homepage_style]
+              top_menu.delete(updater.fields[:homepage_style])
+              top_menu.insert(0, updater.fields[:homepage_style])
+            end
           elsif updater.fields[:homepage_style] != "latest"
             top_menu.delete("categories")
             top_menu.insert(0, "categories")

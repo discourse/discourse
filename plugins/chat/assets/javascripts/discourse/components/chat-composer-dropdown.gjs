@@ -9,7 +9,7 @@ import DMenu from "float-kit/components/d-menu";
 export default class ChatComposerDropdown extends Component {
   @action
   onButtonClick(button, closeFn) {
-    closeFn();
+    closeFn({ focusTrigger: false });
     button.action();
   }
 

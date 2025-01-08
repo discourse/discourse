@@ -2164,6 +2164,9 @@ hy:
       categories_and_top_topics: "Կատեգորիաները և Թոփ Թեմաները"
       categories_boxes: "Ենթակատեգորիաներ Պարունակող Արկղերը"
       categories_boxes_with_topics: "Հանրահայտ Թեմաներ Պարունակող Արկղերը"
+    full_name_requirement:
+      required_at_signup: "Պարտադիր"
+      optional_at_signup: "Ընտրովի"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3816,8 +3819,28 @@ hy:
         sidebar_link:
           all: "Բոլոր հաշվետվությունները"
       config:
+        developer:
+          title: "Ծրագրավորող"
+        files:
+          title: "Ֆայլեր"
+        legal:
+          title: "Օրինական"
+        navigation:
+          title: "Նավիգացիա"
         notifications:
           title: "Ծանուցումներ"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Այլ"
+        search:
+          title: "Որոնում"
+        security:
+          title: "Անվտանգություն"
+        spam:
+          title: "Սպամ"
+        user_api:
+          title: "Օգտատիրոջ API"
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝"
@@ -4130,6 +4153,14 @@ hy:
             post: "գրառումներ"
           more_options:
             title: "Ավելի շատ տարբերակներ"
+        permalinks:
+          edit: "Խմբագրել"
+          delete: "Ջնջել"
+        embeddable_host:
+          edit: "Խմբագրել"
+          delete: "Ջնջել"
+          more_options:
+            title: "Ավելի շատ տարբերակներ"
         look_and_feel:
           themes:
             title: "Թեմաներ"
@@ -4198,7 +4229,7 @@ hy:
             label: "Ներբեռնել"
             title: "Ուղարկել էլ. նամակ՝ ներբեռնման հղումով"
           destroy:
-            title: "Ջնջել պահուստը"
+            title: "Ջնջել"
             confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս պահուստը:"
           restore:
             label: "Վերականգնել"
@@ -5172,15 +5203,11 @@ hy:
         settings: "Կարգավորումներ"
       embedding:
         get_started: "Եթե Դուք ցանկանում եք զետեղել Discourse-ը մեկ այլ կայքում, սկսեք նրա հոսթի ավելացմամբ:"
+        delete: "Ջնջել"
         confirm_delete: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հոսթը:"
         title: "Զետեղում"
-        host: "Թույլատրված Հոսթերը"
-        edit: "խմբագրել"
-        category: "Հրապարակել Կատեգորայում"
-        add_host: "Ավելացնել Հոսթ"
-        settings: "Զետեղման Կարգավորումներ"
-        crawling_settings: "Տվյալների հավաքագրիչի (crawler) կարգավորումներ"
-        crawling_description: "Երբ Discourse -ը ստեղծում է թեմաներ Ձեր գրառումների համար, եթե ոչ մի RSS/ATOM լրահոս առկա չէ, այն կփորձի դուրս բերել Ձեր բովանդակությունը Ձեր HTML -ից: Երբեմն Ձեր բովանդակությունը արտահանելը կարող է դժվար լինել, այդ պատճառով մենք տրամադրում ենք CSS կանոններ տրամադրելու հնարավորություն՝ արտահանումը ավելի հեշտացնելու համար:"
+        edit: "Խմբագրել"
+        crawlers_description: "Երբ Discourse -ը ստեղծում է թեմաներ Ձեր գրառումների համար, եթե ոչ մի RSS/ATOM լրահոս առկա չէ, այն կփորձի դուրս բերել Ձեր բովանդակությունը Ձեր HTML -ից: Երբեմն Ձեր բովանդակությունը արտահանելը կարող է դժվար լինել, այդ պատճառով մենք տրամադրում ենք CSS կանոններ տրամադրելու հնարավորություն՝ արտահանումը ավելի հեշտացնելու համար:"
         embed_by_username: "Օգտանուն թեմայի ստեղծման համար"
         embed_post_limit: "Զետեղման ենթակա գրառումների առավելագույն քանակը"
         embed_title_scrubber: "Գրառումների վերնագրի զտման համար օգտագործվող regular expression"
@@ -5189,7 +5216,12 @@ hy:
         allowed_embed_selectors: "CSS սելեկտոր այն տարրերի համար, որոնք թույլատրված են զետեղումների մեջ"
         blocked_embed_selectors: "CSS սելեկտոր այն տարրերի համար, որոնք հեռացվում են զետեղումներից"
         allowed_embed_classnames: "Թույլատրված CSS կլասների անվանումներ"
-        save: "Պահպանել Զետեղման Կարգավորումները"
+        save: "Պահպանել"
+        host_form:
+          save: "Պահպանել"
+        nav:
+          settings: "Կարգավորումներ"
+          crawlers: "Տվյալների հավաքագրիչներ (Crawler)"
       permalink:
         title: "Մշտահղումներ"
         description: "Վերահղումները, որոնք կիրառվում են URL համար, ֆորումին հայտնի չեն: "

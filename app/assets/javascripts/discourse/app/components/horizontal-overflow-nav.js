@@ -47,14 +47,21 @@ export default class HorizontalOverflowNav extends Component {
   }
 
   watchScroll(element) {
-    if (element.offsetWidth + element.scrollLeft === element.scrollWidth) {
+    const { scrollWidth, scrollLeft, offsetWidth } = element;
+
+    // Check if the content overflows
+    this.hasScroll = scrollWidth > offsetWidth;
+
+    // Ensure the right arrow disappears only when fully scrolled
+    if (scrollWidth - scrollLeft - offsetWidth <= 2) {
       this.hideRightScroll = true;
       clearInterval(this.scrollInterval);
     } else {
       this.hideRightScroll = false;
     }
 
-    if (element.scrollLeft === 0) {
+    // Ensure the left arrow disappears only when fully scrolled to the start
+    if (scrollLeft <= 2) {
       this.hideLeftScroll = true;
       clearInterval(this.scrollInterval);
     } else {

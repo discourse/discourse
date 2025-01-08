@@ -2816,7 +2816,8 @@ ar:
       categories_boxes_with_topics: "مربعات بالموضوعات المميَّزة"
       subcategories_with_featured_topics: "الفئات الفرعية ذات الموضوعات المميَّزة"
     full_name_requirement:
-      required_at_signup: "مطلوب عند التسجيل"
+      required_at_signup: "مطلوب"
+      optional_at_signup: "اختياري"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -5768,8 +5769,32 @@ ar:
         sidebar_link:
           all: "جميع التقارير"
       config:
+        developer:
+          title: "المطور"
+        experimental:
+          title: "تجريبي"
+        files:
+          title: "الملفات"
+        legal:
+          title: "المسائل القانونية"
+        logo:
+          title: "شعار الموقع"
+        navigation:
+          title: "التنقل"
         notifications:
           title: "الإشعارات"
+        onebox:
+          title: "لوحة المعاينة"
+        other:
+          title: "أخرى"
+        search:
+          title: "البحث"
+        security:
+          title: "الأمان"
+        spam:
+          title: "غير مرغوب فيه"
+        user_api:
+          title: "واجهة برمجة التطبيقات للمستخدم"
       new_features:
         title: "ما الجديد?"
         check_for_updates: "تحقق من وجود تحديثات"
@@ -6375,6 +6400,14 @@ ar:
             title: "خيارات إضافية"
             move_up: "التحريك لأعلى"
             move_down: "التحريك لأسفل"
+        permalinks:
+          edit: "تعديل"
+          delete: "حذف"
+        embeddable_host:
+          edit: "تعديل"
+          delete: "حذف"
+          more_options:
+            title: "خيارات إضافية"
         look_and_feel:
           title: "الشكل والمظهر"
           description: "قم بتخصيص موقع Discourse الخاص بك وبناء علامته التجارية، مما يمنحه نمطًا مميزًا."
@@ -6480,7 +6513,7 @@ ar:
             title: "مراسلتي عبر البريد الإلكتروني برابط التنزيل"
             alert: "تم مراسلتك عبر البريد الإلكتروني برابط تنزيل هذه النسخة الاحتياطية"
           destroy:
-            title: "إزالة النسخة الاحتياطية"
+            title: "حذف"
             confirm: "هل تريد بالتأكيد مسح هذه النسخة الاحتياطية؟"
           restore:
             is_disabled: "تم تعطيل الاستعادة حاليًا. لتفعيلها، انتقل إلى <a href='%{url}'>إعدادات الموقع</a>."
@@ -7907,6 +7940,7 @@ ar:
         settings: "الإعدادات"
       embedding:
         get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
+        delete: "حذف"
         confirm_delete: "هل تريد بالتأكيد حذف هذا المضيف؟"
         sample: |
           <p>الصق رمز HTML البرمجي التالي في موقعك لإنشاء الموضوعات على Discourse وتضمينها. استبدل <b> EMBED_URL </b> بعنوان URL الأساسي للصفحة التي تقوم بتضمين الرمز البرمجي عليها.</p>
@@ -7915,16 +7949,9 @@ ar:
 
           <p>استبدل <b>DISCOURSE_USERNAME</b> باسم مستخدم Discourse للمؤلف المفترض أن ينشئ الموضوع. سيبحث Discourse تلقائيًا عن المستخدم من خلال سمة <code>content</code> للعلامات <code>&lt;meta&gt;</code> مع تعيين سمة <code>name</code> إلى <code>discourse-username</code> أو <code>author</code>. تم إيقاف المعلمة <code>discourseUserName</code> وستتم إزالتها في Discourse 3.2.</p>
         title: "التضمين"
-        host: "المضيفون المسموح بهم"
-        allowed_paths: "قائمة السماح بالمسارات"
         edit: "تعديل"
-        category: "النشر في الفئة"
         tags: "وسوم الموضوع"
-        post_author: "مؤلف المنشور - الافتراضي هو %{author}"
-        add_host: "إضافة مضيف"
-        settings: "إعدادات التضمين"
-        crawling_settings: "إعدادات الزاحف"
-        crawling_description: "عندما يُنشئ Discourse موضوعات لمنشوراتك، إذا لم يتوفَّر موجز RSS/ATOM، فسيحاول تحليل محتواك من HTML. قد يكون من الصعب أحيانًا استخراج محتواك؛ لذا فإننا نمنحك القدرة على تحديد قواعد CSS لجعل الاستخراج أسهل."
+        crawlers_description: "عندما يُنشئ Discourse موضوعات لمنشوراتك، إذا لم يتوفَّر موجز RSS/ATOM، فسيحاول تحليل محتواك من HTML. قد يكون من الصعب أحيانًا استخراج محتواك؛ لذا فإننا نمنحك القدرة على تحديد قواعد CSS لجعل الاستخراج أسهل."
         embed_by_username: "اسم المستخدم لإنشاء الموضوع"
         embed_post_limit: "أقصى عدد من المنشورات يمكن تضمينه"
         embed_title_scrubber: "التعبير العادي المُستخدَم لتنقيح عناوين المنشورات"
@@ -7933,7 +7960,12 @@ ar:
         allowed_embed_selectors: "محدِّد CSS للعناصر المسموح بها في التضمينات"
         blocked_embed_selectors: "محدِّد CSS للعناصر التي تتم إزالتها من التضمينات"
         allowed_embed_classnames: "أسماء فئات CSS المسموح بها"
-        save: "حفظ إعدادات التضمين"
+        save: "حفظ"
+        host_form:
+          save: "حفظ"
+        nav:
+          settings: "الإعدادات"
+          crawlers: "متتبعات ارتباطات الويب"
       permalink:
         title: "الروابط الثابتة"
         description: "عمليات إعادة التوجيه التي سيتم تطبيقها على عناوين URL التي لا يعرفها المنتدى."

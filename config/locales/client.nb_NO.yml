@@ -2269,7 +2269,8 @@ nb_NO:
       categories_boxes_with_topics: "Bokser med håndplukket emner"
       subcategories_with_featured_topics: "Underkategorier med utvalgte emner"
     full_name_requirement:
-      required_at_signup: "Nødvendig ved registrering"
+      required_at_signup: "Påkrevd"
+      optional_at_signup: "Valgfritt"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4385,8 +4386,28 @@ nb_NO:
         sidebar_link:
           all: "Alle rapporter"
       config:
+        developer:
+          title: "Utvikler"
+        files:
+          title: "Filer"
+        legal:
+          title: "Juridisk"
+        navigation:
+          title: "Navigasjon"
         notifications:
           title: "Varsler"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Annet"
+        search:
+          title: "Søk"
+        security:
+          title: "Sikkerhet"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Bruker-API"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"
@@ -4672,6 +4693,14 @@ nb_NO:
             post: "innlegg"
           more_options:
             title: "Flere valg"
+        permalinks:
+          edit: "Endre"
+          delete: "Slett"
+        embeddable_host:
+          edit: "Endre"
+          delete: "Slett"
+          more_options:
+            title: "Flere valg"
         look_and_feel:
           themes:
             title: "Drakter"
@@ -4742,7 +4771,7 @@ nb_NO:
             title: "Send e-post med nedlastingslenke"
             alert: "En lenke for nedlasting av denne sikkerhetskopien er blitt sendt til deg på e-post"
           destroy:
-            title: "Fjern sikkerhetskopien"
+            title: "Slett"
             confirm: "Er du sikker på at du vil slette denne sikkerhetskopien"
           restore:
             label: "Gjenooprett"
@@ -5649,15 +5678,11 @@ nb_NO:
         settings: "Instillinger"
       embedding:
         get_started: "Hvis du vil bygge inn Discourse på en annen nettside, begynn med å legge til dens vert."
+        delete: "Slett"
         confirm_delete: "Er du sikker på at du vil slette den verten?"
         title: "Innbygging"
-        host: "Tillatte verter"
-        edit: "rediger"
-        category: "Legg til innlegg i kategori"
-        add_host: "Legg til vert"
-        settings: "Innbyggingsinnstillinger"
-        crawling_settings: "Innstillinger for søkeroboter"
-        crawling_description: "Dersom Discourse oppretter emner for innleggene dine og ingen RSS/ATOM-informasjonskanal finnes, vil det prøve å tolke innholdet ditt ut fra HTML-koden din. Noen ganger kan det være utfordrende å hente ut innhold, så muligheten til å oppgi CSS-regler er der for å gjøre uthentingen enklere."
+        edit: "Endre"
+        crawlers_description: "Dersom Discourse oppretter emner for innleggene dine og ingen RSS/ATOM-informasjonskanal finnes, vil det prøve å tolke innholdet ditt ut fra HTML-koden din. Noen ganger kan det være utfordrende å hente ut innhold, så muligheten til å oppgi CSS-regler er der for å gjøre uthentingen enklere."
         embed_by_username: "Brukernavn for opprettelse av emne"
         embed_post_limit: "Maksimalt antall innlegg å bygge inn"
         embed_title_scrubber: "Regulære uttrykk brukt til å finne og korrigere feil i titler"
@@ -5665,7 +5690,11 @@ nb_NO:
         allowed_embed_selectors: "CSS-velger for elementer som tillates i innbygginger"
         blocked_embed_selectors: "CSS-velger for element som fjernes fra innbygginger"
         allowed_embed_classnames: "Tillatte navn for CSS-klasser"
-        save: "Lagre innbyggingsinnstillinger"
+        save: "Lagre"
+        host_form:
+          save: "Lagre"
+        nav:
+          settings: "Instillinger"
       permalink:
         title: "Permalenker"
         url: "URL"

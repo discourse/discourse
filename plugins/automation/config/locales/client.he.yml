@@ -160,13 +160,13 @@ he:
               description: "כרשות, הגבלת ההקפצה לאירועים שנוצרו או נערכו בלבד"
             valid_trust_levels:
               label: דרגות אמון תקפות
-              description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+              description: יוזנק רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_tags:
               label: תגיות
               description: כרשות, יוזנק רק אם לפוסט יש לפחות את אחת מהתגיות האלו
             restricted_category:
               label: קטגוריה
-              description: הגדרת רשות, להזניק רק אם נושא הפוסט בקטגוריה הזאת
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט בקטגוריה הזאת
             restricted_group:
               label: קבוצה
               description: כרשות, יוזנק רק אם נושא הפוסט הוא הודעה פרטית בתיבת הדואר הנכנס של הקבוצה הזאת
@@ -181,10 +181,10 @@ he:
               description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על פוסטים שנוצרו דרך דוא״ל
             first_post_only:
               label: פוסט ראשון בלבד
-              description: יוקפץ רק אם הפוסט הוא הפוסט הראשון שיצר המשתמש
+              description: יוזנק רק אם הפוסט הוא הפוסט הראשון שיצר המשתמש
             first_topic_only:
               label: נושא ראשון בלבד
-              description: יוקפץ רק אם הנושא הוא הנושא הראשון שיצר המשתמש
+              description: יוזנק רק אם הנושא הוא הנושא הראשון שיצר המשתמש
             skip_via_email:
               label: "דילוג דרך דוא״ל"
               description: "לדלג על ההזנקה אם הפוסט נוצר דרך דוא״ל"
@@ -228,8 +228,12 @@ he:
               description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על הודעות פרטיות שנוצרו דרך דוא״ל
             valid_trust_levels:
               label: דרגות אמון תקפות
-              description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+              description: יוזנק רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: תגיות נוספו או הוסרו
+            tags_added: תגיות נוספו
+            tags_removed: תגיות הוסרו
           fields:
             watching_categories:
               label: קטגוריות במעקב
@@ -237,6 +241,8 @@ he:
             watching_tags:
               label: תגיות במעקב
               description: יוזנק רק אם לנושא יש את אחת מהתגיות האלה
+            trigger_on:
+              label: להזניק עקב
             trigger_with_pms:
               label: הזנקה עם הודעות פרטיות
               description: יוזנק אפילו אם התגיות השתנו בהודעה פרטית
@@ -244,13 +250,13 @@ he:
           fields:
             valid_trust_levels:
               label: דרגות אמון תקפות
-              description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+              description: יוזנק רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
-              description: הגדרת רשות, להזניק רק אם נושא הפוסט בקטגוריה הזאת
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט בקטגוריה הזאת
             restricted_tags:
               label: תגיות
-              description: הגדרת רשות, להזניק רק אם לפוסט יש את אחת התגיות הבאות
+              description: הגדרת רשות, יוזנק רק אם לפוסט יש את אחת התגיות הבאות
       scriptables:
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:
@@ -405,12 +411,12 @@ he:
             label: סקריפט
         trigger:
           name:
-            label: הקפצה
+            label: הזנקה
         automation:
           name:
             label: שם
           trigger:
-            label: הקפצה
+            label: הזנקה
           script:
             label: סקריפט
           version:

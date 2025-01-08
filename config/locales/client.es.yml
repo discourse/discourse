@@ -2343,7 +2343,8 @@ es:
       categories_boxes_with_topics: "Cajas con temas destacados"
       subcategories_with_featured_topics: "Subcategorías con temas destacados"
     full_name_requirement:
-      required_at_signup: "Obligatorio rellenarlo al registrarse"
+      required_at_signup: "Obligatorio"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Mayús"
       ctrl: "Ctrl"
@@ -4767,8 +4768,32 @@ es:
         sidebar_link:
           all: "Todos los informes"
       config:
+        developer:
+          title: "Desarrollador"
+        experimental:
+          title: "Experimental"
+        files:
+          title: "Archivos"
+        legal:
+          title: "Legal"
+        logo:
+          title: "Logotipo del sitio"
+        navigation:
+          title: "Navegación"
         notifications:
           title: "Notificaciones"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Otros"
+        search:
+          title: "Buscar"
+        security:
+          title: "Seguridad"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API de usuario"
       new_features:
         title: "Novedades?"
       dashboard:
@@ -5344,6 +5369,14 @@ es:
             title: "Más opciones"
             move_up: "Subir"
             move_down: "Bajar"
+        permalinks:
+          edit: "Editar"
+          delete: "Eliminar"
+        embeddable_host:
+          edit: "Editar"
+          delete: "Eliminar"
+          more_options:
+            title: "Más opciones"
         look_and_feel:
           title: "Aspecto y estilo"
           description: "Personaliza y marca tu sitio de Discourse, dándole un estilo distintivo."
@@ -5448,7 +5481,7 @@ es:
             title: "Enviar correo electrónico con enlace de descarga"
             alert: "Se te ha enviado por correo electrónico un enlace para descargar esta copia de seguridad."
           destroy:
-            title: "Eliminar la copia de seguridad"
+            title: "Eliminar"
             confirm: "¿Seguro que quieres destruir esta copia de seguridad?"
           restore:
             is_disabled: "La restauración está desactivada actualmente. Para activarla, visita los <a href='%{url}'>ajustes del sitio</a>."
@@ -6798,6 +6831,7 @@ es:
         settings: "Ajustes"
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
+        delete: "Eliminar"
         confirm_delete: "¿Seguro que quieres eliminar este host?"
         sample: |
           <p>Pega el siguiente código HTML en tu sitio para crear e incrustar temas de Discourse. Sustituye <b>EMBED_URL</b> por la URL canónica de la página en la que lo vas a incrustar.
@@ -6806,16 +6840,9 @@ es:
 
           <p>Sustituye <b>DISCOURSE_USERNAME</b> por el nombre de usuario de Discourse del autor que debe crear el tema. Discourse buscará automáticamente al usuario por el atributo <code>content</code> de las etiquetas <code>&lt;meta&gt;</code> con el atributo <code>name</code> establecido en <code>discourse-username</code> o <code>author</code>. El parámetro <code>discourseUserName</code> ha quedado obsoleto y será eliminado en Discourse 3.2.</p> <p>
         title: "Incrustado"
-        host: "Hosts permitidos"
-        allowed_paths: "Lista de rutas permitidas"
-        edit: "editar"
-        category: "Publicar en categoría"
+        edit: "Editar"
         tags: "Etiquetas del tema"
-        post_author: "Autor de la publicación: el valor predeterminado es %{author}"
-        add_host: "Añadir host"
-        settings: "Ajustes de incrustado"
-        crawling_settings: "Ajustes de crawlers"
-        crawling_description: "Cuando Discourse crea temas para tus publicaciones, si no hay un feed RSS/ATOM presente intentará analizar el contenido de tu HTML. A veces puede ser difícil extraer tu contenido, por lo que damos la posibilidad de especificar las reglas CSS para hacer la extracción más fácil."
+        crawlers_description: "Cuando Discourse crea temas para tus publicaciones, si no hay un feed RSS/ATOM presente intentará analizar el contenido de tu HTML. A veces puede ser difícil extraer tu contenido, por lo que damos la posibilidad de especificar las reglas CSS para hacer la extracción más fácil."
         embed_by_username: "Usuario para la creación de temas"
         embed_post_limit: "Número máximo de publicaciones que se pueden insertar"
         embed_title_scrubber: "Expresión regular utilizada para depurar el título de las publicaciones"
@@ -6824,7 +6851,12 @@ es:
         allowed_embed_selectors: "Selector CSS para elementos permitidos en los incrustados"
         blocked_embed_selectors: "Selector CSS para elementos que deben ser eliminados de los incrustados"
         allowed_embed_classnames: "Clases CSS permitidas"
-        save: "Guardar ajustes de incrustado"
+        save: "Guardar"
+        host_form:
+          save: "Guardar"
+        nav:
+          settings: "Ajustes"
+          crawlers: "Crawlers"
       permalink:
         title: "Enlaces permanentes"
         description: "Redirecciones para URL que no existan ya en el foro."

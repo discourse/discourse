@@ -115,6 +115,9 @@ en_GB:
             header_dropdown: "Customise"
   admin_js:
     admin:
+      config:
+        navigation:
+          title: "Navigation"
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
       flags:

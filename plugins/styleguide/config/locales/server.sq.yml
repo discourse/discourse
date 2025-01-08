@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    styleguide_admin_only: "Kufizon dukshmërinë e udhëzuesit të llojit për administratorët"
+    styleguide_allowed_groups: "Kufizon dukshmërinë e udhëzuesit të llojit për anëtarët e grupeve të ofruara"

@@ -2357,7 +2357,8 @@ ug:
       categories_boxes_with_topics: "جەۋھەر تېمىلىق قۇتا"
       subcategories_with_featured_topics: "جەۋھەر تېمىلىق تارماق سەھىپە"
     full_name_requirement:
-      required_at_signup: "تىزىملاتقاندا تەلەپ قىلىنىدۇ"
+      required_at_signup: "زۆرۈر"
+      optional_at_signup: "تاللاشچان"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4797,8 +4798,38 @@ ug:
         sidebar_link:
           all: "بارلىق دوكلات"
       config:
+        developer:
+          title: "ئىجادكار"
+        experimental:
+          title: "تەجرىبە"
+        font_style:
+          title: "خەت نۇسخا ئۇسلۇبى"
+        files:
+          title: "ھۆججەت"
+        legal:
+          title: "قانۇنلۇق"
+        logo:
+          title: "بېكەت تۇغى"
+        navigation:
+          title: "يولباشچى"
         notifications:
           title: "ئۇقتۇرۇش"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "باشقا"
+        rate_limits:
+          title: "باھا چېكى"
+        search:
+          title: "ئىزدە"
+        security:
+          title: "بىخەتەرلىك"
+        spam:
+          title: "ئەخلەت خەت"
+        trust_levels:
+          title: "ئىشەنچ دەرىجىسى"
+        user_api:
+          title: "ئىشلەتكۈچى API"
       new_features:
         title: "يېڭىلىق?"
         check_for_updates: "يېڭىلانمىنى تەكشۈر"
@@ -5285,16 +5316,12 @@ ug:
         sidebar_link:
           appearance: "كۆرۈنۈش"
           server_setup:
-            title: "مۇلازىمېتىر تەڭشىكى"
             keywords: "ئېلخەت|smtp|mailgun|sendgrid|يوللاندى|ئاتلىدى|قاڭقىدى|تاپشۇرۇۋالغان|رەت قىلىندى|ئېلخەت خاتىرىسى|ئالدىن كۆزىتىش ئۈزۈندىسى"
       security:
         title: "بىخەتەرلىك"
         sidebar_link:
           security: "بىخەتەرلىك تەڭشىكى"
           spam: "ئەخلەت خەت تەڭشىكى"
-          staff_action_logs:
-            title: "باشقۇرغۇچى خادىمنىڭ مەشغۇلات خاتىرىسى"
-            keywords: "خاتالىق خاتىرىسى|تەكشۈرۈلگەن ئېلخەت|تەكشۈرۈلگەن ips|تەكشۈرۈلگەن تور ئادرېسى|ئىزدەش خاتىرىسى"
       section_landing_pages:
         account:
           title: "ھېسابات"
@@ -5395,6 +5422,14 @@ ug:
             title: "تېخىمۇ كۆپ تاللانما"
             move_up: "ئۈستىگە يۆتكەل"
             move_down: "ئاستىغا يۆتكەل"
+        permalinks:
+          edit: "تەھرىر"
+          delete: "ئۆچۈر"
+        embeddable_host:
+          edit: "تەھرىر"
+          delete: "ئۆچۈر"
+          more_options:
+            title: "تېخىمۇ كۆپ تاللانما"
         look_and_feel:
           title: "كۆرۈنۈش ۋە تۇيغۇ"
           description: "Discourse تور بېكىتىڭىزنى خاسلاشتۇرۇپ ۋە ماركالاشتۇرۇپ، ئۇنىڭغا ئۆزگىچە ئۇسلۇب ئاتا قىلىدۇ."
@@ -5504,7 +5539,7 @@ ug:
             title: "چۈشۈرۈش ئۇلانمىسى بار ئېلخەت يوللايدۇ"
             alert: "بۇ زاپاسنى چۈشۈرىدىغان ئۇلانمىسى بار ئېلخەت سىزگە يوللاندى"
           destroy:
-            title: "زاپاسنى چىقىرىۋەت"
+            title: "ئۆچۈر"
             confirm: "بۇ زاپاسنى راستتىنلا ئۆچۈرۈۋېتەمسىز؟"
           restore:
             is_disabled: "نۆۋەتتە ئەسلىگە قايتۇرۇش چەكلەنگەن. بۇ ئىقتىدارنى قوزغىتىشتا، <a href='%{url}'>بېكەت تەڭشەك</a> زىيارەت قىلىنىدۇ."
@@ -6906,6 +6941,7 @@ ug:
         settings: "تەڭشەكلەر"
       embedding:
         get_started: "ئەگەر Discourse نى باشقا تور بېكەتكە سىڭدۈرمەكچى بولسىڭىز، ئۇنىڭ مۇلازىمېتىرىنى قوشۇشتىن باشلاڭ."
+        delete: "ئۆچۈر"
         confirm_delete: "بۇ مۇلازىمېتىرنى راستتىنلا ئۆچۈرەمسىز؟"
         sample: |
           <p>تۆۋەندىكى HTML كودىنى تور بېكىتىڭىزنىڭ Discourse تېمىسىنى قۇرۇپ ۋە سىڭدۈرىدىغان جايغا چاپلاڭ. <b>EMBED_URL</b> نى ئۇنى سىز سىڭدۈرمەكچى بولغان بەتنىڭ ئۆلچىمىدىكى تور ئادرېسىغا ئالماشتۇرۇڭ.</p>
@@ -6914,16 +6950,9 @@ ug:
 
           <p><b>DISCOURSE_USERNAME</b> نى يازما يازغۇچىنىڭ Discourse ئىشلەتكۈچى ئاتىغا ئالماشتۇرىدۇ. Discourse ئۆزى <code>&lt;meta&gt;</code> بەلگىسى ئارقىلىق <code>content</code> خاسلىقى بىلەن ئىشلەتكۈچىنى ئۆزلۈكىدىن ئىزدەيدۇ، ئۇنىڭدىكى <code>name</code> خاسلىقى <code>discourse-username</code> ياكى <code>author</code> غا تەڭشىلىدۇ. <code>discourseUserName</code> پارامېتىرىنى ئىشلەتمەيدۇ ھەمدە Discourse 3.2 دىن چىقىرىۋېتىدۇ.</p>
         title: "سىڭدۈرمە"
-        host: "يول قويىدىغان مۇلازىمېتىر"
-        allowed_paths: "يول ئىجازەت تىزىمى"
         edit: "تەھرىر"
-        category: "سەھىپىگە ئېلان قىلىدۇ"
         tags: "تېما بەلگىسى"
-        post_author: "يازما يازغۇچى - كۆڭۈلدىكىسى %{author}"
-        add_host: "مۇلازىمېتىر قوش"
-        settings: "سىڭدۈرمە تەڭشەك"
-        crawling_settings: "ئۆمىلىگۈچ تەڭشىكى"
-        crawling_description: "Discourse تېمىڭىزغا يازما قۇرغاندا، ئەگەر RSS/ATOM مەنبەسى مەۋجۇت بولمىسا، ئۇ HTML دىن مەزمۇنلىرىڭىزنى يېشىشنى سىنايدۇ. بەزىدە مەزمۇنىڭىزنى ئاجرىتىپ ئېلىش رىقابەتكە تولغان بولغاچقا، بىز CSS قائىدىسىنى بەلگىلەيدىغان ئىقتىدارنى تەمىنلەپ ئاجرىتىش جەريانى ئاسانلاشتۇردۇق."
+        crawlers_description: "Discourse تېمىڭىزغا يازما قۇرغاندا، ئەگەر RSS/ATOM مەنبەسى مەۋجۇت بولمىسا، ئۇ HTML دىن مەزمۇنلىرىڭىزنى يېشىشنى سىنايدۇ. بەزىدە مەزمۇنىڭىزنى ئاجرىتىپ ئېلىش رىقابەتكە تولغان بولغاچقا، بىز CSS قائىدىسىنى بەلگىلەيدىغان ئىقتىدارنى تەمىنلەپ ئاجرىتىش جەريانى ئاسانلاشتۇردۇق."
         embed_by_username: "تېما قۇرغۇچىنىڭ ئىشلەتكۈچى ئاتى"
         embed_post_limit: "سىڭدۈرىدىغان ئەڭ كۆپ يازما سانى"
         embed_title_scrubber: "يازمىدىن ماۋزۇسىنى ئاجرىتىشقا ئىشلىتىدىغان مۇنتىزىم ئىپادە"
@@ -6932,7 +6961,12 @@ ug:
         allowed_embed_selectors: "قىستۇرمىدا يول قويۇلىدىغان ئېلېمېنتلارنىڭ CSS تاللىغۇچىسى"
         blocked_embed_selectors: "قىستۇرمىدىن چىقىرىۋەتكەن ئېلېمېنتلارنىڭ CSS تاللىغۇچىسى"
         allowed_embed_classnames: "يول قويۇلىدىغان CSS خىلىنىڭ ئىسمى"
-        save: "سىڭدۈرمە تەڭشەكنى ساقلا"
+        save: "ساقلا"
+        host_form:
+          save: "ساقلا"
+        nav:
+          settings: "تەڭشەكلەر"
+          crawlers: "ئۆمىلىگۈچ"
       permalink:
         title: "ئۆزگەرمەس ئۇلانما"
         description: "مۇنبەر تونۇيالمىغان تور ئادرېسى قوللىنىشىنىڭ قايتا نىشانلىنىشى."
@@ -7015,6 +7049,7 @@ ug:
           hot: "قىزىق"
           categories: "سەھىپە"
         category_names:
+          news: "خەۋەر"
           site_feedback: "بېكەت قايتۇرما ئىنكاسى"
         table_headers:
           topic: "تېما"

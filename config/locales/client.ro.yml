@@ -1862,7 +1862,9 @@ ro:
       categories_boxes: "Cutii cu subcategorii"
       categories_boxes_with_topics: "Cutii cu subiecte recomandate"
     full_name_requirement:
-      required_at_signup: "Necesar la înregistrare"
+      required_at_signup: "Obligatoriu"
+      optional_at_signup: "Opțional"
+      hidden_at_signup: "Opțional, ascuns la înregistrare"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3403,8 +3405,57 @@ ro:
         meta_doc: "Explorează <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentația</a> pentru o prezentare generală detaliată a rapoartelor."
         sidebar_title: "Rapoarte"
       config:
+        developer:
+          title: "Dezvoltator"
+          header_description: "Setări pentru dezvoltatori pentru a controla limitele ratei, multiplicatorii și calculele, modul sigur și alte funcționalități avansate"
+        experimental:
+          title: "Experimental"
+          header_description: "Activează sau dezactivează funcțiile experimentale pentru site-ul tău, cele mai multe dintre acestea pot fi controlate pe bază de grup"
+        font_style:
+          title: "Stil font"
+          header_description: "Personalizează stilurile de font utilizate de temele tale"
+        files:
+          title: "Fișiere"
+          header_description: "Setări care controlează limitele de dimensiune și tip de fișier, dimensiunile și sursele avatarului, stocarea fișierelor, calitatea și compresia imaginii și multe altele"
+        legal:
+          title: "Legal"
+          header_description: "Configurează setările legale, cum ar fi termenele și condițiile, politica de confidențialitate, detaliile de contact și considerațiile specifice UE"
+        login_and_authentication:
+          header_description: "Configurează modul în care utilizatorii se conectează și se autentifică, secretele și cheile, furnizorii OAuth2 și multe altele"
+        logo:
+          title: "Logo site"
+          header_description: "Personalizează variațiile logo-ului site-ului tău"
+        navigation:
+          title: "Navigare"
+          header_description: "Configurează legăturile de navigare și elementele de meniu pentru site-ul tău. Aceasta include locația și comportamentul meniului principal de navigare, legăturile rapide din partea de sus a paginii de pornire, precum și bara laterală de administrare."
         notifications:
           title: "Notificări"
+          header_description: "Configurează modul în care sunt gestionate și livrate notificările pentru utilizatori, inclusiv preferințele de email, notificările push, limitele de menționare și consolidarea notificărilor"
+        onebox:
+          title: "Onebox"
+          header_description: "Configurează modul în care sunt generate și afișate previzualizările onebox pentru site-ul tău."
+        other:
+          title: "Altele"
+          header_description: "Setări care nu se încadrează în nicio altă categorie"
+        rate_limits:
+          title: "Limite de rată"
+        search:
+          title: "Caută"
+          header_description: "Configurează setările de căutare, inclusiv înregistrarea în jurnal și tokenizarea pentru limbile chineză și japoneză"
+        security:
+          title: "Securitate"
+          header_description: "Configurează setările de securitate, inclusiv autentificarea cu doi factori, privilegiile de moderator și politicile de securitate a conținutului"
+        spam:
+          title: "Spam"
+        trust_levels:
+          title: "Niveluri de încredere"
+          header_description: "Setările nivelului de încredere îți permit să ajustezi cerințele și notificările pentru sistemul de progres al comunității tale care promovează automat utilizatorii la niveluri de încredere mai înalte, deoarece demonstrează o implicare constantă și pozitivă cu forumul tău"
+        user_api:
+          title: "API utilizator"
+          header_description: "Configurează ce grupuri de utilizatori pot accesa API-ul, precum și ce scopuri sunt permise"
+        group_permissions:
+          title: "Permisiuni grup"
+          header_description: "Toate permisiunile aplicațiilor bazate pe grup sunt gestionate aici, care controlează accesul la diferite funcții din Discourse"
       new_features:
         title: "Ce este nou?"
         check_for_updates: "Verifică actualizări"
@@ -3454,6 +3505,19 @@ ro:
         report_filter_any: "oricare"
         disabled: Dezactivat
         reports:
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "A fost %{count} acum două zile."
+              few: "Au fost %{count} acum două zile."
+              other: "Au fost %{count} acum două zile."
+            two_weeks_ago:
+              one: "A fost %{count} acum două săptămâni."
+              few: "Au fost %{count} acum două săptămâni."
+              other: "Au fost %{count} acum două săptămâni."
+            thirty_days_ago:
+              one: "A fost %{count} în perioada anterioară de 30 de zile."
+              few: "Au fost %{count} în perioada anterioară de 30 de zile."
+              other: "Au fost %{count} în perioada anterioară de 30 de zile."
           today: "Astăzi"
           yesterday: "Ieri"
           last_7_days: "Ultimele 7"
@@ -3621,6 +3685,7 @@ ro:
           badges: "Insigne"
           notifications: "Notificări"
           permalinks: "Legături permanente"
+          group_permissions: "Permisiuni grup"
           users: "Utilizatori"
           groups: "Grupuri"
           legal: "Legal"
@@ -3634,6 +3699,8 @@ ro:
         title: "Setări email"
         sidebar_link:
           appearance: "Aspect"
+          server_setup:
+            title: "Configurare și jurnale server"
       security:
         title: "Securitate"
         sidebar_link:
@@ -3690,6 +3757,14 @@ ro:
             topic: "discuții"
             post: "Postări"
             auto_action_type: "Ascunde automat conținutul semnalat"
+          more_options:
+            title: "Mai multe opțiuni"
+        permalinks:
+          edit: "Editează"
+          delete: "Șterge"
+        embeddable_host:
+          edit: "Editează"
+          delete: "Șterge"
           more_options:
             title: "Mai multe opțiuni"
         look_and_feel:
@@ -3783,7 +3858,7 @@ ro:
             title: "Trimite email cu link de descărcare"
             alert: "Un link pentru descărcarea acestei copii de rezervă ți-a fost trimis pe email"
           destroy:
-            title: "Șterge backup-ul"
+            title: "Șterge"
             confirm: "Ești sigur că vrei să ștergi acest backup?"
           restore:
             label: "Restabilire"
@@ -4629,17 +4704,16 @@ ro:
         settings: "Setări"
       embedding:
         get_started: "Dacă dorești să încorporezi Discourse pe un alt website, începe prin a-i adăuga gazda."
+        delete: "Șterge"
         confirm_delete: "Ești sigur că vrei să ștergi acest host?"
         title: "Înglobare"
-        host: "Host-uri permise"
-        edit: "editează"
-        category: "Postează în categoria"
+        host: "Gazde permise"
+        allowed_paths: "Listă de căi permise"
+        edit: "Editează"
         tags: "Etichete subiect"
-        post_author: "Autor articol - Valoarea implicită este %{author}"
-        add_host: "Adaugă host"
-        settings: "Setări pentru embeding"
-        crawling_settings: "Setări roboți de căutare"
-        crawling_description: "Când Discourse creează subiecte pentru postările tale, dacă nu este prezent nici un feed RSS/ATOM, va încerca să extragă conținutul din codul HTML. Uneori pot apărea probleme la extragerea conținutului, așa că îți dăm posibilitatea să specifici regulile CSS pentru a ușura extracția."
+        add_host: "Adaugă gazdă"
+        crawlers: "Configurație crawlere"
+        crawlers_description: "Când Discourse creează subiecte pentru postările tale, dacă nu este prezent nici un feed RSS/ATOM, va încerca să extragă conținutul din codul HTML. Uneori pot apărea probleme la extragerea conținutului, așa că îți dăm posibilitatea să specifici regulile CSS pentru a ușura extracția."
         embed_by_username: "Nume utilizator pentru creare subiect"
         embed_post_limit: "Numărul maxim de postări de încorporat."
         embed_title_scrubber: "Expresie obișnuită pentru a curăța titlurile postărilor"
@@ -4647,7 +4721,18 @@ ro:
         allowed_embed_selectors: "Selector CSS pentru elemente care nu sunt permise în embeds."
         blocked_embed_selectors: "Selector CSS pentru elemente care sunt șterse din emebds."
         allowed_embed_classnames: "Nume de clase CSS permise"
-        save: "Salvați setările pentru embeding"
+        save: "Salvează"
+        crawler_settings_saved: "Setări crawler salvate"
+        back: "Înapoi la incorporare"
+        configuration_snippet: "Configurare fragment"
+        host_form:
+          add_header: "Adaugă gazdă"
+          edit_header: "Editează gazdă"
+          save: "Salvează"
+        nav:
+          hosts: "Gazde"
+          settings: "Setări"
+          crawlers: "Crawlere"
       permalink:
         title: "Legături permanente"
         url: "URL"
@@ -4711,6 +4796,11 @@ ro:
           top: "Top"
           latest: "Ultima"
           categories: "Categorii"
+        topic_titles:
+          what_hobbies: "Care sunt pasiunile tale?"
+          what_music: "Ce asculți chiar acum?"
+          funniest_thing: "Cel mai amuzant lucru pe care l-ai văzut astăzi"
+          share_art: "Împărtășește-ți arta!"
         category_names:
           site_feedback: "Feedback la site"
         table_headers:

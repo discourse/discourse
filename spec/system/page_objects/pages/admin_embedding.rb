@@ -26,7 +26,13 @@ module PageObjects
         self
       end
 
+      def open_embedding_host_menu
+        find(".embedding-host-menu-trigger").click
+        self
+      end
+
       def click_delete
+        open_embedding_host_menu
         find(".admin-embeddable-host-item__delete").click
         self
       end

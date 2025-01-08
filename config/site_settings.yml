@@ -367,12 +367,14 @@ basic:
     default: ""
     allow_any: false
     refresh: true
+    area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list
     list_type: compact
     default: "14"
     allow_any: false
     refresh: true
+    area: "group_permissions"
   push_notifications_prompt:
     default: true
     client: true
@@ -437,6 +439,7 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
+    area: "group_permissions"
   adobe_analytics_tags_url:
     default: ""
     regex: "assets.adobedtm.com"
@@ -784,6 +787,7 @@ users:
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
+    area: "group_permissions"
   anonymous_account_duration_minutes:
     default: 10080
     max: 99000
@@ -976,6 +980,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -993,6 +998,7 @@ posting:
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
+    area: "group_permissions"
   post_edit_time_limit:
     default: 1440
     max: 10080
@@ -1075,6 +1081,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   title_max_word_length:
     default: 30
     locale_default:
@@ -1190,6 +1197,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   approve_new_topics_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
@@ -1200,6 +1208,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   approve_suspect_users:
     default: true
   approve_unless_staged:
@@ -1293,6 +1302,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   blur_tl0_flagged_posts_media:
     default: true
     client: true
@@ -1416,6 +1426,7 @@ email:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   email_in_authserv_id:
     default: ""
   email_in_spam_header:
@@ -1572,6 +1583,7 @@ email:
     default: "1|2"
     allow_any: false
     refresh: true
+    area: "group_permissions"
 
 files:
   max_image_size_kb:
@@ -1723,10 +1735,11 @@ files:
     enum: "TrustLevelAndStaffAndDisabledSetting"
     hidden: true
   uploaded_avatars_allowed_groups:
-    default: 10
+    default: "10"
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   default_avatars:
     default: ""
     type: url_list
@@ -1844,9 +1857,11 @@ trust:
   default_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+    area: "trust_levels"
   default_invitee_trust_level:
     default: 1
     enum: "TrustLevelSetting"
+    area: "trust_levels"
   min_trust_to_create_topic:
     default: 0
     enum: "TrustLevelSetting"
@@ -1857,6 +1872,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_to_edit_wiki_post:
     default: 1
     enum: "TrustLevelSetting"
@@ -1867,6 +1883,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_to_edit_post:
     default: 0
     enum: "TrustLevelSetting"
@@ -1877,6 +1894,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_to_allow_self_wiki:
     default: 3
     enum: "TrustLevelSetting"
@@ -1887,6 +1905,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"
@@ -1897,6 +1916,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_to_flag_posts:
     default: 1
     enum: "TrustLevelSetting"
@@ -1907,6 +1927,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
@@ -1917,6 +1938,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
@@ -1927,6 +1949,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_level_to_allow_profile_background:
     default: 0
     client: true
@@ -1938,6 +1961,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_level_to_allow_user_card_background:
     default: 0
     client: true
@@ -1949,6 +1973,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_level_to_allow_invite:
     default: 2
     enum: "TrustLevelSetting"
@@ -1959,6 +1984,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_level_to_allow_ignore:
     default: 2
     enum: "TrustLevelSetting"
@@ -1970,74 +1996,111 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   send_tl2_promotion_message: true
-  tl1_requires_topics_entered: 5
+  tl1_requires_topics_entered:
+    default: 5
+    area: "trust_levels"
   tl1_requires_read_posts:
     default: 30
     client: true
-  tl1_requires_time_spent_mins: 10
-  tl2_requires_topics_entered: 20
-  tl2_requires_read_posts: 100
-  tl2_requires_time_spent_mins: 60
+    area: "trust_levels"
+  tl1_requires_time_spent_mins:
+    default: 10
+    area: "trust_levels"
+  tl2_requires_topics_entered:
+    default: 20
+    area: "trust_levels"
+  tl2_requires_read_posts:
+    default: 100
+    area: "trust_levels"
+  tl2_requires_time_spent_mins:
+    default: 60
+    area: "trust_levels"
   tl2_requires_days_visited:
     default: 15
     max: 36500
-  tl2_requires_likes_received: 1
-  tl2_requires_likes_given: 1
-  tl2_requires_topic_reply_count: 3
+    area: "trust_levels"
+  tl2_requires_likes_received:
+    default: 1
+    area: "trust_levels"
+  tl2_requires_likes_given:
+    default: 1
+    area: "trust_levels"
+  tl2_requires_topic_reply_count:
+    default: 3
+    area: "trust_levels"
   tl3_time_period:
     default: 100
     min: 1
     max: 1000000
+    area: "trust_levels"
   tl3_requires_days_visited:
     default: 50
     max: 36500
+    area: "trust_levels"
   tl3_requires_topics_replied_to:
     default: 10
+    area: "trust_levels"
   tl3_requires_topics_viewed:
     default: 25
     max: 100
+    area: "trust_levels"
   tl3_requires_topics_viewed_cap:
     default: 500
+    area: "trust_levels"
   tl3_requires_posts_read:
     default: 25
     max: 100
+    area: "trust_levels"
   tl3_requires_posts_read_cap:
     default: 20000
     max: 99000
+    area: "trust_levels"
   tl3_requires_topics_viewed_all_time:
     default: 200
+    area: "trust_levels"
   tl3_requires_posts_read_all_time:
     default: 500
+    area: "trust_levels"
   tl3_requires_max_flagged:
     default: 5
+    area: "trust_levels"
   tl3_promotion_min_duration:
     default: 14
     max: 10000
+    area: "trust_levels"
   tl3_requires_likes_given:
     default: 30
+    area: "trust_levels"
   tl3_requires_likes_received:
     default: 20
+    area: "trust_levels"
   tl3_links_no_follow:
     default: false
     client: true
+    area: "trust_levels"
   tl4_delete_posts_and_topics:
     default: false
     client: true
     hidden: true
+    area: "trust_levels"
   delete_all_posts_and_topics_allowed_groups:
     default: ""
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   edit_all_topic_groups:
     default: "13"
     type: group_list
+    area: "group_permissions"
   edit_all_post_groups:
     default: "14"
     type: group_list
+    area: "group_permissions"
 
 security:
   detailed_404: false
@@ -2188,6 +2251,7 @@ security:
     allow_any: false
     refresh: true
     hidden: true
+    area: "group_permissions"
 
 onebox:
   post_onebox_maxlength:
@@ -2502,13 +2566,6 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
-  admin_sidebar_enabled_groups:
-    type: group_list
-    list_type: compact
-    default: "1|2"
-    allow_any: false
-    refresh: true
-    area: "navigation"
   warn_critical_js_deprecations:
     default: true
     client: true
@@ -2547,6 +2604,13 @@ navigation:
       - "top"
       - "bottom"
     area: "navigation"
+  admin_sidebar_enabled_groups:
+    type: group_list
+    list_type: compact
+    default: "1|2"
+    allow_any: false
+    refresh: true
+    area: "group_permissions|navigation"
 
 embedding:
   embed_by_username:
@@ -3220,6 +3284,7 @@ user_api:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   allowed_user_api_push_urls:
     default: ""
     type: list
@@ -3281,6 +3346,7 @@ tags:
     type: group_list
     allow_any: false
     refresh: true
+    area: "group_permissions"
   min_trust_level_to_tag_topics:
     default: "0"
     enum: "TrustLevelAndStaffSetting"
@@ -3293,6 +3359,7 @@ tags:
     allow_any: false
     refresh: true
     client: true
+    area: "group_permissions"
   max_tag_search_results:
     client: true
     default: 5
@@ -3315,6 +3382,7 @@ tags:
     default: ""
     allow_any: false
     refresh: true
+    area: "group_permissions"
   suppress_overlapping_tags_in_list:
     default: false
     client: true
@@ -3400,7 +3468,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
-    area: "navigation"
+    area: "group_permissions|navigation"
   glimmer_topic_list_mode:
     client: true
     type: enum
@@ -3431,3 +3499,4 @@ experimental:
     default: ""
     type: group_list
     list_type: compact
+    area: "group_permissions"

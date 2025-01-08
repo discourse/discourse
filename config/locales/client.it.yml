@@ -2343,7 +2343,8 @@ it:
       categories_boxes_with_topics: "Riquadri con Argomenti in evidenza"
       subcategories_with_featured_topics: "Sottocategorie con argomenti in evidenza"
     full_name_requirement:
-      required_at_signup: "Obbligatorio durante l'iscrizione"
+      required_at_signup: "Obbligatorie"
+      optional_at_signup: "Facoltativo"
     shortcut_modifier_key:
       shift: "Maiusc"
       ctrl: "Ctrl"
@@ -4768,8 +4769,32 @@ it:
         sidebar_link:
           all: "Tutti i rapporti"
       config:
+        developer:
+          title: "Sviluppatore"
+        experimental:
+          title: "Sperimentale"
+        files:
+          title: "File"
+        legal:
+          title: "Informazioni legali"
+        logo:
+          title: "Logo del sito"
+        navigation:
+          title: "Navigazione"
         notifications:
           title: "Notifiche"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Altri"
+        search:
+          title: "Cerca"
+        security:
+          title: "Sicurezza"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API utente"
       new_features:
         title: "Cosa c'è di nuovo?"
       dashboard:
@@ -5346,6 +5371,14 @@ it:
             title: "Altre opzioni"
             move_up: "Sposta su"
             move_down: "Sposta giù"
+        permalinks:
+          edit: "Modifica"
+          delete: "Elimina"
+        embeddable_host:
+          edit: "Modifica"
+          delete: "Elimina"
+          more_options:
+            title: "Altre opzioni"
         look_and_feel:
           title: "Aspetto e feeling"
           description: "Personalizza e dai un branding al tuo sito Discourse, conferendogli uno stile distintivo."
@@ -5450,7 +5483,7 @@ it:
             title: "Invia una email con il collegamento per il download"
             alert: "Un collegamento per scaricare questo backup ti è stato inviato via e-mail."
           destroy:
-            title: "Rimuovi il backup"
+            title: "Elimina"
             confirm: "Sicuro di voler distruggere questo backup?"
           restore:
             is_disabled: "Il ripristino è attualmente disabilitato. Per abilitarlo, visita le <a href='%{url}'>impostazioni del sito</a>."
@@ -6804,6 +6837,7 @@ it:
         settings: "Impostazioni"
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
+        delete: "Elimina"
         confirm_delete: "Sicuro di voler cancellare questo host?"
         sample: |
           <p>Incolla il seguente codice HTML nel tuo sito per creare e incorporare gli argomenti del discorso. Sostituisci <b>EMBED_URL</b> con l'URL canonico della pagina in cui lo stai incorporando.</p>
@@ -6812,16 +6846,9 @@ it:
 
           <p>Sostituisci <b>DISCOURSE_USERNAME</b> con il Discourse username dell'autore che dovrebbe creare l'argomento. Discourse cercherà automaticamente l'utente in base all'attributo <code>content</code> dell'etichetta <code>&lt;meta&gt;</code> con l'attributo <code>name</code> impostato su <code>discourse-username</code> o <code>author</code>. Il parametro <code>discourseUserName</code> è deprecato e verrà rimosso in Discourse 3.2.</p>
         title: "Integrato"
-        host: "Host Abilitati"
-        allowed_paths: "Lista percorsi permessi"
-        edit: "modifica"
-        category: "Pubblica nella Categoria"
+        edit: "Modifica"
         tags: "Etichette argomento"
-        post_author: "Autore messaggio - valore predefinito %{author}"
-        add_host: "Aggiungi Host"
-        settings: "Impostazioni di inclusione"
-        crawling_settings: "Impostazioni Crawler"
-        crawling_description: "Quando Discourse crea gli argomenti per i tuoi messaggi, se non è presente nessun feed RSS/ATOM, cercherà di estrarre il contenuto dal codice HTML. Il contenuto può risultate a volte ostico da estrarre e, per semplificare il processo, forniamo la possibilità di specificare le regole CSS."
+        crawlers_description: "Quando Discourse crea gli argomenti per i tuoi messaggi, se non è presente nessun feed RSS/ATOM, cercherà di estrarre il contenuto dal codice HTML. Il contenuto può risultate a volte ostico da estrarre e, per semplificare il processo, forniamo la possibilità di specificare le regole CSS."
         embed_by_username: "Nome utente per la creazione dell'argomento"
         embed_post_limit: "Numero massimo di messaggi da includere"
         embed_title_scrubber: "Espressione regolare usata per ripulire i titoli dei messaggi"
@@ -6830,7 +6857,12 @@ it:
         allowed_embed_selectors: "Selettore CSS per gli elementi ammessi negli incorporamenti"
         blocked_embed_selectors: "Selettore CSS per elementi rimossi dagli incorporamenti"
         allowed_embed_classnames: "Nomi di classi CSS consentiti"
-        save: "Salva Impostazioni Inclusione"
+        save: "Salva"
+        host_form:
+          save: "Salva"
+        nav:
+          settings: "Impostazioni"
+          crawlers: "Crawler"
       permalink:
         title: "Collegamenti permanenti"
         description: "Reindirizzamenti da applicare per URL non conosciuti dal forum."
