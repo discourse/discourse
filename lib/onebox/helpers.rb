@@ -41,11 +41,10 @@ module Onebox
         canonical_uri = Addressable::URI.parse(canonical_link)
         if canonical_link && canonical_uri &&
              "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
-          uri =
-            FinalDestination.new(
-              canonical_link,
-              Oneboxer.get_final_destination_options(canonical_link),
-            ).resolve
+          canonical_options = Oneboxer.get_final_destination_options(canonical_link)
+          canonical_options["extra_headers"] = { "Accept-Language" => accept_language }
+
+          uri = FinalDestination.new(canonical_link, canonical_options).resolve
           if uri.present?
             response =
               (
@@ -105,6 +104,7 @@ module Onebox
         headers ||= {}
 
         headers["User-Agent"] ||= user_agent if user_agent
+        headers["Accept-Language"] ||= accept_language if accept_language
 
         request = Net::HTTP::Get.new(uri.request_uri, headers)
         start_time = Time.now
@@ -234,6 +234,14 @@ module Onebox
       user_agent = SiteSetting.onebox_user_agent.presence || Onebox.options.user_agent
       user_agent = "#{user_agent} v#{Discourse::VERSION::STRING}"
       user_agent
+    end
+
+    def self.accept_language
+      if SiteSetting.default_locale == "en"
+        "en;q=0.9, *;q=0.5"
+      else
+        "#{SiteSetting.default_locale.gsub(/_/, "-")};q=0.9, en;q=0.8, *;q=0.5"
+      end
     end
 
     # Percent-encodes a URI string per RFC3986 - https://tools.ietf.org/html/rfc3986
