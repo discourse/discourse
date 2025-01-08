@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
@@ -66,7 +67,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
   test("is not visible on mobile", async function (assert) {
     const self = this;
 
-    this.site.desktopView = false;
+    forceMobile();
     this.channel = new ChatFabricators(getOwner(this)).channel();
 
     await render(
