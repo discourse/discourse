@@ -95,8 +95,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1(patch_hash=55h346kvblvnigtrwrsh4hpona)
       lint-to-the-future:
-        specifier: ^2.6.1
-        version: 2.6.1(encoding@0.1.13)
+        specifier: ^2.6.2
+        version: 2.6.2(encoding@0.1.13)
       lint-to-the-future-ember-template:
         specifier: ^3.0.0
         version: 3.0.0(ember-template-lint@6.0.0)
@@ -5965,8 +5965,8 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
 
-  lint-to-the-future@2.6.1:
-    resolution: {integrity: sha512-BRjkKzN0ivVp4eEYybpQR+I9dCeNrulQlbYQtUb3J9RFLN5DZ9GgcCIRicSBepZ7VHpiqrqy7AV2RNjhIf1OIw==}
+  lint-to-the-future@2.6.2:
+    resolution: {integrity: sha512-l8fmDddu7Gqp/gzIyYU+dVUDonaH/GIH9SnldoG+5bNqpdwQE+p4xS6sLuFo+N7MNTMXdq7HBUa9J3nrDkAzQg==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -6421,6 +6421,15 @@ packages:
 
   node-fetch@2.6.12:
     resolution: {integrity: sha512-C/fGU2E8ToujUivIO0H+tpQ6HWo4eEmchoPIoXtxCrVghxdKq+QOHqEZW7tuP3KlV3bC8FRMO5nMCC7Zm1VP6g==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
+
+  node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
     peerDependencies:
       encoding: ^0.1.0
@@ -14840,12 +14849,12 @@ snapshots:
       semver: 7.6.3
       walk-sync: 3.0.0
 
-  lint-to-the-future@2.6.1(encoding@0.1.13):
+  lint-to-the-future@2.6.2(encoding@0.1.13):
     dependencies:
       commander: 9.5.0
       fs-extra: 7.0.1
       import-cwd: 3.0.0
-      node-fetch: 2.6.12(encoding@0.1.13)
+      node-fetch: 2.7.0(encoding@0.1.13)
       temporal-polyfill: 0.2.5
     transitivePeerDependencies:
       - encoding
@@ -15308,6 +15317,12 @@ snapshots:
   node-domexception@1.0.0: {}
 
   node-fetch@2.6.12(encoding@0.1.13):
+    dependencies:
+      whatwg-url: 5.0.0
+    optionalDependencies:
+      encoding: 0.1.13
+
+  node-fetch@2.7.0(encoding@0.1.13):
     dependencies:
       whatwg-url: 5.0.0
     optionalDependencies:
