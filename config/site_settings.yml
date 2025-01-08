@@ -409,13 +409,17 @@ basic:
     hidden: true
   base_font:
     default: "arial"
-    enum: "BaseFontSetting"
+    choices: "BaseFontSetting.values"
     refresh: true
+    type: list
+    list_type: font
     area: "fonts"
   heading_font:
     default: "arial"
-    enum: "BaseFontSetting"
+    choices: "BaseFontSetting.values"
     refresh: true
+    type: list
+    list_type: font
     area: "fonts"
   enable_sitemap:
     default: true

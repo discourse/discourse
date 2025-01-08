@@ -38,6 +38,7 @@ const CUSTOM_TYPES = [
   "named_list",
   "file_size_restriction",
   "file_types_list",
+  "font_list",
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
