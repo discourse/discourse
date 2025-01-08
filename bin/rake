@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
-load File.expand_path("spring", __dir__)
 
 if ENV['RAILS_ENV'] == 'test' && ENV['LOAD_PLUGINS'].nil?
   if ARGV.include?('db:migrate') || ARGV.include?('parallel:migrate')
