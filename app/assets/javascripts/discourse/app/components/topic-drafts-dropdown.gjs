@@ -7,6 +7,7 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DiscourseURL from "discourse/lib/url";
 import DMenu from "float-kit/components/d-menu";
+import { i18n } from "discourse-i18n";
 
 export default class TopicDraftsDropdown extends Component {
   @service currentUser;
@@ -20,7 +21,7 @@ export default class TopicDraftsDropdown extends Component {
 
   get otherDraftsCount() {
     return this.args.otherDrafts > 0
-      ? `+${this.args.otherDrafts} other drafts`
+      ? i18n("drafts.dropdown.other_drafts", { count: this.args.otherDrafts })
       : "";
   }
 
@@ -85,8 +86,8 @@ export default class TopicDraftsDropdown extends Component {
                 @model={{this.currentUser}}
                 class="btn-link view-all-drafts"
               >
-                <span data-other-drafts="{{this.args.otherDrafts}}">{{this.otherDraftsCount}}</span>
-                <span>view all</span>
+                <span data-other-drafts="{{@otherDrafts}}">{{this.otherDraftsCount}}</span>
+                <span>{{i18n "drafts.dropdown.view_all"}}</span>
               </DButton>
             </dropdown.item>
           </DropdownMenu>

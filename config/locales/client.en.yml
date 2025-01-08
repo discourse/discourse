@@ -497,6 +497,11 @@ en:
         confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
+      dropdown:
+        view_all: "view all"
+        other_drafts:
+          one: "+%{count} other draft"
+          other: "+%{count} other drafts"
 
     topic_count_all:
       one: "See %{count} new topic"
