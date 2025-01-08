@@ -14,7 +14,6 @@ class Admin::ApiController < Admin::AdminController
       ApiKey
         .where(hidden: false)
         .includes(:user)
-        .includes(:created_by)
         .order("revoked_at DESC NULLS FIRST, created_at DESC")
         .offset(offset)
         .limit(limit)

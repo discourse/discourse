@@ -1,1 +1,159 @@
-<AdminConfigAreas::ApiKeysShow @apiKey={{this.model}} />
+<LinkTo @route="adminApiKeys.index" class="go-back">
+  {{d-icon "arrow-left"}}
+  {{i18n "admin.api.all_api_keys"}}
+</LinkTo>
+
+<div class="api-key api-key-show">
+  <AdminFormRow @label="admin.api.key">
+    {{#if this.model.revoked_at}}{{d-icon "circle-xmark"}}{{/if}}
+    {{this.model.truncatedKey}}
+  </AdminFormRow>
+
+  <AdminFormRow @label="admin.api.description">
+    {{#if this.editingDescription}}
+      <Input
+        @value={{this.buffered.description}}
+        maxlength="255"
+        placeholder={{i18n "admin.api.description_placeholder"}}
+      />
+    {{else}}
+      <span>
+        {{if
+          this.model.description
+          this.model.description
+          (i18n "admin.api.no_description")
+        }}
+      </span>
+    {{/if}}
+
+    <div class="controls">
+      {{#if this.editingDescription}}
+        <DButton @action={{this.saveDescription}} @icon="check" class="ok" />
+        <DButton
+          @action={{this.editDescription}}
+          @icon="xmark"
+          class="cancel"
+        />
+      {{else}}
+        <DButton
+          @action={{this.editDescription}}
+          @icon="pencil"
+          class="btn-default"
+        />
+      {{/if}}
+    </div>
+  </AdminFormRow>
+
+  <AdminFormRow @label="admin.api.user">
+    {{#if this.model.user}}
+      <LinkTo @route="adminUser" @model={{this.model.user}}>
+        {{avatar this.model.user imageSize="small"}}
+        {{this.model.user.username}}
+      </LinkTo>
+    {{else}}
+      {{i18n "admin.api.all_users"}}
+    {{/if}}
+  </AdminFormRow>
+
+  <AdminFormRow @label="admin.api.created">
+    {{format-date this.model.created_at leaveAgo="true"}}
+  </AdminFormRow>
+
+  <AdminFormRow @label="admin.api.updated">
+    {{format-date this.model.updated_at leaveAgo="true"}}
+  </AdminFormRow>
+
+  <AdminFormRow @label="admin.api.last_used">
+    {{#if this.model.last_used_at}}
+      {{format-date this.model.last_used_at leaveAgo="true"}}
+    {{else}}
+      {{i18n "admin.api.never_used"}}
+    {{/if}}
+  </AdminFormRow>
+
+  <AdminFormRow @label="admin.api.revoked">
+    {{#if this.model.revoked_at}}
+      {{format-date this.model.revoked_at leaveAgo="true"}}
+    {{else}}
+      <span>{{i18n "no_value"}}</span>
+    {{/if}}
+    <div class="controls">
+      {{#if this.model.revoked_at}}
+        <DButton
+          @action={{fn this.undoRevokeKey this.model}}
+          @icon="arrow-rotate-left"
+          @label="admin.api.undo_revoke"
+        />
+        <DButton
+          @action={{fn this.deleteKey this.model}}
+          @icon="trash-can"
+          @label="admin.api.delete"
+          class="btn-danger"
+        />
+      {{else}}
+        <DButton
+          @action={{fn this.revokeKey this.model}}
+          @icon="xmark"
+          @label="admin.api.revoke"
+          class="btn-danger"
+        />
+      {{/if}}
+    </div>
+  </AdminFormRow>
+
+  {{#if this.model.api_key_scopes.length}}
+    <h2 class="scopes-title">{{i18n "admin.api.scopes.title"}}</h2>
+
+    <table class="scopes-table grid">
+      <thead>
+        <tr>
+          <td>{{i18n "admin.api.scopes.resource"}}</td>
+          <td>{{i18n "admin.api.scopes.action"}}</td>
+          <td>{{i18n "admin.api.scopes.allowed_urls"}}</td>
+          <td>{{i18n "admin.api.scopes.allowed_parameters"}}</td>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each this.model.api_key_scopes as |scope|}}
+          <tr>
+            <td>{{scope.resource}}</td>
+            <td>
+              {{scope.action}}
+              <DTooltip
+                @icon="circle-question"
+                @content={{i18n
+                  (concat
+                    "admin.api.scopes.descriptions."
+                    scope.resource
+                    "."
+                    scope.key
+                  )
+                }}
+                class="scope-tooltip"
+              />
+            </td>
+            <td>
+              <DButton
+                @icon="link"
+                @action={{fn this.showURLs scope.urls}}
+                class="btn-info"
+              />
+            </td>
+            <td>
+              {{#each scope.parameters as |p|}}
+                <div>
+                  <b>{{p}}:</b>
+                  {{#if (get scope.allowed_parameters p)}}
+                    {{get scope.allowed_parameters p}}
+                  {{else}}
+                    {{i18n "admin.api.scopes.any_parameter"}}
+                  {{/if}}
+                </div>
+              {{/each}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+</div>
