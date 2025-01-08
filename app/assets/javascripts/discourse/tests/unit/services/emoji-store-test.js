@@ -21,14 +21,6 @@ module("Unit | Service | emoji-store", function (hooks) {
     this.emojiStore.reset();
   });
 
-  test(".favoritesForContext", function (assert) {
-    assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
-      "+1",
-      "heart",
-      "tada",
-    ]);
-  });
-
   test(".trackEmojiForContext", function (assert) {
     this.emojiStore.trackEmojiForContext("grinning", "topic");
     const storedEmojis = new KeyValueStore(STORE_NAMESPACE).getObject(
@@ -37,13 +29,10 @@ module("Unit | Service | emoji-store", function (hooks) {
 
     assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
       "grinning",
-      "+1",
-      "heart",
-      "tada",
     ]);
     assert.deepEqual(
       storedEmojis,
-      ["grinning", "+1", "heart", "tada"],
+      ["grinning"],
       "it persists the tracked emojis"
     );
   });
@@ -73,19 +62,11 @@ module("Unit | Service | emoji-store", function (hooks) {
 
     assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
       "grinning",
-      "+1",
-      "heart",
-      "tada",
     ]);
 
     this.emojiStore.trackEmojiForContext("cat", "chat");
 
-    assert.deepEqual(this.emojiStore.favoritesForContext("chat"), [
-      "cat",
-      "+1",
-      "heart",
-      "tada",
-    ]);
+    assert.deepEqual(this.emojiStore.favoritesForContext("chat"), ["cat"]);
   });
 
   test(".resetContext", function (assert) {
@@ -93,11 +74,7 @@ module("Unit | Service | emoji-store", function (hooks) {
 
     this.emojiStore.resetContext("topic");
 
-    assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
-      "+1",
-      "heart",
-      "tada",
-    ]);
+    assert.deepEqual(this.emojiStore.favoritesForContext("topic"), []);
   });
 
   test(".diversity", function (assert) {
@@ -115,6 +92,7 @@ module("Unit | Service | emoji-store", function (hooks) {
   });
 
   test("sort emojis by frequency", function (assert) {
+    this.emojiStore.trackEmojiForContext("grinning", "topic");
     this.emojiStore.trackEmojiForContext("cat", "topic");
     this.emojiStore.trackEmojiForContext("cat", "topic");
     this.emojiStore.trackEmojiForContext("cat", "topic");
@@ -124,9 +102,7 @@ module("Unit | Service | emoji-store", function (hooks) {
     assert.deepEqual(this.emojiStore.favoritesForContext("topic"), [
       "cat",
       "dog",
-      "+1",
-      "heart",
-      "tada",
+      "grinning",
     ]);
   });
 });
