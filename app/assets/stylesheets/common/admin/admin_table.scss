@@ -96,14 +96,6 @@
     }
   }
 
-  &__badge {
-    background-color: var(--primary-low);
-    border-radius: var(--d-border-radius);
-    font-size: var(--font-down-1);
-    margin-left: var(--space-1);
-    padding: var(--space-2);
-  }
-
   // Success badge
   .status-label.--success {
     background-color: var(--success-low);

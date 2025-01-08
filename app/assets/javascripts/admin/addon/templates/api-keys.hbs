@@ -1,21 +1,3 @@
-<div class="admin-api-keys admin-config-page">
-  <DPageHeader
-    @titleLabel={{i18n "admin.api_keys.title"}}
-    @descriptionLabel={{i18n "admin.api_keys.description"}}
-    @hideTabs={{true}}
-  >
-    <:breadcrumbs>
-      <DBreadcrumbsItem
-        @path="/admin/api/keys"
-        @label={{i18n "admin.api_keys.title"}}
-      />
-    </:breadcrumbs>
-    <:actions as |actions|>
-      <actions.Primary @route="adminApiKeys.new" @label="admin.api_keys.add" />
-    </:actions>
-  </DPageHeader>
-
-  <div class="admin-container admin-config-page__main-area">
-    {{outlet}}
-  </div>
-</div>
+<PluginOutlet @name="admin-api-keys">
+  {{outlet}}
+</PluginOutlet>
