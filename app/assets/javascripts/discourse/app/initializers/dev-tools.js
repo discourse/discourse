@@ -1,11 +1,11 @@
 import { DEBUG } from "@glimmer/env";
-import { isTesting } from "discourse-common/config/environment";
+import { isDevelopment } from "discourse-common/config/environment";
 
 const KEY = "discourse__dev_tools";
 
 let defaultEnabled = false;
 
-if (DEBUG && !isTesting()) {
+if (DEBUG && isDevelopment()) {
   defaultEnabled = true;
 }
 
@@ -56,7 +56,7 @@ export default {
 
         app.advanceReadiness();
       });
-    } else if (DEBUG && !isTesting()) {
+    } else if (DEBUG && isDevelopment()) {
       // eslint-disable-next-line no-console
       console.log(
         "Discourse dev tools are disabled. Run `enableDevTools()` in console to enable."

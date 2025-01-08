@@ -2,9 +2,13 @@
 
 describe "Discourse dev tools", type: :system do
   it "works" do
-    # Open site and check it loads with dev-tools (system specs run on a development build)
+    # Open site and check it loads successfully, with no dev-tools
     visit("/latest")
     expect(page).to have_css("#site-logo")
+    expect(page).not_to have_css(".dev-tools-toolbar")
+
+    # Enable dev tools, and wait for page to reload
+    page.evaluate_script("enableDevTools()")
     expect(page).to have_css(".dev-tools-toolbar")
 
     # Turn on plugin outlet debugging, and check they appear
