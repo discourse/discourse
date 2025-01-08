@@ -152,7 +152,7 @@ module Oneboxer
   end
 
   def self.redis_cached_response_body_key(uri)
-    "CACHED_RESPONSE_#{SiteSetting.default_locale}_#{uri}"
+    "CACHED_RESPONSE_#{onebox_locale}_#{uri}"
   end
 
   # Parse URLs out of HTML, returning the document when finished.
@@ -677,6 +677,9 @@ module Oneboxer
       force_custom_user_agent_hosts: force_custom_user_agent_hosts,
       preserve_fragment_url_hosts: preserve_fragment_url_hosts,
       timeout: 5,
+      extra_headers: {
+        "Accept-Language" => accept_language,
+      },
     }
 
     uri = URI(url)
@@ -704,5 +707,17 @@ module Oneboxer
     fd_options[:default_user_agent] = user_agent_override if user_agent_override
 
     fd_options
+  end
+
+  def self.onebox_locale
+    SiteSetting.onebox_locale.presence || SiteSetting.default_locale
+  end
+
+  def self.accept_language
+    if onebox_locale == "en"
+      "en;q=0.9, *;q=0.5"
+    else
+      "#{onebox_locale.gsub(/_/, "-")};q=0.9, en;q=0.8, *;q=0.5"
+    end
   end
 end
