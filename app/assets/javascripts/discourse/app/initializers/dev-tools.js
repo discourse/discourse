@@ -3,12 +3,6 @@ import { isDevelopment } from "discourse-common/config/environment";
 
 const KEY = "discourse__dev_tools";
 
-let defaultEnabled = false;
-
-if (DEBUG && isDevelopment()) {
-  defaultEnabled = true;
-}
-
 function parseStoredValue() {
   const val = window.localStorage.getItem(KEY);
   if (val === "true") {
@@ -20,16 +14,24 @@ function parseStoredValue() {
   }
 }
 
-function storeValue(value) {
-  if (value === defaultEnabled) {
-    window.localStorage.removeItem(KEY);
-  } else {
-    window.localStorage.setItem(KEY, value);
-  }
-}
-
 export default {
+  after: ["discourse-bootstrap"],
+
   initialize(app) {
+    let defaultEnabled = false;
+
+    if (DEBUG && isDevelopment()) {
+      defaultEnabled = true;
+    }
+
+    function storeValue(value) {
+      if (value === defaultEnabled) {
+        window.localStorage.removeItem(KEY);
+      } else {
+        window.localStorage.setItem(KEY, value);
+      }
+    }
+
     window.enableDevTools = () => {
       storeValue(true);
       window.location.reload();
