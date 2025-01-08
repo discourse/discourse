@@ -3,7 +3,8 @@
 <%- if rtl? %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
 <%- else %>
-  <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+  <%= discourse_stylesheet_link_tag(:mobile, { media: "all and (max-width: 450px)" }) %>
+  <%= discourse_stylesheet_link_tag(:desktop, { media: "all and (min-width: 450px)" }) %>
 <%- end %>
 
 <%- if staff? %>

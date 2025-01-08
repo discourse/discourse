@@ -1,9 +1,13 @@
+import { tracked } from "@glimmer/tracking";
+
 const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
 const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 const ua = navigator.userAgent;
 
 class Capabilities {
+  @tracked viewportWidth;
+
   touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window;
 
   isAndroid = ua.includes("Android");
@@ -45,6 +49,15 @@ class Capabilities {
   wasLaunchedFromDiscourseHub =
     window.location.search.includes("discourse_app=1");
   isAppWebview = window.ReactNativeWebView !== undefined;
+
+  constructor() {
+    this.viewportWidth = window.innerWidth;
+    window.addEventListener("resize", () => {
+      if (window.innerWidth !== this.viewportWidth) {
+        this.viewportWidth = window.innerWidth;
+      }
+    });
+  }
 
   get userHasBeenActive() {
     return (

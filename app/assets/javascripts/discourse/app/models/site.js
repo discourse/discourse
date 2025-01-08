@@ -79,6 +79,7 @@ export default class Site extends RestModel {
   }
 
   @service siteSettings;
+  @service capabilities;
 
   @tracked categories;
 
@@ -93,6 +94,22 @@ export default class Site extends RestModel {
 
     this.topicCountDesc = ["topic_count:desc"];
     this.categories = this.categories || [];
+  }
+
+  get desktopView() {
+    return !this.mobileView;
+  }
+
+  set desktopView(value) {
+    // Ignore server value
+  }
+
+  get mobileView() {
+    return this.capabilities.viewportWidth <= 450;
+  }
+
+  set mobileView(value) {
+    // Ignore server value
   }
 
   get useGlimmerTopicList() {

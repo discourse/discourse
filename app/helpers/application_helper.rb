@@ -627,7 +627,11 @@ module ApplicationHelper
         stylesheet_manager
       end
 
-    manager.stylesheet_link_tag(name, "all", self.method(:add_resource_preload_list))
+    manager.stylesheet_link_tag(
+      name,
+      opts[:media] || "all",
+      self.method(:add_resource_preload_list),
+    )
   end
 
   def discourse_preload_color_scheme_stylesheets
