@@ -315,31 +315,27 @@ RSpec.describe "users" do
   end
 
   path "/admin/users/{id}.json" do
-    # TODO @blake / @sam - this is not passing cause "silence_reason" is a conditional attribute
-    # (also can_be_deleted is) - we need to figure out how to not include it in the schema - it is not included
-    # in the admin response by design
-    #
-    #   get "Get a user by id" do
-    #     tags "Users", "Admin"
-    #     operationId "adminGetUser"
-    #     consumes "application/json"
-    #     expected_request_schema = nil
+    get "Get a user by id" do
+      tags "Users", "Admin"
+      operationId "adminGetUser"
+      consumes "application/json"
+      expected_request_schema = nil
 
-    #     parameter name: :id, in: :path, type: :integer, required: true
+      parameter name: :id, in: :path, type: :integer, required: true
 
-    #     produces "application/json"
-    #     response "200", "response" do
-    #       let(:id) { Fabricate(:user).id }
+      produces "application/json"
+      response "200", "response" do
+        let(:id) { Fabricate(:user).id }
 
-    #       expected_response_schema = load_spec_schema("admin_user_response")
-    #       schema(expected_response_schema)
+        expected_response_schema = load_spec_schema("admin_user_response")
+        schema(expected_response_schema)
 
-    #       it_behaves_like "a JSON endpoint", 200 do
-    #         let(:expected_response_schema) { expected_response_schema }
-    #         let(:expected_request_schema) { expected_request_schema }
-    #       end
-    #     end
-    #   end
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
 
     delete "Delete a user" do
       tags "Users", "Admin"
