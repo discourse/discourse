@@ -51,16 +51,12 @@ export default class EmojiStore extends Service {
   }
 
   resetContext(context) {
-    this.contexts[context] = this.#defaultEmojis;
-    this.#persistRecentEmojisForContext(this.#defaultEmojis, context);
-  }
-
-  get #defaultEmojis() {
-    return this.siteSettings.default_emoji_reactions.split("|").filter(Boolean);
+    this.contexts[context] = [];
+    this.#persistRecentEmojisForContext([], context);
   }
 
   #recentEmojisForContext(context) {
-    return this.contexts[context] ?? this.#defaultEmojis;
+    return this.contexts[context] ?? [];
   }
 
   #addEmojiToContext(emoji, context) {

@@ -129,6 +129,14 @@ export default class EmojiPicker extends Component {
   }
 
   @action
+  showClearFavorites(section) {
+    return (
+      section === "favorites" &&
+      this.emojiStore.favoritesForContext(this.args.context).length
+    );
+  }
+
+  @action
   registerFilterInput(element) {
     this.filterInput = element;
   }
@@ -558,7 +566,7 @@ export default class EmojiPicker extends Component {
                             translatedFallback=section
                           }}
                         </h2>
-                        {{#if (eq section "favorites")}}
+                        {{#if (this.showClearFavorites section)}}
                           <DButton
                             @icon="trash-can"
                             class="btn-transparent"
