@@ -4978,11 +4978,9 @@ en:
             users:
               content: "Users"
               title: "List of all users"
-            my_posts:
-              content: "My Posts"
-              content_drafts: "My Drafts"
-              title: "My recent topic activity"
-              title_drafts: "My unposted drafts"
+            my_drafts:
+              content: "My Drafts"
+              title: "My unposted drafts"
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
