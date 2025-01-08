@@ -310,35 +310,32 @@ export default class EmojiPicker extends Component {
 
   @action
   didRequestSection(section) {
-    schedule("afterRender", () => {
-      this.filteredEmojis = null;
+    this.filteredEmojis = null;
 
-      // we disable scroll listener during requesting section
-      // to avoid it from detecting another section during scroll to requested section
-      this.scrollObserverEnabled = false;
-      this.addVisibleSections(this._getSectionsUpTo(section));
-      this.lastVisibleSection = section;
+    // we disable scroll listener during requesting section
+    // to avoid it from detecting another section during scroll to requested section
+    this.scrollObserverEnabled = false;
+    this.addVisibleSections(this._getSectionsUpTo(section));
+    this.lastVisibleSection = section;
 
-      // iOS hack to avoid blank div when requesting section during momentum
-      if (this.scrollableNode && this.capabilities.isIOS) {
-        this.scrollableNode.style.overflow = "hidden";
-      }
+    // iOS hack to avoid blank div when requesting section during momentum
+    if (this.scrollableNode && this.capabilities.isIOS) {
+      this.scrollableNode.style.overflow = "hidden";
+    }
 
-      const targetEmoji = document.querySelector(
-        `.emoji-picker__section[data-section="${section}"]`
-      );
+    next(() => {
+      schedule("afterRender", () => {
+        const targetEmoji = document.querySelector(
+          `.emoji-picker__section[data-section="${section}"]`
+        );
+        targetEmoji.scrollIntoView({ block: "start" });
 
-      next(() => {
-        schedule("afterRender", () => {
-          targetEmoji.scrollIntoView({ block: "start" });
+        // iOS hack to avoid blank div when requesting section during momentum
+        if (this.scrollableNode && this.capabilities.isIOS) {
+          this.scrollableNode.style.overflow = "scroll";
+        }
 
-          // iOS hack to avoid blank div when requesting section during momentum
-          if (this.scrollableNode && this.capabilities.isIOS) {
-            this.scrollableNode.style.overflow = "scroll";
-          }
-
-          this.scrollObserverEnabled = true;
-        });
+        this.scrollObserverEnabled = true;
       });
     });
   }
@@ -346,6 +343,7 @@ export default class EmojiPicker extends Component {
   @action
   async loadEmojis() {
     if (this.emojiStore.list) {
+      this.didInputFilter(this.args.term);
       return;
     }
 
@@ -353,6 +351,9 @@ export default class EmojiPicker extends Component {
 
     try {
       this.emojiStore.list = await ajax("/emojis.json");
+
+      // we cant filer an empty list so have to wait for it
+      this.didInputFilter(this.args.term);
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -442,7 +443,6 @@ export default class EmojiPicker extends Component {
       <div class="emoji-picker__filter-container">
         <FilterInput
           {{didInsert (if this.site.desktopView this.focusFilter (noop))}}
-          {{didInsert (fn this.didInputFilter @term)}}
           {{didInsert this.registerFilterInput}}
           @value={{@term}}
           @filterAction={{withEventValue this.didInputFilter}}

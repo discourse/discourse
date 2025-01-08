@@ -493,6 +493,8 @@ export default class ChatComposer extends Component {
         if (v.code) {
           return `${v.code}:`;
         } else {
+          $textarea.autocomplete({ cancel: true });
+
           const menuOptions = {
             identifier: "emoji-picker",
             groupIdentifier: "emoji-picker",
@@ -510,12 +512,10 @@ export default class ChatComposer extends Component {
 
           // Close the keyboard before showing the emoji picker
           // it avoids a whole range of bugs on iOS
-          document.activeElement?.blur();
           await waitForClosedKeyboard(this);
 
           const virtualElement = virtualElementFromTextRange();
           this.menuInstance = await this.menu.show(virtualElement, menuOptions);
-          $textarea.autocomplete({ cancel: true });
           return "";
         }
       },
