@@ -8,7 +8,7 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { emojiSearch } from "pretty-text/emoji";
-import { eq, gt, includes, not, notEq } from "truth-helpers";
+import { eq, gt, includes, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FilterInput from "discourse/components/filter-input";
 import concatClass from "discourse/helpers/concat-class";
