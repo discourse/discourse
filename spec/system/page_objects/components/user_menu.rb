@@ -59,14 +59,14 @@ module PageObjects
 
       def has_user_full_name_messaged_notification?(post, user)
         expect(find("#quick-access-all-notifications .private-message").text).to eq(
-          "#{user.name} #{post.topic.title}")
+          "#{user.name} #{post.topic.title}",
+        )
       end
 
-
-      def has_user_full_name_bookmarked_notification?(topic, user)
+      def has_user_full_name_bookmarked_notification?(post, user)
         expect(find("#quick-access-bookmarks .bookmark").text).to eq(
-         "#{user.name} #{topic.title}")
-
+          "#{user.name} #{post.topic.title}",
+        )
       end
 
       def has_user_username_mentioned_notification?(topic, user_that_mentioned)
