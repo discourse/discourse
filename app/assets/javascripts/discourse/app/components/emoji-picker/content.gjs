@@ -181,7 +181,7 @@ export default class EmojiPicker extends Component {
 
     const results = emojiSearch(filter, {
       exclude: this.site.denied_emojis,
-    }).slice(0, 25);
+    }).slice(0, 50);
 
     this.filteredEmojis =
       this.flatEmojis.filter((emoji) => results.includes(emoji.name)) ?? [];
