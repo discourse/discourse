@@ -12,6 +12,7 @@ import {
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
@@ -54,10 +55,7 @@ export default class TopicListItem extends Component {
   static reopen() {
     deprecated(
       "Modifying topic-list-item with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      }
+      RAW_TOPIC_LIST_DEPRECATION_OPTIONS
     );
 
     return super.reopen(...arguments);
@@ -66,10 +64,7 @@ export default class TopicListItem extends Component {
   static reopenClass() {
     deprecated(
       "Modifying topic-list-item with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      }
+      RAW_TOPIC_LIST_DEPRECATION_OPTIONS
     );
 
     return super.reopenClass(...arguments);

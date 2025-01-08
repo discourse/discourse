@@ -1,4 +1,5 @@
 import require from "require";
+import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import deprecated from "discourse-common/lib/deprecated";
 import { getResolverOption } from "discourse-common/resolver";
 
@@ -49,10 +50,7 @@ export function addRawTemplate(name, template, opts = {}) {
     const message = `[${name}] hbr topic-list template overrides and connectors are deprecated. Use the value transformer \`topic-list-columns\` and other new topic-list plugin APIs instead.`;
 
     // NOTE: addRawTemplate is called too early for deprecation handlers to process this:
-    deprecated(message, {
-      since: "v3.4.0.beta3-dev",
-      id: "discourse.hbr-topic-list-overrides",
-    });
+    deprecated(message, RAW_TOPIC_LIST_DEPRECATION_OPTIONS);
 
     needsHbrTopicList(true);
   }
