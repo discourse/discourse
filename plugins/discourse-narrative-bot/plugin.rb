@@ -11,6 +11,7 @@ hide_plugin
 
 require_relative "lib/discourse_narrative_bot/welcome_post_type_site_setting"
 register_asset "stylesheets/discourse-narrative-bot.scss"
+register_asset "fonts/GreatVibes-Regular.ttf"
 
 module ::DiscourseNarrativeBot
   PLUGIN_NAME = "discourse-narrative-bot".freeze
