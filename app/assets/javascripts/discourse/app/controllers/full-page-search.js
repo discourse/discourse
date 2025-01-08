@@ -18,6 +18,7 @@ import {
   translateResults,
   updateRecentSearches,
 } from "discourse/lib/search";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -565,17 +566,24 @@ export default class FullPageSearchController extends Controller {
     this._search();
   }
 
-  @action
-  loadMore() {
-    let page = this.page;
-    if (
+  get canLoadMore() {
+    return (
       this.get("model.grouped_search_result.more_full_page_results") &&
       !this.loading &&
-      page < PAGE_LIMIT
-    ) {
+      this.page < PAGE_LIMIT
+    );
+  }
+
+  @action
+  loadMore() {
+    if (!this.canLoadMore) {
+      return;
+    }
+
+    applyBehaviorTransformer("full-page-search-load-more", () => {
       this.incrementProperty("page");
       this._search();
-    }
+    });
   }
 
   @action
