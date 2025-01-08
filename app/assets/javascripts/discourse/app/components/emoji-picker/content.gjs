@@ -58,6 +58,7 @@ export default class EmojiPicker extends Component {
   @tracked emojis = null;
   @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
+  @tracked term = this.args.term;
 
   prevYPosition = 0;
 
@@ -310,7 +311,8 @@ export default class EmojiPicker extends Component {
 
   @action
   didRequestSection(section) {
-    this.filteredEmojis = null;
+    this.term = "";
+    this.didInputFilter(null);
 
     // we disable scroll listener during requesting section
     // to avoid it from detecting another section during scroll to requested section
@@ -343,7 +345,7 @@ export default class EmojiPicker extends Component {
   @action
   async loadEmojis() {
     if (this.emojiStore.list) {
-      this.didInputFilter(this.args.term);
+      this.didInputFilter(this.term);
       return;
     }
 
@@ -352,8 +354,8 @@ export default class EmojiPicker extends Component {
     try {
       this.emojiStore.list = await ajax("/emojis.json");
 
-      // we cant filer an empty list so have to wait for it
-      this.didInputFilter(this.args.term);
+      // we cant filter an empty list so have to wait for it
+      this.didInputFilter(this.term);
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -444,7 +446,7 @@ export default class EmojiPicker extends Component {
         <FilterInput
           {{didInsert (if this.site.desktopView this.focusFilter (noop))}}
           {{didInsert this.registerFilterInput}}
-          @value={{@term}}
+          @value={{this.term}}
           @filterAction={{withEventValue this.didInputFilter}}
           @icons={{hash right="magnifying-glass"}}
           @containerClass="emoji-picker__filter"
