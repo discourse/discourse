@@ -67,11 +67,7 @@ export default class OutletInfoComponent extends Component {
   }
 
   get isHidden() {
-    if (this.isWrapper) {
-      return !this.isBeforeOrAfter;
-    } else {
-      return false;
-    }
+    return this.isWrapper && !this.isBeforeOrAfter;
   }
 
   get showName() {
