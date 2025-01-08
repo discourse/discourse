@@ -524,16 +524,16 @@ export default class EmojiPicker extends Component {
                       loading="lazy"
                     />
                   {{else}}
-                    {{#unless this.isFiltering}}
+                    {{#if this.isFiltering}}
+                      <div class="spinner-container">
+                        <div class="spinner medium"></div>
+                      </div>
+                    {{else}}
                       <p class="emoji-picker__no-results">
                         {{i18n "chat.emoji_picker.no_results"}}
                         {{replaceEmoji ":crying_cat_face:"}}
                       </p>
-                    {{else}}
-                      <div class="spinner-container">
-                        <div class="spinner medium"></div>
-                      </div>
-                    {{/unless}}
+                    {{/if}}
                   {{/each}}
                 </div>
               {{else}}
