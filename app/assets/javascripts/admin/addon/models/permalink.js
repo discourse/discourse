@@ -10,7 +10,9 @@ export default class Permalink extends RestModel {
       let allLinks = permalinks.map((p) => Permalink.create(p));
 
       let filteredLinks = filter
-        ? allLinks.filter((p) => p.url.includes(filter))
+        ? allLinks.filter(
+            (p) => p.url.includes(filter) || p.external_url?.includes(filter)
+          )
         : allLinks;
 
       return { allLinks, filteredLinks };
