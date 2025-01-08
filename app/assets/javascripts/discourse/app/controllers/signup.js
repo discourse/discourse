@@ -1,7 +1,8 @@
 import { A } from "@ember/array";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import { alias, notEmpty } from "@ember/object/computed";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -45,8 +46,6 @@ export default class SignupPageController extends Controller.extend(
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
-  @alias("nameValidationHelper.nameTitle") nameTitle;
-  @alias("nameValidationHelper.forceValidationReason") forceValidationReason;
 
   init() {
     super.init(...arguments);
@@ -56,6 +55,19 @@ export default class SignupPageController extends Controller.extend(
     }
 
     this.fetchConfirmationValue();
+  }
+
+  get nameTitle() {
+    return this.nameValidationHelper.nameTitle;
+  }
+
+  get nameValidation() {
+    return this.nameValidationHelper.nameValidation;
+  }
+
+  @dependentKeyCompat
+  get forceValidationReason() {
+    return this.nameValidationHelper.forceValidationReason;
   }
 
   @bind
@@ -511,7 +523,7 @@ export default class SignupPageController extends Controller.extend(
     const validation = [
       this.emailValidation,
       this.usernameValidation,
-      this.nameValidationHelper.nameValidation,
+      this.nameValidation,
       this.passwordValidation,
       this.userFieldsValidation,
     ].find((v) => v.failed);

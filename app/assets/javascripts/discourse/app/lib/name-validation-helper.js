@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { dependentKeyCompat } from "@ember/object/compat";
 import { isEmpty } from "@ember/utils";
 import { i18n } from "discourse-i18n";
 
@@ -10,7 +9,6 @@ export default class NameValidationHelper {
     this.owner = owner;
   }
 
-  @dependentKeyCompat
   get nameTitle() {
     return i18n(
       this.owner.site.full_name_required_for_signup
@@ -19,7 +17,6 @@ export default class NameValidationHelper {
     );
   }
 
-  @dependentKeyCompat
   get nameValidation() {
     if (
       this.owner.site.full_name_required_for_signup &&

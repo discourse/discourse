@@ -1,6 +1,7 @@
 import { A } from "@ember/array";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -52,8 +53,6 @@ export default class CreateAccount extends Component.extend(
   @alias("model.accountUsername") accountUsername;
   // For NameValidation mixin
   @alias("model.accountName") accountName;
-  @alias("nameValidationHelper.nameTitle") nameTitle;
-  @alias("nameValidationHelper.forceValidationReason") forceValidationReason;
 
   init() {
     super.init(...arguments);
@@ -69,6 +68,19 @@ export default class CreateAccount extends Component.extend(
         this.set("model.skipConfirmation", false)
       );
     }
+  }
+
+  get nameTitle() {
+    return this.nameValidationHelper.nameTitle;
+  }
+
+  get nameValidation() {
+    return this.nameValidationHelper.nameValidation;
+  }
+
+  @dependentKeyCompat
+  get forceValidationReason() {
+    return this.nameValidationHelper.forceValidationReason;
   }
 
   @bind
@@ -519,7 +531,7 @@ export default class CreateAccount extends Component.extend(
     const validation = [
       this.emailValidation,
       this.usernameValidation,
-      this.nameValidationHelper.nameValidation,
+      this.nameValidation,
       this.passwordValidation,
       this.userFieldsValidation,
     ].find((v) => v.failed);

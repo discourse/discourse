@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, bool, not, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
@@ -34,7 +35,6 @@ export default class InvitesShowController extends Controller.extend(
   @alias("model.email_verified_by_link") emailVerifiedByLink;
   @alias("model.different_external_email") differentExternalEmail;
   @alias("model.username") accountUsername;
-  @alias("nameValidationHelper.nameTitle") nameTitle;
   @not("externalAuthsOnly") passwordRequired;
   @readOnly("model.is_invite_link") isInviteLink;
 
@@ -44,6 +44,15 @@ export default class InvitesShowController extends Controller.extend(
   authOptions = null;
   rejectedEmails = [];
   maskPassword = true;
+
+  get nameTitle() {
+    return this.nameValidationHelper.nameTitle;
+  }
+
+  @dependentKeyCompat
+  get nameValidation() {
+    return this.nameValidationHelper.nameValidation;
+  }
 
   authenticationComplete(options) {
     const props = {
@@ -94,7 +103,7 @@ export default class InvitesShowController extends Controller.extend(
     "emailValidation.failed",
     "usernameValidation.failed",
     "passwordValidation.failed",
-    "nameValidationHelper.nameValidation.failed",
+    "nameValidation.failed",
     "userFieldsValidation.failed",
     "existingUserRedeeming",
     "existingUserCanRedeem"
