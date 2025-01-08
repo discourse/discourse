@@ -25,6 +25,7 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
+import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { cloneJSON } from "discourse-common/lib/object";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { i18n } from "discourse-i18n";
@@ -488,7 +489,7 @@ export default class ChatComposer extends Component {
           return [matches[1]];
         }
       },
-      transformComplete: (v) => {
+      transformComplete: async (v) => {
         if (v.code) {
           return `${v.code}:`;
         } else {
@@ -507,8 +508,13 @@ export default class ChatComposer extends Component {
             },
           };
 
+          // Close the keyboard before showing the emoji picker
+          // it avoids a whole range of bugs on iOS
+          document.activeElement?.blur();
+          await waitForClosedKeyboard(this);
+
           const virtualElement = virtualElementFromTextRange();
-          this.menuInstance = this.menu.show(virtualElement, menuOptions);
+          this.menuInstance = await this.menu.show(virtualElement, menuOptions);
           $textarea.autocomplete({ cancel: true });
           return "";
         }

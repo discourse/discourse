@@ -4,7 +4,6 @@
   }
 
   html:not(.keyboard-visible.mobile-view) & .d-modal__container {
-    top: 0;
     height: calc(var(--composer-vh, var(--1dvh)) * 100);
     max-height: 100%;
 
@@ -17,8 +16,6 @@
   }
 
   html.keyboard-visible.mobile-view & .d-modal__container {
-    height: calc(var(--composer-vh, var(--1dvh)) * 100);
-
     .emoji-picker__content {
       height: calc(var(--composer-vh, var(--1dvh)) * 100 - 50px);
     }
