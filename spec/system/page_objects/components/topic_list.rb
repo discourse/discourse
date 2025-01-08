@@ -75,8 +75,7 @@ module PageObjects
       end
 
       def visit_topic_first_reply_via_keyboard(topic)
-        find("#{topic_list_item_class(topic)} button.posts-map").native.send_keys(:return)
-        find("#topic-entrance button.jump-top").native.send_keys(:return)
+        find("#{topic_list_item_class(topic)} a.badge-posts").native.send_keys(:return)
       end
 
       def topic_list_item_class(topic)
@@ -94,7 +93,7 @@ module PageObjects
       private
 
       def topic_list_item_closed(topic)
-        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg.locked"
+        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg.d-icon-lock"
       end
 
       def topic_list_item_unread_badge(topic)

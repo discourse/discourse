@@ -176,6 +176,12 @@ const POST_MENU_DEPRECATION_OPTIONS = {
   url: "https://meta.discourse.org/t/341014",
 };
 
+export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
+  since: "v3.4.0.beta4-dev",
+  id: "discourse.hbr-topic-list-overrides",
+  url: "https://meta.discourse.org/t/343404",
+};
+
 const appliedModificationIds = new WeakMap();
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
@@ -306,10 +312,7 @@ class PluginApi {
     ) {
       deprecated(
         `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
+        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
       );
     }
 
@@ -357,10 +360,7 @@ class PluginApi {
     ) {
       deprecated(
         `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
+        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
       );
     }
 
