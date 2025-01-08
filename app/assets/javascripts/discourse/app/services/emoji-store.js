@@ -56,7 +56,10 @@ export default class EmojiStore extends Service {
   }
 
   #recentEmojisForContext(context) {
-    return this.contexts[context] ?? [];
+    return (
+      this.contexts[context] ??
+      this.store.getObject(this.#emojisStorekeyForContext(context))
+    );
   }
 
   #addEmojiToContext(emoji, context) {
