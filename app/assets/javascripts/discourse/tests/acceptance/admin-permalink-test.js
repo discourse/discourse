@@ -26,10 +26,8 @@ acceptance("Admin - Permalinks", function (needs) {
 
   needs.user();
   needs.pretender((server, helper) => {
-    server.get("/admin/permalinks.json", (response) => {
-      const result =
-        response.queryParams.filter !== "feature" ? [] : startingData;
-      return helper.response(200, result);
+    server.get("/admin/permalinks.json", () => {
+      return helper.response(200, startingData);
     });
   });
 
