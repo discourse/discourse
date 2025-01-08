@@ -76,7 +76,7 @@ module PageObjects
       end
 
       def header_actions_selector
-        ".admin-page-header__actions"
+        ".d-page-header__actions"
       end
 
       def description_field_selector
