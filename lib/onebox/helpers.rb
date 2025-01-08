@@ -39,10 +39,11 @@ module Onebox
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
         canonical_uri = Addressable::URI.parse(canonical_link)
-        canonical_options = Oneboxer.get_final_destination_options(canonical_link)
-        canonical_options["extra_headers"] = { "Accept-Language" => accept_language }
         if canonical_link && canonical_uri &&
              "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
+          canonical_options = Oneboxer.get_final_destination_options(canonical_link)
+          canonical_options["extra_headers"] = { "Accept-Language" => accept_language }
+
           uri = FinalDestination.new(canonical_link, canonical_options).resolve
           if uri.present?
             response =
