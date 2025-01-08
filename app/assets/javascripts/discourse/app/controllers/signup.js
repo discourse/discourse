@@ -46,6 +46,7 @@ export default class SignupPageController extends Controller.extend(
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
   @alias("nameValidationHelper.nameTitle") nameTitle;
+  @alias("nameValidationHelper.forceValidationReason") forceValidationReason;
 
   init() {
     super.init(...arguments);
@@ -186,7 +187,7 @@ export default class SignupPageController extends Controller.extend(
     "serverEmailValidation",
     "accountEmail",
     "rejectedEmails.[]",
-    "nameValidationHelper.forceValidationReason"
+    "forceValidationReason"
   )
   emailValidation(
     serverAccountEmail,

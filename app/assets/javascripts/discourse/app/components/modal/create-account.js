@@ -53,6 +53,7 @@ export default class CreateAccount extends Component.extend(
   // For NameValidation mixin
   @alias("model.accountName") accountName;
   @alias("nameValidationHelper.nameTitle") nameTitle;
+  @alias("nameValidationHelper.forceValidationReason") forceValidationReason;
 
   init() {
     super.init(...arguments);
@@ -203,7 +204,7 @@ export default class CreateAccount extends Component.extend(
     "serverEmailValidation",
     "model.accountEmail",
     "rejectedEmails.[]",
-    "nameValidationHelper.forceValidationReason"
+    "forceValidationReason"
   )
   emailValidation(
     serverAccountEmail,
