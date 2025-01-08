@@ -6,7 +6,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import AdminUser from "admin/models/admin-user";
 
 export default class ApiKey extends RestModel {
-  @fmt("truncated_key", "%@...") truncatedKey;
+  @fmt("truncated_key", "%@ ...") truncatedKey;
 
   @computed("_user")
   get user() {
@@ -18,6 +18,19 @@ export default class ApiKey extends RestModel {
       this.set("_user", AdminUser.create(value));
     } else {
       this.set("_user", value);
+    }
+  }
+
+  @computed("_created_by")
+  get createdBy() {
+    return this._created_by;
+  }
+
+  set created_by(value) {
+    if (value && !(value instanceof AdminUser)) {
+      this.set("_created_by", AdminUser.create(value));
+    } else {
+      this.set("_created_by", value);
     }
   }
 

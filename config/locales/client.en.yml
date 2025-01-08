@@ -5396,6 +5396,20 @@ en:
         none_selected: "Select a group to get started"
         no_custom_groups: "Create a new custom group"
 
+      api_keys:
+        title: "API Keys"
+        description: "The API keys feature lets you securely integrate Discourse with external systems and automate actions. Admins can create keys with specific scopes to control access to resources and sensitive data. Scopes limit functionality, ensuring enhanced security."
+        add: "Add API key"
+        edit: "Edit"
+        save: "Save"
+        cancel: "Cancel"
+        back: "Back to API keys"
+        revoke: "Revoke"
+        undo_revoke: "Undo revoke"
+        revoked: "Revoked"
+        delete: Permanently delete
+        no_api_keys: "You don't have any API keys yet."
+
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now."
@@ -5403,30 +5417,30 @@ en:
         title: "API"
         key: "Key"
         keys: "Keys"
-        created: Created
+        created: Created by
         updated: Updated
-        last_used: Last Used
-        never_used: (never)
+        last_used: Last used
+        never_used: Never
         generate: "Generate"
-        undo_revoke: "Undo Revoke"
+        undo_revoke: "Undo revoke"
         revoke: "Revoke"
-        all_users: "All Users"
+        all_users: "All users"
         active_keys: "Active API Keys"
         manage_keys: Manage Keys
         show_details: Details
         description: Description
         no_description: (no description)
         all_api_keys: All API Keys
-        user_mode: User Level
+        user_mode: User level
         scope_mode: Scope
         impersonate_all_users: Impersonate any user
-        single_user: "Single User"
+        single_user: "Single user"
         user_placeholder: Enter username
         description_placeholder: What will this key be used for?
         save: Save
         new_key: New API Key
         revoked: Revoked
-        delete: Permanently Delete
+        delete: Permanently delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
         scopes:
@@ -5440,8 +5454,8 @@ en:
           global_description: API key has no restriction and all endpoints are accessible.
           resource: Resource
           action: Action
-          allowed_parameters: Allowed Parameters
-          optional_allowed_parameters: Allowed Parameters (optional)
+          allowed_parameters: Allowed parameters
+          optional_allowed_parameters: Allowed parameters (optional)
           any_parameter: (any parameter)
           allowed_urls: Allowed URLs
           descriptions:
