@@ -28,6 +28,7 @@ const REDUCED_WIDTH_THRESHOLD = 500;
 export default class ChatMessageActionsDesktop extends Component {
   @service chat;
   @service site;
+  @service siteSettings;
   @service emojiStore;
 
   @tracked size = FULL;
@@ -35,8 +36,13 @@ export default class ChatMessageActionsDesktop extends Component {
   popper = null;
 
   get favoriteReactions() {
+    const defaultReactions = this.siteSettings.default_emoji_reactions
+      .split("|")
+      .filter(Boolean);
+
     return this.emojiStore
       .favoritesForContext(`channel_${this.message.channel.id}`)
+      .concat(defaultReactions)
       .slice(0, 3)
       .map(
         (emoji) =>
