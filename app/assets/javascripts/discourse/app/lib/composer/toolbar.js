@@ -8,16 +8,16 @@ function getButtonLabel(labelKey, defaultLabel) {
 }
 
 export default class Toolbar {
-  constructor(opts) {
-    const { siteSettings, capabilities } = opts;
-    this.shortcuts = {};
-    this.context = null;
+  context = null;
+  shortcuts = {};
+  groups = [
+    { group: "fontStyles", buttons: [] },
+    { group: "insertions", buttons: [] },
+    { group: "extras", buttons: [] },
+  ];
 
-    this.groups = [
-      { group: "fontStyles", buttons: [] },
-      { group: "insertions", buttons: [] },
-      { group: "extras", buttons: [] },
-    ];
+  constructor(opts) {
+    const { siteSettings } = opts;
 
     const boldLabel = getButtonLabel("composer.bold_label", "B");
     const boldIcon = boldLabel ? null : "bold";
@@ -60,7 +60,7 @@ export default class Toolbar {
     this.addButton({
       id: "blockquote",
       group: "insertions",
-      icon: "quote-right",
+      icon: "quote-left",
       shortcut: "Shift+9",
       preventFocus: true,
       perform: (e) =>
@@ -70,41 +70,34 @@ export default class Toolbar {
         }),
     });
 
-    if (!capabilities.touch) {
-      this.addButton({
-        id: "code",
-        group: "insertions",
-        shortcut: "E",
-        icon: "code",
-        preventFocus: true,
-        trimLeading: true,
-        perform: (e) => e.formatCode(),
-      });
-
-      this.addButton({
-        id: "bullet",
-        group: "extras",
-        icon: "list-ul",
-        shortcut: "Shift+8",
-        title: "composer.ulist_title",
-        preventFocus: true,
-        perform: (e) => e.applyList("* ", "list_item"),
-      });
-
-      this.addButton({
-        id: "list",
-        group: "extras",
-        icon: "list-ol",
-        shortcut: "Shift+7",
-        title: "composer.olist_title",
-        preventFocus: true,
-        perform: (e) =>
-          e.applyList(
-            (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-            "list_item"
-          ),
-      });
-    }
+    this.addButton({
+      id: "list",
+      group: "extras",
+      icon: "list",
+      title: "composer.list_title",
+      options: [
+        {
+          name: "list-ul",
+          icon: "list-ul",
+          label: "composer.ulist_title",
+          shortcut: "Shift+8",
+          action: (e) => e.applyList("* ", "list_item"),
+          condition: true,
+        },
+        {
+          name: "list-ol",
+          icon: "list-ol",
+          label: "composer.olist_title",
+          shortcut: "Shift+7",
+          action: (e) =>
+            e.applyList(
+              (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+              "list_item"
+            ),
+          condition: true,
+        },
+      ],
+    });
 
     if (siteSettings.support_mixed_text_direction) {
       this.addButton({
@@ -145,6 +138,7 @@ export default class Toolbar {
       perform: buttonAttrs.perform || function () {},
       trimLeading: buttonAttrs.trimLeading,
       popupMenu: buttonAttrs.popupMenu || false,
+      options: buttonAttrs.options,
       preventFocus: buttonAttrs.preventFocus || false,
       condition: buttonAttrs.condition || (() => true),
       shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action
