@@ -94,7 +94,7 @@
 .dev-tools-toolbar {
   position: fixed;
   z-index: 999999;
-  top: calc(var(--header-offset) + 50px);
+  top: 300px;
 
   display: flex;
   flex-direction: column;
