@@ -75,6 +75,15 @@ export default class PostList extends Component {
             @additionalItemClasses={{@additionalItemClasses}}
             @titleAriaLabel={{@titleAriaLabel}}
           >
+            <:abovePostItemHeader>
+              {{yield to="abovePostItemHeader"}}
+            </:abovePostItemHeader>
+            <:belowPostItemMetaData>
+              {{yield to="belowPostItemMetaData"}}
+            </:belowPostItemMetaData>
+            <:abovePostItemExcerpt>
+              {{yield to="abovePostItemExcerpt"}}
+            </:abovePostItemExcerpt>
             <:belowPostItem>
               {{yield to="belowPostItem"}}
             </:belowPostItem>

@@ -31,7 +31,6 @@ class PostSerializer < BasicPostSerializer
              :topic_slug,
              :topic_title,
              :topic_html_title,
-             :url,
              :category_id,
              :display_username,
              :primary_group_name,
@@ -92,7 +91,8 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_pending_count,
              :user_suspended,
              :user_status,
-             :mentioned_users
+             :mentioned_users,
+             :post_url
 
   def initialize(object, opts)
     super(object, opts)
@@ -100,6 +100,10 @@ class PostSerializer < BasicPostSerializer
     PostSerializer::INSTANCE_VARS.each do |name|
       self.public_send("#{name}=", opts[name]) if opts.include? name
     end
+  end
+
+  def post_url
+    object&.url
   end
 
   def topic_slug
