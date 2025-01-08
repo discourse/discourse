@@ -10,11 +10,11 @@ import deprecated, {
 } from "discourse-common/lib/deprecated";
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 
-let cacheReady = false;
 let _connectorCache;
 let _rawConnectorCache;
 let _extraConnectorClasses = {};
 let _extraConnectorComponents = {};
+let debugOutletCallback;
 
 export function resetExtraClasses() {
   _extraConnectorClasses = {};
@@ -67,7 +67,6 @@ function findOutlets(keys, callback) {
 export function clearCache() {
   _connectorCache = null;
   _rawConnectorCache = null;
-  cacheReady = false;
 }
 
 /**
@@ -89,7 +88,6 @@ function safeSetComponentTemplate(template, component) {
  */
 export function expireConnectorCache() {
   _connectorCache = null;
-  cacheReady = false;
 }
 
 class ConnectorInfo {
@@ -172,8 +170,7 @@ class ConnectorInfo {
 }
 
 function buildConnectorCache() {
-  cacheReady = true;
-  _connectorCache ??= {};
+  _connectorCache = {};
 
   const outletsByModuleName = {};
   findOutlets(
@@ -215,15 +212,18 @@ function buildConnectorCache() {
 }
 
 export function connectorsExist(outletName) {
-  if (!cacheReady) {
+  if (!_connectorCache) {
     buildConnectorCache();
   }
-  return Boolean(_connectorCache[outletName]);
+  return Boolean(_connectorCache[outletName] || debugOutletCallback);
 }
 
 export function connectorsFor(outletName) {
-  if (!cacheReady) {
+  if (!_connectorCache) {
     buildConnectorCache();
+  }
+  if (debugOutletCallback) {
+    return debugOutletCallback(outletName, _connectorCache[outletName]);
   }
   return _connectorCache[outletName] || [];
 }
@@ -307,10 +307,6 @@ export function deprecatedArgumentValue(deprecatedArg, options) {
   });
 }
 
-export function _unsafe_set_connector_cache(cache) {
-  _connectorCache = cache;
-}
-
-export function _unsafe_get_connector_cache() {
-  return _connectorCache;
+export function _setOutletDebugCallback(callback) {
+  debugOutletCallback = callback;
 }

@@ -1,34 +1,31 @@
 import curryComponent from "ember-curry-component";
-import {
-  _unsafe_get_connector_cache,
-  _unsafe_set_connector_cache,
-} from "discourse/lib/plugin-connectors";
+import { _setOutletDebugCallback } from "discourse/lib/plugin-connectors";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import devToolsState from "../state";
 import OutletInfoComponent from "./outlet-info";
 
-const alreadyPatched = new Set();
+const SKIP_EXISTING_FOR_OUTLETS = [
+  "home-logo-wrapper", // Wrapper outlet used by chat, so very likely to be present
+];
 
 export function patchConnectors() {
-  const oldConnectorCache = _unsafe_get_connector_cache() || {};
+  _setOutletDebugCallback((outletName, existing) => {
+    existing ||= [];
 
-  const connectorCacheProxy = new Proxy(oldConnectorCache, {
-    get: function (target, prop) {
-      if (!alreadyPatched.has(prop)) {
-        alreadyPatched.add(prop);
-        target[prop] ||= [];
-        target[prop].push({
-          connectorClass: OutletInfoComponent,
-          componentClass: curryComponent(
-            OutletInfoComponent,
-            { outletName: prop },
-            getOwnerWithFallback()
-          ),
-        });
-      }
+    if (!devToolsState.pluginOutletDebug) {
+      return existing;
+    }
 
-      return target[prop];
-    },
+    if (SKIP_EXISTING_FOR_OUTLETS.includes(outletName)) {
+      existing = [];
+    }
+
+    const componentClass = curryComponent(
+      OutletInfoComponent,
+      { outletName },
+      getOwnerWithFallback()
+    );
+
+    return [{ componentClass }, ...existing];
   });
-
-  _unsafe_set_connector_cache(connectorCacheProxy);
 }
