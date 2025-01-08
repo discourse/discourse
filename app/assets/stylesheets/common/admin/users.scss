@@ -117,7 +117,8 @@
     margin-top: 1em;
     &__column-header {
       &--username,
-      &---email {
+      &---email,
+      &--silence-reason {
         .header-contents {
           text-align: left;
         }
