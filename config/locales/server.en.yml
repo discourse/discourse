@@ -1803,7 +1803,7 @@ en:
     block_onebox_on_redirect: "Prevent oneboxing for URLs that lead to a redirecting page. This configuration stops the creation of a visual card (onebox) for any URL that redirects to a different destination, ensuring that direct, non-redirecting URLs are prioritized for oneboxing."
     allowed_inline_onebox_domains: "A list of domains that will be oneboxed in miniature form if linked without a title"
     enable_inline_onebox_on_all_domains: "Ignore allowed_inline_onebox_domains site setting and allow inline onebox on all domains."
-    onebox_locale: "The locale used for oneboxing content. If left blank, the default locale will be used."
+    onebox_locale: "The locale sent to onebox providers. If left blank, the default locale will be used."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Set the maximum number of oneboxes that can be included in a single post. Oneboxes provide a preview of linked content within the post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
