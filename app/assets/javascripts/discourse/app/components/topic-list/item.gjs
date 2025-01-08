@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { array, concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
@@ -12,7 +11,6 @@ import PostCountOrBadges from "discourse/components/topic-list/post-count-or-bad
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
-import { topicTitleDecorators } from "discourse/components/topic-title";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
@@ -105,17 +103,6 @@ export default class Item extends Component {
   }
 
   @action
-  applyTitleDecorators(element) {
-    const rawTopicLink = element.querySelector(".raw-topic-link");
-
-    if (rawTopicLink) {
-      topicTitleDecorators?.forEach((cb) =>
-        cb(this.args.topic, rawTopicLink, "topic-list-item-title")
-      );
-    }
-  }
-
-  @action
   onBulkSelectToggle(e) {
     if (e.target.checked) {
       this.args.selected.addObject(this.args.topic);
@@ -193,7 +180,6 @@ export default class Item extends Component {
   <template>
     <tr
       {{! template-lint-disable no-invalid-interactive }}
-      {{didInsert this.applyTitleDecorators}}
       {{this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
