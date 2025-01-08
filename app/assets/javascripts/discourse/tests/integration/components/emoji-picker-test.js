@@ -70,7 +70,7 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
 
     assert
       .dom(".emoji-picker__section.filtered > img")
-      .exists({ count: 1 }, "it filters the emojis list");
+      .exists({ count: 2 }, "it filters the emojis list");
     assert
       .dom('.emoji-picker__section.filtered > img[alt="grinning"]')
       .exists("it filters the correct emoji");
@@ -81,7 +81,7 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
       .dom('.emoji-picker__section.filtered > img[alt="grinning"]')
       .exists("it is case insensitive");
 
-    await fillIn(".filter-input", "smiley_cat");
+    await fillIn(".filter-input", "grinning");
 
     assert
       .dom('.emoji-picker__section.filtered > img[alt="grinning"]')

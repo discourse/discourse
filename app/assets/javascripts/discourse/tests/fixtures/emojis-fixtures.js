@@ -17,6 +17,12 @@ export default {
         group: "smileys_\u0026_emotion",
         search_aliases: ["smiley_cat", "star_struck"],
       },
+      {
+        name: "smiley_cat",
+        tonable: false,
+        url: "/images/emoji/twitter/smiley_cat.png?v=12",
+        group: "smileys_\u0026_emotion",
+      },
     ],
     "people_&_body": [
       {
