@@ -26,7 +26,7 @@ export default class ApiKeysList extends Component {
   async revokeKey(key) {
     try {
       await key.revoke();
-      this.dMenu.close();
+      await this.dMenu.close();
     } catch (error) {
       popupAjaxError(error);
     }
@@ -36,7 +36,7 @@ export default class ApiKeysList extends Component {
   async undoRevokeKey(key) {
     try {
       await key.undoRevoke();
-      this.dMenu.close();
+      await this.dMenu.close();
     } catch (error) {
       popupAjaxError(error);
     }

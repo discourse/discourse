@@ -53,8 +53,8 @@ export default class AdminConfigAreasApiKeysShow extends Component {
   }
 
   @action
-  showURLs(urls) {
-    this.modal.show(ApiKeyUrlsModal, {
+  async showURLs(urls) {
+    await this.modal.show(ApiKeyUrlsModal, {
       model: { urls },
     });
   }
