@@ -46,7 +46,6 @@ export default class SignupPageController extends Controller.extend(
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
   @alias("nameValidationHelper.nameTitle") nameTitle;
-  @alias("nameValidationHelper.nameValidation") nameValidation;
 
   init() {
     super.init(...arguments);
@@ -187,7 +186,7 @@ export default class SignupPageController extends Controller.extend(
     "serverEmailValidation",
     "accountEmail",
     "rejectedEmails.[]",
-    "forceValidationReason"
+    "nameValidationHelper.forceValidationReason"
   )
   emailValidation(
     serverAccountEmail,
@@ -501,23 +500,17 @@ export default class SignupPageController extends Controller.extend(
     this.login.externalLogin(provider, { signup: true });
   }
 
-  #setForceValidationReason(value) {
-    this.set("forceValidationReason", value);
-    this.nameValidationHelper.forceValidationReason = value;
-    this.notifyPropertyChange("nameValidation");
-  }
-
   @action
   createAccount() {
     this.set("flash", "");
-    this.#setForceValidationReason(true);
+    this.nameValidationHelper.forceValidationReason = true;
     this.set("emailValidationVisible", true);
     this.set("passwordValidationVisible", true);
 
     const validation = [
       this.emailValidation,
       this.usernameValidation,
-      this.nameValidation,
+      this.nameValidationHelper.nameValidation,
       this.passwordValidation,
       this.userFieldsValidation,
     ].find((v) => v.failed);
@@ -538,7 +531,7 @@ export default class SignupPageController extends Controller.extend(
       return;
     }
 
-    this.#setForceValidationReason(false);
+    this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }
 }

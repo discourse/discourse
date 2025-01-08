@@ -53,7 +53,6 @@ export default class CreateAccount extends Component.extend(
   // For NameValidation mixin
   @alias("model.accountName") accountName;
   @alias("nameValidationHelper.nameTitle") nameTitle;
-  @alias("nameValidationHelper.nameValidation") nameValidation;
 
   init() {
     super.init(...arguments);
@@ -204,7 +203,7 @@ export default class CreateAccount extends Component.extend(
     "serverEmailValidation",
     "model.accountEmail",
     "rejectedEmails.[]",
-    "forceValidationReason"
+    "nameValidationHelper.forceValidationReason"
   )
   emailValidation(
     serverAccountEmail,
@@ -509,23 +508,17 @@ export default class CreateAccount extends Component.extend(
     this.login.externalLogin(provider, { signup: true });
   }
 
-  #setForceValidationReason(value) {
-    this.set("forceValidationReason", value);
-    this.nameValidationHelper.forceValidationReason = value;
-    this.notifyPropertyChange("nameValidation");
-  }
-
   @action
   createAccount() {
     this.set("flash", "");
-    this.#setForceValidationReason(true);
+    this.nameValidationHelper.forceValidationReason = true;
     this.set("emailValidationVisible", true);
     this.set("passwordValidationVisible", true);
 
     const validation = [
       this.emailValidation,
       this.usernameValidation,
-      this.nameValidation,
+      this.nameValidationHelper.nameValidation,
       this.passwordValidation,
       this.userFieldsValidation,
     ].find((v) => v.failed);
@@ -546,7 +539,7 @@ export default class CreateAccount extends Component.extend(
       return;
     }
 
-    this.#setForceValidationReason(false);
+    this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }
 }

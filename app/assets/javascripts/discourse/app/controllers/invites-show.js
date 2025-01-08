@@ -35,7 +35,6 @@ export default class InvitesShowController extends Controller.extend(
   @alias("model.different_external_email") differentExternalEmail;
   @alias("model.username") accountUsername;
   @alias("nameValidationHelper.nameTitle") nameTitle;
-  @alias("nameValidationHelper.nameValidation") nameValidation;
   @not("externalAuthsOnly") passwordRequired;
   @readOnly("model.is_invite_link") isInviteLink;
 
@@ -95,7 +94,7 @@ export default class InvitesShowController extends Controller.extend(
     "emailValidation.failed",
     "usernameValidation.failed",
     "passwordValidation.failed",
-    "nameValidation.failed",
+    "nameValidationHelper.nameValidation.failed",
     "userFieldsValidation.failed",
     "existingUserRedeeming",
     "existingUserCanRedeem"

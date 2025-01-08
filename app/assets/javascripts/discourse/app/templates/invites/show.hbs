@@ -17,7 +17,9 @@
         {{else}}
           <div class="invited-by">
             <p>{{i18n "invites.invited_by"}}</p>
-            <p><UserInfo @user={{this.invitedBy}} /></p>
+            <p>
+              <UserInfo @user={{this.invitedBy}} />
+            </p>
           </div>
 
           {{#if this.associateHtml}}
@@ -111,7 +113,7 @@
 
               {{#if (and this.showFullname this.fullnameRequired)}}
                 <FullnameInput
-                  @nameValidation={{this.nameValidation}}
+                  @nameValidation={{this.nameValidationHelper.nameValidation}}
                   @nameTitle={{this.nameTitle}}
                   @accountName={{this.accountName}}
                   @nameDisabled={{this.nameDisabled}}
@@ -159,7 +161,7 @@
 
               {{#if (and this.showFullname (not this.fullnameRequired))}}
                 <FullnameInput
-                  @nameValidation={{this.nameValidation}}
+                  @nameValidation={{this.nameValidationHelper.nameValidation}}
                   @nameTitle={{this.nameTitle}}
                   @accountName={{this.accountName}}
                   @nameDisabled={{this.nameDisabled}}

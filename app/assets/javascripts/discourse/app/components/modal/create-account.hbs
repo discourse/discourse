@@ -101,7 +101,7 @@
 
           {{#if (and this.showFullname this.fullnameRequired)}}
             <FullnameInput
-              @nameValidation={{this.nameValidation}}
+              @nameValidation={{this.nameValidationHelper.nameValidation}}
               @nameTitle={{this.nameTitle}}
               @accountName={{this.accountName}}
               @nameDisabled={{this.nameDisabled}}
@@ -214,7 +214,7 @@
 
           {{#if (and this.showFullname (not this.fullnameRequired))}}
             <FullnameInput
-              @nameValidation={{this.nameValidation}}
+              @nameValidation={{this.nameValidationHelper.nameValidation}}
               @nameTitle={{this.nameTitle}}
               @accountName={{this.accountName}}
               @nameDisabled={{this.nameDisabled}}
