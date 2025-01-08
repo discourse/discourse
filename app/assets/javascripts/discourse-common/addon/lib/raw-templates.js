@@ -1,5 +1,4 @@
 import require from "require";
-import { consolePrefix } from "discourse/lib/source-identifier";
 import deprecated from "discourse-common/lib/deprecated";
 import { getResolverOption } from "discourse-common/resolver";
 
@@ -56,22 +55,6 @@ export function addRawTemplate(name, template, opts = {}) {
     });
 
     needsHbrTopicList(true);
-
-    let prefix;
-    if (opts.themeId) {
-      prefix = consolePrefix(null, {
-        type: "theme",
-        id: opts.themeId,
-        name: opts.themeName,
-      });
-    } else if (opts.pluginName) {
-      prefix = consolePrefix(null, {
-        type: "plugin",
-        name: opts.pluginName,
-      });
-    }
-    // eslint-disable-next-line no-console
-    console.debug(prefix, message);
   }
 
   // Core templates should never overwrite themes / plugins
