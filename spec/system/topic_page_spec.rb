@@ -106,7 +106,7 @@ describe "Topic page", type: :system do
 
       # ensure #test-last-cooked-paragraph is the last paragraph of #post_1.cooked just in case the cooked content of the
       # post is changed in the future. this ensures we testing what we need.
-      last_cooked_child_id = page.find("#post_1 .cooked >:last-child")[:id]
+      last_cooked_child_id = page.find(".cooked >:last-child")[:id]
       expect(last_cooked_child_id).to eq("test-last-cooked-paragraph")
 
       # select the last paragraph by triple clicking
