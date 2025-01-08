@@ -11,6 +11,7 @@ import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
+import { isRailsTesting, isTesting } from "discourse-common/config/environment";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
@@ -125,7 +126,9 @@ export default class Site extends RestModel {
         );
         decision = false;
       } else {
-        console.log("✅  Using the new 'glimmer' topic list");
+        if (!isTesting() && !isRailsTesting()) {
+          console.log("✅  Using the new 'glimmer' topic list");
+        }
         decision = true;
       }
     }
