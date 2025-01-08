@@ -77,13 +77,14 @@ RSpec.describe "Viewing User Menu", system: true do
 
         user = Fabricate(:moderator)
         user2 = Fabricate(:user, name: "John Doe")
-        post = PostCreator.create!(
-          user,
-          title: "message",
-          raw: "private message",
-          archetype: Archetype.private_message,
-          target_usernames: [user2.username]
-        )
+        post =
+          PostCreator.create!(
+            user,
+            title: "message",
+            raw: "private message",
+            archetype: Archetype.private_message,
+            target_usernames: [user2.username],
+          )
 
         sign_in(user2)
 
@@ -92,7 +93,6 @@ RSpec.describe "Viewing User Menu", system: true do
 
         expect(user_menu).to have_user_full_name_messaged_notification(post, user)
       end
-
 
       it "should display user full name in bookmark notification" do
         Jobs.run_immediately!
@@ -145,5 +145,3 @@ RSpec.describe "Viewing User Menu", system: true do
     end
   end
 end
-
-
