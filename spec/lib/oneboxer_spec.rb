@@ -955,6 +955,13 @@ RSpec.describe Oneboxer do
       preview = Oneboxer.preview(url2, invalidate_oneboxes: true)
       expect(Oneboxer.cached_response_body_exists?(url2)).to eq(false)
     end
+
+    it "separates cache by default_locale" do
+      preview = Oneboxer.preview(url, invalidate_oneboxes: true)
+      expect(Oneboxer.cached_response_body_exists?(url)).to eq(true)
+      SiteSetting.default_locale = "fr"
+      expect(Oneboxer.cached_response_body_exists?(url)).to eq(false)
+    end
   end
 
   describe "register_local_handler" do

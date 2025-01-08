@@ -152,7 +152,7 @@ module Oneboxer
   end
 
   def self.redis_cached_response_body_key(uri)
-    "CACHED_RESPONSE_#{uri}"
+    "CACHED_RESPONSE_#{SiteSetting.default_locale}_#{uri}"
   end
 
   # Parse URLs out of HTML, returning the document when finished.
