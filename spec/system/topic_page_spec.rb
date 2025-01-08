@@ -9,6 +9,7 @@ describe "Topic page", type: :system do
       <a name="toc-h2-testing" class="anchor" href="#toc-h2-testing">x</a>
       Testing
     </h2>
+    <p id="test-last-cooked-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor.</p>
     HTML
 
   it "allows TOC anchor navigation" do
@@ -96,6 +97,33 @@ describe "Topic page", type: :system do
       send_keys(:end)
 
       expect(find("#post_#{topic.highest_post_number}")).to be_visible
+    end
+  end
+
+  context "when triple clicking to select a paragraph" do
+    it "select the last paragraph" do
+      visit "/t/#{topic.slug}/#{topic.id}/1"
+
+      # ensure #test-last-cooked-paragraph is the last paragraph of #post_1.cooked just in case the cooked content of the
+      # post is changed in the future. this ensures we testing what we need.
+      last_cooked_child_id = page.find("#post_1 .cooked >:last-child")[:id]
+      expect(last_cooked_child_id).to eq("test-last-cooked-paragraph")
+
+      # select the last paragraph by triple clicking
+      element = page.driver.browser.find_element(id: "test-last-cooked-paragraph")
+      page.driver.browser.action.move_to(element).click.click.click.perform
+
+      # get the selected text in the browser
+      select_content = page.evaluate_script("window.getSelection().toString()")
+
+      # the browser is returning control characters among the whiter space in the end of the text
+      # this regex will work as a .rstrip on steroids and remove them
+      select_content.gsub!(/[\s\p{Cf}]+$/, "")
+
+      # compare the selected text with the last paragraph
+      expect(select_content).to eq(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor.",
+      )
     end
   end
 end
