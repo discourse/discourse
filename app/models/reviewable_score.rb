@@ -11,7 +11,7 @@ class ReviewableScore < ActiveRecord::Base
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.
   def self.types
-    @types ||= PostActionType.flag_types.merge(PostActionType.score_types)
+    PostActionType.flag_types.merge(PostActionType.score_types)
   end
 
   def self.type_title(type)
