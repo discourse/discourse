@@ -4,7 +4,7 @@ import { isDevelopment } from "discourse-common/config/environment";
 const KEY = "discourse__dev_tools";
 
 function parseStoredValue() {
-  const val = window.localStorage.getItem(KEY);
+  const val = window.localStorage?.getItem(KEY);
   if (val === "true") {
     return true;
   } else if (val === "false") {
@@ -26,9 +26,9 @@ export default {
 
     function storeValue(value) {
       if (value === defaultEnabled) {
-        window.localStorage.removeItem(KEY);
+        window.localStorage?.removeItem(KEY);
       } else {
-        window.localStorage.setItem(KEY, value);
+        window.localStorage?.setItem(KEY, value);
       }
     }
 
