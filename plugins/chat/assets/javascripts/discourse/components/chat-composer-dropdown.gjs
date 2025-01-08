@@ -8,8 +8,9 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class ChatComposerDropdown extends Component {
   @action
-  onButtonClick(button, closeFn) {
-    closeFn({ focusTrigger: false });
+  async onButtonClick(button, closeFn) {
+    await closeFn({ focusTrigger: false });
+
     button.action();
   }
 
@@ -27,6 +28,7 @@ export default class ChatComposerDropdown extends Component {
         @arrow={{true}}
         @placements={{array "top" "bottom"}}
         @identifier="chat-composer-dropdown__menu"
+        @modalForMobile={{true}}
         ...attributes
         as |menu|
       >
@@ -39,6 +41,7 @@ export default class ChatComposerDropdown extends Component {
                 @label={{button.label}}
                 class={{concatClass
                   "chat-composer-dropdown__action-btn"
+                  "btn-transparent"
                   button.id
                 }}
               />

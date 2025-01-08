@@ -7,7 +7,7 @@ import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
 import icon from "discourse-common/helpers/d-icon";
 
-export default class DcFilterInput extends Component {
+export default class FilterInput extends Component {
   @tracked isFocused = false;
 
   focusState = modifier((element) => {
@@ -31,7 +31,7 @@ export default class DcFilterInput extends Component {
     <div
       class={{concatClass
         @containerClass
-        "dc-filter-input-container"
+        "filter-input-container"
         (if this.isFocused "is-focused")
       }}
     >
@@ -43,7 +43,7 @@ export default class DcFilterInput extends Component {
         {{this.focusState}}
         {{on "input" (if @filterAction @filterAction (noop))}}
         @value={{@value}}
-        class="dc-filter-input"
+        class="filter-input"
         ...attributes
       />
 

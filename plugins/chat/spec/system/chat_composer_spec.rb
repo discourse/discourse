@@ -64,7 +64,7 @@ RSpec.describe "Chat composer", type: :system do
 
       click_link(I18n.t("js.composer.more_emoji"))
 
-      expect(find(".chat-emoji-picker .dc-filter-input").value).to eq("gri")
+      expect(find(".emoji-picker .filter-input").value).to eq("gri")
     end
 
     xit "filters with the prefilled input" do
@@ -73,8 +73,8 @@ RSpec.describe "Chat composer", type: :system do
 
       click_link(I18n.t("js.composer.more_emoji"))
 
-      expect(page).to have_selector(".chat-emoji-picker [data-emoji='fr']")
-      expect(page).to have_no_selector(".chat-emoji-picker [data-emoji='grinning']")
+      expect(page).to have_selector(".emoji-picker [data-emoji='fr']")
+      expect(page).to have_no_selector(".emoji-picker [data-emoji='grinning']")
     end
 
     xit "replaces the partially typed emoji with the selected" do

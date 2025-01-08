@@ -1,16 +1,36 @@
-.chat-emoji-picker {
-  border-top: 1px solid var(--primary-low);
-  transition: height 125ms ease;
+.fk-d-menu[data-content][data-identifier="emoji-picker"] {
+  z-index: z("modal", "dialog");
+}
+
+.emoji-picker-trigger {
+  .d-icon + .d-button-label {
+    margin-left: 0.25em;
+  }
+}
+
+.emoji-picker {
   display: flex;
   flex-direction: column;
   height: 300px;
-  overflow: hidden;
-  background: var(--secondary);
+  width: 500px;
+  max-width: 100vw;
+
+  .spinner-container {
+    height: 100%;
+  }
+
+  &__diversity-menu.fk-d-menu {
+    z-index: z("modal", "dialog");
+
+    .dropdown-menu {
+      min-width: auto;
+    }
+  }
 
   .emoji {
     padding: 6px;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     image-rendering: -webkit-optimize-contrast;
     cursor: pointer;
 
@@ -23,20 +43,19 @@
   }
 
   &__filter-container {
-    top: 0;
-    position: sticky;
-    background: var(--secondary);
+    background: var(--primary-very-low);
     display: flex;
     height: 50px;
   }
 
   &__filter {
     width: 100%;
-    padding: 0.5rem;
-    margin: 0.25rem;
+    margin: 0.5rem;
+    border-radius: var(--d-border-radius);
+    box-sizing: border-box;
 
     input {
-      background: none;
+      background-color: transparent !important;
       width: 100%;
     }
 
@@ -44,40 +63,51 @@
       color: var(--primary-medium);
     }
 
-    &.dc-filter-input-container {
+    &.filter-input-container {
       border-color: transparent;
-      background: var(--primary-very-low);
+      background: var(--secondary);
     }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: row;
+    height: 250px;
   }
 
   &__scrollable-content {
-    height: 100%;
+    width: 100%;
     overflow-y: scroll;
-    text-transform: capitalize;
-    @include chat-scrollbar();
-    margin: 1px;
+    overscroll-behavior: contain;
+    height: 100%;
   }
 
   &__no-results {
-    padding: 1em;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-weight: 700;
+    padding: 2em;
   }
 
   &__sections-nav {
-    top: 0;
-    position: sticky;
-    background: var(--secondary);
-    border-bottom: 1px solid var(--primary-low);
-    height: 50px;
+    height: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    min-width: 40px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 250px;
+    background: var(--primary-low);
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    overscroll-behavior: contain;
+  }
 
-    &__indicator {
-      background: var(--tertiary);
-      height: 4px;
-      transition: transform 0.3s cubic-bezier(0.1, 0.82, 0.25, 1);
-      position: absolute;
-      bottom: 0;
-    }
+  &__sections-nav::-webkit-scrollbar {
+    display: none;
   }
 
   &__section-btn {
@@ -92,6 +122,10 @@
     &:focus,
     &.active {
       background: none;
+    }
+
+    &.active {
+      scale: 1.4;
     }
 
     .emoji {
@@ -114,18 +148,23 @@
     right: 0;
   }
 
+  &__section-title-container {
+    display: flex;
+    position: sticky;
+    top: -1px; // to avoid an ugly sub 1px gap on retina
+    background: rgba(var(--secondary-rgb), 0.95);
+    z-index: 2;
+  }
+
   &__section-title {
     margin: 0;
     padding: 0.5rem;
-    color: var(--primary-very-high);
-    font-size: var(--font-up-0);
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
     font-weight: 700;
-    background: rgba(var(--secondary-rgb), 0.95);
-    position: sticky;
-    top: 0;
-    z-index: 1;
     width: 100%;
     box-sizing: border-box;
+    text-transform: uppercase;
   }
 
   &__fitzpatrick-modifier-btn {
@@ -196,20 +235,5 @@
   &__fitzpatrick-scale {
     display: flex;
     align-items: center;
-  }
-}
-
-.chat-channel-message-emoji-picker-connector {
-  position: relative;
-
-  .chat-emoji-picker {
-    border: 1px solid var(--primary-low);
-    width: 320px;
-    z-index: z("header") + 1;
-
-    .emoji {
-      width: 22px;
-      height: 22px;
-    }
   }
 }

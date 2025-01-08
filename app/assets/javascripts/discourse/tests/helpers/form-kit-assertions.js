@@ -97,8 +97,8 @@ class FieldHelper {
         return this.element.querySelector(".form-kit__control-select").value;
       }
       case "menu": {
-        return this.element.querySelector(".form-kit__control-menu").dataset
-          .value;
+        return this.element.querySelector(".form-kit__control-menu-trigger")
+          .dataset.value;
       }
       case "checkbox": {
         return this.element.querySelector(".form-kit__control-checkbox")

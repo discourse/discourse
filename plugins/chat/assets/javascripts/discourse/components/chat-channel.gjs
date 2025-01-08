@@ -55,7 +55,6 @@ export default class ChatChannel extends Component {
   @service chatApi;
   @service chatChannelsManager;
   @service chatDraftsManager;
-  @service chatEmojiPickerManager;
   @service chatStateManager;
   @service chatChannelScrollPositions;
   @service("chat-channel-composer") composer;

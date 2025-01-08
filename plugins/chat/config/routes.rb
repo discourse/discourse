@@ -91,8 +91,6 @@ Chat::Engine.routes.draw do
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   post "/:chat_channel_id" => "api/channel_messages#create"
 
-  get "/emojis" => "emojis#index"
-
   base_c_route = "/c/:channel_title/:channel_id"
   get base_c_route => "chat#respond", :as => "channel"
   get "#{base_c_route}/:message_id" => "chat#respond"

@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { test } from "qunit";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import {
   acceptance,
   query,
@@ -28,17 +29,15 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(".d-editor-input", "an :arrow");
+    await simulateKeys(".d-editor-input", "a :man_");
     // the 6th item in the list is the "more..."
     await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
-
-    assert.dom(".emoji-picker.opened.has-filter").exists();
-    await click(".emoji-picker .results img:first-of-type");
+    await emojiPicker().select("man_rowing_boat");
 
     assert
       .dom(".d-editor-preview")
       .hasHtml(
-        `<p>an <img src="/images/emoji/twitter/arrow_backward.png?v=${v}" title=":arrow_backward:" class="emoji" alt=":arrow_backward:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
+        `<p>a <img src="/images/emoji/twitter/man_rowing_boat.png?v=${v}" title=":man_rowing_boat:" class="emoji" alt=":man_rowing_boat:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
       );
   });
 

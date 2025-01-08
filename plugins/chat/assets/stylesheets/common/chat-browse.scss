@@ -48,11 +48,11 @@
     @include breakpoint(tablet) {
       flex-direction: column;
 
-      .dc-filter-input-container {
+      .filter-input-container {
         margin-top: 1rem;
       }
 
-      .dc-filter-input-container,
+      .filter-input-container,
       nav {
         width: 100%;
       }

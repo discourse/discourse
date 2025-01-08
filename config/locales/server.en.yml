@@ -2603,6 +2603,8 @@ en:
     disable_mailing_list_mode: "Disallow users from enabling mailing list mode (prevents any mailing list emails from being sent.)"
     default_email_previous_replies: "Include previous replies in emails by default."
 
+    default_emoji_reactions: "Default favorites emoji reactions. Add up to 5 emojis for quick reaction."
+
     default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
 
     default_hide_profile: "Hide user public profile by default."
@@ -2977,6 +2979,7 @@ en:
       default_email_mailing_list_mode_frequency: ""
       default_email_messages_level: ""
       default_email_previous_replies: ""
+      default_emoji_reactions: ""
       default_hide_presence: ""
       default_hide_profile: ""
       default_include_tl0_in_digests: ""
