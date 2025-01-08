@@ -6742,6 +6742,7 @@ en:
         status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
+        silence_reason: "Silence Reason"
         bulk_actions:
           title: "Bulk actions"
           admin_cant_be_deleted: "This user can't be deleted because they're an admin"
