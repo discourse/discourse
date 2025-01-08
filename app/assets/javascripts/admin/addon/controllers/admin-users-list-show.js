@@ -77,6 +77,11 @@ export default class AdminUsersListShowController extends Controller {
     ).canAdminCheckEmails;
   }
 
+  @computed("query")
+  get showSilenceReason() {
+    return this.query === "silenced";
+  }
+
   resetFilters() {
     this._page = 1;
     this._results = [];

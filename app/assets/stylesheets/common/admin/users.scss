@@ -149,6 +149,18 @@
         }
       }
     }
+
+    &__cell.silence_reason {
+      text-align: left;
+      justify-content: start;
+
+      span {
+        max-width: 12em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
   }
 
   .directory-table__cell {
