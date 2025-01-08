@@ -9,15 +9,10 @@ export default class Permalink extends RestModel {
     return ajax("/admin/permalinks.json").then(function (permalinks) {
       let allLinks = permalinks.map((p) => Permalink.create(p));
 
-      if (!filter) {
-        return { allLinks, filteredLinks: allLinks };
-      }
+      let filteredLinks = filter
+        ? allLinks.filter((p) => p.url.includes(filter))
+        : allLinks;
 
-      let filteredLinks = permalinks
-        .filter((p) => {
-          return p.url.includes(filter);
-        })
-        .map((p) => Permalink.create(p));
       return { allLinks, filteredLinks };
     });
   }
