@@ -111,7 +111,7 @@
       background-color: var(--primary-very-low);
     }
 
-    &.gripper{
+    &.gripper {
       cursor: grab;
       padding-bottom: 0;
       padding-top: 0;
