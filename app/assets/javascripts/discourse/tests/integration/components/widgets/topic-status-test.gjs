@@ -30,9 +30,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       "solved",
     ]);
     const args = {
-      topic: store.createRecord("topic", {
-        has_accepted_answer: true,
-      }),
+      topic: store.createRecord("topic", { has_accepted_answer: true }),
       disableActions: true,
     };
 
