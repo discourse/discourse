@@ -5549,6 +5549,7 @@ en:
         create: "Create"
         edit: "Edit"
         save: "Save"
+        show: "Events"
         delete: "Delete"
         description_label: "Event triggers"
         controls: "Controls"

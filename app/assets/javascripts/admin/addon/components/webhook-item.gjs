@@ -30,6 +30,11 @@ export default class WebhookItem extends Component {
     this.router.transitionTo("adminWebHooks.edit", this.webhook);
   }
 
+  @action
+  events() {
+    this.router.transitionTo("adminWebHooks.show", this.webhook);
+  }
+
   <template>
     <tr class="d-admin-row__content">
       <td class="d-admin-row__overview key">
@@ -66,11 +71,20 @@ export default class WebhookItem extends Component {
               <DropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
+                    @action={{fn this.events}}
+                    @icon="list"
+                    @label="admin.web_hooks.show"
+                    @title="admin.web_hooks.show"
+                    class="admin-web-hook__show"
+                  />
+                </dropdown.item>
+                <dropdown.item>
+                  <DButton
                     @action={{fn this.args.destroy this.webhook}}
                     @icon="trash-can"
                     @label="admin.web_hooks.delete"
                     @title="admin.web_hooks.delete"
-                    class="btn-transparent admin-flag-item__delete"
+                    class="btn-danger admin-web-hook__delete"
                   />
                 </dropdown.item>
               </DropdownMenu>
