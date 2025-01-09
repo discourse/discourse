@@ -10,10 +10,24 @@ import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class PostListItemDetails extends Component {
-  @tracked url = this.args.post?.url || this.args.post?.post_url;
+  @tracked
+  url =
+    this.args.post?.url || this.args.post?.post_url || this.args.post?.postUrl;
+
+  get showUserInfo() {
+    if (this.args.showUserInfo !== undefined) {
+      return this.args.showUserInfo && this.args.user;
+    }
+
+    return this.args.user;
+  }
 
   get topicTitle() {
-    return this.args.post?.topic_html_title || this.args.post?.topic_title;
+    return (
+      this.args.post?.topic_html_title ||
+      this.args.post?.topic_title ||
+      this.args.post?.title
+    );
   }
 
   get titleAriaLabel() {
@@ -38,7 +52,6 @@ export default class PostListItemDetails extends Component {
       <div class="stream-topic-title">
         <TopicStatus @topic={{@post}} @disableActions={{true}} />
         <span class="title">
-          {{log this.url}}
           {{#if this.url}}
             <a
               href={{getURL this.url}}
@@ -54,7 +67,7 @@ export default class PostListItemDetails extends Component {
         {{categoryLink @post.category}}
       </div>
 
-      {{#if @user}}
+      {{#if this.showUserInfo}}
         <div class="post-member-info names">
           <span class="name">{{this.posterName}}</span>
 

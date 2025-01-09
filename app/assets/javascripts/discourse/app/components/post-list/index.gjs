@@ -8,6 +8,8 @@
  * @args {String} emptyText (optional) - Custom text to display when there are no posts
  * @args {String|Array} additionalItemClasses (optional) - Additional classes to add to each post list item
  * @args {String} titleAriaLabel (optional) - Custom Aria label for the post title
+ * @args {String} showUserInfo (optional) - Whether to show user info in the post list items
+ * @args {Array<Object>} shortUrlOpts (optional) - Any opts to pass to resolveAllShortUrls
  *
  * @template Usage Example:
  * ```
@@ -16,6 +18,7 @@
  *    @fetchMorePosts={{this.loadMorePosts}}
  *    @emptyText={{i18n "custom_identifier.empty"}}
  *    @additionalItemClasses="custom-class"
+ *
  * />
  * ```
  */
@@ -68,24 +71,25 @@ export default class PostList extends Component {
     {{/if}}
 
     <LoadMore @selector=".post-list-item" @action={{this.loadMore}}>
-      <div class="post-list">
+      <div class="post-list" ...attributes>
         {{#each @posts as |post|}}
           <PostListItem
             @post={{post}}
             @additionalItemClasses={{@additionalItemClasses}}
             @titleAriaLabel={{@titleAriaLabel}}
+            @showUserInfo={{@showUserInfo}}
           >
             <:abovePostItemHeader>
-              {{yield to="abovePostItemHeader"}}
+              {{yield post to="abovePostItemHeader"}}
             </:abovePostItemHeader>
             <:belowPostItemMetaData>
-              {{yield to="belowPostItemMetaData"}}
+              {{yield post to="belowPostItemMetaData"}}
             </:belowPostItemMetaData>
             <:abovePostItemExcerpt>
-              {{yield to="abovePostItemExcerpt"}}
+              {{yield post to="abovePostItemExcerpt"}}
             </:abovePostItemExcerpt>
             <:belowPostItem>
-              {{yield to="belowPostItem"}}
+              {{yield post to="belowPostItem"}}
             </:belowPostItem>
           </PostListItem>
         {{else}}

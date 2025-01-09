@@ -1,16 +1,24 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import formatDate from "discourse/helpers/format-date";
+import { ajax } from "discourse/lib/ajax";
+import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { userPath } from "discourse/lib/url";
 import dIcon from "discourse-common/helpers/d-icon";
 
 export default class PostListItem extends Component {
   @service site;
+  @service siteSettings;
+  @service currentUser;
 
   get moderatorActionClass() {
     return this.args.post.post_type === this.site.post_types.moderator_action
@@ -24,6 +32,16 @@ export default class PostListItem extends Component {
     }
   }
 
+  get hiddenClass() {
+    return (
+      this.args.post.hidden && !(this.currentUser && this.currentUser.staff)
+    );
+  }
+
+  get deletedClass() {
+    return this.args.post.deleted ? "deleted" : "";
+  }
+
   get user() {
     return {
       id: this.args.post.user_id,
@@ -35,14 +53,41 @@ export default class PostListItem extends Component {
     };
   }
 
+  @action
+  buildOneboxes(element) {
+    schedule("afterRender", () => {
+      loadOneboxes(
+        element,
+        ajax,
+        this.args.post.topic_id,
+        this.args.post.category_id,
+        this.siteSettings.max_oneboxes_per_post,
+        true
+      );
+    });
+  }
+
+  @action
+  resolveShortUrls(element) {
+    resolveAllShortUrls(
+      ajax,
+      this.siteSettings,
+      element,
+      this.args.shortUrlOpts
+    );
+  }
+
   <template>
     <div
       class="post-list-item
         {{concatClass
           this.moderatorActionClass
           this.primaryGroupClass
+          this.hiddenClass
           @additionalItemClasses
         }}"
+      {{didInsert this.buildOneboxes this.args.post}}
+      {{didInsert this.resolveShortUrls this.args.post}}
     >
       {{yield to="abovePostItemHeader"}}
 
@@ -66,6 +111,7 @@ export default class PostListItem extends Component {
           @post={{@post}}
           @titleAriaLabel={{@titleAriaLabel}}
           @user={{this.user}}
+          @showUserInfo={{@showUserInfo}}
         />
         <ExpandPost @item={{@post}} />
 
