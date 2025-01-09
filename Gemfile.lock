@@ -325,7 +325,7 @@ GEM
     optimist (3.2.0)
     ostruct (0.6.1)
     parallel (1.26.3)
-    parallel_tests (4.8.0)
+    parallel_tests (4.9.0)
       parallel
     parser (3.3.6.0)
       ast (~> 2.4.1)
