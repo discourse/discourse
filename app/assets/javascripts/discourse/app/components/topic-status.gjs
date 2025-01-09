@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import element from "discourse/helpers/element";
 import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -21,9 +22,13 @@ export default class TopicStatus extends Component {
     this.args.topic.togglePinnedForUser();
   }
 
+  get wrapperElement() {
+    return element(this.args.tagName ?? "span");
+  }
+
   <template>
     {{~! no whitespace ~}}
-    <span class="topic-statuses">
+    <this.wrapperElement class="topic-statuses">
       {{~#if (and @topic.closed @topic.archived)~}}
         <span
           title={{i18n "topic_statuses.locked_and_archived.help"}}
@@ -98,7 +103,7 @@ export default class TopicStatus extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{~! no whitespace ~}}
-    </span>
+    </this.wrapperElement>
     {{~! no whitespace ~}}
   </template>
 }
