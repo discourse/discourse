@@ -389,7 +389,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def bookmarked
-    @bookmarked ||= post_bookmark.present?
+    @bookmarked ||= @scope.user.present? && !object.topic.trashed? && post_bookmark.present?
   end
 
   def include_bookmark_reminder_at?
@@ -409,11 +409,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_bookmark
-    if @topic_view.present?
-      @post_bookmark ||= @topic_view.bookmarks.find { |bookmark| bookmark.bookmarkable == object }
-    else
-      @post_bookmark ||= Bookmark.find_by(user: scope.user, bookmarkable: object)
-    end
+    @post_bookmark ||= object.post_bookmark(scope.user.id, object.topic_id)
   end
 
   def bookmark_reminder_at

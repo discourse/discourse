@@ -499,22 +499,9 @@ class TopicView
   end
 
   def has_bookmarks?
-    bookmarks.any?
-  end
-
-  def bookmarks
-    return [] if @user.blank?
-    return [] if @topic.trashed?
-
-    @bookmarks ||=
-      Bookmark.for_user_in_topic(@user, @topic.id).select(
-        :id,
-        :bookmarkable_id,
-        :bookmarkable_type,
-        :reminder_at,
-        :name,
-        :auto_delete_preference,
-      )
+    return false if @user.blank?
+    return false if @topic.trashed?
+    Bookmark.for_user_in_topic(@user.id, @topic.id).exists?
   end
 
   MAX_PARTICIPANTS = 24

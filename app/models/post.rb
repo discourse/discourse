@@ -1317,6 +1317,15 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
+  def post_bookmark(user_id, topic_id)
+    goldiload(key: :id) do |ids|
+      Bookmark
+        .for_user_in_topic(user_id, topic_id)
+        .where(bookmarkable_type: "Post", bookmarkable_id: ids)
+        .index_by(&:bookmarkable_id)
+    end
+  end
+
   private
 
   def parse_quote_into_arguments(quote)

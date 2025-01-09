@@ -161,6 +161,9 @@ GEM
     fspath (3.1.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    goldiloader (5.4.0)
+      activerecord (>= 6.1, < 8.1)
+      activesupport (>= 6.1, < 8.1)
     google-protobuf (4.29.2-aarch64-linux)
       bigdecimal
       rake (>= 13)
@@ -645,6 +648,7 @@ DEPENDENCIES
   faraday-retry
   fast_blank
   fastimage
+  goldiloader
   highline
   htmlentities
   http_accept_language
