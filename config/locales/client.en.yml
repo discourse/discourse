@@ -5744,7 +5744,7 @@ en:
           community_title_help: "Short description, shown in the browser tab, for key pages such as categories and topic lists."
           banner_image: "Banner image"
           banner_image_help: |
-            This will be used on your About page. Recommended size: 1100x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
+            Recommended: 1100x300px. Formats: JPG, PNG, SVG (max 10MB).
           contact_information: "Contact information"
           community_owner: "Community owner"
           community_owner_placeholder: "Johnny Smith"
