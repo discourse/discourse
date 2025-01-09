@@ -5,10 +5,13 @@ task "reviewables:mass-handle", %i[reviewable_type username action_id] => :envir
   args_hash = args.to_hash
 
   if args_hash.size == 0
+    pending_types = Reviewable.where(status: Reviewable.statuses[:pending]).distinct.pluck(:type)
     puts <<~HELP
       rake reviewables:mass-handle[reviewable_type,username,action]
       reviewable_type:
-        a subclass of `Reviewable` such as `ReviewableFlaggedPost`, `ReviewableQueuedPost` etc.
+        a type of `Reviewable` such as `ReviewableFlaggedPost`, `ReviewableQueuedPost` etc.
+        Your site currently has #{pending_types.size} types with pending records, and they are:
+        #{pending_types}
       username:
         username of the acting user who will perform the action on the reviewables
       action:
