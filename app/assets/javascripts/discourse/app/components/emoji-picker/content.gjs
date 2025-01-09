@@ -336,7 +336,7 @@ export default class EmojiPicker extends Component {
         const targetEmoji = document.querySelector(
           `.emoji-picker__section[data-section="${section}"]`
         );
-        targetEmoji.scrollIntoView({ block: "start" });
+        targetEmoji.scrollIntoView({ block: "nearest" });
 
         // iOS hack to avoid blank div when requesting section during momentum
         if (this.scrollableNode && this.capabilities.isIOS) {
