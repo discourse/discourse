@@ -114,11 +114,11 @@ export default class FKFieldData extends Component {
   }
 
   /**
-   * Instructions of the field.
+   * Help text of the field.
    * @type {string}
    */
-  get instruction() {
-    return this.args.instruction;
+  get helpText() {
+    return this.args.helpText;
   }
 
   /**
