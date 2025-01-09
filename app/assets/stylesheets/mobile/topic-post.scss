@@ -361,6 +361,14 @@ span.highlighted {
       order: 4;
       flex-basis: 100%;
     }
+
+    .user-badge-buttons {
+      order: 5;
+      .user-badge {
+        padding-top: 0;
+      }
+    }
+
     span {
       margin-right: 0.26em;
     }
