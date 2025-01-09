@@ -58,9 +58,7 @@ class NotificationsController < ApplicationController
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
 
-      if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
-        notifications = Notification.populate_acting_user(notifications)
-      end
+      notifications = Notification.populate_acting_user(notifications)
 
       json = {
         notifications: serialize_data(notifications, NotificationSerializer),
@@ -91,9 +89,7 @@ class NotificationsController < ApplicationController
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
 
-      if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
-        notifications = Notification.populate_acting_user(notifications)
-      end
+      notifications = Notification.populate_acting_user(notifications)
       render_json_dump(
         notifications: serialize_data(notifications, NotificationSerializer),
         total_rows_notifications: total_rows,

@@ -1927,9 +1927,7 @@ class UsersController < ApplicationController
     end
 
     if reminder_notifications.present?
-      if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
-        Notification.populate_acting_user(reminder_notifications)
-      end
+      Notification.populate_acting_user(reminder_notifications)
       serialized_notifications =
         ActiveModel::ArraySerializer.new(
           reminder_notifications,
@@ -2000,9 +1998,7 @@ class UsersController < ApplicationController
     end
 
     if unread_notifications.present?
-      if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
-        Notification.populate_acting_user(unread_notifications)
-      end
+      Notification.populate_acting_user(unread_notifications)
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -2024,9 +2020,7 @@ class UsersController < ApplicationController
     end
 
     if read_notifications.present?
-      if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
-        Notification.populate_acting_user(read_notifications)
-      end
+      Notification.populate_acting_user(read_notifications)
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,
