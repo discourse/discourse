@@ -17,7 +17,9 @@
         {{else}}
           <div class="invited-by">
             <p>{{i18n "invites.invited_by"}}</p>
-            <p><UserInfo @user={{this.invitedBy}} /></p>
+            <p>
+              <UserInfo @user={{this.invitedBy}} />
+            </p>
           </div>
 
           {{#if this.associateHtml}}
