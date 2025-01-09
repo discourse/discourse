@@ -55,12 +55,22 @@
           color: var(--d-sidebar-active-color);
         }
       }
-      .sidebar-section-link-content-badge,
+      .prefix-text {
+        background: var(--d-sidebar-active-prefix-background);
+      }
+      .sidebar-section-link-content-badge {
+        color: var(--d-sidebar-active-color);
+      }
       .sidebar-section-link-suffix.icon.unread svg {
         color: var(--d-sidebar-active-suffix-color);
       }
       .sidebar-section-link-hover:hover .sidebar-section-hover-button {
         background-color: var(--d-sidebar-active-background);
+      }
+      .sidebar-section-hover-button {
+        .d-icon {
+          color: var(--d-sidebar-active-suffix-color);
+        }
       }
     }
 
