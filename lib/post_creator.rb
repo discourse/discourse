@@ -405,7 +405,7 @@ class PostCreator
       TopicEmbed.new(
         topic_id: @post.topic_id,
         post_id: @post.id,
-        embed_url: @opts[:embed_url],
+        embed_url: TopicEmbed.normalize_url(@opts[:embed_url]),
         content_sha1: @opts[:embed_content_sha1],
       )
     rollback_from_errors!(embed) unless embed.save
