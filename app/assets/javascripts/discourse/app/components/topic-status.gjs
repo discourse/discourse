@@ -14,6 +14,7 @@ export default class TopicStatus extends Component {
   @service currentUser;
 
   get canAct() {
+    // TODO: @disableActions -> !@interactive
     return this.currentUser && !this.args.disableActions;
   }
 
