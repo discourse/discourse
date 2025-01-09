@@ -57,34 +57,14 @@
   }
 }
 
-.composer-fields .presence-users {
-  overflow: hidden;
-  flex-shrink: 1;
-  .presence-avatars {
-    flex-wrap: nowrap;
-  }
-}
-
-.mobile-view .composer-fields .presence-users .description {
-  display: none;
+.reply-to .presence-users {
+  padding: unset;
 }
 
 // TMP: RTL overrides
 .rtl {
   span.presence-text {
     margin-right: 8px;
-  }
-
-  .composer-fields .presence-users {
-    right: unset;
-    left: 95px;
-  }
-
-  &.mobile-view {
-    .composer-fields .presence-users {
-      right: unset;
-      left: 65px;
-    }
   }
 }
 
@@ -93,15 +73,12 @@
   display: none;
 }
 
-// Hide the "Topic Presence" in the topic footer when the timeline is hidden
-body:has(.topic-navigation.with-topic-progress)
-  .topic-above-footer-buttons-outlet.presence {
-  display: none;
-}
-
-.topic-navigation-bottom-outlet.presence {
-  margin-right: auto;
-  margin-top: 0.2em;
-  min-height: 1.8em; // height of the avatars, prevents layout shift
-  order: -1;
+// When topic progress is visible in the posts grid area and is sticky,
+// adjust positioning so presence is on the same line
+@media screen and (max-width: 924px) {
+  body:has(.topic-navigation.with-topic-progress)
+    .topic-above-footer-buttons-outlet.presence {
+    margin-top: -3.2em;
+    margin-right: 8em;
+  }
 }

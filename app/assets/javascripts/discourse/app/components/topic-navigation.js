@@ -17,7 +17,8 @@ const MIN_HEIGHT_TIMELINE = 325;
 
 @classNameBindings(
   "info.topicProgressExpanded:topic-progress-expanded",
-  "info.renderTimeline:with-timeline:with-topic-progress"
+  "info.renderTimeline:with-timeline",
+  "info.withTopicProgress:with-topic-progress"
 )
 export default class TopicNavigation extends Component {
   @service modal;
@@ -33,7 +34,10 @@ export default class TopicNavigation extends Component {
     if (this._lastTopicId !== this.topic.id) {
       this._lastTopicId = this.topic.id;
       this.set("canRender", false);
-      next(() => this.set("canRender", true));
+      next(() => {
+        this.set("canRender", true);
+        this._performCheckSize();
+      });
     }
   }
 
@@ -57,6 +61,11 @@ export default class TopicNavigation extends Component {
         this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
       );
     }
+
+    this.info.set(
+      "withTopicProgress",
+      !this.info.renderTimeline && this.topic.posts_count > 1
+    );
   }
 
   @bind
