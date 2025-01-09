@@ -155,7 +155,7 @@ export default class UserStreamComponent extends Component {
       @additionalItemClasses="user-stream-item"
       @showUserInfo={{false}}
       class={{concatClass "user-stream" this.filterClassName}}
-      {{this.eventListeners this.args.stream}}
+      {{this.eventListeners @stream}}
     >
       <:abovePostItemHeader as |post|>
         <PluginOutlet

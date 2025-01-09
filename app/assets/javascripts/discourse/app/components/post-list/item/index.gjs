@@ -86,8 +86,8 @@ export default class PostListItem extends Component {
           this.hiddenClass
           @additionalItemClasses
         }}"
-      {{didInsert this.buildOneboxes this.args.post}}
-      {{didInsert this.resolveShortUrls this.args.post}}
+      {{didInsert this.buildOneboxes @post}}
+      {{didInsert this.resolveShortUrls @post}}
     >
       {{yield to="abovePostItemHeader"}}
 
