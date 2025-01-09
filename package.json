@@ -37,7 +37,7 @@
     "puppeteer-core": "^23.11.1",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "terser": "^5.37.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "scripts": {
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
