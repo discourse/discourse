@@ -64,14 +64,8 @@ class SitemapController < ApplicationController
     raise Discourse::NotFound if !SiteSetting.enable_sitemap
   end
 
-  def build_sitemap_topic_url(slug, id, posts_count = nil)
-    base_url = [Discourse.base_url, "t", slug, id].join("/")
-    return base_url if posts_count.nil?
-
-    page, mod = posts_count.divmod(TopicView.chunk_size)
-    page += 1 if mod > 0
-
-    page > 1 ? "#{base_url}?page=#{page}" : base_url
+  def build_sitemap_topic_url(slug, id)
+    [Discourse.base_url, "t", slug, id].join("/")
   end
   helper_method :build_sitemap_topic_url
 end

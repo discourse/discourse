@@ -6,9 +6,9 @@
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
         http://www.google.com/schemas/sitemap-image/1.1
         http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
-    <% @topics.each do |(id, slug, bumped_at, updated_at, posts_count)| %>
+    <% @topics.each do |(id, slug, bumped_at, updated_at)| %>
       <url>
-        <loc><%= build_sitemap_topic_url(slug, id, posts_count) %></loc>
+        <loc><%= build_sitemap_topic_url(slug, id) %></loc>
         <lastmod><%= (bumped_at || updated_at).xmlschema %></lastmod>
       </url>
     <% end %>

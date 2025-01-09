@@ -93,26 +93,15 @@ RSpec.describe SitemapController do
       expect(all_urls).not_to include("#{Discourse.base_url}/t/#{old_topic.slug}/#{old_topic.id}")
     end
 
-    it "generates correct page numbers based on the topic post count" do
+    it "does not include page numbers" do
       topic = Fabricate(:topic, bumped_at: 1.minute.ago)
       page_size = TopicView.chunk_size
-
-      incomplete_page_size = TopicView.chunk_size - 1
-      topic.update!(posts_count: incomplete_page_size, updated_at: 4.hour.ago)
-      get "/sitemap_recent.xml"
-      url = Nokogiri::XML::Document.parse(response.body).at_css("loc").text
-      expect(url).not_to include("?page=2")
-
-      topic.update!(posts_count: page_size, updated_at: 3.hour.ago)
-      get "/sitemap_recent.xml"
-      url = Nokogiri::XML::Document.parse(response.body).at_css("loc").text
-      expect(url).not_to include("?page=2")
 
       two_page_size = page_size + 1
       topic.update!(posts_count: two_page_size, updated_at: 2.hour.ago)
       get "/sitemap_recent.xml"
       url = Nokogiri::XML::Document.parse(response.body).at_css("loc").text
-      expect(url).to include("?page=2")
+      expect(url).not_to include("?page=2")
     end
   end
 
