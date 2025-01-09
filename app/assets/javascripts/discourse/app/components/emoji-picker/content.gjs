@@ -473,7 +473,7 @@ export default class EmojiPicker extends Component {
       <div class="emoji-picker__content">
         <div class="emoji-picker__sections-nav" {{this.setupSectionsNavScroll}}>
           {{#each-in this.groups as |section emojis|}}
-            {{#if emojis.lengths}}
+            {{#if emojis.length}}
               <DButton
                 class={{concatClass
                   "btn-flat"
