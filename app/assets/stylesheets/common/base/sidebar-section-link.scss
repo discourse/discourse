@@ -55,7 +55,12 @@
           color: var(--d-sidebar-active-color);
         }
       }
-      .sidebar-section-link-content-badge,
+      .prefix-text {
+        background: var(--d-sidebar-active-prefix-background);
+      }
+      .sidebar-section-link-content-badge {
+        color: var(--d-sidebar-active-color);
+      }
       .sidebar-section-link-suffix.icon.unread svg {
         color: var(--d-sidebar-active-suffix-color);
       }
