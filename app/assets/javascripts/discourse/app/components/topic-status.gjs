@@ -64,12 +64,12 @@ export default class TopicStatus extends Component {
             {{on "click" this.togglePinned}}
             href
             title={{i18n "topic_statuses.pinned.help"}}
-            class="topic-status pin-toggle-button"
+            class="topic-status pinned pin-toggle-button"
           >{{icon "thumbtack"}}</a>
         {{~else~}}
           <span
             title={{i18n "topic_statuses.pinned.help"}}
-            class="topic-status"
+            class="topic-status pinned"
           >{{icon "thumbtack"}}</span>
         {{~/if~}}
       {{~else if @topic.unpinned~}}
@@ -78,12 +78,12 @@ export default class TopicStatus extends Component {
             {{on "click" this.togglePinned}}
             href
             title={{i18n "topic_statuses.unpinned.help"}}
-            class="topic-status pin-toggle-button"
+            class="topic-status unpinned pin-toggle-button"
           >{{icon "thumbtack" class="unpinned"}}</a>
         {{~else~}}
           <span
             title={{i18n "topic_statuses.unpinned.help"}}
-            class="topic-status"
+            class="topic-status unpinned"
           >{{icon "thumbtack" class="unpinned"}}</span>
         {{~/if~}}
       {{~/if~}}
