@@ -336,7 +336,7 @@ export default class EmojiPicker extends Component {
         const targetEmoji = document.querySelector(
           `.emoji-picker__section[data-section="${section}"]`
         );
-        targetEmoji.scrollIntoView({ block: "start" });
+        targetEmoji.scrollIntoView({ block: "nearest" });
 
         // iOS hack to avoid blank div when requesting section during momentum
         if (this.scrollableNode && this.capabilities.isIOS) {
@@ -473,27 +473,29 @@ export default class EmojiPicker extends Component {
       <div class="emoji-picker__content">
         <div class="emoji-picker__sections-nav" {{this.setupSectionsNavScroll}}>
           {{#each-in this.groups as |section emojis|}}
-            <DButton
-              class={{concatClass
-                "btn-flat"
-                "emoji-picker__section-btn"
-                (if (eq this.lastVisibleSection section) "active")
-              }}
-              tabindex="-1"
-              @action={{fn this.didRequestSection section}}
-              data-section={{section}}
-            >
-              {{#if (eq section "favorites")}}
-                {{replaceEmoji ":star:"}}
-              {{else}}
-                <img
-                  width="18"
-                  height="18"
-                  class="emoji"
-                  src={{get emojis "0.url"}}
-                />
-              {{/if}}
-            </DButton>
+            {{#if emojis.length}}
+              <DButton
+                class={{concatClass
+                  "btn-flat"
+                  "emoji-picker__section-btn"
+                  (if (eq this.lastVisibleSection section) "active")
+                }}
+                tabindex="-1"
+                @action={{fn this.didRequestSection section}}
+                data-section={{section}}
+              >
+                {{#if (eq section "favorites")}}
+                  {{replaceEmoji ":star:"}}
+                {{else}}
+                  <img
+                    width="18"
+                    height="18"
+                    class="emoji"
+                    src={{get emojis "0.url"}}
+                  />
+                {{/if}}
+              </DButton>
+            {{/if}}
           {{/each-in}}
         </div>
 

@@ -21,6 +21,10 @@ export default class EmojiPicker extends Component {
     return this.args.context ?? "topic";
   }
 
+  get modalForMobile() {
+    return this.args.modalForMobile ?? true;
+  }
+
   <template>
     <DMenu
       @triggerClass={{concatClass @btnClass}}
@@ -28,7 +32,7 @@ export default class EmojiPicker extends Component {
       @onRegisterApi={{this.onRegisterMenu}}
       @identifier="emoji-picker"
       @groupIdentifier="emoji-picker"
-      @modalForMobile={{true}}
+      @modalForMobile={{this.modalForMobile}}
       @maxWidth={{405}}
       @onShow={{@onShow}}
       @onClose={{@onClose}}

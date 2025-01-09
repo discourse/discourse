@@ -49,6 +49,8 @@ export default class UserStatusPicker extends Component {
           @icon={{@status.emoji}}
           @didSelectEmoji={{this.emojiSelected}}
           @btnClass="btn-emoji"
+          @modalForMobile={{false}}
+          @context="user-status"
         />
 
         <input
