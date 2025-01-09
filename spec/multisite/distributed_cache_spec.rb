@@ -8,7 +8,7 @@ RSpec.describe "Multisite SiteSettings", type: :multisite do
   context "without namespace" do
     let(:cache1) { cache("test", namespace: false) }
 
-    it "does leak state across multisite" do
+    it "does share a global state between multisite" do
       cache1["default"] = true
 
       expect(cache1.hash).to eq("default" => true)
@@ -33,7 +33,7 @@ RSpec.describe "Multisite SiteSettings", type: :multisite do
   context "with namespace" do
     let(:cache1) { cache("test", namespace: true) }
 
-    it "does not leak state across multisite" do
+    it "does not share a state between multisite" do
       cache1["default"] = true
 
       expect(cache1.hash).to eq("default" => true)
