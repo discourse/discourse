@@ -2284,6 +2284,10 @@ onebox:
   onebox_user_agent:
     default: ""
     hidden: true
+  onebox_locale:
+    default: ""
+    type: enum
+    enum: "OneboxLocaleSiteSetting"
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
