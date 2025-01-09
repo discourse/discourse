@@ -26,7 +26,7 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
 
     assert
       .dom(`.emoji-picker__section-btn.active[data-section="favorites"]`)
-      .doestNotExist("it doesnt render favorites when empty");
+      .doesNotExist("it doesnt render favorites when empty");
     assert
       .dom(`.emoji-picker__section-btn[data-section="smileys_&_emotion"]`)
       .exists();
