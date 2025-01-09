@@ -214,10 +214,10 @@ class PostCreator
       publish
 
       track_latest_on_category
+      trigger_after_events unless opts[:skip_events]
+
       enqueue_jobs unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
-
-      trigger_after_events unless opts[:skip_events]
 
       auto_close
     end
