@@ -628,7 +628,9 @@ div.ac-wrap {
 }
 
 // The composer on mobile is fixed-positioned, same as on desktop because
-// we are using interactive-widget=resizes-content in the viewport meta tag
+// goes together with the interactive-widget=resizes-content in the viewport meta tag
+// for maximum browser compatibility (especially Firefox and webviews)
+// see https://developer.chrome.com/blog/viewport-resize-behavior for context
 .ipados-device,
 .mobile-device {
   #reply-control {
@@ -687,7 +689,7 @@ div.ac-wrap {
   // using a complicated JS hack.
   //
   // However, iOS Safari doesn't scroll when the input has opacity of 0 or is clipped.
-  // We use this quirk and temporarily hide the element on scroll and quickly show it again
+  // We use this quirk and temporarily hide the element on focus
   //
   // Source https://gist.github.com/kiding/72721a0553fa93198ae2bb6eefaa3299
   input:focus,
