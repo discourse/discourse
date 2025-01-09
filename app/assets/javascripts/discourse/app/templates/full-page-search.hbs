@@ -1,0 +1,305 @@
+{{#if this.loading}}
+  {{hide-application-footer}}
+{{/if}}
+
+{{body-class "search-page"}}
+
+<section class="search-container">
+  <PluginOutlet
+    @name="full-page-search-above-search-header"
+    @connectorTagName="div"
+    @outletArgs={{hash searchTerm=this.searchTerm}}
+  />
+  <div class="search-header" role="search">
+    <h1 class="search-page-heading">
+      {{#if this.hasResults}}
+        <div class="result-count" id="search-result-count" aria-live="polite">
+          {{html-safe this.resultCountLabel}}
+        </div>
+      {{else}}
+        {{i18n "search.full_page_title"}}
+      {{/if}}
+    </h1>
+    <div class="search-bar">
+      <SearchTextField
+        @value={{this.searchTerm}}
+        @aria-label={{i18n "search.search_term_label"}}
+        @enter={{action "search" (hash collapseFilters=true)}}
+        @hasAutofocus={{this.hasAutofocus}}
+        @aria-controls="search-result-count"
+        class="full-page-search search no-blur search-query"
+      />
+      <ComboBox
+        @id="search-type"
+        @value={{this.search_type}}
+        @content={{this.searchTypes}}
+        @onChange={{fn (mut this.search_type)}}
+        @options={{hash castInteger=true}}
+      />
+      <DButton
+        @action={{fn (action "search") (hash collapseFilters=true)}}
+        @icon="magnifying-glass"
+        @label="search.search_button"
+        @ariaLabel="search.search_button"
+        @disabled={{this.searchButtonDisabled}}
+        class="btn-primary search-cta"
+      />
+    </div>
+    {{#if this.usingDefaultSearchType}}
+      {{! context is only provided when searching from mobile view }}
+      {{#if this.context}}
+        <div class="search-context">
+          <label>
+            <Input
+              @type="checkbox"
+              name="searchContext"
+              @checked={{this.searchContextEnabled}}
+            />
+            {{this.searchContextDescription}}
+          </label>
+        </div>
+      {{/if}}
+
+      <div class="search-filters">
+        <PluginOutlet
+          @name="full-page-search-filters"
+          @outletArgs={{hash
+            searchTerm=(readonly this.searchTerm)
+            onChangeSearchTerm=(fn (mut this.searchTerm))
+            search=(action "search" (hash collapseFilters=true))
+            searchButtonDisabled=this.searchButtonDisabled
+            expandFilters=this.expandFilters
+            sortOrder=this.sortOrder
+            sortOrderOptions=this.sortOrders
+            setSortOrder=this.setSortOrder
+            type=this.search_type
+            addSearchResults=this.addSearchResults
+            resultCount=this.resultCount
+          }}
+        >
+          <SearchAdvancedOptions
+            @searchTerm={{readonly this.searchTerm}}
+            @onChangeSearchTerm={{fn (mut this.searchTerm)}}
+            @search={{action "search" (hash collapseFilters=true)}}
+            @searchButtonDisabled={{this.searchButtonDisabled}}
+            @expandFilters={{this.expandFilters}}
+          />
+        </PluginOutlet>
+      </div>
+    {{/if}}
+
+    <div class="search-notice">
+      {{#if this.invalidSearch}}
+        <div class="fps-invalid">
+          {{i18n "search.too_short"}}
+        </div>
+      {{/if}}
+    </div>
+
+  </div>
+
+  <div class="search-advanced">
+    <PluginOutlet
+      @name="full-page-search-below-search-header"
+      @connectorTagName="div"
+      @outletArgs={{hash
+        search=this.searchTerm
+        type=this.search_type
+        model=this.model
+        addSearchResults=this.addSearchResults
+        sortOrder=this.sortOrder
+      }}
+    />
+
+    {{#if this.hasResults}}
+      {{#if this.usingDefaultSearchType}}
+        <div
+          class={{this.searchInfoClassNames}}
+          role="region"
+          ariaLabel={{i18n "search.sort_or_bulk_actions"}}
+        >
+          {{#if this.canBulkSelect}}
+            <DButton
+              @icon="list"
+              @title="topics.bulk.toggle"
+              @action={{action "toggleBulkSelect"}}
+              class="btn-default bulk-select"
+            />
+            {{#if this.bulkSelectHelper.selected}}
+              <TopicList::TopicBulkSelectDropdown
+                @bulkSelectHelper={{this.bulkSelectHelper}}
+                @afterBulkActionComplete={{this.afterBulkActionComplete}}
+              />
+            {{/if}}
+          {{/if}}
+
+          {{#if this.bulkSelectEnabled}}
+            {{#if this.hasUnselectedResults}}
+              <DButton
+                @icon="square-check"
+                @action={{action "selectAll"}}
+                @label="search.select_all"
+                class="btn-default bulk-select-all"
+              />
+            {{/if}}
+
+            {{#if this.hasSelection}}
+              <DButton
+                @icon="far-square"
+                @action={{action "clearAll"}}
+                @label="search.clear_all"
+                class="btn-default bulk-select-clear"
+              />
+            {{/if}}
+          {{/if}}
+
+          <div class="sort-by inline-form">
+            <label>
+              {{i18n "search.sort_by"}}
+            </label>
+            <ComboBox
+              @value={{this.sortOrder}}
+              @content={{this.sortOrders}}
+              @onChange={{this.setSortOrder}}
+              @id="search-sort-by"
+              @options={{hash castInteger=true}}
+            />
+          </div>
+        </div>
+      {{/if}}
+    {{/if}}
+
+    <span>
+      <PluginOutlet
+        @name="full-page-search-below-search-info"
+        @connectorTagName="div"
+        @outletArgs={{hash search=this.searchTerm}}
+      />
+    </span>
+
+    {{#if this.searching}}
+      {{loading-spinner size="medium"}}
+    {{else}}
+      <div class="search-results" role="region">
+        <LoadMore @selector=".fps-result" @action={{action "loadMore"}}>
+          {{#if (or this.usingDefaultSearchType this.customSearchType)}}
+            <SearchResultEntries
+              @posts={{this.searchResultPosts}}
+              @bulkSelectEnabled={{this.bulkSelectEnabled}}
+              @selected={{this.bulkSelectHelper.selected}}
+              @highlightQuery={{this.highlightQuery}}
+              @searchLogId={{this.model.grouped_search_result.search_log_id}}
+            />
+
+            <ConditionalLoadingSpinner @condition={{this.loading}}>
+              {{#if this.error}}
+                <div class="warning">
+                  {{this.error}}
+                </div>
+              {{/if}}
+
+              {{#unless this.hasResults}}
+                {{#if this.searchActive}}
+                  <h3>{{i18n "search.no_results"}}</h3>
+
+                  {{#if this.showSuggestion}}
+                    <div class="no-results-suggestion">
+                      {{i18n "search.cant_find"}}
+                      {{#if this.canCreateTopic}}
+                        <a
+                          href
+                          {{on "click" (fn this.createTopic this.searchTerm)}}
+                        >{{i18n "search.start_new_topic"}}</a>
+                        {{#unless this.siteSettings.login_required}}
+                          {{i18n "search.or_search_google"}}
+                        {{/unless}}
+                      {{else}}
+                        {{i18n "search.search_google"}}
+                      {{/if}}
+                    </div>
+
+                    <GoogleSearch @searchTerm={{this.searchTerm}} />
+                  {{/if}}
+                {{/if}}
+              {{/unless}}
+
+              {{#if this.hasResults}}
+                <h3 class="search-footer">
+                  {{#if
+                    this.model.grouped_search_result.more_full_page_results
+                  }}
+                    {{#if this.isLastPage}}
+                      {{i18n "search.more_results"}}
+                    {{/if}}
+                  {{else}}
+                    {{i18n "search.no_more_results"}}
+                  {{/if}}
+                </h3>
+              {{/if}}
+            </ConditionalLoadingSpinner>
+          {{else}}
+            <ConditionalLoadingSpinner @condition={{this.loading}}>
+              {{#if this.hasResults}}
+                {{#if this.model.categories.length}}
+                  <h4 class="category-heading">
+                    {{i18n "search.categories"}}
+                  </h4>
+                  <div class="category-items">
+                    {{#each this.model.categories as |category|}}
+                      {{category-link
+                        category
+                        extraClasses="fps-category-item"
+                      }}
+                    {{/each}}
+                  </div>
+                {{/if}}
+
+                {{#if this.model.tags.length}}
+                  <h4 class="tag-heading">
+                    {{i18n "search.tags"}}
+                  </h4>
+
+                  <div class="tag-items">
+                    {{#each this.model.tags as |tag|}}
+                      <div class="fps-tag-item">
+                        <a href={{tag.url}}>
+                          {{tag.id}}
+                        </a>
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/if}}
+
+                {{#if this.model.users}}
+                  <div class="user-items">
+                    {{#each this.model.users as |user|}}
+                      <UserLink @user={{user}} class="fps-user-item">
+                        {{avatar user imageSize="large"}}
+
+                        <div class="user-titles">
+                          {{#if user.name}}
+                            <span class="name">
+                              {{user.name}}
+                            </span>
+                          {{/if}}
+
+                          <span class="username">
+                            {{user.username}}
+                          </span>
+                        </div>
+                      </UserLink>
+                    {{/each}}
+                  </div>
+                {{/if}}
+              {{else}}
+                {{#if this.searchActive}}
+                  <h3>{{i18n "search.no_results"}}</h3>
+                {{/if}}
+              {{/if}}
+            </ConditionalLoadingSpinner>
+          {{/if}}
+        </LoadMore>
+      </div>
+    {{/if}}
+  </div>
+</section>
