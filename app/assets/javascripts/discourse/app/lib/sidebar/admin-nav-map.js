@@ -225,6 +225,12 @@ export const ADMIN_NAV_MAP = [
         keywords: "admin.advanced.sidebar_link.api_keys.keywords",
       },
       {
+        name: "admin_webhooks",
+        route: "adminWebHooks",
+        icon: "arrows-rotate",
+        label: "admin.advanced.sidebar_link.webhooks",
+      },
+      {
         name: "admin_developer",
         route: "adminConfig.developer.settings",
         label: "admin.advanced.sidebar_link.developer",
