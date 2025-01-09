@@ -24,8 +24,8 @@
       pointer-events: none;
       background: linear-gradient(
         to bottom,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
+        transparent,
+        var(--d-sidebar-footer-fade)
       );
     }
   }
