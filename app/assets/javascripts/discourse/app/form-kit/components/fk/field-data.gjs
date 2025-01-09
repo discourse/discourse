@@ -114,6 +114,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Instructions of the field.
+   * @type {string}
+   */
+  get instruction() {
+    return this.args.instruction;
+  }
+
+  /**
    * Indicates whether to show the field's title.
    * Defaults to `true`.
    * @type {boolean}

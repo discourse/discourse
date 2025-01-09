@@ -86,6 +86,12 @@ export default class FKControlWrapper extends Component {
           {{yield components}}
         </@component>
 
+        {{#if @field.instruction}}
+          <FKText
+            class="form-kit__container-instruction"
+          >{{@field.instruction}}</FKText>
+        {{/if}}
+
         <FKMeta @field={{@field}} @error={{this.error}} />
       </div>
     </div>

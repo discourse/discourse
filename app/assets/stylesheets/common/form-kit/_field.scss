@@ -44,6 +44,12 @@
     font-size: var(--font-down-1-rem);
   }
 
+  .form-kit__container-instruction {
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+  }
+
   .form-kit__container-content {
     &.--small {
       width: var(--form-kit-small-input) !important;
