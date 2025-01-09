@@ -127,8 +127,9 @@
         display: none;
       }
     }
+
     .d-editor-preview-wrapper {
-      position: fixed;
+      position: absolute;
       z-index: z("fullscreen");
       top: 0;
       bottom: 0;
@@ -143,6 +144,10 @@
       .d-editor-preview {
         margin-bottom: 40px;
       }
+    }
+
+    .composer-controls {
+      display: none;
     }
   }
 

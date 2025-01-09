@@ -652,8 +652,12 @@ div.ac-wrap {
     .submit-panel,
     .composer-fields,
     .d-editor-button-bar {
-      // this prevents touch events bubbling up to the browser, i.e. accidental scrolls
+      // this prevents touch events (i.e. accidental scrolls) from bubbling up
       touch-action: none;
+    }
+
+    &.open.show-preview {
+      height: 70vh;
     }
   }
 
