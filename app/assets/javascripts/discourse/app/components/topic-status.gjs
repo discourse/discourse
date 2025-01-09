@@ -17,9 +17,8 @@ export default class TopicStatus extends Component {
 
   @action
   togglePinned(e) {
-    const { topic } = this.args;
-    topic.pinned ? topic.clearPin() : topic.rePin();
     e.preventDefault();
+    this.args.topic.togglePinnedForUser();
   }
 
   <template>
