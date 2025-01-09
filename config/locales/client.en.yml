@@ -5878,7 +5878,8 @@ en:
         sidebar_link:
           api_keys:
             title: "API keys"
-            keywords: "token|webhook"
+            keywords: "token"
+          webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Embedding"
           rate_limits: "Rate limits"
