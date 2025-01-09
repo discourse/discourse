@@ -93,9 +93,4 @@ html.footer-nav-ipad {
   .d-header-wrap {
     top: var(--footer-nav-height);
   }
-
-  #reply-control.open {
-    height: calc(var(--composer-vh, 1vh) * 100 - var(--footer-nav-height));
-    top: var(--footer-nav-height);
-  }
 }
