@@ -775,6 +775,11 @@ export default {
       if (article.getBoundingClientRect().height > 0) {
         break;
       }
+
+      // Safeguard against infinite loops
+      if (direction === 0) {
+        break;
+      }
     }
 
     for (const a of articles) {
