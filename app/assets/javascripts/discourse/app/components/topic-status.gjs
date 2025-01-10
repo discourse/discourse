@@ -31,6 +31,14 @@ export default class TopicStatus extends Component {
   <template>
     {{~! no whitespace ~}}
     <this.wrapperElement class="topic-statuses">
+      {{~#if @topic.bookmarked}}
+        <a
+          href={{@topic.url}}
+          title={{i18n "topic_statuses.bookmarked.help"}}
+          class="topic-status"
+        >{{icon "bookmark"}}</a>
+      {{~/if~}}
+
       {{~#if (and @topic.closed @topic.archived)~}}
         <span
           title={{i18n "topic_statuses.locked_and_archived.help"}}
