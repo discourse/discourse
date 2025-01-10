@@ -4,7 +4,7 @@ describe Chat::DuplicateMessageValidator do
   let(:message) { "goal!" }
   fab!(:category_channel) { Fabricate(:chat_channel) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   def message_blocked?(message:, chat_channel:, user:)
     chat_message = Fabricate.build(:chat_message, user:, message:, chat_channel:)
@@ -12,7 +12,7 @@ describe Chat::DuplicateMessageValidator do
     chat_message.errors.full_messages.include?(I18n.t("chat.errors.duplicate_message"))
   end
 
-  it "blocks a message if it was posted in a category channel in the last 30 seconds by the same user" do
+  it "blocks a message if it was posted in a category channel in the last 10 seconds by the same user" do
     Fabricate(
       :chat_message,
       created_at: 1.second.ago,
@@ -36,10 +36,10 @@ describe Chat::DuplicateMessageValidator do
     expect(message_blocked?(message: "BUT!", user:, chat_channel: category_channel)).to eq(false)
   end
 
-  it "doesn't block a message if it was posted more than 30 seconds ago" do
+  it "doesn't block a message if it was posted more than 10 seconds ago" do
     Fabricate(
       :chat_message,
-      created_at: 31.seconds.ago,
+      created_at: 11.seconds.ago,
       user:,
       message:,
       chat_channel: category_channel,

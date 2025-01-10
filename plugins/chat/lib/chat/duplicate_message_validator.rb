@@ -16,7 +16,7 @@ module Chat
 
       if chat_channel
            .chat_messages
-           .where(created_at: 30.seconds.ago..)
+           .where(created_at: 10.seconds.ago..)
            .where("LOWER(message) = ?", chat_message.message.strip.downcase)
            .where(user: chat_message.user)
            .exists?

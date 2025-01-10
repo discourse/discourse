@@ -585,8 +585,8 @@ RSpec.describe Chat::UpdateMessage do
         chat_message_2 =
           create_chat_message(user1, "another different chat message here", public_chat_channel)
 
-        chat_message_1.update!(created_at: 30.seconds.ago)
-        chat_message_2.update!(created_at: 20.seconds.ago)
+        chat_message_1.update!(created_at: 15.seconds.ago)
+        chat_message_2.update!(created_at: 5.seconds.ago)
 
         expect do
           described_class.call(
@@ -609,7 +609,7 @@ RSpec.describe Chat::UpdateMessage do
             public_chat_channel,
             upload_ids: [upload1.id, upload2.id],
           )
-        chat_message.update!(created_at: 30.seconds.ago)
+        chat_message.update!(created_at: 5.seconds.ago)
 
         updater =
           described_class.call(
