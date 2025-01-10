@@ -5397,7 +5397,7 @@ en:
         no_custom_groups: "Create a new custom group"
 
       api_keys:
-        title: "API Keys"
+        title: "API keys"
         description: "The API keys feature lets you securely integrate Discourse with external systems and automate actions. Admins can create keys with specific scopes to control access to resources and sensitive data. Scopes limit functionality, ensuring enhanced security."
         add: "Add API key"
         edit: "Edit"
