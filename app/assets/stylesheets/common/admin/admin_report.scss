@@ -79,6 +79,7 @@
   .body {
     display: flex;
     flex-direction: row;
+    margin-top: var(--space-3);
   }
 
   .main {
@@ -225,28 +226,32 @@
 }
 
 .admin-reports-list {
+  --d-border-radius: var(--space-0);
+
   display: flex;
   flex-wrap: wrap;
   list-style-type: none;
-  margin: 0 -1.5%;
-  &__report {
-    margin: 1.5%;
-    border: 1px solid var(--primary-low);
-    flex: 1 1 28%;
-    min-width: 225px;
-    max-width: 550px;
-    a {
-      display: block;
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 1em;
-      .report-description {
-        color: var(--primary-high);
+
+  &.admin-section-landing-wrapper {
+    gap: 1em;
+    padding-top: 0;
+
+    .admin-section-landing-item {
+      margin-bottom: 0;
+      padding: var(--space-4);
+      border-radius: var(--d-border-radius);
+      outline: 1px solid var(--primary-low);
+      margin-bottom: 0;
+
+      @include breakpoint("mobile-extra-large", min-width) {
+        margin-bottom: 0;
       }
-    }
-    &:hover {
-      box-shadow: var(--shadow-card);
+
+      &:hover {
+        border: 0;
+        box-shadow: 0 0 0 1px var(--primary-300), 0 0 0 4px var(--primary-100);
+        transition: all 0.2s ease-in-out;
+      }
     }
   }
 }
