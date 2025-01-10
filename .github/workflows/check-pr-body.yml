@@ -23,6 +23,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           original_description = ENV['PR_BODY']
+
           if !original_description.include? "Dependabot commands and options"
             puts "PR body does not contain rich Dependabot content, skipping"
             exit 0
@@ -33,7 +34,6 @@ jobs:
 
           puts "Updating body to commit message...\n\n---\n#{new_description}\n---"
 
-          puts "Updating PR body..."
           system "gh", "pr", "edit", ENV['PR_NUMBER'], "--body", new_description
 
           comment = <<~COMMENT
@@ -49,6 +49,6 @@ jobs:
           begin
             system *command, "--edit-last", exception: true
           rescue
-            puts "Failed to add comment, continuing..."
+            puts "Failed to edit comment, adding a new one instead..."
             system *command, exception: true
           end
