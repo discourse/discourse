@@ -346,7 +346,7 @@ export default class DEditor extends Component {
         }
       },
 
-      transformComplete: (v) => {
+      transformComplete: (v, event) => {
         if (v.code) {
           this.emojiStore.trackEmojiForContext(v.code, "topic");
           return `${v.code}:`;
@@ -365,7 +365,26 @@ export default class DEditor extends Component {
             },
           };
 
-          const virtualElement = virtualElementFromTextRange();
+          let virtualElement;
+          if (event instanceof KeyboardEvent) {
+            // when user selects more by pressing enter
+            virtualElement = virtualElementFromTextRange();
+          } else {
+            // when user selects more by clicking on it
+            virtualElement = {
+              getBoundingClientRect: () => ({
+                x: event.pageX,
+                y: event.pageY,
+                top: event.pageY,
+                left: event.pageX,
+                bottom: 0,
+                right: 0,
+                width: 0,
+                height: 0,
+              }),
+            };
+          }
+
           this.menuInstance = this.menu.show(virtualElement, menuOptions);
           return "";
         }
