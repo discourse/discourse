@@ -188,6 +188,15 @@ export default class ReviewableItem extends Component {
     return updatedCategoryId || categoryId;
   }
 
+  @discourseComputed("reviewable.type", "reviewable.target_created_by")
+  showIpLookup(reviewableType) {
+    return (
+      reviewableType !== "ReviewableUser" &&
+      this.currentUser.staff &&
+      this.reviewable.target_created_by
+    );
+  }
+
   @bind
   _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
