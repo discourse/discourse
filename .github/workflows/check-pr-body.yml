@@ -32,7 +32,7 @@ jobs:
           commit_message = `git log -1 --pretty=%b`
           raise "Failed to get commit message" unless $?.success?
 
-          new_description = commit_message.split("---").first.strip
+          new_description = commit_message.split("\n---\n").first.strip
 
           puts "Updating body to commit message...\n\n---\n#{new_description}\n---"
 
