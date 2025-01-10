@@ -13,6 +13,10 @@ import { i18n } from "discourse-i18n";
 export default class TopicStatus extends Component {
   @service currentUser;
 
+  get wrapperElement() {
+    return element(this.args.tagName ?? "span");
+  }
+
   get canAct() {
     // TODO: @disableActions -> !@interactive
     return this.currentUser && !this.args.disableActions;
@@ -22,10 +26,6 @@ export default class TopicStatus extends Component {
   togglePinned(e) {
     e.preventDefault();
     this.args.topic.togglePinnedForUser();
-  }
-
-  get wrapperElement() {
-    return element(this.args.tagName ?? "span");
   }
 
   <template>
