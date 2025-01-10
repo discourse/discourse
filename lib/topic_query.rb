@@ -16,12 +16,14 @@ class TopicQuery
       begin
         int = lambda { |x| Integer === x || (String === x && x.match?(/\A-?[0-9]+\z/)) }
         zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
+        five_up_to_one_hundred = lambda { |x| int.call(x) && x.to_i.between?(5, 100) }
         array_or_string = lambda { |x| Array === x || String === x }
         string = lambda { |x| String === x }
         true_or_false = lambda { |x| x == true || x == false || x == "true" || x == "false" }
 
         {
           page: zero_up_to_max_int,
+          per_page: five_up_to_one_hundred,
           before: zero_up_to_max_int,
           bumped_before: zero_up_to_max_int,
           topic_ids: array_or_string,
@@ -59,6 +61,7 @@ class TopicQuery
     # For these to work in Ember, add them to `controllers/discovery/list.js`
     @public_valid_options ||= %i[
       page
+      per_page
       before
       bumped_before
       topic_ids
@@ -89,8 +92,6 @@ class TopicQuery
         %i[
           except_topic_ids
           limit
-          page
-          per_page
           visible
           guardian
           no_definitions
@@ -503,7 +504,7 @@ class TopicQuery
     unpinned_topics = topics.where("NOT ( #{pinned_clause} )")
     pinned_topics = topics.dup.offset(nil).where(pinned_clause).reorder(pinned_at: :desc)
 
-    per_page = options[:per_page] || per_page_setting
+    per_page = options[:per_page]&.to_i || per_page_setting
     limit = per_page unless options[:limit] == false
     page = options[:page].to_i
 
@@ -561,7 +562,7 @@ class TopicQuery
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
-    list.per_page = options[:per_page] || per_page_setting
+    list.per_page = options[:per_page]&.to_i || per_page_setting
     list
   end
 
@@ -836,7 +837,7 @@ class TopicQuery
       result = result.where("COALESCE(categories.topic_id, 0) <> topics.id")
     end
 
-    result = result.limit(options[:per_page]) unless options[:limit] == false
+    result = result.limit(options[:per_page]&.to_i) unless options[:limit] == false
     result = result.visible if options[:visible]
     result =
       result.where.not(topics: { id: options[:except_topic_ids] }).references(:topics) if options[
@@ -844,7 +845,7 @@ class TopicQuery
     ]
 
     if options[:page]
-      offset = options[:page].to_i * options[:per_page]
+      offset = options[:page].to_i * options[:per_page]&.to_i
       result = result.offset(offset) if offset > 0
     end
 
