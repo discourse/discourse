@@ -72,6 +72,7 @@
 }
 
 .admin-customize {
+  /* TODO: Remove when admin header has been added to all /customize pages */
   h1 {
     margin-bottom: 10px;
     input {
@@ -80,6 +81,9 @@
       .ios-device & {
         font-size: var(--font-down-2);
       }
+    }
+    &.d-page-header__title {
+      margin: 0;
     }
   }
 
