@@ -6245,10 +6245,11 @@ en:
             title: "Select base color palette"
             description: "Base palette:"
           title: "Colors"
-          edit: "Edit Color Palettes"
-          long_title: "Color Palettes"
+          edit: "Edit color palettes"
+          long_title: "Color palettes"
+          description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts and components - both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
           about: "Modify the colors used by your themes. Create a new color palette to start."
-          new_name: "New Color Palette"
+          new_name: "New color palette"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color palette?"
           undo: "Undo"
@@ -6600,7 +6601,8 @@ en:
           title: "Error Logs"
 
       watched_words:
-        title: "Watched Words"
+        title: "Watched words"
+        description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         search: "search"
         clear_filter: "Clear"
         show_words:
