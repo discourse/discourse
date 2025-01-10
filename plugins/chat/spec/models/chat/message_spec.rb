@@ -617,8 +617,8 @@ describe Chat::Message do
 
   describe "blocking duplicate messages" do
     let(:message) { "this is duplicate" }
-    fab!(:chat_channel) { Fabricate(:chat_channel) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:chat_channel)
+    fab!(:user)
 
     it "blocks duplicate messages" do
       Fabricate(:chat_message, message:, chat_channel:, user:)
