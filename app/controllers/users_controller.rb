@@ -680,8 +680,8 @@ class UsersController < ApplicationController
       return fail_with("login.wrong_invite_code")
     end
 
-    availability = UsernameCheckerService.new.check_username_availability(params[:username], nil)
-    if clashing_with_existing_route?(params[:username]) || !availability[:available]
+    if clashing_with_existing_route?(params[:username]) ||
+         User.reserved_username?(params[:username])
       return fail_with("login.reserved_username")
     end
 
