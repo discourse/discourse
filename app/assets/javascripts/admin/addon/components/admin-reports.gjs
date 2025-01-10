@@ -59,14 +59,16 @@ export default class AdminReports extends Component {
 
   <template>
     <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-      <div class="admin-reports-header">
-        <input
-          type="text"
-          class="admin-reports-header__filter"
-          placeholder={{i18n "admin.filter_reports"}}
-          value={{this.filter}}
-          {{on "input" (withEventValue (fn (mut this.filter)))}}
-        />
+      <div class="d-admin-filter admin-reports-header">
+        <div class="admin-filter__input-container">
+          <input
+            type="text"
+            class="admin-filter__input admin-reports-header__filter"
+            placeholder={{i18n "admin.filter_reports"}}
+            value={{this.filter}}
+            {{on "input" (withEventValue (fn (mut this.filter)))}}
+          />
+        </div>
       </div>
       <AdminSectionLandingWrapper class="admin-reports-list">
         {{#each this.filteredReports as |report|}}
