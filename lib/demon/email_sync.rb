@@ -3,8 +3,11 @@
 require "demon/base"
 
 class Demon::EmailSync < ::Demon::Base
-  HEARTBEAT_KEY = "email_sync_heartbeat"
   HEARTBEAT_INTERVAL = 60.seconds
+
+  def self.heartbeat_key
+    "#{HOSTNAME}_#{Process.pid}_email_sync_heartbeat"
+  end
 
   def self.prefix
     "email_sync"
@@ -55,7 +58,7 @@ class Demon::EmailSync < ::Demon::Base
     should_restart = false
 
     # Restart process if it does not respond anymore
-    last_heartbeat_ago = Time.now.to_i - Discourse.redis.get(HEARTBEAT_KEY).to_i
+    last_heartbeat_ago = Time.now.to_i - Discourse.redis.get(heartbeat_key).to_i
 
     if last_heartbeat_ago > HEARTBEAT_INTERVAL.to_i
       Rails.logger.warn(
@@ -146,12 +149,6 @@ class Demon::EmailSync < ::Demon::Base
 
   def after_fork
     log("[EmailSync] Loading EmailSync in process id #{Process.pid}")
-
-    loop do
-      break if Discourse.redis.set(HEARTBEAT_KEY, Time.now.to_i, ex: HEARTBEAT_INTERVAL, nx: true)
-      sleep HEARTBEAT_INTERVAL
-    end
-
     log("[EmailSync] Starting EmailSync main thread")
 
     @running = true
@@ -163,7 +160,7 @@ class Demon::EmailSync < ::Demon::Base
     trap("HUP") { kill_threads }
 
     while @running
-      Discourse.redis.set(HEARTBEAT_KEY, Time.now.to_i, ex: HEARTBEAT_INTERVAL)
+      Discourse.redis.set(self.class.heartbeat_key, Time.now.to_i, ex: HEARTBEAT_INTERVAL)
 
       # Kill all threads for databases that no longer exist
       all_dbs = Set.new(RailsMultisite::ConnectionManagement.all_dbs)
@@ -223,7 +220,7 @@ class Demon::EmailSync < ::Demon::Base
     end
 
     @sync_lock.synchronize { kill_threads }
-    Discourse.redis.del(HEARTBEAT_KEY)
+    Discourse.redis.del(self.class.heartbeat_key)
     exit 0
   rescue => e
     log("#{e.message}: #{e.backtrace.join("\n")}")

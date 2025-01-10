@@ -15,7 +15,7 @@ RSpec.describe Demon::EmailSync do
         described_class.set_demons({ "daemon" => daemon })
 
         Discourse.redis.set(
-          described_class::HEARTBEAT_KEY,
+          described_class.heartbeat_key,
           Time.now.to_i - described_class::HEARTBEAT_INTERVAL.to_i - 1,
         )
 
@@ -36,7 +36,7 @@ RSpec.describe Demon::EmailSync do
 
         described_class.set_demons({ "daemon" => daemon })
 
-        Discourse.redis.set(described_class::HEARTBEAT_KEY, Time.now.to_i)
+        Discourse.redis.set(described_class.heartbeat_key, Time.now.to_i)
 
         daemon.expects(:restart)
 
