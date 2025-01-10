@@ -35,8 +35,8 @@ importers:
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.0)
       '@discourse/lint-configs':
-        specifier: ^2.2.1
-        version: 2.2.1(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)
+        specifier: ^2.2.2
+        version: 2.2.2(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1129,8 +1129,8 @@ packages:
     resolution: {integrity: sha512-i1SLeK+DzNnQ3LL/CswPCa/E5u4lh1k6IAEphON8F+cXt0t9euTshDru0q7/IqMa1PMPz5RnHuHscF8/ZJsStg==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/eslint-parser@7.25.8':
-    resolution: {integrity: sha512-Po3VLMN7fJtv0nsOjBDSbO1J71UhzShE9MuOSkWEV9IZQXzhZklYtzKZ8ZD/Ij3a0JBv1AG3Ny2L3jvAHQVOGg==}
+  '@babel/eslint-parser@7.26.5':
+    resolution: {integrity: sha512-Kkm8C8uxI842AwQADxl0GbcG1rupELYLShazYEZO/2DYjhyWXJIOUVOE3tBYm6JXzUCNJOZEzqc4rCW/jsEQYQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || >=14.0.0}
     peerDependencies:
       '@babel/core': ^7.11.0
@@ -1812,11 +1812,11 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.2.1':
-    resolution: {integrity: sha512-cXA6erpwaN9/wX+pNHUeDws6hdQEewfPb+nmWQNAaD72FTDKpjNmwxKDaVH1p65yVsF8SdNRZGKdAnOjkH42aw==}
+  '@discourse/lint-configs@2.2.2':
+    resolution: {integrity: sha512-y3NNvMTbooALdPtbeGfZukDmZ8V3Nb0mupv0Z4o9HBXKOdlKdauitupTBySLTmLzbIJvNbsRSW/b1Tr126vy/g==}
     peerDependencies:
       ember-template-lint: 6.0.0
-      eslint: ^9.14.0
+      eslint: ^9.15.0
       prettier: 2.8.8
 
   '@discourse/moment-timezone-names-translations@1.0.0':
@@ -3986,8 +3986,8 @@ packages:
     resolution: {integrity: sha512-tRpdppF7TRazZrjJ6v3stzv93qxRcSsFmW6cX0Zm2NVKpxE1WV1HblnghVv9TreireHkqI/VDEsfolRF1p6y7Q==}
     engines: {node: '>=8.0.0'}
 
-  css-tree@2.3.1:
-    resolution: {integrity: sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw==}
+  css-tree@3.1.0:
+    resolution: {integrity: sha512-0eW44TGN5SQXU1mWSkKwFstI/22X2bG1nYzZTYMAWjylYURhse752YgbE4Cx46AC+bAvI+/dYTPRk1LqSUnu6w==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
 
   cssesc@3.0.0:
@@ -4348,8 +4348,8 @@ packages:
     resolution: {integrity: sha512-SB9NcZ27OtoUk+gfalsc3QU17+54OoqR668qHcuvHByk4KAhGxCKlkm9EBlKJcGr7yceOOAJqohTcCEBqfRw9g==}
     engines: {node: '>= 0.10.0'}
 
-  ember-eslint-parser@0.5.3:
-    resolution: {integrity: sha512-FYsoiVcGUGDAybPq8X551hcs9NA0SDx77kfU1sHCTLYqfG4zQ0Rcy+lGxoaXaskH7sTf+Up3/oVyjx/+nJ3joA==}
+  ember-eslint-parser@0.5.7:
+    resolution: {integrity: sha512-d0nIQxC6TXsMebi7GcpH6meFDVhTUTYZpQ6Yg5n92+eZHqygAEKWZX55lLa49/wucBXS+Wadp2g6okPcN463aA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@babel/core': ^7.23.6
@@ -4593,8 +4593,8 @@ packages:
       '@babel/eslint-parser':
         optional: true
 
-  eslint-plugin-ember@12.3.1:
-    resolution: {integrity: sha512-Ew8E7R0inU7HSQZ7ChixLvv4y3wtyC++9DYBmAYyjtRoM+p/PwP2kUkyKYJTLi5v5IuSR+fS3IWtbswoq9bPyQ==}
+  eslint-plugin-ember@12.3.3:
+    resolution: {integrity: sha512-OXf3+XofsSMW/zGnp6B1cB2veC9zLzby8RGmHkxNwRHGLs/fYNVBbpwkmdZhzR8+IMN3wjtLR4iNLvkKOAT5bg==}
     engines: {node: 18.* || 20.* || >= 21}
     peerDependencies:
       '@typescript-eslint/parser': '*'
@@ -4612,8 +4612,8 @@ packages:
     peerDependencies:
       eslint: '>=5.0.0'
 
-  eslint-plugin-sort-class-members@1.20.0:
-    resolution: {integrity: sha512-xNaik4GQ/pRwd1soIVI28HEXZbrWoLR5krau2+E8YcHj7N09UviPg5mYhf/rELG29bIFJdXDOFJazN90+luMOw==}
+  eslint-plugin-sort-class-members@1.21.0:
+    resolution: {integrity: sha512-QKV4jvGMu/ge1l4s1TUBC6rqqV/fbABWY7q2EeNpV3FRikoX6KuLhiNvS8UuMi+EERe0hKGrNU9e6ukFDxNnZQ==}
     engines: {node: '>=4.0.0'}
     peerDependencies:
       eslint: '>=0.8.0'
@@ -5177,8 +5177,8 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@15.11.0:
-    resolution: {integrity: sha512-yeyNSjdbyVaWurlwCpcA6XNBrHTMIeDdj0/hnvX/OLJ9ekOXYbLsLinH/MucQyGvNnXhidTdNhTtJaffL2sMfw==}
+  globals@15.14.0:
+    resolution: {integrity: sha512-OkToC372DtlQeje9/zHIo5CT8lRP/FUgEOKBEhU4e0abL7J7CD24fD9ohiLN5hagG/kWCYj4K5oaxxtj2Z0Dig==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -6141,11 +6141,14 @@ packages:
     resolution: {integrity: sha512-daE62nS2ZQsDg9raM0IlZzLmI2u+7ZapXBwdoeBUKAYERPDDIc0qNqA8E0Rp2D+gspKR7BgIFP52GeujaGXWeQ==}
     engines: {node: 6.* || 8.* || >= 10.*}
 
+  mathml-tag-names@2.1.3:
+    resolution: {integrity: sha512-APMBEanjybaPzUrfqU0IMU5I0AswKMH7k8OTLs0vvV4KZpExkTkY87nR/zpbuTPj+gARop7aGUbl11pnDfW6xg==}
+
   mdn-data@2.0.14:
     resolution: {integrity: sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==}
 
-  mdn-data@2.0.30:
-    resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
+  mdn-data@2.12.2:
+    resolution: {integrity: sha512-IEn+pegP1aManZuckezWCO+XZQDplx1366JoVhTpMpBB1sPey/SbveZQUosKiKiGYjg1wH4pMlNgXbCiYgihQA==}
 
   mdurl@1.0.1:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
@@ -7693,6 +7696,9 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  svg-tags@1.0.0:
+    resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
+
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
@@ -8411,7 +8417,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/eslint-parser@7.25.8(@babel/core@7.26.0)(eslint@9.18.0)':
+  '@babel/eslint-parser@7.26.5(@babel/core@7.26.0)(eslint@9.18.0)':
     dependencies:
       '@babel/core': 7.26.0(supports-color@8.1.1)
       '@nicolo-ribaudo/eslint-scope-5-internals': 5.1.1-v1
@@ -9293,20 +9299,20 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.2.1(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)':
+  '@discourse/lint-configs@2.2.2(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)':
     dependencies:
       '@babel/core': 7.26.0(supports-color@8.1.1)
-      '@babel/eslint-parser': 7.25.8(@babel/core@7.26.0)(eslint@9.18.0)
+      '@babel/eslint-parser': 7.26.5(@babel/core@7.26.0)(eslint@9.18.0)
       '@babel/plugin-proposal-decorators': 7.25.9(@babel/core@7.26.0)
       '@stylistic/eslint-plugin-js': 2.11.0(eslint@9.18.0)
       ember-template-lint: 6.0.0
       eslint: 9.18.0
-      eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.25.8(@babel/core@7.26.0)(eslint@9.18.0))(eslint@9.18.0)
-      eslint-plugin-ember: 12.3.1(@babel/core@7.26.0)(eslint@9.18.0)
+      eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.26.5(@babel/core@7.26.0)(eslint@9.18.0))(eslint@9.18.0)
+      eslint-plugin-ember: 12.3.3(@babel/core@7.26.0)(eslint@9.18.0)
       eslint-plugin-qunit: 8.1.2(eslint@9.18.0)
       eslint-plugin-simple-import-sort: 12.1.1(eslint@9.18.0)
-      eslint-plugin-sort-class-members: 1.20.0(eslint@9.18.0)
-      globals: 15.11.0
+      eslint-plugin-sort-class-members: 1.21.0(eslint@9.18.0)
+      globals: 15.14.0
       prettier: 2.8.8
       prettier-plugin-ember-template-tag: 0.3.2
       typescript: 5.7.3
@@ -11948,9 +11954,9 @@ snapshots:
       mdn-data: 2.0.14
       source-map: 0.6.1
 
-  css-tree@2.3.1:
+  css-tree@3.1.0:
     dependencies:
-      mdn-data: 2.0.30
+      mdn-data: 2.12.2
       source-map-js: 1.2.0
 
   cssesc@3.0.0: {}
@@ -12626,14 +12632,16 @@ snapshots:
 
   ember-disable-prototype-extensions@1.1.3: {}
 
-  ember-eslint-parser@0.5.3(@babel/core@7.26.0)(eslint@9.18.0):
+  ember-eslint-parser@0.5.7(@babel/core@7.26.0)(eslint@9.18.0):
     dependencies:
       '@babel/core': 7.26.0(supports-color@8.1.1)
-      '@babel/eslint-parser': 7.25.8(@babel/core@7.26.0)(eslint@9.18.0)
+      '@babel/eslint-parser': 7.26.5(@babel/core@7.26.0)(eslint@9.18.0)
       '@glimmer/syntax': 0.92.3
       content-tag: 2.0.3
       eslint-scope: 7.2.2
       html-tags: 3.3.1
+      mathml-tag-names: 2.1.3
+      svg-tags: 1.0.0
     transitivePeerDependencies:
       - eslint
 
@@ -13058,7 +13066,7 @@ snapshots:
 
   eslint-formatter-kakoune@1.0.0: {}
 
-  eslint-plugin-decorator-position@6.0.0(@babel/eslint-parser@7.25.8(@babel/core@7.26.0)(eslint@9.18.0))(eslint@9.18.0):
+  eslint-plugin-decorator-position@6.0.0(@babel/eslint-parser@7.26.5(@babel/core@7.26.0)(eslint@9.18.0))(eslint@9.18.0):
     dependencies:
       '@babel/core': 7.26.0(supports-color@8.1.1)
       '@babel/plugin-proposal-decorators': 7.25.9(@babel/core@7.26.0)
@@ -13067,15 +13075,15 @@ snapshots:
       eslint: 9.18.0
       snake-case: 3.0.4
     optionalDependencies:
-      '@babel/eslint-parser': 7.25.8(@babel/core@7.26.0)(eslint@9.18.0)
+      '@babel/eslint-parser': 7.26.5(@babel/core@7.26.0)(eslint@9.18.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-ember@12.3.1(@babel/core@7.26.0)(eslint@9.18.0):
+  eslint-plugin-ember@12.3.3(@babel/core@7.26.0)(eslint@9.18.0):
     dependencies:
       '@ember-data/rfc395-data': 0.0.4
-      css-tree: 2.3.1
-      ember-eslint-parser: 0.5.3(@babel/core@7.26.0)(eslint@9.18.0)
+      css-tree: 3.1.0
+      ember-eslint-parser: 0.5.7(@babel/core@7.26.0)(eslint@9.18.0)
       ember-rfc176-data: 0.3.18
       eslint: 9.18.0
       eslint-utils: 3.0.0(eslint@9.18.0)
@@ -13098,7 +13106,7 @@ snapshots:
     dependencies:
       eslint: 9.18.0
 
-  eslint-plugin-sort-class-members@1.20.0(eslint@9.18.0):
+  eslint-plugin-sort-class-members@1.21.0(eslint@9.18.0):
     dependencies:
       eslint: 9.18.0
 
@@ -13919,7 +13927,7 @@ snapshots:
 
   globals@14.0.0: {}
 
-  globals@15.11.0: {}
+  globals@15.14.0: {}
 
   globalthis@1.0.4:
     dependencies:
@@ -14944,9 +14952,11 @@ snapshots:
       '@types/minimatch': 3.0.5
       minimatch: 3.1.2
 
+  mathml-tag-names@2.1.3: {}
+
   mdn-data@2.0.14: {}
 
-  mdn-data@2.0.30: {}
+  mdn-data@2.12.2: {}
 
   mdurl@1.0.1: {}
 
@@ -16598,6 +16608,8 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
+
+  svg-tags@1.0.0: {}
 
   symbol-tree@3.2.4: {}
 
