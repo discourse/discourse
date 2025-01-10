@@ -138,7 +138,7 @@ GEM
     erubi (1.13.1)
     excon (1.2.3)
     execjs (2.10.0)
-    exifr (1.4.0)
+    exifr (1.4.1)
     extralite-bundle (2.8.2)
     fabrication (2.31.0)
     faker (2.23.0)
