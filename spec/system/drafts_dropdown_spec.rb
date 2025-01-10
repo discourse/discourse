@@ -74,7 +74,7 @@ describe "Drafts dropdown", type: :system do
       expect(composer).to be_opened
       composer.create
 
-      wait_for { Draft.count === 5 }
+      wait_for { Draft.count == 5 }
 
       page.visit "/"
       drafts_dropdown.open

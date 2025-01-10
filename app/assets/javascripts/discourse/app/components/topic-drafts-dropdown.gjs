@@ -15,13 +15,15 @@ export default class TopicDraftsDropdown extends Component {
 
   @tracked drafts = [];
 
-  get showDraftMenu() {
+  get shouldDisplay() {
     return this.args.showDraftsMenu;
   }
 
-  get otherDraftsCount() {
-    return this.args.otherDrafts > 0
-      ? i18n("drafts.dropdown.other_drafts", { count: this.args.otherDrafts })
+  get otherDraftsText() {
+    return this.args.otherDraftsCount > 0
+      ? i18n("drafts.dropdown.other_drafts", {
+          count: this.args.otherDraftsCount,
+        })
       : "";
   }
 
@@ -41,7 +43,7 @@ export default class TopicDraftsDropdown extends Component {
 
   @action
   async resumeDraft(draft) {
-    this.dMenu.close();
+    await this.dMenu.close();
 
     if (draft.get("postUrl")) {
       DiscourseURL.routeTo(draft.get("postUrl"));
@@ -56,7 +58,7 @@ export default class TopicDraftsDropdown extends Component {
   }
 
   <template>
-    {{#if this.showDraftMenu}}
+    {{#if this.shouldDisplay}}
       <DMenu
         @identifier="topic-drafts-menu"
         @title="drafts.title"
@@ -87,8 +89,8 @@ export default class TopicDraftsDropdown extends Component {
                 class="btn-link view-all-drafts"
               >
                 <span
-                  data-other-drafts={{@otherDrafts}}
-                >{{this.otherDraftsCount}}</span>
+                  data-other-drafts={{@otherDraftsCount}}
+                >{{this.otherDraftsText}}</span>
                 <span>{{i18n "drafts.dropdown.view_all"}}</span>
               </DButton>
             </dropdown.item>

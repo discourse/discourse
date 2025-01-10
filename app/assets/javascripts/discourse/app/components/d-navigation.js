@@ -121,7 +121,7 @@ export default class DNavigation extends Component {
   }
 
   @discourseComputed("draftCount")
-  otherDraftCount(draftCount) {
+  otherDraftsCount(draftCount) {
     return draftCount > DRAFTS_MENU_LIMIT ? draftCount - DRAFTS_MENU_LIMIT : 0;
   }
 

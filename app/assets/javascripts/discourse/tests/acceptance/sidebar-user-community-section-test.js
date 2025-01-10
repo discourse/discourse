@@ -551,10 +551,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
     await visit("/");
 
-    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
-      draft_count: 1,
-    });
-
     assert
       .dom(
         ".sidebar-section-link[data-link-name='my-drafts'] .sidebar-section-link-content-text"
