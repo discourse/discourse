@@ -2,7 +2,7 @@
   <div class="topic-statuses">
 {{~/if~}}
 
-{{{~view.html~}}}
+{{{view.html}}}
 
 {{~#if status.href~}}
   <a href="{{status.href}}" title="{{status.title}}" class="topic-status {{status.extraClasses}}">{{d-icon status.icon}}</a>
