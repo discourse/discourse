@@ -17,6 +17,7 @@ export default class AdminAreaSettings extends Component {
   @tracked settings = [];
   @tracked filter = "";
   @tracked loading = false;
+  @tracked showBreadcrumb = this.args.showBreadcrumb ?? true;
 
   constructor() {
     super(...arguments);
@@ -62,7 +63,9 @@ export default class AdminAreaSettings extends Component {
   }
 
   <template>
-    <DBreadcrumbsItem @path={{@path}} @label={{i18n "settings"}} />
+    {{#if this.showBreadcrumb}}
+      <DBreadcrumbsItem @path={{@path}} @label={{i18n "settings"}} />
+    {{/if}}
 
     <div
       class="content-body admin-config-area__settings admin-detail pull-left"

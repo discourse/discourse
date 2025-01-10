@@ -7091,7 +7091,7 @@ en:
           confirm_delete: "Are you sure you would like to delete this DiscourseConnect record?"
 
       user_fields:
-        title: "User Fields"
+        title: "User fields"
         help: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
         no_user_fields: "You don't have any custom user fields yet."
         add: "Add user field"
