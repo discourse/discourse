@@ -102,6 +102,7 @@ RSpec.describe TopicQuery do
         # Valid values
         expect(TopicQuery.validate?(:per_page, 100)).to eq(true)
         expect(TopicQuery.validate?(:per_page, 5)).to eq(true)
+        expect(TopicQuery.validate?(:per_page, "10")).to eq(true)
       end
     end
   end
