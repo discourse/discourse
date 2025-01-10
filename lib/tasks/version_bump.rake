@@ -65,6 +65,7 @@ rescue StandardError
 end
 
 def confirm(msg)
+  return if ENV["SKIP_CONFIRMATION"] == "1"
   loop do
     print "#{msg} (yes/no)..."
     break if test_mode?
@@ -107,7 +108,10 @@ def make_pr(base:, branch:, title:)
       > It should only be merged (via fast-forward) using the associated `bin/rake version_bump:*` task.
     MD
 
-  if !test_mode?
+  if ENV["GITHUB_ACTIONS"]
+    puts "Writing TITLE=#{title} to GITHUB_ENV"
+    File.write(ENV["GITHUB_ENV"], "TITLE=#{title}", mode: "a+")
+  elsif !test_mode?
     open_command =
       case RbConfig::CONFIG["host_os"]
       when /darwin|mac os/
@@ -171,7 +175,7 @@ end
 def with_clean_worktree(origin_branch)
   origin_url = git("remote", "get-url", "origin").strip
 
-  if !test_mode? && !origin_url.include?("discourse/discourse")
+  if !test_mode? && !ENV["GITHUB_ACTIONS"] && !origin_url.include?("discourse/discourse")
     raise "Expected 'origin' remote to point to discourse/discourse (got #{origin_url})"
   end
 

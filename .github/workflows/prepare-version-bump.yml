@@ -1,0 +1,102 @@
+name: Version Bump
+
+on:
+  push:
+    branches:
+      - main
+  workflow_call:
+    inputs:
+      merge:
+        type: boolean
+        default: false
+
+concurrency:
+  group: version-bump-${{ inputs.merge }}
+  cancel-in-progress: true
+
+jobs:
+  plan-version-bump:
+    name: ${{inputs.merge && 'Merge' || 'Plan'}}
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:release
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      issues: read
+      pull-requests: write
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: 'main'
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+      - name: Setup gems
+        run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+      - name: Setup GH cli
+        run: |
+          (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+            && sudo mkdir -p -m 755 /etc/apt/keyrings \
+                  && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+                  && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+            && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+            && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+            && sudo apt update \
+            && sudo apt install gh -y
+      - name: Core release notes
+        if: ${{ !inputs.merge }}
+        run: |
+          mkdir -p tmp/notes
+          bin/rake "release_note:generate" | tee tmp/notes/core.txt
+      - name: "Plan Version Bump"
+        if: ${{ !inputs.merge }}
+        run: DRY_RUN=1 bin/rake version_bump:beta
+      - name: "Merge Version Bump"
+        if: ${{ inputs.merge }}
+        run: SKIP_CONFIRMATION=1 bin/rake version_bump:beta
+      - name: "Build PR Body"
+        if: ${{ !inputs.merge }}
+        shell: ruby {0}
+        run: |
+          body = <<~BODY
+            This PR is automatically generated, and will be updated after every commit to the `main` branch.
+
+            Do not use the GitHub UI to merge this PR. When ready to perform the version bump, approve the PR and comment `@discoursebot merge version bump`
+
+            ---
+
+            ### Changelog
+
+            ```
+            #{File.read("tmp/notes/core.txt")}
+            ```
+          BODY
+
+          puts body
+
+          File.write("tmp/pr-body.txt", body)
+      - name: Create/update PR
+        if: ${{ !inputs.merge }}
+        run: |
+          EXISTING_PR="$(gh pr list --head "version_bump/beta" --state open --json url --jq .[].url)"
+          if [ -n "${EXISTING_PR}" ]; then
+              echo "PR already exists -> ${EXISTING_PR}"
+              gh pr edit $EXISTING_PR --title "$TITLE" --body-file tmp/pr-body.txt
+          else
+              gh pr create --title "$TITLE" --body-file tmp/pr-body.txt --draft --head "version_bump/beta"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
