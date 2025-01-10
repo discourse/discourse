@@ -101,12 +101,14 @@ const setPositionFixed = () =>
     if (bodyStyle === void 0) {
       bodyStyle = { ...$body.style };
       $body.style.touchAction = "none";
+      $body.style.position = "fixed";
     }
   });
 const restorePositionSetting = () => {
   if (bodyStyle !== void 0) {
     const $body = document.body;
     $body.style.touchAction = bodyStyle.touchAction || "";
+    $body.style.position = bodyStyle.position || "";
     bodyStyle = void 0;
   }
 };
