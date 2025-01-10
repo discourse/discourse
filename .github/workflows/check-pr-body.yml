@@ -29,8 +29,10 @@ jobs:
             exit 0
           end
 
-          new_description = `git log -1 --pretty=%b`
+          commit_message = `git log -1 --pretty=%b`
           raise "Failed to get commit message" unless $?.success?
+
+          new_description = commit_message.split("---").first.strip
 
           puts "Updating body to commit message...\n\n---\n#{new_description}\n---"
 
