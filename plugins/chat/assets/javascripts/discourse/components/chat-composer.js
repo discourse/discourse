@@ -12,10 +12,6 @@ import { Promise } from "rsvp";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { emojiUrlFor } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
