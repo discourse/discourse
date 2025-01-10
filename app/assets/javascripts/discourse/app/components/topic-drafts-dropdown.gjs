@@ -65,6 +65,7 @@ export default class TopicDraftsDropdown extends Component {
         @icon="chevron-down"
         @onShow={{this.onShowMenu}}
         @onRegisterApi={{this.onRegisterApi}}
+        @modalForMobile={{true}}
         class="btn-small"
       >
         <:content>

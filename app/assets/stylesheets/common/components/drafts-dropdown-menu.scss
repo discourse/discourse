@@ -1,4 +1,4 @@
-// Styles for the topic drafts dropdown menu
+// Styles for the drafts dropdown menu
 
 .topic-drafts-menu-trigger {
   margin-left: -0.4em;
@@ -9,8 +9,6 @@
 }
 
 .topic-drafts-menu-content .dropdown-menu {
-  max-width: 300px;
-
   .btn .d-button-label {
     @include ellipsis;
   }
