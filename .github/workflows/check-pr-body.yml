@@ -1,0 +1,54 @@
+name: check-pr-body
+
+on:
+  pull_request_target:
+    types: [opened, reopened, edited]
+
+jobs:
+  sanitize:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} 
+      - name: "Replace PR body with commit message"
+        shell: ruby {0}
+        env: 
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_NUMBER: ${{ github.event.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          original_description = ENV['PR_BODY']
+          if !original_description.include? "Dependabot commands and options"
+            puts "PR body does not contain rich Dependabot content, skipping"
+            exit 0
+          end
+
+          new_description = `git log -1 --pretty=%b`
+          raise "Failed to get commit message" unless $?.success?
+
+          puts "Updating body to commit message...\n\n---\n#{new_description}\n---"
+
+          puts "Updating PR body..."
+          system "gh", "pr", "edit", ENV['PR_NUMBER'], "--body", new_description
+
+          comment = <<~COMMENT
+            PR body updated to plaintext for easier squash-merging. Original body content below:
+
+            ---
+
+            #{original_description}
+          COMMENT
+
+          puts "Adding comment with original info..."
+          command = ["gh", "pr", "comment", ENV['PR_NUMBER'], "--body", comment]
+          begin
+            system *command, "--edit-last", exception: true
+          rescue
+            puts "Failed to add comment, continuing..."
+            system *command, exception: true
+          end
