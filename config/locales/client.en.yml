@@ -5128,7 +5128,7 @@ en:
 
       reports:
         title: "List of available reports"
-        meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
+        meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
         sidebar_link:
           all: "All reports"
