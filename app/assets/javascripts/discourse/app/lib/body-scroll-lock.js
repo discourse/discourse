@@ -178,43 +178,8 @@ const disableBodyScroll = (targetElement, options) => {
   } else {
     setOverflowHidden(options);
   }
-  if (isIosDevice) {
-    targetElement.ontouchstart = (event) => {
-      if (event.targetTouches.length === 1) {
-        initialClientY = event.targetTouches[0].clientY;
-      }
-    };
-    targetElement.ontouchmove = (event) => {
-      if (event.targetTouches.length === 1) {
-        handleScroll(event, targetElement, options);
-      }
-    };
-    if (!documentListenerAdded) {
-      document.addEventListener(
-        "touchmove",
-        preventDefault,
-        hasPassiveEvents ? { passive: false } : void 0
-      );
-      documentListenerAdded = true;
-    }
-  }
 };
 const clearAllBodyScrollLocks = () => {
-  if (isIosDevice) {
-    locks.forEach((lock) => {
-      lock.targetElement.ontouchstart = null;
-      lock.targetElement.ontouchmove = null;
-    });
-    if (documentListenerAdded) {
-      document.removeEventListener(
-        "touchmove",
-        preventDefault,
-        hasPassiveEvents ? { passive: false } : void 0
-      );
-      documentListenerAdded = false;
-    }
-    initialClientY = -1;
-  }
   if (isIosDevice) {
     restorePositionSetting();
   } else {
@@ -239,18 +204,6 @@ const enableBodyScroll = (targetElement) => {
   if ((locksIndex == null ? void 0 : locksIndex.get(targetElement)) === 0) {
     locks = locks.filter((lock) => lock.targetElement !== targetElement);
     locksIndex == null ? void 0 : locksIndex.delete(targetElement);
-  }
-  if (isIosDevice) {
-    targetElement.ontouchstart = null;
-    targetElement.ontouchmove = null;
-    if (documentListenerAdded && locks.length === 0) {
-      document.removeEventListener(
-        "touchmove",
-        preventDefault,
-        hasPassiveEvents ? { passive: false } : void 0
-      );
-      documentListenerAdded = false;
-    }
   }
   if (locks.length === 0) {
     if (isIosDevice) {
