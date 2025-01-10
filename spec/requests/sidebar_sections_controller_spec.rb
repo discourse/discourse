@@ -344,7 +344,7 @@ RSpec.describe SidebarSectionsController do
       sign_in(admin)
 
       topics_link = community_section.sidebar_urls.find_by(name: "Topics")
-      my_posts_link = community_section.sidebar_urls.find_by(name: "My Drafts")
+      my_posts_link = community_section.sidebar_urls.find_by(name: "My Posts")
 
       community_section
         .sidebar_section_links

@@ -908,7 +908,7 @@ acceptance("Composer", function (needs) {
     });
 
     await visit("/latest");
-    assert.dom("#create-topic").hasText(i18n("topic.open_draft"));
+    assert.dom("#create-topic").hasText(i18n("topic.create"));
 
     await click("#create-topic");
     assert.strictEqual(selectKit(".category-chooser").header().value(), "2");

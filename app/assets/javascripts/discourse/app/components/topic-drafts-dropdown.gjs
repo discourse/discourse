@@ -87,7 +87,7 @@ export default class TopicDraftsDropdown extends Component {
                 class="btn-link view-all-drafts"
               >
                 <span
-                  data-other-drafts="{{@otherDrafts}}"
+                  data-other-drafts={{@otherDrafts}}
                 >{{this.otherDraftsCount}}</span>
                 <span>{{i18n "drafts.dropdown.view_all"}}</span>
               </DButton>
