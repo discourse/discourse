@@ -111,7 +111,7 @@ GEM
     cose (1.3.1)
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
-    cppjieba_rb (0.4.2)
+    cppjieba_rb (0.4.4)
     crack (1.0.0)
       bigdecimal
       rexml
