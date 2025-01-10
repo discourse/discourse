@@ -328,8 +328,8 @@ importers:
         specifier: ^7.26.0
         version: 7.26.0(supports-color@8.1.1)
       '@babel/standalone':
-        specifier: ^7.26.4
-        version: 7.26.4
+        specifier: ^7.26.5
+        version: 7.26.5
       '@colors/colors':
         specifier: ^1.6.0
         version: 1.6.0
@@ -1059,8 +1059,8 @@ importers:
   app/assets/javascripts/theme-transpiler:
     dependencies:
       '@babel/standalone':
-        specifier: ^7.26.4
-        version: 7.26.4
+        specifier: ^7.26.5
+        version: 7.26.5
       '@zxing/text-encoding':
         specifier: ^0.9.0
         version: 0.9.0
@@ -1774,8 +1774,8 @@ packages:
     resolution: {integrity: sha512-dkxf7+hn8mFBwKjs9bvBlArzLVxVbS8usaPUDd5p2a9JCL9tB8OaOVN1isD4+Xyk4ns89/xeOmbQvgdK7IIVdA==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/standalone@7.26.4':
-    resolution: {integrity: sha512-SF+g7S2mhTT1b7CHyfNjDkPU1corxg4LPYsyP0x5KuCl+EbtBQHRLqr9N3q7e7+x7NQ5LYxQf8mJ2PmzebLr0A==}
+  '@babel/standalone@7.26.5':
+    resolution: {integrity: sha512-vXbSrFq1WauHvOg/XWcjkF6r7wDSHbN3+3Aro6LYjfODpGw8dCyqqbUMRX5LXlgzVAUrTSN6JkepFiHhLKHV5Q==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.25.9':
@@ -9256,7 +9256,7 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.0
 
-  '@babel/standalone@7.26.4': {}
+  '@babel/standalone@7.26.5': {}
 
   '@babel/template@7.25.9':
     dependencies:
