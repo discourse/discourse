@@ -8,6 +8,10 @@ class ReviewablesController < ApplicationController
   before_action :version_required, only: %i[update perform]
   before_action :ensure_can_see, except: [:destroy]
 
+  around_action :with_deleted_content,
+                only: %i[index show],
+                if: ->(controller) { controller.guardian.is_staff? }
+
   def index
     offset = params[:offset].to_i
 
@@ -41,6 +45,7 @@ class ReviewablesController < ApplicationController
       type
       sort_order
       flagged_by
+      score_type
     ].each { |filter_key| filters[filter_key] = params[filter_key] }
 
     total_rows = Reviewable.list_for(current_user, **filters).count
@@ -69,6 +74,11 @@ class ReviewablesController < ApplicationController
           total_rows_reviewables: total_rows,
           types: meta_types,
           reviewable_types: Reviewable.types,
+          score_types:
+            ReviewableScore
+              .types
+              .filter { |k, v| k != :notify_user }
+              .map { |k, v| { id: v, name: ReviewableScore.type_title(k) } },
           reviewable_count: current_user.reviewable_count,
           unseen_reviewable_count: Reviewable.unseen_reviewable_count(current_user),
         ),
@@ -317,5 +327,9 @@ class ReviewablesController < ApplicationController
 
   def ensure_can_see
     Guardian.new(current_user).ensure_can_see_review_queue!
+  end
+
+  def with_deleted_content
+    Post.unscoped { Topic.unscoped { PostAction.unscoped { yield } } }
   end
 end

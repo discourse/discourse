@@ -234,6 +234,8 @@ be:
         refresh: "абнавіць"
         status: "Статус"
         category: "катэгорыя"
+        score_type:
+          title: "прычына"
         orders:
           score: "кошт"
       scores:
@@ -455,7 +457,7 @@ be:
       username: "імя карыстальніка"
       read_time: "пры чытанні"
       topics_entered: "створана тым"
-      post_count: "колькасць паведамленняў"
+      post_count: "паведамленняў"
       confirm_delete_other_accounts: "Вы ўпэўненыя, што жадаеце выдаліць гэтых карыстальнікаў?"
     user:
       said: "%{Username}"
@@ -847,6 +849,8 @@ be:
       categories_with_featured_topics: "Катэгорыі з Выбранымі Тэмамі"
       categories_and_latest_topics: "Катэгорыі і Апошнія тэмы"
       categories_and_top_topics: "Катэгорыі і асноўныя тэмы"
+    full_name_requirement:
+      required_at_signup: "абавязковыя"
     select_kit:
       delete_item: "Выдаліць %{name}"
       components:
@@ -1099,7 +1103,6 @@ be:
         title: "друк"
       flag_topic:
         title: "Пазначыць"
-        help: "прыватна пазначце гэтую тэму для ўвагі альбо адпраўце асабістае апавяшчэнне пра яе"
         success_message: "privately flag this topic for attention or send a private notification about it..."
       invite_private:
         group_name: "назва групы"
@@ -1504,8 +1507,25 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
-        sidebar_link:
-          all: "Усё"
+      config:
+        developer:
+          title: "для распрацоўшчыкаў"
+        files:
+          title: "файлы"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "рух"
+        notifications:
+          title: "Натыфікацыі"
+        other:
+          title: "іншае"
+        search:
+          title: "Пошук"
+        security:
+          title: "Бяспека"
+        spam:
+          title: "Спам"
       dashboard:
         title: "Галоўная панэль"
         last_updated: "Адноўлена:"
@@ -1559,6 +1579,7 @@ be:
             category:
               label: катэгорыя
       flags:
+        title: "Мадэрацыя"
         description: "Апісанне"
       groups:
         new:
@@ -1635,28 +1656,17 @@ be:
           badges: "значкі"
           notifications: "Натыфікацыі"
           permalinks: "Сталыя спасылкі"
-          trust_levels: "ўзроўні даверу"
           users: "карыстальнікаў"
+          groups: "групы"
           legal: "Legal"
+          moderation_flags:
+            title: "Мадэрацыя"
       appearance:
         sidebar_link:
           emoji: "Emoji"
           navigation: "рух"
-      email_settings:
-        sidebar_link:
-          preview_summary: "Кароткі выклад навін"
-      email_logs:
-        sidebar_link:
-          sent: "Sent"
-          skipped: "Skipped"
-          received: "Атрымана"
-          rejected: "адхілена"
       security:
         title: "Бяспека"
-        sidebar_link:
-          screened_emails: "Схаваныя емейлы"
-          screened_ips: "Screened IPs"
-          screened_urls: "Screened URLs"
       section_landing_pages:
         account:
           title: "Аккаўнт"
@@ -1667,6 +1677,7 @@ be:
           company_name: "імя"
           saved: "захавана!"
         flags:
+          header: "Мадэрацыя"
           description: "Апісанне"
           edit: "рэдагаваць"
           delete: "Выдаліць"
@@ -1678,6 +1689,12 @@ be:
             invalid_applies_to: "абавязковыя"
             topic: "тэмы"
             post: "паведамленняў"
+        permalinks:
+          edit: "рэдагаваць"
+          delete: "выдаляць"
+        embeddable_host:
+          edit: "рэдагаваць"
+          delete: "выдаляць"
         user_fields:
           type: "Тып"
           delete: "выдаляць"
@@ -1692,7 +1709,6 @@ be:
         sidebar_link:
           developer: "для распрацоўшчыкаў"
           embedding: "узаемадзеянне"
-          rate_limits: "абмежаванне хуткасці"
           files: "файлы"
           other_options: "іншае"
           search: "Пошук"
@@ -1727,7 +1743,7 @@ be:
           download:
             label: "спампаваць"
           destroy:
-            title: "Remove the backup"
+            title: "выдаляць"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             label: "Restore"
@@ -2238,16 +2254,20 @@ be:
         image: "Выява"
         settings: "Налады"
       embedding:
+        delete: "выдаляць"
         confirm_delete: "Вы ўпэўненыя, што жадаеце выдаліць гэты хост?"
         title: "узаемадзеянне"
-        host: "дазволеныя Госты"
-        edit: "правіць"
-        category: "Паведамленне ў Катэгорыю"
-        add_host: "дадаць Хост"
+        edit: "рэдагаваць"
         embed_by_username: "Імя карыстальніка для стварэння тэмы"
         embed_post_limit: "Максімальную колькасць паведамленняў для ўстаўкі"
         embed_truncate: "Абрэзаць укаранёныя паведамленні"
         allowed_embed_classnames: "Дазволеныя імёны класаў CSS"
+        save: "Захаваць"
+        host_form:
+          save: "Захаваць"
+        nav:
+          settings: "Налады"
+          crawlers: "Краўлеры пошукавых сістэм"
       permalink:
         title: "Сталыя спасылкі"
         url: "URL спасылка"
@@ -2260,6 +2280,9 @@ be:
         user_title: "карыстальнік"
         username: "Імя карыстальніка"
         delete_confirm: Вы ўпэўненыя, што жадаеце выдаліць гэта пастаянную спасылку?
+        nav:
+          settings: "Налады"
+          permalinks: "Сталыя спасылкі"
         form:
           label: "новы:"
           url: "URL спасылка"
@@ -2282,3 +2305,18 @@ be:
       previews:
         share_button: "Падзяліцца"
         reply_button: "Адказаць"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "усе катэгорыі"
+          new: "Новыя"
+          unread: "Непрачытаныя"
+          top: "Топ тэмаў"
+          latest: "апошняя"
+          categories: "катэгорыі"
+        category_names:
+          site_feedback: "зваротная сувязь"
+        table_headers:
+          topic: "тэма"
+          replies: "Адказы"
+          views: "прагляды"
+          activity: "актыўнасць"

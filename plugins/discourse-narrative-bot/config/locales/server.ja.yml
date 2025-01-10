@@ -249,8 +249,6 @@ ja:
       bookmark:
         instructions: |-
           もっと詳しく知るには、下の <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を選択して<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **この個人メッセージをブックマーク**してください。ブックマークすると、後で :gift: がもらえるかも！
-        reply: |-
-          お見事！これで、[プロファイルのブックマークタブ](%{bookmark_url})からこの非公開の会話にいつでも簡単に戻れるようになりました。右上のプロファイル写真を選択するだけです &#8599;
         not_found: |-
           あれ？このトピックにはブックマークがありませんね。投稿の下にあるブックマークを見つけられましたか？必要であれば、もっと表示 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使うと、ほかの操作を表示できます。
       emoji:
@@ -285,14 +283,6 @@ ja:
           (そうです。私のユーザー名は 70年代ダンスブームの _disco_ と綴ります。[ナイトライフ万歳!
           ](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          ディスカッションを友好的に保ちたいと思っています。そこで、[マナーを維持](%{guidelines_url})するにはあなたの力が必要です。問題に遭遇したら、非公開で作成者に知らせるか、[スタッフ](%{about_url})に通報してください。投稿を通報する理由は、無害なトピックの分割から明確なコミュニティー規則の違反までさまざまです。**その他**を選択すると、モデレーターと非公開メッセージでのディスカッションを始められます。さらに詳しく質問できます。
-
-          > :imp: 不愉快なことを書き込みました
-
-          早速**この投稿を通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> して、理由に「**不適切**」を選択しましょう！
-        reply: |-
-          この通報は[スタッフ](%{base_uri}/groups/staff)に非公開で通知されます。十分な数のコミュニティーメンバーからこの投稿への通報が寄せられた場合は、予防措置として自動的に非表示になります。(実際には、不愉快な内容は書き込まなかった :angel: ので、この通報は取り消しておきました。)
         not_found: |-
           おや？私の不愉快な投稿はまだ不適切の通報を受けていないようです。:worried: **通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> を使って投稿を不適切だと通報してみてください。投稿の操作をさらに表示するには、もっと表示ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使用してくださいね。
       search:
@@ -386,12 +376,6 @@ ja:
         reply: |-
           お見事！これはカテゴリだけでなく、_さらに_タグが有効になっている場合にはタグでも動作します。
       change_topic_notification_level:
-        instructions: |-
-          すべてのトピックに通知レベルがあります。誰かがあなたに直接話しかけている場合にのみ通知される '通常' で始まります。
-
-          デフォルトでは、非公開メッセージの通知レベルは最高レベルの 'ウォッチ中' に設定されています。この設定では、新しい返信があるたびに通知が届きます。ただし、トピックの通知レベルを 'ウォッチ'、'追跡'、または 'ミュート' にオーバーライドすることができます。
-
-          このトピックの通知レベルを変更してみましょう。トピックの一番下に、このトピックを**ウォッチ中**と示されています。この通知レベルを**追跡**に変更できますか？
         not_found: |-
           まだこのトピックをウォッチ中 :eyes: のようです！設定の場所がわかりませんか？通知レベルボタンは、トピックの一番下にあります。
         reply: |-

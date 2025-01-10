@@ -32,7 +32,7 @@ class Admin::UsersController < Admin::StaffController
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
 
-    opts = { include_can_be_deleted: true }
+    opts = { include_can_be_deleted: true, include_silence_reason: true }
     if params[:show_emails] == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true

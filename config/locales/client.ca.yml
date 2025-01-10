@@ -358,6 +358,7 @@ ca:
     continue: "Continua"
     switch_to_anon: "Entra en el mode anònim"
     switch_from_anon: "Surt del mode anònim"
+    none_placeholder: "Cap"
     banner:
       close: "Descarta aquesta bandera"
       edit: "Edita"
@@ -477,6 +478,8 @@ ca:
         refresh: "Actualitza"
         status: "Estat"
         category: "Categoria"
+        score_type:
+          title: "Motiu"
         orders:
           score: "Puntuació"
           score_asc: "Puntuació (inversa)"
@@ -688,13 +691,13 @@ ca:
       public_admission: "Permet als usuaris d'unir-se al grup lliurement (cal que el grup sigui visible públicament)"
       public_exit: "Permet que els usuaris abandonin el grup lliurement"
       empty:
-        posts: "No hi ha publicacions de membres d'aquest grup."
-        members: "No hi ha membres en aquest grup."
-        requests: "No hi ha sol·licituds d'afiliació per a aquest grup."
-        mentions: "No hi ha mencions d'aquest grup."
-        messages: "No hi ha missatges per a aquest grup."
-        topics: "No hi ha temes de membres d'aquest grup."
-        logs: "No hi ha registres (logs) per a aquest grup."
+        posts: "No hi ha publicacions de membres d'aquest grup"
+        members: "No hi ha membres en aquest grup"
+        requests: "No hi ha sol·licituds d'afiliació per a aquest grup"
+        mentions: "No hi ha mencions d'aquest grup"
+        messages: "No hi ha missatges per a aquest grup"
+        topics: "No hi ha temes de membres d'aquest grup"
+        logs: "No hi ha registres (logs) per a aquest grup"
       add: "Afegeix"
       join: "Registre"
       leave: "Abandona"
@@ -849,7 +852,7 @@ ca:
       trust_level: "nivell de confiança"
       read_time: "temps de lectura"
       topics_entered: "temes introduïts"
-      post_count: "nre. de publicacions"
+      post_count: "publicacions"
       confirm_delete_other_accounts: "Esteu segur que voleu suprimir aquests comptes?"
       powered_by: "utilitzant <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiat"
@@ -915,15 +918,14 @@ ca:
       dismiss_notifications_tooltip: "Marca totes les notificacions no llegides com a llegides"
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
+      color_scheme: "Paleta de colors"
       color_schemes:
         disable_dark_scheme: "Igual que habitualment"
-        dark_instructions: "Podeu previsualitzar l’esquema de colors del mode fosc alternant el mode fosc del dispositiu."
         undo: "Restableix"
         regular: "Habitual"
         dark: "Mode fosc"
         default_dark_scheme: "(lloc predeterminat)"
       dark_mode: "Mode fosc"
-      dark_mode_enable: "Activa l'esquema de colors automàtic en mode fosc"
       text_size_default_on_all_devices: "Fes que aquesta sigui la mida de text predeterminada en tots els meus dispositius"
       allow_private_messages: "Permet a altres usuaris d'enviar-me missatges personals"
       external_links_in_new_tab: "Obre tots els enllaços externs en una pestanya nova"
@@ -1389,8 +1391,6 @@ ca:
     form_kit:
       reset: Restableix
       optional: opcional
-      select:
-        none_placeholder: "Cap"
       errors:
         required: "Necessari"
     close: "Tanca"
@@ -1553,6 +1553,9 @@ ca:
       categories_and_top_topics: "Categories i temes principals"
       categories_boxes: "Caixes amb subcategories"
       categories_boxes_with_topics: "Caixes amb temes destacats"
+    full_name_requirement:
+      required_at_signup: "Necessari"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -1766,8 +1769,6 @@ ca:
         quoted: "citat"
         edited: "editat"
         liked: "nou 'm'agrada'"
-        private_message: "nou missatge privat"
-        invited_to_private_message: "convidat a missatge privat"
         invitee_accepted: "invitació acceptada"
         posted: "publicació nova"
         watching_category_or_tag: "publicació nova"
@@ -2106,7 +2107,6 @@ ca:
         help: "Obre una versió imprimible d'aquest tema"
       flag_topic:
         title: "Bandera"
-        help: "posa bandera en privat a aquest tema per a parar-hi atenció o envia'n una notificació privada"
         success_message: "Heu posat amb èxit la bandera a aquest tema."
       make_public:
         title: "Converteix en tema públic"
@@ -2308,7 +2308,6 @@ ca:
         edit_action: "Edita"
         edit_anonymous: "Ho sentim, però heu d'iniciar la sessió per a editar aquesta publicació."
         flag_action: "Bandera"
-        flag: "posa bandera en privat a aquesta publicació per a destacar-la o envia una notificació privada sobre això"
         delete: "suprimeix aquesta publicació"
         undelete: "restaura aquesta publicació"
         share_action: "Comparteix"
@@ -2990,7 +2989,30 @@ ca:
         title: "Llista de reports disponibles"
         sidebar_title: "Reports"
         sidebar_link:
-          all: "Tot"
+          all: "Tots els reports"
+      config:
+        developer:
+          title: "Desenvolupador"
+        files:
+          title: "Fitxers"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navegació"
+        notifications:
+          title: "Notificacions"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Altres"
+        search:
+          title: "Cerca"
+        security:
+          title: "Seguretat"
+        spam:
+          title: "Brossa"
+        user_api:
+          title: "API d'usuari"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
@@ -3078,6 +3100,7 @@ ca:
             category:
               label: Categoria
       flags:
+        title: "Moderació"
         description: "Descripció"
         enabled: "Activat?"
       groups:
@@ -3235,11 +3258,11 @@ ca:
           badges: "Insígnies"
           notifications: "Notificacions"
           permalinks: "Enllaços permanents"
-          trust_levels: "Nivells de confiança"
           users: "Usuaris"
-          user_fields: "Camps d'usuari"
-          watched_words: "Paraules vigilades"
+          groups: "Grups"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderació"
       appearance:
         title: "Aparença"
         sidebar_link:
@@ -3251,22 +3274,8 @@ ca:
       email_settings:
         sidebar_link:
           appearance: "Aparença"
-          preview_summary: "Previsualitza el resum"
-      email_logs:
-        sidebar_link:
-          sent: "Enviat"
-          skipped: "Saltat"
-          bounced: "Rebotat"
-          received: "Rebut"
-          rejected: "Rebutjat"
       security:
         title: "Seguretat"
-        sidebar_link:
-          error_logs: "Error de registres (logs)"
-          screened_emails: "Correus sota supervisió"
-          screened_ips: "IPs sota supervisió"
-          screened_urls: "URLs sota supervisió"
-          search_logs: "Cerca els registres (logs)"
       section_landing_pages:
         account:
           title: "Compte"
@@ -3279,6 +3288,7 @@ ca:
           optional: "(opcional)"
           saved: "desat!"
         flags:
+          header: "Moderació"
           description: "Descripció"
           enabled: "Activat?"
           edit: "Edita"
@@ -3292,6 +3302,12 @@ ca:
             invalid_applies_to: "Necessari"
             topic: "temes"
             post: "publicacions"
+        permalinks:
+          edit: "Edita"
+          delete: "Suprimeix"
+        embeddable_host:
+          edit: "Edita"
+          delete: "Suprimeix"
         look_and_feel:
           themes:
             title: "Aparences"
@@ -3316,9 +3332,7 @@ ca:
         sidebar_link:
           developer: "Desenvolupador"
           embedding: "Incrustant"
-          rate_limits: "Límits de freqüència"
           user_api: "API d'usuari"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Fitxers"
           other_options: "Altres"
@@ -3361,7 +3375,7 @@ ca:
             title: "Envia correu amb enllaç de descàrrega"
             alert: "Us hem enviat per correu un enllaç per a descarregar aquesta còpia de seguretat"
           destroy:
-            title: "Elimina la còpia de seguretat"
+            title: "Suprimeix"
             confirm: "Esteu segur que voleu destruir aquesta còpia de seguretat?"
           restore:
             label: "Restaura"
@@ -4286,15 +4300,11 @@ ca:
         settings: "Configuració"
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
+        delete: "Suprimeix"
         confirm_delete: "Esteu segur que voleu suprimir aquest amfitrió?"
         title: "Incrustant"
-        host: "Amfitrions permesos"
-        edit: "edita"
-        category: "Publica en la categoria"
-        add_host: "Afegeix amfitrió"
-        settings: "Configuració d'incrustacions"
-        crawling_settings: "Configuració del rastrejador"
-        crawling_description: "Quan Discourse crea temes per a les vostres publicacions, si no hi ha sindicació RSS/ATOM, es provarà d'analitzar-ne els continguts a partir del vostre HTML. A vegades pot ser complicat extraure el vostre contingut, i per això oferim la possibilitat d'especificar regles CSS per a fer més fàcil l'extracció."
+        edit: "Edita"
+        crawlers_description: "Quan Discourse crea temes per a les vostres publicacions, si no hi ha sindicació RSS/ATOM, es provarà d'analitzar-ne els continguts a partir del vostre HTML. A vegades pot ser complicat extraure el vostre contingut, i per això oferim la possibilitat d'especificar regles CSS per a fer més fàcil l'extracció."
         embed_by_username: "Nom d'usuari per a crear un tema"
         embed_post_limit: "Nombre màxim de publicacions que s'incrusten "
         embed_title_scrubber: "Expressió regular emprada per a depurar el títol de les publicacions"
@@ -4302,7 +4312,12 @@ ca:
         allowed_embed_selectors: "Selector de CSS per a elements permesos en les incrustacions"
         blocked_embed_selectors: "Selector de CSS per a elements que han estat eliminats de les incrustacions"
         allowed_embed_classnames: "Noms permesos de classes de CSS"
-        save: "Desa la configuració d'incrustacions"
+        save: "Desa"
+        host_form:
+          save: "Desa"
+        nav:
+          settings: "Configuració"
+          crawlers: "Rastrejadors"
       permalink:
         title: "Enllaços permanents"
         url: "URL"
@@ -4315,6 +4330,9 @@ ca:
         user_title: "Usuari"
         username: "Nom d'usuari "
         delete_confirm: Esteu segur que voleu suprimir l'enllaç permanent?
+        nav:
+          settings: "Configuració"
+          permalinks: "Enllaços permanents"
         form:
           label: "Nou:"
           url: "URL"
@@ -4349,3 +4367,18 @@ ca:
       previews:
         share_button: "Comparteix"
         reply_button: "Respon"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "totes les categories"
+          new: "Nou"
+          unread: "No llegits"
+          top: "Principals"
+          latest: "Més recents"
+          categories: "Categories"
+        category_names:
+          site_feedback: "Comentaris sobre el lloc web"
+        table_headers:
+          topic: "Tema"
+          replies: "Respostes"
+          views: "Vistes"
+          activity: "Activitat"

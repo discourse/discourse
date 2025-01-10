@@ -344,6 +344,8 @@ et:
     continue: "Jätka"
     switch_to_anon: "Sisene anonüümsesse režiimi"
     switch_from_anon: "Välju anonüümsest režiimist"
+    select_placeholder: "Vali..."
+    none_placeholder: "Pole"
     banner:
       close: "Sulge see bänner"
       edit: "Muuda"
@@ -410,6 +412,8 @@ et:
         refresh: "Värskenda"
         status: "Staatus"
         category: "Foorum"
+        score_type:
+          title: "Põhjus"
         orders:
           score: "Skoor"
           score_asc: "Skoor (vastupidine)"
@@ -588,13 +592,13 @@ et:
       public_admission: "Luba kasutajatel grupiga vabalt liituda (nõuab avalikult nähtavat gruppi)"
       public_exit: "Luba kasutajatel vabalt grupist lahkuda"
       empty:
-        posts: "Selle grupi liikmetelt ei ole postitusi."
-        members: "Sellel grupil liikmed puuduvad."
-        requests: "Selle grupi jaoks pole liikmeks astumise taotlusi."
-        mentions: "Seda gruppi pole mainitud."
-        messages: "Sellele grupile teated puuduvad."
-        topics: "Selle grupi liikmetelt ei ole teemasid."
-        logs: "Sellele grupile logid puuduvad."
+        posts: "Selle grupi liikmetelt ei ole postitusi"
+        members: "Sellel grupil liikmed puuduvad"
+        requests: "Selle grupi jaoks pole liikmeks astumise taotlusi"
+        mentions: "Seda gruppi pole mainitud"
+        messages: "Sellele grupile teated puuduvad"
+        topics: "Selle grupi liikmetelt ei ole teemasid"
+        logs: "Sellele grupile logid puuduvad"
       add: "Lisa"
       join: "Liitu"
       leave: "Lahku"
@@ -764,10 +768,9 @@ et:
         one: "Kustuta %{count}"
         other: "Kustuta %{count}"
       username: "kasutajanimi"
-      trust_level: "UT"
       read_time: "lugemise aeg"
       topics_entered: "külastatud teemasid"
-      post_count: "# postitust"
+      post_count: "postitused"
       confirm_delete_other_accounts: "Kindel, et soovid need kontod kustutada?"
       copied: "kopeeritud"
     user_fields:
@@ -830,7 +833,7 @@ et:
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"
       dynamic_favicon: "Kuva arvu brauseri ikoonil"
       theme_default_on_all_devices: "Määra see kõikides minu seadmetes vaiketeemaks"
-      color_scheme: "Värviskeem"
+      color_scheme: "Värvipalett"
       color_schemes:
         default_description: "Teema vaikimisi"
         undo: "Lähtesta"
@@ -1253,9 +1256,6 @@ et:
     form_kit:
       reset: Lähtesta
       optional: valikuline
-      select:
-        select_placeholder: "Vali..."
-        none_placeholder: "Pole"
       errors:
         required: "Nõutud"
     close: "Sulge"
@@ -1386,6 +1386,9 @@ et:
       categories_only: "Ainult foorumid"
       categories_with_featured_topics: "Foorumid esiletõstetud teemadega"
       categories_and_latest_topics: "Foorumid ja viimased teemad"
+    full_name_requirement:
+      required_at_signup: "Nõutud"
+      optional_at_signup: "Valikuline"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1872,7 +1875,6 @@ et:
         help: "Ava selle teema prindikõlblik versioon"
       flag_topic:
         title: "Tähista"
-        help: "tähista see teema privaatselt meelespidamiseks või saada selle kohta privaatsõnum"
         success_message: "Tähistasid selle teema edukalt."
       feature_topic:
         title: "Kajasta seda teemat"
@@ -2079,7 +2081,6 @@ et:
         edit_action: "Muuda"
         edit_anonymous: "Vabandame, kuid selle postituse muutmiseks pead olema sisse logitud."
         flag_action: "Tähis"
-        flag: "tähista see postitus privaatselt kui tähelepanu vajav või saada selle kohta privaatne teavitus"
         delete: "kustuta see postitus"
         undelete: "ennista see postitus"
         share_action: "Jaga"
@@ -2687,7 +2688,30 @@ et:
           never: "mitte kunagi"
       reports:
         sidebar_link:
-          all: "Kõik"
+          all: "Kõik aruanded"
+      config:
+        developer:
+          title: "Arendaja"
+        files:
+          title: "Failid"
+        legal:
+          title: "Õiguslik"
+        navigation:
+          title: "Navigatsioon"
+        notifications:
+          title: "Teavitus"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Muu"
+        search:
+          title: "Otsi"
+        security:
+          title: "Turve"
+        spam:
+          title: "Spämm"
+        user_api:
+          title: "Kasutaja API"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Töölauda on uuendatud:"
@@ -2749,6 +2773,7 @@ et:
             category:
               label: Foorum
       flags:
+        title: "Modereerimine"
         description: "Kirjeldus"
         enabled: "Sisse lülitatud?"
       groups:
@@ -2882,11 +2907,11 @@ et:
           badges: "Märgised"
           notifications: "Teavitus"
           permalinks: "Püsiviited"
-          trust_levels: "Usaldustasemed"
           users: "Kasutajad"
-          user_fields: "Kasutajaväljad"
-          watched_words: "Vaadatud sõnad"
+          groups: "Grupid"
           legal: "Õiguslik"
+          moderation_flags:
+            title: "Modereerimine"
       appearance:
         sidebar_link:
           emoji: "Emotikon"
@@ -2894,24 +2919,8 @@ et:
           themes: "Kujundused"
           components:
             title: "Komponendid"
-      email_settings:
-        sidebar_link:
-          preview_summary: "Saadetise eelvaatlus"
-      email_logs:
-        sidebar_link:
-          sent: "Saadetud"
-          skipped: "Üle hüpatud"
-          bounced: "Välja visatud"
-          received: "Saadud"
-          rejected: "Tagasi lükatud"
       security:
         title: "Turve"
-        sidebar_link:
-          error_logs: "Vealogid"
-          screened_emails: "Varjestatud meilid"
-          screened_ips: "Varjestatud IP-aadressid"
-          screened_urls: "Varjestatud URL-d"
-          search_logs: "Otsingu logid"
       section_landing_pages:
         account:
           title: "Konto"
@@ -2924,6 +2933,7 @@ et:
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:
+          header: "Modereerimine"
           description: "Kirjeldus"
           enabled: "Sisse lülitatud?"
           edit: "Muuda"
@@ -2936,6 +2946,12 @@ et:
             invalid_applies_to: "Nõutud"
             topic: "teemasid"
             post: "postitused"
+        permalinks:
+          edit: "Muuda"
+          delete: "Kustuta"
+        embeddable_host:
+          edit: "Muuda"
+          delete: "Kustuta"
         look_and_feel:
           themes:
             title: "Kujundused"
@@ -2960,9 +2976,7 @@ et:
         sidebar_link:
           developer: "Arendaja"
           embedding: "Sängitamine"
-          rate_limits: "Kiiruspiirangud"
           user_api: "Kasutaja API"
-          web_hooks: "Veebihaagid"
           onebox: "Onebox"
           files: "Failid"
           other_options: "Muu"
@@ -3003,7 +3017,7 @@ et:
           download:
             label: "Lae alla"
           destroy:
-            title: "Eemalda varukoopia"
+            title: "Kustuta"
             confirm: "Oled kindel, et soovid selle varukoopia hävitada?"
           restore:
             label: "Taasta"
@@ -3738,15 +3752,11 @@ et:
         settings: "Sätted"
       embedding:
         get_started: "Kui Sa soovid lisada Discourse teise veebisaidi sisse ehk sängitada, alusta lisades oma teenusepakkuja"
+        delete: "Kustuta"
         confirm_delete: "Oled Sa kindel, et soovid kustutada selle teenusepakkuja?"
         title: "Sängitamine"
-        host: "Lubatud hostid"
-        edit: "muuda"
-        category: "Postita foorumisse"
-        add_host: "Lisa host"
-        settings: "Sängitamise sätted"
-        crawling_settings: "Ämbliku sätted"
-        crawling_description: "Kui Discourse loob Sinu postitustele teemasid ja RSS/ATOM voogu ei ole, üritab ta sisu Sinu HTML-st välja sõeluda. Mõnikord on sisu eraldamine raskendatud, mistõttu pakume sisu eraldamise hõlbustamiseks võimalust CSS-i reeglid ette anda."
+        edit: "Muuda"
+        crawlers_description: "Kui Discourse loob Sinu postitustele teemasid ja RSS/ATOM voogu ei ole, üritab ta sisu Sinu HTML-st välja sõeluda. Mõnikord on sisu eraldamine raskendatud, mistõttu pakume sisu eraldamise hõlbustamiseks võimalust CSS-i reeglid ette anda."
         embed_by_username: "Kasutajanimi teema loomiseks"
         embed_post_limit: "Maksimaalne postituste arv, mida sängitada"
         embed_title_scrubber: "Regex postituste päiste puhastamiseks"
@@ -3754,7 +3764,11 @@ et:
         allowed_embed_selectors: "CSS valik elementidele, mida lubada sängitamistes"
         blocked_embed_selectors: "CSS valik elementidele, mida eemaldada sängitamistes"
         allowed_embed_classnames: "CSS klasside lubatud nimed"
-        save: "Salvesta sängitamise sätted"
+        save: "Salvesta"
+        host_form:
+          save: "Salvesta"
+        nav:
+          settings: "Sätted"
       permalink:
         title: "Püsiviited"
         url: "URL"
@@ -3767,6 +3781,9 @@ et:
         user_title: "Kasutaja"
         username: "Kasutajanimi"
         delete_confirm: Oled Sa kindel, et soovid seda püsiviidet kustutada?
+        nav:
+          settings: "Sätted"
+          permalinks: "Püsiviited"
         form:
           label: "Uus"
           url: "URL"
@@ -3793,3 +3810,18 @@ et:
       previews:
         share_button: "Jaga"
         reply_button: "Vasta"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "kõik foorumid"
+          new: "Uus"
+          unread: "Lugemata"
+          top: "Juhtivad"
+          latest: "Värskeimad"
+          categories: "Liigid"
+        category_names:
+          site_feedback: "Saidi tagasiside."
+        table_headers:
+          topic: "Teema"
+          replies: "Vastused"
+          views: "Vaatamisi"
+          activity: "Aktiivsus"

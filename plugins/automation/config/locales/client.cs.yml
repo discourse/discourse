@@ -9,6 +9,8 @@ cs:
     discourse_automation:
       create: Vytvoř
       update: Aktualizovat
+      destroy_automation:
+        confirm: "Jste si jisti, že chcete odstranit `%{name}`?"
       fields:
         user:
           label: Uživatel
@@ -114,8 +116,13 @@ cs:
               label: Odznak
         suspend_user_by_email:
           fields:
+            suspend_until:
+              label: Pozastavit do (výchozí)
+            reason:
+              label: Důvod (výchozí)
             actor:
               label: Uživatel
+              description: "Uživatel odpovědný za pozastavení (výchozí: systém)"
         pin_topic:
           fields:
             pinnable_topic:
@@ -143,6 +150,8 @@ cs:
             label: Spouštěč
           version:
             label: Verze
+          status:
+            label: Stav
           enabled:
             label: Zapnuto
           disabled:

@@ -25,7 +25,6 @@ import {
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
-import { isTesting } from "discourse-common/config/environment";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
@@ -809,7 +808,7 @@ export default class ComposerEditor extends Component {
       // need to wait a bit for the "slide down" transition of the composer
       discourseLater(
         () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
-        isTesting() ? 0 : 400
+        400
       );
     });
 

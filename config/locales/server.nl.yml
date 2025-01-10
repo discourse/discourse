@@ -394,11 +394,8 @@ nl:
     max_redemptions_limit: "moet tussen 2 en %{max_limit} zijn."
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
-    not_pm: "Je kunt alleen uitnodigen voor privéberichten."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. Je kunt een gebruiker maar één keer voor een topic uitnodigen."
     muted_topic: "Sorry, die gebruiker heeft dit topic gedempt."
-    receiver_does_not_allow_pm: "Sorry, die gebruiker staat niet toe dat je privéberichten stuurt."
-    sender_does_not_allow_pm: "Sorry, je staat niet toe dat die gebruiker je privéberichten stuurt."
     user_cannot_see_topic: "%{username} kan het topic niet zien."
   backup:
     operation_already_running: "Er wordt al een bewerking uitgevoerd. Er kan nu geen nieuwe taak worden gestart."
@@ -1396,12 +1393,10 @@ nl:
       title: "Moderators informeren"
       xaxis: "Dag"
       yaxis: "Aantal berichten"
-      description: "Aantal keren dat moderators persoonlijk zijn ingelicht via een markering."
     notify_user_private_messages:
       title: "Gebruiker inlichten"
       xaxis: "Dag"
       yaxis: "Aantal berichten"
-      description: "Aantal keren dat gebruikers persoonlijk zijn ingelicht via een markering."
     top_referrers:
       title: "Topverwijzingen"
       xaxis: "Gebruiker"
@@ -1728,8 +1723,6 @@ nl:
     summary_percent_filter: "Wanneer een gebruiker op 'Dit topic samenvatten' klikt, de top % van berichten weergeven"
     summary_max_results: "Maximale aantal weergegeven berichten door 'Dit topic samenvatten'"
     summary_timeline_button: "Toon een knop 'Samenvatten' in de tijdlijn"
-    summarization_strategy: "Aanvullende manieren om door plug-ins geregistreerde content samen te vatten"
-    custom_summarization_allowed_groups: "Groepen mogen content samenvatten met behulp van de 'summarization_strategy'."
     enable_personal_messages: "VEROUDERD, gebruik in plaats daarvan de instelling 'groepen waarvoor persoonlijke berichten zijn ingeschakeld'. Geef gebruikers met vertrouwensniveau 1 (configureerbaar via minimaal vertrouwen om berichten te verzenden) de mogelijkheid om berichten te maken en berichten te beantwoorden. Houd er rekening mee dat medewerkers altijd berichten kunnen sturen, wat er ook gebeurt."
     personal_message_enabled_groups: "Sta gebruikers in deze groepen toe om persoonlijke berichten te MAKEN. BELANGRIJK: 1) alle gebruikers kunnen ANTWOORDEN op berichten. 2) Beheerders en moderators kunnen berichten aan elke gebruiker maken. 3) Vertrouwensniveaugroepen omvatten hogere niveaus; kies trust_level_1 om TL1, TL2, TL3, TL4 toe te staan maar niet TL0. 4) Groepsinteractie-instellingen overschrijven deze instelling voor het sturen van berichten naar specifieke groepen."
     enable_system_message_replies: "Toestaan dat gebruikers op systeemberichten kunnen antwoorden, zelfs als persoonlijke berichten zijn uitgeschakeld"
@@ -1803,7 +1796,6 @@ nl:
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
     allow_username_in_share_links: "Sta toe dat gebruikersnamen worden opgenomen in gedeelde links. Dit is handig om badges toe te kennen op basis van unieke bezoekers."
     site_contact_username: "Een geldige gebruikersnaam van een medewerker waarvandaan alle automatische berichten worden verzonden. Wanneer leeg gelaten, wordt de standaardaccount van het systeem gebruikt."
-    site_contact_group_name: "Een geldige groepsnaam voor uitnodiging in alle automatische berichten."
     send_welcome_message: "Alle nieuwe gebruikers een welkomstbericht met een snelstartgids sturen."
     send_tl1_welcome_message: "Nieuwe gebruikers met vertrouwensniveau 1 een welkomstbericht sturen."
     send_tl2_promotion_message: "Nieuwe gebruikers met vertrouwensniveau 2 een bericht over promotie sturen."
@@ -2062,7 +2054,6 @@ nl:
     min_title_similar_length: "De minimale lengte van een titel voordat er op vergelijkbare topics wordt gecontroleerd."
     desktop_category_page_style: "Deze instelling bepaalt de visuele indeling van de pagina /categories op de desktop. Deze omvat opties zoals het weergeven van subcategorieën met uitgelichte topics, het weergeven van de nieuwste topics of het weergeven van toptopics. De gekozen stijl beïnvloedt de manier waarop gebruikers omgaan met en navigeren door categorieën op de site."
     category_colors: "Een lijst van hexadecimale kleurwaarden die voor categorieën zijn toegestaan."
-    default_dark_mode_color_scheme_id: "Het kleurenschema dat wordt gebruikt in donkere modus."
     dark_mode_none: "Geen"
     max_image_size_kb: "De maximale grootte van te uploaden afbeeldingen. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy. Afbeeldingen die groter zijn dan deze waarde en kleiner dan client_max_body_size worden bij het uploaden verkleind."
     max_attachment_size_kb: "De maximale grootte van te uploaden bijlagen. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy."
@@ -2268,7 +2259,6 @@ nl:
     penalty_include_post_message: "Beledigend bericht automatisch opnemen in e-mailberichtsjabloon bij dempen of schorsen van een gebruiker"
     svg_icon_subset: "Voeg extra FontAwesome-pictogrammen toe die je in je assets wilt opnemen. Gebruik het voorvoegsel 'fa-' voor effen pictogrammen, 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen."
     max_prints_per_hour_per_user: "Maximale aantal /print-pagina-impressies (stel dit in op 0 om afdrukken uit te schakelen)"
-    full_name_required: "Volledige naam is een verplicht veld van een gebruikersprofiel."
     enable_names: "Volledige naam van gebruiker weergeven op profiel, gebruikerskaart en e-mails. Schakel dit uit om de volledige naam overal te verbergen."
     display_name_on_posts: "Volledige naam van een gebruiker weergeven bij berichten, naast de @gebruikersnaam."
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
@@ -2294,7 +2284,6 @@ nl:
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op -1 om nooit te verwijderen of op 0 om direct te verwijderen."
     bootstrap_mode_min_users: 'Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen en de knop Aan de slag te verwijderen (stel dit in op 0 om het uit te schakelen, dit kan tot 24 uur duren). Zie <a target="_blank" href="https://meta.discourse.org/t/-/322876">het topic over de bootstrapmodus op Meta</a> voor meer informatie.'
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
-    secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">het onderwerp Veilige uploads op Meta</a> voor meer informatie.'
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."
     secure_uploads_max_email_embed_image_size_kb: "De maximale grootte voor beveiligde afbeeldingen die worden ingesloten in e-mails als de instelling 'veilige uploads insluiten toestaan in e-mails' is ingeschakeld. Als die instelling niet is ingeschakeld, heeft deze instelling geen effect."
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
@@ -2406,7 +2395,6 @@ nl:
     remove_muted_tags_from_latest: "Topics met alleen gedempte tags niet weergeven in de lijst van nieuwste topics."
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
     create_post_for_category_and_tag_changes: "Maak een fluisterbericht wanneer de categorie of tags van een topic veranderen. Dit vereist dat fluisterberichten ingeschakeld zijn."
-    automatically_clean_unused_tags: "Verwijder dagelijks automatisch tags die niet worden gebruikt in topics of privéberichten."
     watched_precedence_over_muted: "Houd me op de hoogte van topic in categorieën of tags die ik in observeer en die ook horen bij een topic dat ik heb gedempt"
     company_name: "Naam van je bedrijf of organisatie. Als je dit veld leeg laat, worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt."
     governing_law: "Geef het rechtsgebied op dat de juridische aspecten van de site beheerst, inclusief de Gebruiksvoorwaarden en het Privacybeleid. Dit is meestal het land of de staat waar het bedrijf dat de site beheert is geregistreerd of zaken doet."
@@ -2446,10 +2434,8 @@ nl:
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
     enable_experimental_lightbox: "Vervangt de standaard afbeeldingslightbox door het vernieuwde ontwerp."
-    experimental_glimmer_topic_list_groups: "Schakel de nieuwe 'glimmer'-implementatie voor topiclijsten in. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     glimmer_post_menu_mode: "Bepaal of de nieuwe 'glimmer'-implementatie voor het plaatsingsmenu wordt gebruikt. 'Auto' wordt automatisch ingeschakeld wanneer al je thema's en plug-ins gereed zijn. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     glimmer_post_menu_groups: "Schakel de nieuwe 'glimmer'-implementatie voor het plaatsingsmenu in de 'auto'-modus in voor specifieke gebruikersgroepen. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
-    experimental_form_templates: "Schakel de functie Formuliersjablonen in. <b>Nadat je deze functie hebt ingeschakeld,</b> kun je de sjablonen beheren via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     admin_sidebar_enabled_groups: "Schakel zijbalknavigatie in voor de beheerinterface voor de opgegeven groepen, die de beheernavigatieknoppen op het hoogste niveau vervangt."
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
@@ -2524,8 +2510,8 @@ nl:
       invalid_search_ranking_weights: "Waarde is ongeldig voor site-instelling search_ranking_weights. Voorbeeld: '{0.1,0.2,0.3,1.0}'. Merk op dat de maximale waarde voor elk gewicht 1,0 is."
     keywords:
       clean_up_inactive_users_after_days: "gedeactiveerd|inactief|niet geactiveerd"
-      purge_unactivated_users_grace_period_days: "gedeactiveerd|inactief|niet geactiveerd"
       navigation_menu: "vervolgkeuzelijst zijbalk|koptekst"
+      purge_unactivated_users_grace_period_days: "gedeactiveerd|inactief|niet geactiveerd"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4922,8 +4908,6 @@ nl:
       styling:
         title: "Look en feel"
         fields:
-          color_scheme:
-            label: "Kleurenschema"
           body_font:
             label: "Lettertype inhoud"
           heading_font:
@@ -4934,23 +4918,9 @@ nl:
             label: "Stijl startpagina"
             choices:
               latest:
-                label: "Nieuwste topics"
-              categories_only:
-                label: "Alleen categorieën"
-              categories_with_featured_topics:
-                label: "Categorieën met uitgelichte topics"
-              categories_and_latest_topics:
-                label: "Categorieën en nieuwste topics"
-              categories_and_latest_topics_created_date:
-                label: "Categorieën en nieuwste topics (sorteren op aanmaakdatum van topics)"
-              categories_and_top_topics:
-                label: "Categorieën en toptopics"
-              categories_boxes:
-                label: "Categorievakken"
-              categories_boxes_with_topics:
-                label: "Categorievakken met topics"
-              subcategories_with_featured_topics:
-                label: "Subcategorieën met uitgelichte topics"
+                label: "Nieuwste"
+              hot:
+                label: "Veelgelezen"
       branding:
         title: "Sitelogo"
         fields:
@@ -5022,7 +4992,7 @@ nl:
       quoted: '%{username} heeft je geciteerd in ''%{topic}'' - %{site_title}'
       replied: '%{username} heeft op je geantwoord in ''%{topic}'' - %{site_title}'
       posted: '%{username} heeft een bericht geplaatst in ''%{topic}'' - %{site_title}'
-      private_message: '%{username} heeft je een privébericht gestuurd in ''%{topic}'' - %{site_title}'
+      private_message: '%{username} heeft je een persoonlijk bericht gestuurd in ''%{topic}'' - %{site_title}'
       linked: '%{username} heeft een link naar je bericht geplaatst vanuit ''%{topic}'' - %{site_title}'
       watching_first_post: '%{username} heeft een nieuw topic gemaakt: ''%{topic}'' - %{site_title}'
       confirm_title: "Meldingen ingeschakeld - %{site_title}"

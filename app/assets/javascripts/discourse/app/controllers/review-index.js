@@ -20,6 +20,7 @@ export default class ReviewIndexController extends Controller {
     "sort_order",
     "additional_filters",
     "flagged_by",
+    "score_type",
   ];
 
   type = null;
@@ -36,6 +37,7 @@ export default class ReviewIndexController extends Controller {
   to_date = null;
   sort_order = null;
   additional_filters = null;
+  filterScoreType = null;
 
   @discourseComputed("reviewableTypes")
   allTypes() {
@@ -47,6 +49,11 @@ export default class ReviewIndexController extends Controller {
         name: i18n(`review.types.${translationKey}.title`),
       };
     });
+  }
+
+  @discourseComputed("scoreTypes")
+  allScoreTypes() {
+    return this.scoreTypes || [];
   }
 
   @discourseComputed
@@ -164,6 +171,7 @@ export default class ReviewIndexController extends Controller {
       username: this.filterUsername,
       reviewed_by: this.filterReviewedBy,
       flagged_by: this.filterFlaggedBy,
+      score_type: this.filterScoreType,
       from_date: isPresent(this.filterFromDate)
         ? this.filterFromDate.toISOString(true).split("T")[0]
         : null,

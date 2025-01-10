@@ -950,12 +950,10 @@ ca:
       title: "Notifica els moderadors"
       xaxis: "Dia"
       yaxis: "Nombre de missatges"
-      description: "Nombre de vegades que els moderadors han estat notificats privadament per una bandera."
     notify_user_private_messages:
       title: "Notifica l'usuari"
       xaxis: "Dia"
       yaxis: "Nombre de missatges"
-      description: "Nombre de vegades que els usuaris han estat notificats de manera privada per una bandera."
     top_referrers:
       title: "Referidors principals"
       xaxis: "Usuari"
@@ -1233,7 +1231,6 @@ ca:
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
-    site_contact_group_name: "Nom de grup vàlid per a ser convidat a tots els missatges automatitzats."
     send_welcome_message: "Envia a tots els usuaris nous un missatge de benvinguda amb la guia ràpida d'inici."
     send_tl1_welcome_message: "Envieu als nous usuaris de nivell de confiança 1 un missatge de benvinguda."
     suppress_reply_directly_below: "No mostris el recompte de respostes desplegable en una publicació quan només hi hagi una resposta directa sota la publicació."
@@ -1510,7 +1507,6 @@ ca:
     app_association_android: "Contingut del punt final (endpoint) <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilitzat per a l’API de Digital Asset Links de Google."
     app_association_ios: "Contingut del punt final (endpoint) <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilitzat per a crear enllaços universals entre aquest lloc i les aplicacions iOS."
     auto_handle_queued_age: "Tracta automàticament els registres que esperen ser revisats després d'aquest nombre de dies. Les banderes s'ignoraran. Les publicacions en cua i els usuaris seran rebutjats. Poseu-ho a 0 per a desactivar la funció."
-    full_name_required: "El nom complet és un camp obligatori del perfil d'usuari."
     enable_names: "Mostra el nom complet de l'usuari en el seu perfil, la seva targeta d'usuari i els seus correus. Desactiveu-ho per a amagar el nom complet a tot arreu."
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
@@ -2828,15 +2824,7 @@ ca:
           homepage_style:
             choices:
               latest:
-                label: "Temes més recents"
-              categories_only:
-                label: "Només categories"
-              categories_with_featured_topics:
-                label: "Categories amb temes destacats"
-              categories_and_latest_topics:
-                label: "Categories i temes més recents"
-              categories_and_top_topics:
-                label: "Categories i temes principals"
+                label: "Més recents"
       corporate:
         fields:
           governing_law:
@@ -2865,7 +2853,7 @@ ca:
       quoted: '%{username} us ha citat en "%{topic}" - %{site_title}'
       replied: '%{username} us ha respost en "%{topic}" - %{site_title}'
       posted: '%{username} publicat en "%{topic}" - %{site_title}'
-      private_message: '%{username} us ha enviat un missatge privat en "%{topic}" - %{site_title}'
+      private_message: '%{username} us ha enviat un missatge personal en "%{topic}" - %{site_title}'
       linked: '%{username} ha enllaçat a la vostra publicació des de "%{topic}" - %{site_title}'
       watching_first_post: '%{username} ha creat un tema nou "%{topic}" - %{site_title}'
       confirm_title: "Notificacions activades - %{site_title}"

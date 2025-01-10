@@ -366,11 +366,8 @@ zh_CN:
     max_redemptions_limit: "应介于 2 和 %{max_limit} 之间。"
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入此话题：%{group_names}。"
-    not_pm: "您只能邀请加入私信。"
     user_exists: "抱歉，该用户已被邀请。您一次只可以邀请一个用户加入话题。"
     muted_topic: "抱歉，该用户已将此话题设为免打扰。"
-    receiver_does_not_allow_pm: "抱歉，该用户不允许您向他们发送私信。"
-    sender_does_not_allow_pm: "抱歉，您不允许该用户向您发送私信。"
     user_cannot_see_topic: "%{username} 无法看到该话题。"
   backup:
     operation_already_running: "一个操作正在运行。目前无法开始新的作业。"
@@ -1324,12 +1321,10 @@ zh_CN:
       title: "通知版主"
       xaxis: "天"
       yaxis: "消息数量"
-      description: "版主通过举报被私下通知的次数。"
     notify_user_private_messages:
       title: "通知用户"
       xaxis: "天"
       yaxis: "消息数量"
-      description: "用户通过举报被私下通知的次数。"
     top_referrers:
       title: "热门推荐人"
       xaxis: "用户"
@@ -1655,8 +1650,6 @@ zh_CN:
     summary_percent_filter: "当用户点击“总结此话题”时，显示前百分之几的帖子"
     summary_max_results: "“总结此话题”返回的最大帖子数量"
     summary_timeline_button: "在时间线中显示“摘要”按钮"
-    summarization_strategy: "总结插件注册的内容的其他方法"
-    custom_summarization_allowed_groups: "允许使用 `summarization_strategy` 总结内容的群组。"
     enable_personal_messages: "已弃用，请改用 'personal message enabled groups' 设置。允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。请注意，管理人员不受限制。"
     personal_message_enabled_groups: "允许这些群组中的用户创建个人消息。重要信息：1) 所有用户都可以回复消息。2) 管理员和版主可以给任何用户创建消息。3) 信任级别群组包括更高级别；选择 trust_level_1 允许 TL1、TL2、TL3、TL4，但不允许 TL0。4) 群组交互设置可以替换此设置，用于向特定群组发送消息。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
@@ -1722,6 +1715,7 @@ zh_CN:
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此网站嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
     content_security_policy_script_src: "额外的允许脚本源。默认包括当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略 (CSP) 缓解 XSS 攻击</a>。启用 strict-dynamic 后，其他主机源将被忽略。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问网站的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
+    suppress_secured_categories_from_admin: "在管理员界面的某些地方禁止管理员查看私人主题和 PM。某些地方的内容仍然可见。这不是一项安全功能：管理员始终可以访问网站上的所有内容。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
     top_menu: "确定首页导航中显示的条目，以及显示顺序。"
@@ -1730,7 +1724,6 @@ zh_CN:
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
     site_contact_username: "用于发送所有自动消息的有效管理人员用户名。如果留空，将使用默认系统帐户。"
-    site_contact_group_name: "要被邀请到所有自动消息的有效群组名称。"
     send_welcome_message: "向所有新用户发送带有快速入门指南的欢迎消息。"
     send_tl1_welcome_message: "向新的信任级别 1 用户发送欢迎消息。"
     send_tl2_promotion_message: "向新的信任级别 2 用户发送有关升级的消息。"
@@ -1990,7 +1983,6 @@ zh_CN:
     min_title_similar_length: "检查有无类似话题之前的标题的最小长度。"
     desktop_category_page_style: "此设置决定桌面版 /categories 页面的视觉布局。其中包括显示带有精选话题的子类别、显示最新话题或呈现热门话题等选项。所选样式将影响用户在网站上类别间的互动和导航方式。"
     category_colors: "设置类别允许的十六进制颜色值列表。"
-    default_dark_mode_color_scheme_id: "在深色模式下使用的配色方案。"
     dark_mode_none: "无"
     max_image_size_kb: "上传的最大图片尺寸。也必须在 nginx (client_max_body_size) /apache 或代理中配置此设置。大于此值或小于 client_max_body_size 的图片在上传时将被调整大小。"
     max_attachment_size_kb: "上传的最大附件文件大小。也必须在 nginx (client_max_body_size) / apache 或代理中配置此设置。"
@@ -2150,6 +2142,7 @@ zh_CN:
     anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
+    hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户配置文件，并隐藏信任级别 1 的用户，直到他们首次发布信息。此功能在必须批准用户和仅限邀请用户的网站上无条件禁用。"
     allow_users_to_hide_profile: "允许用户隐藏他们的个人资料和状态"
     hide_user_activity_tab: "隐藏用户个人资料中的活动标签页，管理员和自己除外。"
     delete_associated_accounts_on_password_reset: "当用户更改密码时，删除用户关联帐户。"
@@ -2196,7 +2189,7 @@ zh_CN:
     penalty_include_post_message: "禁止或暂停用户权限时，自动将违规帖子消息包含在电子邮件消息模板中"
     svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 图标。使用前缀 'fa-' 表示实心图标，使用 'far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
-    full_name_required: "全名是用户个人资料的必填字段。"
+    full_name_requirement: "将全名字段设为注册表单中的必填字段、可选字段或可选但隐藏的字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
@@ -2222,7 +2215,6 @@ zh_CN:
     delete_merged_stub_topics_after_days: "自动删除完全合并的存根话题之前等待的天数。设置为 -1 不会删除。设置为 0 将立即删除。"
     bootstrap_mode_min_users: '禁用引导模式并移除“使用入门”按钮所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/322876">Meta 上的引导模式话题</a>以了解详细信息。'
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
-    secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
     secure_uploads_max_email_embed_image_size_kb: "如果启用了 'secure uploads allow embed in emails' 设置，将被嵌入到电子邮件的安全图片的大小限制；如果不启用，则此设置无效。"
     slug_generation_method: "选择一种缩略名生成方法。'encoded' 将生成百分比编码字符串。'none' 将完全禁用缩略名。"
@@ -2334,7 +2326,6 @@ zh_CN:
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
     force_lowercase_tags: "强制所有新标签完全小写。"
     create_post_for_category_and_tag_changes: "当一个话题的类别或标签发生更改时，创建密语帖子，需要启用密语帖子。"
-    automatically_clean_unused_tags: "每天自动删除未在任何主题或私信中使用的标签。"
     watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已设为免打扰的话题，请通知我。"
     company_name: "您的公司或组织的名称。如果留空，将不会提供样板《服务条款》或《隐私声明》。"
     governing_law: "指定管辖网站法律方面（包括《服务条款》和《隐私政策》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。"
@@ -2374,10 +2365,8 @@ zh_CN:
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
     experimental_new_new_view_groups: '启用新的话题列表，将未读话题与新话题合并，并使边栏中的“一切”链接指向该列表。'
     enable_experimental_lightbox: "将默认图片灯箱替换为全新设计。"
-    experimental_glimmer_topic_list_groups: "启用新的 'glimmer' 话题列表实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     glimmer_post_menu_mode: "控制是否使用新的 'glimmer' 帖子菜单实现。当您的所有主题和插件都准备就绪后，'auto' 将自动启用。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     glimmer_post_menu_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
-    experimental_form_templates: "启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
@@ -2449,8 +2438,8 @@ zh_CN:
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
     keywords:
       clean_up_inactive_users_after_days: "已停用|闲置|未激活"
-      purge_unactivated_users_grace_period_days: "已停用|闲置|未激活"
       navigation_menu: "边栏|标题下拉菜单"
+      purge_unactivated_users_grace_period_days: "已停用|闲置|未激活"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2579,6 +2568,7 @@ zh_CN:
     omniauth_confirm_button: "继续"
     authenticator_error_no_valid_email: "不允许与 %{account} 关联的电子邮件地址。您可能需要使用不同的电子邮件地址配置您的帐户。"
     new_registrations_disabled: "目前不允许注册新帐户。"
+    new_registrations_disabled_discourse_connect: "仅允许通过 Discourse Connect 注册新帐户。"
     password_too_long: "密码不得超过 200 个字符。"
     email_too_long: "您提供的电子邮件过长。邮箱名称不得超过 254 个字符，域名不得超过 253 个字符。"
     wrong_invite_code: "您输入的邀请码不正确。"
@@ -4805,8 +4795,6 @@ zh_CN:
       styling:
         title: "外观"
         fields:
-          color_scheme:
-            label: "配色方案"
           body_font:
             label: "正文字体"
           heading_font:
@@ -4817,23 +4805,9 @@ zh_CN:
             label: "首页样式"
             choices:
               latest:
-                label: "最新话题"
-              categories_only:
-                label: "仅类别"
-              categories_with_featured_topics:
-                label: "包含精选话题的类别"
-              categories_and_latest_topics:
-                label: "类别和最新话题"
-              categories_and_latest_topics_created_date:
-                label: "类别和最新话题（按话题创建日期排序）"
-              categories_and_top_topics:
-                label: "类别和热门话题"
-              categories_boxes:
-                label: "类别框"
-              categories_boxes_with_topics:
-                label: "包含话题的类别框"
-              subcategories_with_featured_topics:
-                label: "包含精选话题的子类别"
+                label: "最新"
+              hot:
+                label: "热议"
       branding:
         title: "网站徽标"
         fields:
@@ -4905,7 +4879,7 @@ zh_CN:
       quoted: '%{username} 在“%{topic}”中引用了您的帖子 - %{site_title}'
       replied: '%{username} 在“%{topic}”中回复了您 - %{site_title}'
       posted: '%{username} 在“%{topic}”中发布了帖子 - %{site_title}'
-      private_message: '%{username} 在“%{topic}”中向您发送了私信 - %{site_title}'
+      private_message: '%{username} 在“%{topic}”中向您发送了个人消息 - %{site_title}'
       linked: '%{username} 链接到您在“%{topic}”中的帖子 - %{site_title}'
       watching_first_post: '%{username} 创建了新话题“%{topic}”- %{site_title}'
       confirm_title: "已启用通知 - %{site_title}"

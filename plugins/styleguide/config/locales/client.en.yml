@@ -70,6 +70,10 @@ en:
           title: "Topic Notifications"
         post:
           title: "Post"
+        post_list:
+          title: "Post List"
+          empty_example: "<PostList /> empty state"
+          populated_example: "<PostList /> populated state"
         topic_map:
           title: "Topic Map"
         site_header:

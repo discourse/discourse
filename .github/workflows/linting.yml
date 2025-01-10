@@ -17,8 +17,8 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
-    container: discourse/discourse_test:slim
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
     timeout-minutes: 30
 
     steps:
@@ -34,12 +34,9 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-gem-
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
         run: |

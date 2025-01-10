@@ -74,6 +74,10 @@ hu:
           title: "Témaértesítések"
         post:
           title: "Bejegyzés"
+        post_list:
+          title: "Bejegyzés Lista"
+          empty_example: "<PostList /> üres állapot"
+          populated_example: "<PostList /> népszerű"
         topic_map:
           title: "Téma térkép"
         site_header:

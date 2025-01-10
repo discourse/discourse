@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { array, concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
@@ -12,7 +11,6 @@ import PostCountOrBadges from "discourse/components/topic-list/post-count-or-bad
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
-import { topicTitleDecorators } from "discourse/components/topic-title";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
@@ -37,7 +35,8 @@ export default class Item extends Component {
       next(() => this.historyStore.delete("lastTopicIdViewed"));
 
       if (this.shouldFocusLastVisited) {
-        element.querySelector(".main-link .title")?.focus();
+        // Using next() so it always runs after clean-dom
+        next(() => element.querySelector(".main-link .title")?.focus());
       }
     } else if (this.args.topic.get("highlight")) {
       // highlight new topics that have been loaded from the server or the one we just created
@@ -55,17 +54,23 @@ export default class Item extends Component {
   }
 
   get expandPinned() {
+    let expandPinned;
     if (
       !this.args.topic.pinned ||
       (this.site.mobileView && !this.siteSettings.show_pinned_excerpt_mobile) ||
       (this.site.desktopView && !this.siteSettings.show_pinned_excerpt_desktop)
     ) {
-      return false;
+      expandPinned = false;
+    } else {
+      expandPinned =
+        (this.args.expandGloballyPinned && this.args.topic.pinned_globally) ||
+        this.args.expandAllPinned;
     }
 
-    return (
-      (this.args.expandGloballyPinned && this.args.topic.pinned_globally) ||
-      this.args.expandAllPinned
+    return applyValueTransformer(
+      "topic-list-item-expand-pinned",
+      expandPinned,
+      { topic: this.args.topic, mobileView: this.site.mobileView }
     );
   }
 
@@ -99,17 +104,6 @@ export default class Item extends Component {
   }
 
   @action
-  applyTitleDecorators(element) {
-    const rawTopicLink = element.querySelector(".raw-topic-link");
-
-    if (rawTopicLink) {
-      topicTitleDecorators?.forEach((cb) =>
-        cb(this.args.topic, rawTopicLink, "topic-list-item-title")
-      );
-    }
-  }
-
-  @action
   onBulkSelectToggle(e) {
     if (e.target.checked) {
       this.args.selected.addObject(this.args.topic);
@@ -140,7 +134,8 @@ export default class Item extends Component {
   click(e) {
     if (
       e.target.classList.contains("raw-topic-link") ||
-      e.target.classList.contains("post-activity")
+      e.target.classList.contains("post-activity") ||
+      e.target.classList.contains("badge-posts")
     ) {
       if (wantsNewWindow(e)) {
         return;
@@ -166,20 +161,15 @@ export default class Item extends Component {
       this.navigateToTopic(this.args.topic, this.args.topic.lastUnreadUrl);
       return;
     }
-
-    if (
-      e.target.classList.contains("d-icon-thumbtack") &&
-      e.target.closest("a.topic-status")
-    ) {
-      e.preventDefault();
-      this.args.topic.togglePinnedForUser();
-      return;
-    }
   }
 
   @action
   keyDown(e) {
-    if (e.key === "Enter" && e.target.classList.contains("post-activity")) {
+    if (
+      e.key === "Enter" &&
+      (e.target.classList.contains("post-activity") ||
+        e.target.classList.contains("badge-posts"))
+    ) {
       e.preventDefault();
       this.navigateToTopic(this.args.topic, e.target.href);
     }
@@ -196,7 +186,6 @@ export default class Item extends Component {
   <template>
     <tr
       {{! template-lint-disable no-invalid-interactive }}
-      {{didInsert this.applyTitleDecorators}}
       {{this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}

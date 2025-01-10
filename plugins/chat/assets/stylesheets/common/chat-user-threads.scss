@@ -62,4 +62,7 @@
   .sidebar-section-link-content-text {
     color: var(--d-sidebar-link-color);
   }
+  .active .sidebar-section-link-content-text {
+    color: var(--d-sidebar-active-color);
+  }
 }

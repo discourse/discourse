@@ -1,0 +1,14 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: alt+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Fri, 15 Jan 2017 00:12:43 +0100
+Message-ID: <180@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div>
+  <div name="messageReplySection">
+    <p>This is the <b>body !!</b> of the email.</p>
+  </div>
+</div>

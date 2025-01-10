@@ -9,6 +9,14 @@ class Capabilities {
   isAndroid = ua.includes("Android");
   isWinphone = ua.includes("Windows Phone");
   isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
+  isTabletScreen =
+    this.touch &&
+    ((window.innerWidth >= 600 && window.innerWidth <= 1280) ||
+      (window.innerHeight >= 600 && window.innerHeight <= 1280));
+  isTablet =
+    this.isTabletScreen ||
+    this.isIpadOS ||
+    /iPad|Android(?!.*Mobile)|Tablet/.test(ua);
 
   isIOS = (/iPhone|iPod/.test(ua) || this.isIpadOS) && !window.MSStream;
   isApple =

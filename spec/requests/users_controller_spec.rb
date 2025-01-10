@@ -19,6 +19,8 @@ RSpec.describe UsersController do
   # late for fab! to work.
   let(:user_deferred) { Fabricate(:user, refresh_auto_groups: true) }
 
+  before { SiteSetting.hide_email_address_taken = false }
+
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
       get "/session/hp.json"
@@ -779,6 +781,23 @@ RSpec.describe UsersController do
           expect(response.status).to eq(200)
           expect(User.find_by(username: @user.username).user_option.timezone).to eq(
             "Australia/Brisbane",
+          )
+        end
+      end
+
+      context "with discourse connect enabled" do
+        before do
+          SiteSetting.discourse_connect_url = "http://example.com/sso"
+          SiteSetting.enable_discourse_connect = true
+        end
+
+        it "blocks registration for local logins" do
+          SiteSetting.enable_local_logins = true
+          post_user
+
+          response_body = response.parsed_body
+          expect(response_body["message"]).to eq(
+            "New account registrations are only allowed through Discourse Connect.",
           )
         end
       end

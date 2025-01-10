@@ -207,12 +207,28 @@ RSpec.describe UsersEmailController do
       context "when new email is different case of existing email" do
         fab!(:other_user) { Fabricate(:user, email: "case.insensitive@gmail.com") }
 
-        it "raises an error" do
-          put "/u/#{user.username}/preferences/email.json",
-              params: {
-                email: other_user.email.upcase,
-              }
-          expect(response).to_not be_successful
+        context "when hiding taken e-mails" do
+          before { SiteSetting.hide_email_address_taken = true }
+
+          it "raises an error" do
+            put "/u/#{user.username}/preferences/email.json",
+                params: {
+                  email: other_user.email.upcase,
+                }
+            expect(response).to be_successful
+          end
+        end
+
+        context "when revealing taken e-mails" do
+          before { SiteSetting.hide_email_address_taken = false }
+
+          it "raises an error" do
+            put "/u/#{user.username}/preferences/email.json",
+                params: {
+                  email: other_user.email.upcase,
+                }
+            expect(response).to_not be_successful
+          end
         end
       end
 

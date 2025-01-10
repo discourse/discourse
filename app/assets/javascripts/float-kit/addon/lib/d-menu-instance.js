@@ -54,7 +54,7 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   @action
-  async close() {
+  async close(options = { focusTrigger: true }) {
     if (getOwner(this).isDestroying) {
       return;
     }
@@ -66,6 +66,12 @@ export default class DMenuInstance extends FloatKitInstance {
     }
 
     await this.menu.close(this);
+
+    if (options.focusTrigger) {
+      this.trigger?.focus?.();
+    }
+
+    await this.options.onClose?.(this);
   }
 
   @action

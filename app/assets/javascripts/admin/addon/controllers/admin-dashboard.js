@@ -102,7 +102,7 @@ export default class AdminDashboardController extends Controller {
 
   @discourseComputed("problemsFetchedAt")
   problemsTimestamp(problemsFetchedAt) {
-    return moment(problemsFetchedAt).locale("en").format("LLL");
+    return moment(problemsFetchedAt).format("LLL");
   }
 
   @action

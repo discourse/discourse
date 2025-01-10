@@ -401,6 +401,7 @@ bg:
     continue: "Напред"
     switch_to_anon: "Влез в Анонимен режим. "
     switch_from_anon: "Излез от Анонимен режим."
+    none_placeholder: "Без"
     banner:
       close: "Отхвърляне на този банер"
       edit: "Редактирай"
@@ -529,6 +530,8 @@ bg:
         refresh: "Опресни"
         status: "Статус"
         category: "Категория"
+        score_type:
+          title: "Причина"
         orders:
           score: "Точки"
           score_asc: "Резултат (обратен)"
@@ -813,13 +816,13 @@ bg:
       public_admission: "Разрешено е на потребителите да се присъединяват към групата свободно (Изисква се публично видима група)"
       public_exit: "Разрешено е на потребителите да напуската групата свободно"
       empty:
-        posts: "Няма публикации от членове на тази група."
-        members: "Няма членове в тази група."
-        requests: "Няма заявки за членство в тази група."
-        mentions: "Няма споменавания на тази група."
-        messages: "Няма съобщения за тази група."
-        topics: "Няма теми от членове на тази група."
-        logs: "Няма журнал за тази група."
+        posts: "Няма публикации от членове на тази група"
+        members: "Няма членове в тази група"
+        requests: "Няма заявки за членство в тази група"
+        mentions: "Няма споменавания на тази група"
+        messages: "Няма съобщения за тази група"
+        topics: "Няма теми от членове на тази група"
+        logs: "Няма журнал за тази група"
       add: "Добави"
       join: "Влизане"
       leave: "Напусни"
@@ -1001,17 +1004,17 @@ bg:
         one: "Изтрий %{count}"
         other: "Изтрий %{count}"
       username: "Потребителско име"
-      trust_level: "TL"
+      trust_level: "ниво на доверие"
       read_time: "Време за прочитане"
       topics_entered: "добавени теми"
-      post_count: "# публикации"
+      post_count: "публикации"
       confirm_delete_other_accounts: "Сигурни ли сте, че искате да изтриете тези профили?"
       powered_by: "с <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "копирано"
     user_fields:
       none: "(изберете опция)"
       required: 'Моля, попълнете "%{name}"'
-      same_as_password: "Вашата парола не трябва да се повтаря в други полета."
+      same_as_password: "Вашата парола не трябва да се повтаря в други полета"
       optional: (по избор)
     user:
       said: "%{username}:"
@@ -1126,18 +1129,14 @@ bg:
         description: "Пропуснете съвети и значки за въвеждане на нови потребители"
       reset_seen_user_tips: "Показване на потребителски съвети отново"
       theme_default_on_all_devices: "Направи тази тема стандарт на всичките ми устройства"
-      color_scheme_default_on_all_devices: "Задаване на цветова схема по подразбиране на всички мои устройства"
-      color_scheme: "Цветова схема"
       color_schemes:
         default_description: "Темата по подразбиране"
         disable_dark_scheme: "Същото като обикновения"
-        dark_instructions: "Можете да прегледате цветовата схема на тъмния режим, като превключите тъмния режим на вашето устройство."
         undo: "Нулиране"
         regular: "Редовен"
         dark: "Тъмен режим"
         default_dark_scheme: "(сайт по подразбиране)"
       dark_mode: "Тъмен режим"
-      dark_mode_enable: "Активирайте цветовата схема за автоматичен тъмен режим"
       text_size_default_on_all_devices: "Направете това размерът на текста по подразбиране на всички мои устройства"
       allow_private_messages: "Позволете на други потребители да ми изпращат лични съобщения"
       external_links_in_new_tab: "Отваряй всички външни връзки в нов раздел."
@@ -1767,8 +1766,6 @@ bg:
     form_kit:
       reset: Нулиране
       optional: по избор
-      select:
-        none_placeholder: "Без"
       errors:
         required: "Задъжителни"
     close: "Затвори"
@@ -1984,6 +1981,9 @@ bg:
       categories_boxes: "Кутии с подкатегории"
       categories_boxes_with_topics: "Кутии с избрани теми"
       subcategories_with_featured_topics: "Подкатегории с избрани теми"
+    full_name_requirement:
+      required_at_signup: "Задъжителни"
+      optional_at_signup: "По избор"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2238,8 +2238,6 @@ bg:
         confirm_body: "Успех! Известяването е включено."
       titles:
         liked: "ново харесване"
-        private_message: "ново лично съобщение"
-        invited_to_private_message: "поканени на лично съобщение"
         invitee_accepted: "поканата е приета"
         posted: "нова публикация"
         watching_category_or_tag: "нова публикация"
@@ -2615,7 +2613,6 @@ bg:
         title: "Печат"
       flag_topic:
         title: "Сигнал"
-        help: "скрито сигнализирайте за публикацията, за да ѝ бъде обърнато внимание или изпратете скрито известие за нея"
         success_message: "Успешно сигнализирахте за тази тема."
       feature_topic:
         title: "Фокусирай тази тема"
@@ -2753,6 +2750,8 @@ bg:
           one: Вие избрахте <b>%{count}</b> публикация.
           other: "Вие избрахте <b>%{count}</b> публикации. "
       deleted_by_author_simple: "(темата е изтрита от автора)"
+    post_list:
+      aria_post_number: "%{title} - публикация #%{postNumber}"
     post:
       quote_reply: "Цитат"
       quote_edit: "Редактирай"
@@ -2836,7 +2835,6 @@ bg:
         edit_action: "Редактирай"
         edit_anonymous: "Съжаляваме, но трябва да сте логнат, за да редактирате. "
         flag_action: "Сигнализиране"
-        flag: "скрито сигнализирайте за публикацията, за да ѝ бъде обърнато внимание или изпратете скрито известие за нея"
         delete_action: "Изтрий публикацията"
         delete: "изтрий тази публикация"
         undelete: "възстановете тази публикация"
@@ -3437,9 +3435,27 @@ bg:
         remove_muted_tags_from_latest:
           always: "винаги"
           never: "никога"
-      reports:
-        sidebar_link:
-          all: "Всички"
+      config:
+        developer:
+          title: "Разработчик"
+        files:
+          title: "Файлове"
+        legal:
+          title: "Правни"
+        navigation:
+          title: "Навигация"
+        notifications:
+          title: "Известия"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Други"
+        search:
+          title: "Търсене"
+        security:
+          title: "Сигурност"
+        spam:
+          title: "Спам"
       dashboard:
         title: "Работен плот"
         version: "Версия"
@@ -3571,32 +3587,15 @@ bg:
           badges: "Значки"
           notifications: "Известия"
           permalinks: "Постоянни адреси"
-          trust_levels: "Нива на доверие"
           users: "Потребители"
-          user_fields: "User Fields"
-          watched_words: "Наблюдавани думи"
+          groups: "Групи"
           legal: "Правни"
       appearance:
         sidebar_link:
           emoji: "Емотикони"
           navigation: "Навигация"
-      email_settings:
-        sidebar_link:
-          preview_summary: "Преглед на справочника"
-      email_logs:
-        sidebar_link:
-          sent: "Изпрати"
-          skipped: "Пропусни"
-          received: "Получени"
-          rejected: "Отхвърлени"
       security:
         title: "Сигурност"
-        sidebar_link:
-          error_logs: "Логове с грешки"
-          screened_emails: "Проверени имейли"
-          screened_ips: "Проверени IP-та"
-          screened_urls: "Проверени URL-та"
-          search_logs: "Търсене в логовете"
       section_landing_pages:
         account:
           title: "Профил"
@@ -3621,6 +3620,12 @@ bg:
             invalid_applies_to: "Задъжителни"
             topic: "теми"
             post: "публикации"
+        permalinks:
+          edit: "Редактирай"
+          delete: "Изтрий"
+        embeddable_host:
+          edit: "Редактирай"
+          delete: "Изтрий"
         user_fields:
           type: "Тип"
           delete: "Изтрий"
@@ -3642,7 +3647,6 @@ bg:
         sidebar_link:
           developer: "Разработчик"
           embedding: "Ембедване"
-          rate_limits: "Лимити"
           onebox: "Onebox"
           files: "Файлове"
           other_options: "Други"
@@ -3685,7 +3689,7 @@ bg:
           download:
             label: "Изтегли"
           destroy:
-            title: "Премахни бекъпа"
+            title: "Изтрий"
             confirm: "Сигурни ли сте, че искате да унищожите бекъпа?"
           restore:
             label: "Възстанови "
@@ -4404,6 +4408,7 @@ bg:
         settings: "Настройки"
       embedding:
         get_started: "Ако искате да внедрите Discourse в друг сайт, започнете с добавянето на хоста му."
+        delete: "Изтрий"
         confirm_delete: "Сигурни ли сте, че искате да изтриете този хост?"
         sample: |
           <p>Поставете следния HTML код във вашия сайт, за да създадете и вградите теми за Discourse. Заменете <b>EMBED_URL</b> с каноничния URL адрес на страницата, в която го вграждате.</p>
@@ -4412,19 +4417,18 @@ bg:
 
           <p>Заменете <b>DISCOURSE_USERNAME</b> с потребителското име на Discourse на автора, който трябва да създаде темата. Discourse автоматично ще търси потребителя по атрибута <code>content</code> на етикетите <code>&lt;meta&gt;</code> с атрибут <code>name</code> , зададен на <code>discourse-username</code> или <code>author</code>. Параметърът <code>discourseUserName</code> е отменен и ще бъде премахнат в Discourse 3.2.</p>
         title: "Ембедване"
-        host: "Позволени хостове"
-        edit: "редактирай"
-        category: "Пост в Категорията"
-        add_host: "Добави Хост"
-        settings: "Настройки за Ембедване"
-        crawling_settings: "Crawler настройки"
-        crawling_description: "Когато Discourse създаде теми за вашите мнения и ако RSS / ATOM емисия не присъства, тя ще се опита да направи разбор на съдържанието от вашия HTML. Понякога това може да бъде предизвикателство за извличане на съдържанието ви, така че ние предоставяме възможността да се определи като CSS правила и да се направи екстракцията по-лесно."
+        edit: "Редактирай"
+        crawlers_description: "Когато Discourse създаде теми за вашите мнения и ако RSS / ATOM емисия не присъства, тя ще се опита да направи разбор на съдържанието от вашия HTML. Понякога това може да бъде предизвикателство за извличане на съдържанието ви, така че ние предоставяме възможността да се определи като CSS правила и да се направи екстракцията по-лесно."
         embed_by_username: "Потребител за създаване на темата"
         embed_post_limit: "Максимален брой публикации за вграждане."
         embed_truncate: "Изтрий вградените постове"
         allowed_embed_selectors: "Избор на CSS елементи които са разрешени за вграждане"
         blocked_embed_selectors: "Избор на CSS елементи които не са разрешени за вграждане"
-        save: "Запамети настройките за вграждане"
+        save: "Запази "
+        host_form:
+          save: "Запази "
+        nav:
+          settings: "Настройки"
       permalink:
         title: "Постоянни адреси"
         url: "URL"
@@ -4437,6 +4441,9 @@ bg:
         user_title: "Потребител"
         username: "Потребителско име"
         delete_confirm: Сигурни ли сте, че искате да изриете този постоянен адрес?
+        nav:
+          settings: "Настройки"
+          permalinks: "Постоянни адреси"
         form:
           label: "Нов:"
           url: "URL"
@@ -4461,3 +4468,18 @@ bg:
       previews:
         share_button: "Споделяне"
         reply_button: "Отговорете"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "всички категории"
+          new: "Нова"
+          unread: "Непрочетени"
+          top: "Топ"
+          latest: "Последни"
+          categories: "Категории"
+        category_names:
+          site_feedback: "Заявка към сайта"
+        table_headers:
+          topic: "Тема"
+          replies: "Отговори"
+          views: "Прегледи"
+          activity: "Активност"

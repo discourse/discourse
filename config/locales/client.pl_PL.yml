@@ -594,6 +594,8 @@ pl_PL:
     continue: "Kontynuuj"
     switch_to_anon: "Włącz tryb anonimowy"
     switch_from_anon: "Zakończ tryb anonimowy"
+    select_placeholder: "Wybierz…"
+    none_placeholder: "Brak"
     banner:
       close: "Zamknij ten baner"
       edit: "Edytuj"
@@ -615,6 +617,7 @@ pl_PL:
       order_by: "Segreguj według:"
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
+      filtered_flagged_by: "Oflagowany przez"
       explain:
         why: "wyjaśnij, dlaczego ten element znalazł się w kolejce"
         title: "Przeglądalna ocena"
@@ -738,6 +741,9 @@ pl_PL:
         refresh: "Odśwież"
         status: "Status"
         category: "Kategoria"
+        score_type:
+          title: "Powód"
+          all: "(wszystkie powody)"
         orders:
           score: "Wynik"
           score_asc: "Wynik (odwrotny)"
@@ -1055,12 +1061,12 @@ pl_PL:
       public_admission: "Zezwól wszystkim użytkownikom na dołączanie do tej grupy (widoczność grupy musi być ustawiona na publiczną)"
       public_exit: "Zezwól wszystkim użytkownikom na opuszczanie tej grupy"
       empty:
-        posts: "Członkowie tej grupy nie napisali żadnych postów."
+        posts: "Członkowie tej grupy nie napisali żadnych postów"
         members: "Nie ma użytkowników w tej grupie"
-        requests: "Są prośby o dołączenie do tej grupy."
-        mentions: "Nie ma wspomnień tej grupy"
-        messages: "Nie ma wiadomości dla tej grupy"
-        topics: "Nie ma wątków stworzonych przez użytkowników tej grupy"
+        requests: "Są prośby o dołączenie do tej grupy"
+        mentions: "Nie ma wzmianek o tej grupie"
+        messages: "Brak wiadomości dla tej grupy"
+        topics: "Nie ma tematów napisanych przez członków tej grupy"
         logs: "Nie ma logów dla tej grupy"
       add: "Dodaj"
       join: "Dołącz"
@@ -1271,17 +1277,18 @@ pl_PL:
         many: "Usuń %{count}"
         other: "Usuń %{count}"
       username: "nazwa użytkownika"
-      trust_level: "TL"
+      trust_level: "Poziom zaufania"
       read_time: "czas czytania:"
       topics_entered: "wprowadzone tematy:"
-      post_count: "# postów"
+      post_count: "wpisy"
       confirm_delete_other_accounts: "Czy na pewno chcesz usunąć wybrane konta?"
       powered_by: "używa <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "skopiowano"
     user_fields:
       none: "(wybierz opcję)"
       required: 'Wprowadź wartość dla "%{name}”'
-      same_as_password: "Twoje hasło nie powinno się powtarzać w innych polach."
+      required_checkbox: 'Pole "%{name}" jest wymagane'
+      same_as_password: "Twoje hasło nie powinno się powtarzać w innych polach"
       optional: (opcjonalne)
     user:
       said: "%{username}:"
@@ -1404,22 +1411,23 @@ pl_PL:
         description: "Pomiń wskazówki i plakietki dotyczące wprowadzania nowych użytkowników"
       reset_seen_user_tips: "Pokaż ponownie podpowiedzi użytkownika"
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
-      color_scheme_default_on_all_devices: "Ustaw domyślny schemat kolorów na wszystkich moich urządzeniach"
-      color_scheme: "Schemat kolorów"
+      color_scheme_default_on_all_devices: "Ustaw domyślną paletę kolorów na wszystkich moich urządzeniach"
+      color_scheme: "Paleta Kolorów"
       color_schemes:
         default_description: "Motyw domyślny"
         disable_dark_scheme: "Taki sam jak zwykły"
-        dark_instructions: "Możesz wyświetlić podgląd schematu kolorów trybu ciemnego, przełączając tryb ciemny urządzenia."
+        dark_instructions: "Możesz wyświetlić paletę kolorów ciemnych poprzez przełączenie trybu ciemnego urządzenia."
         undo: "Przywróć"
         regular: "Normalny"
         dark: "Tryb ciemny"
         default_dark_scheme: "(domyślny na stronie)"
       dark_mode: "Tryb ciemny"
-      dark_mode_enable: "Włącz automatyczny schemat kolorów trybu ciemnego"
+      dark_mode_enable: "Włącz automatyczną paletę kolorów trybu ciemnego"
       text_size_default_on_all_devices: "Ustaw ten domyślny rozmiar tekstu na wszystkich urządzeniach"
       allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
+      enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
       experimental_sidebar:
         enable: "Włącz pasek boczny"
@@ -1829,6 +1837,7 @@ pl_PL:
       location: "Lokalizacja"
       website: "Strona internetowa"
       email_settings: "Email"
+      hide_profile: "Ukryj mój profil publiczny"
       enable_physical_keyboard: "Włącz obsługę klawiatury fizycznej na iPadzie"
       text_size:
         title: "Rozmiar tekstu"
@@ -1986,8 +1995,10 @@ pl_PL:
           send_invite_email: "Zapisz i wyślij e-mail"
           send_invite_email_instructions: "Ogranicz zaproszenie do emaila, aby wysłać email z zaproszeniem"
           update_invite: "Aktualizuj"
+          update_invite_and_send_email: "Aktualizuj i wyślij e-mail"
           cancel: "Anuluj"
           create_link: "Utwórz link"
+          create_link_and_send_email: "Utwórz link i wyślij e-mail"
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -2017,6 +2028,7 @@ pl_PL:
           other: "Twoje hasło jest za krótkie (minimum %{count} znaków)."
         common: "To hasło jest zbyt popularne."
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
+        same_as_name: "Twoje hasło jest takie samo jak nazwa użytkownika."
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło wygląda na poprawne."
         instructions:
@@ -2130,6 +2142,9 @@ pl_PL:
       what_are_you_doing: "Co robisz?"
       pause_notifications: "Wstrzymaj powiadomienia"
       remove_status: "Usuń status"
+    presence_toggle:
+      online: "Dostępny"
+      offline: "Niedostępny"
     user_tips:
       button: "Zrozumiano!"
       skip: "Pomiń wskazówki"
@@ -2176,9 +2191,6 @@ pl_PL:
       optional: opcjonalnie
       errors_summary_title: "Ten formularz zawiera błędy:"
       dirty_form: "Nie przesłano zmian. Czy na pewno chcesz wyjść?"
-      select:
-        select_placeholder: "Wybierz…"
-        none_placeholder: "Brak"
       errors:
         required: "Wymagane"
         invalid_url: "Musi być prawidłowym adresem URL"
@@ -2447,6 +2459,9 @@ pl_PL:
       categories_boxes: "Pudełka z podkategoriami"
       categories_boxes_with_topics: "Pudełka z polecanymi tematami"
       subcategories_with_featured_topics: "Podkategorie z polecanymi tematami"
+    full_name_requirement:
+      required_at_signup: "Wymagane"
+      optional_at_signup: "Opcjonalnie"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2743,6 +2758,7 @@ pl_PL:
           few: "%{count} nowe do sprawdzenia"
           many: "%{count} nowych do sprawdzenia"
           other: "%{count} nowych do sprawdzenia"
+      paused: "Powiadomienia wstrzymane"
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
       empty: "Nie znaleziono powiadomień."
@@ -2847,8 +2863,8 @@ pl_PL:
         quoted: "zacytowany"
         edited: "edytowane"
         liked: "nowe polubienie"
-        private_message: "nowa prywatna wiadomość"
-        invited_to_private_message: "zaproszony na prywatną wiadomość"
+        private_message: "nowa wiadomość osobista"
+        invited_to_private_message: "zaproszony do osobistej wiadomości"
         invitee_accepted: "zaproszenie przyjęte"
         posted: "nowy wpis"
         watching_category_or_tag: "nowy wpis"
@@ -3534,7 +3550,6 @@ pl_PL:
         help: "Otwórz widok wydruku dla tego tematu"
       flag_topic:
         title: "Zgłoś"
-        help: "zgłoś ten temat, aby zwrócić uwagę moderacji lub wyślij powiadomienie o nim"
         success_message: "Ten temat został pomyślnie zgłoszony."
       make_public:
         title: "Konwertuj na temat publiczny"
@@ -3720,6 +3735,8 @@ pl_PL:
           many: "Wybrano <b>%{count}</b> wpisów."
           other: "Wybrano <b>%{count}</b> wpisów."
       deleted_by_author_simple: "(temat usunięty przez autora)"
+    post_list:
+      aria_post_number: "%{title} - post #%{postNumber}"
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
@@ -3854,7 +3871,6 @@ pl_PL:
         edit_action: "Edytuj"
         edit_anonymous: "Przykro nam, ale musisz być zalogowany aby edytować ten wpis."
         flag_action: "Oflaguj"
-        flag: "oflaguj ten wpis lub wyślij powiadomienie o nim do moderatorów"
         delete_action: "Usuń post"
         delete: "usuń ten wpis"
         undelete: "przywróc ten wpis"
@@ -4341,6 +4357,7 @@ pl_PL:
       with_topics: "%{filter} tematy"
       with_category: "%{filter} tematy w %{category} "
       filter:
+        title: "Filtrowane wyniki dla %{filter}"
         button:
           label: "Filtr"
       latest:
@@ -4550,7 +4567,6 @@ pl_PL:
         print: "%{shortcut} Drukuj temat"
         defer: "%{shortcut} Oznacz temat jako nieprzeczytany"
         topic_admin_actions: "%{shortcut} Otwórz działania administratora tematu"
-        archive_private_message: "%{shortcut} Przełącz archiwizację prywatnych wiadomości"
       search_menu:
         title: "Menu wyszukiwania"
         prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
@@ -5106,7 +5122,7 @@ pl_PL:
           save: "Zapisz jako..."
     powered_by_discourse: "Obsługiwane przez Discourse"
   admin_js:
-    type_to_filter: "pisz, aby filtrować…"
+    type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
     admin:
       title: "Administrator Discourse"
@@ -5122,9 +5138,37 @@ pl_PL:
         meta_doc: "Zapoznaj się z naszą <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentacją</a>, aby uzyskać szczegółowy przegląd raportów."
         sidebar_title: "Zgłoszenia"
         sidebar_link:
-          all: "Wszystkie"
+          all: "Wszystkie zgłoszenia"
+      config:
+        developer:
+          title: "Deweloperskie"
+        experimental:
+          title: "Eksperymentalne"
+        files:
+          title: "Pliki"
+        legal:
+          title: "Prawne"
+        logo:
+          title: "Logo witryny"
+        navigation:
+          title: "Nawigacja"
+        notifications:
+          title: "Powiadomienia"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Inne"
+        search:
+          title: "Szukaj"
+        security:
+          title: "Bezpieczeństwo"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API użytkownika"
       new_features:
-        title: "Co nowego"
+        title: "Co nowego?"
+        check_for_updates: "Sprawdź aktualizacje"
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -5142,7 +5186,7 @@ pl_PL:
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         dismiss_notice: "Odrzuć"
         new_features:
-          title: "Co nowego"
+          title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
           previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Dowiedz się więcej..."
@@ -5152,6 +5196,7 @@ pl_PL:
           experiment_toggled_too_fast: "Przełączyłeś funkcję eksperymentalną zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
           experiment_tooltip:
             title_disabled: "Wypróbuj naszą eksperymentalną funkcję"
+            title_enabled: "Wyłącz funkcję eksperymentalną"
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -5232,7 +5277,7 @@ pl_PL:
             type_of_web_hook_event:
               label: "Rodzaj zdarzenia"
       flags:
-        title: "Flagi moderacji"
+        title: "Moderacja"
         description: "Opis"
         enabled: "Włączona?"
         more_options:
@@ -5581,60 +5626,39 @@ pl_PL:
         sidebar_link:
           backups: "Kopie zapasowe"
           whats_new:
-            title: "Co nowego"
+            title: "Co nowego?"
             keywords: "dziennik zmian|funkcja|wydanie"
       community:
         title: "Społeczność"
         sidebar_link:
           about_your_site: "O Twojej witrynie"
           badges: "Odznaki"
-          login_and_authentication: "Logowanie i uwierzytelnianie"
           notifications: "Powiadomienia"
           permalinks: "Permalinki"
-          trust_levels: "Poziomy zaufania"
           users: "Użytkownicy"
-          user_fields: "Pola użytkownika"
-          watched_words: "Obserwowane słowa"
+          groups: "Grupy"
           legal: "Prawne"
-          moderation_flags: "Flagi moderacji"
+          moderation_flags:
+            title: "Moderacja"
       appearance:
         title: "Wygląd"
         sidebar_link:
-          font_style: "Styl czcionki"
           site_logo: "Logo witryny"
-          color_schemes: "Schematy kolorów"
           emoji: "Emoji"
           navigation: "Nawigacja"
           themes: "Motywy"
           components:
             title: "Komponenty"
             keywords: "motyw|rozszerzenie"
-          site_texts: "Teksty witryny"
       email_settings:
         title: "Ustawienia e-mail"
         sidebar_link:
           appearance: "Wygląd"
-          preview_summary: "Pokaż zestawienie aktywności"
-          server_setup: "Konfiguracja serwera"
-      email_logs:
-        title: "Dzienniki e-mail"
-        sidebar_link:
-          sent: "Wysłane"
-          skipped: "Pominięte"
-          bounced: "Odbite"
-          received: "Otrzymane"
-          rejected: "Odrzucone"
       security:
         title: "Bezpieczeństwo"
         sidebar_link:
-          error_logs: "Logi błędów"
-          screened_emails: "Ekranowane e-maile"
-          screened_ips: "Ekranowane adresy IP"
-          screened_urls: "Ekranowane URLe"
-          search_logs: "Logi wyszukiwań"
           security: "Ustawienia zabezpieczeń"
           spam: "Ustawienia spamu"
-          staff_action_logs: "Dzienniki działań personelu"
       section_landing_pages:
         account:
           title: "Konto"
@@ -5642,7 +5666,7 @@ pl_PL:
             title: "Kopie zapasowe"
             description: "Wykonaj kopię zapasową danych swojej witryny"
           whats_new:
-            title: "Co nowego"
+            title: "Co nowego?"
             description: "Odkryj nowe wydania i ulepszenia w Discourse"
       config_areas:
         about:
@@ -5680,7 +5704,7 @@ pl_PL:
             your_organization_saved: "Twoja organizacja została zapisana"
           saved: "zapisano!"
         flags:
-          header: "Flagi moderacji"
+          header: "Moderacja"
           edit_header: "Edytuj flagę"
           subheader: "System flagowania w Discourse pomaga Tobie i Twojemu zespołowi moderatorów zarządzać treściami i zachowaniem użytkowników, utrzymując Twoją społeczność w szacunku i zdrowiu. Domyślne ustawienia są odpowiednie dla większości społeczności i nie musisz ich zmieniać. Jeśli jednak Twoja witryna ma szczególne wymagania, możesz wyłączyć flagi, których nie potrzebujesz i dodać własne niestandardowe flagi."
           description: "Opis"
@@ -5715,6 +5739,14 @@ pl_PL:
             title: "Więcej opcji"
             move_up: "Przenieś wyżej"
             move_down: "Przenieś niżej"
+        permalinks:
+          edit: "Edytuj"
+          delete: "Usuń"
+        embeddable_host:
+          edit: "Edytuj"
+          delete: "Usuń"
+          more_options:
+            title: "Więcej opcji"
         look_and_feel:
           title: "Wygląd i odczucia"
           themes:
@@ -5723,12 +5755,15 @@ pl_PL:
             default_theme: "Motyw domyślny"
             new_theme: "Nowy motyw"
         user_fields:
+          field: "Pole"
           type: "Typ"
           more_options:
             title: "Więcej opcji"
             move_up: "Przenieś wyżej"
             move_down: "Przenieś niżej"
           delete: "Usuń"
+          delete_successful: "Pole użytkownika usunięte."
+          save_successful: "Pole użytkownika zapisane."
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"
@@ -5752,18 +5787,16 @@ pl_PL:
       advanced:
         title: "Zaawansowane"
         sidebar_link:
-          api_keys: "Klucze API"
+          api_keys:
+            title: "Klucze API"
           developer: "Deweloperskie"
           embedding: "Osadzanie"
-          rate_limits: "Limity"
           user_api: "API użytkownika"
-          web_hooks: "Webhooki"
           onebox: "Onebox"
           files: "Pliki"
           other_options: "Inne"
           search: "Szukaj"
           experimental: "Eksperymentalne"
-          all_site_settings: "Wszystkie ustawienia witryny"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -5816,7 +5849,7 @@ pl_PL:
             title: "Wyślij e-mail z linkiem do pobrania"
             alert: "Link do pobrania tej kopii zapasowej został wysłany do ciebie emailem"
           destroy:
-            title: "Usuń kopię zapasową"
+            title: "Usuń"
             confirm: "Czy na pewno chcesz zniszczyć tę kopię zapasową?"
           restore:
             is_disabled: "Przywracanie jest obecnie wyłączone. Aby je włączyć, przejdź do <a href='%{url}'>ustawień witryny</a>."
@@ -5924,7 +5957,7 @@ pl_PL:
           hide_unused_fields: "Ukryj nieużywane pola"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
-          color_scheme_user_selectable: "Schemat kolorów może zostać wybrany przez użytkowników"
+          color_scheme_user_selectable: "Użytkownicy mogą wybrać paletę kolorów"
           auto_update: "Automatycznie aktualizuj po aktualizacji Discourse"
           color_scheme: "Paleta Kolorów"
           edit_color_scheme: "Edytuj paletę kolorów"
@@ -5944,6 +5977,7 @@ pl_PL:
           set_default_theme: "Ustaw domyślne"
           default_theme: "Motyw domyślny"
           set_default_success: "Domyślny motyw ustawiony na %{theme}"
+          install_success: "Motyw %{theme} zainstalowany pomyślnie!"
           inactive_components: "Nieużywane komponenty:"
           selected:
             one: "%{count} wybrano"
@@ -5952,6 +5986,7 @@ pl_PL:
             other: "%{count} wybrano"
           cancel: "Anuluj"
           broken_theme_tooltip: "Ten motyw ma błędy w CSS, HTML lub YAML"
+          broken_theme: "Wyłącz zepsuty motyw"
           disabled_component_tooltip: "Ten komponent został wyłączony"
           default_theme_tooltip: "Ten motyw jest domyślnym motywem witryny"
           updates_available_tooltip: "Dostępne są aktualizacje dla tego motywu"
@@ -6020,6 +6055,7 @@ pl_PL:
           update_to_latest: "Zaktualizuj do najnowszej wersji"
           check_for_updates: "Sprawdź dostępność aktualizacji"
           updating: "Aktualizowanie…"
+          update_success: "Aktualizacja motywu %{theme} zakończona"
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
           add: "Dodaj"
@@ -6614,6 +6650,7 @@ pl_PL:
         invalid: "Przepraszamy, nie możesz zalogować się jako ten użytkownik."
       users:
         title: "Użytkownicy"
+        description: "Przeglądaj i zarządzaj użytkownikami."
         create: "Dodaj Administratora"
         last_emailed: "Ostatni e-mail"
         not_found: "Przepraszamy, taka nazwa użytkownika nie istnieje w naszym systemie."
@@ -6623,16 +6660,29 @@ pl_PL:
         show_emails: "Pokaż e-maile"
         hide_emails: "Ukryj e-maile"
         bulk_actions:
+          title: "Działania zbiorcze"
+          admin_cant_be_deleted: "Ten użytkownik nie może zostać usunięty, ponieważ jest administratorem"
+          too_many_or_old_posts: "Ten użytkownik nie może zostać usunięty, ma zbyt wiele postów lub bardzo stary post"
           delete:
+            label: "Usuń użytkowników…"
             confirmation_modal:
               close: "Zamknij"
               confirm: "Usuń"
+              title:
+                one: "Usuń %{count} użytkownika"
+                few: "Usuń %{count} użytkowników"
+                many: "Usuń %{count} użytkowników"
+                other: "Usuń %{count} użytkowników"
+              bulk_delete_starting: "Rozpoczęcie masowego usuwania…"
+              block_ip_and_email: "Blokuj adresy IP i adresy e-mail wszystkich wybranych użytkowników"
+              bulk_delete_finished: "Operacja usuwania zbiorczego zakończona."
+              failed_to_delete_users: "Nie udało się usunąć następujących użytkowników:"
         nav:
           new: "Nowi"
           active: "Aktywni"
           staff: "Zespół"
           suspended: "Zawieszeni"
-          silenced: "Wyciszony"
+          silenced: "Wyciszeni"
           staged: "Etapowi"
         approved: "Zatwierdzony?"
         titles:
@@ -6754,6 +6804,9 @@ pl_PL:
         time_read: "Czas czytania"
         post_edits_count: "Edycje wpisu"
         anonymize: "Anonimizuj użytkownika"
+        anonymize_confirm: "Czy na pewno chcesz zanonimizować to konto? Spowoduje to zmianę nazwy użytkownika i adresu e-mail oraz zresetowania wszystkich informacji o profilu."
+        delete_associated_accounts_confirm: "Czy na pewno chcesz usunąć wszystkie powiązane konta z tego konta? Użytkownik może nie być w stanie zalogować się, jeśli jego adres e-mail uległ zmianie."
+        disable_second_factor_confirm: "Czy na pewno chcesz wyłączyć uwierzytelnianie dwuskładnikowe dla tego konta?"
         anonymize_yes: "Tak, anonimizuj to konto"
         anonymize_failed: "Wystąpił problem z anonimizacją konta."
         delete: "Usuń użytkownika"
@@ -6816,6 +6869,7 @@ pl_PL:
           few: "Nie można usunąć wszystkich postów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           many: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           other: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
+        delete_confirm_title: "Czy na pewno chcesz usunąć tego użytkownika? To jest trwałe!"
         delete_confirm: "Zasadniczo lepiej jest anonimizować użytkowników niż ich usuwać, aby uniknąć usuwania treści z istniejących dyskusji."
         delete_and_block: "Usuń i <b>zablokuj</b> ten email oraz adres IP"
         delete_dont_block: "Tylko usuń"
@@ -6912,6 +6966,11 @@ pl_PL:
           confirm_delete: "Czy na pewno chcesz usunąć ten rekord DiscourseConnect?"
       user_fields:
         title: "Pola użytkownika"
+        no_user_fields: "Nie masz jeszcze żadnych niestandardowych pól użytkownika."
+        add: "Dodaj pole użytkownika"
+        back: "Powrót do pól użytkownika"
+        edit_header: "Edytuj pole użytkownika"
+        new_header: "Dodaj pole użytkownika"
         untitled: "Bez tytułu"
         name: "Nazwa pola"
         type: "Typ pola"
@@ -6940,13 +6999,20 @@ pl_PL:
           confirmation: "Spowoduje to wyświetlenie istniejącym użytkownikom monitu o wypełnienie tego pola i nie pozwoli im na wykonanie żadnych innych czynności w Twojej witrynie, dopóki pole to nie zostanie wypełnione. Kontynuować?"
         editable:
           title: "Edytowalne po rejestracji"
+          enabled: "Edytowalny"
+          disabled: "Nieedytowalne"
         show_on_profile:
           title: "Widoczne w publicznym profilu"
+          enabled: "Widoczne w profilu"
+          disabled: "Niewidoczne w profilu"
         show_on_user_card:
           title: "Pokaż na karcie użytkownika"
+          enabled: "Widoczne na karcie użytkownika"
+          disabled: "Niewidoczne na karcie użytkownika"
         searchable:
           title: "Możliwe do wyszukania"
           enabled: "Możliwe do wyszukania"
+          disabled: "Niewyszukiwalny"
         field_types:
           text: "Tekst"
           confirm: "Potwierdzenie"
@@ -6964,6 +7030,7 @@ pl_PL:
         show_overriden: "Pokaż tylko nadpisane"
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
         show_untranslated: "Pokazuj tylko nieprzetłumaczone"
+        only_show_selected_locale: "Wyświetlaj wyniki tylko w wybranym języku"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         no_results: "Nie znaleziono pasujących tekstów witryny"
@@ -7181,16 +7248,22 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
+        no_emoji: "Nie masz jeszcze żadnych niestandardowych emoji."
+        add: "Dodaj emoji"
         delete: "Usuń"
+        back: "Powrót do emoji"
+        choose_files: "Wybierz pliki"
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"
+        created_by: "Stworzone przez"
         image: "Grafika"
         alt: "podgląd niestandardowego emoji"
         delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}:?"
         settings: "Ustawienia"
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
+        delete: "Usuń"
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
         sample: |
           <p>Wklej następujący kod HTML do swojej witryny, aby utworzyć i osadzić tematy Discourse. Zastąp <b>EMBED_URL</b> kanonicznym adresem URL strony, na której chcesz go osadzić.</p>
@@ -7199,16 +7272,9 @@ pl_PL:
 
           <p>Zastąp <b>DISCOURSE_USERNAME</b> nazwą użytkownika Discourse autora, który powinien utworzyć temat. Discourse automatycznie wyszuka użytkownika według atrybutu <code>content</code> tagów <code>&lt;meta&gt;</code> z atrybutem <code>name</code> ustawionym na <code>discourse-username</code> lub <code>autor</code>. Parametr <code>discourseUserName</code> został wycofany i zostanie usunięty w Discourse 3.2.</p>
         title: "Osadzanie"
-        host: "Dozwolone hosty"
-        allowed_paths: "Lista dozwolonych ścieżek"
-        edit: "edytuj"
-        category: "Publikuj w kategorii"
+        edit: "Edytuj"
         tags: "Tagi tematu"
-        post_author: "Autor postu — domyślnie %{author}"
-        add_host: "Dodaj host"
-        settings: "Ustawienia osadzania"
-        crawling_settings: "Ustawienia crawlera"
-        crawling_description: "Gdy Discourse tworzy tematy reprezentujące twoje wpisy, a kanał RSS/ATOM nie został podany, treść będzie pobierana poprzez parsowanie HTML. Proces ten może okazać się trudny dlatego umożliwiamy podanie dodatkowych reguł CSS, które usprawniają proces parsowania."
+        crawlers_description: "Gdy Discourse tworzy tematy reprezentujące twoje wpisy, a kanał RSS/ATOM nie został podany, treść będzie pobierana poprzez parsowanie HTML. Proces ten może okazać się trudny dlatego umożliwiamy podanie dodatkowych reguł CSS, które usprawniają proces parsowania."
         embed_by_username: "Użytkownik tworzący tematy"
         embed_post_limit: "Maksymalna ilość osadzanych wpisów "
         embed_title_scrubber: "Wyrażenie regularne używane do czyszczenia tytułu postów"
@@ -7218,6 +7284,11 @@ pl_PL:
         blocked_embed_selectors: "Selektor CSS dla elementów, które są usuwane z osadzonych"
         allowed_embed_classnames: "Dozwolone nazwy klas CSS"
         save: "Zapisz"
+        host_form:
+          save: "Zapisz"
+        nav:
+          settings: "Ustawienia"
+          crawlers: "Botów indeksujących"
       permalink:
         title: "Permalinki"
         description: "Przekierowania ubiegania się o adresy URL nieznane na forum."
@@ -7237,10 +7308,20 @@ pl_PL:
         destination: "Miejsce docelowe"
         copy_to_clipboard: "Skopiuj link bezpośredni do schowka"
         delete_confirm: Czy na pewno chcesz usunąć ten permalink?
+        no_permalinks: "Nie masz jeszcze żadnych linków stałych."
+        add: "Dodaj link stały"
+        back: "Powrót do linków trwałych"
         more_options: "Więcej opcji"
+        copy_success: "Link stały skopiowany do schowka"
+        nav:
+          settings: "Ustawienia"
+          permalinks: "Permalinki"
         form:
           label: "Nowy:"
+          add_header: "Dodaj link stały"
+          edit_header: "Edytuj link stały"
           url: "URL"
+          permalink_type: "Typ stałego linku"
           save: "Zapisz"
       reseed:
         action:
@@ -7277,8 +7358,23 @@ pl_PL:
           moderator: "Moderatorzy"
           regular: "Zwykli użytkownicy"
       previews:
-        topic_title: "Nagłówek tematu dyskusji"
         share_button: "Udostępnij"
         reply_button: "Odpowiedz"
         topic_preview: "Podgląd tematu"
         homepage_preview: "Podgląd strony głównej"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "wszystkie kategorie"
+          new: "Nowa"
+          unread: "Nieprzeczytane"
+          top: "Popularne"
+          latest: "Najnowsza"
+          hot: "Gorące"
+          categories: "Kategorie"
+        category_names:
+          site_feedback: "Dyskusje o serwisie"
+        table_headers:
+          topic: "Temat"
+          replies: "Odpowiedzi"
+          views: "Odsłony"
+          activity: "Aktywność"

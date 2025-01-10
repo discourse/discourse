@@ -905,7 +905,6 @@ bg:
     disable_system_edit_notifications: "Забрани редактирането на уведомления от системните потребители когато 'download_remote_images_to_local' е активно."
     native_app_install_banner_ios: "Показва банер на приложението DiscourseHub на устройства с iOS на основни потребители (ниво на доверие 1) и нагоре."
     native_app_install_banner_android: "Показва банер на приложението DiscourseHub на устройства с Android на основни потребители (ниво на доверие 1) и нагоре."
-    full_name_required: "Полето 'Пълно име' е задължително в потребителския профил"
     enable_names: "Покажи пълното име на потребителите на техните профили, потребителски карти, и имейли. Деактивирай за скриване на пълното име навсякъде."
     display_name_on_posts: "Покажи пълните имена на потребителите в техните публикации като допълнение към потребителските им имена @username."
     show_time_gap_days: "Ако двете публикации са направени през такъв дълъг период, покажи разликата във времето в темата."
@@ -1624,19 +1623,7 @@ bg:
           homepage_style:
             choices:
               latest:
-                label: "Последни теми"
-              categories_only:
-                label: "Само категории"
-              categories_with_featured_topics:
-                label: "Категории с избрани теми"
-              categories_and_latest_topics:
-                label: "Категории и най-новите теми"
-              categories_and_latest_topics_created_date:
-                label: "Категории и най-нови теми (сортиране по дата на създаване на тема)"
-              categories_and_top_topics:
-                label: "Категории и топ теми"
-              subcategories_with_featured_topics:
-                label: "Подкатегории с избрани теми"
+                label: "Последни"
       invites:
         title: "Поканете персонал"
       finished:
@@ -1655,7 +1642,7 @@ bg:
       quoted: '%{username} ви цитира в "%{topic}" - %{site_title}'
       replied: '%{username} ви отговори в "%{topic}" - %{site_title}'
       posted: '%{username} публикува в "%{topic}" - %{site_title}'
-      private_message: '%{username} ви изпрати лично съобщение "%{topic}" - %{site_title}'
+      private_message: '%{username} ви изпрати лично съобщение в "%{topic}" - %{site_title}'
       linked: '%{username} е сложил връзка към вашата публикация в "%{topic}" - %{site_title}'
       confirm_title: "Включени известявания - %{site_title}"
       confirm_body: "Успех! Известяването е включено."

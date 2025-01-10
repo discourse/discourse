@@ -1257,6 +1257,72 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
   end
 
+  # This is an experimental API and may be changed or removed in the future without deprecation.
+  #
+  # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
+  # first rate limiter in the stack that is active is used. By default the rate limiters stack contains the following
+  # rate limiters:
+  #
+  #   `RequestTracker::RateLimiters::User` - Rate limits authenticated requests based on the user's id
+  #   `RequestTracker::RateLimiters::IP` - Rate limits requests based on the IP address
+  #
+  # @param identifier [Symbol] A unique identifier for the rate limiter.
+  #
+  # @param key [Proc] A lambda/proc that defines the `rate_limit_key`.
+  #   - Receives `request` (An instance of `Rack::Request`) as argument.
+  #   - Should return a string representing the rate limit key.
+  #
+  # @param activate_when [Proc] A lambda/proc that defines when the rate limiter should be used for a request.
+  #   - Receives `request` (An instance of `Rack::Request`) as argument.
+  #   - Should return `true` if the rate limiter is active, otherwise `false`.
+  #
+  # @param global [Boolean] Whether the rate limiter applies globally across all sites. Defaults to `false`.
+  #   - Ignored if `klass` is provided.
+  #
+  # @param after [Class, nil] The rate limiter class after which the new rate limiter should be added.
+  #
+  # @param before [Class, nil] The rate limiter class before which the new rate limiter should be added.
+  #
+  # @example Adding a rate limiter that rate limits all requests based on the country of the IP address
+  #
+  #   add_request_rate_limiter(
+  #     identifier: :country,
+  #     key: ->(request) { "country/#{DiscourseIpInfo.get(request.ip)[:country]}" },
+  #     activate_when: ->(request) { DiscourseIpInfo.get(request.ip)[:country].present? },
+  #   )
+  def add_request_rate_limiter(
+    identifier:,
+    key:,
+    activate_when:,
+    global: false,
+    after: nil,
+    before: nil
+  )
+    raise ArgumentError, "only one of `after` or `before` can be provided" if after && before
+
+    stack = Middleware::RequestTracker.rate_limiters_stack
+
+    if (reference_klass = after || before) && !stack.include?(reference_klass)
+      raise ArgumentError, "#{reference_klass} is not a valid value. Must be one of #{stack}"
+    end
+
+    klass =
+      Class.new(RequestTracker::RateLimiters::Base) do
+        define_method(:rate_limit_key) { key.call(@request) }
+        define_method(:rate_limit_globally?) { global }
+        define_method(:active?) { activate_when.call(@request) }
+        define_method(:error_code_identifier) { identifier }
+      end
+
+    if after
+      stack.insert_after(after, klass)
+    elsif before
+      stack.insert_before(before, klass)
+    else
+      stack.prepend(klass)
+    end
+  end
+
   protected
 
   def self.js_path

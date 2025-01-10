@@ -22,13 +22,14 @@ export default class HorizontalOverflowNav extends Component {
   }
 
   @bind
-  checkScroll(event) {
+  onResize(entries) {
     if (this.site.mobileView) {
       return;
     }
 
-    this.watchScroll(event);
-    this.hasScroll = event.target.scrollWidth > event.target.offsetWidth;
+    const element = entries[0].target;
+    this.watchScroll(element);
+    this.hasScroll = element.scrollWidth > element.offsetWidth;
   }
 
   @bind
@@ -37,22 +38,30 @@ export default class HorizontalOverflowNav extends Component {
   }
 
   @bind
-  watchScroll(event) {
+  onScroll(event) {
     if (this.site.mobileView) {
       return;
     }
 
-    if (
-      event.target.offsetWidth + event.target.scrollLeft ===
-      event.target.scrollWidth
-    ) {
+    this.watchScroll(event.target);
+  }
+
+  watchScroll(element) {
+    const { scrollWidth, scrollLeft, offsetWidth } = element;
+
+    // Check if the content overflows
+    this.hasScroll = scrollWidth > offsetWidth;
+
+    // Ensure the right arrow disappears only when fully scrolled
+    if (scrollWidth - scrollLeft - offsetWidth <= 2) {
       this.hideRightScroll = true;
       clearInterval(this.scrollInterval);
     } else {
       this.hideRightScroll = false;
     }
 
-    if (event.target.scrollLeft === 0) {
+    // Ensure the left arrow disappears only when fully scrolled to the start
+    if (scrollLeft <= 2) {
       this.hideLeftScroll = true;
       clearInterval(this.scrollInterval);
     } else {

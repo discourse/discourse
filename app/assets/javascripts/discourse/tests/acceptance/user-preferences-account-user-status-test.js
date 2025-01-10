@@ -1,5 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import {
   acceptance,
   updateCurrentUser,
@@ -9,15 +10,11 @@ async function openUserStatusModal() {
   await click(".pref-user-status .btn-default");
 }
 
-async function pickEmoji(emoji) {
-  await click(".btn-emoji");
-  await fillIn(".emoji-picker-content .filter", emoji);
-  await click(".results .emoji");
-}
-
 async function setStatus(status) {
   await openUserStatusModal();
-  await pickEmoji(status.emoji);
+  await click(".btn-emoji");
+  await emojiPicker().fill(status.emoji);
+  await emojiPicker().select(status.emoji);
   await fillIn(".user-status-description", status.description);
   await click(".d-modal__footer .btn-primary"); // save and close modal
 }
@@ -25,7 +22,7 @@ async function setStatus(status) {
 acceptance("User Profile - Account - User Status", function (needs) {
   const username = "eviltrout";
   const status = {
-    emoji: "tooth",
+    emoji: "grinning",
     description: "off to dentist",
   };
 
@@ -88,7 +85,7 @@ acceptance("User Profile - Account - User Status", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     await visit(`/u/${username}/preferences/account`);
-    const newStatus = { emoji: "surfing_man", description: "surfing" };
+    const newStatus = { emoji: "womans_clothes", description: "shopping" };
     await setStatus(newStatus);
 
     assert

@@ -1,6 +1,7 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
   "discovery-topic-list-load-more",
+  "full-page-search-load-more",
 ]);
 
 export const VALUE_TRANSFORMERS = Object.freeze([
@@ -25,5 +26,6 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-header-sortable-column",
   "topic-list-class",
   "topic-list-item-class",
+  "topic-list-item-expand-pinned",
   "topic-list-item-mobile-layout",
 ]);

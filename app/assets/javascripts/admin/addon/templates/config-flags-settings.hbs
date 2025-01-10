@@ -1,5 +1,6 @@
-<AdminConfigAreas::FlagsSettings
-  @model={{this.model}}
-  @onFilterChanged={{this.filterChangedCallback}}
-  @initialFilter={{this.filter}}
+<AdminAreaSettings
+  @area="flags"
+  @path="/admin/config/flags/settings"
+  @filter={{this.filter}}
+  @adminSettingsFilterChangedCallback={{this.adminSettingsFilterChangedCallback}}
 />

@@ -135,6 +135,8 @@ bg:
             label: Тригер
           version:
             label: Версия
+          status:
+            label: Статус
           enabled:
             label: Да е включен
           disabled:

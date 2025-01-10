@@ -394,11 +394,8 @@ fr:
     max_redemptions_limit: "doit être compris entre 2 et %{max_limit}."
   topic_invite:
     failed_to_invite: "L'utilisateur ne peut pas être invité dans ce sujet sans être membre d'un des groupes suivants : %{group_names}."
-    not_pm: "Vous pouvez uniquement inviter à rejoindre des messages privés."
     user_exists: "Nous sommes désolés, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
     muted_topic: "Nous sommes désolés, cet utilisateur a mis ce sujet en sourdine."
-    receiver_does_not_allow_pm: "Nous sommes désolés, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
-    sender_does_not_allow_pm: "Nous sommes désolés, vous n'autorisez pas cet utilisateur à vous envoyer des messages directs."
     user_cannot_see_topic: "%{username} n'a pas la possibilité de consulter ce sujet."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer une nouvelle tâche pour l'instant."
@@ -1396,12 +1393,10 @@ fr:
       title: "Notifications aux modérateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
-      description: "Nombre de fois où les modérateurs ont été informés d'un signalement par message direct."
     notify_user_private_messages:
       title: "Notifications aux utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
-      description: "Nombre de fois où les utilisateurs ont été informés d'un signalement par message direct."
     top_referrers:
       title: "Meilleurs référents"
       xaxis: "Utilisateur"
@@ -1728,8 +1723,6 @@ fr:
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximal de messages inclus dans le résultat de « Résumer ce sujet »"
     summary_timeline_button: "Afficher un bouton « Résumer » dans la chronologie de chaque sujet"
-    summarization_strategy: "Autres moyens de résumer le contenu enregistré par les extensions"
-    custom_summarization_allowed_groups: "Groupes autorisés à résumer le contenu à l'aide de la « summarization_strategy »."
     enable_personal_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages personnels ». Autorisez les utilisateurs de niveau de confiance 1 (configurable via une confiance minimale pour envoyer des messages) à créer des messages et à y répondre. Notez que les responsables peuvent toujours envoyer des messages quoi qu'il arrive."
     personal_message_enabled_groups: "Autorisez les utilisateurs de ces groupes à CRÉER des messages personnels. IMPORTANT : 1) Tous les utilisateurs peuvent RÉPONDRE aux messages. 2) Les administrateurs et les modérateurs peuvent CRÉER des messages pour n'importe quel utilisateur. 3) Les groupes de niveaux de confiance incluent des niveaux plus élevés ; choisissez trust_level_1 pour autoriser TL1, TL2, TL3, TL4 mais pas TL0. 4) Les paramètres d'interaction de groupe annulent ce paramètre pour la messagerie de groupes spécifiques."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
@@ -1803,7 +1796,6 @@ fr:
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
     site_contact_username: "Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé."
-    site_contact_group_name: "Un nom de groupe valide à inviter à tous les messages directs automatiques."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message de bienvenue avec un guide de démarrage rapide."
     send_tl1_welcome_message: "Envoyer à tous les utilisateurs de niveau de confiance 1 un message de bienvenue."
     send_tl2_promotion_message: "Envoyer aux nouveaux utilisateurs de niveau de confiance 2 un message à propos de la promotion."
@@ -2062,7 +2054,6 @@ fr:
     min_title_similar_length: "La taille minimale d'un titre avant que l'on vérifie l'existence de sujets identiques."
     desktop_category_page_style: "Ce paramètre détermine la disposition visuelle de la page /categories sur le bureau. Il inclut des options telles que l'affichage des sous-catégories avec les sujets en vedette, l'affichage des sujets les plus récents ou la présentation des principaux sujets. Le style choisi influencera la façon dont les utilisateurs interagiront et navigueront dans les catégories du site."
     category_colors: "Une liste de couleurs en valeur hexadécimale autorisées pour les catégories."
-    default_dark_mode_color_scheme_id: "Le jeu de couleurs utilisé en mode sombre."
     dark_mode_none: "Aucune"
     max_image_size_kb: "La taille maximale de téléversement d'image. Cela doit également être configuré dans nginx (client_max_body_size) / apache ou proxy. Les images plus grandes et plus petites que client_max_body_size seront redimensionnées pour s'adapter au téléversement."
     max_attachment_size_kb: "Taille maximale de téléversement de pièces jointes. Cela doit également être configuré dans nginx (client_max_body_size) / apache ou proxy."
@@ -2268,7 +2259,6 @@ fr:
     penalty_include_post_message: "Incluez automatiquement la publication incriminée dans le modèle de message électronique lors de la mise en sourdine ou de la suspension d'un utilisateur"
     svg_icon_subset: "Ajoutez des icônes FontAwesome supplémentaires que vous souhaitez inclure dans vos ressources. Utilisez le préfixe « fa- » pour les icônes pleines, « far- » pour les icônes normales et « fab- » pour les icônes de marque."
     max_prints_per_hour_per_user: "Nombre maximal d'impressions de pages (défini sur 0 pour désactiver l'impression)"
-    full_name_required: "Le nom complet est requis dans le profil utilisateur."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les e-mails. Décocher pour masquer les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son nom d'utilisateur."
     show_time_gap_days: "Si deux messages sont publiés avec ce nombre de jours d'écart, afficher cette durée dans le sujet."
@@ -2294,7 +2284,6 @@ fr:
     delete_merged_stub_topics_after_days: "Délai en jours avant la suppression automatique des sujets brouillon entièrement fusionnés. Réglez ce paramètre sur -1 pour ne jamais supprimer. Réglez-le sur 0 pour supprimer immédiatement."
     bootstrap_mode_min_users: 'Nombre minimal d''utilisateurs requis pour désactiver le mode bootstrap et supprimer le bouton de démarrage (défini sur 0 pour désactiver, peut prendre jusqu''à 24 heures). Consultez <a target="_blank" href="https://meta.discourse.org/t/-/322876">le sujet du mode d''amorçage sur Meta</a> pour obtenir plus de détails.'
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
-    secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
     secure_uploads_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les e-mails, si leur taille est inférieure à la valeur du paramètre « secure uploads max email embed image size kb »."
     secure_uploads_max_email_embed_image_size_kb: "La taille maximale d'images sécurisées qui seront intégrées dans des e-mails si le paramètre « secure uploads allow embed in emails » est activé. Si celui-ci n'est pas activé, ce paramètre est sans effet."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. « encoded » générera des chaînes de caractères encodées avec des pourcentages. « none » désactivera complètement les identifiants."
@@ -2406,7 +2395,6 @@ fr:
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
     force_lowercase_tags: "Forcer les nouvelles étiquettes à être en minuscule."
     create_post_for_category_and_tag_changes: "Créez une publication chuchotée lorsque la catégorie ou les étiquettes d'un sujet changent. Cette option nécessite l'activation des publications chuchotées."
-    automatically_clean_unused_tags: "Supprimez automatiquement les étiquettes qui ne sont utilisées dans aucun sujet ou message privé au quotidien."
     watched_precedence_over_muted: "M'avertir des sujets des catégories ou des étiquettes que je regarde et qui appartiennent également à un sujet que j'ai désactivé"
     company_name: "Nom de votre entreprise ou organisation. Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis."
     governing_law: "Précisez la juridiction qui régit les aspects juridiques du site, y compris les Conditions d'utilisation et la Politique de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités."
@@ -2446,10 +2434,8 @@ fr:
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
     enable_experimental_lightbox: "Remplacez la lightbox d'image par défaut par l'apparence remaniée."
-    experimental_glimmer_topic_list_groups: "Activez la nouvelle implémentation de la liste de sujets « glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
     glimmer_post_menu_mode: "Contrôlez si la nouvelle implémentation du menu de publication « glimmer » est utilisée. « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
     glimmer_post_menu_groups: "Activez la nouvelle implémentation du menu de publication « glimmer » en mode « auto » pour les groupes d'utilisateurs spécifiés. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
-    experimental_form_templates: "Activez la fonctionnalité de modèles de formulaire. <b>Après activation,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser / Modèles</a>."
     admin_sidebar_enabled_groups: "Activez la navigation dans la barre latérale pour l'interface utilisateur d'administration pour les groupes spécifiés, qui remplace les boutons de navigation d'administration de niveau supérieur."
     lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
@@ -2524,8 +2510,8 @@ fr:
       invalid_search_ranking_weights: "La valeur n'est pas valide pour le paramètre du site search_ranking_weights. Exemple : « {0.1,0.2,0.3,1.0} ». Notez que la valeur maximale pour chaque pondération est de 1,0."
     keywords:
       clean_up_inactive_users_after_days: "désactivé|inactif|non activé"
-      purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
       navigation_menu: "barre latérale|menu déroulant d'en-tête"
+      purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4929,8 +4915,6 @@ fr:
       styling:
         title: "Apparence"
         fields:
-          color_scheme:
-            label: "Jeu de couleurs"
           body_font:
             label: "Police de contenu"
           heading_font:
@@ -4941,23 +4925,9 @@ fr:
             label: "Style de la page d'accueil"
             choices:
               latest:
-                label: "Sujets récents"
-              categories_only:
-                label: "Catégories uniquement"
-              categories_with_featured_topics:
-                label: "Catégories avec sujets à la une"
-              categories_and_latest_topics:
-                label: "Catégories et sujets récents"
-              categories_and_latest_topics_created_date:
-                label: "Catégories et derniers sujets (triés par date de création du sujet)"
-              categories_and_top_topics:
-                label: "Catégories et meilleurs sujets"
-              categories_boxes:
-                label: "Boîtes de catégories"
-              categories_boxes_with_topics:
-                label: "Boîtes de catégories avec sujets"
-              subcategories_with_featured_topics:
-                label: "Sous-catégories avec sujets en vedette"
+                label: "Récents"
+              hot:
+                label: "Populaire"
       branding:
         title: "Logo du site"
         fields:

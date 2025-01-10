@@ -250,8 +250,6 @@ fi:
       bookmark:
         instructions: |-
           Jos haluat oppia lisää, valitse <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän viestin alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä yksityisviestiketju kirjanmerkkeihisi**. Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
-        reply: |-
-          Erinomaista! Nyt voit helposti palata takaisin yksityiseen keskusteluumme milloin tahansa [profiilisi kirjanmerkit-välilehden](%{bookmark_url}) kautta. Napsauta profiilikuvaasi yläoikealla &#8599;
         not_found: |-
           Tuota noin, et ole mielestäni kirjanmerkinnyt tämän ketjun viestejä. Löysithän kirjanmerkkikuvakkeen kunkin viestin alta? Voi olla, että sinun täytyy klikata <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">-kuvaketta, jotta näet sen ja muita toimintoja.
       emoji:
@@ -285,14 +283,6 @@ fi:
 
           (Huomaa, että nimessäni on kansainvälisessä hengessä _disco_, ihan kuin siinä 1970-luvun tanssityylissä. [Rakastan yöelämää!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Haluamme pitää keskustelumme ystävällisinä ja tarvitsemme apuasi [pitääksemme asiat sivistyneinä](%{guidelines_url}). Jos huomaat ongelman, ilmoita siitä yksityisesti kirjoittajalle tai [avuliaalle henkilökunnallemme](%{about_url}) liputtamalla asia. Viestin liputtamiselle on monia syitä viattomasta ketjun jakavasta ehdotuksesta aina selkeään yhteisön standardien rikkomukseen. Jos valitset **Jotain muuta**, aloitat yksityisviestikeskustelun valvojien kanssa, jossa voit kysyä lisäkysymyksiä.
-
-          > :imp: Kirjoitin tässä jotain ikävää
-
-          **Merkitse tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ja valitse **Se on sopimaton** syyksi!
-        reply: |-
-          [Henkilökuntamme](%{base_uri}/groups/staff) saa yksityisen ilmoituksen liputuksesta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin liputuksesi.)
         not_found: |-
           Oi voi, tuhmaa viestiäni ei ole vielä liputettu sopimattomaksi. :worried: Voitko liputtaa sen sopimattomaksi **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> -painikkeella? Älä unohda, että saat lisää toimintoja näkyviin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> -painikkeen takaa.
       search:
@@ -386,12 +376,6 @@ fi:
         reply: |-
           Erinomaista! Muista, että tämä toimii alueiden lisäksi myös tunnisteille, jos ne ovat käytössä täällä.
       change_topic_notification_level:
-        instructions: |-
-          Sinulla on jokaiselle ketjulle ilmoitustaso. Aluksi se on 'tavallinen', jolloin saat tavalliseen tapaan ilmoituksen vain, jos joku puhuu nimenomaan sinulle.
-
-          Oletuksena yksityisviestiketjujen ilmoitustaso on kaikkein korkein eli 'tarkkaillaan', jolloin saat ilmoituksen joka ikisestä viestistä. Voit kuitenkin valita _mille tahansa_ ketjulle ilmoitustason 'tarkkaillaan', 'seurataan' tai 'vaimennettu'.
-
-          Kokeillaanpa vaihtaa tämän ketjun ilmoitustasoa. Ketjun alla on painike, joka näyttää sinun tarkkailevan tätä ketjua. Vaihda ilmoitustasoksi **seurataan**.
         not_found: |-
           Näytät yhä tarkkailevan :eyes: tätä ketjua! Jollet meinaa löytää sitä, ilmoitustasopainike sijaitsee ketjun alla.
         reply: |-

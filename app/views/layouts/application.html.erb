@@ -59,6 +59,8 @@
 
     <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
+    <%= render_adobe_analytics_tags_code %>
+
     <link id="manifest-link" rel="manifest" href=<%= manifest_url %> crossorigin="use-credentials">
 
     <%- if include_ios_native_app_banner? %>

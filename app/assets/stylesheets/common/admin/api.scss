@@ -1,44 +1,24 @@
 // Styles for admin/api
 
-table.web-hooks.grid {
-  td.delivery-status {
-    div {
-      display: flex;
-      align-items: center;
-    }
-    .d-icon {
-      margin-right: 0.25em;
-    }
-  }
-  td.payload-url {
+.d-admin-table.web-hooks {
+  .d-admin-row__overview.payload-url {
     word-wrap: break-word;
-    max-width: 55vw;
-  }
-  td.controls {
-    display: flex;
-    button {
-      margin-left: 0.25em;
-    }
-  }
-  @media screen and (min-width: 550px) {
-    tbody {
-      tr {
-        grid-template-columns: 0.5fr repeat(2, 1fr) 0.5fr;
-      }
+    max-width: 20vw;
 
-      td.controls {
-        text-align: right;
-      }
+    @include breakpoint(medium) {
+      max-width: 70vw;
     }
   }
-  @include breakpoint(mobile-extra-large) {
-    tbody {
-      tr {
-        grid-template-columns: 0.5fr 1fr;
-      }
+
+  .d-admin-row__detail.description {
+    @include breakpoint(medium) {
+      display: block;
     }
-    td.controls {
-      grid-row: 2;
+
+    .d-admin-row__mobile-label {
+      @include breakpoint(medium) {
+        display: block;
+      }
     }
   }
 }
@@ -118,6 +98,10 @@ table.web-hooks.grid {
         }
       }
     }
+  }
+
+  .generated-api-key {
+    margin: 1em 0;
   }
 
   .api-key {

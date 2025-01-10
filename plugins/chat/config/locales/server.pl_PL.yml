@@ -93,8 +93,6 @@ pl_PL:
       not_accepting_dms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
       actor_ignoring_target_user: "Ignorujesz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_muting_target_user: "Wyciszasz %{username}, więc nie możesz wysyłać do niego wiadomości."
-      actor_disallowed_dms: "Zdecydowałeś się uniemożliwić użytkownikom wysyłanie Ci wiadomości prywatnych i bezpośrednich, więc nie możesz tworzyć nowych wiadomości bezpośrednich."
-      actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie Ci prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do niego."
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       over_chat_max_direct_message_users_allow_self: "Możesz utworzyć bezpośrednią wiadomość tylko z samym sobą."
       over_chat_max_direct_message_users:

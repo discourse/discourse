@@ -50,6 +50,16 @@ module("Integration | Component | d-select", function (hooks) {
     });
   });
 
+  test("required field", async function (assert) {
+    await render(<template>
+      <DSelect @includeNone={{false}} as |s|>
+        <s.Option @value="foo">The real foo</s.Option>
+      </DSelect>
+    </template>);
+
+    assert.dselect().hasNoOption(NO_VALUE_OPTION);
+  });
+
   test("select attributes", async function (assert) {
     await render(<template><DSelect class="test" /></template>);
 

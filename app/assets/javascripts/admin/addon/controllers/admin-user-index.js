@@ -1,13 +1,13 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
@@ -18,9 +18,7 @@ import MergeUsersConfirmationModal from "../components/modal/merge-users-confirm
 import MergeUsersProgressModal from "../components/modal/merge-users-progress";
 import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
 
-export default class AdminUserIndexController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class AdminUserIndexController extends Controller {
   @service router;
   @service dialog;
   @service adminTools;
@@ -34,6 +32,7 @@ export default class AdminUserIndexController extends Controller.extend(
   ssoLastPayload = null;
 
   @setting("enable_badges") showBadges;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
   @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
 
   @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
@@ -129,6 +128,24 @@ export default class AdminUserIndexController extends Controller.extend(
   @discourseComputed("model.username")
   postEditsByEditorFilter(username) {
     return { editor: username };
+  }
+
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
+  }
+
+  @computed("model.id", "currentUser.id")
+  get canAdminCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canAdminCheckEmails;
   }
 
   groupAdded(added) {

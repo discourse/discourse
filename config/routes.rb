@@ -220,9 +220,10 @@ Discourse::Application.routes.draw do
       get "customize/theme-components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/colors" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/colors/:id" => "color_schemes#index", :constraints => AdminConstraint.new
-      get "customize/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
+      get "config/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
       get "customize/embedding" => "embedding#show", :constraints => AdminConstraint.new
       put "customize/embedding" => "embedding#update", :constraints => AdminConstraint.new
+      get "customize/embedding/:id" => "embedding#edit", :constraints => AdminConstraint.new
 
       resources :themes,
                 only: %i[index create show update destroy],
@@ -243,15 +244,6 @@ Discourse::Application.routes.draw do
       end
 
       scope "/customize", constraints: AdminConstraint.new do
-        resources :user_fields,
-                  only: %i[index create update destroy],
-                  constraints: AdminConstraint.new
-        get "user_fields/new" => "user_fields#index"
-        get "user_fields/:id" => "user_fields#show"
-        get "user_fields/:id/edit" => "user_fields#edit"
-        resources :emojis, only: %i[index create destroy], constraints: AdminConstraint.new
-        get "emojis/new" => "emojis#index"
-        get "emojis/settings" => "emojis#index"
         resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates" do
           collection { get "preview" => "form_templates#preview" }
         end
@@ -304,8 +296,6 @@ Discourse::Application.routes.draw do
 
         resource :email_style, only: %i[show update]
         get "email_style/:field" => "email_styles#show", :constraints => { field: /html|css/ }
-
-        resources :permalinks, only: %i[index new create show destroy]
       end
 
       resources :embeddable_hosts, only: %i[create update destroy], constraints: AdminConstraint.new
@@ -403,6 +393,25 @@ Discourse::Application.routes.draw do
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
 
+        get "developer" => "site_settings#index"
+        get "fonts" => "site_settings#index"
+        get "files" => "site_settings#index"
+        get "legal" => "site_settings#index"
+        get "login-and-authentication" => "site_settings#index"
+        get "logo" => "site_settings#index"
+        get "navigation" => "site_settings#index"
+        get "notifications" => "site_settings#index"
+        get "rate-limits" => "site_settings#index"
+        get "onebox" => "site_settings#index"
+        get "other" => "site_settings#index"
+        get "search" => "site_settings#index"
+        get "security" => "site_settings#index"
+        get "spam" => "site_settings#index"
+        get "user-api" => "site_settings#index"
+        get "experimental" => "site_settings#index"
+        get "trust-levels" => "site_settings#index"
+        get "group-permissions" => "site_settings#index"
+
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
           put "reorder/:direction" => "flags#reorder"
@@ -419,6 +428,26 @@ Discourse::Application.routes.draw do
                   only: %i[index] do
           collection { get "/themes" => "look_and_feel#themes" }
         end
+      end
+
+      scope "/config" do
+        resources :user_fields,
+                  path: "user_fields",
+                  only: %i[index create update destroy],
+                  constraints: AdminConstraint.new
+        get "user-fields/new" => "user_fields#index"
+        get "user-fields/:id" => "user_fields#show"
+        get "user-fields/:id/edit" => "user_fields#edit"
+        get "user-fields" => "user_fields#index"
+
+        get "user_fields/new" => "user_fields#index"
+        get "user_fields/:id" => "user_fields#show"
+        get "user_fields/:id/edit" => "user_fields#edit"
+
+        resources :emoji, only: %i[index create destroy], constraints: AdminConstraint.new
+        get "emoji/new" => "emoji#index"
+        get "emoji/settings" => "emoji#index"
+        resources :permalinks, only: %i[index new create show destroy]
       end
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
@@ -1681,6 +1710,8 @@ Discourse::Application.routes.draw do
 
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
+
+    get "/emojis" => "emojis#index"
 
     if Rails.env.test?
       # Routes that are only used for testing

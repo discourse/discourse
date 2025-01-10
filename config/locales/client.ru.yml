@@ -607,6 +607,8 @@ ru:
     continue: "Продолжить"
     switch_to_anon: "Войти в анонимный режим"
     switch_from_anon: "Выйти из анонимного режима"
+    select_placeholder: "Выбрать…"
+    none_placeholder: "Нет"
     banner:
       close: "Закрыть этот баннер"
       edit: "Изменить"
@@ -751,6 +753,8 @@ ru:
         refresh: "Обновить"
         status: "Статус"
         category: "Категория"
+        score_type:
+          title: "Причина"
         orders:
           score: "Оценка"
           score_asc: "Оценка (обратная сортировка)"
@@ -1068,13 +1072,13 @@ ru:
       public_admission: "Разрешать пользователям свободно присоединяться к группе (требуется общедоступная группа)"
       public_exit: "Разрешать пользователям свободно покидать группу"
       empty:
-        posts: "Участниками этой группы не создано ни одного сообщения."
-        members: "Нет участников в этой группе."
-        requests: "Для этой группы нет запросов на участие."
-        mentions: "Нет упоминаний этой группы."
-        messages: "Нет сообщений для этой группы."
-        topics: "Нет тем от участников этой группы."
-        logs: "Нет журналов для этой группы."
+        posts: "Участниками этой группы не создано ни одного сообщения"
+        members: "Нет участников в этой группе"
+        requests: "Для этой группы нет запросов на участие"
+        mentions: "Нет упоминаний этой группы"
+        messages: "Нет сообщений для этой группы"
+        topics: "Нет тем от участников этой группы"
+        logs: "Нет журналов для этой группы"
       add: "Добавить"
       join: "Вступить"
       leave: "Покинуть"
@@ -1287,14 +1291,14 @@ ru:
       trust_level: "Уровень доверия"
       read_time: "время чтения"
       topics_entered: "посещено тем"
-      post_count: "Кол-во сообщений"
+      post_count: "публикации"
       confirm_delete_other_accounts: "Действительно удалить эти аккаунты?"
       powered_by: "данные получены с помощью <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "скопировано"
     user_fields:
       none: "(выберите вариант)"
       required: 'Введите значение для «%{name}»'
-      same_as_password: "Указанный пароль не должен фигурировать в других полях."
+      same_as_password: "Указанный пароль не должен фигурировать в других полях"
       optional: (необязательно)
     user:
       said: "%{username}:"
@@ -1417,18 +1421,15 @@ ru:
         description: "Не выдавать награды и не показывать советы новым пользователям"
       reset_seen_user_tips: "Показать советы для пользователей еще раз"
       theme_default_on_all_devices: "Сделать эту тему темой по умолчанию на всех моих устройствах"
-      color_scheme_default_on_all_devices: "Установить цветовую схему по умолчанию на всех моих устройствах"
-      color_scheme: "Цветовая схема"
+      color_scheme: "Цветовая палитра"
       color_schemes:
         default_description: "Тема по умолчанию"
         disable_dark_scheme: "Обычная"
-        dark_instructions: "Чтобы увидеть цветовую схему тёмного режима, включите тёмный режим устройства."
         undo: "Сбросить"
         regular: "Обычная"
         dark: "Тёмный режим"
         default_dark_scheme: "(цветовая схема по умолчанию)"
       dark_mode: "Тёмный режим"
-      dark_mode_enable: "Включать тёмный режим автоматически"
       text_size_default_on_all_devices: "Сделать это размер текста размером по умолчанию на всех моих устройствах"
       allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
@@ -2273,9 +2274,6 @@ ru:
       optional: необязательно
       errors_summary_title: "В этой форме есть ошибки:"
       dirty_form: "Вы не отправили изменения! Действительно выйти?"
-      select:
-        select_placeholder: "Выбрать…"
-        none_placeholder: "Нет"
       errors:
         required: "Обязательное"
         invalid_url: "Требуется корректный URL-адерс"
@@ -2593,6 +2591,9 @@ ru:
       categories_boxes: "Блоки с подкатегориями"
       categories_boxes_with_topics: "Блоки с избранными темами"
       subcategories_with_featured_topics: "Подкатегории с избранными темами"
+    full_name_requirement:
+      required_at_signup: "Обязательное"
+      optional_at_signup: "Опционально"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2995,8 +2996,6 @@ ru:
         quoted: "Процитировано"
         edited: "Отредактировано"
         liked: "новый лайк"
-        private_message: "новое личное сообщение"
-        invited_to_private_message: "Приглашен(а) в личное сообщение"
         invitee_accepted: "Приглашение принято"
         posted: "новое сообщение"
         watching_category_or_tag: "новое сообщение"
@@ -3682,7 +3681,6 @@ ru:
         help: "Открыть версию для печати"
       flag_topic:
         title: "Пожаловаться"
-        help: "лично пожаловаться на эту тему для привлечения внимания или отправить личное уведомление о ней"
         success_message: "Вы пожаловались на тему."
       make_public:
         title: "Преобразовать в публичную тему"
@@ -3868,6 +3866,8 @@ ru:
           many: "Вы выбрали <b>%{count}</b> сообщений."
           other: "Вы выбрали <b>%{count}</b> сообщения."
       deleted_by_author_simple: "(тема удалена автором)"
+    post_list:
+      aria_post_number: "%{title} — сообщение #%{postNumber}"
     post:
       confirm_delete: "Действительно удалить сообщение?"
       quote_reply: "Ответить с цитированием"
@@ -4002,7 +4002,6 @@ ru:
         edit_action: "Изменить"
         edit_anonymous: "Войдите, чтобы отредактировать это сообщение."
         flag_action: "Пометить"
-        flag: "лично пожаловаться на это сообщение для привлечения внимания или отправить личное уведомление о нем"
         delete_action: "Удалить публикацию"
         delete: "удалить сообщение"
         undelete_action: "Восстановить публикацию"
@@ -4712,7 +4711,6 @@ ru:
         print: "%{shortcut} Распечатать тему"
         defer: "%{shortcut} Пометить тему как непрочитанную"
         topic_admin_actions: "%{shortcut} Открыть в теме меню действий администратора"
-        archive_private_message: "%{shortcut} Переключатель для архивации личных сообщений"
       search_menu:
         title: "Меню результатов поиска"
         prev_next: "%{shortcut} Перемещение по результатам поиска"
@@ -5284,9 +5282,36 @@ ru:
         meta_doc: "Ознакомьтесь с нашей <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>документацией</a> для подробного обзора отчетов."
         sidebar_title: "Отчеты"
         sidebar_link:
-          all: "Все настройки"
+          all: "Все отчёты"
+      config:
+        developer:
+          title: "Разработчикам"
+        experimental:
+          title: "Экспериментальная функция"
+        files:
+          title: "Файлы"
+        legal:
+          title: "Юридическое"
+        logo:
+          title: "Логотип сайта"
+        navigation:
+          title: "Навигация"
+        notifications:
+          title: "Уведомления"
+        onebox:
+          title: "OneBox"
+        other:
+          title: "Разное"
+        search:
+          title: "Найти"
+        security:
+          title: "Безопасность"
+        spam:
+          title: "Спам"
+        user_api:
+          title: "Пользовательский API"
       new_features:
-        title: "Что нового"
+        title: "Что нового?"
       dashboard:
         title: "Панель управления"
         last_updated: "Панель управления обновлена:"
@@ -5304,7 +5329,7 @@ ru:
         problems_found: "Несколько советов по текущим настройкам сайта"
         dismiss_notice: "Закрыть"
         new_features:
-          title: "Что нового"
+          title: "Что нового?"
           subtitle: "Мы регулярно выпускаем обновления с новыми функциями и улучшениями. На этой странице перечислены ключевые моменты, а полный список доступен по ссылке «Подробнее»."
           previous_announcements: "Вы можете увидеть предыдущие анонсы новых функций на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Подробнее…"
@@ -5394,7 +5419,7 @@ ru:
             type_of_web_hook_event:
               label: "Тип события"
       flags:
-        title: "Метки модерации"
+        title: "Модерация"
         description: "Описание"
         enabled: "Включено?"
         more_options:
@@ -5744,60 +5769,39 @@ ru:
         sidebar_link:
           backups: "Резервные копии"
           whats_new:
-            title: "Что нового"
+            title: "Что нового?"
             keywords: "журнал изменений|функция|версия"
       community:
         title: "Сообщество"
         sidebar_link:
           about_your_site: "О вашем сайте"
           badges: "Награды"
-          login_and_authentication: "Вход и аутентификация"
           notifications: "Уведомления"
           permalinks: "Постоянные ссылки"
-          trust_levels: "Уровни доверия"
           users: "Пользователи"
-          user_fields: "Поля пользователя"
-          watched_words: "Контролируемые слова"
+          groups: "Группы"
           legal: "Юридическое"
-          moderation_flags: "Метки модерации"
+          moderation_flags:
+            title: "Модерация"
       appearance:
         title: "Внешний вид"
         sidebar_link:
-          font_style: "Стиль шрифта"
           site_logo: "Логотип сайта"
-          color_schemes: "Цветовые схемы"
           emoji: "Эмодзи"
           navigation: "Навигация"
           themes: "Темы"
           components:
             title: "Компоненты"
             keywords: "тема|расширение"
-          site_texts: "Тексты сайта"
       email_settings:
         title: "Настройки электронной почты"
         sidebar_link:
           appearance: "Внешний вид"
-          preview_summary: "Предпросмотр сводки"
-          server_setup: "Настройка сервера"
-      email_logs:
-        title: "Журналы электронной почты"
-        sidebar_link:
-          sent: "Отправленные"
-          skipped: "Пропущено"
-          bounced: "Возвращено"
-          received: "Получено"
-          rejected: "Отклонено"
       security:
         title: "Безопасность"
         sidebar_link:
-          error_logs: "Журнал ошибок"
-          screened_emails: "Проверяемые адреса электронной почты"
-          screened_ips: "Проверяемые IP-адреса"
-          screened_urls: "Проверяемые ссылки"
-          search_logs: "Журналы поиска"
           security: "Настройки безопасности"
           spam: "Настройки спама"
-          staff_action_logs: "Журналы действий персонала"
       section_landing_pages:
         account:
           title: "Аккаунт"
@@ -5805,7 +5809,7 @@ ru:
             title: "Резервные копии"
             description: "Создает резервную копию данных вашего сайта"
           whats_new:
-            title: "Что нового"
+            title: "Что нового?"
             description: "Узнавайте о новых версиях и функциях в Discourse"
       config_areas:
         about:
@@ -5838,8 +5842,6 @@ ru:
           site_contact_name_help: |
             Все автоматические сообщения будут отправляться от имени указанного здесь пользователя, относящегося к персоналу. Если оставить поле пустым, будет использован системный аккаунт по умолчанию — System.
           site_contact_group: "Контактная группа сайта"
-          site_contact_group_help: |
-            Группа пользователей, получающих все автоматические уведомления в виде личных сообщений.
           your_organization: "Ваша организация"
           your_organization_description: "Мы будем использовать эту информацию в Условиях использования и Уведомлении о конфиденциальности, чтобы показать, кто управляет сайтом и под какой юрисдикцией."
           company_name: "Название"
@@ -5862,7 +5864,7 @@ ru:
             your_organization_saved: "Данные организации сохранены"
           saved: "сохранено!"
         flags:
-          header: "Метки модерации"
+          header: "Модерация"
           edit_header: "Изменение метки"
           subheader: "Система меток в Discourse поможет вам и вашей команде модераторов работать с контентом и реагировать на поведение пользователей, что позволит обеспечить уважительное и здоровое взаимодействие в сообществе. Настройки по умолчанию подходят для большинства сообществ — их можно не менять. Однако если у вас особые требования к сайту, вы можете отключить ненужные метки и добавить собственные."
           description: "Описание"
@@ -5898,6 +5900,14 @@ ru:
             title: "Другие варианты"
             move_up: "Вверх"
             move_down: "Вниз"
+        permalinks:
+          edit: "Отредактировать"
+          delete: "Удалить"
+        embeddable_host:
+          edit: "Отредактировать"
+          delete: "Удалить"
+          more_options:
+            title: "Другие варианты"
         look_and_feel:
           title: "Оформление"
           description: "Сделайте ваш сайт Discourse уникальным, настроив и оформив его под ваш бренд."
@@ -5940,18 +5950,16 @@ ru:
       advanced:
         title: "Дополнительно"
         sidebar_link:
-          api_keys: "API-ключи"
+          api_keys:
+            title: "API-ключи"
           developer: "Разработчикам"
           embedding: "Встраивание"
-          rate_limits: "Ограничения"
           user_api: "Пользовательский API"
-          web_hooks: "Вебхуки"
           onebox: "OneBox"
           files: "Файлы"
           other_options: "Разное"
           search: "Поиск"
           experimental: "Экспериментально"
-          all_site_settings: "Все настройки сайта"
       navigation_menu:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"
@@ -6004,7 +6012,7 @@ ru:
             title: "Отправить письмо со ссылкой для скачивания"
             alert: "Вам была отправлена ссылка для скачивания резервной копии"
           destroy:
-            title: "Удалить резервную копию"
+            title: "Удалить"
             confirm: "Действительно удалить резервную копию?"
           restore:
             is_disabled: "Восстановление в данный момент отключено. Чтобы включить его, зайдите в <a href='%{url}'>настройки сайта</a>."
@@ -6114,7 +6122,6 @@ ru:
           hide_unused_fields: "Скрыть неиспользуемые поля"
           is_default: "Активирована по умолчанию"
           user_selectable: "Тема может быть выбрана пользователем"
-          color_scheme_user_selectable: "Цветовая схема может быть выбрана пользователем"
           auto_update: "Автообновление при обновлении Discourse"
           color_scheme: "Цветовая палитра"
           edit_color_scheme: "Редактировать цветовую палитру"
@@ -7406,6 +7413,7 @@ ru:
         settings: "Настройки"
       embedding:
         get_started: "Для встраивания на другой сайт необходимо добавить соответствующий хост."
+        delete: "Удалить"
         confirm_delete: "Действительно удалить этот хост?"
         sample: |
           <p>Используйте следующий HTML-код на своем сайте для создания и встраивания тем Discourse. Замените <b>EMBED_URL</b> каноническим URL-адресом страницы, в которую производится встраивание.</p>
@@ -7414,16 +7422,9 @@ ru:
 
           <p>Замените <b>DISCOURSE_USERNAME</b> на имя пользователя Discourse автора, который должен создать тему. Discourse будет автоматически искать пользователя по атрибуту <code>content</code> тегов <code>&lt;meta&gt;</code> с атрибутом <code>name</code>, для которого задано значение <code>discourse-username</code> или <code>author</code>. Параметр <code>discourseUserName</code> устарел и будет удален в Discourse 3.2.</p>
         title: "Встраивание"
-        host: "Разрешённые хосты"
-        allowed_paths: "Список разрешённых путей"
-        edit: "изменить"
-        category: "Опубликовать в категории"
-        tags: "Теги тем"
-        post_author: "Автор публикации — по умолчанию %{author}"
-        add_host: "Добавить хост"
-        settings: "Настройки встраивания"
-        crawling_settings: "Настройки поискового робота"
-        crawling_description: "Если RSS/ATOM не поддерживается, то при создании тем Discourse попытается проанализировать содержимое из HTML. В некоторых случаях извлечение содержимого оказывается сложным, поэтому мы предоставляем возможность задавать правила CSS, чтобы сделать извлечение проще."
+        edit: "Отредактировать"
+        tags: "Теги темы"
+        crawlers_description: "Если RSS/ATOM не поддерживается, то при создании тем Discourse попытается проанализировать содержимое из HTML. В некоторых случаях извлечение содержимого оказывается сложным, поэтому мы предоставляем возможность задавать правила CSS, чтобы сделать извлечение проще."
         embed_by_username: "Имя пользователя, которое будет использоваться при создании темы"
         embed_post_limit: "Максимальное количество встроенных сообщений"
         embed_title_scrubber: "Регулярное выражение, используемое для очистки заголовка сообщений"
@@ -7432,7 +7433,12 @@ ru:
         allowed_embed_selectors: "CSS-селектор для элементов, разрешенных во встраивании"
         blocked_embed_selectors: "CSS-селектор для элементов, удаленных из встраивания"
         allowed_embed_classnames: "Разрешённые имена классов CSS"
-        save: "Сохранить настройки встраивания"
+        save: "Сохранить"
+        host_form:
+          save: "Сохранить"
+        nav:
+          settings: "Настройки"
+          crawlers: "Поисковые роботы"
       permalink:
         title: "Постоянные ссылки"
         description: "Перенаправления, применяемые для URL, не известных форуму."
@@ -7457,6 +7463,9 @@ ru:
         back: "Вернуться к постоянным ссылкам"
         more_options: "Другие варианты"
         copy_success: "Постоянная ссылка скопирована в буфер обмена"
+        nav:
+          settings: "Настройки"
+          permalinks: "Постоянные ссылки"
         form:
           label: "Новая постоянная ссылка:"
           add_header: "Добавление постоянной ссылки"
@@ -7500,8 +7509,23 @@ ru:
           moderator: "Модератор"
           regular: "Обычный пользователь"
       previews:
-        topic_title: "Заголовок темы"
         share_button: "Поделиться"
         reply_button: "Ответить"
         topic_preview: "Предпросмотр темы"
         homepage_preview: "Предпросмотр главной страницы"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "все категории"
+          new: "Новые"
+          unread: "Непрочитанные"
+          top: "Обсуждаемые"
+          latest: "Последние"
+          hot: "Горячие"
+          categories: "Категории"
+        category_names:
+          site_feedback: "Отзывы по сайту"
+        table_headers:
+          topic: "Перенаправление в тему"
+          replies: "Ответы"
+          views: "Просмотров"
+          activity: "Активность"

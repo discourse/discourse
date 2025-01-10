@@ -1,14 +1,15 @@
-<AdminPageHeader
-  @titleLabel="admin.section_landing_pages.account.title"
+<DPageHeader
+  @titleLabel={{i18n "admin.section_landing_pages.account.title"}}
   @hideTabs={{true}}
 >
   <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
     <DBreadcrumbsItem
       @path="/admin/section/account"
       @label={{i18n "admin.section_landing_pages.account.title"}}
     />
   </:breadcrumbs>
-</AdminPageHeader>
+</DPageHeader>
 
 <AdminSectionLandingWrapper>
   <AdminSectionLandingItem

@@ -42,15 +42,15 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
         store.store_upload(uploaded_file, upload)
       end
 
-      context "when the file is a PDF" do
-        let(:original_filename) { "small.pdf" }
-        let(:uploaded_file) { file_from_fixtures("small.pdf", "pdf") }
+      context "when the file is a SVG" do
+        let(:original_filename) { "small.svg" }
+        let(:uploaded_file) { file_from_fixtures("small.svg", "svg") }
 
         it "adds an attachment content-disposition with the original filename" do
           disp_opts = {
             content_disposition:
               "attachment; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}",
-            content_type: "application/pdf",
+            content_type: "image/svg+xml",
           }
           s3_helper
             .expects(:upload)
@@ -65,12 +65,8 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
         let(:original_filename) { "small.mp4" }
         let(:uploaded_file) { file_from_fixtures("small.mp4", "media") }
 
-        it "adds an attachment content-disposition with the original filename" do
-          disp_opts = {
-            content_disposition:
-              "attachment; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}",
-            content_type: "application/mp4",
-          }
+        it "does not add content-disposition header" do
+          disp_opts = { content_type: "application/mp4" }
           s3_helper
             .expects(:upload)
             .with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts))
@@ -84,12 +80,8 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
         let(:original_filename) { "small.mp3" }
         let(:uploaded_file) { file_from_fixtures("small.mp3", "media") }
 
-        it "adds an attachment content-disposition with the original filename" do
-          disp_opts = {
-            content_disposition:
-              "attachment; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}",
-            content_type: "audio/mpeg",
-          }
+        it "does not add content-disposition header" do
+          disp_opts = { content_type: "audio/mpeg" }
           s3_helper
             .expects(:upload)
             .with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts))

@@ -664,6 +664,9 @@ class UsersController < ApplicationController
     params.permit(:user_fields)
     params.permit(:external_ids)
 
+    if SiteSetting.enable_discourse_connect && !is_api?
+      return fail_with("login.new_registrations_disabled_discourse_connect")
+    end
     return fail_with("login.new_registrations_disabled") unless SiteSetting.allow_new_registrations
 
     if params[:password] && params[:password].length > User.max_password_length

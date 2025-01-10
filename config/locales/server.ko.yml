@@ -235,8 +235,6 @@ ko:
     failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면 이 주제에 사용자를 초대할 수 없습니다."
     user_exists: "이 사용자는 이미 초대를 받았습니다. 주제 초대는 한 번만 할 수 있습니다."
     muted_topic: "이 사용자는 이 주제를 뮤트했습니다."
-    receiver_does_not_allow_pm: "이 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않았습니다."
-    sender_does_not_allow_pm: "내게 비공개 메시지를 보낼 수 있도록 이 사용자를 허용하지 않았습니다."
     user_cannot_see_topic: "%{username} 님은 주제를 볼 수 없습니다."
   backup:
     operation_already_running: "현재 작업이 실행 중입니다. 지금은 새 작업을 시작할 수 없습니다."
@@ -1086,12 +1084,10 @@ ko:
       title: "운영자에게 알림"
       xaxis: "일"
       yaxis: "메시지 수"
-      description: "신고로 인해 운영자가 비공개로 알림받은 횟수입니다."
     notify_user_private_messages:
       title: "사용자에게 알림"
       xaxis: "일"
       yaxis: "메시지 수"
-      description: "신고로 인해 사용자가 비공개로 알림받은 횟수입니다."
     top_referrers:
       title: "주요 참조 사용자"
       xaxis: "사용자"
@@ -1412,7 +1408,6 @@ ko:
     invalidate_inactive_admin_email_after_days: "이 기간에 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야 합니다. 비활성화하려면 0으로 설정하세요."
     share_links: "공유 대화창에 표시할 항목과 순서를 결정합니다."
     site_contact_username: "모든 자동 메시지를 보낼 유효한 운영진 아이디입니다. 비워 두면 기본 시스템 계정이 사용됩니다."
-    site_contact_group_name: "자동 전송한 모든 비공개 메시지에 초대할 유효한 그룹 이름입니다."
     send_welcome_message: "모든 신규 사용자에게 퀵스타드 가이드와 환영 메시지를 전송합니다."
     send_tl1_welcome_message: "신규 신뢰 레벨 1 사용자에게 환영 메시지를 전송합니다."
     send_tl2_promotion_message: "신규 신뢰 레벨 2 사용자에게 승급에 대한 메시지를 전송합니다."
@@ -1605,7 +1600,6 @@ ko:
     title_fancy_entities: "일반적인 ASCII 문자를 주제 제목의 멋진 HTML 엔티티로 변환합니다. 예: SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "유사 주제를 확인하기 전 최소 제목 길이입니다."
     category_colors: "카테고리에 허용된 16진수 색상 값의 목록입니다."
-    default_dark_mode_color_scheme_id: "다크 모드에서 사용되는 색상 구성표입니다."
     dark_mode_none: "없음"
     max_similar_results: "새 주제를 작성할 때 에디터 위에 표시할 유사 주제의 수입니다. 비교는 제목과 본문을 기준으로 합니다."
     max_image_megapixels: "이미지에 허용되는 최대 메가픽셀 수입니다. 메가픽셀 수가 많은 이미지는 거부됩니다."
@@ -1763,7 +1757,6 @@ ko:
     app_association_android: "Google의 Digital Asset Links API에 사용되는 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 엔드포인트의 콘텐츠입니다."
     app_association_ios: "이 사이트와 iOS 앱 간의 범용 링크를 만드는 데 사용되는 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> 엔드포인트의 콘텐츠입니다."
     auto_handle_queued_age: "이 정도 기간이 지나면 검토 대기 기록을 자동으로 처리합니다. 신고는 무시됩니다. 대기 중인 게시물 및 사용자는 거부됩니다. 이 기능을 비활성화하려면 0으로 설정하세요."
-    full_name_required: "전체 이름은 사용자 프로필의 필수 필드입니다."
     enable_names: "사용자의 전체 이름을 프로필, 사용자 카드, 이메일에서 표시합니다. 모든 곳에서 전체 이름을 숨기려면 비활성화하세요."
     display_name_on_posts: "게시물에 @아이디뿐만 아니라 사용자의 전체 이름도 표시합니다."
     show_time_gap_days: "이 정도 일 수의 간격으로 두 개의 게시물을 작성한 경우 주제에 시간 간격을 표시합니다."
@@ -3662,8 +3655,6 @@ ko:
             placeholder: "채팅 활성화"
       styling:
         fields:
-          color_scheme:
-            label: "색상 구성표"
           body_font:
             label: "본문 폰트"
           heading_font:
@@ -3674,21 +3665,7 @@ ko:
             label: "홈페이지 스타일"
             choices:
               latest:
-                label: "최신 주제"
-              categories_only:
-                label: "카테고리만"
-              categories_with_featured_topics:
-                label: "추천 주제가 있는 카테고리"
-              categories_and_latest_topics:
-                label: "카테고리 및 최신 주제"
-              categories_and_top_topics:
-                label: "카테고리 및 주요 주제"
-              categories_boxes:
-                label: "카테고리 박스"
-              categories_boxes_with_topics:
-                label: "글이 있는 카테고리 상자"
-              subcategories_with_featured_topics:
-                label: "추천 글이 포함된 하위 카테고리"
+                label: "최신"
       corporate:
         fields:
           governing_law:
@@ -3722,7 +3699,7 @@ ko:
       quoted: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 인용했습니다'
       replied: '''%{topic}'' - %{site_title}에서 %{username} 님이 내게 댓글을 달았습니다'
       posted: '''%{topic}'' - %{site_title}에서 %{username} 님이 게시했습니다'
-      private_message: '''%{topic}'' -%{site_title}에서 %{username} 님이 나에게 비공개 메시지를 보냈습니다'
+      private_message: '%{username}에서 "%{topic}"에 개인 메시지를 보냈습니다-%{site_title}'
       linked: '%{username} 님이 ''%{topic}'' - %{site_title}의 내 게시물에 링크했습니다'
       watching_first_post: '%{username} 님이 새 주제(''%{topic}'' - %{site_title})를 만들었습니다'
       confirm_title: "알림 활성화됨 - %{site_title}"

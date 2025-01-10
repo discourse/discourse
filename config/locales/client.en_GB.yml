@@ -54,10 +54,7 @@ en_GB:
     ip_lookup:
       organisation: Organisation
     user:
-      color_scheme: "Colour Scheme"
-      color_schemes:
-        dark_instructions: "You can preview the dark mode colour scheme by toggling your device's dark mode."
-      dark_mode_enable: "Enable automatic dark mode colour scheme"
+      color_scheme: "Colour Palette"
       experimental_sidebar:
         navigation_section: "Navigation"
       preferences_nav:
@@ -118,6 +115,9 @@ en_GB:
             header_dropdown: "Customise"
   admin_js:
     admin:
+      config:
+        navigation:
+          title: "Navigation"
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
       flags:
@@ -148,7 +148,6 @@ en_GB:
         theme:
           customize_desc: "Customise:"
           long_title: "Amend colours, CSS and HTML contents of your site"
-          color_scheme_user_selectable: "Colour scheme can be selected by users"
           color_scheme: "Colour Palette"
           color_scheme_select: "Select colours to be used by theme"
           header:
@@ -220,4 +219,9 @@ en_GB:
         post_title: "Post"
       reseed:
         modal:
+          categories: "Categories"
+  wizard_js:
+    wizard:
+      homepage_preview:
+        nav_buttons:
           categories: "Categories"

@@ -167,10 +167,10 @@ de:
               description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist
             restricted_group:
               label: Gruppe
-              description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags eine persönliche Nachricht im Posteingang dieser Gruppe ist
+              description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang dieser Gruppe ist
             restricted_groups:
               label: Gruppen
-              description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags eine private Nachricht in einem der Posteingänge der Gruppe ist
+              description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang einer der Gruppen ist
             ignore_group_members:
               label: Gruppenmitglieder ignorieren
               description: Den Auslöser überspringen, falls der Absender ein Mitglied der oben angegebenen Gruppe ist
@@ -413,6 +413,8 @@ de:
             label: Skript
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Aktiviert
           disabled:

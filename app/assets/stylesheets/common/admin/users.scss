@@ -117,7 +117,8 @@
     margin-top: 1em;
     &__column-header {
       &--username,
-      &---email {
+      &---email,
+      &--silence-reason {
         .header-contents {
           text-align: left;
         }
@@ -147,6 +148,18 @@
         span {
           max-width: 100%;
         }
+      }
+    }
+
+    &__cell.silence_reason {
+      text-align: left;
+      justify-content: start;
+
+      span {
+        max-width: 12em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
@@ -209,12 +222,5 @@
 
   .associations button {
     margin: 5px 5px 0 0;
-  }
-
-  .ip-lookup {
-    display: block;
-    .location-box {
-      left: 0;
-    }
   }
 }

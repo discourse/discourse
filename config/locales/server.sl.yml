@@ -655,8 +655,6 @@ sl:
         searches: Iskanj
     system_private_messages:
       title: "Sistem"
-    notify_user_private_messages:
-      description: "Kolikokrat so bili uporabniki zasebno opozorjeni s prijavo."
     top_referrers:
       xaxis: "Uporabnik"
       num_topics: "Tem"
@@ -1971,14 +1969,8 @@ sl:
             label: "Predogled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije z izpostavljenimi temami"
-              categories_and_latest_topics:
-                label: "Kategorije in najnovejše teme"
-              categories_and_top_topics:
-                label: "Kategorije in najboljše teme"
+              latest:
+                label: "Najnovejše"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
   onebox:
@@ -1991,7 +1983,7 @@ sl:
       quoted: '%{username} vas je citiral v "%{topic}" - %{site_title}'
       replied: '%{username} vam je odgovoril v "%{topic}" - %{site_title}'
       posted: '%{username} je objavil v "%{topic}" - %{site_title}'
-      private_message: '%{username} vam je poslal zasebno sporočilo v "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslal zasebno sporočilo "%{topic}" - %{site_title}'
       linked: '%{username} je objavil povezavo na vaš prispevek v "%{topic}" - %{site_title}'
       watching_first_post: '%{username} je ustvaril novo temo "%{topic}" - %{site_title}'
       confirm_title: "Obvestila omogočena - %{site_title}"

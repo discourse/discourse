@@ -89,8 +89,8 @@ de:
       not_accepting_dms: "%{username} akzeptiert derzeit leider keine Nachrichten."
       actor_ignoring_target_user: "Du ignorierst %{username}, daher kannst du keine Nachrichten an die Person senden."
       actor_muting_target_user: "Du hast %{username} stummgeschaltet, daher kannst du keine Nachrichten an die Person senden."
-      actor_disallowed_dms: "Du hast dich dafür entschieden, dass Benutzer dir keine privaten und Direktnachrichten schicken können, daher kannst du keine neuen Direktnachrichten erstellen."
-      actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine privaten und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
+      actor_disallowed_dms: "Du hast dich dafür entschieden, dass Benutzer dir keine persönlichen und Direktnachrichten schicken können, daher kannst du keine neuen Direktnachrichten erstellen."
+      actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine persönlichen und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
       over_chat_max_direct_message_users_allow_self: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
       over_chat_max_direct_message_users:

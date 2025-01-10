@@ -395,11 +395,11 @@ de:
     max_redemptions_limit: "sollte zwischen 2 und %{max_limit} sein."
   topic_invite:
     failed_to_invite: "Der Benutzer kann nicht in dieses Thema eingeladen werden, ohne Mitglied in einer der folgenden Gruppen zu sein: %{group_names}"
-    not_pm: "Du kannst nur zu privaten Nachrichten einladen."
+    not_pm: "Du kannst nur zu persönlichen Nachrichten einladen."
     user_exists: "Entschuldige, dieser Benutzer ist bereits eingeladen worden. Du kannst einen Benutzer nur einmal zu einem Thema einladen."
     muted_topic: "Entschuldige, dieser Benutzer hat dieses Thema stummgeschaltet."
-    receiver_does_not_allow_pm: "Entschuldige, dieser Benutzer erlaubt es dir nicht, ihm private Nachrichten zu senden."
-    sender_does_not_allow_pm: "Entschuldige, du erlaubst diesem Benutzer nicht, dir private Nachrichten zu senden."
+    receiver_does_not_allow_pm: "Entschuldige, dieser Benutzer erlaubt es dir nicht, ihm persönliche Nachrichten zu senden."
+    sender_does_not_allow_pm: "Entschuldige, du erlaubst diesem Benutzer nicht, dir persönliche Nachrichten zu senden."
     user_cannot_see_topic: "%{username} kann das Thema nicht sehen."
   backup:
     operation_already_running: "Ein Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
@@ -1027,8 +1027,8 @@ de:
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Schreibe @%{username} eine Nachricht"
-      description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
-      short_description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
+      description: "Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden."
+      short_description: "Ich möchte mit dieser Person direkt und persönlich über ihren Beitrag reden."
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -1398,12 +1398,12 @@ de:
       title: "Moderatoren benachrichtigen"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl, wie häufig Moderatoren persönlich über eine Meldung informiert wurden."
+      description: "Anzahl, wie häufig Moderatoren persönliche Nachrichten mit zusätzlichen Details zur Meldung erhalten haben."
     notify_user_private_messages:
       title: "Benutzer benachrichtigen"
       xaxis: "Tag"
       yaxis: "Anzahl der Nachrichten"
-      description: "Anzahl, wie häufig Benutzer persönlich über eine Meldung informiert wurden."
+      description: "Anzahl, wie häufig Benutzern persönliche Nachrichten über den Meldungsdialog gesendet wurden"
     top_referrers:
       title: "Top-Referrer"
       xaxis: "Benutzer"
@@ -1730,8 +1730,6 @@ de:
     summary_percent_filter: "Zeige die Top-% der Beiträge eines Themas in der „Dieses Thema zusammenfassen“-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge in der „Dieses Thema zusammenfassen“-Ansicht"
     summary_timeline_button: "Schaltfläche „Zusammenfassen“ in der Zeitleiste anzeigen"
-    summarization_strategy: "Zusätzliche Möglichkeiten, von Plug-ins registrierte Inhalte zusammenzufassen"
-    custom_summarization_allowed_groups: "Gruppen, die Inhalte mit `summarization_strategy` zusammenfassen dürfen."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
     personal_message_enabled_groups: "Erlaube den Benutzern in diesen Gruppen, persönliche Nachrichten zu ERSTELLEN. WICHTIG: 1) Alle Benutzer können auf Nachrichten ANTWORTEN. 2) Administratoren und Moderatoren können Nachrichten an jeden Benutzer ERSTELLEN. 3) Vertrauensstufengruppen beinhalten höhere Stufen; wähle Vertrauensstufe_1, um VS1, VS2, VS3, VS4 zuzulassen, nicht aber VS0. 4) Gruppeninteraktionseinstellungen überschreiben diese Einstellung für Nachrichten an bestimmte Gruppen."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
@@ -1802,6 +1800,7 @@ de:
     content_security_policy_frame_ancestors: "Schränke ein, wer diese Website in iframes über CSP einbetten kann. Kontrolliere erlaubte Hosts unter <a href='%{base_path}/admin/customize/embedding'>Einbettung</a>"
     content_security_policy_script_src: "Zusätzliche Skript-Quellen auf der Erlaubnisliste. Der aktuelle Host und das CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minderung von XSS-Angriffen mit Content Security Policy</a> (CSP). Host-Quellen werden ignoriert, wenn content_security_policy_strict_dynamic aktiviert ist."
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
+    suppress_secured_categories_from_admin: "Unterdrücke private Themen und PMs in einigen Teilen der Benutzeroberfläche für Administratoren. Der Inhalt ist an einigen Stellen weiterhin sichtbar. Dies ist keine Sicherheitsfunktion: Administratoren können immer auf alle Inhalte der Site zugreifen."
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
     top_menu: "Lege fest, welche Elemente in der Homepage-Navigation erscheinen und in welcher Reihenfolge."
@@ -1810,7 +1809,7 @@ de:
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     allow_username_in_share_links: "Benutzernamen in Freigabelinks erlauben. Dies ist nützlich, um Abzeichen für einzelne Besucher zu vergeben."
     site_contact_username: "Gültiger Benutzername eines Team-Mitglieds, in dessen Namen alle automatisch erzeugten Nachrichten versendet werden sollen. Falls leer, wird das Standard-System-Konto verwendet."
-    site_contact_group_name: "Ein gültiger Name einer Gruppe, die zu allen automatisch versendeten privaten Nachrichten eingeladen wird."
+    site_contact_group_name: "Ein gültiger Name einer Gruppe, die zu allen automatisch versendeten persönlichen Nachrichten eingeladen wird."
     send_welcome_message: "Sende allen neuen Benutzern eine Begrüßungsnachricht mit einer Kurzanleitung."
     send_tl1_welcome_message: "Sende neuen Benutzern der Vertrauensstufe 1 eine Begrüßungsnachricht."
     send_tl2_promotion_message: "Sende neuen Benutzern der Vertrauensstufe 2 eine Nachricht über die Beförderung."
@@ -2070,8 +2069,9 @@ de:
     title_fancy_entities: "Konvertiere in Thementiteln gewöhnliche ASCII-Zeichen in schicke HTML-Entities gemäß SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimale Länge eines Titels, bevor nach ähnlichen Titeln gesucht wird."
     desktop_category_page_style: "Diese Einstellung bestimmt das visuelle Layout der /categories-Seite auf dem Desktop. Sie umfasst Optionen wie die Anzeige von Unterkategorien mit vorgestellten Themen, die Anzeige der neuesten Themen oder die Darstellung der Top-Themen. Der gewählte Stil hat Einfluss darauf, wie die Benutzer interagieren und durch die Kategorien auf der Website navigieren."
+    mobile_category_page_style: "Diese Einstellung bestimmt das visuelle Layout der Seite /Kategorien auf dem Handy."
     category_colors: "Liste hexadezimaler Farbwerte, die als Kategoriefarben erlaubt sind."
-    default_dark_mode_color_scheme_id: "Das Farbschema, das im dunklen Modus verwendet wird."
+    default_dark_mode_color_scheme_id: "Die Farbpalette, die im dunklen Modus verwendet wird."
     dark_mode_none: "Keine"
     max_image_size_kb: "Die maximale Bild-Upload-Größe. Diese muss in nginx (client_max_body_size) / apache oder proxy ebenfalls konfiguriert werden. Bilder, die größer als dieser Wert und kleiner als client_max_body_size sind, werden beim Hochladen in der Größe angepasst."
     max_attachment_size_kb: "Die maximale Größe der hochgeladenen Anhänge. Dies muss in nginx (client_max_body_size) / apache oder proxy ebenfalls konfiguriert werden."
@@ -2231,6 +2231,7 @@ de:
     anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
+    hide_new_user_profiles: "Verstecke Benutzerprofile der Vertrauensstufe 1 oder niedriger vor der Öffentlichkeit und bei Benutzern der Vertrauensstufe 1, bis sie zum ersten Mal posten. Diese Funktion ist auf must_approve_users und invite_only-Sites bedingungslos deaktiviert."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
     hide_user_activity_tab: "Blende die Registerkarte „Aktivität“ in Benutzerprofilen (außer für Administratoren und den Benutzer selbst) aus."
     delete_associated_accounts_on_password_reset: "Entferne verknüpfte Konten, wenn der Benutzer sein Passwort ändert."
@@ -2252,7 +2253,7 @@ de:
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit, zur vollständigen Website zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Fully-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihren Avatar ändern können."
-    pm_warn_user_last_seen_months_ago: "Benutzer beim Erstellen einer neuen privaten Nachricht warnen, wenn der Empfänger seit mehr als n Monaten nicht gesehen wurde."
+    pm_warn_user_last_seen_months_ago: "Benutzer beim Erstellen einer neuen PN warnen, wenn der Empfänger seit mehr als n Monaten nicht gesehen wurde."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für nicht kategorisierte Themen in der Themenliste."
     header_dropdown_category_count: "Wie viele Kategorien im Header-Drop-down-Menü angezeigt werden können."
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw., um Teilausdrücke zu verwenden"
@@ -2277,7 +2278,7 @@ de:
     penalty_include_post_message: "Füge automatisch die Nachricht des beanstandeten Beitrags in die E-Mail-Vorlage ein, wenn du einen Benutzer stummschaltest oder sperrst"
     svg_icon_subset: "Füge zusätzliche FontAwesome-Symbole hinzu, die du in deine Assets aufnehmen möchtest. Verwende das Präfix „fa-“ für ausgefüllte Icons, „far-“ für normale Icons und „fab-“ für Markensymbole."
     max_prints_per_hour_per_user: "Maximale Anzahl von /print-Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
-    full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
+    full_name_requirement: "Mache das Feld mit dem vollständigen Namen zu einem erforderlichen, optionalen oder optionalen, aber versteckten Feld im Anmeldeformular."
     enable_names: "Zeige den vollständigen Namen des Benutzers in seinem Profil, auf der Benutzerkarte und in E-Mails an. Deaktivieren, um den vollständigen Namen überall auszublenden."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
@@ -2303,7 +2304,7 @@ de:
     delete_merged_stub_topics_after_days: "Anzahl der Tage, die abgewartet werden, bevor der bei vollständiger Zusammenführung übrig gebliebene Themenstumpf automatisch gelöscht wird; bei -1 wird nie, bei 0 sofort gelöscht."
     bootstrap_mode_min_users: 'Mindestanzahl der Benutzer, die erforderlich ist, um den Starthilfe-Modus zu deaktivieren und die Schaltfläche „Erste Schritte“ zu entfernen (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern). Siehe <a target="_blank" href="https://meta.discourse.org/t/-/322876">das Thema Starthilfe-Modus auf Meta</a> für weitere Informationen.'
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
-    secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
+    secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in persönlichen Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
     secure_uploads_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure uploads max email embed image size kb“."
     secure_uploads_max_email_embed_image_size_kb: "Der Größengrenzwert für sichere Bilder, die in E-Mails eingebettet werden, wenn die Einstellung „secure uploads allow embed in emails“ aktiviert ist. Anderweitig hat diese Einstellung keine Auswirkung."
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. „encoded“ erzeugt einen Prozent-encodierten String, bei „none“ wird kein Kürzel verwendet."
@@ -2415,7 +2416,7 @@ de:
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Um einen Flüsterbeitrag zu erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern, müssen Flüsterbeiträge aktiviert sein."
-    automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder privaten Nachrichten verwendet werden."
+    automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder persönlichen Nachrichten verwendet werden."
     watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
     company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
     governing_law: "Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzerklärung. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Website betreibt, registriert ist oder Geschäfte tätigt."
@@ -2455,15 +2456,16 @@ de:
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
     enable_experimental_lightbox: "Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
-    experimental_glimmer_topic_list_groups: "Aktiviert die neue Implementierung der „glimmer“-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen vorgesehen. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung abgeschlossen und angekündigt ist."
+    glimmer_topic_list_mode: "Lege fest, ob die neue Kopfzeilen-Implementierung \"glimmer\" verwendet werden soll. \"auto\" wird automatisch aktiviert, sobald alle deine Themes und Plugins fertig sind. Weitere Informationen findest du <a href='https://meta.discourse.org/t/343404'>im Thema Meta</a>."
     glimmer_post_menu_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragmenüs verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     glimmer_post_menu_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
-    experimental_form_templates: "Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast</b>, verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
+    experimental_form_templates: "Aktiviere die Funktion der Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen/Vorlagen</a>."
     admin_sidebar_enabled_groups: "Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
+    adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
@@ -2533,8 +2535,8 @@ de:
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
     keywords:
       clean_up_inactive_users_after_days: "deaktiviert|inaktiv|nicht aktiviert"
-      purge_unactivated_users_grace_period_days: "deaktiviert|inaktiv|nicht aktiviert"
       navigation_menu: "Seitenleiste|Kopfzeilen-Drop-down"
+      purge_unactivated_users_grace_period_days: "deaktiviert|inaktiv|nicht aktiviert"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2682,6 +2684,7 @@ de:
     omniauth_confirm_button: "Weiter"
     authenticator_error_no_valid_email: "E-Mail-Adressen mit Bezug zu %{account} sind nicht erlaubt. Du musst möglicherweise dein Konto mit einer anderen E-Mail-Adresse einrichten."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
+    new_registrations_disabled_discourse_connect: "Neue Kontoregistrierungen sind nur über Discourse Connect zulässig."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
     email_too_long: "Die von dir eingegebene E-Mail-Adresse ist zu lang. Der Teil vor dem @ darf maximal 254 Zeichen lang sein und Domain-Namen maximal 253 Zeichen."
     wrong_invite_code: "Der von dir eingegebene Einladungscode war falsch."
@@ -3719,7 +3722,7 @@ de:
 
         %{respond_instructions}
     user_replied_pm:
-      title: "Benutzer hat auf private Nachricht geantwortet"
+      title: "Benutzer hat auf PN geantwortet"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3763,7 +3766,7 @@ de:
 
         %{respond_instructions}
     user_mentioned_pm:
-      title: "Benutzer wurde in privater Nachricht erwähnt"
+      title: "Benutzer wurde in PN erwähnt"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3785,7 +3788,7 @@ de:
 
         %{respond_instructions}
     user_group_mentioned_pm:
-      title: "Gruppe wurde in privater Nachricht erwähnt"
+      title: "Gruppe wurde in PN erwähnt"
       subject_template: "[%{email_prefix}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4933,7 +4936,7 @@ de:
         title: "Look and Feel"
         fields:
           color_scheme:
-            label: "Farbschema"
+            label: "Farbpalette"
           body_font:
             label: "Textkörper-Schriftart"
           heading_font:
@@ -4944,23 +4947,17 @@ de:
             label: "Homepage-Stil"
             choices:
               latest:
-                label: "Aktuelle Themen"
-              categories_only:
-                label: "Nur Kategorien"
-              categories_with_featured_topics:
-                label: "Kategorien mit hervorgehobenen Themen"
+                label: "Aktuelle"
+                description: "Zeigt die zuletzt aktiven Themen in allen Kategorien an, damit die Mitglieder über die Diskussionen, die sie interessieren, auf dem Laufenden bleiben"
+              hot:
+                label: "Heiß"
+                description: "Zeigt aktuelle Themen an, indem es die aktuelle und allgemeine Popularität mischt, und zeigt, worüber die Mitglieder in deiner Community gerade sprechen."
               categories_and_latest_topics:
-                label: "Kategorien und aktuelle Themen"
-              categories_and_latest_topics_created_date:
-                label: "Kategorien und neueste Themen (sortiert nach Datum der Themenerstellung)"
-              categories_and_top_topics:
-                label: "Kategorien und angesagte Themen"
+                label: "Kategorien mit aktuellen Themen"
+                description: "Kombiniert die zuletzt aktiven Themen über alle Kategorien hinweg mit einer Liste der Kategorien, ihrer Beschreibung und der Gesamtzahl der Themen"
               categories_boxes:
                 label: "Kategorie-Boxen"
-              categories_boxes_with_topics:
-                label: "Kategorie-Boxen mit Themen"
-              subcategories_with_featured_topics:
-                label: "Unterkategorien mit hervorgehobenen Themen"
+                description: "Zeigt die Kategorien und ihre Beschreibung in einem Raster an, ideal für Mitglieder, um einen Überblick über die Untergemeinschaften deiner Seite zu erhalten"
       branding:
         title: "Website-Logo"
         fields:
@@ -5032,7 +5029,7 @@ de:
       quoted: '%{username} hat dich zitiert in „%{topic}“ – %{site_title}'
       replied: '%{username} hat dir geantwortet in „%{topic}“ – %{site_title}'
       posted: '%{username} hat geschrieben in „%{topic}“ – %{site_title}'
-      private_message: '%{username} hat dir eine private Nachricht geschickt in „%{topic}“ – %{site_title}'
+      private_message: '%{username} hat dir eine Nachricht geschickt in „%{topic}“ – %{site_title}'
       linked: '%{username} hat deinen Beitrag verlinkt in „%{topic}“ – %{site_title}'
       watching_first_post: '%{username} hat ein neues Thema „%{topic}“ erstellt – %{site_title}'
       confirm_title: "Benachrichtigungen aktiviert – %{site_title}"

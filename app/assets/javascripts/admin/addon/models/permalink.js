@@ -6,10 +6,16 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default class Permalink extends RestModel {
   static findAll(filter) {
-    return ajax("/admin/permalinks.json", { data: { filter } }).then(function (
-      permalinks
-    ) {
-      return permalinks.map((p) => Permalink.create(p));
+    return ajax("/admin/permalinks.json").then(function (permalinks) {
+      let allLinks = permalinks.map((p) => Permalink.create(p));
+
+      let filteredLinks = filter
+        ? allLinks.filter(
+            (p) => p.url.includes(filter) || p.external_url?.includes(filter)
+          )
+        : allLinks;
+
+      return { allLinks, filteredLinks };
     });
   }
 

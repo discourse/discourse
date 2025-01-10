@@ -305,6 +305,13 @@
   opacity: 0.7;
 }
 
+.reviewable-deleted {
+  .reviewable-contents .post-contents .post-body {
+    background-color: var(--danger-low-mid);
+    padding: 0.5em;
+  }
+}
+
 .blur-images {
   img:not(.avatar):not(.emoji) {
     filter: blur(10px);

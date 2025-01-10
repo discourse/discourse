@@ -60,7 +60,7 @@ RSpec.describe Chat::AutoLeaveChannels do
 
       context "when the category's permission changes" do
         fab!(:user) { Fabricate(:user, trust_level: 1) }
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
         fab!(:category) { Fabricate(:private_category, group:) }
         fab!(:chat_channel) { Fabricate(:chat_channel, chatable: category) }
         fab!(:uccm) { Fabricate(:user_chat_channel_membership, user:, chat_channel:) }

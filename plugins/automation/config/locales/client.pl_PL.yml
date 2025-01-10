@@ -158,10 +158,8 @@ pl_PL:
               description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tej kategorii.
             restricted_group:
               label: Grupa
-              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat postu jest prywatną wiadomością w skrzynce odbiorczej tej grupy.
             restricted_groups:
               label: Grupy
-              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat postu jest prywatną wiadomością w jednej ze skrzynek odbiorczych grupy.
             ignore_group_members:
               label: Ignoruj członków grupy
               description: Pomiń wyzwalacz, jeśli nadawca jest członkiem grupy określonej powyżej.
@@ -368,6 +366,8 @@ pl_PL:
             label: Skrypt
           version:
             label: Wersja
+          status:
+            label: Status
           enabled:
             label: Włączona
           disabled:

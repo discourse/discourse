@@ -3,7 +3,8 @@
 $mobile-breakpoint: 700px;
 
 :root {
-  --space-1: 0.25rem;
+  --space-0: 0.125rem; //2px
+  --space-1: 0.25rem; //4px
   --space-2: calc(0.25rem * 2);
   --space-3: calc(0.25rem * 3);
   --space-4: calc(0.25rem * 4);
@@ -423,52 +424,99 @@ $mobile-breakpoint: 700px;
     color: var(--primary-medium);
   }
 }
-.admin-users-list {
-  &__search {
-    @media screen and (max-width: 500px) {
-      width: 100%;
-    }
-    input {
-      min-width: 15em;
-      @media screen and (max-width: 500px) {
-        box-sizing: border-box;
-        width: 100%;
-      }
-    }
-  }
-}
 
-.ip-lookup {
-  position: relative;
-  display: inline-block;
+.ip-lookup-content {
   .location-box {
-    position: absolute;
-    width: 460px;
-    right: 0;
-    z-index: z("dropdown");
-    box-shadow: var(--shadow-card);
-    margin-top: -2px;
-    background-color: var(--secondary);
-    padding: 12px 12px 5px;
+    padding: 1em;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    .title {
+      font-weight: bold;
+      font-size: var(--font-up-1);
+      display: flex;
+      align-items: center;
+    }
+
+    &__controls {
+      display: flex;
+      margin-left: auto;
+
+      align-items: center;
+    }
+
     .powered-by {
       font-size: var(--font-down-1);
-      position: absolute;
-      bottom: -10px;
-      left: 10px;
+      color: var(--primary-high);
     }
-    .other-accounts {
-      margin: 5px 0 0;
-      max-height: 200px;
-      overflow: auto;
-      width: 455px;
-      ul {
-        margin: 0;
+
+    .loading-container {
+      max-width: 100%;
+    }
+
+    dl {
+      margin-bottom: 0;
+    }
+
+    dt {
+      font-weight: bold;
+      &.other-accounts {
+        display: flex;
+        align-items: center;
+        font-weight: normal;
+        font-size: var(--font-down-1);
+
+        .btn {
+          margin-left: auto;
+        }
+        .count {
+          font-weight: bold;
+          margin-left: 0.25em;
+          &.--nonzero {
+            color: var(--danger);
+          }
+        }
       }
-      li {
-        list-style: none;
-      }
-      tr td:first-of-type {
-        width: 130px;
+    }
+
+    dd {
+      margin: 0.25em 0 1em;
+      &.other-accounts {
+        margin: 1em 0 0 0;
+        max-height: 13em;
+        overflow: auto;
+        font-size: var(--font-down-1);
+        padding-right: 0.25em;
+
+        thead {
+          position: sticky;
+          top: 0;
+          line-height: 1.2;
+          background: var(--secondary);
+          th {
+            padding: 0.25em;
+          }
+        }
+
+        ul {
+          margin: 0;
+        }
+        li {
+          list-style: none;
+        }
+
+        td {
+          padding: 0.25em 0.25em 0.25em 0;
+        }
+
+        td.user {
+          white-space: nowrap;
+
+          img {
+            width: 1.25em;
+            height: 1.25em;
+          }
+        }
       }
     }
   }
@@ -732,14 +780,11 @@ $mobile-breakpoint: 700px;
 
     a.active {
       color: var(--primary);
-      background-color: initial;
-      font-weight: 700;
-      border-right: 4px solid var(--d-nav-color--active);
-
-      &::after {
-        display: none; // Hides the arrow
-      }
     }
+  }
+
+  .admin-site-settings-category-nav__item:hover {
+    background: var(--d-sidebar-highlight-background);
   }
 }
 
@@ -1092,7 +1137,6 @@ a.inline-editable-field {
 @import "common/admin/badges";
 @import "common/admin/emails";
 @import "common/admin/flags";
-@import "common/admin/user_fields";
 @import "common/admin/json_schema_editor";
 @import "common/admin/schema_field";
 @import "common/admin/staff_logs";
@@ -1115,7 +1159,6 @@ a.inline-editable-field {
 @import "common/admin/admin_report_table";
 @import "common/admin/admin_report_inline_table";
 @import "common/admin/admin_section_landing_page";
-@import "common/admin/admin_page_header";
 @import "common/admin/admin_intro";
 @import "common/admin/mini_profiler";
 @import "common/admin/schema_theme_setting_editor";

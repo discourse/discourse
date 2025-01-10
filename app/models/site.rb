@@ -214,6 +214,8 @@ class Site
             Discourse.enabled_auth_providers.map do |provider|
               AuthProviderSerializer.new(provider, root: false, scope: guardian)
             end,
+          full_name_required_for_signup:,
+          full_name_visible_in_signup:,
         }.to_json
       )
     end
@@ -251,5 +253,13 @@ class Site
     # publishing forces the sequence up
     # the cache is validated based on the sequence
     MessageBus.publish(SITE_JSON_CHANNEL, "")
+  end
+
+  def self.full_name_required_for_signup
+    SiteSetting.enable_names && SiteSetting.full_name_requirement == "required_at_signup"
+  end
+
+  def self.full_name_visible_in_signup
+    SiteSetting.enable_names && SiteSetting.full_name_requirement != "hidden_at_signup"
   end
 end

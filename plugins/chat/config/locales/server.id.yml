@@ -78,8 +78,6 @@ id:
       not_accepting_dms: "Maaf, %{username} tidak menerima pesan saat ini."
       actor_ignoring_target_user: "Anda mengabaikan %{username}, jadi Anda tidak dapat mengirim pesan kepadanya."
       actor_muting_target_user: "Anda membisukan %{username}, jadi Anda tidak dapat mengirim pesan kepadanya."
-      actor_disallowed_dms: "Anda telah memilih untuk mencegah pengguna mengirimi Anda pesan langsung dan pribadi, sehingga Anda tidak dapat membuat pesan langsung baru."
-      actor_preventing_target_user_from_dm: "Anda telah memilih untuk mencegah %{username} mengirimi Anda pesan langsung dan pribadi, sehingga Anda tidak dapat membuat pesan langsung baru untuk dia."
       user_cannot_send_direct_messages: "Maaf, Anda tidak dapat mengirim pesan langsung."
       over_chat_max_direct_message_users_allow_self: "Anda hanya dapat membuat pesan langsung dengan diri Anda sendiri."
       over_chat_max_direct_message_users:

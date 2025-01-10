@@ -169,10 +169,10 @@ sk:
               description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v tejto kategórii
             restricted_group:
               label: Skupina
-              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku súkromnou správou v doručenej pošte tejto skupiny
+              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku osobnou správou v doručenej pošte tejto skupiny
             restricted_groups:
               label: Skupiny
-              description: Nepovinné, aktivuje sa len vtedy, ak je témou príspevku súkromná správa v jednej zo schránok doručených do skupiny.
+              description: Voliteľné, spustí sa iba vtedy, ak je témou príspevku osobná správa v jednej zo skupinových doručených schránok
             ignore_group_members:
               label: Ignorovať členov skupiny
               description: Preskočte spúšťač, ak je odosielateľ členom vyššie uvedenej skupiny
@@ -415,6 +415,8 @@ sk:
             label: Skript
           version:
             label: Verzia
+          status:
+            label: Stav
           enabled:
             label: Povolené
           disabled:

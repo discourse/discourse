@@ -181,6 +181,8 @@ el:
             label: Έναυσμα
           version:
             label: Έκδοση
+          status:
+            label: Κατάσταση
           enabled:
             label: Ενεργοποιημένο
           disabled:

@@ -250,8 +250,6 @@ pt_BR:
       bookmark:
         instructions: |-
           Se quiser saber mais, selecione <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> abaixo e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marque esta mensagem pessoal como favorita**. Se fizer isto, pode ter um :gift: no seu futuro!
-        reply: |-
-          Excelente! Agora você pode encontrar facilmente o caminho de volta para nossa conversa privada a qualquer momento, direto n [aba favoritos em seu perfil](%{bookmark_url}). Basta selecionar sua foto de perfil no canto superior à direita &#8599;
         not_found: |-
           Ah não, não vejo nenhum favorito neste tópico. Você encontrou o marcador embaixo de cada postagem? Use o Mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar ações adicionais, se necessário.
       emoji:
@@ -285,14 +283,6 @@ pt_BR:
 
           (Sim, meu nome de usuário(a) é soletrado _disco_, como na febre de dança dos anos 70. Eu realmente [amo me divertir à noite!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Gostamos de discussões amigáveis e precisamos da sua ajuda para [manter este ambiente saudável](%{guidelines_url}). Se constatar um problema, sinalize para avisar de forma privada o(a) autor(a) ou a nossa [equipe prestativa](%{about_url}). Há várias razões pelas quais você possa querer sinalizar uma postagem, que variam de uma simples sugestão de divisão de tópicos a claras violações dos padrões da comunidade. Caso selecione **Outra coisa**, você iniciará uma discussão por mensagem privada com os(as) moderadores(as) e poderá fazer mais perguntas.
-
-          > :imp: Escrevi uma coisa horrível aqui
-
-          Vá em frente e **sinalize esta postagem** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> e selecione **Não é apropriado** como o motivo!
-        reply: |-
-          [Nossa equipe](%{base_uri}/groups/staff) será notificada secretamente sobre o seu sinalizador. Se membros suficientes da comunidade sinalizarem uma postagem, ela também será automaticamente oculta como precaução. (Já que, na verdade, não escrevi uma postagem inapropriada :angel:, tomei a liberdade de remover o sinalizador por enquanto.)
         not_found: |-
           Ah não, minha postagem inapropriada ainda não foi sinalizada. :worried: Você pode sinalizá-la como inapropriada usando o **sinalizador** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Não se esqueça de usar o botão Mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar mais ações para cada postagem.
       search:
@@ -385,12 +375,6 @@ pt_BR:
         reply: |-
           Excelente! Lembre-se de que isso funciona tanto para categorias quanto para etiquetas, se as etiquetas estiverem ativadas.
       change_topic_notification_level:
-        instructions: |-
-          Cada tópico tem um nível de notificação. Começa em "normal", o que significa que você normalmente só será notificado(a) quando alguém estiver falando diretamente com você.
-
-          Por padrão, o nível de notificação de uma mensagem particular é definida como o nível mais alto de "acompanhando", o que significa que você será notificado(a) sobre cada nova resposta. Mas você pode substituir o nível de notificação de _qualquer_ tópico para "acompanhando", "monitorando" ou "silenciado"'.
-
-          Vamos tentar alterar o nível de notificação para este tópico. Na parte inferior, você encontrará um botão que mostra que você está **acompanhando** este tópico. Poderia alterar o nível de notificação para **monitorando**?
         not_found: |-
           Parece que você ainda está acompanhando :eyes: este tópico! Se você estiver com dificuldades para encontrá-lo, o botão do nível de notificação está localizado na parte inferior.
         reply: |-

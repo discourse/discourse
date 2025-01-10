@@ -8,6 +8,7 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import LoadMore from "discourse/mixins/load-more";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -19,10 +20,7 @@ export default class TopicList extends Component.extend(LoadMore) {
   static reopen() {
     deprecated(
       "Modifying topic-list with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      }
+      RAW_TOPIC_LIST_DEPRECATION_OPTIONS
     );
 
     return super.reopen(...arguments);
@@ -31,10 +29,7 @@ export default class TopicList extends Component.extend(LoadMore) {
   static reopenClass() {
     deprecated(
       "Modifying topic-list with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      }
+      RAW_TOPIC_LIST_DEPRECATION_OPTIONS
     );
 
     return super.reopenClass(...arguments);

@@ -1334,19 +1334,7 @@ nb_NO:
           homepage_style:
             choices:
               latest:
-                label: "Siste emner"
-              categories_only:
-                label: "Kun kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med fremhevede emner"
-              categories_and_latest_topics:
-                label: "Kategorier og siste emner"
-              categories_and_latest_topics_created_date:
-                label: "Kategorier og nyeste emner (sorter etter emne opprettet dato)"
-              categories_and_top_topics:
-                label: "Kategorier og toppemner"
-              subcategories_with_featured_topics:
-                label: "Underkategorier med utvalgte emner"
+                label: "Siste"
   onebox:
     github:
       closed: "lukket"
@@ -1357,6 +1345,7 @@ nb_NO:
       quoted: '%{username} siterte deg i "%{topic}" - %{site_title}'
       replied: '%{username} svarte deg i "%{topic}" - %{site_title}'
       posted: '%{username} skrev noe i "%{topic}" - %{site_title}'
+      private_message: '%{username} sendte deg en personlig melding i "%{topic}" - %{site_title}'
       linked: '%{username} lenket til innlegget ditt i "%{topic}" - %{site_title}'
       watching_first_post: '%{username} opprettet et nytt emne "%{topic}" - %{site_title}'
       confirm_title: "Varslinger aktivert - %{site_title}"

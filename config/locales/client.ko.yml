@@ -352,6 +352,7 @@ ko:
     continue: "계속하기"
     switch_to_anon: "익명 모드 시작"
     switch_from_anon: "익명 모드 종료"
+    none_placeholder: "없음"
     banner:
       close: "이 배너 닫기"
       edit: "편집"
@@ -468,6 +469,8 @@ ko:
         refresh: "새로고침"
         status: "상태"
         category: "카테고리"
+        score_type:
+          title: "이유"
         orders:
           score: "점수"
           score_asc: "점수(역순)"
@@ -731,13 +734,13 @@ ko:
       public_admission: "사용자가 그룹에 자유롭게 가입하도록 허용(공개 그룹이어야 함)"
       public_exit: "사용자가 자유롭게 그룹에서 탈퇴하도록 허용"
       empty:
-        posts: "이 그룹의 회원이 작성한 게시물이 없습니다."
-        members: "이 그룹에는 회원이 없습니다."
-        requests: "이 그룹에 대한 멤버십 요청이 없습니다."
-        mentions: "이 그룹에 대한 멘션이 없습니다."
-        messages: "이 그룹에 대한 메시지가 없습니다."
-        topics: "이 그룹의 회원이 작성한 주제가 없습니다."
-        logs: "이 그룹에 대한 로그가 없습니다."
+        posts: "이 그룹에는 아직 회원들이 글을 작성하지 않았습니다"
+        members: "이 그룹에는 회원이 없습니다"
+        requests: "이 그룹에 대한 멤버십 요청이 없습니다"
+        mentions: "이 그룹에 대한 언급이 없습니다"
+        messages: "이 그룹에 대한 메시지가 없습니다"
+        topics: "이 그룹의 회원이 작성한 글이 없습니다"
+        logs: "이 그룹에 대한 로그가 없습니다"
       add: "추가"
       join: "가입"
       leave: "탈퇴"
@@ -914,17 +917,17 @@ ko:
       delete_other_accounts:
         other: "%{count}개 삭제"
       username: "사용자명"
-      trust_level: "TL"
+      trust_level: "회원 레벨"
       read_time: "읽은 시간"
       topics_entered: "참여한 주제"
-      post_count: "게시물 수"
+      post_count: "포스트"
       confirm_delete_other_accounts: "이 계정들을 삭제할까요?"
       powered_by: "<a href='https://maxmind.com'>MaxMindDB</a> 사용"
       copied: "복사됨"
     user_fields:
       none: "(옵션 선택)"
       required: '''%{name}''에 대한 값을 입력하세요'
-      same_as_password: "비밀번호를 다른 필드에 반복해서 입력해서는 안 됩니다."
+      same_as_password: "비밀번호를 다른 필드에 반복해서 입력해서는 안 됩니다"
       optional: (선택 사항)
     user:
       said: "%{username}:"
@@ -1022,17 +1025,15 @@ ko:
         description: "새 사용자 온보딩 팁 및 배지 건너뛰기"
       reset_seen_user_tips: "사용자 팁 다시 보기"
       theme_default_on_all_devices: "이 테마를 모든 디바이스에서 디폴트 테마로 설정"
-      color_scheme: "색상 구성표"
+      color_scheme: "색상 팔레트"
       color_schemes:
         default_description: "디폴트 테마"
         disable_dark_scheme: "일반과 동일"
-        dark_instructions: "디바이스의 다크 모드를 전환하여 다크 모드 색상 구성표를 미리 볼 수 있습니다."
         undo: "리셋"
         regular: "일반"
         dark: "다크 모드"
         default_dark_scheme: "(사이트 디폴트)"
       dark_mode: "다크 모드"
-      dark_mode_enable: "다크 모드 색상 구성표 자동 활성화"
       text_size_default_on_all_devices: "모든 디바이스에서 디폴트 텍스트 크기로 설정"
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
@@ -1613,8 +1614,6 @@ ko:
     form_kit:
       reset: 리셋
       optional: 선택 사항
-      select:
-        none_placeholder: "없음"
       errors:
         required: "필수"
         too_short:
@@ -1808,6 +1807,9 @@ ko:
       categories_boxes: "서브카테고리가 있는 박스"
       categories_boxes_with_topics: "추천 주제의 박스"
       subcategories_with_featured_topics: "추천 글이 포함된 하위 카테고리"
+    full_name_requirement:
+      required_at_signup: "필수"
+      optional_at_signup: "선택 사항"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2067,8 +2069,6 @@ ko:
         quoted: "인용됨"
         edited: "편집됨"
         liked: "새 좋아요"
-        private_message: "새 비공개 메시지"
-        invited_to_private_message: "비공개 메시지에 초대됨"
         invitee_accepted: "초대 수락됨"
         posted: "새 게시물"
         watching_category_or_tag: "새 글"
@@ -2539,7 +2539,6 @@ ko:
         help: "이 주제를 인쇄하기 좋은 버전으로 열기"
       flag_topic:
         title: "신고하기"
-        help: "이 주제에 주의를 주거나 비공개로 알림을 보내기 위해 비공개로 신고합니다"
         success_message: "주제를 신고했습니다"
       make_public:
         title: "공개 주제로 변환"
@@ -2765,7 +2764,6 @@ ko:
         edit_action: "편집"
         edit_anonymous: "이 게시물을 편집하려면 로그인이 필요합니다."
         flag_action: "신고"
-        flag: "이 게시물에 주의를 주거나 비공개로 알림을 보내기 위해 비공개로 신고합니다"
         delete: "이 게시물 삭제"
         undelete: "이 글 삭제를 취소합니다."
         share_action: "공유하기"
@@ -3617,7 +3615,30 @@ ko:
         title: "사용 가능한 리포트 목록"
         sidebar_title: "보고서"
         sidebar_link:
-          all: "전체"
+          all: "모든 보고서"
+      config:
+        developer:
+          title: "개발자"
+        files:
+          title: "파일"
+        legal:
+          title: "법률조항"
+        navigation:
+          title: "내비게이션"
+        notifications:
+          title: "알림"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "기타"
+        search:
+          title: "검색"
+        security:
+          title: "보안"
+        spam:
+          title: "스팸"
+        user_api:
+          title: "사용자 API"
       dashboard:
         title: "대시보드"
         last_updated: "대시보드 업데이트됨:"
@@ -3708,6 +3729,7 @@ ko:
             include_subcategories:
               label: "서브카테고리 포함"
       flags:
+        title: "관리"
         description: "내용"
         enabled: "활성화?"
       groups:
@@ -3921,11 +3943,11 @@ ko:
           badges: "배지"
           notifications: "알림"
           permalinks: "고유링크"
-          trust_levels: "회원등급"
           users: "사용자들"
-          user_fields: "사용자 필드"
-          watched_words: "검열 단어"
+          groups: "그룹"
           legal: "법률조항"
+          moderation_flags:
+            title: "관리"
       appearance:
         title: "외관"
         sidebar_link:
@@ -3937,22 +3959,8 @@ ko:
       email_settings:
         sidebar_link:
           appearance: "외관"
-          preview_summary: "요약 미리보기"
-      email_logs:
-        sidebar_link:
-          sent: "보낸 편지함"
-          skipped: "생략됨"
-          bounced: "반송됨"
-          received: "받음"
-          rejected: "거부됨"
       security:
         title: "보안"
-        sidebar_link:
-          error_logs: "에러 로그"
-          screened_emails: "블락된 이메일들"
-          screened_ips: "노출된 IP들"
-          screened_urls: "노출된 URL들"
-          search_logs: "검색 로그"
       section_landing_pages:
         account:
           title: "계정"
@@ -3967,6 +3975,7 @@ ko:
           update: "업데이트"
           saved: "저장되었습니다!"
         flags:
+          header: "관리"
           description: "내용"
           enabled: "활성화?"
           edit: "편집"
@@ -3980,6 +3989,12 @@ ko:
             invalid_applies_to: "필수"
             topic: "글"
             post: "포스트"
+        permalinks:
+          edit: "편집"
+          delete: "삭제하기"
+        embeddable_host:
+          edit: "편집"
+          delete: "삭제하기"
         look_and_feel:
           themes:
             title: "테마"
@@ -4004,9 +4019,7 @@ ko:
         sidebar_link:
           developer: "개발자"
           embedding: "삽입(Embedding)"
-          rate_limits: "제한"
           user_api: "사용자 API"
-          web_hooks: "Webhook"
           onebox: "Onebox"
           files: "파일"
           other_options: "기타"
@@ -4050,7 +4063,7 @@ ko:
             label: "다운로드"
             title: "다운로드 링크와 함께 이메일 전송"
           destroy:
-            title: "백업 삭제"
+            title: "삭제하기"
             confirm: "이 백업을 제거할까요?"
           restore:
             label: "복구"
@@ -4141,7 +4154,6 @@ ko:
           hide_unused_fields: "사용하지 않는 필드 숨기기"
           is_default: "디폴트로 테마가 활성화되었습니다"
           user_selectable: "사용자가 테마를 선택할 수 있습니다"
-          color_scheme_user_selectable: "사용자가 색상 구성표를 선택할 수 있습니다"
           auto_update: "Discourse 업데이트 시 자동 업데이트"
           color_scheme: "색상 팔레트"
           default_light_scheme: "라이트(디폴트)"
@@ -5150,16 +5162,11 @@ ko:
         settings: "설정"
       embedding:
         get_started: "다른 웹사이트에 Discourse를 임베드하려면 먼저 호스트를 추가하세요."
+        delete: "삭제하기"
         confirm_delete: "호스트를 삭제할까요?"
         title: "임베딩"
-        host: "허용 Host"
-        allowed_paths: "경로 허용 목록"
         edit: "편집"
-        category: "카테고리에 게시"
-        add_host: "호스트 추가"
-        settings: "임베딩 설정"
-        crawling_settings: "크롤러 설정"
-        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
         embed_by_username: "주제 생성에 사용할 아이디"
         embed_post_limit: "임베드할 최대 게시물 수"
         embed_title_scrubber: "게시물의 제목을 스크럽하기 위해 사용된 정규식"
@@ -5168,7 +5175,12 @@ ko:
         allowed_embed_selectors: "임베드에서 허용한 요소에 대한 CSS 선택기"
         blocked_embed_selectors: "임베드에서 제거한 요소에 대한 CSS 선택기"
         allowed_embed_classnames: "허용되는 CSS 클래스 이름"
-        save: "임베딩 설정 저장"
+        save: "저장"
+        host_form:
+          save: "저장"
+        nav:
+          settings: "설정"
+          crawlers: "겉옷"
       permalink:
         title: "고정 링크"
         description: "포럼에서 알려지지 않은 URL에 적용할 리디렉션"
@@ -5187,6 +5199,9 @@ ko:
         destination: "대상"
         copy_to_clipboard: "고정 링크를 클립보드에 복사"
         delete_confirm: 이 고정 링크를 삭제할까요?
+        nav:
+          settings: "설정"
+          permalinks: "고유링크"
         form:
           label: "신규:"
           url: "URL"
@@ -5220,8 +5235,22 @@ ko:
           moderator: "운영자"
           regular: "정회원"
       previews:
-        topic_title: "토론 주제 제목"
         share_button: "공유"
         reply_button: "댓글 달기"
         topic_preview: "주제 미리보기"
         homepage_preview: "홈페이지 미리보기"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "모든 카테고리"
+          new: "신규"
+          unread: "읽지 않음"
+          top: "인기글"
+          latest: "최신"
+          categories: "카테고리"
+        category_names:
+          site_feedback: "사이트 피드백"
+        table_headers:
+          topic: "글"
+          replies: "댓글"
+          views: "조회"
+          activity: "활동"

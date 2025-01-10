@@ -8,7 +8,7 @@ describe "Admin Flags Page", type: :system do
   let(:admin_flags_page) { PageObjects::Pages::AdminFlags.new }
   let(:admin_flag_form_page) { PageObjects::Pages::AdminFlagForm.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
-  let(:admin_header) { PageObjects::Components::AdminHeader.new }
+  let(:d_page_header) { PageObjects::Components::DPageHeader.new }
 
   before do
     sign_in(admin)
@@ -27,7 +27,7 @@ describe "Admin Flags Page", type: :system do
     )
 
     admin_flags_page.visit
-    expect(admin_header).to be_visible
+    expect(d_page_header).to be_visible
 
     admin_flags_page.toggle("spam")
     topic_page.visit_topic(post.topic).open_flag_topic_modal
@@ -81,8 +81,7 @@ describe "Admin Flags Page", type: :system do
     expect(admin_flags_page).to have_add_flag_button_enabled
 
     admin_flags_page.click_add_flag
-
-    expect(admin_header).to be_hidden
+    expect(d_page_header).to be_hidden
 
     admin_flag_form_page
       .fill_in_name("Vulgar")
@@ -115,7 +114,7 @@ describe "Admin Flags Page", type: :system do
 
     # update
     admin_flags_page.visit.click_edit_flag("custom_vulgar")
-    expect(admin_header).to be_hidden
+    expect(d_page_header).to be_hidden
     admin_flag_form_page.fill_in_name("Tasteless").click_save
 
     expect(admin_flags_page).to have_flags(
@@ -158,12 +157,12 @@ describe "Admin Flags Page", type: :system do
   it "has settings tab" do
     admin_flags_page.visit
 
-    expect(admin_header).to have_tabs(
+    expect(d_page_header).to have_tabs(
       [I18n.t("admin_js.settings"), I18n.t("admin_js.admin.config_areas.flags.flags_tab")],
     )
 
     admin_flags_page.click_settings_tab
-    expect(page.all(".setting-label h3").map(&:text)).to eq(
+    expect(page.all(".setting-label h3").map(&:text).map(&:downcase)).to eq(
       [
         "silence new user sensitivity",
         "num users to silence new user",

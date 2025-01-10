@@ -20,6 +20,8 @@ class Onebox::Engine::YoutubeOnebox
         thumbnail_url = result[:image]
       end
 
+      return default_onebox_to_html if video_title.chomp("- YouTube").blank? || thumbnail_url.blank?
+
       escaped_title = ERB::Util.html_escape(video_title)
       escaped_start_time = ERB::Util.html_escape(params["t"])
       t_param = "&t=#{escaped_start_time}" if escaped_start_time.present?

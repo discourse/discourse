@@ -167,10 +167,8 @@ es:
               description: Opcional, solo se activará si el tema de la publicación está en esta categoría
             restricted_group:
               label: Grupo
-              description: Opcional, solo se activará si el tema de la publicación es un mensaje privado en la bandeja de entrada de este grupo
             restricted_groups:
               label: Grupos
-              description: Opcional, se activará solo si el tema de la publicación es un mensaje privado en una de las bandejas de entrada del grupo.
             ignore_group_members:
               label: Ignorar a los miembros del grupo
               description: Omitir el activador si el remitente es un miembro del Grupo especificado anteriormente
@@ -413,6 +411,8 @@ es:
             label: Script
           version:
             label: Versión
+          status:
+            label: Estado
           enabled:
             label: Activado
           disabled:

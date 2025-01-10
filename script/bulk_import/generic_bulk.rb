@@ -126,6 +126,10 @@ class BulkImport::Generic < BulkImport::Base
     update_chat_threads
     update_chat_membership_metadata
 
+    import_reactions
+    import_reaction_users
+    import_reaction_shadow_likes
+
     import_upload_references
   end
 
@@ -320,16 +324,19 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing category permissions..."
 
     permissions = query(<<~SQL)
-      SELECT c.id AS category_id, p.value -> 'group_id' AS group_id, p.value -> 'permission_type' AS permission_type
-        FROM categories c,
-             JSON_EACH(c.permissions) p
+      SELECT c.id AS category_id, 
+            p.value -> 'group_id' AS group_id,
+            p.value -> 'existing_group_id' AS existing_group_id,
+            p.value -> 'permission_type' AS permission_type
+      FROM categories c,
+          JSON_EACH(c.permissions) p
     SQL
 
     existing_category_group_ids = CategoryGroup.pluck(:category_id, :group_id).to_set
 
     create_category_groups(permissions) do |row|
       category_id = category_id_from_imported_id(row["category_id"])
-      group_id = group_id_from_imported_id(row["group_id"])
+      group_id = row["existing_group_id"] || group_id_from_imported_id(row["group_id"])
       next if existing_category_group_ids.include?([category_id, group_id])
 
       { category_id: category_id, group_id: group_id, permission_type: row["permission_type"] }
@@ -2941,6 +2948,129 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def import_reaction_users
+    unless defined?(::DiscourseReactions)
+      puts "",
+           "Skipping reaction users import, because the Discourse Reactions plugin is not installed."
+      return
+    end
+
+    puts "", "Importing reaction users..."
+
+    reaction_users = query(<<~SQL)
+      SELECT *
+      FROM discourse_reactions_reaction_users
+      ORDER BY post_id, user_id
+    SQL
+
+    existing_reaction_users =
+      DiscourseReactions::ReactionUser.pluck(:reaction_id, :user_id, :post_id).to_set
+
+    create_reaction_users(reaction_users) do |row|
+      next if row["reaction_id"].blank?
+
+      user_id = user_id_from_imported_id(row["user_id"])
+      post_id = post_id_from_imported_id(row["post_id"])
+      reaction_id = discourse_reaction_id_from_original_id(row["reaction_id"])
+
+      next if post_id.blank? || user_id.blank? || reaction_id.blank?
+      next unless existing_reaction_users.add?([reaction_id, user_id, post_id])
+
+      {
+        reaction_id:,
+        user_id:,
+        created_at: to_datetime(row["created_at"]),
+        updated_at: to_datetime(row["updated_at"]),
+        post_id:,
+      }
+    end
+
+    reaction_users.close
+  end
+
+  def import_reactions
+    unless defined?(::DiscourseReactions)
+      puts "", "Skipping reactions import, because the Discourse Reactions plugin is not installed."
+      return
+    end
+
+    puts "", "Importing reactions..."
+
+    reactions = query(<<~SQL)
+      SELECT *
+      FROM discourse_reactions_reactions
+      ORDER BY post_id, reaction_value
+    SQL
+
+    reaction_type_id = DiscourseReactions::Reaction.reaction_types["emoji"]
+    existing_reactions = DiscourseReactions::Reaction.pluck(:post_id, :reaction_value).to_set
+
+    create_reactions(reactions) do |row|
+      next if row["id"].blank?
+
+      post_id = post_id_from_imported_id(row["post_id"])
+
+      next if post_id.blank? || row["reaction_value"].blank?
+      next unless existing_reactions.add?([post_id, row["reaction_value"]])
+
+      {
+        original_id: row["id"],
+        post_id: post_id,
+        reaction_type: reaction_type_id,
+        reaction_value: row["reaction_value"],
+        reaction_users_count: row["reaction_users_count"],
+        created_at: to_datetime(row["created_at"]),
+        updated_at: to_datetime(row["updated_at"]),
+      }
+    end
+
+    reactions.close
+  end
+
+  def import_reaction_shadow_likes
+    unless defined?(::DiscourseReactions)
+      puts "",
+           "Skipping reaction shadow likes import, because the Discourse Reactions plugin is not installed."
+      return
+    end
+
+    puts "", "Importing reaction shadow likes..."
+
+    reactions = query(<<~SQL)
+      SELECT u.post_id, u.user_id, r.reaction_value, u.created_at
+        FROM discourse_reactions_reactions r
+             JOIN discourse_reactions_reaction_users u ON r.id = u.reaction_id
+       ORDER BY u.post_id, u.user_id
+    SQL
+
+    post_action_type_id = PostActionType.types[:like]
+    existing_likes =
+      PostAction.where(post_action_type_id: post_action_type_id).pluck(:post_id, :user_id).to_set
+
+    create_post_actions(reactions) do |row|
+      next if reaction_excluded_from_like?(row["reaction_value"])
+
+      post_id = post_id_from_imported_id(row["post_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next unless post_id && user_id
+      next unless existing_likes.add?([post_id, user_id])
+
+      {
+        post_id: post_id,
+        user_id: user_id,
+        post_action_type_id: post_action_type_id,
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    reactions.close
+  end
+
+  def reaction_excluded_from_like?(reaction_value)
+    DiscourseReactions::Reaction.reactions_excluded_from_like.include?(reaction_value)
   end
 
   def calculate_external_url(row)

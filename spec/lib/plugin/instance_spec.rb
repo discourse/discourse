@@ -993,4 +993,114 @@ TEXT
       expect(sum).to eq(3)
     end
   end
+
+  describe "#add_request_rate_limiter" do
+    after { Middleware::RequestTracker.reset_rate_limiters_stack }
+
+    it "should raise an error if `after` and `before` kwarg are provided" do
+      plugin = Plugin::Instance.new
+
+      expect do
+        plugin.add_request_rate_limiter(
+          identifier: :some_identifier,
+          key: ->(request) { request.ip },
+          activate_when: ->(request) { request.ip == "1.2.3.4" },
+          after: 0,
+          before: 0,
+        )
+      end.to raise_error(ArgumentError, "only one of `after` or `before` can be provided")
+    end
+
+    it "should raise an error if value of `after` kwarg is invalid" do
+      plugin = Plugin::Instance.new
+
+      expect {
+        plugin.add_request_rate_limiter(
+          identifier: :some_identifier,
+          key: ->(request) { request.ip },
+          activate_when: ->(request) { request.ip == "1.2.3.4" },
+          after: 0,
+        )
+      }.to raise_error(
+        ArgumentError,
+        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP",
+      )
+    end
+
+    it "should raise an error if value of `before` kwarg is invalid" do
+      plugin = Plugin::Instance.new
+
+      expect {
+        plugin.add_request_rate_limiter(
+          identifier: :some_identifier,
+          key: ->(request) { request.ip },
+          activate_when: ->(request) { request.ip == "1.2.3.4" },
+          before: 0,
+        )
+      }.to raise_error(
+        ArgumentError,
+        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP",
+      )
+    end
+
+    it "can prepend a rate limiter to `Middleware::RequestTracker.rate_limiters_stack`" do
+      plugin = Plugin::Instance.new
+
+      plugin.add_request_rate_limiter(
+        identifier: :some_identifier,
+        key: ->(request) { "crawlers" },
+        activate_when: ->(request) { request.user_agent =~ /crawler/ },
+      )
+
+      rate_limiter = Middleware::RequestTracker.rate_limiters_stack[0]
+
+      expect(rate_limiter.superclass).to eq(RequestTracker::RateLimiters::Base)
+    end
+
+    it "can insert a rate limiter before a specific rate limiter in `Middleware::RequestTracker.rate_limiters_stack`" do
+      plugin = Plugin::Instance.new
+
+      plugin.add_request_rate_limiter(
+        identifier: :some_identifier,
+        key: ->(request) { "crawlers" },
+        activate_when: ->(request) { request.user_agent =~ /crawler/ },
+        before: RequestTracker::RateLimiters::IP,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[0]).to eq(
+        RequestTracker::RateLimiters::User,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[1].superclass).to eq(
+        RequestTracker::RateLimiters::Base,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[2]).to eq(
+        RequestTracker::RateLimiters::IP,
+      )
+    end
+
+    it "can insert a rate limiter after a specific rate limiter in `Middleware::RequestTracker.rate_limiters_stack`" do
+      plugin = Plugin::Instance.new
+
+      plugin.add_request_rate_limiter(
+        identifier: :some_identifier,
+        key: ->(request) { "crawlers" },
+        activate_when: ->(request) { request.user_agent =~ /crawler/ },
+        after: RequestTracker::RateLimiters::IP,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[0]).to eq(
+        RequestTracker::RateLimiters::User,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[1]).to eq(
+        RequestTracker::RateLimiters::IP,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[2].superclass).to eq(
+        RequestTracker::RateLimiters::Base,
+      )
+    end
+  end
 end

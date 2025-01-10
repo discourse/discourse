@@ -208,7 +208,7 @@ export function duration(distance, ageOpts) {
 }
 
 export function durationTiny(distance, ageOpts) {
-  return duration(distance, Object.assign({ format: "tiny" }, ageOpts));
+  return duration(distance, { format: "tiny", ...ageOpts });
 }
 
 function relativeAgeTiny(date, ageOpts) {

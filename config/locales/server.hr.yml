@@ -236,7 +236,6 @@ hr:
   invite_link:
     email_taken: "Ovaj email se već koristi. Ako već imate korisnički račun, prijavite se ili poništite zaporku."
   topic_invite:
-    sender_does_not_allow_pm: "Nažalost, ne dopuštate tom korisniku da vam šalje privatne poruke."
     user_cannot_see_topic: "%{username} ne može vidjeti temu."
   backup:
     operation_already_running: "Operacija je trenutno u toku. Trenutno ne možemo započeti novi posao."
@@ -969,12 +968,10 @@ hr:
       title: "Obavijesti moderatore"
       xaxis: "Dan"
       yaxis: "Broj poruka"
-      description: "Koliko su puta moderatori privatno obaviješteni oznakom."
     notify_user_private_messages:
       title: "Obavijesti korisnika"
       xaxis: "Dan"
       yaxis: "Broj poruka"
-      description: "Koliko su puta korisnici privatno obaviješteni oznakom."
     top_referrers:
       title: "Najaktivniji preporučitelji"
       xaxis: "Korisnik"
@@ -1307,7 +1304,6 @@ hr:
     tl3_requires_topics_replied_to: "Minimalni broj tema na koje korisnik mora odgovoriti u zadnjih (tl3 vremensko razdoblje) dana da bi se kvalificirao za promaknuće u razinu povjerenja 3. (0 ili više)"
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
-    default_dark_mode_color_scheme_id: "Shema boja koja se koristi u tamnom načinu rada."
     dark_mode_none: "ništa"
     max_similar_results: "Koliko sličnih tema prikazati iznad uređivača prilikom sastavljanja nove teme. Usporedba se temelji na naslovu i tijelu."
     max_image_megapixels: "Maksimalni dopušteni broj megapiksela za sliku. Slike s većim brojem megapiksela bit će odbijene."
@@ -1405,7 +1401,6 @@ hr:
     embed_post_limit: "Maksimalan broj postova za ugradnju."
     embed_username_required: "Potrebno je korisničko ime za kreiranje teme."
     prevent_anons_from_downloading_files: "Spriječite anonimne korisnike u preuzimanju privitaka."
-    secure_uploads: 'Ograničava pristup SVIM prijenosima (slike, video, audio, tekst, pdf-ovi, zipovi i ostalo). Ako je "potrebna prijava" omogućena, samo prijavljeni korisnici mogu pristupiti učitavanjima. U suprotnom, pristup će biti ograničen samo na učitavanje medija u privatnim porukama i privatnim kategorijama. UPOZORENJE: Ova je postavka složena i zahtijeva duboko administrativno razumijevanje. Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/140017">sigurnu učitava temu na Meta</a> za detalje.'
     secure_uploads_allow_embed_images_in_emails: "Omogućuje ugrađivanje sigurnih slika koje bi se inače redigirale u e-porukama, ako je njihova veličina manja od postavke 'maksimalna veličina slike za ugrađivanje e-pošte u sigurne prijenose kb'."
     secure_uploads_max_email_embed_image_size_kb: "Ograničenje veličine za sigurne slike koje će biti ugrađene u e-poštu ako je omogućena postavka \"sigurni prijenosi dopuštaju ugradnju u e-poštu\". Bez uključene te postavke, ova postavka nema učinka."
     slug_generation_method: "Odaberite metodu stvaranja puževa. 'encoded' će generirati niz postotnog kodiranja. 'none' će uopće onemogućiti puž."
@@ -2357,18 +2352,8 @@ hr:
             label: "Pregled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije s istaknutim temama"
-              categories_and_latest_topics:
-                label: "Kategorije i najnovije teme"
-              categories_and_latest_topics_created_date:
-                label: "Kategorije i najnovije teme (poredaj po datumu kreiranja teme)"
-              categories_and_top_topics:
-                label: "Kategorije i glavne teme"
-              subcategories_with_featured_topics:
-                label: "Potkategorije s istaknutim temama"
+              latest:
+                label: "Posljednje"
       corporate:
         fields:
           contact_url:
@@ -2383,7 +2368,7 @@ hr:
       quoted: '%{username} citirao vas je u "%{topic}" - %{site_title}'
       replied: '%{username} odgovorio u "%{topic}" - %{site_title}'
       posted: '%{username} objavio u "%{topic}" - %{site_title}'
-      private_message: '%{username} vam je poslao privatnu poruku u "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslao privatnu poruku u temi "%{topic}" - %{site_title}'
       linked: '%{username} se povezao s tvojom objavom "%{topic}" - %{site_title}'
       watching_first_post: '%{username} stvorio je novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti omogućene - %{site_title}"

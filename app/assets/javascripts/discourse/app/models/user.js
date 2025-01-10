@@ -17,10 +17,10 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import { longDate } from "discourse/lib/formatter";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
+import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import Singleton from "discourse/mixins/singleton";
 import Badge from "discourse/models/badge";
 import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
@@ -38,7 +38,6 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseLater from "discourse-common/lib/later";
-import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -175,7 +174,36 @@ function userOption(userOptionKey) {
   });
 }
 
+@singleton
 export default class User extends RestModel.extend(Evented) {
+  static createCurrent() {
+    const userJson = PreloadStore.get("currentUser");
+    if (userJson) {
+      userJson.isCurrent = true;
+
+      if (userJson.primary_group_id) {
+        const primaryGroup = userJson.groups.find(
+          (group) => group.id === userJson.primary_group_id
+        );
+        if (primaryGroup) {
+          userJson.primary_group_name = primaryGroup.name;
+        }
+      }
+
+      if (!userJson.user_option.timezone) {
+        userJson.user_option.timezone = moment.tz.guess();
+        this._saveTimezone(userJson);
+      }
+
+      const store = getOwnerWithFallback(this).lookup("service:store");
+      const currentUser = store.createRecord("user", userJson);
+      currentUser.statusManager.trackStatus();
+      return currentUser;
+    }
+
+    return null;
+  }
+
   @service appEvents;
   @service userTips;
 
@@ -1252,46 +1280,13 @@ export default class User extends RestModel.extend(Evented) {
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
   }
-
-  get canUseGlimmerTopicList() {
-    return this.use_glimmer_topic_list && !needsHbrTopicList();
-  }
 }
 
-User.reopenClass(Singleton, {
+User.reopenClass({
   // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username });
     return user.findDetails(options);
-  },
-
-  // TODO: Use app.register and junk Singleton
-  createCurrent() {
-    const userJson = PreloadStore.get("currentUser");
-    if (userJson) {
-      userJson.isCurrent = true;
-
-      if (userJson.primary_group_id) {
-        const primaryGroup = userJson.groups.find(
-          (group) => group.id === userJson.primary_group_id
-        );
-        if (primaryGroup) {
-          userJson.primary_group_name = primaryGroup.name;
-        }
-      }
-
-      if (!userJson.user_option.timezone) {
-        userJson.user_option.timezone = moment.tz.guess();
-        this._saveTimezone(userJson);
-      }
-
-      const store = getOwnerWithFallback(this).lookup("service:store");
-      const currentUser = store.createRecord("user", userJson);
-      currentUser.statusManager.trackStatus();
-      return currentUser;
-    }
-
-    return null;
   },
 
   checkUsername(username, email, for_user_id) {

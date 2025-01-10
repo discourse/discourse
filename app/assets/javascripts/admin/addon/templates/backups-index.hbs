@@ -1,4 +1,4 @@
-<AdminPageSubheader @titleLabel="admin.backups.files_title">
+<DPageSubheader @titleLabel={{i18n "admin.backups.files_title"}}>
   <:actions as |actions|>
     <actions.Wrapped as |wrapped|>
       {{#if this.localBackupStorage}}
@@ -15,7 +15,7 @@
       {{/if}}
     </actions.Wrapped>
   </:actions>
-</AdminPageSubheader>
+</DPageSubheader>
 
 {{#if this.status.restoreDisabled}}
   <div class="backup-message alert alert-info">
@@ -71,22 +71,22 @@
                 <DropdownMenu as |dropdown|>
                   <dropdown.item>
                     <DButton
-                      @icon="trash-can"
-                      @action={{fn (route-action "destroyBackup") backup}}
-                      @disabled={{this.status.isOperationRunning}}
-                      @title={{this.deleteTitle}}
-                      @label="admin.backups.operations.destroy.title"
-                      class="btn-transparent btn-danger backup-item-row__delete"
-                    />
-                  </dropdown.item>
-                  <dropdown.item>
-                    <DButton
                       @icon="play"
                       @action={{fn (route-action "startRestore") backup}}
                       @disabled={{this.status.restoreDisabled}}
                       @title={{this.restoreTitle}}
                       @label="admin.backups.operations.restore.label"
                       class="btn-transparent backup-item-row__restore"
+                    />
+                  </dropdown.item>
+                  <dropdown.item>
+                    <DButton
+                      @icon="trash-can"
+                      @action={{fn (route-action "destroyBackup") backup}}
+                      @disabled={{this.status.isOperationRunning}}
+                      @title={{this.deleteTitle}}
+                      @label="admin.backups.operations.destroy.title"
+                      class="btn-transparent btn-danger backup-item-row__delete"
                     />
                   </dropdown.item>
                 </DropdownMenu>
