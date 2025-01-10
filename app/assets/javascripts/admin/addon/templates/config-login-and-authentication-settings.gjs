@@ -7,16 +7,16 @@ import AdminAreaSettings from "admin/components/admin-area-settings";
 export default RouteTemplate(<template>
   <DPageHeader
     @hideTabs={{true}}
-    @titleLabel={{i18n "admin.config.group_permissions.title"}}
+    @titleLabel={{i18n "admin.config.login_and_authentication.title"}}
     @descriptionLabel={{i18n
-      "admin.config.group_permissions.header_description"
+      "admin.config.login_and_authentication.header_description"
     }}
   >
     <:breadcrumbs>
       <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
-        @path="/admin/config/group-permissions"
-        @label={{i18n "admin.config.group_permissions.title"}}
+        @path="/admin/config/login-and-authentication"
+        @label={{i18n "admin.config.login_and_authentication.title"}}
       />
     </:breadcrumbs>
   </DPageHeader>
@@ -24,8 +24,8 @@ export default RouteTemplate(<template>
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
       @showBreadcrumb={{false}}
-      @area="group_permissions"
-      @path="/admin/config/group-permissions"
+      @categories="login"
+      @path="/admin/config/login-and-authentication"
       @filter={{@controller.filter}}
       @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
     />

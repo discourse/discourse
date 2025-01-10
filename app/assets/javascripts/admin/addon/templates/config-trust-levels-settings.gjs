@@ -7,16 +7,15 @@ import AdminAreaSettings from "admin/components/admin-area-settings";
 export default RouteTemplate(<template>
   <DPageHeader
     @hideTabs={{true}}
-    @titleLabel={{i18n "admin.config.group_permissions.title"}}
-    @descriptionLabel={{i18n
-      "admin.config.group_permissions.header_description"
-    }}
+    @titleLabel={{i18n "admin.config.trust_levels.title"}}
+    @descriptionLabel={{i18n "admin.config.trust_levels.header_description"}}
+    @learnMoreUrl="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
   >
     <:breadcrumbs>
       <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
-        @path="/admin/config/group-permissions"
-        @label={{i18n "admin.config.group_permissions.title"}}
+        @path="/admin/config/trust-levels"
+        @label={{i18n "admin.config.trust_levels.title"}}
       />
     </:breadcrumbs>
   </DPageHeader>
@@ -24,8 +23,8 @@ export default RouteTemplate(<template>
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
       @showBreadcrumb={{false}}
-      @area="group_permissions"
-      @path="/admin/config/group-permissions"
+      @area="trust_levels"
+      @path="/admin/config/trust-levels"
       @filter={{@controller.filter}}
       @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
     />
