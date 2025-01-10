@@ -5403,6 +5403,7 @@ en:
         edit: "Edit"
         save: "Save"
         cancel: "Cancel"
+        continue: "Continue"
         back: "Back to API keys"
         revoke: "Revoke"
         undo_revoke: "Undo revoke"

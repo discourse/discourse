@@ -26,12 +26,20 @@ module PageObjects
         page.has_no_css?(table_selector, text: name)
       end
 
+      def has_generated_api_key?
+        page.has_css?(".generated-api-key")
+      end
+
       def add_api_key(description:)
         page.find(header_actions_selector, text: I18n.t("admin_js.admin.api_keys.add")).click
 
         form = page.find(".form-kit")
         form.find(description_field_selector).fill_in(with: description)
         form.find(".save").click
+      end
+
+      def click_continue
+        page.find("button", text: I18n.t("admin_js.admin.api_keys.continue")).click
       end
 
       def click_edit(description)
