@@ -222,6 +222,10 @@ en:
               label: Valid trust levels
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tags added or removed
+            tags_added: Tags added
+            tags_removed: Tags removed
           fields:
             watching_categories:
               label: Watching categories
@@ -229,6 +233,8 @@ en:
             watching_tags:
               label: Watching tags
               description: Will trigger only if the topic has any of these tags
+            trigger_on:
+              label: Trigger on
             trigger_with_pms:
               label: Trigger with PMs
               description: Will trigger even if the tags were changed in a PM
@@ -408,6 +414,8 @@ en:
             label: Script
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Enabled
           disabled:

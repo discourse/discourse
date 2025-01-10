@@ -351,6 +351,42 @@ RSpec.describe PostMover do
             expect(topic.closed).to eq(true)
           end
 
+          it "records full_move=true in MovedPost records when all posts are moved" do
+            post_ids = [p1.id, p2.id, p3.id, p4.id]
+            new_topic =
+              topic.move_posts(
+                user,
+                [p1.id, p2.id, p3.id, p4.id],
+                title: "new testing topic name",
+                category_id: category.id,
+              )
+            expect(
+              MovedPost.where(
+                old_post_id: post_ids,
+                new_topic_id: new_topic.id,
+                full_move: true,
+              ).count,
+            ).to eq(4)
+          end
+
+          it "records full_move=false in MovedPost records when only some posts" do
+            post_ids = [p3.id, p4.id]
+            new_topic =
+              topic.move_posts(
+                user,
+                [p3.id, p4.id],
+                title: "new testing topic name",
+                category_id: category.id,
+              )
+            expect(
+              MovedPost.where(
+                old_post_id: post_ids,
+                new_topic_id: new_topic.id,
+                full_move: false,
+              ).count,
+            ).to eq(2)
+          end
+
           it "does not move posts that do not belong to the existing topic" do
             new_topic =
               topic.move_posts(user, [p2.id, p3.id, p5.id], title: "Logan is a pretty good movie")
@@ -2717,6 +2753,31 @@ RSpec.describe PostMover do
         expect(event[:event_name]).to eq(:post_moved)
         expect(event[:params][0]).to eq(post_2)
         expect(event[:params][1]).to eq(topic_1.id)
+        expect(event[:params][2]).to eq(post_2)
+      end
+
+      context "with 'freeze_original' option" do
+        it "passes the new post as the first argument and old post as third argument" do
+          post_mover =
+            PostMover.new(
+              topic_1,
+              Discourse.system_user,
+              [post_2.id],
+              options: {
+                freeze_original: true,
+              },
+            )
+          events = DiscourseEvent.track_events(:post_moved) { post_mover.to_topic(topic_2.id) }
+          expect(events.size).to eq(1)
+
+          moved_post = MovedPost.includes(:new_post).find_by(old_post: post_2)
+
+          event = events.first
+          expect(event[:event_name]).to eq(:post_moved)
+          expect(event[:params][0]).to eq(moved_post.new_post)
+          expect(event[:params][1]).to eq(topic_1.id)
+          expect(event[:params][2]).to eq(post_2)
+        end
       end
     end
 
@@ -2837,7 +2898,7 @@ RSpec.describe PostMover do
         ).to eq(true)
       end
 
-      it "creates the moderator message in the correct position" do
+      it "creates the moderator message in the correct position for partial move" do
         PostMover.new(
           original_topic,
           Discourse.system_user,
@@ -2847,11 +2908,71 @@ RSpec.describe PostMover do
           },
         ).to_topic(destination_topic.id)
 
-        moderator_post =
-          original_topic.reload.ordered_posts.find_by(post_number: second_post.post_number + 1) # the next post
-        expect(moderator_post).to be_present
-        expect(moderator_post.post_type).to eq(Post.types[:small_action])
-        expect(moderator_post.action_code).to eq("split_topic")
+        # Moderator post is right after the second_post since it was the last post moved
+        expect(
+          original_topic.ordered_posts.find_by(
+            post_number: second_post.post_number + 1,
+            post_type: Post.types[:small_action],
+            action_code: "split_topic",
+          ),
+        ).to be_present
+      end
+
+      it "creates the moderator message in the correct position for full move" do
+        small_action = Fabricate(:small_action, topic: original_topic)
+        PostMover.new(
+          original_topic,
+          Discourse.system_user,
+          [op.id, first_post.id, second_post.id, third_post.id],
+          options: {
+            freeze_original: true,
+          },
+        ).to_topic(destination_topic.id)
+
+        expect(
+          original_topic.ordered_posts.find_by(
+            post_number: small_action.post_number + 1,
+            post_type: Post.types[:small_action],
+            action_code: "split_topic",
+          ),
+        ).to be_present
+      end
+
+      context "with `post_mover_create_moderator_post` modifier" do
+        fab!(:topic_1) { Fabricate(:topic) }
+        fab!(:topic_2) { Fabricate(:topic) }
+        fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+        fab!(:user)
+
+        before { SiteSetting.delete_merged_stub_topics_after_days = 0 }
+        let(:modifier_block) { Proc.new { |continue, _| false } }
+
+        it "does not create small action post when modifier returns false" do
+          plugin_instance = Plugin::Instance.new
+          plugin_instance.register_modifier(:post_mover_create_moderator_post, &modifier_block)
+
+          expect {
+            PostMover.new(
+              original_topic,
+              Discourse.system_user,
+              [first_post.id, second_post.id],
+              options: {
+                freeze_original: true,
+              },
+            ).to_topic(destination_topic.id)
+          }.not_to change {
+            original_topic
+              .posts
+              .where(post_type: Post.types[:small_action], action_code: "split_topic")
+              .count
+          }
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :post_mover_create_moderator_post,
+            &modifier_block
+          )
+        end
       end
 
       it "keeps posts when moving all posts to a new topic" do
@@ -3045,6 +3166,45 @@ RSpec.describe PostMover do
           rescue RateLimiter::LimitExceeded
             fail "Rate limit exceeded"
           end
+        end
+      end
+    end
+
+    describe "#enqueue_jobs" do
+      fab!(:admin)
+      fab!(:original_topic) { Fabricate(:topic) }
+      fab!(:post_1) { Fabricate(:post, topic: original_topic) }
+      fab!(:post_2) { Fabricate(:post, topic: original_topic) }
+      fab!(:destination_topic) { Fabricate(:topic) }
+
+      it "calls enqueue jobs for PostCreator when @post_creator is present" do
+        post_mover = PostMover.new(original_topic, admin, [post_1, post_2])
+
+        PostCreator.any_instance.expects(:enqueue_jobs).once
+
+        post_mover.instance_variable_set(:@post_creator, PostCreator.new(admin, {}))
+        post_mover.send(:enqueue_jobs, destination_topic)
+      end
+
+      context "with post_mover_enqueue_post_creator_jobs modifier" do
+        let(:modifier_block) { Proc.new { |_| false } }
+
+        it "skips enqueuing jobs when the modifier returns false" do
+          plugin_instance = Plugin::Instance.new
+          plugin_instance.register_modifier(:post_mover_enqueue_post_creator_jobs, &modifier_block)
+
+          post_mover = PostMover.new(original_topic, admin, [post_1, post_2])
+
+          PostCreator.any_instance.expects(:enqueue_jobs).never
+
+          post_mover.instance_variable_set(:@post_creator, PostCreator.new(admin, {}))
+          post_mover.send(:enqueue_jobs, destination_topic)
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :post_mover_enqueue_post_creator_jobs,
+            &modifier_block
+          )
         end
       end
     end

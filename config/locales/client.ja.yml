@@ -442,6 +442,8 @@ ja:
     continue: "続行"
     switch_to_anon: "匿名モードを開始"
     switch_from_anon: "匿名モードを終了"
+    select_placeholder: "選択…"
+    none_placeholder: "なし"
     banner:
       close: "このバナーを閉じる"
       edit: "編集"
@@ -565,6 +567,8 @@ ja:
         refresh: "更新"
         status: "ステータス"
         category: "カテゴリ"
+        score_type:
+          title: "理由"
         orders:
           score: "スコア"
           score_asc: "スコア (昇順)"
@@ -860,14 +864,6 @@ ja:
         description: "このグループのメンバーはこれらのカテゴリにアクセスできます"
       public_admission: "ユーザーがグループに自由に参加することを許可する (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に退出することを許可する"
-      empty:
-        posts: "このグループのメンバーによる投稿はありません。"
-        members: "このグループにはメンバーがいません。"
-        requests: "このグループへのメンバーシップリクエストはありません。"
-        mentions: "このグループのメンションはありません。"
-        messages: "このグループのメッセージはありません。"
-        topics: "このグループのメンバーによるトピックはありません。"
-        logs: "このグループに関するログはありません。"
       add: "追加"
       join: "参加"
       leave: "退出"
@@ -1050,14 +1046,13 @@ ja:
       trust_level: "信頼レベル"
       read_time: "閲覧時間"
       topics_entered: "閲覧したトピック"
-      post_count: "投稿数"
+      post_count: "投稿"
       confirm_delete_other_accounts: "これらのアカウントを削除してもよろしいですか?"
       powered_by: "<a href='https://maxmind.com'>MaxMindDB</a> を使用する"
       copied: "コピーしました"
     user_fields:
       none: "(オプションを選択)"
       required: '"%{name}" の値を入力してください'
-      same_as_password: "他のフィールドでパスワードを繰り返し入力してはいけません。"
       optional: (オプション)
     user:
       said: "%{username}:"
@@ -1180,18 +1175,15 @@ ja:
         description: "新規ユーザー向けオンボーディングのヒントとバッジをスキップする"
       reset_seen_user_tips: "ユーザーヒントをもう一度表示する"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトのテーマにする"
-      color_scheme_default_on_all_devices: "デフォルトの色スキームをすべてのデバイスに設定する"
-      color_scheme: "色スキーム"
+      color_scheme: "色パレット"
       color_schemes:
         default_description: "デフォルトのテーマ"
         disable_dark_scheme: "通常と同じ"
-        dark_instructions: "デバイスをダークモードに切り替えると、ダークモードの色スキームをプレビューできます。"
         undo: "リセット"
         regular: "通常"
         dark: "ダークモード"
         default_dark_scheme: "(サイトのデフォルト)"
       dark_mode: "ダークモード"
-      dark_mode_enable: "ダークモードの色スキームを自動的に有効にする"
       text_size_default_on_all_devices: "これをすべてのデバイスのデフォルトのテキストサイズにする"
       allow_private_messages: "ほかのユーザーが私に個人メッセージを送信することを許可する"
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
@@ -1939,9 +1931,6 @@ ja:
       optional: オプション
       errors_summary_title: "このフォームにはエラーがあります:"
       dirty_form: "変更を送信しませんでした！終了してもよろしいですか？"
-      select:
-        select_placeholder: "選択…"
-        none_placeholder: "なし"
       errors:
         required: "必須"
         invalid_url: "有効な URL である必要があります"
@@ -2220,6 +2209,9 @@ ja:
       categories_boxes: "サブカテゴリのあるボックス"
       categories_boxes_with_topics: "注目のトピックのあるボックス"
       subcategories_with_featured_topics: "注目のトピックを含むサブカテゴリ"
+    full_name_requirement:
+      required_at_signup: "必須"
+      optional_at_signup: "オプション"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2538,8 +2530,6 @@ ja:
         quoted: "引用"
         edited: "編集"
         liked: "新しい「いいね！」"
-        private_message: "新しい個人メッセージ"
-        invited_to_private_message: "個人メッセージに招待"
         invitee_accepted: "招待が承諾されました"
         posted: "新しい投稿"
         watching_category_or_tag: "新しい投稿"
@@ -3129,7 +3119,6 @@ ja:
         help: "このトピックの印刷バージョンを開く"
       flag_topic:
         title: "通報"
-        help: "このトピックを非公開に通報するか、または非公開の通知を送信する"
         success_message: "このトピックを通報しました。"
       make_public:
         title: "公開トピックに変換"
@@ -3282,6 +3271,8 @@ ja:
         description:
           other: "<b>%{count}</b> 件の投稿を選択しました。"
       deleted_by_author_simple: "(作成者が削除したトピック)"
+    post_list:
+      aria_post_number: "%{title} - 投稿 #%{postNumber}"
     post:
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"
@@ -3383,7 +3374,6 @@ ja:
         edit_action: "編集"
         edit_anonymous: "この投稿を編集するには、ログインする必要があります。"
         flag_action: "通報"
-        flag: "この投稿を非公開に通報するか、または非公開の通知を送信する"
         delete_action: "投稿を削除"
         delete: "この投稿を削除する"
         undelete_action: "投稿の削除を取り消す"
@@ -4018,7 +4008,6 @@ ja:
         print: "%{shortcut} トピックを印刷"
         defer: "%{shortcut} トピックを未読としてマーク"
         topic_admin_actions: "%{shortcut} トピックの管理者操作を開く"
-        archive_private_message: "%{shortcut} プライベートメッセージのアーカイブ操作を切り替える"
       search_menu:
         title: "検索メニュー"
         prev_next: "%{shortcut} 選択を上下に移動"
@@ -4512,9 +4501,36 @@ ja:
         meta_doc: "レポートの詳細な概要については、<a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>ドキュメント</a>をご覧ください。"
         sidebar_title: "レポート"
         sidebar_link:
-          all: "すべて"
+          all: "すべてのレポート"
+      config:
+        developer:
+          title: "開発者"
+        experimental:
+          title: "実験的"
+        files:
+          title: "ファイル"
+        legal:
+          title: "法関連"
+        logo:
+          title: "サイトのロゴ"
+        navigation:
+          title: "ナビゲーション"
+        notifications:
+          title: "通知"
+        onebox:
+          title: "ワンボックス"
+        other:
+          title: "その他"
+        search:
+          title: "検索"
+        security:
+          title: "セキュリティ"
+        spam:
+          title: "迷惑"
+        user_api:
+          title: "ユーザー API"
       new_features:
-        title: "新機能"
+        title: "新機能?"
       dashboard:
         title: "ダッシュボード"
         last_updated: "ダッシュボードが更新されました:"
@@ -4532,7 +4548,7 @@ ja:
         problems_found: "現在のサイト設定に基づいたアドバイス"
         dismiss_notice: "閉じる"
         new_features:
-          title: "新機能"
+          title: "新機能?"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
           previous_announcements: "以前の新機能の発表は <a href='%{url}' target='_blank'>Discourse Meta</a> をご覧ください"
           learn_more: "もっと詳しく..."
@@ -4619,7 +4635,7 @@ ja:
             type_of_web_hook_event:
               label: "イベントの種類"
       flags:
-        title: "モデレーション通報"
+        title: "介入"
         description: "説明"
         enabled: "有効化？"
         more_options:
@@ -4951,60 +4967,39 @@ ja:
         sidebar_link:
           backups: "バックアップ"
           whats_new:
-            title: "新着情報"
+            title: "新機能?"
             keywords: "変更ログ|機能|リリース"
       community:
         title: "コミュニティー"
         sidebar_link:
           about_your_site: "サイトについて"
           badges: "バッジ"
-          login_and_authentication: "ログインと認証"
           notifications: "通知"
           permalinks: "パーマリンク"
-          trust_levels: "信頼レベル"
           users: "ユーザー"
-          user_fields: "ユーザーフィールド"
-          watched_words: "ウォッチ中の語"
+          groups: "グループ"
           legal: "法関連"
-          moderation_flags: "モデレーション通報"
+          moderation_flags:
+            title: "介入"
       appearance:
         title: "外観"
         sidebar_link:
-          font_style: "フォントスタイル"
           site_logo: "サイトのロゴ"
-          color_schemes: "色スキーム"
           emoji: "絵文字"
           navigation: "ナビゲーション"
           themes: "テーマ"
           components:
             title: "コンポーネント"
             keywords: "テーマ|拡張機能"
-          site_texts: "サイトのテキスト"
       email_settings:
         title: "メールの設定"
         sidebar_link:
           appearance: "外観"
-          preview_summary: "要約をプレビュー"
-          server_setup: "サーバーのセットアップ"
-      email_logs:
-        title: "メールのロゴ"
-        sidebar_link:
-          sent: "送信済み"
-          skipped: "スキップ"
-          bounced: "バウンス"
-          received: "受信"
-          rejected: "拒否"
       security:
         title: "セキュリティ"
         sidebar_link:
-          error_logs: "エラーログ"
-          screened_emails: "スクリーン対象メール"
-          screened_ips: "スクリーン対象 IP"
-          screened_urls: "スクリーン対象 URL"
-          search_logs: "検索ログ"
           security: "セキュリティの設定"
           spam: "迷惑行為の設定"
-          staff_action_logs: "スタッフの操作ログ"
       section_landing_pages:
         account:
           title: "アカウント"
@@ -5012,7 +5007,7 @@ ja:
             title: "バックアップ"
             description: "サイトのデータのバックアップを作成します"
           whats_new:
-            title: "新着情報"
+            title: "新機能?"
             description: "Discourse の新しいリリースと改善点をご覧ください"
       config_areas:
         about:
@@ -5045,8 +5040,6 @@ ja:
           site_contact_name_help: |
             自動送信メールの from に使用されるスタッフのユーザー名。空欄の場合、デフォルトのシステムアカウントが使用されます。
           site_contact_group: "サイトの連絡先グループ"
-          site_contact_group_help: |
-            自動的に送信されるすべてのプライベートメッセージに招待されるグループ。
           your_organization: "あなたの組織"
           your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
@@ -5069,7 +5062,7 @@ ja:
             your_organization_saved: "組織が保存されました"
           saved: "保存しました！"
         flags:
-          header: "モデレーション通報"
+          header: "介入"
           edit_header: "通報を編集"
           subheader: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
           description: "説明"
@@ -5105,6 +5098,14 @@ ja:
             title: "その他のオプション"
             move_up: "上に移動"
             move_down: "下に移動"
+        permalinks:
+          edit: "編集"
+          delete: "削除"
+        embeddable_host:
+          edit: "編集"
+          delete: "削除"
+          more_options:
+            title: "その他のオプション"
         look_and_feel:
           title: "外観と使い心地"
           description: "Discourse サイトをカスタマイズしてブランド化することで、個性的なスタイルを持たせます。"
@@ -5147,18 +5148,16 @@ ja:
       advanced:
         title: "高度"
         sidebar_link:
-          api_keys: "API キー"
+          api_keys:
+            title: "API キー"
           developer: "開発者"
           embedding: "埋め込み"
-          rate_limits: "レート制限"
           user_api: "ユーザー API"
-          web_hooks: "Webhook"
           onebox: "ワンボックス"
           files: "ファイル"
           other_options: "その他"
           search: "検索"
           experimental: "実験的"
-          all_site_settings: "すべてのサイトの設定"
       navigation_menu:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"
@@ -5211,7 +5210,7 @@ ja:
             title: "ダウンロードリンクをメールで送る"
             alert: "このバックアップのダウンロードリンクがメールで送信されました"
           destroy:
-            title: "バックアップの削除"
+            title: "削除"
             confirm: "このバックアップを削除してもよろしいですか？"
           restore:
             is_disabled: "復元は現在無効になっています。有効にするには、<a href='%{url}'>サイト設定</a>にアクセスしてください。"
@@ -5321,7 +5320,6 @@ ja:
           hide_unused_fields: "未使用のフィールドを非表示"
           is_default: "テーマはデフォルトで有効"
           user_selectable: "ユーザーがテーマを選択できる"
-          color_scheme_user_selectable: "ユーザーが色スキームを選択できる"
           auto_update: "Discourse が更新された時に自動更新する"
           color_scheme: "色パレット"
           edit_color_scheme: "色パレットを編集"
@@ -6548,6 +6546,7 @@ ja:
         settings: "設定"
       embedding:
         get_started: "ほかのウェブサイトに Discourse を埋め込む場合は、まずホストを追加してください。"
+        delete: "削除"
         confirm_delete: "このホストを削除してもよろしいですか？"
         sample: |
           <p>Discourse トピックの作成と埋め込みを行うには、以下の HTML コードをサイトに貼り付けます。<b>EMBED_URL</b> を、埋め込んでいるページの正規 URL に置き換えてください。</p>
@@ -6556,16 +6555,9 @@ ja:
 
           <p><b>DISCOURSE_USERNAME</b> を、トピックを作成する作成者の Discourse ユーザー名に置き換えてください。Discourse は、<code>name</code> 属性が <code>discourse-username</code> または <code>author</code> に設定された <code>&lt;meta&gt;</code> タグの <code>content</code> 属性でユーザーを自動的にルックアップします。<code>discourseUserName</code> パラメーターは廃止になっており、Discourse 3.2 で削除されます。</p>
         title: "埋め込み"
-        host: "許可されたホスト"
-        allowed_paths: "パスのホワイトリスト"
         edit: "編集"
-        category: "カテゴリへ投稿"
         tags: "トピックのタグ"
-        post_author: "投稿の作成者 - デフォルトは %{author}"
-        add_host: "ホストを追加"
-        settings: "埋め込みの設定"
-        crawling_settings: "クローラーの設定"
-        crawling_description: "Discourse が投稿のトピックを作成する際に RSS/ATOM フィードが存在しない場合、HTML からコンテンツを解析しようとします。コンテンツの抽出が困難な場合があるため、抽出を容易にする CSS ルールを指定する機能を提供しています。"
+        crawlers_description: "Discourse が投稿のトピックを作成する際に RSS/ATOM フィードが存在しない場合、HTML からコンテンツを解析しようとします。コンテンツの抽出が困難な場合があるため、抽出を容易にする CSS ルールを指定する機能を提供しています。"
         embed_by_username: "トピック作成のユーザー名"
         embed_post_limit: "埋め込める投稿の最大数"
         embed_title_scrubber: "投稿のタイトルをスクラブするために使用される正規表現"
@@ -6574,7 +6566,12 @@ ja:
         allowed_embed_selectors: "埋め込みで許可される要素の CSS セレクタ"
         blocked_embed_selectors: "埋め込みから削除された要素の CSS セレクタ"
         allowed_embed_classnames: "許可された CSS クラス名"
-        save: "埋め込みの設定を保存"
+        save: "保存"
+        host_form:
+          save: "保存"
+        nav:
+          settings: "設定"
+          crawlers: "クローラー"
       permalink:
         title: "パーマリンク"
         description: "フォーラムが認識していない URL に適用するリダイレクト。"
@@ -6599,6 +6596,9 @@ ja:
         back: "パーマリンクに戻る"
         more_options: "その他のオプション"
         copy_success: "パーマリンクをクリップボードにコピーしました"
+        nav:
+          settings: "設定"
+          permalinks: "パーマリンク"
         form:
           label: "新規:"
           add_header: "パーマリンクを追加"
@@ -6639,8 +6639,23 @@ ja:
           moderator: "モデレーター"
           regular: "レギュラーユーザー"
       previews:
-        topic_title: "ディスカッショントピックの見出し"
         share_button: "共有"
         reply_button: "返信"
         topic_preview: "トピックのプレビュー"
         homepage_preview: "ホームページのプレビュー"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "すべてのカテゴリ"
+          new: "新規"
+          unread: "未読"
+          top: "人気"
+          latest: "最新"
+          hot: "ホット"
+          categories: "カテゴリ"
+        category_names:
+          site_feedback: "サイトに関する意見"
+        table_headers:
+          topic: "トピック"
+          replies: "返信"
+          views: "ビュー"
+          activity: "アクティビティ"

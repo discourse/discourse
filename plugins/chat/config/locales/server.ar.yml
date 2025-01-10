@@ -97,8 +97,6 @@ ar:
       not_accepting_dms: "عذرًا، لا يقبل %{username} الرسائل في الوقت الحالي."
       actor_ignoring_target_user: "أنت تتجاهل %{username}؛ لذا لا يمكنك إرسال رسائل إليه."
       actor_muting_target_user: "أنت تكتم %{username}؛ لذا لا يمكنك إرسال رسائل إليه."
-      actor_disallowed_dms: "لقد اخترت منع المستخدمين من إرسال رسائل خاصة ومباشرة إليك؛ لذا لا يمكنك إنشاء رسائل مباشرة جديدة."
-      actor_preventing_target_user_from_dm: "لقد اخترت منع %{username} من إرسال رسائل خاصة ومباشرة إليك؛ لذا لا يمكنك إنشاء رسائل مباشرة جديدة إليه."
       user_cannot_send_direct_messages: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
       over_chat_max_direct_message_users_allow_self: "يمكنك إرسال رسالة مباشرة إلى نفسك فقط."
       over_chat_max_direct_message_users:

@@ -52,6 +52,9 @@ fix-staged:
     syntax_tree:
       glob: "*.{rb,rake}"
       run: bundle exec stree write Gemfile {staged_files}
+    keyword-translations:
+      glob: "**/server.en.yml"
+      run: bundle exec rake site_settings:add_keyword_translation_keys
 
 lints:
   parallel: true

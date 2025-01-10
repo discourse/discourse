@@ -3,7 +3,6 @@ import { classNames } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
-
 @selectKitOptions({
   i18nPrefix: "category.notifications",
   showFullTitle: false,

@@ -97,6 +97,23 @@ RSpec.describe ExportCsvController do
         expect(response.status).to eq(422)
       end
 
+      it "does not allow moderators to export screened_email if they has no permission to view emails" do
+        SiteSetting.moderators_view_emails = false
+        post "/export_csv/export_entity.json", params: { entity: "screened_email" }
+        expect(response.status).to eq(422)
+      end
+
+      it "allows moderator to export screened_email if they has permission to view emails" do
+        SiteSetting.moderators_view_emails = true
+        post "/export_csv/export_entity.json", params: { entity: "screened_email" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+
+        job_data = Jobs::ExportCsvFile.jobs.first["args"].first
+        expect(job_data["entity"]).to eq("screened_email")
+        expect(job_data["user_id"]).to eq(moderator.id)
+      end
+
       it "allows moderator to export other entities" do
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
         expect(response.status).to eq(200)

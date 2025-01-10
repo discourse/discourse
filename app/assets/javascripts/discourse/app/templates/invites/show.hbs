@@ -17,7 +17,9 @@
         {{else}}
           <div class="invited-by">
             <p>{{i18n "invites.invited_by"}}</p>
-            <p><UserInfo @user={{this.invitedBy}} /></p>
+            <p>
+              <UserInfo @user={{this.invitedBy}} />
+            </p>
           </div>
 
           {{#if this.associateHtml}}
@@ -109,7 +111,7 @@
                 />
               </div>
 
-              {{#if this.fullnameRequired}}
+              {{#if (and this.showFullname this.fullnameRequired)}}
                 <FullnameInput
                   @nameValidation={{this.nameValidation}}
                   @nameTitle={{this.nameTitle}}
@@ -134,6 +136,11 @@
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "invites.password_label"}}
                   </label>
+                  <TogglePasswordMask
+                    @maskPassword={{this.maskPassword}}
+                    @togglePasswordMask={{this.togglePasswordMask}}
+                    @parentController="invites-show"
+                  />
                   <div class="create-account__password-info">
                     <div class="create-account__password-tip-validation">
                       <InputTip
@@ -148,11 +155,6 @@
                         {{i18n "login.caps_lock_warning"}}
                       </div>
                     </div>
-                    <TogglePasswordMask
-                      @maskPassword={{this.maskPassword}}
-                      @togglePasswordMask={{this.togglePasswordMask}}
-                      @parentController="invites-show"
-                    />
                   </div>
                 </div>
               {{/unless}}

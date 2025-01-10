@@ -4,7 +4,7 @@
   }
 }
 .admin-config-area-card {
-  padding: 20px;
+  padding: 20px 5px 20px 20px;
   border: 1px solid var(--primary-low);
   border-radius: 2px;
   background-color: var(--secondary);
@@ -43,9 +43,12 @@
 
   &__header-wrapper {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     flex: 1;
-    margin-bottom: 0.5rem;
+  }
+  &__content {
+    margin-top: 0.5rem;
+    padding-right: 15px;
   }
 }
 
@@ -89,14 +92,19 @@
   }
 
   &__settings {
-    .admin-site-settings-filter-controls {
-      background: var(--primary-very-low);
-      margin-bottom: 1em;
-    }
-
     .setting-label {
       margin-left: 18px;
     }
+  }
+}
+
+.admin-site-settings-filter-controls {
+  background: var(--primary-very-low);
+  margin-bottom: 1em;
+
+  .controls,
+  .search.controls {
+    background: var(--primary-very-low);
   }
 }
 

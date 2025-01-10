@@ -1103,7 +1103,9 @@ ro:
     body_min_entropy: "Entropia minimă (caractere unice, cele ne-englezești contează mai mult) necesară în conținutul unei postări."
     allow_uppercase_posts: "Permite toate caracterele majuscule în titlul subiectului sau în conținutul postării."
     min_title_similar_length: "Lungimea minimă a unui titlu înainte să fie verificat pentru subiecte similare."
+    mobile_category_page_style: "Această setare determină aspectul vizual al paginii /categories pe mobil."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
+    default_dark_mode_color_scheme_id: "Paleta de culori utilizată în modul întunecat."
     dark_mode_none: "Nimeni"
     max_image_size_kb: "Dimensiunea maximă de încărcare imagini. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea. Imaginile mai mari decât aceasta și mai mici decât client_max_body_size vor fi redimensionate pentru a se potrivi la încărcare."
     max_attachment_size_kb: "Dimensiunea maximă de încărcare a fișierelor atașate. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea."
@@ -1205,7 +1207,6 @@ ro:
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
     svg_icon_subset: "Adaugă pictograme FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru pictograme solide, „far-” pentru pictograme obișnuite și „fab-” pentru pictograme de marcă."
-    full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
@@ -1261,6 +1262,7 @@ ro:
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
+    experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -1286,8 +1288,8 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
     keywords:
       clean_up_inactive_users_after_days: "dezactivat|inactiv|neactivat"
-      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
       navigation_menu: "bară laterală|listă derulantă din antet"
+      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -2084,20 +2086,14 @@ ro:
                 label: "Privat"
       styling:
         fields:
+          color_scheme:
+            label: "Paletă de culori"
           styling_preview:
             label: "Previzualizează"
           homepage_style:
             choices:
               latest:
-                label: "Subiecte recente"
-              categories_only:
-                label: "Numai categorii"
-              categories_with_featured_topics:
-                label: "Categorii cu subiecte promovate"
-              categories_and_latest_topics:
-                label: "Categorii și subiecte recente"
-              categories_and_top_topics:
-                label: "Categorii și discuții în top"
+                label: "Ultima"
       corporate:
         fields:
           contact_url:
@@ -2117,7 +2113,6 @@ ro:
       quoted: '%{username} te-a citat în discuția "%{topic}" - %{site_title}'
       replied: '%{username} ți-a răspuns în discuția "%{topic}" - %{site_title}'
       posted: '%{username} a postat în discuția "%{topic}" - %{site_title}'
-      private_message: '%{username} ți-a trimis un mesaj privat în discuția "%{topic}" - %{site_title}'
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
   staff_action_logs:
     json_too_long: "Valorile nu au fost înregistrate pentru că depășesc limitele lungimii coloanei"

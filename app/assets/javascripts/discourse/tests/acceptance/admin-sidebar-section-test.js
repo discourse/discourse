@@ -3,6 +3,7 @@ import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
@@ -24,6 +25,12 @@ acceptance("Admin Sidebar - Sections", function (needs) {
         },
       },
     ]);
+
+    pretender.get("/admin/config/site_settings.json", () =>
+      response({
+        site_settings: [],
+      })
+    );
   });
 
   test("default sections are loaded", async function (assert) {
@@ -47,9 +54,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     assert
       .dom(".sidebar-section[data-section-name='admin-email_settings']")
       .exists("email settings section is displayed");
-    assert
-      .dom(".sidebar-section[data-section-name='admin-email_logs']")
-      .exists("email logs settings section is displayed");
     assert
       .dom(".sidebar-section[data-section-name='admin-security']")
       .exists("security settings section is displayed");

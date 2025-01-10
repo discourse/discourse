@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.39.0";
+export const PLUGIN_API_VERSION = "2.0.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -41,7 +41,6 @@ import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
-import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
@@ -171,6 +170,18 @@ const DEPRECATED_POST_MENU_WIDGETS = [
   "small-user-list",
 ];
 
+const POST_MENU_DEPRECATION_OPTIONS = {
+  since: "v3.4.0.beta3-dev",
+  id: "discourse.post-menu-widget-overrides",
+  url: "https://meta.discourse.org/t/341014",
+};
+
+export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
+  since: "v3.4.0.beta4-dev",
+  id: "discourse.hbr-topic-list-overrides",
+  url: "https://meta.discourse.org/t/343404",
+};
+
 const appliedModificationIds = new WeakMap();
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
@@ -296,14 +307,12 @@ class PluginApi {
   modifyClass(resolverName, changes, opts) {
     if (
       resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item"
+      resolverName === "component:topic-list-item" ||
+      resolverName === "raw-view:topic-status"
     ) {
       deprecated(
-        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
+        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
+        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
       );
     }
 
@@ -346,14 +355,12 @@ class PluginApi {
   modifyClassStatic(resolverName, changes, opts) {
     if (
       resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item"
+      resolverName === "component:topic-list-item" ||
+      resolverName === "raw-view:topic-status"
     ) {
       deprecated(
-        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
+        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
+        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
       );
     }
 
@@ -821,14 +828,21 @@ class PluginApi {
   }
 
   /**
-   * Adds a tracked property to the post model.
+   * Adds tracked properties to the post model.
    *
-   * This method is used to mark a property as tracked for post updates.
+   * This method is used to mark properties as tracked for post updates.
    *
-   * @param {string} name - The name of the property to track.
+   * It will also add the properties to the list of Post's attributes passed to
+   * widgets.
+   *
+   * You'll need to do this if you've added properties to a Post and want to use
+   * them when you're rendering.
+   *
+   * @param {...string} names - The names of the properties to be tracked.
    */
-  addTrackedPostProperty(name) {
-    _addTrackedPostProperty(name);
+  addTrackedPostProperties(...names) {
+    names.forEach((name) => _addTrackedPostProperty(name));
+    includeAttributes(...names); // compatibility with widget's attributes
   }
 
   /**
@@ -880,10 +894,7 @@ class PluginApi {
   addPostMenuButton(name, callback) {
     deprecated(
       "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     apiExtraButtons[name] = callback;
@@ -958,10 +969,7 @@ class PluginApi {
   removePostMenuButton(name, callback) {
     deprecated(
       "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     removeButton(name, callback);
@@ -986,10 +994,7 @@ class PluginApi {
   replacePostMenuButton(name, widget) {
     deprecated(
       "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.post-menu-widget-overrides",
-      }
+      POST_MENU_DEPRECATION_OPTIONS
     );
 
     replaceButton(name, widget);
@@ -2058,33 +2063,6 @@ class PluginApi {
    **/
   setDesktopTopicTimelineScrollAreaHeight(height) {
     setDesktopScrollAreaHeight(height);
-  }
-
-  /**
-   * Allows altering the topic title in the topic list, and in the topic view
-   *
-   * topicTitleType can be `topic-title` or `topic-list-item-title`
-   *
-   * For example, to replace the topic title:
-   *
-   * ```
-   * api.decorateTopicTitle((topicModel, node, topicTitleType) => {
-   *   node.innerText = "my new topic title";
-   * });
-   * ```
-   *
-   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead
-   **/
-  decorateTopicTitle(callback) {
-    deprecated(
-      "decorateTopicTitle is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead",
-      {
-        id: "discourse.decorate-topic-title",
-        since: "3.2",
-        dropFrom: "3.3",
-      }
-    );
-    addTopicTitleDecorator(callback);
   }
 
   /**
@@ -3340,7 +3318,7 @@ class PluginApi {
   }
 
   /**
-   * Registers a component class that will be rendered within the AdminPageHeader component
+   * Registers a component class that will be rendered within the DPageHeader component
    * only on plugins using the AdminPluginConfigPage and the new plugin "show" route.
    *
    * This component will be passed an `@actions` argument, with Primary, Default, Danger,
@@ -3418,10 +3396,7 @@ class PluginApi {
     if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
       deprecated(
         `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.post-menu-widget-overrides",
-        }
+        POST_MENU_DEPRECATION_OPTIONS
       );
     }
   }

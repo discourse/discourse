@@ -73,7 +73,9 @@
               @columns={{this.columns}}
               @showTimeRead={{this.showTimeRead}}
               @order={{this.order}}
+              @updateOrder={{fn (mut this.order)}}
               @asc={{this.asc}}
+              @updateAsc={{fn (mut this.asc)}}
             />
             <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
           {{else}}

@@ -31,6 +31,14 @@ module(
       await formKit().submit();
 
       assert.deepEqual(data, { foo: true });
+
+      await formKit().field("foo").toggle();
+
+      assert.form().field("foo").hasValue(false);
+
+      await formKit().submit();
+
+      assert.deepEqual(data, { foo: false });
     });
 
     test("when disabled", async function (assert) {

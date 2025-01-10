@@ -237,8 +237,6 @@ gl:
       bookmark:
         instructions: |-
           Se desexa aprender máis, seleccione <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> a seguir e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marque esta mensaxe persoal**. Se o fai, pode que haxa un :gift: no futuro!
-        reply: |-
-          Excelente! Agora pode atopar facilmente o camiño de volta á nosa conversa privada en calquera momento desde a [pestana de marcadores do seu perfil] (%{bookmark_url}). Só ten que seleccionar a súa foto de perfil na parte superior dereita &#8599;
         not_found: |-
           Ei, non vexo ningún marcador neste tema. Atopou o marcador baixo cada publicación? Use a función de amosar máis <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para ofrecer accións adicionais se fose necesario.
       emoji:
@@ -272,8 +270,6 @@ gl:
 
           (E si, o meu nome de usuario escríbese _disco_, como na moda de baile dos anos 70. Eu amo [a vida nocturna!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        reply: |-
-          [O noso equipo] (%{base_uri}/groups/staff) recibirá unha notificación privada sobre a alerta. Se bastantes membros da comunidade sinalizan unha publicación, tamén se agochará automaticamente por precaución. (Mais como realmente non escribín nada desagradábel :angel:, seguín adiante e retirei a alerta por agora).
         not_found: |-
           Ah vaia, a miña desagradábel publicación aínda non se sinalizou como inadecuada. :worried: Pode sinalizala como improcedente usando a **alerta** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non esqueza usar o botón de amosar máis <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para ofrecer máis accións de cada publicación.
       search:
@@ -353,12 +349,6 @@ gl:
         reply: |-
           Excelente! Lembre que isto funciona para ambas as categorías _e_ etiquetas, se as etiquetas están activadas.
       change_topic_notification_level:
-        instructions: |-
-          Cada tema ten un nivel de notificación. Comeza en «normal», o que significa que normalmente só recibirá unha notificación cando alguén se dirixa directamente a vostede.
-
-          De modo predeterminado, o nivel de notificación dunha mensaxe privada estabelécese no nivel máis alto de «observación», o que significa que recibirá unha notificación por cada nova resposta. Pero pode sobrescribir o nivel de notificación de _calquera_ tema a «observar», «seguir» ou «silenciar».
-
-          Vamos cambiar o nivel de notificación deste tema. Na parte inferior do tema, atopará un botón que amosa que este tema está en **observación**. Pode cambiar o nivel de notificación a **seguimento**?
         not_found: |-
           Parece que aínda está en observación :eyes: este tema! Se ten problemas para atopalo, o botón de nivel de notificación está situado na parte inferior do tema.
         reply: |-

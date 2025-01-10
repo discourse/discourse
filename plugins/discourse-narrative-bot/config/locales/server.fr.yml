@@ -250,8 +250,6 @@ fr:
       bookmark:
         instructions: |-
           Si vous souhaitez en savoir plus, sélectionnez <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> en dessous et <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ajoutez ce message direct aux signets**. Si vous le faites, vous pourriez recevoir un :gift: prochainement !
-        reply: |-
-          Excellent ! Maintenant, vous pouvez facilement retrouver notre conversation privée à tout moment, à partir de [l'onglet signet présent sur votre profil](%{bookmark_url}). Sélectionnez simplement votre photo de profil dans le coin supérieur droit &#8599;
         not_found: |-
           Oups, je ne vois aucun signet sur ce sujet ! Avez-vous trouvé le bouton signet sous chaque message ? Utilisez le bouton « Afficher plus » <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour dévoiler d'autres actions si nécessaire.
       emoji:
@@ -285,15 +283,6 @@ fr:
 
           (Et oui, mon nom d'utilisateur est écrit « _disco_ », comme dans la folie des années 1970. J'adore [la vie nocturne !](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Nous aimons que les discussions restent sympathiques, et nous comptons sur vous pour veiller à ce que [la civilité règne](%{guidelines_url}). Si quelque chose dans un message vous semble gênant, nous vous invitons à le signaler pour que son auteur ou que [nos aimables responsables](%{about_url}) soient mis au courant. Il y a de nombreuses raisons valables de signaler un message, qui vont de la simple suggestion pour que l'on scinde un sujet en deux jusqu'au signalement d'une infraction claire et nette à la charte communautaire. Au moment de définir le motif de votre signalement, si vous choisissez **Autre**, un échange privé avec les modérateurs sera lancé pour vous donner la possibilité de leur adresser des questions particulières.
-
-          > :imp: J'ai écrit quelque chose de vilain ici
-
-          N'hésitez pas, **signalez ce message** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> et choisissez le motif **C'est répréhensible** !
-        reply: |-
-          [Notre équipe](%{base_uri}/groups/staff) sera notifiée de façon privée au sujet de votre signalement. Si suffisamment de membres de la communauté signalent un message, ce dernier sera automatiquement masqué par précaution.
-          (Vu que le message que j'ai écrit n'était pas vraiment méchant :angel:, j'ai anticipé et j'ai enlevé le signalement pour le moment.)
         not_found: |-
           Oh non ! Mon vilain message n'a pas encore été signalé comme étant répréhensible. :worried: Pouvez-vous le signaler comme étant répréhensible avec l'**indicateur** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? Pensez à utiliser le bouton « Afficher plus » <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afin de faire apparaître les autres actions relatives aux messages.
       search:
@@ -387,12 +376,6 @@ fr:
         reply: |-
           Excellent ! Retenez que ceci fonctionne pour les catégories _et_ les étiquettes, si les étiquettes sont activées.
       change_topic_notification_level:
-        instructions: |-
-          Chaque sujet a un niveau de notification. Il démarre comme « normal », c'est à dire que vous ne serez notifié(e) que quand quelqu'un vous parlera directement.
-
-          Par défaut, le niveau de notification pour un message direct est configuré au plus haut niveau de « surveillance », c'est-à-dire que vous serez notifié(e) à chaque nouvelle réponse. Mais vous pouvez changer le niveau de notification pour _n'importe quel_ sujet sur « Surveiller », « Suivi » ou « Silencieux ».
-
-          Essayons de changer le niveau de notification pour ce sujet. En bas de ce sujet, vous trouverez un bouton qui vous indique que vous **Surveillez** ce sujet. Pouvez-vous changer le niveau de notification pour **Suivi** ?
         not_found: |-
           Il semble que vous êtes encore en train de surveiller :eyes: ce sujet ! Si vous avez des difficultés à le trouver, le bouton du niveau de notification est situé sous le sujet.
         reply: |-

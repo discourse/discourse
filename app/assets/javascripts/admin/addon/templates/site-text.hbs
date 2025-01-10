@@ -1,3 +1,17 @@
+<DPageHeader
+  @titleLabel={{i18n "admin.site_text.title"}}
+  @descriptionLabel={{i18n "admin.site_text.description"}}
+  @hideTabs={{true}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+    <DBreadcrumbsItem
+      @path="/admin/customize/site_texts"
+      @label={{i18n "admin.site_text.title"}}
+    />
+  </:breadcrumbs>
+</DPageHeader>
+
 <div class="row site-texts">
   {{outlet}}
 </div>

@@ -1,12 +1,13 @@
-<div class="admin-emojis admin-config-page">
-  <AdminPageHeader
-    @titleLabel="admin.emoji.title"
-    @descriptionLabel="admin.emoji.description"
+<div class="admin-emoji admin-config-page">
+  <DPageHeader
+    @titleLabel={{i18n "admin.emoji.title"}}
+    @descriptionLabel={{i18n "admin.emoji.description"}}
     @hideTabs={{this.hideTabs}}
   >
     <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
-        @path="/admin/customize/emojis"
+        @path="/admin/config/emoji"
         @label={{i18n "admin.emoji.title"}}
       />
     </:breadcrumbs>
@@ -17,15 +18,15 @@
       <NavItem
         @route="adminEmojis.settings"
         @label="settings"
-        class="admin-emojis-tabs__settings"
+        class="admin-emoji-tabs__settings"
       />
       <NavItem
         @route="adminEmojis.index"
         @label="admin.emoji.title"
-        class="admin-emojis-tabs__emoji"
+        class="admin-emoji-tabs__emoji"
       />
     </:tabs>
-  </AdminPageHeader>
+  </DPageHeader>
 
   <div class="admin-container admin-config-page__main-area">
     {{outlet}}

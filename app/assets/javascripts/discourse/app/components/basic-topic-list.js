@@ -1,10 +1,13 @@
 import Component from "@ember/component";
 import { alias, not } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 export default class BasicTopicList extends Component {
+  @service site;
+
   @alias("topicList.loadingMore") loadingMore;
 
   @not("loaded") loading;

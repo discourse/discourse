@@ -65,6 +65,11 @@ export default class LatestTopicListItem extends Component {
         <div class="bottom-row">
           {{categoryLink @topic.category~}}
           {{~discourseTags @topic mode="list"}}
+          <PluginOutlet
+            @name="below-latest-topic-list-item-bottom-row"
+            @connectorTagName="span"
+            @outletArgs={{hash topic=@topic}}
+          />
         </div>
       </div>
 

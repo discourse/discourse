@@ -68,7 +68,7 @@ RSpec.describe AnonymousShadowCreator do
     end
 
     it "works even when names are required" do
-      SiteSetting.full_name_required = true
+      SiteSetting.full_name_requirement = "required_at_signup"
 
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end

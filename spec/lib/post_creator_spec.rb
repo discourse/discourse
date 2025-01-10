@@ -1512,6 +1512,20 @@ RSpec.describe PostCreator do
         expect(post.topic).not_to be_visible
       end
     end
+
+    it "normalizes the embed url" do
+      embed_url = "http://eviltrout.com/stupid-url/"
+      creator =
+        PostCreator.new(
+          user,
+          embed_url: embed_url,
+          title: "Reviews of Science Ovens",
+          raw: "Did you know that you can use microwaves to cook your dinner? Science!",
+        )
+      creator.create
+      expect(creator.errors).to be_blank
+      expect(TopicEmbed.where(embed_url: "http://eviltrout.com/stupid-url").exists?).to eq(true)
+    end
   end
 
   describe "read credit for creator" do

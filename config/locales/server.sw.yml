@@ -2006,15 +2006,7 @@ sw:
           homepage_style:
             choices:
               latest:
-                label: "Mada za hivi Karibuni"
-              categories_only:
-                label: "Kategoria Pekee"
-              categories_with_featured_topics:
-                label: "Makundi yenye post shilikishi"
-              categories_and_latest_topics:
-                label: "Kategoria na Mada za Hivi Karibuni"
-              categories_and_top_topics:
-                label: "Kategoria na Mada za Juu"
+                label: "Hivi Karibuni"
       corporate:
         fields:
           contact_url:

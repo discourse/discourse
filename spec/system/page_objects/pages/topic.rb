@@ -263,7 +263,7 @@ module PageObjects
       end
 
       def click_notifications_button
-        find(".topic-notifications-button .select-kit-header").click
+        find(".topic-notifications-button .notifications-tracking-trigger").click
       end
 
       def click_admin_menu_button
@@ -272,7 +272,7 @@ module PageObjects
 
       def watch_topic
         click_notifications_button
-        find('li[data-name="watching"]').click
+        find('.notifications-tracking-btn[data-level-name="watching"]').click
       end
 
       def close_topic

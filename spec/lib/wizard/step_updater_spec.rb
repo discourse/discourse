@@ -299,6 +299,43 @@ RSpec.describe Wizard::StepUpdater do
         expect(SiteSetting.desktop_category_page_style).to eq("subcategories_with_featured_topics")
       end
 
+      it "updates top_menu if it doesn't match the new homepage_style and does nothing if it matches" do
+        SiteSetting.top_menu = "categories|new|latest"
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "hot",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("hot|categories|new|latest")
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "hot",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("hot|categories|new|latest")
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "latest",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("latest|hot|categories|new")
+      end
+
       it "does not overwrite top_menu site setting" do
         SiteSetting.top_menu = "latest|unread|unseen|categories"
         updater =

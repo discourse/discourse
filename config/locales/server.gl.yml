@@ -222,8 +222,6 @@ gl:
     failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
     user_exists: "Este usuario xa foi invitado. Só se pode invitar a un usuario a un tema unha única vez."
     muted_topic: "Sentímolo, ese usuario silenciou este tema."
-    receiver_does_not_allow_pm: "Sentímolo, ese usuario non lle permite enviarlles mensaxes privadas."
-    sender_does_not_allow_pm: "Sentímolo, vostede non permite que ese usuario lle envíe mensaxes privadas."
   backup:
     operation_already_running: "Estase a executar unha operación. Nestes intres non se pode comezar un novo traballo."
     backup_file_should_be_tar_gz: "O ficheiro da copia de seguranza debe ter formato .tar.gz."
@@ -1068,12 +1066,10 @@ gl:
       title: "Notificar aos moderadores"
       xaxis: "Día"
       yaxis: "Número de mensaxes"
-      description: "Número de veces que os moderadores foron notificados por privado dunha alerta."
     notify_user_private_messages:
       title: "Notificar aos usuarios"
       xaxis: "Día"
       yaxis: "Número de mensaxes"
-      description: "Número de veces que os usuarios foron notificados por privado dunha alerta."
     top_referrers:
       title: "Referenciadores populares"
       xaxis: "Usuario"
@@ -1378,7 +1374,6 @@ gl:
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Estabelecer en 0 para desactivalo."
     share_links: "Determinar que elementos aparecen no cadro de compartir e en que orde."
     site_contact_username: "Nome de usuario do membro do equipo desde onde se enviarán todas as mensaxes automáticas. Se se deixa en branco, utilizarase a conta predeterminada do sistema."
-    site_contact_group_name: "Un nome de grupo válido para ser convidado a todas as mensaxes automatizadas."
     send_welcome_message: "Enviarlles aos usuarios novos unha mensaxe de benvida cunha guía de comezo rápido."
     send_tl1_welcome_message: "Enviarlles aos usuarios novos con nivel de confianza 1 unha mensaxe de benvida."
     send_tl2_promotion_message: "Envíe unha nova mensaxe aos usuarios de nivel 2 de confianza sobre a promoción."
@@ -1560,7 +1555,6 @@ gl:
     title_fancy_entities: "Converter caracteres ASCII en entidades HTML elegantes no título dos temas, como SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
-    default_dark_mode_color_scheme_id: "O esquema de cores empregado no modo escuro."
     dark_mode_none: "Ningún"
     max_similar_results: "Número de temas similares que se mostran na parte superior do editor cando se está a redactar un novo tema. A comparación baséase no título e mais no corpo da mensaxe."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para unha imaxe. Aquelas cun número superior serán rexeitadas."
@@ -1716,7 +1710,6 @@ gl:
     app_association_android: "Contido do <a href='%{base_path}/.well-known/assetlinks.json'>punto de chegada .well-known/assetlinks.json</a>, utilizado para a API Google's Digital Asset Links."
     app_association_ios: "Contido de <a href='%{base_path}/apple-app-site-association'>punto de chegada de apple-app-site-association</a> , utilizado para crear ligazóns universais entre este sitio e as aplicacións de iOS."
     auto_handle_queued_age: "Xestione automaticamente rexistros que levan moitos días en espera de seren revisados. As alertas ignoraranse. Rexeitaranse as publicacións e os usuarios en cola. Estabelecer en 0 para desactivar esta funcionalidade."
-    full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     enable_names: "Mostrar o nome completo do usuario no seu perfil, tarxeta de usuario e correos electrónicos. Desactivar para agochar o nome completo en todas as partes."
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
@@ -3548,15 +3541,7 @@ gl:
           homepage_style:
             choices:
               latest:
-                label: "Últimos temas"
-              categories_only:
-                label: "Só categorías"
-              categories_with_featured_topics:
-                label: "Categorías con temas de actualidade"
-              categories_and_latest_topics:
-                label: "Categorías e últimos temas"
-              categories_and_top_topics:
-                label: "Categorías e temas destacados"
+                label: "Últimos"
       corporate:
         fields:
           governing_law:
@@ -3589,7 +3574,7 @@ gl:
       quoted: '%{username} citouno en "%{topic}" - %{site_title}'
       replied: '%{username} respondeulle en "%{topic}" - %{site_title}'
       posted: '%{username} publicou en "%{topic}" - %{site_title}'
-      private_message: '%{username} envioulle unha mensaxe privada en "%{topic}" - %{site_title}'
+      private_message: '%{username} envioulle unha mensaxe privada sobre «%{topic}» - %{site_title}'
       linked: '%{username} ligou á súa publicación desde "%{topic}" - %{site_title}'
       watching_first_post: '%{username} creou un tema novo "%{topic}" - %{site_title}'
       confirm_title: "Notificacións activadas - %{site_title}"

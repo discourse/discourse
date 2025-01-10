@@ -87,8 +87,6 @@ zh_CN:
       not_accepting_dms: "抱歉，%{username} 目前不接受消息。"
       actor_ignoring_target_user: "您正在忽略 %{username}，因此您无法向他们发送消息。"
       actor_muting_target_user: "您正在将 %{username} 设为免打扰，因此您无法向他们发送消息。"
-      actor_disallowed_dms: "您已选择阻止用户向您发送私人和直接消息，因此您无法创建新的直接消息。"
-      actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和直接消息，因此您无法创建给他们的新直接消息。"
       user_cannot_send_direct_messages: "抱歉，您无法发送直接消息。"
       over_chat_max_direct_message_users_allow_self: "您只能创建一个与自己的直接消息。"
       over_chat_max_direct_message_users:

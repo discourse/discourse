@@ -167,10 +167,8 @@ it:
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del messaggio rientra in questa categoria
             restricted_group:
               label: Gruppo
-              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio privato nella posta in arrivo di questo gruppo
             restricted_groups:
               label: Gruppi
-              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio privato in una delle caselle di posta del gruppo
             ignore_group_members:
               label: Ignora i membri del gruppo
               description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra
@@ -413,6 +411,8 @@ it:
             label: Script
           version:
             label: Versione
+          status:
+            label: Stato
           enabled:
             label: Abilitati
           disabled:

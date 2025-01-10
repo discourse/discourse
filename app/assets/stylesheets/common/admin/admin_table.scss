@@ -67,30 +67,79 @@
     }
   }
 
+  // Default
   .status-label {
     --d-border-radius: var(--space-4);
+    --status-icon-diameter: 8px;
 
     display: flex;
     flex-wrap: nowrap;
     width: fit-content;
     background-color: var(--primary-low);
-    padding: var(--space-1) var(--space-2);
+    padding: var(--space-0) var(--space-2);
     border-radius: var(--d-border-radius);
 
     .status-label-indicator {
       display: inline-block;
-      width: 6px;
-      height: 6px;
+      width: var(--status-icon-diameter);
+      height: var(--status-icon-diameter);
       border-radius: 50%;
       background-color: var(--primary-high);
       flex-shrink: 0;
       margin-right: var(--space-1);
-      margin-top: 0.4rem;
+      margin-top: 0.35rem;
     }
 
     .status-label-text {
       color: var(--primary-high);
       font-size: var(--font-down-1);
+    }
+  }
+
+  &__badge {
+    background-color: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-1);
+    margin-left: var(--space-1);
+    padding: var(--space-2);
+  }
+
+  // Success badge
+  .status-label.--success {
+    background-color: var(--success-low);
+
+    .status-label-indicator {
+      background-color: var(--success);
+    }
+
+    .status-label-text {
+      color: var(--success-hover);
+    }
+  }
+
+  // Critical badge
+  .status-label.--critical {
+    background-color: var(--danger-low);
+
+    .status-label-indicator {
+      background-color: var(--danger);
+    }
+
+    .status-label-text {
+      color: var(--danger-hover);
+    }
+  }
+
+  // Inactive badge
+  .status-label.--inactive {
+    background-color: var(--primary-low);
+
+    .status-label-indicator {
+      background-color: var(--primary-high);
+    }
+
+    .status-label-text {
+      color: var(--primary-high);
     }
   }
 }

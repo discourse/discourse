@@ -1,0 +1,81 @@
+.post-list {
+  margin: 0;
+
+  .post-list-item {
+    background: var(--d-content-background, var(--secondary));
+    border-bottom: 1px solid var(--primary-low);
+    padding: 1em 0.53em;
+    list-style: none;
+
+    &.moderator-action {
+      background-color: var(--highlight-bg);
+    }
+
+    &.deleted {
+      background-color: var(--danger-low-mid);
+    }
+
+    &.hidden {
+      display: block;
+      opacity: 0.4;
+    }
+
+    &__header {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    &__details {
+      flex-grow: 1;
+      min-width: 0;
+      .badge-category__wrapper {
+        width: 100%;
+      }
+    }
+
+    .stream-topic-title {
+      overflow-wrap: anywhere;
+    }
+
+    .relative-date {
+      line-height: var(--line-height-small);
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      padding-top: 5px;
+    }
+  }
+
+  .avatar-link {
+    margin-right: 0.5em;
+  }
+
+  .name {
+    font-size: var(--font-0);
+    max-width: 400px;
+    @include ellipsis;
+  }
+
+  .excerpt {
+    margin: 1em 0 0 0;
+    font-size: var(--font-0);
+    word-wrap: break-word;
+    color: var(--primary);
+    &:empty {
+      display: none;
+    }
+    details.disabled {
+      color: var(--primary-medium);
+    }
+    .emoji.only-emoji {
+      // oversized emoji break excerpt layout
+      // so we match inline emoji size
+      width: 20px;
+      height: 20px;
+      margin: 0;
+    }
+  }
+
+  .post-member-info {
+    display: flex;
+  }
+}

@@ -16,36 +16,29 @@ DiscourseAutomation::Scriptable.add(
   triggerables %i[recurring user_first_logged_in]
 
   script do |trigger, fields|
-    custom_field_name = fields.dig("custom_field_name", "value")
-
     case trigger["kind"]
     when DiscourseAutomation::Triggers::API_CALL, DiscourseAutomation::Triggers::RECURRING
-      query =
-        DB.query(<<-SQL, prefix: ::User::USER_FIELD_PREFIX, custom_field_name: custom_field_name)
-        SELECT u.id as user_id, g.id as group_id
-        FROM users u
-        JOIN user_custom_fields ucf
-          ON u.id = ucf.user_id
-          AND ucf.name = CONCAT(:prefix, :custom_field_name)
-        JOIN groups g
-          on g.full_name ilike ucf.value
-        FULL OUTER JOIN group_users gu
-          ON gu.user_id = u.id
-          AND gu.group_id = g.id
-        WHERE gu.id is null
-          AND u.active = true
-        ORDER BY 1, 2
-      SQL
+      custom_field_name = "#{::User::USER_FIELD_PREFIX}#{fields.dig("custom_field_name", "value")}"
 
+      # mapping of group full_names to ids for quick lookup
+      group_ids_by_name = Group.where.not(full_name: [nil, ""]).pluck(:full_name, :id).to_h
       groups_by_id = {}
 
+      # find users with the custom field who aren't in their designated group
       User
-        .where(id: query.map(&:user_id))
-        .order(:id)
-        .zip(query) do |user, query_row|
-          group_id = query_row.group_id
-          group = groups_by_id[group_id] ||= Group.find(group_id)
+        .joins(
+          "JOIN user_custom_fields ucf ON users.id = ucf.user_id AND ucf.name = '#{custom_field_name}'",
+        )
+        .where(active: true)
+        .where("ucf.value IS NOT NULL AND ucf.value != ''")
+        .where(
+          "NOT EXISTS ( SELECT 1 FROM group_users gu JOIN groups g ON g.id = gu.group_id WHERE gu.user_id = users.id AND g.full_name = ucf.value)",
+        )
+        .select("users.id, ucf.value as group_name")
+        .find_each do |user|
+          next unless group_id = group_ids_by_name[user.group_name]
 
+          group = groups_by_id[group_id] ||= Group.find(group_id)
           group.add(user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
         end
@@ -58,7 +51,7 @@ DiscourseAutomation::Scriptable.add(
           WHERE ucf.user_id = :user_id AND ucf.name = CONCAT(:prefix, :custom_field_name)
         SQL
           prefix: ::User::USER_FIELD_PREFIX,
-          custom_field_name: custom_field_name,
+          custom_field_name: fields.dig("custom_field_name", "value"),
           user_id: trigger["user"].id,
         ).first
       next if !group_name

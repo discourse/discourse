@@ -42,6 +42,6 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
       </Form>
     </template>);
 
-    assert.dom(".form-kit__control-menu").hasAttribute("disabled");
+    assert.dom(".form-kit__control-menu-trigger").hasAttribute("disabled");
   });
 });

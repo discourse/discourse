@@ -122,5 +122,7 @@ be:
             label: Трыггер старту
           version:
             label: версія
+          status:
+            label: Статус
           disabled:
             label: Адключана

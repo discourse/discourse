@@ -4,10 +4,10 @@ import Badge from "discourse/models/badge";
 import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
-const _additionalAttributes = [];
+const _additionalAttributes = new Set();
 
 export function includeAttributes(...attributes) {
-  attributes.forEach((a) => _additionalAttributes.push(a));
+  attributes.forEach((a) => _additionalAttributes.add(a));
 }
 
 export function transformBasicPost(post) {

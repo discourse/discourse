@@ -548,6 +548,9 @@ en:
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
 
+    select_placeholder: "Select…"
+    none_placeholder: "None"
+
     banner:
       close: "Dismiss this banner"
       edit: "Edit"
@@ -686,6 +689,9 @@ en:
         refresh: "Refresh"
         status: "Status"
         category: "Category"
+        score_type:
+          title: "Reason"
+          all: "(all reasons)"
         orders:
           score: "Score"
           score_asc: "Score (reverse)"
@@ -1002,13 +1008,13 @@ en:
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
       empty:
-        posts: "There are no posts by members of this group."
-        members: "There are no members in this group."
-        requests: "There are no membership requests for this group."
-        mentions: "There are no mentions of this group."
-        messages: "There are no messages for this group."
-        topics: "There are no topics by members of this group."
-        logs: "There are no logs for this group."
+        posts: "There are no posts by members of this group"
+        members: "There are no members in this group"
+        requests: "There are no membership requests for this group"
+        mentions: "There are no mentions of this group"
+        messages: "There are no messages for this group"
+        topics: "There are no topics by members of this group"
+        logs: "There are no logs for this group"
       add: "Add"
       join: "Join"
       leave: "Leave"
@@ -1201,10 +1207,10 @@ en:
         one: "Delete %{count}"
         other: "Delete %{count}"
       username: "username"
-      trust_level: "TL"
+      trust_level: "trust level"
       read_time: "read time"
       topics_entered: "topics entered"
-      post_count: "# posts"
+      post_count: "posts"
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
       powered_by: "using <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copied"
@@ -1212,7 +1218,8 @@ en:
     user_fields:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
-      same_as_password: "Your password should not be repeated in other fields."
+      required_checkbox: 'The field "%{name}" is required'
+      same_as_password: "Your password should not be repeated in other fields"
       optional: (optional)
 
     user:
@@ -1343,18 +1350,18 @@ en:
         description: "Skip new user onboarding tips and badges"
       reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
-      color_scheme_default_on_all_devices: "Set default color scheme on all my devices"
-      color_scheme: "Color Scheme"
+      color_scheme_default_on_all_devices: "Set default color palette on all my devices"
+      color_scheme: "Color Palette"
       color_schemes:
         default_description: "Theme default"
         disable_dark_scheme: "Same as regular"
-        dark_instructions: "You can preview the dark mode color scheme by toggling your device's dark mode."
+        dark_instructions: "You can preview the dark mode color palette by toggling your device's dark mode."
         undo: "Reset"
         regular: "Regular"
         dark: "Dark mode"
         default_dark_scheme: "(site default)"
       dark_mode: "Dark Mode"
-      dark_mode_enable: "Enable automatic dark mode color scheme"
+      dark_mode_enable: "Enable automatic dark mode color palette"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
@@ -2205,9 +2212,6 @@ en:
       optional: optional
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
-      select:
-        select_placeholder: "Select…"
-        none_placeholder: "None"
       errors:
         required: "Required"
         invalid_url: "Must be a valid URL"
@@ -2538,6 +2542,10 @@ en:
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
       subcategories_with_featured_topics: "Subcategories with Featured Topics"
+    full_name_requirement:
+      required_at_signup: "Required"
+      optional_at_signup: "Optional"
+      hidden_at_signup: "Optional, hidden at signup"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -3274,6 +3282,7 @@ en:
         other: "%{count} posts in topic"
       create: "New Topic"
       create_disabled_category: "You're not allowed to create topics in this category"
+      create_disabled_tag: "You're not allowed to create topics with this tag"
       create_long: "Create a new Topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
@@ -3744,6 +3753,10 @@ en:
           one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>%{count}</b> posts."
       deleted_by_author_simple: "(topic deleted by author)"
+
+    post_list:
+      empty: "There are no posts"
+      aria_post_number: "%{title} - post #%{postNumber}"
 
     post:
       confirm_delete: "Are you sure you want to delete this post?"
@@ -5102,7 +5115,7 @@ en:
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     # This is a text input placeholder, keep the translation short
-    type_to_filter: "type to filter…"
+    type_to_filter: "Type to filter…"
     settings: "Settings"
 
     admin:
@@ -5121,10 +5134,66 @@ en:
         meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
         sidebar_title: "Reports"
         sidebar_link:
-          all: "All"
+          all: "All reports"
+
+      config:
+        developer:
+          title: "Developer"
+          header_description: "Developer settings to control rate limits, multipliers and calculations, safe mode, and other advanced features"
+        experimental:
+          title: "Experimental"
+          header_description: "Toggle experimental features on or off for your site, most of these can be controlled on a group basis"
+        font_style:
+          title: "Font style"
+          header_description: "Customize the font styles used by your themes"
+        files:
+          title: "Files"
+          header_description: "Settings that control file size and type limits, avatar sizes and sources, file storage, image quality and compression, and more"
+        legal:
+          title: "Legal"
+          header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations"
+        login_and_authentication:
+          title: "Login and authentication"
+          header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
+        logo:
+          title: "Site logo"
+          header_description: "Customize the variations of your site logo"
+        navigation:
+          title: "Navigation"
+          header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
+        notifications:
+          title: "Notifications"
+          header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
+        onebox:
+          title: "Onebox"
+          header_description: "Configure how onebox previews are generated and displayed for your site"
+        other:
+          title: "Other"
+          header_description: "Settings which do not fit into any other category"
+        rate_limits:
+          title: "Rate limits"
+          header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
+        search:
+          title: "Search"
+          header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
+        security:
+          title: "Security"
+          header_description: "Configure security settings, including two-factor authentication, moderator priviledges, and content security policies"
+        spam:
+          title: "Spam"
+          header_description: "Configure how user registration and posting behavior analyzed by the system to quickly identify and block spam"
+        trust_levels:
+          title: "Trust levels"
+          header_description: "Trust level settings allow you to fine-tune the requirements and notifications for your community’s progression system, which automatically promotes users to higher trust levels as they demonstrate consistent, positive engagement with your forum"
+        user_api:
+          title: "User API"
+          header_description: "Configure which user groups can access the API, as well as which scopes are allowed"
+        group_permissions:
+          title: "Group permissions"
+          header_description: "All group-based app permissions are managed here, which control access to various features within Discourse"
 
       new_features:
-        title: "What's new"
+        title: "What's new?"
         check_for_updates: "Check for updates"
       dashboard:
         title: "Dashboard"
@@ -5143,7 +5212,7 @@ en:
         problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Dismiss"
         new_features:
-          title: "What's new"
+          title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
@@ -5199,6 +5268,17 @@ en:
 
         reports:
           trend_title: "%{percent} change. Currently %{current}, was %{prev} in previous period."
+          percent_change_tooltip: "%{percent} change."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "Was %{count} two days ago."
+              other: "Was %{count} two days ago."
+            two_weeks_ago:
+              one: "Was %{count} two weeks ago."
+              other: "Was %{count} two weeks ago."
+            thirty_days_ago:
+              one: "Was %{count} in the previous 30 day period."
+              other: "Was %{count} in the previous 30 day period."
           today: "Today"
           yesterday: "Yesterday"
           last_7_days: "Last 7"
@@ -5236,7 +5316,7 @@ en:
             type_of_web_hook_event:
               label: "Type of event"
       flags:
-        title: "Moderation Flags"
+        title: "Moderation"
         description: "Description"
         enabled: "Enabled?"
         more_options:
@@ -5319,6 +5399,21 @@ en:
         none_selected: "Select a group to get started"
         no_custom_groups: "Create a new custom group"
 
+      api_keys:
+        title: "API keys"
+        description: "The API keys feature lets you securely integrate Discourse with external systems and automate actions. Admins can create keys with specific scopes to control access to resources and sensitive data. Scopes limit functionality, ensuring enhanced security."
+        add: "Add API key"
+        edit: "Edit"
+        save: "Save"
+        cancel: "Cancel"
+        continue: "Continue"
+        back: "Back to API keys"
+        revoke: "Revoke"
+        undo_revoke: "Undo revoke"
+        revoked: "Revoked"
+        delete: Permanently delete
+        no_api_keys: "You don't have any API keys yet."
+
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now."
@@ -5326,30 +5421,30 @@ en:
         title: "API"
         key: "Key"
         keys: "Keys"
-        created: Created
+        created: Created by
         updated: Updated
-        last_used: Last Used
-        never_used: (never)
+        last_used: Last used
+        never_used: Never
         generate: "Generate"
-        undo_revoke: "Undo Revoke"
+        undo_revoke: "Undo revoke"
         revoke: "Revoke"
-        all_users: "All Users"
+        all_users: "All users"
         active_keys: "Active API Keys"
         manage_keys: Manage Keys
         show_details: Details
         description: Description
         no_description: (no description)
         all_api_keys: All API Keys
-        user_mode: User Level
+        user_mode: User level
         scope_mode: Scope
         impersonate_all_users: Impersonate any user
-        single_user: "Single User"
+        single_user: "Single user"
         user_placeholder: Enter username
         description_placeholder: What will this key be used for?
         save: Save
         new_key: New API Key
         revoked: Revoked
-        delete: Permanently Delete
+        delete: Permanently delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
         scopes:
@@ -5363,8 +5458,8 @@ en:
           global_description: API key has no restriction and all endpoints are accessible.
           resource: Resource
           action: Action
-          allowed_parameters: Allowed Parameters
-          optional_allowed_parameters: Allowed Parameters (optional)
+          allowed_parameters: Allowed parameters
+          optional_allowed_parameters: Allowed parameters (optional)
           any_parameter: (any parameter)
           allowed_urls: Allowed URLs
           descriptions:
@@ -5577,65 +5672,58 @@ en:
         sidebar_link:
           backups: "Backups"
           whats_new:
-            title: "What's New"
+            title: "What's new?"
             keywords: "changelog|feature|release"
 
       community:
         title: "Community"
         sidebar_link:
-          about_your_site: "About Your Site"
+          about_your_site: "About your site"
           badges: "Badges"
-          login_and_authentication: "Login & Authentication"
+          login_and_authentication: "Login & authentication"
           notifications: "Notifications"
           permalinks: "Permalinks"
-          trust_levels: "Trust Levels"
+          trust_levels: "Trust levels"
+          group_permissions: "Group permissions"
           users: "Users"
-          user_fields: "User Fields"
-          watched_words: "Watched Words"
+          groups: "Groups"
+          user_fields: "User fields"
+          watched_words: "Watched words"
           legal: "Legal"
-          moderation_flags: "Moderation Flags"
+          moderation_flags:
+            title: "Moderation"
+            keywords: "flag|review"
 
       appearance:
         title: "Appearance"
         sidebar_link:
-          font_style: "Font Style"
-          site_logo: "Site Logo"
-          color_schemes: "Color Schemes"
+          font_style: "Font style"
+          site_logo: "Site logo"
+          color_schemes: "Color palettes"
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
           components:
             title: "Components"
             keywords: "theme|extension"
-          site_texts: "Site Texts"
+          site_texts: "Site texts"
 
       email_settings:
         title: "Email Settings"
         sidebar_link:
           appearance: "Appearance"
-          preview_summary: "Preview Summary"
-          server_setup: "Server Setup"
-
-      email_logs:
-        title: "Email Logs"
-        sidebar_link:
-          sent: "Sent"
-          skipped: "Skipped"
-          bounced: "Bounced"
-          received: "Received"
-          rejected: "Rejected"
+          server_setup:
+            title: "Server setup & logs"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
 
       security:
         title: "Security"
         sidebar_link:
-          error_logs: "Error Logs"
-          screened_emails: "Screened Emails"
-          screened_ips: "Screened IPs"
-          screened_urls: "Screened URLs"
-          search_logs: "Search Logs"
           security: "Security settings"
           spam: "Spam settings"
-          staff_action_logs: "Staff Action Logs"
+          staff_action_logs:
+            title: "Logs & screening"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
 
       section_landing_pages:
         account:
@@ -5644,7 +5732,7 @@ en:
             title: "Backups"
             description: "Take a backup of your site's data"
           whats_new:
-            title: "What's New"
+            title: "What's new?"
             description: "Discover new releases and improvements to Discourse"
 
       config_areas:
@@ -5702,7 +5790,7 @@ en:
             your_organization_saved: "Your organization saved"
           saved: "saved!"
         flags:
-          header: "Moderation Flags"
+          header: "Moderation"
           edit_header: "Edit Flag"
           subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
@@ -5738,6 +5826,14 @@ en:
             title: "More options"
             move_up: "Move up"
             move_down: "Move down"
+        permalinks:
+          edit: "Edit"
+          delete: "Delete"
+        embeddable_host:
+          edit: "Edit"
+          delete: "Delete"
+          more_options:
+            title: "More options"
         look_and_feel:
           title: "Look and feel"
           description: "Customize and brand your Discourse site, giving it a distinctive style."
@@ -5784,18 +5880,20 @@ en:
       advanced:
         title: "Advanced"
         sidebar_link:
-          api_keys: "API keys"
+          api_keys:
+            title: "API keys"
+            keywords: "token"
+          webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Embedding"
-          rate_limits: "Rate Limits"
+          rate_limits: "Rate limits"
           user_api: "User API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Files"
           other_options: "Other"
           search: "Search"
           experimental: "Experimental"
-          all_site_settings: "All Site Settings"
+          all_site_settings: "All site settings"
 
       navigation_menu:
         sidebar: "Sidebar"
@@ -5851,7 +5949,7 @@ en:
             title: "Send email with download link"
             alert: "A link to download this backup has been emailed to you"
           destroy:
-            title: "Remove the backup"
+            title: "Delete"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
@@ -5964,7 +6062,7 @@ en:
           hide_unused_fields: "Hide unused fields"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
-          color_scheme_user_selectable: "Color scheme can be selected by users"
+          color_scheme_user_selectable: "Color palette can be selected by users"
           auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
           edit_color_scheme: "Edit Color Palette"
@@ -6150,10 +6248,11 @@ en:
             title: "Select base color palette"
             description: "Base palette:"
           title: "Colors"
-          edit: "Edit Color Palettes"
-          long_title: "Color Palettes"
+          edit: "Edit color palettes"
+          long_title: "Color palettes"
+          description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts and components - both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
           about: "Modify the colors used by your themes. Create a new color palette to start."
-          new_name: "New Color Palette"
+          new_name: "New color palette"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color palette?"
           undo: "Undo"
@@ -6505,7 +6604,8 @@ en:
           title: "Error Logs"
 
       watched_words:
-        title: "Watched Words"
+        title: "Watched words"
+        description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         search: "search"
         clear_filter: "Clear"
         show_words:
@@ -6663,6 +6763,7 @@ en:
         status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
+        silence_reason: "Silence Reason"
         bulk_actions:
           title: "Bulk actions"
           admin_cant_be_deleted: "This user can't be deleted because they're an admin"
@@ -6996,7 +7097,7 @@ en:
           confirm_delete: "Are you sure you would like to delete this DiscourseConnect record?"
 
       user_fields:
-        title: "User Fields"
+        title: "User fields"
         help: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
         no_user_fields: "You don't have any custom user fields yet."
         add: "Add user field"
@@ -7053,10 +7154,10 @@ en:
           multiselect: "Multiselect"
 
       site_text:
-        description: "You can customize any of the text on your forum. Please start by searching below:"
+        description: "You can customize any of the text on your forum."
         search: "Search for the text you'd like to edit"
-        title: "Text"
-        edit: "edit"
+        title: "Site texts"
+        edit: "Edit"
         revert: "Revert Changes"
         revert_confirm: "Are you sure you want to revert your changes?"
         go_back: "Back to Search"
@@ -7084,6 +7185,7 @@ en:
         save: "save"
         cancel: "cancel"
         unmask: "unmask input"
+        not_found: "Settings could not be found"
       site_settings:
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
@@ -7296,6 +7398,7 @@ en:
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
+        delete: "Delete"
         confirm_delete: "Are you sure you want to delete that host?"
         sample: |
           <p>Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>EMBED_URL</b> with the canonical URL of the page you are embedding it on.</p>
@@ -7304,16 +7407,18 @@ en:
 
           <p>Replace <b>DISCOURSE_USERNAME</b> with the Discourse username of the author that should create the topic. Discourse will automatically lookup the user by the <code>content</code> attribute of the <code>&lt;meta&gt;</code> tags with <code>name</code> attribute set to <code>discourse-username</code> or <code>author</code>. The <code>discourseUserName</code> parameter has been deprecated and will be removed in Discourse 3.2.</p>
         title: "Embedding"
-        host: "Allowed Hosts"
-        allowed_paths: "Path Allowlist"
-        edit: "edit"
-        category: "Post to Category"
-        tags: "Topic Tags"
-        post_author: "Post Author - Defaults to %{author}"
-        add_host: "Add Host"
-        settings: "Embedding Settings"
-        crawling_settings: "Crawler Settings"
-        crawling_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
+        description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
+        host: "Allowed hosts"
+        allowed_paths: "Path allowlist"
+        edit: "Edit"
+        category: "Post to category"
+        tags: "Topic tags"
+        post_author: "Post author"
+        post_author_with_default: "Post author (defaults to %{author})"
+        add_host: "Add host"
+        posts_and_topics: "Posts and Topics configuration"
+        crawlers: "Crawlers configuration"
+        crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
 
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
@@ -7323,7 +7428,20 @@ en:
         allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
         blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Allowed CSS class names"
-        save: "Save Embedding Settings"
+        save: "Save"
+        posts_and_topics_settings_saved: "Posts and Topics settings saved"
+        crawler_settings_saved: "Crawler settings saved"
+        back: "Back to Embedding"
+        configuration_snippet: "Configuration snippet"
+        host_form:
+          add_header: "Add host"
+          edit_header: "Edit host"
+          save: "Save"
+        nav:
+          hosts: "Hosts"
+          settings: "Settings"
+          posts_and_topics: "Posts and Topics"
+          crawlers: "Crawlers"
 
       permalink:
         title: "Permalinks"
@@ -7349,6 +7467,9 @@ en:
         back: "Back to Permalinks"
         more_options: "More options"
         copy_success: "Permalink copied to clipboard"
+        nav:
+          settings: "Settings"
+          permalinks: "Permalinks"
         form:
           label: "New:"
           add_header: "Add permalink"
@@ -7360,7 +7481,7 @@ en:
 
       reseed:
         action:
-          label: "Replace Text…"
+          label: "Replace text …"
           title: "Replace text of categories and topics with translations"
 
         modal:
@@ -7396,8 +7517,46 @@ en:
           regular: "Regular User"
 
       previews:
-        topic_title: "A discussion topic heading"
+        topic_title: "What books are you reading?"
         share_button: "Share"
         reply_button: "Reply"
         topic_preview: "Topic preview"
         homepage_preview: "Homepage preview"
+
+      homepage_preview:
+        nav_buttons:
+          all_categories: "all categories"
+          new: "New"
+          unread: "Unread"
+          top: "Top"
+          latest: "Latest"
+          hot: "Hot"
+          categories: "Categories"
+        topic_titles:
+          what_books: "What books are you reading?"
+          what_movies: "What movies have you seen recently?"
+          random_fact: "Random fact of the day"
+          tv_show: "Recommend a TV show"
+          what_hobbies: "What are your hobbies?"
+          what_music: "What are you listening to right now?"
+          funniest_thing: "Funniest thing you've seen today"
+          share_art: "Share your art!"
+        topic_ops:
+          what_books: |
+            We all love to read, let's use this topic to share our
+            current or recent reads. I'm a fantasy fan and I've been
+            re-reading The Lord of the Rings for the 100th time.
+            What about you?
+        category_descriptions:
+          icebreakers: "Get to know your fellow community members with fun questions."
+          news: "Discuss the latest news and events."
+          site_feedback: "Share your thoughts on the community and suggest improvements."
+        category_names:
+          icebreakers: "Icebreakers"
+          news: "News"
+          site_feedback: "Site Feedback"
+        table_headers:
+          topic: "Topic"
+          replies: "Replies"
+          views: "Views"
+          activity: "Activity"

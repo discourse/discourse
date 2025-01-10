@@ -10,7 +10,7 @@ sr:
       voters:
         one: "glasač"
         few: "glasača"
-        other: "гласача"
+        other: "glsača"
       total_votes:
         one: "ukupno glasova"
         few: "ukupno glasova"
@@ -88,7 +88,7 @@ sr:
           closed: Kada je glasanje zatvoreno
           staff: Samo članovi osoblja
         poll_groups:
-          label: Ограничите гласање на ове групе
+          label: Ograničite glasanje na ove grupe
         poll_chart_type:
           label: Графикон резултата
           bar: Dijagram
@@ -100,7 +100,7 @@ sr:
         poll_public:
           label: Prikaži ko je glasao
         poll_title:
-          label: Naslov (opcionalno)
+          label: Naslov (opciono)
         poll_options:
           label: Опције (по једна у реду)
           add: Додај опцију

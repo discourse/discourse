@@ -1,0 +1,125 @@
+/**
+  This CSS file is loaded dynamically when loadDevTools() is run in the console.
+  It is not part of our normal CSS build process, so SCSS variables are not available.
+  Native CSS nesting can be used safely, because developers who use this tool are expected to have modern browsers.
+*/
+.plugin-outlet-info {
+  --plugin-outlet-info-border-color: #080;
+  --plugin-outlet-info-background-color: #0c0;
+
+  margin: 1px;
+  border: 1px solid var(--plugin-outlet-info-border-color);
+  display: inline-block;
+
+  background-color: var(--plugin-outlet-info-background-color);
+  color: white;
+
+  text-align: center;
+  font-size: 14px !important;
+  font-weight: normal;
+  padding: 1px 5px;
+  display: inline-flex;
+  align-items: center;
+
+  .d-icon {
+    color: white !important;
+    font-size: 14px !important;
+    width: 14px !important;
+  }
+
+  &.--wrapper {
+    --plugin-outlet-info-border-color: #00c;
+    --plugin-outlet-info-background-color: #88f;
+  }
+}
+
+.plugin-outlet-info__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.plugin-outlet-info__heading {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+
+  display: flex;
+  gap: 5px;
+
+  .title {
+    flex-grow: 1;
+  }
+
+  .github-link {
+    color: var(--primary-medium);
+  }
+}
+
+.plugin-outlet-info__content {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  font-size: 14px;
+  grid-gap: 10px;
+  min-width: 300px;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  & > div {
+    min-width: 0;
+  }
+
+  .fw {
+    font-family: "Courier New", "Courier", "Lucida Console", "Monaco", monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: var(--primary-very-low);
+  }
+
+  .value {
+    display: flex;
+    gap: 5px;
+  }
+
+  .no-arguments {
+    grid-column: span 2;
+  }
+
+  a {
+    color: var(--primary-medium);
+  }
+}
+
+.dev-tools-toolbar {
+  position: fixed;
+  z-index: 999999;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: var(--primary-low);
+  border-radius: 0px 5px 5px 0px;
+
+  button {
+    background: none;
+    border: none;
+    padding: 5px;
+    color: var(--primary-medium);
+
+    &:hover:not(.gripper) {
+      background-color: var(--primary-very-low);
+    }
+
+    &.gripper {
+      cursor: grab;
+      padding-bottom: 0;
+      padding-top: 0;
+      color: var(--primary-400);
+    }
+
+    &.--active {
+      color: var(--success);
+    }
+  }
+}

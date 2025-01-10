@@ -234,8 +234,6 @@ da:
     failed_to_invite: "Brugeren kan ikke inviteres til dette emne uden et gruppemedlemskab i en af følgende grupper: %{group_names}."
     user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
     muted_topic: "Beklager, denne bruger ønsker tavshed i dette emne."
-    receiver_does_not_allow_pm: "Beklager, denne bruger tillader dig ikke at sende private beskeder til sig."
-    sender_does_not_allow_pm: "Beklager, du tillader ikke denne bruger sender dig private beskeder."
     user_cannot_see_topic: "%{username} kan ikke se emnet."
   backup:
     operation_already_running: "En handling kører i øjeblikket. Kan ikke starte et nyt job lige nu."
@@ -1080,12 +1078,10 @@ da:
       title: "Underret moderatorer"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange moderatorer er blevet underrettet privat af en anmeldelse."
     notify_user_private_messages:
       title: "Giv brugeren besked"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange, brugere har fået privat besked af en anmeldelse."
     top_referrers:
       title: "Top henvisere"
       xaxis: "Bruger"
@@ -1482,7 +1478,6 @@ da:
     title_fancy_entities: "Konverter almindelige ASCII-tegn til smarte HTML-entiteter i emnetitler, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimumslængden af en titel før den vil blive kontrolleret for lignende emner."
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
-    default_dark_mode_color_scheme_id: "Farveskemaet der bruges ved mørk tilstand."
     dark_mode_none: "Ingen"
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."
@@ -1551,7 +1546,6 @@ da:
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
-    full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
@@ -3178,15 +3172,7 @@ da:
           homepage_style:
             choices:
               latest:
-                label: "Seneste emner"
-              categories_only:
-                label: "Kun Kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med Fremhævede Emner"
-              categories_and_latest_topics:
-                label: "Kategorier og Seneste Emner"
-              categories_and_top_topics:
-                label: "Kategorier og top emner"
+                label: "Seneste"
       corporate:
         fields:
           governing_law:

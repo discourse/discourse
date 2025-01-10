@@ -223,10 +223,14 @@ module Email
 
     def header_args
       result = {}
+
       if @opts[:add_unsubscribe_link]
-        unsubscribe_url =
-          @template_args[:unsubscribe_url].presence || @template_args[:user_preferences_url]
-        result["List-Unsubscribe"] = "<#{unsubscribe_url}>"
+        if unsubscribe_url = @template_args[:unsubscribe_url].presence
+          result["List-Unsubscribe"] = "<#{unsubscribe_url}>"
+          result["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
+        else
+          result["List-Unsubscribe"] = "<#{@template_args[:user_preferences_url]}>"
+        end
       end
 
       result["X-Discourse-Post-Id"] = @opts[:post_id].to_s if @opts[:post_id]

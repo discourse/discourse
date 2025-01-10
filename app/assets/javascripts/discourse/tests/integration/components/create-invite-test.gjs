@@ -166,7 +166,7 @@ module("Integration | Component | CreateInvite", function (hooks) {
 
     assert.deepEqual(
       formKit().field("expiresAfterDays").options(),
-      ["__NONE__", "1", "3", "7", "30", "90", "999999"],
+      ["1", "3", "7", "30", "90", "999999"],
       "the value of invite_expiry_days is added to the dropdown"
     );
 
@@ -179,7 +179,7 @@ module("Integration | Component | CreateInvite", function (hooks) {
 
     assert.deepEqual(
       formKit().field("expiresAfterDays").options(),
-      ["__NONE__", "1", "7", "30", "90", "999999"],
+      ["1", "7", "30", "90", "999999"],
       "the value of invite_expiry_days is not added to the dropdown if it's already one of the options"
     );
   });

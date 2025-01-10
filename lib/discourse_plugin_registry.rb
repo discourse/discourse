@@ -73,6 +73,7 @@ class DiscoursePluginRegistry
   define_register :groups_callback_for_users_search_controller_action, Hash
   define_register :mail_pollers, Set
   define_register :site_setting_areas, Set
+  define_register :discourse_dev_populate_reviewable_types, Set
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -117,8 +118,6 @@ class DiscoursePluginRegistry
   define_filtered_register :bookmarkables
 
   define_filtered_register :list_suggested_for_providers
-
-  define_filtered_register :summarization_strategies
 
   define_filtered_register :post_action_notify_user_handlers
 

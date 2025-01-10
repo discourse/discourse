@@ -116,7 +116,8 @@ module DiscourseDev
           puts "Once site is running use https://localhost:9292/user/#{username}/become to access the account in development"
         end
 
-        admin.name = ask("Full name:  ") if SiteSetting.full_name_required
+        admin.name = ask("Full name:  ") if SiteSetting.full_name_requirement ==
+          "required_at_signup"
         saved = admin.save
 
         if saved

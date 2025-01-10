@@ -2,6 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { compile } from "handlebars";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import {
   addRawTemplate,
   removeRawTemplate,
@@ -12,10 +13,12 @@ const CONNECTOR =
 
 acceptance("Raw Plugin Outlet", function (needs) {
   needs.hooks.beforeEach(function () {
-    addRawTemplate(
-      CONNECTOR,
-      compile(`<span class='topic-lala'>{{context.topic.id}}</span>`)
-    );
+    withSilencedDeprecations("discourse.hbr-topic-list-overrides", () => {
+      addRawTemplate(
+        CONNECTOR,
+        compile(`<span class='topic-lala'>{{context.topic.id}}</span>`)
+      );
+    });
   });
 
   needs.hooks.afterEach(function () {

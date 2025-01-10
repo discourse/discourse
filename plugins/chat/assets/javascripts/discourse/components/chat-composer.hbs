@@ -79,8 +79,12 @@
             />
           {{/each}}
 
-          <Chat::Composer::Separator />
         {{/if}}
+
+        <PluginOutlet
+          @name="chat-composer-inline-buttons"
+          @outletArgs={{hash composer=this channel=@channel}}
+        />
 
         {{#if this.site.desktopView}}
           <Chat::Composer::Button
@@ -125,9 +129,4 @@
   <div class="chat-replying-indicator-container">
     <ChatReplyingIndicator @presenceChannelName={{this.presenceChannelName}} />
   </div>
-
-  <ChatEmojiPicker
-    @context={{this.context}}
-    @didSelectEmoji={{this.onSelectEmoji}}
-  />
 </div>

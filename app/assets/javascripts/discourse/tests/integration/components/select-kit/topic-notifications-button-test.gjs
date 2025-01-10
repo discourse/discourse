@@ -3,7 +3,6 @@ import { getOwner } from "@ember/owner";
 import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n, { i18n } from "discourse-i18n";
 import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 
@@ -50,20 +49,16 @@ module(
         <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
       </template>);
 
-      assert.strictEqual(
-        selectKit().header().label(),
-        "Normal",
-        "has the correct label"
-      );
+      assert
+        .dom(".notifications-tracking-trigger")
+        .hasText("Normal", "has the correct label");
 
       state.topic = buildTopic.call(this, { level: 2 });
       await settled();
 
-      assert.strictEqual(
-        selectKit().header().label(),
-        "Tracking",
-        "correctly changes the label"
-      );
+      assert
+        .dom(".notifications-tracking-trigger")
+        .hasText("Tracking", "has the correct label");
     });
 
     test("the header has a localized title", async function (assert) {
@@ -77,11 +72,9 @@ module(
         <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
-      assert.strictEqual(
-        selectKit().header().label(),
-        `${originalTranslation} PM`,
-        "has the correct label for PMs"
-      );
+      assert
+        .dom(".notifications-tracking-trigger")
+        .hasText(`${originalTranslation} PM`, "has the correct label for PMs");
     });
 
     test("notification reason text - user mailing list mode", async function (assert) {

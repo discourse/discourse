@@ -3,7 +3,6 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
@@ -34,9 +33,17 @@ export default class DMenu extends Component {
     };
   });
 
-  @action
-  registerFloatBody(element) {
+  registerFloatBody = modifier((element) => {
     this.body = element;
+
+    return () => {
+      this.body = null;
+    };
+  });
+
+  @action
+  teardownFloatBody() {
+    this.body = null;
   }
 
   @action
@@ -97,6 +104,7 @@ export default class DMenu extends Component {
       @translatedLabel={{@label}}
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
+      @isLoading={{@isLoading}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       {{on "keydown" this.forwardTabToContent}}
       ...attributes
@@ -111,6 +119,7 @@ export default class DMenu extends Component {
         <DModal
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
+          @autofocus={{this.options.autofocus}}
           class={{concatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
@@ -118,7 +127,7 @@ export default class DMenu extends Component {
             @class
           }}
           @inline={{(isTesting)}}
-          data-identifier={{@instance.options.identifier}}
+          data-identifier={{this.options.identifier}}
           data-content
         >
           <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>
@@ -148,7 +157,7 @@ export default class DMenu extends Component {
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
-          {{didInsert this.registerFloatBody}}
+          {{this.registerFloatBody}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

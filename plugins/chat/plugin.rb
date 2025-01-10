@@ -37,6 +37,7 @@ module ::Chat
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
     chat_dm_retention_days: :dismissed_dm_retention_reminder,
   }
+  PRESENCE_REGEXP = %r{^/chat-reply/(\d+)(?:/thread/(\d+))?$}
 end
 
 require_relative "lib/chat/engine"
@@ -303,32 +304,29 @@ after_initialize do
   end
 
   register_presence_channel_prefix("chat") do |channel_name|
-    next nil unless channel_name == "/chat/online"
-    config = PresenceChannel::Config.new
-    config.allowed_group_ids = Chat.allowed_group_ids
-    config
+    next if channel_name != "/chat/online"
+    PresenceChannel::Config.new.tap { |config| config.allowed_group_ids = Chat.allowed_group_ids }
   end
 
   register_presence_channel_prefix("chat-reply") do |channel_name|
-    if (
-         channel_id, thread_id =
-           channel_name.match(%r{^/chat-reply/(\d+)(?:/thread/(\d+))?$})&.captures
-       )
-      chat_channel = nil
-      if thread_id
-        chat_channel = Chat::Thread.find_by!(id: thread_id, channel_id: channel_id).channel
+    channel_id, thread_id = Chat::PRESENCE_REGEXP.match(channel_name)&.captures
+
+    next if channel_id.blank?
+
+    chat_channel =
+      if thread_id.present?
+        Chat::Thread.find_by(id: thread_id, channel_id:)&.channel
       else
-        chat_channel = Chat::Channel.find(channel_id)
+        Chat::Channel.find_by(id: channel_id)
       end
 
-      PresenceChannel::Config.new.tap do |config|
-        config.allowed_group_ids = chat_channel.allowed_group_ids
-        config.allowed_user_ids = chat_channel.allowed_user_ids
-        config.public = !chat_channel.read_restricted?
-      end
+    next if chat_channel.nil?
+
+    PresenceChannel::Config.new.tap do |config|
+      config.allowed_group_ids = chat_channel.allowed_group_ids
+      config.allowed_user_ids = chat_channel.allowed_user_ids
+      config.public = !chat_channel.read_restricted?
     end
-  rescue ActiveRecord::RecordNotFound
-    nil
   end
 
   register_push_notification_filter do |user, payload|
@@ -514,6 +512,10 @@ after_initialize do
   # When we eventually allow secure_uploads in chat, this will need to be
   # removed. Depending on the channel, uploads may end up being secure.
   UploadSecurity.register_custom_public_type("chat-composer")
+
+  if Rails.env.local?
+    DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  end
 end
 
 if Rails.env == "test"

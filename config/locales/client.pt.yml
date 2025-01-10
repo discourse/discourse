@@ -402,6 +402,8 @@ pt:
     continue: "Continuar"
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
+    select_placeholder: "Selecionar…"
+    none_placeholder: "Nenhuma"
     banner:
       close: "Marcar esta faixa como vista"
       edit: "Editar"
@@ -531,6 +533,8 @@ pt:
         refresh: "Atualizar"
         status: "Estado"
         category: "Categoria"
+        score_type:
+          title: "Motivo"
         orders:
           score: "Pontuação"
           score_asc: "Pontuação (reverso)"
@@ -808,13 +812,13 @@ pt:
       public_admission: "Permitir entrada livre no grupo (Requer grupo publicamente visível)"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
-        posts: "Não existem publicações por membros deste grupo."
-        members: "Não existem membros neste grupo."
-        requests: "Não existem pedidos de adesão para este grupo."
-        mentions: "Não existem menções deste grupo."
-        messages: "Não existem mensagens para este grupo."
-        topics: "Não existem tópicos por membros deste grupo."
-        logs: "Não existem registos para este grupo."
+        posts: "Não existem publicações por membros deste grupo"
+        members: "Não existem membros neste grupo"
+        requests: "Não existem pedidos de adesão para este grupo"
+        mentions: "Não existem menções deste grupo"
+        messages: "Não existem mensagens para este grupo"
+        topics: "Não existem tópicos por membros deste grupo"
+        logs: "Não existem registos para este grupo"
       add: "Adicionar"
       join: "Entrar"
       leave: "Sair"
@@ -996,10 +1000,10 @@ pt:
         one: "Apagar %{count}"
         other: "Apagar %{count}"
       username: "nome de utilizador"
-      trust_level: "TL"
+      trust_level: "nível de confiança"
       read_time: "tempo de leitura"
       topics_entered: "tópicos inseridos"
-      post_count: "# publicações"
+      post_count: "mensagens"
       confirm_delete_other_accounts: "Tem a certeza que quer apagar estas contas?"
       powered_by: "usando <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
@@ -1104,17 +1108,15 @@ pt:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
       reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
-      color_scheme: "Esquema de Cores"
+      color_scheme: "Paleta de Cores"
       color_schemes:
         default_description: "Tema padrão"
         disable_dark_scheme: "Igual ao normal"
-        dark_instructions: "Pode pré-visualizar o esquema de cores do modo escuro ativando o modo escuro do seu dispositivo."
         undo: "Repor"
         regular: "Habitual"
         dark: "Modo escuro"
         default_dark_scheme: "(padrão do site)"
       dark_mode: "Modo Escuro"
-      dark_mode_enable: "Ativar automaticamente o esquema de cores do modo escuro"
       text_size_default_on_all_devices: "Usar este tamanho de texto por defeito em todos os meus dispositivos"
       allow_private_messages: "Permitir que outros utilizadores me enviem mensagens diretamente"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
@@ -1689,9 +1691,6 @@ pt:
     form_kit:
       reset: Repor
       optional: opcional
-      select:
-        select_placeholder: "Selecionar…"
-        none_placeholder: "Nenhuma"
       errors:
         required: "Necessário"
     close: "Fechar"
@@ -1877,6 +1876,9 @@ pt:
       categories_and_top_topics: "Categorias e Melhores Tópicos"
       categories_boxes: "Caixas com Subcategorias"
       categories_boxes_with_topics: "Caixas com Tópicos em Destaque"
+    full_name_requirement:
+      required_at_signup: "Necessário"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2147,8 +2149,6 @@ pt:
         quoted: "citado"
         edited: "editado"
         liked: "novo like"
-        private_message: "nova mensagem particular"
-        invited_to_private_message: "convidado para mensagem particular"
         invitee_accepted: "convite aceito"
         posted: "novo post"
         watching_category_or_tag: "novo post"
@@ -2599,7 +2599,6 @@ pt:
         help: "Abrir uma versão para impressão deste tópico"
       flag_topic:
         title: "Denunciar"
-        help: "denunciar privadamente este tópico para consideração ou enviar uma notificação privada sobre o mesmo"
         success_message: "Denunciou este tópico com sucesso."
       make_public:
         title: "Converter para Tópico Público"
@@ -2835,7 +2834,6 @@ pt:
         edit_action: "Editar"
         edit_anonymous: "Pedimos desculpa, mas necessita de ter sessão iniciada para editar esta publicação."
         flag_action: "Denunciar"
-        flag: "sinalizar privadamente esta mensagem para moderação ou enviar uma notificação privada sobre a mesma"
         delete: "eliminar esta publicação"
         undelete: "restaurar esta mensagem"
         share_action: "Partilhar"
@@ -3616,7 +3614,30 @@ pt:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
         sidebar_link:
-          all: "Tudo"
+          all: "Todos os relatórios"
+      config:
+        developer:
+          title: "Desenvolvedor"
+        files:
+          title: "Ficheiros"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navegação"
+        notifications:
+          title: "Notificações"
+        onebox:
+          title: "Caixa Única"
+        other:
+          title: "Outro"
+        search:
+          title: "Pesquisar"
+        security:
+          title: "Segurança"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API de Utlizador"
       dashboard:
         title: "Painel de Administração"
         last_updated: "Painel atualizado:"
@@ -3705,6 +3726,7 @@ pt:
             include_subcategories:
               label: "Incluir Subcategorias"
       flags:
+        title: "Moderação"
         description: "Descrição"
         enabled: "Ativado?"
       groups:
@@ -3888,11 +3910,11 @@ pt:
           badges: "Crachás"
           notifications: "Notificações"
           permalinks: "Hiperligações Permanentes"
-          trust_levels: "Níveis de Confiança"
           users: "Utilizadores"
-          user_fields: "Campos de utilizador"
-          watched_words: "Palavras Vigiadas"
+          groups: "Grupos"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderação"
       appearance:
         title: "Aparência"
         sidebar_link:
@@ -3904,22 +3926,8 @@ pt:
       email_settings:
         sidebar_link:
           appearance: "Aparência"
-          preview_summary: "Pré-visualizar Resumo"
-      email_logs:
-        sidebar_link:
-          sent: "Enviado"
-          skipped: "Ignorado"
-          bounced: "Redirecionado"
-          received: "Recebido"
-          rejected: "Rejeitado"
       security:
         title: "Segurança"
-        sidebar_link:
-          error_logs: "Registo de Erros em Logs"
-          screened_emails: "Emails Filtrados"
-          screened_ips: "IPs Filtrados"
-          screened_urls: "URLs Filtrados"
-          search_logs: "Logs de Pesquisa"
       section_landing_pages:
         account:
           title: "Conta"
@@ -3933,6 +3941,7 @@ pt:
           update: "Atualização"
           saved: "guardado!"
         flags:
+          header: "Moderação"
           description: "Descrição"
           enabled: "Ativado?"
           edit: "Editar"
@@ -3946,6 +3955,12 @@ pt:
             invalid_applies_to: "Necessário"
             topic: "tópicos"
             post: "mensagens"
+        permalinks:
+          edit: "Editar"
+          delete: "Eliminar"
+        embeddable_host:
+          edit: "Editar"
+          delete: "Eliminar"
         look_and_feel:
           themes:
             title: "Temas"
@@ -3970,9 +3985,7 @@ pt:
         sidebar_link:
           developer: "Desenvolvedor"
           embedding: "Incorporação"
-          rate_limits: "Limites de Classificação"
           user_api: "API de Utlizador"
-          web_hooks: "Webhooks"
           onebox: "Caixa Única"
           files: "Ficheiros"
           other_options: "Outro"
@@ -4018,7 +4031,7 @@ pt:
             title: "Enviar mensagem com a hiperligação de transferência"
             alert: "Foi-lhe enviada uma mensagem com uma hiperligação para transferir esta cópia de segurança"
           destroy:
-            title: "Remover a cópia de segurança"
+            title: "Eliminar"
             confirm: "Tem a certeza que deseja destruir esta cópia de segurança?"
           restore:
             label: "Restaurar"
@@ -4109,7 +4122,6 @@ pt:
           hide_unused_fields: "Ocultar campos não utilizados"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
-          color_scheme_user_selectable: "O esquema de cores pode ser selecionado pelos usuários"
           auto_update: "Atualização automática quando o Discourse é atualizado"
           color_scheme: "Paleta de Cores"
           default_light_scheme: "Light (padrão)"
@@ -4860,15 +4872,11 @@ pt:
         settings: "Configurações"
       embedding:
         get_started: "Se deseja incorporar o Discourse noutro sítio, comece por adicionar o seu servidor."
+        delete: "Eliminar"
         confirm_delete: "Tem certeza que deseja eliminar este servidor?"
         title: "Incorporação"
-        host: "Servidores Permitidos"
-        edit: "editar"
-        category: "Publicação para Categoria"
-        add_host: "Adicionar Servidor"
-        settings: "Configurações de Incorporação"
-        crawling_settings: "Configurações de Rastreio"
-        crawling_description: "Quando o Discourse cria tópicos para as suas publicações, se nenhum feed RSS/ATOM está presente o Discourse irá tentar analisar o seu conteúdo fora do seu HTML. Algumas vezes pode ser um desafio extrair o seu conteúdo, por isso temos a habilidade de especificar regras CSS para tornar a extração mais fácil. "
+        edit: "Editar"
+        crawlers_description: "Quando o Discourse cria tópicos para as suas publicações, se nenhum feed RSS/ATOM está presente o Discourse irá tentar analisar o seu conteúdo fora do seu HTML. Algumas vezes pode ser um desafio extrair o seu conteúdo, por isso temos a habilidade de especificar regras CSS para tornar a extração mais fácil. "
         embed_by_username: "Nome de uilizador para criação do tópico"
         embed_post_limit: "Número máximo de publicações a incorporar"
         embed_title_scrubber: "Expressão regular usada para filtrar o título de publicações"
@@ -4876,7 +4884,11 @@ pt:
         allowed_embed_selectors: "Seletor CSS para elementos que são permitidos nas incorporações"
         blocked_embed_selectors: "Seletor CSS para elementos que são removidos das incorporações"
         allowed_embed_classnames: "Nomes de classes CSS permitidas"
-        save: "Guardar Configurações de Incorporação"
+        save: "Guardar"
+        host_form:
+          save: "Guardar"
+        nav:
+          settings: "Configurações"
       permalink:
         title: "Hiperligações Permanentes"
         url: "URL"
@@ -4889,6 +4901,9 @@ pt:
         user_title: "Utilizador"
         username: "Nome de Utilizador"
         delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
+        nav:
+          settings: "Configurações"
+          permalinks: "Hiperligações Permanentes"
         form:
           label: "Novo:"
           url: "URL"
@@ -4915,3 +4930,18 @@ pt:
       previews:
         share_button: "Partilhar"
         reply_button: "Responder"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "todas as categorias"
+          new: "Novo"
+          unread: "Não Lido"
+          top: "Os Melhores"
+          latest: "Recente"
+          categories: "Categorias"
+        category_names:
+          site_feedback: "Comentários sobre o Sítio"
+        table_headers:
+          topic: "Tópico"
+          replies: "Respostas"
+          views: "Vistas"
+          activity: "Actividade"

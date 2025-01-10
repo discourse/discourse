@@ -203,6 +203,13 @@ export function useAdminNavConfig(navMap) {
           moderator: true,
         },
         {
+          name: "admin_groups",
+          route: "groups",
+          label: "admin.community.sidebar_link.groups",
+          icon: "user-group",
+          moderator: true,
+        },
+        {
           name: "admin_all_site_settings",
           route: "adminSiteSettings",
           label: "admin.advanced.sidebar_link.all_site_settings",
@@ -400,7 +407,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     if (!currentUser.admin && currentUser.moderator) {
       navConfig.forEach((section) => {
-        section.links = section.links.filterBy("moderator");
+        section.links = section.links.filter((link) => {
+          return link.moderator;
+        });
       });
       navConfig = navConfig.filterBy("links.length");
     }

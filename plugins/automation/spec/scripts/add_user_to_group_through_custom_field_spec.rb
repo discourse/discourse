@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AddUserTogroupThroughCustomField" do
+describe "AddUserToGroupThroughCustomField" do
   fab!(:user_1) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:target_group) { Fabricate(:group, full_name: "Groupity Group") }
@@ -48,6 +48,22 @@ describe "AddUserTogroupThroughCustomField" do
 
       expect(user_1.reload.in_any_groups?([target_group.id])).to eq(true)
       expect(user_2.reload.in_any_groups?([target_group.id])).to eq(false)
+    end
+  end
+
+  context "with empty field value" do
+    before do
+      UserCustomField.create!(user_id: user_1.id, name: "user_field_#{user_field.id}", value: "")
+    end
+
+    it "does not add user to groups with empty fullnames" do
+      empty_fullname_group1 = Fabricate(:group, full_name: "")
+      empty_fullname_group2 = Fabricate(:group, full_name: "")
+
+      automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
+
+      expect(user_1.reload.in_any_groups?([empty_fullname_group1.id])).to eq(false)
+      expect(user_1.reload.in_any_groups?([empty_fullname_group2.id])).to eq(false)
     end
   end
 
@@ -115,6 +131,42 @@ describe "AddUserTogroupThroughCustomField" do
           )
         }.not_to change { user_1.reload.belonging_to_group_ids.length }
       end
+    end
+  end
+
+  context "with many users and groups" do
+    fab!(:bangalore) { Fabricate(:group, full_name: "Bangalore, India") }
+    fab!(:dublin) { Fabricate(:group, full_name: "Dublin, Ireland") }
+    fab!(:iowa) { Fabricate(:group, full_name: "Iowa") }
+    fab!(:missouri) { Fabricate(:group, full_name: "Missouri") }
+
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:user4) { Fabricate(:user) }
+    fab!(:user5) { Fabricate(:user) }
+    fab!(:user6) { Fabricate(:user) }
+
+    before do
+      [
+        [user1, "Dublin, Ireland"],
+        [user4, "Iowa"],
+        [user2, "Bangalore, India"],
+        [user5, ""],
+        [user6, "Missouri"],
+        [user3, "Bangalore, India"],
+      ].each do |user, location|
+        UserCustomField.create!(user: user, name: "user_field_#{user_field.id}", value: location)
+      end
+    end
+
+    it "adds users to their intended groups" do
+      automation.trigger!("kind" => DiscourseAutomation::Triggers::RECURRING)
+
+      expect(bangalore.users).to match_array([user2, user3])
+      expect(dublin.users).to eq([user1])
+      expect(iowa.users).to eq([user4])
+      expect(missouri.users).to eq([user6])
     end
   end
 end

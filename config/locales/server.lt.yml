@@ -196,8 +196,6 @@ lt:
     failed_to_invite: "Vartotojas negali būti pakviestas į šią temą be grupės narystės vienoje iš šių grupių: %{group_names}."
     user_exists: "Atsiprašome, šis vartotojas jau buvo pakviestas. Galite pakviesti vartotoją į temą tik vieną kartą."
     muted_topic: "Atsiprašome, kad vartotojas nutildė šią temą."
-    receiver_does_not_allow_pm: "Atsiprašome, vartotojas neleidžia jums siųsti asmeninių pranešimų."
-    sender_does_not_allow_pm: "Atsiprašome, jūs neleidžiate šiam vartotojui siųsti jums asmeninių pranešimų."
     user_cannot_see_topic: "%{username} negali matyti temos."
   backup:
     operation_already_running: "Šiuo metu vykdoma operacija. Šiuo metu negali pradėti naujo darbo."
@@ -1055,12 +1053,10 @@ lt:
       title: "Pranešti moderatoriams"
       xaxis: "Diena"
       yaxis: "Pranešimų skaičius"
-      description: "Kiek kartų moderatoriams buvo privačiai pranešta vėliavėle."
     notify_user_private_messages:
       title: "Pranešti vartotojui"
       xaxis: "Diena"
       yaxis: "Pranešimų skaičius"
-      description: "Kiek kartų naudotojams buvo privačiai pranešta vėliavėle."
     top_referrers:
       xaxis: "Narys"
       num_clicks: "Spustelėjimai"
@@ -1280,7 +1276,6 @@ lt:
     blocked_ip_blocks: "Sąrašas privačių IP blokų, kurių niekada neturėtų tikrinti „Discourse“"
     share_links: "Nustatykite, kurie elementai rodomi bendrinimo dialogo lange ir kokia tvarka."
     site_contact_username: "Tinkamas personalo vartotojo vardas, iš kurio siunčiami visi automatiniai pranešimai. Jei jis paliekamas tuščias, bus naudojama numatytoji sistemos paskyra."
-    site_contact_group_name: "Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes."
     send_welcome_message: "Siųskite visiems naujiems vartotojams sveikinimo pranešimą su greitu pradžios vadovu."
     send_tl1_welcome_message: "Siųskite naujiems 1 patikimumo lygio vartotojams sveikinimo pranešimą."
     send_tl2_promotion_message: "Nusiųskite naujiems 2 patikimumo lygio vartotojams pranešimą apie reklamą."
@@ -1404,7 +1399,6 @@ lt:
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
     automatically_unpin_topics: "Automatiškai atsegti temas, kai vartotojas pasiekia apačią."
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
-    full_name_required: "Pilnas vardas yra būtinas vartotojo profilio laukas."
     enable_names: "Rodyti visą vartotojo vardą jo profilyje, vartotojo kortelėje ir el. laiškuose. Išjungti, kad visur paslėptumėte visą vardą."
     display_name_on_posts: "Rodyti visą vartotojo vardą jo įrašuose, be @naudotojo vardo."
     short_progress_text_threshold: "Kai pranešimų skaičius temoje viršys šį skaičių, eigos juostoje bus rodomas tik dabartinis įrašo numeris. Jei pakeisite eigos juostos plotį, gali tekti pakeisti šią reikšmę."
@@ -2607,8 +2601,6 @@ lt:
                 label: "Privatu"
       styling:
         fields:
-          color_scheme:
-            label: "Spalvų schema"
           heading_font:
             label: "Antraštės šriftas"
           styling_preview:
@@ -2617,15 +2609,7 @@ lt:
             label: "Pagrindinio puslapio stilius"
             choices:
               latest:
-                label: "Naujausios temos"
-              categories_only:
-                label: "Tiktai Kategorijos"
-              categories_with_featured_topics:
-                label: "Kategorijos su populiariomis temomis"
-              categories_and_latest_topics:
-                label: "Kategorijos su paskutinėmis temomis"
-              categories_and_top_topics:
-                label: "Kategorijos ir Top temos"
+                label: "Naujausia"
       corporate:
         fields:
           governing_law:

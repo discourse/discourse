@@ -66,7 +66,7 @@
     min-width: 0;
     padding: 0;
     font-size: var(--font-down-2-rem);
-    color: var(--primary-medium);
+    color: var(--d-sidebar-header-color);
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -75,7 +75,10 @@
       justify-content: flex-start;
 
       &:hover {
-        color: var(--primary-medium);
+        color: var(--d-sidebar-header-color);
+        .d-icon {
+          color: var(--d-sidebar-header-icon-color);
+        }
       }
 
       &:focus {

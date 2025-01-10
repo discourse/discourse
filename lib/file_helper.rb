@@ -28,6 +28,10 @@ class FileHelper
     filename.match?(inline_images_regexp)
   end
 
+  def self.is_svg?(filename)
+    filename.match?(/\.svg\z/i)
+  end
+
   def self.is_supported_media?(filename)
     filename.match?(supported_media_regexp)
   end

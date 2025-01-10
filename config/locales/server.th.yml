@@ -508,14 +508,8 @@ th:
             label: "แสดงตัวอย่าง"
           homepage_style:
             choices:
-              categories_only:
-                label: "หมวดหมู่เท่านั้น"
-              categories_with_featured_topics:
-                label: "หมวดหมู่พร้อมด้วยกระทู้เด่น"
-              categories_and_latest_topics:
-                label: "หมวดหมู่และกระทู้ล่าสุด"
-              categories_and_top_topics:
-                label: "หมวดหมู่และกระทู้ยอดนิยม"
+              latest:
+                label: "ล่าสุด"
   onebox:
     github:
       closed: "ปิด"
@@ -526,6 +520,7 @@ th:
       quoted: '%{username} อ้างอิงถึงคุณใน "%{topic}" - %{site_title}'
       replied: '%{username} ตอบคุณใน "%{topic}" - %{site_title}'
       posted: '%{username} โพสท์ใน "%{topic}" - %{site_title}'
+      private_message: '%{username}ได้ส่งข้อความส่วนตัวไปหาคุณใน "%{topic}"-%{site_title}'
       linked: '%{username} ลิงค์โพสของคุณจาก "%{topic}" - %{site_title}'
       watching_first_post: '%{username}ได้สร้างกระทู้ใหม่ "%{topic}"-%{site_title}'
       confirm_title: "เปิดการแจ้งเตือนแล้ว - %{site_title}"

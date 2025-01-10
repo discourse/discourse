@@ -1,13 +1,8 @@
 .form-kit__control-select {
-  @include default-input;
+  height: 2em;
+  border: 1px solid var(--primary-low-mid);
 
-  padding: 0 2em 0 0.5em !important;
-  appearance: none;
-  background-image: svg-uri(
-    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$primary-medium}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m2 5 6 6 6-6'/></svg>"
-  );
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 16px 12px;
-  cursor: pointer;
+  @include breakpoint(mobile-large) {
+    height: 2.25em;
+  }
 }

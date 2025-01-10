@@ -497,6 +497,8 @@ de:
     continue: "Weiter"
     switch_to_anon: "Anonymen Modus aktivieren"
     switch_from_anon: "Anonymen Modus deaktivieren"
+    select_placeholder: "Auswählen …"
+    none_placeholder: "Keiner"
     banner:
       close: "Dieses Banner ausblenden"
       edit: "Bearbeiten"
@@ -518,7 +520,7 @@ de:
       order_by: "Sortieren nach"
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
-      filtered_flagged_by: "Markiert von"
+      filtered_flagged_by: "Gemeldet von"
       explain:
         why: "erkläre, warum dieses Element in der Warteschlange gelandet ist"
         title: "Überprüfbares Scoring"
@@ -628,6 +630,9 @@ de:
         refresh: "Aktualisieren"
         status: "Status"
         category: "Kategorie"
+        score_type:
+          title: "Grund"
+          all: "(alle Gründe)"
         orders:
           score: "Score"
           score_asc: "Score (umgekehrt)"
@@ -931,13 +936,13 @@ de:
       public_admission: "Erlaube Benutzern, die Gruppe eigenständig zu betreten (erfordert, dass die Gruppe öffentlich sichtbar ist)"
       public_exit: "Erlaube Benutzern, die Gruppe eigenständig zu verlassen"
       empty:
-        posts: "Es gibt keine Beiträge von Mitgliedern dieser Gruppe."
-        members: "Es gibt keine Mitglieder in dieser Gruppe."
-        requests: "Keine Mitgliedschaftsanfragen für diese Gruppe."
-        mentions: "Es gibt keine Erwähnungen dieser Gruppe."
-        messages: "Es gibt keine Nachrichten für diese Gruppe."
-        topics: "Es gibt keine Themen von Mitgliedern dieser Gruppe."
-        logs: "Es gibt keine Protokolle für diese Gruppe."
+        posts: "Es gibt keine Beiträge von Mitgliedern dieser Gruppe"
+        members: "Es gibt keine Mitglieder in dieser Gruppe"
+        requests: "Keine Mitgliedschaftsanfragen für diese Gruppe"
+        mentions: "Es gibt keine Erwähnungen dieser Gruppe"
+        messages: "Es gibt keine Nachrichten für diese Gruppe"
+        topics: "Es gibt keine Themen von Mitgliedern dieser Gruppe"
+        logs: "Es gibt keine Protokolle für diese Gruppe"
       add: "Hinzufügen"
       join: "Beitreten"
       leave: "Verlassen"
@@ -1127,17 +1132,18 @@ de:
         one: "%{count} löschen"
         other: "%{count} löschen"
       username: "Benutzername"
-      trust_level: "VS"
+      trust_level: "Vertrauensstufe"
       read_time: "Lesezeit"
       topics_entered: "betrachtete Themen"
-      post_count: "# Beiträge"
+      post_count: "Beiträgen"
       confirm_delete_other_accounts: "Bist du sicher, dass du diese Konten löschen willst?"
       powered_by: "verwendet <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopiert"
     user_fields:
       none: "(wähle eine Option aus)"
       required: 'Bitte gib einen Wert für „%{name}“ ein'
-      same_as_password: "Dein Passwort sollte nicht in anderen Feldern wiederholt werden."
+      required_checkbox: 'Das Feld "%{name}" ist erforderlich'
+      same_as_password: "Dein Passwort sollte nicht in anderen Feldern wiederholt werden"
       optional: (optional)
     user:
       said: "%{username}:"
@@ -1260,18 +1266,18 @@ de:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
       reset_seen_user_tips: "Benutzertipps erneut anzeigen"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
-      color_scheme_default_on_all_devices: "Standard-Farbschema auf allen meinen Geräten festlegen"
-      color_scheme: "Farbschema"
+      color_scheme_default_on_all_devices: "Standard-Farbpalette auf allen meinen Geräten festlegen"
+      color_scheme: "Farbpalette"
       color_schemes:
         default_description: "Theme-Standard"
         disable_dark_scheme: "Gleich wie regulär"
-        dark_instructions: "Du kannst das dunkle Farbschema ausprobieren, indem du den dunklen Modus auf deinem Gerät einschaltest."
+        dark_instructions: "Du kannst die dunkle Farbpalette ausprobieren, indem du den dunklen Modus auf deinem Gerät einschaltest."
         undo: "Zurücksetzen"
         regular: "Regulär"
         dark: "Dunkler Modus"
         default_dark_scheme: "(Website-Standard)"
       dark_mode: "Dunkler Modus"
-      dark_mode_enable: "Dunkles Farbschema automatisch aktivieren"
+      dark_mode_enable: "Dunkle Farbpalette automatisch aktivieren"
       text_size_default_on_all_devices: "Mache diese Schriftgröße zum Standard für alle meine Geräte"
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
@@ -2053,9 +2059,6 @@ de:
       optional: optional
       errors_summary_title: "Dieses Formular enthält Fehler:"
       dirty_form: "Du hast deine Änderungen nicht gespeichert! Bist du sicher, dass du die Seite verlassen möchtest?"
-      select:
-        select_placeholder: "Auswählen …"
-        none_placeholder: "Keiner"
       errors:
         required: "Erforderlich"
         invalid_url: "Muss eine gültige URL sein"
@@ -2347,6 +2350,10 @@ de:
       categories_boxes: "Boxen mit Unterkategorien"
       categories_boxes_with_topics: "Spalten mit hervorgehobenen Themen"
       subcategories_with_featured_topics: "Unterkategorien mit hervorgehobenen Themen"
+    full_name_requirement:
+      required_at_signup: "Erforderlich"
+      optional_at_signup: "Optional"
+      hidden_at_signup: "Optional, bei der Anmeldung ausgeblendet"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -2693,8 +2700,8 @@ de:
         quoted: "zitiert"
         edited: "bearbeitet"
         liked: "neue „Gefällt mir“-Angabe"
-        private_message: "neue private Nachricht"
-        invited_to_private_message: "zu einer privaten Nachricht eingeladen"
+        private_message: "neue persönliche Nachricht"
+        invited_to_private_message: "zu einer persönlichen Nachricht eingeladen"
         invitee_accepted: "Einladung angenommen"
         posted: "neuer Beitrag"
         watching_category_or_tag: "neuer Beitrag"
@@ -3048,6 +3055,7 @@ de:
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
       create_disabled_category: "Du darfst keine Themen in dieser Kategorie erstellen"
+      create_disabled_tag: "Du darfst keine Themen mit diesem Schlagwort erstellen"
       create_long: "Ein neues Thema erstellen"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
@@ -3316,7 +3324,7 @@ de:
         help: "Öffne eine druckfreundliche Version dieses Themas"
       flag_topic:
         title: "Melden"
-        help: "Dieses Thema den Moderatoren melden oder eine Nachricht senden."
+        help: "Dieses Thema den Moderatoren melden oder eine persönliche Nachricht senden."
         success_message: "Du hast dieses Thema erfolgreich gemeldet."
       make_public:
         title: "In öffentliches Thema umwandeln"
@@ -3480,6 +3488,9 @@ de:
           one: Du hast <b>%{count}</b> Beitrag ausgewählt.
           other: "Du hast <b>%{count}</b> Beiträge ausgewählt."
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
+    post_list:
+      empty: "Es gibt keine Beiträge"
+      aria_post_number: "%{title} – Beitrag #%{postNumber}"
     post:
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
@@ -3593,7 +3604,7 @@ de:
         edit_action: "Bearbeiten"
         edit_anonymous: "Entschuldige, du musst angemeldet sein, um diesen Beitrag zu bearbeiten."
         flag_action: "Melden"
-        flag: "Diesen Beitrag den Moderatoren melden oder eine Nachricht senden."
+        flag: "Diesen Beitrag den Moderatoren melden oder eine persönliche Nachricht senden."
         delete_action: "Beitrag löschen"
         delete: "diesen Beitrag löschen"
         undelete_action: "Beitrag wiederherstellen"
@@ -4254,7 +4265,7 @@ de:
         print: "%{shortcut} Thema ausdrucken"
         defer: "%{shortcut} Thema als ungelesen markieren"
         topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
-        archive_private_message: "%{shortcut} Archivierung privater Nachricht umschalten"
+        archive_private_message: "%{shortcut} Persönliche Nachricht archivieren/entarchivieren"
       search_menu:
         title: "Suchmenü"
         prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
@@ -4758,7 +4769,7 @@ de:
           save: "Speichern als …"
     powered_by_discourse: "Bereitgestellt von Discourse"
   admin_js:
-    type_to_filter: "zum Filtern hier eingeben …"
+    type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
     admin:
       title: "Discourse-Administrator"
@@ -4774,7 +4785,62 @@ de:
         meta_doc: "Schau dir unsere <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>Dokumentation</a> an, um einen detaillierten Überblick über die Berichte zu erhalten."
         sidebar_title: "Berichte"
         sidebar_link:
-          all: "Gesamt"
+          all: "Alle Berichte"
+      config:
+        developer:
+          title: "Entwickler"
+          header_description: "Entwicklereinstellungen zur Steuerung von Ratenlimits, Multiplikatoren und Berechnungen, dem abgesicherten Modus und anderen erweiterten Funktionen"
+        experimental:
+          title: "Experimentell"
+          header_description: "Schalte experimentelle Funktionen für deine Website ein oder aus, die meisten davon können auf Gruppenbasis gesteuert werden"
+        font_style:
+          title: "Schriftart"
+          header_description: "Passe die von deinen Themes verwendeten Schriftstile an"
+        files:
+          title: "Dateien"
+          header_description: "Einstellungen, die Dateigrößen und -typen, Avatargrößen und -quellen, Dateispeicherung, Bildqualität und -kompression und mehr steuern"
+        legal:
+          title: "Rechtliches"
+          header_description: "Konfiguriere rechtliche Einstellungen, wie z.B. Nutzungsbedingungen, Datenschutzrichtlinien, Kontaktinformationen und EU-spezifische Überlegungen"
+        login_and_authentication:
+          title: "Anmeldung und Authentifizierung"
+          header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
+        logo:
+          title: "Website-Logo"
+          header_description: "Passe die Variationen deines Website-Logos an"
+        navigation:
+          title: "Navigation"
+          header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Admin-Seitenleiste."
+        notifications:
+          title: "Benachrichtigungen"
+          header_description: "Konfiguriere, wie Benachrichtigungen für Nutzer verwaltet und zugestellt werden, einschließlich E-Mail-Einstellungen, Push-Benachrichtigungen, Erwähnungsgrenzen und Benachrichtigungskonsolidierung"
+        onebox:
+          title: "Onebox"
+          header_description: "Konfiguriere, wie Onebox-Vorschauen für deine Website erstellt und angezeigt werden"
+        other:
+          title: "Sonstiges"
+          header_description: "Einstellungen, die in keine andere Kategorie passen"
+        rate_limits:
+          title: "Ratenbegrenzungen"
+          header_description: "Konfiguriere, wie oft Benutzer bestimmte Aktionen ausführen können, wie das Erstellen von Themen, das Senden von Nachrichten und das Posten von Antworten"
+        search:
+          title: "Suche"
+          header_description: "Konfiguriere Sucheinstellungen einschließlich Protokollierung und Tokenisierung für chinesische und japanische Sprachen"
+        security:
+          title: "Sicherheit"
+          header_description: "Konfiguriere die Sicherheitseinstellungen, einschließlich Zwei-Faktor-Authentifizierung, Moderatorenrechte und Sicherheitsrichtlinien für Inhalte"
+        spam:
+          title: "Spam"
+          header_description: "Konfiguriere, wie das System das Registrierungs- und Postingverhalten der Nutzer analysiert, um Spam schnell zu erkennen und zu blockieren"
+        trust_levels:
+          title: "Vertrauensstufen"
+          header_description: "Mit den Einstellungen für die Vertrauensstufe kannst du die Anforderungen und Benachrichtigungen für das Fortschrittssystem deiner Community feinabstimmen, das Benutzern automatisch in höhere Vertrauensstufen befördert, wenn sie beständiges, positives Engagement in deinem Forum zeigen"
+        user_api:
+          title: "Benutzer-API"
+          header_description: "Konfiguriere, welche Benutzergruppen auf die API zugreifen können und welche Bereiche erlaubt sind"
+        group_permissions:
+          title: "Gruppenberechtigungen"
+          header_description: "Hier werden alle gruppenbasierten App-Berechtigungen verwaltet, die den Zugriff auf verschiedene Funktionen innerhalb von Discourse steuern"
       new_features:
         title: "Was ist neu?"
         check_for_updates: "Nach Aktualisierungen suchen"
@@ -4849,6 +4915,17 @@ de:
         custom_date_range: Benutzerdefinierter Datumsbereich
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
+          percent_change_tooltip: "%{percent} ändern."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "War %{count} vor zwei Tagen."
+              other: "War %{count} vor zwei Tagen."
+            two_weeks_ago:
+              one: "War %{count} vor zwei Wochen."
+              other: "War %{count} vor zwei Wochen."
+            thirty_days_ago:
+              one: "War %{count} in den letzten 30 Tagen."
+              other: "War %{count} in den letzten 30 Tagen."
           today: "Heute"
           yesterday: "Gestern"
           last_7_days: "Letzte 7"
@@ -4886,7 +4963,7 @@ de:
             type_of_web_hook_event:
               label: "Art des Ereignisses"
       flags:
-        title: "Moderationsmeldungen"
+        title: "Moderation"
         description: "Beschreibung"
         enabled: "Aktiviert?"
         more_options:
@@ -5235,17 +5312,21 @@ de:
           notifications: "Benachrichtigungen"
           permalinks: "Permalinks"
           trust_levels: "Vertrauensstufen"
+          group_permissions: "Gruppenberechtigungen"
           users: "Benutzer"
+          groups: "Gruppen"
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
-          moderation_flags: "Moderationsmeldungen"
+          moderation_flags:
+            title: "Moderation"
+            keywords: "Meldungen|Überprüfung"
       appearance:
         title: "Erscheinungsbild"
         sidebar_link:
           font_style: "Schriftart"
           site_logo: "Website-Logo"
-          color_schemes: "Farbschemas"
+          color_schemes: "Farbpaletten"
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
@@ -5257,27 +5338,17 @@ de:
         title: "E-Mail-Einstellungen"
         sidebar_link:
           appearance: "Erscheinungsbild"
-          preview_summary: "Vorschau der Zusammenfassung"
-          server_setup: "Server-Einrichtung"
-      email_logs:
-        title: "E-Mail-Protokolle"
-        sidebar_link:
-          sent: "Gesendet"
-          skipped: "Übersprungen"
-          bounced: "Unzustellbar"
-          received: "Empfangen"
-          rejected: "Abgelehnt"
+          server_setup:
+            title: "Server Einrichtung & Protokolle"
+            keywords: "E-Mail|SMTP|Mailgun|Sendgrid|Gesendet|Übersprungen|Zurückgewiesen|Empfangen|Abgelehnt|E-Mail-Protokolle|Vorschau-Zusammenfassung"
       security:
         title: "Sicherheit"
         sidebar_link:
-          error_logs: "Fehlerprotokolle"
-          screened_emails: "Gefilterte E-Mails"
-          screened_ips: "Gefilterte IPs"
-          screened_urls: "Gefilterte URLs"
-          search_logs: "Suchprotokolle"
           security: "Sicherheitseinstellungen"
           spam: "Spam-Einstellungen"
-          staff_action_logs: "Team-Aktionen-Protokolle"
+          staff_action_logs:
+            title: "Protokolle und Screening"
+            keywords: "Fehlerprotokolle|Mitarbeiteraktionen|Geprüfte E-Mails|Geprüfte URLs|Suchprotokolle"
       section_landing_pages:
         account:
           title: "Konto"
@@ -5319,7 +5390,7 @@ de:
             Ein Benutzername eines Team-Mitglieds, von dem alle automatisierten Nachrichten gesendet werden. Wenn dieses Feld leer gelassen wird, wird das Standardsystemkonto verwendet.
           site_contact_group: "Website-Ansprechpartner-Gruppe"
           site_contact_group_help: |
-            Die Gruppe, die zu allen automatisch versendeten privaten Nachrichten eingeladen wird.
+            Die Gruppe, die zu allen automatisch versendeten, persönlichen Nachrichten eingeladen wird.
           your_organization: "Deine Organisation"
           your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Website betreibt und unter welcher Gerichtsbarkeit."
           company_name: "Name"
@@ -5342,7 +5413,7 @@ de:
             your_organization_saved: "Deine Organisation wurde gespeichert"
           saved: "gespeichert!"
         flags:
-          header: "Moderationsmeldungen"
+          header: "Moderation"
           edit_header: "Meldungsgrund bearbeiten"
           subheader: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Website jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
           description: "Beschreibung"
@@ -5378,6 +5449,14 @@ de:
             title: "Mehr Optionen"
             move_up: "Nach oben"
             move_down: "Nach unten"
+        permalinks:
+          edit: "Bearbeiten"
+          delete: "Löschen"
+        embeddable_host:
+          edit: "Bearbeiten"
+          delete: "Löschen"
+          more_options:
+            title: "Mehr Optionen"
         look_and_feel:
           title: "Look and Feel"
           description: "Passe deine Discourse-Website an und verleihe ihr einen unverwechselbaren Stil."
@@ -5423,12 +5502,13 @@ de:
       advanced:
         title: "Erweitert "
         sidebar_link:
-          api_keys: "API-Schlüssel"
+          api_keys:
+            title: "API-Schlüssel"
+            keywords: "Token|Webhook"
           developer: "Entwickler"
           embedding: "Einbettung"
           rate_limits: "Ratenbegrenzungen"
           user_api: "Benutzer-API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Dateien"
           other_options: "Sonstiges"
@@ -5487,7 +5567,7 @@ de:
             title: "Sende E-Mail mit Download-Link"
             alert: "Ein Link zum Download dieses Backups wurde dir per E-Mail geschickt"
           destroy:
-            title: "Das Backup löschen"
+            title: "Löschen"
             confirm: "Möchtest du wirklich das Backup löschen?"
           restore:
             is_disabled: "Die Wiederherstellung ist derzeit deaktiviert. Um sie zu aktivieren, besuche die <a href='%{url}'>Website-Einstellungen</a>."
@@ -5597,7 +5677,7 @@ de:
           hide_unused_fields: "Unbenutzte Felder verbergen"
           is_default: "Theme ist standardmäßig aktiviert"
           user_selectable: "Theme kann von Benutzern ausgewählt werden"
-          color_scheme_user_selectable: "Farbschema kann von Benutzern ausgewählt werden"
+          color_scheme_user_selectable: "Farbpalette kann von Benutzern ausgewählt werden"
           auto_update: "Automatisch aktualisieren, wenn Discourse aktualisiert wird"
           color_scheme: "Farbpalette"
           edit_color_scheme: "Farbpalette bearbeiten"
@@ -6673,6 +6753,7 @@ de:
         save: "speichern"
         cancel: "abbrechen"
         unmask: "Eingabe demaskieren"
+        not_found: "Einstellungen konnten nicht gefunden werden"
       site_settings:
         emoji_list:
           invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
@@ -6882,6 +6963,7 @@ de:
         settings: "Einstellungen"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
+        delete: "Löschen"
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
         sample: |
           <p>Füge den folgenden HTML-Code in deiner Website ein, um Themen in Discourse zu erstellen und diese daraus einzubetten. Ersetze <b>EMBED_URL</b> durch die kanonische URL der Seite, auf der du sie einbettest.</p>
@@ -6890,16 +6972,18 @@ de:
 
           <p>Ersetze <b>DISCOURSE_USERNAME</b> durch den Discourse-Benutzernamen des Autors, der das Thema erstellen soll. Discourse sucht den Benutzer automatisch anhand des <code>content</code>-Attributes in den <code>&lt;meta&gt;</code>-Schlagwörtern, wenn das Attribut <code>name</code> den Wert <code>discourse-username</code> oder <code>author</code> hat. Der Parameter <code>discourseUserName</code> ist veraltet und wird in Discourse 3.2 entfernt.</p>
         title: "Einbettung"
+        description: "Discourse bietet die Möglichkeit, die Kommentare eines Themas auf einer entfernten Website einzubetten. Dazu wird eine Javascript-API verwendet, die einen IFRAME erstellt"
         host: "Erlaubte Hosts"
         allowed_paths: "Pfad-Positivliste"
-        edit: "bearbeiten"
+        edit: "Bearbeiten"
         category: "In Kategorie posten"
         tags: "Schlagwörter des Themas"
-        post_author: "Verfasser des Beitrags – standardmäßig %{author}"
+        post_author: "Autor des Beitrags"
+        post_author_with_default: "Autor des Beitrags (standardmäßig %{author})"
         add_host: "Host hinzufügen"
-        settings: "Einbettungseinstellungen"
-        crawling_settings: "Crawler-Einstellungen"
-        crawling_description: "Wenn Discourse Themen für deine Beiträge erstellt, wird es – falls kein RSS-/ATOM-Feed verfügbar ist – versuchen, den Inhalt aus dem HTML-Code zu extrahieren. Dies ist teilweise schwierig, weshalb hier CSS-Regeln angegeben werden können, die die Extraktion erleichtern."
+        posts_and_topics: "Konfiguration der Beiträge und Themen"
+        crawlers: "Konfiguration der Crawler"
+        crawlers_description: "Wenn Discourse Themen für deine Beiträge erstellt, wird es – falls kein RSS-/ATOM-Feed verfügbar ist – versuchen, den Inhalt aus dem HTML-Code zu extrahieren. Dies ist teilweise schwierig, weshalb hier CSS-Regeln angegeben werden können, die die Extraktion erleichtern."
         embed_by_username: "Benutzername für Themenerstellung"
         embed_post_limit: "Maximale Anzahl der Beiträge, welche eingebettet werden"
         embed_title_scrubber: "Regulärer Ausdruck (Regex), um den Titel eines Beitrags zu bereinigen"
@@ -6908,7 +6992,20 @@ de:
         allowed_embed_selectors: "CSS-Selektor für Elemente, die in Einbettungen erlaubt sind."
         blocked_embed_selectors: "CSS-Selektor für Elemente, die in Einbettungen entfernt werden."
         allowed_embed_classnames: "Erlaubte CSS-Klassennamen"
-        save: "Einbettungseinstellungen speichern"
+        save: "Speichern"
+        posts_and_topics_settings_saved: "Einstellungen für Beiträge und Themen gespeichert"
+        crawler_settings_saved: "Crawler-Einstellungen gespeichert"
+        back: "Zurück zu Einbetten"
+        configuration_snippet: "Konfigurationsausschnitt"
+        host_form:
+          add_header: "Host hinzufügen"
+          edit_header: "Host bearbeiten"
+          save: "Speichern"
+        nav:
+          hosts: "Hosts"
+          settings: "Einstellungen"
+          posts_and_topics: "Beiträge und Themen"
+          crawlers: "Crawler"
       permalink:
         title: "Permalinks"
         description: "Weiterleitungen für URLs, die dem Forum nicht bekannt sind."
@@ -6933,6 +7030,9 @@ de:
         back: "Zurück zu Permalinks"
         more_options: "Mehr Optionen"
         copy_success: "Permalink in die Zwischenablage kopiert"
+        nav:
+          settings: "Einstellungen"
+          permalinks: "Permalinks"
         form:
           label: "Neu:"
           add_header: "Permalink hinzufügen"
@@ -6974,8 +7074,45 @@ de:
           moderator: "Moderator"
           regular: "Normaler Benutzer"
       previews:
-        topic_title: "Überschrift eines Diskussionsthemas"
+        topic_title: "Welche Bücher liest du gerade?"
         share_button: "Teilen"
         reply_button: "Antworten"
         topic_preview: "Themenvorschau"
         homepage_preview: "Vorschau der Homepage"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alle Kategorien"
+          new: "Neu"
+          unread: "Ungelesen"
+          top: "Angesagt"
+          latest: "Aktuelle"
+          hot: "Heiß"
+          categories: "Kategorien"
+        topic_titles:
+          what_books: "Welche Bücher liest du gerade?"
+          what_movies: "Welche Filme hast du in letzter Zeit gesehen?"
+          random_fact: "Zufällige Tatsache des Tages"
+          tv_show: "Eine Fernsehsendung empfehlen"
+          what_hobbies: "Was sind deine Hobbys?"
+          what_music: "Was hörst du gerade?"
+          funniest_thing: "Das Lustigste, was du heute gesehen hast"
+          share_art: "Teile deine Kunst!"
+        topic_ops:
+          what_books: |
+            Wir alle lieben es zu lesen, also lasst uns dieses Thema nutzen, um unsere
+            aktuellen oder kürzlich gelesenen Bücher zu teilen. Ich bin ein Fantasy-Fan und habe
+            zum 100. Mal "Der Herr der Ringe" neu gelesen.
+            Was ist mit dir?
+        category_descriptions:
+          icebreakers: "Lerne deine Community-Mitglieder mit lustigen Fragen kennen."
+          news: "Diskutiere die neuesten Nachrichten und Ereignisse."
+          site_feedback: "Teile deine Meinung über die Community mit und schlage Verbesserungen vor."
+        category_names:
+          icebreakers: "Eisbrecher"
+          news: "Nachrichten"
+          site_feedback: "Feedback"
+        table_headers:
+          topic: "Thema"
+          replies: "Antworten"
+          views: "Aufrufe"
+          activity: "Aktivität"

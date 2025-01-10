@@ -607,6 +607,8 @@ sk:
     continue: "Pokračovať"
     switch_to_anon: "Vstúpiť do anonymného režimu"
     switch_from_anon: "Opustiť anonymný režim"
+    select_placeholder: "Vyberte…"
+    none_placeholder: "Žiadny"
     banner:
       close: "Zamietnuť tento banner"
       edit: "Upraviť"
@@ -628,6 +630,7 @@ sk:
       order_by: "Zoradiť podľa"
       date_filter: "Uverejnené medzi"
       in_reply_to: "v odpovedi na"
+      filtered_flagged_by: "Označené používateľom"
       explain:
         why: "vysvetlite, prečo sa táto položka skončila vo fronte"
         title: "Kontrolovateľné bodovanie"
@@ -751,6 +754,9 @@ sk:
         refresh: "Obnoviť"
         status: "Stav"
         category: "Kategória"
+        score_type:
+          title: "Dôvod"
+          all: "(všetky dôvody)"
         orders:
           score: "Skóre"
           score_asc: "Skóre (opačne)"
@@ -1068,13 +1074,13 @@ sk:
       public_admission: "Povoliť používateľom slobodne sa stať člen skupiny (kupina musí byť verejne viditeľná)"
       public_exit: "Povoliť používateľom slobodne opustiť skupinu."
       empty:
-        posts: "Nie sú tu žiadne príspevky od členov tejto skupiny"
-        members: "V tejto skupine niesú žiadny členovia"
-        requests: "V tejto skupine nie sú žiadne žiadosti o členstvo."
-        mentions: "O tejto skupine nie sp žiadne zmienky."
-        messages: "Pre túto skupinu niesú žiadne správy"
-        topics: "Členovia tejto skupiny nezaložili žiadne témy."
-        logs: "Pre túto skupinu neexistujú žiadne logy."
+        posts: "Žiadne príspevky od členov tejto skupiny"
+        members: "V tejto skupine nie sú žiadni členovia"
+        requests: "V tejto skupine nie sú žiadne žiadosti o členstvo"
+        mentions: "O tejto skupine nie sp žiadne zmienky"
+        messages: "Pre túto skupinu nie sú žiadne správy"
+        topics: "Členovia tejto skupiny nezaložili žiadne témy"
+        logs: "Pre túto skupinu neexistujú žiadne logy"
       add: "Pridať"
       join: "Pridať sa"
       leave: "Opustiť"
@@ -1284,17 +1290,18 @@ sk:
         many: "Zmazaných %{count}"
         other: "Zmazaných %{count}"
       username: "používateľské meno"
-      trust_level: "Dôvera"
+      trust_level: "stupne dôvery"
       read_time: "čas strávený čítaním"
       topics_entered: "založených tém"
-      post_count: "# príspevkov"
+      post_count: "príspevky"
       confirm_delete_other_accounts: "Ste si istý že chcete zmazať tieto účty?"
       powered_by: "používa<a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "skopírované"
     user_fields:
       none: "(vyberte možnosť)"
       required: 'Zadajte hodnotu pre „%{name}“'
-      same_as_password: "Vaše heslo by sa nemalo opakovať v iných poliach."
+      required_checkbox: 'Pole "%{name}" je povinné'
+      same_as_password: "Vaše heslo by sa nemalo opakovať v iných poliach"
       optional: (nepovinné)
     user:
       said: "%{username}:"
@@ -1417,18 +1424,18 @@ sk:
         description: "Preskočiť tipy a odznaky na registráciu nového používateľa"
       reset_seen_user_tips: "Znova zobraziť tipy používateľov"
       theme_default_on_all_devices: "Nastaviť túto tému ako predvolenú na všetkých mojich zariadeniach"
-      color_scheme_default_on_all_devices: "Nastaviť predvolenú farebnú schému na všetkých mojich zariadeniach"
-      color_scheme: "Farebná schéma"
+      color_scheme_default_on_all_devices: "Nastavenie predvolenej palety farieb na všetkých mojich zariadeniach"
+      color_scheme: "Paleta farieb"
       color_schemes:
         default_description: "Predvolená téma"
         disable_dark_scheme: "Rovnaké ako bežné"
-        dark_instructions: "Farebnú schému tmavého režimu si môžete zobraziť prepnutím tmavého režimu zariadenia."
+        dark_instructions: "Môžete si prezrieť paletu farieb tmavého režimu prepnutím tmavého režimu zariadenia."
         undo: "Resetovať"
         regular: "Bežné"
         dark: "Tmavý režim"
         default_dark_scheme: "(predvolené nastavenie stránky)"
       dark_mode: "Tmavý režim"
-      dark_mode_enable: "Povoliť automatickú farebnú schému tmavého režimu"
+      dark_mode_enable: "Povoliť automatickú farebnú paletu tmavého režimu"
       text_size_default_on_all_devices: "Nastaviť ako predvolenú veľkosť textu na všetkých mojich zariadeniach"
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
@@ -2112,6 +2119,7 @@ sk:
           other: "Vaše heslo je príliš krátke (minimum sú %{count} znaky)."
         common: "Toto heslo je príliš časté."
         same_as_username: "Vaše heslo je rovnaké ako používateľské meno."
+        same_as_name: "Vaše heslo je rovnaké ako vaše meno."
         same_as_email: "Vaše heslo je rovnaké ako e-mail."
         ok: "Vaše heslo je v poriadku."
         instructions:
@@ -2275,9 +2283,6 @@ sk:
       optional: nepovinné
       errors_summary_title: "Tento formulár obsahuje chyby:"
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
-      select:
-        select_placeholder: "Vyberte…"
-        none_placeholder: "Žiadny"
       errors:
         required: "Povinné"
         invalid_url: "Musí byť platná adresa URL"
@@ -2601,6 +2606,9 @@ sk:
       categories_boxes: "Boxy s podkategóriami"
       categories_boxes_with_topics: "Boxy s vybranými témami"
       subcategories_with_featured_topics: "Podkategórie s vybranými témami"
+    full_name_requirement:
+      required_at_signup: "Povinné"
+      optional_at_signup: "Nepovinné"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3003,8 +3011,8 @@ sk:
         quoted: "citované"
         edited: "upravené"
         liked: "nové ako"
-        private_message: "nová súkromná správa"
-        invited_to_private_message: "pozvaný do súkromnej správy"
+        private_message: "nová osobná správa"
+        invited_to_private_message: "pozvaný do osobnej správy"
         invitee_accepted: "pozvánka prijatá"
         posted: "nový príspevok"
         watching_category_or_tag: "nový príspevok"
@@ -3398,6 +3406,7 @@ sk:
         other: "%{count} príspevkov k téme"
       create: "Nová téma"
       create_disabled_category: "V tejto kategórii nemáte povolené vytvárať témy"
+      create_disabled_tag: "Nemáte povolené vytvárať témy s touto značkou"
       create_long: "Vytvoriť novú tému"
       open_draft: "Otvoriť koncept"
       private_message: "Vytvoríť správu"
@@ -3682,7 +3691,7 @@ sk:
         help: "Otvoriť tlačiteľnú verziu tohto témy."
       flag_topic:
         title: "Označ"
-        help: "súkromne označiť túto tému do pozornosti, alebo na ňu poslať súkromne upozornenie"
+        help: "súkromne označte túto tému alebo o nej pošlite osobnú správu"
         success_message: "Úspešne ste označili tému."
       make_public:
         title: "Previesť na verejnú tému"
@@ -3868,6 +3877,9 @@ sk:
           many: "Označili ste <b>%{count}</b> príspevkov"
           other: "Označili ste <b>%{count}</b> príspevkov"
       deleted_by_author_simple: "(téma bola zmazaná autorom)"
+    post_list:
+      empty: "Neexistujú žiadne príspevky"
+      aria_post_number: "%{title} – príspevok č.%{postNumber}"
     post:
       confirm_delete: "Naozaj chcete odstrániť tento príspevok?"
       quote_reply: "Citácia"
@@ -4003,7 +4015,7 @@ sk:
         edit_action: "Upraviť"
         edit_anonymous: "Ľutujeme, ale pre úpravu príspevku je potrebné sa prihlásiť."
         flag_action: "Označenie"
-        flag: "súkromne označiť tento príspevok do pozornosti, alebo naň poslať súkromne upozornenie"
+        flag: "súkromne označte tento príspevok alebo o ňom pošlite osobnú správu"
         delete_action: "Odstrániť príspevok"
         delete: "odstrániť tento príspevok"
         undelete_action: "Obnoviť odstránený príspevok"
@@ -4720,7 +4732,7 @@ sk:
         print: "%{shortcut} Vytlačiť tému"
         defer: "%{shortcut} Označiť tému ako neprečítanú"
         topic_admin_actions: "%{shortcut} Akcie správcu otvorenej témy"
-        archive_private_message: "%{shortcut} Prepnúť archiváciu súkromnej správy"
+        archive_private_message: "%{shortcut} Prepnúť archiváciu osobnej správy"
       search_menu:
         title: "Ponuka vyhľadávania"
         prev_next: "%{shortcut} Presun výberu nahor a nadol"
@@ -5276,7 +5288,7 @@ sk:
           save: "Uložiť ako..."
     powered_by_discourse: "Powered by Discourse"
   admin_js:
-    type_to_filter: "filtrovať..."
+    type_to_filter: "Filtrovať..."
     settings: "Nastavenia"
     admin:
       title: "Administrátor Discourse"
@@ -5292,9 +5304,46 @@ sk:
         meta_doc: "Podrobný prehľad správ nájdete v našej dokumentácii <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> ."
         sidebar_title: "Hlásenia"
         sidebar_link:
-          all: "Všetky"
+          all: "Všetky hlásenia"
+      config:
+        developer:
+          title: "Vývojár"
+        experimental:
+          title: "Experimentálne"
+        font_style:
+          title: "Štýl písma"
+        files:
+          title: "Súbory"
+        legal:
+          title: "Právne záležitosti"
+        login_and_authentication:
+          title: "Prihlásenie a overenie"
+          header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
+        logo:
+          title: "Logo stránky"
+        navigation:
+          title: "Navigácia"
+        notifications:
+          title: "Upozornenia"
+          header_description: "Nakonfigurujte spôsob spravovania a doručovania upozornení pre používateľov vrátane e-mailových preferencií, upozornení push, limitov zmienok a konsolidácie upozornení"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Ostatné"
+        rate_limits:
+          title: "Limity sadzieb"
+        search:
+          title: "Hľadať"
+        security:
+          title: "Bezpečnosť"
+        spam:
+          title: "Spam"
+        trust_levels:
+          title: "Úrovne dôvery"
+        user_api:
+          title: "Používateľské rozhranie API"
       new_features:
-        title: "Čo je nové"
+        title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
       dashboard:
         title: "Ovládací panel"
@@ -5313,7 +5362,7 @@ sk:
         problems_found: "Niekoľko rád na základe aktuálnych nastavení vášho webu"
         dismiss_notice: "Zahodiť"
         new_features:
-          title: "Čo je nové"
+          title: "Čo je nové?"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
           previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
@@ -5323,6 +5372,9 @@ sk:
           experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
           experiment_tooltip:
             title_disabled: "Vyskúšajte našu experimentálnu funkciu"
+            title_enabled: "Vypnutie experimentálnej funkcie"
+            content_disabled: "Vyskúšajte našu najnovšiu funkciu vo vývoji! Je stále v experimentálnom štádiu, takže ho môžeme kedykoľvek odstrániť. Odhlásiť sa môžete kedykoľvek budete chcieť.<br/><br/>Zmenou tohto povolíte túto funkciu pre všetkých používateľov."
+            content_enabled: "Zmenou tejto funkcie zakážete túto funkciu pre všetkých používateľov."
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -5366,6 +5418,7 @@ sk:
         custom_date_range: Vlastný rozsah dátumov
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
+          percent_change_tooltip: "%{percent} zmena."
           today: "Dnes"
           yesterday: "Včera"
           last_7_days: "Posledných 7"
@@ -5403,7 +5456,7 @@ sk:
             type_of_web_hook_event:
               label: "Typ podujatia"
       flags:
-        title: "Príznaky moderovania"
+        title: "Moderovanie"
         description: "Popis"
         enabled: "Povolené?"
         more_options:
@@ -5753,28 +5806,31 @@ sk:
         sidebar_link:
           backups: "Zálohy"
           whats_new:
-            title: "Čo je nové"
+            title: "Čo je nové?"
             keywords: "changelog|feature|release"
       community:
         title: "Komunita"
         sidebar_link:
           about_your_site: "O vašej stránke"
           badges: "Odznaky"
-          login_and_authentication: "Prihlásenie a overenie"
+          login_and_authentication: "Prihlásenie a overovanie"
           notifications: "Upozornenia"
           permalinks: "Trvalé odkazy"
-          trust_levels: "Stupne dôvery"
+          trust_levels: "Úrovne dôvery"
           users: "Používatelia"
+          groups: "Skupiny"
           user_fields: "Používateľské polia"
           watched_words: "Sledované slová"
           legal: "Právne záležitosti"
-          moderation_flags: "Príznaky moderovania"
+          moderation_flags:
+            title: "Moderovanie"
+            keywords: "vlajka|recenzia"
       appearance:
         title: "Vzhľad"
         sidebar_link:
           font_style: "Štýl písma"
           site_logo: "Logo stránky"
-          color_schemes: "Farebné schémy"
+          color_schemes: "Palety farieb"
           emoji: "Emoji"
           navigation: "Navigácia"
           themes: "Témy"
@@ -5786,27 +5842,13 @@ sk:
         title: "Nastavenia e-mailu"
         sidebar_link:
           appearance: "Vzhľad"
-          preview_summary: "Súhrn"
-          server_setup: "Nastavenie servera"
-      email_logs:
-        title: "E-mailové protokoly"
-        sidebar_link:
-          sent: "Odoslané"
-          skipped: "Preskočené"
-          bounced: "Odskočené"
-          received: "Obdržané"
-          rejected: "Zamietnuté"
+          server_setup:
+            keywords: "email|smtp|mailgun|sendgrid|poslané|preskočený|odmeňované|prijaté|odmietnutý|e-mailové denníky|náhľad zhrnutia"
       security:
         title: "Bezpečnosť"
         sidebar_link:
-          error_logs: "Chybové Logy"
-          screened_emails: "Kontrolované emaily"
-          screened_ips: "Kontrolované IP adresy"
-          screened_urls: "Kontrolované URL adresy"
-          search_logs: "Vyhľadávacie protokoly"
           security: "Nastavenia zabezpečenia"
           spam: "Nastavenia spamu"
-          staff_action_logs: "Záznamy o akciách personálu"
       section_landing_pages:
         account:
           title: "Účet"
@@ -5814,7 +5856,7 @@ sk:
             title: "Zálohy"
             description: "Urobte si zálohu údajov svojej stránky"
           whats_new:
-            title: "Čo je nové"
+            title: "Čo je nové?"
             description: "Objavte nové verzie a vylepšenia Discourse"
       config_areas:
         about:
@@ -5848,7 +5890,7 @@ sk:
             Používateľské meno člena personálu, z ktorého sa budú odosielať všetky automatické správy. Ak zostane prázdne, použije sa predvolené systémové konto.
           site_contact_group: "Kontaktná skupina stránky"
           site_contact_group_help: |
-            Skupina, ktorá dostane pozvánku do všetkých automaticky odoslaných súkromných správ.
+            Skupina, ktorá dostane pozvánku na všetky automaticky odoslané osobné správy.
           your_organization: "Vaša organizácia"
           your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
@@ -5871,7 +5913,7 @@ sk:
             your_organization_saved: "Vaša organizácia uložená"
           saved: "uložené!"
         flags:
-          header: "Príznaky moderovania"
+          header: "Moderovanie"
           edit_header: "Upraviť príznak"
           subheader: "Systém označovania v službe Discourse pomáha vám a vášmu moderátorskému tímu spravovať obsah a správanie používateľov, aby vaša komunita bola rešpektovaná a zdravá. Predvolené nastavenia sú vhodné pre väčšinu komunít a nemusíte ich meniť. Ak má však vaša stránka špecifické požiadavky, môžete vypnúť príznaky, ktoré nepotrebujete, a pridať vlastné príznaky."
           description: "Popis"
@@ -5907,6 +5949,14 @@ sk:
             title: "Ďalšie možnosti"
             move_up: "Posunúť sa nahor"
             move_down: "Posunúť sa nadol"
+        permalinks:
+          edit: "Upraviť"
+          delete: "Odstrániť"
+        embeddable_host:
+          edit: "Upraviť"
+          delete: "Odstrániť"
+          more_options:
+            title: "Ďalšie možnosti"
         look_and_feel:
           title: "Pozri a cíť"
           description: "Prispôsobte a označte svoju lokalitu Discourse a dodajte jej osobitý štýl."
@@ -5952,12 +6002,13 @@ sk:
       advanced:
         title: "Pokročilé"
         sidebar_link:
-          api_keys: "Kľúče API"
+          api_keys:
+            title: "Kľúče API"
+            keywords: "token|webhook"
           developer: "Vývojár"
           embedding: "Vkladám"
-          rate_limits: "Limity a obmedzenia"
+          rate_limits: "Limity sadzieb"
           user_api: "Používateľské rozhranie API"
-          web_hooks: "Webhooky"
           onebox: "Onebox"
           files: "Súbory"
           other_options: "Ostatné"
@@ -6016,7 +6067,7 @@ sk:
             title: "Odoslať e-mail s odkazom na stiahnutie"
             alert: "Odkaz na stiahnutie tejto zálohy vám bol zaslaný e-mailom"
           destroy:
-            title: "Odstrániť zálohu"
+            title: "Odstrániť"
             confirm: "Ste si istý, že chcete odstrániť túto zálohu?"
           restore:
             is_disabled: "Obnovenie je v súčasnosti vypnuté. Ak ju chcete povoliť, navštívte <a href='%{url}'>nastavenia stránky</a>."
@@ -6126,7 +6177,7 @@ sk:
           hide_unused_fields: "Skryť nepoužívané polia"
           is_default: "Téma je predvolene povolená"
           user_selectable: "Tému si môžu vybrať používatelia"
-          color_scheme_user_selectable: "Farebnú schému si môžu vybrať používatelia"
+          color_scheme_user_selectable: "Farebná paleta môže byť vybraná používateľmi"
           auto_update: "Automatická aktualizácia pri aktualizácii Discourse"
           color_scheme: "Paleta farieb"
           edit_color_scheme: "Úprava palety farieb"
@@ -7242,6 +7293,7 @@ sk:
         save: "uložiť"
         cancel: "zrušiť"
         unmask: "odmaskovať vstup"
+        not_found: "Nastavenia sa nepodarilo nájsť"
       site_settings:
         emoji_list:
           invalid_input: "Zoznam emodži by mal obsahovať len platné názvy emodži, napr.: objatie"
@@ -7461,6 +7513,7 @@ sk:
         settings: "Nastavenia"
       embedding:
         get_started: "Pokiaľ chcete vložiť Discourse na inú stránku, začnite pridaním jej hostiteľa."
+        delete: "Odstrániť"
         confirm_delete: "Ste si istý, že chcete zmazať tohoto hostiteľa?"
         sample: |
           <p>Vložte nasledujúci HTML kód na svoju stránku na vytvorenie a vloženie tém Discourse. Nahraďte <b>EMBED_URL</b> kanonickou URL adresou stránky, na ktorú to vkladáte.</p>
@@ -7469,16 +7522,9 @@ sk:
 
           <p>Nahraďte <b>DISCOURSE_USERNAME</b> používateľským menom Discourse autora, ktorý by mal tému vytvoriť. Discourse automaticky vyhľadá používateľa podľa atribútu <code>content</code> v značkách <code>&lt;meta&gt;</code> s atribútom <code>name</code> nastaveným na <code>discourse-username</code> alebo <code>author</code>. Parameter <code>discourseUserName</code> bol zastaraný a bude odstránený v Discourse 3.2.</p>
         title: "Vkladám"
-        host: "Povolení hostitelia"
-        allowed_paths: "Zoznam povolených ciest"
-        edit: "uprav"
-        category: "Prispievať do kategórií"
+        edit: "Upraviť"
         tags: "Značky tém"
-        post_author: "Autor príspevku - Predvolené nastavenie je %{author}"
-        add_host: "Pridať hostiteľa"
-        settings: "Nastavenia vkladania"
-        crawling_settings: "Nastavenia vyhľadávača"
-        crawling_description: "Ak Discourse vytvorí tému pre Váš príspevok a neexistuje žiadny RSS/ATOM kanál tak sa pokúsime získať Váš obsah z HTML. Získanie obsahu môže byt niekedy výzva a preto poskytujeme možnosť špecifikovať CSS pravidlá na uľahčenie získania obsahu."
+        crawlers_description: "Ak Discourse vytvorí tému pre Váš príspevok a neexistuje žiadny RSS/ATOM kanál tak sa pokúsime získať Váš obsah z HTML. Získanie obsahu môže byt niekedy výzva a preto poskytujeme možnosť špecifikovať CSS pravidlá na uľahčenie získania obsahu."
         embed_by_username: "Používateľské meno pre vytváranie tém"
         embed_post_limit: "Maximálny počet vložených príspevkov"
         embed_title_scrubber: "Regulárny výraz používaný na čistenie názvu príspevkov"
@@ -7487,7 +7533,12 @@ sk:
         allowed_embed_selectors: "CSS selector pre elementy ktoré je možné vkladať"
         blocked_embed_selectors: "CSS selector pre elementy ktoré nie je možné vkladať"
         allowed_embed_classnames: "Dovolené názvy CSS tried"
-        save: "Uložiť Nastavenia vkladania"
+        save: "Uložiť"
+        host_form:
+          save: "Uložiť"
+        nav:
+          settings: "Nastavenia"
+          crawlers: "Crawlery"
       permalink:
         title: "Trvalé odkazy"
         description: "Presmerovanie na adresy URL, ktoré fórum nepozná."
@@ -7512,6 +7563,9 @@ sk:
         back: "Späť na Trvalé odkazy"
         more_options: "Ďalšie možnosti"
         copy_success: "Permalink skopírovaný do schránky"
+        nav:
+          settings: "Nastavenia"
+          permalinks: "Trvalé odkazy"
         form:
           label: "Nový:"
           add_header: "Pridať permalink"
@@ -7555,8 +7609,41 @@ sk:
           moderator: "Moderátor"
           regular: "Bežný používateľ"
       previews:
-        topic_title: "Nadpis témy na diskusiu"
+        topic_title: "Aké knihy čítate?"
         share_button: "Zdieľať"
         reply_button: "Odpoveď"
         topic_preview: "Náhľad témy"
         homepage_preview: "Náhľad na domovskú stránku"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "všetky kategórie"
+          new: "Nový"
+          unread: "Neprečítané"
+          top: "Najlepšie"
+          latest: "Najnovšie"
+          hot: "Horúce"
+          categories: "Kategórie"
+        topic_titles:
+          what_books: "Aké knihy čítate?"
+          what_movies: "Aké filmy ste v poslednej dobe videli?"
+          random_fact: "Náhodný fakt dňa"
+          tv_show: "Odporučiť televízny program"
+        topic_ops:
+          what_books: |
+            Všetci radi čítame, využime túto tému a podeľme sa o svoje
+            aktuálne alebo nedávne čítanie. Som fanúšik fantasy a na
+            som si po stýkrát prečítala Pána prsteňov.
+            A čo vy?
+        category_descriptions:
+          icebreakers: "Zoznámte sa s ostatnými členmi komunity pomocou zábavných otázok."
+          news: "Diskutujte o najnovších správach a udalostiach."
+          site_feedback: "Podeľte sa o svoje názory na komunitu a navrhnite vylepšenia."
+        category_names:
+          icebreakers: "Nadviazanie rozhovoru"
+          news: "Novinky"
+          site_feedback: "Podnety pre tvorcov stránky"
+        table_headers:
+          topic: "Témy"
+          replies: "Odpovede"
+          views: "Zobrazenia"
+          activity: "Aktivity"

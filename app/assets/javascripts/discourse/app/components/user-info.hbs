@@ -13,7 +13,11 @@
 <div class="user-detail">
   <div class="name-line">
     {{#if this.includeLink}}
-      <a href={{this.userPath}} data-user-card={{@user.username}}>
+      <a
+        href={{this.userPath}}
+        data-user-card={{@user.username}}
+        role="heading"
+      >
         <span class={{if this.nameFirst "name" "username"}}>
           {{if this.nameFirst @user.name (format-username @user.username)}}
         </span>

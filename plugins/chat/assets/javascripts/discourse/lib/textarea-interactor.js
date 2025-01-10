@@ -4,6 +4,7 @@ import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
+import { bind } from "discourse-common/utils/decorators";
 
 // This class sole purpose is to provide a way to interact with the textarea
 // using the existing TextareaTextManipulation mixin without using it directly
@@ -45,6 +46,7 @@ export default class TextareaInteractor extends EmberObject {
     this.textarea.dispatchEvent(event);
   }
 
+  @bind
   blur() {
     next(() => {
       schedule("afterRender", () => {
@@ -53,6 +55,7 @@ export default class TextareaInteractor extends EmberObject {
     });
   }
 
+  @bind
   focus(opts = { ensureAtEnd: false, refreshHeight: true, addText: null }) {
     next(() => {
       schedule("afterRender", () => {
@@ -80,6 +83,7 @@ export default class TextareaInteractor extends EmberObject {
     });
   }
 
+  @bind
   ensureCaretAtEnd() {
     schedule("afterRender", () => {
       this.textarea.setSelectionRange(
@@ -89,6 +93,7 @@ export default class TextareaInteractor extends EmberObject {
     });
   }
 
+  @bind
   refreshHeight() {
     schedule("afterRender", () => {
       // this is a quirk which forces us to `auto` first or textarea
@@ -101,19 +106,27 @@ export default class TextareaInteractor extends EmberObject {
     });
   }
 
+  @bind
   getSelected() {
     return this.textManipulation.getSelected(...arguments);
   }
 
+  @bind
   applySurround() {
     return this.textManipulation.applySurround(...arguments);
   }
 
+  @bind
   addText() {
     return this.textManipulation.addText(...arguments);
   }
 
+  @bind
   isInside() {
     return this.textManipulation.isInside(...arguments);
+  }
+
+  emojiSelected(code) {
+    this.textManipulation.emojiSelected(code);
   }
 }

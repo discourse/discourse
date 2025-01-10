@@ -1,0 +1,248 @@
+.fk-d-menu[data-content][data-identifier="emoji-picker"] {
+  z-index: z("modal", "dialog");
+
+  .emoji-picker {
+    max-width: 95vw;
+  }
+}
+
+.fk-d-menu-modal {
+  .emoji-picker {
+    max-width: 100vw;
+  }
+}
+
+.emoji-picker-trigger {
+  .d-icon + .d-button-label {
+    margin-left: 0.25em;
+  }
+}
+
+.emoji-picker {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  width: 500px;
+
+  .spinner-container {
+    height: 100%;
+  }
+
+  &__diversity-menu.fk-d-menu {
+    z-index: z("modal", "dialog");
+
+    .dropdown-menu {
+      min-width: auto;
+    }
+  }
+
+  .emoji {
+    padding: 6px;
+    width: 24px;
+    height: 24px;
+    image-rendering: -webkit-optimize-contrast;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background: var(--primary-very-low);
+      border-radius: var(--d-border-radius);
+      transform: scale(1.25);
+    }
+  }
+
+  &__filter-container {
+    background: var(--primary-very-low);
+    display: flex;
+    height: 50px;
+  }
+
+  &__filter {
+    width: 100%;
+    margin: 0.5rem;
+    border-radius: var(--d-border-radius);
+    box-sizing: border-box;
+
+    input {
+      background-color: transparent !important;
+      width: 100%;
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &.filter-input-container {
+      border-color: transparent;
+      background: var(--secondary);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: row;
+    height: 250px;
+  }
+
+  &__scrollable-content {
+    width: 100%;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    height: 100%;
+  }
+
+  &__no-results {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-weight: 700;
+    padding: 2em;
+  }
+
+  &__sections-nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-width: 40px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 250px;
+    background: var(--primary-low);
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    overscroll-behavior: contain;
+  }
+
+  &__sections-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__section-btn {
+    padding: 0.25rem;
+
+    &:hover {
+      .emoji {
+        background: none;
+      }
+    }
+
+    &:focus,
+    &.active {
+      background: none;
+    }
+
+    &.active {
+      scale: 1.4;
+    }
+
+    .emoji {
+      width: 21px;
+      height: 21px;
+    }
+  }
+
+  &__section-emojis,
+  &__section.filtered {
+    padding: 0.5rem;
+  }
+
+  &__backdrop {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  &__section-title-container {
+    display: flex;
+    position: sticky;
+    top: -1px; // to avoid an ugly sub 1px gap on retina
+    background: rgba(var(--secondary-rgb), 0.95);
+    z-index: 2;
+  }
+
+  &__section-title {
+    margin: 0;
+    padding: 0.5rem;
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    width: 100%;
+    box-sizing: border-box;
+    text-transform: uppercase;
+  }
+
+  &__fitzpatrick-modifier-btn {
+    min-width: 21px;
+    width: 21px;
+    height: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: none;
+    margin-right: 0.5rem;
+    border: 0;
+    border-radius: var(--d-border-radius);
+
+    .d-icon {
+      visibility: hidden;
+    }
+
+    &.current {
+      min-width: 25px;
+      width: 25px;
+      height: 25px;
+    }
+
+    &:not(.current):hover,
+    &:not(.current):focus {
+      .d-icon {
+        visibility: visible;
+        color: white;
+        filter: drop-shadow(0.5px 1.5px 0 rgba(0, 0, 0, 0.3));
+      }
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &.t1 {
+      background: #ffcc4d;
+    }
+
+    &.t2 {
+      background: #f7dece;
+    }
+
+    &.t3 {
+      background: #f3d2a2;
+    }
+
+    &.t4 {
+      background: #d5ab88;
+    }
+
+    &.t5 {
+      background: #af7e57;
+    }
+
+    &.t6 {
+      background: #7c533e;
+    }
+
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+    }
+  }
+
+  &__fitzpatrick-scale {
+    display: flex;
+    align-items: center;
+  }
+}

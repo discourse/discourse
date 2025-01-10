@@ -449,7 +449,8 @@ class Reviewable < ActiveRecord::Base
     additional_filters: {},
     preload: true,
     include_claimed_by_others: true,
-    flagged_by: nil
+    flagged_by: nil,
+    score_type: nil
   )
     order =
       case sort_order
@@ -486,6 +487,16 @@ class Reviewable < ActiveRecord::Base
           SELECT 1 FROM reviewable_scores
           WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.user_id = :flagged_by_id
         )
+      SQL
+    end
+
+    if score_type
+      score_type = score_type.to_i
+      result = result.where(<<~SQL, score_type: score_type)
+      EXISTS(
+        SELECT 1 FROM reviewable_scores
+        WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewable_score_type = :score_type
+      )
       SQL
     end
 

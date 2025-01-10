@@ -341,6 +341,7 @@ gl:
     continue: "Continuar"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
+    none_placeholder: "Ningunha"
     banner:
       close: "Desbotar este báner"
       edit: "Editar"
@@ -462,6 +463,8 @@ gl:
         refresh: "Actualizar"
         status: "Estado"
         category: "Categoría"
+        score_type:
+          title: "Motivo"
         orders:
           score: "Puntuación"
           score_asc: "Puntuación (inversa)"
@@ -700,13 +703,13 @@ gl:
       public_admission: "Permitir que os usuarios se unan ao grupo libremente (require un grupo visíbel ao público)"
       public_exit: "Permitir que os usuarios abandonen o grupo libremente"
       empty:
-        posts: "Non hai publicacións de membros deste grupo."
-        members: "Non hai membros neste grupo."
-        requests: "Non hai petición de incorporación a este grupo."
-        mentions: "Non hai mencións neste grupo."
-        messages: "Non hai mensaxes para este grupo."
-        topics: "Non hai temas de membros deste grupo."
-        logs: "Non hai rexistros deste grupo."
+        posts: "Non hai publicacións de membros deste grupo"
+        members: "Non hai membros neste grupo"
+        requests: "Non hai petición de incorporación a este grupo"
+        mentions: "Non hai mencións neste grupo"
+        messages: "Non hai mensaxes para este grupo"
+        topics: "Non hai temas de membros deste grupo"
+        logs: "Non hai rexistros deste grupo"
       add: "Engadir"
       join: "Participar"
       leave: "Abandonar"
@@ -886,10 +889,10 @@ gl:
         one: "Eliminar %{count}"
         other: "Eliminar %{count}"
       username: "nome de usuario"
-      trust_level: "NdeC"
+      trust_level: "nivel de fiabilidade"
       read_time: "tempo de lectura"
       topics_entered: "temas introducidos"
-      post_count: "# publicacións"
+      post_count: "publicacións"
       confirm_delete_other_accounts: "Confirma que quere eliminar estas contas?"
       powered_by: "utitlízase <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
@@ -976,17 +979,15 @@ gl:
       skip_new_user_tips:
         description: "Saltar consellos e insignias na entrada dos novos usuarios"
       theme_default_on_all_devices: "Facer que este sexa o tema predeterminado en todos os meus dispositivos"
-      color_scheme: "Esquema de cor"
+      color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Predeterminado"
         disable_dark_scheme: "O mesmo que o normal"
-        dark_instructions: "Pode visualizar o esquema do modo escuro trocando no seu dispositivo a modo escuro."
         undo: "Restabelecer"
         regular: "Normal"
         dark: "Modo escuro"
         default_dark_scheme: "(predeterminado do sitio)"
       dark_mode: "Modo escuro"
-      dark_mode_enable: "Activar o esquema de cores automático en modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
@@ -1534,8 +1535,6 @@ gl:
     form_kit:
       reset: Restabelecer
       optional: opcional
-      select:
-        none_placeholder: "Ningunha"
       errors:
         required: "Obrigatorio"
     close: "Pechar"
@@ -1711,6 +1710,9 @@ gl:
       categories_and_top_topics: "Categorías e temas destacados"
       categories_boxes: "Caixas con subcategorías"
       categories_boxes_with_topics: "Caixas con temas destacados"
+    full_name_requirement:
+      required_at_signup: "Obrigatorio"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -1966,8 +1968,6 @@ gl:
         quoted: "citado"
         edited: "editado"
         liked: "novo gústame"
-        private_message: "nova mensaxe privada"
-        invited_to_private_message: "convidado a unha mensaxe privada"
         invitee_accepted: "convite aceptado"
         posted: "nova publicación"
         watching_category_or_tag: "nova publicación"
@@ -2370,7 +2370,6 @@ gl:
         help: "Abrir unha versión imprimíbel deste tema"
       flag_topic:
         title: "Sinalar"
-        help: "sinalar privadamente este tema para revisalo ou enviar unha notificación privada sobre el"
         success_message: "Sinalou o tema correctamente."
       make_public:
         title: "Converter en tema público"
@@ -2610,7 +2609,6 @@ gl:
         edit_action: "Editar"
         edit_anonymous: "Sentímolo pero debe iniciar sesión para editar esta publicación."
         flag_action: "Sinalar"
-        flag: "sinalar privadamente esta publicación ou enviar unha notificación privada sobre ela"
         delete: "eliminar esta publicación"
         undelete: "recuperar esta publicación"
         share_action: "Compartir"
@@ -3407,7 +3405,30 @@ gl:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
         sidebar_link:
-          all: "Todas"
+          all: "Todos os informes"
+      config:
+        developer:
+          title: "Desenvolvedor"
+        files:
+          title: "Ficheiros"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navegación"
+        notifications:
+          title: "Notificacións"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Outro"
+        search:
+          title: "Buscar"
+        security:
+          title: "Seguranza"
+        spam:
+          title: "Lixo"
+        user_api:
+          title: "API de usuario"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -3498,6 +3519,7 @@ gl:
             include_subcategories:
               label: "Incluír subcategorías"
       flags:
+        title: "Moderación"
         description: "Descrición"
         enabled: "Activado?"
       groups:
@@ -3688,11 +3710,11 @@ gl:
           badges: "Insignias"
           notifications: "Notificacións"
           permalinks: "Ligazóns permanentes"
-          trust_levels: "Niveis de confianza"
           users: "Usuarios"
-          user_fields: "Campos do usuario"
-          watched_words: "Palabras observadas"
+          groups: "Grupos"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderación"
       appearance:
         title: "Aparencia"
         sidebar_link:
@@ -3704,22 +3726,8 @@ gl:
       email_settings:
         sidebar_link:
           appearance: "Aparencia"
-          preview_summary: "Visualización do compendio"
-      email_logs:
-        sidebar_link:
-          sent: "Enviada"
-          skipped: "Saltada"
-          bounced: "Rebotada"
-          received: "Recibidas"
-          rejected: "Rexeitada"
       security:
         title: "Seguranza"
-        sidebar_link:
-          error_logs: "Rexistros de erros"
-          screened_emails: "Correos controlados"
-          screened_ips: "IP controlados"
-          screened_urls: "URL controlados"
-          search_logs: "Buscar rexistros"
       section_landing_pages:
         account:
           title: "Conta"
@@ -3733,6 +3741,7 @@ gl:
           update: "Actualizar"
           saved: "gardado!"
         flags:
+          header: "Moderación"
           description: "Descrición"
           enabled: "Activado?"
           edit: "Editar"
@@ -3746,6 +3755,12 @@ gl:
             invalid_applies_to: "Obrigatorio"
             topic: "temas"
             post: "publicacións"
+        permalinks:
+          edit: "Editar"
+          delete: "Eliminar"
+        embeddable_host:
+          edit: "Editar"
+          delete: "Eliminar"
         look_and_feel:
           themes:
             title: "Temas"
@@ -3770,9 +3785,7 @@ gl:
         sidebar_link:
           developer: "Desenvolvedor"
           embedding: "Incorporando"
-          rate_limits: "Límites de frecuencia"
           user_api: "API de usuario"
-          web_hooks: "Enganches de web (webhooks)"
           onebox: "Onebox"
           files: "Ficheiros"
           other_options: "Outro"
@@ -3815,7 +3828,7 @@ gl:
             title: "Enviar correo electrónico coa ligazón de descarga"
             alert: "Recibiu un correo electrónico coa ligazón para descargar esta copia de seguranza"
           destroy:
-            title: "Eliminar a copia de seguranza"
+            title: "Eliminar"
             confirm: "Confirma a destrución desta copia de seguranza?"
           restore:
             label: "Restabelecer"
@@ -3906,7 +3919,6 @@ gl:
           hide_unused_fields: "Agochar campos non usados"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
-          color_scheme_user_selectable: "O esquema de cor pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
           color_scheme: "Paleta de cores"
           default_light_scheme: "Claro (predeterminado)"
@@ -4869,16 +4881,11 @@ gl:
         settings: "Configuración"
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
+        delete: "Eliminar"
         confirm_delete: "Confirma a eliminación deste servidor?"
         title: "Incorporando"
-        host: "Servidores permitidos"
-        allowed_paths: "Lista de camiños admitidos"
-        edit: "editar"
-        category: "Publicación na categoría"
-        add_host: "Engadir servidor"
-        settings: "Configuración da incorporación"
-        crawling_settings: "Configuración do extractor"
-        crawling_description: "Cando o Discourse crea temas para as súas publicacións, se non existe unha fonte RSS/ATOM, tentará procesar o contido do seu HTML. Ás veces pode ser difícil extraer o contido, por iso dámoslle a posibilidade de especificar as regras do CSS para facilitar a extracción."
+        edit: "Editar"
+        crawlers_description: "Cando o Discourse crea temas para as súas publicacións, se non existe unha fonte RSS/ATOM, tentará procesar o contido do seu HTML. Ás veces pode ser difícil extraer o contido, por iso dámoslle a posibilidade de especificar as regras do CSS para facilitar a extracción."
         embed_by_username: "Nome do usuario para crear o tema"
         embed_post_limit: "Número máximo de publicacións que incorporar"
         embed_title_scrubber: "Expresión regular empregada para limpar o título das publicacións"
@@ -4887,7 +4894,12 @@ gl:
         allowed_embed_selectors: "Selector CSS para elementos permitidos nas incorporacións"
         blocked_embed_selectors: "Selector CSS para elementos retirados das incorporacións"
         allowed_embed_classnames: "Nomes permitidos de clases CSS"
-        save: "Gardar a configuración da incorporación"
+        save: "Gardar"
+        host_form:
+          save: "Gardar"
+        nav:
+          settings: "Configuración"
+          crawlers: "Rastrexadores"
       permalink:
         title: "Ligazóns permanentes"
         description: "Redireccións que se lle aplicarán a URL non coñecidos polo foro."
@@ -4906,6 +4918,9 @@ gl:
         destination: "Destino"
         copy_to_clipboard: "Copiar a ligazón permanente ao portapapeis"
         delete_confirm: Confirma a eliminación desta ligazón permanente?
+        nav:
+          settings: "Configuración"
+          permalinks: "Ligazóns permanentes"
         form:
           label: "Novo:"
           url: "URL"
@@ -4940,3 +4955,18 @@ gl:
       previews:
         share_button: "Compartir"
         reply_button: "Responder"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "todas as categorías"
+          new: "Novo"
+          unread: "Pendentes de lectura"
+          top: "Destacados"
+          latest: "Últimos"
+          categories: "Categorías"
+        category_names:
+          site_feedback: "Opinións sobre o sitio"
+        table_headers:
+          topic: "Tema"
+          replies: "Réplicas"
+          views: "Visualizacións"
+          activity: "Actividade"

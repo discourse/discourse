@@ -1,4 +1,5 @@
-import { darkLightDiff, LOREM } from "../../../lib/preview";
+import { i18n } from "discourse-i18n";
+import { darkLightDiff } from "../../../lib/preview";
 import PreviewBaseComponent from "./-preview-base";
 
 export default class HomepagePreview extends PreviewBaseComponent {
@@ -25,26 +26,33 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
     const homepageStyle = this.getHomepageStyle();
 
-    if (homepageStyle === "latest") {
-      this.drawPills(colors, font, height * 0.15);
-      this.renderLatest(ctx, colors, font, width, height);
+    if (homepageStyle === "latest" || homepageStyle === "hot") {
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
+      this.renderNonCategoryHomepage(
+        ctx,
+        colors,
+        font,
+        width,
+        height,
+        homepageStyle
+      );
     } else if (
       ["categories_only", "categories_with_featured_topics"].includes(
         homepageStyle
       )
     ) {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       this.renderCategories(ctx, colors, font, width, height);
     } else if (
       ["categories_boxes", "categories_boxes_with_topics"].includes(
         homepageStyle
       )
     ) {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       const topics = homepageStyle === "categories_boxes_with_topics";
       this.renderCategoriesBoxes(ctx, colors, font, width, height, { topics });
     } else {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       this.renderCategoriesWithTopics(ctx, colors, font, width, height);
     }
   }
@@ -82,14 +90,10 @@ export default class HomepagePreview extends PreviewBaseComponent {
         ]
       );
 
-      ctx.font = `Bold ${bodyFontSize * 1.3}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.3}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.textAlign = "center";
-      ctx.fillText(
-        category.displayName,
-        boxStartX + boxWidth / 2,
-        boxStartY + 25
-      );
+      ctx.fillText(category.name, boxStartX + boxWidth / 2, boxStartY + 25);
       ctx.textAlign = "left";
 
       if (opts.topics) {
@@ -167,16 +171,16 @@ export default class HomepagePreview extends PreviewBaseComponent {
     drawLine(width / 2, y);
 
     // Categories
-    this.categories().forEach((category) => {
+    this.categories().forEach((category, idx) => {
       const textPos = y + categoryHeight * 0.35;
-      ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
-      ctx.fillText(category.displayName, cols[0], textPos);
+      ctx.fillText(category.name, cols[0], textPos);
 
       ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
       ctx.fillStyle = textColor;
       ctx.fillText(
-        titles[0],
+        titles[idx],
         cols[0] - margin * 0.25,
         textPos + categoryHeight * 0.36
       );
@@ -263,16 +267,16 @@ export default class HomepagePreview extends PreviewBaseComponent {
     const titles = this.getTitles();
 
     // Categories
-    this.categories().forEach((category) => {
+    this.categories().forEach((category, idx) => {
       const textPos = y + categoryHeight * 0.35;
-      ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
-      ctx.fillText(category.displayName, cols[0], textPos);
+      ctx.fillText(category.name, cols[0], textPos);
 
       ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
       ctx.fillStyle = textColor;
       ctx.fillText(
-        titles[0],
+        titles[idx],
         cols[0] - margin * 0.25,
         textPos + categoryHeight * 0.36
       );
@@ -303,7 +307,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       const category = this.categories()[0];
       ctx.font = `${bodyFontSize}em '${font}'`;
       const textPos = y + topicHeight * 0.45;
-      ctx.fillStyle = textColor;
+      ctx.fillStyle = colors.primary;
       this.scaleImage(
         this.avatar,
         cols[2],
@@ -313,7 +317,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       );
       ctx.fillText(title, cols[3], textPos);
 
-      ctx.font = `Bold ${bodyFontSize}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize}em '${font}'`;
       ctx.fillText(Math.floor(Math.random() * 90) + 10, cols[4], textPos);
       ctx.font = `${bodyFontSize}em '${font}'`;
       ctx.fillText(`1h`, cols[4], textPos + topicHeight * 0.4);
@@ -321,9 +325,9 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.beginPath();
       ctx.fillStyle = category.color;
       const badgeSize = topicHeight * 0.1;
-      ctx.font = `Bold ${bodyFontSize * 0.5}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 0.5}em '${font}'`;
       ctx.rect(
-        cols[3] + margin * 0.5,
+        cols[3] + margin * 0.25,
         y + topicHeight * 0.65,
         badgeSize,
         badgeSize
@@ -332,8 +336,8 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(
-        category.displayName,
-        cols[3] + badgeSize * 3,
+        category.name,
+        cols[3] + badgeSize * 2,
         y + topicHeight * 0.76
       );
       y += topicHeight;
@@ -347,16 +351,32 @@ export default class HomepagePreview extends PreviewBaseComponent {
   }
 
   getTitles() {
-    return LOREM.split(".")
-      .slice(0, 8)
-      .map((t) => t.substring(0, 40));
+    return [
+      i18n("wizard.homepage_preview.topic_titles.what_books"),
+      i18n("wizard.homepage_preview.topic_titles.what_movies"),
+      i18n("wizard.homepage_preview.topic_titles.random_fact"),
+      i18n("wizard.homepage_preview.topic_titles.tv_show"),
+    ];
+  }
+
+  getHotTitles() {
+    return [
+      i18n("wizard.homepage_preview.topic_titles.what_hobbies"),
+      i18n("wizard.homepage_preview.topic_titles.what_music"),
+      i18n("wizard.homepage_preview.topic_titles.funniest_thing"),
+      i18n("wizard.homepage_preview.topic_titles.share_art"),
+    ];
   }
 
   getDescriptions() {
-    return LOREM.split(".");
+    return [
+      i18n("wizard.homepage_preview.category_descriptions.icebreakers"),
+      i18n("wizard.homepage_preview.category_descriptions.news"),
+      i18n("wizard.homepage_preview.category_descriptions.site_feedback"),
+    ];
   }
 
-  renderLatest(ctx, colors, font, width, height) {
+  renderNonCategoryHomepage(ctx, colors, font, width, height, homepageStyle) {
     const rowHeight = height / 6.6;
     // accounts for hard-set color variables in solarized themes
     const textColor =
@@ -379,17 +399,33 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.stroke();
     };
 
-    const cols = [0.02, 0.66, 0.8, 0.87, 0.93].map((c) => c * width);
+    const cols = [0.02, 0.66, 0.75, 0.83, 0.9].map((c) => c * width);
 
     // Headings
     const headingY = height * 0.33;
 
     ctx.fillStyle = textColor;
     ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
-    ctx.fillText("Topic", cols[0], headingY);
-    ctx.fillText("Replies", cols[2], headingY);
-    ctx.fillText("Views", cols[3], headingY);
-    ctx.fillText("Activity", cols[4], headingY);
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.topic"),
+      cols[0],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.replies"),
+      cols[2],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.views"),
+      cols[3],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.activity"),
+      cols[4],
+      headingY
+    );
 
     // Topics
     let y = headingY + rowHeight / 2.6;
@@ -398,22 +434,26 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.lineWidth = 1;
-    this.getTitles().forEach((title) => {
+
+    const titles =
+      homepageStyle === "hot" ? this.getHotTitles() : this.getTitles();
+    titles.forEach((title) => {
       const textPos = y + rowHeight * 0.4;
-      ctx.fillStyle = textColor;
+      ctx.fillStyle = colors.primary;
       ctx.fillText(title, cols[0], textPos);
 
+      // Category badge
       const category = this.categories()[0];
       ctx.beginPath();
       ctx.fillStyle = category.color;
       const badgeSize = rowHeight * 0.15;
-      ctx.font = `Bold ${bodyFontSize * 0.75}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 0.75}em '${font}'`;
       ctx.rect(cols[0] + 4, y + rowHeight * 0.6, badgeSize, badgeSize);
       ctx.fill();
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(
-        category.displayName,
+        category.name,
         cols[0] + badgeSize * 2,
         y + rowHeight * 0.73
       );
@@ -427,10 +467,18 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
       ctx.fillStyle = textColor;
       ctx.font = `${bodyFontSize}em '${font}'`;
-      for (let j = 2; j <= 4; j++) {
+      for (let colIndex = 2; colIndex <= 4; colIndex++) {
+        // Give Hot a higher range of random values to make it look like
+        // more activity is happening.
+        const randomValue =
+          homepageStyle === "hot"
+            ? Math.floor(Math.random() * (660 - 220) + 220) + 10
+            : Math.floor(Math.random() * 90) + 10;
+
         ctx.fillText(
-          j === 4 ? "1h" : Math.floor(Math.random() * 90) + 10,
-          cols[j] + margin,
+          // Last column is relative activity time, others are random numbers.
+          colIndex === 4 ? "1h" : randomValue,
+          cols[colIndex] + margin,
           y + rowHeight * 0.6
         );
       }

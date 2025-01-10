@@ -59,9 +59,16 @@ export default class ReviewableItem extends Component {
     "reviewable.type",
     "reviewable.last_performing_username",
     "siteSettings.blur_tl0_flagged_posts_media",
-    "reviewable.target_created_by_trust_level"
+    "reviewable.target_created_by_trust_level",
+    "reviewable.deleted_at"
   )
-  customClasses(type, lastPerformingUsername, blurEnabled, trustLevel) {
+  customClasses(
+    type,
+    lastPerformingUsername,
+    blurEnabled,
+    trustLevel,
+    deletedAt
+  ) {
     let classes = dasherize(type);
 
     if (lastPerformingUsername) {
@@ -70,6 +77,10 @@ export default class ReviewableItem extends Component {
 
     if (blurEnabled && trustLevel === 0) {
       classes = `${classes} blur-images`;
+    }
+
+    if (deletedAt) {
+      classes = `${classes} reviewable-deleted`;
     }
 
     return classes;

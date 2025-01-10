@@ -78,7 +78,7 @@ describe ChatSDK::Channel do
   end
 
   describe ".stop_reply" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
     fab!(:client_id) do

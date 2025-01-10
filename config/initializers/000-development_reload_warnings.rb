@@ -27,7 +27,12 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
   end
 
   Listen
-    .to(*paths, only: /\.rb$/, ignore: [/node_modules/]) do |modified, added, removed|
+    .to(
+      *paths,
+      # Aside from .rb files, this will also match site_settings.yml, as well as any plugin settings.yml files.
+      only: /(\.rb|settings.yml)$/,
+      ignore: [/node_modules/],
+    ) do |modified, added, removed|
       supervisor_pid = UNICORN_DEV_SUPERVISOR_PID
       auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
 

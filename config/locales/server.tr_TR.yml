@@ -394,11 +394,8 @@ tr_TR:
     max_redemptions_limit: "2 ila %{max_limit} arasında olmalı."
   topic_invite:
     failed_to_invite: "Kullanıcı, şu gruplardan birinde grup üyeliği olmadan bu konuya davet edilemez: %{group_names}."
-    not_pm: "Yalnızca özel mesajlara davet edebilirsiniz."
     user_exists: "Üzgünüz, bu kullanıcı zaten davet edilmiş. Bir kullanıcıyı bir konuya yalnızca bir kez davet edebilirsiniz."
     muted_topic: "Üzgünüz, bu kullanıcı bu konuyu sessize almış."
-    receiver_does_not_allow_pm: "Üzgünüz, bu kullanıcı kendisine özel mesaj göndermenize izin vermiyor."
-    sender_does_not_allow_pm: "Üzgünüz, bu kullanıcının size özel mesaj göndermesine izin vermiyorsunuz."
     user_cannot_see_topic: "%{username} konuyu göremiyor."
   backup:
     operation_already_running: "Şu anda bir operasyon devam ediyor. Şu anda yeni bir işe başlayamazsınız."
@@ -1389,12 +1386,10 @@ tr_TR:
       title: "Moderatörleri Bilgilendir"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
-      description: "Moderatörlerin bir bayrakla özel olarak bilgilendirilme sayısı."
     notify_user_private_messages:
       title: "Kullanıcıyı Bilgilendir"
       xaxis: "Gün"
       yaxis: "Mesaj sayısı"
-      description: "Kullanıcıların bir bayrak ile özel olarak bilgilendirilme sayısı."
     top_referrers:
       title: "En Çok Referans Yapanlar"
       xaxis: "Kullanıcı"
@@ -1721,8 +1716,6 @@ tr_TR:
     summary_percent_filter: "Bir kullanıcı \"Bu Konuyu Özetleyin\" seçeneğine tıkladığında, gönderilerin en popüler %'sini gösterin"
     summary_max_results: "\"Bu Konuyu Özetle\" ile döndürülen maksimum gönderi sayısı"
     summary_timeline_button: "Zaman çizelgesinde bir \"Özetle\" düğmesi gösterin"
-    summarization_strategy: "Eklentiler tarafından kaydedilen içeriği özetlemenin diğer yolları"
-    custom_summarization_allowed_groups: "`summarization_strategy` kullanarak içerikleri özetlemesine izin verilen gruplar."
     enable_personal_messages: "KALDIRILDI, bunun yerine \"kişisel mesaj etkin gruplar\" ayarını kullanın. Güven seviyesi 1 (mesaj göndermek için minimum güven ile yapılandırılabilir) kullanıcıların mesaj oluşturmasına ve mesajlara yanıt vermesine izin verin. Personelin ne olursa olsun her zaman mesaj gönderebileceğini unutmayın."
     personal_message_enabled_groups: "Bu gruplardaki kullanıcıların kişisel mesajlar OLUŞTURMALARINA izin verin. ÖNEMLİ: 1) tüm kullanıcılar mesajlara YANIT verebilir. 2) Yöneticiler ve modlar herhangi bir kullanıcıya mesaj OLUŞTURABİLİR. 3) Güven seviyesi grupları daha yüksek seviyeleri içerir; GS1, GS2, GS3, GS4'e izin vermek ancak GS0'a izin vermemek için Trust_level_1'i seçin. 4) Grup etkileşimi ayarları, belirli gruplara mesaj göndermek için bu ayarı geçersiz kılar."
     enable_system_message_replies: "Kişisel mesajlar devre dışı bırakılmış olsa bile kullanıcıların sistem mesajlarını yanıtlayabilmesine izin verir"
@@ -1796,7 +1789,6 @@ tr_TR:
     share_links: "Paylaş iletişim kutusunda hangi ögelerin ve hangi sırada görüneceğini belirleyin."
     allow_username_in_share_links: "Kullanıcı adlarının paylaşım bağlantılarına dahil edilmesine izin verin. Bu, benzersiz ziyaretçilere dayalı rozetleri ödüllendirmek için kullanışlıdır."
     site_contact_username: "Tüm otomatik mesajların gönderileceği geçerli bir personel kullanıcı adı. Boş bırakılırsa varsayılan Sistem hesabı kullanılır."
-    site_contact_group_name: "Otomatik olarak gönderilen tüm özel mesajlara davet edilen bir grubun geçerli adı."
     send_welcome_message: "Tüm yeni kullanıcılara hızlı başlangıç kılavuzu içeren bir karşılama mesajı gönderin."
     send_tl1_welcome_message: "Yeni güven seviyesi 1 kullanıcılarına bir karşılama mesajı gönderin."
     send_tl2_promotion_message: "Yeni güven seviyesi 2 kullanıcılarına yükselme hakkında bir mesaj gönderin."
@@ -2055,7 +2047,6 @@ tr_TR:
     min_title_similar_length: "Benzer konular için kontrol edilmeden önce bir başlığın minimum uzunluğu."
     desktop_category_page_style: "Bu ayar, masaüstündeki /categories sayfasının görsel düzenini belirler. Öne çıkan konularla birlikte alt kategorilerin görüntülenmesi, en son konuların gösterilmesi veya en iyi konuların sunulması gibi seçenekleri içerir. Seçilen stil, kullanıcıların sitedeki kategorilerle nasıl etkileşime gireceğini ve kategorilerde nasıl gezineceğini etkiler."
     category_colors: "Kategoriler için izin verilen onaltılık renk değerlerinin bir listesi."
-    default_dark_mode_color_scheme_id: "Koyu moddayken kullanılan renk şeması."
     dark_mode_none: "Hiçbiri"
     max_image_size_kb: "Maksimum görüntü yükleme boyutu. Bu, nginx (client_max_body_size) / apache veya proxy'de de yapılandırılmalıdır. Bundan daha büyük ve client_max_body_size değerinden daha küçük görüntüler yükleme sırasında sığacak şekilde yeniden boyutlandırılır."
     max_attachment_size_kb: "Maksimum ek dosya yükleme boyutu. Bu, nginx (client_max_body_size) / apache veya proxy'de de yapılandırılmalıdır."
@@ -2261,7 +2252,6 @@ tr_TR:
     penalty_include_post_message: "Bir kullanıcıyı sustururken veya askıya alırken rahatsız edici gönderi mesajını otomatik olarak e-posta mesajı şablonuna ekleyin"
     svg_icon_subset: "Varlıklarınıza dâhil etmek istediğiniz ek FontAwesome simgelerini ekleyin. Katı simgeler için \"fa-\", normal simgeler için \"far-\" ve marka simgeleri için \"fab-\" ön ekini kullanın."
     max_prints_per_hour_per_user: "Maksimum /print sayfa gösterim sayısı (yazdırmayı devre dışı bırakmak için 0 olarak ayarlayın)"
-    full_name_required: "Tam ad, kullanıcı profilinin gerekli bir alanıdır."
     enable_names: "Kullanıcının tam adını profilinde, kullanıcı kartında ve e-postalarında gösterin. Tam adı her yerde gizlemek için devre dışı bırakın."
     display_name_on_posts: "Bir kullanıcının @kullanıcı adına ek olarak gönderilerinde tam adını gösterin."
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
@@ -2287,7 +2277,6 @@ tr_TR:
     delete_merged_stub_topics_after_days: "Tamamen birleştirilmiş taslak konularını otomatik olarak silmeden önce beklenecek gün sayısı. Asla silmemek için -1 olarak ayarlayın. Hemen silmek için 0 olarak ayarlayın."
     bootstrap_mode_min_users: 'Ön yükleme modunu devre dışı bırakmak ve Başlarken düğmesini kaldırmak için gereken minimum kullanıcı sayısı (devre dışı bırakmak için 0 olarak ayarlayın, 24 saate kadar sürebilir). Ayrıntılar için <a target="_blank" href="https://meta.discourse.org/t/-/322876">Meta''daki ön yükleme modu konusuna</a> bakın.'
     prevent_anons_from_downloading_files: "Anonim kullanıcıların ekleri indirmesini önleyin."
-    secure_uploads: 'TÜM yüklemelere (resimler, video, ses, metin, pdf''ler, zip''ler ve diğerleri) erişimi sınırlar. "Giriş gerekli" etkinleştirilmişse yüklemelere yalnızca giriş yapmış kullanıcılar erişebilir. Aksi takdirde, erişim yalnızca özel mesajlardaki ve özel kategorilerdeki medya yüklemeleri için sınırlı olacaktır. UYARI: Bu ayar karmaşıktır ve derin bir yönetim anlayışı gerektirir. Ayrıntılar için <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta''daki güvenli yüklemeler konusuna</a> bakın.'
     secure_uploads_allow_embed_images_in_emails: "Boyutları \"güvenli yüklemeler maksimum e-posta yerleştirme görüntü boyutu kb\" ayarından küçükse normalde e-postalara redakte edilecek güvenli görüntülerin yerleştirilmesine izin verir."
     secure_uploads_max_email_embed_image_size_kb: "\"Güvenli yüklemeler e-postalarda yerleştirmeye izin verir\" ayarı etkinleştirilmişse e-postalara yerleştirilecek güvenli görüntüler için boyut sınırı. Bu ayar etkinleştirilmediğinde, bu ayarın etkisi yoktur."
     slug_generation_method: "Kısa ad oluşturma yöntemi seçin. \"encoded\" yüzde kodlama dizesi oluşturur. \"none\" kısa adı tamamen devre dışı bırakır."
@@ -2399,7 +2388,6 @@ tr_TR:
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
     create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde bir fısıltı gönderisi oluşturun, fısıltı gönderilerinin etkinleştirilmesini gerektirir."
-    automatically_clean_unused_tags: "Herhangi bir konuda veya özel mesajda kullanılmayan etiketleri günlük olarak otomatik olarak sil."
     watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendirin"
     company_name: "Şirketinizin veya kuruluşunuzun adı. Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz."
     governing_law: "Hizmet Koşulları ve Gizlilik Politikası da dâhil olmak üzere sitenin hukuki yönlerini düzenleyen yargı bölgesini belirtin. Bu genellikle siteyi işleten şirketin kayıtlı olduğu veya faaliyet gösterdiği ülke veya eyalettir."
@@ -2439,10 +2427,8 @@ tr_TR:
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
     experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_experimental_lightbox: "Varsayılan görüntü ışık kutusunu yenilenen tasarımla değiştirin."
-    experimental_glimmer_topic_list_groups: "Yeni \"parıltı\" konu listesi uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     glimmer_post_menu_mode: "Yeni \"parıltı\" gönderi menüsü uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"otomatik\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleştirilir. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     glimmer_post_menu_groups: "Belirtilen kullanıcı grupları için \"otomatik\" modda yeni \"parıltı\" gönderi menüsü uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
-    experimental_form_templates: "Form şablonları özelliğini etkinleştirin. <b>Etkinleştirdikten sonra,</b> şablonları <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> (özelleştir / şablonlar) bölümünden yönetin."
     admin_sidebar_enabled_groups: "Belirtilen gruplar için yönetici kullanıcı arayüzünde üst düzey yönetici gezinme düğmelerinin yerini alan kenar çubuğu gezinmesini etkinleştirin."
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
@@ -2517,8 +2503,8 @@ tr_TR:
       invalid_search_ranking_weights: "Değer, search_ranking_weights site ayarı için geçersiz. Örnek: \"{0.1,0.2,0.3,1.0}\". Her ağırlık için maksimum değerin 1,0 olduğunu unutmayın."
     keywords:
       clean_up_inactive_users_after_days: "devre dışı|etkin değil|etkinliği kaldırıldı"
-      purge_unactivated_users_grace_period_days: "devre dışı|etkin değil|etkinliği kaldırıldı"
       navigation_menu: "kenar çubuğu|başlık açılır menüsü"
+      purge_unactivated_users_grace_period_days: "devre dışı|etkin değil|etkinliği kaldırıldı"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ornek.com"
@@ -4874,8 +4860,6 @@ tr_TR:
       styling:
         title: "Görünüm ve his"
         fields:
-          color_scheme:
-            label: "Renk düzeni"
           body_font:
             label: "Gövde yazı tipi"
           heading_font:
@@ -4886,23 +4870,9 @@ tr_TR:
             label: "Ana sayfa stili"
             choices:
               latest:
-                label: "En Son Konular"
-              categories_only:
-                label: "Yalnızca Kategoriler"
-              categories_with_featured_topics:
-                label: "Öne Çıkan Konuları içeren Kategoriler"
-              categories_and_latest_topics:
-                label: "Kategoriler ve En Son Konular"
-              categories_and_latest_topics_created_date:
-                label: "Kategoriler ve En Son Konular (konu oluşturulma tarihine göre sıralayın)"
-              categories_and_top_topics:
-                label: "Kategoriler ve Popüler Konular"
-              categories_boxes:
-                label: "Kategoriler Kutuları"
-              categories_boxes_with_topics:
-                label: "Konu içeren Kategoriler Kutuları"
-              subcategories_with_featured_topics:
-                label: "Öne Çıkan Konular içeren Alt Kategoriler"
+                label: "En son"
+              hot:
+                label: "Popüler"
       branding:
         title: "Site logosu"
         fields:
@@ -4974,7 +4944,7 @@ tr_TR:
       quoted: '%{username}, "%{topic}" konusunda sizden alıntı yaptı - %{site_title}'
       replied: '%{username}, "%{topic}" konusunda size yanıt verdi - %{site_title}'
       posted: '%{username}, "%{topic}" konusuna gönderi yaptı - %{site_title}'
-      private_message: '%{username} "%{topic}" konusunda size özel bir mesaj gönderdi - %{site_title}'
+      private_message: '%{username} "%{topic}" konusunda size kişisel bir mesaj gönderdi - %{site_title}'
       linked: '%{username}, "%{topic}" konusundaki gönderinize bağlantı yaptı - %{site_title}'
       watching_first_post: '%{username} yeni bir konu oluşturdu "%{topic}" - %{site_title}'
       confirm_title: "Bildirimler etkinleştirildi - %{site_title}"

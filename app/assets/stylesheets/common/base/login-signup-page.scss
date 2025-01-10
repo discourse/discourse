@@ -11,10 +11,28 @@
 
 body.login-page,
 body.signup-page,
-body.invite-page {
-  & ~ .powered-by-discourse,
-  .above-main-container-outlet {
+body.invite-page,
+body.password-reset-page,
+body.activate-account-page {
+  .powered-by-discourse,
+  .above-main-container-outlet,
+  .before-header-panel-outlet,
+  .below-site-header-outlet {
     display: none;
+  }
+  #main-outlet {
+    padding: 0;
+  }
+  .d-header {
+    box-shadow: none;
+    border: none;
+    background-color: var(--secondary);
+  }
+  .d-header .home-logo-wrapper-outlet {
+    width: 100%;
+  }
+  .d-header .title a {
+    margin: 0 auto;
   }
 }
 
@@ -25,7 +43,8 @@ body.signup-page {
 
 .login-fullpage,
 .signup-fullpage,
-.invites-show {
+.invites-show,
+.password-reset-page {
   .signup-body,
   .login-body {
     display: flex;
@@ -49,6 +68,7 @@ body.signup-page {
 
     &__existing-account,
     &__no-account-yet {
+      font-size: var(--font-down-1);
       color: var(--primary-medium);
     }
 
@@ -207,6 +227,7 @@ body.signup-page {
 
     .btn-social {
       border: 1px solid var(--primary-low);
+      padding: 0.75em 0.77em; // matches input padding
     }
   }
 
@@ -241,8 +262,6 @@ body.signup-page {
   .caps-lock-warning {
     color: var(--danger);
     font-size: var(--font-down-1);
-    font-weight: bold;
-    margin-top: 0.5em;
   }
 
   .create-account__password-info {

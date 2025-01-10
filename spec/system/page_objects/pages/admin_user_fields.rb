@@ -4,7 +4,7 @@ module PageObjects
   module Pages
     class AdminUserFields < PageObjects::Pages::Base
       def visit
-        page.visit "admin/customize/user_fields"
+        page.visit "admin/config/user-fields"
         self
       end
 
@@ -19,7 +19,7 @@ module PageObjects
       end
 
       def click_add_field
-        page.find(".admin-page-header__actions .btn-primary").click
+        page.find(".d-page-header__actions .btn-primary").click
       end
 
       def click_edit

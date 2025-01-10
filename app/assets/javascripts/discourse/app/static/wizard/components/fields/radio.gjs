@@ -32,37 +32,38 @@ export default class Radio extends Component {
 
   <template>
     <div class="wizard-container__radio-choices">
-      {{#each @field.choices as |c|}}
+      {{#each @field.choices as |choice|}}
         <div
           class={{concatClass
             "wizard-container__radio-choice"
-            (if c.selected "--selected")
+            (if choice.selected "--selected")
           }}
+          data-choice-id={{choice.id}}
         >
           <label class="wizard-container__label">
             <PluginOutlet
               @name="wizard-radio"
-              @outletArgs={{hash disabled=c.disabled}}
+              @outletArgs={{hash disabled=choice.disabled}}
             >
               <input
                 type="radio"
-                value={{c.id}}
+                value={{choice.id}}
                 class="wizard-container__radio"
-                disabled={{c.disabled}}
-                checked={{c.selected}}
+                disabled={{choice.disabled}}
+                checked={{choice.selected}}
                 {{on "change" (withEventValue this.selectionChanged)}}
               />
               <span class="wizard-container__radio-label">
-                {{#if c.icon}}
-                  {{icon c.icon}}
+                {{#if choice.icon}}
+                  {{icon choice.icon}}
                 {{/if}}
-                <span>{{c.label}}</span>
+                <span>{{choice.label}}</span>
               </span>
             </PluginOutlet>
 
             <PluginOutlet
               @name="below-wizard-radio"
-              @outletArgs={{hash disabled=c.disabled}}
+              @outletArgs={{hash disabled=choice.disabled}}
             />
           </label>
         </div>

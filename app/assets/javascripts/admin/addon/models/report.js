@@ -376,9 +376,9 @@ export default class Report extends EmberObject {
     if (isNaN(change) || !isFinite(change)) {
       return null;
     } else if (change > 0) {
-      return "+" + change.toFixed(0) + "%";
+      return `+${i18n("js.number.percent", { count: change.toFixed(0) })}`;
     } else {
-      return change.toFixed(0) + "%";
+      return `${i18n("js.number.percent", { count: change.toFixed(0) })}`;
     }
   }
 
@@ -407,17 +407,29 @@ export default class Report extends EmberObject {
 
   changeTitle(valAtT1, valAtT2, prevPeriodString) {
     const change = this.percentChangeString(valAtT1, valAtT2);
-    let title = "";
+    const title = [];
     if (change) {
-      title += `${change} change. `;
+      title.push(
+        i18n("admin.dashboard.reports.percent_change_tooltip", {
+          percent: change,
+        })
+      );
     }
-    title += `Was ${number(valAtT1)} ${prevPeriodString}.`;
-    return title;
+    title.push(
+      i18n(
+        `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
+        {
+          count: valAtT1,
+          previousValue: number(valAtT1),
+        }
+      )
+    );
+    return title.join(" ");
   }
 
   @discourseComputed("yesterdayCount")
   yesterdayCountTitle(yesterdayCount) {
-    return this.changeTitle(this.valueAt(2), yesterdayCount, "two days ago");
+    return this.changeTitle(this.valueAt(2), yesterdayCount, "yesterday");
   }
 
   @discourseComputed("lastSevenDaysCount")
@@ -425,7 +437,7 @@ export default class Report extends EmberObject {
     return this.changeTitle(
       this.valueFor(8, 14),
       lastSevenDaysCount,
-      "two weeks ago"
+      "two_weeks_ago"
     );
   }
 
@@ -439,7 +451,7 @@ export default class Report extends EmberObject {
     return this.changeTitle(
       prev30Days ?? prev_period,
       lastThirtyDaysCount,
-      "in the previous 30 day period"
+      "thirty_days_ago"
     );
   }
 

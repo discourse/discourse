@@ -95,7 +95,7 @@
             {{/if}}
           </div>
 
-          {{#if this.fullnameRequired}}
+          {{#if (and this.showFullname this.fullnameRequired)}}
             <FullnameInput
               @nameValidation={{this.nameValidation}}
               @nameTitle={{this.nameTitle}}
@@ -134,7 +134,10 @@
               <label class="alt-placeholder" for="new-account-password">
                 {{i18n "user.password.title"}}
               </label>
-
+              <TogglePasswordMask
+                @maskPassword={{this.maskPassword}}
+                @togglePasswordMask={{this.togglePasswordMask}}
+              />
               <div class="create-account__password-info">
                 <div class="create-account__password-tip-validation">
                   {{#if this.showPasswordValidation}}
@@ -159,10 +162,6 @@
                     {{i18n "login.caps_lock_warning"}}
                   </div>
                 </div>
-                <TogglePasswordMask
-                  @maskPassword={{this.maskPassword}}
-                  @togglePasswordMask={{this.togglePasswordMask}}
-                />
               </div>
             {{/if}}
 

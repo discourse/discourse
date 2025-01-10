@@ -346,6 +346,8 @@ zh_TW:
     continue: "繼續"
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
+    select_placeholder: "選取…"
+    none_placeholder: "無"
     banner:
       close: "關閉此橫幅"
       edit: "編輯"
@@ -456,6 +458,8 @@ zh_TW:
         refresh: "重新整理"
         status: "狀態"
         category: "分類"
+        score_type:
+          title: "原因"
         orders:
           score: "分數"
           score_asc: "分數 (反向)"
@@ -681,14 +685,6 @@ zh_TW:
         title: "權限"
       public_admission: "允許使用者自由加入群組（需要將群組設為公開瀏覽）"
       public_exit: "允許使用者自由離開群組"
-      empty:
-        posts: "沒有來自該群組成員的貼文。"
-        members: "群組內無成員。"
-        requests: "群組內無任何成員發出請求"
-        mentions: "群組未曾被提及"
-        messages: "無該群組的訊息。"
-        topics: "沒有來自該群組成員的話題。"
-        logs: "無該群組的日誌。"
       add: "新增"
       join: "加入"
       leave: "離開"
@@ -845,10 +841,10 @@ zh_TW:
       delete_other_accounts:
         other: "刪除 %{count} 個"
       username: "使用者名稱"
-      trust_level: "TL"
+      trust_level: "信任等級"
       read_time: "閱讀時間"
       topics_entered: "已閱讀的話題"
-      post_count: "# 貼文"
+      post_count: "貼文"
       confirm_delete_other_accounts: "你確定要刪除這些帳號？"
       powered_by: "使用 <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "已複製"
@@ -944,16 +940,14 @@ zh_TW:
       skip_new_user_tips:
         description: "跳過新使用者登入時的提示和徽章"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
-      color_scheme: "色彩配置"
+      color_scheme: "調色盤"
       color_schemes:
         default_description: "預設佈景主題"
-        dark_instructions: "您可以透過切換您設備的深色模式來預覽深色模式的配色方案。"
         undo: "重置"
         regular: "普通"
         dark: "夜間模式"
         default_dark_scheme: "(網站預設值)"
       dark_mode: "夜間模式"
-      dark_mode_enable: "啟用自動深色模式色彩配置"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
@@ -1420,9 +1414,6 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
-      select:
-        select_placeholder: "選取…"
-        none_placeholder: "無"
       errors:
         required: "必要設定"
         too_short:
@@ -1596,6 +1587,9 @@ zh_TW:
       categories_and_top_topics: "分類與熱門話題"
       categories_boxes: "子分類欄"
       categories_boxes_with_topics: "精選話題欄"
+    full_name_requirement:
+      required_at_signup: "必要設定"
+      optional_at_signup: "選擇性"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2175,7 +2169,6 @@ zh_TW:
         help: "打開此討論話題列印友善的版本"
       flag_topic:
         title: "檢舉"
-        help: "檢舉此話題，或以私訊通知管理員"
         success_message: "已檢舉此話題。"
       feature_topic:
         title: "擁有這個話題"
@@ -2367,7 +2360,6 @@ zh_TW:
         edit_action: "編輯"
         edit_anonymous: "抱歉，您必須登入以修改貼文。"
         flag_action: "檢舉"
-        flag: "檢舉此貼文或傳送私人通知"
         delete: "刪除此貼文"
         undelete: "復原此貼文"
         share_action: "分享"
@@ -3085,7 +3077,30 @@ zh_TW:
         title: "可見報告列表"
         sidebar_title: "報告"
         sidebar_link:
-          all: "全部"
+          all: "所有報告"
+      config:
+        developer:
+          title: "開發人員"
+        files:
+          title: "檔案"
+        legal:
+          title: "法律"
+        navigation:
+          title: "導覽"
+        notifications:
+          title: "通知"
+        onebox:
+          title: "單一框"
+        other:
+          title: "其他"
+        search:
+          title: "搜索"
+        security:
+          title: "安全性"
+        spam:
+          title: "垃圾內容"
+        user_api:
+          title: "使用者 API"
       dashboard:
         title: "控制台"
         version: "版本"
@@ -3169,6 +3184,7 @@ zh_TW:
             category:
               label: 分類
       flags:
+        title: "管理"
         description: "簡述"
         enabled: "啟用?"
       groups:
@@ -3310,11 +3326,11 @@ zh_TW:
           badges: "徽章"
           notifications: "通知"
           permalinks: "固定連結"
-          trust_levels: "信任等級"
           users: "使用者"
-          user_fields: "使用者欄位"
-          watched_words: "已關注的文字"
+          groups: "群組"
           legal: "法律"
+          moderation_flags:
+            title: "管理"
       appearance:
         title: "外觀"
         sidebar_link:
@@ -3326,22 +3342,8 @@ zh_TW:
       email_settings:
         sidebar_link:
           appearance: "外觀"
-          preview_summary: "預覽文摘"
-      email_logs:
-        sidebar_link:
-          sent: "送出"
-          skipped: "跳過"
-          bounced: "退回"
-          received: "收到"
-          rejected: "拒絶"
       security:
         title: "安全性"
-        sidebar_link:
-          error_logs: "錯誤紀錄"
-          screened_emails: "過濾的電子郵件地址"
-          screened_ips: "過濾的 IP 位址"
-          screened_urls: "過濾的網址"
-          search_logs: "搜尋紀錄"
       section_landing_pages:
         account:
           title: "帳號"
@@ -3355,6 +3357,7 @@ zh_TW:
           update: "更新"
           saved: "儲存完畢!"
         flags:
+          header: "管理"
           description: "簡述"
           enabled: "啟用?"
           edit: "編輯"
@@ -3369,6 +3372,12 @@ zh_TW:
             topic: "話題"
             post: "貼文"
             chat_message: "聊天訊息"
+        permalinks:
+          edit: "編輯"
+          delete: "刪除"
+        embeddable_host:
+          edit: "編輯"
+          delete: "刪除"
         look_and_feel:
           themes:
             title: "佈景主題"
@@ -3393,9 +3402,7 @@ zh_TW:
         sidebar_link:
           developer: "開發人員"
           embedding: "嵌入"
-          rate_limits: "評等限制"
           user_api: "使用者 API"
-          web_hooks: "Webhooks"
           onebox: "單一框"
           files: "檔案"
           other_options: "其他"
@@ -3439,7 +3446,7 @@ zh_TW:
             label: "下載"
             title: "傳送含有下載連結的 email"
           destroy:
-            title: "刪除備份"
+            title: "刪除"
             confirm: "你確定要刪除備份嗎?"
           restore:
             label: "還原"
@@ -4360,15 +4367,11 @@ zh_TW:
         settings: "設定"
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
+        delete: "刪除"
         confirm_delete: "你確定要刪除此主機？"
         title: "嵌入"
-        host: "允許的主機"
         edit: "編輯"
-        category: "張貼到分類"
-        add_host: "新增主機"
-        settings: "嵌入設定"
-        crawling_settings: "爬蟲設定"
-        crawling_description: "當 Discourse 為你的貼文開啟了話題時，如果沒有 RSS/ATOM 流存在，它將嘗試從 HTML 中解析內容。有時分離其中的內容時可能是很有挑戰性的，所以我們提供了指定 CSS 規則的能力來幫助分離過程。"
+        crawlers_description: "當 Discourse 為你的貼文開啟了話題時，如果沒有 RSS/ATOM 流存在，它將嘗試從 HTML 中解析內容。有時分離其中的內容時可能是很有挑戰性的，所以我們提供了指定 CSS 規則的能力來幫助分離過程。"
         embed_by_username: "話題開啟者的使用者名稱"
         embed_post_limit: "嵌入的最大貼文數量。"
         embed_title_scrubber: "從貼文中提取標題的正則表達式 \"regular expression\""
@@ -4376,7 +4379,12 @@ zh_TW:
         allowed_embed_selectors: "使用 CSS 選擇器選擇允許的嵌入元素"
         blocked_embed_selectors: "使用 CSS 選擇器移除嵌入元素"
         allowed_embed_classnames: "允許 CSS class 名稱"
-        save: "儲存嵌入設定"
+        save: "保存"
+        host_form:
+          save: "保存"
+        nav:
+          settings: "設定"
+          crawlers: "爬蟲"
       permalink:
         title: "固定連結"
         url: "網址"
@@ -4391,6 +4399,9 @@ zh_TW:
         user_title: "使用者"
         username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
+        nav:
+          settings: "設定"
+          permalinks: "固定連結"
         form:
           label: "新增："
           url: "網址"
@@ -4425,3 +4436,19 @@ zh_TW:
       previews:
         share_button: "分享"
         reply_button: "回覆"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "所有分類"
+          new: "新使用者"
+          unread: "未讀"
+          top: "精選"
+          latest: "最新版本"
+          hot: "熱門"
+          categories: "分類"
+        category_names:
+          site_feedback: "站點回饋"
+        table_headers:
+          topic: "話題"
+          replies: "回覆"
+          views: "觀看"
+          activity: "活動"

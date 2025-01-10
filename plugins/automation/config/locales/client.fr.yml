@@ -167,10 +167,8 @@ fr:
               description: Facultatif, ne se déclenchera que si le sujet de la publication se trouve dans cette catégorie
             restricted_group:
               label: Groupe
-              description: Facultatif, se déclenchera uniquement si le sujet de la publication est un message privé dans la boîte de réception de ce groupe
             restricted_groups:
               label: Groupes
-              description: Facultatif, ne se déclenchera que si le sujet de la publication est un message privé dans l'une des boîtes de réception du groupe
             ignore_group_members:
               label: Ignorer les membres du groupe
               description: Ignorer le déclencheur si l'expéditeur est membre du groupe spécifié ci-dessus
@@ -413,6 +411,8 @@ fr:
             label: Script
           version:
             label: Version
+          status:
+            label: Statut
           enabled:
             label: Activé
           disabled:

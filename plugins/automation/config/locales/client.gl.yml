@@ -143,6 +143,8 @@ gl:
             label: Disparador
           version:
             label: Versión
+          status:
+            label: Estado
           enabled:
             label: Activado
           disabled:

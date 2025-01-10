@@ -429,6 +429,8 @@ te:
     continue: "కొనసాగించండి"
     switch_to_anon: "అనామక మోడ్‌ను నమోదు చేయండి"
     switch_from_anon: "అనామక మోడ్ నుండి నిష్క్రమించండి"
+    select_placeholder: "ఎంచుకోండి…"
+    none_placeholder: "ఏదీ లేదు"
     banner:
       close: "ఈ బ్యానర్‌ని తీసివేయండి"
       edit: "సవరించండి"
@@ -559,6 +561,8 @@ te:
         refresh: "తాజా పరుచు"
         status: "స్థితి"
         category: "వర్గం"
+        score_type:
+          title: "కారణం"
         orders:
           score: "స్కోర్"
           score_asc: "స్కోర్ (రివర్స్)"
@@ -851,14 +855,6 @@ te:
         description: "ఈ సమూహంలోని సభ్యులు ఈ వర్గాలను యాక్సెస్ చేయవచ్చు"
       public_admission: "సభ్యులను సమూహంలో స్వేచ్ఛగా చేరడానికి అనుమతించండి (బహిరంగంగా కనిపించే సమూహం అవసరం)"
       public_exit: "సభ్యులను సమూహాన్ని స్వేచ్ఛగా విడిచిపెట్టడానికి అనుమతించండి"
-      empty:
-        posts: "ఈ సమూహంలోని సభ్యుల పోస్టులు ఏవి లేవు."
-        members: "ఈ సమూహంలో సభ్యులు లేరు."
-        requests: "ఈ సమూహానికి సభ్యత్వ అభ్యర్థనలు లేవు."
-        mentions: "ఈ సమూహం గురించి ప్రస్తావనలు లేవు."
-        messages: "ఈ సమూహంకు సందేశాలు లేవు."
-        topics: "ఈ సమూహంలోని సభ్యుల ద్వారా ఎటువంటి విషయాలు లేవు."
-        logs: "ఈ సమూహం కోసం లాగ్లు లేవు."
       add: "జోడించండి"
       join: "చేరండి"
       leave: "వదిలేయండి"
@@ -1045,17 +1041,16 @@ te:
         one: "%{count} ని తొలగించండి"
         other: "%{count} ని తొలగించండి"
       username: "సభ్యనామం"
-      trust_level: "TL"
+      trust_level: "విశ్వసనీయ స్థాయి"
       read_time: "చదువు సమయం"
       topics_entered: "రాసిన విషయాలు "
-      post_count: "# పోస్ట్‌లు"
+      post_count: "టపాలు"
       confirm_delete_other_accounts: "మీరు నిజ్జంగా ఈ ఖాతాలు తొలగించాలనుకుంటున్నారా?"
       powered_by: "<a href='https://maxmind.com'>మ్యాక్స్మైండ్</a> ఉపయోగించి"
       copied: "కాపీ చేయబడింది"
     user_fields:
       none: "(ఒక ఎంపికను ఎంచుకోండి)"
       required: 'దయచేసి "%{name}" కోసం విలువను నమోదు చేయండి'
-      same_as_password: "మీ పాస్‌వర్డ్ ఇతర ఫీల్డ్‌లలో పునరావృతం కాకూడదు."
       optional: (ఐచ్ఛికం)
     user:
       said: "%{username}:"
@@ -1173,17 +1168,15 @@ te:
         description: "కొత్త సభ్యుడి ఆన్‌బోర్డింగ్ చిట్కాలు మరియు బ్యాడ్జ్‌లను దాటవేయండి"
       reset_seen_user_tips: "సభ్యుడి చిట్కాలను మళ్లీ చూపండి"
       theme_default_on_all_devices: "నా అన్ని పరికరాలలో దీన్ని డిఫాల్ట్ థీమ్‌గా చేయండి"
-      color_scheme: "రంగు పథకం"
+      color_scheme: "రంగుల పాలెట్"
       color_schemes:
         default_description: "థీమ్ డిఫాల్ట్"
         disable_dark_scheme: "రెగ్యులర్ మాదిరిగానే"
-        dark_instructions: "మీరు మీ పరికరం యొక్క డార్క్ మోడ్‌ను టోగుల్ చేయడం ద్వారా డార్క్ మోడ్ కలర్ స్కీమ్‌ని ప్రివ్యూ చేయవచ్చు."
         undo: "రీసెట్ చేయండి"
         regular: "రెగ్యులరు"
         dark: "డార్క్ మోడ్"
         default_dark_scheme: "(సైట్ డిఫాల్ట్)"
       dark_mode: "డార్క్ మోడ్"
-      dark_mode_enable: "ఆటోమేటిక్ డార్క్ మోడ్ రంగు పథకాన్ని ప్రారంభించండి"
       text_size_default_on_all_devices: "నా అన్ని పరికరాలలో దీన్ని డిఫాల్ట్ వచన పరిమాణంగా చేయండి"
       allow_private_messages: "నాకు వ్యక్తిగత సందేశాలను పంపడానికి ఇతర సభ్యులను అనుమతించండి"
       external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరవండి"
@@ -1856,9 +1849,6 @@ te:
     form_kit:
       reset: రీసెట్ చేయండి
       optional: ఐచ్ఛికం
-      select:
-        select_placeholder: "ఎంచుకోండి…"
-        none_placeholder: "ఏదీ లేదు"
       errors:
         required: "అవసరం"
         invalid_url: "తప్పక చెల్లుబాటు అయ్యే URL అయి ఉండాలి"
@@ -2102,6 +2092,9 @@ te:
       categories_boxes: "ఉపవర్గాలతో కూడిన పెట్టెలు"
       categories_boxes_with_topics: "ఫీచర్ చేసిన విషయాలతో పెట్టెలు"
       subcategories_with_featured_topics: "ఫీచర్ చేయబడిన విషయాలతో ఉపవర్గాలు"
+    full_name_requirement:
+      required_at_signup: "అవసరం"
+      optional_at_signup: "ఐచ్ఛికం"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2433,8 +2426,6 @@ te:
         quoted: "కోట్ చేయబడింది"
         edited: "సవరించబడింది"
         liked: "కొత్త ఇష్టం"
-        private_message: "కొత్త ప్రైవేట్ సందేశం"
-        invited_to_private_message: "ప్రైవేట్ సందేశానికి ఆహ్వానించారు"
         invitee_accepted: "ఆహ్వానం ఆమోదించబడింది"
         posted: "కొత్త పోస్ట్"
         watching_category_or_tag: "కొత్త పోస్ట్"
@@ -3037,7 +3028,6 @@ te:
         help: "ఈ విషయం యొక్క ప్రింటర్ అనుకూల సంస్కరణను తెరవండి"
       flag_topic:
         title: "ఫిర్యాదు"
-        help: "ఈ విషయాన్ని ప్రైవేటుగా ఫిర్యాదు చెయ్యండి లేదా ప్రైవేటు నోటిఫికేషన్ పంపండి"
         success_message: "ఈ విషయాన్ని మీరు ఫిర్యాదు చేసారు"
       make_public:
         title: "పబ్లిక్ విషయం గా మార్చండి"
@@ -3201,6 +3191,8 @@ te:
           one: మీరు <b>%{count}</b> పోస్ట్‌ని ఎంచుకున్నారు.
           other: "మీరు <b>%{count}</b> పోస్ట్‌లను ఎంచుకున్నారు."
       deleted_by_author_simple: "(రచయిత తొలగించిన విషయం)"
+    post_list:
+      aria_post_number: "%{title} - పోస్ట్ #%{postNumber}"
     post:
       confirm_delete: "మీరు ఖచ్చితంగా ఈ పోస్ట్‌ను తొలగించాలనుకుంటున్నారా?"
       quote_reply: "కోట్"
@@ -3308,7 +3300,6 @@ te:
         edit_action: "సవరించండి"
         edit_anonymous: "క్షమించండి, కానీ మీరు ఈ పోస్ట్‌ను సవరించడానికి లాగిన్ అయి ఉండాలి."
         flag_action: "ఫిర్యాదు"
-        flag: "ఈ పోస్ట్‌పై ప్రైవేట్‌గా ఫిర్యాదు చేయండి లేదా దాని గురించి ప్రైవేట్ నోటిఫికేషన్‌ను పంపండి"
         delete_action: "పోస్ట్ తొలగించండి"
         delete: "ఈ పోస్ట్‌ని తొలగించండి"
         undelete: "ఈ పోస్ట్‌ని పునస్తాపించండి"
@@ -3931,7 +3922,6 @@ te:
         mark_watching: "%{shortcut} విషయాన్ని అనుసరించండి"
         print: "%{shortcut} ప్రింట్ విషయం"
         topic_admin_actions: "%{shortcut} విషయం అడ్మిన్ చర్యలను తెరవండి"
-        archive_private_message: "%{shortcut} ప్రైవేట్ సందేశాన్ని ఆర్కైవ్ చేయడాన్ని టోగుల్ చేయండి"
       search_menu:
         title: "శోధన మెను"
         prev_next: "%{shortcut} ఎంపికను పైకి క్రిందికి తరలించండి"
@@ -4426,9 +4416,32 @@ te:
         meta_doc: "నివేదికల యొక్క వివరణాత్మక స్థూలదృష్టి కోసం మా <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>డాక్యుమెంటేషన్</a> ని అన్వేషించండి."
         sidebar_title: "నివేదికలు"
         sidebar_link:
-          all: "అన్ని"
-      new_features:
-        title: "కొత్తది ఏమిటి"
+          all: "అన్ని నివేదికలు"
+      config:
+        developer:
+          title: "డవలపరు"
+        files:
+          title: "ఫైళ్లు"
+        legal:
+          title: "చట్టపరమైన"
+        logo:
+          title: "సైట్ లోగో"
+        navigation:
+          title: "నావిగేషన్"
+        notifications:
+          title: "ప్రకటనలు"
+        onebox:
+          title: "వన్బాక్స్"
+        other:
+          title: "ఇతర"
+        search:
+          title: "వెతుకు"
+        security:
+          title: "సెక్యూరిటీ"
+        spam:
+          title: "స్పామ్"
+        user_api:
+          title: "సబ్యుల API"
       dashboard:
         title: "ప్రధాన పేజీ"
         last_updated: "డాష్‌బోర్డ్ నవీకరించబడింది:"
@@ -4444,7 +4457,6 @@ te:
         problems_found: "మీ ప్రస్తుత సైట్ సెట్టింగ్‌ల ఆధారంగా కొన్ని సలహాలు"
         dismiss_notice: "రద్దుచేయండి"
         new_features:
-          title: "కొత్తది ఏమిటి"
           previous_announcements: "మీరు మునుపటి కొత్త ఫీచర్ ప్రకటనలను <a href='%{url}' target='_blank'>డిస్కోర్స్ మెటా</a>లో చూడవచ్చు"
           learn_more: "మరింత తెలుసుకోండి..."
         last_checked: "చివరగా సరిచూసినది"
@@ -4523,6 +4535,7 @@ te:
             include_subcategories:
               label: "ఉపవర్గాలను చేర్చండి"
       flags:
+        title: "మోడరేషన్"
         description: "వివరణ"
         enabled: "ప్రారంభించబడిందా?"
       groups:
@@ -4844,17 +4857,19 @@ te:
       community:
         title: "సంఘం"
         sidebar_link:
+          about_your_site: "మీ సైట్ గురించి"
           badges: "బ్యాడ్జీలు"
           notifications: "నోటిఫికేషన్‌లు"
           permalinks: "శాశ్వత లింక్‌లు"
-          trust_levels: "నమ్మకపు స్థాయిలు"
           users: "సభ్యులు"
-          user_fields: "సభ్య క్షేత్రాలు"
-          watched_words: "అనుసరిస్తున్న పదాలు"
+          groups: "సమూహాలు"
           legal: "చట్టపరమైన"
+          moderation_flags:
+            title: "మోడరేషన్"
       appearance:
         title: "స్వరూపం"
         sidebar_link:
+          site_logo: "సైట్ లోగో"
           emoji: "ఇమోజి"
           navigation: "నావిగేషన్"
           themes: "థీమ్స్"
@@ -4864,22 +4879,8 @@ te:
         title: "ఇమెయిల్ సెట్టింగ్‌లు"
         sidebar_link:
           appearance: "స్వరూపం"
-          preview_summary: "సారాంశాన్ని ప్రివ్యూ"
-      email_logs:
-        sidebar_link:
-          sent: "పంపిన"
-          skipped: "వదిలిన"
-          bounced: "బౌన్స్ అయింది"
-          received: "అందినవి"
-          rejected: "తిరస్కరించబడినవి"
       security:
         title: "సెక్యూరిటీ"
-        sidebar_link:
-          error_logs: "దోష లాగులు"
-          screened_emails: "స్క్రీన్ చేసిన ఈమెయిల్లు"
-          screened_ips: "స్క్రీన్ చేసిన ఐపీలు"
-          screened_urls: "స్క్రీన్ చేసిన యూఆర్ యల్ లు"
-          search_logs: "లాగ్‌లను శోధించండి"
       section_landing_pages:
         account:
           title: "ఖాతా"
@@ -4899,6 +4900,7 @@ te:
           update: "నవీకరించండి"
           saved: "సేవ్ చేయబడింది!"
         flags:
+          header: "మోడరేషన్"
           description: "వివరణ"
           enabled: "ప్రారంభించబడిందా?"
           edit: "సవరించండి"
@@ -4912,6 +4914,12 @@ te:
             invalid_applies_to: "అవసరం"
             topic: "విషయాలు"
             post: "టపాలు"
+        permalinks:
+          edit: "సవరించండి"
+          delete: "తొలగించు"
+        embeddable_host:
+          edit: "సవరించండి"
+          delete: "తొలగించు"
         look_and_feel:
           title: "రూపం మరియు అనుభూతి"
           themes:
@@ -4941,9 +4949,7 @@ te:
         sidebar_link:
           developer: "డవలపరు"
           embedding: "పొందుపరచడం"
-          rate_limits: "రోట్ హద్దులు"
           user_api: "సబ్యుల API"
-          web_hooks: "వెబ్‌బూక్స్"
           onebox: "వన్బాక్స్"
           files: "ఫైళ్లు"
           other_options: "ఇతర"
@@ -4995,7 +5001,7 @@ te:
             label: "దిగుమతి"
             title: "డౌన్‌లోడ్ లింక్‌తో ఇమెయిల్ పంపండి"
           destroy:
-            title: "బ్యాకప్‌ని తీసివేయండి"
+            title: "తొలగించు"
             confirm: "మీరు నిజంగానే బ్యాకప్ ను నాశనం చేయాలనుకుంటున్నారా?"
           restore:
             label: "పునరుద్ధరించండి"
@@ -5101,7 +5107,6 @@ te:
           hide_unused_fields: "ఉపయోగించని ఫీల్డ్‌లను దాచండి"
           is_default: "థీమ్ డిఫాల్ట్‌గా ప్రారంభించబడింది"
           user_selectable: "థీమ్‌ను సభ్యులు ఎంచుకోవచ్చు"
-          color_scheme_user_selectable: "రంగు పథకం సభ్యులు ఎంచుకోవచ్చు"
           auto_update: "డిస్కర్స్ నవీకరించబడినప్పుడు ఆటో నవీకరణ"
           color_scheme: "రంగుల పాలెట్"
           edit_color_scheme: "రంగుల పాలెట్‌ని సవరించండి"
@@ -6244,6 +6249,7 @@ te:
         settings: "అమరికలు"
       embedding:
         get_started: "మీరు మరొక వెబ్సైట్లో డిస్కోర్స్ పొందుపరచాలనుకుంటే, దాని హోస్ట్ను జోడించడం ద్వారా ప్రారంభించండి."
+        delete: "తొలగించు"
         confirm_delete: "మీరు ఖచ్చితంగా ఆ హోస్ట్‌ని తొలగించాలనుకుంటున్నారా?"
         sample: |
           <p>Discourse విషయాలను సృష్టించడానికి మరియు పొందుపరచడానికి కింది HTML కోడ్ను మీ సైట్లో అతికించండి. <b>EMBED_URL</b> ను మీరు పొందుపరుస్తున్న పేజీ యొక్క కానానికల్ URL తో భర్తీ చేయండి.</p>
@@ -6252,14 +6258,8 @@ te:
 
           <p> <b>DISCOURSE_USERNAME</b> ను టాపిక్ సృష్టించాలి అని రచయిత యొక్క Discourse వినియోగదారు పేరు తో భర్తీ చేయండి. ప్రసంగం స్వయంచాలకంగా <code>&lt;meta&gt;</code> ట్యాగ్ల <code>కంటెంట్</code> గుణం ద్వారా వినియోగదారుని లుక్అప్ చేస్తుంది <code>పేరు</code> గుణం <code>డిస్కోర్స్-యూజర్పేరు</code> లేదా <code>రచయిత</code>సెట్. <code>DiscourseUserName</code> పారామితి నిర్వీర్యం చేయబడింది మరియు డిస్కోర్స్ 3.2 లో తొలగించబడుతుంది.</p>
         title: "పొందుపరచడం"
-        host: "అనుమతించబడిన హోస్ట్‌లు"
-        allowed_paths: "మార్గం అనుమతి జాబితా"
         edit: "సవరించండి"
-        category: "ఈ వర్గానికి పోస్ట్ చేయండి"
-        add_host: "హోస్ట్‌ని జోడించండి"
-        settings: "పొందుపరిచే సెట్టింగ్‌లు"
-        crawling_settings: "క్రాలర్ సెట్టింగ్‌లు"
-        crawling_description: "మీ పోస్ట్‌ల కోసం Discourse విషయాలను సృష్టించినప్పుడు, RSS/ATOM ఫీడ్ లేనట్లయితే, అది మీ కంటెంట్‌ను మీ HTML నుండి అన్వయించడానికి ప్రయత్నిస్తుంది. కొన్నిసార్లు మీ కంటెంట్‌ను సంగ్రహించడం సవాలుగా ఉంటుంది, కాబట్టి మేము సంగ్రహణను సులభతరం చేయడానికి CSS నియమాలను పేర్కొనే సామర్థ్యాన్ని అందిస్తాము."
+        crawlers_description: "మీ పోస్ట్‌ల కోసం Discourse విషయాలను సృష్టించినప్పుడు, RSS/ATOM ఫీడ్ లేనట్లయితే, అది మీ కంటెంట్‌ను మీ HTML నుండి అన్వయించడానికి ప్రయత్నిస్తుంది. కొన్నిసార్లు మీ కంటెంట్‌ను సంగ్రహించడం సవాలుగా ఉంటుంది, కాబట్టి మేము సంగ్రహణను సులభతరం చేయడానికి CSS నియమాలను పేర్కొనే సామర్థ్యాన్ని అందిస్తాము."
         embed_by_username: "విషయం సృష్టి కోసం సభ్యనామం"
         embed_post_limit: "పొందుపరచడానికి గరిష్ట పోస్ట్ల సంఖ్య"
         embed_title_scrubber: "పోస్ట్ల శీర్షికను స్క్రబ్ చేయడానికి ఉపయోగించే రెగ్యులర్ ఎక్స్ప్రెషన్"
@@ -6268,7 +6268,12 @@ te:
         allowed_embed_selectors: "ఎంబెడ్‌లలో అనుమతించబడిన మూలకాల కోసం CSS ఎంపిక సాధనం"
         blocked_embed_selectors: "ఎంబెడ్‌ల నుండి తీసివేయబడిన మూలకాల కోసం CSS ఎంపిక సాధనం"
         allowed_embed_classnames: "అనుమతించబడిన CSS class పేర్లు"
-        save: "పొందుపరిచే సెట్టింగ్‌లను సేవ్ చేయండి"
+        save: "సేవ్ చేయండి"
+        host_form:
+          save: "సేవ్ చేయండి"
+        nav:
+          settings: "అమరికలు"
+          crawlers: "క్రాలర్లు"
       permalink:
         title: "శాశ్వత లింక్‌లు"
         description: "ఫోరమ్ ద్వారా తెలియని URLల కోసం దరఖాస్తు చేయడానికి దారి మళ్లింపులు."
@@ -6288,6 +6293,9 @@ te:
         destination: "గమ్యం"
         copy_to_clipboard: "పెర్మాలింక్‌ని క్లిప్‌బోర్డ్‌కి కాపీ చేయండి"
         delete_confirm: మీరు ఖచ్చితంగా ఈ పెర్మాలింక్‌ని తొలగించాలనుకుంటున్నారా?
+        nav:
+          settings: "అమరికలు"
+          permalinks: "శాశ్వత లింక్‌లు"
         form:
           label: "కొత్త:"
           url: "URL"
@@ -6325,8 +6333,23 @@ te:
           moderator: "నిర్వాహకుడు"
           regular: "సాధారణ సభ్యుడు"
       previews:
-        topic_title: "చర్చా విషయం శీర్షిక"
         share_button: "షేర్ చేయండి"
         reply_button: "ప్రత్యుత్తరం ఇవ్వండి"
         topic_preview: "విషయం ప్రివ్యూ"
         homepage_preview: "మొదటి పేజీ ప్రివ్యూ"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "అన్ని వర్గాలు"
+          new: "కొత్త "
+          unread: "చదవని"
+          top: "అగ్ర"
+          latest: "తాజా"
+          hot: "హాట్"
+          categories: "వర్గాలు"
+        category_names:
+          site_feedback: "సైట్ పై అభిప్రాయం"
+        table_headers:
+          topic: "విషయం"
+          replies: "ప్రత్యుత్తరాలు"
+          views: "వీక్షణలు"
+          activity: "కలాపం"

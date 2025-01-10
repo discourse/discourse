@@ -4,7 +4,7 @@ module PageObjects
   module Pages
     class AdminPermalinks < PageObjects::Pages::Base
       def visit
-        page.visit("/admin/customize/permalinks")
+        page.visit("/admin/config/permalinks")
         self
       end
 
@@ -41,6 +41,22 @@ module PageObjects
         has_no_css?(".admin-permalink-item__url")
       end
 
+      def has_no_filter?
+        has_no_css?(".permalink-search")
+      end
+
+      def has_filter?
+        has_css?(".permalink-search")
+      end
+
+      def filter(text)
+        find(".permalink-search").fill_in with: text
+      end
+
+      def has_no_results?
+        has_css?(".permalink-results__no-result")
+      end
+
       def open_permalink_menu(url)
         find("tr.#{url} .permalink-menu-trigger").click
         self
@@ -48,6 +64,15 @@ module PageObjects
 
       def has_closed_permalink_menu?
         has_no_css?(".permalink-menu-content")
+      end
+
+      def click_tab(tab)
+        has_css?(".admin-permalinks-tabs__#{tab}")
+        find(".admin-permalinks-tabs__#{tab}").click
+      end
+
+      def has_active_tab?(tab)
+        has_css?(".admin-permalinks-tabs__#{tab} .active")
       end
     end
   end

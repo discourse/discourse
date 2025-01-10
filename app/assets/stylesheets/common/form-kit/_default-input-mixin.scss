@@ -2,7 +2,7 @@
   width: 100% !important;
   height: 2em;
   background: var(--secondary);
-  border: 1px solid var(--primary-low-mid);
+  border: 1px solid var(--primary-low-mid) !important;
   border-radius: var(--d-input-border-radius);
   padding: 0 0.5em !important;
   box-sizing: border-box;

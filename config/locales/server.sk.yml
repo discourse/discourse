@@ -453,11 +453,11 @@ sk:
     max_redemptions_limit: "by mala byť medzi 2 a %{max_limit}."
   topic_invite:
     failed_to_invite: "Používateľ nemôže byť pozvaný do tejto témy bez členstva v jednej z nasledujúcich skupín: %{group_names}."
-    not_pm: "Pozývať môžete len do súkromných správ."
+    not_pm: "Môžete pozvať iba na osobné správy."
     user_exists: "Je nám ľúto, tento používateľ už bol pozvaný. Používateľa môžete do témy pozvať len raz."
     muted_topic: "Ospravedlňujeme sa, ale tento používateľ túto tému stlmil."
-    receiver_does_not_allow_pm: "Je nám ľúto, ale tento používateľ vám neumožňuje posielať súkromné správy."
-    sender_does_not_allow_pm: "Je nám ľúto, ale tomuto používateľovi nie je povolené posielať vám súkromné správy."
+    receiver_does_not_allow_pm: "Ľutujeme, tento používateľ vám neumožňuje posielať osobné správy."
+    sender_does_not_allow_pm: "Ľutujeme, tomuto používateľovi nepovoľujete posielať vám osobné správy."
     user_cannot_see_topic: "%{username} nevidí tému."
   backup:
     operation_already_running: "Prebieha spracovanie inej operácie. Momentálne sa nová úloha nedá spustiť. "
@@ -1547,12 +1547,12 @@ sk:
       title: "Upozorniť moderátora"
       xaxis: "Deň"
       yaxis: "Počet správ"
-      description: "Počet prípadov, kedy boli moderátori súkromne upozornení prostredníctvom označenia."
+      description: "Počet, koľkokrát moderátori dostali osobné správy s ďalšími podrobnosťami o príznaku."
     notify_user_private_messages:
       title: "Upozorniť používateľa"
       xaxis: "Deň"
       yaxis: "Počet správ"
-      description: "Počet prípadov, keď boli používatelia súkromne upozornení prostredníctvom označenia."
+      description: "Počet odoslaní osobných správ používateľom pomocou dialógového okna príznaku."
     top_referrers:
       title: "Najlepší referenti"
       xaxis: "Používateľ"
@@ -1881,8 +1881,6 @@ sk:
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
     summary_max_results: "Maximálny počet príspevkov vrátených funkciou 'Zhrnúť túto tému'"
     summary_timeline_button: "Zobrazenie tlačidla \"Zhrnúť\" na časovej osi"
-    summarization_strategy: "Ďalšie spôsoby sumarizácie obsahu registrovaného zásuvnými modulmi"
-    custom_summarization_allowed_groups: "Skupiny, ktoré môžu sumarizovať obsah pomocou stratégie `summarization_strategy`."
     enable_personal_messages: "ODSTRÁNENÉ, namiesto toho použite nastavenie \"skupiny povolené pre osobné správy\". Povoľte používateľom úrovne dôveryhodnosti 1 (nastaviteľnej prostredníctvom min. dôveryhodnosti na odosielanie správ) vytvárať správy a odpovedať na správy. Všimnite si, že zamestnanci môžu vždy posielať správy bez ohľadu na to, aké sú."
     personal_message_enabled_groups: "Povoľte používateľom v týchto skupinách VYTVÁRAŤ osobné správy. DÔLEŽITÉ: 1) všetci používatelia môžu ODPOVEDAŤ na správy. 2) Administrátori a modi môžu VYTVORIŤ správy pre ktoréhokoľvek používateľa. 3) Skupiny na úrovni dôvery zahŕňajú vyššie úrovne; vyberte trust_level_1, aby ste povolili TL1, TL2, TL3, TL4, ale nepovolili TL0. 4) Nastavenia interakcie skupín prekrývajú toto nastavenie pre posielanie správ konkrétnym skupinám."
     enable_system_message_replies: "Umožňuje používateľom odpovedať na systémové správy, aj keď sú osobné správy zakázané."
@@ -1953,6 +1951,7 @@ sk:
     content_security_policy_frame_ancestors: "Obmedziť, kto môže túto stránku vložiť do iframe prostredníctvom CSP. Kontrola povolených hostiteľov pri <a href='%{base_path}/admin/customize/embedding'>vkladaní</a>"
     content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Ostatné zdroje hostiteľa sú ignorované, pretože je povolená funkcia strict-dynamic."
     invalidate_inactive_admin_email_after_days: "Účty administrátorov, ktorí nenavštívili stránku počas tohto počtu dní, budú musieť pred prihlásením znovu overiť svoju e-mailovú adresu. Nastavte na 0, aby ste to zakázali."
+    suppress_secured_categories_from_admin: "Potlačenie súkromných tém a PM v niektorých častiach používateľského rozhrania pre administrátorov. Obsah bude na niektorých miestach stále viditeľný. Toto nie je bezpečnostná funkcia: administrátori majú vždy prístup ku všetkému obsahu na stránke."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
     top_menu: "Určite, ktoré položky a v akom poradí sa zobrazia v navigácii na domovskej stránke."
@@ -1961,7 +1960,7 @@ sk:
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
     allow_username_in_share_links: "Povolenie uvádzania používateľských mien v prepojeniach na zdieľanie. Je to užitočné na odmeňovanie odznakov na základe jedinečných návštevníkov."
     site_contact_username: "Platné používateľské meno obsluhy, ktorá bude posielať automatizované správy. Pokiaľ je vynechané, použije sa východzí systémový účet. "
-    site_contact_group_name: "Platný názov skupiny, ktorá je pozývaná do všetkých automaticky odosielaných súkromných správ."
+    site_contact_group_name: "Platný názov skupiny, ktorá bude pozvaná na všetky automaticky odoslané osobné správy."
     send_welcome_message: "Poslať všetkým novým používateľom uvítaciu správu s návodom ako začať. "
     send_tl1_welcome_message: "Odoslanie uvítacej správy novým používateľom úrovne dôveryhodnosti 1."
     send_tl2_promotion_message: "Odoslanie správy o povýšení novým používateľom na úrovni dôveryhodnosti 2."
@@ -2222,7 +2221,7 @@ sk:
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     desktop_category_page_style: "Toto nastavenie určuje vizuálne rozloženie stránky /kategórie na ploche. Zahŕňa možnosti, ako je zobrazenie podkategórií s odporúčanými témami, zobrazenie najnovších tém alebo prezentácia top tém. Zvolený štýl ovplyvní spôsob interakcie používateľov a navigácie v kategóriách na stránke."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
-    default_dark_mode_color_scheme_id: "Farebná schéma používaná v tmavom režime."
+    default_dark_mode_color_scheme_id: "Paleta farieb používaná v tmavom režime."
     dark_mode_none: "Žiadny"
     max_image_size_kb: "Maximálna veľkosť nahraného obrázka. Táto hodnota musí byť nakonfigurovaná v nginx (client_max_body_size) / apache alebo proxy. Obrázky väčšie ako táto veľkosť a menšie ako client_max_body_size sa pri odosielaní zmenšia tak, aby sa zmestili."
     max_attachment_size_kb: "Maximálna veľkosť nahraných súborov prílohy. Táto hodnota musí byť nakonfigurovaná v nginx (client_max_body_size) / apache alebo proxy."
@@ -2382,6 +2381,7 @@ sk:
     anonymous_posting_allowed_groups: "Skupiny, ktoré môžu povoliť anonymné uverejňovanie"
     anonymous_account_duration_minutes: "Každých N minút vytvor nový anonymný účet na ochranu používateľskej anonymity. Príklad: Ak je nastavené na 600, akonáhle uplynie 600 minút od posledného príspevku A používateľ prepne do anonymného režimu, vytvorí sa nový anonymný účet."
     hide_user_profiles_from_public: "Vypnúť používateľské karty, profily a adresár pre anonymných používateľov."
+    hide_new_user_profiles: "Skryť používateľské profily úrovne 1 alebo nižšej pred verejnými používateľmi a používateľmi úrovne 1 dôveryhodnosti, kým nepridajú prvý príspevok. Táto funkcia je bezpodmienečne zakázaná na stránkach must_approve_users a iba na pozvaných stránkach."
     allow_users_to_hide_profile: "Umožniť používateľom skryť svoj profil a prítomnosť"
     hide_user_activity_tab: "Skryť kartu aktivity v používateľských profiloch okrem profilov administrátora a seba."
     delete_associated_accounts_on_password_reset: "Odstránenie účtu spojeného s používateľom, keď používateľ zmení heslo."
@@ -2428,7 +2428,7 @@ sk:
     penalty_include_post_message: "Automatické zahrnutie správy s urážlivým príspevkom do šablóny e-mailovej správy pri umlčaní alebo pozastavení používateľa"
     svg_icon_subset: "Pridajte ďalšie ikony FontAwesome, ktoré chcete zahrnúť do svojich aktív. Pre pevné ikony použite prefix \"fa-\", pre bežné ikony \"far-\" a pre ikony značky \"fab-\"."
     max_prints_per_hour_per_user: "Maximálny počet výtlačkov /tlačovej strany (nastavením na 0 sa tlač zakáže)"
-    full_name_required: "Na používateľskom profile je vyžadované plné meno."
+    full_name_requirement: "Vytvorte pole s celým menom ako povinné, voliteľné alebo voliteľné, ale skryté pole v registračnom formulári."
     enable_names: "Na profile zobraziť plné používateľské meno, karty a emaily používateľa. Vypnite na schovanie plného mena všade."
     display_name_on_posts: "Na príspevkoch zobraziť okrem @loginpoužívateľa i plné meno používateľa."
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
@@ -2454,7 +2454,7 @@ sk:
     delete_merged_stub_topics_after_days: "Počet dní, ktoré treba čakať pred automatickým odstránením úplne zlúčených tém. Nastavte na hodnotu -1, aby ste nikdy neodstránili. Nastavte na 0 na okamžité odstránenie."
     bootstrap_mode_min_users: 'Minimálny počet používateľov potrebný na vypnutie režimu bootstrap a odstránenie tlačidla Začíname (pre vypnutie nastavte hodnotu 0, môže to trvať až 24 hodín). Podrobnosti nájdete v <a target="_blank" href="https://meta.discourse.org/t/-/322876">téme Režim bootstrap na stránke Meta</a>.'
     prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom v preberaní príloh."
-    secure_uploads: "### Preklad\n\n**Obmedzuje prístup ku VŠETKÝM nahratým súborom** (obrázky, videá, audio, texty, PDF, ZIP a ďalšie). Ak je povolené \"vyžaduje sa prihlásenie\", nahraté súbory môžu byť prístupné iba prihláseným používateľom. Inak bude prístup obmedzený iba pre médiá nahraté v súkromných správach a súkromných kategóriách. UPOZORNENIE: Toto nastavenie je zložité a vyžaduje hlboké administratívne porozumenie. Podrobnosti nájdete v téme <a target=\"_blank\" href=\"https://meta.discourse.org/t/-/140017\">zabezpečené nahrávanie na Meta</a>."
+    secure_uploads: 'Obmedzuje prístup ku VŠETKÝM nahraným materiálom (obrázky, video, zvuk, text, pdf, zips a ďalšie). Ak je povolené „potrebné prihlásenie“, prístup k nahrávkam majú iba prihlásení používatelia. V opačnom prípade bude prístup obmedzený len pre nahrávanie médií v osobných správach a súkromných kategóriách. VAROVANIE: Toto nastavenie je zložité a vyžaduje si hlboké administratívne porozumenie. Podrobnosti nájdete v téme <a target="_blank" href="https://meta.discourse.org/t/-/140017">v téme bezpečného nahrávania na Meta</a> .'
     secure_uploads_allow_embed_images_in_emails: "Umožňuje vkladanie zabezpečených obrázkov, ktoré by sa za normálnych okolností v e-mailoch redigovali, ak je ich veľkosť menšia ako nastavenie \"secure uploads max email embed image size kb\"."
     secure_uploads_max_email_embed_image_size_kb: "Hranica veľkosti zabezpečených obrázkov, ktoré sa budú vkladať do e-mailov, ak je povolené nastavenie \"bezpečné nahrávanie umožňuje vkladanie do e-mailov\". Bez zapnutia tohto nastavenia nemá toto nastavenie žiadny účinok."
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
@@ -2566,7 +2566,7 @@ sk:
     remove_muted_tags_from_latest: "V zozname najnovších tém nezobrazujte témy označené iba tlmenými značkami."
     force_lowercase_tags: "Vynútiť, aby všetky nové značky boli písané výhradne malými písmenami."
     create_post_for_category_and_tag_changes: "Vytvorenie šepkaného príspevku pri zmene kategórie alebo značky témy, vyžaduje, aby boli povolené šepkané príspevky."
-    automatically_clean_unused_tags: "Automaticky denne odstraňovať značky, ktoré sa nepoužívajú pri žiadnych témach alebo súkromných správach."
+    automatically_clean_unused_tags: "Automaticky odstráňte značky, ktoré sa nepoužívajú na žiadne témy alebo osobné správy na dennej báze."
     watched_precedence_over_muted: "Upozorniť ma na témy v kategóriách alebo značkách, ktoré sledujem a ktoré tiež patria do tých, ktoré som stlmil"
     company_name: "Názov vašej spoločnosti alebo organizácie. Ak pole ponecháte prázdne, neposkytnú sa žiadne všeobecné zmluvné podmienky ani oznámenie o ochrane osobných údajov."
     governing_law: "Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a zásad ochrany osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká."
@@ -2606,15 +2606,14 @@ sk:
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
     enable_experimental_lightbox: "Nahraďte predvolený lightbox s obrázkami prepracovaným dizajnom."
-    experimental_glimmer_topic_list_groups: "Povolenie novej implementácie zoznamu tém \"glimmer\". Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    experimental_form_templates: "Povoliť funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."
+    adobe_analytics_tags_url: "Adresa URL značiek Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
@@ -2690,8 +2689,8 @@ sk:
       invalid_search_ranking_weights: "Hodnota je neplatná pre nastavenie stránky search_ranking_weights. Príklad: \"{0.1,0.2,0.3,1.0}\". Všimnite si, že maximálna hodnota pre každú váhu je 1,0."
     keywords:
       clean_up_inactive_users_after_days: "deaktivované|neaktívne|neaktivované"
-      purge_unactivated_users_grace_period_days: "deaktivované|neaktívne|neaktivované"
       navigation_menu: "bočný panel|rozbaľovacie okno záhlavia"
+      purge_unactivated_users_grace_period_days: "deaktivované|neaktívne|neaktivované"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2877,6 +2876,7 @@ sk:
     omniauth_confirm_button: "Pokračovať"
     authenticator_error_no_valid_email: "Nie sú povolené žiadne e-mailové adresy spojené s %{account} . Možno budete musieť nakonfigurovať svoje konto s inou e-mailovou adresou."
     new_registrations_disabled: "Registrácia nových účtov momentálne nie je povolená."
+    new_registrations_disabled_discourse_connect: "Registrácia nového účtu je povolená len prostredníctvom služby Discourse Connect."
     password_too_long: "Dĺžka hesla je obmedzená na 200 znakov. "
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     wrong_invite_code: "Zadaný kód pozvánky bol nesprávny."
@@ -5176,7 +5176,7 @@ sk:
         title: "Pozri a cíť"
         fields:
           color_scheme:
-            label: "Farebná schéma"
+            label: "Paleta farieb"
           body_font:
             label: "Písmo tela"
           heading_font:
@@ -5187,23 +5187,17 @@ sk:
             label: "Štýl úvodnej stránky"
             choices:
               latest:
-                label: "Najnovšie témy"
-              categories_only:
-                label: "Iba kategórie"
-              categories_with_featured_topics:
-                label: "Kategórie s odporúčanými témami"
+                label: "Najnovšie"
+                description: "Zobrazuje posledné aktívne témy vo všetkých kategóriách, čím pomáha členom zostať v obraze diskusií, ktoré ich zaujímajú."
+              hot:
+                label: "Horúce"
+                description: "Zobrazuje trendové témy zmiešaním nedávnej a celkovej popularity, ukazuje, o čom členovia vo vašej komunite práve hovoria."
               categories_and_latest_topics:
-                label: "Kategórie a najnovšie témy"
-              categories_and_latest_topics_created_date:
-                label: "Kategórie a najnovšie témy (zoradiť podľa dátumu vytvorenia témy)"
-              categories_and_top_topics:
-                label: "Kategórie a hlavné témy"
+                label: "Kategórie s najnovšími témami"
+                description: "Kombinuje nedávno aktívne témy vo všetkých kategóriách so zoznamom kategórií, ich popisom a celkovým počtom tém."
               categories_boxes:
-                label: "Kategórie Boxy"
-              categories_boxes_with_topics:
-                label: "Kategórie Boxy s témami"
-              subcategories_with_featured_topics:
-                label: "Podkategórie s odporúčanými témami"
+                label: "Kategória boxy"
+                description: "Zobrazuje kategórie a ich popis v mriežke, čo je ideálne pre členov, aby videli prehľad podkomunít na vašej stránke."
       branding:
         title: "Logo stránky"
         fields:
@@ -5275,7 +5269,7 @@ sk:
       quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
       replied: '%{username} vám odpovedal v "%{topic}" - %{site_title}'
       posted: '%{username} prispel v "%{topic}" - %{site_title}'
-      private_message: '%{username} poslal vám súkromnú správu v "%{topic}" - %{site_title}'
+      private_message: '%{username} vám poslal osobnú správu v "%{topic}" - %{site_title}'
       linked: '%{username} odkázal na váš príspevok z "%{topic}" - %{site_title}'
       watching_first_post: '%{username} vytvoril novú tému "%{topic}" - %{site_title}'
       confirm_title: "Upozornenia sú povolené - %{site_title}"

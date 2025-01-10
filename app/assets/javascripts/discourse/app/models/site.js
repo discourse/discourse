@@ -1,20 +1,24 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
 import { alias, sort } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import PreloadStore from "discourse/lib/preload-store";
-import Singleton from "discourse/mixins/singleton";
+import singleton from "discourse/lib/singleton";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
+import { isRailsTesting, isTesting } from "discourse-common/config/environment";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default class Site extends RestModel.extend().reopenClass(Singleton) {
+@singleton
+export default class Site extends RestModel {
   static createCurrent() {
     const store = getOwnerWithFallback(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
@@ -75,17 +79,64 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
     return result;
   }
 
+  @service siteSettings;
+
   @tracked categories;
 
   @alias("is_readonly") isReadOnly;
 
   @sort("categories", "topicCountDesc") categoriesByCount;
 
+  #glimmerTopicDecision;
+
   init() {
     super.init(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
     this.categories = this.categories || [];
+  }
+
+  get useGlimmerTopicList() {
+    if (this.#glimmerTopicDecision !== undefined) {
+      // Caches the decision after the first call, and avoids re-printing the same message
+      return this.#glimmerTopicDecision;
+    }
+
+    let decision;
+
+    /* eslint-disable no-console */
+    const settingValue = this.siteSettings.glimmer_topic_list_mode;
+    if (settingValue === "enabled") {
+      if (needsHbrTopicList()) {
+        console.log(
+          "⚠️  Using the new 'glimmer' topic list, even though some themes/plugins are not ready"
+        );
+      } else {
+        console.log("✅  Using the new 'glimmer' topic list");
+      }
+
+      decision = true;
+    } else if (settingValue === "disabled") {
+      decision = false;
+    } else {
+      // auto
+      if (needsHbrTopicList()) {
+        console.log(
+          "⚠️  Detected themes/plugins which are incompatible with the new 'glimmer' topic-list. Falling back to old implementation."
+        );
+        decision = false;
+      } else {
+        if (!isTesting() && !isRailsTesting()) {
+          console.log("✅  Using the new 'glimmer' topic list");
+        }
+        decision = true;
+      }
+    }
+    /* eslint-enable no-console */
+
+    this.#glimmerTopicDecision = decision;
+
+    return decision;
   }
 
   @computed("categories.[]")

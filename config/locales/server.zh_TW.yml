@@ -901,12 +901,10 @@ zh_TW:
       title: "板主通知"
       xaxis: "天"
       yaxis: "訊息數量"
-      description: "版主已被私人通知投訴的次數"
     notify_user_private_messages:
       title: "使用者通知"
       xaxis: "天"
       yaxis: "訊息數量"
-      description: "通過標記私下通知使用者的次數"
     top_referrers:
       title: "最高引用"
       xaxis: "使用者"
@@ -1175,7 +1173,6 @@ zh_TW:
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
-    site_contact_group_name: "有效的群組名稱將自動被加入到所有自動發送的訊息。"
     send_welcome_message: "給所有使用者發送快速開始指導的消息"
     send_tl1_welcome_message: "向新使用者（信任級別1）發送歡迎消息。"
     suppress_reply_directly_below: "當貼文只有一個回覆時，不顯示貼文的回覆數量。"
@@ -1437,7 +1434,6 @@ zh_TW:
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
     auto_handle_queued_age: "等待多天後系統將自動處理等待審核的記錄，投訴將被忽略。尚未審核的討論話題及使用者將被拒絕。設定為0，可禁用此功能。"
-    full_name_required: "全名是使用者個人信息的必填項。"
     enable_names: "在使用者的個人信息、使用者卡片和郵件中顯示全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在使用者的貼文中顯示他們的全名以及他們的 @username。"
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
@@ -2878,15 +2874,9 @@ zh_TW:
           homepage_style:
             choices:
               latest:
-                label: "最新主題"
-              categories_only:
-                label: "僅分類"
-              categories_with_featured_topics:
-                label: "有精選話題的分類"
-              categories_and_latest_topics:
-                label: "分類和最新話題"
-              categories_and_top_topics:
-                label: "分類與熱門話題"
+                label: "最新版本"
+              hot:
+                label: "熱門"
       corporate:
         fields:
           governing_law:
@@ -2917,7 +2907,7 @@ zh_TW:
       quoted: '%{username}在 "%{topic}" 引用您的內容 - %{site_title}'
       replied: '%{username}在"%{topic}" 回覆了您 - %{site_title}'
       posted: '%{username} 在"%{topic}" 中發文 - %{site_title}'
-      private_message: '%{username}在"%{topic}" 中傳了私人訊息給您 - %{site_title}'
+      private_message: '%{username} 在 "%{topic}" 中私訊了你- %{site_title}'
       linked: '%{username}從"%{topic}"連到了您的貼文 - %{site_title}'
       watching_first_post: '%{username}建立了新的討論話題「%{topic}- %{site_title}」'
       confirm_title: "通知已啟用 - %{site_title}"

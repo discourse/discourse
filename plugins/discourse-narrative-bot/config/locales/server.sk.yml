@@ -253,7 +253,7 @@ sk:
         instructions: |-
           Ak sa chcete dozvedieť viac, vyberte <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> nižšie a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **označte túto osobnú správu ako záložku**. Ak tak urobíte, vo vašej budúcnosti môže byť :gift:!
         reply: |-
-          Výborne! Teraz môžete kedykoľvek ľahko nájsť cestu späť k našej súkromnej konverzácii priamo z [karty so záložkami vo vašom profile](%{bookmark_url}). Stačí si vybrať svoj profilový obrázok vpravo hore &#8599;
+          Vynikajúce! Teraz môžete ľahko nájsť cestu späť k našej konverzácii kedykoľvek priamo z [záložky vo vašom profile] (%{bookmark_url}). Stačí vybrať svoj profilový obrázok vpravo hore &#8599;
         not_found: |-
           Och, v tejto téme nevidím žiadne záložky. Našli ste záložku pod každým príspevkom? Použite zobraziť viac <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> na odkrytie ďalších akcií, ak sú potrebné.
       emoji:
@@ -288,13 +288,13 @@ sk:
           (A áno, moje používateľské meno sa píše _disco_, ako v 70. rokoch 20. storočia tanečné šialenstvo. Milujem nočný život!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Máme radi priateľské diskusie a potrebujeme vašu pomoc, aby sme ich udržali civilizované(%{guidelines_url}). Ak vidíte problém, označte ho a súkromne o ňom informujte autora alebo [náš ochotný personál](%{about_url}). Existuje mnoho dôvodov, prečo by ste mohli chcieť označiť príspevok, od neškodného návrhu na rozdelenie témy až po jasné porušenie komunitných štandardov. Ak vyberiete možnosť **niečo iné**, začnete súkromnou správou diskusiu s moderátormi, kde môžete klásť ďalšie otázky.
+          Máme radi priateľské diskusie a potrebujeme vašu pomoc, aby sme [udržali veci civilizované](%{guidelines_url}). Ak zaznamenáte problém, nahláste ho, aby o ňom vedel autor alebo [náš ochotný personál](%{about_url}). Existuje mnoho dôvodov, prečo by ste mohli chcieť nahlásiť príspevok, od neškodného návrhu na rozdelenie tém až po jasné porušenie noriem komunity. Ak vyberiete **Niečo iné**, spustíte osobnú diskusiu správ s moderátormi, kde môžete klásť ďalšie otázky.
 
-          > :imp: Napísal som tu niečo odporné
+          > :imp: Napísal som tu niečo škaredé
 
           Pokračujte a **označte tento príspevok** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> a ako dôvod vyberte **Je to nevhodné**!
         reply: |-
-          [Naši zamestnanci] (%{base_uri}/skupiny/zamestnanci) budú súkromne informovaní o vašej vlajke. Ak príspevok označí dostatok členov komunity, bude tiež automaticky skrytý ako preventívne opatrenie. (Keďže som v skutočnosti nenapísal škaredý príspevok :angel:, zatiaľ som pokračoval a odstránil vlajku.)
+          [Náš personál](%{group_url}) bude súkromne upozornený na vašu vlajku. Ak dostatočný počet členov komunity označí príspevok, bude tiež preventívne automaticky skrytý. (Keďže som v skutočnosti nenapísal škaredý príspevok :angel:, pokračoval som a nateraz som odstránil vlajku.)
         not_found: |-
           Ach nie, môj nepríjemný príspevok ešte nebol označený ako nevhodný. :worried: Môžete ho označiť ako nevhodné pomocou znaku**vlajky** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezabudnite použiť tlačidlo Zobraziť viac <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> na zobrazenie ďalších akcií pre každý príspevok.
       search:
@@ -389,9 +389,9 @@ sk:
           Výborne! Pamätajte, že to funguje pre obe kategórie _a_ tagy, ak sú tagy povolené.
       change_topic_notification_level:
         instructions: |-
-          Každá téma má úroveň upozornení. Začína sa to „normálne“, čo znamená, že za normálnych okolností budete upozornení iba vtedy, keď niekto hovorí priamo s vami.
+          Každá téma má úroveň upozornení. Začína sa to „normálne“, čo znamená, že za normálnych okolností budete upozornený iba vtedy, keď niekto hovorí priamo s vami.
 
-          V predvolenom nastavení je úroveň upozornenia pre súkromnú správu nastavená na najvyššiu úroveň „sledovania“, čo znamená, že budete upozornení na každú novú odpoveď. Môžete však prepísať úroveň upozornení pre _akúkoľvek_ tému na „sledovať“, „sledovať“ alebo „vypnúť zvuk“.
+          V predvolenom nastavení je úroveň upozornenia pre osobnú správu nastavená na najvyššiu úroveň „sledovania“, čo znamená, že budete upozornený na každú novú odpoveď. Môžete však prepísať úroveň upozornení pre _akúkoľvek_ tému na „sledovať“, „sledovať“ alebo „vypnúť zvuk“.
 
           Skúsme zmeniť úroveň upozornení pre túto tému. V spodnej časti témy nájdete tlačidlo, ktoré ukazuje, že túto tému **pozeráte**. Môžete zmeniť úroveň upozornení na **sledovanie**?
         not_found: |-

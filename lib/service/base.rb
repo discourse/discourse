@@ -91,21 +91,17 @@ module Service
     # @!visibility private
     module StepsHelpers
       def model(name = :model, step_name = :"fetch_#{name}", optional: false)
-        steps << ModelStep.new(name, step_name, optional: optional)
+        steps << ModelStep.new(name, step_name, optional:)
       end
 
       def params(name = :default, default_values_from: nil, &block)
         contract_class = Class.new(Service::ContractBase).tap { _1.class_eval(&block) }
         const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
-        steps << ContractStep.new(
-          name,
-          class_name: contract_class,
-          default_values_from: default_values_from,
-        )
+        steps << ContractStep.new(name, class_name: contract_class, default_values_from:)
       end
 
       def policy(name = :default, class_name: nil)
-        steps << PolicyStep.new(name, class_name: class_name)
+        steps << PolicyStep.new(name, class_name:)
       end
 
       def step(name)
@@ -152,7 +148,7 @@ module Service
       def run_step
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
-        if method.parameters.any? { _1[0] != :keyreq }
+        if !object && method.parameters.any? { _1[0] != :keyreq }
           raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
         end
         args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
@@ -441,8 +437,12 @@ module Service
     def initialize(initial_context = {})
       @context =
         Context.build(
-          initial_context.merge(__steps__: self.class.steps, __service_class__: self.class),
+          initial_context
+            .compact
+            .reverse_merge(params: {})
+            .merge(__steps__: self.class.steps, __service_class__: self.class),
         )
+      initialize_params
     end
 
     # @!visibility private
@@ -462,6 +462,22 @@ module Service
       step_name = caller_locations(1, 1)[0].base_label
       context["result.step.#{step_name}"].fail(error: message)
       context.fail!
+    end
+
+    private
+
+    def initialize_params
+      klass =
+        Data.define(*context[:params].keys) do
+          alias to_hash to_h
+
+          delegate :slice, :merge, to: :to_h
+
+          def method_missing(*)
+            nil
+          end
+        end
+      context[:params] = klass.new(*context[:params].values)
     end
   end
 end

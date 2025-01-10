@@ -40,8 +40,6 @@ def upload(path, remote_path, content_type, content_encoding = nil, logger:)
 
     File.open(path) { |file| helper.upload(file, remote_path, options) }
   end
-
-  File.delete(path) if (File.exist?(path) && ENV["DELETE_ASSETS_AFTER_S3_UPLOAD"])
 end
 
 def use_db_s3_config

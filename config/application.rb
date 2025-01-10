@@ -235,7 +235,11 @@ module Discourse
 
     # Use discourse-fonts gem to symlink fonts and generate .scss file
     fonts_path = File.join(config.root, "public/fonts")
-    Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
+    if !File.exist?(fonts_path) || File.realpath(fonts_path) != DiscourseFonts.path_for_fonts
+      puts "Symlinking fonts from discourse-fonts gem"
+      File.delete(fonts_path) if File.exist?(fonts_path)
+      Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
+    end
 
     require "stylesheet/manager"
     require "svg_sprite"

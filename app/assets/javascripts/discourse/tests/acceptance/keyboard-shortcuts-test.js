@@ -31,7 +31,7 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await triggerKeyEvent(document, "keypress", "G");
     await triggerKeyEvent(document, "keypress", "S");
-    assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
+    assert.true(currentURL().startsWith("/t/this-is-a-test-topic/9"));
 
     // Suggested topics elements exist.
     await visit("/t/internationalization-localization/280");

@@ -478,7 +478,11 @@ export default function (options) {
     }
 
     prevTerm = term;
-    if (term.length !== 0 && term.trim().length === 0) {
+    if (
+      (term.length !== 0 && term.trim().length === 0) ||
+      // close unless the caret is at the end of a word, like #line|<-
+      options.textHandler.value[options.textHandler.getCaretPosition()]?.trim()
+    ) {
       closeAutocomplete();
       return null;
     } else {

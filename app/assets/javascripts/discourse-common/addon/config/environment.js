@@ -12,8 +12,18 @@ export function setEnvironment(e) {
   }
 }
 
+/**
+ * Returns true if running in the qunit test harness
+ */
 export function isTesting() {
-  return environment === "testing";
+  return environment === "qunit-testing";
+}
+
+/**
+ * Returns true is RAILS_ENV=test (e.g. for system specs)
+ */
+export function isRailsTesting() {
+  return environment === "test";
 }
 
 // Generally means "before we migrated to Ember CLI"

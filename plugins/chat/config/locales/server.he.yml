@@ -93,8 +93,8 @@ he:
       not_accepting_dms: "מצטעים, %{username} לא מקבל הודעות כרגע."
       actor_ignoring_target_user: "בחרת להתעלם מ־%{username}, כך שאין לך אפשרות לשלוח אליהם הודעות."
       actor_muting_target_user: "בחרת להשתיק את %{username}, כך שאין לך אפשרות לשלוח אליהם הודעות."
-      actor_disallowed_dms: "בחרת למנוע ממשתמשים לשלוח אליך הודעות פרטיות וישירות כך שאין לך אפשרות ליצור הודעות ישירות חדשות."
-      actor_preventing_target_user_from_dm: "בחרת למנוע מ־%{username} לשלוח אליך הודעות פרטיות וישירות כך שאין לך אפשרות ליצור הודעות ישירות חדשות אליהם."
+      actor_disallowed_dms: "בחרת למנוע ממשתמשים לשלוח לך הודעות פרטיות וישירות, כך שלא ניתן ליצור הודעות ישירות חדשות אליהם."
+      actor_preventing_target_user_from_dm: "בחרת למנוע מ־%{username} לשלוח לך הודעות פרטיות וישירות, כך שלא ניתן ליצור הודעות ישירות חדשות אליהם."
       user_cannot_send_direct_messages: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."
       over_chat_max_direct_message_users_allow_self: "אין לך אפשרות ליצור הודעות ישירות מול עצמך."
       over_chat_max_direct_message_users:

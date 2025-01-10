@@ -115,6 +115,9 @@ function rowHelper(row) {
     el() {
       return row;
     },
+    hasClass(className) {
+      return row.classList.contains(className);
+    },
   };
 }
 

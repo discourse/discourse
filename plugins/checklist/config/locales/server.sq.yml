@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    checklist_enabled: "Aktivizo shtojcën e listës së kontrollit?"

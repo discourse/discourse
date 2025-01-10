@@ -1195,7 +1195,6 @@ el:
     automatically_unpin_topics: "Αυτόματο ξεκαρφίτσωμα των νημάτων, όταν ο χρήστης φτάνει στο κάτω μέρος."
     read_time_word_count: "Μέτρηση των λέξεων ανά λεπτό για να υπολογίσεις τον εκτιμώμενο χρόνο διαβάσματος."
     auto_handle_queued_age: "Αυτόματη διαχείριση εγγραφών σε αναμονή για έλεγχο μετά από τόσες ημέρες. Οι σημάνσεις θα αγνοηθούν. Αναρτήσεις σε ουρά και χρήστες θα αγνοηθούν. Θέσε 0 για απενεργοποίηση αυτής της λειτουργίας."
-    full_name_required: "Το ονοματεπώνυμο είναι απαραίτητο πεδίο για το προφίλ του χρήστη."
     enable_names: "Εμφάνιζε το πλήρες όνομα του χρήστη στο προφίλ τους, στην κάρτα χρήστη και στα email. Απενεργοποίησε για να κρύβεται το πλήρες όνομα παντού. "
     display_name_on_posts: "Να εμφανίζεται το πλήρες όνομα του χρήστη στις δημοσιεύσεις μαζί με το @όνομαχρήστη του."
     show_time_gap_days: "Αν δύο αναρτήσεις δημιουργηθούν με τόσες πολλές ημέρες μεταξύ τους, εμφάνιζε το χρονικό κενό στο θέμα. "
@@ -2403,17 +2402,9 @@ el:
           homepage_style:
             choices:
               latest:
-                label: "Τελευταία Θέματα"
-              categories_only:
-                label: "Μόνο Κατηγορίες"
-              categories_with_featured_topics:
-                label: "Κατηγορίες με Προτεινόμενα Νήματα"
-              categories_and_latest_topics:
-                label: "Κατηγορίες και Τελευταία Νήματα"
-              categories_and_top_topics:
-                label: "Κατηγορίες και κορυφαία θέματα"
-              subcategories_with_featured_topics:
-                label: "Υποκατηγορίες με Προτεινόμενα Θέματα"
+                label: "Πρόσφατα"
+              hot:
+                label: "Δημοφιλή"
       corporate:
         fields:
           contact_url:
@@ -2435,6 +2426,7 @@ el:
       quoted: '%{username} σε παράθεσε στο "%{topic}" - %{site_title}'
       replied: '%{username} σου απάντησε στο "%{topic}" - %{site_title}'
       posted: '%{username} ανάρτησε στο "%{topic}" - %{site_title}'
+      private_message: 'Ο/Η %{username} σας έστειλε ένα προσωπικό μήνυμα στο "%{topic}" - %{site_title}'
       linked: '%{username} έκανε μια σύνδεση στην ανάρτηση που έκανες στο νήμα "%{topic}" - %{site_title}'
       watching_first_post: 'Ο/Η %{username} δημιούργησε ένα νέο θέμα "%{topic}" - %{site_title}'
       confirm_title: "Ενεργοποιημένες ειδοποιήσεις - %{site_title}"

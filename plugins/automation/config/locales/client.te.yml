@@ -140,6 +140,8 @@ te:
             label: ట్రిగ్గర్
           version:
             label: సంస్కరణ
+          status:
+            label: స్థితి
           enabled:
             label: ప్రారంభించబడింది
           disabled:

@@ -56,8 +56,9 @@ RSpec.describe Admin::ReportsController do
       before { sign_in(admin) }
 
       context "with valid params" do
+        fab!(:topic)
+
         it "renders the reports as JSON" do
-          Fabricate(:topic)
           get "/admin/reports/bulk.json",
               params: {
                 reports: {
@@ -72,6 +73,30 @@ RSpec.describe Admin::ReportsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["reports"].count).to eq(2)
+        end
+
+        it "uses the user's locale for report names and descriptions" do
+          SiteSetting.allow_user_locale = true
+          admin.update!(locale: "es")
+          get "/admin/reports/bulk.json",
+              params: {
+                reports: {
+                  topics: {
+                    limit: 10,
+                  },
+                  likes: {
+                    limit: 10,
+                  },
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["reports"].first["title"]).to eq(
+            I18n.t("reports.topics.title", locale: "es"),
+          )
+          expect(response.parsed_body["reports"].first["description"]).to eq(
+            I18n.t("reports.topics.description", locale: "es"),
+          )
         end
       end
 

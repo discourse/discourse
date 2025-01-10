@@ -364,6 +364,7 @@ ur:
     continue: "جاری رکھی"
     switch_to_anon: "گمنام موڈ میں داخل ہوں"
     switch_from_anon: "گمنام موڈ سے باہر نکلیں"
+    none_placeholder: "کوئی نہیں"
     banner:
       close: "اس بینر کو مسترد کریں"
       edit: "ترمیم"
@@ -487,6 +488,8 @@ ur:
         refresh: "رِیفریش"
         status: "سٹیٹس"
         category: "زمرہ"
+        score_type:
+          title: "وجہ"
         orders:
           score: "اسکور"
           score_asc: "اسکور (ریورس)"
@@ -752,14 +755,6 @@ ur:
         description: "اس گروپ کے ممبران ان کیٹگریز تک رسائی حاصل کرسکتے ہیں"
       public_admission: "صارفین کو آزادی سے گروپ میں شمولیت اختیار کرنے کی اجازت دیں (گروپ کا عوامی طور پر ظاہر ہونا لاذمی ہو)"
       public_exit: "صارفین کو آزادانہ طور پر گروپ چھوڑنے کی اجازت دیں"
-      empty:
-        posts: "اس گروپ کے ارکان کی طرف سے کوئی پوسٹس نہیں ہیں۔"
-        members: "اس گروپ میں کوئی ارکان ہیں۔"
-        requests: "اس گروپ کے لئے فی الحال کوئی رکنیت کی درخواستیں نہیں ہیں۔"
-        mentions: "اس گروپ کے کوئی تذکرے موجود نہیں ہیں۔"
-        messages: "اس گروپ کے لئے فی الحال کوئی پیغامات نہیں ہیں۔"
-        topics: "اِس گروپ کے ارکان کی طرف سے کوئی ٹاپک نہیں ہیں۔"
-        logs: "اس گروپ کے لئے کوئی لاگز موجود نہیں ہیں۔"
       add: "شامل کریں"
       join: "شمولیت اختیار کریں"
       leave: "چھوڑ دیں"
@@ -941,10 +936,10 @@ ur:
         one: "%{count} حذف کریں"
         other: "%{count} حذف کریں"
       username: "صارف کا نام"
-      trust_level: "TL"
+      trust_level: "ٹرسٹ لَیول"
       read_time: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
       topics_entered: "درج کردہ موضوعات"
-      post_count: "# پوسٹ"
+      post_count: "پوسٹ`"
       confirm_delete_other_accounts: "کیا آپ واقعی یہ اکاؤنٹس مٹانا چاہتے ہیں؟"
       powered_by: "<a href='https://maxmind.com'>MaxMindDB</a>کا استعمال کرتے ہوئے"
       copied: "کاپی کر لیا"
@@ -1046,17 +1041,15 @@ ur:
       skip_new_user_tips:
         description: "نئے صارف آن بورڈنگ تجاویز اور بیجز کو چھوڑ دیں"
       theme_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ تھیم بنائیں"
-      color_scheme: "رنگ کی سکیم"
+      color_scheme: "رنگ پیلیٹ"
       color_schemes:
         default_description: "تھیم ڈیفالٹ"
         disable_dark_scheme: "باقاعدہ طور پر"
-        dark_instructions: "آپ اپنے آلے کے ڈارک موڈ کو ٹوگل کرکے ڈارک موڈ کلر سکیم کا جائزہ لے سکتے ہیں۔"
         undo: "رِی سَیٹ"
         regular: "معمولی"
         dark: "ڈارک موڈ"
         default_dark_scheme: "(سائٹ ڈیفالٹ)"
       dark_mode: "سیاہ موڈ"
-      dark_mode_enable: "خودکار ڈارک موڈ کلر سکیم کو فعال کریں۔"
       text_size_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ ٹیکسٹ سائز بنائیں"
       allow_private_messages: "دوسرے صارفین کو مجھے ذاتی پیغامات بھیجنے کی اجازت دیں"
       external_links_in_new_tab: "تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں"
@@ -1624,8 +1617,6 @@ ur:
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
-      select:
-        none_placeholder: "کوئی نہیں"
       errors:
         required: "درکار"
     close: "بند کریں"
@@ -1808,6 +1799,9 @@ ur:
       categories_boxes: "ذیلی زمرے والے خانے"
       categories_boxes_with_topics: "نمایاں ٹاپک والے خانے"
       subcategories_with_featured_topics: "نمایاں عنوانات کے ساتھ ذیلی زمرہ جات"
+    full_name_requirement:
+      required_at_signup: "درکار"
+      optional_at_signup: "اختیاری"
     shortcut_modifier_key:
       shift: "شفٹ"
       ctrl: "Ctrl"
@@ -2086,8 +2080,6 @@ ur:
         quoted: "اقتباس کردہ"
         edited: "ترمیم کردہ"
         liked: "نیا لائیک"
-        private_message: "نیا ذاتی پیغام"
-        invited_to_private_message: "ذاتی پیغام کیلئے دعوت دی گئی"
         invitee_accepted: "دعوت قبول کر لی گئی"
         posted: "نئی پوسٹ"
         watching_category_or_tag: "نئی پوسٹ"
@@ -2551,7 +2543,6 @@ ur:
         help: "اس ٹاپک کا \"پرنٹر فرینڈلی\" ورژن کھولیں"
       flag_topic:
         title: "فلَیگ"
-        help: "اس ٹاپک پر توجہ کے لئے نجی طور پر اِسے فلَیگ کریں یا اس کے بارے میں ایک نجی نوٹیفکیشن بھیجیں"
         success_message: "آپ نے کامیابی سے اِس ٹاپک کو فلَیگ کیا"
       make_public:
         title: "پبلک ٹاپک میں تبدیل کریں"
@@ -2795,7 +2786,6 @@ ur:
         edit_action: "ترمیم"
         edit_anonymous: "معذرت، اِس پوسٹ کو ترمیم کرنے کیلیے آپ کا لاگ اِن ہونا ضروری ہے۔"
         flag_action: "فلَیگ"
-        flag: "اس پوسٹ پر توجہ کے لئے اِسے نجی طور پر فلَیگ کریں یا اس کے بارے میں ایک نجی نوٹیفکیشن بھیجیں"
         delete: "اِس پوسٹ کومٹائیں"
         undelete: "اس پوسٹ کو غیر حذف کریں"
         share_action: "شیئر"
@@ -3663,7 +3653,30 @@ ur:
         title: "دستیاب رپورٹوں کی فہرست"
         sidebar_title: "رپورٹیں"
         sidebar_link:
-          all: "تمام"
+          all: "تمام رپورٹیں"
+      config:
+        developer:
+          title: "ڈیولپر"
+        files:
+          title: "فائلیں"
+        legal:
+          title: "قانونی"
+        navigation:
+          title: "نیویگیشن"
+        notifications:
+          title: "اطلاعات"
+        onebox:
+          title: "وَن باکس"
+        other:
+          title: "دیگر"
+        search:
+          title: "تلاش کریں"
+        security:
+          title: "سیکورٹی"
+        spam:
+          title: "سپَیم"
+        user_api:
+          title: "یُوزَر API"
       dashboard:
         title: "ڈَیش بورڈ"
         last_updated: "ڈَیش بورڈ اَپ ڈیٹ کیا گیا:"
@@ -3755,6 +3768,7 @@ ur:
             include_subcategories:
               label: "ذیلی زمرہ جات شامل کریں۔"
       flags:
+        title: "ماڈریٹر کا کام"
         description: "تفصیل"
         enabled: "فعال؟"
       groups:
@@ -3972,11 +3986,11 @@ ur:
           badges: "بَیج"
           notifications: "اطلاعات"
           permalinks: "دائمی لِنکس"
-          trust_levels: "ٹرسٹ لَیول"
           users: "صارفین"
-          user_fields: "صارف کے لیے دیئے گئے خانے"
-          watched_words: "نظر رکھے ہوئے الفاظ"
+          groups: "گروپس"
           legal: "قانونی"
+          moderation_flags:
+            title: "ماڈریٹر کا کام"
       appearance:
         title: "ظاہری شکل"
         sidebar_link:
@@ -3988,22 +4002,8 @@ ur:
       email_settings:
         sidebar_link:
           appearance: "ظاہری شکل"
-          preview_summary: "ڈائجسٹ کا مشاہدہ کریں"
-      email_logs:
-        sidebar_link:
-          sent: "بھیجا جا چکا"
-          skipped: "چھوڑا گیا"
-          bounced: "لوٹا دی گئی"
-          received: "موصول ہو گئی"
-          rejected: "مسترد کر دی گئی"
       security:
         title: "سیکورٹی"
-        sidebar_link:
-          error_logs: "خرابیوں کے لاگز"
-          screened_emails: "سکرین کی گئی اِیمیلز"
-          screened_ips: "سکرین کیے گئے IP"
-          screened_urls: "سکرین کیے گئے یو.آر.ایل."
-          search_logs: "لاگز سرچ کریں"
       section_landing_pages:
         account:
           title: "اکاؤنٹ"
@@ -4017,6 +4017,7 @@ ur:
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
         flags:
+          header: "ماڈریٹر کا کام"
           description: "تفصیل"
           enabled: "فعال؟"
           edit: "ترمیم کریں"
@@ -4030,6 +4031,12 @@ ur:
             invalid_applies_to: "درکار"
             topic: "ٹاپک"
             post: "پوسٹ`"
+        permalinks:
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
+        embeddable_host:
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
         look_and_feel:
           themes:
             title: "تِھیمز"
@@ -4054,9 +4061,7 @@ ur:
         sidebar_link:
           developer: "ڈیولپر"
           embedding: "اَیمبَیڈ کرنا"
-          rate_limits: "رَیٹ لِمِٹس"
           user_api: "یُوزَر API"
-          web_hooks: "وَیب ھُوک٘س٘"
           onebox: "وَن باکس"
           files: "فائلیں"
           other_options: "دیگر"
@@ -4097,7 +4102,7 @@ ur:
             label: "ڈاؤن لوڈ"
             title: "ڈاؤن لوڈ لنک کے ساتھ اِیمیل بھیجیں"
           destroy:
-            title: "بیک اَپ کو ہٹائیں"
+            title: "مٹائیں"
             confirm: "کیا آپ واقعی اِس بیک اَپ کو ختم کرنا چاہتے ہیں؟"
           restore:
             label: "رِیسٹور"
@@ -4188,7 +4193,6 @@ ur:
           hide_unused_fields: "اَیڈوانسڈ غیر استعمال شدہ چھپائیں"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
           user_selectable: "صارفین تِھیم کو منتخب کرسکتے ہیں"
-          color_scheme_user_selectable: "رنگ کی سکیم کو صارفین کی طرف سے منتخب کیا جا سکتا ہے"
           auto_update: "ڈسکورس اپ ڈیٹ ہونے پر آٹو اپ ڈیٹ"
           color_scheme: "رنگ پیلیٹ"
           default_light_scheme: "ہلکا (ڈیفالٹ)"
@@ -5176,16 +5180,11 @@ ur:
         settings: "ترتیبات"
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
+        delete: "مٹائیں"
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
         title: "اَیمبَیڈ کرنا"
-        host: "اجازت یافتہ ہَوسٹ"
-        allowed_paths: "پاتھ کی اجازت کی فہرست"
-        edit: "ترمیم"
-        category: "زمرہ میں پوسٹ کریں"
-        add_host: "ہَوسٹ شامل کریں"
-        settings: "اَیمبَیڈ کرنے کی سیٹِنگ"
-        crawling_settings: "کرالر کی سیٹِنگ"
-        crawling_description: "جب ڈِسکورس آپ کی پوسٹس کیلئے ٹاپک بناتا ہے، اگر کوئی RSS/ATOM فِیڈ موجود نہ ہو تو وہ آپ کا مواد آپ کے HTML سے پارس کرنے کی کوشش کرے گا۔ کبھی کبھار آپ کا مواد نکالنا دشوار ہو سکتا ہے، اِس لیے ہم اِس نکالنے کو آسان بنانے کیلئے CSS اصولوں کی وضاحت کرنے کی صلاحیت فراہم کرتے ہیں۔"
+        edit: "ترمیم کریں"
+        crawlers_description: "جب ڈِسکورس آپ کی پوسٹس کیلئے ٹاپک بناتا ہے، اگر کوئی RSS/ATOM فِیڈ موجود نہ ہو تو وہ آپ کا مواد آپ کے HTML سے پارس کرنے کی کوشش کرے گا۔ کبھی کبھار آپ کا مواد نکالنا دشوار ہو سکتا ہے، اِس لیے ہم اِس نکالنے کو آسان بنانے کیلئے CSS اصولوں کی وضاحت کرنے کی صلاحیت فراہم کرتے ہیں۔"
         embed_by_username: "ٹاپک کی تخلیق کیلئے صارف نام"
         embed_post_limit: "پعسٹس اَیمبَیڈ کرنے کی زیادہ سے زیادہ تعداد۔"
         embed_title_scrubber: "پوسٹس کے عنوان صاف کرنے کیلئے استعمال ہونے والا رَیگولَر اَیکسپرَیشن"
@@ -5194,7 +5193,12 @@ ur:
         allowed_embed_selectors: "عناصر کیلئے CSS سلیکٹر جن کی اَیمبَیڈ میں اجازت ہے"
         blocked_embed_selectors: "عناصر کیلئے CSS سلیکٹر جن کو اَیمبَیڈ سے ہٹایا گیا ہے"
         allowed_embed_classnames: "اجازت یافتہ CSS کلاسوں کے نام"
-        save: "اَیمبَیڈ کرنے کی سیٹِنگ محفوظ کریں"
+        save: "محفوظ کریں"
+        host_form:
+          save: "محفوظ کریں"
+        nav:
+          settings: "ترتیبات"
+          crawlers: "کرالرز"
       permalink:
         title: "دائمی لِنکس"
         description: "URLs جو فورم کو معلوم نہیں, کے لیے دوبارہ ہدایات لاگو کریں۔"
@@ -5213,6 +5217,9 @@ ur:
         destination: "منزل"
         copy_to_clipboard: "پرمالنک کو کلپ بورڈ میں کاپی کریں"
         delete_confirm: کیا آپ واقعی اِس دائمی لِنک کو حذف کرنا چاہتے ہیں؟
+        nav:
+          settings: "ترتیبات"
+          permalinks: "دائمی لِنکس"
         form:
           label: "نیا:"
           url: "URL"
@@ -5245,8 +5252,22 @@ ur:
           moderator: "ماڈریٹر"
           regular: "رَیگولر صارف"
       previews:
-        topic_title: "ایک بحث کےموضوع کی سرخی"
         share_button: "شیئر"
         reply_button: "جواب"
         topic_preview: "موضوع دکھائیں"
         homepage_preview: "ہوم پیج دکھائیں"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "تمام زُمرَہ جات"
+          new: "نئی"
+          unread: "بغیر پڑھے"
+          top: "سب سے اوپر"
+          latest: "تازہ ترین"
+          categories: "اقسام"
+        category_names:
+          site_feedback: "سائٹ کیلئے رائے"
+        table_headers:
+          topic: "ٹاپک"
+          replies: "جوابات"
+          views: "وِیوز"
+          activity: "سرگرمی"

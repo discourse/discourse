@@ -21,7 +21,7 @@ module PageObjects
       end
 
       def plugin_nav_tab_selector(plugin)
-        ".admin-nav-submenu__tabs .admin-plugin-tab-nav-item[data-plugin-nav-tab-id=\"#{plugin}\"]"
+        ".d-nav-submenu__tabs .admin-plugin-tab-nav-item[data-plugin-nav-tab-id=\"#{plugin}\"]"
       end
     end
   end

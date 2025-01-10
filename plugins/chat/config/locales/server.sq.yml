@@ -6,11 +6,11 @@
 
 sq:
   site_settings:
-    chat_separate_sidebar_mode: "Shfaq metoda të posaçme të seksionit anësor për forumin dhe bisedën."
+    chat_separate_sidebar_mode: "Shfaq mënyra të veçanta të shiritit anësor për forumin dhe bisedën."
     chat_enabled: "Aktivizo bisedën."
-    enable_public_channels: "Aktivizo kanalet publike bazuar në kategori."
-    chat_allowed_groups: "Përdoruesit në këto grupe mund të dërgojnë mesazhe. Vëreni që operatorët dhe moderatorët mund të kenë gjithmonë kontroll në bisedë."
-    chat_channel_retention_days: "Mesazhet e bisedës në kanalet më të përdorura ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
+    enable_public_channels: "Aktivizo kanalet publike duke u bazuar në kategori."
+    chat_allowed_groups: "Përdoruesit në këto grupe mund të bisedojnë. Vini re se administratorët dhe moderatorët mund të kenë gjithmonë akses në bisedë."
+    chat_channel_retention_days: "Mesazhet e bisedës në kanalet e rregullta do të mbahen për kaq shumë ditë. Cakto në '0' për të ruajtur mesazhet përgjithmonë."
     chat_dm_retention_days: "Mesazhet e bisedës në kanalet personale të bisedës do të ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
     chat_auto_silence_duration: "Numri i minutave për të cilat përdoruesi do të ndërpritet kur tejkalon kufirin e normës së krijimit të mesazheve të bisedës. Kliko tek '0' për të çaktivizuar ndërprerjen automatike."
     chat_allowed_messages_for_trust_level_0: "Numri i mesazheve që u lejohet përdoruesve të nivelit 0 të dërgojnë në 30 sekonda. Kliko tek '0' për të çaktivizuar limitin."
@@ -95,6 +95,7 @@ sq:
         other: "Nuk mund të krijoni një mesazh të drejtpërdrejtë me më shumë se %{count} përdorues të tjerë."
       original_message_not_found: "Dërguesi i mesazhit të cilit po i përgjigjeni nuk mund të gjendet ose është fshirë."
       thread_invalid_for_channel: "Tema nuk është pjesë e kanalit të ofruar."
+      thread_does_not_match_parent: "Tema nuk përputhet me mesazhin e dërguesit."
       invalid_direct_message: "Nuk ju lejohet të krijoni një mesazh të drejtpërdrejtë."
     reviewables:
       message_already_handled: "Faleminderit, mesazhi është rishikuar tashmë dhe nuk ka nevojë të raportohet përsëri."
@@ -124,6 +125,7 @@ sq:
           description: "Injoro shënimin duke e hequr atë nga radha dhe fshi mesazhin."
         disagree_and_restore:
           title: "Ndrysho dhe rikthe mesazhin"
+          description: "Rikthe mesazhin që të shfaqet për përdoruesit."
         disagree:
           title: "Jo dakord"
         ignore:
@@ -190,11 +192,55 @@ sq:
       direct_message_chat_mention:
         direct: "%{username} ju përmendi në bisedë private"
       new_chat_message: '%{username} dërgoi një mesazh në "%{channel}"'
+      new_direct_chat_message: "%{username} dërgoi një mesazh në bisedën personale."
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Dërgoi një kanal mesazhi.
   reviewable_score_types:
+    needs_review:
+      title: "Nevojë për Rishikim"
     notify_user:
+      chat_pm_title: 'Kanali juaj i bisedës në "%{channel_name}"'
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
+      chat_pm_title: 'Një kanal bisede në "%{channel_name}" ka nevojë për rishikim nga stafi'
       chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Një anëtar i stafit mendon se ky mesazh bisede ka nevojë për rishikim."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Përdoruesi është fshirë"
+      description:
+        one: "Ju keni një kanal të ri bisede"
+        other: "Ju keni mesazhe të reja në kanal"
+      from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Mesazh i ri"
+          other: "[%{site_name}] Mesazhe të reja"
+        chat_dm_1:
+          one: "[%{site_name}] Mesazh i ri nga %{name}"
+          other: "[%{site_name}] Mesazhe të reja nga %{name}"
+        chat_dm_2: "[%{site_name}] Mesazhe të reja nga %{name_1} dhe %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Mesazhe të reja nga %{name} dhe %{count} të tjerë"
+        chat_channel_1:
+          one: "[%{site_name}] Mesazh i ri në %{channel}"
+          other: "[%{site_name}] Mesazhe të reja në %{channel}"
+        chat_channel_2: "[%{site_name}] Mesazhe të reja në %{channel_1} dhe %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Mesazhe të reja në %{channel} dhe %{count} të tjerë"
+        chat_channel_and_dm: "[%{site_name}] Mesazhe të reja në %{channel} dhe nga %{name}"
+      unsubscribe: "Kjo përmbledhje bisede dërgohet nga %{site_link} kur nuk jeni në kanal. Ndrysho %{email_preferences_link}, ose %{unsubscribe_link} për t'u çregjistruar."
+      unsubscribe_no_link: "Kjo përmbledhje bisede dërgohet nga %{site_link} kur jeni në kanal. Ndryshoni %{email_preferences_link}tuaj."
+      view_messages:
+        one: "Shiko mesazhin"
+        other: "Shiko mesazhet %{count}"
+      your_chat_settings: "Preferenca e frekuencës së email-it të kanalit"
   unsubscribe:
     chat_summary:
+      select_title: "Cakto frekuencën e emaileve përmbledhëse të kanalit të bisedës në:"
       never: Asnjëherë
+  category:
+    cannot_delete:
+      has_chat_channels: "Kjo kategori nuk mund të fshihet sepse ka kanale bisede."

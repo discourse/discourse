@@ -1,6 +1,7 @@
 import { A } from "@ember/array";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -9,9 +10,9 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import NameValidationHelper from "discourse/lib/name-validation-helper";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
@@ -24,7 +25,6 @@ import { i18n } from "discourse-i18n";
 export default class SignupPageController extends Controller.extend(
   PasswordValidation,
   UsernameValidation,
-  NameValidation,
   UserFieldsValidation
 ) {
   @service site;
@@ -41,6 +41,7 @@ export default class SignupPageController extends Controller.extend(
   maskPassword = true;
   passwordValidationVisible = false;
   emailValidationVisible = false;
+  nameValidationHelper = new NameValidationHelper(this);
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -54,6 +55,19 @@ export default class SignupPageController extends Controller.extend(
     }
 
     this.fetchConfirmationValue();
+  }
+
+  get nameTitle() {
+    return this.nameValidationHelper.nameTitle;
+  }
+
+  get nameValidation() {
+    return this.nameValidationHelper.nameValidation;
+  }
+
+  @dependentKeyCompat
+  get forceValidationReason() {
+    return this.nameValidationHelper.forceValidationReason;
   }
 
   @bind
@@ -117,12 +131,12 @@ export default class SignupPageController extends Controller.extend(
 
   @discourseComputed
   showFullname() {
-    return this.siteSettings.enable_names;
+    return this.site.full_name_visible_in_signup;
   }
 
   @discourseComputed
   fullnameRequired() {
-    return this.siteSettings.full_name_required;
+    return this.site.full_name_required_for_signup;
   }
 
   @discourseComputed(
@@ -454,11 +468,7 @@ export default class SignupPageController extends Controller.extend(
           ) {
             this.rejectedEmails.pushObject(result.values.email);
           }
-          if (
-            result.errors &&
-            result.errors.password &&
-            result.errors.password.length > 0
-          ) {
+          if (result.errors?.["user_password.password"]?.length > 0) {
             this.rejectedPasswords.pushObject(attrs.accountPassword);
           }
           this.set("formSubmitted", false);
@@ -506,7 +516,7 @@ export default class SignupPageController extends Controller.extend(
   @action
   createAccount() {
     this.set("flash", "");
-    this.set("forceValidationReason", true);
+    this.nameValidationHelper.forceValidationReason = true;
     this.set("emailValidationVisible", true);
     this.set("passwordValidationVisible", true);
 
@@ -534,7 +544,7 @@ export default class SignupPageController extends Controller.extend(
       return;
     }
 
-    this.set("forceValidationReason", false);
+    this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }
 }
