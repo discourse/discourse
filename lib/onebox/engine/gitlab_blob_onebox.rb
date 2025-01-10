@@ -34,6 +34,8 @@ module Onebox
         {}
       end
 
+      private
+
       def data
         super.merge({ domain: "gitlab.com/#{match[:user]}/#{match[:repo]}" })
       end

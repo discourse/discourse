@@ -39,6 +39,8 @@ module Onebox
         github_auth_header(match[:org])
       end
 
+      private
+
       def data
         super.merge({ domain: "github.com/#{match[:org]}/#{match[:repo]}" })
       end
