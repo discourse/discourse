@@ -97,37 +97,16 @@ const restoreOverflowSetting = () => {
 };
 const setPositionFixed = () =>
   window.requestAnimationFrame(() => {
-    const $html = document.documentElement;
     const $body = document.body;
     if (bodyStyle === void 0) {
-      htmlStyle = { ...$html.style };
       bodyStyle = { ...$body.style };
-      const { scrollY, scrollX, innerHeight } = window;
-      $html.style.height = "100%";
-      $html.style.overflow = "hidden";
-      $body.style.position = "fixed";
-      $body.style.top = `${-scrollY}px`;
-      $body.style.left = `${-scrollX}px`;
-      $body.style.width = "100%";
-      $body.style.height = "auto";
+      $body.style.touchAction = "none";
     }
   });
 const restorePositionSetting = () => {
   if (bodyStyle !== void 0) {
-    const y = -parseInt(document.body.style.top, 10);
-    const x = -parseInt(document.body.style.left, 10);
-    const $html = document.documentElement;
     const $body = document.body;
-    $html.style.height = (htmlStyle == null ? void 0 : htmlStyle.height) || "";
-    $html.style.overflow =
-      (htmlStyle == null ? void 0 : htmlStyle.overflow) || "";
-    $body.style.position = bodyStyle.position || "";
-    $body.style.top = bodyStyle.top || "";
-    $body.style.left = bodyStyle.left || "";
-    $body.style.width = bodyStyle.width || "";
-    $body.style.height = bodyStyle.height || "";
-    $body.style.overflow = bodyStyle.overflow || "";
-    window.scrollTo(x, y);
+    $body.style.touchAction = bodyStyle.touchAction || "";
     bodyStyle = void 0;
   }
 };
@@ -199,43 +178,8 @@ const disableBodyScroll = (targetElement, options) => {
   } else {
     setOverflowHidden(options);
   }
-  if (isIosDevice) {
-    targetElement.ontouchstart = (event) => {
-      if (event.targetTouches.length === 1) {
-        initialClientY = event.targetTouches[0].clientY;
-      }
-    };
-    targetElement.ontouchmove = (event) => {
-      if (event.targetTouches.length === 1) {
-        handleScroll(event, targetElement, options);
-      }
-    };
-    if (!documentListenerAdded) {
-      document.addEventListener(
-        "touchmove",
-        preventDefault,
-        hasPassiveEvents ? { passive: false } : void 0
-      );
-      documentListenerAdded = true;
-    }
-  }
 };
 const clearAllBodyScrollLocks = () => {
-  if (isIosDevice) {
-    locks.forEach((lock) => {
-      lock.targetElement.ontouchstart = null;
-      lock.targetElement.ontouchmove = null;
-    });
-    if (documentListenerAdded) {
-      document.removeEventListener(
-        "touchmove",
-        preventDefault,
-        hasPassiveEvents ? { passive: false } : void 0
-      );
-      documentListenerAdded = false;
-    }
-    initialClientY = -1;
-  }
   if (isIosDevice) {
     restorePositionSetting();
   } else {
@@ -260,18 +204,6 @@ const enableBodyScroll = (targetElement) => {
   if ((locksIndex == null ? void 0 : locksIndex.get(targetElement)) === 0) {
     locks = locks.filter((lock) => lock.targetElement !== targetElement);
     locksIndex == null ? void 0 : locksIndex.delete(targetElement);
-  }
-  if (isIosDevice) {
-    targetElement.ontouchstart = null;
-    targetElement.ontouchmove = null;
-    if (documentListenerAdded && locks.length === 0) {
-      document.removeEventListener(
-        "touchmove",
-        preventDefault,
-        hasPassiveEvents ? { passive: false } : void 0
-      );
-      documentListenerAdded = false;
-    }
   }
   if (locks.length === 0) {
     if (isIosDevice) {

@@ -88,6 +88,7 @@ export default class SwipeModifier extends Modifier {
     this.element.addEventListener("swipeend", this.onDidEndSwipe);
     this.element.addEventListener("swipecancel", this.onDidCancelSwipe);
     this.element.addEventListener("swipe", this.onDidSwipe);
+    this.element.addEventListener("scroll", this.onScroll);
   }
 
   /**
@@ -139,6 +140,14 @@ export default class SwipeModifier extends Modifier {
   }
 
   /**
+   * Handler for scroll event. Prevents scrolling while swiping.
+   */
+  @bind
+  onScroll(event) {
+    event.preventDefault();
+  }
+
+  /**
    * Cleans up the swipe modifier.
    */
   cleanup() {
@@ -150,6 +159,7 @@ export default class SwipeModifier extends Modifier {
     this.element.removeEventListener("swipeend", this.onDidEndSwipe);
     this.element.removeEventListener("swipecancel", this.onDidCancelSwipe);
     this.element.removeEventListener("swipe", this.onDidSwipe);
+    this.element.removeEventListener("scroll", this.onScroll);
     this._swipeEvents.removeTouchListeners();
 
     if (this.lockBody) {
