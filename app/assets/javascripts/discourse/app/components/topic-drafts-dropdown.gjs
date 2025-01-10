@@ -34,11 +34,16 @@ export default class TopicDraftsDropdown extends Component {
 
   @action
   async onShowMenu() {
-    const draftsStream = this.currentUser.get("userDraftsStream");
-    draftsStream.reset();
+    try {
+      const draftsStream = this.currentUser.get("userDraftsStream");
+      draftsStream.reset();
 
-    await draftsStream.findItems(this.site);
-    this.drafts = draftsStream.content.slice(0, this.args.draftLimit);
+      await draftsStream.findItems(this.site);
+      this.drafts = draftsStream.content.slice(0, this.args.draftLimit);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to fetch drafts with error:", error);
+    }
   }
 
   @action
