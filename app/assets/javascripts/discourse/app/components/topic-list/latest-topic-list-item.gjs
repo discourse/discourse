@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { array, concat, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import TopicPostBadges from "discourse/components/topic-post-badges";
@@ -13,6 +13,7 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class LatestTopicListItem extends Component {
   get tagClassNames() {
@@ -32,6 +33,9 @@ export default class LatestTopicListItem extends Component {
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
         (if @topic.visited "visited")
+        (applyValueTransformer
+          "latest-topic-list-item-class" (array) (hash topic=@topic)
+        )
       }}
     >
       <PluginOutlet
