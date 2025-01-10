@@ -498,6 +498,7 @@ en:
         yes_value: "Discard"
         no_value: "Resume editing"
       dropdown:
+        title: "Open the latest drafts menu"
         view_all: "view all"
         other_drafts:
           one: "+%{count} other draft"

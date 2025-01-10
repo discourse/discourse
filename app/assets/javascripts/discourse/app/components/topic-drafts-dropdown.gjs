@@ -61,7 +61,7 @@ export default class TopicDraftsDropdown extends Component {
     {{#if this.shouldDisplay}}
       <DMenu
         @identifier="topic-drafts-menu"
-        @title="drafts.title"
+        @title={{i18n "drafts.dropdown.title"}}
         @icon="chevron-down"
         @onShow={{this.onShowMenu}}
         @onRegisterApi={{this.onRegisterApi}}
