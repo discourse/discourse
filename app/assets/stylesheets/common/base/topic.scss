@@ -91,6 +91,9 @@
     grid-template-areas: "posts";
     grid-template-columns: auto;
     .topic-navigation {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
       grid-area: posts;
       grid-row: 3;
       width: auto;

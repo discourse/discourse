@@ -3,16 +3,12 @@ import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { classNameBindings } from "@ember-decorators/component";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
-const CSS_TRANSITION_DELAY = 500;
-
-@classNameBindings("docked", "withTransitions")
+@classNameBindings("docked")
 export default class TopicProgress extends Component {
   elementId = "topic-progress-wrapper";
   docked = false;
-  withTransitions = null;
   progressPosition = null;
 
   @alias("topic.postStream") postStream;
@@ -69,106 +65,20 @@ export default class TopicProgress extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    this.appEvents
-      .on("composer:resized", this, this._composerEvent)
-      .on("topic:current-post-scrolled", this, this._topicScrolled);
+    this.appEvents.on("topic:current-post-scrolled", this, this._topicScrolled);
 
     if (this.prevEvent) {
       scheduleOnce("afterRender", this, this._topicScrolled, this.prevEvent);
     }
-    scheduleOnce("afterRender", this, this._startObserver);
-
-    // start CSS transitions a tiny bit later
-    // to avoid jumpiness on initial topic load
-    discourseLater(this._addCssTransitions, CSS_TRANSITION_DELAY);
   }
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
-    this._topicBottomObserver?.disconnect();
-    this.appEvents
-      .off("composer:resized", this, this._composerEvent)
-      .off("topic:current-post-scrolled", this, this._topicScrolled);
-  }
-
-  @bind
-  _addCssTransitions() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-    this.set("withTransitions", true);
-  }
-
-  _startObserver() {
-    if ("IntersectionObserver" in window) {
-      this._topicBottomObserver = this._setupObserver();
-      this._topicBottomObserver.observe(
-        document.querySelector("#topic-bottom")
-      );
-    }
-  }
-
-  _setupObserver() {
-    // minimum 50px here ensures element is not docked when
-    // scrolling down quickly, it causes post stream refresh loop
-    // on Android
-    const bottomIntersectionMargin =
-      document.querySelector("#reply-control")?.clientHeight || 50;
-
-    return new IntersectionObserver(this._intersectionHandler, {
-      threshold: 1,
-      rootMargin: `0px 0px -${bottomIntersectionMargin}px 0px`,
-    });
-  }
-
-  _composerEvent() {
-    // reinitializing needed to account for composer height
-    // might be no longer necessary if IntersectionObserver API supports dynamic rootMargin
-    // see https://github.com/w3c/IntersectionObserver/issues/428
-    if ("IntersectionObserver" in window) {
-      this._topicBottomObserver?.disconnect();
-      this._startObserver();
-    }
-  }
-
-  @bind
-  _intersectionHandler(entries) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    const composerH =
-      document.querySelector("#reply-control")?.clientHeight || 0;
-
-    // on desktop, pin this element to the composer
-    // otherwise the grid layout will change too much when toggling the composer
-    // and jitter when the viewport is near the topic bottom
-    if (this.site.desktopView && composerH) {
-      this.set("docked", false);
-      this.element.style.setProperty("bottom", `${composerH}px`);
-      return;
-    }
-
-    if (entries[0].isIntersecting === true) {
-      this.set("docked", true);
-      this.element.style.removeProperty("bottom");
-    } else {
-      if (entries[0].boundingClientRect.top > 0) {
-        this.set("docked", false);
-        if (composerH === 0) {
-          const filteredPostsHeight =
-            document.querySelector(".posts-filtered-notice")?.clientHeight || 0;
-          filteredPostsHeight === 0
-            ? this.element.style.removeProperty("bottom")
-            : this.element.style.setProperty(
-                "bottom",
-                `${filteredPostsHeight}px`
-              );
-        } else {
-          this.element.style.setProperty("bottom", `${composerH}px`);
-        }
-      }
-    }
+    this.appEvents.off(
+      "topic:current-post-scrolled",
+      this,
+      this._topicScrolled
+    );
   }
 
   click(e) {
