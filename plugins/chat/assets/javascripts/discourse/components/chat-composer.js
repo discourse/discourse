@@ -285,22 +285,20 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onTextareaFocusOut(event) {
+  onTextareaFocusOut() {
     this.isFocused = false;
-    enableBodyScroll(event.target);
   }
 
   @action
   onTextareaFocusIn(event) {
     this.isFocused = true;
-    const textarea = event.target;
-    disableBodyScroll(textarea);
 
     if (!this.capabilities.isIOS) {
       return;
     }
 
     // hack to prevent the whole viewport to move on focus input
+    const textarea = event.target;
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {

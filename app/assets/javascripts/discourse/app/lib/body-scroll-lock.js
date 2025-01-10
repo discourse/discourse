@@ -97,37 +97,16 @@ const restoreOverflowSetting = () => {
 };
 const setPositionFixed = () =>
   window.requestAnimationFrame(() => {
-    const $html = document.documentElement;
     const $body = document.body;
     if (bodyStyle === void 0) {
-      htmlStyle = { ...$html.style };
       bodyStyle = { ...$body.style };
-      const { scrollY, scrollX, innerHeight } = window;
-      $html.style.height = "100%";
-      $html.style.overflow = "hidden";
-      $body.style.position = "fixed";
-      $body.style.top = `${-scrollY}px`;
-      $body.style.left = `${-scrollX}px`;
-      $body.style.width = "100%";
-      $body.style.height = "auto";
+      $body.style.touchAction = "none";
     }
   });
 const restorePositionSetting = () => {
   if (bodyStyle !== void 0) {
-    const y = -parseInt(document.body.style.top, 10);
-    const x = -parseInt(document.body.style.left, 10);
-    const $html = document.documentElement;
     const $body = document.body;
-    $html.style.height = (htmlStyle == null ? void 0 : htmlStyle.height) || "";
-    $html.style.overflow =
-      (htmlStyle == null ? void 0 : htmlStyle.overflow) || "";
-    $body.style.position = bodyStyle.position || "";
-    $body.style.top = bodyStyle.top || "";
-    $body.style.left = bodyStyle.left || "";
-    $body.style.width = bodyStyle.width || "";
-    $body.style.height = bodyStyle.height || "";
-    $body.style.overflow = bodyStyle.overflow || "";
-    window.scrollTo(x, y);
+    $body.style.touchAction = bodyStyle.touchAction || "";
     bodyStyle = void 0;
   }
 };
