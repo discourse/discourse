@@ -71,7 +71,6 @@
     "autosize": "^6.0.1",
     "babel-import-util": "^3.0.0",
     "babel-plugin-ember-template-compilation": "^2.3.0",
-    "bootstrap": "3.4.1",
     "broccoli-asset-rev": "^3.0.0",
     "custom-proxy": "workspace:1.0.0",
     "deepmerge": "^4.3.1",

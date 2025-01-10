@@ -429,9 +429,6 @@ importers:
       babel-plugin-ember-template-compilation:
         specifier: ^2.3.0
         version: 2.3.0
-      bootstrap:
-        specifier: 3.4.1
-        version: 3.4.1
       broccoli-asset-rev:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3279,10 +3276,6 @@ packages:
 
   body@5.1.0:
     resolution: {integrity: sha512-chUsBxGRtuElD6fmw1gHLpvnKdVLK302peeFa9ZqAEk8TyzZ3fygLyUEDDPTJvL9+Bor0dIwn6ePOsRM2y0zQQ==}
-
-  bootstrap@3.4.1:
-    resolution: {integrity: sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA==}
-    engines: {node: '>=6'}
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -11117,8 +11110,6 @@ snapshots:
       error: 7.2.1
       raw-body: 1.1.7
       safe-json-parse: 1.0.1
-
-  bootstrap@3.4.1: {}
 
   brace-expansion@1.1.11:
     dependencies:
