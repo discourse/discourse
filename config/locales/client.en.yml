@@ -7149,10 +7149,10 @@ en:
           multiselect: "Multiselect"
 
       site_text:
-        description: "You can customize any of the text on your forum. Please start by searching below:"
+        description: "You can customize any of the text on your forum."
         search: "Search for the text you'd like to edit"
-        title: "Text"
-        edit: "edit"
+        title: "Site texts"
+        edit: "Edit"
         revert: "Revert Changes"
         revert_confirm: "Are you sure you want to revert your changes?"
         go_back: "Back to Search"
@@ -7476,7 +7476,7 @@ en:
 
       reseed:
         action:
-          label: "Replace Text…"
+          label: "Replace text …"
           title: "Replace text of categories and topics with translations"
 
         modal:
