@@ -6,7 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import MoreSectionLink from "./more-section-link";

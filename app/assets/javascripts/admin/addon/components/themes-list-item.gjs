@@ -7,7 +7,7 @@ import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import escape from "discourse-common/lib/escape";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";

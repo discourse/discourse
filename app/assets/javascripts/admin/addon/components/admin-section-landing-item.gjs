@@ -7,7 +7,7 @@ import {
   PrimaryButton,
 } from "discourse/components/d-page-action-button";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSectionLandingItem extends Component {

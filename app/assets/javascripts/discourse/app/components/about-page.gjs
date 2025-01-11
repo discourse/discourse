@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import dIcon from "discourse/helpers/d-icon";
 import { number } from "discourse/lib/formatter";
-import dIcon from "discourse-common/helpers/d-icon";
 import escape from "discourse-common/lib/escape";
 import I18n, { i18n } from "discourse-i18n";
 

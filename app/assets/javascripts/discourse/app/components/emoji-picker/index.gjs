@@ -3,8 +3,8 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import EmojiPickerContent from "discourse/components/emoji-picker/content";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import icon from "discourse-common/helpers/d-icon";
 import DMenu from "float-kit/components/d-menu";
 
 export default class EmojiPicker extends Component {
