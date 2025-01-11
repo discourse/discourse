@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { array, concat, hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -183,6 +183,13 @@ export default class Item extends Component {
     );
   }
 
+  get additionalClasses() {
+    return applyValueTransformer("topic-list-item-class", [], {
+      topic: this.args.topic,
+      index: this.args.index,
+    });
+  }
+
   <template>
     <tr
       {{! template-lint-disable no-invalid-interactive }}
@@ -206,9 +213,7 @@ export default class Item extends Component {
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
         this.tagClassNames
-        (applyValueTransformer
-          "topic-list-item-class" (array) (hash topic=@topic index=@index)
-        )
+        this.additionalClasses
       }}
     >
       <PluginOutlet
