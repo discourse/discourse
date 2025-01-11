@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { array, concat, hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
