@@ -8,7 +8,7 @@
     "@babel/plugin-proposal-decorators": "^7.25.9",
     "@discourse/lint-configs": "^2.2.3",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
-    "@fortawesome/fontawesome-free": "6.6.0",
+    "@fortawesome/fontawesome-free": "6.7.2",
     "@glint/core": "^1.5.1",
     "@glint/environment-ember-loose": "^1.5.1",
     "@glint/environment-ember-template-imports": "^1.5.1",

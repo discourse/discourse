@@ -41,8 +41,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@fortawesome/fontawesome-free':
-        specifier: 6.6.0
-        version: 6.6.0
+        specifier: 6.7.2
+        version: 6.7.2
       '@glint/core':
         specifier: ^1.5.1
         version: 1.5.1(typescript@5.7.3)
@@ -2147,8 +2147,8 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
-  '@fortawesome/fontawesome-free@6.6.0':
-    resolution: {integrity: sha512-60G28ke/sXdtS9KZCpZSHHkCbdsOGEhIUGlwq6yhY74UpTiToIh8np7A8yphhM4BWsvNFtIvLpi4co+h9Mr9Ow==}
+  '@fortawesome/fontawesome-free@6.7.2':
+    resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
     engines: {node: '>=6'}
 
   '@glimmer/compiler@0.92.4':
@@ -9741,7 +9741,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@fortawesome/fontawesome-free@6.6.0': {}
+  '@fortawesome/fontawesome-free@6.7.2': {}
 
   '@glimmer/compiler@0.92.4':
     dependencies:
