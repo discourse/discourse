@@ -90,6 +90,10 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
     Group.refresh_automatic_groups!
     channel.add(user)
 
+    if !transients[:user] && channel.direct_message_channel?
+      channel.chatable.direct_message_users.find_or_create_by!(user: user)
+    end
+
     result =
       resolved_class.call(
         chat_channel_id: channel.id,

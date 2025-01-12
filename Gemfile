@@ -276,3 +276,5 @@ gem "drb"
 # dependencies for the automation plugin
 gem "iso8601"
 gem "rrule"
+
+gem "dry-initializer", "~> 3.1"

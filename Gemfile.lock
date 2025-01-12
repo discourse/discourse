@@ -132,6 +132,7 @@ GEM
       literate_randomizer
     docile (1.4.1)
     drb (2.2.1)
+    dry-initializer (3.2.0)
     email_reply_trimmer (0.1.13)
     erubi (1.13.0)
     excon (0.111.0)
@@ -622,6 +623,7 @@ DEPENDENCIES
   discourse-seed-fu
   discourse_dev_assets
   drb
+  dry-initializer (~> 3.1)
   email_reply_trimmer
   excon
   execjs
