@@ -9,6 +9,8 @@ import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
+const DRAFTS_LIMIT = 4;
+
 export default class TopicDraftsDropdown extends Component {
   @service currentUser;
   @service composer;
@@ -16,13 +18,21 @@ export default class TopicDraftsDropdown extends Component {
   @tracked drafts = [];
 
   get shouldDisplay() {
-    return this.args.showDraftsMenu;
+    return this.currentUser && this.draftCount > 0;
+  }
+
+  get draftCount() {
+    return this.currentUser.draft_count;
+  }
+
+  get otherDraftsCount() {
+    return this.draftCount > DRAFTS_LIMIT ? this.draftCount - DRAFTS_LIMIT : 0;
   }
 
   get otherDraftsText() {
-    return this.args.otherDraftsCount > 0
+    return this.otherDraftsCount > 0
       ? i18n("drafts.dropdown.other_drafts", {
-          count: this.args.otherDraftsCount,
+          count: this.otherDraftsCount,
         })
       : "";
   }
@@ -95,7 +105,7 @@ export default class TopicDraftsDropdown extends Component {
                 class="btn-link view-all-drafts"
               >
                 <span
-                  data-other-drafts={{@otherDraftsCount}}
+                  data-other-drafts={{this.otherDraftsCount}}
                 >{{this.otherDraftsText}}</span>
                 <span>{{i18n "drafts.dropdown.view_all"}}</span>
               </DButton>
