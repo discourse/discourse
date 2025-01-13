@@ -10,8 +10,8 @@ import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
-import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
+import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
