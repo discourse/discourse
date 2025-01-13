@@ -1,6 +1,6 @@
 import avatar from "discourse/helpers/bound-avatar-template";
+import dIcon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import dIcon from "discourse-common/helpers/d-icon";
 
 const ActionsSummary = <template>
   {{#each @data.actionsSummary as |as|}}
