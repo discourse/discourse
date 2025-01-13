@@ -1,7 +1,7 @@
 import require from "require";
 import deprecated from "discourse/lib/deprecated";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
-import { getResolverOption } from "discourse-common/resolver";
+import { getResolverOption } from "discourse/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
 let _needsHbrTopicList = false;

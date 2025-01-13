@@ -16,8 +16,8 @@ import { VERSION } from "@ember/version";
 import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { buildResolver } from "discourse/resolver";
 import { isTesting } from "discourse-common/config/environment";
-import { buildResolver } from "discourse-common/resolver";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];

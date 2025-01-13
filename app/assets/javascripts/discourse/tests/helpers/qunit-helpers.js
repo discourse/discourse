@@ -90,6 +90,7 @@ import { clearAddedTrackedPostProperties } from "discourse/models/post";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { clearResolverOptions } from "discourse/resolver";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import {
@@ -99,7 +100,6 @@ import {
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { resetDecorators } from "discourse/widgets/widget";
-import { clearResolverOptions } from "discourse-common/resolver";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { setupDSelectAssertions } from "./d-select-assertions";

@@ -124,3 +124,5 @@ loaderShim("discourse-common/utils/macro-alias", () =>
 loaderShim("discourse-common/utils/multi-cache", () =>
   importSync("discourse/lib/multi-cache")
 );
+
+loaderShim("discourse-common/resolver", () => importSync("discourse/resolver"));
