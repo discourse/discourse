@@ -242,9 +242,11 @@ export default class CreateInvite extends Component {
   }
 
   @action
-  showAdvancedMode() {
+  showAdvancedMode(event) {
     this.displayAdvancedOptions = true;
-  }
+    event.preventDefault();
+    event.stopPropagation();
+   }
 
   @action
   async createLink() {
@@ -326,7 +328,9 @@ export default class CreateInvite extends Component {
             <a
               class="edit-link-options"
               role="button"
+              tabindex="0"
               {{on "click" this.showAdvancedMode}}
+              {{on "keydown" this.showAdvancedMode}}
             >{{i18n "user.invited.invite.edit_link_options"}}</a>
           </p>
         {{else}}
@@ -485,6 +489,7 @@ export default class CreateInvite extends Component {
               }}
               @action={{this.saveInviteAndSendEmail}}
               @disabled={{this.saving}}
+              autofocus="true"
               class="btn-primary save-invite-and-send-email"
             />
           {{/if}}
