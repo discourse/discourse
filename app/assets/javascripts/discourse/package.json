@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
-    "@babel/standalone": "^7.26.5",
+    "@babel/standalone": "^7.26.6",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
