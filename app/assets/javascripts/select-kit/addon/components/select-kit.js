@@ -14,8 +14,8 @@ import { Promise } from "rsvp";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind as bindDecorator } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 import {
   applyContentPluginApiCallbacks,

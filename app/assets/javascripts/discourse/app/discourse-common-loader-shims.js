@@ -129,3 +129,6 @@ loaderShim("discourse-common/deprecation-workflow", () =>
   importSync("discourse/deprecation-workflow")
 );
 loaderShim("discourse-common/resolver", () => importSync("discourse/resolver"));
+loaderShim("discourse-common/config/environment", () =>
+  importSync("discourse/lib/environment")
+);

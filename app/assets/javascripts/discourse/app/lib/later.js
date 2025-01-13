@@ -1,5 +1,5 @@
 import { later } from "@ember/runloop";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 export default function () {
   if (isTesting() && typeof [...arguments].at(-1) === "number") {

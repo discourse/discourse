@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import { isEmpty, isPresent } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { searchForTerm } from "discourse/lib/search";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 
 // args:
 // topicChangedCallback

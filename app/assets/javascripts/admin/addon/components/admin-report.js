@@ -5,11 +5,11 @@ import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { makeArray } from "discourse/lib/helpers";
 import ReportLoader from "discourse/lib/reports-loader";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 import Report, { DAILY_LIMIT_DAYS, SCHEMA_VERSION } from "admin/models/report";
 

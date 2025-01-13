@@ -1,5 +1,5 @@
 import { debounce } from "@ember/runloop";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 /**
   Debounce a Javascript function. This means if it's called many times in a time limit it

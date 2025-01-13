@@ -5,10 +5,10 @@ import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import discourseComputed from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 @classNames("topic-timer-info")

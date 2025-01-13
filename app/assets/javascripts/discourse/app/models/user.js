@@ -16,6 +16,7 @@ import { url } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
 import { longDate } from "discourse/lib/formatter";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL, { getURLWithCDN } from "discourse/lib/get-url";
@@ -38,7 +39,6 @@ import UserBadge from "discourse/models/user-badge";
 import UserDraftsStream from "discourse/models/user-drafts-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import UserStream from "discourse/models/user-stream";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 export const SECOND_FACTOR_METHODS = {

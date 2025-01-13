@@ -6,7 +6,7 @@ import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { computedI18n, setting } from "discourse/lib/computed";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 import BulkUserDeleteConfirmation from "admin/components/bulk-user-delete-confirmation";
 import AdminUser from "admin/models/admin-user";

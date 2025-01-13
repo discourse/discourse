@@ -2,12 +2,12 @@ import { cancel } from "@ember/runloop";
 import { createPopper } from "@popperjs/core";
 import $ from "jquery";
 import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import Site from "discourse/models/site";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 
 /**
   This is a jQuery plugin to support autocompleting values in our text fields.

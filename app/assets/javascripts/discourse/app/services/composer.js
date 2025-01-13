@@ -19,6 +19,7 @@ import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
@@ -45,7 +46,6 @@ import Composer, {
   SAVE_LABELS,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {

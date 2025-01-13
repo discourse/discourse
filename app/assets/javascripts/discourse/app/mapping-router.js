@@ -1,7 +1,7 @@
 import EmbroiderRouter from "@embroider/router";
+import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import Site from "discourse/models/site";
-import { isTesting } from "discourse-common/config/environment";
 import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
 
 class BareRouter extends EmbroiderRouter {

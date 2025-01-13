@@ -8,6 +8,7 @@ import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import concatClass from "discourse/helpers/concat-class";
 import { bind, debounce } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import scrollLock from "discourse/lib/scroll-lock";
 import {
@@ -16,7 +17,6 @@ import {
 } from "discourse/lib/swipe-events";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import swipe from "discourse/modifiers/swipe";
-import { isTesting } from "discourse-common/config/environment";
 import Header from "./header";
 
 let _menuPanelClassesToForceDropdown = [];
