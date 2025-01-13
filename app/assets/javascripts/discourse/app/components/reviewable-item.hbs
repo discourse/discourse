@@ -135,6 +135,13 @@
       {{/if}}
     {{/if}}
 
+    {{#if this.showIpLookup}}
+      <IpLookup
+        @ip="adminLookup"
+        @userId={{this.reviewable.target_created_by.id}}
+      />
+    {{/if}}
+
     <PluginOutlet
       @name="reviewable-item-actions"
       @connectorTagName="div"
