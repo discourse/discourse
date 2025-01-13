@@ -1592,7 +1592,7 @@ export default class ComposerService extends Service {
 
     // The two custom properties below can be overridden by themes/plugins to set different default composer heights.
     if (this.model.action === "reply") {
-      return "var(--reply-composer-height, 300px)";
+      return "var(--reply-composer-height, 255px)";
     } else {
       return "var(--new-topic-composer-height, 400px)";
     }

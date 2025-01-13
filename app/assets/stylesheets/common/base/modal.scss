@@ -41,6 +41,11 @@
         font-size: var(--font-up-2);
         color: var(--primary-high);
       }
+      &:focus-visible {
+        .d-icon {
+          color: var(--primary);
+        }
+      }
     }
   }
 
