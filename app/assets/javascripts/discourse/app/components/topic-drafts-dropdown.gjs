@@ -86,7 +86,10 @@ export default class TopicDraftsDropdown extends Component {
               <DButton
                 @action={{fn this.resumeDraft draft}}
                 @icon={{if draft.topic_id "reply" "layer-group"}}
-                @translatedLabel={{or draft.title (i18n "drafts.dropdown.untitled")}}
+                @translatedLabel={{or
+                  draft.title
+                  (i18n "drafts.dropdown.untitled")
+                }}
                 class="btn-secondary"
               />
             </dropdown.item>
