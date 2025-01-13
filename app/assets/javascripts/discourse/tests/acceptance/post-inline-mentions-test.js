@@ -1,12 +1,12 @@
 import { triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
 
 function topicWithoutUserStatus(topicId, mentionedUserId) {

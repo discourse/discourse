@@ -8,6 +8,7 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import { setTransient } from "discourse/lib/page-tracker";
 import {
   getSearchKey,
@@ -18,12 +19,12 @@ import {
   translateResults,
   updateRecentSearches,
 } from "discourse/lib/search";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export const SEARCH_TYPE_DEFAULT = "topics_posts";
@@ -565,17 +566,24 @@ export default class FullPageSearchController extends Controller {
     this._search();
   }
 
-  @action
-  loadMore() {
-    let page = this.page;
-    if (
+  get canLoadMore() {
+    return (
       this.get("model.grouped_search_result.more_full_page_results") &&
       !this.loading &&
-      page < PAGE_LIMIT
-    ) {
+      this.page < PAGE_LIMIT
+    );
+  }
+
+  @action
+  loadMore() {
+    if (!this.canLoadMore) {
+      return;
+    }
+
+    applyBehaviorTransformer("full-page-search-load-more", () => {
       this.incrementProperty("page");
       this._search();
-    }
+    });
   }
 
   @action

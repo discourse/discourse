@@ -6,7 +6,7 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { cloneJSON } from "discourse/lib/object";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
@@ -16,8 +16,6 @@ import {
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 ["enabled", "disabled"].forEach((postMenuMode) => {
@@ -449,34 +447,6 @@ acceptance("Topic featured links", function (needs) {
     assert
       .dom(".title-wrapper .remove-featured-link")
       .exists("link to remove featured link");
-  });
-});
-
-acceptance("Topic with title decorated", function (needs) {
-  needs.user();
-  needs.hooks.beforeEach(() => {
-    withPluginApi("0.8.40", (api) => {
-      withSilencedDeprecations("discourse.decorate-topic-title", () => {
-        api.decorateTopicTitle((topic, node, topicTitleType) => {
-          node.innerText = `${node.innerText}-${topic.id}-${topicTitleType}`;
-        });
-      });
-    });
-  });
-
-  test("Decorate topic title", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    assert
-      .dom(".fancy-title")
-      .hasText(/-280-topic-title$/, "decorates topic title");
-
-    assert
-      .dom(".raw-topic-link:nth-child(1)")
-      .hasText(
-        /-27331-topic-list-item-title$/,
-        "decorates topic list item title"
-      );
   });
 });
 

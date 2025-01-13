@@ -1,11 +1,11 @@
 import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
+import getURL from "discourse/lib/get-url";
+import { iconNode } from "discourse/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import getURL from "discourse-common/lib/get-url";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 let sanitizeName = function (name) {

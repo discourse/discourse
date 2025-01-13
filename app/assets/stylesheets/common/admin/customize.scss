@@ -72,6 +72,7 @@
 }
 
 .admin-customize {
+  /* TODO: Remove when admin header has been added to all /customize pages */
   h1 {
     margin-bottom: 10px;
     input {
@@ -80,6 +81,9 @@
       .ios-device & {
         font-size: var(--font-down-2);
       }
+    }
+    &.d-page-header__title {
+      margin: 0;
     }
   }
 
@@ -817,14 +821,12 @@
   padding-left: 18px;
 }
 
-.admin-permalink-item {
+.admin-user_field-item,
+.backup-item-row,
+.admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
     border-top: 1px solid var(--primary-low);
-    color: var(--danger);
-    svg {
-      color: var(--danger);
-    }
   }
 }
 
@@ -1069,4 +1071,10 @@
       margin-left: auto;
     }
   }
+}
+
+.about-customize-colors {
+  text-align: center;
+  width: 65%;
+  margin-left: 30%;
 }

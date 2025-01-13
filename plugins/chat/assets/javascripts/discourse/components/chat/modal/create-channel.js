@@ -7,9 +7,9 @@ import { htmlSafe } from "@ember/template";
 import { isBlank, isPresent } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import discourseDebounce from "discourse-common/lib/debounce";
 import I18n, { i18n } from "discourse-i18n";
 
 const DEFAULT_HINT = htmlSafe(

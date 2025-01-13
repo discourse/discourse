@@ -314,7 +314,7 @@ jobs:
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
-        if: github.repository == 'discourse/discourse' && env.DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS == '1'
+        if: github.repository == 'discourse/discourse' && github.ref_name == 'main' && env.DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS == '1'
         run: |
           if [ -f tmp/turbo_rspec_flaky_tests.json ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
@@ -411,7 +411,7 @@ jobs:
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
-    runs-on: debian-12
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Merge Artifacts

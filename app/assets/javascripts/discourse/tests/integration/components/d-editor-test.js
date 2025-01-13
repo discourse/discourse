@@ -6,6 +6,7 @@ import {
   render,
   settled,
   triggerEvent,
+  triggerKeyEvent,
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -13,6 +14,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import { paste, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
@@ -702,44 +704,31 @@ third line`
   );
 
   test("emoji", async function (assert) {
-    // Test adding a custom button
-    withPluginApi("0.1", (api) => {
-      api.onToolbarCreate((toolbar) => {
-        toolbar.addButton({
-          id: "emoji",
-          group: "extras",
-          icon: "far-face-smile",
-          action: () => toolbar.context.send("emoji"),
-        });
-      });
-    });
     this.set("value", "hello world.");
-
-    await render(hbs`<DEditor @value={{this.value}} />`);
-
+    // we need DMenus here, as we are testing the d-editor which is not renderining
+    // the in-element outlet container necessary for DMenu to work
+    await render(hbs`<DMenus /><DEditor @value={{this.value}} />`);
+    const picker = emojiPicker();
     jumpEnd(query("textarea.d-editor-input"));
-    await click("button.emoji");
+    await click(".d-editor-button-bar .emoji");
+    await picker.select("raised_hands");
 
-    await click(
-      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-    );
     assert.strictEqual(
       this.value,
-      "hello world. :grinning:",
+      "hello world. :raised_hands:",
       "it works when there is no partial emoji"
     );
 
     await click("textarea.d-editor-input");
-    await fillIn(".d-editor-input", "starting to type an emoji like :gri");
+    await fillIn(".d-editor-input", "starting to type an emoji like :woman");
     jumpEnd(query("textarea.d-editor-input"));
-    await click("button.emoji");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace"); //simplest way to trigger more menu here
+    await click(".ac-emoji li:last-child a");
+    await picker.select("womans_clothes");
 
-    await click(
-      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-    );
     assert.strictEqual(
       this.value,
-      "starting to type an emoji like :grinning:",
+      "starting to type an emoji like :womans_clothes:",
       "it works when there is a partial emoji"
     );
   });

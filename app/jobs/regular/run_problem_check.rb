@@ -22,7 +22,7 @@ module Jobs
       Jobs.enqueue_in(
         check.retry_after,
         :run_problem_check,
-        args.merge(retry_count: retry_count + 1).stringify_keys,
+        args.merge(retry_count: retry_count + 1),
       )
     rescue StandardError => err
       Discourse.warn_exception(

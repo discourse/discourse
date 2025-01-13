@@ -1,27 +1,28 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, bool, not, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
+import NameValidationHelper from "discourse/lib/name-validation-helper";
 import DiscourseURL from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
-import getUrl from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class InvitesShowController extends Controller.extend(
   PasswordValidation,
   UsernameValidation,
-  NameValidation,
   UserFieldsValidation
 ) {
   queryParams = ["t"];
+  nameValidationHelper = new NameValidationHelper(this);
 
   @readOnly("model.invited_by") invitedBy;
   @alias("model.email") email;
@@ -43,6 +44,15 @@ export default class InvitesShowController extends Controller.extend(
   authOptions = null;
   rejectedEmails = [];
   maskPassword = true;
+
+  get nameTitle() {
+    return this.nameValidationHelper.nameTitle;
+  }
+
+  @dependentKeyCompat
+  get nameValidation() {
+    return this.nameValidationHelper.nameValidation;
+  }
 
   authenticationComplete(options) {
     const props = {

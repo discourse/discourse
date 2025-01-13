@@ -74,6 +74,7 @@
             setSortOrder=this.setSortOrder
             type=this.search_type
             addSearchResults=this.addSearchResults
+            resultCount=this.resultCount
           }}
         >
           <SearchAdvancedOptions
@@ -297,6 +298,10 @@
               {{/if}}
             </ConditionalLoadingSpinner>
           {{/if}}
+          <PluginOutlet
+            @name="full-page-search-below-results"
+            @outletArgs={{hash canLoadMore=this.canLoadMore}}
+          />
         </LoadMore>
       </div>
     {{/if}}

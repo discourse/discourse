@@ -3,7 +3,7 @@ import { alias, not } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 
 export default class BasicTopicList extends Component {
   @service site;

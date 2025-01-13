@@ -223,8 +223,8 @@ class ThemeJavascriptCompiler
       #{source_for_comment}
       */
 
-      import { template as compiler } from "discourse-common/lib/raw-handlebars";
-      import { addRawTemplate } from "discourse-common/lib/raw-templates";
+      import { template as compiler } from "discourse/lib/raw-handlebars";
+      import { addRawTemplate } from "discourse/lib/raw-templates";
 
       let template = compiler(#{compiled});
 

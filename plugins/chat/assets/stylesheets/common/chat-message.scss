@@ -113,7 +113,7 @@
     display: flex;
     flex-wrap: wrap;
 
-    .chat-message-react-btn {
+    .react-btn {
       vertical-align: top;
       padding: 0em 0.25em;
       background: none;
@@ -166,7 +166,7 @@
 
   &:hover {
     .chat-message-reaction-list .chat-message-react-btn {
-      display: inline-block;
+      visibility: visible;
     }
   }
 
@@ -250,6 +250,6 @@
   }
 
   .chat-message-reaction-list .chat-message-react-btn {
-    display: none;
+    visibility: hidden;
   }
 }

@@ -1,25 +1,27 @@
 <ConditionalLoadingSpinner @condition={{this.loading}}>
-  <div class="d-admin-filter">
-    <div class="admin-filter__input-container permalink-search">
-      <TextField
-        @value={{this.filter}}
-        @placeholderKey="admin.permalink.form.filter"
-        @autocorrect="off"
-        @autocapitalize="off"
-        class="admin-filter__input"
-      />
+  {{#if this.model.allLinks.length}}
+    <div class="d-admin-filter">
+      <div class="admin-filter__input-container permalink-search">
+        <TextField
+          @value={{this.filter}}
+          @placeholderKey="admin.permalink.form.filter"
+          @autocorrect="off"
+          @autocapitalize="off"
+          class="admin-filter__input"
+        />
+      </div>
     </div>
-  </div>
+  {{/if}}
 
   <div class="permalink-results">
-    {{#if this.model.length}}
+    {{#if this.model.filteredLinks.length}}
       <table class="d-admin-table permalinks">
         <thead>
           <th>{{i18n "admin.permalink.url"}}</th>
           <th>{{i18n "admin.permalink.destination"}}</th>
         </thead>
         <tbody>
-          {{#each this.model as |pl|}}
+          {{#each this.model.filteredLinks as |pl|}}
             <tr
               class={{concat-class
                 "admin-permalink-item d-admin-row__content"
@@ -73,7 +75,7 @@
 
                   <DMenu
                     @identifier="permalink-menu"
-                    @title={{i18n "admin.permalinks.more_options"}}
+                    @title={{i18n "admin.permalink.more_options"}}
                     @icon="ellipsis-vertical"
                     @onRegisterApi={{this.onRegisterApi}}
                   >
@@ -83,7 +85,7 @@
                           <DButton
                             @action={{fn this.destroyRecord pl}}
                             @icon="trash-can"
-                            class="btn-transparent admin-permalink-item__delete"
+                            class="btn-transparent btn-danger admin-permalink-item__delete"
                             @label="admin.config_areas.permalinks.delete"
                           />
                         </dropdown.item>

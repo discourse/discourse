@@ -8,7 +8,7 @@ import { eq } from "truth-helpers";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import Permalink from "admin/models/permalink";
@@ -87,7 +87,9 @@ export default class AdminFlagsForm extends Component {
         permalink_type: data.permalinkType,
         permalink_type_value: this.valueForPermalinkType(data),
       });
-      this.adminPermalinks.model.unshift(Permalink.create(result.payload));
+      this.adminPermalinks.model.allLinks.unshift(
+        Permalink.create(result.payload)
+      );
       this.router.transitionTo("adminPermalinks");
     } catch (error) {
       popupAjaxError(error);
@@ -106,10 +108,12 @@ export default class AdminFlagsForm extends Component {
           permalink_type_value: this.valueForPermalinkType(data),
         }
       );
-      const index = this.adminPermalinks.model.findIndex(
+      const index = this.adminPermalinks.model.allLinks.findIndex(
         (permalink) => permalink.id === this.args.permalink.id
       );
-      this.adminPermalinks.model[index] = Permalink.create(result.payload);
+      this.adminPermalinks.model.allLinks[index] = Permalink.create(
+        result.payload
+      );
       this.router.transitionTo("adminPermalinks");
     } catch (error) {
       popupAjaxError(error);

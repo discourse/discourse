@@ -3,7 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import BasicTopicList from "discourse/components/basic-topic-list";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class RelatedMessages extends Component {

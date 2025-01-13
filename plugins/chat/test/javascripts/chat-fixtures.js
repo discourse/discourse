@@ -1,4 +1,4 @@
-import { deepMerge } from "discourse-common/lib/object";
+import { deepMerge } from "discourse/lib/object";
 
 export const messageContents = ["Hello world", "What up", "heyo!"];
 

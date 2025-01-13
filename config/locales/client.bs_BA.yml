@@ -1611,7 +1611,8 @@ bs_BA:
       categories_boxes: "Kutije sa podkategorijama"
       categories_boxes_with_topics: "Kutije sa istaknutim temama"
     full_name_requirement:
-      required_at_signup: "Required at signup"
+      required_at_signup: "Required"
+      optional_at_signup: "Opciono"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3142,8 +3143,28 @@ bs_BA:
         sidebar_link:
           all: "Svi izvještaji"
       config:
+        developer:
+          title: "Developer"
+        files:
+          title: "Files"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navigacija"
         notifications:
           title: "Obavijest"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Other"
+        search:
+          title: "Pretraži"
+        security:
+          title: "Security"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Korisnički API"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
@@ -3439,6 +3460,12 @@ bs_BA:
             invalid_applies_to: "Required"
             topic: "topics"
             post: "objave"
+        permalinks:
+          edit: "Edit"
+          delete: "Delete"
+        embeddable_host:
+          edit: "Edit"
+          delete: "Delete"
         look_and_feel:
           themes:
             title: "Teme"
@@ -3506,7 +3533,7 @@ bs_BA:
             title: "Pošaljite e-poštu sa linkom za preuzimanje"
             alert: "Veza za preuzimanje ove sigurnosne kopije vam je poslana e-mailom"
           destroy:
-            title: "Remove the backup"
+            title: "Delete"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             label: "Restore"
@@ -4419,21 +4446,21 @@ bs_BA:
         settings: "Postavke"
       embedding:
         get_started: "Ako želite da ugradite Discourse na drugu web lokaciju, počnite sa dodavanjem njegovog hosta."
+        delete: "Delete"
         confirm_delete: "Jeste li sigurni da želite izbrisati taj host?"
         title: "Embedding"
-        host: "Dozvoljeni domaćini"
-        edit: "uredi"
-        category: "Post u kategoriju"
-        add_host: "Dodaj host"
-        settings: "Postavke ugrađivanja"
-        crawling_settings: "Postavke Crawlera"
+        edit: "Edit"
         embed_post_limit: "Maximum number of posts to embed"
         embed_title_scrubber: "Regular expression korišten za čistku naslova objava"
         embed_truncate: "Skrati embedovane objave"
         allowed_embed_selectors: "CSS selector za elemente koji su dozvoljeni u embeds"
         blocked_embed_selectors: "CSS selector za elemente koji su odstranjeni sa embeds"
         allowed_embed_classnames: "Dopuštena CSS class imena"
-        save: "Sačuvaj Embedding postavke"
+        save: "Save"
+        host_form:
+          save: "Save"
+        nav:
+          settings: "Postavke"
       permalink:
         title: "Permalink-ovi"
         url: "URL"

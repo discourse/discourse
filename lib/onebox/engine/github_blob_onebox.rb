@@ -35,12 +35,14 @@ module Onebox
         "https://raw.githubusercontent.com/#{match[:org]}/#{match[:repo]}/#{match[:sha1]}/#{match[:file]}"
       end
 
-      def title
-        Sanitize.fragment(Onebox::Helpers.uri_unencode(link).sub(%r{^https?\://github\.com/}, ""))
-      end
-
       def auth_headers(match)
         github_auth_header(match[:org])
+      end
+
+      private
+
+      def data
+        super.merge({ domain: "github.com/#{match[:org]}/#{match[:repo]}" })
       end
     end
   end

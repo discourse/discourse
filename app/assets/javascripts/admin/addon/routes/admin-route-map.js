@@ -241,6 +241,30 @@ export default function () {
             path: "/",
           });
         });
+        this.route("experimental", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
+        this.route("other", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
+        this.route("files", function () {
+          this.route("settings", {
+            path: "/",
+          });
+        });
+        this.route(
+          "groupPermissions",
+          { path: "/group-permissions" },
+          function () {
+            this.route("settings", {
+              path: "/",
+            });
+          }
+        );
         this.route("trustLevels", { path: "/trust-levels" }, function () {
           this.route("settings", {
             path: "/",
@@ -277,6 +301,9 @@ export default function () {
             this.route("settings");
           }
         );
+        this.route("developer", function () {
+          this.route("settings", { path: "/" });
+        });
         this.route("fonts", function () {
           this.route("settings", { path: "/" });
         });
@@ -284,6 +311,21 @@ export default function () {
           this.route("settings", { path: "/" });
         });
         this.route("navigation", function () {
+          this.route("settings", { path: "/" });
+        });
+        this.route("onebox", function () {
+          this.route("settings", { path: "/" });
+        });
+        this.route("rate-limits", function () {
+          this.route("settings", { path: "/" });
+        });
+        this.route("security", function () {
+          this.route("settings", { path: "/" });
+        });
+        this.route("spam", function () {
+          this.route("settings", { path: "/" });
+        });
+        this.route("user-api", function () {
           this.route("settings", { path: "/" });
         });
       }

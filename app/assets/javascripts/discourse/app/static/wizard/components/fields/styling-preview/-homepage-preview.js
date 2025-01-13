@@ -28,7 +28,14 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
     if (homepageStyle === "latest" || homepageStyle === "hot") {
       this.drawPills(colors, font, height * 0.15, { homepageStyle });
-      this.renderNonCategoryHomepage(ctx, colors, font, width, height);
+      this.renderNonCategoryHomepage(
+        ctx,
+        colors,
+        font,
+        width,
+        height,
+        homepageStyle
+      );
     } else if (
       ["categories_only", "categories_with_featured_topics"].includes(
         homepageStyle
@@ -352,6 +359,15 @@ export default class HomepagePreview extends PreviewBaseComponent {
     ];
   }
 
+  getHotTitles() {
+    return [
+      i18n("wizard.homepage_preview.topic_titles.what_hobbies"),
+      i18n("wizard.homepage_preview.topic_titles.what_music"),
+      i18n("wizard.homepage_preview.topic_titles.funniest_thing"),
+      i18n("wizard.homepage_preview.topic_titles.share_art"),
+    ];
+  }
+
   getDescriptions() {
     return [
       i18n("wizard.homepage_preview.category_descriptions.icebreakers"),
@@ -360,7 +376,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
     ];
   }
 
-  renderNonCategoryHomepage(ctx, colors, font, width, height) {
+  renderNonCategoryHomepage(ctx, colors, font, width, height, homepageStyle) {
     const rowHeight = height / 6.6;
     // accounts for hard-set color variables in solarized themes
     const textColor =
@@ -418,7 +434,10 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.lineWidth = 1;
-    this.getTitles().forEach((title) => {
+
+    const titles =
+      homepageStyle === "hot" ? this.getHotTitles() : this.getTitles();
+    titles.forEach((title) => {
       const textPos = y + rowHeight * 0.4;
       ctx.fillStyle = colors.primary;
       ctx.fillText(title, cols[0], textPos);
@@ -448,10 +467,18 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
       ctx.fillStyle = textColor;
       ctx.font = `${bodyFontSize}em '${font}'`;
-      for (let j = 2; j <= 4; j++) {
+      for (let colIndex = 2; colIndex <= 4; colIndex++) {
+        // Give Hot a higher range of random values to make it look like
+        // more activity is happening.
+        const randomValue =
+          homepageStyle === "hot"
+            ? Math.floor(Math.random() * (660 - 220) + 220) + 10
+            : Math.floor(Math.random() * 90) + 10;
+
         ctx.fillText(
-          j === 4 ? "1h" : Math.floor(Math.random() * 90) + 10,
-          cols[j] + margin,
+          // Last column is relative activity time, others are random numbers.
+          colIndex === 4 ? "1h" : randomValue,
+          cols[colIndex] + margin,
           y + rowHeight * 0.6
         );
       }

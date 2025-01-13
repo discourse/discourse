@@ -1,4 +1,5 @@
-import { SVG_NAMESPACE } from "discourse-common/lib/icon-library";
+import { next } from "@ember/runloop";
+import { SVG_NAMESPACE } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 const TIMEOUT = 2500;
@@ -43,7 +44,11 @@ export function showAlert(postId, actionClass, messageKey, opts = {}) {
   const actionBtn =
     opts.actionBtn || document.querySelector(`${postSelector} .${actionClass}`);
 
-  actionBtn?.classList.add("post-action-feedback-button");
+  // using `next` here is a workaround for a behavior observed in Safari for iOS / iPadOS
+  // that somehow trigger Ember to restore the button's original classes
+  next(() => {
+    actionBtn?.classList.add("post-action-feedback-button");
+  });
 
   createAlert(i18n(messageKey), postId, actionBtn);
   createCheckmark(actionBtn, actionClass, postId);
@@ -73,7 +78,12 @@ function createCheckmark(btn, actionClass, postId) {
 }
 
 function styleBtn(btn) {
-  btn.classList.add("--activated", "--transition");
+  // using `next` here is a workaround for a behavior observed in Safari for iOS / iPadOS
+  // that somehow trigger Ember to restore the button's original classes preventing the message/checkmark from being
+  // displayed
+  next(() => {
+    btn.classList.add("--activated", "--transition");
+  });
   setTimeout(
     () => btn.classList.remove("--activated"),
     TIMEOUT - TRANSITION_BUFFER

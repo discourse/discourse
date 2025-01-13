@@ -10,10 +10,10 @@ import SecondFactorBackupEdit from "discourse/components/modal/second-factor-bac
 import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
 import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorController extends Controller {

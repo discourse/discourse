@@ -3,8 +3,8 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { setupRenderingTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
-import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 
 module("Plugin Outlet - Deprecated parentView", function (hooks) {
   setupRenderingTest(hooks);

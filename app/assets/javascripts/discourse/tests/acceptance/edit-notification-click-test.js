@@ -1,8 +1,8 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 const revisionResponse = {
   created_at: "2021-07-30T11:19:59.549Z",

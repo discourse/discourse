@@ -2343,7 +2343,8 @@ nl:
       categories_boxes_with_topics: "Vakken met uitgelichte topics"
       subcategories_with_featured_topics: "Subcategorieën met uitgelichte topics"
     full_name_requirement:
-      required_at_signup: "Vereist bij registratie"
+      required_at_signup: "Vereist"
+      optional_at_signup: "Optioneel"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4768,8 +4769,32 @@ nl:
         sidebar_link:
           all: "Alle rapporten"
       config:
+        developer:
+          title: "Ontwikkelaar"
+        experimental:
+          title: "Experimenteel"
+        files:
+          title: "Bestanden"
+        legal:
+          title: "Juridisch"
+        logo:
+          title: "Sitelogo"
+        navigation:
+          title: "Navigatie"
         notifications:
           title: "Meldingen"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Overig"
+        search:
+          title: "Zoeken"
+        security:
+          title: "Beveiliging"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Gebruikers-API"
       new_features:
         title: "Wat is er nieuw?"
       dashboard:
@@ -5346,6 +5371,14 @@ nl:
             title: "Meer opties"
             move_up: "Omhoog verplaatsen"
             move_down: "Omlaag verplaatsen"
+        permalinks:
+          edit: "Bewerken"
+          delete: "Verwijderen"
+        embeddable_host:
+          edit: "Bewerken"
+          delete: "Verwijderen"
+          more_options:
+            title: "Meer opties"
         look_and_feel:
           title: "Look en feel"
           description: "Pas je Discourse-site aan en geef hem een eigen stijl volgens jouw merk."
@@ -5450,7 +5483,7 @@ nl:
             title: "E-mail met downloadlink sturen"
             alert: "Er is een link naar je gestuurd via e-mail om deze back-up te downloaden"
           destroy:
-            title: "De back-up verwijderen"
+            title: "Verwijderen"
             confirm: "Weet je zeker dat je deze back-up wilt verwijderen?"
           restore:
             is_disabled: "Herstellen is momenteel uitgeschakeld. Ga naar de <a href='%{url}'>site-instellingen</a> om het in te schakelen."
@@ -6804,6 +6837,7 @@ nl:
         settings: "Instellingen"
       embedding:
         get_started: "Als je Discourse wilt insluiren op een andere website, begin dan door de host ervan toe te voegen."
+        delete: "Verwijderen"
         confirm_delete: "Weet je zeker dat je die host wilt verwijderen?"
         sample: |
           <p>Plak de volgende HTML-code op je site om Discourse-topics te maken en in te bedden. Vervang <b>EMBED_URL</b> door de canonieke URL van de pagina waarop je het inbedt.</p>
@@ -6812,16 +6846,9 @@ nl:
 
           <p>Vervang <b>DISCOURSE_USERNAME</b> door de Discourse-gebruikersnaam van de auteur die het topic moet maken. Discourse zoekt automatisch de gebruiker via het attribuut <code>content</code> van de <code>&lt;meta&gt;</code>-tags met het attribuut <code>name</code> ingesteld op <code>discourse-username</code> of <code>author</code>. De parameter <code>discourseUserName</code> is verouderd en wordt verwijderd in Discourse 3.2.</p>
         title: "Insluiting"
-        host: "Toegestane hosts"
-        allowed_paths: "Pad-acceptatielijst"
-        edit: "bewerken"
-        category: "Bericht naar categorie"
+        edit: "Bewerken"
         tags: "Topictags"
-        post_author: "Berichtauteur - standaard ingesteld op %{author}"
-        add_host: "Host toevoegen"
-        settings: "Insluitingsinstellingen"
-        crawling_settings: "Crawlerinstellingen"
-        crawling_description: "Als Discourse topics maakt voor je berichten en er geen RSS/ATOM-feed aanwezig is, wordt geprobeerd je content te parsen vanuit HTML. Omdat het soms een uitdaging kan zijn om content te extraheren, bieden we de mogelijkheid voor het opgeven van CSS-regels om de extractie makkelijker te maken."
+        crawlers_description: "Als Discourse topics maakt voor je berichten en er geen RSS/ATOM-feed aanwezig is, wordt geprobeerd je content te parsen vanuit HTML. Omdat het soms een uitdaging kan zijn om content te extraheren, bieden we de mogelijkheid voor het opgeven van CSS-regels om de extractie makkelijker te maken."
         embed_by_username: "Gebruikersnaam voor het maken van topics"
         embed_post_limit: "Maximaal aantal in te sluiten berichten"
         embed_title_scrubber: "Reguliere expressie voor het afleiden van de titel van berichten"
@@ -6830,7 +6857,12 @@ nl:
         allowed_embed_selectors: "CSS-kiezer voor elementen die zijn toegestaan in insluitingen"
         blocked_embed_selectors: "CSS-kiezer voor elementen die worden verwijderd uit insluitingen"
         allowed_embed_classnames: "Namen toegestane CSS-klassen"
-        save: "Insluitingsinstellingen opslaan"
+        save: "Opslaan"
+        host_form:
+          save: "Opslaan"
+        nav:
+          settings: "Instellingen"
+          crawlers: "Crawlers"
       permalink:
         title: "Permalinks"
         description: "Toe te passen omleiding voor URL's die onbekend zijn voor het forum."

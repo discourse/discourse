@@ -86,13 +86,13 @@ module PrettyText
     )
 
     %w[
-      discourse-common/addon/deprecation-workflow
-      discourse-common/addon/lib/get-url
-      discourse-common/addon/lib/object
-      discourse-common/addon/lib/deprecated
-      discourse-common/addon/lib/escape
-      discourse-common/addon/lib/avatar-utils
-      discourse-common/addon/lib/case-converter
+      discourse/app/deprecation-workflow
+      discourse/app/lib/get-url
+      discourse/app/lib/object
+      discourse/app/lib/deprecated
+      discourse/app/lib/escape
+      discourse/app/lib/avatar-utils
+      discourse/app/lib/case-converter
       discourse/app/lib/to-markdown
       discourse/app/static/markdown-it/features
     ].each do |f|
@@ -259,7 +259,7 @@ module PrettyText
         __optInput = {};
         __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
         __paths = #{paths_json};
-        require("discourse-common/lib/avatar-utils").avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
+        require("discourse/lib/avatar-utils").avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
       JS
   end
 
@@ -483,6 +483,8 @@ module PrettyText
   end
 
   def self.excerpt(html, max_length, options = {})
+    return "" if html.blank?
+
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)

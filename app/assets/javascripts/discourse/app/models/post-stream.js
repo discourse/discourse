@@ -5,14 +5,14 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { deepMerge } from "discourse/lib/object";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import { loadTopicView } from "discourse/models/topic";
-import deprecated from "discourse-common/lib/deprecated";
-import { deepMerge } from "discourse-common/lib/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let _lastEditNotificationClick = null;

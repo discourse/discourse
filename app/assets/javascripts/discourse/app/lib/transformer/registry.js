@@ -1,6 +1,7 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
   "discovery-topic-list-load-more",
+  "full-page-search-load-more",
 ]);
 
 export const VALUE_TRANSFORMERS = Object.freeze([

@@ -9,10 +9,14 @@ import { BasePlugin } from "@uppy/core";
 import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
+import { tinyAvatar } from "discourse/lib/avatar-utils";
+import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
 } from "discourse/lib/hashtag-decorator";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import {
   fetchUnseenMentions,
   linkSeenMentions,
@@ -25,13 +29,6 @@ import {
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
-import { tinyAvatar } from "discourse-common/lib/avatar-utils";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed, {
-  bind,
-  debounce,
-} from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];

@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
+import domFromString from "discourse/lib/dom-from-string";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
-import domFromString from "discourse-common/lib/dom-from-string";
 
 const checkedHashtags = new Set();
 let seenHashtags = {};

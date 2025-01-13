@@ -2,36 +2,14 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { isiPad } from "discourse/lib/utilities";
 import observeIntersection from "discourse/modifiers/observe-intersection";
 
-export let topicTitleDecorators = [];
-
-export function addTopicTitleDecorator(decorator) {
-  topicTitleDecorators.push(decorator);
-}
-
-export function resetTopicTitleDecorators() {
-  topicTitleDecorators.length = 0;
-}
-
 export default class TopicTitle extends Component {
   @service header;
-
-  @action
-  applyDecorators(element) {
-    const fancyTitle = element.querySelector(".fancy-title");
-
-    if (fancyTitle) {
-      topicTitleDecorators.forEach((cb) =>
-        cb(this.args.model, fancyTitle, "topic-title")
-      );
-    }
-  }
 
   @action
   keyDown(e) {
@@ -66,7 +44,6 @@ export default class TopicTitle extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     <div
-      {{didInsert this.applyDecorators}}
       {{on "keydown" this.keyDown}}
       {{observeIntersection this.handleIntersectionChange}}
       {{willDestroy this.handleTitleDestroy}}

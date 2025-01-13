@@ -2210,7 +2210,8 @@ ja:
       categories_boxes_with_topics: "注目のトピックのあるボックス"
       subcategories_with_featured_topics: "注目のトピックを含むサブカテゴリ"
     full_name_requirement:
-      required_at_signup: "登録時に必須"
+      required_at_signup: "必須"
+      optional_at_signup: "オプション"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4502,8 +4503,32 @@ ja:
         sidebar_link:
           all: "すべてのレポート"
       config:
+        developer:
+          title: "開発者"
+        experimental:
+          title: "実験的"
+        files:
+          title: "ファイル"
+        legal:
+          title: "法関連"
+        logo:
+          title: "サイトのロゴ"
+        navigation:
+          title: "ナビゲーション"
         notifications:
           title: "通知"
+        onebox:
+          title: "ワンボックス"
+        other:
+          title: "その他"
+        search:
+          title: "検索"
+        security:
+          title: "セキュリティ"
+        spam:
+          title: "迷惑"
+        user_api:
+          title: "ユーザー API"
       new_features:
         title: "新機能?"
       dashboard:
@@ -5073,6 +5098,14 @@ ja:
             title: "その他のオプション"
             move_up: "上に移動"
             move_down: "下に移動"
+        permalinks:
+          edit: "編集"
+          delete: "削除"
+        embeddable_host:
+          edit: "編集"
+          delete: "削除"
+          more_options:
+            title: "その他のオプション"
         look_and_feel:
           title: "外観と使い心地"
           description: "Discourse サイトをカスタマイズしてブランド化することで、個性的なスタイルを持たせます。"
@@ -5177,7 +5210,7 @@ ja:
             title: "ダウンロードリンクをメールで送る"
             alert: "このバックアップのダウンロードリンクがメールで送信されました"
           destroy:
-            title: "バックアップの削除"
+            title: "削除"
             confirm: "このバックアップを削除してもよろしいですか？"
           restore:
             is_disabled: "復元は現在無効になっています。有効にするには、<a href='%{url}'>サイト設定</a>にアクセスしてください。"
@@ -6513,6 +6546,7 @@ ja:
         settings: "設定"
       embedding:
         get_started: "ほかのウェブサイトに Discourse を埋め込む場合は、まずホストを追加してください。"
+        delete: "削除"
         confirm_delete: "このホストを削除してもよろしいですか？"
         sample: |
           <p>Discourse トピックの作成と埋め込みを行うには、以下の HTML コードをサイトに貼り付けます。<b>EMBED_URL</b> を、埋め込んでいるページの正規 URL に置き換えてください。</p>
@@ -6521,16 +6555,9 @@ ja:
 
           <p><b>DISCOURSE_USERNAME</b> を、トピックを作成する作成者の Discourse ユーザー名に置き換えてください。Discourse は、<code>name</code> 属性が <code>discourse-username</code> または <code>author</code> に設定された <code>&lt;meta&gt;</code> タグの <code>content</code> 属性でユーザーを自動的にルックアップします。<code>discourseUserName</code> パラメーターは廃止になっており、Discourse 3.2 で削除されます。</p>
         title: "埋め込み"
-        host: "許可されたホスト"
-        allowed_paths: "パスのホワイトリスト"
         edit: "編集"
-        category: "カテゴリへ投稿"
         tags: "トピックのタグ"
-        post_author: "投稿の作成者 - デフォルトは %{author}"
-        add_host: "ホストを追加"
-        settings: "埋め込みの設定"
-        crawling_settings: "クローラーの設定"
-        crawling_description: "Discourse が投稿のトピックを作成する際に RSS/ATOM フィードが存在しない場合、HTML からコンテンツを解析しようとします。コンテンツの抽出が困難な場合があるため、抽出を容易にする CSS ルールを指定する機能を提供しています。"
+        crawlers_description: "Discourse が投稿のトピックを作成する際に RSS/ATOM フィードが存在しない場合、HTML からコンテンツを解析しようとします。コンテンツの抽出が困難な場合があるため、抽出を容易にする CSS ルールを指定する機能を提供しています。"
         embed_by_username: "トピック作成のユーザー名"
         embed_post_limit: "埋め込める投稿の最大数"
         embed_title_scrubber: "投稿のタイトルをスクラブするために使用される正規表現"
@@ -6539,7 +6566,12 @@ ja:
         allowed_embed_selectors: "埋め込みで許可される要素の CSS セレクタ"
         blocked_embed_selectors: "埋め込みから削除された要素の CSS セレクタ"
         allowed_embed_classnames: "許可された CSS クラス名"
-        save: "埋め込みの設定を保存"
+        save: "保存"
+        host_form:
+          save: "保存"
+        nav:
+          settings: "設定"
+          crawlers: "クローラー"
       permalink:
         title: "パーマリンク"
         description: "フォーラムが認識していない URL に適用するリダイレクト。"

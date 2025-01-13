@@ -1184,7 +1184,8 @@ sw:
       categories_and_latest_topics: "Kategoria na Mada za Hivi Karibuni"
       categories_and_top_topics: "Kategoria na Mada za Juu"
     full_name_requirement:
-      required_at_signup: "Inahitajika wakati wa kujiunga"
+      required_at_signup: "Muhimu na Inahitajika"
+      optional_at_signup: "Sio muhimu"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2365,8 +2366,28 @@ sw:
         sidebar_link:
           all: "Ripoti zote"
       config:
+        developer:
+          title: "Mtengenezaji"
+        files:
+          title: "Mafaili"
+        legal:
+          title: "Halali"
+        navigation:
+          title: "Abiri"
         notifications:
           title: "Taarifa"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Nyingine"
+        search:
+          title: "Tafuta"
+        security:
+          title: "Ulinzi"
+        spam:
+          title: "Barua Taka"
+        user_api:
+          title: "API ya Mtumiaji"
       dashboard:
         title: "Ubao"
         version: "Toleo"
@@ -2575,6 +2596,12 @@ sw:
             invalid_applies_to: "Muhimu na Inahitajika"
             topic: "mada"
             post: "machapisho"
+        permalinks:
+          edit: "Hariri"
+          delete: "Futa"
+        embeddable_host:
+          edit: "Hariri"
+          delete: "Futa"
         look_and_feel:
           themes:
             title: "Mandhari"
@@ -2642,7 +2669,7 @@ sw:
             title: "Tuma barua pepe yenye kiungo cha upakuaji"
             alert: "Kiungo cha kupakua chelezo hii imetumwa kwenye barua pepe yako"
           destroy:
-            title: "Ondoa chelezo"
+            title: "Futa"
             confirm: "Una uhakika unataka kufuta chelezo hii?"
           restore:
             label: "Rejesha"
@@ -3399,21 +3426,21 @@ sw:
         settings: "Mipangilio"
       embedding:
         get_started: "Kama ungependa kuambatanisha Discourse kwenye tovuti nyingine, anza kwa kuandika taarifa zake."
+        delete: "Futa"
         confirm_delete: "Una uhakika unataka kumfuta mwenyeji?"
         title: "Ambatanisha"
-        host: "Ruhusu Wenyeji"
-        edit: "hariri"
-        category: "Andika kwenye Kikundi"
-        add_host: "Ongeza Mwenyeji"
-        settings: "Mipangilio iliopachikwa"
-        crawling_settings: "Mipangilio ya kutembelea taarifa"
-        crawling_description: "Discourse ikitengeneza mada za machapisho yako, kama hakuna taarifa kutoka kwa RSS/ATOM itajaribu kupata maneno kutoka kwenye HTML yako. Kuna changamoto zinazotokea wakati wa kupata hizo taarifa, tunakuruhusu uchague kanuni za CSS ili upatikanaji wa machapisho uwe rahisi zaidi."
+        edit: "Hariri"
+        crawlers_description: "Discourse ikitengeneza mada za machapisho yako, kama hakuna taarifa kutoka kwa RSS/ATOM itajaribu kupata maneno kutoka kwenye HTML yako. Kuna changamoto zinazotokea wakati wa kupata hizo taarifa, tunakuruhusu uchague kanuni za CSS ili upatikanaji wa machapisho uwe rahisi zaidi."
         embed_by_username: "Jina la mtumiaji kwa ajili ya kutengeneza mada"
         embed_post_limit: "Kiwango cha Juu cha Kupachika machapisho"
         embed_title_scrubber: "Neno linalotumika kufuta vichwa vya machapisho"
         embed_truncate: "Fupisha machapisho yaliyopachikwa"
         allowed_embed_classnames: "Ruhusu majina ya madarasa ya CSS "
-        save: "Hifadhi Mipangilio Iliyopachikwa"
+        save: "Hifadhi"
+        host_form:
+          save: "Hifadhi"
+        nav:
+          settings: "Mipangilio"
       permalink:
         title: "Anwani za mtandao"
         url: "Anwani ya mtandao"

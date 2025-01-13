@@ -92,19 +92,15 @@
     color: var(--primary);
     @include ellipsis;
 
+    &:hover {
+      background: var(--d-sidebar-highlight-background);
+    }
+
     &.active {
       position: relative;
-      --arrow-thickness: 8px;
-      background: var(--d-selected);
-
-      &::after {
-        position: absolute;
-        right: 0;
-        top: calc(50% - var(--arrow-thickness));
-        content: " ";
-        border: var(--arrow-thickness) solid transparent;
-        border-left-color: var(--secondary);
-      }
+      color: var(--primary);
+      background-color: var(--d-selected);
+      font-weight: bold;
     }
   }
 

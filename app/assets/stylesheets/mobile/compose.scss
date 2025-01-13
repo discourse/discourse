@@ -7,8 +7,6 @@
 }
 
 #reply-control {
-  z-index: z("mobile-composer");
-
   .reply-area {
     padding: 6px;
     padding-bottom: unquote("max(env(safe-area-inset-bottom), 6px)");
@@ -16,18 +14,11 @@
   }
 
   &.open {
-    height: 250px;
-    &.edit-title {
-      height: 100%;
-    }
+    z-index: z("mobile-composer");
   }
 
-  .keyboard-visible &.open {
-    top: 0px;
-    height: calc(var(--composer-vh, 1vh) * 100);
-    .reply-area {
-      padding-bottom: 6px;
-    }
+  .keyboard-visible &.open .reply-area {
+    padding-bottom: 6px;
   }
 
   .reply-to {
@@ -64,16 +55,9 @@
   }
 
   &.draft {
-    z-index: z("footer-nav") + 1;
-    padding-bottom: env(safe-area-inset-bottom);
-
     .toggle-toolbar,
     .toggle-minimize {
       top: 6px;
-    }
-    .draft-text {
-      width: calc(100% - 40px);
-      @include ellipsis;
     }
   }
 
@@ -143,8 +127,9 @@
         display: none;
       }
     }
+
     .d-editor-preview-wrapper {
-      position: fixed;
+      position: absolute;
       z-index: z("fullscreen");
       top: 0;
       bottom: 0;
@@ -159,6 +144,10 @@
       .d-editor-preview {
         margin-bottom: 40px;
       }
+    }
+
+    .composer-controls {
+      display: none;
     }
   }
 

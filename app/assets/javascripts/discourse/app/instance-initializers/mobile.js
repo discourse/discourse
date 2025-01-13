@@ -1,5 +1,5 @@
 import Mobile from "discourse/lib/mobile";
-import { setResolverOption } from "discourse-common/resolver";
+import { setResolverOption } from "discourse/resolver";
 
 // Initializes the `Mobile` helper object.
 export default {

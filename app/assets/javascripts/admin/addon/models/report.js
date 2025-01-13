@@ -2,7 +2,10 @@ import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import { durationTiny, number } from "discourse/lib/formatter";
+import getURL from "discourse/lib/get-url";
+import { makeArray } from "discourse/lib/helpers";
 import round from "discourse/lib/round";
 import {
   escapeExpression,
@@ -10,9 +13,6 @@ import {
   formatUsername,
   toNumber,
 } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
-import { makeArray } from "discourse-common/lib/helpers";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n, { i18n } from "discourse-i18n";
 
 // Change this line each time report format change
@@ -376,9 +376,9 @@ export default class Report extends EmberObject {
     if (isNaN(change) || !isFinite(change)) {
       return null;
     } else if (change > 0) {
-      return "+" + change.toFixed(0) + "%";
+      return `+${i18n("js.number.percent", { count: change.toFixed(0) })}`;
     } else {
-      return change.toFixed(0) + "%";
+      return `${i18n("js.number.percent", { count: change.toFixed(0) })}`;
     }
   }
 
@@ -416,17 +416,20 @@ export default class Report extends EmberObject {
       );
     }
     title.push(
-      i18n("admin.dashboard.reports.percent_change_tooltip_previous_value", {
-        previousValue: number(valAtT1),
-        previousPeriod: prevPeriodString,
-      })
+      i18n(
+        `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
+        {
+          count: valAtT1,
+          previousValue: number(valAtT1),
+        }
+      )
     );
     return title.join(" ");
   }
 
   @discourseComputed("yesterdayCount")
   yesterdayCountTitle(yesterdayCount) {
-    return this.changeTitle(this.valueAt(2), yesterdayCount, "two days ago");
+    return this.changeTitle(this.valueAt(2), yesterdayCount, "yesterday");
   }
 
   @discourseComputed("lastSevenDaysCount")
@@ -434,7 +437,7 @@ export default class Report extends EmberObject {
     return this.changeTitle(
       this.valueFor(8, 14),
       lastSevenDaysCount,
-      "two weeks ago"
+      "two_weeks_ago"
     );
   }
 
@@ -448,7 +451,7 @@ export default class Report extends EmberObject {
     return this.changeTitle(
       prev30Days ?? prev_period,
       lastThirtyDaysCount,
-      "in the previous 30 day period"
+      "thirty_days_ago"
     );
   }
 

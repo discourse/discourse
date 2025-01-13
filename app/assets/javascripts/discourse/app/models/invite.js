@@ -4,10 +4,10 @@ import { isNone } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class Invite extends EmberObject {
   static create() {

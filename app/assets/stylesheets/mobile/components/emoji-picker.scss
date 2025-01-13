@@ -1,0 +1,57 @@
+.fk-d-menu-modal.emoji-picker-content {
+  .emoji-picker {
+    height: auto;
+  }
+
+  html:not(.keyboard-visible.mobile-view) & .d-modal__container {
+    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    max-height: 100%;
+
+    .emoji-picker__content {
+      height: calc(
+        var(--composer-vh, var(--1dvh)) * 100 - 50px -
+          env(safe-area-inset-bottom)
+      );
+    }
+  }
+
+  html.keyboard-visible.mobile-view & .d-modal__container {
+    .emoji-picker__content {
+      height: calc(var(--composer-vh, var(--1dvh)) * 100 - 50px);
+    }
+  }
+
+  .d-modal__body {
+    padding: 0;
+  }
+
+  .d-modal__container {
+    align-self: flex-start;
+  }
+
+  .emoji-picker__sections-nav {
+    order: 1;
+    height: 50px;
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+    box-sizing: border-box;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+
+  .emoji-picker__content {
+    flex-direction: column;
+    padding-top: 1em;
+    box-sizing: border-box;
+  }
+
+  .emoji-picker__scrollable-content {
+    height: 100%;
+  }
+
+  .emoji-picker__close-btn {
+    margin-left: 0.25em;
+    padding-left: 0.75em;
+  }
+}

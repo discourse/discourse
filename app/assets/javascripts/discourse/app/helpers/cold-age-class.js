@@ -1,4 +1,4 @@
-import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
+import { helperContext, registerRawHelper } from "discourse/lib/helpers";
 
 function daysSinceEpoch(dt) {
   // 1000 * 60 * 60 * 24 = days since epoch

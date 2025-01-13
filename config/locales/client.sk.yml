@@ -2607,9 +2607,8 @@ sk:
       categories_boxes_with_topics: "Boxy s vybranými témami"
       subcategories_with_featured_topics: "Podkategórie s vybranými témami"
     full_name_requirement:
-      required_at_signup: "Požadované pri registrácii"
-      optional_at_signup: "Voliteľné pri registrácii"
-      hidden_at_signup: "Skryté pri registrácii"
+      required_at_signup: "Povinné"
+      optional_at_signup: "Nepovinné"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -5307,8 +5306,42 @@ sk:
         sidebar_link:
           all: "Všetky hlásenia"
       config:
+        developer:
+          title: "Vývojár"
+        experimental:
+          title: "Experimentálne"
+        font_style:
+          title: "Štýl písma"
+        files:
+          title: "Súbory"
+        legal:
+          title: "Právne záležitosti"
+        login_and_authentication:
+          title: "Prihlásenie a overenie"
+          header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
+        logo:
+          title: "Logo stránky"
+        navigation:
+          title: "Navigácia"
         notifications:
           title: "Upozornenia"
+          header_description: "Nakonfigurujte spôsob spravovania a doručovania upozornení pre používateľov vrátane e-mailových preferencií, upozornení push, limitov zmienok a konsolidácie upozornení"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Ostatné"
+        rate_limits:
+          title: "Limity sadzieb"
+        search:
+          title: "Hľadať"
+        security:
+          title: "Bezpečnosť"
+        spam:
+          title: "Spam"
+        trust_levels:
+          title: "Úrovne dôvery"
+        user_api:
+          title: "Používateľské rozhranie API"
       new_features:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
@@ -5385,6 +5418,7 @@ sk:
         custom_date_range: Vlastný rozsah dátumov
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
+          percent_change_tooltip: "%{percent} zmena."
           today: "Dnes"
           yesterday: "Včera"
           last_7_days: "Posledných 7"
@@ -5809,16 +5843,12 @@ sk:
         sidebar_link:
           appearance: "Vzhľad"
           server_setup:
-            title: "Nastavenie servera"
             keywords: "email|smtp|mailgun|sendgrid|poslané|preskočený|odmeňované|prijaté|odmietnutý|e-mailové denníky|náhľad zhrnutia"
       security:
         title: "Bezpečnosť"
         sidebar_link:
           security: "Nastavenia zabezpečenia"
           spam: "Nastavenia spamu"
-          staff_action_logs:
-            title: "Akčné protokoly personálu"
-            keywords: "chybové protokoly|prehľadané e-maily|prehľadané IP adresy|prehľadané URL adresy|vyhľadávacie protokoly"
       section_landing_pages:
         account:
           title: "Účet"
@@ -5919,6 +5949,14 @@ sk:
             title: "Ďalšie možnosti"
             move_up: "Posunúť sa nahor"
             move_down: "Posunúť sa nadol"
+        permalinks:
+          edit: "Upraviť"
+          delete: "Odstrániť"
+        embeddable_host:
+          edit: "Upraviť"
+          delete: "Odstrániť"
+          more_options:
+            title: "Ďalšie možnosti"
         look_and_feel:
           title: "Pozri a cíť"
           description: "Prispôsobte a označte svoju lokalitu Discourse a dodajte jej osobitý štýl."
@@ -6029,7 +6067,7 @@ sk:
             title: "Odoslať e-mail s odkazom na stiahnutie"
             alert: "Odkaz na stiahnutie tejto zálohy vám bol zaslaný e-mailom"
           destroy:
-            title: "Odstrániť zálohu"
+            title: "Odstrániť"
             confirm: "Ste si istý, že chcete odstrániť túto zálohu?"
           restore:
             is_disabled: "Obnovenie je v súčasnosti vypnuté. Ak ju chcete povoliť, navštívte <a href='%{url}'>nastavenia stránky</a>."
@@ -7475,6 +7513,7 @@ sk:
         settings: "Nastavenia"
       embedding:
         get_started: "Pokiaľ chcete vložiť Discourse na inú stránku, začnite pridaním jej hostiteľa."
+        delete: "Odstrániť"
         confirm_delete: "Ste si istý, že chcete zmazať tohoto hostiteľa?"
         sample: |
           <p>Vložte nasledujúci HTML kód na svoju stránku na vytvorenie a vloženie tém Discourse. Nahraďte <b>EMBED_URL</b> kanonickou URL adresou stránky, na ktorú to vkladáte.</p>
@@ -7483,16 +7522,9 @@ sk:
 
           <p>Nahraďte <b>DISCOURSE_USERNAME</b> používateľským menom Discourse autora, ktorý by mal tému vytvoriť. Discourse automaticky vyhľadá používateľa podľa atribútu <code>content</code> v značkách <code>&lt;meta&gt;</code> s atribútom <code>name</code> nastaveným na <code>discourse-username</code> alebo <code>author</code>. Parameter <code>discourseUserName</code> bol zastaraný a bude odstránený v Discourse 3.2.</p>
         title: "Vkladám"
-        host: "Povolení hostitelia"
-        allowed_paths: "Zoznam povolených ciest"
-        edit: "uprav"
-        category: "Prispievať do kategórií"
+        edit: "Upraviť"
         tags: "Značky tém"
-        post_author: "Autor príspevku - Predvolené nastavenie je %{author}"
-        add_host: "Pridať hostiteľa"
-        settings: "Nastavenia vkladania"
-        crawling_settings: "Nastavenia vyhľadávača"
-        crawling_description: "Ak Discourse vytvorí tému pre Váš príspevok a neexistuje žiadny RSS/ATOM kanál tak sa pokúsime získať Váš obsah z HTML. Získanie obsahu môže byt niekedy výzva a preto poskytujeme možnosť špecifikovať CSS pravidlá na uľahčenie získania obsahu."
+        crawlers_description: "Ak Discourse vytvorí tému pre Váš príspevok a neexistuje žiadny RSS/ATOM kanál tak sa pokúsime získať Váš obsah z HTML. Získanie obsahu môže byt niekedy výzva a preto poskytujeme možnosť špecifikovať CSS pravidlá na uľahčenie získania obsahu."
         embed_by_username: "Používateľské meno pre vytváranie tém"
         embed_post_limit: "Maximálny počet vložených príspevkov"
         embed_title_scrubber: "Regulárny výraz používaný na čistenie názvu príspevkov"
@@ -7501,7 +7533,12 @@ sk:
         allowed_embed_selectors: "CSS selector pre elementy ktoré je možné vkladať"
         blocked_embed_selectors: "CSS selector pre elementy ktoré nie je možné vkladať"
         allowed_embed_classnames: "Dovolené názvy CSS tried"
-        save: "Uložiť Nastavenia vkladania"
+        save: "Uložiť"
+        host_form:
+          save: "Uložiť"
+        nav:
+          settings: "Nastavenia"
+          crawlers: "Crawlery"
       permalink:
         title: "Trvalé odkazy"
         description: "Presmerovanie na adresy URL, ktoré fórum nepozná."
@@ -7572,6 +7609,7 @@ sk:
           moderator: "Moderátor"
           regular: "Bežný používateľ"
       previews:
+        topic_title: "Aké knihy čítate?"
         share_button: "Zdieľať"
         reply_button: "Odpoveď"
         topic_preview: "Náhľad témy"
@@ -7585,7 +7623,24 @@ sk:
           latest: "Najnovšie"
           hot: "Horúce"
           categories: "Kategórie"
+        topic_titles:
+          what_books: "Aké knihy čítate?"
+          what_movies: "Aké filmy ste v poslednej dobe videli?"
+          random_fact: "Náhodný fakt dňa"
+          tv_show: "Odporučiť televízny program"
+        topic_ops:
+          what_books: |
+            Všetci radi čítame, využime túto tému a podeľme sa o svoje
+            aktuálne alebo nedávne čítanie. Som fanúšik fantasy a na
+            som si po stýkrát prečítala Pána prsteňov.
+            A čo vy?
+        category_descriptions:
+          icebreakers: "Zoznámte sa s ostatnými členmi komunity pomocou zábavných otázok."
+          news: "Diskutujte o najnovších správach a udalostiach."
+          site_feedback: "Podeľte sa o svoje názory na komunitu a navrhnite vylepšenia."
         category_names:
+          icebreakers: "Nadviazanie rozhovoru"
+          news: "Novinky"
           site_feedback: "Podnety pre tvorcov stránky"
         table_headers:
           topic: "Témy"

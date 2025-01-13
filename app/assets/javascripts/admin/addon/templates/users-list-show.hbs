@@ -122,14 +122,16 @@
           @asc={{this.asc}}
           @automatic={{true}}
         />
-        <TableHeaderToggle
-          @onToggle={{this.updateOrder}}
-          @field="topics_viewed"
-          @labelKey="admin.user.topics_entered"
-          @order={{this.order}}
-          @asc={{this.asc}}
-          @automatic={{true}}
-        />
+        {{#unless this.showSilenceReason}}
+          <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
+            @field="topics_viewed"
+            @labelKey="admin.user.topics_entered"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @automatic={{true}}
+          />
+        {{/unless}}
         <TableHeaderToggle
           @onToggle={{this.updateOrder}}
           @field="posts_read"
@@ -154,6 +156,17 @@
           @asc={{this.asc}}
           @automatic={{true}}
         />
+        {{#if this.showSilenceReason}}
+          <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
+            @field="silence_reason"
+            @labelKey="admin.users.silence_reason"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @automatic={{true}}
+            class="directory-table__column-header--silence-reason"
+          />
+        {{/if}}
         <PluginOutlet
           @name="admin-users-list-thead-after"
           @outletArgs={{hash order=this.order asc=this.asc}}
@@ -270,14 +283,17 @@
                 {{format-duration user.last_seen_age}}
               </span>
             </div>
-            <div class="directory-table__cell topics-entered">
-              <span class="directory-table__label">
-                <span>{{i18n "admin.user.topics_entered"}}</span>
-              </span>
-              <span class="directory-table__value">
-                {{number user.topics_entered}}
-              </span>
-            </div>
+
+            {{#unless this.showSilenceReason}}
+              <div class="directory-table__cell topics-entered">
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.user.topics_entered"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{number user.topics_entered}}
+                </span>
+              </div>
+            {{/unless}}
             <div class="directory-table__cell posts-read">
               <span class="directory-table__label">
                 <span>{{i18n "admin.user.posts_read_count"}}</span>
@@ -305,6 +321,20 @@
                 {{format-duration user.created_at_age}}
               </span>
             </div>
+
+            {{#if this.showSilenceReason}}
+              <div
+                class="directory-table__cell silence_reason"
+                title={{user.silence_reason}}
+              >
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.users.silence_reason"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{user.silence_reason}}
+                </span>
+              </div>
+            {{/if}}
 
             <PluginOutlet
               @name="admin-users-list-td-after"

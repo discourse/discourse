@@ -3,7 +3,7 @@ import { computed, get } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
 
 @tagName("")

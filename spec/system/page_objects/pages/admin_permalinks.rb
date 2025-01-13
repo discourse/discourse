@@ -41,6 +41,22 @@ module PageObjects
         has_no_css?(".admin-permalink-item__url")
       end
 
+      def has_no_filter?
+        has_no_css?(".permalink-search")
+      end
+
+      def has_filter?
+        has_css?(".permalink-search")
+      end
+
+      def filter(text)
+        find(".permalink-search").fill_in with: text
+      end
+
+      def has_no_results?
+        has_css?(".permalink-results__no-result")
+      end
+
       def open_permalink_menu(url)
         find("tr.#{url} .permalink-menu-trigger").click
         self

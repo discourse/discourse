@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
+import dIcon from "discourse/helpers/d-icon";
 import { groupPath } from "discourse/lib/url";
-import dIcon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PrivateMessageMap extends Component {

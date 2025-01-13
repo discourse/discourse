@@ -1,6 +1,6 @@
 import { dependentKeyCompat } from "@ember/object/compat";
 import { isPresent } from "@ember/utils";
-import { deepEqual } from "discourse-common/lib/object";
+import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
 export default class SettingObjectHelper {

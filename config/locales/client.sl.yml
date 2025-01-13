@@ -1910,7 +1910,8 @@ sl:
       categories_boxes: "Škatle s podkategorijami"
       categories_boxes_with_topics: "Škatle z izpostavljenimi temami"
     full_name_requirement:
-      required_at_signup: "Zahtevano ob prijavi"
+      required_at_signup: "Zahtevano"
+      optional_at_signup: "Neobvezno"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3715,8 +3716,28 @@ sl:
         sidebar_link:
           all: "Vsa poročila"
       config:
+        developer:
+          title: "Razvijalci"
+        files:
+          title: "Datoteke"
+        legal:
+          title: "Pravno"
+        navigation:
+          title: "Navigacija"
         notifications:
           title: "Obvestila"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Drugo"
+        search:
+          title: "Išči"
+        security:
+          title: "Varnost"
+        spam:
+          title: "Neželeno"
+        user_api:
+          title: "Uporabniški API"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
@@ -3973,6 +3994,12 @@ sl:
             topic: "tem"
             post: "prispevkov"
             chat_message: "sporočila klepeta"
+        permalinks:
+          edit: "Uredi"
+          delete: "Izbriši"
+        embeddable_host:
+          edit: "Uredi"
+          delete: "Izbriši"
         look_and_feel:
           themes:
             title: "Videzi"
@@ -4029,6 +4056,8 @@ sl:
             confirm: "Želite ustvariti varnostno kopijo?"
           download:
             label: "Naloži"
+          destroy:
+            title: "Izbriši"
         location:
           s3: "S3"
       export_csv:
@@ -4709,10 +4738,15 @@ sl:
         delete_confirm: "Ali ste prepričani, da hočete izbrisati emoji :%{name}:?"
         settings: "Nastavitve"
       embedding:
+        delete: "Izbriši"
         title: "Vdelovanje"
-        edit: "uredi"
-        category: "Objavi v kategorijo"
+        edit: "Uredi"
         embed_by_username: "Uporabniško ime za kreiranje teme"
+        save: "Shrani"
+        host_form:
+          save: "Shrani"
+        nav:
+          settings: "Nastavitve"
       permalink:
         title: "Trajne povezave"
         url: "URL"

@@ -1,12 +1,12 @@
 import { getOwner } from "@ember/owner";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Category Notifications", function (needs) {
   needs.user({ muted_category_ids: [1], indirectly_muted_category_ids: [2] });
