@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { array, concat, hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import TopicPostBadges from "discourse/components/topic-post-badges";
