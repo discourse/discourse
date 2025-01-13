@@ -723,6 +723,12 @@ RSpec.describe "topics" do
         type: :string,
         description: "Enum: `all`, `yearly`, `quarterly`, `monthly`, `weekly`, `daily`",
       )
+      parameter(
+        name: :per_page,
+        in: :query,
+        type: :integer,
+        description: "Maximum number of topics returned, between 1-100",
+      )
 
       produces "application/json"
       response "200", "response" do
@@ -903,6 +909,7 @@ RSpec.describe "topics" do
                }
 
         let(:period) { "all" }
+        let(:per_page) { 20 }
 
         run_test!
       end
