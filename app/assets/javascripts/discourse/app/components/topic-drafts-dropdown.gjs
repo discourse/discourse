@@ -35,7 +35,7 @@ export default class TopicDraftsDropdown extends Component {
   @action
   async onShowMenu() {
     try {
-      const draftsStream = this.currentUser.get("userDraftsStream");
+      const draftsStream = this.currentUser.userDraftsStream;
       draftsStream.reset();
 
       await draftsStream.findItems(this.site);
@@ -50,8 +50,8 @@ export default class TopicDraftsDropdown extends Component {
   async resumeDraft(draft) {
     await this.dMenu.close();
 
-    if (draft.get("postUrl")) {
-      DiscourseURL.routeTo(draft.get("postUrl"));
+    if (draft.postUrl) {
+      DiscourseURL.routeTo(draft.postUrl);
     } else {
       this.composer.open({
         draft,

@@ -60,10 +60,6 @@ async function loadDraft(store, opts = {}) {
     Draft.clear(draftKey, draftSequence);
   }
 
-  if (!draft?.title && !draft?.reply) {
-    return;
-  }
-
   let attrs = {
     draftKey,
     draftSequence,
