@@ -125,4 +125,7 @@ loaderShim("discourse-common/utils/multi-cache", () =>
   importSync("discourse/lib/multi-cache")
 );
 
+loaderShim("discourse-common/deprecation-workflow", () =>
+  importSync("discourse/deprecation-workflow")
+);
 loaderShim("discourse-common/resolver", () => importSync("discourse/resolver"));
