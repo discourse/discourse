@@ -5130,6 +5130,7 @@ en:
         title: "List of available reports"
         meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
+        back: "Back to all reports"
         sidebar_link:
           all: "All reports"
 

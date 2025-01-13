@@ -40,7 +40,6 @@ export default class AdminReport extends Component {
   model = null;
   reportOptions = null;
   forcedModes = null;
-  showAllReportsLink = false;
   filters = null;
   showTrend = false;
   showHeader = true;
