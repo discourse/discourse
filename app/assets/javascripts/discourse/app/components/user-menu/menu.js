@@ -193,6 +193,7 @@ export default class UserMenu extends Component {
   @service router;
   @service site;
   @service siteSettings;
+  @service header;
 
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
@@ -210,7 +211,9 @@ export default class UserMenu extends Component {
 
   @bind
   onRouteChange() {
-    this.args.closeUserMenu();
+    if (this.header.userVisible) {
+      this.args.closeUserMenu();
+    }
   }
 
   get classNames() {

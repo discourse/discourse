@@ -2934,7 +2934,7 @@ en:
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
         votes_released: "Vote was released"
-        new_features: "new Discourse features have been released!"
+        new_features: "New Discourse features have been released!"
         admin_problems: "new advice on your site dashboard"
 
     upload_selector:
