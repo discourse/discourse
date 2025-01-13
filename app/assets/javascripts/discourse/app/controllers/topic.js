@@ -1178,7 +1178,6 @@ export default class TopicController extends Controller.extend(
     const composerController = this.composer;
     const { quoteState } = this;
     const quotedText = buildQuote(post, quoteState.buffer, quoteState.opts);
-    const categoryPermission = this.get("model.category.permission");
 
     quoteState.clear();
 
@@ -1202,9 +1201,9 @@ export default class TopicController extends Controller.extend(
       options = {
         action: Composer.CREATE_TOPIC,
         draftKey: post.topic.draft_key,
-        topicCategoryId: categoryPermission
-          ? this.get("model.category.id")
-          : null,
+        topicCategoryId:
+          this.get("model.category.permission") &&
+          this.get("model.category.id"),
         prioritizedCategoryId: this.get("model.category.id"),
       };
     }
