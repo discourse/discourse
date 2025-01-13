@@ -502,6 +502,11 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.can_use_name?(name, group)
+    UsernameValidator.new(name).valid_format? &&
+      (group.name == name || !User.username_exists?(name))
+  end
+
   def self.refresh_automatic_group!(name)
     return unless id = AUTO_GROUPS[name]
 
@@ -519,9 +524,16 @@ class Group < ActiveRecord::Base
 
     # don't allow shoddy localization to break this
     localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
-    validator = UsernameValidator.new(localized_name)
+    default_name = I18n.t("groups.default_names.#{name}")
 
-    group.name = localized_name if validator.valid_format? && !User.username_exists?(localized_name)
+    group.name =
+      if can_use_name?(localized_name, group)
+        localized_name
+      elsif can_use_name?(default_name, group)
+        default_name
+      else
+        name.to_s
+      end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
