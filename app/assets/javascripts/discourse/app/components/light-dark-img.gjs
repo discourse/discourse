@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import CdnImg from "discourse/components/cdn-img";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { getURLWithCDN } from "discourse/lib/get-url";
 
 export default class LightDarkImg extends Component {
   @service session;

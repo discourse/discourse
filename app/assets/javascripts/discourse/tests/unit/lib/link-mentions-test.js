@@ -1,11 +1,11 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import domFromString from "discourse/lib/dom-from-string";
 import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Unit | Utility | link-mentions", function (hooks) {
   setupTest(hooks);

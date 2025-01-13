@@ -1,8 +1,8 @@
 import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
-import { isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
+import deprecated from "discourse/lib/deprecated";
+import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
+import { isTesting } from "discourse/lib/environment";
 
 let THROW_GJS_ERROR = isTesting();
 

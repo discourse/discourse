@@ -21,11 +21,11 @@ import {
   disableBodyScroll,
   enableBodyScroll,
 } from "discourse/lib/body-scroll-lock";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import { makeArray } from "discourse/lib/helpers";
 import { emojiUrlFor } from "discourse/lib/text";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { makeArray } from "discourse-common/lib/helpers";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 

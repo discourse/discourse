@@ -22,6 +22,10 @@ describe "Admin API Keys Page", type: :system do
     api_keys_page.visit_page
     api_keys_page.add_api_key(description: "Second Integration")
 
+    expect(api_keys_page).to have_generated_api_key
+
+    api_keys_page.click_continue
+
     expect(api_keys_page).to have_api_key_listed("Second Integration")
   end
 

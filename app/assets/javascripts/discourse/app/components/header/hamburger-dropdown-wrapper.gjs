@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
+import { isTesting } from "discourse/lib/environment";
+import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { isTesting } from "discourse-common/config/environment";
-import discourseLater from "discourse-common/lib/later";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
 

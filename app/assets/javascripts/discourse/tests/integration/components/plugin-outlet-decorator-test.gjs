@@ -3,10 +3,10 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import { registerTemporaryModule } from "../../helpers/temporary-module-helper";
 
 const PREFIX = "discourse/plugins/some-plugin/templates/connectors";

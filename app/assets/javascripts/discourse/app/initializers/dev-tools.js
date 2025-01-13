@@ -1,5 +1,5 @@
 import { DEBUG } from "@glimmer/env";
-import { isDevelopment } from "discourse-common/config/environment";
+import { isDevelopment } from "discourse/lib/environment";
 
 const KEY = "discourse__dev_tools";
 

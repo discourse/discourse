@@ -1,6 +1,6 @@
+import getURL from "discourse/lib/get-url";
 import { getRenderDirector } from "discourse/lib/reviewable-types-manager";
 import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
-import getURL from "discourse-common/lib/get-url";
 
 export default class UserMenuReviewableItem extends UserMenuBaseItem {
   constructor({ reviewable, currentUser, siteSettings, site }) {

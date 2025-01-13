@@ -40,37 +40,25 @@
   }
 }
 
-#topic-progress-wrapper {
-  position: fixed;
-  &.docked {
-    position: initial;
+.with-topic-progress {
+  position: sticky;
+  bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
+  z-index: z("timeline");
+}
 
+#topic-progress-wrapper {
+  &.docked {
     .toggle-admin-menu {
       display: none;
     }
   }
 
-  bottom: 0;
-  html:not(.footer-nav-visible) & {
-    bottom: env(safe-area-inset-bottom);
-  }
-
-  right: 10px;
-  z-index: z("timeline");
   display: flex;
   justify-content: flex-end;
   overflow: hidden;
 
   .btn {
     border: 0;
-  }
-
-  &.with-transitions {
-    transition: bottom 0.2s, margin-bottom 0.2s;
-
-    #topic-progress .bg {
-      transition: width 0.5s;
-    }
   }
 
   &:not(.docked) {

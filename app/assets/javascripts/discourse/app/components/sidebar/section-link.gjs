@@ -8,9 +8,9 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
-import deprecated from "discourse-common/lib/deprecated";
-import { bind } from "discourse-common/utils/decorators";
+import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import SectionLinkPrefix from "./section-link-prefix";
 
 /**

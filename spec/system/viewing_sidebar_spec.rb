@@ -56,10 +56,8 @@ describe "Viewing sidebar as logged in user", type: :system do
       sign_in user
       visit("/latest")
       links = page.all("#sidebar-section-content-community .sidebar-section-link-wrapper a")
-      expect(links.map(&:text)).to eq(%w[Tematy Wysłane])
-      expect(links.map { |link| link[:title] }).to eq(
-        ["Wszystkie tematy", "Moja ostatnia aktywność w temacie"],
-      )
+      expect(links.map(&:text)).to eq(%w[Tematy])
+      expect(links.map { |link| link[:title] }).to eq(["Wszystkie tematy"])
     end
   end
 

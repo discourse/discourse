@@ -1,8 +1,8 @@
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { connectorsExist } from "discourse/lib/plugin-connectors";
+import RawHandlebars from "discourse/lib/raw-handlebars";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
-import RawHandlebars from "discourse-common/lib/raw-handlebars";
 
 const GlimmerPluginOutletWrapper = <template>
   {{~! no whitespace ~}}

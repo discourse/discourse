@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { and, equal, not } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

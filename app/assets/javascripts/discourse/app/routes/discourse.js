@@ -2,9 +2,9 @@ import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
 import { service } from "@ember/service";
+import deprecated from "discourse/lib/deprecated";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { seenUser } from "discourse/lib/user-presence";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 export default class DiscourseRoute extends Route {
   @service router;

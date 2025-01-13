@@ -1,9 +1,9 @@
 import EmberObject from "@ember/object";
 import TopicStatus from "discourse/components/topic-status";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class RawTopicStatus extends EmberObject {

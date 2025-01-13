@@ -22,5 +22,7 @@
     color: var(--primary-medium);
     font-size: var(--font-down-1);
     padding: 0.5em 0.25em 0.25em;
+    touch-action: none;
+    height: 100%;
   }
 }

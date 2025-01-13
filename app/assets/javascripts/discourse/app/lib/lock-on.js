@@ -1,5 +1,5 @@
+import { bind } from "discourse/lib/decorators";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { bind } from "discourse-common/utils/decorators";
 
 // Dear traveler, you are entering a zone where we are at war with the browser.
 // The browser is insisting on positioning scrollTop per the location it was in

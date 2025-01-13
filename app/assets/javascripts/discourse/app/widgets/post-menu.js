@@ -5,6 +5,7 @@ import { h } from "virtual-dom";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import discourseLater from "discourse/lib/later";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
 import { smallUserAttrs } from "discourse/lib/user-list-attrs";
 import {
@@ -15,7 +16,6 @@ import RenderGlimmer, {
   registerWidgetShim,
 } from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import discourseLater from "discourse-common/lib/later";
 import { i18n } from "discourse-i18n";
 
 const LIKE_ACTION = 2;

@@ -6,6 +6,7 @@ import AdminAreaSettings from "admin/components/admin-area-settings";
 
 export default RouteTemplate(<template>
   <DPageHeader
+    @hideTabs={{true}}
     @titleLabel={{i18n "admin.config.security.title"}}
     @descriptionLabel={{i18n "admin.config.security.header_description"}}
   >
@@ -20,6 +21,7 @@ export default RouteTemplate(<template>
 
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
+      @showBreadcrumb={{false}}
       @categories="security"
       @path="/admin/config/security"
       @filter={{@controller.filter}}

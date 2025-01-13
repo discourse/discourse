@@ -4,14 +4,14 @@ import { clearRender, render, settled } from "@ember/test-helpers";
 import { observes as nativeClassObserves } from "@ember-decorators/object";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import discourseComputed, {
   afterRender,
   debounce,
   observes,
   on,
-} from "discourse-common/utils/decorators";
+} from "discourse/lib/decorators";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 // eslint-disable-next-line ember/no-classic-classes
 const fooComponent = Component.extend({

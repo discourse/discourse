@@ -4,8 +4,8 @@ import { htmlSafe } from "@ember/template";
 import { gt } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
+import { avatarImg } from "discourse/lib/avatar-utils";
 import { userPath } from "discourse/lib/url";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
 
 const addTopicParticipantClassesCallbacks = [];
 

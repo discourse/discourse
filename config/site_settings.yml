@@ -692,7 +692,7 @@ users:
       cs: "[ěščřžýáíéóůúďťňĚŠČŘŽÝÁÍÉÓŮÚĎŤŇ]"
       de: "[äöüßÄÖÜẞ]"
       fi: "[åäöÅÄÖ]"
-      ja: '[\p{Han}\p{Katakana}\p{Hiragana}]'
+      ja: '[\p{Han}\p{Katakana}\p{Hiragana}ー]'
       ko: '\p{Hangul}'
       zh_CN: '\p{Han}'
       zh_TW: '\p{Han}'

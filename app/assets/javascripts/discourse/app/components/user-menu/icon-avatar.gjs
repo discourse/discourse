@@ -1,6 +1,6 @@
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
-import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
+import icon from "discourse/helpers/d-icon";
+import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
 
 const avatarPx = translateSize("medium");
 

@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
+import getURL from "discourse/lib/get-url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import getURL from "discourse-common/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 
 const ParagraphWrapper = <template><p class="reason">{{yield}}</p></template>;

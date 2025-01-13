@@ -2,6 +2,9 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
+import escape from "discourse/lib/escape";
+import { iconHTML } from "discourse/lib/icon-library";
 import {
   CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
@@ -10,9 +13,6 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import escape from "discourse-common/lib/escape";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 const TITLES = {

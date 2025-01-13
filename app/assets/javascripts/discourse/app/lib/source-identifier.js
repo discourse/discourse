@@ -1,6 +1,6 @@
 import { DEBUG } from "@glimmer/env";
+import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
-import getURL from "discourse-common/lib/get-url";
 
 const BROWSER_EXTENSION_PROTOCOLS = [
   "moz-extension://",

@@ -1,7 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import discourseLater from "discourse/lib/later";
 import Session from "discourse/models/session";
-import discourseLater from "discourse-common/lib/later";
 import { i18n } from "discourse-i18n";
 
 export function listColorSchemes(site, options = {}) {

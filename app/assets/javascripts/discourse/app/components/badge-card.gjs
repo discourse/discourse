@@ -5,10 +5,10 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import dIcon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
 import number from "discourse/helpers/number";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
-import dIcon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
 

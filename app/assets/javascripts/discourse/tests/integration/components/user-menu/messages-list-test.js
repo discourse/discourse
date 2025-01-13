@@ -1,12 +1,12 @@
 import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import { cloneJSON, deepMerge } from "discourse/lib/object";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 function getMessage(overrides = {}) {

@@ -2,11 +2,11 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { h } from "virtual-dom";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { createWidget } from "discourse/widgets/widget";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 module("Integration | Component | Widget | post-menu", function (hooks) {
   setupRenderingTest(hooks);

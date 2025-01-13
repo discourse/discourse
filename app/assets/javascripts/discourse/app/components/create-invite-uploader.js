@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { tagName } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("div")
 export default class CreateInviteUploader extends Component {

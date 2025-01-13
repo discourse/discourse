@@ -5,7 +5,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import WatchedWordTestingModal from "admin/components/modal/watched-word-testing";
 import WatchedWord from "admin/models/watched-word";

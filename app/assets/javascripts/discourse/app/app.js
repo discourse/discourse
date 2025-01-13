@@ -1,6 +1,10 @@
-import "./deprecation-workflow";
+import setupDeprecationWorkflow from "ember-cli-deprecation-workflow";
+import DEPRECATION_WORKFLOW from "./deprecation-workflow";
+setupDeprecationWorkflow({ workflow: DEPRECATION_WORKFLOW });
+
 import "decorator-transforms/globals";
 import "./loader-shims";
+import "./discourse-common-loader-shims";
 import "./global-compat";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 
@@ -11,9 +15,9 @@ import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
+import { isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { isTesting } from "discourse-common/config/environment";
-import { buildResolver } from "discourse-common/resolver";
+import { buildResolver } from "discourse/resolver";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];

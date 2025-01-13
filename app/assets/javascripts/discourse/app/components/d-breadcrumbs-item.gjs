@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import icon from "discourse-common/helpers/d-icon";
-import getURL from "discourse-common/lib/get-url";
+import icon from "discourse/helpers/d-icon";
+import getURL from "discourse/lib/get-url";
 
 export default class DBreadcrumbsItem extends Component {
   @service breadcrumbs;

@@ -154,10 +154,30 @@ module Onebox
           { output: output_builder.join(), array: hash_builder }
         end
 
+        def match
+          @match ||= @url.match(self.raw_regexp)
+        end
+
+        def sha1
+          full = match[:sha1]
+
+          # We don't actually know if this is an sha1, or a branch/tag name
+          # So we only truncate if it's exactly 40 characters long, which is fairly unlikely to be a branch/tag name.
+          if full.length == 40
+            full[0..8]
+          else
+            full
+          end
+        end
+
+        def title
+          Sanitize.fragment(match[:file])
+        end
+
         def raw
           return @raw if defined?(@raw)
 
-          m = @url.match(self.raw_regexp)
+          m = match
 
           if m
             from = /\d+/.match(m[:from]) #get numeric should only match a positive interger
@@ -239,6 +259,7 @@ module Onebox
             model_file: @model_file,
             width: 480,
             height: 360,
+            sha1: sha1,
           }
         end
       end

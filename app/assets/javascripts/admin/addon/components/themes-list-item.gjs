@@ -7,9 +7,9 @@ import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
-import escape from "discourse-common/lib/escape";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import icon from "discourse/helpers/d-icon";
+import escape from "discourse/lib/escape";
+import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 const MAX_COMPONENTS = 4;

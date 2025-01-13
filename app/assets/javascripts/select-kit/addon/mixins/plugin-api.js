@@ -1,5 +1,5 @@
 import { isNone } from "@ember/utils";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 
 let _appendContentCallbacks = {};
 function appendContent(pluginApiIdentifiers, contentFunction) {

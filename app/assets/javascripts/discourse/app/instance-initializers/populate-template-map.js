@@ -1,4 +1,4 @@
-import discourseTemplateMap from "discourse-common/lib/discourse-template-map";
+import discourseTemplateMap from "discourse/lib/discourse-template-map";
 
 export default {
   initialize() {

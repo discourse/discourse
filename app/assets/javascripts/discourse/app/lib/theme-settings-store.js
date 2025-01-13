@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { cloneJSON } from "discourse-common/lib/object";
+import { cloneJSON } from "discourse/lib/object";
 
 const originalSettings = {};
 const settings = {};

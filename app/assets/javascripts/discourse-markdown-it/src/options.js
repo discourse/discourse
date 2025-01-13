@@ -1,4 +1,4 @@
-import { deepMerge } from "discourse-common/lib/object";
+import { deepMerge } from "discourse/lib/object";
 
 // the options are passed here and must be explicitly allowed with
 // the const options & state below

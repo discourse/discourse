@@ -1,5 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import domFromString from "discourse/lib/dom-from-string";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { processHTML } from "discourse/lib/lightbox/process-html";
 import {
@@ -7,7 +8,6 @@ import {
   generateLightboxMarkup,
   LIGHTBOX_IMAGE_FIXTURES,
 } from "discourse/tests/helpers/lightbox-helpers";
-import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Unit | lib | Experimental lightbox | processHTML()", function (hooks) {
   setupTest(hooks);

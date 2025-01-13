@@ -1,6 +1,6 @@
 import { concat } from "@ember/helper";
 import emoji from "discourse/helpers/emoji";
-import escape from "discourse-common/lib/escape";
+import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
 
 const title = (description, endsAt, timezone) => {

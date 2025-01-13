@@ -5,14 +5,11 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
 import raw from "discourse/helpers/raw";
+import { compile } from "discourse/lib/raw-handlebars";
+import { RUNTIME_OPTIONS } from "discourse/lib/raw-handlebars-helpers";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
+import { addRawTemplate, removeRawTemplate } from "discourse/lib/raw-templates";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { compile } from "discourse-common/lib/raw-handlebars";
-import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
-import {
-  addRawTemplate,
-  removeRawTemplate,
-} from "discourse-common/lib/raw-templates";
 
 // We don't have any way to actually compile raw hbs inside tests, so this is only testing
 // the helper itself, not the actual rendering of templates.
