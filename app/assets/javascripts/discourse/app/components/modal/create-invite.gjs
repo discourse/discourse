@@ -246,7 +246,7 @@ export default class CreateInvite extends Component {
     this.displayAdvancedOptions = true;
     event.preventDefault();
     event.stopPropagation();
-   }
+  }
 
   @action
   async createLink() {
@@ -467,7 +467,7 @@ export default class CreateInvite extends Component {
             @action={{this.createLink}}
             @disabled={{this.saving}}
             class="btn-primary save-invite"
-            autofocus=true
+            autofocus="true"
           />
         {{else}}
           <DButton
