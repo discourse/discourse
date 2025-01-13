@@ -234,14 +234,19 @@ export default class Item extends Component {
                 />
               </label>
             {{else}}
-              <a
-                href={{@topic.lastPostUrl}}
-                aria-label={{i18n
-                  "latest_poster_link"
-                  username=@topic.lastPosterUser.username
-                }}
-                data-user-card={{@topic.lastPosterUser.username}}
-              >{{avatar @topic.lastPosterUser imageSize="large"}}</a>
+              <PluginOutlet
+                @name="topic-list-item-mobile-avatar"
+                @outletArgs={{hash topic=@topic}}
+              >
+                <a
+                  href={{@topic.lastPostUrl}}
+                  aria-label={{i18n
+                    "latest_poster_link"
+                    username=@topic.lastPosterUser.username
+                  }}
+                  data-user-card={{@topic.lastPosterUser.username}}
+                >{{avatar @topic.lastPosterUser imageSize="large"}}</a>
+              </PluginOutlet>
             {{/if}}
           </div>
 

@@ -35,8 +35,8 @@ importers:
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.0)
       '@discourse/lint-configs':
-        specifier: ^2.2.3
-        version: 2.2.3(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)
+        specifier: ^2.3.0
+        version: 2.3.0(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -139,9 +139,6 @@ importers:
       '@ember/string':
         specifier: ^4.0.0
         version: 4.0.0
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.26.0)
@@ -447,9 +444,6 @@ importers:
       dialog-holder:
         specifier: workspace:1.0.0
         version: link:../dialog-holder
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
@@ -595,88 +589,6 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15
 
-  app/assets/javascripts/discourse-common:
-    dependencies:
-      '@babel/core':
-        specifier: ^7.26.0
-        version: 7.26.0(supports-color@8.1.1)
-      '@ember/string':
-        specifier: ^4.0.0
-        version: 4.0.0
-      discourse-i18n:
-        specifier: workspace:1.0.0
-        version: link:../discourse-i18n
-      ember-auto-import:
-        specifier: ^2.10.0
-        version: 2.10.0(@glint/template@1.5.1)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2))
-      ember-cli-babel:
-        specifier: ^8.2.0
-        version: 8.2.0(@babel/core@7.26.0)
-      ember-cli-htmlbars:
-        specifier: ^6.3.0
-        version: 6.3.0
-      ember-resolver:
-        specifier: ^13.1.0
-        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
-      truth-helpers:
-        specifier: workspace:1.0.0
-        version: link:../truth-helpers
-    devDependencies:
-      '@ember/optional-features':
-        specifier: ^2.2.0
-        version: 2.2.0
-      '@embroider/test-setup':
-        specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.0(@embroider/core@3.5.0(@glint/template@1.5.1))(@glint/template@1.5.1))(@embroider/core@3.5.0(@glint/template@1.5.1))(@embroider/webpack@4.0.9(@embroider/core@3.5.0(@glint/template@1.5.1))(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
-      '@glimmer/component':
-        specifier: ^1.1.2
-        version: 1.1.2(@babel/core@7.26.0)
-      '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
-      '@types/qunit':
-        specifier: ^2.19.12
-        version: 2.19.12
-      '@types/rsvp':
-        specifier: ^4.0.9
-        version: 4.0.9
-      broccoli-asset-rev:
-        specifier: ^3.0.0
-        version: 3.0.0
-      ember-cli:
-        specifier: ~6.1.0
-        version: 6.1.0(handlebars@4.7.8)(underscore@1.13.6)
-      ember-cli-inject-live-reload:
-        specifier: ^2.1.0
-        version: 2.1.0
-      ember-cli-sri:
-        specifier: ^2.1.1
-        version: 2.1.1
-      ember-cli-terser:
-        specifier: ^4.0.2
-        version: 4.0.2
-      ember-disable-prototype-extensions:
-        specifier: ^1.1.3
-        version: 1.1.3
-      ember-load-initializers:
-        specifier: ^3.0.1
-        version: 3.0.1(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
-      ember-source:
-        specifier: ~5.12.0
-        version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2))
-      ember-source-channel-url:
-        specifier: ^3.0.0
-        version: 3.0.0(encoding@0.1.13)
-      loader.js:
-        specifier: ^4.7.0
-        version: 4.7.0
-      webpack:
-        specifier: ^5.97.1
-        version: 5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)
-
   app/assets/javascripts/discourse-hbr:
     dependencies:
       handlebars:
@@ -697,9 +609,6 @@ importers:
       '@embroider/addon-shim':
         specifier: ^1.9.0
         version: 1.9.0
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
@@ -903,9 +812,6 @@ importers:
       '@babel/core':
         specifier: ^7.26.0
         version: 7.26.0(supports-color@8.1.1)
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
@@ -1076,9 +982,6 @@ importers:
       discourse:
         specifier: workspace:0.0.0
         version: link:../discourse
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs
@@ -1818,8 +1721,8 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.2.3':
-    resolution: {integrity: sha512-GZE2u/9QfLRIEDscickTx6sB51pA/8lZeNx1YTgoXx6OnyOCxfQf/24M9GTPHcOYZHIDtqAFrffSd9FI5NNUOw==}
+  '@discourse/lint-configs@2.3.0':
+    resolution: {integrity: sha512-vHmUUnuTemLDGpnfgK4jcmToM9accbByzxuL3NTY3bGDtygG/B09wkxWr+A9UbAMhlKsJy9w9sIH/2BovyYX3Q==}
     peerDependencies:
       ember-template-lint: 6.0.0
       eslint: ^9.15.0
@@ -9305,7 +9208,7 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.2.3(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)':
+  '@discourse/lint-configs@2.3.0(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)':
     dependencies:
       '@babel/core': 7.26.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.26.5(@babel/core@7.26.0)(eslint@9.18.0)

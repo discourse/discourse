@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import dIcon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import dIcon from "discourse-common/helpers/d-icon";
 import ChatEmojiAvatar from "./chat-emoji-avatar";
 import ChatUserAvatar from "./chat-user-avatar";
 
