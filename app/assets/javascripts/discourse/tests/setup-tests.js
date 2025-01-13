@@ -43,7 +43,7 @@ import { disableCloaking } from "discourse/widgets/post-stream";
 import deprecated from "discourse/lib/deprecated";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
-import { buildResolver } from "discourse-common/resolver";
+import { buildResolver } from "discourse/resolver";
 import { loadSprites } from "../lib/svg-sprite-loader";
 import * as FakerModule from "@faker-js/faker";
 import { setLoadedFaker } from "discourse/lib/load-faker";
