@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DiscourseURL from "discourse/lib/url";
@@ -85,7 +86,10 @@ export default class TopicDraftsDropdown extends Component {
               <DButton
                 @action={{fn this.resumeDraft draft}}
                 @icon={{if draft.topic_id "reply" "layer-group"}}
-                @translatedLabel={{draft.title}}
+                @translatedLabel={{or
+                  draft.title
+                  (i18n "drafts.dropdown.untitled")
+                }}
                 class="btn-secondary"
               />
             </dropdown.item>
