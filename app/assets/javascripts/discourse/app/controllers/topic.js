@@ -22,6 +22,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
 import { deepMerge } from "discourse/lib/object";
@@ -37,7 +38,6 @@ import Composer from "discourse/models/composer";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 let customPostMessageCallbacks = {};
 

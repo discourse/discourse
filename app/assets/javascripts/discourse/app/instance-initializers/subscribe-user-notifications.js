@@ -8,13 +8,13 @@ import {
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
+import { isTesting } from "discourse/lib/environment";
 import {
   isPushNotificationsEnabled,
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import Notification from "discourse/models/notification";
-import { isTesting } from "discourse-common/config/environment";
 
 class SubscribeUserNotificationsInit {
   @service currentUser;

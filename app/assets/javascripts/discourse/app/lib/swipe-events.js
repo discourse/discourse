@@ -1,5 +1,5 @@
 import { bind } from "discourse/lib/decorators";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 // common max animation time in ms for swipe events for swipe end
 // prefers reduced motion and tests return 0

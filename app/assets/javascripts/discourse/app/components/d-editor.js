@@ -18,6 +18,7 @@ import Toolbar from "discourse/lib/composer/toolbar";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { linkSeenHashtagsInContext } from "discourse/lib/hashtag-decorator";
@@ -34,7 +35,6 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];

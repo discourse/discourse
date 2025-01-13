@@ -4,7 +4,7 @@ import {
   alertChannel,
   onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 export default class ChatNotificationManager extends Service {
   @service chat;

@@ -7,8 +7,8 @@ import CreateInvite from "discourse/components/modal/create-invite";
 import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { debounce } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import Invite from "discourse/models/invite";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 export default class UserInvitedShowController extends Controller {

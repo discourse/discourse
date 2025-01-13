@@ -7,7 +7,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 import { MODES } from "./constants";
 import ChatablesLoader from "./lib/chatables-loader";

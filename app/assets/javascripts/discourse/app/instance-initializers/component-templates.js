@@ -2,7 +2,7 @@ import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import deprecated from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 let THROW_GJS_ERROR = isTesting();
 

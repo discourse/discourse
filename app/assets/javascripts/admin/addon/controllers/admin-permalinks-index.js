@@ -4,8 +4,8 @@ import { or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 import Permalink from "admin/models/permalink";
 

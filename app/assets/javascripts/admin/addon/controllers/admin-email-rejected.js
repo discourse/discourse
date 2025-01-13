@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import AdminEmailLogsController from "admin/controllers/admin-email-logs";
 import IncomingEmail from "admin/models/incoming-email";
 

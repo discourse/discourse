@@ -2,13 +2,13 @@ import { run } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   getHighestReadCache,
   resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
-import { isTesting } from "discourse-common/config/environment";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;

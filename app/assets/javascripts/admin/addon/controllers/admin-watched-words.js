@@ -3,7 +3,7 @@ import EmberObject, { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { INPUT_DELAY } from "discourse/lib/environment";
 
 export default class AdminWatchedWordsController extends Controller {
   filter = null;

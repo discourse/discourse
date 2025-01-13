@@ -7,8 +7,8 @@ import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");

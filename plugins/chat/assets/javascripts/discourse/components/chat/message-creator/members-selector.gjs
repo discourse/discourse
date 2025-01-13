@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { i18n } from "discourse-i18n";
 import ChatablesLoader from "./lib/chatables-loader";
 import List from "./list";

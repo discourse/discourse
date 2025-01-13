@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { debounce } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 let _messagesCache = {};

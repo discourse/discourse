@@ -15,8 +15,8 @@ import dirSpan from "discourse/helpers/dir-span";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import Category from "discourse/models/category";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 class ActionSerializer {

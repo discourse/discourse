@@ -7,6 +7,7 @@ import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import getURL, { getAbsoluteURL, getURLWithCDN } from "discourse/lib/get-url";
 import { iconNode } from "discourse/lib/icon-library";
@@ -27,7 +28,6 @@ import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 function transformWithCallbacks(post, topicUrl, store) {

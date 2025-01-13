@@ -6,6 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import PreloadStore from "discourse/lib/preload-store";
 import { needsHbrTopicList } from "discourse/lib/raw-templates";
@@ -15,7 +16,6 @@ import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
-import { isRailsTesting, isTesting } from "discourse-common/config/environment";
 
 @singleton
 export default class Site extends RestModel {

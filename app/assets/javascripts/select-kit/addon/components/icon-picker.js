@@ -2,13 +2,13 @@ import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
+import { isDevelopment } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import {
   convertIconClass,
   disableMissingIconWarning,
   enableMissingIconWarning,
 } from "discourse/lib/icon-library";
-import { isDevelopment } from "discourse-common/config/environment";
 import FilterForMore from "select-kit/components/filter-for-more";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {

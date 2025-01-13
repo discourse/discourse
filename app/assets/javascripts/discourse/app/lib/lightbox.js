@@ -1,6 +1,7 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
@@ -11,7 +12,6 @@ import {
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import User from "discourse/models/user";
-import { isTesting } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 export async function setupLightboxes({ container, selector }) {

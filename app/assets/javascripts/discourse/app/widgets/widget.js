@@ -3,6 +3,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { camelize } from "@ember/string";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import { isProduction } from "discourse/lib/environment";
 import { deepMerge } from "discourse/lib/object";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -25,7 +26,6 @@ import {
   WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
-import { isProduction } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 
 const _registry = {};

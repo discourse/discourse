@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 import { i18n } from "discourse-i18n";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 
