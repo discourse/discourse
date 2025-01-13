@@ -3,16 +3,20 @@
     width: unset;
   }
 
+  &.is-expanded .select-kit-body {
+    width: 300px;
+  }
+
   .select-kit-row.email-group-user-chooser-row {
     .identifier {
       color: var(--primary);
       white-space: nowrap;
       line-height: var(--line-height-medium);
+      margin-right: 0.5em;
     }
     .name {
       color: var(--primary-high);
       font-size: var(--font-down-1);
-      margin-left: 0.5em;
       @include ellipsis;
     }
     .avatar,
