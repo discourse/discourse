@@ -1,1 +1,14 @@
-{{{view.html}}}
+{{~#if view.renderDiv ~}}
+<div class='topic-statuses'>
+{{/if ~}}
+{{~#each view.statuses as |status|~}}
+{{~#if status.href ~}}
+<a href='{{status.href}}' title='{{status.title}}' class='topic-status {{status.extraClasses}}'>{{d-icon status.icon}}</a>
+{{~else ~}}
+<{{status.openTag}} title='{{status.title}}' class='topic-status'>{{d-icon status.icon class=status.key}}</{{status.closeTag}}>
+{{~/if ~}}
+{{~/each}}
+{{~#if view.showDefault~}}{{d-icon view.showDefault}}{{~/if ~}}
+{{~#if view.renderDiv ~}}
+</div>
+{{/if ~}}
