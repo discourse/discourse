@@ -3,7 +3,7 @@ import { concat, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
+import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
@@ -109,7 +109,7 @@ export default class TopicStatus extends Component {
         >{{icon "far-eye-slash"}}</span>
       {{~/if~}}
 
-      {{~#if (not this.site.useGlimmerTopicList)~}}
+      {{~#unless this.site.useGlimmerTopicList~}}
         {{~#each TopicStatusIcons.entries as |entry|~}}
           {{~#if (get @topic entry.attribute)~}}
             <span
@@ -118,7 +118,7 @@ export default class TopicStatus extends Component {
             >{{icon entry.iconName}}</span>
           {{~/if~}}
         {{~/each~}}
-      {{~/if~}}
+      {{~/unless~}}
 
       <PluginOutlet
         @name="after-topic-status"
