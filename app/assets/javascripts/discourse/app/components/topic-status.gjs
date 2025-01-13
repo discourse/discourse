@@ -3,7 +3,7 @@ import { concat, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends Component {
   @service currentUser;
+  @service site;
 
   get wrapperElement() {
     return element(this.args.tagName ?? "span");
@@ -108,14 +109,16 @@ export default class TopicStatus extends Component {
         >{{icon "far-eye-slash"}}</span>
       {{~/if~}}
 
-      {{~#each TopicStatusIcons.entries as |entry|~}}
-        {{~#if (get @topic entry.attribute)~}}
-          <span
-            title={{i18n (concat "topic_statuses." entry.titleKey "help")}}
-            class="topic-status"
-          >{{icon entry.iconName}}</span>
-        {{~/if~}}
-      {{~/each~}}
+      {{~#if (not this.site.useGlimmerTopicList)~}}
+        {{~#each TopicStatusIcons.entries as |entry|~}}
+          {{~#if (get @topic entry.attribute)~}}
+            <span
+              title={{i18n (concat "topic_statuses." entry.titleKey "help")}}
+              class="topic-status"
+            >{{icon entry.iconName}}</span>
+          {{~/if~}}
+        {{~/each~}}
+      {{~/if~}}
 
       <PluginOutlet
         @name="after-topic-status"
