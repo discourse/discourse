@@ -222,109 +222,124 @@ export default class Item extends Component {
       />
       {{#if this.useMobileLayout}}
         <td class="topic-list-data">
-          <div class="pull-left">
-            {{#if @bulkSelectEnabled}}
-              <label for="bulk-select-{{@topic.id}}">
-                <input
-                  {{on "click" this.onBulkSelectToggle}}
-                  checked={{this.isSelected}}
-                  type="checkbox"
-                  id="bulk-select-{{@topic.id}}"
-                  class="bulk-select"
-                />
-              </label>
-            {{else}}
-              <a
-                href={{@topic.lastPostUrl}}
-                aria-label={{i18n
-                  "latest_poster_link"
-                  username=@topic.lastPosterUser.username
-                }}
-                data-user-card={{@topic.lastPosterUser.username}}
-              >{{avatar @topic.lastPosterUser imageSize="large"}}</a>
-            {{/if}}
-          </div>
-
-          <div class="topic-item-metadata right">
-            {{~! no whitespace ~}}
-            <PluginOutlet
-              @name="topic-list-before-link"
-              @outletArgs={{hash topic=@topic}}
-            />
-
-            <div class="main-link">
-              {{~! no whitespace ~}}
-              <PluginOutlet
-                @name="topic-list-before-status"
-                @outletArgs={{hash topic=@topic}}
-              />
-              {{~! no whitespace ~}}
-              <TopicStatus @topic={{@topic}} />
-              {{~! no whitespace ~}}
-              <TopicLink
-                {{on "focus" this.onTitleFocus}}
-                {{on "blur" this.onTitleBlur}}
-                @topic={{@topic}}
-                class="raw-link raw-topic-link"
-              />
-              {{~#if @topic.featured_link~}}
-                &nbsp;
-                {{~topicFeaturedLink @topic}}
-              {{~/if~}}
-              <PluginOutlet
-                @name="topic-list-after-title"
-                @outletArgs={{hash topic=@topic}}
-              />
-              {{~#if @topic.unseen~}}
-                <span class="topic-post-badges">&nbsp;<span
-                    class="badge-notification new-topic"
-                  ></span></span>
-              {{~/if~}}
-              {{~#if this.expandPinned~}}
-                <TopicExcerpt @topic={{@topic}} />
-              {{~/if~}}
-              <PluginOutlet
-                @name="topic-list-main-link-bottom"
-                @outletArgs={{hash topic=@topic}}
-              />
-            </div>
-            {{~! no whitespace ~}}
-            <PluginOutlet
-              @name="topic-list-after-main-link"
-              @outletArgs={{hash topic=@topic}}
-            />
-
-            <div class="pull-right">
-              <PostCountOrBadges
-                @topic={{@topic}}
-                @postBadgesEnabled={{@showTopicPostBadges}}
-              />
-            </div>
-
-            <div class="topic-item-stats clearfix">
-              <span class="topic-item-stats__category-tags">
-                {{#unless @hideCategory}}
-                  <PluginOutlet
-                    @name="topic-list-before-category"
-                    @outletArgs={{hash topic=@topic}}
+          <PluginOutlet
+            @name="topic-list-data-mobile"
+            @outletArgs={{hash
+              topic=@topic
+              bulkSelectEnabled=@bulkSelectEnabled
+              onBulkSelectToggle=this.onBulkSelectToggle
+              isSelected=this.isSelected
+              showTopicPostBadges=@showTopicPostBadges
+              hideCategory=@hideCategory
+              tagsForUser=@tagsForUser
+              expandPinned=this.expandPinned
+              useMobileLayout=this.useMobileLayout
+            }}
+          >
+            <div class="pull-left">
+              {{#if @bulkSelectEnabled}}
+                <label for="bulk-select-{{@topic.id}}">
+                  <input
+                    {{on "click" this.onBulkSelectToggle}}
+                    checked={{this.isSelected}}
+                    type="checkbox"
+                    id="bulk-select-{{@topic.id}}"
+                    class="bulk-select"
                   />
-                  {{categoryLink @topic.category}}
-                {{/unless}}
+                </label>
+              {{else}}
+                <a
+                  href={{@topic.lastPostUrl}}
+                  aria-label={{i18n
+                    "latest_poster_link"
+                    username=@topic.lastPosterUser.username
+                  }}
+                  data-user-card={{@topic.lastPosterUser.username}}
+                >{{avatar @topic.lastPosterUser imageSize="large"}}</a>
+              {{/if}}
+            </div>
 
-                {{discourseTags @topic mode="list"}}
-              </span>
+            <div class="topic-item-metadata right">
+              {{~! no whitespace ~}}
+              <PluginOutlet
+                @name="topic-list-before-link"
+                @outletArgs={{hash topic=@topic}}
+              />
 
-              <div class="num activity last">
-                <span title={{@topic.bumpedAtTitle}} class="age activity">
-                  <a href={{@topic.lastPostUrl}}>{{formatDate
-                      @topic.bumpedAt
-                      format="tiny"
-                      noTitle="true"
-                    }}</a>
+              <div class="main-link">
+                {{~! no whitespace ~}}
+                <PluginOutlet
+                  @name="topic-list-before-status"
+                  @outletArgs={{hash topic=@topic}}
+                />
+                {{~! no whitespace ~}}
+                <TopicStatus @topic={{@topic}} />
+                {{~! no whitespace ~}}
+                <TopicLink
+                  {{on "focus" this.onTitleFocus}}
+                  {{on "blur" this.onTitleBlur}}
+                  @topic={{@topic}}
+                  class="raw-link raw-topic-link"
+                />
+                {{~#if @topic.featured_link~}}
+                  &nbsp;
+                  {{~topicFeaturedLink @topic}}
+                {{~/if~}}
+                <PluginOutlet
+                  @name="topic-list-after-title"
+                  @outletArgs={{hash topic=@topic}}
+                />
+                {{~#if @topic.unseen~}}
+                  <span class="topic-post-badges">&nbsp;<span
+                      class="badge-notification new-topic"
+                    ></span></span>
+                {{~/if~}}
+                {{~#if this.expandPinned~}}
+                  <TopicExcerpt @topic={{@topic}} />
+                {{~/if~}}
+                <PluginOutlet
+                  @name="topic-list-main-link-bottom"
+                  @outletArgs={{hash topic=@topic}}
+                />
+              </div>
+              {{~! no whitespace ~}}
+              <PluginOutlet
+                @name="topic-list-after-main-link"
+                @outletArgs={{hash topic=@topic}}
+              />
+
+              <div class="pull-right">
+                <PostCountOrBadges
+                  @topic={{@topic}}
+                  @postBadgesEnabled={{@showTopicPostBadges}}
+                />
+              </div>
+
+              <div class="topic-item-stats clearfix">
+                <span class="topic-item-stats__category-tags">
+                  {{#unless @hideCategory}}
+                    <PluginOutlet
+                      @name="topic-list-before-category"
+                      @outletArgs={{hash topic=@topic}}
+                    />
+                    {{categoryLink @topic.category}}
+                  {{/unless}}
+
+                  {{discourseTags @topic mode="list"}}
                 </span>
+
+                <div class="num activity last">
+                  <span title={{@topic.bumpedAtTitle}} class="age activity">
+                    <a href={{@topic.lastPostUrl}}>{{formatDate
+                        @topic.bumpedAt
+                        format="tiny"
+                        noTitle="true"
+                      }}</a>
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          </PluginOutlet>
         </td>
       {{else}}
         {{#each @columns as |entry|}}
