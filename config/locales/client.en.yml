@@ -499,7 +499,7 @@ en:
         no_value: "Resume editing"
       dropdown:
         title: "Open the latest drafts menu"
-        untitled: "Undefined title"
+        untitled: "Untitled topic draft"
         view_all: "view all"
         other_drafts:
           one: "+%{count} other draft"
