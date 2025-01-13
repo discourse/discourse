@@ -49,37 +49,33 @@ export default class TextareaInteractor extends EmberObject {
   @bind
   blur() {
     next(() => {
-      schedule("afterRender", () => {
-        this.textarea.blur();
-      });
+      this.textarea.blur();
     });
   }
 
   @bind
   focus(opts = { ensureAtEnd: false, refreshHeight: true, addText: null }) {
     next(() => {
-      schedule("afterRender", () => {
-        if (opts.refreshHeight) {
-          this.refreshHeight();
-        }
+      if (opts.refreshHeight) {
+        this.refreshHeight();
+      }
 
-        if (opts.ensureAtEnd) {
-          this.ensureCaretAtEnd();
-        }
+      if (opts.ensureAtEnd) {
+        this.ensureCaretAtEnd();
+      }
 
-        if (this.capabilities.isIpadOS || this.site.mobileView) {
-          return;
-        }
+      if (this.capabilities.isIpadOS || this.site.mobileView) {
+        return;
+      }
 
-        if (opts.addText) {
-          this.textManipulation.addText(
-            this.textManipulation.getSelected(),
-            opts.addText
-          );
-        }
+      if (opts.addText) {
+        this.textManipulation.addText(
+          this.textManipulation.getSelected(),
+          opts.addText
+        );
+      }
 
-        this.textManipulation.blurAndFocus();
-      });
+      this.textManipulation.blurAndFocus();
     });
   }
 

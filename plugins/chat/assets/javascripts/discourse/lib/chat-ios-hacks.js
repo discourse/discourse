@@ -1,4 +1,4 @@
-import { next, schedule } from "@ember/runloop";
+import { next } from "@ember/runloop";
 import { capabilities } from "discourse/services/capabilities";
 import discourseLater from "discourse-common/lib/later";
 
@@ -17,18 +17,17 @@ export function stackingContextFix(scrollable, callback) {
 
   if (capabilities.isIOS) {
     next(() => {
-      schedule("afterRender", () => {
-        scrollable.style.overflow = "auto";
-        discourseLater(() => {
-          if (!scrollable) {
-            return;
-          }
+      scrollable.style.overflow = "auto";
 
-          scrollable
-            .querySelectorAll(".chat-message-separator__text-container")
-            .forEach((container) => (container.style.zIndex = "2"));
-        }, 50);
-      });
+      discourseLater(() => {
+        if (!scrollable) {
+          return;
+        }
+
+        scrollable
+          .querySelectorAll(".chat-message-separator__text-container")
+          .forEach((container) => (container.style.zIndex = "2"));
+      }, 50);
     });
   }
 }
