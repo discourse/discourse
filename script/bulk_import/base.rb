@@ -311,9 +311,15 @@ class BulkImport::Base
     @chat_message_mapping = load_index(MAPPING_TYPES[:chat_message])
     @last_chat_message_id = last_id(Chat::Message)
 
-    puts "Loading reaction indexes..."
-    @discourse_reaction_mapping = load_index(MAPPING_TYPES[:discourse_reactions_reaction])
-    @last_discourse_reaction_id = last_id(DiscourseReactions::Reaction)
+    if defined?(::DiscourseReactions)
+      puts "Loading reaction indexes..."
+      @discourse_reaction_mapping = load_index(MAPPING_TYPES[:discourse_reactions_reaction])
+      @last_discourse_reaction_id = last_id(DiscourseReactions::Reaction)
+    else
+      puts "Skipping reaction indexes - plugin not installed"
+      @discourse_reaction_mapping = {}
+      @last_discourse_reaction_id = 0
+    end
   end
 
   def use_bbcode_to_md?
