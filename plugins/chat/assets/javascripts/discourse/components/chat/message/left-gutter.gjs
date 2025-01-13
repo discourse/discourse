@@ -4,7 +4,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 import formatChatDate from "../../../helpers/format-chat-date";
 
 export default class ChatMessageLeftGutter extends Component {

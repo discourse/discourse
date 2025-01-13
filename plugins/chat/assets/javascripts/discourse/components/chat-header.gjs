@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatHeader extends Component {
