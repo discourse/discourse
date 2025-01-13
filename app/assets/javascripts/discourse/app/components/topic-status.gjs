@@ -31,7 +31,7 @@ export default class TopicStatus extends Component {
   <template>
     {{~! no whitespace ~}}
     <this.wrapperElement class="topic-statuses">
-      {{~#if @topic.bookmarked}}
+      {{~#if @topic.bookmarked~}}
         <a
           href={{@topic.url}}
           title={{i18n "topic_statuses.bookmarked.help"}}
