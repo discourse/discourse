@@ -100,11 +100,15 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     await click(".sidebar-toggle-all-sections");
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
-    assert.dom(".admin-reports-list__report").exists({ count: 1 });
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .exists({ count: 1 });
 
     await fillIn(".admin-reports-header__filter", "flags");
 
-    assert.dom(".admin-reports-list__report").doesNotExist();
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .doesNotExist();
 
     await click(
       ".sidebar-section-link[data-link-name='admin_login_and_authentication']"
@@ -112,13 +116,13 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
     assert
-      .dom(".admin-reports-list__report")
+      .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "navigating back and forth resets filter");
 
     await fillIn(".admin-reports-header__filter", "activities");
 
     assert
-      .dom(".admin-reports-list__report")
+      .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "filter is case insensitive");
   });
 });
