@@ -91,7 +91,7 @@ RSpec.describe TopicQuery do
 
   describe ".validate?" do
     describe "per_page" do
-      it "only allows integers 5-100" do
+      it "only allows integers 1-100" do
         # Invalid values
         expect(TopicQuery.validate?(:per_page, -1)).to eq(false)
         expect(TopicQuery.validate?(:per_page, 0)).to eq(false)

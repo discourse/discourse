@@ -519,6 +519,12 @@ RSpec.describe "topics" do
         type: :string,
         description: "Defaults to `desc`, add `ascending=true` to sort asc",
       )
+      parameter(
+        name: :per_page,
+        in: :query,
+        type: :integer,
+        description: "Maximum number of topics returned, between 1-100",
+      )
 
       produces "application/json"
       response "200", "topic updated" do
@@ -697,6 +703,7 @@ RSpec.describe "topics" do
 
         let(:order) { "default" }
         let(:ascending) { "false" }
+        let(:per_page) { 20 }
 
         run_test!
       end

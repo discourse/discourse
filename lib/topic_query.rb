@@ -16,14 +16,14 @@ class TopicQuery
       begin
         int = lambda { |x| Integer === x || (String === x && x.match?(/\A-?[0-9]+\z/)) }
         zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
-        five_up_to_one_hundred = lambda { |x| int.call(x) && x.to_i.between?(1, 100) }
+        one_up_to_one_hundred = lambda { |x| int.call(x) && x.to_i.between?(1, 100) }
         array_or_string = lambda { |x| Array === x || String === x }
         string = lambda { |x| String === x }
         true_or_false = lambda { |x| x == true || x == false || x == "true" || x == "false" }
 
         {
           page: zero_up_to_max_int,
-          per_page: five_up_to_one_hundred,
+          per_page: one_up_to_one_hundred,
           before: zero_up_to_max_int,
           bumped_before: zero_up_to_max_int,
           topic_ids: array_or_string,
