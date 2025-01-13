@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { cancel, schedule, throttle } from "@ember/runloop";
+import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import { headerOffset } from "discourse/lib/offset-calculator";
@@ -33,6 +34,8 @@ function mouseYPos(e) {
   "currentUserPrimaryGroupClass"
 )
 export default class ComposerBody extends Component {
+  @service capabilities;
+
   elementId = "reply-control";
 
   @discourseComputed("composer.action")
@@ -87,7 +90,10 @@ export default class ComposerBody extends Component {
     const currentMousePos = mouseYPos(event);
 
     let size = this.origComposerSize + (this.lastMousePos - currentMousePos);
-    size = Math.min(size, window.innerHeight - headerOffset());
+    const maxHeight = this.capabilities.isTablet
+      ? window.innerHeight
+      : window.innerHeight - headerOffset();
+    size = Math.min(size, maxHeight);
     const minHeight = parseInt(getComputedStyle(this.element).minHeight, 10);
     size = Math.max(minHeight, size);
 
