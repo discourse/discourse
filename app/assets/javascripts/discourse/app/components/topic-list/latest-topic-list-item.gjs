@@ -20,6 +20,12 @@ export default class LatestTopicListItem extends Component {
     return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
   }
 
+  get additionalClasses() {
+    return applyValueTransformer("latest-topic-list-item-class", [], {
+      topic: this.args.topic,
+    });
+  }
+
   <template>
     <div
       data-topic-id={{@topic.id}}
@@ -33,9 +39,7 @@ export default class LatestTopicListItem extends Component {
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
         (if @topic.visited "visited")
-        (applyValueTransformer
-          "latest-topic-list-item-class" (array) (hash topic=@topic)
-        )
+        this.additionalClasses
       }}
     >
       <PluginOutlet
