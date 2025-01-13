@@ -1,3 +1,4 @@
+import ChatMessageReactionModel from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
@@ -41,9 +42,11 @@ export default class ChatemojiReactions {
   @service router;
   @service modal;
   @service capabilities;
+  @service siteSettings;
   @service menu;
   @service toasts;
   @service interactedChatMessage;
+  @service emojiStore;
 
   @tracked message = null;
   @tracked context = null;
@@ -53,6 +56,22 @@ export default class ChatemojiReactions {
 
     this.message = message;
     this.context = context;
+  }
+
+  get emojiReactions() {
+    const defaultReactions = this.siteSettings.default_emoji_reactions
+      .split("|")
+      .filter(Boolean);
+
+    return this.emojiStore
+      .favoritesForContext(`channel_${this.message.channel.id}`)
+      .concat(defaultReactions)
+      .slice(0, 3)
+      .map(
+        (emoji) =>
+          this.message.reactions.find((reaction) => reaction.emoji === emoji) ||
+          ChatMessageReactionModel.create({ emoji })
+      );
   }
 
   get pane() {
