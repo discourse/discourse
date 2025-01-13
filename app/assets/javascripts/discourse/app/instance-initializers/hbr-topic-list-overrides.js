@@ -1,5 +1,5 @@
-import { registerDeprecationHandler } from "discourse-common/lib/deprecated";
-import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
+import { registerDeprecationHandler } from "discourse/lib/deprecated";
+import { needsHbrTopicList } from "discourse/lib/raw-templates";
 
 export default {
   before: "inject-objects",

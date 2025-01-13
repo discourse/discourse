@@ -1,6 +1,6 @@
 import DAGMap from "dag-map";
-import { makeArray } from "discourse-common/lib/helpers";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import { makeArray } from "discourse/lib/helpers";
 
 export default class DAG {
   /**

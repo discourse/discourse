@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { service } from "@ember/service";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityController extends Controller {

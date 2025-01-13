@@ -1,6 +1,6 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { capitalize, dasherize } from "@ember/string";
-import { snakeCaseToCamelCase } from "discourse-common/lib/case-converter";
+import { snakeCaseToCamelCase } from "discourse/lib/case-converter";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class AdminPlugin {

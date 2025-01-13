@@ -11,13 +11,13 @@ import FastEditModal from "discourse/components/modal/fast-edit";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
 import {
   clipboardCopy,
   postUrl,
   setCaretPosition,
 } from "discourse/lib/utilities";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export function fixQuotes(str) {

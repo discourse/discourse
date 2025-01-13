@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { classNameBindings } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @classNameBindings("hidden", "multiple")
 export default class LoginButtons extends Component {

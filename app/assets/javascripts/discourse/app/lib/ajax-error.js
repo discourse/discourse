@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
 import $ from "jquery";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
 
 function extractErrorInfo(error, defaultMessage) {

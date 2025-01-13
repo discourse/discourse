@@ -2,15 +2,15 @@ import { deprecate as emberDeprecate } from "@ember/debug";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Sinon from "sinon";
+import deprecated, {
+  withSilencedDeprecations,
+  withSilencedDeprecationsAsync,
+} from "discourse/lib/deprecated";
 import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
 } from "discourse/tests/helpers/raise-on-deprecation";
-import deprecated, {
-  withSilencedDeprecations,
-  withSilencedDeprecationsAsync,
-} from "discourse-common/lib/deprecated";
 
 module("Unit | Utility | deprecated", function (hooks) {
   setupTest(hooks);

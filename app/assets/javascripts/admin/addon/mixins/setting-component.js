@@ -10,8 +10,8 @@ import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { SITE_SETTING_REQUIRES_CONFIRMATION_TYPES } from "discourse/lib/constants";
+import { deepEqual } from "discourse/lib/object";
 import { splitString } from "discourse/lib/utilities";
-import { deepEqual } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 

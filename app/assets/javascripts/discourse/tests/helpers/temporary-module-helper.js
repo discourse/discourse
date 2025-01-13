@@ -1,5 +1,5 @@
+import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { expireConnectorCache } from "discourse/lib/plugin-connectors";
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import { expireModuleTrieCache } from "discourse-common/resolver";
 
 const modifications = [];

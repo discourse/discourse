@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { isNone } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import BadgePreviewModal from "../../components/modal/badge-preview";
 

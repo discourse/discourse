@@ -2,12 +2,12 @@ import Component from "@ember/component";
 import { cancel, schedule, throttle } from "@ember/runloop";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { isiPad } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 const START_DRAG_EVENTS = ["touchstart", "mousedown"];
 const DRAG_EVENTS = ["touchmove", "mousemove"];

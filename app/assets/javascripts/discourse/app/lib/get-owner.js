@@ -1,5 +1,5 @@
 import { getOwner as emberGetOwner, setOwner } from "@ember/owner";
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 
 let _default = {};
 
@@ -23,7 +23,7 @@ export function getOwnerWithFallback(obj) {
  */
 export function getOwner(obj) {
   deprecated(
-    "Importing getOwner from `discourse-common/lib/get-owner` is deprecated. See the alternatives on meta.",
+    "Importing getOwner from `discourse/lib/get-owner` is deprecated. See the alternatives on meta.",
     {
       since: "3.2",
       id: "discourse.get-owner-with-fallback",

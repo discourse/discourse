@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
-import getURL from "discourse-common/lib/get-url";
-import { debounce } from "discourse-common/utils/decorators";
+import { debounce } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 
 const _itemSelectCallbacks = [];
 export function addItemSelectCallback(fn) {

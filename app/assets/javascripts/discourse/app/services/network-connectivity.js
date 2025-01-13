@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { cancel } from "@ember/runloop";
 import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
 
 const CONNECTIVITY_ERROR_CLASS = "network-disconnected";
 

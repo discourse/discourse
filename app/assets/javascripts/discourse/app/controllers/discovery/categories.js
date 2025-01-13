@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 export default class CategoriesController extends Controller {
   @service router;

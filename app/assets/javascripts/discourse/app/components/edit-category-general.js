@@ -4,10 +4,10 @@ import { cancel } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
-import getURL from "discourse-common/lib/get-url";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class EditCategoryGeneral extends buildCategoryPanel("general") {
   @not("category.isUncategorizedCategory") canSelectParentCategory;

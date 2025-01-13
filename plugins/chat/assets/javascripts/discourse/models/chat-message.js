@@ -1,10 +1,10 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import discourseLater from "discourse/lib/later";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import discourseLater from "discourse-common/lib/later";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 

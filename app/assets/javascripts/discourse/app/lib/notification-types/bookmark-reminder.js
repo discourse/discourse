@@ -1,5 +1,5 @@
+import getUrl from "discourse/lib/get-url";
 import NotificationTypeBase from "discourse/lib/notification-types/base";
-import getUrl from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class extends NotificationTypeBase {

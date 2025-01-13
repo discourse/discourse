@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse/lib/icon-library";
 import { escapeExpression } from "discourse/lib/utilities";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default function userStatus(user, { currentUser } = {}) {

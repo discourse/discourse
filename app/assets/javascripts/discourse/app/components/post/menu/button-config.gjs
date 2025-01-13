@@ -1,5 +1,5 @@
-import { helperContext } from "discourse-common/lib/helpers";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import { helperContext } from "discourse/lib/helpers";
 
 export default class PostMenuButtonConfig {
   #Component;

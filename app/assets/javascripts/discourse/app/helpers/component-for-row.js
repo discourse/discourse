@@ -1,4 +1,4 @@
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 registerRawHelper("component-for-row", componentForRow);
 

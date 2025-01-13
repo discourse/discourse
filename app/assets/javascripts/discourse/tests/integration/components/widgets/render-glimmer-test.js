@@ -3,13 +3,13 @@ import templateOnly from "@ember/component/template-only";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import { bind } from "discourse/lib/decorators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import RenderGlimmer, {
   registerWidgetShim,
 } from "discourse/widgets/render-glimmer";
 import Widget, { deleteFromRegistry } from "discourse/widgets/widget";
-import { bind } from "discourse-common/utils/decorators";
 
 class DemoWidget extends Widget {
   static actionTriggered = false;

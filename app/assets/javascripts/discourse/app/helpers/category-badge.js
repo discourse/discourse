@@ -1,6 +1,6 @@
 import { isPresent } from "@ember/utils";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 registerRawHelper("category-badge", categoryBadge);
 

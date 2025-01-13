@@ -2,10 +2,10 @@ import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import Badge from "discourse/models/badge";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class UserBadge extends EmberObject {
   static createFromJson(json) {

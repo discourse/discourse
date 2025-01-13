@@ -4,7 +4,7 @@ import {
   camelCaseToDash,
   camelCaseToSnakeCase,
   snakeCaseToCamelCase,
-} from "discourse-common/lib/case-converter";
+} from "discourse/lib/case-converter";
 
 module("Unit | discourse-common | case-converter", function (hooks) {
   setupTest(hooks);

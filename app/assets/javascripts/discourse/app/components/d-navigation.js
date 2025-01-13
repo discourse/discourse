@@ -6,10 +6,10 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import NavItem from "discourse/models/nav-item";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("")
 export default class DNavigation extends Component {

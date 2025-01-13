@@ -1,8 +1,8 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import { buildResolver, setResolverOption } from "discourse-common/resolver";
 
 let resolver;

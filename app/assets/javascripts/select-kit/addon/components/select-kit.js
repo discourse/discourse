@@ -11,11 +11,11 @@ import {
 } from "@ember-decorators/component";
 import { createPopper } from "@popperjs/core";
 import { Promise } from "rsvp";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind as bindDecorator } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { makeArray } from "discourse/lib/helpers";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import deprecated from "discourse-common/lib/deprecated";
-import { makeArray } from "discourse-common/lib/helpers";
-import { bind as bindDecorator } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import {
   applyContentPluginApiCallbacks,

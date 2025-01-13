@@ -1,9 +1,9 @@
 import { dasherize, decamelize } from "@ember/string";
 import Resolver from "ember-resolver";
-import deprecated from "discourse-common/lib/deprecated";
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
-import { findHelper } from "discourse-common/lib/helpers";
-import SuffixTrie from "discourse-common/lib/suffix-trie";
+import deprecated from "discourse/lib/deprecated";
+import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
+import { findHelper } from "discourse/lib/helpers";
+import SuffixTrie from "discourse/lib/suffix-trie";
 
 let _options = {};
 let moduleSuffixTrie = null;

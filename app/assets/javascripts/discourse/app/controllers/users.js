@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import { and, equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import EditUserDirectoryColumnsModal from "discourse/components/modal/edit-user-directory-columns";
+import discourseDebounce from "discourse/lib/debounce";
 import { longDate } from "discourse/lib/formatter";
 import Group from "discourse/models/group";
-import discourseDebounce from "discourse-common/lib/debounce";
 
 export default class UsersController extends Controller {
   @service modal;

@@ -1,4 +1,4 @@
-import { renderIcon } from "discourse-common/lib/icon-library";
+import { renderIcon } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
 

@@ -1,5 +1,5 @@
-import deprecated from "discourse-common/lib/deprecated";
-import isDescriptor from "discourse-common/utils/is-descriptor";
+import deprecated from "discourse/lib/deprecated";
+import isDescriptor from "discourse/lib/is-descriptor";
 
 function handleDescriptor(target, property, desc, fn, params = []) {
   return {
@@ -18,7 +18,7 @@ export default function macroAlias(fn) {
       return handleDescriptor(...params, fn);
     } else {
       deprecated(
-        `Importing ${fn.name} from 'discourse-common/utils/decorators' is deprecated. You should instead import it from '@ember/object/computed' directly.`,
+        `Importing ${fn.name} from 'discourse/lib/decorators' is deprecated. You should instead import it from '@ember/object/computed' directly.`,
         { id: "discourse.utils-decorators-import" }
       );
       return function (target, property, desc) {

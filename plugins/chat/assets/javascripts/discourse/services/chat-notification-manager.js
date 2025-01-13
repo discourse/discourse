@@ -1,10 +1,10 @@
 import Service, { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import {
   alertChannel,
   onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
 import { isTesting } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatNotificationManager extends Service {
   @service chat;

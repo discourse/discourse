@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { isEmpty, isPresent } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { debounce } from "discourse/lib/decorators";
 import { searchForTerm } from "discourse/lib/search";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { debounce } from "discourse-common/utils/decorators";
 
 // args:
 // topicChangedCallback

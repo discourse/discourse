@@ -3,7 +3,7 @@ import { and, empty } from "@ember/object/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const categorySortCriteria = [];

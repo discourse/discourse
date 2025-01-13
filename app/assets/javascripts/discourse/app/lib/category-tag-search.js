@@ -3,11 +3,11 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { SEPARATOR } from "discourse/lib/category-hashtags";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseLater from "discourse/lib/later";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import Category from "discourse/models/category";
 import { isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseLater from "discourse-common/lib/later";
 
 let cache = {};
 let cacheTime;

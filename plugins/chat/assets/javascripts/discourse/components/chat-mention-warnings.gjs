@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import getURL from "discourse/lib/get-url";
 import dIcon from "discourse-common/helpers/d-icon";
-import getURL from "discourse-common/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class ChatMentionWarnings extends Component {

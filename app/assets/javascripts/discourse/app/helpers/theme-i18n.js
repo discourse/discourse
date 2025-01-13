@@ -1,4 +1,4 @@
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 
 registerRawHelper("theme-i18n", themeI18n);

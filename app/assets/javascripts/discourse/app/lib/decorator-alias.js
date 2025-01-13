@@ -1,4 +1,4 @@
-import extractValue from "discourse-common/utils/extract-value";
+import extractValue from "discourse/lib/extract-value";
 
 export default function decoratorAlias(fn, errorMessage) {
   return function (...params) {

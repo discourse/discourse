@@ -1,6 +1,6 @@
+import discourseComputed from "discourse/lib/decorators";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class TagGroup extends RestModel {
   @discourseComputed("permissions")

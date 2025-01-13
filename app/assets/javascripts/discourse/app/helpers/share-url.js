@@ -1,4 +1,4 @@
-import { helperContext } from "discourse-common/lib/helpers";
+import { helperContext } from "discourse/lib/helpers";
 
 export function resolveShareUrl(url, user) {
   const siteSettings = helperContext().siteSettings;

@@ -1,12 +1,12 @@
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
+import domUtils from "discourse/lib/dom-utils";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
 import { cloak, uncloak } from "discourse/widgets/post-stream";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
-import domUtils from "discourse-common/utils/dom-utils";
 
 const DEBOUNCE_DELAY = 50;
 

@@ -2,8 +2,8 @@ import Helper from "@ember/component/helper";
 import { get } from "@ember/object";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
-import deprecated from "discourse-common/lib/deprecated";
-import RawHandlebars from "discourse-common/lib/raw-handlebars";
+import deprecated from "discourse/lib/deprecated";
+import RawHandlebars from "discourse/lib/raw-handlebars";
 
 export function makeArray(obj) {
   if (obj === null || obj === undefined) {

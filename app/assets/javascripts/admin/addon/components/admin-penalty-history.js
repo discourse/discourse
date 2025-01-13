@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @classNames("penalty-history")
 export default class AdminPenaltyHistory extends Component {

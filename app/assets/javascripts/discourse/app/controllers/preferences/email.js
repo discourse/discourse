@@ -2,8 +2,8 @@ import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
 import { propertyEqual } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { emailValid } from "discourse/lib/utilities";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class EmailController extends Controller {

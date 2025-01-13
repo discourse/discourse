@@ -1,8 +1,8 @@
 import Controller from "@ember/controller";
 import { action, get } from "@ember/object";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class AdminDashboardReportsController extends Controller {
   filter = null;

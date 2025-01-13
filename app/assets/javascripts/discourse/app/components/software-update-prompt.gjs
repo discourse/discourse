@@ -5,9 +5,9 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import { isTesting } from "discourse-common/config/environment";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class SoftwareUpdatePrompt extends Component {

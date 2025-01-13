@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { SVG_NAMESPACE } from "discourse-common/lib/icon-library";
+import { SVG_NAMESPACE } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 const TIMEOUT = 2500;
