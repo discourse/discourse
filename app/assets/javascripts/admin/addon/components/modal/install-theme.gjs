@@ -10,10 +10,10 @@ import ConditionalLoadingSection from "discourse/components/conditional-loading-
 import CopyButton from "discourse/components/copy-button";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import dIcon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
 import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
 import { i18n } from "discourse-i18n";
 import InstallThemeItem from "admin/components/install-theme-item";

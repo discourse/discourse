@@ -4,7 +4,7 @@ import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import DTooltip from "float-kit/components/d-tooltip";
 import devToolsState from "../state";
 import ArgsTable from "./args-table";

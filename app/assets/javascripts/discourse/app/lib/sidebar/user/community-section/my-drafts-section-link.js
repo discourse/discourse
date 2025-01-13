@@ -4,13 +4,13 @@ import { i18n } from "discourse-i18n";
 
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
-export default class MyPostsSectionLink extends BaseSectionLink {
+export default class MyDraftsSectionLink extends BaseSectionLink {
   @tracked draftCount = this.currentUser?.draft_count;
 
   constructor() {
     super(...arguments);
 
-    if (this.shouldDisplay) {
+    if (this.currentUser) {
       this.appEvents.on(
         USER_DRAFTS_CHANGED_EVENT,
         this,
@@ -20,7 +20,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   teardown() {
-    if (this.shouldDisplay) {
+    if (this.currentUser) {
       this.appEvents.off(
         USER_DRAFTS_CHANGED_EVENT,
         this,
@@ -38,21 +38,11 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get name() {
-    return "my-posts";
+    return "my-drafts";
   }
 
   get route() {
-    if (this._hasDraft) {
-      return "userActivity.drafts";
-    } else {
-      return "userActivity.index";
-    }
-  }
-
-  get currentWhen() {
-    if (this._hasDraft) {
-      return "userActivity.index userActivity.drafts";
-    }
+    return "userActivity.drafts";
   }
 
   get model() {
@@ -60,24 +50,11 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    if (this._hasDraft) {
-      return i18n("sidebar.sections.community.links.my_posts.title_drafts");
-    } else {
-      return i18n("sidebar.sections.community.links.my_posts.title");
-    }
+    return i18n("sidebar.sections.community.links.my_drafts.title");
   }
 
   get text() {
-    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
-      return i18n("sidebar.sections.community.links.my_posts.content_drafts");
-    } else {
-      return i18n(
-        `sidebar.sections.community.links.${this.overridenName
-          .toLowerCase()
-          .replace(" ", "_")}.content`,
-        { defaultValue: this.overridenName }
-      );
-    }
+    return i18n("sidebar.sections.community.links.my_drafts.content");
   }
 
   get badgeText() {
@@ -88,7 +65,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     if (this.currentUser.new_new_view_enabled) {
       return this.draftCount.toString();
     } else {
-      return i18n("sidebar.sections.community.links.my_posts.draft_count", {
+      return i18n("sidebar.sections.community.links.my_drafts.draft_count", {
         count: this.draftCount,
       });
     }
@@ -96,13 +73,6 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   get _hasDraft() {
     return this.draftCount > 0;
-  }
-
-  get defaultPrefixValue() {
-    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
-      return "pencil";
-    }
-    return "user";
   }
 
   get suffixCSSClass() {
@@ -120,6 +90,10 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get shouldDisplay() {
-    return this.currentUser;
+    return this.currentUser && this._hasDraft;
+  }
+
+  get prefixValue() {
+    return "far-pen-to-square";
   }
 }

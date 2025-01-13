@@ -4,8 +4,8 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import noop from "discourse/helpers/noop";
-import icon from "discourse-common/helpers/d-icon";
 
 export default class FilterInput extends Component {
   @tracked isFocused = false;

@@ -1,6 +1,7 @@
 import "./deprecation-workflow";
 import "decorator-transforms/globals";
 import "./loader-shims";
+import "./discourse-common-loader-shims";
 import "./global-compat";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 

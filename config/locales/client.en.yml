@@ -497,6 +497,12 @@ en:
         confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
+      dropdown:
+        title: "Open the latest drafts menu"
+        view_all: "view all"
+        other_drafts:
+          one: "+%{count} other draft"
+          other: "+%{count} other drafts"
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -4973,11 +4979,9 @@ en:
             users:
               content: "Users"
               title: "List of all users"
-            my_posts:
-              content: "My Posts"
-              content_drafts: "My Drafts"
-              title: "My recent topic activity"
-              title_drafts: "My unposted drafts"
+            my_drafts:
+              content: "My Drafts"
+              title: "My unposted drafts"
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"

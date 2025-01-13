@@ -1,4 +1,4 @@
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 const InputTip = <template>
   <div

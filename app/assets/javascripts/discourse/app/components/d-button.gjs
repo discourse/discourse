@@ -7,8 +7,8 @@ import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
-import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
 import { i18n } from "discourse-i18n";
 

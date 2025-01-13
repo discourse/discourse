@@ -7,7 +7,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SortableColumn extends Component {
