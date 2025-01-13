@@ -56,9 +56,12 @@ class TagGroup < ActiveRecord::Base
   def self.resolve_permissions(permissions)
     permissions.map do |group, permission|
       group_id = Group.group_id_from_param(group)
-      permission = TagGroupPermission.permission_types[permission.to_sym] unless permission.is_a?(
-        Integer,
-      )
+      permission =
+        if permission.is_a?(Integer)
+          permission
+        else
+          TagGroupPermission.permission_types[permission.to_sym]
+        end
       [group_id, permission]
     end
   end

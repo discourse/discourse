@@ -4752,7 +4752,10 @@ en:
         everyone_can_use: "Tags can be used by everyone"
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
-        cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty and less than 100 characters, and a group is selected for tags permission."
+        cannot_save: 
+          empty_name: "Cannot save tag group. Make sure the tag group name is not empty."
+          no_tags: "Cannot save tag group. Make sure that at least one tag is selected."
+          no_groups: "Cannot save tag group. Make sure that at least one group is selected for permission."
         tags_placeholder: "Search or create tags"
         parent_tag_placeholder: "Optional"
         select_groups_placeholder: "Select groups…"

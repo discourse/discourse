@@ -9,9 +9,9 @@ export default class TagGroup extends RestModel {
       return "public";
     }
 
-    if (permissions["everyone"] === PermissionType.FULL) {
+    if (permissions[0] === PermissionType.FULL) {
       return "public";
-    } else if (permissions["everyone"] === PermissionType.READONLY) {
+    } else if (permissions[0] === PermissionType.READONLY) {
       return "visible";
     } else {
       return "private";
