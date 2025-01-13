@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatMessageCreatorSearchInput extends Component {
