@@ -7,7 +7,7 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "dependencies": {
-    "@babel/standalone": "^7.26.4",
+    "@babel/standalone": "^7.26.5",
     "@zxing/text-encoding": "^0.9.0",
     "babel-plugin-ember-template-compilation": "^2.3.0",
     "content-tag": "^3.1.0",

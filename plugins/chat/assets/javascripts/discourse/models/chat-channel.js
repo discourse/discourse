@@ -36,7 +36,7 @@ export function channelStatusIcon(channelStatus) {
     case CHANNEL_STATUSES.readOnly:
       return "comment-slash";
     case CHANNEL_STATUSES.archived:
-      return "archive";
+      return "box-archive";
   }
 }
 
