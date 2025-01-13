@@ -6,7 +6,7 @@ import {
   snakeCaseToCamelCase,
 } from "discourse/lib/case-converter";
 
-module("Unit | discourse | case-converter", function (hooks) {
+module("Unit | lib | case-converter", function (hooks) {
   setupTest(hooks);
 
   test("camelCaseToSnakeCase", function (assert) {
