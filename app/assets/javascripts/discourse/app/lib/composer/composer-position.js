@@ -6,6 +6,17 @@ export function setupComposerPosition(editor) {
   // The fixes here go together with styling in base/compose.css
   const html = document.documentElement;
 
+  function editorTouchMove(event) {
+    // This is an alternative to locking up the body
+    // It stops scrolling in the given element from bubbling up to the body
+    // when the textarea does not have any content to scroll
+    const notScrollable = editor.scrollHeight <= editor.clientHeight;
+    if (notScrollable) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
   if (
     html.classList.contains("mobile-device") ||
     html.classList.contains("ipados-device")
@@ -47,18 +58,4 @@ function correctScrollPosition() {
       });
     }
   }, 150);
-}
-
-function editorTouchMove(event) {
-  // This is an alternative to locking up the body
-  // It stops scrolling in the given element from bubbling up to the body
-  // when the textarea does not have any content to scroll
-  if (event.target) {
-    const notScrollable =
-      event.target.scrollHeight <= event.target.clientHeight;
-    if (notScrollable) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  }
 }
