@@ -26,7 +26,7 @@ RSpec.describe "Chat New Message from params", type: :system do
     end
 
     it "creates a dm channel and redirects if none exists" do
-      chat_page.visit_new_message(user_2)
+      expect { chat_page.visit_new_message(user_2) }.to change { Chat::Channel.count }.by(1)
 
       expect(page).to have_current_path("/chat/c/#{user_2.username}/#{Chat::Channel.last.id}")
     end
