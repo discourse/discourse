@@ -49,7 +49,7 @@ export default class TopicDraftsDropdown extends Component {
       draftsStream.reset();
 
       await draftsStream.findItems(this.site);
-      this.drafts = draftsStream.content.slice(0, this.args.draftLimit);
+      this.drafts = draftsStream.content.slice(0, DRAFTS_LIMIT);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Failed to fetch drafts with error:", error);
