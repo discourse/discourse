@@ -3,10 +3,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Group from "discourse/models/group";
 import PermissionType from "discourse/models/permission-type";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

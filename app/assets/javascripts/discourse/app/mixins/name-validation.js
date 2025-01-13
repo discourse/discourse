@@ -1,7 +1,7 @@
 import EmberObject, { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 import { i18n } from "discourse-i18n";
 
 export default Mixin.create({

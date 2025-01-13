@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
-import deprecated from "discourse-common/lib/deprecated";
-import { registerRawHelper } from "discourse-common/lib/helpers";
-import { renderIcon } from "discourse-common/lib/icon-library";
+import deprecated from "discourse/lib/deprecated";
+import { registerRawHelper } from "discourse/lib/helpers";
+import { renderIcon } from "discourse/lib/icon-library";
 
 export function iconHTML(id, params) {
   return renderIcon("string", id, params);

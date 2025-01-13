@@ -1,8 +1,8 @@
 import { h } from "virtual-dom";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
+import { iconNode } from "discourse/lib/icon-library";
 import { escapeExpression } from "discourse/lib/utilities";
 import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default createWidget("topic-status", {

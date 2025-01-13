@@ -1,5 +1,5 @@
 import icon from "discourse/helpers/d-icon";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 const BackToForum = <template>

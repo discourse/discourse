@@ -2,6 +2,7 @@ import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { TOP_SITE_CATEGORIES_TO_SHOW } from "discourse/components/sidebar/common/categories-section";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import Site from "discourse/models/site";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
@@ -11,7 +12,6 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance(

@@ -1,6 +1,6 @@
 import jQuery from "jquery";
-import deprecated from "discourse-common/lib/deprecated";
-import { helperContext, makeArray } from "discourse-common/lib/helpers";
+import deprecated from "discourse/lib/deprecated";
+import { helperContext, makeArray } from "discourse/lib/helpers";
 import I18n, { i18n } from "discourse-i18n";
 
 export function shortDate(date) {

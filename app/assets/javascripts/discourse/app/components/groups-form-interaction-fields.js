@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { or } from "@ember/object/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class GroupsFormInteractionFields extends Component {

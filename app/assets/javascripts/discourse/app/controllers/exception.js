@@ -3,8 +3,8 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, equal, gte, none } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 /**

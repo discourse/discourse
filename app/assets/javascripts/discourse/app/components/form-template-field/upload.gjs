@@ -5,9 +5,9 @@ import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class FormTemplateFieldUpload extends Component {
   @tracked uploadValue;

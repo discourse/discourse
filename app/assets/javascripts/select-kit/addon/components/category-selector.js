@@ -1,8 +1,8 @@
 import EmberObject, { action, computed } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
+import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
-import { makeArray } from "discourse-common/lib/helpers";
 import CategoryRow from "select-kit/components/category-row";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";

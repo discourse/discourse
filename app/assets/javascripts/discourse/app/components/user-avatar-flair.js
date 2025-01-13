@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class UserAvatarFlair extends Component {

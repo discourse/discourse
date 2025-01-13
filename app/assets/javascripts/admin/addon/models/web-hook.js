@@ -2,10 +2,10 @@ import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
+import discourseComputed from "discourse/lib/decorators";
 import Group from "discourse/models/group";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
-import discourseComputed from "discourse-common/utils/decorators";
 
 class WebHookExtras {
   @tracked categories;

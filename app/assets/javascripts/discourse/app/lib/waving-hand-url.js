@@ -1,6 +1,6 @@
+import getURL from "discourse/lib/get-url";
+import { helperContext } from "discourse/lib/helpers";
 import { emojiBasePath } from "discourse/lib/settings";
-import getURL from "discourse-common/lib/get-url";
-import { helperContext } from "discourse-common/lib/helpers";
 
 export function wavingHandURL() {
   const emojiSet = helperContext().siteSettings.emoji_set;

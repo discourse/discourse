@@ -1,6 +1,8 @@
 import { getOwner, setOwner } from "@ember/owner";
 import { run, throttle } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import domUtils from "discourse/lib/dom-utils";
+import discourseLater from "discourse/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import {
   nextTopicUrl,
@@ -10,8 +12,6 @@ import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseLater from "discourse-common/lib/later";
-import domUtils from "discourse-common/utils/dom-utils";
 
 let disabledBindings = [];
 export function disableDefaultKeyboardShortcuts(bindings) {

@@ -7,11 +7,11 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import DTooltip from "float-kit/components/d-tooltip";

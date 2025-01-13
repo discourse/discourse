@@ -1,6 +1,6 @@
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PostBookmarkManager from "discourse/lib/post-bookmark-manager";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 export default {
   name: "discourse-bookmark-menu",

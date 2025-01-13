@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
+import getURL from "discourse/lib/get-url";
+import { helperContext } from "discourse/lib/helpers";
 import { isTesting } from "discourse-common/config/environment";
-import getURL from "discourse-common/lib/get-url";
-import { helperContext } from "discourse-common/lib/helpers";
 
 export default function logout({ redirect } = {}) {
   if (isTesting()) {

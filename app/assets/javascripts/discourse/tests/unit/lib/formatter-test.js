@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import domFromString from "discourse/lib/dom-from-string";
 import {
   autoUpdatingRelativeAge,
   duration,
@@ -12,7 +13,6 @@ import {
   updateRelativeAge,
 } from "discourse/lib/formatter";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
-import domFromString from "discourse-common/lib/dom-from-string";
 
 function formatMins(mins, opts = {}) {
   const dt = new Date(new Date() - mins * 60 * 1000);

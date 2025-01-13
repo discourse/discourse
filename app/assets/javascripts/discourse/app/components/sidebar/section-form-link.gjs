@@ -9,7 +9,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
-import discourseLater from "discourse-common/lib/later";
+import discourseLater from "discourse/lib/later";
 import { i18n } from "discourse-i18n";
 import IconPicker from "select-kit/components/icon-picker";
 

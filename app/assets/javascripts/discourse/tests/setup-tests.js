@@ -40,9 +40,9 @@ import {
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { disableCloaking } from "discourse/widgets/post-stream";
-import deprecated from "discourse-common/lib/deprecated";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import deprecated from "discourse/lib/deprecated";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { buildResolver } from "discourse-common/resolver";
 import { loadSprites } from "../lib/svg-sprite-loader";
 import * as FakerModule from "@faker-js/faker";

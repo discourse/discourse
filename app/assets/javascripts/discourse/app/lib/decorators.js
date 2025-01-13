@@ -36,13 +36,13 @@ import {
   observes as emberObservesDecorator,
   on as emberOnDecorator,
 } from "@ember-decorators/object";
-import discourseDebounce from "discourse-common/lib/debounce";
-import deprecated from "discourse-common/lib/deprecated";
-import decoratorAlias from "discourse-common/utils/decorator-alias";
-import extractValue from "discourse-common/utils/extract-value";
-import handleDescriptor from "discourse-common/utils/handle-descriptor";
-import isDescriptor from "discourse-common/utils/is-descriptor";
-import macroAlias from "discourse-common/utils/macro-alias";
+import discourseDebounce from "discourse/lib/debounce";
+import decoratorAlias from "discourse/lib/decorator-alias";
+import deprecated from "discourse/lib/deprecated";
+import extractValue from "discourse/lib/extract-value";
+import handleDescriptor from "discourse/lib/handle-descriptor";
+import isDescriptor from "discourse/lib/is-descriptor";
+import macroAlias from "discourse/lib/macro-alias";
 
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
@@ -126,7 +126,7 @@ export function on(...onParams) {
   return function (target) {
     if (target instanceof CoreObject) {
       deprecated(
-        `Using 'on' from 'discourse-common/utils/decorators' as a class property decorator is deprecated. You should import it from '@ember-decorators/object' instead.`,
+        `Using 'on' from 'discourse/lib/decorators' as a class property decorator is deprecated. You should import it from '@ember-decorators/object' instead.`,
         { id: "discourse.utils-decorators-on", from: "3.1.0.beta2" }
       );
       return emberOnDecorator(...onParams)(...arguments);
@@ -143,7 +143,7 @@ export function observes(...observeParams) {
   return function (target) {
     if (target instanceof CoreObject) {
       deprecated(
-        `Using 'observes' from 'discourse-common/utils/decorators' as a class property decorator is deprecated. You should import it from '@ember-decorators/object' instead.`,
+        `Using 'observes' from 'discourse/lib/decorators' as a class property decorator is deprecated. You should import it from '@ember-decorators/object' instead.`,
         { id: "discourse.utils-decorators-observes", from: "3.1.0.beta2" }
       );
       return emberObservesDecorator(...observeParams)(...arguments);

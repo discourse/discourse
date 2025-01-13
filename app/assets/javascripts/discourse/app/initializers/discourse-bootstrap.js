@@ -1,6 +1,9 @@
 import { DEBUG } from "@glimmer/env";
 import { _backburner } from "@ember/runloop";
 import RSVP from "rsvp";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
+import { setIconList } from "discourse/lib/icon-library";
 import PreloadStore from "discourse/lib/preload-store";
 import { setURLContainer } from "discourse/lib/url";
 import Session from "discourse/models/session";
@@ -10,9 +13,6 @@ import {
   isTesting,
   setEnvironment,
 } from "discourse-common/config/environment";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
-import { setIconList } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
 export default {

@@ -30,6 +30,7 @@
   "peerDependencies": {
     "discourse-i18n": "workspace:1.0.0",
     "pretty-text": "workspace:1.0.0",
+    "discourse": "workspace:0.0.0",
     "xss": "*"
   },
   "engines": {

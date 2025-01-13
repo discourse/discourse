@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @classNameBindings(":simple-list", ":value-list")
 export default class SimpleList extends Component {

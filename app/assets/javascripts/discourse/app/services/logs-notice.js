@@ -3,9 +3,9 @@ import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import getURL from "discourse/lib/get-url";
 import I18n from "discourse-i18n";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";

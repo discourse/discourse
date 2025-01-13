@@ -1,8 +1,8 @@
 import { h } from "virtual-dom";
+import attributeHook from "discourse/lib/attribute-hook";
+import deprecated from "discourse/lib/deprecated";
+import escape from "discourse/lib/escape";
 import { isDevelopment } from "discourse-common/config/environment";
-import attributeHook from "discourse-common/lib/attribute-hook";
-import deprecated from "discourse-common/lib/deprecated";
-import escape from "discourse-common/lib/escape";
 import { i18n } from "discourse-i18n";
 
 export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";

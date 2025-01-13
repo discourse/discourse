@@ -3,6 +3,11 @@ import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
+import { deepMerge } from "discourse/lib/object";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   hasTrackedFilter,
@@ -11,11 +16,6 @@ import {
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
-import { deepMerge } from "discourse-common/lib/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class NavItem extends EmberObject {

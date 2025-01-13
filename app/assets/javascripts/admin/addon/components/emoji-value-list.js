@@ -4,8 +4,8 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
+import discourseComputed from "discourse/lib/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings(":value-list", ":emoji-list")

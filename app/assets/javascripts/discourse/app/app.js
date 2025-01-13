@@ -1,4 +1,7 @@
-import "./deprecation-workflow";
+import setupDeprecationWorkflow from "ember-cli-deprecation-workflow";
+import DEPRECATION_WORKFLOW from "./deprecation-workflow";
+setupDeprecationWorkflow({ workflow: DEPRECATION_WORKFLOW });
+
 import "decorator-transforms/globals";
 import "./loader-shims";
 import "./discourse-common-loader-shims";

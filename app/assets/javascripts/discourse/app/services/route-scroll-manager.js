@@ -1,8 +1,8 @@
 import { next, schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { isTesting } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
 
 const STORE_KEY = Symbol("scroll-location");
 
