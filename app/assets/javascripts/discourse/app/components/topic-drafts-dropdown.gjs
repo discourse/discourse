@@ -17,10 +17,6 @@ export default class TopicDraftsDropdown extends Component {
 
   @tracked drafts = [];
 
-  get shouldDisplay() {
-    return this.currentUser && this.draftCount > 0;
-  }
-
   get draftCount() {
     return this.currentUser.draft_count;
   }
@@ -73,46 +69,44 @@ export default class TopicDraftsDropdown extends Component {
   }
 
   <template>
-    {{#if this.shouldDisplay}}
-      <DMenu
-        @identifier="topic-drafts-menu"
-        @title={{i18n "drafts.dropdown.title"}}
-        @icon="chevron-down"
-        @onShow={{this.onShowMenu}}
-        @onRegisterApi={{this.onRegisterApi}}
-        @modalForMobile={{true}}
-        class="btn-small"
-      >
-        <:content>
-          <DropdownMenu as |dropdown|>
-            {{#each this.drafts as |draft|}}
-              <dropdown.item class="topic-drafts-item">
-                <DButton
-                  @action={{fn this.resumeDraft draft}}
-                  @icon={{if draft.topic_id "reply" "layer-group"}}
-                  @translatedLabel={{draft.title}}
-                  class="btn-secondary"
-                />
-              </dropdown.item>
-            {{/each}}
-
-            <dropdown.divider />
-
-            <dropdown.item>
+    <DMenu
+      @identifier="topic-drafts-menu"
+      @title={{i18n "drafts.dropdown.title"}}
+      @icon="chevron-down"
+      @onShow={{this.onShowMenu}}
+      @onRegisterApi={{this.onRegisterApi}}
+      @modalForMobile={{true}}
+      class="btn-small"
+    >
+      <:content>
+        <DropdownMenu as |dropdown|>
+          {{#each this.drafts as |draft|}}
+            <dropdown.item class="topic-drafts-item">
               <DButton
-                @href="/my/activity/drafts"
-                @model={{this.currentUser}}
-                class="btn-link view-all-drafts"
-              >
-                <span
-                  data-other-drafts={{this.otherDraftsCount}}
-                >{{this.otherDraftsText}}</span>
-                <span>{{i18n "drafts.dropdown.view_all"}}</span>
-              </DButton>
+                @action={{fn this.resumeDraft draft}}
+                @icon={{if draft.topic_id "reply" "layer-group"}}
+                @translatedLabel={{draft.title}}
+                class="btn-secondary"
+              />
             </dropdown.item>
-          </DropdownMenu>
-        </:content>
-      </DMenu>
-    {{/if}}
+          {{/each}}
+
+          <dropdown.divider />
+
+          <dropdown.item>
+            <DButton
+              @href="/my/activity/drafts"
+              @model={{this.currentUser}}
+              class="btn-link view-all-drafts"
+            >
+              <span
+                data-other-drafts={{this.otherDraftsCount}}
+              >{{this.otherDraftsText}}</span>
+              <span>{{i18n "drafts.dropdown.view_all"}}</span>
+            </DButton>
+          </dropdown.item>
+        </DropdownMenu>
+      </:content>
+    </DMenu>
   </template>
 }

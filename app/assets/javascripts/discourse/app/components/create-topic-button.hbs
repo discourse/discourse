@@ -17,5 +17,7 @@
     </:tooltip>
   </DButtonTooltip>
 
-  <TopicDraftsDropdown />
+  {{#if @showDrafts}}
+    <TopicDraftsDropdown />
+  {{/if}}
 {{/if}}
