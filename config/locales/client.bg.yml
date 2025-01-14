@@ -3398,8 +3398,6 @@ bg:
               content: "Групи"
             users:
               content: "Потребители"
-            my_posts:
-              content: "Моите публикации"
             review:
               content: "Преглед"
             invite:
@@ -3542,17 +3540,21 @@ bg:
         automatic: "Автоматично"
         group_owners: Собственици
         add_owners: Добави собственик
+      api_keys:
+        edit: "Редактирай"
+        save: "Запази "
+        cancel: "Прекрати"
+        continue: "Напред"
+        revoke: "Анулирай"
       api:
         generate_master: "Генерирай главен API ключ"
         none: "Няма активни API ключове в момента."
         user: "Потребител"
         title: "API"
         key: "Ключ"
-        created: Създадени
-        never_used: (никога)
+        never_used: Никога
         generate: "Генраирай"
         revoke: "Анулирай"
-        all_users: "Всички потребители"
         show_details: Детайли
         description: Описание
         save: Запази
@@ -3986,7 +3988,6 @@ bg:
         logster:
           title: "Логове с грешки"
       watched_words:
-        title: "Наблюдавани думи"
         search: "търсене"
         clear_filter: "Изчисти"
         download: Изтегли
@@ -4235,7 +4236,6 @@ bg:
           external_email: "Имейл"
           external_avatar_url: "URL до аватара"
       user_fields:
-        title: "User Fields"
         untitled: "Untitled"
         name: "Име на полето"
         type: "Вид на полето"
@@ -4265,10 +4265,8 @@ bg:
           confirm: "Потвърждение"
           dropdown: "Падащо"
       site_text:
-        description: "Можете да персонализирате всеки текст от вашия форум. Моля, започнете, като търсите по-долу:"
         search: "Търсене на текст които искате да редактирате"
-        title: "Текст"
-        edit: "промени"
+        edit: "Редактирай"
         revert: "Върни промените"
         revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
         go_back: "Към търсачката"

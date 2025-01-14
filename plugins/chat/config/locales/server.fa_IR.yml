@@ -9,7 +9,6 @@ fa_IR:
     chat_enabled: "گفتگو را فعال کنید."
     enable_public_channels: "کانال های عمومی را بر اساس دسته ها فعال کنید."
     chat_allow_uploads: "بارگذاری در کانال‌های گفتگو عمومی و کانال‌های پیام مستقیم مجاز است."
-    default_emoji_reactions: "واکنش‌های شکلک پیش‌فرض برای پیام‌های گفتگو. برای واکنش سریع تا ۵ شکلک اضافه کنید."
     errors:
       chat_upload_not_allowed_secure_uploads: "وقتی که در تنظیمات سایت آپلودهای ایمن فعال باشد، آپلود گفتگو مجاز نیست."
   system_messages:

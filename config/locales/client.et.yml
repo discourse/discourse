@@ -2650,8 +2650,6 @@ et:
               content: "Grupid"
             users:
               content: "Kasutajad"
-            my_posts:
-              content: "Minu"
             review:
               content: "Vaata üle"
             invite:
@@ -2820,17 +2818,20 @@ et:
         add_owners: Lisa omanikke
         none_selected: "Vali alustamiseks grupp"
         no_custom_groups: "Loo uus kohandatud grupp"
+      api_keys:
+        edit: "Muuda"
+        save: "Salvesta"
+        cancel: "Tühista"
+        continue: "Jätka"
+        revoke: "Tühista "
       api:
         generate_master: "Genereeri API peavõti"
         none: "Hetkel aktiivsed API võtmed puuduvad."
         user: "Kasutaja"
         title: "API"
-        created: Loodud
-        last_used: Viimati kasutatud
-        never_used: (mitte kunagi)
+        never_used: Mitte kunagi
         generate: "Genereeri"
         revoke: "Tühista "
-        all_users: "Kõik kasutajad"
         show_details: Üksikasjad
         description: Kirjeldus
         save: Salvesta
@@ -2974,6 +2975,7 @@ et:
           installed: "Paigaldatud"
       advanced:
         sidebar_link:
+          webhooks: "Veebihaagid"
           developer: "Arendaja"
           embedding: "Sängitamine"
           user_api: "Kasutaja API"
@@ -3130,8 +3132,6 @@ et:
                 too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
           title: "Värvid"
-          edit: "Muuda värvipalette"
-          long_title: "Värvipaletid"
           copy_name_prefix: "Koopia sellest"
           delete_confirm: "Kas kustutada see vävripalett?"
           undo: "Ennista"
@@ -3341,7 +3341,6 @@ et:
         logster:
           title: "Vealogid"
       watched_words:
-        title: "Vaadatud sõnad"
         search: "otsi"
         clear_filter: "Tühjenda"
         download: Lae alla
@@ -3404,6 +3403,7 @@ et:
         active: "Aktiveeritud"
         status: "Staatus"
         show_emails: "Näita meile"
+        silence_reason: "Vaigistamise põhjus"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -3581,7 +3581,6 @@ et:
           external_email: "E-post"
           external_avatar_url: "Profiili pildi URL"
       user_fields:
-        title: "Kasutajaväljad"
         untitled: "Tiitlita"
         name: "Välja nimi"
         type: "Välja tüüp"
@@ -3611,10 +3610,8 @@ et:
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:
-        description: "Võid oma foorumi kõiki tekste muuta. Alustamiseks otsi allolevast:"
         search: "Otsi teksi, mida soovid muuta"
-        title: "Tekst"
-        edit: "muuda"
+        edit: "Muuda"
         revert: "Pööra tagasi muudatused"
         revert_confirm: "Oled Sa kindel, et soovid tagasi pöörata muudatusi?"
         go_back: "Tagasi otsingusse"

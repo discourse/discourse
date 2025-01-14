@@ -3099,8 +3099,6 @@ bs_BA:
               content: "Grupe"
             users:
               content: "Users"
-            my_posts:
-              content: "Moje objave"
             review:
               content: "Pregled"
             invite:
@@ -3311,29 +3309,29 @@ bs_BA:
         add_owners: Dodajte vlasnike
         none_selected: "Izaberite grupu za početak"
         no_custom_groups: "Kreirajte novu prilagođenu grupu"
+      api_keys:
+        edit: "Edit"
+        save: "Save"
+        cancel: "Odustani"
+        continue: "Nastavi"
+        revoke: "Revoke"
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now."
         user: "User"
         title: "API"
         key: "Ključ"
-        created: Stvoreno
         updated: Ažurirano
-        last_used: Posljednji put korišten
-        never_used: (nikada)
+        never_used: Nikad
         generate: "Generate"
-        undo_revoke: "Poništi Opoziv"
         revoke: "Revoke"
-        all_users: "All Users"
         active_keys: "Aktivni API ključevi"
         manage_keys: Upravljanje ključevima
         show_details: Detalji
         description: Opis
         no_description: (bez opisa)
         all_api_keys: Svi API ključevi
-        user_mode: Korisnički nivo
         impersonate_all_users: Impersonaliziraj bilo kojeg korisnika
-        single_user: "Jedan korisnik"
         save: Sačuvaj
         continue: Nastavi
         scopes:
@@ -3488,6 +3486,7 @@ bs_BA:
           installed: "Installed"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Embedding"
           user_api: "Korisnički API"
@@ -3725,10 +3724,7 @@ bs_BA:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
           title: "Colors"
-          edit: "Uređivanje paleta boja"
-          long_title: "Palete boja"
           about: "Izmijenite boje koje koriste vaše teme. Kreirajte novu paletu boja za početak."
-          new_name: "Nova paleta boja"
           copy_name_prefix: "Copy of"
           delete_confirm: "Izbrisati ovu paletu boja?"
           undo: "Vrati nazad"
@@ -3998,7 +3994,6 @@ bs_BA:
         logster:
           title: "Error Logs"
       watched_words:
-        title: "Pogledane Rijeći"
         search: "pretaži"
         clear_filter: "Clear"
         download: Skinuti
@@ -4064,6 +4059,7 @@ bs_BA:
         status: "Status"
         show_emails: "Prikaži e-mailove"
         hide_emails: "Hide Emails"
+        silence_reason: "Razlog za utišanje"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4265,7 +4261,6 @@ bs_BA:
           external_email: "Email"
           external_avatar_url: "Avatar URL"
       user_fields:
-        title: "User Fields"
         untitled: "Untitled"
         name: "Field Name"
         type: "Field Type"
@@ -4295,10 +4290,8 @@ bs_BA:
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:
-        description: "Možete prilagoditi bilo koji tekst na forumu. Počnite pretraživanjem u nastavku:"
         search: "Potražite tekst koji želite urediti"
-        title: "Poruka"
-        edit: "edit"
+        edit: "Edit"
         revert: "Vrati promjene"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
         go_back: "Nazad na pretragu"

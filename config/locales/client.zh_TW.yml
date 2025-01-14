@@ -322,6 +322,8 @@ zh_TW:
       abandon:
         yes_value: "捨棄"
         no_value: "繼續編輯"
+      dropdown:
+        view_all: "查看全部"
     topic_count_all:
       other: "檢視 %{count} 則新話題"
     topic_count_categories:
@@ -3023,8 +3025,7 @@ zh_TW:
               content: "群組"
             users:
               content: "使用者"
-            my_posts:
-              content: "我的貼文"
+            my_drafts:
               draft_count:
                 other: "%{count} 草稿"
             review:
@@ -3233,15 +3234,20 @@ zh_TW:
         add_owners: 添加所有者
         none_selected: "選擇一個群組以開始"
         no_custom_groups: "建立一個新的自訂群組"
+      api_keys:
+        edit: "編輯"
+        save: "保存"
+        cancel: "取消"
+        continue: "繼續"
+        revoke: "撤回"
       api:
         generate_master: "產生主 API 金鑰"
         none: "目前沒有啟用中的 API 金鑰。"
         user: "使用者"
         title: "API"
         key: "金鑰"
-        created: 已建立
         updated: 更新時間
-        never_used: (永不)
+        never_used: 永不
         generate: "產生"
         revoke: "撤銷"
         all_users: "所有使用者"
@@ -3400,6 +3406,7 @@ zh_TW:
           installed: "已安裝"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "開發人員"
           embedding: "嵌入"
           user_api: "使用者 API"
@@ -3640,10 +3647,7 @@ zh_TW:
             title: "選擇調色盤"
             description: "基本顏色："
           title: "顏色"
-          edit: "編輯調色盤"
-          long_title: "調色盤"
           about: "修改您的佈景主題所使用的顏色，建立一個新調色盤以開始。"
-          new_name: "新調色盤"
           copy_name_prefix: "複製於"
           delete_confirm: "刪除此調色盤？"
           undo: "復原"
@@ -3901,7 +3905,6 @@ zh_TW:
         logster:
           title: "錯誤紀錄"
       watched_words:
-        title: "已關注的文字"
         search: "搜尋"
         clear_filter: "清除"
         download: 下載
@@ -3983,6 +3986,7 @@ zh_TW:
         status: "狀態"
         show_emails: "顯示電子郵件"
         hide_emails: "隱藏 email"
+        silence_reason: "靜音原因"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4184,7 +4188,6 @@ zh_TW:
           external_email: "電子信箱"
           external_avatar_url: "個人資料圖片 URL"
       user_fields:
-        title: "使用者欄位"
         untitled: "未命名"
         name: "欄位名稱"
         type: "欄位類別"
@@ -4217,9 +4220,7 @@ zh_TW:
           confirm: "確認"
           dropdown: "下拉"
       site_text:
-        description: "你可以自定義論壇的任意文本。請按以下搜尋："
         search: "搜尋你想要編輯的文本"
-        title: "文字"
         edit: "編輯"
         revert: "恢復變更"
         revert_confirm: "你確定要撤回這個改動?"
@@ -4408,7 +4409,6 @@ zh_TW:
           save: "保存"
       reseed:
         action:
-          label: "取代文字⋯⋯"
           title: "將分類與話題的文字以翻譯文字取代。"
         modal:
           title: "取代文字"

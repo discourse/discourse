@@ -460,6 +460,8 @@ nl:
         confirm: "Je hebt al een concept openstaan. Wat wil je ermee doen?"
         yes_value: "Weggooien"
         no_value: "Bewerken hervatten"
+      dropdown:
+        view_all: "alles weergeven"
     topic_count_all:
       one: "%{count} nieuw topic weergeven"
       other: "%{count} nieuwe topics weergeven"
@@ -4409,7 +4411,6 @@ nl:
         everyone_can_use: "Tags kunnen door iedereen worden gebruikt"
         usable_only_by_groups: "Tags zijn zichtbaar voor iedereen, maar alleen de volgende groepen kunnen ze gebruiken"
         visible_only_to_groups: "Tags zijn alleen zichtbaar voor de volgende groepen"
-        cannot_save: "Kan taggroep niet opslaan. Zorg dat er minimaal één tag aanwezig is, dat de naam van de taggroep niet leeg en korter dan 100 tekens is en dat er een groep is geselecteerd voor tagstoestemming."
         tags_placeholder: "Zoek of maak tags"
         parent_tag_placeholder: "Optioneel"
         select_groups_placeholder: "Selecteer groepen…"
@@ -4620,11 +4621,9 @@ nl:
             users:
               content: "Gebruikers"
               title: "Lijst van alle gebruikers"
-            my_posts:
-              content: "Mijn berichten"
-              content_drafts: "Mijn concepten"
-              title: "Mijn recente topicactiviteit"
-              title_drafts: "Mijn ongeplaatste concepten"
+            my_drafts:
+              content: "Mijn concepten"
+              title: "Mijn ongeplaatste concepten"
               draft_count:
                 one: "%{count} concept"
                 other: "%{count} concepten"
@@ -4764,7 +4763,6 @@ nl:
           never: "nooit"
       reports:
         title: "Lijst van beschikbare rapporten"
-        meta_doc: "Bekijk onze <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentatie</a> voor een gedetailleerd overzicht van de rapporten."
         sidebar_title: "Rapporten"
         sidebar_link:
           all: "Alle rapporten"
@@ -4983,6 +4981,14 @@ nl:
         add_owners: Eigenaren toevoegen
         none_selected: "Selecteer een groep om te beginnen"
         no_custom_groups: "Een nieuwe aangepaste groep maken"
+      api_keys:
+        title: "API-sleutels"
+        edit: "Bewerken"
+        save: "Opslaan"
+        cancel: "Annuleren"
+        continue: "Doorgaan"
+        revoke: "Intrekken"
+        revoked: "Ingetrokken"
       api:
         generate_master: "Master-API-sleutel genereren"
         none: "Er zijn op dit moment geen actieve API-sleutels."
@@ -4990,12 +4996,10 @@ nl:
         title: "API"
         key: "Sleutel"
         keys: "Sleutels"
-        created: Gemaakt
+        created: Gemaakt door
         updated: Bijgewerkt
-        last_used: Laatst gebruikt
-        never_used: (nooit)
+        never_used: Nooit
         generate: "Genereren"
-        undo_revoke: "Intrekken ongedaan maken"
         revoke: "Intrekken"
         all_users: "Alle gebruikers"
         active_keys: "Actieve API-sleutels"
@@ -5004,16 +5008,13 @@ nl:
         description: Beschrijving
         no_description: (geen beschrijving)
         all_api_keys: Alle API-sleutels
-        user_mode: Gebruikersniveau
         scope_mode: Bereik
         impersonate_all_users: Een gebruiker imiteren
-        single_user: "Enkele gebruiker"
         user_placeholder: Voer gebruikersnaam in
         description_placeholder: Waar wordt deze sleutel voor gebruikt?
         save: Opslaan
         new_key: Nieuwe API-sleutel
         revoked: Ingetrokken
-        delete: Permanent verwijderen
         not_shown_again: Deze sleutel wordt niet meer weergegeven. Zorg dat je een kopie maakt voordat je verder gaat.
         continue: Doorgaan
         scopes:
@@ -5027,8 +5028,6 @@ nl:
           global_description: API-sleutel heeft geen beperking en alle eindpunten zijn toegankelijk.
           resource: Bron
           action: Actie
-          allowed_parameters: Toegestane parameters
-          optional_allowed_parameters: Toegestane parameters (optioneel)
           any_parameter: (alle parameters)
           allowed_urls: Toegestane URL's
           descriptions:
@@ -5423,6 +5422,7 @@ nl:
         sidebar_link:
           api_keys:
             title: "API-sleutels"
+          webhooks: "Webhooks"
           developer: "Ontwikkelaar"
           embedding: "Insluiting"
           user_api: "Gebruikers-API"
@@ -5568,6 +5568,7 @@ nl:
           browse_themes: "Communitythema's bekijken"
           customize_desc: "Aanpassen:"
           title: "Thema's"
+          description: "Thema's zijn uitgebreide aanpassingen die meerdere elementen van de stijl van je forumontwerp wijzigen en vaak ook extra functies aan de voorkant bevatten."
           create: "Maken"
           create_type: "Type"
           create_name: "Naam"
@@ -5777,10 +5778,7 @@ nl:
             title: "Basiskleurenpalet selecteren"
             description: "Basispalet"
           title: "Kleuren"
-          edit: "Kleurenpaletten bewerken"
-          long_title: "Kleurenpaletten"
           about: "De door je thema's gebruikte paletten aanpassen. Maak een nieuw palet om te beginnen."
-          new_name: "Nieuw kleurenpalet"
           copy_name_prefix: "Kopie van"
           delete_confirm: "Dit kleurenpalet verwijderen?"
           undo: "Ongedaan maken"
@@ -6123,7 +6121,6 @@ nl:
         logster:
           title: "Foutenlogs"
       watched_words:
-        title: "Geobserveerde woorden"
         search: "zoeken"
         clear_filter: "Wissen"
         show_words:
@@ -6277,6 +6274,7 @@ nl:
         status: "Status"
         show_emails: "E-mailadressen weergeven"
         hide_emails: "E-mailadressen verbergen"
+        silence_reason: "Reden van dempen"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6560,7 +6558,6 @@ nl:
           delete_sso_record: "SSO-record verwijderen"
           confirm_delete: "Weet je zeker dat je dit DiscourseConnect-record wilt verwijderen?"
       user_fields:
-        title: "Gebruikersvelden"
         untitled: "Geen titel"
         name: "Veldnaam"
         type: "Veldtype"
@@ -6602,10 +6599,8 @@ nl:
           dropdown: "Vervolgkeuzelijst"
           multiselect: "Meervoudige selectie"
       site_text:
-        description: "Je kunt alle tekst op je forum aanpassen. Begin door hieronder te zoeken:"
         search: "Zoek de tekst die je wilt bewerken"
-        title: "Tekst"
-        edit: "bewerken"
+        edit: "Bewerken"
         revert: "Wijzigingen ongedaan maken"
         revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
         go_back: "Terug naar Zoeken"
@@ -6900,7 +6895,6 @@ nl:
           save: "Opslaan"
       reseed:
         action:
-          label: "Tekst vervangen…"
           title: "Tekst van categorieën en topics vervangen door vertalingen"
         modal:
           title: "Tekst vervangen"

@@ -21,7 +21,6 @@ nl:
     chat_minimum_message_length: "Minimumaantal tekens voor een chatbericht."
     chat_allow_uploads: "Sta uploads toe in openbare chatkanalen en kanalen voor directe berichten."
     chat_archive_destination_topic_status: "De status die het bestemmingstopic moet hebben zodra een kanaalarchivering is voltooid. Dit is alleen van toepassing als het bestemmingstopic een nieuw onderwerp is en geen bestaand topic."
-    default_emoji_reactions: "Standaard emojireacties voor chatberichten. Voeg maximaal 5 emoji's toe voor een snelle reactie."
     direct_message_enabled_groups: "Sta gebruikers binnen deze groepen toe privéchats van gebruiker tot gebruiker te maken. Opmerking: medewerkers kunnen altijd privéchats maken en gebruikers kunnen reageren op privéchats die zijn gestart door gebruikers die toestemming hebben om ze te maken."
     chat_message_flag_allowed_groups: "Gebruikers in deze groepen kunnen chatberichten markeren. Houd er rekening mee dat beheerders en moderators altijd chatberichten kunnen markeren."
     max_mentions_per_chat_message: "Maximale aantal @naam-vermeldingen dat een gebruiker in een chatbericht kan gebruiken."

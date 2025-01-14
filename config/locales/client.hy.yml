@@ -458,6 +458,8 @@ hy:
         confirm: "Դուք արդեն ունեք սևագիր: Ի՞նչ կցանկանայիք անել դրա հետ:"
         yes_value: "Ջնջել"
         no_value: "Վերսկսել խմբագրումը"
+      dropdown:
+        view_all: "դիտել բոլոը"
     topic_count_all:
       one: "Տեսնել %{count} նոր թեման"
       other: "Դիտել %{count} նոր թեմաները"
@@ -3776,8 +3778,6 @@ hy:
               content: "Խմբեր"
             users:
               content: "Օգտատերեր"
-            my_posts:
-              content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
             invite:
@@ -3989,29 +3989,30 @@ hy:
         add_owners: Ավելացնել սեփականատեր
         none_selected: "Ընտրեք խումբ՝ մեկնարկի համար"
         no_custom_groups: "Ստեղծել նոր մասնավոր խումբ"
+      api_keys:
+        edit: "Խմբագրել"
+        save: "Պահպանել"
+        cancel: "Չեղարկել"
+        continue: "Շարունակել"
+        revoke: "Հետ կանչել"
+        revoked: "Հետկանչված"
       api:
         generate_master: "Գեներացնել Master API Key"
         none: "Ակտիվ API Key այս պահին չկա:"
         user: "Օգտատեր"
         title: "API"
         key: "Բանալի"
-        created: Ստեղծված
         updated: Թարմացված
-        last_used: Վերջին Օգտագործվածը
-        never_used: (երբեք)
+        never_used: Երբեք
         generate: "Գեներացնել"
-        undo_revoke: "Ետարկել Հետկանչումը "
         revoke: "Հետ կանչել"
-        all_users: "Բոլոր Օգտատերերը"
         active_keys: "Ակտիվ API Բանալիներ "
         manage_keys: Կառավարել Բանալիները
         show_details: Մանրամասներ
         description: Նկարագրություն
         no_description: (նկարագրություն չկա)
         all_api_keys: Բոլոր API Բանալիները
-        user_mode: Օգտատերերի Մակարդակ
         impersonate_all_users: Ներկայանալ որպես օգտատեր
-        single_user: "Առանձին Օգտատեր "
         user_placeholder: Մուտքագրեք օգտանունը
         description_placeholder: 'Ինչի՞ համար է օգտագործվելու այս բանալին:'
         save: Պահպանել
@@ -4185,6 +4186,7 @@ hy:
           installed: "Տեղադրված"
       advanced:
         sidebar_link:
+          webhooks: "Webhook-ներ"
           developer: "Ծրագրավորող"
           embedding: "Զետեղում"
           user_api: "Օգտատիրոջ API"
@@ -4437,10 +4439,7 @@ hy:
             title: "Ընտրել հիմնական գունապնակը"
             description: "Հիմնական գունապնակ՝"
           title: "Գույներ"
-          edit: "Խմբագրել Գունապնակները"
-          long_title: "Գունապնակներ"
           about: "Փոփոխեք Ձեր թեմաների կողմից օգտագործված գույները: Ստեղծեք նոր գունապնակ՝ մեկնարկի համար:"
-          new_name: "Նոր Գունապնակ"
           copy_name_prefix: "Կրկնօրինակ՝ "
           delete_confirm: "Ջնջե՞լ այս գունապնակը:"
           undo: "Ետարկել"
@@ -4718,7 +4717,6 @@ hy:
         logster:
           title: "Սխալների Գրառումներ"
       watched_words:
-        title: "Դիտված Բառեր"
         search: "որոնում"
         clear_filter: "Ջնջել"
         download: Ներբեռնել
@@ -4791,6 +4789,7 @@ hy:
         status: "Ստատուս"
         show_emails: "Ցուցադրել Էլ. հասցեները"
         hide_emails: "Թաքցնել Էլ. նամակները"
+        silence_reason: "Լռեցման Պատճառը"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5019,7 +5018,6 @@ hy:
           external_email: "Էլ. հասցե"
           external_avatar_url: "Պրոֆիլի Նկարի URL"
       user_fields:
-        title: "Օգտատիրոջ Դաշտերը"
         untitled: "Անվերնագիր"
         name: "Դաշտի Անվանումը"
         type: "Դաշտի Տիպը"
@@ -5042,10 +5040,8 @@ hy:
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:
-        description: "Դուք կարող եք անհատականացնել Ձեր ֆորումի տեսքտերից ցանկացածը: Խնդրում ենք սկսել ներքևի որոնումից՝ "
         search: "Որոնել տեքստը, որը կցանկանայիք խմբագրել"
-        title: "Տեքստ"
-        edit: "խմբագրել"
+        edit: "Խմբագրել"
         revert: "Վերադարձնել Փոփոխությունները"
         revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել կատարված փոփոխությունները:"
         go_back: "Վերադարձ Որոնմանը"
@@ -5246,7 +5242,6 @@ hy:
           save: "Պահպանել"
       reseed:
         action:
-          label: "Փոխարինել Տեքստը..."
           title: "Փոխարինել կատեգորիաների և թեմաների տեքստը թարգմանություններով"
         modal:
           title: "Փոխարինել Տեքստը"

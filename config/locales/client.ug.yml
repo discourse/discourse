@@ -460,6 +460,8 @@ ug:
         confirm: "بىر دەسلەپكى نۇسخىڭىز داۋاملىشىۋاتىدۇ. ئۇنى قانداق قىلماقچى بولۇۋاتىسىز؟"
         yes_value: "تاشلىۋەت"
         no_value: "تەھرىرلەشنى ئەسلىگە كەلتۈر"
+      dropdown:
+        view_all: "ھەممىنى كۆرسەت"
     topic_count_all:
       one: "%{count} يېڭى تېمىنى كۆرۈڭ"
       other: "%{count} يېڭى تېمىنى كۆرۈڭ"
@@ -2359,6 +2361,7 @@ ug:
     full_name_requirement:
       required_at_signup: "زۆرۈر"
       optional_at_signup: "تاللاشچان"
+      hidden_at_signup: "تاللاشچان، تىزىملاتقاندا يوشۇرۇن"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4438,7 +4441,6 @@ ug:
         everyone_can_use: "بەلگىنى ھەممەيلەن ئىشلىتەلەيدۇ"
         usable_only_by_groups: "بەلگە ھەممەيلەنگە كۆرۈنىدۇ ئەمما تۆۋەندىكى گۇرۇپپىدىكىلەرلا ئۇلارنى ئىشلىتەلەيدۇ"
         visible_only_to_groups: "بەلگە تۆۋەندىكى گۇرۇپپىلارغىلا كۆرۈنىدۇ"
-        cannot_save: "بەلگە گۇرۇپپىسىنى ساقلىغىلى بولمايدۇ. كەم دېگەندە بىر خەتكۈچنىڭ بارلىقى، بەلگە گۇرۇپپىسىنىڭ ئىسمى بوش بولماسلىقى ۋە 100 ھەرپتىن ئاز بولۇشى، بەلگە ئىجازەتنامىسىگە بىر گۇرۇپپا تاللانغانلىقىغا كاپالەتلىك قىلىڭ."
         tags_placeholder: "بەلگە ئىزدە ياكى قۇر"
         parent_tag_placeholder: "تاللاشچان"
         select_groups_placeholder: "گۇرۇپپا تاللا…"
@@ -4649,11 +4651,9 @@ ug:
             users:
               content: "ئىشلەتكۈچى"
               title: "بارلىق ئىشلەتكۈچى تىزىمى"
-            my_posts:
-              content: "يازمىلىرىم"
-              content_drafts: "دەسلەپكى نۇسخام"
-              title: "يېقىنقى تېما پائالىيىتىم"
-              title_drafts: "يوللىمىغان دەسلەپكى نۇسخام"
+            my_drafts:
+              content: "دەسلەپكى نۇسخام"
+              title: "يوللىمىغان دەسلەپكى نۇسخام"
               draft_count:
                 one: "%{count} دەسلەپكى نۇسخا"
                 other: "%{count} دەسلەپكى نۇسخا"
@@ -4793,7 +4793,6 @@ ug:
           never: "ھەرگىز"
       reports:
         title: "مەۋجۇت دوكلات تىزىمى"
-        meta_doc: "بىزنىڭ <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>قوللانما</a>مىزغا كۆز يۈگۈرتۈپ، پاش قىلىشنىڭ تەپسىلىي مەزمۇنىنى ئىگىلەڭ."
         sidebar_title: "دوكلات"
         sidebar_link:
           all: "بارلىق دوكلات"
@@ -4830,6 +4829,9 @@ ug:
           title: "ئىشەنچ دەرىجىسى"
         user_api:
           title: "ئىشلەتكۈچى API"
+        group_permissions:
+          title: "گۇرۇپپا ئىجازىتى"
+          header_description: "بارلىق گۇرۇپپا ئاساسىدىكى ئەپ ئىجازەتلىرى بۇ جايدا باشقۇرۇلىدۇ، ئۇلار Discourse تىكى ھەر خىل ئىقتىدارلارنىڭ زىيارەت ئىجازىتىنى تىزگىنلەيدۇ"
       new_features:
         title: "يېڭىلىق?"
         check_for_updates: "يېڭىلانمىنى تەكشۈر"
@@ -4904,6 +4906,17 @@ ug:
         custom_date_range: ئىختىيارى چېسلا دائىرىسى
         reports:
           trend_title: "ئۆزگىرىش %{percent}. نۆۋەتتىكى %{current}، ئالدىنقى مەزگىلدە %{prev}"
+          percent_change_tooltip: "%{percent} ئۆزگەردى."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "ئىككى كۈن ئىلگىرى %{count}"
+              other: "ئىككى كۈن ئىلگىرى %{count}"
+            two_weeks_ago:
+              one: "ئىككى ھەپتە ئىلگىرى %{count}"
+              other: "ئىككى ھەپتە ئىلگىرى %{count}"
+            thirty_days_ago:
+              one: "ئۆتكەن 30 كۈن ئىچىدە %{count}"
+              other: "ئۆتكەن 30 كۈن ئىچىدە %{count}"
           today: "بۈگۈن"
           yesterday: "تۈنۈگۈن"
           last_7_days: "ئۆتكەن 7 كۈن"
@@ -5022,6 +5035,19 @@ ug:
         add_owners: ئىگىسىگە قوش
         none_selected: "باشلايدىغان توپ تاللىنىدۇ"
         no_custom_groups: "يېڭى ئىختىيارى توپ قۇرىدۇ"
+      api_keys:
+        title: "API ئاچقۇچى"
+        add: "API ئاچقۇچى قوش"
+        edit: "تەھرىر"
+        save: "ساقلا"
+        cancel: "ۋاز كەچ"
+        continue: "داۋاملاشتۇر"
+        back: "API ئاچقۇچقا قايت"
+        revoke: "بىكار قىل"
+        undo_revoke: "بىكار قىلىشتىن يېنىۋال"
+        revoked: "بىكار قىلىندى"
+        delete: مەڭگۈلۈك ئۆچۈر
+        no_api_keys: "سىزدە تېخى ھېچقانداق API ئاچقۇچ يوق."
       api:
         generate_master: "ئاساسىي API ئاچقۇچى ھاسىللايدۇ"
         none: "ھازىرچە ئاكتىپ API ئاچقۇچى يوق."
@@ -5029,10 +5055,10 @@ ug:
         title: "API"
         key: "ئاچقۇچ"
         keys: "ئاچقۇچ"
-        created: قۇرغان ۋاقتى
+        created: قۇرغۇچى
         updated: يېڭىلاندى
         last_used: ئاخىرقى ئىشلەتكەن ۋاقتى
-        never_used: (ھەرگىز)
+        never_used: ھەرگىز
         generate: "ھاسىللا"
         undo_revoke: "بىكار قىلىشتىن يېنىۋال"
         revoke: "بىكار قىل"
@@ -5290,6 +5316,7 @@ ug:
           notifications: "ئۇقتۇرۇش"
           permalinks: "ئۆزگەرمەس ئۇلانما"
           trust_levels: "ئىشەنچ دەرىجىسى"
+          group_permissions: "گۇرۇپپا ئىجازىتى"
           users: "ئىشلەتكۈچى"
           groups: "گۇرۇپپا"
           user_fields: "ئىشلەتكۈچى بۆلىكى"
@@ -5316,12 +5343,16 @@ ug:
         sidebar_link:
           appearance: "كۆرۈنۈش"
           server_setup:
+            title: "مۇلازىمېتىر تەڭشىكى ۋە خاتىرە"
             keywords: "ئېلخەت|smtp|mailgun|sendgrid|يوللاندى|ئاتلىدى|قاڭقىدى|تاپشۇرۇۋالغان|رەت قىلىندى|ئېلخەت خاتىرىسى|ئالدىن كۆزىتىش ئۈزۈندىسى"
       security:
         title: "بىخەتەرلىك"
         sidebar_link:
           security: "بىخەتەرلىك تەڭشىكى"
           spam: "ئەخلەت خەت تەڭشىكى"
+          staff_action_logs:
+            title: "خاتىرە ۋە سۈزۈش"
+            keywords: "خاتالىق خاتىرىسى|خادىم مەشغۇلاتى|تەكشۈرۈلگەن ئېلخەت|تەكشۈرۈلگەن ips|تەكشۈرۈلگەن تور ئادرېسى|ئىزدەش خاتىرىسى"
       section_landing_pages:
         account:
           title: "ھېسابات"
@@ -5477,6 +5508,7 @@ ug:
         sidebar_link:
           api_keys:
             title: "API ئاچقۇچى"
+          webhooks: "تور ئىلمىكى"
           developer: "ئىجادكار"
           embedding: "سىڭدۈرمە"
           rate_limits: "باھا چېكى"
@@ -5624,6 +5656,7 @@ ug:
           browse_themes: "جامائەت ئۆرنەككە كۆز يۈگۈرت"
           customize_desc: "ئىختىيارى:"
           title: "ئۆرنەك"
+          description: "ئۆرنەك كېڭەيتىلگەن خاسلاشتۇرۇش بولۇپ، مۇنبەر لايىھەيىڭىزدىكى كۆپلىگەن ئېلېمېنتلارنى ئۆزگەرتەلەيسىز، ئادەتتە قوشۇمچە ئالدى ئۇچ ئىقتىدارلىرىنى ئۆز ئىچىگە ئالىدۇ."
           create: "قۇر"
           create_type: "تىپى"
           create_name: "ئىسمى"
@@ -6335,6 +6368,7 @@ ug:
         status: "ھالەت"
         show_emails: "ئېلخەتنى كۆرسەت"
         hide_emails: "ئېلخەتنى يوشۇر"
+        silence_reason: "سۈكۈت قىلىش سەۋەبى"
         bulk_actions:
           title: "توپ مەشغۇلات"
           admin_cant_be_deleted: "بۇ ئىشلەتكۈچى باشقۇرغۇچى بولغاچقا ئۆچۈرگىلى بولمايدۇ"
@@ -6701,9 +6735,8 @@ ug:
           dropdown: "تارتما تىزىملىك"
           multiselect: "كۆپ تاللاش"
       site_text:
-        description: "مۇنبىرىڭىزدىكى خالىغان تېكىستنى ئىختىيارى تەڭشىيەلەيسىز. تۆۋەندىكى ئىزدەشتىن باشلاڭ:"
         search: "تەھرىرلىمەكچى بولغان تېكىستنى ئىزدەيدۇ"
-        title: "تېكىست"
+        title: "بېكەت تېكىستى"
         edit: "تەھرىر"
         revert: "ئۆزگەرتىشنى ئەسلىگە قايتۇر"
         revert_confirm: "ئۆزگەرتىشىڭىزنى راستتىنلا ئەسلىگە قايتۇرامسىز؟"
@@ -6950,8 +6983,16 @@ ug:
 
           <p><b>DISCOURSE_USERNAME</b> نى يازما يازغۇچىنىڭ Discourse ئىشلەتكۈچى ئاتىغا ئالماشتۇرىدۇ. Discourse ئۆزى <code>&lt;meta&gt;</code> بەلگىسى ئارقىلىق <code>content</code> خاسلىقى بىلەن ئىشلەتكۈچىنى ئۆزلۈكىدىن ئىزدەيدۇ، ئۇنىڭدىكى <code>name</code> خاسلىقى <code>discourse-username</code> ياكى <code>author</code> غا تەڭشىلىدۇ. <code>discourseUserName</code> پارامېتىرىنى ئىشلەتمەيدۇ ھەمدە Discourse 3.2 دىن چىقىرىۋېتىدۇ.</p>
         title: "سىڭدۈرمە"
+        host: "يول قويىدىغان مۇلازىمېتىر"
+        allowed_paths: "يول ئىجازەت تىزىمى"
         edit: "تەھرىر"
+        category: "سەھىپىگە ئېلان قىلىدۇ"
         tags: "تېما بەلگىسى"
+        post_author: "يازما يازغۇچى"
+        post_author_with_default: "يازما يازغۇچى ( كۆڭۈلدىكىسى %{author})"
+        add_host: "مۇلازىمېتىر قوش"
+        posts_and_topics: "يازما ۋە تېما سەپلىمىسى"
+        crawlers: "ئۆمىلىگۈچ سەپلىمىسى"
         crawlers_description: "Discourse تېمىڭىزغا يازما قۇرغاندا، ئەگەر RSS/ATOM مەنبەسى مەۋجۇت بولمىسا، ئۇ HTML دىن مەزمۇنلىرىڭىزنى يېشىشنى سىنايدۇ. بەزىدە مەزمۇنىڭىزنى ئاجرىتىپ ئېلىش رىقابەتكە تولغان بولغاچقا، بىز CSS قائىدىسىنى بەلگىلەيدىغان ئىقتىدارنى تەمىنلەپ ئاجرىتىش جەريانى ئاسانلاشتۇردۇق."
         embed_by_username: "تېما قۇرغۇچىنىڭ ئىشلەتكۈچى ئاتى"
         embed_post_limit: "سىڭدۈرىدىغان ئەڭ كۆپ يازما سانى"
@@ -6962,10 +7003,18 @@ ug:
         blocked_embed_selectors: "قىستۇرمىدىن چىقىرىۋەتكەن ئېلېمېنتلارنىڭ CSS تاللىغۇچىسى"
         allowed_embed_classnames: "يول قويۇلىدىغان CSS خىلىنىڭ ئىسمى"
         save: "ساقلا"
+        posts_and_topics_settings_saved: "يازما ۋە تېما تەڭشىكى ساقلاندى"
+        crawler_settings_saved: "ئۆمىلىگۈچ تەڭشىكى ساقلاندى"
+        back: "سىڭدۈرمىگە قايت"
+        configuration_snippet: "سەپلىمە پارچىسى"
         host_form:
+          add_header: "مۇلازىمېتىر قوش"
+          edit_header: "مۇلازىمېتىر تەھرىر"
           save: "ساقلا"
         nav:
+          hosts: "مۇلازىمېتىر"
           settings: "تەڭشەكلەر"
+          posts_and_topics: "يازما ۋە تېما"
           crawlers: "ئۆمىلىگۈچ"
       permalink:
         title: "ئۆزگەرمەس ئۇلانما"
@@ -7035,6 +7084,7 @@ ug:
           moderator: "رىياسەتچى"
           regular: "ئادەتتكى ئىشلەتكۈچى"
       previews:
+        topic_title: "قانداق كىتاب ئوقۇيسىز؟"
         share_button: "ھەمبەھىر"
         reply_button: "جاۋاب"
         topic_preview: "تېما ئالدىن كۆزىتىش"
@@ -7048,6 +7098,13 @@ ug:
           latest: "ئاخىرقى"
           hot: "قىزىق"
           categories: "سەھىپە"
+        topic_titles:
+          what_books: "قانداق كىتاب ئوقۇيسىز؟"
+          what_movies: "يېقىندا قايسى كىنونى كۆردىڭىز؟"
+          random_fact: "شۇ كۈندىكى تاسادىپىي پاكىت"
+          tv_show: "تېلېۋىزىيە پروگراممىسىنى تەۋسىيە قىلىدۇ"
+          what_music: "ھازىر نېمە ئاڭلاۋاتىسىز؟"
+          funniest_thing: "بۈگۈن سىز كۆرگەن ئەڭ قىزىقارلىق ئىش"
         category_names:
           news: "خەۋەر"
           site_feedback: "بېكەت قايتۇرما ئىنكاسى"

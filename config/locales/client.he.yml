@@ -558,6 +558,8 @@ he:
         confirm: "כבר יש טיוטה שהתחלת לערוך. מה לעשות אתה?"
         yes_value: "להשליך"
         no_value: "לחזור לעריכה"
+      dropdown:
+        view_all: "להציג הכול"
     topic_count_all:
       one: "הצגת נושא חדש"
       two: "הצגת שני נושאים חדשים"
@@ -4915,7 +4917,6 @@ he:
         everyone_can_use: "ניתן להשתמש בתגיות בכל מקום"
         usable_only_by_groups: "התגיות גלויות לכולם אך רק הקבוצות הבאות יכולות להשתמש בהן"
         visible_only_to_groups: "התגיות גלויות לקבוצות הבאות בלבד"
-        cannot_save: "לא ניתן לשמור את קבוצת התגיות. נא לוודא שיש לפחות תגית אחד, ששם קבוצת התגיות אינו ריק, הוא באורך של פחות מ־100 תווים וושנבחרה קבוצה לצורך הרשאת תגיות."
         tags_placeholder: "חיפוש או יצירת תגיות"
         parent_tag_placeholder: "רשות"
         select_groups_placeholder: "בחירת קבוצות…"
@@ -5138,11 +5139,9 @@ he:
             users:
               content: "משתמשים"
               title: "רשימת כל המשתמשים"
-            my_posts:
-              content: "הפוסטים שלי"
-              content_drafts: "הטיוטות שלי"
-              title: "הפעילות האחרונה שלי בנושא"
-              title_drafts: "הטיוטות שלא פרסמתי"
+            my_drafts:
+              content: "הטיוטות שלי"
+              title: "הטיוטות שלא פרסמתי"
               draft_count:
                 one: "טיוטה %{count}"
                 two: "%{count} טיוטות"
@@ -5294,7 +5293,6 @@ he:
           never: "אף פעם"
       reports:
         title: "רשימת דיווחים זמינים"
-        meta_doc: "אפשר לעיין ב<a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>תיעוד</a> שלנו לסקירה מפורטת של הדוחות."
         sidebar_title: "דוחות"
         sidebar_link:
           all: "כל הדיווחים"
@@ -5328,11 +5326,13 @@ he:
           header_description: "הגדרה איך התראות מנוהלות ונמסרות למשתמשים, כולל העדפות דוא״ל התראות בדחיפה, מגבלות אזכור ואיחוד התראות"
         onebox:
           title: "תיבת תחימה"
+          header_description: "הגדרה כיצד תצוגות מקדימות בתיבות תחימה נוצרות ומוצגות באתר שלך"
         other:
           title: "אחר"
           header_description: "הגדרות שלא מתאימות לאף קטגוריה אחרת"
         rate_limits:
           title: "מגבלות קצב"
+          header_description: "הגדרה באיזו תדירות יוכלו המשתמשים לבצע פעולות מסוימות כגון יצירת פוסטים, שליחת הודעות ופרסום תגובות"
         search:
           title: "חיפוש"
           header_description: "הגדרת תצורת חיפוש לרבות תיעוד ופירוק לאסימונים בסינית וביפנית"
@@ -5552,6 +5552,20 @@ he:
         add_owners: הוספת בעלים
         none_selected: "נא לבחור קבוצה כדי להתחיל"
         no_custom_groups: "יצירת קבוצה מותאמת אישית"
+      api_keys:
+        title: "מפתחות API"
+        description: "יכולת מפתחות ה־API מאפשר לך לשלב את Discourse מול מערכות חיצוניות ולבצע פעולות אוטומטית. מנהלים יכולים ליצור מפתחות עם תחומי הרשאה מסוימים כדי לשלוט בגישה למשאבים ולנתונים רגישים. תחומי הרשאה מגבילים יכולות, כדי לשפר את אבטחת המידע."
+        add: "הוספת מפתח API"
+        edit: "עריכה"
+        save: "שמירה"
+        cancel: "ביטול"
+        continue: "המשך"
+        back: "חזרה למפתחות API"
+        revoke: "שלול"
+        undo_revoke: "ביטול שלילה"
+        revoked: "נשל"
+        delete: מחיקה לצמיתות
+        no_api_keys: "עדיין אין לך מפתחות API עדיין."
       api:
         generate_master: "יצירת מפתח ראשי ל־API"
         none: "אין מפתחות API פעילים כרגע."
@@ -5559,10 +5573,10 @@ he:
         title: "API"
         key: "מפתח"
         keys: "מפתחות"
-        created: נוצר
+        created: נוצר על ידי
         updated: עודכן
         last_used: שימוש אחרון
-        never_used: (אף פעם)
+        never_used: לעולם לא
         generate: "ייצר"
         undo_revoke: "ביטול שלילה"
         revoke: "שלול"
@@ -5582,7 +5596,7 @@ he:
         save: שמירה
         new_key: מפתח API חדש
         revoked: נשל
-        delete: למחוק לצמיתות
+        delete: מחיקה לצמיתות
         not_shown_again: המפתח הזה לא יוצג עוד. נא לוודא שהעתקת אותו לפני המשך הפעילות שלך.
         continue: המשך
         scopes:
@@ -6018,7 +6032,8 @@ he:
         sidebar_link:
           api_keys:
             title: "מפתחות API"
-            keywords: "אסימון|התליה|ובהוק|webhook"
+            keywords: "אסימון"
+          webhooks: "Webhooks"
           developer: "מפתחים"
           embedding: "שילוב (embedding)"
           rate_limits: "מגבלות קצב"
@@ -6166,6 +6181,7 @@ he:
           browse_themes: "עיון בערכות העיצוב של הקהילה"
           customize_desc: "התאמה אישית:"
           title: "ערכות עיצוב"
+          description: "ערכות עיצוב הן ערכות מתרחבות שמשנות מגוון פריטי עיצוב לסגנון הפורום שלך ובדרך כלל כוללים גם יכולות מצד מנשק המשתמש."
           create: "יצירה"
           create_type: "סוג"
           create_name: "שם"
@@ -6391,7 +6407,8 @@ he:
             description: "לוח בסיסי:"
           title: "צבעים"
           edit: "עריכת לוחות צבעים"
-          long_title: "לוחות צבעים"
+          long_title: "ערכות צבעים"
+          description: "לוחות צבעים מגדירים את צבעי היסוד שממשק האתר שלך משתמש בהם, על אף שערכות עיצוב יכולות לספק עיצוב, פריסות ורכיבים בנוסף - שני אלו יכולים לעבוד יחד כדי ליצור את המראה והתחושה הייחודיים של האתר שלך ואת שניהם אפשר להגיש למשתמשים כדי שיוכלו לבחור מביניהם."
           about: "שינוי הצבעים המכהנים בערכות העיצוב שלך. עליך ליצור לוח צבעים כדי להתחיל."
           new_name: "לוח צבעים חדש"
           copy_name_prefix: "העתק של"
@@ -6737,6 +6754,7 @@ he:
           title: "יומני שגיאות"
       watched_words:
         title: "מילים במעקב"
+        description: "מילים במעקב הן כלי פיקוח שיכול לבצע מספר פעולות לרבות חסימה, צנזור, קישור או סימון פוסטים שמכילים מילים מסוימות"
         search: "חיפוש"
         clear_filter: "ניקוי"
         show_words:
@@ -6893,6 +6911,7 @@ he:
         status: "מצב"
         show_emails: "הצגת כתובות דוא״ל"
         hide_emails: "הסתרת כתובות דוא״ל"
+        silence_reason: "סיבת השתקה"
         bulk_actions:
           title: "פעולות במרוכז"
           admin_cant_be_deleted: "אי אפשר למחוק את המשתמש כי הוא חבר הנהלה"
@@ -7271,9 +7290,9 @@ he:
           dropdown: "נגלל"
           multiselect: "מגוון בחירות"
       site_text:
-        description: "ניתן להתאים כל טקסט בפורום שלך. נא להתחיל בחיפוש שלהלן:"
+        description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
         search: "חיפוש הטקסט שמיועד לעריכה"
-        title: "טקסט"
+        title: "טקסטים של האתר"
         edit: "עריכה"
         revert: "ביטול שינויים"
         revert_confirm: "לבטל את השינויים שלך?"

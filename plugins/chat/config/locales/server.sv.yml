@@ -20,7 +20,6 @@ sv:
     chat_minimum_message_length: "Minsta antal tecken för ett chattmeddelande."
     chat_allow_uploads: "Tillåt uppladdningar i offentliga chattkanaler och direktmeddelandekanaler."
     chat_archive_destination_topic_status: "Den status som målämnet ska ha när ett kanalarkiv är slutfört. Detta gäller endast när målämnet är ett nytt ämne, inte ett befintligt."
-    default_emoji_reactions: "Standardval av emoji-reaktioner för chattmeddelanden. Lägg till upp till 5 emojis som snabbval."
     direct_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa personliga chattar från användare till användare. Obs: personal kan alltid skapa personliga chattar och användare kommer att kunna svara på personliga chattar som initieras av användare som har tillstånd att skapa dem."
     max_mentions_per_chat_message: "Maximalt antal @namnomnämnanden en användare kan göra i ett chattmeddelande."
     chat_max_direct_message_users: "Användare kan inte lägga till fler än detta antal andra användare när de skapar ett nytt direktmeddelande. Ställ in till 0 för att endast tillåta meddelanden till sig själv. Personalen är undantagen från denna inställning."

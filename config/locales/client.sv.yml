@@ -391,6 +391,8 @@ sv:
         confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
+      dropdown:
+        view_all: "visa alla"
     topic_count_all:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
@@ -4263,11 +4265,9 @@ sv:
             users:
               content: "Användare"
               title: "Lista över alla användare"
-            my_posts:
-              content: "Mina inlägg"
-              content_drafts: "Mina utkast"
-              title: "Min senaste ämnesaktivitet"
-              title_drafts: "Mina utkast som inte har publicerats"
+            my_drafts:
+              content: "Mina utkast"
+              title: "Mina utkast som inte har publicerats"
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
@@ -4399,7 +4399,6 @@ sv:
           never: "aldrig"
       reports:
         title: "Lista över tillgängliga rapporter"
-        meta_doc: "Utforska vår <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentation</a> för att se en detaljerad översikt över rapporterna."
         sidebar_title: "Rapporter"
         sidebar_link:
           all: "Alla rapporter"
@@ -4597,6 +4596,13 @@ sv:
         add_owners: Lägg till ägare
         none_selected: "Välj en grupp för att komma igång"
         no_custom_groups: "Skapa en egen grupp"
+      api_keys:
+        edit: "Redigera"
+        save: "Spara"
+        cancel: "Avbryt"
+        continue: "Fortsätt"
+        revoke: "Upphäv"
+        revoked: "Återkallad"
       api:
         generate_master: "Generera API-huvudnyckel"
         none: "Det finns inga aktiva API-nycklar just nu."
@@ -4604,12 +4610,10 @@ sv:
         title: "API"
         key: "Key"
         keys: "Nycklar"
-        created: Skapad
+        created: Skapad av
         updated: Uppdaterad
-        last_used: Senast använd
-        never_used: (aldrig)
+        never_used: Aldrig
         generate: "Generera"
-        undo_revoke: "Ångra återkallelse"
         revoke: "Återkalla"
         all_users: "Alla användare"
         active_keys: "Aktiva API-nycklar"
@@ -4618,16 +4622,13 @@ sv:
         description: Beskrivning
         no_description: (ingen beskrivning)
         all_api_keys: Alla API-nycklar
-        user_mode: Användarnivå
         scope_mode: Omfattning
         impersonate_all_users: Imitera en användare
-        single_user: "Enstaka användare"
         user_placeholder: Ange användarnamn
         description_placeholder: Vad används denna nyckel till?
         save: Spara
         new_key: Ny API-nyckel
         revoked: Upphävd
-        delete: Radera permanent
         not_shown_again: Denna nyckel kommer inte att visas igen. Försäkra dig om att du har tagit en kopia innan du fortsätter.
         continue: Fortsätt
         scopes:
@@ -4641,8 +4642,6 @@ sv:
           global_description: API-nyckeln har ingen begränsning och alla slutpunkter är tillgängliga.
           resource: Resurs
           action: Åtgärd
-          allowed_parameters: Tillåtna parametrar
-          optional_allowed_parameters: Tillåtna parametrar (valfritt)
           any_parameter: (valfri parameter)
           allowed_urls: Tillåtna webbadresser
           descriptions:
@@ -4932,6 +4931,7 @@ sv:
       advanced:
         title: "Avancerat"
         sidebar_link:
+          webhooks: "Webhookar"
           developer: "Utvecklare"
           embedding: "Inbäddning"
           user_api: "Användar-API"
@@ -5252,10 +5252,7 @@ sv:
             title: "Välj grundfärgspalett"
             description: "Grundpalett:"
           title: "Färger"
-          edit: "Ändra färgpaletter"
-          long_title: "Färgpaletter"
           about: "Modifiera färgerna som används av ditt tema. Lägg till en ny färgpalett för att börja."
-          new_name: "Ny färgpalett"
           copy_name_prefix: "Kopia av"
           delete_confirm: "Radera den här färgpaletten?"
           undo: "Ångra"
@@ -5579,7 +5576,6 @@ sv:
         logster:
           title: "Felprotokoll"
       watched_words:
-        title: "Bevakade ord"
         search: "sök"
         clear_filter: "Rensa"
         show_words:
@@ -5727,6 +5723,7 @@ sv:
         status: "Status"
         show_emails: "Visa e-post"
         hide_emails: "Dölj e-post"
+        silence_reason: "Anledning till att tysta"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6003,7 +6000,6 @@ sv:
           delete_sso_record: "Ta bort SSO-post"
           confirm_delete: "Är du säker på att du vill radera denna DiscourseConnect-post?"
       user_fields:
-        title: "Användarfält"
         untitled: "Namnlös"
         name: "Fältnamn"
         type: "Fälttyp"
@@ -6037,10 +6033,8 @@ sv:
           dropdown: "Rullgardinsmeny"
           multiselect: "Multival"
       site_text:
-        description: "Du kan anpassa all text på ditt forum. Börja genom att söka här nedan:"
         search: "Sök efter texten som du vill redigera"
-        title: "Text"
-        edit: "redigera"
+        edit: "Redigera"
         revert: "Ångra ändringarna"
         revert_confirm: "Är du säker på att du vill ångra dina ändringar?"
         go_back: "Tillbaka till sökningen"
@@ -6281,7 +6275,6 @@ sv:
           save: "Spara"
       reseed:
         action:
-          label: "Ersätt text..."
           title: "Ersätt text på kategorier och ämnen med översättningar"
         modal:
           title: "Ersätt text"

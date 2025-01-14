@@ -2373,12 +2373,17 @@ id:
         delete: "Hapus"
         add: "Menambahkan"
         automatic: "Otomatis"
+      api_keys:
+        edit: "Ubah"
+        save: "Simpan"
+        cancel: "Batal"
+        continue: "Lanjutkan"
+        revoke: "Cabut"
       api:
         user: "Pengguna"
         title: "API"
         keys: "Kunci"
-        created: Dibuat
-        never_used: (tidak pernah)
+        never_used: Tidak pernah
         revoke: "Cabut"
         show_details: Detil
         description: Deskripsi
@@ -2764,7 +2769,7 @@ id:
             description: "Saat pengguna baru mendaftar, mereka harus mengisi kolom ini. Pengguna yang sudah ada tidak terpengaruh."
           confirmation: "Ini akan meminta pengguna yang ada untuk mengisi kolom ini dan tidak akan mengizinkan mereka melakukan hal lain di situs Anda hingga kolom tersebut terisi. Lanjutkan?"
       site_text:
-        edit: "ubah"
+        edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"
         show_untranslated: "Hanya tampilkan yang belum diterjemahkan"
         no_results: "Tidak ditemukan teks situs yang cocok"

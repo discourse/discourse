@@ -311,6 +311,8 @@ gl:
       abandon:
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
+      dropdown:
+        view_all: "ver todos"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -3362,8 +3364,6 @@ gl:
               content: "Grupos"
             users:
               content: "Usuarios"
-            my_posts:
-              content: "As miñas publicacións"
             review:
               content: "Revisar"
             invite:
@@ -3580,35 +3580,36 @@ gl:
         add_owners: Engadir propietarios
         none_selected: "Selecciona un grupo para comezar"
         no_custom_groups: "Crear un novo grupo personalizado"
+      api_keys:
+        edit: "Editar"
+        save: "Gardar"
+        cancel: "Cancelar"
+        continue: "Continuar"
+        revoke: "Revogar"
+        revoked: "Revogada"
       api:
         generate_master: "Xerar unha chave maestra da API"
         none: "Non hai chaves activas da API agora mesmo."
         user: "Usuario"
         title: "API"
         key: "Chave"
-        created: Creado
+        created: Creado por
         updated: Actualizado
-        last_used: Último utilizado
-        never_used: (nunca)
+        never_used: Nunca
         generate: "Xerar"
-        undo_revoke: "Desfacer revogar"
         revoke: "Revogar"
-        all_users: "Todos os usuarios"
         active_keys: "Claves activas da API"
         manage_keys: Xestionar chaves
         show_details: Detalles
         description: Descrición
         no_description: (sen descrición)
         all_api_keys: Todas as claves da API
-        user_mode: Nivel de usuario
         impersonate_all_users: Suplantar calquera usuario
-        single_user: "Usuario único"
         user_placeholder: Escribe un nome de usuario
         description_placeholder: Para que se usa esta chave?
         save: Gardar
         new_key: Nova clave API
         revoked: Revogada
-        delete: Eliminar definitivamente
         not_shown_again: Esta clave non se amosará de novo. Asegúrese de ter unha copia antes de continuar.
         continue: Continuar
         scopes:
@@ -3618,8 +3619,6 @@ gl:
           title: Ámbitos
           resource: Recurso
           action: Acción
-          allowed_parameters: Parámetros permitidos
-          optional_allowed_parameters: Parámetros permitidos (opcional)
           any_parameter: (calquera parámetro)
           allowed_urls: URL permitidos
           descriptions:
@@ -3783,6 +3782,7 @@ gl:
           installed: "Instalado"
       advanced:
         sidebar_link:
+          webhooks: "Enganches de web (webhooks)"
           developer: "Desenvolvedor"
           embedding: "Incorporando"
           user_api: "API de usuario"
@@ -4056,10 +4056,7 @@ gl:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
           title: "Cores"
-          edit: "Editar paletas de cores"
-          long_title: "Paletas de cores"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
-          new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Eliminar esta paleta de cores?"
           undo: "Desfacer"
@@ -4359,7 +4356,6 @@ gl:
         logster:
           title: "Rexistros de erros"
       watched_words:
-        title: "Palabras observadas"
         search: "buscar"
         clear_filter: "Borrar"
         show_words:
@@ -4439,6 +4435,7 @@ gl:
         status: "Estado"
         show_emails: "Amosar correos"
         hide_emails: "Agochar correos"
+        silence_reason: "Razón do silencio"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4683,7 +4680,6 @@ gl:
           delete_sso_record: "Eliminar o rexistro de SSO"
           confirm_delete: "Confirma que quere eliminar este rexistro do DiscourseConnect?"
       user_fields:
-        title: "Campos do usuario"
         untitled: "Sen título"
         name: "Nome do campo"
         type: "TIpo de campo"
@@ -4713,10 +4709,8 @@ gl:
           confirm: "Confirmación"
           dropdown: "Despregábel"
       site_text:
-        description: "Pode personalizar calquera texto do seu foro. Comece por buscar a seguir:"
         search: "Busque o texto que quere editar"
-        title: "Texto"
-        edit: "editar"
+        edit: "Editar"
         revert: "Reverter os cambios"
         revert_confirm: "Confirma a reversión dos cambios?"
         go_back: "Volver á busca"
@@ -4927,7 +4921,6 @@ gl:
           save: "Gardar"
       reseed:
         action:
-          label: "Substituír texto…"
           title: "Substituír o texto das categorías e temas coas traducións"
         modal:
           title: "Substituír texto"

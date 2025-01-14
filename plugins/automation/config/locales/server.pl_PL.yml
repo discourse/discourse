@@ -24,6 +24,8 @@ pl_PL:
       category_created_edited:
         title: Kategoria utworzona/edytowana
         description: Gdy kategoria zostanie utworzona lub edytowana, uruchomiona zostanie automatyzacja.
+      recurring:
+        title: Powtarzający się
       point_in_time:
         title: Punkt w czasie
         description: Gdy data zostanie osiągnięta, uruchomiona zostanie automatyzacja
@@ -37,6 +39,8 @@ pl_PL:
         title: Użytkownik promowany
         description: Gdy użytkownik awansuje z jednego poziomu zaufania na inny
         transition_placeholder: "od %{from_level_name} do %{to_level_name}"
+      stalled_wiki:
+        title: Zatrzymana wiki
       post_created_edited:
         title: Post utworzony/edytowany
       pm_created:
@@ -98,3 +102,6 @@ pl_PL:
         button_text: Zrobione
       group_category_notification_default:
         description: "Ustaw domyślny poziom powiadomień kategorii dla członków grupy."
+      random_assign:
+        title: "Przypisanie losowe"
+        description: "Losowo przypisuje tematy do grupy"

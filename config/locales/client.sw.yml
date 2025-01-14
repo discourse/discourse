@@ -2330,8 +2330,6 @@ sw:
               content: "Vikundi"
             users:
               content: "Watumiaji"
-            my_posts:
-              content: "Machapisho Yangu"
             invite:
               content: "Mualiko"
       filter: "Chuja..."
@@ -2497,15 +2495,19 @@ sw:
         add_owners: Ongeza Wamiliki
         none_selected: "Chagua kikundi kuanza"
         no_custom_groups: "Tengeneza kikundi kipya"
+      api_keys:
+        edit: "Hariri"
+        save: "Hifadhi"
+        cancel: "Ghairi"
+        continue: "Endelea"
+        revoke: "Futa"
       api:
         none: "Hakuna funguo za API zilizo amilifu kwa sasa."
         user: "Mtumiaji"
         title: "API"
-        created: Imetengenezwa
-        never_used: (kamwe)
+        never_used: Kamwe
         generate: "Tengeneza"
         revoke: "Futa"
-        all_users: "Watumiaji Wote"
         show_details: Taarifa
         description: Maelezo
         save: hifadhi
@@ -3014,7 +3016,6 @@ sw:
         logster:
           title: "Batli ya Hitilafu"
       watched_words:
-        title: "Maneno yanayoangaliwa"
         search: "tafuta"
         clear_filter: "Futa"
         download: Pakua
@@ -3073,6 +3074,7 @@ sw:
         not_found: "Samahani, jina la mtumiaji halipo kwenye mfupo wetu."
         id_not_found: "Samahani, utambulisho wa mtumiaji haupo kwenye mfumo wetu."
         show_emails: "Onyesha Barua Pepe"
+        silence_reason: "Nyamazisha Sababu"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -3264,7 +3266,6 @@ sw:
           external_email: "Barua Pepe"
           external_avatar_url: "Linki au kiungo cha Picha ya Mtumiaji"
       user_fields:
-        title: "Sehemu za Watumiaji"
         untitled: "Hakuna Kichwa cha Taarifa"
         name: "Jina la Sehemu ya Taarifa"
         type: "Aina ya Taarifa"
@@ -3294,10 +3295,8 @@ sw:
           confirm: "Uhakikisho"
           dropdown: "Shusha Chini"
       site_text:
-        description: "Unaweza kufanya maneno ya jamii yako yawe unavyotaka wewe. Tafadhali anza kwa kufanya utafiti hapo chini:"
         search: "tafuta maneno ambayo ungependa kuhariri"
-        title: "Neno"
-        edit: "hariri"
+        edit: "Hariri"
         revert: "Ondoa Mabadiliko"
         revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
         go_back: "Rudi kwenye Utafiti"

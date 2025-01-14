@@ -345,6 +345,8 @@ da:
       abandon:
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
+      dropdown:
+        view_all: "vis alle"
     topic_count_all:
       one: "Se %{count} nyt emne"
       other: "Se %{count} nye emner"
@@ -3776,10 +3778,9 @@ da:
               content: "Grupper"
             users:
               content: "Brugere"
-            my_posts:
-              content: "Mine indlæg"
-              content_drafts: "Mine Kladder"
-              title_drafts: "Mine uopslåede kladder"
+            my_drafts:
+              content: "Mine Kladder"
+              title: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
             invite:
@@ -4025,35 +4026,36 @@ da:
         add_owners: Tilføj ejere
         none_selected: "Vælg en gruppe for at komme i gang"
         no_custom_groups: "Opret en ny brugerdefineret gruppe"
+      api_keys:
+        edit: "Rediger"
+        save: "Gem"
+        cancel: "Annuller"
+        continue: "Fortsæt"
+        revoke: "Tilbagekald"
+        revoked: "Tilbagekaldt"
       api:
         generate_master: "Generér API-nøgle"
         none: "Der er ingen aktive API-nøgler i øjeblikket."
         user: "Bruger"
         title: "API"
         key: "Nøgle"
-        created: Oprettet
+        created: Oprettet af
         updated: Opdateret
-        last_used: Sidst Brugt
-        never_used: (aldrig)
+        never_used: Aldrig
         generate: "Generér"
-        undo_revoke: "Fortryd tilbagekaldelse"
         revoke: "Tilbagekald"
-        all_users: "Alle brugere"
         active_keys: "Aktive API-nøgler"
         manage_keys: Administrer nøgler
         show_details: Detaljer
         description: Beskrivelse
         no_description: (Ingen beskrivelse)
         all_api_keys: Alle API-nøgler
-        user_mode: Brugerniveau
         impersonate_all_users: Efterlign enhver bruger
-        single_user: "Enkelt Bruger"
         user_placeholder: Indtast brugernavn
         description_placeholder: Hvad skal denne nøgle bruges til?
         save: Gem
         new_key: Ny API-nøgle
         revoked: Tilbagekaldt
-        delete: Slet permanent
         not_shown_again: Denne nøgle vil ikke blive vist igen. Sørg for at tage en kopi før du fortsætter.
         continue: Fortsæt
         scopes:
@@ -4065,8 +4067,6 @@ da:
           global: Globalt
           resource: Ressource
           action: Handling
-          allowed_parameters: Tilladte parametre
-          optional_allowed_parameters: Tilladte parametre (valgfrit)
           any_parameter: (enhver parameter)
           allowed_urls: Tilladte URL'er
           descriptions:
@@ -4255,6 +4255,7 @@ da:
       advanced:
         title: "Avanceret"
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Udvikler"
           embedding: "Indlejring"
           user_api: "Bruger API"
@@ -4547,10 +4548,7 @@ da:
             title: "Vælg basisfarvepalet"
             description: "Basispalet:"
           title: "Farver"
-          edit: "Rediger farvepaletter"
-          long_title: "Farvepaletter"
           about: "Rediger de farver, der bruges af dine temaer. Opret en ny farvepalet for at starte."
-          new_name: "Ny farvepalet"
           copy_name_prefix: "Kopi af"
           delete_confirm: "Slet denne farvepalet?"
           undo: "Fortryd"
@@ -4857,7 +4855,6 @@ da:
         logster:
           title: "Fejl beskeder"
       watched_words:
-        title: "Overvågede ord"
         search: "Søg"
         clear_filter: "Ryd"
         show_words:
@@ -4971,6 +4968,7 @@ da:
         status: "Status"
         show_emails: "Vis Emails"
         hide_emails: "Skjul emails"
+        silence_reason: "Årsag for mådeholdenhed (silence)"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5227,7 +5225,6 @@ da:
           delete_sso_record: "Slet SSO Registrering"
           confirm_delete: "Er du sikker på at, du vil slette dette DiscourseConect-Indlæg?"
       user_fields:
-        title: "Bruger felter"
         untitled: "Ingen titel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5261,10 +5258,8 @@ da:
           dropdown: "Rulleboks"
           multiselect: "Multivælg"
       site_text:
-        description: "Du kan ændre alt tekst på dette forum. Start med at søge herunder:"
         search: "Søg efter teksten du gerne vil rette"
-        title: "Tekst"
-        edit: "ret"
+        edit: "Rediger"
         revert: "Rul ændringer tilbage"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
         go_back: "Tilbage til søgning"
@@ -5486,7 +5481,6 @@ da:
           save: "Gem"
       reseed:
         action:
-          label: "Erstat tekst ..."
           title: "Erstat teksten af kategorier og emner med oversættelser"
         modal:
           title: "Erstat tekst"

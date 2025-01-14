@@ -21,7 +21,6 @@ sq:
     chat_minimum_message_length: "Numri minimal i karaktereve për një kanal bisede."
     chat_allow_uploads: "Lejo ngarkimet në kanalet e bisedës publike dhe kanalet e mesazheve direkte."
     chat_archive_destination_topic_status: "Statusi që duhet të jetë tema e synuar pasi të përfundojë ruajtja në kanal. Kjo vlen vetëm kur tema e synuar është një temë e re, jo një aktuale."
-    default_emoji_reactions: "Reagimet e parazgjedhura të ikonave për mesazhet e bisedës, Shtoni deri në 5 ikona për reagim të shpejtë."
     direct_message_enabled_groups: "Lejo përdoruesit brenda këtyre grupeve të krijojnë biseda personale nga përdoruesi në përdorues. Shënim: stafi mund të krijojë gjithmonë biseda personale dhe përdoruesit do të mund t'u përgjigjen bisedave personale të krijuara nga përdoruesit që kanë leje për t'i krijuar ato."
     chat_message_flag_allowed_groups: "Përdoruesit në këto grupe lejohen të raportojnë mesazhet e bisedës. Vini re se administratorët dhe moderatorët mund të raportojnë gjithmonë mesazhet e bisedës."
     max_mentions_per_chat_message: "Numri maksimal i njoftimeve me emër që një përdorues mund të përdorë në një mesazh bisede."

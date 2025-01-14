@@ -160,6 +160,7 @@ sq:
       removed_user: "Hequr %{who} %{when}"
       removed_group: "Hequr %{who} %{when}"
       autobumped: "Kaloi automatikisht %{when}"
+      category_changed: "Kategoria u përditësua %{when}"
       autoclosed:
         enabled: "Mbylli %{when}"
         disabled: "Hapur %{when}"
@@ -457,6 +458,8 @@ sq:
         confirm: "Tashmë keni një projekt në zhvillim. Çfarë do të dëshironit të bëni me të?"
         yes_value: "Harroni"
         no_value: "Vazhdoni zhvillimin"
+      dropdown:
+        view_all: "shikoni të gjitha"
     topic_count_all:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
@@ -3942,8 +3945,6 @@ sq:
               content: "Grupet"
             users:
               content: "Users"
-            my_posts:
-              content: "Postimet e mia"
             invite:
               content: "Fto"
     form_templates:
@@ -4078,16 +4079,20 @@ sq:
         automatic: "Automatik"
         group_owners: Pronarët
         add_owners: Shto pronarë
+      api_keys:
+        edit: "Redaktoni"
+        save: "Ruani"
+        cancel: "Anulo"
+        continue: "Vazhdoni"
+        revoke: "Revoko"
       api:
         generate_master: "Gjenero Master API Key"
         none: "Për momentin, nuk ka çelësa API aktivë."
         user: "Përdorues"
         title: "API"
-        created: Krijuar
-        never_used: (asnjëherë)
+        never_used: Asnjëherë
         generate: "Gjenero"
         revoke: "Revoko"
-        all_users: "Gjithë Përdoruesit"
         show_details: Detaje
         description: Përshkrimi
         save: Ruaj
@@ -4177,6 +4182,7 @@ sq:
           installed: "Instaluar"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Embedding"
           user_api: "API e përdoruesit"
@@ -4687,7 +4693,6 @@ sq:
           external_email: "Email"
           external_avatar_url: "URL e fotos së profilit"
       user_fields:
-        title: "Fushat e përdoruesit"
         untitled: "Pa Titull"
         name: "Fusha e emrit"
         type: "Field Type"
@@ -4712,10 +4717,8 @@ sq:
           confirm: "Konfirmimi"
           dropdown: "Listë Dropdown"
       site_text:
-        description: "Mund të adaptoni çdo tekst në këtë faqe. Filloni duke bërë një kërkim më poshtë: "
         search: "Kërkoni për tekstin që dëshironi të redaktoni"
-        title: "Tekst"
-        edit: "redakto"
+        edit: "Redaktoni"
         revert: "Rikthe ndryshimet"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
         go_back: "Kthehu tek kërkimi"
