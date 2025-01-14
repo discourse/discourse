@@ -110,8 +110,10 @@ pl_PL:
               label: Ograniczone do kategorii
             stalled_after:
               label: Opóźnienie wyzwalania
+              description: Definiuje opóźnienie między ostatnią edycją wiki a uruchomieniem automatyzacji.
             retriggered_after:
               label: Opóźnienie ponownego wyzwalania
+              description: Określa opóźnienie między pierwszym a kolejnym wyzwoleniem, jeśli wiki nie została jeszcze edytowana po pierwszym wyzwoleniu.
         user_added_to_group:
           fields:
             joined_group:

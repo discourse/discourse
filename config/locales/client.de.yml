@@ -4482,7 +4482,7 @@ de:
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           edit_section:
-            sidebar: "Diesen Abschnitt anpassen"
+            sidebar: "Abschnitt anpassen"
             header_dropdown: "Anpassen"
           links:
             about:
@@ -5259,7 +5259,7 @@ de:
           other_options: "Sonstiges"
           search: "Suche"
           experimental: "Experimentell"
-          all_site_settings: "Alle Website-Einstellungen"
+          all_site_settings: "Website-Einstellungen"
       navigation_menu:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"

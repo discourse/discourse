@@ -3776,6 +3776,7 @@ ro:
                 too_large: "trebuie să fie mai mic sau egal cu %{count}"
         colors:
           title: "Culori"
+          long_title: "Palete de culori"
           copy_name_prefix: "Copie a"
           undo: "Anulează acțiunea"
           undo_title: "Revino asupra schimbărilor aduse acestei culori, de ultima oară când a fost salvată și până acum."

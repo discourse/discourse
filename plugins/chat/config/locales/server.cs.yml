@@ -9,17 +9,23 @@ cs:
     chat_separate_sidebar_mode: "Zobrazit samostatné režimy postranního panelu pro fórum a chat."
     chat_enabled: "Povolit chat."
     chat_channel_retention_days: "Zprávy chatu v běžných kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
-    chat_dm_retention_days: "Zprávy chatu v osobních kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
+    chat_dm_retention_days: "Zprávy chatu v soukromých kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
     chat_auto_silence_duration: "Počet minut, po které budou uživatelé ztišeni, pokud překročí limit rychlosti vytváření zpráv chatu. Nastavením na hodnotu \"0\" automatické ztišování vypnete."
     chat_silence_user_sensitivity: "Pravděpodobnost, že uživatel nahlášený v chatu bude automaticky ztišen."
     chat_auto_silence_from_flags_duration: "Počet minut, po které budou uživatelé ztišeni, když jsou automaticky ztišeni kvůli nahlášeným zprávám chatu."
     chat_default_channel_id: "Kanál chatu, který se ve výchozím nastavení otevře, pokud uživatel nemá žádné nepřečtené zprávy nebo zmínky v jiných kanálech."
+    chat_duplicate_message_sensitivity: "Pravděpodobnost, že duplicitní zpráva od stejného odesílatele bude v krátké době zablokována. Desetinné číslo mezi 0 a 1,0, přičemž 1,0 je nejvyšší nastavení (blokuje zprávy častěji v kratším čase). Chcete-li povolit duplicitní zprávy, nastavte na `0`."
+    default_emoji_reactions: "Výchozí reakce emoji pro zprávy chatu. Přidejte až 5 emotikonů pro rychlou reakci."
+    max_mentions_per_chat_message: "Maximální počet @name upozornění, která může uživatel použít v chatové zprávě."
     chat_preferred_mobile_index: "Preferovaný panel při načítání /chatu na mobilu."
   system_messages:
     chat_channel_archive_complete:
       subject_template: "Archivace kanálů chatu byla úspěšně dokončena"
       text_body_template: |
         Archivace kanálu chatu %{channel_hashtag_or_name} byla úspěšně dokončena. Zprávy byly zkopírovány do tématu [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      text_body_template: |
+        Archivace kanálu chatu %{channel_hashtag_or_name} se nezdařila. Bylo archivováno %{messages_archived} zpráv. Částečně archivované zprávy byly zkopírovány do tématu [%{topic_title}](%{topic_url}). Navštivte kanál na adrese %{channel_url} a zkuste to znovu.
     chat_channel_archive_failed_no_topic:
       text_body_template: |
         Archivace kanálu chatu %{channel_hashtag_or_name} selhala. Žádné zprávy nebyly archivovány. Téma nebylo úspěšně vytvořeno z následujících důvodů:
@@ -35,8 +41,12 @@ cs:
       not_accepting_dms: "Bohužel, %{username} v současnosti nepřijímá zprávy."
       actor_disallowed_dms: "Rozhodli jste se zabránit uživatelům v zasílání soukromých a přímých zpráv, takže nemůžete vytvářet nové přímé zprávy."
       actor_preventing_target_user_from_dm: "Rozhodli jste se zabránit %{username} v zasílání soukromých a přímých zpráv, takže pro ně nemůžete vytvářet nové přímé zprávy."
+      thread_invalid_for_channel: "Vlákno není součástí daného kanálu."
+      thread_does_not_match_parent: "Vlákno neodpovídá nadřazené zprávě."
     reviewables:
       actions:
+        agree_and_keep_deleted:
+          title: "Ponechat zprávu smazanou"
         agree_and_suspend:
           title: "Zakázat uživatele"
           description: "Schválit nahlášení a pozastavit uživatele."
@@ -46,6 +56,13 @@ cs:
         disagree:
           title: "Neschvaluji"
     channel:
+      archive:
+        first_post_raw: "Toto téma je archivem chatovacího kanálu [%{channel_name}](%{channel_url})."
+      messages_moved:
+        one: "@%{acting_username} přesunul zprávu do kanálu [%{channel_name}](%{first_moved_message_url})."
+        few: "@%{acting_username} přesunul %{count} zprávy do kanálu [%{channel_name}](%{first_moved_message_url})."
+        many: "@%{acting_username} přesunul %{count} zpráv do kanálu [%{channel_name}](%{first_moved_message_url})."
+        other: "@%{acting_username} přesunul %{count} zpráv do kanálu [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
         multi_user_truncated:
@@ -67,7 +84,10 @@ cs:
         few: "%{first_identifier} a %{count} další skupiny mají příliš mnoho členů. Nikdo nebyl upozorněn."
         many: "%{first_identifier} a %{count} další skupin má příliš mnoho členů. Nikdo nebyl upozorněn."
         other: "%{first_identifier} a %{count} další skupin má příliš mnoho členů. Nikdo nebyl upozorněn."
-    personal_chat: "osobní chat"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "obsahuje znaky jiné než ASCII"
+    personal_chat: "soukromý chat"
     onebox:
       thread_title_connector: "v"
       x_members:
@@ -82,10 +102,12 @@ cs:
     popup:
       chat_mention:
         direct: 'Uživatel %{username} vás zmínil v "%{channel}"'
+        other_type: '%{username} zmínil %{identifier} v %{channel}'
       direct_message_chat_mention:
-        direct: "%{username} se o vás zmínil v osobním chatu"
-        other_type: "%{username} zmínil/a %{identifier} v osobním chatu"
-      new_direct_chat_message: "%{username} poslal/a zprávu v osobním chatu"
+        direct: "%{username} se o vás zmínil/a v soukromém chatu"
+        other_type: "%{username} zmínil/a %{identifier} v soukromém chatu"
+      new_chat_message: '%{username} poslal zprávu v "%{channel}“'
+      new_direct_chat_message: "%{username} poslal/a zprávu v soukromém chatu"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\\n\\n%{message}\n"
@@ -94,8 +116,36 @@ cs:
   user_notifications:
     chat_summary:
       deleted_user: "Smazaný uživatel"
+      from: "%{site_name}"
+      subject:
+        chat_dm_1:
+          one: "[%{site_name}] Nová zpráva od %{name}"
+          few: "[%{site_name}] Nové zprávy od %{name}"
+          many: "[%{site_name}] Nové zprávy od %{name}"
+          other: "[%{site_name}] Nové zprávy od %{name}"
+        chat_dm_2: "[%{site_name}] Nové zprávy od %{name_1} a %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Nové zprávy od %{name} a %{count} dalších"
+        chat_channel_1:
+          one: "[%{site_name}] Nová zpráva v %{channel}"
+          few: "[%{site_name}] Nové zprávy v %{channel}"
+          many: "[%{site_name}] Nové zprávy v %{channel}"
+          other: "[%{site_name}] Nové zprávy v %{channel}"
+        chat_channel_2: "[%{site_name}] Nové zprávy v %{channel_1} a %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Nové zprávy v %{channel} a %{count} dalších"
+        chat_channel_and_dm: "[%{site_name}] Nové zprávy v %{channel} a od %{name}"
       unsubscribe: "Tento souhrn chatu je odeslán z %{site_link}, když jste pryč. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení."
       unsubscribe_no_link: "Tento souhrn chatu je odesílán ze stránky %{site_link}, když jste pryč. Změňte svůj %{email_preferences_link}."
+      view_messages:
+        one: "Zobrazit zprávu"
+        few: "Zobrazit %{count} zprávy"
+        many: "Zobrazit %{count} zpráv"
+        other: "Zobrazit %{count} zpráv"
+      view_more:
+        one: "Zobrazit %{count} další zprávu"
+        few: "Zobrazit %{count} další zprávy"
+        many: "Zobrazit %{count} dalších zpráv"
+        other: "Zobrazit %{count} dalších zpráv"
+      your_chat_settings: "nastavení četnosti e-mailů v chatu"
   unsubscribe:
     chat_summary:
       never: Nikdy
