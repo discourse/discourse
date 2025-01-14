@@ -9,7 +9,7 @@ export function setupComposerPosition(editor) {
   function editorTouchMove(event) {
     // This is an alternative to locking up the body
     // It stops scrolling in the given element from bubbling up to the body
-    // when the textarea does not have any content to scroll
+    // when the editor does not have any content to scroll
     const notScrollable = editor.scrollHeight <= editor.clientHeight;
     if (notScrollable) {
       event.preventDefault();
@@ -41,7 +41,7 @@ export function setupComposerPosition(editor) {
 function correctScrollPosition() {
   // In some rare cases, when quoting a large text or
   // when editing a long topic, Safari/Firefox will scroll
-  // the body so that the input/textarea is centered
+  // the body so that the editor is centered
   // This pushes the fixed element offscreen
   // Here we detect when the composer's top position is above the window's
   // current scroll offset and correct it
