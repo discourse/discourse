@@ -200,26 +200,28 @@
 
               {{#unless this.hasResults}}
                 {{#if this.searchActive}}
-                  <h3>{{i18n "search.no_results"}}</h3>
+                  <div class="no-results-container">
+                    <h3>{{i18n "search.no_results"}}</h3>
 
-                  {{#if this.showSuggestion}}
-                    <div class="no-results-suggestion">
-                      {{i18n "search.cant_find"}}
-                      {{#if this.canCreateTopic}}
-                        <a
-                          href
-                          {{on "click" (fn this.createTopic this.searchTerm)}}
-                        >{{i18n "search.start_new_topic"}}</a>
-                        {{#unless this.siteSettings.login_required}}
-                          {{i18n "search.or_search_google"}}
-                        {{/unless}}
-                      {{else}}
-                        {{i18n "search.search_google"}}
-                      {{/if}}
-                    </div>
+                    {{#if this.showSuggestion}}
+                      <div class="no-results-suggestion">
+                        {{i18n "search.cant_find"}}
+                        {{#if this.canCreateTopic}}
+                          <a
+                            href
+                            {{on "click" (fn this.createTopic this.searchTerm)}}
+                          >{{i18n "search.start_new_topic"}}</a>
+                          {{#unless this.siteSettings.login_required}}
+                            {{i18n "search.or_search_google"}}
+                          {{/unless}}
+                        {{else}}
+                          {{i18n "search.search_google"}}
+                        {{/if}}
+                      </div>
 
-                    <GoogleSearch @searchTerm={{this.searchTerm}} />
-                  {{/if}}
+                      <GoogleSearch @searchTerm={{this.searchTerm}} />
+                    {{/if}}
+                  </div>
                 {{/if}}
               {{/unless}}
 
