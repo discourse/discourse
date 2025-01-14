@@ -439,6 +439,8 @@ nb_NO:
         confirm: "Du har allerede et utkast under arbeid. Hva vil du gjøre med det?"
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
+      dropdown:
+        view_all: "vis alle"
     topic_count_all:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
@@ -4340,8 +4342,6 @@ nb_NO:
               content: "Grupper"
             users:
               content: "Brukere"
-            my_posts:
-              content: "Mine innlegg"
             review:
               content: "Gjennomgang"
             invite:
@@ -4554,21 +4554,24 @@ nb_NO:
         add_owners: Legg til eiere
         none_selected: "Velg en gruppe for å komme i gang"
         no_custom_groups: "Opprett en ny egendefinert gruppe"
+      api_keys:
+        edit: "Endre"
+        save: "Lagre"
+        cancel: "Avbryt"
+        continue: "Fortsett"
+        revoke: "Trekk tilbake"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det finnes ingen aktive API-nøkler akkurat nå."
         user: "Bruker"
         title: "API"
-        created: Opprettet
         updated: Oppdatert
-        never_used: (aldri)
+        never_used: Aldri
         generate: "Generer API-nøkkel"
         revoke: "Trekk tilbake"
-        all_users: "Alle brukere"
         show_details: Detaljer
         description: Beskrivelse
         save: Lagre
-        delete: Slett permanent
         continue: Fortsett
         scopes:
           action: Handling
@@ -4725,6 +4728,7 @@ nb_NO:
           installed: "Installert"
       advanced:
         sidebar_link:
+          webhooks: "Webhooker"
           developer: "Utvikler"
           embedding: "Innbygging"
           user_api: "Bruker-API"
@@ -5235,7 +5239,6 @@ nb_NO:
         logster:
           title: "Feillogg"
       watched_words:
-        title: "Ord som holdes oppsyn med"
         search: "søk"
         clear_filter: "Tøm"
         download: Last ned
@@ -5300,6 +5303,7 @@ nb_NO:
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
         status: "Status"
         show_emails: "Vis e-poster"
+        silence_reason: "Årsak til demping"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5502,7 +5506,6 @@ nb_NO:
           external_email: "E-post"
           external_avatar_url: "Profilbilde URL"
       user_fields:
-        title: "Brukerfelter"
         untitled: "Uten tittel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5532,10 +5535,8 @@ nb_NO:
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:
-        description: "Du kan skreddersy all tekst på forumet ditt. Start ved å søke nedenfor:"
         search: "Søk etter tekst du ønsker å endre"
-        title: "Tekst"
-        edit: "rediger"
+        edit: "Endre"
         revert: "Tilbakestill endringer"
         revert_confirm: "Er du sikker på at du ønsker å tilbakestille dine endringer?"
         go_back: "Tilbake til søk"

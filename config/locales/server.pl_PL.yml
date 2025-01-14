@@ -292,6 +292,7 @@ pl_PL:
       invalid_site_setting: "Brak ustawienia o nazwie '%{name}'."
       invalid_category_id: "Podana kategoria nie istnieje"
       site_setting_is_hidden: "Nie masz uprawnień do zmiany ukrytych ustawień"
+      site_setting_is_shadowed_globally: "Nie możesz zmienić tego ustawienia, ponieważ jest ono skonfigurowane globalnie"
       site_setting_is_unconfigurable: "Nie masz uprawnień do zmiany ustawień niekonfigurowalnych"
       invalid_choice:
         one: "'%{name}' jest nieprawidłowym wyborem."
@@ -377,8 +378,11 @@ pl_PL:
     max_redemptions_limit: "powinien być między 2, a 1%{max_limit}"
   topic_invite:
     failed_to_invite: "Nie można zaprosić użytkownika do tego tematu, ponieważ nie jest członkiem choć jednej z następujących grup: %{group_names}."
+    not_pm: "Możesz zapraszać tylko do prywatnych wiadomości."
     user_exists: "Przepraszamy, ten użytkownik został już zaproszony. Możesz zaprosić użytkownika do tematu tylko raz."
     muted_topic: "Przepraszamy, ten użytkownik wyciszył ten temat."
+    receiver_does_not_allow_pm: "Niestety, ten użytkownik nie zezwala na wysyłanie wiadomości prywatnych."
+    sender_does_not_allow_pm: "Przepraszamy, nie zezwalasz temu użytkownikowi na wysyłanie Ci prywatnych wiadomości."
     user_cannot_see_topic: "%{username} nie może zobaczyć tematu."
   backup:
     operation_already_running: "Operacja jest już uruchomiona. Nie można teraz utworzyć nowej."
@@ -699,6 +703,7 @@ pl_PL:
               reply_by_email_disabled: "Odpowiedź przez e-mail została wyłączona."
               send_to_email_disabled: "Przepraszamy, nie możesz wysyłać prywatnych wiadomości na e-mail."
               target_user_not_found: "Jeden z użytkowników, do których chciałaś/łeś/łaś wysłać tę wiadomość nie został znaleziony."
+              too_large_group: "Grupa: %{group_name}, ma zbyt wielu użytkowników, aby otrzymać wiadomość. Limit wynosi %{limit}."
               unable_to_update: "Wystąpił błąd przy aktualizacji tego tematu."
               unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
               unable_to_unlist: "Przepraszamy, nie możesz utworzyć niepublicznego tematu."
@@ -1491,8 +1496,10 @@ pl_PL:
       yaxis: "Wszystkie odsłony"
       description: "Liczba nowych odsłon wszystkich użytkowników."
     page_view_legacy_total_reqs:
+      title: "Przestarzałe wyświetlenia stron"
       xaxis: "Dzień"
       yaxis: "Wszystkie odsłony"
+      description: "Przestarzały raport pokazujący liczbę nowych odsłon od wszystkich odwiedzających."
     page_view_logged_in_mobile_reqs:
       title: "Zalogowane odsłony"
       xaxis: "Dzień"
@@ -1738,6 +1745,7 @@ pl_PL:
     block_onebox_on_redirect: "Unikaj tworzenia oneboxów dla adresów URL prowadzących do przekierowań. Ta konfiguracja uniemożliwia tworzenie karty wizualnej (onebox) dla any adres URL, który przekierowuje do innej strony. Dzięki temu priorytet w wyświetlaniu oneboxów mają bezpośrednie adresy URL, które nie prowadzą do przekierowań."
     allowed_inline_onebox_domains: "Lista domen, które zostaną zamienione na osadzony onebox w zmniejszonej formie, jeśli będą umieszczone w poście bez tytułu"
     enable_inline_onebox_on_all_domains: "Zignoruj ustawienie witryny allowed_inline_onebox_domains i zezwalaj na wbudowane Onebox we wszystkich domenach."
+    onebox_locale: "Ustawienia regionalne wysyłane do dostawców onebox. Jeśli pozostanie puste, użyte zostaną domyślne ustawienia regionalne."
     force_custom_user_agent_hosts: "Hosty, dla których ma być używany niestandardowy klient użytkownika Onebox przy wszystkich żądaniach. (Szczególnie przydatne dla hostów, które ograniczają dostęp do agenta użytkownika)."
     max_oneboxes_per_post: "Ustaw maksymalną liczbę oneboxów, które można umieścić w jednym poście. Oneboxy zapewniają podgląd powiązanej treści bezpośrednio w poście."
     facebook_app_access_token: "Token wygenerowany z Twojego identyfikatora aplikacji Facebook i sekret. Używany do generowania osadzonych oneboxów z serwisu Instagram."
@@ -1809,6 +1817,7 @@ pl_PL:
     pending_users_reminder_delay_minutes: "Powiadom moderatorów, jeśli nowi użytkownicy czekają na zatwierdzenie dłużej niż tyle minut. Ustaw na -1, aby wyłączyć powiadomienia."
     persistent_sessions: "Użytkownicy pozostaną zalogowani po zamknięciu przeglądarki internetowej"
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
+    full_page_login: "Pokaż formularze logowania i rejestracji na pełnej stronie (po odznaczeniu tej opcji użytkownicy zobaczą formularze w oknie modalnym). "
     show_signup_form_email_instructions: Pokaż instrukcje e-mail w formularzu rejestracji.
     show_signup_form_username_instructions: Pokaż instrukcje dotyczące nazwy użytkownika w formularzu rejestracji.
     show_signup_form_full_name_instructions: Pokaż pełne instrukcje dotyczące nazwy w formularzu rejestracyjnym.
@@ -1859,9 +1868,11 @@ pl_PL:
     top_page_default_timeframe: "Domyślny okres górnej strony dla anonimowych użytkowników (automatycznie dostosowuje się do zalogowanych użytkowników na podstawie ich ostatniej wizyty)."
     moderators_view_emails: "Zezwalaj moderatorom na przeglądanie adresów e-mail użytkowników."
     prioritize_username_in_ux: "Pokaż nazwę użytkownika jako pierwszą na stronie użytkownika, jego karcie i w postach (gdy opcja jest wyłączona, pełna nazwa jest wyświetlana jako pierwsza)"
+    enable_rich_text_paste: "Włącz automatyczną konwersję HTML na Markdown podczas wklejania tekstu do kompozytora."
     send_old_credential_reminder_days: "Przypomnij o starych danych logowania po dniach"
     email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak, który jest formą nagrody w celu wzmocnienia pozytywnych działań użytkownika. Zobacz <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Czym są odznaki?</a> na Discourse Meta, aby uzyskać więcej informacji."
+    show_badges_in_post_header: "Gdy użytkownik zdobędzie odznakę za konkretny post, wyświetl ją w nagłówku posta."
     max_favorite_badges: "Maksymalna liczba odznak, które użytkownik może wybrać"
     whispers_allowed_groups: "Zezwalaj na prywatną komunikację w ramach tematów członkom określonych grup."
     hidden_post_visible_groups: "Zezwól członkom tych grup na przeglądanie ukrytych postów. Użytkownicy personelu zawsze mogą przeglądać ukryte posty."
@@ -2097,7 +2108,9 @@ pl_PL:
     title_fancy_entities: "Konwertuj typowe znaki ASCII na fantazyjne jednostki HTML w tytułach tematów, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimalna długość tytułu zanim zostanie sprawdzony z podobnymi tematami."
     desktop_category_page_style: "To ustawienie określa wizualny układ strony /categories na komputerze. Zawiera opcje takie jak wyświetlanie podkategorii z polecanymi tematami, pokazywanie najnowszych tematów lub prezentowanie najważniejszych tematów. Wybrany styl będzie miał wpływ na sposób interakcji użytkowników i poruszania się po kategoriach w witrynie."
+    mobile_category_page_style: "To ustawienie określa wizualny układ strony /categories na urządzeniach mobilnych."
     category_colors: "Lista kolorów w formacie hex do użycia w etykietach kategorii."
+    default_dark_mode_color_scheme_id: "Paleta kolorów używana w trybie ciemnym."
     dark_mode_none: "Brak"
     max_image_size_kb: "Maksymalny rozmiar przesyłanego obrazu. Należy to skonfigurować również w nginx (client_max_body_size) / apache lub proxy. Rozmiar obrazów większych i mniejszych niż client_max_body_size zostanie zmieniony tak, aby zmieściły się po przesłaniu."
     max_attachment_size_kb: "Maksymalny rozmiar przesyłanych plików załączników. Należy to skonfigurować również w nginx (client_max_body_size) / apache lub proxy."
@@ -2125,6 +2138,7 @@ pl_PL:
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     log_anonymizer_details: "Czy zachować dane użytkownika w dzienniku po anonimizacji."
+    display_eu_visitor_stats: "Pokaż liczbę odwiedzających z całego świata i UE na stronie /about. Po włączeniu tego ustawienia wyświetlenie statystyk może potrwać kilka minut."
     newuser_spam_host_threshold: "Jak wiele razy użytkownik może zamieścić link do tego samego hosta wewnątrz wpisów `newuser_spam_host_threshold` przed rozważeniem spamu."
     allowed_spam_host_domains: "Lista domen wykluczonych z testowania pod kątem spamu. Nowi użytkownicy nigdy nie będą ograniczani w dodawaniu wpisów z linkami do tych domen."
     staff_like_weight: "Jaką wagę polubienia przypisuje się personelowi (użytkownicy mają wagę 1)"
@@ -2181,6 +2195,7 @@ pl_PL:
     reset_bounce_score_after_days: "Automatycznie resetuj wskaźnik odrzuceń po X dniach."
     blocked_attachment_content_types: "Lista słów kluczowych używanych do blokowania załączników na podstawie typu zawartości."
     blocked_attachment_filenames: "Lista słów kluczowych używanych do blokowania załączników na podstawie nazwy pliku."
+    forwarded_emails_behaviour: "Jak traktować wiadomość e-mail przekazaną do Discourse? <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Dowiedz się więcej</a>"
     always_show_trimmed_content: "Zawsze pokazuj przyciętą część przychodzących e-maili. UWAGA: może ujawniać adresy e-mail."
     trim_incoming_emails: "Przytnij część przychodzących e-maili, które nie są istotne."
     private_email: "Nie umieszczaj treści z wpisów lub tematów w tytule lub treści e-maila. UWAGA: wyłącza także przetrawianie wiadomości e-mail."
@@ -2255,6 +2270,7 @@ pl_PL:
     anonymous_posting_allowed_groups: "Grupy, które mogą włączyć anonimowe publikowanie"
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
     hide_user_profiles_from_public: "Wyłącz karty użytkownika, profile użytkowników i katalog użytkowników dla użytkowników anonimowych."
+    hide_new_user_profiles: "Ukryj profile użytkowników poziomu zaufania 1 lub niższego przed innymi i użytkownikami poziomu zaufania 1, dopóki nie opublikują po raz pierwszy. Ta funkcja jest bezwarunkowo wyłączona w witrynach must_approve_users i invite_only."
     allow_users_to_hide_profile: "Zezwalaj użytkownikom na ukrywanie swojego profilu i statusu dostępności."
     hide_user_activity_tab: "Ukryj kartę aktywności na profilach użytkowników z wyjątkiem administratora i siebie."
     delete_associated_accounts_on_password_reset: "Usuń konto powiązane z użytkownikiem, gdy użytkownik zmieni hasło."
@@ -2286,6 +2302,7 @@ pl_PL:
     disable_tags_edit_notifications: "Wyłącz powiadomienia o zmianach tagów tematu. Obejmuje to tematy, które zostały \"opublikowane\" (np. udostępnione wersje robocze)."
     notification_consolidation_threshold: "Liczba polubień lub powiadomień o członkostwie otrzymanych przed połączeniem powiadomień w jedno. Ustaw 0 aby wyłączyć."
     likes_notification_consolidation_window_mins: "Czas w minutach, po którym powiadomienia o polubieniach są łączone w jedno powiadomienie. Próg można skonfigurować za pomocą `SiteSetting.notification_consolidation_threshold`."
+    linked_notification_consolidation_window_mins: "Czas w minutach, w którym powiązane powiadomienia są konsolidowane w jedno powiadomienie po osiągnięciu progu. Próg można skonfigurować za pomocą `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy użytkownik dotknie dna."
     read_time_word_count: "Licznik słów na minutę dla kalkulacji szacowanego czasu czytania."
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>Tytuł strony</a> zawiera nazwę kategorii."
@@ -2300,6 +2317,7 @@ pl_PL:
     penalty_include_post_message: "Automatycznie dołączaj obraźliwą wiadomość do szablonu wiadomości e-mail podczas wyciszania lub zawieszania użytkownika."
     svg_icon_subset: "Dodaj dodatkowe ikony FontAwesome, które chcesz uwzględnić w swoich zasobach. Użyj przedrostka \"fa-\" dla ikon jednolitych, \"far-\" dla ikon zwykłych i \"fab-\" dla ikon marki."
     max_prints_per_hour_per_user: "Maksymalna liczba wyświetleń strony /print (ustaw na 0, aby wyłączyć drukowanie)"
+    full_name_requirement: "Ustaw pole pełnej nazwy jako wymagane, opcjonalne lub opcjonalne, ale ukryte w formularzu rejestracji."
     enable_names: "Pokaż pełną nazwę użytkownika w jego profilu, karcie użytkownika i w e-mailach. Wyłącz, aby ukryć pełną nazwę użytkownika wszędzie."
     display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego wpisach, a także jego @nazwę użytkownika."
     show_time_gap_days: "Jeśli dwa wpisy zostały dodane w dużej przerwie, wyświetl okres w temacie."
@@ -2368,11 +2386,14 @@ pl_PL:
     disable_mailing_list_mode: "Nie zezwalaj użytkownikom na włączanie trybu listy mailingowej (zapobiega wysyłaniu wiadomości e-mail z list mailingowych)."
     default_email_previous_replies: "Domyślnie uwzględniaj poprzednie odpowiedzi w emailach."
     default_email_in_reply_to: "Domyślnie uwzględniaj fragment odpowiedzi do wpisu w emailu."
+    default_hide_profile: "Domyślnie ukryj publiczny profil użytkownika."
+    default_hide_presence: "Domyślnie wyłącz funkcje obecności."
     default_other_new_topic_duration_minutes: "Domyślny globalny warunek dla którego temat uznawany jest za nowy."
     default_other_auto_track_topics_after_msecs: "Domyślny globalny czas przed, którym temat jest śledzony automatycznie."
     default_other_notification_level_when_replying: "Globalny domyślny poziom powiadomienia, gdy użytkownik odpowie w temacie."
     default_other_external_links_in_new_tab: "Otwórz linki zewnętrzne w nowej karcie domyślnie."
     default_other_enable_quoting: "Domyślnie zezwól na podświetlone cytowane odpowiedzi."
+    default_other_enable_smart_lists: "Domyślnie włącz inteligentne listy podczas pisania w kompozytorze."
     default_other_enable_defer: "Domyślnie włącz funkcję odroczenia tematu."
     default_other_dynamic_favicon: "Domyślnie pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
     default_other_skip_new_user_tips: "Pomiń wskazówki i odznaki dotyczące wprowadzania nowych użytkowników."
@@ -2429,6 +2450,7 @@ pl_PL:
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów oznaczonych tylko wyciszonymi tagami na najnowszej liście tematów."
     force_lowercase_tags: "Wymuś, aby wszystkie nowe tagi były małymi literami."
+    automatically_clean_unused_tags: "Automatycznie usuwaj tagi, które nie są używane w żadnych tematach ani wiadomościach prywatnych."
     watched_precedence_over_muted: "Powiadamiaj mnie o tematach w obserwowanych przeze mnie kategoriach lub tagach, które również należą do tych, które wyciszyłem."
     company_name: "Nazwa Twojej firmy lub organizacji. Jeśli pozostawisz to pole puste, nie otrzymasz szablonu warunków świadczenia usług ani informacji o ochronie prywatności."
     governing_law: "Określ jurysdykcję, która reguluje aspekty prawne witryny, w tym Warunki korzystania z usługi i politykę prywatności. Zwykle jest to kraj lub stan, w którym zarejestrowana jest lub prowadzi działalność firma obsługująca witrynę"
@@ -2444,6 +2466,7 @@ pl_PL:
     heading_font: "Czcionka używana w nagłówkach witryny. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--heading-font-family`."
     enable_sitemap: "Wygeneruj mapę witryny dla swojej strony i umieść ją w pliku robots.txt."
     sitemap_page_size: "Liczba adresów URL do uwzględnienia na każdej stronie mapy witryny. Maksymalnie 50.000"
+    enable_user_status: "Zezwól użytkownikom na ustawienie niestandardowego statusu (emoji + opis)."
     enable_user_tips: "Włącz nowe wskazówki dla użytkowników, które opisują najważniejsze funkcje witryny"
     short_title: "Krótki tytuł będzie używany na ekranie głównym użytkownika, launcherze lub w innych miejscach, gdzie przestrzeń może być ograniczona. Powinien składać się maksymalnie z 12 znaków."
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
@@ -2466,9 +2489,11 @@ pl_PL:
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
     admin_sidebar_enabled_groups: "Włącz nawigację boczną w interfejsie administracyjnym dla określonych grup, co zastępuje przyciski nawigacyjne na górnej belce."
+    lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
     about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."
+    adobe_analytics_tags_url: "Adres URL znaczników Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
@@ -2727,6 +2752,7 @@ pl_PL:
     omniauth_confirm_button: "Kontynuuj"
     authenticator_error_no_valid_email: "Adresy e-mail powiązane z %{account} są niedozwolone. Musisz użyć innego adresu."
     new_registrations_disabled: "Aktualnie nie jest możliwe zarejestrowanie nowego konta."
+    new_registrations_disabled_discourse_connect: "Rejestracje nowych kont są dozwolone tylko za pośrednictwem Discourse Connect."
     password_too_long: "Hasła są ograniczone do 200 znaków."
     email_too_long: "Podałeś/łaś zbyt długi adres email. Nazwa skrzynki pocztowej nie może być dłuższa niż 254 znaki, a nazwa domeny nie może zawierać więcej niż 253 znaki."
     wrong_invite_code: "Wprowadzony kod zaproszenia był nieprawidłowy."
@@ -4874,6 +4900,8 @@ pl_PL:
       styling:
         title: "Wygląd i odczucia"
         fields:
+          color_scheme:
+            label: "Paleta kolorów"
           body_font:
             label: "Czcionka"
           heading_font:
@@ -4885,8 +4913,16 @@ pl_PL:
             choices:
               latest:
                 label: "Najnowsza"
+                description: "Wyświetla ostatnio aktywne tematy we wszystkich kategoriach, pomagając członkom być na bieżąco z dyskusjami, na których im zależy."
               hot:
                 label: "Gorące"
+                description: "Wyświetla popularne tematy, łącząc najnowszą i ogólną popularność, pokazując, o czym użytkownicy rozmawiają teraz w Twojej społeczności."
+              categories_and_latest_topics:
+                label: "Kategorie z najnowszymi tematami"
+                description: "Łączy ostatnio aktywne tematy we wszystkich kategoriach z listą kategorii, ich opisem i łączną liczbą tematów."
+              categories_boxes:
+                label: "Bloki kategorii"
+                description: "Wyświetla kategorie i ich opis w siatce, idealna dla członków, aby mogli zobaczyć przegląd podspołeczności Twojej witryny"
       branding:
         title: "Logo witryny"
         fields:

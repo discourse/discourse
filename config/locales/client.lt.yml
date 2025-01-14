@@ -3618,8 +3618,6 @@ lt:
               content: "Grupės"
             users:
               content: "Vartotojai"
-            my_posts:
-              content: "Mano Įrašai"
             review:
               content: "Peržiūra"
             invite:
@@ -3831,6 +3829,13 @@ lt:
         add_owners: Pridėti valdytojus
         none_selected: "Norėdami pradėti, pasirinkite grupę"
         no_custom_groups: "Sukurti naują pasirinktinę grupę"
+      api_keys:
+        edit: "Redaguoti"
+        save: "Išsaugoti"
+        cancel: "Atšaukti"
+        continue: "Tęsti"
+        revoke: "Pašalinti"
+        revoked: "Atšauktas"
       api:
         generate_master: "Generuoti pagrindinį API raktą"
         none: "Šiuo metu nėra jokių aktyvių API raktų."
@@ -3839,28 +3844,22 @@ lt:
         key: "Raktas"
         created: Sukurta
         updated: Atnaujinta
-        last_used: Paskutinis naudotas
-        never_used: (niekada)
+        never_used: Niekada
         generate: "Generuoti"
-        undo_revoke: "Anuliuoti Atšaukti"
         revoke: "Pašalinti"
-        all_users: "Visi vartotojai"
         active_keys: "Aktyvūs API raktai"
         manage_keys: Tvarkyti raktus
         show_details: Detalės
         description: Aprašymas
         no_description: (Nėra aprašymo)
         all_api_keys: Visi API raktai
-        user_mode: Vartotojo lygis
         scope_mode: Apimtis
         impersonate_all_users: Apsimesti bet kokiu vartotoju
-        single_user: "Vienas vartotojas"
         user_placeholder: Įveskite vartotojo vardą
         description_placeholder: Kam bus naudojamas šis raktas?
         save: Saugoti
         new_key: Naujas API raktas
         revoked: Atšauktas
-        delete: Ištrinti visam laikui
         not_shown_again: Šis raktas daugiau nebus rodomas. Prieš tęsdami būtinai nukopijuokite.
         continue: Tęsti
         scopes:
@@ -3869,8 +3868,6 @@ lt:
           global_description: API raktas neturi apribojimų ir visi galiniai taškai yra prieinami.
           resource: Ištekliai
           action: Veiksmas
-          allowed_parameters: Leidžiami parametrai
-          optional_allowed_parameters: Leidžiami parametrai (neprivaloma)
           any_parameter: (bet koks parametras)
           allowed_urls: Leidžiami URL
           descriptions:
@@ -4280,10 +4277,7 @@ lt:
             title: "Pasirinkite pagrindinę spalvų paletę"
             description: "Pagrindinė paletė:"
           title: "Spalvos"
-          edit: "Redaguoti spalvų paletes"
-          long_title: "Spalvų paletės"
           about: "Pakeiskite temų naudojamas spalvas. Norėdami pradėti, sukurkite naują spalvų paletę."
-          new_name: "Nauja spalvų paletė"
           copy_name_prefix: "Kopija"
           delete_confirm: "Ištrinti šią spalvų paletę?"
           undo: "Anuliuoti"
@@ -4562,7 +4556,6 @@ lt:
         logster:
           title: "Klaidų įrašai"
       watched_words:
-        title: "Peržiūrėti Žodžiai"
         search: "paieška"
         clear_filter: "Išvalyti"
         download: Atsisiųsti
@@ -4642,6 +4635,7 @@ lt:
         status: "Statusas"
         show_emails: "Rodyti el. pašto adresus"
         hide_emails: "Slėpti laiškus"
+        silence_reason: "Tylos priežastis"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4872,7 +4866,6 @@ lt:
           delete_sso_record: "Ištrinti SSO įrašą"
           confirm_delete: "Ar tikrai norite ištrinti šį „DiscourseConnect“ įrašą?"
       user_fields:
-        title: "Vartotojo laukeliai"
         untitled: "Be pavadinimo"
         name: "Lauko Pavadinimas"
         type: "Lauko Tema"
@@ -4904,10 +4897,8 @@ lt:
           dropdown: "Išskleidimas"
           multiselect: "Daugialypis pasirinkimas"
       site_text:
-        description: "Tu gali keisti bet kurį forumo tekstą. Prašom pradėti naudojant paiešką žemiau:"
         search: "Ieškoti teksto, kurį norėtum keisti"
-        title: "Tekstas"
-        edit: "redaguoti"
+        edit: "Redaguoti"
         revert: "Atstatyti Pakeitimus"
         revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
         go_back: "Atgal į Paiešką"
@@ -5118,7 +5109,6 @@ lt:
           save: "Išsaugoti"
       reseed:
         action:
-          label: "Pakeisti tekstą…"
           title: "Pakeiskite kategorijų ir temų tekstą vertimais"
         modal:
           title: "Pakeisti tekstą"

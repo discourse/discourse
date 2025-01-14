@@ -460,6 +460,8 @@ pt_BR:
         confirm: "Você já tem um rascunho em andamento. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+      dropdown:
+        view_all: "visualizar tudo"
     topic_count_all:
       one: "Veja %{count} novo tópico"
       other: "Veja %{count} novos tópicos"
@@ -4409,7 +4411,6 @@ pt_BR:
         everyone_can_use: "Etiquetas podem ser usadas por todos(as)"
         usable_only_by_groups: "Etiquetas são visíveis para todos(as), mas somente os seguintes grupos podem usá-las"
         visible_only_to_groups: "As etiquetas são visíveis somente para os seguintes grupos"
-        cannot_save: "Não é possível salvar grupo de etiquetas. Verifique se há pelo menos uma etiqueta presente, o nome do grupo de etiquetas não está vazio, tem menos de 100 caracteres, e se um grupo foi selecionado para permissão de etiquetas."
         tags_placeholder: "Pesquisar ou criar etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Selecionar grupos…"
@@ -4620,11 +4621,9 @@ pt_BR:
             users:
               content: "Usuários(as)"
               title: "Lista de todos(as) os(as) usuários(as)"
-            my_posts:
-              content: "Minhas postagens"
-              content_drafts: "Meus Rascunhos"
-              title: "Minha atividade de tópico recente"
-              title_drafts: "Meus rascunhos não publicados"
+            my_drafts:
+              content: "Meus Rascunhos"
+              title: "Meus rascunhos não publicados"
               draft_count:
                 one: "%{count} rascunho"
                 other: "%{count} rascunhos"
@@ -4764,7 +4763,6 @@ pt_BR:
           never: "nunca"
       reports:
         title: "Lista de relatórios disponíveis"
-        meta_doc: "Explore nossa <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentação</a> para uma visão detalhada dos relatórios."
         sidebar_title: "Relatórios"
         sidebar_link:
           all: "Todos os relatórios"
@@ -4983,6 +4981,14 @@ pt_BR:
         add_owners: Adicionar proprietários(as)
         none_selected: "Selecione um grupo para começar"
         no_custom_groups: "Crie um novo grupo personalizado"
+      api_keys:
+        title: "Chaves de API"
+        edit: "Editar"
+        save: "Salvar"
+        cancel: "Cancelar"
+        continue: "Continuar"
+        revoke: "Revogar"
+        revoked: "Regovado(a)"
       api:
         generate_master: "Gerar chave mestra de API"
         none: "Não existem chaves API ativas no momento."
@@ -4990,30 +4996,24 @@ pt_BR:
         title: "API"
         key: "Chave"
         keys: "Chaves"
-        created: Criado(a)
         updated: Atualizado(a)
-        last_used: Usados(as) por último
-        never_used: (nunca)
+        never_used: Nunca
         generate: "Gerar"
-        undo_revoke: "Desfazer revogação"
         revoke: "Revogar"
-        all_users: "Todos os(as) usuários(as)"
+        all_users: "Todos(as) os(as) usuários(as)"
         active_keys: "Chaves de API ativas"
         manage_keys: Gerenciar chaves
         show_details: Detalhes
         description: Descrição
         no_description: (sem descrição)
         all_api_keys: Todas chaves de API
-        user_mode: Nível de usuário(a)
         scope_mode: Escopo
         impersonate_all_users: Representar qualquer usuário(a)
-        single_user: "Usuário(a) único(a)"
         user_placeholder: Insira o nome do(a) usuário(a)
         description_placeholder: Para que esta chave será usada?
         save: Salvar
         new_key: Nova chave de API
         revoked: Revogado(a)
-        delete: Excluir permanentemente
         not_shown_again: Esta chave não será exibida novamente. Faça uma cópia antes de continuar.
         continue: Continuar
         scopes:
@@ -5027,8 +5027,6 @@ pt_BR:
           global_description: A chave de API não tem restrição e todos os pontos de extremidade estão acessíveis.
           resource: Recurso
           action: Ação
-          allowed_parameters: Parâmetros restritos
-          optional_allowed_parameters: Parâmetros permitidos (opcional)
           any_parameter: (qualquer parâmetro)
           allowed_urls: URLs permitidas
           descriptions:
@@ -5423,6 +5421,7 @@ pt_BR:
         sidebar_link:
           api_keys:
             title: "Chaves de API"
+          webhooks: "Webhooks"
           developer: "Desenvolvedor"
           embedding: "Incorporar"
           user_api: "API de usuário(a)"
@@ -5568,6 +5567,7 @@ pt_BR:
           browse_themes: "Explore os temas da comunidade"
           customize_desc: "Personalizar:"
           title: "Temas"
+          description: "Temas são personalizações que podem ser estendidas e alteram vários elementos do estilo do design do fórum, incluindo muitas vezes recursos adicionais de front-end."
           create: "Criar"
           create_type: "Tipo"
           create_name: "Nome"
@@ -5777,10 +5777,7 @@ pt_BR:
             title: "Selecionar paleta de cores básicas"
             description: "Paleta básica:"
           title: "Cores"
-          edit: "Editar paletas de cores"
-          long_title: "Paletas de cores"
           about: "Altere as cores usadas nos seus temas. Crie um novo esquema de cores para começar."
-          new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Excluir esta paleta de cores?"
           undo: "Desfazer"
@@ -6123,7 +6120,6 @@ pt_BR:
         logster:
           title: "Registro de erros"
       watched_words:
-        title: "Palavras acompanhadas"
         search: "pesquisa"
         clear_filter: "Limpar"
         show_words:
@@ -6277,6 +6273,7 @@ pt_BR:
         status: "Status"
         show_emails: "Exibir e-mails"
         hide_emails: "Ocultar e-mails"
+        silence_reason: "Motivo do silêncio"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6560,7 +6557,6 @@ pt_BR:
           delete_sso_record: "Excluir registro SSO"
           confirm_delete: "Tem certeza de que gostaria de excluir este registro do DiscourseConnect?"
       user_fields:
-        title: "Campos de usuário(a)"
         untitled: "Sem título"
         name: "Nome do campo"
         type: "Tipo do campo"
@@ -6602,10 +6598,8 @@ pt_BR:
           dropdown: "Menu suspenso"
           multiselect: "Multisseleção"
       site_text:
-        description: "Você pode personalizar qualquer parte do texto em seu fórum. Comece pesquisando abaixo:"
         search: "Pesquise o texto que você gostaria de editar"
-        title: "Texto"
-        edit: "editar"
+        edit: "Editar"
         revert: "Reverter alterações"
         revert_confirm: "Tem certeza que deseja reverter suas alterações?"
         go_back: "Voltar para pesquisa"
@@ -6900,7 +6894,6 @@ pt_BR:
           save: "Salvar"
       reseed:
         action:
-          label: "Substituir texto…"
           title: "Substituir texto de categorias e tópicos por traduções"
         modal:
           title: "Substituir texto"

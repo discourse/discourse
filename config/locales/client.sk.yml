@@ -558,6 +558,8 @@ sk:
         confirm: "Už máte rozpracovaný návrh. Čo by ste s ním chceli urobiť?"
         yes_value: "Zahodiť"
         no_value: "Pokračovať v úprave"
+      dropdown:
+        view_all: "zobraziť všetko"
     topic_count_all:
       one: "Pozrieť %{count} novú tému."
       few: "Pozrieť %{count} nových tém."
@@ -2609,6 +2611,7 @@ sk:
     full_name_requirement:
       required_at_signup: "Povinné"
       optional_at_signup: "Nepovinné"
+      hidden_at_signup: "Voliteľné, skryté pri registrácii"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4922,7 +4925,6 @@ sk:
         everyone_can_use: "Značky môže používať každý"
         usable_only_by_groups: "Značky sú viditeľné pre všetkých, ale používať ich môžu len tieto skupiny"
         visible_only_to_groups: "Značky sú viditeľné len pre tieto skupiny"
-        cannot_save: "Skupinu značiek nie je možné uložiť. Uistite sa, že je prítomný aspoň jedna značka, názov skupiny značiek nie je prázdny a má menej ako 100 znakov a že je vybratá skupina pre povolenie značiek."
         tags_placeholder: "Vyhľadajte alebo vytvorte značky"
         parent_tag_placeholder: "Nepovinné"
         select_groups_placeholder: "Vyberte skupiny…"
@@ -5145,15 +5147,13 @@ sk:
             users:
               content: "Používatelia"
               title: "Zoznam všetkých používateľov"
-            my_posts:
-              content: "Moje príspevky"
-              content_drafts: "Moje koncepty"
-              title: "Moja nedávna aktivita na túto tému"
-              title_drafts: "Moje nezverejnené koncepty"
+            my_drafts:
+              content: "Moje koncepty"
+              title: "Moje nezverejnené koncepty"
               draft_count:
                 one: "%{count} koncept"
                 few: "%{count} konceptov"
-                many: "%{count} konceptov"
+                many: "%{count} koncepty"
                 other: "%{count} koncepty"
             review:
               content: "Recenzia"
@@ -5301,47 +5301,64 @@ sk:
           never: "nikdy"
       reports:
         title: "Zoznam dostupných prehľadov"
-        meta_doc: "Podrobný prehľad správ nájdete v našej dokumentácii <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> ."
         sidebar_title: "Hlásenia"
         sidebar_link:
           all: "Všetky hlásenia"
       config:
         developer:
           title: "Vývojár"
+          header_description: "Nastavenia vývojára na ovládanie limitov rýchlosti, násobiteľov a výpočtov, bezpečného režimu a ďalších pokročilých funkcií"
         experimental:
           title: "Experimentálne"
+          header_description: "Zapínanie alebo vypínanie experimentálnych funkcií na vašom webe, väčšinu z nich možno ovládať skupinovo."
         font_style:
           title: "Štýl písma"
+          header_description: "Prispôsobenie štýlov písma používaných v témach"
         files:
           title: "Súbory"
+          header_description: "Nastavenia, ktoré kontrolujú veľkosť a typ súborov, veľkosti a zdroje avatarov, ukladanie súborov, kvalitu a kompresiu obrázkov a ďalšie."
         legal:
           title: "Právne záležitosti"
+          header_description: "Konfigurácia právnych nastavení, ako sú podmienky poskytovania služieb, zásady ochrany osobných údajov, kontaktné údaje a aspekty špecifické pre EÚ."
         login_and_authentication:
           title: "Prihlásenie a overenie"
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
         logo:
           title: "Logo stránky"
+          header_description: "Prispôsobenie variantov loga vášho webu"
         navigation:
           title: "Navigácia"
+          header_description: "Konfigurácia navigačných odkazov a položiek ponuky na vašom webe. To zahŕňa umiestnenie a správanie primárnej navigačnej ponuky, rýchlych odkazov v hornej časti domovskej stránky, ako aj bočného panela správcu."
         notifications:
           title: "Upozornenia"
           header_description: "Nakonfigurujte spôsob spravovania a doručovania upozornení pre používateľov vrátane e-mailových preferencií, upozornení push, limitov zmienok a konsolidácie upozornení"
         onebox:
           title: "Onebox"
+          header_description: "Konfigurácia spôsobu generovania a zobrazovania náhľadov v rámčeku OneBox pre váš web"
         other:
           title: "Ostatné"
+          header_description: "Nastavenia, ktoré nepatria do žiadnej inej kategórie"
         rate_limits:
           title: "Limity sadzieb"
+          header_description: "Konfigurácia toho, ako často môžu používatelia vykonávať určité činnosti, napríklad vytvárať témy, posielať správy a odosielať odpovede."
         search:
           title: "Hľadať"
+          header_description: "Konfigurácia nastavení vyhľadávania vrátane protokolovania a tokenizácie pre čínštinu a japončinu"
         security:
           title: "Bezpečnosť"
+          header_description: "Konfigurácia nastavení zabezpečenia vrátane dvojfaktorového overovania, oprávnení moderátora a zásad zabezpečenia obsahu"
         spam:
           title: "Spam"
+          header_description: "Konfigurácia spôsobu, akým systém analyzuje správanie používateľov pri registrácii a odosielaní príspevkov, aby bolo možné rýchlo identifikovať a blokovať spam"
         trust_levels:
           title: "Úrovne dôvery"
+          header_description: "Nastavenia úrovne dôveryhodnosti vám umožnia doladiť požiadavky a oznámenia pre systém postupu vašej komunity, ktorý automaticky povyšuje používateľov na vyššie úrovne dôveryhodnosti, keď preukážu konzistentnú a pozitívnu angažovanosť na vašom fóre."
         user_api:
           title: "Používateľské rozhranie API"
+          header_description: "Konfigurácia skupín používateľov, ktoré majú prístup k rozhraniu API, ako aj povolených rozsahov"
+        group_permissions:
+          title: "Oprávnenia skupiny"
+          header_description: "Tu sa spravujú všetky oprávnenia aplikácií založené na skupine, ktoré riadia prístup k rôznym funkciám v rámci Discourse."
       new_features:
         title: "Čo je nové?"
         check_for_updates: "Kontrola aktualizácií"
@@ -5419,6 +5436,22 @@ sk:
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
           percent_change_tooltip: "%{percent} zmena."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "Pred dvoma dňami bolo na stránke %{count} ."
+              few: "Pred dvoma dňami bolo na stránke %{count} ."
+              many: "Pred dvoma dňami bolo na stránke %{count} ."
+              other: "Pred dvoma dňami bolo na stránke %{count} ."
+            two_weeks_ago:
+              one: "Pred dvoma týždňami bolo na stránke %{count} ."
+              few: "Pred dvoma týždňami bola na stránke %{count} ."
+              many: "Pred dvoma týždňami bola na stránke %{count} ."
+              other: "Pred dvoma týždňami bola na stránke %{count} ."
+            thirty_days_ago:
+              one: "V predchádzajúcom 30-dňovom období bolo %{count} ."
+              few: "V predchádzajúcom 30-dňovom období bolo %{count} ."
+              many: "V predchádzajúcom 30-dňovom období bolo %{count} ."
+              other: "V predchádzajúcom 30-dňovom období bolo %{count} ."
           today: "Dnes"
           yesterday: "Včera"
           last_7_days: "Posledných 7"
@@ -5543,6 +5576,20 @@ sk:
         add_owners: Pridať vlastníkov
         none_selected: "Vyberte skupinu a začnite"
         no_custom_groups: "Vytvorte novú vlastnú skupinu"
+      api_keys:
+        title: "Kľúče API"
+        description: "Funkcia kľúčov API umožňuje bezpečne integrovať Discourse s externými systémami a automatizovať akcie. Správcovia môžu vytvárať kľúče so špecifickým rozsahom na kontrolu prístupu k zdrojom a citlivým údajom. Rozsahy obmedzujú funkčnosť, čím zabezpečujú zvýšenú bezpečnosť."
+        add: "Pridanie kľúča API"
+        edit: "Upraviť"
+        save: "Uložiť"
+        cancel: "Zrušiť"
+        continue: "Pokračovať"
+        back: "Späť na kľúče API"
+        revoke: "Zrušiť"
+        undo_revoke: "Zrušenie odvolania"
+        revoked: "Odvolané"
+        delete: Natrvalo odstrániť
+        no_api_keys: "Zatiaľ nemáte žiadne kľúče API."
       api:
         generate_master: "Vygenerovať Master API kľúč"
         none: "V súčasnosti neexistujú žiadne aktívne API kľúče."
@@ -5550,12 +5597,12 @@ sk:
         title: "API"
         key: "Kľúč"
         keys: "Kľúče"
-        created: Vytvorené
+        created: Vytvoril
         updated: Aktualizované
         last_used: Naposledy použité
-        never_used: (nikdy)
+        never_used: Nikdy
         generate: "Generovať"
-        undo_revoke: "Zrušiť odvolanie"
+        undo_revoke: "Zrušenie odvolania"
         revoke: "Zrušiť"
         all_users: "Všetci používatelia"
         active_keys: "Aktívne kľúče API"
@@ -5567,13 +5614,13 @@ sk:
         user_mode: Úroveň používateľa
         scope_mode: Rozsah
         impersonate_all_users: Vydávať sa za akéhokoľvek používateľa
-        single_user: "Jeden používateľ"
+        single_user: "Jediný používateľ"
         user_placeholder: Zadajte používateľské meno
         description_placeholder: Na čo sa bude tento kľúč používať?
         save: Uložiť
         new_key: Nový kľúč API
         revoked: Odvolané
-        delete: Trvalé odstránenie
+        delete: Natrvalo odstrániť
         not_shown_again: Tento kľúč sa už nezobrazí. Pred pokračovaním sa uistite, že ste si urobili kópiu.
         continue: Pokračovať
         scopes:
@@ -5817,6 +5864,7 @@ sk:
           notifications: "Upozornenia"
           permalinks: "Trvalé odkazy"
           trust_levels: "Úrovne dôvery"
+          group_permissions: "Oprávnenia skupiny"
           users: "Používatelia"
           groups: "Skupiny"
           user_fields: "Používateľské polia"
@@ -5843,12 +5891,16 @@ sk:
         sidebar_link:
           appearance: "Vzhľad"
           server_setup:
+            title: "Nastavenie servera a protokoly"
             keywords: "email|smtp|mailgun|sendgrid|poslané|preskočený|odmeňované|prijaté|odmietnutý|e-mailové denníky|náhľad zhrnutia"
       security:
         title: "Bezpečnosť"
         sidebar_link:
           security: "Nastavenia zabezpečenia"
           spam: "Nastavenia spamu"
+          staff_action_logs:
+            title: "Protokoly a skríning"
+            keywords: "protokoly o chybách|akcie zamestnancov|prehľadané e-maily|prehľadané IP adresy|prehľadané URL adresy|denníky vyhľadávania"
       section_landing_pages:
         account:
           title: "Účet"
@@ -6004,7 +6056,8 @@ sk:
         sidebar_link:
           api_keys:
             title: "Kľúče API"
-            keywords: "token|webhook"
+            keywords: "token"
+          webhooks: "Webhooky"
           developer: "Vývojár"
           embedding: "Vkladám"
           rate_limits: "Limity sadzieb"
@@ -6152,6 +6205,7 @@ sk:
           browse_themes: "Prehľadávanie tém komunity"
           customize_desc: "Upraviť:"
           title: "Témy"
+          description: "Témy sú rozsiahle úpravy, ktoré menia viaceré prvky štýlu dizajnu fóra a často obsahujú aj ďalšie funkcie predného konca."
           create: "Vytvoriť:"
           create_type: "Typ"
           create_name: "Meno"
@@ -6376,10 +6430,8 @@ sk:
             title: "Vyberte základnú paletu farieb"
             description: "Základná paleta:"
           title: "Farby"
-          edit: "Upraviť palety farieb"
           long_title: "Palety farieb"
           about: "Upravte farby používané v témach. Na začiatok vytvorte novú paletu farieb."
-          new_name: "Nová paleta farieb"
           copy_name_prefix: "Kópia"
           delete_confirm: "Odstrániť túto paletu farieb?"
           undo: "Späť"
@@ -6879,6 +6931,7 @@ sk:
         status: "Stav"
         show_emails: "Ukázať Emaily"
         hide_emails: "Skryť e-maily"
+        silence_reason: "Dôvod ticha"
         bulk_actions:
           title: "Hromadné akcie"
           admin_cant_be_deleted: "Tento používateľ nemôže byť odstránený, pretože je správcom"
@@ -7263,10 +7316,9 @@ sk:
           dropdown: "Zoznam"
           multiselect: "Viacnásobný výber"
       site_text:
-        description: "Môžete prispôsobiť hociktorý text na Vašom fóre. Prosím začnite hľadaním nižšie:"
         search: "Hľadajte text, ktorý chcete upraviť"
-        title: "Text"
-        edit: "uprav"
+        title: "Texty stránok"
+        edit: "Upraviť"
         revert: "Vrátiť zmeny"
         revert_confirm: "Ste si istý, že chcete vrátiť vykonané zmeny späť?"
         go_back: "Návrat na vyhľadávanie"
@@ -7522,8 +7574,17 @@ sk:
 
           <p>Nahraďte <b>DISCOURSE_USERNAME</b> používateľským menom Discourse autora, ktorý by mal tému vytvoriť. Discourse automaticky vyhľadá používateľa podľa atribútu <code>content</code> v značkách <code>&lt;meta&gt;</code> s atribútom <code>name</code> nastaveným na <code>discourse-username</code> alebo <code>author</code>. Parameter <code>discourseUserName</code> bol zastaraný a bude odstránený v Discourse 3.2.</p>
         title: "Vkladám"
+        description: "Discourse má možnosť vložiť komentáre z témy na vzdialenú stránku pomocou rozhrania API pre Javascript, ktoré vytvorí okno IFRAME"
+        host: "Povolení hostitelia"
+        allowed_paths: "Zoznam povolených ciest"
         edit: "Upraviť"
+        category: "Uverejniť v kategórii"
         tags: "Značky tém"
+        post_author: "Autor príspevku"
+        post_author_with_default: "Autor príspevku (predvolené nastavenie je %{author})"
+        add_host: "Pridať hostiteľa"
+        posts_and_topics: "Konfigurácia príspevkov a tém"
+        crawlers: "Konfigurácia prehľadávačov"
         crawlers_description: "Ak Discourse vytvorí tému pre Váš príspevok a neexistuje žiadny RSS/ATOM kanál tak sa pokúsime získať Váš obsah z HTML. Získanie obsahu môže byt niekedy výzva a preto poskytujeme možnosť špecifikovať CSS pravidlá na uľahčenie získania obsahu."
         embed_by_username: "Používateľské meno pre vytváranie tém"
         embed_post_limit: "Maximálny počet vložených príspevkov"
@@ -7534,10 +7595,18 @@ sk:
         blocked_embed_selectors: "CSS selector pre elementy ktoré nie je možné vkladať"
         allowed_embed_classnames: "Dovolené názvy CSS tried"
         save: "Uložiť"
+        posts_and_topics_settings_saved: "Nastavenia príspevkov a tém boli uložené"
+        crawler_settings_saved: "Uložené nastavenia prehľadávača"
+        back: "Späť na vkladanie"
+        configuration_snippet: "Úryvok konfigurácie"
         host_form:
+          add_header: "Pridať hostiteľa"
+          edit_header: "Upraviť hostiteľa"
           save: "Uložiť"
         nav:
+          hosts: "Hostitelia"
           settings: "Nastavenia"
+          posts_and_topics: "Príspevky a témy"
           crawlers: "Crawlery"
       permalink:
         title: "Trvalé odkazy"
@@ -7576,7 +7645,6 @@ sk:
           save: "Uložiť"
       reseed:
         action:
-          label: "Nahradiť text…"
           title: "Nahradenie textu kategórií a tém prekladmi"
         modal:
           title: "Nahradiť text"
@@ -7628,6 +7696,10 @@ sk:
           what_movies: "Aké filmy ste v poslednej dobe videli?"
           random_fact: "Náhodný fakt dňa"
           tv_show: "Odporučiť televízny program"
+          what_hobbies: "Aké sú vaše koníčky?"
+          what_music: "Čo práve počúvate?"
+          funniest_thing: "Najvtipnejšia vec, ktorú ste dnes videli"
+          share_art: "Podeľte sa o svoje umenie!"
         topic_ops:
           what_books: |
             Všetci radi čítame, využime túto tému a podeľme sa o svoje

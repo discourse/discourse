@@ -460,6 +460,8 @@ tr_TR:
         confirm: "Halihazırda devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
         yes_value: "Kapat"
         no_value: "Düzenlemeyi sürdür"
+      dropdown:
+        view_all: "tümünü görüntüle"
     topic_count_all:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
@@ -4409,7 +4411,6 @@ tr_TR:
         everyone_can_use: "Etiketler herkes tarafından kullanılabilir"
         usable_only_by_groups: "Etiketler herkes tarafından görülebilir, ancak yalnızca aşağıdaki gruplar bunları kullanabilir"
         visible_only_to_groups: "Etiketler yalnızca aşağıdaki gruplar tarafından görülebilir"
-        cannot_save: "Etiket grubu kaydedilemiyor. En az bir etiket bulunduğundan, etiket grubu adının boş olmadığından ve 100 karakterden az olduğundan ve etiket izni için bir grubun seçildiğinden emin olun."
         tags_placeholder: "Etiket arayın veya oluşturun"
         parent_tag_placeholder: "İsteğe bağlı"
         select_groups_placeholder: "Grupları seç…"
@@ -4620,11 +4621,9 @@ tr_TR:
             users:
               content: "Kullanıcılar"
               title: "Tüm kullanıcıların listesi"
-            my_posts:
-              content: "Gönderilerim"
-              content_drafts: "Taslaklarım"
-              title: "Son konu etkinliğim"
-              title_drafts: "Gönderilmemiş taslaklarım"
+            my_drafts:
+              content: "Taslaklarım"
+              title: "Gönderilmemiş taslaklarım"
               draft_count:
                 one: "%{count} taslak"
                 other: "%{count} taslak"
@@ -4764,7 +4763,6 @@ tr_TR:
           never: "asla"
       reports:
         title: "Mevcut raporlar listesi"
-        meta_doc: "Raporlara ayrıntılı bir genel bakış için <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>belgelerimizi</a> keşfedin."
         sidebar_title: "Raporlar"
         sidebar_link:
           all: "Tüm raporlar"
@@ -4983,6 +4981,14 @@ tr_TR:
         add_owners: Sahip ekle
         none_selected: "Başlamak için bir grup seçin"
         no_custom_groups: "Yeni bir özel grup oluşturun"
+      api_keys:
+        title: "API anahtarları"
+        edit: "Düzenle"
+        save: "Kaydet"
+        cancel: "İptal et"
+        continue: "Devam et"
+        revoke: "Geri çek"
+        revoked: "İptal edildi"
       api:
         generate_master: "Ana API Anahtarı Oluşturun"
         none: "Şu anda aktif API anahtarı bulunmuyor."
@@ -4990,30 +4996,25 @@ tr_TR:
         title: "API"
         key: "Anahtar"
         keys: "Anahtarlar"
-        created: Oluşturuldu
+        created: Oluşturan
         updated: Güncellendi
-        last_used: Son Kullanılan
-        never_used: (asla)
+        never_used: Asla
         generate: "Oluştur"
-        undo_revoke: "İptal İşlemini Geri Al"
         revoke: "Geri çek"
-        all_users: "Tüm Kullanıcılar"
+        all_users: "Tüm kullanıcılar"
         active_keys: "Aktif API Anahtarları"
         manage_keys: Anahtarları Yönet
         show_details: Ayrıntılar
         description: Açıklama
         no_description: (açıklama yok)
         all_api_keys: Tüm API Anahtarları
-        user_mode: Kullanıcı Seviyesi
         scope_mode: Kapsam
         impersonate_all_users: Herhangi bir kullanıcı rolüne gir
-        single_user: "Tek Kullanıcı"
         user_placeholder: Kullanıcı adı girin
         description_placeholder: Bu anahtar ne için kullanılacak?
         save: Kaydet
         new_key: Yeni API Anahtarı
         revoked: İptal edildi
-        delete: Kalıcı Olarak Sil
         not_shown_again: Bu tuş tekrar gösterilmeyecek. Devam etmeden önce bir kopyasını aldığınızdan emin olun.
         continue: Devam et
         scopes:
@@ -5027,8 +5028,6 @@ tr_TR:
           global_description: API anahtarının herhangi bir kısıtlaması yoktur ve tüm uç noktalara erişilebilir.
           resource: Kaynak
           action: Eylem
-          allowed_parameters: İzin Verilen Parametreler
-          optional_allowed_parameters: İzin Verilen Parametreler (isteğe bağlı)
           any_parameter: (herhangi bir parametre)
           allowed_urls: İzin verilen URL'ler
           descriptions:
@@ -5423,6 +5422,7 @@ tr_TR:
         sidebar_link:
           api_keys:
             title: "API anahtarları"
+          webhooks: "Web Kancaları"
           developer: "Geliştirici"
           embedding: "Gömme"
           user_api: "Kullanıcı API'si"
@@ -5568,6 +5568,7 @@ tr_TR:
           browse_themes: "Topluluk temalarına göz atın"
           customize_desc: "Özelleştir:"
           title: "Temalar"
+          description: "Temalar, forum tasarımınızın stilinin birçok unsurunu değiştiren ve genellikle ek ön uç özellikleri de içeren geniş kapsamlı özelleştirmelerdir."
           create: "Oluştur"
           create_type: "Tür"
           create_name: "Ad"
@@ -5777,10 +5778,7 @@ tr_TR:
             title: "Temel renk paletini seçin"
             description: "Temel palet:"
           title: "Renkler"
-          edit: "Renk Paletlerini Düzenle"
-          long_title: "Renk Paletleri"
           about: "Temalarınız tarafından kullanılan renkleri değiştirin. Başlamak için yeni bir renk paleti oluşturun."
-          new_name: "Yeni Renk Paleti"
           copy_name_prefix: "Şunun kopyası:"
           delete_confirm: "Bu renk paleti silinsin mi?"
           undo: "Geri Al"
@@ -6123,7 +6121,6 @@ tr_TR:
         logster:
           title: "Hata Kayıtları"
       watched_words:
-        title: "İzlenen Kelimeler"
         search: "ara"
         clear_filter: "Temizle"
         show_words:
@@ -6277,6 +6274,7 @@ tr_TR:
         status: "Durum"
         show_emails: "E-postaları Göster"
         hide_emails: "E-postaları gizle"
+        silence_reason: "Susturulma Nedeni"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6560,7 +6558,6 @@ tr_TR:
           delete_sso_record: "SSO Kaydını Sil"
           confirm_delete: "Bu DiscourseConnect kaydını silmek istediğinizden emin misiniz?"
       user_fields:
-        title: "Kullanıcı Alanları"
         untitled: "Başlıksız"
         name: "Alan Adı"
         type: "Alan Türü"
@@ -6602,10 +6599,8 @@ tr_TR:
           dropdown: "Açılır Menü"
           multiselect: "Çoklu seçim"
       site_text:
-        description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz. Lütfen aşağıda arama yaparak başlayın:"
         search: "Düzenlemek istediğiniz metni arayın"
-        title: "Metin"
-        edit: "düzenle"
+        edit: "Düzenle"
         revert: "Değişiklikleri Geri Al"
         revert_confirm: "Değişikliklerinizi geri almak istediğinizden emin misiniz?"
         go_back: "Aramaya geri dön"
@@ -6900,7 +6895,6 @@ tr_TR:
           save: "Kaydet"
       reseed:
         action:
-          label: "Metni Değiştir…"
           title: "Kategoriler ve konuların metnini çevirilerle değiştir"
         modal:
           title: "Metni Değiştir"

@@ -343,6 +343,8 @@ vi:
       abandon:
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
+      dropdown:
+        view_all: "xem tất cả"
     topic_count_all:
       other: "Xem %{count} chủ đề mới"
     topic_count_categories:
@@ -3631,8 +3633,7 @@ vi:
               content: "Nhóm"
             users:
               content: "Người dùng"
-            my_posts:
-              content: "Bài viết của tôi"
+            my_drafts:
               draft_count:
                 other: "%{count} bản nháp"
             review:
@@ -3853,6 +3854,13 @@ vi:
         add_owners: Thêm chủ sở hữu
         none_selected: "Chọn một nhóm để bắt đầu"
         no_custom_groups: "Tạo một nhóm mới"
+      api_keys:
+        edit: "Sửa"
+        save: "Lưu lại"
+        cancel: "Huỷ"
+        continue: "Tiếp tục"
+        revoke: "Thu hồi"
+        revoked: "Đã thu hồi"
       api:
         generate_master: "Tạo Master API Key"
         none: "Không có API keys nào kích hoạt lúc này."
@@ -3861,10 +3869,8 @@ vi:
         key: "Phím"
         created: Tạo bởi
         updated: Đã cập nhật
-        last_used: Được sử dụng lần cuối
-        never_used: (không bao giờ)
+        never_used: Không bao giờ
         generate: "Khởi tạo"
-        undo_revoke: "Thu hồi lệnh hủy bỏ"
         revoke: "Thu hồi"
         all_users: "Tất cả Thành viên"
         active_keys: "Kích hoạt khóa API"
@@ -3873,16 +3879,13 @@ vi:
         description: Mô tả
         no_description: (Không có mô tả)
         all_api_keys: Tất cả các khóa API
-        user_mode: Cấp độ người dùng
         scope_mode: Phạm vi
         impersonate_all_users: Mạo danh bất kỳ người dùng nào
-        single_user: "Một người dùng"
         user_placeholder: Điền tên đăng nhập
         description_placeholder: Khóa này sẽ được sử dụng để làm gì?
         save: Lưu
         new_key: Khóa API mới
         revoked: Đã thu hồi
-        delete: Xóa vĩnh viễn
         not_shown_again: Khóa này sẽ không được hiển thị lại. Đảm bảo bạn chụp một bản sao trước khi tiếp tục.
         continue: Tiếp tục
         scopes:
@@ -3896,8 +3899,6 @@ vi:
           global_description: Khóa API không có hạn chế và tất cả các điểm cuối đều có thể truy cập được.
           resource: Nguồn
           action: Hoạt động
-          allowed_parameters: Các thông số được phép
-          optional_allowed_parameters: Các thông số được phép (tùy chọn)
           any_parameter: (bất kỳ thông số nào)
           allowed_urls: URL được phép
           descriptions:
@@ -4121,6 +4122,7 @@ vi:
       advanced:
         title: "Nâng cao"
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Nhà phát triển"
           embedding: "Nhúng"
           user_api: "API người dùng"
@@ -4408,10 +4410,7 @@ vi:
             title: "Chọn bảng màu cơ bản"
             description: "Bảng màu cơ bản:"
           title: "Màu sắc"
-          edit: "Chỉnh sửa bảng màu"
-          long_title: "Bảng màu"
           about: "Sửa đổi màu sắc mà chủ đề của bạn sử dụng. Tạo một bảng màu mới để bắt đầu."
-          new_name: "Bảng màu mới"
           copy_name_prefix: "Bản sao của"
           delete_confirm: "Xóa bảng màu này?"
           undo: "Hoàn tác"
@@ -4701,7 +4700,6 @@ vi:
         logster:
           title: "Log lỗi"
       watched_words:
-        title: "Từ đã xem"
         search: "Tìm kiếm"
         clear_filter: "Xóa"
         show_words:
@@ -4776,6 +4774,7 @@ vi:
         status: "Trạng thái"
         show_emails: "Hiện địa chỉ Email"
         hide_emails: "Ẩn Email"
+        silence_reason: "Lý do tắt tiếng"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5021,7 +5020,6 @@ vi:
           external_avatar_url: "URL Ảnh đại diện"
           delete_sso_record: "Xóa bản ghi SSO"
       user_fields:
-        title: "Trường tài khoản"
         untitled: "Không có tiêu đề"
         name: "Tên Trường"
         type: "Loại Trường"
@@ -5050,10 +5048,8 @@ vi:
           dropdown: "Xổ xuống"
           multiselect: "Chọn nhiều"
       site_text:
-        description: "Bạn có thể tùy chỉnh bất kỳ nội dung nào trên diễn đàn. Hãy bắt đầu bằng cách tìm kiếm dưới đây:"
         search: "Tìm kiếm nội dung bạn muốn sửa"
-        title: "Văn bản"
-        edit: "sửa"
+        edit: "Sửa"
         revert: "Hoàn nguyên thay đổi"
         revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
         go_back: "Quay lại tìm kiếm"
@@ -5275,7 +5271,6 @@ vi:
           save: "Lưu lại"
       reseed:
         action:
-          label: "Thay thế Văn bản…"
           title: "Thay thế văn bản của các danh mục và chủ đề bằng các bản dịch"
         modal:
           title: "Thay thế Văn bản"

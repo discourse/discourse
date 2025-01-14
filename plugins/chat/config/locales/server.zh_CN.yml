@@ -21,7 +21,6 @@ zh_CN:
     chat_minimum_message_length: "聊天消息的最少字符数。"
     chat_allow_uploads: "允许在公共聊天频道和直接消息频道中上传文件。"
     chat_archive_destination_topic_status: "频道归档完成后目标话题应处于的状态。这仅适用于目标话题是新话题而不是现有话题的情况。"
-    default_emoji_reactions: "聊天消息的默认表情符号回应。最多可添加 5 个表情符号进行快速回应。"
     direct_message_enabled_groups: "允许这些群组中的用户创建用户间的个人聊天。请注意：管理人员始终可以创建个人聊天，用户将能够回复有权创建个人聊天的用户发起的个人聊天。"
     chat_message_flag_allowed_groups: "这些群组中的用户可以举报聊天消息。请注意，管理员和版主始终可以举报聊天消息。"
     max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"

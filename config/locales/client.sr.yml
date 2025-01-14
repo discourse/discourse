@@ -2057,8 +2057,6 @@ sr:
               content: "Grupe"
             users:
               content: "Korisnici"
-            my_posts:
-              content: "Moje poruke"
             invite:
               content: "Pozovite"
               title: "Pozovi nove članove"
@@ -2181,23 +2179,26 @@ sr:
         add: "Dodaj"
         custom: "Posebna"
         automatic: "Automatska"
+      api_keys:
+        edit: "Izmeni"
+        save: "Sačuvaj"
+        cancel: "Odustani"
+        continue: "Nastavi"
+        revoke: "Povuci"
       api:
         generate_master: "Generiši glavni API ključ"
         none: "Nema aktivnih API ključeva"
         user: "Korisnik"
         title: "API"
-        created: Napravljeno
-        never_used: (nikad)
+        never_used: Nikad
         generate: "Generiši"
         revoke: "Povuci"
-        all_users: "Svi korisnici"
         show_details: Detalji
         description: Opis
         save: Sačuvaj
         continue: Nastavi
         scopes:
           action: Akcije
-          optional_allowed_parameters: Dopušteni parametri (izborno)
           descriptions:
             invites:
               create: Pošaljite pozivnice e-mailom ili generišite linkove za pozivnice.
@@ -2722,7 +2723,6 @@ sr:
           external_email: "E-mail"
           external_avatar_url: "URL Profilne Slike"
       user_fields:
-        title: "Korisnička polja"
         untitled: "Nenaslovljeno"
         name: "Ime Polja"
         type: "Tip Polja"
@@ -2748,7 +2748,7 @@ sr:
         field_types:
           confirm: "Potvrda"
       site_text:
-        edit: "izmeni"
+        edit: "Izmeni"
         show_overriden: "Pokazuj samo promenjeno"
         outdated:
           dismiss: "Odbaci"

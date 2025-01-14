@@ -328,6 +328,8 @@ ca:
       abandon:
         yes_value: "Descarta"
         no_value: "Reprèn l'edició"
+      dropdown:
+        view_all: "mostra-ho tot"
     topic_count_all:
       one: "Vegeu %{count} tema nou"
       other: "Vegeu %{count} temes nous"
@@ -2946,8 +2948,6 @@ ca:
               content: "Grups"
             users:
               content: "Usuaris"
-            my_posts:
-              content: "Les meves publicacions"
             review:
               content: "Revisa"
             invite:
@@ -3155,28 +3155,29 @@ ca:
         add_owners: Afegeix propietaris
         none_selected: "Seleccioneu un grup per a començar"
         no_custom_groups: "Crea un no grup personalitzat"
+      api_keys:
+        edit: "Edita"
+        save: "Desa"
+        cancel: "Cancel·la"
+        continue: "Continua"
+        revoke: "Revoca"
+        revoked: "Revocat"
       api:
         generate_master: "Genera una clau API mestra"
         none: "No hi ha claus API actives ara mateix"
         user: "Usuari"
         title: "API"
         key: "Clau"
-        created: Creat
         updated: Actualitzat
-        last_used: Darrer utilitzat
-        never_used: (mai)
+        never_used: Mai
         generate: "Genera"
-        undo_revoke: "Desfés revocar"
         revoke: "Revoca"
-        all_users: "Tots els usuaris"
         active_keys: "Claus actives de l'API"
         show_details: Detalls
         description: Descripció
         no_description: (sense descripció)
         all_api_keys: Totes les claus de l'API
-        user_mode: Nivell d’usuari
         impersonate_all_users: Suplanta qualsevol usuari
-        single_user: "Usuari únic"
         user_placeholder: Introduïu el nom d'usuari
         description_placeholder: Per a què es farà servir aquesta clau?
         save: Desa
@@ -3330,6 +3331,7 @@ ca:
           installed: "Instal·lat"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Desenvolupador"
           embedding: "Incrustant"
           user_api: "API d'usuari"
@@ -3572,10 +3574,7 @@ ca:
             title: "Seleccioneu la paleta de colors base"
             description: "Paleta base:"
           title: "Colors"
-          edit: "Edita les paletes de colors"
-          long_title: "Paletes de colors"
           about: "Modifiqueu els colors utilitzats per les vostres aparences. Creeu una nova paleta de colors per a començar."
-          new_name: "Nova paleta de colors"
           copy_name_prefix: "Còpia de"
           delete_confirm: "Voleu suprimir aquesta paleta de colors?"
           undo: "Desfés"
@@ -3847,7 +3846,6 @@ ca:
         logster:
           title: "Error de registres (logs)"
       watched_words:
-        title: "Paraules vigilades"
         search: "cerca"
         clear_filter: "Neteja"
         download: Descarrega
@@ -3914,6 +3912,7 @@ ca:
         status: "Estat"
         show_emails: "Mostra correus"
         hide_emails: "Amaga els correus "
+        silence_reason: "Raó del silenciament"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4122,7 +4121,6 @@ ca:
           external_email: "Correu electrònic"
           external_avatar_url: "URL de la imatge de perfil"
       user_fields:
-        title: "Camps d'usuari"
         untitled: "Sense títol"
         name: "Nom del camp"
         type: "Tipus de camp"
@@ -4150,10 +4148,8 @@ ca:
           confirm: "Confirmació"
           dropdown: "Desplega"
       site_text:
-        description: "Podeu personalitzar qualsevol text en el vostre fòrum. Comenceu cercant aquí:"
         search: "Cerca el text que t'agradaria editar"
-        title: "Text"
-        edit: "edita"
+        edit: "Edita"
         revert: "Reverteix els canvis"
         revert_confirm: "Esteu segur que voleu revertir els canvis?"
         go_back: "Torna a la cerca"
@@ -4339,7 +4335,6 @@ ca:
           save: "Desa"
       reseed:
         action:
-          label: "Reemplaça el text..."
           title: "Reemplaça el text de categories i temes amb les traduccions"
         modal:
           title: "Reemplaça el text"

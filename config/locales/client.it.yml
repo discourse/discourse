@@ -460,6 +460,12 @@ it:
         confirm: "Hai già una bozza in corso. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
+      dropdown:
+        title: "Apri il menu delle ultime bozze"
+        view_all: "vedi tutto"
+        other_drafts:
+          one: "+%{count} altra bozza"
+          other: "+%{count} altre bozze"
     topic_count_all:
       one: "Vedi %{count} nuovo argomento"
       other: "Vedi %{count} nuovi argomenti"
@@ -4409,7 +4415,6 @@ it:
         everyone_can_use: "Le etichette possono essere usate da tutti"
         usable_only_by_groups: "Le etichette sono visibili a tutti, ma solo i gruppi seguenti possono usarle"
         visible_only_to_groups: "Le etichette sono visibili soltanto ai seguenti gruppi"
-        cannot_save: "Impossibile salvare il gruppo di etichette. Assicurati che ci sia almeno un'etichetta, che il nome del gruppo di etichette non sia vuoto e non abbia meno di 100 caratteri e che sia selezionato un gruppo etichette per i permessi."
         tags_placeholder: "Cerca o crea etichette"
         parent_tag_placeholder: "Facoltativo"
         select_groups_placeholder: "Seleziona gruppi…"
@@ -4620,11 +4625,9 @@ it:
             users:
               content: "Utenti"
               title: "Elenco di tutti gli utenti"
-            my_posts:
-              content: "I miei Messaggi"
-              content_drafts: "Le mie bozze"
-              title: "La mia recente attività sull'argomento"
-              title_drafts: "Le mie bozze non pubblicate"
+            my_drafts:
+              content: "Le mie bozze"
+              title: "Le mie bozze non pubblicate"
               draft_count:
                 one: "%{count} bozza"
                 other: "%{count} bozze"
@@ -4764,7 +4767,6 @@ it:
           never: "mai"
       reports:
         title: "Elenco dei rapporti disponibili"
-        meta_doc: "Consulta la nostra documentazione <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> per una panoramica dettagliata dei report."
         sidebar_title: "Report"
         sidebar_link:
           all: "Tutti i rapporti"
@@ -4983,6 +4985,14 @@ it:
         add_owners: Aggiungi proprietari
         none_selected: "Seleziona un gruppo per iniziare"
         no_custom_groups: "Crea un nuovo gruppo personalizzato"
+      api_keys:
+        title: "Chiavi API"
+        edit: "Modifica"
+        save: "Salva"
+        cancel: "Annulla"
+        continue: "Continua"
+        revoke: "Revoca"
+        revoked: "Revocata"
       api:
         generate_master: "Genera una chiave API Master"
         none: "Non ci sono chiavi API attive al momento."
@@ -4990,30 +5000,25 @@ it:
         title: "API"
         key: "Chiave"
         keys: "Chiavi"
-        created: Creazione
+        created: Creato da
         updated: Aggiornato
-        last_used: Ultimo uso
-        never_used: (mai)
+        never_used: Mai
         generate: "Genera"
-        undo_revoke: "Annullare Revoca"
         revoke: "Revoca"
-        all_users: "Tutti gli Utenti"
+        all_users: "Tutti gli utenti"
         active_keys: "Chiavi API Attive"
         manage_keys: Gestisci Chiavi
         show_details: Dettagli
         description: Descrizione
         no_description: (nessuna descrizione)
         all_api_keys: Tutte le Chiavi API
-        user_mode: Livello utente
         scope_mode: Ambito
         impersonate_all_users: Impersona qualsiasi utente
-        single_user: "Utente Singolo"
         user_placeholder: Inserisci nome utente
         description_placeholder: A cosa servirà questa chiave?
         save: Salva
         new_key: Nuova Chiave API
         revoked: Revocata
-        delete: Elimina definitivamente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
         scopes:
@@ -5027,8 +5032,6 @@ it:
           global_description: La chiave API non ha restrizioni e tutti gli endpoint sono accessibili.
           resource: Risorsa
           action: Azione
-          allowed_parameters: Parametri consentiti
-          optional_allowed_parameters: Parametri Consentiti (Opzionali)
           any_parameter: (qualsiasi parametro)
           allowed_urls: URL consentiti
           descriptions:
@@ -5423,6 +5426,7 @@ it:
         sidebar_link:
           api_keys:
             title: "Chiavi API"
+          webhooks: "Webhook"
           developer: "Sviluppatore"
           embedding: "Integrazione"
           user_api: "API utente"
@@ -5568,6 +5572,7 @@ it:
           browse_themes: "Sfoglia i temi della comunità"
           customize_desc: "Personalizza:"
           title: "Temi"
+          description: "I temi sono ampie personalizzazioni che modificano più elementi dello stile del design del tuo forum e spesso includono anche funzionalità front-end aggiuntive."
           create: "Crea"
           create_type: "Tipo"
           create_name: "Nome"
@@ -5777,10 +5782,7 @@ it:
             title: "Seleziona la tavolozza dei colori di base"
             description: "Tavolozza di base:"
           title: "Colori"
-          edit: "Modifica le tavolozze dei colori"
-          long_title: "Tavolozze dei colori"
           about: "Modifica i colori usati dal tuo tema. Crea una nuova tavolozza dei colori per iniziare."
-          new_name: "Nuova tavolozza dei colori"
           copy_name_prefix: "Copia di"
           delete_confirm: "Eliminare questa tavolozza dei colori?"
           undo: "Annulla"
@@ -6123,7 +6125,6 @@ it:
         logster:
           title: "Log Errori"
       watched_words:
-        title: "Parole Osservate"
         search: "ricerca"
         clear_filter: "Pulisci"
         show_words:
@@ -6277,6 +6278,7 @@ it:
         status: "Stato"
         show_emails: "Mostra email"
         hide_emails: "Nascondi email"
+        silence_reason: "Motivo Silenzio"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6560,7 +6562,6 @@ it:
           delete_sso_record: "Elimina Record SSO"
           confirm_delete: "Sei sicuro di voler eliminare questo record DiscourseConnect?"
       user_fields:
-        title: "Campi Utente"
         untitled: "Senza nome"
         name: "Nome Campo"
         type: "Tipo Campo"
@@ -6602,10 +6603,8 @@ it:
           dropdown: "A discesa"
           multiselect: "Selezione multipla"
       site_text:
-        description: "Puoi personalizzare qualsiasi testo del tuo forum. Comincia effettuando una ricerca qui sotto:"
         search: "Trova il testo che vorresti modificare"
-        title: "Testo"
-        edit: "modifica"
+        edit: "Modifica"
         revert: "Annulla Modifiche"
         revert_confirm: "Sei sicuro di voler annullare le modifiche?"
         go_back: "Torna alla Ricerca"
@@ -6900,7 +6899,6 @@ it:
           save: "Salva"
       reseed:
         action:
-          label: "Sostituisci testo..."
           title: "Sostituisci il testo delle Categorie e degli Argomenti con le traduzioni"
         modal:
           title: "Sostituisci testo"

@@ -411,6 +411,8 @@ ja:
         confirm: "作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
         no_value: "編集を再開"
+      dropdown:
+        view_all: "すべて表示"
     topic_count_all:
       other: "%{count} 件の新規トピックを見る"
     topic_count_categories:
@@ -4155,7 +4157,6 @@ ja:
         everyone_can_use: "全員がタグを使用できます。"
         usable_only_by_groups: "タグは全員に表示されますが、次のグループのみが使用できます。"
         visible_only_to_groups: "タグは次のグループにのみ表示されます"
-        cannot_save: "タググループを保存できません。少なくとも 1 つのタグが存在し、タググループ名が空ではなく 100 文字以下であり、タグ権限のグループが選択されていることを確認してください。"
         tags_placeholder: "タグを検索または作成"
         parent_tag_placeholder: "オプション"
         select_groups_placeholder: "グループを選択…"
@@ -4360,11 +4361,9 @@ ja:
             users:
               content: "ユーザー"
               title: "すべてのユーザーのリスト"
-            my_posts:
-              content: "自分の投稿"
-              content_drafts: "下書き"
-              title: "最近のトピックアクティビティ"
-              title_drafts: "未投稿の下書き"
+            my_drafts:
+              content: "下書き"
+              title: "未投稿の下書き"
               draft_count:
                 other: "%{count} 下書き"
             review:
@@ -4498,7 +4497,6 @@ ja:
           never: "削除しない"
       reports:
         title: "使用可能なレポートのリスト"
-        meta_doc: "レポートの詳細な概要については、<a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>ドキュメント</a>をご覧ください。"
         sidebar_title: "レポート"
         sidebar_link:
           all: "すべてのレポート"
@@ -4713,6 +4711,14 @@ ja:
         add_owners: オーナーを追加
         none_selected: "開始するにはグループを選択してください"
         no_custom_groups: "新しいカスタムグループを作成する"
+      api_keys:
+        title: "API キー"
+        edit: "編集"
+        save: "保存"
+        cancel: "キャンセル"
+        continue: "続行"
+        revoke: "取り消す"
+        revoked: "取り消し済み"
       api:
         generate_master: "マスター API キーを生成"
         none: "現在アクティブな API キーが存在しません。"
@@ -4720,12 +4726,10 @@ ja:
         title: "API"
         key: "キー"
         keys: "キー"
-        created: 作成
+        created: 作成者
         updated: 更新
-        last_used: 最後の使用
-        never_used: (未使用)
+        never_used: なし
         generate: "生成"
-        undo_revoke: "取り消しを元に戻す"
         revoke: "取り消す"
         all_users: "すべてのユーザー"
         active_keys: "アクティブな API キー"
@@ -4734,16 +4738,13 @@ ja:
         description: 説明
         no_description: (説明なし)
         all_api_keys: すべての API キー
-        user_mode: ユーザーレベル
         scope_mode: 範囲
         impersonate_all_users: ユーザーを代理して操作
-        single_user: "単一ユーザー"
         user_placeholder: ユーザー名を入力
         description_placeholder: このキーは何に使用されますか？
         save: 保存
         new_key: 新しい API キー
         revoked: 取り消し済み
-        delete: 永久に削除
         not_shown_again: このキーは二度と表示されません。続行する前に必ずコピーしてください。
         continue: 続行
         scopes:
@@ -4757,8 +4758,6 @@ ja:
           global_description: API キーには制限がなく、すべてのエンドポイントにアクセスできます。
           resource: リソース
           action: 操作
-          allowed_parameters: 許可されたパラメーター
-          optional_allowed_parameters: 許可されたパラメーター (オプション)
           any_parameter: (任意のパラメーター)
           allowed_urls: 許可された URL
           descriptions:
@@ -5150,6 +5149,7 @@ ja:
         sidebar_link:
           api_keys:
             title: "API キー"
+          webhooks: "Webhook"
           developer: "開発者"
           embedding: "埋め込み"
           user_api: "ユーザー API"
@@ -5295,6 +5295,7 @@ ja:
           browse_themes: "コミュニティーのテーマを閲覧"
           customize_desc: "カスタマイズ:"
           title: "テーマ"
+          description: "テーマは、フォーラムのデザインの複数のスタイル要素を変更する広範なカスタマイズテンプレートであり、多くの場合、フロントエンドの追加機能も含まれています。"
           create: "作成"
           create_type: "タイプ"
           create_name: "名前"
@@ -5497,10 +5498,7 @@ ja:
             title: "基本色パレットを選択してください"
             description: "基本パレット:"
           title: "色"
-          edit: "色パレットを編集"
-          long_title: "色パレット"
           about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
-          new_name: "新しい色パレット"
           copy_name_prefix: "コピー元:"
           delete_confirm: "この色パレットを削除しますか？"
           undo: "元に戻す"
@@ -5843,7 +5841,6 @@ ja:
         logster:
           title: "エラーログ"
       watched_words:
-        title: "ウォッチ中の言葉"
         search: "検索"
         clear_filter: "クリア"
         show_words:
@@ -5996,6 +5993,7 @@ ja:
         status: "ステータス"
         show_emails: "メールアドレスを表示"
         hide_emails: "メールを非表示"
+        silence_reason: "投稿禁止の理由"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6274,7 +6272,6 @@ ja:
           delete_sso_record: "SSO レコードを削除"
           confirm_delete: "この DiscourseConnect レコードを削除してもよろしいですか？"
       user_fields:
-        title: "ユーザーフィールド"
         untitled: "無題"
         name: "フィールド名"
         type: "フィールドタイプ"
@@ -6316,9 +6313,7 @@ ja:
           dropdown: "ドロップダウン"
           multiselect: "複数選択"
       site_text:
-        description: "フォーラム上のテキストを編集することができます。まずは、以下で検索してください。"
         search: "編集するテキストを検索"
-        title: "テキスト"
         edit: "編集"
         revert: "変更を戻す"
         revert_confirm: "変更を戻してよろしいですか？"
@@ -6609,7 +6604,6 @@ ja:
           save: "保存"
       reseed:
         action:
-          label: "テキストを置換..."
           title: "カテゴリとトピックのテキストを翻訳に置き換える"
         modal:
           title: "テキストを置換"

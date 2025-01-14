@@ -451,6 +451,8 @@ fa_IR:
         confirm: "شما از قبل یک پیش نویس در حال انجام دارید. دوست دارید با آن چه کار کنید؟"
         yes_value: "حذف"
         no_value: "ادامه"
+      dropdown:
+        view_all: "مشاهده همه"
     topic_count_all:
       one: "مشاهده %{count} موضوع جدید"
       other: "مشاهده %{count} موضوع جدید"
@@ -4501,8 +4503,7 @@ fa_IR:
             users:
               content: "کاربران"
               title: "فهرست همه‌ی کاربران"
-            my_posts:
-              content: "نوشته‌های من"
+            my_drafts:
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"
@@ -4717,6 +4718,13 @@ fa_IR:
         add_owners: افزودن مالک
         none_selected: "برای شروع یک گروه انتخاب کنید"
         no_custom_groups: "ایجاد گروه سفارشی"
+      api_keys:
+        title: "کلیدهای API"
+        edit: "ویرایش"
+        save: "ذخیره"
+        cancel: "انصراف"
+        continue: "ادامه"
+        revoke: "ابطال"
       api:
         generate_master: "ایجاد کلید اصلی API"
         none: "هم اکنون هیچ کلید API فعالی وجود ندارد"
@@ -4724,9 +4732,8 @@ fa_IR:
         title: "API"
         key: "کلید"
         keys: "کلیدها"
-        created: ساخته شده
         updated: به روز شده
-        never_used: (هرگز)
+        never_used: هرگز
         generate: "تولید کردن"
         revoke: "ابطال"
         all_users: "همه کاربران"
@@ -4914,6 +4921,7 @@ fa_IR:
         sidebar_link:
           api_keys:
             title: "کلیدهای API"
+          webhooks: "webhook ها"
           developer: "توسعه دهنده"
           embedding: "جاسازی"
           user_api: "API کاربر"
@@ -5357,7 +5365,6 @@ fa_IR:
         logster:
           title: "گزارش خطا"
       watched_words:
-        title: "کلمات تماشا شده"
         search: "جست‌وجو"
         clear_filter: "واضح"
         case_sensitive: "«حساس به حروف کوچک و بزرگ»"
@@ -5605,7 +5612,6 @@ fa_IR:
           external_email: "ایمیل"
           external_avatar_url: "نشانی اینترنتی تصویر پروفایل"
       user_fields:
-        title: "زمینه‌های کاربر"
         untitled: "بدون عنوان"
         name: "نام زمینه"
         type: "نوع زمینه"
@@ -5630,9 +5636,7 @@ fa_IR:
           confirm: "تاییدیه"
           dropdown: "کرکره‌ای"
       site_text:
-        description: "شما می‌توانید در انجمن خود همه متن‌ها را شخصی سازی کنید, لطفا با جستجو کردن در زیر شروع کنید:"
         search: "جستجو برای متنی که میخواهید ویرایش کنید"
-        title: "متن"
         edit: "ویرایش"
         revert: "بازگردانی تغییرات"
         revert_confirm: "آیا مطمئن هستید که میخواهید تغییرات را بازگردانی کنید؟"

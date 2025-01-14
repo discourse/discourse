@@ -392,6 +392,8 @@ sl:
       abandon:
         yes_value: "Zavrzi"
         no_value: "Nadaljujt urejanje"
+      dropdown:
+        view_all: "prikaži vse"
     topic_count_all:
       one: "Poglej %{count} novo temo"
       two: "Poglej %{count} novi temi"
@@ -3639,8 +3641,6 @@ sl:
               content: "Skupine"
             users:
               content: "Uporabniki"
-            my_posts:
-              content: "Moji prispevki"
             review:
               content: "Pregled"
             invite:
@@ -3878,21 +3878,24 @@ sl:
         group_owners: Skrbniki
         add_owners: Dodaj skrbnike
         no_custom_groups: "Ustvari novo skupino po meri"
+      api_keys:
+        edit: "Uredi"
+        save: "Shrani"
+        cancel: "Prekliči"
+        continue: "Nadaljuj"
+        revoke: "Odstrani"
+        revoked: "Preklican"
       api:
         generate_master: "Ustvari glavni API ključ"
         user: "Uporabnik"
         title: "API"
-        created: Ustvarjeno
-        last_used: Nazadnje uporabljeno
-        never_used: (nikoli)
+        never_used: Nikoli
         generate: "Ustvari"
         revoke: "Prekliči"
-        all_users: "Vsi uporabniki"
         show_details: Podrobnosti
         description: Opis
         save: Shrani
         revoked: Preklican
-        delete: Trajno izbriši
         not_shown_again: Ta ključ ne bo več prikazan. Preden nadaljujete, si ustvarite kopijo.
         continue: Nadaljuj
         scopes:
@@ -4309,7 +4312,6 @@ sl:
         logster:
           title: "Dnevnik napak"
       watched_words:
-        title: "Nadzorovane besede"
         search: "išči"
         clear_filter: "Počisti"
         show_words:
@@ -4376,6 +4378,7 @@ sl:
         status: "Stanje"
         show_emails: "Pokaži e-naslove"
         hide_emails: "Skrij e-naslove"
+        silence_reason: "Razlog za utišanje"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4570,7 +4573,6 @@ sl:
           delete_sso_record: "Izbriši zapis SSO"
           confirm_delete: "Ali ste prepričani, da želite izbrisati ta zapis DiscourseConnect?"
       user_fields:
-        title: "Podatki uporabnika"
         name: "Ime polja"
         type: "Vrsta polja"
         description: "Opis polja"
@@ -4599,10 +4601,8 @@ sl:
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:
-        description: "Lahko spremenite katerikoli besedilo na forumu. Začnite tako da poiščete spodaj:"
         search: "Išči besedilo, ki bi ga rad/a uredil/a"
-        title: "Besedilo"
-        edit: "uredi"
+        edit: "Uredi"
         revert: "Prekliči spremembe"
         revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
         go_back: "Nazaj na iskalnik"

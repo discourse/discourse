@@ -428,6 +428,8 @@ el:
       abandon:
         yes_value: "Απόρριψη"
         no_value: "Συνέχιση επεξεργασίας"
+      dropdown:
+        view_all: "προβολή όλων"
     topic_count_all:
       one: "Δείτε %{count} νέο θέμα"
       other: "Δείτε %{count} νέα θέματα"
@@ -3887,11 +3889,9 @@ el:
             users:
               content: "Χρήστες"
               title: "Λίστα όλων των χρηστών"
-            my_posts:
-              content: "Οι αναρτήσεις μου"
-              content_drafts: "Τα προσχέδιά μου"
-              title: "Η πρόσφατη θεματική μου δραστηριότητα"
-              title_drafts: "Τα μη δημοσιευμένα προσχέδια μου"
+            my_drafts:
+              content: "Τα προσχέδιά μου"
+              title: "Τα μη δημοσιευμένα προσχέδια μου"
               draft_count:
                 one: "%{count} προσχέδιο"
                 other: "%{count} προσχέδια"
@@ -4129,35 +4129,37 @@ el:
         add_owners: Προσθήκη ιδιοκτητών
         none_selected: "Επίλεξε ομάδα για να ξεκινήσεις"
         no_custom_groups: "Δημιουργία νέας προσαρμοσμένης ομάδας"
+      api_keys:
+        title: "Κλειδιά API"
+        edit: "Επεξεργασία"
+        save: "Αποθήκευση"
+        cancel: "Ακύρωση"
+        continue: "Συνεχίστε"
+        revoke: "Ανακάλεσε"
+        revoked: "Ανακλήθηκε"
       api:
         generate_master: "Δημιουργία Master API Key"
         none: "Δεν υπάρχουν ενεργά κλειδιά API αυτή την στιγμή."
         user: "Χρήστης"
         title: "API"
         key: "Κλειδί"
-        created: Δημιουργήθηκε
+        created: Δημιουργήθηκε από
         updated: Ενημερώθηκε
-        last_used: Τελευταία χρήση
-        never_used: (ποτέ)
+        never_used: Ποτέ
         generate: "Δημιουργία"
-        undo_revoke: "Αναίρεση ανάκλησης"
         revoke: "Ανάκληση"
-        all_users: "Όλοι οι χρήστες"
         active_keys: "Ενεργά κλειδιά API"
         manage_keys: Διαχείριση κλειδιών
         show_details: Λεπτομέρειες
         description: Περιγραφή
         no_description: (χωρίς περιγραφή)
         all_api_keys: Όλα τα κλειδιά API
-        user_mode: Επίπεδο χρήστη
         impersonate_all_users: Υποδυθείτε οποιονδήποτε χρήστη
-        single_user: "Μεμονωμένος χρήστης"
         user_placeholder: Εισαγωγή ονόματος χρήστη
         description_placeholder: Σε τι χρησιμεύει αυτό το κλειδί;
         save: Αποθήκευση
         new_key: Νέο κλειδί API
         revoked: Ανακλήθηκε
-        delete: Μόνιμη Διαγραφή
         not_shown_again: Αυτό το κλειδί δε θα εμφανιστεί ξανά. Βεβαιωθείτε ότι έχετε λάβει ένα αντίγραφο πριν συνεχίσετε.
         continue: Συνεχίστε
         scopes:
@@ -4167,8 +4169,6 @@ el:
           title: Πεδία εφαρμογής
           resource: Πόρος
           action: Ενέργεια
-          allowed_parameters: Επιτρεπόμενες παράμετροι
-          optional_allowed_parameters: Επιτρεπόμενες παράμετροι (προαιρετικό)
           any_parameter: (οποιαδήποτε παράμετρος)
           allowed_urls: Επιτρεπόμενες διευθύνσεις URL
           descriptions:
@@ -4336,6 +4336,7 @@ el:
         sidebar_link:
           api_keys:
             title: "Κλειδιά API"
+          webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Ενσωμάτωση"
           user_api: "User API"
@@ -4613,10 +4614,7 @@ el:
             title: "Επιλογή βασικής παλέτας χρωμάτων"
             description: "Βασική παλέτα:"
           title: "Χρώματα"
-          edit: "Επεξεργασία παλετών χρωμάτων"
-          long_title: "Παλέτες χρωμάτων"
           about: "Τροποποιήστε τα χρώματα που χρησιμοποιούνται από τα θέματα σας. Δημιουργήστε μια νέα παλέτα χρωμάτων για να ξεκινήσετε."
-          new_name: "Νέα παλέτα χρωμάτων"
           copy_name_prefix: "Αντίγραφο του"
           delete_confirm: "Διαγραφή αυτής της παλέτας χρωμάτων;"
           undo: "Αναίρεση"
@@ -4904,7 +4902,6 @@ el:
         logster:
           title: "Error Logs"
       watched_words:
-        title: "Επιτηρούμενες Λέξεις"
         search: "αναζήτηση"
         clear_filter: "Καθαρισμός"
         download: Κατέβασμα
@@ -4977,6 +4974,7 @@ el:
         status: "Κατάσταση"
         show_emails: "Προβολή Emails"
         hide_emails: "Απόκρυψη emails"
+        silence_reason: "Αιτία σιώπησης"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5204,7 +5202,6 @@ el:
           external_email: "Διεύθυνση Email"
           external_avatar_url: "URL Εικόνας Προφίλ"
       user_fields:
-        title: "Πεδία Χρήστη"
         untitled: "Χωρίς τίτλο"
         name: "Όνομα πεδίου"
         type: "Τύπος πεδίου"
@@ -5231,10 +5228,8 @@ el:
           dropdown: "Dropdown"
           multiselect: "Πολλαπλή επιλογή"
       site_text:
-        description: "Μπορείς να προσαρμόσεις οποιοδήποτε κείμενο στο χώρο συζητήσεων σου. Παρακαλώ ξεκίνησε κάνοντας αναζήτηση παρακάτω:"
         search: "Αναζήτησε το κείμενο που θα ήθελες να επεξεργαστείς"
-        title: "Κείμενο"
-        edit: "επεξεργασία"
+        edit: "Επεξεργασία"
         revert: "Επαναφορά αλλαγών"
         revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"
         go_back: "Πίσω στην αναζήτηση"
@@ -5441,7 +5436,6 @@ el:
           save: "Αποθήκευση"
       reseed:
         action:
-          label: "Αντικατάσταση κειμένου…"
           title: "Αντικατάσταση κειμένου κατηγοριών και θεμάτων με μεταφράσεις"
         modal:
           title: "Αντικατάσταση κειμένου"

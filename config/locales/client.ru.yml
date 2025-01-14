@@ -558,6 +558,8 @@ ru:
         confirm: "У вас уже есть черновик. Что с ним сделать?"
         yes_value: "Удалить"
         no_value: "Возобновить редактирование"
+      dropdown:
+        view_all: "просмотреть всё"
     topic_count_all:
       one: "Посмотреть %{count} новую тему"
       few: "Посмотреть %{count} новые темы"
@@ -4900,7 +4902,6 @@ ru:
         everyone_can_use: "Все могут использовать теги"
         usable_only_by_groups: "Теги видны всем, но использовать их могут только указанные группы"
         visible_only_to_groups: "Теги видны только указанным группам"
-        cannot_save: "Невозможно сохранить группу тегов. Убедитесь, что выбран хотя бы один тег, имя группы тегов непустое и содержит менее 100 символов, и указаны соответствующие группы, если выбрано ограничение по использованию тегов."
         tags_placeholder: "Найти или создать тег"
         parent_tag_placeholder: "Необязательно"
         select_groups_placeholder: "Выберите группы…"
@@ -5123,15 +5124,13 @@ ru:
             users:
               content: "Пользователи"
               title: "Список пользователей"
-            my_posts:
-              content: "Мои сообщения"
-              content_drafts: "Мои черновики"
-              title: "Мои недавняя активность в темах"
-              title_drafts: "Мои неопубликованные черновики"
+            my_drafts:
+              content: "Мои черновики"
+              title: "Мои неопубликованные черновики"
               draft_count:
                 one: "%{count} черновик"
-                few: "%{count} черновика"
-                many: "%{count} черновиков"
+                few: "%{count} черновиков"
+                many: "%{count} черновика"
                 other: "%{count} черновика"
             review:
               content: "Очередь проверки"
@@ -5279,7 +5278,6 @@ ru:
           never: "Никогда"
       reports:
         title: "Список доступных отчётов"
-        meta_doc: "Ознакомьтесь с нашей <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>документацией</a> для подробного обзора отчетов."
         sidebar_title: "Отчеты"
         sidebar_link:
           all: "Все отчёты"
@@ -5506,6 +5504,14 @@ ru:
         add_owners: Добавить владельцев
         none_selected: "Для начала выберите группу!"
         no_custom_groups: "Создать новую кастомную группу"
+      api_keys:
+        title: "API-ключи"
+        edit: "Отредактировать"
+        save: "Сохранить"
+        cancel: "Нет"
+        continue: "Продолжить"
+        revoke: "Отозвать"
+        revoked: "Отозван"
       api:
         generate_master: "Сгенерировать ключ API"
         none: "Отсутствует ключ API."
@@ -5513,12 +5519,10 @@ ru:
         title: "API"
         key: "Ключ"
         keys: "Ключи"
-        created: Создан
+        created: Создано
         updated: Обновлён
-        last_used: Последнее использование
-        never_used: (никогда)
+        never_used: Никогда
         generate: "Сгенерировать"
-        undo_revoke: "Отменить"
         revoke: "Отозвать"
         all_users: "Все пользователи"
         active_keys: "Активные API-ключи"
@@ -5527,16 +5531,13 @@ ru:
         description: Описание
         no_description: (без описания)
         all_api_keys: Все API-ключи
-        user_mode: Режим
         scope_mode: Область действия ключа API
         impersonate_all_users: Представиться как пользователь
-        single_user: "Отдельный пользователь"
         user_placeholder: Введите имя пользователя
         description_placeholder: Для чего будет использоваться этот ключ?
         save: Сохранить
         new_key: Новый API-ключ
         revoked: Отозван
-        delete: Окончательно удалить
         not_shown_again: Этот ключ больше не будет отображаться. Прежде чем продолжить, обязательно сохраните его копию.
         continue: Продолжить
         scopes:
@@ -5550,8 +5551,6 @@ ru:
           global_description: API-ключ не имеет ограничений, доступны все разрешения.
           resource: Ресурс
           action: Действие
-          allowed_parameters: Разрешённые параметры
-          optional_allowed_parameters: Разрешённые параметры (необязательно)
           any_parameter: (любой параметр)
           allowed_urls: Разрешённые URL
           descriptions:
@@ -5952,6 +5951,7 @@ ru:
         sidebar_link:
           api_keys:
             title: "API-ключи"
+          webhooks: "Вебхуки"
           developer: "Разработчикам"
           embedding: "Встраивание"
           user_api: "Пользовательский API"
@@ -6097,6 +6097,7 @@ ru:
           browse_themes: "Просмотр тем сообщества"
           customize_desc: "Настроить:"
           title: "Темы"
+          description: "Темы — это обширные настройки, которые изменяют множество элементов стиля форума и обычно включают дополнительный функционал для пользовательского интерфейса."
           create: "Создать"
           create_type: "Тип"
           create_name: "Название"
@@ -6320,10 +6321,7 @@ ru:
             title: "Выберите базовую цветовую палитру"
             description: "Базовая палитра:"
           title: "Цвета"
-          edit: "Редактировать цветовую палитру"
-          long_title: "Цветовые палитры"
           about: "Измените цвета, используемые в темах. Создайте новую цветовую палитру."
-          new_name: "Новая цветовая палитра"
           copy_name_prefix: "Копия"
           delete_confirm: "Удалить эту цветовую палитру?"
           undo: "Отменить"
@@ -6666,7 +6664,6 @@ ru:
         logster:
           title: "Журнал ошибок"
       watched_words:
-        title: "Контролируемые слова"
         search: "поиск"
         clear_filter: "Очистить"
         show_words:
@@ -6822,6 +6819,7 @@ ru:
         status: "Статус"
         show_emails: "Показать адреса эл. почты"
         hide_emails: "Скрыть адреса эл. почты"
+        silence_reason: "Причина заморозки"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -7125,7 +7123,6 @@ ru:
           delete_sso_record: "Удалить запись SSO"
           confirm_delete: "Действительно удалить эту запись DiscourseConnect?"
       user_fields:
-        title: "Поля пользователя"
         untitled: "Без заголовка"
         name: "Название поля"
         type: "Тип поля"
@@ -7167,10 +7164,8 @@ ru:
           dropdown: "Выпадающий список"
           multiselect: "Множественный выбор"
       site_text:
-        description: "Вы можете отредактировать любой текст на форуме. Начните с поиска:"
         search: "Найдите текст, который вы хотите отредактировать"
-        title: "Текст"
-        edit: "Изменить"
+        edit: "Отредактировать"
         revert: "Отменить изменения"
         revert_confirm: "Действительно отменить внесённые изменения?"
         go_back: "Вернуться к поиску"
@@ -7476,7 +7471,6 @@ ru:
           save: "Сохранить"
       reseed:
         action:
-          label: "Заменить текст…"
           title: "Заменить переводами текст категорий и тем"
         modal:
           title: "Заменить текст"

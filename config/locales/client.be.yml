@@ -1475,9 +1475,8 @@ be:
               content: "Групы"
             users:
               content: "карыстальнікаў"
-            my_posts:
-              content: "мае паведамленні"
-              content_drafts: "Мае чарнавікі"
+            my_drafts:
+              content: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
       filter: "Filter..."
@@ -1599,16 +1598,20 @@ be:
         delete: "выдаліць"
         delete_failed: "Не атрымалася выдаліць групу. Калі гэта - аўтаматычная група, яе немагчыма знішчыць."
         add: "дадаць"
+      api_keys:
+        edit: "рэдагаваць"
+        save: "захаваць"
+        cancel: "адмяніць"
+        continue: "Працягнуць"
+        revoke: "адклікаць"
       api:
         generate_master: "Згенераваць Галоўны ключ API"
         none: "Пакуль няма ніводнага актыўнага ключа API."
         user: "Карыстальнік"
         title: "API"
-        created: створаны
-        never_used: (ніколі)
+        never_used: ніколі
         generate: "згенераваць"
         revoke: "Адклікнуць"
-        all_users: "Усе карыстальнікі"
         active_keys: "Актыўныя API ключы"
         manage_keys: Кіраваць ключамі
         show_details: Дэталі

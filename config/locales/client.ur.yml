@@ -334,6 +334,8 @@ ur:
       abandon:
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
+      dropdown:
+        view_all: "سب دیکھیں"
     topic_count_all:
       one: "%{count} نیا ٹاپک دیکھیں۔"
       other: "%{count} نئے ٹاپک دیکھیں۔"
@@ -3609,8 +3611,6 @@ ur:
               content: "گروپس"
             users:
               content: "صارفین"
-            my_posts:
-              content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
             invite:
@@ -3831,36 +3831,37 @@ ur:
         add_owners: مالکان شامل کریں
         none_selected: "شروع کرنے کے لئے ایک گروپ منتخب کریں"
         no_custom_groups: "ایک نیا \"اپنی مرضی کا\" گروپ بنائیں"
+      api_keys:
+        edit: "ترمیم کریں"
+        save: "محفوظ کریں"
+        cancel: "منسوخ"
+        continue: "جاری رکھی"
+        revoke: "منسوخ کریں"
+        revoked: "منسوخ"
       api:
         generate_master: "ماسٹر API کِی تخلیق کریں"
         none: "کوئی فعال API کیز اِس وقت موجود نہیں ہیں۔"
         user: "صارف"
         title: "API"
         key: "کی"
-        created: بنایا گیا
+        created: بنائی گئی
         updated: اپ ڈیٹ
-        last_used: آخری بار استعمال
-        never_used: (کبھی نہیں)
+        never_used: کبھی نہیں
         generate: "تخلیق کریں"
-        undo_revoke: "کالعدم کریں۔"
         revoke: "منسوخ کریں"
-        all_users: "تمام صارفین"
         active_keys: "ایکٹو API کیز"
         manage_keys: چابیاں منظم کریں
         show_details: تفصیلات
         description: تفصیل
         no_description: (کوئی وضاحت نہیں)
         all_api_keys: تمام API کی چابیاں
-        user_mode: صارف کی سطح
         scope_mode: دائرہ کار
         impersonate_all_users: کسی بھی صارف کی نقالی
-        single_user: "واحد صارف"
         user_placeholder: صارف نام درج کریں۔
         description_placeholder: اس چابی کو کس کام کے لیے استعمال کیا جائے گا؟
         save: محفوظ کریں
         new_key: نئی API چابی
         revoked: منسوخ
-        delete: مستقل طور پر مٹائیں
         not_shown_again: یہ چابی دوبارہ نہیں دکھائی جائے گی۔ یقینی بنائیں کہ آپ جاری رکھنے سے پہلے ایک کاپی کرلیں۔
         continue: جاری رکھی
         scopes:
@@ -3874,8 +3875,6 @@ ur:
           global_description: API چابی پر کوئی پابندی نہیں ہے اور تمام اینڈ پوائنٹس قابل رسائی ہیں۔
           resource: وسائل
           action: عمل
-          allowed_parameters: اجازت یافتہ پیرامیٹر
-          optional_allowed_parameters: اجازت شدہ پیرامیٹرز (اختیاری)
           any_parameter: (کوئی بھی پیرامیٹر)
           allowed_urls: اجازت یافتہ URLs
           descriptions:
@@ -4059,6 +4058,7 @@ ur:
           installed: "انسٹال کیا ہوا"
       advanced:
         sidebar_link:
+          webhooks: "وَیب ھُوک٘س٘"
           developer: "ڈیولپر"
           embedding: "اَیمبَیڈ کرنا"
           user_api: "یُوزَر API"
@@ -4334,10 +4334,7 @@ ur:
             title: "بَیس رنگ پیلیٹ منتخب کریں"
             description: "بَیس پیلیٹ:"
           title: "رنگ"
-          edit: "رنگ پیلیٹ ترمیم کریں"
-          long_title: "رنگ پیلیٹ"
           about: "اپنی تِھیمز کے استعمال کردہ رنگوں میں ترمیم کریں۔ شروع کرنے کے لئے ایک نئی پیلیٹ بنائیں۔"
-          new_name: "نئی رنگ پیلیٹ"
           copy_name_prefix: "نقل از"
           delete_confirm: "اِس رنگ کی تختی کومٹائیں؟"
           undo: "کالعدم کریں"
@@ -4639,7 +4636,6 @@ ur:
         logster:
           title: "خرابیوں کے لاگز"
       watched_words:
-        title: "نظر رکھے ہوئے الفاظ"
         search: "سرچ"
         clear_filter: "صاف کریں"
         show_words:
@@ -4726,6 +4722,7 @@ ur:
         status: "سٹیٹس"
         show_emails: "اِیمیل دکھائیں"
         hide_emails: "ای میلز چھپائیں"
+        silence_reason: "خاموش کردینے کی وجہ"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4984,7 +4981,6 @@ ur:
           delete_sso_record: "ایس ایس او ریکارڈ کو حذف کریں"
           confirm_delete: "کیا آپ واقعی اس DiscourseConnect ریکارڈ کو حذف کرنا چاہیں گے؟"
       user_fields:
-        title: "صارف کے لیے دیئے گئے خانے"
         untitled: "بلاعنوان"
         name: "فیلڈ کا نام"
         type: "فیلڈ کی قسم"
@@ -5008,10 +5004,8 @@ ur:
           dropdown: "ڈراپ ڈاؤن"
           multiselect: "کثیر الانتخاب"
       site_text:
-        description: "آپ اپنے فورم پر کسی بھی ٹَیکسٹ کو اپنی مرضی کے مطابق بدل سکتے ہیں۔ براہ مہربانی شروع کرنے کیلئے ذیل میں سرچ کریں:"
         search: "آپ جس ٹَیکسٹ میں ترمیم کرنا چاہتے اُسے سرچ کریں"
-        title: "ٹیکسٹ"
-        edit: "ترمیم"
+        edit: "ترمیم کریں"
         revert: "تبدیلیاں لوٹائیں"
         revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
         go_back: "واپس سَرچ پر"
@@ -5226,7 +5220,6 @@ ur:
           save: "محفوظ کریں"
       reseed:
         action:
-          label: "متن بدلیں..."
           title: "ترجمہ کے ساتھ زُمرہ جات اور ٹاپکس کا متن تبدیل کریں"
         modal:
           title: "متن بدلیں"

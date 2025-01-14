@@ -21,7 +21,6 @@ de:
     chat_minimum_message_length: "Mindestanzahl von Zeichen für eine Chat-Nachricht."
     chat_allow_uploads: "Uploads in öffentlichen Chat-Kanälen und Direktnachrichtenkanälen zulassen."
     chat_archive_destination_topic_status: "Der Status, den das Zielthema haben soll, sobald eine Kanalarchivierung abgeschlossen ist. Dies gilt nur, wenn das Zielthema ein neues Thema ist und kein vorhandenes."
-    default_emoji_reactions: "Standard-Emoji-Reaktionen für Chat-Nachrichten. Füge bis zu 5 Emojis für schnelle Reaktionen hinzu."
     direct_message_enabled_groups: "Benutzern in diesen Gruppen erlauben, persönliche Benutzer-zu-Benutzer-Chats zu erstellen. Hinweis: Teammitglieder können immer persönliche Chats erstellen und Benutzer können auf persönliche Chats antworten, die von Benutzern initiiert wurden, die die Berechtigung haben, sie zu erstellen."
     chat_message_flag_allowed_groups: "Benutzer in diesen Gruppen dürfen Chat-Nachrichten melden. Beachte, dass Administratoren und Moderatoren immer Chatnachrichten melden können."
     max_mentions_per_chat_message: "Maximale Anzahl von @name-Benachrichtigungen, die ein Benutzer in einer Chat-Nachricht verwenden kann."

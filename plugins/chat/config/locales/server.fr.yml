@@ -21,7 +21,6 @@ fr:
     chat_minimum_message_length: "Nombre minimal de caractères pour un message de discussion."
     chat_allow_uploads: "Autoriser les téléversements dans les canaux de discussion publics et les canaux de messagerie directe."
     chat_archive_destination_topic_status: "Le statut que doit avoir le sujet de destination une fois l'archivage du canal terminé. Cela s'applique uniquement lorsque le sujet de destination est un nouveau sujet, et non un sujet existant."
-    default_emoji_reactions: "Réactions émoji par défaut pour les messages de discussion. Ajoutez jusqu'à 5 émojis pour une réaction rapide."
     direct_message_enabled_groups: "Permettre aux utilisateurs de ces groupes de créer des discussions privées entre utilisateurs. Remarque : les responsables peuvent toujours créer des conversations privées et les utilisateurs pourront répondre aux conversations privées initiées par les utilisateurs qui sont autorisés à les créer."
     chat_message_flag_allowed_groups: "Les utilisateurs de ces groupes sont autorisés à signaler les messages de discussion. Notez que les administrateurs et les modérateurs peuvent toujours signaler les messages de discussion."
     max_mentions_per_chat_message: "Nombre maximum de notifications @name qu'un utilisateur peut utiliser dans un message de discussion."

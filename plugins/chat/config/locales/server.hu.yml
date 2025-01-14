@@ -21,7 +21,6 @@ hu:
     chat_minimum_message_length: "A csevegőüzenetek minimális karakterszáma."
     chat_allow_uploads: "Feltöltés engedélyezése nyilvános csevegőcsatornákon és közvetlen üzenetküldő csatornákon."
     chat_archive_destination_topic_status: "Az az állapot, amelyet a céltéma a csatornaarchiválás befejezése után fog kapni. Ez csak akkor érvényes, ha a céltéma egy új téma, nem pedig egy meglévő."
-    default_emoji_reactions: "Alapértelmezett hangulatjel-reakciók a csevegőüzenetekhez. Adjon hozzá akár 5 hangulatjelet a gyors reakció érdekében."
     direct_message_enabled_groups: "A következő csoportokba tartozó felhasználók számára engedélyezi a felhasználók közötti Személyes Csevegések létrehozását. Megjegyzés: a stábtagok mindig létrehozhatnak Személyes Csevegéseket, és a felhasználók válaszolhatnak olyan Személyes Csevegésekre, amelyeket olyan felhasználók kezdeményeztek, akiknek jogosultságuk van azok létrehozására."
     chat_message_flag_allowed_groups: "A következő csoportok felhasználói megjelölhetnek csevegőüzeneteket. Vegye figyelembe, hogy az adminisztrátorok és moderátorok mindig megjelölhetik a csevegési üzeneteket."
     max_mentions_per_chat_message: "A chat üzenetben használható @név értesítések maximális száma felhasználónként."
