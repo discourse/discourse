@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { and, gt, not, or } from "truth-helpers";
+import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -15,7 +16,6 @@ import { i18n } from "discourse-i18n";
 import PluginOutlet from "../../plugin-outlet";
 import FeaturedLink from "./featured-link";
 import Participant from "./participant";
-import Status from "./status";
 
 export default class Info extends Component {
   @service currentUser;
@@ -105,8 +105,8 @@ export default class Info extends Component {
             {{/if}}
 
             {{#if (and @topicInfo.fancyTitle @topicInfo.url)}}
-              <Status
-                @topicInfo={{@topicInfo}}
+              <TopicStatus
+                @topic={{@topicInfo}}
                 @disableActions={{@disableActions}}
               />
 
