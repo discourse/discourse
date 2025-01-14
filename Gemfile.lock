@@ -545,7 +545,7 @@ GEM
     sqlite3 (2.5.0-x86_64-darwin)
     sqlite3 (2.5.0-x86_64-linux-gnu)
     sshkey (3.0.0)
-    stackprof (0.2.26)
+    stackprof (0.2.27)
     stringio (3.1.2)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
