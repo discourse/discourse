@@ -5551,6 +5551,7 @@ en:
         save: "Save"
         show: "Events"
         delete: "Delete"
+        cancel: "Cancel"
         description_label: "Event triggers"
         controls: "Controls"
         back: "Back to webhooks"
