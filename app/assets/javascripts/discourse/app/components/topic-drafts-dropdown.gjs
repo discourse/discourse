@@ -17,6 +17,7 @@ export default class TopicDraftsDropdown extends Component {
   @service composer;
 
   @tracked drafts = [];
+  @tracked loading = false;
 
   get draftCount() {
     return this.currentUser.draft_count;
@@ -41,6 +42,8 @@ export default class TopicDraftsDropdown extends Component {
 
   @action
   async onShowMenu() {
+    this.loading = true;
+
     try {
       const draftsStream = this.currentUser.userDraftsStream;
       draftsStream.reset();
@@ -50,6 +53,8 @@ export default class TopicDraftsDropdown extends Component {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Failed to fetch drafts with error:", error);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -77,6 +82,7 @@ export default class TopicDraftsDropdown extends Component {
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
       @modalForMobile={{true}}
+      @disabled={{this.loading}}
       class="btn-small"
     >
       <:content>
