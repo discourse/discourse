@@ -110,15 +110,14 @@
 
 .progress-back-container {
   z-index: z("dropdown");
-  margin-right: 0;
   animation-duration: 0.5s;
   animation-name: button-jump-up;
-  width: 145px;
   text-align: center;
   margin-bottom: 0px;
+  margin-right: 0.5em;
   position: absolute;
   right: 0;
-  top: -120%; // above parent container + some extra space
+  bottom: 100%; // above parent container + some extra space
   .btn {
     margin: 0;
   }
