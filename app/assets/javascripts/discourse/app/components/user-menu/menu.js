@@ -211,9 +211,7 @@ export default class UserMenu extends Component {
 
   @bind
   onRouteChange() {
-    if (this.header.userVisible) {
-      this.args.closeUserMenu();
-    }
+    this.args.closeUserMenu();
   }
 
   get classNames() {

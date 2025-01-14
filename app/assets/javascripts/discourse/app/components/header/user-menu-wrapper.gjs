@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isTesting } from "discourse/lib/environment";
@@ -53,7 +54,7 @@ export default class UserMenuWrapper extends Component {
       }}
       ...attributes
     >
-      <UserMenu @closeUserMenu={{@toggleUserMenu}} />
+      <UserMenu @closeUserMenu={{fn @toggleUserMenu false}} />
     </div>
   </template>
 }
