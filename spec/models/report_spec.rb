@@ -699,7 +699,7 @@ RSpec.describe Report do
 
     context "with flags" do
       let(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
-      let(:post) { Fabricate(:post, user: flagger) }
+      let(:post) { Fabricate(:post, user: Fabricate(:user)) }
 
       before { freeze_time }
 
@@ -722,6 +722,26 @@ RSpec.describe Report do
         expect(row[:flagger_avatar_template]).to be_present
         expect(row[:resolution]).to eq("No action")
         expect(row[:response_time]).to eq(nil)
+      end
+
+      it "exports the CSV of the report correctly" do
+        result =
+          PostActionCreator.new(flagger, post, PostActionType.types[:spam], message: "bad").perform
+
+        result.reviewable.perform(flagger, :agree_and_hide)
+        expect(result.success).to eq(true)
+        expect(report.data).to be_present
+
+        exporter = Jobs::ExportCsvFile.new
+        exporter.entity = "report"
+        exporter.extra = HashWithIndifferentAccess.new(name: "flags_status")
+        exporter.current_user = flagger
+        exported_csv = []
+        exporter.report_export { |entry| exported_csv << entry }
+        expect(exported_csv[0]).to eq(["Type", "Assigned", "Poster", "Flagger", "Resolution time"])
+        expect(exported_csv[1]).to eq(
+          ["spam", flagger.username, post.user.username, flagger.username, "0.0"],
+        )
       end
     end
   end
