@@ -4,18 +4,18 @@ import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import PreloadStore from "discourse/lib/preload-store";
+import { needsHbrTopicList } from "discourse/lib/raw-templates";
 import singleton from "discourse/lib/singleton";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
-import { isRailsTesting, isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @singleton
 export default class Site extends RestModel {

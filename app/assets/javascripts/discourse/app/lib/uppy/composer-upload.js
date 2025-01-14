@@ -9,6 +9,8 @@ import XHRUpload from "@uppy/xhr-upload";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
+import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import {
   bindFileInputChangeListener,
   displayErrorForBulkUpload,
@@ -21,8 +23,6 @@ import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class UppyComposerUpload {

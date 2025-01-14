@@ -1,6 +1,6 @@
 // Remove when legacy modals are dropped (deprecation: discourse.modal-controllers)
 
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 
 /**
  * Render a modal

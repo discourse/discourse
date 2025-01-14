@@ -1,11 +1,11 @@
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import domFromString from "discourse/lib/dom-from-string";
 import { setupLightboxes } from "discourse/lib/lightbox";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { generateLightboxMarkup } from "discourse/tests/helpers/lightbox-helpers";
-import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Integration | Component | d-lightbox", function (hooks) {
   setupRenderingTest(hooks);

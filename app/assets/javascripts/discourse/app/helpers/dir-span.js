@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
+import { helperContext, registerRawHelper } from "discourse/lib/helpers";
 import { escapeExpression } from "discourse/lib/utilities";
-import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
 
 function setDir(text) {
   let content = text ? text : "";

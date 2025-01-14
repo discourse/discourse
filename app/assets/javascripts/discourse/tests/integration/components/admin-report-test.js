@@ -12,13 +12,15 @@ module("Integration | Component | admin-report", function (hooks) {
 
     assert.dom(".admin-report.signups").exists();
     assert.dom(".admin-report-table").exists("defaults to table mode");
-    assert.dom(".header .item.report").hasText("Signups", "has a title");
-
-    await click("[data-trigger]");
-
     assert
-      .dom("[data-content]")
-      .hasText("New account registrations for this period");
+      .dom(".d-page-subheader .d-page-subheader__title")
+      .hasText("Signups", "has a title");
+    assert
+      .dom(".d-page-subheader .d-page-subheader__description")
+      .hasText(
+        "New account registrations for this period",
+        "has a description"
+      );
 
     assert
       .dom(".admin-report-table thead tr th:first-child .title")

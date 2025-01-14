@@ -31,15 +31,7 @@
       {{/if}}
 
       <div class="group-info-names">
-        <span class="group-info-name">
-          {{or this.model.full_name this.model.name}}
-        </span>
-
-        {{#if this.model.full_name}}
-          <div class="group-info-full-name">
-            {{this.model.name}}
-          </div>
-        {{/if}}
+        <GroupInfo @group={{this.model}} />
 
         {{#if (and this.canManageGroup this.model.automatic)}}
           <DTooltip class="group-automatic-tooltip">

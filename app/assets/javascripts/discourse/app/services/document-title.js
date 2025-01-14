@@ -1,7 +1,7 @@
 import Service, { service } from "@ember/service";
+import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import updateTabCount from "discourse/lib/update-tab-count";
-import getURL from "discourse-common/lib/get-url";
 
 @disableImplicitInjections
 export default class DocumentElement extends Service {

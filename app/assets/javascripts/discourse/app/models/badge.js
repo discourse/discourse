@@ -2,10 +2,10 @@ import EmberObject from "@ember/object";
 import { alias, none } from "@ember/object/computed";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class Badge extends RestModel {
   static createFromJson(json) {

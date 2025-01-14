@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cloneJSON } from "discourse-common/lib/object";
+import { cloneJSON } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 import Tree from "admin/components/schema-theme-setting/editor/tree";
 import FieldInput from "admin/components/schema-theme-setting/field";

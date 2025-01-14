@@ -11,14 +11,14 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
+import { RUNTIME_OPTIONS } from "discourse/lib/raw-handlebars-helpers";
+import { findRawTemplate } from "discourse/lib/raw-templates";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
-import deprecated from "discourse-common/lib/deprecated";
-import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export function showEntrance(e) {

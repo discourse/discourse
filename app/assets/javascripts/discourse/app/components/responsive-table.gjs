@@ -4,8 +4,8 @@ import { on } from "@ember/modifier";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
+import { bind } from "discourse/lib/decorators";
 import onResize from "discourse/modifiers/on-resize";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class ResponsiveTable extends Component {
   lastScrollPosition = 0;

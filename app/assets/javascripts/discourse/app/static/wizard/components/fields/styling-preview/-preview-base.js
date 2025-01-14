@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
+import getUrl from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
-import getUrl from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 import { darkLightDiff, drawHeader } from "../../../lib/preview";
 

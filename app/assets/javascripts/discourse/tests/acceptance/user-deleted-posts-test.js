@@ -1,7 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import postFixtures from "discourse/tests/fixtures/post";
-import { cloneJSON } from "discourse-common/lib/object";
 import { acceptance } from "../helpers/qunit-helpers";
 
 acceptance("User's deleted posts page", function (needs) {

@@ -6,8 +6,8 @@ import { classNames } from "@ember-decorators/component";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
-import getUrl from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import imagePreviews from "./image-previews";
 

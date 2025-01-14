@@ -3,7 +3,7 @@ import EmberObject, { action } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export const BAR_CHART_TYPE = "bar";

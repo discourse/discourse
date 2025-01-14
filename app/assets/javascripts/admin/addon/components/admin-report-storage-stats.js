@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import I18n, { i18n } from "discourse-i18n";
 
 @classNames("admin-report-storage-stats")

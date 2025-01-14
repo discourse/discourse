@@ -3,8 +3,8 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { setLogoffCallback } from "discourse/lib/ajax";
 import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
+import { bind } from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let pluginCounterFunctions = [];

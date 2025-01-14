@@ -35,14 +35,14 @@ importers:
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.0)
       '@discourse/lint-configs':
-        specifier: ^2.2.3
-        version: 2.2.3(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)
+        specifier: ^2.3.0
+        version: 2.3.0(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
       '@fortawesome/fontawesome-free':
-        specifier: 6.6.0
-        version: 6.6.0
+        specifier: 6.7.2
+        version: 6.7.2
       '@glint/core':
         specifier: ^1.5.1
         version: 1.5.1(typescript@5.7.3)
@@ -89,8 +89,8 @@ importers:
         specifier: ^4.0.4
         version: 4.0.4
       lefthook:
-        specifier: ^1.10.3
-        version: 1.10.3
+        specifier: ^1.10.4
+        version: 1.10.4
       licensee:
         specifier: ^11.1.1
         version: 11.1.1(patch_hash=55h346kvblvnigtrwrsh4hpona)
@@ -139,9 +139,6 @@ importers:
       '@ember/string':
         specifier: ^4.0.0
         version: 4.0.0
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.26.0)
@@ -299,6 +296,9 @@ importers:
       ember-curry-component:
         specifier: ^0.1.0
         version: 0.1.0(@babel/core@7.26.0)
+      ember-resolver:
+        specifier: ^13.1.0
+        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
       ember-route-template:
         specifier: ^1.0.3
         version: 1.0.3
@@ -444,9 +444,6 @@ importers:
       dialog-holder:
         specifier: workspace:1.0.0
         version: link:../dialog-holder
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
@@ -592,88 +589,6 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15
 
-  app/assets/javascripts/discourse-common:
-    dependencies:
-      '@babel/core':
-        specifier: ^7.26.0
-        version: 7.26.0(supports-color@8.1.1)
-      '@ember/string':
-        specifier: ^4.0.0
-        version: 4.0.0
-      discourse-i18n:
-        specifier: workspace:1.0.0
-        version: link:../discourse-i18n
-      ember-auto-import:
-        specifier: ^2.10.0
-        version: 2.10.0(@glint/template@1.5.1)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2))
-      ember-cli-babel:
-        specifier: ^8.2.0
-        version: 8.2.0(@babel/core@7.26.0)
-      ember-cli-htmlbars:
-        specifier: ^6.3.0
-        version: 6.3.0
-      ember-resolver:
-        specifier: ^13.1.0
-        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
-      handlebars:
-        specifier: ^4.7.8
-        version: 4.7.8
-      truth-helpers:
-        specifier: workspace:1.0.0
-        version: link:../truth-helpers
-    devDependencies:
-      '@ember/optional-features':
-        specifier: ^2.2.0
-        version: 2.2.0
-      '@embroider/test-setup':
-        specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.0(@embroider/core@3.5.0(@glint/template@1.5.1))(@glint/template@1.5.1))(@embroider/core@3.5.0(@glint/template@1.5.1))(@embroider/webpack@4.0.9(@embroider/core@3.5.0(@glint/template@1.5.1))(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
-      '@glimmer/component':
-        specifier: ^1.1.2
-        version: 1.1.2(@babel/core@7.26.0)
-      '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.32
-      '@types/qunit':
-        specifier: ^2.19.12
-        version: 2.19.12
-      '@types/rsvp':
-        specifier: ^4.0.9
-        version: 4.0.9
-      broccoli-asset-rev:
-        specifier: ^3.0.0
-        version: 3.0.0
-      ember-cli:
-        specifier: ~6.1.0
-        version: 6.1.0(handlebars@4.7.8)(underscore@1.13.6)
-      ember-cli-inject-live-reload:
-        specifier: ^2.1.0
-        version: 2.1.0
-      ember-cli-sri:
-        specifier: ^2.1.1
-        version: 2.1.1
-      ember-cli-terser:
-        specifier: ^4.0.2
-        version: 4.0.2
-      ember-disable-prototype-extensions:
-        specifier: ^1.1.3
-        version: 1.1.3
-      ember-load-initializers:
-        specifier: ^3.0.1
-        version: 3.0.1(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
-      ember-source:
-        specifier: ~5.12.0
-        version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2))
-      ember-source-channel-url:
-        specifier: ^3.0.0
-        version: 3.0.0(encoding@0.1.13)
-      loader.js:
-        specifier: ^4.7.0
-        version: 4.7.0
-      webpack:
-        specifier: ^5.97.1
-        version: 5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)
-
   app/assets/javascripts/discourse-hbr:
     dependencies:
       handlebars:
@@ -694,9 +609,6 @@ importers:
       '@embroider/addon-shim':
         specifier: ^1.9.0
         version: 1.9.0
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
@@ -900,9 +812,6 @@ importers:
       '@babel/core':
         specifier: ^7.26.0
         version: 7.26.0(supports-color@8.1.1)
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
@@ -1070,9 +979,9 @@ importers:
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.0)
-      discourse-common:
-        specifier: workspace:1.0.0
-        version: link:../discourse-common
+      discourse:
+        specifier: workspace:0.0.0
+        version: link:../discourse
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs
@@ -1812,8 +1721,8 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.2.3':
-    resolution: {integrity: sha512-GZE2u/9QfLRIEDscickTx6sB51pA/8lZeNx1YTgoXx6OnyOCxfQf/24M9GTPHcOYZHIDtqAFrffSd9FI5NNUOw==}
+  '@discourse/lint-configs@2.3.0':
+    resolution: {integrity: sha512-vHmUUnuTemLDGpnfgK4jcmToM9accbByzxuL3NTY3bGDtygG/B09wkxWr+A9UbAMhlKsJy9w9sIH/2BovyYX3Q==}
     peerDependencies:
       ember-template-lint: 6.0.0
       eslint: ^9.15.0
@@ -2147,8 +2056,8 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
-  '@fortawesome/fontawesome-free@6.6.0':
-    resolution: {integrity: sha512-60G28ke/sXdtS9KZCpZSHHkCbdsOGEhIUGlwq6yhY74UpTiToIh8np7A8yphhM4BWsvNFtIvLpi4co+h9Mr9Ow==}
+  '@fortawesome/fontawesome-free@6.7.2':
+    resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
     engines: {node: '>=6'}
 
   '@glimmer/compiler@0.92.4':
@@ -5871,58 +5780,58 @@ packages:
     resolution: {integrity: sha512-M6T051+5QCGLBQb8id3hdvIW8+zeFV2FyBGFS9IEK5H9Wt4MueD4bW1eWikpHgZp+5xR3l5c8pZUkQsIA0BFZg==}
     engines: {node: '>=8'}
 
-  lefthook-darwin-arm64@1.10.3:
-    resolution: {integrity: sha512-XmdYa49PQPahBNaS+M6PHvMG83azN2l2/mrpfPhOwYJjR+kBtonpgySOKGKxuzgz1lIHRHVkkJnN4oRhxA0VzQ==}
+  lefthook-darwin-arm64@1.10.4:
+    resolution: {integrity: sha512-ARVuQwMFkKBy++2W4ACwCf5oy93qfOs0KKjJM1ssvgLB25MtJQeIhEoJ10sPXYkEnLZnEkfAtX4womVEjCXyXw==}
     cpu: [arm64]
     os: [darwin]
 
-  lefthook-darwin-x64@1.10.3:
-    resolution: {integrity: sha512-ymreiYQjXe8+eGYCY3LIPJuS5tUHllMkY/FVN7sYssD5zCUEUib3WnYW6nzON+hTz0MFCGpxMEt+8WB6EwYBHA==}
+  lefthook-darwin-x64@1.10.4:
+    resolution: {integrity: sha512-KQw7nPtdF3+Bf9UQMdME2jzEu9KJJhAt5SdS9/JTDcfXTwBd1tz3l1bQT4BmvP2Du3XqSvgttWCrhGfIkfO9mw==}
     cpu: [x64]
     os: [darwin]
 
-  lefthook-freebsd-arm64@1.10.3:
-    resolution: {integrity: sha512-zbmX+XJmMZs5cEFPFlf6WsHxz40Gi9KBw0qdt3DKO4YN6zfGFGk3XAxlZBTgzfzIXWDF30psNOMmjz3YWMX8kw==}
+  lefthook-freebsd-arm64@1.10.4:
+    resolution: {integrity: sha512-BMXbiB6cF8Cr8pyE3r/hPzBMZJqTNZ4dwC5w/RQTvori5kow8kDgiby2pNVq3gaYvyg4TpXccc8dGgjQoOBHRQ==}
     cpu: [arm64]
     os: [freebsd]
 
-  lefthook-freebsd-x64@1.10.3:
-    resolution: {integrity: sha512-AYQ2WAd7d4eU+bnRcJxMXN22PSZlpuomcxNuEyBt9Iob3wTxadIs/VA5sjYC+eq3WMTNK1LprMoHmBrFOuCdaQ==}
+  lefthook-freebsd-x64@1.10.4:
+    resolution: {integrity: sha512-ClXTNqa4DyXJjZ2u8SINx4XxHWOvJ7FFbtqPl+NJiPmToRZ/nYVaeZakgHTblupB3z/xggiPAKdlKbqABELCzw==}
     cpu: [x64]
     os: [freebsd]
 
-  lefthook-linux-arm64@1.10.3:
-    resolution: {integrity: sha512-AeegzjSa/diFGEK8LrmzVTk9yb3m/TyN/YQDq10knc5Cp1tS+17ctiEj+/lwnxCQjIrClN7dPq5LFgXqjHJNKQ==}
+  lefthook-linux-arm64@1.10.4:
+    resolution: {integrity: sha512-DyBOXztZSlbMJaQzZ41d+FKgYMC1RzJqHeHFjGMKGNF1Q8eUfW1gGhrBM7yfSJIFAuqOCUK6fw7hI5l7YbOLuQ==}
     cpu: [arm64]
     os: [linux]
 
-  lefthook-linux-x64@1.10.3:
-    resolution: {integrity: sha512-Ysf0806Yjw9CRDn5At4KktJFZiaFpq81dcEiTZ4OA7D5z45+1FOhlID5mImPuQDyi4MaPRnyTdcnOOtENb4Umg==}
+  lefthook-linux-x64@1.10.4:
+    resolution: {integrity: sha512-V3U/8rs1/6nCmghs4YRGdxPonTLVtvs/W3Ji6UQXFqGLeNAhlhTj2XTYko+vY2QfmavThBpqOtw36Line+d6iw==}
     cpu: [x64]
     os: [linux]
 
-  lefthook-openbsd-arm64@1.10.3:
-    resolution: {integrity: sha512-iZkwhMyJKq9wGg+CKHdwwdRABbtVK4M0cVi2QOQQKPGWE6VfDJL6eJWUed0fsSQ0OvX9InaSsKQPPMnxdqHI5w==}
+  lefthook-openbsd-arm64@1.10.4:
+    resolution: {integrity: sha512-+vCvGHqf5qqijbBgjBaQBzV4Mpl16UIgw0QQmnS0oYiaL5HQND3KPSA/bsLnoXe9UWvpIQY4GfMVpqhdl2HN4Q==}
     cpu: [arm64]
     os: [openbsd]
 
-  lefthook-openbsd-x64@1.10.3:
-    resolution: {integrity: sha512-miNizDXKq3lwjMpQZvqCv4CBXc0o7sRvAw31MJKa4y1YQ0Ib56tlcaC7UoZpLCgNv0ySH2msOUxUTrzwtbYVdg==}
+  lefthook-openbsd-x64@1.10.4:
+    resolution: {integrity: sha512-kvHxriC02YQY9egRD43uzMA7Y/VWo+CzcW894ovpmROOCmmipydDoWPoEd+kknyYyNmntXhXgebAopCy/ZOr8A==}
     cpu: [x64]
     os: [openbsd]
 
-  lefthook-windows-arm64@1.10.3:
-    resolution: {integrity: sha512-cpTRNwkNoKayIiCbZaL5cBJ+YR4Mz6gFLd85ZPwIuO9FQpR/haJZU0VOJOJwjN5XRVBAFPR6ARFW7h47YFw0EQ==}
+  lefthook-windows-arm64@1.10.4:
+    resolution: {integrity: sha512-jSta3l7gYjZWCytvmEC039XXbuvJiZO8hawR3B6nWZFgjaYA0ECS6/fdxuz1kGxd1zMDrvnFoOeTcSGQwHGmaA==}
     cpu: [arm64]
     os: [win32]
 
-  lefthook-windows-x64@1.10.3:
-    resolution: {integrity: sha512-WJPPJBwBY2wl2VzaXZizNWDKeskH9iEbfgEhQl69hQtsaHVcRYFbZWEg9pPp6kHBp0jMTDZ4+OqMZGOf6iNLDA==}
+  lefthook-windows-x64@1.10.4:
+    resolution: {integrity: sha512-d6jOidPQ8HTmXHH8izE7/BY4ZHAsCVgkfSyQI13rvBahZfPjmtE0yNBfd2MC+xyxW1E8M0uloy7ZhAYM4WZjdw==}
     cpu: [x64]
     os: [win32]
 
-  lefthook@1.10.3:
-    resolution: {integrity: sha512-lfOJ6C+eHuy8id75gFuIubuK7uAMI1d9ESuXhR2I3WYmugt1M583FbPunhw3Wap6eQtEGjQEUulIwK47qwzR/w==}
+  lefthook@1.10.4:
+    resolution: {integrity: sha512-DwRkvZA7IeZv9hwdXKr0PIi0FX1/2ehU5ImPYCs1q9QlPQVmKBborb/z5BnI5k/y52qaAHCgBhcuhm5cwLjMSQ==}
     hasBin: true
 
   levn@0.4.1:
@@ -9299,7 +9208,7 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.2.3(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)':
+  '@discourse/lint-configs@2.3.0(ember-template-lint@6.0.0)(eslint@9.18.0)(prettier@2.8.8)':
     dependencies:
       '@babel/core': 7.26.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.26.5(@babel/core@7.26.0)(eslint@9.18.0)
@@ -9741,7 +9650,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@fortawesome/fontawesome-free@6.6.0': {}
+  '@fortawesome/fontawesome-free@6.7.2': {}
 
   '@glimmer/compiler@0.92.4':
     dependencies:
@@ -14645,48 +14554,48 @@ snapshots:
     dependencies:
       invert-kv: 3.0.1
 
-  lefthook-darwin-arm64@1.10.3:
+  lefthook-darwin-arm64@1.10.4:
     optional: true
 
-  lefthook-darwin-x64@1.10.3:
+  lefthook-darwin-x64@1.10.4:
     optional: true
 
-  lefthook-freebsd-arm64@1.10.3:
+  lefthook-freebsd-arm64@1.10.4:
     optional: true
 
-  lefthook-freebsd-x64@1.10.3:
+  lefthook-freebsd-x64@1.10.4:
     optional: true
 
-  lefthook-linux-arm64@1.10.3:
+  lefthook-linux-arm64@1.10.4:
     optional: true
 
-  lefthook-linux-x64@1.10.3:
+  lefthook-linux-x64@1.10.4:
     optional: true
 
-  lefthook-openbsd-arm64@1.10.3:
+  lefthook-openbsd-arm64@1.10.4:
     optional: true
 
-  lefthook-openbsd-x64@1.10.3:
+  lefthook-openbsd-x64@1.10.4:
     optional: true
 
-  lefthook-windows-arm64@1.10.3:
+  lefthook-windows-arm64@1.10.4:
     optional: true
 
-  lefthook-windows-x64@1.10.3:
+  lefthook-windows-x64@1.10.4:
     optional: true
 
-  lefthook@1.10.3:
+  lefthook@1.10.4:
     optionalDependencies:
-      lefthook-darwin-arm64: 1.10.3
-      lefthook-darwin-x64: 1.10.3
-      lefthook-freebsd-arm64: 1.10.3
-      lefthook-freebsd-x64: 1.10.3
-      lefthook-linux-arm64: 1.10.3
-      lefthook-linux-x64: 1.10.3
-      lefthook-openbsd-arm64: 1.10.3
-      lefthook-openbsd-x64: 1.10.3
-      lefthook-windows-arm64: 1.10.3
-      lefthook-windows-x64: 1.10.3
+      lefthook-darwin-arm64: 1.10.4
+      lefthook-darwin-x64: 1.10.4
+      lefthook-freebsd-arm64: 1.10.4
+      lefthook-freebsd-x64: 1.10.4
+      lefthook-linux-arm64: 1.10.4
+      lefthook-linux-x64: 1.10.4
+      lefthook-openbsd-arm64: 1.10.4
+      lefthook-openbsd-x64: 1.10.4
+      lefthook-windows-arm64: 1.10.4
+      lefthook-windows-x64: 1.10.4
 
   levn@0.4.1:
     dependencies:

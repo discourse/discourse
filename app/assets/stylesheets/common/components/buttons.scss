@@ -62,7 +62,7 @@
       }
     }
   }
-  &:focus {
+  &:focus-visible {
     outline: none;
     background-color: $hover-bg-color;
     color: $hover-text-color;
@@ -71,10 +71,6 @@
       @media (forced-colors: active) {
         color: Highlight;
       }
-    }
-
-    &:focus-visible {
-      @include darken-background($hover-bg-color, 0.1);
     }
   }
 
@@ -201,7 +197,7 @@
   color: #000;
   background: #fff;
   border-radius: var(--d-border-radius);
-  &:focus {
+  &:focus-visible {
     outline: 1px solid #000;
   }
   &[href] {
@@ -289,7 +285,7 @@
   }
   .discourse-no-touch & {
     &:hover,
-    &:focus {
+    &:focus-visible {
       color: var(--primary);
       .d-icon {
         color: var(--primary);
@@ -298,7 +294,7 @@
     &:hover {
       background: transparent;
     }
-    &:focus {
+    &:focus-visible {
       background: var(--primary-low);
     }
   }
@@ -310,14 +306,14 @@
     }
     .discourse-no-touch & {
       &:hover,
-      &:focus {
+      &:focus-visible {
         background: transparent;
         .d-icon {
           color: var(--primary);
         }
       }
     }
-    &:focus {
+    &:focus-visible {
       background: transparent;
       .d-icon {
         color: var(--primary);
@@ -330,14 +326,14 @@
       &,
       &:hover,
       &.btn-hover,
-      &:focus {
+      &:focus-visible {
         color: var(--primary);
       }
     }
     &:not([disabled]) {
       &:hover,
       &.btn-hover,
-      &:focus {
+      &:focus-visible {
         color: var(--tertiary-hover);
       }
 
@@ -347,7 +343,7 @@
       }
     }
   }
-  &:focus {
+  &:focus-visible {
     outline: none;
     background: var(--primary-low);
     .d-icon {
@@ -370,10 +366,6 @@
       background: transparent;
     }
   }
-  &:focus {
-    color: var(--tertiary);
-    background: transparent;
-  }
   &:focus-visible {
     color: var(--tertiary);
     background: transparent;
@@ -386,7 +378,6 @@
   .d-icon {
     color: inherit;
   }
-  &:focus,
   &:focus-visible {
     color: var(--#{$btn-color}-hover);
   }
@@ -406,7 +397,6 @@
     .d-icon {
       color: var(--primary-high);
     }
-    &:focus,
     &:focus-visible {
       background: transparent;
       color: var(--tertiary-hover);

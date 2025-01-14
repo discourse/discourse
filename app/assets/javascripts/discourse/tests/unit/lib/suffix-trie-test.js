@@ -1,6 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import SuffixTrie from "discourse-common/lib/suffix-trie";
+import SuffixTrie from "discourse/lib/suffix-trie";
 
 module("Unit | SuffixTrie", function (hooks) {
   setupTest(hooks);

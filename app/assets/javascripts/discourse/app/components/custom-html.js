@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { getOwner } from "@ember/owner";
 import { hbs } from "ember-cli-htmlbars";
 import { getCustomHTML } from "discourse/helpers/custom-html";
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 
 export default class CustomHtml extends Component {
   triggerAppEvent = null;

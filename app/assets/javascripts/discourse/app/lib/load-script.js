@@ -2,8 +2,8 @@ import { run } from "@ember/runloop";
 import { buildWaiter } from "@ember/test-waiters";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import getURL, { getURLWithCDN } from "discourse/lib/get-url";
 import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 
 const WAITER = buildWaiter("load-script");
 const _loaded = {};

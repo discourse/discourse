@@ -1,5 +1,5 @@
 import { on } from "@ember/modifier";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 const SidebarSectionLinkButton = <template>
   <div class="sidebar-section-link-wrapper">

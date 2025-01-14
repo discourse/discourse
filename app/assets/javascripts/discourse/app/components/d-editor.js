@@ -15,12 +15,18 @@ import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
 import Toolbar from "discourse/lib/composer/toolbar";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
+import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { linkSeenHashtagsInContext } from "discourse/lib/hashtag-decorator";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -29,12 +35,6 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
-import { isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import deprecated from "discourse-common/lib/deprecated";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];

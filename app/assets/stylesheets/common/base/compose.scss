@@ -65,8 +65,10 @@ html.composer-open {
   }
 
   &.open {
+    --min-height: 255px;
     box-sizing: border-box;
     height: var(--composer-height);
+    min-height: var(--min-height);
     max-height: calc(100vh - var(--header-offset, 4em));
     padding-bottom: var(--composer-ipad-padding);
   }
@@ -632,6 +634,7 @@ div.ac-wrap {
 // for maximum browser compatibility (especially Firefox and webviews)
 // see https://developer.chrome.com/blog/viewport-resize-behavior for context
 .ipados-device,
+.tablet-device,
 .mobile-device {
   #reply-control {
     z-index: -1;

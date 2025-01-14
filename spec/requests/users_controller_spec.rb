@@ -1846,7 +1846,7 @@ RSpec.describe UsersController do
 
       it "raises an error without a new_username param" do
         put "/u/#{user.username}/preferences/username.json", params: { username: user.username }
-        expect(response.status).to eq(400)
+        expect(response).to be_bad_request
         expect(user.reload.username).to eq(old_username)
       end
 
@@ -1862,7 +1862,7 @@ RSpec.describe UsersController do
       it "raises an error when change_username fails" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "@" }
 
-        expect(response.status).to eq(422)
+        expect(response).to be_unprocessable
 
         body = response.parsed_body
 
@@ -1876,7 +1876,7 @@ RSpec.describe UsersController do
       it "should succeed in normal circumstances" do
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(200)
+        expect(response).to be_successful
         expect(user.reload.username).to eq(new_username)
       end
 
@@ -1895,9 +1895,30 @@ RSpec.describe UsersController do
         SiteSetting.reserved_usernames = "reserved"
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
-        body = response.parsed_body
+        expect(response).to be_unprocessable
 
-        expect(body["errors"].first).to include(I18n.t("login.reserved_username"))
+        expect(response.parsed_body["errors"].first).to include(I18n.t("login.reserved_username"))
+      end
+
+      it "allows admins to change a username to one in the reserved list" do
+        sign_in(admin)
+        SiteSetting.reserved_usernames = "reserved"
+
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+        expect(response).to be_successful
+
+        expect(response.parsed_body["username"]).to eq("reserved")
+      end
+
+      it "does not allow admins to change a username to one in the reserved list if that user already exists" do
+        sign_in(admin)
+        SiteSetting.reserved_usernames = "reserved"
+        Fabricate(:user, username: "reserved")
+
+        put "/u/#{user.username}/preferences/username.json", params: { new_username: "reserved" }
+        expect(response).to be_unprocessable
+
+        expect(response.parsed_body["errors"].first).to include("Username must be unique")
       end
 
       it "should fail if the user is old" do
@@ -1921,7 +1942,7 @@ RSpec.describe UsersController do
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(200)
+        expect(response).to be_successful
         expect(
           UserHistory.where(
             action: UserHistory.actions[:change_username],
@@ -1947,7 +1968,7 @@ RSpec.describe UsersController do
 
         put "/u/#{user.username}/preferences/username.json", params: { new_username: new_username }
 
-        expect(response.status).to eq(422)
+        expect(response).to be_unprocessable
         expect(response.parsed_body["errors"].first).to include(
           I18n.t("errors.messages.auth_overrides_username"),
         )
@@ -1989,6 +2010,30 @@ RSpec.describe UsersController do
     context "when username is unavailable" do
       before { get "/u/check_username.json", params: { username: user1.username } }
       include_examples "when username is unavailable"
+    end
+
+    describe "reserved usernames" do
+      before { SiteSetting.reserved_usernames = SiteSetting.reserved_usernames + "|reserved" }
+
+      context "when checking a reserved username" do
+        before { get "/u/check_username.json", params: { username: "reserved" } }
+        include_examples "when username is unavailable"
+      end
+
+      context "when checking a reserved username as an admin" do
+        before { sign_in(admin) }
+
+        context "when user already exists" do
+          fab!(:user) { Fabricate(:user, username: "reserved") }
+          before { get "/u/check_username.json", params: { username: "reserved" } }
+          include_examples "when username is unavailable"
+        end
+
+        context "when user does not exist" do
+          before { get "/u/check_username.json", params: { username: "reserved" } }
+          include_examples "when username is available"
+        end
+      end
     end
 
     shared_examples "checking an invalid username" do

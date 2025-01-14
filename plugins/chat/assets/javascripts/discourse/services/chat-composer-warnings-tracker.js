@@ -2,8 +2,8 @@ import { tracked } from "@glimmer/tracking";
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 
 const MENTION_RESULT = {
   invalid: -1,

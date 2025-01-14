@@ -1,8 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class Permalink extends RestModel {
   static findAll(filter) {

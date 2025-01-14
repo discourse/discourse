@@ -2,8 +2,8 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { makeArray } from "discourse-common/lib/helpers";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
+import { makeArray } from "discourse/lib/helpers";
 
 export default class UsersController extends Controller {
   @and(

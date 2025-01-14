@@ -497,6 +497,13 @@ en:
         confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
+      dropdown:
+        title: "Open the latest drafts menu"
+        untitled: "Untitled draft"
+        view_all: "view all"
+        other_drafts:
+          one: "+%{count} other draft"
+          other: "+%{count} other drafts"
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -4746,7 +4753,10 @@ en:
         everyone_can_use: "Tags can be used by everyone"
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
-        cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty and less than 100 characters, and a group is selected for tags permission."
+        cannot_save: 
+          empty_name: "Cannot save tag group. Make sure the tag group name is not empty."
+          no_tags: "Cannot save tag group. Make sure that at least one tag is selected."
+          no_groups: "Cannot save tag group. Make sure that at least one group is selected for permission."
         tags_placeholder: "Search or create tags"
         parent_tag_placeholder: "Optional"
         select_groups_placeholder: "Select groups…"
@@ -4973,11 +4983,9 @@ en:
             users:
               content: "Users"
               title: "List of all users"
-            my_posts:
-              content: "My Posts"
-              content_drafts: "My Drafts"
-              title: "My recent topic activity"
-              title_drafts: "My unposted drafts"
+            my_drafts:
+              content: "My Drafts"
+              title: "My unposted drafts"
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
@@ -5128,8 +5136,9 @@ en:
 
       reports:
         title: "List of available reports"
-        meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
+        meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
+        back: "Back to all reports"
         sidebar_link:
           all: "All reports"
 

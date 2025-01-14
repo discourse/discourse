@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
+import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
@@ -13,7 +14,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
-import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default {

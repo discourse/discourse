@@ -3,12 +3,12 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { deepEqual } from "discourse/lib/object";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
-import { deepEqual } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 // A helper to build a topic route for a filter

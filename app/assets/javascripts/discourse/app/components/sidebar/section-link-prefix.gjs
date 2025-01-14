@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
 import { isHex } from "discourse/components/sidebar/section-link";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 export default class SidebarSectionLinkPrefix extends Component {
   get prefixValue() {

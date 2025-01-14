@@ -2,7 +2,10 @@ import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import { durationTiny, number } from "discourse/lib/formatter";
+import getURL from "discourse/lib/get-url";
+import { makeArray } from "discourse/lib/helpers";
 import round from "discourse/lib/round";
 import {
   escapeExpression,
@@ -10,9 +13,6 @@ import {
   formatUsername,
   toNumber,
 } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
-import { makeArray } from "discourse-common/lib/helpers";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n, { i18n } from "discourse-i18n";
 
 // Change this line each time report format change

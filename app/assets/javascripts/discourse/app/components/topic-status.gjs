@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends Component {

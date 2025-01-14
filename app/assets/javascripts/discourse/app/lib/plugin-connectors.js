@@ -5,10 +5,8 @@ import {
 } from "@glimmer/manager";
 import templateOnly from "@ember/component/template-only";
 import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
-import deprecated, {
-  withSilencedDeprecations,
-} from "discourse-common/lib/deprecated";
-import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
+import { buildRawConnectorCache } from "discourse/lib/raw-templates";
 
 let _connectorCache;
 let _rawConnectorCache;

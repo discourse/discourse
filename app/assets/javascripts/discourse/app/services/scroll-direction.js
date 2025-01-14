@@ -1,9 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { next, throttle } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
 
 // Small buffer so that very tiny scrolls don't trigger mobile header switch
 const MOBILE_SCROLL_TOLERANCE = 5;

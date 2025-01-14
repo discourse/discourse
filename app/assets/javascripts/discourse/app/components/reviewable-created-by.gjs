@@ -1,6 +1,6 @@
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 const ReviewableCreatedBy = <template>
   <div class="created-by">
