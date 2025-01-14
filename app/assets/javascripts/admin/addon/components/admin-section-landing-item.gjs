@@ -54,9 +54,16 @@ export default class AdminSectionLandingItem extends Component {
         {{/if}}
 
         {{#if @titleRoute}}
-          <LinkTo @route={{@titleRoute}}><h3
-              class="admin-section-landing-item__title"
-            >{{this.title}}</h3></LinkTo>
+          {{#if @titleRouteModel}}
+            <LinkTo @route={{@titleRoute}} @model={{@titleRouteModel}}><h3
+                class="admin-section-landing-item__title"
+              >{{this.title}}</h3></LinkTo>
+          {{else}}
+            <LinkTo @route={{@titleRoute}}><h3
+                class="admin-section-landing-item__title"
+              >{{this.title}}</h3></LinkTo>
+          {{/if}}
+
         {{else}}
           <h3 class="admin-section-landing-item__title">{{this.title}}</h3>
         {{/if}}
