@@ -637,8 +637,6 @@ div.ac-wrap {
 .tablet-device,
 .mobile-device {
   #reply-control {
-    z-index: -1;
-
     &.open {
       z-index: z("mobile-composer");
     }
