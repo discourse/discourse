@@ -5,11 +5,14 @@
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
   <PageLoadingSlider />
-  <PluginOutlet
-    @name="above-site-header"
-    @connectorTagName="div"
-    @outletArgs={{hash currentPath=this.router._router.currentPath}}
-  />
+
+  {{#unless this.hidePluginOutlets}}
+    <PluginOutlet
+      @name="above-site-header"
+      @connectorTagName="div"
+      @outletArgs={{hash currentPath=this.router._router.currentPath}}
+    />
+  {{/unless}}
 
   {{#if this.showSiteHeader}}
     <GlimmerSiteHeader
@@ -31,11 +34,13 @@
     <OfflineIndicator />
   {{/if}}
 
-  <PluginOutlet
-    @name="below-site-header"
-    @connectorTagName="div"
-    @outletArgs={{hash currentPath=this.router._router.currentPath}}
-  />
+  {{#unless this.hidePluginOutlets}}
+    <PluginOutlet
+      @name="below-site-header"
+      @connectorTagName="div"
+      @outletArgs={{hash currentPath=this.router._router.currentPath}}
+    />
+  {{/unless}}
 
   <div id="main-outlet-wrapper" class="wrap" role="main">
     <div class="sidebar-wrapper">
@@ -47,10 +52,14 @@
 
     <LoadingSliderFallbackSpinner />
 
-    <PluginOutlet @name="before-main-outlet" />
+    {{#unless this.hidePluginOutlets}}
+      <PluginOutlet @name="before-main-outlet" />
+    {{/unless}}
 
     <div id="main-outlet">
-      <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+      {{#unless this.hidePluginOutlets}}
+        <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+      {{/unless}}
       <div class="container" id="main-container">
         {{#if this.showTop}}
           <CustomHtml @name="top" />
@@ -74,7 +83,9 @@
       />
     </div>
 
-    <PluginOutlet @name="after-main-outlet" />
+    {{#unless this.hidePluginOutlets}}
+      <PluginOutlet @name="after-main-outlet" />
+    {{/unless}}
 
     {{#if this.showPoweredBy}}
       <PoweredByDiscourse />

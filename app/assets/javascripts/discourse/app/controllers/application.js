@@ -104,6 +104,13 @@ export default class ApplicationController extends Controller {
     return this.siteSettings.navigation_menu === "sidebar";
   }
 
+  get hidePluginOutlets() {
+    const excludedRoutes = ["login", "signup", "invites"];
+    const currentRoute = this.router.currentRouteName;
+
+    return excludedRoutes.some((route) => currentRoute.startsWith(route));
+  }
+
   calculateShowSidebar() {
     return (
       this.canDisplaySidebar &&
