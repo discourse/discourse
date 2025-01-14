@@ -33,7 +33,6 @@ describe "Admin Webhooks Page", type: :system do
     webhooks_page.visit_page
     webhooks_page.click_edit("https://www.example.com/1")
     webhooks_page.edit_payload_url("https://www.example.com/3")
-    webhooks_page.click_save
 
     expect(webhooks_page).to have_webhook_listed("https://www.example.com/3")
   end

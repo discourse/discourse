@@ -1,25 +1,25 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
+import { concat, fn, hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
-import Component from "@glimmer/component";
-import { concat, fn, hash } from "@ember/helper";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import icon from "discourse/helpers/d-icon";
-import CategorySelector from "select-kit/components/category-selector";
-import ComboBox from "select-kit/components/combo-box";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import GroupSelector from "discourse/components/group-selector";
-import { LinkTo } from "@ember/routing";
-import { Input } from "@ember/component";
-import { i18n } from "discourse-i18n";
 import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RadioButton from "discourse/components/radio-button";
-import TagChooser from "select-kit/components/tag-chooser";
 import TextField from "discourse/components/text-field";
-import WebhookEventChooser from "admin/components/webhook-event-chooser";
+import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { i18n } from "discourse-i18n";
+import WebhookEventChooser from "admin/components/webhook-event-chooser";
+import CategorySelector from "select-kit/components/category-selector";
+import ComboBox from "select-kit/components/combo-box";
+import TagChooser from "select-kit/components/tag-chooser";
 
 export default class AdminConfigAreasWebhookForm extends Component {
   @service router;
@@ -63,19 +63,6 @@ export default class AdminConfigAreasWebhookForm extends Component {
     return this.siteSettings.tagging_enabled;
   }
 
-  get saveButtonText() {
-    return this.webhook.isNew ? i18n("admin.web_hooks.create") : i18n("admin.web_hooks.save");
-  }
-
-  eventTypeValidation() {
-    if (!this.webhook.wildcard_web_hook && this.webhook.web_hook_event_types?.length < 1) {
-      return EmberObject.create({
-        failed: true,
-        reason: i18n("admin.web_hooks.event_type_missing"),
-      });
-    }
-  }
-
   @action
   async save() {
     const isNew = this.webhook.isNew;
@@ -87,7 +74,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
 
       this.saved = true;
 
-      if(isNew) {
+      if (isNew) {
         this.router.transitionTo("adminWebHooks.show", this.webhook);
       } else {
         this.router.transitionTo("adminWebHooks.index");
@@ -108,7 +95,9 @@ export default class AdminConfigAreasWebhookForm extends Component {
 
             <form class="web-hook form-horizontal">
               <div class="control-group">
-                <label for="payload-url">{{i18n "admin.web_hooks.payload_url"}}</label>
+                <label for="payload-url">{{i18n
+                    "admin.web_hooks.payload_url"
+                  }}</label>
                 <TextField
                   @name="payload-url"
                   @value={{this.webhook.payload_url}}
@@ -118,7 +107,9 @@ export default class AdminConfigAreasWebhookForm extends Component {
               </div>
 
               <div class="control-group">
-                <label for="content-type">{{i18n "admin.web_hooks.content_type"}}</label>
+                <label for="content-type">{{i18n
+                    "admin.web_hooks.content_type"
+                  }}</label>
                 <ComboBox
                   @content={{this.contentTypes}}
                   @name="content-type"
@@ -156,7 +147,11 @@ export default class AdminConfigAreasWebhookForm extends Component {
                     <div class="event-selector">
                       {{#each-in this.groupedEventTypes as |group eventTypes|}}
                         <div class="event-group">
-                          {{i18n (concat "admin.web_hooks." group "_event.group_name")}}
+                          {{i18n
+                            (concat
+                              "admin.web_hooks." group "_event.group_name"
+                            )
+                          }}
                           {{#each eventTypes as |type|}}
                             <WebhookEventChooser
                               @type={{type}}
@@ -244,28 +239,40 @@ export default class AdminConfigAreasWebhookForm extends Component {
 
               <div>
                 <label class="checkbox-label">
-                  <Input @type="checkbox" name="active" @checked={{this.webhook.active}} />
+                  <Input
+                    @type="checkbox"
+                    name="active"
+                    @checked={{this.webhook.active}}
+                  />
                   {{i18n "admin.web_hooks.active"}}
                 </label>
 
                 {{#if this.webhook.active}}
-                  <div class="instructions">{{i18n "admin.web_hooks.active_notice"}}</div>
+                  <div class="instructions">{{i18n
+                      "admin.web_hooks.active_notice"
+                    }}</div>
                 {{/if}}
               </div>
             </form>
 
             <div class="controls">
-              <DButton
-                @translatedLabel={{this.saveButtonText}}
-                @action={{this.save}}
-                class="btn-primary admin-webhooks__save-button"
-              />
-
               {{#if this.webhook.isNew}}
+                <DButton
+                  @translatedLabel={{i18n "admin.web_hooks.create"}}
+                  @action={{this.save}}
+                  class="btn-primary admin-webhooks__save-button"
+                />
+
                 <LinkTo @route="adminWebHooks" class="btn btn-default">
                   {{i18n "admin.web_hooks.cancel"}}
                 </LinkTo>
               {{else}}
+                <DButton
+                  @translatedLabel={{i18n "admin.web_hooks.save"}}
+                  @action={{this.save}}
+                  class="btn-primary admin-webhooks__save-button"
+                />
+
                 <LinkTo
                   @route="adminWebHooks.show"
                   @model={{this.webhook}}

@@ -6,13 +6,9 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import avatar from "discourse/helpers/avatar";
-import formatDate from "discourse/helpers/format-date";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 import WebhookStatus from "admin/components/webhook-status";
+import DMenu from "float-kit/components/d-menu";
 
 export default class WebhookItem extends Component {
   @service router;
@@ -71,7 +67,7 @@ export default class WebhookItem extends Component {
               <DropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
-                    @action={{fn this.events}}
+                    @action={{this.events}}
                     @icon="list"
                     @label="admin.web_hooks.show"
                     @title="admin.web_hooks.show"
@@ -80,7 +76,7 @@ export default class WebhookItem extends Component {
                 </dropdown.item>
                 <dropdown.item>
                   <DButton
-                    @action={{fn this.args.destroy this.webhook}}
+                    @action={{fn @destroy this.webhook}}
                     @icon="trash-can"
                     @label="admin.web_hooks.delete"
                     @title="admin.web_hooks.delete"
