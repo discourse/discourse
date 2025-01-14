@@ -90,8 +90,8 @@ class Wizard
           type: "radio",
           value: SiteSetting.invite_only ? "invite_only" : "sign_up",
         ) do |field|
-          field.add_choice("sign_up", icon: "user-plus")
-          field.add_choice("invite_only", icon: "paper-plane")
+          field.add_choice("sign_up")
+          field.add_choice("invite_only")
         end
 
         step.add_field(

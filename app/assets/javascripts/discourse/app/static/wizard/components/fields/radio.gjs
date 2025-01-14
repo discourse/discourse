@@ -54,9 +54,6 @@ export default class Radio extends Component {
                 {{on "change" (withEventValue this.selectionChanged)}}
               />
               <span class="wizard-container__radio-label">
-                {{#if choice.icon}}
-                  {{icon choice.icon}}
-                {{/if}}
                 <span>{{choice.label}}</span>
               </span>
             </PluginOutlet>
