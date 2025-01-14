@@ -1,12 +1,9 @@
 import { visit } from "@ember/test-helpers";
 import { compile } from "handlebars";
 import { test } from "qunit";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import { addRawTemplate, removeRawTemplate } from "discourse/lib/raw-templates";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
-import {
-  addRawTemplate,
-  removeRawTemplate,
-} from "discourse-common/lib/raw-templates";
 
 const CONNECTOR =
   "javascripts/raw-test/connectors/topic-list-before-status/lala";

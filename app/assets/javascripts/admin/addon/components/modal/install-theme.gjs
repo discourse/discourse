@@ -14,7 +14,7 @@ import dIcon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
+import { POPULAR_THEMES } from "discourse/lib/popular-themes";
 import { i18n } from "discourse-i18n";
 import InstallThemeItem from "admin/components/install-theme-item";
 import { COMPONENTS, THEMES } from "admin/models/theme";

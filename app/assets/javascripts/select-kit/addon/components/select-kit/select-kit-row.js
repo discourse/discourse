@@ -9,7 +9,7 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
 

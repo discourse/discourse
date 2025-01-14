@@ -16,5 +16,9 @@ export default {
     if (caps.isIOS) {
       html.classList.add("ios-device");
     }
+
+    if (caps.isTablet) {
+      html.classList.add("tablet-device");
+    }
   },
 };

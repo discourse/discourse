@@ -17,10 +17,10 @@ import {
   disableBodyScroll,
   enableBodyScroll,
 } from "discourse/lib/body-scroll-lock";
+import { bind } from "discourse/lib/decorators";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
-import { bind } from "discourse-common/utils/decorators";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";

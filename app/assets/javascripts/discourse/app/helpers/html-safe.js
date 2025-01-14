@@ -1,5 +1,5 @@
 import { htmlSafe as emberHtmlSafe } from "@ember/template";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 registerRawHelper("html-safe", htmlSafe);
 

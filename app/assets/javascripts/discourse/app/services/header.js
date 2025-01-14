@@ -3,8 +3,8 @@ import { registerDestructor } from "@ember/destroyable";
 import { dependentKeyCompat } from "@ember/object/compat";
 import Service, { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import deprecated from "discourse-common/lib/deprecated";
 import { SCROLLED_UP } from "./scroll-direction";
 
 const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];

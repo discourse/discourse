@@ -1,12 +1,12 @@
 import { guidFor } from "@ember/object/internals";
 import { cancel } from "@ember/runloop";
 import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
+import { bind } from "discourse/lib/decorators";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import Mobile from "discourse/lib/mobile";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 // Use to attach copy/fullscreen buttons to a block of code, either

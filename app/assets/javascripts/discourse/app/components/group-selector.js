@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
+import { findRawTemplate } from "discourse/lib/raw-templates";
 import { i18n } from "discourse-i18n";
 
 export default class GroupSelector extends Component {

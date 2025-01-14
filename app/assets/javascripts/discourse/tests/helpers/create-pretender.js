@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
 import Pretender from "pretender";
+import getURL from "discourse/lib/get-url";
+import { cloneJSON } from "discourse/lib/object";
 import User from "discourse/models/user";
-import getURL from "discourse-common/lib/get-url";
-import { cloneJSON } from "discourse-common/lib/object";
 
 export function parsePostData(query) {
   const result = {};

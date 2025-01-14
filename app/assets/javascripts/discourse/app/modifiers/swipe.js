@@ -5,8 +5,8 @@ import {
   disableBodyScroll,
   enableBodyScroll,
 } from "discourse/lib/body-scroll-lock";
+import { bind } from "discourse/lib/decorators";
 import SwipeEvents from "discourse/lib/swipe-events";
-import { bind } from "discourse-common/utils/decorators";
 /**
  * A modifier for handling swipe gestures on an element.
  *

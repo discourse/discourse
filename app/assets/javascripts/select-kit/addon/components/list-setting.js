@@ -1,7 +1,7 @@
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
   MAIN_COLLECTION,

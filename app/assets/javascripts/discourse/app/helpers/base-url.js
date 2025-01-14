@@ -1,6 +1,6 @@
-import deprecated from "discourse-common/lib/deprecated";
-import getUrl from "discourse-common/lib/get-url";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import deprecated from "discourse/lib/deprecated";
+import getUrl from "discourse/lib/get-url";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 registerRawHelper("base-url", baseUrl);
 

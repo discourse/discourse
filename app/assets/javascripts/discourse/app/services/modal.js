@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
 import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
+import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
-import deprecated from "discourse-common/lib/deprecated";
 
 const LEGACY_OPTS = new Set([
   "admin",

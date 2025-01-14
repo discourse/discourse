@@ -1,7 +1,7 @@
-import escape from "discourse-common/lib/escape";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import { helperContext } from "discourse-common/lib/helpers";
-import { deepMerge } from "discourse-common/lib/object";
+import escape from "discourse/lib/escape";
+import { getURLWithCDN } from "discourse/lib/get-url";
+import { helperContext } from "discourse/lib/helpers";
+import { deepMerge } from "discourse/lib/object";
 
 let allowedSizes = null;
 

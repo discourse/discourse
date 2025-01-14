@@ -6,8 +6,8 @@ import {
   addWidgetCleanCallback,
   removeWidgetCleanCallback,
 } from "discourse/components/mount-widget";
+import { bind } from "discourse/lib/decorators";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { bind } from "discourse-common/utils/decorators";
 
 const STICKY_CLASS = "sticky-avatar";
 const TOPIC_POST_SELECTOR = ".post-stream .topic-post";

@@ -7,7 +7,7 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import DMenu from "float-kit/components/d-menu";
 
 export default class TopicAdminMenu extends Component {

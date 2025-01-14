@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
+import { registerRawHelper } from "discourse/lib/helpers";
 import renderTags from "discourse/lib/render-tags";
-import { registerRawHelper } from "discourse-common/lib/helpers";
 
 registerRawHelper("discourse-tags", discourseTags);
 export default function discourseTags(topic, params) {

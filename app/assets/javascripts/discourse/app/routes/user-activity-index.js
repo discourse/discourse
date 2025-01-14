@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
+import getURL from "discourse/lib/get-url";
+import { iconHTML } from "discourse/lib/icon-library";
 import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
-import getURL from "discourse-common/lib/get-url";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityIndex extends UserActivityStreamRoute {

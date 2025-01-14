@@ -9,7 +9,7 @@ import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimm
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 import { i18n } from "discourse-i18n";
 
 const ACTION_AS_STRING_DEPRECATION_ARGS = [

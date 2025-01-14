@@ -8,7 +8,7 @@ import getURL, {
   setupS3CDN,
   setupURL,
   withoutPrefix,
-} from "discourse-common/lib/get-url";
+} from "discourse/lib/get-url";
 
 module("Unit | Utility | get-url", function (hooks) {
   setupTest(hooks);

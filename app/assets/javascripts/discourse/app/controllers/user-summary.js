@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { duration } from "discourse/lib/formatter";
-import discourseComputed from "discourse-common/utils/decorators";
 
 // should be kept in sync with 'UserSummary::MAX_BADGES'
 const MAX_BADGES = 6;

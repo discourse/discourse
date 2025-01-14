@@ -1,11 +1,11 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
+import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { replaceIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { replaceIcon } from "discourse-common/lib/icon-library";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";

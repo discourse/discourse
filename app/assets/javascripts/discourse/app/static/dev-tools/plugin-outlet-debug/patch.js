@@ -1,6 +1,6 @@
 import curryComponent from "ember-curry-component";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { _setOutletDebugCallback } from "discourse/lib/plugin-connectors";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import devToolsState from "../state";
 import OutletInfoComponent from "./outlet-info";
 

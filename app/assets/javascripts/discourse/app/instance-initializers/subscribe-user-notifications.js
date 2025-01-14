@@ -1,20 +1,20 @@
 // Subscribes to user events on the message bus
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import {
   alertChannel,
   disable as disableDesktopNotifications,
   init as initDesktopNotifications,
   onNotification as onDesktopNotification,
 } from "discourse/lib/desktop-notifications";
+import { isTesting } from "discourse/lib/environment";
 import {
   isPushNotificationsEnabled,
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import Notification from "discourse/models/notification";
-import { isTesting } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
 
 class SubscribeUserNotificationsInit {
   @service currentUser;

@@ -1,4 +1,4 @@
-import { camelCaseToDash } from "discourse-common/lib/case-converter";
+import { camelCaseToDash } from "discourse/lib/case-converter";
 
 let isWhiteSpace, escapeHtml;
 

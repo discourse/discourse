@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { classNames, tagName } from "@ember-decorators/component";
-import { REPLACEMENTS } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
-import { afterRender } from "discourse-common/utils/decorators";
+import { afterRender } from "discourse/lib/decorators";
+import { REPLACEMENTS } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 
 @tagName("section")
 @classNames("styleguide-icons")

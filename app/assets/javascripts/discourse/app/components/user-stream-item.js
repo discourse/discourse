@@ -2,9 +2,9 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { classNameBindings, tagName } from "@ember-decorators/component";
 import { propertyEqual } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 import { actionDescription } from "discourse/widgets/post-small-action";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("li")
 @classNameBindings(

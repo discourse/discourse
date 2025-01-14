@@ -1,5 +1,5 @@
-import { default as emberGetUrl } from "discourse-common/lib/get-url";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { default as emberGetUrl } from "discourse/lib/get-url";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 registerRawHelper("get-url", getUrl);
 

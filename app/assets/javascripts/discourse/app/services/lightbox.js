@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   DOCUMENT_ELEMENT_LIGHTBOX_OPEN_CLASS,
@@ -13,7 +14,6 @@ import {
 } from "discourse/lib/lightbox/helpers";
 import { processHTML } from "discourse/lib/lightbox/process-html";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import { bind } from "discourse-common/utils/decorators";
 
 @disableImplicitInjections
 export default class LightboxService extends Service {
