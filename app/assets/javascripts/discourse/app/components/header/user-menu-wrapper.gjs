@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
