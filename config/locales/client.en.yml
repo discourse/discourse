@@ -6044,6 +6044,7 @@ en:
           customize_desc: "Customize:"
           title: "Themes"
           description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
+          components_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design."
           create: "Create"
           create_type: "Type"
           create_name: "Name"
