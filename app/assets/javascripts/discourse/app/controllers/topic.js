@@ -1201,7 +1201,9 @@ export default class TopicController extends Controller.extend(
       options = {
         action: Composer.CREATE_TOPIC,
         draftKey: post.topic.draft_key,
-        topicCategoryId: this.get("model.category.id"),
+        topicCategoryId:
+          this.get("model.category.permission") &&
+          this.get("model.category.id"),
         prioritizedCategoryId: this.get("model.category.id"),
       };
     }
