@@ -4753,7 +4753,7 @@ en:
         everyone_can_use: "Tags can be used by everyone"
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
-        cannot_save: 
+        cannot_save:
           empty_name: "Cannot save tag group. Make sure the tag group name is not empty."
           no_tags: "Cannot save tag group. Make sure that at least one tag is selected."
           no_groups: "Cannot save tag group. Make sure that at least one group is selected for permission."
@@ -6043,6 +6043,7 @@ en:
           browse_themes: "Browse community themes"
           customize_desc: "Customize:"
           title: "Themes"
+          description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
           create: "Create"
           create_type: "Type"
           create_name: "Name"
