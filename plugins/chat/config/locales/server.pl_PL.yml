@@ -264,11 +264,19 @@ pl_PL:
           few: "[%{site_name}] Nowe wiadomości"
           many: "[%{site_name}] Nowe wiadomości"
           other: "[%{site_name}] Nowe wiadomości"
+        chat_dm_1:
+          one: "[%{site_name}] Nowa wiadomość od %{name}"
+          few: "[%{site_name}] Nowe wiadomości od %{name}"
+          many: "[%{site_name}] Nowe wiadomości od %{name}"
+          other: "[%{site_name}] Nowe wiadomości od %{name}"
+        chat_dm_2: "[%{site_name}] Nowe wiadomości od %{name_1} i %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Nowe wiadomości od %{name} i %{count} innych"
         chat_channel_1:
           one: "[%{site_name}] Nowa wiadomość w %{channel}"
           few: "[%{site_name}] Nowe wiadomości w %{channel}"
           many: "[%{site_name}] Nowe wiadomości w %{channel}"
           other: "[%{site_name}] Nowe wiadomości w %{channel}"
+        chat_channel_2: "[%{site_name}] Nowe wiadomości w %{channel_1} i %{channel_2}"
       unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
       unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:

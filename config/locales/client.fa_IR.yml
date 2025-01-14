@@ -4565,6 +4565,7 @@ fa_IR:
         show_details: جزئیات
         description: توضیح
         save: ذخیره
+        delete: برای همیشه حذف کنید
         continue: ادامه
         scopes:
           read_only: فقط خواندنی

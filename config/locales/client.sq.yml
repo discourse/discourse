@@ -141,6 +141,7 @@ sq:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "postimi #%{postNumber} nga @%{username}"
       close: "mbylle"
+      twitter: "Shpërndaje në Twitter"
       facebook: "Shpërndaje në Facebook"
       email: "Dërgo me email"
       url: "Kopjoni dhe ndani URL-në"
@@ -158,6 +159,7 @@ sq:
       removed_user: "Hequr %{who} %{when}"
       removed_group: "Hequr %{who} %{when}"
       autobumped: "Kaloi automatikisht %{when}"
+      category_changed: "Kategoria u përditësua %{when}"
       autoclosed:
         enabled: "Mbylli %{when}"
         disabled: "Hapur %{when}"
@@ -694,6 +696,7 @@ sq:
       never: "Asnjëherë"
       last_custom: "Data e fundit e personalizuar"
       custom: "Data dhe ora e personalizuar"
+      custom_short: "Me porosi..."
       select_timeframe: "Zgjidhni një kornizë kohore"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postoi <a href='%{topicUrl}'>temën</a>"
@@ -871,6 +874,7 @@ sq:
       empty:
         posts: "Nuk ka postime nga anëtarët e këtij grupi."
         members: "Nuk ka anëtarë në këtë grup."
+        requests: "Nuk ka kërkesa për anëtarësim për këtë grup."
       add: "Shto"
       join: "Bashkohu"
       leave: "Dilni"
@@ -1070,6 +1074,7 @@ sq:
     user_fields:
       none: "(zgjidhni një opsion)"
       required: 'Ju lutemi shkruani një vlerë për "%{name}”'
+      same_as_password: "Fjalëkalimi juaj nuk duhet të përsëritet në fusha të tjera."
       optional: (opsionale)
     user:
       said: "%{username}:"
@@ -1594,6 +1599,7 @@ sq:
         ok: "Emri duket në rregull"
       username:
         title: "Emri i përdoruesit"
+        instructions: "Unike, pa hapësira, të shkurtra."
         short_instructions: "Anëtarët e tjerë mund t'ju përmendin si @%{username}"
         available: "Emri është i disponueshëm"
         not_available: "Nuk është i disponueshëm. Provoni %{suggestion}?"
@@ -1639,6 +1645,7 @@ sq:
       location: "Vendndodhja"
       website: "Faqja web"
       email_settings: "Email"
+      hide_profile_and_presence: "Fshih profilin tim publik dhe veçoritë e pranisë"
       enable_physical_keyboard: "Aktivizoni mbështetjen fizike të tastierës në iPad"
       text_size:
         title: "Madhësia e tekstit"
@@ -1756,6 +1763,10 @@ sq:
           success: "Lidhja e ftesës u krijua me sukses!"
           error: "Pati një gabim gjatë krijimit të lidhjes së Ftesës"
         invite:
+          new_title: "Krijo Ftesë"
+          edit_title: "Redakto Ftesën"
+          instructions: "Ndani këtë link për të dhënë menjëherë akses në këtë faqe:"
+          copy_link: "kopjo lidhjen"
           expires_in_time: "Skadon në %{time}"
           expired_at_time: "Ka skaduar në %{time}"
           show_advanced: "Shfaqni opsionet e avancuara"
@@ -1769,6 +1780,7 @@ sq:
           invite_to_topic: "Arrini në temë"
           send_invite_email: "Ruani dhe dërgoni email"
           send_invite_email_instructions: "Kufizoni ftesën në email për të dërguar një email ftesë"
+          invite_saved: "Ftesa u ruajt."
         bulk_invite:
           none: "Nuk ka ftesë për t'u shfaqur në këtë faqe."
           text: "Ftesë me shumicë"
@@ -1798,6 +1810,9 @@ sq:
         same_as_username: "Fjalëkalimi është i njëjtë me emrin e përdoruesit."
         same_as_email: "Fjalëkalimi është i njëjtë me adresën email."
         ok: "Fjalëkalimi është i pranueshëm."
+        instructions:
+          one: "Të paktën %{count} shkronja"
+          other: "Të paktën %{count} shkronja."
         required: "Ju lutemi shkruani një fjalëkalim"
         confirm: "Konfirmoni"
         incorrect_password: "Fjalëkalimi i futur është i pasaktë."
@@ -2068,6 +2083,7 @@ sq:
     search_hint: "emri i anëtarit, email ose adresë IP"
     create_account:
       header_title: "Mirë se vini!"
+      subheader_title: "Krijojmë llogarinë tuaj"
       disclaimer: "Duke u regjistruar, ju pranoni <a href='%{privacy_link}' target='blank'>politikën e privatësisë</a> dhe <a href='%{tos_link}' target='blank'>kushtet e shërbimit</a>."
       title: "Regjistrohu"
       failed: "Diçka nuk funksionoi siç duhet, mbase kjo adresë emaili është e regjistruar në faqe. Provoni butonin e fjalëkalimit të humbur. "
@@ -2105,6 +2121,8 @@ sq:
       confirm_button: Përfundoni hyrjen
     login:
       header_title: "Mirë se vini përsëri"
+      subheader_title: "Hyni në llogarinë tuaj"
+      title: "Identifikohu"
       username: "Anëtari"
       password: "Fjalëkalimi"
       show_password: "Shfaq"
@@ -2201,6 +2219,7 @@ sq:
       success: "Llogaria juaj u krijua dhe ju tani mund të identifikoheni."
       name_label: "Emri"
       password_label: "Fjalëkalimi"
+      existing_user_can_redeem: "Përditësoni ftesën tuaj për një temë ose grup."
     password_reset:
       continue: "Vazhdo tek %{site_name}"
     emoji_set:
@@ -2563,6 +2582,8 @@ sq:
         quoted: "cituar"
         edited: "redaktuar"
         liked: "pëlqim i ri"
+        private_message: "mesazh i ri privat"
+        invited_to_private_message: "te ftuar ne mesazh privat"
         invitee_accepted: "ftesa u pranua"
         posted: "postim i ri"
         watching_category_or_tag: "postim i ri"
@@ -3653,6 +3674,7 @@ sq:
         mark_tracking: "%{shortcut} Ndiqe temën"
         mark_watching: "%{shortcut} Vëzhgoje temën"
         print: "%{shortcut} Printo temën"
+        archive_private_message: "%{shortcut} Ndrysho arkivimin e mesazhit privat"
     badges:
       earned_n_times:
         one: "Kjo stemë është fituar %{count} herë"
@@ -3821,6 +3843,7 @@ sq:
         show: "Shfaq"
         about: "Rreth"
   admin_js:
+    type_to_filter: "shkruani për të filtruar…"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -3831,6 +3854,8 @@ sq:
       reports:
         sidebar_link:
           all: "Të Gjithë"
+      new_features:
+        title: "Çfarë ka të re"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
@@ -3842,6 +3867,8 @@ sq:
         installed_version: "Instaluar"
         latest_version: "Të fundit"
         new_features:
+          title: "Çfarë ka të re"
+          subtitle: "Për më shumë detaje rreth veçorive dhe përmirësimeve të reja, shtojmë gjatë gjithë kohës, shihni <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Shënimet e publikimit</a>."
           learn_more: "Mëso më shumë..."
         last_checked: "Verifikimi i fundit"
         refresh_problems: "Rifresko"
@@ -3879,6 +3906,7 @@ sq:
             category:
               label: Kategori
       flags:
+        title: "Sinjalet e Moderimit"
         description: "Përshkrimi"
         enabled: "Aktivizuar?"
       groups:
@@ -3919,15 +3947,22 @@ sq:
         user: "Përdorues"
         title: "API"
         created: Krijuar
+        last_used: Përdorur për herë të fundit
         never_used: (asnjëherë)
         generate: "Gjenero"
+        undo_revoke: "Zhbëj anulimin"
         revoke: "Revoko"
         all_users: "Gjithë Përdoruesit"
         show_details: Detaje
         description: Përshkrimi
+        user_mode: Niveli i përdoruesit
+        single_user: "Përdorues i vetëm"
         save: Ruaj
+        delete: Fshi përgjithmonë
         scopes:
           action: Veprimi
+          allowed_parameters: Parametrat e lejuar
+          optional_allowed_parameters: Parametrat e lejuar (opsionale)
       web_hooks:
         title: "Webhooks"
         edit: "Redakto"
@@ -3948,18 +3983,26 @@ sq:
         title: "Llogaria"
         sidebar_link:
           backups: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re"
       community:
         title: "Komuniteti"
         sidebar_link:
+          about_your_site: "Rreth faqes suaj"
           badges: "Stemat"
+          login_and_authentication: "Hyrja dhe Verifikimi"
           notifications: "Njoftimet"
           permalinks: "Permalinks"
           trust_levels: "Nivelet e besimit"
           users: "Users"
           user_fields: "Fushat e përdoruesit"
+          watched_words: "Fjalët e shikuara"
           legal: "Legale"
+          moderation_flags: "Sinjalet e Moderimit"
       appearance:
         sidebar_link:
+          font_style: "Stili i Fontit"
+          site_logo: "Logo e faqes"
           emoji: "Emoji"
           navigation: "Shfletimi"
       email_settings:
@@ -4549,6 +4592,9 @@ sq:
           title: "Trego në kartën e anëtarit"
           enabled: "e treguar në kartën e anëtarit"
           disabled: "nuk tregohet në kartën e anëtarit"
+        searchable:
+          enabled: "kërkimet"
+          disabled: "nuk kërkohen"
         field_types:
           text: "Fusha tekstit"
           confirm: "Konfirmimi"
@@ -4675,6 +4721,10 @@ sq:
             with_post: <span class="username">%{username}</span> for post in %{link}
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
+        badge_intro:
+          title: "Zgjidhni një simbol ekzistues ose krijoni një të ri për të filluar"
+          what_are_badges_title: "Çfarë janë simbolet?"
+          badge_query_examples_title: "Shembuj të pyetjeve të simbolit"
       emoji:
         title: "Emoji"
         add: "Add New Emoji"
@@ -4685,7 +4735,15 @@ sq:
         settings: "Rregullimet"
       embedding:
         title: "Embedding"
+        host: "Lajmëruesit e lejuar"
         edit: "redakto"
+        category: "Postoni në kategori"
+        tags: "Shënjuesit e Temave"
+        post_author: "Autori i postimit - Parazgjedhja në %{author}"
+        add_host: "Shto lajmëruesin"
+        settings: "Vendosja e cilësimeve"
+        crawling_settings: "Cilësimet e prezantuesit"
+        crawling_description: "Kur diskutimi krijon tema për postimet tuaja, nëse nuk ka faqe RSS/ATOM, përpjekja do të analizojë përmbajtjen tuaj nga HTML-ja juaj. Ndonjëherë mund të jetë sfiduese për të nxjerrë përmbajtjen tuaj, kështu që ne ofrojmë mundësinë për të specifikuar rregullat CSS për ta bërë më të lehtë nxjerrjen."
         embed_post_limit: "Maximum number of posts to embed"
         embed_truncate: "Truncate the embedded posts"
       permalink:
@@ -4704,6 +4762,8 @@ sq:
           add: "Shto"
           filter: "Search (URL or External URL)"
       reseed:
+        action:
+          label: "Zëvendëso tekstin…"
         modal:
           categories: "Categories"
           topics: "Tema"
@@ -4722,5 +4782,6 @@ sq:
           moderator: "Moderator"
           regular: "Përdorues i thjeshtë"
       previews:
+        topic_title: "Titulli i një teme diskutimi"
         share_button: "Shpërndaje"
         reply_button: "Përgjigju"

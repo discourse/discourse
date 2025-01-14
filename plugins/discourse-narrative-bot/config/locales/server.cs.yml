@@ -133,7 +133,7 @@ cs:
           V současné době umím dělat následující věci:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Spustit interaktivní výukový kurz speciálně pro tebe, v osobní zprávě. `{name-of-tutorial}` může být jedno z: `%{tracks}`.
+          > Spustit interaktivní výukový kurz speciálně pro tebe, v soukromé zprávě. `{name-of-tutorial}` může být jedno z: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -270,7 +270,7 @@ cs:
         not_found: |-
           Jejda, ve tvé odpovědi nevidím žádné emoji? Ale ne! :sob:
 
-          Zkus napsat dvojtečku <kbd>:</kbd> , čímž vyvoláš výběr emoji, a pak napiš několik prvních písmen toho, co chceš, například `:bird:`
+          Zkus napsat dvojtečku <kbd>:</kbd>, čímž vyvoláš výběr emoji, a pak napiš několik prvních písmen toho, co chceš, například `:bird:`
 
           Nebo v editoru stiskni tlačítko emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> .
 
@@ -285,7 +285,7 @@ cs:
         not_found: |-
           Nikde tam nevidím své jméno :frowning: . Můžeš mě zkusit znovu zmínit jako `@%{discobot_username}`?
 
-          (A ano, moje uživatelské jméno se píše _disco_, stejně jako taneční šílenství 70. let. Mám [rád noční život!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+          (A ano, moje uživatelské jméno se píše _disco_, stejně jako taneční šílenství 70. let. Mám [rád noční život!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
           Máme rádi přátelské diskuse a potřebujeme tvoji pomoc, abychom je [udrželi civilizované](%{guidelines_url}). Pokud vidíš nějaký problém, označ jej prosím, a dej tak o něm soukromě vědět autorovi nebo [naší ochotné redakci](%{about_url}). Existuje mnoho důvodů, proč bys mohl/a chtít příspěvek označit, od neškodného návrhu na rozdělení tématu až po jasné porušení komunitních standardů. Pokud vybereš možnost **Něco jiného**, zahájíš diskusi s moderátory v soukromé zprávě, kde můžeš položit další otázky.
@@ -334,9 +334,9 @@ cs:
       cert_title: "Jako uznání za úspěšné dokončení kurzu pro pokročilé uživatele"
       title: ":arrow_up: Pokročilé uživatelské funkce"
       start_message: |-
-        Jako _pokročilý_ uživatel jste navštívili [vaše preference page] (%{base_uri}/ moje / preference) Zatím @%{username}? Existuje mnoho způsobů, jak si přizpůsobit svůj zážitek, například výběr tmavého nebo světlého motivu.
+        Jako _pokročilý_ uživatel jsi již navštívil/a [stránku svých předvoleb](%{base_uri}/my/preferences) @%{username}? Existuje mnoho způsobů, jak si přizpůsobit prostředí, například výběrem tmavého nebo světlého motivu.
 
-        Ale odbočím, pojďme začít!
+        Ale to odbočuji, pojďme začít!
       edit:
         bot_created_post_raw: "@%{discobot_username} je zdaleka nejúžasnější robot, kterého znám :wink:"
         instructions: |-
@@ -376,7 +376,7 @@ cs:
           Upozorňuji, že máš na vrácení příspěvku pouze %{deletion_after} hodin.
       category_hashtag:
         instructions: |-
-          Věděl/a jsi, že v příspěvku můžeš odkazovat na kategorie a štítky? Viděl/a jsti například kategorii %{category} ?
+          Věděl/a jsi, že v příspěvku můžeš odkazovat na kategorie a štítky? Viděl/a jsti například kategorii %{category}?
 
           Zadej `#` kdekoli ve větě a vyber libovolnou kategorii nebo štítek.
         not_found: |-
@@ -417,7 +417,7 @@ cs:
         reply: |-
           Hej, pěkná anketa! Jak jsem si vedl při výuce?
 
-          [anketa]
+          [poll]
           * :+1:
           * :-1:
           [/poll]
@@ -448,7 +448,7 @@ cs:
           Skvělá práce – tvůj smysl pro detail je obdivuhodný!
       end:
         message: |-
-          Proletěl jsi to jako _pokročilý uživatel_, opravdu :bow:
+          Proletěl/a jsi to jako _pokročilý uživatel_, opravdu :bow:
 
           %{certificate}
 
