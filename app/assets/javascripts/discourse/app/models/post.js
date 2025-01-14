@@ -8,6 +8,7 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
@@ -18,7 +19,6 @@ import Composer from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 const pluginTrackedProperties = new Set();

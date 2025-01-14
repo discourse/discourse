@@ -8,10 +8,10 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 // Number of tokens shown by default.

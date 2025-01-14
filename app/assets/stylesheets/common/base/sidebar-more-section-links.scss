@@ -2,7 +2,7 @@
   background-color: var(--d-sidebar-background);
   transition: background-color 0.25s;
   box-shadow: var(--shadow-card);
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--d-sidebar-border-color);
   margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
 
   .sidebar-row {
@@ -16,7 +16,7 @@
 }
 
 .sidebar-more-section-links-details-content-footer {
-  border-top: 2px solid var(--primary-low);
+  border-top: 2px solid var(--d-sidebar-border-color);
   display: flex;
   width: 100%;
 

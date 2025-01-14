@@ -1,5 +1,5 @@
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 
 @classNames("tag-row")

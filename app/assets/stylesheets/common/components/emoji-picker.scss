@@ -1,5 +1,15 @@
 .fk-d-menu[data-content][data-identifier="emoji-picker"] {
   z-index: z("modal", "dialog");
+
+  .emoji-picker {
+    max-width: 95vw;
+  }
+}
+
+.fk-d-menu-modal {
+  .emoji-picker {
+    max-width: 100vw;
+  }
 }
 
 .emoji-picker-trigger {
@@ -13,7 +23,6 @@
   flex-direction: column;
   height: 300px;
   width: 500px;
-  max-width: 100vw;
 
   .spinner-container {
     height: 100%;

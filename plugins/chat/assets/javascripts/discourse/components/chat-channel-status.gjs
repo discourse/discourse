@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   CHANNEL_STATUSES,

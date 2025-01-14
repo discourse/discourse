@@ -3,35 +3,54 @@
   @include breakpoint(large) {
     --d-sidebar-width: #{$d-sidebar-narrow-width};
   }
-  --d-sidebar-animation-time: 0.25s;
-  --d-sidebar-animation-ease: ease-in-out;
-  // 1.25rem gets text left-aligned with the hamburger icon
   --d-sidebar-row-horizontal-padding: 1rem;
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
 
+  --d-sidebar-animation-time: 0.25s;
+  --d-sidebar-animation-ease: ease-in-out;
+
   --d-sidebar-background: var(--secondary);
   --d-sidebar-admin-background: var(--primary-very-low);
-  --d-sidebar-prefix-background: var(
-    --primary-low
-  ); // example: chat participant count
 
-  --d-sidebar-header-color: var(--primary);
+  // must be rgba for gradient
+  --d-sidebar-footer-fade: rgba(var(--secondary-rgb), 1);
+
+  --d-sidebar-header-color: var(--primary-medium);
   --d-sidebar-header-icon-color: var(--primary-medium);
+
+  --d-sidebar-border-color: var(--primary-low);
 
   --d-sidebar-link-color: var(--primary-high);
   --d-sidebar-link-icon-color: var(--primary-500);
   --d-sidebar-link-badge-color: var(--primary-700); // example: new count
 
+  // example: chat participant count
+  --d-sidebar-prefix-background: var(--primary-low);
+  --d-sidebar-prefix-color: var(--d-sidebar-link-color);
+
+  // example: unread dot
+  --d-sidebar-suffix-color: var(--tertiary-med-or-tertiary);
+
+  // highlight applies to both hover and focus states
   --d-sidebar-highlight-background: var(--primary-low);
   --d-sidebar-highlight-color: var(--primary-high);
   --d-sidebar-highlight-prefix-background: var(--primary-300);
+  --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
+  --d-sidebar-highlight-suffix-color: var(--tertiary-med-or-tertiary);
+
   --d-sidebar-highlight-hover-background: var(
     --primary-medium
   ); // example: hovering a button within a highlighted section
   --d-sidebar-highlight-hover-icon: var(
     --primary-very-low
   ); // example: hovering a button within a highlighted section
+
+  --d-sidebar-active-background: var(--d-selected);
+  --d-sidebar-active-color: var(--d-sidebar-link-color);
+  --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
+  --d-sidebar-active-prefix-background: var(--primary-200);
+  --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
 }
 
 .sidebar-row {

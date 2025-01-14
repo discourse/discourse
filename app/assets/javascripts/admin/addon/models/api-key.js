@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
 import AdminUser from "admin/models/admin-user";
 
 export default class ApiKey extends RestModel {

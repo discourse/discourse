@@ -368,8 +368,16 @@ pre.onebox code ol.lines li:before {
   counter-increment: li-counter;
 }
 
-.onebox.githubblob h4 {
-  word-break: break-all;
+.onebox.githubblob,
+.onebox.gitlabblob {
+  .onebox-body h4 {
+    word-break: break-all;
+    margin-bottom: 5px;
+    font-size: 1rem;
+  }
+  .git-blob-info {
+    font-size: var(--font-down-1);
+  }
 }
 
 pre.onebox code ol {

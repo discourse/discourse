@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 
 @tagName("")
 export default class CopyButton extends Component {

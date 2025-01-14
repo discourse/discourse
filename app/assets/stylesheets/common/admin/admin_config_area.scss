@@ -73,6 +73,10 @@
     flex-direction: column;
   }
 
+  &__full-width {
+    flex: 1 0 100%;
+  }
+
   &__primary-content {
     flex: 0 1 70%;
 

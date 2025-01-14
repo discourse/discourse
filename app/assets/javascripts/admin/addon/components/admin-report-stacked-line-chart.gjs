@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { number } from "discourse/lib/formatter";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import hexToRGBA from "admin/lib/hex-to-rgba";
 import Report from "admin/models/report";
 import Chart from "./chart";

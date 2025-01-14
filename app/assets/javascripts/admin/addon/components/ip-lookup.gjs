@@ -16,6 +16,8 @@ import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 import DMenu from "float-kit/components/d-menu";
 
+const MAX_ACCOUNTS_TO_DELETE = 50;
+
 export default class IpLookup extends Component {
   @service dialog;
   @service site;
@@ -26,13 +28,13 @@ export default class IpLookup extends Component {
   @tracked loading = false;
   @tracked otherAccountsLoading = false;
   @tracked totalOthersWithSameIP;
+  @tracked ipToLookup = this.args.ip;
 
   get otherAccountsToDelete() {
     const otherAccountsLength = this.otherAccounts?.length || 0;
     const totalOthers = this.totalOthersWithSameIP || 0;
-    // can only delete up to 50 accounts at a time
-    const total = Math.min(50, totalOthers);
-    const visible = Math.min(50, otherAccountsLength);
+    const total = Math.min(MAX_ACCOUNTS_TO_DELETE, totalOthers);
+    const visible = Math.min(MAX_ACCOUNTS_TO_DELETE, otherAccountsLength);
     return Math.max(visible, total);
   }
 
@@ -40,18 +42,27 @@ export default class IpLookup extends Component {
   async lookup() {
     this.loading = true;
     try {
-      if (!this.location && this.args.ip) {
-        const loc = await ajax("/admin/users/ip-info", {
-          data: { ip: this.args.ip },
-        });
-        this.location = loc;
+      if (this.args.ip === "adminLookup") {
+        try {
+          const userInfo = await AdminUser.find(this.args.userId);
+          this.ipToLookup = userInfo.ip_address;
+        } catch (err) {
+          popupAjaxError(err);
+          return;
+        }
       }
 
-      if (!this.otherAccounts && this.args.ip) {
+      if (!this.location && this.ipToLookup) {
+        this.location = await ajax("/admin/users/ip-info", {
+          data: { ip: this.ipToLookup },
+        });
+      }
+
+      if (!this.otherAccounts && this.ipToLookup) {
         this.otherAccountsLoading = true;
 
         const data = {
-          ip: this.args.ip,
+          ip: this.ipToLookup,
           exclude: this.args.userId,
           order: "trust_level DESC",
         };
@@ -75,7 +86,7 @@ export default class IpLookup extends Component {
   @action
   async copy() {
     const { location } = this;
-    let text = `IP: ${this.args.ip}`;
+    let text = `IP: ${this.ipToLookup}`;
 
     if (location) {
       if (location.hostname) {
@@ -111,7 +122,6 @@ export default class IpLookup extends Component {
     this.dialog.yesNoConfirm({
       message: i18n("ip_lookup.confirm_delete_other_accounts"),
       didConfirm: async () => {
-        // reset state
         this.otherAccounts = null;
         this.otherAccountsLoading = true;
         this.totalOthersWithSameIP = null;
@@ -120,7 +130,7 @@ export default class IpLookup extends Component {
           await ajax("/admin/users/delete-others-with-same-ip.json", {
             type: "DELETE",
             data: {
-              ip: this.args.ip,
+              ip: this.ipToLookup,
               exclude: this.args.userId,
               order: "trust_level DESC",
             },

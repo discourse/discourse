@@ -1,12 +1,12 @@
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance("Topic - Quote button - logged in", function (needs) {

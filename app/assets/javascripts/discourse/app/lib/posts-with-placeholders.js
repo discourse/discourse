@@ -4,7 +4,7 @@ import {
 } from "@ember/-internals/metal";
 import EmberArray from "@ember/array";
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 export function Placeholder(viewName) {
   this.viewName = viewName;

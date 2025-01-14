@@ -15,7 +15,7 @@
     <% @about.admins.each do |user| %>
       <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
         <meta itemprop='url' content='<%= user_path(user.encoded_username(lower: true)) %>'>
-        <a href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
+        <a rel='nofollow' href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
           <span itemprop='image'>
             <img width="45" height="45" class="avatar" src="<%= user.small_avatar_url %>">
           </span>
@@ -36,7 +36,7 @@
       <% @about.moderators.each do |user| %>
         <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
           <meta itemprop='url' content='<%= user_path(user.encoded_username(lower: true)) %>'>
-          <a href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
+          <a rel='nofollow' href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
             <span itemprop='image'>
               <img width="45" height="45" class="avatar" src="<%= user.small_avatar_url %>">
             </span>

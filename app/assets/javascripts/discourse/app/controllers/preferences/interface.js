@@ -10,10 +10,10 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import { propertyEqual } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES

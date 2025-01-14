@@ -8,10 +8,10 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import LoadMore from "discourse/mixins/load-more";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("table")
 @classNames("topic-list")

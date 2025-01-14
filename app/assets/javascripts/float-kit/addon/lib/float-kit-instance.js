@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { makeArray } from "discourse-common/lib/helpers";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import { makeArray } from "discourse/lib/helpers";
+import discourseLater from "discourse/lib/later";
 
 const TOUCH_OPTIONS = { passive: true, capture: true };
 

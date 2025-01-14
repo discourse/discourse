@@ -1,7 +1,7 @@
+import deprecated from "discourse/lib/deprecated";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { humanizeList } from "discourse/lib/text";
 import { isAppleDevice } from "discourse/lib/utilities";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import I18n, { i18n } from "discourse-i18n";
 
 function isGUID(value) {

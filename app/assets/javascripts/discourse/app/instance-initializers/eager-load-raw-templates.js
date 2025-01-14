@@ -1,4 +1,4 @@
-import { eagerLoadRawTemplateModules } from "discourse-common/lib/raw-templates";
+import { eagerLoadRawTemplateModules } from "discourse/lib/raw-templates";
 
 export default {
   initialize() {

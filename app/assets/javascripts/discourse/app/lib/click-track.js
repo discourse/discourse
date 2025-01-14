@@ -1,13 +1,13 @@
 import jQuery from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL, { samePrefix } from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
-import { isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export function isValidLink(link) {

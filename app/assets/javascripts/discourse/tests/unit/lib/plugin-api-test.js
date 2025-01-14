@@ -3,8 +3,8 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
+import discourseComputed from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import discourseComputed from "discourse-common/utils/decorators";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);

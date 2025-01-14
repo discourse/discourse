@@ -1,5 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import postFixtures from "discourse/tests/fixtures/post";
 import {
   acceptance,
@@ -7,7 +8,6 @@ import {
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Fast Edit", function (needs) {
   needs.user();

@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { ajax } from "discourse/lib/ajax";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import AdminFilteredSiteSettings from "admin/components/admin-filtered-site-settings";
@@ -17,6 +17,7 @@ export default class AdminAreaSettings extends Component {
   @tracked settings = [];
   @tracked filter = "";
   @tracked loading = false;
+  @tracked showBreadcrumb = this.args.showBreadcrumb ?? true;
 
   constructor() {
     super(...arguments);
@@ -62,7 +63,9 @@ export default class AdminAreaSettings extends Component {
   }
 
   <template>
-    <DBreadcrumbsItem @path={{@path}} @label={{i18n "settings"}} />
+    {{#if this.showBreadcrumb}}
+      <DBreadcrumbsItem @path={{@path}} @label={{i18n "settings"}} />
+    {{/if}}
 
     <div
       class="content-body admin-config-area__settings admin-detail pull-left"

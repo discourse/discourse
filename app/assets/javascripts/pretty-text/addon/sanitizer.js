@@ -1,5 +1,5 @@
 import xss from "xss";
-import escape from "discourse-common/lib/escape";
+import escape from "discourse/lib/escape";
 
 // Should match any <iframe> without a src attribute
 const IFRAME_REGEXP =

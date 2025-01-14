@@ -4,8 +4,8 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import { debounce } from "discourse/lib/decorators";
 import { searchForTerm } from "discourse/lib/search";
-import { debounce } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ChooseMessage extends Component {

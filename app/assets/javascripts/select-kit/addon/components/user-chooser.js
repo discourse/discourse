@@ -1,11 +1,11 @@
 import { computed } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import { makeArray } from "discourse/lib/helpers";
 import userSearch, {
   eagerCompleteSearch,
   skipSearch,
 } from "discourse/lib/user-search";
-import { makeArray } from "discourse-common/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,

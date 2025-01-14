@@ -9,14 +9,14 @@ import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
+import discourseComputed from "discourse/lib/decorators";
+import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox, {
   cleanupLightboxes,
   setupLightboxes,
 } from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNames("image-uploader")

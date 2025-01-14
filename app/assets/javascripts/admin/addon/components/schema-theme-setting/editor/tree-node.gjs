@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { gt } from "truth-helpers";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 import ChildTree from "admin/components/schema-theme-setting/editor/child-tree";
 
 export default class SchemaThemeSettingNewEditorTreeNode extends Component {

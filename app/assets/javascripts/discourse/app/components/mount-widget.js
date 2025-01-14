@@ -4,9 +4,9 @@ import { cancel, scheduleOnce } from "@ember/runloop";
 import { camelize } from "@ember/string";
 import { diff, patch } from "virtual-dom";
 import DirtyKeys from "discourse/lib/dirty-keys";
+import { getRegister } from "discourse/lib/get-owner";
 import { WidgetClickHook } from "discourse/widgets/hooks";
 import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
-import { getRegister } from "discourse-common/lib/get-owner";
 
 let _cleanCallbacks = {};
 

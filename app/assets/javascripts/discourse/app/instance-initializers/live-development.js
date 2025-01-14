@@ -1,7 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 
 // Use the message bus for live reloading of components for faster development.
 class LiveDevelopmentInit {

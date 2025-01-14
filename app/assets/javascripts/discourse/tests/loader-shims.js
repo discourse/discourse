@@ -1,5 +1,5 @@
 import { importSync } from "@embroider/macros";
-import loaderShim from "discourse-common/lib/loader-shim";
+import loaderShim from "discourse/lib/loader-shim";
 
 // AMD shims for the test bundle, see the comment in loader-shim.js
 loaderShim("pretender", () => importSync("pretender"));

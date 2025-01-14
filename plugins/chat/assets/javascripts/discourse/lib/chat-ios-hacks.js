@@ -1,6 +1,6 @@
 import { next, schedule } from "@ember/runloop";
+import discourseLater from "discourse/lib/later";
 import { capabilities } from "discourse/services/capabilities";
-import discourseLater from "discourse-common/lib/later";
 
 // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
 // we use different hacks to work around this

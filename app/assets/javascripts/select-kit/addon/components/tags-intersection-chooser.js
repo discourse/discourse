@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { attributeBindings, classNames } from "@ember-decorators/component";
+import { makeArray } from "discourse/lib/helpers";
 import DiscourseURL from "discourse/lib/url";
-import { makeArray } from "discourse-common/lib/helpers";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 import { pluginApiIdentifiers } from "select-kit/components/select-kit";
 

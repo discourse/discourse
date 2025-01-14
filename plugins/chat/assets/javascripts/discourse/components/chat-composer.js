@@ -12,11 +12,9 @@ import { Promise } from "rsvp";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import { cloneJSON } from "discourse/lib/object";
+import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -26,8 +24,6 @@ import {
 } from "discourse/lib/user-status-on-autocomplete";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
-import { cloneJSON } from "discourse-common/lib/object";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { i18n } from "discourse-i18n";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
@@ -285,22 +281,20 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onTextareaFocusOut(event) {
+  onTextareaFocusOut() {
     this.isFocused = false;
-    enableBodyScroll(event.target);
   }
 
   @action
   onTextareaFocusIn(event) {
     this.isFocused = true;
-    const textarea = event.target;
-    disableBodyScroll(textarea);
 
     if (!this.capabilities.isIOS) {
       return;
     }
 
     // hack to prevent the whole viewport to move on focus input
+    const textarea = event.target;
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {

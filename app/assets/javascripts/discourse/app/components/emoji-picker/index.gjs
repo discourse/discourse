@@ -3,8 +3,8 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import EmojiPickerContent from "discourse/components/emoji-picker/content";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import icon from "discourse-common/helpers/d-icon";
 import DMenu from "float-kit/components/d-menu";
 
 export default class EmojiPicker extends Component {
@@ -21,6 +21,10 @@ export default class EmojiPicker extends Component {
     return this.args.context ?? "topic";
   }
 
+  get modalForMobile() {
+    return this.args.modalForMobile ?? true;
+  }
+
   <template>
     <DMenu
       @triggerClass={{concatClass @btnClass}}
@@ -28,7 +32,7 @@ export default class EmojiPicker extends Component {
       @onRegisterApi={{this.onRegisterMenu}}
       @identifier="emoji-picker"
       @groupIdentifier="emoji-picker"
-      @modalForMobile={{true}}
+      @modalForMobile={{this.modalForMobile}}
       @maxWidth={{405}}
       @onShow={{@onShow}}
       @onClose={{@onClose}}

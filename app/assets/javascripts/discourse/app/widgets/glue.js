@@ -1,8 +1,8 @@
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { diff, patch } from "virtual-dom";
 import DirtyKeys from "discourse/lib/dirty-keys";
+import { isTesting } from "discourse/lib/environment";
 import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
-import { isTesting } from "discourse-common/config/environment";
 
 export default class WidgetGlue {
   constructor(name, register, attrs) {

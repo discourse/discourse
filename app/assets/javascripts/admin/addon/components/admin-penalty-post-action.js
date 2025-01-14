@@ -1,9 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
-import discourseComputed, {
-  afterRender,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const ACTIONS = ["delete", "delete_replies", "edit", "none"];

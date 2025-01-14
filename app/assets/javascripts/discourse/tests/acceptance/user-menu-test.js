@@ -11,6 +11,7 @@ import { test } from "qunit";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -23,7 +24,6 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance("User menu", function (needs) {

@@ -1,13 +1,13 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Logged on user - Tags section", function (needs) {

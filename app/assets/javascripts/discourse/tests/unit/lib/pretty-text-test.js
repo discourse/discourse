@@ -6,7 +6,7 @@ import {
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import QUnit, { module, test } from "qunit";
-import { deepMerge } from "discourse-common/lib/object";
+import { deepMerge } from "discourse/lib/object";
 import DiscourseMarkdownIt from "discourse-markdown-it";
 import { extractDataAttribute } from "discourse-markdown-it/engine";
 

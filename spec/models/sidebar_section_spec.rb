@@ -24,7 +24,7 @@ RSpec.describe SidebarSection do
     expect(community_section.sidebar_section_links.all.map { |link| link.linkable.name }).to eq(
       [
         "Topics",
-        "My Posts",
+        "My Drafts",
         "Review",
         "Admin",
         "Invite",

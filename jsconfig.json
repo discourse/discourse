@@ -12,9 +12,6 @@
       "discourse/tests/*": [
         "./app/assets/javascripts/discourse/tests/*"
       ],
-      "discourse-common/*": [
-        "./app/assets/javascripts/discourse-common/addon/*"
-      ],
       "admin/*": [
         "./app/assets/javascripts/admin/addon/*"
       ],
@@ -86,7 +83,6 @@
   "include": [
     "./app/assets/javascripts/discourse/app",
     "./app/assets/javascripts/discourse/tests",
-    "./app/assets/javascripts/discourse-common/addon",
     "./app/assets/javascripts/admin/addon",
     "./app/assets/javascripts/pretty-text/addon",
     "./app/assets/javascripts/select-kit/addon",

@@ -7,7 +7,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 
 export default class PageLoadingSlider extends Component {
   @service loadingSlider;

@@ -4,51 +4,13 @@
       {{#if this.showHeader}}
         <div class="header">
           {{#if this.showTitle}}
-            <ul class="breadcrumb">
-              {{#if this.showAllReportsLink}}
-                <li class="item all-reports">
-                  <LinkTo @route="adminReports.index" class="report-url">
-                    {{i18n "admin.dashboard.all_reports"}}
-                  </LinkTo>
-                </li>
-
-                {{#unless this.showNotFoundError}}
-                  <li class="item separator">|</li>
-                {{/unless}}
-              {{/if}}
-
-              {{#unless this.showNotFoundError}}
-                <li class="item report">
-                  <a href={{this.model.reportUrl}} class="report-url">
-                    {{this.model.title}}
-                  </a>
-
-                  {{#if this.model.description}}
-                    <DTooltip
-                      @interactive={{this.model.description_link.length}}
-                    >
-                      <:trigger>
-                        {{d-icon "circle-question"}}
-                      </:trigger>
-                      <:content>
-                        {{#if this.model.description_link}}
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={{this.model.description_link}}
-                            class="info"
-                          >
-                            {{this.model.description}}
-                          </a>
-                        {{else}}
-                          <span>{{this.model.description}}</span>
-                        {{/if}}
-                      </:content>
-                    </DTooltip>
-                  {{/if}}
-                </li>
-              {{/unless}}
-            </ul>
+            {{#unless this.showNotFoundError}}
+              <DPageSubheader
+                @titleLabel={{this.model.title}}
+                @descriptionLabel={{this.model.description}}
+                @learnMoreUrl={{this.model.description_link}}
+              />
+            {{/unless}}
           {{/if}}
 
           {{#if this.shouldDisplayTrend}}
