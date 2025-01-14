@@ -400,20 +400,20 @@ importers:
         specifier: ^4.0.9
         version: 4.0.9
       '@uppy/aws-s3':
-        specifier: ^4.1.0
-        version: 4.1.0(@uppy/core@4.2.2)
-      '@uppy/core':
-        specifier: ^4.2.2
-        version: 4.2.2
-      '@uppy/drop-target':
-        specifier: 3.0.1
-        version: 3.0.1(@uppy/core@4.2.2)
-      '@uppy/utils':
-        specifier: ^6.0.3
-        version: 6.0.3
-      '@uppy/xhr-upload':
         specifier: ^4.2.1
-        version: 4.2.1(@uppy/core@4.2.2)
+        version: 4.2.1(@uppy/core@4.4.1)
+      '@uppy/core':
+        specifier: ^4.4.1
+        version: 4.4.1
+      '@uppy/drop-target':
+        specifier: 3.1.1
+        version: 3.1.1(@uppy/core@4.4.1)
+      '@uppy/utils':
+        specifier: ^6.1.1
+        version: 6.1.1
+      '@uppy/xhr-upload':
+        specifier: ^4.3.2
+        version: 4.3.2(@uppy/core@4.4.1)
       a11y-dialog:
         specifier: 8.1.1
         version: 8.1.1
@@ -653,7 +653,7 @@ importers:
         version: 4.2.0
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
     devDependencies:
       ember-cli:
         specifier: ~6.1.0
@@ -993,7 +993,7 @@ importers:
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2))
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2)))
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
@@ -2683,34 +2683,34 @@ packages:
   '@types/yauzl@2.10.0':
     resolution: {integrity: sha512-Cn6WYCm0tXv8p6k+A8PvbDG763EDpBoTzHdA+Q/MF6H3sapGjCm9NzoaJncJS9tUKSuCoDs9XHxYYsQDgxR6kw==}
 
-  '@uppy/aws-s3@4.1.0':
-    resolution: {integrity: sha512-xRip1Lo3He+3J3fP/SooEFQJKWMCVADTl8J375PzvpaeNnDFKa6W2XLEEl/fGy/K7vI4sH8Znz4+omdtSFCPSQ==}
+  '@uppy/aws-s3@4.2.1':
+    resolution: {integrity: sha512-wpPO0TXiYFAQMgJJODjvnCc7YkNVwWTUQuXkTELTAI+/N8a1HeRC+Q+v0GRY5CIpODtdJ2sxcwHh+z0UH3obQA==}
     peerDependencies:
-      '@uppy/core': ^4.2.0
+      '@uppy/core': ^4.4.1
 
-  '@uppy/companion-client@4.1.0':
-    resolution: {integrity: sha512-nQ8CQfZcYVBNtFQ6ePj7FDIq38DXlH0YpzP/91LR9gnDVISJKKUuvWfr6tPktj1lRw9FZV8jLmlMKT2ituVKiw==}
+  '@uppy/companion-client@4.4.1':
+    resolution: {integrity: sha512-ardMacShsfzaIbqHEH48YlpzWZkBj1qhAj0Dvn3r31p9d0HA5xFUvAdLYrZ6ezKvZ0RcDbf0SB5qCrQMkjscXQ==}
     peerDependencies:
-      '@uppy/core': ^4.2.0
+      '@uppy/core': ^4.4.1
 
-  '@uppy/core@4.2.2':
-    resolution: {integrity: sha512-TfTXngDLHK+gNwbpt1tgKfQ0vQwa7V5ilAnD/VNT+6AGW+/dqGFLZbA6q8xKvVTZ2sUbwDMSWFtqem+G04AhNQ==}
+  '@uppy/core@4.4.1':
+    resolution: {integrity: sha512-WQnphWj3bk0EYzy4j4rn7nEHKOExqYLm/YOWIpBjXZMY7tJIHbzpv60qHqE6oQsRMwmNcz3mkq8PGR5NubBbvQ==}
 
-  '@uppy/drop-target@3.0.1':
-    resolution: {integrity: sha512-nDWXUYtTyyq0Vq7/J0WeRi8eyevGmAIoA5Uy/IJJiKYI5MXP7X3eSIXym161wrsyHZi0ZGUkf0XAwl9e6ZLe/A==}
+  '@uppy/drop-target@3.1.1':
+    resolution: {integrity: sha512-/2jnQ3DqfcWGjgoasLBLvwJ3fozavwSXFVULenDmPUI8YPjuxmEtOu61XnZ/OLhRnZo6Qm+kltSd+YUS0P/LNA==}
     peerDependencies:
-      '@uppy/core': ^4.0.1
+      '@uppy/core': ^4.4.1
 
-  '@uppy/store-default@4.1.0':
-    resolution: {integrity: sha512-z5VSc4PNXpAtrrUPg5hdKJO5Ul7u4ZYLyK+tYzvEgzgR4nLVZmpGzj/d4N90jXpUqEibWKXvevODEB5VlTLHzg==}
+  '@uppy/store-default@4.2.0':
+    resolution: {integrity: sha512-PieFVa8yTvRHIqsNKfpO/yaJw5Ae/hT7uT58ryw7gvCBY5bHrNWxH5N0XFe8PFHMpLpLn8v3UXGx9ib9QkB6+Q==}
 
-  '@uppy/utils@6.0.3':
-    resolution: {integrity: sha512-GBVzyAIeVKNe/F3TT63rXR80MSL9ov/FG3BbApO+4wbIt4vai7xpOxGCeTXpW2JjEeOwEb50n1fn92zMCdV9Dg==}
+  '@uppy/utils@6.1.1':
+    resolution: {integrity: sha512-60guVvz+TXvN1gEgbTjDAfleo6HeTGE02/9T+tycv7hVqIkzLbYsJBgVFhVY/Y2fBW0fOX/lzKc1kN4YZQtvpA==}
 
-  '@uppy/xhr-upload@4.2.1':
-    resolution: {integrity: sha512-pafgk0vLr+FKDHo+xmBMwNncj68oRNoaTnj0por7LPND0QGXV7xwBZnGGkQhiHLooV2MNBEhFQtx93A76cEINg==}
+  '@uppy/xhr-upload@4.3.2':
+    resolution: {integrity: sha512-dgj7MCZ50fM1mx446PWV/u3X4qgcRw26tIepoHfVI1UNby4p+GS7G7VxcE6IK9zM0epRXmhe609UdMtKWH7NaQ==}
     peerDependencies:
-      '@uppy/core': ^4.2.2
+      '@uppy/core': ^4.4.1
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -6285,8 +6285,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.0.8:
-    resolution: {integrity: sha512-TcJPw+9RV9dibz1hHUzlLVy8N4X9TnwirAjrU08Juo6BNKggzVfP2ZJ/3ZUSq15Xl5i85i+Z89XBO90pB2PghQ==}
+  nanoid@5.0.9:
+    resolution: {integrity: sha512-Aooyr6MXU6HpvvWXKoVoXwKMs/KyVakWwg7xQfv5/S/RIgJMy0Ifa45H9qqYy7pTCszrHzP21Uk4PZq2HpEM8Q==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -10452,47 +10452,47 @@ snapshots:
       '@types/node': 20.3.2
     optional: true
 
-  '@uppy/aws-s3@4.1.0(@uppy/core@4.2.2)':
+  '@uppy/aws-s3@4.2.1(@uppy/core@4.4.1)':
     dependencies:
-      '@uppy/companion-client': 4.1.0(@uppy/core@4.2.2)
-      '@uppy/core': 4.2.2
-      '@uppy/utils': 6.0.3
+      '@uppy/companion-client': 4.4.1(@uppy/core@4.4.1)
+      '@uppy/core': 4.4.1
+      '@uppy/utils': 6.1.1
 
-  '@uppy/companion-client@4.1.0(@uppy/core@4.2.2)':
+  '@uppy/companion-client@4.4.1(@uppy/core@4.4.1)':
     dependencies:
-      '@uppy/core': 4.2.2
-      '@uppy/utils': 6.0.3
+      '@uppy/core': 4.4.1
+      '@uppy/utils': 6.1.1
       namespace-emitter: 2.0.1
       p-retry: 6.2.0
 
-  '@uppy/core@4.2.2':
+  '@uppy/core@4.4.1':
     dependencies:
       '@transloadit/prettier-bytes': 0.3.4
-      '@uppy/store-default': 4.1.0
-      '@uppy/utils': 6.0.3
+      '@uppy/store-default': 4.2.0
+      '@uppy/utils': 6.1.1
       lodash: 4.17.21
       mime-match: 1.0.2
       namespace-emitter: 2.0.1
-      nanoid: 5.0.8
+      nanoid: 5.0.9
       preact: 10.23.2
 
-  '@uppy/drop-target@3.0.1(@uppy/core@4.2.2)':
+  '@uppy/drop-target@3.1.1(@uppy/core@4.4.1)':
     dependencies:
-      '@uppy/core': 4.2.2
-      '@uppy/utils': 6.0.3
+      '@uppy/core': 4.4.1
+      '@uppy/utils': 6.1.1
 
-  '@uppy/store-default@4.1.0': {}
+  '@uppy/store-default@4.2.0': {}
 
-  '@uppy/utils@6.0.3':
+  '@uppy/utils@6.1.1':
     dependencies:
       lodash: 4.17.21
       preact: 10.23.2
 
-  '@uppy/xhr-upload@4.2.1(@uppy/core@4.2.2)':
+  '@uppy/xhr-upload@4.3.2(@uppy/core@4.4.1)':
     dependencies:
-      '@uppy/companion-client': 4.1.0(@uppy/core@4.2.2)
-      '@uppy/core': 4.2.2
-      '@uppy/utils': 6.0.3
+      '@uppy/companion-client': 4.4.1(@uppy/core@4.4.1)
+      '@uppy/core': 4.4.1
+      '@uppy/utils': 6.1.1
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -12763,7 +12763,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)):
+  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.7)(esbuild@0.24.2))):
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-plugin-ember-template-compilation: 2.2.5
@@ -15076,7 +15076,7 @@ snapshots:
 
   nanoid@3.3.7: {}
 
-  nanoid@5.0.8: {}
+  nanoid@5.0.9: {}
 
   nanomatch@1.2.13:
     dependencies:
