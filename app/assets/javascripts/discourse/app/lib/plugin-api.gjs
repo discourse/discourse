@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.0.0";
+export const PLUGIN_API_VERSION = "2.1.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -45,6 +45,7 @@ import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discours
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
+import { registerUserProfileBeforeSaveCallback } from "discourse/controllers/preferences/profile";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
@@ -3377,6 +3378,17 @@ class PluginApi {
    */
   registerMoreTopicsTab(tab) {
     registeredTabs.push(tab);
+  }
+
+  /**
+   * Registers a callback to run before the user profile is saved in the user preferences
+   * Profile tab. The callback receives the `model` object for the user profile.
+   *
+   * @param {Function} callback
+   *
+   */
+  registerUserProfileBeforeSaveCallback(callback) {
+    registerUserProfileBeforeSaveCallback(callback);
   }
 
   #deprecatedWidgetOverride(widgetName, override) {

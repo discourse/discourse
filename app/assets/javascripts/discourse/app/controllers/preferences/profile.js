@@ -9,6 +9,14 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
+const beforeSaveCallbacks = [];
+export function registerUserProfileBeforeSaveCallback(callback) {
+  beforeSaveCallbacks.push(callback);
+}
+export function clearUserProfileBeforeSaveCallbacks() {
+  beforeSaveCallbacks.length = 0;
+}
+
 export default class ProfileController extends Controller {
   @service dialog;
   @service modal;
@@ -141,6 +149,8 @@ export default class ProfileController extends Controller {
 
     // Update the user fields
     this.send("_updateUserFields");
+
+    beforeSaveCallbacks.forEach((callback) => callback(this.model));
 
     return this.model
       .save(this.saveAttrNames)
