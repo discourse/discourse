@@ -57,12 +57,12 @@ export default class WebhookItem extends Component {
         <div class="d-admin-row__controls-options">
           <DButton
             @action={{this.edit}}
-            @label="admin.api_keys.edit"
+            @label="admin.web_hooks.edit"
             @title="admin.api.show_details"
             class="btn-small"
           />
           <DMenu
-            @identifier="api_key-menu"
+            @identifier="webhook-menu"
             @title={{i18n "admin.config_areas.user_fields.more_options.title"}}
             @icon="ellipsis-vertical"
             @onRegisterApi={{this.onRegisterApi}}
