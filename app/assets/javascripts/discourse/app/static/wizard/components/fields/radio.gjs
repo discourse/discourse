@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 
 export default class Radio extends Component {
@@ -54,9 +53,6 @@ export default class Radio extends Component {
                 {{on "change" (withEventValue this.selectionChanged)}}
               />
               <span class="wizard-container__radio-label">
-                {{#if choice.icon}}
-                  {{icon choice.icon}}
-                {{/if}}
                 <span>{{choice.label}}</span>
               </span>
             </PluginOutlet>
