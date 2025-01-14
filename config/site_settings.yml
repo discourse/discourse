@@ -414,6 +414,7 @@ basic:
     type: list
     list_type: font
     area: "fonts"
+    allow_any: false
   heading_font:
     default: "arial"
     choices: "BaseFontSetting.values"
@@ -421,6 +422,7 @@ basic:
     type: list
     list_type: font
     area: "fonts"
+    allow_any: false
   enable_sitemap:
     default: true
   sitemap_page_size:
