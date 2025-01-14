@@ -45,6 +45,8 @@ function buildFontChoices() {
   ];
 }
 
+// TODO (martin) Add test for the homepage style here
+
 module(
   "Integration | Component | Wizard | Fields | Dropdown",
   function (hooks) {
