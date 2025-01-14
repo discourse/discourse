@@ -212,7 +212,9 @@
   del,
   .diff-del {
     color: var(--primary);
-    text-decoration: none;
+    &:not(s, .bbcode-u, .bbcode-s) {
+      text-decoration: none;
+    }
     code,
     img {
       border: 2px solid;
