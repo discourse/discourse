@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { service } from "@ember/service";
 import discourseComputed from "discourse/lib/decorators";
@@ -7,7 +8,7 @@ export default class UserActivityController extends Controller {
   @service currentUser;
   @controller user;
 
-  userActionType = null;
+  @tracked userActionType = null;
 
   @discourseComputed("currentUser.draft_count")
   draftLabel(count) {
