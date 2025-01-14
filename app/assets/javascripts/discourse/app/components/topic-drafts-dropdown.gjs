@@ -42,10 +42,6 @@ export default class TopicDraftsDropdown extends Component {
 
   @action
   async onShowMenu() {
-    if (this.loading) {
-      return;
-    }
-
     this.loading = true;
 
     try {
@@ -57,9 +53,9 @@ export default class TopicDraftsDropdown extends Component {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Failed to fetch drafts with error:", error);
+    } finally {
+      this.loading = false;
     }
-
-    this.loading = false;
   }
 
   @action
@@ -86,6 +82,7 @@ export default class TopicDraftsDropdown extends Component {
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
       @modalForMobile={{true}}
+      @disabled={{this.loading}}
       class="btn-small"
     >
       <:content>
