@@ -117,7 +117,12 @@ export default class PostListItem extends Component {
           @user={{this.user}}
           @showUserInfo={{@showUserInfo}}
         />
-        <ExpandPost @item={{@post}} />
+
+        {{#if @post.draftType}}
+          <span class="draft-type">{{htmlSafe @post.draftType}}</span>
+        {{else}}
+          <ExpandPost @item={{@post}} />
+        {{/if}}
 
         <div class="post-list-item__metadata">
           <span class="time">

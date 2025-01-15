@@ -31,13 +31,16 @@ export default class PostListItemDetails extends Component {
   }
 
   get titleAriaLabel() {
-    return (
-      this.args.titleAriaLabel ||
-      i18n("post_list.aria_post_number", {
+    if (this.args.titleAriaLabel) {
+      return this.args.titleAriaLabel;
+    }
+
+    if (this.args.post.post_number && this.topicTitle) {
+      return i18n("post_list.aria_post_number", {
         title: this.topicTitle,
         postNumber: this.args.post.post_number,
-      })
-    );
+      });
+    }
   }
 
   get posterName() {

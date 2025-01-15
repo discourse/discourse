@@ -1,0 +1,126 @@
+{{!
+ !!! DEPRECATED COMPNENT: DO NOT USE !!!
+ Instead use `<PostList />` component to render a post list.
+ TODO(keegan): Remove this component once all plugin/theme component instances have been updated
+}}
+<PluginOutlet @name="user-stream-item-above" @outletArgs={{hash item=@item}} />
+
+<div class="user-stream-item__header info">
+  <a
+    href={{this.userUrl}}
+    data-user-card={{or @item.draft_username @item.username}}
+    class="avatar-link"
+  >
+    <div class="avatar-wrapper">
+      {{avatar @item imageSize="large" extraClasses="actor" ignoreTitle="true"}}
+    </div>
+  </a>
+
+  <div class="user-stream-item__details">
+    <div class="stream-topic-title">
+      <TopicStatus @topic={{@item}} @disableActions={{true}} />
+      <span class="title">
+        {{#if @item.postUrl}}
+          <a href={{@item.postUrl}}>{{html-safe @item.title}}</a>
+        {{else}}
+          {{html-safe @item.title}}
+        {{/if}}
+      </span>
+    </div>
+    <div class="category">{{category-link @item.category}}</div>
+  </div>
+
+  {{#if @item.draftType}}
+    <span class="draft-type">{{html-safe @item.draftType}}</span>
+  {{else}}
+    <ExpandPost @item={{@item}} />
+  {{/if}}
+
+  <div class="user-stream-item__metadata">
+    <span class="time">{{format-date @item.created_at}}</span>
+
+    {{#if @item.deleted_by}}
+      <span class="delete-info">
+        {{d-icon "trash-can"}}
+        {{avatar
+          @item.deleted_by
+          imageSize="tiny"
+          extraClasses="actor"
+          ignoreTitle="true"
+        }}
+        {{format-date @item.deleted_at leaveAgo="true"}}
+      </span>
+    {{/if}}
+  </div>
+
+  <span>
+    <PluginOutlet
+      @name="user-stream-item-header"
+      @connectorTagName="div"
+      @outletArgs={{hash item=@item}}
+    />
+  </span>
+</div>
+
+{{#if this.actionDescription}}
+  <p class="excerpt">{{this.actionDescription}}</p>
+{{/if}}
+
+<p
+  data-topic-id={{@item.topic_id}}
+  data-post-id={{@item.post_id}}
+  data-user-id={{@item.user_id}}
+  class="excerpt"
+>
+  {{~#if @item.expandedExcerpt}}
+    {{~html-safe @item.expandedExcerpt~}}
+  {{else}}
+    {{~html-safe @item.excerpt~}}
+  {{/if~}}
+</p>
+
+{{#each @item.children as |child|}}
+  {{! DEPRECATED: 'child-actions' class }}
+  <div class="user-stream-item-actions child-actions">
+    {{d-icon child.icon class="icon"}}
+    {{#each child.items as |grandChild|}}
+      <a
+        href={{grandChild.userUrl}}
+        data-user-card={{grandChild.username}}
+        class="avatar-link"
+      >
+        <div class="avatar-wrapper">
+          {{avatar
+            grandChild
+            imageSize="tiny"
+            extraClasses="actor"
+            ignoreTitle="true"
+            avatarTemplatePath="acting_avatar_template"
+          }}
+        </div>
+      </a>
+      {{#if grandChild.edit_reason}}
+        &mdash;
+        <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
+    {{/each}}
+  </div>
+{{/each}}
+
+{{#if @item.editableDraft}}
+  <div class="user-stream-item-draft-actions">
+    <DButton
+      @action={{fn @resumeDraft @item}}
+      @icon="pencil"
+      @label="drafts.resume"
+      class="btn-default resume-draft"
+    />
+    <DButton
+      @action={{fn @removeDraft @item}}
+      @icon="trash-can"
+      @title="drafts.remove"
+      class="btn-danger remove-draft"
+    />
+  </div>
+{{/if}}
+
+{{yield to="bottom"}}
