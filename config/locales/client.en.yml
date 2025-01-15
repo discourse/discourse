@@ -5184,7 +5184,7 @@ en:
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
         security:
           title: "Security"
-          header_description: "Configure security settings, including two-factor authentication, moderator priviledges, and content security policies"
+          header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
         spam:
           title: "Spam"
           header_description: "Configure how user registration and posting behavior analyzed by the system to quickly identify and block spam"
