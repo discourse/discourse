@@ -13,13 +13,13 @@ import PostActionDescription from "discourse/components/post-action-description"
 import PostList from "discourse/components/post-list";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
-import dIcon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserStreamComponent extends Component {
