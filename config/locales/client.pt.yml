@@ -3571,8 +3571,6 @@ pt:
               content: "Grupos"
             users:
               content: "Utilizadores"
-            my_posts:
-              content: "As Minhas publicações"
             review:
               content: "Revisão"
             invite:
@@ -3787,35 +3785,35 @@ pt:
         add_owners: Adicionar proprietários
         none_selected: "Selecione um grupo para começar"
         no_custom_groups: "Criar um novo grupo personalizado"
+      api_keys:
+        edit: "Editar"
+        save: "Guardar"
+        cancel: "Cancelar"
+        continue: "Continuar"
+        revoke: "Revogar"
+        revoked: "Revogado"
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."
         user: "Utilizador"
         title: "API"
         key: "Chave"
-        created: Criado
         updated: Atualizado
-        last_used: Último Uso
-        never_used: (nunca)
+        never_used: Nunca
         generate: "Gerar"
-        undo_revoke: "Desfazer Revogação"
         revoke: "Revogar"
-        all_users: "Todos os Utilizadores"
         active_keys: "Chaves de API Ativas"
         manage_keys: Gerenciar Chaves
         show_details: Detalhes
         description: Descrição
         no_description: (sem descrição)
         all_api_keys: Todas as Chaves de API
-        user_mode: Nível de Usuário
         impersonate_all_users: Personificar qualquer usuário
-        single_user: "Único Usuário"
         user_placeholder: Digite o nome de usuário
         description_placeholder: Para que essa chave será usada?
         save: Guardar
         new_key: Nova Chave de API
         revoked: Revogado
-        delete: Excluir Permanentemente
         not_shown_again: Esta chave não será exibida novamente. Certifique-se de tirar uma cópia antes de continuar.
         continue: Continuar
         scopes:
@@ -3826,8 +3824,6 @@ pt:
           global: Global
           resource: Recurso
           action: Ação
-          allowed_parameters: Parâmetros Permitidos
-          optional_allowed_parameters: Parâmetros permitidos (opcional)
           any_parameter: (qualquer parâmetro)
           allowed_urls: URLs Permitidos
           descriptions:
@@ -3983,6 +3979,7 @@ pt:
           installed: "Instalado"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Desenvolvedor"
           embedding: "Incorporação"
           user_api: "API de Utlizador"
@@ -4209,10 +4206,7 @@ pt:
           select_base:
             description: "Paleta de base:"
           title: "Cores"
-          edit: "Editar Paletas de Cores"
-          long_title: "Paletas de Cores"
           about: "Modifique as cores usadas por seus temas. Crie uma nova paleta de cores para começar."
-          new_name: "Nova Paleta de Cores"
           copy_name_prefix: "Cópia de"
           delete_confirm: "Excluir esta paleta de cores?"
           undo: "Desfazer"
@@ -4461,7 +4455,6 @@ pt:
         logster:
           title: "Registo de Erros em Logs"
       watched_words:
-        title: "Palavras Vigiadas"
         search: "pesquisar"
         clear_filter: "Remover"
         download: Transferir
@@ -4698,7 +4691,6 @@ pt:
           external_email: "E-mail"
           external_avatar_url: "URL da Fotografia de Perfil"
       user_fields:
-        title: "Campos de utilizador"
         untitled: "Sem título"
         name: "Nome do Campo"
         type: "Tipo do Campo"
@@ -4728,10 +4720,8 @@ pt:
           confirm: "Confirmação"
           dropdown: "Lista pendente"
       site_text:
-        description: "Pode personalizar qualquer texto no seu fórum. Por favor comece por pesquisar abaixo:"
         search: "Pesquisar o texto que gostaria de editar"
-        title: "Texto"
-        edit: "editar"
+        edit: "Editar"
         revert: "Reverter Alterações"
         revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
         go_back: "De volta à Pesquisa"

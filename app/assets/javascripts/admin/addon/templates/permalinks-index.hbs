@@ -1,25 +1,27 @@
 <ConditionalLoadingSpinner @condition={{this.loading}}>
-  <div class="d-admin-filter">
-    <div class="admin-filter__input-container permalink-search">
-      <TextField
-        @value={{this.filter}}
-        @placeholderKey="admin.permalink.form.filter"
-        @autocorrect="off"
-        @autocapitalize="off"
-        class="admin-filter__input"
-      />
+  {{#if this.model.allLinks.length}}
+    <div class="d-admin-filter">
+      <div class="admin-filter__input-container permalink-search">
+        <TextField
+          @value={{this.filter}}
+          @placeholderKey="admin.permalink.form.filter"
+          @autocorrect="off"
+          @autocapitalize="off"
+          class="admin-filter__input"
+        />
+      </div>
     </div>
-  </div>
+  {{/if}}
 
   <div class="permalink-results">
-    {{#if this.model.length}}
+    {{#if this.model.filteredLinks.length}}
       <table class="d-admin-table permalinks">
         <thead>
           <th>{{i18n "admin.permalink.url"}}</th>
           <th>{{i18n "admin.permalink.destination"}}</th>
         </thead>
         <tbody>
-          {{#each this.model as |pl|}}
+          {{#each this.model.filteredLinks as |pl|}}
             <tr
               class={{concat-class
                 "admin-permalink-item d-admin-row__content"

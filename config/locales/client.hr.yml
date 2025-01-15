@@ -474,6 +474,8 @@ hr:
         confirm: "Već imate nacrt u tijeku. Što biste željeli učiniti s njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi uređivati"
+      dropdown:
+        view_all: "pregledaj sve"
     topic_count_all:
       one: "Pregledajte %{count} nepročitanu temu."
       few: "Pregledajte %{count} nove teme."
@@ -4386,10 +4388,8 @@ hr:
             users:
               content: "Korisnici"
               title: "Popis svih korisnika"
-            my_posts:
-              content: "Moje objave"
-              title: "Moja nedavna aktivnost vezana uz temu"
-              title_drafts: "Moje neobjavljene skice"
+            my_drafts:
+              title: "Moje neobjavljene skice"
               draft_count:
                 one: "%{count} nacrt"
                 few: "%{count} nacrti"
@@ -4653,36 +4653,37 @@ hr:
         add_owners: Dodajte vlasnike
         none_selected: "Odaberite grupu za početak"
         no_custom_groups: "Stvaranje nove prilagođene grupe"
+      api_keys:
+        edit: "Uredi"
+        save: "Spremi"
+        cancel: "Odustani"
+        continue: "Nastavi"
+        revoke: "Povuci"
+        revoked: "Opoziv"
       api:
         generate_master: "Generiraj glavni API ključ"
         none: "Nema aktivnih API ključeva"
         user: "Korisnik"
         title: "API"
         key: "Ključ"
-        created: Stvoreno
+        created: Napravio
         updated: Ažurirano
-        last_used: Posljednji put korišteno
-        never_used: (nikada)
+        never_used: Nikad
         generate: "Generiraj"
-        undo_revoke: "Poništi opoziv"
         revoke: "Povuci"
-        all_users: "Svi korisnici"
         active_keys: "Aktivni API ključevi"
         manage_keys: Upravljanje ključevima
         show_details: Detalji
         description: Opis
         no_description: (bez opisa)
         all_api_keys: Svi API ključevi
-        user_mode: Korisnička razina
         scope_mode: Opsezi
         impersonate_all_users: Predstavljajte se kao bilo koji korisnik
-        single_user: "Jedan korisnik"
         user_placeholder: Unesite korisničko ime
         description_placeholder: Za što će se koristiti ovaj ključ?
         save: Spremi
         new_key: Novi API ključ
         revoked: Opoziv
-        delete: Trajno izbriši
         not_shown_again: Ovaj ključ se više neće prikazati. Provjerite jeste li uzeti kopiju prije nastavka.
         continue: Nastavi
         scopes:
@@ -4696,8 +4697,6 @@ hr:
           global_description: API ključ nema ograničenja i sve krajnje točke su dostupne.
           resource: Resurs
           action: Akcija
-          allowed_parameters: Dopušteni parametri
-          optional_allowed_parameters: Dopušteni parametri (izborno)
           any_parameter: (bilo koji parametar)
           allowed_urls: Dopušteni URL -ovi
           descriptions:
@@ -4900,6 +4899,7 @@ hr:
           installed: "Instalirano"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Programer"
           embedding: "Ugrađivanje"
           user_api: "Korisnički API"
@@ -5196,10 +5196,7 @@ hr:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
           title: "Boje"
-          edit: "Uređivanje paleta boja"
-          long_title: "Palete boja"
           about: "Izmijenite boje koje koriste vaše teme. Za početak izradite novu paletu boja."
-          new_name: "Nova paleta boja"
           copy_name_prefix: "Kopija"
           delete_confirm: "Izbrisati ovu paletu boja?"
           undo: "Vrati na prethodno"
@@ -5513,7 +5510,6 @@ hr:
         logster:
           title: "Zapis grešak"
       watched_words:
-        title: "Gledane riječi"
         search: "pretraži"
         clear_filter: "Izbriši"
         show_words:
@@ -5604,6 +5600,7 @@ hr:
         status: "Statust"
         show_emails: "Pokaži emailove"
         hide_emails: "Sakrij e-poštu"
+        silence_reason: "Razlog šutnje"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5880,7 +5877,6 @@ hr:
           delete_sso_record: "Izbriši SSO zapis"
           confirm_delete: "Jeste li sigurni da želite izbrisati ovaj DiscourSeconnect zapis?"
       user_fields:
-        title: "Korisnička polja"
         untitled: "Nenaslovljeno"
         name: "Ime polja"
         type: "Tip polja"
@@ -5914,10 +5910,8 @@ hr:
           dropdown: "Padajući izbornik"
           multiselect: "Višestruki odabir"
       site_text:
-        description: "Možete prilagoditi bilo koji tekst na forumu. Molimo vas da započnete pretraživanjem ispod:"
         search: "Potražite tekst koji želite urediti"
-        title: "Tekst"
-        edit: "izmijeni"
+        edit: "Uredi"
         revert: "Vrati promjene"
         revert_confirm: "Jeste li sigurni da želite poništiti promjene?"
         go_back: "Natrag na pretraživanje"
@@ -6134,7 +6128,6 @@ hr:
           save: "Spremi"
       reseed:
         action:
-          label: "Zamijeni tekst…"
           title: "Zamijenite tekst kategorija i tema prijevodima"
         modal:
           title: "Zamijeni tekst"

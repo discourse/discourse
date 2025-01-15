@@ -1,8 +1,8 @@
 import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
+import { getAbsoluteURL, getURLWithCDN } from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { fileToImageData } from "discourse/lib/media-optimization-utils";
-import { getAbsoluteURL, getURLWithCDN } from "discourse-common/lib/get-url";
 
 /**
  * This worker follows a particular promise/callback flow to ensure

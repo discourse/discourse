@@ -460,6 +460,8 @@ fr:
         confirm: "Vous avez déjà un brouillon en cours de rédaction. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
+      dropdown:
+        view_all: "tout voir"
     topic_count_all:
       one: "Voir %{count} nouveau sujet"
       other: "Voir %{count} nouveaux sujets"
@@ -630,7 +632,7 @@ fr:
         status: "État"
         category: "Catégorie"
         score_type:
-          title: "Motif d'attribution"
+          title: "Raison"
         orders:
           score: "Score"
           score_asc: "Score (inverse)"
@@ -934,9 +936,9 @@ fr:
       public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
       public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:
-        posts: "Aucun message n'a été envoyé par les membres de ce groupe"
-        members: "Il n' y a aucun membre dans ce groupe"
-        requests: "Il n'y a aucune demande pour rejoindre ce groupe"
+        posts: "Aucune publication n'a été envoyée par les membres de ce groupe"
+        members: "Il n'y a aucun membre dans ce groupe"
+        requests: "Il n'y a aucune demande d'adhésion pour ce groupe"
         mentions: "Il n'y a aucune mention de ce groupe"
         messages: "Il n'y a aucun message pour ce groupe"
         topics: "Aucun sujet n'a été créé par les membres de ce groupe"
@@ -3475,7 +3477,7 @@ fr:
           other: "Vous avez sélectionné <b>%{count}</b> messages."
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
     post_list:
-      aria_post_number: "%{title} - message #%{postNumber}"
+      aria_post_number: "%{title} - publication #%{postNumber}"
     post:
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"
@@ -4408,7 +4410,6 @@ fr:
         everyone_can_use: "Les étiquettes peuvent être utilisées par tout le monde"
         usable_only_by_groups: "Les étiquettes sont visibles par tous, mais seuls les groupes suivants peuvent les utiliser"
         visible_only_to_groups: "Les étiquettes sont uniquement visibles pour les groupes suivants"
-        cannot_save: "Impossible d'enregistrer le groupe d'étiquettes. Assurez-vous qu'au moins une étiquette est présente, que le nom du groupe d'étiquettes n'est pas vide et contient moins de 100 caractères, et qu'un groupe est sélectionné pour l'autorisation des étiquettes."
         tags_placeholder: "Créez ou recherchez des étiquettes"
         parent_tag_placeholder: "Facultatif"
         select_groups_placeholder: "Sélectionnez des groupes…"
@@ -4619,11 +4620,9 @@ fr:
             users:
               content: "Utilisateurs"
               title: "Liste de tous les utilisateurs"
-            my_posts:
-              content: "Mes messages"
-              content_drafts: "Mes brouillons"
-              title: "Mon activité récente sur le sujet"
-              title_drafts: "Mes brouillons non publiés"
+            my_drafts:
+              content: "Mes brouillons"
+              title: "Mes brouillons non publiés"
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"
@@ -4750,7 +4749,7 @@ fr:
           save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
   admin_js:
-    type_to_filter: "Filtrer les paramètres…"
+    type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
     admin:
       title: "Administrateur Discourse"
@@ -4763,7 +4762,6 @@ fr:
           never: "jamais"
       reports:
         title: "Liste des rapports disponibles"
-        meta_doc: "Explorez notre <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> pour obtenir un aperçu détaillé des rapports."
         sidebar_title: "Rapports"
         sidebar_link:
           all: "Tous les rapports"
@@ -4795,7 +4793,7 @@ fr:
         user_api:
           title: "API utilisateur"
       new_features:
-        title: "Nouveautés?"
+        title: "Quoi de neuf ?"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"
@@ -4813,7 +4811,7 @@ fr:
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         dismiss_notice: "Rejeter"
         new_features:
-          title: "Nouveautés?"
+          title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
           previous_announcements: "Vous pouvez voir les annonces précédentes de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "En savoir plus…"
@@ -4982,6 +4980,14 @@ fr:
         add_owners: Ajouter des propriétaires
         none_selected: "Sélectionnez un groupe pour commencer"
         no_custom_groups: "Créer un nouveau groupe personnalisé"
+      api_keys:
+        title: "Clés d'API"
+        edit: "Modifier"
+        save: "Enregistrer"
+        cancel: "Annuler"
+        continue: "Continuer"
+        revoke: "Révoquer"
+        revoked: "Révoquée"
       api:
         generate_master: "Générer une clé d'API maître"
         none: "Il n'y a actuellement aucune clé API active."
@@ -4989,12 +4995,10 @@ fr:
         title: "API"
         key: "Clé"
         keys: "Clés"
-        created: Créé
+        created: Créé par 
         updated: Mis à jour
-        last_used: Dernière utilisation
-        never_used: (jamais)
+        never_used: Jamais
         generate: "Générer"
-        undo_revoke: "Annuler la révocation"
         revoke: "Révoquer"
         all_users: "Tous les utilisateurs"
         active_keys: "Clés actives pour l’API"
@@ -5003,16 +5007,13 @@ fr:
         description: Description
         no_description: (aucune description)
         all_api_keys: Toutes les clés pour l’API
-        user_mode: Niveau de l’utilisateur
         scope_mode: Permissions
         impersonate_all_users: Incarner un utilisateur
-        single_user: "Utilisateur unique"
         user_placeholder: Saisissez un nom d'utilisateur
         description_placeholder: À quoi servira cette clé ?
         save: Enregistrer
         new_key: Nouvelle clé pour l’API
         revoked: Révoquée
-        delete: Supprimer définitivement
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
         continue: Continuer
         scopes:
@@ -5026,8 +5027,6 @@ fr:
           global_description: La clé API n'a aucune restriction et tous les points de terminaison (endpoints) sont accessibles.
           resource: Ressource
           action: Action
-          allowed_parameters: Paramètres autorisés
-          optional_allowed_parameters: Paramètres autorisés (facultatif)
           any_parameter: (tout paramètre)
           allowed_urls: URL autorisées
           descriptions:
@@ -5422,6 +5421,7 @@ fr:
         sidebar_link:
           api_keys:
             title: "Clés d'API"
+          webhooks: "Webhooks"
           developer: "Développeur"
           embedding: "Intégration"
           user_api: "API utilisateur"
@@ -5567,6 +5567,7 @@ fr:
           browse_themes: "Parcourir les thèmes de la communauté"
           customize_desc: "Personnaliser :"
           title: "Thèmes"
+          description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires."
           create: "Créer"
           create_type: "Type"
           create_name: "Nom"
@@ -5776,10 +5777,7 @@ fr:
             title: "Sélectionner la palette de couleurs de base"
             description: "Palette de base :"
           title: "Couleurs"
-          edit: "Modifier les palettes de couleurs"
-          long_title: "Palettes de couleurs"
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
-          new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
           undo: "Annuler"
@@ -6122,7 +6120,6 @@ fr:
         logster:
           title: "Journal d'erreurs"
       watched_words:
-        title: "Mots surveillés"
         search: "rechercher"
         clear_filter: "Effacer"
         show_words:
@@ -6276,6 +6273,7 @@ fr:
         status: "Statut"
         show_emails: "Afficher les adresses e-mail"
         hide_emails: "Masquer les adresses e-mail"
+        silence_reason: "Raison de la mise en sourdine"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6559,7 +6557,6 @@ fr:
           delete_sso_record: "Supprimer l'enregistrement SSO"
           confirm_delete: "Voulez-vous vraiment supprimer cet enregistrement DiscourseConnect ?"
       user_fields:
-        title: "Champs utilisateurs"
         untitled: "Sans titre"
         name: "Nom du champ"
         type: "Type du champ"
@@ -6601,10 +6598,8 @@ fr:
           dropdown: "Menu déroulant"
           multiselect: "Sélection multiple"
       site_text:
-        description: "Vous pouvez personnaliser n'importe quel texte de votre forum. Commencez en utilisant la recherche ci-dessous :"
         search: "Recherchez le texte que vous souhaitez modifier"
-        title: "Texte"
-        edit: "modifier"
+        edit: "Modifier"
         revert: "Annuler les modifications"
         revert_confirm: "Voulez-vous vraiment annuler vos modifications ?"
         go_back: "Retour à la recherche"
@@ -6894,7 +6889,6 @@ fr:
           save: "Enregistrer"
       reseed:
         action:
-          label: "Remplacer le texte…"
           title: "Remplacer le texte des catégories et des sujets avec les traductions"
         modal:
           title: "Remplacer le texte"

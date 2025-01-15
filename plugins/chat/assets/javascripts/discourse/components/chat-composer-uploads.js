@@ -3,11 +3,11 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import { bind } from "discourse/lib/decorators";
+import { cloneJSON } from "discourse/lib/object";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import { cloneJSON } from "discourse-common/lib/object";
-import { bind } from "discourse-common/utils/decorators";
 
 @classNames("chat-composer-uploads")
 export default class ChatComposerUploads extends Component {

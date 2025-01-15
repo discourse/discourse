@@ -652,6 +652,8 @@ ar:
         confirm: "لديك بالفعل مسودة قيد التقدم. ماذا تريد أن تفعل بها؟"
         yes_value: "تجاهل"
         no_value: "استئناف التعديل"
+      dropdown:
+        view_all: "عرض الكل"
     topic_count_all:
       zero: "عرض %{count} موضوع جديد"
       one: "عرض موضوع واحد (%{count}) جديد"
@@ -5361,7 +5363,6 @@ ar:
         everyone_can_use: "يمكن للجميع استخدام الوسوم"
         usable_only_by_groups: "تكون الوسوم مرئية للجميع، ولكن يمكن للمجموعات التالية فقط استخدامها"
         visible_only_to_groups: "تكون الوسوم مرئية للمجموعات التالية فقط"
-        cannot_save: "لا يمكن حفظ مجموعة الوسوم. تأكَّد من وجود وسم واحد على الأقل، وأن اسم مجموعة الوسوم ليس فارغًا وأقل من 100 حرف، وأن هناك مجموعة محدَّدة لمنحها إذن الوسوم."
         tags_placeholder: "البحث أو إنشاء الوسوم"
         parent_tag_placeholder: "اختياري"
         select_groups_placeholder: "تحديد المجموعات…"
@@ -5596,18 +5597,16 @@ ar:
             users:
               content: "المستخدمون"
               title: "قائمة بكل المستخدمين"
-            my_posts:
-              content: "منشوراتي"
-              content_drafts: "مسوداتي"
-              title: "نشاطي الأخير في الموضوع"
-              title_drafts: "مسوداتي غير المنشورة"
+            my_drafts:
+              content: "مسوداتي"
+              title: "مسوداتي غير المنشورة"
               draft_count:
-                zero: "%{count} مسودة"
+                zero: "%{count} مسودات"
                 one: "مسودة واحدة (%{count})"
                 two: "مسودتان (%{count})"
                 few: "%{count} مسودات"
-                many: "%{count} مسودة"
-                other: "%{count} مسودة"
+                many: "%{count} مسودات"
+                other: "%{count} مسودات"
             review:
               content: "المراجعة"
               title: "المنشورات المُبلَغ عنها والعناصر الأخرى في قائمة الانتظار"
@@ -5764,7 +5763,6 @@ ar:
           never: "أبدًا"
       reports:
         title: "قائمة التقارير المتاحة"
-        meta_doc: "استكشف <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>وثائقنا</a> للحصول على نظرة عامة مفصَّلة عن التقارير."
         sidebar_title: "التقارير"
         sidebar_link:
           all: "جميع التقارير"
@@ -6000,6 +5998,14 @@ ar:
         add_owners: إضافة مالكين
         none_selected: "حدِّد مجموعة للبدء"
         no_custom_groups: "إنشاء مجموعة مخصَّصة جديدة"
+      api_keys:
+        title: "مفاتيح واجهة برمجة التطبيقات"
+        edit: "تعديل"
+        save: "حفظ"
+        cancel: "إلغاء"
+        continue: "متابعة"
+        revoke: "الغاء"
+        revoked: "سُحب"
       api:
         generate_master: "إنشاء مفتاح API رئيسى"
         none: "لا توجد مفاتيح API نشطة حاليًا."
@@ -6007,12 +6013,10 @@ ar:
         title: "API"
         key: "المفتاح"
         keys: "المفاتيح"
-        created: تاريخ الإنشاء
+        created: تم إنشاؤها بواسطة
         updated: تاريخ التحديث
-        last_used: آخر استخدام
-        never_used: (أبدًا)
+        never_used: أبدًا
         generate: "إنشاء"
-        undo_revoke: "التراجع عن الإلغاء"
         revoke: "إلغاء"
         all_users: "جميع المستخدمين"
         active_keys: "مفاتيح API النشطة"
@@ -6021,16 +6025,13 @@ ar:
         description: الوصف
         no_description: (لا يوجد وصف)
         all_api_keys: جميع مفاتيح API
-        user_mode: مستوى المستخدم
         scope_mode: المجال
         impersonate_all_users: انتحال شخصية أي مستخدم
-        single_user: "مستخدم فردي"
         user_placeholder: أدخِل اسم المستخدم
         description_placeholder: ما الذي سيتم استخدام هذا المفتاح فيه؟
         save: حفظ
         new_key: مفتاح API جديد
         revoked: تم الإلغاء
-        delete: الحذف بشكلٍٍ دائم
         not_shown_again: لن يتم عرض هذا المفتاح مرة أخرى. تأكَّد من أخذ نسخة قبل المتابعة.
         continue: متابعة
         scopes:
@@ -6044,8 +6045,6 @@ ar:
           global_description: ليس هناك قيود مفروضة على مفتاح API ويمكن الوصول إلى كل نقاط النهاية.
           resource: المورد
           action: الإجراء
-          allowed_parameters: المعلمات المسموح بها
-          optional_allowed_parameters: المعلمات المسموح بها (اختياري)
           any_parameter: (أي معلمة)
           allowed_urls: عناوين URL المسموح بها
           descriptions:
@@ -6453,6 +6452,7 @@ ar:
         sidebar_link:
           api_keys:
             title: "مفاتيح واجهة برمجة التطبيقات"
+          webhooks: "خطافات الويب"
           developer: "المطور"
           embedding: "التضمين"
           user_api: "واجهة برمجة التطبيقات للمستخدم"
@@ -6598,6 +6598,7 @@ ar:
           browse_themes: "تصفُّح سمات المجتمع"
           customize_desc: "تخصيص:"
           title: "السمات"
+          description: "تُعد السمات تخصيصات موسَّعة تؤدي إلى تغيير عدة عناصر في نمط تصميم مدونتك، وغالبًا ما يتضمَّن أيضًا ميزات إضافية للواجهة الأمامية."
           create: "إنشاء"
           create_type: "النوع"
           create_name: "الاسم"
@@ -6835,10 +6836,7 @@ ar:
             title: "تحديد لوحة الألوان الأساسية"
             description: "لوحة الألوان الأساسية:"
           title: "الألوان"
-          edit: "تعديل لوحات الألوان"
-          long_title: "لوحات الألوان"
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
-          new_name: "لوحة ألوان جديدة"
           copy_name_prefix: "نسخة من"
           delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
           undo: "تراجع"
@@ -7181,7 +7179,6 @@ ar:
         logster:
           title: "سجلات الأخطاء"
       watched_words:
-        title: "الكلمات المُراقَبة"
         search: "البحث"
         clear_filter: "مسح"
         show_words:
@@ -7339,6 +7336,7 @@ ar:
         status: "الحالة"
         show_emails: "إظهار عناوين البريد الإلكتروني"
         hide_emails: "إخفاء عناوين البريد الإلكتروني"
+        silence_reason: "سبب الكتم"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -7642,7 +7640,6 @@ ar:
           delete_sso_record: "حذف سجل SSO"
           confirm_delete: "هل تريد بالتأكيد حذف سجل DiscourseConnect هذا؟"
       user_fields:
-        title: "حقول المستخدم"
         add: "أضف حقل المستخدم"
         untitled: "بلا لقب"
         name: "اسم الحقل"
@@ -7685,9 +7682,7 @@ ar:
           dropdown: "قائمة منسدلة"
           multiselect: "حقل اختيارات متعددة"
       site_text:
-        description: "يمكنك تخصيص أي من النصوص في منتداك. يُرجى البدء بالبحث أدناه:"
         search: "البحث عن النص الذي تريد تعديله"
-        title: "النص"
         edit: "تعديل"
         revert: "التراجع عن التغييرات"
         revert_confirm: "هل تريد بالتأكيد التراجع عن التغييرات؟"
@@ -8003,7 +7998,6 @@ ar:
           save: "حفظ"
       reseed:
         action:
-          label: "استبدال النص..."
           title: "استبدال نص الفئات والموضوعات بالترجمات"
         modal:
           title: "استبدال النص"

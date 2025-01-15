@@ -1,6 +1,6 @@
 import { registerDestructor } from "@ember/destroyable";
 import Modifier from "ember-modifier";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 
 export default class ChatTrackMessage extends Modifier {
   didEnterViewport = null;

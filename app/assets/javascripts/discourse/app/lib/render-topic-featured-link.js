@@ -1,6 +1,6 @@
 import { h } from "virtual-dom";
+import { renderIcon } from "discourse/lib/icon-library";
 import User from "discourse/models/user";
-import { renderIcon } from "discourse-common/lib/icon-library";
 
 const _decorators = [];
 

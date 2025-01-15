@@ -1,11 +1,11 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import {
   convertIconClass,
   iconHTML,
   iconNode,
-} from "discourse-common/lib/icon-library";
+} from "discourse/lib/icon-library";
 
 module("Unit | Utility | icon-library", function (hooks) {
   setupTest(hooks);

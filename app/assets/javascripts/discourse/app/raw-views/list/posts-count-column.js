@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import I18n from "discourse-i18n";
 
 export default class PostsCountColumn extends EmberObject {

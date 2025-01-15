@@ -72,6 +72,7 @@
 }
 
 .admin-customize {
+  /* TODO: Remove when admin header has been added to all /customize pages */
   h1 {
     margin-bottom: 10px;
     input {
@@ -80,6 +81,9 @@
       .ios-device & {
         font-size: var(--font-down-2);
       }
+    }
+    &.d-page-header__title {
+      margin: 0;
     }
   }
 
@@ -951,7 +955,7 @@
   }
 }
 
-.admin-customize-email-templates {
+.admin-email-templates {
   .email-template,
   .controls {
     margin-top: 1em;
@@ -1067,4 +1071,10 @@
       margin-left: auto;
     }
   }
+}
+
+.about-customize-colors {
+  text-align: center;
+  width: 65%;
+  margin-left: 30%;
 }

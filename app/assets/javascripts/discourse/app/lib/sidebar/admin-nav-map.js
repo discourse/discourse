@@ -162,7 +162,7 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_server_setup",
-        route: "adminEmail.index",
+        route: "adminEmail",
         label: "admin.email_settings.sidebar_link.server_setup.title",
         icon: "gear",
         keywords: "admin.email_settings.sidebar_link.server_setup.keywords",
@@ -223,6 +223,12 @@ export const ADMIN_NAV_MAP = [
         icon: "key",
         label: "admin.advanced.sidebar_link.api_keys.title",
         keywords: "admin.advanced.sidebar_link.api_keys.keywords",
+      },
+      {
+        name: "admin_webhooks",
+        route: "adminWebHooks",
+        icon: "arrows-rotate",
+        label: "admin.advanced.sidebar_link.webhooks",
       },
       {
         name: "admin_developer",

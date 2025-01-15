@@ -20,7 +20,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
     server.get("/chat/:id/messages.json", () =>
       helper.response({ chat_messages: [], meta: {} })
     );
-    server.get("/chat/emojis.json", () =>
+    server.get("/emojis.json", () =>
       helper.response({ favorites: [{ name: "grinning" }] })
     );
     server.post("/chat/drafts", () => {

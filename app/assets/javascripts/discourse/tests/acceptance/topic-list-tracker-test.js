@@ -1,6 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -9,7 +10,6 @@ import {
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Topic list tracking", function (needs) {
   let notificationLevel;

@@ -33,15 +33,6 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
         }
       end
 
-      it "does not provide a content_disposition for images" do
-        s3_helper
-          .expects(:upload)
-          .with(uploaded_file, kind_of(String), upload_opts)
-          .returns(%w[path etag])
-        upload = build_upload
-        store.store_upload(uploaded_file, upload)
-      end
-
       context "when the file is a SVG" do
         let(:original_filename) { "small.svg" }
         let(:uploaded_file) { file_from_fixtures("small.svg", "svg") }
@@ -65,8 +56,12 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
         let(:original_filename) { "small.mp4" }
         let(:uploaded_file) { file_from_fixtures("small.mp4", "media") }
 
-        it "does not add content-disposition header" do
-          disp_opts = { content_type: "application/mp4" }
+        it "adds inline content-disposition header with original filename" do
+          disp_opts = {
+            content_disposition:
+              "inline; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}",
+            content_type: "application/mp4",
+          }
           s3_helper
             .expects(:upload)
             .with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts))
@@ -80,8 +75,12 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
         let(:original_filename) { "small.mp3" }
         let(:uploaded_file) { file_from_fixtures("small.mp3", "media") }
 
-        it "does not add content-disposition header" do
-          disp_opts = { content_type: "audio/mpeg" }
+        it "adds inline content-disposition header with filename" do
+          disp_opts = {
+            content_disposition:
+              "inline; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}",
+            content_type: "audio/mpeg",
+          }
           s3_helper
             .expects(:upload)
             .with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts))

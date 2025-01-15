@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class MergeUsersProgress extends Component {

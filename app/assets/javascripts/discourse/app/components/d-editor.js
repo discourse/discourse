@@ -10,16 +10,23 @@ import { translations } from "pretty-text/emoji/data";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
 import Toolbar from "discourse/lib/composer/toolbar";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
+import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { linkSeenHashtagsInContext } from "discourse/lib/hashtag-decorator";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -27,12 +34,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import deprecated from "discourse-common/lib/deprecated";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
@@ -53,8 +55,9 @@ export function onToolbarCreate(func) {
 
 @classNames("d-editor")
 export default class DEditor extends Component {
-  @service("emoji-store") emojiStore;
+  @service emojiStore;
   @service modal;
+  @service menu;
 
   editorComponent = TextareaEditor;
   textManipulation;
@@ -62,8 +65,6 @@ export default class DEditor extends Component {
   ready = false;
   lastSel = null;
   showLink = true;
-  emojiPickerIsActive = false;
-  emojiFilter = "";
   isEditorFocused = false;
   processPreview = true;
   morphingOptions = {
@@ -345,15 +346,46 @@ export default class DEditor extends Component {
         }
       },
 
-      transformComplete: (v) => {
+      transformComplete: (v, event) => {
         if (v.code) {
-          this.emojiStore.track(v.code);
+          this.emojiStore.trackEmojiForContext(v.code, "topic");
           return `${v.code}:`;
         } else {
           this.textManipulation.autocomplete({ cancel: true });
-          this.set("emojiPickerIsActive", true);
-          this.set("emojiFilter", v.term);
 
+          const menuOptions = {
+            identifier: "emoji-picker",
+            component: EmojiPickerDetached,
+            modalForMobile: true,
+            data: {
+              didSelectEmoji: (emoji) => {
+                this.textManipulation.emojiSelected(emoji);
+              },
+              term: v.term,
+            },
+          };
+
+          let virtualElement;
+          if (event instanceof KeyboardEvent) {
+            // when user selects more by pressing enter
+            virtualElement = virtualElementFromTextRange();
+          } else {
+            // when user selects more by clicking on it
+            virtualElement = {
+              getBoundingClientRect: () => ({
+                x: event.pageX,
+                y: event.pageY,
+                top: event.pageY,
+                left: event.pageX,
+                bottom: 0,
+                right: 0,
+                width: 0,
+                height: 0,
+              }),
+            };
+          }
+
+          this.menuInstance = this.menu.show(virtualElement, menuOptions);
           return "";
         }
       },
@@ -368,9 +400,10 @@ export default class DEditor extends Component {
           }
 
           if (term === "") {
-            if (this.emojiStore.favorites.length) {
+            const favorites = this.emojiStore.favoritesForContext("topic");
+            if (favorites.length) {
               return resolve(
-                this.emojiStore.favorites
+                favorites
                   .filter((f) => !this.site.denied_emojis?.includes(f))
                   .slice(0, 5)
               );
@@ -515,13 +548,6 @@ export default class DEditor extends Component {
     return true;
   }
 
-  @action
-  onEmojiPickerClose() {
-    if (!(this.isDestroyed || this.isDestroying)) {
-      this.set("emojiPickerIsActive", false);
-    }
-  }
-
   /**
    * Represents a toolbar event object passed to toolbar buttons.
    *
@@ -566,15 +592,6 @@ export default class DEditor extends Component {
       replaceText: (oldVal, newVal, opts) =>
         this.textManipulation.replaceText(oldVal, newVal, opts),
     };
-  }
-
-  @action
-  emoji() {
-    if (this.disabled) {
-      return;
-    }
-
-    this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
   }
 
   @action

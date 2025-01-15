@@ -19,9 +19,13 @@ html.footer-nav-visible {
     padding-bottom: 0px;
   }
 
-  #topic-progress-wrapper:not(.docked) {
-    margin-bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
+  .with-topic-progress {
+    bottom: calc(
+      var(--footer-nav-height) + env(safe-area-inset-bottom) +
+        var(--composer-height, 0px)
+    );
   }
+
   .posts-filtered-notice {
     transition: all linear 0.1s;
     bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
@@ -84,11 +88,6 @@ html.footer-nav-ipad {
     background-color: var(--header_background);
     z-index: z("ipad-header-nav");
     padding-bottom: 0; // resets safe-area-inset-bottom
-  }
-
-  #reply-control,
-  #reply-control.fullscreen {
-    z-index: z("ipad-header-nav") + 1;
   }
 
   .d-header-wrap {

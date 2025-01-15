@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { bind } from "discourse/lib/decorators";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { userPath } from "discourse/lib/url";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class WatchRead extends Component {
   @service currentUser;

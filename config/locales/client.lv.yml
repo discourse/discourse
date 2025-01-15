@@ -2809,8 +2809,6 @@ lv:
               content: "Grupas"
             users:
               content: "Lietotāji"
-            my_posts:
-              content: "Mani ieraksti"
             review:
               content: "Pārskats"
             invite:
@@ -2957,16 +2955,20 @@ lv:
         add_owners: Pievienot īpašniekus
         none_selected: "Izvēlēties grupu, lai uzsāktu"
         no_custom_groups: "Izveidot jaunu specifisku grupu"
+      api_keys:
+        edit: "Rediģēt"
+        save: "Saglabāt"
+        cancel: "Atcelt"
+        continue: "Turpināt"
+        revoke: "Atsaukt"
       api:
         generate_master: "Radīt jaunu Master API atslēgu"
         none: "Šobrīd nav aktīvu API atslēgu."
         user: "Lietotājs"
         title: "API"
-        created: Radīts
-        never_used: (nekad)
+        never_used: Nekad
         generate: "Radīt"
         revoke: "Atsaukt"
-        all_users: "Visi lietotāji"
         show_details: Detaļas
         description: Apraksts
         save: Saglabāt
@@ -3403,7 +3405,6 @@ lv:
         logster:
           title: "Kļūdu saraksts (log)"
       watched_words:
-        title: "Vārdi, kas tiek novēroti"
         search: "meklēt"
         clear_filter: "Notīrīt"
         download: Lejuplādēt
@@ -3631,7 +3632,6 @@ lv:
           external_email: "E-pasts"
           external_avatar_url: "Profila attēla URL"
       user_fields:
-        title: "Lietotāja lauki"
         untitled: "Bez nosaukuma"
         name: "Lauka nosaukums"
         type: "Lauka veids"
@@ -3661,10 +3661,8 @@ lv:
           confirm: "Apstiprinājums"
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:
-        description: "Jūs varat pielāgot jebkuru tekstu jūsu forumā. Sāciet, meklējot sekojošo:"
         search: "Meklēt tekstu, kuru vēlies rediģēt"
-        title: "Teksts"
-        edit: "labot"
+        edit: "Rediģēt"
         revert: "Atsaukt Izmaiņas"
         revert_confirm: "Vai tiešām vēlies atsaukt izmaiņas?"
         go_back: "Atpakaļ pie meklētāja"

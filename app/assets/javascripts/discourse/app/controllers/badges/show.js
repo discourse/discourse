@@ -1,8 +1,8 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import discourseComputed from "discourse/lib/decorators";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ShowController extends Controller {

@@ -1,4 +1,4 @@
-import getAbsoluteURL, { isAbsoluteURL } from "discourse-common/lib/get-url";
+import getAbsoluteURL, { isAbsoluteURL } from "discourse/lib/get-url";
 
 export function registerServiceWorker(serviceWorkerURL, registerOptions = {}) {
   if (window.isSecureContext && "serviceWorker" in navigator) {

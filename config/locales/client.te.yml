@@ -392,6 +392,8 @@ te:
         confirm: "మీకు ఇప్పటికే చిత్తుప్రతి పురోగతిలో ఉంది. మీరు దానితో ఏమి చేయాలనుకుంటున్నారు?"
         yes_value: "విస్మరించండి"
         no_value: "సవరణను కొనసాగించండి"
+      dropdown:
+        view_all: "అన్ని చూడండి"
     topic_count_all:
       one: "%{count} కొత్త విషయం చూడండి"
       other: "%{count} కొత్త విషయాలను చూడండి"
@@ -4275,11 +4277,9 @@ te:
             users:
               content: "సభ్యులు"
               title: "సభ్యులందరి జాబితా"
-            my_posts:
-              content: "నా పోస్ట్‌లు"
-              content_drafts: "నా చిత్తుప్రతులు"
-              title: "నా ఇటీవలి విషయం కార్యాచరణ"
-              title_drafts: "నా పోస్ట్ చేయని చిత్తుప్రతులు"
+            my_drafts:
+              content: "నా చిత్తుప్రతులు"
+              title: "నా పోస్ట్ చేయని చిత్తుప్రతులు"
               draft_count:
                 one: "%{count} డ్రాఫ్ట్"
                 other: "%{count} డ్రాఫ్ట్లు"
@@ -4413,7 +4413,6 @@ te:
           never: "ఎప్పటికీ వద్దు"
       reports:
         title: "అందుబాటులో ఉన్న నివేదికల జాబితా"
-        meta_doc: "నివేదికల యొక్క వివరణాత్మక స్థూలదృష్టి కోసం మా <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>డాక్యుమెంటేషన్</a> ని అన్వేషించండి."
         sidebar_title: "నివేదికలు"
         sidebar_link:
           all: "అన్ని నివేదికలు"
@@ -4611,6 +4610,13 @@ te:
         add_owners: యజమానులను జోడించండి
         none_selected: "ప్రారంభించడానికి సమూహాన్ని ఎంచుకోండి"
         no_custom_groups: "కొత్త అనుకూల సమూహాన్ని సృష్టించండి"
+      api_keys:
+        edit: "సవరించండి"
+        save: "సేవ్ చేయండి"
+        cancel: "రద్దుచేయండి"
+        continue: "కొనసాగించండి"
+        revoke: "ఉపసంహరించుకోండి"
+        revoked: "రద్దు చేయబడింది"
       api:
         generate_master: "మాస్టరు ఏపీఐ కీ ఉత్తపత్తించు"
         none: "ప్రస్తుతం సక్రియ API కీలు ఏవీ లేవు."
@@ -4618,30 +4624,24 @@ te:
         title: "ఏపీఐ"
         key: "కీ"
         keys: "కీలు"
-        created: సృష్టించిన
+        created: సృష్టికర్త
         updated: నవీకరించబడింది
-        last_used: చివరిగా ఉపయోగించబడింది
-        never_used: (ఎప్పుడూ లేదు)
+        never_used: ఎప్పటికీ వద్దు
         generate: "ఉత్పత్తించు"
-        undo_revoke: "ఉపసంహరణను రద్దు చేయండి"
         revoke: "ఉపసంహరించుకోండి"
-        all_users: "అందరు సభ్యులు"
         active_keys: "యాక్టివ్ API కీలు"
         manage_keys: కీలను నిర్వహించండి
         show_details: వివరాలు
         description: వివరణ
         no_description: (వివరణ లేదు)
         all_api_keys: అన్ని API కీలు
-        user_mode: సభ్యుడి స్థాయి
         scope_mode: పరిధి
         impersonate_all_users: ఏదైనా సభ్యుడు వలె నటించండి
-        single_user: "ఒకే సభ్యుడు"
         user_placeholder: సభ్యనామం నమోదు చేయండి
         description_placeholder: ఈ కీ దేనికి ఉపయోగించబడుతుంది?
         save: సేవ్ చేయండి
         new_key: కొత్త API కీ
         revoked: రద్దు చేయబడింది
-        delete: శాశ్వతంగా తొలగించండి
         not_shown_again: ఈ కీ మళ్లీ ప్రదర్శించబడదు. కొనసాగించడానికి ముందు మీరు కాపీని తీసుకున్నారని నిర్ధారించుకోండి.
         continue: కొనసాగించండి
         scopes:
@@ -4655,8 +4655,6 @@ te:
           global_description: API కీకి పరిమితి లేదు మరియు అన్ని ఎండ్ పాయింట్‌లు యాక్సెస్ చేయబడతాయి.
           resource: వనరు
           action: చర్య
-          allowed_parameters: అనుమతించబడిన పారామితులు
-          optional_allowed_parameters: అనుమతించబడిన పారామితులు (ఐచ్ఛికం)
           any_parameter: (ఏదైనా పరామితి)
           allowed_urls: అనుమతించబడిన URLలు
           descriptions:
@@ -4947,6 +4945,7 @@ te:
       advanced:
         title: "అధునాతన"
         sidebar_link:
+          webhooks: "వెబ్‌బూక్స్"
           developer: "డవలపరు"
           embedding: "పొందుపరచడం"
           user_api: "సబ్యుల API"
@@ -5267,10 +5266,7 @@ te:
             title: "బేస్ కలర్ పాలెట్ ఎంచుకోండి"
             description: "బేస్ పాలెట్:"
           title: "రంగులు"
-          edit: "రంగుల పలకలను సవరించండి"
-          long_title: "రంగు పాలెట్లు"
           about: "మీ థీమ్‌లు ఉపయోగించే రంగులను సవరించండి. ప్రారంభించడానికి కొత్త రంగుల పాలెట్‌ను సృష్టించండి."
-          new_name: "కొత్త రంగుల పాలెట్"
           copy_name_prefix: "దీనికి నకలు"
           delete_confirm: "ఈ రంగుల పాలెట్‌ను తొలగించాలా?"
           undo: "రద్దు చేయండి"
@@ -5594,7 +5590,6 @@ te:
         logster:
           title: "దోష లాగులు"
       watched_words:
-        title: "అనుసరిస్తున్న పదాలు"
         search: "శోధించండి"
         clear_filter: "క్లియర్"
         show_words:
@@ -5742,6 +5737,7 @@ te:
         status: "స్థితి"
         show_emails: "ఇమెయిల్‌లను చూపండి"
         hide_emails: "ఇమెయిల్‌లను దాచండి"
+        silence_reason: "నిశ్శబ్దం కారణం"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6024,7 +6020,6 @@ te:
           delete_sso_record: "SSO రికార్డ్‌ను తొలగించండి"
           confirm_delete: "మీరు ఖచ్చితంగా ఈ DiscourseConnect రికార్డ్‌ను తొలగించాలనుకుంటున్నారా?"
       user_fields:
-        title: "సభ్య క్షేత్రాలు"
         untitled: "పేరులేని"
         name: "క్షేత్రం పేరు"
         type: "క్షేత్రం టైపు"
@@ -6058,9 +6053,7 @@ te:
           dropdown: "డ్రాప్డౌన్"
           multiselect: "బహుళ ఎంపిక"
       site_text:
-        description: "మీరు మీ ఫోరమ్‌లోని ఏదైనా వచనాన్ని అనుకూలీకరించవచ్చు. దయచేసి దిగువ శోధించడం ద్వారా ప్రారంభించండి:"
         search: "మీరు సవరించాలనుకుంటున్న వచనం కోసం శోధించండి"
-        title: "వచనం"
         edit: "సవరించండి"
         revert: "మార్పులను తిరిగి మార్చండి"
         revert_confirm: "మీరు ఖచ్చితంగా మీ మార్పులను తిరిగి మార్చాలనుకుంటున్నారా?"
@@ -6302,7 +6295,6 @@ te:
           save: "సేవ్ చేయండి"
       reseed:
         action:
-          label: "వచనాన్ని భర్తీ చేయండి…"
           title: "వర్గాలు మరియు విషయాల వచనాన్ని అనువాదాలతో భర్తీ చేయండి"
         modal:
           title: "వచనాన్ని భర్తీ చేయండి"

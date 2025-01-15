@@ -14,6 +14,8 @@ pl_PL:
       select_trigger: Wybierz wyzwalacz
       confirm_automation_reset: Ta czynność spowoduje zresetowanie opcji skryptu i wyzwalacza, nowy stan zostanie zapisany, czy chcesz kontynuować?
       confirm_automation_trigger: Ta czynność uruchomi automatyzację, czy chcesz kontynuować?
+      no_automation_yet: Nie utworzyłeś jeszcze żadnej automatyzacji. Wybierz opcję poniżej, aby rozpocząć.
+      filter_placeholder: Filtruj według nazwy lub opisu...
       edit_automation:
         trigger_section:
           forced: Ten wyzwalacz jest wymuszany przez skrypt.
@@ -109,8 +111,10 @@ pl_PL:
               label: Ograniczone do kategorii
             stalled_after:
               label: Opóźnienie wyzwalania
+              description: Definiuje opóźnienie między ostatnią edycją wiki a uruchomieniem automatyzacji.
             retriggered_after:
               label: Opóźnienie ponownego wyzwalania
+              description: Określa opóźnienie między pierwszym a kolejnym wyzwoleniem, jeśli wiki nie została jeszcze edytowana po pierwszym wyzwoleniu.
         user_added_to_group:
           fields:
             joined_group:
@@ -204,6 +208,10 @@ pl_PL:
             valid_trust_levels:
               label: Prawidłowe poziomy zaufania
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tagi dodane lub usunięte
+            tags_added: Dodano tagi
+            tags_removed: Tagi usunięte
           fields:
             watching_categories:
               label: Obserwuje kategorie
@@ -350,6 +358,7 @@ pl_PL:
           fields:
             custom_field_name:
               label: "Nazwa niestandardowego pola użytkownika"
+      unnamed_automation: "Automatyzacja bez nazwy"
       models:
         script:
           name:

@@ -1,5 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import {
   acceptance,
   publishToMessageBus,
@@ -14,8 +15,8 @@ async function openUserStatusModal() {
 
 async function pickEmoji(emoji) {
   await click(".btn-emoji");
-  await fillIn(".emoji-picker-content .filter", emoji);
-  await click(".results .emoji");
+  await emojiPicker().fill(emoji);
+  await emojiPicker().select(emoji);
 }
 
 async function setDoNotDisturbMode() {
@@ -24,7 +25,7 @@ async function setDoNotDisturbMode() {
 
 acceptance("User Status", function (needs) {
   const userStatus = "off to dentist";
-  const userStatusEmoji = "tooth";
+  const userStatusEmoji = "grinning";
   const userId = 1;
   const userTimezone = "UTC";
 
@@ -108,17 +109,13 @@ acceptance("User Status", function (needs) {
 
   test("emoji picking", async function (assert) {
     this.siteSettings.enable_user_status = true;
-
     await visit("/");
     await openUserStatusModal();
 
     assert.dom(".d-icon-discourse-emojis").exists("empty status icon is shown");
 
-    await click(".btn-emoji");
-    assert.dom(".emoji-picker.opened").exists("emoji picker is opened");
+    await pickEmoji(userStatusEmoji);
 
-    await fillIn(".emoji-picker-content .filter", userStatusEmoji);
-    await click(".results .emoji");
     assert
       .dom(`.btn-emoji img.emoji[title=${userStatusEmoji}]`)
       .exists("chosen status emoji is shown");
@@ -259,7 +256,8 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
     await fillIn(".user-status-description", "another status");
-    await pickEmoji("cold_face"); // another emoji
+
+    await pickEmoji("grinning"); // another emoji
     await click(".d-modal-cancel");
     await openUserStatusModal();
 
@@ -318,7 +316,7 @@ acceptance(
   "User Status - pause notifications (do not disturb mode)",
   function (needs) {
     const userStatus = "off to dentist";
-    const userStatusEmoji = "tooth";
+    const userStatusEmoji = "grinning";
     const userId = 1;
     const userTimezone = "UTC";
 
@@ -438,7 +436,7 @@ acceptance(
 
 acceptance("User Status - user menu", function (needs) {
   const userStatus = "off to dentist";
-  const userStatusEmoji = "tooth";
+  const userStatusEmoji = "grinning";
   const userId = 1;
   const userTimezone = "UTC";
 

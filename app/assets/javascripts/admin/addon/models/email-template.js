@@ -4,7 +4,7 @@ import RestModel from "discourse/models/rest";
 
 export default class EmailTemplate extends RestModel {
   revert() {
-    return ajax(`/admin/customize/email_templates/${this.id}`, {
+    return ajax(`/admin/email/templates/${this.id}`, {
       type: "DELETE",
     }).then((result) =>
       getProperties(result.email_template, "subject", "body", "can_revert")

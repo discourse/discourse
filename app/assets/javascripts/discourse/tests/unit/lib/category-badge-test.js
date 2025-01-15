@@ -3,7 +3,7 @@ import { setupTest } from "ember-qunit";
 import $ from "jquery";
 import { module, test } from "qunit";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { helperContext } from "discourse-common/lib/helpers";
+import { helperContext } from "discourse/lib/helpers";
 
 module("Unit | Utility | category-badge", function (hooks) {
   setupTest(hooks);

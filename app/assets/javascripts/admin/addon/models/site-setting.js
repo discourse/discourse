@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import SettingObjectHelper from "admin/lib/setting-object-helper";
 

@@ -1,8 +1,8 @@
 import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import discourseDebounce from "discourse/lib/debounce";
+import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
 
 @disableImplicitInjections
 export default class UserTips extends Service {

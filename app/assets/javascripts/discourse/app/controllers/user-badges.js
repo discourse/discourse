@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, filterBy, sort } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 export default class UserBadgesController extends Controller {
   @controller user;

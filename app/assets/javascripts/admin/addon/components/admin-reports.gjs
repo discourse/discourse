@@ -1,25 +1,29 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { LinkTo } from "@ember/routing";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
-import dIcon from "discourse-common/helpers/d-icon";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
+import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
 
 export default class AdminReports extends Component {
   @service siteSettings;
   @tracked reports = null;
   @tracked filter = "";
-  @tracked isLoading = false;
+  @tracked isLoading = true;
+
+  constructor() {
+    super(...arguments);
+    this.loadReports();
+  }
 
   @bind
   loadReports() {
-    this.isLoading = true;
     ajax("/admin/reports")
       .then((json) => {
         this.reports = json.reports;
@@ -54,39 +58,28 @@ export default class AdminReports extends Component {
   }
 
   <template>
-    <div {{didInsert this.loadReports}}>
-      <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-        <div class="admin-reports-header">
-          <h2>{{i18n "admin.reports.title"}}</h2>
-          <Input
-            class="admin-reports-header__filter"
+    <ConditionalLoadingSpinner @condition={{this.isLoading}}>
+      <div class="d-admin-filter admin-reports-header">
+        <div class="admin-filter__input-container">
+          <input
+            type="text"
+            class="admin-filter__input admin-reports-header__filter"
             placeholder={{i18n "admin.filter_reports"}}
-            @value={{this.filter}}
+            value={{this.filter}}
+            {{on "input" (withEventValue (fn (mut this.filter)))}}
           />
         </div>
-
-        <div class="alert alert-info">
-          {{dIcon "book"}}
-          {{htmlSafe (i18n "admin.reports.meta_doc")}}
-        </div>
-
-        <ul class="admin-reports-list">
-          {{#each this.filteredReports as |report|}}
-            <li class="admin-reports-list__report">
-              <LinkTo @route="adminReports.show" @model={{report.type}}>
-                <h3
-                  class="admin-reports-list__report-title"
-                >{{report.title}}</h3>
-                {{#if report.description}}
-                  <p class="admin-reports-list__report-description">
-                    {{report.description}}
-                  </p>
-                {{/if}}
-              </LinkTo>
-            </li>
-          {{/each}}
-        </ul>
-      </ConditionalLoadingSpinner>
-    </div>
+      </div>
+      <AdminSectionLandingWrapper class="admin-reports-list">
+        {{#each this.filteredReports as |report|}}
+          <AdminSectionLandingItem
+            @titleLabelTranslated={{report.title}}
+            @descriptionLabelTranslated={{report.description}}
+            @titleRoute="adminReports.show"
+            @titleRouteModel={{report.type}}
+          />
+        {{/each}}
+      </AdminSectionLandingWrapper>
+    </ConditionalLoadingSpinner>
   </template>
 }

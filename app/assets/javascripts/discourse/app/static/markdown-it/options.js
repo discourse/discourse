@@ -1,6 +1,6 @@
+import { getURLWithCDN } from "discourse/lib/get-url";
+import { helperContext } from "discourse/lib/helpers";
 import { formatUsername } from "discourse/lib/utilities";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import { helperContext } from "discourse-common/lib/helpers";
 
 export default function buildOptions(options) {
   let context = helperContext();

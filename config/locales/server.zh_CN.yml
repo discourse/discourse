@@ -368,6 +368,8 @@ zh_CN:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入此话题：%{group_names}。"
     user_exists: "抱歉，该用户已被邀请。您一次只可以邀请一个用户加入话题。"
     muted_topic: "抱歉，该用户已将此话题设为免打扰。"
+    receiver_does_not_allow_pm: "抱歉，该用户不允许你向他们发送个人消息。"
+    sender_does_not_allow_pm: "抱歉，你不允许该用户向你发送个人消息。"
     user_cannot_see_topic: "%{username} 无法看到该话题。"
   backup:
     operation_already_running: "一个操作正在运行。目前无法开始新的作业。"
@@ -2260,6 +2262,7 @@ zh_CN:
     default_email_mailing_list_mode_frequency: "启用邮寄名单模式的用户默认将以频率收到电子邮件。"
     disable_mailing_list_mode: "禁止用户启用邮寄名单模式（阻止发送任何邮寄名单电子邮件。）"
     default_email_previous_replies: "在电子邮件中默认包含以前的回复。"
+    default_emoji_reactions: "默认收藏表情符号反应。添加最多 5 个表情符号以快速做出反应。"
     default_email_in_reply_to: "在电子邮件中默认包含帖子回复节选。"
     default_hide_profile: "默认隐藏用户公开个人资料。"
     default_hide_presence: "默认禁用在线状态功能。"

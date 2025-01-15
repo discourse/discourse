@@ -11,6 +11,8 @@ describe "Admin Permalinks Page", type: :system do
 
   it "allows admin to create, edit, and destroy permalink" do
     admin_permalinks_page.visit
+    expect(admin_permalinks_page).to have_no_filter
+
     admin_permalinks_page.click_add_permalink
     admin_permalink_form_page
       .fill_in_url("test")
@@ -18,6 +20,13 @@ describe "Admin Permalinks Page", type: :system do
       .fill_in_category("1")
       .click_save
     expect(admin_permalinks_page).to have_permalinks("test")
+    expect(admin_permalinks_page).to have_filter
+
+    admin_permalinks_page.filter("no results")
+    expect(admin_permalinks_page).to have_no_results
+    expect(admin_permalinks_page).to have_filter
+
+    admin_permalinks_page.filter("")
 
     admin_permalinks_page.click_edit_permalink("test")
     admin_permalink_form_page.fill_in_url("test2").click_save

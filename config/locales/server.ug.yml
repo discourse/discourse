@@ -2637,6 +2637,9 @@ ug:
       from: "%{site_name}"
     set_password:
       title: "ئىم تەڭشەك"
+    admin_login:
+      title: "باشقۇرغۇچى تىزىمغا كىرىش"
+      subject_template: "[%{email_prefix}] تىزىمغا كىرىش"
     account_created:
       title: "ھېسابات قۇرۇلدى"
       subject_template: "[%{email_prefix}] يېڭى ھېساباتىڭىز"
@@ -2651,6 +2654,14 @@ ug:
     confirm_new_email_via_admin:
       title: "يېڭى ئېلخەت جەزملەش"
       subject_template: "%{email_prefix} يېڭى ئېلخەت ئادرېسىڭىزنى جەزملەڭ"
+    confirm_old_email_add:
+      title: "كونا ئېلخەتنى خەزملەيدۇ (قوش)"
+      subject_template: "%{email_prefix} نۆۋەتتىكى ئېلخەت ئادرېسىڭىزنى جەزملەيدۇ"
+    notify_old_email:
+      title: "كونا ئېلخەتنى ئۇقتۇرىدۇ"
+      subject_template: "[%{email_prefix}] ئېلخەت ئادرېسىڭىز ئۆزگەرگەن"
+    notify_old_email_add:
+      title: "كونا ئېلخەتنى ئۇقتۇرىدۇ (قوش)"
     signup_after_approval:
       title: "دەلىللەنگەندىن كېيىن تىزىملىتىش"
       subject_template: "سىزنى %{site_name} تەستىقلىدى!"
@@ -2664,6 +2675,21 @@ ug:
     signup:
       title: "تىزىملىتىڭ"
       subject_template: "[%{email_prefix}] يېڭى ھېساباتىڭىزنى جەزملىدى"
+    activation_reminder:
+      title: "ئاكتىپلاش ئەسكەرتىشى"
+      subject_template: "[%{email_prefix}] ھېساباتىڭىزنى جەزملەش ئەسكەرتىشى"
+      text_body_template: |
+        %{site_name} غا خۇش كەلدىڭىز!
+
+        بۇ ھېساباتىڭىزنى ئاكتىپلاش ھەققىدىكى دوستانە ئەسكەرتىش.
+
+        تۆۋەندىكى ئۇلانمىنى چېكىپ يېڭى ھېساباتىڭىزنى جەزملەپ ئاكتىپلاڭ:
+        %{base_url}/u/activate-account/%{email_token}
+
+        ئەگەر يۇقىرى ئۇلانمىنى چەككىلى بولمىسا، ئۇنى كۆچۈرۈپ توركۆرگۈنىڭ ئادرېس بالدىقىغا چاپلاپ سىناڭ.
+    suspicious_login:
+      title: "يېڭى تىزىمغا كىرىش ئاگاھلاندۇرۇشى"
+      subject_template: "[%{site_name}] كە %{location} دىن يېڭىدىن تىزىمغا كىردى"
     post_approved:
       title: "يازمىڭىز تەستىقلاندى"
   page_not_found:
@@ -2671,9 +2697,22 @@ ug:
     popular_topics: "ئالقىشلىق"
     recent_topics: "يېقىنقى"
     see_more: "تېخىمۇ كۆپ"
+    search_title: "بۇ تور بېكەتنى ئىزدەيدۇ"
     search_button: "ئىزدە"
+  offline:
+    title: "ئەپنى يۈكلىيەلمەيدۇ"
+    offline_page_message: "سىز تورسىزدەك قىلىسىز! تور باغلىنىشىڭىزنى تەكشۈرۈپ ئاندىن قايتا سىناڭ."
+  login_required:
+    welcome_message: "# [%{title} غا خۇش كەلدىڭىز](#welcome)"
   upload:
+    edit_reason: "سۈرەتنىڭ يەرلىك نۇسخىسى چۈشۈرۈلدى"
     unauthorized: "كەچۈرۈڭ، سىز يۈكلەشنى سىناۋاتقان ھۆججەتكە يول قويۇلمايدۇ (يول قويىدىغان كېڭەيتىلمىسى: %{authorized_extensions})."
+    pasted_image_filename: "چاپلانغان سۈرەت"
+    store_failure: "#%{user_id} ئىشلەتكۈچى يۈكلىگەن #%{upload_id} نى ساقلىيالمىدى."
+    file_missing: "كەچۈرۈڭ، چوقۇم يۈكلەيدىغان ھۆججەت تەمىنلىشىڭىز كېرەك."
+    empty: "كەچۈرۈڭ، سىز تەمىنلىگەن ھۆججەت بوش."
+    failed: "كەچۈرۈڭ، يۈكلىيەلمىدىڭىز. قايتا سىناڭ."
+    png_to_jpg_conversion_failure_message: "PNG دىن JPG غا ئايلاندۇرۇۋاتقاندا خاتالىق كۆرۈلدى."
     optimize_failure_message: "يۈكلەنگەن سۈرەتنى ئەلالاشتۇرۇۋاتقاندا خاتالىق كۆرۈلدى."
     download_failure: "ھۆججەتنى سىرتقى تەمىنلىگۈچىدىن چۈشۈرەلمىدى."
     size_mismatch_failure: "ھۆججەتنىڭ S3 يۈكلەيدىغان چوڭلۇقى بىلەن سىرتقى يۈكلەيدىغان مۆلچەردىكى چوڭلۇقى بىلەن ماس كەلمىدى. %{additional_detail}"

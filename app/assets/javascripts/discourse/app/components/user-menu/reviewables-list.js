@@ -1,9 +1,9 @@
 import { service } from "@ember/service";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import { ajax } from "discourse/lib/ajax";
+import getUrl from "discourse/lib/get-url";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
-import getUrl from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class UserMenuReviewablesList extends UserMenuItemsList {

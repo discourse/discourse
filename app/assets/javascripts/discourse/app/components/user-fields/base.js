@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { classNameBindings } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @classNameBindings(":user-field", "field.field_type", "customFieldClass")
 export default class UserFieldBase extends Component {

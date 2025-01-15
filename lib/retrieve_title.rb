@@ -8,11 +8,12 @@ module RetrieveTitle
     FinalDestination::UrlEncodingError,
   ]
 
-  def self.crawl(url, max_redirects: nil, initial_https_redirect_ignore_limit: false)
+  def self.crawl(url, max_redirects: nil, initial_https_redirect_ignore_limit: false, headers: {})
     fetch_title(
       url,
       max_redirects: max_redirects,
       initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit,
+      headers: headers,
     )
   rescue *UNRECOVERABLE_ERRORS
     # ¯\_(ツ)_/¯
@@ -70,7 +71,12 @@ module RetrieveTitle
   end
 
   # Fetch the beginning of a HTML document at a url
-  def self.fetch_title(url, max_redirects: nil, initial_https_redirect_ignore_limit: false)
+  def self.fetch_title(
+    url,
+    max_redirects: nil,
+    initial_https_redirect_ignore_limit: false,
+    headers: {}
+  )
     fd =
       FinalDestination.new(
         url,
@@ -78,9 +84,7 @@ module RetrieveTitle
         stop_at_blocked_pages: true,
         max_redirects: max_redirects,
         initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit,
-        headers: {
-          Accept: "text/html,*/*",
-        },
+        headers: headers.merge({ Accept: "text/html,*/*" }),
       )
 
     current = nil

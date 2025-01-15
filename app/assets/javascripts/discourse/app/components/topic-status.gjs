@@ -1,30 +1,45 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { concat, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
+import element from "discourse/helpers/element";
+import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends Component {
   @service currentUser;
+  @service site;
+
+  get wrapperElement() {
+    return element(this.args.tagName ?? "span");
+  }
 
   get canAct() {
+    // TODO: @disableActions -> !@interactive
     return this.currentUser && !this.args.disableActions;
   }
 
   @action
   togglePinned(e) {
-    const { topic } = this.args;
-    topic.pinned ? topic.clearPin() : topic.rePin();
     e.preventDefault();
+    this.args.topic.togglePinnedForUser();
   }
 
   <template>
     {{~! no whitespace ~}}
-    <span class="topic-statuses">
+    <this.wrapperElement class="topic-statuses">
+      {{~#if @topic.bookmarked~}}
+        <a
+          href={{@topic.url}}
+          title={{i18n "topic_statuses.bookmarked.help"}}
+          class="topic-status"
+        >{{icon "bookmark"}}</a>
+      {{~/if~}}
+
       {{~#if (and @topic.closed @topic.archived)~}}
         <span
           title={{i18n "topic_statuses.locked_and_archived.help"}}
@@ -60,12 +75,12 @@ export default class TopicStatus extends Component {
             {{on "click" this.togglePinned}}
             href
             title={{i18n "topic_statuses.pinned.help"}}
-            class="topic-status"
+            class="topic-status pinned pin-toggle-button"
           >{{icon "thumbtack"}}</a>
         {{~else~}}
           <span
             title={{i18n "topic_statuses.pinned.help"}}
-            class="topic-status"
+            class="topic-status pinned"
           >{{icon "thumbtack"}}</span>
         {{~/if~}}
       {{~else if @topic.unpinned~}}
@@ -74,12 +89,12 @@ export default class TopicStatus extends Component {
             {{on "click" this.togglePinned}}
             href
             title={{i18n "topic_statuses.unpinned.help"}}
-            class="topic-status"
+            class="topic-status unpinned pin-toggle-button"
           >{{icon "thumbtack" class="unpinned"}}</a>
         {{~else~}}
           <span
             title={{i18n "topic_statuses.unpinned.help"}}
-            class="topic-status"
+            class="topic-status unpinned"
           >{{icon "thumbtack" class="unpinned"}}</span>
         {{~/if~}}
       {{~/if~}}
@@ -94,12 +109,23 @@ export default class TopicStatus extends Component {
         >{{icon "far-eye-slash"}}</span>
       {{~/if~}}
 
+      {{~#unless this.site.useGlimmerTopicList~}}
+        {{~#each TopicStatusIcons.entries as |entry|~}}
+          {{~#if (get @topic entry.attribute)~}}
+            <span
+              title={{i18n (concat "topic_statuses." entry.titleKey "help")}}
+              class="topic-status"
+            >{{icon entry.iconName}}</span>
+          {{~/if~}}
+        {{~/each~}}
+      {{~/unless~}}
+
       <PluginOutlet
         @name="after-topic-status"
         @outletArgs={{hash topic=@topic}}
       />
       {{~! no whitespace ~}}
-    </span>
+    </this.wrapperElement>
     {{~! no whitespace ~}}
   </template>
 }

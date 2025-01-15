@@ -1,10 +1,10 @@
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
 import { updateCsrfToken } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class LoginMethod extends EmberObject {

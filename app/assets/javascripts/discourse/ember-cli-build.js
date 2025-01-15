@@ -172,10 +172,16 @@ module.exports = function (defaults) {
           },
         },
         externals: [
-          function ({ request }, callback) {
+          function ({ context, request }, callback) {
             if (
+              context.includes("discourse-markdown-it/src") &&
+              request.startsWith("discourse/")
+            ) {
+              // v1 ember apps can't be imported from addons. Workaround via commonjs.
+              // Won't be necessary once we move to a v2 app.
+              callback(null, request, "commonjs");
+            } else if (
               !request.includes("-embroider-implicit") &&
-              // TODO: delete special case for jquery when removing app.import() above
               (request.startsWith("admin/") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))

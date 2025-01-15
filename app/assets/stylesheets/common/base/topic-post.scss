@@ -244,6 +244,15 @@
   }
 }
 
+.cooked-selection-barrier {
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  opacity: 0;
+}
+
 // add staff color
 .moderator {
   .regular > .cooked {

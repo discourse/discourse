@@ -65,7 +65,7 @@ class S3Inventory
                 next if key.exclude?("#{type}/")
 
                 url = File.join(Discourse.store.absolute_base_url, key)
-                connection.put_copy_data("#{url},#{row[CSV_ETAG_INDEX]}\n")
+                connection.put_copy_data("#{CGI.unescape(url)},#{row[CSV_ETAG_INDEX]}\n")
               end
             end
 

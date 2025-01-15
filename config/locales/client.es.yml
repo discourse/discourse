@@ -460,6 +460,13 @@ es:
         confirm: "Ya tienes un borrador en curso. ¿Qué te gustaría hacer con él?"
         yes_value: "Descartar"
         no_value: "Reanudar edición"
+      dropdown:
+        title: "Abre el menú de últimos borradores"
+        untitled: "Borrador sin título"
+        view_all: "ver todo"
+        other_drafts:
+          one: "+%{count} otro borrador"
+          other: "+%{count} otros borradores"
     topic_count_all:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
@@ -520,6 +527,7 @@ es:
       order_by: "Ordenar por"
       date_filter: "Publicado entre"
       in_reply_to: "en respuesta a"
+      filtered_flagged_by: "Denunciado por"
       explain:
         why: "explica por qué este elemento ha acabado en la cola"
         title: "Puntuación revisable"
@@ -631,6 +639,7 @@ es:
         category: "Categoría"
         score_type:
           title: "Motivo"
+          all: "(todos los motivos)"
         orders:
           score: "Puntuación"
           score_asc: "Puntuación (orden inverso)"
@@ -1140,6 +1149,7 @@ es:
     user_fields:
       none: "(selecciona una opción)"
       required: 'Introduce un valor para «%{name}»'
+      required_checkbox: 'El campo «%{name}» es obligatorio'
       same_as_password: "Tu contraseña no debe repetirse en otros campos"
       optional: (opcional)
     user:
@@ -1263,15 +1273,18 @@ es:
         description: "Omitir consejos y medallas de bienvenida"
       reset_seen_user_tips: "Mostrar consejos de usuario de nuevo"
       theme_default_on_all_devices: "Hacer que este sea el tema por defecto en todos mis dispositivos"
-      color_scheme: "Paleta de color"
+      color_scheme_default_on_all_devices: "Establecer la paleta de colores por defecto en todos mis dispositivos"
+      color_scheme: "Paleta de colores"
       color_schemes:
         default_description: "Tema predeterminado"
         disable_dark_scheme: "Igual que el normal"
+        dark_instructions: "Puedes previsualizar la paleta de colores del modo oscuro activando el modo oscuro de tu dispositivo."
         undo: "Restablecer"
         regular: "Habitual"
         dark: "Modo oscuro"
         default_dark_scheme: "(valor predeterminado por el sitio)"
       dark_mode: "Modo oscuro"
+      dark_mode_enable: "Activar la paleta de colores automática del modo oscuro"
       text_size_default_on_all_devices: "Hacer que este sea el tamaño por defecto en todos mis dispositivos"
       allow_private_messages: "Permitir que otros usuarios me envíen mensajes personales"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
@@ -1857,6 +1870,7 @@ es:
             one {# día}
             other {# días} }
             }.
+          edit_link_options: "Edita las opciones del enlace o envíalo por correo electrónico."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
           restrict: "Restringir a"
@@ -1906,6 +1920,7 @@ es:
           other: "Tu contraseña es demasiado corta (el mínimo es de %{count} caracteres)."
         common: "Esta contraseña es demasiado común."
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
+        same_as_name: "Tu contraseña es la misma que tu nombre."
         same_as_email: "Tu contraseña es la misma que tu correo electrónico."
         ok: "Tu contraseña es válida."
         instructions:
@@ -2345,6 +2360,7 @@ es:
     full_name_requirement:
       required_at_signup: "Obligatorio"
       optional_at_signup: "Opcional"
+      hidden_at_signup: "Opcional, oculto al registrarte"
     shortcut_modifier_key:
       shift: "Mayús"
       ctrl: "Ctrl"
@@ -2604,6 +2620,7 @@ es:
         new_reviewable:
           one: "%{count} nuevo revisable"
           other: "%{count} nuevos revisables"
+      paused: "Notificaciones en pausa"
       title: "notificaciones por menciones a tu @nombre, respuestas a tus publicaciones y temas, mensajes, etc"
       none: "No se pudieron cargar las notificaciones en este momento."
       empty: "No se encontraron notificaciones."
@@ -2690,6 +2707,8 @@ es:
         quoted: "citado"
         edited: "editado"
         liked: "nuevo me gusta"
+        private_message: "nuevo mensaje personal"
+        invited_to_private_message: "invitado a mensaje personal"
         invitee_accepted: "invitación aceptada"
         posted: "nueva publicación"
         watching_category_or_tag: "nueva publicación"
@@ -3043,6 +3062,7 @@ es:
         other: "%{count} publicaciones en el tema"
       create: "Nuevo tema"
       create_disabled_category: "No tienes permiso para crear temas en esta categoría."
+      create_disabled_tag: "No puedes crear temas con esta etiqueta"
       create_long: "Crear un tema nuevo"
       open_draft: "Abrir borrador"
       private_message: "Comenzar un mensaje"
@@ -3311,6 +3331,7 @@ es:
         help: "Abrir una versión imprimible de este tema"
       flag_topic:
         title: "Denunciar"
+        help: "denuncia en privado este tema para llamar la atención o envía un mensaje personal sobre él"
         success_message: "Has denunciado este tema correctamente."
       make_public:
         title: "Convertir en tema público"
@@ -3475,7 +3496,8 @@ es:
           other: "Has seleccionado <b>%{count}</b> publicaciones."
       deleted_by_author_simple: "(tema eliminado por su autor/a)"
     post_list:
-      aria_post_number: "%{title}, publicación nº %{postNumber}"
+      empty: "No hay publicaciones"
+      aria_post_number: "%{title}, publicación n.º %{postNumber}"
     post:
       confirm_delete: "¿Seguro que quieres eliminar esta publicación?"
       quote_reply: "Citar"
@@ -3547,6 +3569,7 @@ es:
         other: "Viendo %{count} respuestas"
       in_reply_to: "Cargar publicación principal"
       view_all_posts: "Ver todas las publicaciones"
+      badge_granted_tooltip: "¡%{username} ha ganado la insignia '%{badge_name}' por esta publicación!"
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
@@ -3588,6 +3611,7 @@ es:
         edit_action: "Editar"
         edit_anonymous: "Lo sentimos, necesitas iniciar sesión para editar esta publicación."
         flag_action: "Denunciar"
+        flag: "denuncia en privado esta publicación para llamar la atención o envía un mensaje personal sobre ella"
         delete_action: "Eliminar publicación"
         delete: "eliminar este publicación"
         undelete_action: "Recuperar publicación eliminada"
@@ -4049,6 +4073,7 @@ es:
       with_topics: "%{filter} temas"
       with_category: "%{filter} Foro de %{category}"
       filter:
+        title: "Resultados filtrados para %{filter}"
         button:
           label: "Filtrar"
       latest:
@@ -4247,6 +4272,7 @@ es:
         print: "%{shortcut} Imprimir tema"
         defer: "%{shortcut} Marcar tema como no leído"
         topic_admin_actions: "%{shortcut} Abrir acciones de administrador del tema"
+        archive_private_message: "%{shortcut} Activar el archivo de mensajes personales"
       search_menu:
         title: "Menú de búsqueda"
         prev_next: "%{shortcut} Mover selección arriba y abajo"
@@ -4408,7 +4434,10 @@ es:
         everyone_can_use: "Todos pueden utilizar las etiquetas"
         usable_only_by_groups: "Las etiquetas son visibles para todo el mundo, pero solo los siguientes grupos las pueden usar"
         visible_only_to_groups: "Las etiquetas solo son visibles para los siguientes grupos"
-        cannot_save: "No se puede guardar el grupo de etiquetas. Asegúrese de que haya al menos una etiqueta presente, que el nombre del grupo de etiquetas no esté vacío y tenga menos de 100 caracteres, y que esté seleccionado un grupo para el permiso de etiquetas."
+        cannot_save:
+          empty_name: "No se puede guardar el grupo de etiquetas. Asegúrate de que el nombre del grupo de etiquetas no está vacío."
+          no_tags: "No se puede guardar el grupo de etiquetas. Asegúrate de que hay al menos una etiqueta seleccionada."
+          no_groups: "No se puede guardar el grupo de etiquetas. Asegúrate de que hay al menos un grupo seleccionado para el permiso."
         tags_placeholder: "Buscar o crear etiquetas"
         parent_tag_placeholder: "Opcional"
         select_groups_placeholder: "Seleccionar grupos…"
@@ -4619,11 +4648,9 @@ es:
             users:
               content: "Usuarios"
               title: "Lista de todos los usuarios"
-            my_posts:
-              content: "Mis publicaciones"
-              content_drafts: "Mis borradores"
-              title: "Mi actividad de tema reciente"
-              title_drafts: "Mis borradores no publicados"
+            my_drafts:
+              content: "Mis borradores"
+              title: "Mis borradores no publicados"
               draft_count:
                 one: "%{count} borrador"
                 other: "%{count} borradores"
@@ -4763,39 +4790,69 @@ es:
           never: "nunca"
       reports:
         title: "Lista de informes disponibles"
-        meta_doc: "Explora nuestra <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentación</a> para obtener una visión detallada de los informes."
+        meta_doc: "Los informes son una poderosa herramienta para ayudarte a comprender lo que ocurre en tu sitio. Pueden ayudarte a identificar tendencias, detectar problemas y tomar decisiones basadas en datos."
         sidebar_title: "Informes"
+        back: "Volver a todos los informes"
         sidebar_link:
           all: "Todos los informes"
       config:
         developer:
           title: "Desarrollador"
+          header_description: "Ajustes del desarrollador para controlar los límites de velocidad, multiplicadores y cálculos, modo seguro y otras funciones avanzadas"
         experimental:
           title: "Experimental"
+          header_description: "Ajustes del desarrollador para controlar los límites de velocidad, multiplicadores y cálculos, modo seguro y otras funciones avanzadas"
+        font_style:
+          title: "Estilo de letra"
+          header_description: "Personaliza los estilos de fuente utilizados por tus temas"
         files:
           title: "Archivos"
+          header_description: "Ajustes que controlan los límites de tamaño y tipo de archivo, los tamaños y fuentes de los avatares, el almacenamiento de archivos, la calidad y compresión de las imágenes, etc."
         legal:
           title: "Legal"
+          header_description: "Configura los ajustes legales, como las condiciones del servicio, la política de privacidad, los datos de contacto y las consideraciones específicas de la UE."
+        login_and_authentication:
+          title: "Inicio de sesión y autenticación"
+          header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
         logo:
           title: "Logotipo del sitio"
+          header_description: "Personaliza las variaciones del logotipo de tu sitio"
         navigation:
           title: "Navegación"
+          header_description: "Configura los enlaces de navegación y los elementos de menú de tu sitio. Esto incluye la ubicación y el comportamiento del menú de navegación principal, los enlaces rápidos de la parte superior de la página de inicio, así como la barra lateral de administración."
         notifications:
           title: "Notificaciones"
+          header_description: "Configura cómo se gestionan y entregan las notificaciones a los usuarios, incluyendo preferencias de correo electrónico, notificaciones push, límites de menciones y consolidación de notificaciones"
         onebox:
           title: "Onebox"
+          header_description: "Configura cómo se generan y se muestran las previsualizaciones de onebox para tu sitio"
         other:
           title: "Otros"
+          header_description: "Ajustes que no encajan en ninguna otra categoría"
+        rate_limits:
+          title: "Límites de velocidad"
+          header_description: "Configura la frecuencia con la que los usuarios pueden realizar determinadas acciones, como crear temas, enviar mensajes y publicar respuestas"
         search:
           title: "Buscar"
+          header_description: "Configura los ajustes de búsqueda, incluidos el registro y la tokenización para los idiomas chino y japonés"
         security:
           title: "Seguridad"
+          header_description: "Configura las opciones de seguridad, incluida la autenticación de dos factores, los privilegios de moderador y las políticas de seguridad de contenidos."
         spam:
           title: "Spam"
+          header_description: "Configura cómo analiza el sistema el comportamiento de registro y publicación de los usuarios para identificar y bloquear rápidamente el spam"
+        trust_levels:
+          title: "Niveles de confianza"
+          header_description: "La configuración del nivel de confianza te permite ajustar los requisitos y las notificaciones del sistema de progresión de tu comunidad, que asciende automáticamente a los usuarios a niveles de confianza más altos a medida que demuestran un compromiso constante y positivo con tu foro"
         user_api:
           title: "API de usuario"
+          header_description: "Configura qué grupos de usuarios pueden acceder a la API, así como los ámbitos permitidos"
+        group_permissions:
+          title: "Permisos de grupo"
+          header_description: "Aquí se gestionan todos los permisos de aplicaciones basados en grupos, que controlan el acceso a diversas funciones dentro de Discourse"
       new_features:
-        title: "Novedades?"
+        title: "Novedades"
+        check_for_updates: "Buscar actualizaciones"
       dashboard:
         title: "Panel de control"
         last_updated: "Última actualización del panel de control:"
@@ -4813,7 +4870,7 @@ es:
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         dismiss_notice: "Descartar"
         new_features:
-          title: "Novedades?"
+          title: "Novedades"
           subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
           previous_announcements: "Puedes ver anuncios anteriores de nuevas funciones en <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Más información..."
@@ -4823,6 +4880,9 @@ es:
           experiment_toggled_too_fast: "Has activado la característica experimental demasiado rápido. Espera unos segundos antes de volver a intentarlo."
           experiment_tooltip:
             title_disabled: "Prueba nuestra característica experimental"
+            title_enabled: "Desactivar la característica experimental"
+            content_disabled: "¡Prueba nuestra nueva característica en desarrollo! Aún está en fase experimental, por lo que podríamos eliminarla en cualquier momento. Puedes excluirte cuando quieras.<br/><br/>Si cambias esto, se activará la característica para todos los usuarios."
+            content_enabled: "Si cambias esto, se desactivará la característica para todos los usuarios."
         last_checked: "Ultima comprobación"
         refresh_problems: "Volver a cargar"
         no_problems: "No se ha encontrado ningún problema."
@@ -4864,6 +4924,17 @@ es:
         custom_date_range: Rango de fechas personalizado
         reports:
           trend_title: "%{percent} de cambio. Actualmente %{current}, era %{prev} en el período previo."
+          percent_change_tooltip: "%{percent} de cambio."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "Fue %{count} hace dos días."
+              other: "Fue %{count} hace dos días."
+            two_weeks_ago:
+              one: "Fue %{count} hace dos semanas."
+              other: "Fue %{count} hace dos semanas."
+            thirty_days_ago:
+              one: "Fue %{count} en el periodo de 30 días anterior."
+              other: "Fue %{count} en el periodo de 30 días anterior."
           today: "Hoy"
           yesterday: "Ayer"
           last_7_days: "Últimos 7"
@@ -4982,6 +5053,20 @@ es:
         add_owners: Añadir propietarios
         none_selected: "Selecciona un grupo para empezar"
         no_custom_groups: "Crear un nuevo grupo personalizado"
+      api_keys:
+        title: "Claves API"
+        description: "La función de claves API te permite integrar Discourse de forma segura con sistemas externos y automatizar acciones. Los administradores pueden crear claves con ámbitos específicos para controlar el acceso a recursos y datos sensibles. Los ámbitos limitan la funcionalidad, garantizando una mayor seguridad."
+        add: "Añadir clave API"
+        edit: "Editar"
+        save: "Guardar"
+        cancel: "Cancelar"
+        continue: "Continuar"
+        back: "Volver a Claves API"
+        revoke: "Revocar"
+        undo_revoke: "Deshacer la revocación"
+        revoked: "Revocada"
+        delete: Eliminar permanentemente
+        no_api_keys: "Aún no tienes ninguna clave API."
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."
@@ -4989,12 +5074,12 @@ es:
         title: "API"
         key: "Clave"
         keys: "Claves"
-        created: Creado
+        created: Creado por
         updated: Actualizado
         last_used: Usada por última vez
-        never_used: (nunca)
+        never_used: Nunca
         generate: "Generar clave de API"
-        undo_revoke: "Deshacer revocación"
+        undo_revoke: "Deshacer la revocación"
         revoke: "Revocar"
         all_users: "Todos los usuarios"
         active_keys: "Claves de API activas"
@@ -5006,7 +5091,7 @@ es:
         user_mode: Nivel de usuario
         scope_mode: Ámbito
         impersonate_all_users: Suplantar cualquier usuario
-        single_user: "Un usuario"
+        single_user: "Usuario único"
         user_placeholder: Introducir nombre de usuario
         description_placeholder: '¿Para qué se usará esta clave?'
         save: Guardar
@@ -5238,39 +5323,54 @@ es:
         sidebar_link:
           backups: "Copias de seguridad"
           whats_new:
-            title: "Novedades?"
+            title: "Novedades"
             keywords: "registro de cambios|característica|lanzamiento"
       community:
         title: "Comunidad"
         sidebar_link:
           about_your_site: "Acerca de tu sitio"
           badges: "Medallas"
+          login_and_authentication: "Inicio de sesión y autenticación"
           notifications: "Notificaciones"
           permalinks: "Enlaces permanentes"
+          trust_levels: "Niveles de confianza"
+          group_permissions: "Permisos de grupo"
           users: "Usuarios"
           groups: "Grupos"
+          user_fields: "Campos de usuario"
+          watched_words: "Palabras vigiladas"
           legal: "Legal"
           moderation_flags:
             title: "Moderación"
+            keywords: "denunciar|revisar"
       appearance:
         title: "Aspecto"
         sidebar_link:
+          font_style: "Estilo de letra"
           site_logo: "Logotipo del sitio"
+          color_schemes: "Paletas de colores"
           emoji: "Emoji"
           navigation: "Navegación"
           themes: "Temas"
           components:
             title: "Componentes"
             keywords: "tema|extensión"
+          site_texts: "Textos del sitio"
       email_settings:
         title: "Ajustes del correo electrónico"
         sidebar_link:
           appearance: "Aspecto"
+          server_setup:
+            title: "Configuración y registros del servidor"
+            keywords: "correo electrónico|smtp|mailgun|sendgrid|enviado|omitido|recibido|rechazado|registros de correo electrónico|previsualizar resumen"
       security:
         title: "Seguridad"
         sidebar_link:
           security: "Ajustes de seguridad"
           spam: "Ajustes de correo no deseado"
+          staff_action_logs:
+            title: "Registros y cribado"
+            keywords: "registros de errores|acciones del personal|correos electrónicos cribados|ips cribadas|urls cribadas|registros de búsqueda"
       section_landing_pages:
         account:
           title: "Cuenta"
@@ -5278,7 +5378,7 @@ es:
             title: "Copias de seguridad"
             description: "Haz una copia de seguridad de los datos de tu sitio web"
           whats_new:
-            title: "Novedades?"
+            title: "Novedades"
             description: "Descubre nuevas versiones y mejoras de Discourse"
       config_areas:
         about:
@@ -5311,6 +5411,8 @@ es:
           site_contact_name_help: |
             Un nombre de usuario de personal desde el que enviar todos los mensajes automatizados. Si se deja en blanco, se utilizará la cuenta predeterminada del Sistema.
           site_contact_group: "Grupo de contacto del sitio"
+          site_contact_group_help: |
+            El grupo al que se invita a todos los mensajes personales enviados automáticamente.
           your_organization: "Tu organización"
           your_organization_description: "Utilizaremos esta información en los Términos del servicio y en el Aviso de privacidad para mostrar quién opera el sitio y bajo qué jurisdicción."
           company_name: "Nombre"
@@ -5390,12 +5492,15 @@ es:
             new_theme: "Nuevo tema"
             user_selectable: "Seleccionable por el usuario"
         user_fields:
+          field: "Campo"
           type: "Tipo"
           more_options:
             title: "Más opciones"
-            move_up: "Sube"
-            move_down: "Baja"
+            move_up: "Subir"
+            move_down: "Bajar"
           delete: "Eliminar"
+          delete_successful: "Campo de usuario eliminado."
+          save_successful: "Campo de usuario guardado."
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"
@@ -5421,14 +5526,18 @@ es:
         sidebar_link:
           api_keys:
             title: "Claves API"
+            keywords: "token"
+          webhooks: "Webhooks"
           developer: "Desarrollador"
           embedding: "Incrustado"
+          rate_limits: "Límites de velocidad"
           user_api: "API de usuario"
           onebox: "Onebox"
           files: "Archivos"
           other_options: "Otros"
           search: "Buscar"
           experimental: "Experimental"
+          all_site_settings: "Todos los ajustes del sitio"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menú desplegable de encabezado"
@@ -5566,6 +5675,8 @@ es:
           browse_themes: "Ver temas de la comunidad"
           customize_desc: "Personalizar:"
           title: "Temas"
+          description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end."
+          components_description: "Los componentes son pequeñas personalizaciones que pueden añadirse a los temas para cambiar elementos específicos del estilo del diseño de tu foro."
           create: "Crear"
           create_type: "Tipo"
           create_name: "Nombre"
@@ -5591,6 +5702,7 @@ es:
           hide_unused_fields: "Ocultar campos sin uso"
           is_default: "El tema está activado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
+          color_scheme_user_selectable: "Los usuarios pueden seleccionar la paleta de colores"
           auto_update: "Actualizar automáticamente junto a Discourse"
           color_scheme: "Paleta de color"
           edit_color_scheme: "Editar paleta de colores"
@@ -5775,10 +5887,11 @@ es:
             title: "Seleccionar paleta base de color"
             description: "Paleta base:"
           title: "Colores"
-          edit: "Editar paletas de color"
-          long_title: "Paletas de color"
+          edit: "Editar paletas de colores"
+          long_title: "Paletas de colores"
+          description: "Las paletas de colores definen los colores básicos utilizados en la interfaz de tu sitio, mientras que los temas pueden proporcionar estilos, diseños y componentes adicionales: ambos pueden trabajar juntos para crear el aspecto único de tu sitio, y ambos pueden estar disponibles para que los usuarios seleccionen sus preferencias."
           about: "Modifica los colores utilizados en tus temas. Crea una nueva paleta de color para empezar."
-          new_name: "Nueva paleta de color"
+          new_name: "Nueva paleta de colores"
           copy_name_prefix: "Copia de"
           delete_confirm: "¿Eliminar esta paleta de color?"
           undo: "Deshacer"
@@ -6122,6 +6235,7 @@ es:
           title: "Registros de errores"
       watched_words:
         title: "Palabras vigiladas"
+        description: "Las palabras vigiladas son herramientas de moderación que pueden realizar varias acciones diferentes, como bloquear, censurar, enlazar o denunciar publicaciones que contengan determinadas palabras"
         search: "buscar"
         clear_filter: "Quitar filtros"
         show_words:
@@ -6267,6 +6381,7 @@ es:
         invalid: "Lo sentimos, no puedes suplantar a ese usuario."
       users:
         title: "Usuarios"
+        description: "Ver y gestionar usuarios."
         create: "Añadir usuario administrador"
         last_emailed: "Último correo enviado"
         not_found: "Lo sentimos, ese usuario no existe en nuestro sistema."
@@ -6275,11 +6390,34 @@ es:
         status: "Estado"
         show_emails: "Mostrar correos electrónicos"
         hide_emails: "Ocultar correos electrónicos"
+        silence_reason: "Motivo para silenciar"
         bulk_actions:
+          title: "Acciones en bloque"
+          admin_cant_be_deleted: "Este usuario no se puede eliminar porque es administrador"
+          too_many_or_old_posts: "Este usuario no se puede eliminar porque tiene demasiadas publicaciones o una publicación muy antigua."
+          too_many_selected_users:
+            one: "Has alcanzado el límite de %{count} usuario para la eliminación en bloque"
+            other: "Has alcanzado el límite de %{count} usuarios para la eliminación en bloque"
           delete:
+            label: "Eliminar usuarios…"
             confirmation_modal:
+              prompt_text:
+                one: 'Estás a punto de eliminar %{count} usuario de forma permanente. Escribe «%{confirmation_phrase}» a continuación para continuar:'
+                other: 'Estás a punto de eliminar %{count} usuarios de forma permanente. Escribe «%{confirmation_phrase}» a continuación para continuar:'
+              confirmation_phrase:
+                one: "eliminar %{count} usuario"
+                other: "eliminar %{count} usuarios"
               close: "Cerrar"
               confirm: "Eliminar"
+              title:
+                one: "Eliminar %{count} usuario"
+                other: "Eliminar %{count} usuarios"
+              bulk_delete_starting: "Iniciando la eliminación en bloque…"
+              block_ip_and_email: "Bloquear las direcciones IP y los correos electrónicos de todos los usuarios seleccionados"
+              user_delete_succeeded: "[%{position}/%{total}] Se eliminó con éxito a @%{username}"
+              user_delete_failed: "[%{position}/%{total}] No se ha podido eliminar a @%{username} - %{error}"
+              bulk_delete_finished: "Operación de eliminación en bloque completada."
+              failed_to_delete_users: "No se han podido eliminar los siguientes usuarios:"
         nav:
           new: "Nuevos"
           active: "Activos"
@@ -6559,6 +6697,12 @@ es:
           confirm_delete: "¿Seguro que quieres eliminar este registro de DiscourseConnect?"
       user_fields:
         title: "Campos de usuario"
+        help: "Crea campos de usuario personalizados para recopilar detalles adicionales sobre los miembros de tu comunidad. Puedes elegir qué información se requiere durante el registro, qué se muestra en los perfiles y qué pueden actualizar los usuarios."
+        no_user_fields: "Aún no tienes ningún campo de usuario personalizado."
+        add: "Añadir campo de usuario"
+        back: "Volver a los campos de usuario"
+        edit_header: "Editar campo de usuario"
+        new_header: "Añadir campo de usuario"
         untitled: "Sin título"
         name: "Nombre del campo"
         type: "Tipo de campo"
@@ -6587,23 +6731,30 @@ es:
           confirmation: "Esto pedirá a los usuarios existentes que rellenen este campo y no les permitirá hacer nada más en tu sitio hasta que el campo esté rellenado. ¿Continuar?"
         editable:
           title: "Editable después del registro"
+          enabled: "Editable"
+          disabled: "No editable"
         show_on_profile:
           title: "Se muestra públicamente en el perfil"
+          enabled: "Se muestra en el perfil"
+          disabled: "No se muestra en el perfil"
         show_on_user_card:
           title: "Mostrar en las tarjetas de usuario"
+          enabled: "Se muestra en la tarjeta de usuario"
+          disabled: "No se muestra en la tarjeta de usuario"
         searchable:
           title: "Se puede buscar"
           enabled: "Se puede buscar"
+          disabled: "No se puede buscar"
         field_types:
           text: "Texto"
           confirm: "Confirmación"
           dropdown: "Desplegable"
           multiselect: "Selección múltiple"
       site_text:
-        description: "Puedes personalizar cualquier texto de tu foro. Empieza buscando:"
+        description: "Puedes personalizar cualquier texto de tu foro."
         search: "Busca el texto que te gustaría editar"
-        title: "Texto"
-        edit: "editar"
+        title: "Textos del sitio"
+        edit: "Editar"
         revert: "Revertir los cambios"
         revert_confirm: "¿Seguro que quieres revertir los cambios?"
         go_back: "Volver a la búsqueda"
@@ -6611,6 +6762,7 @@ es:
         show_overriden: "Mostrar solo los sobrescritos"
         show_outdated: "Mostrar solo obsoletos/no válidos"
         show_untranslated: "Mostrar solo sin traducir"
+        only_show_selected_locale: "Mostrar resultados solo en el idioma seleccionado"
         locale: "Idioma:"
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu búsqueda."
         no_results: "No se han encontrado textos de sitios coincidentes"
@@ -6629,6 +6781,7 @@ es:
         save: "guardar"
         cancel: "cancelar"
         unmask: "desenmascarar entrada"
+        not_found: "No se han encontrado los ajustes"
       site_settings:
         emoji_list:
           invalid_input: "Las listas de emojis solo pueden contener nombres válidos de emojis. Ej.: abrazos"
@@ -6754,10 +6907,13 @@ es:
         no_user_badges: "%{name} no ha recibido ninguna medalla."
         no_badges: No hay medallas que se puedan conceder.
         none_selected: "Selecciona una medalla para empezar"
+        usage_heading: Uso
         allow_title: Permitir que se use la medalla como título
         multiple_grant: Se puede conceder varias veces
         visibility_heading: Visibilidad
         listable: Mostrar medalla en la página pública de medallas
+        show_in_post_header: Mostrar medalla en la publicación para la que fue otorgada
+        show_in_post_header_disabled: Requiere que estén activadas las opciones «Mostrar medalla en la página pública de medallas» y «Mostrar la publicación por la cual se concedió la medalla en la página de medallas».
         enabled: activado
         disabled: desactivado
         icon: Icono
@@ -6819,8 +6975,12 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
+        description: "Añade nuevos emoji que estarán disponibles para todos. Selecciona varios archivos para crear emojis utilizando sus nombres de archivo. El grupo seleccionado se utilizará para todos los archivos que se añadan al mismo tiempo."
+        no_emoji: "Aún no tienes ningún emoji personalizado."
         add: "Añadir emoji"
         delete: "Eliminar"
+        back: "Volver a emoji"
+        choose_files: "Seleccionar archivos"
         uploading: "Subiendo…"
         name: "Nombre"
         group: "Grupo"
@@ -6840,8 +7000,17 @@ es:
 
           <p>Sustituye <b>DISCOURSE_USERNAME</b> por el nombre de usuario de Discourse del autor que debe crear el tema. Discourse buscará automáticamente al usuario por el atributo <code>content</code> de las etiquetas <code>&lt;meta&gt;</code> con el atributo <code>name</code> establecido en <code>discourse-username</code> o <code>author</code>. El parámetro <code>discourseUserName</code> ha quedado obsoleto y será eliminado en Discourse 3.2.</p> <p>
         title: "Incrustado"
+        description: "Discourse tiene la capacidad de incrustar los comentarios de un tema en un sitio remoto utilizando una API Javascript que crea un IFRAME"
+        host: "Anfitriones permitidos"
+        allowed_paths: "Lista de rutas permitidas"
         edit: "Editar"
+        category: "Publicar en categoría"
         tags: "Etiquetas del tema"
+        post_author: "Autor de la publicación"
+        post_author_with_default: "Autor de la publicación (el valor predeterminado es %{author})"
+        add_host: "Añadir anfitrión"
+        posts_and_topics: "Configuración de publicaciones y temas"
+        crawlers: "Configuración de rastreadores"
         crawlers_description: "Cuando Discourse crea temas para tus publicaciones, si no hay un feed RSS/ATOM presente intentará analizar el contenido de tu HTML. A veces puede ser difícil extraer tu contenido, por lo que damos la posibilidad de especificar las reglas CSS para hacer la extracción más fácil."
         embed_by_username: "Usuario para la creación de temas"
         embed_post_limit: "Número máximo de publicaciones que se pueden insertar"
@@ -6852,11 +7021,19 @@ es:
         blocked_embed_selectors: "Selector CSS para elementos que deben ser eliminados de los incrustados"
         allowed_embed_classnames: "Clases CSS permitidas"
         save: "Guardar"
+        posts_and_topics_settings_saved: "Se han guardado los ajustes de publicaciones y temas"
+        crawler_settings_saved: "Se han guardado los ajustes del rastreador"
+        back: "Volver a la incrustación"
+        configuration_snippet: "Fragmento de configuración"
         host_form:
+          add_header: "Añadir anfitrión"
+          edit_header: "Editar anfitrión"
           save: "Guardar"
         nav:
+          hosts: "Anfitriones"
           settings: "Ajustes"
-          crawlers: "Crawlers"
+          posts_and_topics: "Publicaciones y temas"
+          crawlers: "Rastreadores"
       permalink:
         title: "Enlaces permanentes"
         description: "Redirecciones para URL que no existan ya en el foro."
@@ -6876,6 +7053,7 @@ es:
         destination: "Destino"
         copy_to_clipboard: "Copiar enlace permanente al portapapeles"
         delete_confirm: '¿Seguro que quieres eliminar este enlace permanente?'
+        no_permalinks: "Aún no tienes ningún enlace permanente."
         add: "Añadir permalink"
         back: "Volver a Permalinks"
         more_options: "Más opciones"
@@ -6893,7 +7071,7 @@ es:
           save: "Guardar"
       reseed:
         action:
-          label: "Reemplazar texto..."
+          label: "Reemplazar texto …"
           title: "Reemplazar texto de las categorías y temas con traducciones"
         modal:
           title: "Reemplazar texto"
@@ -6924,6 +7102,7 @@ es:
           moderator: "Moderador"
           regular: "Usuario habitual"
       previews:
+        topic_title: "¿Qué libros estás leyendo?"
         share_button: "Compartir"
         reply_button: "Responder"
         topic_preview: "Vista previa de tema"
@@ -6937,7 +7116,28 @@ es:
           latest: "Recientes"
           hot: "Caliente"
           categories: "Categorías"
+        topic_titles:
+          what_books: "¿Qué libros estás leyendo?"
+          what_movies: "¿Qué películas has visto recientemente?"
+          random_fact: "Dato aleatorio del día"
+          tv_show: "Recomienda un programa de TV"
+          what_hobbies: "¿Cuáles son tus aficiones?"
+          what_music: "¿Qué estás escuchando ahora mismo?"
+          funniest_thing: "Lo más gracioso que has visto hoy"
+          share_art: "¡Comparte tu arte!"
+        topic_ops:
+          what_books: |
+            A todos nos gusta leer, utilicemos este tema para compartir nuestras
+            lecturas actuales o recientes. Me gusta la fantasía y he estado releyendo
+            El Señor de los Anillos por centésima vez.
+            ¿Y tú?
+        category_descriptions:
+          icebreakers: "Conoce a tus compañeros de comunidad con preguntas divertidas."
+          news: "Comenta las últimas noticias y eventos."
+          site_feedback: "Comparte tus opiniones sobre la comunidad y sugiere mejoras."
         category_names:
+          icebreakers: "Rompehielos"
+          news: "Noticias"
           site_feedback: "Sugerencias sobre el sitio"
         table_headers:
           topic: "Tema"

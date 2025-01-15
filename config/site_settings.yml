@@ -409,14 +409,20 @@ basic:
     hidden: true
   base_font:
     default: "arial"
-    enum: "BaseFontSetting"
+    choices: "BaseFontSetting.values"
     refresh: true
+    type: list
+    list_type: font
     area: "fonts"
+    allow_any: false
   heading_font:
     default: "arial"
-    enum: "BaseFontSetting"
+    choices: "BaseFontSetting.values"
     refresh: true
+    type: list
+    list_type: font
     area: "fonts"
+    allow_any: false
   enable_sitemap:
     default: true
   sitemap_page_size:
@@ -688,7 +694,7 @@ users:
       cs: "[ěščřžýáíéóůúďťňĚŠČŘŽÝÁÍÉÓŮÚĎŤŇ]"
       de: "[äöüßÄÖÜẞ]"
       fi: "[åäöÅÄÖ]"
-      ja: '[\p{Han}\p{Katakana}\p{Hiragana}]'
+      ja: '[\p{Han}\p{Katakana}\p{Hiragana}ー]'
       ko: '\p{Hangul}'
       zh_CN: '\p{Han}'
       zh_TW: '\p{Han}'
@@ -959,6 +965,10 @@ posting:
   max_emojis_in_title:
     default: 1
     area: "emojis"
+  default_emoji_reactions:
+    type: emoji_list
+    default: +1|heart|tada
+    client: true
   allow_uncategorized_topics:
     client: true
     default: false
@@ -2276,6 +2286,10 @@ onebox:
   onebox_user_agent:
     default: ""
     hidden: true
+  onebox_locale:
+    default: ""
+    type: enum
+    enum: "OneboxLocaleSiteSetting"
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
@@ -3476,7 +3490,7 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: disabled
+    default: auto
   glimmer_post_menu_mode:
     client: true
     type: enum

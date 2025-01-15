@@ -1,21 +1,21 @@
 import { visit } from "@ember/test-helpers";
 import { compile } from "handlebars";
 import { test } from "qunit";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import { addRawTemplate, removeRawTemplate } from "discourse/lib/raw-templates";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import {
-  addRawTemplate,
-  removeRawTemplate,
-} from "discourse-common/lib/raw-templates";
 
 const CONNECTOR =
   "javascripts/raw-test/connectors/topic-list-before-status/lala";
 
 acceptance("Raw Plugin Outlet", function (needs) {
   needs.hooks.beforeEach(function () {
-    addRawTemplate(
-      CONNECTOR,
-      compile(`<span class='topic-lala'>{{context.topic.id}}</span>`)
-    );
+    withSilencedDeprecations("discourse.hbr-topic-list-overrides", () => {
+      addRawTemplate(
+        CONNECTOR,
+        compile(`<span class='topic-lala'>{{context.topic.id}}</span>`)
+      );
+    });
   });
 
   needs.hooks.afterEach(function () {

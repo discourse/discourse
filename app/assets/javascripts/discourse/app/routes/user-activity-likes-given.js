@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse/lib/icon-library";
 import UserAction from "discourse/models/user-action";
 import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityLikesGiven extends UserActivityStreamRoute {

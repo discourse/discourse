@@ -250,6 +250,8 @@ es:
       bookmark:
         instructions: |-
           Si quieres aprender más, selecciona debajo el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> y <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **guarda en marcadores este mensaje personal**. Si lo haces, ¡puede haber un :gift: en tu futuro!
+        reply: |-
+          ¡Excelente! Ahora puedes volver fácilmente a nuestra conversación en cualquier momento, directamente desde [la pestaña de favoritos de tu perfil](%{bookmark_url}). Solo tienes que seleccionar tu foto de perfil en la parte superior derecha &#8599;
         not_found: |-
           Oh oh, no veo ningún marcador en este tema. ¿Encontraste el botón para guardar en marcadores que se encuentra debajo de cada mensaje? Usa el botón mostrar más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que aparezcan acciones adicionales si necesitas.
       emoji:
@@ -282,6 +284,14 @@ es:
 
           (¡Sí! mi nombre de usuario es _disco_, como el baile de los años 70. [¡Me encanta la vida nocturna!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          Nos gusta que nuestros debates sean amables, y necesitamos tu ayuda para [mantener las cosas civilizadas](%{guidelines_url}). Si ves un problema, marca la bandera para informar al autor o a [nuestro colaborador](%{about_url}) sobre él. Hay muchas razones por las que puede querer denunciar una publicación, que va desde una inocua sugerencia de división de temas hasta una clara violación de los estándares comunitarios. Si seleccionas **Algo más**, iniciarás una discusión a través de mensajes personales con los moderadores donde podrás hacer más preguntas.
+
+          > :imp: Escribí algo desagradable aquí
+
+          ¡Sigue adelante y **denuncia esta publicación** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> y selecciona **Es inapropiada** como la razón!
+        reply: |-
+          Se notificará a [nuestro personal](%{group_url}) por privado sobre tu denuncia. Si un número suficiente de miembros denuncia una publicación, esta se ocultará automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado la denuncia por ahora)
         not_found: |-
           Oh no, mi publicación desagradable todavía no ha sido denunciada. :worried: ¿Puedes denunciarla como inapropiada usando el botón de **denunciar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que primero debes presionar el botón ver más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que se muestren otras opciones para cada mensaje.
       search:
@@ -375,6 +385,12 @@ es:
         reply: |-
           ¡Excelente! Recuerda que esto funciona para categorías _y_ etiquetas, si las etiquetas están disponibles.
       change_topic_notification_level:
+        instructions: |-
+          Cada tema tiene un nivel de notificación. Comienza en «normal», lo que significa que normalmente solo se notificará cuando alguien te está hablando directamente.
+
+          De forma predeterminada, el nivel de notificación de un mensaje personal se establece en el nivel más alto de «vigilancia», lo que significa que se te notificará cada respuesta nueva. Pero puedes sobrescribir el nivel de notificación de _cualquier_ tema a «vigilar», «seguir» o «silenciar».
+
+          Intentemos cambiar el nivel de notificación de este tema. Al final del tema, encontrarás un botón que muestra que estás **vigilando** este tema. ¿Puedes cambiar el nivel de notificación a **en seguimiento**?
         not_found: |-
           ¡Parece que aún estás vigilando :eyes: este tema! Si tienes problemas para encontrar el botón del nivel de notificación, este se encuentra en la parte inferior del tema.
         reply: |-

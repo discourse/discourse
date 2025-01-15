@@ -11,7 +11,7 @@
           {{#if this.currentUser.admin}}
             <NavItem
               @route="adminSiteSettings"
-              @label="admin.site_settings.title"
+              @label="admin.site_settings.nav_title"
             />
           {{/if}}
           <NavItem @route="adminUsers" @label="admin.users.title" />
@@ -31,7 +31,8 @@
             @label="admin.customize.title"
           />
           {{#if this.currentUser.admin}}
-            <NavItem @route="adminApi" @label="admin.api.title" />
+            <NavItem @route="adminApiKeys" @label="admin.api_keys.title" />
+            <NavItem @route="adminWebHooks" @label="admin.web_hooks.title" />
             {{#if this.siteSettings.enable_backups}}
               <NavItem @route="admin.backups" @label="admin.backups.title" />
             {{/if}}

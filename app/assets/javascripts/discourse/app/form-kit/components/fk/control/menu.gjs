@@ -7,7 +7,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import FKControlMenuContainer from "discourse/form-kit/components/fk/control/menu/container";
 import FKControlMenuDivider from "discourse/form-kit/components/fk/control/menu/divider";
 import FKControlMenuItem from "discourse/form-kit/components/fk/control/menu/item";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 export default class FKControlMenu extends Component {
   static controlType = "menu";
@@ -22,7 +22,8 @@ export default class FKControlMenu extends Component {
   <template>
     <DMenu
       @onRegisterApi={{this.registerMenuApi}}
-      @triggerClass="form-kit__control-menu"
+      @triggerClass="form-kit__control-menu-trigger"
+      @contentClass="form-kit__control-menu-content"
       @disabled={{@field.disabled}}
       @placement="bottom-start"
       @offset={{5}}

@@ -89,6 +89,24 @@ RSpec.describe TopicQuery do
     end
   end
 
+  describe ".validate?" do
+    describe "per_page" do
+      it "only allows integers 1-100" do
+        # Invalid values
+        expect(TopicQuery.validate?(:per_page, -1)).to eq(false)
+        expect(TopicQuery.validate?(:per_page, 0)).to eq(false)
+        expect(TopicQuery.validate?(:per_page, 101)).to eq(false)
+        expect(TopicQuery.validate?(:per_page, "invalid")).to eq(false)
+        expect(TopicQuery.validate?(:per_page, [])).to eq(false)
+
+        # Valid values
+        expect(TopicQuery.validate?(:per_page, 1)).to eq(true)
+        expect(TopicQuery.validate?(:per_page, 100)).to eq(true)
+        expect(TopicQuery.validate?(:per_page, "10")).to eq(true)
+      end
+    end
+  end
+
   describe "#list_topics_by" do
     it "allows users to view their own invisible topics" do
       _topic = Fabricate(:topic, user: user)

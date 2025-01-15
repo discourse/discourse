@@ -1,12 +1,12 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Topic - User Status", function (needs) {
   const status = { emoji: "tooth", description: "off to dentist" };

@@ -4,18 +4,20 @@ html.composer-open {
     transition: padding-bottom 250ms ease;
   }
 }
+
 #reply-control {
   position: fixed;
   display: flex;
   flex-direction: column;
   bottom: 0;
-  height: 0;
   right: 0;
   left: 0;
   margin-left: auto;
   margin-right: auto;
   max-width: $reply-area-max-width;
   width: 100%;
+  height: 0;
+  min-height: 0;
 
   &.hide-preview {
     max-width: 740px;
@@ -37,19 +39,14 @@ html.composer-open {
     min-width: 0;
   }
   z-index: z("composer", "content");
-  transition: height 250ms ease, background 250ms ease, transform 250ms ease,
-    max-width 250ms ease, padding-bottom 250ms ease;
+  transition: height 0.2s, max-width 0.2s, padding-bottom 0.2s, top 0.2s,
+    transform 0.2s, min-height 0.2s;
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
 
   .reply-area {
     display: flex;
     flex-direction: column;
-
-    &.with-form-template {
-      max-height: 100%;
-      box-sizing: border-box;
-    }
   }
 
   .saving-text,
@@ -68,11 +65,12 @@ html.composer-open {
   }
 
   &.open {
+    --min-height: 255px;
+    box-sizing: border-box;
     height: var(--composer-height);
-  }
-
-  &.closed {
-    height: 0 !important;
+    min-height: var(--min-height);
+    max-height: calc(100vh - var(--header-offset, 4em));
+    padding-bottom: var(--composer-ipad-padding);
   }
 
   &.draft,
@@ -104,6 +102,7 @@ html.composer-open {
     display: flex;
     .draft-text {
       display: block;
+      @include ellipsis;
     }
     .grippie,
     .saving-text {
@@ -604,45 +603,6 @@ div.ac-wrap {
   }
 }
 
-@keyframes transformer {
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-body.ios-safari-composer-hacks {
-  #main-outlet,
-  header,
-  .grippie,
-  html:not(.fullscreen-composer) & .toggle-fullscreen {
-    display: none;
-  }
-
-  #reply-control {
-    top: 0px;
-    &.open {
-      height: calc(var(--composer-vh, 1vh) * 100);
-    }
-  }
-}
-
-body:not(.ios-safari-composer-hacks) {
-  #reply-control.open {
-    --min-height: 255px;
-    min-height: var(--min-height);
-    max-height: calc(100vh - var(--header-offset, 4em));
-    &.composer-action-reply {
-      // we can let the reply composer get a little shorter
-      min-height: calc(var(--min-height) - 4em);
-    }
-    padding-bottom: var(--composer-ipad-padding);
-    box-sizing: border-box;
-  }
-}
-
 .toggle-preview {
   margin-left: auto;
   transition: all 0.33s ease-out;
@@ -658,4 +618,103 @@ body:not(.ios-safari-composer-hacks) {
 
 .draft-error {
   color: var(--danger);
+}
+
+@keyframes blink_input_opacity_to_prevent_scrolling_when_focus {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// The composer on mobile is fixed-positioned, same as on desktop because
+// goes together with the interactive-widget=resizes-content in the viewport meta tag
+// for maximum browser compatibility (especially Firefox and webviews)
+// see https://developer.chrome.com/blog/viewport-resize-behavior for context
+.ipados-device,
+.tablet-device,
+.mobile-device {
+  #reply-control {
+    &.open {
+      z-index: z("mobile-composer");
+    }
+
+    &.draft,
+    &.saving {
+      z-index: z("ipad-header-nav") + 1;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .toggle-fullscreen {
+      display: none;
+    }
+
+    .submit-panel,
+    .composer-fields,
+    .d-editor-button-bar {
+      // this prevents touch events (i.e. accidental scrolls) from bubbling up
+      touch-action: none;
+    }
+  }
+
+  &.keyboard-visible #reply-control.open {
+    height: calc(var(--composer-vh, 1vh) * 100);
+
+    .grippie {
+      display: none;
+    }
+  }
+
+  &.composer-open .with-topic-progress {
+    bottom: calc(var(--composer-height));
+  }
+}
+
+.mobile-device {
+  #reply-control {
+    .grippie {
+      display: none;
+    }
+
+    &.open.show-preview {
+      height: 70vh;
+    }
+  }
+}
+
+.ipados-device {
+  // this might be overkill
+  // but on iPad with a physical keyboard the composer is shifted up on scroll
+  // this adds a solid box shadow below, looks cleaner
+  #reply-control {
+    box-shadow: 0 150px 0px 0px var(--secondary);
+  }
+}
+
+// Safari in iOS/iPad does not handle well a bottom:0 fixed-positioned element,
+// especially while the software keyboard is visible, so we top-anchor it here
+// and shift it using transform
+.ipados-device,
+.ios-device {
+  #reply-control {
+    // the two properties below are equivalent to bottom: 0
+    top: calc(var(--composer-vh, 1vh) * 100);
+    transform: translateY(-100%);
+    bottom: unset;
+  }
+
+  // When an element (input, textearea) gets focus, iOS Safari tries to put it in the center
+  // by scrolling and zooming. We handle zooming with a meta tag. We used to handle scrolling
+  // using a complicated JS hack.
+  //
+  // However, iOS Safari doesn't scroll when the input has opacity of 0 or is clipped.
+  // We use this quirk and temporarily hide the element on focus
+  //
+  // Source https://gist.github.com/kiding/72721a0553fa93198ae2bb6eefaa3299
+  input:focus,
+  textarea:focus {
+    animation: blink_input_opacity_to_prevent_scrolling_when_focus 0.01s;
+  }
 }

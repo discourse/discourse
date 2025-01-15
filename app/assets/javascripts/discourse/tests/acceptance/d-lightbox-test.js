@@ -8,6 +8,7 @@ import {
 import { skip, test } from "qunit";
 import sinon from "sinon";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   generateLightboxMarkup,
@@ -18,7 +19,6 @@ import {
   chromeTest,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import i18n from "discourse-i18n";
 
 async function waitForLoad() {

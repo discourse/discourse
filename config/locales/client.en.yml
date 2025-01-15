@@ -497,6 +497,13 @@ en:
         confirm: "You already have a draft in progress. What would you like to do with it?"
         yes_value: "Discard"
         no_value: "Resume editing"
+      dropdown:
+        title: "Open the latest drafts menu"
+        untitled: "Untitled draft"
+        view_all: "view all"
+        other_drafts:
+          one: "+%{count} other draft"
+          other: "+%{count} other drafts"
 
     topic_count_all:
       one: "See %{count} new topic"
@@ -2934,7 +2941,7 @@ en:
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
         votes_released: "Vote was released"
-        new_features: "new Discourse features have been released!"
+        new_features: "New Discourse features have been released!"
         admin_problems: "new advice on your site dashboard"
 
     upload_selector:
@@ -4746,7 +4753,10 @@ en:
         everyone_can_use: "Tags can be used by everyone"
         usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
         visible_only_to_groups: "Tags are visible only to the following groups"
-        cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty and less than 100 characters, and a group is selected for tags permission."
+        cannot_save:
+          empty_name: "Cannot save tag group. Make sure the tag group name is not empty."
+          no_tags: "Cannot save tag group. Make sure that at least one tag is selected."
+          no_groups: "Cannot save tag group. Make sure that at least one group is selected for permission."
         tags_placeholder: "Search or create tags"
         parent_tag_placeholder: "Optional"
         select_groups_placeholder: "Select groups…"
@@ -4973,11 +4983,9 @@ en:
             users:
               content: "Users"
               title: "List of all users"
-            my_posts:
-              content: "My Posts"
-              content_drafts: "My Drafts"
-              title: "My recent topic activity"
-              title_drafts: "My unposted drafts"
+            my_drafts:
+              content: "My Drafts"
+              title: "My unposted drafts"
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
@@ -5128,8 +5136,9 @@ en:
 
       reports:
         title: "List of available reports"
-        meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
+        meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
+        back: "Back to all reports"
         sidebar_link:
           all: "All reports"
 
@@ -5396,6 +5405,21 @@ en:
         none_selected: "Select a group to get started"
         no_custom_groups: "Create a new custom group"
 
+      api_keys:
+        title: "API keys"
+        description: "The API keys feature lets you securely integrate Discourse with external systems and automate actions. Admins can create keys with specific scopes to control access to resources and sensitive data. Scopes limit functionality, ensuring enhanced security."
+        add: "Add API key"
+        edit: "Edit"
+        save: "Save"
+        cancel: "Cancel"
+        continue: "Continue"
+        back: "Back to API keys"
+        revoke: "Revoke"
+        undo_revoke: "Undo revoke"
+        revoked: "Revoked"
+        delete: Permanently delete
+        no_api_keys: "You don't have any API keys yet."
+
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now."
@@ -5403,30 +5427,30 @@ en:
         title: "API"
         key: "Key"
         keys: "Keys"
-        created: Created
+        created: Created by
         updated: Updated
-        last_used: Last Used
-        never_used: (never)
+        last_used: Last used
+        never_used: Never
         generate: "Generate"
-        undo_revoke: "Undo Revoke"
+        undo_revoke: "Undo revoke"
         revoke: "Revoke"
-        all_users: "All Users"
+        all_users: "All users"
         active_keys: "Active API Keys"
         manage_keys: Manage Keys
         show_details: Details
         description: Description
         no_description: (no description)
         all_api_keys: All API Keys
-        user_mode: User Level
+        user_mode: User level
         scope_mode: Scope
         impersonate_all_users: Impersonate any user
-        single_user: "Single User"
+        single_user: "Single user"
         user_placeholder: Enter username
         description_placeholder: What will this key be used for?
         save: Save
         new_key: New API Key
         revoked: Revoked
-        delete: Permanently Delete
+        delete: Permanently delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
         scopes:
@@ -5440,8 +5464,8 @@ en:
           global_description: API key has no restriction and all endpoints are accessible.
           resource: Resource
           action: Action
-          allowed_parameters: Allowed Parameters
-          optional_allowed_parameters: Allowed Parameters (optional)
+          allowed_parameters: Allowed parameters
+          optional_allowed_parameters: Allowed parameters (optional)
           any_parameter: (any parameter)
           allowed_urls: Allowed URLs
           descriptions:
@@ -5864,7 +5888,8 @@ en:
         sidebar_link:
           api_keys:
             title: "API keys"
-            keywords: "token|webhook"
+            keywords: "token"
+          webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Embedding"
           rate_limits: "Rate limits"
@@ -6018,6 +6043,8 @@ en:
           browse_themes: "Browse community themes"
           customize_desc: "Customize:"
           title: "Themes"
+          description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
+          components_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design."
           create: "Create"
           create_type: "Type"
           create_name: "Name"
@@ -6229,10 +6256,11 @@ en:
             title: "Select base color palette"
             description: "Base palette:"
           title: "Colors"
-          edit: "Edit Color Palettes"
-          long_title: "Color Palettes"
+          edit: "Edit color palettes"
+          long_title: "Color palettes"
+          description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts and components - both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
           about: "Modify the colors used by your themes. Create a new color palette to start."
-          new_name: "New Color Palette"
+          new_name: "New color palette"
           copy_name_prefix: "Copy of"
           delete_confirm: "Delete this color palette?"
           undo: "Undo"
@@ -6296,8 +6324,8 @@ en:
           overridden: Your site's default robots.txt file is overridden.
         email_style:
           title: "Email Style"
-          heading: "Customize Email Style"
-          html: "HTML Template"
+          heading: "Customize email style"
+          html: "HTML"
           css: "CSS"
           reset: "Reset to default"
           reset_confirm: "Are you sure you want to reset to the default %{fieldName} and lose all your changes?"
@@ -6306,7 +6334,8 @@ en:
 
       email:
         title: "Emails"
-        settings: "Email Settings"
+        description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs."
+        settings: "Settings"
         templates: "Templates"
         templates_title: "Email Templates"
         preview_digest: "Preview Summary"
@@ -6584,7 +6613,8 @@ en:
           title: "Error Logs"
 
       watched_words:
-        title: "Watched Words"
+        title: "Watched words"
+        description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         search: "search"
         clear_filter: "Clear"
         show_words:
@@ -6742,6 +6772,7 @@ en:
         status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
+        silence_reason: "Silence Reason"
         bulk_actions:
           title: "Bulk actions"
           admin_cant_be_deleted: "This user can't be deleted because they're an admin"
@@ -7075,7 +7106,7 @@ en:
           confirm_delete: "Are you sure you would like to delete this DiscourseConnect record?"
 
       user_fields:
-        title: "User Fields"
+        title: "User fields"
         help: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
         no_user_fields: "You don't have any custom user fields yet."
         add: "Add user field"
@@ -7132,10 +7163,10 @@ en:
           multiselect: "Multiselect"
 
       site_text:
-        description: "You can customize any of the text on your forum. Please start by searching below:"
+        description: "You can customize any of the text on your forum."
         search: "Search for the text you'd like to edit"
-        title: "Text"
-        edit: "edit"
+        title: "Site texts"
+        edit: "Edit"
         revert: "Revert Changes"
         revert_confirm: "Are you sure you want to revert your changes?"
         go_back: "Back to Search"
@@ -7165,11 +7196,13 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
+        title: "Site Settings"
+        description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:
             label: "Add Emoji"
-        title: "Settings"
+        nav_title: "Settings"
         no_results: "No results found."
         more_site_setting_results:
           one: "There is more than %{count} result. Please refine your search or select a category."
@@ -7459,7 +7492,7 @@ en:
 
       reseed:
         action:
-          label: "Replace Text…"
+          label: "Replace text …"
           title: "Replace text of categories and topics with translations"
 
         modal:
@@ -7494,6 +7527,25 @@ en:
           moderator: "Moderator"
           regular: "Regular User"
 
+      homepage_choices:
+        custom:
+          label: "Custom"
+          description: "Display a %{type}-focused homepage with users landing on %{landingPage}"
+        style_type:
+          categories: "category"
+          topics: "topic"
+
+      top_menu_items:
+        new: "New"
+        unread: "Unread"
+        top: "Top"
+        latest: "Latest"
+        hot: "Hot"
+        categories: "Categories"
+        unseen: "Unseen"
+        read: "Read"
+        bookmarks: "Bookmarks"
+
       previews:
         topic_title: "What books are you reading?"
         share_button: "Share"
@@ -7504,12 +7556,6 @@ en:
       homepage_preview:
         nav_buttons:
           all_categories: "all categories"
-          new: "New"
-          unread: "Unread"
-          top: "Top"
-          latest: "Latest"
-          hot: "Hot"
-          categories: "Categories"
         topic_titles:
           what_books: "What books are you reading?"
           what_movies: "What movies have you seen recently?"

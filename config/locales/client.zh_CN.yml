@@ -411,6 +411,12 @@ zh_CN:
         confirm: "您已经有一个正在进行的草稿。您想对它做什么？"
         yes_value: "舍弃"
         no_value: "恢复编辑"
+      dropdown:
+        title: "打开最新草稿菜单"
+        untitled: "无标题草稿"
+        view_all: "查看全部"
+        other_drafts:
+          other: "其他 %{count} 篇草稿"
     topic_count_all:
       other: "查看 %{count} 个新话题"
     topic_count_categories:
@@ -4168,7 +4174,10 @@ zh_CN:
         everyone_can_use: "每个人都可以使用标签"
         usable_only_by_groups: "标签对所有人可见，但只有以下群组可以使用它们"
         visible_only_to_groups: "标签仅对以下群组可见"
-        cannot_save: "无法保存标签群组。确保至少存在一个标签，标签群组名称不为空且少于 100 个字符，并为标签权限选择一个群组。"
+        cannot_save:
+          empty_name: "无法保存标签组。请确保标签组名称不为空。"
+          no_tags: "无法保存标签组。请确保至少选择一个标签。"
+          no_groups: "无法保存标签组。请确保至少选择一个权限群组。"
         tags_placeholder: "搜索或创建标签"
         parent_tag_placeholder: "可选"
         select_groups_placeholder: "选择群组…"
@@ -4373,11 +4382,9 @@ zh_CN:
             users:
               content: "用户"
               title: "所有用户列表"
-            my_posts:
-              content: "我的帖子"
-              content_drafts: "我的草稿"
-              title: "我最近的话题活动"
-              title_drafts: "我的未发布草稿"
+            my_drafts:
+              content: "我的草稿"
+              title: "我的未发布草稿"
               draft_count:
                 other: "%{count} 个草稿"
             review:
@@ -4511,20 +4518,24 @@ zh_CN:
           never: "从不"
       reports:
         title: "可用报告列表"
-        meta_doc: "浏览我们的 <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>文档</a>，了解举报的详细概述。"
+        meta_doc: "报告是帮助您了解网站上发生的事情的有力工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
         sidebar_title: "举报"
+        back: "返回到所有报告"
         sidebar_link:
           all: "所有报告"
       config:
         developer:
           title: "开发者"
+          header_description: "控制速率限制、乘数和计算、安全模式和其他高级功能的开发者设置"
         experimental:
           title: "实验性"
+          header_description: "切换站点的实验性功能，其中大部分功能可按组进行控制"
         font_style:
           title: "字体样式"
           header_description: "自定义主题使用的字体样式"
         files:
           title: "文件"
+          header_description: "控制文件大小和类型限制、头像大小和来源、文件存储、图片质量和压缩等的设置"
         legal:
           title: "法律信息"
           header_description: "配置法律设置，如服务条件、隐私政策、联系细节和欧盟特定注意事项"
@@ -4536,27 +4547,34 @@ zh_CN:
           header_description: "自定义网站徽标的变体"
         navigation:
           title: "导航"
+          header_description: "配置站点的导航链接和菜单项。这包括主导航菜单、主页顶部快速链接以及管理员侧边栏的位置和行为"
         notifications:
           title: "通知"
           header_description: "配置用户如何管理和发送通知，包括电子邮件首选项、推送通知、提及限制和通知合并"
         onebox:
           title: "Onebox"
+          header_description: "配置如何为您的站点生成和显示 Onebox 预览"
         other:
           title: "其他"
+          header_description: "不属于任何其他类别的设置"
         rate_limits:
           title: "速率限制"
+          header_description: "配置用户执行特定操作的频率，例如创建话题、发送消息和发布回复"
         search:
           title: "搜索"
           header_description: "配置中文和日文搜索设置，包括日志记录和标记化"
         security:
           title: "安全性"
+          header_description: "配置安全设置，包括双重身份验证、版主权限和内容安全策略"
         spam:
           title: "垃圾内容"
+          header_description: "配置系统如何分析用户的注册和发帖行为，以快速识别和阻止垃圾信息"
         trust_levels:
           title: "信任级别"
           header_description: "信任级别设置允许你微调社区升级系统的要求和通知，当用户在论坛中表现出持续、积极的参与时，系统会自动将用户提升到更高的信任级别"
         user_api:
           title: "用户 API"
+          header_description: "配置哪些用户群组可以访问 API，以及允许哪些范围"
         group_permissions:
           title: "群组权限"
           header_description: "所有基于群组的应用权限都在这里管理，这些权限控制 Discourse 中各种功能的访问权限"
@@ -4756,6 +4774,20 @@ zh_CN:
         add_owners: 添加所有者
         none_selected: "选择一个群组以开始"
         no_custom_groups: "创建一个自定义群组"
+      api_keys:
+        title: "API 密钥"
+        description: "API 密钥功能可让你安全地将 Discourse 与外部系统集成并自动执行操作。管理员可以创建具有特定范围的密钥来控制对资源和敏感数据的访问。范围限制功能，确保增强安全性。"
+        add: "添加 API 密钥"
+        edit: "编辑"
+        save: "保存"
+        cancel: "取消"
+        continue: "继续"
+        back: "返回到 API 密钥"
+        revoke: "撤消"
+        undo_revoke: "取消撤消"
+        revoked: "已撤消"
+        delete: 永久删除
+        no_api_keys: "你还没有任何 API 密钥。"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有有效的 API 密钥。"
@@ -4763,10 +4795,10 @@ zh_CN:
         title: "API"
         key: "密钥"
         keys: "密钥"
-        created: 创建
+        created: 创建者
         updated: 更新
-        last_used: 最后使用
-        never_used: '（从不）'
+        last_used: 最后使用：
+        never_used: 永不
         generate: "生成"
         undo_revoke: "取消撤消"
         revoke: "撤消"
@@ -4801,7 +4833,7 @@ zh_CN:
           resource: 资源
           action: 操作
           allowed_parameters: 允许的参数
-          optional_allowed_parameters: 允许的参数（可选）
+          optional_allowed_parameters: 允许的参数 (可选)
           any_parameter: '（任意参数）'
           allowed_urls: 允许的 URL
           descriptions:
@@ -5213,7 +5245,8 @@ zh_CN:
         sidebar_link:
           api_keys:
             title: "API 密钥"
-            keywords: "token|webhook"
+            keywords: "token"
+          webhooks: "网络钩子"
           developer: "开发者"
           embedding: "嵌入"
           rate_limits: "速率限制"
@@ -5361,6 +5394,7 @@ zh_CN:
           browse_themes: "浏览社区主题"
           customize_desc: "自定义："
           title: "主题"
+          description: "主题是扩展性的自定义，可以改变您的论坛设计风格中的多种元素，通常还包括额外的前端功能。"
           create: "创建"
           create_type: "类型"
           create_name: "名称"
@@ -5566,6 +5600,7 @@ zh_CN:
           title: "颜色"
           edit: "编辑调色板"
           long_title: "调色板"
+          description: "调色板定义网站界面上使用的核心颜色，而主题可以提供额外的样式、布局和组件——两者可以协同工作以创建你网站的独特外观和感觉，并且两者都可以供用户选择自己的偏好。"
           about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
           copy_name_prefix: "副本 -"
@@ -5911,6 +5946,7 @@ zh_CN:
           title: "错误日志"
       watched_words:
         title: "关注词"
+        description: "关注词是一种审核工具，可以执行多种不同的操作，包括屏蔽、审查、链接或举报包含某些词的帖子"
         search: "搜索"
         clear_filter: "清除"
         show_words:
@@ -6064,6 +6100,7 @@ zh_CN:
         status: "状态"
         show_emails: "显示电子邮件"
         hide_emails: "隐藏电子邮件"
+        silence_reason: "禁言原因"
         bulk_actions:
           title: "批量操作"
           admin_cant_be_deleted: "无法删除此用户，因为他们是管理员"
@@ -6073,9 +6110,20 @@ zh_CN:
           delete:
             label: "删除用户…"
             confirmation_modal:
+              prompt_text:
+                other: '您即将永久删除 %{count} 位用户。请在下面输入“%{confirmation_phrase}”以继续：'
+              confirmation_phrase:
+                other: "删除 %{count} 个用户"
               close: "关闭"
               confirm: "删除"
+              title:
+                other: "删除 %{count} 个用户"
+              bulk_delete_starting: "开始批量删除…"
               block_ip_and_email: "屏蔽所有选定用户的 IP 地址和电子邮件"
+              user_delete_succeeded: "[%{position}/%{total}] 已成功删除 @%{username}"
+              user_delete_failed: "[%{position}/%{total}] 无法删除 @%{username} - %{error}"
+              bulk_delete_finished: "批量删除操作完成。"
+              failed_to_delete_users: "以下用户删除失败："
         nav:
           new: "新"
           active: "活跃"
@@ -6350,6 +6398,11 @@ zh_CN:
           confirm_delete: "确定要删除此 DiscourseConnect 记录吗？"
       user_fields:
         title: "用户字段"
+        no_user_fields: "您还没有任何自定义用户字段。"
+        add: "添加用户字段"
+        back: "返回到用户字段"
+        edit_header: "编辑用户字段"
+        new_header: "添加用户字段"
         untitled: "无标题"
         name: "字段名称"
         type: "字段类型"
@@ -6378,22 +6431,29 @@ zh_CN:
           confirmation: "这将提示现有用户填写此字段，并且在填写该字段之前不允许他们在网站上执行任何其他操作。是否继续？"
         editable:
           title: "注册后可以编辑"
+          enabled: "可编辑"
+          disabled: "不可编辑"
         show_on_profile:
           title: "在公开个人资料中显示"
+          enabled: "在个人资料中显示"
+          disabled: "不在个人资料中显示"
         show_on_user_card:
           title: "在用户卡片上显示"
+          enabled: "在用户卡片上显示"
+          disabled: "不在用户卡片上显示"
         searchable:
           title: "可搜索"
           enabled: "可搜索"
+          disabled: "不可搜索"
         field_types:
           text: "文本"
           confirm: "确认"
           dropdown: "下拉菜单"
           multiselect: "多选"
       site_text:
-        description: "您可以自定义论坛上的任何文本。请从在下面搜索开始："
+        description: "你可以自定义论坛上的任何文本。"
         search: "搜索您要编辑的文本"
-        title: "文本"
+        title: "网站文本"
         edit: "编辑"
         revert: "还原变更"
         revert_confirm: "确定要还原您的变更吗？"
@@ -6549,6 +6609,8 @@ zh_CN:
         multiple_grant: 可以多次授予
         visibility_heading: 公开范围
         listable: 在公共徽章页面上显示徽章
+        show_in_post_header: 在授予徽章的帖子上显示徽章
+        show_in_post_header_disabled: 需要同时启用“在公共徽章页面上显示徽章”和“在徽章页面上显示授予徽章的帖子”。
         enabled: 已启用
         disabled: 已禁用
         icon: 图标
@@ -6659,6 +6721,7 @@ zh_CN:
         configuration_snippet: "配置片段"
         host_form:
           add_header: "添加主机"
+          edit_header: "编辑主机"
           save: "保存"
         nav:
           hosts: "主机"
@@ -6745,7 +6808,14 @@ zh_CN:
           latest: "最新"
           hot: "热议"
           categories: "类别"
+        topic_titles:
+          what_movies: "你最近看了什么电影？"
+          tv_show: "推荐一部电视节目"
+          what_hobbies: "您有什么爱好？"
+          what_music: "你正在听什么？"
         category_names:
+          icebreakers: "破冰活动"
+          news: "新闻"
           site_feedback: "网站反馈"
         table_headers:
           topic: "话题"

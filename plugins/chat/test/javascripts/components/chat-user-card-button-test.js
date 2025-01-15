@@ -18,7 +18,7 @@ module(
       this.user = new CoreFabricators(getOwner(this)).user();
 
       await render(
-        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+        hbs`<Chat::DirectMessageButton @user={{this.user}} @modal={{true}} />`
       );
 
       assert.dom(".chat-direct-message-btn").exists("it shows the chat button");
@@ -31,7 +31,7 @@ module(
       this.user = new CoreFabricators(getOwner(this)).user();
 
       await render(
-        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+        hbs`<Chat::DirectMessageButton @user={{this.user}} @modal={{true}} />`
       );
 
       assert
@@ -49,7 +49,7 @@ module(
       });
 
       await render(
-        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+        hbs`<Chat::DirectMessageButton @user={{this.user}} @modal={{true}} />`
       );
 
       assert

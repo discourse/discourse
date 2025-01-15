@@ -6,14 +6,14 @@ Discourse is a powerful and flexible platform with many options for customizatio
 
 To get started, we recommend you follow the sections below for each of the following:
 
-- [ ] [Test your email configuration](#email-test-your-email-configuration-2)
-- [ ] [Complete the setup wizard](#magic_wand-complete-the-setup-wizard-3)
-- [ ] [Invite a few people to join you](#handshake-invite-a-few-people-to-join-you-4)
-- [ ] [Discuss ideas with your community](#thought_balloon-discuss-ideas-with-your-community-5)
-- [ ] [Update your welcome topic and guidelines](#wave-update-your-welcome-topic-and-guidelines-6)
-- [ ] [Adjust other customizations](#art-adjust-other-customizations-7)
-- [ ] [Repeat!](#arrows_clockwise-repeat-8)
-- [ ] [Launch your community](#rocket-launch-your-community-9)
+- [Test your email configuration](#email-test-your-email-configuration-2)
+- [Complete the setup wizard](#magic_wand-complete-the-setup-wizard-3)
+- [Invite a few people to join you](#handshake-invite-a-few-people-to-join-you-4)
+- [Discuss ideas with your community](#thought_balloon-discuss-ideas-with-your-community-5)
+- [Update your welcome topic and guidelines](#wave-update-your-welcome-topic-and-guidelines-6)
+- [Adjust other customizations](#art-adjust-other-customizations-7)
+- [Repeat!](#arrows_clockwise-repeat-8)
+- [Launch your community](#rocket-launch-your-community-9)
 
 > :bulb: If you need to get back here later, scroll to the top of any page and click the <kbd>Getting started</kbd> button.
 
@@ -35,6 +35,7 @@ You've already been through the setup wizard, but if you skipped some steps, you
 ## :handshake: Invite a few people to join you
 
 It's helpful to collaborate with at least one or two other people early that can provide feedback on the decisions you're making about your community.
+
 - **If your community allows people to freely sign up**, send them the link and ask them to join.
 - **If your community is invite only**, go to [your invites page](%{base_url}/my/invited) and look for the <kbd>+ Invite</kbd> button to create invite links you can share or directly email everyone you want to have in your community.
 
@@ -64,15 +65,15 @@ To get you started, think about what you want new members to **know about your c
 
 ## :art: Adjust other customizations
 
-To customize the look and feel of your community beyond what you configured in the [setup wizard](%{base_url}/wizard), you can change the following settings in the [admin section](/admin):
+To customize the look and feel of your community beyond what you configured in the [setup wizard](%{base_url}/wizard), you can change the following settings in the [admin interface](%{base_url}/admin):
 
-- [Logo images](%{base_url}/admin/site_settings/category/branding)
-- [Color schemes](%{base_url}/admin/customize/colors)
-- [Font styles](%{base_url}/admin/site_settings/category/all_results?filter=font)
+- [Logo images](%{base_url}/admin/config/logo)
+- [Color palettes](%{base_url}/admin/customize/colors)
+- [Font styles](%{base_url}/admin/config/fonts)
 - [Site theme](%{base_url}/admin/customize/themes)
-- [Navigation menu](%{base_url}/admin/site_settings/category/navigation)
+- [Navigation menu](%{base_url}/admin/config/navigation)
 - [Custom user fields](%{base_url}/admin/config/user-fields)
-- [Terms of service and privacy policies](%{base_url}/admin/site_settings/category/legal)
+- [Terms of service and privacy policies](%{base_url}/admin/config/legal)
 
 [details="Advanced options"]
 
@@ -123,7 +124,7 @@ Here are some additional resources from [the Discourse blog](http://blog.discour
 
 - One CPU and 1GB of memory, with swap, is the minimum for a basic Discourse community. As your community grows you may need more memory or CPU resources.
 - [Our Docker container install](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
-- You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click process, visit [/admin/update](/admin/update).
+- You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click process, visit [the update page](/admin/update).
 
 ### Optional things you might eventually want to set up
 - [All sysadmin documentation topics](https://meta.discourse.org/c/-/55)

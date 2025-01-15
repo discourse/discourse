@@ -287,6 +287,8 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
+      dropdown:
+        view_all: "ดูทั้งหมด"
     topic_count_all:
       other: "ดู%{count}กระทู้ใหม่"
     topic_count_categories:
@@ -2493,8 +2495,7 @@ th:
               content: "กลุ่ม"
             users:
               content: "ผู้ใช้"
-            my_posts:
-              content: "โพสต์ของฉัน"
+            my_drafts:
               draft_count:
                 other: "%{count}แบบร่าง"
             review:
@@ -2650,15 +2651,19 @@ th:
         group_owners: เจ้าของ
         add_owners: เพิ่มเจ้าของ
         none_selected: "เลือกกลุ่มเพื่อเริ่มต้น"
+      api_keys:
+        edit: "แก้ไข"
+        save: "บันทึก"
+        cancel: "ยกเลิก"
+        continue: "ดำเนินการต่อ"
+        revoke: "เอาออก"
       api:
         user: "ผู้ใช้"
         title: "API"
-        created: สร้างแล้ว
+        created: สร้างโดย
         updated: อัปเดตแล้ว
-        last_used: ใช้ครั้งล่าสุด
-        never_used: (ไม่เคย)
+        never_used: ไม่เคย
         revoke: "เอาออก"
-        all_users: "ผู้ใช้ทั้งหมด"
         show_details: รายละเอียด
         description: รายละเอียด
         user_placeholder: กรอกชื่อผู้ใช้
@@ -3180,7 +3185,6 @@ th:
           external_email: "อีเมล"
           external_avatar_url: "URL ของรูปโปรไฟล์"
       user_fields:
-        title: "ช่องข้อมูลผู้ใช้"
         untitled: "ไม่ได้ตั้งชื่อ"
         name: "ชื่อช่อง"
         type: "ประเภทช่อง"
@@ -3206,9 +3210,7 @@ th:
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:
-        description: "คุณสามารถปรับแต่งข้อความบนฟอรั่มของคุณได้คุณอย่าง เริ่มได้โดยการค้นหาข้างล่างนี่"
         search: "ค้นหาข้อความที่คุณต้องการแก้ไข"
-        title: "ข้อความ"
         edit: "แก้ไข"
         revert: "ย้อนกลับการแก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"

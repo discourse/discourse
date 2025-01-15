@@ -460,6 +460,8 @@ fi:
         confirm: "Sinulla on jo keskeneräinen luonnos. Mitä haluat tehdä sille?"
         yes_value: "Hylkää"
         no_value: "Jatka muokkausta"
+      dropdown:
+        view_all: "katso kaikki"
     topic_count_all:
       one: "Näytä %{count} uusi ketju"
       other: "Näytä %{count} uutta ketjua"
@@ -4409,7 +4411,6 @@ fi:
         everyone_can_use: "Kuka vain voi käyttää tunnisteita"
         usable_only_by_groups: "Tunnisteet näkyvät kaikille, mutta vain nämä ryhmät voivat käyttää niitä"
         visible_only_to_groups: "Tunnisteet näkyvät vain näille ryhmille"
-        cannot_save: "Tunnisteryhmää ei voida tallentaa. Varmista, että ryhmässä on vähintään yksi tunniste, ryhmän nimi ei ole tyhjä ja se on alle 100 merkin pituinen ja että ryhmä on valittuna tunnisteiden käyttöoikeuksiin."
         tags_placeholder: "Hae tai luo tunnisteita"
         parent_tag_placeholder: "Valinnainen"
         select_groups_placeholder: "Valitse ryhmät…"
@@ -4620,11 +4621,9 @@ fi:
             users:
               content: "Käyttäjät"
               title: "Luettelo kaikista käyttäjistä"
-            my_posts:
-              content: "Viestini"
-              content_drafts: "Omat luonnokset"
-              title: "Viimeaikainen ketjutoimintani"
-              title_drafts: "Julkaisemattomat luonnokseni"
+            my_drafts:
+              content: "Omat luonnokset"
+              title: "Julkaisemattomat luonnokseni"
               draft_count:
                 one: "%{count} luonnos"
                 other: "%{count} luonnosta"
@@ -4764,7 +4763,6 @@ fi:
           never: "ei koskaan"
       reports:
         title: "Saatavilla olevat raportit"
-        meta_doc: "Tutustu <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>ohjeisiimme</a> saadaksesi yksityiskohtaisen yleiskatsauksen raporteista."
         sidebar_title: "Raportit"
         sidebar_link:
           all: "Kaikki raportit"
@@ -4983,6 +4981,14 @@ fi:
         add_owners: Lisää isäntiä
         none_selected: "Aloita valitsemalla ryhmä"
         no_custom_groups: "Luo uusi mukautettu ryhmä"
+      api_keys:
+        title: "API-avaimet"
+        edit: "Muokkaa"
+        save: "Tallenna"
+        cancel: "Peruuta"
+        continue: "Jatka"
+        revoke: "Peru"
+        revoked: "Peruttu"
       api:
         generate_master: "Luo API-rajapinnan pääavain"
         none: "Aktiivisia API-avaimia ei ole tällä hetkellä."
@@ -4990,12 +4996,10 @@ fi:
         title: "API"
         key: "Avain"
         keys: "Avaimet"
-        created: Luotu
+        created: Luonut
         updated: Päivitetty
-        last_used: Viimeksi käytetty
-        never_used: (ei koskaan)
+        never_used: Ei koskaan
         generate: "Luo"
-        undo_revoke: "Kumoa peruminen"
         revoke: "Peru"
         all_users: "Kaikki käyttäjät"
         active_keys: "Aktiiviset API-avaimet"
@@ -5004,16 +5008,13 @@ fi:
         description: Kuvaus
         no_description: (ei kuvausta)
         all_api_keys: Kaikki API-avaimet
-        user_mode: Käyttäjän taso
         scope_mode: Näkyvyysalue
         impersonate_all_users: Esiinny minä käyttäjänä tahansa
-        single_user: "Yksittäinen käyttäjä"
         user_placeholder: Anna käyttäjätunnus
         description_placeholder: Mitä tällä avaimella voi tehdä?
         save: Tallenna
         new_key: Uusi API-avain
         revoked: Peruttu
-        delete: Poista pysyvästi
         not_shown_again: Tätä avainta ei näytetä uudelleen. Kopioi se ennen jatkamista.
         continue: Jatka
         scopes:
@@ -5026,8 +5027,6 @@ fi:
           global_description: API-avaimella ei ole rajoituksia, ja kaikki päätepisteet ovat käytettävissä.
           resource: Resurssi
           action: Toiminto
-          allowed_parameters: Sallitut parametrit
-          optional_allowed_parameters: Sallitut parametrit (valinnainen)
           any_parameter: (mikä tahansa parametri)
           allowed_urls: Sallitut URL-osoitteet
           descriptions:
@@ -5422,6 +5421,7 @@ fi:
         sidebar_link:
           api_keys:
             title: "API-avaimet"
+          webhooks: "Webhookit"
           developer: "Kehittäjä"
           embedding: "Upottaminen"
           user_api: "Käyttäjä-API"
@@ -5567,6 +5567,7 @@ fi:
           browse_themes: "Selaile yhteisön kehittämiä teemoja"
           customize_desc: "Mukauta:"
           title: "Teemat"
+          description: "Teemat ovat laajoja mukautuksia, jotka muuttavat useita foorumisi ulkoasun tyylin elementtejä ja sisältävät usein myös lisäkäyttöliittymäominaisuuksia."
           create: "Luo"
           create_type: "Tyyppi"
           create_name: "Nimi"
@@ -5776,10 +5777,7 @@ fi:
             title: "Valitse perusväripaletti"
             description: "Peruspaletti:"
           title: "Värit"
-          edit: "Muokkaa väripaletteja"
-          long_title: "Väripaletit"
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
-          new_name: "Uusi väripaletti"
           copy_name_prefix: "Kopio"
           delete_confirm: "Poistetaanko tämä väripaletti?"
           undo: "Kumoa"
@@ -6122,7 +6120,6 @@ fi:
         logster:
           title: "Virhelokit"
       watched_words:
-        title: "Tarkkaillut sanat"
         search: "haku"
         clear_filter: "Tyhjennä"
         show_words:
@@ -6276,6 +6273,7 @@ fi:
         status: "Tila"
         show_emails: "Näytä sähköpostit"
         hide_emails: "Piilota sähköpostit"
+        silence_reason: "Hiljennyksen syy"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6559,7 +6557,6 @@ fi:
           delete_sso_record: "Poista SSO-tietue"
           confirm_delete: "Haluatko varmasti poistaa tämän DiscourseConnect-tietueen?"
       user_fields:
-        title: "Käyttäjäkentät"
         untitled: "Nimetön"
         name: "Kentän nimi"
         type: "Kentän tyyppi"
@@ -6601,10 +6598,8 @@ fi:
           dropdown: "Pudotusvalikko"
           multiselect: "Monivalinta"
       site_text:
-        description: "Omalla foorumillasi voit muokata mitä tahansa tekstiä. Käytä alla olevaa hakutoimintoa:"
         search: "Hae tekstiä, jota haluaisit muokata"
-        title: "Teksti"
-        edit: "muokkaa"
+        edit: "Muokkaa"
         revert: "Palauta muutokset"
         revert_confirm: "Haluatko varmasti palauttaa muutokset?"
         go_back: "Takaisin hakuun"
@@ -6899,7 +6894,6 @@ fi:
           save: "Tallenna"
       reseed:
         action:
-          label: "Korvaa teksti..."
           title: "Korvaa alueiden ja ketjujen tekstejä käännöksillä"
         modal:
           title: "Korvaa teksti"

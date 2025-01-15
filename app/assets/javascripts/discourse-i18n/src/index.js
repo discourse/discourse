@@ -61,6 +61,11 @@ export class I18n {
     return "Verbose localization is enabled. Close the browser tab to turn it off. Reload the page to see the translation keys.";
   }
 
+  disableVerboseLocalizationSession() {
+    sessionStorage.removeItem("verbose_localization");
+    return "Verbose localization disabled. Reload the page.";
+  }
+
   _translate(scope, options) {
     options = this.prepareOptions(options);
     options.needsPluralization = typeof options.count === "number";

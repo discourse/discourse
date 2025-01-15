@@ -412,6 +412,14 @@ ro:
         confirm: "Ai deja o ciornă în curs de redactare. Ce ai vrea să faci cu ea?"
         yes_value: "Renunță"
         no_value: "Reia editarea"
+      dropdown:
+        title: "Deschide meniul celei mai recente ciorne"
+        untitled: "Ciornă fără titlu"
+        view_all: "vezi tot"
+        other_drafts:
+          one: "încă %{count} ciornă"
+          few: "încă %{count} ciorne"
+          other: "încă %{count} de ciorne"
     topic_count_all:
       one: "Afișați %{count} subiect nou"
       few: "Afișați %{count} subiecte noi"
@@ -3306,8 +3314,13 @@ ro:
               content: "Grupuri"
             users:
               content: "Utilizatori"
-            my_posts:
-              content: "Articolele mele"
+            my_drafts:
+              content: "Ciornele mele"
+              title: "Ciornele mele nepublicate"
+              draft_count:
+                one: "%{count} ciornă"
+                few: "%{count} ciorne"
+                other: "%{count} de ciorne"
             review:
               content: "Revizuire"
               title: "Articole semnalate și alte elemente la coadă"
@@ -3402,7 +3415,6 @@ ro:
           always: "întotdeauna"
           never: "niciodată"
       reports:
-        meta_doc: "Explorează <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentația</a> pentru o prezentare generală detaliată a rapoartelor."
         sidebar_title: "Rapoarte"
       config:
         developer:
@@ -3580,24 +3592,45 @@ ro:
         add_owners: Adaugă proprietari
         none_selected: "Alege un grup pentru a începe"
         no_custom_groups: "Creează un nou grup personalizat"
+      api_keys:
+        title: "Chei API"
+        description: "Funcția de chei API îți permite să integrezi în siguranță Discourse cu sisteme externe și să automatizezi acțiunile. Administratorii pot crea chei cu scopuri specifice pentru a controla accesul la resurse și la datele sensibile. Scopurile limitează funcționalitatea, asigurând securitate sporită."
+        add: "Adaugă cheie API"
+        edit: "Editează"
+        save: "Salvează"
+        cancel: "Anulează"
+        continue: "Continuă"
+        back: "Înapoi la chei API"
+        revoke: "Revocă"
+        undo_revoke: "Anulează revocare"
+        revoked: "Revocat"
+        delete: Șterge definitiv
+        no_api_keys: "Încă nu ai nicio cheie API."
       api:
         generate_master: "Generează cheie API principală"
         none: "Nu sunt chei API principale active deocamdată."
         user: "Utilizator"
         title: "API"
         keys: "Chei"
-        created: Creat
+        created: Creată de
         updated: Actualizat
-        never_used: (niciodată)
+        last_used: Ultima utilizare
+        never_used: Niciodată
         generate: "Generare"
+        undo_revoke: "Anulează revocare"
         revoke: "Revocă"
         all_users: "Toți utilizatorii"
         show_details: Detalii
         description: Descriere
+        user_mode: Nivel utilizator
+        single_user: "Utilizator unic"
         save: Salvează
+        delete: Șterge definitiv
         continue: Continuă
         scopes:
           action: țiune
+          allowed_parameters: Parametrii permiși
+          optional_allowed_parameters: Parametrii permiși (opțional)
           descriptions:
             topics:
               recover: Recuperează un subiect.
@@ -3811,6 +3844,8 @@ ro:
         sidebar_link:
           api_keys:
             title: "Chei API"
+            keywords: "jeton"
+          webhooks: "Cârlige web"
           developer: "Dezvoltator"
           embedding: "Înglobare"
           user_api: "API utilizator"
@@ -3914,6 +3949,7 @@ ro:
           themes_intro_img_alt: "Substituent nou pentru temă"
           customize_desc: "Personalizează:"
           title: "Teme"
+          description: "Temele sunt personalizări extinse care schimbă mai multe elemente ale stilului de design al forumului tău și adesea includ și funcții frontale suplimentare."
           create: "Creează"
           create_type: "Tip"
           create_name: "Nume"
@@ -4000,6 +4036,10 @@ ro:
                 too_large: "trebuie să fie mai mic sau egal cu %{count}"
         colors:
           title: "Culori"
+          edit: "Editează paletă de culori"
+          long_title: "Paletă de culori"
+          description: "Paletele de culori definesc culorile de bază utilizate în interfața site-ului tău, în timp ce temele pot oferi stil, machete și componente suplimentare – ambele pot lucra împreună pentru a crea aspectul și impresia unică a site-ului tău și ambele pot fi puse la dispoziție utilizatorilor pentru a-și selecta preferințele."
+          new_name: "Paletă nouă de culori"
           copy_name_prefix: "Copie a"
           undo: "Anulează acțiunea"
           undo_title: "Revino asupra schimbărilor aduse acestei culori, de ultima oară când a fost salvată și până acum."
@@ -4236,6 +4276,7 @@ ro:
           title: "Jurnal erori"
       watched_words:
         title: "Cuvinte urmărite"
+        description: "Cuvintele urmărite sunt instrumente de moderare care pot efectua mai multe acțiuni diferite, inclusiv blocarea, cenzura, legarea sau semnalarea postărilor care conțin anumite cuvinte"
         search: "caută"
         clear_filter: "Șterge"
         html: "(html)"
@@ -4545,9 +4586,9 @@ ro:
           confirm: "Confirmare"
           dropdown: "Meniu derulant"
       site_text:
-        description: "Poți personaliza orice text pe forum. Te rugăm să începi prin a căuta mai jos:"
+        description: "Poți personaliza orice text de pe forumul tău."
         search: "Caută textul pe care vrei să îl editezi"
-        title: "Text"
+        title: "Texte site"
         edit: "Editează"
         revert: "Revocați schimbările"
         revert_confirm: "Ești sigur că vrei să revoci schimbările?"
@@ -4764,6 +4805,8 @@ ro:
           permalink_type: "Tip legătură permanentă"
           save: "Salvează"
       reseed:
+        action:
+          label: "Înlocuiește text…"
         modal:
           categories: "Categorii"
           topics: "Discuții"

@@ -55,11 +55,13 @@ cs:
       all_loaded: "Zobrazení všech zpráv"
       already_enabled: "Chat je v tomto tématu již povolen. Obnovte prosím stránku."
       disabled_for_topic: "Chat je v tomto tématu zakázán."
+      bot: "bot"
       create: "Vytvoř"
       cancel: "Zrušit"
       cancel_reply: "Zrušit odpověď"
       chat_channels: "Kanály"
       browse_all_channels: "Procházet všechny kanály"
+      see_in: "Zobrazit v"
       move_to_channel:
         title: "Přesunout zprávy do kanálu"
         instructions:
@@ -87,17 +89,27 @@ cs:
         leave_groupchat_info: "Opuštěním této skupinové konverzace k ní již nebudete mít přístup a nebudete dostávat s ní spojená upozornění. Chcete-li se do ní znovu připojit, musíte být znovu pozváni některým ze členů skupinové konverzace."
         join: "Přidat se ke skupině"
         leave: "Opustit skupinu"
+        save_label:
+          mute_channel: "Předvolba ztlumení kanálu byla uložena"
+          desktop_notification: "Předvolba oznámení na ploše byla uložena"
+          mobile_notification: "Předvolba mobilních push notifikací uložena"
       channel_archive:
+        title: "Archivace kanálu"
         instructions: "<p>Archivace kanálu jej přepne do režimu pouze pro čtení a přesune všechny zprávy z kanálu do nového nebo existujícího tématu. Nelze odesílat nové zprávy a stávající zprávy nelze upravovat ani mazat.</p><p>Jste si jisti, že chcete archivovat kanál <strong>%{channelTitle}</strong>?</p>"
-        process_started: "Proces archivace byl zahájen. Toto okno se brzy uzavře a po dokončení procesu archivace obdržíte osobní zprávu."
+        process_started: "Proces archivace byl zahájen. Toto okno se brzy uzavře a po dokončení procesu archivace obdržíte soukromou zprávu."
         retry: "Zkuste znovu"
       channel_open:
         title: "Otevřít kanál"
+        instructions: "Znovu otevře kanál, všichni uživatelé budou moci posílat zprávy a upravovat své stávající zprávy."
       channel_close:
         title: "Zavřít kanál"
+        instructions: "Uzavřením kanálu zabráníte uživatelům mimo redakci, odesílat nové zprávy nebo upravovat stávající zprávy. Opravdu chcete tento kanál zavřít?"
       channel_delete:
         title: "Odstranit kanál"
         instructions: "<p>Odstraní kanál <strong>%{name}</strong> a historii chatu. Všechny zprávy a související data, jako jsou reakce a nahrané soubory, budou trvale odstraněny. Pokud chcete historii kanálu zachovat a vyřadit jej z provozu, můžete kanál raději archivovat.</p> <p>Jste si jisti, že chcete kanál <strong>trvale odstranit</strong>? Pro potvrzení zadejte název kanálu do pole níže.</p>"
+        confirm: "Rozumím důsledkům, smažte kanál"
+        confirm_channel_name: "Zadejte název kanálu"
+        process_started: "Proces smazání kanálu byl zahájen. Tento dialog se brzy uzavře, smazaný kanál již nikde neuvidíte."
       channels_list_popup:
         browse: "Procházet kanály"
         create: "Nový kanál"
@@ -105,21 +117,31 @@ cs:
       remove: "Smazat"
       collapse: "Sbalit panel chatu"
       expand: "Rozbalit zásuvku chatu"
+      confirm_flag: "Opravdu chcete nahlásit zprávu uživatele %{username}?"
+      deleted:
+        one: "Zpráva byla smazána. [zobrazit]"
+        few: "%{count} zprávy byly smazány. [zobrazit všechny]"
+        many: "%{count} zprávy bylo smazáno. [zobrazit všechny]"
+        other: "%{count} zprávy bylo smazáno. [zobrazit všechny]"
+      hidden: "Zpráva byla skrytá. [zobrazit]"
       delete: "Smazat"
       edited: "upraveno"
       muted: "ztišení"
       joined: "účet vytvořen"
       empty_state:
-        direct_message_cta: "Zahájení osobního konverzace"
-        direct_message: "Můžete také zahájit osobní konverzaci s jedním nebo více uživateli."
+        direct_message_cta: "Zahájení soukromého chatu"
+        direct_message: "Můžete také zahájit soukromou konverzaci s jedním nebo více uživateli."
         title: "Nebyly nalezeny žádné kanály"
+        my_threads: "Zatím nemáte žádná vlákna. Zde se zobrazí vlákna, kterých se účastníte."
       email_frequency:
+        description: "E-mail vám zašleme pouze v případě, že jsme vás v posledních 15 minutách neviděli."
         never: "Nikdy"
         title: "E-mailová upozornění"
         when_away: "Jen v nepřítomnosti"
       header_indicator_preference:
         title: "Zobrazit indikátor aktivity v záhlaví"
         all_new: "Všechny nové zprávy"
+        dm_and_mentions: "Přímé zprávy, zmínky a sledovaná vlákna"
         only_mentions: "Pouze zmínky"
         never: "Nikdy"
       separate_sidebar_mode:
@@ -128,27 +150,135 @@ cs:
       flag: "Nahlášení"
       emoji: "Vložit emoji"
       flagged: "Tato zpráva byla označena ke kontrole"
+      invalid_access: "Nemáte přístup k zobrazení tohoto kanálu chatu"
       invitation_notification: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"
       in_reply_to: "V odpovědi na"
       heading: "Chat"
       join: "Přidat se ke skupině"
       last_visit: "poslední návštěva"
+      mention_warning:
+        invitations_sent:
+          one: "Pozvánka odeslána"
+          few: "Pozvánky odeslány"
+          many: "Pozvánky odeslány"
+          other: "Pozvánky odeslány"
+        invite: "Pozvat do kanálu"
+        channel_wide_mentions_disallowed: "Zmínky @here a @all jsou v tomto kanálu zakázány."
+        groups:
+          header:
+            some: "Někteří uživatelé nebudou upozorněni"
+            all: "Nikdo nebude upozorněn"
+          unreachable_1: "@%{group} nepovoluje zmínky."
+          unreachable_2: "@%{group1} a @%{group2} nepovolují zmínky."
+          unreachable_multiple:
+            one: "@%{group} a %{count} další skupina nepovolují zmínky."
+            few: "@%{group} a %{count} další skupiny nepovolují zmínky."
+            many: "@%{group} a %{count} dalších skupin nepovolují zmínky."
+            other: "@%{group} a %{count} dalších skupin nepovolují zmínky."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Zmíněním @{group1} překročíte <a href="{siteSettingUrl}" target="_blank">limit počtu upozornění</a> # uživatele.}
+                              other {Zmíněním @{group1} překročíte <a href="{siteSettingUrl}" target="_blank">limit počtu upozornění</a> # uživatelů.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Zmíněním @{group1} překročíte limit počtu upozornění # uživatele.}
+                              other {Zmíněním @{group1} překročíte limit počtu upozornění # uživatelů.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Zmíněním @{group1} a @{group2} překročíte <a href="{siteSettingUrl}" target="_blank">limit počtu upozornění</a> # uživatele.}
+                            other {Zmíněním @{group1} a @{group2} překročíte <a href="{siteSettingUrl}" target="_blank">limit počtu upozornění</a> # uživatelů.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Zmíněním @{group1} a @{group2} překročíte limit počtu upozornění # uživatele.}
+                            other {Zmíněním @{group1} a @{group2} překročíte limit počtu upozornění # uživatelů.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Zmíněním těchto {groupCount} skupin překročíte <a href="{siteSettingUrl}" target="_blank">limit počtu upozornění</a> # uživatele.}
+                            other {Zmíněním těchto {groupCount} skupin překročíte <a href="{siteSettingUrl}" target="_blank">limit počtu upozornění</a> # uživatelů.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Zmíněním těchto {groupCount} skupin překročíte limit počtu upozornění # uživatele.}
+                            other {Zmíněním těchto {groupCount} skupin překročíte limit počtu upozornění # uživatelů.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "Tato zpráva překračuje limit počtu upozornění %{count} zmínky."
+          few: "Tato zpráva překračuje limit počtu upozornění %{count} zmínek."
+          many: "Tato zpráva překračuje limit počtu upozornění %{count} zmínek."
+          other: "Tato zpráva překračuje limit počtu upozornění %{count} zmínek."
+        too_many_mentions_admin:
+          one: 'Tato zpráva překračuje <a href="%{siteSettingUrl}" target="_blank">limit počtu upozornění</a> %{count} zmínky.'
+          few: 'Tato zpráva překračuje <a href="%{siteSettingUrl}" target="_blank">limit počtu upozornění</a> %{count} zmínek.'
+          many: 'Tato zpráva překračuje <a href="%{siteSettingUrl}" target="_blank">limit počtu upozornění</a> %{count} zmínek.'
+          other: 'Tato zpráva překračuje <a href="%{siteSettingUrl}" target="_blank">limit počtu upozornění</a> %{count} zmínek.'
       aria_roles:
+        header: "Záhlaví chatu"
+        composer: "Editor chatu"
         channels_list: "Seznam kanálů chatu"
       no_direct_message_channels: "Zatím jste se nepřipojili k žádným přímým zprávám!"
       no_direct_message_channels_cta: "Zahajte konverzaci"
       no_public_channels: "Zatím jste se nepřipojili k žádnému kanálu!"
       no_public_channels_cta: "Procházet kanály"
+      kicked_from_channel: "K tomuto kanálu již nemáte přístup."
+      only_chat_push_notifications:
+        title: "Odesílání pouze push notifikací chatu"
+        description: "Zablokovat odesílání všech push notifikací mimo chat"
+      ignore_channel_wide_mention:
+        title: "Ignorování zmínek v rámci celého kanálu"
+        description: "Neposílat upozornění pro zmínky v rámci celého kanálu (@here a @all)."
+      show_thread_title_prompts:
+        title: "Zobrazit výzvy k zadání názvu vlákna"
+        description: "Zobrazit výzvy k nastavení názvu pro nová vlákna"
+      open: "Otevřít chat"
       open_full_page: "Otevřít chat na celou obrazovku"
       close_full_page: "Zavřít chat na celé obrazovce"
+      open_message: "Otevřít zprávu v chatu"
+      placeholder_self: "Poznamenejte něco"
       placeholder_channel: "Pište v %{channelName}"
+      placeholder_thread: "Odpovězte do vlákna"
       placeholder_users: "Pište si s %{commaSeparatedNames}"
+      placeholder_group: "Napište do skupiny"
+      placeholder_new_message_disallowed:
+        archived: "Kanál je archivován, nové zprávy momentálně nelze odeslat."
+        closed: "Kanál je uzavřen, nové zprávy momentálně nelze odeslat."
+        read_only: "Kanál je nastaven pouze pro čtení, nové zprávy momentálně nelze odeslat."
       placeholder_silenced: "V tuto chvíli nemůžete odesílat zprávy."
+      remove_upload: "Odstranit soubor"
       react: "Reagovat pomocí emoji"
       reply: "Odpověď"
       edit: "Upravit"
       copy_link: "Kopírovat odkaz"
+      copy_text: "Kopírovat text"
       rebake_message: "Obnovit HTML"
+      message_too_long: "Zpráva je příliš dlouhá, zprávy mohou mít maximálně %{count} znaků."
       retry_staged_message:
         title: "Chyba sítě"
         action: "Poslat znovu?"
@@ -159,15 +289,44 @@ cs:
       save: "Uložit"
       select: "Vybrat"
       return_to_list: "Zpět na seznam kanálů"
+      return_to_channel: "Zpět na kanál"
+      return_to_threads_list: "Zpět na seznam vláken"
+      unread_threads_count:
+        one: "Máte %{count} nepřečtenou diskuzi"
+        few: "Máte %{count} nepřečtené diskuzi"
+        many: "Máte %{count} nepřečtených diskuzí"
+        other: "Máte %{count} nepřečtených diskuzí"
+      scroll_to_bottom: "Přejít na konec"
+      scroll_to_new_messages: "Zobrazit nové zprávy"
+      sound:
+        title: "Zvuk upozornění na ploše"
       sounds:
         none: "Žádná"
+        bell: "Zvonek"
+        ding: "Cink"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Připojit soubor"
+      upload_to_channel: "Nahrát do %{title}"
+      upload_to_thread: "Nahrát do vlákna"
+      uploaded_files:
+        one: "%{count} soubor"
+        few: "%{count} soubory"
+        many: "%{count} souborů"
+        other: "%{count} souborů"
+      you_flagged: "Nahlásili jste tuto zprávu"
       exit: "zpět"
       channel_status:
+        read_only_header: "Kanál je určen pouze pro čtení"
+        read_only: "Pouze pro čtení"
+        archived_header: "Kanál je archivován"
         archived: "Archivované"
+        archive_failed: "Archivace kanálu se nezdařila. Archivováno bylo %{completed} z %{total} zpráv. Bylo vytvořeno <a target=\"_blank\" href=\"%{topic_url}\">cílové téma</a> . Stisknutím tlačítka Opakovat se můžete pokusit archivaci dokončit."
+        archive_failed_no_topic: "Archivace kanálu se nezdařila. Archivováno bylo %{completed} z %{total} zpráv. Nebylo vytvořeno cílové téma. Stisknutím tlačítka Opakovat se můžete pokusit archivaci dokončit."
+        archive_completed: "Viz <a target=\"_blank\" href=\"%{topic_url}\">archivační téma</a>"
+        closed_header: "Kanál je uzavřen"
         closed: "Uzavřeno"
+        open_header: "Kanál je otevřený"
         open: "Otevřít"
       browse:
         back: "Zpět"
@@ -185,7 +344,9 @@ cs:
         add_member: Přidat člena
         back_to_settings: "Zpět na nastavení"
       about_view:
-        title: Nadpis
+        associated_topic: Propojené téma
+        associated_category: Propojená kategorie
+        title: Název
         name: Jméno
         description: Popis
       channel_info:
@@ -195,20 +356,42 @@ cs:
           members: Členové
           settings: Nastavení
       new_message_modal:
+        title: Odeslání zprávy
+        add_user_long: <kbd>shift + kliknutí</kbd> nebo <kbd>shift + enter</kbd><span>Přidat @%{username}</span>
+        add_user_short: <span>Přidat uživatele</span>
+        open_channel: <span>Otevřít kanál</span>
+        default_search_placeholder: "#kanál, @někdo nebo cokoli"
+        default_channel_search_placeholder: "#kanál"
+        default_user_search_placeholder: "@někdo"
         user_search_placeholder: "...přidat další členy"
+        disabled_user: "zakázal chat"
+        no_items: "Žádné položky"
         create_group_placeholder: "Název skupinové konverzace (nepovinné)"
+        participants_counter: "%{selection_count}/%{max} účastníků"
         new_group_chat: "Nová skupinová konverzace"
         filter: "Filtr"
         cant_add_more_members: "Byl dosažen maximální počet členů"
         create_new_group_chat: "Vytvoření skupinové konverzace"
         group_with_too_many_members: "má příliš mnoho členů (%{membersCount})"
+      channel_edit_name_slug_modal:
+        title: Úprava kanálu
+        input_placeholder: Přidat název
+        slug_description: Zkratka kanálu se používá v URL adrese místo názvu kanálu
+        name: Název kanálu
+        slug: URL kanálu (volitelná)
+      channel_edit_description_modal:
+        title: Úprava popisu
+        input_placeholder: Přidejte popis
+        description: Řekněte lidem, o čem je tento kanál
       direct_message_creator:
+        add_to_channel: "Přidat do kanálu"
         title: Nová zpráva
         prefix: "Komu:"
         no_results: Žádné výsledky
+        selected_user_title: "Zrušit výběr %{username}"
         group_name: "Název skupinové konverzace (nepovinné)"
         members_counter:
-          one: "%{count}/%{max} člena"
+          one: "%{count}/%{max} členů"
           few: "%{count}/%{max} členů"
           many: "%{count}/%{max} členů"
           other: "%{count}/%{max} členů"
@@ -221,13 +404,77 @@ cs:
           many: "%{count} členů"
           other: "%{count} členů"
       create_channel:
+        threading:
+          label: "Povolit vlákna"
+        auto_join_users:
+          public_category_warning: "%{category} je veřejná kategorie. Automaticky přidat všechny nedávno aktivní uživatele do tohoto kanálu?"
+          warning_1_group:
+            one: "Automaticky přidat %{count} uživatele z %{group}?"
+            few: "Automaticky přidat %{count} uživatele z %{group}?"
+            many: "Automaticky přidat %{count} uživatelů z %{group}?"
+            other: "Automaticky přidat %{count} uživatelů z %{group}?"
+          warning_2_groups:
+            one: "Automaticky přidat %{count} uživatele z %{group1} a %{group2}?"
+            few: "Automaticky přidat %{count} uživatele z %{group1} a %{group2}?"
+            many: "Automaticky přidat %{count} uživatelů z %{group1} a %{group2}?"
+            other: "Automaticky přidat %{count} uživatelů z %{group1} a %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Automaticky přidat {userCount} uživatele z {groupName} a {groupCount} další skupiny?}
+                few {Automaticky přidat {userCount} uživatele z {groupName} a {groupCount} další skupiny?}
+                many {Automaticky přidat {userCount} uživatelů z {groupName} a {groupCount} další skupiny?}
+                        other {Automaticky přidat {userCount} uživatelů z {groupName} a {groupCount} další skupiny?}
+                      }
+                    }
+                few {
+                      { userCount, plural,
+                          one {Automaticky přidat {userCount} uživatele z {groupName} a {groupCount} dalších skupin?}
+                few {Automaticky přidat {userCount} uživatele z {groupName} a {groupCount} dalších skupin?}
+                many {Automaticky přidat {userCount} uživatelů z {groupName} a {groupCount} dalších skupin?}
+                        other {Automaticky přidat {userCount} uživatelů z {groupName} a {groupCount} dalších skupin?}
+                      }
+                    }
+                many {
+                      { userCount, plural,
+                          one {Automaticky přidat {userCount} uživatele z {groupName} a {groupCount} dalších skupin?}
+                few {Automaticky přidat {userCount} uživatele z {groupName} a {groupCount} dalších skupin?}
+                many {Automaticky přidat {userCount} uživatelů z {groupName} a {groupCount} dalších skupin?}
+                        other {Automaticky přidat {userCount} uživatelů z {groupName} a {groupCount} dalších skupin?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Automaticky přidat {userCount} uživatele z {groupName} a {groupCount} dalších skupin?}
+                few {Automaticky přidat {userCount} uživatele z {groupName} a {groupCount} dalších skupin?}
+                many {Automaticky přidat {userCount} uživatelů z {groupName} a {groupCount} dalších skupin?}
+                        other {Automaticky přidat {userCount} uživatelů z {groupName} a {groupCount} dalších skupin?}
+                      }
+                    }
+            }
         choose_category:
+          label: "Vyberte kategorii"
           none: "vyberte jednu..."
+          default_hint: Přístup spravujte přes <a href=%{link} target="_blank">%{category} nastavení zabezpečení.</a>
+          hint_1_group: 'Uživatelé v %{group} budou mít přístup k tomuto kanálu podle nastavení zabezpečení <a href="%{settingLink}" target="_blank"></a>'
+          hint_2_groups: 'Uživatelé v %{group1} a %{group2} budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
+          hint_multiple_groups:
+            one: 'Uživatelé v %{group} a %{count} další skupině budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
+            few: 'Uživatelé v %{group} a %{count} dalších skupinách budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
+            many: 'Uživatelé v %{group} a %{count} dalších skupinách budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
+            other: 'Uživatelé v %{group} a %{count} dalších skupinách budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
+        create: "Vytvořit kanál"
+        description: "Popis (volitelný)"
+        name: "Název kanálu"
+        slug: "URL kanálu (volitelná)"
         title: "Nový kanál"
         type: "Typ"
         types:
           category: "Kategorie"
           topic: "Témata"
+      reviewable:
+        type: "Zpráva chatu"
       reactions:
         only_you: "<span>Reagovali jste pomocí </span>:%{emoji}:"
         you_and_single_user: "<span>Vy a %{username} jste reagovali pomocí </span>:%{emoji}:"
@@ -245,20 +492,36 @@ cs:
           many: "<span>%{commaSeparatedUsernames} a %{count} dalších reagovalo na </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} a %{count} dalších reagovalo na </span>:%{emoji}:"
       composer:
+        toggle_toolbar: "Přepnout nástrojovou lištu"
         italic_text: "text kurzívou"
         bold_text: "tučný text"
+        code_text: "text kódu"
         send: "Poslat"
       quote:
+        original_channel: 'Původně odesláno v <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "Citace z chatu zkopírována do schránky"
         default_thread_title: "Vlákno"
       notification_levels:
         never: "Nikdy"
+        mention: "Pouze pro zmínky"
+        always: "Pro všechny aktivity"
       settings:
+        channel_wide_mentions_label: "Povolit zmínky @all a @here"
+        channel_wide_mentions_description: "Umožněte uživatelům upozornit všechny členy #%{channel} pomocí @all nebo pouze ty, kteří jsou v danou chvíli aktivní, pomocí @here."
+        channel_threading_label: "Vlákna"
+        channel_threading_description: "Když je povoleno vytváření vláken, odpovědi na zprávy chatu vytvoří samostatnou konverzaci, která bude existovat vedle hlavního kanálu."
+        auto_join_users_label: "Automaticky přidávat uživatele"
         auto_join_users_info: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup do kategorie %{category}."
         auto_join_users_info_no_category: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup ke zvolené kategorii."
+        auto_join_users_warning: "Každý uživatel, který není členem tohoto kanálu a má přístup do kategorie %{category}, se k němu připojí. Jste si jisti?"
+        notification_level: "Odesílat push notifikace"
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
+        mute: "Ztlumit kanál"
         threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
+        muted_on: "Zapnuto"
+        muted_off: "Vypnuto"
         notifications: "Upozornění"
         preview: "Náhled"
         save: "Uložit"
@@ -266,36 +529,61 @@ cs:
         unfollow: "Opustit skupinu"
         admin_title: "Administrace"
         settings_title: "Nastavení"
+        info_title: "Informace o kanálu"
         category_label: "Kategorie"
         history_label: "Historie"
         members_label: "Členové"
       admin:
         title: "Chat"
         export_messages:
+          title: "Export zpráv chatu"
           description: "Tímto se exportují všechny zprávy ze všech kanálů."
+          create_export: "Vytvořit export"
+          confirm_export: "Toto exportuje všechny zprávy ze všech kanálů a odešle vám výsledek v soukromé zprávě. Opravdu chcete exportovat?"
+          export_has_started: "Export byl zahájen. Až bude hotový, obdržíte SZ."
       my_threads:
         title: Moje vlákna
         aria_label: "Přepnout na můj seznam vláken"
       direct_messages:
         title: "Soukromé zprávy"
+        aria_label: "Přepnutí na přímé zprávy"
         new: "Vytvořit osobní chat"
+        create: "Přejít"
         leave: "Opustit tento osobní chat"
         close: "Zavřít tento osobní chat"
+        cannot_create: "Je nám líto, ale přímé zprávy nelze odesílat."
       channel_list:
         title: "Kanály"
+        aria_label: "Přepnout na seznam kanálů"
       incoming_webhooks:
         back: "Zpět"
         channel_placeholder: "Vyberte kanál"
+        channel: "Kanál"
         confirm_destroy: "Jste si jisti, že chcete odstranit tento příchozí webhook? Toto nelze zrušit."
+        current_emoji: "Aktuální emoji"
         description: "Popis"
         delete: "Smazat"
         emoji: "Smajlíky :)"
+        emoji_instructions: "Pokud emoji ponecháte prázdné, použije se systémový avatar."
         name: "Jméno"
+        name_placeholder: "název..."
+        new: "Nový příchozí webhook"
+        none: "Nebyly vytvořeny žádné existující příchozí webhooky."
+        no_emoji: "Nejsou vybrány žádné emotikony"
+        post_to: "Poslat na"
+        reset_emoji: "Obnovit Emoji"
         save: "Uložit"
         edit: "Upravit"
+        select_emoji: "Vybrat Emoji"
         system: "systémové soukromé zprávy"
+        title: "Příchozí webhooky"
         url: "URL"
+        url_instructions: "Tato adresa URL obsahuje secret – uchovejte ji v bezpečí."
         username: "Uživatelské jméno"
+        username_instructions: "Uživatelské jméno bota, který přispívá do kanálu. Pokud je ponecháno prázdné, je výchozí hodnota \"system\"."
+        instructions: "Příchozí webhooky mohou být použity externími systémy k odesílání zpráv do určeného kanálu chatu jako uživatel bota prostřednictvím endpointu <code>/hooks/:key</code>. Payload se skládá z jednoho <code>textového</code> parametru, který je omezen na 2000 znaků.<br><br>Podporujeme také omezené množství parametrů <code>text</code> ve formátu Slack, extrahování odkazů a zmínek na základě formátu na <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api. slack.com/reference/surfaces/formatting</a>, ale tomu je třeba použít endpoint <code>/hooks/:key/slack</code>."
+        saved: "Změny webhooku uloženy"
+        created: "Webhook vytvořen"
       selection:
         cancel: "Zrušit"
         quote_selection: "Citovat v tématu"
@@ -327,7 +615,16 @@ cs:
             few: "Chystáte se vytvořit novou zprávu a vyplnit ji <b>%{count}</b> vybranými zprávami v chatu."
             many: "Chystáte se vytvořit novou zprávu a vyplnit ji <b>%{count}</b> vybranými zprávami v chatu."
             other: "Chystáte se vytvořit novou zprávu a vyplnit ji <b>%{count}</b> vybranými zprávami v chatu."
+      replying_indicator:
+        single_user: "%{username} píše"
+        multiple_users: "%{commaSeparatedUsernames} a %{lastUsername} píší"
+        many_users:
+          one: "%{commaSeparatedUsernames} a %{count} další píší"
+          few: "%{commaSeparatedUsernames} a %{count} další píší"
+          many: "%{commaSeparatedUsernames} a %{count} dalších píší"
+          other: "%{commaSeparatedUsernames} a %{count} dalších píší"
       retention_reminders:
+        indefinitely_short: "na neurčito"
         indefinitely_long: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly po neomezenou dobu."
         short:
           one: "%{count} den"
@@ -346,34 +643,65 @@ cs:
         spam: "Tato zpráva je reklamou nebo vandalismem. Není užitečná ani relevantní pro aktuální kanál."
         notify_user: "Chci s touto osobou mluvit o jejich zprávě přímo a osobně."
         notify_moderators: "Tato zpráva vyžaduje pozornost členů redakce z jiného důvodu, který není uveden výše."
+      flagging:
+        action: "Nahlásit zprávu"
       emoji_picker:
+        favorites: "Často používané"
+        smileys_&_emotion: "Smajlíky a emoce"
         objects: "Objekty"
+        people_&_body: "Lidé a tělo"
+        travel_&_places: "Cestování a místa"
+        animals_&_nature: "Zvířata a příroda"
+        food_&_drink: "Jídlo a pití"
         activities: "Aktivity"
         flags: "Nahlášení"
         symbols: "Symboly"
         search_placeholder: "Vyhledávání podle názvu a přezdívky emoji..."
         no_results: "Žádné výsledky"
       thread:
-        title: "Nadpis"
+        title: "Název"
+        view_thread: Zobrazit vlákno
         replies:
           one: "%{count} odpověď"
           few: "%{count} odpovědí"
           many: "%{count} odpovědí"
           other: "%{count} odpovědí"
         label: Vlákno
+        close: "Zavřít vlákno"
+        original_message:
+          started_by: "Zahájil"
         settings: "Nastavení"
         last_reply: "poslední odpověď"
         notifications:
           regular:
             title: "Normální"
+            description: "Dostávejte upozornění, když vás někdo v tomto vlákně zmíní."
           tracking:
             title: "Sledované"
+            description: "Dostávejte upozornění, když vás někdo v tomto vlákně zmíní a zobrazit počet nových odpovědí v seznamu vláken."
           watching:
             title: "Hlídání"
+            description: "Dostávejte upozornění na všechny odpovědi v tomto vlákně a zobrazit počet nových odpovědí v seznamu vláken."
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
+      thread_title_toast:
+        title: "Nastavení názvu vlákna"
+        message: "Pomozte ostatním objevit tuto konverzaci."
+        dismiss_action: "Znovu nezobrazovat"
+        primary_action: "Nastavit název"
       thread_title_modal:
+        title: "Nastavení názvu vlákna"
         input_placeholder: "Řekněte ostatním, o čem je tato konverzace..."
         discourse_ai:
+          title: "Názvy vláken se generují automaticky"
           description: "Podívejte se na %{url} , kde se dozvíte více o tomto a dalších vylepšeních vašeho zážitku z Discourse."
+      threads:
+        open: "Otevřít vlákno"
+        list: "Vlákna"
+        none: "V tomto kanálu se neúčastníte žádných vláken."
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"
@@ -381,37 +709,88 @@ cs:
       chat_invitation: "vás pozval/a, abyste se připojili ke kanálu chatu"
       chat_invitation_html: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} a %{username2}"
+        few: "%{username} a %{count} další"
+        many: "%{username} a %{count} další"
+        other: "%{username} a %{count} dalších"
       popup:
+        chat_mention:
+          direct: 'vás zmínil v "%{channel}"'
+          direct_html: '<span>%{username}</span> <span>vás zmínil v "%{channel}"</span>'
+          other_plain: 'zmínil %{identifier} v "%{channel}"'
+          other_html: '<span>%{username}</span> <span>zmínil %{identifier} v "%{channel}"</span>'
         direct_message_chat_mention:
           direct: "vás zmínil/a v osobním chatu"
           direct_html: "<span>%{username}</span> <span>vás zmínil/a v osobním chatu</span>"
           other_plain: "zmínil/a %{identifier} v osobním chatu"
-          other_html: "<span>%{username}</span> <span>zmínil/a %{identifier} v osobním chatu</span>"
+          other_html: "<span>%{username}</span> <span>zmínil/a %{identifier} v soukromém chatu</span>"
+        chat_message: "Nová zpráva chatu"
+        chat_quoted: "%{username} citoval vaši zprávu v chatu"
+      titles:
+        chat_mention: "Zmínky v chatu"
+        chat_invitation: "Pozván/a do kanálu chatu"
+        chat_quoted: "Citovaná zpráva v chatu"
+        chat_watched_thread: "Sledované vlákno chatu"
+    action_codes:
+      chat:
+        enabled: '%{who} povolil/a <button class="btn-link open-chat">chat</button> %{when}'
+        disabled: "%{who} uzavřel/a chat %{when}"
     discourse_automation:
       scriptables:
         send_chat_message:
+          title: Odeslat zprávu chatu
           fields:
+            chat_channel_id:
+              label: ID kanálu chatu
             message:
               label: Zpráva
+            sender:
+              label: Odesílatel
+              description: Výchozí je system
     review:
+      transcript:
+        view: "Zobrazit přepis předchozích zpráv"
       types:
+        chat_reviewable_message:
+          title: "Nahlášená zpráva chatu"
         reviewable_chat_message:
           title: "Označená zpráva chatu"
+          noun: "zpráva chatu"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
         keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Přepnout kanál"
+          switch__unread_channel_arrows: "%{shortcut} Přepnout nepřečtený kanál"
           open_quick_channel_selector: "%{shortcut} Otevřít rychlý výběr kanálů"
+          open_insert_link_modal: "%{shortcut} Vložit hypertextový odkaz (pouze editor)"
+          composer_bold: "%{shortcut} Tučné (pouze editor)"
+          composer_italic: "%{shortcut} Kurzíva (pouze editor)"
+          composer_code: "%{shortcut} Kód (pouze editor)"
+          drawer_open: "%{shortcut} Otevření okénka chatu"
+          drawer_close: "%{shortcut} Zavření okénka chatu"
           mark_all_channels_read: "%{shortcut} Označit všechny kanály jako přečtené"
     topic_statuses:
       chat:
         help: "Pro toto téma je povolen chat"
     user:
-      allow_private_messages: "Povolit ostatním uživatelům posílat mi osobní zprávy a přímé zprávy v chatu"
-      muted_users_instructions: "Potlačit všechna oznámení, osobní zprávy a přímé zprávy z chatu od těchto uživatelů."
-      allowed_pm_users_instructions: "Od těchto uživatelů povolit pouze osobní zprávy nebo přímé zprávy chatu."
-      allow_private_messages_from_specific_users: "Povolit posílání osobních zpráv nebo přímých zpráv v chatu pouze konkrétním uživatelům."
-      ignored_users_instructions: "Potlačit všechny příspěvky, zprávy, oznámení, osobní zprávy a přímé zprávy chatu od těchto uživatelů."
+      allow_private_messages: "Povolit ostatním uživatelům posílat mi soukromé zprávy a přímé zprávy v chatu"
+      muted_users_instructions: "Potlačit všechna oznámení, soukromé zprávy a přímé zprávy z chatu od těchto uživatelů."
+      allowed_pm_users_instructions: "Od těchto uživatelů povolit pouze soukromé zprávy nebo přímé zprávy chatu."
+      allow_private_messages_from_specific_users: "Povolit posílání soukromých zpráv nebo přímých zpráv v chatu pouze konkrétním uživatelům."
+      ignored_users_instructions: "Potlačit všechny příspěvky, zprávy, oznámení, soukromé zprávy a přímé zprávy chatu od těchto uživatelů."
+    user_menu:
+      no_chat_notifications_title: "Zatím nemáte žádná oznámení z chatu"
+      no_chat_notifications_body: >
+        Na tomto panelu budete upozorněni, když vám někdo napíše přímou zprávu nebo vás v chatu <b>@zmíní</b>. Upozornění vám budou zasílána také na váš e-mail, pokud se delší dobu nepřihlásíte. <br><br> Kliknutím na nadpis v horní části libovolného chatového kanálu můžete nastavit, jaká upozornění budete v daném kanálu dostávat. Další informace naleznete v části <a href='%{preferencesUrl}'>Nastavení upozornění</a>.
+      tabs:
+        chat_notifications: "Upozornění chatu"
+        chat_notifications_with_unread:
+          one: "Oznámení chatu – %{count} nepřečtené upozornění"
+          few: "Oznámení chatu – %{count} nepřečtená upozornění"
+          many: "Oznámení chatu – %{count} nepřečtených upozornění"
+          other: "Oznámení chatu – %{count} nepřečtených upozornění"
     styleguide:
       sections:
         chat:

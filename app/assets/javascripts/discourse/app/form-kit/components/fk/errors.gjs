@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 export default class FKErrors extends Component {
   concatErrors(errors) {

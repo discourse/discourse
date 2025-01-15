@@ -1,6 +1,7 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
   "discovery-topic-list-load-more",
+  "full-page-search-load-more",
 ]);
 
 export const VALUE_TRANSFORMERS = Object.freeze([
@@ -11,19 +12,20 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "home-logo-href",
   "home-logo-image-url",
   "invite-simple-mode-topic",
+  "latest-topic-list-item-class",
   "mentions-class",
   "more-topics-tabs",
   "move-to-topic-merge-options",
   "move-to-topic-move-options",
-  "navigation-bar-dropdown-mode",
   "navigation-bar-dropdown-icon",
-  "parent-category-row-class-mobile",
+  "navigation-bar-dropdown-mode",
   "parent-category-row-class",
+  "parent-category-row-class-mobile",
   "post-menu-buttons",
   "small-user-attrs",
+  "topic-list-class",
   "topic-list-columns",
   "topic-list-header-sortable-column",
-  "topic-list-class",
   "topic-list-item-class",
   "topic-list-item-expand-pinned",
   "topic-list-item-mobile-layout",

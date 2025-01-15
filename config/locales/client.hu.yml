@@ -460,6 +460,12 @@ hu:
         confirm: "Már van egy folyamatban lévő piszkozata. Mit szeretne vele kezdeni?"
         yes_value: "Elvetés"
         no_value: "Szerkesztés folytatása"
+      dropdown:
+        title: "Legújabb piszkozatok menü megnyitása"
+        view_all: "mindent megtekint"
+        other_drafts:
+          one: "+%{count} egyéb piszkozat"
+          other: "+%{count} egyéb piszkozat"
     topic_count_all:
       one: "Nézzen meg %{count} új témát"
       other: "Nézzen meg %{count} új témát"
@@ -632,6 +638,7 @@ hu:
         category: "Kategória"
         score_type:
           title: "Ok"
+          all: "(minden ok)"
         orders:
           score: "Pontszám"
           score_asc: "Pontszám (fordított)"
@@ -4433,7 +4440,10 @@ hu:
         everyone_can_use: "A címkéket mindenki használhatja"
         usable_only_by_groups: "A címkék mindenki számára láthatóak, de csak a következő csoportok használhatják őket"
         visible_only_to_groups: "A címkék csak a következő csoportok számára láthatók"
-        cannot_save: "Nem lehet elmenteni a címkecsoportot. Győződjön meg róla, hogy legalább egy címke van jelen, a címkecsoport neve nem üres és 100 karakternél rövidebb, valamint egy csoport ki van választva a címkék engedélyezéséhez."
+        cannot_save:
+          empty_name: "A címkecsoport nem menthető. Győződjön meg arról, hogy a címkecsoport neve nem üres."
+          no_tags: "A címkecsoport nem menthető. Győződjön meg arról, hogy legalább egy címke ki van jelölve."
+          no_groups: "A címkecsoport nem menthető. Győződjön meg arról, hogy legalább egy csoport ki van jelölve az engedélyhez."
         tags_placeholder: "Címkék keresése vagy létrehozása"
         parent_tag_placeholder: "Nem kötelező"
         select_groups_placeholder: "Csoportok kiválasztása…"
@@ -4644,11 +4654,9 @@ hu:
             users:
               content: "Felhasználók"
               title: "Az összes felhasználó listája"
-            my_posts:
-              content: "Bejegyzéseim"
-              content_drafts: "Vázlataim"
-              title: "Legutóbbi téma tevékenységem"
-              title_drafts: "Nem közzétett piszkozataim"
+            my_drafts:
+              content: "Vázlataim"
+              title: "Nem közzétett piszkozataim"
               draft_count:
                 one: "%{count} vázlat"
                 other: "%{count} vázlat"
@@ -4788,7 +4796,6 @@ hu:
           never: "soha"
       reports:
         title: "Aktív bejelentések listája"
-        meta_doc: "Fedezze fel <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentációnkat</a> a jelentések részletes áttekintéséhez."
         sidebar_title: "Jelentések"
         sidebar_link:
           all: "Összes bejelentés"
@@ -4921,6 +4928,7 @@ hu:
         custom_date_range: Egyéni dátumtartomány
         reports:
           trend_title: "%{percent} megváltoztatni. Jelenlegi %{current}, volt %{prev} az előző időszakban"
+          percent_change_tooltip: "%{percent} változás."
           percent_change_tooltip_previous_value:
             yesterday:
               one: "Két napja %{count} volt."
@@ -5049,6 +5057,20 @@ hu:
         add_owners: Tulajdonosok hozzáadása
         none_selected: "Válasz ki egy csoportot hogy elkezdhesd"
         no_custom_groups: "Új egyéni csoport létrehozása"
+      api_keys:
+        title: "API kulcsok"
+        description: "Az API-kulcsok funkció lehetővé teszi a Discourse külső rendszerekkel való biztonságos integrálását és a műveletek automatizálását. A rendszergazdák meghatározott hatókörű kulcsokat hozhatnak létre az erőforrásokhoz és az érzékeny adatokhoz való hozzáférés szabályozására. A hatókör korlátozza a funkcionalitást, és fokozott biztonságot biztosít."
+        add: "API-kulcs hozzáadása"
+        edit: "Szerkesztés"
+        save: "Mentés"
+        cancel: "Mégse"
+        continue: "Folytatás"
+        back: "Vissza az API-kulcsokhoz"
+        revoke: "Visszavonás"
+        undo_revoke: "Visszavonás visszavonása"
+        revoked: "Visszavonva"
+        delete: Végleges törlés
+        no_api_keys: "Még nem rendelkezik API-kulccsal."
       api:
         generate_master: "Mester API-kulcs létrehozása"
         none: "Jelenleg nincsenek elérhető API kulcsok."
@@ -5056,10 +5078,10 @@ hu:
         title: "API"
         key: "Kulcs"
         keys: "Kulcs"
-        created: Létrehozott
+        created: Létrehozva
         updated: Frissítve
         last_used: Utoljára használva
-        never_used: (soha)
+        never_used: Soha
         generate: "Generálás"
         undo_revoke: "Visszavonás visszavonása"
         revoke: "Visszavonás"
@@ -5509,7 +5531,8 @@ hu:
         sidebar_link:
           api_keys:
             title: "API kulcsok"
-            keywords: "token|webhook"
+            keywords: "token"
+          webhooks: "Webhooks"
           developer: "Fejlesztő"
           embedding: "Beágyazás"
           rate_limits: "Korlátozások"
@@ -5657,6 +5680,7 @@ hu:
           browse_themes: "Közösségi témák böngészése"
           customize_desc: "Személyre szabás:"
           title: "Témák"
+          description: "A témák kiterjedt testreszabások, amelyek megváltoztatják a fórum stílusának több elemét, és gyakran további kezelőfelület-szolgáltatásokat is tartalmaznak."
           create: "Létrehoz"
           create_type: "Típus"
           create_name: "Név"
@@ -5869,6 +5893,7 @@ hu:
           title: "Színek"
           edit: "Színpaletták szerkesztése"
           long_title: "Színpaletták"
+          description: "A színpaletták határozzák meg a webhely felületén használt alapszíneket, míg a témák további stílust, elrendezést és összetevőket biztosíthatnak – mindkettő együtt képes létrehozni a webhely egyedi megjelenését és hangulatát, és mindkettő elérhetővé tehető a felhasználók számára, hogy kiválaszthassák preferenciáikat."
           about: "Módosítsa a témák által használt színeket. Kezdésként hozzon létre egy új színpalettát."
           new_name: "Új színpaletta"
           copy_name_prefix: "másolata"
@@ -6214,6 +6239,7 @@ hu:
           title: "Hiba-naplók"
       watched_words:
         title: "Figyelt szavak"
+        description: "A megfigyelt szavak olyan moderációs eszközök, amelyek többféle műveletet is végrehajthatnak, beleértve bizonyos szavakat tartalmazó bejegyzések blokkolását, cenzúrázását, linkelését vagy megjelölését."
         search: "keresés"
         clear_filter: "Törlés"
         show_words:
@@ -6368,6 +6394,7 @@ hu:
         status: "Állapot"
         show_emails: "E-mailek megjelenítése"
         hide_emails: "E-mailek elrejtése"
+        silence_reason: "Némítás oka"
         bulk_actions:
           title: "Csoportos műveletek"
           admin_cant_be_deleted: "Ez a felhasználó nem törölhető, mert rendszergazda"
@@ -6734,10 +6761,10 @@ hu:
           dropdown: "Legördülő menü"
           multiselect: "Többszörös kiválasztás"
       site_text:
-        description: "Testre szabhatja a fórumon megjelenő bármely szöveget. Kezdd az alábbi kereséssel:"
+        description: "Bármelyik szöveget személyre szabhatja a fórumon."
         search: "A szerkesztendő szöveg keresése"
-        title: "Szöveg"
-        edit: "szerkesztés"
+        title: "Oldal szövegei"
+        edit: "Szerkesztés"
         revert: "Változtatások visszavonása"
         revert_confirm: "Biztos, hogy visszavonja a változtatásait?"
         go_back: "Vissza a kereséshez"
@@ -6993,6 +7020,7 @@ hu:
         post_author_with_default: "Bejegyzés szerzője (Alapértelmezetten: %{author})"
         add_host: "Gazdagép hozzáadása"
         posts_and_topics: "Bejegyzések és témák beállítása"
+        crawlers: "Keresőrobot beállítás"
         crawlers_description: "Amikor a Discourse témákat hoz létre a bejegyzéseidhez, ha nincs RSS/ATOM feed, akkor megpróbálja a HTML-edből elemezni a tartalmat. Néha kihívást jelenthet a tartalom kinyerése, ezért lehetőséget biztosítunk a CSS szabályok megadására, hogy megkönnyítsük a kinyerést."
         embed_by_username: "Felhasználónév a téma létrehozáshoz"
         embed_post_limit: "Beágyazott bejegyzések legnagyobb száma"
@@ -7004,6 +7032,7 @@ hu:
         allowed_embed_classnames: "Engedélyezett CSS-osztálynevek"
         save: "Mentés"
         posts_and_topics_settings_saved: "A bejegyzések és témák beállításai mentve"
+        crawler_settings_saved: "Keresőrobot beállítás mentve"
         back: "Vissza a beágyazáshoz"
         configuration_snippet: "Konfigurációs kódrészlet"
         host_form:

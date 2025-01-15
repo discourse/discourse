@@ -545,6 +545,8 @@ pl_PL:
         confirm: "Masz już wersję roboczą w toku. Co chcesz z nią zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
+      dropdown:
+        view_all: "pokaż wszystkie"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -1979,6 +1981,7 @@ pl_PL:
                 many {# dni}
               other {# dni}
             }.
+          edit_link_options: "Edytuj opcje linku lub wyślij e-mailem."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
           restrict: "Ogranicz do"
@@ -1999,6 +2002,8 @@ pl_PL:
           cancel: "Anuluj"
           create_link: "Utwórz link"
           create_link_and_send_email: "Utwórz link i wyślij e-mail"
+          invite_saved_without_sending_email: "Zaproszenie zapisane. Skopiuj poniższy link i udostępnij go, aby natychmiast przyznać dostęp do tej strony."
+          invite_saved_with_sending_email: "Wiadomość z zaproszeniem została wysłana. Możesz również skopiować poniższy link i udostępnić go, aby natychmiast przyznać dostęp do tej strony."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -2145,6 +2150,7 @@ pl_PL:
     presence_toggle:
       online: "Dostępny"
       offline: "Niedostępny"
+      title: "Przełącz funkcje obecności"
     user_tips:
       button: "Zrozumiano!"
       skip: "Pomiń wskazówki"
@@ -2462,6 +2468,7 @@ pl_PL:
     full_name_requirement:
       required_at_signup: "Wymagane"
       optional_at_signup: "Opcjonalnie"
+      hidden_at_signup: "Opcjonalne, ukryte przy rejestracji"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2518,6 +2525,7 @@ pl_PL:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} jest większe niż maksymalna dozwolona wartość %{max_file_size}"
+        size_too_small: "%{provided_file_size} jest mniejsze niż minimalna dozwolona wartość %{min_file_size}"
     emoji_picker:
       filter_placeholder: Szukaj emoji
       smileys_&_emotion: Buźki i emocje
@@ -3258,6 +3266,7 @@ pl_PL:
         other: "%{count} postów w temacie"
       create: "Nowy temat"
       create_disabled_category: "Nie masz uprawnień do tworzenia tematów w tej kategorii"
+      create_disabled_tag: "Nie możesz tworzyć tematów z tym tagiem"
       create_long: "Utwórz nowy temat"
       open_draft: "Otwórz szkic"
       private_message: "Napisz wiadomość"
@@ -3736,6 +3745,7 @@ pl_PL:
           other: "Wybrano <b>%{count}</b> wpisów."
       deleted_by_author_simple: "(temat usunięty przez autora)"
     post_list:
+      empty: "Brak postów"
       aria_post_number: "%{title} - post #%{postNumber}"
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
@@ -4756,7 +4766,6 @@ pl_PL:
         everyone_can_use: "Tagi mogą być wykorzystywane przez wszystkich"
         usable_only_by_groups: "Tagi są widoczne dla wszystkich, ale tylko następujące grupy mogą ich używać"
         visible_only_to_groups: "Tagi są widoczne tylko dla następujących grup"
-        cannot_save: "Nie można zapisać grupy tagów. Upewnij się, że istnieje co najmniej jeden tag, nazwa grupy tagów nie jest pusta i ma mniej niż 100 znaków, a grupa jest wybrana dla uprawnień tagów."
         tags_placeholder: "Wyszukaj lub utwórz tagi"
         parent_tag_placeholder: "Opcjonalnie"
         select_groups_placeholder: "Wybierz grupy…"
@@ -4979,11 +4988,9 @@ pl_PL:
             users:
               content: "Użytkownicy"
               title: "Lista wszystkich użytkowników"
-            my_posts:
-              content: "Wysłane"
-              content_drafts: "Moje szkice"
-              title: "Moja ostatnia aktywność w temacie"
-              title_drafts: "Moje nieopublikowane wersje robocze"
+            my_drafts:
+              content: "Moje szkice"
+              title: "Moje nieopublikowane wersje robocze"
               draft_count:
                 one: "%{count} szkic"
                 few: "%{count} szkice"
@@ -5135,37 +5142,64 @@ pl_PL:
           never: "nigdy"
       reports:
         title: "Lista dostępnych zgłoszeń"
-        meta_doc: "Zapoznaj się z naszą <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentacją</a>, aby uzyskać szczegółowy przegląd raportów."
         sidebar_title: "Zgłoszenia"
         sidebar_link:
           all: "Wszystkie zgłoszenia"
       config:
         developer:
           title: "Deweloperskie"
+          header_description: "Ustawienia deweloperskie do kontrolowania limitów szybkości, mnożników i obliczeń, trybu bezpiecznego i innych zaawansowanych funkcji."
         experimental:
           title: "Eksperymentalne"
+          header_description: "Włączaj lub wyłączaj eksperymentalne funkcje dla swojej witryny, większość z nich może być kontrolowana dla grupy."
+        font_style:
+          title: "Styl czcionki"
+          header_description: "Dostosuj style czcionek używane w Twoich motywach"
         files:
           title: "Pliki"
+          header_description: "Ustawienia, które kontrolują limity rozmiaru i typu plików, rozmiary i źródła awatarów, przechowywanie plików, jakość i kompresję obrazu i nie tylko."
         legal:
           title: "Prawne"
+          header_description: "Skonfiguruj ustawienia prawne, takie jak warunki świadczenia usług, polityka prywatności, dane kontaktowe i kwestie specyficzne dla UE."
+        login_and_authentication:
+          title: "Logowanie i uwierzytelnianie"
+          header_description: "Skonfiguruj sposób logowania i uwierzytelniania użytkowników, sekrety i klucze, dostawców OAuth2 i nie tylko."
         logo:
           title: "Logo witryny"
+          header_description: "Dostosuj warianty logo swojej witryny"
         navigation:
           title: "Nawigacja"
+          header_description: "Skonfiguruj łącza nawigacyjne i elementy menu dla swojej witryny. Obejmuje to lokalizację i zachowanie głównego menu nawigacyjnego, szybkich linków u góry strony głównej, a także paska bocznego administratora"
         notifications:
           title: "Powiadomienia"
+          header_description: "Skonfiguruj sposób zarządzania powiadomieniami i ich dostarczania użytkownikom, w tym preferencje dotyczące wiadomości e-mail, powiadomień push, limitów wzmianek i konsolidacji powiadomień."
         onebox:
           title: "Onebox"
+          header_description: "Skonfiguruj sposób generowania i wyświetlania podglądów onebox dla swojej witryny."
         other:
           title: "Inne"
+          header_description: "Ustawienia, które nie pasują do żadnej innej kategorii"
+        rate_limits:
+          title: "Ograniczenia szybkości"
+          header_description: "Skonfiguruj, jak często użytkownicy mogą wykonywać określone czynności, takie jak tworzenie tematów, wysyłanie wiadomości i publikowanie odpowiedzi."
         search:
           title: "Szukaj"
+          header_description: "Skonfiguruj ustawienia wyszukiwania, w tym rejestrowanie i tokenizację dla języków chińskiego i japońskiego."
         security:
           title: "Bezpieczeństwo"
+          header_description: "Skonfiguruj ustawienia zabezpieczeń, w tym uwierzytelnianie dwuskładnikowe, uprawnienia moderatora i zasady bezpieczeństwa treści."
         spam:
           title: "Spam"
+          header_description: "Skonfiguruj sposób, w jaki system analizuje rejestrację użytkowników i ich posty, aby szybko identyfikować i blokować spam."
+        trust_levels:
+          title: "Poziom zaufania"
+          header_description: "Ustawienia poziomu zaufania pozwalają na precyzyjne dostosowanie wymagań i powiadomień dla systemu progresji twojej społeczności, który automatycznie awansuje użytkowników na wyższe poziomy zaufania, gdy wykazują oni stałe, pozytywne zaangażowanie na twoim forum."
         user_api:
           title: "API użytkownika"
+          header_description: "Skonfiguruj, które grupy użytkowników mogą uzyskać dostęp do interfejsu API, a także które zakresy są dozwolone."
+        group_permissions:
+          title: "Uprawnienia grupy"
+          header_description: "Tutaj zarządzane są wszystkie uprawnienia aplikacji oparte na grupach, które kontrolują dostęp do różnych funkcji w Discourse"
       new_features:
         title: "Co nowego?"
         check_for_updates: "Sprawdź aktualizacje"
@@ -5197,6 +5231,8 @@ pl_PL:
           experiment_tooltip:
             title_disabled: "Wypróbuj naszą eksperymentalną funkcję"
             title_enabled: "Wyłącz funkcję eksperymentalną"
+            content_disabled: "Wypróbuj naszą najnowszą funkcję! Jest ona wciąż w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz zrezygnować, kiedy tylko zechcesz.<br/><br/>Zmiana tej opcji włączy funkcję dla wszystkich użytkowników."
+            content_enabled: "Zmiana tej opcji spowoduje wyłączenie funkcji dla wszystkich użytkowników."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -5364,6 +5400,17 @@ pl_PL:
         add_owners: Dodaj właścicieli
         none_selected: "Wybierz grupę, aby rozpocząć"
         no_custom_groups: "Utwórz nową niestandardową grupę"
+      api_keys:
+        title: "Klucze API"
+        add: "Dodaj klucz API"
+        edit: "Edytuj"
+        save: "Zapisz"
+        cancel: "Anuluj"
+        continue: "Kontynuuj"
+        back: "Powrót do kluczy API"
+        revoke: "Odbierz"
+        revoked: "Unieważniono"
+        no_api_keys: "Nie masz jeszcze żadnych kluczy API."
       api:
         generate_master: "Generuj główny klucz API"
         none: "Nie ma teraz aktywnych kluczy API."
@@ -5371,12 +5418,11 @@ pl_PL:
         title: "API"
         key: "Klucz"
         keys: "Klucze"
-        created: Utworzono
+        created: Utworzony przez
         updated: Zaktualizowane
-        last_used: Ostatnio używane
-        never_used: (nigdy)
+        last_used: Ostatnio używany
+        never_used: Nigdy
         generate: "Generuj"
-        undo_revoke: "Cofnij unieważnienie"
         revoke: "Unieważnij"
         all_users: "Wszyscy użytkownicy"
         active_keys: "Aktywne klucze API"
@@ -5385,7 +5431,6 @@ pl_PL:
         description: Opis
         no_description: (brak opisu)
         all_api_keys: Wszystkie klucze API
-        user_mode: Poziom użytkownika
         scope_mode: Zakres
         impersonate_all_users: Podszywanie się pod dowolnego użytkownika
         single_user: "Pojedynczy użytkownik"
@@ -5409,7 +5454,7 @@ pl_PL:
           resource: Zasób
           action: Akcja
           allowed_parameters: Dozwolone parametry
-          optional_allowed_parameters: Dozwolone parametry (opcjonalnie)
+          optional_allowed_parameters: Dozwolone parametry (opcjonalne)
           any_parameter: (dowolny parametr)
           allowed_urls: Dozwolone adresy URL
           descriptions:
@@ -5633,32 +5678,44 @@ pl_PL:
         sidebar_link:
           about_your_site: "O Twojej witrynie"
           badges: "Odznaki"
+          login_and_authentication: "Logowanie i uwierzytelnianie"
           notifications: "Powiadomienia"
           permalinks: "Permalinki"
+          trust_levels: "Poziomy zaufania"
+          group_permissions: "Uprawnienia grupy"
           users: "Użytkownicy"
           groups: "Grupy"
+          user_fields: "Pola użytkownika"
+          watched_words: "Obserwowane słowa"
           legal: "Prawne"
           moderation_flags:
             title: "Moderacja"
       appearance:
         title: "Wygląd"
         sidebar_link:
+          font_style: "Styl czcionki"
           site_logo: "Logo witryny"
+          color_schemes: "Palety kolorów"
           emoji: "Emoji"
           navigation: "Nawigacja"
           themes: "Motywy"
           components:
             title: "Komponenty"
             keywords: "motyw|rozszerzenie"
+          site_texts: "Teksty witryny"
       email_settings:
         title: "Ustawienia e-mail"
         sidebar_link:
           appearance: "Wygląd"
+          server_setup:
+            title: "Konfiguracja serwera i logi"
       security:
         title: "Bezpieczeństwo"
         sidebar_link:
           security: "Ustawienia zabezpieczeń"
           spam: "Ustawienia spamu"
+          staff_action_logs:
+            title: "Logi i kontrola"
       section_landing_pages:
         account:
           title: "Konto"
@@ -5695,7 +5752,9 @@ pl_PL:
           company_name_warning: |
             Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
           governing_law: "Obowiązujące prawo"
+          governing_law_placeholder: "Prowincja, stan lub kraj"
           city_for_disputes: "Miasto do sporów"
+          city_for_disputes_placeholder: "Miasto"
           optional: "(opcjonalne)"
           update: "Aktualizuj"
           toasts:
@@ -5735,6 +5794,7 @@ pl_PL:
             non_deletable: "Nie możesz usunąć tej flagi, ponieważ jest to flaga systemowa lub została już użyta w systemie recenzji, jednak nadal możesz ją wyłączyć."
             require_message: "Poproś użytkowników o podanie dodatkowych powodów"
             require_message_description: "Po wybraniu tej flagi zostanie wyświetlone pole tekstowe, w którym użytkownik może podać dodatkowe szczegóły dotyczące powodu oflagowania treści."
+            auto_action_type: "Automatyczne ukrywanie oflagowanej zawartości"
           more_options:
             title: "Więcej opcji"
             move_up: "Przenieś wyżej"
@@ -5751,9 +5811,12 @@ pl_PL:
           title: "Wygląd i odczucia"
           themes:
             title: "Motywy"
+            themes_intro_img_alt: "Nowy symbol zastępczy motywu"
             set_default_theme: "Ustaw domyślne"
             default_theme: "Motyw domyślny"
+            themes_description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe."
             new_theme: "Nowy motyw"
+            user_selectable: "Możliwe do wyboru przez użytkownika"
         user_fields:
           field: "Pole"
           type: "Typ"
@@ -5789,14 +5852,17 @@ pl_PL:
         sidebar_link:
           api_keys:
             title: "Klucze API"
+          webhooks: "Webhooki"
           developer: "Deweloperskie"
           embedding: "Osadzanie"
+          rate_limits: "Ograniczenia szybkości"
           user_api: "API użytkownika"
           onebox: "Onebox"
           files: "Pliki"
           other_options: "Inne"
           search: "Szukaj"
           experimental: "Eksperymentalne"
+          all_site_settings: "Wszystkie ustawienia witryny"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -5927,11 +5993,14 @@ pl_PL:
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
           themes_intro: "Wybierz istniejący motyw lub zainstaluj nowy, by rozpocząć"
+          themes_intro_new: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
+          themes_intro_img_alt: "Nowy symbol zastępczy motywu"
           beginners_guide_title: "Poradnik początkującego użytkownika motywów Discourse"
           developers_guide_title: "Poradnik kreatora motywów Discourse"
           browse_themes: "Przeglądaj motywy społeczności"
           customize_desc: "Personalizacja:"
           title: "Motywy"
+          description: "Motywy to rozbudowane modyfikacje, które zmieniają wiele elementów stylu twojego forum i często zawierają także dodatkowe funkcje front-endowe."
           create: "Stwórz"
           create_type: "Typ"
           create_name: "Imię"
@@ -6158,6 +6227,7 @@ pl_PL:
           title: "Kolory"
           edit: "Edytuj palety kolorów"
           long_title: "Palety kolorów"
+          description: "Palety kolorów definiują podstawowe kolory używane w interfejsie Twojej witryny, podczas gdy motywy mogą zapewniać dodatkowe stylizacje, układy i komponenty - oba mogą współpracować ze sobą, aby stworzyć unikalny wygląd i styl Twojej witryny, i oba mogą być dostępne dla użytkowników, aby mogli wybrać swoje preferencje."
           about: "Zmodyfikuj kolory używane w swoich motywach. Utwórz nową paletę kolorów, aby rozpocząć."
           new_name: "Nowa paleta kolorów"
           copy_name_prefix: "Kopia"
@@ -6503,6 +6573,7 @@ pl_PL:
           title: "Logi błędów"
       watched_words:
         title: "Obserwowane słowa"
+        description: "Obserwowane słowa to narzędzia moderacji, które mogą wykonywać wiele różnych działań, w tym blokowanie, cenzurowanie, linkowanie lub oznaczanie postów zawierających określone słowa"
         search: "szukaj"
         clear_filter: "Wyczyść"
         show_words:
@@ -6659,6 +6730,7 @@ pl_PL:
         status: "Status"
         show_emails: "Pokaż e-maile"
         hide_emails: "Ukryj e-maile"
+        silence_reason: "Powód wyciszenia"
         bulk_actions:
           title: "Działania zbiorcze"
           admin_cant_be_deleted: "Ten użytkownik nie może zostać usunięty, ponieważ jest administratorem"
@@ -6666,6 +6738,11 @@ pl_PL:
           delete:
             label: "Usuń użytkowników…"
             confirmation_modal:
+              confirmation_phrase:
+                one: "usuń %{count} użytkownika"
+                few: "usuń %{count} użytkowników"
+                many: "usuń %{count} użytkowników"
+                other: "usuń %{count} użytkowników"
               close: "Zamknij"
               confirm: "Usuń"
               title:
@@ -6675,6 +6752,7 @@ pl_PL:
                 other: "Usuń %{count} użytkowników"
               bulk_delete_starting: "Rozpoczęcie masowego usuwania…"
               block_ip_and_email: "Blokuj adresy IP i adresy e-mail wszystkich wybranych użytkowników"
+              user_delete_succeeded: "[%{position}/%{total}] Pomyślnie usunięto @%{username}"
               bulk_delete_finished: "Operacja usuwania zbiorczego zakończona."
               failed_to_delete_users: "Nie udało się usunąć następujących użytkowników:"
         nav:
@@ -6966,6 +7044,7 @@ pl_PL:
           confirm_delete: "Czy na pewno chcesz usunąć ten rekord DiscourseConnect?"
       user_fields:
         title: "Pola użytkownika"
+        help: "Twórz niestandardowe pola użytkownika, aby zbierać dodatkowe informacje o członkach społeczności. Możesz wybrać, jakie informacje są wymagane podczas rejestracji, co jest wyświetlane w profilach i co użytkownicy mogą aktualizować."
         no_user_fields: "Nie masz jeszcze żadnych niestandardowych pól użytkownika."
         add: "Dodaj pole użytkownika"
         back: "Powrót do pól użytkownika"
@@ -7019,10 +7098,10 @@ pl_PL:
           dropdown: "Lista rozwijana"
           multiselect: "Wielokrotny wybór"
       site_text:
-        description: "Możesz dostosować dowolny tekst na swoim forum. Rozpocznij wyszukując poniżej:"
+        description: "Możesz dostosować dowolny tekst na swoim forum."
         search: "Znajdź etykietę lub tekst który chcesz zmienić"
-        title: "Tekst"
-        edit: "edytuj"
+        title: "Teksty witryny"
+        edit: "Edytuj"
         revert: "Cofnij zmiany"
         revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
         go_back: "Wróć do wyszukiwania"
@@ -7048,6 +7127,7 @@ pl_PL:
         none: "żadne"
         save: "zapisz"
         cancel: "anuluj"
+        not_found: "Nie można znaleźć ustawień"
       site_settings:
         emoji_list:
           invalid_input: "Lista emoji powinna zawierać tylko poprawne nazwy emoji, np. hugs"
@@ -7177,6 +7257,7 @@ pl_PL:
         no_user_badges: "%{name} nie otrzymał żadnych odznak."
         no_badges: Nie ma odznak, które można by było przyznać.
         none_selected: "Wybierz odznakę, aby rozpocząć"
+        usage_heading: Użycie
         allow_title: Pozwól wykorzystywać odznakę jako tytuł
         multiple_grant: Może być przyznana wielokrotnie
         visibility_heading: Widoczność
@@ -7248,6 +7329,7 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
+        description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Wybierz wiele plików, aby utworzyć emoji przy użyciu ich nazw. Wybrana grupa będzie używana dla wszystkich plików dodanych w tym samym czasie."
         no_emoji: "Nie masz jeszcze żadnych niestandardowych emoji."
         add: "Dodaj emoji"
         delete: "Usuń"
@@ -7272,8 +7354,16 @@ pl_PL:
 
           <p>Zastąp <b>DISCOURSE_USERNAME</b> nazwą użytkownika Discourse autora, który powinien utworzyć temat. Discourse automatycznie wyszuka użytkownika według atrybutu <code>content</code> tagów <code>&lt;meta&gt;</code> z atrybutem <code>name</code> ustawionym na <code>discourse-username</code> lub <code>autor</code>. Parametr <code>discourseUserName</code> został wycofany i zostanie usunięty w Discourse 3.2.</p>
         title: "Osadzanie"
+        description: "Discourse ma możliwość osadzania komentarzy z tematu w zdalnej witrynie za pomocą interfejsu API Javascript, który tworzy IFRAME"
+        host: "Dozwolone hosty"
         edit: "Edytuj"
+        category: "Publikuj w kategorii"
         tags: "Tagi tematu"
+        post_author: "Autor postu"
+        post_author_with_default: "Autor postu (domyślnie %{author})"
+        add_host: "Dodaj host"
+        posts_and_topics: "Konfiguracja postów i tematów"
+        crawlers: "Konfiguracja robotów"
         crawlers_description: "Gdy Discourse tworzy tematy reprezentujące twoje wpisy, a kanał RSS/ATOM nie został podany, treść będzie pobierana poprzez parsowanie HTML. Proces ten może okazać się trudny dlatego umożliwiamy podanie dodatkowych reguł CSS, które usprawniają proces parsowania."
         embed_by_username: "Użytkownik tworzący tematy"
         embed_post_limit: "Maksymalna ilość osadzanych wpisów "
@@ -7284,10 +7374,18 @@ pl_PL:
         blocked_embed_selectors: "Selektor CSS dla elementów, które są usuwane z osadzonych"
         allowed_embed_classnames: "Dozwolone nazwy klas CSS"
         save: "Zapisz"
+        posts_and_topics_settings_saved: "Ustawienia postów i tematów zostały zapisane"
+        crawler_settings_saved: "Ustawienia robota zostały zapisane"
+        back: "Powrót do osadzania"
+        configuration_snippet: "Fragment konfiguracji"
         host_form:
+          add_header: "Dodaj host"
+          edit_header: "Edytuj hosta"
           save: "Zapisz"
         nav:
+          hosts: "Hosty"
           settings: "Ustawienia"
+          posts_and_topics: "Posty i tematy"
           crawlers: "Botów indeksujących"
       permalink:
         title: "Permalinki"
@@ -7320,12 +7418,13 @@ pl_PL:
           label: "Nowy:"
           add_header: "Dodaj link stały"
           edit_header: "Edytuj link stały"
+          filter: "Adres URL wyszukiwania lub docelowy adres URL"
           url: "URL"
           permalink_type: "Typ stałego linku"
           save: "Zapisz"
       reseed:
         action:
-          label: "Zamień tekst…"
+          label: "Zamień tekst …"
           title: "Zamień tekst kategorii i wątków tłumaczeniami"
         modal:
           title: "Zamień tekst"
@@ -7358,6 +7457,7 @@ pl_PL:
           moderator: "Moderatorzy"
           regular: "Zwykli użytkownicy"
       previews:
+        topic_title: "Jakie książki czytasz?"
         share_button: "Udostępnij"
         reply_button: "Odpowiedz"
         topic_preview: "Podgląd tematu"
@@ -7371,7 +7471,28 @@ pl_PL:
           latest: "Najnowsza"
           hot: "Gorące"
           categories: "Kategorie"
+        topic_titles:
+          what_books: "Jakie książki czytasz?"
+          what_movies: "Jakie filmy widziałeś ostatnio?"
+          random_fact: "Losowy fakt dnia"
+          tv_show: "Poleć program telewizyjny"
+          what_hobbies: "Jakie masz hobby?"
+          what_music: "Czego teraz słuchasz?"
+          funniest_thing: "Najzabawniejsza rzecz, jaką dziś widziałeś"
+          share_art: "Podziel się swoją sztuką!"
+        topic_ops:
+          what_books: |
+            Wszyscy kochamy czytać, użyjmy tego tematu, aby podzielić się naszymi
+            aktualnymi lub niedawnymi lekturami. Jestem fanem fantasy i właśnie
+            ponownie czytam Władcę Pierścieni po raz setny.
+            A Ty?
+        category_descriptions:
+          icebreakers: "Poznaj innych członków społeczności dzięki zabawnym pytaniom."
+          news: "Omów najnowsze wiadomości i wydarzenia."
+          site_feedback: "Podziel się swoimi przemyśleniami na temat społeczności i zasugeruj ulepszenia."
         category_names:
+          icebreakers: "Lodołamacze"
+          news: "Wiadomości"
           site_feedback: "Dyskusje o serwisie"
         table_headers:
           topic: "Temat"

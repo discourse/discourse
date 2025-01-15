@@ -2,21 +2,20 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
+import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatMessageReaction, {
-  REACTIONS,
-} from "discourse/plugins/chat/discourse/models/chat-message-reaction";
+import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 const removedSecondaryActions = new Set();
 
@@ -28,12 +27,10 @@ export function resetRemovedChatComposerSecondaryActions() {
   removedSecondaryActions.clear();
 }
 
-export default class ChatMessageInteractor {
+export default class ChatemojiReactions {
   @service appEvents;
   @service dialog;
   @service chat;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
   @service chatChannelComposer;
   @service chatThreadComposer;
   @service chatChannelPane;
@@ -44,41 +41,24 @@ export default class ChatMessageInteractor {
   @service router;
   @service modal;
   @service capabilities;
+  @service menu;
   @service toasts;
+  @service interactedChatMessage;
 
   @tracked message = null;
   @tracked context = null;
-
-  cachedFavoritesReactions = null;
 
   constructor(owner, message, context) {
     setOwner(this, owner);
 
     this.message = message;
     this.context = context;
-    this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
   }
 
   get pane() {
     return this.context === MESSAGE_CONTEXT_THREAD
       ? this.chatThreadPane
       : this.chatChannelPane;
-  }
-
-  get emojiReactions() {
-    let favorites = this.cachedFavoritesReactions;
-
-    // may be a {} if no defaults defined in some production builds
-    if (!favorites || !favorites.slice) {
-      return [];
-    }
-
-    return favorites.slice(0, 3).map((emoji) => {
-      return (
-        this.message.reactions.find((reaction) => reaction.emoji === emoji) ||
-        ChatMessageReaction.create({ emoji })
-      );
-    });
   }
 
   get canEdit() {
@@ -291,10 +271,6 @@ export default class ChatMessageInteractor {
       this.chat.activeMessage = null;
     }
 
-    if (reactAction === REACTIONS.add) {
-      this.chatEmojiReactionStore.track(`:${emoji}:`);
-    }
-
     this.pane.reacting = true;
 
     this.message.react(
@@ -406,13 +382,29 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  openEmojiPicker(_, { target }) {
-    const pickerState = {
-      didSelectEmoji: this.selectReaction,
-      trigger: target,
-      context: "chat-channel-message",
-    };
-    this.chatEmojiPickerManager.open(pickerState);
+  async openEmojiPicker(trigger) {
+    this.interactedChatMessage.emojiPickerOpen = true;
+
+    await this.menu.show(trigger, {
+      identifier: "emoji-picker",
+      groupIdentifier: "emoji-picker",
+      component: EmojiPickerDetached,
+      onClose: () => {
+        this.interactedChatMessage.emojiPickerOpen = false;
+      },
+      data: {
+        context: `channel_${this.message.channel.id}`,
+        didSelectEmoji: (emoji) => {
+          this.selectReaction(emoji);
+        },
+      },
+    });
+  }
+
+  @action
+  async closeEmojiPicker() {
+    await this.menu.close("emoji-picker");
+    this.interactedChatMessage.emojiPickerOpen = false;
   }
 
   @bind

@@ -15,7 +15,6 @@ en:
     chat_minimum_message_length: "Minimum number of characters for a chat message."
     chat_allow_uploads: "Allow uploads in public chat channels and direct message channels."
     chat_archive_destination_topic_status: "The status that the destination topic should be once a channel archive is completed. This only applies when the destination topic is a new topic, not an existing one."
-    default_emoji_reactions: "Default emoji reactions for chat messages. Add up to 5 emojis for quick reaction."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages. Note that admins and moderators can always flag chat messages."
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
