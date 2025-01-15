@@ -22,8 +22,9 @@ class GroupPostSerializer < ApplicationSerializer
              :user_title,
              :primary_group_name
 
-  has_one :user, serializer: GroupPostUserSerializer
-  has_one :topic, serializer: BasicTopicSerializer
+  # TODO(keegan): Remove `embed: :object` after updating references in discourse-reactions
+  has_one :user, serializer: GroupPostUserSerializer, embed: :object
+  has_one :topic, serializer: BasicTopicSerializer, embed: :object
 
   def topic_title
     object.topic.title
