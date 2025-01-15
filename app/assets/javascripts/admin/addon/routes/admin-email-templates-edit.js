@@ -1,9 +1,9 @@
 import Route from "@ember/routing/route";
 import { scrollTop } from "discourse/mixins/scroll-top";
 
-export default class AdminCustomizeEmailTemplatesEditRoute extends Route {
+export default class AdminEmailTemplatesEditRoute extends Route {
   model(params) {
-    const all = this.modelFor("adminCustomizeEmailTemplates");
+    const all = this.modelFor("adminEmailTemplates");
     return all.findBy("id", params.id);
   }
 

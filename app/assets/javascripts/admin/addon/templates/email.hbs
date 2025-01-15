@@ -1,23 +1,33 @@
-<AdminNav>
-  <NavItem @route="adminEmail.index" @label="admin.email.settings" />
-  <NavItem
-    @route="adminEmail.previewDigest"
-    @label="admin.email.preview_digest"
-  />
-  <NavItem
-    @route="adminEmail.advancedTest"
-    @label="admin.email.advanced_test.title"
-  />
-  <NavItem
-    @route="adminCustomizeEmailTemplates"
-    @label="admin.email.templates"
-  />
-  <NavItem @route="adminEmail.sent" @label="admin.email.sent" />
-  <NavItem @route="adminEmail.skipped" @label="admin.email.skipped" />
-  <NavItem @route="adminEmail.bounced" @label="admin.email.bounced" />
-  <NavItem @route="adminEmail.received" @label="admin.email.received" />
-  <NavItem @route="adminEmail.rejected" @label="admin.email.rejected" />
-</AdminNav>
+<DPageHeader
+  @titleLabel={{i18n "admin.email.title"}}
+  @descriptionLabel={{i18n "admin.email.description"}}
+  @shouldDisplay={{true}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+    <DBreadcrumbsItem
+      @path="/admin/email"
+      @label={{i18n "admin.email.title"}}
+    />
+  </:breadcrumbs>
+  <:tabs>
+    <NavItem @route="adminEmail.index" @label="admin.email.settings" />
+    <NavItem
+      @route="adminEmail.previewDigest"
+      @label="admin.email.preview_digest"
+    />
+    <NavItem
+      @route="adminEmail.advancedTest"
+      @label="admin.email.advanced_test.title"
+    />
+    <NavItem @route="adminEmailTemplates" @label="admin.email.templates" />
+    <NavItem @route="adminEmail.sent" @label="admin.email.sent" />
+    <NavItem @route="adminEmail.skipped" @label="admin.email.skipped" />
+    <NavItem @route="adminEmail.bounced" @label="admin.email.bounced" />
+    <NavItem @route="adminEmail.received" @label="admin.email.received" />
+    <NavItem @route="adminEmail.rejected" @label="admin.email.rejected" />
+  </:tabs>
+</DPageHeader>
 
 <div class="admin-container">
   {{outlet}}

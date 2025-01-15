@@ -194,6 +194,13 @@ Discourse::Application.routes.draw do
           post "handle_mail"
           get "advanced-test"
           post "advanced-test" => "email#advanced_test"
+          get "templates" => "email_templates#index"
+          get "templates/(:id)" => "email_templates#show", :constraints => { id: /[0-9a-z_.]+/ }
+          delete "templates/(:id)" => "email_templates#revert",
+                 :constraints => {
+                   id: /[0-9a-z_.]+/,
+                 }
+          put "templates/(:id)" => "email_templates#update", :constraints => { id: /[0-9a-z_.]+/ }
         end
       end
 
@@ -278,17 +285,6 @@ Discourse::Application.routes.draw do
 
         get "reseed" => "site_texts#get_reseed_options"
         post "reseed" => "site_texts#reseed"
-
-        get "email_templates" => "email_templates#index"
-        get "email_templates/(:id)" => "email_templates#show", :constraints => { id: /[0-9a-z_.]+/ }
-        put "email_templates/(:id)" => "email_templates#update",
-            :constraints => {
-              id: /[0-9a-z_.]+/,
-            }
-        delete "email_templates/(:id)" => "email_templates#revert",
-               :constraints => {
-                 id: /[0-9a-z_.]+/,
-               }
 
         get "robots" => "robots_txt#show"
         put "robots.json" => "robots_txt#update"
