@@ -19,7 +19,7 @@ import DiscourseURL from "discourse/lib/url";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserStreamComponent extends Component {

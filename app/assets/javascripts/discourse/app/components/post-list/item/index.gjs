@@ -13,7 +13,7 @@ import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { userPath } from "discourse/lib/url";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 
 export default class PostListItem extends Component {
   @service site;
