@@ -155,7 +155,6 @@ Alternatively, you can ssh into your server and rebuild using:
 
 ```
 cd /var/discourse
-git pull
 ./launcher rebuild app
 ```
 
