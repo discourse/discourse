@@ -6334,7 +6334,8 @@ en:
 
       email:
         title: "Emails"
-        settings: "Email Settings"
+        description: "Customize your server email settings, the templates used to create emails, and view email logs."
+        settings: "Settings"
         templates: "Templates"
         templates_title: "Email Templates"
         preview_digest: "Preview Summary"

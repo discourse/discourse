@@ -38,6 +38,13 @@ export default function () {
         this.route("rejected");
         this.route("previewDigest", { path: "/preview-digest" });
         this.route("advancedTest", { path: "/advanced-test" });
+        this.route(
+          "adminEmailTemplates",
+          { path: "/templates", resetNamespace: true },
+          function () {
+            this.route("edit", { path: "/:template_id" });
+          }
+        );
       }
     );
 
@@ -77,13 +84,6 @@ export default function () {
             this.route("postsAndTopics", { path: "/posts_and_topics" });
             this.route("crawlers");
             this.route("new");
-            this.route("edit", { path: "/:id" });
-          }
-        );
-        this.route(
-          "adminCustomizeEmailTemplates",
-          { path: "/email_templates", resetNamespace: true },
-          function () {
             this.route("edit", { path: "/:id" });
           }
         );

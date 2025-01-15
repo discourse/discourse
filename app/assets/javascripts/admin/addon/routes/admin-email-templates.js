@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 
-export default class AdminCustomizeEmailTemplatesRoute extends Route {
+export default class AdminEmailTemplatesRoute extends Route {
   @service router;
 
   model() {
@@ -15,13 +15,11 @@ export default class AdminCustomizeEmailTemplatesRoute extends Route {
 
   @action
   didTransition() {
-    const editController = this.controllerFor(
-      "adminCustomizeEmailTemplates.edit"
-    );
+    const editController = this.controllerFor("adminEmailTemplates.edit");
 
     if (!editController.emailTemplate) {
       this.router.transitionTo(
-        "adminCustomizeEmailTemplates.edit",
+        "adminEmailTemplates.edit",
         this.controller.get("sortedTemplates.firstObject")
       );
     }
