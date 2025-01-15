@@ -78,7 +78,7 @@ const extension = {
         : "";
       const topicId = node.attrs.topicId ? `, topic:${node.attrs.topicId}` : "";
       const quoteValue = node.attrs.username
-        ? `="${node.attrs.username}${postNumber}${topicId}"]`
+        ? `="${node.attrs.username}${postNumber}${topicId}"`
         : "";
 
       state.write(`[quote${quoteValue}]\n`);

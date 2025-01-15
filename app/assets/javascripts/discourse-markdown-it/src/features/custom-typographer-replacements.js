@@ -32,7 +32,7 @@ function replaceScoped(inlineTokens) {
   for (i = inlineTokens.length - 1; i >= 0; i--) {
     token = inlineTokens[i];
     if (token.type === "text") {
-      token.content = replaceScopedStr(token.content.replace);
+      token.content = replaceScopedStr(token.content);
     }
   }
 }

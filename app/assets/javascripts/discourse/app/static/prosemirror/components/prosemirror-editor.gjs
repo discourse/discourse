@@ -1,13 +1,14 @@
-import { next } from "@ember/runloop";
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import "../extensions";
+import "../extensions/register-additional"; // registers all non-core extensions
 import { baseKeymap } from "prosemirror-commands";
+import * as ProsemirrorCommands from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
 import { gapCursor } from "prosemirror-gapcursor";
 import * as ProsemirrorHistory from "prosemirror-history";
@@ -15,23 +16,21 @@ import { history } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
 import * as ProsemirrorModel from "prosemirror-model";
 import * as ProsemirrorState from "prosemirror-state";
-import { EditorState, Plugin } from "prosemirror-state";
+import { EditorState } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
 import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
-import {
-  getNodeViews,
-  getPlugins,
-} from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
-import { convertFromMarkdown } from "../lib/parser";
+import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import { buildInputRules } from "../core/inputrules";
+import { buildKeymap } from "../core/keymap";
+import Parser from "../core/parser";
+import { extractNodeViews, extractPlugins } from "../core/plugin";
+import { createSchema } from "../core/schema";
+import Serializer from "../core/serializer";
+import placeholder from "../extensions/placeholder";
 import * as utils from "../lib/plugin-utils";
-import { createSchema } from "../lib/schema";
-import { convertToMarkdown } from "../lib/serializer";
 import TextManipulation from "../lib/text-manipulation";
-import { buildInputRules } from "../plugins/inputrules";
-import { buildKeymap } from "../plugins/keymap";
-import placeholder from "../plugins/placeholder";
 
 /**
  * @typedef PluginContext
@@ -49,6 +48,7 @@ import placeholder from "../plugins/placeholder";
  * @property {typeof import('prosemirror-state')} pmState
  * @property {typeof import('prosemirror-history')} pmHistory
  * @property {typeof import('prosemirror-transform')} pmTransform
+ * @property {typeof import('prosemirror-commands')} pmCommands
  * @property {() => PluginContext} getContext
  */
 
@@ -58,7 +58,6 @@ import placeholder from "../plugins/placeholder";
  * @property {string} [placeholder] The placeholder text to be displayed when the editor is empty
  * @property {boolean} [disabled] Whether the editor should be disabled
  * @property {Record<string, () => void>} [keymap] A mapping of keybindings to commands
- * @property {[import('prosemirror-state').Plugin]} [plugins] A list of plugins to be used in the editor (it will override any plugins from extensions)
  * @property {Record<string, import('prosemirror-view').NodeViewConstructor>} [nodeViews] A mapping of node names to node view components (it will override any node views from extensions)
  * @property {import('prosemirror-state').Schema} [schema] The schema to be used in the editor (it will override the default schema)
  * @property {(value: string) => void} [change] A callback called when the editor content changes
@@ -68,6 +67,7 @@ import placeholder from "../plugins/placeholder";
  * @property {number} [topicId] The ID of the topic being edited, if any
  * @property {number} [categoryId] The ID of the category of the topic being edited, if any
  * @property {string} [class] The class to be added to the ProseMirror contentEditable editor
+ * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
  */
 
 /**
@@ -82,20 +82,21 @@ export default class ProsemirrorEditor extends Component {
   @service session;
   @service dialog;
 
-  schema = this.args.schema ?? createSchema();
+  schema = createSchema(this.extensions, this.args.includeDefault);
   view;
-  plugins = this.args.plugins;
 
   #lastSerialized;
 
   get pluginParams() {
     return {
       utils,
+      schema: this.schema,
       pmState: ProsemirrorState,
       pmModel: ProsemirrorModel,
       pmView: ProsemirrorView,
       pmHistory: ProsemirrorHistory,
       pmTransform: ProsemirrorTransform,
+      pmCommands: ProsemirrorCommands,
       getContext: () => ({
         placeholder: this.args.placeholder,
         topicId: this.args.topicId,
@@ -105,11 +106,23 @@ export default class ProsemirrorEditor extends Component {
     };
   }
 
+  get extensions() {
+    const extensions = this.args.extensions ?? getExtensions();
+
+    // enforcing core extensions
+    return extensions.includes(placeholder)
+      ? extensions
+      : [placeholder, ...extensions];
+  }
+
   get keymapFromArgs() {
     return Object.entries(this.args.keymap ?? {}).reduce(
       (acc, [key, value]) => {
-        // original keymap uses itsatrap format
-        acc[key.replaceAll("+", "-")] = value;
+        const pmKey = key
+          .split("+")
+          .map((word) => (word === "tab" ? "Tab" : word))
+          .join("-");
+        acc[pmKey] = value;
         return acc;
       },
       {}
@@ -117,32 +130,45 @@ export default class ProsemirrorEditor extends Component {
   }
 
   @action
+  handleAsyncPlugin(plugin) {
+    const state = this.view.state.reconfigure({
+      plugins: [...this.view.state.plugins, plugin],
+    });
+
+    this.view.updateState(state);
+  }
+
+  @action
   setup(container) {
     const params = this.pluginParams;
-    const pluginList = getPlugins()
-      .flatMap((plugin) => this.processPlugin(plugin, params))
-      // filter async plugins from initial load
-      .filter(Boolean);
 
-    this.plugins ??= [
-      buildInputRules(this.schema),
-      keymap(buildKeymap(this.schema, this.keymapFromArgs)),
+    const plugins = [
+      buildInputRules(this.extensions, this.schema, this.args.includeDefault),
+      keymap(
+        buildKeymap(
+          this.extensions,
+          this.schema,
+          this.keymapFromArgs,
+          params,
+          this.args.includeDefault
+        )
+      ),
       keymap(baseKeymap),
       dropCursor({ color: "var(--primary)" }),
       gapCursor(),
       history(),
-      placeholder(),
-      ...pluginList,
+      ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),
     ];
 
-    const state = EditorState.create({
-      schema: this.schema,
-      plugins: this.plugins,
-    });
+    this.parser = new Parser(this.extensions, this.args.includeDefault);
+    this.serializer = new Serializer(this.extensions, this.args.includeDefault);
+
+    const state = EditorState.create({ schema: this.schema, plugins });
 
     this.view = new EditorView(container, {
+      convertFromMarkdown: this.convertFromMarkdown,
       getContext: params.getContext,
-      nodeViews: this.args.nodeViews ?? getNodeViews(),
+      nodeViews: extractNodeViews(this.extensions),
       state,
       attributes: { class: this.args.class },
       editable: () => this.args.disabled !== true,
@@ -151,7 +177,7 @@ export default class ProsemirrorEditor extends Component {
 
         if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
           // TODO(renato): avoid calling this on every change
-          const value = convertToMarkdown(this.view.state.doc);
+          const value = this.serializer.convert(this.view.state.doc);
           this.#lastSerialized = value;
           this.args.change?.({ target: { value } });
         }
@@ -185,20 +211,25 @@ export default class ProsemirrorEditor extends Component {
   }
 
   @bind
+  convertFromMarkdown(markdown) {
+    let doc;
+    try {
+      doc = this.parser.convert(this.schema, markdown);
+    } catch (e) {
+      next(() => this.dialog.alert(e.message));
+      throw e;
+    }
+    return doc;
+  }
+
+  @bind
   convertFromValue() {
     // Ignore the markdown we just serialized
     if (this.args.value === this.#lastSerialized) {
       return;
     }
 
-    let doc;
-    try {
-      doc = convertFromMarkdown(this.schema, this.args.value);
-    } catch (e) {
-      console.error(e);
-      this.dialog.alert(e.message);
-      return;
-    }
+    const doc = this.convertFromMarkdown(this.args.value);
 
     const tr = this.view.state.tr;
     tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(
@@ -221,39 +252,6 @@ export default class ProsemirrorEditor extends Component {
         .setMeta("addToHistory", false)
         .setMeta("discourseContextChanged", { key, value })
     );
-  }
-
-  async processAsyncPlugin(promise, params) {
-    const plugin = await promise;
-
-    const state = this.view.state.reconfigure({
-      plugins: [...this.view.state.plugins, this.processPlugin(plugin, params)],
-    });
-
-    this.view.updateState(state);
-  }
-
-  processPlugin(plugin, params) {
-    if (typeof plugin === "function") {
-      const ret = plugin(params);
-
-      if (ret instanceof Promise) {
-        this.processAsyncPlugin(ret, params);
-        return;
-      }
-
-      return this.processPlugin(ret, params);
-    }
-
-    if (plugin instanceof Array) {
-      return plugin.map((plugin) => this.processPlugin(plugin, params));
-    }
-
-    if (plugin instanceof Plugin) {
-      return plugin;
-    }
-
-    return new Plugin(plugin);
   }
 
   <template>

@@ -34,6 +34,7 @@
     "immer": "^10.1.1",
     "jspreadsheet-ce": "^4.15.0",
     "morphlex": "^0.0.16",
+    "orderedmap": "^2.1.1",
     "pretty-text": "workspace:1.0.0",
     "prosemirror-commands": "^1.6.0",
     "prosemirror-dropcursor": "^1.8.1",

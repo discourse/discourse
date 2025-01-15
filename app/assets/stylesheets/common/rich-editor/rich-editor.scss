@@ -23,10 +23,6 @@
     margin-top: 0.5rem;
   }
 
-  a[href] {
-    pointer-events: none;
-  }
-
   h1,
   h2,
   h3,
@@ -53,7 +49,7 @@
 
   img {
     display: inline-block;
-    //margin: 0 auto;
+    height: auto;
     max-width: 100%;
 
     &[data-placeholder="true"] {
@@ -132,10 +128,6 @@
 
   .onebox-wrapper {
     white-space: normal;
-
-    a[href] {
-      pointer-events: all;
-    }
   }
 
   .code-block {

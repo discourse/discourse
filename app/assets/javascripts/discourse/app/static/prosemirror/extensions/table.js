@@ -132,7 +132,9 @@ const extension = {
       state.inTable = true;
 
       // leading newline, it seems to have issues in a line just below a > blockquote otherwise
-      state.out += "\n";
+      if (state.out) {
+        state.out += "\n";
+      }
 
       // group is table_head or table_body
       node.forEach((group, groupOffset, groupIndex) => {
@@ -143,18 +145,7 @@ const extension = {
             }
             state.out += cellIndex === 0 ? "| " : " | ";
 
-            cell.forEach((cellNode) => {
-              if (
-                cellNode.textContent === "" &&
-                cellNode.content.size === 0 &&
-                cellNode.type.name === "paragraph"
-              ) {
-                state.out += "  ";
-              } else {
-                state.closed = false;
-                state.render(cellNode, row, cellIndex);
-              }
-            });
+            state.renderInline(cell);
 
             // if table_head
             if (groupIndex === 0) {

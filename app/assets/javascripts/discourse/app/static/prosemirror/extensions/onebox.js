@@ -186,7 +186,7 @@ const extension = {
                 (a, b) => b.pos - a.pos
               )) {
                 const tr = view.state.tr;
-                console.log("replacing", pos, url);
+                // console.log("replacing", pos, url);
                 const node = tr.doc.nodeAt(pos);
                 tr.replaceWith(
                   pos - 1,
