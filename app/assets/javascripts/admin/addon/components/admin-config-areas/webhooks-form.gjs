@@ -1,24 +1,18 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
-import { concat, fn, hash } from "@ember/helper";
+import { cached, tracked } from "@glimmer/tracking";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import { eq } from "truth-helpers";
 import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DButton from "discourse/components/d-button";
+import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
-import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import RadioButton from "discourse/components/radio-button";
-import TextField from "discourse/components/text-field";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import WebhookEventChooser from "admin/components/webhook-event-chooser";
 import CategorySelector from "select-kit/components/category-selector";
-import ComboBox from "select-kit/components/combo-box";
 import TagChooser from "select-kit/components/tag-chooser";
 
 export default class AdminConfigAreasWebhookForm extends Component {
@@ -42,6 +36,22 @@ export default class AdminConfigAreasWebhookForm extends Component {
     this.#loadExtras();
   }
 
+  @cached
+  get formData() {
+    return {
+      payload_url: this.webhook.payload_url,
+      content_type: this.webhook.content_type,
+      secret: this.webhook.secret === "" ? null : this.webhook.secret,
+      categories: this.webhook.categories,
+      group_names: this.webhook.group_names,
+      tag_names: this.webhook.tag_names,
+      wildcard: this.webhook.wildcard,
+      web_hook_event_types: this.webhook.web_hook_event_types,
+      verify_certificate: this.webhook.verify_certificate,
+      active: this.webhook.active,
+    };
+  }
+
   async #loadExtras() {
     try {
       this.loadingExtras = true;
@@ -53,7 +63,11 @@ export default class AdminConfigAreasWebhookForm extends Component {
       this.contentTypes = webhooks.extras.content_types;
       this.deliveryStatuses = webhooks.extras.delivery_statuses;
 
-      this.webhook.set("web_hook_event_types", this.defaultEventTypes);
+      if (this.webhook.isNew) {
+        this.webhookEventTypes = [...this.defaultEventTypes];
+      } else {
+        this.webhookEventTypes = [...this.webhook.web_hook_event_types];
+      }
     } finally {
       this.loadingExtras = false;
     }
@@ -63,16 +77,23 @@ export default class AdminConfigAreasWebhookForm extends Component {
     return this.siteSettings.tagging_enabled;
   }
 
+  get saveButtonLabel() {
+    return this.webhook.isNew
+      ? "admin.web_hooks.create"
+      : "admin.web_hooks.save";
+  }
+
   @action
-  async save() {
-    const isNew = this.webhook.isNew;
-
-    this.saved = false;
-
+  async save(data) {
     try {
-      await this.webhook.save();
+      const isNew = this.webhook.isNew;
 
-      this.saved = true;
+      this.webhook.setProperties({
+        ...data,
+        web_hook_event_types: this.webhookEventTypes,
+      });
+
+      await this.webhook.save();
 
       if (isNew) {
         this.router.transitionTo("adminWebHooks.show", this.webhook);
@@ -91,197 +112,187 @@ export default class AdminConfigAreasWebhookForm extends Component {
       <div class="admin-config-area__primary-content">
         <div class="admin-config-area-card">
           <div class="web-hook-container">
-            <p>{{i18n "admin.web_hooks.detailed_instruction"}}</p>
+            <ConditionalLoadingSection @isLoading={{this.loadingExtras}}>
+              <p>{{i18n "admin.web_hooks.detailed_instruction"}}</p>
+              <Form
+                @onSubmit={{this.save}}
+                @data={{this.formData}}
+                as |form transientData|
+              >
+                <form.Field
+                  @name="payload_url"
+                  @title={{i18n "admin.web_hooks.payload_url"}}
+                  @format="large"
+                  @validation="required|url"
+                  as |field|
+                >
+                  <field.Input
+                    placeholder={{i18n
+                      "admin.web_hooks.payload_url_placeholder"
+                    }}
+                  />
+                </form.Field>
 
-            <form class="web-hook form-horizontal">
-              <div class="control-group">
-                <label for="payload-url">{{i18n
-                    "admin.web_hooks.payload_url"
-                  }}</label>
-                <TextField
-                  @name="payload-url"
-                  @value={{this.webhook.payload_url}}
-                  @placeholderKey="admin.web_hooks.payload_url_placeholder"
-                />
-                <InputTip @validation={{this.urlValidation}} />
-              </div>
+                <form.Field
+                  @name="content_type"
+                  @title={{i18n "admin.web_hooks.content_type"}}
+                  @format="large"
+                  @validation="required"
+                  as |field|
+                >
+                  <field.Select as |select|>
+                    {{#each this.contentTypes as |contentType|}}
+                      <select.Option
+                        @value={{contentType.id}}
+                      >{{contentType.name}}</select.Option>
+                    {{/each}}
+                  </field.Select>
+                </form.Field>
 
-              <div class="control-group">
-                <label for="content-type">{{i18n
-                    "admin.web_hooks.content_type"
-                  }}</label>
-                <ComboBox
-                  @content={{this.contentTypes}}
-                  @name="content-type"
-                  @value={{this.webhook.content_type}}
-                  @onChange={{fn (mut this.webhook.content_type)}}
-                />
-              </div>
-
-              <div class="control-group">
-                <label for="secret">{{i18n "admin.web_hooks.secret"}}</label>
-                <TextField
+                <form.Field
                   @name="secret"
-                  @value={{this.webhook.secret}}
-                  @placeholderKey="admin.web_hooks.secret_placeholder"
-                />
-                <InputTip @validation={{this.secretValidation}} />
-              </div>
+                  @title={{i18n "admin.web_hooks.secret"}}
+                  @description={{i18n "admin.web_hooks.secret_placeholder"}}
+                  @format="large"
+                  @validation="length:12"
+                  as |field|
+                >
+                  <field.Input />
+                </form.Field>
 
-              <div class="control-group">
-                <label>{{i18n "admin.web_hooks.event_chooser"}}</label>
+                <form.Field
+                  @name="wildcard"
+                  @title={{i18n "admin.web_hooks.event_chooser"}}
+                  @validation="required"
+                  @onSet={{this.setRequirement}}
+                  @format="full"
+                  as |field|
+                >
+                  <field.RadioGroup as |radioGroup|>
+                    <radioGroup.Radio @value="individual">
+                      {{i18n "admin.web_hooks.individual_event"}}
+                    </radioGroup.Radio>
+                    {{#if (eq transientData.wildcard "individual")}}
+                      <div class="event-selector">
+                        {{#each-in
+                          this.groupedEventTypes
+                          as |group eventTypes|
+                        }}
+                          <div class="event-group">
+                            {{i18n
+                              (concat
+                                "admin.web_hooks." group "_event.group_name"
+                              )
+                            }}
+                            {{#each eventTypes as |type|}}
+                              <WebhookEventChooser
+                                @type={{type}}
+                                @group={{group}}
+                                @eventTypes={{this.webhookEventTypes}}
+                              />
+                            {{/each}}
+                          </div>
+                        {{/each-in}}
+                      </div>
+                    {{/if}}
+                    <radioGroup.Radio @value="wildcard">
+                      {{i18n "admin.web_hooks.wildcard_event"}}
+                    </radioGroup.Radio>
+                  </field.RadioGroup>
+                </form.Field>
 
-                <label class="subscription-choice">
-                  <RadioButton
-                    @name="subscription-choice"
-                    @onChange={{fn (mut this.webhook.wildcard_web_hook) false}}
-                    @value={{false}}
-                    @selection={{this.webhook.wildcard_web_hook}}
-                  />
-                  {{i18n "admin.web_hooks.individual_event"}}
-                  <InputTip @validation={{this.eventTypeValidation}} />
-                </label>
-
-                <ConditionalLoadingSection @isLoading={{this.loadingExtras}}>
-                  {{#unless this.webhook.wildcard_web_hook}}
-                    <div class="event-selector">
-                      {{#each-in this.groupedEventTypes as |group eventTypes|}}
-                        <div class="event-group">
-                          {{i18n
-                            (concat
-                              "admin.web_hooks." group "_event.group_name"
-                            )
-                          }}
-                          {{#each eventTypes as |type|}}
-                            <WebhookEventChooser
-                              @type={{type}}
-                              @group={{group}}
-                              @eventTypes={{this.webhook.web_hook_event_types}}
-                            />
-                          {{/each}}
-                        </div>
-                      {{/each-in}}
-                    </div>
-                  {{/unless}}
-                </ConditionalLoadingSection>
-
-                <label class="subscription-choice">
-                  <RadioButton
-                    @name="subscription-choice"
-                    @onChange={{fn (mut this.webhook.wildcard_web_hook) true}}
-                    @value={{true}}
-                    @selection={{this.webhook.wildcard_web_hook}}
-                  />
-                  {{i18n "admin.web_hooks.wildcard_event"}}
-                </label>
-              </div>
-
-              <div class="filters control-group">
-                <div class="filter">
-                  <label>{{icon "circle" class="tracking"}}{{i18n
-                      "admin.web_hooks.categories_filter"
-                    }}</label>
-                  <CategorySelector
-                    @categories={{this.webhook.categories}}
-                    @onChange={{fn (mut this.webhook.categories)}}
-                  />
-                  <div class="instructions">{{i18n
-                      "admin.web_hooks.categories_filter_instructions"
-                    }}</div>
-                </div>
+                <form.Field
+                  @name="categories"
+                  @title={{i18n "admin.web_hooks.categories_filter"}}
+                  @description={{i18n
+                    "admin.web_hooks.categories_filter_instructions"
+                  }}
+                  @format="large"
+                  as |field|
+                >
+                  <field.Custom>
+                    <CategorySelector
+                      @categories={{field.value}}
+                      @onChange={{field.set}}
+                    />
+                  </field.Custom>
+                </form.Field>
 
                 {{#if this.showTagsFilter}}
-                  <div class="filter">
-                    <label>{{icon "circle" class="tracking"}}{{i18n
-                        "admin.web_hooks.tags_filter"
-                      }}</label>
-                    <TagChooser
-                      @tags={{this.webhook.tag_names}}
-                      @everyTag={{true}}
-                      @excludeSynonyms={{true}}
-                    />
-                    <div class="instructions">{{i18n
-                        "admin.web_hooks.tags_filter_instructions"
-                      }}</div>
-                  </div>
+                  <form.Field
+                    @name="tag_names"
+                    @title={{i18n "admin.web_hooks.tags_filter"}}
+                    @description={{i18n
+                      "admin.web_hooks.tags_filter_instructions"
+                    }}
+                    @format="large"
+                    as |field|
+                  >
+                    <field.Custom>
+                      <TagChooser
+                        @tags={{field.value}}
+                        @everyTag={{true}}
+                        @excludeSynonyms={{true}}
+                        @onChange={{field.set}}
+                      />
+                    </field.Custom>
+                  </form.Field>
                 {{/if}}
 
-                <div class="filter">
-                  <label>{{icon "circle" class="tracking"}}{{i18n
-                      "admin.web_hooks.groups_filter"
-                    }}</label>
-                  <GroupSelector
-                    @groupNames={{this.webhook.groupsFilterInName}}
-                    @groupFinder={{this.webhook.groupFinder}}
-                  />
-                  <div class="instructions">{{i18n
-                      "admin.web_hooks.groups_filter_instructions"
-                    }}</div>
-                </div>
-              </div>
-
-              <span>
-                <PluginOutlet
-                  @name="web-hook-fields"
-                  @connectorTagName="div"
-                  @outletArgs={{hash model=this.webhook}}
-                />
-              </span>
-
-              <label>
-                <Input
-                  @type="checkbox"
-                  name="verify_certificate"
-                  @checked={{this.webhook.verify_certificate}}
-                />
-                {{i18n "admin.web_hooks.verify_certificate"}}
-              </label>
-
-              <div>
-                <label class="checkbox-label">
-                  <Input
-                    @type="checkbox"
-                    name="active"
-                    @checked={{this.webhook.active}}
-                  />
-                  {{i18n "admin.web_hooks.active"}}
-                </label>
-
-                {{#if this.webhook.active}}
-                  <div class="instructions">{{i18n
-                      "admin.web_hooks.active_notice"
-                    }}</div>
-                {{/if}}
-              </div>
-            </form>
-
-            <div class="controls">
-              {{#if this.webhook.isNew}}
-                <DButton
-                  @translatedLabel={{i18n "admin.web_hooks.create"}}
-                  @action={{this.save}}
-                  class="btn-primary admin-webhooks__save-button"
-                />
-
-                <LinkTo @route="adminWebHooks" class="btn btn-default">
-                  {{i18n "admin.web_hooks.cancel"}}
-                </LinkTo>
-              {{else}}
-                <DButton
-                  @translatedLabel={{i18n "admin.web_hooks.save"}}
-                  @action={{this.save}}
-                  class="btn-primary admin-webhooks__save-button"
-                />
-
-                <LinkTo
-                  @route="adminWebHooks.show"
-                  @model={{this.webhook}}
-                  class="btn btn-default"
+                <form.Field
+                  @name="group_names"
+                  @title={{i18n "admin.web_hooks.groups_filter"}}
+                  @description={{i18n
+                    "admin.web_hooks.groups_filter_instructions"
+                  }}
+                  @format="large"
+                  as |field|
                 >
-                  {{i18n "admin.web_hooks.cancel"}}
-                </LinkTo>
-              {{/if}}
-            </div>
+                  <field.Custom>
+                    <GroupSelector
+                      @groupNames={{field.value}}
+                      @groupFinder={{this.webhook.groupFinder}}
+                      @onChange={{field.set}}
+                    />
+                  </field.Custom>
+                </form.Field>
+
+                <span>
+                  <PluginOutlet
+                    @name="web-hook-fields"
+                    @connectorTagName="div"
+                    @outletArgs={{hash model=this.webhook}}
+                  />
+                </span>
+
+                <form.Field
+                  @name="verify_certificate"
+                  @title={{i18n "admin.web_hooks.verify_certificate"}}
+                  @showTitle={{false}}
+                  as |field|
+                >
+                  <field.Checkbox />
+                </form.Field>
+
+                <form.Field
+                  @name="active"
+                  @title={{i18n "admin.web_hooks.active"}}
+                  @showTitle={{false}}
+                  as |field|
+                >
+                  <field.Checkbox />
+                </form.Field>
+
+                <form.Actions>
+                  <form.Submit class="save" @label={{this.saveButtonLabel}} />
+                  <form.Button
+                    @route="adminWebHooks.index"
+                    @label="admin.web_hooks.cancel"
+                    class="btn-default"
+                  />
+                </form.Actions>
+              </Form>
+            </ConditionalLoadingSection>
           </div>
         </div>
       </div>

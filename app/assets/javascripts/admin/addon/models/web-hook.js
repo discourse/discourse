@@ -41,7 +41,7 @@ export default class WebHook extends RestModel {
   verify_certificate = true;
   active = false;
   web_hook_event_types = null;
-  groupsFilterInName = null;
+  group_names = null;
 
   @computed("wildcard_web_hook")
   get wildcard() {
@@ -73,7 +73,7 @@ export default class WebHook extends RestModel {
   updateGroupsFilter() {
     const groupIds = this.group_ids;
     this.set(
-      "groupsFilterInName",
+      "group_names",
       Site.currentProp("groups").reduce((groupNames, g) => {
         if (groupIds.includes(g.id)) {
           groupNames.push(g.name);
@@ -106,7 +106,7 @@ export default class WebHook extends RestModel {
 
     // Hack as {{group-selector}} accepts a comma-separated string as data source, but
     // we use an array to populate the datasource above.
-    const groupsFilter = this.groupsFilterInName;
+    const groupsFilter = this.group_names;
     const groupNames =
       typeof groupsFilter === "string" ? groupsFilter.split(",") : groupsFilter;
 

@@ -23,14 +23,14 @@ module PageObjects
       def add_webhook(payload_url:)
         page.find(header_actions_selector, text: I18n.t("admin_js.admin.web_hooks.add")).click
 
-        form = page.find("form.web-hook")
+        form = page.find(form_selector)
         form.find(payload_url_field_selector).fill_in(with: payload_url)
 
         click_save
       end
 
       def edit_payload_url(payload_url)
-        form = page.find("form.web-hook")
+        form = page.find(form_selector)
         form.find(payload_url_field_selector).fill_in(with: payload_url)
 
         click_save
@@ -65,6 +65,10 @@ module PageObjects
         ".d-admin-row__content"
       end
 
+      def form_selector
+        ".form-kit"
+      end
+
       def summary_selector
         ".admin-webhooks__summary"
       end
@@ -74,11 +78,11 @@ module PageObjects
       end
 
       def payload_url_field_selector
-        "input[name='payload-url']"
+        "input[name='payload_url']"
       end
 
       def save_button_selector
-        ".admin-webhooks__save-button"
+        ".save"
       end
 
       def back_button_selector

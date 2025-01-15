@@ -9,7 +9,6 @@ import WebhookItem from "admin/components/webhook-item";
 
 export default class AdminConfigAreasWebhooksList extends Component {
   @service dialog;
-  @service router;
 
   @tracked webhooks = this.args.webhooks;
 
