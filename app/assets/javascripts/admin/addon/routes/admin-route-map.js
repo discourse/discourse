@@ -42,7 +42,7 @@ export default function () {
           "adminEmailTemplates",
           { path: "/templates", resetNamespace: true },
           function () {
-            this.route("edit", { path: "/:template_id" });
+            this.route("edit", { path: "/:id" });
           }
         );
       }
