@@ -8,7 +8,7 @@ module Jobs
       return unless SiteSetting.enable_badges
 
       Jobs.enqueue_after(:ensure_badge_consistency) do
-        Badge.enabled.map { |b| Jobs.enqueue(:grant_badge, badge_id: b.id) }
+        Badge.enabled.each { |b| Jobs.enqueue(:grant_badge, badge_id: b.id) }
       end
     end
   end
