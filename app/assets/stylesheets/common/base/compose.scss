@@ -629,11 +629,11 @@ div.ac-wrap {
   }
 }
 
-// Ensures we don't apply this to touch-enabled desktops
+// Limiting to hover: none ensures we don't target touch-enabled desktops here
 @media (hover: none) {
-  // The composer on mobile is fixed-positioned, same as on desktop because
-  // goes together with the interactive-widget=resizes-content in the viewport meta tag
-  // for maximum browser compatibility (especially Firefox and webviews)
+  // This targets mobile/iPad/tablets and it goes together with
+  // the interactive-widget=resizes-content in the viewport meta tag
+  // for maximum browser compatibility (including Firefox on Android)
   // see https://developer.chrome.com/blog/viewport-resize-behavior for context
   .discourse-touch,
   .mobile-device {
