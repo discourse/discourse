@@ -269,7 +269,11 @@ class SiteSettings::TypeSupervisor
     if type == self.class.types[:list] || type == self.class.types[:string]
       if @allow_any.key?(name) && !@allow_any[name]
         split = val.to_s.split("|")
-        diff = (split - @choices[name])
+        resolved_choices = @choices[name]
+        if resolved_choices.first.is_a?(Hash)
+          resolved_choices = resolved_choices.map { |c| c[:value] }
+        end
+        diff = (split - resolved_choices)
         if diff.length > 0
           raise Discourse::InvalidParameters.new(
                   I18n.t(
