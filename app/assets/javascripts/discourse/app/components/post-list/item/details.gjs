@@ -34,7 +34,7 @@ export default class PostListItemDetails extends Component {
     return (
       this.args.titleAriaLabel ||
       i18n("post_list.aria_post_number", {
-        title: this.args.post.topic_title,
+        title: this.topicTitle,
         postNumber: this.args.post.post_number,
       })
     );

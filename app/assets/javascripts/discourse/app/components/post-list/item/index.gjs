@@ -53,6 +53,10 @@ export default class PostListItem extends Component {
     };
   }
 
+  get postId() {
+    return this.args.post.id || this.args.post.post_id;
+  }
+
   @action
   buildOneboxes(element) {
     schedule("afterRender", () => {
@@ -141,7 +145,7 @@ export default class PostListItem extends Component {
 
       <div
         data-topic-id={{@post.topic_id}}
-        data-post-id={{@post.id}}
+        data-post-id={{this.postId}}
         data-user-id={{@post.user_id}}
         class="excerpt"
       >

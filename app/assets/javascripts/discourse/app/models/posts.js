@@ -11,6 +11,10 @@ export default class Posts extends RestModel {
       data.before = opts.before;
     }
 
+    if (opts.id) {
+      data.id = opts.id;
+    }
+
     const { latest_posts } = await ajax("/posts.json", { data });
     return latest_posts.map((post) => {
       post.category = Category.findById(post.category_id);

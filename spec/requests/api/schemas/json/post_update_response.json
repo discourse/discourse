@@ -26,6 +26,9 @@
         "post_type": {
           "type": "integer"
         },
+        "posts_count": {
+          "type": "integer"
+        },
         "updated_at": {
           "type": "string"
         },
@@ -205,6 +208,9 @@
         "reviewable_score_pending_count": {
           "type": "integer"
         },
+        "post_url": {
+          "type": "string"
+        },
         "mentioned_users": {
           "type": "array",
           "items": {}
@@ -230,6 +236,7 @@
         "cooked",
         "post_number",
         "post_type",
+        "posts_count",
         "updated_at",
         "reply_count",
         "reply_to_post_number",
@@ -269,7 +276,8 @@
         "wiki",
         "reviewable_id",
         "reviewable_score_count",
-        "reviewable_score_pending_count"
+        "reviewable_score_pending_count",
+        "post_url"
       ]
     }
   },
