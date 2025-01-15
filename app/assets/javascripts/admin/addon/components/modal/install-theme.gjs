@@ -243,7 +243,6 @@ export default class InstallThemeModal extends Component {
   #backgroundLoading() {
     if (this.loading) {
       setTimeout(() => {
-        console.log("Loading time passed: ", this.loadingTimePassed);
         this.loadingTimePassed += 1;
         this.#backgroundLoading();
       }, 1000);
