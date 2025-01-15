@@ -37,23 +37,23 @@ export default class Dropdown extends Component {
     }
 
     if (this.args.field.id === "homepage_style") {
-      let type, landingPage;
-      if (
-        this.args.field.value.includes("category") ||
-        this.args.field.value.includes("categories")
-      ) {
-        type = i18n("wizard.homepage_choices.style_type.categories");
-        landingPage = i18n(`wizard.top_menu_items.categories`);
-      } else {
-        type = i18n(`wizard.homepage_choices.style_type.topics`);
-        landingPage = i18n(`wizard.top_menu_items.${this.args.field.value}`);
-      }
-
       // These are the 3 supported options for the wizard, but admins can
       // configure other options too. See also Wizard::Builder
       if (
         !["hot", "latest", "category_boxes"].includes(this.args.field.value)
       ) {
+        let type, landingPage;
+        if (
+          this.args.field.value.includes("category") ||
+          this.args.field.value.includes("categories")
+        ) {
+          type = i18n("wizard.homepage_choices.style_type.categories");
+          landingPage = i18n(`wizard.top_menu_items.categories`);
+        } else {
+          type = i18n(`wizard.homepage_choices.style_type.topics`);
+          landingPage = i18n(`wizard.top_menu_items.${this.args.field.value}`);
+        }
+
         this.args.field.choices.push(
           new Choice({
             id: this.args.field.value,

@@ -4,6 +4,7 @@ import Dropdown from "discourse/static/wizard/components/fields/dropdown";
 import { Choice, Field } from "discourse/static/wizard/models/wizard";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 function buildFontChoices() {
   return [
@@ -44,8 +45,6 @@ function buildFontChoices() {
     },
   ];
 }
-
-// TODO (martin) Add test for the homepage style here
 
 module(
   "Integration | Component | Wizard | Fields | Dropdown",
@@ -252,6 +251,82 @@ module(
           `has heading-font-${choice.id} CSS class`
         );
       });
+    });
+
+    test("homepage_style shows the 3 main options by default (hot, latest, category_boxes)", async function (assert) {
+      const field = new Field({
+        type: "dropdown",
+        id: "homepage_style",
+        label: "homepage style",
+        value: "latest",
+        choices: [
+          { id: "latest", description: "latest stuff" },
+          { id: "hot", description: "hot stuff" },
+          { id: "category_boxes", description: "category boxes" },
+        ],
+      });
+
+      await render(<template><Dropdown @field={{field}} /></template>);
+      const homepageStyleSelector = selectKit(
+        ".wizard-container__dropdown.homepage-style-selector"
+      );
+      await homepageStyleSelector.expand();
+      assert.strictEqual(
+        homepageStyleSelector.displayedContent().length,
+        3,
+        "has 3 options by default"
+      );
+    });
+
+    test("homepage_style shows an additional custom option for less common setting configurations", async function (assert) {
+      const field = new Field({
+        type: "dropdown",
+        id: "homepage_style",
+        label: "homepage style",
+        value: "categories_and_latest_topics_created_date",
+        choices: [
+          { id: "latest", description: "latest stuff" },
+          { id: "hot", description: "hot stuff" },
+          { id: "category_boxes", description: "category boxes" },
+        ],
+      });
+
+      await render(<template><Dropdown @field={{field}} /></template>);
+      const homepageStyleSelector = selectKit(
+        ".wizard-container__dropdown.homepage-style-selector"
+      );
+      await homepageStyleSelector.expand();
+      assert.strictEqual(
+        homepageStyleSelector.selectedRow().value(),
+        "categories_and_latest_topics_created_date"
+      );
+      assert.strictEqual(
+        homepageStyleSelector.selectedRow().label(),
+        i18n("wizard.homepage_choices.custom.label")
+      );
+      assert.strictEqual(
+        homepageStyleSelector.selectedRow().description(),
+        i18n("wizard.homepage_choices.custom.description", {
+          type: i18n("wizard.homepage_choices.style_type.categories"),
+          landingPage: i18n(`wizard.top_menu_items.categories`).toLowerCase(),
+        })
+      );
+
+      field.value = "top";
+      await render(<template><Dropdown @field={{field}} /></template>);
+      await homepageStyleSelector.expand();
+      assert.strictEqual(homepageStyleSelector.selectedRow().value(), "top");
+      assert.strictEqual(
+        homepageStyleSelector.selectedRow().label(),
+        i18n("wizard.homepage_choices.custom.label")
+      );
+      assert.strictEqual(
+        homepageStyleSelector.selectedRow().description(),
+        i18n("wizard.homepage_choices.custom.description", {
+          type: i18n("wizard.homepage_choices.style_type.topics"),
+          landingPage: i18n(`wizard.top_menu_items.top`).toLowerCase(),
+        })
+      );
     });
   }
 );
