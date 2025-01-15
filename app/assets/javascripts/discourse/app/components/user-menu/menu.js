@@ -193,7 +193,6 @@ export default class UserMenu extends Component {
   @service router;
   @service site;
   @service siteSettings;
-  @service header;
 
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
