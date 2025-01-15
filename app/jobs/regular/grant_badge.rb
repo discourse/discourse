@@ -2,6 +2,8 @@
 
 module Jobs
   class GrantBadge < ::Jobs::Base
+    sidekiq_options queue: "low"
+
     def execute(args)
       return unless SiteSetting.enable_badges
 
