@@ -2941,7 +2941,7 @@ en:
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
         votes_released: "Vote was released"
-        new_features: "new Discourse features have been released!"
+        new_features: "New Discourse features have been released!"
         admin_problems: "new advice on your site dashboard"
 
     upload_selector:
@@ -6324,8 +6324,8 @@ en:
           overridden: Your site's default robots.txt file is overridden.
         email_style:
           title: "Email Style"
-          heading: "Customize Email Style"
-          html: "HTML Template"
+          heading: "Customize email style"
+          html: "HTML"
           css: "CSS"
           reset: "Reset to default"
           reset_confirm: "Are you sure you want to reset to the default %{fieldName} and lose all your changes?"
@@ -6334,7 +6334,8 @@ en:
 
       email:
         title: "Emails"
-        settings: "Email Settings"
+        description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs."
+        settings: "Settings"
         templates: "Templates"
         templates_title: "Email Templates"
         preview_digest: "Preview Summary"
@@ -7195,11 +7196,13 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
+        title: "Site Settings"
+        description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:
             label: "Add Emoji"
-        title: "Settings"
+        nav_title: "Settings"
         no_results: "No results found."
         more_site_setting_results:
           one: "There is more than %{count} result. Please refine your search or select a category."
@@ -7524,6 +7527,25 @@ en:
           moderator: "Moderator"
           regular: "Regular User"
 
+      homepage_choices:
+        custom:
+          label: "Custom"
+          description: "Display a %{type}-focused homepage with users landing on %{landingPage}"
+        style_type:
+          categories: "category"
+          topics: "topic"
+
+      top_menu_items:
+        new: "New"
+        unread: "Unread"
+        top: "Top"
+        latest: "Latest"
+        hot: "Hot"
+        categories: "Categories"
+        unseen: "Unseen"
+        read: "Read"
+        bookmarks: "Bookmarks"
+
       previews:
         topic_title: "What books are you reading?"
         share_button: "Share"
@@ -7534,12 +7556,6 @@ en:
       homepage_preview:
         nav_buttons:
           all_categories: "all categories"
-          new: "New"
-          unread: "Unread"
-          top: "Top"
-          latest: "Latest"
-          hot: "Hot"
-          categories: "Categories"
         topic_titles:
           what_books: "What books are you reading?"
           what_movies: "What movies have you seen recently?"

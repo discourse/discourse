@@ -22,7 +22,7 @@ RSpec.describe "S3Inventory", type: :multisite do
     db1 = files["default"].read
     db2 = files["second"].read
 
-    expect(db1.lines.count).to eq(3)
+    expect(db1.lines.count).to eq(4)
     expect(db2.lines.count).to eq(1)
 
     files.values.each do |f|
