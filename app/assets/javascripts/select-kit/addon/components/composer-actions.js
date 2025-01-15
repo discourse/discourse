@@ -289,7 +289,6 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     options.action = PRIVATE_MESSAGE;
     options.recipients = recipients.join(",");
     options.archetypeId = "private_message";
-    options.skipDraftCheck = true;
 
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
@@ -297,14 +296,12 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
   replyToTopicSelected(options) {
     options.action = REPLY;
     options.topic = _topicSnapshot;
-    options.skipDraftCheck = true;
     this._openComposer(options);
   }
 
   replyToPostSelected(options) {
     options.action = REPLY;
     options.post = _postSnapshot;
-    options.skipDraftCheck = true;
     this._openComposer(options);
   }
 
@@ -326,7 +323,6 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
     options.disableScopedCategory = true;
-    options.skipDraftCheck = true;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
 
@@ -352,7 +348,6 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     options.action = PRIVATE_MESSAGE;
     options.recipients = usernames;
     options.archetypeId = "private_message";
-    options.skipDraftCheck = true;
 
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   }
@@ -362,7 +357,6 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     options.categoryId = this.get("composerModel.categoryId");
     options.topicTitle = this.get("composerModel.title");
     options.tags = this.get("composerModel.tags");
-    options.skipDraftCheck = true;
     this._openComposer(options);
   }
 

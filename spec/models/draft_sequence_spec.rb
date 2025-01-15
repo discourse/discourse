@@ -3,11 +3,12 @@
 RSpec.describe DraftSequence do
   fab!(:user)
   fab!(:upload)
+  let!(:topic_draft_key) { Draft::NEW_TOPIC + "_0001" }
 
   describe ".next" do
     it "should produce next sequence for a key" do
-      expect(DraftSequence.next!(user, "test")).to eq 1
-      expect(DraftSequence.next!(user, "test")).to eq 2
+      expect(DraftSequence.next!(user, topic_draft_key)).to eq 1
+      expect(DraftSequence.next!(user, topic_draft_key)).to eq 2
     end
 
     it "should not produce next sequence for non-human user" do
@@ -16,11 +17,9 @@ RSpec.describe DraftSequence do
     end
 
     it "deletes old drafts and associated upload references" do
-      key = Draft::NEW_TOPIC + "_0001"
-
       Draft.set(
         user,
-        key,
+        topic_draft_key,
         0,
         {
           reply: "[#{upload.original_filename}|attachment](#{upload.short_url})",
@@ -35,9 +34,11 @@ RSpec.describe DraftSequence do
         }.to_json,
       )
 
-      expect { DraftSequence.next!(user, key) }.to change { Draft.count }.by(-1).and change {
-              UploadReference.count
-            }.by(-1).and change { user.reload.user_stat.draft_count }.by(-1)
+      expect { DraftSequence.next!(user, topic_draft_key) }.to change { Draft.count }.by(
+        -1,
+      ).and change { UploadReference.count }.by(-1).and change {
+                    user.reload.user_stat.draft_count
+                  }.by(-1)
     end
   end
 

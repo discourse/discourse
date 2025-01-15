@@ -1313,7 +1313,6 @@ export default class ComposerService extends Service {
    @param {Number} [opts.prioritizedCategoryId]
    @param {Number} [opts.formTemplateId]
    @param {String} [opts.draftSequence]
-   @param {Boolean} [opts.skipDraftCheck]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
    @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
    **/
@@ -1408,37 +1407,7 @@ export default class ComposerService extends Service {
         composerModel.setProperties({ unlistTopic: false, whisper: false });
       }
 
-      // we need a draft sequence for the composer to work
-      if (opts.draftSequence === undefined) {
-        let data = await Draft.get(opts.draftKey);
-
-        if (opts.skipDraftCheck) {
-          data.draft = undefined;
-        } else {
-          data = await this.confirmDraftAbandon(data);
-        }
-
-        opts.draft ||= data.draft;
-        opts.draftSequence = data.draft_sequence;
-
-        await this._setModel(composerModel, opts);
-
-        return;
-      }
-
       await this._setModel(composerModel, opts);
-
-      // otherwise, do the draft check async
-      if (!opts.draft && !opts.skipDraftCheck) {
-        let data = await Draft.get(opts.draftKey);
-        data = await this.confirmDraftAbandon(data);
-
-        if (data.draft) {
-          opts.draft = data.draft;
-          opts.draftSequence = data.draft_sequence;
-          await this.open(opts);
-        }
-      }
     } finally {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });
@@ -1457,7 +1426,6 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
-      skipDraftCheck: true,
     });
   }
 
