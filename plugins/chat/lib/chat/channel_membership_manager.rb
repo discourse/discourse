@@ -3,7 +3,7 @@
 module Chat
   class ChannelMembershipManager
     def self.all_for_user(user)
-      override = DiscoursePluginRegistry.apply_modifier(:list_user_channels_modifier, nil, user)
+      override = DiscoursePluginRegistry.apply_modifier(:channel_memberships, nil, user)
 
       return override if !override.nil?
 
