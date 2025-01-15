@@ -50,11 +50,7 @@ export default class DiscourseRoute extends Route {
       "DiscourseRoute#openTopicDraft is deprecated. Inject the composer service and call openNewTopic instead",
       { id: "discourse.open-topic-draft" }
     );
-    if (this.currentUser?.has_topic_draft) {
-      return getOwnerWithFallback(this)
-        .lookup("service:composer")
-        .openNewTopic({ preferDraft: true });
-    }
+    return getOwnerWithFallback(this).lookup("service:composer").openNewTopic();
   }
 
   isCurrentUser(user) {

@@ -2,7 +2,7 @@
 
 class Draft < ActiveRecord::Base
   NEW_TOPIC = "new_topic"
-  NEW_PRIVATE_MESSAGE = "new_private_message"
+  NEW_PRIVATE_MESSAGE = "new_message"
   EXISTING_TOPIC = "topic_"
 
   belongs_to :user
@@ -129,12 +129,6 @@ class Draft < ActiveRecord::Base
     raise Draft::OutOfSequence if sequence != current_sequence
 
     data if current_sequence == draft_sequence
-  end
-
-  def self.has_topic_draft(user)
-    return if !user || !user.id || !User.human_user_id?(user.id)
-
-    Draft.where(user_id: user.id, draft_key: NEW_TOPIC).present?
   end
 
   def self.clear(user, key, sequence)

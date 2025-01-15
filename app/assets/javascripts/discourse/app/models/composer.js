@@ -39,7 +39,7 @@ export const CREATE_TOPIC = "createTopic",
   PRIVATE_MESSAGE = "privateMessage",
   REPLY = "reply",
   EDIT = "edit",
-  NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
+  NEW_PRIVATE_MESSAGE_KEY = "new_message",
   NEW_TOPIC_KEY = "new_topic";
 
 function isEdit(action) {
@@ -1306,7 +1306,7 @@ export default class Composer extends RestModel {
     return true;
   }
 
-  saveDraft(user) {
+  saveDraft() {
     if (!this.canSaveDraft) {
       return Promise.resolve();
     }
@@ -1335,10 +1335,6 @@ export default class Composer extends RestModel {
             draftConflictUser: result.conflict_user,
           });
         } else {
-          if (this.draftKey === NEW_TOPIC_KEY && user) {
-            user.set("has_topic_draft", true);
-          }
-
           this.setProperties({
             draftStatus: null,
             draftConflictUser: null,

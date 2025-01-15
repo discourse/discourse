@@ -15,10 +15,7 @@ import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { translateModKey } from "discourse/lib/utilities";
-import Composer, {
-  CREATE_TOPIC,
-  NEW_TOPIC_KEY,
-} from "discourse/models/composer";
+import Composer, { CREATE_TOPIC } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { toggleCheckDraftPopup } from "discourse/services/composer";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -27,7 +24,6 @@ import {
   acceptance,
   metaModifier,
   query,
-  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -895,27 +891,6 @@ acceptance("Composer", function (needs) {
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
-  });
-
-  test("Loads tags and category from draft payload", async function (assert) {
-    updateCurrentUser({ has_topic_draft: true });
-
-    sinon.stub(Draft, "get").resolves({
-      draft:
-        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "xmark"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
-      draft_sequence: 0,
-      draft_key: NEW_TOPIC_KEY,
-    });
-
-    await visit("/latest");
-    assert.dom("#create-topic").hasText(i18n("topic.create"));
-
-    await click("#create-topic");
-    assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
-    assert.strictEqual(
-      selectKit(".mini-tag-chooser").header().value(),
-      "fun,xmark"
-    );
   });
 
   test("Deleting the text content of the first post in a private message", async function (assert) {

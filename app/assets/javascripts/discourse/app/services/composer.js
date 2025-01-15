@@ -41,6 +41,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer, {
   CREATE_TOPIC,
+  NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
   SAVE_ICONS,
   SAVE_LABELS,
@@ -139,6 +140,14 @@ export default class ComposerService extends Service {
 
   get isOpen() {
     return this.model?.composeState === Composer.OPEN;
+  }
+
+  get topicDraftKey() {
+    return NEW_TOPIC_KEY + "_" + new Date().getTime();
+  }
+
+  get privateMessageDraftKey() {
+    return NEW_PRIVATE_MESSAGE_KEY + "_" + new Date().getTime();
   }
 
   @on("init")
@@ -580,8 +589,8 @@ export default class ComposerService extends Service {
 
     if (opts.fallbackToNewTopic) {
       return await this.open({
-        action: Composer.CREATE_TOPIC,
-        draftKey: Composer.NEW_TOPIC_KEY,
+        action: CREATE_TOPIC,
+        draftKey: this.topicDraftKey,
         ...(opts.openOpts || {}),
       });
     }
@@ -1213,10 +1222,6 @@ export default class ComposerService extends Service {
           );
         }
 
-        if (this.get("model.draftKey") === Composer.NEW_TOPIC_KEY) {
-          this.currentUser.set("has_topic_draft", false);
-        }
-
         if (result.responseJson.route_to) {
           // TODO: await this:
           this.destroyDraft();
@@ -1440,49 +1445,20 @@ export default class ComposerService extends Service {
     }
   }
 
-  async #openNewTopicDraft() {
-    if (
-      this.model?.action === Composer.CREATE_TOPIC &&
-      this.model?.draftKey === Composer.NEW_TOPIC_KEY
-    ) {
-      this.set("model.composeState", Composer.OPEN);
-    } else {
-      const data = await Draft.get(Composer.NEW_TOPIC_KEY);
-      if (data.draft) {
-        return this.open({
-          action: Composer.CREATE_TOPIC,
-          draft: data.draft,
-          draftKey: Composer.NEW_TOPIC_KEY,
-          draftSequence: data.draft_sequence,
-        });
-      }
-    }
-  }
-
   @action
-  async openNewTopic({
-    title,
-    body,
-    category,
-    tags,
-    formTemplate,
-    preferDraft = false,
-  } = {}) {
-    if (preferDraft && this.currentUser.has_topic_draft) {
-      return this.#openNewTopicDraft();
-    } else {
-      return this.open({
-        prioritizedCategoryId: category?.id,
-        topicCategoryId: category?.id,
-        formTemplateId: formTemplate?.id,
-        topicTitle: title,
-        topicBody: body,
-        topicTags: tags,
-        action: CREATE_TOPIC,
-        draftKey: NEW_TOPIC_KEY,
-        draftSequence: 0,
-      });
-    }
+  async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
+    return this.open({
+      prioritizedCategoryId: category?.id,
+      topicCategoryId: category?.id,
+      formTemplateId: formTemplate?.id,
+      topicTitle: title,
+      topicBody: body,
+      topicTags: tags,
+      action: CREATE_TOPIC,
+      draftKey: this.topicDraftKey,
+      draftSequence: 0,
+      skipDraftCheck: true,
+    });
   }
 
   @action
@@ -1493,7 +1469,7 @@ export default class ComposerService extends Service {
       topicTitle: title,
       topicBody: body,
       archetypeId: "private_message",
-      draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+      draftKey: this.privateMessageDraftKey,
       hasGroups,
     });
   }
@@ -1602,10 +1578,6 @@ export default class ComposerService extends Service {
     const key = this.get("model.draftKey");
     if (!key) {
       return;
-    }
-
-    if (key === Composer.NEW_TOPIC_KEY) {
-      this.currentUser.set("has_topic_draft", false);
     }
 
     if (this._saveDraftPromise) {
@@ -1751,12 +1723,10 @@ export default class ComposerService extends Service {
         }
       }
 
-      this._saveDraftPromise = this.model
-        .saveDraft(this.currentUser)
-        .finally(() => {
-          this._lastDraftSaved = Date.now();
-          this._saveDraftPromise = null;
-        });
+      this._saveDraftPromise = this.model.saveDraft().finally(() => {
+        this._lastDraftSaved = Date.now();
+        this._saveDraftPromise = null;
+      });
     }
   }
 

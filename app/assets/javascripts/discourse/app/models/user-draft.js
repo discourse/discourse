@@ -33,10 +33,10 @@ export default class UserDraft extends RestModel {
 
   @discourseComputed("draft_key")
   draftType(draftKey) {
-    switch (draftKey) {
-      case NEW_TOPIC_KEY:
+    switch (true) {
+      case draftKey.startsWith(NEW_TOPIC_KEY):
         return i18n("drafts.new_topic");
-      case NEW_PRIVATE_MESSAGE_KEY:
+      case draftKey.startsWith(NEW_PRIVATE_MESSAGE_KEY):
         return i18n("drafts.new_private_message");
       default:
         return false;

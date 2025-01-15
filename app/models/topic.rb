@@ -449,11 +449,7 @@ class Topic < ActiveRecord::Base
   end
 
   def advance_draft_sequence
-    if self.private_message?
-      DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
-    else
-      DraftSequence.next!(user, Draft::NEW_TOPIC)
-    end
+    DraftSequence.next!(user, self.draft_key)
   end
 
   def ensure_topic_has_a_category

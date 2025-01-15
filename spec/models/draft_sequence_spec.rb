@@ -16,9 +16,11 @@ RSpec.describe DraftSequence do
     end
 
     it "deletes old drafts and associated upload references" do
+      key = Draft::NEW_TOPIC + "_0001"
+
       Draft.set(
         user,
-        Draft::NEW_TOPIC,
+        key,
         0,
         {
           reply: "[#{upload.original_filename}|attachment](#{upload.short_url})",
@@ -33,11 +35,9 @@ RSpec.describe DraftSequence do
         }.to_json,
       )
 
-      expect { DraftSequence.next!(user, Draft::NEW_TOPIC) }.to change { Draft.count }.by(
-        -1,
-      ).and change { UploadReference.count }.by(-1).and change {
-                    user.reload.user_stat.draft_count
-                  }.by(-1)
+      expect { DraftSequence.next!(user, key) }.to change { Draft.count }.by(-1).and change {
+              UploadReference.count
+            }.by(-1).and change { user.reload.user_stat.draft_count }.by(-1)
     end
   end
 
