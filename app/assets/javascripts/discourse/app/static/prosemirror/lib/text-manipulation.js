@@ -2,8 +2,9 @@ import { setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
+import { liftListItem, sinkListItem } from "prosemirror-schema-list";
+import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
-import { convertFromMarkdown } from "discourse/static/prosemirror/lib/parser";
 import { i18n } from "discourse-i18n";
 
 /** @implements {TextManipulation} */
@@ -85,8 +86,8 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
-    const text = i18n(`composer.${exampleKey}`);
-    const doc = convertFromMarkdown(this.schema, head + text + tail);
+    const text = head + i18n(`composer.${exampleKey}`) + tail;
+    const doc = this.view.props.convertFromMarkdown(text);
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
@@ -94,7 +95,7 @@ export default class ProsemirrorTextManipulation {
   }
 
   addText(sel, text, options) {
-    const doc = convertFromMarkdown(this.schema, text);
+    const doc = this.view.props.convertFromMarkdown(text);
 
     // assumes it returns a single block node
     const content =
@@ -105,18 +106,21 @@ export default class ProsemirrorTextManipulation {
     this.view.dispatch(
       this.view.state.tr.replaceWith(sel.start, sel.end, content)
     );
+
+    this.focus();
   }
 
   insertBlock(block) {
-    const doc = convertFromMarkdown(this.schema, block);
+    const doc = this.view.props.convertFromMarkdown(block);
+    const node = doc.content.firstChild;
 
-    this.view.dispatch(
-      this.view.state.tr.replaceWith(
-        this.view.state.selection.from - 1,
-        this.view.state.selection.to,
-        doc.content.firstChild
-      )
-    );
+    const tr = this.view.state.tr.replaceSelectionWith(node);
+    if (!tr.selection.$from.nodeAfter) {
+      tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.from + 1)));
+    }
+    this.view.dispatch(tr);
+
+    this.focus();
   }
 
   applyList(_selection, head, exampleKey, opts) {
@@ -186,37 +190,11 @@ export default class ProsemirrorTextManipulation {
 
   @bind
   emojiSelected(code) {
-    const text = this.autocompleteHandler
-      .getValue()
-      .slice(0, this.getCaretPosition());
-    const captures = text.match(/\B:(\w*)$/);
-
-    if (!captures) {
-      if (text.match(/\S$/)) {
-        this.view.dispatch(
-          this.view.state.tr
-            .insertText(" ", this.view.state.selection.from)
-            .replaceSelectionWith(this.schema.nodes.emoji.create({ code }))
-        );
-      } else {
-        this.view.dispatch(
-          this.view.state.tr.replaceSelectionWith(
-            this.schema.nodes.emoji.create({ code })
-          )
-        );
-      }
-    } else {
-      let numOfRemovedChars = captures[1].length;
-      this.view.dispatch(
-        this.view.state.tr
-          .delete(
-            this.view.state.selection.from - numOfRemovedChars - 1,
-            this.view.state.selection.from
-          )
-          .replaceSelectionWith(this.schema.nodes.emoji.create({ code }))
-      );
-    }
-    this.focus();
+    this.view.dispatch(
+      this.view.state.tr
+        .replaceSelectionWith(this.schema.nodes.emoji.create({ code }))
+        .insertText(" ")
+    );
   }
 
   @bind
@@ -258,15 +236,32 @@ export default class ProsemirrorTextManipulation {
   }
 
   indentSelection(direction) {
-    const command = direction === "right" ? wrapIn : lift;
+    const { selection } = this.view.state;
 
-    command(this.schema.nodes.blockquote)(this.view.state, this.view.dispatch);
+    const isInsideListItem =
+      selection.$head.depth > 0 &&
+      selection.$head.node(-1).type === this.schema.nodes.list_item;
+
+    if (isInsideListItem) {
+      const command =
+        direction === "right"
+          ? sinkListItem(this.schema.nodes.list_item)
+          : liftListItem(this.schema.nodes.list_item);
+      command(this.view.state, this.view.dispatch);
+      return true;
+    }
   }
 
   insertText(text) {
+    const doc = this.view.props.convertFromMarkdown(text);
+
     this.view.dispatch(
-      this.view.state.tr.insertText(text, this.view.state.selection.from)
+      this.view.state.tr
+        .replaceSelectionWith(doc.content.firstChild)
+        .scrollIntoView()
     );
+
+    this.focus();
   }
 
   replaceText(oldValue, newValue, opts) {
@@ -333,7 +328,7 @@ class ProsemirrorAutocompleteHandler {
     //   );
     // }
 
-    const doc = convertFromMarkdown(this.schema, term);
+    const doc = this.view.props.convertFromMarkdown(term);
 
     const tr = this.view.state.tr.replaceWith(
       from,
@@ -455,7 +450,7 @@ class ProsemirrorPlaceholderHandler {
     });
 
     // keeping compatibility with plugins that change the image node via markdown
-    const doc = convertFromMarkdown(this.schema, markdown);
+    const doc = this.view.props.convertFromMarkdown(markdown);
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(

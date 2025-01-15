@@ -19,6 +19,7 @@ const extension = {
           getAttrs: (dom) => {
             return { code: dom.getAttribute("alt").replace(/:/g, "") };
           },
+          priority: 60,
         },
       ],
       toDOM: (node) => {
@@ -57,14 +58,16 @@ const extension = {
     },
     {
       match: new RegExp(
-        `(?<=^|\\W)(${Object.keys(translations).map(escapeRegExp).join("|")})$`
+        `(?<=^|\\W)(${Object.keys(translations).map(escapeRegExp).join("|")}) $`
       ),
       handler: (state, match, start, end) => {
-        return state.tr.replaceWith(
-          start,
-          end,
-          state.schema.nodes.emoji.create({ code: translations[match[1]] })
-        );
+        return state.tr
+          .replaceWith(
+            start,
+            end,
+            state.schema.nodes.emoji.create({ code: translations[match[1]] })
+          )
+          .insertText(" ");
       },
     },
   ],

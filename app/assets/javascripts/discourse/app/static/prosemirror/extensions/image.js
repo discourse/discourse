@@ -119,7 +119,7 @@ const extension = {
           // we should only track the changes
           tr.doc.descendants((node, pos) => {
             if (node.type.name === "image" && node.attrs["data-orig-src"]) {
-              if (node.attrs.src === PLACEHOLDER_IMG) {
+              if (node.attrs.src.endsWith(PLACEHOLDER_IMG)) {
                 updated.push({ pos, src: node.attrs["data-orig-src"] });
               } else {
                 updated = updated.filter(

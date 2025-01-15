@@ -34,8 +34,6 @@ const defaultExtensions = [
   trailingParagraph,
   typographerReplacements,
   markdownPaste,
-
-  // table last
   table,
 ];
 

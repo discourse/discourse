@@ -10,6 +10,9 @@ const extension = {
   },
   inputRules: ({ schema, markInputRule }) =>
     markInputRule(/\[u]$/, schema.marks.underline),
+  keymap({ pmCommands, schema }) {
+    return { "Mod-u": pmCommands.toggleMark(schema.marks.underline) };
+  },
   parse: {
     bbcode_u: { mark: "underline" },
   },

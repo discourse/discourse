@@ -1,12 +1,10 @@
-import { convertFromMarkdown } from "../lib/parser";
-
 /** @type {RichEditorExtension} */
 const extension = {
   plugins({ pmState: { Plugin }, pmModel: { Fragment, Slice } }) {
     return new Plugin({
       props: {
         clipboardTextParser(text, $context, plain, view) {
-          const { content } = convertFromMarkdown(view.state.schema, text);
+          const { content } = view.props.convertFromMarkdown(text);
 
           return Slice.maxOpen(Fragment.from(content));
         },

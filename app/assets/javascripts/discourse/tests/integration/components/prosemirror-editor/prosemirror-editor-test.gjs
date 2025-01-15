@@ -10,4 +10,19 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
     await render(<template><ProsemirrorEditor /></template>);
     assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
   });
+
+  test("renders the editor with minimum extensions", async function (assert) {
+    const minimumExtensions = [
+      { nodeSpec: { doc: { content: "inline*" }, text: { group: "inline" } } },
+    ];
+
+    await render(<template>
+      <ProsemirrorEditor
+        @includeDefault={{false}}
+        @extensions={{minimumExtensions}}
+      />
+    </template>);
+
+    assert.dom(".ProseMirror").exists("it renders the ProseMirror editor");
+  });
 });

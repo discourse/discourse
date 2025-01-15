@@ -536,7 +536,7 @@ export default class UppyComposerUpload {
   @bind
   _pasteEventListener(event) {
     if (
-      document.activeElement !== document.querySelector(this.editorInputClass)
+      !document.querySelector(this.editorInputClass)?.contains(event.target)
     ) {
       return;
     }
@@ -551,6 +551,7 @@ export default class UppyComposerUpload {
     }
 
     if (event && event.clipboardData && event.clipboardData.files) {
+      event.preventDefault();
       this._addFiles([...event.clipboardData.files], { pasted: true });
     }
   }

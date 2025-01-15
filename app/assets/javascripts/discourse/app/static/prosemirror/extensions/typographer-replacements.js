@@ -13,6 +13,10 @@ const extension = {
     {
       match: new RegExp(`(${RARE_RE.source})$`),
       handler: (state, match, start, end) => {
+        if (state.doc.rangeHasMark(start, end, state.schema.marks.code)) {
+          return false;
+        }
+
         return state.tr.replaceWith(
           start,
           end,
