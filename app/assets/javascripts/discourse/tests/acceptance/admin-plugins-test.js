@@ -47,7 +47,7 @@ acceptance("Admin - Plugins", function (needs) {
       .hasText("Some Test Plugin", "displays the plugin in the table");
 
     assert
-      .dom(".admin-plugins .admin-container .alert-error")
+      .dom(".admin-plugins .admin-config-page .alert-error")
       .exists("shows an error for unknown routes");
 
     assert
