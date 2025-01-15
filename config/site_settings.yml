@@ -408,7 +408,7 @@ basic:
     default: ""
     hidden: true
   base_font:
-    default: "arial"
+    default: "Arial"
     choices: "BaseFontSetting.values"
     refresh: true
     type: list
@@ -416,7 +416,7 @@ basic:
     area: "fonts"
     allow_any: false
   heading_font:
-    default: "arial"
+    default: "Arial"
     choices: "BaseFontSetting.values"
     refresh: true
     type: list
