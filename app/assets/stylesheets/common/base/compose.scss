@@ -629,46 +629,53 @@ div.ac-wrap {
   }
 }
 
-// The composer on mobile is fixed-positioned, same as on desktop because
-// goes together with the interactive-widget=resizes-content in the viewport meta tag
-// for maximum browser compatibility (especially Firefox and webviews)
-// see https://developer.chrome.com/blog/viewport-resize-behavior for context
-.ipados-device,
-.tablet-device,
-.mobile-device {
-  #reply-control {
-    &.open {
-      z-index: z("mobile-composer");
+// Ensures we don't apply this to touch-enabled desktops
+@media (hover: none) {
+  // The composer on mobile is fixed-positioned, same as on desktop because
+  // goes together with the interactive-widget=resizes-content in the viewport meta tag
+  // for maximum browser compatibility (especially Firefox and webviews)
+  // see https://developer.chrome.com/blog/viewport-resize-behavior for context
+  .discourse-touch,
+  .mobile-device {
+    #reply-control {
+      // this might be overkill
+      // but on iPad with a physical keyboard the composer is shifted up on scroll
+      // this adds a solid box shadow below, looks cleaner
+      box-shadow: 0 150px 0px 0px var(--secondary);
+
+      &.open {
+        z-index: z("mobile-composer");
+      }
+
+      &.draft,
+      &.saving {
+        z-index: z("ipad-header-nav") + 1;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .toggle-fullscreen {
+        display: none;
+      }
+
+      .submit-panel,
+      .composer-fields,
+      .d-editor-button-bar {
+        // this prevents touch events (i.e. accidental scrolls) from bubbling up
+        touch-action: none;
+      }
     }
 
-    &.draft,
-    &.saving {
-      z-index: z("ipad-header-nav") + 1;
-      padding-bottom: env(safe-area-inset-bottom);
+    &.keyboard-visible #reply-control.open {
+      height: calc(var(--composer-vh, 1vh) * 100);
+
+      .grippie {
+        display: none;
+      }
     }
 
-    .toggle-fullscreen {
-      display: none;
+    &.composer-open .with-topic-progress {
+      bottom: calc(var(--composer-height));
     }
-
-    .submit-panel,
-    .composer-fields,
-    .d-editor-button-bar {
-      // this prevents touch events (i.e. accidental scrolls) from bubbling up
-      touch-action: none;
-    }
-  }
-
-  &.keyboard-visible #reply-control.open {
-    height: calc(var(--composer-vh, 1vh) * 100);
-
-    .grippie {
-      display: none;
-    }
-  }
-
-  &.composer-open .with-topic-progress {
-    bottom: calc(var(--composer-height));
   }
 }
 
@@ -684,19 +691,9 @@ div.ac-wrap {
   }
 }
 
-.ipados-device {
-  // this might be overkill
-  // but on iPad with a physical keyboard the composer is shifted up on scroll
-  // this adds a solid box shadow below, looks cleaner
-  #reply-control {
-    box-shadow: 0 150px 0px 0px var(--secondary);
-  }
-}
-
 // Safari in iOS/iPad does not handle well a bottom:0 fixed-positioned element,
 // especially while the software keyboard is visible, so we top-anchor it here
 // and shift it using transform
-.ipados-device,
 .ios-device {
   #reply-control {
     // the two properties below are equivalent to bottom: 0
