@@ -105,6 +105,9 @@ function rowHelper(row) {
     label() {
       return row.querySelector(".name").innerText.trim();
     },
+    description() {
+      return row.querySelector(".desc").innerText.trim();
+    },
     value() {
       const value = row?.getAttribute("data-value");
       return isEmpty(value) ? null : value;

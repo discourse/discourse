@@ -7527,6 +7527,25 @@ en:
           moderator: "Moderator"
           regular: "Regular User"
 
+      homepage_choices:
+        custom:
+          label: "Custom"
+          description: "Display a %{type}-focused homepage with users landing on %{landingPage}"
+        style_type:
+          categories: "category"
+          topics: "topic"
+
+      top_menu_items:
+        new: "New"
+        unread: "Unread"
+        top: "Top"
+        latest: "Latest"
+        hot: "Hot"
+        categories: "Categories"
+        unseen: "Unseen"
+        read: "Read"
+        bookmarks: "Bookmarks"
+
       previews:
         topic_title: "What books are you reading?"
         share_button: "Share"
@@ -7537,12 +7556,6 @@ en:
       homepage_preview:
         nav_buttons:
           all_categories: "all categories"
-          new: "New"
-          unread: "Unread"
-          top: "Top"
-          latest: "Latest"
-          hot: "Hot"
-          categories: "Categories"
         topic_titles:
           what_books: "What books are you reading?"
           what_movies: "What movies have you seen recently?"

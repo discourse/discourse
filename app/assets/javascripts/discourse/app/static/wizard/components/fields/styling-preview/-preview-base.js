@@ -380,26 +380,21 @@ export default class PreviewBase extends Component {
     ctx.restore();
 
     const categoryHomepage =
-      opts.homepageStyle !== "hot" && opts.homepageStyle !== "latest";
+      opts.homepageStyle.includes("category") ||
+      opts.homepageStyle.includes("categories");
 
     // First top menu item
-    let otherHomepageText;
-    switch (opts.homepageStyle) {
-      case "hot":
-        otherHomepageText = i18n("wizard.homepage_preview.nav_buttons.hot");
-        break;
-      case "latest":
-        otherHomepageText = i18n("wizard.homepage_preview.nav_buttons.latest");
-        break;
-    }
+    const otherHomepageText = i18n(
+      `wizard.top_menu_items.${opts.homepageStyle}`
+    );
 
     const firstTopMenuItemText = categoryHomepage
-      ? i18n("wizard.homepage_preview.nav_buttons.categories")
+      ? i18n("wizard.top_menu_items.categories")
       : otherHomepageText;
 
-    const newText = i18n("wizard.homepage_preview.nav_buttons.new");
-    const unreadText = i18n("wizard.homepage_preview.nav_buttons.unread");
-    const topText = i18n("wizard.homepage_preview.nav_buttons.top");
+    const newText = i18n("wizard.top_menu_items.new");
+    const unreadText = i18n("wizard.top_menu_items.unread");
+    const topText = i18n("wizard.top_menu_items.top");
 
     ctx.beginPath();
     ctx.fillStyle = colors.tertiary;

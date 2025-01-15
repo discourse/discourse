@@ -205,11 +205,13 @@ class Wizard
             value: current,
             show_in_sidebar: true,
           )
+
+        # When changing these options, also consider the Dropdown component
+        # for the wizard, we have special logic to add a "Custom" category for
+        # unsupported options.
         style.add_choice("latest")
         style.add_choice("hot")
-
         # Subset of CategoryPageStyle, we don't want to show all the options here.
-        style.add_choice("categories_and_latest_topics")
         style.add_choice("categories_boxes")
 
         step.add_field(id: "styling_preview", type: "styling-preview")
@@ -219,12 +221,13 @@ class Wizard
           updater.update_setting(:heading_font, updater.fields[:heading_font])
 
           top_menu = SiteSetting.top_menu_map
-          if %w[latest hot].include?(updater.fields[:homepage_style])
+          if !updater.fields[:homepage_style].include?("categories") &&
+               !updater.fields[:homepage_style].include?("category")
             if top_menu.first != updater.fields[:homepage_style]
               top_menu.delete(updater.fields[:homepage_style])
               top_menu.insert(0, updater.fields[:homepage_style])
             end
-          elsif updater.fields[:homepage_style] != "latest"
+          else
             top_menu.delete("categories")
             top_menu.insert(0, "categories")
             updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])
