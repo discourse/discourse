@@ -1,7 +1,29 @@
-<div class="row">
-  <h2>{{i18n "admin.customize.email_style.heading"}}</h2>
+<DPageHeader
+  @titleLabel={{i18n "admin.customize.email_style.heading"}}
+  @descriptionLabel={{i18n "admin.customize.email_style.instructions"}}
+  @shouldDisplay={{true}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+    <DBreadcrumbsItem
+      @path="/admin/customize/email_style"
+      @label={{i18n "admin.customize.email_style.heading"}}
+    />
+  </:breadcrumbs>
+  <:tabs>
+    <NavItem
+      @label="admin.customize.email_style.html"
+      @route="adminCustomizeEmailStyle.edit"
+      @routeParam="html"
+    />
+    <NavItem
+      @label="admin.customize.email_style.css"
+      @route="adminCustomizeEmailStyle.edit"
+      @routeParam="css"
+    />
+  </:tabs>
+</DPageHeader>
 
-  <p>{{i18n "admin.customize.email_style.instructions"}}</p>
+<div class="admin-container">
+  {{outlet}}
 </div>
-
-{{outlet}}
