@@ -41,6 +41,7 @@ export default class InstallThemeModal extends Component {
   @tracked duplicateRemoteThemeWarning;
   @tracked themeCannotBeInstalled;
   @tracked name;
+  @tracked loadingTimePassed;
 
   recordType = this.args.model.recordType || "theme";
   keyGenUrl = this.args.model.keyGenUrl || "/admin/themes/generate_key_pair";
@@ -121,6 +122,14 @@ export default class InstallThemeModal extends Component {
     });
   }
 
+  get installingMessage() {
+    if (this.loadingTimePassed > 10) {
+      return i18n("admin.customize.theme.installing_message_long_time");
+    }
+
+    return i18n("admin.customize.theme.installing_message");
+  }
+
   themeHasSameUrl(theme, url) {
     const themeUrl = theme.remote_theme?.remote_url;
     return (
@@ -167,18 +176,7 @@ export default class InstallThemeModal extends Component {
   @action
   async installTheme() {
     if (this.create) {
-      this.loading = true;
-      const theme = this.store.createRecord(this.recordType);
-      try {
-        await theme.save({ name: this.name, component: this.component });
-        this.args.model.addTheme(theme);
-        this.args.closeModal();
-      } catch (err) {
-        popupAjaxError(err);
-      } finally {
-        this.loading = false;
-      }
-      return;
+      return this.#createTheme();
     }
 
     let options = {
@@ -225,6 +223,8 @@ export default class InstallThemeModal extends Component {
 
     try {
       this.loading = true;
+      this.loadingTimePassed = 0;
+      this.#backgroundLoading();
       const result = await ajax(this.importUrl, options);
       const theme = this.store.createRecord(this.recordType, result.theme);
       this.args.model.addTheme(theme);
@@ -234,6 +234,31 @@ export default class InstallThemeModal extends Component {
         return popupAjaxError(err);
       }
       this.themeCannotBeInstalled = i18n("admin.customize.theme.force_install");
+    } finally {
+      this.loadingTimePassed = 0;
+      this.loading = false;
+    }
+  }
+
+  #backgroundLoading() {
+    if (this.loading) {
+      setTimeout(() => {
+        console.log("Loading time passed: ", this.loadingTimePassed);
+        this.loadingTimePassed += 1;
+        this.#backgroundLoading();
+      }, 1000);
+    }
+  }
+
+  async #createTheme() {
+    this.loading = true;
+    const theme = this.store.createRecord(this.recordType);
+    try {
+      await theme.save({ name: this.name, component: this.component });
+      this.args.model.addTheme(theme);
+      this.args.closeModal();
+    } catch (err) {
+      popupAjaxError(err);
     } finally {
       this.loading = false;
     }
@@ -275,7 +300,7 @@ export default class InstallThemeModal extends Component {
         <div class="install-theme-content">
           <ConditionalLoadingSection
             @isLoading={{this.loading}}
-            @title={{i18n "admin.customize.theme.installing_message"}}
+            @title={{this.installingMessage}}
           >
             {{#if this.popular}}
               <div class="popular-theme-items">
