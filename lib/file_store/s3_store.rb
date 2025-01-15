@@ -97,12 +97,10 @@ module FileStore
       # Only add a "content disposition: attachment" header for svgs
       # see https://github.com/discourse/discourse/commit/31e31ef44973dc4daaee2f010d71588ea5873b53.
       # Adding this header for all files would break the ability to view attachments in the browser
-      if FileHelper.is_svg?(filename)
-        options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-          disposition: "attachment",
-          filename: filename,
-        )
-      end
+      options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+        disposition: FileHelper.is_svg?(filename) ? "attachment" : "inline",
+        filename: filename,
+      )
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
 
