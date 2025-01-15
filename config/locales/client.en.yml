@@ -6325,7 +6325,7 @@ en:
         email_style:
           title: "Email Style"
           heading: "Customize email style"
-          html: "HTML template"
+          html: "HTML"
           css: "CSS"
           reset: "Reset to default"
           reset_confirm: "Are you sure you want to reset to the default %{fieldName} and lose all your changes?"
