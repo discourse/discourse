@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import { hash } from "@ember/helper";
 
 export default class TopicLink extends Component {
   get url() {
@@ -10,14 +12,18 @@ export default class TopicLink extends Component {
 
   <template>
     {{~! no whitespace ~}}
-    <a
-      href={{this.url}}
-      data-topic-id={{@topic.id}}
-      role="heading"
-      aria-level="2"
-      class="title"
-      ...attributes
-    >{{htmlSafe @topic.fancyTitle}}</a>
+    <PluginOutlet @name="topic-link" @outletArgs={{hash topic=@topic}}>
+      {{~! no whitespace ~}}
+      <a
+        href={{this.url}}
+        data-topic-id={{@topic.id}}
+        role="heading"
+        aria-level="2"
+        class="title"
+        ...attributes
+      >{{htmlSafe @topic.fancyTitle}}</a>
+      {{~! no whitespace ~}}
+    </PluginOutlet>
     {{~! no whitespace ~}}
   </template>
 }
