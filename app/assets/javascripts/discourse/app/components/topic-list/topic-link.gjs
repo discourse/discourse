@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { hash } from "@ember/helper";
 
 export default class TopicLink extends Component {
   get url() {
