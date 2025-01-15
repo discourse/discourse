@@ -153,7 +153,11 @@ if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
           logdev: Rails.root.join("log", "#{Rails.env}.log"),
           type: :rails,
           customize_event:
-            lambda { |event| event["database"] = RailsMultisite::ConnectionManagement.current_db },
+            lambda do |event|
+              event["database"] = RailsMultisite::ConnectionManagement.current_db
+              DiscoursePluginRegistry.apply_modifier(:discourse_logstash_logger_log_event, event)
+              event
+            end,
         )
 
       # Stop broadcasting to Rails' default logger
