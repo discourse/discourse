@@ -7195,11 +7195,13 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
+        title: "Site Settings"
+        description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:
             label: "Add Emoji"
-        title: "Settings"
+        nav_title: "Settings"
         no_results: "No results found."
         more_site_setting_results:
           one: "There is more than %{count} result. Please refine your search or select a category."
