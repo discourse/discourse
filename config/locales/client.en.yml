@@ -6423,7 +6423,9 @@ en:
           post_approved: "Post Approved"
 
       logs:
-        title: "Logs"
+        title: "Logs & screening"
+        description: "Logs and screening allow you to monitor and manage your community, ensuring that it remains safe and respectful. You can view logs of all actions taken by staff members, search logs, and user screening configuration."
+        nav_title: "Logs"
         action: "Action"
         created_at: "Created"
         last_match_at: "Last Matched"

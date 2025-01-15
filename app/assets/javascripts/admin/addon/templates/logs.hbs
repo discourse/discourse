@@ -1,27 +1,37 @@
-<AdminNav>
-  <NavItem
-    @route="adminLogs.staffActionLogs"
-    @label="admin.logs.staff_actions.title"
-  />
-  {{#if this.currentUser.can_see_emails}}
+<DPageHeader
+  @titleLabel={{i18n "admin.logs.title"}}
+  @descriptionLabel={{i18n "admin.logs.description"}}
+  @shouldDisplay={{true}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+    <DBreadcrumbsItem @path="/admin/logs" @label={{i18n "admin.logs.title"}} />
+  </:breadcrumbs>
+  <:tabs>
     <NavItem
-      @route="adminLogs.screenedEmails"
-      @label="admin.logs.screened_emails.title"
+      @route="adminLogs.staffActionLogs"
+      @label="admin.logs.staff_actions.title"
     />
-  {{/if}}
-  <NavItem
-    @route="adminLogs.screenedIpAddresses"
-    @label="admin.logs.screened_ips.title"
-  />
-  <NavItem
-    @route="adminLogs.screenedUrls"
-    @label="admin.logs.screened_urls.title"
-  />
-  <NavItem @route="adminSearchLogs" @label="admin.logs.search_logs.title" />
-  {{#if this.currentUser.admin}}
-    <NavItem @path="/logs" @label="admin.logs.logster.title" />
-  {{/if}}
-</AdminNav>
+    {{#if this.currentUser.can_see_emails}}
+      <NavItem
+        @route="adminLogs.screenedEmails"
+        @label="admin.logs.screened_emails.title"
+      />
+    {{/if}}
+    <NavItem
+      @route="adminLogs.screenedIpAddresses"
+      @label="admin.logs.screened_ips.title"
+    />
+    <NavItem
+      @route="adminLogs.screenedUrls"
+      @label="admin.logs.screened_urls.title"
+    />
+    <NavItem @route="adminSearchLogs" @label="admin.logs.search_logs.title" />
+    {{#if this.currentUser.admin}}
+      <NavItem @path="/logs" @label="admin.logs.logster.title" />
+    {{/if}}
+  </:tabs>
+</DPageHeader>
 
 <div class="admin-container">
   {{outlet}}
