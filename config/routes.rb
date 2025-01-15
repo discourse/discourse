@@ -286,17 +286,6 @@ Discourse::Application.routes.draw do
         get "reseed" => "site_texts#get_reseed_options"
         post "reseed" => "site_texts#reseed"
 
-        # get "email_templates", to: redirect("/admin/email/templates")
-        # get "email_templates/(:id)" => "email_templates#show", :constraints => { id: /[0-9a-z_.]+/ }
-        # put "email_templates/(:id)" => "email_templates#update",
-        #     :constraints => {
-        #       id: /[0-9a-z_.]+/,
-        #     }
-        # delete "email_templates/(:id)" => "email_templates#revert",
-        #        :constraints => {
-        #          id: /[0-9a-z_.]+/,
-        #        }
-
         get "robots" => "robots_txt#show"
         put "robots.json" => "robots_txt#update"
         delete "robots.json" => "robots_txt#reset"
