@@ -14,6 +14,7 @@ import dIcon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseLater from "discourse/lib/later";
 import { POPULAR_THEMES } from "discourse/lib/popular-themes";
 import { i18n } from "discourse-i18n";
 import InstallThemeItem from "admin/components/install-theme-item";
@@ -242,7 +243,11 @@ export default class InstallThemeModal extends Component {
 
   #backgroundLoading() {
     if (this.loading) {
-      setTimeout(() => {
+      discourseLater(() => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
         this.loadingTimePassed += 1;
         this.#backgroundLoading();
       }, 1000);
