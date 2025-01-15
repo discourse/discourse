@@ -55,7 +55,7 @@ export default class TopicCell extends Component {
         @outletArgs={{hash topic=@topic}}
       />
 
-      <span class="link-top-line">
+      <span class="link-top-line" role="heading" aria-level="2">
         {{~! no whitespace ~}}
         <PluginOutlet
           @name="topic-list-before-status"
