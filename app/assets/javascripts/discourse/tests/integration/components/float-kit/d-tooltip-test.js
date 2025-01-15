@@ -15,11 +15,11 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   setupRenderingTest(hooks);
 
   async function hover() {
-    await triggerEvent(".fk-d-tooltip__trigger", "mousemove");
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
   }
 
   async function leave() {
-    await triggerEvent(".fk-d-tooltip__trigger", "mouseleave");
+    await triggerEvent(".fk-d-tooltip__trigger", "pointerleave");
   }
 
   async function close() {
