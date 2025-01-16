@@ -2,8 +2,10 @@
 
 describe "Flagging post", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
-  fab!(:first_post) { Fabricate(:post) }
-  fab!(:post_to_flag) { Fabricate(:post, topic: first_post.topic) }
+  fab!(:category)
+  fab!(:topic) { Fabricate(:topic, category: category) }
+  fab!(:first_post) { Fabricate(:post, topic: topic) }
+  fab!(:post_to_flag) { Fabricate(:post, topic: topic) }
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
@@ -16,7 +18,7 @@ describe "Flagging post", type: :system do
       other_flag_reviewable =
         Fabricate(:reviewable_flagged_post, target: post_to_flag, created_by: other_flag.user)
       expect(other_flag.reload.agreed_at).to be_nil
-      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.visit_topic(topic)
       topic_page.expand_post_actions(post_to_flag)
       topic_page.click_post_action_button(post_to_flag, :flag)
       flag_modal.choose_type(:off_topic)
@@ -37,7 +39,7 @@ describe "Flagging post", type: :system do
     before { sign_in(current_user) }
 
     it do
-      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.visit_topic(topic)
       topic_page.expand_post_actions(post_to_flag)
       topic_page.click_post_action_button(post_to_flag, :flag)
       flag_modal.choose_type(:illegal)
@@ -58,7 +60,7 @@ describe "Flagging post", type: :system do
     before { sign_in(tl0_user) }
 
     it "does not allow to mark posts as illegal" do
-      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.visit_topic(topic)
       topic_page.expand_post_actions(post_to_flag)
       expect(topic_page).to have_no_flag_button
     end
@@ -66,7 +68,7 @@ describe "Flagging post", type: :system do
     it "allows to mark posts as illegal when allow_tl0_and_anonymous_users_to_flag_illegal_content setting is enabled" do
       SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
       SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
-      topic_page.visit_topic(post_to_flag.topic).open_flag_topic_modal
+      topic_page.visit_topic(topic).open_flag_topic_modal
       expect(flag_modal).to have_choices(I18n.t("js.flagging.formatted_name.illegal"))
     end
   end
@@ -75,7 +77,7 @@ describe "Flagging post", type: :system do
     let(:anonymous_flag_modal) { PageObjects::Modals::AnonymousFlag.new }
 
     it "does not allow to mark posts as illegal" do
-      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.visit_topic(topic)
       expect(topic_page).to have_no_post_more_actions(post_to_flag)
     end
 
@@ -83,21 +85,31 @@ describe "Flagging post", type: :system do
       SiteSetting.contact_email = "contact@example.com"
       SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
 
-      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.visit_topic(topic, post_number: post_to_flag.post_number)
       topic_page.expand_post_actions(post_to_flag)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
       expect(anonymous_flag_modal.body).to have_content(
-        I18n.t("js.anonymous_flagging.description", { contact_info: "contact@example.com" }),
+        ActionView::Base.full_sanitizer.sanitize(
+          I18n.t(
+            "js.anonymous_flagging.description",
+            { email: "contact@example.com", topic_title: topic.title, url: current_url },
+          ),
+        ),
       )
 
       SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
-      topic_page.visit_topic(post_to_flag.topic)
+      topic_page.visit_topic(topic)
       topic_page.expand_post_actions(post_to_flag)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
       expect(anonymous_flag_modal.body).to have_content(
-        I18n.t("js.anonymous_flagging.description", { contact_info: "illegal@example.com" }),
+        ActionView::Base.full_sanitizer.sanitize(
+          I18n.t(
+            "js.anonymous_flagging.description",
+            { email: "illegal@example.com", topic_title: topic.title, url: current_url },
+          ),
+        ),
       )
     end
   end

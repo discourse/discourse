@@ -4210,9 +4210,7 @@ en:
 
     anonymous_flagging:
       title: "Report illegal content"
-      description: "To report illegal content, please contact %{contact_info}."
-      email_subject: "Illegal content: %{title}"
-      email_body: "The post %{url} contains illegal content."
+      description: "To report illegal content, please contact <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
 
     flagging:
       title: "Thanks for keeping our community civil!"
