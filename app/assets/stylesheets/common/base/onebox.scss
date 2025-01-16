@@ -406,7 +406,7 @@ pre.onebox code ol.lines li {
   list-style-type: none;
   padding-left: 5px;
   margin-left: 0;
-  border-left: 1px solid #cfcfcf;
+  border-left: 1px solid var(--primary-300);
   min-height: 1.5em; //show empty li lines
   white-space: pre;
   width: max-content;
