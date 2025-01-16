@@ -39,7 +39,7 @@
       class="controls controls-dropdown"
       data-setting-name="user-notification-level-when-replying"
     >
-      <label>{{i18n "user.notification_level_when_replying"}}</label>
+      <label>{{i18n "user.notification_level_when_replying.label"}}</label>
       <ComboBox
         @valueProperty="value"
         @content={{this.notificationLevelsForReplying}}
@@ -49,6 +49,11 @@
         }}
       />
     </div>
+
+    <PluginOutlet
+      @name="user-preferences-tracking-topics"
+      @outletArgs={{hash model=this.model customAttrNames=this.customAttrNames}}
+    />
 
     <PreferenceCheckbox
       @labelKey="user.topics_unread_when_closed"
