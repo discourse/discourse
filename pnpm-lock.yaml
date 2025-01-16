@@ -264,8 +264,8 @@ importers:
   app/assets/javascripts/discourse:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.3.0
-        version: 9.3.0
+        specifier: ^9.4.0
+        version: 9.4.0
       '@glimmer/syntax':
         specifier: ^0.93.1
         version: 0.93.1
@@ -2043,8 +2043,8 @@ packages:
     resolution: {integrity: sha512-lB05FkqEdUg2AA0xEbUz0SnkXT1LcCTa438W4IWTUh4hdOnVbQyOJ81OrDXsJk/LSiJHubgGEFoR5EHq1NsH1A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@faker-js/faker@9.3.0':
-    resolution: {integrity: sha512-r0tJ3ZOkMd9xsu3VRfqlFR6cz0V/jFYRswAIpC+m/DIfAUXq7g8N7wTAlhSANySXYGKzGryfDXwtwsY8TxEIDw==}
+  '@faker-js/faker@9.4.0':
+    resolution: {integrity: sha512-85+k0AxaZSTowL0gXp8zYWDIrWclTbRPg/pm/V0dSFZ6W6D4lhcG3uuZl4zLsEKfEvs69xDbLN2cHQudwp95JA==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@floating-ui/core@1.6.7':
@@ -9637,7 +9637,7 @@ snapshots:
       '@eslint/core': 0.10.0
       levn: 0.4.1
 
-  '@faker-js/faker@9.3.0': {}
+  '@faker-js/faker@9.4.0': {}
 
   '@floating-ui/core@1.6.7':
     dependencies:

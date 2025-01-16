@@ -15,7 +15,7 @@
     "test": "ember test"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.3.0",
+    "@faker-js/faker": "^9.4.0",
     "@glimmer/syntax": "^0.93.1",
     "@highlightjs/cdn-assets": "11.11.1",
     "@json-editor/json-editor": "2.15.2",
