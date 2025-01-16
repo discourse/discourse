@@ -394,7 +394,7 @@ pre.onebox code {
   background-color: var(--primary-very-low);
 }
 pre.onebox code li {
-  padding-left: 5px;
+  padding-left: 0.5em;
 }
 
 pre.onebox code ol.lines {
@@ -404,7 +404,7 @@ pre.onebox code ol.lines {
 
 pre.onebox code ol.lines li {
   list-style-type: none;
-  padding-left: 5px;
+  padding-left: 0.5em;
   margin-left: 0;
   border-left: 1px solid var(--primary-300);
   min-height: 1.5em; //show empty li lines
