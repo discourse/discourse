@@ -359,7 +359,7 @@ pre.onebox code ol.lines li:before {
   display: inline-block;
   width: 35px;
   left: -40px;
-  color: #afafaf;
+  color: var(--primary-600);
   text-align: right;
   padding-right: 5px;
   font-size: var(--font-down-1);
