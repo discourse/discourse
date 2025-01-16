@@ -67,7 +67,7 @@ describe "Flagging post", type: :system do
       SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
       SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
       topic_page.visit_topic(post_to_flag.topic).open_flag_topic_modal
-      expect(flag_modal).to have_choices("It's Illegal")
+      expect(flag_modal).to have_choices(I18n.t("js.flagging.formatted_name.illegal"))
     end
   end
 
