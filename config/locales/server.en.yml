@@ -2605,7 +2605,7 @@ en:
     disable_mailing_list_mode: "Disallow users from enabling mailing list mode (prevents any mailing list emails from being sent.)"
     default_email_previous_replies: "Include previous replies in emails by default."
 
-    default_emoji_reactions: "Default favorites emoji reactions. Add up to 5 emojis for quick reaction."
+    default_emoji_reactions: "Add up to 5 emojis shown by default in chat to allow quick reaction."
 
     default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
 
