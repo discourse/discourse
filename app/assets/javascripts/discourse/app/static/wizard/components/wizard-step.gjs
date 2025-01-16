@@ -10,6 +10,8 @@ import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
 
+const READY_STEP_INDEX = 5;
+
 export default class WizardStepComponent extends Component {
   @tracked saving = false;
 
@@ -28,7 +30,7 @@ export default class WizardStepComponent extends Component {
   // We don't want to show the step counter for optional steps after
   // the "Ready" step.
   get showStepCounter() {
-    return this.args.step.displayIndex < 5;
+    return this.args.step.displayIndex < READY_STEP_INDEX;
   }
 
   /**
