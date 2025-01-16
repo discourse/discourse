@@ -78,6 +78,10 @@ module PageObjects
         ".topic-post:not(.staged) #post_#{post_number}"
       end
 
+      def has_no_post_more_actions?(post)
+        within_post(post) { has_no_css?(".show-more-actions") }
+      end
+
       def has_post_more_actions?(post)
         within_post(post) { has_css?(".show-more-actions") }
       end
@@ -298,6 +302,10 @@ module PageObjects
 
       def move_to_public_modal
         find(".modal.convert-to-public-topic")
+      end
+
+      def has_no_flag_button?
+        has_no_css?(".post-action-menu__flag.create-flag")
       end
 
       def open_flag_topic_modal

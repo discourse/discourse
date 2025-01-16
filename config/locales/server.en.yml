@@ -364,6 +364,8 @@ en:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
       twitter_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
+      tl0_and_anonymous_flag: "Either 'site contact email' or 'email address to report illegal content' must be provided for anonymous users."
+
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
@@ -2307,6 +2309,8 @@ en:
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content."
+    email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
 

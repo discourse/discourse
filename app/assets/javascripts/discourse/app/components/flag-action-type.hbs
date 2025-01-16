@@ -42,6 +42,7 @@
         <input
           id="radio_{{this.flag.name_key}}"
           {{on "click" (fn this.changePostActionType this.flag)}}
+          checked={{this.selected}}
           type="radio"
           name="post_action_type_index"
         />
