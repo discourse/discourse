@@ -37,6 +37,9 @@ module.exports = function (defaults) {
     "ember-qunit": {
       insertContentForTestBody: false,
     },
+    "ember-template-imports": {
+      inline_source_map: true,
+    },
     sourcemaps: {
       // There seems to be a bug with broccoli-concat when sourcemaps are disabled
       // that causes the `app.import` statements below to fail in production mode.
