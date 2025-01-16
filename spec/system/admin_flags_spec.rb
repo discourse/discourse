@@ -157,11 +157,11 @@ describe "Admin Flags Page", type: :system do
   it "has settings tab" do
     admin_flags_page.visit
 
-    expect(d_page_header).to have_tabs(
+    expect(admin_flags_page).to have_tabs(
       [I18n.t("admin_js.settings"), I18n.t("admin_js.admin.config_areas.flags.flags_tab")],
     )
 
-    admin_flags_page.click_settings_tab
+    admin_flags_page.click_tab("settings")
     expect(page.all(".setting-label h3").map(&:text).map(&:downcase)).to eq(
       [
         "silence new user sensitivity",

@@ -2,7 +2,7 @@
 
 module PageObjects
   module Pages
-    class AdminFlags < PageObjects::Pages::Base
+    class AdminFlags < AdminBase
       def visit
         page.visit("/admin/config/flags")
         self
@@ -104,11 +104,6 @@ module PageObjects
       def confirm_delete
         find(".dialog-footer .btn-primary").click
         expect(page).to have_no_css(".dialog-body", wait: Capybara.default_max_wait_time * 3)
-        self
-      end
-
-      def click_settings_tab
-        find(".admin-flags-tabs__settings a").click
         self
       end
     end
