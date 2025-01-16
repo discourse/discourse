@@ -98,6 +98,10 @@ export default class TopicCell extends Component {
               @outletArgs={{hash topic=@topic}}
             />
             {{categoryLink @topic.category}}
+            <PluginOutlet
+              @name="topic-list-after-category"
+              @outletArgs={{hash topic=@topic}}
+            />
           {{/unless}}
         {{/unless}}
 
