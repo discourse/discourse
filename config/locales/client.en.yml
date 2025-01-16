@@ -5542,7 +5542,7 @@ en:
 
       web_hooks:
         title: "Webhooks"
-        none: "You don't have any webhooks yet."
+        none: "You don't have any webhooks yet"
         instruction: "Webhooks allows Discourse to notify external services when certain event happens in your site. When the webhook is triggered, a POST request will send to URLs provided."
         detailed_instruction: "A POST request will be sent to provided URL when chosen event happens."
         add: "Add webhook"
@@ -5559,7 +5559,7 @@ en:
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
-        secret_placeholder: "String used for generating signatures."
+        secret_placeholder: "String used for generating signatures"
         event_type_missing: "You need to set up at least one event type."
         content_type: "Content Type"
         secret: "Secret"
