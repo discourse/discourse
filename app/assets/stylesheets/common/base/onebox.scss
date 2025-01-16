@@ -381,6 +381,10 @@ pre.onebox code ol.lines li:before {
     font-size: var(--font-down-1);
     line-height: var(--line-height-small);
   }
+
+  pre {
+    margin-bottom: 0;
+  }
 }
 
 pre.onebox code ol {
