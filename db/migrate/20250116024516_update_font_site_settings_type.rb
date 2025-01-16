@@ -5,6 +5,6 @@ class UpdateFontSiteSettingsType < ActiveRecord::Migration[7.2]
   end
 
   def down
-    execute "UPDATE site_settings SET data_type=1 WHERE name IN('base_font', 'heading_font')"
+    execute "UPDATE site_settings SET data_type=7 WHERE name IN('base_font', 'heading_font')"
   end
 end
