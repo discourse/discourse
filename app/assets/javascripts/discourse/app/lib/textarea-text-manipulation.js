@@ -35,7 +35,7 @@ const FOUR_SPACES_INDENT = "4-spaces-indent";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
-export function getHead(head, prev) {
+function getHead(head, prev) {
   if (typeof head === "string") {
     return [head, head.length];
   } else {
@@ -43,11 +43,14 @@ export function getHead(head, prev) {
   }
 }
 
+/** @implements {TextManipulation} */
 export default class TextareaTextManipulation {
   @service appEvents;
   @service siteSettings;
   @service capabilities;
   @service currentUser;
+
+  allowPreview = true;
 
   eventPrefix;
   textarea;
@@ -819,11 +822,17 @@ export default class TextareaTextManipulation {
   }
 
   putCursorAtEnd() {
-    putCursorAtEnd(this.textarea);
+    if (this.capabilities.isIOS) {
+      putCursorAtEnd(this.textarea);
+    } else {
+      // in some browsers, the focus() called by putCursorAtEnd doesn't bubble the event to set
+      // isEditorFoused=true and bring the focus indicator to the wrapper, unless we do it on next tick
+      next(() => putCursorAtEnd(this.textarea));
+    }
   }
 
   autocomplete(options) {
-    return this.$textarea.autocomplete(
+    this.$textarea.autocomplete(
       options instanceof Object
         ? { textHandler: this.autocompleteHandler, ...options }
         : options
@@ -841,6 +850,7 @@ function insertAtTextarea(textarea, start, end, text) {
   }
 }
 
+/** @implements {AutocompleteHandler} */
 export class TextareaAutocompleteHandler {
   textarea;
   $textarea;
@@ -850,12 +860,13 @@ export class TextareaAutocompleteHandler {
     this.$textarea = $(textarea);
   }
 
-  get value() {
+  getValue() {
     return this.textarea.value;
   }
 
-  replaceTerm({ start, end, term }) {
-    const space = this.value.substring(end + 1, end + 2) === " " ? "" : " ";
+  replaceTerm(start, end, term) {
+    const space =
+      this.getValue().substring(end + 1, end + 2) === " " ? "" : " ";
     insertAtTextarea(this.textarea, start, end + 1, term + space);
     setCaretPosition(this.textarea, start + 1 + term.trim().length);
   }
@@ -876,9 +887,11 @@ export class TextareaAutocompleteHandler {
   }
 }
 
+/** @implements {PlaceholderHandler} */
 class TextareaPlaceholderHandler {
   @service composer;
 
+  /** @type {TextareaTextManipulation} */
   textManipulation;
 
   #placeholders = {};
