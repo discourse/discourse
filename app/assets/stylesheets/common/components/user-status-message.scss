@@ -1,4 +1,8 @@
 [data-content][data-identifier="user-status-message-tooltip"] {
+  .fk-d-tooltip__inner-content {
+    gap: 0.65em;
+  }
+
   .emoji {
     width: 1em;
     height: 1em;
@@ -9,14 +13,9 @@
     color: var(--primary-800);
   }
 
-  .user-status-tooltip-description {
-    font-weight: bold;
-    margin-left: 0.25rem;
-    vertical-align: middle;
-  }
-
   .user-status-tooltip-until {
     color: var(--primary-medium);
-    padding-left: 0.25rem;
+    white-space: nowrap;
+    margin-left: 0.15em;
   }
 }
