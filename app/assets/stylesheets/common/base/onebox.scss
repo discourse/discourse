@@ -101,6 +101,7 @@ aside.onebox {
   header {
     align-items: center;
     display: flex;
+    line-height: var(--line-height-medium);
     margin-bottom: 1em;
 
     .d-icon {
