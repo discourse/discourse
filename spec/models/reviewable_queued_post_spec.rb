@@ -320,6 +320,16 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(Topic.count).to eq(topic_count)
       expect(Post.count).to eq(post_count)
     end
+
+    it "remaps tags with synonyms when approved" do
+      syn_tag = Fabricate(:tag, name: "syntag", target_tag: Fabricate(:tag, name: "maintag"))
+      reviewable.payload["tags"] += ["syntag"]
+
+      result = reviewable.perform(moderator, :approve_post)
+
+      expect(result.success?).to eq(true)
+      expect(result.created_post_topic.tags.pluck(:name)).to match_array(%w[cool neat maintag])
+    end
   end
 
   describe "Callbacks" do

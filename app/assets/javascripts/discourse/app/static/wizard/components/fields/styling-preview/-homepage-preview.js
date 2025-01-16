@@ -184,7 +184,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.fillStyle = textColor;
       ctx.fillText(
         titles[idx],
-        cols[0] - margin * 0.25,
+        cols[0] - margin * 0.1,
         textPos + categoryHeight * 0.36
       );
 

@@ -66,12 +66,12 @@ RSpec.describe "Admin EmbeddableHost Management", type: :system do
     admin_embedding_page.visit
     expect(page).not_to have_content("#{author.username}")
 
-    admin_embedding_page.click_posts_and_topics_tab
+    admin_embedding_page.click_tab("posts-and-topics")
 
     admin_embedding_posts_and_topics_page.fill_in_embed_by_username(author)
     admin_embedding_posts_and_topics_page.click_save
 
-    admin_embedding_page.click_hosts_tab
+    admin_embedding_page.click_tab("hosts")
     expect(page).to have_content("#{author.username}")
   end
 end

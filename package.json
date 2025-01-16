@@ -24,7 +24,7 @@
     "esbuild": "^0.24.2",
     "eslint": "^9.18.0",
     "jsdoc": "^4.0.4",
-    "lefthook": "^1.10.5",
+    "lefthook": "^1.10.7",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.6.2",
     "lint-to-the-future-ember-template": "^3.0.0",
@@ -34,7 +34,7 @@
     "moment-timezone": "0.5.45",
     "pikaday": "1.8.2",
     "prettier": "^2.8.8",
-    "puppeteer-core": "^24.0.0",
+    "puppeteer-core": "^24.1.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "terser": "^5.37.0",
     "typescript": "^5.7.3"

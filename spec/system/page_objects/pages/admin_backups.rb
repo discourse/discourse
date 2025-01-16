@@ -2,21 +2,10 @@
 
 module PageObjects
   module Pages
-    class AdminBackups < PageObjects::Pages::Base
+    class AdminBackups < AdminBase
       def visit_page
         page.visit "/admin/backups"
         self
-      end
-
-      def click_tab(tab_name)
-        case tab_name
-        when "settings"
-          find(".admin-backups-tabs__settings").click
-        when "files"
-          find(".admin-backups-tabs__files").click
-        when "logs"
-          find(".admin-backups-tabs__logs").click
-        end
       end
 
       def has_backup_listed?(filename)

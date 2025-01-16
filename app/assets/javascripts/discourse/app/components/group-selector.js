@@ -38,7 +38,9 @@ export default class GroupSelector extends Component {
       onChangeItems: (items) => {
         selectedGroups = items;
 
-        if (this.onChangeCallback) {
+        if (this.onChange) {
+          this.onChange(items.join(","));
+        } else if (this.onChangeCallback) {
           this.onChangeCallback(this.groupNames, selectedGroups);
         } else {
           this.set("groupNames", items.join(","));
