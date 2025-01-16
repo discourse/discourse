@@ -651,7 +651,11 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    if (!target || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) {
+    if (
+      !target ||
+      /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) ||
+      target.closest('[contenteditable="true"]')
+    ) {
       return;
     }
 

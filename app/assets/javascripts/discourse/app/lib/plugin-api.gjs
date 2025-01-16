@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.0.0";
+export const PLUGIN_API_VERSION = "2.1.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -65,6 +65,7 @@ import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -3377,6 +3378,10 @@ class PluginApi {
    */
   registerMoreTopicsTab(tab) {
     registeredTabs.push(tab);
+  }
+
+  registerRichEditorExtension(extension) {
+    registerRichEditorExtension(extension);
   }
 
   #deprecatedWidgetOverride(widgetName, override) {
