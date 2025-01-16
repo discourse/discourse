@@ -4,7 +4,6 @@
   background: var(--secondary);
   box-sizing: border-box;
   display: flex;
-  z-index: z("composer", "content") - 1;
   padding: 0 0.67em;
 
   &.-clickable {
