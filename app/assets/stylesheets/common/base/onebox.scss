@@ -376,8 +376,10 @@ pre.onebox code ol.lines li:before {
     margin-bottom: 5px;
     font-size: 1rem;
   }
+
   .git-blob-info {
     font-size: var(--font-down-1);
+    line-height: var(--line-height-small);
   }
 }
 
