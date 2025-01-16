@@ -127,7 +127,7 @@ module("Integration | Component | user-info", function (hooks) {
     await render(
       hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} /><DTooltips />`
     );
-    await triggerEvent(query(".user-status-message"), "mousemove");
+    await triggerEvent(query(".user-status-message"), "pointermove");
 
     assert
       .dom("[data-content][data-identifier='user-status-message-tooltip']")

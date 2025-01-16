@@ -159,7 +159,7 @@ module(
 
     test("it shows status tooltip", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} /><DTooltips />`);
-      await triggerEvent(statusSelector(mentionedUser.username), "mousemove");
+      await triggerEvent(statusSelector(mentionedUser.username), "pointermove");
 
       assert
         .dom(".user-status-tooltip-description")

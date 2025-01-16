@@ -81,7 +81,7 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   @action
-  async onMouseMove(event) {
+  async onPointerMove(event) {
     if (this.expanded && this.trigger.contains(event.target)) {
       return;
     }
@@ -99,7 +99,7 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   @action
-  async onMouseLeave(event) {
+  async onPointerLeave(event) {
     if (this.untriggers.includes("hover")) {
       await this.onUntrigger(event);
     }
