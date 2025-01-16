@@ -1408,6 +1408,18 @@ export default class ComposerService extends Service {
       }
 
       await this._setModel(composerModel, opts);
+
+      // otherwise, do the draft check async
+      if (!opts.draft) {
+        let data = await Draft.get(opts.draftKey);
+        data = await this.confirmDraftAbandon(data);
+
+        if (data.draft) {
+          opts.draft = data.draft;
+          opts.draftSequence = data.draft_sequence;
+          await this.open(opts);
+        }
+      }
     } finally {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });
