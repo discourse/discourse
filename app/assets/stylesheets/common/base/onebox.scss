@@ -218,9 +218,8 @@ aside.onebox {
       }
     }
 
-    // tighten bottom margin on last para
     p:last-child {
-      margin-bottom: 4px;
+      margin-bottom: 0;
     }
 
     // twitter fixes
