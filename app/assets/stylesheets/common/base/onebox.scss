@@ -536,6 +536,8 @@ pre.onebox code {
     overflow-y: auto;
     word-break: break-word;
     font-family: var(--d-font-family--monospace);
+    font-size: 0.875em;
+    line-height: calc((13 + 4) / 13);
     box-sizing: border-box;
 
     .show-more {
