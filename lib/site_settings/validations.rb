@@ -269,8 +269,7 @@ module SiteSettings::Validations
 
   def validate_allow_tl0_and_anonymous_users_to_flag_illegal_content(new_val)
     return if new_val == "f"
-    return if SiteSetting.contact_email.present?
-    return if SiteSetting.email_address_to_report_illegal_content.present?
+    return if SiteSetting.contact_email.present? || SiteSetting.email_address_to_report_illegal_content.present?
 
     validate_error :tl0_and_anonymous_flag
   end
