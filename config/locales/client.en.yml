@@ -5159,7 +5159,7 @@ en:
           title: "Legal"
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations"
         login_and_authentication:
-          title: "Login and authentication"
+          title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
         logo:
           title: "Site logo"
@@ -5988,8 +5988,8 @@ en:
         button_text: "Export"
 
       invite:
-        button_text: "Send Invites"
-        button_title: "Send Invites"
+        button_text: "Send invites"
+        button_title: "Send invites"
 
       customize:
         title: "Customize"
@@ -6341,15 +6341,15 @@ en:
         description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs."
         settings: "Settings"
         templates: "Templates"
-        templates_title: "Email Templates"
-        preview_digest: "Preview Summary"
+        templates_title: "Email templates"
+        preview_digest: "Preview summary"
         advanced_test:
-          title: "Advanced Test"
+          title: "Advanced test"
           desc: "See how Discourse processes received emails. To be able to correctly process the email, please paste below the whole original email message."
           email: "Original message"
-          run: "Run Test"
-          text: "Selected Text Body"
-          elided: "Elided Text"
+          run: "Run test"
+          text: "Selected text body"
+          elided: "Elided text"
         sending_test: "Sending test Email…"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
@@ -6358,16 +6358,16 @@ en:
         bounced: "Bounced"
         received: "Received"
         rejected: "Rejected"
-        sent_at: "Sent At"
+        sent_at: "Sent at"
         time: "Time"
         user: "User"
-        email_type: "Email Type"
+        email_type: "Email type"
         details_title: "Show email details"
-        to_address: "To Address"
+        to_address: "To address"
         test_email_address: "email address to test"
-        send_test: "Send Test Email"
+        send_test: "Send test email"
         sent_test: "sent!"
-        delivery_method: "Delivery Method"
+        delivery_method: "Delivery method"
         preview_digest_desc: "Preview the content of the summary emails sent to inactive users."
         refresh: "Refresh"
         send_digest_label: "Send this result to:"
@@ -6377,11 +6377,11 @@ en:
         html: "html"
         text: "text"
         html_preview: "Email Content Preview"
-        last_seen_user: "Last Seen User:"
+        last_seen_user: "Last seen user:"
         no_result: "No results found for summary."
-        reply_key: "Reply Key"
-        post_link_with_smtp: "Post & SMTP Details"
-        skipped_reason: "Skip Reason"
+        reply_key: "Reply key"
+        post_link_with_smtp: "Post & SMTP details"
+        skipped_reason: "Skip reason"
         incoming_emails:
           from_address: "From"
           to_addresses: "To"
@@ -6390,12 +6390,12 @@ en:
           error: "Error"
           none: "No incoming emails found."
           modal:
-            title: "Incoming Email Details"
+            title: "Incoming email details"
             error: "Error"
             headers: "Headers"
             subject: "Subject"
             body: "Body"
-            rejection_message: "Rejection Mail"
+            rejection_message: "Rejection mail"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -6447,10 +6447,10 @@ en:
         staff_actions:
           all: "all"
           filter: "Filter:"
-          title: "Staff Actions"
-          clear_filters: "Show Everything"
+          title: "Staff actions"
+          clear_filters: "Show everything"
           staff_user: "User"
-          target_user: "Target User"
+          target_user: "Target user"
           subject: "Subject"
           when: "When"
           context: "Context"
@@ -6578,9 +6578,9 @@ en:
             tag_group_change: "change tag group"
             delete_associated_accounts: "delete associated accounts"
         screened_emails:
-          title: "Screened Emails"
+          title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
-          email: "Email Address"
+          email: "Email address"
           actions:
             allow: "Allow"
         screened_urls:
@@ -6595,7 +6595,7 @@ en:
           actions:
             block: "Block"
             do_nothing: "Allow"
-            allow_admin: "Allow Admin"
+            allow_admin: "Allow admin"
           form:
             label: "New:"
             ip_address: "IP address"
@@ -6605,18 +6605,18 @@ en:
             text: "Roll up"
             title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
         search_logs:
-          title: "Search Logs"
+          title: "Search logs"
           term: "Term"
           searches: "Searches"
           click_through_rate: "CTR"
           types:
             all_search_types: "All search types"
             header: "Header"
-            full_page: "Full Page"
+            full_page: "Full page"
             click_through_only: "All (click through only)"
-          header_search_results: "Header Search Results"
+          header_search_results: "Header search results"
         logster:
-          title: "Error Logs"
+          title: "Error logs"
 
       watched_words:
         title: "Watched words"
@@ -6629,7 +6629,7 @@ en:
         case_sensitive: "(case-sensitive)"
         html: "(html)"
         download: Download
-        clear_all: Clear All
+        clear_all: Clear all
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
         invalid_regex: 'The watched word "%{word}" is an invalid regular expression.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Watched words are regular expressions</a> and they do not automatically include word boundaries. If you want the regular expression to match whole words, include <code>\b</code> at the start and end of your regular expression.'
@@ -6776,9 +6776,9 @@ en:
         id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Activated"
         status: "Status"
-        show_emails: "Show Emails"
-        hide_emails: "Hide Emails"
-        silence_reason: "Silence Reason"
+        show_emails: "Show emails"
+        hide_emails: "Hide emails"
+        silence_reason: "Silence reason"
         bulk_actions:
           title: "Bulk actions"
           admin_cant_be_deleted: "This user can't be deleted because they're an admin"
@@ -6815,8 +6815,8 @@ en:
           staged: "Staged"
         approved: "Approved?"
         titles:
-          active: "Active Users"
-          new: "New Users"
+          active: "Active users"
+          new: "New users"
           pending: "Users Pending Review"
           newuser: "Users at Trust Level 0 (New User)"
           basic: "Users at Trust Level 1 (Basic User)"
@@ -6824,11 +6824,11 @@ en:
           regular: "Users at Trust Level 3 (Regular)"
           leader: "Users at Trust Level 4 (Leader)"
           staff: "Staff"
-          admins: "Admin Users"
+          admins: "Admin users"
           moderators: "Moderators"
-          silenced: "Silenced Users"
-          suspended: "Suspended Users"
-          staged: "Staged Users"
+          silenced: "Silenced users"
+          suspended: "Suspended users"
+          staged: "Staged users"
         not_verified: "Not verified"
         check_email:
           title: "Reveal this user's email address"
@@ -7202,7 +7202,7 @@ en:
         unmask: "unmask input"
         not_found: "Settings could not be found"
       site_settings:
-        title: "Site Settings"
+        title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
@@ -7308,7 +7308,7 @@ en:
         description: Description
         long_description: Long description
         badge_type: Badge type
-        group_settings: Group Settings
+        group_settings: Group settings
         badge_grouping: Group
         badge_groupings:
           modal_title: Badge Groupings
@@ -7380,7 +7380,7 @@ en:
           title: "Choose a badge or create a new one"
           description: "Start by selecting an existing badge to customize, or create a brand new badge"
         mass_award:
-          title: Bulk Award
+          title: Bulk award
           description: Award the same badge to many users at once.
           no_badge_selected: Please select a badge to get started.
           perform: "Award Badge to Users"
@@ -7433,7 +7433,7 @@ en:
         post_author: "Post author"
         post_author_with_default: "Post author (defaults to %{author})"
         add_host: "Add host"
-        posts_and_topics: "Posts and Topics configuration"
+        posts_and_topics: "Posts & topics configuration"
         crawlers: "Crawlers configuration"
         crawlers_description: "When Discourse creates topics for your posts, if no RSS/ATOM feed is present it will attempt to parse your content out of your HTML. Sometimes it can be challenging to extract your content, so we provide the ability to specify CSS rules to make extraction easier."
 
@@ -7446,9 +7446,9 @@ en:
         blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Allowed CSS class names"
         save: "Save"
-        posts_and_topics_settings_saved: "Posts and Topics settings saved"
+        posts_and_topics_settings_saved: "Posts & topics settings saved"
         crawler_settings_saved: "Crawler settings saved"
-        back: "Back to Embedding"
+        back: "Back to embedding"
         configuration_snippet: "Configuration snippet"
         host_form:
           add_header: "Add host"
@@ -7457,7 +7457,7 @@ en:
         nav:
           hosts: "Hosts"
           settings: "Settings"
-          posts_and_topics: "Posts and Topics"
+          posts_and_topics: "Posts & topics"
           crawlers: "Crawlers"
 
       permalink:
