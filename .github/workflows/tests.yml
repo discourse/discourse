@@ -64,6 +64,8 @@ jobs:
         include:
           - build_type: system
             target: chat
+          - build_type: production-build
+            target: core
 
     steps:
       - name: Set working directory owner
@@ -293,6 +295,12 @@ jobs:
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
         shell: bash
         timeout-minutes: 30
+
+      - name: Test production build
+        if: matrix.build_type == 'production-build'
+        env: 
+          CHEAP_SOURCE_MAPS: 0 # We want real sourcemaps here
+        run: ./script/check_reproducible_assets.rb
 
       - name: Check for failed system test screenshots
         id: check-failed-system-test-screenshots
