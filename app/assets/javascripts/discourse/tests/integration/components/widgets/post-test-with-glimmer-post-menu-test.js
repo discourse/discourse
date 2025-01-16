@@ -796,5 +796,21 @@ module(
 
       assert.dom(".user-status-message").doesNotExist();
     });
+
+    test("more actions button is displayed when multiple hidden items are configured", async function (assert) {
+      this.siteSettings.post_menu_hidden_items = "bookmark|edit|copyLink";
+
+      await render(hbs`
+    <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+      assert.dom(".show-more-actions").exists();
+    });
+
+    test("hidden menu expands automatically when only one hidden item is configured", async function (assert) {
+      this.siteSettings.post_menu_hidden_items = "bookmark|edit";
+
+      await render(hbs`
+    <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+      assert.dom(".show-more-actions").doesNotExist();
+    });
   }
 );
