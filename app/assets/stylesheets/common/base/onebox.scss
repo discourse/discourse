@@ -355,13 +355,14 @@ pre.onebox {
 
 // -- Onebox Github Code Blob --
 pre.onebox code ol.lines li:before {
+  box-sizing: border-box;
   position: absolute;
   display: inline-block;
-  width: 35px;
-  left: -40px;
+  width: 3.5em;
+  left: calc(-3em + 1px);
   color: var(--primary-600);
   text-align: right;
-  padding-right: 5px;
+  padding-right: 0.5em;
   font-size: var(--font-down-1);
   line-height: var(--line-height-large);
   content: counter(li-counter);
@@ -399,7 +400,8 @@ pre.onebox code li {
 
 pre.onebox code ol.lines {
   position: relative;
-  margin: 0 0 0 40px;
+  margin: 0 0 0 2.5em;
+  padding-left: 0.5em;
 }
 
 pre.onebox code ol.lines li {
