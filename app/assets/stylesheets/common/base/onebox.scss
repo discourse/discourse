@@ -364,7 +364,7 @@ pre.onebox code ol.lines li:before {
   text-align: right;
   padding-right: 0.5em;
   font-size: var(--font-down-1);
-  line-height: var(--line-height-large);
+  line-height: calc((13 + 9.4) / 13); // matches the `code` line-height
   content: counter(li-counter);
   counter-increment: li-counter;
 }
