@@ -26,6 +26,7 @@ class PostsController < ApplicationController
   skip_before_action :preload_json,
                      :check_xhr,
                      only: %i[markdown_id markdown_num short_link user_posts_feed]
+  skip_before_action :preload_json, :check_xhr, if: -> { request.format.rss? }
 
   MARKDOWN_TOPIC_PAGE_SIZE = 100
 
