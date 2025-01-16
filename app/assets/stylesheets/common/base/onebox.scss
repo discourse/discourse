@@ -481,6 +481,8 @@ pre.onebox code {
   .branches {
     grid-area: branches;
     font-size: var(--font-down-1);
+    line-height: var(--line-height-medium);
+
     code {
       word-break: break-all;
     }
