@@ -220,7 +220,7 @@ registerButton(
       (siteSettings.allow_tl0_and_anonymous_users_to_flag_illegal_content &&
         !currentUser)
     ) {
-      let button = {
+      const button = {
         action: "showFlags",
         title: currentUser
           ? "post.controls.flag"
