@@ -369,6 +369,10 @@ pre.onebox code ol.lines li:before {
   counter-increment: li-counter;
 }
 
+pre.onebox code ol.lines li.selected:before {
+  background-color: var(--highlight-bg);
+}
+
 .onebox.githubblob,
 .onebox.gitlabblob {
   .onebox-body h4 {
@@ -414,8 +418,9 @@ pre.onebox code ol.lines li {
   width: max-content;
 }
 
-pre.onebox code li.selected {
+pre.onebox code ol.lines li.selected {
   background-color: var(--highlight-bg);
+  border-left-color: rgba(var(--primary-rgb), 0.2);
 }
 
 pre.onebox code {
