@@ -2,6 +2,8 @@
 
 class Wizard
   class Builder
+    WIZARD_FONTS = %w[lato inter montserrat open_sans poppins roboto]
+
     def initialize(user)
       @wizard = Wizard.new(user)
     end
@@ -165,28 +167,50 @@ class Wizard
           themes.add_choice(t[:id], data: { colors: t[:colors] })
         end
 
-        body_font =
-          step.add_field(
-            id: "body_font",
-            type: "dropdown",
-            value: SiteSetting.base_font,
-            show_in_sidebar: true,
-          )
+        if SiteSetting.base_font != SiteSetting.heading_font
+          body_font =
+            step.add_field(
+              id: "body_font",
+              type: "dropdown",
+              value: SiteSetting.base_font,
+              show_in_sidebar: true,
+            )
 
-        heading_font =
-          step.add_field(
-            id: "heading_font",
-            type: "dropdown",
-            value: SiteSetting.heading_font,
-            show_in_sidebar: true,
-          )
+          heading_font =
+            step.add_field(
+              id: "heading_font",
+              type: "dropdown",
+              value: SiteSetting.heading_font,
+              show_in_sidebar: true,
+            )
+        else
+          site_font =
+            step.add_field(
+              id: "site_font",
+              type: "dropdown",
+              value: SiteSetting.base_font,
+              show_in_sidebar: true,
+            )
+        end
+
+        allowed_fonts = WIZARD_FONTS
+        allowed_fonts << SiteSetting.base_font if !allowed_fonts.include?(SiteSetting.base_font)
+        if !allowed_fonts.include?(SiteSetting.heading_font)
+          allowed_fonts << SiteSetting.heading_font
+        end
 
         DiscourseFonts
           .fonts
-          .sort_by { |f| f[:name] }
+          .select do |font|
+            # We only want to display certain fonts in the wizard, others will be accessible
+            # in site settings.
+            allowed_fonts.include?(font[:key])
+          end
+          .sort_by { |font| font[:name] }
           .each do |font|
-            body_font.add_choice(font[:key], label: font[:name])
-            heading_font.add_choice(font[:key], label: font[:name])
+            body_font&.add_choice(font[:key], label: font[:name])
+            heading_font&.add_choice(font[:key], label: font[:name])
+            site_font&.add_choice(font[:key], label: font[:name])
           end
 
         current =
@@ -217,8 +241,13 @@ class Wizard
         step.add_field(id: "styling_preview", type: "styling-preview")
 
         step.on_update do |updater|
-          updater.update_setting(:base_font, updater.fields[:body_font])
-          updater.update_setting(:heading_font, updater.fields[:heading_font])
+          if updater.fields[:site_font].present?
+            updater.update_setting(:base_font, updater.fields[:site_font])
+            updater.update_setting(:heading_font, updater.fields[:site_font])
+          else
+            updater.update_setting(:base_font, updater.fields[:body_font])
+            updater.update_setting(:heading_font, updater.fields[:heading_font])
+          end
 
           top_menu = SiteSetting.top_menu_map
           if !updater.fields[:homepage_style].include?("categories") &&

@@ -82,13 +82,12 @@ describe "Wizard", type: :system do
   end
 
   describe "Wizard Step: Styling" do
-    it "lets user configure styling including fonts and colors" do
+    it "lets user configure styling including font and colors" do
       wizard_page.go_to_step("styling")
       expect(wizard_page).to be_on_step("styling")
 
       wizard_page.styling_step.select_color_palette_option("Dark")
-      wizard_page.styling_step.select_body_font_option("lato")
-      wizard_page.styling_step.select_heading_font_option("merriweather")
+      wizard_page.styling_step.select_font_option("roboto")
       wizard_page.styling_step.select_homepage_style_option("hot")
 
       wizard_page.go_to_next_step
@@ -97,16 +96,31 @@ describe "Wizard", type: :system do
       expect(Theme.find_default.color_scheme_id).to eq(
         ColorScheme.find_by(base_scheme_id: "Dark", via_wizard: true).id,
       )
-      expect(SiteSetting.base_font).to eq("lato")
-      expect(SiteSetting.heading_font).to eq("merriweather")
+      expect(SiteSetting.base_font).to eq("roboto")
+      expect(SiteSetting.heading_font).to eq("roboto")
       expect(SiteSetting.homepage).to eq("hot")
 
       wizard_page.go_to_step("styling")
 
       expect(wizard_page.styling_step).to have_selected_color_palette("Dark")
-      expect(wizard_page.styling_step).to have_selected_body_font("lato")
-      expect(wizard_page.styling_step).to have_selected_heading_font("merriweather")
+      expect(wizard_page.styling_step).to have_selected_font("roboto")
       expect(wizard_page.styling_step).to have_selected_homepage_style("hot")
+    end
+
+    it "lets user select separate body and heading font if they are already seperate" do
+      SiteSetting.base_font = "poppins"
+      SiteSetting.heading_font = "montserrat"
+      wizard_page.go_to_step("styling")
+      expect(wizard_page).to be_on_step("styling")
+
+      wizard_page.styling_step.select_body_font_option("roboto")
+      wizard_page.styling_step.select_heading_font_option("inter")
+
+      wizard_page.go_to_next_step
+      expect(wizard_page).to be_on_step("ready")
+
+      expect(SiteSetting.base_font).to eq("roboto")
+      expect(SiteSetting.heading_font).to eq("inter")
     end
   end
 

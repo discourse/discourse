@@ -9,7 +9,7 @@ RSpec.describe Stylesheet::Importer do
 
   describe "#font" do
     it "includes font variable" do
-      default_font = ":root{--font-family: Arial, sans-serif}"
+      default_font = ":root{--font-family: Inter, Arial, sans-serif}"
       expect(compile_css("color_definitions")).to include(default_font)
       expect(compile_css("embed")).to include(default_font)
       expect(compile_css("publish")).to include(default_font)

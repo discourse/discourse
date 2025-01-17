@@ -21,6 +21,12 @@
 #                               defined in the choices option. A type:list setting with the word 'colors' in
 #                               its name will make color values have a bold line of the corresponding color
 #
+# list_type: simple           - Allow multiple values to be selected for the list, and new values can be defined if
+#                               allow_any is true. This list displays like a list of items with add/remove buttons,
+#                               and the ability to reorder items.
+# list_type: compact          - Allow multiple values to be selected for the list, and new values can be defined if
+#                               allow_any is true. This list displays like the tag selector.
+#
 # type: enum                  - A single value, chosen from a set of valid values in the choices option.
 # type: json_schema           - The setting value is stored as JSON in the database. Used
 #                               in the format `json_schema: ClassName` where the class implements
@@ -409,7 +415,7 @@ basic:
     default: ""
     hidden: true
   base_font:
-    default: "arial"
+    default: "inter"
     choices: "BaseFontSetting.values"
     refresh: true
     type: list
@@ -417,7 +423,7 @@ basic:
     area: "fonts"
     allow_any: false
   heading_font:
-    default: "arial"
+    default: "inter"
     choices: "BaseFontSetting.values"
     refresh: true
     type: list

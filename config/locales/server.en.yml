@@ -5426,6 +5426,8 @@ en:
             label: "Color palette"
           body_font:
             label: "Body font"
+          site_font:
+            label: "Font"
           heading_font:
             label: "Heading font"
           styling_preview:
