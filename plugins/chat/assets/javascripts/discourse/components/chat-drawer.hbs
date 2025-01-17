@@ -8,8 +8,8 @@
 
 {{#if this.chatStateManager.isDrawerActive}}
   <div
-    data-chat-channel-id={{this.chat.activeChannel.id}}
-    data-chat-thread-id={{this.chat.activeChannel.activeThread.id}}
+    data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
+    data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
     class={{concat-class
       "chat-drawer"
       (if this.chatStateManager.isDrawerExpanded "is-expanded" "is-collapsed")
@@ -29,6 +29,7 @@
 
       <this.chatDrawerRouter.component
         @params={{this.chatDrawerRouter.params}}
+        @model={{this.chatDrawerRouter.model}}
         @openURL={{this.openURL}}
         @openInFullPage={{this.openInFullPage}}
         @toggleExpand={{this.toggleExpand}}
