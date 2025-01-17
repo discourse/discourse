@@ -91,32 +91,37 @@ export default class TopicCell extends Component {
       </span>
 
       <div class="link-bottom-line">
-        {{#unless @hideCategory}}
-          {{#unless @topic.isPinnedUncategorized}}
-            <PluginOutlet
-              @name="topic-list-before-category"
-              @outletArgs={{hash topic=@topic}}
-            />
-            {{categoryLink @topic.category}}
-            <PluginOutlet
-              @name="topic-list-after-category"
-              @outletArgs={{hash topic=@topic}}
-            />
+        <PluginOutlet
+          @name="topic-list-topic-cell-link-bottom-line"
+          @outletArgs={{hash topic=@topic tagsForUser=@tagsForUser}}
+        >
+          {{#unless @hideCategory}}
+            {{#unless @topic.isPinnedUncategorized}}
+              <PluginOutlet
+                @name="topic-list-before-category"
+                @outletArgs={{hash topic=@topic}}
+              />
+              {{categoryLink @topic.category}}
+              <PluginOutlet
+                @name="topic-list-after-category"
+                @outletArgs={{hash topic=@topic}}
+              />
+            {{/unless}}
           {{/unless}}
-        {{/unless}}
 
-        {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 
-        {{#if this.participantGroups}}
-          <ParticipantGroups @groups={{this.participantGroups}} />
-        {{/if}}
+          {{#if this.participantGroups}}
+            <ParticipantGroups @groups={{this.participantGroups}} />
+          {{/if}}
 
-        <ActionList
-          @topic={{@topic}}
-          @postNumbers={{@topic.liked_post_numbers}}
-          @icon="heart"
-          class="likes"
-        />
+          <ActionList
+            @topic={{@topic}}
+            @postNumbers={{@topic.liked_post_numbers}}
+            @icon="heart"
+            class="likes"
+          />
+        </PluginOutlet>
       </div>
 
       {{#if @expandPinned}}
