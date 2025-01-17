@@ -217,7 +217,7 @@ module PostGuardian
   end
 
   def can_delete_post?(post)
-    return false if !can_see_post?(post)
+    return false if cannot_see_post?(post)
 
     # Can't delete the first post
     return false if post.is_first_post?
@@ -247,7 +247,7 @@ module PostGuardian
     return false if !SiteSetting.can_permanently_delete
     return false if !post
     return false if post.is_first_post?
-    return false if !is_admin? || !can_edit_post?(post)
+    return false if !is_admin? || cannot_edit_post?(post)
     return false if !post.deleted_at
     if post.deleted_by_id == @user.id && post.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       return false
@@ -310,7 +310,7 @@ module PostGuardian
   def can_see_post?(post)
     return false if post.blank?
     return true if is_admin?
-    return false unless can_see_post_topic?(post)
+    return false if cannot_see_post_topic?(post)
     unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
       return false
     end

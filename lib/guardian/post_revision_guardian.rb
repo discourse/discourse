@@ -4,7 +4,7 @@
 module PostRevisionGuardian
   def can_see_post_revision?(post_revision)
     return false unless post_revision
-    return false if post_revision.hidden && !can_view_hidden_post_revisions?
+    return false if post_revision.hidden && cannot_view_hidden_post_revisions?
 
     can_view_edit_history?(post_revision.post)
   end

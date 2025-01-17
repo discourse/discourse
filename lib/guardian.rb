@@ -96,6 +96,21 @@ class Guardian
     end
   end
 
+  # Support `cannot_do?` as an alias of `if !can_do?` and `unless can_do?`.
+  def method_missing(name, *arguments)
+    prefix, check = name.to_s.split("_", 2)
+
+    if prefix == "cannot"
+      !send("can_#{check}", *arguments)
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(name)
+    name.to_s.start_with?("cannot_") || super
+  end
+
   attr_reader :request
 
   def initialize(user = nil, request = nil)
@@ -188,7 +203,7 @@ class Guardian
     # can_create_klass_on_parent?
     target = klass.name.underscore
     if parent.present?
-      return false unless can_see?(parent)
+      return false if cannot_see?(parent)
       target << "_on_#{parent.class.name.underscore}"
     end
     create_method = :"can_create_#{target}?"
@@ -605,7 +620,7 @@ class Guardian
     return false if SiteSetting.secure_uploads?
     return false if topic.blank?
     return false if topic.private_message?
-    return false unless can_see_topic?(topic)
+    return false if cannot_see_topic?(topic)
     is_staff?
   end
 
