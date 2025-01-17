@@ -12,11 +12,15 @@ module Jobs
       end_date = start_date + 1.year
 
       sql = BadgeQueries.anniversaries(start_date, end_date)
-      user_ids = DB.query_single(sql)
+      user_ids_to_anniversary_dates = DB.query_array(sql).to_h
 
       User
-        .where(id: user_ids)
-        .find_each { |user| BadgeGranter.grant(badge, user, created_at: end_date) }
+        .where(id: user_ids_to_anniversary_dates.keys)
+        .find_each do |user|
+          anniversary_date = user_ids_to_anniversary_dates[user.id] || start_date
+          years_ago = Date.today.year - anniversary_date.year
+          BadgeGranter.grant(badge, user, created_at: anniversary_date.advance(years: years_ago))
+        end
     end
   end
 end
