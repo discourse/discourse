@@ -28,7 +28,6 @@ const extension = {
           `@${node.attrs.name}`,
         ];
       },
-      leafText: (node) => `@${node.attrs.name}`,
     },
   },
 

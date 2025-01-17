@@ -32,7 +32,7 @@ export default class ProsemirrorTextManipulation {
     });
   }
 
-  getSelected(trimLeading, opts) {
+  getSelected() {
     const start = this.view.state.selection.from;
     const end = this.view.state.selection.to;
     const value = this.view.state.doc.textBetween(start, end, " ", " ");
@@ -70,7 +70,7 @@ export default class ProsemirrorTextManipulation {
     this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
   }
 
-  applySurround(sel, head, tail, exampleKey, opts) {
+  applySurround(sel, head, tail, exampleKey) {
     const applySurroundMap = {
       italic_text: this.schema.marks.em,
       bold_text: this.schema.marks.strong,
@@ -94,7 +94,7 @@ export default class ProsemirrorTextManipulation {
     );
   }
 
-  addText(sel, text, options) {
+  addText(sel, text) {
     const doc = this.view.props.convertFromMarkdown(text);
 
     // assumes it returns a single block node
@@ -123,12 +123,7 @@ export default class ProsemirrorTextManipulation {
     this.focus();
   }
 
-  applyList(_selection, head, exampleKey, opts) {
-    // This is similar to applySurround, but doing it line by line
-    // We may use markdown parsing as a fallback if we don't identify the exampleKey
-    // similarly to applySurround
-    // TODO to check actual applyList uses in the wild
-
+  applyList(_selection, head, exampleKey) {
     let command;
 
     const isInside = (type) => {
@@ -143,27 +138,18 @@ export default class ProsemirrorTextManipulation {
     };
 
     if (exampleKey === "list_item") {
-      if (head === "* ") {
-        command = isInside(this.schema.nodes.bullet_list)
-          ? lift
-          : wrapIn(this.schema.nodes.bullet_list);
-      } else {
-        command = isInside(this.schema.nodes.ordered_list)
-          ? lift
-          : wrapIn(this.schema.nodes.ordered_list);
-      }
-    } else {
-      const applyListMap = {
-        blockquote_text: this.schema.nodes.blockquote,
-      };
+      const nodeType =
+        head === "* "
+          ? this.schema.nodes.bullet_list
+          : this.schema.nodes.ordered_list;
 
-      if (applyListMap[exampleKey]) {
-        command = isInside(applyListMap[exampleKey])
-          ? lift
-          : wrapIn(applyListMap[exampleKey]);
-      } else {
-        // TODO(renato): fallback to markdown parsing
-      }
+      command = isInside(this.schema.nodes.list_item) ? lift : wrapIn(nodeType);
+    } else if (exampleKey === "blockquote_text") {
+      command = isInside(this.schema.nodes.blockquote)
+        ? lift
+        : wrapIn(this.schema.nodes.blockquote);
+    } else {
+      throw new Error("Unknown exampleKey");
     }
 
     command?.(this.view.state, this.view.dispatch);
@@ -201,7 +187,7 @@ export default class ProsemirrorTextManipulation {
   paste() {
     // Intentionally no-op
     // Pasting markdown is being handled by the markdown-paste extension
-    // Pasting an url on top of a text is being handled by the link extension
+    // Pasting a url on top of a text is being handled by the link extension
   }
 
   selectText(from, length, opts) {
@@ -222,17 +208,6 @@ export default class ProsemirrorTextManipulation {
   @bind
   inCodeBlock() {
     return this.autocompleteHandler.inCodeBlock();
-  }
-
-  /**
-   * Gets the textual caret position within the selected text block
-   *
-   * @returns {number}
-   */
-  getCaretPosition() {
-    const { $anchor } = this.view.state.selection;
-
-    return $anchor.pos - $anchor.start();
   }
 
   indentSelection(direction) {
@@ -264,11 +239,50 @@ export default class ProsemirrorTextManipulation {
     this.focus();
   }
 
-  replaceText(oldValue, newValue, opts) {
-    // this method should be deprecated, this is not very reliable:
-    // we're converting the current document to markdown, replacing it, and setting its result
-    // as the new document content
-    // TODO
+  replaceText(oldValue, newValue, opts = {}) {
+    const markdown = this.view.props.convertToMarkdown(this.view.state.doc);
+
+    const regex = opts.regex || new RegExp(oldValue, "g");
+    const index = opts.index || 0;
+    let matchCount = 0;
+
+    const newMarkdown = markdown.replace(regex, (match) => {
+      if (matchCount++ === index) {
+        return newValue;
+      }
+      return match;
+    });
+
+    if (markdown === newMarkdown) {
+      return;
+    }
+
+    const newDoc = this.view.props.convertFromMarkdown(newMarkdown);
+    if (!newDoc) {
+      return;
+    }
+
+    const diff = newValue.length - oldValue.length;
+    const startOffset = this.view.state.selection.from + diff;
+    const endOffset = this.view.state.selection.to + diff;
+
+    const tr = this.view.state.tr.replaceWith(
+      0,
+      this.view.state.doc.content.size,
+      newDoc.content
+    );
+
+    if (
+      !opts.skipNewSelection &&
+      (opts.forceFocus || this.view.dom === document.activeElement)
+    ) {
+      const adjustedStart = Math.min(startOffset, tr.doc.content.size);
+      const adjustedEnd = Math.min(endOffset, tr.doc.content.size);
+
+      tr.setSelection(TextSelection.create(tr.doc, adjustedStart, adjustedEnd));
+    }
+
+    this.view.dispatch(tr);
   }
 
   toggleDirection() {
@@ -312,21 +326,6 @@ class ProsemirrorAutocompleteHandler {
     const node = this.view.state.selection.$head.nodeBefore;
     const from = this.view.state.selection.from - node.nodeSize + start;
     const to = this.view.state.selection.from - node.nodeSize + end + 1;
-
-    // Alternative approach using inputRules, if `convertFromMarkdown` is too expensive
-    //
-    // let replaced;
-    // for (const plugin of this.view.state.plugins) {
-    //   if (plugin.spec.isInputRules) {
-    //     replaced ||= plugin.props.handleTextInput(this.view, from, to, term, null);
-    //   }
-    // }
-    //
-    // if (!replaced) {
-    //   this.view.dispatch(
-    //     this.view.state.tr.replaceWith(from, to, this.schema.text(term))
-    //   );
-    // }
 
     const doc = this.view.props.convertFromMarkdown(term);
 
@@ -449,7 +448,7 @@ class ProsemirrorPlaceholderHandler {
       return true;
     });
 
-    // keeping compatibility with plugins that change the image node via markdown
+    // keeping compatibility with plugins that change the upload markdown
     const doc = this.view.props.convertFromMarkdown(markdown);
 
     this.view.dispatch(

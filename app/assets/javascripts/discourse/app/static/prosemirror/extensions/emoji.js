@@ -38,7 +38,6 @@ const extension = {
           },
         ];
       },
-      leafText: (node) => `:${node.attrs.code}:`,
     },
   },
 
