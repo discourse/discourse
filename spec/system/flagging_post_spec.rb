@@ -61,7 +61,6 @@ describe "Flagging post", type: :system do
 
     it "does not allow to mark posts as illegal" do
       topic_page.visit_topic(topic)
-      topic_page.expand_post_actions(post_to_flag)
       expect(topic_page).to have_no_flag_button
     end
 
@@ -86,7 +85,6 @@ describe "Flagging post", type: :system do
       SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
 
       topic_page.visit_topic(topic, post_number: post_to_flag.post_number)
-      topic_page.expand_post_actions(post_to_flag)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
       expect(anonymous_flag_modal.body).to have_content(
@@ -100,7 +98,6 @@ describe "Flagging post", type: :system do
 
       SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
       topic_page.visit_topic(topic)
-      topic_page.expand_post_actions(post_to_flag)
       topic_page.find_post_action_button(post_to_flag, :flag).click
 
       expect(anonymous_flag_modal.body).to have_content(
