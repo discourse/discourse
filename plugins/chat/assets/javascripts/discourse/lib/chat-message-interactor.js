@@ -1,4 +1,3 @@
-import ChatMessageReactionModel from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
@@ -16,7 +15,9 @@ import { i18n } from "discourse-i18n";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
+import ChatMessageReactionModel, {
+  REACTIONS,
+} from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 const removedSecondaryActions = new Set();
 
