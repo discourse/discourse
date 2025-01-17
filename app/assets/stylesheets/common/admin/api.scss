@@ -25,55 +25,7 @@
 
 // Api keys
 
-.d-admin-table.api-keys {
-  margin-bottom: 0.25em;
-
-  tr.revoked {
-    color: var(--primary-high);
-  }
-
-  .d-admin-row__overview.key {
-    width: 20%;
-  }
-}
-
 .admin-api-keys {
-  h2 {
-    margin-bottom: 10px;
-  }
-  .api-key-new {
-    .form-element,
-    .form-element-desc {
-      &.input-area {
-        width: 100%;
-
-        .value-list,
-        .select-kit,
-        input[type="text"],
-        input[type="text"].filter-input {
-          width: 100%;
-          margin: 0;
-        }
-
-        @include breakpoint(mobile-extra-large, min-width) {
-          width: 75%;
-          .value-list,
-          .select-kit,
-          input[type="text"] {
-            width: 50%;
-          }
-        }
-      }
-      &.label-area {
-        label {
-          margin: 0.5em 1em 0 0;
-        }
-        @include breakpoint(mobile-extra-large, min-width) {
-          width: 25%;
-        }
-      }
-    }
-  }
   .api-key-show {
     .form-element,
     .form-element-desc {
