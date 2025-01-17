@@ -365,6 +365,8 @@ class Notification < ActiveRecord::Base
   end
 
   def self.populate_acting_user(notifications)
+    should_be_done = SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
+    return notifications if !should_be_done
     usernames =
       notifications.map do |notification|
         notification.acting_username =
