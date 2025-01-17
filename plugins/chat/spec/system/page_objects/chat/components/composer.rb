@@ -42,6 +42,7 @@ module PageObjects
 
         def fill_in(**args)
           input.fill_in(**args)
+          self
         end
 
         def value
@@ -104,6 +105,14 @@ module PageObjects
 
         def focused?
           component.has_css?(".chat-composer.is-focused")
+        end
+
+        def enter_shortcut
+          input.send_keys(:enter)
+        end
+
+        def shift_enter_shortcut
+          input.send_keys(%i[shift enter])
         end
       end
     end

@@ -116,6 +116,25 @@
   />
 </div>
 
+{{#if this.site.desktopView}}
+  <div
+    class="control-group chat-setting controls-dropdown"
+    data-setting-name="user_chat_send_shortcut"
+  >
+    <label for="user_chat_send_shortcut">
+      {{i18n "chat.send_shortcut.title"}}
+    </label>
+
+    <ComboBox
+      @valueProperty="value"
+      @content={{this.chatSendShortcutOptions}}
+      @value={{this.chatSendShortcut}}
+      @id="user_chat_send_shortcut"
+      @onChange={{fn (mut this.model.user_option.chat_send_shortcut)}}
+    />
+  </div>
+{{/if}}
+
 <SaveControls
   @id="user_chat_preference_save"
   @model={{this.model}}

@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -16,6 +17,7 @@ const CHAT_ATTRS = [
   "chat_email_frequency",
   "chat_header_indicator_preference",
   "chat_separate_sidebar_mode",
+  "chat_send_shortcut",
 ];
 
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
@@ -28,6 +30,14 @@ export default class PreferencesChatController extends Controller {
   @service siteSettings;
 
   subpageTitle = i18n("chat.admin.title");
+
+  chatSendShortcutOptions = [
+    { name: htmlSafe(i18n("chat.send_shortcut.enter")), value: "enter" },
+    {
+      name: htmlSafe(i18n("chat.send_shortcut.shift_enter")),
+      value: "shift_enter",
+    },
+  ];
 
   emailFrequencyOptions = [
     { name: i18n("chat.email_frequency.never"), value: "never" },
@@ -75,6 +85,10 @@ export default class PreferencesChatController extends Controller {
     } else {
       return mode;
     }
+  }
+
+  get chatSendShortcut() {
+    return this.model.get("user_option.chat_send_shortcut");
   }
 
   @discourseComputed
