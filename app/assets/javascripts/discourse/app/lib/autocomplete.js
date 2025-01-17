@@ -581,7 +581,14 @@ export default function (options) {
       let term = options.textHandler
         .getValue()
         .substring(completeStart + (options.key ? 1 : 0), cp);
-      updateAutoComplete(dataSource(term, options));
+      if (
+        !options.key ||
+        options.textHandler.getValue()[completeStart] === options.key
+      ) {
+        updateAutoComplete(dataSource(term, options));
+      } else {
+        closeAutocomplete();
+      }
     }
   }
 

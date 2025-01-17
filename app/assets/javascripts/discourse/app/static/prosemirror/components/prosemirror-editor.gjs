@@ -6,7 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import "../extensions/register-additional"; // registers all non-core extensions
+import "../extensions/register-default";
 import { baseKeymap } from "prosemirror-commands";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
@@ -31,6 +31,8 @@ import Serializer from "../core/serializer";
 import placeholder from "../extensions/placeholder";
 import * as utils from "../lib/plugin-utils";
 import TextManipulation from "../lib/text-manipulation";
+
+const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
 
 /**
  * @typedef PluginContext
@@ -167,6 +169,7 @@ export default class ProsemirrorEditor extends Component {
 
     this.view = new EditorView(container, {
       convertFromMarkdown: this.convertFromMarkdown,
+      convertToMarkdown: this.serializer.convert.bind(this.serializer),
       getContext: params.getContext,
       nodeViews: extractNodeViews(this.extensions),
       state,
@@ -176,7 +179,7 @@ export default class ProsemirrorEditor extends Component {
         this.view.updateState(this.view.state.apply(tr));
 
         if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
-          // TODO(renato): avoid calling this on every change
+          // If this gets expensive, we can debounce it
           const value = this.serializer.convert(this.view.state.doc);
           this.#lastSerialized = value;
           this.args.change?.({ target: { value } });
@@ -193,9 +196,10 @@ export default class ProsemirrorEditor extends Component {
         },
       },
       handleKeyDown: (view, event) => {
-        // skip the event if it's an Enter keypress and the autocomplete is open
+        // suppress if Enter/Tab and the autocomplete is open
         return (
-          event.key === "Enter" && !!document.querySelector(".autocomplete")
+          AUTOCOMPLETE_KEY_DOWN_SUPPRESS.includes(event.key) &&
+          !!document.querySelector(".autocomplete")
         );
       },
     });
