@@ -483,9 +483,21 @@ export function setURLContainer(container) {
 }
 
 export function prefixProtocol(url) {
-  return !url.includes("://") && !url.startsWith("mailto:")
-    ? "https://" + url
-    : url;
+  if (!url || typeof url !== "string") {
+    return url;
+  }
+
+  url = url.trim();
+
+  if (url.startsWith("//")) {
+    return `https:${url}`;
+  }
+
+  if (url.startsWith("/") || url.includes("://") || url.startsWith("mailto:")) {
+    return url;
+  }
+
+  return `https://${url}`;
 }
 
 export function getCategoryAndTagUrl(category, subcategories, tag) {
