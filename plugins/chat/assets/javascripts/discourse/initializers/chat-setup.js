@@ -64,7 +64,7 @@ class ChatSetupInit {
           label: "chat.emoji",
           id: "emoji",
           class: "chat-emoji-btn",
-          icon: "discourse-emojis",
+          icon: "smile",
           position: "dropdown",
           displayed: owner.lookup("service:site").mobileView,
           action(context) {
