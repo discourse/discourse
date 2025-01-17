@@ -102,13 +102,6 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
-      - name: Container envs
-        id: container-envs
-        run: |
-          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
-          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: Symlink vendor/bundle from image
         run: |
           ln -s /var/www/discourse/vendor/bundle vendor/bundle
