@@ -402,7 +402,7 @@ export default class DModal extends Component {
             enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}
-          {{on "pointerup" this.handleWrapperPointerDown}}
+          {{on "pointerdown" this.handleWrapperPointerDown}}
         ></div>
       {{/unless}}
     </ConditionalInElement>

@@ -52,7 +52,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-content"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
       )
       .exists("additional section links are displayed");
 
@@ -70,7 +70,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content "
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
       )
       .doesNotExist("additional section links are hidden");
   });
