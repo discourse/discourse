@@ -1,12 +1,14 @@
 "use strict";
 
+// This is used only in the test environment!
+// See app/helpers/application_helper.rb#discourse_config_environment
+// for the method that generates configs for other envs.
 module.exports = function (environment) {
   const ENV = {
     modulePrefix: "discourse",
     environment,
     rootURL: `${process.env.DISCOURSE_RELATIVE_URL_ROOT ?? ""}/`, // Add a trailing slash (not required by the Rails app in this env variable)
     locationType: "history",
-    historySupportMiddleware: false,
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -17,9 +19,9 @@ module.exports = function (environment) {
         Date: false,
         String: false,
       },
+      _DEFAULT_ASYNC_OBSERVERS: true,
       LOG_STACKTRACE_ON_DEPRECATION: false,
     },
-    exportApplicationGlobal: true,
 
     APP: {
       // Here you can pass flags/options to your application instance
@@ -35,14 +37,6 @@ module.exports = function (environment) {
     // Default (normally false; true in core qunit runs)
   }
 
-  if (environment === "development") {
-    // ENV.APP.LOG_RESOLVER = true;
-    // ENV.APP.LOG_ACTIVE_GENERATION = true;
-    // ENV.APP.LOG_TRANSITIONS = true;
-    // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
-    // ENV.APP.LOG_VIEW_LOOKUPS = true;
-  }
-
   if (environment === "test") {
     // Testem prefers this...
     ENV.locationType = "none";
@@ -53,10 +47,6 @@ module.exports = function (environment) {
 
     ENV.APP.rootElement = "#ember-testing";
     ENV.APP.autoboot = false;
-  }
-
-  if (environment === "production") {
-    // here you can enable a production-specific feature
   }
 
   return ENV;
