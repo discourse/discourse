@@ -12,6 +12,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",
+  "home-logo-minimized",
   "invite-simple-mode-topic",
   "latest-topic-list-item-class",
   "mentions-class",

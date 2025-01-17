@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
 import HomeLogo from "./home-logo";
@@ -22,6 +23,18 @@ export default class Contents extends Component {
     }
 
     return "bars";
+  }
+
+  get minimized() {
+    return applyValueTransformer(
+      "home-logo-minimized",
+      this.args.topicInfoVisible,
+      {
+        topicInfo: this.args.topicInfo,
+        sidebarEnabled: this.args.sidebarEnabled,
+        showSidebar: this.args.showSidebar,
+      }
+    );
   }
 
   <template>
@@ -55,7 +68,7 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <HomeLogo @minimized={{@topicInfoVisible}} />
+          <HomeLogo @minimized={{this.minimized}} />
         </PluginOutlet>
       </div>
 
