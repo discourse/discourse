@@ -402,6 +402,7 @@ export default class DModal extends Component {
             enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}
+          {{! template-lint-disable no-pointer-down-event-binding }}
           {{on "pointerdown" this.handleWrapperPointerDown}}
         ></div>
       {{/unless}}
