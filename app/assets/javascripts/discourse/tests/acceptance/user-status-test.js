@@ -112,7 +112,7 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.dom(".d-icon-smile").exists("empty status icon is shown");
+    assert.dom(".d-icon-face-smile").exists("empty status icon is shown");
 
     await pickEmoji(userStatusEmoji);
 
@@ -305,7 +305,7 @@ acceptance("User Status", function (needs) {
     await click(".btn.delete-status");
     await openUserStatusModal();
 
-    assert.dom(".d-icon-smile").exists("empty status icon is shown");
+    assert.dom(".d-icon-face-smile").exists("empty status icon is shown");
     assert
       .dom(".user-status-description")
       .hasValue("", "no status description is shown");
