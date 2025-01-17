@@ -42,13 +42,21 @@ RSpec.describe UserNameSuggester do
       expect(UserNameSuggester.suggest("a")).to eq("a11")
     end
 
-    it "is able to guess a decent username from an email" do
-      expect(UserNameSuggester.suggest("bob@example.com")).to eq("bob")
+    it "doesn't suggest anything based on usernames by default" do
+      expect(UserNameSuggester.suggest("bob@example.com")).to eq("user1")
     end
 
-    it "has a special case for me and i emails" do
-      expect(UserNameSuggester.suggest("me@eviltrout.com")).to eq("eviltrout")
-      expect(UserNameSuggester.suggest("i@eviltrout.com")).to eq("eviltrout")
+    context "with use_email_for_username_and_name_suggestions enabled" do
+      before { SiteSetting.use_email_for_username_and_name_suggestions = true }
+
+      it "is able to guess a decent username from an email" do
+        expect(UserNameSuggester.suggest("bob@example.com")).to eq("bob")
+      end
+
+      it "has a special case for me and i emails" do
+        expect(UserNameSuggester.suggest("me@eviltrout.com")).to eq("eviltrout")
+        expect(UserNameSuggester.suggest("i@eviltrout.com")).to eq("eviltrout")
+      end
     end
 
     it "shortens very long suggestions" do
@@ -63,12 +71,14 @@ RSpec.describe UserNameSuggester do
     end
 
     it "doesn't suggest reserved usernames" do
+      SiteSetting.use_email_for_username_and_name_suggestions = true
       SiteSetting.reserved_usernames = "myadmin|steve|steve1"
       expect(UserNameSuggester.suggest("myadmin@hissite.com")).to eq("myadmin1")
       expect(UserNameSuggester.suggest("steve")).to eq("steve2")
     end
 
     it "doesn't suggest generic usernames" do
+      SiteSetting.use_email_for_username_and_name_suggestions = true
       UserNameSuggester::GENERIC_NAMES.each do |name|
         expect(UserNameSuggester.suggest("#{name}@apple.org")).to eq("apple")
       end
