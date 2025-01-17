@@ -2826,4 +2826,66 @@ HTML
       expect(doc.to_html).to eq(html_with_thumbnail)
     end
   end
+
+  describe "markdown tabs" do
+    it "supports overriding default tab in markdown" do
+      md = <<~MD
+      [tabs]
+      [tab="First Tab"]
+      Tab 1 **content**
+      [/tab]
+      [tab="Second Tab" selected]
+      Tab 2 content
+      [/tab]
+      [/tabs]
+      MD
+
+      html = PrettyText.cook(md)
+      expected = <<~HTML
+        <div class="markdown-tabs">
+        <section>
+        <h4>
+        First Tab</h4>
+        <p>Tab 1 <strong>content</strong></p>
+        </section>
+        <section data-selected="">
+        <h4>
+        Second Tab</h4>
+        <p>Tab 2 content</p>
+        </section>
+        </div>
+      HTML
+      expect(html).to match_html(expected)
+    end
+
+    it "supports tabs markup" do
+      md = <<~MD
+      [tabs]
+      [tab="First Tab"]
+      Tab 1 **content**
+      [/tab]
+      [tab="Second Tab"]
+      Tab 2 content
+      [/tab]
+      [/tabs]
+      MD
+
+      html = PrettyText.cook(md)
+      expected = <<~HTML
+        <div class="markdown-tabs">
+        <section>
+        <h4>
+        First Tab</h4>
+        <p>Tab 1 <strong>content</strong></p>
+        </section>
+        <section>
+        <h4>
+        Second Tab</h4>
+        <p>Tab 2 content</p>
+        </section>
+        </div>
+      HTML
+      expect(html).to match_html(expected)
+    end
+  end
 end
