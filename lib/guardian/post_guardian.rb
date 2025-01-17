@@ -164,6 +164,7 @@ module PostGuardian
     if (is_staff? || is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category))
       return can_create_post?(post.topic)
     end
+    return false if !can_see_post_topic?(post)
 
     return false if post.topic&.archived? || post.user_deleted || post.deleted_at
 
