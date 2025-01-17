@@ -16,7 +16,7 @@ export default {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "discourse-emojis",
+          icon: "smile",
           sendAction: () => {
             const menu = api.container.lookup("service:menu");
             menu.show(document.querySelector(".insert-composer-emoji"), {

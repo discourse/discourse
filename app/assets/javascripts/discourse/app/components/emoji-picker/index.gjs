@@ -14,7 +14,7 @@ export default class EmojiPicker extends Component {
   }
 
   get icon() {
-    return this.args.icon ?? "discourse-emojis";
+    return this.args.icon ?? "smile";
   }
 
   get context() {
@@ -38,10 +38,10 @@ export default class EmojiPicker extends Component {
       @onClose={{@onClose}}
     >
       <:trigger>
-        {{#if @icon}}
-          {{replaceEmoji (concat ":" @icon ":")}}
+        {{#if @emoji}}
+          {{replaceEmoji (concat ":" @emoji ":")}}
         {{else}}
-          {{icon "discourse-emojis"}}
+          {{icon this.icon}}
         {{/if}}
 
         {{#if @label}}
