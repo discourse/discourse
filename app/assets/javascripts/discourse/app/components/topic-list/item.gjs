@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -190,6 +191,28 @@ export default class Item extends Component {
     });
   }
 
+  get style() {
+    const parts = applyValueTransformer("topic-list-item-style", [], {
+      topic: this.args.topic,
+      index: this.args.index,
+    });
+
+    const safeParts = parts.filter(Boolean).filter((part) => {
+      if (isHTMLSafe(part)) {
+        return true;
+      }
+      // eslint-disable-next-line no-console
+      console.error(
+        "topic-list-item-style must be formed of htmlSafe strings. Skipped unsafe value:",
+        part
+      );
+    });
+
+    if (safeParts.length) {
+      return htmlSafe(safeParts.join("\n"));
+    }
+  }
+
   <template>
     <tr
       {{! template-lint-disable no-invalid-interactive }}
@@ -215,6 +238,7 @@ export default class Item extends Component {
         this.tagClassNames
         this.additionalClasses
       }}
+      style={{this.style}}
     >
       <PluginOutlet
         @name="above-topic-list-item"
