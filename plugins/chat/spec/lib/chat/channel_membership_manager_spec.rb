@@ -10,20 +10,16 @@ RSpec.describe Chat::ChannelMembershipManager do
 
   describe "#all_for_user" do
     it "works with plugin modifier" do
-      DiscoursePluginRegistry.register_modifier(plugin, :list_user_channels_modifier, &deny_block)
+      DiscoursePluginRegistry.register_modifier(plugin, :channel_memberships, &deny_block)
       action = described_class.all_for_user(user)
       expect(action).to eq(false)
 
-      DiscoursePluginRegistry.register_modifier(plugin, :list_user_channels_modifier, &allow_block)
+      DiscoursePluginRegistry.register_modifier(plugin, :channel_memberships, &allow_block)
       action = described_class.all_for_user(user)
       expect(action).to eq(true)
     ensure
-      DiscoursePluginRegistry.unregister_modifier(plugin, :list_user_channels_modifier, &deny_block)
-      DiscoursePluginRegistry.unregister_modifier(
-        plugin,
-        :list_user_channels_modifier,
-        &allow_block
-      )
+      DiscoursePluginRegistry.unregister_modifier(plugin, :channel_memberships, &deny_block)
+      DiscoursePluginRegistry.unregister_modifier(plugin, :channel_memberships, &allow_block)
     end
   end
 
