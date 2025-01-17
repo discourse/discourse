@@ -1318,7 +1318,7 @@ RSpec.describe Topic do
   end
 
   describe "bumping topics" do
-    let!(:topic) { Fabricate(:topic, bumped_at: 1.year.ago) }
+    fab!(:topic) { Fabricate(:topic, bumped_at: 1.year.ago) }
 
     it "updates the bumped_at field when a new post is made" do
       expect(topic.bumped_at).to be_present
@@ -1329,19 +1329,18 @@ RSpec.describe Topic do
     end
 
     context "when editing posts" do
-      before do
-        @earlier_post = Fabricate(:post, topic: topic, user: topic.user)
-        @last_post = Fabricate(:post, topic: topic, user: topic.user)
-        topic.reload
-      end
+      fab!(:earlier_post) { Fabricate(:post, topic:, user: topic.user) }
+      fab!(:last_post) { Fabricate(:post, topic:, user: topic.user) }
+
+      before { topic.reload }
 
       it "doesn't bump the topic on an edit to the last post that doesn't result in a new version" do
         expect {
           SiteSetting.editing_grace_period = 5.minutes
-          @last_post.revise(
-            @last_post.user,
-            { raw: @last_post.raw + "a" },
-            revised_at: @last_post.created_at + 10.seconds,
+          last_post.revise(
+            last_post.user,
+            { raw: last_post.raw + "a" },
+            revised_at: last_post.created_at + 10.seconds,
           )
           topic.reload
         }.not_to change(topic, :bumped_at)
@@ -1349,21 +1348,21 @@ RSpec.describe Topic do
 
       it "bumps the topic when a new version is made of the last post" do
         expect {
-          @last_post.revise(moderator, raw: "updated contents")
+          last_post.revise(moderator, raw: "updated contents")
           topic.reload
         }.to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
         expect {
-          @earlier_post.revise(moderator, raw: "updated contents")
+          earlier_post.revise(moderator, raw: "updated contents")
           topic.reload
         }.not_to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post have invalid topic title while edit" do
         expect {
-          @last_post.revise(moderator, title: "invalid title")
+          last_post.revise(moderator, title: "invalid title")
           topic.reload
         }.not_to change(topic, :bumped_at)
       end
@@ -1404,38 +1403,36 @@ RSpec.describe Topic do
 
   describe "update_status" do
     fab!(:post) { Fabricate(:post).tap { |p| p.topic.update!(bumped_at: 1.hour.ago) } }
-
     fab!(:topic) { post.topic }
 
-    before do
-      @original_bumped_at = topic.bumped_at
-      @user = topic.user
-      @user.admin = true
-    end
+    let(:user) { topic.user }
+    let!(:original_bumped_at) { topic.bumped_at }
+
+    before { user.admin = true }
 
     context "with visibility" do
       let(:category) { Fabricate(:category_with_definition) }
 
       context "when disabled" do
         it "should not be visible and have correct counts" do
-          topic.update_status("visible", false, @user)
+          topic.update_status("visible", false, user)
           topic.reload
           expect(topic).not_to be_visible
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at).to eq_time(@original_bumped_at)
+          expect(topic.bumped_at).to eq_time(original_bumped_at)
         end
 
         it "decreases topic_count of topic category" do
           topic.update!(category: category)
           Category.update_stats
 
-          expect do 2.times { topic.update_status("visible", false, @user) } end.to change {
+          expect do 2.times { topic.update_status("visible", false, user) } end.to change {
             category.reload.topic_count
           }.by(-1)
         end
 
         it "decreases topic_count of user stat" do
-          expect do 2.times { topic.update_status("visible", false, @user) } end.to change {
+          expect do 2.times { topic.update_status("visible", false, user) } end.to change {
             post.user.user_stat.reload.topic_count
           }.from(1).to(0)
         end
@@ -1444,35 +1441,35 @@ RSpec.describe Topic do
           user.user_profile.update(featured_topic_id: topic.id)
           expect(user.user_profile.featured_topic).to eq(topic)
 
-          topic.update_status("visible", false, @user)
+          topic.update_status("visible", false, user)
           expect(user.user_profile.reload.featured_topic).to eq(nil)
         end
       end
 
       context "when enabled" do
         before do
-          topic.update_status("visible", false, @user)
+          topic.update_status("visible", false, user)
           topic.reload
         end
 
         it "should be visible with correct counts" do
-          topic.update_status("visible", true, @user)
+          topic.update_status("visible", true, user)
 
           expect(topic).to be_visible
           expect(topic.moderator_posts_count).to eq(2)
-          expect(topic.bumped_at).to eq_time(@original_bumped_at)
+          expect(topic.bumped_at).to eq_time(original_bumped_at)
         end
 
         it "increases topic_count of topic category" do
           topic.update!(category: category)
 
-          expect do 2.times { topic.update_status("visible", true, @user) } end.to change {
+          expect do 2.times { topic.update_status("visible", true, user) } end.to change {
             category.reload.topic_count
           }.by(1)
         end
 
         it "increases topic_count of user stat" do
-          expect do 2.times { topic.update_status("visible", true, @user) } end.to change {
+          expect do 2.times { topic.update_status("visible", true, user) } end.to change {
             post.user.user_stat.reload.topic_count
           }.from(0).to(1)
         end
@@ -1482,27 +1479,27 @@ RSpec.describe Topic do
     context "with pinned" do
       context "when disabled" do
         before do
-          topic.update_status("pinned", false, @user)
+          topic.update_status("pinned", false, user)
           topic.reload
         end
 
         it "doesn't have a pinned_at but has correct dates" do
           expect(topic.pinned_at).to be_blank
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at).to eq_time(@original_bumped_at)
+          expect(topic.bumped_at).to eq_time(original_bumped_at)
         end
       end
 
       context "when enabled" do
         before do
           topic.update_attribute :pinned_at, nil
-          topic.update_status("pinned", true, @user)
+          topic.update_status("pinned", true, user)
           topic.reload
         end
 
         it "should enable correctly" do
           expect(topic.pinned_at).to be_present
-          expect(topic.bumped_at).to eq_time(@original_bumped_at)
+          expect(topic.bumped_at).to eq_time(original_bumped_at)
           expect(topic.moderator_posts_count).to eq(1)
         end
       end
@@ -1510,67 +1507,69 @@ RSpec.describe Topic do
 
     context "with archived" do
       it "should create a staff action log entry" do
-        expect { topic.update_status("archived", true, @user) }.to change {
+        expect { topic.update_status("archived", true, user) }.to change {
           UserHistory.where(action: UserHistory.actions[:topic_archived]).count
         }.by(1)
       end
 
       context "when disabled" do
+        let(:archived_topic) { Fabricate(:topic, archived: true, bumped_at: 1.hour.ago) }
+        let!(:original_bumped_at) { archived_topic.bumped_at }
+
         before do
-          @archived_topic = Fabricate(:topic, archived: true, bumped_at: 1.hour.ago)
-          @original_bumped_at = @archived_topic.bumped_at
-          @archived_topic.update_status("archived", false, @user)
-          @archived_topic.reload
+          archived_topic.update_status("archived", false, user)
+          archived_topic.reload
         end
 
         it "should archive correctly" do
-          expect(@archived_topic).not_to be_archived
-          expect(@archived_topic.bumped_at).to eq_time(@original_bumped_at)
-          expect(@archived_topic.moderator_posts_count).to eq(1)
+          expect(archived_topic).not_to be_archived
+          expect(archived_topic.bumped_at).to eq_time(original_bumped_at)
+          expect(archived_topic.moderator_posts_count).to eq(1)
         end
       end
 
       context "when enabled" do
         before do
           topic.update_attribute :archived, false
-          topic.update_status("archived", true, @user)
+          topic.update_status("archived", true, user)
           topic.reload
         end
 
         it "should be archived" do
           expect(topic).to be_archived
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at).to eq_time(@original_bumped_at)
+          expect(topic.bumped_at).to eq_time(original_bumped_at)
         end
       end
     end
 
     shared_examples_for "a status that closes a topic" do
       context "when disabled" do
+        let(:closed_topic) { Fabricate(:topic, closed: true, bumped_at: 1.hour.ago) }
+        let!(:original_bumped_at) { closed_topic.bumped_at }
+
         before do
-          @closed_topic = Fabricate(:topic, closed: true, bumped_at: 1.hour.ago)
-          @original_bumped_at = @closed_topic.bumped_at
-          @closed_topic.update_status(status, false, @user)
-          @closed_topic.reload
+          closed_topic.update_status(status, false, user)
+          closed_topic.reload
         end
 
         it "should not be pinned" do
-          expect(@closed_topic).not_to be_closed
-          expect(@closed_topic.moderator_posts_count).to eq(1)
-          expect(@closed_topic.bumped_at).not_to eq_time(@original_bumped_at)
+          expect(closed_topic).not_to be_closed
+          expect(closed_topic.moderator_posts_count).to eq(1)
+          expect(closed_topic.bumped_at).not_to eq_time(original_bumped_at)
         end
       end
 
       context "when enabled" do
         before do
           topic.update_attribute :closed, false
-          topic.update_status(status, true, @user)
+          topic.update_status(status, true, user)
           topic.reload
         end
 
         it "should be closed" do
           expect(topic).to be_closed
-          expect(topic.bumped_at).to eq_time(@original_bumped_at)
+          expect(topic.bumped_at).to eq_time(original_bumped_at)
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.topic_timers.first).to eq(nil)
         end
@@ -1582,17 +1581,17 @@ RSpec.describe Topic do
       it_behaves_like "a status that closes a topic"
 
       it "should archive group message" do
-        group.add(@user)
+        group.add(user)
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
 
-        expect { topic.update_status(status, true, @user) }.to change(
+        expect { topic.update_status(status, true, user) }.to change(
           topic.group_archived_messages,
           :count,
         ).by(1)
       end
 
       it "should create a staff action log entry" do
-        expect { topic.update_status(status, true, @user) }.to change {
+        expect { topic.update_status(status, true, user) }.to change {
           UserHistory.where(action: UserHistory.actions[:topic_closed]).count
         }.by(1)
       end
@@ -1606,7 +1605,7 @@ RSpec.describe Topic do
         it "includes the autoclose duration in the moderator post" do
           freeze_time(Time.new(2000, 1, 1))
           topic.created_at = 3.days.ago
-          topic.update_status(status, true, @user)
+          topic.update_status(status, true, user)
           expect(topic.posts.last.raw).to include "closed after 3 days"
         end
       end
@@ -1624,7 +1623,7 @@ RSpec.describe Topic do
 
           freeze_time(2.days.from_now)
 
-          topic.update_status(status, true, @user)
+          topic.update_status(status, true, user)
           expect(topic.posts.last.raw).to include "closed after 2 days"
         end
       end
@@ -1698,47 +1697,44 @@ RSpec.describe Topic do
   end
 
   context "with last_poster info" do
-    before do
-      @post = create_post
-      @user = @post.user
-      @topic = @post.topic
-    end
+    let(:post) { create_post }
+    let!(:user) { post.user }
+    let!(:topic) { post.topic }
 
     it "initially has the last_post_user_id of the OP" do
-      expect(@topic.last_post_user_id).to eq(@user.id)
+      expect(topic.last_post_user_id).to eq(user.id)
     end
 
     context "after a second post" do
-      before do
-        @second_user = coding_horror
-        @new_post = create_post(topic: @topic, user: @second_user)
-        @topic.reload
-      end
+      let(:second_user) { coding_horror }
+      let!(:new_post) { create_post(topic:, user: second_user) }
+
+      before { topic.reload }
 
       it "updates the last_post_user_id to the second_user" do
-        expect(@topic.last_post_user_id).to eq(@second_user.id)
-        expect(@topic.last_posted_at.to_i).to eq(@new_post.created_at.to_i)
-        topic_user = @second_user.topic_users.find_by(topic_id: @topic.id)
+        expect(topic.last_post_user_id).to eq(second_user.id)
+        expect(topic.last_posted_at.to_i).to eq(new_post.created_at.to_i)
+        topic_user = second_user.topic_users.find_by(topic_id: topic.id)
         expect(topic_user.posted?).to eq(true)
       end
     end
   end
 
   describe "with category" do
-    before { @category = Fabricate(:category_with_definition) }
+    fab!(:category) { Fabricate(:category_with_definition) }
 
     it "should not increase the topic_count with no category" do
       expect {
-        Fabricate(:topic, user: @category.user)
-        @category.reload
-      }.not_to change(@category, :topic_count)
+        Fabricate(:topic, user: category.user)
+        category.reload
+      }.not_to change(category, :topic_count)
     end
 
     it "should increase the category's topic_count" do
       expect {
-        Fabricate(:topic, user: @category.user, category_id: @category.id)
-        @category.reload
-      }.to change(@category, :topic_count).by(1)
+        Fabricate(:topic, user: category.user, category_id: category.id)
+        category.reload
+      }.to change(category, :topic_count).by(1)
     end
   end
 
@@ -2888,16 +2884,16 @@ RSpec.describe Topic do
     topic = Fabricate(:topic)
     user = topic.user
     user.admin = true
-    @topic_status_event_triggered = false
+    topic_status_event = spy
 
-    blk = Proc.new { @topic_status_event_triggered = true }
+    blk = Proc.new { topic_status_event.triggered }
 
     DiscourseEvent.on(:topic_status_updated, &blk)
 
     topic.update_status("closed", true, user)
     topic.reload
 
-    expect(@topic_status_event_triggered).to eq(true)
+    expect(topic_status_event).to have_received(:triggered)
   ensure
     DiscourseEvent.off(:topic_status_updated, &blk)
   end
@@ -3321,38 +3317,40 @@ RSpec.describe Topic do
   end
 
   describe "#auto_close_threshold_reached?" do
+    fab!(:post)
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: post, topic: post.topic) }
+
+    let(:topic) { post.topic }
+
     before do
       Reviewable.set_priorities(low: 2.0, medium: 6.0, high: 9.0)
       SiteSetting.num_flaggers_to_close_topic = 2
       SiteSetting.reviewable_default_visibility = "medium"
       SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivities[:high]
-      post = Fabricate(:post)
-      @topic = post.topic
-      @reviewable = Fabricate(:reviewable_flagged_post, target: post, topic: @topic)
     end
 
     it "ignores flags with a low score" do
       5.times do
-        @reviewable.add_score(
+        reviewable.add_score(
           Fabricate(:user, trust_level: TrustLevel[0]),
           PostActionType.types[:spam],
           created_at: 1.minute.ago,
         )
       end
 
-      expect(@topic.auto_close_threshold_reached?).to eq(false)
+      expect(topic.auto_close_threshold_reached?).to eq(false)
     end
 
     it "returns true when the flags have a high score" do
       5.times do
-        @reviewable.add_score(
+        reviewable.add_score(
           Fabricate(:user, admin: true),
           PostActionType.types[:spam],
           created_at: 1.minute.ago,
         )
       end
 
-      expect(@topic.auto_close_threshold_reached?).to eq(true)
+      expect(topic.auto_close_threshold_reached?).to eq(true)
     end
   end
 

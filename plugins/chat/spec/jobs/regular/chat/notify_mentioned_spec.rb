@@ -6,24 +6,22 @@ describe Jobs::Chat::NotifyMentioned do
   fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:public_channel) { Fabricate(:category_channel) }
+  fab!(:chat_group) { Fabricate(:group, users: [user_1, user_2]) }
+
+  let!(:result) do
+    Chat::CreateDirectMessageChannel.call(
+      guardian: user_1.guardian,
+      params: {
+        target_usernames: [user_1.username, user_2.username],
+      },
+    ) do |result|
+      on_success { result }
+      on_failure { service_failed!(result) }
+    end
+  end
+  let(:personal_chat_channel) { result.channel }
 
   before do
-    user_1.reload
-    user_2.reload
-
-    @chat_group = Fabricate(:group, users: [user_1, user_2])
-    result =
-      Chat::CreateDirectMessageChannel.call(
-        guardian: user_1.guardian,
-        params: {
-          target_usernames: [user_1.username, user_2.username],
-        },
-      )
-
-    service_failed!(result) if result.failure?
-
-    @personal_chat_channel = result.channel
-
     [user_1, user_2].each do |u|
       Fabricate(:user_chat_channel_membership, chat_channel: public_channel, user: u)
     end
@@ -147,10 +145,10 @@ describe Jobs::Chat::NotifyMentioned do
 
     it "does nothing if user is not participating in a private channel" do
       user_3 = Fabricate(:user)
-      @chat_group.add(user_3)
+      chat_group.add(user_3)
       to_notify_map = { direct_mentions: [user_3.id] }
 
-      message = create_chat_message(channel: @personal_chat_channel)
+      message = create_chat_message(channel: personal_chat_channel)
 
       PostAlerter.expects(:push_notification).never
 
@@ -227,7 +225,7 @@ describe Jobs::Chat::NotifyMentioned do
       message = create_chat_message
       Fabricate(:all_chat_mention, chat_message: message)
       Fabricate(:here_chat_mention, chat_message: message)
-      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
+      Fabricate(:group_chat_mention, group: chat_group, chat_message: message)
 
       desktop_notification =
         track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -248,7 +246,7 @@ describe Jobs::Chat::NotifyMentioned do
       message = create_chat_message
       Fabricate(:all_chat_mention, chat_message: message)
       Fabricate(:here_chat_mention, chat_message: message)
-      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
+      Fabricate(:group_chat_mention, group: chat_group, chat_message: message)
 
       PostAlerter.expects(:push_notification).with(
         user_2,
@@ -275,7 +273,7 @@ describe Jobs::Chat::NotifyMentioned do
       message = create_chat_message
       Fabricate(:all_chat_mention, chat_message: message)
       Fabricate(:here_chat_mention, chat_message: message)
-      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
+      Fabricate(:group_chat_mention, group: chat_group, chat_message: message)
 
       created_notification =
         track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -334,7 +332,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       context "with private channels" do
         it "users a different translated title" do
-          message = create_chat_message(channel: @personal_chat_channel)
+          message = create_chat_message(channel: personal_chat_channel)
           Fabricate(:all_chat_mention, chat_message: message)
 
           desktop_notification =
@@ -389,7 +387,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       context "with private channels" do
         it "uses a different translated title" do
-          message = create_chat_message(channel: @personal_chat_channel)
+          message = create_chat_message(channel: personal_chat_channel)
           Fabricate(:here_chat_mention, chat_message: message)
 
           desktop_notification =
@@ -462,7 +460,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       context "with private channels" do
         it "users a different translated title" do
-          message = create_chat_message(channel: @personal_chat_channel)
+          message = create_chat_message(channel: personal_chat_channel)
 
           desktop_notification =
             track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -480,13 +478,13 @@ describe Jobs::Chat::NotifyMentioned do
     end
 
     describe "group mentions" do
-      let(:to_notify_ids_map) { { @chat_group.name.to_sym => [user_2.id] } }
+      let(:to_notify_ids_map) { { chat_group.name.to_sym => [user_2.id] } }
 
       let(:payload_translated_title) do
         I18n.t(
           "discourse_push_notifications.popup.chat_mention.other_type",
           username: user_1.username,
-          identifier: "@#{@chat_group.name}",
+          identifier: "@#{chat_group.name}",
           channel: public_channel.title(user_2),
         )
       end
@@ -495,19 +493,19 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to core notifications" do
         message = create_chat_message
-        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
+        Fabricate(:group_chat_mention, group: chat_group, chat_message: message)
 
         created_notification =
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
         data_hash = created_notification.data_hash
 
-        expect(data_hash[:identifier]).to eq(@chat_group.name)
+        expect(data_hash[:identifier]).to eq(chat_group.name)
         expect(data_hash[:is_group_mention]).to eq(true)
       end
 
       it "includes here mention specific data to desktop notifications" do
         message = create_chat_message
-        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
+        Fabricate(:group_chat_mention, group: chat_group, chat_message: message)
 
         desktop_notification =
           track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -517,8 +515,8 @@ describe Jobs::Chat::NotifyMentioned do
 
       context "with private channels" do
         it "uses a different translated title" do
-          message = create_chat_message(channel: @personal_chat_channel)
-          Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
+          message = create_chat_message(channel: personal_chat_channel)
+          Fabricate(:group_chat_mention, group: chat_group, chat_message: message)
 
           desktop_notification =
             track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -527,7 +525,7 @@ describe Jobs::Chat::NotifyMentioned do
             I18n.t(
               "discourse_push_notifications.popup.direct_message_chat_mention.other_type",
               username: user_1.username,
-              identifier: "@#{@chat_group.name}",
+              identifier: "@#{chat_group.name}",
             )
 
           expect(desktop_notification.data[:translated_title]).to eq(expected_title)

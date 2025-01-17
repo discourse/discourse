@@ -12,12 +12,13 @@ RSpec.describe UsernameChanger do
       it "should change the username" do
         new_username = "#{user.username}1234"
 
+        result = nil
         events =
           DiscourseEvent
-            .track_events { @result = UsernameChanger.change(user, new_username) }
+            .track_events { result = UsernameChanger.change(user, new_username) }
             .last(2)
 
-        expect(@result).to eq(true)
+        expect(result).to eq(true)
 
         event = events.first
         expect(event[:event_name]).to eq(:username_changed)
@@ -36,10 +37,10 @@ RSpec.describe UsernameChanger do
       it "do nothing if the new username is the same" do
         new_username = user.username
 
-        events =
-          DiscourseEvent.track_events { @result = UsernameChanger.change(user, new_username) }
+        result = nil
+        events = DiscourseEvent.track_events { result = UsernameChanger.change(user, new_username) }
 
-        expect(@result).to eq(false)
+        expect(result).to eq(false)
         expect(events.count).to be_zero
       end
     end
@@ -50,8 +51,7 @@ RSpec.describe UsernameChanger do
       let(:username_lower_before_change) { user.username_lower }
 
       it "should not change the username" do
-        @result = UsernameChanger.change(user, wrong_username)
-        expect(@result).to eq(false)
+        expect(UsernameChanger.change(user, wrong_username)).to eq(false)
 
         user.reload
         expect(user.username).to eq(username_before_change)
@@ -82,18 +82,17 @@ RSpec.describe UsernameChanger do
     end
 
     describe "allow custom minimum username length from site settings" do
-      before do
-        @custom_min = 2
-        SiteSetting.min_username_length = @custom_min
-      end
+      let(:custom_min) { 2 }
+
+      before { SiteSetting.min_username_length = custom_min }
 
       it "should allow a shorter username than default" do
-        result = UsernameChanger.change(user, "a" * @custom_min)
+        result = UsernameChanger.change(user, "a" * custom_min)
         expect(result).not_to eq(false)
       end
 
       it "should not allow a shorter username than limit" do
-        result = UsernameChanger.change(user, "a" * (@custom_min - 1))
+        result = UsernameChanger.change(user, "a" * (custom_min - 1))
         expect(result).to eq(false)
       end
 
