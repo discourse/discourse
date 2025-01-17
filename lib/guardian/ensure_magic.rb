@@ -19,6 +19,6 @@ module EnsureMagic
 
   # Make sure we can see the object. Will raise a NotFound if it's nil
   def ensure_can_see!(obj)
-    raise Discourse::InvalidAccess.new("Can't see #{obj}") unless can_see?(obj)
+    raise Discourse::InvalidAccess.new("Can't see #{obj}") if cannot_see?(obj)
   end
 end
