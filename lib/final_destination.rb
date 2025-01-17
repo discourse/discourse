@@ -569,7 +569,11 @@ class FinalDestination
   def uri(location)
     begin
       URI.parse(location)
-    rescue URI::Error
+    rescue URI::Error => e
+      # when we enter `resolve` and we start going through the redirect chain (line 362)
+      # we have to then catch the excpection and encode the URL.
+      # This change is worriesome because FinalDestination is widly used across the app, not just for oneboxes.
+      UrlHelper.encode(location) if (e.message =~ /URI must be ascii only/)
     end
   end
 
