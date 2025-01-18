@@ -682,7 +682,17 @@ module Oneboxer
       },
     }
 
-    uri = URI(url)
+    # This is only going to be applied to the initial URL, and not any urls from within the redirect chain.
+    # See attached specs that prove this.
+    begin
+      uri = URI(url)
+    rescue URI::Error => e
+      if (e.message =~ /URI must be ascii only/)
+        url = UrlHelper.encode(url)
+        retry
+      end
+      nil
+    end
 
     # For private GitHub repos, we get a 404 when trying to use
     # FinalDestination to request the final URL because no auth headers

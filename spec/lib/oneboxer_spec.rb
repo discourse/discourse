@@ -537,6 +537,45 @@ RSpec.describe Oneboxer do
       end
     end
 
+    it "resolves URI and oneboxes when url in redirect chain contains non-ASCII characters" do
+      stub_request(:head, "https://oh.no").to_return(
+        status: 301,
+        body: "",
+        headers: {
+          "location" => "https://oh.no/really-øh-nø",
+        },
+      )
+      stub_request(:get, "https://oh.no").to_return(
+        status: 301,
+        body: "",
+        headers: {
+          "location" => "https://oh.no/really-øh-nø",
+        },
+      )
+
+      stub_request(:get, "https://oh.no/really-øh-nø").to_return(
+        status: 200,
+        body: html,
+        headers: {
+        },
+      )
+      stub_request(:head, "https://oh.no/really-øh-nø").to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
+
+      expect(Oneboxer.external_onebox("https://oh.no")[:onebox]).to be_present
+    end
+
+    it "resolves URI and oneboxes when url contains non-ASCII characters" do
+      stub_request(:get, "https://øh.nø").to_return(status: 200, body: html)
+      stub_request(:head, "https://øh.nø").to_return(status: 200, body: "", headers: {})
+
+      expect(Oneboxer.external_onebox("https://øh.nø")[:onebox]).to be_present
+    end
+
     it "censors external oneboxes" do
       Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad word")
 
