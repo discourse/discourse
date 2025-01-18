@@ -51,8 +51,11 @@ export default class TopicNavigation extends Component {
     } else if (this.site.mobileView) {
       this.info.set("renderTimeline", false);
     } else {
-      const composerHeight =
-        document.querySelector("#reply-control")?.offsetHeight || 0;
+      const composerHeight = document.documentElement.classList.contains(
+        "composer-open-no-preview"
+      )
+        ? 0
+        : document.querySelector("#reply-control")?.offsetHeight || 0;
       const verticalSpace =
         window.innerHeight - composerHeight - headerOffset();
 

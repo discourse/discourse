@@ -46,6 +46,10 @@
   z-index: z("timeline");
 }
 
+.composer-open-no-preview .with-topic-progress {
+  bottom: env(safe-area-inset-bottom);
+}
+
 #topic-progress-wrapper {
   &.docked {
     .toggle-admin-menu {
