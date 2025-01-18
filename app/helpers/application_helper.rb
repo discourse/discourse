@@ -30,7 +30,6 @@ module ApplicationHelper
           Date: false,
           String: false,
         },
-        _DEFAULT_ASYNC_OBSERVERS: true,
       },
       APP: {
         name: "discourse",

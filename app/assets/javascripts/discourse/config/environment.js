@@ -19,7 +19,6 @@ module.exports = function (environment) {
         Date: false,
         String: false,
       },
-      _DEFAULT_ASYNC_OBSERVERS: true,
       LOG_STACKTRACE_ON_DEPRECATION: false,
     },
 
