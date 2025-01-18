@@ -321,5 +321,5 @@ RSpec.describe Draft do
     end
   end
 
-  it { is_expected.to validate_length_of(:draft_key).is_at_most(25) }
+  it { is_expected.to validate_length_of(:draft_key).is_at_most(40) }
 end
