@@ -2,8 +2,6 @@ import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
 import { service } from "@ember/service";
-import deprecated from "discourse/lib/deprecated";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { seenUser } from "discourse/lib/user-presence";
 
 export default class DiscourseRoute extends Route {
@@ -43,14 +41,6 @@ export default class DiscourseRoute extends Route {
     if (app.get("loginRequired")) {
       this.router.replaceWith("login");
     }
-  }
-
-  openTopicDraft() {
-    deprecated(
-      "DiscourseRoute#openTopicDraft is deprecated. Inject the composer service and call openNewTopic instead",
-      { id: "discourse.open-topic-draft" }
-    );
-    return getOwnerWithFallback(this).lookup("service:composer").openNewTopic();
   }
 
   isCurrentUser(user) {

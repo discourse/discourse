@@ -39,7 +39,7 @@ export const CREATE_TOPIC = "createTopic",
   PRIVATE_MESSAGE = "privateMessage",
   REPLY = "reply",
   EDIT = "edit",
-  NEW_PRIVATE_MESSAGE_KEY = "new_message",
+  NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
   NEW_TOPIC_KEY = "new_topic";
 
 function isEdit(action) {

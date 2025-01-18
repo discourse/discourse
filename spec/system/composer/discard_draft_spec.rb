@@ -81,7 +81,7 @@ describe "Composer - discard draft modal", type: :system do
     it "destroys draft" do
       visit "/new-topic"
 
-      composer.fill_content("this is a test topic")
+      composer.fill_title("this is a test topic")
       composer.fill_content("a b c d e f g")
 
       wait_for(timeout: 5) { Draft.count == 1 }

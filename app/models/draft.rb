@@ -2,14 +2,14 @@
 
 class Draft < ActiveRecord::Base
   NEW_TOPIC = "new_topic"
-  NEW_PRIVATE_MESSAGE = "new_message"
+  NEW_PRIVATE_MESSAGE = "new_private_message"
   EXISTING_TOPIC = "topic_"
 
   belongs_to :user
 
   has_many :upload_references, as: :target, dependent: :delete_all
 
-  validates :draft_key, length: { maximum: 25 }
+  validates :draft_key, length: { maximum: 40 }
 
   after_commit :update_draft_count, on: %i[create destroy]
 
