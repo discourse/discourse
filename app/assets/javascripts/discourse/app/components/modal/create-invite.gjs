@@ -11,6 +11,7 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import FutureDateInput from "discourse/components/future-date-input";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { extractError } from "discourse/lib/ajax-error";
 import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
@@ -308,6 +309,14 @@ export default class CreateInvite extends Component {
         {{/if}}
       </:belowHeader>
       <:body>
+        <PluginOutlet
+          @name="create-invite-before-modal-body"
+          @outletArgs={{hash
+            invite=@invite
+            simpleMode=this.simpleMode
+            inviteCreated=this.inviteCreated
+          }}
+        />
         {{#if this.simpleMode}}
           {{#if this.inviteCreated}}
             {{#unless this.site.mobileView}}
@@ -459,6 +468,14 @@ export default class CreateInvite extends Component {
             {{/if}}
           </Form>
         {{/if}}
+        <PluginOutlet
+          @name="create-invite-after-modal-body"
+          @outletArgs={{hash
+            invite=@invite
+            simpleMode=this.simpleMode
+            inviteCreated=this.inviteCreated
+          }}
+        />
       </:body>
       <:footer>
         {{#if this.simpleMode}}
@@ -549,5 +566,9 @@ class ShareOrCopyInviteLink extends Component {
         @translatedLabelAfterCopy={{i18n "user.invited.invite.link_copied"}}
       />
     {{/if}}
+    <PluginOutlet
+      @name="create-invite-after-copy-link"
+      @outletArgs={{hash invite=@invite}}
+    />
   </template>
 }
