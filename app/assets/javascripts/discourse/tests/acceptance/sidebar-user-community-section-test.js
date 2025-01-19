@@ -47,54 +47,32 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
       )
       .exists("additional section links are displayed");
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary[aria-expanded='true']"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger[aria-expanded='true']"
       )
       .exists(
         "aria-expanded toggles to true when additional links are displayed"
       );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
       )
       .doesNotExist("additional section links are hidden");
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-    );
-
-    await click("#main-outlet");
-
-    assert
-      .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
-      )
-      .doesNotExist(
-        "additional section links are hidden when clicking outside"
-      );
-
-    assert
-      .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary[aria-expanded='false']"
-      )
-      .exists(
-        "aria-expanded toggles to false when additional links are hidden"
-      );
   });
 
   test("clicking on everything link", async function (assert) {
@@ -252,7 +230,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     await click(
@@ -279,7 +257,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger .sidebar-section-link-content-text"
       )
       .hasText(
         i18n("sidebar.more"),
@@ -301,7 +279,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
@@ -315,7 +293,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     await click(
@@ -335,7 +313,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
@@ -357,7 +335,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     await click(
@@ -384,7 +362,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger .sidebar-section-link-content-text"
       )
       .hasText(
         i18n("sidebar.more"),
@@ -408,7 +386,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
@@ -422,7 +400,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     await click(
@@ -448,7 +426,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     await click(
@@ -468,7 +446,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
@@ -860,7 +838,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       .doesNotExist("review link is not shown");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
@@ -897,12 +875,12 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='review']"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content .sidebar-section-link[data-link-name='review']"
       )
       .exists("review link is displayed in the more drawer");
 
@@ -923,12 +901,12 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       .hasText("34 pending", "displays the pending reviewable count");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='review']"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content .sidebar-section-link[data-link-name='review']"
       )
       .doesNotExist("review link is not displayed in the more drawer");
   });
@@ -947,7 +925,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     assert
@@ -1009,7 +987,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     await click(".sidebar-section-link[data-link-name='user-summary']");

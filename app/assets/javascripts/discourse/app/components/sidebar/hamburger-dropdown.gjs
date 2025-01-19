@@ -66,6 +66,7 @@ export default class SidebarHamburgerDropdown extends Component {
                     @collapsableSections={{this.collapsableSections}}
                     @panel={{this.sidebarState.currentPanel}}
                     @hideApiSections={{@forceMainSidebarPanel}}
+                    @toggleNavigationMenu={{@toggleNavigationMenu}}
                   />
                 {{else}}
                   <ApiPanels

@@ -93,6 +93,7 @@ export default class SidebarCustomSection extends Component {
             @moreButtonAction={{this.section.moreSectionButtonAction}}
             @moreButtonText={{this.section.moreSectionButtonText}}
             @moreButtonIcon={{this.section.moreSectionButtonIcon}}
+            @toggleNavigationMenu={{@toggleNavigationMenu}}
           />
         {{/if}}
       {{else if this.section.moreSectionButtonAction}}

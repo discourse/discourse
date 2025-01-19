@@ -12,7 +12,7 @@ import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
 
 const CLOSE_ON_CLICK_SELECTORS =
-  "a[href], .sidebar-section-header-button, .sidebar-section-link-button, .sidebar-section-link";
+  "a[href], .sidebar-section-header-button, .sidebar-section-link:not(.--link-button)";
 
 export default class HamburgerDropdownWrapper extends Component {
   @service currentUser;
@@ -37,6 +37,10 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
+    if (e.target.closest(".sidebar-more-section-content")) {
+      return;
+    }
+
     if (
       e.target.classList.contains("header-cloak") &&
       !prefersReducedMotion()
@@ -101,6 +105,7 @@ export default class HamburgerDropdownWrapper extends Component {
     >
       <SidebarHamburgerDropdown
         @forceMainSidebarPanel={{this.forceMainSidebarPanel}}
+        @toggleNavigationMenu={{this.toggleNavigation}}
       />
     </div>
   </template>
