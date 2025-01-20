@@ -10,7 +10,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import LoadMore from "discourse/mixins/load-more";
-import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
@@ -118,9 +117,6 @@ export default class UserStream extends Component.extend(LoadMore) {
         Draft.clear(draft.draft_key, draft.sequence)
           .then(() => {
             stream.remove(draft);
-            if (draft.draft_key === NEW_TOPIC_KEY) {
-              this.currentUser.set("has_topic_draft", false);
-            }
           })
           .catch((error) => {
             popupAjaxError(error);

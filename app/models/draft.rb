@@ -9,7 +9,7 @@ class Draft < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :delete_all
 
-  validates :draft_key, length: { maximum: 25 }
+  validates :draft_key, length: { maximum: 40 }
 
   after_commit :update_draft_count, on: %i[create destroy]
 
@@ -129,12 +129,6 @@ class Draft < ActiveRecord::Base
     raise Draft::OutOfSequence if sequence != current_sequence
 
     data if current_sequence == draft_sequence
-  end
-
-  def self.has_topic_draft(user)
-    return if !user || !user.id || !User.human_user_id?(user.id)
-
-    Draft.where(user_id: user.id, draft_key: NEW_TOPIC).present?
   end
 
   def self.clear(user, key, sequence)

@@ -296,7 +296,6 @@ export default class ReviewableItem extends Component {
       action: Composer.EDIT,
       draftKey: post.get("topic.draft_key"),
       draftSequence: post.get("topic.draft_sequence"),
-      skipDraftCheck: true,
       skipJumpOnSave: true,
     };
 

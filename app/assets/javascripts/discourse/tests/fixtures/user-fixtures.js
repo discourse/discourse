@@ -296,7 +296,6 @@ export default {
         day_6_start_time: 480,
         day_6_end_time: 1020,
       },
-      has_topic_draft: true,
     },
   },
   "/u/eviltrout/card.json": {

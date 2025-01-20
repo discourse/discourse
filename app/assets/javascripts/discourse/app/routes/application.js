@@ -137,7 +137,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       action: Composer.PRIVATE_MESSAGE,
       recipients,
       archetypeId: "private_message",
-      draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+      draftKey: this.composer.privateMessageDraftKey,
       draftSequence: 0,
       reply,
       title,
