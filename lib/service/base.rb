@@ -112,6 +112,10 @@ module Service
         steps << TransactionStep.new(&block)
       end
 
+      def lock(*keys, &block)
+        steps << LockStep.new(*keys, &block)
+      end
+
       def options(&block)
         klass = Class.new(Service::OptionsBase).tap { _1.class_eval(&block) }
         const_set("Options", klass)
@@ -254,6 +258,39 @@ module Service
 
       def run_step
         ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
+      end
+    end
+
+    # @!visibility private
+    class LockStep < Step
+      include StepsHelpers
+
+      attr_reader :steps
+
+      def initialize(*keys, &block)
+        @keys = keys
+        @steps = []
+        instance_exec(&block)
+      end
+
+      def run_step
+        success =
+          DistributedMutex.synchronize(lock_name) do
+            steps.each { |step| step.call(instance, context) }
+            :success
+          end
+
+        if success != :success
+          context[result_key].fail(locked: true)
+          context.fail!
+        end
+      end
+
+      def lock_name
+        [
+          context.__service_class__.to_s.underscore,
+          *@keys.map { |key| context[:params].send(key) }.filter(&:presence),
+        ].join(":")
       end
     end
 

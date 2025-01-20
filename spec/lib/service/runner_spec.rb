@@ -167,6 +167,26 @@ RSpec.describe Service::Runner do
     end
   end
 
+  class LockService
+    include Service::Base
+
+    params do
+      attribute :post_id, :integer
+      attribute :user_id, :integer
+    end
+
+    lock(:post_id, :user_id) { step :locked_step }
+    step :after_lock
+
+    def locked_step
+      @ran = true
+    end
+
+    def after_lock
+      @ran || raise("Lock not acquired")
+    end
+  end
+
   describe ".call" do
     subject(:runner) { described_class.call(service, dependencies, &actions_block) }
 
@@ -499,6 +519,37 @@ RSpec.describe Service::Runner do
 
       it "runs properly" do
         expect(runner).to eq :success
+      end
+    end
+
+    context "when aquiring a lock" do
+      let(:service) { LockService }
+      let(:dependencies) { { params: { post_id: 123, user_id: 456 } } }
+      let(:actions) { <<-BLOCK }
+          proc do
+            on_success { :success }
+            on_failure { :failure }
+          end
+      BLOCK
+
+      it "runs successfully" do
+        expect(runner).to eq :success
+      end
+    end
+
+    context "when failing to acquire a lock" do
+      let(:service) { LockService }
+      let(:dependencies) { { params: { post_id: 123, user_id: 456 } } }
+      let(:actions) { <<-BLOCK }
+          proc do
+            on_success { :success }
+            on_failure { :failure }
+          end
+      BLOCK
+
+      it "fails the service" do
+        DistributedMutex.stubs(:synchronize).returns
+        expect(runner).to eq :failure
       end
     end
   end
