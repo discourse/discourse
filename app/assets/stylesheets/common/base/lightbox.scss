@@ -4,6 +4,7 @@ $meta-element-margin: 6px;
   position: relative;
   display: inline-block;
   overflow: hidden;
+
   &:hover .meta {
     opacity: 0.9;
     transition: opacity 0.5s;
@@ -25,10 +26,12 @@ $meta-element-margin: 6px;
 .lightbox-wrapper {
   display: inline-block;
   vertical-align: middle;
+
   img {
     object-fit: cover;
     object-position: top;
   }
+
   &,
   * {
     outline: 0;
@@ -55,8 +58,9 @@ $meta-element-margin: 6px;
     margin: $meta-element-margin;
     opacity: 0.8;
     color: var(--secondary);
+
     + .filename {
-      margin-left: 0px;
+      margin-left: 0;
     }
   }
 

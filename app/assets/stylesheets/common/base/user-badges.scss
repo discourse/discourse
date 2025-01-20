@@ -37,19 +37,22 @@
   &.disabled {
     color: var(--primary-medium);
     background-color: var(--primary-very-low);
+
     .fa {
       opacity: 0.4;
     }
   }
 }
 
-@media all and (max-width: 750px) {
+@media all and (width <= 750px) {
   .show-badge .user-badge-with-posts .badge-user a.post-link {
     width: auto;
   }
+
   .show-badge div.badge-user {
     padding: 0;
   }
+
   .badges-listing {
     display: block;
 
@@ -64,6 +67,7 @@
 
     .row {
       display: block;
+
       > div {
         display: block;
         margin-top: 10px;
@@ -82,6 +86,7 @@
 .show-badge .single-user {
   margin-left: 2%;
   padding-bottom: 20px;
+
   .load-more {
     padding-top: 30px;
     display: block;
@@ -91,18 +96,20 @@
 
 .show-badge .single-user .badge-user {
   padding-left: 0;
-
   text-align: left;
   display: block;
   margin: 20px 0;
+
   .badge-info {
     display: none;
   }
+
   .date {
     display: inline-block;
     font-size: var(--font-up-1);
     margin-left: 10px;
   }
+
   .post-link {
     font-size: var(--font-up-2);
     width: 500px;
@@ -111,7 +118,7 @@
   }
   width: 800px;
 
-  &:after {
+  &::after {
     content: "";
     clear: both;
     display: table;
@@ -171,7 +178,7 @@
       display: inline-block;
       line-height: var(--line-height-medium);
 
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         left: 0;
@@ -224,7 +231,7 @@
       h3 {
         margin-bottom: 0.25em;
         font-size: var(--font-up-1);
-        @media screen and (min-width: 900px) {
+        @media screen and (width >= 900px) {
           font-size: var(--font-up-2);
         }
       }
@@ -235,7 +242,7 @@
     width: 100%;
     align-self: flex-start;
 
-    @media screen and (min-width: 767px) {
+    @media screen and (width >= 767px) {
       max-width: calc(var(--d-max-width) / 2);
     }
 
@@ -260,6 +267,7 @@
 .badge-groups {
   margin: 20px 0;
   color: var(--primary-med-or-secondary-med);
+
   h3 {
     margin-bottom: 1em;
   }
@@ -300,6 +308,7 @@
   .grant-info-item {
     margin-bottom: 1em;
     color: var(--primary-med-or-secondary-med);
+
     &:first-of-type {
       margin-right: 10px;
     }
@@ -312,6 +321,7 @@
 
     .badge-title {
       height: 100%;
+
       &__saved {
         color: var(--success);
       }
@@ -334,6 +344,7 @@
       align-items: baseline;
       gap: 0.5em;
       margin: 0;
+
       button:last-of-type {
         margin-right: auto;
       }

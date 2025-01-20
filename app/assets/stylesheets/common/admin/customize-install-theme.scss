@@ -4,9 +4,11 @@
     .install-theme-items {
       flex: 0 0 150px;
     }
+
     .install-theme-content {
       flex: 1 1 100%;
     }
+
     .select-kit {
       width: 100%;
     }
@@ -34,13 +36,14 @@
   label {
     display: block;
     padding: 10px 30px 10px 10px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     cursor: pointer;
   }
 
   input:checked + label {
     color: var(--secondary);
     background-color: var(--tertiary);
+
     + .d-icon {
       display: block;
       color: var(--secondary);
@@ -57,6 +60,7 @@
 
 .install-theme-content {
   width: calc(100% - 20px);
+
   input[type="file"] {
     width: 100%;
     overflow: hidden; // Chrome needs this
@@ -64,7 +68,7 @@
 }
 
 .install-theme-items + .install-theme-content {
-  padding: 0px 0px 10px 20px;
+  padding: 0 0 10px 20px;
   width: calc(100% - 200px);
 }
 
@@ -82,7 +86,7 @@
 
 .popular-theme-item {
   border-bottom: 1px solid var(--primary-low);
-  padding: 8px 0px;
+  padding: 8px 0;
   display: flex;
   align-items: center;
 
@@ -90,8 +94,10 @@
     flex-direction: column;
     align-items: initial;
   }
+
   .popular-theme-name {
     flex: 1;
+
     .popular-theme-type {
       font-weight: normal;
       font-size: var(--font-down-2);
@@ -101,6 +107,7 @@
     a {
       color: var(--primary-very-high);
       font-weight: bold;
+
       &:hover,
       &:visited,
       &:active {
@@ -113,6 +120,7 @@
       padding-right: 20px;
     }
   }
+
   .popular-theme-buttons {
     @include breakpoint(mobile-extra-large) {
       display: flex;

@@ -10,9 +10,11 @@
     padding-left: 0.5em;
     padding-right: 0.5em;
   }
+
   .hex-input {
     margin: 0;
   }
+
   .picker {
     padding: 0;
     border-left: none;
@@ -20,10 +22,12 @@
     margin-bottom: 0;
     height: unset;
   }
+
   // Reset webkit/blink default style
   input[type="color"]::-webkit-color-swatch-wrapper {
     padding: 0;
   }
+
   input[type="color"]::-webkit-color-swatch {
     border: none;
     border-radius: 0; // Reset webkit specific style

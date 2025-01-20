@@ -13,10 +13,12 @@ $progress-bar-circle-size: 0.5rem;
   &__segment {
     width: auto;
   }
+
   &__circle {
     height: $progress-bar-circle-size;
     width: $progress-bar-circle-size;
     transform: none !important;
+
     .--active & {
       background: var(--success);
       box-shadow: 0 0 1px 5px var(--success-low);

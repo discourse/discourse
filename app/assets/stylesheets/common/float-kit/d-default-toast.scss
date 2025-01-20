@@ -20,17 +20,21 @@
       background-color: var(--success-low);
       color: var(--primary);
     }
+
     &.alert-error {
       background-color: var(--danger-low);
       color: var(--primary);
     }
+
     &.alert-warning {
       background-color: var(--highlight-bg);
       color: var(--primary);
     }
+
     &.alert-info {
       background-color: var(--tertiary-low);
       color: var(--primary);
+
       &.clickable {
         color: var(--tertiary);
         z-index: z("base");

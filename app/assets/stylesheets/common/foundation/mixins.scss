@@ -48,12 +48,13 @@ $breakpoints: (
 // Clearfix
 
 @mixin clearfix() {
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     content: "";
     display: table;
   }
-  &:after {
+
+  &::after {
     clear: both;
   }
 }
@@ -114,6 +115,7 @@ $hpad: 0.65em;
   line-height: normal;
   box-sizing: border-box;
   padding: $vpad $hpad;
+
   .ios-device & {
     font-size: var(--font-size-ios-input);
     padding-top: $vpad * 0.8;
@@ -122,14 +124,12 @@ $hpad: 0.65em;
 }
 
 @mixin sticky {
-  position: -webkit-sticky;
   position: sticky;
 }
 
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 
 @mixin user-select($mode) {
-  -webkit-user-select: $mode;
   user-select: $mode;
 }
 
@@ -151,8 +151,6 @@ $hpad: 0.65em;
 
 @mixin appearance-none() {
   // resets default browser styles
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
 }
 
@@ -241,7 +239,7 @@ $hpad: 0.65em;
   // it returns a CDN or subfolder path (if applicable).
   // SCSS will compile (and return the relative path) if public_image_path is missing.
   @if variable-exists(public_image_path) {
-    @if (str-index("#{$path}", "/plugins") == 1) {
+    @if str-index("#{$path}", "/plugins") == 1 {
       $plugin_asset_path: str-replace($public_image_path, "/images", "");
       @return url("#{$plugin_asset_path}#{$path}");
     } @else {
@@ -279,10 +277,12 @@ $hpad: 0.65em;
 @mixin nav-active() {
   color: var(--d-nav-color--active);
   background: var(--d-nav-bg-color--active);
+
   .d-icon {
     color: var(--d-nav-color--active);
   }
-  &:after {
+
+  &::after {
     content: "";
     position: absolute;
     left: 0;

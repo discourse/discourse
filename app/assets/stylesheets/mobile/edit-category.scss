@@ -9,7 +9,8 @@ div.edit-category {
     border-bottom: 1px solid var(--primary-low);
     margin: 0.5em 0;
     overflow: hidden;
-    &:after {
+
+    &::after {
       background: linear-gradient(
         to right,
         rgba(var(--secondary-rgb), 0),
@@ -17,7 +18,7 @@ div.edit-category {
       );
       content: "";
       position: absolute;
-      right: 0px;
+      right: 0;
       height: 100%;
       width: 30px;
     }
@@ -30,10 +31,12 @@ div.edit-category {
     display: inline-flex;
     width: 100%;
     margin-bottom: 0;
+
     li {
       font-size: var(--font-down-1);
       border-bottom: none;
     }
+
     a.active::after {
       display: none;
     }

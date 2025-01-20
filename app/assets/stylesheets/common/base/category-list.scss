@@ -1,9 +1,11 @@
 .category-list {
   table-layout: fixed;
+
   .category-text-title {
     display: flex;
     align-items: baseline;
   }
+
   .category-name {
     display: inline-block;
     max-width: 100%;
@@ -11,6 +13,7 @@
     vertical-align: text-top;
     line-height: var(--line-height-medium);
   }
+
   &.with-topics {
     .subcategories-with-subcategories {
       .category-description {
@@ -18,6 +21,7 @@
       }
     }
   }
+
   &.hidden {
     display: none;
   }
@@ -32,9 +36,11 @@
     h3 {
       display: inline;
     }
+
     .category-text-title {
       display: inline-flex;
     }
+
     .stat {
       margin-left: 0.5em;
     }
@@ -66,7 +72,7 @@
 
     .parent-box-link {
       // This avoids an issue with nested links by layering links instead
-      &:before {
+      &::before {
         content: "";
         position: absolute;
         z-index: 0;
@@ -100,10 +106,8 @@
     padding: 1em;
     display: flex;
     flex-direction: column;
-
     border-width: 2px;
     border-left-width: 0;
-
     border-style: solid;
     border-color: var(--primary-low);
   }
@@ -117,11 +121,13 @@
 
 .category-boxes {
   grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+
   .category-box {
     > a {
       width: 100%;
       padding: 0;
     }
+
     .category-box-inner {
       padding: 1em;
 
@@ -148,8 +154,10 @@
 
     //  allow clicks to fall through the description text to the category below...
     pointer-events: none;
+
     .overflow {
       max-height: 6em;
+
       div a {
         //  ...but links in description should still be clickable
         pointer-events: auto;
@@ -180,11 +188,14 @@
 
     .category-title-link {
       display: flex;
+
       .category-logo {
         flex: 1 0 auto;
         margin: 0.25em 0.5em 0.5em 0;
+
         --max-height: 40px;
       }
+
       .category-text-title {
         order: 2;
         line-height: var(--line-height-medium);
@@ -192,7 +203,8 @@
         margin-bottom: 0.25em;
         word-wrap: break-word;
       }
-      &:before {
+
+      &::before {
         // This avoids an issue with nested links by layering links instead
         content: "";
         position: absolute;
@@ -222,25 +234,31 @@
   .subcategories {
     display: flex;
     flex-flow: wrap;
+
     .subcategory {
       display: flex;
       align-items: center;
       @include ellipsis;
       margin-bottom: 0.6em;
+
       .badge-category__wrapper {
         overflow: hidden;
       }
+
       .subcategory-image-placeholder {
         display: inline-block;
         margin-right: 0.6em;
         flex: 1 0 auto;
       }
+
       .subcategory-link {
         min-width: 0;
         @include ellipsis;
       }
+
       .category-logo img {
         display: inline-block;
+
         --height: 20px;
         height: var(--height);
         width: calc(var(--height) * var(--aspect-ratio));
@@ -252,6 +270,7 @@
 
 .category-boxes-with-topics {
   grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+
   .category-box {
     padding: 0;
   }
@@ -264,6 +283,7 @@
 
   .category-box-heading {
     margin-bottom: 0.5em;
+
     a[href] {
       width: 100%;
       color: var(--primary);
@@ -272,22 +292,27 @@
 
   .featured-topics {
     margin-bottom: 1em;
+
     // we absolutely position the parent category's link so the whole box is clickable
     // to prevent this covering topic links, we need to raise the z-index
     z-index: 1;
+
     ul {
       color: var(--primary-medium);
       list-style: none;
       padding: 0;
       margin: 0;
     }
+
     li {
       padding: 4px 0;
       display: flex;
       align-items: baseline;
+
       a {
         @include line-clamp(2);
       }
+
       .d-icon {
         margin-right: 0.15em;
         width: 0.76em;
@@ -301,6 +326,7 @@
   h3,
   h4 {
     margin-bottom: 0;
+
     .d-icon {
       color: var(--primary-high);
       height: 0.76em;
@@ -309,11 +335,13 @@
       margin-right: 0.1em;
     }
   }
+
   .category-description {
     margin-top: 0.5em;
     overflow: hidden;
     color: var(--primary-high);
   }
+
   .category-logo.aspect-image {
     margin-top: 0.5em;
   }
@@ -330,9 +358,11 @@
   margin-top: 1em;
   margin-bottom: 0;
   border-top: 1px solid var(--primary-low);
+
   .category-description {
     font-size: var(--font-down-1);
   }
+
   .category-logo.aspect-image {
     --max-height: 75px;
   }
@@ -344,6 +374,7 @@
     color: var(--primary-medium);
     font-size: var(--font-down-1);
   }
+
   > .category-description,
   tr.category-description {
     display: none;
@@ -355,8 +386,8 @@
     .category {
       &.no-category-style {
         border-color: transparent;
-        border-left: 0px;
-        padding-left: 0px;
+        border-left: 0;
+        padding-left: 0;
       }
     }
   }
