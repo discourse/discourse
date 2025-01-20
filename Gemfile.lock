@@ -124,7 +124,7 @@ GEM
     diff-lcs (1.5.1)
     diffy (3.4.3)
     digest (3.1.1)
-    discourse-fonts (0.0.12)
+    discourse-fonts (0.0.13)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
