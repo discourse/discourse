@@ -37,7 +37,7 @@
     "puppeteer-core": "^24.1.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "stylelint": "^16.10.0",
-    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard": "^37.0.0",
     "stylelint-config-standard-scss": "^13.1.0",
     "terser": "^5.37.0",
     "typescript": "^5.7.3"
