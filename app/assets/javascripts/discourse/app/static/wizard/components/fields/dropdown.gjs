@@ -20,7 +20,10 @@ export default class Dropdown extends Component {
       }
     }
 
-    if (this.args.field.id === "body_font") {
+    if (
+      this.args.field.id === "body_font" ||
+      this.args.field.id === "site_font"
+    ) {
       for (let choice of this.args.field.choices) {
         set(choice, "classNames", `body-font-${choice.id.replace(/_/g, "-")}`);
       }
@@ -74,6 +77,7 @@ export default class Dropdown extends Component {
         return ColorPalettes;
       case "body_font":
       case "heading_font":
+      case "site_font":
         return FontSelector;
       case "homepage_style":
         return HomepageStyleSelector;

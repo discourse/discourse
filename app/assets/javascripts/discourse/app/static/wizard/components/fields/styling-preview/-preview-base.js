@@ -57,6 +57,7 @@ export default class PreviewBase extends Component {
       this.step.findField("color_scheme")?.addListener(this.themeChanged);
       this.step.findField("homepage_style")?.addListener(this.themeChanged);
       this.step.findField("body_font")?.addListener(this.themeBodyFontChanged);
+      this.step.findField("site_font")?.addListener(this.themeFontChanged);
       this.step
         .findField("heading_font")
         ?.addListener(this.themeHeadingFontChanged);
@@ -74,6 +75,7 @@ export default class PreviewBase extends Component {
       this.step
         .findField("body_font")
         ?.removeListener(this.themeBodyFontChanged);
+      this.step.findField("site_font")?.removeListener(this.themeFontChanged);
       this.step
         .findField("heading_font")
         ?.removeListener(this.themeHeadingFontChanged);
@@ -96,6 +98,13 @@ export default class PreviewBase extends Component {
   themeHeadingFontChanged() {
     if (!this.loadingFontVariants) {
       this.loadFontVariants(this.wizard.headingFont);
+    }
+  }
+
+  @action
+  themeFontChanged() {
+    if (!this.loadingFontVariants) {
+      this.loadFontVariants(this.wizard.font);
     }
   }
 

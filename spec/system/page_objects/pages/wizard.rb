@@ -100,6 +100,13 @@ class PageObjects::Pages::Wizard::StylingStep < PageObjects::Pages::Wizard::Step
     select_kit.select_row_by_value(palette)
   end
 
+  def select_font_option(font)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-site-font .wizard-container__dropdown")
+    select_kit.expand
+    select_kit.select_row_by_value(font)
+  end
+
   def select_body_font_option(font)
     select_kit =
       PageObjects::Components::SelectKit.new(".dropdown-body-font .wizard-container__dropdown")
@@ -125,6 +132,12 @@ class PageObjects::Pages::Wizard::StylingStep < PageObjects::Pages::Wizard::Step
     select_kit =
       PageObjects::Components::SelectKit.new(".dropdown-color-scheme .wizard-container__dropdown")
     select_kit.has_selected_value?(palette)
+  end
+
+  def has_selected_font?(font)
+    select_kit =
+      PageObjects::Components::SelectKit.new(".dropdown-site-font .wizard-container__dropdown")
+    select_kit.has_selected_value?(font)
   end
 
   def has_selected_body_font?(font)
