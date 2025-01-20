@@ -188,10 +188,6 @@ export class Tag {
 
   static div() {
     return class extends Tag.block("div") {
-      constructor() {
-        super();
-      }
-
       decorate(text) {
         const attr = this.element.attributes;
 
