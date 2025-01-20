@@ -116,7 +116,7 @@ export default class UserStream extends RestModel {
             Site.current().updateCategory(category);
           });
 
-          result.user_actions.forEach((action) => {
+          result.user_actions?.forEach((action) => {
             action.title = emojiUnescape(escapeExpression(action.title));
             copy.pushObject(UserAction.create(action));
           });

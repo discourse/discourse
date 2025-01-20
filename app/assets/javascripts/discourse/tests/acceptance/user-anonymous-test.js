@@ -22,15 +22,15 @@ acceptance("User Anonymous", function () {
       .dom(document.body)
       .hasClass("user-activity-page", "has the body class");
     assert.dom(".user-main .about").exists("has the about section");
-    assert.dom(".user-stream .item").exists("has stream items");
+    assert.dom(".user-stream-item").exists("has stream items");
 
     await visit("/u/eviltrout/activity/topics");
-    assert.dom(".user-stream .item").doesNotExist("has no stream displayed");
+    assert.dom(".user-stream-item").doesNotExist("has no stream displayed");
     assert.dom(".topic-list tr").exists("has a topic list");
 
     await visit("/u/eviltrout/activity/replies");
     assert.dom(".user-main .about").exists("has the about section");
-    assert.dom(".user-stream .item").exists("has stream items");
+    assert.dom(".user-stream-item").exists("has stream items");
 
     assert.dom(".user-stream.filter-5").exists("stream has filter class");
   });

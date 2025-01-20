@@ -1,5 +1,8 @@
 <ul class="user-stream">
-  {{#each this.model as |pending_post|}}
-    <PendingPost @post={{pending_post}} />
-  {{/each}}
+  <PostList
+    @posts={{this.model}}
+    @showUserInfo={{false}}
+    @additionalItemClasses="user-stream-item"
+    class="user-stream"
+  />
 </ul>

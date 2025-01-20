@@ -17,6 +17,7 @@ class PostSerializer < BasicPostSerializer
 
   attributes :post_number,
              :post_type,
+             :posts_count,
              :updated_at,
              :reply_count,
              :reply_to_post_number,
@@ -84,12 +85,14 @@ class PostSerializer < BasicPostSerializer
              :last_wiki_edit,
              :locked,
              :excerpt,
+             :truncated,
              :reviewable_id,
              :reviewable_score_count,
              :reviewable_score_pending_count,
              :user_suspended,
              :user_status,
-             :mentioned_users
+             :mentioned_users,
+             :post_url
 
   def initialize(object, opts)
     super(object, opts)
@@ -97,6 +100,10 @@ class PostSerializer < BasicPostSerializer
     PostSerializer::INSTANCE_VARS.each do |name|
       self.public_send("#{name}=", opts[name]) if opts.include? name
     end
+  end
+
+  def post_url
+    object&.url
   end
 
   def topic_slug
@@ -119,12 +126,24 @@ class PostSerializer < BasicPostSerializer
     @add_excerpt
   end
 
+  def include_truncated?
+    @add_excerpt
+  end
+
+  def truncated
+    true
+  end
+
   def topic_title
     topic&.title
   end
 
   def topic_html_title
     topic&.fancy_title
+  end
+
+  def posts_count
+    topic&.posts_count
   end
 
   def category_id
