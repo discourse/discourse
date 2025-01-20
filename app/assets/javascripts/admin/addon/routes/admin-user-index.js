@@ -1,7 +1,6 @@
 import { service } from "@ember/service";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
-import AdminUser from "admin/models/admin-user";
 
 export default class AdminUserIndexRoute extends DiscourseRoute {
   @service siteSettings;
@@ -14,30 +13,10 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
     return this.currentModel.username;
   }
 
-  async afterModel(model) {
+  async afterModel() {
     if (this.currentUser.admin) {
       const groups = await Group.findAll();
       this._availableGroups = groups.filterBy("automatic", false);
-
-      await model.checkEmail();
-      await this.currentUser.checkEmail();
-
-      if (this.siteSettings.site_contact_username) {
-        this._site_contact = await AdminUser.findByUsername(
-          this.siteSettings.site_contact_username
-        );
-      } else {
-        const staff = await AdminUser.findAll("staff", {
-          show_emails: true,
-          order: "created",
-          asc: false,
-        });
-        this._site_contact = staff.length ? staff[0] : null;
-      }
-
-      if (this._site_contact) {
-        await this._site_contact.checkEmail();
-      }
     }
   }
 
@@ -48,7 +27,6 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
       customGroupIdsBuffer: model.customGroups.mapBy("id"),
       ssoExternalEmail: null,
       ssoLastPayload: null,
-      siteContact: this._site_contact,
       model,
     });
   }

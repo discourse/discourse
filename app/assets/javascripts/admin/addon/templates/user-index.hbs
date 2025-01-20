@@ -27,27 +27,26 @@
 
           <:content>
             <DropdownMenu as |dropdown|>
-
               <dropdown.item>
                 <DButton
-                  @translatedLabel={{this.sendArchiveToUserLabel}}
+                  @label="admin.user.download_archive.send_to_user"
                   class="btn-transparent"
                   @action={{action "sendArchiveToUser"}}
                 />
               </dropdown.item>
               <dropdown.item>
                 <DButton
-                  @translatedLabel={{this.sendArchiveToAdminLabel}}
+                  @label="admin.user.download_archive.send_to_admin"
                   class="btn-transparent"
                   @action={{action "sendArchiveToAdmin"}}
                 />
               </dropdown.item>
               <dropdown.item>
                 <DButton
-                  @translatedLabel={{this.sendArchiveToSiteContactLabel}}
+                  @label="admin.user.download_archive.send_to_site_contact"
                   class="btn-transparent"
                   @action={{action "sendArchiveToSiteContact"}}
-                  @disabled={{this.siteContactIsUncontactable}}
+                  @disabled={{not this.siteContactEmailAvailable}}
                 />
               </dropdown.item>
             </DropdownMenu>

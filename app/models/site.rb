@@ -262,4 +262,8 @@ class Site
   def self.full_name_visible_in_signup
     SiteSetting.enable_names && SiteSetting.full_name_requirement != "hidden_at_signup"
   end
+
+  def self.site_contact_email_available
+    ["", "no_email"].exclude?(Discourse.site_contact_user.email)
+  end
 end

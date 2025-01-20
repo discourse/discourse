@@ -867,6 +867,9 @@
     },
     "full_name_visible_in_signup": {
       "type": "boolean"
+    },
+    "site_contact_email_available": {
+      "type": "boolean"
     }
   },
   "required": [

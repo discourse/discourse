@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { and, notEmpty } from "@ember/object/computed";
+import { alias, and, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
@@ -35,6 +35,8 @@ export default class AdminUserIndexController extends Controller {
   @setting("enable_badges") showBadges;
   @setting("moderators_view_emails") canModeratorsViewEmails;
   @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
+
+  @alias("site.site_contact_email_available") siteContactEmailAvailable;
 
   @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
   primaryGroupDirty;
@@ -164,30 +166,6 @@ export default class AdminUserIndexController extends Controller {
         }
       })
       .catch(() => this.dialog.alert(i18n("generic_error")));
-  }
-
-  @discourseComputed("model.email")
-  sendArchiveToUserLabel(email = "") {
-    return i18n("admin.user.download_archive.send_to_user", { email });
-  }
-
-  @discourseComputed("currentUser.email")
-  sendArchiveToAdminLabel(email = "") {
-    return i18n("admin.user.download_archive.send_to_admin", { email });
-  }
-
-  @discourseComputed("siteContact.email")
-  sendArchiveToSiteContactLabel(email = "") {
-    if (this.siteContactIsUncontactable) {
-      return i18n("admin.user.download_archive.send_to_site_contact_no_email");
-    }
-
-    return i18n("admin.user.download_archive.send_to_site_contact", { email });
-  }
-
-  @discourseComputed("siteContact.email")
-  siteContactIsUncontactable(email = "") {
-    return ["", "no_email"].includes(email);
   }
 
   @action

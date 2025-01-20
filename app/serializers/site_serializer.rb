@@ -50,6 +50,7 @@ class SiteSerializer < ApplicationSerializer
     :valid_flag_applies_to_types,
     :full_name_required_for_signup,
     :full_name_visible_in_signup,
+    :site_contact_email_available,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -389,6 +390,10 @@ class SiteSerializer < ApplicationSerializer
 
   def full_name_visible_in_signup
     Site.full_name_visible_in_signup
+  end
+
+  def site_contact_email_available
+    Site.site_contact_email_available if scope.is_admin?
   end
 
   private
