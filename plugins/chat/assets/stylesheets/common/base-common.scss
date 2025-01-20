@@ -161,8 +161,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 
   .is-online & {
     padding: 2px;
-    box-shadow: inset 0 0 0 1px var(--success),
-      inset 0 0 0 2px var(--secondary);
+    box-shadow: inset 0 0 0 1px var(--success), inset 0 0 0 2px var(--secondary);
   }
 }
 

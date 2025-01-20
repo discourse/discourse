@@ -6,7 +6,14 @@
   .about-page & {
     max-width: unset;
 
-    section:not(.admins, .moderators, .category-moderators, .about__admins, .about__moderators, .about__header) {
+    section:not(
+        .admins,
+        .moderators,
+        .category-moderators,
+        .about__admins,
+        .about__moderators,
+        .about__header
+      ) {
       max-width: 700px;
     }
 
