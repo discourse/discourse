@@ -245,7 +245,7 @@ GEM
       mini_racer (>= 0.6.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_racer (0.17.0.pre10)
+    mini_racer (0.17.0.pre11)
       libv8-node (~> 22.7.0.4)
     mini_scheduler (0.18.0)
       sidekiq (>= 6.5, < 8.0)
@@ -665,7 +665,7 @@ DEPENDENCIES
   message_bus
   messageformat-wrapper
   mini_mime
-  mini_racer (= 0.17.pre10)
+  mini_racer (= 0.17.pre11)
   mini_scheduler
   mini_sql
   mini_suffix
