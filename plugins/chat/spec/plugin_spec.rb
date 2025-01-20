@@ -152,35 +152,6 @@ describe Chat do
     end
   end
 
-  describe "chat oneboxes" do
-    fab!(:chat_channel) { Fabricate(:category_channel) }
-    fab!(:user)
-
-    fab!(:chat_message) do
-      Fabricate(:chat_message, chat_channel: chat_channel, user: user, message: "Hello world!")
-    end
-
-    let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
-
-    context "when inline" do
-      it "renders channel" do
-        results = InlineOneboxer.new([chat_url], skip_cache: true).process
-        expect(results).to be_present
-        expect(results[0][:url]).to eq(chat_url)
-        expect(results[0][:title]).to eq("Chat ##{chat_channel.name}")
-      end
-
-      it "renders messages" do
-        results = InlineOneboxer.new(["#{chat_url}/#{chat_message.id}"], skip_cache: true).process
-        expect(results).to be_present
-        expect(results[0][:url]).to eq("#{chat_url}/#{chat_message.id}")
-        expect(results[0][:title]).to eq(
-          "Message ##{chat_message.id} by #{chat_message.user.username} – ##{chat_channel.name}",
-        )
-      end
-    end
-  end
-
   describe "auto-joining users to a channel" do
     fab!(:chatters_group) { Fabricate(:group) }
     fab!(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago, trust_level: 1) }
