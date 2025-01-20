@@ -23,19 +23,6 @@ html.composer-open {
     max-width: 740px;
   }
 
-  .with-form-template {
-    .toggle-preview,
-    #mobile-file-upload,
-    .submit-panel .mobile-preview {
-      display: none;
-    }
-
-    .d-editor-preview-wrapper {
-      display: none;
-      flex: 0;
-    }
-  }
-
   @media screen and (width <= 1200px) {
     min-width: 0;
   }
@@ -48,6 +35,22 @@ html.composer-open {
   .reply-area {
     display: flex;
     flex-direction: column;
+  }
+
+  .with-form-template {
+    overflow: auto;
+    flex: 1;
+
+    .toggle-preview,
+    #mobile-file-upload,
+    .submit-panel .mobile-preview {
+      display: none;
+    }
+
+    .d-editor-preview-wrapper {
+      display: none;
+      flex: 0;
+    }
   }
 
   .saving-text,
