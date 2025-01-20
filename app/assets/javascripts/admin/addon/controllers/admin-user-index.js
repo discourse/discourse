@@ -166,6 +166,21 @@ export default class AdminUserIndexController extends Controller {
       .catch(() => this.dialog.alert(i18n("generic_error")));
   }
 
+  @discourseComputed("model.email")
+  sendArchiveToUserLabel(email = "") {
+    return i18n("admin.user.download_archive.send_to_user", { email });
+  }
+
+  @discourseComputed("currentUser.email")
+  sendArchiveToAdminLabel(email = "") {
+    return i18n("admin.user.download_archive.send_to_admin", { email });
+  }
+
+  @discourseComputed("siteContact.email")
+  sendArchiveToSiteContactLabel(email = "") {
+    return i18n("admin.user.download_archive.send_to_site_contact", { email });
+  }
+
   @action
   sendArchiveToUser() {
     this.sendArchive(

@@ -30,21 +30,21 @@
 
               <dropdown.item>
                 <DButton
-                  @label="admin.user.download_archive.send_to_user"
+                  @translatedLabel={{this.sendArchiveToUserLabel}}
                   class="btn-transparent"
                   @action={{action "sendArchiveToUser"}}
                 />
               </dropdown.item>
               <dropdown.item>
                 <DButton
-                  @label="admin.user.download_archive.send_to_admin"
+                  @translatedLabel={{this.sendArchiveToAdminLabel}}
                   class="btn-transparent"
                   @action={{action "sendArchiveToAdmin"}}
                 />
               </dropdown.item>
               <dropdown.item>
                 <DButton
-                  @label="admin.user.download_archive.send_to_site_contact"
+                  @translatedLabel={{this.sendArchiveToSiteContactLabel}}
                   class="btn-transparent"
                   @action={{action "sendArchiveToSiteContact"}}
                 />
