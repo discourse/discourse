@@ -404,9 +404,13 @@ export default class PostMenu extends Component {
 
   @cached
   get visibleButtons() {
-    const nonCollapsed = this.availableButtons.filter((button) => {
-      return !this.availableCollapsedButtons.includes(button);
-    });
+    let nonCollapsed = this.availableButtons;
+
+    if (this.renderableCollapsedButtons.length > 1) {
+      nonCollapsed = nonCollapsed.filter((button) => {
+        return !this.renderableCollapsedButtons.includes(button);
+      });
+    }
 
     return DAG.from(
       nonCollapsed.map((button) => [button.key, button, button.position]),
