@@ -6932,7 +6932,7 @@ en:
           send_to_user: "Send to user (%{email})"
           send_to_admin: "Send to admin (%{email})"
           send_to_site_contact: "Send to site contact (%{email})"
-          send_to_site_contact_no_email: "Send to site contact (no contact email defined)"
+          send_to_site_contact_no_email: "Send to site contact (no site contact defined)"
           confirm_user: "Do you really want to send this user an archive of their account activity and preferences?"
           confirm_admin: "Do you really want to send yourself an archive of this user's account activity and preferences?"
           confirm_site_contact: "Do you really want to send the site contact an archive of this user's account activity and preferences?"
