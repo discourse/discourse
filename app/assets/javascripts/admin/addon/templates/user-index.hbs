@@ -47,6 +47,7 @@
                   @translatedLabel={{this.sendArchiveToSiteContactLabel}}
                   class="btn-transparent"
                   @action={{action "sendArchiveToSiteContact"}}
+                  @disabled={{this.siteContactIsUncontactable}}
                 />
               </dropdown.item>
             </DropdownMenu>

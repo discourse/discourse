@@ -181,6 +181,11 @@ export default class AdminUserIndexController extends Controller {
     return i18n("admin.user.download_archive.send_to_site_contact", { email });
   }
 
+  @discourseComputed("siteContact.email")
+  siteContactIsUncontactable(email = "") {
+    return ["", "no_email"].includes(email);
+  }
+
   @action
   sendArchiveToUser() {
     this.sendArchive(
