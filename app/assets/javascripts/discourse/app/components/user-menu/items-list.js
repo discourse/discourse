@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DiscourseURL from "discourse/lib/url";
 
 export default class UserMenuItemsList extends Component {
   @service session;
@@ -86,11 +85,5 @@ export default class UserMenuItemsList extends Component {
     throw new Error(
       `dismissButtonClick must be implemented in ${this.constructor.name}.`
     );
-  }
-
-  @action
-  showAll() {
-    DiscourseURL.routeTo(this.showAllHref);
-    this.args.closeUserMenu();
   }
 }
