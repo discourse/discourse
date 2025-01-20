@@ -58,6 +58,8 @@ module Migrations::CLI
       if validator.has_errors?
         validator.errors.each { |error| print_error(error) }
         exit(1)
+      else
+        puts "Configuration file is valid".green
       end
     end
 

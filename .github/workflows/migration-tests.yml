@@ -69,7 +69,6 @@ jobs:
           bundle config --local without development
           bundle config --local with migrations
           bundle install --jobs $(($(nproc) - 1))
-          bundle clean
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
