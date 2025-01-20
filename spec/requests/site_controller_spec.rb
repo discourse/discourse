@@ -27,7 +27,7 @@ RSpec.describe SiteController do
       expect(json["logo_small_url"]).to eq(expected_url)
       expect(json["mobile_logo_url"]).to eq(expected_url)
       expect(json["header_primary_color"]).to eq("333")
-      expect(json["header_background_color"]).to eq("ffffff")
+      expect(json["header_background_color"]).to eq("fff")
       expect(json["login_required"]).to eq(true)
       expect(json["locale"]).to eq("en")
       expect(json["include_in_discourse_discover"]).to eq(true)
