@@ -36,12 +36,17 @@
     "prettier": "^2.8.8",
     "puppeteer-core": "^24.1.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
+    "stylelint": "^16.10.0",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard-scss": "^13.1.0",
     "terser": "^5.37.0",
     "typescript": "^5.7.3"
   },
   "scripts": {
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
     "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
+    "lint:css": "pnpm stylelint 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss')",
+    "lint:css:fix": "pnpm stylelint --fix 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss')",
     "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
     "lint:js": "eslint ./app/assets/javascripts $(script/list_bundled_plugins) --cache --no-error-on-unmatched-pattern",
     "lint:js:fix": "eslint --fix ./app/assets/javascripts $(script/list_bundled_plugins) --no-error-on-unmatched-pattern",
