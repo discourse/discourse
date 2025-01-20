@@ -62,22 +62,32 @@ export default class LatestTopicListItem extends Component {
 
       <div class="main-link">
         <div class="top-row">
-          <TopicStatus @topic={{@topic}} @context="topic-list" />
+          <PluginOutlet
+            @name="latest-topic-list-item-main-link-top-row"
+            @outletArgs={{hash topic=@topic}}
+          >
+            <TopicStatus @topic={{@topic}} @context="topic-list" />
 
-          {{topicLink @topic}}
-          {{~#if @topic.featured_link}}
-            &nbsp;{{topicFeaturedLink @topic}}
-          {{/if~}}
-          <TopicPostBadges
-            @unreadPosts={{@topic.unread_posts}}
-            @unseen={{@topic.unseen}}
-            @url={{@topic.lastUnreadUrl}}
-          />
+            {{topicLink @topic}}
+            {{~#if @topic.featured_link}}
+              &nbsp;{{topicFeaturedLink @topic}}
+            {{/if~}}
+            <TopicPostBadges
+              @unreadPosts={{@topic.unread_posts}}
+              @unseen={{@topic.unseen}}
+              @url={{@topic.lastUnreadUrl}}
+            />
+          </PluginOutlet>
         </div>
 
         <div class="bottom-row">
-          {{categoryLink @topic.category~}}
-          {{~discourseTags @topic mode="list"}}
+          <PluginOutlet
+            @name="latest-topic-list-item-main-link-bottom-row"
+            @outletArgs={{hash topic=@topic}}
+          >
+            {{categoryLink @topic.category~}}
+            {{~discourseTags @topic mode="list"}}
+          </PluginOutlet>
           <PluginOutlet
             @name="below-latest-topic-list-item-bottom-row"
             @connectorTagName="span"
@@ -92,15 +102,18 @@ export default class LatestTopicListItem extends Component {
           @connectorTagName="div"
           @outletArgs={{hash topic=@topic}}
         />
-
-        <ItemRepliesCell @topic={{@topic}} @tagName="div" />
-
-        <div class="topic-last-activity">
-          <a
-            href={{@topic.lastPostUrl}}
-            title={{@topic.bumpedAtTitle}}
-          >{{formatDate @topic.bumpedAt format="tiny" noTitle="true"}}</a>
-        </div>
+        <PluginOutlet
+          @name="latest-topic-list-item-topic-stats"
+          @outletArgs={{hash topic=@topic}}
+        >
+          <ItemRepliesCell @topic={{@topic}} @tagName="div" />
+          <div class="topic-last-activity">
+            <a
+              href={{@topic.lastPostUrl}}
+              title={{@topic.bumpedAtTitle}}
+            >{{formatDate @topic.bumpedAt format="tiny" noTitle="true"}}</a>
+          </div>
+        </PluginOutlet>
       </div>
     </div>
   </template>
