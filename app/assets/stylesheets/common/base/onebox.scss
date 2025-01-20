@@ -435,12 +435,12 @@ pre.onebox code {
       "icon branches"
       "icon info"
       "body body";
-    grid-template-columns: 2.5em 1fr;
+    grid-template-columns: 2.5em minmax(0, 1fr);
     gap: 0.25em 0.75em;
 
     @include breakpoint(mobile-extra-large) {
       gap: 0.25em 0.5em;
-      grid-template-columns: 1.5em 1fr;
+      grid-template-columns: 1.5em minmax(0, 1fr);
       grid-template-areas:
         "icon title"
         "branches branches"
