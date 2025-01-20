@@ -658,7 +658,7 @@ RSpec.describe Stylesheet::Manager do
         ).compile(force: true)
 
       expect(stylesheet).not_to include("--primary: #CC0000;")
-      expect(stylesheet).to include("--primary: #222222;") # from base scheme
+      expect(stylesheet).to include("--primary: #222;") # from base scheme
     end
 
     it "uses the correct scheme when a valid scheme id is used" do
