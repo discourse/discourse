@@ -13,6 +13,9 @@ module ApplicationHelper
     @extra_body_classes ||= Set.new
   end
 
+  # This generated equivalent of Ember's config/environment.js is used
+  # in development, production, and theme tests. (i.e. everywhere except
+  # regular tests)
   def discourse_config_environment(testing: false)
     # TODO: Can this come from Ember CLI somehow?
     config = {
@@ -20,7 +23,6 @@ module ApplicationHelper
       environment: Rails.env,
       rootURL: Discourse.base_path,
       locationType: "history",
-      historySupportMiddleware: false,
       EmberENV: {
         FEATURES: {
         },
@@ -28,22 +30,25 @@ module ApplicationHelper
           Date: false,
           String: false,
         },
-        _APPLICATION_TEMPLATE_WRAPPER: false,
-        _DEFAULT_ASYNC_OBSERVERS: true,
-        _JQUERY_INTEGRATION: true,
       },
       APP: {
         name: "discourse",
         version: "#{Discourse::VERSION::STRING} #{Discourse.git_version}",
-        exportApplicationGlobal: true,
+        # LOG_RESOLVER: true,
+        # LOG_ACTIVE_GENERATION: true,
+        # LOG_TRANSITIONS: true,
+        # LOG_TRANSITIONS_INTERNAL: true,
+        # LOG_VIEW_LOOKUPS: true,
       },
     }
 
     if testing
       config[:environment] = "test"
       config[:locationType] = "none"
-      config[:APP][:autoboot] = false
+      config[:APP][:LOG_ACTIVE_GENERATION] = false
+      config[:APP][:LOG_VIEW_LOOKUPS] = false
       config[:APP][:rootElement] = "#ember-testing"
+      config[:APP][:autoboot] = false
     end
 
     config.to_json

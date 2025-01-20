@@ -15,7 +15,9 @@ import { i18n } from "discourse-i18n";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { REACTIONS } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
+import ChatMessageReactionModel, {
+  REACTIONS,
+} from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 const removedSecondaryActions = new Set();
 
@@ -41,9 +43,11 @@ export default class ChatemojiReactions {
   @service router;
   @service modal;
   @service capabilities;
+  @service siteSettings;
   @service menu;
   @service toasts;
   @service interactedChatMessage;
+  @service emojiStore;
 
   @tracked message = null;
   @tracked context = null;
@@ -53,6 +57,22 @@ export default class ChatemojiReactions {
 
     this.message = message;
     this.context = context;
+  }
+
+  get emojiReactions() {
+    const defaultReactions = this.siteSettings.default_emoji_reactions
+      .split("|")
+      .filter(Boolean);
+
+    return this.emojiStore
+      .favoritesForContext(`channel_${this.message.channel.id}`)
+      .concat(defaultReactions)
+      .slice(0, 3)
+      .map(
+        (emoji) =>
+          this.message.reactions.find((reaction) => reaction.emoji === emoji) ||
+          ChatMessageReactionModel.create({ emoji })
+      );
   }
 
   get pane() {

@@ -184,6 +184,15 @@ module("Unit | Utility | url", function (hooks) {
       prefixProtocol("www.discourse.org/mailto:foo"),
       "https://www.discourse.org/mailto:foo"
     );
+    assert.strictEqual(
+      prefixProtocol("http://www.discourse.org"),
+      "http://www.discourse.org"
+    );
+    assert.strictEqual(
+      prefixProtocol("ftp://www.discourse.org"),
+      "ftp://www.discourse.org"
+    );
+    assert.strictEqual(prefixProtocol("/my/preferences"), "/my/preferences");
   });
 
   test("getCategoryAndTagUrl", function (assert) {

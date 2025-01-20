@@ -4,6 +4,7 @@
       display: inline-flex;
       min-width: auto;
       border: none;
+      white-space: nowrap;
 
       &.is-expanded {
         .select-kit-collection,
