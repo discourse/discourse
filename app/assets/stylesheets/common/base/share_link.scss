@@ -1,5 +1,4 @@
 // styles that apply to the "share" modal & popup when sharing a link to a post or topic
-
 .link-share-container,
 .notify-user-input {
   display: flex;
@@ -47,6 +46,7 @@
     color: var(--twitter);
   }
 }
+
 .share-facebook {
   .d-icon {
     color: var(--facebook);

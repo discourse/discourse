@@ -3,24 +3,21 @@
   @include breakpoint(large) {
     --d-sidebar-width: #{$d-sidebar-narrow-width};
   }
+
   --d-sidebar-row-horizontal-padding: 1rem;
+
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
-
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
-
   --d-sidebar-background: var(--secondary);
   --d-sidebar-admin-background: var(--primary-very-low);
 
   // must be rgba for gradient
   --d-sidebar-footer-fade: rgba(var(--secondary-rgb), 1);
-
   --d-sidebar-header-color: var(--primary-medium);
   --d-sidebar-header-icon-color: var(--primary-medium);
-
   --d-sidebar-border-color: var(--primary-low);
-
   --d-sidebar-link-color: var(--primary-high);
   --d-sidebar-link-icon-color: var(--primary-500);
   --d-sidebar-link-badge-color: var(--primary-700); // example: new count
@@ -38,10 +35,10 @@
   --d-sidebar-highlight-prefix-background: var(--primary-300);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
   --d-sidebar-highlight-suffix-color: var(--tertiary-med-or-tertiary);
-
   --d-sidebar-highlight-hover-background: var(
     --primary-medium
   ); // example: hovering a button within a highlighted section
+
   --d-sidebar-highlight-hover-icon: var(
     --primary-very-low
   ); // example: hovering a button within a highlighted section
@@ -74,11 +71,9 @@
   @supports (height: 1dvh) {
     --1dvh: 1dvh;
   }
-
   height: calc(
     var(--composer-vh, var(--1dvh)) * 100 - var(--main-outlet-offset, 0px)
   );
-
   align-self: start;
   overflow-y: auto;
 
@@ -86,11 +81,11 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    height: 100%;
     width: 100%;
     padding: 0;
     border-right: 1px solid var(--primary-low);
     overflow-x: hidden;
+
     // allows sidebar to scroll to the bottom when the composer is open
     height: calc(100% - var(--composer-height, 0px));
   }
@@ -112,7 +107,6 @@
     --scrollbarBg: transparent;
     --scrollbarThumbBg: var(--primary-low);
     --scrollbarWidth: 0.5em;
-
     scrollbar-color: transparent var(--scrollbarBg);
     transition: scrollbar-color 0.25s ease-in-out;
     transition-delay: 0.5s;
@@ -136,7 +130,6 @@
       &::-webkit-scrollbar-thumb {
         background-color: var(--scrollbarThumbBg);
       }
-
       transition-delay: 0s;
     }
 
@@ -144,6 +137,7 @@
       color: var(--d-sidebar-link-color);
       display: flex;
       align-items: center;
+
       svg {
         margin-right: var(--d-sidebar-section-link-prefix-margin-right);
         height: 0.75em;
@@ -168,23 +162,29 @@
     cursor: move;
     -webkit-user-drag: element;
   }
+
   .dragging {
     opacity: 0.4;
   }
+
   form {
     margin-bottom: 0;
   }
+
   .input-group input {
     width: 100%;
     margin-bottom: 0;
   }
+
   input.warning {
     border: 1px solid var(--danger);
   }
+
   .icon.warning,
   .value.warning {
     position: absolute;
   }
+
   .sidebar-section-form__input-wrapper {
     margin-bottom: 1em;
 
@@ -198,7 +198,6 @@
     grid-template-columns: 2em 4.5em repeat(2, 1fr) 2em;
     padding: 0.55em 0 0.7em;
     -webkit-user-drag: none;
-    user-drag: none;
     cursor: default;
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
@@ -215,9 +214,11 @@
     &.drag-above {
       border-top: 2px solid var(--tertiary);
     }
+
     &.drag-below {
       border-bottom: 2px solid var(--tertiary);
     }
+
     .link-icon {
       grid-column: 2;
     }
@@ -237,19 +238,23 @@
   .btn-flat.add-link {
     margin-top: 0.5em;
     margin-left: -0.5em;
+
     &:active,
     &:focus {
       background: none;
     }
+
     svg {
       color: var(--tertiary);
       width: 0.75em;
       height: 0.75em;
     }
+
     &:hover svg {
       color: var(--tertiary-hover);
     }
   }
+
   .d-modal__footer {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -257,36 +262,45 @@
     @include breakpoint(mobile-extra-large) {
       grid-template-columns: auto 1fr;
       justify-items: left;
+
       .mark-public-wrapper {
         grid-row: 1;
         grid-column: 1 / span 2;
       }
+
       .checkbox-label {
         padding: 0 0 0.5em 0;
       }
     }
+
     .reset-link,
     .delete {
       margin: 0;
       justify-self: right;
     }
+
     .mark-public-wrapper {
       &.-disabled label {
         cursor: not-allowed;
       }
+
       .checkbox-label {
         margin: 0;
       }
     }
   }
+
   .select-kit.multi-select .multi-select-header .formatted-selection {
     display: none;
   }
+
   .select-kit.is-expanded .select-kit-body {
     min-width: 220px;
   }
+
   .reset-link {
     margin-right: 0;
+
     .discourse-no-touch & {
       &:hover {
         .d-icon {
@@ -294,15 +308,18 @@
         }
       }
     }
+
     .d-icon {
       font-size: var(--font-down-1);
       color: var(--tertiary);
     }
   }
+
   .delete-link {
     .d-icon {
       color: var(--primary-medium);
     }
+
     .discourse-no-touch & {
       &:hover {
         .d-icon {
@@ -315,6 +332,7 @@
 
 .sidebar__panel-switch-button {
   margin: 1em 1.3em 0 1.3em;
+
   &:last-of-type {
     margin-bottom: 1em;
   }
@@ -356,8 +374,8 @@
     border: 0;
     background: none;
     margin-bottom: 0;
-    width: 50px;
     height: 2em;
+
     &:focus-within {
       outline: 0;
     }
@@ -375,10 +393,12 @@
 .sidebar-no-results {
   margin: 0.5em var(--d-sidebar-row-horizontal-padding) 0
     var(--d-sidebar-row-horizontal-padding);
+
   &__title {
     font-weight: bold;
   }
 }
+
 .sidebar-no-results {
   display: block;
 }
@@ -396,6 +416,7 @@
 .sidebar-toggle-all-sections.btn-transparent {
   padding-right: 0;
   color: var(--d-sidebar-link-color);
+
   svg {
     width: 0.75em;
     height: 0.85em;

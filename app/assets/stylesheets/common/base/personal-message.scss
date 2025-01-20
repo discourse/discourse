@@ -4,6 +4,7 @@
 
   .topic-post {
     margin-bottom: 0.5em;
+
     &:last-child {
       margin-bottom: 1.5em;
     }
@@ -14,6 +15,7 @@
       var(--pm-border-radius);
     border: 1px solid var(--primary-low);
     padding-left: var(--pm-padding);
+
     .desktop-view & {
       margin-left: calc(var(--pm-padding) * -1);
     }
@@ -52,6 +54,7 @@
       var(--topic-body-width) + var(--topic-body-width-padding) * 2 +
         var(--topic-avatar-width) - 1.65em
     );
+
     &.old {
       border: 1px solid var(--primary-low);
     }
@@ -97,6 +100,7 @@
 
     .participants {
       margin-bottom: 1.5em;
+
       .user {
         border: none;
         background: var(--primary-low);
@@ -113,21 +117,26 @@
 
   .embedded-posts {
     border: none;
+
     .topic-body {
       overflow: visible;
       width: 100%;
     }
+
     .topic-avatar {
       padding-left: 0;
     }
+
     .collapse-down,
     .collapse-up {
       display: none;
     }
+
     &.bottom {
       margin-bottom: 0;
       margin-right: calc(var(--topic-body-width-padding) * 2);
     }
+
     &.top {
       .cooked {
         border: 1px solid var(--primary-low);
@@ -135,6 +144,7 @@
         margin-left: calc(var(--pm-padding) * -1);
         padding-left: 2.15em;
       }
+
       .row {
         .topic-body,
         .topic-avatar {
@@ -151,12 +161,12 @@
   }
 
   // special post type colors
-
   .current-user-post {
     .regular.contents {
       background: var(--tertiary-very-low);
       border-color: var(--tertiary-very-low);
     }
+
     .embedded-posts {
       .topic-body .cooked {
         background: transparent;
@@ -174,6 +184,7 @@
     .regular.contents {
       background: var(--highlight-low);
       border-color: var(--highlight-low);
+
       .cooked {
         background: transparent;
       }
@@ -195,10 +206,12 @@
     .topic-body .regular.contents {
       background: var(--danger-low);
       border-color: transparent;
+
       .cooked {
         background: transparent;
       }
     }
+
     &.whisper {
       .topic-body .regular.contents {
         border-color: var(--danger-low-mid);

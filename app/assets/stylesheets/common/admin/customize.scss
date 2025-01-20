@@ -1,9 +1,9 @@
 // Customize area
-
 .email-template {
   input {
     width: 100%;
   }
+
   label {
     font-weight: bold;
   }
@@ -12,6 +12,7 @@
 .create-theme-modal {
   div.input {
     margin-bottom: 12px;
+
     .label {
       width: 20%;
       display: inline-block;
@@ -29,6 +30,7 @@
     width: 100%;
     height: 100%;
     min-height: 300px;
+
     .ace_editor {
       position: absolute;
       left: 0;
@@ -49,16 +51,19 @@
   .admin-container {
     padding: 0;
   }
+
   .error-message,
   .raw-error {
     margin-top: 5px;
     margin-bottom: 5px;
   }
+
   .error-message {
     .fa {
       color: var(--danger);
     }
   }
+
   .raw-error {
     background-color: var(--primary-very-low);
     padding: 5px;
@@ -75,13 +80,16 @@
   /* TODO: Remove when admin header has been added to all /customize pages */
   h1 {
     margin-bottom: 10px;
+
     input {
       margin-bottom: 0;
       font-size: var(--font-down-2);
+
       .ios-device & {
         font-size: var(--font-down-2);
       }
     }
+
     &.d-page-header__title {
       margin: 0;
     }
@@ -104,15 +112,18 @@
     padding-left: 10px;
     padding-right: 10px;
   }
+
   .admin-footer {
     margin-top: 20px;
   }
+
   .color-schemes li {
     .d-icon {
       margin-right: 0.25em;
       color: var(--primary-medium);
     }
   }
+
   .show-current-style {
     display: inline-block;
     vertical-align: top;
@@ -128,12 +139,15 @@
         min-width: 0;
         overflow-wrap: anywhere;
       }
+
       input {
         margin: 0;
       }
+
       .btn {
         margin-left: 0.5em;
       }
+
       a {
         font-size: var(--font-down-2);
       }
@@ -165,6 +179,7 @@
     a.license-url {
       display: inline-block;
       margin-right: 10px;
+
       .d-icon {
         margin-left: 5px;
       }
@@ -175,6 +190,7 @@
       font-weight: bold;
       margin-bottom: 7px;
     }
+
     .control-unit {
       margin-top: 0.5em;
       margin-bottom: 2em;
@@ -184,11 +200,11 @@
         justify-content: space-between;
         width: 79.7%;
 
-        @media screen and (max-width: 700px) {
+        @media screen and (width <= 700px) {
           width: 100%;
         }
 
-        @media screen and (min-width: 700px) and (max-width: 768px) {
+        @media screen and (width >= 700px) and (width <= 768px) {
           width: 73%;
         }
 
@@ -198,15 +214,19 @@
         }
       }
     }
+
     .control {
       margin-bottom: 10px;
     }
+
     .description {
       margin-bottom: 12px;
     }
+
     .theme-controls {
       display: flex;
       flex-wrap: wrap;
+
       .btn {
         margin: 0 0.5em 0.5em 0;
       }
@@ -215,25 +235,32 @@
     &.color-scheme .admin-controls {
       display: flex;
       padding: 1em;
+
       label {
         margin-bottom: 0;
+
         input[type="checkbox"] {
           margin-top: 0;
         }
       }
+
       .pull-left {
         width: 70%;
       }
+
       .pull-right {
         width: 30%;
       }
     }
   }
+
   .add-component-button {
     vertical-align: middle;
   }
+
   .themes-list {
     display: inline-block;
+
     .create-actions {
       margin-top: 0.5em;
     }
@@ -243,6 +270,7 @@
     width: 100%;
     display: flex;
     border: 1px solid var(--primary-low);
+
     .tab {
       border: none;
       padding: 1em;
@@ -250,11 +278,13 @@
       box-sizing: border-box;
       text-align: center;
       background: var(--d-nav-bg-color);
+
       &.themes-tab {
         border-top-right-radius: 0;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
       }
+
       &.components-tab {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
@@ -266,10 +296,12 @@
         &:hover {
           color: var(--d-nav-color--hover);
           background: var(--d-nav-bg-color--hover);
+
           &.active {
             color: var(--d-nav-color--active);
             background: var(--d-nav-bg-color--active);
           }
+
           .d-icon {
             color: inherit;
           }
@@ -278,7 +310,7 @@
 
       &.active {
         position: relative;
-        @include nav-active();
+        @include nav-active;
       }
     }
 
@@ -286,6 +318,7 @@
       @include ellipsis;
     }
   }
+
   .themes-list-search {
     display: flex;
     align-items: center;
@@ -299,6 +332,7 @@
       position: absolute;
       padding-left: 0.5em;
     }
+
     &__input {
       width: 100%;
       height: 100%;
@@ -328,17 +362,19 @@
       white-space: nowrap;
       margin-right: 1em;
     }
+
     &__input {
       margin-right: 0.5em;
+
       summary {
         width: auto;
       }
     }
   }
+
   .themes-list-filter,
   .themes-list-search {
     color: var(--primary);
-    border-bottom: 1px solid var(--primary-low);
     display: flex;
     border-right: 1px solid var(--primary-low);
     border-bottom: 1px solid var(--primary-low);
@@ -350,10 +386,10 @@
     max-height: 60vh;
     border-bottom-right-radius: var(--d-border-radius);
     border-bottom-left-radius: var(--d-border-radius);
-    @media screen and (max-height: 1000px) {
+    @media screen and (height <= 1000px) {
       max-height: 50vh;
     }
-    @media screen and (max-height: 800px) {
+    @media screen and (height <= 800px) {
       max-height: 40vh;
     }
     border-right: 1px solid var(--primary-low);
@@ -364,6 +400,7 @@
     &__item:last-child {
       border-bottom: none;
     }
+
     &__item {
       color: var(--primary);
       border-bottom: 1px solid var(--primary-low);
@@ -377,6 +414,7 @@
       &.inactive-theme {
         color: var(--primary-high);
         background: var(--primary-very-low);
+
         &:not(.selected):hover {
           color: var(--primary);
         }
@@ -392,14 +430,17 @@
           padding-left: 0.33em;
           padding-top: 1em;
         }
+
         .btn.select-inactive-mode {
           padding-left: 0;
           padding-top: 0;
           padding-bottom: 0;
         }
       }
-      &:not(.inactive-indicator):not(.selected):hover {
+
+      &:not(.inactive-indicator, .selected):hover {
         background-color: var(--primary-very-low);
+
         .component {
           border-color: var(--primary-low-mid);
         }
@@ -408,17 +449,21 @@
       &.selected {
         color: var(--secondary);
         background-color: var(--tertiary);
+
         .components-list {
           color: var(--secondary);
         }
       }
+
       &:not(.selected) {
         .broken-indicator {
           color: var(--danger);
         }
+
         .fa {
           opacity: 0.7;
         }
+
         .default-indicator {
           color: var(--success);
         }
@@ -433,6 +478,7 @@
         display: flex;
         align-items: center;
         @include line-clamp(4);
+
         .icons {
           margin-left: auto;
         }
@@ -440,13 +486,16 @@
         .cancel-select-inactive-mode {
           margin-left: auto;
         }
+
         .btn-delete {
           font-size: var(--font-down-1);
           margin-left: 0.5em;
+
           svg {
             margin-right: 0.5em;
           }
         }
+
         input {
           margin-top: 0;
         }
@@ -496,6 +545,7 @@
     .theme-setting {
       min-height: 35px;
     }
+
     .theme-translation {
       padding-bottom: 0;
       margin-top: 18px;
@@ -505,16 +555,19 @@
         height: unset;
       }
     }
+
     .setting-label {
       @include breakpoint(tablet, min-width) {
         width: 25%;
       }
       word-wrap: break-word;
+
       h3 {
         margin-top: 0;
         margin-bottom: 0.5rem;
       }
     }
+
     .setting {
       padding-bottom: 0;
     }
@@ -555,6 +608,7 @@
     width: 100%;
     padding: 0;
     margin: 0;
+
     .wrapper {
       position: absolute;
       top: 20px;
@@ -568,9 +622,11 @@
   .current-style {
     float: left;
   }
+
   .content-list ul {
     margin-bottom: 10px;
   }
+
   .current-style {
     width: 100%;
 
@@ -633,9 +689,11 @@
         top: 80px;
         width: 100%;
       }
+
       .admin-footer {
         margin-top: 10px;
       }
+
       .ace-wrapper {
         height: calc(100vh - 200px);
       }
@@ -658,6 +716,7 @@
     .status-actions {
       float: right;
       margin-top: 7px;
+
       span {
         margin-right: 10px;
       }
@@ -666,6 +725,7 @@
     .buttons {
       float: left;
       width: 200px;
+
       .saving {
         padding: 5px 0 0 0;
         margin-left: 10px;
@@ -674,11 +734,13 @@
       }
     }
   }
+
   .color-scheme {
     .controls {
       display: flex;
       align-items: center;
       margin-bottom: 1em;
+
       button:not(:last-child),
       a {
         margin-right: 10px;
@@ -693,32 +755,41 @@
       display: block;
     }
   }
+
   .colors {
     thead th {
       border: none;
     }
+
     td.hex {
       width: 160px;
+
       .color-picker {
         display: inline-flex;
       }
     }
+
     td.actions {
       width: 200px;
     }
+
     .color-picker input {
       width: 80px;
       margin-bottom: 0;
     }
+
     th.overridden {
       text-align: right;
     }
+
     .color-input {
       display: flex;
     }
+
     h3 {
       margin: 0;
     }
+
     .description {
       margin: 0.15em 0 0;
       color: var(--primary-high);
@@ -742,24 +813,29 @@
   .removable-list {
     list-style: none;
     margin-left: 0;
+
     li {
       &.disabled-child {
         .child-link {
           color: var(--primary-medium);
+
           &:hover {
             text-decoration: underline;
           }
         }
       }
+
       .btn {
         margin-left: 5px;
       }
       display: table-row;
+
       .col.child-link {
         padding-right: 10px;
         padding-bottom: 10px;
         min-width: 80px;
       }
+
       .col {
         display: table-cell;
       }
@@ -771,10 +847,12 @@
   input[type="file"] {
     display: block;
     margin-bottom: 0.25em;
+
     + label {
       color: var(--primary-medium);
     }
   }
+
   label {
     display: inline-block;
   }
@@ -786,11 +864,13 @@
 
 .public-key {
   margin-top: 1em;
+
   textarea {
     cursor: auto;
     min-height: 220px;
     margin-bottom: 0;
   }
+
   button {
     position: absolute;
     top: 0;
@@ -817,6 +897,7 @@
     }
   }
 }
+
 .admin-config-area__settings-no-results {
   padding-left: 18px;
 }
@@ -833,38 +914,46 @@
 // embedding
 .embeddable-hosts {
   margin-bottom: 2em;
+
   table.grid {
     margin-bottom: 1em;
+
     .tag-chooser,
     .user-chooser {
       width: 100%;
     }
+
     tr td {
       word-wrap: break-word;
       max-width: 25vw;
       align-self: start;
     }
+
     td.controls {
       min-width: 6em;
     }
+
     .select-kit.combo-box.category-chooser {
       width: calc(100% - 10px);
     }
   }
-  @media screen and (max-width: 880px) {
+  @media screen and (width <= 880px) {
     table.grid {
       thead {
         display: none;
       }
+
       div.label {
         display: block;
         font-size: var(--font-down-1);
         color: var(--primary-medium);
       }
+
       td.controls,
       td.editing-controls {
         align-self: end;
       }
+
       tr {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -872,16 +961,18 @@
     }
   }
 
-  @media screen and (max-width: 580px) {
+  @media screen and (width <= 580px) {
     table.grid {
       tr td.editing-input {
         grid-column-start: 1;
         grid-column-end: 4;
         max-width: 100%;
+
         input {
           width: calc(100% - 20px);
         }
       }
+
       td.editing-controls {
         margin-top: 1em;
         max-width: 100%;
@@ -892,6 +983,7 @@
   @include breakpoint(mobile-medium) {
     table.grid tr {
       grid-template-columns: repeat(2, 1fr);
+
       td.controls {
         text-align: left;
       }
@@ -906,6 +998,7 @@
         color: var(--primary-medium);
       }
     }
+
     svg.d-icon {
       color: var(--primary-low-mid);
     }
@@ -916,14 +1009,17 @@
   h2 {
     margin-bottom: 1em;
   }
+
   .user-field {
     padding-block: 0.5em;
     margin-bottom: 1em;
     border-bottom: 1px solid var(--primary-low);
+
     .form-display {
       width: 25%;
       float: left;
     }
+
     .clearfix {
       clear: both;
     }
@@ -948,6 +1044,7 @@
     padding: 7px;
     margin-bottom: 7px;
   }
+
   .robots-txt-input {
     width: 100%;
     box-sizing: border-box;
@@ -972,6 +1069,7 @@
     width: 100%;
     height: calc(100vh - 480px);
     min-height: 200px;
+
     .ace_editor {
       position: absolute;
       left: 0;
@@ -1027,6 +1125,7 @@
     .footer-buttons {
       display: flex;
       gap: 0.5rem;
+
       .btn-danger {
         margin-left: auto;
       }

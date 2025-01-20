@@ -1,8 +1,8 @@
 // styles for admin/settings
-
 .settings {
   .setting {
     padding-bottom: 20px;
+
     .setting-label {
       float: left;
       width: 17.6576%;
@@ -12,27 +12,33 @@
         margin-right: 0;
         margin-left: 0;
         width: 100%;
+
         h3 {
           margin-bottom: 6px;
         }
       }
+
       .history-icon {
         opacity: 0;
         transition: opacity 0.3s;
         color: var(--primary-medium);
       }
+
       &:hover .history-icon {
         opacity: 1;
       }
     }
+
     .setting-value {
       float: left;
       width: 53%;
       padding-right: 20px;
+
       input[type="checkbox"],
       input[type="radio"] {
         flex: 0 0 auto;
       }
+
       .category-selector {
         width: 95%;
       }
@@ -40,24 +46,29 @@
         width: 100%;
         padding-right: 0;
       }
+
       .select-kit {
         width: 100% !important; // Needs !important to override hard-coded value
         @media (max-width: $mobile-breakpoint) {
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
+
       .image-uploader {
         display: flex;
       }
+
       .uploaded-image-preview {
         background-size: contain;
         background-repeat: no-repeat;
         background-color: var(--primary-medium);
       }
     }
+
     .setting-controls {
       float: left;
     }
+
     .input-setting-string,
     .input-setting-integer,
     .input-setting-textarea {
@@ -66,9 +77,11 @@
         width: 100%;
       }
     }
+
     .input-setting-textarea {
       height: 150px;
     }
+
     .input-setting-list {
       @media (max-width: $mobile-breakpoint) {
         width: 100%;
@@ -78,6 +91,7 @@
       border: 1px solid var(--primary-low);
       border-radius: 3px;
       transition: border linear 0.2s, box-shadow linear 0.2s;
+
       li.sortable-placeholder {
         @include unselectable;
         padding: 3px 5px 3px 18px;
@@ -93,30 +107,37 @@
         height: 1em;
       }
     }
+
     .desc,
     .validation-error {
       padding-top: 3px;
       font-size: var(--font-down-1);
       line-height: var(--line-height-large);
     }
+
     .validation-error {
       color: var(--danger);
     }
+
     .desc {
       color: var(--primary-medium);
     }
+
     h3 {
       font-size: var(--font-0);
       font-weight: normal;
     }
   }
+
   .setting.overridden {
     .values input {
       background-color: var(--highlight-bg);
     }
+
     h3 {
       position: relative;
-      &:before {
+
+      &::before {
         content: "";
         position: absolute;
         top: 0.5rem;
@@ -128,6 +149,7 @@
       }
     }
   }
+
   .setting.overridden.string {
     input[type="text"],
     input[type="password"],
@@ -135,9 +157,11 @@
       background-color: var(--highlight-bg);
     }
   }
+
   .warning {
     color: var(--danger);
   }
+
   .file-types-list__button {
     margin-top: 0.5em;
     margin-bottom: 0.2em;

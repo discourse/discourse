@@ -1,5 +1,4 @@
 // Styles for /admin/logs
-
 .log-details-modal {
   pre {
     white-space: pre-wrap;
@@ -10,11 +9,12 @@
 .staff-actions {
   width: 100%;
   word-wrap: break-word;
-  @media screen and (min-width: 550px) and (max-width: 767px) {
+  @media screen and (width >= 550px) and (width <= 767px) {
     table.staff-logs tr {
       display: grid;
       grid-template-rows: auto auto;
       grid-template-columns: repeat(4, 1fr);
+
       td {
         align-self: start;
         padding: 2px 4px;
@@ -24,11 +24,14 @@
     td.created-at {
       grid-column-start: -1;
     }
+
     td.subject {
       grid-row: 2;
       grid-column-start: 2;
+
       div.subject {
         display: flex;
+
         a {
           word-wrap: break-word;
           min-width: 25px;
@@ -53,29 +56,35 @@
   @include breakpoint(mobile-extra-large) {
     table.staff-logs tr {
       grid-template-columns: 1fr 1fr 0.5fr;
+
       td.staff-users {
         grid-column-start: 1;
         grid-column-end: 3;
       }
+
       td.created-at {
         grid-row: 1;
         grid-column-start: -1;
         text-align: right;
       }
+
       td.action {
         grid-row: 2;
         grid-column-start: 1;
       }
+
       td.subject {
         grid-row: 2;
         grid-column-start: 2;
         grid-column-end: 5;
         max-width: 60vw;
       }
+
       td.details,
       td.context {
         max-width: unset;
       }
+
       td.details {
         grid-row: 3;
         grid-column-start: 1;
@@ -83,6 +92,7 @@
         padding: 0.25em 0;
         max-width: 90vw;
       }
+
       td.context {
         grid-row: 4;
         grid-column-start: 1;
@@ -94,24 +104,30 @@
   .staff-user {
     font-weight: bold;
     display: flex;
+
     a:first-of-type {
       margin-right: 0.25em;
     }
+
     .deleted-user {
       font-size: var(--font-up-2);
     }
   }
+
   .created_at {
     text-align: center;
   }
+
   td.subject,
   td.details {
     max-width: 10vw;
+
     > div {
       max-height: 100px;
       overflow-y: auto;
     }
   }
+
   td.context {
     word-break: break-all;
   }
@@ -120,17 +136,21 @@
 .staff-action-logs-controls {
   display: flex;
   align-items: center;
+
   .select-kit {
     margin: 0 0.5em;
   }
+
   button {
     margin-left: auto;
   }
   margin: 0 0 1em 0;
+
   a.filter {
     .label {
       font-weight: bold;
     }
+
     .d-icon {
       margin-left: 0.5em;
     }
@@ -144,14 +164,15 @@
 .screened-ip-controls {
   display: flex;
   flex-wrap: wrap;
+
   .screened-ip-address-form {
     .combobox {
       width: 140px;
     }
-    @media screen and (min-width: 900px) {
+    @media screen and (width >= 900px) {
       margin-left: auto;
     }
-    @media screen and (max-width: 899px) {
+    @media screen and (width <= 899px) {
       margin-top: 1em;
     }
   }
@@ -161,22 +182,24 @@ table.screened-ip-addresses {
   td.ip_address {
     min-width: 150px;
     word-wrap: break-word;
+
     input {
       width: 80%;
     }
   }
+
   td.actions {
     text-align: right;
   }
 }
 
-@media screen and (min-width: 550px) {
+@media screen and (width >= 550px) {
   table.screened-ip-addresses tr {
     grid-template-columns: repeat(5, 1fr) auto;
   }
 }
 
-@media screen and (max-width: 549px) {
+@media screen and (width <= 549px) {
   table.screened-ip-addresses tr {
     td.actions {
       grid-row: 3;
@@ -185,16 +208,19 @@ table.screened-ip-addresses {
       text-align: right;
       margin-top: 0.5em;
     }
+
     td.created_at {
       grid-row: 1;
       grid-column-start: 3;
       text-align: right;
     }
+
     td.last_match_at {
       grid-row: 2;
       grid-column-start: 3;
       text-align: right;
     }
+
     td.match_count {
       grid-row: 2;
       grid-column-start: 2;
@@ -229,11 +255,13 @@ table.screened-ip-addresses {
       grid-column-end: 3;
       word-wrap: break-word;
     }
+
     td.ip_address {
       grid-row: 2;
       grid-column-start: 1;
       grid-column-end: -1;
     }
+
     td.action {
       margin-top: 0.25em;
     }
@@ -241,7 +269,6 @@ table.screened-ip-addresses {
 }
 
 // Watched words
-
 .watched-word-box {
   display: inline-block;
   width: 250px;
@@ -279,6 +306,7 @@ table.screened-ip-addresses {
 
 .watched-words-uploader {
   display: inline-block;
+
   label {
     font-weight: normal;
   }
@@ -334,9 +362,11 @@ table.screened-ip-addresses {
     padding-top: 4px;
     vertical-align: top;
   }
+
   input.watched-word-input-field {
     min-width: 300px;
   }
+
   .select-kit.multi-select.watched-word-input-field {
     width: 300px;
     margin-bottom: 9px;
@@ -348,20 +378,20 @@ table.screened-ip-addresses {
 }
 
 // Search logs
-
 table.search-logs-list {
   td.term {
     width: 60%;
     word-wrap: break-word;
-    @media screen and (max-width: 767px) {
+    @media screen and (width <= 767px) {
       width: 100%;
     }
   }
+
   th:not(.term),
   td:not(.term) {
     text-align: center;
   }
-  @media screen and (min-width: 550px) {
+  @media screen and (width >= 550px) {
     tr {
       td.term {
         grid-column-start: 1;
@@ -375,6 +405,7 @@ table.search-logs-list {
         grid-column-start: 1;
         grid-column-end: 4;
       }
+
       th:not(.term),
       td:not(.term) {
         text-align: left;

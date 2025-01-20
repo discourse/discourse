@@ -27,6 +27,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   background-color: rgba(0, 0, 0, 0.75);
   z-index: z("header");
   pointer-events: none;
+
   &-content {
     width: max-content;
     display: flex;
@@ -35,27 +36,33 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
     padding: 2em;
     background-color: #1d1d1d;
     border-radius: 0.25em;
+
     &-images {
       .d-icon {
         height: 3em;
         width: 3em;
         color: var(--secondary-or-primary);
+
         &:first-of-type {
           transform: rotate(-5deg);
         }
+
         &:nth-of-type(2) {
           height: 4em;
           width: 4em;
         }
+
         &:last-of-type {
           transform: rotate(5deg);
         }
       }
     }
+
     &-text {
       margin: 1.5em 0 0 0;
       font-size: var(--font-up-1);
       color: var(--secondary-or-primary);
+
       .d-icon-upload {
         padding-right: 0.25em;
         position: relative;
@@ -94,7 +101,6 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
       .d-icon {
         color: var(--header_primary-low-mid);
       }
-
       background: none;
     }
   }
@@ -155,8 +161,8 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 
   .is-online & {
     padding: 2px;
-    box-shadow: inset 0px 0px 0px 1px var(--success),
-      inset 0px 0px 0px 2px var(--secondary);
+    box-shadow: inset 0 0 0 1px var(--success),
+      inset 0 0 0 2px var(--secondary);
   }
 }
 
@@ -277,6 +283,7 @@ html.has-full-page-chat {
       min-height: 0;
     }
   }
+
   [data-popper-reference-hidden] {
     visibility: hidden;
   }

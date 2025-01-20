@@ -3,10 +3,12 @@
   #main-outlet {
     padding: 0;
   }
+
   .contents.body-page {
     margin: 0;
   }
 }
+
 .login-welcome {
   gap: 2em;
   height: 100svh;
@@ -28,12 +30,14 @@
 .d-modal.login-modal,
 .d-modal.create-account {
   padding-bottom: var(--safe-area-inset-bottom);
+
   .d-modal {
     &__container {
       height: 100svh;
       max-height: unset;
       width: 100%;
     }
+
     &__body {
       flex-direction: column;
       gap: unset;
@@ -41,10 +45,12 @@
       padding-bottom: 1em;
       outline: none;
     }
+
     &__footer {
       padding: 1em 1.5rem;
       border-top: 1px solid var(--primary-low);
     }
+
     &__footer-buttons {
       gap: 0.5em;
     }
@@ -113,6 +119,7 @@
         margin-bottom: 0.5rem;
       }
     }
+
     &__signup {
       background: none !important;
       font-size: var(--font-down);
@@ -127,6 +134,7 @@
         margin-bottom: 0.5rem;
       }
     }
+
     &__login {
       background: none !important;
       font-size: var(--font-down);
@@ -169,16 +177,20 @@
       &:not(:last-child) {
         margin-bottom: 0.75em;
       }
+
       input:focus + label,
       input.value-entered + label.alt-placeholder {
         top: -10px;
       }
+
       input.alt-placeholder:invalid {
         color: var(--primary);
       }
+
       label.more-info {
         color: var(--primary-medium);
       }
+
       .more-info,
       .tip,
       .instructions {
@@ -190,6 +202,7 @@
       display: contents;
     }
   }
+
   .caps-lock-warning {
     display: none;
   }
@@ -206,6 +219,7 @@
       .user-field.text label.control-label {
         top: 11px;
       }
+
       div.user-field:not(.dropdown)
         .controls
         input:focus
@@ -215,6 +229,7 @@
         label.alt-placeholder.control-label {
         top: -10px;
       }
+
       .user-field.dropdown label.control-label,
       .user-field.multiselect label.control-label {
         top: -10px;
@@ -262,6 +277,7 @@
     flex-direction: column;
     flex-grow: 1;
     align-items: center;
+
     .tada-image {
       margin: 0;
     }

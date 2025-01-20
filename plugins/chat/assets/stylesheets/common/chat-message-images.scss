@@ -43,9 +43,11 @@ $max_image_height: 150px;
         .thumbnail.onebox-avatar {
           display: none;
         }
+
         .aspect-image {
           margin-right: 0;
           max-width: 100%;
+
           + h3 {
             margin-top: 0.25rem;
           }
@@ -54,6 +56,7 @@ $max_image_height: 150px;
         h3 {
           margin-block: 0.75rem 0;
         }
+
         p {
           margin-top: 0.5rem;
         }
@@ -78,6 +81,7 @@ $max_image_height: 150px;
     object-fit: contain;
     max-height: $max_image_height;
     max-width: calc(#{$max_image_height} / 9 * 16);
+
     &:has(div[data-provider-name="tiktok"]) {
       max-height: unset;
     }

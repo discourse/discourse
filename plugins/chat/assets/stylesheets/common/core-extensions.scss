@@ -21,6 +21,7 @@
 
   li.user-profile-controls-outlet.chat-button {
     order: -1;
+
     &:empty {
       display: none;
     }

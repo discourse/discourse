@@ -3,6 +3,7 @@
   clear: both;
   text-align: right;
   margin-bottom: 10px;
+
   .post-action {
     display: inline-block;
     margin-left: 10px;
@@ -23,6 +24,7 @@
     line-height: var(--line-height-medium);
     overflow-wrap: break-word;
     width: 100%;
+
     a {
       color: var(--primary);
     }

@@ -6,13 +6,16 @@ html.modal-open {
   --modal-max-width: 600px;
   --modal-width: 30em; // set in ems to scale with user font-size
   --modal-min-width: 400px;
+
   &__container {
     max-width: var(--modal-max-width);
     min-width: var(--modal-min-width);
     min-height: var(--modal-min-height); // unset, optional theme utility
+
     .d-modal.-large & {
       max-width: 800px;
     }
+
     .d-modal.-max & {
       max-width: 90vw;
     }
@@ -29,10 +32,12 @@ html.modal-open {
 .close {
   font-size: var(--font-up-3);
   text-decoration: none;
+
   &:visited {
     color: var(--primary-high);
   }
   cursor: pointer;
+
   &:hover {
     color: var(--primary);
   }

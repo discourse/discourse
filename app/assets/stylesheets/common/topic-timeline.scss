@@ -20,9 +20,10 @@
       transition: max-height 0.4s ease-out;
     }
 
-    @media screen and (max-height: 425px) {
+    @media screen and (height <= 425px) {
       max-height: 75vh;
     }
+
     .topic-timeline {
       .timeline-footer-controls {
         display: flex;
@@ -30,6 +31,7 @@
         max-width: calc(100% - 9em); // 9em is the width of the timeline
       }
     }
+
     .timeline-controls {
       display: table-cell;
       vertical-align: top;
@@ -49,14 +51,16 @@
     right: 0;
     border-top: 1px solid var(--primary-low);
     box-shadow: var(--shadow-composer);
-    padding: 20px 0px;
+    padding: 20px 0;
     z-index: z("fullscreen");
-    @media screen and (max-height: 425px) {
+    @media screen and (height <= 425px) {
       padding-top: 10px;
     }
+
     .back-button {
       display: none;
     }
+
     .topic-timeline {
       width: 100%;
       table-layout: fixed;
@@ -68,26 +72,30 @@
       .timeline-date-wrapper {
         text-align: right;
       }
+
       .post-excerpt {
         max-width: 650px;
         line-height: var(--line-height-large);
         display: block;
         @include line-clamp(8);
-        @media screen and (max-height: 425px) {
+        @media screen and (height <= 425px) {
           @include line-clamp(5);
         }
       }
+
       .username {
         color: var(--primary-high-or-secondary-low);
         word-wrap: break-word;
         font-weight: bold;
       }
+
       .title {
         margin-top: 0;
         padding-left: 1em;
         display: table-cell;
         vertical-align: top;
         width: 100%;
+
         h2 {
           margin-top: 0;
           display: block;
@@ -95,17 +103,21 @@
           font-size: var(--font-up-2);
           @include line-clamp(4);
         }
+
         a {
           color: var(--primary);
         }
       }
+
       .timeline-last-read {
         right: 0;
         margin-left: 0;
+
         .progress {
           display: none;
         }
       }
+
       .timeline-footer-controls {
         display: none;
         position: absolute;
@@ -122,6 +134,7 @@
         padding-right: 1.5em;
         width: 7em;
       }
+
       .timeline-scrollarea {
         border-right: 1px solid var(--tertiary-low-or-tertiary-high);
         border-left: none;
@@ -132,6 +145,7 @@
           margin-right: -1.5em;
           padding-right: 1.5em;
           justify-content: flex-end;
+
           .timeline-scroller-content {
             box-sizing: border-box;
             max-width: 100%;
@@ -140,6 +154,7 @@
             padding-left: 0;
             padding-right: 1em;
           }
+
           .timeline-handle {
             float: none;
             width: 11px;
@@ -213,14 +228,17 @@
     .timeline-padding {
       transition: height 0.15s ease-out;
       cursor: pointer;
+
       // this element has a click event
       // the negative margin lets this element overlap
       // the scrollarea's vertical track and thus it
       // enables taps on the track to work
       margin-left: -1em;
+
       .widget-dragging & {
         transition: none;
       }
+
       .dragging & {
         transition: none;
       }
@@ -274,6 +292,7 @@
     .timeline-last-read {
       position: absolute;
       margin-left: -0.35em;
+
       .progress {
         font-size: 0.8em;
         color: var(--tertiary);

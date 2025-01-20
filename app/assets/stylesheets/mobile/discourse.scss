@@ -4,7 +4,6 @@
 // throughout the Discourse application
 
 // Base Elements
-
 body {
   background-color: var(--secondary);
 }
@@ -53,6 +52,7 @@ blockquote {
 
   a {
     color: var(--primary);
+
     .d-icon {
       margin-right: 0.25em;
       color: var(--primary-medium);
@@ -65,6 +65,7 @@ blockquote {
     @include form-item-sizing;
     border-color: var(--primary-medium);
     max-width: 100%;
+
     .selection {
       @include ellipsis;
       max-width: 120px;
@@ -80,6 +81,7 @@ blockquote {
 
   .drop {
     display: none;
+
     &.expanded {
       left: 0;
       display: block;
@@ -115,7 +117,6 @@ blockquote {
 }
 
 // Special elements
-
 #main-outlet-wrapper {
   margin-left: unset;
   margin-right: unset;
@@ -123,7 +124,8 @@ blockquote {
 
 #main-outlet {
   padding-top: 1.25em;
-  &:after {
+
+  &::after {
     // setup overlay for sidebar
     content: "";
     opacity: 0;

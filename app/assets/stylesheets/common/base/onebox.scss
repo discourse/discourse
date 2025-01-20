@@ -1,5 +1,5 @@
 a.loading-onebox {
-  &:before {
+  &::before {
     content: "";
     display: inline-flex;
     float: left;
@@ -16,10 +16,10 @@ a.loading-onebox {
 
 .onebox-result {
   @include post-aside;
-
   margin-top: 15px;
   padding: 12px;
   font-size: var(--font-0);
+
   > .source {
     margin-bottom: 12px;
     margin-right: 10px;
@@ -27,6 +27,7 @@ a.loading-onebox {
     color: var(--primary);
     position: relative;
     height: 20px;
+
     .info {
       a {
         color: black;
@@ -35,6 +36,7 @@ a.loading-onebox {
       }
       position: absolute;
       font-size: var(--font-0);
+
       img.favicon {
         margin-right: 3px;
       }
@@ -43,6 +45,7 @@ a.loading-onebox {
 
   .onebox-result-body {
     padding-top: 5px;
+
     img {
       max-height: 80%;
       max-width: 25%;
@@ -50,16 +53,20 @@ a.loading-onebox {
       float: left;
       margin-right: 1em;
     }
+
     h3,
     h4 {
       margin: 0;
     }
+
     code {
       max-height: 400px;
     }
+
     .metrics {
       clear: both;
       padding-bottom: 25px;
+
       .metric {
         padding-left: 33px;
         float: left;
@@ -75,6 +82,7 @@ a.loading-onebox {
       float: none;
       margin-right: 7px;
     }
+
     img.popcorn {
       float: none;
       margin-left: 20px;
@@ -145,12 +153,13 @@ aside.onebox {
     img:not(.avatar, .onebox-avatar-inline) {
       max-height: 170px;
       max-width: 20%;
-      @media all and (max-width: 600px) {
+      @media all and (width <= 600px) {
         max-width: 35%;
       }
       height: auto;
       float: left;
       margin-right: 1em;
+
       &.onebox-full-image {
         max-height: none;
         max-width: none;
@@ -160,6 +169,7 @@ aside.onebox {
     [style*="--aspect-ratio"] > :first-child {
       width: 100%;
     }
+
     [style*="--aspect-ratio"] > img {
       height: auto;
     }
@@ -169,6 +179,7 @@ aside.onebox {
     @supports (--custom: property) {
       .aspect-image {
         max-height: 170px;
+
         --magic-ratio: calc(var(--aspect-ratio) + 0.15);
         width: calc(128px * var(--magic-ratio));
         max-width: 20%;
@@ -204,11 +215,13 @@ aside.onebox {
       [style*="--aspect-ratio"] {
         position: relative;
       }
+
       [style*="--aspect-ratio"]::before {
         content: "";
         display: block;
         padding-bottom: calc(100% / (var(--aspect-ratio)));
       }
+
       [style*="--aspect-ratio"] > :first-child {
         position: absolute;
         top: 0;
@@ -246,14 +259,17 @@ aside.onebox {
       .fa {
         margin-right: 5px;
       }
+
       .full-name,
       .location {
         margin-right: 10px;
       }
+
       .user-onebox--joined {
         color: var(--primary-medium);
         margin-top: 10px;
       }
+
       .aspect-image {
         width: 80px;
         height: 80px;
@@ -283,8 +299,9 @@ aside.onebox {
     }
 
     .video-icon {
-      &:before {
+      &::before {
         opacity: 0.8;
+
         // ideally, the SVG used here should be in HTML and reference the SVG sprite
         content: svg-uri(
           '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
@@ -323,10 +340,12 @@ aside.onebox {
   background-color: var(--primary-low-mid);
   color: var(--primary);
   border: 1px inset var(--primary);
+
   .gdocs-onebox-logo {
     display: inline-block;
     width: 128px;
     height: 128px;
+
     &.g-calendar-logo {
       background: absolute-image-url(
           "/favicons/google_branding/logo_calendar_128px.png"
@@ -354,7 +373,7 @@ pre.onebox {
 }
 
 // -- Onebox Github Code Blob --
-pre.onebox code ol.lines li:before {
+pre.onebox code ol.lines li::before {
   position: absolute;
   display: inline-block;
   width: 35px;
@@ -375,6 +394,7 @@ pre.onebox code ol.lines li:before {
     margin-bottom: 5px;
     font-size: 1rem;
   }
+
   .git-blob-info {
     font-size: var(--font-down-1);
   }
@@ -384,9 +404,11 @@ pre.onebox code ol {
   margin-left: 0;
   line-height: var(--line-height-large);
 }
+
 pre.onebox code {
   background-color: var(--primary-very-low);
 }
+
 pre.onebox code li {
   padding-left: 5px;
 }
@@ -417,6 +439,7 @@ pre.onebox code {
 .onebox-warning-message {
   margin-top: 5px;
   color: var(--primary-med-or-secondary-med);
+
   img.emoji {
     width: 20px;
     height: 20px;
@@ -481,6 +504,7 @@ pre.onebox code {
   .branches {
     grid-area: branches;
     font-size: var(--font-down-1);
+
     code {
       word-break: break-all;
     }
@@ -489,6 +513,7 @@ pre.onebox code {
   .github-info-container {
     width: 100%;
     overflow-x: hidden;
+
     > span {
       // TODO: remove in a few months
       // replaced by .github-info in new commit oneboxes
@@ -510,6 +535,7 @@ pre.onebox code {
       .added {
         color: var(--success);
       }
+
       .removed {
         color: var(--danger);
       }
@@ -533,7 +559,7 @@ pre.onebox code {
 
     .show-more {
       // padding on right for larger hitzone
-      padding: 0.5em 1.5em 0em 0.25em;
+      padding: 0.5em 1.5em 0 0.25em;
     }
   }
 
@@ -624,9 +650,11 @@ pre.onebox code {
 .onebox-body .status_tag.open {
   background-color: #6cc644;
 }
+
 .onebox-body .status_tag.merged {
   background-color: #6e5494;
 }
+
 .onebox-body .status_tag.closed {
   background-color: #bd2c00;
 }
@@ -646,6 +674,7 @@ aside.onebox.twitterstatus .onebox-body {
     height: 36px;
     margin-right: 12px;
   }
+
   .twitter-screen-name {
     font-size: var(--font-down-1);
   }
@@ -704,7 +733,7 @@ aside.onebox.twitterstatus .onebox-body {
     white-space: nowrap;
 
     svg {
-      fill: currentColor;
+      fill: currentcolor;
       margin-right: 0.25em;
     }
   }
@@ -775,6 +804,7 @@ aside.onebox.xkcd .onebox-body img {
     background: absolute-image-url("/favicons/pdf_64px.png") no-repeat;
     background-size: 48px 48px;
   }
+
   .filesize {
     color: gray;
   }
@@ -788,9 +818,11 @@ aside.onebox.xkcd .onebox-body img {
   .label2 {
     color: var(--primary-med-or-secondary-med);
   }
+
   .label1 {
     float: left;
   }
+
   .label2 {
     float: right;
   }
@@ -802,6 +834,7 @@ aside.onebox.xkcd .onebox-body img {
     height: 16px;
     margin-right: 0.5em;
   }
+
   &.category-onebox {
     border: 1px solid var(--primary-low);
     padding-left: calc(1em - 5px);
@@ -817,6 +850,7 @@ aside.onebox.xkcd .onebox-body img {
 
   .discourse-tags {
     vertical-align: bottom;
+
     .d-icon-tag {
       font-size: var(--font-down-1);
       margin-right: 0.35em;
@@ -844,6 +878,7 @@ aside.onebox.xkcd .onebox-body img {
   div.aspect-image-full-size {
     position: relative;
   }
+
   div.description {
     color: var(--primary-med-or-secondary-med);
   }
@@ -853,11 +888,13 @@ aside.onebox.xkcd .onebox-body img {
   .thumbnail {
     width: 60px;
     height: 60px;
+
     &.onebox-full-image {
       max-height: 60px;
       max-width: 60px;
     }
   }
+
   .label1 {
     color: var(--primary-med-or-secondary-med);
   }
@@ -884,16 +921,19 @@ aside.onebox.mixcloud-preview {
   border: 0;
   height: 120px;
   background-color: #1c1f21;
+
   article.onebox-body img {
     padding: 0;
     max-height: 120px;
   }
+
   .onebox-body {
     a[href],
     a[href]:visited,
     a[href]:hover {
       color: #d1d1d1;
     }
+
     .video-icon {
       position: relative;
       top: 17px;
@@ -901,9 +941,11 @@ aside.onebox.mixcloud-preview {
       float: left;
       padding-left: 6px;
     }
+
     .mixcloud-text {
       padding-left: 170px;
       font-family: sans-serif;
+
       h3 {
         font-size: 13px;
         font-weight: 300;
@@ -911,6 +953,7 @@ aside.onebox.mixcloud-preview {
         padding-top: 15px;
         height: 20px;
       }
+
       h4 {
         font-size: 12px;
         font-weight: 200;
@@ -1044,39 +1087,43 @@ iframe.loom-onebox {
     align-items: center;
 
     &.image {
-      &:before {
+      &::before {
         opacity: 0.8;
         content: svg-uri(
           '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="grey" d="M464 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h416c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM112 120c-30.928 0-56 25.072-56 56s25.072 56 56 56 56-25.072 56-56-25.072-56-56-56zM64 384h384V272l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L208 320l-55.515-55.515c-4.686-4.686-12.284-4.686-16.971 0L64 336v48z"></path></svg>'
         );
       }
     }
+
     &.video {
-      &:before {
+      &::before {
         opacity: 0.8;
         content: svg-uri(
           '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="white" d="M336.2 64H47.8C21.4 64 0 85.4 0 111.8v288.4C0 426.6 21.4 448 47.8 448h288.4c26.4 0 47.8-21.4 47.8-47.8V111.8c0-26.4-21.4-47.8-47.8-47.8zm189.4 37.7L416 177.3v157.4l109.6 75.5c21.2 14.6 50.4-.3 50.4-25.8V127.5c0-25.4-29.1-40.4-50.4-25.8z"></path></svg>'
         );
       }
     }
+
     &.audio {
-      &:before {
+      &::before {
         opacity: 0.4;
         content: svg-uri(
           '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M511.99 32.01c0-21.71-21.1-37.01-41.6-30.51L150.4 96c-13.3 4.2-22.4 16.5-22.4 30.5v261.42c-10.05-2.38-20.72-3.92-32-3.92-53.02 0-96 28.65-96 64s42.98 64 96 64 96-28.65 96-64V214.31l256-75.02v184.63c-10.05-2.38-20.72-3.92-32-3.92-53.02 0-96 28.65-96 64s42.98 64 96 64 96-28.65 96-64l-.01-351.99z"></path></svg>'
         );
       }
     }
+
     &.map {
-      &:before {
+      &::before {
         opacity: 0.4;
         content: svg-uri(
           '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z"></path></svg>'
         );
       }
     }
+
     &.generic {
-      &:before {
+      &::before {
         opacity: 0.4;
         content: svg-uri(
           '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M288 248v28c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-28c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm-12 72H108c-6.6 0-12 5.4-12 12v28c0 6.6 5.4 12 12 12h168c6.6 0 12-5.4 12-12v-28c0-6.6-5.4-12-12-12zm108-188.1V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V48C0 21.5 21.5 0 48 0h204.1C264.8 0 277 5.1 286 14.1L369.9 98c9 8.9 14.1 21.2 14.1 33.9zm-128-80V128h76.1L256 51.9zM336 464V176H232c-13.3 0-24-10.7-24-24V48H48v416h288z"></path></svg>'
@@ -1099,9 +1146,11 @@ aside.onebox.preview-error .site-icon {
     height: 36px;
     margin-right: 12px;
   }
+
   .threads-screen-name {
     font-size: var(--font-down-1);
   }
+
   h4 {
     margin-bottom: 0;
   }
@@ -1159,7 +1208,7 @@ aside.onebox.preview-error .site-icon {
     margin-left: 0.75em;
 
     svg {
-      fill: currentColor;
+      fill: currentcolor;
       margin-right: 0.25em;
     }
   }

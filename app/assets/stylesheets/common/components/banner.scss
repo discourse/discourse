@@ -1,7 +1,6 @@
 // --------------------------------------------------
 // Banner
 // --------------------------------------------------
-
 #banner {
   padding: 1em;
   background: var(--tertiary-low);
@@ -16,15 +15,17 @@
     display: flex;
 
     > .btn {
-      padding-top: 0em;
-      padding-bottom: 0em;
+      padding-top: 0;
+      padding-bottom: 0;
       color: var(--primary-high);
+
       .d-icon {
         color: var(--primary-medium);
       }
 
       &:hover {
         color: var(--primary);
+
         .d-icon {
           color: var(--primary-high);
         }

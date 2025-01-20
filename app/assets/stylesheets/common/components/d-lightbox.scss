@@ -1,5 +1,4 @@
 /* Main document */
-
 html.has-lightbox {
   overflow: hidden;
 
@@ -16,16 +15,15 @@ html.has-lightbox {
   }
 
   --carousel-item-size: clamp(6.5rem, 12vh, 15rem);
-  --d-lightbox-primary: #ffffff;
-  --d-lightbox-secondary: #000000;
+  --d-lightbox-primary: #fff;
+  --d-lightbox-secondary: #000;
   --d-lightbox-secondary-translucent: rgba(0, 0, 0, 0.25);
-  --d-lightbox-tertiary: #222222;
+  --d-lightbox-tertiary: #222;
 }
 
-/* Lightbox element*/
+/* Lightbox element */
 
 // Grid
-
 .d-lightbox {
   overscroll-behavior: contain;
 
@@ -46,7 +44,6 @@ html.has-lightbox {
   &.is-vertical &__content {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto auto;
-
     grid-template-areas:
       "lightbox-header"
       "lightbox-body"
@@ -102,7 +99,6 @@ html.has-lightbox {
     grid-area: lightbox-body;
     display: grid;
     place-items: center stretch;
-
     grid-auto-flow: column;
     grid-template-columns: auto 1fr auto;
     grid-template-areas: "lightbox-previous-button lightbox-main-image lightbox-next-button";
@@ -192,6 +188,7 @@ html.has-lightbox {
   &__carousel-items {
     grid-auto-flow: column;
   }
+
   &__carousel-item,
   &__carousel-item.is-current {
     height: var(--carousel-item-size);
@@ -226,7 +223,6 @@ html.has-lightbox {
 }
 
 /* Base styles */
-
 .d-lightbox {
   &.is-visible {
     position: fixed;
@@ -256,7 +252,6 @@ html.has-lightbox {
       var(--d-lightbox-secondary),
       transparent
     );
-
     position: relative;
   }
 }
@@ -330,12 +325,14 @@ html.has-lightbox {
     gap: 0 0.25em;
     word-break: break-word;
     max-width: 100%;
+
     // right/left padding to align with buttons
     padding: 0 0.65em;
     border: 1px solid transparent;
     width: 100%;
     min-width: 0;
     overflow: hidden;
+
     &:focus-visible {
       outline: none;
       border: 1px solid var(--tertiary);
@@ -363,6 +360,7 @@ html.has-lightbox {
     position: relative;
     color: var(--d-lightbox-primary);
   }
+
   &__carousel-previous-button,
   &__carousel-next-button {
     z-index: 2;
@@ -410,8 +408,9 @@ html.has-lightbox {
   &.is-vertical &__carousel {
     position: relative;
     background-color: var(--d-lightbox-secondary-translucent);
-    &:before,
-    &:after {
+
+    &::before,
+    &::after {
       content: "";
       position: absolute;
       display: block;
@@ -421,15 +420,10 @@ html.has-lightbox {
       width: 20%;
     }
 
-    &:before {
+    &::before {
       left: 0;
       top: 0;
       background: var(--d-lightbox-secondary);
-      -webkit-mask-image: linear-gradient(
-        90deg,
-        var(--d-lightbox-secondary),
-        transparent
-      );
       mask-image: linear-gradient(
         90deg,
         var(--d-lightbox-secondary),
@@ -437,15 +431,10 @@ html.has-lightbox {
       );
     }
 
-    &:after {
+    &::after {
       right: 0;
       bottom: 0;
       background: var(--d-lightbox-secondary);
-      -webkit-mask-image: linear-gradient(
-        -90deg,
-        var(--d-lightbox-secondary),
-        transparent
-      );
       mask-image: linear-gradient(
         -90deg,
         var(--d-lightbox-secondary),
@@ -454,12 +443,12 @@ html.has-lightbox {
     }
 
     .rtl & {
-      &:before {
+      &::before {
         left: auto;
         right: 0;
       }
 
-      &:after {
+      &::after {
         left: 0;
         right: auto;
       }
@@ -479,8 +468,9 @@ html.has-lightbox {
 .d-lightbox {
   &.is-horizontal &__carousel {
     position: relative;
-    &:before,
-    &:after {
+
+    &::before,
+    &::after {
       content: "";
       position: absolute;
       display: block;
@@ -490,15 +480,10 @@ html.has-lightbox {
       width: 100%;
     }
 
-    &:before {
+    &::before {
       left: 0;
       top: 0;
       background: var(--d-lightbox-secondary);
-      -webkit-mask-image: linear-gradient(
-        180deg,
-        var(--d-lightbox-secondary),
-        transparent
-      );
       mask-image: linear-gradient(
         180deg,
         var(--d-lightbox-secondary) 20%,
@@ -506,15 +491,10 @@ html.has-lightbox {
       );
     }
 
-    &:after {
+    &::after {
       right: 0;
       bottom: 0;
       background: var(--d-lightbox-secondary);
-      -webkit-mask-image: linear-gradient(
-        0,
-        var(--d-lightbox-secondary),
-        transparent
-      );
       mask-image: linear-gradient(
         0,
         var(--d-lightbox-secondary) 20%,
@@ -555,6 +535,7 @@ html.has-lightbox {
     &:focus-visible {
       outline: 1px solid var(--tertiary);
       border-radius: 1px;
+
       .d-icon {
         color: var(--tertiary);
       }
@@ -616,7 +597,6 @@ html.has-lightbox {
   &.can-zoom {
     .d-lightbox__body {
       @extend %lightbox-scrollable;
-
       overflow: auto;
       height: 100%;
       width: 100%;
@@ -677,6 +657,7 @@ html.has-lightbox {
     .d-lightbox__body {
       gap: 0;
     }
+
     .d-lightbox__main-image,
     .d-lightbox__zoomed-image-container {
       transform: rotate(var(--d-lightbox-image-rotation));
@@ -707,7 +688,6 @@ html.has-lightbox {
 }
 
 /* Animations */
-
 .d-lightbox {
   &.is-visible &__content {
     @extend %lightbox-animation-base;
@@ -755,9 +735,10 @@ html.has-lightbox {
 
   // MOZ
   scrollbar-width: none;
-  overflow: auto;
+
   // Webkit
   overflow: overlay;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -767,6 +748,7 @@ html.has-lightbox {
   0% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
   }
@@ -776,6 +758,7 @@ html.has-lightbox {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }

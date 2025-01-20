@@ -1,5 +1,4 @@
 // Styles for /admin/plugins
-
 .admin-contents.admin-plugins {
   .controls {
     .settings-button {
@@ -82,11 +81,11 @@
     .horizontal-overflow-nav {
       background: transparent;
 
-      &:before {
+      &::before {
         display: none;
       }
 
-      &:after {
+      &::after {
         display: none;
       }
     }

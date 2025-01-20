@@ -29,7 +29,7 @@
 
 @use "sass:math";
 
-$overlay-color: #000000 !default;
+$overlay-color: #000 !default;
 $overlay-opacity: 0.8 !default;
 $shadow: 0 0 8px rgba(0, 0, 0, 0.6) !default; // shadow on image or iframe
 $popup-padding-left: 8px !default; // Padding from left and from right side
@@ -77,7 +77,6 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   z-index: z("modal", "popover");
   overflow: hidden;
   position: fixed;
-
   background: $overlay-color;
   animation: fade 0.3s alternate;
 }
@@ -91,7 +90,7 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   z-index: z("modal", "popover") + 1;
   position: fixed;
   outline: 0 !important;
-  -webkit-backface-visibility: hidden; // fixes webkit bug that can cause "false" scrollbar
+  backface-visibility: hidden; // fixes webkit bug that can cause "false" scrollbar
 }
 
 // Root container
@@ -103,14 +102,12 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   left: 0;
   top: 0;
   padding: 0 $popup-padding-left;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
 // Vertical centerer helper
 .mfp-container {
-  &:before {
+  &::before {
     content: "";
     display: inline-block;
     height: 100%;
@@ -121,7 +118,7 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
 // Remove vertical centering when popup has class `mfp-align-top`
 .mfp-align-top {
   .mfp-container {
-    &:before {
+    &::before {
       display: none;
     }
   }
@@ -136,6 +133,7 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   text-align: left;
   z-index: $z-index-base + 5;
 }
+
 .mfp-inline-holder,
 .mfp-ajax-holder {
   .mfp-content {
@@ -148,20 +146,18 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
 .mfp-ajax-cur {
   cursor: progress;
 }
+
 .mfp-zoom-out-cur {
   &,
   .mfp-image-holder .mfp-close {
-    cursor: -moz-zoom-out;
-    cursor: -webkit-zoom-out;
     cursor: zoom-out;
   }
 }
+
 .mfp-zoom {
-  cursor: pointer;
-  cursor: -webkit-zoom-in;
-  cursor: -moz-zoom-in;
   cursor: zoom-in;
 }
+
 .mfp-auto-cursor {
   .mfp-content {
     cursor: auto;
@@ -216,8 +212,10 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   left: 8px;
   right: 8px;
   z-index: $z-index-base + 4;
+
   a {
     color: $controls-text-color;
+
     &:hover {
       color: $controls-text-color-hover;
     }
@@ -246,13 +244,13 @@ button {
     cursor: pointer;
     background: transparent;
     border: 0;
-    -webkit-appearance: none;
+    appearance: none;
     display: block;
     padding: 0;
     z-index: $z-index-base + 6;
-    -webkit-box-shadow: none;
     box-shadow: none;
   }
+
   &::-moz-focus-inner {
     padding: 0;
     border: 0;
@@ -286,11 +284,13 @@ button {
     top: 1px;
   }
 }
+
 .mfp-close-btn-in {
   .mfp-close {
     color: $inner-close-icon-color;
   }
 }
+
 .mfp-image-holder,
 .mfp-iframe-holder {
   .mfp-close {
@@ -323,16 +323,19 @@ button {
     width: 90px;
     height: 110px;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
     &:active {
       margin-top: -54px;
     }
+
     &:hover,
     &:focus {
       outline: 0;
       opacity: 1;
     }
-    &:before,
-    &:after,
+
+    &::before,
+    &::after,
     .mfp-b,
     .mfp-a {
       content: "";
@@ -347,14 +350,14 @@ button {
       border: medium inset transparent;
     }
 
-    &:after,
+    &::after,
     .mfp-a {
       border-top-width: 13px;
       border-bottom-width: 13px;
       top: 8px;
     }
 
-    &:before,
+    &::before,
     .mfp-b {
       border-top-width: 21px;
       border-bottom-width: 21px;
@@ -364,12 +367,13 @@ button {
   .mfp-arrow-left {
     left: 0;
 
-    &:after,
+    &::after,
     .mfp-a {
       border-right: 17px solid #fff;
       margin-left: 31px;
     }
-    &:before,
+
+    &::before,
     .mfp-b {
       margin-left: 25px;
       border-right: 27px solid #3f3f3f;
@@ -378,12 +382,14 @@ button {
 
   .mfp-arrow-right {
     right: 0;
-    &:after,
+
+    &::after,
     .mfp-a {
       border-left: 17px solid #fff;
       margin-left: 39px;
     }
-    &:before,
+
+    &::before,
     .mfp-b {
       border-left: 27px solid #3f3f3f;
     }
@@ -395,20 +401,24 @@ button {
   .mfp-iframe-holder {
     padding-top: $iframe-padding-top;
     padding-bottom: $iframe-padding-top;
+
     .mfp-content {
       line-height: 0;
       width: 100%;
       max-width: $iframe-max-width;
     }
+
     .mfp-close {
       top: -40px;
     }
   }
+
   .mfp-iframe-scaler {
     width: 100%;
     height: 0;
     overflow: hidden;
     padding-top: $iframe-ratio * 100%;
+
     iframe {
       position: absolute;
       display: block;
@@ -432,8 +442,6 @@ button {
       height: auto;
       display: block;
       line-height: 0;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
       box-sizing: border-box;
       padding: $image-padding-top 0 $image-padding-bottom;
       margin: 0 auto;
@@ -443,7 +451,8 @@ button {
   /* The shadow behind the image */
   .mfp-figure {
     line-height: 0;
-    &:after {
+
+    &::after {
       content: "";
       position: absolute;
       left: 0;
@@ -457,16 +466,19 @@ button {
       box-shadow: $shadow;
       background: $image-background;
     }
+
     small {
       color: $caption-subtitle-color;
       display: block;
       font-size: var(--font-down-1);
       line-height: var(--line-height-medium);
     }
+
     figure {
       margin: 0;
     }
   }
+
   .mfp-bottom-bar {
     margin-top: -$image-padding-bottom + 4;
     position: absolute;
@@ -475,6 +487,7 @@ button {
     width: 100%;
     cursor: auto;
   }
+
   .mfp-title {
     text-align: left;
     line-height: var(--line-height-medium);
@@ -482,6 +495,7 @@ button {
     word-wrap: break-word;
     padding-right: 36px; // leave some space for counter at right side
     max-width: 100%;
+
     // add the download icon
     a.image-source-link .d-icon {
       padding-right: 5px;
@@ -518,32 +532,37 @@ button {
   }
 
   @if $include-mobile-layout-for-image {
-    @media all and (max-width: 800px) and (orientation: landscape),
-      screen and (max-height: 300px) {
+    @media all and (width <= 800px) and (orientation: landscape),
+      screen and (height <= 300px) {
       /**
        * Remove all paddings around the image on small screen
        */
+
       .mfp-img-mobile {
         .mfp-image-holder {
           padding-left: 0;
           padding-right: 0;
         }
+
         img {
           &.mfp-img {
             padding: 0;
           }
         }
+
         .mfp-figure {
           /* The shadow behind the image */
-          &:after {
+          &::after {
             top: 0;
             bottom: 0;
           }
+
           small {
             display: inline;
             margin-left: 5px;
           }
         }
+
         .mfp-bottom-bar {
           background: rgba(0, 0, 0, 0.6);
           bottom: 0;
@@ -551,17 +570,18 @@ button {
           top: auto;
           padding: 3px 5px;
           position: fixed;
-          -webkit-box-sizing: border-box;
-          -moz-box-sizing: border-box;
           box-sizing: border-box;
+
           &:empty {
             padding: 0;
           }
         }
+
         .mfp-counter {
           right: 5px;
           top: 3px;
         }
+
         .mfp-close {
           top: 0;
           right: 0;
@@ -579,18 +599,19 @@ button {
 }
 
 // Scale navigation arrows and reduce padding from sides
-@media all and (max-width: 900px) {
+@media all and (width <= 900px) {
   .mfp-arrow {
     @include transform(scale(0.75));
   }
+
   .mfp-arrow-left {
     transform-origin: 0;
-    -webkit-transform-origin: 0;
   }
+
   .mfp-arrow-right {
     transform-origin: 100%;
-    -webkit-transform-origin: 100%;
   }
+
   .mfp-container {
     padding-left: $popup-padding-left-mobile;
     padding-right: $popup-padding-left-mobile;
@@ -604,8 +625,6 @@ button {
     @media screen and (prefers-reduced-motion: no-preference) {
       transition: all 0.2s;
     }
-    -webkit-transform: scale(0.8);
-    -ms-transform: scale(0.8);
     transform: scale(0.8);
   }
 
@@ -620,6 +639,7 @@ button {
       opacity: 1;
       @include transform(scale(1));
     }
+
     &.mfp-bg {
       opacity: 0.7;
     }
@@ -631,6 +651,7 @@ button {
       @include transform(scale(0.8));
       opacity: 0;
     }
+
     &.mfp-bg {
       opacity: 0;
     }
@@ -642,9 +663,11 @@ button {
     overflow-y: auto !important;
     overflow-x: auto !important;
   }
+
   .mfp-figure {
     overflow: auto;
   }
+
   .mfp-img {
     max-width: none;
   }

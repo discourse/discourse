@@ -10,14 +10,17 @@
       flex: 1 1 auto;
       gap: 0 0.5em;
     }
+
     .category-desc p {
       margin: 0;
     }
+
     .category-desc {
       margin: 0;
       font-size: var(--font-down-1);
       color: var(--primary-medium);
     }
+
     .topic-count {
       white-space: nowrap;
     }

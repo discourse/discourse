@@ -12,6 +12,7 @@
   .chat-message-thread-indicator {
     margin-left: 0;
     margin-top: 1rem;
+
     &:hover {
       box-shadow: none;
     }
@@ -59,9 +60,11 @@
 //sidebar
 #sidebar-section-content-user-threads {
   padding-bottom: 0.35em;
+
   .sidebar-section-link-content-text {
     color: var(--d-sidebar-link-color);
   }
+
   .active .sidebar-section-link-content-text {
     color: var(--d-sidebar-active-color);
   }

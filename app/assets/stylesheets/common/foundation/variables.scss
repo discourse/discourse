@@ -11,19 +11,17 @@
 $small-width: 800px !default;
 $medium-width: 995px !default;
 $large-width: 1110px !default;
-
 $topic-body-width: 690px;
 $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
 $reply-area-max-width: 1475px !default;
-
 $d-sidebar-width: 17em !default;
 $d-sidebar-narrow-width: 14em !default;
 
 // Brand color variables
 // --------------------------------------------------
 
-$google: #ffffff !default;
+$google: #fff !default;
 $google-hover: darken($google, 5%) !default;
 $instagram: #e1306c !default;
 $instagram-hover: darken($instagram, 15%) !default;
@@ -113,6 +111,7 @@ $z-layers: (
     @if not map-has-key($map, $key) {
       @return false;
     }
+
     $map: map-get($map, $key);
   }
   @return true;

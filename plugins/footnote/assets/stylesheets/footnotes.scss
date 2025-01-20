@@ -1,7 +1,7 @@
 .inline-footnotes {
   a.expand-footnote {
     user-select: none;
-    padding: 0px 0.5em;
+    padding: 0 0.5em;
     margin: 0 0 0 0.25em;
     color: var(--primary-low-mid-or-secondary-high);
     background: var(--primary-low);
@@ -25,6 +25,7 @@
   .footnotes-list,
   .footnotes-sep {
     position: absolute;
+
     // the left/right positioning prevents overflow issues
     // with long words causing overflow on small screens
     left: 0;
