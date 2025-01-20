@@ -890,7 +890,7 @@ RSpec.describe PostsController do
     include_examples "action requires login", :post, "/posts.json"
 
     before do
-      SiteSetting.min_first_post_typing_time = 0
+      SiteSetting.fast_typing_threshold = "disabled"
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
@@ -1148,11 +1148,11 @@ RSpec.describe PostsController do
 
       context "when fast typing" do
         before do
-          SiteSetting.min_first_post_typing_time = 3000
+          SiteSetting.fast_typing_threshold = "standard"
           SiteSetting.auto_silence_fast_typers_max_trust_level = 1
         end
 
-        it "queues the post if min_first_post_typing_time is not met" do
+        it "queues the post if fast_typing_threshold is not met" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -3085,7 +3085,7 @@ RSpec.describe PostsController do
 
       before do
         sign_in(user)
-        SiteSetting.min_first_post_typing_time = 0
+        SiteSetting.fast_typing_threshold = "disabled"
       end
 
       it "allows strings to be added" do

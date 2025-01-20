@@ -8,6 +8,8 @@
 class NewPostManager
   attr_reader :user, :args
 
+  FAST_TYPING_THRESHOLD_MAP = { disabled: 0, low: 1000, standard: 3000, high: 5000 }
+
   def self.sorted_handlers
     @sorted_handlers ||= clear_handlers!
   end
@@ -44,7 +46,8 @@ class NewPostManager
     args = manager.args
 
     is_first_post?(manager) &&
-      args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time &&
+      args[:typing_duration_msecs].to_i <
+        FAST_TYPING_THRESHOLD_MAP[SiteSetting.fast_typing_threshold.to_sym] &&
       SiteSetting.auto_silence_fast_typers_on_first_post &&
       manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
   end

@@ -2370,7 +2370,17 @@ spam:
   auto_respond_to_flag_actions:
     default: true
     area: "flags"
-  min_first_post_typing_time: 3000
+  min_first_post_typing_time:
+    default: 3000
+    hidden: true
+  fast_typing_threshold:
+    type: enum
+    default: standard
+    choices:
+      - disabled
+      - low
+      - standard
+      - high
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level:
     default: 0
