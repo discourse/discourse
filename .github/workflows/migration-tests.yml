@@ -23,21 +23,15 @@ permissions:
 jobs:
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Tests with Ruby ${{ matrix.ruby }}
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
-    container: discourse/discourse_test:slim
+    name: Tests
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
     timeout-minutes: 20
 
     env:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        ruby: ["3.3"]
 
     steps:
       - name: Set working directory owner
@@ -62,23 +56,9 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
-      - name: Container envs
-        id: container-envs
+      - name: Symlink vendor/bundle from image
         run: |
-          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
-          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.container-envs.outputs.ruby_version }}-
-            ${{ steps.container-envs.outputs.debian_release }}-
-            ${{ hashFiles('**/Gemfile.lock') }}-
-            migrations-tooling
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
         run: |
@@ -93,6 +73,10 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
+      - name: Get CPU cores
+        id: cpu-info
+        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+
       - name: Fetch app state cache
         uses: actions/cache@v4
         id: app-cache
@@ -100,7 +84,8 @@ jobs:
           path: tmp/app-cache
           key: >-
             ${{ runner.os }}-
-            ${{ hashFiles('.github/workflows/tests.yml') }}-
+            ${{ steps.cpu-info.outputs.cpu-cores }}-
+            ${{ hashFiles('.github/workflows/migration-tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
             ${{ hashFiles('config/environments/test.rb') }}
 
