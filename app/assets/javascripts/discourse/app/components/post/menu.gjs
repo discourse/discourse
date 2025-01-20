@@ -396,11 +396,6 @@ export default class PostMenu extends Component {
     return items;
   }
 
-  @action
-  expandIfOnlyOneHiddenButton() {
-    this.collapsed = this.renderableCollapsedButtons.length > 1;
-  }
-
   @cached
   get renderableCollapsedButtons() {
     return this.availableCollapsedButtons.filter((button) =>
@@ -609,7 +604,6 @@ export default class PostMenu extends Component {
             "replies-button-visible"
           )
         }}
-        {{didInsert this.expandIfOnlyOneHiddenButton}}
       >
         {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
         {{#each this.extraControls key="key" as |extraControl|}}
