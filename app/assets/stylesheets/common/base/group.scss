@@ -98,6 +98,7 @@
   .group-details-button {
     display: flex;
     flex-wrap: wrap;
+
     button:not(:last-child) {
       margin-right: 0.5em;
     }
@@ -148,9 +149,11 @@ table.group-manage-logs {
         grid-column-start: 1;
         grid-column-end: -1;
       }
+
       .member-settings {
         margin-left: auto;
       }
+
       .user-info {
         padding-right: 3.5em;
       }
@@ -277,11 +280,11 @@ table.group-category-permissions {
     li {
       display: inline-block;
 
-      &:before {
+      &::before {
         content: "|";
       }
 
-      &:first-child:before {
+      &:first-child::before {
         content: "";
       }
     }
@@ -313,6 +316,6 @@ table.group-category-permissions {
 }
 
 .groups-form .control-group.buttons {
-  margin-bottom: 0px;
+  margin-bottom: 0;
   padding: 1em 0;
 }

@@ -7,7 +7,7 @@
   z-index: 1;
   margin: 0 1px 0 0;
   will-change: transform;
-  @include chat-scrollbar();
+  @include chat-scrollbar;
   min-height: 1px;
   box-sizing: border-box;
   transition: padding-top 0.2s ease-in-out;

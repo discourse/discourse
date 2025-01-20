@@ -2,7 +2,6 @@
 // global styles that apply to the Discourse application specifically
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
-
 :root {
   --d-max-width: 1110px;
 }
@@ -25,6 +24,7 @@ body.dragging {
   .control-group {
     margin-bottom: 1.25em;
   }
+
   .controls:not(.controls-dropdown) + .controls {
     margin-top: 0.5em;
   }

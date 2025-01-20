@@ -6,16 +6,19 @@
     padding: 1em;
     overflow-y: auto;
   }
+
   &__progress-line {
     overflow-anchor: none;
 
     &.-success {
       color: var(--success);
     }
+
     &.-error {
       color: var(--danger);
     }
   }
+
   &__progress-anchor {
     overflow-anchor: auto;
     height: 1px;

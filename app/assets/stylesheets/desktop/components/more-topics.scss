@@ -1,8 +1,10 @@
 .more-topics__container {
   .nav {
     position: absolute;
+
     li {
       margin-right: 0;
+
       .btn {
         font-size: var(--font-0);
         line-height: var(--line-height-large);
@@ -10,6 +12,7 @@
       }
     }
   }
+
   .more-topics__lists:not(.single-list) {
     .topic-list-header .default {
       visibility: hidden;

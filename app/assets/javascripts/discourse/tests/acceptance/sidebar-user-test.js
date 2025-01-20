@@ -68,9 +68,8 @@ acceptance(
       assert
         .dom("[data-link-name='admin']")
         .exists("the admin link is not within the 'more' dropdown");
-
       assert
-        .dom(".sidebar-more-section-links-details-summary")
+        .dom(".sidebar-more-section-trigger")
         .doesNotExist(
           "the 'more' dropdown should not be present in header dropdown mode"
         );

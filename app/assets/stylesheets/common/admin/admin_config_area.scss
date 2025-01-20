@@ -3,6 +3,7 @@
     margin-bottom: 1em;
   }
 }
+
 .admin-config-area-card {
   padding: 20px 5px 20px 20px;
   border: 1px solid var(--primary-low);
@@ -31,6 +32,7 @@
   &__control-group-horizontal {
     display: flex;
     margin-bottom: 18px;
+
     label {
       margin-right: 1em;
     }
@@ -46,6 +48,7 @@
     align-items: center;
     flex: 1;
   }
+
   &__content {
     margin-top: 0.5rem;
     padding-right: 15px;

@@ -83,16 +83,18 @@
 
       th,
       td {
-        padding: 8px 0px;
+        padding: 8px 0;
       }
     }
   }
+
   .penalty-history {
     position: sticky;
     bottom: 0;
     background-color: var(--secondary);
     padding: 0 0 1em 0;
   }
+
   .penalty-history::before {
     position: absolute;
     content: "";

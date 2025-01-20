@@ -1,7 +1,6 @@
 // --------------------------------------------------
 // Discourse header
 // --------------------------------------------------
-
 .d-header {
   height: 3.66em;
 
@@ -12,26 +11,32 @@
   #site-text-logo {
     font-size: var(--font-up-1);
   }
+
   .extra-info-wrapper {
     .extra-info {
       // header title should not be centered if there's no tags / categories
       &:not(.two-rows) {
         min-height: 2.25em;
       }
+
       .header-title {
         font-size: var(--font-0);
+
         // the margin-bottom here is fragile, changing it can cause tag alignment issues
         margin: 0 0 0.35em 0;
+
         .archetype-private_message & {
           // PMs might have participant avatars in the header
           margin: 0 0 0.15em 0;
         }
       }
+
       .private-message-glyph-wrapper {
         float: left;
       }
     }
   }
+
   button.sign-up-button {
     display: none;
   }
@@ -44,6 +49,7 @@
       display: none;
     }
   }
+
   // Fade in header avatar + icons if topic title is not visible in mobile header
   .panel .icons {
     animation: fadein 0.5s;
@@ -51,6 +57,7 @@
       animation-duration: 0s;
     }
   }
+
   // A rendering bug in safari causes header SVGs to jitter after animations.
   // translateZ() forces gpu rendering which fixes the issue.
   .d-header-icons {
@@ -62,8 +69,9 @@
   .d-icon {
     line-height: var(--line-height-medium);
   }
+
   .active .icon {
-    &:after {
+    &::after {
       margin-top: -1px;
     }
   }

@@ -1,6 +1,6 @@
 @mixin theme-card-border($color) {
   border-color: var(--#{$color}-medium);
-  box-shadow: 0px 0px 0px 3px var(--#{$color}-low);
+  box-shadow: 0 0 0 3px var(--#{$color}-low);
 }
 
 .themes-cards-container {
@@ -13,40 +13,46 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: 0px 0px 0px 3px transparent;
+  box-shadow: 0 0 0 3px transparent;
   transition: box-shadow 0.3s ease-in-out;
+
   &.--updating {
     animation: updating 3s ease-in-out 1,
       updatingInfinite 3s ease-in-out 3s infinite;
     @keyframes updating {
       0% {
-        box-shadow: 0px 0px 0px 3px transparent;
+        box-shadow: 0 0 0 3px transparent;
         border: 1px solid var(--success);
       }
+
       50% {
-        box-shadow: 0px 0px 0px 6px var(--success-low);
+        box-shadow: 0 0 0 6px var(--success-low);
         border: 1px solid var(--success);
       }
+
       100% {
-        box-shadow: 0px 0px 0px 3px var(--success-low);
+        box-shadow: 0 0 0 3px var(--success-low);
         border: 1px solid var(--success);
       }
     }
     @keyframes updatingInfinite {
       0% {
-        box-shadow: 0px 0px 0px 3px var(--success-low);
+        box-shadow: 0 0 0 3px var(--success-low);
         border: 1px solid var(--success);
       }
+
       50% {
-        box-shadow: 0px 0px 0px 6px var(--success-low);
+        box-shadow: 0 0 0 6px var(--success-low);
         border: 1px solid var(--success);
       }
+
       100% {
-        box-shadow: 0px 0px 0px 3px var(--success-low);
+        box-shadow: 0 0 0 3px var(--success-low);
         border: 1px solid var(--success);
       }
     }
   }
+
   &.--updating .d-icon-arrows-rotate {
     animation: rotate 3s linear infinite;
     margin-right: 0.45em;
@@ -54,11 +60,13 @@
       0% {
         transform: rotate(0deg);
       }
+
       100% {
         transform: rotate(360deg);
       }
     }
   }
+
   .admin-config-area-card__content {
     display: flex;
     flex-direction: column;

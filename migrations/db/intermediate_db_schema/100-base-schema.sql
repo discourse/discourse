@@ -33,5 +33,5 @@ CREATE TABLE users
     suspended_at              DATETIME,
     suspended_till            DATETIME,
     title                     TEXT,
-    uploaded_avatar_id        INTEGER
+    uploaded_avatar_id        TEXT
 );

@@ -4,6 +4,7 @@
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 1em;
+
   .groups-header-new {
     order: 2;
     margin-bottom: 0.5em;
@@ -99,12 +100,14 @@
         display: flex;
         align-items: center;
         color: var(--primary-high);
+
         .d-icon {
           margin-right: 0.25em;
           font-size: 0.8em;
           color: var(--primary-medium);
         }
       }
+
       .group-description {
         color: var(--primary-high);
         word-wrap: break-word;
@@ -134,6 +137,7 @@
         }
       }
     }
+
     .avatar-flair-image {
       width: $size;
     }
@@ -144,8 +148,10 @@
   .control-group-inline {
     display: inline;
   }
+
   &.groups-notifications-form {
     max-width: 33em;
+
     .control-instructions {
       color: var(--primary-medium);
       margin-bottom: 10px;

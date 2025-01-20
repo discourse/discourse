@@ -1,5 +1,4 @@
 // Styles for admin/api
-
 .d-admin-table.web-hooks {
   .d-admin-row__overview.payload-url {
     word-wrap: break-word;
@@ -24,7 +23,6 @@
 }
 
 // Api keys
-
 .admin-api-keys {
   .api-key-show {
     .form-element,
@@ -43,8 +41,10 @@
           margin: 0;
         }
       }
+
       &.label-area {
         width: 25%;
+
         label {
           margin-right: 1em;
         }
@@ -59,18 +59,22 @@
   .api-key {
     padding: 10px;
     margin-bottom: 10px;
+
     .form-element,
     .form-element-desc {
       float: left;
       padding: 0.5em 0;
+
       &.input-area {
         input[type="checkbox"] {
           margin-top: 0.5em;
         }
+
         .ac-wrap {
           width: 50% !important;
         }
       }
+
       &.label-area {
         label {
           text-align: left;
@@ -78,20 +82,24 @@
         }
       }
     }
+
     .controls {
       float: right;
       text-align: left;
       width: 50%;
     }
+
     .scopes-title {
       margin-top: 20px;
     }
   }
+
   .scopes-table.grid {
     margin: 20px 0;
 
     tr {
       grid-template-columns: repeat(4, 1fr);
+
       input {
         margin-bottom: 2px;
       }
@@ -127,9 +135,11 @@
   .tip.good:empty {
     display: none;
   }
+
   input {
     max-width: calc(100% - 10px);
   }
+
   .select-kit,
   .select-kit.multi-select {
     width: 100%;
@@ -159,15 +169,19 @@
     padding-bottom: 10px;
     border-bottom: var(--primary-low) 1px solid;
   }
+
   .filters {
     border-bottom: var(--primary-low) 1px solid;
+
     .filter {
       margin-bottom: 1em;
     }
+
     label .d-icon {
       margin-right: 0.25em;
     }
   }
+
   .instructions {
     margin-top: 5px;
   }
@@ -199,6 +213,7 @@
   li {
     padding: 2px 0;
   }
+
   .col {
     display: inline-block;
     padding-top: 6px;
@@ -206,38 +221,49 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+
   .col.heading {
     font-weight: bold;
     padding: 4px 0;
   }
+
   .col.heading.actions {
     padding: 4px 0;
   }
+
   .col.first {
     width: 90px;
   }
+
   .col.event-id {
     width: 90px;
   }
+
   .col.timestamp {
     width: 180px;
   }
+
   .col.completion {
     width: 250px;
   }
+
   .col.actions {
     padding-top: 0;
+
     a {
       text-decoration: underline;
     }
   }
+
   .details {
     display: block;
     margin-top: 1rem;
   }
+
   label {
     font-size: var(--font-0);
   }
+
   &.content-list {
     width: 100%;
   }
@@ -259,9 +285,11 @@
 .hook-event {
   display: inline-block;
   width: 100%;
+
   label {
     display: inline-block;
   }
+
   p {
     margin: 0 0 5px 25px;
   }

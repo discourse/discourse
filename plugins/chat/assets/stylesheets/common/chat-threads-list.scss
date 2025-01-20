@@ -8,7 +8,7 @@
 
   &__items {
     overflow-y: scroll;
-    @include chat-scrollbar();
+    @include chat-scrollbar;
     box-sizing: border-box;
     flex-grow: 1;
     overscroll-behavior: contain;
@@ -18,6 +18,6 @@
 
   &__no-threads {
     @include thread-list-item;
-    margin: 0.5rem 0rem 0.5rem 0.5rem;
+    margin: 0.5rem 0 0.5rem 0.5rem;
   }
 }

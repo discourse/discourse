@@ -8,6 +8,7 @@
   .form-kit__field[data-disabled] & {
     cursor: not-allowed;
   }
+
   input[type="radio"] {
     margin-right: 0; //old input overrule
   }

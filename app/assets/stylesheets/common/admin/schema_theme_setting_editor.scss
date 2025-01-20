@@ -26,6 +26,7 @@
         ul {
           padding: 0 calc(var(--schema-space) * 2) 0 var(--schema-space);
           margin: 0 0 1em;
+
           li:hover {
             background: var(--primary-very-low);
           }
@@ -41,6 +42,7 @@
           padding: var(--schema-space) calc(var(--schema-space) * 3)
             var(--schema-space) calc(var(--schema-space) * 2);
           gap: 0.5em;
+
           .d-icon {
             font-size: var(--font-down-3);
             margin-left: auto;
@@ -52,15 +54,17 @@
           width: 100%;
           border-bottom: 1px solid var(--primary-low);
           color: var(--primary-700);
+
           &:hover {
             color: var(--primary-800);
             background: var(--primary-very-low);
           }
 
           .schema-theme-setting-editor__tree-node-text {
-            color: currentColor;
+            color: currentcolor;
+
             .d-icon {
-              color: currentColor;
+              color: currentcolor;
               margin-left: 0;
               margin-right: var(--schema-space);
             }
@@ -120,6 +124,7 @@
             .d-icon {
               color: var(--primary-700);
             }
+
             &:hover {
               background: var(--primary-very-low);
             }
@@ -128,6 +133,7 @@
           &.--child {
             margin-left: var(--schema-space);
             border-left: 1px solid var(--primary-200);
+
             .schema-theme-setting-editor__tree-node-text {
               color: var(--primary-800);
             }
@@ -143,15 +149,16 @@
         padding: var(--schema-space);
 
         .d-icon {
-          color: currentColor;
+          color: currentcolor;
           font-size: var(--font-down-1);
         }
 
         &:hover {
           background: var(--primary-very-low);
           color: var(--tertiary-hover);
+
           .d-icon {
-            color: currentColor;
+            color: currentcolor;
           }
         }
       }

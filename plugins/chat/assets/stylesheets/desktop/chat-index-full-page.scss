@@ -32,9 +32,11 @@
         height: 2.5em;
         padding: 0 0.5rem;
         margin: 0 0.5rem 0.125rem 0.5rem;
+
         &:hover,
         &.active {
           background-color: var(--primary-low);
+
           .chat-channel-title {
             .category-chat-name,
             .chat-name,
@@ -51,9 +53,11 @@
         }
       }
     }
+
     .channels-list-container {
       height: auto;
     }
+
     .channels-list-container.center-empty-channels-list {
       height: 90%;
     }

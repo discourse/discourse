@@ -62,61 +62,72 @@ export default class TopicCell extends Component {
           @outletArgs={{hash topic=@topic}}
         />
         {{~! no whitespace ~}}
-        <TopicStatus @topic={{@topic}} />
-        {{~! no whitespace ~}}
-        <TopicLink
-          {{on "focus" this.onTitleFocus}}
-          {{on "blur" this.onTitleBlur}}
-          @topic={{@topic}}
-          class="raw-link raw-topic-link"
-        />
-        {{~#if @topic.featured_link~}}
-          &nbsp;
-          {{~topicFeaturedLink @topic}}
-        {{~/if~}}
         <PluginOutlet
-          @name="topic-list-after-title"
-          @outletArgs={{hash topic=@topic}}
-        />
-        {{~! no whitespace ~}}
-        <UnreadIndicator @topic={{@topic}} />
-        {{~#if @showTopicPostBadges~}}
-          <TopicPostBadges
-            @unreadPosts={{@topic.unread_posts}}
-            @unseen={{@topic.unseen}}
-            @newDotText={{this.newDotText}}
-            @url={{@topic.lastUnreadUrl}}
+          @name="topic-list-topic-cell-link-top-line"
+          @outletArgs={{hash topic=@topic tagsForUser=@tagsForUser}}
+        >
+          {{~! no whitespace ~}}
+          <TopicStatus @topic={{@topic}} />
+          {{~! no whitespace ~}}
+          <TopicLink
+            {{on "focus" this.onTitleFocus}}
+            {{on "blur" this.onTitleBlur}}
+            @topic={{@topic}}
+            class="raw-link raw-topic-link"
           />
-        {{~/if~}}
+          {{~#if @topic.featured_link~}}
+            &nbsp;
+            {{~topicFeaturedLink @topic}}
+          {{~/if~}}
+          <PluginOutlet
+            @name="topic-list-after-title"
+            @outletArgs={{hash topic=@topic}}
+          />
+          {{~! no whitespace ~}}
+          <UnreadIndicator @topic={{@topic}} />
+          {{~#if @showTopicPostBadges~}}
+            <TopicPostBadges
+              @unreadPosts={{@topic.unread_posts}}
+              @unseen={{@topic.unseen}}
+              @newDotText={{this.newDotText}}
+              @url={{@topic.lastUnreadUrl}}
+            />
+          {{~/if~}}
+        </PluginOutlet>
       </span>
 
       <div class="link-bottom-line">
-        {{#unless @hideCategory}}
-          {{#unless @topic.isPinnedUncategorized}}
-            <PluginOutlet
-              @name="topic-list-before-category"
-              @outletArgs={{hash topic=@topic}}
-            />
-            {{categoryLink @topic.category}}
-            <PluginOutlet
-              @name="topic-list-after-category"
-              @outletArgs={{hash topic=@topic}}
-            />
+        <PluginOutlet
+          @name="topic-list-topic-cell-link-bottom-line"
+          @outletArgs={{hash topic=@topic tagsForUser=@tagsForUser}}
+        >
+          {{#unless @hideCategory}}
+            {{#unless @topic.isPinnedUncategorized}}
+              <PluginOutlet
+                @name="topic-list-before-category"
+                @outletArgs={{hash topic=@topic}}
+              />
+              {{categoryLink @topic.category}}
+              <PluginOutlet
+                @name="topic-list-after-category"
+                @outletArgs={{hash topic=@topic}}
+              />
+            {{/unless}}
           {{/unless}}
-        {{/unless}}
 
-        {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
+          {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 
-        {{#if this.participantGroups}}
-          <ParticipantGroups @groups={{this.participantGroups}} />
-        {{/if}}
+          {{#if this.participantGroups}}
+            <ParticipantGroups @groups={{this.participantGroups}} />
+          {{/if}}
 
-        <ActionList
-          @topic={{@topic}}
-          @postNumbers={{@topic.liked_post_numbers}}
-          @icon="heart"
-          class="likes"
-        />
+          <ActionList
+            @topic={{@topic}}
+            @postNumbers={{@topic.liked_post_numbers}}
+            @icon="heart"
+            class="likes"
+          />
+        </PluginOutlet>
       </div>
 
       {{#if @expandPinned}}

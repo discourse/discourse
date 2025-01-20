@@ -2,9 +2,11 @@
   .sidebar-section-wrapper {
     padding-bottom: 0;
   }
+
   .sidebar-section-header {
     display: flex;
   }
+
   .sidebar-section[data-section-name="community"]
     .sidebar-section-link-prefix.icon {
     cursor: pointer;
@@ -20,15 +22,18 @@
     a {
       pointer-events: none;
     }
+
     .sidebar-section-link-wrapper {
       .sidebar-section-link-prefix.icon,
       .sidebar-section-link {
         background: none;
         color: var(--primary-low-mid);
       }
+
       .sidebar-section-link.drag {
         font-weight: bold;
         color: var(--primary-high);
+
         .sidebar-section-link-prefix.icon {
           color: var(--primary-high);
         }
@@ -36,6 +41,7 @@
     }
   }
 }
+
 .discourse-touch {
   .sidebar-custom-sections {
     a:hover {

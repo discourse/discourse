@@ -18,9 +18,10 @@
   }
 
   .search-header {
-    @include search-page-spacing();
+    @include search-page-spacing;
     background: var(--primary-very-low);
   }
+
   .warning {
     background-color: var(--danger-medium);
     padding: 5px 8px;
@@ -56,6 +57,7 @@
 
     .select-kit {
       flex: 1 1 20%;
+
       .name {
         white-space: nowrap;
       }
@@ -74,6 +76,7 @@
 
   .search-advanced {
     position: relative;
+
     .search-actions,
     .search-title,
     .search-bar {
@@ -81,7 +84,7 @@
     }
 
     .search-results {
-      @include search-page-spacing();
+      @include search-page-spacing;
 
       @include breakpoint(tablet) {
         padding: 1rem 0.5rem 1rem 0.25rem;
@@ -121,6 +124,7 @@
         margin: 0;
         padding: 0;
         display: inline;
+
         button {
           margin-right: 0.5em;
         }
@@ -129,6 +133,7 @@
       .sort-by.inline-form label {
         margin-bottom: 0;
       }
+
       #search-sort-by {
         margin-bottom: 0;
       }
@@ -177,18 +182,22 @@
         cursor: pointer;
         padding-top: 0.25em;
         padding-bottom: 0.25em;
+
         &:focus-visible {
           outline: 2px solid transparent;
           background-color: var(--tertiary-very-low);
         }
       }
+
       &[open] > summary {
         color: var(--primary);
         margin-bottom: 1em;
+
         &:focus-visible {
           background-color: var(--tertiary-very-low);
         }
       }
+
       .control-label {
         font-weight: bold;
         color: var(--primary-high);
@@ -220,6 +229,7 @@
         .search-advanced-options {
           column-count: 2;
           column-gap: 2em;
+
           .control-group {
             break-inside: avoid;
           }
@@ -238,6 +248,7 @@
           // overriding inline width from JS
           width: 100% !important;
         }
+
         .select-kit {
           min-width: unset;
         }
@@ -334,6 +345,7 @@
     flex-wrap: wrap;
     margin-top: 0.25em;
     gap: 0 0.5em;
+
     .badge-category__wrapper {
       max-width: 100%;
     }
@@ -353,6 +365,7 @@
     font-size: var(--font-0);
     line-height: var(--line-height-large);
     color: var(--primary-medium);
+
     .date {
       color: var(--primary-high);
     }
@@ -366,6 +379,7 @@
     display: block;
     color: var(--primary-high);
     margin-top: 0.25em;
+
     .d-icon {
       color: var(--love);
       font-size: var(--font-down-1);
@@ -375,18 +389,21 @@
   a.search-link.visited .topic-title {
     color: var(--primary-medium);
   }
+
   .search-link {
     .topic-title {
       font-size: var(--font-up-1);
       line-height: var(--line-height-medium);
       color: var(--primary);
     }
+
     .topic-statuses {
       display: inline-block;
       flex-shrink: 0;
       font-size: 1.1em;
       line-height: var(--line-height-medium);
       color: var(--primary-medium);
+
       span {
         line-height: 1;
       }
@@ -414,17 +431,20 @@
       min-width: 25px;
       flex: 0 0 auto;
     }
+
     .user-titles {
       display: flex;
       flex-direction: column;
       max-width: 300px;
       overflow: hidden;
+
       .name {
         color: var(--primary-high-or-secondary-low);
         font-size: var(--font-0);
         font-weight: 700;
         @include ellipsis;
       }
+
       .username {
         color: var(--primary-high-or-secondary-low);
         font-size: var(--font-down-1);
@@ -436,6 +456,7 @@
   .category-items,
   .tag-items {
     margin-bottom: 1.5em;
+
     .fps-category-item,
     .fps-tag-item {
       margin-bottom: 1.5em;
