@@ -6935,7 +6935,7 @@ en:
           confirm_user: "Do you really want to send this user an archive of their account activity and preferences?"
           confirm_admin: "Do you really want to send yourself an archive of this user's account activity and preferences?"
           confirm_site_contact: "Do you really want to send the site contact an archive of this user's account activity and preferences?"
-          success_user: "We've started collecting the user archive, the user will receive a message when the process is complete."
+          success_user: "We've started collecting the user archive, they will receive a message when the process is complete."
           success_admin: "We've started collecting the user archive, you will receive a message when the process is complete."
           success_site_contact: "We've started collecting the user archive, the site contact will receive a message when the process is complete."
         ip_lookup: "IP Lookup"

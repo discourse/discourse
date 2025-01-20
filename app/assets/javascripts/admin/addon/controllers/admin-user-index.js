@@ -171,7 +171,7 @@ export default class AdminUserIndexController extends Controller {
     this.sendArchive(
       { send_to_user: true },
       i18n("admin.user.download_archive.confirm_user"),
-      i18n("admin.user.download_archive.success_admin")
+      i18n("admin.user.download_archive.success_user")
     );
   }
 
@@ -189,7 +189,7 @@ export default class AdminUserIndexController extends Controller {
     this.sendArchive(
       { send_to_site_contact: true },
       i18n("admin.user.download_archive.confirm_site_contact"),
-      i18n("admin.user.download_archive.success_admin")
+      i18n("admin.user.download_archive.success_site_contact")
     );
   }
 
