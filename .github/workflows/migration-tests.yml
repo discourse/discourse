@@ -32,6 +32,7 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
+      LOAD_PLUGINS: 1
 
     steps:
       - name: Set working directory owner
