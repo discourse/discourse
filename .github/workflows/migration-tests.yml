@@ -112,7 +112,7 @@ jobs:
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Check IntermediateDB schema
-        run: migrations/bin/cli schema validate
+        run: DEBUG=1 migrations/bin/cli schema validate
 
       - name: RSpec
         run: bin/rspec --default-path migrations/spec
