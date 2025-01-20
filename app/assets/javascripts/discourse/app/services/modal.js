@@ -43,6 +43,7 @@ export default class ModalService extends Service {
    * @returns {Promise} A promise that resolves when the modal is closed, with any data passed to closeModal
    */
   async show(modal, opts) {
+    console.log("show", modal);
     if (typeof modal === "string") {
       this.dialog.alert(
         `Error: the '${modal}' modal needs updating to work with the latest version of Discourse. See https://meta.discourse.org/t/268057.`
@@ -88,6 +89,7 @@ export default class ModalService extends Service {
   }
 
   close(data) {
+    console.trace();
     clearAllBodyScrollLocks();
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;

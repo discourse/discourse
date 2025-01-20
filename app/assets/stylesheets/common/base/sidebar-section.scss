@@ -16,6 +16,10 @@
 
     .sidebar-section-header-button {
       font-size: var(--font-down-1);
+
+      > * {
+        pointer-events: none;
+      }
     }
 
     .btn.dropdown-select-box-header,
@@ -142,9 +146,6 @@
 
   .sidebar-section-content {
     margin: 0;
-    hr {
-      margin: 0em 1.5em;
-    }
   }
 }
 
