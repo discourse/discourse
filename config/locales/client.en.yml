@@ -1925,7 +1925,7 @@ en:
         after_5_minutes: "after 5 minutes"
         after_10_minutes: "after 10 minutes"
 
-      notification_level_when_replying: 
+      notification_level_when_replying:
         label: "When posting"
         watch_topic: "Watch topic"
         track_topic: "Track topic"
@@ -6927,6 +6927,17 @@ en:
         manage_user: "Manage user"
         show_public_profile: "Show Public Profile"
         action_logs: "Action Logs"
+        download_archive:
+          button: "Download Archive"
+          send_to_user: "Send to user"
+          send_to_admin: "Send to admin"
+          send_to_site_contact: "Send to site contact"
+          confirm_user: "Do you really want to send this user an archive of their account activity and preferences?"
+          confirm_admin: "Do you really want to send yourself an archive of this user's account activity and preferences?"
+          confirm_site_contact: "Do you really want to send the site contact an archive of this user's account activity and preferences?"
+          success_user: "We've started collecting the user archive, the user will receive a message when the process is complete."
+          success_admin: "We've started collecting the user archive, you will receive a message when the process is complete."
+          success_site_contact: "We've started collecting the user archive, the site contact will receive a message when the process is complete."
         ip_lookup: "IP Lookup"
         log_out: "Log Out"
         logged_out: "User was logged out on all devices"

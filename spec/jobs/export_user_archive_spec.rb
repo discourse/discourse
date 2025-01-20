@@ -119,19 +119,159 @@ RSpec.describe Jobs::ExportUserArchive do
     context "with a requesting_user_id that is not the user being exported" do
       it "raises an error when not admin" do
         expect do
-          Jobs::ExportUserArchive.new.execute(user_id: user.id, requesting_user_id: user2.id)
+          Jobs::ExportUserArchive.new.execute(
+            user_id: user.id,
+            admin: {
+              requesting_user_id: user2.id,
+            },
+          )
         end.to raise_error(
           Discourse::InvalidParameters,
           "requesting_user_id: can only be admins when specified",
         )
       end
 
-      it "creates the upload and sends the message to the specified requesting_user_id" do
-        expect do Jobs::ExportUserArchive.new.execute(user_id: user2.id) end.to change {
-          Upload.count
-        }.by(1)
+      it "creates the upload and defaults to sending the message to the specified requesting_user_id" do
+        expect do
+          Jobs::ExportUserArchive.new.execute(
+            user_id: user2.id,
+            admin: {
+              requesting_user_id: admin.id,
+            },
+          )
+        end.to change { Upload.count }.by(1)
 
-        system_message = user2.topics_allowed.last
+        system_message = admin.topics_allowed.last
+
+        expect(system_message.title).to eq(
+          I18n.t(
+            "system_messages.csv_export_succeeded.subject_template",
+            export_title: "User Archive",
+          ),
+        )
+
+        upload = system_message.first_post.uploads.first
+
+        expect(system_message.first_post.raw).to eq(
+          I18n.t(
+            "system_messages.csv_export_succeeded.text_body_template",
+            download_link:
+              "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})",
+          ).chomp,
+        )
+      end
+
+      it "creates the upload and sends it to the original user if the send_to_user flag is set" do
+        expect do
+          Jobs::ExportUserArchive.new.execute(
+            user_id: user.id,
+            admin: {
+              requesting_user_id: admin.id,
+              send_to_user: true,
+            },
+          )
+        end.to change { Upload.count }.by(1)
+
+        system_message = user.topics_allowed.last
+
+        expect(system_message.title).to eq(
+          I18n.t(
+            "system_messages.csv_export_succeeded.subject_template",
+            export_title: "User Archive",
+          ),
+        )
+
+        upload = system_message.first_post.uploads.first
+
+        expect(system_message.first_post.raw).to eq(
+          I18n.t(
+            "system_messages.csv_export_succeeded.text_body_template",
+            download_link:
+              "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})",
+          ).chomp,
+        )
+      end
+
+      it "creates the upload and sends it to the admin if the send_to_admin flag is set" do
+        expect do
+          Jobs::ExportUserArchive.new.execute(
+            user_id: user.id,
+            admin: {
+              requesting_user_id: admin.id,
+              send_to_admin: true,
+            },
+          )
+        end.to change { Upload.count }.by(1)
+
+        system_message = admin.topics_allowed.last
+
+        expect(system_message.title).to eq(
+          I18n.t(
+            "system_messages.csv_export_succeeded.subject_template",
+            export_title: "User Archive",
+          ),
+        )
+
+        upload = system_message.first_post.uploads.first
+
+        expect(system_message.first_post.raw).to eq(
+          I18n.t(
+            "system_messages.csv_export_succeeded.text_body_template",
+            download_link:
+              "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})",
+          ).chomp,
+        )
+      end
+
+      it "creates the upload and sends it to the site contact if the send_to_site_contact flag is set" do
+        site_contact = Fabricate(:user, admin: true)
+        SiteSetting.site_contact_username = site_contact.username.downcase
+
+        expect do
+          Jobs::ExportUserArchive.new.execute(
+            user_id: user.id,
+            admin: {
+              requesting_user_id: admin.id,
+              send_to_site_contact: true,
+            },
+          )
+        end.to change { Upload.count }.by(1)
+
+        system_message = site_contact.topics_allowed.last
+
+        expect(system_message.title).to eq(
+          I18n.t(
+            "system_messages.csv_export_succeeded.subject_template",
+            export_title: "User Archive",
+          ),
+        )
+
+        upload = system_message.first_post.uploads.first
+
+        expect(system_message.first_post.raw).to eq(
+          I18n.t(
+            "system_messages.csv_export_succeeded.text_body_template",
+            download_link:
+              "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})",
+          ).chomp,
+        )
+      end
+
+      it "creates the upload and sends it to the original user, even when that user is suspended" do
+        user.suspended_till = 1.day.from_now
+        user.save!
+
+        expect do
+          Jobs::ExportUserArchive.new.execute(
+            user_id: user.id,
+            admin: {
+              requesting_user_id: admin.id,
+              send_to_user: true,
+            },
+          )
+        end.to change { Upload.count }.by(1)
+
+        system_message = user.topics_allowed.last
 
         expect(system_message.title).to eq(
           I18n.t(

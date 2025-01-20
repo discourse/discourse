@@ -8,6 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
+import { exportEntity } from "discourse/lib/export-csv";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -163,6 +164,49 @@ export default class AdminUserIndexController extends Controller {
         }
       })
       .catch(() => this.dialog.alert(i18n("generic_error")));
+  }
+
+  @action
+  sendArchiveToUser() {
+    this.sendArchive(
+      { send_to_user: true },
+      i18n("admin.user.download_archive.confirm_user"),
+      i18n("admin.user.download_archive.success_admin")
+    );
+  }
+
+  @action
+  sendArchiveToAdmin() {
+    this.sendArchive(
+      { send_to_admin: true },
+      i18n("admin.user.download_archive.confirm_admin"),
+      i18n("admin.user.download_archive.success_admin")
+    );
+  }
+
+  @action
+  sendArchiveToSiteContact() {
+    this.sendArchive(
+      { send_to_site_contact: true },
+      i18n("admin.user.download_archive.confirm_site_contact"),
+      i18n("admin.user.download_archive.success_admin")
+    );
+  }
+
+  sendArchive(args, confirmationMessage, successMessage) {
+    args.export_user_id = this.model.id;
+
+    this.dialog.yesNoConfirm({
+      message: confirmationMessage,
+      didConfirm: async () => {
+        try {
+          await exportEntity("user_archive", args);
+          this.dialog.alert(successMessage);
+        } catch (err) {
+          popupAjaxError(err);
+        }
+      },
+    });
   }
 
   @discourseComputed("ssoLastPayload")

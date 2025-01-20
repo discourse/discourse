@@ -17,6 +17,41 @@
     {{/if}}
     {{#if this.model.active}}
       {{#if this.currentUser.admin}}
+        <DMenu
+          @label={{i18n "admin.user.download_archive.button"}}
+          @icon="download"
+        >
+          <:trigger>
+            {{d-icon "chevron-down"}}
+          </:trigger>
+
+          <:content>
+            <DropdownMenu as |dropdown|>
+
+              <dropdown.item>
+                <DButton
+                  @label="admin.user.download_archive.send_to_user"
+                  class="btn-transparent"
+                  @action={{action "sendArchiveToUser"}}
+                />
+              </dropdown.item>
+              <dropdown.item>
+                <DButton
+                  @label="admin.user.download_archive.send_to_admin"
+                  class="btn-transparent"
+                  @action={{action "sendArchiveToAdmin"}}
+                />
+              </dropdown.item>
+              <dropdown.item>
+                <DButton
+                  @label="admin.user.download_archive.send_to_site_contact"
+                  class="btn-transparent"
+                  @action={{action "sendArchiveToSiteContact"}}
+                />
+              </dropdown.item>
+            </DropdownMenu>
+          </:content>
+        </DMenu>
         <DButton
           @action={{this.logOut}}
           @icon="power-off"

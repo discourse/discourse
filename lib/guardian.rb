@@ -536,7 +536,7 @@ class Guardian
       @user.in_any_groups?(SiteSetting.send_email_messages_allowed_groups_map)
   end
 
-  def can_export_entity?(entity)
+  def can_export_entity?(entity, entity_id = nil)
     return false if anonymous?
     return true if is_admin?
     return can_see_emails? if entity == "screened_email"
@@ -544,6 +544,7 @@ class Guardian
 
     # Regular users can only export their archives
     return false unless entity == "user_archive"
+    return false unless entity_id == @user.id
     UserExport.where(
       user_id: @user.id,
       created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day),
