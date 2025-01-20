@@ -1,7 +1,10 @@
+import { service } from "@ember/service";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminUserIndexRoute extends DiscourseRoute {
+  @service siteSettings;
+
   model() {
     return this.modelFor("adminUser");
   }
@@ -10,12 +13,10 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
     return this.currentModel.username;
   }
 
-  afterModel(model) {
+  async afterModel() {
     if (this.currentUser.admin) {
-      return Group.findAll().then((groups) => {
-        this._availableGroups = groups.filterBy("automatic", false);
-        return model;
-      });
+      const groups = await Group.findAll();
+      this._availableGroups = groups.filterBy("automatic", false);
     }
   }
 

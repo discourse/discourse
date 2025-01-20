@@ -3,6 +3,7 @@
 RSpec.describe ExportCsvController do
   context "while logged in as normal user" do
     fab!(:user)
+    fab!(:user2) { Fabricate(:user) }
     before { sign_in(user) }
 
     describe "#export_entity" do
@@ -28,6 +29,18 @@ RSpec.describe ExportCsvController do
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
+      it "doesn't allow a normal user to export another user's archive" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "user_archive",
+               args: {
+                 export_user_id: user2.id,
+               },
+             }
+        expect(response.status).to eq(422)
+        expect(Jobs::ExportUserArchive.jobs.size).to eq(0)
+      end
+
       it "correctly logs the entity export" do
         post "/export_csv/export_entity.json", params: { entity: "user_archive" }
 
@@ -40,6 +53,7 @@ RSpec.describe ExportCsvController do
   end
 
   context "while logged in as an admin" do
+    fab!(:user)
     fab!(:admin)
     before { sign_in(admin) }
 
@@ -72,6 +86,22 @@ RSpec.describe ExportCsvController do
         expect(log_entry.action).to eq(UserHistory.actions[:entity_export])
         expect(log_entry.acting_user_id).to eq(admin.id)
         expect(log_entry.subject).to eq("user_list")
+      end
+
+      it "allows user archives for other users" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "user_archive",
+               args: {
+                 export_user_id: user.id,
+               },
+             }
+        expect(response.status).to eq(200)
+        expect(Jobs::ExportUserArchive.jobs.size).to eq(1)
+
+        job_data = Jobs::ExportUserArchive.jobs.first["args"].first
+        expect(job_data["user_id"]).to eq(user.id)
+        expect(job_data["admin"]["requesting_user_id"]).to eq(admin.id)
       end
 
       it "fails requests where the entity is too long" do

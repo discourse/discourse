@@ -119,9 +119,18 @@ module Jobs
     def execute(args)
       @archive_for_user = User.find_by(id: args[:user_id])
 
-      if args[:requesting_user_id].present?
-        @requesting_user = User.find_by(id: args[:requesting_user_id])
-        if !@requesting_user&.admin?
+      if args[:admin]&.has_key?(:requesting_user_id)
+        @requesting_user = User.find_by(id: args[:admin][:requesting_user_id])
+        if @requesting_user&.admin?
+          # Admins can decide who to send the export to
+          if args[:admin][:send_to_user]
+            @requesting_user = @archive_for_user
+          elsif args[:admin][:send_to_admin]
+            # We've already set the requesting user to the admin
+          elsif args[:admin][:send_to_site_contact]
+            @requesting_user = Discourse.site_contact_user
+          end
+        else
           raise Discourse::InvalidParameters.new(
                   "requesting_user_id: can only be admins when specified",
                 )

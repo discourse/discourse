@@ -4,8 +4,12 @@ class ExportCsvController < ApplicationController
   skip_before_action :preload_json, :check_xhr, only: [:show]
 
   def export_entity
-    guardian.ensure_can_export_entity!(export_params[:entity])
     entity = export_params[:entity]
+    entity_id = nil
+    if entity == "user_archive" && params[:args].present? && params[:args][:export_user_id].present?
+      entity_id = params[:args][:export_user_id].to_i
+    end
+    guardian.ensure_can_export_entity!(entity, entity_id)
     raise Discourse::InvalidParameters.new(:entity) unless entity.is_a?(String) && entity.size < 100
 
     (export_params[:args] || {}).each do |key, value|
@@ -15,7 +19,19 @@ class ExportCsvController < ApplicationController
     end
 
     if entity == "user_archive"
-      Jobs.enqueue(:export_user_archive, user_id: current_user.id, args: export_params[:args])
+      requesting_user_id = current_user.id if entity_id
+      admin = { requesting_user_id: requesting_user_id }
+      if params[:args].present?
+        admin[:send_to_user] = params[:args][:send_to_user] == "true"
+        admin[:send_to_admin] = params[:args][:send_to_admin] == "true"
+        admin[:send_to_site_contact] = params[:args][:send_to_site_contact] == "true"
+      end
+      Jobs.enqueue(
+        :export_user_archive,
+        user_id: entity_id || current_user.id,
+        args: export_params[:args],
+        admin: admin,
+      )
     else
       Jobs.enqueue(
         :export_csv_file,

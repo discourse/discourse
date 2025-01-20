@@ -497,4 +497,56 @@ RSpec.describe SiteSerializer do
       expect(site_json[:full_name_visible_in_signup]).to eq(false)
     end
   end
+
+  describe "#site_contact_email_available" do
+    describe "when user is an admin" do
+      fab!(:admin)
+      let(:site_json) do
+        admin_guardian = Guardian.new(admin)
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      end
+
+      it "is false when site_contact_user email is blank" do
+        Discourse.site_contact_user.email = ""
+        Discourse.site_contact_user.save(validate: false)
+        expect(site_json[:site_contact_email_available]).to eq(false)
+      end
+
+      it "is false when site_contact_user email is 'no_email'" do
+        Discourse.site_contact_user.email = "no_email"
+        Discourse.site_contact_user.save(validate: false)
+        expect(site_json[:site_contact_email_available]).to eq(false)
+      end
+
+      it "is true when site_contact_user email is present" do
+        Discourse.site_contact_user.update!(email: "foo@bar.com")
+        expect(site_json[:site_contact_email_available]).to eq(true)
+      end
+    end
+
+    describe "when user is not an admin" do
+      fab!(:user)
+      let(:site_json) do
+        user_guardian = Guardian.new(user)
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      end
+
+      it "is nil when site_contact_user email is blank" do
+        Discourse.site_contact_user.email = ""
+        Discourse.site_contact_user.save(validate: false)
+        expect(site_json[:site_contact_email_available]).to eq(nil)
+      end
+
+      it "is nil when site_contact_user email is 'no_email'" do
+        Discourse.site_contact_user.email = "no_email"
+        Discourse.site_contact_user.save(validate: false)
+        expect(site_json[:site_contact_email_available]).to eq(nil)
+      end
+
+      it "is nil when site_contact_user email is present" do
+        Discourse.site_contact_user.update!(email: "foo@bar.com")
+        expect(site_json[:site_contact_email_available]).to eq(nil)
+      end
+    end
+  end
 end
