@@ -7,6 +7,10 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-01-14
+
+- Add `registerUserProfileBeforeSaveCallback` which allows accessing the user profile model before save, so themes and components can add custom logic here and change properties.
+
 ## [2.0.0] - 2025-01-07
 
 - Removed `decorateTopicTitle`. This has been deprecated for more than a year, and we are not aware of any remaining uses in the ecosystem.
