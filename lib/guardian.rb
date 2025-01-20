@@ -540,11 +540,11 @@ class Guardian
     return false if anonymous?
     return true if is_admin?
     return can_see_emails? if entity == "screened_email"
-    return entity != "user_list" && (entity != "user_archive" || entity_id.nil?) if is_moderator?
+    return entity != "user_list" if is_moderator? && (entity != "user_archive" || entity_id.nil?)
 
     # Regular users can only export their archives
     return false unless entity == "user_archive"
-    return false unless entity_id == @user.id
+    return false unless entity_id == @user.id || entity_id.nil?
     UserExport.where(
       user_id: @user.id,
       created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day),
