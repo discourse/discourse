@@ -1,13 +1,11 @@
 .composer-toggle-switch {
   --toggle-switch-width: 40px;
   --toggle-switch-height: 24px;
-
   height: 100%;
   grid-column: span 2;
   justify-content: center;
   display: flex;
   align-items: center;
-
   border: 0;
   padding: 0;
   background: transparent;
@@ -15,6 +13,7 @@
   &:focus-visible {
     outline: none;
   }
+
   &[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
@@ -34,7 +33,7 @@
       outline-offset: 2px;
     }
 
-    &:before {
+    &::before {
       content: "";
       display: block;
       position: absolute;

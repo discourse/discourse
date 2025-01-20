@@ -30,12 +30,7 @@ export default class Parser {
   }
 
   convert(schema, text) {
-    const tokens = parse(text);
-
-    // console.log("Converting tokens", tokens);
-
-    const dummyTokenizer = { parse: () => tokens };
-    const parser = new MarkdownParser(schema, dummyTokenizer, this.parseTokens);
+    const parser = new MarkdownParser(schema, { parse }, this.parseTokens);
 
     // Adding function parse handlers directly
     for (const [key, callback] of Object.entries(this.postParseTokens)) {
@@ -46,19 +41,20 @@ export default class Parser {
   }
 }
 
-/**
- * Node names to be processed allowing multiple occurrences, with its respective `noCloseToken` boolean definition
- * @type {Record<string, boolean>}
- */
-const MULTIPLE_ALLOWED = { span: false, wrap_bbcode: true, bbcode: false };
+const multipleParseSpecs = {};
 
 function extractParsers(extensions) {
-  const parsers = extensions.reduce((acc, { parse: parseObj }) => {
+  return extensions.reduce((acc, { parse: parseObj }) => {
     if (parseObj) {
       Object.entries(parseObj).forEach(([token, parseSpec]) => {
-        if (MULTIPLE_ALLOWED[token] !== undefined) {
-          acc[token] ??= [];
-          acc[token].push(parseSpec);
+        if (acc[token] !== undefined) {
+          if (multipleParseSpecs[token] === undefined) {
+            // switch to use multipleParseSpecs
+            multipleParseSpecs[token] = [acc[token]];
+            acc[token] = multipleParser(token);
+          }
+
+          multipleParseSpecs[token].push(parseSpec);
           return;
         }
         acc[token] = parseSpec;
@@ -67,71 +63,22 @@ function extractParsers(extensions) {
 
     return acc;
   }, {});
-
-  for (const [tokenName, noCloseToken] of Object.entries(MULTIPLE_ALLOWED)) {
-    const parseList = parsers[tokenName];
-    delete parsers[tokenName];
-    Object.assign(
-      parsers,
-      generateMultipleParser(tokenName, parseList, noCloseToken)
-    );
-  }
-
-  return parsers;
 }
 
-function generateMultipleParser(tokenName, list, noCloseToken) {
-  if (noCloseToken) {
-    return {
-      [tokenName](state, token, tokens, i) {
-        if (!list) {
-          return;
-        }
+function multipleParser(tokenName) {
+  return (state, token, tokens, i) => {
+    const parseSpecs = multipleParseSpecs[tokenName];
 
-        for (let parser of list) {
-          // Stop once a parse function returns true
-          if (parser(state, token, tokens, i)) {
-            return;
-          }
-        }
-        throw new Error(
-          `No parser to process ${tokenName} token. Tag: ${
-            token.tag
-          }, attrs: ${JSON.stringify(token.attrs)}`
-        );
-      },
-    };
-  } else {
-    return {
-      [`${tokenName}_open`](state, token, tokens, i) {
-        if (!list) {
-          return;
-        }
+    for (const parseSpec of parseSpecs) {
+      if (parseSpec(state, token, tokens, i)) {
+        return;
+      }
+    }
 
-        state[`skip${tokenName}CloseStack`] ??= [];
-
-        let handled = false;
-        for (let parser of list) {
-          if (parser(state, token, tokens, i)) {
-            handled = true;
-            break;
-          }
-        }
-
-        state[`skip${tokenName}CloseStack`].push(!handled);
-      },
-      [`${tokenName}_close`](state) {
-        if (!list || !state[`skip${tokenName}CloseStack`]) {
-          return;
-        }
-
-        const skipCurrentLevel = state[`skip${tokenName}CloseStack`].pop();
-        if (skipCurrentLevel) {
-          return;
-        }
-
-        state.closeNode();
-      },
-    };
-  }
+    throw new Error(
+      `No parser processed ${tokenName} token for tag: ${
+        token.tag
+      }, attrs: ${JSON.stringify(token.attrs)}`
+    );
+  };
 }

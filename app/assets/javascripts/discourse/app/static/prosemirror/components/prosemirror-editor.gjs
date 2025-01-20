@@ -61,8 +61,6 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {string} [placeholder] The placeholder text to be displayed when the editor is empty
  * @property {boolean} [disabled] Whether the editor should be disabled
  * @property {Record<string, () => void>} [keymap] A mapping of keybindings to commands
- * @property {Record<string, import('prosemirror-view').NodeViewConstructor>} [nodeViews] A mapping of node names to node view components (it will override any node views from extensions)
- * @property {import('prosemirror-state').Schema} [schema] The schema to be used in the editor (it will override the default schema)
  * @property {(value: string) => void} [change] A callback called when the editor content changes
  * @property {() => void} [focusIn] A callback called when the editor gains focus
  * @property {() => void} [focusOut] A callback called when the editor loses focus
@@ -119,11 +117,12 @@ export default class ProsemirrorEditor extends Component {
   }
 
   get keymapFromArgs() {
+    const replacements = { tab: "Tab" };
     return Object.entries(this.args.keymap ?? {}).reduce(
       (acc, [key, value]) => {
         const pmKey = key
           .split("+")
-          .map((word) => (word === "tab" ? "Tab" : word))
+          .map((word) => replacements[word] ?? word)
           .join("-");
         acc[pmKey] = value;
         return acc;

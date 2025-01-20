@@ -30,6 +30,7 @@
   h5,
   h6 {
     margin: 30px 0 10px;
+
     &:first-child {
       margin-top: 10px;
     }
@@ -59,9 +60,11 @@
         0% {
           opacity: 0.6;
         }
+
         50% {
           opacity: 0.4;
         }
+
         100% {
           opacity: 0.6;
         }
@@ -171,11 +174,7 @@
 
 .ProseMirror {
   word-wrap: break-word;
-  white-space: pre-wrap;
   white-space: break-spaces;
-  -webkit-font-variant-ligatures: none;
-  font-variant-ligatures: none;
-  font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
 }
 
 .ProseMirror pre {
@@ -189,9 +188,7 @@
 .ProseMirror-hideselection *::selection {
   background: transparent;
 }
-.ProseMirror-hideselection *::-moz-selection {
-  background: transparent;
-}
+
 .ProseMirror-hideselection {
   caret-color: transparent;
 }
@@ -206,12 +203,11 @@
 }
 
 /* Make sure li selections wrap around markers */
-
 li.ProseMirror-selectednode {
   outline: none;
 }
 
-li.ProseMirror-selectednode:after {
+li.ProseMirror-selectednode::after {
   content: "";
   position: absolute;
   left: -32px;
@@ -223,7 +219,6 @@ li.ProseMirror-selectednode:after {
 }
 
 /* Protect against generic img rules */
-
 .ProseMirror-separator {
   display: inline !important;
   border: none !important;
@@ -240,7 +235,7 @@ li.ProseMirror-selectednode:after {
   position: absolute;
 }
 
-.ProseMirror-gapcursor:after {
+.ProseMirror-gapcursor::after {
   content: "";
   display: block;
   position: absolute;

@@ -65,6 +65,10 @@ export function registerRichEditorExtension(extension) {
   EXTENSIONS.push(extension);
 }
 
+export function resetRichEditorExtensions() {
+  EXTENSIONS.length = 0;
+}
+
 /**
  * Get all extensions registered for the rich editor
  *
