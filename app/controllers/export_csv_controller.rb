@@ -5,10 +5,7 @@ class ExportCsvController < ApplicationController
 
   def export_entity
     entity = export_params[:entity]
-    entity_id = nil
-    if entity == "user_archive" && params[:args].present? && params[:args][:export_user_id].present?
-      entity_id = params[:args][:export_user_id].to_i
-    end
+    entity_id = params.dig(:args, :export_user_id)&.to_i if entity == "user_archive"
     guardian.ensure_can_export_entity!(entity, entity_id)
     raise Discourse::InvalidParameters.new(:entity) unless entity.is_a?(String) && entity.size < 100
 
@@ -30,7 +27,7 @@ class ExportCsvController < ApplicationController
         :export_user_archive,
         user_id: entity_id || current_user.id,
         args: export_params[:args],
-        admin: admin,
+        admin:,
       )
     else
       Jobs.enqueue(
