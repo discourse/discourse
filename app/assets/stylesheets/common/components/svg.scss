@@ -6,7 +6,7 @@
   display: inline-flex;
   position: relative;
   vertical-align: -0.125em;
-  fill: currentColor;
+  fill: currentcolor;
   flex-shrink: 0; // Prevent the icon from shrinking if it's in a flexbox
   overflow: visible;
 }
@@ -23,7 +23,6 @@ svg > use {
 //    <svg class="... d-icon-icon2 fa-stack-2x ..." xmlns="http://www.w3.org/2000/svg"><use href="#icon2"></use></svg>
 // </span>
 // -------------------------
-
 .fa-stack {
   position: relative;
   width: 1em;
@@ -32,8 +31,8 @@ svg > use {
 
   .fa-stack-1x,
   .fa-stack-2x {
-    left: 0px;
-    top: 0px;
+    left: 0;
+    top: 0;
     position: absolute;
   }
 

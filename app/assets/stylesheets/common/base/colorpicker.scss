@@ -1,5 +1,4 @@
 // styles for the category badge color picker
-
 .category-color-editor {
   input {
     width: 5.5em;
@@ -29,9 +28,11 @@
       padding: 0;
       flex: 0 0 auto;
       color: white;
+
       svg {
         display: none;
       }
+
       &.used-color svg {
         display: inline-flex;
         opacity: 0.8;

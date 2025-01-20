@@ -6,12 +6,15 @@
     .names {
       flex: 1 1 auto;
     }
+
     .usercard-controls {
       max-width: 225px;
+
       button {
         min-width: 150px;
       }
     }
+
     .user-profile-link {
       &:focus-visible {
         border: 1px solid;
@@ -19,6 +22,7 @@
       }
     }
   }
+
   .names__primary {
     .d-icon {
       font-size: var(--font-down-1);
@@ -30,12 +34,15 @@
     // at 200% - 400% zoom levels
     --avatar-width: 4em;
     --avatar-margin: 0;
+
     .names__primary {
       font-size: var(--font-up-2);
     }
+
     .first-row {
       gap: 0.5em 0;
       flex-wrap: wrap;
+
       .usercard-controls {
         max-width: unset;
         width: 100%;
@@ -43,8 +50,10 @@
         flex-wrap: wrap;
         gap: 0 0.5em;
       }
+
       li {
         flex: 1 1 0;
+
         &:empty {
           display: none;
         }
@@ -61,6 +70,7 @@
       display: block;
       max-width: 185px;
     }
+
     .more-user-badges {
       max-width: 125px;
     }

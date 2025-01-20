@@ -4,18 +4,23 @@
   .thresholds {
     margin-top: 1em;
   }
+
   table {
     width: 100%;
   }
+
   table td {
     padding: 0.5em;
   }
+
   td.sum {
     text-align: right;
   }
+
   td.sum.total {
     font-weight: bold;
   }
+
   tr.total {
     td {
       background-color: var(--primary-low);

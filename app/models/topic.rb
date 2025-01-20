@@ -1174,6 +1174,7 @@ class Topic < ActiveRecord::Base
         end
 
         topic_user.destroy
+        MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
         return true
       end
     end

@@ -28,6 +28,7 @@
     &__details {
       flex-grow: 1;
       min-width: 0;
+
       .badge-category__wrapper {
         width: 100%;
       }
@@ -60,12 +61,15 @@
     font-size: var(--font-0);
     word-wrap: break-word;
     color: var(--primary);
+
     &:empty {
       display: none;
     }
+
     details.disabled {
       color: var(--primary-medium);
     }
+
     .emoji.only-emoji {
       // oversized emoji break excerpt layout
       // so we match inline emoji size

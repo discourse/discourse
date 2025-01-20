@@ -3,7 +3,6 @@ import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { and, eq } from "truth-helpers";
@@ -396,11 +395,6 @@ export default class PostMenu extends Component {
     return items;
   }
 
-  @action
-  expandIfOnlyOneHiddenButton() {
-    this.collapsed = this.renderableCollapsedButtons.length > 1;
-  }
-
   @cached
   get renderableCollapsedButtons() {
     return this.availableCollapsedButtons.filter((button) =>
@@ -410,9 +404,13 @@ export default class PostMenu extends Component {
 
   @cached
   get visibleButtons() {
-    const nonCollapsed = this.availableButtons.filter((button) => {
-      return !this.availableCollapsedButtons.includes(button);
-    });
+    let nonCollapsed = this.availableButtons;
+
+    if (this.renderableCollapsedButtons.length > 1) {
+      nonCollapsed = nonCollapsed.filter((button) => {
+        return !this.renderableCollapsedButtons.includes(button);
+      });
+    }
 
     return DAG.from(
       nonCollapsed.map((button) => [button.key, button, button.position]),
@@ -609,7 +607,6 @@ export default class PostMenu extends Component {
             "replies-button-visible"
           )
         }}
-        {{didInsert this.expandIfOnlyOneHiddenButton}}
       >
         {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
         {{#each this.extraControls key="key" as |extraControl|}}

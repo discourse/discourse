@@ -10,21 +10,25 @@
   opacity: 0;
   z-index: calc(z("timeline") + 1);
 }
+
 .--transition {
   .post-action-feedback-alert,
   .post-action-feedback-svg {
     transition: opacity 0.25s, color 0.25s;
   }
 }
+
 .--activated {
   .post-action-feedback-alert,
   .post-action-feedback-svg {
     opacity: 1;
   }
+
   .post-action-feedback-alert {
     &.-success {
       color: var(--success);
     }
+
     &.-fail {
       color: var(--danger);
     }

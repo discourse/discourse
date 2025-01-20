@@ -20,6 +20,8 @@ const SidebarMoreSectionLink = <template>
     @suffixType={{@sectionLink.suffixType}}
     @suffixValue={{@sectionLink.suffixValue}}
     @title={{@sectionLink.title}}
+    @toggleNavigationMenu={{@toggleNavigationMenu}}
+    ...attributes
   />
 </template>;
 

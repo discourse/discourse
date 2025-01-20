@@ -52,7 +52,7 @@ summary:first-of-type {
   display: block;
 }
 
-summary:before {
+summary::before {
   content: "\25BA";
   margin-right: 0.25em;
 }
@@ -62,8 +62,8 @@ details[open] .lightbox-wrapper {
   display: block;
 }
 
-details[open] > summary:before,
-details.open > summary:before {
+details[open] > summary::before,
+details.open > summary::before {
   content: "\25BC";
 }
 
@@ -99,12 +99,13 @@ summary::-webkit-details-marker {
     &[open] {
       background: var(--primary-very-low);
       padding: 0.5rem 0.75rem;
+
       summary {
         padding: 0;
       }
     }
 
-    summary:before {
+    summary::before {
       content: "" !important;
       display: none;
     }

@@ -42,6 +42,7 @@
 
   &.disabled {
     cursor: not-allowed;
+
     .d-editor-button-bar {
       opacity: 0.5;
       pointer-events: none;
@@ -69,7 +70,7 @@
   margin: 0;
   min-height: auto;
   word-wrap: break-word;
-  -webkit-appearance: none;
+  appearance: none;
   border-radius: 0;
 }
 
@@ -117,24 +118,30 @@
     height: 100%;
     min-height: 10em;
   }
+
   .local-dates.btn {
     display: none;
   }
+
   .d-editor-container {
     display: block;
   }
+
   .d-editor-textarea-wrapper {
     border: 1px solid var(--primary-low);
   }
+
   .d-editor-preview-wrapper {
     max-width: 100%;
     margin: 0;
     padding: 0;
   }
+
   .d-editor-preview {
     background-color: var(--primary-very-low);
     margin-top: 1em;
     padding: 0.667em;
+
     &:empty {
       margin: 0;
       padding: 0;
@@ -150,12 +157,14 @@
 
 .d-editor-preview img {
   vertical-align: baseline; // consistent with cooked
+
   &.emoji,
   &.avatar,
   &.onebox-avatar,
   &.site-icon {
     vertical-align: text-bottom;
   }
+
   &.resizable {
     object-fit: cover;
     object-position: top;
@@ -221,6 +230,7 @@
 
     .alt-text-readonly-container {
       flex: 1 1 auto;
+
       // arbitrary min-width value allows for correct shrinking
       min-width: 100px;
 
@@ -246,6 +256,7 @@
       flex: 1;
       max-width: 100%;
       height: 95%; // gives input some padding
+
       .alt-text-input,
       .alt-text-edit-ok,
       .alt-text-edit-cancel {
@@ -320,8 +331,9 @@
     color: var(--primary-medium);
 
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
     }
+
     .discourse-no-touch & {
       &:hover {
         color: var(--primary-low);

@@ -29,13 +29,14 @@ html.composer-open {
     .submit-panel .mobile-preview {
       display: none;
     }
+
     .d-editor-preview-wrapper {
       display: none;
       flex: 0;
     }
   }
 
-  @media screen and (max-width: 1200px) {
+  @media screen and (width <= 1200px) {
     min-width: 0;
   }
   z-index: z("composer", "content");
@@ -59,6 +60,7 @@ html.composer-open {
       border-color: var(--secondary);
       border-right-color: transparent;
     }
+
     .d-icon {
       color: var(--secondary);
     }
@@ -100,10 +102,12 @@ html.composer-open {
   &.draft {
     cursor: pointer;
     display: flex;
+
     .draft-text {
       display: block;
       @include ellipsis;
     }
+
     .grippie,
     .saving-text {
       display: none;
@@ -132,6 +136,7 @@ html.composer-open {
         color: var(--primary-medium);
       }
     }
+
     .composer-action-title {
       display: flex;
       align-items: center;
@@ -157,7 +162,7 @@ html.composer-open {
         margin-right: 5px;
         max-width: 100px;
         @include ellipsis;
-        @media screen and (max-width: 500px) {
+        @media screen and (width <= 500px) {
           display: none;
         }
       }
@@ -193,9 +198,11 @@ html.composer-open {
 
   .display-edit-reason {
     display: inline-flex;
+
     a {
       display: inline-flex;
     }
+
     .d-icon {
       padding: 0.3em 0.5em;
       color: var(--tertiary);
@@ -274,13 +281,16 @@ html.composer-open {
       .selected-name {
         max-width: 100%;
         overflow: hidden;
+
         .name {
           display: flex;
           max-width: 100%;
           gap: 0 0.5em;
+
           .badge-category {
             overflow: hidden;
           }
+
           // This prevents the first category from being too-truncated at the expense of a long subcategory
           > span:last-of-type:not(:first-of-type) {
             flex-shrink: 10;
@@ -333,11 +343,13 @@ html.composer-open {
 
   .tags-input {
     position: relative;
-    margin: 0 0 8px 0px;
+    margin: 0 0 8px 0;
     flex-grow: 1;
+
     .mini-tag-chooser {
       z-index: z("composer", "dropdown");
       width: 100%;
+
       .select-kit-header {
         color: var(--primary-high);
       }
@@ -399,10 +411,12 @@ html.composer-open {
     display: flex;
     align-items: center;
     margin-right: auto;
+
     a {
       margin-left: 0.33em;
       color: var(--primary-high);
     }
+
     .spinner {
       margin-right: 0.33em;
     }
@@ -410,11 +424,13 @@ html.composer-open {
 
   #draft-status {
     margin-left: auto;
+
     .d-icon-user-pen {
       color: var(--danger);
       font-size: 20px;
       vertical-align: -5.5px;
     }
+
     + .btn-mini-toggle {
       margin-left: 0;
     }
@@ -452,10 +468,12 @@ html.composer-open {
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
       }
+
       &:last-of-type a {
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
       }
+
       a {
         @include ellipsis;
         align-items: center;
@@ -518,6 +536,7 @@ html.composer-open {
     li a {
       padding: 0.5em 1em;
     }
+
     .emoji {
       height: 0.75em;
       width: 0.75em;
@@ -528,6 +547,7 @@ html.composer-open {
     li:last-of-type a {
       color: var(--primary-high);
     }
+
     .emoji {
       margin-right: 0.25em;
     }
@@ -538,6 +558,7 @@ div.ac-wrap.disabled {
   input {
     display: none;
   }
+
   .item a {
     display: none;
   }
@@ -552,6 +573,7 @@ div.ac-wrap div.item a.remove,
   border-radius: 12px;
   box-sizing: border-box;
   border: 1px solid var(--primary-low);
+
   &:hover {
     background-color: var(--danger-low);
     border: 1px solid var(--danger-medium);
@@ -567,10 +589,12 @@ div.ac-wrap {
   align-items: center;
   min-height: 30px;
   box-sizing: border-box;
+
   div.item {
     float: left;
     padding: 4px 10px;
     line-height: var(--line-height-large);
+
     span {
       display: inline-block;
       line-height: var(--line-height-medium);
@@ -587,6 +611,7 @@ div.ac-wrap {
 
   input[type="text"] {
     float: left;
+
     &.fullwidth-input {
       width: 100%;
     }
@@ -596,6 +621,7 @@ div.ac-wrap {
 .md-table {
   overflow-y: auto;
   margin: 1em 0;
+
   .mobile-view & {
     table {
       width: 100%;
@@ -624,6 +650,7 @@ div.ac-wrap {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -641,7 +668,7 @@ div.ac-wrap {
       // this might be overkill
       // but on iPad with a physical keyboard the composer is shifted up on scroll
       // this adds a solid box shadow below, looks cleaner
-      box-shadow: 0 150px 0px 0px var(--secondary);
+      box-shadow: 0 150px 0 0 var(--secondary);
 
       &.open {
         z-index: z("mobile-composer");

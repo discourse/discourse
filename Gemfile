@@ -284,6 +284,9 @@ group :migrations, optional: true do
 
   # CLI
   gem "ruby-progressbar"
+
+  # non-cryptographic hashing algorithm for generating placeholder IDs
+  gem "digest-xxhash"
 end
 
 gem "dry-initializer", "~> 3.1"

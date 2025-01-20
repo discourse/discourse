@@ -97,5 +97,14 @@ RSpec.describe PostGuardian do
       post.update!(user: anon)
       expect(Guardian.new(anon).can_edit_post?(post)).to eq(true)
     end
+
+    it "returns false if the user is the author, but can no longer see the post" do
+      post.update!(user: user)
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:can_see_post_topic?).returns(false)
+
+      expect(guardian.can_edit_post?(post)).to eq(false)
+    end
   end
 end

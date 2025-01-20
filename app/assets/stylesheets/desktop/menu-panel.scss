@@ -11,11 +11,11 @@
 }
 
 // Sidebar-hamburger hybrid
-
 .hamburger-panel .revamped {
   --d-sidebar-highlight-background: var(--d-hover);
   --d-sidebar-row-horizontal-padding: 0.5rem;
   --d-sidebar-row-height: 30px;
+
   // 1.25rem gets text left-aligned with the hamburger icon
   --d-sidebar-row-horizontal-padding: 0.66rem;
   width: 360px;
@@ -41,16 +41,20 @@
 
     &.sidebar-section {
       padding-top: 0.5em;
+
       .sidebar-section-header-wrapper {
         margin: 0 0 0.5em;
         padding-bottom: 0.25em;
+
         .d-icon-globe {
           color: var(--primary-medium);
         }
       }
-      ul {
+
+      .sidebar-section-content {
         display: grid;
         grid-template-columns: 1fr 1fr;
+
         li {
           min-width: 0;
         }
@@ -71,11 +75,13 @@
   .sidebar-footer-wrapper {
     padding: 0;
     margin-top: 1em;
+
     .sidebar-footer-container {
       padding: 0;
       border: none;
       background: var(--secondary);
-      &:before {
+
+      &::before {
         top: -1.5em;
         background: linear-gradient(
           to bottom,

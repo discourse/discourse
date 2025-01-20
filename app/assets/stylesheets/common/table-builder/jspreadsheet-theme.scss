@@ -3,20 +3,16 @@
   --jexcel_header_color_highlighted: var(--primary-high);
   --jexcel_header_background: var(--primary-very-low);
   --jexcel_header_background_highlighted: var(--primary-low);
-
   --jexcel_content_color: var(--primary);
   --jexcel_content_color_highlighted: var(--primary-high);
   --jexcel_content_background: var(--secondary);
   --jexcel_content_background_highlighted: var(--tertiary-very-low);
-
   --jexcel_menu_background: var(--secondary);
   --jexcel_menu_background_highlighted: var(--secondary-very-high);
   --jexcel_menu_color: var(--primary-medium);
   --jexcel_menu_color_highlighted: var(--primary);
-
   --jexcel_border_color: var(--primary-low-mid);
   --jexcel_border_color_highlighted: var(--tertiary-high);
-
   --active_color: var(--primary-very-low);
   --active-color: var(--active_color);
 }
@@ -36,6 +32,7 @@ table.jexcel > thead > tr > td {
   padding: 10px;
   font-weight: bold;
 }
+
 table.jexcel > tbody > tr > td {
   padding: 8px;
   border-right: 1px solid transparent;
@@ -197,32 +194,39 @@ table.jexcel > tbody > tr.selected > td:first-child {
 .jexcel .highlight-bottom {
   border-bottom: 1.5px solid var(--jexcel_border_color_highlighted);
 }
+
 .jexcel .highlight-right {
   border-right: 1.5px solid var(--jexcel_border_color_highlighted);
 }
+
 .jexcel .highlight-left {
   border-left: 1.5px solid var(--jexcel_border_color_highlighted);
 }
+
 .jexcel .highlight-top {
   border-top: 1.5px solid var(--jexcel_border_color_highlighted);
 }
+
 .jexcel .copying-top {
   border-top-color: var(--jexcel_border_color_highlighted);
 }
+
 .jexcel .copying-right {
   border-right-color: var(--jexcel_border_color_highlighted);
 }
+
 .jexcel .copying-left {
   border-left-color: var(--jexcel_border_color_highlighted);
 }
+
 .jexcel .copying-bottom {
   border-bottom-color: var(--jexcel_border_color_highlighted);
 }
+
 .jexcel_border_main,
 .jexcel .highlight-top.highlight-left,
 .jexcel .highlight-top,
 .jexcel .highlight-left {
-  -webkit-box-shadow: unset;
   box-shadow: unset;
 }
 
@@ -258,9 +262,11 @@ table.jexcel > tbody > tr > td {
 .jexcel_container {
   padding: 0.5em;
   min-width: 100%;
+
   .jexcel_content {
     min-width: 100%;
     padding: 0;
+
     table.jexcel {
       min-width: 100%;
     }

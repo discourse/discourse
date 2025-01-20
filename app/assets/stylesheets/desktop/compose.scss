@@ -24,14 +24,17 @@
       .title-and-category {
         flex-wrap: nowrap;
         gap: 0.5em;
+
         .tags-input {
           max-width: 50%;
           flex: 1 1 auto;
         }
       }
+
       .title-input {
         max-width: 50%;
         min-width: 0;
+
         input {
           min-width: 0;
         }
@@ -42,6 +45,7 @@
     .users-input {
       width: 100%;
       flex: 0 0 auto;
+
       &.can-warn {
         // space for warning, inverse of mini-tag-chooser width
         width: 60%;
@@ -51,6 +55,7 @@
     .add-warning {
       flex: 1 1 auto;
       overflow: hidden;
+
       span {
         // protects the space of the user input in case there's a very long translation
         @include ellipsis;
@@ -71,7 +76,7 @@
     padding: 4px 0;
     background: var(--tertiary);
 
-    &:before {
+    &::before {
       content: "";
       display: block;
       width: 24px;
@@ -122,9 +127,11 @@
   &.get-a-room {
     bottom: unset;
     padding: 2.25em 6em 2.5em 2.25em;
+
     p {
       font-size: var(--font-up-1);
     }
+
     button:not(.close) {
       margin-top: 0.5em;
     }
@@ -142,15 +149,18 @@
     top: 0;
     color: var(--primary-medium);
     font-size: var(--font-0);
+
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
       font-size: var(--font-up-1);
       margin: 0 0 0 0.25em;
     }
+
     .discourse-no-touch & {
       &:active,
       &:focus {
         background: transparent;
+
         .d-icon {
           color: var(--primary);
         }
@@ -161,6 +171,7 @@
   ul {
     margin: 0;
     padding: 0 0 0 1.5em;
+
     &.list,
     &.topics {
       list-style: none;
@@ -182,6 +193,7 @@
 
 .custom-body {
   background-color: var(--tertiary-low);
+
   p {
     max-width: 98%;
   }
@@ -206,19 +218,24 @@
     flex: 0 1 auto;
     margin-right: 0.5em;
   }
+
   span.badge-wrapper {
     margin-left: 0;
   }
+
   .blurb {
     color: var(--primary-high);
   }
+
   .topic-title,
   .blurb {
     margin-bottom: 0.5em;
+
     .d-icon {
       color: var(--primary-high);
     }
   }
+
   span.topic {
     display: flex;
     flex-direction: column;
@@ -246,6 +263,7 @@
 
 a.toggle-preview {
   color: var(--primary-high);
+
   &:hover {
     color: var(--tertiary);
   }
@@ -288,18 +306,22 @@ a.toggle-preview {
       .d-editor-textarea-wrapper {
         border: none;
       }
+
       &.show-preview .d-editor-textarea-wrapper {
         border-right: 1px solid var(--primary-low);
       }
+
       #draft-status,
       #file-uploading {
         margin-left: 0;
         text-align: initial;
       }
+
       .composer-popup {
         top: 30px;
       }
-      &:before {
+
+      &::before {
         content: "";
         background: var(--secondary);
         width: 100%;
@@ -324,6 +346,7 @@ a.toggle-preview {
   left: 50%;
   top: 10%;
   transform: translate(-50%, 0);
+
   .rtl & {
     // R2 is not smart enough to support this swap
     transform: translate(50%, 0);
@@ -334,6 +357,7 @@ a.toggle-preview {
   padding: 0.5em 0.75em;
   pointer-events: none;
   border-radius: 2px;
+
   kbd {
     background: none;
   }
@@ -345,6 +369,7 @@ a.toggle-preview {
       height: auto;
     }
   }
+
   #reply-control:not(.fullscreen) {
     .has-sidebar-page & {
       width: auto;

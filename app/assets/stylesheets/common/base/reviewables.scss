@@ -9,19 +9,24 @@
 
   .status {
     color: var(--primary-medium);
+
     span.approved {
       color: var(--success);
+
       .d-icon {
-        color: currentColor;
+        color: currentcolor;
       }
     }
+
     span.rejected {
       color: var(--danger);
+
       .d-icon {
-        color: currentColor;
+        color: currentcolor;
       }
     }
   }
+
   .explain {
     margin-left: 0.5em;
   }
@@ -64,6 +69,7 @@
   .saved {
     margin-left: 0.5em;
   }
+
   .reviewable-score-type {
     display: flex;
     margin-bottom: 0.5em;
@@ -71,6 +77,7 @@
     .select-kit {
       min-width: 10em;
     }
+
     .title {
       width: 30%;
     }
@@ -80,6 +87,7 @@
 .reviewable-user-info {
   max-width: 100%;
   margin: 0.5em 0;
+
   .reviewable-user-fields {
     margin-bottom: 2em;
   }
@@ -87,13 +95,14 @@
   .reviewable-user-details {
     border-bottom: 1px solid var(--primary-low);
     padding-bottom: 0.25em;
-
     display: flex;
+
     .name {
       width: 8em;
       font-weight: bold;
       margin-right: 1em;
     }
+
     .value {
       max-width: calc(
         100% - 8em - 1em
@@ -136,6 +145,7 @@
 .reviewable-claimed-topic {
   display: flex;
   align-items: center;
+
   .btn-small {
     margin-left: 0.5em;
   }
@@ -152,6 +162,7 @@
 .claimed-by {
   display: flex;
   align-items: center;
+
   .claimed-username {
     margin-left: 0.5em;
   }
@@ -188,6 +199,7 @@
     width: 5em;
   }
 }
+
 .user-flag-percentage {
   display: flex;
   align-items: center;
@@ -195,22 +207,28 @@
 
   .percentage-label {
     margin-right: 0.25em;
+
     &.agreed {
       color: var(--success);
+
       + .d-icon {
         color: var(--success);
       }
     }
+
     &.disagreed {
       color: var(--danger);
+
       + .d-icon {
         color: var(--danger);
       }
     }
+
     &.ignored {
       color: var(--primary-medium);
     }
   }
+
   .d-icon {
     font-size: 0.9em;
   }
@@ -231,6 +249,7 @@
     margin-bottom: 0.5em;
     font-size: var(--font-down-1);
     align-items: baseline;
+
     .reviewable-type {
       margin-right: 0.25em;
       padding: 0.25em 0.5em;
@@ -239,26 +258,32 @@
       color: var(--secondary);
       border-radius: 8px;
       background-color: var(--secondary-high);
+
       &.-flagged-post,
       &.-flagged-chat-message {
         background-color: var(--danger);
       }
+
       &.-queued-post,
       &.-queued-topic,
       &.-user {
         background-color: var(--tertiary);
       }
     }
+
     .reply-count {
       margin-left: 1em;
     }
+
     .created-at {
       margin-left: 1em;
       margin-right: auto;
+
       a {
         color: var(--primary-med-or-secondary-med);
       }
     }
+
     .score {
       font-size: var(--font-down-1);
     }
@@ -287,6 +312,7 @@
       background-color: var(--success);
       color: var(--secondary);
     }
+
     .reject-post,
     .reject-post > summary {
       background-color: var(--danger);
@@ -313,7 +339,7 @@
 }
 
 .blur-images {
-  img:not(.avatar):not(.emoji) {
+  img:not(.avatar, .emoji) {
     filter: blur(10px);
     transition: 0.2s ease-in-out;
 
@@ -346,6 +372,7 @@
       margin-left: 0.5em;
     }
   }
+
   .user,
   .reviewed-by {
     display: flex;
@@ -378,18 +405,22 @@
 
   tbody {
     border-width: 1px;
+
     td {
       white-space: nowrap;
       vertical-align: baseline;
+
       &.user a,
       &.reviewed-by a {
         max-width: 150px;
         @include ellipsis;
       }
     }
+
     > tr > th {
       text-align: left;
     }
+
     > tr > th,
     > tr > td {
       &:not(:empty) {
@@ -429,13 +460,16 @@
 
 .reviewable-item {
   margin-block: 3rem;
+
   .show-raw-email {
     color: var(--primary-medium);
     font-size: var(--font-down-2);
   }
+
   .post-title {
     background-color: yellow;
   }
+
   .created-by {
     margin-right: 1em;
     padding-top: 0.35em;
@@ -458,6 +492,7 @@
       display: flex;
     }
   }
+
   .reviewable-post-header {
     display: flex;
     justify-content: space-between;
@@ -470,6 +505,7 @@
       align-items: center;
       color: var(--primary-medium);
       font-size: 0.9em;
+
       .d-icon {
         margin-right: 0.5em;
       }
@@ -490,7 +526,7 @@
       max-height: 50vh;
       overflow: hidden;
 
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         left: 0;
@@ -504,9 +540,11 @@
         transform: translateX(-50%) translateY(-50%);
       }
     }
+
     p {
       margin-bottom: 0;
     }
+
     &__toggle-btn {
       background: var(--primary-very-low);
       color: var(--primary-high);
@@ -549,6 +587,7 @@
     width: 100%;
     color: var(--primary-medium);
     margin-bottom: 0.75em;
+
     .title-text {
       font-weight: bold;
       color: var(--primary);
@@ -556,9 +595,11 @@
       font-size: var(--font-up-2);
       margin-right: 0.75em;
     }
+
     .badge-category__wrapper {
       margin-left: 0.25em;
     }
+
     .discourse-tag {
       vertical-align: bottom;
       padding-left: 0.1em;
@@ -573,13 +614,14 @@
 .editable-fields {
   .editable-created-by {
     display: flex;
+
     .avatar {
       margin-right: 0.25em;
     }
     margin-bottom: 0.5em;
   }
-
   width: 100%;
+
   .editable-field {
     .mini-tag-chooser {
       margin: 0;

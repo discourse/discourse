@@ -61,6 +61,7 @@
 
     &.no-change {
       color: var(--primary-medium);
+
       .d-icon {
         display: none;
       }
@@ -97,7 +98,7 @@
     }
 
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
       font-size: var(--font-up-5);
       display: block;
       margin: 0.25em auto;
@@ -212,7 +213,7 @@
   border-bottom: 1px solid var(--primary-low);
   padding-bottom: 0.5em;
 
-  @media screen and (max-width: 400px) {
+  @media screen and (width <= 400px) {
     flex-wrap: wrap;
   }
 
@@ -227,7 +228,6 @@
 
 .admin-reports-list {
   --d-border-radius: var(--space-0);
-
   display: flex;
   flex-wrap: wrap;
   list-style-type: none;
@@ -237,7 +237,6 @@
     padding-top: 0;
 
     .admin-section-landing-item {
-      margin-bottom: 0;
       padding: var(--space-4);
       border-radius: var(--d-border-radius);
       outline: 1px solid var(--primary-low);

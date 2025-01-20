@@ -16,12 +16,14 @@
   h1 {
     font-size: var(--font-up-3);
     line-height: var(--line-height-medium);
+
     a {
       color: var(--primary);
       vertical-align: middle;
       word-wrap: break-word;
     }
   }
+
   .title-category-wrapper {
     margin-top: 5px;
   }
@@ -76,9 +78,11 @@ sub sub {
   .now-date {
     padding: 0.5em 0;
   }
+
   .timeline-scrollarea-wrapper .timeline-date-wrapper {
     @include ellipsis;
   }
+
   .topic-category {
     margin-bottom: 0.5rem;
   }

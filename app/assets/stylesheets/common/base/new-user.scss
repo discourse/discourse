@@ -27,6 +27,7 @@
 @mixin bordered-nav-pills {
   width: 100%;
   margin: 0;
+
   .d-icon {
     font-size: var(--font-down-1);
   }
@@ -38,6 +39,7 @@
           font-size: var(--font-up-1);
           margin: 0;
         }
+
         span {
           display: none;
         }
@@ -68,6 +70,7 @@
   .user-navigation-primary {
     [class*="horizontal-overflow-nav__scroll"] {
       font-size: var(--font-up-1);
+
       .d-icon {
         margin-top: 0.15em; // minor alignment
       }
@@ -78,7 +81,6 @@
     position: relative;
     display: flex;
     min-width: 0;
-
     gap: 0 0.5em;
     font-size: var(--font-down-1);
 
@@ -95,10 +97,12 @@
       // manage long group names
       max-width: 20vw;
       min-width: 7em;
+
       .select-kit-selected-name,
       .name {
         @include ellipsis;
       }
+
       .name {
         min-width: 0;
       }
@@ -110,6 +114,7 @@
       @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
       }
+
       > li {
         margin: 0;
       }
@@ -163,6 +168,7 @@
 
 .user-preferences__tracking-topics-wrapper {
   margin-bottom: 3em;
+
   .control-label {
     margin-bottom: 1em;
   }
@@ -172,6 +178,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
   gap: 2em;
+
   .control-group {
     width: 100%;
     min-width: 16em;

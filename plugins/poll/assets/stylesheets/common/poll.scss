@@ -22,6 +22,7 @@ div.poll-outer {
       color: var(--primary);
       padding: 0.5em 0;
       word-break: break-word;
+
       button {
         background-color: transparent;
         border: none;
@@ -55,11 +56,13 @@ div.poll-outer {
         &.nav-items {
           display: flex;
           gap: 0.5em;
+
           .nav-btn {
             background-color: var(--secondary);
             border: none;
             color: var(--primary-medium);
           }
+
           .active {
             .nav-btn {
               color: var(--primary);
@@ -67,10 +70,12 @@ div.poll-outer {
           }
         }
       }
+
       .rank {
         display: inline-block;
         min-width: 20px;
       }
+
       .poll-results-ranked_choice-subtitle-rounds {
         margin: 0.25em 0 0.67rem;
       }
@@ -79,8 +84,8 @@ div.poll-outer {
     img {
       // Hacky way to stop images without width/height
       // from causing abrupt unintended scrolling
-      &:not([width]):not(.emoji),
-      &:not([height]):not(.emoji) {
+      &:not([width], .emoji),
+      &:not([height], .emoji) {
         width: 200px !important;
         height: 200px !important;
         object-fit: contain;
@@ -97,6 +102,7 @@ div.poll-outer {
       @include breakpoint("mobile-extra-large") {
         border-top: 1px solid var(--primary-low);
         flex-direction: row-reverse;
+
         &_counts,
         &_instructions {
           padding: 1em;
@@ -153,10 +159,12 @@ div.poll-outer {
             display: flex;
             flex-direction: column;
             align-items: center;
+
             .info-label,
             .info-number {
               margin: 0;
             }
+
             + .poll-info_counts-count {
               display: flex;
               flex-direction: row;
@@ -165,6 +173,7 @@ div.poll-outer {
               min-width: 0;
               gap: 0 0.33em;
               margin: 0.5em;
+
               .info-number,
               .info-label {
                 font-size: var(--font-up-1);
@@ -188,12 +197,14 @@ div.poll-outer {
         flex-direction: column;
         justify-content: center;
         align-self: start;
+
         &:empty {
           display: none;
         }
 
         @include breakpoint("mobile-extra-large", min-width) {
           padding-top: 1.25em;
+
           &:not(:empty) {
             border-top: 1px solid var(--primary-low);
           }
@@ -203,6 +214,7 @@ div.poll-outer {
           padding-right: 1em;
           height: 100%;
           flex: 1 1 auto;
+
           &:not(:empty) {
             border-right: 1px solid var(--primary-low);
           }
@@ -211,6 +223,7 @@ div.poll-outer {
         li {
           display: flex;
           gap: 0.5em;
+
           &:not(:last-child) {
             margin-bottom: 0.5em;
           }
@@ -219,15 +232,18 @@ div.poll-outer {
             &:not(:last-child) {
               margin-bottom: 1em;
             }
+
             &:not(:first-child:last-child) {
               // only applied when there are multiple items
               .d-icon {
                 width: 15%;
               }
+
               span {
                 width: 85%;
               }
             }
+
             &:first-child:last-child {
               // when there's a single item, it looks better centered
               display: inline;
@@ -251,6 +267,7 @@ div.poll-outer {
         .info-label {
           font-size: var(--font-up-2);
         }
+
         .info-number {
           font-size: var(--font-up-6);
         }
@@ -294,17 +311,20 @@ div.poll-outer {
       button {
         white-space: nowrap;
         align-self: start;
+
         .d-button-label {
           @include ellipsis;
         }
 
         @include breakpoint("tablet") {
           flex: 1 1 0;
+
           &:first-child:last-child {
             // if there's only one button,
             // don't expand the width
             flex: 0 1 auto;
           }
+
           &.toggle-results:first-child {
             // don't expand the back button
             flex: 0 1 auto;
@@ -360,10 +380,12 @@ div.poll-outer {
       > li {
         cursor: default;
         padding: 0.25em 0;
+
         &:last-child {
           padding-bottom: 0;
         }
       }
+
       .option {
         p {
           margin: 0;
@@ -440,7 +462,7 @@ div.poll-outer {
       padding: 0;
     }
 
-    li[data-poll-option-id]:before {
+    li[data-poll-option-id]::before {
       position: relative;
       vertical-align: baseline;
       border: 2px solid var(--primary);
@@ -461,7 +483,7 @@ div.poll-outer {
     }
 
     &[data-poll-type="multiple"] {
-      li[data-poll-option-id]:before {
+      li[data-poll-option-id]::before {
         border-radius: 3px;
       }
     }
@@ -469,7 +491,8 @@ div.poll-outer {
     &[data-poll-type="ranked_choice"] {
       li[data-poll-option-id] {
         position: relative;
-        &:before {
+
+        &::before {
           mask-image: svg-uri(
             '<svg width="0.75em" height="0.75em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>'
           );
@@ -481,7 +504,8 @@ div.poll-outer {
           border-radius: var(--d-button-border-radius);
           border: none;
         }
-        &:after {
+
+        &::after {
           content: "";
           position: absolute;
           height: 1.125em;
