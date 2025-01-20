@@ -1,6 +1,6 @@
 <ComposerBody
   @composer={{this.composer.model}}
-  @showPreview={{this.composer.showPreview}}
+  @showPreview={{this.composer.isPreviewVisible}}
   @openIfDraft={{this.composer.openIfDraft}}
   @typed={{this.composer.typed}}
   @cancelled={{this.composer.cancelled}}
@@ -136,7 +136,7 @@
 
                 <div
                   class="title-and-category
-                    {{if this.composer.showPreview 'with-preview'}}"
+                    {{if this.composer.isPreviewVisible 'with-preview'}}"
                 >
                   <ComposerTitle
                     @composer={{this.composer.model}}
@@ -204,7 +204,7 @@
                   @connectorTagName="div"
                   @outletArgs={{hash
                     model=this.composer.model
-                    showPreview=this.composer.showPreview
+                    showPreview=this.composer.isPreviewVisible
                   }}
                 />
               </span>
@@ -298,17 +298,19 @@
               </a>
             {{/if}}
 
-            <a
-              href
-              class="btn btn-default no-text mobile-preview"
-              title={{i18n "composer.show_preview"}}
-              {{on "click" this.composer.togglePreview}}
-              aria-label={{i18n "composer.show_preview"}}
-            >
-              {{d-icon "desktop"}}
-            </a>
+            {{#if this.composer.allowPreview}}
+              <a
+                href
+                class="btn btn-default no-text mobile-preview"
+                title={{i18n "composer.show_preview"}}
+                {{on "click" this.composer.togglePreview}}
+                aria-label={{i18n "composer.show_preview"}}
+              >
+                {{d-icon "desktop"}}
+              </a>
+            {{/if}}
 
-            {{#if this.composer.showPreview}}
+            {{#if this.composer.isPreviewVisible}}
               <DButton
                 @action={{this.composer.togglePreview}}
                 @title="composer.hide_preview"
@@ -369,14 +371,14 @@
             {{/if}}
           </div>
 
-          {{#if this.site.desktopView}}
+          {{#if (and this.composer.allowPreview this.site.desktopView)}}
             <DButton
               @action={{this.composer.togglePreview}}
               @translatedTitle={{this.composer.toggleText}}
               @icon="angles-left"
               class={{concat-class
                 "btn-transparent btn-mini-toggle toggle-preview"
-                (unless this.composer.showPreview "active")
+                (unless this.composer.isPreviewVisible "active")
               }}
             />
           {{/if}}

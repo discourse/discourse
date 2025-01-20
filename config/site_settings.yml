@@ -3523,3 +3523,7 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions"
+  experimental_rich_editor:
+    client: true
+    default: false
+    hidden: true

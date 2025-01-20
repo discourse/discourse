@@ -29,7 +29,6 @@ import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { buildQuote } from "discourse/lib/quote";
 import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import {
@@ -122,6 +121,7 @@ export default class ComposerService extends Service {
   topic = null;
   linkLookup = null;
   showPreview = true;
+  allowPreview = true;
   composerHeight = null;
 
   @and("site.mobileView", "showPreview") forcePreview;
@@ -135,6 +135,10 @@ export default class ComposerService extends Service {
 
   get topicController() {
     return getOwnerWithFallback(this).lookup("controller:topic");
+  }
+
+  get isPreviewVisible() {
+    return this.get("showPreview") && this.get("allowPreview");
   }
 
   get isOpen() {
@@ -833,45 +837,6 @@ export default class ComposerService extends Service {
   fullscreenComposer() {
     this.toggleFullscreen();
     return false;
-  }
-
-  // Import a quote from the post
-  @action
-  async importQuote(toolbarEvent) {
-    const postStream = this.get("topic.postStream");
-    let postId = this.get("model.post.id");
-
-    // If there is no current post, use the first post id from the stream
-    if (!postId && postStream) {
-      postId = postStream.get("stream.firstObject");
-    }
-
-    // If we're editing a post, fetch the reply when importing a quote
-    if (this.get("model.editingPost")) {
-      const replyToPostNumber = this.get("model.post.reply_to_post_number");
-      if (replyToPostNumber) {
-        const replyPost = postStream.posts.findBy(
-          "post_number",
-          replyToPostNumber
-        );
-
-        if (replyPost) {
-          postId = replyPost.id;
-        }
-      }
-    }
-
-    if (!postId) {
-      return;
-    }
-
-    this.set("model.loading", true);
-
-    const post = await this.store.find("post", postId);
-    const quote = buildQuote(post, post.raw, { full: true });
-
-    toolbarEvent.addText(quote);
-    this.set("model.loading", false);
   }
 
   @action
