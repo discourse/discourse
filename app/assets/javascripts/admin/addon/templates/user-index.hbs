@@ -43,11 +43,25 @@
               </dropdown.item>
               <dropdown.item>
                 <DButton
-                  @label="admin.user.download_archive.send_to_site_contact"
                   class="btn-transparent"
                   @action={{action "sendArchiveToSiteContact"}}
                   @disabled={{not this.siteContactEmailAvailable}}
-                />
+                >
+                  <div class="admin-user-download-archive-btn">
+                    <span class="d-button-label">
+                      {{i18n
+                        "admin.user.download_archive.send_to_site_contact"
+                      }}
+                    </span>
+                    {{#unless this.siteContactEmailAvailable}}
+                      <span class="d-button-label">
+                        {{i18n
+                          "admin.user.download_archive.send_to_site_contact_no_email"
+                        }}
+                      </span>
+                    {{/unless}}
+                  </div>
+                </DButton>
               </dropdown.item>
             </DropdownMenu>
           </:content>

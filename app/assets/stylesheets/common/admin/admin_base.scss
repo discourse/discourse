@@ -844,6 +844,15 @@ section.details {
   }
 }
 
+.admin-user-download-archive-btn span {
+  text-align: left;
+  display: block;
+
+  &:last-child {
+    font-size: var(--font-down-1);
+  }
+}
+
 .row.groups {
   input[type="text"] {
     width: 500px;
