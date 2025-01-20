@@ -114,7 +114,7 @@ export default class ProfileController extends Controller {
 
   @action
   useCurrentTimezone() {
-    this.model.set("user_option.timezone", moment.tz.guess());
+    this.model.set("user_option.timezone", moment.tz.guess(true));
   }
 
   @action
