@@ -3532,6 +3532,12 @@ RSpec.describe Guardian do
     it "does not allow anonymous to export" do
       expect(anonymous_guardian.can_export_entity?("user_archive")).to be_falsey
     end
+
+    it "only allows admins to export user_archive of other users" do
+      expect(user_guardian.can_export_entity?("user_archive", another_user.id)).to be_falsey
+      expect(moderator_guardian.can_export_entity?("user_archive", another_user.id)).to be_falsey
+      expect(admin_guardian.can_export_entity?("user_archive", another_user.id)).to be_truthy
+    end
   end
 
   describe "#can_ignore_user?" do

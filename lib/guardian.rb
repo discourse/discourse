@@ -540,7 +540,7 @@ class Guardian
     return false if anonymous?
     return true if is_admin?
     return can_see_emails? if entity == "screened_email"
-    return entity != "user_list" if is_moderator?
+    return entity != "user_list" && (entity != "user_archive" || entity_id.nil?) if is_moderator?
 
     # Regular users can only export their archives
     return false unless entity == "user_archive"
