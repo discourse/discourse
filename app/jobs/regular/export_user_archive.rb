@@ -119,22 +119,15 @@ module Jobs
     def execute(args)
       @archive_for_user = User.find_by(id: args[:user_id])
 
-      Discourse.warn("Export args: #{args}", args)
-
       if args[:admin]&.has_key?(:requesting_user_id)
-        Discourse.warn("Present", {})
         @requesting_user = User.find_by(id: args[:admin][:requesting_user_id])
         if @requesting_user&.admin?
-          Discourse.warn("admin", {})
           # Admins can decide who to send the export to
           if args[:admin][:send_to_user]
-            Discourse.warn("sending to user", {})
             @requesting_user = @archive_for_user
           elsif args[:admin][:send_to_admin]
-            Discourse.warn("sending to admin", {})
             # We've already set the requesting user to the admin
           elsif args[:admin][:send_to_site_contact]
-            Discourse.warn("sending to site contact", {})
             @requesting_user = Discourse.site_contact_user
           end
         else
@@ -143,7 +136,6 @@ module Jobs
                 )
         end
       else
-        Discourse.warn("self", {})
         @requesting_user = @archive_for_user
       end
 
