@@ -16,6 +16,7 @@ import {
   shouldCloseMenu,
 } from "discourse/lib/swipe-events";
 import { isDocumentRTL } from "discourse/lib/text-direction";
+import { dedupeTracked } from "discourse/lib/tracked-tools";
 import swipe from "discourse/modifiers/swipe";
 import Header from "./header";
 
@@ -28,6 +29,8 @@ export default class GlimmerSiteHeader extends Component {
   @service currentUser;
   @service site;
   @service header;
+
+  @dedupeTracked docked = false;
 
   pxClosed;
   headerElement;
@@ -91,9 +94,16 @@ export default class GlimmerSiteHeader extends Component {
     }
 
     // clamping to 0 to prevent negative values (hello, Safari)
+    const headerWrapTop = Math.max(
+      0,
+      Math.floor(this._headerWrap.getBoundingClientRect().top) + window.scrollY
+    );
     const headerWrapBottom = Math.max(
       0,
-      Math.floor(this._headerWrap.getBoundingClientRect().bottom)
+      Math.floor(
+        this._headerWrap.querySelector(".d-header").getBoundingClientRect()
+          .bottom
+      )
     );
 
     let mainOutletOffsetTop = Math.max(
@@ -109,6 +119,15 @@ export default class GlimmerSiteHeader extends Component {
 
       mainOutletOffsetTop -= 1; // For 1px border on testing container
     }
+
+    this.docked = headerWrapTop === 0;
+    this._headerWrap.style.setProperty(
+      "--header-height",
+      `${
+        this._headerWrap.querySelector(".d-header").getBoundingClientRect()
+          .height
+      }px`
+    );
 
     const docStyle = document.documentElement.style;
     const currentHeaderOffset =
@@ -376,6 +395,7 @@ export default class GlimmerSiteHeader extends Component {
       class={{concatClass
         (unless this.slideInMode "drop-down-mode")
         "d-header-wrap"
+        (if this.docked "--docked")
       }}
       {{didInsert this.setupHeader}}
       {{swipe

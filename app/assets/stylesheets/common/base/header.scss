@@ -1,6 +1,16 @@
 .d-header-wrap {
-  @include sticky;
-  top: 0;
+  &:not(.--docked) {
+    @include sticky;
+    top: 0;
+  }
+  &.--docked {
+    position: relative;
+    height: var(--header-height);
+
+    .d-header {
+      position: fixed;
+    }
+  }
   z-index: z("header");
 }
 
