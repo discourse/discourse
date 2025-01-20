@@ -158,6 +158,21 @@ acceptance("Admin - User Index", function (needs) {
     server.put("/admin/users/7/disable_second_factor", () => {
       return helper.response({ success: "OK" });
     });
+
+    server.get("/admin/users/list/staff.json", () => {
+      return helper.response([
+        {
+          id: -1,
+          username: "system",
+          name: "System",
+          active: true,
+          admin: true,
+          moderator: true,
+          can_grant_admin: true,
+          can_revoke_admin: true,
+        },
+      ]);
+    });
   });
 
   needs.hooks.beforeEach(() => {

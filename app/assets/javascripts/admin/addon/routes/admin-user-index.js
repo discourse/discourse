@@ -22,18 +22,17 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
       await model.checkEmail();
       await this.currentUser.checkEmail();
 
-      try {
-        if (this.siteSettings.site_contact_username) {
-          this._site_contact = await AdminUser.findByUsername(
-            this.siteSettings.site_contact_username
-          );
-        } else {
-          this._site_contact = await AdminUser.find(-1);
-        }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(`Failed to load the site contact: ${error}`);
-        this._site_contact = null;
+      if (this.siteSettings.site_contact_username) {
+        this._site_contact = await AdminUser.findByUsername(
+          this.siteSettings.site_contact_username
+        );
+      } else {
+        const staff = await AdminUser.findAll("staff", {
+          show_emails: true,
+          order: "created",
+          asc: false,
+        });
+        this._site_contact = staff.length ? staff[0] : null;
       }
 
       if (this._site_contact) {
