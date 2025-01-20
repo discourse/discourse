@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative "../lib/migrations"
+require_relative "../migrations"
 
 require "colored2"
 require "thor"
