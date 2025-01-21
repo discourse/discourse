@@ -27,6 +27,7 @@ export default class UserStreamComponent extends Component {
   @service composer;
   @service appEvents;
   @service currentUser;
+  @service router;
   @tracked lastDecoratedElement;
 
   eventListeners = modifier((element) => {
@@ -56,6 +57,17 @@ export default class UserStreamComponent extends Component {
     if (filter) {
       return `filter-${filter.toString().replace(",", "-")}`;
     }
+  }
+
+  get usernamePath() {
+    // We want the draft_username for the drafts route,
+    // in-case you are editing a post that was created by another user
+    // the draft usernmae will show the post item to show the editing user
+    if (this.router.currentRouteName === "userActivity.drafts") {
+      return "draft_username";
+    }
+
+    return "username";
   }
 
   @action
@@ -152,6 +164,7 @@ export default class UserStreamComponent extends Component {
       @posts={{@stream.content}}
       @idPath="post_id"
       @urlPath="postUrl"
+      @usernamePath={{this.usernamePath}}
       @fetchMorePosts={{this.loadMore}}
       @additionalItemClasses="user-stream-item"
       @showUserInfo={{false}}

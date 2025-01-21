@@ -15,7 +15,11 @@ export default RouteTemplate(
     }
 
     <template>
-      <PostList @posts={{@model}} @fetchMorePosts={{this.loadMorePosts}} />
+      <PostList
+        @posts={{@model}}
+        @fetchMorePosts={{this.loadMorePosts}}
+        @titlePath="topic_html_title"
+      />
     </template>
   }
 );

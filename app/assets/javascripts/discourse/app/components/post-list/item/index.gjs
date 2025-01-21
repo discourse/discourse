@@ -38,7 +38,9 @@ export default class PostListItem extends Component {
     return {
       id: this.args.post.user_id,
       name: this.args.post.name,
-      username: this.args.post.username,
+      username: this.args.usernamePath
+        ? this.args.post[this.args.usernamePath]
+        : this.args.post.username,
       avatar_template: this.args.post.avatar_template,
       title: this.args.post.user_title,
       primary_group_name: this.args.post.primary_group_name,

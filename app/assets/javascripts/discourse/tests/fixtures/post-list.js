@@ -3,6 +3,7 @@ const postModel = [
     id: 1,
     title: "My dog is so cute",
     url: "/t/my-dog-is-so-cute/1/1",
+    topic_id: 1,
     created_at: "2024-03-15T18:45:38.720Z",
     category: {
       id: 1,
@@ -23,6 +24,7 @@ const postModel = [
     id: 2,
     title: "My cat is adorable",
     url: "/t/my-cat-is-so-adorable/2/1",
+    topic_id: 2,
     created_at: "2024-03-16T18:45:38.720Z",
     category: {
       id: 1,
