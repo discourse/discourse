@@ -52,26 +52,34 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
     expect(validator.errors).to be_empty
   end
 
-  it "validates the config against JSON schema" do
-    expect(validator.validate({})).to have_errors
-    expect(validator.errors).to contain_exactly(
-      "object at root is missing required properties: output, schema, plugins",
-    )
+  context "with JSON schema" do
+    it "detects missing required properties" do
+      expect(validator.validate({})).to have_errors
+      expect(validator.errors).to contain_exactly(
+        "object at root is missing required properties: output, schema, plugins",
+      )
+    end
 
-    incomplete_config = minimal_config.except(:plugins)
-    incomplete_config[:schema].except!(:global)
-    expect(validator.validate(incomplete_config)).to have_errors
-    expect(validator.errors).to contain_exactly(
-      "object at `/schema` is missing required properties: global",
-      "object at root is missing required properties: plugins",
-    )
+    it "detects nested, missing required properties" do
+      incomplete_config = minimal_config.except(:plugins)
+      incomplete_config[:schema].except!(:global)
 
-    invalid_config = minimal_config
-    invalid_config[:output][:models_namespace] = 123
-    expect(validator.validate(invalid_config)).to have_errors
-    expect(validator.errors).to contain_exactly(
-      "value at `/output/models_namespace` is not a string",
-    )
+      expect(validator.validate(incomplete_config)).to have_errors
+      expect(validator.errors).to contain_exactly(
+        "object at `/schema` is missing required properties: global",
+        "object at root is missing required properties: plugins",
+      )
+    end
+
+    it "detects datatype mismatches" do
+      invalid_config = minimal_config
+      invalid_config[:output][:models_namespace] = 123
+
+      expect(validator.validate(invalid_config)).to have_errors
+      expect(validator.errors).to contain_exactly(
+        "value at `/output/models_namespace` is not a string",
+      )
+    end
   end
 
   context "with output config" do
@@ -97,13 +105,41 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
     end
   end
 
+  context "with schema config" do
+    it "detects excluded tables that do not exist" do
+      config = minimal_config
+      config[:schema][:global][:tables][:exclude] = %w[users foo bar]
+      config[:schema][:tables] = {}
+
+      expect(validator.validate(config)).to have_errors
+      expect(validator.errors).to contain_exactly(
+        "Excluded table does not exist: bar",
+        "Excluded table does not exist: foo",
+      )
+    end
+
+    it "detects excluded tables that are used in `schema/tables` section" do
+      allow(ActiveRecord::Base.connection).to receive(:tables).and_return(%w[categories users])
+
+      config = minimal_config
+      config[:schema][:global][:tables][:exclude] = %w[categories users]
+      config[:schema][:tables] = { categories: {}, users: {} }
+
+      expect(validator.validate(config)).to have_errors
+      expect(validator.errors).to contain_exactly(
+        "Excluded table can't be configured in `schema/tables` section: categories",
+        "Excluded table can't be configured in `schema/tables` section: users",
+      )
+    end
+  end
+
   context "with plugins config" do
     before do
       allow(Discourse).to receive(:plugins).and_return(
         [
-          instance_double(Plugin::Instance, name: "footnote"),
-          instance_double(Plugin::Instance, name: "chat"),
-          instance_double(Plugin::Instance, name: "poll"),
+          instance_double(::Plugin::Instance, name: "footnote"),
+          instance_double(::Plugin::Instance, name: "chat"),
+          instance_double(::Plugin::Instance, name: "poll"),
         ],
       )
     end
@@ -111,6 +147,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
     it "detects if a configured plugin is missing" do
       config = minimal_config
       config[:plugins] = %w[foo poll bar chat footnote]
+
       expect(validator.validate(config)).to have_errors
       expect(validator.errors).to contain_exactly("Configured plugins not installed: bar, foo")
     end
@@ -118,6 +155,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
     it "detects if an active plugin isn't configured" do
       config = minimal_config
       config[:plugins] = %w[poll]
+
       expect(validator.validate(config)).to have_errors
       expect(validator.errors).to contain_exactly(
         "Additional plugins installed. Uninstall them or add to configuration: chat, footnote",
