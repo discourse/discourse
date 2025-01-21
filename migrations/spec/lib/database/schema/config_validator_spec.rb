@@ -45,6 +45,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
         ),
       ],
     )
+    allow(Discourse).to receive(:plugins).and_return([])
   end
 
   it "validates the minimal config" do
