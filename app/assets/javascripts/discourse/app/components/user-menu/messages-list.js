@@ -79,7 +79,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
 
     if (
       this.siteSettings.show_user_menu_avatars ||
-      !this.siteSettings.prioritize_username_in_ux
+      this.siteSettings.prioritize_full_name_in_ux
     ) {
       // Populate avatar_template for lastPoster
       const usersById = new Map(data.users.map((u) => [u.id, u]));

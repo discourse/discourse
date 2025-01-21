@@ -31,7 +31,7 @@ export default class UserMenuMessageItem extends UserMenuBaseItem {
   }
 
   get label() {
-    if (this.siteSettings.prioritize_username_in_ux) {
+    if (!this.siteSettings.prioritize_full_name_in_ux) {
       return this.message.last_poster_username;
     }
 

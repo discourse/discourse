@@ -49,8 +49,8 @@ RSpec.describe "Viewing User Menu", system: true do
       expect(user_menu).to have_group_mentioned_notification(topic, user, mentionable_group)
     end
 
-    context "with SiteSetting.prioritize_username_in_ux=false" do
-      before { SiteSetting.prioritize_username_in_ux = false }
+    context "with SiteSetting.prioritize_full_name_in_ux=true" do
+      before { SiteSetting.prioritize_full_name_in_ux = true }
 
       it "should display user full name in mention notifications" do
         Jobs.run_immediately!
@@ -117,8 +117,8 @@ RSpec.describe "Viewing User Menu", system: true do
       end
     end
 
-    context "with SiteSetting.prioritize_username_in_ux=true" do
-      before { SiteSetting.prioritize_username_in_ux = true }
+    context "with SiteSetting.prioritize_full_name_in_ux=false" do
+      before { SiteSetting.prioritize_full_name_in_ux = false }
 
       it "should display only username in mention notifications" do
         Jobs.run_immediately!

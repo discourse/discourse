@@ -24,7 +24,7 @@ export default class UserMenuBookmarkItem extends UserMenuBaseItem {
   }
 
   get label() {
-    if (this.siteSettings.prioritize_username_in_ux) {
+    if (!this.siteSettings.prioritize_full_name_in_ux) {
       return this.bookmark.user?.username;
     }
 

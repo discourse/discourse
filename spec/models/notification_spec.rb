@@ -837,7 +837,7 @@ RSpec.describe Notification do
     end
 
     it "Sets the acting_user correctly for each notification" do
-      SiteSetting.prioritize_username_in_ux = false
+      SiteSetting.prioritize_full_name_in_ux = true
       Notification.populate_acting_user(
         [notification1, notification2, notification3, notification4, notification5],
       )
