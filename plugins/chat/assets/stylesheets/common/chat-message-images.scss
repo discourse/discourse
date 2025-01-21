@@ -34,7 +34,9 @@ $max_image_height: 150px;
     .onebox-body .aspect-image {
       max-width: 50%;
     }
+  }
 
+  .onebox:not(.githubpullrequest, .githubcommit, .githubissue) {
     @container (width < 400px) {
       .onebox-body {
         display: flex;
