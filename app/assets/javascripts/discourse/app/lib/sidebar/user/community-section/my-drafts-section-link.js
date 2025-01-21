@@ -2,35 +2,32 @@ import { tracked } from "@glimmer/tracking";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { i18n } from "discourse-i18n";
 
-const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
+const DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
 export default class MyDraftsSectionLink extends BaseSectionLink {
-  @tracked draftCount = this.currentUser?.draft_count;
+  @tracked draftCount;
 
   constructor() {
     super(...arguments);
+    this._updateDraftCount();
 
-    if (this.currentUser) {
-      this.appEvents.on(
-        USER_DRAFTS_CHANGED_EVENT,
-        this,
-        this._updateDraftCount
-      );
-    }
+    this.appEvents.on(DRAFTS_CHANGED_EVENT, this, this._updateDraftCount);
   }
 
-  teardown() {
-    if (this.currentUser) {
-      this.appEvents.off(
-        USER_DRAFTS_CHANGED_EVENT,
-        this,
-        this._updateDraftCount
-      );
-    }
+  get teardown() {
+    this.appEvents.off(DRAFTS_CHANGED_EVENT, this, this._updateDraftCount);
+  }
+
+  get shouldDisplay() {
+    return this.currentUser && this._hasDraft;
+  }
+
+  get _hasDraft() {
+    return this.draftCount > 0;
   }
 
   _updateDraftCount() {
-    this.draftCount = this.currentUser.draft_count;
+    this.draftCount = this.currentUser?.draft_count ?? 0;
   }
 
   get showCount() {
@@ -71,10 +68,6 @@ export default class MyDraftsSectionLink extends BaseSectionLink {
     }
   }
 
-  get _hasDraft() {
-    return this.draftCount > 0;
-  }
-
   get suffixCSSClass() {
     return "unread";
   }
@@ -87,10 +80,6 @@ export default class MyDraftsSectionLink extends BaseSectionLink {
     if (this._hasDraft && !this.showCount) {
       return "circle";
     }
-  }
-
-  get shouldDisplay() {
-    return this.currentUser && this._hasDraft;
   }
 
   get prefixValue() {
