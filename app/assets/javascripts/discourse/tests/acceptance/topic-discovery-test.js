@@ -1,4 +1,4 @@
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { configureEyeline } from "discourse/lib/eyeline";
 import { cloneJSON } from "discourse/lib/object";
@@ -156,9 +156,9 @@ acceptance("Topic Discovery", function (needs) {
     const assertShowingLatest = (url) => {
       assert.strictEqual(currentURL(), url, "stays on latest");
       assert.strictEqual(
-        document
-          .querySelector(".topic-list-body .topic-list-item:first-of-type")
-          .closest(".hidden"),
+        find(".topic-list-body .topic-list-item:first-of-type").closest(
+          ".hidden"
+        ),
         null,
         "topic list is visible"
       );

@@ -344,7 +344,7 @@ acceptance("Search - Anonymous", function (needs) {
       .doesNotExist("search context indicator is no longer visible");
 
     await fillIn("#search-term", "dev");
-    focus("#search-term");
+    await focus("#search-term");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
@@ -354,7 +354,7 @@ acceptance("Search - Anonymous", function (needs) {
       .exists("search context indicator is visible");
 
     await fillIn("#search-term", "");
-    focus("#search-term");
+    await focus("#search-term");
     await triggerKeyEvent("#search-term", "keyup", "Backspace");
 
     assert
@@ -1153,7 +1153,7 @@ acceptance("Search - assistant", function (needs) {
     assert.dom(".btn.search-context").exists("shows the button");
 
     await fillIn("#search-term", "");
-    focus("input#search-term");
+    await focus("input#search-term");
     await triggerKeyEvent("input#search-term", "keyup", "Backspace");
 
     assert.dom(".btn.search-context").doesNotExist("removes the button");
@@ -1165,7 +1165,7 @@ acceptance("Search - assistant", function (needs) {
       .exists("shows the button when reinvoking search");
 
     await fillIn("#search-term", "emoji");
-    focus("input#search-term");
+    await focus("input#search-term");
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
     assert

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import templateOnly from "@ember/component/template-only";
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, find, render, settled } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -430,7 +430,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       />
     `);
 
-    document.querySelector(".hello-username").someUniqueProperty = true;
+    find(".hello-username").someUniqueProperty = true;
 
     this.set("shouldDisplay", true);
     await settled();

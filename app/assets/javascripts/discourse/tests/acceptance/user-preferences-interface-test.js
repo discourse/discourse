@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, find, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
@@ -26,7 +26,7 @@ acceptance("User Preferences - Interface", function (needs) {
       assert.dom(".saved").doesNotExist("hasn't been saved yet");
       await click(".save-changes");
       assert.dom(".saved").exists("it displays the saved message");
-      document.querySelector(".saved").remove();
+      find(".saved").remove();
     };
 
     await visit("/u/eviltrout/preferences/interface");
@@ -266,7 +266,7 @@ acceptance(
         assert.dom(".saved").doesNotExist("hasn't been saved yet");
         await click(".save-changes");
         assert.dom(".saved").exists("displays the saved message");
-        document.querySelector(".saved").remove();
+        find(".saved").remove();
       };
 
       await visit("/u/eviltrout/preferences/interface");

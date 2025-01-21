@@ -3,6 +3,7 @@ import {
   currentRouteName,
   currentURL,
   fillIn,
+  find,
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -54,7 +55,7 @@ acceptance("User Preferences", function (needs) {
       assert.dom(".saved").doesNotExist("it hasn't been saved yet");
       await click(".save-changes");
       assert.dom(".saved").exists("it displays the saved message");
-      document.querySelector(".saved").remove();
+      find(".saved").remove();
     };
 
     await fillIn(".pref-name input[type=text]", "Jon Snow");

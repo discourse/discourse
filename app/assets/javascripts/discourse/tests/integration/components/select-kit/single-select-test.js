@@ -1,4 +1,4 @@
-import { render, tab } from "@ember/test-helpers";
+import { find, render, tab } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -468,12 +468,8 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
       />
     `);
     await this.subject.expand();
-    const header = document
-      .querySelector(".select-kit-header")
-      .getBoundingClientRect();
-    const body = document
-      .querySelector(".select-kit-body")
-      .getBoundingClientRect();
+    const header = find(".select-kit-header").getBoundingClientRect();
+    const body = find(".select-kit-body").getBoundingClientRect();
 
     assert.true(header.bottom > body.top, "correctly offsets the body");
   });

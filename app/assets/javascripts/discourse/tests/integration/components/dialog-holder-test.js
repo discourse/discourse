@@ -1,6 +1,7 @@
 import {
   click,
   fillIn,
+  find,
   render,
   settled,
   triggerKeyEvent,
@@ -29,10 +30,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     });
     await settled();
 
-    assert.true(
-      document.querySelector(".dialog-overlay").offsetWidth > 0,
-      "overlay is visible"
-    );
+    assert.true(find(".dialog-overlay").offsetWidth > 0, "overlay is visible");
     assert
       .dom(".dialog-body")
       .hasText("This is an error", "dialog has error message");
@@ -61,10 +59,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     });
     await settled();
 
-    assert.true(
-      document.querySelector(".dialog-overlay").offsetWidth > 0,
-      "overlay is visible"
-    );
+    assert.true(find(".dialog-overlay").offsetWidth > 0, "overlay is visible");
     assert
       .dom(".dialog-body")
       .hasText("This is an error", "dialog has error message");

@@ -1,4 +1,4 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ThemeSettingsEditor from "admin/components/theme-settings-editor";
@@ -88,11 +88,9 @@ module(
         <ThemeSettingsEditor @model={{model}} />
       </template>);
 
-      document
-        .querySelector(".ace")
-        .aceEditor.session.doc.setValue(
-          JSON.stringify([{ setting: "bar", value: "bar" }])
-        );
+      find(".ace").aceEditor.session.doc.setValue(
+        JSON.stringify([{ setting: "bar", value: "bar" }])
+      );
       await click("button#save");
 
       assert
@@ -113,7 +111,7 @@ module(
         <ThemeSettingsEditor @model={{model}} />
       </template>);
 
-      document.querySelector(".ace").aceEditor.session.doc.setValue(
+      find(".ace").aceEditor.session.doc.setValue(
         JSON.stringify([
           { setting: "foo", value: "foo" },
           { setting: "bar", value: "bar" },

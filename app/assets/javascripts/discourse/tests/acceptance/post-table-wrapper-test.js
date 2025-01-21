@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, find, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -16,7 +16,7 @@ acceptance("Post Table Wrapper Test", function () {
       )
       .exists("buttons for the table wrapper appear inside a separate div");
 
-    const fullscreenButtonWrapper = document.querySelector(
+    const fullscreenButtonWrapper = find(
       `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper__buttons`
     );
 

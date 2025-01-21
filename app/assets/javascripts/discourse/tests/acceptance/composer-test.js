@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  find,
   focus,
   settled,
   triggerEvent,
@@ -204,7 +205,7 @@ acceptance("Composer", function (needs) {
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("the body is now good");
 
-    const textarea = document.querySelector("#reply-control .d-editor-input");
+    const textarea = find("#reply-control .d-editor-input");
     textarea.selectionStart = textarea.value.length;
     textarea.selectionEnd = textarea.value.length;
 
@@ -363,8 +364,7 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        document.querySelector(".topic-post:nth-of-type(1) .cooked > p")
-          .innerText,
+        find(".topic-post:nth-of-type(1) .cooked > p").innerText,
         "composer has contents of post to be edited"
       );
   });
@@ -1345,7 +1345,7 @@ acceptance("composer buttons API", function (needs) {
     await click(".post-controls button.reply");
     await fillIn(".d-editor-input", "hello the world");
 
-    const editor = document.querySelector(".d-editor-input");
+    const editor = find(".d-editor-input");
     editor.setSelectionRange(6, 9); // select the text input in the composer
 
     await triggerKeyEvent(".d-editor-input", "keydown", "B", {
@@ -1399,7 +1399,7 @@ acceptance("composer buttons API", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".post-controls button.reply");
 
-    const editor = document.querySelector(".d-editor-input");
+    const editor = find(".d-editor-input");
     await triggerKeyEvent(".d-editor-input", "keydown", "S", {
       altKey: true,
       ...metaModifier,

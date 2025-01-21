@@ -1,5 +1,12 @@
 import { getOwner } from "@ember/owner";
-import { click, fillIn, focus, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  focus,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
@@ -304,7 +311,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image: Text after the image.");
-    const textArea = document.querySelector(".d-editor-input");
+    const textArea = find(".d-editor-input");
     textArea.selectionStart = 10;
     textArea.selectionEnd = 10;
 
@@ -340,7 +347,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       ".d-editor-input",
       "The image: [paste here] Text after the image."
     );
-    const textArea = document.querySelector(".d-editor-input");
+    const textArea = find(".d-editor-input");
     textArea.selectionStart = 10;
     textArea.selectionEnd = 23;
 
@@ -427,7 +434,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\ntext after image");
-    const input = document.querySelector(".d-editor-input");
+    const input = find(".d-editor-input");
     input.selectionStart = 10;
     input.selectionEnd = 10;
 
@@ -456,12 +463,11 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       uppyEventFired = true;
     });
 
-    focus(".d-editor-input");
+    await focus(".d-editor-input");
     await paste(".d-editor", "\ta\tb\n1\t2\t3", {
       types: ["text/plain", "Files"],
       files: [createFile("avatar.png")],
     });
-    await settled();
 
     assert
       .dom(".d-editor-input")
@@ -543,7 +549,7 @@ acceptance(
       appEvents.on("composer:upload-error", async () => {
         await settled();
 
-        if (document.querySelector(".dialog-body")) {
+        if (find(".dialog-body")) {
           assert
             .dom(".dialog-body")
             .hasText(

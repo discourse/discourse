@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, find, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -46,7 +46,7 @@ acceptance("Spoiler Button", function (needs) {
 
     await fillIn(".d-editor-input", "This is hidden");
 
-    const textarea = document.querySelector(".d-editor-input");
+    const textarea = find(".d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 

@@ -1,5 +1,6 @@
 import { run } from "@ember/runloop";
 import {
+  find,
   getApplication,
   settled,
   triggerKeyEvent,
@@ -593,8 +594,7 @@ export async function paste(selector, text, otherClipboardData = {}) {
   const e = new Event("paste", { cancelable: true });
   e.clipboardData = deepMerge({ getData: () => text }, otherClipboardData);
 
-  const element =
-    typeof selector === "string" ? document.querySelector(selector) : selector;
+  const element = typeof selector === "string" ? find(selector) : selector;
 
   element.dispatchEvent(e);
 
@@ -604,7 +604,7 @@ export async function paste(selector, text, otherClipboardData = {}) {
 
 export async function simulateKey(element, key) {
   if (typeof element === "string") {
-    element = document.querySelector(element);
+    element = find(element);
   }
 
   if (key === "\b") {
