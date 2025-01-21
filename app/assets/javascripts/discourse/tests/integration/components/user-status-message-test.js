@@ -46,7 +46,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(
       hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
-    await triggerEvent(".user-status-message", "mousemove");
+    await triggerEvent(".user-status-message", "pointermove");
 
     assert
       .dom('[data-content][data-identifier="user-status-message-tooltip"]')
@@ -64,7 +64,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(
       hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
-    await triggerEvent(".user-status-message", "mousemove");
+    await triggerEvent(".user-status-message", "pointermove");
 
     assert
       .dom('[data-content][data-identifier="user-status-message-tooltip"]')
@@ -82,7 +82,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(
       hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
-    await triggerEvent(".user-status-message", "mousemove");
+    await triggerEvent(".user-status-message", "pointermove");
 
     assert
       .dom(
@@ -95,7 +95,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(
       hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
-    await triggerEvent(".user-status-message", "mousemove");
+    await triggerEvent(".user-status-message", "pointermove");
 
     assert
       .dom('[data-content][data-identifier="user-status-message-tooltip"]')
