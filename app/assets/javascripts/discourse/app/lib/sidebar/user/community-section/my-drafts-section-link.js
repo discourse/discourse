@@ -5,29 +5,22 @@ import { i18n } from "discourse-i18n";
 const DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
 export default class MyDraftsSectionLink extends BaseSectionLink {
-  @tracked draftCount;
+  @tracked shouldDisplay = this._hasDraft;
 
   constructor() {
     super(...arguments);
-    this._updateDraftCount();
 
-    this.appEvents.on(DRAFTS_CHANGED_EVENT, this, this._updateDraftCount);
-  }
-
-  get teardown() {
-    this.appEvents.off(DRAFTS_CHANGED_EVENT, this, this._updateDraftCount);
-  }
-
-  get shouldDisplay() {
-    return this.currentUser && this._hasDraft;
+    if (this.currentUser) {
+      this.appEvents.on(DRAFTS_CHANGED_EVENT, this, this._updateDraftCount);
+    }
   }
 
   get _hasDraft() {
-    return this.draftCount > 0;
+    return this.currentUser?.draft_count > 0;
   }
 
   _updateDraftCount() {
-    this.draftCount = this.currentUser?.draft_count ?? 0;
+    this.shouldDisplay = this.currentUser?.draft_count > 0;
   }
 
   get showCount() {
@@ -55,15 +48,15 @@ export default class MyDraftsSectionLink extends BaseSectionLink {
   }
 
   get badgeText() {
-    if (!this.showCount || !this._hasDraft) {
+    if (!this.showCount || !this.shouldDisplay) {
       return;
     }
 
     if (this.currentUser.new_new_view_enabled) {
-      return this.draftCount.toString();
+      return this.currentUser?.draft_count.toString();
     } else {
       return i18n("sidebar.sections.community.links.my_drafts.draft_count", {
-        count: this.draftCount,
+        count: this.currentUser?.draft_count,
       });
     }
   }
@@ -77,7 +70,7 @@ export default class MyDraftsSectionLink extends BaseSectionLink {
   }
 
   get suffixValue() {
-    if (this._hasDraft && !this.showCount) {
+    if (this.shouldDisplay && !this.showCount) {
       return "circle";
     }
   }
