@@ -33,7 +33,10 @@ export default class SignupPageController extends Controller.extend(
   @service login;
 
   @tracked accountUsername;
+<<<<<<< HEAD
   @tracked isDeveloper = false;
+=======
+>>>>>>> 705f072e3b (DEV: convert username field in signup page to native input with 1 way data binding)
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
@@ -57,6 +60,11 @@ export default class SignupPageController extends Controller.extend(
     }
 
     this.fetchConfirmationValue();
+  }
+
+  @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
   }
 
   get nameTitle() {

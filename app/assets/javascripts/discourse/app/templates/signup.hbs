@@ -13,9 +13,9 @@
 
     <div
       class={{concat-class
-        (if this.site.desktopView "login-left-side")
-        this.authOptions.auth_provider
-      }}
+      (if this.site.desktopView "login-left-side")
+      this.authOptions.auth_provider
+    }}
     >
       <SignupProgressBar @step="signup" />
       <WelcomeHeader
@@ -111,12 +111,12 @@
           <PluginOutlet
             @name="create-account-before-password"
             @outletArgs={{hash
-              accountName=this.accountName
-              accountUsername=this.accountUsername
-              accountPassword=this.accountPassword
-              userFields=this.userFields
-              authOptions=this.authOptions
-            }}
+            accountName=this.accountName
+            accountUsername=this.accountUsername
+            accountPassword=this.accountPassword
+            userFields=this.userFields
+            authOptions=this.authOptions
+          }}
           />
 
           <div class="input-group create-account__password">
@@ -156,9 +156,9 @@
                   {{/if}}
                   <div
                     class={{concat-class
-                      "caps-lock-warning"
-                      (unless this.capsLockOn "hidden")
-                    }}
+                    "caps-lock-warning"
+                    (unless this.capsLockOn "hidden")
+                  }}
                   >
                     {{d-icon "triangle-exclamation"}}
                     {{i18n "login.caps_lock_warning"}}
@@ -203,11 +203,11 @@
           <PluginOutlet
             @name="create-account-after-password"
             @outletArgs={{hash
-              accountName=this.accountName
-              accountUsername=this.accountUsername
-              accountPassword=this.accountPassword
-              userFields=this.userFields
-            }}
+            accountName=this.accountName
+            accountUsername=this.accountUsername
+            accountPassword=this.accountPassword
+            userFields=this.userFields
+          }}
           />
 
           {{#if (and this.showFullname (not this.fullnameRequired))}}
@@ -240,11 +240,11 @@
           <PluginOutlet
             @name="create-account-after-user-fields"
             @outletArgs={{hash
-              accountName=this.accountName
-              accountUsername=this.accountUsername
-              accountPassword=this.accountPassword
-              userFields=this.userFields
-            }}
+            accountName=this.accountName
+            accountUsername=this.accountUsername
+            accountPassword=this.accountPassword
+            userFields=this.userFields
+          }}
           />
         </form>
 
@@ -267,7 +267,7 @@
     {{#if this.hasAtLeastOneLoginButton}}
       {{#if this.site.mobileView}}
         <div class="login-or-separator"><span>
-            {{i18n "login.or"}}</span></div>{{/if}}
+          {{i18n "login.or"}}</span></div>{{/if}}
       <div class="login-right-side">
         <LoginButtons
           @externalLogin={{this.externalLogin}}
