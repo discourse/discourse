@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import discourseDebounce from "discourse/lib/debounce";
@@ -22,8 +21,6 @@ function validResult(attrs) {
 }
 
 export default class UsernameValidationHelper {
-  @service siteSettings;
-
   @tracked usernameValidationResult = new TrackedObject();
   checkedUsername = null;
 
@@ -75,11 +72,11 @@ export default class UsernameValidationHelper {
       });
     }
 
-    if (username.length < this.siteSettings.min_username_length) {
+    if (username.length < this.owner.siteSettings.min_username_length) {
       return failedResult({ reason: i18n("user.username.too_short") });
     }
 
-    if (username.length > this.siteSettings.max_username_length) {
+    if (username.length > this.owner.siteSettings.max_username_length) {
       return failedResult({ reason: i18n("user.username.too_long") });
     }
 
