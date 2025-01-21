@@ -2657,6 +2657,7 @@ pt_BR:
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Não é autorizado nenhum endereço de e-mail associado a %{account}. Você pode precisar configurar sua conta com um endereço de e-mail diferente."
     new_registrations_disabled: "Não é permitido cadastrar novas contas por enquanto."
+    new_registrations_disabled_discourse_connect: "Registros de novas contas são permitidos apenas com o Discourse Connect."
     password_too_long: "Senhas são limitadas a 200 caracteres."
     email_too_long: "O e-mail informado é muito longo. Os endereços de e-mail não devem ter mais de 254 caracteres, e nomes de domínio devem ter no máximo 253 caracteres."
     wrong_invite_code: "O código de convite inserido estava incorreto."

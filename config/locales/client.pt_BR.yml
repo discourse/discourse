@@ -556,7 +556,7 @@ pt_BR:
         original: "(tópico original)"
         details: "detalhes"
         unique_users:
-          one: "%{count} usuário"
+          one: "%{count} usuário(a)"
           other: "%{count} usuários"
       replies:
         one: "%{count} resposta"
@@ -739,7 +739,7 @@ pt_BR:
       posts_read_long: "Postagens lidas"
       last_updated: "Última atualização:"
       total_rows:
-        one: "%{count} usuário"
+        one: "%{count} usuário(a)"
         other: "%{count} usuários"
       edit_columns:
         title: "Editar colunas do diretório"
@@ -1325,7 +1325,7 @@ pt_BR:
         personal: "Pessoal"
         latest: "Últimos"
         sent: "Enviadas"
-        unread: "Não lidos(as)"
+        unread: "Não lidas"
         unread_with_count:
           one: "Não lido (%{count})"
           other: "Não lidos (%{count})"
@@ -4465,7 +4465,7 @@ pt_BR:
             sent: "Enviadas"
             new: "Novo"
             new_with_count: "Novos(s) (%{count})"
-            unread: "Não lidos(as)"
+            unread: "Não lidas"
             unread_with_count: "Não lido(s) (%{count})"
             archive: "Arquivo"
         tags:

@@ -3041,6 +3041,7 @@ ar:
     omniauth_confirm_button: "متابعة"
     authenticator_error_no_valid_email: "غير مسموح بعناوين البريد الإلكتروني المرتبطة بحساب %{account}. قد تحتاج إلى إعداد حسابك بعنوان بريد إلكتروني مختلف."
     new_registrations_disabled: "عمليات تسجيل الحسابات الجديدة غير مسموح بها في الوقت الحالي."
+    new_registrations_disabled_discourse_connect: "لا يُسمَح بتسجيل حسابات جديدة إلا من خلال Discourse Connect."
     password_too_long: "كلمات المرور محدَّدة بعدد 200 حرف."
     email_too_long: "عنوان البريد الإلكتروني الذي أدخلته طويل جدًا. يجب ألا تتجاوز أسماء صناديق البريد 254 حرفًا، ويجب ألا تزيد أسماء النطاقات عن 253 حرفًا."
     wrong_invite_code: "رمز الدعوة الذي أدخلته غير صحيح."

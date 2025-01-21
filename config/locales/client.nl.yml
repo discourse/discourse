@@ -6648,7 +6648,7 @@ nl:
           <p>Vervang <b>DISCOURSE_USERNAME</b> door de Discourse-gebruikersnaam van de auteur die het topic moet maken. Discourse zoekt automatisch de gebruiker via het attribuut <code>content</code> van de <code>&lt;meta&gt;</code>-tags met het attribuut <code>name</code> ingesteld op <code>discourse-username</code> of <code>author</code>. De parameter <code>discourseUserName</code> is verouderd en wordt verwijderd in Discourse 3.2.</p>
         title: "Insluiting"
         host: "Toegestane hosts"
-        allowed_paths: "Pad-acceptatielijst"
+        allowed_paths: "Padtoelatingslijst"
         edit: "bewerken"
         category: "Bericht naar categorie"
         tags: "Topictags"

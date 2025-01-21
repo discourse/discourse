@@ -635,7 +635,7 @@ de:
     get_a_room:
       one: Du hast @%{reply_username} einmal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
       other: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
-    dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation markiert. Bist du sicher, dass du darauf antworten möchtest? Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten.
+    dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation gemeldet. Bist du sicher, dass du darauf antworten möchtest? Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten.
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
 
@@ -1210,7 +1210,7 @@ de:
         time_to_resolution: Lösungszeit
       description: "Liste der Meldungszustände einschließlich Art der Meldung, Beitragsersteller, Meldungsersteller und Zeit bis zur Lösung."
     visits:
-      title: "Nutzerbesuche"
+      title: "Benutzerbesuche"
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
       description: "Anzahl der Besuche von angemeldeten Benutzern."
@@ -2171,7 +2171,7 @@ de:
     enable_user_directory: "Aktiviert ein durchsuchbares Benutzerverzeichnis"
     enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
-    group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der privaten Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
+    group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der persönlichen Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
     allow_anonymous_posting: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow_anonymous_likes`."
     allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
@@ -2357,7 +2357,7 @@ de:
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     tag_topic_allowed_groups: "Gruppen, die Schlagwörter zu Themen hinzufügen dürfen. Administratoren und Moderatoren können immer Schlagwörter zu Themen hinzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
-    remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
+    remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Schlagwörtern versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
     automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder privaten Nachrichten verwendet werden."

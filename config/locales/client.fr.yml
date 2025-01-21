@@ -139,7 +139,7 @@ fr:
       to_placeholder: "date de fin"
     share:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
-      post: "message #%{postNumber} par @%{username}"
+      post: "publication #%{postNumber} par @%{username}"
       close: "fermer"
       twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
@@ -308,7 +308,7 @@ fr:
         last_30_days: "30 jours"
       like_count: "J'aime"
       topic_count: "Sujets"
-      post_count: "Nombre de messages"
+      post_count: "Publications"
       user_count: "Inscriptions"
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
@@ -477,7 +477,7 @@ fr:
           name: "est intervenu(e)"
           title: "Lorsqu'un responsable choisit d'agir, le signalement reçoit un bonus."
         user_accuracy_bonus:
-          name: "fiabilité de l’utilisateur"
+          name: "précision de l'utilisateur"
           title: "Les utilisateurs dont les signalements ont généralement été approuvés obtiennent un bonus."
         trust_level_bonus:
           name: "niveau de confiance"
@@ -1219,7 +1219,7 @@ fr:
       dark_mode: "Mode sombre"
       dark_mode_enable: "Activer le mode sombre automatiquement"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
-      allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
+      allow_private_messages: "Permettre aux autres utilisateurs de m'envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
       enable_defer: "Activer le marquage des sujets comme non lus"
@@ -3549,7 +3549,7 @@ fr:
         by_you:
           off_topic: "Vous avez signalé ceci comme étant hors-sujet"
           spam: "Vous avez signalé ceci comme étant du spam"
-          inappropriate: "Vous avez signalé ceci comme étant répréhensible"
+          inappropriate: "Vous avez signalé ceci comme étant inapproprié"
           illegal: "Vous avez signalé cela comme étant illégal"
           notify_moderators: "Vous avez signalé ceci pour modération"
           notify_user: "Vous avez envoyé un message à cet utilisateur"
@@ -3814,7 +3814,7 @@ fr:
       notify_staff: "Notifier les responsables de manière privée"
       formatted_name:
         off_topic: "C'est hors-sujet"
-        inappropriate: "C'est répréhensible"
+        inappropriate: "C'est inapproprié"
         spam: "C'est du spam"
         illegal: "C'est illégal"
       custom_placeholder_notify_user: "Soyez précis(e), constructif(ve) et faites toujours preuve de respect."
@@ -4225,7 +4225,7 @@ fr:
       add_synonyms_explanation:
         one: "Tous les éléments utilisant cette étiquette seront changés pour utiliser <b>%{tag_name}</b>. Voulez-vous vraiment effectuer ce changement ?"
         other: "Tous les éléments utilisant ces étiquettes seront changés pour utiliser <b>%{tag_name}</b>. Voulez-vous vraiment effectuer ce changement ?"
-      add_synonyms_failed: "Les étiquettes suivantes n'ont pas pu être ajoutées comme synonymes : <b>%{tag_names}</b>. Assurez-vous qu'elles n'ont pas de synonymes et qu’elles ne sont pas des synonymes d'une autre étiquette."
+      add_synonyms_failed: "Les étiquettes suivantes n'ont pas pu être ajoutées comme synonymes : <b>%{tag_names}</b>. Assurez-vous qu'elles n'ont pas de synonymes et qu'elles ne sont pas des synonymes d'une autre étiquette."
       remove_synonym: "Supprimer le synonyme"
       delete_synonym_confirm: 'Voulez-vous vraiment supprimer le synonyme « %{tag_name} » ?'
       delete_tag: "Supprimer l'étiquette"
@@ -4835,7 +4835,7 @@ fr:
         no_custom_groups: "Créer un nouveau groupe personnalisé"
       api:
         generate_master: "Générer une clé d'API maître"
-        none: "Il n'y a actuellement aucune clé API active."
+        none: "Il n'y a actuellement aucune clé d'API active."
         user: "Utilisateur"
         title: "API"
         key: "Clé"
@@ -4848,20 +4848,20 @@ fr:
         undo_revoke: "Annuler la révocation"
         revoke: "Révoquer"
         all_users: "Tous les utilisateurs"
-        active_keys: "Clés actives pour l’API"
+        active_keys: "Clés d'API actives"
         manage_keys: Gérer les clés
         show_details: Détails
         description: Description
         no_description: (aucune description)
-        all_api_keys: Toutes les clés pour l’API
-        user_mode: Niveau de l’utilisateur
+        all_api_keys: Toutes les clés d'API
+        user_mode: Niveau de l'utilisateur
         scope_mode: Permissions
         impersonate_all_users: Incarner un utilisateur
         single_user: "Utilisateur unique"
         user_placeholder: Saisissez un nom d'utilisateur
         description_placeholder: À quoi servira cette clé ?
         save: Enregistrer
-        new_key: Nouvelle clé pour l’API
+        new_key: Nouvelle clé d'API
         revoked: Révoquée
         delete: Supprimer définitivement
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
@@ -4874,7 +4874,7 @@ fr:
           granular: Détaillé
           read_only: Lecture seule
           global: Global
-          global_description: La clé API n'a aucune restriction et tous les points de terminaison (endpoints) sont accessibles.
+          global_description: La clé d'API n'a aucune restriction et tous les points de terminaison sont accessibles.
           resource: Ressource
           action: Action
           allowed_parameters: Paramètres autorisés
@@ -4883,7 +4883,7 @@ fr:
           allowed_urls: URL autorisées
           descriptions:
             global:
-              read: Limitez la clé API aux points de terminaison en lecture seule.
+              read: Limitez la clé d'API aux points de terminaison en lecture seule.
             topics:
               read: Lire un sujet ou un message spécifique qu'il contient. Le RSS est aussi accepté.
               write: Créer un nouveau sujet ou publier sur un sujet existant.
@@ -5861,9 +5861,9 @@ fr:
             enable_theme_component: "activer le composant de thème"
             revoke_title: "révoquer le titre"
             change_title: "modifier le titre"
-            api_key_create: "créer une clé pour l’API"
-            api_key_update: "mettre à jour une clé pour l’API"
-            api_key_destroy: "supprimer une clé d’API"
+            api_key_create: "créer une clé d'API"
+            api_key_update: "mettre à jour une clé d'API"
+            api_key_destroy: "supprimer une clé d'API"
             override_upload_secure_status: "passer outre le statut de téléchargement sécurisé"
             page_published: "page publiée"
             page_unpublished: "publication de la page annulée"
@@ -6594,7 +6594,7 @@ fr:
           error_help: "Consulter les liens suivants pour obtenir de l'aide sur les requêtes de badge."
           bad_count_warning:
             header: "ATTENTION !"
-            text: "Certains badges n'ont pas été attribués. Ceci se produit lorsque la requête du badge retourne des identifiants d'utilisateurs ou de messages qui n’existent plus. Cela peut produire des résultats inattendus, veuillez vérifier votre requête."
+            text: "Certains badges n'ont pas été attribués. Cela se produit lorsque la requête du badge retourne des identifiants d'utilisateurs ou de publications qui n'existent plus, ce qui peut produire des résultats inattendus. Veuillez vérifier votre requête."
           no_grant_count: "Aucun badge à assigner."
           grant_count:
             one: "<b>%{count}</b> badge à assigner."

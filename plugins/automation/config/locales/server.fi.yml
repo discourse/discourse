@@ -54,7 +54,7 @@ fi:
         title: Viesti luotu tai viestiä muokattu
         description: Kun kelvollista viestiä muokataan tai sellainen luodaan, automaatio käynnistyy
       pm_created:
-        title: Yksityisviesti luotu
+        title: Henkilökohtainen viesti luotu
         description: Kun kelvollinen yksityisviesti luodaan, automaatio käynnistyy
       topic:
         title: Ketju

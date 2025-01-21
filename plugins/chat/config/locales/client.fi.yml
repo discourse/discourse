@@ -635,11 +635,11 @@ fi:
       chat:
         help: "Chat on käytössä tässä ketjussa"
     user:
-      allow_private_messages: "Salli muiden käyttäjien lähettää minulle yksityisviestejä ja chat-yksityisviestejä"
-      muted_users_instructions: "Estä kaikki ilmoitukset, yksityisviestit ja chat-yksityisviestit näiltä käyttäjiltä."
-      allowed_pm_users_instructions: "Salli vain näiden käyttäjien yksityisviestit tai chat-yksityisviestit."
-      allow_private_messages_from_specific_users: "Salli vain tiettyjen käyttäjien lähettää minulle yksityisviestejä tai chat-yksityisviestejä"
-      ignored_users_instructions: "Estä kaikki viestit, ilmoitukset, yksityisviestit ja chat-yksityisviestit näiltä käyttäjiltä."
+      allow_private_messages: "Salli muiden käyttäjien lähettää minulle henkilökohtaisia viestejä ja chat-yksityisviestejä"
+      muted_users_instructions: "Estä kaikki ilmoitukset, henkilökohtaiset viestit ja chat-yksityisviestit näiltä käyttäjiltä."
+      allowed_pm_users_instructions: "Salli vain näiden käyttäjien henkilökohtaiset viestit tai chat-yksityisviestit."
+      allow_private_messages_from_specific_users: "Salli vain tiettyjen käyttäjien lähettää minulle henkilökohtaisia viestejä tai chat-yksityisviestejä"
+      ignored_users_instructions: "Estä kaikki viestit, ilmoitukset, henkilökohtaiset viestit ja chat-yksityisviestit näiltä käyttäjiltä."
     user_menu:
       no_chat_notifications_title: "Sinulla ei ole vielä chat-ilmoituksia"
       no_chat_notifications_body: >

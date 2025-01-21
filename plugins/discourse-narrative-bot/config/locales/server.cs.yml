@@ -15,13 +15,13 @@ cs:
     discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot kurzy k přeskočení"
   badges:
     certified:
-      name: Certifikován(a)
-      description: "Dokončil(a) výukový program pro nové uživatele"
+      name: Certifikován/a
+      description: "Dokončil/a výukový program pro nové uživatele"
       long_description: |
         Tento odznak je udělen po úspěšném dokončení interaktivního kurzu pro nové uživatele. Převzali jste iniciativu naučit se základní nástroje diskuse a nyní jste certifikováni!
     licensed:
-      name: Licencován(a)
-      description: "Dokončil(a) náš výukový kurz pro pokročilé uživatele"
+      name: Licencován/a
+      description: "Dokončil/a náš výukový kurz pro pokročilé uživatele"
       long_description: |
         Tento odznak se uděluje po úspěšném absolvování interaktivního kurzu pro pokročilé uživatele. Zvládli jste pokročilé diskusní nástroje – a nyní máte plnou licenci!
   discourse_narrative_bot:

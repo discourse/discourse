@@ -290,7 +290,7 @@ it:
 
           > :imp: Ho scritto qualcosa di brutto qui
 
-          Vai avanti e **segnala questo post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> e seleziona **Contenuto inappropriato** come motivo!
+          Vai avanti e **segnala questo messaggio** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> e seleziona **Contenuto inappropriato** come motivo!
         reply: |-
           [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-

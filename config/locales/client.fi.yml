@@ -402,7 +402,7 @@ fi:
       remove: "Poista"
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
       new_topic: "Uusi ketjuluonnos"
-      new_private_message: "Uusi yksityisviestin luonnos"
+      new_private_message: "Uusi henkilökohtaisen viestin luonnos"
       abandon:
         confirm: "Sinulla on jo keskeneräinen luonnos. Mitä haluat tehdä sille?"
         yes_value: "Hylkää"
@@ -1120,7 +1120,7 @@ fi:
         ignore_option_title: "Et saa tähän käyttäjään liittyviä ilmoituksia, ja kaikki hänen sisältönsä piilotetaan."
         add_ignored_user: "Lisää…"
         mute_option: "Vaimennettu"
-        mute_option_title: "Et saa ilmoituksia, yksityisviestejä tai chat-yksityisviestejä tältä käyttäjältä."
+        mute_option_title: "Et saa ilmoituksia, henkilökohtaisia viestejä tai chat-yksityisviestejä tältä käyttäjältä."
         normal_option: "Normaali"
         normal_option_title: "Saat ilmoituksen, jos käyttäjä vastaa sinulle, lainaa sinua tai mainitsee sinut."
       notification_schedule:
@@ -1181,7 +1181,7 @@ fi:
       dismiss_notifications: "Kuittaa kaikki"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       dismiss_bookmarks_tooltip: "Merkitse kaikki lukemattomat kirjanmerkkimuistutukset luetuiksi"
-      dismiss_messages_tooltip: "Merkitse kaikki lukemattomien yksityisviestien ilmoitukset luetuiksi"
+      dismiss_messages_tooltip: "Merkitse kaikki lukemattomien henkilökohtaisten viestien ilmoitukset luetuiksi"
       no_likes_title: "Et ole vielä saanut tykkäyksiä"
       no_likes_body: >
         Saat ilmoituksen täällä aina, kun joku tykkää viestistäsi, jotta näet, mitä muut pitävät arvokkaana. Muut näkevät myös saman, kun tykkäät heidän viesteistään! <br><br> Ilmoituksia tykkäyksistä ei koskaan lähetetä sinulle sähköpostitse, mutta voit säätää, miten saat ilmoituksia tykkäyksistä sivustolla <a href='%{preferencesUrl}'>ilmoitusasetuksissasi</a>.
@@ -1219,7 +1219,7 @@ fi:
       dark_mode: "Tumma tila"
       dark_mode_enable: "Ota käyttöön automaattinen tumman tilan värimalli"
       text_size_default_on_all_devices: "Tee tästä oletusfonttikoko kaikille laitteilleni"
-      allow_private_messages: "Salli toisten käyttäjien lähettää minulle yksityisviestejä"
+      allow_private_messages: "Salli toisten käyttäjien lähettää minulle henkilökohtaisia viestejä"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
       enable_defer: "Ota ketjujen merkitseminen lukemattomiksi käyttöön"
@@ -1286,7 +1286,7 @@ fi:
       muted_users_instructions: "Älä näytä ilmoituksia tai vastaanota yksityisviestejä näiltä käyttäjiltä."
       allowed_pm_users: "Sallittu"
       allowed_pm_users_instructions: "Salli yksityisviestit vain näiltä käyttäjiltä."
-      allow_private_messages_from_specific_users: "Salli vain tiettyjen käyttäjien lähettää minulle yksityisviestejä."
+      allow_private_messages_from_specific_users: "Salli vain tiettyjen käyttäjien lähettää minulle henkilökohtaisia viestejä."
       ignored_users: "Sivuutettu"
       ignored_users_instructions: "Älä näytä viestejä ja ilmoituksia tai vastaanota yksityisviestejä näiltä käyttäjiltä."
       tracked_topics_link: "Näytä"
@@ -1342,7 +1342,7 @@ fi:
         all_tags: "Kaikki tunnisteet"
         warnings: "Viralliset varoitukset"
         read_more_in_group: "Haluatko lukea lisää? Selaile muita ryhmän %{groupLink} viestejä."
-        read_more: "Haluatko lukea lisää? Selaa muita viestejä <a href='%{basePath}/u/%{username}/messages'>yksityisviesteissä</a>."
+        read_more: "Haluatko lukea lisää? Selaa muita viestejä <a href='%{basePath}/u/%{username}/messages'>henkilökohtaisissa viesteissä</a>."
         read_more_group_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
@@ -1381,20 +1381,20 @@ fi:
               }
               { NEW, plural,
                    =0 {}
-                  one { ja <a href="{basePath}/u/{username}/messages/new"># uusi</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
-                other { ja <a href="{basePath}/u/{username}/messages/new"># uutta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+                  one { ja <a href="{basePath}/u/{username}/messages/new"># uusi</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">henkilökohtaisia viestejä</a>}
+                other { ja <a href="{basePath}/u/{username}/messages/new"># uutta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">henkilökohtaisia viestejä</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/unread"># lukematon</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
-                other {Jäljellä on <a href="{basePath}/u/{username}/messages/unread"># lukematonta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/unread"># lukematon</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">henkilökohtaisia viestejä</a>}
+                other {Jäljellä on <a href="{basePath}/u/{username}/messages/unread"># lukematonta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">henkilökohtaisia viestejä</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/new"># uusi</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
-                other {Jäljellä on <a href="{basePath}/u/{username}/messages/new"># uutta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">yksityisviestejä</a>}
+                  one {Jäljellä on <a href="{basePath}/u/{username}/messages/new"># uusi</a> viesti, tai selaa muita <a href="{basePath}/u/{username}/messages">henkilökohtaisia viestejä</a>}
+                other {Jäljellä on <a href="{basePath}/u/{username}/messages/new"># uutta</a> viestiä, tai selaa muita <a href="{basePath}/u/{username}/messages">henkilökohtaisia viestejä</a>}
               }
             }
             other {}
@@ -1697,7 +1697,7 @@ fi:
         always: "aina"
         only_when_away: "vain, kun olen poissa"
         never: "ei koskaan"
-      email_messages_level: "Lähetä minulle sähköpostiviesti, kun minulle lähetetään yksityisviesti"
+      email_messages_level: "Lähetä minulle sähköpostiviesti, kun minulle lähetetään henkilökohtainen viesti"
       include_tl0_in_digests: "Lisää uusien käyttäjien sisältö yhteenvetosähköposteihin"
       email_in_reply_to: "Sisällytä lyhennelmä vastattavasta viestistä sähköposteihin"
       other_settings: "Muut"
@@ -2567,8 +2567,8 @@ fi:
             one: "Oletko varma? Sinulla on %{count} lukematon kirjanmerkkimuistutus."
             other: "Oletko varma? Sinulla on %{count} lukematonta kirjanmerkkimuistutusta."
           messages:
-            one: "Oletko varma? Sinulla on %{count} lukematon yksityisviesti."
-            other: "Oletko varma? Sinulla on %{count} lukematonta yksityisviestiä."
+            one: "Oletko varma? Sinulla on %{count} lukematon henkilökohtainen viesti."
+            other: "Oletko varma? Sinulla on %{count} lukematonta henkilökohtaista viestiä."
         dismiss: "Kuittaa"
         cancel: "Peruuta"
       group_message_summary:
@@ -2580,7 +2580,7 @@ fi:
         quoted: '%{username} lainasi sinua ketjussa "%{topic}" – %{site_title}'
         replied: '%{username} vastasi sinulle ketjussa "%{topic}" – %{site_title}'
         posted: '%{username} lähetti viestin ketjuun "%{topic}" – %{site_title}'
-        private_message: '%{username} lähetti sinulle yksityisviestin ketjussa "%{topic}" – %{site_title}'
+        private_message: '%{username} lähetti sinulle henkilökohtaisen viestin ketjussa "%{topic}" – %{site_title}'
         linked: '%{username} linkitti viestiisi ketjusta "%{topic}" – %{site_title}'
         watching_first_post: '%{username} loi uuden ketjun "%{topic}" – %{site_title}'
         watching_category_or_tag: '%{username} lähetti viestin ketjuun "%{topic}" – %{site_title}'
@@ -2759,7 +2759,7 @@ fi:
       sr_menu_tabs: "Käyttäjävalikon välilehdet"
       view_all_notifications: "näytä kaikki ilmoitukset"
       view_all_bookmarks: "näytä kaikki kirjanmerkit"
-      view_all_messages: "näytä kaikki yksityisviestit"
+      view_all_messages: "näytä kaikki henkilökohtaiset viestit"
       tabs:
         all_notifications: "Kaikki ilmoitukset"
         replies: "Vastaukset"
@@ -2778,10 +2778,10 @@ fi:
         watching_with_unread:
           one: "Tarkkaillut ketjut – %{count} lukematon tarkkailtu ketju"
           other: "Tarkkaillut ketjut – %{count} lukematonta tarkkailtua ketjua"
-        messages: "Yksityisviestit"
+        messages: "Henkilökohtaiset viestit"
         messages_with_unread:
-          one: "Yksityisviestit – %{count} lukematon viesti"
-          other: "Yksityisviestit – %{count} lukematonta viestiä"
+          one: "Henkilökohtaiset viestit – %{count} lukematon viesti"
+          other: "Henkilökohtaiset viestit – %{count} lukematonta viestiä"
         bookmarks: "Kirjanmerkit"
         bookmarks_with_unread:
           one: "Kirjanmerkit – %{count} lukematon kirjanmerkki"
@@ -3188,7 +3188,7 @@ fi:
         visible: "Listaa ketju"
         reset_read: "Nollaa tiedot lukemisista"
         make_public: "Tee ketjusta julkinen…"
-        make_private: "Muuta yksityisviestiksi"
+        make_private: "Muuta henkilökohtaiseksi viestiksi"
         reset_bump_date: "Palauta ketjun päiväysleima"
       feature:
         pin: "Kiinnitä ketju"
@@ -4256,7 +4256,7 @@ fi:
       delete_no_unused_tags: "Käyttämättömiä tunnisteita ei ole."
       tag_list_joiner: ", "
       delete_unused: "Poista käyttämättömät tunnisteet"
-      delete_unused_description: "Poista kaikki tunnisteet, joita ei ole liitetty ketjuihin tai yksityisviesteihin"
+      delete_unused_description: "Poista kaikki tunnisteet, joita ei ole liitetty ketjuihin tai henkilökohtaisiin viesteihin"
       filters:
         without_category: "%{filter} %{tag} ketjut"
         with_category: "%{filter} %{tag} ketjut alueella %{category}"
@@ -4356,7 +4356,7 @@ fi:
       no_replies_title_others: "%{username} ei ole vielä vastannut yhteenkään ketjuun"
       no_replies_body: "Kun <a href='%{searchUrl}'>löydät</a> mielenkiintoisen keskustelun, johon haluat osallistua, voit vastata kyseiseen viestiin painamalla <kbd>Vastaa</kbd>-painiketta suoraan viestin alapuolella. Jos haluat mieluummin vastata yleiseen ketjuun kuin yksittäiseen viestiin tai yksittäiselle henkilölle, etsi <kbd>Vastaa</kbd>-painike ketjun alalaidasta tai ketjun aikajanalta."
       no_drafts_title: "Et ole aloittanut luonnoksia"
-      no_drafts_body: "Etkö ole valmis lähettämään viestiäsi? Tallennamme automaattisesti uuden luonnoksen ja listaamme sen tänne aina, kun alat kirjoittamaan ketjua, vastausta tai yksityisviestiä. Hylkää luonnos valitsemalla peruutuspainike tai tallenna luonnos jatkaaksesi myöhemmin."
+      no_drafts_body: "Etkö ole valmis lähettämään viestiäsi? Tallennamme automaattisesti uuden luonnoksen ja listaamme sen tänne aina, kun alat kirjoittamaan ketjua, vastausta tai henkilökohtaista viestiä. Hylkää luonnos valitsemalla peruutuspainike tai tallenna luonnos jatkaaksesi myöhemmin."
       no_likes_title: "Et ole vielä tykännyt ketjuista"
       no_likes_title_others: "%{username} ei ole vielä tykännyt ketjuista"
       no_likes_body: "Erinomainen tapa osallistua on aloittaa lukemalla jo käytyjä keskusteluita ja valita %{heartIcon} tykkäämissäsi viesteissä!"
@@ -4459,7 +4459,7 @@ fi:
           header_link_text: "Tietoa"
         messages:
           header_link_text: "Viestit"
-          header_action_title: "Luo yksityisviesti"
+          header_action_title: "Luo henkilökohtainen viesti"
           links:
             inbox: "Postilaatikko"
             sent: "Lähetetyt"
@@ -5835,7 +5835,7 @@ fi:
             post_locked: "viesti lukittu"
             post_edit: "viestin muokkaus"
             post_unlocked: "viestin lukitus poistettu"
-            check_personal_message: "katso yksityisviesti"
+            check_personal_message: "katso henkilökohtainen viesti"
             disabled_second_factor: "poista kaksivaiheinen tunnistus käytöstä"
             topic_published: "ketju julkaistu"
             post_approved: "viesti hyväksytty"

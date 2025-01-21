@@ -521,7 +521,7 @@ fi:
     top_weekly: "Viikon parhaat ketjut"
     top_daily: "Päivän parhaat ketjut"
     posts: "Uusimmat viestit"
-    private_posts: "Uusimmat yksityisviestit"
+    private_posts: "Uusimmat henkilökohtaiset viestit"
     group_posts: "Uusimmat viestit ryhmässä %{group_name}"
     group_mentions: "Uusimmat maininnat ryhmässä %{group_name}"
     user_posts: "Viimeisimmät viestit käyttäjältä @%{username}"
@@ -633,8 +633,8 @@ fi:
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
     dominating_topic: Olet kirjoittanut paljon tähän ketjuun! Voisit antaa muille mahdollisuuden vastata täällä ja keskustella asioista myös keskenään.
     get_a_room:
-      one: Olet vastannut käyttäjälle @%{reply_username} kerran, tiesitkö, että voit lähettää hänelle yksityisviestin?
-      other: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle yksityisviestin?
+      one: Olet vastannut käyttäjälle @%{reply_username} kerran, tiesitkö, että voit lähettää hänelle henkilökohtaisen viestin?
+      other: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle henkilökohtaisen viestin?
     dont_feed_the_trolls: Tästä viestistä on jo ilmoitettu ylläpidolle. Haluatko varmasti vastata siihen? Vastaukset negatiiviseen sisältöön rohkaisevat negatiivisempaan käyttäytymiseen.
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
@@ -667,12 +667,12 @@ fi:
         topic:
           attributes:
             base:
-              warning_requires_pm: "Voit liittää varoituksia vain yksityisviesteihin."
+              warning_requires_pm: "Voit liittää varoituksia vain henkilökohtaisiin viesteihin."
               too_many_users: "Voit lähettää varoituksia vain yhdelle käyttäjälle kerrallaan."
-              cant_send_pm: "Et voi lähettää yksityisviestiä tälle käyttäjälle."
+              cant_send_pm: "Et voi lähettää henkilökohtaista viestiä tälle käyttäjälle."
               no_user_selected: "Sinun täytyy valita kelvollinen käyttäjä."
               reply_by_email_disabled: "Sähköpostilla vastaaminen ei ole käytössä."
-              send_to_email_disabled: "Et voi lähettää yksityisviestejä sähköpostiin."
+              send_to_email_disabled: "Et voi lähettää henkilökohtaisia viestejä sähköpostiin."
               target_user_not_found: "Yhtä käyttäjää, jolle lähetät tämän viestin, ei löydy."
               unable_to_update: "Ketjun päivittäminen epäonnistui."
               unable_to_tag: "Tunnisteen asettaminen ketjuun epäonnistui."
@@ -1194,7 +1194,7 @@ fi:
         post_count: Kirjoitetut viestit
         pm_count: Kirjoitetut yksityisviestit
         revision_count: Revisiot
-      description: Luettelo valvojien aktiivisuudesta. Sisältää käsitellyt liput, lukuajan, luodut ketjut, lähetetyt viestit, lähetetyt yksityisviestit ja tarkastukset.
+      description: Luettelo valvojien aktiivisuudesta. Sisältää käsitellyt liput, lukuajan, luodut ketjut, lähetetyt viestit, lähetetyt henkilökohtaiset viestit ja tarkastukset.
     flags_status:
       title: "Lippujen status"
       values:
@@ -1338,22 +1338,22 @@ fi:
       title: "Käyttäjältä käyttäjälle (pl. vastaukset)"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monta yksityiskeskustelua aloitettu."
+      description: "Kuinka monta henkilökohtaista keskustelua aloitettu."
     user_to_user_private_messages_with_replies:
       title: "Käyttäjältä käyttäjälle (ml. vastaukset)"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monta uutta yksityiskeskustelun aloitusta tai vastausta."
+      description: "Kuinka monta uutta henkilökohtaisen keskustelun aloitusta tai vastausta."
     system_private_messages:
       title: "Järjestelmä"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monta yksityisviestiä järjestelmä on lähettänyt automaattisesti."
+      description: "Kuinka monta henkilökohtaista viestiä järjestelmä on lähettänyt automaattisesti."
     moderator_warning_private_messages:
       title: "Valvojan varoitus"
       xaxis: "Päivä"
       yaxis: "Viestien lukumäärä"
-      description: "Kuinka monta yksityistä varoitusta valvojat ovat lähettäneet."
+      description: "Kuinka monta varoitusta valvojat ovat lähettäneet henkilökohtaisilla viesteillä."
     notify_moderators_private_messages:
       title: "Ilmoita valvojille"
       xaxis: "Päivä"
@@ -1586,8 +1586,8 @@ fi:
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
     set_locale_from_accept_language_header: "aseta käyttöliittymän kieli anonyymeille käyttäjille verkkoselaimen kieliotsikkotiedoista"
     support_mixed_text_direction: "Salli vasemmalta-oikealle- ja oikealta-vasemmalle-kirjoitusta käytettävän sekaisin."
-    min_post_length: "Pienin sallittu viestin pituus merkkeinä (pois lukien yksityisviestit)"
-    min_first_post_length: "Pienin sallittu ensimmäisen viestin (aiheen leipäteksti) pituus merkkeinä (pois lukien yksityisviestit)"
+    min_post_length: "Pienin sallittu viestin pituus merkkeinä (pois lukien henkilökohtaiset viestit)"
+    min_first_post_length: "Pienin sallittu ensimmäisen viestin (aiheen leipäteksti) pituus merkkeinä (pois lukien henkilökohtaiset viestit)"
     min_personal_message_post_length: "Pienin sallittu viestin pituus merkkeinä (sekä ensimmäinen viesti että vastaukset)"
     max_post_length: "Viestin merkkien maksimimäärä"
     topic_featured_link_enabled: "Antaa käyttäjien liittää esittelylinkin ketjuihinsa. Kun tämä on käytössä, ketjuihin voi liittää korostetun linkin, joka on julkisesti näkyvissä ja jota voidaan muokata, jos käyttäjällä on riittävät oikeudet. Esittelylinkki voi parantaa ketjun ymmärrettävyyttä tarjoamalla siihen liittyvää lisäsisältöä."
@@ -1689,7 +1689,7 @@ fi:
     custom_summarization_allowed_groups: "Ryhmät voivat tehdä yhteenvetoja sisällöistä käyttämällä \"summarization_strategy\"-asetusta."
     enable_personal_messages: "VANHENTUNUT, käytä tämän sijaan \"personal message enabled groups\" -asetusta. Salli luottamustason 1 (määritettävissä viestien lähettämiseen vaadittavan vähimmäisluottamustason kautta) käyttäjien luoda viestejä ja vastata viesteihin. Henkilökunta voi aina lähettää viestejä asetuksista riippumatta."
     personal_message_enabled_groups: "Salli näiden ryhmien käyttäjien LUODA yksityisviestejä. TÄRKEÄÄ: 1) kaikki käyttäjät voivat VASTATA viesteihin. 2) Ylläpitäjät ja valvojat voivat LUODA viestejä kenelle tahansa käyttäjälle. 3) Luottamustasoryhmät sisältävät korkeammat tasot; trust_level_1:n valitseminen sallii luottamustasot TL1, TL2, TL3, TL4, mutta ei TL0:aa. 4) Ryhmän vuorovaikutusasetukset ohittavat tämän asetuksen lähetettäessä viestejä tietyille ryhmille."
-    enable_system_message_replies: "Sallii käyttäjien vastata järjestelmän viesteihin, vaikka yksityisviestit eivät olisikaan käytössä"
+    enable_system_message_replies: "Sallii käyttäjien vastata järjestelmän viesteihin, vaikka henkilökohtaiset viestit eivät olisikaan käytössä"
     enable_chunked_encoding: "Ota käyttöön palvelimen joukkokoodausvastaukset. Tämä ominaisuus toimii useimmissa määrityksissä, mutta jotkin välityspalvelimet saattavat puskuroida, mikä aiheuttaa vastausten viivästymisen"
     long_polling_base_url: "Perus-URL, jota käytetään long pollingissa (kun CDN tarjoaa dynaamista sisältöä, varmista että tämä on asetettu noudoksi lähteestä) esim: http://lähde.sivusto.com"
     polling_interval: "Kun long polling ei ole käytössä, kuinka usein kirjautuneet käyttäjät pollaavat millisekunneissa."
@@ -1753,7 +1753,7 @@ fi:
     content_security_policy_script_src: "Muut sallitut skriptilähteet. Nykyinen palvelin ja CDN sallitaan oletuksena. Katso <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP) Muut isäntälähteet ohitetaan, koska strict-dynamic on käytössä."
     invalidate_inactive_admin_email_after_days: "Ylläpitäjätilit, jotka eivät ole vierailleet sivustolla näin moneen päivään, joutuvat vahvistamaan sähköpostiosoitteensa uudelleen ennen sisäänkirjautumista. Aseta 0 poistaaksesi käytöstä."
     include_secure_categories_in_tag_counts: "Kun tämä on käytössä, tunnisteen ketjujen määrä sisältää ketjut, jotka kuuluvat kaikkien käyttäjien lukurajoitetuille alueille. Kun tämä ei ole käytössä, normaaleille käyttäjille näytetään vain ketjujen määrä tunnisteelle, joissa kaikki ketjut ovat julkisilla alueilla."
-    display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen yksityisviestien määrä näytetään."
+    display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen henkilökohtaisten viestien määrä näytetään."
     top_menu: "Määritä, mitkä kohteet näytetään aloitussivun navigoinnissa ja missä järjestyksessä."
     post_menu: "Määritä, mitkä kohteet näytetään viestivalikossa ja missä järjestyksessä."
     post_menu_hidden_items: "Viestivalikossa piilotettavat valikon vaihtoehdot, ellei laajentavaa kolmea pistettä klikata."
@@ -1884,7 +1884,7 @@ fi:
     max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimimäärä per käyttäjä."
     max_edits_per_day: "Muokkausten päivittäinen maksimimäärä per käyttäjä."
     max_topics_per_day: "Kuinka monta ketjua käyttäjä voi aloittaa päivässä."
-    max_personal_messages_per_day: "Kuinka monta uutta yksityisviestiketjua käyttäjä voi aloittaa päivässä."
+    max_personal_messages_per_day: "Kuinka monta uutta henkilökohtaista viestiketjua käyttäjä voi aloittaa päivässä."
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_minute: "Maksimimäärä ketjukutsuja, jonka käyttäjä voi lähettää minuutissa."
@@ -1974,9 +1974,9 @@ fi:
     edit_post_allowed_groups: "Ryhmät, jotka voivat muokata viestejä. Ylläpitäjät ja valvojat voivat aina muokata viestejä."
     min_trust_to_allow_self_wiki: "Minimiluottamustaso, jolla käyttäjä voi tehdä omasta viestistään wiki-viestin."
     self_wiki_allowed_groups: "Salli näiden ryhmien käyttäjien luoda oma viestiwiki. Ylläpitäjät ja valvojat voivat aina luoda oman viestiwikin."
-    min_trust_to_send_messages: "VANHENTUNUT, käytä tämän sijaan 'personal message enabled groups' -asetusta. Uusien yksityisviestin luomiseen vaadittava vähimmäisluottamustaso."
-    min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää yksityisviestejä sähköpostitse."
-    send_email_messages_allowed_groups: "Ryhmät, jotka voivat lähettää yksityisviestejä sähköpostitse. Ylläpitäjät ja valvojat voivat aina lähettää yksityisviestejä sähköpostitse."
+    min_trust_to_send_messages: "VANHENTUNUT, käytä tämän sijaan 'personal message enabled groups' -asetusta. Uusien henkilökohtaisten viestin luomiseen vaadittava vähimmäisluottamustaso."
+    min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää henkilökohtaisia viestejä sähköpostitse."
+    send_email_messages_allowed_groups: "Ryhmät, jotka voivat lähettää henkilökohtaisia viestejä sähköpostitse. Ylläpitäjät ja valvojat voivat aina lähettää henkilökohtaisia viestejä sähköpostitse."
     min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi merkitä viestejä"
     flag_post_allowed_groups: "Ryhmät, jotka voivat liputtaa viestejä. Ylläpitäjät ja valvojat voivat aina liputtaa viestejä."
     min_trust_to_post_links: "Vähimmäisluottamustaso, jolla voi lisätä linkkejä viesteihin"
@@ -2006,7 +2006,7 @@ fi:
     here_mention_allowed_groups: "Ryhmät, jotka voivat käyttää @here-mainintaa. Ylläpitäjät ja valvojat voivat aina käyttää @here-mainintaa."
     create_thumbnails: "Luo esikatselu- ja lightbox-kuvia, jotka ovat liian suuria mahtuakseen viestiin."
     email_time_window_mins: "Odota (n) minuuttia ennen ilmoitussähköpostien lähettämistä, jotta käyttäjällä on aikaa muokata ja viimeistellä viestinsä."
-    personal_email_time_window_seconds: "Odota (n) sekuntia ennen kuin yksityisviestien sähköposti-ilmoitusten lähettämistä, jotta käyttäjillä on mahdollisuus muokata ja viimeistellä viestinsä."
+    personal_email_time_window_seconds: "Odota (n) sekuntia ennen henkilökohtaisten viestien sähköposti-ilmoitusten lähettämistä, jotta käyttäjillä on mahdollisuus muokata ja viimeistellä viestinsä."
     email_posts_context: "Kuinka monta edellistä vastausta liitetään kontekstiksi sähköposti-ilmoituksessa."
     flush_timings_secs: "Kuinka usein ajoitustiedot päivitetään palvelimelle, sekunneissa."
     title_max_word_length: "Suurin sallittu sanan pituus merkkeinä ketjun otsikossa."
@@ -2184,7 +2184,7 @@ fi:
     allow_featured_topic_on_user_profiles: "Salli käyttäjän esitellä linkkiä ketjuun käyttäjäkortissaan ja profiilissaan."
     show_inactive_accounts: "Salli kirjautuneiden käyttäjien selata aktivoimattomia käyttäjätilejä."
     hide_suspension_reasons: "Älä näytä hyllytysten syitä julkisesti käyttäjäprofiileissa."
-    log_personal_messages_views: "Pidä lokia siitä, kun ylläpitäjät lukevat toisten käyttäjien/ryhmien yksityiskeskusteluja."
+    log_personal_messages_views: "Pidä lokia siitä, kun ylläpitäjät lukevat toisten käyttäjien/ryhmien henkilökohtaisia viestejä."
     ignored_users_count_message_threshold: "Huomauta valvojille, jos näin moni käyttäjä sivuuttaa tietyn käyttäjän."
     ignored_users_message_gap_days: "Millaisin väliajoin valvojia huomautetaan uudelleen käyttäjästä, jonka monet muut ovat sivuuttaneet."
     clean_up_inactive_users_after_days: "Kuinka monen päivän kuluttua ei-aktiivinen käyttäjä (luottamustaso 0 eikä yhtään viestiä) poistetaan. Arvo 0 poistaa siivouksen käytöstä."
@@ -2245,7 +2245,7 @@ fi:
     allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_username_required: "Käyttäjätunnus vaaditaan ketjun luomiseksi."
-    notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille yksityisviesteillä. Poista käytöstä arvolla 0."
+    notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille henkilökohtaisilla viesteillä. Poista käytöstä arvolla 0."
     delete_drafts_older_than_n_days: "Poista luonnokset, joita ei ole muutettu yli (n) päivään."
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen käytöstä ja Aloittaminen-painikkeen poistamiseen (poista käytöstä arvolla 0, voi kestää jopa 24 tuntia)"
@@ -2352,7 +2352,7 @@ fi:
     tags_sort_alphabetically: "Näytä tunnisteet aakkosjärjestyksessä. Oletusasetus on näyttäminen suosion mukaan."
     tags_listed_by_group: "Listaa tunnisteet tunnisteryhmittäin <a href='%{base_path}/tags' target='_blank'>Tunnisteet-sivulla</a>."
     tag_style: "Määritä tunnistemerkkien visuaalinen ulkoasu sivustolla. Tämän asetuksen avulla voit mukauttaa tunnisteiden visuaalista esittämistä sivuston kaikilla alueilla, mikä parantaa asettelun johdonmukaisuutta ja helppokäyttöisyyttä."
-    pm_tags_allowed_for_groups: "Sallita sisältyvien ryhmien jäsenten merkitä tunnisteella mikä tahansa yksityisviesti"
+    pm_tags_allowed_for_groups: "Sallita sisältyvien ryhmien jäsenten merkitä tunnisteella mikä tahansa henkilökohtainen viesti"
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
     tag_topic_allowed_groups: "Ryhmät, jotka voivat merkitä ketjuja tunnisteilla. Ylläpitäjät ja valvojat voivat aina merkitä ketjuja tunnisteilla."
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
@@ -2656,6 +2656,7 @@ fi:
     omniauth_confirm_button: "Jatka"
     authenticator_error_no_valid_email: "Mikään tiliin %{account} liittyvistä sähköpostiosoitteista ei ole sallittu. Voit joutua määrittämään tilisi eri sähköpostiosoitteella."
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
+    new_registrations_disabled_discourse_connect: "Uusien tilien rekisteröinnit sallitaan vain Discourse Connectin kautta."
     password_too_long: "Salasanan enimmäispituus on 200 merkkiä."
     email_too_long: "Antamasi sähköpostiosoite on liian pitkä. Postilaatikon nimi ei saa olla yli 254 merkkiä pitkä, eikä verkkotunnuksen nimi yli 253 merkkiä pitkä."
     wrong_invite_code: "Antamasi kutsukoodi oli väärä."
@@ -2747,8 +2748,8 @@ fi:
     already_silenced: "%{staff} hiljensi jo käyttäjän %{time_ago}."
     already_suspended: "%{staff} hyllytti jo käyttäjän %{time_ago}."
     cannot_delete_has_posts:
-      one: "Käyttäjällä %{username} on %{count} viesti julkisessa ketjussa tai yksityisviestissä, joten häntä ei voida poistaa."
-      other: "Käyttäjällä %{username} on %{count} viestiä julkisessa ketjussa tai yksityisviestissä, joten häntä ei voida poistaa."
+      one: "Käyttäjällä %{username} on %{count} viesti julkisessa ketjussa tai henkilökohtaisessa viestissä, joten häntä ei voida poistaa."
+      other: "Käyttäjällä %{username} on %{count} viestiä julkisessa ketjussa tai henkilökohtaisessa viestissä, joten häntä ei voida poistaa."
   unsubscribe_mailer:
     title: "Peru sähköpostimuistukset"
     subject_template: "Vahvista, ettet enää halua, että %{site_title} lähettää sinulle sähköpostimuistutuksia."

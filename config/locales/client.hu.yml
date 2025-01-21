@@ -4680,7 +4680,7 @@ hu:
         new_features:
           title: "Újdonságok"
           subtitle: "Még több részletet talál az új funkciókról és fejlesztésekről, amelyeket folyamatosan hozzáadunk, további részletekért lásd a <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Kiadási jegyzetet</a>."
-          previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a>oldalon tekintheted meg"
+          previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a> oldalon tekintheted meg"
           learn_more: "Tudjon meg többet..."
         last_checked: "Utoljára ellenőrizve"
         refresh_problems: "Újratöltés"
@@ -5117,7 +5117,7 @@ hu:
           font_style: "Betűstílus"
           site_logo: "Webhely logó"
           color_schemes: "Színséma"
-          emoji: "Emoji"
+          emoji: "Hangulatjel"
           navigation: "Navigáció"
           themes: "Témák"
           components:

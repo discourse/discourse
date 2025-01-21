@@ -28,7 +28,7 @@ fr:
       api_call:
         title: Appel d'API
         description: Faire une requête POST pour déclencher une automatisation
-        doc: La requête POST doit être envoyée à « /automations/:id/trigger.json » avec une clé API globale.
+        doc: La requête POST doit être envoyée à « /automations/:id/trigger.json » avec une clé d'API globale.
       category_created_edited:
         title: Catégorie créée/modifiée
         description: Lorsqu'une catégorie est créée ou modifiée, l'automatisation sera déclenchée
