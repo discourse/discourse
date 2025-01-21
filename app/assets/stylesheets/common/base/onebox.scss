@@ -154,7 +154,7 @@ aside.onebox {
     img:not(.avatar, .onebox-avatar-inline) {
       max-height: 170px;
       max-width: 20%;
-      @media all and (width <= 600px) {
+      @media all and (max-width: 600px) {
         max-width: 35%;
       }
       height: auto;

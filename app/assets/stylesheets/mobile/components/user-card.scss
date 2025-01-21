@@ -105,7 +105,7 @@
   }
 
   .public-user-fields {
-    @media screen and (height <= 550px) {
+    @media screen and (max-height: 550px) {
       max-height: 12vh;
     }
     max-height: 40vh;

@@ -39,5 +39,6 @@ export default {
     "scss/comment-no-empty": null,
     "function-linear-gradient-no-nonstandard-direction": null,
     "scss/at-mixin-pattern": null,
+    "media-feature-range-notation": "prefix",
   },
 };

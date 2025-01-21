@@ -57,7 +57,7 @@ body.wizard {
     @include breakpoint("mobile-extra-large") {
       height: 50px;
     }
-    @media screen and (height <= 900px) {
+    @media screen and (max-height: 900px) {
       .desktop-view & {
         display: none;
       }
@@ -182,7 +182,7 @@ body.wizard {
 
   &__field.text-governing-law,
   &__field.text-city-for-disputes {
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       display: none;
     }
   }
@@ -202,7 +202,7 @@ body.wizard {
     box-sizing: border-box;
     margin-right: 1em;
 
-    @media only screen and (width <= 925px) {
+    @media only screen and (max-width: 925px) {
       width: 100%;
       margin-left: auto;
       margin-right: auto;
@@ -215,7 +215,7 @@ body.wizard {
       border-radius: 0.5em;
       margin-top: -1em;
 
-      @media only screen and (width <= 925px) {
+      @media only screen and (max-width: 925px) {
         display: none;
       }
     }
@@ -312,7 +312,7 @@ body.wizard {
 
   &__step-form {
     flex: 1 0 50%;
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       width: 100%;
     }
   }
@@ -344,7 +344,7 @@ body.wizard {
 
   &__step-text {
     display: inline;
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       display: none;
     }
   }
@@ -549,7 +549,7 @@ body.wizard {
       margin: 0;
     }
 
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       font-size: var(--font-0);
     }
   }
@@ -558,7 +558,7 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 3.5em;
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       margin-left: 2em;
     }
   }
@@ -619,7 +619,7 @@ body.wizard {
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       height: 20px;
       width: 35px;
     }
@@ -637,7 +637,7 @@ body.wizard {
     color: var(--secondary);
     top: 4px;
     left: 9px;
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       top: 3px;
       left: 5px;
       font-size: var(--font-down-3);
@@ -652,7 +652,7 @@ body.wizard {
     top: 4px;
     left: 4px;
     transition: left 0.25s;
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       height: 12px;
       width: 12px;
     }
@@ -671,7 +671,7 @@ body.wizard {
 
   &__checkbox:checked + .wizard-container__checkbox-slider::before {
     left: 26px;
-    @media only screen and (width <= 568px) {
+    @media only screen and (max-width: 568px) {
       left: 20px;
     }
   }
@@ -750,7 +750,7 @@ body.wizard {
     .wizard-congratulations-wrap {
       display: flex;
       gap: 1em;
-      @media screen and (width <= 750px) {
+      @media screen and (max-width: 750px) {
         flex-direction: column-reverse;
       }
     }

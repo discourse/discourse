@@ -20,7 +20,7 @@
       transition: max-height 0.4s ease-out;
     }
 
-    @media screen and (height <= 425px) {
+    @media screen and (max-height: 425px) {
       max-height: 75vh;
     }
 
@@ -53,7 +53,7 @@
     box-shadow: var(--shadow-composer);
     padding: 20px 0;
     z-index: z("fullscreen");
-    @media screen and (height <= 425px) {
+    @media screen and (max-height: 425px) {
       padding-top: 10px;
     }
 
@@ -78,7 +78,7 @@
         line-height: var(--line-height-large);
         display: block;
         @include line-clamp(8);
-        @media screen and (height <= 425px) {
+        @media screen and (max-height: 425px) {
           @include line-clamp(5);
         }
       }
