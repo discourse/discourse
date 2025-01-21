@@ -46,6 +46,12 @@ class Theme < ActiveRecord::Base
           -> { where(target_id: Theme.targets[:settings], name: "yaml") },
           class_name: "ThemeField"
   has_one :javascript_cache, dependent: :destroy
+  has_one :theme_color_scheme, dependent: :destroy
+  has_one :owned_color_scheme,
+          class_name: "ColorScheme",
+          through: :theme_color_scheme,
+          source: :color_scheme
+
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
            class_name: "ThemeField"
