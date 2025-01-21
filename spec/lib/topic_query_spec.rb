@@ -700,18 +700,19 @@ RSpec.describe TopicQuery do
   end
 
   describe "muted categories" do
-    it "is removed from top, new and latest lists" do
+    it "is removed from latest, new, top, and hot lists" do
       category = Fabricate(:category_with_definition)
-      topic = Fabricate(:topic, category: category)
-      CategoryUser.create!(
-        user_id: user.id,
-        category_id: category.id,
-        notification_level: CategoryUser.notification_levels[:muted],
-      )
+      topic = Fabricate(:topic, category:)
+
+      notification_level = CategoryUser.notification_levels[:muted]
+      CategoryUser.create!(user:, category:, notification_level:)
+      TopTopic.create!(topic: topic, all_score: 1)
+      TopicHotScore.create!(topic: topic, score: 1.0)
+
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
-      TopTopic.create!(topic: topic, all_score: 1)
       expect(topic_query.list_top_for(:all).topics.map(&:id)).not_to include(topic.id)
+      expect(topic_query.list_hot.topics.map(&:id)).not_to include(topic.id)
     end
   end
 
@@ -784,7 +785,7 @@ RSpec.describe TopicQuery do
   end
 
   describe "muted tags" do
-    it "is removed from new and latest lists" do
+    it "is removed from latest, new, top, and hot lists" do
       SiteSetting.tagging_enabled = true
       SiteSetting.remove_muted_tags_from_latest = "always"
 
@@ -801,45 +802,32 @@ RSpec.describe TopicQuery do
         notification_level: CategoryUser.notification_levels[:muted],
       )
 
-      topic_ids = topic_query.list_latest.topics.map(&:id)
-      expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
+      [muted_topic, tagged_topic, muted_tagged_topic, untagged_topic].each do |topic|
+        TopTopic.create(topic:, all_score: 1)
+        TopicHotScore.create!(topic:, score: 1.0)
+      end
 
-      topic_ids = topic_query.list_new.topics.map(&:id)
-      expect(topic_ids).to contain_exactly(tagged_topic.id, untagged_topic.id)
+      ids = [tagged_topic, untagged_topic].map &:id
+      expect(topic_query.list_latest.topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_new.topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_top_for(:all).topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(*ids)
 
       SiteSetting.remove_muted_tags_from_latest = "only_muted"
 
-      topic_ids = topic_query.list_latest.topics.map(&:id)
-      expect(topic_ids).to contain_exactly(
-        tagged_topic.id,
-        muted_tagged_topic.id,
-        untagged_topic.id,
-      )
-
-      topic_ids = topic_query.list_new.topics.map(&:id)
-      expect(topic_ids).to contain_exactly(
-        tagged_topic.id,
-        muted_tagged_topic.id,
-        untagged_topic.id,
-      )
+      ids = [tagged_topic, muted_tagged_topic, untagged_topic].map &:id
+      expect(topic_query.list_latest.topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_new.topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_top_for(:all).topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(*ids)
 
       SiteSetting.remove_muted_tags_from_latest = "never"
 
-      topic_ids = topic_query.list_latest.topics.map(&:id)
-      expect(topic_ids).to contain_exactly(
-        muted_topic.id,
-        tagged_topic.id,
-        muted_tagged_topic.id,
-        untagged_topic.id,
-      )
-
-      topic_ids = topic_query.list_new.topics.map(&:id)
-      expect(topic_ids).to contain_exactly(
-        muted_topic.id,
-        tagged_topic.id,
-        muted_tagged_topic.id,
-        untagged_topic.id,
-      )
+      ids = [muted_topic, tagged_topic, muted_tagged_topic, untagged_topic].map &:id
+      expect(topic_query.list_latest.topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_new.topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_top_for(:all).topics.map(&:id)).to contain_exactly(*ids)
+      expect(topic_query.list_hot.topics.map(&:id)).to contain_exactly(*ids)
     end
 
     it "is not removed from the tag page itself" do
