@@ -213,7 +213,7 @@
   border-bottom: 1px solid var(--primary-low);
   padding-bottom: 0.5em;
 
-  @media screen and (width <= 400px) {
+  @media screen and (max-width: 400px) {
     flex-wrap: wrap;
   }
 

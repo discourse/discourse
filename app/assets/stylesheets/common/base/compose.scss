@@ -23,7 +23,7 @@ html.composer-open {
     max-width: 740px;
   }
 
-  @media screen and (width <= 1200px) {
+  @media screen and (max-width: 1200px) {
     min-width: 0;
   }
   z-index: z("composer", "content");
@@ -165,7 +165,7 @@ html.composer-open {
         margin-right: 5px;
         max-width: 100px;
         @include ellipsis;
-        @media screen and (width <= 500px) {
+        @media screen and (max-width: 500px) {
           display: none;
         }
       }

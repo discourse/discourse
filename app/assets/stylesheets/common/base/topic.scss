@@ -51,7 +51,7 @@
   }
 
   // timeline
-  @media screen and (width >= 925px) {
+  @media screen and (min-width: 925px) {
     // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     .topic-navigation {
       grid-area: timeline;
@@ -94,7 +94,7 @@
   }
 
   // progress bar
-  @media screen and (width <= 924px) {
+  @media screen and (max-width: 924px) {
     grid-template-areas: "posts";
     grid-template-columns: auto;
 
@@ -193,7 +193,7 @@
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
-    @media screen and (width >= 925px) {
+    @media screen and (min-width: 925px) {
       width: 90%; // topic title isn't full-width on wide screens
     }
   }
