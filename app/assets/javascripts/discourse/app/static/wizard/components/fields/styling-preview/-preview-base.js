@@ -206,8 +206,8 @@ export default class PreviewBase extends Component {
     const options = {
       ctx,
       colors,
-      font: font?.label,
-      headingFont: headingFont?.label,
+      font,
+      headingFont,
       width: this.width,
       height: this.height,
     };
@@ -337,7 +337,7 @@ export default class PreviewBase extends Component {
     const badgeHeight = headerHeight * 2 * 0.25;
     const headerMargin = headerHeight * 0.2;
     const fontSize = Math.round(badgeHeight * 0.5);
-    ctx.font = `${fontSize}px '${font}'`;
+    ctx.font = `${fontSize}px '${font.label}'`;
 
     const allCategoriesText = i18n(
       "wizard.homepage_preview.nav_buttons.all_categories"
@@ -406,7 +406,7 @@ export default class PreviewBase extends Component {
     );
     ctx.fill();
 
-    ctx.font = `${fontSize}px '${font}'`;
+    ctx.font = `${fontSize}px '${font.label}'`;
     ctx.fillStyle = colors.secondary;
     const pillButtonTextY = headerHeight + headerMargin * 1.4 + fontSize;
     const firstTopMenuItemX = headerMargin * 3.0 + categoriesBoxWidth;

@@ -6,6 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
@@ -78,6 +79,10 @@ export default class WizardStepComponent extends Component {
 
   get includeSidebar() {
     return !!this.step.fields.find((f) => f.showInSidebar);
+  }
+
+  get containerFontClasses() {
+    return `wizard-container-body-font-${this.wizard.font.id} wizard-container-heading-font-${this.wizard.headingFont.id}`;
   }
 
   @action
@@ -195,7 +200,7 @@ export default class WizardStepComponent extends Component {
         </div>
       {{/if}}
 
-      <div class="wizard-container">
+      <div class={{concatClass "wizard-container" this.containerFontClasses}}>
         <div class="wizard-container__step-contents">
           <div class="wizard-container__step-header">
             {{#if @step.emoji}}
