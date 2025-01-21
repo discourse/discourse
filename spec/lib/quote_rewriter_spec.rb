@@ -119,7 +119,7 @@ RSpec.describe QuoteRewriter do
           <aside class="quote no-group" data-username="codinghorror" data-post="1" data-topic="#{quoted_post.topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="24" height="24" src="#{avatar_url}" class="avatar"> Mr. Atwood:</div>
+          <img alt="" width="24" height="24" src="#{avatar_url}" class="avatar"> Mr. Atwood:</div>
           <blockquote>
           <p>quoted post</p>
           </blockquote>
