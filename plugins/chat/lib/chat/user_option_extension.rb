@@ -40,7 +40,7 @@ module Chat
       end
 
       def base.chat_send_shortcut
-        @chat_send_shortcut ||= { enter: 0, shift_enter: 1 }
+        @chat_send_shortcut ||= { enter: 0, meta_enter: 1 }
       end
 
       # Avoid attempting to override when autoloading

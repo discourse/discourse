@@ -116,24 +116,38 @@
   />
 </div>
 
-{{#if this.site.desktopView}}
-  <div
-    class="control-group chat-setting controls-dropdown"
-    data-setting-name="user_chat_send_shortcut"
-  >
-    <label for="user_chat_send_shortcut">
-      {{i18n "chat.send_shortcut.title"}}
-    </label>
-
-    <ComboBox
-      @valueProperty="value"
-      @content={{this.chatSendShortcutOptions}}
-      @value={{this.chatSendShortcut}}
-      @id="user_chat_send_shortcut"
-      @onChange={{fn (mut this.model.user_option.chat_send_shortcut)}}
-    />
+<div
+  class="control-group chat-setting controls-dropdown"
+  data-setting-name="user_chat_send_shortcut"
+>
+  <div class="radio-group">
+    {{#each this.chatSendShortcutOptions as |option|}}
+      <div class="radio-group-option">
+        <label class="controls">
+          <input
+            type="radio"
+            name="chat_send_shortcut"
+            value={{option.value}}
+            checked={{eq
+              this.model.user_option.chat_send_shortcut
+              option.value
+            }}
+            {{on
+              "change"
+              (withEventValue
+                (fn (mut this.model.user_option.chat_send_shortcut))
+              )
+            }}
+          />
+          {{option.label}}
+        </label>
+        <span class="control-instructions">
+          {{option.description}}
+        </span>
+      </div>
+    {{/each}}
   </div>
-{{/if}}
+</div>
 
 <SaveControls
   @id="user_chat_preference_save"

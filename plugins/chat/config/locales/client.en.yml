@@ -137,9 +137,12 @@ en:
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
       send_shortcut:
-        title: "Shortcut used to send a message"
-        enter: "<kbd>Enter</kbd>"
-        shift_enter: "<kbd>Shift</kbd> <span>+</span> <kbd>Enter</kbd>"
+        enter:
+          label: "Send by Enter"
+          description: "New line by Shift + Enter"
+        meta_enter:
+          label: "Send by %{meta_key} + Enter"
+          description: "New line by Enter"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"

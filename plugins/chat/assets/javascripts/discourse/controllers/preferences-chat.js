@@ -5,6 +5,8 @@ import { htmlSafe } from "@ember/template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
@@ -32,10 +34,17 @@ export default class PreferencesChatController extends Controller {
   subpageTitle = i18n("chat.admin.title");
 
   chatSendShortcutOptions = [
-    { name: htmlSafe(i18n("chat.send_shortcut.enter")), value: "enter" },
     {
-      name: htmlSafe(i18n("chat.send_shortcut.shift_enter")),
-      value: "shift_enter",
+      label: i18n("chat.send_shortcut.enter.label"),
+      value: "enter",
+      description: i18n("chat.send_shortcut.enter.description"),
+    },
+    {
+      label: i18n("chat.send_shortcut.meta_enter.label", {
+        meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
+      }),
+      value: "meta_enter",
+      description: i18n("chat.send_shortcut.meta_enter.description"),
     },
   ];
 
