@@ -86,7 +86,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
   test("onChange action", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
-    this.set("onChange", (item) => assert.step(item.id));
+    this.set("onChange", (item) => assert.step(`${item.id}`));
 
     await render(hbs`
       <MountWidget
