@@ -99,7 +99,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
 
     it "checks if `models_namespace` is an existing namespace" do
       config = minimal_config
-      config[:output][:models_namespace] = "::Foo::Bar::IntermediateDB"
+      config[:output][:models_namespace] = "Foo::Bar::IntermediateDB"
       expect(validator.validate(config)).to have_errors
       expect(validator.errors).to contain_exactly("`models_namespace` is not defined")
     end
