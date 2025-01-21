@@ -69,6 +69,11 @@ class NotificationEmailer
         notification_type: notification_type.to_s,
       }
 
+      if post_id > 0
+        post = Post.find_by(id: post_id)
+        hash[:force_email_notification] = post.force_email_notification if post
+      end
+
       hash[:post_id] = post_id if post_id > 0 && notification_type != :post_approved
       hash
     end

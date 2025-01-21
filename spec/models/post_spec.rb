@@ -2331,4 +2331,13 @@ RSpec.describe Post do
       ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
     end
   end
+
+  describe "#force_email_notification" do
+    fab!(:post)
+
+    it "should save as a custom field" do
+      post.force_email_notification = true
+      expect(post.custom_fields["force_email_notification"]).to eq("true")
+    end
+  end
 end

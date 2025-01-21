@@ -121,14 +121,15 @@ module Jobs
 
       if args[:admin]&.has_key?(:requesting_user_id)
         @requesting_user = User.find_by(id: args[:admin][:requesting_user_id])
+        @notify_user = @requesting_user
         if @requesting_user&.admin?
           # Admins can decide who to send the export to
           if args[:admin][:send_to_user]
-            @requesting_user = @archive_for_user
+            @notify_user = @archive_for_user
           elsif args[:admin][:send_to_admin]
             # We've already set the requesting user to the admin
           elsif args[:admin][:send_to_site_contact]
-            @requesting_user = Discourse.site_contact_user
+            @notify_user = Discourse.site_contact_user
           end
         else
           raise Discourse::InvalidParameters.new(
@@ -136,7 +137,7 @@ module Jobs
                 )
         end
       else
-        @requesting_user = @archive_for_user
+        @notify_user = @archive_for_user
       end
 
       @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
@@ -523,7 +524,7 @@ module Jobs
               File.basename(zip_filename),
               type: "csv_export",
               for_export: "true",
-            ).create_for(@requesting_user.id)
+            ).create_for(@notify_user.id)
 
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
@@ -635,17 +636,18 @@ module Jobs
     def notify_user(upload, export_title)
       post = nil
 
-      if @requesting_user
+      if @notify_user
         post =
           if upload.persisted?
             SystemMessage.create_from_system_user(
-              @requesting_user,
+              @notify_user,
               :csv_export_succeeded,
               download_link: UploadMarkdown.new(upload).attachment_markdown,
               export_title: export_title,
+              force_email_notification: @requesting_user&.admin?,
             )
           else
-            SystemMessage.create_from_system_user(@requesting_user, :csv_export_failed)
+            SystemMessage.create_from_system_user(@notify_user, :csv_export_failed)
           end
       end
 

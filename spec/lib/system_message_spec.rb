@@ -98,5 +98,12 @@ RSpec.describe SystemMessage do
       expect(event[:params].first[:message_type]).to eq(:tl2_promotion_message)
       expect(event[:params].first[:recipient]).to eq(user)
     end
+
+    it "passes force_email_notification to PostCreator" do
+      system_message = SystemMessage.new(user)
+      post = system_message.create(:tl2_promotion_message, force_email_notification: true)
+
+      expect(post.force_email_notification).to eq(true)
+    end
   end
 end

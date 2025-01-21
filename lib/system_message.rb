@@ -59,6 +59,7 @@ class SystemMessage
       subtype: TopicSubtype.system_message,
       skip_validations: true,
       post_alert_options: params[:post_alert_options],
+      force_email_notification: params[:force_email_notification],
     ]
 
     DiscourseEvent.trigger(
@@ -102,6 +103,7 @@ class SystemMessage
         end,
       site_password: "",
       base_url: Discourse.base_url,
+      force_email_notification: false,
     }
   end
 end

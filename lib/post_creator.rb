@@ -10,34 +10,38 @@ class PostCreator
 
   # Acceptable options:
   #
-  #   raw                     - raw text of post
-  #   image_sizes             - We can pass a list of the sizes of images in the post as a shortcut.
-  #   invalidate_oneboxes     - Whether to force invalidation of oneboxes in this post
-  #   acting_user             - The user performing the action might be different than the user
-  #                             who is the post "author." For example when copying posts to a new
-  #                             topic.
-  #   created_at              - Post creation time (optional)
-  #   auto_track              - Automatically track this topic if needed (default true)
-  #   custom_fields           - Custom fields to be added to the post, Hash (default nil)
-  #   post_type               - Whether this is a regular post or moderator post.
-  #   no_bump                 - Do not cause this post to bump the topic.
-  #   cooking_options         - Options for rendering the text
-  #   cook_method             - Method of cooking the post.
-  #                               :regular - Pass through Markdown parser and strip bad HTML
-  #                               :raw_html - Perform no processing
-  #                               :raw_email - Imported from an email
-  #   via_email               - Mark this post as arriving via email
-  #   raw_email               - Full text of arriving email (to store)
-  #   action_code             - Describes a small_action post (optional)
-  #   skip_jobs               - Don't enqueue jobs when creation succeeds. This is needed if you
-  #                             wrap `PostCreator` in a transaction, as the sidekiq jobs could
-  #                             dequeue before the commit finishes. If you do this, be sure to
-  #                             call `enqueue_jobs` after the transaction is committed.
-  #   hidden_reason_id        - Reason for hiding the post (optional)
-  #   skip_validations        - Do not validate any of the content in the post
-  #   draft_key               - the key of the draft we are creating (will be deleted on success)
-  #   advance_draft           - Destroy draft after creating post or topic
-  #   silent                  - Do not update topic stats and fields like last_post_user_id
+  #   raw                      - raw text of post
+  #   image_sizes              - We can pass a list of the sizes of images in the post as a shortcut.
+  #   invalidate_oneboxes      - Whether to force invalidation of oneboxes in this post
+  #   acting_user              - The user performing the action might be different than the user
+  #                              who is the post "author." For example when copying posts to a new
+  #                              topic.
+  #   created_at               - Post creation time (optional)
+  #   auto_track               - Automatically track this topic if needed (default true)
+  #   custom_fields            - Custom fields to be added to the post, Hash (default nil)
+  #   post_type                - Whether this is a regular post or moderator post.
+  #   no_bump                  - Do not cause this post to bump the topic.
+  #   cooking_options          - Options for rendering the text
+  #   cook_method              - Method of cooking the post.
+  #                                :regular - Pass through Markdown parser and strip bad HTML
+  #                                :raw_html - Perform no processing
+  #                                :raw_email - Imported from an email
+  #   via_email                - Mark this post as arriving via email
+  #   raw_email                - Full text of arriving email (to store)
+  #   action_code              - Describes a small_action post (optional)
+  #   skip_jobs                - Don't enqueue jobs when creation succeeds. This is needed if you
+  #                              wrap `PostCreator` in a transaction, as the sidekiq jobs could
+  #                              dequeue before the commit finishes. If you do this, be sure to
+  #                              call `enqueue_jobs` after the transaction is committed.
+  #   hidden_reason_id         - Reason for hiding the post (optional)
+  #   skip_validations         - Do not validate any of the content in the post
+  #   draft_key                - the key of the draft we are creating (will be deleted on success)
+  #   advance_draft            - Destroy draft after creating post or topic
+  #   silent                   - Do not update topic stats and fields like last_post_user_id
+  #   force_email_notification - Force email notification for this post, overriding any safety checks
+  #                              that would otherwise prevent it (for example, it will send notifications
+  #                              to suspended users). This should only ever be used for messages manually
+  #                              triggered by staff (for example, user archives exported from the admin UI).)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -552,6 +556,7 @@ class PostCreator
       via_email
       raw_email
       action_code
+      force_email_notification
     ].each { |a| post.public_send("#{a}=", @opts[a]) if @opts[a].present? }
 
     post.extract_quoted_post_numbers

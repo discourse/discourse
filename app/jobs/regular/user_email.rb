@@ -109,7 +109,8 @@ module Jobs
         return skip_message(SkippedEmailLog.reason_types[:user_email_anonymous_user])
       end
 
-      if user.suspended?
+      if user.suspended? && !args[:force_email_notification]
+        Discourse.warn("wat #{args}", {})
         if !type.in?(%w[user_private_message account_suspended])
           return skip_message(SkippedEmailLog.reason_types[:user_email_user_suspended_not_pm])
         elsif post&.topic&.group_pm?
@@ -117,7 +118,7 @@ module Jobs
         end
       end
 
-      if type == "digest"
+      if type == "digest" && !args[:force_email_notification]
         # same checks as in the "enqueue_digest_emails" job
         # in case something changed since the job was enqueued
         return if SiteSetting.disable_digest_emails? || SiteSetting.private_email?
@@ -159,7 +160,7 @@ module Jobs
       email_args = {}
 
       if (post || notification || notification_type || args[:force_respect_seen_recently]) &&
-           (seen_recently && !user.suspended?)
+           (seen_recently && !user.suspended?) && !args[:force_email_notification]
         return skip_message(SkippedEmailLog.reason_types[:user_email_seen_recently])
       end
 
@@ -187,14 +188,16 @@ module Jobs
         end
 
         unless always_email_regular?(user, type) || always_email_private_message?(user, type)
-          if notification&.read? || post&.seen?(user)
+          if (notification&.read? || post&.seen?(user)) && !args[:force_email_notification]
             return skip_message(SkippedEmailLog.reason_types[:user_email_notification_already_read])
           end
         end
       end
 
-      skip_reason_type = skip_email_for_post(post, user)
-      return skip_message(skip_reason_type) if skip_reason_type.present?
+      if !args[:force_email_notification]
+        skip_reason_type = skip_email_for_post(post, user)
+        return skip_message(skip_reason_type) if skip_reason_type.present?
+      end
 
       # Make sure that mailer exists
       unless UserNotifications.respond_to?(type)
@@ -219,13 +222,15 @@ module Jobs
         email_args[:user_agent] = args[:user_agent]
       end
 
-      if EmailLog.reached_max_emails?(user, type)
-        return skip_message(SkippedEmailLog.reason_types[:exceeded_emails_limit])
-      end
+      if !args[:force_email_notification]
+        if EmailLog.reached_max_emails?(user, type)
+          return skip_message(SkippedEmailLog.reason_types[:exceeded_emails_limit])
+        end
 
-      if !EmailLog::CRITICAL_EMAIL_TYPES.include?(type) &&
-           user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
-        return skip_message(SkippedEmailLog.reason_types[:exceeded_bounces_limit])
+        if !EmailLog::CRITICAL_EMAIL_TYPES.include?(type) &&
+             user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+          return skip_message(SkippedEmailLog.reason_types[:exceeded_bounces_limit])
+        end
       end
 
       if args[:user_history_id]

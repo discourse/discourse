@@ -54,6 +54,20 @@ RSpec.describe Jobs::UserEmail do
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
+    it "does call the mailer when the user is suspended, but the force_email_notification flag is set" do
+      suspended.update!(last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+      Jobs::UserEmail.new.execute(
+        type: :digest,
+        user_id: suspended.id,
+        force_email_notification: true,
+      )
+      expect(ActionMailer::Base.deliveries).to_not be_empty
+
+      email = ActionMailer::Base.deliveries.first
+
+      expect(email.to).to contain_exactly(user.email)
+    end
+
     it "doesn't call the mailer when the user is not active" do
       user.update!(active: false)
       Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)

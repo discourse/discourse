@@ -326,6 +326,26 @@ RSpec.describe PostCreator do
         creator_with_image_sizes.create
       end
 
+      it "passes the force_email_notification flag to the post when true" do
+        creator.opts[:force_email_notification] = true
+        creator.create
+
+        expect(Post.last.force_email_notification).to eq(true)
+      end
+
+      it "passes the force_email_notification flag to the post when false" do
+        creator.opts[:force_email_notification] = false
+        creator.create
+
+        expect(Post.last.force_email_notification).to eq(false)
+      end
+
+      it "doesn't pass the force_email_notification flag to the post if it's not set" do
+        creator.create
+
+        expect(Post.last.force_email_notification).to eq(false)
+      end
+
       it "sets topic excerpt if first post, but not second post" do
         first_post = creator.create
         topic = first_post.topic.reload

@@ -1317,6 +1317,14 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
+  def force_email_notification
+    custom_fields["force_email_notification"] == "true"
+  end
+
+  def force_email_notification=(value)
+    custom_fields["force_email_notification"] = value.to_s
+  end
+
   private
 
   def parse_quote_into_arguments(quote)

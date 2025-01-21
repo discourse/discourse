@@ -80,6 +80,9 @@ RSpec.describe Jobs::ExportUserArchive do
         ),
       )
 
+      # Only admins can force email notifications
+      expect(system_message.first_post.force_email_notification).to eq(false)
+
       upload = system_message.first_post.uploads.first
 
       expect(system_message.first_post.raw).to eq(
@@ -143,6 +146,8 @@ RSpec.describe Jobs::ExportUserArchive do
 
         system_message = admin.topics_allowed.last
 
+        expect(system_message.first_post.force_email_notification).to eq(true)
+
         expect(system_message.title).to eq(
           I18n.t(
             "system_messages.csv_export_succeeded.subject_template",
@@ -174,6 +179,8 @@ RSpec.describe Jobs::ExportUserArchive do
 
         system_message = user.topics_allowed.last
 
+        expect(system_message.first_post.force_email_notification).to eq(true)
+
         expect(system_message.title).to eq(
           I18n.t(
             "system_messages.csv_export_succeeded.subject_template",
@@ -204,6 +211,8 @@ RSpec.describe Jobs::ExportUserArchive do
         end.to change { Upload.count }.by(1)
 
         system_message = admin.topics_allowed.last
+
+        expect(system_message.first_post.force_email_notification).to eq(true)
 
         expect(system_message.title).to eq(
           I18n.t(
@@ -239,6 +248,8 @@ RSpec.describe Jobs::ExportUserArchive do
 
         system_message = site_contact.topics_allowed.last
 
+        expect(system_message.first_post.force_email_notification).to eq(true)
+
         expect(system_message.title).to eq(
           I18n.t(
             "system_messages.csv_export_succeeded.subject_template",
@@ -272,6 +283,8 @@ RSpec.describe Jobs::ExportUserArchive do
         end.to change { Upload.count }.by(1)
 
         system_message = user.topics_allowed.last
+
+        expect(system_message.first_post.force_email_notification).to eq(true)
 
         expect(system_message.title).to eq(
           I18n.t(
