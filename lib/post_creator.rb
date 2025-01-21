@@ -38,10 +38,10 @@ class PostCreator
   #   draft_key                - the key of the draft we are creating (will be deleted on success)
   #   advance_draft            - Destroy draft after creating post or topic
   #   silent                   - Do not update topic stats and fields like last_post_user_id
-  #   force_email_notification - Force email notification for this post, overriding any safety checks
-  #                              that would otherwise prevent it (for example, it will send notifications
-  #                              to suspended users). This should only ever be used for messages manually
-  #                              triggered by staff (for example, user archives exported from the admin UI).)
+  #   force_email_notification - Force email notification for this post, overriding any safety checks that would
+  #                              otherwise prevent it (for example, it will send notifications to suspended users).
+  #                              This should only ever be used for posts created by staff, with the intention of
+  #                              generating an email (for example, user archives exported from the admin UI).
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to

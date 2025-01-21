@@ -1317,6 +1317,10 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
+  # This flag forces email notification for any notifications generated for this post, overriding any
+  # safety checks that would otherwise prevent it (for example, it will send notifications
+  # to suspended users). This should only ever be used for posts created by staff, with the intention
+  # of generating an email (for example, user archives exported from the admin UI).
   def force_email_notification
     custom_fields["force_email_notification"] == "true"
   end
