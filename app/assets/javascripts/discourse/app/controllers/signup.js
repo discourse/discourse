@@ -15,17 +15,16 @@ import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import { userPath } from "discourse/lib/url";
+import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class SignupPageController extends Controller.extend(
   PasswordValidation,
-  UsernameValidation,
   UserFieldsValidation
 ) {
   @service site;
@@ -33,10 +32,7 @@ export default class SignupPageController extends Controller.extend(
   @service login;
 
   @tracked accountUsername;
-<<<<<<< HEAD
   @tracked isDeveloper = false;
-=======
->>>>>>> 705f072e3b (DEV: convert username field in signup page to native input with 1 way data binding)
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
@@ -47,6 +43,7 @@ export default class SignupPageController extends Controller.extend(
   passwordValidationVisible = false;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper(this);
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -65,6 +62,11 @@ export default class SignupPageController extends Controller.extend(
   @action
   setAccountUsername(event) {
     this.accountUsername = event.target.value;
+  }
+
+  @dependentKeyCompat
+  get usernameValidation() {
+    return this.usernameValidationHelper.usernameValidation;
   }
 
   get nameTitle() {
