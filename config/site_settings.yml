@@ -3523,3 +3523,6 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions"
+  use_overhauled_theme_color_palette:
+    default: false
+    hidden: true

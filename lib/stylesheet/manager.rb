@@ -38,10 +38,11 @@ class Stylesheet::Manager
     cache.clear_regex(/#{plugin}/)
   end
 
-  def self.color_scheme_cache_key(color_scheme, theme_id = nil)
+  def self.color_scheme_cache_key(color_scheme, theme_id = nil, dark: false)
     color_scheme_name = Slug.for(color_scheme.name) + color_scheme&.id.to_s
     theme_string = theme_id ? "_theme#{theme_id}" : ""
-    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}"
+    dark_string = dark ? "_dark" : ""
+    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}#{dark_string}"
   end
 
   def self.precompile_css
@@ -110,14 +111,17 @@ class Stylesheet::Manager
       theme = manager.get_theme(theme_id)
 
       [theme_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
-
-        Stylesheet::Manager::Builder.new(
-          target: COLOR_SCHEME_STYLESHEET,
-          theme: theme,
-          color_scheme: scheme,
-          manager: manager,
-        ).compile(force: true)
+        [true, false].each do |dark|
+          mode = dark ? "dark" : "light"
+          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (#{mode})"
+          Stylesheet::Manager::Builder.new(
+            target: COLOR_SCHEME_STYLESHEET,
+            theme: theme,
+            color_scheme: scheme,
+            manager: manager,
+            dark:,
+          ).compile(force: true)
+        end
       end
 
       clear_color_scheme_cache!
@@ -332,7 +336,7 @@ class Stylesheet::Manager
     end
   end
 
-  def color_scheme_stylesheet_details(color_scheme_id = nil, media)
+  def color_scheme_stylesheet_details(color_scheme_id = nil, media, dark: false)
     theme_id = @theme_id || SiteSetting.default_theme_id
 
     color_scheme =
@@ -349,10 +353,10 @@ class Stylesheet::Manager
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
-    cache_key = self.class.color_scheme_cache_key(color_scheme, theme_id)
+    cache_key = self.class.color_scheme_cache_key(color_scheme, theme_id, dark:)
 
     cache.defer_get_set(cache_key) do
-      stylesheet = { color_scheme_id: color_scheme.id }
+      stylesheet = { color_scheme_id: color_scheme.id, dark: }
 
       theme = get_theme(theme_id)
 
@@ -362,6 +366,7 @@ class Stylesheet::Manager
           theme: get_theme(theme_id),
           color_scheme: color_scheme,
           manager: self,
+          dark:,
         )
 
       builder.compile unless File.exist?(builder.stylesheet_fullpath)
@@ -372,8 +377,8 @@ class Stylesheet::Manager
     end
   end
 
-  def color_scheme_stylesheet_preload_tag(color_scheme_id = nil, media = "all")
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media)
+  def color_scheme_stylesheet_preload_tag(color_scheme_id = nil, media = "all", dark: false)
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media, dark:)
 
     return "" if !stylesheet
 
@@ -382,8 +387,13 @@ class Stylesheet::Manager
     %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
 
-  def color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = "all", preload_callback = nil)
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media)
+  def color_scheme_stylesheet_link_tag(
+    color_scheme_id = nil,
+    media = "all",
+    preload_callback = nil,
+    dark: false
+  )
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media, dark:)
 
     return "" if !stylesheet
 
