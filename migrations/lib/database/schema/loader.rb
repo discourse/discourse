@@ -2,8 +2,6 @@
 
 module Migrations::Database::Schema
   class Loader
-    attr_reader :errors
-
     def initialize(schema_config)
       @schema_config = schema_config
       @db = ActiveRecord::Base.connection

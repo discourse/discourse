@@ -15,9 +15,11 @@ module Migrations::Database::Schema
       @errors.clear
 
       validate_with_json_schema(config)
-      return if has_errors?
+      return self if has_errors?
 
       validate_config(config)
+
+      self
     end
 
     def has_errors?
@@ -37,25 +39,28 @@ module Migrations::Database::Schema
     end
 
     def validate_config(config)
-      validate_plugins(config)
+      validate_output_config(config)
       validate_schema_config(config)
+      validate_plugins(config)
     end
 
-    def validate_plugins(config)
-      if (plugin_names = config[:plugins]).nil?
-        @errors << "Plugin configuration not found"
-        return
-      end
+    def validate_output_config(config)
+      output_config = config[:output]
 
-      all_plugin_names = Discourse.plugins.map(&:name)
+      schema_file_path = File.dirname(output_config[:schema_file])
+      schema_file_path = File.expand_path(schema_file_path, ::Migrations.root_path)
+      @errors << "Directory of `schema_file` does not exist" if !Dir.exist?(schema_file_path)
 
-      if (additional_plugins = all_plugin_names.difference(plugin_names)).any?
-        @errors << "Additional plugins installed. Uninstall them or add to configuration: #{additional_plugins.join(", ")}"
-      end
+      models_directory = File.expand_path(output_config[:models_directory], ::Migrations.root_path)
+      @errors << "`models_directory` does not exist" if !Dir.exist?(models_directory)
 
-      if (missing_plugins = plugin_names.difference(all_plugin_names)).any?
-        @errors << "Configured plugins not installed: #{missing_plugins.join(", ")}"
-      end
+      existing_namespace =
+        begin
+          Object.const_get(output_config[:models_namespace]).is_a?(Module)
+        rescue NameError
+          false
+        end
+      @errors << "`models_namespace` is not defined" if !existing_namespace
     end
 
     def validate_schema_config(config)
@@ -72,8 +77,8 @@ module Migrations::Database::Schema
 
       schema_config
         .dig(:global, :tables, :exclude)
-        .sort
-        .each do |table_name|
+        &.sort
+        &.each do |table_name|
           if !existing_table_names.delete?(table_name)
             @errors << "Excluded table does not exist: #{table_name}"
           end
@@ -88,6 +93,19 @@ module Migrations::Database::Schema
 
       existing_table_names.each do |table_name|
         @errors << "Table missing from configuration file: #{table_name}"
+      end
+    end
+
+    def validate_plugins(config)
+      plugin_names = config[:plugins]
+      all_plugin_names = Discourse.plugins.map(&:name)
+
+      if (additional_plugins = all_plugin_names.difference(plugin_names)).any?
+        @errors << "Additional plugins installed. Uninstall them or add to configuration: #{additional_plugins.sort.join(", ")}"
+      end
+
+      if (missing_plugins = plugin_names.difference(all_plugin_names)).any?
+        @errors << "Configured plugins not installed: #{missing_plugins.sort.join(", ")}"
       end
     end
   end
