@@ -110,7 +110,6 @@ module Jobs
       end
 
       if user.suspended? && !args[:force_email_notification]
-        Discourse.warn("wat #{args}", {})
         if !type.in?(%w[user_private_message account_suspended])
           return skip_message(SkippedEmailLog.reason_types[:user_email_user_suspended_not_pm])
         elsif post&.topic&.group_pm?
