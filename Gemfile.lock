@@ -193,7 +193,8 @@ GEM
     image_size (3.4.0)
     in_threads (1.6.0)
     io-console (0.8.0)
-    irb (1.14.3)
+    irb (1.15.0)
+      pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     iso8601 (0.13.0)
@@ -332,7 +333,10 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
+    pp (0.6.2)
+      prettyprint
     prettier_print (1.2.1)
+    prettyprint (0.2.0)
     progress (3.6.0)
     pry (0.14.2)
       coderay (~> 1.1)
