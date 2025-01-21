@@ -763,6 +763,7 @@ sq:
         notify_users: "Njoftoni përdoruesit"
         set_owner: "Cakto përdoruesit si pronarë të këtij grupi"
       requests:
+        title: "Kërkesat"
         reason: "Arsye"
         accept: "Pranoni"
         accepted: "pranuar"
@@ -3742,6 +3743,7 @@ sq:
         save: "Ruaj"
         delete: "Fshije"
         confirm_delete: "Jeni të sigurtë që doni të fshini këtë grup etiketash?"
+        cannot_save: "Grupi i emrave nuk mund të ruhet. Sigurohuni që ka të paktën një emër të pranishëm, emri i grupit të emrave nuk është bosh dhe më pak se 100 karaktere dhe një grup është zgjedhur për lejen e etiketave."
       topics:
         none:
           unread: "Nuk keni tema të palexuara."
@@ -3825,6 +3827,8 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+              content_drafts: "Draftet e mia"
+              title_drafts: "Draftet e mia të papostuara"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -3965,8 +3969,13 @@ sq:
           optional_allowed_parameters: Parametrat e lejuar (opsionale)
       web_hooks:
         title: "Webhooks"
+        none: "Nuk ka mesazhe të automatizuara për momentin."
+        new: "Mesazhe të reja të automatizuara"
         edit: "Redakto"
         save: "Ruaj"
+        go_back: "Kthehu në listë"
+        wildcard_event: "Më dërgo gjithçka."
+        individual_event: "Zgjidhni ngjarje individuale."
         active: "Aktiv"
         delivery_status:
           failed: "Dështoi"
@@ -4005,10 +4014,13 @@ sq:
           site_logo: "Logo e faqes"
           emoji: "Emoji"
           navigation: "Shfletimi"
+          site_texts: "Tekstet e faqes"
       email_settings:
         sidebar_link:
           preview_summary: "Parashiko emailin përmbledhës"
+          server_setup: "Konfigurimi i serverit"
       email_logs:
+        title: "Hapësirat e emailit"
         sidebar_link:
           sent: "Dërguar"
           skipped: "Skipped"
@@ -4023,12 +4035,23 @@ sq:
           screened_urls: "Kontroll URL-sh"
           security: "Siguria"
           spam: "Spam"
+          staff_action_logs: "Hapësirat e Veprimit të Stafit"
       config_areas:
         about:
+          community_owner_help: |
+            Kjo do të përdoret në faqen tuaj. Madhësia e rekomanduar: 800x300px. Llojet e pranuara: JPG, PNG dhe SVG deri në 10 MB.
+          your_organization: "Organizata juaj"
+          company_name: "Emri i shoqërisë"
+          company_name_placeholder: "Sample Company Inc."
+          company_name_help: |
+            Emri i shoqërisë ose organizatës suaj.
+          governing_law_help: |
+            Specifikoni juridiksionin që rregullon aspektet ligjore të faqes, duke përfshirë Kushtet e Shërbimit dhe Njoftimin e Privatësisë. Ky është zakonisht vendi ose shteti ku shoqëria që operon faqen është e regjistruar ose kryen biznes.
           saved: "u ruajt!"
         flags:
           description: "Përshkrimi"
           enabled: "Aktivizuar?"
+          add: "Shto sinjalizuesin"
           edit: "Redakto"
           delete: "Fshij"
           form:
@@ -4054,6 +4077,7 @@ sq:
           installed: "Instaluar"
       advanced:
         sidebar_link:
+          api_keys: "Çelësat API"
           developer: "Developer"
           embedding: "Embedding"
           rate_limits: "Kufizimet"
@@ -4063,6 +4087,7 @@ sq:
           files: "Skedarë"
           other_options: "Të tjerë"
           search: "Kërko"
+          all_site_settings: "Të gjitha cilësimet e faqes"
       backups:
         title: "Rezervat"
         menu:

@@ -332,7 +332,7 @@ fr:
       cors_origins_should_not_have_trailing_slash: "Vous ne devez pas ajouter la barre oblique finale (/) aux origines CORS."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Les agents utilisateurs doivent comporter au moins 3 caractères pour éviter de limiter accidentellement le débit des utilisateurs légitimes."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Vous ne pouvez ajouter aucune des valeurs suivantes au paramètre : %{values}."
-      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Vous ne pouvez pas désactiver le retrait des métadonnées de l'image si l'option « Image d’optimisation des médias du compositeur activée » est activée. Désactivez cette option avant de désactiver les métadonnées de l'image."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Vous ne pouvez pas désactiver le retrait des métadonnées de l'image si l'option « Image d'optimisation des contenus multimédias du compositeur activée » est activée. Désactivez cette option avant de désactiver les métadonnées de l'image."
       twitter_summary_large_image_no_svg: "Les images de résumé Twitter utilisées pour les métadonnées twitter:image ne peuvent pas être des images .svg."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -408,7 +408,7 @@ fr:
   invalid_access: "L'accès à la ressource demandée n'est pas autorisé."
   authenticator_not_found: "La méthode d'authentification n'existe pas ou a été désactivée."
   authenticator_no_connect: "Ce fournisseur d'authentification ne permet pas d'établir une connexion avec un compte utilisateur existant sur le forum."
-  invalid_api_credentials: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le nom d’utilisateur ou la clé API n'est pas valide."
+  invalid_api_credentials: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le nom d'utilisateur ou la clé d'API n'est pas valide."
   provider_not_enabled: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le fournisseur d'authentification n'est pas activé."
   provider_not_found: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le fournisseur d'authentification n'existe pas."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
@@ -991,7 +991,7 @@ fr:
       email_title: '« %{title} » a été signalé comme spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: "Répréhensible"
+      title: "Inapproprié"
       description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de la communauté</a> par une personne raisonnable.'
       short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
     illegal:
@@ -1067,9 +1067,9 @@ fr:
       long_form: "signalé comme spam"
       short_description: "Ceci est une publicité"
     inappropriate:
-      title: "Répréhensible"
+      title: "Inapproprié"
       description: 'Le contenu de ce sujet serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a> par une personne raisonnable.'
-      long_form: "signalé comme répréhensible"
+      long_form: "signalé comme étant inapproprié"
       short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
     notify_moderators:
       title: "Autre chose"
@@ -1133,7 +1133,7 @@ fr:
     read: "lecture"
     read_write: "lecture/écriture"
     description: '« %{application_name} » demande l''accès suivant à votre compte :'
-    instructions: 'Nous venons de générer une nouvelle clé API utilisateur à utiliser avec « %{application_name} », merci de coller cette clé dans votre application :'
+    instructions: 'Nous venons de générer une nouvelle clé d''API utilisateur à utiliser avec « %{application_name} ». Veuillez coller cette clé dans votre application :'
     otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
     otp_confirmation:
       confirm_title: Continuer vers %{site_name}
@@ -1252,7 +1252,7 @@ fr:
         api: "API"
         user_api: "API utilisateur"
       yaxis: "Jour"
-      description: "Requêtes d'API pour les clés API ordinaires et les clés API de l'utilisateur."
+      description: "Requêtes d'API pour les clés d'API ordinaires et les clés d'API de l'utilisateur."
     consolidated_page_views_browser_detection:
       title: "Vues de pages consolidées avec détection du navigateur (expérimental)"
       xaxis:
@@ -1480,7 +1480,7 @@ fr:
       title: "Événements webhook"
       xaxis: "Jour"
       yaxis: "Nombre d'événements"
-      description: "Nombre d’événements webhook déclenchés ou leur durée moyenne."
+      description: "Nombre d'événements webhook déclenchés ou leur durée moyenne."
     suspicious_logins:
       title: "Connexions suspectes"
       labels:
@@ -1564,7 +1564,7 @@ fr:
       email_polling_errored_recently:
         one: "La vérification des e-mails a généré une erreur au cours des dernières 24 heures. Consultez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour en savoir plus."
         other: "La vérification des e-mails a généré %{count} erreurs au cours des dernières 24 heures. Consultez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour en savoir plus."
-      missing_mailgun_api_key: "Le serveur est configuré pour envoyer des e-mails via Mailgun, mais vous n'avez pas fourni la clé API nécessaire pour vérifier les messages webhook."
+      missing_mailgun_api_key: "Le serveur est configuré pour envoyer des e-mails via Mailgun, mais vous n'avez pas fourni la clé d'API nécessaire pour vérifier les messages webhook."
       bad_favicon_url: "Impossible de charger le favicon. Vérifiez le paramètre favicon dans les <a href='%{base_path}/admin/site_settings'>paramètres du site</a>"
       poll_pop3_timeout: "La connexion au serveur POP3 arrive à expiration. Les e-mails entrants n'ont pas pu être récupérés. Vérifiez vos paramètres POP3 <a href='%{base_path}/admin/site_settings/category/email'></a> et votre fournisseur de services."
       poll_pop3_auth_error: "La connexion au serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier vos <a href='%{base_path}/admin/site_settings/category/email'>paramètres POP3</a>."
@@ -2091,7 +2091,7 @@ fr:
     auto_generated_allowlist: "Liste des adresses e-mail qui ne seront pas vérifiées pour du contenu généré automatiquement. Exemple : foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquer les e-mails entrants identifiés comme étant générés automatiquement."
     ignore_by_title: "Ignorer les e-mails entrants selon leur titre."
-    mailgun_api_key: "Clé API secrète de Mailgun utilisée pour vérifier les messages du Webhook."
+    mailgun_api_key: "Clé d'API secrète de Mailgun utilisée pour vérifier les messages du webhook."
     sendgrid_verification_key: "Clé de vérification Sendgrid utilisée pour vérifier les messages du webhook."
     mailjet_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/mailjet?t=supersecret"
     mandrill_authentication_key: "Clé d'authentification Mandrill utilisée pour vérifier les messages du webhook."
@@ -2327,11 +2327,11 @@ fr:
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événements des Webhooks."
     retain_web_hook_events_aggregate_days: "Nombre de jours nécessaires pour conserver les enregistrements agrégés des événements webhook."
     retry_web_hook_events: "Réessayer jusqu'à 4 fois les événements de Webhooks qui ont échoué. Les intervalles entre chaque tentative sont de 1, 5, 25 et 125 minutes."
-    revoke_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé API avant qu'elle soit automatiquement révoquée (0 pour jamais)"
-    revoke_api_keys_maxlife_days: "Nombre de jours avant qu'une clé API soit automatiquement révoquée (0 pour jamais)"
+    revoke_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé d'API avant qu'elle soit automatiquement révoquée (0 pour jamais)"
+    revoke_api_keys_maxlife_days: "Nombre de jours avant qu'une clé d'API soit automatiquement révoquée (0 pour jamais)"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     min_trust_level_for_user_api_key: |
-      Niveau de confiance requis pour la génération de clés API utilisateur.<br>
+      Niveau de confiance requis pour la génération de clés d'API utilisateur.<br>
       <b>AVERTISSEMENT</b> : la modification du niveau de confiance empêchera les utilisateurs dont le niveau de confiance est inférieur de se connecter via Discourse Hub
     user_api_key_allowed_groups: |
       L'appartenance à un groupe est requise pour la génération de clés d'API utilisateur.<br>
@@ -2339,8 +2339,8 @@ fr:
        Les administrateurs et les modérateurs peuvent toujours créer des clés d'API utilisateur.
     allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via les clés d'API. Le symbole « * » peut être utilisé pour remplacer n'importe quelle partie de cette adresse (p. ex. : www.exemple.fr/*)."
     allowed_user_api_push_urls: "Adresses URL autorisées pour le service push du serveur vers l'API utilisateur"
-    revoke_user_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé API utilisateur avant qu'elle soit automatiquement révoquée (0 pour jamais)"
-    revoke_user_api_keys_maxlife_days: "Nombre de jours avant qu'une clé API utilisateur soit automatiquement révoquée (0 pour jamais)"
+    revoke_user_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé d'API utilisateur avant qu'elle soit automatiquement révoquée (0 pour jamais)"
+    revoke_user_api_keys_maxlife_days: "Nombre de jours avant qu'une clé d'API utilisateur soit automatiquement révoquée (0 pour jamais)"
     tagging_enabled: "Activer les balises sur les sujets ? Consultez le <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>guide d'administration sur les étiquettes sur Meta</a> pour obtenir plus d'informations."
     min_trust_to_create_tag: "Le niveau de confiance minimal requis pour créer une étiquette."
     create_tag_allowed_groups: "Groupes autorisés à créer des étiquettes. Les administrateurs et les modérateurs peuvent toujours créer des étiquettes."
@@ -2657,6 +2657,7 @@ fr:
     omniauth_confirm_button: "Continuer"
     authenticator_error_no_valid_email: "Aucune adresse e-mail associée à %{account} n'est autorisée. Vous devrez peut-être configurer votre compte avec une autre adresse."
     new_registrations_disabled: "La création de nouveaux comptes n'est pas autorisée pour le moment."
+    new_registrations_disabled_discourse_connect: "L'enregistrement de nouveaux comptes est uniquement autorisé via Discourse Connect."
     password_too_long: "Les mots de passe sont limités à 200 caractères."
     email_too_long: "L'e-mail renseigné est trop long. Les noms d'adresses e-mail ne doivent pas dépasser 254 caractères et les noms de domaines ne doivent pas dépasser 253 caractères."
     wrong_invite_code: "Le code d'invitation est invalide."
@@ -3366,7 +3367,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s’adresse cette réponse. [Contactez un responsable](%{base_url}/about).
+        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s'adresse cette réponse. [Contactez un membre du personnel](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "E-mail rejeté - Mauvaise adresse de destination"
       subject_template: "[%{email_prefix}] Problème d'e-mail - Adresse de destinataire inconnue"
@@ -4528,7 +4529,7 @@ fr:
 
       ## [Conformité à la Loi sur la protection de la vie privée en ligne des enfants](#coppa)
 
-      Notre site, nos produits et nos services sont tous destinés à des personnes âgées d'au moins 13 ans. Si ce serveur se trouve aux États-Unis et que vous avez moins de 13 ans, conformément aux exigences de la COPPA ([Children’s Online Privacy Protection Act](https://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utilisez pas ce site.
+      Notre site, nos produits et nos services sont tous destinés à des personnes âgées d'au moins 13 ans. Si ce serveur se trouve aux États-Unis et que vous avez moins de 13 ans, conformément aux exigences de la COPPA ([Children's Online Privacy Protection Act](https://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utilisez pas ce site.
 
       <a name="online"></a>
 

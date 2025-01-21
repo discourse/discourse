@@ -2477,6 +2477,7 @@ sr:
         search: "pretraži"
         clear_filter: "Čisto"
         download: Preuzmi
+        clear_all: Očisti sve
         actions:
           block: "Blokiraj"
           flag: "Označi Zastavom"

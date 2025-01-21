@@ -2561,6 +2561,7 @@ ja:
     omniauth_confirm_button: "続行"
     authenticator_error_no_valid_email: "%{account} に関連付けられたメールアドレスは許可されていません。別のメールアドレスでアカウントを構成する必要がある場合があります。"
     new_registrations_disabled: "現在、新しいアカウントの登録を行えません。"
+    new_registrations_disabled_discourse_connect: "新規アカウント登録は Discourse Connect を通じてのみ許可されます。"
     password_too_long: "パスワードは 200 文字までです。"
     email_too_long: "メールアドレスが長すぎます。メールボックス名は 254 文字以内、ドメイン名は 253 文字以内である必要があります。"
     wrong_invite_code: "入力した招待コードは間違っています。"

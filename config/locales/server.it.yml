@@ -2657,6 +2657,7 @@ it:
     omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "Non sono ammessi gli indirizzi email associati a %{account}. Potrebbe essere necessario configurare il tuo account con un diverso indirizzo email."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
+    new_registrations_disabled_discourse_connect: "La registrazione di nuovi account è consentita solo tramite Discourse Connect."
     password_too_long: "Le password sono limitate a 200 caratteri."
     email_too_long: "L'email fornita è troppo lunga. Le mailbox non devono superare i 254 caratteri, e i nomi di dominio non devono superare i 253 caratteri."
     wrong_invite_code: "Il codice di invito che hai inserito non era corretto."

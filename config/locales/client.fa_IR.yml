@@ -2997,20 +2997,20 @@ fa_IR:
             }
             { NEW, plural,
                  =0 {}
-                one { و یک موضوع <a href="{basePath}/new"># جدید</a> باقی مانده است,}
-              other { و موضوعات <a href="{basePath}/new"># جدیدی</a> باقی مانده‌اند,}
+                one { و<a href="{basePath}/new"># موضوع جدید</a> باقی مانده است،}
+              other { و <a href="{basePath}/new"># موضوع جدید</a> باقی مانده‌است،}
             }
           }
           false {
             { UNREAD, plural,
                  =0 {}
-                one {یک موضوع<a href="{basePath}/unread"># خوانده‌نشده</a> باقی مانده است,}
-              other {موضوعات <a href="{basePath}/unread"># خوانده‌نشده‌ای</a> باقی مانده‌اند,}
+                one {<a href="{basePath}/unread"># موضوع خوانده‌نشده</a> باقی مانده است،}
+              other {<a href="{basePath}/unread"># موضوع خوانده‌نشده‌</a> باقی مانده‌است،}
             }
             { NEW, plural,
                  =0 {}
-                one {یک موضوع <a href="{basePath}/new"># جدید</a> باقی مانده است,}
-              other {موضوعات <a href="{basePath}/new"># جدیدی</a> باقی مانده‌اند,}
+                one {<a href="{basePath}/new"># موضوع جدید</a> باقی مانده است،}
+              other {<a href="{basePath}/new"># موضوع جدید</a> باقی مانده‌است،}
             }
           }
           other {}

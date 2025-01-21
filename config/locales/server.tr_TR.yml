@@ -2650,6 +2650,7 @@ tr_TR:
     omniauth_confirm_button: "Devam et"
     authenticator_error_no_valid_email: "%{account} ile ilişkili hiçbir e-posta adresine izin verilmiyor. Hesabınızı farklı bir e-posta adresiyle yapılandırmanız gerekebilir."
     new_registrations_disabled: "Şu anda yeni hesap kayıtlarına izin verilmiyor."
+    new_registrations_disabled_discourse_connect: "Yeni hesap kayıtlarına yalnızca Discourse Connect üzerinden izin verilir."
     password_too_long: "Şifreler 200 karakterle sınırlıdır."
     email_too_long: "Sağladığınız e-posta çok uzun. Posta kutusu adları en fazla 254 karakter, alan adları ise en fazla 253 karakter olmalıdır."
     wrong_invite_code: "Girdiğiniz davet kodu yanlış."

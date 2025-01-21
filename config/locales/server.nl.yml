@@ -2250,7 +2250,7 @@ nl:
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op 0 om stubtopics niet te verwijderen."
     bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen en de knop Aan de slag te verwijderen (stel dit in op 0 om het uit te schakelen, dit kan tot 24 uur duren)"
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
-    secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">het onderwerp Veilige uploads op Meta</a> voor meer informatie.'
+    secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">de topic Veilige uploads op Meta</a> voor meer informatie.'
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."
     secure_uploads_max_email_embed_image_size_kb: "De maximale grootte voor beveiligde afbeeldingen die worden ingesloten in e-mails als de instelling 'veilige uploads insluiten toestaan in e-mails' is ingeschakeld. Als die instelling niet is ingeschakeld, heeft deze instelling geen effect."
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
@@ -2657,6 +2657,7 @@ nl:
     omniauth_confirm_button: "Doorgaan"
     authenticator_error_no_valid_email: "E-mailadressen gekoppeld aan %{account} zijn niet toegestaan. Mogelijk moet je je account configureren met een ander e-mailadres."
     new_registrations_disabled: "Nieuwe accountregistraties zijn op dit moment niet toegestaan."
+    new_registrations_disabled_discourse_connect: "Nieuwe accountregistraties zijn alleen toegestaan via Discourse Connect."
     password_too_long: "Wachtwoorden mogen maximaal 200 tekens lang zijn."
     email_too_long: "Het opgegeven e-mailadres is te lang. Postvaknamen mogen niet langer zijn dan 254 tekens, en domeinnamen niet langer dan 253 tekens."
     wrong_invite_code: "De ingevoerde code is ongeldig."

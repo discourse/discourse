@@ -236,8 +236,8 @@ cs:
         enabled: "Uvedeno %{when}"
         disabled: "Skryto %{when}"
       banner:
-        enabled: "Vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
-        disabled: "Odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
+        enabled: "Vytvořil/a tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem zrušen."
+        disabled: "Odstranil/a tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
       forwarded: "Výše uvedený e-mail přeposlán"
     topic_admin_menu: "Akce tématu."
     skip_to_main_content: "Přeskočit na hlavní obsah"
@@ -1002,7 +1002,7 @@ cs:
         logs: "Pro tuto skupinu neexistují žádné protokoly."
       add: "Přidat"
       join: "Přidat se ke skupině"
-      leave: "Opustit skupinu"
+      leave: "Opustit"
       request: "Požádat o členství ve skupině"
       message: "Zpráva"
       confirm_leave: "Opravdu chcete opustit tuto skupinu?"
@@ -1323,7 +1323,7 @@ cs:
         Zde budete upozorněni, kdykoli se někomu líbil některý z vašich příspěvků, abyste viděli, co ostatní považují za cenné. Ostatní uvidí totéž, když se vám budou jejich příspěvky také líbit! <br><br> Oznámení o hodnocení Líbí se vám nikdy neposílají e-mailem, ale způsob přijímání oznámení o hodnocení Líbí se na webu si můžete nastavit ve <a href='%{preferencesUrl}'>předvolbách oznámení</a>.
       no_messages_title: "Nemáte žádné zprávy"
       no_messages_body: >
-        Potřebujete s někým vést přímý osobní rozhovor mimo běžnou konverzaci? Napište mu zprávu tak, že vyberete jeho avatara a použijete tlačítko %{icon} Zpráva.<br><br> Pokud potřebujete pomoc, můžete <a href='%{aboutUrl}'>napsat zprávu redaktorovi</a>.
+        Potřebujete s někým vést přímý osobní rozhovor mimo běžnou konverzaci? Napište jim zprávu tak, že vyberete jejich avatara a použijete tlačítko %{icon} Zpráva.<br><br> Pokud potřebujete pomoc, můžete <a href='%{aboutUrl}'>napsat zprávu redaktorům</a>.
       no_bookmarks_title: "Ještě jste si nic neuložili do záložek"
       no_bookmarks_body: >
         Tlačítkem %{icon} začněte přidávat příspěvky do záložek, kde budou snadno k dosažení. Můžete si také naplánovat připomenutí!
@@ -1749,7 +1749,7 @@ cs:
         add_email: "Přidat alternativní e-mail"
         auth_override_instructions: "E-mail lze aktualizovat u poskytovatele ověření."
         no_secondary: "Žádné záložní emailové adresy"
-        instructions: "Nikdy nebude zveřejněno."
+        instructions: "Nikdy nebude zveřejněna."
         admin_note: "Poznámka: Pokud správce změní e-mail jiného uživatele, který není správcem, znamená to, že tento uživatel ztratil přístup ke svému původnímu e-mailovému účtu. Na jeho novou adresu bude odeslán e-mail pro obnovení hesla. E-mail uživatele se nezmění, dokud proces obnovení hesla nedokončí."
         ok: "Pro potvrzení vám pošleme email."
         required: "Zadejte prosím e-mailovou adresu"
@@ -2026,12 +2026,12 @@ cs:
           many: "vytvořených příspěvků"
           other: "vytvořených příspěvků"
         likes_given:
-          one: "udělen"
-          few: "uděleny"
+          one: "uděleno"
+          few: "udělena"
           many: "uděleno"
           other: "uděleno"
         likes_received:
-          one: "obdržen"
+          one: "obdrženo"
           few: "obdrženy"
           many: "obdrženo"
           other: "obdrženo"
@@ -2309,7 +2309,7 @@ cs:
       leave_message: "Opravdu chcete opustit tuto zprávu?"
       remove_allowed_user: "Určitě chcete odstranit %{name} z této zprávy?"
       remove_allowed_group: "Opravdu chcete odstranit %{name} z této zprávy?"
-      leave: "Opustit skupinu"
+      leave: "Opustit"
       remove_group: "Odebrat skupinu"
       remove_user: "Odebrat uživatele"
     email: "Email"
@@ -2334,7 +2334,7 @@ cs:
       invite: "Vložte svoje uživatelské jméno nebo e-mailovou adresu a my vám zašleme postup pro obnovení hesla."
       invite_no_username: "Vložte svoji e-mailovou adresu a my vám zašleme postup pro obnovení hesla."
       email-username: "E-mail nebo uživatelské jméno"
-      reset: "Resetovat heslo"
+      reset: "Obnovit heslo"
       complete_username: "Pokud nějaký účet odpovídá uživatelskému jménu <b>%{username}</b>, obdržíte záhy email s instrukcemi jak dál postupovat v resetování hesla."
       complete_email: "Pokud nějaký účet odpovídá emailu <b>%{email}</b>, obdržíte záhy email s instrukcemi jak dál postupovat v resetování hesla."
       complete_username_found: "Našli jsme účet, který odpovídá uživatelskému jménu <b>%{username}</b>. Brzy byste měli obdržet e-mail s pokyny, jak obnovit heslo."
@@ -2389,7 +2389,7 @@ cs:
       password_expired: "Platnost hesla vypršela. Prosím <a href='%{reset_url}'>resetujte své heslo</a>."
       blank_username: "Zadejte vaši emailovou adresu a uživatelské jméno."
       blank_username_or_password: "Vyplňte prosím email nebo uživatelské jméno, a heslo."
-      reset_password: "Resetovat heslo"
+      reset_password: "Obnovit heslo"
       logging_in: "Přihlašování…"
       previous_sign_up: "Máte již účet?"
       or: "Nebo"
@@ -2451,7 +2451,7 @@ cs:
     invites:
       accept_title: "Pozvánka"
       welcome_to: "Vítejte v %{site_name}!"
-      invited_by: "Pozvání od:"
+      invited_by: "Byli jste pozváni od:"
       social_login_available: "Budete se moci také přihlásit pomocí libovolné sociální sítě používající tento email."
       your_email: "Emailová adresa vašeho účtu je <b>%{email}</b>."
       accept_invite: "Přijmout pozvánku"
@@ -2543,7 +2543,7 @@ cs:
       activities: Aktivity
       objects: Objekty
       symbols: Symboly
-      flags: Nahlášení
+      flags: Vlajky
       recent: Nedávno použité
       default_tone: Bez barvy pleti
       light_tone: Světlá pleť
@@ -3525,7 +3525,7 @@ cs:
         close: "Zavřít téma"
         multi_select: "Vybrat příspěvky…"
         slow_mode: "Nastavit pomalý režim…"
-        timed_update: "Nastavení časovače tématu…"
+        timed_update: "Nastavit časovač tématu…"
         pin: "Připnout téma"
         unpin: "Zrušit připnutí tématu…"
         unarchive: "Navrátit z archivu"
@@ -3703,7 +3703,7 @@ cs:
         unpublished: "Vaše stránka byla zrušena a již není přístupná."
         publishing_settings: "Nastavení publikování"
       change_owner:
-        title: "Změnit vlastníka"
+        title: "Změna vlastnictví"
         action: "Změnit vlastnictví"
         error: "Při změně vlastnictví příspěvků došlo k chybě."
         placeholder: "uživatelské jméno nového vlastníka"
@@ -3739,9 +3739,9 @@ cs:
           label: "vybrat +níže"
           title: "Přidat příspěvek a vše po něm do výběru"
         delete: smazat označené
-        cancel: zrušit označování
+        cancel: zrušit výběr
         select_all: vybrat všechny
-        deselect_all: zrušit výběr
+        deselect_all: nevybrat nic
         description:
           one: Máte označen <b>%{count}</b> příspěvek.
           few: "Máte označeny <b>%{count}</b> příspěvky."
@@ -3899,12 +3899,12 @@ cs:
         permanently_delete_confirmation: "Jste si jistý, že chcete tento příspěvek trvale smazat? Nebudete jej moci obnovit."
         wiki: "Převést na wiki"
         unwiki: "Odstranit Wiki"
-        convert_to_moderator: "Zvýraznit barevně"
+        convert_to_moderator: "Barevně zvýraznit"
         revert_to_regular: "Zrušit zvýraznění"
         rebake: "Obnovit HTML"
         publish_page: "Publikování stránky"
         unhide: "Odkrýt"
-        change_owner: "Změna vlastnictví…"
+        change_owner: "Změnit vlastnictví…"
         grant_badge: "Udělit odznak..."
         lock_post: "Uzamknout příspěvek"
         lock_post_description: "Zabránit přispěvatelům v úpravách tohoto příspěvku"
@@ -3951,7 +3951,7 @@ cs:
           sr_post_likers_list_description: "uživatelé, kterým se líbil tento příspěvek"
           sr_post_readers_list_description: "uživatelé, kteří si přečetli tento příspěvek"
         by_you:
-          off_topic: "Označili jste tento příspěvek jako off-topic"
+          off_topic: "Označili jste tento příspěvek jako mimo téma"
           spam: "Označili jste tento příspěvek jako spam"
           inappropriate: "Označili jste tento příspěvek jako nevhodný"
           illegal: "Toto jste označili jako nezákonné"
@@ -3993,12 +3993,12 @@ cs:
             button: "HTML"
           side_by_side_markdown:
             title: "Zobrazení rozdílů zdrojového kódu vedle sebe"
-            button: "původní"
+            button: "Zdroj"
       raw_email:
         displays:
           raw:
             title: "Ukázat původní email"
-            button: "původní"
+            button: "Zdroj"
           text_part:
             title: "Ukázat textovou část emailu"
             button: "Text"
@@ -4019,16 +4019,16 @@ cs:
         actions:
           delete_bookmark:
             name: "Smazat záložku"
-            description: "Odebere záložku z vašeho profilu a zastaví všechny připomínky pro záložku."
+            description: "Odebere záložku z vašeho profilu a zastaví všechny připomínky na ni."
           edit_bookmark:
             name: "Upravit záložku"
-            description: "Upravit název záložky nebo změnit datum a čas připomenutí"
+            description: "Upravte název záložky nebo změňte datum a čas připomenutí"
           clear_bookmark_reminder:
             name: "Vymazat připomínku"
             description: "Vymazat datum a čas připomenutí"
           pin_bookmark:
             name: "Připnout záložku"
-            description: "Připnout záložku. To se zobrazí v horní části seznamu záložek."
+            description: "Připněte si záložku. Tím se záložka zobrazí na začátku seznamu."
           unpin_bookmark:
             name: "Odepnout záložku"
             description: "Odepněte záložku. Už se nebude zobrazovat v horní části seznamu záložek."
@@ -4205,7 +4205,7 @@ cs:
           title: "Pozastavit uživatele"
           details: "Dosáhnout prahové hodnoty nahlášení a pozastavit uživatele."
         silence:
-          title: "ztišit uživatele"
+          title: "Ztišit uživatele"
           details: "Dosáhnout prahové hodnoty nahlášení a ztišit uživatele."
       notify_action: "Zpráva"
       official_warning: "Oficiální varování"
@@ -4235,7 +4235,7 @@ cs:
         inappropriate: "Je to nevhodné"
         spam: "Je to spam"
         illegal: "Je to nezákonné"
-      custom_placeholder_notify_user: "Buďte věcný, konstruktivní a vždy zdvořilý."
+      custom_placeholder_notify_user: "Buďte věcní, konstruktivní a vždy zdvořilí."
       notify_user_textarea_label: "Zpráva pro uživatele"
       custom_placeholder_notify_moderators: "Sdělte nám, co vás přesně trápí a kde to bude možné, tak nám poskytněte související odkazy a příklady."
       notify_moderators_textarea_label: "Zpráva pro moderátory"
@@ -4866,7 +4866,7 @@ cs:
         few: "%{count} nová"
         many: "%{count} nových"
         other: "%{count} nové"
-      toggle_section: "Přepnout sekci"
+      toggle_section: "Sbalit/rozbalit sekci"
       more: "Více"
       all_categories: "Všechny kategorie"
       all_tags: "Všechny štítky"
@@ -5200,7 +5200,7 @@ cs:
         traffic_short: "Provoz"
         traffic: "Webové požadavky na aplikaci"
         page_views: "Zobrazení stránek"
-        page_views_short: "Zobrazení stránky"
+        page_views_short: "Zobrazení"
         show_traffic_report: "Zobrazit detailní zprávu o provozu"
         community_health: Zdraví komunity
         moderators_activity: Aktivita moderátorů
@@ -6674,7 +6674,7 @@ cs:
         suspended_by: "Suspended by"
         silence_reason: "Důvod"
         silenced_by: "Ztišený uživatelem"
-        silence_modal_title: "ztišit uživatele"
+        silence_modal_title: "Ztišení uživatele"
         silence_duration: "Na jak dlouhou dobu bude uživatel ztišený?"
         silence_reason_label: "Proč ztišujete tohoto uživatele?"
         silence_reason_placeholder: "Důvod ztišení "

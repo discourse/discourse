@@ -286,16 +286,15 @@ fr:
           (Et oui, mon nom d'utilisateur est écrit « _disco_ », comme dans la folie des années 1970. J'adore [la vie nocturne !](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Nous aimons que les discussions restent sympathiques, et nous comptons sur vous pour veiller à ce que [la civilité règne](%{guidelines_url}). Si quelque chose dans un message vous semble gênant, nous vous invitons à le signaler pour que son auteur ou que [nos aimables responsables](%{about_url}) soient mis au courant. Il y a de nombreuses raisons valables de signaler un message, qui vont de la simple suggestion pour que l'on scinde un sujet en deux jusqu'au signalement d'une infraction claire et nette à la charte communautaire. Au moment de définir le motif de votre signalement, si vous choisissez **Autre**, un échange privé avec les modérateurs sera lancé pour vous donner la possibilité de leur adresser des questions particulières.
+          Nous aimons que nos discussions soient amicales et nous comptons sur vous pour veiller à ce que [la civilité règne](%{guidelines_url}). Si vous rencontrez un problème, veuillez le signaler pour en informer son auteur ou [notre personnel](%{about_url}). Il y a de nombreuses raisons valables de signaler un contenu, qui vont de la simple suggestion pour scinder un sujet en deux jusqu'au signalement d'une infraction flagrante de nos normes communautaires. Si vous sélectionnez **Autre chose**, une conversation privée sera engagée avec les modérateurs pour vous donner la possibilité de leur adresser vos questions.
 
-          > :imp: J'ai écrit quelque chose de vilain ici
+          > :imp: J'ai écrit quelque chose de désagréable ici
 
-          N'hésitez pas, **signalez ce message** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> et choisissez le motif **C'est répréhensible** !
+          N'hésitez pas, **signalez cette publication** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> et sélectionnez la raison **C'est inapproprié** !
         reply: |-
-          [Notre équipe](%{base_uri}/groups/staff) sera notifiée de façon privée au sujet de votre signalement. Si suffisamment de membres de la communauté signalent un message, ce dernier sera automatiquement masqué par précaution.
-          (Vu que le message que j'ai écrit n'était pas vraiment méchant :angel:, j'ai anticipé et j'ai enlevé le signalement pour le moment.)
+          [Notre équipe](%{base_uri}/groups/staff) sera informée de façon privée au sujet de votre signalement. Si suffisamment de membres de la communauté signalent un message, ce dernier sera automatiquement masqué par mesure de précaution. (Vu que le message que j'ai écrit n'était pas vraiment désagréable :angel:, j'ai supprimé le signalement pour le moment.)
         not_found: |-
-          Oh non ! Mon vilain message n'a pas encore été signalé comme étant répréhensible. :worried: Pouvez-vous le signaler comme étant répréhensible avec l'**indicateur** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? Pensez à utiliser le bouton « Afficher plus » <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afin de faire apparaître les autres actions relatives aux messages.
+          Oh non ! Mon message désagréable n'a pas encore été signalé comme étant inapproprié. :worried: Pouvez-vous le signaler comme étant inapproprié avec le **signalement** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? Pensez à utiliser le bouton « Afficher plus » <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour faire apparaître les autres actions relatives aux messages.
       search:
         instructions: |-
           _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les défis, sélectionnez **l'icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> située en haut à droite &#8599;, choisissez « dans ce sujet », puis tentez de la trouver.
@@ -345,7 +344,7 @@ fr:
         not_found: |-
           Il semble que vous n'avez pas encore modifié le [message](%{url}) que j'ai créé pour vous. Pouvez-vous réessayer ?
 
-          Utilisez l’icône <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> pour afficher l'éditeur.
+          Utilisez l'icône <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> pour afficher l'éditeur.
         reply: |-
           Bon boulot !
 
@@ -396,9 +395,9 @@ fr:
         not_found: |-
           Il semble que vous êtes encore en train de surveiller :eyes: ce sujet ! Si vous avez des difficultés à le trouver, le bouton du niveau de notification est situé sous le sujet.
         reply: |-
-          Super boulot ! J’espère que vous n'avez pas mis ce sujet en sourdine car il m'arrive parfois d'être un peu bavard :grin:
+          Super boulot ! J'espère que vous n'avez pas mis ce sujet en sourdine, car il m'arrive parfois d'être un peu bavard :grin:
 
-          Remarquez que quand vous répondez à un sujet, ou lisez un sujet pendant plusieurs minutes, le niveau de notification est automatiquement configuré sur « Suivi ». Vous pouvez modifier cela dans [vos préférences utilisateur](%{base_uri}/my/preferences).
+          Remarquez que quand vous répondez à un sujet ou lisez un sujet pendant plusieurs minutes, le niveau de notification est automatiquement configuré sur « Suivi ». Vous pouvez modifier cela dans [vos préférences utilisateur](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Savez-vous que vous pouvez ajouter un sondage sur n'importe quel message ? Essayez en utilisant la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roue dans l'éditeur pour **créer un sondage**.
