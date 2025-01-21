@@ -2,17 +2,21 @@
   0% {
     margin-bottom: -60px;
   }
+
   50% {
     margin-bottom: 10px;
   }
+
   65% {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
+
   77% {
     margin-bottom: 5px;
   }
+
   100% {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 }
 
@@ -25,6 +29,7 @@
   grid-template-areas: "posts timeline";
   grid-template-columns: auto auto;
   margin-bottom: var(--below-topic-margin);
+
   > .row {
     grid-area: posts;
     max-width: calc(
@@ -35,6 +40,7 @@
 
   .timeline-container {
     margin-left: unset !important;
+
     /* This is a temporary override to ease the transition
     to the sticky position timeline for themes with custom timeline positioning.
     Without this those themes would render topics unreadable. */
@@ -45,7 +51,7 @@
   }
 
   // timeline
-  @media screen and (min-width: 925px) {
+  @media screen and (width >= 925px) {
     // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     .topic-navigation {
       grid-area: timeline;
@@ -78,7 +84,7 @@
         display: flex;
         align-items: center;
         position: absolute;
-        right: 0px;
+        right: 0;
         top: 8px;
         color: var(--primary);
         opacity: 0.5;
@@ -86,10 +92,12 @@
       }
     }
   }
+
   // progress bar
-  @media screen and (max-width: 924px) {
+  @media screen and (width <= 924px) {
     grid-template-areas: "posts";
     grid-template-columns: auto;
+
     .topic-navigation {
       display: flex;
       justify-content: flex-end;
@@ -102,6 +110,7 @@
     .timeline-container:not(.timeline-fullscreen) {
       display: none; // hiding this because sometimes the JS switch lags and causes layout issues
     }
+
     .timeline-container .timeline-scroller-content {
       position: relative;
     }
@@ -113,11 +122,12 @@
   animation-duration: 0.5s;
   animation-name: button-jump-up;
   text-align: center;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   margin-right: 0.5em;
   position: absolute;
   right: 0;
   bottom: 100%; // above parent container + some extra space
+
   .btn {
     margin: 0;
   }
@@ -131,12 +141,15 @@
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
       var(--topic-avatar-width)
   );
+
   &:empty {
     padding: 0;
   }
+
   span .d-icon {
     font-size: var(--font-down-1);
   }
+
   .topic-timer-heading,
   .slow-mode-heading {
     display: flex;
@@ -144,12 +157,14 @@
     margin: 0;
     padding: var(--below-topic-margin) 0;
   }
+
   .slow-mode-remove,
   .topic-timer-modify {
     display: flex;
     margin-left: auto;
     align-self: flex-start;
   }
+
   button {
     font-size: var(--font-down-2);
     background: transparent;
@@ -159,12 +174,15 @@
 .title-wrapper {
   display: flex;
   flex-wrap: wrap;
+
   .topic-statuses {
     line-height: 1.2;
+
     .d-icon {
       color: var(--primary-medium);
     }
   }
+
   .header-title .private-message-glyph-wrapper {
     float: left;
     margin-right: 0.25em;
@@ -175,10 +193,11 @@
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
-    @media screen and (min-width: 925px) {
+    @media screen and (width >= 925px) {
       width: 90%; // topic title isn't full-width on wide screens
     }
   }
+
   h1 {
     margin-bottom: 0;
     width: 100%;
@@ -187,6 +206,7 @@
   a.edit-topic .d-icon {
     font-size: 0.8em;
   }
+
   .edit-topic-title {
     display: flex;
     flex-wrap: wrap;
@@ -197,6 +217,7 @@
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width)
     );
+
     .select-kit .category-row {
       max-width: unset;
     }
@@ -204,6 +225,7 @@
 
   .edit-title__wrapper {
     flex: 1 1 100%;
+
     #edit-title {
       width: 100%;
       margin: 0;
@@ -215,6 +237,7 @@
     @include breakpoint(tablet) {
       min-width: 0; // allows category name to shrink to fit narrow screens
     }
+
     .select-kit.combo-box.category-chooser {
       width: 100%;
     }
@@ -229,12 +252,14 @@
     .mini-tag-chooser {
       width: 100%;
     }
+
     .select-kit-header--filter {
       flex-wrap: nowrap; // forces the whole input to wrap if needed, rather than individual tags
       min-width: 0;
       @include breakpoint(tablet) {
         flex-wrap: wrap; // individual tags will need to wrap on narrow screens
       }
+
       button {
         min-width: 0;
       }
@@ -260,22 +285,27 @@
 
 .private_message {
   background: var(--d-content-background);
+
   #topic-title {
     .edit-topic-title {
       position: relative;
       min-width: 0;
+
       .private-message-glyph {
         position: absolute;
         z-index: 1;
         left: 0.75em;
         top: 1.2em;
+
         .mobile-view & {
           top: 1.1em;
         }
       }
+
       #edit-title {
         padding-left: 2.25em;
       }
+
       .mini-tag-chooser {
         margin-left: 0;
         @include breakpoint(mobile-large, min-width) {
@@ -295,7 +325,6 @@
 .has-pending-posts {
   display: flex;
   justify-content: space-between;
-
   padding: 0.5em;
   background-color: var(--highlight-bg);
   margin-top: 1em;
@@ -305,46 +334,58 @@
 .post-links-container {
   @include unselectable;
   clear: both;
+
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
     border-top: 1px solid var(--primary-low);
+
     li:last-of-type {
       margin-bottom: 1em;
     }
   }
+
   .expand-links {
     color: var(--primary-med-or-secondary-med);
   }
+
   .track-link {
     display: flex;
     align-items: center;
+
     span:not(.badge) {
       @include ellipsis;
     }
   }
+
   ul {
     margin: 0;
     list-style: none;
+
     li {
       margin-bottom: 0.5em;
+
       a[href] {
         color: var(--primary-med-or-secondary-med);
       }
+
       .d-icon {
         font-size: var(--font-down-2);
         margin: 0 0.5em 0 0;
       }
     }
   }
+
   a.reply-new {
     .d-icon {
       background: var(--secondary);
       border-radius: 20px;
       transition: all linear 0.15s;
     }
+
     &:hover {
       color: var(--tertiary);
+
       .d-icon {
         background: var(--tertiary-low);
       }
@@ -358,6 +399,7 @@ a.topic-featured-link {
   text-transform: lowercase;
   color: var(--primary-med-or-secondary-med);
   font-size: 0.875rem;
+
   .d-icon {
     font-size: var(--font-down-1);
     margin-right: 0.25em;
@@ -370,6 +412,7 @@ a.topic-featured-link {
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width)
     );
+
     .reviewable-item {
       .post-body {
         max-height: unset;

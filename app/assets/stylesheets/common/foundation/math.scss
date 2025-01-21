@@ -27,6 +27,7 @@ $SQRT2: 1.4142135623730951;
     @warn "Argument for `fact()` must be a positive integer.";
     @return null;
   }
+
   $ret: 1;
   @while $x > 0 {
     $ret: $ret * $x;
@@ -69,6 +70,7 @@ $SQRT2: 1.4142135623730951;
     @if $exp % 2 == 1 {
       $x: $x * $b;
     }
+
     $b: $b * $b;
     $exp: floor($exp * 0.5);
   }
@@ -84,6 +86,7 @@ $SQRT2: 1.4142135623730951;
   @if $x <= 0 {
     @return math.div(0, 0);
   }
+
   $k: nth(frexp(math.div($x, $SQRT2)), 2);
   $x: math.div($x, ldexp(1, $k));
   $x: math.div($x - 1, $x + 1);
@@ -104,6 +107,7 @@ $SQRT2: 1.4142135623730951;
   @if $exp != floor($exp) {
     @return error("Exponent for `ipow()` must be an integer.");
   }
+
   $r: 1;
   $s: 0;
   @if $exp < 0 {
@@ -114,6 +118,7 @@ $SQRT2: 1.4142135623730951;
     @if $exp % 2 == 1 {
       $r: $r * $base;
     }
+
     $exp: floor($exp * 0.5);
     $base: $base * $base;
   }
@@ -158,6 +163,7 @@ $SQRT2: 1.4142135623730951;
   @if $x < 0 {
     @return error("Argument for `sqrt()` must be a positive number.");
   }
+
   $ret: 1;
   @for $i from 1 through 24 {
     $ret: $ret - math.div(pow($ret, 2) - $x, 2 * $ret);

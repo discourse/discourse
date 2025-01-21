@@ -967,7 +967,7 @@ RSpec.describe Email::Receiver do
 
       user = topic.user
       expect(user.staged).to eq(true)
-      expect(user.username).to eq("random.name")
+      expect(user.username).to eq("user1")
       expect(user.name).to eq("Случайная Имя")
     end
 
@@ -1090,10 +1090,12 @@ RSpec.describe Email::Receiver do
 
       it "associates email replies using both 'In-Reply-To' and 'References' headers" do
         expect { process(:email_reply_1) }.to change(Topic, :count).by(1) &
-          change(Post, :count).by(3)
+          change(Post, :count).by(3) & change(User, :count).by(3)
 
         topic = Topic.last
+        users = User.last(3)
         ordered_posts = topic.ordered_posts
+        expect(ordered_posts.size).to eq(3)
 
         expect(ordered_posts.first.raw).to eq("This is email reply **1**.")
 
@@ -1101,7 +1103,7 @@ RSpec.describe Email::Receiver do
           expect(post.action_code).to eq("invited_user")
           expect(post.user.email).to eq("one@foo.com")
 
-          expect(%w[two three].include?(post.custom_fields["action_code_who"])).to eq(true)
+          expect(users.map(&:username)).to include(post.custom_fields["action_code_who"])
         end
 
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1)

@@ -74,6 +74,10 @@ cs:
     import_error:
       generic: Při importu tohoto motivu došlo k chybě
       upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
+      screenshot: "Chyba při importu snímků obrazovky motivu. %{errors}"
+      screenshot_invalid_type: "Snímky obrazovky motivu musí být v jednom z následujících formátů: %{accepted_formats}. Snímek obrazovky %{file_name} má neplatný formát."
+      screenshot_invalid_size: "Snímky obrazovky motivu musí být menší než %{max_size}. Snímek obrazovky %{file_name} je příliš velký."
+      screenshot_invalid_dimensions: "Snímky obrazovky motivu musí být maximálně %{max_width}x%{max_height}. Snímek obrazovky %{file_name} tuto hodnotu přesahuje. Jeho rozměry jsou %{width}x%{height}."
       about_json: "Chyba importu: about.json neexistuje nebo je neplatný. Jste si jisti, že se jedná o Discourse motiv?"
       about_json_too_big: "Chyba importu: about.json je větší než %{limit} limit."
       about_json_values: "about.json obsahuje neplatné hodnoty: %{errors}"
@@ -130,6 +134,11 @@ cs:
         few: "Hodnota musí mít alespoň %{count} znaky."
         many: "Hodnota musí mít alespoň %{count} znaků."
         other: "Hodnota musí mít alespoň %{count} znaků."
+      string_value_not_valid_max:
+        one: "Hodnota musí být dlouhá maximálně %{count} znak."
+        few: "Hodnota musí být dlouhá maximálně %{count} znaky."
+        many: "Hodnota musí být dlouhá maximálně %{count} znaků."
+        other: "Hodnota musí být dlouhá maximálně %{count} znaků."
       objects:
         humanize_required: "Vlastnost na ukazateli JSON '%{property_json_pointer}' je povinná."
         required: "nesmí být prázdný"
@@ -140,6 +149,25 @@ cs:
         humanize_not_valid_integer_value: "Vlastnost v ukazateli JSON '%{property_json_pointer}' musí být celé číslo (integer)."
         not_valid_integer_value: "musí být celé číslo"
         humanize_not_valid_float_value: "Vlastnost v ukazateli JSON '%{property_json_pointer}' musí být číslo s plovoucí desetinnou čárkou (float)."
+        not_valid_float_value: "musí být číslo s plov. des. čárkou (float)"
+        humanize_not_valid_boolean_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být boolean."
+        not_valid_boolean_value: "musí být boolean"
+        humanize_not_valid_enum_value: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být jedna z následujících %{choices}."
+        not_valid_enum_value: "musí být jedna z následujících: %{choices}"
+        string_value_not_valid_max:
+          one: "musí být maximálně %{count} znak"
+          few: "musí být maximálně %{count} znaky"
+          many: "musí být maximálně %{count} znaků"
+          other: "musí být maximálně %{count} znaků"
+        humanize_number_value_not_valid_min: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být větší nebo rovna %{min}."
+        number_value_not_valid_min: "musí být větší než nebo rovno %{min}"
+        humanize_number_value_not_valid_max: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být menší nebo rovna %{max}."
+        number_value_not_valid_max: "musí být menší nebo rovno %{max}"
+        humanize_string_value_not_valid_url: "Vlastnost v JSON Pointer '%{property_json_pointer}' musí být platná adresa URL."
+        string_value_not_valid_url: "musí být platná adresa URL"
+    locale_errors:
+      top_level_locale: "Klíč nejvyšší úrovně v souboru locale musí odpovídat názvu locale."
+      invalid_yaml: "YAML překladový soubor je neplatný"
   emails:
     incoming:
       default_subject: "Toto téma potřebuje název"
@@ -147,6 +175,8 @@ cs:
       maximum_staged_user_per_email_reached: "Dosáhli jste maximálního počtu založených předběžných uživatelů na jeden e-mail."
       no_subject: "(bez předmětu)"
       no_body: "(bez textu)"
+      attachments: "(přílohy)"
+      missing_attachment: "(Chybí příloha %{filename})"
       continuing_old_discussion:
         one: "Pokračujeme v diskusi z [%{title}](%{url}), protože byla vytvořena před více než %{count} dnem."
         few: "Pokračujeme v diskusi z [%{title}](%{url}), protože byla vytvořena před více než %{count} dny."
@@ -155,6 +185,9 @@ cs:
       errors:
         empty_email_error: "Toto se stává, když e-mail, který obdržíme, je prázdný."
         no_message_id_error: "Toto se stává, když e-mail nemá žádnou hlavičku s \"ID zprávy\"."
+        auto_generated_email_error: "Stává se, když je v hlavičce hodnota 'precedence' nastavena na: list, junk, bulk nebo auto_reply, nebo když jakékoli jiné záhlaví obsahuje: auto-submitted, auto-replied nebo auto-generated."
+        no_body_detected_error: "Stává se, když jsme nemohli přečíst tělo a neexistovaly ani žádné přílohy."
+        no_sender_detected_error: "Stává se, když jsme nemohli najít platnou e-mailovou adresu v záhlaví From."
         inactive_user_error: "Toto se stává, když odesílatel není aktivní."
         silenced_user_error: "Toto se stává, když odesílatel byl ztišen."
         topic_not_found_error: "Toto se stává, když přijde odpověď k smazanému tématu."
@@ -236,6 +269,11 @@ cs:
     site_settings:
       invalid_site_setting: "Neexistuje žádné nastavení s názvem '%{name}'"
       invalid_category_id: "Zadali jste kategorii, která neexistuje"
+      invalid_choice:
+        one: "'%{name}' je neplatná volba."
+        few: "'%{name}' jsou neplatné volby."
+        many: "'%{name}' jsou neplatné volby."
+        other: "'%{name}' jsou neplatné volby."
       default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
       default_tags_already_selected: "Nemůžete vybrat štítek použitý v jiném seznamu."
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
@@ -253,6 +291,8 @@ cs:
       cors_origins_should_not_have_trailing_slash: "Ke CORS origins byste neměli přidávat koncové lomítko (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastavení nemůžete přidat žádnou z následujících hodnot: %{values}."
+      twitter_summary_large_image_no_svg: "Obrázky na Twitter shrnutí používané pro twitter:image metadata nemohou být obrázky .svg."
+      tl0_and_anonymous_flag: "Pro anonymní uživatele musí být nastaven buď 'site contact email' nebo 'email address to report illegal content'."
   custom_fields:
     validations:
       max_items: "Bylo dosaženo maximálního počtu uživatelských polí pro tuto entitu (%{max_items_number})"
@@ -265,7 +305,7 @@ cs:
     not_found_template: |
       <p>Vaše pozvánka do <a href="%{base_url}">%{site_name}</a> již byla uplatněna.</p>
 
-      <p>Pokud si pamatujete své heslo, se můžete <a href="%{base_url}/login">přihlásit</a>.</p>
+      <p>Pokud si pamatujete své heslo, můžete se <a href="%{base_url}/login">přihlásit</a>.</p>
 
       <p>V opačném případě prosím <a href="%{base_url}/password-reset">Obnovte své heslo</a>.</p>
     not_found_template_link: |
@@ -322,6 +362,7 @@ cs:
   authenticator_no_connect: "Tento poskytovatel ověřování neumožňuje připojení k existujícímu účtu fóra."
   invalid_api_credentials: "Nemáte oprávnění na zobrazení požadovaného zdroje. Uživatelské jméno nebo klíč k API je nevalidní."
   read_only_mode_enabled: "Tato stránka je v režimu jen pro čtení. Interakce jsou zakázány."
+  email_template_cant_be_modified: "Tuto šablonu e-mailu nelze upravit"
   invalid_whisper_access: "Buď šeptání není povoleno, nebo nemáte přístup k vytváření šeptaných příspěvků"
   not_in_group:
     title_topic: "Pro zobrazení tohoto tématu musíte požádat o členství ve skupině '%{group}'."
@@ -418,6 +459,7 @@ cs:
   is_invalid: "zdá se to být nejasné, je to kompletní věta?"
   next_page: "další strana →"
   prev_page: "← předchozí strana"
+  show_post_in_topic: "zobrazit příspěvek v tématu"
   page_num: "Strana %{num}"
   home_title: "Domů"
   topics_in_category: "Témata v kategorii '%{category}'"
@@ -529,9 +571,9 @@ cs:
       moderators: "Odpovědni za reakci na nahlášení, moderování diskusí a pomoc členům s jejich účty"
       trust_level_0: "Noví členové s omezenými schopnostmi, kteří se učí komunitním normám a funkcím"
       trust_level_1: "Členové s větší důvěrou, kteří prokázali počáteční zapojení čtením, mají nyní přístup k více funkcím. Všichni členové této skupiny jsou zároveň členy skupiny uroven_duvery_0."
-      trust_level_2: "Aktivní členové, kteří dlouhodobě důsledně přispívali a získali plná občanská privilegia. Všichni členové této skupiny jsou také členy skupin trust_level_1 a trust_level_0."
-      trust_level_3: "Vysoce angažovaní, dlouhodobí přispěvatelé, kteří tvoří páteř komunity a získali omezená moderátorská práva. Všichni členové této skupiny jsou zároveň členy skupin trust_level_2, trust_level_1 a trust_level_0."
-      trust_level_4: "Ručně povýšení členové, kteří byli oceněni za své příkladné příspěvky a kterým byla svěřena další moderátorská práva. Všichni členové této skupiny jsou zároveň členy skupin trust_level_3, trust_level_2, trust_level_1 a trust_level_0."
+      trust_level_2: "Aktivní členové, kteří dlouhodobě důsledně přispívali a získali plná občanská privilegia. Všichni členové této skupiny jsou také členy skupin uroven_duvery_1 a uroven_duvery_0."
+      trust_level_3: "Vysoce angažovaní, dlouhodobí přispěvatelé, kteří tvoří páteř komunity a získali omezená moderátorská práva. Všichni členové této skupiny jsou zároveň členy skupin uroven_duvery_2, uroven_duvery_1 a uroven_duvery_0."
+      trust_level_4: "Ručně povýšení členové, kteří byli oceněni za své příkladné příspěvky a kterým byla svěřena další moderátorská práva. Všichni členové této skupiny jsou zároveň členy skupin uroven_duvery_3, uroven_duvery_2, uroven_duvery_1 a uroven_duvery_0."
     request_membership_pm:
       title: "Žádost o členství pro @%{group_name}"
     request_accepted_pm:
@@ -625,6 +667,9 @@ cs:
               reply_by_email_disabled: "Odpověď přes email byla vypnuta."
               send_to_email_disabled: "Litujeme, ale na e-mail nelze posílat soukromé zprávy."
               target_user_not_found: "Jeden z uživatelů, kterým posíláte tuto zprávu, nebyl nalezen."
+              too_large_group: "Skupina: %{group_name}, má příliš mnoho uživatelů na to, aby obdržela zprávu. Limit je %{limit}."
+              unable_to_update: "Při aktualizaci tohoto tématu došlo k chybě."
+              unable_to_tag: "Při nastavování štítku tohoto tématu došlo k chybě."
               unable_to_unlist: "Je nám líto, ale nemůžete vytvořit skryté téma."
             featured_link:
               invalid: "je neplatná. URL adresa by měla obsahovat http:// nebo https://."
@@ -653,6 +698,10 @@ cs:
               same_as_current: "je stejné jako vaše současné heslo."
               same_as_name: "je stejné jako vaše jméno."
               unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "Toto téma nemůže být uvedeno ve vašem profilu."
         user_email:
           attributes:
             user_id:
@@ -676,6 +725,9 @@ cs:
           attributes:
             execute_at:
               in_the_past: "musí být v budoucnosti."
+            duration_minutes:
+              cannot_be_zero: "musí být větší než 0."
+              exceeds_maximum: "nesmí být více než 20 let."
         watched_word:
           attributes:
             word:
@@ -899,17 +951,39 @@ cs:
         other: "téměř před %{count} roky"
   password_reset:
     no_token: 'Jejda! Odkaz, který jste použili, již nefunguje. Nyní se můžete <a href="%{base_url}/login">Přihlásit</a> . Pokud jste zapomněli heslo, můžete <a href="%{base_url}/password-reset">požádat o odkaz</a> pro jeho obnovení.'
-    title: "Resetovat heslo"
+    title: "Obnova hesla"
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."
   email_login:
     invalid_token: 'Jejda! Odkaz, který jste použili, již nefunguje. Nyní se můžete <a href="%{base_url}/login">Přihlásit</a> . Pokud jste zapomněli heslo, můžete <a href="%{base_url}/password-reset">požádat o odkaz</a> pro jeho obnovení.'
     title: "Přihlášení e-mailem"
   user_auth_tokens:
+    browser:
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+      unknown: "neznámý prohlížeč"
     device:
+      android: "Zařízení Android"
+      chromebook: "Chrome OS"
+      ipad: "iPad"
       iphone: "iPhone"
+      ipod: "iPod"
+      linux: "Počítač GNU/Linux"
+      mac: "Mac"
+      mobile: "Mobilní zařízení"
+      windows: "Počítač Windows"
+      unknown: "neznámé zařízení"
     os:
       android: "Android"
+      chromeos: "Chrome OS"
+      ios: "iOS"
+      linux: "Linux"
+      macos: "macOS"
+      windows: "Microsoft Windows"
+      unknown: "neznámý operační systém"
   change_email:
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
     doesnt_exist: "Tato e-mailová adresa není spojena s vaším účtem."
@@ -917,9 +991,13 @@ cs:
     already_done: "Bohužel, tento potvrzovací odkaz již není platný. Možná jste si již e-mail změnili?"
     confirm: "Potvrdit"
     max_secondary_emails_error: "Dosáhli jste maximálního povoleného limitu sekundárních e-mailů."
+  associated_accounts:
+    revoke_failed: "Nepodařilo se zrušit váš účet pomocí %{provider_name}."
+    connected: "(připojeno)"
   activation:
     already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
     approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
+    missing_session: "Nemůžeme zjistit, zda byl váš účet vytvořen, ujistěte se, že máte povoleny soubory cookie."
     activated: "Litujeme, tento účet byl již aktivován."
     admin_confirm:
       title: "Potvrďte účet správce"
@@ -932,7 +1010,7 @@ cs:
       title: "Potřebuje schválení"
   post_action_types:
     off_topic:
-      title: "Off-Topic"
+      title: "Mimo téma"
       description: "Tento příspěvek se nevztahuje k diskuzi definované názvem a obsahem prvního příspěvku a měl by asi být přesunut jinam."
       short_description: "Není relevantní k diskuzi"
     spam:
@@ -973,6 +1051,7 @@ cs:
       short_description: "Tento příspěvek se mi líbí"
   draft:
     sequence_conflict_error:
+      title: "chyba konceptu"
       description: "Koncept je upravován v jiném okně. Načtěte znovu tuto stránku, prosím."
     too_many_drafts:
       title: "Příliš mnoho konceptů"
@@ -1052,6 +1131,7 @@ cs:
       logging_in_as: Přihlášení jako %{username}
       confirm_button: Dokončit přihlášení
     scopes:
+      message_bus: "Živé aktualizace"
       session_info: "Číst user session info"
       read: "Číst vše"
       write: "Zapsat vše"
@@ -1112,9 +1192,10 @@ cs:
         time_to_resolution: Doba odbavení
       description: "Seznam stavů nahlášení včetně typu, přispěvatele, ohlašovatele a doby do odbavení."
     visits:
-      title: "Návštěvy uživatelů podle dnů"
+      title: "Návštěvy uživatelů"
       xaxis: "Den"
       yaxis: "Počet návštěv"
+      description: "Počet návštěv přihlášených uživatelů."
     signups:
       title: "Registrace"
       xaxis: "Den"
@@ -1156,6 +1237,11 @@ cs:
       yaxis: "Den"
       description: "Požadavky API na běžné klíče API a uživatelské klíče API."
     consolidated_page_views_browser_detection:
+      xaxis:
+        page_view_anon_browser: "Anonymní prohlížeč"
+        page_view_logged_in_browser: "Přihlášený prohlížeč"
+        page_view_crawler: "Známý prohledávač"
+        page_view_other: "Ostatní zobrazení"
       yaxis: "Den"
     site_traffic:
       title: "Návštěvnost stránek"
@@ -1238,6 +1324,7 @@ cs:
       title: "Odesláno emailů"
       xaxis: "Den"
       yaxis: "Počet emailů"
+      description: "Počet nově odeslaných e-mailů."
     user_to_user_private_messages:
       title: "Mezi uživateli (kromě odpovědí)"
       xaxis: "Den"
@@ -1292,29 +1379,52 @@ cs:
     page_view_anon_reqs:
       title: "Anonymní"
       xaxis: "Den"
+      yaxis: "Anonymní zobrazení stránek"
+      description: "Počet nových zobrazení stránek návštěvníky, kteří nejsou přihlášeni ke svému účtu."
     page_view_logged_in_reqs:
       title: "Přihlášen"
       xaxis: "Den"
+      yaxis: "Přihlášená zobrazení stránek"
+      description: "Počet nových zobrazení stránek od přihlášených uživatelů."
     page_view_crawler_reqs:
+      title: "Zobrazení stránek webovéhých prohledávačů"
       xaxis: "Den"
+      yaxis: "Zobrazení stránek webovéhých prohledávačů"
+      description: "Celkový počet zobrazení stránek webovými prohledávači v průběhu času."
     page_view_total_reqs:
-      title: "Zobrazení stránky "
+      title: "Zobrazení stránek"
       xaxis: "Den"
       yaxis: "Celkové pageviews"
+      description: "Počet nových zobrazení stránek od všech návštěvníků."
     page_view_legacy_total_reqs:
+      title: "Počty zobrazení stránek (zastaralé)"
       xaxis: "Den"
       yaxis: "Celkové pageviews"
+      description: "Starší sestava zobrazující počet nových zobrazení stránek od všech návštěvníků."
     page_view_logged_in_mobile_reqs:
+      title: "Přihlášená zobrazení stránek"
       xaxis: "Den"
+      yaxis: "Mobilní přihlášená zobrazení stránek"
+      description: "Počet nových zobrazení stránek od uživatelů na mobilních zařízeních a přihlášených k účtu."
     page_view_anon_mobile_reqs:
+      title: "Anonymní zobrazení stránek"
       xaxis: "Den"
+      yaxis: "Mobilní anonymní zobrazení stránek"
+      description: "Počet nových zobrazení stránek návštěvníky na mobilním zařízení, kteří nejsou přihlášeni."
     page_view_anon_browser_reqs:
+      title: "Anonymní zobrazení stránek v prohlížeči"
       xaxis: "Den"
+      yaxis: "Anonymní zobrazení stránek v prohlížeči"
+      description: "Počet zobrazení stránek anonymními návštěvníky používajícími skutečné prohlížeče."
     page_view_logged_in_browser_reqs:
+      title: "Přihlášená zobrazení stránek v prohlížeči"
       xaxis: "Den"
+      yaxis: "Přihlášená zobrazení stránek v prohlížeči"
+      description: "Počet zobrazení stránek přihlášenými návštěvníky pomocí skutečných prohlížečů."
     http_background_reqs:
       title: "Pozadí"
       xaxis: "Den"
+      yaxis: "Požadavky používané pro živou aktualizaci a sledování"
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Den"
@@ -1339,6 +1449,7 @@ cs:
       title: "Čas první odpovědi"
       xaxis: "Den"
       yaxis: "Průměrný čas (hodiny)"
+      description: "Průměrná doba (v hodinách) první odpovědi na nová témata."
     topics_with_no_response:
       title: "Témat bez odpovědi"
       xaxis: "Den"
@@ -1346,9 +1457,10 @@ cs:
     mobile_visits:
       xaxis: "Den"
       yaxis: "Počet návštěv"
+      description: "Počet unikátních přihlášených uživatelů, kteří navštívili stránku pomocí mobilního zařízení."
     web_crawlers:
       labels:
-        page_views: "Zobrazení stránky "
+        page_views: "Zobrazení stránky"
     web_hook_events_daily_aggregate:
       xaxis: "Den"
     suspicious_logins:
@@ -1434,9 +1546,12 @@ cs:
     back_from_logster_text: "Zpět na web"
   site_settings:
     disabled: "vypnuto"
+    censored_words: "Slova, která budou automaticky nahrazena &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automaticky smazat všechny skryté příspěvky, které jsou skryté déle než 30 dní."
     default_locale: "Výchozí jazyk této instance Discourse. Text kategorií a témat generovaných systémem můžete nahradit v nabídce <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Přizpůsobit / Text</a>."
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
+    set_locale_from_accept_language_header: "nastavit jazyk rozhraní pro anonymní uživatele z nastavení jejich webového prohlížeče"
+    support_mixed_text_direction: "Podpora smíšených směrů textu zleva doprava a zprava doleva."
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
@@ -1961,13 +2076,13 @@ cs:
 
       %{notes}
   flag_reasons:
-    off_topic: "Váš příspěvek byl označen jako **off-topic**: komunita se domnívá, že se nehodí k tématu, jak je aktuálně definováno v názvu a prvním příspěvku."
+    off_topic: "Váš příspěvek byl označen jako **mimo téma**: komunita se domnívá, že se nehodí k tématu, jak je aktuálně definováno v názvu a prvním příspěvku."
     inappropriate: "Váš příspěvek byl označen jako **nevhodný**: komunita se domnívá, že je útočný, urážlivý, že se jedná o nenávistné chování nebo o porušení [našich komunitních zásad](%{base_path}/guidelines)."
     illegal: "Váš příspěvek byl označen jako **nelegální**: komunita se domnívá, že by mohl porušovat zákon."
     spam: "Váš příspěvek byl označen jako **spam**: komunita má pocit, že se jedná o reklamu, něco, co má příliš propagační charakter, místo aby bylo užitečné nebo relevantní k tématu, jak se očekávalo."
     notify_moderators: "Váš příspěvek byl označen **pro kontrolu moderátorem**: komunita má pocit, že něco v tomto příspěvku vyžaduje ruční zásah člena redakce."
     responder:
-      off_topic: "Příspěvek byl označen jako **off-topic**: komunita se domnívá, že se nehodí k tématu, jak je v současné době definováno názvem a prvním příspěvkem."
+      off_topic: "Příspěvek byl označen jako **mimo téma**: komunita se domnívá, že se nehodí k tématu, jak je v současné době definováno názvem a prvním příspěvkem."
       inappropriate: "Příspěvek byl označen jako **nevhodný**: komunita se domnívá, že je útočný, urážlivý, že se jedná o nenávistné chování nebo o porušení [našich komunitních zásad](%{base_path}/guidelines)."
       spam: "Příspěvek byl označen jako **spam**: komunita se domnívá, že jde o reklamu, něco, co je svou povahou příliš propagační, místo aby bylo užitečné nebo relevantní k tématu, jak se očekávalo."
   temporarily_closed_due_to_flags:
@@ -2775,6 +2890,7 @@ cs:
         %{base_url}/session/email-login/%{email_token}.
     set_password:
       title: "Nastavit heslo"
+      subject_template: "[%{email_prefix}] Nastavení hesla"
       text_body_template: |
         Někdo požádal o přidání hesla k vašemu účtu na [%{site_name}](%{base_url}). Případně se můžete přihlásit pomocí jakékoli podporované online služby (Google, Facebook atd.), která je spojena s touto ověřenou e-mailovou adresou.
 

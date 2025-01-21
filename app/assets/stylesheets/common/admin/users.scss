@@ -1,5 +1,4 @@
 //Styles for /admin/users
-
 .display-row.associations .value {
   width: 750px;
   @media (max-width: $mobile-breakpoint) {
@@ -14,25 +13,31 @@
   display: flex;
   align-items: center;
   padding: 10px 5px;
+
   &:nth-of-type(1) {
     border-top: 0;
   }
+
   &.highlight-danger {
     background-color: var(--danger-low);
   }
   border-top: 1px solid var(--primary-low);
-  &:before,
-  &:after {
+
+  &::before,
+  &::after {
     display: table;
     content: "";
   }
-  &:after {
+
+  &::after {
     clear: both;
   }
+
   &.secondary-emails ul {
     margin: 0;
     list-style: none;
   }
+
   .field {
     font-weight: bold;
     width: 17.65765%;
@@ -44,12 +49,14 @@
       margin-top: 5px;
     }
   }
+
   .value {
     width: 100%;
     max-width: 350px;
     min-width: 50px;
     margin-left: 12px;
     word-break: break-word;
+
     .select-kit {
       min-width: 100px;
     }
@@ -57,17 +64,21 @@
       text-align: left;
       margin-left: 0;
     }
+
     .select-kit {
       width: inherit;
     }
   }
+
   .long-value {
     margin-left: 12px;
     font-size: var(--font-down-1);
+
     button {
       margin-left: 10px;
     }
   }
+
   .controls {
     margin-left: 12px;
     @media (max-width: $mobile-breakpoint) {
@@ -75,10 +86,12 @@
       text-align: left;
       margin-left: 0;
     }
+
     .btn {
       margin-right: 5px;
     }
   }
+
   &.username,
   &.name {
     .value {
@@ -91,6 +104,7 @@
   input {
     margin-bottom: 0;
   }
+
   .users-list {
     .username .d-icon {
       color: var(--primary-medium);
@@ -103,8 +117,10 @@
     &.username {
       justify-content: start;
     }
+
     &.email {
       justify-content: start;
+
       span {
         display: flex;
         min-width: 17em;
@@ -115,6 +131,7 @@
 
   .directory-table {
     margin-top: 1em;
+
     &__column-header {
       &--username,
       &---email,
@@ -145,6 +162,7 @@
       @include breakpoint("tablet") {
         grid-column-start: 1;
         grid-column-end: -1;
+
         span {
           max-width: 100%;
         }
@@ -187,6 +205,7 @@
   .display-row {
     flex-direction: column;
     align-items: flex-start;
+
     .field,
     .value {
       width: 100%;
@@ -201,6 +220,7 @@
     word-wrap: break-word;
     max-width: 100%;
     margin: 0;
+
     button {
       margin: 5px 0;
       display: block;

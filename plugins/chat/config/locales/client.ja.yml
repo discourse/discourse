@@ -616,6 +616,11 @@ ja:
           other_html: "<span>%{username}</span> <span>が %{identifier} をパーソナルチャットでメンションしました</span>"
         chat_message: "新しいチャットメッセージ"
         chat_quoted: "%{username} があなたのチャットメッセージを引用しました"
+      titles:
+        chat_mention: "チャットでメンションされました"
+        chat_invitation: "チャットチャンネルに招待されました"
+        chat_quoted: "チャットメッセージが引用されました"
+        chat_watched_thread: "ウォッチ中のチャットスレッド"
     action_codes:
       chat:
         enabled: '%{who} が<button class="btn-link open-chat">チャット</button>を有効にしました: %{when}'

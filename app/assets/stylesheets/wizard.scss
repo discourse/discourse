@@ -21,7 +21,6 @@ body.wizard {
   background-size: 110vw 110vh; // crops better than cover at various viewport sizes
   background-repeat: no-repeat;
   background-position: bottom;
-
   color: var(--primary-very-high);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
@@ -58,7 +57,7 @@ body.wizard {
     @include breakpoint("mobile-extra-large") {
       height: 50px;
     }
-    @media screen and (max-height: 900px) {
+    @media screen and (height <= 900px) {
       .desktop-view & {
         display: none;
       }
@@ -80,7 +79,6 @@ body.wizard {
   box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   margin: 1em auto;
-  padding: 0;
   border: 1px solid var(--primary-low);
   border-radius: 8px;
   padding: 2em;
@@ -184,7 +182,7 @@ body.wizard {
 
   &__field.text-governing-law,
   &__field.text-city-for-disputes {
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       display: none;
     }
   }
@@ -204,7 +202,7 @@ body.wizard {
     box-sizing: border-box;
     margin-right: 1em;
 
-    @media only screen and (max-width: 925px) {
+    @media only screen and (width <= 925px) {
       width: 100%;
       margin-left: auto;
       margin-right: auto;
@@ -217,7 +215,7 @@ body.wizard {
       border-radius: 0.5em;
       margin-top: -1em;
 
-      @media only screen and (max-width: 925px) {
+      @media only screen and (width <= 925px) {
         display: none;
       }
     }
@@ -228,6 +226,7 @@ body.wizard {
     justify-content: flex-end;
     position: relative;
     padding-right: 10px;
+
     .preview-nav-button {
       text-align: center;
       padding: 10px 15px;
@@ -236,6 +235,7 @@ body.wizard {
       font-size: 14px;
       font-weight: bold;
       color: var(--primary-high);
+
       &.active {
         background: var(--secondary);
         border-bottom-left-radius: 10px;
@@ -255,18 +255,21 @@ body.wizard {
     border-radius: 10px;
     cursor: grab;
     user-select: none;
+
     &.dragging {
       cursor: grabbing;
     }
+
     .topic-preview {
       position: absolute;
-      left: 0px;
-      top: 0px;
+      left: 0;
+      top: 0;
     }
+
     .homepage-preview {
       position: absolute;
       left: calc(100% + 25px);
-      top: 0px;
+      top: 0;
     }
   }
 
@@ -309,7 +312,7 @@ body.wizard {
 
   &__step-form {
     flex: 1 0 50%;
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       width: 100%;
     }
   }
@@ -341,7 +344,7 @@ body.wizard {
 
   &__step-text {
     display: inline;
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       display: none;
     }
   }
@@ -368,7 +371,6 @@ body.wizard {
 
   &__button {
     border-radius: 2px;
-    font-size: var(--font-0);
     border: 0;
     padding: 0.5em;
     transition: var(--d-button-transition);
@@ -406,6 +408,7 @@ body.wizard {
       margin-left: 0;
     }
   }
+
   &__button.primary:hover,
   &__button.primary:focus {
     background-color: var(--tertiary-hover);
@@ -450,6 +453,7 @@ body.wizard {
     color: var(--tertiary-hover);
     background-color: transparent;
   }
+
   &__button.finish:active,
   &__button.finish:disabled {
     background-color: transparent;
@@ -545,7 +549,7 @@ body.wizard {
       margin: 0;
     }
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       font-size: var(--font-0);
     }
   }
@@ -554,14 +558,13 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 3.5em;
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       margin-left: 2em;
     }
   }
 
   &__text-input {
     border-radius: 4px !important;
-    padding: 5px;
     width: 100%;
     font-size: var(--font-up-1);
     margin: 0;
@@ -582,6 +585,7 @@ body.wizard {
   &__dropdown.color-palettes .select-kit-row.color-palettes-row .name {
     flex: 0 0 30%;
   }
+
   &__dropdown.color-palettes .select-kit-row.color-palettes-row .palettes {
     flex: 1 1 70%;
     overflow: hidden;
@@ -615,31 +619,32 @@ body.wizard {
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       height: 20px;
       width: 35px;
     }
   }
-  &__checkbox-slider:before,
-  &__checkbox-slider:after {
+
+  &__checkbox-slider::before,
+  &__checkbox-slider::after {
     content: "";
     display: block;
     position: absolute;
   }
 
-  &__checkbox-slider:after {
+  &__checkbox-slider::after {
     content: "\2713"; // checkmark
     color: var(--secondary);
     top: 4px;
     left: 9px;
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       top: 3px;
       left: 5px;
       font-size: var(--font-down-3);
     }
   }
 
-  &__checkbox-slider:before {
+  &__checkbox-slider::before {
     background: var(--secondary);
     border-radius: 50%;
     width: 20px;
@@ -647,23 +652,26 @@ body.wizard {
     top: 4px;
     left: 4px;
     transition: left 0.25s;
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       height: 12px;
       width: 12px;
     }
   }
+
   &__field.checkbox-field
     .wizard-container__label:hover
-    .wizard-container__checkbox-slider:before {
+    .wizard-container__checkbox-slider::before {
     background: var(--secondary);
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
   }
+
   &__checkbox:checked + .wizard-container__checkbox-slider {
     background: var(--tertiary);
   }
-  &__checkbox:checked + .wizard-container__checkbox-slider:before {
+
+  &__checkbox:checked + .wizard-container__checkbox-slider::before {
     left: 26px;
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       left: 20px;
     }
   }
@@ -742,7 +750,7 @@ body.wizard {
     .wizard-congratulations-wrap {
       display: flex;
       gap: 1em;
-      @media screen and (max-width: 750px) {
+      @media screen and (width <= 750px) {
         flex-direction: column-reverse;
       }
     }
@@ -771,7 +779,6 @@ body.wizard {
 }
 
 // Register admin page... /finish-installation/register
-
 .wizard-container-contents.finish-installation {
   .wizard-container__combobox {
     background: var(--secondary);

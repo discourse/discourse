@@ -1422,7 +1422,8 @@ vi:
         after_4_minutes: "sau 4 phút"
         after_5_minutes: "sau 5 phút"
         after_10_minutes: "sau 10 phút"
-      notification_level_when_replying: "Khi tôi đăng một chủ đề, hãy đặt chủ đề đó thành"
+      notification_level_when_replying:
+        do_nothing: "Không làm gì cả"
       invited:
         title: "Lời mời"
         pending_tab: "Đang treo"
@@ -3944,26 +3945,24 @@ vi:
               utilities: Cần thiết nếu bạn sử dụng Tiện ích plugin WP Discourse.
       web_hooks:
         title: "Webhooks"
-        none: "Không có webhook nào ngay bây giờ."
         instruction: "Webhooks cho phép Discourse thông báo cho các dịch vụ bên ngoài khi một sự kiện nào đó xảy ra trong trang web của bạn. Khi webhook được kích hoạt, POST sẽ gửi đến các URL được cung cấp."
         detailed_instruction: "POST sẽ được gửi đến URL được cung cấp khi sự kiện đã chọn xảy ra."
-        new: "Webhook mới"
         create: "Tạo"
         edit: "Sửa"
         save: "Lưu"
+        delete: "Xóa"
+        cancel: "Huỷ"
         controls: "Kiểm soát"
-        go_back: "Quay lại danh sách"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Bí mật không được có bất kỳ ký tự trống nào."
         secret_too_short: "Bí mật phải có ít nhất 12 ký tự."
-        secret_placeholder: "Một chuỗi tùy chọn, được sử dụng để tạo chữ ký"
         event_type_missing: "Bạn cần thiết lập ít nhất một loại sự kiện."
         content_type: "Content Type"
         secret: "Bí mật"
         event_chooser: "Sự kiện nào sẽ kích hoạt webhook này?"
-        wildcard_event: "Gửi cho tôi mọi thứ."
-        individual_event: "Chọn các sự kiện riêng lẻ."
+        wildcard_event: "Gửi cho tôi mọi thứ"
+        individual_event: "Chọn các sự kiện riêng lẻ"
         verify_certificate: "Kiểm tra chứng chỉ TLS của payload url"
         active: "Kích hoạt"
         active_notice: "Chúng tôi sẽ cung cấp chi tiết sự kiện khi nó xảy ra."
@@ -4199,9 +4198,6 @@ vi:
           screened_url: "Export danh sách URL theo định dạng CSV."
       export_json:
         button_text: "Xuất"
-      invite:
-        button_text: "Gửi Lời Mời"
-        button_title: "Gửi Lời Mời"
       customize:
         title: "Tùy biến"
         preview: "xem trước"
@@ -4454,8 +4450,7 @@ vi:
           overridden: Tệp robots.txt mặc định của trang web của bạn bị ghi đè.
         email_style:
           title: "Kiểu email"
-          heading: "Tùy chỉnh kiểu email"
-          html: "Mẫu HTML"
+          html: "HTML"
           css: "CSS"
           reset: "Đặt lại về mặc định"
           reset_confirm: "Bạn có chắc chắn muốn đặt lại về %{fieldName} mặc định và mất tất cả các thay đổi của mình không?"
@@ -4463,15 +4458,11 @@ vi:
           instructions: "Tùy chỉnh mẫu trong đó tất cả các email html được hiển thị và tạo kiểu bằng CSS."
       email:
         title: "Emails"
+        settings: "Cài đặt"
         templates: "Templates"
-        preview_digest: "Xem trước tập san"
         advanced_test:
-          title: "Kiểm tra nâng cao"
           desc: "Xem cách Discourse xử lý email nhận được. Để có thể xử lý email một cách chính xác, vui lòng dán vào bên dưới toàn bộ thông báo email gốc."
           email: "Tin nhắn gốc"
-          run: "Chạy thử nghiệm"
-          text: "Nội dung văn bản đã chọn"
-          elided: "Văn bản Elided"
         error: "<b>LỖI</b> - %{server_error}"
         test_error: "Có vấn đề khi gửi email test. Vui lòng kiểm tra lại cấu hình email của bạn, chắc chắn host mail của bạn không bị khóa kết nối, và thử lại."
         sent: "Đã gửi"
@@ -4479,15 +4470,10 @@ vi:
         bounced: "Bị trả lại"
         received: "Đã nhận"
         rejected: "Từ chối"
-        sent_at: "Đã gửi vào lúc"
         time: "Thời gian"
         user: "Thành viên"
-        email_type: "Loại Email"
-        to_address: "Đến Địa chỉ"
         test_email_address: "địa chỉ email để test"
-        send_test: "Gửi Email test"
         sent_test: "đã gửi!"
-        delivery_method: "Phương thức chuyển giao"
         preview_digest_desc: "Xem trước nội dung của tập san email đã gửi cho các thành viên không hoạt động."
         refresh: "Tải lại"
         send_digest_label: "Gửi kết quả này tới:"
@@ -4496,10 +4482,7 @@ vi:
         html: "html"
         text: "text"
         html_preview: "Xem trước nội dung email"
-        last_seen_user: "Người dùng cuối:"
         no_result: "Không tìm thấy kết quả cho tóm tắt."
-        reply_key: "Key phản hồi"
-        skipped_reason: "Bỏ qua Lý do"
         incoming_emails:
           from_address: "Từ"
           to_addresses: "Tới"
@@ -4508,12 +4491,10 @@ vi:
           error: "Lỗi"
           none: "Không tìm tháy các email đến."
           modal:
-            title: "Chi Tiết Email Đến"
             error: "Lỗi"
             headers: "Tên"
             subject: "Tiêu đề"
             body: "Nội dung"
-            rejection_message: "Từ Chối Thư"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -4539,7 +4520,7 @@ vi:
           delete_topic: "Chủ đề đã bị xóa"
           post_approved: "Đăng được phê duyệt"
       logs:
-        title: "Log"
+        nav_title: "Log"
         action: "Hành động"
         created_at: "Đã tạo"
         last_match_at: "Khớp lần cuối"
@@ -4557,10 +4538,8 @@ vi:
         staff_actions:
           all: "Tất cả"
           filter: "Lọc:"
-          title: "Staff Actions"
-          clear_filters: "Hiện thị mọi thứ"
           staff_user: "Người dùng"
-          target_user: "Target User"
+          target_user: "Người dùng mục tiêu"
           subject: "Chủ đề"
           when: "Khi"
           context: "Ngữ cảnh"
@@ -4660,9 +4639,7 @@ vi:
             watched_word_create: "thêm từ đã xem"
             watched_word_destroy: "xóa từ đã xem"
         screened_emails:
-          title: "Screened Emails"
           description: "Khi ai đó cố gắng tạo tài khoản mới, các địa chỉ email sau sẽ được kiểm tra và đăng ký sẽ bị chặn, hoặc một số hành động khác được thực hiện."
-          email: "Địa chỉ Email"
           actions:
             allow: "Cho phép"
         screened_urls:
@@ -4677,7 +4654,6 @@ vi:
           actions:
             block: "Khóa"
             do_nothing: "Cho phép"
-            allow_admin: "Cho phép Quản trị"
           form:
             label: "Mới:"
             ip_address: "Địa chỉ IP"
@@ -4687,25 +4663,19 @@ vi:
             text: "Cuộn lên"
             title: "Tạo mạng con mới các entry cấm nếu có ít nhất 'min_ban_entries_for_roll_up' entry."
         search_logs:
-          title: "Nhật ký tìm kiếm"
           term: "Thuật ngữ"
           searches: "Số lần tìm kiếm"
           click_through_rate: "CTR"
           types:
             all_search_types: "Tất cả các loại tìm kiếm"
             header: "Header"
-            full_page: "Toàn trang"
             click_through_only: "Tất cả (chỉ nhấp qua)"
-          header_search_results: "Tiêu đề hết quả Tìm kiếm"
-        logster:
-          title: "Log lỗi"
       watched_words:
         search: "Tìm kiếm"
         clear_filter: "Xóa"
         show_words:
           other: "hiển thị %{count} từ"
         download: Tải xuống
-        clear_all: Xóa tất cả
         clear_all_confirm: "Bạn có chắc chắn muốn xóa tất cả các từ đã xem cho hành động %{action} ?"
         actions:
           block: "Khóa"
@@ -4772,9 +4742,6 @@ vi:
         id_not_found: "Xin lỗi, id người dùng không tồn tại trong hệ thống."
         active: "Đã kích hoạt"
         status: "Trạng thái"
-        show_emails: "Hiện địa chỉ Email"
-        hide_emails: "Ẩn Email"
-        silence_reason: "Lý do tắt tiếng"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4789,8 +4756,7 @@ vi:
           staged: "Theo giai đoạn"
         approved: "Đã duyệt?"
         titles:
-          active: "Thành viên kích hoạt"
-          new: "Thành viên mới"
+          active: "Thành viên đang hoạt động"
           pending: "Hoãn Xem xét Tài khoản"
           newuser: "Tài khoản ở Cấp độ Tin tưởng 0 (Tài khoản mới)"
           basic: "Tài khoản ở Cấp độ Tin tưởng 1 (Tài khoản Cơ bản)"
@@ -4798,9 +4764,7 @@ vi:
           regular: "Tài khoản ở Độ tin cậy mức 3 (Regular)"
           leader: "Tài khoản ở Độ tin cậy mức 4 (Leader)"
           staff: "Nhân viên"
-          admins: "Tài khoản Quản trị"
           moderators: "Điều hành viên"
-          suspended: "Tài khoản Tạm khóa"
         not_verified: "Chưa xác thực"
         check_email:
           title: "Khám phá email của tài khoản này"
@@ -5071,7 +5035,7 @@ vi:
           invalid_input: "Danh sách biểu tượng cảm xúc chỉ nên chứa các tên biểu tượng cảm xúc hợp lệ, ví dụ: ôm"
           add_emoji_button:
             label: "Thêm biểu tượng cảm xúc"
-        title: "Cài đặt"
+        nav_title: "Cài đặt"
         no_results: "Không tìm thấy kết quả."
         clear_filter: "Xóa"
         add_url: "thêm URL"
@@ -5201,7 +5165,6 @@ vi:
             with_post_time: <span class="username">%{username}</span> viết bài trong %{link} lúc <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> lúc <span class="time">%{time}</span>
         mass_award:
-          title: Giải thưởng hàng loạt
           description: Trao cùng một huy hiệu cho nhiều người dùng cùng một lúc.
           no_badge_selected: Vui lòng chọn một huy hiệu để bắt đầu.
           perform: "Trao huy hiệu cho người dùng"
@@ -5298,6 +5261,21 @@ vi:
           admin: "Quản trị"
           moderator: "Điều hành"
           regular: "Người sử dụng thường xuyên"
+      homepage_choices:
+        custom:
+          label: "Tùy biến"
+        style_type:
+          categories: "danh mục"
+          topics: "chủ đề"
+      top_menu_items:
+        new: "Mới"
+        unread: "Chưa đọc"
+        top: "Top"
+        latest: "Mới nhất"
+        categories: "Danh mục"
+        unseen: "Không nhìn thấy"
+        read: "Đọc"
+        bookmarks: "Các đánh dấu"
       previews:
         share_button: "Chia sẻ"
         reply_button: "Trả lời "
@@ -5306,11 +5284,6 @@ vi:
       homepage_preview:
         nav_buttons:
           all_categories: "tất cả chuyên mục"
-          new: "Mới"
-          unread: "Chưa đọc"
-          top: "Top"
-          latest: "Mới nhất"
-          categories: "Danh mục"
         category_names:
           site_feedback: "Phản hồi"
         table_headers:

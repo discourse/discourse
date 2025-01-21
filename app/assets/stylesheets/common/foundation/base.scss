@@ -1,7 +1,6 @@
 // These CSS custom properties are added here instead of in variables.scss
 // because variables.scss is injected into every theme CSS file
 // which causes problems when overriding custom properties in themes
-
 :root {
   --topic-body-width: #{$topic-body-width};
   --topic-body-width-padding: #{$topic-body-width-padding};
@@ -13,14 +12,13 @@
   --d-input-border-radius: 2px;
   --d-content-background: initial;
   --d-font-family--monospace: ui-monospace, "Cascadia Mono", "Segoe UI Mono",
-    "Liberation Mono", Menlo, Monaco, Consolas, monospace;
+    "Liberation Mono", menlo, monaco, consolas, monospace;
   --d-button-transition: none;
 }
 
 // --------------------------------------------------
 // Base styles for HTML elements
 // --------------------------------------------------
-
 html {
   color: var(--primary);
   font-family: var(--font-family);
@@ -49,17 +47,19 @@ html {
 
 // Links
 // --------------------------------------------------
-
 a {
   color: var(--tertiary);
   text-decoration: none;
   cursor: pointer;
+
   &:visited {
     color: var(--tertiary);
   }
+
   &:hover {
     color: var(--tertiary);
   }
+
   &:active {
     color: var(--tertiary);
   }
@@ -67,7 +67,6 @@ a {
 
 // Typography
 // --------------------------------------------------
-
 hr {
   display: block;
   height: 1px;
@@ -79,7 +78,6 @@ hr {
 
 // Lists
 // --------------------------------------------------
-
 ul,
 ol,
 dd {
@@ -112,7 +110,6 @@ li,
 
 // Embedded content
 // --------------------------------------------------
-
 img {
   vertical-align: middle;
 }
@@ -123,7 +120,6 @@ img {
 
 // Forms
 // --------------------------------------------------
-
 fieldset {
   margin: 0;
   border: 0;
@@ -132,8 +128,8 @@ fieldset {
 
 pre code {
   overflow: auto;
-  -moz-tab-size: 4;
   tab-size: 4;
+
   &.lang-markdown {
     white-space: pre-wrap;
   }
@@ -141,7 +137,6 @@ pre code {
 
 // Tables
 // --------------------------------------------------
-
 table {
   border-collapse: collapse;
 }
@@ -167,7 +162,6 @@ ruby > rt {
 
 // Buttons (was in normalized)
 // --------------------------------------------------
-
 button,
 html input[type="button"],
 input[type="reset"],
@@ -177,11 +171,11 @@ input[type="submit"] {
 
 // Inline form
 // --------------------------------------------------
-
 .inline-form {
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
+
   &.full-width {
     display: flex;
   }
@@ -202,6 +196,7 @@ input[type="submit"] {
   > .d-date-input {
     margin-bottom: 0.5em; // for when items wrap (mobile, narrow windows)
     margin-right: 0.5em;
+
     &:last-child {
       margin-right: 0;
     }

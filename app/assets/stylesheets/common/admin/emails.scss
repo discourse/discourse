@@ -5,29 +5,35 @@
   .filters input {
     width: 100%;
   }
+
   .time {
     width: 50px;
   }
+
   .reply-key {
     display: block;
     font-size: var(--font-down-1);
     color: var(--primary-medium);
   }
+
   .username div {
     max-width: 180px;
     @include ellipsis;
   }
+
   .addresses p {
     margin: 2px 0;
     max-width: 200px;
     @include ellipsis;
   }
+
   .sent-email-address a {
     // prevent long email addresses from breaking the layout
     display: inline-block;
     max-width: 300px;
     overflow-wrap: break-word;
   }
+
   .email-address {
     max-width: 250px;
     @include ellipsis;
@@ -35,6 +41,7 @@
 
   .email-details {
     text-align: right;
+
     a {
       color: var(--primary-high);
     }
@@ -45,19 +52,24 @@
   .control-group {
     margin: 8px 0;
   }
+
   .controls {
     margin-left: 110px;
   }
+
   p {
     margin: 5px 10px;
   }
+
   .error-description {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
   }
+
   hr {
     margin: 0;
   }
+
   label {
     font-weight: bold;
     float: left;
@@ -65,10 +77,12 @@
     text-align: right;
     margin: 0 10px;
   }
+
   ul {
     list-style: none;
     margin: 0 10px;
   }
+
   textarea {
     width: 95%;
     height: 150px;
@@ -87,6 +101,7 @@
   .controls {
     margin: 1em 0.5em;
   }
+
   .preview-output iframe {
     width: 100%;
     height: 600px;
@@ -138,17 +153,21 @@
       margin: 0;
       width: unset;
     }
+
     .control-group {
       textarea {
         height: 200px;
       }
+
       &:last-of-type textarea {
         height: 40px;
       }
     }
+
     .controls {
       margin: 0;
     }
+
     p {
       margin: 5px 0;
     }

@@ -15,8 +15,8 @@ $calendar-icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16
     box-shadow: none;
     position: relative;
 
-    &::-webkit-input-placeholder,
-    &::-ms-input-placeholder,
+    &::input-placeholder,
+    &::input-placeholder,
     &::placeholder {
       font-size: var(--font-0);
       color: var(--primary-medium);
@@ -27,7 +27,7 @@ $calendar-icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16
     }
 
     // iOS doesn't display the placeholder attribute for date inputs
-    html.ios-device &:after {
+    html.ios-device &::after {
       font-size: var(--font-0);
       color: var(--primary-medium);
       content: attr(placeholder);
@@ -42,22 +42,22 @@ $calendar-icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16
     html:not(.ios-device) & {
       &::after {
         content: "";
-        -webkit-mask: svg-uri($calendar-icon) no-repeat 50% 50%;
         mask: svg-uri($calendar-icon) no-repeat 50% 50%;
         position: absolute;
         right: 4px;
-        top: 0px;
+        top: 0;
         box-sizing: border-box;
         background-color: var(--primary);
         height: 100%;
         width: 20px;
         z-index: 1;
       }
+
       &::-webkit-calendar-picker-indicator {
         background: transparent;
         position: absolute;
         cursor: pointer;
-        right: 0px;
+        right: 0;
         z-index: 2;
       }
     }

@@ -1555,7 +1555,8 @@ bg:
         after_4_minutes: "след 4 минути"
         after_5_minutes: "след 5 минути"
         after_10_minutes: "след 10 минути"
-      notification_level_when_replying: "Когато публикувам в тема, задайте тази тема на"
+      notification_level_when_replying:
+        do_nothing: "Не прави нищо"
       invited:
         title: "Покани"
         pending_tab: "Чакащи"
@@ -3565,6 +3566,8 @@ bg:
         create: "Създай"
         edit: "Редактирай"
         save: "Запази"
+        delete: "Изтрий"
+        cancel: "Прекрати"
         active: "Активни"
         delivery_status:
           failed: "Провалени"
@@ -3713,9 +3716,6 @@ bg:
           screened_url: "Експортирайте пълният прегледан URL лист в CSV файл. "
       export_json:
         button_text: "Експорт"
-      invite:
-        button_text: "Изпрати поканите"
-        button_title: "Изпрати поканите"
       customize:
         title: "Персонализация"
         preview: "преглед"
@@ -3817,36 +3817,29 @@ bg:
           selected:
             name: "избрани"
         email_style:
+          html: "HTML"
           css: "CSS"
           reset: "Обновявам до първоначалното"
       email:
         title: "Имейли"
+        settings: "Настройки"
         templates: "Шаблони"
-        preview_digest: "Преглед на справочника"
         error: "<b>ГРЕШКА</b> - %{server_error}"
         test_error: "Проблем при изпращането на пробния имейл. Моля, проверете настройките на имейла, вижте дали хостът не блокира имейл връзката и пробвайте отново."
         sent: "Изпрати"
         skipped: "Пропусни"
         received: "Получени"
         rejected: "Отхвърлени"
-        sent_at: "Изпратен в "
         time: "Време "
         user: "Потребител "
-        email_type: "Тип Имейл"
-        to_address: "До адрес "
         test_email_address: "имейл адрес за тест "
-        send_test: "Изпрати тестов имейл "
         sent_test: "изпратено!"
-        delivery_method: "Метод за доставяне "
         preview_digest_desc: "Преглед на съдържанието на имейлите, изпратени до неактивните потребители."
         refresh: "Опресни"
         format: "Формат"
         html: "html"
         text: "текст"
-        last_seen_user: "Последно видян потребител: "
         no_result: "Не са намерени резултати за резюмиране."
-        reply_key: "Ключов отговор "
-        skipped_reason: "Пропусни причина "
         incoming_emails:
           from_address: "От"
           to_addresses: "До"
@@ -3855,12 +3848,10 @@ bg:
           error: "Грешка"
           none: "Няма намерени входящи писма"
           modal:
-            title: "Детайли за входящо писмо"
             error: "Грешка"
             headers: "Хедъри"
             subject: "Тема"
             body: "Тяло"
-            rejection_message: "Отхвърлено писмо"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -3877,7 +3868,7 @@ bg:
         actions:
           delete_topic: "Тема е изтрита"
       logs:
-        title: "Логове"
+        nav_title: "Логове"
         action: "Действия"
         created_at: "Създадени"
         last_match_at: "Последно съвпадение"
@@ -3895,10 +3886,8 @@ bg:
         staff_actions:
           all: "всички подкатегории"
           filter: "Филтер:"
-          title: "Действия на персонала"
-          clear_filters: "Покажи всичко "
           staff_user: "Потребител"
-          target_user: "Целеви потребител "
+          target_user: "Целеви потребител"
           subject: "Тема "
           when: "Кога "
           context: "Контекст "
@@ -3953,9 +3942,7 @@ bg:
             change_badge: "промени значката"
             delete_badge: "изтрий значката"
         screened_emails:
-          title: "Проверени имейли"
           description: "Когато някой се опита да създаде нов профил, следните имейл адреси ще бъдат проверени и регистрацията ще бъде отказана или ще бъде предприето друго действие."
-          email: "Имейл адрес"
           actions:
             allow: "Позволи"
         screened_urls:
@@ -3969,7 +3956,6 @@ bg:
           actions:
             block: "Блокирай"
             do_nothing: "Позволи"
-            allow_admin: "Разреши Админ "
           form:
             label: "Нов:"
             ip_address: "IP адрес"
@@ -3979,19 +3965,14 @@ bg:
             text: "Свиване"
             title: "Създава нов бан на подмрежа ако има най-малко 'min_ban_entries_for_roll_up' записи. "
         search_logs:
-          title: "Търсене в логовете"
           term: "Термин"
           searches: "Търсения"
           types:
             header: "Хедър"
-            full_page: "Пълна страница"
-        logster:
-          title: "Логове с грешки"
       watched_words:
         search: "търсене"
         clear_filter: "Изчисти"
         download: Изтегли
-        clear_all: Изчисти всички
         actions:
           block: "Блокирай "
           censor: "Цензуриране"
@@ -4080,7 +4061,6 @@ bg:
         not_found: "Съжаляваме, това потребителско име не съществува при нас."
         id_not_found: "Съжаляваме, това потребителско име не съществува при нас. "
         status: "Статус"
-        show_emails: "Покажи имейла"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4094,8 +4074,6 @@ bg:
           staged: "Поставен"
         approved: "Одобрен?"
         titles:
-          active: "Активни потребители"
-          new: "Нови потребители"
           pending: "Потребители, изискващи преглед"
           newuser: "Потребители с Ниво на доверие 0 (нов)"
           basic: "Потребители с Ниво на доверие 1 (основен)"
@@ -4103,9 +4081,7 @@ bg:
           regular: "Потребители с Ниво за сигурност 3 (Редовни)"
           leader: "Потребители с Ниво на доверие 4 (лидер)"
           staff: "Персонал "
-          admins: "Админи"
           moderators: "Модератори"
-          suspended: "Отстранени"
         not_verified: "Непроверен "
         check_email:
           title: "Разкрий имейла на този потребител"
@@ -4281,7 +4257,7 @@ bg:
         save: "запази "
         cancel: "прекрати"
       site_settings:
-        title: "Настройки"
+        nav_title: "Настройки"
         no_results: "Няма резултати"
         clear_filter: "Изчисти"
         add_url: "добавяне на URL"
@@ -4463,17 +4439,27 @@ bg:
           admin: "Администратор"
           moderator: "Модератор"
           regular: "Обикновен потребител"
+      homepage_choices:
+        custom:
+          label: "По избор"
+        style_type:
+          categories: "категория"
+          topics: "тема"
+      top_menu_items:
+        new: "Нова"
+        unread: "Непрочетени"
+        top: "Топ"
+        latest: "Последни"
+        categories: "Категории"
+        unseen: "Непрегледани"
+        read: "Прочети"
+        bookmarks: "Отметки"
       previews:
         share_button: "Споделяне"
         reply_button: "Отговорете"
       homepage_preview:
         nav_buttons:
           all_categories: "всички категории"
-          new: "Нова"
-          unread: "Непрочетени"
-          top: "Топ"
-          latest: "Последни"
-          categories: "Категории"
         category_names:
           site_feedback: "Заявка към сайта"
         table_headers:

@@ -155,7 +155,7 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
   };
 
   async function mouseMove(selector) {
-    await triggerEvent(selector, "mousemove");
+    await triggerEvent(selector, "pointermove");
   }
 
   test("shows user status tooltip", async function (assert) {

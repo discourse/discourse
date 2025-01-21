@@ -1,5 +1,4 @@
 // Desktop styles for "/user" section
-
 .user-profile-hidden {
   font-size: 1.5em;
   text-align: center;
@@ -10,6 +9,7 @@
 
   .combo-box {
     width: 100%;
+
     &:not(:last-of-type) {
       margin-bottom: 0.875em;
     }
@@ -21,10 +21,12 @@
 
     li {
       border-bottom: none;
+
       &:hover,
       &.active {
         background: var(--primary-very-low);
       }
+
       &.archive {
         padding-left: 1.4em;
       }
@@ -73,7 +75,7 @@
 }
 
 .invite-controls .btn {
-  margin-right: 0px;
+  margin-right: 0;
 }
 
 table.user-invite-list {
@@ -131,6 +133,7 @@ table.user-invite-list {
       .user-profile-image {
         height: 300px;
       }
+
       .details {
         box-sizing: border-box;
         width: 100%;
@@ -153,6 +156,7 @@ table.user-invite-list {
       .user-profile-image {
         display: none;
       }
+
       .controls {
         display: flex;
         max-width: unset;

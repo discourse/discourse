@@ -1,5 +1,4 @@
 // Shared styles
-
 .login-fullpage,
 .signup-fullpage,
 .invites-show {
@@ -20,12 +19,14 @@
         width: 100%;
       }
     }
+
     &__existing-account,
     &__no-account-yet {
       font-size: var(--font-down-1);
       margin-bottom: 0.5rem;
       text-align: center;
       width: 100%;
+
       &::before {
         content: " ";
         display: block;
@@ -35,6 +36,7 @@
         margin-block: 1rem;
       }
     }
+
     &__disclaimer {
       font-size: var(--font-down-1);
       margin-bottom: 0.5rem;
@@ -45,26 +47,30 @@
     height: 100%;
   }
 
-  @media screen and (max-width: 767px) {
+  @media screen and (width <= 767px) {
     // important to maintain narrow desktop widths
     // for auth modals in Discourse Hub on iPad
     .has-alt-auth {
       flex-direction: column;
       overflow: auto;
       gap: 0;
+
       .login-page-cta,
       .signup-page-cta,
       .btn-social {
         font-size: var(--font-down-1);
       }
+
       .login-left-side {
         overflow: unset;
         padding: 1em;
         max-width: unset;
       }
+
       .login-right-side {
         padding: 1em;
         max-width: unset;
+
         &::before {
           height: 1px;
           width: calc(100% - 2em);

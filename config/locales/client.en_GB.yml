@@ -139,9 +139,6 @@ en_GB:
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"
-      invite:
-        button_text: "Send invitations"
-        button_title: "Send invitations"
       customize:
         title: "Customise"
         color: "Colour"
@@ -185,7 +182,6 @@ en_GB:
           love:
             description: "The like button's colour."
         email_style:
-          heading: "Customise Email Style"
           instructions: "Customise the template in which all html emails are rendered, and style using CSS."
       logs:
         staff_actions:
@@ -217,6 +213,5 @@ en_GB:
           categories: "Categories"
   wizard_js:
     wizard:
-      homepage_preview:
-        nav_buttons:
-          categories: "Categories"
+      top_menu_items:
+        categories: "Categories"

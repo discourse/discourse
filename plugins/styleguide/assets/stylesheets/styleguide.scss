@@ -106,26 +106,29 @@
           }
         }
       }
-
       margin-bottom: 2em;
     }
 
     &.colors-examples {
       .styleguide-example {
         display: flex;
+
         .example-title {
           min-width: 15%;
           margin-right: 1em;
           border-bottom: none;
+
           &-text {
             color: var(--primary);
             text-transform: capitalize;
           }
+
           &-use-case {
             font-size: var(--font-down-1);
             display: block;
           }
         }
+
         .color-row {
           display: flex;
 
@@ -141,6 +144,7 @@
               flex: 4;
               border-bottom: 1px solid var(--primary-300);
             }
+
             .color-name {
               flex: 1;
               display: flex;
@@ -158,13 +162,16 @@
   pre {
     background: var(--primary-very-low);
     white-space: pre-wrap;
+
     &.pre-inline {
       display: inline-block;
       margin: 0;
       vertical-align: bottom;
     }
+
     span {
       color: var(--primary-medium);
+
       &.hljs-attribute {
         color: teal;
       }
@@ -218,11 +225,13 @@
     text-align: center;
     padding: 10px;
     overflow: hidden;
+
     svg {
       display: block;
       font-size: 3em;
       margin: 5px auto;
     }
+
     span {
       font-size: var(--font-down-1);
       word-wrap: break-word;

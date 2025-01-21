@@ -29,6 +29,7 @@
         .logo-wrapper {
           float: left;
         }
+
         .auth-buttons {
           float: right;
           margin-top: 0.4em;
@@ -51,10 +52,12 @@
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
     }
+
     // min-width acts as a placeholder if the small logo takes a while to load
     // it prevents topic title from shifting after the small logo loads
     // it's set to match the #site-logo height so square small logos don't resize when titles dock
     min-width: var(--d-logo-height);
+
     a,
     a:visited {
       min-width: 0;
@@ -116,6 +119,7 @@
   .login-button,
   .sign-up-button {
     padding: 6px 10px;
+
     .fa {
       margin-right: 3px;
     }
@@ -155,25 +159,30 @@
     cursor: pointer;
     border: 1px solid transparent;
     outline: none;
+
     img.avatar {
       width: 2.1333em;
       height: 2.1333em;
     }
+
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
       background-color: var(--primary-low);
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
+
       > .d-icon {
         color: var(--primary-medium);
       }
     }
+
     &:active {
       color: var(--primary);
       background-color: var(--primary-low);
     }
   }
+
   .drop-down-mode & {
     .active .icon {
       position: relative;
@@ -182,10 +191,12 @@
       border-top: 1px solid var(--primary-low);
       border-left: 1px solid var(--primary-low);
       border-right: 1px solid var(--primary-low);
+
       > .d-icon {
         color: var(--primary-medium);
       }
-      &:after {
+
+      &::after {
         display: block;
         position: absolute;
         top: 100%;
@@ -196,6 +207,7 @@
         content: "";
         border-top: 1px solid var(--secondary);
       }
+
       &:hover {
         border-bottom: none;
       }
@@ -213,14 +225,15 @@
   .notifications {
     position: relative;
   }
+
   .header-dropdown-toggle {
     position: relative;
   }
+
   .badge-notification {
     border: 2px solid var(--header_background);
     position: absolute;
     z-index: z("base");
-    left: 0;
     top: -4px;
     min-width: 0.6em;
     left: auto;
@@ -230,9 +243,11 @@
       &.new-pms {
         background-color: var(--success);
       }
+
       &.new-reviewables {
         background-color: var(--danger);
       }
+
       .d-icon {
         color: var(--secondary);
         font-size: var(--font-down-1);
@@ -240,9 +255,11 @@
       }
     }
   }
+
   .unread-notifications {
     background-color: var(--tertiary-med-or-tertiary);
   }
+
   .unread-high-priority-notifications {
     left: auto;
     right: 25px;
@@ -258,12 +275,14 @@
     width: 2.2857em;
     height: 2.2857em;
     padding: 0.2143em;
+
     &:focus,
     .discourse-no-touch & {
       &:hover {
         background-color: var(--primary-low);
       }
     }
+
     .d-icon {
       width: 100%;
       font-size: var(--font-up-4);
@@ -282,8 +301,10 @@
   height: 100%;
   line-height: var(--line-height-medium);
   padding: 0 1.5em 0 0.5em;
+
   // we need to hide overflow in both to truncate the title in a flexbox
   overflow: hidden;
+
   .extra-info {
     overflow: hidden;
     width: 100%;
@@ -292,6 +313,7 @@
       animation-duration: 0s;
     }
   }
+
   .title-wrapper {
     display: grid;
     grid-template-areas:
@@ -300,67 +322,83 @@
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
     align-items: baseline;
     gap: 0 0.5em;
+
     .header-title {
       grid-area: title;
     }
+
     .categories-wrapper {
       grid-area: categories;
     }
+
     .topic-header-extra {
       grid-area: extra;
+
       .archetype-private_message & {
         grid-area: categories;
       }
     }
   }
+
   .topic-link {
     color: var(--header_primary);
     display: block;
     @include ellipsis;
   }
+
   .topic-statuses {
     .d-icon {
       color: var(--header_primary-medium);
     }
+
     .d-icon-envelope {
       color: var(--danger);
     }
   }
+
   .header-title {
     padding: 0;
     margin: 0;
     font-size: var(--font-up-3);
     width: 100%;
   }
+
   .categories-wrapper {
     display: inline-flex;
     flex: 0 1 auto;
     gap: 0 0.5em;
     @include ellipsis;
   }
+
   .badge-category__wrapper {
     min-width: 2.75em; // min needed for ellipsis
     @include ellipsis;
+
     .badge-category {
       color: var(--header_primary-high);
     }
   }
+
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
     max-width: 100%;
     gap: 0.5em;
+
     .discourse-tags {
       display: inline;
       color: var(--header_primary-high);
       @include ellipsis;
+
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
         vertical-align: unset;
       }
     }
+
     .topic-featured-link {
       align-self: baseline;
+
       .d-icon {
         font-size: var(--font-down-2);
       }
@@ -378,9 +416,11 @@ $mobile-avatar-height: 1.532em;
   align-items: center;
   font-size: var(--font-down-1);
   @include ellipsis;
+
   &:not(:first-child) {
     margin-left: 5px;
   }
+
   .trigger-user-card,
   .trigger-group-card {
     &:not(:last-of-type) {
@@ -391,10 +431,12 @@ $mobile-avatar-height: 1.532em;
   .trigger-user-card {
     .icon {
       height: $avatar-height;
+
       .mobile-view & {
         height: $mobile-avatar-height;
       }
       display: inline-block;
+
       img {
         height: 100%;
         width: auto;
@@ -413,6 +455,7 @@ $mobile-avatar-height: 1.532em;
       display: flex;
       align-items: center;
       height: $avatar-height;
+
       .mobile-view & {
         height: $mobile-avatar-height;
       }
@@ -455,6 +498,7 @@ $mobile-avatar-height: 1.532em;
 
 #additional-panel-wrapper {
   position: absolute;
+
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed

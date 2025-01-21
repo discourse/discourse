@@ -1784,7 +1784,6 @@ fa_IR:
         after_4_minutes: "پس از ۴ دقیقه"
         after_5_minutes: "پس از ۵ دقیقه"
         after_10_minutes: "پس از ۱۰ دقیقه"
-      notification_level_when_replying: "وقتی به یک موضوع پاسخ می‌دهم، وضعیت آن موضوع را تغییر بده به "
       topics_unread_when_closed: "موضوعات خوانده نشده را در صورت بسته شدن در نظر بگیر"
       invited:
         title: "دعوت‌ها"
@@ -3109,20 +3108,20 @@ fa_IR:
             }
             { NEW, plural,
                  =0 {}
-                one { و یک موضوع <a href="{basePath}/new"># جدید</a> باقی مانده است,}
-              other { و موضوعات <a href="{basePath}/new"># جدیدی</a> باقی مانده‌اند,}
+                one { و<a href="{basePath}/new"># موضوع جدید</a> باقی مانده است،}
+              other { و <a href="{basePath}/new"># موضوع جدید</a> باقی مانده‌است،}
             }
           }
           false {
             { UNREAD, plural,
                  =0 {}
-                one {یک موضوع<a href="{basePath}/unread"># خوانده‌نشده</a> باقی مانده است,}
-              other {موضوعات <a href="{basePath}/unread"># خوانده‌نشده‌ای</a> باقی مانده‌اند,}
+                one {<a href="{basePath}/unread"># موضوع خوانده‌نشده</a> باقی مانده است،}
+              other {<a href="{basePath}/unread"># موضوع خوانده‌نشده‌</a> باقی مانده‌است،}
             }
             { NEW, plural,
                  =0 {}
-                one {یک موضوع <a href="{basePath}/new"># جدید</a> باقی مانده است,}
-              other {موضوعات <a href="{basePath}/new"># جدیدی</a> باقی مانده‌اند,}
+                one {<a href="{basePath}/new"># موضوع جدید</a> باقی مانده است،}
+              other {<a href="{basePath}/new"># موضوع جدید</a> باقی مانده‌است،}
             }
           }
           other {}
@@ -4767,26 +4766,24 @@ fa_IR:
               administer_groups: گروه‌ها را فهرست، نمایش، ایجاد، به‌روزرسانی و حذف کنید.
       web_hooks:
         title: "webhook ها"
-        none: "در حال حاضر webhook‌ی وجود ندارد"
         instruction: "webhook ها به Discourse اجازه می‌دهند که به در زمان رخ دادن رویداد‌ها به سرویس‌های خارجی اعلام کنند. وقتی webhook فعال شود یک درخواست POST به لینک‌های ارائه شده ارسال می‌شود."
         detailed_instruction: "وقتی رویداد اتفاق بیفتد، یک درخواست POST به لینک ارائه شده ارسال می‌شود."
-        new: "webhook جدید"
         create: "ایجاد"
         edit: "ویرایش"
         save: "ذخیره"
+        delete: "حذف"
+        cancel: "انصراف"
         controls: "کنترل‌ها"
-        go_back: "بازگشت به فهرست"
         payload_url: "لینک payload"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "رمز نباید شامل کاراکتر فاصله باشد."
         secret_too_short: "رمز باید حداقل 12 کاراکتر باشد."
-        secret_placeholder: "یک رشته اختیاری که برای ایجاد امضا استفاده می‌شود."
         event_type_missing: "باید حداقل یک نوع رویداد تنظیم کنید."
         content_type: "نوع محتوا"
         secret: "رمز"
         event_chooser: "می‌خواهید با کدام رویداد این وب‌هوک را فعال کنید؟"
-        wildcard_event: "همه چیز را برای من ارسال کن."
-        individual_event: "رویداد‌های جداگانه انتخاب کنید."
+        wildcard_event: "همه چیز را برای من ارسال کن"
+        individual_event: "رویداد‌های جداگانه انتخاب کنید"
         verify_certificate: "گواهی‌نامه TLS را در پیوند payload بررسی کنید."
         active: "فعال"
         active_notice: "جزئیات رویداد را وقتی اتفاق می‌افتد، ارسال می‌کنیم."
@@ -4995,9 +4992,6 @@ fa_IR:
           screened_url: "برون ریزی کامل لیست URL به نمایش در آمده در فرمت CSV."
       export_json:
         button_text: "خروجی گرفتن"
-      invite:
-        button_text: "ارسال دعوتنامه‌ها"
-        button_title: "ارسال دعوتنامه‌ها"
       customize:
         title: "سفارشی‌سازی"
         preview: "پیش‌نمایش"
@@ -5183,16 +5177,14 @@ fa_IR:
           selected:
             name: "انتخاب شده"
         email_style:
-          html: "قالب HTML"
+          html: "HTML"
           css: "سی اس اس"
           reset: "بازگردانی به پیش‌فرض"
           save_error_with_reason: "تغییرات شما ذخیره نشده‌است. %{error}"
       email:
         title: "ایمیل‌ها"
-        settings: "تنظیمات ایمیل"
+        settings: "تنظیمات"
         templates: "قالب‌ها"
-        templates_title: "قالب‌های ایمیل"
-        preview_digest: "پیشنمایش خلاصه"
         advanced_test:
           email: "پیام اصلی"
         error: "<b>خطا</b> - %{server_error}"
@@ -5202,16 +5194,11 @@ fa_IR:
         bounced: "برگشته"
         received: "دریافت شده"
         rejected: "رد شده"
-        sent_at: "ارسال شده در"
         time: "زمان"
         user: "کاربر"
-        email_type: "نوع ایمیل"
         details_title: "نمایش جزئیات ایمیل"
-        to_address: "به آدرس"
         test_email_address: "آدرس ایمیل برای آزمایش"
-        send_test: "ارسال ایمیل آزمایشی"
         sent_test: "فرستاده شد!"
-        delivery_method: "روش تحویل"
         preview_digest_desc: "پیش نمایش محتوای خلاصه ایمیل های ارسال شده به کاربران غیر فعال."
         refresh: "تازه‌سازی"
         send_digest_label: "ارسال نتیجه به:"
@@ -5219,10 +5206,7 @@ fa_IR:
         format: "قالب"
         html: "html"
         text: "متن"
-        last_seen_user: "آخرین حضور کاربر:"
         no_result: "نتیجه‌ای برای خلاصه پیدا نشد."
-        reply_key: "کلید پاسخ"
-        skipped_reason: "دلیل رد شدن"
         incoming_emails:
           from_address: "از طرف"
           to_addresses: "به"
@@ -5231,12 +5215,10 @@ fa_IR:
           error: "خطا"
           none: "ایمیل ورودی پیدا نشد."
           modal:
-            title: "جزئیات ایمیل ورودی"
             error: "خطا"
             headers: "سربرگ"
             subject: "موضوع"
             body: "متن"
-            rejection_message: "رد کردن ایمیل"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -5253,7 +5235,7 @@ fa_IR:
         actions:
           delete_topic: "مبحث حذف شده"
       logs:
-        title: "گزارش‌ها"
+        nav_title: "گزارش‌ها"
         action: "عمل"
         created_at: "ساخته شد"
         last_match_at: "آخرین مطابقت "
@@ -5271,8 +5253,6 @@ fa_IR:
         staff_actions:
           all: "همه"
           filter: "فیلتر:"
-          title: "عملیات همکارا"
-          clear_filters: "همه چیز را نشان بده "
           staff_user: "کاربر"
           target_user: "کاربر هدف"
           subject: "موضوع"
@@ -5331,9 +5311,7 @@ fa_IR:
             delete_group: "حذف گروه"
             delete_associated_accounts: "حذف حساب‌های کاربری مرتبط"
         screened_emails:
-          title: "ایمیل ها نمایش داده شده"
           description: "وقتی کسی سعی می کند یک حساب جدید ایجاد کند، آدرس‌های ایمیل زیر بررسی و ثبت نام مسدود خواهد شد، و یا برخی از اقدام های دیگر انجام می شود."
-          email: "آدرس ایمیل"
           actions:
             allow: "اجازه دادن"
         screened_urls:
@@ -5347,7 +5325,6 @@ fa_IR:
           actions:
             block: "بستن"
             do_nothing: "اجازه دادن"
-            allow_admin: "به مدیر ارشد اجازه بده"
           form:
             label: "جدید:"
             ip_address: "نشانی IP"
@@ -5357,19 +5334,14 @@ fa_IR:
             text: "جمع کردن"
             title: "ساخت مسدود سازی زیر شبکه جدید اگر آنها آخرین 'min_ban_entries_for_roll_up' ورودی ها بودند."
         search_logs:
-          title: "جستجوی گزارش‌ها"
           searches: "جستجوها"
           types:
             header: "سربرگ"
-            full_page: "صفحهٔ کامل"
-        logster:
-          title: "گزارش خطا"
       watched_words:
         search: "جست‌وجو"
         clear_filter: "واضح"
         case_sensitive: "«حساس به حروف کوچک و بزرگ»"
         download: دانلود
-        clear_all: پاکسازی همه
         actions:
           block: "بستن"
           censor: "سانسور"
@@ -5431,8 +5403,6 @@ fa_IR:
         id_not_found: "متاسفیم٬ این شناسه کاربری در سیستم ما وجود ندارد."
         active: "فعال شد"
         status: "وضعیت"
-        show_emails: "ایمیل ها را نشان بده"
-        hide_emails: "مخفی کردن رایانامه‌ها"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5447,7 +5417,6 @@ fa_IR:
         approved: "تایید شده ؟"
         titles:
           active: "کاربران فعال"
-          new: "کاربران تازه"
           pending: "کاربران در انتظار بررسی"
           newuser: "کاربران در سطح اعتماد 0 (کاربر جدید)"
           basic: "کاربران در سطح اعتماد 1 (کاربر ساده)"
@@ -5455,9 +5424,7 @@ fa_IR:
           regular: "کاربران در سطح اعتماد 3 (عادی)"
           leader: "کاربران در سطح اعتماد 4 (راهبر)"
           staff: "همکار"
-          admins: "مدیران ارشد"
           moderators: "ناظران"
-          suspended: "کاربران تعلیق شده"
         not_verified: "تایید نشده"
         check_email:
           title: "ایمیل این کاربران را قابل رویت کن"
@@ -5658,7 +5625,7 @@ fa_IR:
           invalid_input: "فهرست شکلک‌ها فقط باید حاوی نام‌های شکلک معتبر باشد، به عنوان مثال: آغوش"
           add_emoji_button:
             label: "افزودن شکلک"
-        title: "تنظیمات"
+        nav_title: "تنظیمات"
         no_results: "چیزی یافت نشد."
         more_site_setting_results:
           one: "بیش از %{count} نتیجه وجود دارد. لطفا جستجوی خود را اصلاح کنید یا یک دسته‌بندی را انتخاب کنید."
@@ -5850,18 +5817,28 @@ fa_IR:
           admin: "مدیر ارشد"
           moderator: "ناظر"
           regular: "کاربر عادی"
+      homepage_choices:
+        custom:
+          label: "سفارشی"
+        style_type:
+          categories: "دسته‌بندی"
+          topics: "موضوع"
+      top_menu_items:
+        new: "تازه"
+        unread: "خوانده‌ نشده‌"
+        top: "برترین‌ها"
+        latest: "آخرین"
+        hot: "داغ"
+        categories: "دسته‌بندی‌ها"
+        unseen: "دیده نشده"
+        read: "خواندن"
+        bookmarks: "نشانک‌ها"
       previews:
         share_button: "اشتراک‌گذاری"
         reply_button: "پاسخ"
       homepage_preview:
         nav_buttons:
           all_categories: "همه‌ی دسته‌بندی‌ها"
-          new: "تازه"
-          unread: "خوانده‌ نشده‌"
-          top: "برترین‌ها"
-          latest: "آخرین"
-          hot: "داغ"
-          categories: "دسته‌بندی‌ها"
         category_names:
           site_feedback: "بازخورد از سایت"
         table_headers:

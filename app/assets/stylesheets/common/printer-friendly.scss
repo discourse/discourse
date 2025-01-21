@@ -1,6 +1,7 @@
 @media print {
   /* remove items N/A for print
   ** visual clutter etc. */
+
   .avatar,
   .topic-avatar,
   header,
@@ -39,49 +40,60 @@
   .poll-info {
     display: none !important;
   }
+
   /* For readability */
   a,
   a:visited {
-    color: #0088cc !important;
+    color: #08c !important;
   }
+
   /* bottom border to help separate posts */
   div.row {
     border-top: 1px solid #aaa;
   }
+
   .cooked pre code {
     max-height: none;
   }
+
   #main-outlet {
     padding: 0 !important;
   }
+
   html,
   body {
     min-width: 0;
     height: auto;
   }
+
   .lightbox-wrapper img {
     max-width: 500px !important;
     height: auto !important;
   }
+
   .topic-body {
     width: auto;
     margin: 0;
     padding: 0;
     float: none;
   }
+
   .topic-post article.boxed .select-posts {
     width: auto;
     left: auto;
     right: 0;
   }
+
   .gap {
     width: auto;
   }
+
   /* restyle div#topic-title */
   #topic-title {
     margin: 0;
     padding: 0;
   }
+
   #topic-title div div h1 {
     margin: 2.5em 0 0 0;
     padding: 0;
@@ -89,11 +101,13 @@
     font-weight: normal;
     font-size: normal;
   }
+
   a,
   a:visited {
     color: #ddd;
     font-weight: bold;
   }
+
   /* localhost  - MOOT for production */
   .topic-category-outlet.show-topic-category-location,
   div.alert.alert-info.alert-emails-disabled,

@@ -128,9 +128,12 @@ export default class FloatKitInstance {
             this.trigger.removeEventListener("focusout", this.onFocusOut);
             break;
           case "hover":
-            this.trigger.removeEventListener("mousemove", this.onMouseMove);
+            this.trigger.removeEventListener("pointermove", this.onPointerMove);
             if (!this.options.interactive) {
-              this.trigger.removeEventListener("mouseleave", this.onMouseLeave);
+              this.trigger.removeEventListener(
+                "pointerleave",
+                this.onPointerLeave
+              );
             }
 
             break;
@@ -180,13 +183,17 @@ export default class FloatKitInstance {
             });
             break;
           case "hover":
-            this.trigger.addEventListener("mousemove", this.onMouseMove, {
+            this.trigger.addEventListener("pointermove", this.onPointerMove, {
               passive: true,
             });
             if (!this.options.interactive) {
-              this.trigger.addEventListener("mouseleave", this.onMouseLeave, {
-                passive: true,
-              });
+              this.trigger.addEventListener(
+                "pointerleave",
+                this.onPointerLeave,
+                {
+                  passive: true,
+                }
+              );
             }
 
             break;

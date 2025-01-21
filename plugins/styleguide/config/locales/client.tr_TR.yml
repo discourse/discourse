@@ -74,6 +74,10 @@ tr_TR:
           title: "Konu Bildirimleri"
         post:
           title: "Gönderi"
+        post_list:
+          title: "Gönderi Listesi"
+          empty_example: "<PostList /> boş durum"
+          populated_example: "<PostList /> doldurulmuş durum"
         topic_map:
           title: "Konu Haritası"
         site_header:

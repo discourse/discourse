@@ -2,6 +2,7 @@
   &.dropdown-select-box {
     &.composer-actions {
       margin: 0;
+
       .select-kit-header {
         background: none;
         outline: none;
@@ -13,11 +14,13 @@
         .d-icon {
           padding: 5px 6px;
         }
+
         &:hover,
         &:focus {
           background: var(--primary-low);
         }
       }
+
       .d-icon {
         margin: 0 !important;
       }

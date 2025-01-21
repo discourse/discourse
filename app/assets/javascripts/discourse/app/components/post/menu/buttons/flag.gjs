@@ -6,9 +6,21 @@ import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
 
 export default class PostMenuFlagButton extends Component {
-  static shouldRender(args) {
+  static shouldRender(args, helper) {
     const { reviewable_id, canFlag, hidden } = args.post;
-    return reviewable_id || (canFlag && !hidden);
+    return (
+      reviewable_id ||
+      (canFlag && !hidden) ||
+      (helper.siteSettings
+        .allow_tl0_and_anonymous_users_to_flag_illegal_content &&
+        !helper.currentUser)
+    );
+  }
+
+  get title() {
+    return this.args.post.currentUser
+      ? "post.controls.flag"
+      : "post.controls.anonymous_flag";
   }
 
   @action
@@ -36,7 +48,7 @@ export default class PostMenuFlagButton extends Component {
         @action={{@buttonActions.showFlags}}
         @icon="flag"
         @label={{if @showLabel "post.controls.flag_action"}}
-        @title="post.controls.flag"
+        @title={{this.title}}
       />
     </div>
   </template>
