@@ -462,6 +462,7 @@ hu:
         no_value: "Szerkesztés folytatása"
       dropdown:
         title: "Legújabb piszkozatok menü megnyitása"
+        untitled: "Névtelen vázlat"
         view_all: "mindent megtekint"
         other_drafts:
           one: "+%{count} egyéb piszkozat"
@@ -1798,7 +1799,11 @@ hu:
         after_4_minutes: "4 perc elteltével"
         after_5_minutes: "5 perc elteltével"
         after_10_minutes: "10 perc elteltével"
-      notification_level_when_replying: "Ha közzéteszek egy témát, állítsa be erre:"
+      notification_level_when_replying:
+        label: "Feladáskor"
+        watch_topic: "Megfigyelt témák"
+        track_topic: "Téma követése"
+        do_nothing: "Ne csinálj semmit"
       topics_unread_when_closed: "Tekintse a témákat olvasatlannak, amikor bezárják"
       invited:
         title: "Meghívók"
@@ -2728,7 +2733,7 @@ hu:
         membership_request_consolidated: "új tagsági kérés"
         reaction: "új reakció"
         votes_released: "A szavazat feloldásra került"
-        new_features: "új Discourse funkciók jelentek meg!"
+        new_features: "Új Discourse funkciók jelentek meg!"
         admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
       uploading: "Feltöltés"
@@ -3612,6 +3617,7 @@ hu:
         edit_anonymous: "Sajnos be kell jelentkeznie, hogy szerkeszthesse ezt a bejegyzést."
         flag_action: "Jelölés"
         flag: "privátként jelezze ezt a bejegyzést, vagy küldjön személyes üzenetet róla"
+        anonymous_flag: "email küldése egy stábtagnak, hogy jelölje meg ezt a bejegyzést"
         delete_action: "Bejegyzés törlése"
         delete: "bejegyzés törlése"
         undelete_action: "Bejegyzés visszavonása"
@@ -3919,6 +3925,9 @@ hu:
         all: "minden téma"
         none: "nincsenek alkategóriák"
       colors_disabled: "Nem választhat színt, mert nincs kategóriastílusa."
+    anonymous_flagging:
+      title: "Illegális tartalom bejelentése"
+      description: "Az illegális tartalom bejelentéséhez vegye fel a kapcsolatot: <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Köszönjük, hogy megőrizte közösségünket!"
       action: "Bejegyzés megjelölése"
@@ -4796,7 +4805,9 @@ hu:
           never: "soha"
       reports:
         title: "Aktív bejelentések listája"
+        meta_doc: "A jelentések egy hatékony eszköz, amely segít megérteni, mi történik a webhelyén. Segítségükkel azonosíthatja a trendeket, felismerheti a problémákat, és adatok alapján hozhat döntéseket."
         sidebar_title: "Jelentések"
+        back: "Vissza az összes jelentéshez"
         sidebar_link:
           all: "Összes bejelentés"
       config:
@@ -4855,7 +4866,7 @@ hu:
           title: "Csoportengedélyek"
           header_description: "Itt kezelik az összes csoportalapú alkalmazásengedélyt, amelyek szabályozzák a Discourse különféle funkcióihoz való hozzáférést"
       new_features:
-        title: "Újdonságok?"
+        title: "Újdonságok"
         check_for_updates: "Frissítések keresése"
       dashboard:
         title: "Vezérlőpult"
@@ -4876,7 +4887,7 @@ hu:
         new_features:
           title: "Újdonságok?"
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
-          previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a>oldalon tekintheted meg"
+          previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a> oldalon tekintheted meg"
           learn_more: "Tudjon meg többet..."
           experimental: "Kísérleti"
           experiment_enabled: "Engedélyezte a kísérleti funkciót."
@@ -5192,27 +5203,30 @@ hu:
               messages: Üzenetek listázása a /logs állományból, vagy egy adott naplóüzenet lekérdezése.
       web_hooks:
         title: "Webhooks"
-        none: "Jelenleg nincsenek webhooks."
+        none: "Még nincsenek webhookok"
         instruction: "A Webhooks lehetővé teszi a Discourse számára, hogy értesítse a külső szolgáltatásokat, ha bizonyos esemény történik az Ön webhelyén. Amikor a webhook aktiválódik, a rendszer egy POST-kérést küld a megadott URL-ekre."
         detailed_instruction: "A kiválasztott esemény bekövetkezésekor POST kérést küldünk a megadott URL-re."
-        new: "Új Webhook"
+        add: "Webhook hozzáadása"
         create: "Létrehoz"
         edit: "Szerkesztés"
         save: "Mentés"
+        show: "Események"
+        delete: "Törlés"
+        cancel: "Mégse"
         description_label: "Eseményt kiváltó okok"
         controls: "Irányítás"
-        go_back: "Vissza a listára"
+        back: "Vissza a webhookhoz"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "A titokban nem lehet üres karakter."
         secret_too_short: "A titoknak legalább 12 karakteresnek kell lennie"
-        secret_placeholder: "Egy opcionális karakterlánc, amelyet aláírás létrehozásához használnak"
+        secret_placeholder: "Az aláírások generálásához használt karakterlánc"
         event_type_missing: "Legalább egy eseménytípust be kell állítania."
         content_type: "Tartalom típus"
         secret: "Titok"
         event_chooser: "Mely eseményeknek kell kiváltaniuk ezt a webhookot?"
         wildcard_event: "Küldj el mindent"
-        individual_event: "Válassza ki az egyes eseményeket."
+        individual_event: "Válassza ki az egyes eseményeket"
         verify_certificate: "Ellenőrizze a hasznos tartalom URL-jének TLS-tanúsítványát"
         active: "Aktív"
         active_notice: "Az esemény részleteit akkor közöljük, amikor az megtörténik."
@@ -5354,7 +5368,7 @@ hu:
           font_style: "Betűstílus"
           site_logo: "Webhely logó"
           color_schemes: "Színpaletták"
-          emoji: "Emoji"
+          emoji: "Hangulatjel"
           navigation: "Navigáció"
           themes: "Témák"
           components:
@@ -5681,6 +5695,7 @@ hu:
           customize_desc: "Személyre szabás:"
           title: "Témák"
           description: "A témák kiterjedt testreszabások, amelyek megváltoztatják a fórum stílusának több elemét, és gyakran további kezelőfelület-szolgáltatásokat is tartalmaznak."
+          components_description: "Az összetevők kisebb testreszabások, amelyek hozzáadhatók a témákhoz, hogy megváltoztassák a fórum kialakításának stílusát."
           create: "Létrehoz"
           create_type: "Típus"
           create_name: "Név"
@@ -5779,7 +5794,8 @@ hu:
           install_upload: "Az Ön készülékéről"
           install_git_repo: "Egy git tárolóból"
           install_create: "Új létrehozása"
-          installing_message: "Téma telepítése, ez néhány percet igénybe vehet..."
+          installing_message: "Új téma beállítása…"
+          installing_message_long_time: "Az új téma beállítása a vártnál kicsit tovább tart. Várjon!…"
           duplicate_remote_theme: "A(z) „%{name}” témaösszetevő már telepítve van. Biztosan telepíteni akar egy másik példányt?"
           force_install: "A téma nem telepíthető, mert a Git tároló nem elérhető. Biztos, hogy folytatni szeretné a telepítést?"
           create_placeholder: "Helyőrző létrehozása"
@@ -5955,7 +5971,7 @@ hu:
         email_style:
           title: "E-mail stílus"
           heading: "E-mail stílus testreszabása"
-          html: "HTML sablon"
+          html: "HTML"
           css: "CSS"
           reset: "Alapértelmezés visszaállítása"
           reset_confirm: "Biztosan vissza szeretnéd állítani az alapértelmezett %{fieldName} értéket, és elveszteni az összes módosítást?"
@@ -5963,7 +5979,8 @@ hu:
           instructions: "Testreszabhatja azt a sablont, amelyben az összes html e-mail megjelenik, és stílust adjon a CSS használatával."
       email:
         title: "Emailek"
-        settings: "E-mail beállítások"
+        description: "Testreszabhatja az e-mailek létrehozásához használt sablonokat, megtekintheti a kiküldött összefoglaló e-maileket, és megtekintheti az e-mail naplókat."
+        settings: "Beállítások"
         templates: "Sablonok"
         templates_title: "E-mail sablonok"
         preview_digest: "Előnézet összefoglalója"
@@ -5985,13 +6002,13 @@ hu:
         sent_at: "Elküldve"
         time: "Idő"
         user: "Felhasználó"
-        email_type: "E-mail tips"
+        email_type: "E-mail típus"
         details_title: "E-mail adatok megjelenítése"
         to_address: "Címzett"
         test_email_address: "Email cím a teszteléshez"
         send_test: "Teszt Email Küldése"
         sent_test: "elküldve!"
-        delivery_method: "Szállítási módszer"
+        delivery_method: "Szálítási módszer"
         preview_digest_desc: "Inaktív felhasználóknak küldött összefoglaló e-mailek tartalmának áttekintése."
         refresh: "Frissítés"
         send_digest_label: "Eredmény elküldése:"
@@ -6049,7 +6066,9 @@ hu:
           delete_topic: "Téma törölve"
           post_approved: "Bejegyzés jóváhagyva"
       logs:
-        title: "Naplók"
+        title: "Naplók és szűrés"
+        description: "A naplók és a szűrések lehetővé teszik a közösség figyelemmel kísérését és kezelését, biztosítva, hogy az biztonságos és tiszteletteljes maradjon. Megtekintheti a személyzet tagjai által végrehajtott összes művelet naplóit, a keresési naplókat és a felhasználói szűrési konfigurációt."
+        nav_title: "Naplók"
         action: "Művelet"
         created_at: "Létrehozva"
         last_match_at: "Utoljára párosított"
@@ -6236,7 +6255,7 @@ hu:
             click_through_only: "Mind (csak kattintással)"
           header_search_results: "Fejléc keresési eredmények"
         logster:
-          title: "Hiba-naplók"
+          title: "Hibanaplók"
       watched_words:
         title: "Figyelt szavak"
         description: "A megfigyelt szavak olyan moderációs eszközök, amelyek többféle műveletet is végrehajthatnak, beleértve bizonyos szavakat tartalmazó bejegyzések blokkolását, cenzúrázását, linkelését vagy megjelölését."
@@ -6432,7 +6451,7 @@ hu:
         approved: "Jóváhagyott?"
         titles:
           active: "Aktív felhasználók"
-          new: "Új felhasználók"
+          new: "Új felhasználó"
           pending: "Felülvizsgálatra váró felhasználók"
           newuser: "A felhasználók bizalmi szintje 0 (Új felhasználó)"
           basic: "A felhasználók bizalmi szintje 1-es (Alapszintű Felhasználó)"
@@ -6444,7 +6463,7 @@ hu:
           moderators: "Moderátorok"
           silenced: "Némított felhasználók"
           suspended: "Felfüggesztett felhasználok"
-          staged: "Beállított felhasználók"
+          staged: "Szakaszos felhasználók"
         not_verified: "Nem megerősített"
         check_email:
           title: "A felhasználó e-mail-címének megjelenítése"
@@ -6793,11 +6812,13 @@ hu:
         unmask: "bevitel feloldása"
         not_found: "A beállítások nem találhatók"
       site_settings:
+        title: "Webhely beállítások"
+        description: "Konfigurálja a Discourse webhely beállításait a megjelenés, a funkcionalitás és a felhasználói élmény testreszabása érdekében."
         emoji_list:
           invalid_input: "Az emodzsik listája csak érvényes emodzsineveket tartalmazhat, például ölelés"
           add_emoji_button:
             label: "Emodzsi hozzáadása"
-        title: "Beállítások"
+        nav_title: "Beállítások"
         no_results: "Nincs találat."
         more_site_setting_results:
           one: "A keresés több, mint %{count} találatot adott. Kérlek, pontosítsd a keresést vagy válassz egy kategóriát!"
@@ -7111,6 +7132,23 @@ hu:
           admin: "Adminisztrátor"
           moderator: "Moderátor"
           regular: "Felhasználó"
+      homepage_choices:
+        custom:
+          label: "Egyéni"
+          description: "Jelenítsen meg egy %{type}-központú kezdőlapot, ahol a felhasználók a %{landingPage}címre kerülnek"
+        style_type:
+          categories: "kategória"
+          topics: "témával"
+      top_menu_items:
+        new: "Új"
+        unread: "Olvasatlan"
+        top: "Népszerű"
+        latest: "Legutóbbi"
+        hot: "Felkapott"
+        categories: "Kategóriák"
+        unseen: "Nem látott"
+        read: "Olvasott"
+        bookmarks: "Könyvjelzők"
       previews:
         topic_title: "Milyen könyveket olvasol?"
         share_button: "Megosztás"
@@ -7120,12 +7158,6 @@ hu:
       homepage_preview:
         nav_buttons:
           all_categories: "összes kategória"
-          new: "Új"
-          unread: "Olvasatlan"
-          top: "Népszerű"
-          latest: "Legutóbbi"
-          hot: "Felkapott"
-          categories: "Kategóriák"
         topic_titles:
           what_books: "Milyen könyveket olvasol?"
           what_movies: "Milyen filmeket láttál mostanában?"

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -63,12 +62,6 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   @action
-  onWheel() {
-    // prevents menu to stop scroll on the list of messages
-    this.chat.activeMessage = null;
-  }
-
-  @action
   setup(element) {
     this.popper?.destroy();
 
@@ -119,7 +112,6 @@ export default class ChatMessageActionsDesktop extends Component {
       <div
         {{didInsert this.setup}}
         {{didUpdate this.setup this.chat.activeMessage.model.id}}
-        {{on "wheel" this.onWheel passive=true}}
         {{willDestroy this.teardown}}
         class={{concatClass
           "chat-message-actions-container"

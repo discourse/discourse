@@ -96,15 +96,32 @@ export default class GlimmerSiteHeader extends Component {
       document.documentElement.getBoundingClientRect().top
     );
 
-    const headerWrapTop =
-      this._headerWrap.getBoundingClientRect().top - overscrollPx;
+    // Tends to be zero, but is set higher when on iPad PWA with the 'footer-navigation' at top of screen
+    const headerCssTop = parseInt(
+      window.getComputedStyle(this._headerWrap).getPropertyValue("top"),
+      10
+    );
+
     let headerWrapBottom =
       this._headerWrap.getBoundingClientRect().bottom - overscrollPx;
 
-    // While scrolling on iOS, an element fixed to the top of the screen can have a `top` which fluctuates
-    // between -1 and 1. To avoid that fluctuation affecting the header offset, we subtract that tiny fluctuation from the bottom value.
-    if (Math.abs(headerWrapTop) < 1) {
-      headerWrapBottom -= headerWrapTop;
+    // iOS Safari bug: when overscrolling at the bottom of the page on iOS, fixed/sticky elements report their position incorrectly.
+    // Clamp the headerWrapBottom to the minimum possible value (top + height) to avoid this.
+    const minimumPossibleHeaderWrapBottom =
+      headerCssTop + this._headerWrap.getBoundingClientRect().height;
+    headerWrapBottom = Math.max(
+      headerWrapBottom,
+      minimumPossibleHeaderWrapBottom
+    );
+
+    // Safari bug: while scrolling on iOS, fixed elements can have a viewport position which fluctuates by sub-pixel amounts.
+    // To avoid that fluctuation affecting the header offset, we subtract that tiny fluctuation from the header-offset.
+    const headerWrapTopDiff =
+      this._headerWrap.getBoundingClientRect().top -
+      overscrollPx -
+      headerCssTop;
+    if (Math.abs(headerWrapTopDiff) < 1) {
+      headerWrapBottom -= headerWrapTopDiff;
     }
 
     let mainOutletOffsetTop = Math.max(

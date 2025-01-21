@@ -2205,7 +2205,8 @@ sr:
       web_hooks:
         edit: "Izmeni"
         save: "Sačuvaj"
-        secret_placeholder: "Opcioni string koji se koristi za generiranje potpisa"
+        delete: "Obriši"
+        cancel: "Odustani"
         active: "Aktivni"
         delivery_status:
           failed: "Neuspešno"
@@ -2413,28 +2414,20 @@ sr:
         email_style:
           css: "CSS"
       email:
-        preview_digest: "Pregled sažetka"
+        settings: "Podešavanja"
         error: "<b>GREŠKA</b> - %{server_error}"
         test_error: "Dogodio se problem pri slanju test emaila. Molimo proverite podešavanja emaila, potvrdite da domaćin ne blokira email veze i pokušajte ponovo."
         sent: "Poslato"
         skipped: "Preskočeno"
         received: "Primljeno"
-        sent_at: "Poslato na"
         time: "Vreme"
         user: "Korisnik"
-        email_type: "Vrsta Email-a"
-        to_address: "Na Adresu"
         test_email_address: "email adresa za test"
-        send_test: "Pošalji Test Email"
         sent_test: "poslato!"
-        delivery_method: "Metoda dostave"
         refresh: "Osveži"
         format: "Format"
         html: "html"
         text: "tekst"
-        last_seen_user: "Posljednji Viđeni Korisnik:"
-        reply_key: "Ključ odgovora"
-        skipped_reason: "Preskoči razlog"
         incoming_emails:
           subject: "Predmet"
           error: "Greška"
@@ -2451,7 +2444,7 @@ sr:
             address_placeholder: "name@example.com"
             reply_key_placeholder: "ključ odgovora"
       logs:
-        title: "Logovi"
+        nav_title: "Logovi"
         action: "Akcije"
         created_at: "Otvoreno"
         last_match_at: "Zadnji usklađeni"
@@ -2468,10 +2461,7 @@ sr:
         staff_actions:
           all: "sve"
           filter: "Filter:"
-          title: "Akcije Osoblja"
-          clear_filters: "Prikaži sve"
           staff_user: "Korisnik"
-          target_user: "Ciljani korisnik"
           subject: "Predmet"
           when: "Kada"
           context: "Kontekst"
@@ -2499,9 +2489,7 @@ sr:
             deactivate_user: "deaktivirati korisnika"
             web_hook_deactivate: "webhook deaktivirati"
         screened_emails:
-          title: "Provereni emailovi"
           description: "Kad neko pokuša otvoriti nalog, sledeće email adrese će biti proverene i registracija će biti blokirana ili će neke druge akcije biti poduzete."
-          email: "Email adresa"
           actions:
             allow: "Dozvoli"
         screened_urls:
@@ -2515,7 +2503,6 @@ sr:
           actions:
             block: "Blokiraj"
             do_nothing: "Dozvoli"
-            allow_admin: "Dozvoli Administratoru"
           form:
             label: "Novo:"
             ip_address: "IP adrese"
@@ -2527,8 +2514,6 @@ sr:
         search_logs:
           types:
             header: "Header"
-        logster:
-          title: "Logovi Grešaka"
       watched_words:
         search: "pretraži"
         clear_filter: "Čisto"
@@ -2571,7 +2556,6 @@ sr:
         not_found: "Žao nam je, taj korisnik ne postoji u našem sistemu."
         id_not_found: "Žao nam je, taj korisnički ID ne postoji u našem sistemu."
         active: "Aktivirano"
-        show_emails: "Pokaži Email-ove"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -2584,8 +2568,6 @@ sr:
           suspended: "Suspendovani"
         approved: "Potvrđenji?"
         titles:
-          active: "Aktivni Korisnici"
-          new: "Novi Korisnici"
           pending: "Korisnici koji čekaju reviziju"
           newuser: "Korisnici na nivou poverenja 0 (Novi Korisnik)"
           basic: "Korisnici na nivou poverenja 1 (Osnovni Korisnik)"
@@ -2593,9 +2575,7 @@ sr:
           regular: "Korisnici na nivou poverenja 3 (Stalni)"
           leader: "Korisnici na nivou poverenja 4 (Vođe)"
           staff: "Osoblje"
-          admins: "Administratori"
           moderators: "Moderatori"
-          suspended: "Suspendovani Korisnici"
         not_verified: "Nije verifikovano"
         check_email:
           title: "Otkrij korisnikovu email adresu"
@@ -2759,7 +2739,7 @@ sr:
         save: "sačuvaj"
         cancel: "otkaži"
       site_settings:
-        title: "Podešavanja"
+        nav_title: "Podešavanja"
         no_results: "Nema pronađenih rezultata."
         clear_filter: "Čisto"
         uploaded_image_list:
@@ -2907,17 +2887,26 @@ sr:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Običan korisnik"
+      homepage_choices:
+        custom:
+          label: "Posebna"
+        style_type:
+          categories: "kategorija"
+          topics: "tema"
+      top_menu_items:
+        new: "Nova"
+        unread: "Nepročitano"
+        top: "Top"
+        latest: "Poslednje"
+        categories: "Kategorije"
+        read: "Pročitano"
+        bookmarks: "Markiraj"
       previews:
         share_button: "Podeli"
         reply_button: "Odgovori"
       homepage_preview:
         nav_buttons:
           all_categories: "sve kategorije"
-          new: "Nova"
-          unread: "Nepročitano"
-          top: "Top"
-          latest: "Poslednje"
-          categories: "Kategorije"
         table_headers:
           topic: "Tema"
           replies: "Odgovori"

@@ -166,8 +166,10 @@ ja:
               description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
             restricted_group:
               label: グループ
+              description: オプション。投稿のトピックがこのグループの受信トレイにある個人メッセージである場合にのみトリガーされます。
             restricted_groups:
               label: グループ
+              description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
             ignore_group_members:
               label: グループメンバーを無視
               description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
@@ -225,6 +227,10 @@ ja:
               label: 有効な信頼レベル
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: タグの追加または削除
+            tags_added: タグの追加
+            tags_removed: タグの削除
           fields:
             watching_categories:
               label: ウォッチ中のカテゴリ
@@ -232,6 +238,8 @@ ja:
             watching_tags:
               label: ウォッチ中のタグ
               description: トピックにこれらのいずれかのタグが設定されている場合にのみトリガーされます
+            trigger_on:
+              label: 次の場合にトリガー
             trigger_with_pms:
               label: PM でトリガー
               description: タグが PM で変更された場合でもトリガーされます
