@@ -1497,7 +1497,8 @@ da:
         after_4_minutes: "efter 4 minutter"
         after_5_minutes: "efter 5 minutter"
         after_10_minutes: "efter 10 minutter"
-      notification_level_when_replying: "Når jeg skriver i et emne, sæt emnet som"
+      notification_level_when_replying:
+        do_nothing: "Gøre ingenting"
       invited:
         title: "Invitationer"
         pending_tab: "Afventende"
@@ -4098,26 +4099,22 @@ da:
               revoke_badge_from_user: Tilbagekald et emblem fra en bruger.
       web_hooks:
         title: "Webhooks"
-        none: "Der er ingen webhooks i øjeblikket"
         instruction: "Webhooks lader Discourse notificere eksterne tjenester når visse events forekommer på dit site. Når en webhook udløses, så sendes der en POST-forespørgsel til URL-adresserne som er angivet."
         detailed_instruction: "En POST-forespørgsel vil blive sendt til den angivne URL når valgt event forekommer."
-        new: "Ny Webhook"
         create: "Opret"
         edit: "Redigér"
         save: "Gem"
+        delete: "Slet"
+        cancel: "Annuller"
         controls: "Kontrolfunktioner"
-        go_back: "Tilbage til oversigt"
         payload_url: "Payload-URL"
         payload_url_placeholder: "https://example.dk/postreceive"
         secret_invalid: "Hemmelighed må ikke indeholde mellemrumstegn."
         secret_too_short: "Hemmeligheden bør have mindst 12 tegn."
-        secret_placeholder: "En valgfri tekststreng, der bruges til at oprette signatur"
         event_type_missing: "Du er nødt til at konfigurere mindst én eventtype."
         content_type: "Indholdstype"
         secret: "Hemmelighed"
         event_chooser: "Hvilke begivenheder skal udløse denne webhook?"
-        wildcard_event: "Send mig alt"
-        individual_event: "Vælg individuelle begivenheder"
         verify_certificate: "Tjek TLS-certificatet for payload-URL'en"
         active: "Aktiv"
         active_notice: "Vi vil levere detaljer om eventet når det sker."
@@ -4332,9 +4329,6 @@ da:
           screened_url: "Eksporter den fulde screenede URL liste som en CSV fil."
       export_json:
         button_text: "Eksporter"
-      invite:
-        button_text: "Send Invitationer"
-        button_title: "Send Invitationer"
       customize:
         title: "Tilpasning"
         preview: "forhåndsvisning"
@@ -4602,8 +4596,7 @@ da:
           overridden: Dit websteds standard robots.txt-fil er tilsidesat.
         email_style:
           title: "E-mail-stil"
-          heading: "Tilpas E-Mail Stil"
-          html: "HTML skabelon"
+          html: "HTML"
           css: "CSS"
           reset: "Nulstil til standard"
           reset_confirm: "Er du sikker på, at du vil nulstille til standard %{fieldName} og miste alle dine ændringer?"
@@ -4611,15 +4604,11 @@ da:
           instructions: "Tilpas skabelonen, hvorfra alle html-mails dannes, og formater med CSS."
       email:
         title: "Emails"
+        settings: "Indstillinger"
         templates: "Skabeloner"
-        preview_digest: "Forhåndsvisning af sammendrag"
         advanced_test:
-          title: "Avanceret test"
           desc: "Se hvordan Discourse behandler modtagne e-mails. For at kunne behandle email korrekt skal du indsætte hele den originale email besked her under."
           email: "Original besked"
-          run: "Kør test"
-          text: "Valgt tekstdel"
-          elided: "Udeladt tekst"
         sending_test: "Sender test email…"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Der opstod et problem med at sende test emailen. Dobbelt check dine email indstillinger, verificer at din server ikke blokerer email forbindelser og prøv så igen."
@@ -4628,16 +4617,11 @@ da:
         bounced: "Bounced"
         received: "Modtaget"
         rejected: "Afvist"
-        sent_at: "Sendt"
         time: "Tidspunkt"
         user: "Bruger"
-        email_type: "E-mail-type"
         details_title: "Vis e-mail detaljer"
-        to_address: "Modtager"
         test_email_address: "e-mail-adress der skal testes"
-        send_test: "send test-e-mail"
         sent_test: "sendt!"
-        delivery_method: "Leveringsmetode"
         preview_digest_desc: "Forhåndsvis indholdet af de opsamlings-emails der sendes til inaktive brugere"
         refresh: "Opdatér"
         send_digest_label: "Send dette resultat til:"
@@ -4647,10 +4631,7 @@ da:
         html: "html"
         text: "text"
         html_preview: "Forhåndsvisning af E-mail"
-        last_seen_user: "Sidst sete bruge:"
         no_result: "Ingen resultater for sammenfatning."
-        reply_key: "Svarnøgle"
-        skipped_reason: "Begrundelse"
         incoming_emails:
           from_address: "Fra"
           to_addresses: "Til"
@@ -4659,12 +4640,10 @@ da:
           error: "Fejl"
           none: "Ingen indkommende emails fundet"
           modal:
-            title: "Indgående email detaljer"
             error: "Fejl"
             headers: "Headers"
             subject: "Emne"
             body: "Indhold"
-            rejection_message: "Afvist mail"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -4690,7 +4669,7 @@ da:
           delete_topic: "Emne er slettet"
           post_approved: "Indlæg godkendt"
       logs:
-        title: "Logs"
+        nav_title: "Logs"
         action: "Handling"
         created_at: "Oprettet"
         last_match_at: "Sidste matchet"
@@ -4708,10 +4687,8 @@ da:
         staff_actions:
           all: "alle"
           filter: "Filter:"
-          title: "Handlinger"
-          clear_filters: "Vis alt"
           staff_user: "bruger"
-          target_user: "Bruger"
+          target_user: "Målbruger"
           subject: "Subjekt"
           when: "Hvorår"
           context: "Kontekst"
@@ -4815,9 +4792,7 @@ da:
             watched_word_create: "tilføj overvåget ord"
             watched_word_destroy: "slet overvåget ord"
         screened_emails:
-          title: "Blokerede e-mails"
           description: "Følgende e-mail-adresser kontrolleres når nogen prøver at oprette en konto, og oprettelsen vil enten blive blokeret, eller der vil blive foretaget en anden handling."
-          email: "E-mail-adresse"
           actions:
             allow: "Tillad"
         screened_urls:
@@ -4832,7 +4807,6 @@ da:
           actions:
             block: "Blokér"
             do_nothing: "Tillad"
-            allow_admin: "Tillad Admin"
           form:
             label: "Ny:"
             ip_address: "IP-adresse"
@@ -4842,18 +4816,13 @@ da:
             text: "Saml sammen"
             title: "Laver et nyt subnet forbud hvis der er mindst 'min_ban_entries_for_roll_up' forbud."
         search_logs:
-          title: "Søgnings logs"
           term: "Betingelse"
           searches: "søgninger"
           click_through_rate: "CTR"
           types:
             all_search_types: "Alle søgetyper"
             header: "Sidehoved"
-            full_page: "Fuld side"
             click_through_only: "Alle (kun klikke igennem)"
-          header_search_results: "Søgeresultater for overskrift"
-        logster:
-          title: "Fejl beskeder"
       watched_words:
         search: "Søg"
         clear_filter: "Ryd"
@@ -4861,7 +4830,6 @@ da:
           one: "vis %{count} ord"
           other: "vis %{count} ord"
         download: Download
-        clear_all: Ryd alle
         clear_all_confirm: "Er du sikker på, at du vil rydde alle overvågede ord for %{action}-handlingen?"
         invalid_regex: 'Det overvågede ord "%{word}" er et ugyldigt regulært udtryk.'
         actions:
@@ -4966,9 +4934,6 @@ da:
         id_not_found: "Desværre, dette bruger id findes ikke på vores system."
         active: "Aktiveret"
         status: "Status"
-        show_emails: "Vis Emails"
-        hide_emails: "Skjul emails"
-        silence_reason: "Årsag for mådeholdenhed (silence)"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4984,7 +4949,6 @@ da:
         approved: "Godkendt?"
         titles:
           active: "Aktive brugere"
-          new: "Nye brugere"
           pending: "Brugere afventende andmeldelse"
           newuser: "Brugere på tillidsniveau 0 (Ny bruger)"
           basic: "Brugere på tillidsniveau 1 (Basisbruger)"
@@ -4992,11 +4956,7 @@ da:
           regular: "Bruger på tillidsniveau 3 (Regulær)"
           leader: "Bruger på tillidsniveau 4 (Leder)"
           staff: "Personale"
-          admins: "Admin-brugere"
           moderators: "Moderatorer"
-          silenced: "Mådeholdte (silenced) brugere "
-          suspended: "Suspenderede brugere"
-          staged: "Forhåndsoprettede brugere"
         not_verified: "Ikke verificeret"
         check_email:
           title: "Vis denne brugers email adresse"
@@ -5283,7 +5243,7 @@ da:
           invalid_input: "Humørikon liste bør kun indeholde gyldige humørikon navne, for eksempel: knus"
           add_emoji_button:
             label: "Tilføj Humørikon"
-        title: "Indstillinger"
+        nav_title: "Indstillinger"
         no_results: "Ingen resultater fundet."
         clear_filter: "Ryd"
         add_url: "tilføj URL"
@@ -5414,7 +5374,6 @@ da:
             with_post_time: <span class="username">%{username}</span> for indlæg i %{link} klokken <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> klokken <span class="time">%{time}</span>
         mass_award:
-          title: Masseudnævnelse
           description: Tildel det samme emblem til mange brugere på én gang.
           no_badge_selected: Vælg venligst et emblem for at komme igang.
           perform: "Tildel Emblem til Brugere"
@@ -5509,6 +5468,21 @@ da:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Fast bruger"
+      homepage_choices:
+        custom:
+          label: "Tilpasset"
+        style_type:
+          categories: "kategori"
+          topics: "emne"
+      top_menu_items:
+        new: "Nye"
+        unread: "Ulæste"
+        top: "Top"
+        latest: "Seneste"
+        categories: "Kategorier"
+        unseen: "Usete"
+        read: "Læs"
+        bookmarks: "Bogmærker"
       previews:
         share_button: "Del"
         reply_button: "Svar"
@@ -5516,11 +5490,6 @@ da:
       homepage_preview:
         nav_buttons:
           all_categories: "alle kategorier"
-          new: "Nye"
-          unread: "Ulæste"
-          top: "Top"
-          latest: "Seneste"
-          categories: "Kategorier"
         category_names:
           site_feedback: "Site Feedback"
         table_headers:

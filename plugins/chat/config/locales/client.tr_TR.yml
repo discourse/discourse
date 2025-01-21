@@ -655,6 +655,11 @@ tr_TR:
           other_html: "<span>%{username}</span> <span>kişisel sohbette şundan bahsetti: %{identifier}</span>"
         chat_message: "Yeni sohbet mesajı"
         chat_quoted: "%{username} sohbet mesajınızı alıntıladı"
+      titles:
+        chat_mention: "Sohbette bahsedildi"
+        chat_invitation: "Sohbet kanalına davet edildi"
+        chat_quoted: "Sohbet mesajından alıntı yapıldı"
+        chat_watched_thread: "Sohbet ileti dizisini izledi"
     action_codes:
       chat:
         enabled: '%{who} %{when} <button class="btn-link open-chat">sohbeti</button> etkinleştirdi'

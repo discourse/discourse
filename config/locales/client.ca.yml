@@ -1253,7 +1253,8 @@ ca:
         after_4_minutes: "al cap de 4 minuts"
         after_5_minutes: "al cap de 5 minuts"
         after_10_minutes: "al cap de 10 minuts"
-      notification_level_when_replying: "Quan jo publiqui en un tema nou, estableix aquest tema a"
+      notification_level_when_replying:
+        do_nothing: "No facis res"
       invited:
         title: "Invitacions"
         pending_tab: "Pendents"
@@ -3188,26 +3189,24 @@ ca:
           action: Acció
       web_hooks:
         title: "Webhooks"
-        none: "Ara no hi ha webhooks."
         instruction: "Els webhooks permeten a Discourse notificar als serveis externs quan passen alguns esdeveniments en el vostre lloc web. Quan es dispara el webhook, s'envia una petició POST als URLs facilitats."
         detailed_instruction: "S'enviarà una petició POST a l'URL facilitat quan passi l'esdeveniment seleccionat."
-        new: "Webhook nou"
         create: "Crea"
         edit: "Edita"
         save: "Desa"
+        delete: "Suprimeix"
+        cancel: "Cancel·la"
         controls: "Controls"
-        go_back: "Torna a la llista"
         payload_url: "URL de càrrega útil"
         payload_url_placeholder: "https://exemple.com/postreceive"
         secret_invalid: "El secret no ha de tenir cap espai en blanc"
         secret_too_short: "El secret hauria de tenir un mínim de 12 caràcters."
-        secret_placeholder: "Una cadena opcional, emprada per a generar una signatura"
         event_type_missing: "Cal que establiu com a mínim un tipus d'esdeveniment."
         content_type: "Tipus de contingut"
         secret: "Secret"
         event_chooser: "Quins esdeveniments haurien de disparar aquest webhook?"
-        wildcard_event: "Envia-m'ho tot."
-        individual_event: "Tria esdeveniments individuals."
+        wildcard_event: "Envia-m'ho tot"
+        individual_event: "Tria esdeveniments individuals"
         verify_certificate: "Comprova el certificat TLS de l'URL de càrrega útil"
         active: "Actiu"
         active_notice: "Lliurarem detalls de l'esdeveniment quan succeeixi."
@@ -3402,9 +3401,6 @@ ca:
           screened_url: "Exporta la llista completa d'URLs sota supervisió en format CSV."
       export_json:
         button_text: "Exporta"
-      invite:
-        button_text: "Envia invitacions"
-        button_title: "Envia invitacions"
       customize:
         title: "Personalitza"
         preview: "previsualització"
@@ -3618,8 +3614,7 @@ ca:
           overridden: El fitxer robots.txt predeterminat del vostre lloc web és sobreescrit.
         email_style:
           title: "Estil de correu electrònic"
-          heading: "Personalitza l'estil de correu electrònic"
-          html: "Plantilla HTML"
+          html: "HTML"
           css: "CSS"
           reset: "Restableix el valor predeterminat"
           reset_confirm: "Esteu segur que voleu restablir el valor predeterminat de %{fieldName} i perdre tots els canvis?"
@@ -3627,15 +3622,11 @@ ca:
           instructions: "Personalitzeu la plantilla en què es presenten tots els correus electrònics HTML i establiu l'estil amb CSS."
       email:
         title: "Correus"
+        settings: "Configuració"
         templates: "Plantilles"
-        preview_digest: "Previsualitza el resum"
         advanced_test:
-          title: "Test avançat"
           desc: "Vegeu com processa els correus rebuts Discourse. Per a poder processar correctament el correu electrònic, enganxeu-lo baix de tot el missatge de correu electrònic original."
           email: "Missatge original"
-          run: "Executa el test"
-          text: "Cos de text seleccionat"
-          elided: "Text elidit"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Hi ha hagut un problema en enviar el correu de prova. Torneu a revisar la configuració del vostre correu; verifiqueu que el vostre amfitrió no bloca les connexions de correu i intenteu-ho una altra vegada. "
         sent: "Enviat"
@@ -3643,15 +3634,10 @@ ca:
         bounced: "Rebotat"
         received: "Rebut"
         rejected: "Rebutjat"
-        sent_at: "Enviat en"
         time: "Temps"
         user: "Usuari"
-        email_type: "Tipus de correu"
-        to_address: "A l'adreça"
         test_email_address: "adreça de correu per al test"
-        send_test: "Envia correu de prova"
         sent_test: "enviat!"
-        delivery_method: "Mètode de lliurament"
         preview_digest_desc: "Previsualitza el contingut dels correus de resum enviat a usuaris inactius."
         refresh: "Actualitza"
         send_digest_label: "Envia aquest resultat a:"
@@ -3659,10 +3645,7 @@ ca:
         format: "Format"
         html: "html"
         text: "text"
-        last_seen_user: "Darrer usuari vist:"
         no_result: "No s'han trobat resultats per al resum."
-        reply_key: "Clau de resposta"
-        skipped_reason: "Salta el motiu"
         incoming_emails:
           from_address: "De"
           to_addresses: "A"
@@ -3671,12 +3654,10 @@ ca:
           error: "Error"
           none: "No s'han trobat correus entrants"
           modal:
-            title: "Detalls de correu entrant"
             error: "Error"
             headers: "Encapçalaments"
             subject: "Assumpte"
             body: "Cos"
-            rejection_message: "Correu de rebuig"
           filters:
             from_placeholder: "desde@exemple.com"
             to_placeholder: "to@example.com"
@@ -3700,7 +3681,7 @@ ca:
           delete_topic: "Tema suprimit"
           post_approved: "Publicació aprovada"
       logs:
-        title: "Registres"
+        nav_title: "Registres"
         action: "Acció"
         created_at: "Creat"
         last_match_at: "Darrera coincidència"
@@ -3718,10 +3699,8 @@ ca:
         staff_actions:
           all: "tot"
           filter: "Filtre:"
-          title: "Accions de l'equip responsable"
-          clear_filters: "Mostra-ho tot"
           staff_user: "Usuari"
-          target_user: "Usuari objectiu"
+          target_user: "Usuari destinatari"
           subject: "Assumpte"
           when: "Quan"
           context: "Context"
@@ -3807,9 +3786,7 @@ ca:
             change_title: "canvia el títol"
             api_key_create: "crea la clau API"
         screened_emails:
-          title: "Correus sota supervisió"
           description: "Quan es prova de crear un compte nou, es revisaran les següents adreces i es blocarà el registre o es durà a terme alguna altra acció."
-          email: "Adreça de correu"
           actions:
             allow: "Permet"
         screened_urls:
@@ -3823,7 +3800,6 @@ ca:
           actions:
             block: "Bloca"
             do_nothing: "Permet"
-            allow_admin: "Permet administració"
           form:
             label: "Nou:"
             ip_address: "Adreça IP"
@@ -3833,23 +3809,17 @@ ca:
             text: "Agrupa"
             title: "Crea entrades prohibides d'una nova subxarxa si com a mínim hi ha 'min_ban_entries_for_roll_up' entrades."
         search_logs:
-          title: "Cerca els registres (logs)"
           term: "Termini"
           searches: "Cerques"
           click_through_rate: "CTR"
           types:
             all_search_types: "Totes les classes de cerca"
             header: "Capçalera"
-            full_page: "Pàgina completa"
             click_through_only: "Tot (sols fent clic)"
-          header_search_results: "Resultats de la cerca de capçalera"
-        logster:
-          title: "Error de registres (logs)"
       watched_words:
         search: "cerca"
         clear_filter: "Neteja"
         download: Descarrega
-        clear_all: Neteja-ho tot
         actions:
           block: "Bloca"
           censor: "Censura"
@@ -3910,9 +3880,6 @@ ca:
         id_not_found: "Aquest ID d'usuari no existeix en el nostre sistema. "
         active: "Activat"
         status: "Estat"
-        show_emails: "Mostra correus"
-        hide_emails: "Amaga els correus "
-        silence_reason: "Raó del silenciament"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -3927,8 +3894,6 @@ ca:
           staged: "Fictici"
         approved: "Aprovat?"
         titles:
-          active: "Usuaris actius"
-          new: "Usuaris nous"
           pending: "Usuaris pendents de revisar"
           newuser: "Usuaris amb nivell de confiança 0 (nouvinguts)"
           basic: "Usuaris amb nivell de confiança 1 (bàsic)"
@@ -3936,11 +3901,7 @@ ca:
           regular: "Usuaris amb nivell de confiança 3 (habitual)"
           leader: "Usuaris amb nivell de confiança 4 (líders)"
           staff: "Equip responsable"
-          admins: "Usuaris administradors"
           moderators: "Moderadors"
-          silenced: "Usuaris silenciats"
-          suspended: "Usuaris suspesos"
-          staged: "Usuaris ficticis"
         not_verified: "No verificat"
         check_email:
           title: "Mostra l'adreça de correu d'aquest usuari"
@@ -4165,7 +4126,7 @@ ca:
         save: "desa"
         cancel: "cancel·la"
       site_settings:
-        title: "Configuració"
+        nav_title: "Configuració"
         no_results: "Sense resultats"
         clear_filter: "Neteja"
         add_url: "afegeix URL"
@@ -4359,17 +4320,26 @@ ca:
           admin: "Admin"
           moderator: "Moderador"
           regular: "Usuari habitual"
+      homepage_choices:
+        custom:
+          label: "Personalitzat"
+        style_type:
+          categories: "categoria"
+          topics: "tema"
+      top_menu_items:
+        new: "Nou"
+        unread: "No llegits"
+        top: "Principals"
+        latest: "Més recents"
+        categories: "Categories"
+        read: "Llegit"
+        bookmarks: "Preferits"
       previews:
         share_button: "Comparteix"
         reply_button: "Respon"
       homepage_preview:
         nav_buttons:
           all_categories: "totes les categories"
-          new: "Nou"
-          unread: "No llegits"
-          top: "Principals"
-          latest: "Més recents"
-          categories: "Categories"
         category_names:
           site_feedback: "Comentaris sobre el lloc web"
         table_headers:

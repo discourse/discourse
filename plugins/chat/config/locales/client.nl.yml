@@ -655,6 +655,11 @@ nl:
           other_html: "<span>%{username}</span> <span>heeft %{identifier} genoemd in een privéchat</span>"
         chat_message: "Nieuw chatbericht"
         chat_quoted: "%{username} heeft je chatbericht geciteerd"
+      titles:
+        chat_mention: "Vermeld in chat"
+        chat_invitation: "Uitgenodigd voor chatkanaal"
+        chat_quoted: "Chatbericht geciteerd"
+        chat_watched_thread: "Chatthread geobserveerd"
     action_codes:
       chat:
         enabled: '%{who} heeft <button class="btn-link open-chat">chat</button> %{when} ingeschakeld'

@@ -2673,7 +2673,8 @@ th:
         create: "สร้าง"
         edit: "แก้ไข"
         save: "บันทึก"
-        wildcard_event: "ส่งทุกอย่างหาฉัน"
+        delete: "ลบ"
+        cancel: "ยกเลิก"
         active: "ใช้งานอยู่"
         delivery_status:
           title: "สถานะการส่ง"
@@ -2793,9 +2794,6 @@ th:
         button_text: "ส่งออก"
       export_json:
         button_text: "ส่งออก"
-      invite:
-        button_text: "ส่งคำเชิญ"
-        button_title: "ส่งคำเชิญ"
       customize:
         title: "การปรับแต่ง"
         preview: "แสดงตัวอย่าง"
@@ -2876,10 +2874,12 @@ th:
           selected:
             name: "เลือกแล้ว"
         email_style:
+          html: "HTML"
           css: "CSS"
           save_error_with_reason: "การเปลี่ยนแปลงไม่ได้ถูกบันทึก %{error}"
       email:
         title: "อีเมล"
+        settings: "การตั้งค่า"
         templates: "รูปแบบ"
         advanced_test:
           email: "ข้อความต้นฉบับ"
@@ -2888,18 +2888,14 @@ th:
         skipped: "ข้าม"
         received: "รับ"
         rejected: "ถูกปฏิเสธ"
-        sent_at: "ถูกส่งเมื่อ"
         time: "เวลา"
         user: "ผู้ใช้"
-        email_type: "ประเภทอีเมล"
-        to_address: "ไปยังที่อยู่"
         sent_test: "ส่งแล้ว!"
         refresh: "รีเฟรช"
         send_digest_label: "ส่งผลลัพธ์นี้ไปยัง:"
         send_digest: "ส่ง"
         html: "html"
         text: "ข้อความ"
-        last_seen_user: "ผู้ใช้ที่ดูล่าสุด:"
         incoming_emails:
           from_address: "จาก"
           to_addresses: "ถึง"
@@ -2934,7 +2930,6 @@ th:
           block: "บล็อก"
         staff_actions:
           all: "ทั้งหมด"
-          clear_filters: "แสดงทั้งหมด"
           staff_user: "ผู้ใช้"
           target_user: "ผู้ใช้เป้าหมาย"
           subject: "หัวข้อ"
@@ -2983,7 +2978,6 @@ th:
             update_email: "อัปเดตอีเมล"
             destroy_email: "ทำลายอีเมล"
         screened_emails:
-          email: "ที่อยู่อีเมล"
           actions:
             allow: "อนุญาต"
         screened_urls:
@@ -2993,7 +2987,6 @@ th:
           actions:
             block: "บล็อก"
             do_nothing: "อนุญาต"
-            allow_admin: "อนุญาตแอดมิน"
           form:
             label: "ใหม่:"
             ip_address: "ที่อยู่ไอพี"
@@ -3004,12 +2997,10 @@ th:
           types:
             all_search_types: "การค้นหาทั้งหมด"
             header: "Header"
-            full_page: "ทั้งหน้า"
       watched_words:
         search: "ค้นหา"
         clear_filter: "ล้าง"
         download: ดาวน์โหลด
-        clear_all: ล้างทั้งหมด
         actions:
           block: "บล็อก"
           censor: "เซนเซอร์"
@@ -3059,8 +3050,6 @@ th:
         last_emailed: "อีเมลล่าสุด"
         active: "เปิดใช้งานแล้ว"
         status: "สถานะ"
-        show_emails: "แสดงอีเมล"
-        hide_emails: "ซ่อนอีเมล"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -3073,8 +3062,6 @@ th:
           suspended: "ระงับการใช้งาน"
         approved: "ยืนยันหรือไม่"
         titles:
-          active: "ผู้ใช้ที่ใช้งานอยู่"
-          new: "ผู้ใช้งานใหม่"
           pending: "ผู้ใช้งานที่รอการยืนยัน"
           newuser: "ผู้ใช้ที่ระดับความไว้ใจ 0 (ผู้ใช้ใหม่)"
           basic: "ผู้ใช้ที่ระดับความไว้ใจ 1 (ผู้ใช้ทั่วไป)"
@@ -3083,7 +3070,6 @@ th:
           leader: "ผู้ใช้ที่ระดับความไว้ใจ 4 (ผู้นำ)"
           staff: "ทีมงาน"
           moderators: "ผู้ดูแลระบบ"
-          suspended: "ผู้ใช้งานที่ถูกระงับ"
         not_verified: "ยังไม่ได้รับการตรวจสอบ"
         check_email:
           title: "แสดงอีเมลของผู้ใช้งานนี้"
@@ -3224,7 +3210,7 @@ th:
         save: "บันทึก"
         cancel: "ยกเลิก"
       site_settings:
-        title: "การตั้งค่า"
+        nav_title: "การตั้งค่า"
         no_results: "ไม่มีผลการค้นหา"
         clear_filter: "ล้าง"
         add_url: "เพิ่ม URL"
@@ -3364,17 +3350,24 @@ th:
           admin: "แอดมิน"
           moderator: "ผู้ดูแล"
           regular: "ผู้ใช้ทั่วไป"
+      homepage_choices:
+        style_type:
+          categories: "หมวดหมู่"
+          topics: "หัวข้อ"
+      top_menu_items:
+        new: "ใหม่"
+        unread: "ยังไม่อ่าน"
+        top: "บน"
+        latest: "ล่าสุด"
+        categories: "หมวดหมู่"
+        read: "อ่าน"
+        bookmarks: "บุ๊คมาร์ค"
       previews:
         share_button: "แบ่งปัน"
         reply_button: "ตอบ"
       homepage_preview:
         nav_buttons:
           all_categories: "ทุกหมวดหมู่"
-          new: "ใหม่"
-          unread: "ยังไม่อ่าน"
-          top: "บน"
-          latest: "ล่าสุด"
-          categories: "หมวดหมู่"
         table_headers:
           topic: "หัวข้อ"
           replies: "ตอบ"
