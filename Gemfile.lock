@@ -345,7 +345,7 @@ GEM
     pry-stack_explorer (0.6.1)
       binding_of_caller (~> 1.0)
       pry (~> 0.13)
-    psych (5.2.2)
+    psych (5.2.3)
       date
       stringio
     public_suffix (6.0.1)
