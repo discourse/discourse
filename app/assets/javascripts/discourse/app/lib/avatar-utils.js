@@ -78,7 +78,7 @@ export function avatarImg(options, customGetURL) {
     title = ` title='${escaped}'`;
   }
 
-  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;
+  return `<img alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {

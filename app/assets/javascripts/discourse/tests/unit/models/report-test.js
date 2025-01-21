@@ -368,7 +368,7 @@ module("Unit | Model | report", function (hooks) {
     const computedUsernameLabel = usernameLabel.compute(row);
     assert.strictEqual(
       computedUsernameLabel.formattedValue,
-      "<a href='/admin/users/1/joffrey'><img loading='lazy' alt='' width='24' height='24' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/admin/users/1/joffrey'><img alt='' width='24' height='24' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
     );
     assert.strictEqual(computedUsernameLabel.value, "joffrey");
 
@@ -457,7 +457,7 @@ module("Unit | Model | report", function (hooks) {
     const userLink = computedLabels[0].compute(row).formattedValue;
     assert.strictEqual(
       userLink,
-      "<a href='/forum/admin/users/1/joffrey'><img loading='lazy' alt='' width='24' height='24' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/forum/admin/users/1/joffrey'><img alt='' width='24' height='24' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
     );
   });
 });
