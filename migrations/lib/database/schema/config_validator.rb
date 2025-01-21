@@ -64,27 +64,32 @@ module Migrations::Database::Schema
     end
 
     def validate_schema_config(config)
-      if (schema_config = config[:schema]).nil?
-        @errors << "Schema configuration not found"
-        return
-      end
-
+      schema_config = config[:schema]
       validate_tables(schema_config)
     end
 
     def validate_tables(schema_config)
       existing_table_names = @db.tables.sort.to_set
+      excluded_tables = schema_config.dig(:global, :tables, :exclude)
+      configured_tables = schema_config[:tables]
 
-      schema_config
-        .dig(:global, :tables, :exclude)
-        &.sort
-        &.each do |table_name|
+      if excluded_tables
+        excluded_tables.sort.each do |table_name|
           if !existing_table_names.delete?(table_name)
             @errors << "Excluded table does not exist: #{table_name}"
           end
         end
 
-      schema_config[:tables].sort.each do |table_name, _config|
+        excluded_tables
+          .intersection(configured_tables.keys.map(&:to_s))
+          .sort
+          .each do |table_name|
+            @errors << "Excluded table can't be configured in `schema/tables` section: #{table_name}"
+            configured_tables.delete(table_name.to_sym)
+          end
+      end
+
+      configured_tables.sort.each do |table_name, _config|
         table_name = table_name.to_s
         if !existing_table_names.delete?(table_name)
           @errors << "Table does not exist: #{table_name}"
