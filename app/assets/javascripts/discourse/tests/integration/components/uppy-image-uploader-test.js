@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -63,25 +63,22 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       `
     );
 
-    const dropImage = (target) => {
-      target = document.querySelector(target);
+    const dropImage = async (target) => {
       const dataTransfer = new DataTransfer();
       const file = new File(["dummy content"], "test-image.png", {
         type: "image/png",
       });
       dataTransfer.items.add(file);
-      const dragEnterEvent = new DragEvent("dragenter", { dataTransfer });
-      target.dispatchEvent(dragEnterEvent);
-      const dragOverEvent = new DragEvent("dragover", { dataTransfer });
-      target.dispatchEvent(dragOverEvent);
 
-      return () => {
-        const dragLeaveEvent = new DragEvent("dragleave", { dataTransfer });
-        target.dispatchEvent(dragLeaveEvent);
+      await triggerEvent(target, "dragenter", { dataTransfer });
+      await triggerEvent(target, "dragover", { dataTransfer });
+
+      return async () => {
+        await triggerEvent(target, "dragleave", { dataTransfer });
       };
     };
 
-    const leave1 = dropImage("#uploader1 .uploaded-image-preview");
+    const leave1 = await dropImage("#uploader1 .uploaded-image-preview");
 
     assert
       .dom("#uploader1 .uploaded-image-preview")
@@ -90,9 +87,9 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       .dom("#uploader2 .uploaded-image-preview")
       .hasNoClass("uppy-is-drag-over");
 
-    leave1();
+    await leave1();
 
-    dropImage("#uploader2 .uploaded-image-preview");
+    await dropImage("#uploader2 .uploaded-image-preview");
 
     assert
       .dom("#uploader2 .uploaded-image-preview")

@@ -6,7 +6,6 @@ import SearchMenu, {
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 // Note this isn't a full-fledge test of the search menu. Those tests are in
@@ -75,19 +74,15 @@ module("Integration | Component | search-menu", function (hooks) {
     await render(<template><div id="click-me"><SearchMenu /></div></template>);
     await click("#search-term");
 
-    assert.strictEqual(
-      document.activeElement,
-      query("#search-term"),
-      "Clicking the search term input focuses it"
-    );
+    assert
+      .dom("#search-term")
+      .isFocused("Clicking the search term input focuses it");
 
     await click("#click-me");
 
-    assert.strictEqual(
-      document.activeElement,
-      document.body,
-      "Clicking outside blurs focus and closes panel"
-    );
+    assert
+      .dom(document.body)
+      .isFocused("Clicking outside blurs focus and closes panel");
     assert
       .dom(".menu-panel .search-menu-initial-options")
       .doesNotExist("Menu panel is hidden");

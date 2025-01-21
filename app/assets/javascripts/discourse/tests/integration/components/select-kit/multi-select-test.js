@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { paste, query } from "discourse/tests/helpers/qunit-helpers";
+import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const DEFAULT_CONTENT = [
@@ -114,7 +114,7 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     `);
 
     await this.subject.expand();
-    await paste(query(".filter-input"), "foo|bar");
+    await paste(".filter-input", "foo|bar");
 
     assert.strictEqual(this.subject.header().value(), "1,2");
   });

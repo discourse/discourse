@@ -4,7 +4,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -40,7 +39,7 @@ module("Integration | Component | site-setting", function (hooks) {
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
 
-    assert.strictEqual(query(".validation-error h1").outerHTML, message);
+    assert.dom(".validation-error").includesHtml(message);
   });
 
   test("Error response without html_message is not rendered as HTML", async function (assert) {

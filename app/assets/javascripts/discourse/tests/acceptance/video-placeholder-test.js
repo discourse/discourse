@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -40,8 +40,7 @@ acceptance("Video Placeholder Test", function () {
 
     const video = document.querySelector("video");
     video.play = function () {}; // We don't actually want the video to play in our test
-    const canPlayEvent = new Event("canplay");
-    video.dispatchEvent(canPlayEvent);
+    await triggerEvent(video, "canplay");
 
     assert
       .dom(video)
