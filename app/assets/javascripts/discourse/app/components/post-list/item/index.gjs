@@ -1,18 +1,12 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import { ajax } from "discourse/lib/ajax";
-import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { userPath } from "discourse/lib/url";
 
 export default class PostListItem extends Component {
@@ -33,9 +27,7 @@ export default class PostListItem extends Component {
   }
 
   get hiddenClass() {
-    return (
-      this.args.post.hidden && !(this.currentUser && this.currentUser.staff)
-    );
+    return this.args.post.hidden && !this.currentUser?.staff;
   }
 
   get deletedClass() {
@@ -46,7 +38,7 @@ export default class PostListItem extends Component {
     return {
       id: this.args.post.user_id,
       name: this.args.post.name,
-      username: this.args.post.draft_username || this.args.post.username,
+      username: this.args.post.username,
       avatar_template: this.args.post.avatar_template,
       title: this.args.post.user_title,
       primary_group_name: this.args.post.primary_group_name,
@@ -54,31 +46,9 @@ export default class PostListItem extends Component {
   }
 
   get postId() {
-    return this.args.post.id || this.args.post.post_id;
-  }
-
-  @action
-  buildOneboxes(element) {
-    schedule("afterRender", () => {
-      loadOneboxes(
-        element,
-        ajax,
-        this.args.post.topic_id,
-        this.args.post.category_id,
-        this.siteSettings.max_oneboxes_per_post,
-        true
-      );
-    });
-  }
-
-  @action
-  resolveShortUrls(element) {
-    resolveAllShortUrls(
-      ajax,
-      this.siteSettings,
-      element,
-      this.args.shortUrlOpts
-    );
+    return this.args.idPath
+      ? this.args.post[this.args.idPath]
+      : this.args.post.id;
   }
 
   <template>
@@ -90,8 +60,6 @@ export default class PostListItem extends Component {
           this.hiddenClass
           @additionalItemClasses
         }}"
-      {{didInsert this.buildOneboxes @post}}
-      {{didInsert this.resolveShortUrls @post}}
     >
       {{yield to="abovePostItemHeader"}}
 
@@ -114,12 +82,14 @@ export default class PostListItem extends Component {
         <PostListItemDetails
           @post={{@post}}
           @titleAriaLabel={{@titleAriaLabel}}
+          @titlePath={{@titlePath}}
+          @urlPath={{@urlPath}}
           @user={{this.user}}
           @showUserInfo={{@showUserInfo}}
         />
 
         {{#if @post.draftType}}
-          <span class="draft-type">{{htmlSafe @post.draftType}}</span>
+          <span class="draft-type">{{@post.draftType}}</span>
         {{else}}
           <ExpandPost @item={{@post}} />
         {{/if}}

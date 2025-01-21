@@ -75,8 +75,11 @@ export default class PostList extends Component {
         {{#each @posts as |post|}}
           <PostListItem
             @post={{post}}
+            @idPath={{@idPath}}
+            @urlPath={{@urlPath}}
             @additionalItemClasses={{@additionalItemClasses}}
             @titleAriaLabel={{@titleAriaLabel}}
+            @titlePath={{@titlePath}}
             @showUserInfo={{@showUserInfo}}
           >
             <:abovePostItemHeader>

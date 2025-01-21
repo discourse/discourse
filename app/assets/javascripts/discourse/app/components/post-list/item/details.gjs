@@ -1,7 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
@@ -10,9 +8,11 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
 
 export default class PostListItemDetails extends Component {
-  @tracked
-  url =
-    this.args.post?.url || this.args.post?.post_url || this.args.post?.postUrl;
+  get url() {
+    return this.args.urlPath
+      ? this.args.post[this.args.urlPath]
+      : this.args.post?.url;
+  }
 
   get showUserInfo() {
     if (this.args.showUserInfo !== undefined) {
@@ -23,11 +23,9 @@ export default class PostListItemDetails extends Component {
   }
 
   get topicTitle() {
-    return (
-      this.args.post?.topic_html_title ||
-      this.args.post?.topic_title ||
-      this.args.post?.title
-    );
+    return this.args?.titlePath
+      ? this.args.post[this.args.titlePath]
+      : this.args.post?.title;
   }
 
   get titleAriaLabel() {
@@ -59,9 +57,9 @@ export default class PostListItemDetails extends Component {
             <a
               href={{getURL this.url}}
               aria-label={{this.titleAriaLabel}}
-            >{{htmlSafe this.topicTitle}}</a>
+            >{{this.topicTitle}}</a>
           {{else}}
-            {{htmlSafe this.topicTitle}}
+            {{this.topicTitle}}
           {{/if}}
         </span>
       </div>

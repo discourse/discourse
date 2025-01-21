@@ -28,7 +28,6 @@ export default class UserStreamComponent extends Component {
   @service appEvents;
   @service currentUser;
   @tracked lastDecoratedElement;
-  @tracked filterClassName = "";
 
   eventListeners = modifier((element) => {
     $(element).on("click.details-disabled", "details.disabled", () => false);
@@ -49,13 +48,13 @@ export default class UserStreamComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.setFilterClassName();
   }
 
-  setFilterClassName() {
+  get filterClassName() {
     const filter = this.args.stream?.filter;
+
     if (filter) {
-      this.filterClassName = `filter-${filter.toString().replace(",", "-")}`;
+      return `filter-${filter.toString().replace(",", "-")}`;
     }
   }
 
@@ -151,6 +150,8 @@ export default class UserStreamComponent extends Component {
   <template>
     <PostList
       @posts={{@stream.content}}
+      @idPath="post_id"
+      @urlPath="postUrl"
       @fetchMorePosts={{this.loadMore}}
       @additionalItemClasses="user-stream-item"
       @showUserInfo={{false}}
