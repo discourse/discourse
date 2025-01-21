@@ -105,8 +105,8 @@ export default class GlimmerSiteHeader extends Component {
     let headerWrapBottom =
       this._headerWrap.getBoundingClientRect().bottom - overscrollPx;
 
-    // While scrolling on iOS, an element fixed to the top of the screen can have a `top` which fluctuates
-    // between -1 and 1. To avoid that fluctuation affecting the header offset, we subtract that tiny fluctuation from the bottom value.
+    // While scrolling on iOS, fixed elements can have a viewport position which fluctuates between -1 and 1.
+    // To avoid that fluctuation affecting the header offset, we subtract that tiny fluctuation from the header-offset.
     const headerWrapTopDiff =
       this._headerWrap.getBoundingClientRect().top -
       overscrollPx -
