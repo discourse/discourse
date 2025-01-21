@@ -9,6 +9,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
   "category-description-text",
   "category-display-name",
+  "composer-disable-submit",
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",

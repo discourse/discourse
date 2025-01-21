@@ -29,6 +29,7 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
@@ -162,11 +163,13 @@ export default class ComposerService extends Service {
     "_disableSubmit"
   )
   get disableSubmit() {
-    return (
+    return applyValueTransformer(
+      "composer-disable-submit",
       this.model?.loading ||
-      this.isUploading ||
-      this.isProcessingUpload ||
-      this._disableSubmit
+        this.isUploading ||
+        this.isProcessingUpload ||
+        this._disableSubmit,
+      { model: this.model }
     );
   }
 
