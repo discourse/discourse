@@ -86,6 +86,8 @@ id:
         automation:
           name:
             label: Nama
+          status:
+            label: Status
           enabled:
             label: Diaktifkan
           disabled:

@@ -1,11 +1,11 @@
 import { DEBUG } from "@glimmer/env";
 import { capitalize } from "@ember/string";
+import { isTesting } from "discourse/lib/environment";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import {
   BEHAVIOR_TRANSFORMERS,
   VALUE_TRANSFORMERS,
 } from "discourse/lib/transformer/registry";
-import { isTesting } from "discourse-common/config/environment";
 
 const CORE_TRANSFORMER = "CORE";
 const PLUGIN_TRANSFORMER = "PLUGIN";

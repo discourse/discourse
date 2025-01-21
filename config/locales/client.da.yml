@@ -345,6 +345,8 @@ da:
       abandon:
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
+      dropdown:
+        view_all: "vis alle"
     topic_count_all:
       one: "Se %{count} nyt emne"
       other: "Se %{count} nye emner"
@@ -797,13 +799,13 @@ da:
       public_admission: "Tillad brugere frit at tilmelde sig gruppen (Kræver at det er en offentlig synlig gruppe)"
       public_exit: "Tillad brugere frit at forlade gruppen"
       empty:
-        posts: "Der er ingen indlæg skrevet af medlemmer i denne gruppe."
-        members: "Der er ingen medlemmer i denne gruppe."
-        requests: "Der er ingen anmodninger om medlemskab for denne gruppe."
-        mentions: "Denne gruppe bliver ikke nævnt nogen steder."
-        messages: "Der er ingen beskeder til denne gruppe."
-        topics: "Der er ingen emner skrevet af medlemmer i denne gruppe."
-        logs: "Der er ingen logs for denne gruppe."
+        posts: "Der er ingen indlæg skrevet af medlemmer i denne gruppe"
+        members: "Der er ingen medlemmer i denne gruppe"
+        requests: "Der er ingen anmodninger om medlemskab for denne gruppe"
+        mentions: "Denne gruppe bliver ikke nævnt nogen steder"
+        messages: "Der er ingen beskeder til denne gruppe"
+        topics: "Der er ingen emner skrevet af medlemmer i denne gruppe"
+        logs: "Der er ingen logs for denne gruppe"
       add: "Tilføj"
       join: "Tilslut"
       leave: "Forlad"
@@ -986,10 +988,10 @@ da:
         one: "Slet %{count}"
         other: "Slet %{count}"
       username: "brugernavn"
-      trust_level: "TN"
+      trust_level: "tillidsniveau"
       read_time: "læse tid"
       topics_entered: "emner besøgt"
-      post_count: "# indlæg"
+      post_count: "indlæg"
       confirm_delete_other_accounts: "Er du sikker på, at du vil slette disse konti?"
       powered_by: "bruger <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopieret"
@@ -1914,6 +1916,9 @@ da:
       categories_and_top_topics: "Kategorier og top emner"
       categories_boxes: "Kasser med underkategorier"
       categories_boxes_with_topics: "Kasser med udvalgte emner"
+    full_name_requirement:
+      required_at_signup: "Obligatoriske"
+      optional_at_signup: "Valgfri"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2828,6 +2833,8 @@ da:
           one: Du har valgt <b>%{count}</b> indlæg.
           other: "Du har valgt <b>%{count}</b> indlæg."
       deleted_by_author_simple: "(emne slettet af forfatteren)"
+    post_list:
+      aria_post_number: "%{title} - indlæg #%{postNumber}"
     post:
       confirm_delete: "Er du sikker på, at du vil slette dette indlæg?"
       quote_reply: "Citér"
@@ -3771,10 +3778,9 @@ da:
               content: "Grupper"
             users:
               content: "Brugere"
-            my_posts:
-              content: "Mine indlæg"
-              content_drafts: "Mine Kladder"
-              title_drafts: "Mine uopslåede kladder"
+            my_drafts:
+              content: "Mine Kladder"
+              title: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
             invite:
@@ -3819,7 +3825,7 @@ da:
           save: "Gem som..."
     powered_by_discourse: "Drevet af Discourse"
   admin_js:
-    type_to_filter: "skriv for at filtrere…"
+    type_to_filter: "Skriv for at filtrere…"
     settings: "Indstillinger"
     admin:
       title: "Discourse Admin"
@@ -3834,9 +3840,32 @@ da:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
         sidebar_link:
-          all: "Alle"
+          all: "Alle rapporter"
+      config:
+        developer:
+          title: "Udvikler"
+        files:
+          title: "Filer"
+        legal:
+          title: "Jura"
+        navigation:
+          title: "Navigation"
+        notifications:
+          title: "Notifikationer"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Andre"
+        search:
+          title: "Søg"
+        security:
+          title: "Sikkerhed"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Bruger API"
       new_features:
-        title: "Hvad er nyt"
+        title: "Hvad er nyt?"
       dashboard:
         title: "Dashboard"
         last_updated: "instrumentbræt opdateret:"
@@ -3854,7 +3883,7 @@ da:
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         dismiss_notice: "Ignorer Alle"
         new_features:
-          title: "Hvad er nyt"
+          title: "Hvad er nyt?"
           learn_more: "Lær mere..."
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
@@ -3931,6 +3960,7 @@ da:
             include_subcategories:
               label: "Inkludér Underkategorier"
       flags:
+        title: "Moderation"
         description: "Beskrivelse"
         enabled: "Aktiveret?"
         more_options:
@@ -3996,35 +4026,36 @@ da:
         add_owners: Tilføj ejere
         none_selected: "Vælg en gruppe for at komme i gang"
         no_custom_groups: "Opret en ny brugerdefineret gruppe"
+      api_keys:
+        edit: "Rediger"
+        save: "Gem"
+        cancel: "Annuller"
+        continue: "Fortsæt"
+        revoke: "Tilbagekald"
+        revoked: "Tilbagekaldt"
       api:
         generate_master: "Generér API-nøgle"
         none: "Der er ingen aktive API-nøgler i øjeblikket."
         user: "Bruger"
         title: "API"
         key: "Nøgle"
-        created: Oprettet
+        created: Oprettet af
         updated: Opdateret
-        last_used: Sidst Brugt
-        never_used: (aldrig)
+        never_used: Aldrig
         generate: "Generér"
-        undo_revoke: "Fortryd tilbagekaldelse"
         revoke: "Tilbagekald"
-        all_users: "Alle brugere"
         active_keys: "Aktive API-nøgler"
         manage_keys: Administrer nøgler
         show_details: Detaljer
         description: Beskrivelse
         no_description: (Ingen beskrivelse)
         all_api_keys: Alle API-nøgler
-        user_mode: Brugerniveau
         impersonate_all_users: Efterlign enhver bruger
-        single_user: "Enkelt Bruger"
         user_placeholder: Indtast brugernavn
         description_placeholder: Hvad skal denne nøgle bruges til?
         save: Gem
         new_key: Ny API-nøgle
         revoked: Tilbagekaldt
-        delete: Slet permanent
         not_shown_again: Denne nøgle vil ikke blive vist igen. Sørg for at tage en kopi før du fortsætter.
         continue: Fortsæt
         scopes:
@@ -4036,8 +4067,6 @@ da:
           global: Globalt
           resource: Ressource
           action: Handling
-          allowed_parameters: Tilladte parametre
-          optional_allowed_parameters: Tilladte parametre (valgfrit)
           any_parameter: (enhver parameter)
           allowed_urls: Tilladte URL'er
           descriptions:
@@ -4136,22 +4165,22 @@ da:
         title: "Konto"
         sidebar_link:
           backups: "Backups"
+          whats_new:
+            title: "Hvad er nyt?"
       community:
         title: "Fællesskab"
         sidebar_link:
           badges: "Emblemer"
           notifications: "Notifikationer"
           permalinks: "Permalinks"
-          trust_levels: "Tillidsniveauer"
           users: "Brugere"
           groups: "Grupper"
-          user_fields: "Bruger felter"
-          watched_words: "Overvågede ord"
           legal: "Jura"
+          moderation_flags:
+            title: "Moderation"
       appearance:
         title: "Udseende"
         sidebar_link:
-          color_schemes: "Farvepaletter"
           emoji: "Humørikon"
           navigation: "Navigation"
           themes: "Temaer"
@@ -4160,27 +4189,15 @@ da:
       email_settings:
         sidebar_link:
           appearance: "Udseende"
-          preview_summary: "Forhåndsvisning af sammendrag"
-      email_logs:
-        sidebar_link:
-          sent: "Sendt"
-          skipped: "Droppet"
-          bounced: "Bounced"
-          received: "Modtaget"
-          rejected: "Afvist"
       security:
         title: "Sikkerhed"
-        sidebar_link:
-          error_logs: "Fejl beskeder"
-          screened_emails: "Blokerede e-mails"
-          screened_ips: "Blokerede IPer"
-          screened_urls: "Blokerede URLer"
-          search_logs: "Søgnings logs"
       section_landing_pages:
         account:
           title: "Konto"
           backups:
             title: "Backups"
+          whats_new:
+            title: "Hvad er nyt?"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4189,6 +4206,7 @@ da:
           update: "Opdater"
           saved: "gemt!"
         flags:
+          header: "Moderation"
           description: "Beskrivelse"
           enabled: "Aktiveret?"
           edit: "Rediger"
@@ -4205,6 +4223,12 @@ da:
           more_options:
             move_up: "Flyt op"
             move_down: "Flyt ned"
+        permalinks:
+          edit: "Rediger"
+          delete: "Slet"
+        embeddable_host:
+          edit: "Rediger"
+          delete: "Slet"
         look_and_feel:
           themes:
             title: "Temaer"
@@ -4231,11 +4255,10 @@ da:
       advanced:
         title: "Avanceret"
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Udvikler"
           embedding: "Indlejring"
-          rate_limits: "Begrænsninger"
           user_api: "Bruger API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Filer"
           other_options: "Andre"
@@ -4284,7 +4307,7 @@ da:
             title: "Send e-mail med downloadlink"
             alert: "Et link til download af denne backup er blevet e-mailet til dig"
           destroy:
-            title: "Sletter backuppen"
+            title: "Slet"
             confirm: "Er du sikker på du vil fjerne denne backup?"
           restore:
             label: "Genetabler"
@@ -4525,10 +4548,7 @@ da:
             title: "Vælg basisfarvepalet"
             description: "Basispalet:"
           title: "Farver"
-          edit: "Rediger farvepaletter"
-          long_title: "Farvepaletter"
           about: "Rediger de farver, der bruges af dine temaer. Opret en ny farvepalet for at starte."
-          new_name: "Ny farvepalet"
           copy_name_prefix: "Kopi af"
           delete_confirm: "Slet denne farvepalet?"
           undo: "Fortryd"
@@ -4835,7 +4855,6 @@ da:
         logster:
           title: "Fejl beskeder"
       watched_words:
-        title: "Overvågede ord"
         search: "Søg"
         clear_filter: "Ryd"
         show_words:
@@ -4949,6 +4968,7 @@ da:
         status: "Status"
         show_emails: "Vis Emails"
         hide_emails: "Skjul emails"
+        silence_reason: "Årsag for mådeholdenhed (silence)"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5205,7 +5225,6 @@ da:
           delete_sso_record: "Slet SSO Registrering"
           confirm_delete: "Er du sikker på at, du vil slette dette DiscourseConect-Indlæg?"
       user_fields:
-        title: "Bruger felter"
         untitled: "Ingen titel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5239,10 +5258,8 @@ da:
           dropdown: "Rulleboks"
           multiselect: "Multivælg"
       site_text:
-        description: "Du kan ændre alt tekst på dette forum. Start med at søge herunder:"
         search: "Søg efter teksten du gerne vil rette"
-        title: "Tekst"
-        edit: "ret"
+        edit: "Rediger"
         revert: "Rul ændringer tilbage"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
         go_back: "Tilbage til søgning"
@@ -5418,16 +5435,11 @@ da:
         settings: "Indstillinger"
       embedding:
         get_started: "Hvis du vil indlejre Discourse på et andet website, skal du starte med at tilføje dets server."
+        delete: "Slet"
         confirm_delete: "Er du sikker på at du vil slette denne server?"
         title: "Indlejring"
-        host: "Tilladte servere"
-        allowed_paths: "Sti Tilladelsesliste"
-        edit: "redigér"
-        category: "Opret i kategorien"
-        add_host: "Tilføj server"
-        settings: "Indlejrings-indstillinger"
-        crawling_settings: "Robot-indstillinger"
-        crawling_description: "Når Discourse opretter emner for dine indlæg, og der ikke er noget RSS/ATOM-feed, vil den forsøge at parse dit indhold ud fra din HTML. Det kan nogengange være en udfordring at udtrække dit indhold, så vi giver mulighed for at specificere CSS-regler for at gøre udtræk lettere."
+        edit: "Rediger"
+        crawlers_description: "Når Discourse opretter emner for dine indlæg, og der ikke er noget RSS/ATOM-feed, vil den forsøge at parse dit indhold ud fra din HTML. Det kan nogengange være en udfordring at udtrække dit indhold, så vi giver mulighed for at specificere CSS-regler for at gøre udtræk lettere."
         embed_by_username: "Brugernavn for oprettelse af emne"
         embed_post_limit: "Maksimalt antal indlæg der kan indlejres."
         embed_title_scrubber: "Regular expression er brugt til at gøre titler pæne på indlæg"
@@ -5436,7 +5448,12 @@ da:
         allowed_embed_selectors: "CSS-selektorer for elementer der er tilladte i indlejringer"
         blocked_embed_selectors: "CSS-selektorer for elementer der fjernes fra indlejringer"
         allowed_embed_classnames: "Tilladte CSS-klassenavne"
-        save: "Gem indlejrings-indstillinger"
+        save: "Gem"
+        host_form:
+          save: "Gem"
+        nav:
+          settings: "Indstillinger"
+          crawlers: "Crawlere"
       permalink:
         title: "Permalinks"
         description: "Omdirigeringer der skal anvendes for URL'er der ikke er kendt af forummet."
@@ -5455,13 +5472,15 @@ da:
         destination: "Destination"
         copy_to_clipboard: "Kopier Permalink til udklipsholder"
         delete_confirm: Er du sikker på at du vil slette dette permalink?
+        nav:
+          settings: "Indstillinger"
+          permalinks: "Permalinks"
         form:
           label: "Ny:"
           url: "URL"
           save: "Gem"
       reseed:
         action:
-          label: "Erstat tekst ..."
           title: "Erstat teksten af kategorier og emner med oversættelser"
         modal:
           title: "Erstat tekst"
@@ -5494,3 +5513,18 @@ da:
         share_button: "Del"
         reply_button: "Svar"
         topic_preview: "Forhåndsvisning af emne"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alle kategorier"
+          new: "Nye"
+          unread: "Ulæste"
+          top: "Top"
+          latest: "Seneste"
+          categories: "Kategorier"
+        category_names:
+          site_feedback: "Site Feedback"
+        table_headers:
+          topic: "Emne"
+          replies: "Svar"
+          views: "Visninger"
+          activity: "Aktivitet"

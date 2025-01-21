@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { underscore } from "@ember/string";
 import { isPresent } from "@ember/utils";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewIndexController extends Controller {

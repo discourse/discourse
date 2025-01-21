@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 function customTagArray(val) {

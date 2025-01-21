@@ -1,5 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import postFixtures from "discourse/tests/fixtures/post";
 import {
   acceptance,
@@ -7,7 +8,6 @@ import {
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Fast Edit", function (needs) {
   needs.user();
@@ -88,7 +88,7 @@ acceptance("Fast Edit", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     query("#post_2 .cooked").append(`That’s what she said!`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    const textNode = query("#post_2 .cooked").childNodes[3];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -101,7 +101,7 @@ acceptance("Fast Edit", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     query("#post_2 .cooked").append(`Je suis désolé, comment ça va?`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    const textNode = query("#post_2 .cooked").childNodes[3];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -113,7 +113,7 @@ acceptance("Fast Edit", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     query("#post_2 .cooked").append(`这是一个测试`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    const textNode = query("#post_2 .cooked").childNodes[3];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -125,7 +125,7 @@ acceptance("Fast Edit", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     query("#post_2 .cooked").append(`This is great 👍`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    const textNode = query("#post_2 .cooked").childNodes[3];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");

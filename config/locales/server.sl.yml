@@ -1969,14 +1969,8 @@ sl:
             label: "Predogled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije z izpostavljenimi temami"
-              categories_and_latest_topics:
-                label: "Kategorije in najnovejše teme"
-              categories_and_top_topics:
-                label: "Kategorije in najboljše teme"
+              latest:
+                label: "Najnovejše"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
   onebox:

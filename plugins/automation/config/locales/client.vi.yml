@@ -138,5 +138,7 @@ vi:
             label: Phát động
           version:
             label: Phiên bản
+          status:
+            label: Trạng thái
           disabled:
             label: Vô hiệu hóa

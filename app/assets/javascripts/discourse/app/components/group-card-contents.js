@@ -5,9 +5,9 @@ import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
 import { setting } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
-import discourseComputed from "discourse-common/utils/decorators";
 
 const maxMembersToDisplay = 10;
 

@@ -5,13 +5,13 @@ import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class Group extends RestModel {
   static findAll(opts) {

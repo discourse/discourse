@@ -71,7 +71,6 @@
   .status-label {
     --d-border-radius: var(--space-4);
     --status-icon-diameter: 8px;
-
     display: flex;
     flex-wrap: nowrap;
     width: fit-content;
@@ -94,6 +93,14 @@
       color: var(--primary-high);
       font-size: var(--font-down-1);
     }
+  }
+
+  &__badge {
+    background-color: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-1);
+    margin-left: var(--space-1);
+    padding: var(--space-2);
   }
 
   // Success badge

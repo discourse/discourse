@@ -1,8 +1,8 @@
 import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {

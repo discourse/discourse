@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 let _started = false;
 let cache = {};
 let transitionCount = 0;

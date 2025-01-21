@@ -2,7 +2,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 import TreeNode from "admin/components/schema-theme-setting/editor/tree-node";
 
 <template>

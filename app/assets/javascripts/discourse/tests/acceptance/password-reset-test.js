@@ -22,7 +22,7 @@ acceptance("Password Reset", function (needs) {
       if (body.password === "jonesyAlienSlayer") {
         return helper.response({
           success: false,
-          errors: { password: ["is the name of your cat"] },
+          errors: { "user_password.password": ["is the name of your cat"] },
           friendly_messages: ["Password is the name of your cat"],
         });
       } else {

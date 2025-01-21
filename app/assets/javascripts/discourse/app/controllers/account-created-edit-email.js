@@ -2,8 +2,8 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import { changeEmail } from "discourse/lib/user-activation";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class AccountCreatedEditEmailController extends Controller {
   @service router;

@@ -6,7 +6,7 @@ import { isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ProfileController extends Controller {
@@ -114,7 +114,7 @@ export default class ProfileController extends Controller {
 
   @action
   useCurrentTimezone() {
-    this.model.set("user_option.timezone", moment.tz.guess());
+    this.model.set("user_option.timezone", moment.tz.guess(true));
   }
 
   @action

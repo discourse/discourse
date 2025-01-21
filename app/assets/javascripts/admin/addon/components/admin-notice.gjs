@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 export default class AdminNotice extends Component {
   @service currentUser;

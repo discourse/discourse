@@ -11,7 +11,7 @@ RSpec.describe Chat::TrashMessages do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
-    fab!(:chat_channel) { Fabricate(:chat_channel) }
+    fab!(:chat_channel)
     fab!(:message1) { Fabricate(:chat_message, user: current_user, chat_channel: chat_channel) }
     fab!(:message2) { Fabricate(:chat_message, user: current_user, chat_channel: chat_channel) }
     let(:guardian) { Guardian.new(current_user) }

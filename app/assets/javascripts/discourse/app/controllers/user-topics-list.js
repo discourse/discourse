@@ -6,6 +6,7 @@ import { or } from "@ember/object/computed";
 import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import discourseComputed from "discourse/lib/decorators";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
 import {
@@ -13,7 +14,6 @@ import {
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
 import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
-import discourseComputed from "discourse-common/utils/decorators";
 
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {

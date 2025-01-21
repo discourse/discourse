@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import ListSetting from "select-kit/components/list-setting";
 
 export default class CompactList extends Component {

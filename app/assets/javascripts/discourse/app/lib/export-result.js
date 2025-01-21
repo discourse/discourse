@@ -1,4 +1,4 @@
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
 
 export function outputExportResult(result) {

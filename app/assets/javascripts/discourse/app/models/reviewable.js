@@ -1,8 +1,8 @@
 import { dasherize, underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n, { i18n } from "discourse-i18n";
 import Category from "./category";
 

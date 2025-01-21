@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DSection from "discourse/components/d-section";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 
 module("Integration | Component | d-section", function (hooks) {
   setupRenderingTest(hooks);

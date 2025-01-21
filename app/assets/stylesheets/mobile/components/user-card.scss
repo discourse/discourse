@@ -9,30 +9,38 @@
   margin: 0;
   max-height: 85vh; // 2.5vh margin-top and margin-bottom. 10vh top
   box-sizing: border-box;
+
   // avatar - names - controls
   .first-row {
     flex-wrap: wrap;
+
     .names {
       flex: 1 1 0;
       box-sizing: border-box;
     }
+
     .user-card-avatar {
       flex: 0 0 auto;
     }
+
     .usercard-controls {
       width: 100%; // always wraps to next line
       display: flex;
       flex-wrap: wrap;
       margin-top: 1em;
       gap: 0.5em;
+
       li {
         flex: 1 0 45%;
         min-width: 8em;
+
         &:empty {
           display: none;
         }
+
         button {
           margin: 0;
+
           .d-button-label {
             @include ellipsis;
           }
@@ -40,15 +48,19 @@
       }
     }
   }
+
   .names__primary {
     font-size: var(--font-up-3);
+
     .d-icon {
       font-size: var(--font-down-2);
     }
   }
+
   .names__secondary {
     font-size: var(--font-0);
   }
+
   .user-status {
     font-size: var(--font-down-1);
   }
@@ -61,6 +73,7 @@
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
+
     .user-card-badge-link,
     .more-user-badges {
       display: flex;
@@ -68,18 +81,22 @@
       max-width: 50%; // for text ellipsis
       padding: 2px 0;
       box-sizing: border-box;
+
       &:nth-child(odd) {
         padding-right: 4px;
       }
+
       a {
         width: 100%;
         display: flex;
       }
     }
+
     .user-badge {
       display: flex;
       margin: 0;
       width: 100%;
+
       .badge-display-name {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -88,11 +105,12 @@
   }
 
   .public-user-fields {
-    @media screen and (max-height: 550px) {
+    @media screen and (height <= 550px) {
       max-height: 12vh;
     }
     max-height: 40vh;
     overflow-y: auto;
+
     .public-user-field {
       @include line-clamp(3);
     }

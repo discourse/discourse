@@ -4,8 +4,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { bind } from "discourse/lib/decorators";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 const _pluginNotices = new DeferredTrackedSet();

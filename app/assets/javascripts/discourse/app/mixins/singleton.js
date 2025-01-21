@@ -46,7 +46,7 @@
  ```
  **/
 import Mixin from "@ember/object/mixin";
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 
 const Singleton = Mixin.create({
   init() {

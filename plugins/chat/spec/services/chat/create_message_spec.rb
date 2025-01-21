@@ -300,7 +300,7 @@ RSpec.describe Chat::CreateMessage do
           end
 
           context "when membership is enforced" do
-            fab!(:user) { Fabricate(:user) }
+            fab!(:user)
 
             before do
               SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]

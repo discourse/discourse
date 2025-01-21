@@ -1334,19 +1334,7 @@ nb_NO:
           homepage_style:
             choices:
               latest:
-                label: "Siste emner"
-              categories_only:
-                label: "Kun kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med fremhevede emner"
-              categories_and_latest_topics:
-                label: "Kategorier og siste emner"
-              categories_and_latest_topics_created_date:
-                label: "Kategorier og nyeste emner (sorter etter emne opprettet dato)"
-              categories_and_top_topics:
-                label: "Kategorier og toppemner"
-              subcategories_with_featured_topics:
-                label: "Underkategorier med utvalgte emner"
+                label: "Siste"
   onebox:
     github:
       closed: "lukket"

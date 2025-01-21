@@ -4,7 +4,7 @@ import { gt } from "@ember/object/computed";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed, { debounce } from "discourse-common/utils/decorators";
+import discourseComputed, { debounce } from "discourse/lib/decorators";
 
 export default class GroupIndexController extends Controller {
   queryParams = ["order", "asc", "filter"];

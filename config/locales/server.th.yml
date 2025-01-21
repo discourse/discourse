@@ -508,14 +508,8 @@ th:
             label: "แสดงตัวอย่าง"
           homepage_style:
             choices:
-              categories_only:
-                label: "หมวดหมู่เท่านั้น"
-              categories_with_featured_topics:
-                label: "หมวดหมู่พร้อมด้วยกระทู้เด่น"
-              categories_and_latest_topics:
-                label: "หมวดหมู่และกระทู้ล่าสุด"
-              categories_and_top_topics:
-                label: "หมวดหมู่และกระทู้ยอดนิยม"
+              latest:
+                label: "ล่าสุด"
   onebox:
     github:
       closed: "ปิด"

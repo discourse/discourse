@@ -125,6 +125,8 @@ bs_BA:
             label: Trigger
           version:
             label: Verzija
+          status:
+            label: Status
           enabled:
             label: Omogućen
           disabled:

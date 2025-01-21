@@ -1,5 +1,5 @@
 import { and, eq, notEq } from "truth-helpers";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 
 const Logo = <template>
   {{#if (and @darkUrl (notEq @url @darkUrl))}}

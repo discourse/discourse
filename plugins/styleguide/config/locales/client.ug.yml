@@ -73,6 +73,10 @@ ug:
           title: "تېما ئۇقتۇرۇشى"
         post:
           title: "يازما"
+        post_list:
+          title: "يازما تىزىمى"
+          empty_example: "<PostList />بوش ھالەت"
+          populated_example: "<PostList />قاڭقىتىلغان ھالەت"
         topic_map:
           title: "تېما خەرىتىسى"
         site_header:

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
+import { afterRender } from "discourse/lib/decorators";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import { afterRender } from "discourse-common/utils/decorators";
 
 export default class PendingPost extends Component {
   didRender() {

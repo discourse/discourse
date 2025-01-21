@@ -13,10 +13,17 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class LatestTopicListItem extends Component {
   get tagClassNames() {
     return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
+  }
+
+  get additionalClasses() {
+    return applyValueTransformer("latest-topic-list-item-class", [], {
+      topic: this.args.topic,
+    });
   }
 
   <template>
@@ -32,6 +39,7 @@ export default class LatestTopicListItem extends Component {
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
         (if @topic.visited "visited")
+        this.additionalClasses
       }}
     >
       <PluginOutlet
@@ -40,12 +48,17 @@ export default class LatestTopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
 
-      <div class="topic-poster">
-        <UserLink @user={{@topic.lastPosterUser}}>
-          {{avatar @topic.lastPosterUser imageSize="large"}}
-        </UserLink>
-        <UserAvatarFlair @user={{@topic.lastPosterUser}} />
-      </div>
+      <PluginOutlet
+        @name="latest-topic-list-item-topic-poster"
+        @outletArgs={{hash topic=@topic}}
+      >
+        <div class="topic-poster">
+          <UserLink @user={{@topic.lastPosterUser}}>
+            {{avatar @topic.lastPosterUser imageSize="large"}}
+          </UserLink>
+          <UserAvatarFlair @user={{@topic.lastPosterUser}} />
+        </div>
+      </PluginOutlet>
 
       <div class="main-link">
         <div class="top-row">

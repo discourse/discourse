@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostsController do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   fab!(:topic) { Fabricate(:topic, user: admin) }
 
   fab!(:post1) { Fabricate(:post, topic:, raw: "[poll]\n- A\n- B\n[/poll]") }

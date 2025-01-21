@@ -2,14 +2,14 @@ import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import $ from "jquery";
 import { getAndClearUnhandledThemeErrors } from "discourse/app";
+import { bind } from "discourse/lib/decorators";
+import escape from "discourse/lib/escape";
+import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import identifySource, {
   consolePrefix,
   getThemeInfo,
 } from "discourse/lib/source-identifier";
-import escape from "discourse-common/lib/escape";
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 const showingErrors = new Set();

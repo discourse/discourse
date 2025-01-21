@@ -4,8 +4,8 @@ import {
   avatarImg,
   avatarUrl,
   getRawAvatarSize,
-} from "discourse-common/lib/avatar-utils";
-import { setupURL } from "discourse-common/lib/get-url";
+} from "discourse/lib/avatar-utils";
+import { setupURL } from "discourse/lib/get-url";
 
 module("Unit | Utilities", function (hooks) {
   setupTest(hooks);

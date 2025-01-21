@@ -11,7 +11,7 @@ import {
   setting,
   url,
 } from "discourse/lib/computed";
-import { setPrefix } from "discourse-common/lib/get-url";
+import { setPrefix } from "discourse/lib/get-url";
 
 module("Unit | Utility | computed", function (hooks) {
   setupTest(hooks);

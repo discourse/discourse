@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
+import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import Badge from "discourse/models/badge";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 const _additionalAttributes = new Set();

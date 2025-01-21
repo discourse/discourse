@@ -1,14 +1,14 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import { iconHTML, renderIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   addTagDecorateCallback,
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
-import { iconHTML, renderIcon } from "discourse-common/lib/icon-library";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";

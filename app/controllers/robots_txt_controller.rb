@@ -21,7 +21,7 @@ class RobotsTxtController < ApplicationController
     /*?*api_key*
   ]
 
-  DISALLOWED_WITH_HEADER_PATHS = %w[/badges /u/ /my /search /tag/*/l /g /t/*/*.rss /c/*.rss]
+  DISALLOWED_WITH_HEADER_PATHS = %w[/badges /my /search /tag/*/l /g /t/*/*.rss /c/*.rss]
 
   def index
     if (overridden = SiteSetting.overridden_robots_txt.dup).present?

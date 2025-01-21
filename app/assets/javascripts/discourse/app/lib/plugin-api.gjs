@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.39.2";
+export const PLUGIN_API_VERSION = "2.0.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -41,7 +41,6 @@ import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
-import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
@@ -66,13 +65,21 @@ import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import { isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
+import {
+  iconNode,
+  registerIconRenderer,
+  replaceIcon,
+} from "discourse/lib/icon-library";
 import KeyboardShortcuts, {
   disableDefaultKeyboardShortcuts,
 } from "discourse/lib/keyboard-shortcuts";
@@ -153,14 +160,6 @@ import {
   queryRegistry,
   reopenWidget,
 } from "discourse/widgets/widget";
-import { isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import {
-  iconNode,
-  registerIconRenderer,
-  replaceIcon,
-} from "discourse-common/lib/icon-library";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
@@ -175,6 +174,12 @@ const POST_MENU_DEPRECATION_OPTIONS = {
   since: "v3.4.0.beta3-dev",
   id: "discourse.post-menu-widget-overrides",
   url: "https://meta.discourse.org/t/341014",
+};
+
+export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
+  since: "v3.4.0.beta4-dev",
+  id: "discourse.hbr-topic-list-overrides",
+  url: "https://meta.discourse.org/t/343404",
 };
 
 const appliedModificationIds = new WeakMap();
@@ -307,10 +312,7 @@ class PluginApi {
     ) {
       deprecated(
         `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
+        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
       );
     }
 
@@ -358,10 +360,7 @@ class PluginApi {
     ) {
       deprecated(
         `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
+        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
       );
     }
 
@@ -2064,33 +2063,6 @@ class PluginApi {
    **/
   setDesktopTopicTimelineScrollAreaHeight(height) {
     setDesktopScrollAreaHeight(height);
-  }
-
-  /**
-   * Allows altering the topic title in the topic list, and in the topic view
-   *
-   * topicTitleType can be `topic-title` or `topic-list-item-title`
-   *
-   * For example, to replace the topic title:
-   *
-   * ```
-   * api.decorateTopicTitle((topicModel, node, topicTitleType) => {
-   *   node.innerText = "my new topic title";
-   * });
-   * ```
-   *
-   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead
-   **/
-  decorateTopicTitle(callback) {
-    deprecated(
-      "decorateTopicTitle is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead",
-      {
-        id: "discourse.decorate-topic-title",
-        since: "3.2",
-        dropFrom: "3.3",
-      }
-    );
-    addTopicTitleDecorator(callback);
   }
 
   /**

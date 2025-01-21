@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
 import helperFn from "discourse/helpers/helper-fn";
-import escape from "discourse-common/lib/escape";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import escape from "discourse/lib/escape";
+import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 

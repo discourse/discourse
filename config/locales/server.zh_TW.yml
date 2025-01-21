@@ -1434,7 +1434,6 @@ zh_TW:
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
     auto_handle_queued_age: "等待多天後系統將自動處理等待審核的記錄，投訴將被忽略。尚未審核的討論話題及使用者將被拒絕。設定為0，可禁用此功能。"
-    full_name_required: "全名是使用者個人信息的必填項。"
     enable_names: "在使用者的個人信息、使用者卡片和郵件中顯示全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在使用者的貼文中顯示他們的全名以及他們的 @username。"
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
@@ -2875,15 +2874,9 @@ zh_TW:
           homepage_style:
             choices:
               latest:
-                label: "最新主題"
-              categories_only:
-                label: "僅分類"
-              categories_with_featured_topics:
-                label: "有精選話題的分類"
-              categories_and_latest_topics:
-                label: "分類和最新話題"
-              categories_and_top_topics:
-                label: "分類與熱門話題"
+                label: "最新版本"
+              hot:
+                label: "熱門"
       corporate:
         fields:
           governing_law:

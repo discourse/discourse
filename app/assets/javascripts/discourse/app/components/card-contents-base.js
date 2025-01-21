@@ -2,12 +2,12 @@ import Component from "@ember/component";
 import { alias, match } from "@ember/object/computed";
 import { next, schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import discourseLater from "discourse/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 
 const DEFAULT_SELECTOR = "#main-outlet";
 const AVATAR_OVERFLOW_SIZE = 44;

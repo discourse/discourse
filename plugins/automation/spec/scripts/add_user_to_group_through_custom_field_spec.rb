@@ -140,7 +140,7 @@ describe "AddUserToGroupThroughCustomField" do
     fab!(:iowa) { Fabricate(:group, full_name: "Iowa") }
     fab!(:missouri) { Fabricate(:group, full_name: "Missouri") }
 
-    fab!(:user1) { Fabricate(:user, id: bangalore.id) }
+    fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) }

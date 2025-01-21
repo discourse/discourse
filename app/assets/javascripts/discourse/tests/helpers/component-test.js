@@ -3,12 +3,12 @@ import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 import QUnit, { test } from "qunit";
 import { autoLoadModules } from "discourse/instance-initializers/auto-load-modules";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import deprecated from "discourse/lib/deprecated";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
-import deprecated from "discourse-common/lib/deprecated";
 
 export function setupRenderingTest(hooks) {
   emberSetupRenderingTest(hooks);

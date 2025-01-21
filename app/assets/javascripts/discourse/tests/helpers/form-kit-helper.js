@@ -107,7 +107,7 @@ class Field {
         break;
       case "menu":
         const trigger = this.element.querySelector(
-          ".fk-d-menu__trigger.form-kit__control-menu"
+          ".fk-d-menu__trigger.form-kit__control-menu-trigger"
         );
         await click(trigger);
         const menu = document.body.querySelector(

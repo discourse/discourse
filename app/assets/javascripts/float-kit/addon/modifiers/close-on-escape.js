@@ -1,11 +1,8 @@
 import { registerDestructor } from "@ember/destroyable";
-import { service } from "@ember/service";
 import Modifier from "ember-modifier";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 
 export default class FloatKitCloseOnEscape extends Modifier {
-  @service menu;
-
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());

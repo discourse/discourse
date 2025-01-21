@@ -15,10 +15,6 @@ export function registerEmoji(code, url, group) {
   extendedEmojiMap.set(code, { url, group });
 }
 
-export function extendedEmojiList() {
-  return extendedEmojiMap;
-}
-
 const emojiMap = new Map();
 
 // Regex from https://github.com/mathiasbynens/emoji-test-regex-pattern/blob/main/dist/latest/javascript.txt

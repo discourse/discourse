@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import discourseComputed from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorForm extends Component {

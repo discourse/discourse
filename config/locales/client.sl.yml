@@ -392,6 +392,8 @@ sl:
       abandon:
         yes_value: "Zavrzi"
         no_value: "Nadaljujt urejanje"
+      dropdown:
+        view_all: "prikaži vse"
     topic_count_all:
       one: "Poglej %{count} novo temo"
       two: "Poglej %{count} novi temi"
@@ -811,13 +813,13 @@ sl:
       public_admission: "Dovoli uporabnikom, da se sami pridružijo skupini (skupina mora biti javna)"
       public_exit: "Dovoli uporabnikom da sami zapustijo skupino"
       empty:
-        posts: "Ni prispevkov članov skupine."
-        members: "Ta skupina nima članov."
-        requests: "Ni nobenih zahtevkov po članstvu v tej skupini."
-        mentions: "Ta skupina ni bila nikjer omenjena."
-        messages: "Ni sporočil za to skupino."
-        topics: "Člani te skupine nimajo nobene teme."
-        logs: "Dnevnik za to skupino je prazen."
+        posts: "Ni prispevkov članov skupine"
+        members: "Ta skupina nima članov"
+        requests: "Ni nobenih zahtevkov po članstvu v tej skupini"
+        mentions: "Ta skupina ni bila nikjer omenjena"
+        messages: "Ni sporočil za to skupino"
+        topics: "Člani te skupine nimajo nobene teme"
+        logs: "Dnevnik za to skupino je prazen"
       add: "Dodaj"
       join: "Pridruži se"
       leave: "Zapusti"
@@ -1016,10 +1018,10 @@ sl:
         few: "Izbriši %{count}"
         other: "Izbriši %{count}"
       username: "uporabniško ime"
-      trust_level: "TL"
+      trust_level: "nivo zaupanja"
       read_time: "čas prebiranja"
       topics_entered: "vstop v teme"
-      post_count: "# prispevkov"
+      post_count: "prispevkov"
       confirm_delete_other_accounts: "Ste prepričani, da želite izbrisati te račune?"
       powered_by: "s pomočjo <a href='https://maxmind.com'>MaxMindB</a>"
       copied: "skopirano"
@@ -1909,6 +1911,9 @@ sl:
       categories_and_top_topics: "Kategorije in najboljše teme"
       categories_boxes: "Škatle s podkategorijami"
       categories_boxes_with_topics: "Škatle z izpostavljenimi temami"
+    full_name_requirement:
+      required_at_signup: "Zahtevano"
+      optional_at_signup: "Neobvezno"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3636,8 +3641,6 @@ sl:
               content: "Skupine"
             users:
               content: "Uporabniki"
-            my_posts:
-              content: "Moji prispevki"
             review:
               content: "Pregled"
             invite:
@@ -3711,7 +3714,30 @@ sl:
         title: "Seznam poročil"
         sidebar_title: "Poročila"
         sidebar_link:
-          all: "Vse"
+          all: "Vsa poročila"
+      config:
+        developer:
+          title: "Razvijalci"
+        files:
+          title: "Datoteke"
+        legal:
+          title: "Pravno"
+        navigation:
+          title: "Navigacija"
+        notifications:
+          title: "Obvestila"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Drugo"
+        search:
+          title: "Išči"
+        security:
+          title: "Varnost"
+        spam:
+          title: "Neželeno"
+        user_api:
+          title: "Uporabniški API"
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča posodobljena:"
@@ -3801,6 +3827,7 @@ sl:
             category:
               label: Kategorija
       flags:
+        title: "Moderiranje"
         description: "Opis"
         enabled: "Vključeno?"
       groups:
@@ -3851,21 +3878,24 @@ sl:
         group_owners: Skrbniki
         add_owners: Dodaj skrbnike
         no_custom_groups: "Ustvari novo skupino po meri"
+      api_keys:
+        edit: "Uredi"
+        save: "Shrani"
+        cancel: "Prekliči"
+        continue: "Nadaljuj"
+        revoke: "Odstrani"
+        revoked: "Preklican"
       api:
         generate_master: "Ustvari glavni API ključ"
         user: "Uporabnik"
         title: "API"
-        created: Ustvarjeno
-        last_used: Nazadnje uporabljeno
-        never_used: (nikoli)
+        never_used: Nikoli
         generate: "Ustvari"
         revoke: "Prekliči"
-        all_users: "Vsi uporabniki"
         show_details: Podrobnosti
         description: Opis
         save: Shrani
         revoked: Preklican
-        delete: Trajno izbriši
         not_shown_again: Ta ključ ne bo več prikazan. Preden nadaljujete, si ustvarite kopijo.
         continue: Nadaljuj
         scopes:
@@ -3926,12 +3956,11 @@ sl:
           badges: "Značke"
           notifications: "Obvestila"
           permalinks: "Trajne povezave"
-          trust_levels: "Nivo zaupanja"
           users: "Uporabniki"
           groups: "Skupine"
-          user_fields: "Podatki uporabnika"
-          watched_words: "Nadzorovane besede"
           legal: "Pravno"
+          moderation_flags:
+            title: "Moderiranje"
       appearance:
         title: "Videz"
         sidebar_link:
@@ -3941,19 +3970,8 @@ sl:
       email_settings:
         sidebar_link:
           appearance: "Videz"
-      email_logs:
-        sidebar_link:
-          sent: "Poslano"
-          received: "Prejeto"
-          rejected: "Zavrnjeno"
       security:
         title: "Varnost"
-        sidebar_link:
-          error_logs: "Dnevnik napak"
-          screened_emails: "Nadzorovani e-naslovi"
-          screened_ips: "Nadzorovani IPji"
-          screened_urls: "Nadzorovani URLji"
-          search_logs: "Dnevnik iskanj"
       section_landing_pages:
         account:
           title: "Račun"
@@ -3965,6 +3983,7 @@ sl:
           optional: "(neobvezno)"
           saved: "shranjeno!"
         flags:
+          header: "Moderiranje"
           description: "Opis"
           enabled: "Vključeno?"
           edit: "Uredi"
@@ -3978,6 +3997,12 @@ sl:
             topic: "tem"
             post: "prispevkov"
             chat_message: "sporočila klepeta"
+        permalinks:
+          edit: "Uredi"
+          delete: "Izbriši"
+        embeddable_host:
+          edit: "Uredi"
+          delete: "Izbriši"
         look_and_feel:
           themes:
             title: "Videzi"
@@ -4002,7 +4027,6 @@ sl:
         sidebar_link:
           developer: "Razvijalci"
           embedding: "Vdelovanje"
-          rate_limits: "Omejitve"
           user_api: "Uporabniški API"
           onebox: "Onebox"
           files: "Datoteke"
@@ -4035,6 +4059,8 @@ sl:
             confirm: "Želite ustvariti varnostno kopijo?"
           download:
             label: "Naloži"
+          destroy:
+            title: "Izbriši"
         location:
           s3: "S3"
       export_csv:
@@ -4286,7 +4312,6 @@ sl:
         logster:
           title: "Dnevnik napak"
       watched_words:
-        title: "Nadzorovane besede"
         search: "išči"
         clear_filter: "Počisti"
         show_words:
@@ -4353,6 +4378,7 @@ sl:
         status: "Stanje"
         show_emails: "Pokaži e-naslove"
         hide_emails: "Skrij e-naslove"
+        silence_reason: "Razlog za utišanje"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4547,7 +4573,6 @@ sl:
           delete_sso_record: "Izbriši zapis SSO"
           confirm_delete: "Ali ste prepričani, da želite izbrisati ta zapis DiscourseConnect?"
       user_fields:
-        title: "Podatki uporabnika"
         name: "Ime polja"
         type: "Vrsta polja"
         description: "Opis polja"
@@ -4576,10 +4601,8 @@ sl:
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:
-        description: "Lahko spremenite katerikoli besedilo na forumu. Začnite tako da poiščete spodaj:"
         search: "Išči besedilo, ki bi ga rad/a uredil/a"
-        title: "Besedilo"
-        edit: "uredi"
+        edit: "Uredi"
         revert: "Prekliči spremembe"
         revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
         go_back: "Nazaj na iskalnik"
@@ -4715,10 +4738,15 @@ sl:
         delete_confirm: "Ali ste prepričani, da hočete izbrisati emoji :%{name}:?"
         settings: "Nastavitve"
       embedding:
+        delete: "Izbriši"
         title: "Vdelovanje"
-        edit: "uredi"
-        category: "Objavi v kategorijo"
+        edit: "Uredi"
         embed_by_username: "Uporabniško ime za kreiranje teme"
+        save: "Shrani"
+        host_form:
+          save: "Shrani"
+        nav:
+          settings: "Nastavitve"
       permalink:
         title: "Trajne povezave"
         url: "URL"
@@ -4731,6 +4759,9 @@ sl:
         user_title: "Uporabnik"
         username: "Uporabniško ime"
         delete_confirm: Ali ste prepričani, da želite odstraniti trajno povezavo?
+        nav:
+          settings: "Nastavitve"
+          permalinks: "Trajne povezave"
         form:
           label: "Novo:"
           url: "URL"
@@ -4763,3 +4794,18 @@ sl:
       previews:
         share_button: "Deli"
         reply_button: "Odgovori"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "vse kategorije"
+          new: "Nova"
+          unread: "Neprebrane"
+          top: "Najboljše"
+          latest: "Najnovejše"
+          categories: "Kategorije"
+        category_names:
+          site_feedback: "Povratne informacije spletnega mesta"
+        table_headers:
+          topic: "Tema"
+          replies: "Odgovori"
+          views: "Ogledov"
+          activity: "Aktivnost"

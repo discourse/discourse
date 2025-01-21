@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import RestModel from "discourse/models/rest";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
 
 export default class PublishedPage extends RestModel {
   @computed("slug")

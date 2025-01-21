@@ -20,6 +20,24 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body).to be_present
       end
 
+      it "returns silence reason when user is silenced" do
+        silencer =
+          UserSilencer.new(
+            user,
+            admin,
+            message: :too_many_spam_flags,
+            reason: "because I said so",
+            keep_posts: true,
+          )
+        silencer.silence
+
+        get "/admin/users/list.json"
+        expect(response.status).to eq(200)
+
+        silenced_user = response.parsed_body.find { |u| u["id"] == user.id }
+        expect(silenced_user["silence_reason"]).to eq("because I said so")
+      end
+
       context "when showing emails" do
         it "returns email for all the users" do
           get "/admin/users/list.json", params: { show_emails: "true" }
@@ -113,7 +131,7 @@ RSpec.describe Admin::UsersController do
         Fabricate(:user, ip_address: "88.88.88.88")
         Fabricate(:admin, ip_address: user.ip_address)
         Fabricate(:moderator, ip_address: user.ip_address)
-        similar_user = Fabricate(:user, ip_address: user.ip_address)
+        _similar_user = Fabricate(:user, ip_address: user.ip_address)
 
         get "/admin/users/#{user.id}.json"
 
@@ -2137,7 +2155,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
+        _user =
           DiscourseConnect.parse(
             sso.payload,
             secure_session: read_secure_session,

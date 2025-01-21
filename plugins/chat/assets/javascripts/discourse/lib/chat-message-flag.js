@@ -1,7 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class ChatMessageFlag {

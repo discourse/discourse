@@ -1,13 +1,13 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import Site from "discourse/models/site";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance("Topic Discovery Tracked", function (needs) {

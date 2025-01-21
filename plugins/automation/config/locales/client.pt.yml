@@ -139,6 +139,8 @@ pt:
             label: Acionar
           version:
             label: Versão
+          status:
+            label: Estado
           enabled:
             label: Ativado
           disabled:

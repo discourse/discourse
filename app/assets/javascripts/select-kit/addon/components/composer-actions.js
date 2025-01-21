@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -13,7 +14,6 @@ import {
   REPLY,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";

@@ -20,11 +20,10 @@ class ChangeFullNameRequiredSetting < ActiveRecord::Migration[7.2]
     SQL
 
     DB.exec(<<~SQL, value: new_setting) if new_setting
-        INSERT INTO site_settings
-        (name, data_type, value, created_at, updated_at)
-        VALUES
-        ('full_name_requirement', 7, :value, NOW(), NOW())
-      SQL
+      INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
+      VALUES ('full_name_requirement', 7, :value, NOW(), NOW())
+      ON CONFLICT (name) DO NOTHING
+    SQL
   end
 
   def down

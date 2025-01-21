@@ -2268,6 +2268,41 @@ RSpec.describe Email::Receiver do
       text, _elided, _format = receiver.select_body
       expect(text).to be_blank
     end
+
+    it "strip unsubscribe links" do
+      keep_relative = "/email/unsubscribe/#{SecureRandom.hex(32)}"
+      keep_other_instance = "http://other.discourse.org/email/unsubscribe/#{SecureRandom.hex(32)}"
+      strip_in_text = "#{Discourse.base_url}/email/unsubscribe/#{SecureRandom.hex(32)}"
+      strip_in_elided = "#{Discourse.base_url}/email/unsubscribe/#{SecureRandom.hex(32)}"
+
+      email = <<~EMAIL
+        Date: Fri, 10 Jan 2024 13:25:42 +0100
+        Subject: Will this be stripped?
+        From: Foo <foo@discourse.org>
+        To: bar@discourse.org
+        Content-Type: text/plain; charset="UTF-8"
+
+        This is a line that will not be touched.
+
+        This is a [relative](#{keep_relative}) link.
+
+        This one is from <a href="#{keep_other_instance}">another instance</a>
+
+        Here's my unsubscribe link: #{strip_in_text}
+
+        XoXo
+
+        ---
+
+        To unsubscribe from these emails, [click here](#{strip_in_elided}).
+      EMAIL
+
+      text, elided, _ = Email::Receiver.new(email).select_body
+
+      expect(text).to_not include(strip_in_text)
+      expect(text).to include(keep_relative, keep_other_instance)
+      expect(elided).to_not include(strip_in_elided)
+    end
   end
 
   describe "replying to digest" do

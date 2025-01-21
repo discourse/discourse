@@ -328,6 +328,8 @@ ca:
       abandon:
         yes_value: "Descarta"
         no_value: "Reprèn l'edició"
+      dropdown:
+        view_all: "mostra-ho tot"
     topic_count_all:
       one: "Vegeu %{count} tema nou"
       other: "Vegeu %{count} temes nous"
@@ -691,13 +693,13 @@ ca:
       public_admission: "Permet als usuaris d'unir-se al grup lliurement (cal que el grup sigui visible públicament)"
       public_exit: "Permet que els usuaris abandonin el grup lliurement"
       empty:
-        posts: "No hi ha publicacions de membres d'aquest grup."
-        members: "No hi ha membres en aquest grup."
-        requests: "No hi ha sol·licituds d'afiliació per a aquest grup."
-        mentions: "No hi ha mencions d'aquest grup."
-        messages: "No hi ha missatges per a aquest grup."
-        topics: "No hi ha temes de membres d'aquest grup."
-        logs: "No hi ha registres (logs) per a aquest grup."
+        posts: "No hi ha publicacions de membres d'aquest grup"
+        members: "No hi ha membres en aquest grup"
+        requests: "No hi ha sol·licituds d'afiliació per a aquest grup"
+        mentions: "No hi ha mencions d'aquest grup"
+        messages: "No hi ha missatges per a aquest grup"
+        topics: "No hi ha temes de membres d'aquest grup"
+        logs: "No hi ha registres (logs) per a aquest grup"
       add: "Afegeix"
       join: "Registre"
       leave: "Abandona"
@@ -852,7 +854,7 @@ ca:
       trust_level: "nivell de confiança"
       read_time: "temps de lectura"
       topics_entered: "temes introduïts"
-      post_count: "nre. de publicacions"
+      post_count: "publicacions"
       confirm_delete_other_accounts: "Esteu segur que voleu suprimir aquests comptes?"
       powered_by: "utilitzant <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiat"
@@ -1553,6 +1555,9 @@ ca:
       categories_and_top_topics: "Categories i temes principals"
       categories_boxes: "Caixes amb subcategories"
       categories_boxes_with_topics: "Caixes amb temes destacats"
+    full_name_requirement:
+      required_at_signup: "Necessari"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -2943,8 +2948,6 @@ ca:
               content: "Grups"
             users:
               content: "Usuaris"
-            my_posts:
-              content: "Les meves publicacions"
             review:
               content: "Revisa"
             invite:
@@ -2986,7 +2989,30 @@ ca:
         title: "Llista de reports disponibles"
         sidebar_title: "Reports"
         sidebar_link:
-          all: "Tot"
+          all: "Tots els reports"
+      config:
+        developer:
+          title: "Desenvolupador"
+        files:
+          title: "Fitxers"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navegació"
+        notifications:
+          title: "Notificacions"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Altres"
+        search:
+          title: "Cerca"
+        security:
+          title: "Seguretat"
+        spam:
+          title: "Brossa"
+        user_api:
+          title: "API d'usuari"
       dashboard:
         title: "Tauler de control"
         last_updated: "Tauler de control actualitzat:"
@@ -3074,6 +3100,7 @@ ca:
             category:
               label: Categoria
       flags:
+        title: "Moderació"
         description: "Descripció"
         enabled: "Activat?"
       groups:
@@ -3128,28 +3155,29 @@ ca:
         add_owners: Afegeix propietaris
         none_selected: "Seleccioneu un grup per a començar"
         no_custom_groups: "Crea un no grup personalitzat"
+      api_keys:
+        edit: "Edita"
+        save: "Desa"
+        cancel: "Cancel·la"
+        continue: "Continua"
+        revoke: "Revoca"
+        revoked: "Revocat"
       api:
         generate_master: "Genera una clau API mestra"
         none: "No hi ha claus API actives ara mateix"
         user: "Usuari"
         title: "API"
         key: "Clau"
-        created: Creat
         updated: Actualitzat
-        last_used: Darrer utilitzat
-        never_used: (mai)
+        never_used: Mai
         generate: "Genera"
-        undo_revoke: "Desfés revocar"
         revoke: "Revoca"
-        all_users: "Tots els usuaris"
         active_keys: "Claus actives de l'API"
         show_details: Detalls
         description: Descripció
         no_description: (sense descripció)
         all_api_keys: Totes les claus de l'API
-        user_mode: Nivell d’usuari
         impersonate_all_users: Suplanta qualsevol usuari
-        single_user: "Usuari únic"
         user_placeholder: Introduïu el nom d'usuari
         description_placeholder: Per a què es farà servir aquesta clau?
         save: Desa
@@ -3231,16 +3259,14 @@ ca:
           badges: "Insígnies"
           notifications: "Notificacions"
           permalinks: "Enllaços permanents"
-          trust_levels: "Nivells de confiança"
           users: "Usuaris"
           groups: "Grups"
-          user_fields: "Camps d'usuari"
-          watched_words: "Paraules vigilades"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderació"
       appearance:
         title: "Aparença"
         sidebar_link:
-          color_schemes: "Paletes de colors"
           emoji: "Emoji"
           navigation: "Navegació"
           themes: "Aparences"
@@ -3249,22 +3275,8 @@ ca:
       email_settings:
         sidebar_link:
           appearance: "Aparença"
-          preview_summary: "Previsualitza el resum"
-      email_logs:
-        sidebar_link:
-          sent: "Enviat"
-          skipped: "Saltat"
-          bounced: "Rebotat"
-          received: "Rebut"
-          rejected: "Rebutjat"
       security:
         title: "Seguretat"
-        sidebar_link:
-          error_logs: "Error de registres (logs)"
-          screened_emails: "Correus sota supervisió"
-          screened_ips: "IPs sota supervisió"
-          screened_urls: "URLs sota supervisió"
-          search_logs: "Cerca els registres (logs)"
       section_landing_pages:
         account:
           title: "Compte"
@@ -3277,6 +3289,7 @@ ca:
           optional: "(opcional)"
           saved: "desat!"
         flags:
+          header: "Moderació"
           description: "Descripció"
           enabled: "Activat?"
           edit: "Edita"
@@ -3290,6 +3303,12 @@ ca:
             invalid_applies_to: "Necessari"
             topic: "temes"
             post: "publicacions"
+        permalinks:
+          edit: "Edita"
+          delete: "Suprimeix"
+        embeddable_host:
+          edit: "Edita"
+          delete: "Suprimeix"
         look_and_feel:
           themes:
             title: "Aparences"
@@ -3312,11 +3331,10 @@ ca:
           installed: "Instal·lat"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Desenvolupador"
           embedding: "Incrustant"
-          rate_limits: "Límits de freqüència"
           user_api: "API d'usuari"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Fitxers"
           other_options: "Altres"
@@ -3359,7 +3377,7 @@ ca:
             title: "Envia correu amb enllaç de descàrrega"
             alert: "Us hem enviat per correu un enllaç per a descarregar aquesta còpia de seguretat"
           destroy:
-            title: "Elimina la còpia de seguretat"
+            title: "Suprimeix"
             confirm: "Esteu segur que voleu destruir aquesta còpia de seguretat?"
           restore:
             label: "Restaura"
@@ -3556,10 +3574,7 @@ ca:
             title: "Seleccioneu la paleta de colors base"
             description: "Paleta base:"
           title: "Colors"
-          edit: "Edita les paletes de colors"
-          long_title: "Paletes de colors"
           about: "Modifiqueu els colors utilitzats per les vostres aparences. Creeu una nova paleta de colors per a començar."
-          new_name: "Nova paleta de colors"
           copy_name_prefix: "Còpia de"
           delete_confirm: "Voleu suprimir aquesta paleta de colors?"
           undo: "Desfés"
@@ -3831,7 +3846,6 @@ ca:
         logster:
           title: "Error de registres (logs)"
       watched_words:
-        title: "Paraules vigilades"
         search: "cerca"
         clear_filter: "Neteja"
         download: Descarrega
@@ -3898,6 +3912,7 @@ ca:
         status: "Estat"
         show_emails: "Mostra correus"
         hide_emails: "Amaga els correus "
+        silence_reason: "Raó del silenciament"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4106,7 +4121,6 @@ ca:
           external_email: "Correu electrònic"
           external_avatar_url: "URL de la imatge de perfil"
       user_fields:
-        title: "Camps d'usuari"
         untitled: "Sense títol"
         name: "Nom del camp"
         type: "Tipus de camp"
@@ -4134,10 +4148,8 @@ ca:
           confirm: "Confirmació"
           dropdown: "Desplega"
       site_text:
-        description: "Podeu personalitzar qualsevol text en el vostre fòrum. Comenceu cercant aquí:"
         search: "Cerca el text que t'agradaria editar"
-        title: "Text"
-        edit: "edita"
+        edit: "Edita"
         revert: "Reverteix els canvis"
         revert_confirm: "Esteu segur que voleu revertir els canvis?"
         go_back: "Torna a la cerca"
@@ -4284,15 +4296,11 @@ ca:
         settings: "Configuració"
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
+        delete: "Suprimeix"
         confirm_delete: "Esteu segur que voleu suprimir aquest amfitrió?"
         title: "Incrustant"
-        host: "Amfitrions permesos"
-        edit: "edita"
-        category: "Publica en la categoria"
-        add_host: "Afegeix amfitrió"
-        settings: "Configuració d'incrustacions"
-        crawling_settings: "Configuració del rastrejador"
-        crawling_description: "Quan Discourse crea temes per a les vostres publicacions, si no hi ha sindicació RSS/ATOM, es provarà d'analitzar-ne els continguts a partir del vostre HTML. A vegades pot ser complicat extraure el vostre contingut, i per això oferim la possibilitat d'especificar regles CSS per a fer més fàcil l'extracció."
+        edit: "Edita"
+        crawlers_description: "Quan Discourse crea temes per a les vostres publicacions, si no hi ha sindicació RSS/ATOM, es provarà d'analitzar-ne els continguts a partir del vostre HTML. A vegades pot ser complicat extraure el vostre contingut, i per això oferim la possibilitat d'especificar regles CSS per a fer més fàcil l'extracció."
         embed_by_username: "Nom d'usuari per a crear un tema"
         embed_post_limit: "Nombre màxim de publicacions que s'incrusten "
         embed_title_scrubber: "Expressió regular emprada per a depurar el títol de les publicacions"
@@ -4300,7 +4308,12 @@ ca:
         allowed_embed_selectors: "Selector de CSS per a elements permesos en les incrustacions"
         blocked_embed_selectors: "Selector de CSS per a elements que han estat eliminats de les incrustacions"
         allowed_embed_classnames: "Noms permesos de classes de CSS"
-        save: "Desa la configuració d'incrustacions"
+        save: "Desa"
+        host_form:
+          save: "Desa"
+        nav:
+          settings: "Configuració"
+          crawlers: "Rastrejadors"
       permalink:
         title: "Enllaços permanents"
         url: "URL"
@@ -4313,13 +4326,15 @@ ca:
         user_title: "Usuari"
         username: "Nom d'usuari "
         delete_confirm: Esteu segur que voleu suprimir l'enllaç permanent?
+        nav:
+          settings: "Configuració"
+          permalinks: "Enllaços permanents"
         form:
           label: "Nou:"
           url: "URL"
           save: "Desa"
       reseed:
         action:
-          label: "Reemplaça el text..."
           title: "Reemplaça el text de categories i temes amb les traduccions"
         modal:
           title: "Reemplaça el text"
@@ -4347,3 +4362,18 @@ ca:
       previews:
         share_button: "Comparteix"
         reply_button: "Respon"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "totes les categories"
+          new: "Nou"
+          unread: "No llegits"
+          top: "Principals"
+          latest: "Més recents"
+          categories: "Categories"
+        category_names:
+          site_feedback: "Comentaris sobre el lloc web"
+        table_headers:
+          topic: "Tema"
+          replies: "Respostes"
+          views: "Vistes"
+          activity: "Activitat"

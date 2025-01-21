@@ -1,7 +1,7 @@
 import { warn } from "@ember/debug";
 import { BasePlugin } from "@uppy/core";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 export class UppyPluginBase extends BasePlugin {
   constructor(uppy, opts) {

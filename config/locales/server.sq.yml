@@ -797,7 +797,6 @@ sq:
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     automatically_unpin_topics: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes."
     read_time_word_count: "Numërimi i fjalëve për minutë për të llogaritur kohën e vlerësuar të leximit."
-    full_name_required: "Full name is a required field of a user's profile."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
@@ -1384,12 +1383,8 @@ sq:
             label: "Parashikimi"
           homepage_style:
             choices:
-              categories_only:
-                label: "Vetëm kategoritë"
-              categories_with_featured_topics:
-                label: "Kategoritë dhe temat e zgjedhura"
-              categories_and_latest_topics:
-                label: "Kategoritë dhe temat e fundit"
+              latest:
+                label: "Më të fundit"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'

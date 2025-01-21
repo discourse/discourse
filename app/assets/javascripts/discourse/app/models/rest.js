@@ -4,7 +4,7 @@ import EmberObject from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { getOwner, setOwner } from "@ember/owner";
 import { Promise } from "rsvp";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 
 export default class RestModel extends EmberObject {
   // Overwrite and JSON will be passed through here before `create` and `update`

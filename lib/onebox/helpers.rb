@@ -105,6 +105,7 @@ module Onebox
         headers ||= {}
 
         headers["User-Agent"] ||= user_agent if user_agent
+        headers["Accept-Language"] ||= Oneboxer.accept_language
 
         request = Net::HTTP::Get.new(uri.request_uri, headers)
         start_time = Time.now

@@ -102,6 +102,7 @@
     @label={{this.createTopicLabel}}
     @btnClass={{this.createTopicClass}}
     @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
+    @showDrafts={{if (gt this.draftCount 0) true false}}
   />
 
   <PluginOutlet

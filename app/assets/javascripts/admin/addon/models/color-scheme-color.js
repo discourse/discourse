@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { observes, on } from "@ember-decorators/object";
 import { propertyNotEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ColorSchemeColor extends EmberObject {

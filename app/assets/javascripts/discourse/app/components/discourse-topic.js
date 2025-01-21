@@ -7,9 +7,9 @@ import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
+import { bind } from "discourse/lib/decorators";
 import { highlightPost } from "discourse/lib/utilities";
 import Scrolling from "discourse/mixins/scrolling";
-import { bind } from "discourse-common/utils/decorators";
 
 @classNameBindings(
   "multiSelect",

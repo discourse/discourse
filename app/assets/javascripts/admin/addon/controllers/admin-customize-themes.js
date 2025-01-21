@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { THEMES } from "admin/models/theme";
 
 export default class AdminCustomizeThemesController extends Controller {

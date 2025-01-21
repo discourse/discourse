@@ -8,6 +8,8 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import escape from "discourse/lib/escape";
+import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import {
@@ -16,8 +18,6 @@ import {
 } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import escape from "discourse-common/lib/escape";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 import ForgotPassword from "./forgot-password";
 

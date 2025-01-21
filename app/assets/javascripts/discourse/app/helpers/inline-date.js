@@ -1,5 +1,5 @@
+import deprecated from "discourse/lib/deprecated";
 import { relativeAge } from "discourse/lib/formatter";
-import deprecated from "discourse-common/lib/deprecated";
 
 export default function inlineDate(dt) {
   deprecated("inline-date helper is deprecated", {

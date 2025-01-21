@@ -2785,7 +2785,7 @@ HTML
       .with("[PrettyText] Deprecation notice: Some deprecation message")
 
     PrettyText.v8.eval <<~JS
-      require("discourse-common/lib/deprecated").default("Some deprecation message");
+      require("discourse/lib/deprecated").default("Some deprecation message");
     JS
   end
 

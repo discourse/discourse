@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import TagUpload from "discourse/components/modal/tag-upload";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class TagsIndexController extends Controller {

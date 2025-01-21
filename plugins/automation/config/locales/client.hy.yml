@@ -142,5 +142,7 @@ hy:
             label: Գործարկել
           version:
             label: Տարբերակ
+          status:
+            label: Ստատուս
           disabled:
             label: Անջատված

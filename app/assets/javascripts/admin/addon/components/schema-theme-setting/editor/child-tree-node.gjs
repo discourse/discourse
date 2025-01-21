@@ -1,5 +1,5 @@
 import { on } from "@ember/modifier";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 
 <template>
   <li

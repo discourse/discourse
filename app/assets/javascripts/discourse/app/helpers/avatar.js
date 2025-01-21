@@ -1,9 +1,9 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { avatarImg } from "discourse/lib/avatar-utils";
+import { registerRawHelper } from "discourse/lib/helpers";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
-import { registerRawHelper } from "discourse-common/lib/helpers";
 import { i18n } from "discourse-i18n";
 
 let _customAvatarHelpers;

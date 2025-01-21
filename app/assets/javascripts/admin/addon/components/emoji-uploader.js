@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { isEmpty } from "@ember/utils";
+import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 const DEFAULT_GROUP = "default";
 

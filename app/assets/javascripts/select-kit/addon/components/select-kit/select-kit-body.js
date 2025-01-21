@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 
 @classNames("select-kit-body")
 @classNameBindings("emptyBody:empty-body")

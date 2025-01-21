@@ -113,5 +113,7 @@ th:
             label: ชื่อ
           version:
             label: เวอร์ชัน
+          status:
+            label: สถานะ
           disabled:
             label: ปิดใช้งานแล้ว

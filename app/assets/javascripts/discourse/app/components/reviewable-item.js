@@ -9,11 +9,11 @@ import RejectReasonReviewableModal from "discourse/components/modal/reject-reaso
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import optionalService from "discourse/lib/optional-service";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let _components = {};
@@ -186,6 +186,15 @@ export default class ReviewableItem extends Component {
   @discourseComputed("_updates.category_id", "reviewable.category.id")
   tagCategoryId(updatedCategoryId, categoryId) {
     return updatedCategoryId || categoryId;
+  }
+
+  @discourseComputed("reviewable.type", "reviewable.target_created_by")
+  showIpLookup(reviewableType) {
+    return (
+      reviewableType !== "ReviewableUser" &&
+      this.currentUser.staff &&
+      this.reviewable.target_created_by
+    );
   }
 
   @bind

@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import dIcon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import dIcon from "discourse-common/helpers/d-icon";
 import ChatUserAvatar from "./chat-user-avatar";
 
 const ChatComposerMessageDetails = <template>

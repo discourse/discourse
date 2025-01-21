@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
+import icon from "discourse/helpers/d-icon";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class BookmarkIcon extends Component {

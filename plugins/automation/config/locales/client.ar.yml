@@ -415,6 +415,8 @@ ar:
             label: البرنامج النصي
           version:
             label: الإصدار
+          status:
+            label: الحالة
           enabled:
             label: مفعَّلة
           disabled:

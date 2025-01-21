@@ -1743,7 +1743,6 @@ ur:
     app_association_android: "<a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> اَینڈ پائنٹ کے مشمولات، جو گُوگل کے ڈیجیٹل اَیسٹ لنکس API کیلئے استعمال ہوتے ہیں۔"
     app_association_ios: "<a href='%{base_path}/apple-app-site-association'>اَیپل-اَیپ سائٹ-ایسوسی-ایشن</a> اَینڈ پائنٹ کے مشمولات، جو اِس سائٹ اور iOS ایپس کے مابین یونیورسل لنکس بنانے کیلئے استعمال ہوتے ہیں۔"
     auto_handle_queued_age: "اُن ریکارڈز کو خود کار طریقہ سے ہَینڈل کریں جو اتنے دنوں کے بعد نظر ثانی کے منتظر ہیں۔ فلَیگز کو نظر انداز کیا جائے گا۔ قطار شدہ پوسٹس اور صارفین کو مسترد کردیا جائے گا۔ اِس خصوصیت کو غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔"
-    full_name_required: "مکمل نام ایک صارف کے پروفائل کا لازمی فیلڈ ہے۔"
     enable_names: "صارف کا مکمل نام اُن کے پروفائل، صارف کارڈ، اور ای میل پر دکھائیں۔ ہر جگہ مکمل نام چھپانے کیلئے غیر فعال کریں۔"
     display_name_on_posts: "اپنے @username کے علاوہ صارف کی پوسٹس پر اُن کا مکمل نام بھی دکھائیں۔"
     show_time_gap_days: "اگر دو پوسٹس اتنے دنوں بعد شائع کی گئے ہوں، تو ٹاپک میں وقت کا فرق دکھائیں۔"
@@ -3283,17 +3282,7 @@ ur:
           homepage_style:
             choices:
               latest:
-                label: "تازہ ترین ٹاپک"
-              categories_only:
-                label: "صرف زمرہ جات"
-              categories_with_featured_topics:
-                label: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
-              categories_and_latest_topics:
-                label: "زُمرہ جات اور تازہ ترین ٹاپکس"
-              categories_and_top_topics:
-                label: "زمرہ جات اور ٹاپ ٹاپکس"
-              subcategories_with_featured_topics:
-                label: "نمایاں عنوانات کے ساتھ ذیلی زمرہ جات"
+                label: "تازہ ترین"
       corporate:
         fields:
           governing_law:

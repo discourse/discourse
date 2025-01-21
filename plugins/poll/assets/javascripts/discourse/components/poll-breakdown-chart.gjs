@@ -3,7 +3,7 @@ import { mapBy } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import I18n from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";

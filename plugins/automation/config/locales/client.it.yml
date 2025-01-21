@@ -411,6 +411,8 @@ it:
             label: Script
           version:
             label: Versione
+          status:
+            label: Stato
           enabled:
             label: Abilitati
           disabled:

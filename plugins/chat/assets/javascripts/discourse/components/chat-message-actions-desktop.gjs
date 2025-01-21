@@ -26,7 +26,6 @@ const REDUCED_WIDTH_THRESHOLD = 500;
 
 export default class ChatMessageActionsDesktop extends Component {
   @service chat;
-  @service chatEmojiPickerManager;
   @service site;
 
   @tracked size = FULL;
@@ -53,6 +52,16 @@ export default class ChatMessageActionsDesktop extends Component {
     return this.size === FULL;
   }
 
+  get messageContainer() {
+    return chatMessageContainer(this.message.id, this.context);
+  }
+
+  @action
+  openEmojiPicker(_, event) {
+    event.preventDefault();
+    this.messageInteractor.openEmojiPicker(event.target);
+  }
+
   @action
   onWheel() {
     // prevents menu to stop scroll on the list of messages
@@ -64,24 +73,19 @@ export default class ChatMessageActionsDesktop extends Component {
     this.popper?.destroy();
 
     schedule("afterRender", () => {
-      const messageContainer = chatMessageContainer(
-        this.message.id,
-        this.context
-      );
-
-      if (!messageContainer) {
+      if (!this.messageContainer) {
         return;
       }
 
-      const viewport = messageContainer.closest(".popper-viewport");
+      const viewport = this.messageContainer.closest(".popper-viewport");
       this.size =
         viewport.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
 
-      if (!messageContainer) {
+      if (!this.messageContainer) {
         return;
       }
 
-      this.popper = createPopper(messageContainer, element, {
+      this.popper = createPopper(this.messageContainer, element, {
         placement: "top-end",
         strategy: "fixed",
         modifiers: [
@@ -133,10 +137,7 @@ export default class ChatMessageActionsDesktop extends Component {
           }}
         >
           {{#if this.shouldRenderFavoriteReactions}}
-            {{#each
-              this.messageInteractor.emojiReactions key="emoji"
-              as |reaction|
-            }}
+            {{#each this.messageInteractor.emojiReactions as |reaction|}}
               <ChatMessageReaction
                 @reaction={{reaction}}
                 @onReaction={{this.messageInteractor.react}}
@@ -149,10 +150,9 @@ export default class ChatMessageActionsDesktop extends Component {
 
           {{#if this.messageInteractor.canInteractWithMessage}}
             <DButton
-              @action={{this.messageInteractor.openEmojiPicker}}
-              @icon="discourse-emojis"
-              @title="chat.react"
+              @action={{this.openEmojiPicker}}
               @forwardEvent={{true}}
+              @icon="discourse-emojis"
               class="btn-flat react-btn"
             />
           {{/if}}

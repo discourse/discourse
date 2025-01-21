@@ -1,13 +1,13 @@
 import { cancel } from "@ember/runloop";
 import { createPopper } from "@popperjs/core";
 import $ from "jquery";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import Site from "discourse/models/site";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
 
 /**
   This is a jQuery plugin to support autocompleting values in our text fields.
@@ -478,7 +478,11 @@ export default function (options) {
     }
 
     prevTerm = term;
-    if (term.length !== 0 && term.trim().length === 0) {
+    if (
+      (term.length !== 0 && term.trim().length === 0) ||
+      // close unless the caret is at the end of a word, like #line|<-
+      options.textHandler.value[options.textHandler.getCaretPosition()]?.trim()
+    ) {
       closeAutocomplete();
       return null;
     } else {

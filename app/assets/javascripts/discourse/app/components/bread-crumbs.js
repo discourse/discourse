@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { filter } from "@ember/object/computed";
 import { classNameBindings, tagName } from "@ember-decorators/component";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 
 //  A breadcrumb including category drop downs
 @tagName("ol")

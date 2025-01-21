@@ -11,14 +11,14 @@ import { observes, on } from "@ember-decorators/object";
 import CardContentsBase from "discourse/components/card-contents-base";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { durationTiny } from "discourse/lib/formatter";
+import { getURLWithCDN } from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNames("user-card")

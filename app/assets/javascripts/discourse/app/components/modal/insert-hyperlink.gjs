@@ -11,9 +11,9 @@ import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import discourseDebounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
 import { prefixProtocol } from "discourse/lib/url";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { i18n } from "discourse-i18n";
 
 export default class InsertHyperlink extends Component {

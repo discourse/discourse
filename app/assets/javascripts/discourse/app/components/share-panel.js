@@ -2,10 +2,10 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import discourseComputed from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class SharePanel extends Component {

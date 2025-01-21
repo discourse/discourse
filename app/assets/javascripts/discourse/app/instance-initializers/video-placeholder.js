@@ -1,7 +1,7 @@
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
 import { i18n } from "discourse-i18n";
 
 export default {

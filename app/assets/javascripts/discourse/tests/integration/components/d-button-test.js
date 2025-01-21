@@ -2,8 +2,8 @@ import ClassicComponent from "@ember/component";
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 import I18n, { i18n } from "discourse-i18n";
 
 module("Integration | Component | d-button", function (hooks) {

@@ -1,5 +1,5 @@
+import discourseLater from "discourse/lib/later";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
-import discourseLater from "discourse-common/lib/later";
 
 // Send bg color to webview so iOS status bar matches site theme
 export default {

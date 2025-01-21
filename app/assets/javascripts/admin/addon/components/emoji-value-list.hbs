@@ -43,17 +43,8 @@
 {{/if}}
 
 <div class="value">
-  <DButton
-    @action={{fn this.editValue this.data}}
-    @icon="discourse-emojis"
-    @label="admin.site_settings.emoji_list.add_emoji_button.label"
-    class="add-emoji-button d-editor-textarea-wrapper"
+  <EmojiPicker
+    @label={{i18n "admin.site_settings.emoji_list.add_emoji_button.label"}}
+    @didSelectEmoji={{this.emojiSelected}}
   />
 </div>
-
-<EmojiPicker
-  @isActive={{this.emojiPickerIsActive}}
-  @isEditorFocused={{this.isEditorFocused}}
-  @emojiSelected={{this.emojiSelected}}
-  @onEmojiPickerClose={{this.closeEmojiPicker}}
-/>

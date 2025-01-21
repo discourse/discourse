@@ -1,4 +1,4 @@
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 
 export default function capitalizeString(str) {
   deprecated("capitalize-string helper is deprecated", {

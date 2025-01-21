@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreaCard extends Component {
-  @tracked collapsed = false;
+  @tracked collapsed = this.args.collapsed;
 
   get computedHeading() {
     if (this.args.heading) {

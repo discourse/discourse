@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const CUSTOM_REASON_KEY = "custom";

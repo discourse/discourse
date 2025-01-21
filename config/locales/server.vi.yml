@@ -1290,7 +1290,6 @@ vi:
     likes_notification_consolidation_window_mins: "Khoảng thời gian tính bằng phút mà các thông báo đã thích được tổng hợp thành một thông báo sau khi đạt đến ngưỡng. Ngưỡng có thể được định cấu hình thông qua `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi người dùng xuống cuối trang."
     read_time_word_count: "Đếm số từ mỗi phút để ước lượng thời gian đọc."
-    full_name_required: "Tên đầy đủ là trường bắt buộc trong hồ sơ thành viên."
     enable_names: "Hiển thị tên đầy đủ của thành viên trên trang hồ sơ, thẻ thành viên, và email. Tắt để ẩn tên đầy đủ ở khắp mọi nơi."
     display_name_on_posts: "Hiển thị tên đầy đủ của thành viên trên bài viết của họ và khi gõ @username."
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
@@ -2136,18 +2135,8 @@ vi:
             label: "Xem trước"
           homepage_style:
             choices:
-              categories_only:
-                label: "Chỉ chuyên mục"
-              categories_with_featured_topics:
-                label: "Các chuyên mục và chủ đề nổi bật"
-              categories_and_latest_topics:
-                label: "Các chuyên mục và chủ đề mới"
-              categories_and_latest_topics_created_date:
-                label: "Danh mục và Chủ đề mới nhất (sắp xếp theo chủ đề ngày tạo)"
-              categories_and_top_topics:
-                label: "Chuyên mục và Chủ đề nổi bật"
-              subcategories_with_featured_topics:
-                label: "Danh mục con với các chủ đề nổi bật"
+              latest:
+                label: "Mới nhất"
       corporate:
         fields:
           contact_url:

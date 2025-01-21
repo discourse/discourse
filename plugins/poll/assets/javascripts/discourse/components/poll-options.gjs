@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PollOptionRankedChoice from "./poll-option-ranked-choice";
 

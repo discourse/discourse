@@ -1,5 +1,5 @@
 import cookie, { removeCookie } from "discourse/lib/cookie";
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 import { i18n } from "discourse-i18n";
 
 const keySelector = "meta[name=discourse_theme_id]";

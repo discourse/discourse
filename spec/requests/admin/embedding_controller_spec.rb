@@ -43,10 +43,11 @@ RSpec.describe Admin::EmbeddingController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "updates embedding" do
+      it "updates posts and topics settings" do
         put "/admin/customize/embedding.json",
             params: {
               embedding: {
+                type: "posts_and_topics",
                 embed_by_username: "system",
                 embed_post_limit: 200,
               },
@@ -56,6 +57,21 @@ RSpec.describe Admin::EmbeddingController do
         expect(response.parsed_body["embedding"]["embed_by_username"]).to eq("system")
         expect(response.parsed_body["embedding"]["embed_post_limit"]).to eq(200)
       end
+
+      it "updates crawlers settings" do
+        put "/admin/customize/embedding.json",
+            params: {
+              embedding: {
+                type: "crawlers",
+                allowed_embed_selectors: "article",
+                blocked_embed_selectors: "p",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["embedding"]["allowed_embed_selectors"]).to eq("article")
+        expect(response.parsed_body["embedding"]["blocked_embed_selectors"]).to eq("p")
+      end
     end
 
     shared_examples "embedding updates not allowed" do
@@ -63,6 +79,7 @@ RSpec.describe Admin::EmbeddingController do
         put "/admin/customize/embedding.json",
             params: {
               embedding: {
+                type: "posts_and_topics",
                 embed_by_username: "system",
                 embed_post_limit: 200,
               },

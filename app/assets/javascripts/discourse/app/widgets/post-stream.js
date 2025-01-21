@@ -2,14 +2,14 @@ import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import discourseDebounce from "discourse/lib/debounce";
+import { iconNode } from "discourse/lib/icon-library";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 let transformCallbacks = null;

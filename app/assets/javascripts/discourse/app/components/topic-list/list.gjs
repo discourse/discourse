@@ -110,7 +110,9 @@ export default class TopicList extends Component {
   }
 
   get bulkSelectEnabled() {
-    return this.args.bulkSelectHelper?.bulkSelectEnabled;
+    return (
+      this.args.bulkSelectHelper?.bulkSelectEnabled && this.args.canBulkSelect
+    );
   }
 
   get canDoBulkActions() {

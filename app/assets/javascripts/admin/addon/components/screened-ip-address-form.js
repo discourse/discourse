@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames, tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 

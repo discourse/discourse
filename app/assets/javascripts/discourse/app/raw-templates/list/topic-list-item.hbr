@@ -18,7 +18,7 @@
 <td class='main-link clearfix topic-list-data' colspan="1">
   {{~raw-plugin-outlet name="topic-list-before-link"}}
   {{~plugin-outlet name="topic-list-before-link" outletArgs=(raw-hash topic=topic)}}
-  <span class='link-top-line'>
+  <span class="link-top-line" role="heading" aria-level="2">
     {{~raw-plugin-outlet name="topic-list-before-status"}}
     {{~plugin-outlet name="topic-list-before-status" outletArgs=(raw-hash topic=topic)}}
     {{~raw "topic-status" topic=topic}}

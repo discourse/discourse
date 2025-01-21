@@ -391,6 +391,8 @@ sv:
         confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
+      dropdown:
+        view_all: "visa alla"
     topic_count_all:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
@@ -855,13 +857,8 @@ sv:
       public_admission: "Tillåt användare att fritt gå med i grupp (Kräver offentligt synlig grupp)"
       public_exit: "Tillåt användare att fritt lämna grupp"
       empty:
-        posts: "Det är inga kommentarer från medlemmar i denna grupp"
-        members: "Det finns inga medlemmar i denna grupp"
-        requests: "Det finns inga medlemsansökningar för denna grupp."
-        mentions: "Det finns inga omnämnanden av denna grupp"
-        messages: "Det finns inga meddelanden för denna grupp."
-        topics: "Det finns inga trådar från medlemmar i denna grupp"
-        logs: "Det finns inga loggar för denna grupp"
+        requests: "Det finns inga medlemsansökningar för denna grupp"
+        messages: "Det finns inga meddelanden för denna grupp"
       add: "Lägg till"
       join: "Gå med"
       leave: "Lämna"
@@ -1048,10 +1045,10 @@ sv:
         one: "Ta bort %{count}"
         other: "Ta bort %{count}"
       username: "användarnamn"
-      trust_level: "TL"
+      trust_level: "förtroendenivå"
       read_time: "lästid"
       topics_entered: "besökta ämnen"
-      post_count: "# inlägg"
+      post_count: "inlägg"
       confirm_delete_other_accounts: "Är du säker på att du vill ta bort dessa här konton?"
       powered_by: "använd <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopierad"
@@ -2099,6 +2096,9 @@ sv:
       categories_boxes: "Boxar med underkategorier"
       categories_boxes_with_topics: "Boxar med utvalda ämnen"
       subcategories_with_featured_topics: "Underkategorier med utvalda ämnen"
+    full_name_requirement:
+      required_at_signup: "Krävs"
+      optional_at_signup: "Valfritt"
     shortcut_modifier_key:
       shift: "Skift"
       ctrl: "Ctrl"
@@ -3188,6 +3188,8 @@ sv:
           one: Du har markerat <b>%{count}</b> inlägg.
           other: "Du har markerat <b>%{count}</b> inlägg."
       deleted_by_author_simple: "(ämne raderat av författaren)"
+    post_list:
+      aria_post_number: "%{title} - inlägg #%{postNumber}"
     post:
       confirm_delete: "Är du säker på att du vill radera det här inlägget?"
       quote_reply: "Citat"
@@ -4263,11 +4265,9 @@ sv:
             users:
               content: "Användare"
               title: "Lista över alla användare"
-            my_posts:
-              content: "Mina inlägg"
-              content_drafts: "Mina utkast"
-              title: "Min senaste ämnesaktivitet"
-              title_drafts: "Mina utkast som inte har publicerats"
+            my_drafts:
+              content: "Mina utkast"
+              title: "Mina utkast som inte har publicerats"
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
@@ -4386,7 +4386,7 @@ sv:
           paste: "Klistra in..."
           save: "Spara som..."
   admin_js:
-    type_to_filter: "skriv för att filtrera…"
+    type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
     admin:
       title: "Discourse-administratör"
@@ -4399,12 +4399,34 @@ sv:
           never: "aldrig"
       reports:
         title: "Lista över tillgängliga rapporter"
-        meta_doc: "Utforska vår <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentation</a> för att se en detaljerad översikt över rapporterna."
         sidebar_title: "Rapporter"
         sidebar_link:
-          all: "Alla"
-      new_features:
-        title: "Vad är nytt?"
+          all: "Alla rapporter"
+      config:
+        developer:
+          title: "Utvecklare"
+        files:
+          title: "Filer"
+        legal:
+          title: "Juridik"
+        logo:
+          title: "Webbplatsens logotyp"
+        navigation:
+          title: "Navigering"
+        notifications:
+          title: "Aviseringar"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Övrigt"
+        search:
+          title: "Sök"
+        security:
+          title: "Säkerhet"
+        spam:
+          title: "Skräppost"
+        user_api:
+          title: "Användar-API"
       dashboard:
         title: "Översiktspanel"
         last_updated: "Översiktspanelen uppdaterad:"
@@ -4420,7 +4442,6 @@ sv:
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Avfärda"
         new_features:
-          title: "Vad är nytt?"
           previous_announcements: "Du kan se tidigare meddelanden om nya funktioner på <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Läs mer..."
         last_checked: "Senast kollad"
@@ -4499,6 +4520,7 @@ sv:
             include_subcategories:
               label: "Inkludera underkategorier"
       flags:
+        title: "Moderering"
         description: "Beskrivning"
         enabled: "Aktiverad?"
       groups:
@@ -4574,6 +4596,13 @@ sv:
         add_owners: Lägg till ägare
         none_selected: "Välj en grupp för att komma igång"
         no_custom_groups: "Skapa en egen grupp"
+      api_keys:
+        edit: "Redigera"
+        save: "Spara"
+        cancel: "Avbryt"
+        continue: "Fortsätt"
+        revoke: "Upphäv"
+        revoked: "Återkallad"
       api:
         generate_master: "Generera API-huvudnyckel"
         none: "Det finns inga aktiva API-nycklar just nu."
@@ -4581,12 +4610,10 @@ sv:
         title: "API"
         key: "Key"
         keys: "Nycklar"
-        created: Skapad
+        created: Skapad av
         updated: Uppdaterad
-        last_used: Senast använd
-        never_used: (aldrig)
+        never_used: Aldrig
         generate: "Generera"
-        undo_revoke: "Ångra återkallelse"
         revoke: "Återkalla"
         all_users: "Alla användare"
         active_keys: "Aktiva API-nycklar"
@@ -4595,16 +4622,13 @@ sv:
         description: Beskrivning
         no_description: (ingen beskrivning)
         all_api_keys: Alla API-nycklar
-        user_mode: Användarnivå
         scope_mode: Omfattning
         impersonate_all_users: Imitera en användare
-        single_user: "Enstaka användare"
         user_placeholder: Ange användarnamn
         description_placeholder: Vad används denna nyckel till?
         save: Spara
         new_key: Ny API-nyckel
         revoked: Upphävd
-        delete: Radera permanent
         not_shown_again: Denna nyckel kommer inte att visas igen. Försäkra dig om att du har tagit en kopia innan du fortsätter.
         continue: Fortsätt
         scopes:
@@ -4618,8 +4642,6 @@ sv:
           global_description: API-nyckeln har ingen begränsning och alla slutpunkter är tillgängliga.
           resource: Resurs
           action: Åtgärd
-          allowed_parameters: Tillåtna parametrar
-          optional_allowed_parameters: Tillåtna parametrar (valfritt)
           any_parameter: (valfri parameter)
           allowed_urls: Tillåtna webbadresser
           descriptions:
@@ -4818,19 +4840,19 @@ sv:
       community:
         title: "Community"
         sidebar_link:
+          about_your_site: "Om din webbplats"
           badges: "Utmärkelser"
           notifications: "Aviseringar"
           permalinks: "Permalänkar"
-          trust_levels: "Förtroendenivåer"
           users: "Användare"
           groups: "Grupper"
-          user_fields: "Användarfält"
-          watched_words: "Bevakade ord"
           legal: "Juridik"
+          moderation_flags:
+            title: "Moderering"
       appearance:
         title: "Utseende"
         sidebar_link:
-          color_schemes: "Färgpaletter"
+          site_logo: "Webbplatsens logotyp"
           emoji: "Emoji"
           navigation: "Navigering"
           themes: "Teman"
@@ -4840,22 +4862,8 @@ sv:
         title: "E-postinställningar"
         sidebar_link:
           appearance: "Utseende"
-          preview_summary: "Förhandsgranska sammandrag"
-      email_logs:
-        sidebar_link:
-          sent: "Skickade"
-          skipped: "Överhoppade"
-          bounced: "Studsade"
-          received: "Mottagna"
-          rejected: "Avvisade"
       security:
         title: "Säkerhet"
-        sidebar_link:
-          error_logs: "Felprotokoll"
-          screened_emails: "Kontrollerade e-postadresser"
-          screened_ips: "Granskade IP-adresser"
-          screened_urls: "Granskade URL:er"
-          search_logs: "Söklogg"
       section_landing_pages:
         account:
           title: "Konto"
@@ -4875,6 +4883,7 @@ sv:
           update: "Uppdatera"
           saved: "sparat!"
         flags:
+          header: "Moderering"
           description: "Beskrivning"
           enabled: "Aktiverad?"
           edit: "Redigera"
@@ -4889,6 +4898,12 @@ sv:
             topic: "ämnen"
             post: "inlägg"
             chat_message: "chattmeddelanden"
+        permalinks:
+          edit: "Redigera"
+          delete: "Radera"
+        embeddable_host:
+          edit: "Redigera"
+          delete: "Radera"
         look_and_feel:
           title: "Utseende och känsla"
           themes:
@@ -4916,11 +4931,10 @@ sv:
       advanced:
         title: "Avancerat"
         sidebar_link:
+          webhooks: "Webhookar"
           developer: "Utvecklare"
           embedding: "Inbäddning"
-          rate_limits: "Begränsningar"
           user_api: "Användar-API"
-          web_hooks: "Webhookar"
           onebox: "Onebox"
           files: "Filer"
           other_options: "Övrigt"
@@ -4974,7 +4988,7 @@ sv:
             title: "Skicka mail med nedladdningslänk"
             alert: "En länk för nedladdning av denna säkerhetskopia har skickats till dig via e-post"
           destroy:
-            title: "Ta bort säkerhetskopian"
+            title: "Radera"
             confirm: "Är du säker på att du vill förstöra denna säkerhetskopia?"
           restore:
             label: "Återställ"
@@ -5238,10 +5252,7 @@ sv:
             title: "Välj grundfärgspalett"
             description: "Grundpalett:"
           title: "Färger"
-          edit: "Ändra färgpaletter"
-          long_title: "Färgpaletter"
           about: "Modifiera färgerna som används av ditt tema. Lägg till en ny färgpalett för att börja."
-          new_name: "Ny färgpalett"
           copy_name_prefix: "Kopia av"
           delete_confirm: "Radera den här färgpaletten?"
           undo: "Ångra"
@@ -5565,7 +5576,6 @@ sv:
         logster:
           title: "Felprotokoll"
       watched_words:
-        title: "Bevakade ord"
         search: "sök"
         clear_filter: "Rensa"
         show_words:
@@ -5713,6 +5723,7 @@ sv:
         status: "Status"
         show_emails: "Visa e-post"
         hide_emails: "Dölj e-post"
+        silence_reason: "Anledning till att tysta"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5989,7 +6000,6 @@ sv:
           delete_sso_record: "Ta bort SSO-post"
           confirm_delete: "Är du säker på att du vill radera denna DiscourseConnect-post?"
       user_fields:
-        title: "Användarfält"
         untitled: "Namnlös"
         name: "Fältnamn"
         type: "Fälttyp"
@@ -6023,10 +6033,8 @@ sv:
           dropdown: "Rullgardinsmeny"
           multiselect: "Multival"
       site_text:
-        description: "Du kan anpassa all text på ditt forum. Börja genom att söka här nedan:"
         search: "Sök efter texten som du vill redigera"
-        title: "Text"
-        edit: "redigera"
+        edit: "Redigera"
         revert: "Ångra ändringarna"
         revert_confirm: "Är du säker på att du vill ångra dina ändringar?"
         go_back: "Tillbaka till sökningen"
@@ -6214,6 +6222,7 @@ sv:
         settings: "Inställningar"
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
+        delete: "Radera"
         confirm_delete: "Är du säker på att du vill ta bort värden?"
         sample: |
           <p>Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Ersätt <b>EMBED_URL</b> med den kanoniska webbadressen till sidan du bäddar in den på.</p>
@@ -6222,14 +6231,8 @@ sv:
 
           <p>Ersätt <b>DISCOURSE_USERNAME</b> med Discourse-användarnamnet för författaren som ska skapa ämnet. Discourse kommer automatiskt att söka efter användaren med <code>&lt;meta&gt;</code> taggarnas <code>innehåll</code> sattribut med <code>namn</code>attributet inställt på <code>discourse-användarnamn</code> eller <code>författare</code>. Parametern <code>discourseUserName</code> har fasats ut och kommer att tas bort i Discourse 3.2.</p>
         title: "Inbäddning"
-        host: "Tillåtna värdar"
-        allowed_paths: "Sökväg till vitlista"
-        edit: "ändra"
-        category: "Inlägg till kategori"
-        add_host: "Lägg till värd"
-        settings: "Inbäddningsinställningar"
-        crawling_settings: "Inställningar för sökrobotar"
-        crawling_description: "När Discourse skapar ämnen för dina inlägg, om det inte finns något RSS/ATOM-flöde närvarande så kommer det att försöka parsa ditt innehåll från din HTML. Ibland är det utmanande att extrahera ditt innehåll, så vi tillhandahåller möjligheten att specificera CSS-reglerna för att göra extraheringen enklare."
+        edit: "Redigera"
+        crawlers_description: "När Discourse skapar ämnen för dina inlägg, om det inte finns något RSS/ATOM-flöde närvarande så kommer det att försöka parsa ditt innehåll från din HTML. Ibland är det utmanande att extrahera ditt innehåll, så vi tillhandahåller möjligheten att specificera CSS-reglerna för att göra extraheringen enklare."
         embed_by_username: "Användarnamn för skapandet av ämne"
         embed_post_limit: "Högsta tillåtna antal inlägg att bädda in"
         embed_title_scrubber: "Reguljära uttryck som används för att hitta och korrigera fel i inläggsrubriken"
@@ -6238,7 +6241,12 @@ sv:
         allowed_embed_selectors: "CSS-väljare för element som är tillåtna i inbäddningar"
         blocked_embed_selectors: "CSS-väljare för element som tas bort från inbäddningar"
         allowed_embed_classnames: "Tillåtna CSS-klassnamn"
-        save: "Spara inbäddningsinställningar"
+        save: "Spara"
+        host_form:
+          save: "Spara"
+        nav:
+          settings: "Inställningar"
+          crawlers: "Sökrobotar"
       permalink:
         title: "Permalänkar"
         description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet."
@@ -6258,13 +6266,15 @@ sv:
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?
+        nav:
+          settings: "Inställningar"
+          permalinks: "Permalänkar"
         form:
           label: "Ny:"
           url: "URL"
           save: "Spara"
       reseed:
         action:
-          label: "Ersätt text..."
           title: "Ersätt text på kategorier och ämnen med översättningar"
         modal:
           title: "Ersätt text"
@@ -6295,8 +6305,23 @@ sv:
           moderator: "Moderator"
           regular: "Regelbunden användare"
       previews:
-        topic_title: "En diskussionsämnesrubrik"
         share_button: "Dela"
         reply_button: "Svara"
         topic_preview: "Ämnesförhandsgranskning"
         homepage_preview: "Förhandsgranskning av hemsida"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alla kategorier"
+          new: "Nya"
+          unread: "Olästa"
+          top: "Topp"
+          latest: "Senaste"
+          hot: "Hett"
+          categories: "Kategorier"
+        category_names:
+          site_feedback: "Feedback om webbplatsen"
+        table_headers:
+          topic: "Ämne"
+          replies: "Svar"
+          views: "Visningar"
+          activity: "Aktivitet"

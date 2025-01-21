@@ -774,13 +774,13 @@ id:
       public_admission: "Izinkan pengguna untuk bergabung dengan grup secara bebas (Membutuhkan grup yang dapat dilihat oleh umum)"
       public_exit: "Izinkan pengguna untuk meninggalkan grup dengan bebas"
       empty:
-        posts: "Tidak ada pos oleh anggota grup ini."
-        members: "Tidak ada anggota dalam kelompok ini."
-        requests: "Tidak ada permintaan keanggotaan untuk grup ini."
-        mentions: "Tidak ada penyebutan untuk grup ini."
-        messages: "Tidak ada pesan untuk kelompok ini."
-        topics: "Tidak ada topik oleh anggota kelompok ini."
-        logs: "Tidak ada log untuk grup ini."
+        posts: "Tidak ada pos oleh anggota grup ini"
+        members: "Tidak ada anggota dalam kelompok ini"
+        requests: "Tidak ada permintaan keanggotaan untuk grup ini"
+        mentions: "Tidak ada penyebutan untuk grup ini"
+        messages: "Tidak ada pesan untuk kelompok ini"
+        topics: "Tidak ada topik oleh anggota kelompok ini"
+        logs: "Tidak ada log untuk grup ini"
       add: "Menambahkan"
       join: "Gabung"
       leave: "Keluar"
@@ -941,10 +941,10 @@ id:
       delete_other_accounts:
         other: "Hapus %{count}"
       username: "username"
-      trust_level: "TL"
+      trust_level: "tingkat kepercayaan"
       read_time: "waktu baca"
       topics_entered: "memasuki topik"
-      post_count: "# post"
+      post_count: "post"
       confirm_delete_other_accounts: "Apakah Anda yakin untuk menghapus akun ini?"
       powered_by: "menggunakan <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "disalin"
@@ -1585,6 +1585,8 @@ id:
       categories_and_top_topics: "Kategori dan Topik Teratas"
       categories_boxes: "Kotak dengan Subkategori"
       categories_boxes_with_topics: "Kotak dengan Topik Unggulan"
+    full_name_requirement:
+      optional_at_signup: "Opsional"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2307,9 +2309,19 @@ id:
         remove_muted_tags_from_latest:
           always: "selalu"
           never: "tidak pernah"
-      reports:
-        sidebar_link:
-          all: "Semua"
+      config:
+        navigation:
+          title: "Navigasi"
+        notifications:
+          title: "Pemberitahuan"
+        other:
+          title: "Lainnya"
+        search:
+          title: "Cari"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API Pengguna"
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
@@ -2339,7 +2351,6 @@ id:
             category:
               label: Kategori
       flags:
-        title: "Bendera Moderasi"
         description: "Deskripsi"
         enabled: "Diaktifkan?"
       groups:
@@ -2362,12 +2373,17 @@ id:
         delete: "Hapus"
         add: "Menambahkan"
         automatic: "Otomatis"
+      api_keys:
+        edit: "Ubah"
+        save: "Simpan"
+        cancel: "Batal"
+        continue: "Lanjutkan"
+        revoke: "Cabut"
       api:
         user: "Pengguna"
         title: "API"
         keys: "Kunci"
-        created: Dibuat
-        never_used: (tidak pernah)
+        never_used: Tidak pernah
         revoke: "Cabut"
         show_details: Detil
         description: Deskripsi
@@ -2412,15 +2428,9 @@ id:
           notifications: "Pemberitahuan"
           users: "Pengguna"
           groups: "Grup"
-          moderation_flags: "Bendera Moderasi"
       appearance:
         sidebar_link:
           navigation: "Navigasi"
-      email_logs:
-        sidebar_link:
-          sent: "Mengirim"
-          received: "Menerima"
-          rejected: "Ditolak"
       section_landing_pages:
         account:
           title: "Akun"
@@ -2436,7 +2446,6 @@ id:
             your_organization_saved: "Organisasi Anda disimpan"
           saved: "tersimpan!"
         flags:
-          header: "Bendera Moderasi"
           description: "Deskripsi"
           enabled: "Diaktifkan?"
           edit: "Ubah"
@@ -2450,6 +2459,12 @@ id:
             post: "post"
             require_message: "Minta pengguna untuk memberikan alasan tambahan"
             require_message_description: "Saat tanda ini dipilih, kolom teks akan ditampilkan bagi pengguna untuk memberikan detail tambahan tentang alasan mereka menandai konten"
+        permalinks:
+          edit: "Ubah"
+          delete: "Hapus"
+        embeddable_host:
+          edit: "Ubah"
+          delete: "Hapus"
         user_fields:
           type: "Tipe"
           delete: "Hapus"
@@ -2476,6 +2491,8 @@ id:
           backup:
             include_uploads: "sertakan semua unggahan"
             s3_upload_warning: 'Ini hanya untuk cadangan basis data. Unggahan tidak akan disertakan, artinya semua gambar dan file lain yang diunggah bisa hilang jika cadangan dikembalikan ke pengaturan hosting lain. <b>Untuk mengaktifkan pencadangan penuh termasuk unggahan S3 Anda, silakan lihat <a href="https://meta.discourse.org/t/-/276535" target="_blank">panduan ini</a>.</b>'
+          destroy:
+            title: "Hapus"
       export_csv:
         button_text: "Ekspor"
       export_json:
@@ -2752,7 +2769,7 @@ id:
             description: "Saat pengguna baru mendaftar, mereka harus mengisi kolom ini. Pengguna yang sudah ada tidak terpengaruh."
           confirmation: "Ini akan meminta pengguna yang ada untuk mengisi kolom ini dan tidak akan mengizinkan mereka melakukan hal lain di situs Anda hingga kolom tersebut terisi. Lanjutkan?"
       site_text:
-        edit: "ubah"
+        edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"
         show_untranslated: "Hanya tampilkan yang belum diterjemahkan"
         no_results: "Tidak ditemukan teks situs yang cocok"
@@ -2813,15 +2830,22 @@ id:
         name: "Nama"
         settings: "Pengaturan"
       embedding:
-        edit: "ubah"
-        tags: "Tag Topik"
-        post_author: "Penulis Post - Bawaannya adalah %{author}"
+        delete: "Hapus"
+        edit: "Ubah"
+        save: "Simpan"
+        host_form:
+          save: "Simpan"
+        nav:
+          settings: "Pengaturan"
+          crawlers: "Perayap"
       permalink:
         topic_title: "Topik"
         post_title: "Postingan"
         category_title: "Kategori"
         user_title: "Pengguna"
         username: "Nama Pengguna"
+        nav:
+          settings: "Pengaturan"
         form:
           label: "Baru:"
           save: "Simpan"
@@ -2840,3 +2864,16 @@ id:
           moderator: "Moderator"
       previews:
         reply_button: "Balas"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "Semua kategori"
+          new: "New"
+          unread: "Belum dibaca"
+          latest: "Terbaru"
+          categories: "Kategori"
+        category_names:
+          site_feedback: "Umpan Balik Situs"
+        table_headers:
+          topic: "Topik"
+          replies: "balasan"
+          activity: "Activity"

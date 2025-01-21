@@ -21,7 +21,6 @@ pt_BR:
     chat_minimum_message_length: "Número mínimo de caracteres para uma mensagem de chat."
     chat_allow_uploads: "Permitir envios em canais de chat públicos e canais de mensagens diretas."
     chat_archive_destination_topic_status: "O status que o tópico de destino deve ter quando um arquivo de canal for concluído. Isso só se aplica quando o tópico de destino for um tópico novo, não um preexistente."
-    default_emoji_reactions: "Reações de emoji padrão para mensagens do chat. Adicione até cinco emojis para uma reação rápida."
     direct_message_enabled_groups: "Permitir que os(as) usuários(as) desses grupos criem chats pessoais de usuário para usuário(a). Observação: a equipe sempre pode criar chats pessoais e os(as) usuários(as) poderão responder aos chats pessoais iniciados por usuários que tenham permissão para criá-los."
     chat_message_flag_allowed_groups: "Os(as) usuários(as) nestes grupos têm permissão para sinalizar mensagens no chat. Observação: usuários(as) e moderadores(as) sempre podem sinalizar mensagens no chat."
     max_mentions_per_chat_message: "Quantidade máxima de notificações @nome que um(a) usuário(a) pode usar numa mensagem de chat."

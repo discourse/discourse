@@ -1,10 +1,10 @@
 // IMPORTANT: This stylesheet needs to work for super old browsers, including those
 // without support for `var()`. Therefore every color definition needs to define a simple
 // value first, as a fallback
-
 body.crawler,
 body > noscript {
   font-family: serif;
+
   h1,
   h2,
   h3,
@@ -13,11 +13,13 @@ body > noscript {
   h6 {
     font-family: serif;
   }
+
   &.browser-update {
     header {
       height: 50px;
       margin-bottom: 1em;
     }
+
     .buorg {
       position: absolute;
       top: 50px;
@@ -29,33 +31,32 @@ body > noscript {
       font-size: 14px;
       margin-bottom: 10px;
     }
+
     #topic-title {
       margin-top: 2em;
     }
   }
 
-  &:after,
-  &:before {
+  &::after,
+  &::before {
     // common way to show fixed background images
     display: none;
   }
 
   a {
     // we want all links to look like links
-    color: blue !important;
     color: var(--tertiary) !important;
     text-decoration: underline !important;
   }
+
   > header {
     // site header
     box-sizing: border-box;
     width: 100%;
     top: 0;
-    background-color: #fff;
     background-color: var(--header_background);
     padding: 10px;
     box-shadow: none;
-    border-bottom: 1px solid #eee;
     border-bottom: 1px solid var(--header_primary-medium);
   }
 
@@ -64,11 +65,12 @@ body > noscript {
   }
 
   // topic list
-
   div#main-outlet {
     padding: 10px;
+
     div.post {
       word-break: break-word;
+
       img {
         max-width: 100%;
         height: auto;
@@ -82,27 +84,32 @@ body > noscript {
     margin: 2em 0;
 
     thead {
-      border-bottom: 1px solid #ddd;
       border-bottom: 1px solid var(--primary_low);
+
       th {
         padding: 0 0 0.5em;
       }
+
       th:nth-child(2) {
         display: none;
       }
+
       th:first-of-type {
         width: 60%;
         padding-left: 0;
       }
+
       th:last-of-type,
       th.replies,
       th.views {
         text-align: center;
       }
+
       th:last-of-type,
       th.replies {
         width: 20%;
       }
+
       th.posters {
         display: none;
       }
@@ -111,31 +118,38 @@ body > noscript {
     td {
       padding: 10px 0;
     }
+
     td.posters {
       display: none;
     }
+
     td:last-of-type,
     td.replies,
     td.views {
       text-align: center;
     }
+
     td:first-of-type {
       width: 60%;
     }
+
     td:last-of-type,
     td.replies {
       width: 20%;
     }
 
-    @media (max-width: 850px) {
+    @media (width <= 850px) {
       table-layout: auto;
       margin: 0;
+
       td {
         word-break: break-word;
+
         &.posters {
           a:not(:last-of-type) {
             display: none;
           }
+
           a:last-of-type {
             display: block;
           }
@@ -161,14 +175,16 @@ body > noscript {
     }
 
     .topic-list-item {
-      border-bottom: 1px solid #eee;
       border-bottom: 1px solid var(--primary-low);
+
       > * {
         padding: 0.75em 0;
       }
+
       td.main-link {
         padding-right: 1em;
       }
+
       p.excerpt {
         font-size: var(--font-down-1);
       }
@@ -190,17 +206,18 @@ body > noscript {
   }
 
   // topics
-
   div#main-outlet {
     div.post {
       word-break: break-word;
       overflow: auto;
       max-width: 100%;
+
       img {
         max-width: 100%;
         height: auto;
       }
     }
+
     .topic-body {
       float: unset;
     }
@@ -210,14 +227,15 @@ body > noscript {
     margin-top: 1em;
     margin-bottom: 2em;
     padding-top: 1.5em;
-    border-top: 1px solid #eee;
     border-top: 1px solid var(--primary-low);
   }
 
   .crawler-post-meta {
     margin-bottom: 1em;
+
     .creator {
       word-break: break-all;
+
       a {
         font-weight: bold;
       }
@@ -234,6 +252,7 @@ body > noscript {
     @include breakpoint(tablet, min-width) {
       float: right;
     }
+
     [itemprop="position"] {
       float: left;
       margin-right: 0.5em;
@@ -242,10 +261,10 @@ body > noscript {
 
   .crawler-linkback-list {
     margin-top: 1em;
+
     a {
       display: block;
       padding: 0.5em 0;
-      border-top: 1px solid #ddd;
       border-top: 1px solid var(--primary-low);
     }
   }
@@ -260,6 +279,7 @@ body > noscript {
     > * {
       display: block;
     }
+
     h1 {
       margin-bottom: 0.25em;
     }
@@ -274,34 +294,33 @@ body > noscript {
   code,
   blockquote,
   aside.quote .title {
-    background: #eee;
     background: var(--primary-low);
   }
 
   .md-table {
     tr {
-      border: 1px solid #ddd;
       border: 1px solid var(--primary-low);
     }
+
     th {
       font-weight: bold;
     }
+
     td,
     th {
       padding: 0.25em;
-      border-right: 1px solid #ddd;
       border-right: 1px solid var(--primary-low);
     }
   }
 
   // footer
-
   footer {
     margin-top: 2em;
   }
 
   .noscript-footer-nav {
     margin-top: 4em;
+
     a {
       margin-right: 0.25em;
       white-space: nowrap;
@@ -315,13 +334,16 @@ body > noscript {
 
   .crawler-nav {
     margin: 1em 0;
+
     ul {
       margin: 0;
       list-style-type: none;
     }
+
     li {
       display: inline-block;
     }
+
     a {
       display: inline-block;
       padding: 0.5em 1em 0.5em 0;
@@ -332,6 +354,7 @@ body > noscript {
 .buorg div {
   padding: 8px;
 }
+
 .buorg a,
 .buorg a:visited {
   color: #e25600;

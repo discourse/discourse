@@ -410,6 +410,8 @@ zh_CN:
             label: 脚本
           version:
             label: 版本
+          status:
+            label: 状态
           enabled:
             label: 已启用
           disabled:

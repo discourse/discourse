@@ -1,11 +1,11 @@
 import ArrayProxy from "@ember/array/proxy";
 import { ajax } from "discourse/lib/ajax";
+import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { number } from "discourse/lib/formatter";
 import PreloadStore from "discourse/lib/preload-store";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
-import deprecated from "discourse-common/lib/deprecated";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryList extends ArrayProxy {

@@ -21,7 +21,6 @@ tr_TR:
     chat_minimum_message_length: "Bir sohbet mesajı için minimum karakter sayısı."
     chat_allow_uploads: "Genel sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
-    default_emoji_reactions: "Sohbet mesajları için varsayılan emoji tepkileri. Hızlı tepki için en fazla 5 emoji ekleyin."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
     chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
     max_mentions_per_chat_message: "Bir kullanıcının bir sohbet mesajında kullanabileceği maksimum @name bildirimi sayısı."

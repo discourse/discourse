@@ -701,13 +701,13 @@ bs_BA:
       public_admission: "Omogući korisnicima da se mogu slobodno učlaniti u grupu (zahtjeva da grupa bude javno otvorena)"
       public_exit: "Omogući korisnicima da mogu slobodno napustiti grupu"
       empty:
-        posts: "Ne postoje postovi člana ove grupe."
-        members: "Nema članova u grupi."
-        requests: "Za ovu grupu nema zahtjeva za članstvo."
-        mentions: "Nema spominjanja u grupi."
-        messages: "Nema novih poruka za ovu grupu."
-        topics: "Nema novih tema od strane članova ove grupe."
-        logs: "Nema novih logova za ovu grupu."
+        posts: "Ne postoje postovi člana ove grupe"
+        members: "Nema članova u grupi"
+        requests: "Za ovu grupu nema zahtjeva za članstvo"
+        mentions: "Nema spominjanja u grupi"
+        messages: "Nema novih poruka za ovu grupu"
+        topics: "Nema novih tema od strane članova ove grupe"
+        logs: "Nema novih logova za ovu grupu"
       add: "Dodaj"
       join: "Učlani se"
       leave: "Napusti"
@@ -869,10 +869,10 @@ bs_BA:
         few: "Izbriši %{count}"
         other: "Izbriši %{count}"
       username: "korisničko ime"
-      trust_level: "NP"
+      trust_level: "nivo povjerenja"
       read_time: "vrijeme čitanja"
       topics_entered: "pogledano tema"
-      post_count: "# postova"
+      post_count: "objave"
       confirm_delete_other_accounts: "Jeste sigurni da želite da izbrišete ove račune?"
       powered_by: "koristeći <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "koprian"
@@ -1610,6 +1610,9 @@ bs_BA:
       categories_and_top_topics: "Kategorije i top teme"
       categories_boxes: "Kutije sa podkategorijama"
       categories_boxes_with_topics: "Kutije sa istaknutim temama"
+    full_name_requirement:
+      required_at_signup: "Required"
+      optional_at_signup: "Opciono"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3096,8 +3099,6 @@ bs_BA:
               content: "Grupe"
             users:
               content: "Users"
-            my_posts:
-              content: "Moje objave"
             review:
               content: "Pregled"
             invite:
@@ -3138,7 +3139,30 @@ bs_BA:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
         sidebar_link:
-          all: "All"
+          all: "Svi izvještaji"
+      config:
+        developer:
+          title: "Developer"
+        files:
+          title: "Files"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navigacija"
+        notifications:
+          title: "Obavijest"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Other"
+        search:
+          title: "Pretraži"
+        security:
+          title: "Security"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Korisnički API"
       dashboard:
         title: "Dashboard"
         last_updated: "Nadzorna ploča je ažurirana:"
@@ -3230,6 +3254,7 @@ bs_BA:
             include_subcategories:
               label: "Uključi potkategorije"
       flags:
+        title: "Moderacija"
         description: "Opis"
         enabled: "Omogućen?"
       groups:
@@ -3284,29 +3309,29 @@ bs_BA:
         add_owners: Dodajte vlasnike
         none_selected: "Izaberite grupu za početak"
         no_custom_groups: "Kreirajte novu prilagođenu grupu"
+      api_keys:
+        edit: "Edit"
+        save: "Save"
+        cancel: "Odustani"
+        continue: "Nastavi"
+        revoke: "Revoke"
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now."
         user: "User"
         title: "API"
         key: "Ključ"
-        created: Stvoreno
         updated: Ažurirano
-        last_used: Posljednji put korišten
-        never_used: (nikada)
+        never_used: Nikad
         generate: "Generate"
-        undo_revoke: "Poništi Opoziv"
         revoke: "Revoke"
-        all_users: "All Users"
         active_keys: "Aktivni API ključevi"
         manage_keys: Upravljanje ključevima
         show_details: Detalji
         description: Opis
         no_description: (bez opisa)
         all_api_keys: Svi API ključevi
-        user_mode: Korisnički nivo
         impersonate_all_users: Impersonaliziraj bilo kojeg korisnika
-        single_user: "Jedan korisnik"
         save: Sačuvaj
         continue: Nastavi
         scopes:
@@ -3389,16 +3414,14 @@ bs_BA:
           badges: "Bedž"
           notifications: "Obavijest"
           permalinks: "Permalink-ovi"
-          trust_levels: "Trust Levels"
           users: "Korisnici"
           groups: "Groups"
-          user_fields: "User Fields"
-          watched_words: "Pogledane Rijeći"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderacija"
       appearance:
         title: "Izgled"
         sidebar_link:
-          color_schemes: "Palete boja"
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Teme"
@@ -3407,22 +3430,8 @@ bs_BA:
       email_settings:
         sidebar_link:
           appearance: "Izgled"
-          preview_summary: "Pregled Sajta"
-      email_logs:
-        sidebar_link:
-          sent: "Poslano"
-          skipped: "Skipped"
-          bounced: "Vraćeni"
-          received: "Primljeno"
-          rejected: "Odbijeni"
       security:
         title: "Security"
-        sidebar_link:
-          error_logs: "Error Logs"
-          screened_emails: "Screened Emails"
-          screened_ips: "Screened IPs"
-          screened_urls: "Screened URLs"
-          search_logs: "Logovi pretrage"
       section_landing_pages:
         account:
           title: "Račun"
@@ -3435,6 +3444,7 @@ bs_BA:
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
+          header: "Moderacija"
           description: "Opis"
           enabled: "Omogućen?"
           edit: "Edit"
@@ -3448,6 +3458,12 @@ bs_BA:
             invalid_applies_to: "Required"
             topic: "topics"
             post: "objave"
+        permalinks:
+          edit: "Edit"
+          delete: "Delete"
+        embeddable_host:
+          edit: "Edit"
+          delete: "Delete"
         look_and_feel:
           themes:
             title: "Teme"
@@ -3470,11 +3486,10 @@ bs_BA:
           installed: "Installed"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Embedding"
-          rate_limits: "Rate Limits"
           user_api: "Korisnički API"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Files"
           other_options: "Other"
@@ -3517,7 +3532,7 @@ bs_BA:
             title: "Pošaljite e-poštu sa linkom za preuzimanje"
             alert: "Veza za preuzimanje ove sigurnosne kopije vam je poslana e-mailom"
           destroy:
-            title: "Remove the backup"
+            title: "Delete"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             label: "Restore"
@@ -3709,10 +3724,7 @@ bs_BA:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
           title: "Colors"
-          edit: "Uređivanje paleta boja"
-          long_title: "Palete boja"
           about: "Izmijenite boje koje koriste vaše teme. Kreirajte novu paletu boja za početak."
-          new_name: "Nova paleta boja"
           copy_name_prefix: "Copy of"
           delete_confirm: "Izbrisati ovu paletu boja?"
           undo: "Vrati nazad"
@@ -3982,7 +3994,6 @@ bs_BA:
         logster:
           title: "Error Logs"
       watched_words:
-        title: "Pogledane Rijeći"
         search: "pretaži"
         clear_filter: "Clear"
         download: Skinuti
@@ -4048,6 +4059,7 @@ bs_BA:
         status: "Status"
         show_emails: "Prikaži e-mailove"
         hide_emails: "Hide Emails"
+        silence_reason: "Razlog za utišanje"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4249,7 +4261,6 @@ bs_BA:
           external_email: "Email"
           external_avatar_url: "Avatar URL"
       user_fields:
-        title: "User Fields"
         untitled: "Untitled"
         name: "Field Name"
         type: "Field Type"
@@ -4279,10 +4290,8 @@ bs_BA:
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:
-        description: "Možete prilagoditi bilo koji tekst na forumu. Počnite pretraživanjem u nastavku:"
         search: "Potražite tekst koji želite urediti"
-        title: "Poruka"
-        edit: "edit"
+        edit: "Edit"
         revert: "Vrati promjene"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
         go_back: "Nazad na pretragu"
@@ -4430,21 +4439,21 @@ bs_BA:
         settings: "Postavke"
       embedding:
         get_started: "Ako želite da ugradite Discourse na drugu web lokaciju, počnite sa dodavanjem njegovog hosta."
+        delete: "Delete"
         confirm_delete: "Jeste li sigurni da želite izbrisati taj host?"
         title: "Embedding"
-        host: "Dozvoljeni domaćini"
-        edit: "uredi"
-        category: "Post u kategoriju"
-        add_host: "Dodaj host"
-        settings: "Postavke ugrađivanja"
-        crawling_settings: "Postavke Crawlera"
+        edit: "Edit"
         embed_post_limit: "Maximum number of posts to embed"
         embed_title_scrubber: "Regular expression korišten za čistku naslova objava"
         embed_truncate: "Skrati embedovane objave"
         allowed_embed_selectors: "CSS selector za elemente koji su dozvoljeni u embeds"
         blocked_embed_selectors: "CSS selector za elemente koji su odstranjeni sa embeds"
         allowed_embed_classnames: "Dopuštena CSS class imena"
-        save: "Sačuvaj Embedding postavke"
+        save: "Save"
+        host_form:
+          save: "Save"
+        nav:
+          settings: "Postavke"
       permalink:
         title: "Permalink-ovi"
         url: "URL"
@@ -4457,6 +4466,9 @@ bs_BA:
         user_title: "User"
         username: "Nadimak"
         delete_confirm: Jeste li sigurni da želite izbrisati ovaj permalink?
+        nav:
+          settings: "Postavke"
+          permalinks: "Permalink-ovi"
         form:
           label: "Novo:"
           url: "URL"
@@ -4484,3 +4496,16 @@ bs_BA:
       previews:
         share_button: "Podijeli"
         reply_button: "Odgovori"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "Sve kategorije"
+          new: "Novi"
+          unread: "Nepročitano"
+          top: "Top teme"
+          latest: "Zadnje"
+          categories: "Kategorije"
+        table_headers:
+          topic: "Topic"
+          replies: "Odgovori"
+          views: "Pregledi"
+          activity: "Activity"

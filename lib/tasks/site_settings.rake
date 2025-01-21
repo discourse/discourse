@@ -90,39 +90,3 @@ task "site_settings:find_dead" => :environment do
     puts "No dead settings found."
   end
 end
-
-desc "Add missing keyword translation keys"
-task "site_settings:add_keyword_translation_keys" => :environment do
-  # Manually load the YAML file, since we need to manually dump it at the end
-  filename = "#{Rails.root}/config/locales/server.en.yml"
-
-  text = File.read(filename)
-  yml = YAML.load_file(filename, aliases: true)
-
-  new_keywords = {}
-
-  added = 0
-
-  yml["en"]["site_settings"].each do |key, value|
-    next if !value.is_a?(String)
-
-    if yml["en"]["site_settings"]["keywords"].key?(key)
-      new_keywords[key] = yml["en"]["site_settings"]["keywords"][key]
-    else
-      new_keywords[key] = ""
-      added += 1
-    end
-  end
-
-  removed = yml["en"]["site_settings"]["keywords"].length - new_keywords.length - added
-
-  new_text = ""
-  new_keywords.keys.sort.each { |key| new_text += "      #{key}: \"#{new_keywords[key]}\"\n" }
-
-  text.gsub!(/(# BEGIN KEYWORDS\n)(.*)(      # END KEYWORDS)/m, "\\1#{new_text}\\3")
-
-  File.write(filename, text)
-
-  puts "Keyword entries added: #{added}"
-  puts "Keyword entries removed: #{removed}"
-end

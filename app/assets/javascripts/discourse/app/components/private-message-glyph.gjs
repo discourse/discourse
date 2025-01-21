@@ -1,4 +1,4 @@
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const PrivateMessageGlyph = <template>

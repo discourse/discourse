@@ -969,6 +969,7 @@ ro:
     show_pinned_excerpt_mobile: "Arată fragmente din subiectele fixate în vizualizarea de mobil."
     show_pinned_excerpt_desktop: "Arată fragmente din subiectele fixate în vizualizarea de desktop."
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
+    onebox_locale: "Locala trimisă furnizorilor onebox. Dacă este lăsată necompletat, se va folosi locala implicită."
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
@@ -1103,6 +1104,7 @@ ro:
     body_min_entropy: "Entropia minimă (caractere unice, cele ne-englezești contează mai mult) necesară în conținutul unei postări."
     allow_uppercase_posts: "Permite toate caracterele majuscule în titlul subiectului sau în conținutul postării."
     min_title_similar_length: "Lungimea minimă a unui titlu înainte să fie verificat pentru subiecte similare."
+    mobile_category_page_style: "Această setare determină aspectul vizual al paginii /categories pe mobil."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
     default_dark_mode_color_scheme_id: "Paleta de culori utilizată în modul întunecat."
     dark_mode_none: "Nimeni"
@@ -1206,7 +1208,6 @@ ro:
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
     svg_icon_subset: "Adaugă pictograme FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru pictograme solide, „far-” pentru pictograme obișnuite și „fab-” pentru pictograme de marcă."
-    full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
@@ -1231,6 +1232,7 @@ ro:
     default_email_mailing_list_mode: "Implicit, trimite un email pentru fiecare nou mesaj."
     default_email_mailing_list_mode_frequency: "Implicit, utilizatorii care activează modul mailing list vor primi emailuri cu această frecvență."
     default_email_previous_replies: "Implicit, include răspunsurile anterioare în emailuri."
+    default_emoji_reactions: "Reacții emoji preferate implicite. Adaugă până la 5 emoji-uri pentru o reacție rapidă."
     default_email_in_reply_to: "Implicit, include în email un extras postarea căreia i se răspunde."
     default_hide_profile: "Ascunde implicit profilul public al utilizatorului."
     default_hide_presence: "Dezactivează implicit funcționalitățile de prezență."
@@ -1262,6 +1264,7 @@ ro:
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
+    experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -1287,8 +1290,8 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
     keywords:
       clean_up_inactive_users_after_days: "dezactivat|inactiv|neactivat"
-      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
       navigation_menu: "bară laterală|listă derulantă din antet"
+      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -2092,15 +2095,7 @@ ro:
           homepage_style:
             choices:
               latest:
-                label: "Subiecte recente"
-              categories_only:
-                label: "Numai categorii"
-              categories_with_featured_topics:
-                label: "Categorii cu subiecte promovate"
-              categories_and_latest_topics:
-                label: "Categorii și subiecte recente"
-              categories_and_top_topics:
-                label: "Categorii și discuții în top"
+                label: "Ultima"
       corporate:
         fields:
           contact_url:

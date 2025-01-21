@@ -439,6 +439,8 @@ nb_NO:
         confirm: "Du har allerede et utkast under arbeid. Hva vil du gjøre med det?"
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
+      dropdown:
+        view_all: "vis alle"
     topic_count_all:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
@@ -899,13 +901,13 @@ nb_NO:
       public_admission: "Tillat brukere å ta del i gruppen fritt (krever offentlig synlig gruppe)"
       public_exit: "Tillat brukere å fritt forlate gruppen"
       empty:
-        posts: "Det finnes ingen innlegg av medlemmer i denne gruppen."
-        members: "Det finnes ingen medlemmer av denne gruppen."
-        requests: "Det er ingen medlemsforespørsler for denne gruppen."
-        mentions: "Denne gruppen har aldri blitt nevnt."
-        messages: "Det finnes ingen meldinger til denne gruppen."
-        topics: "Det finnes ingen emner opprettet av medlemmer av denne gruppen."
-        logs: "Det finnes ingen logger for denne gruppen."
+        posts: "Det finnes ingen innlegg av medlemmer i denne gruppen"
+        members: "Det finnes ingen medlemmer av denne gruppen"
+        requests: "Det er ingen medlemsforespørsler for denne gruppen"
+        mentions: "Denne gruppen har aldri blitt nevnt"
+        messages: "Det finnes ingen meldinger til denne gruppen"
+        topics: "Det finnes ingen emner opprettet av medlemmer av denne gruppen"
+        logs: "Det finnes ingen logger for denne gruppen"
       add: "Legg til"
       join: "Bli medlem"
       leave: "Forlat"
@@ -1095,10 +1097,10 @@ nb_NO:
         one: "Slett %{count}"
         other: "Slett %{count}"
       username: "brukernavn"
-      trust_level: "TN"
+      trust_level: "tillitsnivå"
       read_time: "lesetid"
       topics_entered: "emner åpnet"
-      post_count: "# innlegg"
+      post_count: "innlegg"
       confirm_delete_other_accounts: "Er du sikker på at du vil slette disse kontoene?"
       powered_by: "bruker <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopiert"
@@ -2268,6 +2270,9 @@ nb_NO:
       categories_boxes: "Bokser med underkategorier"
       categories_boxes_with_topics: "Bokser med håndplukket emner"
       subcategories_with_featured_topics: "Underkategorier med utvalgte emner"
+    full_name_requirement:
+      required_at_signup: "Påkrevd"
+      optional_at_signup: "Valgfritt"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3392,6 +3397,8 @@ nb_NO:
           one: Du har valgt <b>%{count}</b> innlegg.
           other: "Du har valgt <b>%{count}</b> innlegg."
       deleted_by_author_simple: "(emne slettet av forfatter)"
+    post_list:
+      aria_post_number: "%{title} - innlegg #%{postNumber}"
     post:
       confirm_delete: "Er du sikker på at du vil slette dette innlegget?"
       quote_reply: "Sitat"
@@ -4335,8 +4342,6 @@ nb_NO:
               content: "Grupper"
             users:
               content: "Brukere"
-            my_posts:
-              content: "Mine innlegg"
             review:
               content: "Gjennomgang"
             invite:
@@ -4364,7 +4369,7 @@ nb_NO:
         show: "Vis"
         about: "Om"
   admin_js:
-    type_to_filter: "skriv for å filtrere…"
+    type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
     admin:
       title: "Discourse-admin"
@@ -4379,7 +4384,30 @@ nb_NO:
         title: "Liste over tilgjengelige rapporter"
         sidebar_title: "Rapporter"
         sidebar_link:
-          all: "Alle"
+          all: "Alle rapporter"
+      config:
+        developer:
+          title: "Utvikler"
+        files:
+          title: "Filer"
+        legal:
+          title: "Juridisk"
+        navigation:
+          title: "Navigasjon"
+        notifications:
+          title: "Varsler"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Annet"
+        search:
+          title: "Søk"
+        security:
+          title: "Sikkerhet"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Bruker-API"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"
@@ -4471,6 +4499,7 @@ nb_NO:
             include_subcategories:
               label: "Inkluder underkategorier"
       flags:
+        title: "Moderering"
         description: "Beskrivelse"
         enabled: "Aktivert?"
         more_options:
@@ -4525,21 +4554,24 @@ nb_NO:
         add_owners: Legg til eiere
         none_selected: "Velg en gruppe for å komme i gang"
         no_custom_groups: "Opprett en ny egendefinert gruppe"
+      api_keys:
+        edit: "Endre"
+        save: "Lagre"
+        cancel: "Avbryt"
+        continue: "Fortsett"
+        revoke: "Trekk tilbake"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det finnes ingen aktive API-nøkler akkurat nå."
         user: "Bruker"
         title: "API"
-        created: Opprettet
         updated: Oppdatert
-        never_used: (aldri)
+        never_used: Aldri
         generate: "Generer API-nøkkel"
         revoke: "Trekk tilbake"
-        all_users: "Alle brukere"
         show_details: Detaljer
         description: Beskrivelse
         save: Lagre
-        delete: Slett permanent
         continue: Fortsett
         scopes:
           action: Handling
@@ -4618,12 +4650,11 @@ nb_NO:
           badges: "Merker"
           notifications: "Varsler"
           permalinks: "Permalenker"
-          trust_levels: "Tillitsnivå"
           users: "Brukere"
           groups: "Grupper"
-          user_fields: "Brukerfelter"
-          watched_words: "Ord som holdes oppsyn med"
           legal: "Juridisk"
+          moderation_flags:
+            title: "Moderering"
       appearance:
         title: "Utseende"
         sidebar_link:
@@ -4635,22 +4666,8 @@ nb_NO:
       email_settings:
         sidebar_link:
           appearance: "Utseende"
-          preview_summary: "Forhåndsvis oppsummering"
-      email_logs:
-        sidebar_link:
-          sent: "Sendt"
-          skipped: "Hoppet over"
-          bounced: "Tilbakesendt"
-          received: "Mottatt"
-          rejected: "Avvist"
       security:
         title: "Sikkerhet"
-        sidebar_link:
-          error_logs: "Feillogg"
-          screened_emails: "Kontrollerte e-poster"
-          screened_ips: "Kontrollerte IP-er"
-          screened_urls: "Kontrollerte URL-er"
-          search_logs: "Søkelogger"
       section_landing_pages:
         account:
           title: "Konto"
@@ -4663,6 +4680,7 @@ nb_NO:
           update: "Oppdater"
           saved: "lagret!"
         flags:
+          header: "Moderering"
           description: "Beskrivelse"
           enabled: "Aktivert?"
           edit: "Endre"
@@ -4676,6 +4694,14 @@ nb_NO:
             invalid_applies_to: "Påkrevd"
             topic: "emner"
             post: "innlegg"
+          more_options:
+            title: "Flere valg"
+        permalinks:
+          edit: "Endre"
+          delete: "Slett"
+        embeddable_host:
+          edit: "Endre"
+          delete: "Slett"
           more_options:
             title: "Flere valg"
         look_and_feel:
@@ -4702,11 +4728,10 @@ nb_NO:
           installed: "Installert"
       advanced:
         sidebar_link:
+          webhooks: "Webhooker"
           developer: "Utvikler"
           embedding: "Innbygging"
-          rate_limits: "Frekvensbegresninger"
           user_api: "Bruker-API"
-          web_hooks: "Webhooker"
           onebox: "Onebox"
           files: "Filer"
           other_options: "Annet"
@@ -4750,7 +4775,7 @@ nb_NO:
             title: "Send e-post med nedlastingslenke"
             alert: "En lenke for nedlasting av denne sikkerhetskopien er blitt sendt til deg på e-post"
           destroy:
-            title: "Fjern sikkerhetskopien"
+            title: "Slett"
             confirm: "Er du sikker på at du vil slette denne sikkerhetskopien"
           restore:
             label: "Gjenooprett"
@@ -5214,7 +5239,6 @@ nb_NO:
         logster:
           title: "Feillogg"
       watched_words:
-        title: "Ord som holdes oppsyn med"
         search: "søk"
         clear_filter: "Tøm"
         download: Last ned
@@ -5279,6 +5303,7 @@ nb_NO:
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
         status: "Status"
         show_emails: "Vis e-poster"
+        silence_reason: "Årsak til demping"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5481,7 +5506,6 @@ nb_NO:
           external_email: "E-post"
           external_avatar_url: "Profilbilde URL"
       user_fields:
-        title: "Brukerfelter"
         untitled: "Uten tittel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5511,10 +5535,8 @@ nb_NO:
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:
-        description: "Du kan skreddersy all tekst på forumet ditt. Start ved å søke nedenfor:"
         search: "Søk etter tekst du ønsker å endre"
-        title: "Tekst"
-        edit: "rediger"
+        edit: "Endre"
         revert: "Tilbakestill endringer"
         revert_confirm: "Er du sikker på at du ønsker å tilbakestille dine endringer?"
         go_back: "Tilbake til søk"
@@ -5657,15 +5679,11 @@ nb_NO:
         settings: "Instillinger"
       embedding:
         get_started: "Hvis du vil bygge inn Discourse på en annen nettside, begynn med å legge til dens vert."
+        delete: "Slett"
         confirm_delete: "Er du sikker på at du vil slette den verten?"
         title: "Innbygging"
-        host: "Tillatte verter"
-        edit: "rediger"
-        category: "Legg til innlegg i kategori"
-        add_host: "Legg til vert"
-        settings: "Innbyggingsinnstillinger"
-        crawling_settings: "Innstillinger for søkeroboter"
-        crawling_description: "Dersom Discourse oppretter emner for innleggene dine og ingen RSS/ATOM-informasjonskanal finnes, vil det prøve å tolke innholdet ditt ut fra HTML-koden din. Noen ganger kan det være utfordrende å hente ut innhold, så muligheten til å oppgi CSS-regler er der for å gjøre uthentingen enklere."
+        edit: "Endre"
+        crawlers_description: "Dersom Discourse oppretter emner for innleggene dine og ingen RSS/ATOM-informasjonskanal finnes, vil det prøve å tolke innholdet ditt ut fra HTML-koden din. Noen ganger kan det være utfordrende å hente ut innhold, så muligheten til å oppgi CSS-regler er der for å gjøre uthentingen enklere."
         embed_by_username: "Brukernavn for opprettelse av emne"
         embed_post_limit: "Maksimalt antall innlegg å bygge inn"
         embed_title_scrubber: "Regulære uttrykk brukt til å finne og korrigere feil i titler"
@@ -5673,7 +5691,11 @@ nb_NO:
         allowed_embed_selectors: "CSS-velger for elementer som tillates i innbygginger"
         blocked_embed_selectors: "CSS-velger for element som fjernes fra innbygginger"
         allowed_embed_classnames: "Tillatte navn for CSS-klasser"
-        save: "Lagre innbyggingsinnstillinger"
+        save: "Lagre"
+        host_form:
+          save: "Lagre"
+        nav:
+          settings: "Instillinger"
       permalink:
         title: "Permalenker"
         url: "URL"
@@ -5687,6 +5709,9 @@ nb_NO:
         username: "Brukernavn"
         delete_confirm: Er du sikker på at du vil slette denne permalenken?
         more_options: "Flere valg"
+        nav:
+          settings: "Instillinger"
+          permalinks: "Permalenker"
         form:
           label: "Ny:"
           url: "URL"
@@ -5716,3 +5741,18 @@ nb_NO:
       previews:
         share_button: "Del"
         reply_button: "Svar"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alle kategorier"
+          new: "Ny"
+          unread: "Uleste"
+          top: "Aktive"
+          latest: "Siste"
+          categories: "Kategorier"
+        category_names:
+          site_feedback: "Tilbakemeldinger"
+        table_headers:
+          topic: "Emne"
+          replies: "Svar"
+          views: "Visninger"
+          activity: "Aktivitet"

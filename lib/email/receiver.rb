@@ -517,7 +517,12 @@ module Email
             .join
       end
 
-      [text, elided_text, text_format]
+      [strip_unsubscribe_links(text), strip_unsubscribe_links(elided_text), text_format]
+    end
+
+    def strip_unsubscribe_links(text)
+      @unsubscribe_regex ||= %r|#{Discourse.base_url}/email/unsubscribe/\h{64}|
+      (text.presence || "").gsub(@unsubscribe_regex, "")
     end
 
     def to_markdown(html, elided_html)

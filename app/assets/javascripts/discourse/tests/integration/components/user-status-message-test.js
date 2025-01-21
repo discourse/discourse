@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime, query } from "discourse/tests/helpers/qunit-helpers";
 
 async function mouseenter() {
-  await triggerEvent(query(".user-status-message"), "mousemove");
+  await triggerEvent(query(".user-status-message"), "pointermove");
 }
 
 module("Integration | Component | user-status-message", function (hooks) {

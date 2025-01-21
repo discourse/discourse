@@ -1,6 +1,6 @@
 import { gt } from "truth-helpers";
+import icon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
-import icon from "discourse-common/helpers/d-icon";
 
 const OpLikesCell = <template>
   <td class="num likes">

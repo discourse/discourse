@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class EmailStylesEditor extends Component {

@@ -1,10 +1,12 @@
 .archetype-private_message {
   .topic-body {
     flex: 1 1 auto;
+
     .cooked {
       padding: 0;
       margin: 0;
     }
+
     .contents.regular {
       margin-top: 0.5em;
       margin-left: 0;
@@ -23,6 +25,7 @@
 
   .topic-post {
     margin: 0;
+
     article {
       border-top: none;
     }
@@ -41,6 +44,7 @@
 
   .topic-meta-data .names .first.staff {
     flex-basis: 100%;
+
     & + .second,
     & + .second + .user-title {
       flex-basis: unset;

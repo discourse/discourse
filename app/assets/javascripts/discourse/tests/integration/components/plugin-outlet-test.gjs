@@ -8,6 +8,10 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import deprecated, {
+  withSilencedDeprecations,
+  withSilencedDeprecationsAsync,
+} from "discourse/lib/deprecated";
 import {
   extraConnectorClass,
   extraConnectorComponent,
@@ -15,10 +19,6 @@ import {
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
-import deprecated, {
-  withSilencedDeprecations,
-  withSilencedDeprecationsAsync,
-} from "discourse-common/lib/deprecated";
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,

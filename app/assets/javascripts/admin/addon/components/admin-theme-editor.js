@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { fmt } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class AdminThemeEditor extends Component {

@@ -127,7 +127,12 @@ describe "Admin | Sidebar Navigation", type: :system do
     # When match section title, display all links
     filter.filter("Email Sett")
     links = page.all(".sidebar-section-link-content-text")
-    expect(links.map(&:text)).to eq(["Server setup", "Appearance"])
+    expect(links.map(&:text)).to eq(
+      [
+        I18n.t("admin_js.admin.email_settings.sidebar_link.server_setup.title"),
+        I18n.t("admin_js.admin.email_settings.sidebar_link.appearance"),
+      ],
+    )
   end
 
   it "escapes the filtered expression for regex expressions" do

@@ -214,10 +214,10 @@ class PostCreator
       publish
 
       track_latest_on_category
+      trigger_after_events unless opts[:skip_events]
+
       enqueue_jobs unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
-
-      trigger_after_events unless opts[:skip_events]
 
       auto_close
     end
@@ -405,7 +405,7 @@ class PostCreator
       TopicEmbed.new(
         topic_id: @post.topic_id,
         post_id: @post.id,
-        embed_url: @opts[:embed_url],
+        embed_url: TopicEmbed.normalize_url(@opts[:embed_url]),
         content_sha1: @opts[:embed_content_sha1],
       )
     rollback_from_errors!(embed) unless embed.save

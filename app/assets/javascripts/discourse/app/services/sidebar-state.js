@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import escapeRegExp from "discourse/lib/escape-regexp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
@@ -13,7 +14,6 @@ import {
   MAIN_PANEL,
   SEPARATED_MODE,
 } from "discourse/lib/sidebar/panels";
-import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {

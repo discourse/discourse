@@ -7,7 +7,7 @@ import {
   PrimaryButton,
 } from "discourse/components/d-page-action-button";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSectionLandingItem extends Component {
@@ -54,9 +54,16 @@ export default class AdminSectionLandingItem extends Component {
         {{/if}}
 
         {{#if @titleRoute}}
-          <LinkTo @route={{@titleRoute}}><h3
-              class="admin-section-landing-item__title"
-            >{{this.title}}</h3></LinkTo>
+          {{#if @titleRouteModel}}
+            <LinkTo @route={{@titleRoute}} @model={{@titleRouteModel}}><h3
+                class="admin-section-landing-item__title"
+              >{{this.title}}</h3></LinkTo>
+          {{else}}
+            <LinkTo @route={{@titleRoute}}><h3
+                class="admin-section-landing-item__title"
+              >{{this.title}}</h3></LinkTo>
+          {{/if}}
+
         {{else}}
           <h3 class="admin-section-landing-item__title">{{this.title}}</h3>
         {{/if}}

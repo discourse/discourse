@@ -7,7 +7,11 @@ module Stylesheet
 end
 
 class Stylesheet::Manager
+  # Bump this number to invalidate all stylesheet caches (e.g. if you change something inside the compiler)
   BASE_COMPILER_VERSION = 2
+
+  # Add any dependencies here which should automatically cause a global cache invalidation.
+  BASE_CACHE_KEY = "#{BASE_COMPILER_VERSION}::#{DiscourseFonts::VERSION}"
 
   CACHE_PATH = "tmp/stylesheet-cache"
   private_constant :CACHE_PATH
@@ -132,13 +136,13 @@ class Stylesheet::Manager
         if File.exist?(manifest_full_path)
           File.readlines(manifest_full_path, "r")[0]
         else
-          cachebuster = "#{BASE_COMPILER_VERSION}:#{fs_assets_hash}"
+          cachebuster = "#{BASE_CACHE_KEY}:#{fs_assets_hash}"
           FileUtils.mkdir_p(MANIFEST_DIR)
           File.open(manifest_full_path, "w") { |f| f.print(cachebuster) }
           cachebuster
         end
     else
-      "#{BASE_COMPILER_VERSION}:#{max_file_mtime}"
+      "#{BASE_CACHE_KEY}:#{max_file_mtime}"
     end
   end
 

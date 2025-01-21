@@ -566,6 +566,13 @@ RSpec.describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "raises an error when user is OP but can no longer see the post" do
+        post = Fabricate(:private_message_post, user: user)
+        post.topic.remove_allowed_user(admin, user)
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response).to be_forbidden
+      end
+
       it "updates post's raw attribute" do
         put "/posts/#{post.id}.json", params: { post: { raw: "edited body   " } }
 

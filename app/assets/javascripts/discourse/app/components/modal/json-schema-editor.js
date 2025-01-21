@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { waitForPromise } from "@ember/test-waiters";
 import { create } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
+import { iconNode } from "discourse/lib/icon-library";
 
 export default class JsonSchemaEditorModal extends Component {
   @tracked editor = null;

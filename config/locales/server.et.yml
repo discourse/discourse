@@ -1050,13 +1050,7 @@ et:
           homepage_style:
             choices:
               latest:
-                label: "Viimased teemad"
-              categories_only:
-                label: "Ainult foorumid"
-              categories_with_featured_topics:
-                label: "Foorumid esiletõstetud teemadega"
-              categories_and_latest_topics:
-                label: "Foorumid ja viimased teemad"
+                label: "Värskeimad"
       corporate:
         fields:
           contact_url:

@@ -4,11 +4,11 @@ import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import UserStatusMessage from "discourse/components/user-status-message";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
+import { avatarUrl } from "discourse/lib/avatar-utils";
+import { bind } from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { avatarUrl } from "discourse-common/lib/avatar-utils";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import {

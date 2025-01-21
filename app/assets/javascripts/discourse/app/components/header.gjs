@@ -205,8 +205,8 @@ export default class GlimmerHeader extends Component {
   }
 
   @action
-  toggleUserMenu() {
-    this.header.userVisible = !this.header.userVisible;
+  toggleUserMenu(value) {
+    this.header.userVisible = value ?? !this.header.userVisible;
     this.toggleBodyScrolling(this.header.userVisible);
     this.args.animateMenu();
   }

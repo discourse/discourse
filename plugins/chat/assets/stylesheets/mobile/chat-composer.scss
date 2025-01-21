@@ -2,10 +2,12 @@
   &__wrapper {
     padding-top: 0.75rem;
     background: none;
+
     .chat-replying-indicator {
       padding-left: calc(1rem + (2 * 5px) + 0.2rem + (2 * 0.65rem) + 1px);
     }
   }
+
   &__outer-container {
     padding: 0;
     align-items: flex-end;
@@ -14,22 +16,27 @@
       opacity: 0.5;
     }
   }
+
   &__inner-container {
     align-self: stretch;
     min-height: unset;
   }
+
   &__input-container {
     padding: 0.15em 0.5em;
     background: var(--primary-very-low);
   }
+
   &__input {
     .ios-device & {
       background-color: transparent;
     }
   }
+
   &-button__wrapper {
     margin-bottom: 0.3em;
   }
+
   &-button.-send {
     height: auto;
     width: auto;
@@ -42,6 +49,7 @@
     .is-send-enabled & {
       background-color: var(--tertiary-high);
       color: var(--secondary);
+
       .d-icon {
         color: inherit;
       }

@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import dIcon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import laterFn from "../../../modifiers/chat/later-fn";
 

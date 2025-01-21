@@ -21,7 +21,6 @@ fi:
     chat_minimum_message_length: "Chat-viestin merkkien vähimmäismäärä."
     chat_allow_uploads: "Salli lataukset julkisilla chat-kanavilla ja yksityisviestikanavilla."
     chat_archive_destination_topic_status: "Tila, jossa kohdeketjun tulisi olla, kun kanavan arkistointi on valmis. Tätä käytetään vain, kun kohdeketju on uusi ketju, ei olemassa oleva."
-    default_emoji_reactions: "Chat-viestien oletusarvoiset emoji-reaktiot. Lisää enintään 5 emojia nopeaa reagointia varten."
     direct_message_enabled_groups: "Salli näiden ryhmien käyttäjien luoda käyttäjien välisiä henkilökohtaisia chat-keskusteluja. Huomautus: henkilökunta voi aina luoda henkilökohtaisia chat-keskusteluja, ja käyttäjät voivat vastata henkilökohtaisiin chat-keskusteluihin, jotka on aloittanut käyttäjä, jolla on oikeus luoda niitä."
     chat_message_flag_allowed_groups: "Näiden ryhmien käyttäjät voivat liputtaa chat-viestejä. Huomaa, että ylläpitäjät ja valvojat voivat aina liputtaa chat-viestejä."
     max_mentions_per_chat_message: "Kuinka monta @nimi-ilmoitusta käyttäjä voi lisätä chat-viestiin."

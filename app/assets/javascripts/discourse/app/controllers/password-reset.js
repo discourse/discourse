@@ -2,13 +2,13 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, or, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import PasswordValidation from "discourse/mixins/password-validation";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class PasswordResetController extends Controller.extend(
@@ -145,7 +145,7 @@ export default class PasswordResetController extends Controller.extend(
             securityKeyRequired: false,
             errorMessage: null,
           });
-        } else if (result.errors?.password?.length > 0) {
+        } else if (result.errors?.["user_password.password"]?.length > 0) {
           this.rejectedPasswords.pushObject(this.accountPassword);
           this.rejectedPasswordsMessages.set(
             this.accountPassword,

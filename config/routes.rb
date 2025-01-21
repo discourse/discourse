@@ -194,6 +194,13 @@ Discourse::Application.routes.draw do
           post "handle_mail"
           get "advanced-test"
           post "advanced-test" => "email#advanced_test"
+          get "templates" => "email_templates#index"
+          get "templates/(:id)" => "email_templates#show", :constraints => { id: /[0-9a-z_.]+/ }
+          delete "templates/(:id)" => "email_templates#revert",
+                 :constraints => {
+                   id: /[0-9a-z_.]+/,
+                 }
+          put "templates/(:id)" => "email_templates#update", :constraints => { id: /[0-9a-z_.]+/ }
         end
       end
 
@@ -223,6 +230,7 @@ Discourse::Application.routes.draw do
       get "config/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
       get "customize/embedding" => "embedding#show", :constraints => AdminConstraint.new
       put "customize/embedding" => "embedding#update", :constraints => AdminConstraint.new
+      get "customize/embedding/:id" => "embedding#edit", :constraints => AdminConstraint.new
 
       resources :themes,
                 only: %i[index create show update destroy],
@@ -277,17 +285,6 @@ Discourse::Application.routes.draw do
 
         get "reseed" => "site_texts#get_reseed_options"
         post "reseed" => "site_texts#reseed"
-
-        get "email_templates" => "email_templates#index"
-        get "email_templates/(:id)" => "email_templates#show", :constraints => { id: /[0-9a-z_.]+/ }
-        put "email_templates/(:id)" => "email_templates#update",
-            :constraints => {
-              id: /[0-9a-z_.]+/,
-            }
-        delete "email_templates/(:id)" => "email_templates#revert",
-               :constraints => {
-                 id: /[0-9a-z_.]+/,
-               }
 
         get "robots" => "robots_txt#show"
         put "robots.json" => "robots_txt#update"
@@ -392,8 +389,24 @@ Discourse::Application.routes.draw do
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
 
+        get "developer" => "site_settings#index"
+        get "fonts" => "site_settings#index"
+        get "files" => "site_settings#index"
+        get "legal" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
+        get "logo" => "site_settings#index"
+        get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
+        get "rate-limits" => "site_settings#index"
+        get "onebox" => "site_settings#index"
+        get "other" => "site_settings#index"
+        get "search" => "site_settings#index"
+        get "security" => "site_settings#index"
+        get "spam" => "site_settings#index"
+        get "user-api" => "site_settings#index"
+        get "experimental" => "site_settings#index"
+        get "trust-levels" => "site_settings#index"
+        get "group-permissions" => "site_settings#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -1693,6 +1706,8 @@ Discourse::Application.routes.draw do
 
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
+
+    get "/emojis" => "emojis#index"
 
     if Rails.env.test?
       # Routes that are only used for testing

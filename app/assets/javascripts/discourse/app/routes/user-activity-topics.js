@@ -1,8 +1,8 @@
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import getURL from "discourse/lib/get-url";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityTopics extends UserTopicListRoute {

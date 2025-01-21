@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 function entranceDate(dt, showTime) {

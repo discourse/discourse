@@ -1,5 +1,5 @@
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import { getCanonicalUrl } from "discourse/lib/url";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
 
 export default {
   initialize(owner) {

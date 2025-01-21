@@ -97,6 +97,14 @@ ro:
               label: Utilizatori
             restricted_group:
               label: Grup
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Etichete adăugate sau eliminate
+            tags_added: Etichete adăugate
+            tags_removed: Etichete eliminate
+          fields:
+            trigger_on:
+              label: Declanșator pornit
         after_post_cook:
           fields:
             restricted_category:
@@ -174,6 +182,8 @@ ro:
             label: Declanșator
           version:
             label: Versiune
+          status:
+            label: Stare
           enabled:
             label: Activat
           disabled:

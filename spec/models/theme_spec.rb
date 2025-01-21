@@ -566,7 +566,7 @@ HTML
 
     Theme.clear_default!
 
-    expect(ColorScheme.hex_for_name("header_primary")).to eq("333333")
+    expect(ColorScheme.hex_for_name("header_primary")).to eq("333")
   end
 
   it "correctly notifies about theme changes" do

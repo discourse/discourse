@@ -14,7 +14,12 @@ cs:
         title: Témata
     scriptables:
       pin_topic:
-        title: Připevnit téma
+        title: Připnout téma
+      suspend_user_by_email:
+        title: Pozastavit uživatele podle e-mailu
+        description: Automaticky pozastavit účet na základě e-mailové adresy
+      suspend_user_by_email_with_api_call:
+        doc: Při spuštění příkazu `suspend_user_by_email` pomocí volání rozhraní api očekává koncový bod, že v odeslaných parametrech bude uveden platný `email`. K přepsání výchozích hodnot polí lze použít také `reasons` a `suspend_until (formát ISO 8601)`.
       close_topic:
         title: Zavřít téma
       append_last_checked_by:

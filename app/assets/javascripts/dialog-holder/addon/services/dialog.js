@@ -1,7 +1,7 @@
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import A11yDialog from "a11y-dialog";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 
 export default class DialogService extends Service {
   dialogInstance = null;

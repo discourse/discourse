@@ -7,13 +7,13 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import {
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 

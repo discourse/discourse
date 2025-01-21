@@ -269,7 +269,7 @@ class UsersController < ApplicationController
     params.require(:new_username)
 
     if clashing_with_existing_route?(params[:new_username]) ||
-         User.reserved_username?(params[:new_username])
+         (User.reserved_username?(params[:new_username]) && !current_user.admin?)
       return render_json_error(I18n.t("login.reserved_username"))
     end
 
@@ -614,7 +614,7 @@ class UsersController < ApplicationController
     # The special case where someone is changing the case of their own username
     return render_available_true if changing_case_of_own_username(target_user, username)
 
-    checker = UsernameCheckerService.new
+    checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = params[:email] || target_user.try(:email)
     render json: checker.check_username(username, email)
   end

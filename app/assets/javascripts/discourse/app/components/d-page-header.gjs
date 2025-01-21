@@ -16,7 +16,7 @@ import {
 } from "discourse/components/d-page-action-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 

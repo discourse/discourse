@@ -1,4 +1,5 @@
 import { service } from "@ember/service";
+import discourseComputed from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import {
@@ -6,7 +7,6 @@ import {
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class UserDraft extends RestModel {

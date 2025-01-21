@@ -460,6 +460,8 @@ fr:
         confirm: "Vous avez déjà un brouillon en cours de rédaction. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
+      dropdown:
+        view_all: "tout voir"
     topic_count_all:
       one: "Voir %{count} nouveau sujet"
       other: "Voir %{count} nouveaux sujets"
@@ -630,7 +632,7 @@ fr:
         status: "État"
         category: "Catégorie"
         score_type:
-          title: "Motif d'attribution"
+          title: "Raison"
         orders:
           score: "Score"
           score_asc: "Score (inverse)"
@@ -934,13 +936,13 @@ fr:
       public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
       public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:
-        posts: "Aucun message n'a été envoyé par les membres de ce groupe."
-        members: "Il n' y a aucun membre dans ce groupe."
-        requests: "Il n'y a aucune demande pour rejoindre ce groupe."
-        mentions: "Il n'y a aucune mention de ce groupe."
-        messages: "Il n'y a aucun message pour ce groupe."
-        topics: "Aucun sujet n'a été créé par les membres de ce groupe."
-        logs: "Il n'y a aucun journal pour ce groupe."
+        posts: "Aucune publication n'a été envoyée par les membres de ce groupe"
+        members: "Il n'y a aucun membre dans ce groupe"
+        requests: "Il n'y a aucune demande d'adhésion pour ce groupe"
+        mentions: "Il n'y a aucune mention de ce groupe"
+        messages: "Il n'y a aucun message pour ce groupe"
+        topics: "Aucun sujet n'a été créé par les membres de ce groupe"
+        logs: "Il n'y a aucun journal pour ce groupe"
       add: "Ajouter"
       join: "Rejoindre"
       leave: "Quitter"
@@ -1133,7 +1135,7 @@ fr:
       trust_level: "niveau de confiance"
       read_time: "temps de lecture"
       topics_entered: "sujets visités"
-      post_count: "# messages"
+      post_count: "publications"
       confirm_delete_other_accounts: "Voulez-vous vraiment supprimer ces comptes ?"
       powered_by: "Informations fournies par <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copié"
@@ -2342,6 +2344,9 @@ fr:
       categories_boxes: "Boîtes avec sous-catégories"
       categories_boxes_with_topics: "Boîtes avec sujets à la une"
       subcategories_with_featured_topics: "Sous-catégories avec sujets en vedette"
+    full_name_requirement:
+      required_at_signup: "Requis"
+      optional_at_signup: "Facultatif"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -3471,6 +3476,8 @@ fr:
           one: vous avez sélectionné <b>%{count}</b> message.
           other: "Vous avez sélectionné <b>%{count}</b> messages."
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
+    post_list:
+      aria_post_number: "%{title} - publication #%{postNumber}"
     post:
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"
@@ -4403,7 +4410,6 @@ fr:
         everyone_can_use: "Les étiquettes peuvent être utilisées par tout le monde"
         usable_only_by_groups: "Les étiquettes sont visibles par tous, mais seuls les groupes suivants peuvent les utiliser"
         visible_only_to_groups: "Les étiquettes sont uniquement visibles pour les groupes suivants"
-        cannot_save: "Impossible d'enregistrer le groupe d'étiquettes. Assurez-vous qu'au moins une étiquette est présente, que le nom du groupe d'étiquettes n'est pas vide et contient moins de 100 caractères, et qu'un groupe est sélectionné pour l'autorisation des étiquettes."
         tags_placeholder: "Créez ou recherchez des étiquettes"
         parent_tag_placeholder: "Facultatif"
         select_groups_placeholder: "Sélectionnez des groupes…"
@@ -4614,11 +4620,9 @@ fr:
             users:
               content: "Utilisateurs"
               title: "Liste de tous les utilisateurs"
-            my_posts:
-              content: "Mes messages"
-              content_drafts: "Mes brouillons"
-              title: "Mon activité récente sur le sujet"
-              title_drafts: "Mes brouillons non publiés"
+            my_drafts:
+              content: "Mes brouillons"
+              title: "Mes brouillons non publiés"
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"
@@ -4745,7 +4749,7 @@ fr:
           save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
   admin_js:
-    type_to_filter: "commencez votre saisie pour filtrer…"
+    type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
     admin:
       title: "Administrateur Discourse"
@@ -4758,12 +4762,38 @@ fr:
           never: "jamais"
       reports:
         title: "Liste des rapports disponibles"
-        meta_doc: "Explorez notre <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> pour obtenir un aperçu détaillé des rapports."
         sidebar_title: "Rapports"
         sidebar_link:
-          all: "Tout"
+          all: "Tous les rapports"
+      config:
+        developer:
+          title: "Développeur"
+        experimental:
+          title: "Expérimental"
+        files:
+          title: "Fichiers"
+        legal:
+          title: "Mentions légales"
+        logo:
+          title: "Logo du site"
+        navigation:
+          title: "Navigation"
+        notifications:
+          title: "Notifications"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Autre"
+        search:
+          title: "Recherche"
+        security:
+          title: "Sécurité"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API utilisateur"
       new_features:
-        title: "Nouveautés"
+        title: "Quoi de neuf ?"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"
@@ -4781,7 +4811,7 @@ fr:
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         dismiss_notice: "Rejeter"
         new_features:
-          title: "Nouveautés"
+          title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
           previous_announcements: "Vous pouvez voir les annonces précédentes de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "En savoir plus…"
@@ -4869,7 +4899,7 @@ fr:
             type_of_web_hook_event:
               label: "Type d'événement"
       flags:
-        title: "Signalements de modération"
+        title: "Modération"
         description: "Description"
         enabled: "Activé ?"
         more_options:
@@ -4950,6 +4980,14 @@ fr:
         add_owners: Ajouter des propriétaires
         none_selected: "Sélectionnez un groupe pour commencer"
         no_custom_groups: "Créer un nouveau groupe personnalisé"
+      api_keys:
+        title: "Clés d'API"
+        edit: "Modifier"
+        save: "Enregistrer"
+        cancel: "Annuler"
+        continue: "Continuer"
+        revoke: "Révoquer"
+        revoked: "Révoquée"
       api:
         generate_master: "Générer une clé d'API maître"
         none: "Il n'y a actuellement aucune clé API active."
@@ -4957,12 +4995,10 @@ fr:
         title: "API"
         key: "Clé"
         keys: "Clés"
-        created: Créé
+        created: Créé par 
         updated: Mis à jour
-        last_used: Dernière utilisation
-        never_used: (jamais)
+        never_used: Jamais
         generate: "Générer"
-        undo_revoke: "Annuler la révocation"
         revoke: "Révoquer"
         all_users: "Tous les utilisateurs"
         active_keys: "Clés actives pour l’API"
@@ -4971,16 +5007,13 @@ fr:
         description: Description
         no_description: (aucune description)
         all_api_keys: Toutes les clés pour l’API
-        user_mode: Niveau de l’utilisateur
         scope_mode: Permissions
         impersonate_all_users: Incarner un utilisateur
-        single_user: "Utilisateur unique"
         user_placeholder: Saisissez un nom d'utilisateur
         description_placeholder: À quoi servira cette clé ?
         save: Enregistrer
         new_key: Nouvelle clé pour l’API
         revoked: Révoquée
-        delete: Supprimer définitivement
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
         continue: Continuer
         scopes:
@@ -4994,8 +5027,6 @@ fr:
           global_description: La clé API n'a aucune restriction et tous les points de terminaison (endpoints) sont accessibles.
           resource: Ressource
           action: Action
-          allowed_parameters: Paramètres autorisés
-          optional_allowed_parameters: Paramètres autorisés (facultatif)
           any_parameter: (tout paramètre)
           allowed_urls: URL autorisées
           descriptions:
@@ -5207,61 +5238,39 @@ fr:
         sidebar_link:
           backups: "Sauvegardes"
           whats_new:
-            title: "Nouveautés"
+            title: "Nouveautés?"
             keywords: "journal des modifications|fonctionnalité|version"
       community:
         title: "Communauté"
         sidebar_link:
           about_your_site: "À propos de votre site"
           badges: "Badges"
-          login_and_authentication: "Connexion et authentification"
           notifications: "Notifications"
           permalinks: "Permaliens"
-          trust_levels: "Niveaux de confiance"
           users: "Utilisateurs"
           groups: "Groupes"
-          user_fields: "Champs utilisateurs"
-          watched_words: "Mots surveillés"
           legal: "Mentions légales"
-          moderation_flags: "Signalements de modération"
+          moderation_flags:
+            title: "Modération"
       appearance:
         title: "Apparence"
         sidebar_link:
-          font_style: "Style de police"
           site_logo: "Logo du site"
-          color_schemes: "Palettes de couleurs"
           emoji: "Émoji"
           navigation: "Navigation"
           themes: "Thèmes"
           components:
             title: "Composants"
             keywords: "thème|extension"
-          site_texts: "Textes du site"
       email_settings:
         title: "Paramètres de messagerie"
         sidebar_link:
           appearance: "Apparence"
-          preview_summary: "Aperçu du résumé"
-          server_setup: "Configuration du serveur"
-      email_logs:
-        title: "Journaux des e-mails"
-        sidebar_link:
-          sent: "Envoyés"
-          skipped: "Ignorés"
-          bounced: "Non délivrés"
-          received: "Reçus"
-          rejected: "Rejetés"
       security:
         title: "Sécurité"
         sidebar_link:
-          error_logs: "Journaux d'erreurs"
-          screened_emails: "E-mails filtrés"
-          screened_ips: "IP sous surveillance"
-          screened_urls: "URL sous surveillance"
-          search_logs: "Journaux de recherche"
           security: "Paramètres de sécurité"
           spam: "Paramètres anti-spam"
-          staff_action_logs: "Journaux d'action du personnel"
       section_landing_pages:
         account:
           title: "Compte"
@@ -5269,7 +5278,7 @@ fr:
             title: "Sauvegardes"
             description: "Effectuez une sauvegarde des données de votre site"
           whats_new:
-            title: "Nouveautés"
+            title: "Nouveautés?"
             description: "Découvrez les nouvelles versions et améliorations de Discourse"
       config_areas:
         about:
@@ -5324,7 +5333,7 @@ fr:
             your_organization_saved: "Votre organisation enregistrée"
           saved: "enregistré !"
         flags:
-          header: "Signalements de modération"
+          header: "Modération"
           edit_header: "Modifier le signalement"
           subheader: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
           description: "Description"
@@ -5360,6 +5369,14 @@ fr:
             title: "Plus d'options"
             move_up: "Déplacer vers le haut"
             move_down: "Déplacer vers le bas"
+        permalinks:
+          edit: "Modifier"
+          delete: "Supprimer"
+        embeddable_host:
+          edit: "Modifier"
+          delete: "Supprimer"
+          more_options:
+            title: "Plus d'options"
         look_and_feel:
           title: "Apparence"
           description: "Personnalisez et marquez votre site Discourse en lui donnant un style distinctif."
@@ -5402,18 +5419,17 @@ fr:
       advanced:
         title: "Avancé"
         sidebar_link:
-          api_keys: "Clés d'API"
+          api_keys:
+            title: "Clés d'API"
+          webhooks: "Webhooks"
           developer: "Développeur"
           embedding: "Intégration"
-          rate_limits: "Limites d'utilisation"
           user_api: "API utilisateur"
-          web_hooks: "Webhooks"
           onebox: "Onebox"
           files: "Fichiers"
           other_options: "Autre"
           search: "Recherche"
           experimental: "Expérimental"
-          all_site_settings: "Tous les paramètres du site"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
@@ -5466,7 +5482,7 @@ fr:
             title: "Envoyer un e-mail avec un lien de téléchargement"
             alert: "Un lien pour télécharger la sauvegarde vous a été envoyé par e-mail"
           destroy:
-            title: "Supprimer la sauvegarde"
+            title: "Supprimer"
             confirm: "Voulez-vous vraiment supprimer cette sauvegarde ?"
           restore:
             is_disabled: "La restauration est actuellement désactivée. Pour l'activer, consultez les <a href='%{url}'>paramètres du site</a>."
@@ -5551,6 +5567,7 @@ fr:
           browse_themes: "Parcourir les thèmes de la communauté"
           customize_desc: "Personnaliser :"
           title: "Thèmes"
+          description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires."
           create: "Créer"
           create_type: "Type"
           create_name: "Nom"
@@ -5760,10 +5777,7 @@ fr:
             title: "Sélectionner la palette de couleurs de base"
             description: "Palette de base :"
           title: "Couleurs"
-          edit: "Modifier les palettes de couleurs"
-          long_title: "Palettes de couleurs"
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
-          new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
           delete_confirm: "Supprimer cette palette de couleurs ?"
           undo: "Annuler"
@@ -6106,7 +6120,6 @@ fr:
         logster:
           title: "Journal d'erreurs"
       watched_words:
-        title: "Mots surveillés"
         search: "rechercher"
         clear_filter: "Effacer"
         show_words:
@@ -6260,6 +6273,7 @@ fr:
         status: "Statut"
         show_emails: "Afficher les adresses e-mail"
         hide_emails: "Masquer les adresses e-mail"
+        silence_reason: "Raison de la mise en sourdine"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -6543,7 +6557,6 @@ fr:
           delete_sso_record: "Supprimer l'enregistrement SSO"
           confirm_delete: "Voulez-vous vraiment supprimer cet enregistrement DiscourseConnect ?"
       user_fields:
-        title: "Champs utilisateurs"
         untitled: "Sans titre"
         name: "Nom du champ"
         type: "Type du champ"
@@ -6585,10 +6598,8 @@ fr:
           dropdown: "Menu déroulant"
           multiselect: "Sélection multiple"
       site_text:
-        description: "Vous pouvez personnaliser n'importe quel texte de votre forum. Commencez en utilisant la recherche ci-dessous :"
         search: "Recherchez le texte que vous souhaitez modifier"
-        title: "Texte"
-        edit: "modifier"
+        edit: "Modifier"
         revert: "Annuler les modifications"
         revert_confirm: "Voulez-vous vraiment annuler vos modifications ?"
         go_back: "Retour à la recherche"
@@ -6816,6 +6827,7 @@ fr:
         settings: "Paramètres"
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
+        delete: "Supprimer"
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
         sample: |
           <p>Collez le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacez <b>EMBED_URL</b> par l'URL canonique de la page sur laquelle vous l'intégrez.</p>
@@ -6824,16 +6836,9 @@ fr:
 
           <p>Remplacez <b>DISCOURSE_USERNAME</b> par le nom d'utilisateur Discourse de l'auteur qui doit créer le sujet. Discourse recherchera automatiquement l'utilisateur par l'attribut <code>content</code> des balises <code>&lt;meta&gt;</code> avec l'attribut <code>name</code> défini sur <code>discourse-username</code> ou <code>author</code>. Le paramètre <code>discourseUserName</code> est obsolète et sera supprimé dans Discourse 3.2.</p>
         title: "Intégration externe"
-        host: "Hôtes autorisés"
-        allowed_paths: "Liste des chemins autorisés"
-        edit: "modifier"
-        category: "Publier dans la catégorie"
+        edit: "Modifier"
         tags: "Étiquettes de sujet"
-        post_author: "Auteur de la publication. La valeur par défaut est %{author}"
-        add_host: "Ajouter un hôte"
-        settings: "Paramètres d'intégration externe"
-        crawling_settings: "Paramètres des robots d'indexation"
-        crawling_description: "Quand Discourse crée des sujets pour vos messages, si aucun flux RSS/ATOM n'est présent, la plateforme essaiera d'extraire le contenu à partir du HTML. Cette extraction peut parfois s'avérer difficile, nous donnons donc la possibilité de définir des règles CSS pour faciliter l'extraction."
+        crawlers_description: "Quand Discourse crée des sujets pour vos messages, si aucun flux RSS/ATOM n'est présent, la plateforme essaiera d'extraire le contenu à partir du HTML. Cette extraction peut parfois s'avérer difficile, nous donnons donc la possibilité de définir des règles CSS pour faciliter l'extraction."
         embed_by_username: "Nom d'utilisateur pour la création de sujet"
         embed_post_limit: "Le nombre maximal de messages à intégrer"
         embed_title_scrubber: "Expression régulière utilisée pour nettoyer le titre des messages"
@@ -6842,7 +6847,12 @@ fr:
         allowed_embed_selectors: "Sélecteur CSS pour les éléments autorisés dans les contenus intégrés"
         blocked_embed_selectors: "Sélecteur CSS pour les éléments qui sont supprimés des contenus intégrés"
         allowed_embed_classnames: "Classes CSS autorisées"
-        save: "Enregistrer les paramètres d'intégration"
+        save: "Enregistrer"
+        host_form:
+          save: "Enregistrer"
+        nav:
+          settings: "Paramètres"
+          crawlers: "Robots d'indexation"
       permalink:
         title: "Permaliens"
         description: "Redirections à appliquer pour les URL non connues par le forum."
@@ -6866,6 +6876,9 @@ fr:
         back: "Retour aux permaliens"
         more_options: "Plus d'options"
         copy_success: "Permalien copié dans le presse-papiers"
+        nav:
+          settings: "Paramètres"
+          permalinks: "Permaliens"
         form:
           label: "Nouveau :"
           add_header: "Ajouter un permalien"
@@ -6876,7 +6889,6 @@ fr:
           save: "Enregistrer"
       reseed:
         action:
-          label: "Remplacer le texte…"
           title: "Remplacer le texte des catégories et des sujets avec les traductions"
         modal:
           title: "Remplacer le texte"
@@ -6907,8 +6919,23 @@ fr:
           moderator: "Modérateur"
           regular: "Utilisateur normal"
       previews:
-        topic_title: "Titre d'un sujet de discussion"
         share_button: "Partager"
         reply_button: "Répondre"
         topic_preview: "Aperçu du sujet"
         homepage_preview: "Aperçu de la page d'accueil"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "toutes les catégories"
+          new: "Nouveaux"
+          unread: "Non lus"
+          top: "Top"
+          latest: "Récents"
+          hot: "Populaire"
+          categories: "Catégories"
+        category_names:
+          site_feedback: "Commentaires sur le site"
+        table_headers:
+          topic: "Sujet"
+          replies: "Réponses"
+          views: "Vues"
+          activity: "Activité"

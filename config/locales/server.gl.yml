@@ -1710,7 +1710,6 @@ gl:
     app_association_android: "Contido do <a href='%{base_path}/.well-known/assetlinks.json'>punto de chegada .well-known/assetlinks.json</a>, utilizado para a API Google's Digital Asset Links."
     app_association_ios: "Contido de <a href='%{base_path}/apple-app-site-association'>punto de chegada de apple-app-site-association</a> , utilizado para crear ligazóns universais entre este sitio e as aplicacións de iOS."
     auto_handle_queued_age: "Xestione automaticamente rexistros que levan moitos días en espera de seren revisados. As alertas ignoraranse. Rexeitaranse as publicacións e os usuarios en cola. Estabelecer en 0 para desactivar esta funcionalidade."
-    full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     enable_names: "Mostrar o nome completo do usuario no seu perfil, tarxeta de usuario e correos electrónicos. Desactivar para agochar o nome completo en todas as partes."
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
@@ -3542,15 +3541,7 @@ gl:
           homepage_style:
             choices:
               latest:
-                label: "Últimos temas"
-              categories_only:
-                label: "Só categorías"
-              categories_with_featured_topics:
-                label: "Categorías con temas de actualidade"
-              categories_and_latest_topics:
-                label: "Categorías e últimos temas"
-              categories_and_top_topics:
-                label: "Categorías e temas destacados"
+                label: "Últimos"
       corporate:
         fields:
           governing_law:

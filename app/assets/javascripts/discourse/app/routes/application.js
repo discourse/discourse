@@ -7,6 +7,9 @@ import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
+import deprecated from "discourse/lib/deprecated";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
@@ -16,9 +19,6 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { findAll } from "discourse/models/login-method";
 import DiscourseRoute from "discourse/routes/discourse";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 function isStrictlyReadonly(site) {

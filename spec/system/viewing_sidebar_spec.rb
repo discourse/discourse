@@ -56,10 +56,39 @@ describe "Viewing sidebar as logged in user", type: :system do
       sign_in user
       visit("/latest")
       links = page.all("#sidebar-section-content-community .sidebar-section-link-wrapper a")
-      expect(links.map(&:text)).to eq(%w[Tematy Wysłane])
-      expect(links.map { |link| link[:title] }).to eq(
-        ["Wszystkie tematy", "Moja ostatnia aktywność w temacie"],
-      )
+      expect(links.map(&:text)).to eq(%w[Tematy])
+      expect(links.map { |link| link[:title] }).to eq(["Wszystkie tematy"])
+    end
+  end
+
+  describe "when viewing the 'more' content in the Community sidebar section" do
+    let(:more_trigger_selector) do
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
+    end
+    let(:more_links_selector) do
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
+    end
+
+    it "toggles the more menu and handles click outside to close it" do
+      visit("/latest")
+
+      find(more_trigger_selector).click
+
+      expect(page).to have_selector(more_links_selector, visible: true)
+
+      expect(page).to have_selector("#{more_trigger_selector}[aria-expanded='true']")
+
+      find(more_trigger_selector).click
+
+      expect(page).not_to have_selector(more_links_selector)
+
+      expect(page).to have_selector("#{more_trigger_selector}[aria-expanded='false']")
+
+      find(more_trigger_selector).click
+
+      find(".d-header-wrap").click
+
+      expect(page).not_to have_selector(more_links_selector)
     end
   end
 

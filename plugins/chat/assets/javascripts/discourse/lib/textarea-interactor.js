@@ -3,6 +3,7 @@ import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 
 // This class sole purpose is to provide a way to interact with the textarea
@@ -45,12 +46,14 @@ export default class TextareaInteractor extends EmberObject {
     this.textarea.dispatchEvent(event);
   }
 
+  @bind
   blur() {
     next(() => {
       this.textarea.blur();
     });
   }
 
+  @bind
   focus(opts = { ensureAtEnd: false, refreshHeight: true, addText: null }) {
     next(() => {
       if (opts.refreshHeight) {
@@ -76,6 +79,7 @@ export default class TextareaInteractor extends EmberObject {
     });
   }
 
+  @bind
   ensureCaretAtEnd() {
     schedule("afterRender", () => {
       this.textarea.setSelectionRange(
@@ -85,6 +89,7 @@ export default class TextareaInteractor extends EmberObject {
     });
   }
 
+  @bind
   refreshHeight() {
     schedule("afterRender", () => {
       // this is a quirk which forces us to `auto` first or textarea
@@ -97,18 +102,22 @@ export default class TextareaInteractor extends EmberObject {
     });
   }
 
+  @bind
   getSelected() {
     return this.textManipulation.getSelected(...arguments);
   }
 
+  @bind
   applySurround() {
     return this.textManipulation.applySurround(...arguments);
   }
 
+  @bind
   addText() {
     return this.textManipulation.addText(...arguments);
   }
 
+  @bind
   isInside() {
     return this.textManipulation.isInside(...arguments);
   }

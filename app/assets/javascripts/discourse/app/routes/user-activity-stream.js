@@ -1,10 +1,7 @@
-import ViewingActionType from "discourse/mixins/viewing-action-type";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
-export default class UserActivityStream extends DiscourseRoute.extend(
-  ViewingActionType
-) {
+export default class UserActivityStream extends DiscourseRoute {
   templateName = "user/stream";
 
   queryParams = {
@@ -30,7 +27,7 @@ export default class UserActivityStream extends DiscourseRoute.extend(
 
   setupController() {
     super.setupController(...arguments);
-    this.viewingActionType(this.userActionType);
+    this.controllerFor("user-activity").userActionType = this.userActionType;
   }
 
   emptyState() {

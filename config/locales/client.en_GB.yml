@@ -115,6 +115,9 @@ en_GB:
             header_dropdown: "Customise"
   admin_js:
     admin:
+      config:
+        navigation:
+          title: "Navigation"
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
       flags:
@@ -127,7 +130,6 @@ en_GB:
               anonymize: Anonymise user accounts.
       appearance:
         sidebar_link:
-          color_schemes: "Colour palettes"
           navigation: "Navigation"
       config_areas:
         flags:
@@ -166,10 +168,7 @@ en_GB:
           select_base:
             title: "Select base colour palette"
           title: "Colours"
-          edit: "Edit colour palettes"
-          long_title: "Colour palettes"
           about: "Modify the colours used by your themes. Create a new colour palette to start."
-          new_name: "New colour palette"
           delete_confirm: "Delete this colour palette?"
           undo_title: "Undo your changes to this colour since the last time it was saved."
           revert_title: "Reset this colour to Discourse's default colour palette."
@@ -205,8 +204,6 @@ en_GB:
         anonymize_failed: "There was a problem anonymising the account."
         merge_failed: "There was an error whilst merging the users."
         delete_confirm: "It is generally preferable to anonymise users rather than deleting them, to avoid removing content from existing discussions."
-      site_text:
-        description: "You can customise any of the text on your forum. Please start by searching below:"
       site_settings:
         categories:
           navigation: "Navigation"
@@ -217,4 +214,9 @@ en_GB:
         post_title: "Post"
       reseed:
         modal:
+          categories: "Categories"
+  wizard_js:
+    wizard:
+      homepage_preview:
+        nav_buttons:
           categories: "Categories"

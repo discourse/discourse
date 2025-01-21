@@ -5,13 +5,13 @@ import { cancel, next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import discourseLater from "discourse/lib/later";
 import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
@@ -35,7 +35,6 @@ export default class Chat extends Service {
 
   cook = null;
   presenceChannel = null;
-  sidebarActive = false;
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;

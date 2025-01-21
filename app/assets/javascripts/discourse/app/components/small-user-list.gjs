@@ -3,8 +3,8 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import avatar from "discourse/helpers/bound-avatar-template";
+import getURL from "discourse/lib/get-url";
 import { smallUserAttrs } from "discourse/lib/user-list-attrs";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class SmallUserList extends Component {

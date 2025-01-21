@@ -3,8 +3,8 @@ import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryLink from "discourse/helpers/category-link";
+import getURL from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default class PostListItemDetails extends Component {
