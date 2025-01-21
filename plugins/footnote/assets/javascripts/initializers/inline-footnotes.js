@@ -1,7 +1,7 @@
 import { createPopper } from "@popperjs/core";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import richEditorExtension from "../lib/rich-editor-extension";
+// import richEditorExtension from "../lib/rich-editor-extension";
 
 let inlineFootnotePopper;
 
@@ -130,7 +130,8 @@ export default {
         tooltip?.removeAttribute("data-footnote-id");
       });
 
-      api.registerRichEditorExtension(richEditorExtension);
+      // TODO WIP
+      // api.registerRichEditorExtension(richEditorExtension);
     });
   },
 
