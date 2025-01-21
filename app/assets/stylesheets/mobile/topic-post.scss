@@ -426,6 +426,7 @@ span.highlighted {
   max-width: var(--d-wrap-padding-h);
   right: calc(var(--d-wrap-padding-h) * -1);
   font-size: 6px; // static size to avoid overflow issues
+
   svg {
     right: -2px;
   }
