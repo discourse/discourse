@@ -60,14 +60,7 @@ module PostStreamSerializerMixin
         (object.posts || []).map do |post|
           post.topic = object.topic
 
-          # serializer = PostSerializer.new(post, scope: scope, root: false)
-          serializer =
-            DiscourseTranslator::TranslatedPostSerializer.new(
-              post,
-              scope: scope,
-              root: false,
-              lang: @options[:lang],
-            )
+          serializer = PostSerializer.new(post, scope: scope, root: false)
           serializer.add_raw = true if @options[:include_raw]
           serializer.topic_view = object
 
