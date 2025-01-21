@@ -10,12 +10,12 @@
 }
 
 .topic-post-visited {
-  + .topic-post article {
+  + .topic-post > article {
     border-top: none;
   }
 }
 
-.topic-post article {
+.topic-post > article {
   border-top: 1px solid var(--primary-low);
   padding: 15px 0 8px 0;
 }
@@ -425,10 +425,10 @@ span.highlighted {
   // contained within the padding to prevent vertical overflow
   max-width: var(--d-wrap-padding-h);
   right: calc(var(--d-wrap-padding-h) * -1);
-  font-size: var(--font-down-5);
+  font-size: 6px; // static size to avoid overflow issues
 
   svg {
-    right: -0.25em;
+    right: -2px;
   }
 }
 

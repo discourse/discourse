@@ -9,9 +9,9 @@ cs:
     poll:
       voters:
         one: "hlasující"
-        few: "hlasujících"
-        many: "hlasující"
-        other: "hlasující"
+        few: "hlasující"
+        many: "hlasujících"
+        other: "hlasujících"
       total_votes:
         one: "hlas celkem"
         few: "hlasy celkem"
@@ -63,7 +63,7 @@ cs:
         label: "Výsledky"
       show-tally:
         title: "Zobrazit výsledky hlasování jako počet hlasů"
-        label: "Zobrazit součty"
+        label: "Zobrazit počty"
       show-percentage:
         title: "Zobrazit výsledky hlasování v procentech"
         label: "Zobrazit procenta"

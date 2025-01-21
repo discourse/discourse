@@ -1298,7 +1298,6 @@ lv:
         after_4_minutes: "pēc 4 minūtēm"
         after_5_minutes: "pēc 5 minūtēm"
         after_10_minutes: "pēc 10 minūtēm"
-      notification_level_when_replying: "Kad es ierakstu tēmā, iestatīt tēmai"
       invited:
         title: "Ielūgumi"
         pending_tab: "Gaidošie"
@@ -2980,16 +2979,16 @@ lv:
         create: "Izveidot"
         edit: "Rediģēt"
         save: "Saglabāt"
+        delete: "Dzēst"
+        cancel: "Atcelt"
         controls: "Pārvaldīšana"
-        go_back: "Atgriezties pie saraksta"
         secret_invalid: "Noslēpums nedrīkst saturēt tukšus simbolus."
         secret_too_short: "Noslēpumam jāsatur vismaz 12 simboli."
-        secret_placeholder: "Neobligāta simbolu virkne, ko izmanto paraksta radīšanai"
         event_type_missing: "Jums ir jānorāda vismaz viens notikumu tips."
         content_type: "Satura tips."
         secret: "Noslēpums"
-        wildcard_event: "Sūtīt man visu."
-        individual_event: "Izvēlēties individuālus notikumus."
+        wildcard_event: "Sūtīt man visu"
+        individual_event: "Izvēlēties individuālus notikumus"
         active: "Aktīvs"
         active_notice: "Mēs nosūtīsim detalizētu informāciju par notikumu, tiklīdz būs signāls."
         delivery_status:
@@ -3151,9 +3150,6 @@ lv:
           staff_action: "Eksportēt pilnu darbinieku darbību sarakstu CSV formātā."
       export_json:
         button_text: "Eksportēt"
-      invite:
-        button_text: "Nosūtīt ielūgumus"
-        button_title: "Nosūtīt ielūgumus"
       customize:
         title: "Pielāgot"
         preview: "priekšskatījums"
@@ -3243,10 +3239,12 @@ lv:
           love:
             description: "Atzinības pogas krāsa."
         email_style:
+          html: "HTML"
           css: "CSS"
           reset: "Atiestatīt uz noklusējumu"
       email:
         title: "E-pasti"
+        settings: "Iestatījumi"
         templates: "Veidnes"
         error: "<b>KĻŪDA</b> - %{server_error}"
         test_error: "Sūtot testa e-pastu, notika kļūda. Lūdzu uzmanīgi pārbaudiet jūsu e-pasta iestatījumus, pārliecinieties, ka jūsu izvietotājs nebloķē e-pasta savienojumus un mēģiniet vēlreiz."
@@ -3255,15 +3253,10 @@ lv:
         bounced: "Pārsūtīts"
         received: "Saņemts"
         rejected: "Noraidīts"
-        sent_at: "Izsūtīts"
         time: "Laiks"
         user: "Lietotājs"
-        email_type: "E-pasta veids"
-        to_address: "Saņēmēja adreses"
         test_email_address: "E-pasta adreses testiem"
-        send_test: "Nosūtīt Testa Epastu"
         sent_test: "nosūtīts!"
-        delivery_method: "Piegādes veids"
         preview_digest_desc: "Pārskatīt saturu e-pastam kas tiks sūtīts neaktīviem lietotājiem."
         refresh: "Pārlādēt"
         send_digest_label: "Sūtīt rezultātus:"
@@ -3271,10 +3264,7 @@ lv:
         format: "Formāts"
         html: "html"
         text: "teksts"
-        last_seen_user: "Lietotājs pēdējo reizi manīts:"
         no_result: "Nav atrasts neviens paziņojums"
-        reply_key: "Atbildes atslēga"
-        skipped_reason: "Izlaist Iemeslus"
         incoming_emails:
           from_address: "No"
           to_addresses: "Kam"
@@ -3283,12 +3273,10 @@ lv:
           error: "Kļūda"
           none: "Nav atrasts neviens saņemtais e-pasts"
           modal:
-            title: "Saņemtā e-pasta detaļas"
             error: "Kļūda"
             headers: "Virsraksts"
             subject: "Tēma"
             body: "Saturs"
-            rejection_message: "Atteikuma e-pasts"
           filters:
             from_placeholder: "no@piemers.lv"
             to_placeholder: "sanemejs@piemers.lv"
@@ -3305,7 +3293,7 @@ lv:
         actions:
           delete_topic: "Temats dzēsts"
       logs:
-        title: "Žurnāls"
+        nav_title: "Žurnāls"
         action: "Darbība"
         created_at: "Radīts"
         last_match_at: "Pēdējo reizi atbilst"
@@ -3323,8 +3311,6 @@ lv:
         staff_actions:
           all: "Viss"
           filter: "Filtri:"
-          title: "Personāla darbības"
-          clear_filters: "Rādīt visu"
           staff_user: "Lietotājs"
           target_user: "Mērķa lietotājs"
           subject: "Tēma"
@@ -3377,9 +3363,7 @@ lv:
             custom_staff: "Iestatīt darbību"
             post_approved: "ziņa apstiprināta"
         screened_emails:
-          title: "Pārbaudītie e-pasti"
           description: "Kad kāds mēģina izveidot jaunu kontu sekojošās e-pasta adreses tiks pārbaudītas, un reģistrācija tiks apturēta, vai kāda cita darbība tiks veikta."
-          email: "E-pasta adreses"
           actions:
             allow: "Atļaut"
         screened_urls:
@@ -3393,7 +3377,6 @@ lv:
           actions:
             block: "Bloķēt"
             do_nothing: "Atļaut"
-            allow_admin: "Atļaut administrēt"
           form:
             label: "Jauns:"
             ip_address: "IP adrese"
@@ -3402,13 +3385,10 @@ lv:
           roll_up:
             text: "Roll up"
             title: "Radīt jaunu \"subnet ban\" ierakstu ja ir vismaz 'min_ban_entries_for_roll_up' ieraskti."
-        logster:
-          title: "Kļūdu saraksts (log)"
       watched_words:
         search: "meklēt"
         clear_filter: "Notīrīt"
         download: Lejuplādēt
-        clear_all: Noņemt visus
         actions:
           block: "Bloķēt"
           censor: "Cenzēt"
@@ -3461,7 +3441,6 @@ lv:
         not_found: "Piedod, šāds lietotājvārds neeksistē mūsu sistēmā."
         id_not_found: "Piedod, šāds lietotāja ID neeksistē mūsu sistēmā."
         status: "Statuss"
-        show_emails: "Parādīt E-pastus"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -3475,8 +3454,6 @@ lv:
           staged: "Izveidots"
         approved: "Apstiprināt?"
         titles:
-          active: "Aktīvi lietotāji"
-          new: "Jauni lietotāji"
           pending: "Lietotāji, kas jāizskata"
           newuser: "Lietotāji ar 0. uzticības pakāpi (Jauns lietotājs)"
           basic: "Lietotāji ar 1. uzticības pakāpi (Biedri)"
@@ -3484,9 +3461,7 @@ lv:
           regular: "Lietotāji ar 3. uzticības pakāpi (Aktīvie atbalstītāji)"
           leader: "Lietotāji ar 4. uzticības pakāpi (Vadītāji)"
           staff: "Personāls"
-          admins: "Administratori"
           moderators: "Moderātori"
-          suspended: "Atceltie lietotāji"
         not_verified: "Nav apstiprināts"
         check_email:
           title: "Atklāt šī lietotāja e-pasta adresi"
@@ -3677,7 +3652,7 @@ lv:
         save: "saglabāt"
         cancel: "atcelt"
       site_settings:
-        title: "Iestatījumi"
+        nav_title: "Iestatījumi"
         no_results: "Nekas nav atrasts."
         clear_filter: "Noņemt"
         add_url: "Pievienot URL"
@@ -3854,17 +3829,25 @@ lv:
           admin: "Administrators"
           moderator: "Moderātors"
           regular: "Lietotājs"
+      homepage_choices:
+        style_type:
+          categories: "sadaļa"
+          topics: "tēmas"
+      top_menu_items:
+        new: "jauns"
+        unread: "Nelasīts"
+        top: "Populārākās"
+        latest: "Pēdējais"
+        categories: "Sadaļas"
+        unseen: "Neredzēts"
+        read: "Lasīts"
+        bookmarks: "Grāmatzīmes"
       previews:
         share_button: "Dalīties"
         reply_button: "Atbilde"
       homepage_preview:
         nav_buttons:
           all_categories: "visas sadaļas"
-          new: "jauns"
-          unread: "Nelasīts"
-          top: "Populārākās"
-          latest: "Pēdējais"
-          categories: "Sadaļas"
         table_headers:
           topic: "Tēmas"
           replies: "Atbildes"

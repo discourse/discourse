@@ -559,7 +559,14 @@ sk:
         yes_value: "Zahodiť"
         no_value: "Pokračovať v úprave"
       dropdown:
+        title: "Otvorenie ponuky najnovších návrhov"
+        untitled: "Návrh bez názvu"
         view_all: "zobraziť všetko"
+        other_drafts:
+          one: "+%{count} ďalší návrh"
+          few: "+%{count} ďalších návrhov"
+          many: "+%{count} ďalších návrhov"
+          other: "+%{count} ďalšie návrhy"
     topic_count_all:
       one: "Pozrieť %{count} novú tému."
       few: "Pozrieť %{count} nových tém."
@@ -1991,7 +1998,11 @@ sk:
         after_4_minutes: "po 4 minútach"
         after_5_minutes: "po 5 minútach"
         after_10_minutes: "po 10 minútach"
-      notification_level_when_replying: "Keď prispejem do témy, nastav spôsob sledovania na"
+      notification_level_when_replying:
+        label: "Pri zverejňovaní"
+        watch_topic: "Sledujte tému"
+        track_topic: "Sledovať tému"
+        do_nothing: "Nerobiť nič"
       topics_unread_when_closed: "Považujte témy za neprečítané, keď sú zatvorené"
       invited:
         title: "Pozvánky"
@@ -3035,7 +3046,7 @@ sk:
         membership_request_consolidated: "nové žiadosti o členstvo"
         reaction: "nová reakcia"
         votes_released: "Hlasovanie bolo zverejnené"
-        new_features: "boli vydané nové funkcie Discourse!"
+        new_features: "Boli vydané nové funkcie Discourse!"
         admin_problems: "nové rady na informačnom paneli vášho webu"
     upload_selector:
       uploading: "Nahrávanie"
@@ -4019,6 +4030,7 @@ sk:
         edit_anonymous: "Ľutujeme, ale pre úpravu príspevku je potrebné sa prihlásiť."
         flag_action: "Označenie"
         flag: "súkromne označte tento príspevok alebo o ňom pošlite osobnú správu"
+        anonymous_flag: "pošlite e-mail personálu, aby označili tento príspevok"
         delete_action: "Odstrániť príspevok"
         delete: "odstrániť tento príspevok"
         undelete_action: "Obnoviť odstránený príspevok"
@@ -4344,6 +4356,9 @@ sk:
         all: "všetky témy"
         none: "žiadne podkategórie"
       colors_disabled: "Nemôžete vybrať farby, pretože máte štýl kategórie žiadny."
+    anonymous_flagging:
+      title: "Nahlásiť nezákonný obsah"
+      description: "Ak chcete nahlásiť nezákonný obsah, kontaktujte <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Ďakujeme, že udržiavate našu komunitu civilnou!"
       action: "Označ príspevok"
@@ -4925,6 +4940,10 @@ sk:
         everyone_can_use: "Značky môže používať každý"
         usable_only_by_groups: "Značky sú viditeľné pre všetkých, ale používať ich môžu len tieto skupiny"
         visible_only_to_groups: "Značky sú viditeľné len pre tieto skupiny"
+        cannot_save:
+          empty_name: "Nie je možné uložiť skupinu značiek. Uistite sa, že názov skupiny značiek nie je prázdny."
+          no_tags: "Nie je možné uložiť skupinu značiek. Uistite sa, že je vybraná aspoň jedna značka."
+          no_groups: "Nie je možné uložiť skupinu značiek. Uistite sa, že je vybraná aspoň jedna skupina na povolenie."
         tags_placeholder: "Vyhľadajte alebo vytvorte značky"
         parent_tag_placeholder: "Nepovinné"
         select_groups_placeholder: "Vyberte skupiny…"
@@ -5301,7 +5320,9 @@ sk:
           never: "nikdy"
       reports:
         title: "Zoznam dostupných prehľadov"
+        meta_doc: "Správy sú účinným nástrojom, ktorý vám pomôže pochopiť, čo sa deje na vašom webe. Pomôžu vám identifikovať trendy, odhaliť problémy a prijímať rozhodnutia na základe údajov."
         sidebar_title: "Hlásenia"
+        back: "Späť na všetky správy"
         sidebar_link:
           all: "Všetky hlásenia"
       config:
@@ -5321,7 +5342,7 @@ sk:
           title: "Právne záležitosti"
           header_description: "Konfigurácia právnych nastavení, ako sú podmienky poskytovania služieb, zásady ochrany osobných údajov, kontaktné údaje a aspekty špecifické pre EÚ."
         login_and_authentication:
-          title: "Prihlásenie a overenie"
+          title: "Prihlásenie a overovanie"
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
         logo:
           title: "Logo stránky"
@@ -5711,27 +5732,30 @@ sk:
               messages: Zoznam správ z /logs alebo získanie konkrétnej správy denníka.
       web_hooks:
         title: "Webhooky"
-        none: "Momentálne neexistujú žiadne webhooky."
+        none: "Zatiaľ nemáte žiadne webhooky"
         instruction: "Webhooky umožňujú službe Discourse oznamovať externým službám, keď sa na vašom webe stane určitá udalosť. Po spustení webhooku sa na zadané adresy URL odošle požiadavka POST."
         detailed_instruction: "Požiadavka POST bude odoslaná na zadanú adresu URL, keď nastane vybraná udalosť."
-        new: "Nový webhook"
+        add: "Pridať webhook"
         create: "Vytvoriť"
         edit: "Upraviť"
         save: "Uložiť"
+        show: "Udalosti"
+        delete: "Odstrániť"
+        cancel: "Zrušiť"
         description_label: "Spúšťače udalostí"
         controls: "Ovládacie prvky"
-        go_back: "Späť na zoznam"
+        back: "Späť k webhookom"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Tajomstvo nesmie obsahovať žiadne prázdne znaky."
         secret_too_short: "Tajomstvo by malo mať aspoň 12 znakov."
-        secret_placeholder: "Voliteľný reťazec, ktorý sa používa na generovanie podpisu"
+        secret_placeholder: "Reťazec používaný na generovanie podpisov"
         event_type_missing: "Musíte nastaviť aspoň jeden typ udalosti."
         content_type: "Typ obsahu"
         secret: "Tajomstvo"
         event_chooser: "Ktoré udalosti by mali spustiť tento webhook?"
-        wildcard_event: "Pošlite mi všetko."
-        individual_event: "Vyberte jednotlivé udalosti."
+        wildcard_event: "Pošlite mi všetko"
+        individual_event: "Vyberte jednotlivé udalosti"
         verify_certificate: "Kontrola certifikátu TLS url adresy payload"
         active: "Aktívny"
         active_notice: "Podrobnosti o udalosti dodáme, keď k nej dôjde."
@@ -6206,6 +6230,7 @@ sk:
           customize_desc: "Upraviť:"
           title: "Témy"
           description: "Témy sú rozsiahle úpravy, ktoré menia viaceré prvky štýlu dizajnu fóra a často obsahujú aj ďalšie funkcie predného konca."
+          components_description: "Komponenty sú menšie úpravy, ktoré možno pridať do tém s cieľom zmeniť konkrétne prvky štýlu dizajnu fóra."
           create: "Vytvoriť:"
           create_type: "Typ"
           create_name: "Meno"
@@ -6308,7 +6333,8 @@ sk:
           install_upload: "Z vášho zariadenia"
           install_git_repo: "Z git repozitára"
           install_create: "Vytvoriť nové"
-          installing_message: "Inštalácia témy môže trvať niekoľko minút..."
+          installing_message: "Nastavenie novej témy…"
+          installing_message_long_time: "Nastavenie nového motívu trvá trochu dlhšie, než sa očakávalo, vydržte…"
           duplicate_remote_theme: "Komponent témy \"%{name}\" je už nainštalovaný, určite chcete nainštalovať ďalšiu kópiu?"
           force_install: "Tému nie je možné nainštalovať, pretože Git repozitár je nedostupný. Ste si istí, že chcete pokračovať v inštalácii?"
           create_placeholder: "Vytvoriť zástupný symbol"
@@ -6430,8 +6456,11 @@ sk:
             title: "Vyberte základnú paletu farieb"
             description: "Základná paleta:"
           title: "Farby"
+          edit: "Úprava paliet farieb"
           long_title: "Palety farieb"
+          description: "Farebné palety definujú základné farby používané v rozhraní vášho webu, zatiaľ čo témy môžu poskytovať ďalšie štýly, rozvrhnutia a komponenty - obe môžu spolupracovať na vytvorení jedinečného vzhľadu vášho webu a obe môžu byť k dispozícii používateľom, aby si mohli vybrať svoje preferencie."
           about: "Upravte farby používané v témach. Na začiatok vytvorte novú paletu farieb."
+          new_name: "Nová paleta farieb"
           copy_name_prefix: "Kópia"
           delete_confirm: "Odstrániť túto paletu farieb?"
           undo: "Späť"
@@ -6491,7 +6520,7 @@ sk:
         email_style:
           title: "Štýl e-mailu"
           heading: "Prispôsobenie štýlu e-mailu"
-          html: "Šablóna HTML"
+          html: "HTML"
           css: "CSS"
           reset: "Obnovenie predvoleného nastavenia"
           reset_confirm: "Ste si istí, že chcete obnoviť predvolené nastavenie %{fieldName} a stratiť všetky zmeny?"
@@ -6499,17 +6528,18 @@ sk:
           instructions: "Prispôsobte šablónu, v ktorej sa vykresľujú všetky e-maily vo formáte HTML, a upravte štýl pomocou CSS."
       email:
         title: "Email"
-        settings: "Nastavenia e-mailu"
+        description: "Prispôsobte si šablóny používané na vytváranie e-mailov, zobrazte si náhľad súhrnných e-mailov, ktoré budú odoslané, a zobrazte protokoly e-mailov."
+        settings: "Nastavenia"
         templates: "Šablóny"
-        templates_title: "Šablóny e-mailov"
-        preview_digest: "Súhrn"
+        templates_title: "E-mailové šablóny"
+        preview_digest: "Súhrn ukážky"
         advanced_test:
           title: "Pokročilý test"
           desc: "Pozrite si, ako diskurz Discourse spracováva prijaté e-maily. Aby bolo možné e-mail správne spracovať, vložte nižšie celú pôvodnú e-mailovú správu."
           email: "Pôvodná správa"
           run: "Spustiť test"
           text: "Vybrané telo textu"
-          elided: "Odstránený text"
+          elided: "Elidovaný text"
         sending_test: "Odosiela sa testovací e-mail…"
         error: "<b>CHYBA</b> - %{server_error}"
         test_error: "Pri posielaní testovacieho emailu nastala chyba. Prosím preverte Vaše emailové nastavenia, overte si, že váš hostiteľ neblokuje emailové spojenia a skúste znova."
@@ -6518,14 +6548,14 @@ sk:
         bounced: "Odskočený"
         received: "Obdržané"
         rejected: "Zamietnuté"
-        sent_at: "Odoslané"
+        sent_at: "Odoslané o"
         time: "Čas"
         user: "Používateľ"
-        email_type: "Typ emailu"
+        email_type: "Typ e-mailu"
         details_title: "Zobraziť podrobnosti e-mailu"
-        to_address: "Adresát"
+        to_address: "Na adresu"
         test_email_address: "testovacia emailová adresa"
-        send_test: "Odoslať testovací email"
+        send_test: "Odoslať testovací e-mail"
         sent_test: "odoslané!"
         delivery_method: "Spôsob doručenia"
         preview_digest_desc: "Náhľad obsahu súhrnných emailov zaslaných neaktívnym používateľom."
@@ -6537,11 +6567,11 @@ sk:
         html: "html"
         text: "text"
         html_preview: "Náhľad obsahu e-mailu"
-        last_seen_user: "Posledný videný používateľ"
+        last_seen_user: "Naposledy videný používateľ:"
         no_result: "Nenašli sa žiadne výsledky pre súhrn."
-        reply_key: "Tlačidlo odpovedať"
-        post_link_with_smtp: "Podrobnosti o príspevku a SMTP"
-        skipped_reason: "Preskočiť zdôvodnenie"
+        reply_key: "Kľúč na odpoveď"
+        post_link_with_smtp: "Podrobnosti o príspevkoch a SMTP"
+        skipped_reason: "Preskočiť dôvod"
         incoming_emails:
           from_address: "Od"
           to_addresses: "Komu"
@@ -6555,7 +6585,7 @@ sk:
             headers: "Hlavičky"
             subject: "Predmet"
             body: "Telo"
-            rejection_message: "Mail na odmietnutie"
+            rejection_message: "Pošta o odmietnutí"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -6585,7 +6615,9 @@ sk:
           delete_topic: "Téma vymazaná"
           post_approved: "Príspevok bol schválený"
       logs:
-        title: "Logy"
+        title: "Protokoly a skríning"
+        description: "Protokoly a skríning vám umožňujú monitorovať a spravovať vašu komunitu, čím zaisťujú jej bezpečnosť a rešpekt. Môžete si zobraziť denníky všetkých akcií vykonaných zamestnancami, denníky vyhľadávania a konfiguráciu kontroly používateľov."
+        nav_title: "Logy"
         action: "Akcia"
         created_at: "Vytvorené"
         last_match_at: "Posledný zodpovedajúci"
@@ -6604,7 +6636,7 @@ sk:
           all: "všetko"
           filter: "Filter:"
           title: "Akcie personálu"
-          clear_filters: "Ukázať všetko"
+          clear_filters: "Zobraziť všetko"
           staff_user: "Používateľ"
           target_user: "Cieľový používateľ"
           subject: "Predmet"
@@ -6734,9 +6766,9 @@ sk:
             tag_group_change: "zmeniť skupinu značiek"
             delete_associated_accounts: "odstrániť priradené účty"
         screened_emails:
-          title: "Kontrolované emaily"
+          title: "Preverené e-maily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "
-          email: "Emailové adresy"
+          email: "E-mailová adresa"
           actions:
             allow: "Povoliť"
         screened_urls:
@@ -6761,7 +6793,7 @@ sk:
             text: "Zbaliť"
             title: "Vytvorí novú podsieť zakázaných záznamov pokiaľ existuje aspoň 'min_ban_entries_for_roll_up' záznamov"
         search_logs:
-          title: "Záznamy o vyhľadávaní"
+          title: "Hľadanie denníkov"
           term: "Termín"
           searches: "Vyhľadávania"
           click_through_rate: "CTR"
@@ -6772,9 +6804,10 @@ sk:
             click_through_only: "Všetky (iba kliknutím)"
           header_search_results: "Výsledky vyhľadávania v hlavičke"
         logster:
-          title: "Chybové Logy"
+          title: "Protokoly chýb"
       watched_words:
         title: "Sledované slová"
+        description: "Sledované slová sú moderátorské nástroje, ktoré môžu vykonávať viacero rôznych činností vrátane blokovania, cenzurovania, odkazovania alebo označovania príspevkov obsahujúcich určité slová."
         search: "hľadať"
         clear_filter: "Vyčistiť"
         show_words:
@@ -6785,7 +6818,7 @@ sk:
         case_sensitive: "(rozlišujú sa veľké a malé písmená)"
         html: "(html)"
         download: Stiahnuť
-        clear_all: Odznač všetky
+        clear_all: Vymazať všetko
         clear_all_confirm: "Ste si istí, že chcete vymazať všetky sledované slová pre akciu %{action} ?"
         invalid_regex: 'Sledované slovo "%{word}" je neplatný regulárny výraz.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Sledované slová sú regulárne výrazy</a> a automaticky neobsahujú hranice slov. Ak chcete, aby sa regulárny výraz zhodoval s celými slovami, pridajte <code>\b</code> na začiatok a koniec regulárneho výrazu.'
@@ -6929,7 +6962,7 @@ sk:
         id_not_found: "Prepáčte, toto používateľské id sa nenachádza v našom systéme."
         active: "Aktivované"
         status: "Stav"
-        show_emails: "Ukázať Emaily"
+        show_emails: "Zobraziť e-maily"
         hide_emails: "Skryť e-maily"
         silence_reason: "Dôvod ticha"
         bulk_actions:
@@ -6985,11 +7018,11 @@ sk:
           regular: "Používatelia na stupni dôvery 3 (Stály člen)"
           leader: "Používatelia na stupni dôvery 4 (Vodca)"
           staff: "Personál"
-          admins: "Admin používatelia"
+          admins: "Administrátori"
           moderators: "Moderátori"
           silenced: "Umlčaní používatelia"
-          suspended: "Užívatelia s odobratými právami"
-          staged: "Etapoví používatelia"
+          suspended: "Pozastavení používatelia"
+          staged: "Pozastavení používatelia"
         not_verified: "Neoverený"
         check_email:
           title: "Odhaliť emailovú adresu tohto používateľa"
@@ -7316,6 +7349,7 @@ sk:
           dropdown: "Zoznam"
           multiselect: "Viacnásobný výber"
       site_text:
+        description: "Môžete si prispôsobiť akýkoľvek text na fóre."
         search: "Hľadajte text, ktorý chcete upraviť"
         title: "Texty stránok"
         edit: "Upraviť"
@@ -7347,11 +7381,13 @@ sk:
         unmask: "odmaskovať vstup"
         not_found: "Nastavenia sa nepodarilo nájsť"
       site_settings:
+        title: "Nastavenia stránky"
+        description: "Konfigurujte nastavenia svojej stránky Discourse a prispôsobte jej vzhľad, funkcie a používateľské prostredie."
         emoji_list:
           invalid_input: "Zoznam emodži by mal obsahovať len platné názvy emodži, napr.: objatie"
           add_emoji_button:
             label: "Pridajte Emoji"
-        title: "Nastavenia"
+        nav_title: "Nastavenia"
         no_results: "Žiadne výsledky"
         more_site_setting_results:
           one: "Existuje viac ako %{count} výsledkov. Upresnite vyhľadávanie alebo vyberte kategóriu."
@@ -7645,6 +7681,7 @@ sk:
           save: "Uložiť"
       reseed:
         action:
+          label: "Nahradiť text …"
           title: "Nahradenie textu kategórií a tém prekladmi"
         modal:
           title: "Nahradiť text"
@@ -7676,6 +7713,23 @@ sk:
           admin: "Administrátor"
           moderator: "Moderátor"
           regular: "Bežný používateľ"
+      homepage_choices:
+        custom:
+          label: "Vlastné"
+          description: "Zobrazenie domovskej stránky %{type}so zameraním na používateľov, ktorí pristávajú na stránke %{landingPage}."
+        style_type:
+          categories: "kategória"
+          topics: "témy"
+      top_menu_items:
+        new: "Nový"
+        unread: "Neprečítané"
+        top: "Najlepšie"
+        latest: "Najnovšie"
+        hot: "Horúce"
+        categories: "Kategórie"
+        unseen: "Nevidené"
+        read: "Prečítaná"
+        bookmarks: "Záložky"
       previews:
         topic_title: "Aké knihy čítate?"
         share_button: "Zdieľať"
@@ -7685,12 +7739,6 @@ sk:
       homepage_preview:
         nav_buttons:
           all_categories: "všetky kategórie"
-          new: "Nový"
-          unread: "Neprečítané"
-          top: "Najlepšie"
-          latest: "Najnovšie"
-          hot: "Horúce"
-          categories: "Kategórie"
         topic_titles:
           what_books: "Aké knihy čítate?"
           what_movies: "Aké filmy ste v poslednej dobe videli?"

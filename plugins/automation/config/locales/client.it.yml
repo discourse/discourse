@@ -167,8 +167,10 @@ it:
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del messaggio rientra in questa categoria
             restricted_group:
               label: Gruppo
+              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio personale nella posta in arrivo di questo gruppo
             restricted_groups:
               label: Gruppi
+              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio personale in una delle caselle di posta del gruppo
             ignore_group_members:
               label: Ignora i membri del gruppo
               description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra
@@ -226,6 +228,10 @@ it:
               label: Livelli di attendibilità validi
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Etichette aggiunte o rimosse
+            tags_added: Etichette aggiunte
+            tags_removed: Etichette rimosse
           fields:
             watching_categories:
               label: Categorie osservate
@@ -233,6 +239,8 @@ it:
             watching_tags:
               label: Etichette osservate
               description: Verrà attivato solo se l'argomento ha una di queste etichette
+            trigger_on:
+              label: Attivazione
             trigger_with_pms:
               label: Attiva con messaggi privati
               description: L'attivazione avverrà anche se le etichette sono state modificate in un messaggio privato

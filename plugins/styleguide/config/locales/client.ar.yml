@@ -74,6 +74,10 @@ ar:
           title: "إشعارات الموضوعات"
         post:
           title: "المنشور"
+        post_list:
+          title: "قائمة المنشورات"
+          empty_example: "<PostList /> حالة فارغة"
+          populated_example: "<PostList /> حالة ممتلئة"
         topic_map:
           title: "خريطة الموضوع"
         site_header:

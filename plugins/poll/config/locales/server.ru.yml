@@ -41,6 +41,7 @@ ru:
     default_poll_with_multiple_choices_has_invalid_parameters: "Опрос с множественным выбором вариантов ответа содержит неправильные параметры."
     named_poll_with_multiple_choices_has_invalid_parameters: "Опрос <strong>%{name}</strong> с множественным выбором вариантов ответа содержит неправильные параметры."
     requires_at_least_1_valid_option: "Выберите хотя бы 1 вариант ответа."
+    requires_that_at_least_one_option_is_ranked: "В опросах с голосованием по принципу ранжирования необходимо выбрать хотя бы один вариант."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Вы не можете редактировать опрос после прошедших %{minutes} минут."
       cannot_edit_named_poll_with_votes: "Вы не можете изменить имя опроса <strong>${name}</strong> после прошедших %{minutes} минут."
