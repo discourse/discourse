@@ -539,6 +539,7 @@ class Guardian
   def can_export_entity?(entity)
     return false if anonymous?
     return true if is_admin?
+    return can_see_emails? if entity == "screened_email"
     return entity != "user_list" if is_moderator?
 
     # Regular users can only export their archives
@@ -547,6 +548,11 @@ class Guardian
       user_id: @user.id,
       created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day),
     ).count == 0
+  end
+
+  def can_see_emails?
+    return true if is_admin?
+    SiteSetting.moderators_view_emails && is_moderator?
   end
 
   def can_mute_user?(target_user)

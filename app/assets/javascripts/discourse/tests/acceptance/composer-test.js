@@ -12,6 +12,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import LinkLookup from "discourse/lib/link-lookup";
+import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { translateModKey } from "discourse/lib/utilities";
 import Composer, {
@@ -28,7 +29,6 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 acceptance("Composer", function (needs) {
@@ -909,7 +909,7 @@ acceptance("Composer", function (needs) {
     });
 
     await visit("/latest");
-    assert.dom("#create-topic").hasText(i18n("topic.open_draft"));
+    assert.dom("#create-topic").hasText(i18n("topic.create"));
 
     await click("#create-topic");
     assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
@@ -1317,33 +1317,6 @@ acceptance("Composer - default category not set", function (needs) {
 });
 // END: Default Composer Category tests
 
-acceptance("Composer - current time", function (needs) {
-  needs.user();
-
-  test("composer insert current time shortcut", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    await click("#topic-footer-buttons .btn.create");
-    assert.dom(".d-editor-input").exists("the composer input is visible");
-    await fillIn(".d-editor-input", "and the time now is: ");
-
-    const date = moment().format("YYYY-MM-DD");
-
-    await triggerKeyEvent(".d-editor-input", "keydown", ".", {
-      ...metaModifier,
-      shiftKey: true,
-    });
-
-    assert.true(
-      document
-        .querySelector("#reply-control .d-editor-input")
-        .value.trim()
-        .startsWith(`and the time now is: [date=${date}`),
-      "adds the current date"
-    );
-  });
-});
-
 acceptance("composer buttons API", function (needs) {
   needs.user();
   needs.settings({
@@ -1375,12 +1348,10 @@ acceptance("composer buttons API", function (needs) {
     const editor = document.querySelector(".d-editor-input");
     editor.setSelectionRange(6, 9); // select the text input in the composer
 
-    await triggerKeyEvent(
-      ".d-editor-input",
-      "keydown",
-      "B",
-      Object.assign({ altKey: true }, metaModifier)
-    );
+    await triggerKeyEvent(".d-editor-input", "keydown", "B", {
+      altKey: true,
+      ...metaModifier,
+    });
 
     assert
       .dom(".d-editor-input")
@@ -1429,12 +1400,10 @@ acceptance("composer buttons API", function (needs) {
     await click(".post-controls button.reply");
 
     const editor = document.querySelector(".d-editor-input");
-    await triggerKeyEvent(
-      ".d-editor-input",
-      "keydown",
-      "S",
-      Object.assign({ altKey: true }, metaModifier)
-    );
+    await triggerKeyEvent(".d-editor-input", "keydown", "S", {
+      altKey: true,
+      ...metaModifier,
+    });
 
     assert.dom(editor).hasValue(":smile: from keyboard");
   });

@@ -40,8 +40,8 @@
 </UserNav::MessagesSecondaryNav>
 
 {{#in-element this.navigationControlsButton}}
-  <GroupNotificationsButton
-    @value={{this.group.group_user.notification_level}}
+  <GroupNotificationsTracking
+    @levelId={{this.group.group_user.notification_level}}
     @onChange={{this.changeGroupNotificationLevel}}
   />
 {{/in-element}}

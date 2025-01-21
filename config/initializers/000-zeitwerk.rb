@@ -45,6 +45,7 @@ Rails.autoloaders.each do |autoloader|
     "http" => "HTTP",
     "gc_stat_instrumenter" => "GCStatInstrumenter",
     "chat_sdk" => "ChatSDK",
+    "ip" => "IP",
   )
 end
 Rails.autoloaders.main.ignore(

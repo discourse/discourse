@@ -248,7 +248,7 @@ describe Chat::MessageSerializer do
     end
 
     context "with user status" do
-      fab!(:user_status) { Fabricate(:user_status) }
+      fab!(:user_status)
       fab!(:mentioned_user) { Fabricate(:user, user_status: user_status) }
       fab!(:message) do
         Fabricate(

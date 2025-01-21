@@ -47,11 +47,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     this.site.mobileView = true;
 
     await render(
-      hbs`<DMenu @inline={{true}} @modalForMobile={{true}} @content="content" />`
+      hbs`<DMenu @identifier="foo" @inline={{true}} @modalForMobile={{true}} @content="content" />`
     );
     await open();
 
-    assert.dom(".fk-d-menu-modal").hasText("content");
+    assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
   });
 
   test("@onRegisterApi", async function (assert) {
@@ -349,5 +349,41 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     assert.dom(".fk-d-menu__trigger.first").doesNotExist();
     assert.dom(".fk-d-menu.first").exists();
+  });
+
+  test("focusTrigger on close", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+    this.close = async () => await this.api.close();
+
+    await render(
+      hbs`<DMenu @onRegisterApi={{this.onRegisterApi}} @inline={{true}} @icon="xmark">
+        <DButton @icon="xmark" class="close" @action={{this.close}} />
+      </DMenu>`
+    );
+
+    await click(".fk-d-menu__trigger");
+    await triggerKeyEvent(document.activeElement, "keydown", "Tab");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+    assert.dom(".fk-d-menu__trigger").isFocused();
+  });
+
+  test("focusTrigger=false on close", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+    this.close = async () => await this.api.close({ focusTrigger: false });
+
+    await render(
+      hbs`<DMenu @onRegisterApi={{this.onRegisterApi}} @inline={{true}} @icon="xmark">
+        <DButton @icon="xmark" class="close" @action={{this.close}} />
+      </DMenu>`
+    );
+
+    await click(".fk-d-menu__trigger");
+    await triggerKeyEvent(document.activeElement, "keydown", "Tab");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+    assert.dom(document.body).isFocused();
   });
 });

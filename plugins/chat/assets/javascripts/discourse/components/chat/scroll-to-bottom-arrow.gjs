@@ -1,6 +1,6 @@
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse/helpers/d-icon";
 
 const ScrollToBottomArrow = <template>
   <div class="chat-scroll-to-bottom">

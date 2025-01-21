@@ -1,7 +1,7 @@
 import { htmlSafe, isHTMLSafe } from "@ember/template";
+import { registerRawHelper } from "discourse/lib/helpers";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { registerRawHelper } from "discourse-common/lib/helpers";
 
 registerRawHelper("replace-emoji", replaceEmoji);
 

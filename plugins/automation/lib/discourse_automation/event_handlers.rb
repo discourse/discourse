@@ -243,6 +243,17 @@ module DiscourseAutomation
             next if (changed_tags & watching_tags["value"]).empty?
           end
 
+          trigger_on = automation.trigger_field("trigger_on")["value"]
+
+          if trigger_on == Triggers::TopicTagsChanged::TriggerOn::TAGS_ADDED && added_tags.empty?
+            next
+          end
+
+          if trigger_on == Triggers::TopicTagsChanged::TriggerOn::TAGS_REMOVED &&
+               removed_tags.empty?
+            next
+          end
+
           automation.trigger!(
             "kind" => name,
             "topic" => topic,

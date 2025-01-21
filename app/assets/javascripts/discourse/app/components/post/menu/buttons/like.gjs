@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
-import discourseLater from "discourse-common/lib/later";
+import icon from "discourse/helpers/d-icon";
+import discourseLater from "discourse/lib/later";
 import { i18n } from "discourse-i18n";
 
 export default class PostMenuLikeButton extends Component {
@@ -130,7 +130,7 @@ class LikeCount extends Component {
           (if @post.yours "my-likes" "regular-likes")
         }}
         ...attributes
-        @ariaPressed={{@state.isWhoReadVisible}}
+        @ariaPressed={{@state.isWhoLikedVisible}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"
           count=@post.likeCount

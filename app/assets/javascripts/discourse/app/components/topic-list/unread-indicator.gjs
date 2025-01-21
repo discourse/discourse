@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import icon from "discourse-common/helpers/d-icon";
-import { bind } from "discourse-common/utils/decorators";
+import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class UnreadIndicator extends Component {
@@ -26,12 +26,8 @@ export default class UnreadIndicator extends Component {
     return `/private-messages/unread-indicator/${this.args.topic.id}`;
   }
 
-  get isUnread() {
-    return typeof this.args.topic.get("unread_by_group_member") !== "undefined";
-  }
-
   <template>
-    {{~#if this.isUnread~}}
+    {{~#if @topic.unread_by_group_member~}}
       &nbsp;<span
         title={{i18n "topic.unread_indicator"}}
         class="badge badge-notification unread-indicator"

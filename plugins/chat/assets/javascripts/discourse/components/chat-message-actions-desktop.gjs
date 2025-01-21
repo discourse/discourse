@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -26,7 +25,6 @@ const REDUCED_WIDTH_THRESHOLD = 500;
 
 export default class ChatMessageActionsDesktop extends Component {
   @service chat;
-  @service chatEmojiPickerManager;
   @service site;
 
   @tracked size = FULL;
@@ -53,10 +51,14 @@ export default class ChatMessageActionsDesktop extends Component {
     return this.size === FULL;
   }
 
+  get messageContainer() {
+    return chatMessageContainer(this.message.id, this.context);
+  }
+
   @action
-  onWheel() {
-    // prevents menu to stop scroll on the list of messages
-    this.chat.activeMessage = null;
+  openEmojiPicker(_, event) {
+    event.preventDefault();
+    this.messageInteractor.openEmojiPicker(event.target);
   }
 
   @action
@@ -64,24 +66,19 @@ export default class ChatMessageActionsDesktop extends Component {
     this.popper?.destroy();
 
     schedule("afterRender", () => {
-      const messageContainer = chatMessageContainer(
-        this.message.id,
-        this.context
-      );
-
-      if (!messageContainer) {
+      if (!this.messageContainer) {
         return;
       }
 
-      const viewport = messageContainer.closest(".popper-viewport");
+      const viewport = this.messageContainer.closest(".popper-viewport");
       this.size =
         viewport.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
 
-      if (!messageContainer) {
+      if (!this.messageContainer) {
         return;
       }
 
-      this.popper = createPopper(messageContainer, element, {
+      this.popper = createPopper(this.messageContainer, element, {
         placement: "top-end",
         strategy: "fixed",
         modifiers: [
@@ -115,7 +112,6 @@ export default class ChatMessageActionsDesktop extends Component {
       <div
         {{didInsert this.setup}}
         {{didUpdate this.setup this.chat.activeMessage.model.id}}
-        {{on "wheel" this.onWheel passive=true}}
         {{willDestroy this.teardown}}
         class={{concatClass
           "chat-message-actions-container"
@@ -133,10 +129,7 @@ export default class ChatMessageActionsDesktop extends Component {
           }}
         >
           {{#if this.shouldRenderFavoriteReactions}}
-            {{#each
-              this.messageInteractor.emojiReactions key="emoji"
-              as |reaction|
-            }}
+            {{#each this.messageInteractor.emojiReactions as |reaction|}}
               <ChatMessageReaction
                 @reaction={{reaction}}
                 @onReaction={{this.messageInteractor.react}}
@@ -149,10 +142,9 @@ export default class ChatMessageActionsDesktop extends Component {
 
           {{#if this.messageInteractor.canInteractWithMessage}}
             <DButton
-              @action={{this.messageInteractor.openEmojiPicker}}
-              @icon="discourse-emojis"
-              @title="chat.react"
+              @action={{this.openEmojiPicker}}
               @forwardEvent={{true}}
+              @icon="discourse-emojis"
               class="btn-flat react-btn"
             />
           {{/if}}

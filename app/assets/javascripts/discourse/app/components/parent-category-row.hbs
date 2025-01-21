@@ -5,6 +5,14 @@
   />
 
   {{#if this.site.mobileView}}
+    <PluginOutlet
+      @name="category-list-before-category-mobile"
+      @outletArgs={{hash
+        category=this.category
+        listType=this.listType
+        isMuted=this.isMuted
+      }}
+    />
     <div
       data-category-id={{this.category.id}}
       data-notification-level={{this.category.notificationLevelString}}
@@ -80,8 +88,19 @@
           'has-description'
           'no-description'
         }}
+        {{this.applyValueTransformer
+          'parent-category-row-class'
+          (array)
+          (hash category=this.category)
+        }}
         {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
     >
+
+      <PluginOutlet
+        @name="category-list-before-category-section"
+        @outletArgs={{hash category=this.category listType=this.listType}}
+      />
+
       <td
         class="category {{if this.isMuted 'muted'}}"
         style={{category-color-variable this.category.color}}
@@ -141,6 +160,11 @@
         {{/if}}
       </td>
 
+      <PluginOutlet
+        @name="category-list-before-topics-section"
+        @outletArgs={{hash category=this.category}}
+      />
+
       <td class="topics">
         <div title={{this.category.statTitle}}>{{html-safe
             this.category.stat
@@ -154,17 +178,26 @@
         />
       </td>
 
+      <PluginOutlet
+        @name="category-list-after-topics-section"
+        @outletArgs={{hash category=this.category}}
+      />
+
       {{#unless this.isMuted}}
         {{#if this.showTopics}}
           <td class="latest">
             {{#each this.category.featuredTopics as |t|}}
-              {{#if this.currentUser.canUseGlimmerTopicList}}
+              {{#if this.site.useGlimmerTopicList}}
                 <TopicList::FeaturedTopic @topic={{t}} />
               {{else}}
                 <FeaturedTopic @topic={{t}} />
               {{/if}}
             {{/each}}
           </td>
+          <PluginOutlet
+            @name="category-list-after-latest-section"
+            @outletArgs={{hash category=this.category}}
+          />
         {{/if}}
       {{/unless}}
     </tr>

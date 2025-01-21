@@ -212,9 +212,6 @@ sw:
           Sioni jina langu popote :frowning: Unaweza ukajaribu kunitaja kama `@%{discobot_username}` tena?
 
           (Ndio, jina langu ni _disco_, kama miziki ya miaka ya 1970. Ni[napenda kusherehekea!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
-      flag:
-        reply: |-
-          [Wasaidizi](%{base_uri}/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi sijaandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
       search:
         reply: |-
           Nina furaha kuwa umeiona :tada:
@@ -268,12 +265,6 @@ sw:
         reply: |-
           Vizuri sana! Kumbuka hii inafanya kazi kwenye kategoria _na_lebo kama lebo zikiruhusiwa.
       change_topic_notification_level:
-        instructions: |-
-          Kila mada ina kiwango cha ujulishaji. Inaanza na 'kawaida', inamaanisha utajulishwa tu mtu akikuongelea.
-
-          Kama chaguo-msingi, kiwango cha ujulishaji kwa ajili ya ujumbe binafsi ipo kwenye kiwango cha juu cha 'kuangalia', ina maanisha kuwa utajulishwa kuhusu kila jibu jipya. Lakini unaweza kubadilisha kiwango hiki kwa ajili ya mada 'zinazoangaliwa', 'inayofuatiliwa' au 'kunyamazishwa'.
-
-          Tujaribu kubadilisha kiwango cha ujulishaji kwa ajili ya mada hii. Chini ya mada, utaona kitufe kinachosema una **angalia** mada hii. Unaweza kubadilisha kiwango cha ujulishaji kuwa **inafuatiliwa**?
         not_found: |-
           Inaonekana kuwa bado unaangalia :eyes: mada hii! Kama umeshindwa kuiona, kitufe cha kiwango cha kujulisha kinapatikana chini ya mada.
       poll:

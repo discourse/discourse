@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import icon from "discourse/helpers/d-icon";
 import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserStat extends Component {

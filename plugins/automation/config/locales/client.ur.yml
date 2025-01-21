@@ -143,5 +143,7 @@ ur:
             label: محرکات
           version:
             label: ورژن
+          status:
+            label: سٹیٹس
           disabled:
             label: غیر فعال

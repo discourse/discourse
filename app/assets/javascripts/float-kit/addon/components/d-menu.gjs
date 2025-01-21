@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
@@ -7,7 +9,7 @@ import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 import DFloatBody from "float-kit/components/d-float-body";
 import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
@@ -30,6 +32,36 @@ export default class DMenu extends Component {
       this.menuInstance.destroy();
     };
   });
+
+  registerFloatBody = modifier((element) => {
+    this.body = element;
+
+    return () => {
+      this.body = null;
+    };
+  });
+
+  @action
+  teardownFloatBody() {
+    this.body = null;
+  }
+
+  @action
+  forwardTabToContent(event) {
+    if (!this.body) {
+      return;
+    }
+
+    if (event.key === "Tab") {
+      event.preventDefault();
+
+      const firstFocusable = this.body.querySelector(
+        'button, a, input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      firstFocusable?.focus() || this.body.focus();
+    }
+  }
 
   get menuId() {
     return `d-menu-${this.menuInstance.id}`;
@@ -72,7 +104,9 @@ export default class DMenu extends Component {
       @translatedLabel={{@label}}
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
+      @isLoading={{@isLoading}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
+      {{on "keydown" this.forwardTabToContent}}
       ...attributes
     >
       {{#if (has-block "trigger")}}
@@ -85,6 +119,7 @@ export default class DMenu extends Component {
         <DModal
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
+          @autofocus={{this.options.autofocus}}
           class={{concatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
@@ -92,7 +127,7 @@ export default class DMenu extends Component {
             @class
           }}
           @inline={{(isTesting)}}
-          data-identifier={{@instance.options.identifier}}
+          data-identifier={{this.options.identifier}}
           data-content
         >
           <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>
@@ -122,6 +157,7 @@ export default class DMenu extends Component {
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
+          {{this.registerFloatBody}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

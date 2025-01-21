@@ -1,9 +1,9 @@
 import AllowLister from "pretty-text/allow-lister";
 import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
-import deprecated from "discourse-common/lib/deprecated";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import { helperContext } from "discourse-common/lib/helpers";
+import deprecated from "discourse/lib/deprecated";
+import { getURLWithCDN } from "discourse/lib/get-url";
+import { helperContext } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 
 async function withEngine(name, ...args) {

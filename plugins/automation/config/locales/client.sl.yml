@@ -134,6 +134,8 @@ sl:
             label: Sproži
           version:
             label: Verzija
+          status:
+            label: Stanje
           enabled:
             label: Vključeno
           disabled:

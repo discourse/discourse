@@ -10,7 +10,7 @@
     {{#if this.model.can_view_action_logs}}
       <DButton
         @action={{fn this.viewActionLogs this.model.username}}
-        @icon="far-list-alt"
+        @icon="far-rectangle-list"
         @label="admin.user.action_logs"
         class="btn-default"
       />
@@ -193,7 +193,9 @@
     <div class="value">{{this.model.ip_address}}</div>
     <div class="controls">
       {{#if this.currentUser.staff}}
-        <IpLookup @ip={{this.model.ip_address}} @userId={{this.model.id}} />
+        {{#if this.model.ip_address}}
+          <IpLookup @ip={{this.model.ip_address}} @userId={{this.model.id}} />
+        {{/if}}
       {{/if}}
     </div>
   </div>
@@ -203,10 +205,12 @@
     <div class="value">{{this.model.registration_ip_address}}</div>
     <div class="controls">
       {{#if this.currentUser.staff}}
-        <IpLookup
-          @ip={{this.model.registration_ip_address}}
-          @userId={{this.model.id}}
-        />
+        {{#if this.model.registration_ip_address}}
+          <IpLookup
+            @ip={{this.model.registration_ip_address}}
+            @userId={{this.model.id}}
+          />
+        {{/if}}
       {{/if}}
     </div>
   </div>
@@ -850,7 +854,7 @@
           {{else}}
             <DButton
               @action={{fn this.checkSsoPayload this.model}}
-              @icon="far-list-alt"
+              @icon="far-rectangle-list"
               @label="admin.users.check_sso.text"
               @title="admin.users.check_sso.title"
               class="btn-default"

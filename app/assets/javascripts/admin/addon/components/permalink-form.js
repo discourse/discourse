@@ -4,7 +4,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { fmt } from "discourse/lib/computed";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import Permalink from "admin/models/permalink";
 

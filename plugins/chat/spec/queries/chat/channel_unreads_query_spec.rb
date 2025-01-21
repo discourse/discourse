@@ -210,7 +210,7 @@ describe Chat::ChannelUnreadsQuery do
     end
 
     context "for unread mentions in a thread" do
-      fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel_1) }
+      fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
       fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, original_message: thread_om) }
 
       it "does include the original message in the mention count" do
@@ -230,6 +230,7 @@ describe Chat::ChannelUnreadsQuery do
         thread_message_2 = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         create_mention(thread_message_1, channel_1)
         create_mention(thread_message_2, channel_1)
+
         expect(query.first).to eq(
           {
             mention_count: 2,

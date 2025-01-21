@@ -2,10 +2,10 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
-import { isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
 
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
@@ -22,6 +22,7 @@ export default class ApplicationController extends Controller {
   sidebarDisabledRouteOverride = false;
   navigationMenuQueryParamOverride = null;
   showSiteHeader = true;
+  showSkipToContent = true;
 
   get showFooter() {
     return this.footer.showFooter;

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { not, readOnly } from "@ember/object/computed";
+import discourseComputed from "discourse/lib/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class GroupsFormMembershipFields extends Component {

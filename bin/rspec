@@ -15,4 +15,9 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
 require 'rubygems'
 require 'bundler/setup'
 
+if ENV["LOAD_PLUGINS"].nil? && ARGV.any? { |pattern| pattern.include?("plugins/") }
+  STDERR.puts "Detected plugin spec path, setting LOAD_PLUGINS to 1"
+  ENV["LOAD_PLUGINS"] = "1"
+end
+
 load Gem.bin_path('rspec-core', 'rspec')

@@ -1224,7 +1224,18 @@ module Discourse
     locale
   end
 
+  # For test environment only
+  def self.enable_sidekiq_logging
+    @@sidekiq_logging_enabled = true
+  end
+
+  # For test environment only
+  def self.disable_sidekiq_logging
+    @@sidekiq_logging_enabled = false
+  end
+
   def self.enable_sidekiq_logging?
-    ENV["DISCOURSE_LOG_SIDEKIQ"] == "1"
+    ENV["DISCOURSE_LOG_SIDEKIQ"] == "1" ||
+      (defined?(@@sidekiq_logging_enabled) && @@sidekiq_logging_enabled)
   end
 end

@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import ThreadTrackingDropdown from "discourse/plugins/chat/discourse/components/chat-thread-tracking-dropdown";
+import ThreadNotificationsTracking from "discourse/plugins/chat/discourse/components/thread-notifications-tracking";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 
 export default class ChatNavbarThreadTrackingDropdown extends Component {
@@ -54,8 +54,8 @@ export default class ChatNavbarThreadTrackingDropdown extends Component {
   }
 
   <template>
-    <ThreadTrackingDropdown
-      @value={{this.threadNotificationLevel}}
+    <ThreadNotificationsTracking
+      @levelId={{this.threadNotificationLevel}}
       @onChange={{this.updateThreadNotificationLevel}}
       class={{concatClass
         "c-navbar__thread-tracking-dropdown"

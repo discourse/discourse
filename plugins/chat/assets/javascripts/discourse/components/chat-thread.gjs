@@ -8,9 +8,9 @@ import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import ChatThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
@@ -46,7 +46,6 @@ export default class ChatThread extends Component {
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatComposerPresenceManager;
   @service chatHistory;
   @service chatDraftsManager;
   @service chatThreadComposer;
@@ -443,17 +442,16 @@ export default class ChatThread extends Component {
     }
 
     try {
-      const params = {
-        message: message.message,
-        in_reply_to_id: null,
-        staged_id: message.id,
-        upload_ids: message.uploads.map((upload) => upload.id),
-        thread_id: message.thread.id,
-      };
-
       const response = await this.chatApi.sendMessage(
         this.args.thread.channel.id,
-        Object.assign({}, params, extractCurrentTopicInfo(this))
+        {
+          message: message.message,
+          in_reply_to_id: null,
+          staged_id: message.id,
+          upload_ids: message.uploads.map((upload) => upload.id),
+          thread_id: message.thread.id,
+          ...extractCurrentTopicInfo(this),
+        }
       );
 
       this.args.thread.currentUserMembership ??=

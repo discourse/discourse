@@ -75,10 +75,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :new_new_view_enabled?,
              :use_admin_sidebar,
              :can_view_raw_email,
-             :use_glimmer_topic_list?,
-             :use_auto_glimmer_post_menu?,
              :login_method,
-             :has_unseen_features
+             :has_unseen_features,
+             :can_see_emails
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -323,15 +322,15 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
   end
 
-  def use_glimmer_topic_list?
-    scope.user.in_any_groups?(SiteSetting.experimental_glimmer_topic_list_groups_map)
-  end
-
-  def use_auto_glimmer_post_menu?
-    scope.user.in_any_groups?(SiteSetting.glimmer_post_menu_groups_map)
-  end
-
   def do_not_disturb_channel_position
     MessageBus.last_id("/do-not-disturb/#{object.id}")
+  end
+
+  def can_see_emails
+    scope.can_see_emails?
+  end
+
+  def include_can_see_emails?
+    object.staff?
   end
 end

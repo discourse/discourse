@@ -6,7 +6,7 @@ module Jobs
   class ExportUserArchive < ::Jobs::Base
     sidekiq_options retry: false
 
-    attr_accessor :current_user
+    attr_accessor :archive_for_user
     # note: contents provided entirely by user
     attr_accessor :extra
 
@@ -117,7 +117,19 @@ module Jobs
       )
 
     def execute(args)
-      @current_user = User.find_by(id: args[:user_id])
+      @archive_for_user = User.find_by(id: args[:user_id])
+
+      if args[:requesting_user_id].present?
+        @requesting_user = User.find_by(id: args[:requesting_user_id])
+        if !@requesting_user&.admin?
+          raise Discourse::InvalidParameters.new(
+                  "requesting_user_id: can only be admins when specified",
+                )
+        end
+      else
+        @requesting_user = @archive_for_user
+      end
+
       @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
 
@@ -136,8 +148,8 @@ module Jobs
       end
 
       export_title = "user_archive".titleize
-      filename = "user_archive-#{@current_user.username}-#{@timestamp}"
-      user_export = UserExport.create(file_name: filename, user_id: @current_user.id)
+      filename = "user_archive-#{@archive_for_user.username}-#{@timestamp}"
+      user_export = UserExport.create(file_name: filename, user_id: @archive_for_user.id)
 
       filename = "#{filename}-#{user_export.id}"
       dirname = "#{UserExport.base_directory}/#{filename}"
@@ -170,37 +182,17 @@ module Jobs
         FileUtils.rm_rf(dirname)
       end
 
-      # create upload
-      upload = nil
+      begin
+        # create upload
+        upload = create_upload_for_user(user_export, zip_filename)
+      ensure
+        post = notify_user(upload, export_title)
 
-      if File.exist?(zip_filename)
-        File.open(zip_filename) do |file|
-          upload =
-            UploadCreator.new(
-              file,
-              File.basename(zip_filename),
-              type: "csv_export",
-              for_export: "true",
-            ).create_for(@current_user.id)
-
-          if upload.persisted?
-            user_export.update_columns(upload_id: upload.id)
-          else
-            Rails.logger.warn(
-              "Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}",
-            )
-          end
+        if user_export.present? && post.present?
+          topic = post.topic
+          user_export.update_columns(topic_id: topic.id)
+          topic.update_status("closed", true, Discourse.system_user)
         end
-
-        File.delete(zip_filename)
-      end
-    ensure
-      post = notify_user(upload, export_title)
-
-      if user_export.present? && post.present?
-        topic = post.topic
-        user_export.update_columns(topic_id: topic.id)
-        topic.update_status("closed", true, Discourse.system_user)
       end
     end
 
@@ -209,7 +201,7 @@ module Jobs
 
       Post
         .includes(topic: :category)
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .select(:topic_id, :post_number, :raw, :cooked, :like_count, :reply_count, :created_at)
         .order(:created_at)
         .with_deleted
@@ -220,13 +212,13 @@ module Jobs
       return enum_for(:user_archive_profile_export) unless block_given?
 
       UserProfile
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .select(:location, :website, :bio_raw, :views)
         .each { |user_profile| yield get_user_archive_profile_fields(user_profile) }
     end
 
     def preferences_export
-      UserSerializer.new(@current_user, scope: guardian)
+      UserSerializer.new(@archive_for_user, scope: guardian)
     end
 
     def preferences_filetype
@@ -237,7 +229,7 @@ module Jobs
       return enum_for(:auth_tokens) unless block_given?
 
       UserAuthToken
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .each do |token|
           yield(
             [
@@ -258,14 +250,14 @@ module Jobs
 
     def include_auth_token_logs?
       # SiteSetting.verbose_auth_token_logging
-      UserAuthTokenLog.where(user_id: @current_user.id).exists?
+      UserAuthTokenLog.where(user_id: @archive_for_user.id).exists?
     end
 
     def auth_token_logs_export
       return enum_for(:auth_token_logs) unless block_given?
 
       UserAuthTokenLog
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .each do |log|
           yield(
             [
@@ -286,7 +278,7 @@ module Jobs
       return enum_for(:badges_export) unless block_given?
 
       UserBadge
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .joins(:badge)
         .select(
           :badge_id,
@@ -318,7 +310,7 @@ module Jobs
     def bookmarks_export
       return enum_for(:bookmarks_export) unless block_given?
 
-      @current_user
+      @archive_for_user
         .bookmarks
         .where.not(bookmarkable_type: nil)
         .order(:id)
@@ -353,7 +345,7 @@ module Jobs
       return enum_for(:category_preferences_export) unless block_given?
 
       CategoryUser
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .includes(:category)
         .merge(Category.secured(guardian))
         .each do |cu|
@@ -377,7 +369,7 @@ module Jobs
 
       PostAction
         .with_deleted
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .where(post_action_type_id: post_action_type_view.flag_types.values)
         .order(:created_at)
         .each do |pa|
@@ -403,7 +395,7 @@ module Jobs
       return enum_for(:likes_export) unless block_given?
       PostAction
         .with_deleted
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .where(post_action_type_id: post_action_type_view.types[:like])
         .order(:created_at)
         .each do |pa|
@@ -426,7 +418,7 @@ module Jobs
     def include_post_actions?
       # Most forums should not have post_action records other than flags and likes, but they are possible in historical oddities.
       PostAction
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .where.not(
           post_action_type_id:
             post_action_type_view.flag_types.values + [post_action_type_view.types[:like]],
@@ -438,7 +430,7 @@ module Jobs
       return enum_for(:likes_export) unless block_given?
       PostAction
         .with_deleted
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .where.not(
           post_action_type_id:
             post_action_type_view.flag_types.values + [post_action_type_view.types[:like]],
@@ -465,7 +457,7 @@ module Jobs
 
       # Most Reviewable fields staff-private, but post content needs to be exported.
       ReviewableQueuedPost
-        .where(target_created_by_id: @current_user.id)
+        .where(target_created_by_id: @archive_for_user.id)
         .order(:created_at)
         .each do |rev|
           yield(
@@ -485,7 +477,7 @@ module Jobs
       return enum_for(:visits_export) unless block_given?
 
       UserVisit
-        .where(user_id: @current_user.id)
+        .where(user_id: @archive_for_user.id)
         .order(visited_at: :asc)
         .each { |uv| yield [uv.visited_at, uv.posts_read, uv.mobile, uv.time_read] }
     end
@@ -512,8 +504,34 @@ module Jobs
 
     private
 
+    def create_upload_for_user(user_export, zip_filename)
+      upload = nil
+      if File.exist?(zip_filename)
+        File.open(zip_filename) do |file|
+          upload =
+            UploadCreator.new(
+              file,
+              File.basename(zip_filename),
+              type: "csv_export",
+              for_export: "true",
+            ).create_for(@requesting_user.id)
+
+          if upload.persisted?
+            user_export.update_columns(upload_id: upload.id)
+          else
+            Rails.logger.warn(
+              "Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}",
+            )
+          end
+        end
+
+        File.delete(zip_filename)
+      end
+      upload
+    end
+
     def guardian
-      @guardian ||= Guardian.new(@current_user)
+      @guardian ||= Guardian.new(@archive_for_user)
     end
 
     def piped_category_name(category_id, category)
@@ -529,7 +547,7 @@ module Jobs
     def self_or_other(user_id)
       if user_id.nil?
         nil
-      elsif user_id == @current_user.id
+      elsif user_id == @archive_for_user.id
         "self"
       else
         "other"
@@ -608,17 +626,17 @@ module Jobs
     def notify_user(upload, export_title)
       post = nil
 
-      if @current_user
+      if @requesting_user
         post =
           if upload.persisted?
             SystemMessage.create_from_system_user(
-              @current_user,
+              @requesting_user,
               :csv_export_succeeded,
               download_link: UploadMarkdown.new(upload).attachment_markdown,
               export_title: export_title,
             )
           else
-            SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
+            SystemMessage.create_from_system_user(@requesting_user, :csv_export_failed)
           end
       end
 

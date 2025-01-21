@@ -37,7 +37,7 @@ module(
       assert.deepEqual(data, { foo: "option-3" });
     });
 
-    test("when disabled", async function (assert) {
+    test("@disabled", async function (assert) {
       await render(<template>
         <Form as |form|>
           <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>

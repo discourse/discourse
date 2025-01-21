@@ -5,9 +5,9 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { overrideThrowGjsError } from "discourse/instance-initializers/component-templates";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 function silenceMobileAndOverrideDeprecations(hooks) {
@@ -16,6 +16,7 @@ function silenceMobileAndOverrideDeprecations(hooks) {
     const promise = new Promise((resolve) => (unsilenceCallback = resolve));
     withSilencedDeprecationsAsync(
       [
+        "component-template-resolving", // silence ember's template resolving deprecation
         "discourse.mobile-templates",
         "discourse.resolver-template-overrides",
         "discourse.component-template-overrides",

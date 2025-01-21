@@ -621,6 +621,45 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "#actions_for" do
+    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:user)
+
+    it "gets the bundles and actions for a reviewable" do
+      actions = reviewable.actions_for(user.guardian)
+      expect(actions.bundles.map(&:id)).to eq(%w[approve_post reject_post revise_and_reject_post])
+      expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
+        ["approve_post"],
+      )
+      expect(actions.bundles.find { |b| b.id == "reject_post" }.actions.map(&:id)).to eq(
+        ["reject_post"],
+      )
+      expect(actions.bundles.find { |b| b.id == "revise_and_reject_post" }.actions.map(&:id)).to eq(
+        ["revise_and_reject_post"],
+      )
+    end
+
+    describe "handling empty bundles" do
+      class ReviewableTestRecord < Reviewable
+        def build_actions(actions, guardian, args)
+          actions.add(:approve_post) do |action|
+            action.icon = "check"
+            action.label = "reviewables.actions.approve_post.title"
+          end
+          actions.add_bundle("empty_bundle", icon: "xmark", label: "Empty Bundle")
+        end
+      end
+
+      it "does not return empty bundles with no actions" do
+        actions = ReviewableTestRecord.new.actions_for(user.guardian)
+        expect(actions.bundles.map(&:id)).to eq(%w[approve_post])
+        expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
+          ["approve_post"],
+        )
+      end
+    end
+  end
+
   describe "default actions" do
     let(:reviewable) { Reviewable.new }
     let(:actions) { Reviewable::Actions.new(reviewable, Guardian.new) }

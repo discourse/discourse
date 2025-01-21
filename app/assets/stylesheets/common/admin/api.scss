@@ -1,99 +1,29 @@
 // Styles for admin/api
-
-table.web-hooks.grid {
-  td.delivery-status {
-    div {
-      display: flex;
-      align-items: center;
-    }
-    .d-icon {
-      margin-right: 0.25em;
-    }
-  }
-  td.payload-url {
+.d-admin-table.web-hooks {
+  .d-admin-row__overview.payload-url {
     word-wrap: break-word;
-    max-width: 55vw;
-  }
-  td.controls {
-    display: flex;
-    button {
-      margin-left: 0.25em;
-    }
-  }
-  @media screen and (min-width: 550px) {
-    tbody {
-      tr {
-        grid-template-columns: 0.5fr repeat(2, 1fr) 0.5fr;
-      }
+    max-width: 20vw;
 
-      td.controls {
-        text-align: right;
-      }
+    @include breakpoint(medium) {
+      max-width: 70vw;
     }
   }
-  @include breakpoint(mobile-extra-large) {
-    tbody {
-      tr {
-        grid-template-columns: 0.5fr 1fr;
-      }
+
+  .d-admin-row__detail.description {
+    @include breakpoint(medium) {
+      display: block;
     }
-    td.controls {
-      grid-row: 2;
+
+    .d-admin-row__mobile-label {
+      @include breakpoint(medium) {
+        display: block;
+      }
     }
   }
 }
 
 // Api keys
-
-table.api-keys {
-  margin-bottom: 0.25em;
-
-  tr.revoked {
-    color: var(--primary-medium);
-  }
-
-  .d-admin-row__overview.key {
-    width: 30%;
-  }
-}
-
 .admin-api-keys {
-  h2 {
-    margin-bottom: 10px;
-  }
-  .api-key-new {
-    .form-element,
-    .form-element-desc {
-      &.input-area {
-        width: 100%;
-
-        .value-list,
-        .select-kit,
-        input[type="text"],
-        input[type="text"].filter-input {
-          width: 100%;
-          margin: 0;
-        }
-
-        @include breakpoint(mobile-extra-large, min-width) {
-          width: 75%;
-          .value-list,
-          .select-kit,
-          input[type="text"] {
-            width: 50%;
-          }
-        }
-      }
-      &.label-area {
-        label {
-          margin: 0.5em 1em 0 0;
-        }
-        @include breakpoint(mobile-extra-large, min-width) {
-          width: 25%;
-        }
-      }
-    }
-  }
   .api-key-show {
     .form-element,
     .form-element-desc {
@@ -111,8 +41,10 @@ table.api-keys {
           margin: 0;
         }
       }
+
       &.label-area {
         width: 25%;
+
         label {
           margin-right: 1em;
         }
@@ -120,21 +52,29 @@ table.api-keys {
     }
   }
 
+  .generated-api-key {
+    margin: 1em 0;
+  }
+
   .api-key {
     padding: 10px;
     margin-bottom: 10px;
+
     .form-element,
     .form-element-desc {
       float: left;
       padding: 0.5em 0;
+
       &.input-area {
         input[type="checkbox"] {
           margin-top: 0.5em;
         }
+
         .ac-wrap {
           width: 50% !important;
         }
       }
+
       &.label-area {
         label {
           text-align: left;
@@ -142,20 +82,24 @@ table.api-keys {
         }
       }
     }
+
     .controls {
       float: right;
       text-align: left;
       width: 50%;
     }
+
     .scopes-title {
       margin-top: 20px;
     }
   }
+
   .scopes-table.grid {
     margin: 20px 0;
 
     tr {
       grid-template-columns: repeat(4, 1fr);
+
       input {
         margin-bottom: 2px;
       }
@@ -191,9 +135,11 @@ table.api-keys {
   .tip.good:empty {
     display: none;
   }
+
   input {
     max-width: calc(100% - 10px);
   }
+
   .select-kit,
   .select-kit.multi-select {
     width: 100%;
@@ -223,15 +169,19 @@ table.api-keys {
     padding-bottom: 10px;
     border-bottom: var(--primary-low) 1px solid;
   }
+
   .filters {
     border-bottom: var(--primary-low) 1px solid;
+
     .filter {
       margin-bottom: 1em;
     }
+
     label .d-icon {
       margin-right: 0.25em;
     }
   }
+
   .instructions {
     margin-top: 5px;
   }
@@ -263,6 +213,7 @@ table.api-keys {
   li {
     padding: 2px 0;
   }
+
   .col {
     display: inline-block;
     padding-top: 6px;
@@ -270,38 +221,49 @@ table.api-keys {
     overflow-y: auto;
     overflow-x: hidden;
   }
+
   .col.heading {
     font-weight: bold;
     padding: 4px 0;
   }
+
   .col.heading.actions {
     padding: 4px 0;
   }
+
   .col.first {
     width: 90px;
   }
+
   .col.event-id {
     width: 90px;
   }
+
   .col.timestamp {
     width: 180px;
   }
+
   .col.completion {
     width: 250px;
   }
+
   .col.actions {
     padding-top: 0;
+
     a {
       text-decoration: underline;
     }
   }
+
   .details {
     display: block;
     margin-top: 1rem;
   }
+
   label {
     font-size: var(--font-0);
   }
+
   &.content-list {
     width: 100%;
   }
@@ -323,9 +285,11 @@ table.api-keys {
 .hook-event {
   display: inline-block;
   width: 100%;
+
   label {
     display: inline-block;
   }
+
   p {
     margin: 0 0 5px 25px;
   }

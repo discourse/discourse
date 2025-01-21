@@ -1,4 +1,4 @@
-import escape from "discourse-common/lib/escape";
+import escape from "discourse/lib/escape";
 
 let customTagSectionLinkPrefixIcons = {};
 

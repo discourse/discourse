@@ -324,6 +324,8 @@ class InvitesController < ApplicationController
       },
     )
 
+    raise Discourse::NotFound if SiteSetting.enable_discourse_connect
+
     invite = Invite.find_by(invite_key: params[:id])
     redeeming_user = current_user
 

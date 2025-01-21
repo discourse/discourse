@@ -1,10 +1,10 @@
 import { Promise } from "rsvp";
 import KeyValueStore from "discourse/lib/key-value-store";
+import discourseLater from "discourse/lib/later";
 import DiscourseURL from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import discourseLater from "discourse-common/lib/later";
 import { i18n } from "discourse-i18n";
 
 let primaryTab = false;

@@ -40,11 +40,11 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     const sectionLinks = queryAll(
-      ".sidebar-more-section-links-details-content-main .sidebar-section-link"
+      ".sidebar-more-section-content .sidebar-section-link"
     );
 
     assert
@@ -83,3 +83,34 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
       );
   });
 });
+
+acceptance(
+  "Sidebar - Anonymous user - Community Section with hidden links",
+  function (needs) {
+    needs.settings({ navigation_menu: "sidebar" });
+
+    needs.site({
+      anonymous_sidebar_sections: [
+        {
+          id: 1,
+          title: "The A Team",
+          section_type: "community",
+          links: [
+            {
+              id: 2,
+              name: "Admin",
+              value: "/admin",
+              segment: "secondary",
+            },
+          ],
+        },
+      ],
+    });
+
+    test("more... is not shown when there are no displayable links", async function (assert) {
+      await visit("/");
+
+      assert.dom(".sidebar-more-section-links-details-summary").doesNotExist();
+    });
+  }
+);

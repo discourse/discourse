@@ -1,8 +1,8 @@
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import TextField from "discourse/components/text-field";
+import discourseComputed from "discourse/lib/decorators";
 import { applySearchAutocomplete } from "discourse/lib/search";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class SearchTextField extends TextField {

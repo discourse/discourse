@@ -77,6 +77,9 @@ class InlineOneboxer
             url,
             max_redirects: max_redirects,
             initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
+            headers: {
+              "Accept-Language" => Oneboxer.accept_language,
+            },
           )
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
@@ -115,7 +118,7 @@ class InlineOneboxer
   end
 
   def self.cache_key(url)
-    "inline_onebox:#{url}"
+    "inline_onebox:#{Oneboxer.onebox_locale}:#{url}"
   end
 
   def self.post_author_for_title(topic, post_number)

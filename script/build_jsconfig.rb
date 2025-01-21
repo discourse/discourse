@@ -8,7 +8,6 @@ Dir.chdir("#{__dir__}/..") # rubocop:disable Discourse/NoChdir because this is n
 CORE_NAMESPACES = {
   "discourse/*" => ["app/assets/javascripts/discourse/app"],
   "discourse/tests/*" => ["app/assets/javascripts/discourse/tests"],
-  "discourse-common/*" => ["app/assets/javascripts/discourse-common/addon"],
   "admin/*" => ["app/assets/javascripts/admin/addon"],
   "pretty-text/*" => ["app/assets/javascripts/pretty-text/addon"],
   "select-kit/*" => ["app/assets/javascripts/select-kit/addon"],

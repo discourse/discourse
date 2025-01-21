@@ -1,9 +1,9 @@
 import { h } from "virtual-dom";
+import getURL from "discourse/lib/get-url";
+import { iconNode } from "discourse/lib/icon-library";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
-import getURL from "discourse-common/lib/get-url";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default createWidget("link", {

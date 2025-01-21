@@ -14,6 +14,7 @@ export default class WizardRoute extends Route {
     this.controllerFor("application").setProperties({
       showTop: false,
       showSiteHeader: false,
+      showSkipToContent: false,
     });
   }
 
@@ -25,6 +26,7 @@ export default class WizardRoute extends Route {
     this.controllerFor("application").setProperties({
       showTop: true,
       showSiteHeader: true,
+      showSkipToContent: true,
     });
   }
 }

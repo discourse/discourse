@@ -1,4 +1,4 @@
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 export function reload() {
   if (!isTesting()) {

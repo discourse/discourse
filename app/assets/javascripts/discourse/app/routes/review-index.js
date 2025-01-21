@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { isPresent } from "@ember/utils";
+import { bind } from "discourse/lib/decorators";
 import DiscourseRoute from "discourse/routes/discourse";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class ReviewIndex extends DiscourseRoute {
   model(params) {
@@ -39,8 +39,10 @@ export default class ReviewIndex extends DiscourseRoute {
       filterCategoryId: meta.category_id,
       filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
+      scoreTypes: meta.score_types,
       filterUsername: meta.username,
       filterReviewedBy: meta.reviewed_by,
+      filterFlaggedBy: meta.flagged_by,
       filterFromDate: isPresent(meta.from_date) ? moment(meta.from_date) : null,
       filterToDate: isPresent(meta.to_date) ? moment(meta.to_date) : null,
       filterSortOrder: meta.sort_order,

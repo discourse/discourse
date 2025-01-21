@@ -21,7 +21,6 @@ tr_TR:
     chat_minimum_message_length: "Bir sohbet mesajı için minimum karakter sayısı."
     chat_allow_uploads: "Genel sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
-    default_emoji_reactions: "Sohbet mesajları için varsayılan emoji tepkileri. Hızlı tepki için en fazla 5 emoji ekleyin."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
     chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
     max_mentions_per_chat_message: "Bir kullanıcının bir sohbet mesajında kullanabileceği maksimum @name bildirimi sayısı."
@@ -89,8 +88,8 @@ tr_TR:
       not_accepting_dms: "Üzgünüz, %{username} şu anda mesaj kabul etmiyor."
       actor_ignoring_target_user: "%{username} adlı kullanıcıyı yok sayıyorsunuz, bu nedenle ona mesaj gönderemezsiniz."
       actor_muting_target_user: "%{username} adlı kullanıcıyı sessize aldınız, bu nedenle ona mesaj gönderemezsiniz."
-      actor_disallowed_dms: "Kullanıcıların size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla yeni doğrudan mesaj oluşturamazsınız."
-      actor_preventing_target_user_from_dm: "%{username} adlı kullanıcının size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla ona yeni doğrudan mesaj oluşturamazsınız."
+      actor_disallowed_dms: "Kullanıcıların size kişisel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, bu nedenle yeni doğrudan mesaj oluşturamazsınız."
+      actor_preventing_target_user_from_dm: "%{username} adlı kişinin size kişisel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, bu nedenle onlara yeni doğrudan mesaj oluşturamazsınız."
       user_cannot_send_direct_messages: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
       over_chat_max_direct_message_users_allow_self: "Yalnızca kendinize doğrudan mesaj oluşturabilirsiniz."
       over_chat_max_direct_message_users:

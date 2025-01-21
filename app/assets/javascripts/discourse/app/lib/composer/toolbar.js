@@ -78,7 +78,7 @@ export default class Toolbar {
         icon: "code",
         preventFocus: true,
         trimLeading: true,
-        action: (...args) => this.context.send("formatCode", args),
+        perform: (e) => e.formatCode(),
       });
 
       this.addButton({

@@ -359,7 +359,18 @@ class TopicsController < ApplicationController
 
   def update
     topic = Topic.find_by(id: params[:topic_id])
+
     guardian.ensure_can_edit!(topic)
+
+    original_title = params[:original_title]
+    if original_title.present? && original_title != topic.title
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
+
+    original_tags = params[:original_tags]
+    if original_tags.present? && original_tags.sort != topic.tags.pluck(:name).sort
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
 
     if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
       if topic.shared_draft
@@ -846,6 +857,7 @@ class TopicsController < ApplicationController
     params.permit(:participants)
     params.permit(:chronological_order)
     params.permit(:archetype)
+    params.permit(:freeze_original)
 
     raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
 
@@ -858,6 +870,7 @@ class TopicsController < ApplicationController
     args = {}
     args[:destination_topic_id] = destination_topic_id.to_i
     args[:chronological_order] = params[:chronological_order] == "true"
+    args[:freeze_original] = params[:freeze_original] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]
@@ -880,6 +893,7 @@ class TopicsController < ApplicationController
     params.permit(:participants)
     params.permit(:chronological_order)
     params.permit(:archetype)
+    params.permit(:freeze_original)
 
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
@@ -1388,6 +1402,7 @@ class TopicsController < ApplicationController
     ].present?
     args[:tags] = params[:tags] if params[:tags].present?
     args[:chronological_order] = params[:chronological_order] == "true"
+    args[:freeze_original] = true if params[:freeze_original] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]

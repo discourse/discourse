@@ -234,5 +234,16 @@ RSpec.describe UserAvatar do
       expect(user_avatar.gravatar_upload_id).to eq(nil)
       expect(user_avatar.custom_upload_id).to eq(nil)
     end
+
+    it "deletes avatars without users and does not remove avatars with users" do
+      user_avatar_with_user = Fabricate(:user_avatar)
+      user_avatar_without_user = Fabricate(:user_avatar)
+      user_avatar_without_user.user.delete
+
+      UserAvatar.ensure_consistency!
+
+      expect(UserAvatar.exists?(user_avatar_with_user.id)).to eq true
+      expect(UserAvatar.exists?(user_avatar_without_user.id)).to eq false
+    end
   end
 end

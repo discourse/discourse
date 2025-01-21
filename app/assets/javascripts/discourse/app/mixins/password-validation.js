@@ -30,6 +30,7 @@ export default Mixin.create({
     "passwordRequired",
     "rejectedPasswords.[]",
     "accountUsername",
+    "accountName",
     "accountEmail",
     "passwordMinLength",
     "forceValidationReason",
@@ -84,6 +85,17 @@ export default Mixin.create({
         return EmberObject.create(
           Object.assign(failedAttrs, {
             reason: i18n("user.password.same_as_username"),
+          })
+        );
+      }
+
+      if (
+        !isEmpty(this.accountName) &&
+        this.accountPassword === this.accountName
+      ) {
+        return EmberObject.create(
+          Object.assign(failedAttrs, {
+            reason: i18n("user.password.same_as_name"),
           })
         );
       }

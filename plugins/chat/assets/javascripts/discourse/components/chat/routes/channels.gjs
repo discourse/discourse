@@ -17,7 +17,7 @@ export default class ChatRoutesChannels extends Component {
         </navbar.Actions>
       </Navbar>
 
-      <ChannelsListPublic @sortByActivity={{true}} />
+      <ChannelsListPublic />
     </div>
   </template>
 }

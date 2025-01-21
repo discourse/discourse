@@ -21,6 +21,7 @@ class AdminUserIndexQuery
     "topics_viewed" => "user_stats.topics_entered",
     "posts" => "user_stats.post_count",
     "read_time" => "user_stats.time_read",
+    "silence_reason" => "silence_reason",
   }
 
   def find_users(limit = 100)
@@ -40,7 +41,7 @@ class AdminUserIndexQuery
     custom_direction = params[:asc].present? ? "ASC" : "DESC"
     if custom_order.present? &&
          without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)\z/, "")]
-      order << "#{without_dir} #{custom_direction}"
+      order << "#{without_dir} #{custom_direction} NULLS LAST"
     end
 
     if !custom_order.present?
@@ -119,9 +120,22 @@ class AdminUserIndexQuery
     @query.where("users.id != ?", params[:exclude]) if params[:exclude].present?
   end
 
-  # this might not be needed in rails 4 ?
   def append(active_relation)
     @query = active_relation if active_relation
+  end
+
+  def with_silence_reason
+    @query.joins(
+      "LEFT JOIN LATERAL (
+        SELECT user_histories.details silence_reason
+        FROM user_histories
+        WHERE user_histories.target_user_id = users.id
+        AND user_histories.action = #{UserHistory.actions[:silence_user]}
+        AND users.silenced_till IS NOT NULL
+        ORDER BY user_histories.created_at DESC
+        LIMIT 1
+      ) user_histories ON true",
+    )
   end
 
   def find_users_query
@@ -130,6 +144,7 @@ class AdminUserIndexQuery
     append filter_by_ip
     append filter_exclude
     append filter_by_search
+    append with_silence_reason
     @query
   end
 end

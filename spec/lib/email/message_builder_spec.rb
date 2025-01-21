@@ -335,6 +335,12 @@ RSpec.describe Email::MessageBuilder do
         expect(message_with_unsubscribe.header_args["List-Unsubscribe"]).to be_present
       end
 
+      it "has the List-Unsubscribe-Post header" do
+        expect(message_with_unsubscribe.header_args["List-Unsubscribe-Post"]).to eq(
+          "List-Unsubscribe=One-Click",
+        )
+      end
+
       it "has the unsubscribe url in the body" do
         expect(message_with_unsubscribe.body).to match("/t/1234/unsubscribe")
       end

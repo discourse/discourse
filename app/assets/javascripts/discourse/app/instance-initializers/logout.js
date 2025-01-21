@@ -1,7 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let _showingLogout = false;

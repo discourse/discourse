@@ -6,6 +6,7 @@ describe "Admin Chat Incoming Webhooks", type: :system do
 
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:admin_incoming_webhooks_page) { PageObjects::Pages::AdminIncomingWebhooks.new }
+  let(:d_page_header) { PageObjects::Components::DPageHeader.new }
 
   before do
     chat_system_bootstrap(current_user)
@@ -14,7 +15,13 @@ describe "Admin Chat Incoming Webhooks", type: :system do
 
   it "can create incoming webhooks" do
     admin_incoming_webhooks_page.visit
+
+    expect(d_page_header).to be_visible
+
     admin_incoming_webhooks_page.click_new
+
+    expect(d_page_header).to be_hidden
+
     admin_incoming_webhooks_page.form.field("name").fill_in("Test webhook")
     admin_incoming_webhooks_page.form.field("description").fill_in("Some test content")
     admin_incoming_webhooks_page.form.field("username").fill_in("system")

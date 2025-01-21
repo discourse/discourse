@@ -2,7 +2,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import ChatChatable from "discourse/plugins/chat/discourse/models/chat-chatable";
 
 const MAX_RESULTS = 10;

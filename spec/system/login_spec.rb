@@ -10,7 +10,10 @@ shared_examples "login scenarios" do |login_page_object|
   fab!(:admin) { Fabricate(:admin, username: "admin", password: "supersecurepassword") }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
-  before { Jobs.run_immediately! }
+  before do
+    SiteSetting.hide_email_address_taken = false
+    Jobs.run_immediately!
+  end
 
   def wait_for_email_link(user, type)
     wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }

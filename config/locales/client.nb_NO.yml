@@ -439,6 +439,8 @@ nb_NO:
         confirm: "Du har allerede et utkast under arbeid. Hva vil du gjøre med det?"
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
+      dropdown:
+        view_all: "vis alle"
     topic_count_all:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
@@ -476,6 +478,8 @@ nb_NO:
     continue: "Fortsett"
     switch_to_anon: "Start inkognitomodus"
     switch_from_anon: "Avslutt inkognitomodus"
+    select_placeholder: "Velg…"
+    none_placeholder: "Ingen"
     banner:
       close: "Fjern dette banneret"
       edit: "Rediger"
@@ -606,6 +610,8 @@ nb_NO:
         refresh: "Last inn på nytt"
         status: "Status"
         category: "Kategori"
+        score_type:
+          title: "Begrunnelse"
         orders:
           score: "Poeng"
           score_asc: "Resultat (omvendt)"
@@ -895,13 +901,13 @@ nb_NO:
       public_admission: "Tillat brukere å ta del i gruppen fritt (krever offentlig synlig gruppe)"
       public_exit: "Tillat brukere å fritt forlate gruppen"
       empty:
-        posts: "Det finnes ingen innlegg av medlemmer i denne gruppen."
-        members: "Det finnes ingen medlemmer av denne gruppen."
-        requests: "Det er ingen medlemsforespørsler for denne gruppen."
-        mentions: "Denne gruppen har aldri blitt nevnt."
-        messages: "Det finnes ingen meldinger til denne gruppen."
-        topics: "Det finnes ingen emner opprettet av medlemmer av denne gruppen."
-        logs: "Det finnes ingen logger for denne gruppen."
+        posts: "Det finnes ingen innlegg av medlemmer i denne gruppen"
+        members: "Det finnes ingen medlemmer av denne gruppen"
+        requests: "Det er ingen medlemsforespørsler for denne gruppen"
+        mentions: "Denne gruppen har aldri blitt nevnt"
+        messages: "Det finnes ingen meldinger til denne gruppen"
+        topics: "Det finnes ingen emner opprettet av medlemmer av denne gruppen"
+        logs: "Det finnes ingen logger for denne gruppen"
       add: "Legg til"
       join: "Bli medlem"
       leave: "Forlat"
@@ -1091,17 +1097,17 @@ nb_NO:
         one: "Slett %{count}"
         other: "Slett %{count}"
       username: "brukernavn"
-      trust_level: "TN"
+      trust_level: "tillitsnivå"
       read_time: "lesetid"
       topics_entered: "emner åpnet"
-      post_count: "# innlegg"
+      post_count: "innlegg"
       confirm_delete_other_accounts: "Er du sikker på at du vil slette disse kontoene?"
       powered_by: "bruker <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "kopiert"
     user_fields:
       none: "(velg et alternativ)"
       required: 'Skriv inn en verdi for "%{name}'
-      same_as_password: "Passordet ditt skal ikke gjentas i andre felt."
+      same_as_password: "Passordet ditt skal ikke gjentas i andre felt"
       optional: (valgfritt)
     user:
       said: "%{username}:"
@@ -1224,18 +1230,15 @@ nb_NO:
         description: "Hopp over nye brukeropplæringstips og merker"
       reset_seen_user_tips: "Vis brukaropplæringstips igjen"
       theme_default_on_all_devices: "Gjør dette standardtemaet til alle mine enheter"
-      color_scheme_default_on_all_devices: "Angi standard fargeskjema på alle enhetene mine"
-      color_scheme: "Fargeskjema"
+      color_scheme: "Farge Palett"
       color_schemes:
         default_description: "Tema standard"
         disable_dark_scheme: "Samme som vanlig"
-        dark_instructions: "Du kan forhåndsvise den mørke modusen ved å endre på enhetens mørke modus."
         undo: "Tilbakestill"
         regular: "Aktivt medlem"
         dark: "Mørk modus"
         default_dark_scheme: "(nettstedsstandard)"
       dark_mode: "Mørk Modus"
-      dark_mode_enable: "Aktivere automatisk fargevalg i mørk modus"
       text_size_default_on_all_devices: "Gjør denne standardtekststørrelsen på alle mine enheter"
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
@@ -1743,7 +1746,8 @@ nb_NO:
         after_4_minutes: "etter 4 minutt"
         after_5_minutes: "etter 5 minutt"
         after_10_minutes: "etter 10 minutt"
-      notification_level_when_replying: "Når jeg skriver noe i et emne, sett emnet som"
+      notification_level_when_replying:
+        do_nothing: "ikke gjør noe"
       topics_unread_when_closed: "Betrakt emner som ulest når de er lukket"
       invited:
         title: "invitasjoner"
@@ -2267,6 +2271,9 @@ nb_NO:
       categories_boxes: "Bokser med underkategorier"
       categories_boxes_with_topics: "Bokser med håndplukket emner"
       subcategories_with_featured_topics: "Underkategorier med utvalgte emner"
+    full_name_requirement:
+      required_at_signup: "Påkrevd"
+      optional_at_signup: "Valgfritt"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2612,8 +2619,6 @@ nb_NO:
         quoted: "sitert"
         edited: "redigert"
         liked: "ny som"
-        private_message: "ny privat melding"
-        invited_to_private_message: "invitert til privat melding"
         invitee_accepted: "invitasjonen akseptert"
         posted: "nytt innlegg"
         watching_category_or_tag: "nytt innlegg"
@@ -2633,7 +2638,7 @@ nb_NO:
         membership_request_consolidated: "ny forespørsel om medlemskap"
         reaction: "ny reaksjon"
         votes_released: "Stemmen ble utgitt"
-        new_features: "nye Discourse-funksjoner har blitt lansert!"
+        new_features: "Nye Discourse-funksjoner har blitt lansert!"
         admin_problems: "nye råd på dashbordet på nettstedet ditt"
     upload_selector:
       uploading: "Laster opp bilde"
@@ -3230,7 +3235,6 @@ nb_NO:
         help: "Åpne en utskriftsvennlig utgave av dette emnet"
       flag_topic:
         title: "Rapporter"
-        help: "rapporter dette innlegget privat eller send et privat varsel om det"
         success_message: "Du har rapportert dette emnet."
       make_public:
         title: "Konverter til offentlig emne"
@@ -3394,6 +3398,8 @@ nb_NO:
           one: Du har valgt <b>%{count}</b> innlegg.
           other: "Du har valgt <b>%{count}</b> innlegg."
       deleted_by_author_simple: "(emne slettet av forfatter)"
+    post_list:
+      aria_post_number: "%{title} - innlegg #%{postNumber}"
     post:
       confirm_delete: "Er du sikker på at du vil slette dette innlegget?"
       quote_reply: "Sitat"
@@ -3501,7 +3507,6 @@ nb_NO:
         edit_action: "Rediger"
         edit_anonymous: "Beklager, du må være innlogget for å endre dette innlegget."
         flag_action: "Flagg"
-        flag: "rapporter dette innlegget privat eller send et privat varsel om det"
         delete: "slett dette innlegget"
         undelete: "gjenopprett dette innlegget"
         share_action: "Del"
@@ -3934,7 +3939,6 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
-        title: "Filtrer"
         button:
           label: "Filtrer"
       latest:
@@ -4339,8 +4343,6 @@ nb_NO:
               content: "Grupper"
             users:
               content: "Brukere"
-            my_posts:
-              content: "Mine innlegg"
             review:
               content: "Gjennomgang"
             invite:
@@ -4368,7 +4370,7 @@ nb_NO:
         show: "Vis"
         about: "Om"
   admin_js:
-    type_to_filter: "skriv for å filtrere…"
+    type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
     admin:
       title: "Discourse-admin"
@@ -4383,7 +4385,30 @@ nb_NO:
         title: "Liste over tilgjengelige rapporter"
         sidebar_title: "Rapporter"
         sidebar_link:
-          all: "Alle"
+          all: "Alle rapporter"
+      config:
+        developer:
+          title: "Utvikler"
+        files:
+          title: "Filer"
+        legal:
+          title: "Juridisk"
+        navigation:
+          title: "Navigasjon"
+        notifications:
+          title: "Varsler"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Annet"
+        search:
+          title: "Søk"
+        security:
+          title: "Sikkerhet"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "Bruker-API"
       dashboard:
         title: "Dashbord"
         last_updated: "Dashbord oppdatert:"
@@ -4475,6 +4500,7 @@ nb_NO:
             include_subcategories:
               label: "Inkluder underkategorier"
       flags:
+        title: "Moderering"
         description: "Beskrivelse"
         enabled: "Aktivert?"
         more_options:
@@ -4529,46 +4555,46 @@ nb_NO:
         add_owners: Legg til eiere
         none_selected: "Velg en gruppe for å komme i gang"
         no_custom_groups: "Opprett en ny egendefinert gruppe"
+      api_keys:
+        edit: "Endre"
+        save: "Lagre"
+        cancel: "Avbryt"
+        continue: "Fortsett"
+        revoke: "Trekk tilbake"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det finnes ingen aktive API-nøkler akkurat nå."
         user: "Bruker"
         title: "API"
-        created: Opprettet
         updated: Oppdatert
-        never_used: (aldri)
+        never_used: Aldri
         generate: "Generer API-nøkkel"
         revoke: "Trekk tilbake"
-        all_users: "Alle brukere"
         show_details: Detaljer
         description: Beskrivelse
         save: Lagre
-        delete: Slett permanent
         continue: Fortsett
         scopes:
           action: Handling
       web_hooks:
         title: "Webhooker"
-        none: "Det finnes ingen webhooker for tiden."
         instruction: "Webhooker lar Discourse sender meldinger til eksterne tjenester når spesifiserte situasjoner oppstår på nettstedet. Når en webhook utløses, sendes en POST-forespørsel til nettadressene du angir."
         detailed_instruction: "En POST-forespørsel sendes til den angitte URL-en når den valgte hendelsen skjer."
-        new: "Ny webhook"
         create: "Opprett"
         edit: "Endre"
         save: "Lagre"
+        delete: "Slett"
+        cancel: "Avbryt"
         controls: "Handlinger"
-        go_back: "Tilbake til liste"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://eksempel.no/postmottak"
         secret_invalid: "Delt hemmelighet kan ikke inneholde blanke tegn."
         secret_too_short: "Delt hemmelighet må være minst 12 tegn."
-        secret_placeholder: "En valgfri streng som brukes for å lage signatur"
         event_type_missing: "Du må sette opp minst en type hendelse."
         content_type: "Content Type"
         secret: "Delt hemmelighet"
         event_chooser: "Hvilke hendelser skal utløse denne vevkroken?"
-        wildcard_event: "Send meg alt"
-        individual_event: "Velg hendelser enkeltvis."
+        individual_event: "Velg hendelser enkeltvis"
         verify_certificate: "Kontroller TLSs-sertifikat til payload url"
         active: "Aktiv"
         active_notice: "Vi sender hendelsesdetaljer når det skjer."
@@ -4622,11 +4648,11 @@ nb_NO:
           badges: "Merker"
           notifications: "Varsler"
           permalinks: "Permalenker"
-          trust_levels: "Tillitsnivå"
           users: "Brukere"
-          user_fields: "Brukerfelter"
-          watched_words: "Ord som holdes oppsyn med"
+          groups: "Grupper"
           legal: "Juridisk"
+          moderation_flags:
+            title: "Moderering"
       appearance:
         title: "Utseende"
         sidebar_link:
@@ -4638,22 +4664,8 @@ nb_NO:
       email_settings:
         sidebar_link:
           appearance: "Utseende"
-          preview_summary: "Forhåndsvis oppsummering"
-      email_logs:
-        sidebar_link:
-          sent: "Sendt"
-          skipped: "Hoppet over"
-          bounced: "Tilbakesendt"
-          received: "Mottatt"
-          rejected: "Avvist"
       security:
         title: "Sikkerhet"
-        sidebar_link:
-          error_logs: "Feillogg"
-          screened_emails: "Kontrollerte e-poster"
-          screened_ips: "Kontrollerte IP-er"
-          screened_urls: "Kontrollerte URL-er"
-          search_logs: "Søkelogger"
       section_landing_pages:
         account:
           title: "Konto"
@@ -4666,6 +4678,7 @@ nb_NO:
           update: "Oppdater"
           saved: "lagret!"
         flags:
+          header: "Moderering"
           description: "Beskrivelse"
           enabled: "Aktivert?"
           edit: "Endre"
@@ -4679,6 +4692,14 @@ nb_NO:
             invalid_applies_to: "Påkrevd"
             topic: "emner"
             post: "innlegg"
+          more_options:
+            title: "Flere valg"
+        permalinks:
+          edit: "Endre"
+          delete: "Slett"
+        embeddable_host:
+          edit: "Endre"
+          delete: "Slett"
           more_options:
             title: "Flere valg"
         look_and_feel:
@@ -4705,11 +4726,10 @@ nb_NO:
           installed: "Installert"
       advanced:
         sidebar_link:
+          webhooks: "Webhooker"
           developer: "Utvikler"
           embedding: "Innbygging"
-          rate_limits: "Frekvensbegresninger"
           user_api: "Bruker-API"
-          web_hooks: "Webhooker"
           onebox: "Onebox"
           files: "Filer"
           other_options: "Annet"
@@ -4753,7 +4773,7 @@ nb_NO:
             title: "Send e-post med nedlastingslenke"
             alert: "En lenke for nedlasting av denne sikkerhetskopien er blitt sendt til deg på e-post"
           destroy:
-            title: "Fjern sikkerhetskopien"
+            title: "Slett"
             confirm: "Er du sikker på at du vil slette denne sikkerhetskopien"
           restore:
             label: "Gjenooprett"
@@ -4778,9 +4798,6 @@ nb_NO:
           screened_url: "Eksporter komplett liste over filtrerte URL'er i CSV format."
       export_json:
         button_text: "Eksporter"
-      invite:
-        button_text: "Send invitasjoner"
-        button_title: "Send invitasjoner"
       customize:
         title: "Tilpasse"
         preview: "forhåndsvisning"
@@ -4844,7 +4861,6 @@ nb_NO:
           hide_unused_fields: "Skjul ubrukte felter"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
-          color_scheme_user_selectable: "Fargeskjema kan velges av brukere"
           auto_update: "Automatisk oppdatering når Discourse er oppdatert"
           color_scheme: "Farge Palett"
           default_light_scheme: "Lys (standard)"
@@ -4978,8 +4994,7 @@ nb_NO:
           overridden: Sidens standard robots.txt fil er overstyrt.
         email_style:
           title: "E-post Stil"
-          heading: "Tilpass e-poststil"
-          html: "HTML mal"
+          html: "HTML"
           css: "CSS"
           reset: "Tilbakestill til standard"
           reset_confirm: "Er du sikker på at du vil tilbakestille til standard %{fieldName} og miste alle dine endringer?"
@@ -4987,14 +5002,11 @@ nb_NO:
           instructions: "Tilpass malen hvor alle html e-poster gjengis og stil ved hjelp av CSS."
       email:
         title: "E-poster"
+        settings: "Instillinger"
         templates: "Maler"
-        preview_digest: "Forhåndsvis oppsummering"
         advanced_test:
-          title: "Avansert test"
           desc: "Se hvordan Diskurs-prosesser mottatt e-post. For å kunne behandle e-posten riktig, lim inn hele den opprinnelige e-postmeldingen."
           email: "Original melding"
-          run: "Kjør test"
-          text: "Valgt tekstinnhold"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Det oppstod et problem ved utsendelse av e-post for testing. Sjekk e-postinnstillinger nøye, sjekk at verten ikke blokkerer e-posttilkoblinger, og prøv igjen."
         sent: "Sendt"
@@ -5002,15 +5014,10 @@ nb_NO:
         bounced: "Tilbakesendt"
         received: "Mottatt"
         rejected: "Avvist"
-        sent_at: "Sendt"
         time: "Tid"
         user: "Bruker"
-        email_type: "E-posttype"
-        to_address: "Til adresse"
         test_email_address: "e-postadresse å teste"
-        send_test: "Send e-post for testing"
         sent_test: "sendt!"
-        delivery_method: "Leveringsmetode"
         preview_digest_desc: "Forhåndsvis innholde i oppsummerings-e-postene som sendes til inaktive brukere."
         refresh: "Refresh"
         send_digest_label: "Send dette resultatet til:"
@@ -5019,10 +5026,7 @@ nb_NO:
         html: "html"
         text: "tekst"
         html_preview: "Forhåndsvisning av e-innhold"
-        last_seen_user: "Bruker sett sist:"
         no_result: "Ingen resultater funnet for oppsummering."
-        reply_key: "Svar-ID"
-        skipped_reason: "Hopp over grunn"
         incoming_emails:
           from_address: "Fra"
           to_addresses: "Til"
@@ -5031,12 +5035,10 @@ nb_NO:
           error: "Feil"
           none: "Fant ingen innkommende e-poster."
           modal:
-            title: "Innkommende e-postdetaljer"
             error: "Feil"
             headers: "Hoder"
             subject: "Emne"
             body: "Meldingstekst"
-            rejection_message: "Avvisningse-post"
           filters:
             from_placeholder: "fra@eksempel.no"
             to_placeholder: "til@eksempel.no"
@@ -5060,7 +5062,7 @@ nb_NO:
           delete_topic: "Emne slettet"
           post_approved: "Innlegg godkjent"
       logs:
-        title: "Logger"
+        nav_title: "Logger"
         action: "Handling"
         created_at: "Opprettet"
         last_match_at: "Siste treff"
@@ -5078,8 +5080,6 @@ nb_NO:
         staff_actions:
           all: "alle"
           filter: "Filtrer:"
-          title: "Personalhandlinger"
-          clear_filters: "Vis alt"
           staff_user: "Bruker"
           target_user: "Målbruker"
           subject: "Emne"
@@ -5179,9 +5179,7 @@ nb_NO:
             topic_opened: "Emne åpnet"
             topic_archived: "Emne arkivert"
         screened_emails:
-          title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
-          email: "E-postadresse"
           actions:
             allow: "Tillat"
         screened_urls:
@@ -5195,7 +5193,6 @@ nb_NO:
           actions:
             block: "Blokker"
             do_nothing: "Tillat"
-            allow_admin: "Tillat Admin"
           form:
             label: "Ny:"
             ip_address: "IP-adresse"
@@ -5205,24 +5202,17 @@ nb_NO:
             text: "Slå sammen."
             title: "Lager nye blokkeringsoppføringer for subnett hvis det er minst 'min_ban_entries_for_roll_up' oppføringer."
         search_logs:
-          title: "Søkelogger"
           term: "Term"
           searches: "Søk"
           click_through_rate: "Klikkrate"
           types:
             all_search_types: "Alle søketyper"
             header: "Hode"
-            full_page: "Full side"
             click_through_only: "Alle (kun klikk gjennom)"
-          header_search_results: "Hode-søkeresultater"
-        logster:
-          title: "Feillogg"
       watched_words:
-        title: "Ord som holdes oppsyn med"
         search: "søk"
         clear_filter: "Tøm"
         download: Last ned
-        clear_all: Fjern alle
         actions:
           block: "Blokker"
           censor: "Sensurer"
@@ -5282,7 +5272,6 @@ nb_NO:
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
         status: "Status"
-        show_emails: "Vis e-poster"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5298,7 +5287,6 @@ nb_NO:
         approved: "Godkjent?"
         titles:
           active: "Aktive brukere"
-          new: "Nye brukere"
           pending: "Brukere som venter på evaluering"
           newuser: "Brukere på tillitsnivå 0 (Ny bruker)"
           basic: "Brukere på tillitsnivå 1 (Juniormedlem)"
@@ -5306,11 +5294,7 @@ nb_NO:
           regular: "Brukere på tillitsnivå 3 (Aktivt medlem)"
           leader: "Brukere på tillitsnivå 4 (Leder)"
           staff: "Stab"
-          admins: "Admin-brukere"
           moderators: "Moderatorer"
-          silenced: "Dempede brukere"
-          suspended: "Utestengte brukere"
-          staged: "Arrangerte brukere"
         not_verified: "Uverifisert"
         check_email:
           title: "Vis denne brukerens e-postadresse"
@@ -5485,7 +5469,6 @@ nb_NO:
           external_email: "E-post"
           external_avatar_url: "Profilbilde URL"
       user_fields:
-        title: "Brukerfelter"
         untitled: "Uten tittel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5515,10 +5498,8 @@ nb_NO:
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:
-        description: "Du kan skreddersy all tekst på forumet ditt. Start ved å søke nedenfor:"
         search: "Søk etter tekst du ønsker å endre"
-        title: "Tekst"
-        edit: "rediger"
+        edit: "Endre"
         revert: "Tilbakestill endringer"
         revert_confirm: "Er du sikker på at du ønsker å tilbakestille dine endringer?"
         go_back: "Tilbake til søk"
@@ -5533,7 +5514,7 @@ nb_NO:
         save: "lagre"
         cancel: "avbryt"
       site_settings:
-        title: "Innstillinger"
+        nav_title: "Instillinger"
         no_results: "Ingen treff funnet."
         clear_filter: "Tøm"
         add_url: "legg til URL"
@@ -5545,6 +5526,8 @@ nb_NO:
             label: "Last opp"
         selectable_avatars:
           title: "Liste over avatarer brukere kan velge mellom"
+        table_column_heading:
+          status: "Status"
         categories:
           all_results: "Alle"
           required: "Påkrevd"
@@ -5610,6 +5593,7 @@ nb_NO:
         none_selected: "Velg et merke for å komme i gang"
         allow_title: Tillat merke å bli benyttet som en tittel
         multiple_grant: Kan bli tildelt flere ganger
+        visibility_heading: Synlighet
         listable: Vis merket på den offentlige merkesiden
         enabled: aktivert
         disabled: deaktivert
@@ -5658,15 +5642,11 @@ nb_NO:
         settings: "Instillinger"
       embedding:
         get_started: "Hvis du vil bygge inn Discourse på en annen nettside, begynn med å legge til dens vert."
+        delete: "Slett"
         confirm_delete: "Er du sikker på at du vil slette den verten?"
         title: "Innbygging"
-        host: "Tillatte verter"
-        edit: "rediger"
-        category: "Legg til innlegg i kategori"
-        add_host: "Legg til vert"
-        settings: "Innbyggingsinnstillinger"
-        crawling_settings: "Innstillinger for søkeroboter"
-        crawling_description: "Dersom Discourse oppretter emner for innleggene dine og ingen RSS/ATOM-informasjonskanal finnes, vil det prøve å tolke innholdet ditt ut fra HTML-koden din. Noen ganger kan det være utfordrende å hente ut innhold, så muligheten til å oppgi CSS-regler er der for å gjøre uthentingen enklere."
+        edit: "Endre"
+        crawlers_description: "Dersom Discourse oppretter emner for innleggene dine og ingen RSS/ATOM-informasjonskanal finnes, vil det prøve å tolke innholdet ditt ut fra HTML-koden din. Noen ganger kan det være utfordrende å hente ut innhold, så muligheten til å oppgi CSS-regler er der for å gjøre uthentingen enklere."
         embed_by_username: "Brukernavn for opprettelse av emne"
         embed_post_limit: "Maksimalt antall innlegg å bygge inn"
         embed_title_scrubber: "Regulære uttrykk brukt til å finne og korrigere feil i titler"
@@ -5674,7 +5654,11 @@ nb_NO:
         allowed_embed_selectors: "CSS-velger for elementer som tillates i innbygginger"
         blocked_embed_selectors: "CSS-velger for element som fjernes fra innbygginger"
         allowed_embed_classnames: "Tillatte navn for CSS-klasser"
-        save: "Lagre innbyggingsinnstillinger"
+        save: "Lagre"
+        host_form:
+          save: "Lagre"
+        nav:
+          settings: "Instillinger"
       permalink:
         title: "Permalenker"
         url: "URL"
@@ -5688,6 +5672,9 @@ nb_NO:
         username: "Brukernavn"
         delete_confirm: Er du sikker på at du vil slette denne permalenken?
         more_options: "Flere valg"
+        nav:
+          settings: "Instillinger"
+          permalinks: "Permalenker"
         form:
           label: "Ny:"
           url: "URL"
@@ -5714,6 +5701,31 @@ nb_NO:
           admin: "Administrator"
           moderator: "Moderator"
           regular: "Aktivt medlem"
+      homepage_choices:
+        custom:
+          label: "Egendefinert"
+        style_type:
+          categories: "kategori"
+          topics: "emne"
+      top_menu_items:
+        new: "Ny"
+        unread: "Uleste"
+        top: "Aktive"
+        latest: "Siste"
+        categories: "Kategorier"
+        unseen: "Usette"
+        read: "Les"
+        bookmarks: "Bokmerker"
       previews:
         share_button: "Del"
         reply_button: "Svar"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "alle kategorier"
+        category_names:
+          site_feedback: "Tilbakemeldinger"
+        table_headers:
+          topic: "Emne"
+          replies: "Svar"
+          views: "Visninger"
+          activity: "Aktivitet"

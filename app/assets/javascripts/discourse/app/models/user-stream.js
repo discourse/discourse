@@ -2,12 +2,12 @@ import { A } from "@ember/array";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import UserAction from "discourse/models/user-action";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class UserStream extends RestModel {
   loaded = false;

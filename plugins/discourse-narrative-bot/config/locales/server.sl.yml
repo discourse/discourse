@@ -238,8 +238,6 @@ sl:
       bookmark:
         instructions: |-
           Da se naučite kaj novega, kliknite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> spodaj in <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **zaznamujte to zasebno sporočilo**. Če to storite se vam v prihodnje mogoče obeta :gift:!
-        reply: |-
-          Odlično! Zdaj lahko kadarkoli preprosto poiščete svojo pot nazaj v najin zasebni pogovor neposredno iz [zavihka zaznamkov v vašem profilu] (%{bookmark_url}) tako, da izberete sliko profila v desnem zgornjem kotu &#8599;
         not_found: |-
           Oh, ne vidim nobenega zaznamka v tej temi. Ali ste našli zaznamek pod vsakim prispevkom? Uporabite prikaži več <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> za prikaz ostalih akcij.
       emoji:
@@ -273,8 +271,6 @@ sl:
 
           (In ja, moje ime se črkuje kot _disco_, kot plesna norost iz 1970s. Imam rad [nočno življenje!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        reply: |-
-          [Naše osebje](%{base_uri}/groups/staff) bo zasebno obveščeno o vaši prijavi. Če bo dovolj članov skupnosti prijavilo ta prispevek, se bo samodejno skril zaradi previdnosti. (Ker pa jaz dejansko nisem napisal nič neprimernega :angel:, sem odstranil prijavo za zdaj.)
         not_found: |-
           Oh ne, moja grda objava še vedno ni bila označena kot neprimerna. :worried: Ali jo lahko označite kot neprimerno z uporabo **zastavice** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne pozabite uporabiti gumba <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , ki razkrije več dejanj za vsako objavo.
       search:
@@ -354,12 +350,6 @@ sl:
         reply: |-
           Odlično! Zapomnite si da to deluje tako za kategorije _kot_ za oznake, če so omogočene.
       change_topic_notification_level:
-        instructions: |-
-          Vsaka tema in nivo obveščanja. Na začetku je to 'Običajno', kar pomeni da boste obveščeni samo, ko vas bo nekdo neposredno omenil.
-
-          Za zasebno sporočilo je privzeta najvišja stopnja obveščanja 'Opazujem', kar pomeni da boste obveščeni za vsak nov odgovor. Lahko pa spremenite nivo obveščanja za _vsako_ temo na 'Opazujem', 'Sledim' ali 'Utišano'.
-
-          Poskusimo spremeniti nivo obveščanja za to temo. Pod temo boste našli gumb, ki prikazuje da **Opazujem** to temo. Ali jo lahko spremenite na **Sledim**?
         not_found: |-
           Izgleda, da še vedno opazujete :eyes: to temo! Če imate težavo najti nivo obveščanja, poglejte levo spodaj pod to temo.
         reply: |-

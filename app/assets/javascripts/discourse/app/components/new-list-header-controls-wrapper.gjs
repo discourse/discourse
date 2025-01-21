@@ -6,7 +6,7 @@ import NewListHeaderControls from "discourse/components/topic-list/new-list-head
 import raw from "discourse/helpers/raw";
 
 export default class NewListHeaderControlsWrapper extends Component {
-  @service currentUser;
+  @service site;
 
   @action
   click(e) {
@@ -21,7 +21,7 @@ export default class NewListHeaderControlsWrapper extends Component {
   }
 
   <template>
-    {{#if this.currentUser.canUseGlimmerTopicList}}
+    {{#if this.site.useGlimmerTopicList}}
       <div class="topic-replies-toggle-wrapper">
         <NewListHeaderControls
           @current={{@current}}

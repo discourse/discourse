@@ -167,10 +167,10 @@ pt_BR:
               description: Opcional, ativação apenas se o tópico da postagem estiver nesta categoria
             restricted_group:
               label: Grupo
-              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem privada na caixa de mensagens deste grupo
+              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal na caixa de mensagens deste grupo
             restricted_groups:
               label: Grupos
-              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem privada em uma das caixas de entrada do grupo
+              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal em uma das caixas de entrada do grupo
             ignore_group_members:
               label: Ignorar membros de grupo
               description: Ignorar o gatilho se o(a) remetente for um membro do Grupo especificado acima
@@ -228,6 +228,10 @@ pt_BR:
               label: Níveis de confiança válidos
               description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Etiquetas adicionadas ou removidas
+            tags_added: Etiquetas adicionadas
+            tags_removed: Etiquetas removidas
           fields:
             watching_categories:
               label: Categorias de acompanhamento
@@ -235,6 +239,8 @@ pt_BR:
             watching_tags:
               label: Etiquetas de acompanhamento
               description: Ativa-se apenas se o tópico tiver uma destas etiquetas
+            trigger_on:
+              label: Acionar em
             trigger_with_pms:
               label: Ativar com MPs
               description: Isso é ativado mesmo se as etiquetas forem alteradas numa MP
@@ -413,6 +419,8 @@ pt_BR:
             label: Script
           version:
             label: Versão
+          status:
+            label: Status
           enabled:
             label: Ativada
           disabled:

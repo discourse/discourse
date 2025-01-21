@@ -3,10 +3,10 @@ import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { computedI18n } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class InvitePanel extends Component {

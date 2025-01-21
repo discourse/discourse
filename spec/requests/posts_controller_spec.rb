@@ -547,7 +547,7 @@ RSpec.describe PostsController do
       end
 
       it "checks for an edit conflict" do
-        update_params[:post][:raw_old] = "old body"
+        update_params[:post][:original_text] = "old body"
         put "/posts/#{post.id}.json", params: update_params
 
         expect(response.status).to eq(409)
@@ -562,6 +562,13 @@ RSpec.describe PostsController do
 
       it "raises an error when the user doesn't have permission to see the post" do
         post = Fabricate(:private_message_post, post_number: 3)
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response).to be_forbidden
+      end
+
+      it "raises an error when user is OP but can no longer see the post" do
+        post = Fabricate(:private_message_post, user: user)
+        post.topic.remove_allowed_user(admin, user)
         put "/posts/#{post.id}.json", params: update_params
         expect(response).to be_forbidden
       end
@@ -726,7 +733,6 @@ RSpec.describe PostsController do
             params: {
               post: {
                 raw: "this is a random post",
-                raw_old: post.raw,
                 random_number: 244,
               },
             }
@@ -2493,6 +2499,21 @@ RSpec.describe PostsController do
         expect(data.length).to eq(0)
       end
 
+      it "returns PMs for admins who are also moderators" do
+        admin.update!(moderator: true)
+
+        pm_post = Fabricate(:private_message_post)
+        PostDestroyer.new(admin, pm_post).destroy
+
+        sign_in(admin)
+
+        get "/posts/#{pm_post.user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.size).to eq(1)
+        expect(response.parsed_body.first["id"]).to eq(pm_post.id)
+      end
+
       it "only shows posts deleted by other users" do
         create_post(user: user)
         post_deleted_by_user = create_post(user: user)
@@ -2579,6 +2600,8 @@ RSpec.describe PostsController do
   end
 
   describe "#user_posts_feed" do
+    before { user.user_stat.update!(post_count: 1) }
+
     it "returns public posts rss feed" do
       public_post
       private_post

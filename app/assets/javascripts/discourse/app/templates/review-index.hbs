@@ -55,6 +55,18 @@
 
       <div class="reviewable-filter">
         <label class="filter-label">
+          {{i18n "review.filters.score_type.title"}}
+        </label>
+        <ComboBox
+          @value={{this.filterScoreType}}
+          @content={{this.allScoreTypes}}
+          @onChange={{fn (mut this.filterScoreType)}}
+          @options={{hash none="review.filters.score_type.all"}}
+        />
+      </div>
+
+      <div class="reviewable-filter">
+        <label class="filter-label">
           {{i18n "review.filters.priority.title"}}
         </label>
         <ComboBox
@@ -72,6 +84,21 @@
           @value={{this.filterCategoryId}}
           @onChange={{fn (mut this.filterCategoryId)}}
           @options={{hash none="review.filters.all_categories" clearable=true}}
+        />
+      </div>
+
+      <div class="reviewable-filter topic-filter">
+        <label class="filter-label">
+          {{i18n "review.filtered_flagged_by"}}
+        </label>
+        <EmailGroupUserChooser
+          @value={{this.filterFlaggedBy}}
+          @onChange={{action "updateFilterFlaggedBy"}}
+          @options={{hash
+            maximum=1
+            excludeCurrentUser=false
+            fullWidthWrap=true
+          }}
         />
       </div>
 

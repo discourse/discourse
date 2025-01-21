@@ -1,12 +1,12 @@
 import Handlebars from "handlebars";
 import $ from "jquery";
+import * as AvatarUtils from "discourse/lib/avatar-utils";
+import deprecated from "discourse/lib/deprecated";
+import escape from "discourse/lib/escape";
+import getURL from "discourse/lib/get-url";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
-import * as AvatarUtils from "discourse-common/lib/avatar-utils";
-import deprecated from "discourse-common/lib/deprecated";
-import escape from "discourse-common/lib/escape";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 let _defaultHomepage;
@@ -14,7 +14,7 @@ let _defaultHomepage;
 function deprecatedAvatarUtil(name) {
   return function () {
     deprecated(
-      `${name} should be imported from discourse-common/lib/avatar-utils instead of discourse/lib/utilities`,
+      `${name} should be imported from discourse/lib/avatar-utils instead of discourse/lib/utilities`,
       { id: "discourse.avatar-utils" }
     );
     return AvatarUtils[name](...arguments);
@@ -156,17 +156,21 @@ export function selectedText() {
     } else if (oneboxTest) {
       // This is a partial quote from a onebox.
       // Treat it as though the entire onebox was quoted.
-      const oneboxUrl = oneboxTest.dataset.oneboxSrc;
-      div.append(oneboxUrl);
+      div.append(oneboxTest.dataset.oneboxSrc);
     } else {
       div.append(range.cloneContents());
     }
   }
 
   div.querySelectorAll("aside.onebox[data-onebox-src]").forEach((element) => {
-    const oneboxUrl = element.dataset.oneboxSrc;
-    element.replaceWith(oneboxUrl);
+    element.replaceWith(element.dataset.oneboxSrc);
   });
+
+  div
+    .querySelectorAll("div.video-placeholder-container[data-video-src]")
+    .forEach((element) => {
+      element.replaceWith(`![|video](${element.dataset.videoSrc})`);
+    });
 
   return toMarkdown(div.outerHTML);
 }

@@ -6,8 +6,8 @@ import {
   classNameBindings,
   tagName,
 } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("li")
 @classNameBindings(

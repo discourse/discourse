@@ -88,13 +88,13 @@ export default class AdminChatIncomingWebhooksList extends Component {
             >
               <div class="d-admin-row__controls-options">
                 <LinkTo
-                  @route="adminPlugins.show.discourse-chat-incoming-webhooks.show"
+                  @route="adminPlugins.show.discourse-chat-incoming-webhooks.edit"
                   @model={{webhook.id}}
                   class="btn btn-small admin-chat-incoming-webhooks-edit"
                 >{{i18n "chat.incoming_webhooks.edit"}}</LinkTo>
 
                 <DButton
-                  @icon="trash-alt"
+                  @icon="trash-can"
                   @title="chat.incoming_webhooks.delete"
                   @action={{fn this.destroyWebhook webhook}}
                   class="btn-danger btn-small admin-chat-incoming-webhooks-delete"

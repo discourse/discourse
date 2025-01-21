@@ -30,6 +30,10 @@ class Reviewable < ActiveRecord::Base
         @label = label
         @actions = []
       end
+
+      def empty?
+        @actions.empty?
+      end
     end
 
     class Action < Item

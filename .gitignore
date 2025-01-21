@@ -84,3 +84,9 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+
+# devenv.sh
+.devenv*
+
+# direnv.net
+.direnv

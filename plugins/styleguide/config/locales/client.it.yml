@@ -74,6 +74,10 @@ it:
           title: "Notifiche Argomenti"
         post:
           title: "Messaggio"
+        post_list:
+          title: "Elenco dei messaggi"
+          empty_example: "<PostList /> stato vuoto"
+          populated_example: "<PostList /> stato popolato"
         topic_map:
           title: "Mappa Argomento"
         site_header:

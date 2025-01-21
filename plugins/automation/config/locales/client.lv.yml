@@ -132,6 +132,8 @@ lv:
             label: Aktivizēt
           version:
             label: Versij
+          status:
+            label: Statuss
           enabled:
             label: Ieslēgts
           disabled:

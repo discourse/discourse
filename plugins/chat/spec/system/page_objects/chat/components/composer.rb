@@ -13,7 +13,7 @@ module PageObjects
         end
 
         def blank?
-          input.value.blank?
+          has_value?("")
         end
 
         def enabled?
@@ -49,7 +49,7 @@ module PageObjects
         end
 
         def has_value?(expected)
-          value == expected
+          has_field?(input[:id], with: expected)
         end
 
         def reply_to_last_message_shortcut
@@ -91,11 +91,11 @@ module PageObjects
         end
 
         def editing_message?(message)
-          value == message.message && message_details.editing?(message)
+          has_value?(message.message) && message_details.editing?(message)
         end
 
         def editing_no_message?
-          value == "" && message_details.has_no_message?
+          blank? && message_details.has_no_message?
         end
 
         def focus

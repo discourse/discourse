@@ -105,6 +105,10 @@ acceptance("Create Account - User Fields", function (needs) {
       .exists("shows required field error");
 
     assert
+      .dom(".user-field-ive-read-the-terms-of-service .tip.bad")
+      .exists("shows required field error");
+
+    assert
       .dom(".user-field-whats-your-dad-like .tip.bad")
       .exists("shows same as password error");
   });

@@ -2,8 +2,8 @@ import EmberObject, { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
+import discourseDebounce from "discourse/lib/debounce";
 import User from "discourse/models/user";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { i18n } from "discourse-i18n";
 
 function failedResult(attrs) {

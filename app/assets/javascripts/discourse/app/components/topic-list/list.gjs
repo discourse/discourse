@@ -110,7 +110,9 @@ export default class TopicList extends Component {
   }
 
   get bulkSelectEnabled() {
-    return this.args.bulkSelectHelper?.bulkSelectEnabled;
+    return (
+      this.args.bulkSelectHelper?.bulkSelectEnabled && this.args.canBulkSelect
+    );
   }
 
   get canDoBulkActions() {
@@ -143,7 +145,10 @@ export default class TopicList extends Component {
 
     // work backwards
     // this is more efficient cause we keep appending to list
-    const start = topics.findIndex((topic) => !topic.get("pinned"));
+    const start = Math.max(
+      topics.findIndex((topic) => !topic.get("pinned")),
+      0
+    );
     let lastVisitedTopic, topic;
 
     for (let i = topics.length - 1; i >= start; i--) {
@@ -166,12 +171,19 @@ export default class TopicList extends Component {
     return lastVisitedTopic;
   }
 
+  get additionalClasses() {
+    return applyValueTransformer("topic-list-class", [], {
+      topics: this.args.topics,
+    });
+  }
+
   <template>
     {{! template-lint-disable table-groups }}
     <table
       class={{concatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header")
+        this.additionalClasses
       }}
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>

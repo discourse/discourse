@@ -11,6 +11,11 @@ describe "Admin Users Page", type: :system do
 
   before { sign_in(current_user) }
 
+  it "show correct breadcrumbs" do
+    admin_users_page.visit
+    expect(admin_users_page).to have_correct_breadcrumbs
+  end
+
   describe "bulk user delete" do
     let(:confirmation_modal) { PageObjects::Modals::BulkUserDeleteConfirmation.new }
 
@@ -137,6 +142,35 @@ describe "Admin Users Page", type: :system do
       )
       confirmation_modal.close
       expect(admin_users_page).to have_users([user_1.id])
+    end
+
+    it "has an option to block IPs and emails" do
+      user_1.update!(ip_address: IPAddr.new("44.22.11.33"))
+
+      admin_users_page.visit
+      admin_users_page.bulk_select_button.click
+
+      admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
+      admin_users_page.bulk_actions_dropdown.expand
+      admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
+      confirmation_modal.fill_in_confirmation_phase(user_count: 1)
+      confirmation_modal.block_ip_and_email_checkbox.click
+      confirmation_modal.confirm_button.click
+
+      expect(confirmation_modal).to have_successful_log_entry_for_user(
+        user: user_1,
+        position: 1,
+        total: 1,
+      )
+      expect(
+        ScreenedIpAddress.exists?(
+          ip_address: user_1.ip_address,
+          action_type: ScreenedIpAddress.actions[:block],
+        ),
+      ).to be_truthy
+      expect(
+        ScreenedEmail.exists?(email: user_1.email, action_type: ScreenedEmail.actions[:block]),
+      ).to be_truthy
     end
   end
 

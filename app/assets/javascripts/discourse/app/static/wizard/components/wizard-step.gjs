@@ -10,6 +10,8 @@ import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
 
+const READY_STEP_INDEX = 5;
+
 export default class WizardStepComponent extends Component {
   @tracked saving = false;
 
@@ -23,6 +25,12 @@ export default class WizardStepComponent extends Component {
 
   get id() {
     return this.step.id;
+  }
+
+  // We don't want to show the step counter for optional steps after
+  // the "Ready" step.
+  get showStepCounter() {
+    return this.args.step.displayIndex < READY_STEP_INDEX;
   }
 
   /**
@@ -172,18 +180,20 @@ export default class WizardStepComponent extends Component {
       {{didInsert this.autoFocus}}
       {{didUpdate this.stepChanged @step.id}}
     >
-      <div class="wizard-container__step-counter">
-        <span class="wizard-container__step-text">
-          {{i18n "wizard.step-text"}}
-        </span>
-        <span class="wizard-container__step-count">
-          {{i18n
-            "wizard.step"
-            current=@step.displayIndex
-            total=@wizard.totalSteps
-          }}
-        </span>
-      </div>
+      {{#if this.showStepCounter}}
+        <div class="wizard-container__step-counter">
+          <span class="wizard-container__step-text">
+            {{i18n "wizard.step-text"}}
+          </span>
+          <span class="wizard-container__step-count">
+            {{i18n
+              "wizard.step"
+              current=@step.displayIndex
+              total=@wizard.totalSteps
+            }}
+          </span>
+        </div>
+      {{/if}}
 
       <div class="wizard-container">
         <div class="wizard-container__step-contents">

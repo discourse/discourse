@@ -2,7 +2,7 @@
 
 module PageObjects
   module Pages
-    class AdminUsers < PageObjects::Pages::Base
+    class AdminUsers < AdminBase
       class UserRow
         attr_reader :element
 
@@ -43,6 +43,12 @@ module PageObjects
         all(".directory-table__row").size
       end
 
+      def has_correct_breadcrumbs?
+        expect(all(".d-breadcrumbs__item").map(&:text)).to eq(
+          [I18n.t("js.admin_title"), I18n.t("admin_js.admin.users.title")],
+        )
+      end
+
       def has_users?(user_ids)
         user_ids.all? { |id| has_css?(".directory-table__row[data-user-id=\"#{id}\"]") }
       end
@@ -69,16 +75,6 @@ module PageObjects
 
       def has_none_users?
         has_content?(I18n.t("js.search.no_results"))
-      end
-
-      def click_tab(tab)
-        has_css?(".admin-users-tabs__#{tab}")
-        find(".admin-users-tabs__#{tab}").click
-      end
-
-      def has_active_tab?(tab)
-        has_css?(".admin-users-tabs__#{tab} .active")
-        has_no_css?(".loading-container .visible")
       end
 
       def has_no_emails?

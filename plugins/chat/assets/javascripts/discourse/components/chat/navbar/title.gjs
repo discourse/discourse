@@ -1,6 +1,6 @@
 import { hash } from "@ember/helper";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import SubTitle from "./sub-title";
 
 const ChatNavbarTitle = <template>

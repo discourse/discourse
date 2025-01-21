@@ -1,14 +1,17 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { helperContext } from "discourse/lib/helpers";
+import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import loadScript from "discourse/lib/load-script";
-import { postRNWebviewMessage } from "discourse/lib/utilities";
+import {
+  escapeExpression,
+  postRNWebviewMessage,
+} from "discourse/lib/utilities";
 import User from "discourse/models/user";
-import { isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { helperContext } from "discourse-common/lib/helpers";
-import { renderIcon } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export async function setupLightboxes({ container, selector }) {
@@ -116,7 +119,7 @@ export default function lightbox(elem, siteSettings) {
         titleSrc(item) {
           const href = item.el.data("download-href") || item.src;
           let src = [
-            item.el.attr("title"),
+            escapeExpression(item.el.attr("title")),
             $("span.informations", item.el).text(),
           ];
           if (

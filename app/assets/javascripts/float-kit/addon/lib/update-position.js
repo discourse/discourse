@@ -6,10 +6,10 @@ import {
   offset,
   shift,
 } from "@floating-ui/dom";
+import domFromString from "discourse/lib/dom-from-string";
+import { isTesting } from "discourse/lib/environment";
+import { iconHTML } from "discourse/lib/icon-library";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { isTesting } from "discourse-common/config/environment";
-import domFromString from "discourse-common/lib/dom-from-string";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { FLOAT_UI_PLACEMENTS } from "float-kit/lib/constants";
 
 const centerOffset = offset(({ rects }) => {

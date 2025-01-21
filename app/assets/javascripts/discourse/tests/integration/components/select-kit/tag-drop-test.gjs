@@ -31,7 +31,7 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
     await render(<template>
       <TagDrop
         @currentCategory={{category}}
-        @tagId={{"jeff"}}
+        @tagId="jeff"
         @options={{hash tagId="jeff"}}
       />
     </template>);

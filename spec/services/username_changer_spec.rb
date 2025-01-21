@@ -469,7 +469,7 @@ RSpec.describe UsernameChanger do
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img loading="lazy" alt='' width="24" height="24" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img alt='' width="24" height="24" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -477,7 +477,7 @@ RSpec.describe UsernameChanger do
             <aside class="quote no-group" data-username="bar">
             <div class="title">
             <div class="quote-controls"></div>
-            <img loading="lazy" alt="" width="24" height="24" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img alt="" width="24" height="24" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -485,7 +485,7 @@ RSpec.describe UsernameChanger do
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img loading="lazy" alt="" width="24" height="24" src="#{avatar_url}" class="avatar"> bar:</div>
+            <img alt="" width="24" height="24" src="#{avatar_url}" class="avatar"> bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -520,7 +520,7 @@ RSpec.describe UsernameChanger do
             <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
             <div class="title">
             <div class="quote-controls"></div>
-            <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/letter_avatar_proxy/v4/letter/b/b77776/48.png" class="avatar"> Foo Bar:</div>
+            <img alt="" width="24" height="24" src="//test.localhost/letter_avatar_proxy/v4/letter/b/b77776/48.png" class="avatar"> Foo Bar:</div>
             <blockquote>
             <p>quoted post</p>
             </blockquote>
@@ -551,7 +551,7 @@ RSpec.describe UsernameChanger do
               <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
               <div class="title">
               <div class="quote-controls"></div>
-              <img loading="lazy" alt='' width="24" height="24" src="#{avatar_url}" class="avatar"> bar:</div>
+              <img alt='' width="24" height="24" src="#{avatar_url}" class="avatar"> bar:</div>
               <blockquote>
               <p>quoted</p>
               </blockquote>
@@ -597,7 +597,7 @@ RSpec.describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img loading="lazy" alt="" width="24" height="24" src="#{avatar_url}" class="avatar">
+                <img alt="" width="24" height="24" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -608,7 +608,7 @@ RSpec.describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img loading="lazy" alt="" width="24" height="24" src="#{avatar_url}" class="avatar">
+                <img alt="" width="24" height="24" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.topic.url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -627,7 +627,7 @@ RSpec.describe UsernameChanger do
             <aside class="quote" data-post="#{quoted_post.post_number}" data-topic="#{quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img loading="lazy" alt="" width="24" height="24" src="#{avatar_url}" class="avatar">
+                <img alt="" width="24" height="24" src="#{avatar_url}" class="avatar">
                 <a href="#{protocol_relative_url(quoted_post.full_url)}">#{quoted_post.topic.title}</a>
               </div>
               <blockquote>
@@ -637,7 +637,7 @@ RSpec.describe UsernameChanger do
             <aside class="quote" data-post="#{another_quoted_post.post_number}" data-topic="#{another_quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>
-                <img loading="lazy" alt="" width="24" height="24" src="#{user_avatar_url(evil_trout)}" class="avatar">
+                <img alt="" width="24" height="24" src="#{user_avatar_url(evil_trout)}" class="avatar">
                 <a href="#{protocol_relative_url(another_quoted_post.full_url)}">#{another_quoted_post.topic.title}</a>
               </div>
               <blockquote>

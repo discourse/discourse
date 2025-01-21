@@ -10,6 +10,74 @@ class Demon::EmailSync < ::Demon::Base
     "email_sync"
   end
 
+  def self.max_email_sync_rss
+    return 0 if demons.empty?
+
+    email_sync_pids = demons.map { |uid, demon| demon.pid }
+
+    return 0 if email_sync_pids.empty?
+
+    rss =
+      `ps -eo pid,rss,args | grep '#{email_sync_pids.join("|")}' | grep -v grep | awk '{print $2}'`.split(
+        "\n",
+      )
+        .map(&:to_i)
+        .max
+
+    (rss || 0) * 1024
+  end
+  private_class_method :max_email_sync_rss
+
+  DEFAULT_MAX_ALLOWED_EMAIL_SYNC_RSS_MEGABYTES = 500
+
+  def self.max_allowed_email_sync_rss
+    [
+      ENV["UNICORN_EMAIL_SYNC_MAX_RSS"].to_i,
+      DEFAULT_MAX_ALLOWED_EMAIL_SYNC_RSS_MEGABYTES,
+    ].max.megabytes
+  end
+  private_class_method :max_allowed_email_sync_rss
+
+  if Rails.env.test?
+    def self.test_cleanup
+      @@email_sync_next_heartbeat_check = nil
+    end
+  end
+
+  def self.check_email_sync_heartbeat
+    if defined?(@@email_sync_next_heartbeat_check) && @@email_sync_next_heartbeat_check &&
+         @@email_sync_next_heartbeat_check > Time.now.to_i
+      return
+    end
+
+    @@email_sync_next_heartbeat_check = (Time.now + HEARTBEAT_INTERVAL).to_i
+
+    should_restart = false
+
+    # Restart process if it does not respond anymore
+    last_heartbeat_ago = Time.now.to_i - Discourse.redis.get(HEARTBEAT_KEY).to_i
+
+    if last_heartbeat_ago > HEARTBEAT_INTERVAL.to_i
+      Rails.logger.warn(
+        "EmailSync heartbeat test failed (last heartbeat was #{last_heartbeat_ago}s ago), restarting",
+      )
+
+      should_restart = true
+    end
+
+    # Restart process if memory usage is too high
+    if !should_restart && (email_sync_rss = max_email_sync_rss) > max_allowed_email_sync_rss
+      Rails.logger.warn(
+        "EmailSync is consuming too much memory (using: %0.2fM) for '%s', restarting" %
+          [(email_sync_rss.to_f / 1.megabyte), HOSTNAME],
+      )
+
+      should_restart = true
+    end
+
+    restart if should_restart
+  end
+
   private
 
   def suppress_stdout

@@ -21,7 +21,6 @@ sk:
     chat_minimum_message_length: "Minimálny počet znakov pre chatovú správu."
     chat_allow_uploads: "Povoľte nahrávanie vo verejných kanáloch chatu a kanáloch priamych správ."
     chat_archive_destination_topic_status: "Stav, že cieľová téma by mala byť po dokončení archívu kanála. Platí to len vtedy, keď je cieľovou témou nová téma, nie existujúca."
-    default_emoji_reactions: "Predvolené emoji reakcie pre správy chatu. Pridajte až 5 emotikonov pre rýchlu reakciu."
     direct_message_enabled_groups: "Povoliť používateľom v rámci týchto skupín vytvárať osobné rozhovory medzi používateľmi. Poznámka: Zamestnanci môžu vždy vytvárať osobné rozhovory a používatelia budú môcť odpovedať na osobné rozhovory iniciované používateľmi, ktorí majú povolenie na ich vytváranie."
     chat_message_flag_allowed_groups: "Používatelia v týchto skupinách môžu označovať chatové správy. Všimnite si, že správcovia a moderátori môžu správy četu vždy nahlásiť."
     max_mentions_per_chat_message: "Maximálny počet oznámení @name, ktoré môže používateľ použiť v správe chatu."
@@ -93,8 +92,8 @@ sk:
       not_accepting_dms: "Ľutujeme, %{username} momentálne neprijíma správy."
       actor_ignoring_target_user: "Ignorujete %{username}, takže im nemôžete posielať správy."
       actor_muting_target_user: "Vypnete zvuk na stránke %{username}, takže im nemôžete posielať správy."
-      actor_disallowed_dms: "Rozhodli ste sa zabrániť používateľom odosielať vám súkromné a priame správy, takže nemôžete vytvárať nové priame správy."
-      actor_preventing_target_user_from_dm: "Rozhodli ste sa zabrániť %{username} v odosielaní súkromných a priamych správ, takže pre nich nemôžete vytvárať nové priame správy."
+      actor_disallowed_dms: "Rozhodli ste sa zabrániť používateľom odosielať vám osobné a priame správy, takže nemôžete vytvárať nové priame správy."
+      actor_preventing_target_user_from_dm: "Rozhodli ste sa zabrániť tomu, aby vám %{username} odosielal osobné a priame správy, takže k nim nemôžete vytvárať nové priame správy."
       user_cannot_send_direct_messages: "Ľutujeme, nemôžete posielať priame správy."
       over_chat_max_direct_message_users_allow_self: "Súkromnú správu môžete vytvoriť len sami so sebou."
       over_chat_max_direct_message_users:

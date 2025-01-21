@@ -18,60 +18,58 @@ export default class ComposerPresenceDisplay extends Component {
   @tracked editChannel;
 
   setupReplyChannel = helperFn((_, on) => {
-    const topic = this.args.model.topic;
+    const { topic } = this.args.model;
+
     if (!topic || !this.isReply) {
       return;
     }
 
-    const replyChannel = this.presence.getChannel(
-      `/discourse-presence/reply/${topic.id}`
-    );
-    replyChannel.subscribe();
+    const name = `/discourse-presence/reply/${topic.id}`;
+    const replyChannel = this.presence.getChannel(name);
     this.replyChannel = replyChannel;
 
+    replyChannel.subscribe();
     on.cleanup(() => replyChannel.unsubscribe());
   });
 
   setupWhisperChannel = helperFn((_, on) => {
-    if (
-      !this.args.model.topic ||
-      !this.isReply ||
-      !this.currentUser.staff ||
-      !this.currentUser.whisperer
-    ) {
+    const { topic } = this.args.model;
+    const { whisperer } = this.currentUser;
+
+    if (!topic || !this.isReply || !whisperer) {
       return;
     }
 
-    const whisperChannel = this.presence.getChannel(
-      `/discourse-presence/whisper/${this.args.model.topic.id}`
-    );
-    whisperChannel.subscribe();
+    const name = `/discourse-presence/whisper/${topic.id}`;
+    const whisperChannel = this.presence.getChannel(name);
     this.whisperChannel = whisperChannel;
 
+    whisperChannel.subscribe();
     on.cleanup(() => whisperChannel.unsubscribe());
   });
 
   setupEditChannel = helperFn((_, on) => {
-    if (!this.args.model.post || !this.isEdit) {
+    const { post } = this.args.model;
+
+    if (!post || !this.isEdit) {
       return;
     }
 
-    const editChannel = this.presence.getChannel(
-      `/discourse-presence/edit/${this.args.model.post.id}`
-    );
-    editChannel.subscribe();
+    const name = `/discourse-presence/edit/${post.id}`;
+    const editChannel = this.presence.getChannel(name);
     this.editChannel = editChannel;
 
+    editChannel.subscribe();
     on.cleanup(() => editChannel.unsubscribe());
   });
 
   notifyState = helperFn((_, on) => {
-    const { topic, post, reply } = this.args.model;
-    const raw = this.isEdit ? post?.raw || "" : "";
+    const { topic, post, replyDirty } = this.args.model;
     const entity = this.isEdit ? post : topic;
 
-    if (reply !== raw) {
-      this.composerPresenceManager.notifyState(this.state, entity?.id);
+    if (entity) {
+      const name = `/discourse-presence/${this.state}/${entity.id}`;
+      this.composerPresenceManager.notifyState(name, replyDirty);
     }
 
     on.cleanup(() => this.composerPresenceManager.leave());
@@ -85,12 +83,15 @@ export default class ComposerPresenceDisplay extends Component {
     return this.state === "edit";
   }
 
+  @cached
   get state() {
-    if (this.args.model.editingPost) {
+    const { editingPost, whisper, replyingToTopic } = this.args.model;
+
+    if (editingPost) {
       return "edit";
-    } else if (this.args.model.whisper) {
+    } else if (whisper) {
       return "whisper";
-    } else if (this.args.model.replyingToTopic) {
+    } else if (replyingToTopic) {
       return "reply";
     }
   }
@@ -98,6 +99,7 @@ export default class ComposerPresenceDisplay extends Component {
   @cached
   get users() {
     let users;
+
     if (this.isEdit) {
       users = this.editChannel?.users || [];
     } else {
@@ -112,36 +114,38 @@ export default class ComposerPresenceDisplay extends Component {
   }
 
   <template>
-    {{this.setupReplyChannel}}
-    {{this.setupWhisperChannel}}
-    {{this.setupEditChannel}}
-    {{this.notifyState}}
+    {{#if this.currentUser}}
+      {{this.setupReplyChannel}}
+      {{this.setupWhisperChannel}}
+      {{this.setupEditChannel}}
+      {{this.notifyState}}
 
-    {{#if (gt this.users.length 0)}}
-      <div class="presence-users">
-        <div class="presence-avatars">
-          {{#each this.users as |user|}}
-            <UserLink @user={{user}}>
-              {{avatar user imageSize="small"}}
-            </UserLink>
-          {{/each}}
+      {{#if (gt this.users.length 0)}}
+        <div class="presence-users">
+          <div class="presence-avatars">
+            {{#each this.users as |user|}}
+              <UserLink @user={{user}}>
+                {{avatar user imageSize="small"}}
+              </UserLink>
+            {{/each}}
+          </div>
+
+          <span class="presence-text">
+            <span class="description">
+              {{~#if this.isReply~}}
+                {{i18n "presence.replying" count=this.users.length}}
+              {{~else~}}
+                {{i18n "presence.editing" count=this.users.length}}
+              {{~/if~}}
+            </span>
+            <span class="wave">
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+              <span class="dot">.</span>
+            </span>
+          </span>
         </div>
-
-        <span class="presence-text">
-          <span class="description">
-            {{~#if this.isReply~}}
-              {{i18n "presence.replying" count=this.users.length}}
-            {{~else~}}
-              {{i18n "presence.editing" count=this.users.length}}
-            {{~/if~}}
-          </span>
-          <span class="wave">
-            <span class="dot">.</span>
-            <span class="dot">.</span>
-            <span class="dot">.</span>
-          </span>
-        </span>
-      </div>
+      {{/if}}
     {{/if}}
   </template>
 }

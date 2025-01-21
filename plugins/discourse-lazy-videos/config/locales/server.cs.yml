@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    lazy_videos_enabled: "Povolení pluginu Lazy Videos"
+    lazy_youtube_enabled: "Povolení odloženého načítání pro vložené soubory YouTube"
+    lazy_vimeo_enabled: "Povolení odloženého načítání vložených videí Vimeo"
+    lazy_tiktok_enabled: "Povolení odloženého načítání pro vložené soubory TikTok (experimentální)"

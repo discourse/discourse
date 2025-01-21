@@ -5,7 +5,12 @@ import { h } from "virtual-dom";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
+import { registerDeprecationHandler } from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import getURL, { getAbsoluteURL, getURLWithCDN } from "discourse/lib/get-url";
+import { iconNode } from "discourse/lib/icon-library";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import {
@@ -23,14 +28,6 @@ import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { isTesting } from "discourse-common/config/environment";
-import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
-import { registerDeprecationHandler } from "discourse-common/lib/deprecated";
-import getURL, {
-  getAbsoluteURL,
-  getURLWithCDN,
-} from "discourse-common/lib/get-url";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 function transformWithCallbacks(post, topicUrl, store) {
@@ -550,14 +547,18 @@ createWidget("post-contents", {
 
     if (
       this.siteSettings.glimmer_post_menu_mode === "enabled" ||
-      ((this.siteSettings.glimmer_post_menu_mode === "auto" ||
-        this.currentUser?.use_auto_glimmer_post_menu) &&
+      (this.siteSettings.glimmer_post_menu_mode === "auto" &&
         !postMenuWidgetExtensionsAdded)
     ) {
       if (!postMenuConsoleWarningLogged) {
-        if (postMenuWidgetExtensionsAdded) {
-          postMenuConsoleWarningLogged = true;
+        postMenuConsoleWarningLogged = true;
 
+        if (!isTesting()) {
+          // eslint-disable-next-line no-console
+          console.log("✅  Using the new 'glimmer' post menu!");
+        }
+
+        if (postMenuWidgetExtensionsAdded) {
           // eslint-disable-next-line no-console
           console.warn(
             [
@@ -567,12 +568,6 @@ createWidget("post-contents", {
               // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
             ].join("\n- ")
           );
-        } else if (this.currentUser?.use_auto_glimmer_post_menu) {
-          // TODO (glimmer-post-menu): remove this else if block when removing the site setting glimmer_post_menu_groups
-          postMenuConsoleWarningLogged = true;
-
-          // eslint-disable-next-line no-console
-          console.log("✅  Using the new 'glimmer' post menu!");
         }
       }
 
@@ -617,8 +612,7 @@ createWidget("post-contents", {
       );
     } else {
       if (
-        (this.siteSettings.glimmer_post_menu_mode !== "disabled" ||
-          this.currentUser?.use_auto_glimmer_post_menu) &&
+        this.siteSettings.glimmer_post_menu_mode !== "disabled" &&
         postMenuWidgetExtensionsAdded &&
         !postMenuConsoleWarningLogged
       ) {
@@ -1019,15 +1013,16 @@ createWidget("post-article", {
     return new RenderGlimmer(
       this,
       "div.topic-map.--op",
-      hbs`<TopicMap
-        @model={{@data.model}}
-        @topicDetails={{@data.topicDetails}}
-        @postStream={{@data.postStream}}
-        @showPMMap={{@data.showPMMap}}
-        @showInvite={{@data.showInvite}}
-        @removeAllowedGroup={{@data.removeAllowedGroup}}
-        @removeAllowedUser={{@data.removeAllowedUser}}
-      />`,
+      hbs`
+        <TopicMap
+          @model={{@data.model}}
+          @topicDetails={{@data.topicDetails}}
+          @postStream={{@data.postStream}}
+          @showPMMap={{@data.showPMMap}}
+          @showInvite={{@data.showInvite}}
+          @removeAllowedGroup={{@data.removeAllowedGroup}}
+          @removeAllowedUser={{@data.removeAllowedUser}}
+        />`,
       {
         model: attrs.topic,
         topicDetails: attrs.topic.get("details"),

@@ -4,9 +4,9 @@ import { alias, empty, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
 import UserBadge from "discourse/models/user-badge";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 

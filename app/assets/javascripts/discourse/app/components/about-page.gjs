@@ -5,9 +5,9 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import dIcon from "discourse/helpers/d-icon";
+import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
-import dIcon from "discourse-common/helpers/d-icon";
-import escape from "discourse-common/lib/escape";
 import I18n, { i18n } from "discourse-i18n";
 
 const pluginActivitiesFuncs = [];
@@ -149,8 +149,9 @@ export default class AboutPage extends Component {
     const email = escape(this.args.model.contact_email || "");
 
     if (url) {
+      const href = this.contactURLHref;
       return i18n("about.contact_info", {
-        contact_info: `<a href='${url}' target='_blank'>${url}</a>`,
+        contact_info: `<a href='${href}' target='_blank'>${url}</a>`,
       });
     } else if (email) {
       return i18n("about.contact_info", {
@@ -159,6 +160,20 @@ export default class AboutPage extends Component {
     } else {
       return null;
     }
+  }
+
+  get contactURLHref() {
+    const url = escape(this.args.model.contact_url || "");
+
+    if (!url) {
+      return;
+    }
+
+    if (url.startsWith("/") || url.match(/^\w+:/)) {
+      return url;
+    }
+
+    return `//${url}`;
   }
 
   get siteAgeString() {
@@ -215,7 +230,7 @@ export default class AboutPage extends Component {
     {{#if this.currentUser.admin}}
       <p>
         <LinkTo class="edit-about-page" @route="adminConfig.about">
-          {{dIcon "pencil-alt"}}
+          {{dIcon "pencil"}}
           <span>{{i18n "about.edit"}}</span>
         </LinkTo>
       </p>
@@ -278,7 +293,7 @@ export default class AboutPage extends Component {
       <div class="about__right-side">
         <h3>{{i18n "about.contact"}}</h3>
         {{#if this.contactInfo}}
-          <p>{{htmlSafe this.contactInfo}}</p>
+          <p class="about__contact-info">{{htmlSafe this.contactInfo}}</p>
         {{/if}}
         <p>{{i18n "about.report_inappropriate_content"}}</p>
         <h3>{{i18n "about.site_activity"}}</h3>

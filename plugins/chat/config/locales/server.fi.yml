@@ -21,7 +21,6 @@ fi:
     chat_minimum_message_length: "Chat-viestin merkkien vähimmäismäärä."
     chat_allow_uploads: "Salli lataukset julkisilla chat-kanavilla ja yksityisviestikanavilla."
     chat_archive_destination_topic_status: "Tila, jossa kohdeketjun tulisi olla, kun kanavan arkistointi on valmis. Tätä käytetään vain, kun kohdeketju on uusi ketju, ei olemassa oleva."
-    default_emoji_reactions: "Chat-viestien oletusarvoiset emoji-reaktiot. Lisää enintään 5 emojia nopeaa reagointia varten."
     direct_message_enabled_groups: "Salli näiden ryhmien käyttäjien luoda käyttäjien välisiä henkilökohtaisia chat-keskusteluja. Huomautus: henkilökunta voi aina luoda henkilökohtaisia chat-keskusteluja, ja käyttäjät voivat vastata henkilökohtaisiin chat-keskusteluihin, jotka on aloittanut käyttäjä, jolla on oikeus luoda niitä."
     chat_message_flag_allowed_groups: "Näiden ryhmien käyttäjät voivat liputtaa chat-viestejä. Huomaa, että ylläpitäjät ja valvojat voivat aina liputtaa chat-viestejä."
     max_mentions_per_chat_message: "Kuinka monta @nimi-ilmoitusta käyttäjä voi lisätä chat-viestiin."
@@ -89,8 +88,8 @@ fi:
       not_accepting_dms: "%{username} ei ota vastaan viestejä tällä hetkellä."
       actor_ignoring_target_user: "Ohitat käyttäjän %{username} tällä hetkellä, joten et voi lähettää hänelle viestejä."
       actor_muting_target_user: "Olet vaimentanut käyttäjän %{username}, joten et voi lähettää hänelle viestejä."
-      actor_disallowed_dms: "Olet päättänyt estää käyttäjiä lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä."
-      actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä hänelle."
+      actor_disallowed_dms: "Olet päättänyt estää käyttäjiä lähettämästä sinulle henkilökohtaisia ja yksityisviestejä, joten et voi luoda uusia yksityisviestejä."
+      actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle henkilökohtaisia viestejä, joten et voi luoda uusia henkilökohtaisia viestejä hänelle."
       user_cannot_send_direct_messages: "Valitettavasti et voi lähettää yksityisviestejä."
       over_chat_max_direct_message_users_allow_self: "Voit luoda yksityisviestin vain itsellesi."
       over_chat_max_direct_message_users:

@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { underscore } from "@ember/string";
 import { isPresent } from "@ember/utils";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewIndexController extends Controller {
@@ -19,6 +19,8 @@ export default class ReviewIndexController extends Controller {
     "to_date",
     "sort_order",
     "additional_filters",
+    "flagged_by",
+    "score_type",
   ];
 
   type = null;
@@ -30,10 +32,12 @@ export default class ReviewIndexController extends Controller {
   filtersExpanded = this.site.desktopView;
   username = "";
   reviewed_by = "";
+  flagged_by = "";
   from_date = null;
   to_date = null;
   sort_order = null;
   additional_filters = null;
+  filterScoreType = null;
 
   @discourseComputed("reviewableTypes")
   allTypes() {
@@ -45,6 +49,11 @@ export default class ReviewIndexController extends Controller {
         name: i18n(`review.types.${translationKey}.title`),
       };
     });
+  }
+
+  @discourseComputed("scoreTypes")
+  allScoreTypes() {
+    return this.scoreTypes || [];
   }
 
   @discourseComputed
@@ -161,6 +170,8 @@ export default class ReviewIndexController extends Controller {
       category_id: this.filterCategoryId,
       username: this.filterUsername,
       reviewed_by: this.filterReviewedBy,
+      flagged_by: this.filterFlaggedBy,
+      score_type: this.filterScoreType,
       from_date: isPresent(this.filterFromDate)
         ? this.filterFromDate.toISOString(true).split("T")[0]
         : null,
@@ -187,6 +198,11 @@ export default class ReviewIndexController extends Controller {
   @action
   updateFilterReviewedBy(selected) {
     this.set("filterReviewedBy", selected.firstObject);
+  }
+
+  @action
+  updateFilterFlaggedBy(selected) {
+    this.set("filterFlaggedBy", selected.firstObject);
   }
 
   @action

@@ -1,5 +1,5 @@
 import loadEmberExam from "ember-exam/test-support/load";
-import { start } from "ember-qunit";
+import { setupEmberOnerrorValidation, start } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
 import setupTests from "discourse/tests/setup-tests";
@@ -20,12 +20,10 @@ document.addEventListener("discourse-init", () => {
   }
 
   const params = new URLSearchParams(window.location.search);
-  const target = params.get("target");
+  const target = params.get("target") || "core";
   const testingTheme = !!document.querySelector("script[data-theme-id]");
-  const testingCore = !testingTheme && (!target || target === "core");
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
-
-  window.EmberENV.LOG_STACKTRACE_ON_DEPRECATION = false;
+  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
 
   document.body.insertAdjacentHTML(
     "afterbegin",
@@ -37,6 +35,11 @@ document.addEventListener("discourse-init", () => {
       </div>
     `
   );
+
+  const testingCore = !testingTheme && target === "core";
+  if (testingCore) {
+    setupEmberOnerrorValidation();
+  }
 
   setup(QUnit.assert);
   setupTests(config.APP);
@@ -51,11 +54,33 @@ document.addEventListener("discourse-init", () => {
     QUnit.config.reorder = false;
   }
 
+  loader.shouldLoadModule = function (name) {
+    if (!/[-_]test$/.test(name)) {
+      return false;
+    }
+
+    const isPlugin = name.match(/\/plugins\//);
+    const isTheme = name.match(/\/theme-\d+\//);
+    const isCore = !isPlugin && !isTheme;
+    const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
+
+    const loadCore = target === "core" || target === "all";
+    const loadAllPlugins = target === "plugins" || target === "all";
+
+    if (hasThemeJs) {
+      return isTheme;
+    } else if (isCore && !loadCore) {
+      return false;
+    } else if (isPlugin && !(loadAllPlugins || pluginName === target)) {
+      return false;
+    }
+
+    return true;
+  };
   loader.loadModules();
 
   start({
     setupTestContainer: false,
-    loadTests: false,
     startTests: !disableAutoStart,
     setupEmberOnerrorValidation: testingCore,
     setupTestIsolationValidation: true,

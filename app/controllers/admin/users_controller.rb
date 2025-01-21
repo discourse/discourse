@@ -32,7 +32,7 @@ class Admin::UsersController < Admin::StaffController
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
 
-    opts = { include_can_be_deleted: true }
+    opts = { include_can_be_deleted: true, include_silence_reason: true }
     if params[:show_emails] == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
@@ -403,8 +403,12 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def destroy_bulk
+    # capture service_params outside the hijack block to avoid thread safety
+    # issues
+    service_arg = service_params
+
     hijack do
-      User::BulkDestroy.call(service_params) do
+      User::BulkDestroy.call(service_arg) do
         on_success { render json: { deleted: true } }
 
         on_failed_contract do |contract|

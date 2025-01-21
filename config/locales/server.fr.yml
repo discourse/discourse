@@ -315,6 +315,7 @@ fr:
       invalid_site_setting: "Aucun paramètre nommé « %{name} » n'existe"
       invalid_category_id: "Vous avez spécifiez une catégorie qui n'existe pas"
       site_setting_is_hidden: "Vous n'avez pas l'autorisation de modifier les paramètres masqués"
+      site_setting_is_shadowed_globally: "Vous ne pouvez pas modifier ce paramètre, car il est configuré globalement"
       site_setting_is_unconfigurable: "Vous n'avez pas l'autorisation de modifier les paramètres non configurables"
       invalid_choice:
         one: "« %{name} » n'est pas un choix valide."
@@ -336,7 +337,7 @@ fr:
       cors_origins_should_not_have_trailing_slash: "Vous ne devez pas ajouter la barre oblique finale (/) aux origines CORS."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Les agents utilisateurs doivent comporter au moins 3 caractères pour éviter de limiter accidentellement le débit des utilisateurs légitimes."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Vous ne pouvez ajouter aucune des valeurs suivantes au paramètre : %{values}."
-      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Vous ne pouvez pas désactiver le retrait des métadonnées de l'image si l'option « Image d’optimisation des médias du compositeur activée » est activée. Désactivez cette option avant de désactiver les métadonnées de l'image."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Vous ne pouvez pas désactiver le retrait des métadonnées de l'image si l'option « Image d'optimisation des contenus multimédias du compositeur activée » est activée. Désactivez cette option avant de désactiver les métadonnées de l'image."
       twitter_summary_large_image_no_svg: "Les images de résumé Twitter utilisées pour les métadonnées twitter:image ne peuvent pas être des images .svg."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -394,7 +395,7 @@ fr:
     max_redemptions_limit: "doit être compris entre 2 et %{max_limit}."
   topic_invite:
     failed_to_invite: "L'utilisateur ne peut pas être invité dans ce sujet sans être membre d'un des groupes suivants : %{group_names}."
-    not_pm: "Vous pouvez uniquement inviter à rejoindre des messages privés."
+    not_pm: "Vous pouvez uniquement inviter à rejoindre des messages directs."
     user_exists: "Nous sommes désolés, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
     muted_topic: "Nous sommes désolés, cet utilisateur a mis ce sujet en sourdine."
     receiver_does_not_allow_pm: "Nous sommes désolés, cet utilisateur ne vous autorise pas à lui envoyer des messages directs."
@@ -412,7 +413,7 @@ fr:
   invalid_access: "L'accès à la ressource demandée n'est pas autorisé."
   authenticator_not_found: "La méthode d'authentification n'existe pas ou a été désactivée."
   authenticator_no_connect: "Ce fournisseur d'authentification ne permet pas d'établir une connexion avec un compte utilisateur existant sur le forum."
-  invalid_api_credentials: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le nom d’utilisateur ou la clé API n'est pas valide."
+  invalid_api_credentials: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le nom d'utilisateur ou la clé d'API n'est pas valide."
   provider_not_enabled: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le fournisseur d'authentification n'est pas activé."
   provider_not_found: "Vous n'êtes pas autorisé(e) à voir cette ressource. Le fournisseur d'authentification n'existe pas."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
@@ -599,6 +600,7 @@ fr:
       admins: "Responsable de la configuration et de la maintenance de ce site, avec accès à toutes les données des membres et des activités"
       moderators: "Responsable de répondre aux signalements, de modérer les discussions et d'aider les membres avec leurs comptes"
       trust_level_0: "Nouveaux membres aux capacités limitées, qui apprennent les normes et les fonctionnalités de la communauté"
+      trust_level_1: "Les membres bénéficiant d'une plus grande confiance, qui ont fait preuve d'un engagement initial en lisant, peuvent maintenant accéder à davantage de fonctions. Tous les membres de ce groupe sont également membres du groupe de niveau de confiance 0."
       trust_level_2: "Membres actifs qui ont régulièrement fait des heures supplémentaires et obtenu tous les privilèges de citoyenneté. Tous les membres de ce groupe sont également membres des groupes trust_level_1 et trust_level_0."
       trust_level_3: "Contributeurs très engagés et de longue date, qui constituent l'épine dorsale de la communauté et qui ont obtenu des privilèges de modération limités. Tous les membres de ce groupe sont également membres des groupes trust_level_2, trust_level_1 et trust_level_0."
       trust_level_4: "Membres promus manuellement, reconnus pour leurs contributions exemplaires et dotés de privilèges de modération supplémentaires. Tous les membres de ce groupe sont également membres des groupes trust_level_3, trust_level_2, trust_level_1 et trust_level_0."
@@ -677,6 +679,8 @@ fr:
       user_profile:
         bio_raw: "À propos de moi"
       user:
+        password: "Mot de passe"
+      user_password:
         password: "Mot de passe"
     errors:
       models:
@@ -1012,7 +1016,7 @@ fr:
       email_title: '« %{title} » a été signalé comme spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: "Répréhensible"
+      title: "Inapproprié"
       description: 'Le contenu de ce message serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de la communauté</a> par une personne raisonnable.'
       short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
     illegal:
@@ -1088,9 +1092,9 @@ fr:
       long_form: "signalé comme spam"
       short_description: "Ceci est une publicité"
     inappropriate:
-      title: "Répréhensible"
+      title: "Inapproprié"
       description: 'Le contenu de ce sujet serait jugé offensant, injurieux, haineux ou en infraction avec les <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a> par une personne raisonnable.'
-      long_form: "signalé comme répréhensible"
+      long_form: "signalé comme étant inapproprié"
       short_description: 'Une transgression des <a href="%{base_path}/guidelines">lignes directrices de notre communauté</a>'
     notify_moderators:
       title: "Autre chose"
@@ -1154,7 +1158,7 @@ fr:
     read: "lecture"
     read_write: "lecture/écriture"
     description: '« %{application_name} » demande l''accès suivant à votre compte :'
-    instructions: 'Nous venons de générer une nouvelle clé API utilisateur à utiliser avec « %{application_name} », merci de coller cette clé dans votre application :'
+    instructions: 'Nous venons de générer une nouvelle clé d''API utilisateur à utiliser avec « %{application_name} ». Veuillez coller cette clé dans votre application :'
     otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
     otp_confirmation:
       confirm_title: Continuer vers %{site_name}
@@ -1276,7 +1280,7 @@ fr:
         api: "API"
         user_api: "API utilisateur"
       yaxis: "Jour"
-      description: "Requêtes d'API pour les clés API ordinaires et les clés API de l'utilisateur."
+      description: "Requêtes d'API pour les clés d'API ordinaires et les clés d'API de l'utilisateur."
     consolidated_page_views_browser_detection:
       title: "Vues de pages consolidées avec détection du navigateur (expérimental)"
       title_legacy: "Vues de pages consolidées avec détection du navigateur (expérimental)"
@@ -1394,12 +1398,12 @@ fr:
       title: "Notifications aux modérateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
-      description: "Nombre de fois où les modérateurs ont été informés d'un signalement par message direct."
+      description: "Nombre de fois où les modérateurs ont reçu des messages directs contenant des détails de signalement supplémentaires."
     notify_user_private_messages:
       title: "Notifications aux utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
-      description: "Nombre de fois où les utilisateurs ont été informés d'un signalement par message direct."
+      description: "Nombre de fois où des messages directs ont été envoyés aux utilisateurs à l'aide de la boîte de dialogue de signalement."
     top_referrers:
       title: "Meilleurs référents"
       xaxis: "Utilisateur"
@@ -1521,7 +1525,7 @@ fr:
       title: "Événements webhook"
       xaxis: "Jour"
       yaxis: "Nombre d'événements"
-      description: "Nombre d’événements webhook déclenchés ou leur durée moyenne."
+      description: "Nombre d'événements webhook déclenchés ou leur durée moyenne."
     suspicious_logins:
       title: "Connexions suspectes"
       labels:
@@ -1605,7 +1609,7 @@ fr:
       email_polling_errored_recently:
         one: "La vérification des e-mails a généré une erreur au cours des dernières 24 heures. Consultez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour en savoir plus."
         other: "La vérification des e-mails a généré %{count} erreurs au cours des dernières 24 heures. Consultez <a href='%{base_path}/logs' target='_blank'>le journal</a> pour en savoir plus."
-      missing_mailgun_api_key: "Le serveur est configuré pour envoyer des e-mails via Mailgun, mais vous n'avez pas fourni la clé API nécessaire pour vérifier les messages webhook."
+      missing_mailgun_api_key: "Le serveur est configuré pour envoyer des e-mails via Mailgun, mais vous n'avez pas fourni la clé d'API nécessaire pour vérifier les messages webhook."
       bad_favicon_url: "Impossible de charger le favicon. Vérifiez le paramètre favicon dans les <a href='%{base_path}/admin/site_settings'>paramètres du site</a>"
       poll_pop3_timeout: "La connexion au serveur POP3 arrive à expiration. Les e-mails entrants n'ont pas pu être récupérés. Vérifiez vos paramètres POP3 <a href='%{base_path}/admin/site_settings/category/email'></a> et votre fournisseur de services."
       poll_pop3_auth_error: "La connexion au serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier vos <a href='%{base_path}/admin/site_settings/category/email'>paramètres POP3</a>."
@@ -1616,6 +1620,7 @@ fr:
       google_analytics_version: "Votre Discourse utilise actuellement Google Analytics 3, qui ne sera plus pris en charge après le mois de juillet 2023. <a href='https://meta.discourse.org/t/260498'>Passez à Google Analytics 4</a> dès maintenant pour continuer à recevoir des informations et des analyses précieuses sur les performances de votre site Web."
       category_style_deprecated: "Votre Discourse utilise actuellement un style de catégorie obsolète qui sera supprimé avant la version bêta finale de Discourse 3.2. Veuillez vous référer à <a href='https://meta.discourse.org/t/282441'>Passage à un paramètre de site de style de catégorie unique</a> pour obtenir des instructions sur la façon de conserver le style de catégorie sélectionné."
       maxmind_db_configuration: 'Le serveur a été configuré pour utiliser les bases de données MaxMind pour les recherches IP inversées, mais aucun identifiant de compte MaxMind valide n''a été configuré, ce qui pourrait empêcher le téléchargement des bases de données MaxMind à l''avenir. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consultez ce guide pour en savoir plus</a>.'
+      admin_sidebar_deprecation: "L'ancienne disposition d'administration est obsolète au profit de la nouvelle <a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>disposition de la barre latérale</a> et sera supprimée dans la prochaine version. Vous pouvez <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurer</a> la nouvelle disposition de la barre latérale maintenant pour l'activer avant cette suppression."
     back_from_logster_text: "Retour au site"
   site_settings:
     allow_bulk_invite: "Autoriser l'envoi d'invitations multiples via l'importation d'un fichier CSV"
@@ -1695,6 +1700,7 @@ fr:
     block_onebox_on_redirect: "Empêchez les onebox pour les URL qui mènent à une page de redirection. Cette configuration arrête la création d'une carte visuelle (onebox) pour toute URL redirigeant vers une destination différente, en garantissant ainsi que les URL directes et sans redirection sont prioritaires pour le oneboxing."
     allowed_inline_onebox_domains: "Une liste de domaines qui seront transformés en Onebox s'ils ont été insérés sans titre"
     enable_inline_onebox_on_all_domains: "Ignorez le paramètre de site Allowed_inline_onebox_domains et autorisez Onebox en ligne sur tous les domaines."
+    onebox_locale: "Les paramètres régionaux envoyés aux fournisseurs Onebox. Si ce champ est laissé vide, les paramètres régionaux par défaut seront utilisés."
     force_custom_user_agent_hosts: "Domaines pour lesquels utiliser un agent utilisateur personnalisé pour les requêtes de Onebox. (Cela est utile pour les domaines limitant les accès par agent utilisateur.)"
     max_oneboxes_per_post: "Définissez le nombre maximal de onebox pouvant être incluses dans une seule publication. Les onebox fournissent un aperçu du contenu lié dans la publication."
     facebook_app_access_token: "Un jeton généré à partir de votre identifiant d'application Facebook et de votre secret. Utilisé pour générer des Onebox Instagram."
@@ -1726,8 +1732,6 @@ fr:
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximal de messages inclus dans le résultat de « Résumer ce sujet »"
     summary_timeline_button: "Afficher un bouton « Résumer » dans la chronologie de chaque sujet"
-    summarization_strategy: "Autres moyens de résumer le contenu enregistré par les extensions"
-    custom_summarization_allowed_groups: "Groupes autorisés à résumer le contenu à l'aide de la « summarization_strategy »."
     enable_personal_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages personnels ». Autorisez les utilisateurs de niveau de confiance 1 (configurable via une confiance minimale pour envoyer des messages) à créer des messages et à y répondre. Notez que les responsables peuvent toujours envoyer des messages quoi qu'il arrive."
     personal_message_enabled_groups: "Autorisez les utilisateurs de ces groupes à CRÉER des messages personnels. IMPORTANT : 1) Tous les utilisateurs peuvent RÉPONDRE aux messages. 2) Les administrateurs et les modérateurs peuvent CRÉER des messages pour n'importe quel utilisateur. 3) Les groupes de niveaux de confiance incluent des niveaux plus élevés ; choisissez trust_level_1 pour autoriser TL1, TL2, TL3, TL4 mais pas TL0. 4) Les paramètres d'interaction de groupe annulent ce paramètre pour la messagerie de groupes spécifiques."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
@@ -1769,7 +1773,11 @@ fr:
     pending_users_reminder_delay_minutes: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre de minutes. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur Web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
-    experimental_full_page_login: "Remplacez la fenêtre de connexion/inscription par un formulaire de connexion/inscription pleine page."
+    full_page_login: "Affichez les formulaires de connexion et d'inscription sur une page complète (lorsque cette case n'est pas cochée, les utilisateurs verront les formulaires dans un mode modal). "
+    show_signup_form_email_instructions: Affichez les instructions relatives à l'adresse e-mail sur le formulaire d'inscription.
+    show_signup_form_username_instructions: Affichez les instructions relatives au nom d'utilisateur sur le formulaire d'inscription.
+    show_signup_form_full_name_instructions: Affichez les instructions relatives au nom complet sur le formulaire d'inscription.
+    show_signup_form_password_instructions: Affichez les instructions relatives au mot de passe sur le formulaire d'inscription.
     ga_version: "Version de Google Universal Analytics à utiliser : v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics, par exemple : UA-12345678-9 ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics, par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1794,6 +1802,7 @@ fr:
     content_security_policy_frame_ancestors: "Limiter les parties autorisées à intégrer ce site dans une iframe par le biais de l'attribut « csp ». Appliquer les restrictions d'hôtes définies dans la page <a href='%{base_path}/admin/customize/embedding'>Intégration externe</a>."
     content_security_policy_script_src: "Sources de script supplémentaires autorisées. L'hôte actuel et le CDN sont inclus par défaut. Voir <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Empêcher les attaques XSS grâce à la politique de sécurité du contenu (CSP).</a> Les autres sources hôtes sont ignorées car la dynamique stricte est activée."
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
+    suppress_secured_categories_from_admin: "Supprimez les sujets privés et les messages directs dans certaines parties de l'interface utilisateur pour les administrateurs. Le contenu sera toujours visible à certains endroits. Il ne s'agit pas d'une fonctionnalité de sécurité : les administrateurs peuvent toujours accéder à l'ensemble du contenu du site."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
     top_menu: "Déterminez quels éléments apparaissent dans la navigation de la page d'accueil et dans quel ordre."
@@ -1802,7 +1811,7 @@ fr:
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
     site_contact_username: "Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé."
-    site_contact_group_name: "Un nom de groupe valide à inviter à tous les messages directs automatiques."
+    site_contact_group_name: "Nom valide d'un groupe qui est invité à participer à tous les messages directs envoyés automatiquement."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message de bienvenue avec un guide de démarrage rapide."
     send_tl1_welcome_message: "Envoyer à tous les utilisateurs de niveau de confiance 1 un message de bienvenue."
     send_tl2_promotion_message: "Envoyer aux nouveaux utilisateurs de niveau de confiance 2 un message à propos de la promotion."
@@ -1821,10 +1830,11 @@ fr:
     send_old_credential_reminder_days: "Rappeler l'utilisation de vieux identifiants après ce nombre de jours"
     email_token_valid_hours: "Les jetons (tokens) de mot de passe oublié/activation de compte sont valides (n) jours."
     enable_badges: "Activez le système de badges, qui est une forme de gamification visant à renforcer les actions positives des utilisateurs. Voir <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Que sont les badges ?</a> sur Discourse Meta pour en savoir plus."
+    show_badges_in_post_header: "Lorsqu'un utilisateur obtient un badge pour une publication particulière, affichez le badge dans l'en-tête de la publication."
     max_favorite_badges: "Nombre maximal de badges que l'utilisateur peut sélectionner"
     whispers_allowed_groups: "Autoriser la communication privée au sein des sujets pour les membres de groupes spécifiques."
     hidden_post_visible_groups: "Autorisez les membres de ces groupes à voir les messages masqués. Les responsables peuvent toujours voir les messages masqués."
-    allow_index_in_robots_txt: "Indiquer dans le fichier robots.txt que ce site peut être indexé par les moteurs de recherche Web. Dans des cas exceptionnels, vous pouvez remplacer définitivement le fichier <a href='%{base_path}/admin/customize/robots'>robots.txt</a>."
+    allow_index_in_robots_txt: "Indiquez dans le fichier robots.txt que ce site est autorisé à être indexé par les moteurs de recherche. Vous pouvez <a href='%{base_path}/admin/customize/robots'>remplacer votre fichier robots.txt ici.</a> <b>AVERTISSEMENT</b> : des règles mal configurées pourraient empêcher l'exploration de votre site comme prévu."
     blocked_email_domains: "Liste délimitée par des barres verticales de domaines de messagerie avec lesquels les utilisateurs ne sont pas autorisés à créer des comptes. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge. Exemple : mailinator.com|trashmail.net"
     allowed_email_domains: "Une liste délimitée par des barres verticales de domaines de messagerie avec lesquels les utilisateurs DOIVENT enregistrer des comptes. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge. AVERTISSEMENT : les utilisateurs dont les domaines de messagerie ne sont pas répertoriés ne seront pas autorisés !"
     normalize_emails: "Vérifiez que l'adresse e-mail normalisée n'est pas déjà utilisée. L'adresse normalisée s'obtient en ôtant tous les points et caractères éventuellement situés entre les symboles « + » et « @ » de l'adresse indiquée par l'utilisateur."
@@ -2061,8 +2071,9 @@ fr:
     title_fancy_entities: "Convertir les caractères ASCII communs en jolies entités HTML dans les titres des sujets, comme SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "La taille minimale d'un titre avant que l'on vérifie l'existence de sujets identiques."
     desktop_category_page_style: "Ce paramètre détermine la disposition visuelle de la page /categories sur le bureau. Il inclut des options telles que l'affichage des sous-catégories avec les sujets en vedette, l'affichage des sujets les plus récents ou la présentation des principaux sujets. Le style choisi influencera la façon dont les utilisateurs interagiront et navigueront dans les catégories du site."
+    mobile_category_page_style: "Ce paramètre détermine la disposition visuelle de la page /categories sur les appareils mobiles."
     category_colors: "Une liste de couleurs en valeur hexadécimale autorisées pour les catégories."
-    default_dark_mode_color_scheme_id: "Le jeu de couleurs utilisé en mode sombre."
+    default_dark_mode_color_scheme_id: "La palette de couleurs utilisée en mode sombre."
     dark_mode_none: "Aucune"
     max_image_size_kb: "La taille maximale de téléversement d'image. Cela doit également être configuré dans nginx (client_max_body_size) / apache ou proxy. Les images plus grandes et plus petites que client_max_body_size seront redimensionnées pour s'adapter au téléversement."
     max_attachment_size_kb: "Taille maximale de téléversement de pièces jointes. Cela doit également être configuré dans nginx (client_max_body_size) / apache ou proxy."
@@ -2135,7 +2146,7 @@ fr:
     auto_generated_allowlist: "Liste des adresses e-mail qui ne seront pas vérifiées pour du contenu généré automatiquement. Exemple : foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquer les e-mails entrants identifiés comme étant générés automatiquement."
     ignore_by_title: "Ignorer les e-mails entrants selon leur titre."
-    mailgun_api_key: "Clé API secrète de Mailgun utilisée pour vérifier les messages du Webhook."
+    mailgun_api_key: "Clé d'API secrète de Mailgun utilisée pour vérifier les messages du webhook."
     sendgrid_verification_key: "Clé de vérification Sendgrid utilisée pour vérifier les messages du webhook."
     mailjet_webhook_token: "Jeton utilisé pour vérifier la charge utile du webhook. Il doit être transmis en tant que paramètre de requête « t » du webhook, par exemple : https://example.com/webhook/mailjet?t=supersecret"
     mandrill_authentication_key: "Clé d'authentification Mandrill utilisée pour vérifier les messages du webhook."
@@ -2222,6 +2233,7 @@ fr:
     anonymous_posting_allowed_groups: "Groupes autorisés à activer la publication anonyme"
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme toutes les N minutes pour chaque utilisateur. Exemple : si la valeur 600 est choisie, lorsque 600 minutes seront passées après le dernier message ET que l'utilisateur passera en mode anonyme, un nouveau compte anonyme lui sera créé."
     hide_user_profiles_from_public: "Désactiver les cartes, les profils et le répertoire d'utilisateurs pour les visiteurs."
+    hide_new_user_profiles: "Masquez les profils d'utilisateurs de niveau de confiance 1 ou inférieur au public et les utilisateurs de niveau de confiance 1 jusqu'à ce qu'ils envoient une publication pour la première fois. Cette fonctionnalité est désactivée sans condition sur les sites must_approve_users et invite_only."
     allow_users_to_hide_profile: "Autoriser les utilisateurs à masquer leur profil et leur présence"
     hide_user_activity_tab: "Masquez l'onglet d'activité sur les profils d'utilisateur, à l'exception d'Admin et de Self."
     delete_associated_accounts_on_password_reset: "Supprimez le compte associé à l'utilisateur lorsque celui-ci change le mot de passe."
@@ -2268,7 +2280,7 @@ fr:
     penalty_include_post_message: "Incluez automatiquement la publication incriminée dans le modèle de message électronique lors de la mise en sourdine ou de la suspension d'un utilisateur"
     svg_icon_subset: "Ajoutez des icônes FontAwesome supplémentaires que vous souhaitez inclure dans vos ressources. Utilisez le préfixe « fa- » pour les icônes pleines, « far- » pour les icônes normales et « fab- » pour les icônes de marque."
     max_prints_per_hour_per_user: "Nombre maximal d'impressions de pages (défini sur 0 pour désactiver l'impression)"
-    full_name_required: "Le nom complet est requis dans le profil utilisateur."
+    full_name_requirement: "Faites du champ du nom complet un champ obligatoire, facultatif ou facultatif mais masqué dans le formulaire d'inscription."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les e-mails. Décocher pour masquer les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son nom d'utilisateur."
     show_time_gap_days: "Si deux messages sont publiés avec ce nombre de jours d'écart, afficher cette durée dans le sujet."
@@ -2294,7 +2306,7 @@ fr:
     delete_merged_stub_topics_after_days: "Délai en jours avant la suppression automatique des sujets brouillon entièrement fusionnés. Réglez ce paramètre sur -1 pour ne jamais supprimer. Réglez-le sur 0 pour supprimer immédiatement."
     bootstrap_mode_min_users: 'Nombre minimal d''utilisateurs requis pour désactiver le mode bootstrap et supprimer le bouton de démarrage (défini sur 0 pour désactiver, peut prendre jusqu''à 24 heures). Consultez <a target="_blank" href="https://meta.discourse.org/t/-/322876">le sujet du mode d''amorçage sur Meta</a> pour obtenir plus de détails.'
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
-    secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
+    secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages directs et catégories privées. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
     secure_uploads_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les e-mails, si leur taille est inférieure à la valeur du paramètre « secure uploads max email embed image size kb »."
     secure_uploads_max_email_embed_image_size_kb: "La taille maximale d'images sécurisées qui seront intégrées dans des e-mails si le paramètre « secure uploads allow embed in emails » est activé. Si celui-ci n'est pas activé, ce paramètre est sans effet."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. « encoded » générera des chaînes de caractères encodées avec des pourcentages. « none » désactivera complètement les identifiants."
@@ -2340,6 +2352,7 @@ fr:
     default_email_mailing_list_mode_frequency: "Par défaut, les utilisateurs ayant activé la liste de diffusion recevront des e-mails à cette fréquence."
     disable_mailing_list_mode: "Interdire aux utilisateurs d'activer le mode « liste de diffusion » (empêche tout e-mail d'être expédié vers une liste de diffusion)."
     default_email_previous_replies: "Inclure par défaut les réponses précédentes dans les e-mails."
+    default_emoji_reactions: "Réactions émoji préférées par défaut. Ajoutez jusqu'à 5 émojis pour permettre une réaction rapide."
     default_email_in_reply_to: "Inclure par défaut l'extrait du message auquel se fait la réponse dans les e-mails."
     default_hide_profile: "Masquer le profil public de l'utilisateur par défaut."
     default_hide_presence: "Désactiver les fonctionnalités de présence par défaut."
@@ -2373,11 +2386,11 @@ fr:
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événements des Webhooks."
     retain_web_hook_events_aggregate_days: "Nombre de jours nécessaires pour conserver les enregistrements agrégés des événements webhook."
     retry_web_hook_events: "Réessayer jusqu'à 4 fois les événements de Webhooks qui ont échoué. Les intervalles entre chaque tentative sont de 1, 5, 25 et 125 minutes."
-    revoke_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé API avant qu'elle soit automatiquement révoquée (0 pour jamais)"
-    revoke_api_keys_maxlife_days: "Nombre de jours avant qu'une clé API soit automatiquement révoquée (0 pour jamais)"
+    revoke_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé d'API avant qu'elle soit automatiquement révoquée (0 pour jamais)"
+    revoke_api_keys_maxlife_days: "Nombre de jours avant qu'une clé d'API soit automatiquement révoquée (0 pour jamais)"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     min_trust_level_for_user_api_key: |
-      Niveau de confiance requis pour la génération de clés API utilisateur.<br>
+      Niveau de confiance requis pour la génération de clés d'API utilisateur.<br>
       <b>AVERTISSEMENT</b> : la modification du niveau de confiance empêchera les utilisateurs dont le niveau de confiance est inférieur de se connecter via Discourse Hub
     user_api_key_allowed_groups: |
       L'appartenance à un groupe est requise pour la génération de clés d'API utilisateur.<br>
@@ -2385,8 +2398,8 @@ fr:
        Les administrateurs et les modérateurs peuvent toujours créer des clés d'API utilisateur.
     allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via les clés d'API. Le symbole « * » peut être utilisé pour remplacer n'importe quelle partie de cette adresse (p. ex. : www.exemple.fr/*)."
     allowed_user_api_push_urls: "Adresses URL autorisées pour le service push du serveur vers l'API utilisateur"
-    revoke_user_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé API utilisateur avant qu'elle soit automatiquement révoquée (0 pour jamais)"
-    revoke_user_api_keys_maxlife_days: "Nombre de jours avant qu'une clé API utilisateur soit automatiquement révoquée (0 pour jamais)"
+    revoke_user_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé d'API utilisateur avant qu'elle soit automatiquement révoquée (0 pour jamais)"
+    revoke_user_api_keys_maxlife_days: "Nombre de jours avant qu'une clé d'API utilisateur soit automatiquement révoquée (0 pour jamais)"
     tagging_enabled: "Activer les balises sur les sujets ? Consultez le <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>guide d'administration sur les étiquettes sur Meta</a> pour obtenir plus d'informations."
     min_trust_to_create_tag: "Le niveau de confiance minimal requis pour créer une étiquette."
     create_tag_allowed_groups: "Groupes autorisés à créer des étiquettes. Les administrateurs et les modérateurs peuvent toujours créer des étiquettes."
@@ -2406,7 +2419,7 @@ fr:
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
     force_lowercase_tags: "Forcer les nouvelles étiquettes à être en minuscule."
     create_post_for_category_and_tag_changes: "Créez une publication chuchotée lorsque la catégorie ou les étiquettes d'un sujet changent. Cette option nécessite l'activation des publications chuchotées."
-    automatically_clean_unused_tags: "Supprimez automatiquement les étiquettes qui ne sont utilisées dans aucun sujet ou message privé au quotidien."
+    automatically_clean_unused_tags: "Supprimez automatiquement les étiquettes qui ne sont utilisées dans aucun sujet ou message direct au quotidien."
     watched_precedence_over_muted: "M'avertir des sujets des catégories ou des étiquettes que je regarde et qui appartiennent également à un sujet que j'ai désactivé"
     company_name: "Nom de votre entreprise ou organisation. Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis."
     governing_law: "Précisez la juridiction qui régit les aspects juridiques du site, y compris les Conditions d'utilisation et la Politique de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités."
@@ -2445,17 +2458,17 @@ fr:
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
-    experimental_topics_filter: "Active la route de filtrage des sujets expérimentaux vers /filter"
     enable_experimental_lightbox: "Remplacez la lightbox d'image par défaut par l'apparence remaniée."
-    experimental_glimmer_topic_list_groups: "Activez la nouvelle implémentation de la liste de sujets « glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
+    glimmer_topic_list_mode: "Contrôlez si la nouvelle implémentation « Glimmer » de la liste de sujets est utilisée. L'option « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêtes. Consultez la <a href='https://meta.discourse.org/t/343404'>méta-rubrique</a> pour obtenir plus d'informations."
     glimmer_post_menu_mode: "Contrôlez si la nouvelle implémentation du menu de publication « glimmer » est utilisée. « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
     glimmer_post_menu_groups: "Activez la nouvelle implémentation du menu de publication « glimmer » en mode « auto » pour les groupes d'utilisateurs spécifiés. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
-    experimental_form_templates: "Activez la fonctionnalité de modèles de formulaire. <b>Après activation,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser / Modèles</a>."
+    experimental_form_templates: "Activez la fonctionnalité de modèles de formulaire. Gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
     admin_sidebar_enabled_groups: "Activez la navigation dans la barre latérale pour l'interface utilisateur d'administration pour les groupes spécifiés, qui remplace les boutons de navigation d'administration de niveau supérieur."
     lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
     about_page_hidden_groups: "N'affichez pas les membres de groupes spécifiques sur la page /about."
+    adobe_analytics_tags_url: "URL des balises Adobe Analytics (https://assets.adobedtm.com/...)"
     view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."
@@ -2525,8 +2538,8 @@ fr:
       invalid_search_ranking_weights: "La valeur n'est pas valide pour le paramètre du site search_ranking_weights. Exemple : « {0.1,0.2,0.3,1.0} ». Notez que la valeur maximale pour chaque pondération est de 1,0."
     keywords:
       clean_up_inactive_users_after_days: "désactivé|inactif|non activé"
-      purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
       navigation_menu: "barre latérale|menu déroulant d'en-tête"
+      purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2674,6 +2687,7 @@ fr:
     omniauth_confirm_button: "Continuer"
     authenticator_error_no_valid_email: "Aucune adresse e-mail associée à %{account} n'est autorisée. Vous devrez peut-être configurer votre compte avec une autre adresse."
     new_registrations_disabled: "La création de nouveaux comptes n'est pas autorisée pour le moment."
+    new_registrations_disabled_discourse_connect: "L'enregistrement de nouveaux comptes est uniquement autorisé via Discourse Connect."
     password_too_long: "Les mots de passe sont limités à 200 caractères."
     email_too_long: "L'e-mail renseigné est trop long. Les noms d'adresses e-mail ne doivent pas dépasser 254 caractères et les noms de domaines ne doivent pas dépasser 253 caractères."
     wrong_invite_code: "Le code d'invitation est invalide."
@@ -2767,6 +2781,7 @@ fr:
     cannot_delete_has_posts:
       one: "L'utilisateur %{username} a %{count} message dans un sujet public ou message personnel, vous ne pouvez donc pas le supprimer."
       other: "L'utilisateur %{username} a %{count} messages dans des sujets publics ou messages personnels, vous ne pouvez donc pas le supprimer."
+    cannot_bulk_delete: "Un ou plusieurs utilisateurs ne peuvent pas être supprimés parce qu'ils sont administrateurs, parce qu'ils ont trop de publications ou parce qu'ils ont une très ancienne publication."
   unsubscribe_mailer:
     title: "Désabonnement"
     subject_template: "Confirmez que vous ne souhaitez plus recevoir d'e-mails de mises à jour de %{site_title}"
@@ -3383,7 +3398,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s’adresse cette réponse. [Contactez un responsable](%{base_url}/about).
+        La clé de réponse est invalide ou inconnue et nous ne pouvons pas savoir à quel message s'adresse cette réponse. [Contactez un membre du personnel](%{base_url}/about).
     email_reject_bad_destination_address:
       title: "E-mail rejeté - Mauvaise adresse de destination"
       subject_template: "[%{email_prefix}] Problème d'e-mail - Adresse de destinataire inconnue"
@@ -4545,7 +4560,7 @@ fr:
 
       ## [Conformité à la Loi sur la protection de la vie privée en ligne des enfants](#coppa)
 
-      Notre site, nos produits et nos services sont tous destinés à des personnes âgées d'au moins 13 ans. Si ce serveur se trouve aux États-Unis et que vous avez moins de 13 ans, conformément aux exigences de la COPPA ([Children’s Online Privacy Protection Act](https://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utilisez pas ce site.
+      Notre site, nos produits et nos services sont tous destinés à des personnes âgées d'au moins 13 ans. Si ce serveur se trouve aux États-Unis et que vous avez moins de 13 ans, conformément aux exigences de la COPPA ([Children's Online Privacy Protection Act](https://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utilisez pas ce site.
 
       <a name="online"></a>
 
@@ -4599,7 +4614,7 @@ fr:
       name: Habitué
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à la recatégorisation, au renommage, au suivi de liens, au wiki et à plus de « J'aime »
       long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir contribué régulièrement à notre communauté pendant ces quelques mois. Vous faites partie de nos lecteurs et lectrices les plus actifs et votre contribution à ce qui rend notre communauté si belle est significative. Vous pouvez désormais recatégoriser et renommer des sujets, accéder au salon privé, signaler des spams et vous bénéficiez de nombreux « J'aime » supplémentaires à attribuer chaque jour.
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir contribué régulièrement à notre communauté pendant ces quelques mois. Vous faites désormais partie de nos lecteurs et lectrices les plus actifs et vos contributions contribuent à l'excellence de notre communauté. Vous pouvez désormais recatégoriser et renommer les sujets, profiter de signalements de spams plus efficaces et vous obtiendrez également davantage de mentions « J'aime » chaque jour.
     leader:
       name: Meneur
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion de sujets, et toujours plus de « J'aime »
@@ -4933,7 +4948,7 @@ fr:
         title: "Apparence"
         fields:
           color_scheme:
-            label: "Jeu de couleurs"
+            label: "Palette de couleurs"
           body_font:
             label: "Police de contenu"
           heading_font:
@@ -4944,23 +4959,17 @@ fr:
             label: "Style de la page d'accueil"
             choices:
               latest:
-                label: "Sujets récents"
-              categories_only:
-                label: "Catégories uniquement"
-              categories_with_featured_topics:
-                label: "Catégories avec sujets à la une"
+                label: "Récents"
+                description: "Affiche les sujets actifs les plus récents dans toutes les catégories et aide les membres à rester au courant des discussions qui les intéressent"
+              hot:
+                label: "Populaires"
+                description: "Affiche les sujets tendance en combinant la popularité récente et la popularité globale, et met en valeur ce dont les membres de votre communauté parlent en ce moment"
               categories_and_latest_topics:
-                label: "Catégories et sujets récents"
-              categories_and_latest_topics_created_date:
-                label: "Catégories et derniers sujets (triés par date de création du sujet)"
-              categories_and_top_topics:
-                label: "Catégories et meilleurs sujets"
+                label: "Catégories avec les sujets les plus récents"
+                description: "Combine les sujets récemment actifs dans toutes les catégories avec une liste de catégories, leurs descriptions et le nombre total de sujets"
               categories_boxes:
                 label: "Boîtes de catégories"
-              categories_boxes_with_topics:
-                label: "Boîtes de catégories avec sujets"
-              subcategories_with_featured_topics:
-                label: "Sous-catégories avec sujets en vedette"
+                description: "Affiche les catégories et leur description dans une grille, idéale pour que les membres voient un aperçu des sous-communautés de votre site"
       branding:
         title: "Logo du site"
         fields:
@@ -5054,6 +5063,7 @@ fr:
         other: "Révoqué automatiquement, créé il y a plus de %{count} jours"
       revoked: Révoquée
       restored: Rétablie
+    bulk_user_delete: "supprimé lors d'une opération de suppression groupée"
   reviewables:
     already_handled: "Merci, mais nous avons déjà examiné ce message et avons décidé d'approuver sa publication."
     already_handled_and_user_not_exist: "Merci, mais cet élément a déjà été examiné entre-temps, et l'utilisateur concerné n'est plus inscrit."

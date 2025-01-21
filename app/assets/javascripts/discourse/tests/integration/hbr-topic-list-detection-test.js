@@ -1,18 +1,18 @@
 import { module, test } from "qunit";
 import TopicList from "discourse/components/topic-list";
 import TopicListItem from "discourse/components/topic-list-item";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { rawConnectorsFor } from "discourse/lib/plugin-connectors";
-import {
-  disableRaiseOnDeprecation,
-  enableRaiseOnDeprecation,
-} from "discourse/tests/helpers/raise-on-deprecation";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import {
   addRawTemplate,
   needsHbrTopicList,
   removeRawTemplate,
-} from "discourse-common/lib/raw-templates";
+} from "discourse/lib/raw-templates";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 
 module("Integration | Lib | hbr topic list detection", function (hooks) {
   hooks.beforeEach(function () {

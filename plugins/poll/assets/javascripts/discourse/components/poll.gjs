@@ -5,10 +5,10 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import {
@@ -479,7 +479,7 @@ export default class PollComponent extends Component {
       voters = preloadedVoters;
     }
 
-    this.preloadedVoters = Object.assign({}, preloadedVoters);
+    this.preloadedVoters = { ...preloadedVoters };
     const votersCount = voters?.length;
 
     return ajax("/polls/voters.json", {
@@ -535,7 +535,7 @@ export default class PollComponent extends Component {
         if (optionId) {
           preloadedVoters[optionId].loading = false;
         }
-        this.preloadedVoters = Object.assign({}, preloadedVoters);
+        this.preloadedVoters = { ...preloadedVoters };
       });
   }
 

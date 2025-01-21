@@ -3,12 +3,12 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import icon from "discourse/helpers/d-icon";
 import {
   addExtraUserClasses,
   renderAvatar,
 } from "discourse/helpers/user-avatar";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import UserTip from "../../user-tip";
 import UserStatusBubble from "./user-status-bubble";

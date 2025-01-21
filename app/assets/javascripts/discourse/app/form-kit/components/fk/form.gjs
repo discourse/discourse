@@ -14,6 +14,7 @@ import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKFieldset from "discourse/form-kit/components/fk/fieldset";
 import FKInputGroup from "discourse/form-kit/components/fk/input-group";
+import FKObject from "discourse/form-kit/components/fk/object";
 import Row from "discourse/form-kit/components/fk/row";
 import FKSection from "discourse/form-kit/components/fk/section";
 import FKSubmit from "discourse/form-kit/components/fk/submit";
@@ -288,6 +289,17 @@ class FKForm extends Component {
             registerField=this.registerField
             unregisterField=this.unregisterField
             triggerRevalidationFor=this.triggerRevalidationFor
+          )
+          Object=(component
+            FKObject
+            errors=this.formData.errors
+            addError=this.addError
+            data=this.formData
+            set=this.set
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            triggerRevalidationFor=this.triggerRevalidationFor
+            remove=this.remove
           )
           InputGroup=(component
             FKInputGroup

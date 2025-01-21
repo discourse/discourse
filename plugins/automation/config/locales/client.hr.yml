@@ -140,6 +140,8 @@ hr:
             label: Okidač
           version:
             label: Inačica
+          status:
+            label: Statust
           enabled:
             label: Omogućeno
           disabled:

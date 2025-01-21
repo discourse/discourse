@@ -20,6 +20,24 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body).to be_present
       end
 
+      it "returns silence reason when user is silenced" do
+        silencer =
+          UserSilencer.new(
+            user,
+            admin,
+            message: :too_many_spam_flags,
+            reason: "because I said so",
+            keep_posts: true,
+          )
+        silencer.silence
+
+        get "/admin/users/list.json"
+        expect(response.status).to eq(200)
+
+        silenced_user = response.parsed_body.find { |u| u["id"] == user.id }
+        expect(silenced_user["silence_reason"]).to eq("because I said so")
+      end
+
       context "when showing emails" do
         it "returns email for all the users" do
           get "/admin/users/list.json", params: { show_emails: "true" }
@@ -113,7 +131,7 @@ RSpec.describe Admin::UsersController do
         Fabricate(:user, ip_address: "88.88.88.88")
         Fabricate(:admin, ip_address: user.ip_address)
         Fabricate(:moderator, ip_address: user.ip_address)
-        similar_user = Fabricate(:user, ip_address: user.ip_address)
+        _similar_user = Fabricate(:user, ip_address: user.ip_address)
 
         get "/admin/users/#{user.id}.json"
 
@@ -1439,6 +1457,8 @@ RSpec.describe Admin::UsersController do
     fab!(:deleted_users) { Fabricate.times(3, :user) }
 
     shared_examples "bulk user deletion possible" do
+      before { sign_in(current_user) }
+
       it "can delete multiple users" do
         delete "/admin/users/destroy-bulk.json", params: { user_ids: deleted_users.map(&:id) }
         expect(response.status).to eq(200)
@@ -1477,18 +1497,86 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
         expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
       end
+
+      it "blocks emails and IPs of deleted users if block_ip_and_email is true" do
+        current_user.update!(ip_address: IPAddr.new("127.189.34.11"))
+        deleted_users[0].update!(ip_address: IPAddr.new("127.189.34.11"))
+        deleted_users[1].update!(ip_address: IPAddr.new("249.21.44.3"))
+        deleted_users[2].update!(ip_address: IPAddr.new("3.1.22.88"))
+
+        expect do
+          delete "/admin/users/destroy-bulk.json",
+                 params: {
+                   user_ids: deleted_users.map(&:id),
+                   block_ip_and_email: true,
+                 }
+        end.to change {
+          ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block]).count
+        }.by(2).and change {
+                ScreenedEmail.where(action_type: ScreenedEmail.actions[:block]).count
+              }.by(3)
+
+        expect(
+          ScreenedIpAddress.exists?(
+            ip_address: "249.21.44.3",
+            action_type: ScreenedIpAddress.actions[:block],
+          ),
+        ).to be_truthy
+        expect(
+          ScreenedIpAddress.exists?(
+            ip_address: "3.1.22.88",
+            action_type: ScreenedIpAddress.actions[:block],
+          ),
+        ).to be_truthy
+        expect(ScreenedIpAddress.exists?(ip_address: current_user.ip_address)).to be_falsey
+
+        expect(
+          ScreenedEmail.exists?(
+            email: deleted_users[0].email,
+            action_type: ScreenedEmail.actions[:block],
+          ),
+        ).to be_truthy
+        expect(
+          ScreenedEmail.exists?(
+            email: deleted_users[1].email,
+            action_type: ScreenedEmail.actions[:block],
+          ),
+        ).to be_truthy
+        expect(
+          ScreenedEmail.exists?(
+            email: deleted_users[2].email,
+            action_type: ScreenedEmail.actions[:block],
+          ),
+        ).to be_truthy
+        expect(response.status).to eq(200)
+        expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
+      end
+
+      it "doesn't block emails and IPs of deleted users if block_ip_and_email is false" do
+        expect do
+          delete "/admin/users/destroy-bulk.json",
+                 params: {
+                   user_ids: deleted_users.map(&:id),
+                   block_ip_and_email: false,
+                 }
+        end.to not_change {
+          ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block]).count
+        }.and not_change { ScreenedEmail.where(action_type: ScreenedEmail.actions[:block]).count }
+        expect(response.status).to eq(200)
+        expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
+      end
     end
 
     context "when logged in as an admin" do
-      before { sign_in(admin) }
-
-      include_examples "bulk user deletion possible"
+      include_examples "bulk user deletion possible" do
+        let(:current_user) { admin }
+      end
     end
 
     context "when logged in as a moderator" do
-      before { sign_in(moderator) }
-
-      include_examples "bulk user deletion possible"
+      include_examples "bulk user deletion possible" do
+        let(:current_user) { moderator }
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -2067,7 +2155,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
+        _user =
           DiscourseConnect.parse(
             sso.payload,
             secure_session: read_secure_session,

@@ -21,7 +21,6 @@ zh_CN:
     chat_minimum_message_length: "聊天消息的最少字符数。"
     chat_allow_uploads: "允许在公共聊天频道和直接消息频道中上传文件。"
     chat_archive_destination_topic_status: "频道归档完成后目标话题应处于的状态。这仅适用于目标话题是新话题而不是现有话题的情况。"
-    default_emoji_reactions: "聊天消息的默认表情符号回应。最多可添加 5 个表情符号进行快速回应。"
     direct_message_enabled_groups: "允许这些群组中的用户创建用户间的个人聊天。请注意：管理人员始终可以创建个人聊天，用户将能够回复有权创建个人聊天的用户发起的个人聊天。"
     chat_message_flag_allowed_groups: "这些群组中的用户可以举报聊天消息。请注意，管理员和版主始终可以举报聊天消息。"
     max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"
@@ -87,8 +86,8 @@ zh_CN:
       not_accepting_dms: "抱歉，%{username} 目前不接受消息。"
       actor_ignoring_target_user: "您正在忽略 %{username}，因此您无法向他们发送消息。"
       actor_muting_target_user: "您正在将 %{username} 设为免打扰，因此您无法向他们发送消息。"
-      actor_disallowed_dms: "您已选择阻止用户向您发送私人和直接消息，因此您无法创建新的直接消息。"
-      actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和直接消息，因此您无法创建给他们的新直接消息。"
+      actor_disallowed_dms: "您已选择阻止用户向您发送个人消息和直接消息，因此您无法创建新的直接消息。"
+      actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送个人消息和直接消息，因此您无法创建发给他们的新直接消息。"
       user_cannot_send_direct_messages: "抱歉，您无法发送直接消息。"
       over_chat_max_direct_message_users_allow_self: "您只能创建一个与自己的直接消息。"
       over_chat_max_direct_message_users:
@@ -175,6 +174,8 @@ zh_CN:
       inline_to_message: "消息 #%{message_id}，来自%{username} – #%{chat_channel}"
       inline_to_channel: "聊天 #%{chat_channel}"
       inline_to_topic_channel: "话题%{topic_title}的聊天"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "#%{chat_channel} 中的话题"
       thread_title_connector: "位置："
       x_members:
         other: "%{count} 个成员"

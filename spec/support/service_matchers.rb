@@ -26,8 +26,7 @@ module ServiceMatchers
     private
 
     def error_message_with_inspection(message)
-      inspector = Service::StepsInspector.new(result)
-      "#{message}\n\n#{inspector.inspect}\n\n#{inspector.error}"
+      "#{message}\n\n#{result.inspect_steps}"
     end
   end
 
@@ -88,8 +87,7 @@ module ServiceMatchers
     end
 
     def error_message_with_inspection(message)
-      inspector = Service::StepsInspector.new(result)
-      "#{message}\n\n#{inspector.inspect}\n\n#{inspector.error}"
+      "#{message}\n\n#{result.inspect_steps}"
     end
 
     def set_unexpected_result
@@ -161,7 +159,7 @@ module ServiceMatchers
     end
 
     def step_failed?
-      super && result[step].exception.is_a?(exception)
+      result[step]&.exception&.is_a?(exception)
     end
 
     def step_not_existing_message
@@ -210,13 +208,5 @@ module ServiceMatchers
 
   def run_successfully
     RunServiceSuccessfully.new
-  end
-
-  def inspect_steps(result)
-    inspector = Service::StepsInspector.new(result)
-    puts "Steps:"
-    puts inspector.inspect
-    puts "\nFirst error:"
-    puts inspector.error
   end
 end

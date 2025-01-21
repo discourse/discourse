@@ -240,8 +240,9 @@ class PostsController < ApplicationController
 
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
-    raw_old = params[:post][:raw_old]
-    if raw_old.present? && raw_old != post.raw
+    # keep `raw_old` for backwards compatibility
+    original_text = params[:post][:original_text] || params[:post][:raw_old]
+    if original_text.present? && original_text != post.raw
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
@@ -813,7 +814,7 @@ class PostsController < ApplicationController
           .order(created_at: :desc)
       end
 
-    if guardian.user.moderator?
+    if guardian.user.moderator? && !guardian.user.admin?
       # Awful hack, but you can't seem to remove the `default_scope` when joining
       # So instead I grab the topics separately
       topic_ids = posts.dup.pluck(:topic_id)

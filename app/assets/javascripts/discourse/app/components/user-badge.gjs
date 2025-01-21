@@ -15,7 +15,7 @@ export default class UserBadge extends Component {
 
   <template>
     <a class="user-card-badge-link" href={{this.badgeUrl}}>
-      <BadgeButton @badge={{@badge}}>
+      <BadgeButton @badge={{@badge}} @showName={{@showName}}>
         {{#if this.showGrantCount}}
           <span class="count">&nbsp;(&times;{{@count}})</span>
         {{/if}}

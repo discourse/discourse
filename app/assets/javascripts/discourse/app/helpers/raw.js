@@ -4,10 +4,10 @@ import { getOwner, setOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
-import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import { helperContext, registerRawHelper } from "discourse/lib/helpers";
+import { RUNTIME_OPTIONS } from "discourse/lib/raw-handlebars-helpers";
+import { findRawTemplate } from "discourse/lib/raw-templates";
 
 function renderRaw(ctx, template, templateName, params) {
   params = { ...params };

@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { blur, click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
@@ -22,7 +22,7 @@ acceptance("Password Reset", function (needs) {
       if (body.password === "jonesyAlienSlayer") {
         return helper.response({
           success: false,
-          errors: { password: ["is the name of your cat"] },
+          errors: { "user_password.password": ["is the name of your cat"] },
           friendly_messages: ["Password is the name of your cat"],
         });
       } else {
@@ -71,6 +71,8 @@ acceptance("Password Reset", function (needs) {
     assert.dom(".password-reset .tip.good").exists("input looks good");
 
     await fillIn(".password-reset input", "123");
+    await blur(".password-reset input");
+
     assert.dom(".password-reset .tip.bad").exists("input is not valid");
     assert.dom(".password-reset .tip.bad").includesHtml(
       i18n("user.password.too_short", {

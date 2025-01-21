@@ -19,7 +19,6 @@
   ],
   "dependencies": {
     "@embroider/addon-shim": "^1.9.0",
-    "discourse-common": "workspace:1.0.0",
     "discourse-i18n": "workspace:1.0.0",
     "ember-auto-import": "^2.10.0",
     "markdown-it": "14.0.0",
@@ -30,6 +29,7 @@
   "peerDependencies": {
     "discourse-i18n": "workspace:1.0.0",
     "pretty-text": "workspace:1.0.0",
+    "discourse": "workspace:0.0.0",
     "xss": "*"
   },
   "engines": {

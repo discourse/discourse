@@ -15,7 +15,6 @@ en:
     chat_minimum_message_length: "Minimum number of characters for a chat message."
     chat_allow_uploads: "Allow uploads in public chat channels and direct message channels."
     chat_archive_destination_topic_status: "The status that the destination topic should be once a channel archive is completed. This only applies when the destination topic is a new topic, not an existing one."
-    default_emoji_reactions: "Default emoji reactions for chat messages. Add up to 5 emojis for quick reaction."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages. Note that admins and moderators can always flag chat messages."
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
@@ -84,8 +83,8 @@ en:
       not_accepting_dms: "Sorry, %{username} is not accepting messages at the moment."
       actor_ignoring_target_user: "You are ignoring %{username}, so you cannot send messages to them."
       actor_muting_target_user: "You are muting %{username}, so you cannot send messages to them."
-      actor_disallowed_dms: "You have chosen to prevent users from sending you private and direct messages, so you cannot create new direct messages."
-      actor_preventing_target_user_from_dm: "You have chosen to prevent %{username} from sending you private and direct messages, so you cannot create new direct messages to them."
+      actor_disallowed_dms: "You have chosen to prevent users from sending you personal and direct messages, so you cannot create new direct messages."
+      actor_preventing_target_user_from_dm: "You have chosen to prevent %{username} from sending you personal and direct messages, so you cannot create new direct messages to them."
       user_cannot_send_direct_messages: "Sorry, you cannot send direct messages."
       over_chat_max_direct_message_users_allow_self: "You can only create a direct message with yourself."
       over_chat_max_direct_message_users:
@@ -185,6 +184,8 @@ en:
       inline_to_message: "Message #%{message_id} by %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat for Topic %{topic_title}"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Thread in #%{chat_channel}"
       thread_title_connector: "in"
 
       x_members:

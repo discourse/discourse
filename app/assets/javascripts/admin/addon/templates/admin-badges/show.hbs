@@ -245,7 +245,7 @@
       </field.Menu>
     </form.Field>
 
-    <form.CheckboxGroup as |group|>
+    <form.CheckboxGroup @title={{i18n "admin.badges.usage_heading"}} as |group|>
       <group.Field
         @title={{i18n "admin.badges.allow_title"}}
         @showTitle={{false}}
@@ -264,7 +264,12 @@
       >
         <field.Checkbox />
       </group.Field>
+    </form.CheckboxGroup>
 
+    <form.CheckboxGroup
+      @title={{i18n "admin.badges.visibility_heading"}}
+      as |group|
+    >
       <group.Field
         @title={{i18n "admin.badges.listable"}}
         @showTitle={{false}}
@@ -283,6 +288,20 @@
         as |field|
       >
         <field.Checkbox />
+      </group.Field>
+
+      <group.Field
+        @title={{i18n "admin.badges.show_in_post_header"}}
+        @showTitle={{false}}
+        @name="show_in_post_header"
+        @disabled={{this.disableBadgeOnPosts data}}
+        as |field|
+      >
+        <field.Checkbox>
+          {{#if (this.postHeaderDescription data)}}
+            {{i18n "admin.badges.show_in_post_header_disabled"}}
+          {{/if}}
+        </field.Checkbox>
       </group.Field>
     </form.CheckboxGroup>
   </form.Section>

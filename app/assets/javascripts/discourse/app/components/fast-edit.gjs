@@ -53,6 +53,13 @@ export default class FastEdit extends Component {
       const result = await ajax(`/posts/${this.args.post.id}`);
       const newRaw = result.raw.replace(this.args.initialValue, this.value);
 
+      // Warn the user if we failed to update the post
+      if (newRaw === result.raw) {
+        throw new Error(
+          "Failed to update the post. Did your fast edit include a special character?"
+        );
+      }
+
       await this.args.post.save({ raw: newRaw });
     } catch (error) {
       popupAjaxError(error);

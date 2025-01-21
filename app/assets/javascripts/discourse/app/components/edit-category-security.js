@@ -1,8 +1,8 @@
 import { action } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
+import discourseComputed from "discourse/lib/decorators";
 import PermissionType from "discourse/models/permission-type";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class EditCategorySecurity extends buildCategoryPanel(
   "security"

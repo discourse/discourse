@@ -322,7 +322,8 @@ class ListController < ApplicationController
     define_method("top_#{period}") do |options = nil|
       top_options = build_topic_list_options
       top_options.merge!(options) if options
-      top_options[:per_page] = SiteSetting.topics_per_period_in_top_page
+      top_options[:per_page] = top_options[:per_page].presence ||
+        SiteSetting.topics_per_period_in_top_page
 
       user = list_target_user
       list = TopicQuery.new(user, top_options).list_top_for(period)

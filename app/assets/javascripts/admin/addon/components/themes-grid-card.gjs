@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import DMenu from "float-kit/components/d-menu";
@@ -41,7 +41,7 @@ export default class ThemeCard extends Component {
   }
 
   get footerActionIcon() {
-    return this.args.theme.isPendingUpdates ? "sync" : "ellipsis-h";
+    return this.args.theme.isPendingUpdates ? "arrows-rotate" : "ellipsis";
   }
 
   // NOTE: inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
@@ -116,7 +116,7 @@ export default class ThemeCard extends Component {
           <span
             title={{i18n "admin.customize.theme.updates_available_tooltip"}}
             class="theme-card__update-available"
-          >{{icon "info-circle"}}</span>
+          >{{icon "circle-info"}}</span>
         {{/if}}
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot_url}}
@@ -179,7 +179,7 @@ export default class ThemeCard extends Component {
                       @preventFocus={{true}}
                       @icon={{if
                         @theme.default
-                        "far-check-square"
+                        "far-square-check"
                         "far-square"
                       }}
                       class="theme-card__button"

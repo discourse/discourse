@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import SelectKitComponent, {
   pluginApiIdentifiers,
   selectKitOptions,

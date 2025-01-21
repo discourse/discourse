@@ -1498,6 +1498,19 @@ RSpec.describe Post do
       ).to(true)
     end
 
+    it "should inform the user when custom flag" do
+      custom_flag = Fabricate(:flag, name: "custom flag")
+      post.hide!(PostActionType.types[:custom_custom_flag])
+
+      jobs = Jobs::SendSystemMessage.jobs
+      expect(jobs.size).to eq(1)
+
+      Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
+      expect(Post.last.raw).to match("custom flag")
+
+      custom_flag.destroy!
+    end
+
     it "should decrease user_stat topic_count for first post" do
       expect do post.hide!(PostActionType.types[:off_topic]) end.to change {
         post.user.user_stat.reload.topic_count

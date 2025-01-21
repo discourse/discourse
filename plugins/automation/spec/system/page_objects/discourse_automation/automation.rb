@@ -30,8 +30,6 @@ module PageObjects
 
       def update
         form.find(".update-automation").click
-        form.has_selector?(".update-automation.is-loading")
-        form.has_no_selector?(".update-automation.is-loading")
         self
       end
 

@@ -2,9 +2,9 @@ import { alias, or } from "@ember/object/computed";
 import { readOnly } from "@ember/object/lib/computed/computed_macros";
 import Mixin from "@ember/object/mixin";
 import { getOwner } from "@ember/owner";
+import deprecated from "discourse/lib/deprecated";
+import { deepMerge } from "discourse/lib/object";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import deprecated from "discourse-common/lib/deprecated";
-import { deepMerge } from "discourse-common/lib/object";
 
 export { HUGE_FILE_THRESHOLD_BYTES } from "discourse/lib/uppy/uppy-upload";
 

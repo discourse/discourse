@@ -125,7 +125,7 @@ module PageObjects
             selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
           JS
         when "menu"
-          trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu")
+          trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu-trigger")
           trigger.click
           menu = find("[aria-labelledby='#{trigger["id"]}']")
           item = menu.find(".form-kit__control-menu-item[data-value='#{value}'] .btn")

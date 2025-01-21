@@ -3,13 +3,13 @@ import EmberObject, { get } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
+import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
-import { deepEqual, deepMerge } from "discourse-common/lib/object";
-import { bind } from "discourse-common/utils/decorators";
 
 function isNew(topic) {
   return (

@@ -1,13 +1,13 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Software update refresh", function (needs) {
   needs.user();

@@ -14,33 +14,4 @@ RSpec.describe TrustLevelSetting do
       expect(value[:value]).to eq(0)
     end
   end
-
-  xdescribe ".valid_value?" do
-    let(:deprecated_test) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml" }
-
-    before { SiteSetting.load_settings(deprecated_test) }
-
-    it "allows all trust levels as valid values" do
-      expect(TrustLevelSetting.valid_value?(TrustLevel[0])).to eq(true)
-      expect(TrustLevelSetting.valid_value?(TrustLevel[1])).to eq(true)
-      expect(TrustLevelSetting.valid_value?(TrustLevel[2])).to eq(true)
-      expect(TrustLevelSetting.valid_value?(TrustLevel[3])).to eq(true)
-      expect(TrustLevelSetting.valid_value?(TrustLevel[4])).to eq(true)
-      expect(TrustLevelSetting.valid_value?(20)).to eq(false)
-    end
-
-    it "does not allow 'admin' or 'staff' as valid values" do
-      expect(TrustLevelSetting.valid_value?("admin")).to eq(false)
-      expect(TrustLevelSetting.valid_value?("staff")).to eq(false)
-    end
-
-    it "does not allow setting 'admin' or 'staff' as valid values" do
-      expect { SiteSetting.min_trust_level_to_allow_invite = "admin" }.to raise_error(
-        Discourse::InvalidParameters,
-      )
-      expect { SiteSetting.min_trust_level_to_allow_invite = "staff" }.to raise_error(
-        Discourse::InvalidParameters,
-      )
-    end
-  end
 end

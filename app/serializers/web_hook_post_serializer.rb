@@ -30,6 +30,7 @@ class WebHookPostSerializer < PostSerializer
     flair_color
     notice
     mentioned_users
+    badges_granted
   ].each { |attr| define_method("include_#{attr}?") { false } }
 
   def topic_posts

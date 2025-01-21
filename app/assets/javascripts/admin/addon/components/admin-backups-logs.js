@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { scheduleOnce } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 
 @classNames("admin-backups-logs")

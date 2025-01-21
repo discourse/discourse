@@ -73,18 +73,18 @@
               class="-{{button.id}}"
               disabled={{or this.disabled button.disabled}}
               tabindex={{if button.disabled -1 0}}
-              {{on
-                "click"
-                (fn this.handleInlineButtonAction button.action)
-                bubbles=false
-              }}
+              {{on "click" (fn this.handleInlineButtonAction button.action)}}
               {{on "focus" (fn this.computeIsFocused true)}}
               {{on "blur" (fn this.computeIsFocused false)}}
             />
           {{/each}}
 
-          <Chat::Composer::Separator />
         {{/if}}
+
+        <PluginOutlet
+          @name="chat-composer-inline-buttons"
+          @outletArgs={{hash composer=this channel=@channel}}
+        />
 
         {{#if this.site.desktopView}}
           <Chat::Composer::Button
@@ -129,9 +129,4 @@
   <div class="chat-replying-indicator-container">
     <ChatReplyingIndicator @presenceChannelName={{this.presenceChannelName}} />
   </div>
-
-  <ChatEmojiPicker
-    @context={{this.context}}
-    @didSelectEmoji={{this.onSelectEmoji}}
-  />
 </div>

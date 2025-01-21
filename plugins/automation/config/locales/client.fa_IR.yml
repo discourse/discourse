@@ -196,6 +196,8 @@ fa_IR:
             label: اسکریپت
           version:
             label: نسخه
+          status:
+            label: وضعیت
           enabled:
             label: فعال شد
           disabled:

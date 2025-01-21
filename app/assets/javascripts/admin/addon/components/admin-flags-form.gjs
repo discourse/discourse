@@ -7,7 +7,7 @@ import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import MultiSelect from "select-kit/components/multi-select";
@@ -205,7 +205,7 @@ export default class AdminFlagsForm extends Component {
                 </checkboxGroup.Field>
               </form.CheckboxGroup>
 
-              <form.Alert @icon="info-circle">
+              <form.Alert @icon="circle-info">
                 {{i18n "admin.config_areas.flags.form.alert"}}
               </form.Alert>
 

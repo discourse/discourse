@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DAG from "discourse/lib/dag";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import Dropdown from "./dropdown";
 import UserDropdown from "./user-dropdown";
 

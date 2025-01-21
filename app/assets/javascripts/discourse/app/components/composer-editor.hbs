@@ -43,6 +43,7 @@
     @outletArgs={{hash composer=this.composer.model editorType="composer"}}
     @topicId={{this.composer.model.topic.id}}
     @categoryId={{this.composer.model.category.id}}
+    @onSetup={{this.setupEditor}}
   >
     {{yield}}
   </DEditor>

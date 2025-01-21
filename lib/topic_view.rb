@@ -205,6 +205,25 @@ class TopicView
     { users: user_badge_mapping, badges: indexed_badges }
   end
 
+  def post_user_badges
+    return [] unless SiteSetting.enable_badges && SiteSetting.show_badges_in_post_header
+
+    @post_user_badges ||=
+      begin
+        UserBadge
+          .for_post_header_badges(@posts)
+          .reduce({}) do |hash, user_badge|
+            hash[user_badge.post_id] ||= []
+            hash[user_badge.post_id] << user_badge
+            hash
+          end
+      end
+
+    return [] unless @post_user_badges
+
+    @post_user_badges
+  end
+
   def show_read_indicator?
     return false if !@user || !topic.private_message?
 

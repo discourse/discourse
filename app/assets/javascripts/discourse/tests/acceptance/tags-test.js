@@ -117,7 +117,7 @@ acceptance("Tags", function (needs) {
 
   test("hide tag notifications menu", async function (assert) {
     await visit("/tags/c/faq/4/test");
-    assert.dom(".tag-notifications-button").doesNotExist();
+    assert.dom(".tag-notifications-tracking").doesNotExist();
   });
 });
 

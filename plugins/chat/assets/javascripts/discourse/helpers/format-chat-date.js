@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
+import getURL from "discourse/lib/get-url";
 import User from "discourse/models/user";
-import getURL from "discourse-common/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default function formatChatDate(message, options = {}) {

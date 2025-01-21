@@ -82,6 +82,7 @@ Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
@@ -264,7 +265,10 @@ RSpec.configure do |config|
   # Sometimes the backtrace is quite big for failing specs, this will
   # remove rspec/gem paths from the backtrace so it's easier to see the
   # actual application code that caused the failure.
-  if ENV["RSPEC_EXCLUDE_NOISE_IN_BACKTRACE"]
+  #
+  # This behaviour is enabled by default, to include gems in
+  # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
+  if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
     config.backtrace_exclusion_patterns = [
       %r{/lib\d*/ruby/},
       %r{bin/},
@@ -689,20 +693,35 @@ RSpec.configure do |config|
     if example.exception && RspecErrorTracker.exceptions.present?
       lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
 
+      lines << "\n"
       lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
 
       RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
         lines << "\n"
-        lines << "Error encountered while processing #{path}"
-        lines << "  #{ex.class}: #{ex.message}"
+        lines << "Error encountered while processing #{path}.\n"
+        lines << "  #{ex.class}: #{ex.message}\n"
+        framework_lines_excluded = 0
+
         ex.backtrace.each_with_index do |line, backtrace_index|
-          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
-            next if line.match?(%r{/gems/})
+          # This behaviour is enabled by default, to include gems in
+          # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
+          if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
+            if line.match?(%r{/gems/})
+              framework_lines_excluded += 1
+              next
+            else
+              if framework_lines_excluded.positive?
+                lines << "    ...(#{framework_lines_excluded} framework line(s) excluded)\n"
+                framework_lines_excluded = 0
+              end
+            end
           end
           lines << "    #{line}\n"
         end
       end
 
+      lines << "\n"
       lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
       lines << "\n"
     end
@@ -955,6 +974,23 @@ def has_trigger?(trigger_name)
     FROM INFORMATION_SCHEMA.TRIGGERS
     WHERE trigger_name = '#{trigger_name}'
   SQL
+end
+
+def stub_deprecated_settings!(override:)
+  SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
+
+  stub_const(
+    SiteSettings::DeprecatedSettings,
+    "SETTINGS",
+    [["old_one", "new_one", override, "0.0.1"]],
+  ) do
+    SiteSetting.setup_deprecated_methods
+    yield
+  end
+
+  defaults = SiteSetting.defaults.instance_variable_get(:@defaults)
+  defaults.each { |_, hash| hash.delete(:old_one) }
+  defaults.each { |_, hash| hash.delete(:new_one) }
 end
 
 def silence_stdout

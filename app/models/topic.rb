@@ -286,6 +286,7 @@ class Topic < ActiveRecord::Base
            dependent: :destroy
 
   has_one :top_topic
+  has_one :topic_hot_score
   has_one :shared_draft, dependent: :destroy
   has_one :published_page
 
@@ -1173,6 +1174,7 @@ class Topic < ActiveRecord::Base
         end
 
         topic_user.destroy
+        MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
         return true
       end
     end
@@ -1298,6 +1300,9 @@ class Topic < ActiveRecord::Base
         moved_by,
         post_ids,
         move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
+        options: {
+          freeze_original: opts[:freeze_original],
+        },
       )
 
     if opts[:destination_topic_id]

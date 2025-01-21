@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { and, equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import discourseComputed from "discourse/lib/decorators";
 import {
   defaultTimeShortcuts,
   formatTime,
@@ -11,7 +12,6 @@ import {
   TIME_SHORTCUT_TYPES,
 } from "discourse/lib/time-shortcut";
 import { laterToday, now, parseCustomDatetime } from "discourse/lib/time-utils";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 const BINDINGS = {

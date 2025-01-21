@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { gt } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class ReviewableScore extends Component {

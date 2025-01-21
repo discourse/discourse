@@ -1,10 +1,10 @@
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import { toggleCheckDraftPopup } from "discourse/services/composer";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
 
 const FORM_TEMPLATES = [
   {

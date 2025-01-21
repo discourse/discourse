@@ -1,9 +1,9 @@
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import getURL from "discourse/lib/get-url";
+import { iconHTML } from "discourse/lib/icon-library";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
-import getURL from "discourse-common/lib/get-url";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { i18n } from "discourse-i18n";
 
 export default class UserActivityRead extends UserTopicListRoute {

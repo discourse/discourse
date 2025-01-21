@@ -3,8 +3,9 @@
     margin-bottom: 1em;
   }
 }
+
 .admin-config-area-card {
-  padding: 20px;
+  padding: 20px 5px 20px 20px;
   border: 1px solid var(--primary-low);
   border-radius: 2px;
   background-color: var(--secondary);
@@ -31,6 +32,7 @@
   &__control-group-horizontal {
     display: flex;
     margin-bottom: 18px;
+
     label {
       margin-right: 1em;
     }
@@ -43,9 +45,13 @@
 
   &__header-wrapper {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     flex: 1;
-    margin-bottom: 0.5rem;
+  }
+
+  &__content {
+    margin-top: 0.5rem;
+    padding-right: 15px;
   }
 }
 
@@ -70,6 +76,10 @@
     flex-direction: column;
   }
 
+  &__full-width {
+    flex: 1 0 100%;
+  }
+
   &__primary-content {
     flex: 0 1 70%;
 
@@ -89,13 +99,19 @@
   }
 
   &__settings {
-    .admin-site-settings-filter-controls {
-      margin-bottom: 1em;
-    }
-
     .setting-label {
       margin-left: 18px;
     }
+  }
+}
+
+.admin-site-settings-filter-controls {
+  background: var(--primary-very-low);
+  margin-bottom: 1em;
+
+  .controls,
+  .search.controls {
+    background: var(--primary-very-low);
   }
 }
 

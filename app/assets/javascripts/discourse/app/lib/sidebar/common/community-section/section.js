@@ -14,7 +14,7 @@ import {
 import SectionLink from "discourse/lib/sidebar/section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import InviteSectionLink from "discourse/lib/sidebar/user/community-section/invite-section-link";
-import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
+import MyDraftsSectionLink from "discourse/lib/sidebar/user/community-section/my-drafts-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
 
 const SPECIAL_LINKS_MAP = {
@@ -22,7 +22,7 @@ const SPECIAL_LINKS_MAP = {
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
-  "/my/activity": MyPostsSectionLink,
+  "/my/activity": MyDraftsSectionLink,
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,
@@ -77,7 +77,8 @@ export default class CommunitySection {
 
         return filtered;
       }, [])
-      .concat(this.apiPrimaryLinks);
+      .concat(this.apiPrimaryLinks)
+      .filter((link) => link.shouldDisplay);
 
     this.moreLinks = this.section.links
       .reduce((filtered, link) => {
@@ -91,7 +92,8 @@ export default class CommunitySection {
 
         return filtered;
       }, [])
-      .concat(this.apiSecondaryLinks);
+      .concat(this.apiSecondaryLinks)
+      .filter((link) => link.shouldDisplay);
   }
 
   teardown() {

@@ -167,10 +167,10 @@ tr_TR:
               description: İsteğe bağlı, yalnızca gönderinin konusu bu kategorideyse tetiklenir
             restricted_group:
               label: Grup
-              description: İsteğe bağlı, yalnızca gönderinin konusu bu grubun gelen kutusundaki bir özel mesajsa tetiklenir
+              description: İsteğe bağlı, yalnızca gönderinin konusu bu grubun gelen kutusundaki kişisel bir mesajsa tetiklenir
             restricted_groups:
               label: Grup
-              description: İsteğe bağlı, yalnızca gönderinin konusu grup gelen kutularından birinde bulunan bir özel mesajsa tetiklenir
+              description: İsteğe bağlı, yalnızca gönderinin konusu grup gelen kutularından birindeki kişisel bir mesajsa tetiklenir
             ignore_group_members:
               label: Grup üyelerini yok say
               description: Gönderen yukarıda belirtilen Grubun bir üyesiyse tetikleyiciyi atla
@@ -228,6 +228,10 @@ tr_TR:
               label: Geçerli güven seviyeleri
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Eklenen veya kaldırılan etiketler
+            tags_added: Eklenen etiketler
+            tags_removed: Kaldırılan etiketler
           fields:
             watching_categories:
               label: Kategori izleme
@@ -235,6 +239,8 @@ tr_TR:
             watching_tags:
               label: Etiket izleme
               description: Yalnızca konu bu etiketlerden herhangi birine sahipse tetiklenir
+            trigger_on:
+              label: Tetikleyici açık
             trigger_with_pms:
               label: Kişisel mesajlarla tetikleyin
               description: Etiketler bir kişisel mesajda değiştirilmiş olsa bile tetiklenir
@@ -413,6 +419,8 @@ tr_TR:
             label: Komut dosyası
           version:
             label: Sürüm
+          status:
+            label: Durum
           enabled:
             label: Etkin
           disabled:

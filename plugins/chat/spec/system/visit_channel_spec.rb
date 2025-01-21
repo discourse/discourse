@@ -114,7 +114,7 @@ RSpec.describe "Visit channel", type: :system do
         end
 
         it "shows an error" do
-          chat.visit_channel(inaccessible_dm_channel_1)
+          chat.visit_channel(readonly_category_channel_1)
 
           expect(page).to have_content(I18n.t("invalid_access"))
         end

@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { makeArray } from "discourse-common/lib/helpers";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import { makeArray } from "discourse/lib/helpers";
+import discourseLater from "discourse/lib/later";
 
 const TOUCH_OPTIONS = { passive: true, capture: true };
 
@@ -128,9 +128,12 @@ export default class FloatKitInstance {
             this.trigger.removeEventListener("focusout", this.onFocusOut);
             break;
           case "hover":
-            this.trigger.removeEventListener("mousemove", this.onMouseMove);
+            this.trigger.removeEventListener("pointermove", this.onPointerMove);
             if (!this.options.interactive) {
-              this.trigger.removeEventListener("mouseleave", this.onMouseLeave);
+              this.trigger.removeEventListener(
+                "pointerleave",
+                this.onPointerLeave
+              );
             }
 
             break;
@@ -180,13 +183,17 @@ export default class FloatKitInstance {
             });
             break;
           case "hover":
-            this.trigger.addEventListener("mousemove", this.onMouseMove, {
+            this.trigger.addEventListener("pointermove", this.onPointerMove, {
               passive: true,
             });
             if (!this.options.interactive) {
-              this.trigger.addEventListener("mouseleave", this.onMouseLeave, {
-                passive: true,
-              });
+              this.trigger.addEventListener(
+                "pointerleave",
+                this.onPointerLeave,
+                {
+                  passive: true,
+                }
+              );
             }
 
             break;

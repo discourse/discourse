@@ -1,4 +1,4 @@
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 export const ANIMATION_DURATION =
   isTesting() || window.matchMedia("(prefers-reduced-motion: reduce)").matches

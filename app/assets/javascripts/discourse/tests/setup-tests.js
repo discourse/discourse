@@ -10,7 +10,6 @@ import {
   setApplication,
   setResolver,
 } from "@ember/test-helpers";
-import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
 import $ from "jquery";
 import MessageBus from "message-bus-client";
 import QUnit from "qunit";
@@ -41,10 +40,10 @@ import {
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { disableCloaking } from "discourse/widgets/post-stream";
-import deprecated from "discourse-common/lib/deprecated";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
-import { buildResolver } from "discourse-common/resolver";
+import deprecated from "discourse/lib/deprecated";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
+import { buildResolver } from "discourse/resolver";
 import { loadSprites } from "../lib/svg-sprite-loader";
 import * as FakerModule from "@faker-js/faker";
 import { setLoadedFaker } from "discourse/lib/load-faker";
@@ -356,32 +355,6 @@ export default function setupTests(config) {
 
   const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
   const hasThemeJs = !!document.querySelector("script[data-theme-id]");
-
-  const shouldLoadModule = (name) => {
-    if (!/\-test/.test(name)) {
-      return false;
-    }
-
-    const isPlugin = name.match(/\/plugins\//);
-    const isTheme = name.match(/\/theme-\d+\//);
-    const isCore = !isPlugin && !isTheme;
-    const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
-
-    const loadCore = target === "core" || target === "all";
-    const loadAllPlugins = target === "plugins" || target === "all";
-
-    if (hasThemeJs) {
-      return isTheme;
-    } else if (isCore && !loadCore) {
-      return false;
-    } else if (isPlugin && !(loadAllPlugins || pluginName === target)) {
-      return false;
-    }
-
-    return true;
-  };
-
-  addModuleExcludeMatcher((name) => !shouldLoadModule(name));
 
   // forces 0 as duration for all jquery animations
   $.fx.off = true;

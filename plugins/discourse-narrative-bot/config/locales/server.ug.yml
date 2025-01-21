@@ -120,6 +120,7 @@ ug:
         discobot_disabled: سىز مايىللىقتىن مېنى چەكلەپسىز. سىز يېڭى ئىشلەتكۈچى باشلاش كۆرسەتمىسىگە يول قويسىڭىز ئاندىن مەن بىلەن تەسىرلىشەلەيسىز.
     new_user_narrative:
       reset_trigger: "دەرسلىك"
+      title: "يېڭى ئىشلەتكۈچى دەرسىنى تاماملاش گۇۋاھنامىسى"
       cert_title: "يېڭى ئىشلەتكۈچى دەرسىنى مۇۋەپپەقىيەتلىك تامالىسا تارتۇقلىنىدۇ"
       hello:
         title: "سالام!"
@@ -160,6 +161,11 @@ ug:
     advanced_user_narrative:
       reset_trigger: "ئالىي دەرسلىك"
       title: ":arrow_up: ئالىي ئىشلەتكۈچى ئىقتىدارى"
+      edit:
+        not_found: |-
+          قارىغاندا مەن سىزگە قۇرۇپ بەرگەن [يازما](%{url}) نى تېخى تەھرىرلىمەپسىز. قايتا سىناپ باقامسىز؟
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> سىنبەلگىنى ئىشلىتىپ تەھرىرلىگۈچنى ئېچىڭ.
       recover:
         deleted_post_raw: "@%{discobot_username} نېمە ئۈچۈن يازمامنى ئۆچۈردى؟ :anguished:"
       category_hashtag:
@@ -173,6 +179,19 @@ ug:
           ```text
           مەن # ئارقىلىق سەھىپە ئۇلانمىسى قۇرالايمەن.
       poll:
+        instructions: |-
+          خالىغان يازمىغا راي سىناش قوشالايدىغانلىقىىڭىزنى بىلەمتىڭىز؟ تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> چىشلىق چاقنى ئىشلىتىپ **راي سىناش قۇر**ۇڭ.
+        not_found: |-
+          ئاپلا! جاۋابىڭىزدا ھېچقانداق راي سىناش يوق.
+
+          تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> چىشلىق چاق سىنبەلگىنى ئىشىلىتىڭ ياكى كېيىنكى جاۋابىڭىزدا بۇ راي سىناشنى كۆچۈرۈپ چاپلاڭ:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           ھەي، ياخشى بىلەت تاشلاش! قاراڭ سىزگە قانداق ئۆگەتتىم؟
 

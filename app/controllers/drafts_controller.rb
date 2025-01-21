@@ -96,16 +96,33 @@ class DraftsController < ApplicationController
 
     json = success_json.merge(draft_sequence: sequence)
 
-    if data.present?
-      # this is a bit of a kludge we need to remove (all the parsing) too many special cases here
-      # we need to catch action edit and action editSharedDraft
-      if data["postId"].present? && data["originalText"].present? &&
-           data["action"].to_s.start_with?("edit")
-        post = Post.find_by(id: data["postId"])
-        if post && post.raw != data["originalText"]
-          conflict_user = BasicUserSerializer.new(post.last_editor, root: false)
-          render json: json.merge(conflict_user: conflict_user)
-          return
+    # check for conflicts when editing a post
+    if data.present? && data["postId"].present? && data["action"].to_s.start_with?("edit")
+      original_text = data["original_text"] || data["originalText"]
+      original_title = data["original_title"]
+      original_tags = data["original_tags"]
+
+      if original_text.present?
+        if post = Post.find_by(id: data["postId"])
+          conflict = original_text != post.raw
+
+          if post.post_number == 1
+            conflict ||= original_title.present? && original_title != post.topic.title
+
+            # Since the topic might have hidden tags the current editor can't see,
+            # we need to check for conflicts even though there might not be any visible tags in the editor
+            if !conflict
+              original_tags = (original_tags || []).map(&:downcase).to_set
+              current_tags = post.topic.tags.pluck(:name).to_set
+              hidden_tags = DiscourseTagging.hidden_tag_names(@guardian).to_set
+              conflict = original_tags != (current_tags - hidden_tags)
+            end
+          end
+
+          if conflict
+            conflict_user = BasicUserSerializer.new(post.last_editor, root: false)
+            json.merge!(conflict_user:)
+          end
         end
       end
     end

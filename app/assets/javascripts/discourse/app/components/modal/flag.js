@@ -29,6 +29,10 @@ export default class Flag extends Component {
     this.adminTools
       ?.checkSpammer(this.args.model.flagModel.user_id)
       .then((result) => (this.spammerDetails = result));
+
+    if (this.flagsAvailable.length === 1) {
+      this.selected = this.flagsAvailable[0];
+    }
   }
 
   get flagActions() {

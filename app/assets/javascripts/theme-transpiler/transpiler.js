@@ -28,7 +28,7 @@ import Handlebars from "handlebars";
 // so we polyfill it
 import getRandomValues from "polyfill-crypto.getrandomvalues";
 import { minify as terserMinify } from "terser";
-import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
+import RawHandlebars from "discourse/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 globalThis.crypto = { getRandomValues };
 import { browsers } from "../discourse/config/targets";

@@ -22,7 +22,7 @@ export default class ChatDrawerRoutesChannels extends Component {
 
       {{#if this.chatStateManager.isDrawerExpanded}}
         <div class="chat-drawer-content">
-          <ChannelsListPublic @sortByActivity={{true}} />
+          <ChannelsListPublic />
         </div>
 
         <ChatFooter />

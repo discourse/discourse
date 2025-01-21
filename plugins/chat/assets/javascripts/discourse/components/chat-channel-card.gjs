@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import borderColor from "discourse/helpers/border-color";
 import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import dIcon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 

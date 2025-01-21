@@ -2,7 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 class Tab extends EmberObject {
@@ -115,12 +115,8 @@ export default class GroupController extends Controller {
   }
 
   @discourseComputed("model", "model.automatic")
-  canManageGroup(model, automatic) {
-    return (
-      this.currentUser &&
-      (this.currentUser.canManageGroup(model) ||
-        (model.can_admin_group && automatic))
-    );
+  canManageGroup(model) {
+    return this.currentUser?.canManageGroup(model);
   }
 
   @action

@@ -1,9 +1,10 @@
-<AdminPageHeader
-  @titleLabel="admin.config_areas.look_and_feel.title"
-  @descriptionLabel="admin.config_areas.look_and_feel.description"
+<DPageHeader
+  @titleLabel={{i18n "admin.config_areas.look_and_feel.title"}}
+  @descriptionLabel={{i18n "admin.config_areas.look_and_feel.description"}}
   @learnMoreUrl="https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
 >
   <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
     <DBreadcrumbsItem
       @path="/admin/config/look-and-feel"
       @label={{i18n "admin.config_areas.look_and_feel.title"}}
@@ -16,7 +17,7 @@
       @label="admin.config_areas.look_and_feel.themes.title"
     />
   </:tabs>
-</AdminPageHeader>
+</DPageHeader>
 
 <div class="admin-container admin-config-page__main-area">
   {{outlet}}

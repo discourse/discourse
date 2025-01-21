@@ -26,7 +26,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
-    color: currentColor;
+    color: currentcolor;
     background: var(--secondary);
     border-radius: 0.62em;
     padding: 0.25em 0.65em 0.25em 0.5em;
@@ -67,6 +67,7 @@
       0% {
         background-position: 0% 50%;
       }
+
       100% {
         background-position: 100% 50%;
       }

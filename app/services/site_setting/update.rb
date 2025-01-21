@@ -36,6 +36,7 @@ class SiteSetting::Update
     end
   end
 
+  policy :setting_is_shadowed_globally
   policy :setting_is_visible
   policy :setting_is_configurable
   step :save
@@ -44,6 +45,10 @@ class SiteSetting::Update
 
   def current_user_is_admin(guardian:)
     guardian.is_admin?
+  end
+
+  def setting_is_shadowed_globally(params:)
+    !SiteSetting.shadowed_settings.include?(params.setting_name)
   end
 
   def setting_is_visible(params:, options:)

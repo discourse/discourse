@@ -10,10 +10,10 @@ import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import { and, eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import icon from "discourse-common/helpers/d-icon";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
@@ -140,7 +140,10 @@ export default class ChatChannelRow extends Component {
   }
 
   get channelHasUnread() {
-    return this.args.channel.tracking.unreadCount > 0;
+    return (
+      this.args.channel.tracking.unreadCount > 0 ||
+      this.args.channel.unreadThreadsCountSinceLastViewed > 0
+    );
   }
 
   get shouldRenderLastMessage() {

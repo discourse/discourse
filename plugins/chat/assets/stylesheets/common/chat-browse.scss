@@ -48,11 +48,11 @@
     @include breakpoint(tablet) {
       flex-direction: column;
 
-      .dc-filter-input-container {
+      .filter-input-container {
         margin-top: 1rem;
       }
 
-      .dc-filter-input-container,
+      .filter-input-container,
       nav {
         width: 100%;
       }
@@ -63,7 +63,8 @@
     display: flex;
     align-items: center;
     margin: 0;
-    &:before {
+
+    &::before {
       content: none; //there is a strange thing applied on nav-pills and this resets it
     }
   }

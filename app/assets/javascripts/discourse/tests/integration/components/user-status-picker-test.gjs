@@ -39,11 +39,11 @@ module("Integration | Component | user-status-picker", function (hooks) {
     await render(<template><UserStatusPicker @status={{status}} /></template>);
 
     await click(".btn-emoji");
-    await fillIn(".emoji-picker-content .filter", "mega");
-    await click(".results .emoji");
+    await fillIn(".emoji-picker-content .filter-input", "raised");
+    await click(".emoji-picker__sections .emoji");
 
-    assert.dom(".emoji").hasAttribute("alt", "mega");
-    assert.strictEqual(status.emoji, "mega");
+    assert.dom(".emoji").hasAttribute("alt", "raised_hands");
+    assert.strictEqual(status.emoji, "raised_hands");
   });
 
   test("it sets default emoji when user starts typing a description", async function (assert) {

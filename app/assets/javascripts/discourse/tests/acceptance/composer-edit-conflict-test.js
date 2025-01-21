@@ -13,17 +13,17 @@ acceptance("Composer - Edit conflict", function (needs) {
     });
   });
 
-  test("Should not send originalText when posting a new reply", async function (assert) {
+  test("Should not send 'original_text' when posting a new reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:nth-of-type(1) button.reply");
     await fillIn(
       ".d-editor-input",
       "hello world hello world hello world hello world hello world"
     );
-    assert.false(lastBody.includes("originalText"));
+    assert.false(lastBody.includes("original_text"));
   });
 
-  test("Should send originalText when editing a reply", async function (assert) {
+  test("Should send 'original_text' when editing a reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
@@ -31,6 +31,6 @@ acceptance("Composer - Edit conflict", function (needs) {
       ".d-editor-input",
       "hello world hello world hello world hello world hello world"
     );
-    assert.true(lastBody.includes("originalText"));
+    assert.true(lastBody.includes("original_text"));
   });
 });

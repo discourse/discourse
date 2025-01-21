@@ -225,8 +225,6 @@ lt:
       bookmark:
         instructions: |-
           Jei norite sužinoti daugiau, pasirinkite žemiau esantį <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **pažymėkite šią asmeninę žinutę**. Jei tai padarysite, jūsų ateityje gali laukti :gift:
-        reply: |-
-          Puiku! Dabar galite bet kada lengvai grįžti į mūsų privatų pokalbį tiesiai iš [profilio žymių skirtuko] (%{bookmark_url}). Tiesiog pasirinkite savo profilio nuotrauką viršutiniame dešiniajame kampe &#8599;
         not_found: |-
           Oi, nematau jokių žymių šioje temoje. Ar radote žymę po kiekvienu įrašu? Jei reikia, naudokite Rodyti daugiau <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> kad atskleistumėte papildomus veiksmus.
       emoji:
@@ -244,8 +242,6 @@ lt:
 
           (Ir taip, mano vartotojo vardas parašytas _disco_, kaip 1970-ųjų šokių traku. Aš [myliu naktinį gyvenimą!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        reply: |-
-          [Mūsų darbuotojai] (%{base_uri}/grupių/darbuotojų) bus asmeniškai informuoti apie jūsų vėliavą. Jei pakankamai bendruomenės narių pažymi įrašą, jis taip pat bus automatiškai paslėptas dėl atsargumo. (Kadangi iš tikrųjų neparašiau bjauraus įrašo :angel:, kol kas pašalinau vėliavėlę.)
         not_found: |-
           Oi ne, mano bjaurus pranešimas dar nebuvo pažymėtas kaip netinkamas. :worried: Ar galite pažymėti jį kaip netinkamą naudojant **vėliavą** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nepamirškite naudoti Rodyti daugiau mygtuko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , kad atskleistumėte daugiau veiksmų kiekvienam įrašui.
       search:

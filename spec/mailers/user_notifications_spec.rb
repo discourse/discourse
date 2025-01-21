@@ -200,6 +200,7 @@ RSpec.describe UserNotifications do
         expect(email.html_part.body.to_s).to be_present
         expect(email.text_part.body.to_s).to be_present
         expect(email.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
+        expect(email.header["List-Unsubscribe-Post"].to_s).to eq("List-Unsubscribe=One-Click")
         expect(email.header["X-Discourse-Topic-Ids"].to_s).to eq(
           "#{another_popular_topic.id},#{popular_topic.id}",
         )
@@ -437,6 +438,7 @@ RSpec.describe UserNotifications do
         expect(email.header["List-Unsubscribe"].to_s).to match(
           /http:\/\/test.localhost\/forum\/email\/unsubscribe\/\h{64}/,
         )
+        expect(email.header["List-Unsubscribe-Post"].to_s).to eq("List-Unsubscribe=One-Click")
 
         topic_url = "http://test.localhost/forum/t/#{popular_topic.slug}/#{popular_topic.id}"
         expect(html).to include(topic_url)

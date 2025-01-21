@@ -94,17 +94,13 @@ module FileStore
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
       }
 
-      # add a "content disposition: attachment" header with the original
-      # filename for everything but safe images (not SVG). audio and video will
-      # still stream correctly in HTML players, and when a direct link is
-      # provided to any file but an image it will download correctly in the
-      # browser.
-      if !FileHelper.is_inline_image?(filename)
-        options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-          disposition: "attachment",
-          filename: filename,
-        )
-      end
+      # Only add a "content disposition: attachment" header for svgs
+      # see https://github.com/discourse/discourse/commit/31e31ef44973dc4daaee2f010d71588ea5873b53.
+      # Adding this header for all files would break the ability to view attachments in the browser
+      options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+        disposition: FileHelper.is_svg?(filename) ? "attachment" : "inline",
+        filename: filename,
+      )
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
 

@@ -3,11 +3,11 @@ import { computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { attributeBindings } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import TopicBookmarkManager from "discourse/lib/topic-bookmark-manager";
-import discourseComputed from "discourse-common/utils/decorators";
 
 @attributeBindings("role")
 export default class TopicFooterButtons extends Component {
@@ -46,6 +46,11 @@ export default class TopicFooterButtons extends Component {
   @discourseComputed("inlineButtons.[]", "topic.assigned_to_user")
   dropdownButtons(inlineButtons) {
     return inlineButtons.filter((button) => button.dropdown);
+  }
+
+  @discourseComputed("dropdownButtons.[]")
+  loneDropdownButton(dropdownButtons) {
+    return dropdownButtons.length === 1 ? dropdownButtons[0] : null;
   }
 
   @discourseComputed("topic.isPrivateMessage")

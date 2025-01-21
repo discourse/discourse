@@ -4,7 +4,10 @@ RSpec.describe "User profile", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:user)
 
-  before { chat_system_bootstrap }
+  before do
+    user.user_stat.update!(post_count: 1)
+    chat_system_bootstrap
+  end
 
   shared_examples "not showing chat button" do
     it "has no chat button" do

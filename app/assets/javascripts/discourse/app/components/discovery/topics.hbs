@@ -7,7 +7,7 @@
 {{/if}}
 
 {{#if @model.sharedDrafts}}
-  {{#if this.currentUser.canUseGlimmerTopicList}}
+  {{#if this.site.useGlimmerTopicList}}
     <TopicList::List
       @listTitle="shared_drafts.title"
       @top={{this.top}}
@@ -88,7 +88,7 @@
   </span>
 
   {{#if this.hasTopics}}
-    {{#if this.currentUser.canUseGlimmerTopicList}}
+    {{#if this.site.useGlimmerTopicList}}
       <TopicList::List
         @highlightLastVisited={{true}}
         @top={{this.top}}

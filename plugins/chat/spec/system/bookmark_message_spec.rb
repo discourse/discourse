@@ -73,6 +73,9 @@ RSpec.describe "Bookmark message", type: :system do
 
         expect(channel_page).to have_bookmarked_message(message_1)
 
+        user_menu.open
+        user_menu.click_bookmarks_tab
+
         user_menu.click_bookmark(bookmark_2)
 
         expect(channel_page).to have_bookmarked_message(message_2)

@@ -335,6 +335,8 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
 end
 
 describe "Social authentication", type: :system do
+  before { SiteSetting.full_name_requirement = "optional_at_signup" }
+
   context "when desktop" do
     include_examples "social authentication scenarios",
                      PageObjects::Modals::Signup.new,

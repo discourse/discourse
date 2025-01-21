@@ -153,14 +153,29 @@ export function createData(store) {
 
     <p>Case everti equidem ius ea, ubique veritus vim id. Eros omnium conclusionemque qui te, usu error alienum imperdiet ut, ex ius meis adipisci. Libris reprehendunt eos ex, mea at nisl suavitate. Altera virtute democritum pro cu, melius latine in ius.</p>`;
 
+  const excerpt =
+    "<p>Lorem ipsum dolor sit amet, et nec quis viderer prompta, ex omnium ponderum insolens eos, sed discere invenire principes in. Fuisset constituto per ad. Est no scripta propriae facilisis, viderer impedit deserunt in mel. Quot debet facilisis ne vix, nam in detracto tacimates.</p>";
+
   const transformedPost = {
     id: 1234,
     topic,
+    user: {
+      avatar_template: user.avatar_template,
+      id: user.id,
+      username: user.username,
+      name: user.name,
+    },
     name: user.name,
     username: user.username,
     avatar_template: user.avatar_template,
+    category: {
+      id: categories[0].id,
+      name: categories[0].name,
+      color: categories[0].color,
+    },
     created_at: "2024-11-13T21:12:37.835Z",
     cooked,
+    excerpt,
     post_number: 1,
     post_type: 1,
     updated_at: moment().subtract(2, "days"),
@@ -262,7 +277,63 @@ export function createData(store) {
   const postModel = store.createRecord("post", {
     transformedPost,
   });
+
   postModel.set("topic", store.createRecord("topic", transformedPost.topic));
+
+  const postList = [
+    transformedPost,
+    {
+      id: 145,
+      topic: pinnedTopic,
+      created_at: "2024-03-15T18:45:38.720Z",
+      category: {
+        id: categories[2].id,
+        color: categories[2].color,
+        name: categories[2].name,
+      },
+      user: {
+        avatar_template: user.avatar_template,
+        id: user.id,
+        username: user.username,
+        name: user.name,
+      },
+      excerpt,
+    },
+    {
+      id: 144,
+      topic: archivedTopic,
+      created_at: "2024-02-15T18:45:38.720Z",
+      category: {
+        id: categories[1].id,
+        color: categories[1].color,
+        name: categories[1].name,
+      },
+      user: {
+        avatar_template: user.avatar_template,
+        id: user.id,
+        username: user.username,
+        name: user.name,
+      },
+      excerpt,
+    },
+    {
+      id: 143,
+      topic: closedTopic,
+      created_at: "2024-01-15T18:45:38.720Z",
+      category: {
+        id: categories[0].id,
+        color: categories[0].color,
+        name: categories[0].name,
+      },
+      user: {
+        avatar_template: user.avatar_template,
+        id: user.id,
+        username: user.username,
+        name: user.name,
+      },
+      excerpt,
+    },
+  ];
 
   _data = {
     options: [
@@ -316,6 +387,7 @@ export function createData(store) {
 
     transformedPost,
     postModel,
+    postList,
 
     user,
 

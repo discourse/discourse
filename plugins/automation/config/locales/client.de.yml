@@ -167,10 +167,10 @@ de:
               description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist
             restricted_group:
               label: Gruppe
-              description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags eine persönliche Nachricht im Posteingang dieser Gruppe ist
+              description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang dieser Gruppe ist
             restricted_groups:
               label: Gruppen
-              description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags eine private Nachricht in einem der Posteingänge der Gruppe ist
+              description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang einer der Gruppen ist
             ignore_group_members:
               label: Gruppenmitglieder ignorieren
               description: Den Auslöser überspringen, falls der Absender ein Mitglied der oben angegebenen Gruppe ist
@@ -228,6 +228,10 @@ de:
               label: Gültige Vertrauensstufen
               description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird. Standardmäßig eine beliebige Vertrauensstufe
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Schlagwörter hinzugefügt oder entfernt
+            tags_added: Schlagwörter hinzugefügt
+            tags_removed: Schlagwörter entfernt
           fields:
             watching_categories:
               label: Überwachte Kategorien
@@ -235,6 +239,8 @@ de:
             watching_tags:
               label: Überwachte Schlagwörter
               description: Wird nur bei Themen mit einem dieser Schlagwörter ausgelöst
+            trigger_on:
+              label: Auslösen wenn
             trigger_with_pms:
               label: Auslösen mit PN
               description: Wird auch ausgelöst, wenn die Schlagwörter in einer PN geändert wurden
@@ -413,6 +419,8 @@ de:
             label: Skript
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Aktiviert
           disabled:

@@ -1,17 +1,18 @@
 import Component from "@ember/component";
 import { action, set, setProperties } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
+import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
+import discourseComputed from "discourse/lib/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings(":value-list", ":emoji-list")
 export default class EmojiValueList extends Component {
+  @service menu;
+
   values = null;
-  emojiPickerIsActive = false;
-  isEditorFocused = false;
 
   @discourseComputed("values")
   collection(values) {
@@ -28,13 +29,6 @@ export default class EmojiValueList extends Component {
           emojiUrl: emojiUrlFor(value),
         };
       });
-  }
-
-  @action
-  closeEmojiPicker() {
-    this.collection.setEach("isEditing", false);
-    this.set("emojiPickerIsActive", false);
-    this.set("isEditorFocused", false);
   }
 
   @action
@@ -62,9 +56,6 @@ export default class EmojiValueList extends Component {
       this.collection.addObject(newCollectionValue);
       this._saveValues();
     }
-
-    this.set("emojiPickerIsActive", false);
-    this.set("isEditorFocused", false);
   }
 
   @discourseComputed("collection")
@@ -94,8 +85,7 @@ export default class EmojiValueList extends Component {
   }
 
   @action
-  editValue(index) {
-    this.closeEmojiPicker();
+  editValue(index, event) {
     schedule("afterRender", () => {
       if (parseInt(index, 10) >= 0) {
         const item = this.collection[index];
@@ -104,12 +94,18 @@ export default class EmojiValueList extends Component {
         }
       }
 
-      this.set("isEditorFocused", true);
-      discourseLater(() => {
-        if (this.element && !this.isDestroying && !this.isDestroyed) {
-          this.set("emojiPickerIsActive", true);
-        }
-      }, 100);
+      this.menu.show(event.target, {
+        identifier: "emoji-picker",
+        groupIdentifier: "emoji-picker",
+        component: EmojiPickerDetached,
+        modalForMobile: true,
+        data: {
+          context: "chat",
+          didSelectEmoji: (emoji) => {
+            this._replaceValue(index, emoji);
+          },
+        },
+      });
     });
   }
 

@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { classNameBindings, tagName } from "@ember-decorators/component";
-import computed from "discourse-common/utils/decorators";
+import computed from "discourse/lib/decorators";
 
 @tagName("section")
 @classNameBindings(":styleguide-section", "sectionClass")

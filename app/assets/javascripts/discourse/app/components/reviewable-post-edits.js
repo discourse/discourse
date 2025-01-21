@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import HistoryModal from "discourse/components/modal/history";
+import discourseComputed from "discourse/lib/decorators";
 import { longDate } from "discourse/lib/formatter";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class ReviewablePostEdits extends Component {
   @service modal;

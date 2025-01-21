@@ -70,7 +70,7 @@
         <form>
           <ChooseMessage
             @currentTopicId={{@model.topic.id}}
-            @selectedTopicId={{this.selectedTopicId}}
+            @setSelectedTopicId={{fn (mut this.selectedTopic)}}
           />
 
           <label>{{i18n "topic.move_to_new_message.participants"}}</label>
@@ -80,7 +80,7 @@
             @onChange={{fn (mut this.participants)}}
           />
 
-          {{#if this.selectedTopicId}}
+          {{#if this.selectedTopic}}
             <hr />
             <label for="chronological-order" class="checkbox-label">
               <Input
@@ -131,6 +131,8 @@
         {{/if}}
       </div>
 
+      <PluginOutlet @name="move-to-topic-after-radio-buttons" />
+
       {{#if this.existingTopic}}
         <p>
           {{html-safe
@@ -145,7 +147,7 @@
             @currentTopicId={{@model.topic.id}}
           />
 
-          {{#if this.selectedTopicId}}
+          {{#if this.selectedTopic}}
             <hr />
             <label for="chronological-order" class="checkbox-label">
               <Input

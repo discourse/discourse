@@ -7,8 +7,6 @@
 }
 
 #reply-control {
-  z-index: z("mobile-composer");
-
   .reply-area {
     padding: 6px;
     padding-bottom: unquote("max(env(safe-area-inset-bottom), 6px)");
@@ -16,18 +14,11 @@
   }
 
   &.open {
-    height: 250px;
-    &.edit-title {
-      height: 100%;
-    }
+    z-index: z("mobile-composer");
   }
 
-  .keyboard-visible &.open {
-    top: 0px;
-    height: calc(var(--composer-vh, 1vh) * 100);
-    .reply-area {
-      padding-bottom: 6px;
-    }
+  .keyboard-visible &.open .reply-area {
+    padding-bottom: 6px;
   }
 
   .reply-to {
@@ -64,16 +55,9 @@
   }
 
   &.draft {
-    z-index: z("footer-nav") + 1;
-    padding-bottom: env(safe-area-inset-bottom);
-
     .toggle-toolbar,
     .toggle-minimize {
       top: 6px;
-    }
-    .draft-text {
-      width: calc(100% - 40px);
-      @include ellipsis;
     }
   }
 
@@ -95,6 +79,7 @@
 
     .create {
       max-width: 50vw;
+
       span {
         @include ellipsis;
       }
@@ -108,6 +93,7 @@
       #file-uploading {
         margin-left: 6px;
       }
+
       .cancel {
         font-size: 1.4em;
         color: var(--primary-low-mid);
@@ -115,11 +101,13 @@
         padding: 3px 6px;
       }
     }
+
     .mobile-file-upload:not(.hidden),
     .mobile-preview {
       // Alignment fix, remove if converted to buttons
       display: inline-flex;
     }
+
     .mobile-file-upload {
       &.hidden + .mobile-preview {
         // Hide preview button while file is uploading to make room for upload progress
@@ -137,14 +125,16 @@
       padding-top: 10px;
       z-index: z("fullscreen") + 1;
       background-color: var(--secondary);
+
       .cancel,
       .mobile-file-upload,
       .mobile-preview {
         display: none;
       }
     }
+
     .d-editor-preview-wrapper {
-      position: fixed;
+      position: absolute;
       z-index: z("fullscreen");
       top: 0;
       bottom: 0;
@@ -156,9 +146,14 @@
       margin: 0;
       padding: 10px;
       overflow: auto;
+
       .d-editor-preview {
         margin-bottom: 40px;
       }
+    }
+
+    .composer-controls {
+      display: none;
     }
   }
 
@@ -183,6 +178,7 @@
   .title-and-category,
   .user-selector {
     margin: 0;
+
     .users-input {
       margin-bottom: 6px;
     }

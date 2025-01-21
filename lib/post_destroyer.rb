@@ -413,6 +413,7 @@ class PostDestroyer
             "flag_reasons#{".responder" if notify_responders}.#{flag_type}",
             locale: SiteSetting.default_locale,
             base_path: Discourse.base_path,
+            default: PostActionType.flags.find { |flag| flag[:name_key] == flag_type.to_s }[:name],
           ),
       },
     )

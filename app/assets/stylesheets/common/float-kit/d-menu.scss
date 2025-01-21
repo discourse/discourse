@@ -104,6 +104,10 @@
       justify-content: flex-start;
       background: rgba(0, 0, 0, 0);
 
+      &.-selected {
+        background: var(--d-hover);
+      }
+
       &.btn-danger {
         color: var(--danger);
 
@@ -111,6 +115,7 @@
           color: inherit;
         }
       }
+
       &:hover,
       &:focus {
         background: var(--d-hover);
@@ -133,6 +138,6 @@
   }
 
   &__divider {
-    margin: 0rem;
+    margin: 0;
   }
 }

@@ -402,6 +402,8 @@ pt:
     continue: "Continuar"
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
+    select_placeholder: "Selecionar…"
+    none_placeholder: "Nenhuma"
     banner:
       close: "Marcar esta faixa como vista"
       edit: "Editar"
@@ -531,6 +533,8 @@ pt:
         refresh: "Atualizar"
         status: "Estado"
         category: "Categoria"
+        score_type:
+          title: "Motivo"
         orders:
           score: "Pontuação"
           score_asc: "Pontuação (reverso)"
@@ -808,13 +812,13 @@ pt:
       public_admission: "Permitir entrada livre no grupo (Requer grupo publicamente visível)"
       public_exit: "Permitir que os utilizadores deixem o grupo livremente"
       empty:
-        posts: "Não existem publicações por membros deste grupo."
-        members: "Não existem membros neste grupo."
-        requests: "Não existem pedidos de adesão para este grupo."
-        mentions: "Não existem menções deste grupo."
-        messages: "Não existem mensagens para este grupo."
-        topics: "Não existem tópicos por membros deste grupo."
-        logs: "Não existem registos para este grupo."
+        posts: "Não existem publicações por membros deste grupo"
+        members: "Não existem membros neste grupo"
+        requests: "Não existem pedidos de adesão para este grupo"
+        mentions: "Não existem menções deste grupo"
+        messages: "Não existem mensagens para este grupo"
+        topics: "Não existem tópicos por membros deste grupo"
+        logs: "Não existem registos para este grupo"
       add: "Adicionar"
       join: "Entrar"
       leave: "Sair"
@@ -996,10 +1000,10 @@ pt:
         one: "Apagar %{count}"
         other: "Apagar %{count}"
       username: "nome de utilizador"
-      trust_level: "TL"
+      trust_level: "nível de confiança"
       read_time: "tempo de leitura"
       topics_entered: "tópicos inseridos"
-      post_count: "# publicações"
+      post_count: "mensagens"
       confirm_delete_other_accounts: "Tem a certeza que quer apagar estas contas?"
       powered_by: "usando <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
@@ -1104,17 +1108,15 @@ pt:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
       reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
-      color_scheme: "Esquema de Cores"
+      color_scheme: "Paleta de Cores"
       color_schemes:
         default_description: "Tema padrão"
         disable_dark_scheme: "Igual ao normal"
-        dark_instructions: "Pode pré-visualizar o esquema de cores do modo escuro ativando o modo escuro do seu dispositivo."
         undo: "Repor"
         regular: "Habitual"
         dark: "Modo escuro"
         default_dark_scheme: "(padrão do site)"
       dark_mode: "Modo Escuro"
-      dark_mode_enable: "Ativar automaticamente o esquema de cores do modo escuro"
       text_size_default_on_all_devices: "Usar este tamanho de texto por defeito em todos os meus dispositivos"
       allow_private_messages: "Permitir que outros utilizadores me enviem mensagens diretamente"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
@@ -1487,7 +1489,6 @@ pt:
         after_4_minutes: "depois de 4 minutos"
         after_5_minutes: "depois de 5 minutos"
         after_10_minutes: "depois de 10 minutos"
-      notification_level_when_replying: "Quando eu publico num tópico, coloque esse tópico como"
       invited:
         title: "Convites"
         pending_tab: "Pendente"
@@ -1874,6 +1875,9 @@ pt:
       categories_and_top_topics: "Categorias e Melhores Tópicos"
       categories_boxes: "Caixas com Subcategorias"
       categories_boxes_with_topics: "Caixas com Tópicos em Destaque"
+    full_name_requirement:
+      required_at_signup: "Necessário"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2144,8 +2148,6 @@ pt:
         quoted: "citado"
         edited: "editado"
         liked: "novo like"
-        private_message: "nova mensagem particular"
-        invited_to_private_message: "convidado para mensagem particular"
         invitee_accepted: "convite aceito"
         posted: "novo post"
         watching_category_or_tag: "novo post"
@@ -2596,7 +2598,6 @@ pt:
         help: "Abrir uma versão para impressão deste tópico"
       flag_topic:
         title: "Denunciar"
-        help: "denunciar privadamente este tópico para consideração ou enviar uma notificação privada sobre o mesmo"
         success_message: "Denunciou este tópico com sucesso."
       make_public:
         title: "Converter para Tópico Público"
@@ -2832,7 +2833,6 @@ pt:
         edit_action: "Editar"
         edit_anonymous: "Pedimos desculpa, mas necessita de ter sessão iniciada para editar esta publicação."
         flag_action: "Denunciar"
-        flag: "sinalizar privadamente esta mensagem para moderação ou enviar uma notificação privada sobre a mesma"
         delete: "eliminar esta publicação"
         undelete: "restaurar esta mensagem"
         share_action: "Partilhar"
@@ -3181,7 +3181,6 @@ pt:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       filter:
-        title: "Filtrar"
         button:
           label: "Filtrar"
       latest:
@@ -3571,8 +3570,6 @@ pt:
               content: "Grupos"
             users:
               content: "Utilizadores"
-            my_posts:
-              content: "As Minhas publicações"
             review:
               content: "Revisão"
             invite:
@@ -3614,7 +3611,30 @@ pt:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
         sidebar_link:
-          all: "Tudo"
+          all: "Todos os relatórios"
+      config:
+        developer:
+          title: "Desenvolvedor"
+        files:
+          title: "Ficheiros"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navegação"
+        notifications:
+          title: "Notificações"
+        onebox:
+          title: "Caixa Única"
+        other:
+          title: "Outro"
+        search:
+          title: "Pesquisar"
+        security:
+          title: "Segurança"
+        spam:
+          title: "Spam"
+        user_api:
+          title: "API de Utlizador"
       dashboard:
         title: "Painel de Administração"
         last_updated: "Painel atualizado:"
@@ -3703,6 +3723,7 @@ pt:
             include_subcategories:
               label: "Incluir Subcategorias"
       flags:
+        title: "Moderação"
         description: "Descrição"
         enabled: "Ativado?"
       groups:
@@ -3763,35 +3784,35 @@ pt:
         add_owners: Adicionar proprietários
         none_selected: "Selecione um grupo para começar"
         no_custom_groups: "Criar um novo grupo personalizado"
+      api_keys:
+        edit: "Editar"
+        save: "Guardar"
+        cancel: "Cancelar"
+        continue: "Continuar"
+        revoke: "Revogar"
+        revoked: "Revogado"
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."
         user: "Utilizador"
         title: "API"
         key: "Chave"
-        created: Criado
         updated: Atualizado
-        last_used: Último Uso
-        never_used: (nunca)
+        never_used: Nunca
         generate: "Gerar"
-        undo_revoke: "Desfazer Revogação"
         revoke: "Revogar"
-        all_users: "Todos os Utilizadores"
         active_keys: "Chaves de API Ativas"
         manage_keys: Gerenciar Chaves
         show_details: Detalhes
         description: Descrição
         no_description: (sem descrição)
         all_api_keys: Todas as Chaves de API
-        user_mode: Nível de Usuário
         impersonate_all_users: Personificar qualquer usuário
-        single_user: "Único Usuário"
         user_placeholder: Digite o nome de usuário
         description_placeholder: Para que essa chave será usada?
         save: Guardar
         new_key: Nova Chave de API
         revoked: Revogado
-        delete: Excluir Permanentemente
         not_shown_again: Esta chave não será exibida novamente. Certifique-se de tirar uma cópia antes de continuar.
         continue: Continuar
         scopes:
@@ -3802,8 +3823,6 @@ pt:
           global: Global
           resource: Recurso
           action: Ação
-          allowed_parameters: Parâmetros Permitidos
-          optional_allowed_parameters: Parâmetros permitidos (opcional)
           any_parameter: (qualquer parâmetro)
           allowed_urls: URLs Permitidos
           descriptions:
@@ -3819,15 +3838,14 @@ pt:
               show: Pesquise usando o endpoint `/search.json?q=term`.
       web_hooks:
         title: "Webhooks"
-        none: "Não existem webhooks neste momento."
         instruction: "Webhooks permitem ao Discourse notificar serviços externos quando certos eventos acontecem no seu site. Quando o webhook é despoletado, um pedido POST será enviado aos URLs fornecidos."
         detailed_instruction: "Um pedido POST será enviado ao URL fornecido quando o evento escolhido acontecer."
-        new: "Novo Webhook"
         create: "Criar"
         edit: "Editar"
         save: "Guardar"
+        delete: "Eliminar"
+        cancel: "Cancelar"
         controls: "Controlos"
-        go_back: "Voltar à lista"
         payload_url: "URL de carga"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "O segredo não pode ter espaços."
@@ -3835,8 +3853,8 @@ pt:
         event_type_missing: "Tem de configurar pelo menos um tipo de evento."
         content_type: "Tipo de Conteúdo"
         secret: "Segredo"
-        wildcard_event: "Enviar-me tudo."
-        individual_event: "Selecionar eventos individuais."
+        wildcard_event: "Enviar-me tudo"
+        individual_event: "Selecionar eventos individuais"
         verify_certificate: "Verificar certificado TLS do url de carga"
         active: "Ativo"
         active_notice: "Entregaremos detalhes do evento quando este acontecer."
@@ -3886,11 +3904,11 @@ pt:
           badges: "Crachás"
           notifications: "Notificações"
           permalinks: "Hiperligações Permanentes"
-          trust_levels: "Níveis de Confiança"
           users: "Utilizadores"
-          user_fields: "Campos de utilizador"
-          watched_words: "Palavras Vigiadas"
+          groups: "Grupos"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderação"
       appearance:
         title: "Aparência"
         sidebar_link:
@@ -3902,22 +3920,8 @@ pt:
       email_settings:
         sidebar_link:
           appearance: "Aparência"
-          preview_summary: "Pré-visualizar Resumo"
-      email_logs:
-        sidebar_link:
-          sent: "Enviado"
-          skipped: "Ignorado"
-          bounced: "Redirecionado"
-          received: "Recebido"
-          rejected: "Rejeitado"
       security:
         title: "Segurança"
-        sidebar_link:
-          error_logs: "Registo de Erros em Logs"
-          screened_emails: "Emails Filtrados"
-          screened_ips: "IPs Filtrados"
-          screened_urls: "URLs Filtrados"
-          search_logs: "Logs de Pesquisa"
       section_landing_pages:
         account:
           title: "Conta"
@@ -3931,6 +3935,7 @@ pt:
           update: "Atualização"
           saved: "guardado!"
         flags:
+          header: "Moderação"
           description: "Descrição"
           enabled: "Ativado?"
           edit: "Editar"
@@ -3944,6 +3949,12 @@ pt:
             invalid_applies_to: "Necessário"
             topic: "tópicos"
             post: "mensagens"
+        permalinks:
+          edit: "Editar"
+          delete: "Eliminar"
+        embeddable_host:
+          edit: "Editar"
+          delete: "Eliminar"
         look_and_feel:
           themes:
             title: "Temas"
@@ -3966,11 +3977,10 @@ pt:
           installed: "Instalado"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Desenvolvedor"
           embedding: "Incorporação"
-          rate_limits: "Limites de Classificação"
           user_api: "API de Utlizador"
-          web_hooks: "Webhooks"
           onebox: "Caixa Única"
           files: "Ficheiros"
           other_options: "Outro"
@@ -4016,7 +4026,7 @@ pt:
             title: "Enviar mensagem com a hiperligação de transferência"
             alert: "Foi-lhe enviada uma mensagem com uma hiperligação para transferir esta cópia de segurança"
           destroy:
-            title: "Remover a cópia de segurança"
+            title: "Eliminar"
             confirm: "Tem a certeza que deseja destruir esta cópia de segurança?"
           restore:
             label: "Restaurar"
@@ -4041,9 +4051,6 @@ pt:
           screened_url: "Exportar lista total de URL selecionados em formato CSV."
       export_json:
         button_text: "Exportar"
-      invite:
-        button_text: "Enviar Convites"
-        button_title: "Enviar Convites"
       customize:
         title: "Personalizar"
         preview: "pré-visualização"
@@ -4107,7 +4114,6 @@ pt:
           hide_unused_fields: "Ocultar campos não utilizados"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
-          color_scheme_user_selectable: "O esquema de cores pode ser selecionado pelos usuários"
           auto_update: "Atualização automática quando o Discourse é atualizado"
           color_scheme: "Paleta de Cores"
           default_light_scheme: "Light (padrão)"
@@ -4195,10 +4201,7 @@ pt:
           select_base:
             description: "Paleta de base:"
           title: "Cores"
-          edit: "Editar Paletas de Cores"
-          long_title: "Paletas de Cores"
           about: "Modifique as cores usadas por seus temas. Crie uma nova paleta de cores para começar."
-          new_name: "Nova Paleta de Cores"
           copy_name_prefix: "Cópia de"
           delete_confirm: "Excluir esta paleta de cores?"
           undo: "Desfazer"
@@ -4242,8 +4245,7 @@ pt:
           overridden: O arquivo robots.txt padrão do site foi substituído.
         email_style:
           title: "Estilo de Email"
-          heading: "Personalizar Estilo de E-mail"
-          html: "Modelo HTML"
+          html: "HTML"
           css: "CSS"
           reset: "Restaurar ao padrão"
           reset_confirm: "Tem certeza de que deseja restaurar %{fieldName} para o padrão e perder todas as alterações?"
@@ -4251,10 +4253,8 @@ pt:
           instructions: "Personalize o modelo no qual todos os emails html são renderizados e estilize usando CSS."
       email:
         title: "Emails"
+        settings: "Configurações"
         templates: "Templates"
-        preview_digest: "Pré-visualizar Resumo"
-        advanced_test:
-          title: "Teste Avançado"
         error: "<b>ERRO</b> - %{server_error}"
         test_error: "Ocorreu um problema no envio da mensagem de teste. Por favor, verifique novamente as suas configurações de e-mail, verifique se o seu hospedeiro não está a bloquear as ligações de e-mail, e tente novamente."
         sent: "Enviado"
@@ -4262,15 +4262,10 @@ pt:
         bounced: "Redirecionado"
         received: "Recebido"
         rejected: "Rejeitado"
-        sent_at: "Enviado em"
         time: "Tempo"
         user: "Utilizador"
-        email_type: "Tipo de Email"
-        to_address: "Endereço Para"
         test_email_address: "endereço de email para testar"
-        send_test: "Enviar Email de Teste"
         sent_test: "enviado!"
-        delivery_method: "Método de Entrega"
         preview_digest_desc: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos."
         refresh: "Atualizar"
         send_digest_label: "Enviar este resultado para:"
@@ -4278,10 +4273,7 @@ pt:
         format: "Formato"
         html: "html"
         text: "texto"
-        last_seen_user: "Último Utilizador Visto:"
         no_result: "Não foram encontrados resultados para resumo."
-        reply_key: "Chave de Resposta"
-        skipped_reason: "Ignorar Motivo"
         incoming_emails:
           from_address: "De"
           to_addresses: "Para"
@@ -4290,12 +4282,10 @@ pt:
           error: "Erro"
           none: "Nenhum email de entrada encontrado."
           modal:
-            title: "Detalhes de emails recebidos."
             error: "Erro"
             headers: "Cabeçalhos"
             subject: "Assunto"
             body: "Corpo"
-            rejection_message: "Correio de rejeição"
           filters:
             from_placeholder: "de@exemplo.com"
             to_placeholder: "para@exemplo.com"
@@ -4312,7 +4302,7 @@ pt:
         actions:
           delete_topic: "Tópico eliminado"
       logs:
-        title: "Logs"
+        nav_title: "Logs"
         action: "Ação"
         created_at: "Criado"
         last_match_at: "Última Correspondência"
@@ -4330,10 +4320,8 @@ pt:
         staff_actions:
           all: "todos"
           filter: "Filtrar:"
-          title: "Ações do Pessoal"
-          clear_filters: "Mostrar Tudo"
           staff_user: "Utilizador"
-          target_user: "Utilizador Destino"
+          target_user: "Utilizador alvo"
           subject: "Assunto"
           when: "Quando"
           context: "Contexto"
@@ -4411,9 +4399,7 @@ pt:
             watched_word_create: "add watched word"
             watched_word_destroy: "delete watched word"
         screened_emails:
-          title: "Emails Filtrados"
           description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de e-mail serão verificados e o registo será bloqueado, ou outra ação executada."
-          email: "Endereço de Email"
           actions:
             allow: "Permitir"
         screened_urls:
@@ -4428,7 +4414,6 @@ pt:
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
-            allow_admin: "Permitir Administração"
           form:
             label: "Novo:"
             ip_address: "Endereço IP"
@@ -4438,20 +4423,14 @@ pt:
             text: "Adicionar"
             title: "Cria interdições de sub-redes se existir pelo menos 'min_ban_entries_for_roll_up' entradas."
         search_logs:
-          title: "Logs de Pesquisa"
           searches: "Pesquisas"
           types:
             all_search_types: "Todos os tipos de pesquisa"
             header: "Cabeçalho"
-            full_page: "Página Inteira"
-        logster:
-          title: "Registo de Erros em Logs"
       watched_words:
-        title: "Palavras Vigiadas"
         search: "pesquisar"
         clear_filter: "Remover"
         download: Transferir
-        clear_all: Remover Tudo
         clear_all_confirm: "Tem a certeza de que pretende limpar todas as palavras vigiadas para a ação %{action}"
         actions:
           block: "Bloquear"
@@ -4507,7 +4486,6 @@ pt:
         not_found: "Pedimos desculpa, esse nome de utilizador não existe no nosso sistema."
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
         status: "Estado"
-        show_emails: "Mostrar Emails"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4522,8 +4500,7 @@ pt:
           staged: "Não Confirmado"
         approved: "Aprovado?"
         titles:
-          active: "Utilizadores Ativos"
-          new: "Utilizadores Novos"
+          active: "Utilizadores ativos"
           pending: "Utilizadores com Confirmação Pendente"
           newuser: "Utilizadores no Nível de Confiança 0 (Novo Utilizador)"
           basic: "Utilizadores no Nível de Confiança 1 (Utilizador Básico)"
@@ -4531,9 +4508,7 @@ pt:
           regular: "Utilizadores no Nível de Confiança 3 (Regular)"
           leader: "Utilizadores no Nível de Confiança 4 (Líder)"
           staff: "Pessoal"
-          admins: "Utilizadores da Administração"
           moderators: "Moderadores"
-          suspended: "Utilizadores Suspensos"
         not_verified: "Não verificado"
         check_email:
           title: "Revelar o endereço de email deste utilizador"
@@ -4684,7 +4659,6 @@ pt:
           external_email: "E-mail"
           external_avatar_url: "URL da Fotografia de Perfil"
       user_fields:
-        title: "Campos de utilizador"
         untitled: "Sem título"
         name: "Nome do Campo"
         type: "Tipo do Campo"
@@ -4714,10 +4688,8 @@ pt:
           confirm: "Confirmação"
           dropdown: "Lista pendente"
       site_text:
-        description: "Pode personalizar qualquer texto no seu fórum. Por favor comece por pesquisar abaixo:"
         search: "Pesquisar o texto que gostaria de editar"
-        title: "Texto"
-        edit: "editar"
+        edit: "Editar"
         revert: "Reverter Alterações"
         revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
         go_back: "De volta à Pesquisa"
@@ -4733,7 +4705,7 @@ pt:
         save: "guardar"
         cancel: "cancelar"
       site_settings:
-        title: "Configurações"
+        nav_title: "Configurações"
         no_results: "Não foi encontrado nenhum resultado."
         clear_filter: "Remover"
         add_url: "adicionar URL"
@@ -4741,6 +4713,8 @@ pt:
         uploaded_image_list:
           upload:
             label: "Carregar"
+        table_column_heading:
+          status: "Estado"
         categories:
           all_results: "Todos"
           required: "Necessário"
@@ -4806,6 +4780,7 @@ pt:
         none_selected: "Selecione um crachá para começar"
         allow_title: Permitir que o crachá seja usado como título
         multiple_grant: Pode ser concedido múltiplas vezes
+        visibility_heading: Visibilidade
         listable: Mostrar crachá na página pública de crachás
         enabled: ativado
         disabled: desativado
@@ -4855,15 +4830,11 @@ pt:
         settings: "Configurações"
       embedding:
         get_started: "Se deseja incorporar o Discourse noutro sítio, comece por adicionar o seu servidor."
+        delete: "Eliminar"
         confirm_delete: "Tem certeza que deseja eliminar este servidor?"
         title: "Incorporação"
-        host: "Servidores Permitidos"
-        edit: "editar"
-        category: "Publicação para Categoria"
-        add_host: "Adicionar Servidor"
-        settings: "Configurações de Incorporação"
-        crawling_settings: "Configurações de Rastreio"
-        crawling_description: "Quando o Discourse cria tópicos para as suas publicações, se nenhum feed RSS/ATOM está presente o Discourse irá tentar analisar o seu conteúdo fora do seu HTML. Algumas vezes pode ser um desafio extrair o seu conteúdo, por isso temos a habilidade de especificar regras CSS para tornar a extração mais fácil. "
+        edit: "Editar"
+        crawlers_description: "Quando o Discourse cria tópicos para as suas publicações, se nenhum feed RSS/ATOM está presente o Discourse irá tentar analisar o seu conteúdo fora do seu HTML. Algumas vezes pode ser um desafio extrair o seu conteúdo, por isso temos a habilidade de especificar regras CSS para tornar a extração mais fácil. "
         embed_by_username: "Nome de uilizador para criação do tópico"
         embed_post_limit: "Número máximo de publicações a incorporar"
         embed_title_scrubber: "Expressão regular usada para filtrar o título de publicações"
@@ -4871,7 +4842,11 @@ pt:
         allowed_embed_selectors: "Seletor CSS para elementos que são permitidos nas incorporações"
         blocked_embed_selectors: "Seletor CSS para elementos que são removidos das incorporações"
         allowed_embed_classnames: "Nomes de classes CSS permitidas"
-        save: "Guardar Configurações de Incorporação"
+        save: "Guardar"
+        host_form:
+          save: "Guardar"
+        nav:
+          settings: "Configurações"
       permalink:
         title: "Hiperligações Permanentes"
         url: "URL"
@@ -4884,6 +4859,9 @@ pt:
         user_title: "Utilizador"
         username: "Nome de Utilizador"
         delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
+        nav:
+          settings: "Configurações"
+          permalinks: "Hiperligações Permanentes"
         form:
           label: "Novo:"
           url: "URL"
@@ -4907,6 +4885,31 @@ pt:
           admin: "Administrador"
           moderator: "Moderador"
           regular: "Utilizador Regular"
+      homepage_choices:
+        custom:
+          label: "Personalizar"
+        style_type:
+          categories: "categoria"
+          topics: "tópico"
+      top_menu_items:
+        new: "Novo"
+        unread: "Não Lido"
+        top: "Os Melhores"
+        latest: "Recente"
+        categories: "Categorias"
+        unseen: "Por ler"
+        read: "Lidos"
+        bookmarks: "Marcadores"
       previews:
         share_button: "Partilhar"
         reply_button: "Responder"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "todas as categorias"
+        category_names:
+          site_feedback: "Comentários sobre o Sítio"
+        table_headers:
+          topic: "Tópico"
+          replies: "Respostas"
+          views: "Vistas"
+          activity: "Actividade"

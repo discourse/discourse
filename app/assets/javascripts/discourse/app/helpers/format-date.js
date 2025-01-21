@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 /**
   Display logic for dates. It is unbound in Ember but will use jQuery to

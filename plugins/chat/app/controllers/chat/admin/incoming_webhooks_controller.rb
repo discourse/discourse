@@ -16,7 +16,7 @@ module Chat
         )
       end
 
-      def show
+      def edit
         webhook =
           Chat::IncomingWebhook.includes(:chat_channel).find(params[:incoming_chat_webhook_id])
         render_serialized(

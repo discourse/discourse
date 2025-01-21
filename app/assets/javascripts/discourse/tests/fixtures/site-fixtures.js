@@ -60,6 +60,8 @@ export default {
       anonymous_top_menu_items: ["latest", "hot", "categories"],
       uncategorized_category_id: 17,
       is_readonly: false,
+      full_name_required_for_signup: false,
+      full_name_visible_in_signup: true,
       categories: [
         {
           id: 3,

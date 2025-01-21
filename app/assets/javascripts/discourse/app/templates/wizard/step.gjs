@@ -2,11 +2,11 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import RouteTemplate from "ember-route-template";
+import getUrl from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
 import WizardCanvas from "discourse/static/wizard/components/wizard-canvas";
 import WizardStep from "discourse/static/wizard/components/wizard-step";
-import getUrl from "discourse-common/lib/get-url";
 
 export default RouteTemplate(
   class extends Component {

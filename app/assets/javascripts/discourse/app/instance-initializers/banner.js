@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import PreloadStore from "discourse/lib/preload-store";
-import { bind } from "discourse-common/utils/decorators";
 
 class BannerInit {
   @service site;

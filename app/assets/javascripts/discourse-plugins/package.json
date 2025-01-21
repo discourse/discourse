@@ -18,8 +18,8 @@
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
-    "ember-cli": "~6.0.1",
-    "webpack": "^5.96.1"
+    "ember-cli": "~6.1.0",
+    "webpack": "^5.97.1"
   },
   "engines": {
     "node": ">= 18",

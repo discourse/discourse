@@ -7,8 +7,8 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
+import { afterRender, bind } from "discourse/lib/decorators";
 import { sanitize } from "discourse/lib/text";
-import { afterRender, bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 class Section {

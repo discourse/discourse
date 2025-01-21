@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { cloneJSON } from "discourse-common/lib/object";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import { cloneJSON } from "discourse/lib/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatChannelThreadSubscriptionManager {

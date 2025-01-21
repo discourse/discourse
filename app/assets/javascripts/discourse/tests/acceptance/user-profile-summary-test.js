@@ -1,8 +1,8 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
 let deleteAndBlock;
@@ -23,6 +23,21 @@ acceptance("User Profile - Summary", function (needs) {
     assert
       .dom(".top-categories-section .category-link")
       .exists("top categories");
+  });
+
+  test("Viewing Summary - Expanding / collapsing info", async function (assert) {
+    await visit("/u/eviltrout/summary");
+
+    const collapsed = `button[aria-controls="collapsed-info-panel"][aria-expanded="false"]`;
+    const expanded = `button[aria-controls="collapsed-info-panel"][aria-expanded="true"]`;
+
+    assert.dom(collapsed).exists("info panel is collapsed");
+
+    await click(collapsed);
+    assert.dom(expanded).exists("info panel is expanded");
+
+    await click(expanded);
+    assert.dom(collapsed).exists("info panel is collapsed");
   });
 
   test("Top Categories Search", async function (assert) {

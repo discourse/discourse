@@ -10,13 +10,13 @@ import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
@@ -54,9 +54,7 @@ export default class ChatChannel extends Component {
   @service chat;
   @service chatApi;
   @service chatChannelsManager;
-  @service chatComposerPresenceManager;
   @service chatDraftsManager;
-  @service chatEmojiPickerManager;
   @service chatStateManager;
   @service chatChannelScrollPositions;
   @service("chat-channel-composer") composer;
@@ -559,17 +557,13 @@ export default class ChatChannel extends Component {
     }
 
     try {
-      const params = {
+      await this.chatApi.sendMessage(this.args.channel.id, {
         message: message.message,
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-      };
-
-      await this.chatApi.sendMessage(
-        this.args.channel.id,
-        Object.assign({}, params, extractCurrentTopicInfo(this))
-      );
+        ...extractCurrentTopicInfo(this),
+      });
 
       if (!this.capabilities.isIOS) {
         this.scrollToLatestMessage();

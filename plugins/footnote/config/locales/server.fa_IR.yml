@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  site_settings:
+    enable_markdown_footnotes: فعال کردن قابلیت پانوشت در این وبگاه.
+    display_footnotes_inline: فعال کردن گسترش درون‌خطی پانوشت‌ها.

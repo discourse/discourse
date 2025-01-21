@@ -1,21 +1,8 @@
-.chat-composer.is-disabled {
-  .no-touch & {
-    .chat-composer-dropdown__trigger-btn:hover {
-      cursor: default;
-      .d-icon {
-        color: var(--primary-high);
-      }
-    }
-  }
-}
-
 .chat-composer-dropdown__trigger-btn {
   margin-left: 0.2rem;
-  transition: transform 0.25s ease-in-out;
 
   .d-icon {
     padding: 5px;
-    transition: transform 0.1s ease-in-out;
     background: var(--primary-low);
     border-radius: 100%;
   }
@@ -26,20 +13,8 @@
     .d-icon {
       color: var(--primary) !important;
     }
-
     background: none !important;
     background-image: none !important;
-  }
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &.-expanded {
-    .d-icon {
-      transform: rotate(135deg);
-      transform-origin: center center;
-    }
   }
 }
 
@@ -52,9 +27,4 @@
 .chat-composer-dropdown__action-btn {
   width: 100%;
   justify-content: flex-start;
-  background: none;
-
-  .d-icon {
-    color: var(--primary);
-  }
 }

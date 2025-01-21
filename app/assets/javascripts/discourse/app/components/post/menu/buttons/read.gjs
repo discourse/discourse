@@ -25,7 +25,7 @@ export default class PostMenuReadButton extends Component {
       <DButton
         ...attributes
         @action={{@buttonActions.toggleWhoRead}}
-        @icon="book-reader"
+        @icon="book-open-reader"
         @title="post.controls.read_indicator"
       />
     </div>

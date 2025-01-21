@@ -1,5 +1,5 @@
 {{#if this.model.length}}
-  <table class="automations">
+  <table class="d-admin-table automations">
     <thead>
       <tr>
         <th></th>
@@ -14,9 +14,12 @@
     </thead>
     <tbody>
       {{#each this.model as |automation|}}
-        <tr>
+        <tr class="d-admin-row__content">
           {{#if automation.script.not_found}}
-            <td colspan="5" class="alert alert-danger">
+            <td colspan="5" class="d-admin-row__detail alert alert-danger">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "discourse_automation.models.automation.status.label"}}
+              </div>
               {{i18n
                 "discourse_automation.scriptables.not_found"
                 script=automation.script.id
@@ -24,7 +27,10 @@
               }}
             </td>
           {{else if automation.trigger.not_found}}
-            <td colspan="5" class="alert alert-danger">
+            <td colspan="5" class="d-admin-row__detail alert alert-danger">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "discourse_automation.models.automation.status.label"}}
+              </div>
               {{i18n
                 "discourse_automation.triggerables.not_found"
                 trigger=automation.trigger.id
@@ -33,46 +39,71 @@
             </td>
           {{else}}
             <td
-              class="automations__status"
+              class="d-admin-row__detail automations__status"
               role="button"
               {{on "click" (fn this.editAutomation automation)}}
-            >{{format-enabled-automation
+            >
+              <div class="d-admin-row__mobile-label">
+                {{i18n "discourse_automation.models.automation.status.label"}}
+              </div>
+              {{format-enabled-automation
                 automation.enabled
                 automation.trigger
-              }}</td>
+              }}
+            </td>
             <td
-              class="automations__name"
+              class="d-admin-row__overview automations__name"
               tabindex="0"
               role="button"
               {{on "keypress" (fn this.editAutomation automation)}}
               {{on "click" (fn this.editAutomation automation)}}
-            >{{if
+            >
+              {{if
                 automation.name
                 automation.name
                 (i18n "discourse_automation.unnamed_automation")
-              }}</td>
+              }}
+            </td>
             <td
-              class="automations__script"
+              class="d-admin-row__detail automations__script"
               role="button"
               {{on "click" (fn this.editAutomation automation)}}
-            >{{if automation.trigger.id automation.trigger.name "-"}}</td>
+            >
+              <div class="d-admin-row__mobile-label">
+                {{i18n "discourse_automation.models.automation.trigger.label"}}
+              </div>
+              {{if automation.trigger.id automation.trigger.name "-"}}
+            </td>
             <td
-              class="automations__version"
+              class="d-admin-row__detail automations__version"
               role="button"
               {{on "click" (fn this.editAutomation automation)}}
-            >{{automation.script.name}} (v{{automation.script.version}})</td>
-            <td>
-              <a
-                href={{automation.last_updated_by.userPath}}
-                data-user-card={{automation.last_updated_by.username}}
-              >
-                {{avatar automation.last_updated_by imageSize="small"}}
-              </a>
-              {{format-date automation.updated_at leaveAgo="true"}}
+            >
+              <div class="d-admin-row__mobile-label">
+                {{i18n "discourse_automation.models.automation.script.label"}}
+              </div>
+              {{automation.script.name}}
+              (v{{automation.script.version}})
+            </td>
+            <td class="d-admin-row__detail automations__updated-by">
+              <div class="d-admin-row__mobile-label">
+                {{i18n
+                  "discourse_automation.models.automation.last_updated_by.label"
+                }}
+              </div>
+              <div class="automations__user-timestamp">
+                <a
+                  href={{automation.last_updated_by.userPath}}
+                  data-user-card={{automation.last_updated_by.username}}
+                >
+                  {{avatar automation.last_updated_by imageSize="small"}}
+                </a>
+                {{format-date automation.updated_at leaveAgo="true"}}
+              </div>
             </td>
           {{/if}}
 
-          <td class="automations__delete">
+          <td class="d-admin-row__controls automations__delete">
             <DButton
               @icon="trash-can"
               @action={{action "destroyAutomation" automation}}

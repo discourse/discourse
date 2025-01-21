@@ -177,6 +177,7 @@ ro:
     embed:
       load_from_remote: "A apărut o eroare la încărcarea postării."
     site_settings:
+      site_setting_is_shadowed_globally: "Nu poți modifica această setare pentru că este configurată la nivel global"
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
       page_publishing_requirements: "Publicarea paginilor nu poate fi activată dacă este activată încărcarea securizată."
@@ -355,6 +356,8 @@ ro:
       user_profile:
         bio_raw: "Despre mine"
       user:
+        password: "Parolă"
+      user_password:
         password: "Parolă"
     errors:
       models:
@@ -966,6 +969,7 @@ ro:
     show_pinned_excerpt_mobile: "Arată fragmente din subiectele fixate în vizualizarea de mobil."
     show_pinned_excerpt_desktop: "Arată fragmente din subiectele fixate în vizualizarea de desktop."
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
+    onebox_locale: "Locala trimisă furnizorilor onebox. Dacă este lăsată necompletat, se va folosi locala implicită."
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
@@ -985,7 +989,10 @@ ro:
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: 'Toți utilizatorii noi trebuie să aștepte aprobarea moderatorului sau a administratorului înainte de a li se permite să se conecteze. (Notă: activarea acestei setări elimină și opțiunea de invitare „ajunge la subiect”).'
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
-    experimental_full_page_login: "Înlocuiește modalul de conectare sau înregistrare cu un formular de conectare sau înregistrare pe întreaga pagină."
+    show_signup_form_email_instructions: Afișează instrucțiunile pentru email pe formularul de înscriere.
+    show_signup_form_username_instructions: Afișează instrucțiunile pentru numele de utilizator în formularul de înscriere.
+    show_signup_form_full_name_instructions: Afișează instrucțiunile pentru numele complet în formularul de înscriere.
+    show_signup_form_password_instructions: Afișează instrucțiunile pentru parolă în formularul de înscriere.
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL pentru iframe src pe care Discourse le poate permite în siguranță în mesaje"
@@ -1097,7 +1104,9 @@ ro:
     body_min_entropy: "Entropia minimă (caractere unice, cele ne-englezești contează mai mult) necesară în conținutul unei postări."
     allow_uppercase_posts: "Permite toate caracterele majuscule în titlul subiectului sau în conținutul postării."
     min_title_similar_length: "Lungimea minimă a unui titlu înainte să fie verificat pentru subiecte similare."
+    mobile_category_page_style: "Această setare determină aspectul vizual al paginii /categories pe mobil."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
+    default_dark_mode_color_scheme_id: "Paleta de culori utilizată în modul întunecat."
     dark_mode_none: "Nimeni"
     max_image_size_kb: "Dimensiunea maximă de încărcare imagini. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea. Imaginile mai mari decât aceasta și mai mici decât client_max_body_size vor fi redimensionate pentru a se potrivi la încărcare."
     max_attachment_size_kb: "Dimensiunea maximă de încărcare a fișierelor atașate. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea."
@@ -1199,7 +1208,6 @@ ro:
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
     svg_icon_subset: "Adaugă pictograme FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru pictograme solide, „far-” pentru pictograme obișnuite și „fab-” pentru pictograme de marcă."
-    full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
@@ -1224,6 +1232,7 @@ ro:
     default_email_mailing_list_mode: "Implicit, trimite un email pentru fiecare nou mesaj."
     default_email_mailing_list_mode_frequency: "Implicit, utilizatorii care activează modul mailing list vor primi emailuri cu această frecvență."
     default_email_previous_replies: "Implicit, include răspunsurile anterioare în emailuri."
+    default_emoji_reactions: "Reacții emoji preferate implicite. Adaugă până la 5 emoji-uri pentru o reacție rapidă."
     default_email_in_reply_to: "Implicit, include în email un extras postarea căreia i se răspunde."
     default_hide_profile: "Ascunde implicit profilul public al utilizatorului."
     default_hide_presence: "Dezactivează implicit funcționalitățile de prezență."
@@ -1255,7 +1264,7 @@ ro:
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
-    experimental_topics_filter: "Activează ruta de filtrare a subiectelor experimentale la /filter"
+    experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -1281,8 +1290,8 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
     keywords:
       clean_up_inactive_users_after_days: "dezactivat|inactiv|neactivat"
-      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
       navigation_menu: "bară laterală|listă derulantă din antet"
+      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -1871,10 +1880,10 @@ ro:
       long_description: |
         Această insignă este acordată prima dată când editezi una dintre postările tale. Deși nu veți putea să vă editați postările pentru totdeauna, editarea este încurajată - puteți îmbunătăți formatarea, puteți remedia mici erori sau puteți adăuga orice ați ratat când ați postat inițial. Editați pentru a vă îmbunătăți și mai bine postările!
     basic_user:
-      name: Simplu utilizator
+      name: De bază
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Niveluri de încredere</a> toate funcțiile esențiale ale comunității
       long_description: |
-        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumesc pentru că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori; Ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, marcarea, editarea wiki și abilitatea de a posta mai multe imagini și link-uri.
+        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumim că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori, ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, semnalarea, editarea wiki și abilitatea de a publica mai multe imagini și legături.
     member:
       name: Membru
     regular:
@@ -2079,20 +2088,14 @@ ro:
                 label: "Privat"
       styling:
         fields:
+          color_scheme:
+            label: "Paletă de culori"
           styling_preview:
             label: "Previzualizează"
           homepage_style:
             choices:
               latest:
-                label: "Subiecte recente"
-              categories_only:
-                label: "Numai categorii"
-              categories_with_featured_topics:
-                label: "Categorii cu subiecte promovate"
-              categories_and_latest_topics:
-                label: "Categorii și subiecte recente"
-              categories_and_top_topics:
-                label: "Categorii și discuții în top"
+                label: "Ultima"
       corporate:
         fields:
           contact_url:
@@ -2112,7 +2115,6 @@ ro:
       quoted: '%{username} te-a citat în discuția "%{topic}" - %{site_title}'
       replied: '%{username} ți-a răspuns în discuția "%{topic}" - %{site_title}'
       posted: '%{username} a postat în discuția "%{topic}" - %{site_title}'
-      private_message: '%{username} ți-a trimis un mesaj privat în discuția "%{topic}" - %{site_title}'
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
   staff_action_logs:
     json_too_long: "Valorile nu au fost înregistrate pentru că depășesc limitele lungimii coloanei"

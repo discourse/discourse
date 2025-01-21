@@ -1,6 +1,7 @@
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { configureEyeline } from "discourse/lib/eyeline";
+import { cloneJSON } from "discourse/lib/object";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topFixtures from "discourse/tests/fixtures/top-fixtures";
@@ -9,7 +10,6 @@ import {
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -36,14 +36,6 @@ acceptance("Topic Discovery", function (needs) {
         "title",
         "eviltrout - Most Posts",
         "it shows user's full name in avatar title"
-      );
-
-    assert
-      .dom("a[data-user-card=eviltrout] img.avatar")
-      .hasAttribute(
-        "loading",
-        "lazy",
-        "it adds loading=`lazy` to topic list avatars"
       );
 
     await visit("/c/bug");

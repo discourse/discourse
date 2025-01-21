@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
@@ -9,6 +9,7 @@ import DFloatPortal from "float-kit/components/d-float-portal";
 import { getScrollParent } from "float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "float-kit/modifiers/close-on-escape";
+import and from "truth-helpers/helpers/and";
 
 export default class DFloatBody extends Component {
   closeOnScroll = modifierFn(() => {
@@ -22,6 +23,18 @@ export default class DFloatBody extends Component {
 
     return () => {
       firstScrollParent.removeEventListener("scroll", handler);
+    };
+  });
+
+  trapPointerDown = modifierFn((element) => {
+    const handler = (event) => {
+      event.stopPropagation();
+    };
+
+    element.addEventListener("pointerdown", handler);
+
+    return () => {
+      element.removeEventListener("pointerdown", handler);
     };
   });
 
@@ -66,11 +79,14 @@ export default class DFloatBody extends Component {
         aria-expanded={{if @instance.expanded "true" "false"}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
+        {{this.trapPointerDown}}
         {{(if @trapTab (modifier TrapTab autofocus=this.options.autofocus))}}
         {{(if
-          this.supportsCloseOnClickOutside
+          (and @instance.expanded this.supportsCloseOnClickOutside)
           (modifier
-            closeOnClickOutside @instance.close (hash target=this.content)
+            closeOnClickOutside
+            (fn @instance.close (hash focusTrigger=false))
+            (hash target=this.content)
           )
         )}}
         {{(if

@@ -4,6 +4,7 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
+import TopicDetails from "discourse/models/topic-details";
 
 module("Unit | Model | topic", function (hooks) {
   setupTest(hooks);
@@ -108,6 +109,10 @@ module("Unit | Model | topic", function (hooks) {
     const topic = this.store.createRecord("topic", { id: 1234 });
     const topicDetails = topic.details;
 
+    assert.true(
+      topicDetails instanceof TopicDetails,
+      "topicDetails is an instance of TopicDetails"
+    );
     assert.present(topicDetails, "a topic has topicDetails after we create it");
     assert.strictEqual(
       topicDetails.topic,
@@ -165,6 +170,10 @@ module("Unit | Model | topic", function (hooks) {
     });
 
     assert.blank(topic.post_stream, "it does not update post_stream");
+    assert.true(
+      topic.details instanceof TopicDetails,
+      "topicDetails is an instance of TopicDetails"
+    );
     assert.strictEqual(topic.details.hello, "world", "it updates the details");
     assert.strictEqual(topic.cool, "property", "it updates other properties");
     assert.strictEqual(topic.category, category);

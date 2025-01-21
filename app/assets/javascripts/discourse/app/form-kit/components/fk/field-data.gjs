@@ -146,13 +146,11 @@ export default class FKFieldData extends Component {
       throw new Error("@name can't include `.` or `-`.");
     }
 
-    return (
-      (this.args.collectionName ? `${this.args.collectionName}.` : "") +
-      (this.args.collectionIndex !== undefined
-        ? `${this.args.collectionIndex}.`
-        : "") +
-      this.args.name
-    );
+    if (this.args.parentName) {
+      return `${this.args.parentName}.${this.args.name}`;
+    }
+
+    return this.args.name;
   }
 
   /**

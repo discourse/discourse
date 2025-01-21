@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { next, schedule, throttle } from "@ember/runloop";
+import { schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
@@ -9,16 +9,20 @@ import { BasePlugin } from "@uppy/core";
 import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
+import { tinyAvatar } from "discourse/lib/avatar-utils";
+import { setupComposerPosition } from "discourse/lib/composer/composer-position";
+import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
 } from "discourse/lib/hashtag-decorator";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import {
   authorizesOneOrMoreImageExtensions,
   IMAGE_MARKDOWN_REGEX,
@@ -26,14 +30,6 @@ import {
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
-import { isTesting } from "discourse-common/config/environment";
-import { tinyAvatar } from "discourse-common/lib/avatar-utils";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed, {
-  bind,
-  debounce,
-} from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];
@@ -139,7 +135,7 @@ export default class ComposerEditor extends Component {
   @observes("composer.focusTarget")
   setFocus() {
     if (this.composer.focusTarget === "editor") {
-      putCursorAtEnd(this.element.querySelector("textarea"));
+      this.textManipulation.putCursorAtEnd();
     }
   }
 
@@ -188,26 +184,40 @@ export default class ComposerEditor extends Component {
 
   @on("didInsertElement")
   _composerEditorInit() {
-    const input = this.element.querySelector(".d-editor-input");
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    input?.addEventListener(
-      "scroll",
-      this._throttledSyncEditorAndPreviewScroll
-    );
-
     this._registerImageAltTextButtonClick(preview);
-
-    // Focus on the body unless we have a title
-    if (!this.get("composer.model.canEditTitle")) {
-      putCursorAtEnd(input);
-    }
 
     if (this.composer.allowUpload) {
       this.uppyComposerUpload.setup(this.element);
     }
 
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
+  }
+
+  @bind
+  setupEditor(textManipulation) {
+    this.textManipulation = textManipulation;
+    this.uppyComposerUpload.textManipulation = textManipulation;
+
+    const input = this.element.querySelector(".d-editor-input");
+
+    input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
+
+    // Focus on the body unless we have a title
+    if (!this.get("composer.model.canEditTitle")) {
+      this.textManipulation.putCursorAtEnd();
+    }
+
+    const destroyComposerPosition = setupComposerPosition(input);
+
+    return () => {
+      destroyComposerPosition();
+
+      input.removeEventListener(
+        "scroll",
+        this._throttledSyncEditorAndPreviewScroll
+      );
+    };
   }
 
   @discourseComputed(
@@ -785,7 +795,6 @@ export default class ComposerEditor extends Component {
 
   @on("willDestroyElement")
   _composerClosed() {
-    const input = this.element.querySelector(".d-editor-input");
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
 
     if (this.composer.allowUpload) {
@@ -794,17 +803,10 @@ export default class ComposerEditor extends Component {
 
     this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
 
-    next(() => {
-      // need to wait a bit for the "slide down" transition of the composer
-      discourseLater(
-        () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
-        isTesting() ? 0 : 400
-      );
-    });
-
-    input?.removeEventListener(
-      "scroll",
-      this._throttledSyncEditorAndPreviewScroll
+    // need to wait a bit for the "slide down" transition of the composer
+    discourseLater(
+      () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
+      400
     );
 
     preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);

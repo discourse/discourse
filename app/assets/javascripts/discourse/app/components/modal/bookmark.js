@@ -9,6 +9,7 @@ import { CLOSE_INITIATED_BY_CLICK_OUTSIDE } from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import discourseLater from "discourse/lib/later";
 import { sanitize } from "discourse/lib/text";
 import {
   defaultTimeShortcuts,
@@ -16,7 +17,6 @@ import {
 } from "discourse/lib/time-shortcut";
 import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import discourseLater from "discourse-common/lib/later";
 import { i18n } from "discourse-i18n";
 
 const BOOKMARK_BINDINGS = {

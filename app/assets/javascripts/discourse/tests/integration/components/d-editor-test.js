@@ -2,10 +2,12 @@ import { next } from "@ember/runloop";
 import {
   click,
   fillIn,
+  find,
   focus,
   render,
   settled,
   triggerEvent,
+  triggerKeyEvent,
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -13,6 +15,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import { paste, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
@@ -62,7 +65,7 @@ module("Integration | Component | d-editor", function (hooks) {
 
   function jumpEnd(textarea) {
     if (typeof textarea === "string") {
-      textarea = document.querySelector(textarea);
+      textarea = find(textarea);
     }
 
     textarea.selectionStart = textarea.value.length;
@@ -249,7 +252,7 @@ function xyz(x, y, z) {
 
     await render(hbs`<DEditor @value={{this.value}} />`);
 
-    const textarea = document.querySelector("textarea.d-editor-input");
+    const textarea = find("textarea.d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -346,6 +349,26 @@ third line`
     assert.strictEqual(this.value, "first line\n\nsecond line\n\nthird line");
     assert.strictEqual(textarea.selectionStart, 0);
     assert.strictEqual(textarea.selectionEnd, 23);
+  });
+
+  test("code button does not reset undo history", async function (assert) {
+    this.set("value", "existing");
+
+    await render(hbs`<DEditor @value={{this.value}} />`);
+    const textarea = find("textarea.d-editor-input");
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 8;
+
+    await click("button.code");
+    assert.strictEqual(this.value, "`existing`");
+
+    await click("button.code");
+    assert.strictEqual(this.value, "existing");
+
+    document.execCommand("undo");
+    assert.strictEqual(this.value, "`existing`");
+    document.execCommand("undo");
+    assert.strictEqual(this.value, "existing");
   });
 
   test("code fences", async function (assert) {
@@ -619,6 +642,22 @@ third line`
     assert.strictEqual(textarea.selectionEnd, 18);
   });
 
+  testCase(
+    "list button does not reset undo history",
+    async function (assert, textarea) {
+      this.set("value", "existing");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 8;
+
+      await click("button.list");
+      assert.strictEqual(this.value, "1. existing");
+
+      document.execCommand("undo");
+
+      assert.strictEqual(this.value, "existing");
+    }
+  );
+
   test("clicking the toggle-direction changes dir from ltr to rtl and back", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
     this.siteSettings.default_locale = "en";
@@ -670,44 +709,31 @@ third line`
   );
 
   test("emoji", async function (assert) {
-    // Test adding a custom button
-    withPluginApi("0.1", (api) => {
-      api.onToolbarCreate((toolbar) => {
-        toolbar.addButton({
-          id: "emoji",
-          group: "extras",
-          icon: "far-face-smile",
-          action: () => toolbar.context.send("emoji"),
-        });
-      });
-    });
     this.set("value", "hello world.");
-
-    await render(hbs`<DEditor @value={{this.value}} />`);
-
+    // we need DMenus here, as we are testing the d-editor which is not renderining
+    // the in-element outlet container necessary for DMenu to work
+    await render(hbs`<DMenus /><DEditor @value={{this.value}} />`);
+    const picker = emojiPicker();
     jumpEnd("textarea.d-editor-input");
-    await click("button.emoji");
+    await click(".d-editor-button-bar .emoji");
+    await picker.select("raised_hands");
 
-    await click(
-      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-    );
     assert.strictEqual(
       this.value,
-      "hello world. :grinning:",
+      "hello world. :raised_hands:",
       "it works when there is no partial emoji"
     );
 
     await click("textarea.d-editor-input");
-    await fillIn(".d-editor-input", "starting to type an emoji like :gri");
+    await fillIn(".d-editor-input", "starting to type an emoji like :woman");
     jumpEnd("textarea.d-editor-input");
-    await click("button.emoji");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Backspace"); //simplest way to trigger more menu here
+    await click(".ac-emoji li:last-child a");
+    await picker.select("womans_clothes");
 
-    await click(
-      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
-    );
     assert.strictEqual(
       this.value,
-      "starting to type an emoji like :grinning:",
+      "starting to type an emoji like :womans_clothes:",
       "it works when there is a partial emoji"
     );
   });

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "colored2"
+
 module BackupRestore
   RestoreDisabledError = Class.new(RuntimeError)
   FilenameMissingError = Class.new(RuntimeError)
@@ -9,12 +11,20 @@ module BackupRestore
 
     attr_reader :success
 
-    def initialize(user_id:, filename:, factory:, disable_emails: true, location: nil)
+    def initialize(
+      user_id:,
+      filename:,
+      factory:,
+      disable_emails: true,
+      location: nil,
+      interactive: false
+    )
       @user_id = user_id
       @filename = filename
       @factory = factory
       @logger = factory.logger
       @disable_emails = disable_emails
+      @interactive = interactive
 
       ensure_restore_is_enabled
       ensure_we_have_a_user
@@ -48,7 +58,7 @@ module BackupRestore
       @system.flush_redis
       @system.clear_sidekiq_queues
 
-      @database_restorer.restore(db_dump_path)
+      @database_restorer.restore(db_dump_path, @interactive)
 
       reload_site_settings
 
@@ -58,7 +68,7 @@ module BackupRestore
       clear_stats
       reload_translations
 
-      @uploads_restorer.restore(@tmp_directory)
+      restore_uploads
 
       clear_emoji_cache
       clear_theme_cache
@@ -141,6 +151,20 @@ module BackupRestore
     def reload_translations
       log "Reloading translations..."
       TranslationOverride.reload_all_overrides!
+    end
+
+    def restore_uploads
+      if @interactive
+        puts ""
+        puts "Attention! Pausing restore before uploads.".red.bold
+        puts "You can work on the restored database in a separate Rails console."
+        puts ""
+        puts "Press any key to continue with the restore.".bold
+        puts ""
+        STDIN.getch
+      end
+
+      @uploads_restorer.restore(@tmp_directory)
     end
 
     def notify_user

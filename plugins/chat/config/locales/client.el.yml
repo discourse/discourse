@@ -15,19 +15,53 @@ el:
       site_settings:
         chat_separate_sidebar_mode:
           always: "Πάντα"
+          fullscreen: "Όταν η συνομιλία είναι σε πλήρη οθόνη"
           never: "Ποτέ"
+      web_hooks:
+        chat_event:
+          group_name: "Συμβάντα συνομιλίας"
+          chat_message_created: "Μήνυμα δημιουργήθηκε"
+          chat_message_edited: "Μήνυμα έχει επεξεργαστεί"
+          chat_message_trashed: "Μήνυμα έχει απορριφθεί"
+          chat_message_restored: "Μήνυμα έχει αποκατασταθεί"
+    about:
+      chat_messages_count: "Μηνύματα συνομιλίας"
+      chat_channels_count: "Κανάλια συνομιλίας"
+      chat_users_count: "Χρήστες συνομιλίας"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} μήνυμα συνομιλίας"
+          other: "%{formatted_number} μηνύματα συνομιλίας"
     chat:
       back_to_forum: "Φόρουμ"
       deleted_chat_username: διεγράφη
       dates:
         yesterday: "Χτες"
+      all_loaded: "Εμφάνιση όλων των μηνυμάτων"
+      already_enabled: "Η συνομιλία είναι ήδη ενεργοποιημένη σε αυτό το θέμα. Κάντε ανανέωση."
+      disabled_for_topic: "Η συνομιλία είναι απενεργοποιημένη σε αυτό το θέμα."
       create: "Δημιουργία"
       cancel: "Ακύρωση"
+      chat_channels: "Κανάλια"
+      browse_all_channels: "Περιήγηση σε όλα τα κανάλια"
+      move_to_channel:
+        title: "Μετακίνηση μηνυμάτων στο κανάλι"
+        confirm_move: "Μετακίνηση Μηνυμάτων"
       channel_settings:
+        title: "Ρυθμίσεις καναλιού"
         edit: "Επεξεργασία"
         add: "Προσθήκη"
+        close_channel: "Κλείσιμο καναλιού"
+        open_channel: "Άνοιγμα καναλιού"
+        archive_channel: "Αρχειοθέτηση καναλιού"
+        delete_channel: "Διαγραφή καναλιού"
+        join_channel: "Εγγραφή στο κανάλι"
+        leave_channel: "Αποχώρηση από το κανάλι"
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
+      channel_archive:
+        title: "Αρχειοθέτηση Καναλιού"
+        retry: "Επανάληψη"
       channel_open:
         title: "Άνοιγμα Καναλιού"
       channel_close:

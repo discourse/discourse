@@ -1,9 +1,9 @@
 import { computed } from "@ember/object";
 import { classNameBindings } from "@ember-decorators/component";
 import TextField from "discourse/components/text-field";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { allowOnlyNumericInput } from "discourse/lib/utilities";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings("invalid")
