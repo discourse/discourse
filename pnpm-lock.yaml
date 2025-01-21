@@ -276,8 +276,8 @@ importers:
         specifier: ^9.4.0
         version: 9.4.0
       '@glimmer/syntax':
-        specifier: ^0.93.1
-        version: 0.93.1
+        specifier: ^0.94.0
+        version: 0.94.0
       '@highlightjs/cdn-assets':
         specifier: 11.11.1
         version: 11.11.1
@@ -699,8 +699,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.26.0)
       '@glimmer/syntax':
-        specifier: ^0.93.1
-        version: 0.93.1
+        specifier: ^0.94.0
+        version: 0.94.0
       broccoli-asset-rev:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2130,8 +2130,8 @@ packages:
   '@glimmer/interfaces@0.92.3':
     resolution: {integrity: sha512-QwQeA01N+0h+TAi/J7iUnZtRuJy+093hNyagxDQBA6b1wCBw+q+al9+O6gmbWlkWE7EifzmNE1nnrgcecJBlJQ==}
 
-  '@glimmer/interfaces@0.93.0':
-    resolution: {integrity: sha512-k2xUOMmB5e8/tH+LqiUqYnrV3f2RFxPvo0i62xNvfFnZMayJwonUz97i7+V5E5dv82rckzVHNg0bWyNmMyCnqg==}
+  '@glimmer/interfaces@0.94.0':
+    resolution: {integrity: sha512-EBIfKh9DdTRzKpjhk8b2+mbk3hAi8CFRV+vEAI9Uo5+3KyaMuY6ZA7UAZE1qPsS6PgLzWxJa2EYsoQ1XxzPKoA==}
 
   '@glimmer/manager@0.92.4':
     resolution: {integrity: sha512-YMoarZT/+Ft2YSd+Wuu5McVsdP9y6jeAdVQGYFpno3NlL3TXYbl7ELtK7OGxFLjzQE01BdiUZZRvcY+a/s9+CQ==}
@@ -2163,8 +2163,8 @@ packages:
   '@glimmer/syntax@0.92.3':
     resolution: {integrity: sha512-7wPKQmULyXCYf0KvbPmfrs/skPISH2QGR9atCnmDWnHyLv5SSZVLm1P0Ctrpta6+Ci3uGQb7hGk0IjsLEavcYQ==}
 
-  '@glimmer/syntax@0.93.1':
-    resolution: {integrity: sha512-Dvq+Ni4Dcpn8kEiYN4ziTQxHrmPSchJCQJppXmFzdz77SFnhl0nWf7W8nnj88DNFEyBzKiTQCyCSuew4jrbgjA==}
+  '@glimmer/syntax@0.94.0':
+    resolution: {integrity: sha512-5DRrkiRzWHBGtA7W6NGgXYXnU70JTDs/9jqdiaawRJksnSU50q+93RB5cAFK3W3XXxzLS9x99ZfH5S1iJUIokw==}
 
   '@glimmer/tracking@1.1.2':
     resolution: {integrity: sha512-cyV32zsHh+CnftuRX84ALZpd2rpbDrhLhJnTXn9W//QpqdRZ5rdMsxSY9fOsj0CKEc706tmEU299oNnDc0d7tA==}
@@ -2178,8 +2178,8 @@ packages:
   '@glimmer/util@0.92.3':
     resolution: {integrity: sha512-K1oH93gGU36slycxJ9CcFpUTsdOc4XQ6RuZFu5oRsxFYtEF5PSu7ik11h58fyeoaWOr1ebfkyAMawbeI2AJ5GA==}
 
-  '@glimmer/util@0.93.1':
-    resolution: {integrity: sha512-EFLxpoGY+cEyi/GVyO5acBpyAlf0CLSvGjURbuWcKcOMtESO72KPJvJuLaAcRssHDqKtWKPO/Fs7nNl8wfn7Lg==}
+  '@glimmer/util@0.94.0':
+    resolution: {integrity: sha512-302PbePNUPy6YAdm6cQPqCG7aAJEnD20NT/PP049s9xAieEB8RPiApK6j63EOzN5hDgwxFUQaVlxPD3zEZYJ2Q==}
 
   '@glimmer/validator@0.44.0':
     resolution: {integrity: sha512-i01plR0EgFVz69GDrEuFgq1NheIjZcyTy3c7q+w7d096ddPVeVcRzU3LKaqCfovvLJ+6lJx40j45ecycASUUyw==}
@@ -2200,8 +2200,8 @@ packages:
   '@glimmer/wire-format@0.92.3':
     resolution: {integrity: sha512-gFz81Q9+V7Xs0X8mSq6y8qacHm0dPaGJo2/Bfcsdow1hLOKNgTCLr4XeDBhRML8f6I6Gk9ugH4QDxyIOXOpC4w==}
 
-  '@glimmer/wire-format@0.93.1':
-    resolution: {integrity: sha512-EHtdlZAZsOMBP6b9YC03OyduswqiT6Ei/mR/N1oR/4LZZ8lOyVgp6Q4H0TQW6jprWEiTMdHaO8/SEGTCrrhtUw==}
+  '@glimmer/wire-format@0.94.0':
+    resolution: {integrity: sha512-7BNfPvRleGEhbvc0Tix/pP2oVyd1VVPdrjsVIy2N9Qh8kjZTJenB6eG2ci99DicbBzr1N89AMyFkAIgvtG2Xxw==}
 
   '@glint/core@1.5.1':
     resolution: {integrity: sha512-5VDL/7z9CrirHyx4XyCARDOjujl2Z92hftp19ChXWEPLypukoXW+uDG/awgYCh2T1eNtxufX4j2Liqw0m1eAEw==}
@@ -9970,7 +9970,7 @@ snapshots:
     dependencies:
       '@simple-dom/interface': 1.4.0
 
-  '@glimmer/interfaces@0.93.0':
+  '@glimmer/interfaces@0.94.0':
     dependencies:
       '@simple-dom/interface': 1.4.0
 
@@ -10067,11 +10067,11 @@ snapshots:
       '@handlebars/parser': 2.0.0
       simple-html-tokenizer: 0.5.11
 
-  '@glimmer/syntax@0.93.1':
+  '@glimmer/syntax@0.94.0':
     dependencies:
-      '@glimmer/interfaces': 0.93.0
-      '@glimmer/util': 0.93.1
-      '@glimmer/wire-format': 0.93.1
+      '@glimmer/interfaces': 0.94.0
+      '@glimmer/util': 0.94.0
+      '@glimmer/wire-format': 0.94.0
       '@handlebars/parser': 2.0.0
       simple-html-tokenizer: 0.5.11
 
@@ -10093,10 +10093,9 @@ snapshots:
       '@glimmer/env': 0.1.7
       '@glimmer/interfaces': 0.92.3
 
-  '@glimmer/util@0.93.1':
+  '@glimmer/util@0.94.0':
     dependencies:
-      '@glimmer/env': 0.1.7
-      '@glimmer/interfaces': 0.93.0
+      '@glimmer/interfaces': 0.94.0
 
   '@glimmer/validator@0.44.0': {}
 
@@ -10128,10 +10127,9 @@ snapshots:
       '@glimmer/interfaces': 0.92.3
       '@glimmer/util': 0.92.3
 
-  '@glimmer/wire-format@0.93.1':
+  '@glimmer/wire-format@0.94.0':
     dependencies:
-      '@glimmer/interfaces': 0.93.0
-      '@glimmer/util': 0.93.1
+      '@glimmer/interfaces': 0.94.0
 
   '@glint/core@1.5.1(typescript@5.7.3)':
     dependencies:
