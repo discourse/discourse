@@ -506,8 +506,8 @@ pre.onebox code {
   .github-icon {
     grid-area: icon;
     align-self: start;
-    width: 100%;
     max-width: 2.15em;
+    height: auto;
     justify-self: center;
     fill: var(--primary-high);
   }
