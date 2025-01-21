@@ -1,5 +1,4 @@
 // Topic list navigation & controls
-
 .list-controls {
   background: var(--d-content-background);
 
@@ -9,10 +8,12 @@
     border: 1px solid var(--primary-medium);
     font-size: var(--font-0);
     height: 100%;
+
     &:focus {
       border-color: var(--tertiary);
     }
   }
+
   .select-kit {
     .select-kit-collection {
       max-height: 40vh;
@@ -22,6 +23,7 @@
 
 .navigation-container {
   width: 100%;
+
   --nav-space: 0.75em;
   display: flex;
   flex-wrap: wrap;
@@ -34,6 +36,7 @@
   list-style: none;
   padding: 0;
   margin: 0 0 var(--nav-space) 0;
+
   > li {
     // only target the top-level li, not dropdowns
     display: flex;
@@ -56,12 +59,15 @@
   align-items: stretch;
   margin-bottom: var(--nav-space);
   gap: var(--nav-space) 0; // used if the buttons wrap
+
   > * {
     white-space: nowrap;
+
     &:not(:last-child) {
       margin-right: 0.4em;
     }
   }
+
   .select-kit-header {
     height: 100%;
   }
@@ -70,6 +76,7 @@
       .d-button-label {
         display: none;
       }
+
       .d-icon {
         margin: 0;
       }
@@ -83,6 +90,7 @@
 
 .category-heading {
   max-width: 100%;
+
   p {
     margin-top: 0;
     line-height: var(--line-height-large);
@@ -120,16 +128,17 @@
 }
 
 // Topic list body
-
 .topic-list-item.visited .topic-list-data,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
   a.title:not(.badge-notification) {
     color: var(--primary-medium);
   }
+
   .badge-category {
     color: var(--primary-medium);
   }
+
   .discourse-tag,
   .discourse-tag:visited {
     color: var(--primary-medium);
@@ -147,6 +156,7 @@
 
 .topic-list-main-link {
   font-size: var(--font-up-1);
+
   a.title {
     padding: 15px 0;
     word-break: break-word;
@@ -176,6 +186,7 @@
     .texts .name {
       font-weight: normal;
     }
+
     .icons {
       font-size: var(--font-down-2);
       margin-right: 0.75em;
@@ -228,8 +239,9 @@
     text-align: left;
     vertical-align: middle;
   }
+
   .btn-flat .d-icon {
-    color: currentColor;
+    color: currentcolor;
   }
 
   td {
@@ -250,6 +262,7 @@
     .title:focus {
       outline: none;
     }
+
     .title:focus-visible {
       outline: none;
     }
@@ -259,6 +272,7 @@
     &.read {
       display: none;
     }
+
     .d-icon {
       vertical-align: middle;
       font-size: var(--font-down-5);
@@ -271,13 +285,16 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5em;
+
     .discourse-tags {
       flex-wrap: wrap;
     }
+
     a.discourse-tag.box {
       padding-top: 0;
       padding-bottom: 0;
     }
+
     .discourse-tag.box {
       margin-right: 0.25em;
     }
@@ -298,9 +315,11 @@
           align-items: center;
           height: 1.25em;
           color: var(--primary-high);
+
           .mobile-view & {
             height: 1.1em;
           }
+
           .d-icon {
             margin-right: 5px;
           }
@@ -343,6 +362,7 @@
   .num.activity {
     a {
       padding: 15px 5px;
+
       span.relative-date {
         pointer-events: none;
       }
@@ -378,6 +398,7 @@
 .loading .topic-list {
   border: 0;
   box-shadow: none;
+
   .topic-list-item {
     background-color: transparent;
   }
@@ -406,6 +427,7 @@
     margin-bottom: 0;
     font-size: var(--font-0);
   }
+
   .spinner {
     margin-top: 40px;
   }

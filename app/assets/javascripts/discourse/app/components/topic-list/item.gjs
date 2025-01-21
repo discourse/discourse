@@ -229,6 +229,9 @@ export default class Item extends Component {
           bulkSelectEnabled=@bulkSelectEnabled
           onBulkSelectToggle=this.onBulkSelectToggle
           isSelected=this.isSelected
+          hideCategory=@hideCategory
+          tagsForUser=@tagsForUser
+          showTopicPostBadges=@showTopicPostBadges
         }}
       >
         {{#if this.useMobileLayout}}
@@ -330,6 +333,10 @@ export default class Item extends Component {
                       @outletArgs={{hash topic=@topic}}
                     />
                     {{categoryLink @topic.category}}
+                    <PluginOutlet
+                      @name="topic-list-after-category"
+                      @outletArgs={{hash topic=@topic}}
+                    />
                   {{/unless}}
 
                   {{discourseTags @topic mode="list"}}

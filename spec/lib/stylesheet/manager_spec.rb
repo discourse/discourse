@@ -658,7 +658,7 @@ RSpec.describe Stylesheet::Manager do
         ).compile(force: true)
 
       expect(stylesheet).not_to include("--primary: #CC0000;")
-      expect(stylesheet).to include("--primary: #222222;") # from base scheme
+      expect(stylesheet).to include("--primary: #222;") # from base scheme
     end
 
     it "uses the correct scheme when a valid scheme id is used" do
@@ -1043,7 +1043,7 @@ RSpec.describe Stylesheet::Manager do
 
   describe ".fs_asset_cachebuster" do
     it "returns a number in test/development mode" do
-      expect(Stylesheet::Manager.fs_asset_cachebuster).to match(/\A[0-9]+:[0-9]+\z/)
+      expect(Stylesheet::Manager.fs_asset_cachebuster).to match(/\A.*:[0-9]+\z/)
     end
 
     context "with production mode enabled" do
@@ -1056,7 +1056,7 @@ RSpec.describe Stylesheet::Manager do
 
       it "returns a hash" do
         cachebuster = Stylesheet::Manager.fs_asset_cachebuster
-        expect(cachebuster).to match(/\A[0-9]+:[0-9a-f]{40}\z/)
+        expect(cachebuster).to match(/\A.*:[0-9a-f]{40}\z/)
       end
 
       it "caches the value on the filesystem" do

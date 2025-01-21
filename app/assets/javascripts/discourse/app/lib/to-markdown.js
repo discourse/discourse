@@ -87,7 +87,6 @@ export class Tag {
       "address",
       "article",
       "dd",
-      "div",
       "dl",
       "dt",
       "fieldset",
@@ -183,6 +182,24 @@ export class Tag {
         }
 
         return `${this.gap}${this.prefix}${text}${this.suffix}${this.gap}`;
+      }
+    };
+  }
+
+  static div() {
+    return class extends Tag.block("div") {
+      decorate(text) {
+        const attr = this.element.attributes;
+
+        if (/\bmathjax-math\b/.test(attr.class)) {
+          return "";
+        }
+
+        if (/\bmath\b/.test(attr.class) && attr["data-applied-mathjax"]) {
+          return "\n$$\n" + text + "\n$$\n";
+        }
+
+        return super.decorate(text);
       }
     };
   }
@@ -290,6 +307,14 @@ export class Tag {
 
         if (attr.class === "badge badge-notification clicks") {
           return "";
+        }
+
+        if (/\bmathjax-math\b/.test(attr.class)) {
+          return "";
+        }
+
+        if (/\bmath\b/.test(attr.class) && attr["data-applied-mathjax"]) {
+          return "$" + text + "$";
         }
 
         return super.decorate(text);
@@ -689,6 +714,7 @@ function tagByName(name) {
       Tag.ol(),
       Tag.list("ul"),
       Tag.span(),
+      Tag.div(),
     ];
 
     for (const tag of allTags) {

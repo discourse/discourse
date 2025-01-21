@@ -18,7 +18,6 @@ import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import chatMessageContainer from "discourse/plugins/chat/discourse/lib/chat-message-container";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import ChatMessageReactionModel from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 const MSG_ACTIONS_VERTICAL_PADDING = -10;
 const FULL = "full";
@@ -28,28 +27,10 @@ const REDUCED_WIDTH_THRESHOLD = 500;
 export default class ChatMessageActionsDesktop extends Component {
   @service chat;
   @service site;
-  @service siteSettings;
-  @service emojiStore;
 
   @tracked size = FULL;
 
   popper = null;
-
-  get favoriteReactions() {
-    const defaultReactions = this.siteSettings.default_emoji_reactions
-      .split("|")
-      .filter(Boolean);
-
-    return this.emojiStore
-      .favoritesForContext(`channel_${this.message.channel.id}`)
-      .concat(defaultReactions)
-      .slice(0, 3)
-      .map(
-        (emoji) =>
-          this.message.reactions.find((reaction) => reaction.emoji === emoji) ||
-          ChatMessageReactionModel.create({ emoji })
-      );
-  }
 
   get message() {
     return this.chat.activeMessage.model;
@@ -156,7 +137,7 @@ export default class ChatMessageActionsDesktop extends Component {
           }}
         >
           {{#if this.shouldRenderFavoriteReactions}}
-            {{#each this.favoriteReactions as |reaction|}}
+            {{#each this.messageInteractor.emojiReactions as |reaction|}}
               <ChatMessageReaction
                 @reaction={{reaction}}
                 @onReaction={{this.messageInteractor.react}}

@@ -42,8 +42,10 @@
   .chat__thread-title-container {
     display: flex;
     grid-area: title;
+
     .chat__thread-title {
       @include ellipsis;
+
       &__name {
         @include ellipsis;
       }

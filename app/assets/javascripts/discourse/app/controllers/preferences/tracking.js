@@ -10,6 +10,7 @@ export default class extends Controller {
   @service currentUser;
   @service siteSettings;
   @tracked saved = false;
+  @tracked customAttrNames = [];
 
   likeNotificationFrequencies = [
     { name: i18n("user.like_notification_frequency.always"), value: 0 },
@@ -53,15 +54,15 @@ export default class extends Controller {
 
   notificationLevelsForReplying = [
     {
-      name: i18n("topic.notifications.watching.title"),
+      name: i18n("user.notification_level_when_replying.watch_topic"),
       value: NotificationLevels.WATCHING,
     },
     {
-      name: i18n("topic.notifications.tracking.title"),
+      name: i18n("user.notification_level_when_replying.track_topic"),
       value: NotificationLevels.TRACKING,
     },
     {
-      name: i18n("topic.notifications.regular.title"),
+      name: i18n("user.notification_level_when_replying.do_nothing"),
       value: NotificationLevels.REGULAR,
     },
   ];
@@ -154,7 +155,8 @@ export default class extends Controller {
 
   @computed(
     "siteSettings.tagging_enabled",
-    "siteSettings.mute_all_categories_by_default"
+    "siteSettings.mute_all_categories_by_default",
+    "customAttrNames"
   )
   get saveAttrNames() {
     const attrs = [
@@ -180,6 +182,10 @@ export default class extends Controller {
       );
     }
 
+    if (this.customAttrNames?.length > 0) {
+      attrs.push(...this.customAttrNames);
+    }
+
     return attrs;
   }
 
@@ -189,9 +195,7 @@ export default class extends Controller {
 
     return this.model
       .save(this.saveAttrNames)
-      .then(() => {
-        this.saved = true;
-      })
+      .then(() => (this.saved = true))
       .catch(popupAjaxError);
   }
 }

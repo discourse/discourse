@@ -1,6 +1,7 @@
 body.invite-page {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
+
   #main-outlet-wrapper {
     padding: 0;
   }
@@ -11,6 +12,7 @@ body.invite-page {
   #modal-alert {
     box-sizing: border-box;
     display: inline-block;
+
     // if you want to use flexbox here make sure child elements like <b> don't cause line breaks
     padding: 1em 3.5em 1em 1em; // large right padding to make sure long text isn't under the close button
     width: 100%;
@@ -18,9 +20,10 @@ body.invite-page {
     margin-bottom: 0;
     min-height: 35px;
   }
+
   #modal-alert:empty {
-    min-height: 0px;
-    padding: 0px;
+    min-height: 0;
+    padding: 0;
     overflow: hidden;
     display: inline;
   }
@@ -30,6 +33,7 @@ body.invite-page {
 #new-account-link {
   cursor: pointer;
   text-align: left;
+
   // the second button can wrap in some locales, and this helps alignment
 }
 
@@ -39,16 +43,19 @@ body.invite-page {
     display: flex;
     flex-direction: column;
     width: 400px;
+
     input {
       padding: 0.75em 0.77em;
       min-width: 250px;
       margin-bottom: 0.25em;
       width: 100%;
     }
+
     .input {
       position: relative;
       margin-bottom: 1em;
     }
+
     .tip {
       display: block;
     }
@@ -64,6 +71,7 @@ body.invite-page {
   right: 0;
   top: 0;
   padding: 0.75em 0.77em; // alligns with input padding
+
   .ios-device & {
     // reset form-item-sizing mixin styles
     padding: 0.7em;
@@ -73,6 +81,7 @@ body.invite-page {
 
 .auth-message {
   padding: 0 15px 15px 15px;
+
   &:empty {
     padding: 0;
   }
@@ -82,15 +91,18 @@ body.invite-page {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+
   p {
     margin: 0;
     font-size: var(--font-0);
   }
+
   a {
     display: inline-block;
     padding: 1em 0.5em 1em 0;
     color: var(--tertiary);
   }
+
   button {
     margin-right: 1em;
   }
@@ -101,8 +113,10 @@ body.invite-page {
   background-color: var(--secondary);
   padding: 20px;
   margin: 0 auto;
+
   .content-wrapper {
     padding: 1em 2.5em 1em 2.5em;
+
     .image-wrapper {
       text-align: center;
       padding-bottom: 1em;
@@ -111,11 +125,14 @@ body.invite-page {
         max-width: 200px;
       }
     }
+
     .email-login-form {
       text-align: center;
+
       .btn-primary {
         margin-top: 10px;
       }
+
       #security-key {
         justify-content: center;
       }

@@ -3,6 +3,7 @@ import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import AddPmParticipants from "discourse/components/modal/add-pm-participants";
+import AnonymousFlagModal from "discourse/components/modal/anonymous-flag";
 import ChangeOwnerModal from "discourse/components/modal/change-owner";
 import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
@@ -27,6 +28,7 @@ const SCROLL_DELAY = 500;
 export default class TopicRoute extends DiscourseRoute {
   @service composer;
   @service screenTrack;
+  @service currentUser;
   @service modal;
   @service router;
 
@@ -104,7 +106,7 @@ export default class TopicRoute extends DiscourseRoute {
 
   @action
   showFlags(model) {
-    this.modal.show(FlagModal, {
+    this.modal.show(this.currentUser ? FlagModal : AnonymousFlagModal, {
       model: {
         flagTarget: new PostFlag(),
         flagModel: model,

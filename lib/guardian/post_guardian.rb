@@ -94,6 +94,10 @@ module PostGuardian
                 post.topic.private_message?
             )
         ) ||
+          (
+            action_key == :illegal &&
+              SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content
+          ) ||
           # not a flagging action, and haven't done it already
           not(is_flag || already_taken_this_action) &&
             # nothing except flagging on archived topics
@@ -160,6 +164,7 @@ module PostGuardian
     if (is_staff? || is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category))
       return can_create_post?(post.topic)
     end
+    return false if !can_see_post_topic?(post)
 
     return false if post.topic&.archived? || post.user_deleted || post.deleted_at
 

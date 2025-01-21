@@ -16,7 +16,7 @@ html.footer-nav-visible {
   #reply-control.draft {
     bottom: var(--footer-nav-height);
     margin-bottom: env(safe-area-inset-bottom);
-    padding-bottom: 0px;
+    padding-bottom: 0;
   }
 
   .with-topic-progress {
@@ -48,18 +48,20 @@ html.footer-nav-visible {
   }
 
   &.visible {
-    bottom: 0px;
+    bottom: 0;
   }
 
   .footer-nav-widget {
     display: flex;
     justify-content: "space-evenly";
     @include unselectable;
+
     button {
       flex: 1;
       margin: 4px;
       border-radius: 2px;
       padding: 14px 18px;
+
       &:disabled {
         opacity: 0.6;
       }
@@ -76,15 +78,16 @@ html.footer-nav-visible {
 @supports (-webkit-backdrop-filter: blur(10px)) {
   html:not(.footer-nav-ipad) .footer-nav {
     background-color: rgba(var(--header_background-rgb), 0.7);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
   }
 }
 
 html.footer-nav-ipad {
   padding-top: var(--footer-nav-height);
+
   .footer-nav {
     bottom: auto;
-    top: 0px;
+    top: 0;
     background-color: var(--header_background);
     z-index: z("ipad-header-nav");
     padding-bottom: 0; // resets safe-area-inset-bottom

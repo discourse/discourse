@@ -21,6 +21,7 @@
 
   &.with-topics {
     margin-left: 3px;
+
     .category {
       width: 45%;
     }
@@ -40,13 +41,16 @@
       font-size: var(--font-up-1);
       font-weight: bold;
     }
+
     .unit {
       font-size: var(--font-down-1);
     }
+
     .badge-notification {
       display: block;
       text-align: right;
       padding-right: 0;
+
       &:first-child {
         margin-top: 0.75em;
       }
@@ -58,29 +62,36 @@
     flex-wrap: wrap;
     gap: 0.15em 0.75em;
     margin-top: 0.5em;
+
     .subcategory {
       display: inline-flex;
       align-items: baseline;
       gap: 0.25em;
       @include ellipsis;
+
       .badge-category {
         min-width: 0;
       }
     }
+
     .category__badges {
       display: flex;
       gap: 0.25em;
+
       .badge-notification {
         top: 0;
         padding: 0;
       }
     }
+
     .badge-notification.unread-posts {
       display: block;
       padding: 0;
     }
+
     &__more-subcategories {
       font-size: var(--font-down-1);
+
       a {
         color: var(--primary-high);
       }
@@ -91,18 +102,22 @@
     margin: 10px 0 0;
     display: flex;
     align-items: baseline;
+
     &:first-of-type {
       margin-top: 13px;
     }
+
     a.last-posted-at,
     a.last-posted-at:visited {
       font-size: var(--font-down-1);
       color: var(--primary-med-or-secondary-high);
     }
+
     .title {
       @include ellipsis;
       flex: 0 1 auto;
     }
+
     .topic-post-badges .badge.unread-posts,
     .title {
       margin-right: 5px;
@@ -118,9 +133,11 @@
   tbody {
     .category {
       border-left: 6px solid var(--category-badge-color, var(--primary-low));
+
       h3,
       h4 {
         line-height: var(--line-height-medium);
+
         a[href] {
           color: var(--primary);
         }
@@ -153,13 +170,13 @@
   }
 
   div.column.categories {
-    @media all and (max-width: 600px) {
+    @media all and (width <= 600px) {
       margin-right: 0;
     }
-    @media all and (min-width: 600px) {
+    @media all and (width >= 600px) {
       margin-right: 1em;
     }
-    @media all and (min-width: 700px) {
+    @media all and (width >= 700px) {
       margin-right: 2em;
     }
   }

@@ -36,14 +36,16 @@ export default class UserStatusMessage extends Component {
         </:trigger>
         <:content>
           {{emoji @status.emoji skipTitle=true}}
-          <span class="user-status-tooltip-description">
-            {{@status.description}}
-          </span>
-          {{#if this.until}}
-            <div class="user-status-tooltip-until">
-              {{this.until}}
-            </div>
-          {{/if}}
+          <div class="user-status-tooltip-wrapper">
+            <span class="user-status-tooltip-description">
+              {{@status.description}}
+            </span>
+            {{#if this.until}}
+              <span class="user-status-tooltip-until">
+                {{this.until}}
+              </span>
+            {{/if}}
+          </div>
         </:content>
       </DTooltip>
     {{/if}}

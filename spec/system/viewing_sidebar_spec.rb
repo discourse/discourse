@@ -61,6 +61,37 @@ describe "Viewing sidebar as logged in user", type: :system do
     end
   end
 
+  describe "when viewing the 'more' content in the Community sidebar section" do
+    let(:more_trigger_selector) do
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
+    end
+    let(:more_links_selector) do
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
+    end
+
+    it "toggles the more menu and handles click outside to close it" do
+      visit("/latest")
+
+      find(more_trigger_selector).click
+
+      expect(page).to have_selector(more_links_selector, visible: true)
+
+      expect(page).to have_selector("#{more_trigger_selector}[aria-expanded='true']")
+
+      find(more_trigger_selector).click
+
+      expect(page).not_to have_selector(more_links_selector)
+
+      expect(page).to have_selector("#{more_trigger_selector}[aria-expanded='false']")
+
+      find(more_trigger_selector).click
+
+      find(".d-header-wrap").click
+
+      expect(page).not_to have_selector(more_links_selector)
+    end
+  end
+
   describe "when viewing the tags section" do
     fab!(:tag1) do
       Fabricate(:tag, name: "tag 1", description: "tag 1 description <script>").tap do |tag|

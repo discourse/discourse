@@ -7,7 +7,7 @@
   overflow: hidden;
   grid-area: main;
   min-width: 250px;
-  @include chat-height(var(--chat-header-offset, 0px));
+  @include chat-height(var(--chat-header-offset, 0));
 
   .join-channel-btn.in-float {
     position: absolute;

@@ -15,7 +15,7 @@
     list-style-type: none;
     display: block;
 
-    &:before {
+    &::before {
       content: none !important;
       margin: 0;
     }
@@ -38,7 +38,6 @@
       align-items: center;
       justify-content: center;
       border-radius: 0;
-      border: none;
       border: 1px solid var(--primary-low);
       box-shadow: var(--shadow-dropdown);
       background: var(--secondary);
@@ -82,6 +81,7 @@
     display: flex;
     align-items: stretch;
     height: 100%;
+
     &:not(.btn) {
       border-radius: var(--d-input-border-radius);
       padding-left: 0.5em;
@@ -101,7 +101,6 @@
     }
 
     .d-icon-spinner {
-      -webkit-animation: rotate-forever 1s infinite linear;
       animation: rotate-forever 1s infinite linear;
     }
 
@@ -126,6 +125,7 @@
         display: inline-flex;
         gap: 0.5em;
         min-width: 0;
+
         > .d-icon {
           margin-left: 0.5em;
           margin-right: 0;
@@ -265,7 +265,7 @@
     }
 
     &::-webkit-scrollbar {
-      -webkit-appearance: none;
+      appearance: none;
       width: 10px;
     }
 
@@ -357,6 +357,7 @@
     0% {
       width: 0;
     }
+
     100% {
       width: 100%;
     }
