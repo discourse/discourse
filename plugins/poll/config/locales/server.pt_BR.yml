@@ -37,6 +37,7 @@ pt_BR:
     default_poll_with_multiple_choices_has_invalid_parameters: "A enquete com múltiplas opções tem parâmetros inválidos."
     named_poll_with_multiple_choices_has_invalid_parameters: "A enquete com o nome de <strong>%{name}</strong> com múltiplas escolhas tem parâmetros inválidos."
     requires_at_least_1_valid_option: "Você precisa selecionar pelo menos uma opção válida."
+    requires_that_at_least_one_option_is_ranked: "Nas pesquisas de escolha classificada, você deve classificar ao menos uma opção."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Você não pode modificar uma enquete depois dos primeiros %{minutes} minutos."
       cannot_edit_named_poll_with_votes: "Você não pode modificar a enquete com o nome de <strong>${name}</strong> depois dos primeiros %{minutes} minutos."

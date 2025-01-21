@@ -1291,7 +1291,8 @@ bs_BA:
         after_4_minutes: "poslije 4 minute"
         after_5_minutes: "poslije 5 minuta"
         after_10_minutes: "poslije 10 minuta"
-      notification_level_when_replying: "Kada objavim objavu u temi, postavi tu temu u"
+      notification_level_when_replying:
+        do_nothing: "Ne radi ništa"
       invited:
         title: "Pozivnice"
         pending_tab: "Na čekanju"
@@ -3341,26 +3342,24 @@ bs_BA:
               bookmarks: Poredak korisničkih zabilješki. Ispostavlja podsjetnike za zabilješke koristeći ICS format.
       web_hooks:
         title: "Webhooks"
-        none: "Trenutno nema web-hookova."
         instruction: "Webhooks omogućava diskursu da obavesti eksterne servise kada se dogodi određeni događaj na vašem sajtu. Kada se webhook pokrene, POST zahtjev će biti poslan na URL adrese."
         detailed_instruction: "POST zahtjev će biti poslan na navedenu URL adresu kada se dogodi odabrani događaj."
-        new: "Novi Webhook"
         create: "napravi"
         edit: "Edit"
         save: "Sačuvaj"
+        delete: "Delete"
+        cancel: "Odustani"
         controls: "Kontrole"
-        go_back: "Nazad na listu"
         payload_url: "URL naslova"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Tajna ne smije imati prazne znakove."
         secret_too_short: "Tajna mora biti najmanje 12 znakova."
-        secret_placeholder: "Opcionalni niz koji se koristi za generiranje potpisa"
         event_type_missing: "Morate postaviti najmanje jedan tip događaja."
         content_type: "Vrsta sadržaja"
         secret: "Tajna"
         event_chooser: "Koji događaji treba da pokrenu ovaj webkuk?"
-        wildcard_event: "Pošalji mi sve."
-        individual_event: "Izaberite pojedinačne događaje."
+        wildcard_event: "Pošalji mi sve"
+        individual_event: "Izaberite pojedinačne događaje"
         verify_certificate: "Provjerite TLS certifikat o URL-u korisnog toka"
         active: "Active"
         active_notice: "Mi ćemo dostaviti detalje događaja kada se to dogodi."
@@ -3557,9 +3556,6 @@ bs_BA:
           screened_url: "Izvezite punu prikazanu listu URL-ova u CSV formatu."
       export_json:
         button_text: "Izvoz"
-      invite:
-        button_text: "Pošalji Pozivnice"
-        button_title: "Pošalji pozivnice"
       customize:
         title: "Customize"
         preview: "preview"
@@ -3767,18 +3763,15 @@ bs_BA:
           warning: "Ovo će trajno poništiti sve srodne postavke web-lokacije."
           overridden: Vaša standardna robots.txt datoteka je na novo zapisana.
         email_style:
+          html: "HTML"
           css: "Stylesheet"
       email:
         title: "Emailovi"
+        settings: "Postavke"
         templates: "Predlošci"
-        preview_digest: "Pregled Sajta"
         advanced_test:
-          title: "Napredni test"
           desc: "Pogledajte kako su diskursni procesi primili e-mail. Da biste mogli ispravno obraditi e-poštu, zalijepite ispod cijele originalne poruke e-maila."
           email: "Originalna poruka"
-          run: "Pokreni test"
-          text: "Odlućeno Tijelo Texta"
-          elided: "Elided Text"
         error: "<b>Greška</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
@@ -3786,15 +3779,10 @@ bs_BA:
         bounced: "Vraćeni"
         received: "Primljeno"
         rejected: "Odbijeni"
-        sent_at: "Sent At"
         time: "Time"
         user: "User"
-        email_type: "Email Type"
-        to_address: "To Address"
         test_email_address: "email address to test"
-        send_test: "Send Test Email"
         sent_test: "sent!"
-        delivery_method: "Delivery Method"
         preview_digest_desc: "Prikaži sadržaj sažetih poruka pošte poslanih neaktivnim korisnicima."
         refresh: "Refresh"
         send_digest_label: "Pošaljite ovaj rezultat na:"
@@ -3802,10 +3790,7 @@ bs_BA:
         format: "Format"
         html: "html"
         text: "text"
-        last_seen_user: "Last Seen User:"
         no_result: "Nisu pronađeni rezultati za sažetak."
-        reply_key: "Reply Key"
-        skipped_reason: "Skip Reason"
         incoming_emails:
           from_address: "Od"
           to_addresses: "Za"
@@ -3814,12 +3799,10 @@ bs_BA:
           error: "Greška"
           none: "Nema dolaznih poruka pošte."
           modal:
-            title: "Detalji dolaznih poruka pošte"
             error: "Greška"
             headers: "Zaglavlja"
             subject: "Naslov"
             body: "Tijelo"
-            rejection_message: "Poruka odbijenica"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -3843,7 +3826,7 @@ bs_BA:
           delete_topic: "Tema je izbrisana"
           post_approved: "Post odobren"
       logs:
-        title: "Logs"
+        nav_title: "Logs"
         action: "Action"
         created_at: "Created"
         last_match_at: "Last Matched"
@@ -3861,10 +3844,8 @@ bs_BA:
         staff_actions:
           all: "sve"
           filter: "Filter:"
-          title: "Staff Actions"
-          clear_filters: "Show Everything"
           staff_user: "User"
-          target_user: "Target User"
+          target_user: "Ciljani korisnik"
           subject: "Subject"
           when: "When"
           context: "Context"
@@ -3954,9 +3935,7 @@ bs_BA:
             topic_archived: "tema arhivirana"
             topic_unarchived: "tema vraćena iz arhive"
         screened_emails:
-          title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
-          email: "Email Address"
           actions:
             allow: "Allow"
         screened_urls:
@@ -3971,7 +3950,6 @@ bs_BA:
           actions:
             block: "Block"
             do_nothing: "Allow"
-            allow_admin: "Allow Admin"
           form:
             label: "New:"
             ip_address: "IP address"
@@ -3981,23 +3959,17 @@ bs_BA:
             text: "Roll up"
             title: "Stvara nove unose za zabranu podmreže ako postoje najmanje 'min_ban_entries_for_roll_up' stavke."
         search_logs:
-          title: "Logovi pretrage"
           term: "Term"
           searches: "Pretraživanja"
           click_through_rate: "CTR"
           types:
             all_search_types: "Sve vrste pretraživanja"
             header: "Header"
-            full_page: "Puna Strana"
             click_through_only: "Sve (samo klikom)"
-          header_search_results: "Rezultati pretraživanja zaglavlja"
-        logster:
-          title: "Error Logs"
       watched_words:
         search: "pretaži"
         clear_filter: "Clear"
         download: Skinuti
-        clear_all: Očisti sve
         actions:
           block: "Block"
           censor: "Censor"
@@ -4057,9 +4029,6 @@ bs_BA:
         id_not_found: "Nažalost, taj korisnički ID ne postoji u našem sistemu."
         active: "Aktivirano"
         status: "Status"
-        show_emails: "Prikaži e-mailove"
-        hide_emails: "Hide Emails"
-        silence_reason: "Razlog za utišanje"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4074,8 +4043,6 @@ bs_BA:
           staged: "Priređen"
         approved: "Approved?"
         titles:
-          active: "Active Users"
-          new: "New Users"
           pending: "Users Pending Review"
           newuser: "Users at Trust Level 0 (New User)"
           basic: "Users at Trust Level 1 (Basic User)"
@@ -4083,11 +4050,7 @@ bs_BA:
           regular: "Users at Trust Level 3 (Regular)"
           leader: "Users at Trust Level 4 (Leader)"
           staff: "Zaposleni"
-          admins: "Admin Users"
           moderators: "Moderators"
-          silenced: "Stišani korisnici"
-          suspended: "Suspended Users"
-          staged: "Upućeni korisnici"
         not_verified: "Not verified"
         check_email:
           title: "Reveal this user's email address"
@@ -4307,7 +4270,7 @@ bs_BA:
         save: "save"
         cancel: "otkaži"
       site_settings:
-        title: "Postavke"
+        nav_title: "Postavke"
         no_results: "No results found."
         clear_filter: "Clear"
         add_url: "add URL"
@@ -4493,17 +4456,26 @@ bs_BA:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Regularan korisnik"
+      homepage_choices:
+        custom:
+          label: "Custom"
+        style_type:
+          categories: "kategorija"
+          topics: "topic"
+      top_menu_items:
+        new: "Novi"
+        unread: "Nepročitano"
+        top: "Top teme"
+        latest: "Zadnje"
+        categories: "Kategorije"
+        read: "Čitao"
+        bookmarks: "Zabilješke"
       previews:
         share_button: "Podijeli"
         reply_button: "Odgovori"
       homepage_preview:
         nav_buttons:
           all_categories: "Sve kategorije"
-          new: "Novi"
-          unread: "Nepročitano"
-          top: "Top teme"
-          latest: "Zadnje"
-          categories: "Kategorije"
         table_headers:
           topic: "Topic"
           replies: "Odgovori"

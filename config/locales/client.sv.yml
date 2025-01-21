@@ -1632,7 +1632,8 @@ sv:
         after_4_minutes: "efter 4 minuter"
         after_5_minutes: "efter 5 minuter"
         after_10_minutes: "efter 10 minuter"
-      notification_level_when_replying: "När jag publicerar i ett ämne, ställ in ämnet till"
+      notification_level_when_replying:
+        do_nothing: "Gör ingenting"
       invited:
         title: "Inbjudningar"
         pending_tab: "Avvaktar"
@@ -2451,7 +2452,7 @@ sv:
         membership_request_consolidated: "ny begäran om medlemskap"
         reaction: "ny reaktion"
         votes_released: "Röstningen släpptes"
-        new_features: "nya Discourse-funktioner har släppts!"
+        new_features: "Nya Discourse-funktioner har släppts!"
         admin_problems: "nytt råd på din webbplats översiktspanel"
     upload_selector:
       uploading: "Laddar upp"
@@ -4711,27 +4712,25 @@ sv:
               messages: Visa en lista över meddelanden från /logs eller få ett specifikt loggmeddelande.
       web_hooks:
         title: "Webhookar"
-        none: "Det finns inga webhookar just nu."
         instruction: "Med Webhooks kan Discourse meddela externa tjänster när specifika händelser sker på din webbsida. När webhook:en triggas skickas en POST-begäran till de angivna URL:erna."
         detailed_instruction: "En POST-begäran skickas till angiven URL när vald händelse sker."
-        new: "Ny webhook"
         create: "Skapa"
         edit: "Redigera"
         save: "Spara"
+        delete: "Radera"
+        cancel: "Avbryt"
         description_label: "Händelseutlösare"
         controls: "Kontroller"
-        go_back: "Tillbaka till listan"
         payload_url: "Försändelse-URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
-        secret_placeholder: "En alternativ sträng som används för att generera signatur"
         event_type_missing: "Du behöver sätta upp åtminstone en händelse."
         content_type: "Innehållstyp"
         secret: "Hemlighet"
         event_chooser: "Vilka händelser ska utlösa denna webbkoppling?"
-        wildcard_event: "Skicka mig allt."
-        individual_event: "Välj enskilda händelser."
+        wildcard_event: "Skicka mig allt"
+        individual_event: "Välj enskilda händelser"
         verify_certificate: "Kontrollera TLS-certifikatet för försändelse-URL:en"
         active: "Aktiva"
         active_notice: "Vi kommer att ge detaljer kring händelsen när den händer."
@@ -5013,9 +5012,6 @@ sv:
           screened_url: "Exportera hela den undersökta URL-listan i CSV-format."
       export_json:
         button_text: "Exportera"
-      invite:
-        button_text: "Skicka inbjudningar"
-        button_title: "Skicka inbjudningar"
       customize:
         title: "Anpassa"
         preview: "förhandsgranska"
@@ -5310,8 +5306,7 @@ sv:
           overridden: Din sidas standardfil robots.txt är åsidosatt.
         email_style:
           title: "E-poststil"
-          heading: "Anpassa e-poststil"
-          html: "HTML-mall"
+          html: "HTML"
           css: "CSS"
           reset: "Återställ till standard"
           reset_confirm: "Är du säker på att du vill återställa till standard-%{fieldName} och förlora alla dina ändringar?"
@@ -5319,17 +5314,11 @@ sv:
           instructions: "Anpassa mallen där alla e-post renderas, samt stil genom CSS."
       email:
         title: "E-post"
-        settings: "E-postinställningar"
+        settings: "Inställningar"
         templates: "Mallar"
-        templates_title: "E-postmallar"
-        preview_digest: "Förhandsgranska sammandrag"
         advanced_test:
-          title: "Avancerat test"
           desc: "Se hur Discourse hanterar mottagen e-post. För att kunna hantera e-posten korrekt klistrar du in hela e-postmeddelandet i original nedanför."
           email: "Originalmeddelande"
-          run: "Kör test"
-          text: "Välj textkropp"
-          elided: "Struken text"
         sending_test: "Skickar test-e-post…"
         error: "<b>PROBLEM</b> - %{server_error}"
         test_error: "Det uppstod ett problem med att skicka testmeddelandet. Dubbelkolla dina e-postinställningar, verifiera att din värddator inte blockerar e-postkopplingar, och försök igen."
@@ -5338,16 +5327,11 @@ sv:
         bounced: "Studsade"
         received: "Mottagna"
         rejected: "Avvisade"
-        sent_at: "Skickat"
         time: "Tid"
         user: "Användare"
-        email_type: "E-posttyp"
         details_title: "Visa e-postdetaljer"
-        to_address: "Till-adress"
         test_email_address: "e-postadress att testa"
-        send_test: "Skicka e-posttest"
         sent_test: "skickat!"
-        delivery_method: "Leveransmetod"
         preview_digest_desc: "Förhandsgranska innehållet i sammanfattningen som skickas via e-post till inaktiva användare."
         refresh: "Uppdatera"
         send_digest_label: "Skicka detta resultat till:"
@@ -5357,11 +5341,7 @@ sv:
         html: "html"
         text: "text"
         html_preview: "Förhandsgranskning e-postinnehåll "
-        last_seen_user: "Senast sedd användare:"
         no_result: "Hittade inga resultat för sammanfattning."
-        reply_key: "Svarsnyckel"
-        post_link_with_smtp: "Inläggs- och SMTP-detaljer"
-        skipped_reason: "Anledning till överhoppning"
         incoming_emails:
           from_address: "Från"
           to_addresses: "Till"
@@ -5370,12 +5350,10 @@ sv:
           error: "Fel"
           none: "Hittades inga inkommande e-postmeddelanden."
           modal:
-            title: "Detaljer om inkommande e-post"
             error: "Fel"
             headers: "Sidhuvuden"
             subject: "Ämne"
             body: "Huvuddel"
-            rejection_message: "Avvisad e-post"
           filters:
             from_placeholder: "från@exempel.se"
             to_placeholder: "till@exempel.se"
@@ -5405,7 +5383,7 @@ sv:
           delete_topic: "Ämne raderat"
           post_approved: "Inlägg godkänt"
       logs:
-        title: "Loggar"
+        nav_title: "Loggar"
         action: "Åtgärd"
         created_at: "Skapad"
         last_match_at: "Senast matchad"
@@ -5423,10 +5401,8 @@ sv:
         staff_actions:
           all: "alla"
           filter: "Filter:"
-          title: "Personalåtgärder"
-          clear_filters: "Visa allt"
           staff_user: "Användare"
-          target_user: "Målanvändare"
+          target_user: "Specifik användare"
           subject: "Ämne"
           when: "När"
           context: "Sammanhang"
@@ -5536,9 +5512,7 @@ sv:
             destroy_public_sidebar_section: "förstöra doffentlig sektion i sidopanel"
             reset_bounce_score: "återställ antalet studsar"
         screened_emails:
-          title: "Kontrollerade e-postadresser"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
-          email: "E-postadress"
           actions:
             allow: "Tillåt"
         screened_urls:
@@ -5553,7 +5527,6 @@ sv:
           actions:
             block: "Blockera"
             do_nothing: "Tillåt"
-            allow_admin: "Tillåt admin"
           form:
             label: "Ny:"
             ip_address: "IP-adress"
@@ -5563,18 +5536,13 @@ sv:
             text: "Rulla upp"
             title: "Skapar nya förbjudna delnätsposter om det finns minst 'min_ban_entries_for_roll_up' poster."
         search_logs:
-          title: "Söklogg"
           term: "Term"
           searches: "Sökningar"
           click_through_rate: "CTR"
           types:
             all_search_types: "Alla söktyper"
             header: "Sidhuvud"
-            full_page: "Helsida"
             click_through_only: "Alla (bara klickade)"
-          header_search_results: "Sidhuvud Sökresultat"
-        logster:
-          title: "Felprotokoll"
       watched_words:
         search: "sök"
         clear_filter: "Rensa"
@@ -5583,7 +5551,6 @@ sv:
           other: "visa %{count} ord"
         case_sensitive: "(skiftlägeskänsligt)"
         download: Hämta
-        clear_all: Rensa alla
         clear_all_confirm: "Är du säker på att du vill rensa alla bevakade ord för åtgärden %{action}?"
         invalid_regex: 'Det bevakade ordet "%{word}" är ett ogiltigt reguljärt uttryck.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Bevakade ord är reguljära uttryck</a> och de omfattar inte automatiskt ordgränser. Om du vill att det reguljära uttrycket ska matcha hela ord, anger du <code>\b</code> i början och slutet av ditt reguljära uttryck.'
@@ -5721,9 +5688,6 @@ sv:
         id_not_found: "Detta användar-ID finns tyvärr inte i vårt system."
         active: "Aktiverad"
         status: "Status"
-        show_emails: "Visa e-post"
-        hide_emails: "Dölj e-post"
-        silence_reason: "Anledning till att tysta"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5739,7 +5703,6 @@ sv:
         approved: "Godkänd?"
         titles:
           active: "Aktiva användare"
-          new: "Nya användare"
           pending: "Användare under granskning"
           newuser: "Användare på förtroendenivå 0 (Ny användare)"
           basic: "Användare på förtroendenivå 1 (Grundnivå)"
@@ -5747,11 +5710,7 @@ sv:
           regular: "Användare på förtroendenivå 3 (Stammis)"
           leader: "Användare på förtroendenivå 4 (Ledare)"
           staff: "Medarbetare"
-          admins: "Admin-användare"
           moderators: "Moderatorer"
-          silenced: "Tystade användare"
-          suspended: "Avstängda användare"
-          staged: "Påhittade användare"
         not_verified: "Ej verifierade"
         check_email:
           title: "Visa den här användarens e-postadress"
@@ -6063,7 +6022,7 @@ sv:
           invalid_input: "Emoji-listan får endast innehålla giltiga emoji-namn, t.ex.: kramar"
           add_emoji_button:
             label: "Lägg till emoji"
-        title: "Webbplatsinställningar"
+        nav_title: "Inställningar"
         no_results: "Inga resultat hittades."
         more_site_setting_results:
           one: "Det är över %{count} resultat. Förfina din sökning eller välj en kategori."
@@ -6201,7 +6160,6 @@ sv:
             with_post_time: <span class="username">%{username}</span> för inlägg i %{link} kl. <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> kl. <span class="time">%{time}</span>
         mass_award:
-          title: Tilldela genom bulk
           description: Tilldela samma utmärkelse till flera användare samtidigt.
           no_badge_selected: Välj en utmärkelse för att komma igång.
           perform: "Tilldela utmärkelse till användare"
@@ -6304,6 +6262,22 @@ sv:
           admin: "Administratör"
           moderator: "Moderator"
           regular: "Regelbunden användare"
+      homepage_choices:
+        custom:
+          label: "Anpassad"
+        style_type:
+          categories: "kategori"
+          topics: "ämne"
+      top_menu_items:
+        new: "Nya"
+        unread: "Olästa"
+        top: "Topp"
+        latest: "Senaste"
+        hot: "Hett"
+        categories: "Kategorier"
+        unseen: "Osedda"
+        read: "Läs"
+        bookmarks: "Bokmärken"
       previews:
         share_button: "Dela"
         reply_button: "Svara"
@@ -6312,12 +6286,6 @@ sv:
       homepage_preview:
         nav_buttons:
           all_categories: "alla kategorier"
-          new: "Nya"
-          unread: "Olästa"
-          top: "Topp"
-          latest: "Senaste"
-          hot: "Hett"
-          categories: "Kategorier"
         category_names:
           site_feedback: "Feedback om webbplatsen"
         table_headers:

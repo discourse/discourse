@@ -546,6 +546,8 @@ pl_PL:
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
       dropdown:
+        title: "Otwórz menu najnowszych wersji roboczych"
+        untitled: "Wersja robocza bez tytułu"
         view_all: "pokaż wszystkie"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
@@ -1903,7 +1905,8 @@ pl_PL:
         after_4_minutes: "po 4 minutach"
         after_5_minutes: "po 5 minutach"
         after_10_minutes: "po 10 minutach"
-      notification_level_when_replying: "Kiedy piszę w temacie, dołącz ten temat do"
+      notification_level_when_replying:
+        do_nothing: "Nic nie rób"
       topics_unread_when_closed: "Uznaj tematy za nieprzeczytane po ich zamknięciu"
       invited:
         title: "Zaproszenia"
@@ -2892,7 +2895,7 @@ pl_PL:
         membership_request_consolidated: "nowe wnioski o członkostwo"
         reaction: "nowa reakcja"
         votes_released: "Głos został zwolniony"
-        new_features: "nowe funkcje Discourse zostały udostępnione!"
+        new_features: "Nowe funkcje Discourse zostały udostępnione!"
         admin_problems: "nowe porady w panelu administratora"
     upload_selector:
       uploading: "Wgrywanie"
@@ -3883,6 +3886,7 @@ pl_PL:
         flag_action: "Oflaguj"
         delete_action: "Usuń post"
         delete: "usuń ten wpis"
+        undelete_action: "Cofnij usunięcie postu"
         undelete: "przywróc ten wpis"
         share_action: "Udostępnij"
         share: "udostępnij odnośnik do tego wpisu"
@@ -4205,6 +4209,8 @@ pl_PL:
         all: "wszystkie tematy"
         none: "brak podkategorii"
       colors_disabled: "Nie możesz wybrać kolorów, ponieważ nie masz stylu kategorii."
+    anonymous_flagging:
+      title: "Zgłoś nielegalną treść"
     flagging:
       title: "Dziękujemy za dbanie o kulturę w naszej społeczności!"
       action: "Oflaguj wpis"
@@ -5530,27 +5536,24 @@ pl_PL:
               messages: Wyświetl listę wiadomości z /logs lub uzyskaj określony komunikat dziennika.
       web_hooks:
         title: "Webhooki"
-        none: "Brak webhooków"
         instruction: "Webhooks pozwala Discourse powiadomić zewnętrzne usługi, kiedy pewne zdarzenie pojawi się na twojej stronie. Gdy webhook jest uruchamiany, żądanie POST wyśle ​​do URL świadczonych."
         detailed_instruction: "Zapytanie POST zostanie wysłane na podany adres URL gdy zostanie spełnione wybrane wydarzenie"
-        new: "Nowy webhook"
         create: "Stwórz"
         edit: "Edytuj"
         save: "Zapisz"
+        delete: "Usuń"
+        cancel: "Anuluj"
         description_label: "Wyzwalacze zdarzeń"
         controls: "Ustawienia"
-        go_back: "Powrót do listy"
         payload_url: "Zawartość URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Sekret nie może zawierać pustych znaków."
         secret_too_short: "Sekret musi zawierać przynajmniej 12 znaków."
-        secret_placeholder: "Opcjonalna fraza użyta do generowania podpisu"
         event_type_missing: "Musisz ustawić co najmniej jeden typ wydarzenia."
         content_type: "Typ zawartości"
         secret: "Tajemnica"
         event_chooser: "Jakie zdarzenia powinny wywołać uruchomienie tego webhooka?"
-        wildcard_event: "Wysyłaj mi wszystko."
-        individual_event: "Wybierz indywidualne zdarzenia"
+        wildcard_event: "Wysyłaj mi wszystko"
         verify_certificate: "Sprawdź certyfikat TLS zawarty w url"
         active: "Aktywny"
         active_notice: "Dostarczymy detale wydarzenia, kiedy się ono odbędzie."
@@ -5942,9 +5945,6 @@ pl_PL:
           screened_url: "Eksportuj listę monitorowanych URLi do formatu CSV."
       export_json:
         button_text: "Eksportuj"
-      invite:
-        button_text: "Wyślij zaproszenia"
-        button_title: "Wysyłanie zaproszeń"
       customize:
         title: "Wygląd"
         preview: "podgląd"
@@ -6103,7 +6103,6 @@ pl_PL:
           install_upload: "Z twojego urządzenia"
           install_git_repo: "Z repozytorium git"
           install_create: "Stwórz nowy"
-          installing_message: "Instalacja motywu może potrwać kilka minut..."
           duplicate_remote_theme: "Komponent motywu ”%{name}” jest już zainstalowany. Czy na pewno chcesz zainstalować inną kopię?"
           force_install: "Nie można zainstalować motywu, ponieważ repozytorium Git jest niedostępne. Czy na pewno chcesz kontynuować instalację?"
           create_placeholder: "Utwórz symbol zastępczy"
@@ -6288,8 +6287,7 @@ pl_PL:
           overridden: Domyślny plik robots.txt twojej witryny został nadpisany
         email_style:
           title: "Styl e-maili"
-          heading: "Dostosuj styl e-maili"
-          html: "Szablon HTML"
+          html: "HTML"
           css: "CSS"
           reset: "Przywróć ustawienia domyślne"
           reset_confirm: "Czy na pewno chcesz zresetować do domyślnego %{fieldName} i stracić wszystkie zmiany?"
@@ -6297,17 +6295,11 @@ pl_PL:
           instructions: "Dostosuj szablon, w którym renderowane są wszystkie wiadomości e-mail w formacie HTML, i nadaj mu styl za pomocą CSS."
       email:
         title: "E-maile"
-        settings: "Ustawienia e-mail"
+        settings: "Ustawienia"
         templates: "Szablony"
-        templates_title: "Szablony e-mail"
-        preview_digest: "Pokaż zestawienie aktywności"
         advanced_test:
-          title: "Zaawansowany test"
           desc: "Zobacz, jak Discourse przetwarza otrzymane e-maile. Aby móc poprawnie przetworzyć wiadomość e-mail, wklej poniżej całą oryginalną wiadomość e-mail."
           email: " Oryginalna wiadomość"
-          run: "Przeprowadź test"
-          text: "Wybrane body tekstu"
-          elided: "Pominięty tekst"
         sending_test: "Wysyłanie testowego emaila…"
         error: "<b>BŁAD</b> - %{server_error}"
         test_error: "Wystąpił problem podczas wysyłania testowego e-maila. Sprawdź ustawienia poczty, upewnij się czy Twój serwer nie blokuje połączeń pocztowych i spróbuj ponownie."
@@ -6316,16 +6308,11 @@ pl_PL:
         bounced: "Odbite"
         received: "Otrzymane"
         rejected: "Odrzucone"
-        sent_at: "Wysłany na"
         time: "Czas"
         user: "Użytkownik"
-        email_type: "Typ -emaila"
         details_title: "Pokaż szczegóły e-maila"
-        to_address: "Na adres"
         test_email_address: "adres email do testu"
-        send_test: "Wyślij email testowy"
         sent_test: "wysłany!"
-        delivery_method: "Metoda dostarczenia"
         preview_digest_desc: "Podgląd treści zestawienia wysyłanego e-mailem do nieaktywnych użytkowników."
         refresh: "Odśwież"
         send_digest_label: "Wyślij ten wynik do:"
@@ -6335,11 +6322,7 @@ pl_PL:
         html: "html"
         text: "text"
         html_preview: "Podgląd zawartości wiadomości e-mail"
-        last_seen_user: "Ostatnia "
         no_result: "Brak wyników przy przetwarzaniu. "
-        reply_key: "Klucz odpowiedzi"
-        post_link_with_smtp: "Szczegóły wiadomości i SMTP"
-        skipped_reason: "Powód pominięcia"
         incoming_emails:
           from_address: "Od"
           to_addresses: "Do"
@@ -6348,12 +6331,10 @@ pl_PL:
           error: "Błąd"
           none: "Nie znaleziono przychodzących wiadomości e-mail."
           modal:
-            title: "Szczegóły przychodzącej wiadomości e-mail"
             error: "Błąd"
             headers: "Nagłówki"
             subject: "Temat"
             body: "Treść"
-            rejection_message: "Odrzucona poczta"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -6383,7 +6364,8 @@ pl_PL:
           delete_topic: "Temat usunięty"
           post_approved: "Wpis zatwierdzony"
       logs:
-        title: "Logi"
+        title: "Logi i kontrola"
+        nav_title: "Logi"
         action: "Działanie"
         created_at: "Utworzony"
         last_match_at: "Ostatnia Zgodność"
@@ -6401,10 +6383,8 @@ pl_PL:
         staff_actions:
           all: "wszystkie"
           filter: "Filtr:"
-          title: "Działania zespołu zarządzającego"
-          clear_filters: "Pokaż wszystko"
           staff_user: "Użytkownik"
-          target_user: "Użytkownik będący Obiektem"
+          target_user: "Wskazany użytkownik"
           subject: "Temat"
           when: "Kiedy"
           context: "Kontekst"
@@ -6532,9 +6512,7 @@ pl_PL:
             tag_group_change: "zmień grupę tagów"
             delete_associated_accounts: "usuń powiązane konta"
         screened_emails:
-          title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
-          email: "Adres email"
           actions:
             allow: "Zezwól"
         screened_urls:
@@ -6549,7 +6527,6 @@ pl_PL:
           actions:
             block: "Zablokuj"
             do_nothing: "Zezwól"
-            allow_admin: "Włącz dostęp do panelu admina"
           form:
             label: "Nowy:"
             ip_address: "Adres IP"
@@ -6559,18 +6536,13 @@ pl_PL:
             text: "Zgrupuj"
             title: "Tworzy nowy ban dla podsieci jeśli jest co najmniej 'min_ban_entries_for_roll_up' pozycji."
         search_logs:
-          title: "Logi wyszukiwań"
           term: "Szukana fraza"
           searches: "Wyszukiwania"
           click_through_rate: "CTR"
           types:
             all_search_types: "Wszystkie typy wyszukiwania"
             header: "Nagłówek"
-            full_page: "Pełna strona"
             click_through_only: "wszystkie (tylko przeklikiwanie)"
-          header_search_results: "Wyniki wyszukiwania w nagłówku"
-        logster:
-          title: "Logi błędów"
       watched_words:
         title: "Obserwowane słowa"
         description: "Obserwowane słowa to narzędzia moderacji, które mogą wykonywać wiele różnych działań, w tym blokowanie, cenzurowanie, linkowanie lub oznaczanie postów zawierających określone słowa"
@@ -6584,7 +6556,6 @@ pl_PL:
         case_sensitive: "(z uwzg. wielkości liter)"
         html: "(html)"
         download: Pobierz
-        clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
         invalid_regex: 'Obserwowane słowo "%{word}" jest nieprawidłowym wyrażeniem regularnym.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Obserwowane słowa są wyrażeniami regularnymi</a> i nie zawierają w sobie automatycznie granic słów. Jeśli chcesz, aby wyrażenie regularne pasowało do całych słów, dodaj <code>\b</code> na początku i na końcu wyrażenia regularnego.'
@@ -6728,9 +6699,6 @@ pl_PL:
         id_not_found: "Przepraszamy, ten identyfikator użytkownika nie istnieje w naszym systemie."
         active: "Aktywowane"
         status: "Status"
-        show_emails: "Pokaż e-maile"
-        hide_emails: "Ukryj e-maile"
-        silence_reason: "Powód wyciszenia"
         bulk_actions:
           title: "Działania zbiorcze"
           admin_cant_be_deleted: "Ten użytkownik nie może zostać usunięty, ponieważ jest administratorem"
@@ -6765,7 +6733,6 @@ pl_PL:
         approved: "Zatwierdzony?"
         titles:
           active: "Aktywni użytkownicy"
-          new: "Nowi użytkownicy"
           pending: "Użytkownicy oczekujący na akceptację"
           newuser: "Użytkownicy na 0 poziomie zaufania (Nowi)"
           basic: "Użytkownicy na 1 poziomie zaufania (Podstawowi)"
@@ -6773,11 +6740,7 @@ pl_PL:
           regular: "Użytkownicy na 3 poziomie zaufania (Regularni)"
           leader: "Użytkownicy na 4 poziomie zaufania (Weterani)"
           staff: "Zespół"
-          admins: "Administratorzy"
           moderators: "Moderatorzy"
-          silenced: "Wyciszeni użytkownicy"
-          suspended: "Zawieszeni użytkownicy"
-          staged: "Użytkownicy etapowi"
         not_verified: "Niezweryfikowany"
         check_email:
           title: "Wyświetl adres email tego użytkownika"
@@ -7133,7 +7096,7 @@ pl_PL:
           invalid_input: "Lista emoji powinna zawierać tylko poprawne nazwy emoji, np. hugs"
           add_emoji_button:
             label: "Dodaj emoji"
-        title: "Ustawienia"
+        nav_title: "Ustawienia"
         no_results: "Brak wyników wyszukiwania"
         more_site_setting_results:
           one: "Jest więcej niż %{count} wynik. Zawęź wyszukiwanie lub wybierz kategorię."
@@ -7236,7 +7199,6 @@ pl_PL:
         description: Opis
         long_description: Długi opis
         badge_type: Typ odznaki
-        group_settings: Ustawienia grupy
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupy odznak
@@ -7308,7 +7270,6 @@ pl_PL:
           title: "Wybierz odznakę lub utwórz nową"
           description: "Zacznij od wybrania istniejącej plakietki do dostosowania lub stwórz zupełnie nową plakietkę"
         mass_award:
-          title: Masowa odznaka
           description: Przyznaj tę samą odznakę wielu użytkownikom jednocześnie.
           no_badge_selected: Wybierz odznakę, aby rozpocząć.
           perform: "Odznaka dla użytkowników"
@@ -7362,7 +7323,6 @@ pl_PL:
         post_author: "Autor postu"
         post_author_with_default: "Autor postu (domyślnie %{author})"
         add_host: "Dodaj host"
-        posts_and_topics: "Konfiguracja postów i tematów"
         crawlers: "Konfiguracja robotów"
         crawlers_description: "Gdy Discourse tworzy tematy reprezentujące twoje wpisy, a kanał RSS/ATOM nie został podany, treść będzie pobierana poprzez parsowanie HTML. Proces ten może okazać się trudny dlatego umożliwiamy podanie dodatkowych reguł CSS, które usprawniają proces parsowania."
         embed_by_username: "Użytkownik tworzący tematy"
@@ -7374,9 +7334,7 @@ pl_PL:
         blocked_embed_selectors: "Selektor CSS dla elementów, które są usuwane z osadzonych"
         allowed_embed_classnames: "Dozwolone nazwy klas CSS"
         save: "Zapisz"
-        posts_and_topics_settings_saved: "Ustawienia postów i tematów zostały zapisane"
         crawler_settings_saved: "Ustawienia robota zostały zapisane"
-        back: "Powrót do osadzania"
         configuration_snippet: "Fragment konfiguracji"
         host_form:
           add_header: "Dodaj host"
@@ -7385,7 +7343,6 @@ pl_PL:
         nav:
           hosts: "Hosty"
           settings: "Ustawienia"
-          posts_and_topics: "Posty i tematy"
           crawlers: "Botów indeksujących"
       permalink:
         title: "Permalinki"
@@ -7456,6 +7413,22 @@ pl_PL:
           admin: "Administratorzy"
           moderator: "Moderatorzy"
           regular: "Zwykli użytkownicy"
+      homepage_choices:
+        custom:
+          label: "Niestandardowe"
+        style_type:
+          categories: "kategoria"
+          topics: "temat"
+      top_menu_items:
+        new: "Nowa"
+        unread: "Nieprzeczytane"
+        top: "Popularne"
+        latest: "Najnowsza"
+        hot: "Gorące"
+        categories: "Kategorie"
+        unseen: "Niewidziany"
+        read: "Przeczytane"
+        bookmarks: "Zakładki"
       previews:
         topic_title: "Jakie książki czytasz?"
         share_button: "Udostępnij"
@@ -7465,12 +7438,6 @@ pl_PL:
       homepage_preview:
         nav_buttons:
           all_categories: "wszystkie kategorie"
-          new: "Nowa"
-          unread: "Nieprzeczytane"
-          top: "Popularne"
-          latest: "Najnowsza"
-          hot: "Gorące"
-          categories: "Kategorie"
         topic_titles:
           what_books: "Jakie książki czytasz?"
           what_movies: "Jakie filmy widziałeś ostatnio?"
