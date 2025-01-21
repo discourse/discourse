@@ -79,6 +79,7 @@ class TopicsController < ApplicationController
         :replies_to_post_number,
         :filter_upwards_post_id,
         :filter_top_level_replies,
+        :lang,
       )
     username_filters = opts[:username_filters]
 
@@ -1370,6 +1371,7 @@ class TopicsController < ApplicationController
         scope: guardian,
         root: false,
         include_raw: !!params[:include_raw],
+        lang: params[:lang],
       )
 
     respond_to do |format|
