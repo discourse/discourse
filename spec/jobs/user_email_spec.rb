@@ -65,7 +65,7 @@ RSpec.describe Jobs::UserEmail do
 
       email = ActionMailer::Base.deliveries.first
 
-      expect(email.to).to contain_exactly(user.email)
+      expect(email.to).to contain_exactly(suspended.email)
     end
 
     it "doesn't call the mailer when the user is not active" do
