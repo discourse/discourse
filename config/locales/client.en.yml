@@ -1925,7 +1925,7 @@ en:
         after_5_minutes: "after 5 minutes"
         after_10_minutes: "after 10 minutes"
 
-      notification_level_when_replying: 
+      notification_level_when_replying:
         label: "When posting"
         watch_topic: "Watch topic"
         track_topic: "Track topic"
@@ -4545,7 +4545,7 @@ en:
         title: "Application"
         create: "%{shortcut} Create a new topic"
         notifications: "%{shortcut} Open notifications"
-        hamburger_menu: "%{shortcut} Open hamburger menu"
+        hamburger_menu: "%{shortcut} Open navigation menu"
         user_profile_menu: "%{shortcut} Open user menu"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"
