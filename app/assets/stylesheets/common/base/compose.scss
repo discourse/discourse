@@ -731,11 +731,14 @@ div.ac-wrap {
     bottom: unset;
   }
 
-  &.footer-nav-visible #reply-control.draft {
-    margin-top: calc(
-      (var(--footer-nav-height) + env(safe-area-inset-bottom)) * -1
-    );
-    padding-bottom: 0px;
+  &.footer-nav-visible {
+    #reply-control.draft,
+    #reply-control.saving {
+      margin-top: calc(
+        (var(--footer-nav-height) + env(safe-area-inset-bottom)) * -1
+      );
+      padding-bottom: 0px;
+    }
   }
 
   // When an element (input, textearea) gets focus, iOS Safari tries to put it in the center
