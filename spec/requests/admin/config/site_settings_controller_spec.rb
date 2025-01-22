@@ -47,11 +47,9 @@ RSpec.describe Admin::SiteSettingsController do
               Admin::Config::SiteSettingsController::ADMIN_CONFIG_AREA_ALLOWLISTED_HIDDEN_SETTINGS.first.to_s
           end,
         ).to be_present
-        get "/admin/config/site_settings.json", params: { filter_names: ["set_locale_from_cookie"] }
+        get "/admin/config/site_settings.json", params: { filter_names: ["max_category_nesting"] }
         expect(
-          response.parsed_body["site_settings"].find do |s|
-            s["setting"] == "set_locale_from_cookie"
-          end,
+          response.parsed_body["site_settings"].find { |s| s["setting"] == "max_category_nesting" },
         ).to be_nil
       end
 

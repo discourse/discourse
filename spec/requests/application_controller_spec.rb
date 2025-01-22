@@ -1089,11 +1089,10 @@ RSpec.describe ApplicationController do
       end
     end
 
-    context "with set_locale_from_cookie enabled" do
+    context "with locale cookie 🍪" do
       context "when cookie locale differs from default locale" do
         before do
           SiteSetting.allow_user_locale = true
-          SiteSetting.set_locale_from_cookie = true
           SiteSetting.default_locale = "en"
         end
 
