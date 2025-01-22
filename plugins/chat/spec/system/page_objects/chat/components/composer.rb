@@ -116,7 +116,7 @@ module PageObjects
         end
 
         def meta_enter_shortcut
-          input.send_keys(%i[meta enter])
+          input.send_keys([PLATFORM_KEY_MODIFIER, :enter])
         end
       end
     end
