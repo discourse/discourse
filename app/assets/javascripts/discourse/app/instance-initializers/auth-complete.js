@@ -140,14 +140,18 @@ export default {
               };
 
               if (siteSettings.full_page_login) {
-                router.transitionTo("signup").then((signup) => {
-                  const signupController =
-                    signup.controller || owner.lookup("controller:signup");
-                  Object.keys(createAccountProps || {}).forEach((key) => {
-                    signupController.set(key, createAccountProps[key]);
+                router
+                  .transitionTo("signup", {
+                    queryParams: { authComplete: true },
+                  })
+                  .then((signup) => {
+                    const signupController =
+                      signup.controller || owner.lookup("controller:signup");
+                    Object.keys(createAccountProps || {}).forEach((key) => {
+                      signupController.set(key, createAccountProps[key]);
+                    });
+                    signupController.handleSkipConfirmation();
                   });
-                  signupController.handleSkipConfirmation();
-                });
               } else {
                 modal.show(CreateAccount, { model: createAccountProps });
               }

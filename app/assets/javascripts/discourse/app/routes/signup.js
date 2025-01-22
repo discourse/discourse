@@ -8,8 +8,12 @@ export default class SignupRoute extends DiscourseRoute {
   @service router;
   @service login;
 
-  beforeModel() {
-    if (this.login.isOnlyOneExternalLoginMethod) {
+  authComplete = false;
+
+  beforeModel(transition) {
+    this.authComplete = transition.to.queryParams.authComplete || false;
+
+    if (this.login.isOnlyOneExternalLoginMethod && !this.authComplete) {
       this.login.singleExternalLogin();
     } else {
       this.showCreateAccount();
@@ -19,7 +23,7 @@ export default class SignupRoute extends DiscourseRoute {
   setupController(controller) {
     super.setupController(...arguments);
 
-    if (this.login.isOnlyOneExternalLoginMethod) {
+    if (this.login.isOnlyOneExternalLoginMethod && !this.authComplete) {
       controller.set("isRedirecting", true);
     }
   }
