@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
@@ -8,10 +9,12 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
+import { exportEntity } from "discourse/lib/export-csv";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
+import UserExport from "admin/models/user-export";
 import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
 import DeleteUserPostsProgressModal from "../components/modal/delete-user-posts-progress";
 import MergeUsersConfirmationModal from "../components/modal/merge-users-confirmation";
@@ -24,6 +27,9 @@ export default class AdminUserIndexController extends Controller {
   @service adminTools;
   @service modal;
 
+  @tracked userExport = null;
+  @tracked userExportReloading = false;
+
   originalPrimaryGroupId = null;
   customGroupIdsBuffer = null;
   availableGroups = null;
@@ -34,6 +40,7 @@ export default class AdminUserIndexController extends Controller {
   @setting("enable_badges") showBadges;
   @setting("moderators_view_emails") canModeratorsViewEmails;
   @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
+  @notEmpty("userExport") userExportAvailable;
 
   @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
   primaryGroupDirty;
@@ -168,6 +175,37 @@ export default class AdminUserIndexController extends Controller {
   @discourseComputed("ssoLastPayload")
   ssoPayload(lastPayload) {
     return lastPayload.split("&");
+  }
+
+  @action
+  triggerUserExport() {
+    this.dialog.yesNoConfirm({
+      message: i18n("admin.user.exports.download.confirm"),
+      didConfirm: async () => {
+        this.userExportReloading = true;
+        const currentExportUri = this.userExport?.uri;
+        try {
+          await exportEntity("user_archive", { export_user_id: this.model.id });
+          this.dialog.alert(i18n("admin.user.exports.download.success"));
+
+          const interval = setInterval(async () => {
+            this.userExport = await UserExport.findLatest(this.model.id);
+            if (this.userExport.uri !== currentExportUri) {
+              this.userExportReloading = false;
+              clearInterval(interval);
+            }
+          }, 1000);
+        } catch (err) {
+          popupAjaxError(err);
+        }
+      },
+    });
+  }
+
+  get userExportExpiry() {
+    return i18n("admin.user.exports.download.expires_in", {
+      count: this.userExport.retain_hours,
+    });
   }
 
   @action

@@ -1,5 +1,6 @@
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
+import UserExport from "admin/models/user-export";
 
 export default class AdminUserIndexRoute extends DiscourseRoute {
   model() {
@@ -10,12 +11,12 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
     return this.currentModel.username;
   }
 
-  afterModel(model) {
+  async afterModel(model) {
     if (this.currentUser.admin) {
-      return Group.findAll().then((groups) => {
-        this._availableGroups = groups.filterBy("automatic", false);
-        return model;
-      });
+      const groups = await Group.findAll();
+      this._availableGroups = groups.filterBy("automatic", false);
+
+      this._userExport = await UserExport.findLatest(model.id);
     }
   }
 
@@ -23,6 +24,7 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
     controller.setProperties({
       originalPrimaryGroupId: model.primary_group_id,
       availableGroups: this._availableGroups,
+      userExport: this._userExport,
       customGroupIdsBuffer: model.customGroups.mapBy("id"),
       ssoExternalEmail: null,
       ssoLastPayload: null,
