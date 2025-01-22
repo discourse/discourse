@@ -11,7 +11,7 @@ export default class PostListItemDetails extends Component {
   get url() {
     return this.args.urlPath
       ? this.args.post[this.args.urlPath]
-      : this.args.post?.url;
+      : this.args.post.url;
   }
 
   get showUserInfo() {
