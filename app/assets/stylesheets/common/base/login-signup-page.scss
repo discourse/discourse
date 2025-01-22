@@ -42,6 +42,9 @@ body.activate-account-page {
 body.login-page,
 body.signup-page {
   background-color: var(--secondary);
+  &.redirecting {
+    display: none;
+  }
 }
 
 .login-fullpage,
