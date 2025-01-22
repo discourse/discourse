@@ -298,6 +298,9 @@ export default class ApplicationRoute extends DiscourseRoute {
       if (this.isOnlyOneExternalLoginMethod) {
         this.login.externalLogin(this.externalLoginMethods[0]);
       } else if (this.siteSettings.full_page_login) {
+        if (this.router.currentRouteName !== "signup") {
+          cookie("destination_url", window.location.href);
+        }
         this.router.transitionTo("login").then((login) => {
           login.controller.set("canSignUp", this.controller.canSignUp);
           if (this.siteSettings.login_required) {
@@ -327,12 +330,19 @@ export default class ApplicationRoute extends DiscourseRoute {
           signup: true,
         });
       } else if (this.siteSettings.full_page_login) {
+        if (
+          this.router.currentRouteName !== "login" &&
+          this.router.currentRouteName !== "invites.show"
+        ) {
+          cookie("destination_url", window.location.href);
+        }
         this.router.transitionTo("signup").then((signup) => {
           Object.keys(createAccountProps || {}).forEach((key) => {
             signup.controller.set(key, createAccountProps[key]);
           });
         });
       } else {
+        cookie("destination_url", window.location.href);
         this.modal.show(CreateAccount, { model: createAccountProps });
       }
     }
