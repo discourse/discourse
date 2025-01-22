@@ -14,7 +14,7 @@ export default class SignupRoute extends DiscourseRoute {
     this.authComplete = transition.to.queryParams.authComplete || false;
 
     if (this.login.isOnlyOneExternalLoginMethod && !this.authComplete) {
-      this.login.singleExternalLogin();
+      this.login.singleExternalLogin({ signup: true });
     } else {
       this.showCreateAccount();
     }

@@ -21,8 +21,8 @@ export default class LoginService extends Service {
   }
 
   @action
-  async singleExternalLogin() {
-    await this.externalLogin(this.externalLoginMethods[0]);
+  async singleExternalLogin(opts) {
+    await this.externalLogin(this.externalLoginMethods[0], opts);
   }
 
   get isOnlyOneExternalLoginMethod() {
