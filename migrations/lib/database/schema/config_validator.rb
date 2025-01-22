@@ -65,39 +65,39 @@ module Migrations::Database::Schema
 
     def validate_schema_config(config)
       schema_config = config[:schema]
+      validate_excluded_tables(schema_config)
       validate_tables(schema_config)
     end
 
-    def validate_tables(schema_config)
-      existing_table_names = @db.tables.sort.to_set
-      excluded_tables = schema_config.dig(:global, :tables, :exclude)
-      configured_tables = schema_config[:tables]
+    def validate_excluded_tables(schema_config)
+      excluded_table_names = schema_config.dig(:global, :tables, :exclude)
+      return if excluded_table_names.blank?
 
-      if excluded_tables
-        excluded_tables.sort.each do |table_name|
-          if !existing_table_names.delete?(table_name)
-            @errors << "Excluded table does not exist: #{table_name}"
-          end
-        end
+      existing_table_names = @db.tables.to_set
 
-        excluded_tables
-          .intersection(configured_tables.keys.map(&:to_s))
-          .sort
-          .each do |table_name|
-            @errors << "Excluded table can't be configured in `schema/tables` section: #{table_name}"
-            configured_tables.delete(table_name.to_sym)
-          end
-      end
-
-      configured_tables.sort.each do |table_name, _config|
-        table_name = table_name.to_s
+      excluded_table_names.sort.each do |table_name|
         if !existing_table_names.delete?(table_name)
-          @errors << "Table does not exist: #{table_name}"
+          @errors << "Excluded table does not exist: #{table_name}"
+        end
+      end
+    end
+
+    def validate_tables(schema_config)
+      existing_table_names = @db.tables
+      configured_table_names = schema_config[:tables].keys.map(&:to_s).to_set
+      excluded_table_names = schema_config.dig(:global, :tables, :exclude) || []
+
+      excluded_table_names.sort.each do |table_name|
+        if configured_table_names.include?(table_name)
+          @errors << "Excluded table can't be configured in `schema/tables` section: #{table_name}"
         end
       end
 
-      existing_table_names.each do |table_name|
-        @errors << "Table missing from configuration file: #{table_name}"
+      existing_table_names.sort.each do |table_name|
+        if !configured_table_names.include?(table_name) &&
+             !excluded_table_names.include?(table_name)
+          @errors << "Table missing from configuration file: #{table_name}"
+        end
       end
     end
 
