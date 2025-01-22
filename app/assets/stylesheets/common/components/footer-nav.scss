@@ -13,12 +13,6 @@ html.footer-nav-visible {
     padding-bottom: calc(var(--footer-nav-height) + 15px);
   }
 
-  #reply-control.draft {
-    bottom: var(--footer-nav-height);
-    margin-bottom: env(safe-area-inset-bottom);
-    padding-bottom: 0;
-  }
-
   .with-topic-progress {
     bottom: calc(
       var(--footer-nav-height) + env(safe-area-inset-bottom) +
