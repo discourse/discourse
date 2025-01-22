@@ -82,7 +82,17 @@ export default class WizardStepComponent extends Component {
   }
 
   get containerFontClasses() {
-    return `wizard-container-body-font-${this.wizard.font.id} wizard-container-heading-font-${this.wizard.headingFont.id}`;
+    let fontClasses = "";
+
+    if (this.wizard.font) {
+      fontClasses += ` wizard-container-body-font-${this.wizard.font.id}`;
+    }
+
+    if (this.wizard.headingFont) {
+      fontClasses += ` wizard-container-heading-font-${this.wizard.headingFont.id}`;
+    }
+
+    return fontClasses;
   }
 
   @action

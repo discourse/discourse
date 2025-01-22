@@ -100,6 +100,10 @@ export default class PreviewBase extends Component {
   }
 
   loadFontVariants(font) {
+    if (!font) {
+      return Promise.resolve();
+    }
+
     const fontVariantData = this.fontMap[font.id];
 
     // System font for example does not need to load from a remote source.
