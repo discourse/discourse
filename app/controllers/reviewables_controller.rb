@@ -74,6 +74,9 @@ class ReviewablesController < ApplicationController
           total_rows_reviewables: total_rows,
           types: meta_types,
           reviewable_types: Reviewable.types,
+          unknown_reviewable_types:
+            Reviewable.pending.distinct.pluck(:type) -
+              Reviewable.types.map { |reviewable| reviewable.new.type },
           score_types:
             ReviewableScore
               .types

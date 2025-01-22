@@ -1,3 +1,27 @@
+{{#if this.displayUnknownReviewableTypesWarning}}
+  <div class="alert alert-info unknown-reviewables">
+    <span class="text">{{i18n "review.unknown.title"}}</span>
+    <ul>
+      {{#each this.unknownReviewableTypes as |type|}}
+        <li>{{type}}</li>
+      {{/each}}
+    </ul>
+    <span class="text">{{htmlSafe
+        (i18n
+          "review.unknown.instruction"
+          url="https://meta.discourse.org/t/types-of-review-items-created-by-plugins/350179"
+        )
+      }}</span>
+    <div class="unknown-reviewables__options">
+      <DButton
+        @label="review.unknown.ignore_all"
+        @icon="trash-can"
+        @action={{this.ignoreAllUnknownTypes}}
+        class="btn-default"
+      />
+    </div>
+  </div>
+{{/if}}
 <div class="reviewable-container">
   <div class="reviewable-list">
     {{#if this.reviewables}}
