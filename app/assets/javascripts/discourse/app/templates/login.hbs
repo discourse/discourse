@@ -3,7 +3,7 @@
 {{body-class "login-page"}}
 
 {{#if this.isRedirecting}}
-  {{body-class "redirecting"}}
+  {{loading-spinner}}
 {{else}}
   {{#if
     (and

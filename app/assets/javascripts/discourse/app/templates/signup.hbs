@@ -4,7 +4,7 @@
 {{body-class "signup-page"}}
 
 {{#if this.isRedirecting}}
-  {{body-class "redirecting"}}
+  {{loading-spinner}}
 {{else}}
   <div class="signup-fullpage">
     <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
