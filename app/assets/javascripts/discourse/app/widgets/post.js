@@ -808,9 +808,28 @@ createWidget("post-notice", {
 
   html(attrs) {
     if (attrs.notice.type === "custom") {
+      let createdByHTML = "";
+      if (attrs.noticeCreatedByUser) {
+        const createdByName =
+          this.siteSettings.display_name_on_posts &&
+          prioritizeNameInUx(attrs.noticeCreatedByUser.name)
+            ? attrs.noticeCreatedByUser.name
+            : attrs.noticeCreatedByUser.username;
+        createdByHTML = i18n("post.notice.custom_created_by", {
+          userLinkHTML: `<a
+                  class="trigger-user-card"
+                  data-user-card="${attrs.noticeCreatedByUser.username}"
+                  title=${createdByName}
+                  aria-hidden="false"
+                  role="listitem"
+                >${createdByName}</a>`,
+        });
+      }
       return [
         iconNode("user-shield"),
-        new RawHtml({ html: `<div>${attrs.notice.cooked}</div>` }),
+        new RawHtml({
+          html: `<div class="post-notice-message">${attrs.notice.cooked} ${createdByHTML}</div>`,
+        }),
       ];
     }
 

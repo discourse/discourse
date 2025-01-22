@@ -64,8 +64,27 @@ module PostStreamSerializerMixin
           serializer.add_raw = true if @options[:include_raw]
           serializer.topic_view = object
 
+          serializer.notice_created_by_users = post_notice_created_by_users if scope.is_staff?
+
           serializer.as_json
         end
+      end
+  end
+
+  def post_notice_created_by_users
+    @post_notice_created_by_users ||=
+      begin
+        user_ids = []
+        object
+          .post_custom_fields
+          .each do |post_id, custom_fields|
+            if custom_fields[Post::NOTICE]
+              user_ids << custom_fields[Post::NOTICE]["created_by_user_id"]
+            end
+          end
+          .compact
+          .uniq
+        User.real.where(id: user_ids)
       end
   end
 
