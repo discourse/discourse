@@ -114,6 +114,10 @@ module PageObjects
         def shift_enter_shortcut
           input.send_keys(%i[shift enter])
         end
+
+        def meta_enter_shortcut
+          input.send_keys(%i[meta enter])
+        end
       end
     end
   end

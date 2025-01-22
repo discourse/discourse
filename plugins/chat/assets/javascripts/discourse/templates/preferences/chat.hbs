@@ -127,6 +127,7 @@
           <input
             type="radio"
             name="chat_send_shortcut"
+            id={{concat "chat_send_shortcut_" option.value}}
             value={{option.value}}
             checked={{eq
               this.model.user_option.chat_send_shortcut

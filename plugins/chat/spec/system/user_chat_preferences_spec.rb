@@ -65,12 +65,10 @@ RSpec.describe "User chat preferences", type: :system do
   it "can select send shorcut sidebar mode" do
     visit("/my/preferences")
     find(".user-nav__preferences-chat", visible: :all).click
-    select_kit = PageObjects::Components::SelectKit.new("#user_chat_send_shortcut")
-    select_kit.expand
-    select_kit.select_row_by_value("shift_enter")
+    find("#chat_send_shortcut_meta_enter").click
     find(".save-changes").click
 
-    expect(select_kit).to have_selected_value("shift_enter")
+    expect(page).to have_checked_field("chat_send_shortcut_meta_enter")
   end
 
   context "as an admin on another user's preferences" do
