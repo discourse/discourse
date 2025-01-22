@@ -1,4 +1,3 @@
-{{hide-application-header-buttons "search" "login" "signup" "menu"}}
 {{hide-application-sidebar}}
 {{body-class "login-page"}}
 
@@ -11,6 +10,7 @@
       (or this.showLogin (not this.siteSettings.login_required))
     )
   }}
+    {{hide-application-header-buttons "search" "login" "signup" "menu"}}
     <div class="login-fullpage">
       <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
 
