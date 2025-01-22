@@ -25,7 +25,7 @@ export default class PostListItemDetails extends Component {
   get topicTitle() {
     return this.args.titlePath
       ? this.args.post[this.args.titlePath]
-      : this.args.post?.title;
+      : this.args.post.title;
   }
 
   get titleAriaLabel() {
