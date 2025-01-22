@@ -737,7 +737,7 @@ div.ac-wrap {
       margin-top: calc(
         (var(--footer-nav-height) + env(safe-area-inset-bottom)) * -1
       );
-      padding-bottom: 0px;
+      padding-bottom: 0;
     }
   }
 
