@@ -123,7 +123,7 @@ GEM
     debug_inspector (1.2.0)
     diff-lcs (1.5.1)
     diffy (3.4.3)
-    digest (3.1.1)
+    digest (3.2.0)
     digest-xxhash (0.2.9)
     discourse-fonts (0.0.16)
     discourse-seed-fu (2.3.12)
