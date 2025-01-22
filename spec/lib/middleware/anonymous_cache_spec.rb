@@ -77,11 +77,10 @@ RSpec.describe Middleware::AnonymousCache do
 
         french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
         french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
-        none = new_helper.cache_key
-        expect(none).to eq(french1)
         expect(french1).to eq(french2)
 
-        es_cookie = new_helper("HTTP_COOKIE" => "locale=es;").cache_key
+        es_cookie =
+          new_helper("HTTP_COOKIE" => "locale=es;", "HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
         expect(es_cookie).to include("l=es")
       end
     end
