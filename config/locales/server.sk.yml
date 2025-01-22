@@ -393,6 +393,7 @@ sk:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastaveniu nemôžete pridať žiadnu z nasledujúcich hodnôt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Ak je povolená možnosť „optimalizácia obrazu pre kompozitor“, nemôžete zakázať metadáta obrázka pásu. Pred zakázaním metadát obrázkov pásu zakážte možnosť „optimalizácia obrazu kompozitora je povolená“."
       twitter_summary_large_image_no_svg: "Súhrnné obrázky Twitteru používané pre metadáta twitter:image nemôžu byť obrázky .svg."
+      tl0_and_anonymous_flag: "V prípade anonymných používateľov sa musí uviesť buď \"kontaktný e-mail stránky\", alebo \"e-mailová adresa na nahlásenie nezákonného obsahu\"."
     conflicting_google_user_id: 'ID účtu Google pre toto konto sa zmenilo; z bezpečnostných dôvodov je potrebný zásah personálu. Obráťte sa na personál a odkážte ich na <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>.'
     onebox:
       invalid_address: "Je nám ľúto, ale náhľad tejto webovej stránky sa nám nepodarilo vygenerovať, pretože sa nepodarilo nájsť server '%{hostname}'. Namiesto náhľadu sa vo vašom príspevku zobrazí iba odkaz. :cry:"
@@ -1771,6 +1772,7 @@ sk:
       google_analytics_version: "Tvoj Discourse momentálne používa Google Analytics 3, ktorý už nebude podporovaný po júli 2023. <a href='https://meta.discourse.org/t/260498'>Aktualizuj na Google Analytics 4</a> teraz, aby si naďalej získaval cenné prehľady a analytické údaje o výkonnosti tvojej webovej stránky."
       category_style_deprecated: "Váš Discourse v súčasnosti používa zastaraný štýl kategórie, ktorý bude odstránený pred konečným vydaním beta verzie Discusu 3.2. Pokyny, ako zachovať zvolený štýl kategórie, nájdete v časti <a href='https://meta.discourse.org/t/282441'>Presun na nastavenie lokality v štýle jednej kategórie</a> ."
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
+      admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
     back_from_logster_text: "Späť na stránku"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
@@ -1850,6 +1852,7 @@ sk:
     block_onebox_on_redirect: "Zabránenie oneboxingu pre adresy URL, ktoré vedú na presmerovanú stránku. Táto konfigurácia zastaví vytváranie vizuálnej karty (onebox) pre akúkoľvek adresu URL, ktorá presmeruje na iný cieľ, čím sa zabezpečí, že priame, nepresmerované adresy URL budú prioritne označené oneboxom."
     allowed_inline_onebox_domains: "Zoznam domén, ktoré budú v miniatúrnej podobe v jednom rámčeku, ak sú prepojené bez názvu"
     enable_inline_onebox_on_all_domains: "Ignorujte nastavenie webu enabled_inline_onebox_domains a povoľte inline onebox vo všetkých doménach."
+    onebox_locale: "Miestne nastavenie bolo odoslané poskytovateľom služby onebox. Ak ponecháte prázdne, použije sa predvolené miestne nastavenie."
     force_custom_user_agent_hosts: "Hostitelia, pre ktorých sa má používať vlastný používateľský agent onebox na všetky požiadavky. (Obzvlášť užitočné pre hostiteľov, ktorí obmedzujú prístup podľa používateľského agenta)."
     max_oneboxes_per_post: "Nastavenie maximálneho počtu oneboxov, ktoré môžu byť zahrnuté v jednom príspevku. Oneboxy poskytujú náhľad prepojeného obsahu v rámci príspevku."
     facebook_app_access_token: "Token vygenerovaný z vášho ID a tajomstva aplikácie Facebook. Používa sa na generovanie instagramových oneboxov."
@@ -2220,6 +2223,7 @@ sk:
     title_fancy_entities: "Konverzia bežných znakov ASCII na módne entity HTML v názvoch tém ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     desktop_category_page_style: "Toto nastavenie určuje vizuálne rozloženie stránky /kategórie na ploche. Zahŕňa možnosti, ako je zobrazenie podkategórií s odporúčanými témami, zobrazenie najnovších tém alebo prezentácia top tém. Zvolený štýl ovplyvní spôsob interakcie používateľov a navigácie v kategóriách na stránke."
+    mobile_category_page_style: "Toto nastavenie určuje vizuálne rozloženie stránky /kategórie na mobilných zariadeniach."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
     default_dark_mode_color_scheme_id: "Paleta farieb používaná v tmavom režime."
     dark_mode_none: "Žiadny"
@@ -2272,6 +2276,8 @@ sk:
     reviewable_default_visibility: "Nezobrazujte položky, ktoré sa dajú skontrolovať, pokiaľ nespĺňajú túto prioritu"
     reviewable_low_priority_threshold: "Filter priority skryje položky, ktoré sa dajú prezerať a ktoré nespĺňajú toto skóre, pokiaľ sa nepoužije filter \"(akýkoľvek)\"."
     high_trust_flaggers_auto_hide_posts: "Príspevky nových používateľov sa automaticky skryjú po označení ako spam používateľom TL3+"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonymní používatelia uvidia informácie, že majú správcom poslať e-mail a nahlásiť nezákonný obsah."
+    email_address_to_report_illegal_content: "Ak zostane prázdne, použije sa predvolený e-mail správcu stránky."
     cooldown_hours_until_reflag: "Koľko času budú musieť používatelia čakať, kým budú môcť zmeniť označenie príspevku"
     slow_mode_prevents_editing: "Zabraňuje \"pomalý režim\" úpravám po uplynutí obdobia editácie_grace_period?"
     reply_by_email_enabled: "Aktivujte funkciu, ktorá umožňuje používateľom reagovať na témy priamo prostredníctvom e-mailu namiesto toho, aby sa museli prihlásiť na webovú stránku. Viac informácií nájdete v <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>príručke o Meta</a>."
@@ -2500,6 +2506,7 @@ sk:
     default_email_mailing_list_mode_frequency: "Používatelia, ktorí povolia režim poštového zoznamu, budú predvolene dostávať e-maily takto často."
     disable_mailing_list_mode: "Zakázať používateľom zapnúť režim poštového zoznamu (zabráni odosielaniu akýchkoľvek e-mailov z poštového zoznamu)."
     default_email_previous_replies: "Predvolené zahrnutie predchádzajúcich odpovedí do e-mailov."
+    default_emoji_reactions: "Predvolené obľúbené emoji reakcie. Pridajte až 5 emotikonov pre rýchlu reakciu."
     default_email_in_reply_to: "V predvolenom nastavení zahrnúť do e-mailov úryvok odpovedí na príspevok."
     default_hide_profile: "Predvolene skryť verejný profil používateľa."
     default_hide_presence: "Predvolene vypnúť funkcie prítomnosti."
@@ -2595,7 +2602,6 @@ sk:
     share_quote_visibility: "Určite, kedy sa majú zobrazovať tlačidlá na zdieľanie citácií: nikdy, len anonymným používateľom alebo všetkým používateľom. "
     create_revision_on_bulk_topic_moves: "Vytvorte revíziu pre prvé príspevky, keď sa témy hromadne presunú do novej kategórie."
     allow_changing_staged_user_tracking: "Umožniť nezaktívnenému používateľovi s právami administrátora meniť preferencie kategórií a upozornení na značky."
-    use_email_for_username_and_name_suggestions: "Na návrhy používateľského mena a mena použite prvú časť e-mailových adries. Všimnite si, že takto je pre verejnosť jednoduchšie uhádnuť celé e-mailové adresy používateľov (pretože veľká časť ľudí využíva spoločné služby, ako napríklad `gmail.com`)."
     use_name_for_username_suggestions: "Pri navrhovaní používateľských mien používajte celé meno používateľa."
     suggest_weekends_in_date_pickers: "Zahrnúť víkendy (sobotu a nedeľu) do návrhov na výber dátumu (ak Discourse používate len počas pracovných dní, od pondelka do piatku, vypnite túto funkciu)."
     show_bottom_topic_map: "Zobrazí mapu témy v spodnej časti témy, ak má 10 alebo viac odpovedí."
@@ -2606,8 +2612,10 @@ sk:
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
     enable_experimental_lightbox: "Nahraďte predvolený lightbox s obrázkami prepracovaným dizajnom."
+    glimmer_topic_list_mode: "Kontrola, či sa používa nová implementácia zoznamu tém \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Viac informácií nájdete v <a href='https://meta.discourse.org/t/343404'>téme Meta</a>."
     glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_menu_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
+    experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."

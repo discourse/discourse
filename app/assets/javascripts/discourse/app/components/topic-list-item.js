@@ -332,14 +332,6 @@ export default class TopicListItem extends Component {
       return this.navigateToTopic(topic, topic.lastUnreadUrl);
     }
 
-    if (
-      classList.contains("d-icon-thumbtack") &&
-      target.closest("a.topic-status")
-    ) {
-      this.topic.togglePinnedForUser();
-      return false;
-    }
-
     return this.unhandledRowClick(e, topic);
   }
 

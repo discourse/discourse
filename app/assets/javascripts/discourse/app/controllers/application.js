@@ -22,6 +22,7 @@ export default class ApplicationController extends Controller {
   sidebarDisabledRouteOverride = false;
   navigationMenuQueryParamOverride = null;
   showSiteHeader = true;
+  showSkipToContent = true;
 
   get showFooter() {
     return this.footer.showFooter;

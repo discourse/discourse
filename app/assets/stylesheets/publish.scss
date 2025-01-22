@@ -14,12 +14,12 @@
 .published-page-header {
   box-sizing: border-box;
   width: 100%;
-  top: 0;
   z-index: z("header");
   background-color: var(--header_background);
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.25);
   position: sticky;
   top: 0;
+
   .published-page-header-wrapper {
     box-sizing: border-box;
     max-width: calc(
@@ -28,14 +28,16 @@
     );
     width: 100%;
     display: flex;
-    margin: 0em auto;
+    margin: 0 auto;
     padding: 0.5em 10px; // 10px matches .wrap padding
     align-items: center;
+
     .published-page-logo {
       height: 45px;
       margin-right: 1em;
       line-height: 1em;
     }
+
     .published-page-title {
       color: var(--header_primary);
       font-size: var(--font-up-5);
@@ -70,6 +72,7 @@
     width: 45px;
     border: 4px solid var(--tertiary-medium);
   }
+
   .topic-created-at {
     color: var(--primary-medium);
   }
@@ -77,6 +80,7 @@
 
 .published-page-content-body {
   font-size: 1.25em;
+
   img {
     max-width: 100%;
     height: auto;

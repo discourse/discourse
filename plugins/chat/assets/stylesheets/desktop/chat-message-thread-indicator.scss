@@ -15,11 +15,13 @@
     grid-template-areas:
       "avatar info info participants"
       "excerpt excerpt excerpt replies";
+
     &__replies-count {
       align-self: center;
       grid-area: replies;
       justify-content: flex-end;
     }
+
     &__last-reply-excerpt {
       white-space: wrap;
       display: -webkit-box;

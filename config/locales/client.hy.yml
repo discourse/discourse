@@ -458,6 +458,8 @@ hy:
         confirm: "Դուք արդեն ունեք սևագիր: Ի՞նչ կցանկանայիք անել դրա հետ:"
         yes_value: "Ջնջել"
         no_value: "Վերսկսել խմբագրումը"
+      dropdown:
+        view_all: "դիտել բոլոը"
     topic_count_all:
       one: "Տեսնել %{count} նոր թեման"
       other: "Դիտել %{count} նոր թեմաները"
@@ -1749,7 +1751,8 @@ hy:
         after_4_minutes: "4 րոպե հետո"
         after_5_minutes: "5 րոպե հետո"
         after_10_minutes: "10 րոպե հետո"
-      notification_level_when_replying: "Երբ ես գրառում եմ կատարում թեմայում, նշանակել այդ թեման որպես"
+      notification_level_when_replying:
+        do_nothing: "Ոչինչ չանել"
       topics_unread_when_closed: "Դիտարկել թեմաները չկարդացած, երբ դրանք փակ են"
       invited:
         title: "Հրավերներ"
@@ -3776,8 +3779,6 @@ hy:
               content: "Խմբեր"
             users:
               content: "Օգտատերեր"
-            my_posts:
-              content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
             invite:
@@ -3989,29 +3990,30 @@ hy:
         add_owners: Ավելացնել սեփականատեր
         none_selected: "Ընտրեք խումբ՝ մեկնարկի համար"
         no_custom_groups: "Ստեղծել նոր մասնավոր խումբ"
+      api_keys:
+        edit: "Խմբագրել"
+        save: "Պահպանել"
+        cancel: "Չեղարկել"
+        continue: "Շարունակել"
+        revoke: "Հետ կանչել"
+        revoked: "Հետկանչված"
       api:
         generate_master: "Գեներացնել Master API Key"
         none: "Ակտիվ API Key այս պահին չկա:"
         user: "Օգտատեր"
         title: "API"
         key: "Բանալի"
-        created: Ստեղծված
         updated: Թարմացված
-        last_used: Վերջին Օգտագործվածը
-        never_used: (երբեք)
+        never_used: Երբեք
         generate: "Գեներացնել"
-        undo_revoke: "Ետարկել Հետկանչումը "
         revoke: "Հետ կանչել"
-        all_users: "Բոլոր Օգտատերերը"
         active_keys: "Ակտիվ API Բանալիներ "
         manage_keys: Կառավարել Բանալիները
         show_details: Մանրամասներ
         description: Նկարագրություն
         no_description: (նկարագրություն չկա)
         all_api_keys: Բոլոր API Բանալիները
-        user_mode: Օգտատերերի Մակարդակ
         impersonate_all_users: Ներկայանալ որպես օգտատեր
-        single_user: "Առանձին Օգտատեր "
         user_placeholder: Մուտքագրեք օգտանունը
         description_placeholder: 'Ինչի՞ համար է օգտագործվելու այս բանալին:'
         save: Պահպանել
@@ -4023,26 +4025,22 @@ hy:
           action: Գործողություն
       web_hooks:
         title: "Webhook-ներ"
-        none: "Այս պահին webhook-ներ չկան:"
         instruction: "Webhook-ները թույլ են տալիս Discourse-ին ծանուցել արտաքին ծառայություններին, երբ որևէ իրադարձություն է տեղի ունենում Ձեր կայքում: Երբ webhook-ը գործարկված է, տրված URL-ներին ուղարկվում է POST-հարցում:"
         detailed_instruction: "տրված URL-ներին կուղարկվի POST-հարցում, երբ տեղի ունենա ընտրված իրադարձությունը:"
-        new: "Նոր Webhook"
         create: "Ստեղծել"
         edit: "Խմբագրել"
         save: "Պահպանել"
+        delete: "Ջնջել"
+        cancel: "Չեղարկել"
         controls: "Կառավարում"
-        go_back: "Վերադառնալ ցանկին"
         payload_url: "Տվյալների ուղարկման URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Ծածկագիրը չպետք է ունենա բացատներ:"
         secret_too_short: "Ծածկագիրը պետք է պարունակի առնվազն 12 սիմվոլ:"
-        secret_placeholder: "Ընտրովի տող, որը օգտագործվում է ստորագրություն գեներացնելու համար"
         event_type_missing: "Դուք պետք է սահմանեք առնվազն մեկ իրադարձության տիպ:"
         content_type: "Բովանդակության Տիպը"
         secret: "Ծածկագիր"
         event_chooser: "Ո՞ր իրադարձությունները պետք է գործարկի այս webhook-ը:"
-        wildcard_event: "Ուղարկել ինձ ամբողջը:"
-        individual_event: "Ընտրել առանձին իրադարձություններ:"
         verify_certificate: "Ստուգել տվյալների ուղարկման url-ի TLS հավաստագիրը:"
         active: "Ակտիվ"
         active_notice: "Մենք կուղարկենք իրադարձության մանրամասները, երբ այն տեղի ունենա:"
@@ -4185,6 +4183,7 @@ hy:
           installed: "Տեղադրված"
       advanced:
         sidebar_link:
+          webhooks: "Webhook-ներ"
           developer: "Ծրագրավորող"
           embedding: "Զետեղում"
           user_api: "Օգտատիրոջ API"
@@ -4254,9 +4253,6 @@ hy:
           screened_url: "Արտահանել ցուցադրված URL-ների ամբողջական ցանկը CSV ֆորմատով:"
       export_json:
         button_text: "Արտահանել"
-      invite:
-        button_text: "Ուղարկել Հրավերներ"
-        button_title: "Ուղարկել Հրավերներ"
       customize:
         title: "Անհատականացնել"
         preview: "նախադիտում"
@@ -4437,10 +4433,7 @@ hy:
             title: "Ընտրել հիմնական գունապնակը"
             description: "Հիմնական գունապնակ՝"
           title: "Գույներ"
-          edit: "Խմբագրել Գունապնակները"
-          long_title: "Գունապնակներ"
           about: "Փոփոխեք Ձեր թեմաների կողմից օգտագործված գույները: Ստեղծեք նոր գունապնակ՝ մեկնարկի համար:"
-          new_name: "Նոր Գունապնակ"
           copy_name_prefix: "Կրկնօրինակ՝ "
           delete_confirm: "Ջնջե՞լ այս գունապնակը:"
           undo: "Ետարկել"
@@ -4484,8 +4477,7 @@ hy:
           overridden: 'Ձեր կայքի լռելյայն robots.txt ֆայլը վերագրանցված է:'
         email_style:
           title: "Էլ. փոստի Ոճը"
-          heading: "Էլ. փոստի Ոճի Կարգավորում"
-          html: "HTML - Ձևանմուշ"
+          html: "HTML"
           css: "CSS"
           reset: "Վերականգնել լռելյայն"
           reset_confirm: "Համոզվա՞ծ եք, որ ցանկանում վերականգնել լռելյայն %{fieldName} и կորցնել ձեր բոլոր փոփոխությունները:"
@@ -4493,15 +4485,11 @@ hy:
           instructions: "Ձևանմուշի կարգավորում, որում պատկերվում են բոլոր html էլեկտրոնային փոստի հաղորդագրությունները և ոճը՝ օգտագործելով CSS:"
       email:
         title: "Էլ. հասցեներ"
+        settings: "Կարգավորումներ"
         templates: "Ձևանմուշներ"
-        preview_digest: "Նախադիտման Ամփոփումը"
         advanced_test:
-          title: "Ընդլայնված Փորձարկում"
           desc: "Տեսեք, թե ինչպես է DIscourse-ը մշակում ստացված էլ. նամակները: Ճշգրիտ կերպով նամակը մշակելու համար խնդրում ենք ներքևում տեղադրել ամբողջական սկզբնական հաղորդագրությունը:"
           email: "Սկզբնական հաղորդագրություն"
-          run: "Մեկնարկել Փորձարկումը"
-          text: "Ընտրված Տեքստի Բովանդակությունը"
-          elided: "Բաց Թողնված Տեքստ"
         error: "<b>ՍԽԱԼ</b> - %{server_error}"
         test_error: "Փորձնական նամակն ուղարկելիս խնդիր է առաջացել: Խնդրում ենք կրկին ստուգել Ձեր էլ. հասցեի կարգավորումները, համոզվել, որ Ձեր հոսթը չի արգելափակում կապը էլ. հասցեով, և կրկին փորձել:"
         sent: "Ուղարկված է"
@@ -4509,15 +4497,10 @@ hy:
         bounced: "Վերադարձված է"
         received: "Ստացված է"
         rejected: "Մերժված է"
-        sent_at: "Ուղարկման Ամսաթիվ"
         time: "Ժամանակը"
         user: "Օգտատեր"
-        email_type: "Էլ. նամակի Տիպը"
-        to_address: "Հասցեին"
         test_email_address: "փորձարկման էլ. հասցեն"
-        send_test: "Ուղարկել Փորձնական Էլ. նամակ"
         sent_test: "ուղարկված է!"
-        delivery_method: "Ուղարկման Մեթոդը"
         preview_digest_desc: "Նախադիտել ոչ ակտիվ օգտատերերին ուղարկված ամփոփիչ էլ. նամակների բովանդակությունը:"
         refresh: "Թարմացնել"
         send_digest_label: "Ուղարկել այս արդյունքը դեպի՝ "
@@ -4526,10 +4509,7 @@ hy:
         html: "html"
         text: "տեքստ"
         html_preview: "Էլփոստի Բովանդակության Նախադիտում"
-        last_seen_user: "Վերջին Այցելությունը՝ "
         no_result: "Ամփոփման համար արդյուքներ չեն գտնվել:"
-        reply_key: "Պատասխանի Բանալին"
-        skipped_reason: "Բաց թողնել Պատճառը"
         incoming_emails:
           from_address: "Ում կողմից"
           to_addresses: "Ում"
@@ -4538,12 +4518,10 @@ hy:
           error: "Սխալ"
           none: "Մուտքային նամակներ չեն գտվնել:"
           modal:
-            title: "Մուտքային Նամակի Մանրամասները"
             error: "Սխալ"
             headers: "Վերնագրեր"
             subject: "Թեմա"
             body: "Տեքստ"
-            rejection_message: "Մերժման Նամակ"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -4567,7 +4545,7 @@ hy:
           delete_topic: "Թեման Ջնջված է"
           post_approved: "Գրառումը Հաստատված է"
       logs:
-        title: "Գրառումներ"
+        nav_title: "Գրառումներ"
         action: "Գործողություն"
         created_at: "Ստեղծված"
         last_match_at: "Վերջին Համընկնումը"
@@ -4585,10 +4563,8 @@ hy:
         staff_actions:
           all: "բոլորը"
           filter: "Ֆիլտրել՝ "
-          title: "Անձնակազմի Գործողություններ"
-          clear_filters: "Ցուցադրել Ամբողջը"
           staff_user: "Օգտատեր"
-          target_user: "Նպատակային Օգտատերը"
+          target_user: "Նպատակային օգտատեր"
           subject: "Թեմա"
           when: "Երբ"
           context: "Համատեքստ"
@@ -4679,9 +4655,7 @@ hy:
             page_published: "էջը հրատարակված է"
             page_unpublished: "էջի հրատարակումը չեղարկված է"
         screened_emails:
-          title: "Ցուցադրված Էլ. հասցեները"
           description: "Երբ որևէ մեկը փորձի ստեղծել նոր հաշիվ, հետևյալ էլ. հասցեները կստուգվեն, և գրանցումը կարգելափոկվի, կամ կկատարվի մեկ այլ գործողություն:"
-          email: "Էլ. Հասցե"
           actions:
             allow: "Թույլատրել"
         screened_urls:
@@ -4695,7 +4669,6 @@ hy:
           actions:
             block: "Արգելել"
             do_nothing: "Թույլատրել"
-            allow_admin: "Թույլատրել Ադմինին"
           form:
             label: "Նոր՝ "
             ip_address: "IP հասցե"
@@ -4705,24 +4678,17 @@ hy:
             text: "Խմբավորել"
             title: "Ստեղծում է նոր սուբնեթի արգելքների մուտքեր, եթե կա առնվազն 'min_ban_entries_for_roll_up' մուտք:"
         search_logs:
-          title: "Որոնել Գրառումներ"
           term: "Պայման"
           searches: "Որոնումներ"
           click_through_rate: "CTR"
           types:
             all_search_types: "Որոնման բոլոր տիպերը"
             header: "Վերնամաս"
-            full_page: "Ամբողջ էջը"
             click_through_only: "Բոլոր (միայն սեղմման միջոցով)"
-          header_search_results: "Վերնամասի Որոնման Արդյունքներ"
-        logster:
-          title: "Սխալների Գրառումներ"
       watched_words:
-        title: "Դիտված Բառեր"
         search: "որոնում"
         clear_filter: "Ջնջել"
         download: Ներբեռնել
-        clear_all: Ջնջել Բոլորը
         actions:
           block: "Արգելափակել"
           censor: "Գրաքննել"
@@ -4789,8 +4755,6 @@ hy:
         id_not_found: "Ներողություն, այդ օգտատիրոջ id-ն գոյություն չունի մեր համակարգում:"
         active: "Ակտիվացված"
         status: "Ստատուս"
-        show_emails: "Ցուցադրել Էլ. հասցեները"
-        hide_emails: "Թաքցնել Էլ. նամակները"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4805,8 +4769,7 @@ hy:
           staged: "Աստիճանավորված (Staged)"
         approved: "Հաստատվա՞ծ"
         titles:
-          active: "Ակտիվ Օգտատերեր"
-          new: "Նոր Օգտատերեր"
+          active: "Ակտիվ օգտատերեր"
           pending: "Վերանայման Սպասող Օգտատերեր"
           newuser: "Վստահության 0 Մակարդակի Օգտատերեր (Նոր Օգտատեր)"
           basic: "Վստահության 1 Մակարդակի Օգտատերեր (Սկզբնական Օգտագործող)"
@@ -4814,11 +4777,7 @@ hy:
           regular: "Վստահության 3-րդ Մակարդակի Օգտատերեր (Սովորական)"
           leader: "Վստահության 4 Մակարդակի Օգտատերեր (Առաջնորդ)"
           staff: "Անձնակազմ"
-          admins: "Ադմին Օգտատերեր"
           moderators: "Մոդերատորներ"
-          silenced: "Լռեցված Օգտատերեր"
-          suspended: "Սառեցված Օգտատերեր"
-          staged: "Աստիճանավորված Օգտատերեր"
         not_verified: "Չհաստատված"
         check_email:
           title: "Ցուցադրել այս օգտատիրոջ էլ. հասցեն"
@@ -5019,7 +4978,6 @@ hy:
           external_email: "Էլ. հասցե"
           external_avatar_url: "Պրոֆիլի Նկարի URL"
       user_fields:
-        title: "Օգտատիրոջ Դաշտերը"
         untitled: "Անվերնագիր"
         name: "Դաշտի Անվանումը"
         type: "Դաշտի Տիպը"
@@ -5042,10 +5000,8 @@ hy:
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:
-        description: "Դուք կարող եք անհատականացնել Ձեր ֆորումի տեսքտերից ցանկացածը: Խնդրում ենք սկսել ներքևի որոնումից՝ "
         search: "Որոնել տեքստը, որը կցանկանայիք խմբագրել"
-        title: "Տեքստ"
-        edit: "խմբագրել"
+        edit: "Խմբագրել"
         revert: "Վերադարձնել Փոփոխությունները"
         revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել կատարված փոփոխությունները:"
         go_back: "Վերադարձ Որոնմանը"
@@ -5061,7 +5017,7 @@ hy:
         save: "պահպանել"
         cancel: "չեղարկել"
       site_settings:
-        title: "Կարգավորումներ"
+        nav_title: "Կարգավորումներ"
         no_results: "Արդյունքներ չեն գտնվել:"
         clear_filter: "Ջնջել"
         add_url: "ավելացնել URL"
@@ -5183,7 +5139,6 @@ hy:
             with_post_time: <span class="username">%{username}</span>-ին %{link}-ում գրառման համար <span class="time">%{time}</span> -ին
             with_time: <span class="username">%{username}</span>-ին <span class="time">%{time}</span>-ին
         mass_award:
-          title: Զանգվածային Պարգևատրում
           description: 'Պարգևատրել մի քանի օգտատերերի նույն կրծքանշանով՝ միանգամից: '
           no_badge_selected: 'Խնդրում ենք ընտրել կրծքանշան՝ մեկնարկի համար:'
           perform: "Պարգևատրել Օգտատերերին՝ Կրծքանշանով "
@@ -5246,7 +5201,6 @@ hy:
           save: "Պահպանել"
       reseed:
         action:
-          label: "Փոխարինել Տեքստը..."
           title: "Փոխարինել կատեգորիաների և թեմաների տեքստը թարգմանություններով"
         modal:
           title: "Փոխարինել Տեքստը"
@@ -5272,18 +5226,28 @@ hy:
           admin: "Ադմին"
           moderator: "Մոդերատոր"
           regular: "Սովորական Օգտատեր"
+      homepage_choices:
+        custom:
+          label: "Մասնավոր"
+        style_type:
+          categories: "կատեգորիա"
+          topics: "թեմա"
+      top_menu_items:
+        new: "Նոր"
+        unread: "Չկարդացած"
+        top: "Ամենահայտնի"
+        latest: "Վերջինը"
+        hot: "Թոփ"
+        categories: "Կատեգորիաներ"
+        unseen: "Չդիտված"
+        read: "Կարդացել է"
+        bookmarks: "Էջանշաններ"
       previews:
         share_button: "Կիսվել"
         reply_button: "Պատասխանել"
       homepage_preview:
         nav_buttons:
           all_categories: "բոլոր կատեգորիաները"
-          new: "Նոր"
-          unread: "Չկարդացած"
-          top: "Ամենահայտնի"
-          latest: "Վերջինը"
-          hot: "Թոփ"
-          categories: "Կատեգորիաներ"
         category_names:
           site_feedback: "Կայքի Արձագանքներ"
         table_headers:

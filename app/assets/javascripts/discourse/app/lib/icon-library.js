@@ -146,6 +146,7 @@ function handleDeprecatedIcon(id) {
       `The icon name "${id}" has been updated to "${newId}". Please use the new name in your code. Old names will be removed in Q2 2025.`,
       {
         id: "discourse.fontawesome-6-upgrade",
+        url: "https://meta.discourse.org/t/325349",
       }
     );
   }

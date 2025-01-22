@@ -32,13 +32,14 @@
 
     > .btn-group:last-child {
       position: absolute;
-      right: 0px;
-      top: 0px;
+      right: 0;
+      top: 0;
 
       .btn {
         font-size: var(--font-down-1);
       }
     }
+
     > .btn-group {
       margin-top: 0;
       display: flex;
@@ -65,6 +66,7 @@
     th {
       vertical-align: middle;
       padding: 0.5em 0;
+
       &:last-child {
         text-align: right;
       }
@@ -102,6 +104,7 @@
     > .card-title {
       width: 100%;
       border-bottom: 1px solid var(--primary-low);
+
       > .json-editor-btn-collapse {
         float: right;
       }

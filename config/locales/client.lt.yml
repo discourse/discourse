@@ -1495,7 +1495,8 @@ lt:
         after_4_minutes: "po 4 minučių"
         after_5_minutes: "po 5 minučių"
         after_10_minutes: "po 10 minučių"
-      notification_level_when_replying: "Kuomet paskelbiu temą, pažymeti tą temą kaip"
+      notification_level_when_replying:
+        do_nothing: "Nieko nedaryti"
       invited:
         title: "Pakvietimai"
         pending_tab: "Laukiama"
@@ -3618,8 +3619,6 @@ lt:
               content: "Grupės"
             users:
               content: "Vartotojai"
-            my_posts:
-              content: "Mano Įrašai"
             review:
               content: "Peržiūra"
             invite:
@@ -3831,6 +3830,13 @@ lt:
         add_owners: Pridėti valdytojus
         none_selected: "Norėdami pradėti, pasirinkite grupę"
         no_custom_groups: "Sukurti naują pasirinktinę grupę"
+      api_keys:
+        edit: "Redaguoti"
+        save: "Išsaugoti"
+        cancel: "Atšaukti"
+        continue: "Tęsti"
+        revoke: "Pašalinti"
+        revoked: "Atšauktas"
       api:
         generate_master: "Generuoti pagrindinį API raktą"
         none: "Šiuo metu nėra jokių aktyvių API raktų."
@@ -3839,28 +3845,22 @@ lt:
         key: "Raktas"
         created: Sukurta
         updated: Atnaujinta
-        last_used: Paskutinis naudotas
-        never_used: (niekada)
+        never_used: Niekada
         generate: "Generuoti"
-        undo_revoke: "Anuliuoti Atšaukti"
         revoke: "Pašalinti"
-        all_users: "Visi vartotojai"
         active_keys: "Aktyvūs API raktai"
         manage_keys: Tvarkyti raktus
         show_details: Detalės
         description: Aprašymas
         no_description: (Nėra aprašymo)
         all_api_keys: Visi API raktai
-        user_mode: Vartotojo lygis
         scope_mode: Apimtis
         impersonate_all_users: Apsimesti bet kokiu vartotoju
-        single_user: "Vienas vartotojas"
         user_placeholder: Įveskite vartotojo vardą
         description_placeholder: Kam bus naudojamas šis raktas?
         save: Saugoti
         new_key: Naujas API raktas
         revoked: Atšauktas
-        delete: Ištrinti visam laikui
         not_shown_again: Šis raktas daugiau nebus rodomas. Prieš tęsdami būtinai nukopijuokite.
         continue: Tęsti
         scopes:
@@ -3869,8 +3869,6 @@ lt:
           global_description: API raktas neturi apribojimų ir visi galiniai taškai yra prieinami.
           resource: Ištekliai
           action: Veiksmas
-          allowed_parameters: Leidžiami parametrai
-          optional_allowed_parameters: Leidžiami parametrai (neprivaloma)
           any_parameter: (bet koks parametras)
           allowed_urls: Leidžiami URL
           descriptions:
@@ -3906,15 +3904,16 @@ lt:
         create: "Sukurti"
         edit: "Redaguoti"
         save: "Saugoti"
+        delete: "Pašalinti"
+        cancel: "Atšaukti"
         controls: "Valdymai"
-        go_back: "Atgal į sąrašą"
         payload_url: "Naudingos apkrovos URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Paslaptyje neturi būti tuščių simbolių."
         content_type: "Turinio tipas"
         secret: "Slaptas"
-        wildcard_event: "Siųsti man viską."
-        individual_event: "Pasirinkite atskirus įvykius."
+        wildcard_event: "Siųsti man viską"
+        individual_event: "Pasirinkite atskirus įvykius"
         verify_certificate: "Patikrinkite TLS naudingos apkrovos URL sertifikatą"
         active: "Aktyvus"
         active_notice: "Mes pristatysime renginio detales, kai tai įvyks."
@@ -4098,9 +4097,6 @@ lt:
           screened_url: "Eksportuoti pilną URL sąrašą CSV formatu."
       export_json:
         button_text: "Eksportuoti"
-      invite:
-        button_text: "Siųsti pakvietimą"
-        button_title: "Siųsti pakvietimą"
       customize:
         title: "Pakeisti"
         preview: "peržiūra"
@@ -4280,10 +4276,7 @@ lt:
             title: "Pasirinkite pagrindinę spalvų paletę"
             description: "Pagrindinė paletė:"
           title: "Spalvos"
-          edit: "Redaguoti spalvų paletes"
-          long_title: "Spalvų paletės"
           about: "Pakeiskite temų naudojamas spalvas. Norėdami pradėti, sukurkite naują spalvų paletę."
-          new_name: "Nauja spalvų paletė"
           copy_name_prefix: "Kopija"
           delete_confirm: "Ištrinti šią spalvų paletę?"
           undo: "Anuliuoti"
@@ -4328,36 +4321,28 @@ lt:
           warning: "Tai visam laikui pakeis visus susijusius svetainės nustatymus."
         email_style:
           title: "El. pašto stilius"
-          heading: "Pritaikyti el. pašto stilių"
-          html: "HTML šablonas"
+          html: "HTML"
           css: "CSS"
           reset: "Atstatyti numatytuosius nustatymus"
           reset_confirm: "Ar tikrai norite iš naujo nustatyti numatytąjį %{fieldName} ir prarasti visus pakeitimus?"
           save_error_with_reason: "Jūsų pakeitimai nebuvo išsaugoti. %{error}"
       email:
         title: "El. laiškai"
+        settings: "Nustatymai"
         templates: "Juodraščiai"
-        preview_digest: "Parodyti Santrauką"
         advanced_test:
-          title: "Išplėstinis testas"
           desc: "Sužinokite, kaip Discourse apdoroja gautus el. laiškus. Kad galėtumėte tinkamai apdoroti el. laišką, įklijuokite žemiau visą pradinį el. pašto pranešimą."
           email: "Originali žinutė"
-          run: "Vykdyti testą"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Įvyko klaida siunčiant testinį el. laišką. Prašome dar kartą patikrinti pašto nustatymus, įsitikinkite, kad jūsų tiekėjas neblokuoja pašto prisijungimų ir bandykite dar kartą."
         sent: "Išsiųsti"
         skipped: "Praleisti"
         received: "Gauta"
         rejected: "Atmesta"
-        sent_at: "Išsiųsta"
         time: "Laikas"
         user: "Vartotojas"
-        email_type: "El. laiško tipas"
-        to_address: "Adresatas"
         test_email_address: "el. pašto adresas testavimui"
-        send_test: "Siųsti testinį el. paštą"
         sent_test: "išsiųsta!"
-        delivery_method: "Pristatymo metodas"
         preview_digest_desc: "Parodyti el. laiško turinį, siunčiamą neaktyviems vartotojams"
         refresh: "Atnaujinti"
         send_digest_label: "Siųsti šį rezultatą:"
@@ -4366,10 +4351,7 @@ lt:
         html: "html"
         text: "tekstas"
         html_preview: "El. Pašto turinio peržiūra"
-        last_seen_user: "Paskutinį kartą žiūrėti vartotojai:"
         no_result: "Nerasta rezultatų suvestinei."
-        reply_key: "Atsakymo nustatymai"
-        skipped_reason: "Praleidimo priežastis"
         incoming_emails:
           from_address: "Nuo"
           to_addresses: "Kam"
@@ -4378,7 +4360,6 @@ lt:
           error: "Klaida"
           none: "Nerasta jokių el. laiškų "
           modal:
-            title: "Gaunamo el. pašto informacija"
             error: "Klaida"
             headers: "Antraštės"
             subject: "Tema"
@@ -4406,7 +4387,7 @@ lt:
           delete_topic: "Tema ištrinta"
           post_approved: "Įrašas patvirtintas"
       logs:
-        title: "Įrašai"
+        nav_title: "Įrašai"
         action: "Veiksmai"
         created_at: "Sukurtas"
         last_match_at: "Paskutiniai Sutapę vartotojai"
@@ -4424,10 +4405,8 @@ lt:
         staff_actions:
           all: "visi"
           filter: "Filtruoti:"
-          title: "Komandos veiksmai"
-          clear_filters: "Rodyti viską"
           staff_user: "Narys"
-          target_user: "Tiksliniai vartotojai/auditorija"
+          target_user: "Numatytas narys"
           subject: "Tema"
           when: "Kada"
           context: "Kontekstas"
@@ -4522,9 +4501,7 @@ lt:
             watched_word_create: "pridėti stebėtą žodį"
             watched_word_destroy: "ištrinti stebėtą žodį"
         screened_emails:
-          title: "Tikrinti el. laiškai"
           description: "Kai kažkas kuria naują paskyrą, naudojamas el. pašto adresas bus patikrintas, o registracija bus užblokuota."
-          email: "El. pašto adresas"
           actions:
             allow: "Leisti"
         screened_urls:
@@ -4539,7 +4516,6 @@ lt:
           actions:
             block: "Blokuoti"
             do_nothing: "Leisti"
-            allow_admin: "Suteikti Administratoriaus teises"
           form:
             label: "Naujas:"
             ip_address: "IP adresas"
@@ -4549,24 +4525,17 @@ lt:
             text: "Sujungti/sukaupti"
             title: "Sukurti naujus Atskirus Tinklus blokuotus sąrašus jeigu yra bent 'min_ban_entries_for_roll_up' įrašai."
         search_logs:
-          title: "Paieškos žurnalas"
           term: "Terminas"
           searches: "Paieškos"
           click_through_rate: "CTR"
           types:
             all_search_types: "Visi paieškos tipai"
             header: "Viršus"
-            full_page: "Pilnas puslapis"
             click_through_only: "Viskas (tik spustelėjus)"
-          header_search_results: "Antraštės paieškos rezultatai"
-        logster:
-          title: "Klaidų įrašai"
       watched_words:
-        title: "Peržiūrėti Žodžiai"
         search: "paieška"
         clear_filter: "Išvalyti"
         download: Atsisiųsti
-        clear_all: Išvalyti viską
         clear_all_confirm: "Ar tikrai norite išvalyti visus stebėtus žodžius %{action} veiksmui?"
         actions:
           block: "Blokuoti"
@@ -4640,8 +4609,6 @@ lt:
         id_not_found: "Atsiprašome, tačiau toks vartotojo ID sistemoje neegzistuoja"
         active: "aktyvuota"
         status: "Statusas"
-        show_emails: "Rodyti el. pašto adresus"
-        hide_emails: "Slėpti laiškus"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4656,8 +4623,6 @@ lt:
           staged: "Inscenizuotas"
         approved: "Patvirtinta?"
         titles:
-          active: "Aktyvūs vartotojai"
-          new: "Nauji vartotojai"
           pending: "Vartotojai laukiantys patvirtinimo"
           newuser: "Vartotojai su 0 pasitikėjimo lygiu (Naujas vartotojas)"
           basic: "Vartotojai su 1 pasitikėjimo lygiu (Paprastas vartotojas)"
@@ -4665,10 +4630,7 @@ lt:
           regular: "Vartotojai turintys 3 pasitikėjimo Lygį (Regular)"
           leader: "Vartotojai turintys 4 pasitikėjimo Lygį (Leader)"
           staff: "Komanda"
-          admins: "Administratoriai"
           moderators: "Moderatoriai"
-          silenced: "Nutildyti nariai"
-          suspended: "Sustabdyti vartotojai"
         not_verified: "Nepatvirtinta"
         check_email:
           title: "Atskleisk šio vartotojo el. pašto adresą"
@@ -4872,7 +4834,6 @@ lt:
           delete_sso_record: "Ištrinti SSO įrašą"
           confirm_delete: "Ar tikrai norite ištrinti šį „DiscourseConnect“ įrašą?"
       user_fields:
-        title: "Vartotojo laukeliai"
         untitled: "Be pavadinimo"
         name: "Lauko Pavadinimas"
         type: "Lauko Tema"
@@ -4904,10 +4865,8 @@ lt:
           dropdown: "Išskleidimas"
           multiselect: "Daugialypis pasirinkimas"
       site_text:
-        description: "Tu gali keisti bet kurį forumo tekstą. Prašom pradėti naudojant paiešką žemiau:"
         search: "Ieškoti teksto, kurį norėtum keisti"
-        title: "Tekstas"
-        edit: "redaguoti"
+        edit: "Redaguoti"
         revert: "Atstatyti Pakeitimus"
         revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
         go_back: "Atgal į Paiešką"
@@ -4929,7 +4888,7 @@ lt:
           invalid_input: "Jaustukų sąraše turi būti tik tinkami jaustukų pavadinimai, pvz.: apkabinimai"
           add_emoji_button:
             label: "Pridėti jaustukus"
-        title: "Nustatymai"
+        nav_title: "Nustatymai"
         no_results: "Nerasta jokių rezultatų."
         clear_filter: "Išvalyti"
         add_url: "pridėti URL"
@@ -5056,7 +5015,6 @@ lt:
             with_post_time: <span class="username">%{username}</span> už įrašą %{link} <span class="time">%{time}</span> laiku
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> laiku
         mass_award:
-          title: Masinis apdovanojimas
           description: Suteikite tą patį ženklelį daugeliui vartotojų vienu metu.
           no_badge_selected: Pasirinkite ženklelį, kad pradėtumėt.
           perform: "Apdovanojimo ženkliukas vartotojams"
@@ -5118,7 +5076,6 @@ lt:
           save: "Išsaugoti"
       reseed:
         action:
-          label: "Pakeisti tekstą…"
           title: "Pakeiskite kategorijų ir temų tekstą vertimais"
         modal:
           title: "Pakeisti tekstą"
@@ -5140,6 +5097,21 @@ lt:
           admin: "Adminas"
           moderator: "Moderatorius"
           regular: "Regulerus narys"
+      homepage_choices:
+        custom:
+          label: "Išskirtinės"
+        style_type:
+          categories: "kategorija"
+          topics: "tema"
+      top_menu_items:
+        new: "Nauji"
+        unread: "Neperskaitytos"
+        top: "Populiarios"
+        latest: "Naujausia"
+        categories: "Kategorijos"
+        unseen: "Nematytas"
+        read: "Skaitykite"
+        bookmarks: "Žymės"
       previews:
         share_button: "Dalintis"
         reply_button: "Atsakyti"
@@ -5148,11 +5120,6 @@ lt:
       homepage_preview:
         nav_buttons:
           all_categories: "visos kategorijos"
-          new: "Nauji"
-          unread: "Neperskaitytos"
-          top: "Populiarios"
-          latest: "Naujausia"
-          categories: "Kategorijos"
         category_names:
           site_feedback: "Puslapio atsiliepimai"
         table_headers:

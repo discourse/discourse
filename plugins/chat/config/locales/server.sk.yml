@@ -21,7 +21,6 @@ sk:
     chat_minimum_message_length: "Minimálny počet znakov pre chatovú správu."
     chat_allow_uploads: "Povoľte nahrávanie vo verejných kanáloch chatu a kanáloch priamych správ."
     chat_archive_destination_topic_status: "Stav, že cieľová téma by mala byť po dokončení archívu kanála. Platí to len vtedy, keď je cieľovou témou nová téma, nie existujúca."
-    default_emoji_reactions: "Predvolené emoji reakcie pre správy chatu. Pridajte až 5 emotikonov pre rýchlu reakciu."
     direct_message_enabled_groups: "Povoliť používateľom v rámci týchto skupín vytvárať osobné rozhovory medzi používateľmi. Poznámka: Zamestnanci môžu vždy vytvárať osobné rozhovory a používatelia budú môcť odpovedať na osobné rozhovory iniciované používateľmi, ktorí majú povolenie na ich vytváranie."
     chat_message_flag_allowed_groups: "Používatelia v týchto skupinách môžu označovať chatové správy. Všimnite si, že správcovia a moderátori môžu správy četu vždy nahlásiť."
     max_mentions_per_chat_message: "Maximálny počet oznámení @name, ktoré môže používateľ použiť v správe chatu."

@@ -527,4 +527,28 @@ test2
 
     assert.strictEqual(toMarkdown(html), "[quiet]hey\nthere[/quiet]");
   });
+
+  test("converts inline mathjax", function (assert) {
+    const html = `<p>Lorem ipsum <span class="math" data-applied-mathjax="true" style="display: none;">E=mc^2</span><span class="math-container,inline-math,mathjax-math" style=""><span id="MathJax-Element-1-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 117%;"><span id="MJXc-Node-1" class="mjx-math"><span id="MJXc-Node-2" class="mjx-mrow"><span id="MJXc-Node-3" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.483em; padding-bottom: 0.27em; padding-right: 0.026em;">E</span></span><span id="MJXc-Node-4" class="mjx-mo MJXc-space3"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.056em; padding-bottom: 0.323em;">=</span></span><span id="MJXc-Node-5" class="mjx-mi MJXc-space3"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.216em; padding-bottom: 0.27em;">m</span></span><span id="MJXc-Node-6" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-7" class="mjx-mi"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.216em; padding-bottom: 0.27em;">c</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.513em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-8" class="mjx-mn" style=""><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.377em; padding-bottom: 0.323em;">2</span></span></span></span></span></span></span><script type="math/tex" id="MathJax-Element-1">E=mc^2</script></span> dolor sit amet.</p>`;
+    const markdown = `Lorem ipsum $E=mc^2$ dolor sit amet.`;
+    assert.strictEqual(toMarkdown(html), markdown);
+  });
+
+  test("converts block mathjax", function (assert) {
+    const html = `<p>Before</p>
+    <div class="math" data-applied-mathjax="true" style="display: none;">
+    \\sqrt{(-1)} \\; 2^3 \\; \\sum \\; \\pi
+    </div><div class="math-container,block-math,mathjax-math" style=""><span class="mjx-chtml MJXc-display" style="text-align: center;"><span id="MathJax-Element-2-Frame" class="mjx-chtml MathJax_CHTML" tabindex="0" style="font-size: 117%; text-align: center;"><span id="MJXc-Node-9" class="mjx-math"><span id="MJXc-Node-10" class="mjx-mrow"><span id="MJXc-Node-11" class="mjx-msqrt"><span class="mjx-box" style="padding-top: 0.045em;"><span class="mjx-surd"><span class="mjx-char MJXc-TeX-size2-R" style="padding-top: 0.911em; padding-bottom: 0.911em;">√</span></span><span class="mjx-box" style="padding-top: 0.315em; border-top: 1.4px solid;"><span id="MJXc-Node-12" class="mjx-mrow"><span id="MJXc-Node-13" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.483em; padding-bottom: 0.59em;">(</span></span><span id="MJXc-Node-14" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.323em; padding-bottom: 0.43em;">−</span></span><span id="MJXc-Node-15" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.377em; padding-bottom: 0.323em;">1</span></span><span id="MJXc-Node-16" class="mjx-mo"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.483em; padding-bottom: 0.59em;">)</span></span></span></span></span></span><span id="MJXc-Node-17" class="mjx-mspace" style="width: 0.278em; height: 0px;"></span><span id="MJXc-Node-18" class="mjx-msubsup"><span class="mjx-base"><span id="MJXc-Node-19" class="mjx-mn"><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.377em; padding-bottom: 0.323em;">2</span></span></span><span class="mjx-sup" style="font-size: 70.7%; vertical-align: 0.591em; padding-left: 0px; padding-right: 0.071em;"><span id="MJXc-Node-20" class="mjx-mn" style=""><span class="mjx-char MJXc-TeX-main-R" style="padding-top: 0.377em; padding-bottom: 0.377em;">3</span></span></span></span><span id="MJXc-Node-21" class="mjx-mspace" style="width: 0.278em; height: 0px;"></span><span id="MJXc-Node-22" class="mjx-mo MJXc-space1"><span class="mjx-char MJXc-TeX-size2-R" style="padding-top: 0.751em; padding-bottom: 0.751em;">∑</span></span><span id="MJXc-Node-23" class="mjx-mspace" style="width: 0.278em; height: 0px;"></span><span id="MJXc-Node-24" class="mjx-mi MJXc-space1"><span class="mjx-char MJXc-TeX-math-I" style="padding-top: 0.216em; padding-bottom: 0.27em; padding-right: 0.003em;">π</span></span></span></span></span></span><script type="math/tex; mode=display" id="MathJax-Element-2">\\sqrt{(-1)} \\; 2^3 \\; \\sum \\; \\pi</script></div>
+    <p>After</p>`;
+
+    const markdown = `Before
+
+$$
+\\sqrt{(-1)} \\; 2^3 \\; \\sum \\; \\pi
+$$
+
+After`;
+
+    assert.strictEqual(toMarkdown(html), markdown);
+  });
 });

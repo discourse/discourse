@@ -47,6 +47,9 @@ sq:
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Fshirë nga autori"
+  topic_category_changed: "Nga %{from} në %{to}"
+  topic_tag_changed:
+    added_and_removed: "U shtua %{added} dhe u hoq %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
   components:

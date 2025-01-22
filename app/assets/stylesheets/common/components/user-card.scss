@@ -3,6 +3,7 @@
 .fk-d-menu[data-identifier="usercard"] {
   max-width: calc(100vw - 2em);
   width: auto;
+
   .fk-d-menu__inner-content {
     min-width: 0;
     overflow: visible;
@@ -27,7 +28,8 @@
   border-radius: 100%;
   position: relative;
   overflow: hidden;
-  &:before {
+
+  &::before {
     @media (prefers-reduced-motion: no-preference) {
       animation: placeHolderShimmer 4s linear infinite forwards;
     }
@@ -62,21 +64,26 @@
   .card-content {
     padding: 10px;
     background: rgba(var(--secondary-rgb), 0.85);
-    &:after {
+
+    &::after {
       content: "";
       display: block;
       clear: both;
     }
+
     a.card-huge-avatar {
       display: block;
     }
+
     .bio {
       @include line-clamp(2);
     }
   }
+
   .card-row:not(.first-row) {
     margin-top: 0.5em;
   }
+
   // avatar - names - controls
   .first-row {
     .names {
@@ -97,37 +104,46 @@
         flex: 0 1 auto;
         @include ellipsis;
       }
+
       span {
         display: block;
       }
     }
+
     .usercard-controls {
       list-style-type: none;
       margin: 0;
+
       button {
         width: 100%;
       }
     }
   }
+
   .btn {
     margin-bottom: 5px;
   }
+
   .names__primary {
     line-height: var(--line-height-medium);
     font-size: var(--font-up-5);
     font-weight: bold;
+
     .d-icon {
       color: var(--primary);
     }
   }
+
   .names__secondary {
     font-size: var(--font-up-1);
   }
+
   .metadata {
     display: flex;
     flex-wrap: wrap;
     gap: 0.15em 0.5em;
     color: var(--primary);
+
     &.email,
     .desc,
     a {
@@ -140,12 +156,14 @@
     margin: 0;
     @include ellipsis;
   }
+
   .names__primary,
   .names__secondary {
     a {
       color: var(--primary);
     }
   }
+
   p {
     margin: 0 0 5px 0;
   }
@@ -156,53 +174,65 @@
   // avatar - names - controls
   .first-row {
     display: flex;
+
     .avatar-placeholder {
       width: var(--avatar-width);
       height: var(--avatar-width);
     }
+
     .user-card-avatar {
       margin-top: var(--avatar-margin);
       max-height: var(--avatar-width);
     }
+
     .avatar {
       width: var(--avatar-width);
       height: var(--avatar-width);
     }
+
     .new-user a {
       color: var(--primary-low-mid);
     }
   }
+
   // user bio - suspension reason
   .second-row {
     max-height: 150px;
     overflow: auto;
+
     .bio {
       a:not(.mention) {
         color: var(--tertiary);
       }
+
       .overflow {
         max-height: 60px;
         overflow: hidden;
       }
     }
+
     .suspended {
       color: var(--danger);
+
       .suspension-reason-title,
       .suspension-date {
         font-weight: bold;
       }
     }
+
     .profile-hidden,
     .inactive-user {
       font-size: var(--font-up-1);
       margin-top: 0.5em;
     }
   }
+
   // featured topic
   .featured-topic {
     .desc {
       color: var(--primary-high);
     }
+
     a {
       color: var(--primary);
       text-decoration: underline;
@@ -215,34 +245,41 @@
     flex-wrap: wrap;
     width: 100%;
     align-items: center;
+
     .location,
     .website-name {
       display: flex;
       overflow: hidden;
       align-items: center;
+
       .d-icon {
         margin-right: 0.25em;
       }
     }
+
     .website-name a,
     .location span {
       @include ellipsis;
       color: var(--primary);
     }
+
     .location,
     .local-time,
     .website-name {
       margin-right: 0.5em;
     }
+
     .website-name a {
       text-decoration: underline;
     }
   }
+
   // custom user fields
   .public-user-fields {
     margin: 0;
+
     .user-field-value-list-item:not(:last-of-type) {
-      &:after {
+      &::after {
         // create comma separated list
         content: ",";
       }
@@ -252,20 +289,24 @@
   // badges
   .badge-section {
     line-height: 0;
+
     .user-badge {
       @include ellipsis;
       background: var(--primary-very-low);
       border: 1px solid var(--primary-low);
       color: var(--primary);
     }
+
     .user-card-badge-link {
       overflow: hidden;
     }
+
     .user-card-badge-link,
     .more-user-badges {
       vertical-align: top;
       display: inline-block;
     }
+
     .more-user-badges a {
       @extend .user-badge;
     }
@@ -299,9 +340,11 @@
   // avatar - names and controls
   .first-row {
     display: flex;
+
     .group-card-avatar {
       margin-top: var(--avatar-margin);
     }
+
     .avatar-flair {
       display: flex;
       background-size: contain;
@@ -309,27 +352,33 @@
       width: var(--avatar-width);
       height: var(--avatar-width);
       color: var(--primary);
+
       .d-icon {
         margin: auto;
         font-size: calc(var(--avatar-width) / 1.5);
       }
+
       &.rounded {
         border-radius: 50%;
       }
     }
   }
+
   // group bio
   .second-row {
     max-height: 150px;
     overflow: auto;
+
     .bio {
       a:not(.mention) {
         color: var(--tertiary);
       }
+
       img {
         max-width: 100%;
         height: auto;
       }
+
       .overflow {
         max-height: 60px;
         overflow: hidden;

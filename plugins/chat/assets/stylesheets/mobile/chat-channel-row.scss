@@ -1,6 +1,7 @@
 :root {
   --channel-list-avatar-size: 43px;
 }
+
 .chat-channel-row {
   margin: 0;
   border-radius: 0;
@@ -15,7 +16,6 @@
     .chat-channel-row__content {
       background-color: var(--danger-low);
     }
-
     height: 0 !important;
     overflow: hidden;
     opacity: 0.5 !important;
@@ -27,14 +27,16 @@
     z-index: 2;
     box-sizing: border-box;
     transition: border-radius 0.25s ease-in-out;
+
     //for sliding delete animation
     background: var(--primary-very-low);
     height: 100%;
 
     &.-animate-reset {
       transition: margin-right 0.15s ease-out;
-      margin-right: 0px !important;
+      margin-right: 0 !important;
     }
+
     &:not(.-animate-reset) {
       border-top-right-radius: 0.25rem;
       border-bottom-right-radius: 0.25rem;
@@ -48,6 +50,7 @@
       align-items: center;
       flex-grow: 1;
     }
+
     .is-dm & {
       display: grid;
       grid-template-areas:
@@ -55,6 +58,7 @@
         "msg msg";
       width: 100%;
       align-items: center;
+
       &:has(.chat-channel-unread-indicator) {
         grid-template-areas:
           "name metadata"
@@ -69,10 +73,10 @@
     justify-content: flex-end;
     align-items: center;
     position: absolute;
-    top: 0px;
-    bottom: 0px;
-    right: 0px;
-    left: 0px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
     background: var(--danger);
     color: var(--primary-very-low);
 
@@ -101,16 +105,20 @@
     &__channel-info {
       grid-area: name;
     }
+
     &__metadata {
       grid-area: metadata;
+
       .chat-channel-unread-indicator {
         font-size: var(--font-down-2);
         margin-top: 0.25rem;
       }
     }
+
     &__metadata-date {
       font-size: var(--font-down-2);
     }
+
     &__last-message {
       @include ellipsis;
       grid-area: msg;

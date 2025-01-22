@@ -1,5 +1,4 @@
 // Page not found styles
-
 .not-found-container {
   background: var(--d-content-background);
 }
@@ -34,6 +33,7 @@
   @media screen and (max-width: 600px) {
     width: 100%;
   }
+
   h2 {
     margin-bottom: 10px;
   }
@@ -49,6 +49,7 @@
       display: none;
     }
   }
+
   a:not(.badge-category__wrapper) {
     flex-basis: 100%;
   }

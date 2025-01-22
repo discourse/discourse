@@ -16,12 +16,12 @@ cs:
           label: Uživatel
         pm:
           title:
-            label: Nadpis
+            label: Název
           raw:
             label: Tělo
         pms:
           title:
-            label: Nadpis
+            label: Název
           raw:
             label: Tělo
         group:

@@ -1,5 +1,12 @@
 import { getOwner } from "@ember/owner";
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  focus,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
@@ -10,7 +17,6 @@ import {
   chromeTest,
   createFile,
   paste,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -305,7 +311,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image: Text after the image.");
-    const textArea = query(".d-editor-input");
+    const textArea = find(".d-editor-input");
     textArea.selectionStart = 10;
     textArea.selectionEnd = 10;
 
@@ -341,7 +347,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       ".d-editor-input",
       "The image: [paste here] Text after the image."
     );
-    const textArea = query(".d-editor-input");
+    const textArea = find(".d-editor-input");
     textArea.selectionStart = 10;
     textArea.selectionEnd = 23;
 
@@ -428,7 +434,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\ntext after image");
-    const input = query(".d-editor-input");
+    const input = find(".d-editor-input");
     input.selectionStart = 10;
     input.selectionEnd = 10;
 
@@ -457,17 +463,14 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       uppyEventFired = true;
     });
 
-    let element = query(".d-editor");
-    let inputElement = query(".d-editor-input");
-    inputElement.focus();
-    await paste(element, "\ta\tb\n1\t2\t3", {
+    await focus(".d-editor-input");
+    await paste(".d-editor", "\ta\tb\n1\t2\t3", {
       types: ["text/plain", "Files"],
       files: [createFile("avatar.png")],
     });
-    await settled();
 
     assert
-      .dom(inputElement)
+      .dom(".d-editor-input")
       .hasValue(
         "||a|b|\n|---|---|---|\n|1|2|3|\n",
         "only the plain text table is pasted"
@@ -546,7 +549,7 @@ acceptance(
       appEvents.on("composer:upload-error", async () => {
         await settled();
 
-        if (query(".dialog-body")) {
+        if (find(".dialog-body")) {
           assert
             .dom(".dialog-body")
             .hasText(

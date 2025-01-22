@@ -34,11 +34,13 @@
       display: flex;
       justify-content: space-between;
     }
+
     &-tip-validation {
       display: flex;
       flex-direction: column;
     }
   }
+
   .invitation-cta {
     display: flex;
     align-items: center;

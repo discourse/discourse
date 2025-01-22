@@ -392,6 +392,8 @@ sl:
       abandon:
         yes_value: "Zavrzi"
         no_value: "Nadaljujt urejanje"
+      dropdown:
+        view_all: "prikaži vse"
     topic_count_all:
       one: "Poglej %{count} novo temo"
       two: "Poglej %{count} novi temi"
@@ -1489,7 +1491,8 @@ sl:
         after_4_minutes: "po 4 minutah"
         after_5_minutes: "po 5 minutah"
         after_10_minutes: "po 10 minutah"
-      notification_level_when_replying: "Ko objavim v določeni temi, nastavi temo na"
+      notification_level_when_replying:
+        do_nothing: "Ne naredi nič"
       invited:
         title: "Povabila"
         pending_tab: "V teku"
@@ -3639,8 +3642,6 @@ sl:
               content: "Skupine"
             users:
               content: "Uporabniki"
-            my_posts:
-              content: "Moji prispevki"
             review:
               content: "Pregled"
             invite:
@@ -3878,21 +3879,24 @@ sl:
         group_owners: Skrbniki
         add_owners: Dodaj skrbnike
         no_custom_groups: "Ustvari novo skupino po meri"
+      api_keys:
+        edit: "Uredi"
+        save: "Shrani"
+        cancel: "Prekliči"
+        continue: "Nadaljuj"
+        revoke: "Odstrani"
+        revoked: "Preklican"
       api:
         generate_master: "Ustvari glavni API ključ"
         user: "Uporabnik"
         title: "API"
-        created: Ustvarjeno
-        last_used: Nazadnje uporabljeno
-        never_used: (nikoli)
+        never_used: Nikoli
         generate: "Ustvari"
         revoke: "Prekliči"
-        all_users: "Vsi uporabniki"
         show_details: Podrobnosti
         description: Opis
         save: Shrani
         revoked: Preklican
-        delete: Trajno izbriši
         not_shown_again: Ta ključ ne bo več prikazan. Preden nadaljujete, si ustvarite kopijo.
         continue: Nadaljuj
         scopes:
@@ -3905,8 +3909,10 @@ sl:
         create: "Ustvari"
         edit: "Uredi"
         save: "Shrani"
+        delete: "Izbriši"
+        cancel: "Prekliči"
         secret: "Skriven"
-        wildcard_event: "Pošlji mi vse."
+        wildcard_event: "Pošlji mi vse"
         active: "Aktivni"
         post_event:
           group_name: "Objavi dogodke"
@@ -4065,9 +4071,6 @@ sl:
         button_text: "Izvozi"
       export_json:
         button_text: "Izvozi"
-      invite:
-        button_text: "Pošlji povabila"
-        button_title: "Pošlji povabila"
       customize:
         title: "Prilagodi"
         preview: "predogled"
@@ -4159,16 +4162,17 @@ sl:
           selected:
             name: "izbran"
         email_style:
+          html: "HTML"
           css: "CSS"
           reset: "Ponastavi na privzeto"
       email:
         title: "E-pošta"
+        settings: "Nastavitve"
         templates: "Predloge"
         test_error: "Prišlo je do napake med pošiljanjem testnega e-sporočila. Ponovno preverite vaše nastavitve e-pošte in preverite, da vaš ponudnik ne blokira povezav za e-pošto. Potem poskusite ponovno."
         sent: "Poslano"
         received: "Prejeto"
         rejected: "Zavrnjeno"
-        sent_at: "Poslano"
         time: "Čas"
         user: "Uporabnik"
         sent_test: "poslano!"
@@ -4198,7 +4202,7 @@ sl:
           silence_user: "Uporabnik utišan"
           delete_topic: "Tema izbrisana"
       logs:
-        title: "Dnevniki"
+        nav_title: "Dnevniki"
         action: "Dejanje"
         created_at: "Ustvarjeno"
         ip_address: "IP"
@@ -4214,8 +4218,6 @@ sl:
         staff_actions:
           all: "vse"
           filter: "Filter:"
-          title: "Dejanja osebja"
-          clear_filters: "Pokaži vse"
           staff_user: "Uporabnik"
           target_user: "Ciljni uporabnik"
           subject: "Vsebina"
@@ -4277,9 +4279,7 @@ sl:
             entity_export: "izvoz entitete"
             delete_group: "izbriši skupino"
         screened_emails:
-          title: "Nadzorovani e-naslovi"
           description: "Nadzorovani e-naslovi se bodo preverili ob vsaki novi registraciji uporabniškega računa - vsak poskus bo blokiran ali bo izvedena druga akcija."
-          email: "E-naslov"
           actions:
             allow: "Dovoli"
         screened_urls:
@@ -4292,24 +4292,18 @@ sl:
           actions:
             block: "Blokiraj"
             do_nothing: "Dovoli"
-            allow_admin: "Dovoli administratorju"
           form:
             label: "Novo:"
             add: "Dodaj"
             filter: "Išči"
         search_logs:
-          title: "Dnevnik iskanj"
           term: "Iskalni pogoj"
           searches: "Iskanj"
           types:
             all_search_types: "Vse vrste iskanj"
             header: "Glava"
-            full_page: "Cela stran"
             click_through_only: "Vse (kjer je kliknil na rezultat)"
-        logster:
-          title: "Dnevnik napak"
       watched_words:
-        title: "Nadzorovane besede"
         search: "išči"
         clear_filter: "Počisti"
         show_words:
@@ -4318,7 +4312,6 @@ sl:
           few: "pokaži %{count} besede"
           other: "pokaži %{count} besed"
         download: Naloži
-        clear_all: Počisti vse
         actions:
           block: "Blokiraj"
           censor: "Cenzuriraj"
@@ -4374,8 +4367,6 @@ sl:
         last_emailed: "Zadnja e-pošta"
         active: "Aktiviran"
         status: "Stanje"
-        show_emails: "Pokaži e-naslove"
-        hide_emails: "Skrij e-naslove"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4391,7 +4382,6 @@ sl:
         approved: "Potrjen?"
         titles:
           active: "Aktivni uporabniki"
-          new: "Novi uporabniki"
           pending: "Uporabniki za odobritev"
           newuser: "Uporabniki na nivoju zaupanja 0 (novi)"
           basic: "Uporabniki na nivoju zaupanja 1 (osnovni)"
@@ -4400,9 +4390,6 @@ sl:
           leader: "Uporabniki na nivoju zaupanja 4 (vodja)"
           staff: "Osebje"
           moderators: "Moderatorji"
-          silenced: "Utišani uporabniki"
-          suspended: "Suspendirani uporabniki"
-          staged: "Prirejeni uporabniki"
         check_email:
           text: "Prikaži"
         check_sso:
@@ -4570,7 +4557,6 @@ sl:
           delete_sso_record: "Izbriši zapis SSO"
           confirm_delete: "Ali ste prepričani, da želite izbrisati ta zapis DiscourseConnect?"
       user_fields:
-        title: "Podatki uporabnika"
         name: "Ime polja"
         type: "Vrsta polja"
         description: "Opis polja"
@@ -4599,10 +4585,8 @@ sl:
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:
-        description: "Lahko spremenite katerikoli besedilo na forumu. Začnite tako da poiščete spodaj:"
         search: "Išči besedilo, ki bi ga rad/a uredil/a"
-        title: "Besedilo"
-        edit: "uredi"
+        edit: "Uredi"
         revert: "Prekliči spremembe"
         revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
         go_back: "Nazaj na iskalnik"
@@ -4619,7 +4603,7 @@ sl:
         save: "shrani"
         cancel: "prekliči"
       site_settings:
-        title: "Nastavitve"
+        nav_title: "Nastavitve"
         no_results: "Iskanje nima zadetkov."
         clear_filter: "Počisti"
         add_group: "dodaj skupino"
@@ -4791,17 +4775,26 @@ sl:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Običajni uporabnik"
+      homepage_choices:
+        custom:
+          label: "Po meri"
+        style_type:
+          categories: "kategorija"
+          topics: "tema"
+      top_menu_items:
+        new: "Nova"
+        unread: "Neprebrane"
+        top: "Najboljše"
+        latest: "Najnovejše"
+        categories: "Kategorije"
+        read: "Prebrano"
+        bookmarks: "Zaznamki"
       previews:
         share_button: "Deli"
         reply_button: "Odgovori"
       homepage_preview:
         nav_buttons:
           all_categories: "vse kategorije"
-          new: "Nova"
-          unread: "Neprebrane"
-          top: "Najboljše"
-          latest: "Najnovejše"
-          categories: "Kategorije"
         category_names:
           site_feedback: "Povratne informacije spletnega mesta"
         table_headers:

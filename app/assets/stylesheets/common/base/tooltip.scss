@@ -1,7 +1,6 @@
 #discourse-tooltip {
   --d-tooltip-background: var(--secondary);
   --d-tooltip-border: var(--primary-medium);
-
   background-color: var(--d-tooltip-background);
   position: absolute;
   z-index: z("tooltip");
@@ -22,8 +21,8 @@
     background: var(--d-tooltip-background);
   }
 
-  .tooltip-pointer:before,
-  .tooltip-pointer:after {
+  .tooltip-pointer::before,
+  .tooltip-pointer::after {
     position: absolute;
     pointer-events: none;
     border: solid transparent;
@@ -33,7 +32,7 @@
     width: 0;
   }
 
-  .tooltip-pointer:after {
+  .tooltip-pointer::after {
     border-bottom-color: var(--d-tooltip-background);
     border-width: 8px;
     left: 50%;
@@ -41,7 +40,7 @@
     margin-bottom: -0.5px;
   }
 
-  .tooltip-pointer:before {
+  .tooltip-pointer::before {
     border-bottom-color: var(--d-tooltip-border);
     border-width: 9px;
     left: 50%;

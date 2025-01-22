@@ -435,8 +435,11 @@ export default class FullPageSearchController extends Controller {
 
             if (args.page > 1) {
               if (model) {
-                this.model.posts.pushObjects(model.posts);
-                this.model.topics.pushObjects(model.topics);
+                this.model.set("posts", this.model.posts.concat(model.posts));
+                this.model.set(
+                  "topics",
+                  this.model.topics.concat(model.topics)
+                );
                 this.model.set(
                   "grouped_search_result",
                   results.grouped_search_result

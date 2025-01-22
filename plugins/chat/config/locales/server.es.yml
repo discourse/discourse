@@ -21,7 +21,6 @@ es:
     chat_minimum_message_length: "Número mínimo de caracteres para un mensaje de chat."
     chat_allow_uploads: "Permitir las subidas en los canales de chat públicos y en los canales de mensajes directos."
     chat_archive_destination_topic_status: "El estado que debe tener el tema de destino una vez completado el archivo de un canal. Esto solo se aplica cuando el tema de destino es un tema nuevo, no uno existente."
-    default_emoji_reactions: "Reacciones emoji por defecto para los mensajes de chat. Añade hasta 5 emojis para una reacción rápida."
     direct_message_enabled_groups: "Permite a los usuarios de estos grupos crear Chats Personales de usuario a usuario. Nota: el personal siempre puede crear Chats Personales, y los usuarios podrán responder a los Chats Personales iniciados por los usuarios que tienen permiso para crearlos."
     chat_message_flag_allowed_groups: "Los usuarios de estos grupos pueden marcar los mensajes de chat. Tenga en cuenta que los administradores y moderadores siempre pueden marcar mensajes de chat."
     max_mentions_per_chat_message: "Número máximo de notificaciones de @name que un usuario puede usar en un mensaje de chat."
@@ -89,6 +88,8 @@ es:
       not_accepting_dms: "Lo siento, %{username} no acepta mensajes en este momento."
       actor_ignoring_target_user: "Estás ignorando a %{username}, por lo que no puedes enviarle mensajes."
       actor_muting_target_user: "Estás silenciando a %{username}, por lo que no puedes enviarle mensajes."
+      actor_disallowed_dms: "Has elegido impedir que los usuarios te envíen mensajes personales y directos, por lo que no puedes crear nuevos mensajes directos."
+      actor_preventing_target_user_from_dm: "Has elegido impedir que %{username} te envíe mensajes personales y directos, por lo que no puedes crear nuevos mensajes directos para este usuario."
       user_cannot_send_direct_messages: "Lo sentimos, no puedes enviar mensajes directos."
       over_chat_max_direct_message_users_allow_self: "Solo puedes crear un mensaje directo contigo mismo."
       over_chat_max_direct_message_users:

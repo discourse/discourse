@@ -100,6 +100,10 @@ export default class PreviewBase extends Component {
   }
 
   loadFontVariants(font) {
+    if (!font) {
+      return Promise.resolve();
+    }
+
     const fontVariantData = this.fontMap[font.id];
 
     // System font for example does not need to load from a remote source.
@@ -206,8 +210,8 @@ export default class PreviewBase extends Component {
     const options = {
       ctx,
       colors,
-      font: font?.label,
-      headingFont: headingFont?.label,
+      font,
+      headingFont,
       width: this.width,
       height: this.height,
     };
@@ -337,7 +341,7 @@ export default class PreviewBase extends Component {
     const badgeHeight = headerHeight * 2 * 0.25;
     const headerMargin = headerHeight * 0.2;
     const fontSize = Math.round(badgeHeight * 0.5);
-    ctx.font = `${fontSize}px '${font}'`;
+    ctx.font = `${fontSize}px '${font.label}'`;
 
     const allCategoriesText = i18n(
       "wizard.homepage_preview.nav_buttons.all_categories"
@@ -380,26 +384,21 @@ export default class PreviewBase extends Component {
     ctx.restore();
 
     const categoryHomepage =
-      opts.homepageStyle !== "hot" && opts.homepageStyle !== "latest";
+      opts.homepageStyle.includes("category") ||
+      opts.homepageStyle.includes("categories");
 
     // First top menu item
-    let otherHomepageText;
-    switch (opts.homepageStyle) {
-      case "hot":
-        otherHomepageText = i18n("wizard.homepage_preview.nav_buttons.hot");
-        break;
-      case "latest":
-        otherHomepageText = i18n("wizard.homepage_preview.nav_buttons.latest");
-        break;
-    }
+    const otherHomepageText = i18n(
+      `wizard.top_menu_items.${opts.homepageStyle}`
+    );
 
     const firstTopMenuItemText = categoryHomepage
-      ? i18n("wizard.homepage_preview.nav_buttons.categories")
+      ? i18n("wizard.top_menu_items.categories")
       : otherHomepageText;
 
-    const newText = i18n("wizard.homepage_preview.nav_buttons.new");
-    const unreadText = i18n("wizard.homepage_preview.nav_buttons.unread");
-    const topText = i18n("wizard.homepage_preview.nav_buttons.top");
+    const newText = i18n("wizard.top_menu_items.new");
+    const unreadText = i18n("wizard.top_menu_items.unread");
+    const topText = i18n("wizard.top_menu_items.top");
 
     ctx.beginPath();
     ctx.fillStyle = colors.tertiary;
@@ -411,7 +410,7 @@ export default class PreviewBase extends Component {
     );
     ctx.fill();
 
-    ctx.font = `${fontSize}px '${font}'`;
+    ctx.font = `${fontSize}px '${font.label}'`;
     ctx.fillStyle = colors.secondary;
     const pillButtonTextY = headerHeight + headerMargin * 1.4 + fontSize;
     const firstTopMenuItemX = headerMargin * 3.0 + categoriesBoxWidth;

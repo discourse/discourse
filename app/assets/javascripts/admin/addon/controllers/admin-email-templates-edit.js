@@ -6,11 +6,11 @@ import discourseComputed from "discourse/lib/decorators";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { i18n } from "discourse-i18n";
 
-export default class AdminCustomizeEmailTemplatesEditController extends Controller.extend(
+export default class AdminEmailTemplatesEditController extends Controller.extend(
   bufferedProperty("emailTemplate")
 ) {
   @service dialog;
-  @controller adminCustomizeEmailTemplates;
+  @controller adminEmailTemplates;
 
   emailTemplate = null;
   saved = false;

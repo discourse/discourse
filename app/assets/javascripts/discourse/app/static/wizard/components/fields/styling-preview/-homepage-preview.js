@@ -26,7 +26,10 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
     const homepageStyle = this.getHomepageStyle();
 
-    if (homepageStyle === "latest" || homepageStyle === "hot") {
+    if (
+      !homepageStyle.startsWith("categories") &&
+      !homepageStyle.startsWith("category")
+    ) {
       this.drawPills(colors, font, height * 0.15, { homepageStyle });
       this.renderNonCategoryHomepage(
         ctx,
@@ -181,7 +184,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.fillStyle = textColor;
       ctx.fillText(
         titles[idx],
-        cols[0] - margin * 0.25,
+        cols[0] - margin * 0.1,
         textPos + categoryHeight * 0.36
       );
 

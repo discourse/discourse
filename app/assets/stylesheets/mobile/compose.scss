@@ -79,6 +79,7 @@
 
     .create {
       max-width: 50vw;
+
       span {
         @include ellipsis;
       }
@@ -92,6 +93,7 @@
       #file-uploading {
         margin-left: 6px;
       }
+
       .cancel {
         font-size: 1.4em;
         color: var(--primary-low-mid);
@@ -99,11 +101,13 @@
         padding: 3px 6px;
       }
     }
+
     .mobile-file-upload:not(.hidden),
     .mobile-preview {
       // Alignment fix, remove if converted to buttons
       display: inline-flex;
     }
+
     .mobile-file-upload {
       &.hidden + .mobile-preview {
         // Hide preview button while file is uploading to make room for upload progress
@@ -121,6 +125,7 @@
       padding-top: 10px;
       z-index: z("fullscreen") + 1;
       background-color: var(--secondary);
+
       .cancel,
       .mobile-file-upload,
       .mobile-preview {
@@ -141,6 +146,7 @@
       margin: 0;
       padding: 10px;
       overflow: auto;
+
       .d-editor-preview {
         margin-bottom: 40px;
       }
@@ -172,6 +178,7 @@
   .title-and-category,
   .user-selector {
     margin: 0;
+
     .users-input {
       margin-bottom: 6px;
     }

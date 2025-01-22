@@ -230,6 +230,10 @@ sk:
               label: Platné úrovne dôvery
               description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolene na ľubovoľnú úroveň dôveryhodnosti
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Pridané alebo odstránené značky
+            tags_added: Pridané značky
+            tags_removed: Odstránené značky
           fields:
             watching_categories:
               label: Sledovanie kategórií
@@ -237,6 +241,8 @@ sk:
             watching_tags:
               label: Sledovanie značiek
               description: Spustí sa iba vtedy, ak téma obsahuje niektorú z týchto značiek
+            trigger_on:
+              label: Spúšťač na
             trigger_with_pms:
               label: Spúšťanie pomocou PM
               description: Spustí sa, aj keď boli značky zmenené v PM

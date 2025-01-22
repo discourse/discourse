@@ -1,17 +1,33 @@
-<DPageHeader
-  @titleLabel={{i18n "admin.customize.theme.title"}}
-  @descriptionLabel={{i18n "admin.customize.theme.description"}}
-  @learnMoreUrl="https://meta.discourse.org/t/91966"
-  @hideTabs={{true}}
->
-  <:breadcrumbs>
-    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-    <DBreadcrumbsItem
-      @path="/admin/customize/themes"
-      @label={{i18n "admin.customize.theme.title"}}
-    />
-  </:breadcrumbs>
-</DPageHeader>
+{{#if (eq this.currentTab "themes")}}
+  <DPageHeader
+    @titleLabel={{i18n "admin.customize.theme.title"}}
+    @descriptionLabel={{i18n "admin.customize.theme.description"}}
+    @learnMoreUrl="https://meta.discourse.org/t/91966"
+    @hideTabs={{true}}
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path="/admin/customize/themes"
+        @label={{i18n "admin.customize.theme.title"}}
+      />
+    </:breadcrumbs>
+  </DPageHeader>
+{{else}}
+  <DPageHeader
+    @titleLabel={{i18n "admin.customize.theme.components"}}
+    @descriptionLabel={{i18n "admin.customize.theme.components_description"}}
+    @hideTabs={{true}}
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path="/admin/customize/components"
+        @label={{i18n "admin.customize.theme.components"}}
+      />
+    </:breadcrumbs>
+  </DPageHeader>
+{{/if}}
 
 <PluginOutlet @name="admin-customize-themes">
   {{#unless this.editingTheme}}

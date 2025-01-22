@@ -412,6 +412,14 @@ ro:
         confirm: "Ai deja o ciornă în curs de redactare. Ce ai vrea să faci cu ea?"
         yes_value: "Renunță"
         no_value: "Reia editarea"
+      dropdown:
+        title: "Deschide meniul celei mai recente ciorne"
+        untitled: "Ciornă fără titlu"
+        view_all: "vezi tot"
+        other_drafts:
+          one: "încă %{count} ciornă"
+          few: "încă %{count} ciorne"
+          other: "încă %{count} de ciorne"
     topic_count_all:
       one: "Afișați %{count} subiect nou"
       few: "Afișați %{count} subiecte noi"
@@ -1487,7 +1495,9 @@ ro:
         after_4_minutes: "după 4 minute"
         after_5_minutes: "după 5 minute"
         after_10_minutes: "după 10 minute"
-      notification_level_when_replying: "Când postez într-un subiect, setează subiectul ca"
+      notification_level_when_replying:
+        watch_topic: "Urmărește subiect"
+        do_nothing: "Nu face nimic"
       invited:
         title: "Invitații"
         pending_tab: "În așteptare"
@@ -2054,6 +2064,7 @@ ro:
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
         post_approved: "articol aprobat"
+        new_features: "Au fost lansate funcționalități Discourse noi!"
         admin_problems: "sfaturi noi în panoul de control al site-ului tău"
     upload_selector:
       uploading: "Se încarcă"
@@ -3306,8 +3317,13 @@ ro:
               content: "Grupuri"
             users:
               content: "Utilizatori"
-            my_posts:
-              content: "Articolele mele"
+            my_drafts:
+              content: "Ciornele mele"
+              title: "Ciornele mele nepublicate"
+              draft_count:
+                one: "%{count} ciornă"
+                few: "%{count} ciorne"
+                other: "%{count} de ciorne"
             review:
               content: "Revizuire"
               title: "Articole semnalate și alte elemente la coadă"
@@ -3402,7 +3418,6 @@ ro:
           always: "întotdeauna"
           never: "niciodată"
       reports:
-        meta_doc: "Explorează <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentația</a> pentru o prezentare generală detaliată a rapoartelor."
         sidebar_title: "Rapoarte"
       config:
         developer:
@@ -3580,24 +3595,45 @@ ro:
         add_owners: Adaugă proprietari
         none_selected: "Alege un grup pentru a începe"
         no_custom_groups: "Creează un nou grup personalizat"
+      api_keys:
+        title: "Chei API"
+        description: "Funcția de chei API îți permite să integrezi în siguranță Discourse cu sisteme externe și să automatizezi acțiunile. Administratorii pot crea chei cu scopuri specifice pentru a controla accesul la resurse și la datele sensibile. Scopurile limitează funcționalitatea, asigurând securitate sporită."
+        add: "Adaugă cheie API"
+        edit: "Editează"
+        save: "Salvează"
+        cancel: "Anulează"
+        continue: "Continuă"
+        back: "Înapoi la chei API"
+        revoke: "Revocă"
+        undo_revoke: "Anulează revocare"
+        revoked: "Revocat"
+        delete: Șterge definitiv
+        no_api_keys: "Încă nu ai nicio cheie API."
       api:
         generate_master: "Generează cheie API principală"
         none: "Nu sunt chei API principale active deocamdată."
         user: "Utilizator"
         title: "API"
         keys: "Chei"
-        created: Creat
+        created: Creată de
         updated: Actualizat
-        never_used: (niciodată)
+        last_used: Ultima utilizare
+        never_used: Niciodată
         generate: "Generare"
+        undo_revoke: "Anulează revocare"
         revoke: "Revocă"
         all_users: "Toți utilizatorii"
         show_details: Detalii
         description: Descriere
+        user_mode: Nivel utilizator
+        single_user: "Utilizator unic"
         save: Salvează
+        delete: Șterge definitiv
         continue: Continuă
         scopes:
           action: țiune
+          allowed_parameters: Parametrii permiși
+          optional_allowed_parameters: Parametrii permiși (opțional)
           descriptions:
             topics:
               recover: Recuperează un subiect.
@@ -3611,25 +3647,28 @@ ro:
               messages: Listează mesajele din /logs sau obține un anumit mesaj din jurnal.
       web_hooks:
         title: "Cârlige web"
-        none: "Momentan nu există nici un webhook"
+        none: "Încă nu ai niciun cârlig web."
         instruction: "Webhooks permit Discourse să notifice servicii externe atunci când anumite evenimente se petrec pe site. Când un webhook este declanșat, o interogare POST va fi trimisă la URL-urile menționate."
         detailed_instruction: "O interogare POST va fi trimisă catre URL-ul menționat atunci când se produc evenimentele alese."
-        new: "Nou webhook"
+        add: "Adaugă cârlig web"
         create: "Creează"
         edit: "Modifică"
         save: "Salvează"
+        show: "Evenimente"
+        delete: "Șterge"
+        cancel: "Anulează"
         controls: "Controale"
-        go_back: "Înapoi la listă"
+        back: "Înapoi la cârlige web"
         payload_url: "URL-ul încărcăturii "
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Secretul nu trebuie să aibă nici un caracter spațiu-gol."
         secret_too_short: "Secretul trebuie sa conțină cel puțin 12 caractere."
-        secret_placeholder: "Un șir de caractere opțional, folosit la generarea semnăturii"
+        secret_placeholder: "Șir utilizat pentru generarea de semnături"
         event_type_missing: "Va trebui să setezi cel puțin un tip de evenimente."
         content_type: "Tip conținut"
         secret: "Secret"
-        wildcard_event: "Trimite-mi orice."
-        individual_event: "Selectează evenimente individuale."
+        wildcard_event: "Trimite-mi orice"
+        individual_event: "Selectează evenimente individuale"
         verify_certificate: "Verifică certificatul TSL al URL-ului încărcăturii"
         active: "Active"
         active_notice: "Vom livra detaliile evenimentului atunci când acesta se va produce."
@@ -3811,6 +3850,8 @@ ro:
         sidebar_link:
           api_keys:
             title: "Chei API"
+            keywords: "jeton"
+          webhooks: "Cârlige web"
           developer: "Dezvoltator"
           embedding: "Înglobare"
           user_api: "API utilizator"
@@ -3914,6 +3955,7 @@ ro:
           themes_intro_img_alt: "Substituent nou pentru temă"
           customize_desc: "Personalizează:"
           title: "Teme"
+          description: "Temele sunt personalizări extinse care schimbă mai multe elemente ale stilului de design al forumului tău și adesea includ și funcții frontale suplimentare."
           create: "Creează"
           create_type: "Tip"
           create_name: "Nume"
@@ -3948,7 +3990,8 @@ ro:
           edit_css_html_help: "Nu ai modificat CSS sau HTML"
           installed: "Instalată"
           install_popular: "Populare"
-          installing_message: "Se instalează tema, acest lucru ar putea dura câteva minute..."
+          installing_message: "Se configurează noua ta temă…"
+          installing_message_long_time: "Setarea noii tale teme durează un pic mai mult decât a fost estimat, te rugăm să ai răbdare…"
           about_theme: "Despre"
           license: "Licență"
           version: "Versiune:"
@@ -4000,6 +4043,10 @@ ro:
                 too_large: "trebuie să fie mai mic sau egal cu %{count}"
         colors:
           title: "Culori"
+          edit: "Editează paletă de culori"
+          long_title: "Paletă de culori"
+          description: "Paletele de culori definesc culorile de bază utilizate în interfața site-ului tău, în timp ce temele pot oferi stil, machete și componente suplimentare – ambele pot lucra împreună pentru a crea aspectul și impresia unică a site-ului tău și ambele pot fi puse la dispoziție utilizatorilor pentru a-și selecta preferințele."
+          new_name: "Paletă nouă de culori"
           copy_name_prefix: "Copie a"
           undo: "Anulează acțiunea"
           undo_title: "Revino asupra schimbărilor aduse acestei culori, de ultima oară când a fost salvată și până acum."
@@ -4046,14 +4093,20 @@ ro:
           selected:
             name: "selectat"
         email_style:
+          heading: "Personalizează stilul de email"
+          html: "HTML"
           css: "CSS"
           reset: "Resetare la valorile implicite"
       email:
         title: "Email"
-        settings: "Setări email"
+        description: "Personalizează șabloanele folosite pentru a crea emailuri, previzualizează rezumatele emailurilor care vor fi trimise și vizualizează jurnalele de email."
+        settings: "Setări"
         templates: "Șabloane"
         templates_title: "Șabloane de email"
-        preview_digest: "Rezumat previzualizare"
+        advanced_test:
+          title: "Test avansat"
+          run: "Rulează test"
+          text: "Corp text selectat"
         error: "<b>EROARE</b> - %{server_error}"
         test_error: "A apărut o problemă la trimiterea email-ului. Te rugăm verifică setările mailului, Verifică dacă gazda nu blochează conexiunile de email și încearcă din nou."
         sent: "Trimis"
@@ -4061,15 +4114,15 @@ ro:
         bounced: "Ricoșate"
         received: "Primit"
         rejected: "Respins"
-        sent_at: "Trimise la"
+        sent_at: "Trimis la"
         time: "Timp"
         user: "Utilizator"
-        email_type: "Tipul de email"
+        email_type: "Tip email"
         to_address: "La adresa"
         test_email_address: "Adresă email de test"
         send_test: "Trimite email de test"
         sent_test: "trimis!"
-        delivery_method: "Metoda de livrare"
+        delivery_method: "Metodă de livrare"
         preview_digest_desc: "Previzualizează conținutul emailurilor-rezumat trimise către utilizatori inactivi."
         refresh: "Reîmprospătează"
         send_digest_label: "Trimite acest rezultat către:"
@@ -4077,10 +4130,7 @@ ro:
         format: "Format"
         html: "html"
         text: "text"
-        last_seen_user: "Ultimul utilizator văzut:"
         no_result: "Nu s-au găsit rezultate pentru rezumatul-email."
-        reply_key: "Cheie de răspuns"
-        skipped_reason: "Motivul omiterii"
         incoming_emails:
           from_address: "De la"
           to_addresses: "Către"
@@ -4089,12 +4139,10 @@ ro:
           error: "Eroare"
           none: "Nu s-au găsit emailuri primite."
           modal:
-            title: "Detaliile emailului primit"
             error: "Eroare"
             headers: "Antete"
             subject: "Subiect"
             body: "Corp"
-            rejection_message: "Mail respingere"
           filters:
             from_placeholder: "de_la@exemplu.com"
             to_placeholder: "către@exemplu.com"
@@ -4118,7 +4166,7 @@ ro:
           delete_post: "Postare ștearsă"
           delete_topic: "Subiect șters"
       logs:
-        title: "Rapoarte"
+        nav_title: "Rapoarte"
         action: "Acțiune"
         created_at: "Creat"
         last_match_at: "Ultima potrivire"
@@ -4136,8 +4184,6 @@ ro:
         staff_actions:
           all: "tot"
           filter: "Filtru:"
-          title: "Acțiunile membrilor echipei"
-          clear_filters: "Arată tot"
           staff_user: "Utilizator"
           target_user: "Utilizator țintă"
           subject: "Subiect"
@@ -4199,9 +4245,8 @@ ro:
             tag_group_change: "schimbă etichetă grup"
             delete_associated_accounts: "șterge conturile asociate"
         screened_emails:
-          title: "Email-uri filtrate"
           description: "Când cineva încearcă să creeze un cont nou, următorul email va fi verificat iar înregistrarea va fi blocată, sau o altă acțiune va fi inițiată."
-          email: "Adresa email"
+          email: "Adresă email"
           actions:
             allow: "Permite"
         screened_urls:
@@ -4231,16 +4276,17 @@ ro:
           types:
             all_search_types: "Toate tipurile de căutare"
             header: "Antet"
-            full_page: "Întreaga pagină"
+            full_page: "Pagină întreagă"
         logster:
           title: "Jurnal erori"
       watched_words:
         title: "Cuvinte urmărite"
+        description: "Cuvintele urmărite sunt instrumente de moderare care pot efectua mai multe acțiuni diferite, inclusiv blocarea, cenzura, legarea sau semnalarea postărilor care conțin anumite cuvinte"
         search: "caută"
         clear_filter: "Șterge"
         html: "(html)"
         download: Descărcare
-        clear_all: Deselectează tot
+        clear_all: Șterge tot
         actions:
           block: "Blochează"
           censor: "Cenzurează"
@@ -4306,7 +4352,8 @@ ro:
         not_found: "Ne pare rău, acest nume de utilizator nu există în sistem."
         id_not_found: "Ne pare rău, dar acest utilizator nu există în sistem."
         status: "Status"
-        show_emails: "Arată email"
+        show_emails: "Arată emailuri"
+        hide_emails: "Ascunde emailuri"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4330,7 +4377,6 @@ ro:
           regular: "Utilizatori la nivel de încredere 3 (Utilizator frecvent)"
           leader: "Utilizatori la nivel de încredere 4 (Utilizator lider)"
           staff: "Echipa"
-          admins: "Administratori"
           moderators: "Moderatori"
           suspended: "Utilizatori suspendați"
         not_verified: "Neverificat"
@@ -4545,9 +4591,9 @@ ro:
           confirm: "Confirmare"
           dropdown: "Meniu derulant"
       site_text:
-        description: "Poți personaliza orice text pe forum. Te rugăm să începi prin a căuta mai jos:"
+        description: "Poți personaliza orice text de pe forumul tău."
         search: "Caută textul pe care vrei să îl editezi"
-        title: "Text"
+        title: "Texte site"
         edit: "Editează"
         revert: "Revocați schimbările"
         revert_confirm: "Ești sigur că vrei să revoci schimbările?"
@@ -4565,7 +4611,9 @@ ro:
         cancel: "Anulează"
         not_found: "Setările nu au putut fi găsite"
       site_settings:
-        title: "Setări"
+        title: "Setări site"
+        description: "Configurează setările pentru site-ul tău Discourse pentru a personaliza aspectul, funcționalitatea și experiența utilizatorului."
+        nav_title: "Setări"
         no_results: "Nu s-au găsit rezultate."
         clear_filter: "Șterge"
         add_url: "adaugă URL"
@@ -4764,6 +4812,8 @@ ro:
           permalink_type: "Tip legătură permanentă"
           save: "Salvează"
       reseed:
+        action:
+          label: "Înlocuiește text…"
         modal:
           categories: "Categorii"
           topics: "Discuții"
@@ -4785,17 +4835,27 @@ ro:
           admin: "Administrator"
           moderator: "Moderator"
           regular: "Utilizator frecvent"
+      homepage_choices:
+        custom:
+          label: "Personalizat"
+        style_type:
+          categories: "categorie"
+          topics: "discuție"
+      top_menu_items:
+        new: "Nou"
+        unread: "Necitite"
+        top: "Top"
+        latest: "Ultimele"
+        categories: "Categorii"
+        unseen: "Nevăzute"
+        read: "Citite"
+        bookmarks: "Semne de carte"
       previews:
         share_button: "Distribuie"
         reply_button: "Răspunde"
       homepage_preview:
         nav_buttons:
           all_categories: "Toate categoriile"
-          new: "Nou"
-          unread: "Necitite"
-          top: "Top"
-          latest: "Ultima"
-          categories: "Categorii"
         topic_titles:
           what_hobbies: "Care sunt pasiunile tale?"
           what_music: "Ce asculți chiar acum?"

@@ -48,12 +48,17 @@ export default class LatestTopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
 
-      <div class="topic-poster">
-        <UserLink @user={{@topic.lastPosterUser}}>
-          {{avatar @topic.lastPosterUser imageSize="large"}}
-        </UserLink>
-        <UserAvatarFlair @user={{@topic.lastPosterUser}} />
-      </div>
+      <PluginOutlet
+        @name="latest-topic-list-item-topic-poster"
+        @outletArgs={{hash topic=@topic}}
+      >
+        <div class="topic-poster">
+          <UserLink @user={{@topic.lastPosterUser}}>
+            {{avatar @topic.lastPosterUser imageSize="large"}}
+          </UserLink>
+          <UserAvatarFlair @user={{@topic.lastPosterUser}} />
+        </div>
+      </PluginOutlet>
 
       <div class="main-link">
         <div class="top-row">

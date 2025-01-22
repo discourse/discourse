@@ -17,7 +17,6 @@ pt:
     chat_minimum_message_length: "Quantidade mínima de caracteres para uma mensagem de bate-papo."
     chat_allow_uploads: "Permitir uploads em canais de bate-papo públicos e canais de mensagens diretas."
     chat_archive_destination_topic_status: "O status que o tópico de destino deve ter quando o arquivamente de um canal for concluído. Isso só se aplica quando o tópico de destino é um novo tópico, não um tópico existente."
-    default_emoji_reactions: "Reação padrão de emoji para mensagens de bate-papo. Adicione até 5 emojis para uma reação rápida."
     direct_message_enabled_groups: "Permita que os usuários desses grupos criem bate-papos pessoais entre usuários. Observação: a equipe sempre pode criar bate-papos pessoais e os usuários poderão responder aos bate-papos pessoais iniciados por usuários que têm permissão para criá-los."
     max_mentions_per_chat_message: "Número máximo de notificações @usuário que um usuário pode usar em uma mensagem de bate-papo."
     chat_max_direct_message_users: "Os usuários não podem adicionar mais do que essa quantidade de outros usuários ao criar uma nova mensagem direta. Defina como 0 para permitir mensagens apenas para si mesmo. Membros da equipe estão isentos dessa configuração."

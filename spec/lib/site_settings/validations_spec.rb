@@ -474,4 +474,19 @@ RSpec.describe SiteSettings::Validations do
       expect { validations.validate_twitter_summary_large_image(nil) }.not_to raise_error
     end
   end
+
+  describe "#validate_allow_tl0_and_anonymous_users_to_flag_illegal_content" do
+    it "does not allow to enable when no contact email is provided" do
+      expect {
+        validations.validate_allow_tl0_and_anonymous_users_to_flag_illegal_content("t")
+      }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.tl0_and_anonymous_flag"),
+      )
+      SiteSetting.contact_email = "illegal@example.com"
+      expect {
+        validations.validate_allow_tl0_and_anonymous_users_to_flag_illegal_content("t")
+      }.not_to raise_error
+    end
+  end
 end

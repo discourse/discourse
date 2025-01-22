@@ -1489,7 +1489,6 @@ pt:
         after_4_minutes: "depois de 4 minutos"
         after_5_minutes: "depois de 5 minutos"
         after_10_minutes: "depois de 10 minutos"
-      notification_level_when_replying: "Quando eu publico num tópico, coloque esse tópico como"
       invited:
         title: "Convites"
         pending_tab: "Pendente"
@@ -3571,8 +3570,6 @@ pt:
               content: "Grupos"
             users:
               content: "Utilizadores"
-            my_posts:
-              content: "As Minhas publicações"
             review:
               content: "Revisão"
             invite:
@@ -3787,35 +3784,35 @@ pt:
         add_owners: Adicionar proprietários
         none_selected: "Selecione um grupo para começar"
         no_custom_groups: "Criar um novo grupo personalizado"
+      api_keys:
+        edit: "Editar"
+        save: "Guardar"
+        cancel: "Cancelar"
+        continue: "Continuar"
+        revoke: "Revogar"
+        revoked: "Revogado"
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."
         user: "Utilizador"
         title: "API"
         key: "Chave"
-        created: Criado
         updated: Atualizado
-        last_used: Último Uso
-        never_used: (nunca)
+        never_used: Nunca
         generate: "Gerar"
-        undo_revoke: "Desfazer Revogação"
         revoke: "Revogar"
-        all_users: "Todos os Utilizadores"
         active_keys: "Chaves de API Ativas"
         manage_keys: Gerenciar Chaves
         show_details: Detalhes
         description: Descrição
         no_description: (sem descrição)
         all_api_keys: Todas as Chaves de API
-        user_mode: Nível de Usuário
         impersonate_all_users: Personificar qualquer usuário
-        single_user: "Único Usuário"
         user_placeholder: Digite o nome de usuário
         description_placeholder: Para que essa chave será usada?
         save: Guardar
         new_key: Nova Chave de API
         revoked: Revogado
-        delete: Excluir Permanentemente
         not_shown_again: Esta chave não será exibida novamente. Certifique-se de tirar uma cópia antes de continuar.
         continue: Continuar
         scopes:
@@ -3826,8 +3823,6 @@ pt:
           global: Global
           resource: Recurso
           action: Ação
-          allowed_parameters: Parâmetros Permitidos
-          optional_allowed_parameters: Parâmetros permitidos (opcional)
           any_parameter: (qualquer parâmetro)
           allowed_urls: URLs Permitidos
           descriptions:
@@ -3843,15 +3838,14 @@ pt:
               show: Pesquise usando o endpoint `/search.json?q=term`.
       web_hooks:
         title: "Webhooks"
-        none: "Não existem webhooks neste momento."
         instruction: "Webhooks permitem ao Discourse notificar serviços externos quando certos eventos acontecem no seu site. Quando o webhook é despoletado, um pedido POST será enviado aos URLs fornecidos."
         detailed_instruction: "Um pedido POST será enviado ao URL fornecido quando o evento escolhido acontecer."
-        new: "Novo Webhook"
         create: "Criar"
         edit: "Editar"
         save: "Guardar"
+        delete: "Eliminar"
+        cancel: "Cancelar"
         controls: "Controlos"
-        go_back: "Voltar à lista"
         payload_url: "URL de carga"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "O segredo não pode ter espaços."
@@ -3859,8 +3853,8 @@ pt:
         event_type_missing: "Tem de configurar pelo menos um tipo de evento."
         content_type: "Tipo de Conteúdo"
         secret: "Segredo"
-        wildcard_event: "Enviar-me tudo."
-        individual_event: "Selecionar eventos individuais."
+        wildcard_event: "Enviar-me tudo"
+        individual_event: "Selecionar eventos individuais"
         verify_certificate: "Verificar certificado TLS do url de carga"
         active: "Ativo"
         active_notice: "Entregaremos detalhes do evento quando este acontecer."
@@ -3983,6 +3977,7 @@ pt:
           installed: "Instalado"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Desenvolvedor"
           embedding: "Incorporação"
           user_api: "API de Utlizador"
@@ -4056,9 +4051,6 @@ pt:
           screened_url: "Exportar lista total de URL selecionados em formato CSV."
       export_json:
         button_text: "Exportar"
-      invite:
-        button_text: "Enviar Convites"
-        button_title: "Enviar Convites"
       customize:
         title: "Personalizar"
         preview: "pré-visualização"
@@ -4209,10 +4201,7 @@ pt:
           select_base:
             description: "Paleta de base:"
           title: "Cores"
-          edit: "Editar Paletas de Cores"
-          long_title: "Paletas de Cores"
           about: "Modifique as cores usadas por seus temas. Crie uma nova paleta de cores para começar."
-          new_name: "Nova Paleta de Cores"
           copy_name_prefix: "Cópia de"
           delete_confirm: "Excluir esta paleta de cores?"
           undo: "Desfazer"
@@ -4256,8 +4245,7 @@ pt:
           overridden: O arquivo robots.txt padrão do site foi substituído.
         email_style:
           title: "Estilo de Email"
-          heading: "Personalizar Estilo de E-mail"
-          html: "Modelo HTML"
+          html: "HTML"
           css: "CSS"
           reset: "Restaurar ao padrão"
           reset_confirm: "Tem certeza de que deseja restaurar %{fieldName} para o padrão e perder todas as alterações?"
@@ -4265,10 +4253,8 @@ pt:
           instructions: "Personalize o modelo no qual todos os emails html são renderizados e estilize usando CSS."
       email:
         title: "Emails"
+        settings: "Configurações"
         templates: "Templates"
-        preview_digest: "Pré-visualizar Resumo"
-        advanced_test:
-          title: "Teste Avançado"
         error: "<b>ERRO</b> - %{server_error}"
         test_error: "Ocorreu um problema no envio da mensagem de teste. Por favor, verifique novamente as suas configurações de e-mail, verifique se o seu hospedeiro não está a bloquear as ligações de e-mail, e tente novamente."
         sent: "Enviado"
@@ -4276,15 +4262,10 @@ pt:
         bounced: "Redirecionado"
         received: "Recebido"
         rejected: "Rejeitado"
-        sent_at: "Enviado em"
         time: "Tempo"
         user: "Utilizador"
-        email_type: "Tipo de Email"
-        to_address: "Endereço Para"
         test_email_address: "endereço de email para testar"
-        send_test: "Enviar Email de Teste"
         sent_test: "enviado!"
-        delivery_method: "Método de Entrega"
         preview_digest_desc: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos."
         refresh: "Atualizar"
         send_digest_label: "Enviar este resultado para:"
@@ -4292,10 +4273,7 @@ pt:
         format: "Formato"
         html: "html"
         text: "texto"
-        last_seen_user: "Último Utilizador Visto:"
         no_result: "Não foram encontrados resultados para resumo."
-        reply_key: "Chave de Resposta"
-        skipped_reason: "Ignorar Motivo"
         incoming_emails:
           from_address: "De"
           to_addresses: "Para"
@@ -4304,12 +4282,10 @@ pt:
           error: "Erro"
           none: "Nenhum email de entrada encontrado."
           modal:
-            title: "Detalhes de emails recebidos."
             error: "Erro"
             headers: "Cabeçalhos"
             subject: "Assunto"
             body: "Corpo"
-            rejection_message: "Correio de rejeição"
           filters:
             from_placeholder: "de@exemplo.com"
             to_placeholder: "para@exemplo.com"
@@ -4326,7 +4302,7 @@ pt:
         actions:
           delete_topic: "Tópico eliminado"
       logs:
-        title: "Logs"
+        nav_title: "Logs"
         action: "Ação"
         created_at: "Criado"
         last_match_at: "Última Correspondência"
@@ -4344,10 +4320,8 @@ pt:
         staff_actions:
           all: "todos"
           filter: "Filtrar:"
-          title: "Ações do Pessoal"
-          clear_filters: "Mostrar Tudo"
           staff_user: "Utilizador"
-          target_user: "Utilizador Destino"
+          target_user: "Utilizador alvo"
           subject: "Assunto"
           when: "Quando"
           context: "Contexto"
@@ -4425,9 +4399,7 @@ pt:
             watched_word_create: "add watched word"
             watched_word_destroy: "delete watched word"
         screened_emails:
-          title: "Emails Filtrados"
           description: "Quando alguém tenta criar uma nova conta, os seguintes endereços de e-mail serão verificados e o registo será bloqueado, ou outra ação executada."
-          email: "Endereço de Email"
           actions:
             allow: "Permitir"
         screened_urls:
@@ -4442,7 +4414,6 @@ pt:
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
-            allow_admin: "Permitir Administração"
           form:
             label: "Novo:"
             ip_address: "Endereço IP"
@@ -4452,20 +4423,14 @@ pt:
             text: "Adicionar"
             title: "Cria interdições de sub-redes se existir pelo menos 'min_ban_entries_for_roll_up' entradas."
         search_logs:
-          title: "Logs de Pesquisa"
           searches: "Pesquisas"
           types:
             all_search_types: "Todos os tipos de pesquisa"
             header: "Cabeçalho"
-            full_page: "Página Inteira"
-        logster:
-          title: "Registo de Erros em Logs"
       watched_words:
-        title: "Palavras Vigiadas"
         search: "pesquisar"
         clear_filter: "Remover"
         download: Transferir
-        clear_all: Remover Tudo
         clear_all_confirm: "Tem a certeza de que pretende limpar todas as palavras vigiadas para a ação %{action}"
         actions:
           block: "Bloquear"
@@ -4521,7 +4486,6 @@ pt:
         not_found: "Pedimos desculpa, esse nome de utilizador não existe no nosso sistema."
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
         status: "Estado"
-        show_emails: "Mostrar Emails"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4536,8 +4500,7 @@ pt:
           staged: "Não Confirmado"
         approved: "Aprovado?"
         titles:
-          active: "Utilizadores Ativos"
-          new: "Utilizadores Novos"
+          active: "Utilizadores ativos"
           pending: "Utilizadores com Confirmação Pendente"
           newuser: "Utilizadores no Nível de Confiança 0 (Novo Utilizador)"
           basic: "Utilizadores no Nível de Confiança 1 (Utilizador Básico)"
@@ -4545,9 +4508,7 @@ pt:
           regular: "Utilizadores no Nível de Confiança 3 (Regular)"
           leader: "Utilizadores no Nível de Confiança 4 (Líder)"
           staff: "Pessoal"
-          admins: "Utilizadores da Administração"
           moderators: "Moderadores"
-          suspended: "Utilizadores Suspensos"
         not_verified: "Não verificado"
         check_email:
           title: "Revelar o endereço de email deste utilizador"
@@ -4698,7 +4659,6 @@ pt:
           external_email: "E-mail"
           external_avatar_url: "URL da Fotografia de Perfil"
       user_fields:
-        title: "Campos de utilizador"
         untitled: "Sem título"
         name: "Nome do Campo"
         type: "Tipo do Campo"
@@ -4728,10 +4688,8 @@ pt:
           confirm: "Confirmação"
           dropdown: "Lista pendente"
       site_text:
-        description: "Pode personalizar qualquer texto no seu fórum. Por favor comece por pesquisar abaixo:"
         search: "Pesquisar o texto que gostaria de editar"
-        title: "Texto"
-        edit: "editar"
+        edit: "Editar"
         revert: "Reverter Alterações"
         revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
         go_back: "De volta à Pesquisa"
@@ -4747,7 +4705,7 @@ pt:
         save: "guardar"
         cancel: "cancelar"
       site_settings:
-        title: "Configurações"
+        nav_title: "Configurações"
         no_results: "Não foi encontrado nenhum resultado."
         clear_filter: "Remover"
         add_url: "adicionar URL"
@@ -4927,17 +4885,27 @@ pt:
           admin: "Administrador"
           moderator: "Moderador"
           regular: "Utilizador Regular"
+      homepage_choices:
+        custom:
+          label: "Personalizar"
+        style_type:
+          categories: "categoria"
+          topics: "tópico"
+      top_menu_items:
+        new: "Novo"
+        unread: "Não Lido"
+        top: "Os Melhores"
+        latest: "Recente"
+        categories: "Categorias"
+        unseen: "Por ler"
+        read: "Lidos"
+        bookmarks: "Marcadores"
       previews:
         share_button: "Partilhar"
         reply_button: "Responder"
       homepage_preview:
         nav_buttons:
           all_categories: "todas as categorias"
-          new: "Novo"
-          unread: "Não Lido"
-          top: "Os Melhores"
-          latest: "Recente"
-          categories: "Categorias"
         category_names:
           site_feedback: "Comentários sobre o Sítio"
         table_headers:

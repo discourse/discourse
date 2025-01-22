@@ -1120,7 +1120,8 @@ et:
         after_4_minutes: "pärast 4 minutit"
         after_5_minutes: "pärast 5 minutit"
         after_10_minutes: "pärast 10 minutit"
-      notification_level_when_replying: "Kui ma postitan teemasse, vali teemaks"
+      notification_level_when_replying:
+        do_nothing: "Ära tee midagi"
       invited:
         title: "kutsed"
         pending_tab: "Ootel"
@@ -2650,8 +2651,6 @@ et:
               content: "Grupid"
             users:
               content: "Kasutajad"
-            my_posts:
-              content: "Minu"
             review:
               content: "Vaata üle"
             invite:
@@ -2820,17 +2819,20 @@ et:
         add_owners: Lisa omanikke
         none_selected: "Vali alustamiseks grupp"
         no_custom_groups: "Loo uus kohandatud grupp"
+      api_keys:
+        edit: "Muuda"
+        save: "Salvesta"
+        cancel: "Tühista"
+        continue: "Jätka"
+        revoke: "Tühista "
       api:
         generate_master: "Genereeri API peavõti"
         none: "Hetkel aktiivsed API võtmed puuduvad."
         user: "Kasutaja"
         title: "API"
-        created: Loodud
-        last_used: Viimati kasutatud
-        never_used: (mitte kunagi)
+        never_used: Mitte kunagi
         generate: "Genereeri"
         revoke: "Tühista "
-        all_users: "Kõik kasutajad"
         show_details: Üksikasjad
         description: Kirjeldus
         save: Salvesta
@@ -2839,25 +2841,23 @@ et:
           action: Tegevus
       web_hooks:
         title: "Veebihaagid"
-        none: "Hetkel veebihaagid puuduvad."
         instruction: "Veebihaagid lubavad Discourse'l teavitada muid teenuseid sündmustest Sinu saidil. Kui veebihaak vallandub, saadetakse etteantud URL-dele POST päring."
         detailed_instruction: "Valitud sündmuse toimumisel saadetakse etteantud URL-le POST päring."
-        new: "Uus veebihaak"
         create: "Loo"
         edit: "Muuda"
         save: "Salvesta"
+        delete: "Kustuta"
+        cancel: "Tühista"
         controls: "Juhtpult"
-        go_back: "Tagasi nimekirja"
         payload_url: "Kasuliku lasti URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Salavõti ei tohi sisaldada tühikuid."
         secret_too_short: "Salavõti peab olema vähemalt 12 sümbolit pikk."
-        secret_placeholder: "Mittekohustuslik tekst, mida kasutatakse allkirja genereerimiseks"
         event_type_missing: "Pead seadistama vähemalt ühe sündmuse liigi."
         content_type: "Sisutüüp"
         secret: "Salavõti"
-        wildcard_event: "Saada mulle kõik."
-        individual_event: "Vali üksikud sündmused."
+        wildcard_event: "Saada mulle kõik"
+        individual_event: "Vali üksikud sündmused"
         verify_certificate: "Kontrolli kasuliku lasti URL-i TLS sertifikaati"
         active: "Aktiivne"
         active_notice: "Teavitame sündmuse üksikasjadest peale selle toimumist."
@@ -2974,6 +2974,7 @@ et:
           installed: "Paigaldatud"
       advanced:
         sidebar_link:
+          webhooks: "Veebihaagid"
           developer: "Arendaja"
           embedding: "Sängitamine"
           user_api: "Kasutaja API"
@@ -3039,9 +3040,6 @@ et:
           screened_url: "Ekspordi varjestatud URL-de täielik loend CSV formaadis."
       export_json:
         button_text: "Ekspordi"
-      invite:
-        button_text: "Saada kutsed"
-        button_title: "Saada kutsed"
       customize:
         title: "Kohanda"
         preview: "eelvaade"
@@ -3130,8 +3128,6 @@ et:
                 too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
           title: "Värvid"
-          edit: "Muuda värvipalette"
-          long_title: "Värvipaletid"
           copy_name_prefix: "Koopia sellest"
           delete_confirm: "Kas kustutada see vävripalett?"
           undo: "Ennista"
@@ -3169,11 +3165,12 @@ et:
           selected:
             name: "valitud"
         email_style:
+          html: "HTML"
           css: "CSS"
       email:
         title: "Meilid"
+        settings: "Sätted"
         templates: "Mallid"
-        preview_digest: "Saadetise eelvaatlus"
         error: "<b>VIGA</b> - %{server_error}"
         test_error: "Testmeili saatmisel tekkis viga. Palun kontrolli oma meilisätteid, veendu, et sinu teenusepakkuja ei blokeeri meiliühendusi ja proovi uuesti."
         sent: "Saadetud"
@@ -3181,15 +3178,10 @@ et:
         bounced: "Välja visatud"
         received: "Saadud"
         rejected: "Tagasi lükatud"
-        sent_at: "Saadetud"
         time: "Aeg"
         user: "Kasutaja"
-        email_type: "Meili tüüp"
-        to_address: "Aadressile"
         test_email_address: "testitav meiliaadress"
-        send_test: "Saada testmeil"
         sent_test: "saadetud!"
-        delivery_method: "Kättetoimetamise viis"
         preview_digest_desc: "Passiivsetele kasutajatele meilitud saadetiste sisu eelvaatlus."
         refresh: "Värskenda"
         send_digest_label: "Saada see tulemus:"
@@ -3197,10 +3189,7 @@ et:
         format: "Formaat"
         html: "html"
         text: "tekst"
-        last_seen_user: "Viimati nähtud kasutaja:"
         no_result: "Referaadile ei leitud ühtegi tulemust."
-        reply_key: "Vastuse võti"
-        skipped_reason: "Ülehüppamise põhjus"
         incoming_emails:
           from_address: "Kellelt"
           to_addresses: "Kellele"
@@ -3209,12 +3198,10 @@ et:
           error: "Viga"
           none: "Sissetulevaid meile pole."
           modal:
-            title: "Sissetuleva meili üksikasjad"
             error: "Viga"
             headers: "Päised"
             subject: "Teema"
             body: "Sisu"
-            rejection_message: "Meil äraütlemise kohta"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -3235,7 +3222,7 @@ et:
           delete_post: "Postitus on kustutatud"
           delete_topic: "Teema on kustutatud"
       logs:
-        title: "Logid"
+        nav_title: "Logid"
         action: "Tegevus"
         created_at: "Loodud"
         last_match_at: "Viimati tabatud"
@@ -3253,8 +3240,6 @@ et:
         staff_actions:
           all: "kõik"
           filter: "Filter:"
-          title: "Tiimi tegevused"
-          clear_filters: "Näita kõike"
           staff_user: "Kasutaja"
           target_user: "Sihtkasutaja"
           subject: "Teema"
@@ -3306,9 +3291,7 @@ et:
             backup_download: "lae varukoopia alla"
             backup_destroy: "hävita varukoopia"
         screened_emails:
-          title: "Varjestatud meilid"
           description: "Kui keegi üritab uut kontot luua, siis kontrollitakse järgmisi meiliaadresse ja vastavuse korral registreerimine peatatakse või tehakse mõni muu toiming."
-          email: "Meiliaadress"
           actions:
             allow: "Luba"
         screened_urls:
@@ -3322,7 +3305,6 @@ et:
           actions:
             block: "Blokeeri"
             do_nothing: "Luba"
-            allow_admin: "Luba Admin"
           form:
             label: "Uus:"
             ip_address: "IP-aadress"
@@ -3332,20 +3314,15 @@ et:
             text: "Koonda kokku"
             title: "Loob uue bännitud alamvõrgu koondsissekande kui on kogunenud vähemalt 'min_ban_entries_for_roll_up' aadressi."
         search_logs:
-          title: "Otsingu logid"
           term: "Termin"
           searches: "Otsingud"
           types:
             all_search_types: "Kõik otsinguliigid"
             header: "Päis"
-        logster:
-          title: "Vealogid"
       watched_words:
-        title: "Vaadatud sõnad"
         search: "otsi"
         clear_filter: "Tühjenda"
         download: Lae alla
-        clear_all: Puhasta kõik
         actions:
           block: "Blokeeri"
           censor: "Tsenseeri"
@@ -3403,7 +3380,6 @@ et:
         id_not_found: "Vabanda, sellist kasutajatunnust ei eksisteeri meie süsteemis."
         active: "Aktiveeritud"
         status: "Staatus"
-        show_emails: "Näita meile"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -3419,7 +3395,6 @@ et:
         approved: "Heakskiidetud?"
         titles:
           active: "Aktiivsed kasutajad"
-          new: "Uued kasutajad"
           pending: "Kasutajad kontrolli ootel"
           newuser: "Kasutajad usaldustasemel 0 (Uued kasutajad)"
           basic: "Kasutajad usaldustasemel 1 (Kasutajad)"
@@ -3427,10 +3402,7 @@ et:
           regular: "Kasutajad usaldustasemel 3 (Püsiliikmed)"
           leader: "Kasutajad usaldustasemel 4 (Vedajad)"
           staff: "Meeskond"
-          admins: "Admin-kasutajad"
           moderators: "Moderaatorid"
-          silenced: "Vaigistatud kasutajad"
-          suspended: "Peatatud kasutajad"
         not_verified: "Ei ole kontrollitud"
         check_email:
           title: "Näita selle kasutaja meiliaadressi"
@@ -3581,7 +3553,6 @@ et:
           external_email: "E-post"
           external_avatar_url: "Profiili pildi URL"
       user_fields:
-        title: "Kasutajaväljad"
         untitled: "Tiitlita"
         name: "Välja nimi"
         type: "Välja tüüp"
@@ -3611,10 +3582,8 @@ et:
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:
-        description: "Võid oma foorumi kõiki tekste muuta. Alustamiseks otsi allolevast:"
         search: "Otsi teksi, mida soovid muuta"
-        title: "Tekst"
-        edit: "muuda"
+        edit: "Muuda"
         revert: "Pööra tagasi muudatused"
         revert_confirm: "Oled Sa kindel, et soovid tagasi pöörata muudatusi?"
         go_back: "Tagasi otsingusse"
@@ -3629,7 +3598,7 @@ et:
         save: "salvesta"
         cancel: "tühista"
       site_settings:
-        title: "Sätted"
+        nav_title: "Sätted"
         no_results: "Ei leidnud midagi."
         clear_filter: "Puhasta"
         add_url: "lisa URL"
@@ -3807,17 +3776,26 @@ et:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Tavakasutaja"
+      homepage_choices:
+        custom:
+          label: "Individuaalne"
+        style_type:
+          categories: "foorum"
+          topics: "teema"
+      top_menu_items:
+        new: "Uus"
+        unread: "Lugemata"
+        top: "Juhtivad"
+        latest: "Värskeimad"
+        categories: "Liigid"
+        read: "Loe"
+        bookmarks: "Järjehoidjad"
       previews:
         share_button: "Jaga"
         reply_button: "Vasta"
       homepage_preview:
         nav_buttons:
           all_categories: "kõik foorumid"
-          new: "Uus"
-          unread: "Lugemata"
-          top: "Juhtivad"
-          latest: "Värskeimad"
-          categories: "Liigid"
         category_names:
           site_feedback: "Saidi tagasiside."
         table_headers:

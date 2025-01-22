@@ -904,7 +904,8 @@ sw:
         after_4_minutes: "baada ya dakika 4"
         after_5_minutes: "baada ya dakika 5"
         after_10_minutes: "baada ya dakika 10"
-      notification_level_when_replying: "Nikiandika ndani ya mada, mada itawekwa kwenye"
+      notification_level_when_replying:
+        do_nothing: "Usifanye chochote"
       invited:
         title: "Waliokaribishwa"
         pending_tab: "subiria"
@@ -2330,8 +2331,6 @@ sw:
               content: "Vikundi"
             users:
               content: "Watumiaji"
-            my_posts:
-              content: "Machapisho Yangu"
             invite:
               content: "Mualiko"
       filter: "Chuja..."
@@ -2497,15 +2496,19 @@ sw:
         add_owners: Ongeza Wamiliki
         none_selected: "Chagua kikundi kuanza"
         no_custom_groups: "Tengeneza kikundi kipya"
+      api_keys:
+        edit: "Hariri"
+        save: "Hifadhi"
+        cancel: "Ghairi"
+        continue: "Endelea"
+        revoke: "Futa"
       api:
         none: "Hakuna funguo za API zilizo amilifu kwa sasa."
         user: "Mtumiaji"
         title: "API"
-        created: Imetengenezwa
-        never_used: (kamwe)
+        never_used: Kamwe
         generate: "Tengeneza"
         revoke: "Futa"
-        all_users: "Watumiaji Wote"
         show_details: Taarifa
         description: Maelezo
         save: hifadhi
@@ -2516,17 +2519,17 @@ sw:
         create: "Tengeneza"
         edit: "Hariri"
         save: "Hifadhi"
+        delete: "Futa"
+        cancel: "Ghairi"
         controls: "Vidhibiti"
-        go_back: "Rudi kwenye orodha"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Siri haiwezi kuwa wazi bila herufi."
         secret_too_short: "Siri iwe na herufi 12 au zaidi."
-        secret_placeholder: "Sehemu nyongeza ya kutengeneza sahihi"
         event_type_missing: "Unahitaji kuandika aina moja ya tukio au zaidi."
         content_type: "Aina ya Maandishi"
         secret: "Siri"
-        wildcard_event: "Nitumie kila kitu."
-        individual_event: "Chagua matukio rejareja."
+        wildcard_event: "Nitumie kila kitu"
+        individual_event: "Chagua matukio rejareja"
         active: "Amilifu"
         active_notice: "Tutakuletea taarifa za tukio zinapotokea."
         delivery_status:
@@ -2691,9 +2694,6 @@ sw:
           screened_url: "Hamisha orodha ya anwani za tovuti zilizoruhusiwa au kukatazwa kwenye umbizo wa CSV."
       export_json:
         button_text: "Hamisha"
-      invite:
-        button_text: "Tuma Mialiko"
-        button_title: "Tuma Mialiko"
       customize:
         title: "Geuza Kukufaa"
         preview: "kihakiki"
@@ -2831,11 +2831,12 @@ sw:
           selected:
             name: "imechaguliwa"
         email_style:
+          html: "HTML"
           css: "CSS"
       email:
         title: "Barua Pepe"
+        settings: "Mipangilio"
         templates: "Violezo"
-        preview_digest: "Kihakiki Jarida"
         error: "<b>HITILAFU</b> - %{server_error}"
         test_error: "Tatizo limetokea wakati wa kutuma barua pepe ya majaribio. Tafadhali angalia tena mipangilio ya barua, hakikisha kuwa muunganisho wa barua haujazuiliwa, na jaribu tena."
         sent: "Imetumwa"
@@ -2843,15 +2844,10 @@ sw:
         bounced: "Haijafika"
         received: "Imepokelewa"
         rejected: "Imekataliwa"
-        sent_at: "Imetumwa"
         time: "Mda"
         user: "Mtumiaji"
-        email_type: "Aina ya Barua Pepe"
-        to_address: "Kwenda kwenye Anwani"
         test_email_address: "barua pepe ya kujaribisha"
-        send_test: "Tuma Barua Pepe ya Kujaribisha"
         sent_test: "imetumwa!"
-        delivery_method: "Njia ya Uwasilishaji"
         preview_digest_desc: "Kihakiki maandishi ya barua pepe za jarida zinatomwa kwa watumiaji wasiotembelea jumuiya."
         refresh: "Rudisha Tena"
         send_digest_label: "Tuma majibu haya kwa:"
@@ -2859,10 +2855,7 @@ sw:
         format: "umbizo"
         html: "html"
         text: "neno"
-        last_seen_user: "Mara ya Mwisho Mtumiaji Ameonekana:"
         no_result: "Hakuna majibu yaliyopatikana kwa ajili ya jarida."
-        reply_key: "Ufunguo wa Jibu"
-        skipped_reason: "Iruke Sababu"
         incoming_emails:
           from_address: "Kutoka"
           to_addresses: "Kwenda"
@@ -2871,12 +2864,10 @@ sw:
           error: "Hitilafu"
           none: "Hakuna barua pepe inayoingia iliyopatikana."
           modal:
-            title: "Barua Pepe Inayopokelewa"
             error: "Hitilafu"
             headers: "Vichwa"
             subject: "Maudhui"
             body: "Mwili"
-            rejection_message: "Barua ya Kukataa"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "kwendakwa@example.com"
@@ -2899,7 +2890,7 @@ sw:
           delete_post: "Chapisho Limefutwa"
           delete_topic: "Mada Imefutwa"
       logs:
-        title: "Batli"
+        nav_title: "Batli"
         action: "Kitendo"
         created_at: "Imetengenezwa"
         last_match_at: "Mara ya mwisho Imefanananishwa"
@@ -2916,10 +2907,8 @@ sw:
         staff_actions:
           all: "yote"
           filter: "Chuja:"
-          title: "Vitendo vya Wasaidizi"
-          clear_filters: "Onyesha Kila Kitu"
           staff_user: "Mtumiaji"
-          target_user: "Mlenge Mtumiaji "
+          target_user: "Mtumiaji aliyelengwa"
           subject: "maudhui"
           when: "Lini"
           context: "Muktadha"
@@ -2981,8 +2970,6 @@ sw:
             delete_badge: "Futa beji"
             merge_user: "Unganisha mtumiaji"
         screened_emails:
-          title: "barua pepe zilizochunguzwa"
-          email: "anuani ya barua pepe"
           actions:
             allow: "ruhusu"
         screened_urls:
@@ -2996,29 +2983,21 @@ sw:
           actions:
             block: "Zuia"
             do_nothing: "Ruhusu"
-            allow_admin: "Ruhusu Kiongozi"
           form:
             label: "Mpya:"
             ip_address: "Anwani ya Mtandao"
             add: "Ongeza"
             filter: "Tafuta"
         search_logs:
-          title: "Batli ya Utafiti"
           term: "Neno"
           searches: "Utafiti"
           types:
             all_search_types: "Aina zote za matokeo"
             header: "Kichwa"
-            full_page: "Ukurasa Wote"
-          header_search_results: "Matokeo ya Utafiti"
-        logster:
-          title: "Batli ya Hitilafu"
       watched_words:
-        title: "Maneno yanayoangaliwa"
         search: "tafuta"
         clear_filter: "Futa"
         download: Pakua
-        clear_all: Futa Zote
         actions:
           block: "Zuia"
           censor: "Kizuizi"
@@ -3072,7 +3051,6 @@ sw:
         last_emailed: "Mara ya Mwisho Amepokea Barua Pepe"
         not_found: "Samahani, jina la mtumiaji halipo kwenye mfupo wetu."
         id_not_found: "Samahani, utambulisho wa mtumiaji haupo kwenye mfumo wetu."
-        show_emails: "Onyesha Barua Pepe"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -3087,8 +3065,6 @@ sw:
           staged: "Sehemu ya kujaribu"
         approved: "Wamekubaliwa?"
         titles:
-          active: "Watumiaji amilifu"
-          new: "Watumiaji Wapya"
           pending: "Ukaguzi wa watuamiaji ambao hawajapitishwa"
           newuser: "Watumiaji wenye Kiwango 0 cha Uaminifu (Mtumiaji Mpya)"
           basic: "Watumiaji wenye Kiwango cha 1 cha Uaminifu (Mshiriki wa Awali)"
@@ -3096,10 +3072,7 @@ sw:
           regular: "Watumiaji wenye Kiwango cha 3 cha Uaminifu (Kawaida)"
           leader: "Watumiaji wenye Kiwango cha 4 cha Uaminifu (Kiongozi)"
           staff: "Wasaidizi"
-          admins: "Watumiaji ambao ni Viongozi"
           moderators: "Wasimamizi"
-          silenced: "Watumiaji Walionyamazishwa"
-          suspended: "Watumiaji Waliositishwa"
         not_verified: "Haijathibitishwa"
         check_email:
           title: "Onyesha barua pepe ya mtumiaji"
@@ -3264,7 +3237,6 @@ sw:
           external_email: "Barua Pepe"
           external_avatar_url: "Linki au kiungo cha Picha ya Mtumiaji"
       user_fields:
-        title: "Sehemu za Watumiaji"
         untitled: "Hakuna Kichwa cha Taarifa"
         name: "Jina la Sehemu ya Taarifa"
         type: "Aina ya Taarifa"
@@ -3294,10 +3266,8 @@ sw:
           confirm: "Uhakikisho"
           dropdown: "Shusha Chini"
       site_text:
-        description: "Unaweza kufanya maneno ya jamii yako yawe unavyotaka wewe. Tafadhali anza kwa kufanya utafiti hapo chini:"
         search: "tafuta maneno ambayo ungependa kuhariri"
-        title: "Neno"
-        edit: "hariri"
+        edit: "Hariri"
         revert: "Ondoa Mabadiliko"
         revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
         go_back: "Rudi kwenye Utafiti"
@@ -3312,7 +3282,7 @@ sw:
         save: "hifadhi"
         cancel: "ghairi"
       site_settings:
-        title: "Mpangilio"
+        nav_title: "Mipangilio"
         no_results: "Hakuna Majibu Yaliyopatikana"
         clear_filter: "Futa"
         add_url: "ongeza anwani ya mtandao"
@@ -3478,17 +3448,26 @@ sw:
           admin: "Msimamizi"
           moderator: "Msimamizi"
           regular: "Mtumiaji wa Kawaida"
+      homepage_choices:
+        custom:
+          label: "Binafsi"
+        style_type:
+          categories: "kategoria"
+          topics: "mada"
+      top_menu_items:
+        new: "Mpya"
+        unread: "Haijasomwa"
+        top: "Juu"
+        latest: "Hivi Karibuni"
+        categories: "Kategoria"
+        read: "Soma"
+        bookmarks: "Mialamisho"
       previews:
         share_button: "Shirikisha"
         reply_button: "Jibu"
       homepage_preview:
         nav_buttons:
           all_categories: "kategoria zote"
-          new: "Mpya"
-          unread: "Haijasomwa"
-          top: "Juu"
-          latest: "Hivi Karibuni"
-          categories: "Kategoria"
         category_names:
           site_feedback: "Majibu ya Mtandao"
         table_headers:

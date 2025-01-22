@@ -40,11 +40,11 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     await visit("/");
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     const sectionLinks = queryAll(
-      ".sidebar-more-section-links-details-content-main .sidebar-section-link"
+      ".sidebar-more-section-content .sidebar-section-link"
     );
 
     assert

@@ -74,6 +74,10 @@ fi:
           title: "Ketjun ilmoitukset"
         post:
           title: "Viesti"
+        post_list:
+          title: "Viestiluettelo"
+          empty_example: "<PostList /> tyhjä tila"
+          populated_example: "<PostList /> täytetty tila"
         topic_map:
           title: "Ketjun kartta"
         site_header:

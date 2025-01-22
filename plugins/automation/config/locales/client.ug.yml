@@ -228,6 +228,9 @@ ug:
               label: ئىناۋەتلىك ئىشەنچ دەرىجىسى
               description: يازمىنى بۇ ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى قۇرغاندىلا ئاندىن قوزغىتىلىدۇ، كۆڭۈلدىكى ئەھۋالدا خالىغان ئىشەنچ دەرىجىسى
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added: بەلگە قوشۇلدى
+            tags_removed: بەلگە چىقىرىۋېتىلدى
           fields:
             watching_categories:
               label: كۆزەتتىكى سەھىپە

@@ -166,8 +166,10 @@ zh_CN:
               description: 可选，仅在帖子所属话题属于此类别时触发
             restricted_group:
               label: 群组
+              description: 可选，仅在帖子的话题是此群组收件箱中的个人消息时触发
             restricted_groups:
               label: 群组
+              description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
             ignore_group_members:
               label: 忽略群组成员
               description: 如果发件人是上面指定的群组的成员，则跳过触发器
@@ -225,6 +227,10 @@ zh_CN:
               label: 有效信任级别
               description: 仅在这些信任级别的用户创建帖子时触发，默认为任意信任级别
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: 标签已添加或移除
+            tags_added: 标签已添加
+            tags_removed: 标签已移除
           fields:
             watching_categories:
               label: 关注类别
@@ -232,6 +238,8 @@ zh_CN:
             watching_tags:
               label: 关注标签
               description: 仅当话题包含以下任意标签时触发
+            trigger_on:
+              label: 触发条件
             trigger_with_pms:
               label: 通过私信触发
               description: 即使在私信中更改了标签也会触发

@@ -1,5 +1,6 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "composer-position:editor-touch-move",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
 ]);
@@ -11,6 +12,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",
+  "home-logo-minimized",
   "invite-simple-mode-topic",
   "latest-topic-list-item-class",
   "mentions-class",

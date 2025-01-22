@@ -160,6 +160,7 @@ sq:
       removed_user: "Hequr %{who} %{when}"
       removed_group: "Hequr %{who} %{when}"
       autobumped: "Kaloi automatikisht %{when}"
+      category_changed: "Kategoria u përditësua %{when}"
       autoclosed:
         enabled: "Mbylli %{when}"
         disabled: "Hapur %{when}"
@@ -457,6 +458,9 @@ sq:
         confirm: "Tashmë keni një projekt në zhvillim. Çfarë do të dëshironit të bëni me të?"
         yes_value: "Harroni"
         no_value: "Vazhdoni zhvillimin"
+      dropdown:
+        title: "Hapni menunë e drafteve më të fundit"
+        view_all: "shikoni të gjitha"
     topic_count_all:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
@@ -821,6 +825,7 @@ sq:
         notify_users: "Njoftoni përdoruesit"
         set_owner: "Cakto përdoruesit si pronarë të këtij grupi"
       requests:
+        title: "Kërkesat"
         reason: "Arsye"
         accept: "Pranoni"
         accepted: "pranuar"
@@ -1785,7 +1790,8 @@ sq:
         after_4_minutes: "pas 4 minutash"
         after_5_minutes: "pas 5 minutash"
         after_10_minutes: "pas 10 minutash"
-      notification_level_when_replying: "Kur postoj në një temë, vendoseni atë temë në"
+      notification_level_when_replying:
+        track_topic: "Ndiqni temën"
       topics_unread_when_closed: "Konsideroni temat e palexuara kur ato janë të mbyllura"
       invited:
         title: "Ftesat"
@@ -2719,7 +2725,7 @@ sq:
         membership_request_consolidated: "kërkesa të reja për anëtarësim"
         reaction: "reagim i ri"
         votes_released: "Votimi u hap"
-        new_features: "veçoritë e reja të Diskursit janë lëshuar!"
+        new_features: "Veçoritë e reja të Diskursit janë lëshuar!"
         admin_problems: "këshilla të reja në panelin e faqes suaj"
     upload_selector:
       uploading: "Duke ngarkuar"
@@ -3942,8 +3948,6 @@ sq:
               content: "Grupet"
             users:
               content: "Users"
-            my_posts:
-              content: "Postimet e mia"
             invite:
               content: "Fto"
     form_templates:
@@ -4078,16 +4082,20 @@ sq:
         automatic: "Automatik"
         group_owners: Pronarët
         add_owners: Shto pronarë
+      api_keys:
+        edit: "Redaktoni"
+        save: "Ruani"
+        cancel: "Anulo"
+        continue: "Vazhdoni"
+        revoke: "Revoko"
       api:
         generate_master: "Gjenero Master API Key"
         none: "Për momentin, nuk ka çelësa API aktivë."
         user: "Përdorues"
         title: "API"
-        created: Krijuar
-        never_used: (asnjëherë)
+        never_used: Asnjëherë
         generate: "Gjenero"
         revoke: "Revoko"
-        all_users: "Gjithë Përdoruesit"
         show_details: Detaje
         description: Përshkrimi
         save: Ruaj
@@ -4097,6 +4105,8 @@ sq:
         title: "Webhooks"
         edit: "Redakto"
         save: "Ruaj"
+        delete: "Fshij"
+        cancel: "Anulo"
         active: "Aktiv"
         delivery_status:
           failed: "Dështoi"
@@ -4135,6 +4145,7 @@ sq:
             title: "Rezervat"
       config_areas:
         about:
+          your_organization: "Organizata juaj"
           company_name: "Emri"
           saved: "u ruajt!"
         flags:
@@ -4177,6 +4188,7 @@ sq:
           installed: "Instaluar"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "Developer"
           embedding: "Embedding"
           user_api: "API e përdoruesit"
@@ -4241,9 +4253,6 @@ sq:
           screened_url: "Eksporto listën e plotë të URLve në format CSV. "
       export_json:
         button_text: "Eksporto"
-      invite:
-        button_text: "Dërgo ftesa"
-        button_title: "Dërgo ftesa"
       customize:
         title: "Personalizo"
         preview: "parashiko"
@@ -4336,33 +4345,26 @@ sq:
             name: "zemra"
             description: "Ngjyra e butonit të pëlqimeve."
         email_style:
+          html: "HTML"
           css: "CSS"
       email:
         title: "Emailat"
+        settings: "Rregullimet"
         templates: "Shabllonet"
-        preview_digest: "Parashiko emailin përmbledhës"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Pati një problem gjatë dërgimit të emailit test. Verifiko parametrat e dërgimit dhe provo përsëri. "
         sent: "Dërguar"
         skipped: "Skipped"
         received: "Marrë"
         rejected: "Rejected"
-        sent_at: "Sent At"
         time: "Koha"
         user: "User"
-        email_type: "Email Type"
-        to_address: "To Address"
         test_email_address: "email address to test"
-        send_test: "Dërgo email test"
         sent_test: "u dërgua!"
-        delivery_method: "Metoda e dorëzimit"
         refresh: "Rifresko"
         format: "Formati"
         html: "html"
         text: "tekst"
-        last_seen_user: "Last Seen User:"
-        reply_key: "Reply Key"
-        skipped_reason: "Skip Reason"
         incoming_emails:
           from_address: "Nga"
           to_addresses: "Për"
@@ -4371,12 +4373,10 @@ sq:
           error: "Gabim"
           none: "Nuk u gjetën emaila hyrës."
           modal:
-            title: "Detajet e email të ardhur"
             error: "Gabim"
             headers: "Headers"
             subject: "Subjekti"
             body: "Përmbajtja"
-            rejection_message: "Rejection Mail"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -4390,7 +4390,7 @@ sq:
             address_placeholder: "emri@shembull.com"
             reply_key_placeholder: "reply key"
       logs:
-        title: "Ditari"
+        nav_title: "Ditari"
         action: "Veprimi"
         created_at: "Krijuar"
         last_match_at: "Last Matched"
@@ -4408,8 +4408,6 @@ sq:
         staff_actions:
           all: "të gjitha"
           filter: "Filtro:"
-          title: "Veprime Stafi"
-          clear_filters: "Trego gjithshka"
           staff_user: "User"
           target_user: "Anëtari i prekur"
           subject: "Subjekti"
@@ -4454,9 +4452,7 @@ sq:
             activate_user: "aktivizo anëtarin"
             deactivate_user: "çaktivizo anëtarin"
         screened_emails:
-          title: "Kontroll Email-ash"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
-          email: "Email Address"
           actions:
             allow: "Lejo"
         screened_urls:
@@ -4470,7 +4466,6 @@ sq:
           actions:
             block: "Blloko"
             do_nothing: "Lejo"
-            allow_admin: "Allow Admin"
           form:
             label: "E Re:"
             ip_address: "Adresa IP"
@@ -4482,13 +4477,10 @@ sq:
         search_logs:
           types:
             header: "Ballina"
-        logster:
-          title: "Ditar Gabimesh"
       watched_words:
         search: "kërko"
         clear_filter: "Pastro"
         download: Shkarko
-        clear_all: Pastro kriteret
         actions:
           block: "Blloko"
           flag: "Sinjalizoni"
@@ -4532,7 +4524,6 @@ sq:
         last_emailed: "Emaili i fundit"
         not_found: "Na vjen keq, por ky emër nuk u gjet në sistem."
         id_not_found: "Na vjen keq, por ky emër nuk ekziston në sistem."
-        show_emails: "Trego adresat email"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4546,8 +4537,7 @@ sq:
           staged: "Staged"
         approved: "Aprovuar?"
         titles:
-          active: "Përdorues Aktivë"
-          new: "Përdorues të Rinj"
+          active: "Përdoruesit aktivë"
           pending: "Përdorues në pritje"
           newuser: "Përdorues me Nivel Besimi 0 (Përdorues i Ri)"
           basic: "Përdorues me Nivel Besimi 1 (Përdorues i Thjeshtë)"
@@ -4555,9 +4545,7 @@ sq:
           regular: "Përdorues me Nivel Besimi 3 (Të Zakonshëm)"
           leader: "Përdorues me Nivel Besimi 4 (Udhëheqës)"
           staff: "Stafi"
-          admins: "Administratorë"
           moderators: "Moderatorë"
-          suspended: "Përdorues të Pezulluar"
         not_verified: "I pa verifikuar"
         check_email:
           title: "Shfaq adresën email të këtij përdoruesi."
@@ -4687,7 +4675,6 @@ sq:
           external_email: "Email"
           external_avatar_url: "URL e fotos së profilit"
       user_fields:
-        title: "Fushat e përdoruesit"
         untitled: "Pa Titull"
         name: "Fusha e emrit"
         type: "Field Type"
@@ -4712,10 +4699,8 @@ sq:
           confirm: "Konfirmimi"
           dropdown: "Listë Dropdown"
       site_text:
-        description: "Mund të adaptoni çdo tekst në këtë faqe. Filloni duke bërë një kërkim më poshtë: "
         search: "Kërkoni për tekstin që dëshironi të redaktoni"
-        title: "Tekst"
-        edit: "redakto"
+        edit: "Redaktoni"
         revert: "Rikthe ndryshimet"
         revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
         go_back: "Kthehu tek kërkimi"
@@ -4730,7 +4715,7 @@ sq:
         save: "ruaj"
         cancel: "anulo"
       site_settings:
-        title: "Rregullimet"
+        nav_title: "Rregullimet"
         no_results: "Nuk u gjet asnjë rezultat."
         clear_filter: "Pastro"
         add_url: "shto URL"
@@ -4891,17 +4876,27 @@ sq:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Përdorues i thjeshtë"
+      homepage_choices:
+        custom:
+          label: "Grupet e krijuara"
+        style_type:
+          categories: "kategori"
+          topics: "topic"
+      top_menu_items:
+        new: "I Ri"
+        unread: "Të palexuara"
+        top: "Popullore"
+        latest: "Më të fundit"
+        categories: "Categories"
+        unseen: "E padukshme"
+        read: "Lexo"
+        bookmarks: "Të preferuarat"
       previews:
         share_button: "Shpërndaje"
         reply_button: "Përgjigju"
       homepage_preview:
         nav_buttons:
           all_categories: "kategoritë"
-          new: "I Ri"
-          unread: "Të palexuara"
-          top: "Popullore"
-          latest: "Më të fundit"
-          categories: "Categories"
         category_names:
           site_feedback: "Reagimet e Faqes"
         table_headers:

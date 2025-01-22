@@ -74,6 +74,10 @@ jobs:
         if: ${{ !cancelled() }}
         run: pnpm lint:hbs
 
+      - name: Stylelint
+        if: ${{ !cancelled() }}
+        run: pnpm lint:css
+
       - name: English locale lint (core)
         if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"

@@ -59,7 +59,7 @@ module("Unit | Utilities", function (hooks) {
     let avatarTemplate = "/path/to/avatar/{size}.png";
     assert.strictEqual(
       avatarImg({ avatarTemplate, size: "tiny" }),
-      "<img loading='lazy' alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar'>",
+      "<img alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar'>",
       "it returns the avatar html"
     );
 
@@ -69,7 +69,7 @@ module("Unit | Utilities", function (hooks) {
         size: "tiny",
         title: "evilest trout",
       }),
-      "<img loading='lazy' alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar' title='evilest trout'>",
+      "<img alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar' title='evilest trout'>",
       "it adds a title if supplied"
     );
 
@@ -79,7 +79,7 @@ module("Unit | Utilities", function (hooks) {
         size: "tiny",
         extraClasses: "evil fish",
       }),
-      "<img loading='lazy' alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar evil fish'>",
+      "<img alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar evil fish'>",
       "it adds extra classes if supplied"
     );
 

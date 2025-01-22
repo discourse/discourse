@@ -54,6 +54,7 @@ required:
     default: ""
     type: email
     area: "about|notifications|legal"
+    client: true
   contact_url:
     default: ""
     area: "about|legal"
@@ -414,6 +415,7 @@ basic:
     type: list
     list_type: font
     area: "fonts"
+    allow_any: false
   heading_font:
     default: "arial"
     choices: "BaseFontSetting.values"
@@ -421,6 +423,7 @@ basic:
     type: list
     list_type: font
     area: "fonts"
+    allow_any: false
   enable_sitemap:
     default: true
   sitemap_page_size:
@@ -1936,6 +1939,14 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
+  allow_tl0_and_anonymous_users_to_flag_illegal_content:
+    default: false
+    area: "flags"
+    client: true
+  email_address_to_report_illegal_content:
+    default: ""
+    area: "flags"
+    client: true
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"

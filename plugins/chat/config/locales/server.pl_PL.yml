@@ -21,7 +21,6 @@ pl_PL:
     chat_minimum_message_length: "Minimalna liczba znaków wiadomości na czacie."
     chat_allow_uploads: "Zezwalaj na przesyłanie plików w publicznych kanałach czatu i kanałach wiadomości bezpośrednich."
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
-    default_emoji_reactions: "Domyślne reakcje emoji dla wiadomości czatu. Dodaj do 5 emotikonów, aby szybko reagować."
     direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie czatów osobistych między użytkownikami. Uwaga: personel zawsze może tworzyć czaty osobiste, a użytkownicy będą mogli odpowiadać na czaty osobiste inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
     chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oznaczać flagami wiadomości czatu. Należy pamiętać, że administratorzy i moderatorzy zawsze mogą oznaczać flagami wiadomości czatu."
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
@@ -93,6 +92,8 @@ pl_PL:
       not_accepting_dms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
       actor_ignoring_target_user: "Ignorujesz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_muting_target_user: "Wyciszasz %{username}, więc nie możesz wysyłać do niego wiadomości."
+      actor_disallowed_dms: "Zdecydowałeś się uniemożliwić użytkownikom wysyłanie Ci prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości."
+      actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie do Ciebie osobistych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do nich."
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       over_chat_max_direct_message_users_allow_self: "Możesz utworzyć bezpośrednią wiadomość tylko z samym sobą."
       over_chat_max_direct_message_users:
@@ -261,11 +262,19 @@ pl_PL:
           few: "[%{site_name}] Nowe wiadomości"
           many: "[%{site_name}] Nowe wiadomości"
           other: "[%{site_name}] Nowe wiadomości"
+        chat_dm_1:
+          one: "[%{site_name}] Nowa wiadomość od %{name}"
+          few: "[%{site_name}] Nowe wiadomości od %{name}"
+          many: "[%{site_name}] Nowe wiadomości od %{name}"
+          other: "[%{site_name}] Nowe wiadomości od %{name}"
+        chat_dm_2: "[%{site_name}] Nowe wiadomości od %{name_1} i %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Nowe wiadomości od %{name} i %{count} innych"
         chat_channel_1:
           one: "[%{site_name}] Nowa wiadomość w %{channel}"
           few: "[%{site_name}] Nowe wiadomości w %{channel}"
           many: "[%{site_name}] Nowe wiadomości w %{channel}"
           other: "[%{site_name}] Nowe wiadomości w %{channel}"
+        chat_channel_2: "[%{site_name}] Nowe wiadomości w %{channel_1} i %{channel_2}"
       unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
       unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:

@@ -1,5 +1,6 @@
 import { run } from "@ember/runloop";
 import {
+  find,
   getApplication,
   settled,
   triggerKeyEvent,
@@ -589,15 +590,23 @@ export function createFile(name, type = "image/png", blobData = null) {
   return file;
 }
 
-export async function paste(element, text, otherClipboardData = {}) {
-  let e = new Event("paste", { cancelable: true });
+export async function paste(selector, text, otherClipboardData = {}) {
+  const e = new Event("paste", { cancelable: true });
   e.clipboardData = deepMerge({ getData: () => text }, otherClipboardData);
+
+  const element = typeof selector === "string" ? find(selector) : selector;
+
   element.dispatchEvent(e);
+
   await settled();
   return e;
 }
 
 export async function simulateKey(element, key) {
+  if (typeof element === "string") {
+    element = find(element);
+  }
+
   if (key === "\b") {
     await triggerKeyEvent(element, "keydown", "Backspace");
 
