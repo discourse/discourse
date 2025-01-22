@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import discourseDebounce from "discourse/lib/debounce";
@@ -86,6 +86,7 @@ export default class UsernameValidationHelper {
     });
   }
 
+  @action
   async checkUsernameAvailability() {
     const result = await User.checkUsername(
       this.owner.accountUsername,
