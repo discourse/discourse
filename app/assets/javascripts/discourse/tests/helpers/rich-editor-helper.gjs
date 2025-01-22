@@ -1,5 +1,5 @@
-import { settled, click, render, waitFor } from "@ember/test-helpers";
 import { tracked } from "@glimmer/tracking";
+import { click, render, settled, waitFor } from "@ember/test-helpers";
 import DEditor from "discourse/components/d-editor";
 
 export async function testMarkdown(
