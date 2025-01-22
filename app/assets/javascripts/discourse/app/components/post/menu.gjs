@@ -14,7 +14,7 @@ import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
-import { userPath } from "discourse/lib/url";
+import { smallUserAttrs } from "discourse/components/user-list-attrs";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -63,16 +63,6 @@ const coreButtonComponents = new Map([
   [buttonKeys.SHARE, PostMenuShareButton],
   [buttonKeys.SHOW_MORE, PostMenuShowMoreButton],
 ]);
-
-function smallUserAttributes(user) {
-  return {
-    template: user.avatar_template,
-    username: user.username,
-    post_url: user.post_url,
-    url: userPath(user.username_lower),
-    unknown: user.unknown,
-  };
-}
 
 const defaultDagOptions = {
   defaultPosition: { before: buttonKeys.SHOW_MORE },
@@ -565,7 +555,7 @@ export default class PostMenu extends Component {
       post_action_type_id: LIKE_ACTION,
     });
 
-    this.likedUsers = users.map(smallUserAttributes);
+    this.likedUsers = users.map(smallUserAttrs);
     this.totalLikedUsers = users.totalRows;
     this.isWhoLikedVisible = true;
   }
@@ -575,7 +565,7 @@ export default class PostMenu extends Component {
       id: this.args.post.id,
     });
 
-    this.readers = users.map(smallUserAttributes);
+    this.readers = users.map(smallUserAttrs);
     this.totalReaders = users.totalRows;
     this.isWhoReadVisible = true;
   }
