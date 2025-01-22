@@ -1215,9 +1215,9 @@ module Discourse
   end
 
   def self.anonymous_locale(request)
-    locale = HttpLanguageParser.parse(request.cookies["locale"])
-    locale ||= HttpLanguageParser.parse(request.env["HTTP_ACCEPT_LANGUAGE"])
-    locale
+    cookie = request.cookies["locale"]
+    request_locale = cookie.present? ? cookie : request.env["HTTP_ACCEPT_LANGUAGE"]
+    HttpLanguageParser.parse(request_locale)
   end
 
   # For test environment only
