@@ -328,7 +328,9 @@ export default class ChatComposer extends Component {
       const shortcutPreference =
         this.currentUser.user_option.chat_send_shortcut;
       const send =
-        (shortcutPreference === "enter" && !event.shiftKey) || event.metaKey;
+        (shortcutPreference === "enter" && !event.shiftKey) ||
+        event.ctrlKey ||
+        event.metaKey;
 
       if (!send) {
         // insert newline
