@@ -7,9 +7,10 @@ module Jobs
     def execute(args)
       return unless SiteSetting.enable_badges
 
-      Jobs.enqueue_after(:ensure_badge_consistency) do
-        Badge.enabled.each { |b| Jobs.enqueue(:grant_badge, badge_id: b.id) }
-      end
+      enabled_badges = Badge.enabled
+
+      Discourse.redis.setex("grant_badge_remaining", 2.hours, enabled_badges.count)
+      enabled_badges.find_each { |b| Jobs.enqueue(:grant_badge, badge_id: b.id) }
     end
   end
 end

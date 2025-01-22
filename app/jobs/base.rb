@@ -295,8 +295,6 @@ module Jobs
           RailsMultisite::ConnectionManagement.all_dbs
         end
 
-      batch_id = opts.delete(:current_batch_id)
-
       exceptions = []
       dbs.each do |db|
         begin
@@ -354,8 +352,6 @@ module Jobs
         self.class.clear_cluster_concurrency_lock!
       end
 
-      Jobs.decrease_batch_count(batch_id, jid) if batch_id
-
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
   end
@@ -394,11 +390,6 @@ module Jobs
     # Unless we want to work on all sites
     unless opts.delete(:all_sites)
       opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
-    end
-
-    if batch_id = Thread.current[:current_batch_id]
-      opts[:current_batch_id] = batch_id
-      Sidekiq.redis { |redis| redis.hincrby("batch:#{batch_id}", "count", 1) }
     end
 
     delay = opts.delete(:delay_for)
@@ -468,76 +459,6 @@ module Jobs
   def self.enqueue_at(datetime, job_name, opts = {})
     secs = [datetime.to_f - Time.zone.now.to_f, 0].max
     enqueue_in(secs, job_name, opts)
-  end
-
-  def self.decrease_batch_count(batch_id, job_id = nil)
-    batch_key = "batch:#{batch_id}"
-    batch_jobs_key = "batch:#{batch_id}:jobs"
-
-    Sidekiq.redis do |redis|
-      if redis.exists?(batch_key)
-        if !job_id || redis.sadd?(batch_jobs_key, job_id)
-          if redis.hincrby(batch_key, "count", -1) == 0
-            batch = redis.hgetall(batch_key)
-
-            redis.del(batch_key)
-            redis.del(batch_jobs_key)
-
-            # An instance of the same job might run several times (e.g. if it fails
-            # and is retried). When that happens, `batch` might be undefined because
-            # the batch job has already been enqueued and deleted from Redis.
-            Jobs.enqueue(batch["job_name"], JSON.parse(batch["opts"])) if batch["job_name"]
-          end
-        end
-      end
-    end
-  end
-
-  # Enqueues a job to run after all the jobs enqueued within the block have
-  # completed (either successfully or not).
-  def self.enqueue_after(job_name, opts = {})
-    # This method creates a new batch ID and stores it in a thread-local
-    # variable. This ID is then associated to a Hash which keeps track of the
-    # remaining number of jobs, the job name and its arguments.
-    #
-    # When `enqueue` is called from within the block, the thread variable is
-    # read and set as a job argument (see `current_batch_id`).
-    #
-    # After the job finishes (the first time, in case of failed jobs subsequent
-    # runs are ignored), the counter is decreased and if it reaches 0, then
-    # `job_name` is enqueued.
-
-    if run_immediately?
-      yield
-      enqueue(job_name, opts)
-      return
-    end
-
-    raise "Nested enqueue_after is not supported" if Thread.current[:current_batch_id]
-
-    Thread.current[:current_batch_id] = batch_id = SecureRandom.hex(12)
-
-    Sidekiq.redis do |redis|
-      # Jobs in the batch might not be enqueued fast enough and some might
-      # finish before the batch is scheduled. Starting with a `count` of `1` and
-      # decrementing it after all jobs are enqueued ensures that all batch jobs
-      # run.
-      #
-      # Consider that the block may enqueue a job, sleep for a while and then
-      # enqueue another job. If the first job finishes, the count would reach
-      # `0` and schedule the batch job. This prevents that by ensuring that the
-      # count never reaches `0` until the block finishes, at which point the
-      # `decrease_batch_count` is called one more time (see below).
-      redis.hmset("batch:#{batch_id}", "count", 1, "job_name", job_name, "opts", opts.to_json)
-    end
-
-    begin
-      yield
-    ensure
-      Thread.current[:current_batch_id] = nil
-    end
-
-    decrease_batch_count(batch_id)
   end
 
   def self.cancel_scheduled_job(job_name, opts = {})
