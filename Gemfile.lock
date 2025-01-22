@@ -125,7 +125,7 @@ GEM
     diffy (3.4.3)
     digest (3.1.1)
     digest-xxhash (0.2.9)
-    discourse-fonts (0.0.14)
+    discourse-fonts (0.0.15)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
