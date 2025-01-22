@@ -309,6 +309,7 @@ export default class ChatComposer extends Component {
     if (
       this.site.mobileView ||
       event.altKey ||
+      event.metaKey ||
       this.#isAutocompleteDisplayed()
     ) {
       return;
