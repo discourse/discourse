@@ -209,3 +209,11 @@ input[type="checkbox"],
 input[type="radio"] {
   accent-color: var(--tertiary);
 }
+
+textarea,
+input,
+select,
+button {
+  font-variation-settings: inherit;
+  font-feature-settings: inherit;
+}
