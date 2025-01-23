@@ -502,7 +502,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_notice_created_by_user?
-    scope.is_staff? && notice.present?
+    scope.is_staff? && notice.present? && notice_created_by_users.present?
   end
 
   def notice_created_by_user
