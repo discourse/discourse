@@ -16,7 +16,7 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
       const groups = await Group.findAll();
       this._availableGroups = groups.filterBy("automatic", false);
 
-      this._userExport = UserExport.create(model.latest_export.user_export);
+      this._userExport = UserExport.create(model.latest_export?.user_export);
     }
   }
 
