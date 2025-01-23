@@ -6,6 +6,10 @@ import {
   iconHTML,
   iconNode,
 } from "discourse/lib/icon-library";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 
 module("Unit | Utility | icon-library", function (hooks) {
   setupTest(hooks);
@@ -49,37 +53,42 @@ module("Unit | Utility | icon-library", function (hooks) {
 
   test("fa5 remaps", function (assert) {
     withSilencedDeprecations("discourse.fontawesome-6-upgrade", () => {
-      assert.throws(
-        () => {
-          const adjustIcon = iconHTML("adjust");
-          assert.true(
-            adjustIcon.includes("d-icon-adjust"),
-            "class is maintained"
-          );
-          assert.true(
-            adjustIcon.includes('href="#circle-half-stroke"'),
-            "has remapped icon"
-          );
-        },
-        /FA6 deprecation error/,
-        "throws an error if icon name is deprecated"
+      const adjustIcon = iconHTML("adjust");
+      assert.true(adjustIcon.includes("d-icon-adjust"), "class is maintained");
+      assert.true(
+        adjustIcon.includes('href="#circle-half-stroke"'),
+        "has remapped icon"
       );
 
-      assert.throws(
-        () => {
-          const farIcon = iconHTML("far-dot-circle");
-          assert.true(
-            farIcon.includes("d-icon-far-dot-circle"),
-            "class is maintained"
-          );
-          assert.true(
-            farIcon.includes('href="#far-circle-dot"'),
-            "has remapped icon"
-          );
-        },
-        /FA6 deprecation error/,
-        "throws an error if icon name is deprecated"
+      const farIcon = iconHTML("far-dot-circle");
+      assert.true(
+        farIcon.includes("d-icon-far-dot-circle"),
+        "class is maintained"
+      );
+      assert.true(
+        farIcon.includes('href="#far-circle-dot"'),
+        "has remapped icon"
       );
     });
+  });
+
+  test("fa5 remaps throws error", function (assert) {
+    disableRaiseOnDeprecation();
+    assert.throws(
+      () => {
+        iconHTML("adjust");
+      },
+      /Deprecation notice: The icon name "adjust" has been updated to "circle-half-stroke".*\[deprecation id: discourse\.fontawesome-6-upgrade\]/,
+      "throws an error if icon name is deprecated"
+    );
+
+    assert.throws(
+      () => {
+        iconHTML("far-dot-circle");
+      },
+      /Deprecation notice: The icon name "far-dot-circle" has been updated to "far-circle-dot".*\[deprecation id: discourse\.fontawesome-6-upgrade\]/,
+      "throws an error if icon name is deprecated"
+    );
+    enableRaiseOnDeprecation();
   });
 });

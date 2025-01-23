@@ -146,17 +146,12 @@ function handleDeprecatedIcon(id) {
   newId = remapFromFA5(newId);
 
   if (newId !== id) {
-    if (isTesting() || isRailsTesting()) {
-      throw new Error(
-        `[FA6 deprecation error] The icon "${id}" is deprecated. Use "${newId}" instead.`
-      );
-    }
-
     deprecated(
       `The icon name "${id}" has been updated to "${newId}". Please use the new name in your code. Old names will be removed in Q2 2025.`,
       {
         id: "discourse.fontawesome-6-upgrade",
         url: "https://meta.discourse.org/t/325349",
+        raiseError: isTesting() || isRailsTesting(),
       }
     );
   }
