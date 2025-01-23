@@ -148,7 +148,7 @@ function handleDeprecatedIcon(id) {
   if (newId !== id) {
     if (isTesting() || isRailsTesting()) {
       throw new Error(
-        `[Deprecation error] The icon "${id}" is deprecated. Use "${newId}" instead.`
+        `[FA6 deprecation error] The icon "${id}" is deprecated. Use "${newId}" instead.`
       );
     }
 
