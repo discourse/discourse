@@ -1,3 +1,4 @@
+// @ts-check
 import { setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import $ from "jquery";
@@ -6,6 +7,12 @@ import { liftListItem, sinkListItem } from "prosemirror-schema-list";
 import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+
+/**
+ * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
+ * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
+ * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
+ */
 
 /** @implements {TextManipulation} */
 export default class ProsemirrorTextManipulation {
@@ -16,7 +23,9 @@ export default class ProsemirrorTextManipulation {
   /** @type {import("prosemirror-view").EditorView} */
   view;
   $editorElement;
+  /** @type {PlaceholderHandler} */
   placeholder;
+  /** @type {AutocompleteHandler} */
   autocompleteHandler;
   convertFromMarkdown;
   convertToMarkdown;
@@ -29,10 +38,15 @@ export default class ProsemirrorTextManipulation {
     this.convertToMarkdown = convertToMarkdown;
     this.$editorElement = $(view.dom);
 
-    this.placeholder = new ProsemirrorPlaceholderHandler({ schema, view });
+    this.placeholder = new ProsemirrorPlaceholderHandler({
+      schema,
+      view,
+      convertFromMarkdown,
+    });
     this.autocompleteHandler = new ProsemirrorAutocompleteHandler({
       schema,
       view,
+      convertFromMarkdown,
     });
   }
 
@@ -63,6 +77,7 @@ export default class ProsemirrorTextManipulation {
   }
 
   autocomplete(options) {
+    // @ts-ignore
     this.$editorElement.autocomplete(
       options instanceof Object
         ? { textHandler: this.autocompleteHandler, ...options }
@@ -70,8 +85,8 @@ export default class ProsemirrorTextManipulation {
     );
   }
 
-  applySurroundSelection(head, tail, exampleKey, opts) {
-    this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
+  applySurroundSelection(head, tail, exampleKey) {
+    this.applySurround(this.getSelected(), head, tail, exampleKey);
   }
 
   applySurround(sel, head, tail, exampleKey) {
@@ -387,10 +402,12 @@ class ProsemirrorAutocompleteHandler {
 class ProsemirrorPlaceholderHandler {
   view;
   schema;
+  convertFromMarkdown;
 
-  constructor({ schema, view }) {
+  constructor({ schema, view, convertFromMarkdown }) {
     this.schema = schema;
     this.view = view;
+    this.convertFromMarkdown = convertFromMarkdown;
   }
 
   insert(file) {
@@ -443,6 +460,7 @@ class ProsemirrorPlaceholderHandler {
   }
 
   success(file, markdown) {
+    /** @type {null | { node: import("prosemirror-model").Node, pos: number }} */
     let nodeToReplace = null;
     this.view.state.doc.descendants((node, pos) => {
       if (
@@ -455,6 +473,10 @@ class ProsemirrorPlaceholderHandler {
       }
       return true;
     });
+
+    if (!nodeToReplace) {
+      return;
+    }
 
     // keeping compatibility with plugins that change the upload markdown
     const doc = this.convertFromMarkdown(markdown);

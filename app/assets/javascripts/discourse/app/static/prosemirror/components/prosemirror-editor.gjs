@@ -68,7 +68,7 @@ export default class ProsemirrorEditor extends Component {
   view;
 
   #lastSerialized;
-  /** @type {() => void} */
+  /** @type {undefined | (() => void)} */
   #destructor;
 
   get pluginParams() {

@@ -5,6 +5,7 @@
  *
  * @interface TextManipulation
  */
+export const TextManipulation = {};
 
 /**
  * Whether the editor allows a preview being shown
@@ -196,8 +197,7 @@
  *
  * @interface PlaceholderHandler
  */
-// eslint-disable-next-line no-unused-vars
-const PlaceholderHandler = {};
+export const PlaceholderHandler = {};
 
 /**
  * Inserts a file
@@ -258,6 +258,7 @@ const PlaceholderHandler = {};
  *
  * @interface AutocompleteHandler
  */
+export const AutocompleteHandler = {};
 
 /**
  * Replaces the range with the given text
