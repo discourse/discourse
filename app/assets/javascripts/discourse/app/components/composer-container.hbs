@@ -8,7 +8,7 @@
 >
   <div class="grippie"></div>
   {{#if this.composer.visible}}
-    {{html-class (if this.composer.showPreview "composer-has-preview")}}
+    {{html-class (if this.composer.isPreviewVisible "composer-has-preview")}}
     <ComposerMessages
       @composer={{this.composer.model}}
       @messageCount={{this.composer.messageCount}}
