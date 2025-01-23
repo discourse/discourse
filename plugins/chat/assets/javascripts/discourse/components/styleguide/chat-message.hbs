@@ -4,12 +4,6 @@
   </Styleguide::Component>
 
   <Styleguide::Controls>
-    <Styleguide::Controls::Row @name="Last Visit">
-      <DToggleSwitch
-        @state={{this.message.newest}}
-        {{on "click" this.toggleLastVisit}}
-      />
-    </Styleguide::Controls::Row>
     <Styleguide::Controls::Row @name="Deleted">
       <DToggleSwitch
         @state={{not (not this.message.deletedAt)}}

@@ -73,6 +73,10 @@ module PageObjects
           end
         end
 
+        def has_last_visit_line?(**args)
+          find(**args).has_content?(I18n.t("js.chat.last_visit"))
+        end
+
         def has_message?(**args)
           message.exists?(**args)
         end

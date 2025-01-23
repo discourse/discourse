@@ -52,6 +52,10 @@ module PageObjects
         find(message_by_id_selector(id))
       end
 
+      def has_no_last_visit_line?
+        has_no_content?(I18n.t("js.chat.last_visit"))
+      end
+
       def has_no_loading_skeleton?
         has_no_css?(".chat-skeleton")
       end

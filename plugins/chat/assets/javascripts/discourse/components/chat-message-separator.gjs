@@ -62,6 +62,10 @@ export default class ChatMessageSeparator extends Component {
     }
   }
 
+  get isNewestMessage() {
+    return this.args.message.id === this.args.message.channel.newestMessage?.id;
+  }
+
   #areDatesOnSameDay(a, b) {
     return (
       a.getFullYear() === b.getFullYear() &&
@@ -88,7 +92,7 @@ export default class ChatMessageSeparator extends Component {
       <div
         class={{concatClass
           "chat-message-separator-date"
-          (if @message.newest "with-last-visit")
+          (if this.isNewestMessage "with-last-visit")
         }}
         role="button"
         {{on "click" this.onDateClick passive=true}}
@@ -97,7 +101,7 @@ export default class ChatMessageSeparator extends Component {
           <span class="chat-message-separator__text">
             {{this.formattedFirstMessageDate}}
 
-            {{#if @message.newest}}
+            {{#if this.isNewestMessage}}
               <span class="chat-message-separator__last-visit">
                 <span
                   class="chat-message-separator__last-visit-separator"
@@ -112,7 +116,7 @@ export default class ChatMessageSeparator extends Component {
       <div class="chat-message-separator__line-container">
         <div class="chat-message-separator__line"></div>
       </div>
-    {{else if @message.newest}}
+    {{else if this.isNewestMessage}}
       <div class="chat-message-separator-new">
         <div class="chat-message-separator__text-container">
           <span class="chat-message-separator__text">
