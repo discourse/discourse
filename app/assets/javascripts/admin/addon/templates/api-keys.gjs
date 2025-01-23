@@ -1,5 +1,11 @@
-<PluginOutlet @name="admin-api-keys">
-  <div class="admin-api-keys admin-config-page">
+import RouteTemplate from "ember-route-template";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import { i18n } from "discourse-i18n";
+
+export default RouteTemplate(<template>
+  <PluginOutlet @name="admin-api-keys">
     <DPageHeader
       @titleLabel={{i18n "admin.api_keys.title"}}
       @descriptionLabel={{i18n "admin.api_keys.description"}}
@@ -23,5 +29,5 @@
     <div class="admin-container admin-config-page__main-area">
       {{outlet}}
     </div>
-  </div>
-</PluginOutlet>
+  </PluginOutlet>
+</template>);

@@ -62,7 +62,7 @@ export default class LatestTopicListItem extends Component {
 
       <div class="main-link">
         <div class="top-row">
-          <TopicStatus @topic={{@topic}} />
+          <TopicStatus @topic={{@topic}} @context="topic-list" />
 
           {{topicLink @topic}}
           {{~#if @topic.featured_link}}

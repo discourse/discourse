@@ -74,8 +74,8 @@
       width: 2.5em;
       transition: var(--d-button-transition);
       border-radius: var(--d-border-radius);
-      border-top-left-radius: 0px;
-      border-bottom-left-radius: 0px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
 
       &:focus {
         border-color: var(--primary-300);
@@ -128,7 +128,6 @@
 
   .chat-message-reaction {
     @include chat-reaction;
-
     align-items: center;
     border-radius: 0;
     border-left-color: transparent;

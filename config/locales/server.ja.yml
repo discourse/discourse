@@ -289,6 +289,7 @@ ja:
       invalid_site_setting: "'%{name}' という名前の設定は存在しません"
       invalid_category_id: "存在しないカテゴリを指定しました"
       site_setting_is_hidden: "非表示の設定を変更する権限がありません"
+      site_setting_is_shadowed_globally: "この設定はグローバルに構成されているため変更できません"
       site_setting_is_unconfigurable: "構成不可能な設定を変更する権限がありません"
       invalid_choice:
         other: "'%{name}' は無効な選択です。"
@@ -365,8 +366,11 @@ ja:
     max_redemptions_limit: "は、2 と %{max_limit} の間である必要があります。"
   topic_invite:
     failed_to_invite: "次のいずれかのグループのグループメンバーシップがない場合、ユーザーをこのトピックに招待できません: %{group_names}。"
+    not_pm: "個人メッセージにのみ招待できます。"
     user_exists: "そのユーザーはすでに招待されています。ユーザーを一度しかトピックに招待できません。"
     muted_topic: "そのユーザーはこのトピックをミュートしています。"
+    receiver_does_not_allow_pm: "そのユーザーは、あなたが個人メッセージを送信することを許可していません。"
+    sender_does_not_allow_pm: "そのユーザーが個人メッセージを送信することを許可していません。"
     user_cannot_see_topic: "%{username} はトピックを閲覧できません。"
   backup:
     operation_already_running: "作業を実行中です。新しいジョブを開始できません。"
@@ -551,6 +555,7 @@ ja:
       admins: "このサイトの構成と管理を担当し、すべてのメンバーとアクティビティデータにアクセスできます"
       moderators: "通報への対応、ディスカッションのモデレーション、アカウントに関するメンバーのサポートを担当します"
       trust_level_0: "コミュニティーの規範や機能を学習中で、機能に制限のある新規メンバー"
+      trust_level_1: "より信頼されているメンバー。閲覧によって最初のエンゲージメントを示し、さらに多くの機能にアクセスできるようになりました。このグループのすべてのメンバーは trust_level_0 グループのメンバーでもあります。"
       trust_level_2: "長い間継続的に貢献し、完全な市民権を獲得したアクティブメンバー。このグループのすべてのメンバーは、trust_level_1 および trust_level_0 グループのメンバーでもあります。"
       trust_level_3: "コミュニティーの中核を成し、限定的なモデレーション権限を獲得した、非常に積極的な長期貢献者。このグループのすべてのメンバーは、trust_level_2、trust_level_1、および trust_level_0 グループのメンバーでもあります。"
       trust_level_4: "模範的な貢献が認められ、追加のモデレーション権限が委任されている、手動昇格メンバー。このグループのすべてのメンバーは、trust_level_3、trust_level_2、trust_level_1、および trust_level_0 グループのメンバーでもあります。"
@@ -1319,10 +1324,12 @@ ja:
       title: "モデレーターに通知"
       xaxis: "日"
       yaxis: "メッセージ件数"
+      description: "モデレーターが追加の通報情報を含む個人メッセージを受信した回数。"
     notify_user_private_messages:
       title: "ユーザーに通知"
       xaxis: "日"
       yaxis: "メッセージ件数"
+      description: "ユーザーが通報ダイアログ経由で個人メッセージを受信した回数。"
     top_referrers:
       title: "上位リファラー"
       xaxis: "ユーザー"
@@ -1538,6 +1545,7 @@ ja:
       google_analytics_version: "あなたの Discourse は現在 Google Analytics 3 を使用していますが、2023 年 7 月以降はサポートされなくなります。今すぐ <a href='https://meta.discourse.org/t/260498'>Google Analytics 4 にアップグレード</a>して、ウェブサイトのパフォーマンスに関する貴重なインサイトと分析を引き続き受け取りましょう。"
       category_style_deprecated: "あなたの Discourse は現在、Discourse 3.2 の最終ベータリリース前に削除が予定されている非推奨のカテゴリスタイルを使用しています。選択したカテゴリスタイルを維持する方法については、<a href='https://meta.discourse.org/t/282441'>単一カテゴリスタイルのサイト設定</a>をご覧ください。"
       maxmind_db_configuration: 'サーバーは逆 IP ルックアップに MaxMind データベースを使用するように構成されていますが、有効な MaxMind アカウント ID が構成されていないため、今後、MaxMind データベースのダウンロードに失敗する可能性があります。<a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
+      admin_sidebar_deprecation: "古い管理者レイアウトは使用できなくなり、新しい<a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>サイドバーレイアウト</a>に代わります。古いレイアウトは次のリリースで削除されます。その前に新しいサイドバーレイアウトを使用し始める場合は、今すぐ<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>構成</a>してください。"
     back_from_logster_text: "サイトに戻る"
   site_settings:
     allow_bulk_invite: "CSV ファイルのアップロードによる一括招待を許可する"
@@ -1617,6 +1625,7 @@ ja:
     block_onebox_on_redirect: "リダイレクトページにつながる URL のワンボックス化を防止します。この構成により、別の宛先にリダイレクトする URL のビジュアルカード (ワンボックス) を作成できなくなるため、リダイレクトされないダイレクト URL がワンボックスに優先されます。"
     allowed_inline_onebox_domains: "タイトルなしでリンクされた場合、ミニチュア形式でワンボックス化されるドメインのリスト"
     enable_inline_onebox_on_all_domains: "allowed_inline_onebox_domains サイト設定を無視し、すべてのドメインでインワインのワンボックスを許可します。"
+    onebox_locale: "ワンボックスプロバイダーに送信されるロケール。空白のままにすると、デフォルトのロケールが使用されます。"
     force_custom_user_agent_hosts: "すべてのリクエストでカスタムワンボックスユーザーエージェントを使用するホスト (特にユーザーエージェントごとにアクセスを制限するホストで役立ちます)。"
     max_oneboxes_per_post: "1 つの投稿に含められるワンボックスの最大数を設定します。ワンボックスは投稿内でリンクされたコンテンツのプレビューを表示します。"
     facebook_app_access_token: "Facebook アプリ ID とシークレットから生成されるトークン。Instagram ワンボックスを生成するために使用されます。"
@@ -1689,6 +1698,11 @@ ja:
     pending_users_reminder_delay_minutes: "モデレーターに新しいユーザーがこの時間以上承認待ちであることを通知します。-1 に設定すると、通知は無効になります。"
     persistent_sessions: "ユーザーはブラウザが閉じられてもログインのままになる"
     maximum_session_age: "ユーザーは最後の訪問から n 時間以内はログインしたままになる"
+    full_page_login: "ログインフォームと登録フォームをフルページで表示します (オフの場合、フォームはモーダルで表示されます)。"
+    show_signup_form_email_instructions: 登録フォームにメールアドレスの指示を表示します。
+    show_signup_form_username_instructions: 登録フォームにユーザー名の指示を表示します。
+    show_signup_form_full_name_instructions: 登録フォームにフルネームの指示を表示します。
+    show_signup_form_password_instructions: 登録フォームにパスワードの指示を表示します。
     ga_version: "使用する Google Universal Analytics のバージョン: v3 (analytics.js)、v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics トラッキングコード ID。例: UA-12345678-9。<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a> をご覧ください"
     ga_universal_domain_name: "Google Universal Analytics ドメイン名。例: mysite.com。<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a> をご覧ください"
@@ -1713,6 +1727,7 @@ ja:
     content_security_policy_frame_ancestors: "CSP を介してこのサイトを iframe に埋め込むことのできるユーザーを制限する。許可されるホストを <a href='%{base_path}/admin/customize/embedding'>埋め込み</a>で制御します。"
     content_security_policy_script_src: "追加のホワイトリストにあるスクリプトソース。現在のホストと CDN はデフォルトで含まれています。<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>コンテンツセキュリティポリシー (CSP) で XSS 攻撃を緩和する</a> をご覧ください。その他のホストソースは strict-dynamic が有効であるため無視されます。"
     invalidate_inactive_admin_email_after_days: "この日数以上サイトを訪問していない管理者アカウントは、ログインする前にメールアドレスを再確認する必要があります。0 に設定すると無効になります。"
+    suppress_secured_categories_from_admin: "管理者の一部の UI で非公開のトピックと PM を非表示にします。コンテンツは引き続き一部の場所で表示されます。これはセキュリティ機能ではありません。管理者はサイト上のすべてのコンテンツにいつでもアクセスできます。"
     include_secure_categories_in_tag_counts: "有効にすると、タグのトピック数には、すべてのユーザーに対して読み取りが制限されたカテゴリにあるトピックが含まれます。無効にすると、通常のユーザーは、すべてのトピックが公開カテゴリにあるタグのトピック数のみが表示されます。"
     display_personal_messages_tag_counts: "有効にすると、指定されたタグが付けられた個人メッセージの数が表示されます。"
     top_menu: "ホームページのナビゲーションにどの項目がどの順序で表示されるかを指定します。"
@@ -1721,6 +1736,7 @@ ja:
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
     allow_username_in_share_links: "ユーザー名を共有リンクに含めることを許可します。これは、ユニークビジター数に応じてバッジを与えるのに役立ちます。"
     site_contact_username: "自動送信メールの from に使用される有効なスタッフのユーザー名。空欄の場合デフォルトのシステムアカウントが使用されます。"
+    site_contact_group_name: "自動的に送信されるすべての個人メッセージに招待される有効なグループ名。"
     send_welcome_message: "すべての新規ユーザーにクイックスタートガイド付きのようこそメッセージを送信する。"
     send_tl1_welcome_message: "新しい信頼レベル 1 のユーザーにようこそメッセージを送信します。"
     send_tl2_promotion_message: "新しい信頼レベル 2 ユーザーに昇格に関するメッセージを送信します。"
@@ -1739,9 +1755,11 @@ ja:
     send_old_credential_reminder_days: "日数後に古い資格情報についてリマインダーする"
     email_token_valid_hours: "「パスワードを忘れました」またはアカウントアクティベーションのトークンを有効にする時間 (n)"
     enable_badges: "バッジシステムを有効にします。これは、ユーザーの肯定的な行動を強化するゲーミフィケーションの一形態です。詳細については、Discourse Meta の「<a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>バッジとは？</a>」をご覧ください。"
+    show_badges_in_post_header: "ユーザーが特定の投稿に対してバッジを獲得すると、そのバッジを投稿のヘッダーに表示します。"
     max_favorite_badges: "ユーザーが選択できるバッジの最大数"
     whispers_allowed_groups: "特定のグループのメンバーに、トピック内での非公開コミュニケーションを許可します。"
     hidden_post_visible_groups: "これらのグループのメンバーが非表示の投稿を表示できるようにします。スタッフユーザーは常に非表示の投稿を表示できます。"
+    allow_index_in_robots_txt: "このサイトはウェブ検索エンジンによるインデックス作成を許可されていることを robots.txt で指定します。<a href='%{base_path}/admin/customize/robots'>robots.txt のオーバーライドはこちら</a>で行えます。<b>警告</b>: 構成ルールを誤ると、期待どおりにサイトがクロールされない場合があります。"
     blocked_email_domains: "ユーザーがアカウントの登録に使用できないメールドメインのパイプ区切りのリスト。サブドメインは自動的に指定されたドメインに対して処理されます。ワイルドカード記号の * と ? はサポートされていません。例: mailinator.com|trashmail.net"
     allowed_email_domains: "ユーザーがアカウントの登録に使用する必要のあるメールドメインのパイプ区切りのリスト。サブドメインは自動的に指定されたドメインに対して処理されます。ワイルドカード記号の * と ? はサポートされていません。警告: リストに含まれないメールドメインのユーザーは許可されません！"
     normalize_emails: "正規化されたメールアドレスが一意であるかをチェックします。正規化されたメールアドレスでは、ユーザー名のすべてのドットと、+ と @ 記号の間のすべてが削除されます。"
@@ -1978,7 +1996,9 @@ ja:
     title_fancy_entities: "トピックのタイトル内の共通の ASCII 文字をファンシーな HTML エンティティ (SmartyPants、<a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>) に変換する"
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"
     desktop_category_page_style: "この設定により、デスクトップ上の /categories ページの視覚的なレイアウトが決定します。注目のトピックを含むサブカテゴリの表示、最新のトピックの表示、トップトピックの紹介などのオプションが含まれます。スタイルの選択は、ユーザーがサイトのカテゴリをどのように操作して移動するかに影響します。"
+    mobile_category_page_style: "この設定によって、モバイル上の /categories ページの視覚的なレイアウトが決まります。"
     category_colors: "カテゴリに利用可能な 16 進数の色値のリスト"
+    default_dark_mode_color_scheme_id: "ダークモードで使用される色パレット。"
     dark_mode_none: "なし"
     max_image_size_kb: "最大画像アップロードサイズ。これは、nginx (client_max_body_size) / apache またはプロキシでも構成されている必要があります。これより大きいか、client_max_body_size より小さい画像は、アップロード時にフィットするようにサイズ変更されます。"
     max_attachment_size_kb: "添付ファイルの最大アップロードサイズ。nginx (client_max_body_size) / apache または proxy でも設定する必要があります。"
@@ -2138,6 +2158,7 @@ ja:
     anonymous_posting_allowed_groups: "匿名投稿を有効にできるグループ"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
     hide_user_profiles_from_public: "匿名ユーザーのユーザーカード、ユーザープロファイル、およびユーザーディレクトリを無効にする。"
+    hide_new_user_profiles: "信頼レベル 1 以下のユーザープロファイルは、そのユーザーが初めて投稿するまで一般ユーザーと信頼レベル 1 のユーザーに対して非表示になります。この機能は must_approve_users と invite_only サイトでは無条件に無効になります。"
     allow_users_to_hide_profile: "ユーザーがプロファイルとプレゼンスを非表示することを許可する"
     hide_user_activity_tab: "管理者と自分以外のユーザープロファイルでアクティビティタブを非表示にします。"
     delete_associated_accounts_on_password_reset: "ユーザーがパスワードを変更すると、ユーザーに関連付けられたアカウントを削除します。"
@@ -2184,6 +2205,7 @@ ja:
     penalty_include_post_message: "ユーザーを投稿禁止または凍結する際に、メールメッセージのテンプレートに問題のある投稿メッセージを自動的に含めます。"
     svg_icon_subset: "アセットに含める追加の FontAwesome アイコンを追加する。ソリッドアイコンには 'fa-'、通常のアイコンには 'far-'、ブランドアイコンには 'fab-' のプレフィックスを使用します。"
     max_prints_per_hour_per_user: "/print ページの最大インプレッション数 (0 に設定すると出力が無効になります)"
+    full_name_requirement: "登録フォームのフルネームフィールドを必須、オプション、またはオプションで非表示にします。"
     enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームはすべての場所で非表示になります。"
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
@@ -2209,6 +2231,7 @@ ja:
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまでに待機する日数。-1 に設定すると削除されません。0 に設定すると直ちに削除されます。"
     bootstrap_mode_min_users: 'ブートストラップモードを無効にして「はじめに」ボタンを削除するために必要な最低ユーザー数 (0 に設定すると無効になります。最長 24 時間かかる場合があります)。詳細は、<a target="_blank" href="https://meta.discourse.org/t/-/322876">Meta のブートストラップモードに関するトピック</a>をご覧ください。'
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
+    secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
     secure_uploads_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure uploads max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可します。"
     secure_uploads_max_email_embed_image_size_kb: "'secure uploads allow embed in emails' 設定が有効である場合にメールに埋め込まれるセキュリティで保護された画像のサイズのカットオフ。その設定が有効でない場合、この設定の効果はありません。"
     slug_generation_method: "スラッグ生成方法を選択します。'encode' はパーセントエンコード文字列を生成します。'none'は、スラッグを無効にします。"
@@ -2254,6 +2277,7 @@ ja:
     default_email_mailing_list_mode_frequency: "メーリングリストモードを有効にしたユーザーはデフォルトで、この頻度でメールを受信する。"
     disable_mailing_list_mode: "ユーザーによるメーリングリストモードの有効化を禁止する (メーリングリストのメールは送信されなくなります)。"
     default_email_previous_replies: "デフォルトでメールに以前の返信を含めます。"
+    default_emoji_reactions: "デフォルトのお気に入りの絵文字リアクション。クイックリアクションとして最大 5 つの絵文字を追加できます。"
     default_email_in_reply_to: "デフォルトで、投稿への返信の抜粋をメールに含める。"
     default_hide_profile: "ユーザーの公開プロファイルをデフォルトで非表示にする。"
     default_hide_presence: "プレゼンス機能をデフォルトで無効化する。"
@@ -2320,6 +2344,7 @@ ja:
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
     force_lowercase_tags: "すべての新しいタグが完全に小文字になるように強制する。"
     create_post_for_category_and_tag_changes: "トピックのカテゴリまたはタグが変更されたときにささやき投稿を作成する。ささやき投稿を有効にする必要があります。"
+    automatically_clean_unused_tags: "どのトピックや個人メッセージにも使用されていないタグを毎日自動的に削除します。"
     watched_precedence_over_muted: "ミュートしているものも含むウォッチ中のカテゴリまたはタグ内のトピックについて通知する"
     company_name: "会社または組織の名前。空白のままにすると、定型の利用規約またはプライバシーに関する通知は提供されません。"
     governing_law: "利用規約やプライバシーポリシーなど、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。"
@@ -2359,13 +2384,16 @@ ja:
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
     enable_experimental_lightbox: "デフォルトの画像ライトボックスを改良されたデザインに置き換える。"
+    glimmer_topic_list_mode: "新しい 'glimmer' トピックリストの実装が使用されるかどうかを制御します。'auto' の場合、すべてのテーマとプラグインの準備が整うと自動的に有効になります。詳細は、<a href='https://meta.discourse.org/t/343404'>メタトピック</a>をご覧ください。"
     glimmer_post_menu_mode: "新しい 'glimmer' 投稿メニューの実装が使用されるかどうかを制御する。'auto' はすべてのテーマとプラグインの準備ができると自動的に有効化します。この実装は活動的に開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     glimmer_post_menu_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
+    experimental_form_templates: "フォームのテンプレート機能を有効にします。テンプレートは <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> で管理できます。"
     admin_sidebar_enabled_groups: "指定したグループの管理者 UI のサイドバーナビゲーションを有効にします。これは、トップレベル管理者ナビゲーションボタンを置き換えます。"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     show_user_menu_avatars: "ユーザーメニューにユーザーアバターを表示する"
     about_page_hidden_groups: "/about ページに特定のグループのメンバーを表示しない。"
+    adobe_analytics_tags_url: "Adobe Analytics タグの URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "受信メールで作成された場合に、投稿の生のメールコンテンツを表示できるグループ。これには、メールのヘッダーやその他の技術情報が含まれます。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
@@ -2562,6 +2590,7 @@ ja:
     omniauth_confirm_button: "続行"
     authenticator_error_no_valid_email: "%{account} に関連付けられたメールアドレスは許可されていません。別のメールアドレスでアカウントを構成する必要がある場合があります。"
     new_registrations_disabled: "現在、新しいアカウントの登録を行えません。"
+    new_registrations_disabled_discourse_connect: "新規アカウント登録は Discourse Connect を通じてのみ許可されます。"
     password_too_long: "パスワードは 200 文字までです。"
     email_too_long: "メールアドレスが長すぎます。メールボックス名は 254 文字以内、ドメイン名は 253 文字以内である必要があります。"
     wrong_invite_code: "入力した招待コードは間違っています。"
@@ -2651,6 +2680,7 @@ ja:
     already_suspended: "ユーザーは %{staff} によって %{time_ago}に凍結されています。"
     cannot_delete_has_posts:
       other: "ユーザー %{username} には公開トピックまたは個人メッセージに %{count} 件の投稿があるため、削除できません。"
+    cannot_bulk_delete: "1 人以上のユーザーは、管理者であるため、投稿数が多すぎるため、または非常に古い投稿があるため、削除できません。"
   unsubscribe_mailer:
     title: "購読解除メーラー"
     subject_template: "今後 %{site_title} からの更新メールの受信を希望しないことを確認してください"
@@ -4449,6 +4479,8 @@ ja:
     regular:
       name: レギュラー
       description: カテゴリ整理、名前変更、フォローリンク、ウィキ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
+      long_description: |
+        このバッジは、信頼レベル 3 に達すると付与されます。数か月に渡り、コミュニティーに定期的に参加していただきありがとうございました。これで、最もアクティブな読者の 1 人となり、コミュニティーを素晴らしいものにしてくれる信頼ある貢献者となりました。カテゴリ整理やトピックの名前変更、より強力な迷惑通報の利用が可能となり、1 日当たりの「いいね！」が増えています。
     leader:
       name: リーダー
       description: グローバル編集、固定、クローズ、アーカイブ、分割とマージ、「いいね！」の増加を<a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">付与</a>しました
@@ -4775,6 +4807,8 @@ ja:
       styling:
         title: "外観"
         fields:
+          color_scheme:
+            label: "色パレット"
           body_font:
             label: "本文のフォント"
           heading_font:
@@ -4786,8 +4820,16 @@ ja:
             choices:
               latest:
                 label: "最新"
+                description: "すべてのカテゴリで直近のアクティブなトピックを表示し、メンバーが関心のあるディスカッションの最新情報を把握できるようにします。"
               hot:
                 label: "ホット"
+                description: "最近の人気と全体的な人気を組み合わせてトレンド中のトピックを表示し、現在コミュニティーでメンバーが何について語っているのかを紹介します。"
+              categories_and_latest_topics:
+                label: "カテゴリと最新トピック"
+                description: "全カテゴリの最近アクティブなトピックとカテゴリのリスト、説明、および合計トピック数を合わせて表示します。"
+              categories_boxes:
+                label: "カテゴリボックス"
+                description: "カテゴリとその説明をグリッドに表示します。メンバーがサイトのサブコミュニティーの概要を確認するのに最適です。"
       branding:
         title: "サイトのロゴ"
         fields:
@@ -4879,6 +4921,7 @@ ja:
         other: "自動取り消し。%{count} 日以上前に作成されました"
       revoked: 取り消し済み
       restored: 復元済み
+    bulk_user_delete: "一括削除操作で削除されました"
   reviewables:
     already_handled: "その投稿をすでにレビューし、再通報の必要はないと判断しました。"
     already_handled_and_user_not_exist: "誰かがすでにレビュー済みで、そのユーザーはもう存在しません。"

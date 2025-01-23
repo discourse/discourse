@@ -13,7 +13,7 @@
       ". content";
     grid-template-columns: auto 1fr;
 
-    &:not(:first-of-type):not(:last-of-type) {
+    &:not(:first-of-type, :last-of-type) {
       margin-top: 1.5em;
       margin-bottom: 1.5em;
     }
@@ -29,6 +29,7 @@
     .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
     }
+
     .chat-skeleton__body:nth-of-type(even) & {
       background-color: var(--primary-200);
     }
@@ -45,6 +46,7 @@
     .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
     }
+
     .chat-skeleton__body:nth-of-type(even) & {
       background-color: var(--primary-200);
     }
@@ -86,6 +88,7 @@
     .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
     }
+
     .chat-skeleton__body:nth-of-type(even) & {
       background-color: var(--primary-200);
     }
@@ -109,10 +112,10 @@
     overflow: hidden;
 
     *[class^="chat-skeleton__message-"]:not(
-        .chat-skeleton__message-content
-      ):not(.chat-skeleton__message-text):not(
+        .chat-skeleton__message-content,
+        .chat-skeleton__message-text,
         .chat-skeleton__message-reactions
-      ):after {
+      )::after {
       position: absolute;
       top: 0;
       right: 0;

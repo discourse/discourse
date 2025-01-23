@@ -91,7 +91,7 @@
     margin: 5px 0;
     text-overflow: ellipsis;
     cursor: inherit;
-    @include chat-scrollbar();
+    @include chat-scrollbar;
     white-space: pre-wrap !important;
     min-width: 20px;
 

@@ -1631,7 +1631,8 @@ be:
         create: "стварыць"
         edit: "рэдагаваць"
         save: "стварыць..."
-        go_back: "Вярнуцца да спісу"
+        delete: "выдаляць"
+        cancel: "адмяніць"
         secret: "сакрэт"
         active: "актыўны"
         delivery_status:
@@ -1758,9 +1759,6 @@ be:
         button_text: "экспарт"
       export_json:
         button_text: "экспарт"
-      invite:
-        button_text: "Адправіць запрашэнні"
-        button_title: "Адправіць запрашэнні"
       customize:
         title: "Кастамізаваць"
         preview: "preview"
@@ -1836,27 +1834,20 @@ be:
             description: "Колер кнопкі \"Падабаецца\"."
       email:
         title: "Емейлы"
+        settings: "Налады"
         templates: "шаблоны"
-        preview_digest: "Кароткі выклад навін"
         sent: "Sent"
         skipped: "Skipped"
         received: "Атрымана"
         rejected: "адхілена"
         user: "карыстальнік"
-        email_type: "Тып емейлу"
-        to_address: "скрыню атрымальніка"
         test_email_address: "электронны скрыню для праверкі"
-        send_test: "Адправіць Тэставы Email"
         sent_test: "адпраўлена!"
-        delivery_method: "спосаб дастаўкі"
         refresh: "абнавіць"
         send_digest: "адправіць"
         format: "фармат"
         html: "html"
         text: "тэкст"
-        last_seen_user: "Апошняе наведванне карыстальніка:"
-        reply_key: "ключ адказы"
-        skipped_reason: "Skip Reason"
         incoming_emails:
           from_address: "ад"
           to_addresses: "да"
@@ -1882,7 +1873,7 @@ be:
         actions:
           delete_topic: "Тэма выдаленая"
       logs:
-        title: "Логі"
+        nav_title: "Логі"
         action: "дзеянне"
         created_at: "створаны"
         last_match_at: "апошняя адпаведнасць"
@@ -1935,9 +1926,7 @@ be:
             lock_trust_level: "заблакаваць ўзровень даверу"
             post_rejected: "публікацыя адхілена"
         screened_emails:
-          title: "Схаваныя емейлы"
           description: "Калі хто-то спрабуе стварыць новы ўліковы запіс, наступныя электронныя скрыні будуць правераны і рэгістрацыю заблакаваны, ці прынятыя нейкія іншых дзеянняў."
-          email: "Электронная пошта"
           actions:
             allow: "дазволіць"
         screened_urls:
@@ -2026,7 +2015,6 @@ be:
         not_found: "Выбачайце, такога імя карыстальніка няма ў нашай сістэме."
         id_not_found: "Выбачайце, карыстальніка з такім нумарам няма ў нашай сістэме."
         status: "Статус"
-        show_emails: "Паказаць емейл"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -2040,8 +2028,6 @@ be:
           silenced: "глушыцелем"
         approved: "Адобрана?"
         titles:
-          active: "Актыўныя карыстальнікі"
-          new: "Новыя карыстальнікі"
           staff: "персанал"
           moderators: "мадэратары"
       user:
@@ -2170,7 +2156,7 @@ be:
         save: "стварыць..."
         cancel: "адмена"
       site_settings:
-        title: "Налады"
+        nav_title: "Налады"
         no_results: "Няма вынікаў."
         clear_filter: "ачысціць"
         add_url: "дадаць URL"
@@ -2305,17 +2291,24 @@ be:
           admin: "Адміністратар"
           moderator: "Мадэратар"
           regular: "звычайны карыстальнік"
+      homepage_choices:
+        style_type:
+          categories: "катэгорыя"
+          topics: "тэма"
+      top_menu_items:
+        new: "Новыя"
+        unread: "Непрачытаныя"
+        top: "Топ тэмаў"
+        latest: "апошняя"
+        categories: "катэгорыі"
+        read: "прачытаныя"
+        bookmarks: "закладкі"
       previews:
         share_button: "Падзяліцца"
         reply_button: "Адказаць"
       homepage_preview:
         nav_buttons:
           all_categories: "усе катэгорыі"
-          new: "Новыя"
-          unread: "Непрачытаныя"
-          top: "Топ тэмаў"
-          latest: "апошняя"
-          categories: "катэгорыі"
         category_names:
           site_feedback: "зваротная сувязь"
         table_headers:

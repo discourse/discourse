@@ -108,6 +108,7 @@ export default class Info extends Component {
               <TopicStatus
                 @topic={{@topicInfo}}
                 @disableActions={{@disableActions}}
+                @context="header"
               />
 
               <a

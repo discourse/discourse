@@ -559,6 +559,8 @@ he:
         yes_value: "להשליך"
         no_value: "לחזור לעריכה"
       dropdown:
+        title: "פתיחת תפריט הטיוטות האחרונות"
+        untitled: "טיוטה ללא שם"
         view_all: "להציג הכול"
     topic_count_all:
       one: "הצגת נושא חדש"
@@ -1989,7 +1991,10 @@ he:
         after_4_minutes: "אחרי 4 דקות"
         after_5_minutes: "אחרי 5 דקות"
         after_10_minutes: "אחרי 10 דקות"
-      notification_level_when_replying: "כאשר אני מפרסם נושא, קבע נושא זה ל"
+      notification_level_when_replying:
+        label: "בעת פרסום"
+        watch_topic: "מעקב אחר נושא"
+        do_nothing: "לא לעשות דבר"
       topics_unread_when_closed: "להחשיב נושאים כלא נקראו כשהם סגורים"
       invited:
         title: "הזמנות"
@@ -4342,6 +4347,8 @@ he:
         all: "כל הנושאים"
         none: "אין תת־קטגוריות"
       colors_disabled: "אי אפשר לבחור צבעים כיוון שסגנון הקטגוריה הוא כלום."
+    anonymous_flagging:
+      title: "דיווח על תוכן לא חוקי"
     flagging:
       title: "תודה על שמירת התרבות בקהילה שלנו!"
       action: "סימון פוסט"
@@ -4443,7 +4450,7 @@ he:
         title: "הורד מנעיצה"
         help: "נושא זה אינו מקובע עבורכם; הוא יופיע בסדר הרגיל"
       pinned_globally:
-        title: "נעוץ גלובאלית"
+        title: "נעוץ כוללנית"
         help: "הנושא הזה נעוץ בכל האתר; הוא יוצג בראש הקטגוריה שלו כחדש ביותר"
       pinned:
         title: "נעוץ"
@@ -4917,6 +4924,9 @@ he:
         everyone_can_use: "ניתן להשתמש בתגיות בכל מקום"
         usable_only_by_groups: "התגיות גלויות לכולם אך רק הקבוצות הבאות יכולות להשתמש בהן"
         visible_only_to_groups: "התגיות גלויות לקבוצות הבאות בלבד"
+        cannot_save:
+          empty_name: "לא ניתן לשמור קבוצת תגיות. נא לוודא ששם קבוצת התגיות לא ריק."
+          no_tags: "לא ניתן לשמור קבוצת תגיות. נא לוודא שלפחות תגית אחת נבחרה."
         tags_placeholder: "חיפוש או יצירת תגיות"
         parent_tag_placeholder: "רשות"
         select_groups_placeholder: "בחירת קבוצות…"
@@ -5294,6 +5304,7 @@ he:
       reports:
         title: "רשימת דיווחים זמינים"
         sidebar_title: "דוחות"
+        back: "חזרה לכל הדוחות"
         sidebar_link:
           all: "כל הדיווחים"
       config:
@@ -5687,27 +5698,30 @@ he:
               messages: הצגת הודעות מ־‎/logs או משיכת הודעת יומן מסוימת.
       web_hooks:
         title: "Webhooks"
-        none: "אין כרגע webhooks."
+        none: "עדיין אין לך התליות"
         instruction: "התליות (Webhooks) מאפשרות ל־Discourse להודיע לשירותים חיצוניים מתי מתרחש אירוע מסוים באתר שלך. כאשר ההתליה מתרחשת, תישלח בקשת POST לכתובות שצוינו."
         detailed_instruction: "בקשת POST תישלח ל URL שמוגדר כאשר מתרחש האירוע שנבחר."
-        new: "Webhook חדש"
+        add: "הוספת התלייה"
         create: "יצירה"
         edit: "עריכה"
         save: "שמירה"
+        show: "אירועים"
+        delete: "מחיקה"
+        cancel: "ביטול"
         description_label: "הקפצות לאירועים"
         controls: "מכוונים"
-        go_back: "חזרה לרשימה"
+        back: "חזרה להתליות"
         payload_url: "URL של התוכן"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "אסור שהסוד יכיל תווי רווח כלשהם."
         secret_too_short: "הסוד אמור להכיל לפחות 12 תווים."
-        secret_placeholder: "מחרוזת רשות, משמשת ליצירת חתימה"
+        secret_placeholder: "מחרוזת שמשמשת ליצירת חתימות"
         event_type_missing: "עליך לקבוע לפחות סוג אירועים אחד."
         content_type: "סוג תוכן"
         secret: "סוד"
         event_chooser: "אילו אירועים אמורים להזניק את ההתליה הזאת?"
-        wildcard_event: "לשלוח הכול אליי."
-        individual_event: "בחירת אירועים מסוימים."
+        wildcard_event: "לשלוח הכול אליי"
+        individual_event: "בחירת אירועים מסוימים"
         verify_certificate: "נא לבדוק את אישור ה־TLS של כתובת המטען"
         active: "פעיל"
         active_notice: "נשלח פרטי אירוע כאשר הוא מתרחש."
@@ -6124,8 +6138,8 @@ he:
       export_json:
         button_text: "ייצוא"
       invite:
-        button_text: "משלוח הזמנות"
-        button_title: "משלוח הזמנות"
+        button_text: "שליחת הזמנות"
+        button_title: "שליחת הזמנות"
       customize:
         title: "התאמה אישית"
         preview: "תצוגה מקדימה"
@@ -6284,7 +6298,6 @@ he:
           install_upload: "מהמכשיר שלך"
           install_git_repo: "ממאגר git"
           install_create: "יצירת חדשה"
-          installing_message: "ערכת נושא מותקנת, עלול לארוך מספר דקות…"
           duplicate_remote_theme: "רכיב ערכת העיצוב „%{name}” כבר מותקן, להתקין עותק נוסף?"
           force_install: "לא ניתן להתקין את ערכת העיצוב כיוון שמאגר ה־Git אינו נגיש. להמשיך בהתקנתה?"
           create_placeholder: "יצירת ממלא מקום"
@@ -6469,8 +6482,7 @@ he:
           overridden: קובץ ה־robots.txt כבררת מחדל של האתר שלך נדרס.
         email_style:
           title: "סגנון דוא״ל"
-          heading: "התאמת סגנון דוא״ל"
-          html: "תבנית HTML"
+          html: "HTML"
           css: "CSS"
           reset: "איפוס לברירת מחדל"
           reset_confirm: "לאפס אל בררת המחדל %{fieldName} ולאבד את כל השינויים שלך?"
@@ -6478,17 +6490,11 @@ he:
           instructions: "התאמת התבנית שמשמשת כתבנית להודעות html, לצד עיצוב עם CSS."
       email:
         title: "הודעות דוא״ל"
-        settings: "הגדרות דוא״ל"
+        settings: "הגדרות"
         templates: "תבניות"
-        templates_title: "תבניות דוא״ל"
-        preview_digest: "תצוגה מקדימה של תמצית"
         advanced_test:
-          title: "בדיקה מתקדמת"
           desc: "הצגה כיצד Discourse מעבד הודעות שהתקבלו. כדי לאפשר עיבוד נכון של הודעת הדוא״ל נא להדביק את הודעת הדוא״ל במלואה."
           email: "הודעה מקורית"
-          run: "הרצת בדיקות"
-          text: "גוף ההודעה נבחר"
-          elided: "טקסט מושמט"
         sending_test: "נשלחת הודעת דוא״ל לבדיקה…"
         error: "<b>שגיאה</b> - %{server_error}"
         test_error: "אירעה תקלה בשליחת הודעת הדוא״ל לבדיקה. נא לבדוק את הגדרות הדוא״ל שלך ולאמת שהמארח שלך לא חוסם חיבורי דוא״ל נכנסים ולאחר מכן לנסות שוב."
@@ -6497,16 +6503,11 @@ he:
         bounced: "הוחזר"
         received: "התקבל"
         rejected: "נדחה"
-        sent_at: "נשלח ב"
         time: "זמן"
         user: "משתמש"
-        email_type: "סוג דוא״ל"
         details_title: "הצגת פרטי דוא״ל"
-        to_address: "לכתובת"
         test_email_address: "כתובת דוא״ל לבדיקה"
-        send_test: "שליחת הודעת דוא״ל בדיקה"
         sent_test: "נשלח!"
-        delivery_method: "שיטת העברה"
         preview_digest_desc: "תצוגה מקדימה של הודעת סיכום שנשלחת בדוא״ל למשתמשים לא פעילים. "
         refresh: "רענן"
         send_digest_label: "שילחו תוצאה זו אל:"
@@ -6516,11 +6517,7 @@ he:
         html: "html"
         text: "טקסט"
         html_preview: "תצוגה מקדימה של תוכן הדוא״ל"
-        last_seen_user: "משתמש שנראה לאחרונה:"
         no_result: "לא נמצאו תוצאות לתמצית."
-        reply_key: "מפתח תגובה"
-        post_link_with_smtp: "הגדרות דואר ו־SMTP"
-        skipped_reason: "דלג על סיבה"
         incoming_emails:
           from_address: "מאת"
           to_addresses: "אל"
@@ -6529,12 +6526,10 @@ he:
           error: "שגיאה"
           none: "לא נמצאו הודעות דוא״ל נכנסות."
           modal:
-            title: "פרטי דוא״ל נכנס"
             error: "שגיאה"
             headers: "כותרות"
             subject: "נושא"
             body: "גוף"
-            rejection_message: "הודעות דוא״ל לדחייה"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -6564,7 +6559,8 @@ he:
           delete_topic: "נושא נמחק"
           post_approved: "פוסט אושר"
       logs:
-        title: "יומנים"
+        title: "יומנים וסינון"
+        nav_title: "יומנים"
         action: "פעולה"
         created_at: "נוצר"
         last_match_at: "הותאם לאחרונה"
@@ -6582,8 +6578,6 @@ he:
         staff_actions:
           all: "הכול"
           filter: "סינון:"
-          title: "פעולות סגל"
-          clear_filters: "להציג הכול"
           staff_user: "משתמש"
           target_user: "משתמש מטרה"
           subject: "נושא"
@@ -6713,9 +6707,7 @@ he:
             tag_group_change: "החלפת קבוצת תגיות"
             delete_associated_accounts: "מחיקת חשבונות משויכים"
         screened_emails:
-          title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
-          email: "כתובת דוא״ל"
           actions:
             allow: "לאפשר"
         screened_urls:
@@ -6730,7 +6722,6 @@ he:
           actions:
             block: "חסימה"
             do_nothing: "לאפשר"
-            allow_admin: "לאפשר להנהלה"
           form:
             label: "חדשה:"
             ip_address: "כתובת IP"
@@ -6740,18 +6731,13 @@ he:
             text: "גלגול (Roll up)"
             title: "יוצר ערכי איסור משנה חדשים, אם יש לפחות 'min_ban_entries_for_roll_up' ערכים."
         search_logs:
-          title: "חיפוש ביומנים"
           term: "ביטוי"
           searches: "חיפושים"
           click_through_rate: "שיעור לחיצה"
           types:
             all_search_types: "כל סוגי החיפושים"
             header: "כותרת"
-            full_page: "עמוד מלא"
             click_through_only: "הכול (שיעור לחיצה בלבד)"
-          header_search_results: "תוצאות חיפוש כותרות"
-        logster:
-          title: "יומני שגיאות"
       watched_words:
         title: "מילים במעקב"
         description: "מילים במעקב הן כלי פיקוח שיכול לבצע מספר פעולות לרבות חסימה, צנזור, קישור או סימון פוסטים שמכילים מילים מסוימות"
@@ -6765,7 +6751,6 @@ he:
         case_sensitive: "(תלוי רישיות)"
         html: "(html)"
         download: הורדה
-        clear_all: לפנות הכול
         clear_all_confirm: "לפנות את כל המילים שבמעקב לפעולה %{action}?"
         invalid_regex: 'המילה „%{word}” שבמעקב היא ביטוי רגולרי שגוי.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">מילים במעקב הן ביטויים רגולריים</a> ואין כוללות גבולות מילים. כדי שהביטוי הרגולרי ילכוד מילים מלאות, יש לכלול ‎<code>\b</code>‎ בתחילת ובסוף הביטוי הרגולרי שלך.'
@@ -6909,9 +6894,6 @@ he:
         id_not_found: "מצטערים, זהות המשתמש/ת אינה קיימת במערכת שלנו."
         active: "מופעל"
         status: "מצב"
-        show_emails: "הצגת כתובות דוא״ל"
-        hide_emails: "הסתרת כתובות דוא״ל"
-        silence_reason: "סיבת השתקה"
         bulk_actions:
           title: "פעולות במרוכז"
           admin_cant_be_deleted: "אי אפשר למחוק את המשתמש כי הוא חבר הנהלה"
@@ -6956,8 +6938,7 @@ he:
           staged: "מבוים"
         approved: "מאושר?"
         titles:
-          active: "הפעל משתמשים"
-          new: "משתמשים חדשים"
+          active: "משתמשים פעילים"
           pending: "משתמשים שממתינים לבדיקה"
           newuser: "משתמשים בדרגת אמון 0 (משתמשים חדשים)"
           basic: "משתמשים בדרגת אמון 1 (משתמשים בסיסיים)"
@@ -6965,11 +6946,7 @@ he:
           regular: "משתמשים בדרגת אמון 3 (רגילים)"
           leader: "משתמשים בדרגת אמון 4 (מובילים)"
           staff: "סגל"
-          admins: "מנהלים ראשיים"
           moderators: "מפקחים"
-          silenced: "משתמשים מושתקים"
-          suspended: "משתמשים מושעים"
-          staged: "משתמשים מבוימים"
         not_verified: "לא מאומת"
         check_email:
           title: "חשיפת כתובת הדוא״ל של המשתמש"
@@ -7326,7 +7303,7 @@ he:
           invalid_input: "רשימות האמוג׳י אמורה להכיל רק שמות סימני אמוג׳י תקניים, למשל: hugs (חיבוקים)"
           add_emoji_button:
             label: "הוספת אמוג׳י"
-        title: "הגדרות"
+        nav_title: "הגדרות"
         no_results: "לא נמצאו תוצאות."
         more_site_setting_results:
           one: "יש למעלה מתוצאה אחת. נא למקד את החיפוש שלך."
@@ -7429,7 +7406,6 @@ he:
         description: תיאור
         long_description: תיאור ארוך
         badge_type: סוג עיטור
-        group_settings: הגדרות קבוצתיות
         badge_grouping: קבוצה
         badge_groupings:
           modal_title: קבוצות עיטורים
@@ -7503,7 +7479,6 @@ he:
           title: "נא לבחור עיטור או ליצור חדש"
           description: "אפשר להתחיל על ידי בחירת עיטור לשינוי או ליצור עיטור חדש לגמרי."
         mass_award:
-          title: חלוקת עיטורים
           description: להעניק את אותו העיטור למגוון משתמשים בו זמנית.
           no_badge_selected: נא לבחור עיטור כדי להתחיל.
           perform: "להעניק עיטור למשתמשים"
@@ -7558,7 +7533,6 @@ he:
         post_author: "יוצר/ת הפוסט"
         post_author_with_default: "יוצר/ת הפוסט (ברירת המחדל היא %{author})"
         add_host: "הוספת מארח"
-        posts_and_topics: "הגדרות פוסטים ונושאים"
         crawlers: "הגדרות הסורק"
         crawlers_description: "כאשר Discourse יוצר נושאים חדשים עבור פוסטים שלך, אם לא קיים RSS/ATOM הוא ינסה לפענח את התוכן מתוך ה־HTML שלך. לפעמים מדובר באתגר רציני לחלץ את התכנים שלך אז אנחנו מספקים את האפשרות להגדיר כללי CSS כדי שהחילוץ יהיה קל יותר."
         embed_by_username: "שם משתמש ליצירת נושא"
@@ -7570,9 +7544,7 @@ he:
         blocked_embed_selectors: "בוררי CSS לרכיבים (elements) שיוסרו מהטמעות (embeds)"
         allowed_embed_classnames: "שמות מחלקות CSS מורשות"
         save: "שמירה"
-        posts_and_topics_settings_saved: "הגדרות פוסטים ונושאים נשמרו"
         crawler_settings_saved: "הגדרות הסורק נשמרו"
-        back: "חזרה להטמעה"
         configuration_snippet: "מקטע הגדרות"
         host_form:
           add_header: "הוספת מארח"
@@ -7581,7 +7553,6 @@ he:
         nav:
           hosts: "מארחים"
           settings: "הגדרות"
-          posts_and_topics: "פוסטים ונושאים"
           crawlers: "סורקי אינטרנט"
       permalink:
         title: "קישורים קבועים"
@@ -7652,6 +7623,22 @@ he:
           admin: "מנהלים"
           moderator: "מפקח"
           regular: "משתמש רגיל"
+      homepage_choices:
+        custom:
+          label: "מותאם"
+        style_type:
+          categories: "קטגוריה"
+          topics: "נושא"
+      top_menu_items:
+        new: "חדשות"
+        unread: "טרם נקראו"
+        top: "מובילים"
+        latest: "אחרונות"
+        hot: "חמים"
+        categories: "קטגוריות"
+        unseen: "לא נראו"
+        read: "נקרא"
+        bookmarks: "סימניות"
       previews:
         topic_title: "אילו ספרים יצא לך לקרוא לאחרונה?"
         share_button: "לשתף"
@@ -7661,12 +7648,6 @@ he:
       homepage_preview:
         nav_buttons:
           all_categories: "כל הקטגוריות"
-          new: "חדשות"
-          unread: "טרם נקראו"
-          top: "מובילים"
-          latest: "אחרונות"
-          hot: "חמים"
-          categories: "קטגוריות"
         topic_titles:
           what_books: "אילו ספרים יצא לך לקרוא לאחרונה?"
           what_movies: "אילו סרטים ראית לאחרונה?"

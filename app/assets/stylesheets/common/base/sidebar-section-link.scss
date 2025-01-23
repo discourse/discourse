@@ -19,8 +19,9 @@
     .prefix-image {
       border: 1px solid transparent;
     }
+
     &.active .prefix-image {
-      box-shadow: 0px 0px 0px 1px var(--success);
+      box-shadow: 0 0 0 1px var(--success);
     }
   }
 
@@ -36,9 +37,11 @@
       background: var(--d-sidebar-highlight-background);
       color: var(--d-sidebar-highlight-color);
       outline: none;
+
       .prefix-text {
         background: var(--d-sidebar-highlight-prefix-background);
       }
+
       .sidebar-section-link-suffix.icon.unread svg {
         color: var(--d-sidebar-highlight-suffix-color);
       }
@@ -55,15 +58,19 @@
           color: var(--d-sidebar-active-color);
         }
       }
+
       .prefix-text {
         background: var(--d-sidebar-active-prefix-background);
       }
+
       .sidebar-section-link-content-badge {
         color: var(--d-sidebar-active-color);
       }
+
       .sidebar-section-link-suffix.icon.unread svg {
         color: var(--d-sidebar-active-suffix-color);
       }
+
       .sidebar-section-link-hover:hover .sidebar-section-hover-button {
         background-color: var(--d-sidebar-active-background);
       }
@@ -71,9 +78,11 @@
 
     &--muted {
       opacity: 0.5;
+
       .sidebar-section-link-prefix.icon .d-icon {
         color: var(--primary-medium);
       }
+
       &.active {
         .sidebar-section-link-prefix.icon .d-icon {
           color: var(--primary-high);
@@ -95,6 +104,7 @@
     .sidebar-section-link-suffix {
       margin-left: 1em;
       font-size: var(--font-down-4);
+
       &.icon {
         &.urgent svg {
           color: var(--success);
@@ -198,6 +208,7 @@
         margin-right: -0.2em;
       }
     }
+
     .prefix-span {
       width: 0.8em;
       height: 0.8em;

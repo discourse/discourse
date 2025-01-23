@@ -14,17 +14,20 @@
       line-height: var(--line-height-medium);
       margin-right: 0.5em;
     }
+
     .name {
       color: var(--primary-high);
       font-size: var(--font-down-1);
       @include ellipsis;
     }
+
     .avatar,
     .d-icon {
       margin-left: 0;
       margin-right: 0.5em;
     }
   }
+
   .select-kit-header {
     .x-more-item {
       background: var(--primary-low);
@@ -34,7 +37,7 @@
       display: flex;
       justify-content: space-between;
       box-sizing: border-box;
-      margin: 2px 0 0px 3px;
+      margin: 2px 0 0 3px;
       float: left;
       height: 30px;
       color: inherit;

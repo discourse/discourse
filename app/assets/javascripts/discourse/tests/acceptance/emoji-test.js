@@ -4,7 +4,6 @@ import { test } from "qunit";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import {
   acceptance,
-  query,
   simulateKey,
   simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -60,14 +59,10 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, ":s");
-
+    await simulateKeys(".d-editor-input", ":s");
     assert.dom(".autocomplete.ac-emoji").doesNotExist();
 
-    await simulateKey(editor, "w");
-
+    await simulateKey(".d-editor-input", "w");
     assert.dom(".autocomplete.ac-emoji").exists();
   });
 });

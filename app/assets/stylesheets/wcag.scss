@@ -1,7 +1,6 @@
 // Overrides for WCAG color schemes only
 
 // Global
-
 ::placeholder {
   color: var(--primary-medium);
   opacity: 1;
@@ -16,6 +15,7 @@ html.discourse-no-touch {
     .d-icon {
       color: var(--primary-medium);
     }
+
     &:hover,
     &.btn-hover,
     &:focus {
@@ -24,9 +24,11 @@ html.discourse-no-touch {
       }
     }
   }
+
   .btn-primary .d-icon {
     color: var(--secondary);
   }
+
   .btn-icon.ok,
   .btn-icon.cancel,
   .btn-danger:not(.btn-flat, .btn-transparent) {
@@ -34,6 +36,7 @@ html.discourse-no-touch {
       color: var(--secondary);
     }
   }
+
   .btn-flat.delete.d-hover,
   .btn-flat.delete:hover {
     background: var(--danger);
@@ -60,27 +63,29 @@ html {
   .d-editor-button-bar {
     .btn-icon.btn-default .d-icon {
       color: var(--primary-low-mid);
+
       .discourse-no-touch & {
         &:hover {
           color: var(--secondary);
         }
       }
     }
+
     .btn-icon:not(.btn-flat, .btn-danger, .btn-primary):focus {
       .d-icon {
-        color: currentColor;
+        color: currentcolor;
       }
     }
   }
 
   // Site header
-
   .menu-panel li a.widget-link:hover,
   .menu-panel li a.widget-link:focus,
   .menu-panel li.heading a.widget-link:hover,
   .menu-panel li.heading a.widget-link:focus {
     color: var(--primary);
     background-color: var(--highlight-medium);
+
     .d-icon {
       color: var(--primary);
     }
@@ -107,7 +112,6 @@ html {
   }
 
   // Topic list
-
   table th {
     color: var(--primary-high);
   }
@@ -128,6 +132,7 @@ html {
   .badge-notification.unread-posts {
     background: var(--tertiary);
   }
+
   .select-kit.dropdown-select-box.period-chooser
     .period-chooser-header
     h2.selected-name
@@ -151,13 +156,13 @@ html {
   }
 
   // Posts
-
   .discourse-no-touch .topic-body .actions .fade-out {
     opacity: 1;
   }
 
   .topic-body .reply-to-tab {
     color: var(--primary-medium);
+
     .d-icon {
       color: var(--primary-low-mid);
     }
@@ -167,6 +172,7 @@ html {
     .timeline-scrollarea {
       border-color: var(--primary-low-mid);
     }
+
     .timeline-handle {
       background: var(--primary-low-mid);
     }
@@ -183,6 +189,7 @@ html {
       color: var(--tertiary);
     }
   }
+
   .meta .d-icon + .filename,
   .meta .informations {
     color: var(--secondary);
@@ -202,7 +209,6 @@ html {
   }
 
   // Post controls
-
   .topic-admin-menu,
   .timeline-controls {
     .btn .d-icon {
@@ -217,6 +223,7 @@ html {
       button.create .d-icon {
         color: var(--primary-high-or-secondary-low);
       }
+
       button {
         &.d-hover,
         &:hover,
@@ -224,6 +231,7 @@ html {
         &:active {
           background: var(--primary-medium);
           color: var(--secondary);
+
           .d-icon {
             color: var(--secondary);
           }
@@ -234,15 +242,18 @@ html {
         &.delete:focus {
           background: var(--danger);
           color: var(--secondary);
+
           .d-icon {
             color: var(--secondary);
           }
         }
+
         &.bookmark {
           &.bookmarked {
             .d-icon {
               color: var(--tertiary);
             }
+
             &.d-hover,
             &:hover {
               .d-icon {
@@ -252,9 +263,11 @@ html {
           }
         }
       }
+
       .double-button .button-count {
         color: var(--primary-medium);
       }
+
       .double-button:hover {
         button,
         .d-icon,
@@ -266,10 +279,12 @@ html {
 
     .show-replies {
       color: var(--primary-medium);
+
       &:hover,
       &:focus {
         color: var(--secondary);
         background: var(--primary-medium);
+
         .d-icon {
           color: var(--secondary);
         }
@@ -278,7 +293,6 @@ html {
   }
 
   // Categories
-
   .list-cell,
   .table-heading,
   .category-list td,
@@ -332,7 +346,6 @@ html {
   }
 
   // Notifications
-
   .user-menu.revamped .tabs-list .btn .badge-notification {
     background-color: dark-light-choose($tertiary-high, $tertiary);
   }
@@ -346,7 +359,6 @@ html {
   }
 
   // Admin Settings
-
   .admin-controls {
     .nav-pills > li > a:not(.active):hover {
       background: var(--primary-medium);
@@ -359,7 +371,7 @@ html {
     background-color: yellow; // resets to browser default
   }
 
-  .settings .setting.overridden h3:before {
+  .settings .setting.overridden h3::before {
     background-color: var(--tertiary);
   }
 
@@ -368,7 +380,6 @@ html {
   }
 
   // Dashboard
-
   .user-metrics .table-cell.user-basic .label,
   .user-metrics .table-cell.user-member .label,
   .user-metrics .table-cell.user-leader .label {
@@ -380,7 +391,6 @@ html {
   }
 
   // Search
-
   .search-container
     .search-filters
     details.search-advanced-additional-options
@@ -394,7 +404,6 @@ html {
   }
 
   // Review
-
   .reviewable-item .reviewable-meta-data .created-at a {
     color: var(--primary-medium);
   }
@@ -409,7 +418,6 @@ html {
 }
 
 // chat
-
 .no-touch
   .chat-messages-container
   .chat-message:hover
@@ -420,7 +428,6 @@ html {
 }
 
 // sidebar
-
 .sidebar-wrapper
   .sidebar-sections
   .sidebar-section-link-suffix.icon.unread

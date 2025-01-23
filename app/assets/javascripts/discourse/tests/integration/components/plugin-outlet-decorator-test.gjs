@@ -6,7 +6,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "../../helpers/temporary-module-helper";
 
 const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
@@ -39,12 +38,13 @@ module("Plugin Outlet - Decorator", function (hooks) {
       <PluginOutlet @connectorTagName="div" @name="my-outlet-name" />
     </template>);
 
-    const fooConnector = query(".my-outlet-name-outlet.foo");
-    const barConnector = query(".my-outlet-name-outlet.bar");
-
-    assert.dom(fooConnector).exists();
-    assert.strictEqual(fooConnector.style.backgroundColor, "yellow");
-    assert.strictEqual(barConnector.style.backgroundColor, "");
+    assert.dom(".my-outlet-name-outlet.foo").exists();
+    assert
+      .dom(".my-outlet-name-outlet.foo")
+      .hasAttribute("style", "background-color: yellow;");
+    assert
+      .dom(".my-outlet-name-outlet.bar")
+      .doesNotHaveStyle("backgroundColor");
 
     await render(<template>
       <PluginOutlet

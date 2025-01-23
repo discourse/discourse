@@ -115,7 +115,7 @@
 
     .react-btn {
       vertical-align: top;
-      padding: 0em 0.25em;
+      padding: 0 0.25em;
       background: none;
       border: none;
       will-change: scale;
@@ -178,6 +178,7 @@
 
     &.-deleted {
       background-color: var(--danger-low);
+
       .chat-message-expand {
         color: var(--danger);
       }

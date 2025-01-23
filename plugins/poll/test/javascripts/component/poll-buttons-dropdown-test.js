@@ -2,7 +2,6 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module("Poll | Component | poll-buttons-dropdown", function (hooks) {
@@ -75,7 +74,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
 
     assert.dom("li.dropdown-menu__item").exists({ count: 2 });
     assert
-      .dom(query("li.dropdown-menu__item span"))
+      .dom("li.dropdown-menu__item span")
       .hasText(
         i18n("poll.show-tally.label"),
         "displays the show absolute button"

@@ -34,4 +34,12 @@
   "task.autoDetect": "off",
   "eslint.debug": false,
   "rubyLsp.formatter": "syntax_tree",
+
+  // stylelint scss support
+  "stylelint.validate": ["css", "postcss", "scss"],
+
+  // disable other stylesheet linters
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false
 }

@@ -57,7 +57,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       });
     });
 
-    ["latest", "top", "new", "unread"].forEach((type) => {
+    ["latest", "top", "new", "unread", "hot"].forEach((type) => {
       server.get(`/tag/:tagId/l/${type}.json`, () => {
         return helper.response(
           cloneJSON(discoveryFixture["/tag/important/l/latest.json"])
@@ -269,7 +269,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       .exists("the tag1 section link is marked as active for the top route");
   });
 
-  test("visiting tag discovery new ", async function (assert) {
+  test("visiting tag discovery new route", async function (assert) {
     await visit(`/tag/tag1/l/new`);
 
     assert
@@ -295,6 +295,20 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     assert
       .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
       .exists("the tag1 section link is marked as active for the unread route");
+  });
+
+  test("visiting tag discovery hot route", async function (assert) {
+    await visit(`/tag/tag1/l/hot`);
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
+
+    assert
+      .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
+      .exists("the tag1 section link is marked as active for the hot route");
   });
 
   test("show suffix indicator for new content on tag section links", async function (assert) {

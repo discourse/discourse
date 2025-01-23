@@ -1,7 +1,6 @@
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
-
 .topic-list {
   .right {
     margin-left: 55px;
@@ -17,10 +16,12 @@
     position: relative;
     z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
     font-size: var(--font-up-1);
+
     a.title {
       color: var(--primary);
       padding: 0;
     }
+
     .topic-statuses {
       a {
         line-height: 0.8;
@@ -37,6 +38,7 @@
     font-size: var(--font-0);
     line-height: var(--line-height-small);
     padding: 0.15em 0.4em 0.2em 0.4em;
+
     .d-icon {
       color: var(--secondary);
     }
@@ -44,6 +46,7 @@
     &.new-topic::before {
       margin-right: 0;
     }
+
     &.new-topic {
       padding: 0;
     }
@@ -61,13 +64,16 @@
     align-items: baseline;
     margin-top: 0.5em;
     z-index: z("base");
+
     .num.activity {
       margin-left: auto;
       font-size: var(--font-down-1);
     }
+
     .category a {
       max-width: 160px;
     }
+
     .num .d-icon,
     a,
     a:visited {
@@ -113,6 +119,7 @@
 
   .age {
     white-space: nowrap;
+
     a {
       color: var(--primary-medium);
     }
@@ -140,6 +147,7 @@
 
   tbody {
     border-top: none;
+
     .category {
       border-left: 6px solid;
     }
@@ -150,11 +158,13 @@
   tr:first-of-type {
     border: none;
   }
+
   // Allow percentage widths on table cells to include their padding
   box-sizing: border-box;
+
   *,
-  *:before,
-  *:after {
+  *::before,
+  *::after {
     box-sizing: inherit;
   }
 
@@ -188,17 +198,21 @@
   margin: 1.25em 10px 0;
   border-bottom: none !important;
   border-top: 1px solid var(--primary-low) !important;
+
   &:last-of-type {
     margin-top: 0;
     margin-bottom: 1.25em;
     border-bottom: 1px solid var(--primary-low) !important;
   }
+
   td:first-of-type {
-    padding: 12px 0px;
+    padding: 12px 0;
   }
+
   .category-logo.aspect-image {
     display: none;
   }
+
   .subcategories {
     padding-left: 10px;
   }
@@ -206,6 +220,7 @@
 
 tr.category-topic-link {
   border-bottom: 1px solid var(--primary-low);
+
   &:last-of-type {
     border-bottom: none;
   }
@@ -220,9 +235,11 @@ tr.category-topic-link {
   h4 {
     max-width: 100%;
     padding: 0 0 0 10px;
+
     .d-icon {
       margin-right: 5px;
     }
+
     a[href] {
       color: var(--primary);
     }
@@ -257,6 +274,7 @@ tr.category-topic-link {
 
   .subcategories-list {
     border-bottom: none;
+
     td {
       padding-top: 15px;
     }
@@ -266,6 +284,7 @@ tr.category-topic-link {
     .num {
       white-space: nowrap;
     }
+
     .topic-excerpt {
       width: 110%;
     }
@@ -274,18 +293,22 @@ tr.category-topic-link {
   .posters {
     float: left;
   }
+
   > footer {
     border-top: 1px solid var(--primary-low);
     padding: 7px 10px;
+
     .category-stat {
       float: left;
       margin: 3px 1em 0 0;
       font-weight: normal;
       font-size: var(--font-down-1);
+
       .value {
         font-weight: bold;
       }
     }
+
     .btn {
       float: right;
       margin-left: 7px;
@@ -316,11 +339,11 @@ tr.category-topic-link {
 
 // Misc. stuff
 // --------------------------------------------------
-
 .dropdown,
 .multiselect {
   position: relative;
 }
+
 .dropdown-toggle:active,
 .open .dropdown-toggle {
   outline: 0;
@@ -347,26 +370,32 @@ tr.category-topic-link {
 td .main-link {
   width: 78%;
   display: inline-block;
+
   a.title {
     padding: 0.33em 0.67em 0.33em 0;
     word-wrap: break-word;
   }
 }
+
 .topic-list {
   &-body {
     border-width: 1px;
   }
+
   .num.posts-map {
     font-size: var(--font-up-2);
     padding: 0;
+
     > button,
     > a {
       padding: 0;
     }
   }
+
   .num.activity a {
     padding: 0;
   }
+
   // so the topic excerpt is full width
   // as the containing div is 80%
   .topic-excerpt {
@@ -394,7 +423,6 @@ td .main-link {
 }
 
 // Bulk select
-
 .topic-list-header {
   display: none;
 }
@@ -406,6 +434,7 @@ td .main-link {
     z-index: z("base") + 2;
     top: var(--header-offset);
     background: var(--secondary);
+
     tr {
       display: flex;
       align-items: center;
@@ -414,11 +443,14 @@ td .main-link {
 
     .topic-list-data {
       display: none;
+
       &.bulk-select {
         display: inline-block;
       }
+
       &.default {
         display: flex;
+
         .bulk-select-topic-dropdown__count {
           display: none;
         }
@@ -437,6 +469,7 @@ td .main-link {
   padding-left: 0.85em;
   gap: 0.5em;
   font-size: var(--font-down-1);
+
   .select-kit-collection {
     font-size: var(--font-up-1);
   }
@@ -467,7 +500,8 @@ td .main-link {
 
     &.active {
       @include nav-active;
-      &:after {
+
+      &::after {
         height: 0.15em;
         bottom: -0.15em;
       }
@@ -478,6 +512,7 @@ td .main-link {
 #list-area .show-more .alert {
   align-items: center;
   gap: 0.5em;
+
   &.loading {
     color: var(--primary-medium);
   }

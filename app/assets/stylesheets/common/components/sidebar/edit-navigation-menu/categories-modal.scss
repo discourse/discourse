@@ -36,6 +36,7 @@
     margin: 0;
     flex-grow: 1;
     font-weight: normal;
+
     input[type="checkbox"] {
       margin-right: 0;
     }
@@ -66,6 +67,7 @@
     color: var(--primary-high);
     font-size: var(--font-down-1);
     margin: 0.25em 0;
+
     // avoids long words (like urls) from breaking the layou
     word-break: break-word;
   }

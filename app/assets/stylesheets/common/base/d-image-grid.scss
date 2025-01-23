@@ -18,12 +18,14 @@
 
   .d-image-grid-column {
     box-sizing: border-box;
+
     // use flex layout, flex-grow and object-fit: cover
     // to better have the images fill their containers
     // and line up vertically (it's not perfect!)
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+
     .button-wrapper {
       bottom: 0;
       min-width: unset;
@@ -33,11 +35,12 @@
     > span {
       flex-grow: 1;
       overflow: hidden;
+
       // hardcoded max-height here prevents extra tall images
       // from having an outsized effect on the grid
       max-height: 1200px;
 
-      img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
+      img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
         height: 100%;
         object-fit: cover;
       }
@@ -63,9 +66,11 @@
       .meta .informations {
         display: none;
       }
+
       .meta .filename {
         flex-grow: 3;
       }
+
       // full-height lightbox element in container
       > .lightbox {
         height: 100%;
@@ -76,14 +81,15 @@
     .image-wrapper {
       display: block;
       margin-bottom: $grid-column-gap;
-      padding-bottom: 0em;
+      padding-bottom: 0;
     }
   }
 
   .d-editor-preview & {
     .image-wrapper {
       margin-bottom: $grid-column-gap;
-      padding-bottom: 0em;
+      padding-bottom: 0;
+
       .button-wrapper {
         .scale-btn-container,
         &[editing] .wrap-image-grid-button {

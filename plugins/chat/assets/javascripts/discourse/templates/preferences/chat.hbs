@@ -116,6 +116,40 @@
   />
 </div>
 
+<div
+  class="control-group chat-setting controls-dropdown"
+  data-setting-name="user_chat_send_shortcut"
+>
+  <div class="radio-group">
+    {{#each this.chatSendShortcutOptions as |option|}}
+      <div class="radio-group-option">
+        <label class="controls">
+          <input
+            type="radio"
+            name="chat_send_shortcut"
+            id={{concat "chat_send_shortcut_" option.value}}
+            value={{option.value}}
+            checked={{eq
+              this.model.user_option.chat_send_shortcut
+              option.value
+            }}
+            {{on
+              "change"
+              (withEventValue
+                (fn (mut this.model.user_option.chat_send_shortcut))
+              )
+            }}
+          />
+          {{option.label}}
+        </label>
+        <span class="control-instructions">
+          {{option.description}}
+        </span>
+      </div>
+    {{/each}}
+  </div>
+</div>
+
 <SaveControls
   @id="user_chat_preference_save"
   @model={{this.model}}

@@ -1925,7 +1925,11 @@ en:
         after_5_minutes: "after 5 minutes"
         after_10_minutes: "after 10 minutes"
 
-      notification_level_when_replying: "When I post in a topic, set that topic to"
+      notification_level_when_replying:
+        label: "When posting"
+        watch_topic: "Watch topic"
+        track_topic: "Track topic"
+        do_nothing: "Do nothing"
       topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
@@ -3890,6 +3894,7 @@ en:
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag_action: "Flag"
         flag: "privately flag this post for attention or send a personal message about it"
+        anonymous_flag: "send an email to staff to flag this post"
         delete_action: "Delete post"
         delete: "delete this post"
         undelete_action: "Undelete post"
@@ -4206,6 +4211,10 @@ en:
         all: "all topics"
         none: "no subcategories"
       colors_disabled: "You can’t select colors because you have a category style of none."
+
+    anonymous_flagging:
+      title: "Report illegal content"
+      description: "To report illegal content, please contact <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
 
     flagging:
       title: "Thanks for keeping our community civil!"
@@ -4536,7 +4545,7 @@ en:
         title: "Application"
         create: "%{shortcut} Create a new topic"
         notifications: "%{shortcut} Open notifications"
-        hamburger_menu: "%{shortcut} Open hamburger menu"
+        hamburger_menu: "%{shortcut} Open navigation menu"
         user_profile_menu: "%{shortcut} Open user menu"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
         search: "%{shortcut} Search"

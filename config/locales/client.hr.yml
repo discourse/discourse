@@ -1736,7 +1736,8 @@ hr:
         after_4_minutes: "nakon 4 minute"
         after_5_minutes: "nakon 5 minuta"
         after_10_minutes: "nakon 10 minuta"
-      notification_level_when_replying: "Kad pišem u temi postavi temu na"
+      notification_level_when_replying:
+        do_nothing: "Ne radi ništa"
       topics_unread_when_closed: "Smatraj teme nepročitanima kada su zatvorene"
       invited:
         title: "Pozivnice"
@@ -4742,27 +4743,25 @@ hr:
               utilities: Neophodno ako koristite dodatak WP Discourse Utilities.
       web_hooks:
         title: "Webhooks"
-        none: "Trenutno nema webhooks."
         instruction: "Webhooks omogućuje Discourseu da obavještava vanjske usluge kada se na vašoj web lokaciji dogodi određeni događaj. Kada se pokrene webhook, POST zahtjev će poslati na navedene URL-ove."
         detailed_instruction: "POST zahtjev će se poslati na navedeni URL kada se dogodi odabrani događaj."
-        new: "Novi Webhook"
         create: "Kreiraj"
         edit: "Uredi"
         save: "Spremi"
+        delete: "Pobriši"
+        cancel: "Odustani"
         description_label: "Okidači događaja"
         controls: "Kontrole"
-        go_back: "Povratak na popis"
         payload_url: "URL nosivosti"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Tajna ne smije imati praznih znakova."
         secret_too_short: "Tajna treba sadržavati najmanje 12 znakova."
-        secret_placeholder: "Izborni niz koji se koristi za generiranje potpisa"
         event_type_missing: "Morate postaviti barem jedan tip događaja."
         content_type: "Vrsta sadržaja"
         secret: "Tajna"
         event_chooser: "Koji bi događaji trebali pokrenuti ovu web-dojavnicu?"
-        wildcard_event: "Pošalji mi sve."
-        individual_event: "Odaberite pojedinačne događaje."
+        wildcard_event: "Pošalji mi sve"
+        individual_event: "Odaberite pojedinačne događaje"
         verify_certificate: "Provjerite TLS certifikat o url nosivosti"
         active: "Aktivno"
         active_notice: "Detalje događaja dostavit ćemo kad se to dogodi."
@@ -4975,9 +4974,6 @@ hr:
           screened_url: "Izvezi popis svih provjeravanih URL-ova u CSV formatu."
       export_json:
         button_text: "Izvoz"
-      invite:
-        button_text: "Pošalji pozivnice"
-        button_title: "Pošalji pozivnice"
       customize:
         title: "Prilagodba"
         preview: "predprikaz"
@@ -5250,8 +5246,7 @@ hr:
           overridden: Zadana datoteka robots.txt web-mjesta nadjačana je.
         email_style:
           title: "Stil e-pošte"
-          heading: "Prilagodite stil e -pošte"
-          html: "HTML predložak"
+          html: "HTML"
           css: "CSS"
           reset: "Vrati na zadano"
           reset_confirm: "Jeste li sigurni da želite vratiti zadane %{fieldName} i izgubiti sve promjene?"
@@ -5259,17 +5254,11 @@ hr:
           instructions: "Prilagodite predložak u kojem se generiraju sve html e -poruke i stilizirajte ga pomoću CSS -a."
       email:
         title: "E-mail poruke"
-        settings: "E-mail postavke"
+        settings: "Postavke"
         templates: "Predlošci"
-        templates_title: "E-mail predlošci"
-        preview_digest: "Pregled sažetka"
         advanced_test:
-          title: "Napredni test"
           desc: "Pogledajte kako Discourse obrađuje primljene e-mail poruke. Da biste mogli ispravno obraditi e-mail poruke, zalijepite ispod cijele izvorne e-mail poruke."
           email: "Izvorna poruka"
-          run: "Pokreni test"
-          text: "Odabrano tijelo teksta"
-          elided: "Poništeni tekst"
         sending_test: "Slanje testne e-mail poruke…"
         error: "<b>GREŠKA</b> - %{server_error}"
         test_error: "Dogodio se problem pri slanju testne e-mail poruke. Još jednom provjerite e-mail postavke, potvrdite da poslužitelj ne blokira e-mail konekcije i pokušajte ponovo."
@@ -5278,16 +5267,11 @@ hr:
         bounced: "Vraćeno"
         received: "Primljeno"
         rejected: "Odbijeno"
-        sent_at: "Poslano"
         time: "Vrijeme"
         user: "Korisnik"
-        email_type: "Vrsta e-mail poruke"
         details_title: "Prikaži detalje e-mail poruke"
-        to_address: "Na adresu"
         test_email_address: "e-mail adresa za testiranje"
-        send_test: "Pošalji testni e-mail"
         sent_test: "poslano!"
-        delivery_method: "Metoda dostave"
         preview_digest_desc: "Pregledajte sadržaj e-mail poruka sa sažetkom poslanih neaktivnim korisnicima."
         refresh: "Osvježi"
         send_digest_label: "Pošalji ovaj rezultat na:"
@@ -5297,11 +5281,7 @@ hr:
         html: "hmtl"
         text: "tekst"
         html_preview: "Pregled sadržaja e-pošte"
-        last_seen_user: "Posljednji viđeni korisnik:"
         no_result: "Nije pronađen rezultat za sažetak."
-        reply_key: "Ključ odgovora"
-        post_link_with_smtp: "Post & SMTP Detalji"
-        skipped_reason: "Preskoči razlog"
         incoming_emails:
           from_address: "Od"
           to_addresses: "Za"
@@ -5310,12 +5290,10 @@ hr:
           error: "Greška"
           none: "Nije pronađena nijedna dolazna e-mail poruka."
           modal:
-            title: "Detalji dolazne e-mail poruke"
             error: "Greška"
             headers: "Zaglavlja"
             subject: "Predmet"
             body: "Tijelo"
-            rejection_message: "Mail za odbijanje"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -5345,7 +5323,7 @@ hr:
           delete_topic: "Tema je obrisana"
           post_approved: "Objava odobrena"
       logs:
-        title: "Zapisi"
+        nav_title: "Zapisi"
         action: "Akcija"
         created_at: "Stvoreno"
         last_match_at: "Zadnji usklađeni"
@@ -5363,8 +5341,6 @@ hr:
         staff_actions:
           all: "sve"
           filter: "Filter:"
-          title: "Akcije osoblja"
-          clear_filters: "Prikaži sve"
           staff_user: "Korisnik"
           target_user: "Ciljani korisnik"
           subject: "predmet"
@@ -5470,9 +5446,7 @@ hr:
             watched_word_create: "dodaj promatranu riječ"
             watched_word_destroy: "izbriši gledanu riječ"
         screened_emails:
-          title: "Provjereni emailovi"
           description: "Kad netko pokuša stvoriti račun, slijedeće email adrese će biti provjerene i registracija će biti blokirana ili će neke druge akcije biti poduzete."
-          email: "Email adresa"
           actions:
             allow: "Dopusti"
         screened_urls:
@@ -5487,7 +5461,6 @@ hr:
           actions:
             block: "Blokiraj"
             do_nothing: "Dopusti"
-            allow_admin: "Dopusti administratoru"
           form:
             label: "Novo:"
             ip_address: "IP adrese"
@@ -5497,18 +5470,13 @@ hr:
             text: "Zaokruži"
             title: "Stvori nove unose zabrana za podmreže ako ima barem 'min_ban_entries_for_roll_up' unosa."
         search_logs:
-          title: "Pretraživanje dnevnika"
           term: "Pojam"
           searches: "Pretraživanja"
           click_through_rate: "CTR"
           types:
             all_search_types: "Sve vrste pretraživanja"
             header: "Uzglavlje"
-            full_page: "Cijela stranica"
             click_through_only: "Sve (samo kliknite)"
-          header_search_results: "Rezultati pretraživanja zaglavlja"
-        logster:
-          title: "Zapis grešak"
       watched_words:
         search: "pretraži"
         clear_filter: "Izbriši"
@@ -5518,7 +5486,6 @@ hr:
           other: "Prikaži %{count} riječi"
         case_sensitive: "(osjetljivo na velika i mala slova)"
         download: Preuzmi
-        clear_all: Obriši sve
         clear_all_confirm: "Jeste li sigurni da želite očistiti sve promatrane riječi za %{action} akciju?"
         invalid_regex: 'Promatrana riječ "%{word}" je nevažeći regularni izraz.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Gledane riječi su regularni izrazi</a> i ne uključuju automatski granice riječi. Ako želite da regularni izraz odgovara cijelim riječima, uključite <code>\b</code> na početak i kraj vašeg regularnog izraza.'
@@ -5598,9 +5565,6 @@ hr:
         id_not_found: "Žao nam je, taj korisnički ID ne postoji."
         active: "Aktivirano"
         status: "Statust"
-        show_emails: "Pokaži emailove"
-        hide_emails: "Sakrij e-poštu"
-        silence_reason: "Razlog šutnje"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5616,7 +5580,6 @@ hr:
         approved: "Potvrđeni?"
         titles:
           active: "Aktivni korisnici"
-          new: "Novi korisnici"
           pending: "Korisnici koji čekaju reviziju"
           newuser: "Korisnici na razini povjerenja 0 (novi korisnici)"
           basic: "Korisnici na razini povjerenja 1 (osnovni korisnici)"
@@ -5624,11 +5587,7 @@ hr:
           regular: "Korisnici na razini povjerenja 3 (stalni)"
           leader: "Korisnici na razini povjerenja 4 (vođe)"
           staff: "Osoblje"
-          admins: "Administratori"
           moderators: "Moderatori"
-          silenced: "Ušutkani korisnici"
-          suspended: "Suspendirani korisnici"
-          staged: "Postupni korisnici"
         not_verified: "Nije odobreno"
         check_email:
           title: "Otkrij korisnikovu email adresu."
@@ -5933,7 +5892,7 @@ hr:
           invalid_input: "Emotikona lista treba sadržavati samo važeća imena emoji, npr.: zagrljaji"
           add_emoji_button:
             label: "Dodaj emotikone"
-        title: "Postavke"
+        nav_title: "Postavke"
         no_results: "Nema pronađenih rezultata"
         clear_filter: "Izbriši"
         add_url: "dodaj URL"
@@ -6062,7 +6021,6 @@ hr:
             with_post_time: <span class="username">%{username}</span> za objavu u %{link} u <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
         mass_award:
-          title: Skupna nagrada
           description: Dodijelite istu značku velikom broju korisnika odjednom.
           no_badge_selected: Odaberite značku da biste započeli.
           perform: "Dodijelite značku korisnicima"
@@ -6157,6 +6115,21 @@ hr:
           admin: "Administrator"
           moderator: "Moderator"
           regular: "Stalni član"
+      homepage_choices:
+        custom:
+          label: "Posebna"
+        style_type:
+          categories: "kategorija"
+          topics: "tema"
+      top_menu_items:
+        new: "Novo"
+        unread: "Nepročitano"
+        top: "Najaktivnije"
+        latest: "Posljednje"
+        categories: "Kategorije"
+        unseen: "Neviđeno"
+        read: "Pročitajte"
+        bookmarks: "Zabilješke"
       previews:
         share_button: "Dijeli"
         reply_button: "Odgovori"
@@ -6165,11 +6138,6 @@ hr:
       homepage_preview:
         nav_buttons:
           all_categories: "sve kategorije"
-          new: "Novo"
-          unread: "Nepročitano"
-          top: "Najaktivnije"
-          latest: "Posljednje"
-          categories: "Kategorije"
         category_names:
           site_feedback: "Povratne informacije o stranici"
         table_headers:

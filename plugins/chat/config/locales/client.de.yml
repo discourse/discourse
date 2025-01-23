@@ -111,7 +111,7 @@ de:
       remove: "Entfernen"
       collapse: "Chat-Bereich ausblenden"
       expand: "Chat-Bereich erweitern"
-      confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} markieren möchtest?"
+      confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} melden möchtest?"
       deleted:
         one: "Eine Nachricht wurde gelöscht. [Anzeigen]"
         other: "%{count} Nachrichten wurden gelöscht. [Alle anzeigen]"
@@ -578,7 +578,7 @@ de:
         notify_user: "Ich möchte mit dieser Person direkt und persönlich über ihre Nachricht sprechen."
         notify_moderators: "Diese Nachricht erfordert die Aufmerksamkeit des Teams aus einem anderen, oben nicht aufgeführten Grund."
       flagging:
-        action: "Nachricht markieren"
+        action: "Nachricht melden"
       emoji_picker:
         favorites: "Häufig verwendet"
         smileys_&_emotion: "Smileys und Emotionen"

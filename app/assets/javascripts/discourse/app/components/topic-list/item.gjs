@@ -229,6 +229,9 @@ export default class Item extends Component {
           bulkSelectEnabled=@bulkSelectEnabled
           onBulkSelectToggle=this.onBulkSelectToggle
           isSelected=this.isSelected
+          hideCategory=@hideCategory
+          tagsForUser=@tagsForUser
+          showTopicPostBadges=@showTopicPostBadges
         }}
       >
         {{#if this.useMobileLayout}}
@@ -280,7 +283,7 @@ export default class Item extends Component {
                   @outletArgs={{hash topic=@topic}}
                 />
                 {{~! no whitespace ~}}
-                <TopicStatus @topic={{@topic}} />
+                <TopicStatus @topic={{@topic}} @context="topic-list" />
                 {{~! no whitespace ~}}
                 <TopicLink
                   {{on "focus" this.onTitleFocus}}

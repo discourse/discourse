@@ -61,7 +61,7 @@ export default class DMenuInstance extends FloatKitInstance {
 
     await super.close(...arguments);
 
-    if (this.site.mobileView && this.options.modalForMobile) {
+    if (this.site.mobileView && this.options.modalForMobile && this.expanded) {
       await this.modal.close();
     }
 
