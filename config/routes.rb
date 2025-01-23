@@ -227,7 +227,6 @@ Discourse::Application.routes.draw do
       get "customize/theme-components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/colors" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/colors/:id" => "color_schemes#index", :constraints => AdminConstraint.new
-      get "config/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
       get "customize/embedding" => "embedding#show", :constraints => AdminConstraint.new
       put "customize/embedding" => "embedding#update", :constraints => AdminConstraint.new
       get "customize/embedding/:id" => "embedding#edit", :constraints => AdminConstraint.new
@@ -251,6 +250,39 @@ Discourse::Application.routes.draw do
       end
 
       scope "/customize", constraints: AdminConstraint.new do
+        get "user_fields" => redirect("/admin/config/user-fields", status: 301)
+        get "user_fields/new" => redirect("/admin/config/user-fields/new", status: 301)
+        get "user_fields/:id",
+            to: redirect { |params, req| "/admin/config/user-fields/#{params[:id]}" },
+            constraints: {
+              id: /[0-9a-z_.]+/,
+            }
+        get "user_fields/:id/edit",
+            to: redirect { |params, req| "/admin/config/user-fields/#{params[:id]}/edit" },
+            constraints: {
+              id: /[0-9a-z_.]+/,
+            }
+        post "user_fields", to: redirect("/admin/config/user-fields", status: 301)
+        put "user_fields/:id",
+            to: redirect { |params, req| "/admin/config/user-fields/#{params[:id]}" },
+            constraints: {
+              id: /[0-9a-z_.]+/,
+            }
+        delete "user_fields/:id",
+               to: redirect { |params, req| "/admin/config/user-fields/#{params[:id]}" },
+               constraints: {
+                 id: /[0-9a-z_.]+/,
+               }
+        get "emojis" => redirect("/admin/config/emoji", status: 301)
+        get "emojis/new" => redirect("/admin/config/emoji/new", status: 301)
+        get "emojis/settings" => redirect("/admin/config/emoji/settings", status: 301)
+        post "emojis" => redirect("/admin/config/emoji", status: 301)
+        delete "emojis/:id",
+               to: redirect { |params, req| "/admin/config/emoji/#{params[:id]}" },
+               constraints: {
+                 id: /[0-9a-z_.]+/,
+               }
+
         resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates" do
           collection { get "preview" => "form_templates#preview" }
         end
@@ -286,12 +318,51 @@ Discourse::Application.routes.draw do
         get "reseed" => "site_texts#get_reseed_options"
         post "reseed" => "site_texts#reseed"
 
+        get "email_templates" => redirect("/admin/email/templates", status: 301)
+        get "email_templates/:id",
+            to: redirect { |params, req| "/admin/config/email-templates/#{params[:id]}" },
+            constraints: {
+              id: /[0-9a-z_.]+/,
+            }
+        match "email_templates/:id",
+              to: redirect { |params, req| "/admin/email/templates/#{params[:id]}" },
+              constraints: {
+                id: /[0-9a-z_.]+/,
+              },
+              via: :put
+
+        match "email_templates/:id",
+              to: redirect { |params, req| "/admin/email/templates/#{params[:id]}" },
+              constraints: {
+                id: /[0-9a-z_.]+/,
+              },
+              via: :delete
+
         get "robots" => "robots_txt#show"
         put "robots.json" => "robots_txt#update"
         delete "robots.json" => "robots_txt#reset"
 
         resource :email_style, only: %i[show update]
         get "email_style/:field" => "email_styles#show", :constraints => { field: /html|css/ }
+
+        get "permalinks" => redirect("/admin/config/permalinks", status: 301)
+        get "permalinks/new" => redirect("/admin/config/permalinks/new", status: 301)
+        get "permalinks/:id",
+            to: redirect { |params, req| "/admin/config/permalinks/#{params[:id]}" },
+            constraints: {
+              id: /[0-9a-z_.]+/,
+            }
+        put "permalinks/:id",
+            to: redirect { |params, req| "/admin/config/permalinks/#{params[:id]}" },
+            constraints: {
+              id: /[0-9a-z_.]+/,
+            }
+        delete "permalinks/:id",
+               to: redirect { |params, req| "/admin/config/permalinks/#{params[:id]}" },
+               constraints: {
+                 id: /[0-9a-z_.]+/,
+               }
+        post "permalinks", to: redirect("/admin/config/permalinks", status: 301)
       end
 
       resources :embeddable_hosts, only: %i[create update destroy], constraints: AdminConstraint.new
