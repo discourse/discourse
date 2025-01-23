@@ -163,7 +163,6 @@ describe "Admin Customize Themes", type: :system do
 
     it "should match the current user locale translation" do
       SiteSetting.allow_user_locale = true
-      SiteSetting.set_locale_from_accept_language_header = true
       SiteSetting.default_locale = "fr"
 
       theme.set_field(

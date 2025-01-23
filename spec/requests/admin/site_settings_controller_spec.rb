@@ -25,9 +25,7 @@ RSpec.describe Admin::SiteSettingsController do
         get "/admin/site_settings.json"
         expect(response.status).to eq(200)
         expect(
-          response.parsed_body["site_settings"].find do |s|
-            s["setting"] == "set_locale_from_cookie"
-          end,
+          response.parsed_body["site_settings"].find { |s| s["setting"] == "max_category_nesting" },
         ).to be_nil
       end
     end
