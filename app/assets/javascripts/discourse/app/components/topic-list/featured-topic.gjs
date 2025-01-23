@@ -17,7 +17,7 @@ const onTimestampClick = function (event) {
 
 const FeaturedTopic = <template>
   <div data-topic-id={{@topic.id}} class="featured-topic --glimmer">
-    <TopicStatus @topic={{@topic}} />
+    <TopicStatus @topic={{@topic}} @context="topic-list" />
 
     <a href={{@topic.lastUnreadUrl}} class="title">{{htmlSafe
         @topic.fancyTitle
