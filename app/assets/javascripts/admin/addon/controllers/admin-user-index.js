@@ -19,10 +19,10 @@ import MergeUsersProgressModal from "../components/modal/merge-users-progress";
 import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
 
 export default class AdminUserIndexController extends Controller {
-  @service adminTools;
-  @service dialog;
-  @service modal;
   @service router;
+  @service dialog;
+  @service adminTools;
+  @service modal;
 
   originalPrimaryGroupId = null;
   customGroupIdsBuffer = null;
