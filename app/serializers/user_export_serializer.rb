@@ -19,10 +19,6 @@ class UserExportSerializer < ApplicationSerializer
     object.upload.extension
   end
 
-  def retain_hours
-    object.retain_hours
-  end
-
   def human_filesize
     object.upload.human_filesize
   end
