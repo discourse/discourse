@@ -88,6 +88,10 @@
 
     // allows sidebar to scroll to the bottom when the composer is open
     height: calc(100% - var(--composer-height, 0px));
+
+    html:not(.composer-has-preview) & {
+      height: 100%;
+    }
   }
 
   .sidebar-sections {
