@@ -1,5 +1,5 @@
 import { setOwner } from "@ember/owner";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
