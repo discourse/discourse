@@ -1,11 +1,9 @@
-import { htmlSafe } from "@ember/template";
 import AllowLister from "pretty-text/allow-lister";
 import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import deprecated from "discourse/lib/deprecated";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
-import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 async function withEngine(name, ...args) {
@@ -153,8 +151,4 @@ export function humanizeList(listItems) {
       last,
     ].join(" ");
   }
-}
-
-export function processTitle(title) {
-  return htmlSafe(emojiUnescape(escapeExpression(title)));
 }
