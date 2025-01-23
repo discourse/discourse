@@ -867,39 +867,7 @@
 {{/if}}
 
 {{#if this.currentUser.admin}}
-  <section class="details">
-    <h1>{{i18n "admin.user.exports.title"}}</h1>
-
-    <div class="display-row">
-      <div class="field">{{i18n
-          "admin.user.exports.download.description"
-        }}</div>
-      <div class="value">
-        {{#if this.userExportAvailable}}
-          <a
-            class="download"
-            href={{this.userExport.uri}}
-          >{{this.userExport.filename}}</a><br />
-          {{this.userExport.human_filesize}}<br />
-          {{this.userExportExpiry}}
-        {{else}}
-          {{i18n "admin.user.exports.download.not_available"}}
-        {{/if}}
-      </div>
-      <div class="controls">
-        <DButton
-          @action={{this.triggerUserExport}}
-          @icon="download"
-          @label="admin.user.exports.download.button"
-          class="btn-default"
-        >
-          {{#if this.userExportReloading}}
-            &nbsp;{{loading-spinner size="small"}}
-          {{/if}}
-        </DButton>
-      </div>
-    </div>
-  </section>
+  <AdminUserExportsTable @model={{this.model}} />
 {{/if}}
 
 <span>

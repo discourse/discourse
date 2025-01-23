@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
@@ -8,30 +7,22 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
-import discourseComputed, { bind } from "discourse/lib/decorators";
-import { exportEntity } from "discourse/lib/export-csv";
+import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
-import UserExport from "admin/models/user-export";
 import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
 import DeleteUserPostsProgressModal from "../components/modal/delete-user-posts-progress";
 import MergeUsersConfirmationModal from "../components/modal/merge-users-confirmation";
 import MergeUsersProgressModal from "../components/modal/merge-users-progress";
 import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
 
-const EXPORT_PROGRESS_CHANNEL = "/user-export-progress";
-
 export default class AdminUserIndexController extends Controller {
   @service adminTools;
   @service dialog;
-  @service messageBus;
   @service modal;
   @service router;
-
-  @tracked userExport = null;
-  @tracked userExportReloading = false;
 
   originalPrimaryGroupId = null;
   customGroupIdsBuffer = null;
@@ -43,7 +34,6 @@ export default class AdminUserIndexController extends Controller {
   @setting("enable_badges") showBadges;
   @setting("moderators_view_emails") canModeratorsViewEmails;
   @notEmpty("model.manual_locked_trust_level") hasLockedTrustLevel;
-  @notEmpty("userExport") userExportAvailable;
 
   @propertyNotEqual("originalPrimaryGroupId", "model.primary_group_id")
   primaryGroupDirty;
@@ -52,28 +42,6 @@ export default class AdminUserIndexController extends Controller {
   canDisableSecondFactor;
 
   @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
-
-  constructor() {
-    super(...arguments);
-    this.messageBus.subscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.messageBus.unsubscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
-  }
-
-  @bind
-  onExportProgress(data) {
-    if (data.user_export_id === this.model.id) {
-      this.userExportReloading = false;
-      if (data.failed) {
-        this.dialog.alert(i18n("admin.user.exports.download.export_failed"));
-      } else {
-        this.userExport = UserExport.create(data.export_data.user_export);
-      }
-    }
-  }
 
   @discourseComputed("model.customGroups")
   customGroupIds(customGroups) {
@@ -200,28 +168,6 @@ export default class AdminUserIndexController extends Controller {
   @discourseComputed("ssoLastPayload")
   ssoPayload(lastPayload) {
     return lastPayload.split("&");
-  }
-
-  @action
-  triggerUserExport() {
-    this.dialog.yesNoConfirm({
-      message: i18n("admin.user.exports.download.confirm"),
-      didConfirm: async () => {
-        this.userExportReloading = true;
-        try {
-          await exportEntity("user_archive", { export_user_id: this.model.id });
-          this.dialog.alert(i18n("admin.user.exports.download.success"));
-        } catch (err) {
-          popupAjaxError(err);
-        }
-      },
-    });
-  }
-
-  get userExportExpiry() {
-    return i18n("admin.user.exports.download.expires_in", {
-      count: this.userExport.retain_hours,
-    });
   }
 
   @action
