@@ -4,12 +4,16 @@
  * @type {RichEditorExtension}
  */
 const extension = {
-  plugins({ pmState: { Plugin }, pmView: { Decoration, DecorationSet } }) {
+  plugins({
+    pmState: { Plugin },
+    pmView: { Decoration, DecorationSet },
+    getContext,
+  }) {
     let placeholder;
 
     return new Plugin({
-      view(view) {
-        placeholder = view.props.getContext().placeholder;
+      view() {
+        placeholder = getContext().placeholder;
         return {};
       },
       state: {
