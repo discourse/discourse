@@ -409,16 +409,18 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme
   end
 
-  def self.lookup_hex_for_name(name, scheme_id = nil)
+  def self.lookup_hex_for_name(name, scheme_id = nil, dark: false)
     enabled_color_scheme = find_by(id: scheme_id) if scheme_id
     enabled_color_scheme ||= Theme.where(id: SiteSetting.default_theme_id).first&.color_scheme
-    (enabled_color_scheme || base).colors.find { |c| c.name == name }.try(:hex)
+    color_record = (enabled_color_scheme || base).colors.find { |c| c.name == name }
+    return if !color_record
+    dark ? color_record.dark_hex || color_record.hex : color_record.hex
   end
 
-  def self.hex_for_name(name, scheme_id = nil)
-    hex_cache.defer_get_set(scheme_id ? name + "_#{scheme_id}" : name) do
-      lookup_hex_for_name(name, scheme_id)
-    end
+  def self.hex_for_name(name, scheme_id = nil, dark: false)
+    cache_key = scheme_id ? "#{name}_#{scheme_id}" : name
+    cache_key += "_dark" if dark
+    hex_cache.defer_get_set(cache_key) { lookup_hex_for_name(name, scheme_id, dark:) }
   end
 
   def colors=(arr)
@@ -450,10 +452,16 @@ class ColorScheme < ActiveRecord::Base
     colors || ColorScheme.base_colors
   end
 
-  def resolved_colors
+  def resolved_colors(dark: false)
     from_base = ColorScheme.base_colors
     from_custom_scheme = base_colors
-    from_db = colors.map { |c| [c.name, c.hex] }.to_h
+    from_db =
+      colors
+        .map do |c|
+          hex = dark ? (c.dark_hex || c.hex) : c.hex
+          [c.name, hex]
+        end
+        .to_h
 
     resolved = from_base.merge(from_custom_scheme).except("hover", "selected").merge(from_db)
 
