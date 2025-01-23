@@ -13,7 +13,9 @@ export function setupComposerPosition(editor) {
     // when the editor does not have any content to scroll
     applyBehaviorTransformer("composer-position:editor-touch-move", () => {
       const notScrollable = editor.scrollHeight <= editor.clientHeight;
-      if (notScrollable) {
+      const selection = window.getSelection();
+
+      if (notScrollable && selection.rangeCount === 0) {
         event.preventDefault();
         event.stopPropagation();
       }
