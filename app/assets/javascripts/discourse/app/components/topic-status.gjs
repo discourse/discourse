@@ -113,7 +113,7 @@ export default class TopicStatus extends Component {
         {{~#each TopicStatusIcons.entries as |entry|~}}
           {{~#if (get @topic entry.attribute)~}}
             <span
-              title={{i18n (concat "topic_statuses." entry.titleKey "help")}}
+              title={{i18n (concat "topic_statuses." entry.titleKey ".help")}}
               class="topic-status"
             >{{icon entry.iconName}}</span>
           {{~/if~}}
