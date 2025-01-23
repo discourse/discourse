@@ -16,9 +16,11 @@ class ExportCsvController < ApplicationController
     end
 
     if entity == "user_archive"
+      requesting_user_id = current_user.id if entity_id
       Jobs.enqueue(
         :export_user_archive,
         user_id: entity_id || current_user.id,
+        requesting_user_id:,
         args: export_params[:args],
       )
     else

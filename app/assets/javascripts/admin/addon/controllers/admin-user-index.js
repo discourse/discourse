@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
-import discourseComputed from "discourse/lib/decorators";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
@@ -21,11 +21,14 @@ import MergeUsersConfirmationModal from "../components/modal/merge-users-confirm
 import MergeUsersProgressModal from "../components/modal/merge-users-progress";
 import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
 
+const EXPORT_PROGRESS_CHANNEL = "/user-export-progress";
+
 export default class AdminUserIndexController extends Controller {
-  @service router;
-  @service dialog;
   @service adminTools;
+  @service dialog;
+  @service messageBus;
   @service modal;
+  @service router;
 
   @tracked userExport = null;
   @tracked userExportReloading = false;
@@ -49,6 +52,28 @@ export default class AdminUserIndexController extends Controller {
   canDisableSecondFactor;
 
   @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
+
+  constructor() {
+    super(...arguments);
+    this.messageBus.subscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.messageBus.unsubscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
+  }
+
+  @bind
+  onExportProgress(data) {
+    if (data.user_export_id === this.model.id) {
+      this.userExportReloading = false;
+      if (data.failed) {
+        this.dialog.alert(i18n("admin.user.exports.download.export_failed"));
+      } else {
+        this.userExport = UserExport.create(data.export_data.user_export);
+      }
+    }
+  }
 
   @discourseComputed("model.customGroups")
   customGroupIds(customGroups) {
@@ -183,18 +208,9 @@ export default class AdminUserIndexController extends Controller {
       message: i18n("admin.user.exports.download.confirm"),
       didConfirm: async () => {
         this.userExportReloading = true;
-        const currentExportUri = this.userExport?.uri;
         try {
           await exportEntity("user_archive", { export_user_id: this.model.id });
           this.dialog.alert(i18n("admin.user.exports.download.success"));
-
-          const interval = setInterval(async () => {
-            this.userExport = await UserExport.findLatest(this.model.id);
-            if (this.userExport.uri !== currentExportUri) {
-              this.userExportReloading = false;
-              clearInterval(interval);
-            }
-          }, 1000);
         } catch (err) {
           popupAjaxError(err);
         }
