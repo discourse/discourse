@@ -185,10 +185,19 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     assert.dom(element).hasValue(":smile: ");
 
-    await triggerArrowKey(element, "ArrowLeft");
-    await triggerArrowKey(element, "ArrowLeft");
-    await triggerArrowKey(element, "ArrowLeft");
-    await triggerArrowKey(element, "ArrowRight");
+    async function triggerArrowKey(key) {
+      await triggerKeyEvent(element, "keydown", key, { code: key });
+      await triggerKeyEvent(element, "keyup", key, { code: key });
+
+      const pos = element.selectionStart;
+      const direction = key === "ArrowLeft" ? -1 : 1;
+      element.setSelectionRange(pos + 1 * direction, pos + 1 * direction);
+    }
+
+    await triggerArrowKey("ArrowLeft");
+    await triggerArrowKey("ArrowLeft");
+    await triggerArrowKey("ArrowLeft");
+    await triggerArrowKey("ArrowRight");
 
     assert.strictEqual(element.selectionStart, 6);
 
@@ -202,13 +211,32 @@ module("Unit | Utility | autocomplete", function (hooks) {
     assert.dom(element).hasValue(":smile ");
     assert.dom("#ac-testing").exists();
   });
+
+  test("Autocomplete respects triggerRule on continued typing", async function (assert) {
+    const element = textArea();
+
+    $(element).autocomplete({
+      key: ":",
+      template,
+      transformComplete: (e) => e.slice(1),
+      dataSource: () => [":smile:"],
+      triggerRule: async (_, { inCodeBlock }) => !(await inCodeBlock()),
+    });
+
+    await simulateKeys(element, "```\n:");
+
+    assert.dom("#ac-testing").doesNotExist();
+
+    await simulateKey(element, "smil");
+
+    assert.dom("#ac-testing").doesNotExist();
+
+    await simulateKey(element, "\n```\n:");
+
+    assert.dom("#ac-testing").exists();
+
+    await simulateKey(element, "smil");
+
+    assert.dom("#ac-testing").exists();
+  });
 });
-
-async function triggerArrowKey(element, key) {
-  await triggerKeyEvent(element, "keydown", key, { code: key });
-  await triggerKeyEvent(element, "keyup", key, { code: key });
-
-  const pos = element.selectionStart;
-  const direction = key === "ArrowLeft" ? -1 : 1;
-  element.setSelectionRange(pos + 1 * direction, pos + 1 * direction);
-}
