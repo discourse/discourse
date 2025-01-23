@@ -232,6 +232,34 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
+
+    context "when there is only one external login method enabled" do
+      before do
+        SiteSetting.enable_google_oauth2_logins = true
+        SiteSetting.enable_local_logins = false
+      end
+      after { reset_omniauth_config(:google_oauth2) }
+
+      it "automatically redirects to the external auth provider" do
+        mock_google_auth
+        visit("/login")
+
+        expect(signup_form).to be_open
+        expect(signup_form).to have_no_password_input
+        expect(signup_form).to have_valid_username
+        expect(signup_form).to have_valid_email
+        signup_form.click_create_account
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+
+      it "automatically redirects to the external auth provider when skipping the signup form" do
+        SiteSetting.auth_skip_create_confirm = true
+        mock_google_auth
+        visit("/login")
+
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
   end
 
   context "when user exists" do
