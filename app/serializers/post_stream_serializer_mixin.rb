@@ -74,16 +74,11 @@ module PostStreamSerializerMixin
   def post_notice_created_by_users
     @post_notice_created_by_users ||=
       begin
-        user_ids = []
-        object
-          .post_custom_fields
-          .each do |post_id, custom_fields|
-            if custom_fields[Post::NOTICE]
-              user_ids << custom_fields[Post::NOTICE]["created_by_user_id"]
-            end
-          end
-          .compact
-          .uniq
+        user_ids =
+          object
+            .post_custom_fields
+            .filter_map { |_, custom_fields| custom_fields.dig(Post::NOTICE, "created_by_user_id") }
+            .uniq
         User.real.where(id: user_ids)
       end
   end
