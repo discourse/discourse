@@ -1132,12 +1132,12 @@ export default class ComposerService extends Service {
           title: i18n("composer.posting_not_on_topic"),
           buttons: [
             {
-              label: topicLabelContent(originalTopic),
+              label: htmlSafe(topicLabelContent(originalTopic)),
               class: "btn-primary btn-reply-where btn-reply-on-original",
               action: () => this.save(true),
             },
             {
-              label: topicLabelContent(currentTopic),
+              label: htmlSafe(topicLabelContent(currentTopic)),
               class: "btn-reply-where btn-reply-here",
               action: () => {
                 composer.setProperties({ topic: currentTopic, post: null });
