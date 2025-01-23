@@ -6973,7 +6973,8 @@ en:
             not_available: No export available
             button: Request archive
             confirm: Do you really want to create an archive of this user's activity and preferences?
-            success: We've started collecting collecting the archive, the download link will update when the process is complete.
+            started: We've started collecting collecting the archive, the download link will update when the process is complete.
+            success: The archive is ready for download.
             export_failed: We're sorry, but the export failed. Please check the logs for further information.
         anonymize: "Anonymize User"
         anonymize_confirm: "Are you sure you want to anonymize this account? This will change the username and email, and reset all profile information."

@@ -16,6 +16,7 @@ const EXPORT_PROGRESS_CHANNEL = "/user-export-progress";
 export default class extends Component {
   @service dialog;
   @service messageBus;
+  @service toasts;
 
   @tracked userExport = null;
   @tracked userExportReloading = false;
@@ -43,6 +44,10 @@ export default class extends Component {
         this.dialog.alert(i18n("admin.user.exports.download.export_failed"));
       } else {
         this.userExport = UserExport.create(data.export_data.user_export);
+        this.toasts.success({
+          duration: 3000,
+          data: { message: i18n("admin.user.exports.download.success") },
+        });
       }
     }
   }
@@ -51,13 +56,17 @@ export default class extends Component {
   triggerUserExport() {
     this.dialog.yesNoConfirm({
       message: i18n("admin.user.exports.download.confirm"),
-      didConfirm: async () => {
+      didConfirm: () => {
         this.userExportReloading = true;
         try {
-          await exportEntity("user_archive", {
+          exportEntity("user_archive", {
             export_user_id: this.model.id,
           });
-          this.dialog.alert(i18n("admin.user.exports.download.success"));
+
+          this.toasts.success({
+            duration: 3000,
+            data: { message: i18n("admin.user.exports.download.started") },
+          });
         } catch (err) {
           popupAjaxError(err);
         }
