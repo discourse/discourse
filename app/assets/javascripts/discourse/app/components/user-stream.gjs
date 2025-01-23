@@ -166,6 +166,7 @@ export default class UserStreamComponent extends Component {
       @urlPath="postUrl"
       @usernamePath={{this.usernamePath}}
       @fetchMorePosts={{this.loadMore}}
+      @titlePath="titleHtml"
       @additionalItemClasses="user-stream-item"
       @showUserInfo={{false}}
       class={{concatClass "user-stream" this.filterClassName}}

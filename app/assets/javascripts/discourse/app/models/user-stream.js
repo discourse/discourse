@@ -1,9 +1,9 @@
 import { A } from "@ember/array";
 import { Promise } from "rsvp";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
-import { processTitle } from "discourse/lib/text";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import UserAction from "discourse/models/user-action";
@@ -116,7 +116,7 @@ export default class UserStream extends RestModel {
           });
 
           result.user_actions?.forEach((action) => {
-            action.title = processTitle(action.title);
+            action.titleHtml = replaceEmoji(action.title);
             copy.pushObject(UserAction.create(action));
           });
 
