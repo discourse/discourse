@@ -17,6 +17,7 @@ import DiscourseURL from "discourse/lib/url";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import { findAll } from "discourse/models/login-method";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -42,6 +43,17 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @setting("title") siteTitle;
   @setting("short_site_description") shortSiteDescription;
+
+  get isOnlyOneExternalLoginMethod() {
+    return (
+      !this.siteSettings.enable_local_logins &&
+      this.externalLoginMethods.length === 1
+    );
+  }
+
+  get externalLoginMethods() {
+    return findAll();
+  }
 
   @action
   loading(transition) {
@@ -283,8 +295,8 @@ export default class ApplicationRoute extends DiscourseRoute {
         : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.login.isOnlyOneExternalLoginMethod) {
-        this.login.singleExternalLogin();
+      if (this.isOnlyOneExternalLoginMethod) {
+        this.login.externalLogin(this.externalLoginMethods[0]);
       } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("login").then((login) => {
           login.controller.set("canSignUp", this.controller.canSignUp);
@@ -309,9 +321,11 @@ export default class ApplicationRoute extends DiscourseRoute {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.login.isOnlyOneExternalLoginMethod) {
+      if (this.isOnlyOneExternalLoginMethod) {
         // we will automatically redirect to the external auth service
-        this.login.singleExternalLogin({ signup: true });
+        this.login.externalLogin(this.externalLoginMethods[0], {
+          signup: true,
+        });
       } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("signup").then((signup) => {
           Object.keys(createAccountProps || {}).forEach((key) => {

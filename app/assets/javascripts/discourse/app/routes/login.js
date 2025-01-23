@@ -7,12 +7,9 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
   @service router;
-  @service login;
 
   beforeModel() {
-    if (this.login.isOnlyOneExternalLoginMethod) {
-      this.login.singleExternalLogin();
-    } else if (
+    if (
       !this.siteSettings.login_required &&
       (!this.siteSettings.full_page_login ||
         this.siteSettings.enable_discourse_connect)
@@ -37,10 +34,6 @@ export default class LoginRoute extends DiscourseRoute {
     controller.set("canSignUp", canSignUp);
     controller.set("flashType", "");
     controller.set("flash", "");
-
-    if (this.login.isOnlyOneExternalLoginMethod) {
-      controller.set("isRedirecting", true);
-    }
 
     if (this.siteSettings.login_required) {
       controller.set("showLogin", false);
