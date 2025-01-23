@@ -59,7 +59,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
 
   get computedLabel() {
     if (this.args.label) {
-      return i18n(this.args.label);
+      return htmlSafe(i18n(this.args.label));
     }
     return this.args.translatedLabel;
   }
@@ -225,7 +225,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
 
       {{~#if this.computedLabel~}}
         <span class="d-button-label">
-          {{~htmlSafe this.computedLabel~}}
+          {{~this.computedLabel~}}
           {{~#if @ellipsis~}}
             &hellip;
           {{~/if~}}
