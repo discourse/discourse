@@ -36,7 +36,6 @@ $search-pad-horizontal: 0.5em;
       margin-bottom: 0;
       width: auto;
       flex-grow: 1;
-      padding-right: 50px;
 
       &:focus {
         outline: none;
@@ -378,6 +377,9 @@ $search-pad-horizontal: 0.5em;
   }
 
   .searching {
+    display: flex;
+    align-items: center;
+
     .spinner {
       width: 12px;
       height: 12px;
