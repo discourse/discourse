@@ -759,6 +759,10 @@ users:
   prioritize_username_in_ux:
     client: true
     default: true
+  prioritize_full_name_in_ux:
+    client: true
+    default: false
+    hidden: true
   email_token_valid_hours:
     default: 48
     min: 1
