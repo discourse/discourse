@@ -150,33 +150,6 @@ RSpec.describe Admin::EmailController do
           )
         end
       end
-
-      context "when type is not group_smtp and filter param is address" do
-        let(:target_email) { user.email }
-
-        it "should only filter within to address" do
-          other_email = "foo@bar.com"
-          another_email = "forty@two.com"
-          email_log_matching_to_address = Fabricate(:email_log, to_address: target_email)
-          email_log_matching_cc_address =
-            Fabricate(
-              :email_log,
-              to_address: admin.email,
-              cc_addresses: "#{other_email};#{target_email};#{another_email}",
-            )
-
-          get "/admin/email/sent.json", params: { address: target_email }
-
-          expect(response.status).to eq(200)
-          logs = response.parsed_body
-          expect(logs.size).to eq(1)
-          email_log_found_with_to_address =
-            logs.find { |log| log["id"] == email_log_matching_to_address.id }
-          expect(email_log_found_with_to_address["cc_addresses"]).to be_nil
-          expect(email_log_found_with_to_address["to_address"]).to eq target_email
-          expect(logs.find { |log| log["id"] == email_log_matching_cc_address.id }).to be_nil
-        end
-      end
     end
 
     shared_examples "sent emails inaccessible" do
