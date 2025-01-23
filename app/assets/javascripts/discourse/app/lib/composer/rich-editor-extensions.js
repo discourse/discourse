@@ -57,7 +57,9 @@
 const EXTENSIONS = [];
 
 /**
- * Register an extension for the rich editor
+ * Registers an extension for the rich editor
+ *
+ * EXPERIMENTAL: This API will change without warning
  *
  * @param {RichEditorExtension} extension
  */
