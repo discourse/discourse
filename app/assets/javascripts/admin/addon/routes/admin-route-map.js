@@ -276,9 +276,14 @@ export default function () {
             path: "/",
           });
         });
-        this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
-          this.route("themes");
-        });
+        this.route(
+          "themesAndComponents",
+          { path: "/themes-and-components" },
+          function () {
+            this.route("themes");
+            this.route("components");
+          }
+        );
         this.route(
           "adminPermalinks",
           { path: "/permalinks", resetNamespace: true },

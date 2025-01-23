@@ -1,36 +1,38 @@
-{{#if (eq this.currentTab "themes")}}
-  <DPageHeader
-    @titleLabel={{i18n "admin.config.themes.title"}}
-    @descriptionLabel={{i18n "admin.config.themes.header_description"}}
-    @learnMoreUrl="https://meta.discourse.org/t/91966"
-    @hideTabs={{true}}
-  >
-    <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-      <DBreadcrumbsItem
-        @path="/admin/customize/themes"
-        @label={{i18n "admin.config.themes.title"}}
-      />
-    </:breadcrumbs>
-  </DPageHeader>
-{{else}}
-  <DPageHeader
-    @titleLabel={{i18n "admin.config.components.title"}}
-    @descriptionLabel={{i18n "admin.config.components.header_description"}}
-    @hideTabs={{true}}
-  >
-    <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
-      <DBreadcrumbsItem
-        @path="/admin/customize/components"
-        @label={{i18n "admin.config.components.title"}}
-      />
-    </:breadcrumbs>
-  </DPageHeader>
-{{/if}}
+{{#unless this.currentUser.use_admin_sidebar}}
+  {{#if (eq this.currentTab "themes")}}
+    <DPageHeader
+      @titleLabel={{i18n "admin.config.themes.title"}}
+      @descriptionLabel={{i18n "admin.config.themes.header_description"}}
+      @learnMoreUrl="https://meta.discourse.org/t/91966"
+      @hideTabs={{true}}
+    >
+      <:breadcrumbs>
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem
+          @path="/admin/customize/themes"
+          @label={{i18n "admin.config.themes.title"}}
+        />
+      </:breadcrumbs>
+    </DPageHeader>
+  {{else}}
+    <DPageHeader
+      @titleLabel={{i18n "admin.config.components.title"}}
+      @descriptionLabel={{i18n "admin.config.components.header_description"}}
+      @hideTabs={{true}}
+    >
+      <:breadcrumbs>
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem
+          @path="/admin/customize/components"
+          @label={{i18n "admin.config.components.title"}}
+        />
+      </:breadcrumbs>
+    </DPageHeader>
+  {{/if}}
+{{/unless}}
 
 <PluginOutlet @name="admin-customize-themes">
-  {{#unless this.editingTheme}}
+  {{#unless (or this.editingTheme this.currentUser.use_admin_sidebar)}}
     <ThemesList
       @themes={{this.fullThemes}}
       @components={{this.childThemes}}

@@ -5956,6 +5956,72 @@ en:
             failed: "Failed"
       home:
         title: "Home"
+      account:
+        title: "Account"
+        sidebar_link:
+          backups: "Backups"
+          whats_new:
+            title: "What's new?"
+            keywords: "changelog|feature|release"
+
+      community:
+        title: "Community"
+        sidebar_link:
+          about_your_site: "About your site"
+          badges: "Badges"
+          login_and_authentication: "Login & authentication"
+          notifications: "Notifications"
+          permalinks: "Permalinks"
+          trust_levels: "Trust levels"
+          group_permissions: "Group permissions"
+          users: "Users"
+          groups: "Groups"
+          user_fields: "User fields"
+          watched_words: "Watched words"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderation"
+            keywords: "flag|review"
+
+      appearance:
+        title: "Appearance"
+        sidebar_link:
+          font_style: "Font style"
+          site_logo: "Site logo"
+          color_schemes: "Color palettes"
+          emoji: "Emoji"
+          navigation: "Navigation"
+          themes_and_components:
+            title: "Themes and components"
+            keywords: "extension"
+          site_texts: "Site texts"
+
+      email_settings:
+        title: "Email Settings"
+        sidebar_link:
+          appearance: "Appearance"
+          server_setup:
+            title: "Server setup & logs"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+
+      security:
+        title: "Security"
+        sidebar_link:
+          security: "Security settings"
+          spam: "Spam settings"
+          staff_action_logs:
+            title: "Logs & screening"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Backups"
+            description: "Take a backup of your site's data"
+          whats_new:
+            title: "What's new?"
+            description: "Discover new releases and improvements to Discourse"
 
       config_areas:
         about:
@@ -6052,7 +6118,9 @@ en:
           delete: "Delete"
           more_options:
             title: "More options"
-        look_and_feel:
+        themes_and_components:
+          title: "Themes and components"
+          description: "Customize and brand your Discourse site, giving it a distinctive style."
           themes:
             title: "Themes"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
@@ -6062,6 +6130,10 @@ en:
             themes_description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
             new_theme: "New theme"
             user_selectable: "User selectable"
+            back: "Back to themes"
+          components:
+            title: "Components"
+            back: "Back to components"
         user_fields:
           field: "Field"
           type: "Type"
@@ -6238,6 +6310,7 @@ en:
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
           themes_intro_new: "Install a new theme to get started, or create your own from scratch using these resources."
+          components_intro_new: "Install a new component to get started, or create your own from scratch using these resources."
           themes_intro_img_alt: "New theme placeholder"
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"

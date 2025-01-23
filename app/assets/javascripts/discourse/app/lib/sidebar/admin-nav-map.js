@@ -240,22 +240,14 @@ export const ADMIN_NAV_MAP = [
         settings_area: "navigation",
       },
       {
-        name: "admin_themes",
-        route: "adminCustomizeThemes",
-        routeModels: ["themes"],
-        model: "themes",
-        label: "admin.config.themes.title",
-        description: "admin.config.themes.header_description",
+        name: "admin_themes_and_components",
+        route: "adminConfig.themesAndComponents.themes",
+        currentWhen:
+          "adminConfig.themesAndComponents.themes adminConfig.themesAndComponents.components",
+        label: "admin.appearance.sidebar_link.themes_and_components.title",
         icon: "paintbrush",
-      },
-      {
-        name: "admin_components",
-        route: "adminCustomizeThemes",
-        routeModels: ["components"],
-        label: "admin.config.components.title",
-        description: "admin.config.components.header_description",
-        icon: "puzzle-piece",
-        keywords: "admin.config.components.keywords",
+        keywords:
+          "admin.appearance.sidebar_link.themes_and_components.keywords",
       },
       {
         name: "admin_customize_site_texts",
