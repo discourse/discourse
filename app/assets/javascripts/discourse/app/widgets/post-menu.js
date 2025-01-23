@@ -4,7 +4,7 @@ import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
-import { smallUserAttrs } from "discourse/components/user-list-attrs";
+import { smallUserAttrs } from "discourse/components/small-user-list";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import discourseLater from "discourse/lib/later";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
