@@ -6963,6 +6963,19 @@ en:
         approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
         post_edits_count: "Post Edits"
+        exports:
+          title: User exports
+          download:
+            description: Download latest export
+            expires_in:
+              one: Expires in %{count} hour
+              other: Expires in %{count} hours
+            not_available: No export available
+            button: Request archive
+            confirm: Do you really want to create an archive of this user's activity and preferences?
+            started: We've started collecting collecting the archive, the download link will update when the process is complete.
+            success: The archive is ready for download.
+            export_failed: We're sorry, but the export failed. Please check the logs for further information.
         anonymize: "Anonymize User"
         anonymize_confirm: "Are you sure you want to anonymize this account? This will change the username and email, and reset all profile information."
         delete_associated_accounts_confirm: "Are you sure you want to delete all associated accounts from this account? The user may not be able to log in if their email has changed."

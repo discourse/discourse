@@ -39,4 +39,22 @@ RSpec.describe UserExport do
       expect(Topic.exists?(id: topic_2.id)).to eq(true)
     end
   end
+
+  describe "#retain_hours" do
+    it "should return the correct number of hours" do
+      csv_file_1 = Fabricate(:upload, created_at: 1.day.ago)
+      topic_1 = Fabricate(:topic, created_at: 1.day.ago)
+      Fabricate(:post, topic: topic_1)
+      export =
+        UserExport.create!(
+          file_name: "test",
+          user: user,
+          upload_id: csv_file_1.id,
+          topic_id: topic_1.id,
+          created_at: 1.day.ago,
+        )
+
+      expect(export.retain_hours).to eq(23)
+    end
+  end
 end

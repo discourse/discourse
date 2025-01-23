@@ -1372,6 +1372,10 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/session/passkey/challenge.json", () =>
     response({ challenge: "123" })
   );
+
+  pretender.get("/export_csv/latest_user_archive/:id.json", () =>
+    response(null)
+  );
 }
 
 export function resetPretender() {
