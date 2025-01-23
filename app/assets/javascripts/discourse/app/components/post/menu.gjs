@@ -9,7 +9,9 @@ import { and, eq } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SmallUserList, { smallUserAttrs } from "discourse/components/small-user-list";
+import SmallUserList, {
+  smallUserAttrs,
+} from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
