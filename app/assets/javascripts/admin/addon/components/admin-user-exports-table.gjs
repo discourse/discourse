@@ -45,7 +45,7 @@ export default class extends Component {
       } else {
         this.userExport = UserExport.create(data.export_data.user_export);
         this.toasts.success({
-          duration: 3000,
+          autoClose: false,
           data: { message: i18n("admin.user.exports.download.success") },
         });
       }
