@@ -109,7 +109,12 @@ export default class TopicStatus extends Component {
         >{{icon "far-eye-slash"}}</span>
       {{~/if~}}
 
-      {{~#unless this.site.useGlimmerTopicList~}}
+      {{~#if this.site.useGlimmerTopicList~}}
+        <PluginOutlet
+          @name="after-topic-status"
+          @outletArgs={{hash topic=@topic}}
+        />
+      {{~else~}}
         {{~#each TopicStatusIcons.entries as |entry|~}}
           {{~#if (get @topic entry.attribute)~}}
             <span
@@ -118,12 +123,7 @@ export default class TopicStatus extends Component {
             >{{icon entry.iconName}}</span>
           {{~/if~}}
         {{~/each~}}
-      {{~/unless~}}
-
-      <PluginOutlet
-        @name="after-topic-status"
-        @outletArgs={{hash topic=@topic}}
-      />
+      {{~/if~}}
       {{~! no whitespace ~}}
     </this.wrapperElement>
     {{~! no whitespace ~}}
