@@ -628,7 +628,7 @@ module Jobs
 
       if @requesting_user
         post =
-          if export.upload.persisted?
+          if export.upload&.persisted?
             ::MessageBus.publish(
               "/user-export-progress",
               {
