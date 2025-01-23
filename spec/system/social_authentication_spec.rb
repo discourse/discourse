@@ -233,7 +233,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
       end
     end
 
-    context "when is the only external login method" do
+    context "when there is only one external login method enabled" do
       before do
         SiteSetting.enable_google_oauth2_logins = true
         SiteSetting.enable_local_logins = false
