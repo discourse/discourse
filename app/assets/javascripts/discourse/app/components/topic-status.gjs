@@ -112,7 +112,7 @@ export default class TopicStatus extends Component {
       {{~#if this.site.useGlimmerTopicList~}}
         <PluginOutlet
           @name="after-topic-status"
-          @outletArgs={{hash topic=@topic}}
+          @outletArgs={{hash topic=@topic context=@context}}
         />
       {{~else~}}
         {{~#each TopicStatusIcons.entries as |entry|~}}
