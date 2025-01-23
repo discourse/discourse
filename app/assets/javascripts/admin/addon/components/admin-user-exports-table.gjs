@@ -92,16 +92,15 @@ export default class extends Component {
           {{/if}}
         </div>
         <div class="controls">
-          <DButton
-            @action={{this.triggerUserExport}}
-            @icon="download"
-            @label="admin.user.exports.download.button"
-            class="btn-default"
-          >
-            <ConditionalLoadingSpinner
-              @condition={{this.userExportReloading}}
+          <ConditionalLoadingSpinner @condition={{this.userExportReloading}}>
+
+            <DButton
+              @action={{this.triggerUserExport}}
+              @icon="download"
+              @label="admin.user.exports.download.button"
+              class="btn-default"
             />
-          </DButton>
+          </ConditionalLoadingSpinner>
         </div>
       </div>
     </section>
