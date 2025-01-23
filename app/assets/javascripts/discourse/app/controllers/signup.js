@@ -257,6 +257,11 @@ export default class SignupPageController extends Controller.extend(
   }
 
   @action
+  setAccountUsername(event) {
+    this.set("accountUsername", event.target.value);
+  }
+
+  @action
   togglePasswordValidation() {
     if (this.passwordValidation.reason) {
       this.set("passwordValidationVisible", true);
