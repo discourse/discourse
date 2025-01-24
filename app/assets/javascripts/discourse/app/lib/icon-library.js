@@ -1,7 +1,11 @@
 import { h } from "virtual-dom";
 import attributeHook from "discourse/lib/attribute-hook";
 import deprecated from "discourse/lib/deprecated";
-import { isDevelopment } from "discourse/lib/environment";
+import {
+  isDevelopment,
+  isRailsTesting,
+  isTesting,
+} from "discourse/lib/environment";
 import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
 
@@ -147,6 +151,7 @@ function handleDeprecatedIcon(id) {
       {
         id: "discourse.fontawesome-6-upgrade",
         url: "https://meta.discourse.org/t/325349",
+        raiseError: isTesting() || isRailsTesting(),
       }
     );
   }
@@ -189,12 +194,12 @@ registerIconRenderer({
     }
     html += ` xmlns="${SVG_NAMESPACE}"><use href="#${id}" /></svg>`;
     if (params.label) {
-      html += `<span class='sr-only'>${escape(params.label)}</span>`;
+      html += `<span class="sr-only">${escape(params.label)}</span>`;
     }
     if (params.title) {
-      html = `<span class="svg-icon-title" title='${escape(
+      html = `<span class="svg-icon-title" title="${escape(
         i18n(params.title)
-      )}'>${html}</span>`;
+      )}">${html}</span>`;
     }
 
     if (params.translatedtitle) {
@@ -207,9 +212,9 @@ registerIconRenderer({
     }
 
     if (params.translatedTitle) {
-      html = `<span class="svg-icon-title" title='${escape(
+      html = `<span class="svg-icon-title" title="${escape(
         params.translatedTitle
-      )}'>${html}</span>`;
+      )}">${html}</span>`;
     }
     return html;
   },

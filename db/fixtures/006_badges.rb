@@ -173,7 +173,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstShare
   b.name = "First Share"
-  b.default_icon = "share-alt"
+  b.default_icon = "share-nodes"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -193,7 +193,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "share-alt"
+    b.default_icon = "share-nodes"
     b.badge_type_id = level
     b.multiple_grant = true
     b.target_posts = true
@@ -402,7 +402,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstEmoji
   b.name = "First Emoji"
-  b.default_icon = "smile"
+  b.default_icon = "face-smile"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
