@@ -4,6 +4,8 @@
 {{body-class "signup-page"}}
 
 {{#if this.isRedirectingToExternalAuth}}
+  {{! Hide the signup form if the site has only one external }}
+  {{! authentication method and is being automatically redirected to it }}
   {{loading-spinner}}
 {{else}}
   <div class="signup-fullpage">

@@ -1,7 +1,8 @@
 {{hide-application-sidebar}}
 {{body-class "login-page"}}
-
 {{#if this.isRedirectingToExternalAuth}}
+  {{! Hide the login form if the site has only one external }}
+  {{! authentication method and is being automatically redirected to it }}
   {{loading-spinner}}
 {{else}}
   {{#if
@@ -10,6 +11,7 @@
       (or this.showLogin (not this.siteSettings.login_required))
     )
   }}
+    {{! Show the full page login form }}
     {{hide-application-header-buttons "search" "login" "signup" "menu"}}
     <div class="login-fullpage">
       <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
@@ -136,6 +138,7 @@
     </div>
 
   {{else}}
+    {{! Show the login-required splash screen }}
     {{body-class "static-login"}}
     <section class="container">
       <div class="contents clearfix body-page">
