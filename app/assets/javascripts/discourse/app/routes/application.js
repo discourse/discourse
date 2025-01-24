@@ -283,7 +283,10 @@ export default class ApplicationRoute extends DiscourseRoute {
         : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.login.isOnlyOneExternalLoginMethod) {
+      if (
+        this.login.isOnlyOneExternalLoginMethod &&
+        this.siteSettings.auth_immediately
+      ) {
         this.login.singleExternalLogin();
       } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("login").then((login) => {
@@ -309,7 +312,10 @@ export default class ApplicationRoute extends DiscourseRoute {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.login.isOnlyOneExternalLoginMethod) {
+      if (
+        this.login.isOnlyOneExternalLoginMethod &&
+        this.siteSettings.auth_immediately
+      ) {
         // we will automatically redirect to the external auth service
         this.login.singleExternalLogin({ signup: true });
       } else if (this.siteSettings.full_page_login) {

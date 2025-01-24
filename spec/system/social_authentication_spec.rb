@@ -293,6 +293,17 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
+
+      it "does not automatically redirect when auth_immediately is disabled" do
+        SiteSetting.auth_immediately = false
+        mock_google_auth
+
+        visit("/login")
+        expect(page).to have_css("#login-buttons .google_oauth2")
+
+        visit("/signup")
+        expect(page).to have_css("#login-buttons .google_oauth2")
+      end
     end
   end
 

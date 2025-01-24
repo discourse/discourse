@@ -14,7 +14,10 @@ export default class LoginRoute extends DiscourseRoute {
       return;
     }
 
-    if (this.login.isOnlyOneExternalLoginMethod) {
+    if (
+      this.login.isOnlyOneExternalLoginMethod &&
+      this.siteSettings.auth_immediately
+    ) {
       this.login.singleExternalLogin();
     } else if (
       !this.siteSettings.full_page_login ||
@@ -41,7 +44,10 @@ export default class LoginRoute extends DiscourseRoute {
     controller.set("flashType", "");
     controller.set("flash", "");
 
-    if (this.login.isOnlyOneExternalLoginMethod) {
+    if (
+      this.login.isOnlyOneExternalLoginMethod &&
+      this.siteSettings.auth_immediately
+    ) {
       if (this.siteSettings.login_required) {
         controller.set("autoRedirect", true);
         controller.set("singleExternalLogin", this.login.singleExternalLogin);

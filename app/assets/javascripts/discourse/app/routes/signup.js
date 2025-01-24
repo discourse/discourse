@@ -18,7 +18,8 @@ export default class SignupRoute extends DiscourseRoute {
     this.autoRedirect =
       !this.authComplete &&
       this.singleLoginMethod &&
-      !this.siteSettings.login_required;
+      !this.siteSettings.login_required &&
+      this.siteSettings.auth_immediately;
 
     if (this.autoRedirect) {
       this.login.singleExternalLogin({ signup: true });
@@ -40,6 +41,7 @@ export default class SignupRoute extends DiscourseRoute {
     const { canSignUp } = this.controllerFor("application");
     if (
       this.authComplete ||
+      !this.auth_immediately ||
       (canSignUp &&
         this.siteSettings.full_page_login &&
         !this.singleLoginMethod)
