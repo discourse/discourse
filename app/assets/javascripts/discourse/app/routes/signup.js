@@ -16,7 +16,9 @@ export default class SignupRoute extends DiscourseRoute {
     this.authComplete = transition.to.queryParams.authComplete || false;
     this.singleLoginMethod = this.login.isOnlyOneExternalLoginMethod;
     this.autoRedirect =
-      !this.authComplete && this.singleLoginMethod && ! this.siteSettings.login_required;
+      !this.authComplete &&
+      this.singleLoginMethod &&
+      !this.siteSettings.login_required;
 
     if (this.autoRedirect) {
       this.login.singleExternalLogin({ signup: true });
@@ -29,7 +31,7 @@ export default class SignupRoute extends DiscourseRoute {
     super.setupController(...arguments);
 
     if (this.autoRedirect) {
-      controller.set("isRedirecting", true);
+      controller.set("isRedirectingToExternalAuth", true);
     }
   }
 
