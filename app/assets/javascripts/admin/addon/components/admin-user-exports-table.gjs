@@ -28,7 +28,9 @@ export default class extends Component {
     this.messageBus.subscribe(EXPORT_PROGRESS_CHANNEL, this.onExportProgress);
 
     this.model = this.args.model;
-    this.userExport = UserExport.create(this.model.latest_export?.user_export);
+    if (this.model.latest_export) {
+      this.userExport = UserExport.create(this.model.latest_export.user_export);
+    }
   }
 
   willDestroy() {
@@ -43,7 +45,9 @@ export default class extends Component {
       if (data.failed) {
         this.dialog.alert(i18n("admin.user.exports.download.export_failed"));
       } else {
-        this.userExport = UserExport.create(data.export_data.user_export);
+        if (data.export_data.user_export) {
+          this.userExport = UserExport.create(data.export_data.user_export);
+        }
         this.toasts.success({
           autoClose: false,
           data: { message: i18n("admin.user.exports.download.success") },

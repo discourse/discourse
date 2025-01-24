@@ -110,7 +110,7 @@ class BadgeGranter
         WHERE notification_id IS NULL AND user_id = :user_id AND badge_id = :badge_id
       SQL
 
-      UserBadge.update_featured_ranks!(user.id)
+      UserBadge.update_featured_ranks!([user.id])
     end
   end
 
@@ -404,8 +404,9 @@ class BadgeGranter
     post_clause = badge.target_posts ? "AND (q.post_id = ub.post_id OR NOT :multiple_grant)" : ""
     post_id_field = badge.target_posts ? "q.post_id" : "NULL"
 
-    sql = <<~SQL
-      DELETE FROM user_badges
+    if badge.auto_revoke && full_backfill
+      sql = <<~SQL
+        DELETE FROM user_badges
         WHERE id IN (
           SELECT ub.id
           FROM user_badges ub
@@ -415,17 +416,22 @@ class BadgeGranter
           #{post_clause}
           WHERE ub.badge_id = :id AND q.user_id IS NULL
         )
-    SQL
+        RETURNING user_badges.user_id
+      SQL
 
-    if badge.auto_revoke && full_backfill
-      DB.exec(
-        sql,
-        id: badge.id,
-        post_ids: [-1],
-        user_ids: [-2],
-        backfill: true,
-        multiple_grant: true, # cheat here, cause we only run on backfill and are deleting
-      )
+      rows =
+        DB.query(
+          sql,
+          id: badge.id,
+          post_ids: [-1],
+          user_ids: [-2],
+          backfill: true,
+          multiple_grant: true, # cheat here, cause we only run on backfill and are deleting
+        )
+
+      if (revoked_callback = opts&.dig(:revoked_callback)) && rows.size > 0
+        revoked_callback.call(rows.map { |r| r.user_id })
+      end
     end
 
     sql = <<~SQL
@@ -465,34 +471,41 @@ class BadgeGranter
       return
     end
 
-    builder
-      .query(
+    rows =
+      builder.query(
         id: badge.id,
         multiple_grant: badge.multiple_grant,
         backfill: full_backfill,
         post_ids: post_ids || [-2],
         user_ids: user_ids || [-2],
       )
-      .each do |row|
-        next if suppress_notification?(badge, row.granted_at, row.skip_new_user_tips)
-        next if row.staff && badge.awarded_for_trust_level?
 
-        notification = send_notification(row.user_id, row.username, row.locale, badge)
-        UserBadge.trigger_user_badge_granted_event(badge.id, row.user_id)
+    if (granted_callback = opts&.dig(:granted_callback)) && rows.size > 0
+      granted_callback.call(rows.map { |r| r.user_id })
+    end
 
-        DB.exec(
-          "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
-          notification_id: notification.id,
-          id: row.id,
-        )
-      end
+    rows.each do |row|
+      next if suppress_notification?(badge, row.granted_at, row.skip_new_user_tips)
+      next if row.staff && badge.awarded_for_trust_level?
+
+      notification = send_notification(row.user_id, row.username, row.locale, badge)
+      UserBadge.trigger_user_badge_granted_event(badge.id, row.user_id)
+
+      DB.exec(
+        "UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
+        notification_id: notification.id,
+        id: row.id,
+      )
+    end
 
     badge.reset_grant_count!
   rescue => e
     raise GrantError, "Failed to backfill '#{badge.name}' badge: #{opts}. Reason: #{e.message}"
   end
 
-  def self.revoke_ungranted_titles!
+  def self.revoke_ungranted_titles!(user_ids = nil)
+    user_ids = user_ids.join(", ") if user_ids
+
     DB.exec <<~SQL
       UPDATE users u
       SET title = ''
@@ -509,6 +522,7 @@ class BadgeGranter
             AND b.allow_title
             AND b.enabled
         )
+        #{user_ids.present? ? "AND u.id IN (:user_ids)" : ""}
     SQL
 
     DB.exec <<~SQL
@@ -518,6 +532,7 @@ class BadgeGranter
       WHERE up.user_id = u.id
         AND (u.title IS NULL OR u.title = '')
         AND up.granted_title_badge_id IS NOT NULL
+        #{user_ids.present? ? "AND up.user_id IN (:user_ids)" : ""}
     SQL
   end
 

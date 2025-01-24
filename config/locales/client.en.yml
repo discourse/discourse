@@ -3811,6 +3811,7 @@ en:
       notice:
         new_user: "This is the first time %{user} has posted — let’s welcome them to our community!"
         returning_user: "It’s been a while since we’ve seen %{user} — their last post was %{time}."
+        custom_created_by: "(added by %{userLinkHTML})"
 
       unread: "Post is unread"
       has_replies:
@@ -3940,9 +3941,9 @@ en:
         delete_topic_confirm_modal_no: "No, keep this topic"
         delete_topic_error: "An error occurred while deleting this topic"
         delete_topic: "delete topic"
-        add_post_notice: "Add Staff Notice…"
-        change_post_notice: "Change Staff Notice…"
-        delete_post_notice: "Delete Staff Notice"
+        add_post_notice: "Add Official Notice…"
+        change_post_notice: "Change Official Notice…"
+        delete_post_notice: "Delete Official Notice"
         remove_timer: "remove timer"
         edit_timer: "edit timer"
 

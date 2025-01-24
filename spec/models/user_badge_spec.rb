@@ -121,14 +121,14 @@ RSpec.describe UserBadge do
     it "can ensure consistency per user" do
       user_badge_tl2.update_column(:featured_rank, 20) # Update without hooks
       expect(user_badge_tl2.reload.featured_rank).to eq(20) # Double check
-      UserBadge.update_featured_ranks! user.id
+      UserBadge.update_featured_ranks!([user.id])
       expect(user_badge_tl2.reload.featured_rank).to eq(1)
     end
 
     it "can ensure consistency for all users" do
       user_badge_tl2.update_column(:featured_rank, 20) # Update without hooks
       expect(user_badge_tl2.reload.featured_rank).to eq(20) # Double check
-      UserBadge.update_featured_ranks!
+      UserBadge.update_featured_ranks!([user.id])
       expect(user_badge_tl2.reload.featured_rank).to eq(1)
     end
   end

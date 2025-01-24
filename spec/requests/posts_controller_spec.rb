@@ -2911,6 +2911,7 @@ RSpec.describe PostsController do
         "type" => Post.notices[:custom],
         "raw" => raw_notice,
         "cooked" => PrettyText.cook(raw_notice, features: { onebox: false }),
+        "created_by_user_id" => moderator.id,
       )
       expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_create]).count).to eq(1)
 
@@ -2944,6 +2945,7 @@ RSpec.describe PostsController do
           "type" => Post.notices[:custom],
           "raw" => raw_notice,
           "cooked" => PrettyText.cook(raw_notice, features: { onebox: false }),
+          "created_by_user_id" => user.id,
         )
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: nil }

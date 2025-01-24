@@ -625,10 +625,12 @@ class PostsController < ApplicationController
     old_notice = post.custom_fields[Post::NOTICE]
 
     if params[:notice].present?
+      cooked_notice = PrettyText.cook(params[:notice], features: { onebox: false })
       post.custom_fields[Post::NOTICE] = {
         type: Post.notices[:custom],
         raw: params[:notice],
-        cooked: PrettyText.cook(params[:notice], features: { onebox: false }),
+        cooked: cooked_notice,
+        created_by_user_id: current_user.id,
       }
     else
       post.custom_fields.delete(Post::NOTICE)
@@ -642,7 +644,7 @@ class PostsController < ApplicationController
       new_value: params[:notice],
     )
 
-    render body: nil
+    render json: success_json.merge(cooked_notice:)
   end
 
   def destroy_bookmark

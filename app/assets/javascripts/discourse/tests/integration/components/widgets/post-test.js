@@ -1126,6 +1126,38 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
   });
 
+  test("post notice - custom official notice with created by username", async function (assert) {
+    this.siteSettings.display_name_on_posts = false;
+    this.siteSettings.prioritize_username_in_ux = true;
+    this.set("args", {
+      notice: {
+        type: "custom",
+        cooked: "<p>This is an official notice</p>",
+      },
+      noticeCreatedByUser: {
+        username: "codinghorror",
+        name: "Jeff",
+        id: 1,
+      },
+    });
+
+    await render(hbs`
+      <MountWidget @widget="post" @args={{this.args}} />`);
+
+    assert.dom(".post-notice.custom").hasText(
+      "This is an official notice " +
+        i18n("post.notice.custom_created_by", {
+          userLinkHTML: "codinghorror",
+        })
+    );
+
+    assert
+      .dom(
+        ".post-notice.custom .post-notice-message a.trigger-user-card[data-user-card='codinghorror']"
+      )
+      .exists();
+  });
+
   test("post notice - with name", async function (assert) {
     this.siteSettings.display_name_on_posts = true;
     this.siteSettings.prioritize_username_in_ux = false;
