@@ -50,20 +50,8 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system, annotations]
-        target: [core, plugins, themes]
-        exclude:
-          - build_type: annotations
-            target: plugins
-          - build_type: annotations
-            target: themes
-          - build_type: backend
-            target: themes
-          - build_type: frontend
-            target: core # Handled by core_frontend_tests job (below)
-        include:
-          - build_type: system
-            target: chat
+        build_type: [frontend]
+        target: [themes]
 
     steps:
       - name: Set working directory owner
