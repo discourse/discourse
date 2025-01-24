@@ -893,7 +893,7 @@ class ApplicationController < ActionController::Base
 
     redirect_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     if !request.fullpath.start_with?(redirect_path)
-      redirect_to path(redirect_path)
+      redirect_to redirect_path
       nil
     end
   end
