@@ -248,6 +248,7 @@ export default function setupTests(config) {
 
   let app;
   QUnit.testStart(function (ctx) {
+    console.log("Test started", ctx.module, ctx.name);
     let settings = resetSettings();
     resetThemeSettings();
 
@@ -309,7 +310,8 @@ export default function setupTests(config) {
     sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
   });
 
-  QUnit.testDone(function () {
+  QUnit.testDone(function (ctx) {
+    console.log("Test done", ctx.module, ctx.name);
     testCleanup(getOwner(app), app);
 
     sinon.restore();
