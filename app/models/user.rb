@@ -1908,6 +1908,8 @@ class User < ActiveRecord::Base
   end
 
   def similar_users
+    return User.none if self.ip_address.blank?
+
     User
       .real
       .where.not(id: self.id)
