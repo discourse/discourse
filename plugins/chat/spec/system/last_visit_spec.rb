@@ -32,7 +32,7 @@ RSpec.describe "Last visit", type: :system do
     )
     chat_page.visit_channel(channel_1)
 
-    expect(channel_page.messages).to have_last_visit_line(id: message_1.id)
+    expect(channel_page).to have_last_visit_line_at_id(message_1.id)
 
     sidebar_page.open_channel(channel_2)
     sidebar_page.open_channel(channel_1)
@@ -43,6 +43,6 @@ RSpec.describe "Last visit", type: :system do
     message_4 = Fabricate(:chat_message, user: user_1, chat_channel: channel_1, use_service: true)
     sidebar_page.open_channel(channel_1)
 
-    expect(channel_page.messages).to have_last_visit_line(id: message_1.id)
+    expect(channel_page).to have_last_visit_line_at_id(message_4.id)
   end
 end

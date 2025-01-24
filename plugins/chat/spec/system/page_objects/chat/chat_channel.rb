@@ -52,6 +52,12 @@ module PageObjects
         find(message_by_id_selector(id))
       end
 
+      def has_last_visit_line_at_id?(id)
+        find(".chat-message-separator[data-id=\"#{id}\"]").has_content?(
+          I18n.t("js.chat.last_visit"),
+        )
+      end
+
       def has_no_last_visit_line?
         has_no_content?(I18n.t("js.chat.last_visit"))
       end

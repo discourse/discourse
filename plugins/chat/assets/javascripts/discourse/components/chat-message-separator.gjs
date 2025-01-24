@@ -91,11 +91,13 @@ export default class ChatMessageSeparator extends Component {
     {{#if this.formattedFirstMessageDate}}
       <div
         class={{concatClass
+          "chat-message-separator"
           "chat-message-separator-date"
           (if this.isNewestMessage "with-last-visit")
         }}
         role="button"
         {{on "click" this.onDateClick passive=true}}
+        data-id={{@message.id}}
       >
         <div class="chat-message-separator__text-container" {{this.track}}>
           <span class="chat-message-separator__text">
@@ -117,7 +119,10 @@ export default class ChatMessageSeparator extends Component {
         <div class="chat-message-separator__line"></div>
       </div>
     {{else if this.isNewestMessage}}
-      <div class="chat-message-separator-new">
+      <div
+        class="chat-message-separator chat-message-separator-new"
+        data-id={{@message.id}}
+      >
         <div class="chat-message-separator__text-container">
           <span class="chat-message-separator__text">
             {{i18n "chat.last_visit"}}
