@@ -239,7 +239,6 @@ jobs:
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
         run: |
-          bundle exec rails runner "puts Theme.find(6).name"
           DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
         timeout-minutes: 3
 
