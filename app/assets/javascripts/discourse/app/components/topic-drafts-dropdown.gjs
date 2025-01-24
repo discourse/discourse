@@ -83,7 +83,7 @@ export default class TopicDraftsDropdown extends Component {
       @onRegisterApi={{this.onRegisterApi}}
       @modalForMobile={{true}}
       @disabled={{this.loading}}
-      class="btn-small"
+      class="btn-small btn-default"
     >
       <:content>
         <DropdownMenu as |dropdown|>
