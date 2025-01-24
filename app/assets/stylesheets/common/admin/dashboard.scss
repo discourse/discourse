@@ -150,6 +150,27 @@
       &.site-traffic {
         grid-column: span 12;
       }
+
+      .header {
+        display: grid;
+        grid-template-areas: "title trend" "description description";
+        grid-template-columns: auto 1fr;
+
+        .d-page-subheader {
+          display: contents;
+        }
+
+        .d-page-subheader__description {
+          grid-area: description;
+          margin-top: 0;
+        }
+
+        .trend {
+          grid-area: trend;
+          white-space: nowrap;
+          align-self: start;
+        }
+      }
     }
 
     @include breakpoint(medium) {

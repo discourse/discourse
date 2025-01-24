@@ -11,6 +11,7 @@ class PostSerializer < BasicPostSerializer
     post_actions
     all_post_actions
     add_excerpt
+    notice_created_by_users
   ]
 
   INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
@@ -82,6 +83,7 @@ class PostSerializer < BasicPostSerializer
              :action_code_who,
              :action_code_path,
              :notice,
+             :notice_created_by_user,
              :last_wiki_edit,
              :locked,
              :excerpt,
@@ -516,6 +518,19 @@ class PostSerializer < BasicPostSerializer
 
   def include_action_code_path?
     include_action_code? && action_code_path.present?
+  end
+
+  def include_notice_created_by_user?
+    scope.is_staff? && notice.present? && notice_created_by_users.present?
+  end
+
+  def notice_created_by_user
+    return if notice.blank?
+    return if notice["type"] != Post.notices[:custom]
+    return if notice["created_by_user_id"].blank?
+    found_user = notice_created_by_users&.find { |user| user.id == notice["created_by_user_id"] }
+    return if !found_user
+    BasicUserSerializer.new(found_user, root: false).as_json
   end
 
   def notice

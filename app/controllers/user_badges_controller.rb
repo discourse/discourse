@@ -144,7 +144,7 @@ class UserBadgesController < ApplicationController
     UserBadge.where(user_id: user_badge.user_id, badge_id: user_badge.badge_id).update_all(
       is_favorite: !user_badge.is_favorite,
     )
-    UserBadge.update_featured_ranks!(user_badge.user_id)
+    UserBadge.update_featured_ranks!([user_badge.user_id])
   end
 
   private

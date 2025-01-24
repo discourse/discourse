@@ -406,6 +406,8 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
     assert.dom(".reply-where-modal").exists("pops up a modal");
 
+    assert.dom(".topic-title").exists({ count: 2 }); // modal buttons
+
     await click(".btn-reply-here");
     assert
       .dom(".topic-post:last-of-type .cooked p")

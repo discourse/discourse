@@ -184,9 +184,9 @@ module Jobs
 
       begin
         # create upload
-        upload = create_upload_for_user(user_export, zip_filename)
+        create_upload_for_user(user_export, zip_filename)
       ensure
-        post = notify_user(upload, export_title)
+        post = notify_user(user_export, export_title)
 
         if user_export.present? && post.present?
           topic = post.topic
@@ -623,19 +623,34 @@ module Jobs
       %w[composer_open_duration_msecs is_poll reply_to_post_number tags title typing_duration_msecs]
     end
 
-    def notify_user(upload, export_title)
+    def notify_user(export, export_title)
       post = nil
 
       if @requesting_user
         post =
-          if upload.persisted?
+          if export.upload&.persisted?
+            ::MessageBus.publish(
+              "/user-export-progress",
+              {
+                user_export_id: @archive_for_user.id,
+                export_data: UserExportSerializer.new(export, scope: guardian).as_json,
+              },
+              user_ids: [@requesting_user.id],
+            )
+
             SystemMessage.create_from_system_user(
               @requesting_user,
               :csv_export_succeeded,
-              download_link: UploadMarkdown.new(upload).attachment_markdown,
+              download_link: UploadMarkdown.new(export.upload).attachment_markdown,
               export_title: export_title,
             )
           else
+            ::MessageBus.publish(
+              "/user-export-progress",
+              { user_export_id: @archive_for_user.id, failed: true },
+              user_ids: [@requesting_user.id],
+            )
+
             SystemMessage.create_from_system_user(@requesting_user, :csv_export_failed)
           end
       end

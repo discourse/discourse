@@ -866,6 +866,10 @@
   </section>
 {{/if}}
 
+{{#if this.currentUser.admin}}
+  <AdminUserExportsTable @model={{this.model}} />
+{{/if}}
+
 <span>
   <PluginOutlet
     @name="after-user-details"

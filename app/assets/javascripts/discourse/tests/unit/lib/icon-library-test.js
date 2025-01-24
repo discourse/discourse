@@ -6,6 +6,10 @@ import {
   iconHTML,
   iconNode,
 } from "discourse/lib/icon-library";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 
 module("Unit | Utility | icon-library", function (hooks) {
   setupTest(hooks);
@@ -66,5 +70,25 @@ module("Unit | Utility | icon-library", function (hooks) {
         "has remapped icon"
       );
     });
+  });
+
+  test("fa5 remaps throws error", function (assert) {
+    disableRaiseOnDeprecation();
+    assert.throws(
+      () => {
+        iconHTML("adjust");
+      },
+      /Deprecation notice: The icon name "adjust" has been updated to "circle-half-stroke".*\[deprecation id: discourse\.fontawesome-6-upgrade\]/,
+      "throws an error if icon name is deprecated"
+    );
+
+    assert.throws(
+      () => {
+        iconHTML("far-dot-circle");
+      },
+      /Deprecation notice: The icon name "far-dot-circle" has been updated to "far-circle-dot".*\[deprecation id: discourse\.fontawesome-6-upgrade\]/,
+      "throws an error if icon name is deprecated"
+    );
+    enableRaiseOnDeprecation();
   });
 });

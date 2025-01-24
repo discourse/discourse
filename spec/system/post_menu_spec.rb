@@ -108,7 +108,7 @@ describe "Post menu", type: :system do
           expect(topic_page).to have_post_action_button(post2, :admin)
         end
 
-        it "displays the admin button when the user can wiki the post / edit staff notices" do
+        it "displays the admin button when the user can wiki the post / edit official notices" do
           # display the admin button when the user can wiki
           sign_in(Fabricate(:trust_level_4))
 
