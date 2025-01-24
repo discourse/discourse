@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
@@ -31,13 +32,14 @@ export default class CreateAccount extends Component.extend(
   @service siteSettings;
   @service login;
 
+  @tracked isDeveloper = false;
+  @tracked accountUsername = this.model.accountUsername;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
   rejectedEmails = A();
   prefilledUsername = null;
   userFields = null;
-  isDeveloper = false;
   maskPassword = true;
   passwordValidationVisible = false;
   emailValidationVisible = false;
@@ -46,13 +48,11 @@ export default class CreateAccount extends Component.extend(
   @notEmpty("model.authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
-
+  // For NameValidation mixin
+  @alias("model.accountName") accountName;
   // For UsernameValidation mixin
   @alias("model.authOptions") authOptions;
   @alias("model.accountEmail") accountEmail;
-  @alias("model.accountUsername") accountUsername;
-  // For NameValidation mixin
-  @alias("model.accountName") accountName;
 
   init() {
     super.init(...arguments);
@@ -68,6 +68,11 @@ export default class CreateAccount extends Component.extend(
         this.set("model.skipConfirmation", false)
       );
     }
+  }
+
+  @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
   }
 
   get nameTitle() {
@@ -349,15 +354,14 @@ export default class CreateAccount extends Component.extend(
     if (this.prefilledUsername) {
       // If username field has been filled automatically, and email field just changed,
       // then remove the username.
-      if (this.model.accountUsername === this.prefilledUsername) {
-        this.set("model.accountUsername", "");
+      if (this.accountUsername === this.prefilledUsername) {
+        this.accountUsername = "";
       }
       this.set("prefilledUsername", null);
     }
     if (
       this.get("emailValidation.ok") &&
-      (isEmpty(this.model.accountUsername) ||
-        this.get("model.authOptions.email"))
+      (isEmpty(this.accountUsername) || this.get("model.authOptions.email"))
     ) {
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd party auth,
@@ -416,7 +420,7 @@ export default class CreateAccount extends Component.extend(
       accountName: this.model.accountName,
       accountEmail: this.model.accountEmail,
       accountPassword: this.accountPassword,
-      accountUsername: this.model.accountUsername,
+      accountUsername: this.accountUsername,
       accountChallenge: this.accountChallenge,
       inviteCode: this.inviteCode,
       accountPasswordConfirm: this.accountHoneypot,
@@ -443,7 +447,7 @@ export default class CreateAccount extends Component.extend(
           return;
         }
 
-        this.set("isDeveloper", false);
+        this.isDeveloper = false;
         if (result.success) {
           // invalidate honeypot
           this._challengeExpiry = 1;
@@ -463,7 +467,7 @@ export default class CreateAccount extends Component.extend(
         } else {
           this.set("flash", result.message || i18n("create_account.failed"));
           if (result.is_developer) {
-            this.set("isDeveloper", true);
+            this.isDeveloper = true;
           }
           if (
             result.errors &&
