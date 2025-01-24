@@ -10,16 +10,15 @@ class FillFastTypingThresholdBasedOnDeprecatedSetting < ActiveRecord::Migration[
     if old_setting_value.present?
       fast_typing_threshold_setting =
         case
-        when old_setting_value.to_i == NewPostManager::FAST_TYPING_THRESHOLD_MAP[:disabled]
+        when old_setting_value.to_i == 0
           "off"
-        when old_setting_value.to_i < NewPostManager::FAST_TYPING_THRESHOLD_MAP[:standard]
+        when old_setting_value.to_i < 3000
           "low"
-        when old_setting_value.to_i < NewPostManager::FAST_TYPING_THRESHOLD_MAP[:high]
+        when old_setting_value.to_i < 5000
           "standard"
         else
           "high"
         end
-      puts fast_typing_threshold_setting
 
       DB.exec(
         "INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
