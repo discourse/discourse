@@ -222,13 +222,14 @@ module Stylesheet
 
       if font[:variants].present?
         fonts_dir = UrlHelper.absolute("#{Discourse.base_path}/fonts")
+        puts "fonts dir is #{fonts_dir}"
         font[:variants].each do |variant|
           src =
             (
               if variant[:src]
                 variant[:src]
               else
-                "url(\"https://rsms.me/inter/font-files/InterVariable.woff2?v=4.1\") format(\"#{variant[:format]}\")"
+                "url(\"http://localhost:60098#{fonts_dir}/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
               end
             )
 
