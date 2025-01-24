@@ -103,7 +103,10 @@ export default RouteTemplate(
           {{#if this.accountActivated}}
             <div class="account-activated">
               <div class="tada-image">
-                <img src="/images/wizard/tada.svg" alt="tada emoji" />
+                <img
+                  src={{getURL "/images/wizard/tada.svg"}}
+                  alt="tada emoji"
+                />
               </div>
               {{#if this.needsApproval}}
                 <p>{{i18n "user.activate_account.approval_required"}}</p>
