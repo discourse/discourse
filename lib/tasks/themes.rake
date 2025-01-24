@@ -289,6 +289,8 @@ task "themes:qunit_all_official" => :environment do |task, args|
     end
   end
 
+  puts Theme.pluck(:id, :name)
+
   Rake::Task["themes:qunit"].reenable
   Rake::Task["themes:qunit"].invoke("ids", theme_ids_with_qunit_tests.join("|"))
 end
