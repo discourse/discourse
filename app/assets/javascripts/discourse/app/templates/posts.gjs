@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import RouteTemplate from "ember-route-template";
 import PostList from "discourse/components/post-list";
 import Posts from "discourse/models/posts";
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   class extends Component {
@@ -15,11 +16,14 @@ export default RouteTemplate(
     }
 
     <template>
-      <PostList
-        @posts={{@model}}
-        @fetchMorePosts={{this.loadMorePosts}}
-        @titlePath="topic_html_title"
-      />
+      <section class="posts-page">
+        <h2 class="posts-page__title">{{i18n "post_list.title"}}</h2>
+        <PostList
+          @posts={{@model}}
+          @fetchMorePosts={{this.loadMorePosts}}
+          @titlePath="topic_html_title"
+        />
+      </section>
     </template>
   }
 );

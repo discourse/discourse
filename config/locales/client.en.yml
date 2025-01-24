@@ -3763,6 +3763,7 @@ en:
       deleted_by_author_simple: "(topic deleted by author)"
 
     post_list:
+      title: "Latest posts"
       empty: "There are no posts"
       aria_post_number: "%{title} - post #%{postNumber}"
 
