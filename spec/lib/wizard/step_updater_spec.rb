@@ -96,6 +96,15 @@ RSpec.describe Wizard::StepUpdater do
       expect(SiteSetting.heading_font).to eq("oswald")
     end
 
+    it "updates both fonts if site_font is used" do
+      updater = wizard.create_updater("styling", site_font: "open_sans", homepage_style: "latest")
+      updater.update
+      expect(updater.success?).to eq(true)
+      expect(wizard.completed_steps?("styling")).to eq(true)
+      expect(SiteSetting.base_font).to eq("open_sans")
+      expect(SiteSetting.heading_font).to eq("open_sans")
+    end
+
     context "with colors" do
       context "with an existing color scheme" do
         fab!(:color_scheme) { Fabricate(:color_scheme, name: "existing", via_wizard: true) }
