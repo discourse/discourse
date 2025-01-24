@@ -1,8 +1,8 @@
 {{~#if @tagName~}}
   {{!
-    Older outlets have a wrapper tagName. RFC0389 proposes an interface for dynamic tag names, which we may want to use in future.
-    But for now, this classic component wrapper takes care of the tagName.
-  }}
+  Older outlets have a wrapper tagName. RFC0389 proposes an interface for dynamic tag names, which we may want to use in future.
+  But for now, this classic component wrapper takes care of the tagName.
+}}
   <this.wrapperComponent @tagName={{@tagName}}>
     {{~#each (this.getConnectors) as |c|~}}
       {{~#if c.componentClass~}}
@@ -28,6 +28,7 @@
   {{~#if (has-block)~}}
     <PluginOutlet
       @name={{concat @name "__before"}}
+      @alias={{@aliasForBefore}}
       @outletArgs={{this.outletArgsWithDeprecations}}
     />
   {{~/if~}}
@@ -59,6 +60,7 @@
   {{~#if (has-block)~}}
     <PluginOutlet
       @name={{concat @name "__after"}}
+      @alias={{@aliasForAfter}}
       @outletArgs={{this.outletArgsWithDeprecations}}
     />
   {{~/if~}}
