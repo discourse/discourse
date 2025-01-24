@@ -34,7 +34,6 @@ jobs:
     timeout-minutes: 20
 
     env:
-      # DISCOURSE_HOSTNAME: www.example.com
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
