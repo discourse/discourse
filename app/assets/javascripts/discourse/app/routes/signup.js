@@ -13,11 +13,10 @@ export default class SignupRoute extends DiscourseRoute {
   singleLoginMethod = false;
 
   beforeModel(transition) {
-    const loginRequired = this.siteSettings.login_required;
     this.authComplete = transition.to.queryParams.authComplete || false;
     this.singleLoginMethod = this.login.isOnlyOneExternalLoginMethod;
     this.autoRedirect =
-      !this.authComplete && this.singleLoginMethod && !loginRequired;
+      !this.authComplete && this.singleLoginMethod && ! this.siteSettings.login_required;
 
     if (this.autoRedirect) {
       this.login.singleExternalLogin({ signup: true });
