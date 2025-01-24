@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import ChatDrawerRoutesBrowse from "discourse/plugins/chat/discourse/components/chat/drawer-routes/browse";
 import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel";
 import ChatDrawerRoutesChannelInfoMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-info-members";
@@ -33,13 +34,7 @@ const ROUTES = {
       }
     },
   },
-  "chat.index": { name: ChatDrawerRoutesChannels },
-  // order matters, non index before index
   "chat.browse": {
-    name: ChatDrawerRoutesBrowse,
-    extractParams: () => ({ currentTab: "open" }),
-  },
-  "chat.browse.index": {
     name: ChatDrawerRoutesBrowse,
     extractParams: () => ({ currentTab: "open" }),
   },
@@ -60,28 +55,53 @@ const ROUTES = {
     extractParams: (r) => ({ currentTab: r.localName }),
   },
   "chat.channels": { name: ChatDrawerRoutesChannels },
-  "chat.channel": { name: ChatDrawerRoutesChannel },
-  "chat.channel.index": { name: ChatDrawerRoutesChannel },
+  "chat.channel": {
+    name: ChatDrawerRoutesChannel,
+
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+      return { channel };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
+    },
+  },
   "chat.channel.thread": {
     name: ChatDrawerRoutesChannelThread,
+
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
         threadId: route.params.threadId,
       };
     },
-  },
-  "chat.channel.thread.index": {
-    name: ChatDrawerRoutesChannelThread,
-    extractParams: (route) => {
-      return {
-        channelId: route.parent.params.channelId,
-        threadId: route.params.threadId,
-      };
+
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+      const thread = await channel.threadsManager.find(
+        channel.id,
+        params.threadId
+      );
+
+      return { channel, thread };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
     },
   },
   "chat.channel.thread.near-message": {
     name: ChatDrawerRoutesChannelThread,
+
     extractParams: (route) => {
       return {
         channelId: route.parent.parent.params.channelId,
@@ -89,13 +109,46 @@ const ROUTES = {
         messageId: route.params.messageId,
       };
     },
+
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+
+      const thread = await channel.threadsManager.find(
+        channel.id,
+        params.threadId
+      );
+
+      return { channel, thread };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
+    },
   },
   "chat.channel.threads": {
     name: ChatDrawerRoutesChannelThreads,
+
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
       };
+    },
+
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+      return { channel };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
     },
   },
   "chat.direct-messages": {
@@ -106,45 +159,90 @@ const ROUTES = {
   },
   "chat.channel.near-message": {
     name: ChatDrawerRoutesChannel,
+
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
         messageId: route.params.messageId,
       };
+    },
+
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+      return { channel };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
     },
   },
   "chat.channel.near-message-with-thread": {
     name: ChatDrawerRoutesChannel,
+
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
         messageId: route.params.messageId,
       };
     },
+
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+      return { channel };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
+    },
   },
   "chat.channel.info.settings": {
     name: ChatDrawerRoutesChannelInfoSettings,
+
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
       };
+    },
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+      return { channel };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
     },
   },
   "chat.channel.info.members": {
     name: ChatDrawerRoutesChannelInfoMembers,
+
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
       };
     },
-  },
-  "chat.channel-legacy": {
-    name: ChatDrawerRoutesChannel,
-    extractParams: (route) => {
-      return {
-        channelId: route.params.channelId,
-        messageId: route.queryParams.messageId,
-      };
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+      return { channel };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
     },
   },
 };
@@ -161,8 +259,17 @@ export default class ChatDrawerRouter extends Service {
   @tracked drawerRoute = null;
   @tracked params = null;
   @tracked currentRouteName = null;
+  @tracked model = null;
 
   routeNames = Object.keys(ROUTES);
+
+  canHandleRoute(route) {
+    return !!ROUTES[this.#forceParentRouteForIndex(route).name];
+  }
+
+  get activeChannelId() {
+    return this.model?.channel?.id;
+  }
 
   get hasThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
@@ -176,12 +283,20 @@ export default class ChatDrawerRouter extends Service {
     return this.chat.userCanAccessDirectMessages;
   }
 
-  stateFor(route) {
-    this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
-
+  async stateFor(route) {
+    this.drawerRoute?.deactivate?.call(this, this.chatHistory.currentRoute);
     this.chatHistory.visit(route);
-    this.drawerRoute = ROUTES[route.name];
-    this.params = this.drawerRoute?.extractParams?.(route) || route.params;
+    this.drawerRoute = ROUTES[this.#forceParentRouteForIndex(route).name];
+    this.params =
+      this.drawerRoute?.extractParams?.call(this, route) || route.params;
+
+    try {
+      this.model = await this.drawerRoute?.model?.call(this, this.params);
+      this.drawerRoute?.afterModel?.call(this, this.model);
+    } catch (e) {
+      popupAjaxError(e);
+    }
+
     this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
     this.currentRouteName = route.name;
     this.drawerRoute.activate?.(route);
@@ -193,11 +308,14 @@ export default class ChatDrawerRouter extends Service {
   }
 
   #routeFromURL(url) {
-    let route = this.router.recognize(url);
+    const route = this.router.recognize(url);
+    return this.#forceParentRouteForIndex(route);
+  }
 
+  #forceParentRouteForIndex(route) {
     // ember might recognize the index subroute
     if (route.localName === "index") {
-      route = route.parent;
+      return route.parent;
     }
 
     return route;

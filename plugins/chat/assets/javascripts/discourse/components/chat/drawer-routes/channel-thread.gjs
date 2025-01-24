@@ -1,10 +1,7 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread";
@@ -12,12 +9,11 @@ import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread"
 export default class ChatDrawerRoutesChannelThread extends Component {
   @service chat;
   @service chatStateManager;
-  @service chatChannelsManager;
   @service chatHistory;
 
   get backButton() {
     const link = {
-      models: this.chat.activeChannel?.routeModels,
+      models: this.args.model?.channel?.routeModels,
     };
 
     if (this.chatHistory.previousRoute?.name === "chat.channel.threads") {
@@ -37,41 +33,18 @@ export default class ChatDrawerRoutesChannelThread extends Component {
 
   get threadTitle() {
     return (
-      this.chat.activeChannel?.activeThread?.title ?? i18n("chat.thread.label")
+      this.args.model?.channel?.activeThread?.title ?? i18n("chat.thread.label")
     );
   }
 
   @action
-  async fetchChannelAndThread() {
-    if (!this.args.params?.channelId || !this.args.params?.threadId) {
-      return;
-    }
-
-    try {
-      const channel = await this.chatChannelsManager.find(
-        this.args.params.channelId
-      );
-
-      this.chat.activeChannel = channel;
-
-      channel.threadsManager
-        .find(channel.id, this.args.params.threadId)
-        .then((thread) => {
-          this.chat.activeChannel.activeThread = thread;
-        });
-    } catch (error) {
-      popupAjaxError(error);
-    }
+  setFullTitle(value) {
+    this.showThreadFullTitle = value;
   }
 
   <template>
-    <div
-      class="c-drawer-routes --channel-thread"
-      {{didInsert this.fetchChannelAndThread}}
-      {{didUpdate this.fetchChannelAndThread @params.channelId}}
-      {{didUpdate this.fetchChannelAndThread @params.threadId}}
-    >
-      {{#if this.chat.activeChannel}}
+    <div class="c-drawer-routes --channel-thread">
+      {{#if @model.channel}}
         <Navbar
           @onClick={{this.chat.toggleDrawer}}
           @showFullTitle={{this.showfullTitle}}
@@ -92,13 +65,11 @@ export default class ChatDrawerRoutesChannelThread extends Component {
 
         {{#if this.chatStateManager.isDrawerExpanded}}
           <div class="chat-drawer-content">
-            {{#each (array this.chat.activeChannel.activeThread) as |thread|}}
-              {{#if thread}}
-                <ChatThread
-                  @thread={{thread}}
-                  @targetMessageId={{@params.messageId}}
-                />
-              {{/if}}
+            {{#each (array @model.thread) as |thread|}}
+              <ChatThread
+                @thread={{thread}}
+                @targetMessageId={{@params.messageId}}
+              />
             {{/each}}
           </div>
         {{/if}}
