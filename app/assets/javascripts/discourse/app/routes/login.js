@@ -7,12 +7,18 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
   @service router;
+  @service login;
 
   beforeModel() {
-    if (
-      !this.siteSettings.login_required &&
-      (!this.siteSettings.full_page_login ||
-        this.siteSettings.enable_discourse_connect)
+    if (this.siteSettings.login_required) {
+      return;
+    }
+
+    if (this.login.isOnlyOneExternalLoginMethod) {
+      this.login.singleExternalLogin();
+    } else if (
+      !this.siteSettings.full_page_login ||
+      this.siteSettings.enable_discourse_connect
     ) {
       this.router
         .replaceWith(`/${defaultHomepage()}`)
@@ -34,6 +40,15 @@ export default class LoginRoute extends DiscourseRoute {
     controller.set("canSignUp", canSignUp);
     controller.set("flashType", "");
     controller.set("flash", "");
+
+    if (this.login.isOnlyOneExternalLoginMethod) {
+      if (this.siteSettings.login_required) {
+        controller.set("autoRedirect", true);
+        controller.set("singleExternalLogin", this.login.singleExternalLogin);
+      } else {
+        controller.set("isRedirecting", true);
+      }
+    }
 
     if (this.siteSettings.login_required) {
       controller.set("showLogin", false);

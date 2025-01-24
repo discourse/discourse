@@ -841,12 +841,6 @@ class ApplicationController < ActionController::Base
       # save original URL in a session so we can redirect after login
       session[:destination_url] = destination_url
       redirect_to path("/session/sso")
-    elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins &&
-          Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
-      # Only one authentication provider, direct straight to it.
-      # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
-      cookies[:destination_url] = destination_url
-      redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
     else
       # save original URL in a cookie (javascript redirects after login in this case)
       cookies[:destination_url] = destination_url
