@@ -41,7 +41,7 @@ export default class SignupRoute extends DiscourseRoute {
     const { canSignUp } = this.controllerFor("application");
     if (
       this.authComplete ||
-      !this.auth_immediately ||
+      !this.siteSettings.auth_immediately ||
       (canSignUp &&
         this.siteSettings.full_page_login &&
         !this.singleLoginMethod)
