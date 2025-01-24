@@ -228,7 +228,7 @@ module Stylesheet
               if variant[:src]
                 variant[:src]
               else
-                "url(\"#{fonts_dir}/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
+                "url(\"https://rsms.me/inter/font-files/InterVariable.woff2?v=4.1\") format(\"#{variant[:format]}\")"
               end
             )
 
