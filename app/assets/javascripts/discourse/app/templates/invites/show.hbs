@@ -93,9 +93,11 @@
               {{/if}}
 
               <div class="input username-input input-group">
-                <Input
+                <input
                   {{on "focusin" this.scrollInputIntoView}}
-                  @value={{this.accountUsername}}
+                  {{on "input" this.setAccountUsername}}
+                  type="text"
+                  value={{this.accountUsername}}
                   class={{value-entered this.accountUsername}}
                   id="new-account-username"
                   name="username"
