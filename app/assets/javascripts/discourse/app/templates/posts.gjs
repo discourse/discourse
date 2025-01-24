@@ -10,7 +10,7 @@ export default RouteTemplate(
     @action
     async loadMorePosts() {
       const posts = this.args.model;
-      const before = posts[posts.length - 1].created_at;
+      const before = posts[posts.length - 1].id;
 
       return Posts.find({ before });
     }
