@@ -142,6 +142,15 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
     end
 
+    it "should properly redirect admins when enforce_second_factor is 'all' in subfolder" do
+      set_subfolder "/forum"
+      SiteSetting.enforce_second_factor = "all"
+      sign_in(admin)
+
+      get "/"
+      expect(response).to redirect_to("/forum/u/#{admin.username}/preferences/second-factor")
+    end
+
     it "should redirect users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
