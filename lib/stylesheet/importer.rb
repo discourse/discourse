@@ -237,6 +237,7 @@ module Stylesheet
               font-family: '#{font[:name]}';
               src: #{src};
               font-weight: #{variant[:weight]};
+              font-display: optional;
             }
           CSS
         end
