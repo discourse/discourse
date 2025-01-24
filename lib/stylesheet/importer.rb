@@ -232,14 +232,14 @@ module Stylesheet
               end
             )
 
-          # contents << <<~CSS
-          #   @font-face {
-          #     font-family: '#{font[:name]}';
-          #     src: #{src};
-          #     font-weight: #{variant[:weight]};
-          #     font-display: optional;
-          #   }
-          # CSS
+          contents << <<~CSS
+            @font-face {
+              font-family: '#{font[:name]}';
+              src: #{src};
+              font-weight: #{variant[:weight]};
+              font-display: optional;
+            }
+          CSS
         end
       end
 
