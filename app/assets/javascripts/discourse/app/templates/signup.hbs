@@ -69,24 +69,24 @@
               {{/if}}
             </div>
 
-          <div class="input-group create-account__username">
-            <input
-              {{on "focusin" this.scrollInputIntoView}}
-              {{on "input" this.setAccountUsername}}
-              type="text"
-              value={{this.accountUsername}}
-              disabled={{this.usernameDisabled}}
-              maxlength={{this.maxUsernameLength}}
-              aria-describedby="username-validation username-validation-more-info"
-              aria-invalid={{this.usernameValidation.failed}}
-              autocomplete="off"
-              name="username"
-              id="new-account-username"
-              class={{value-entered this.accountUsername}}
-            />
-            <label class="alt-placeholder" for="new-account-username">
-              {{i18n "user.username.title"}}
-            </label>
+            <div class="input-group create-account__username">
+              <input
+                {{on "focusin" this.scrollInputIntoView}}
+                {{on "input" this.setAccountUsername}}
+                type="text"
+                value={{this.accountUsername}}
+                disabled={{this.usernameDisabled}}
+                maxlength={{this.maxUsernameLength}}
+                aria-describedby="username-validation username-validation-more-info"
+                aria-invalid={{this.usernameValidation.failed}}
+                autocomplete="off"
+                name="username"
+                id="new-account-username"
+                class={{value-entered this.accountUsername}}
+              />
+              <label class="alt-placeholder" for="new-account-username">
+                {{i18n "user.username.title"}}
+              </label>
 
               {{#if this.showUsernameInstructions}}
                 <span class="more-info" id="username-validation-more-info">
