@@ -689,7 +689,7 @@ aside.quote {
   .buttons {
     display: flex;
     flex-wrap: wrap;
-    @media screen and (width <= 420px) {
+    @media screen and (max-width: 420px) {
       flex-direction: column;
       align-items: flex-start;
 
@@ -1344,7 +1344,7 @@ span.mention {
   }
 }
 
-@media all and (width <= 767px) {
+@media all and (max-width: 767px) {
   .reply-to-tab {
     span {
       display: none;
@@ -1430,6 +1430,10 @@ span.mention {
     .d-icon {
       color: var(--primary-medium);
     }
+  }
+
+  .post-notice-message p {
+    display: inline;
   }
 
   p {

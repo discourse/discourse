@@ -283,7 +283,7 @@ export default class Item extends Component {
                   @outletArgs={{hash topic=@topic}}
                 />
                 {{~! no whitespace ~}}
-                <TopicStatus @topic={{@topic}} />
+                <TopicStatus @topic={{@topic}} @context="topic-list" />
                 {{~! no whitespace ~}}
                 <TopicLink
                   {{on "focus" this.onTitleFocus}}

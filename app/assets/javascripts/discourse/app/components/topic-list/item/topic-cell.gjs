@@ -67,7 +67,7 @@ export default class TopicCell extends Component {
           @outletArgs={{hash topic=@topic tagsForUser=@tagsForUser}}
         >
           {{~! no whitespace ~}}
-          <TopicStatus @topic={{@topic}} />
+          <TopicStatus @topic={{@topic}} @context="topic-list" />
           {{~! no whitespace ~}}
           <TopicLink
             {{on "focus" this.onTitleFocus}}

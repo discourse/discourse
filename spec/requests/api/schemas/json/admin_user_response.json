@@ -134,6 +134,9 @@
     "full_suspend_reason": {
       "type": ["string", "null"]
     },
+    "latest_export": {
+      "type": ["object", "null"]
+    },
     "silence_reason": {
       "type": ["string", "null"]
     },

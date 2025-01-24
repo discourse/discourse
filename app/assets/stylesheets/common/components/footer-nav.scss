@@ -13,12 +13,6 @@ html.footer-nav-visible {
     padding-bottom: calc(var(--footer-nav-height) + 15px);
   }
 
-  #reply-control.draft {
-    bottom: var(--footer-nav-height);
-    margin-bottom: env(safe-area-inset-bottom);
-    padding-bottom: 0;
-  }
-
   .with-topic-progress {
     bottom: calc(
       var(--footer-nav-height) + env(safe-area-inset-bottom) +
@@ -78,6 +72,10 @@ html.footer-nav-visible {
 @supports (-webkit-backdrop-filter: blur(10px)) {
   html:not(.footer-nav-ipad) .footer-nav {
     background-color: rgba(var(--header_background-rgb), 0.7);
+
+    /* prefix needed for iOS < 18 */
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
   }
 }

@@ -1724,7 +1724,7 @@ en:
       google_analytics_version: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
-      admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
+      admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -1736,6 +1736,7 @@ en:
     default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text</a>."
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
+    set_locale_from_cookie: "Allows setting an anonymous user's locale via the 'locale' browser cookie"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
     min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
     min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
@@ -2729,7 +2730,7 @@ en:
     create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
-    use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Note that this makes it easier for the public to guess full user email addresses (because a large proportion of people share common services like `gmail.com`)."
+    use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover your members' full email address (because a large proportion of people share common serves like `gmail.com`)."
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."

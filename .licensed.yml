@@ -29,6 +29,8 @@ ignored:
     - net-protocol # Ruby (default gem)
     - openssl # Ruby (default gem)
     - ostruct # Ruby (default gem)
+    - pp # Ruby (default gem)
+    - prettyprint # Ruby (default gem)
     - racc # Ruby (default gem)
     - rchardet # LGPL
     - rdoc # Ruby (default gem)

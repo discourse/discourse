@@ -3,11 +3,12 @@
 class Stylesheet::Manager::Builder
   attr_reader :theme
 
-  def initialize(target: :desktop, theme: nil, color_scheme: nil, manager:)
+  def initialize(target: :desktop, theme: nil, color_scheme: nil, manager:, dark: false)
     @target = target
     @theme = theme
     @color_scheme = color_scheme
     @manager = manager
+    @dark = dark
   end
 
   def compile(opts = {})
@@ -46,6 +47,7 @@ class Stylesheet::Manager::Builder
           source_map_file: source_map_url_relative_from_stylesheet,
           color_scheme_id: @color_scheme&.id,
           load_paths: load_paths,
+          dark: @dark,
         )
       rescue SassC::SyntaxError, SassC::NotRenderedError => e
         if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
@@ -119,13 +121,14 @@ class Stylesheet::Manager::Builder
   end
 
   def qualified_target
+    dark_string = @dark ? "_dark" : ""
     if is_theme?
       "#{@target}_#{theme&.id}"
     elsif @color_scheme
-      "#{@target}_#{scheme_slug}_#{@color_scheme&.id}_#{@theme&.id}"
+      "#{@target}_#{scheme_slug}_#{@color_scheme&.id}_#{@theme&.id}#{dark_string}"
     else
       scheme_string = theme&.color_scheme ? "_#{theme.color_scheme.id}" : ""
-      "#{@target}#{scheme_string}"
+      "#{@target}#{scheme_string}#{dark_string}"
     end
   end
 
@@ -245,8 +248,9 @@ class Stylesheet::Manager::Builder
     digest_string = "#{current_hostname}-"
     if cs
       theme_color_defs = resolve_baked_field(:common, :color_definitions)
+      dark_string = @dark ? "-dark" : ""
       digest_string +=
-        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
+        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}#{dark_string}"
     else
       digest_string += "defaults-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
 

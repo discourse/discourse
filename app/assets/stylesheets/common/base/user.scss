@@ -520,7 +520,7 @@
     }
   }
 
-  @media all and (width <= 600px) {
+  @media all and (max-width: 600px) {
     float: none;
     width: 100%;
   }

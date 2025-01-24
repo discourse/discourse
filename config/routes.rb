@@ -1517,6 +1517,7 @@ Discourse::Application.routes.draw do
 
     post "/export_csv/export_entity" => "export_csv#export_entity",
          :as => "export_entity_export_csv_index"
+    get "/export_csv/latest_user_archive/:user_id.json" => "export_csv#latest_user_archive"
 
     get "onebox" => "onebox#show"
     get "inline-onebox" => "inline_onebox#show"

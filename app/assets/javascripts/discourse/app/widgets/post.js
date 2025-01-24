@@ -20,7 +20,11 @@ import {
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
-import { clipboardCopy, formatUsername } from "discourse/lib/utilities";
+import {
+  clipboardCopy,
+  escapeExpression,
+  formatUsername,
+} from "discourse/lib/utilities";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
@@ -808,9 +812,28 @@ createWidget("post-notice", {
 
   html(attrs) {
     if (attrs.notice.type === "custom") {
+      let createdByHTML = "";
+      if (attrs.noticeCreatedByUser) {
+        const createdByName = escapeExpression(
+          prioritizeNameInUx(attrs.noticeCreatedByUser.name)
+            ? attrs.noticeCreatedByUser.name
+            : attrs.noticeCreatedByUser.username
+        );
+        createdByHTML = i18n("post.notice.custom_created_by", {
+          userLinkHTML: `<a
+                  class="trigger-user-card"
+                  data-user-card="${attrs.noticeCreatedByUser.username}"
+                  title="${createdByName}"
+                  aria-hidden="false"
+                  role="listitem"
+                >${createdByName}</a>`,
+        });
+      }
       return [
         iconNode("user-shield"),
-        new RawHtml({ html: `<div>${attrs.notice.cooked}</div>` }),
+        new RawHtml({
+          html: `<div class="post-notice-message">${attrs.notice.cooked} ${createdByHTML}</div>`,
+        }),
       ];
     }
 

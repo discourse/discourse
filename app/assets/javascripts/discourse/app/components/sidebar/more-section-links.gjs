@@ -84,7 +84,7 @@ export default class SidebarMoreSectionLinks extends Component {
 
     <li class="sidebar-section-link-wrapper">
       <DMenu
-        @triggerClass="sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
+        @triggerClass="btn-transparent sidebar-section-link sidebar-more-section-links-details-summary sidebar-row --link-button"
         @modalForMobile={{true}}
         @autofocus={{true}}
         @placement="bottom"

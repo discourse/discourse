@@ -170,13 +170,13 @@
   }
 
   div.column.categories {
-    @media all and (width <= 600px) {
+    @media all and (max-width: 600px) {
       margin-right: 0;
     }
-    @media all and (width >= 600px) {
+    @media all and (min-width: 600px) {
       margin-right: 1em;
     }
-    @media all and (width >= 700px) {
+    @media all and (min-width: 700px) {
       margin-right: 2em;
     }
   }

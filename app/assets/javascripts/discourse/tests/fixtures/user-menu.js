@@ -57,7 +57,7 @@ export default {
           user: {
             id: 1,
             username: "osama",
-            name: "Osama",
+            name: "Osama S",
             avatar_template:
               "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png",
           },
@@ -143,6 +143,7 @@ export default {
     read_notifications: [],
     users: [{id: 13,
         username: "mixtape",
+        name: "Mix Tape",
         avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png"
     }]
   }

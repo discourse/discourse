@@ -158,7 +158,6 @@ basic:
     validator: "AllowUserLocaleEnabledValidator"
   set_locale_from_cookie:
     default: false
-    hidden: true
     client: true
     validator: "AllowUserLocaleEnabledValidator"
   support_mixed_text_direction:
@@ -766,6 +765,10 @@ users:
   prioritize_username_in_ux:
     client: true
     default: true
+  prioritize_full_name_in_ux:
+    client: true
+    default: false
+    hidden: true
   email_token_valid_hours:
     default: 48
     min: 1
@@ -3529,3 +3532,6 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions"
+  use_overhauled_theme_color_palette:
+    default: false
+    hidden: true

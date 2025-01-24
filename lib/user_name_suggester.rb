@@ -7,6 +7,9 @@ module UserNameSuggester
   def self.suggest(*input, current_username: nil)
     name =
       input.find do |item|
+        if !SiteSetting.use_email_for_username_and_name_suggestions
+          next if item.to_s =~ User::EMAIL
+        end
         parsed_name = parse_name_from_email(item)
         break parsed_name if sanitize_username(parsed_name).present?
       end

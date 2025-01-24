@@ -90,7 +90,7 @@ $mobile-breakpoint: 700px;
   position: relative;
 
   .nav-stacked {
-    @media screen and (width <= 700px) {
+    @media screen and (max-width: 700px) {
       margin: 0;
     }
   }
@@ -108,7 +108,7 @@ $mobile-breakpoint: 700px;
   &.admin-site-settings-category {
     overflow: hidden;
 
-    @media (width <= 500px) {
+    @media (max-width: 500px) {
       background-color: var(--primary-very-low);
     }
   }
@@ -143,7 +143,7 @@ $mobile-breakpoint: 700px;
     display: none;
   }
 
-  @media screen and (width <= 970px) and (width >= 768px) {
+  @media screen and (max-width: 970px) and (min-width: 768px) {
     td,
     th {
       padding: 6px 4px;
@@ -173,7 +173,7 @@ $mobile-breakpoint: 700px;
 
 .admin-contents table.grid {
   // Table switches to grid for narrow screens
-  @media screen and (width <= 767px) {
+  @media screen and (max-width: 767px) {
     thead {
       display: none;
     }
@@ -240,7 +240,7 @@ $mobile-breakpoint: 700px;
     }
   }
 
-  @media screen and (width >= 550px) {
+  @media screen and (min-width: 550px) {
     tr {
       grid-template-columns: repeat(6, 1fr);
     }
@@ -587,7 +587,7 @@ $mobile-breakpoint: 700px;
   .username {
     input[type="text"] {
       min-width: 15em;
-      @media screen and (width <= 500px) {
+      @media screen and (max-width: 500px) {
         box-sizing: border-box;
         width: 100%;
       }
@@ -608,7 +608,7 @@ $mobile-breakpoint: 700px;
 
   .search-logs-filter {
     margin-left: auto;
-    @media screen and (width <= 700px) {
+    @media screen and (max-width: 700px) {
       flex: 1 1 100%;
       margin-left: 0;
     }
@@ -788,7 +788,7 @@ $mobile-breakpoint: 700px;
 
     // Hide the search checkbox for very small screens
     // Todo: find somewhere to display it - probably requires switching its order in the html
-    @media (width <= 550px) {
+    @media (max-width: 550px) {
       display: none;
     }
   }
@@ -840,7 +840,7 @@ $mobile-breakpoint: 700px;
     z-index: z("base") - 1;
     width: 250px;
   }
-  @media (width <= 500px) {
+  @media (max-width: 500px) {
     width: 50%;
   }
 
@@ -875,7 +875,7 @@ $mobile-breakpoint: 700px;
     transition: transform 0.3s ease;
     @include transform(translateX(250px));
   }
-  @media (width <= 500px) {
+  @media (max-width: 500px) {
     transition: transform 0.3s ease;
     @include transform(translateX(50%));
   }
@@ -945,7 +945,7 @@ section.details {
   }
 }
 
-@media all and (width >= 320px) and (width <= 500px) {
+@media all and (min-width: 320px) and (max-width: 500px) {
   .full-width {
     margin: 0;
   }

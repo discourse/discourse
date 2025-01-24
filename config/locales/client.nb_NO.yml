@@ -1746,7 +1746,8 @@ nb_NO:
         after_4_minutes: "etter 4 minutt"
         after_5_minutes: "etter 5 minutt"
         after_10_minutes: "etter 10 minutt"
-      notification_level_when_replying: "Når jeg skriver noe i et emne, sett emnet som"
+      notification_level_when_replying:
+        do_nothing: "ikke gjør noe"
       topics_unread_when_closed: "Betrakt emner som ulest når de er lukket"
       invited:
         title: "invitasjoner"
@@ -2637,7 +2638,7 @@ nb_NO:
         membership_request_consolidated: "ny forespørsel om medlemskap"
         reaction: "ny reaksjon"
         votes_released: "Stemmen ble utgitt"
-        new_features: "nye Discourse-funksjoner har blitt lansert!"
+        new_features: "Nye Discourse-funksjoner har blitt lansert!"
         admin_problems: "nye råd på dashbordet på nettstedet ditt"
     upload_selector:
       uploading: "Laster opp bilde"
@@ -4577,26 +4578,23 @@ nb_NO:
           action: Handling
       web_hooks:
         title: "Webhooker"
-        none: "Det finnes ingen webhooker for tiden."
         instruction: "Webhooker lar Discourse sender meldinger til eksterne tjenester når spesifiserte situasjoner oppstår på nettstedet. Når en webhook utløses, sendes en POST-forespørsel til nettadressene du angir."
         detailed_instruction: "En POST-forespørsel sendes til den angitte URL-en når den valgte hendelsen skjer."
-        new: "Ny webhook"
         create: "Opprett"
         edit: "Endre"
         save: "Lagre"
+        delete: "Slett"
+        cancel: "Avbryt"
         controls: "Handlinger"
-        go_back: "Tilbake til liste"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://eksempel.no/postmottak"
         secret_invalid: "Delt hemmelighet kan ikke inneholde blanke tegn."
         secret_too_short: "Delt hemmelighet må være minst 12 tegn."
-        secret_placeholder: "En valgfri streng som brukes for å lage signatur"
         event_type_missing: "Du må sette opp minst en type hendelse."
         content_type: "Content Type"
         secret: "Delt hemmelighet"
         event_chooser: "Hvilke hendelser skal utløse denne vevkroken?"
-        wildcard_event: "Send meg alt"
-        individual_event: "Velg hendelser enkeltvis."
+        individual_event: "Velg hendelser enkeltvis"
         verify_certificate: "Kontroller TLSs-sertifikat til payload url"
         active: "Aktiv"
         active_notice: "Vi sender hendelsesdetaljer når det skjer."
@@ -4800,9 +4798,6 @@ nb_NO:
           screened_url: "Eksporter komplett liste over filtrerte URL'er i CSV format."
       export_json:
         button_text: "Eksporter"
-      invite:
-        button_text: "Send invitasjoner"
-        button_title: "Send invitasjoner"
       customize:
         title: "Tilpasse"
         preview: "forhåndsvisning"
@@ -4999,8 +4994,7 @@ nb_NO:
           overridden: Sidens standard robots.txt fil er overstyrt.
         email_style:
           title: "E-post Stil"
-          heading: "Tilpass e-poststil"
-          html: "HTML mal"
+          html: "HTML"
           css: "CSS"
           reset: "Tilbakestill til standard"
           reset_confirm: "Er du sikker på at du vil tilbakestille til standard %{fieldName} og miste alle dine endringer?"
@@ -5008,14 +5002,11 @@ nb_NO:
           instructions: "Tilpass malen hvor alle html e-poster gjengis og stil ved hjelp av CSS."
       email:
         title: "E-poster"
+        settings: "Instillinger"
         templates: "Maler"
-        preview_digest: "Forhåndsvis oppsummering"
         advanced_test:
-          title: "Avansert test"
           desc: "Se hvordan Diskurs-prosesser mottatt e-post. For å kunne behandle e-posten riktig, lim inn hele den opprinnelige e-postmeldingen."
           email: "Original melding"
-          run: "Kjør test"
-          text: "Valgt tekstinnhold"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Det oppstod et problem ved utsendelse av e-post for testing. Sjekk e-postinnstillinger nøye, sjekk at verten ikke blokkerer e-posttilkoblinger, og prøv igjen."
         sent: "Sendt"
@@ -5023,15 +5014,10 @@ nb_NO:
         bounced: "Tilbakesendt"
         received: "Mottatt"
         rejected: "Avvist"
-        sent_at: "Sendt"
         time: "Tid"
         user: "Bruker"
-        email_type: "E-posttype"
-        to_address: "Til adresse"
         test_email_address: "e-postadresse å teste"
-        send_test: "Send e-post for testing"
         sent_test: "sendt!"
-        delivery_method: "Leveringsmetode"
         preview_digest_desc: "Forhåndsvis innholde i oppsummerings-e-postene som sendes til inaktive brukere."
         refresh: "Refresh"
         send_digest_label: "Send dette resultatet til:"
@@ -5040,10 +5026,7 @@ nb_NO:
         html: "html"
         text: "tekst"
         html_preview: "Forhåndsvisning av e-innhold"
-        last_seen_user: "Bruker sett sist:"
         no_result: "Ingen resultater funnet for oppsummering."
-        reply_key: "Svar-ID"
-        skipped_reason: "Hopp over grunn"
         incoming_emails:
           from_address: "Fra"
           to_addresses: "Til"
@@ -5052,12 +5035,10 @@ nb_NO:
           error: "Feil"
           none: "Fant ingen innkommende e-poster."
           modal:
-            title: "Innkommende e-postdetaljer"
             error: "Feil"
             headers: "Hoder"
             subject: "Emne"
             body: "Meldingstekst"
-            rejection_message: "Avvisningse-post"
           filters:
             from_placeholder: "fra@eksempel.no"
             to_placeholder: "til@eksempel.no"
@@ -5081,7 +5062,7 @@ nb_NO:
           delete_topic: "Emne slettet"
           post_approved: "Innlegg godkjent"
       logs:
-        title: "Logger"
+        nav_title: "Logger"
         action: "Handling"
         created_at: "Opprettet"
         last_match_at: "Siste treff"
@@ -5099,8 +5080,6 @@ nb_NO:
         staff_actions:
           all: "alle"
           filter: "Filtrer:"
-          title: "Personalhandlinger"
-          clear_filters: "Vis alt"
           staff_user: "Bruker"
           target_user: "Målbruker"
           subject: "Emne"
@@ -5200,9 +5179,7 @@ nb_NO:
             topic_opened: "Emne åpnet"
             topic_archived: "Emne arkivert"
         screened_emails:
-          title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
-          email: "E-postadresse"
           actions:
             allow: "Tillat"
         screened_urls:
@@ -5216,7 +5193,6 @@ nb_NO:
           actions:
             block: "Blokker"
             do_nothing: "Tillat"
-            allow_admin: "Tillat Admin"
           form:
             label: "Ny:"
             ip_address: "IP-adresse"
@@ -5226,23 +5202,17 @@ nb_NO:
             text: "Slå sammen."
             title: "Lager nye blokkeringsoppføringer for subnett hvis det er minst 'min_ban_entries_for_roll_up' oppføringer."
         search_logs:
-          title: "Søkelogger"
           term: "Term"
           searches: "Søk"
           click_through_rate: "Klikkrate"
           types:
             all_search_types: "Alle søketyper"
             header: "Hode"
-            full_page: "Full side"
             click_through_only: "Alle (kun klikk gjennom)"
-          header_search_results: "Hode-søkeresultater"
-        logster:
-          title: "Feillogg"
       watched_words:
         search: "søk"
         clear_filter: "Tøm"
         download: Last ned
-        clear_all: Fjern alle
         actions:
           block: "Blokker"
           censor: "Sensurer"
@@ -5302,8 +5272,6 @@ nb_NO:
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
         status: "Status"
-        show_emails: "Vis e-poster"
-        silence_reason: "Årsak til demping"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5319,7 +5287,6 @@ nb_NO:
         approved: "Godkjent?"
         titles:
           active: "Aktive brukere"
-          new: "Nye brukere"
           pending: "Brukere som venter på evaluering"
           newuser: "Brukere på tillitsnivå 0 (Ny bruker)"
           basic: "Brukere på tillitsnivå 1 (Juniormedlem)"
@@ -5327,11 +5294,7 @@ nb_NO:
           regular: "Brukere på tillitsnivå 3 (Aktivt medlem)"
           leader: "Brukere på tillitsnivå 4 (Leder)"
           staff: "Stab"
-          admins: "Admin-brukere"
           moderators: "Moderatorer"
-          silenced: "Dempede brukere"
-          suspended: "Utestengte brukere"
-          staged: "Arrangerte brukere"
         not_verified: "Uverifisert"
         check_email:
           title: "Vis denne brukerens e-postadresse"
@@ -5551,7 +5514,7 @@ nb_NO:
         save: "lagre"
         cancel: "avbryt"
       site_settings:
-        title: "Innstillinger"
+        nav_title: "Instillinger"
         no_results: "Ingen treff funnet."
         clear_filter: "Tøm"
         add_url: "legg til URL"
@@ -5738,17 +5701,27 @@ nb_NO:
           admin: "Administrator"
           moderator: "Moderator"
           regular: "Aktivt medlem"
+      homepage_choices:
+        custom:
+          label: "Egendefinert"
+        style_type:
+          categories: "kategori"
+          topics: "emne"
+      top_menu_items:
+        new: "Ny"
+        unread: "Uleste"
+        top: "Aktive"
+        latest: "Siste"
+        categories: "Kategorier"
+        unseen: "Usette"
+        read: "Les"
+        bookmarks: "Bokmerker"
       previews:
         share_button: "Del"
         reply_button: "Svar"
       homepage_preview:
         nav_buttons:
           all_categories: "alle kategorier"
-          new: "Ny"
-          unread: "Uleste"
-          top: "Aktive"
-          latest: "Siste"
-          categories: "Kategorier"
         category_names:
           site_feedback: "Tilbakemeldinger"
         table_headers:

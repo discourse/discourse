@@ -595,6 +595,9 @@ RSpec.describe "posts" do
                  notice: {
                    type: :object,
                  },
+                 notice_created_by_user: {
+                   type: %i[object null],
+                 },
                  reviewable_id: {
                    type: %i[integer null],
                  },

@@ -224,32 +224,102 @@ RSpec.describe PostSerializer do
     fab!(:user) { Fabricate(:user, trust_level: 1) }
     fab!(:user_tl1) { Fabricate(:user, trust_level: 1) }
     fab!(:user_tl2) { Fabricate(:user, trust_level: 2) }
+    fab!(:post) { Fabricate(:post, user: user) }
 
-    let(:post) do
-      post = Fabricate(:post, user: user)
-      post.custom_fields[Post::NOTICE] = {
-        type: Post.notices[:returning_user],
-        last_posted_at: 1.day.ago,
-      }
-      post.save_custom_fields
-      post
+    def json_for_user(user, serializer_opts = {})
+      serializer = PostSerializer.new(post, scope: Guardian.new(user), root: false)
+
+      if serializer_opts[:notice_created_by_users]
+        serializer.notice_created_by_users = serializer_opts[:notice_created_by_users]
+      end
+
+      serializer.as_json(serializer_opts)
     end
 
-    def json_for_user(user)
-      PostSerializer.new(post, scope: Guardian.new(user), root: false).as_json
+    describe "returning_user notice" do
+      before do
+        post.custom_fields[Post::NOTICE] = {
+          type: Post.notices[:returning_user],
+          last_posted_at: 1.day.ago,
+        }
+        post.save_custom_fields
+      end
+
+      it "is visible for TL2+ users (except poster)" do
+        expect(json_for_user(nil)[:notice]).to eq(nil)
+        expect(json_for_user(user)[:notice]).to eq(nil)
+
+        SiteSetting.returning_user_notice_tl = 2
+        expect(json_for_user(user_tl1)[:notice]).to eq(nil)
+        expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
+
+        SiteSetting.returning_user_notice_tl = 1
+        expect(json_for_user(user_tl1)[:notice][:type]).to eq(Post.notices[:returning_user])
+        expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
+      end
     end
 
-    it "is visible for TL2+ users (except poster)" do
-      expect(json_for_user(nil)[:notice]).to eq(nil)
-      expect(json_for_user(user)[:notice]).to eq(nil)
+    describe "custom notice" do
+      fab!(:moderator)
 
-      SiteSetting.returning_user_notice_tl = 2
-      expect(json_for_user(user_tl1)[:notice]).to eq(nil)
-      expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
+      before do
+        post.custom_fields[Post::NOTICE] = {
+          type: Post.notices[:custom],
+          raw: "This is a notice",
+          cooked: "<p>This is a notice</p>",
+          created_by_user_id: moderator.id,
+        }
+        post.save_custom_fields
+      end
 
-      SiteSetting.returning_user_notice_tl = 1
-      expect(json_for_user(user_tl1)[:notice][:type]).to eq(Post.notices[:returning_user])
-      expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
+      it "displays for all trust levels" do
+        expect(json_for_user(user)[:notice]).to eq(
+          {
+            cooked: "<p>This is a notice</p>",
+            created_by_user_id: moderator.id,
+            raw: "This is a notice",
+            type: Post.notices[:custom],
+          }.with_indifferent_access,
+        )
+        expect(json_for_user(user_tl1)[:notice]).to eq(
+          {
+            cooked: "<p>This is a notice</p>",
+            created_by_user_id: moderator.id,
+            raw: "This is a notice",
+            type: Post.notices[:custom],
+          }.with_indifferent_access,
+        )
+        expect(json_for_user(user_tl2)[:notice]).to eq(
+          {
+            cooked: "<p>This is a notice</p>",
+            created_by_user_id: moderator.id,
+            raw: "This is a notice",
+            type: Post.notices[:custom],
+          }.with_indifferent_access,
+        )
+      end
+
+      it "only displays the created_by_user for staff" do
+        expect(
+          json_for_user(user, notice_created_by_users: [moderator])[:notice_created_by_user],
+        ).to eq(nil)
+        expect(
+          json_for_user(user_tl1, notice_created_by_users: [moderator])[:notice_created_by_user],
+        ).to eq(nil)
+        expect(
+          json_for_user(user_tl2, notice_created_by_users: [moderator])[:notice_created_by_user],
+        ).to eq(nil)
+        expect(
+          json_for_user(moderator, notice_created_by_users: [moderator])[:notice_created_by_user],
+        ).to eq(
+          {
+            id: moderator.id,
+            username: moderator.username,
+            name: moderator.name,
+            avatar_template: moderator.avatar_template,
+          },
+        )
+      end
     end
   end
 

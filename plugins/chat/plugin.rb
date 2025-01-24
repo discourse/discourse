@@ -61,6 +61,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
+  UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
   register_reviewable_type Chat::ReviewableMessage
 
@@ -245,6 +246,10 @@ after_initialize do
   add_to_serializer(:current_user_option, :chat_separate_sidebar_mode) do
     object.chat_separate_sidebar_mode
   end
+
+  add_to_serializer(:user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+
+  add_to_serializer(:current_user_option, :chat_send_shortcut) { object.chat_send_shortcut }
 
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]

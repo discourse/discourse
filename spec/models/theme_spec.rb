@@ -1585,4 +1585,15 @@ HTML
       expect(count).to eq 3
     end
   end
+
+  describe "#owned_color_scheme" do
+    it "is destroyed when the theme is destroyed" do
+      scheme = Fabricate(:color_scheme, owning_theme: theme)
+
+      theme.destroy!
+
+      expect(ThemeColorScheme.exists?(color_scheme_id: scheme.id)).to eq(false)
+      expect(ColorScheme.unscoped.exists?(id: scheme.id)).to eq(false)
+    end
+  end
 end

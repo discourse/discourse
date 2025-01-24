@@ -1625,7 +1625,8 @@ te:
         after_4_minutes: "4 నిమిషాల తర్వాత"
         after_5_minutes: "5 నిమిషాల తర్వాత"
         after_10_minutes: "10 నిమిషాల తర్వాత"
-      notification_level_when_replying: "నేను ఒక విషయంలో పోస్ట్ చేసినప్పుడు, ఆ విషయాన్ని ఈ విదంగా సెట్ చేయండి"
+      notification_level_when_replying:
+        do_nothing: "ఏమీ చేయవద్దు"
       invited:
         title: "ఆహ్వానాలు"
         pending_tab: "పెండింగు"
@@ -4726,27 +4727,23 @@ te:
               messages: /logs నుండి సందేశాలను జాబితా చేయండి లేదా నిర్దిష్ట లాగ్ సందేశాన్ని పొందండి.
       web_hooks:
         title: "వెబ్‌బూక్స్"
-        none: "ప్రస్తుతం వెబ్‌హుక్స్ ఏవీ లేవు."
         instruction: "మీ సైట్‌లో నిర్దిష్ట ఈవెంట్ జరిగినప్పుడు బాహ్య సేవలకు తెలియజేయడానికి Webhooks ప్రసంగాన్ని అనుమతిస్తుంది. webhook ట్రిగ్గర్ చేయబడినప్పుడు, అందించిన URLలకు POST అభ్యర్థన పంపబడుతుంది."
         detailed_instruction: "ఎంచుకున్న ఈవెంట్ జరిగినప్పుడు అందించిన URLకి POST అభ్యర్థన పంపబడుతుంది."
-        new: "కొత్త వెబ్‌హుక్"
         create: "సృష్టించండి"
         edit: "సవరించండి"
         save: "సేవ్ చేయండి"
+        delete: "తొలగించు"
+        cancel: "రద్దుచేయండి"
         description_label: "ఈవెంట్ ట్రిగ్గర్స్"
         controls: "నియంత్రణలు"
-        go_back: "జాబితాకు తిరిగి వెళ్ళండి"
         payload_url: "పేలోడ్ URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "సీక్రెట్‌లో ఖాళీ అక్షరాలు ఉండకూడదు."
         secret_too_short: "రహస్యం కనీసం 12 అక్షరాలు ఉండాలి."
-        secret_placeholder: "సంతకాన్ని రూపొందించడానికి ఉపయోగించే ఐచ్ఛిక స్ట్రింగ్"
         event_type_missing: "మీరు కనీసం ఒక ఈవెంట్ రకాన్ని సెటప్ చేయాలి."
         content_type: "కంటెంట్ రకం"
         secret: "రహస్యం"
         event_chooser: "ఏ ఈవెంట్‌లు ఈ వెబ్‌హుక్‌ని ట్రిగ్గర్ చేయాలి?"
-        wildcard_event: "ప్రతిదీ నాకు పంపండి."
-        individual_event: "వ్యక్తిగత ఈవెంట్లను ఎంచుకోండి."
         verify_certificate: "పేలోడ్ url యొక్క TLS సర్టిఫికేట్ను తనిఖీ చేయండి"
         active: "క్రియాశీల"
         active_notice: "ఇది జరిగినప్పుడు మేము ఈవెంట్ వివరాలను అందిస్తాము."
@@ -5025,9 +5022,6 @@ te:
           screened_url: "వడకట్టిన యూఆర్ యల్ల పూర్తి జాబితాను సీయస్వీ రూపులో ఎగుమతించు"
       export_json:
         button_text: "ఎగుమతి"
-      invite:
-        button_text: "ఆహ్వానాలు పంపు"
-        button_title: "ఆహ్వానాలు పంపు"
       customize:
         title: "కస్టమైజ్"
         preview: "ప్రివ్యూ"
@@ -5173,7 +5167,6 @@ te:
           install_upload: "మీ పరికరం నుండి"
           install_git_repo: "ఒక git రిపోజిటరీ నుండి"
           install_create: "కొత్తదాన్ని సృష్టించండి"
-          installing_message: "థీమ్‌ను ఇన్‌స్టాల్ చేస్తోంది, దీనికి చాలా నిమిషాలు పట్టవచ్చు..."
           duplicate_remote_theme: "థీమ్ భాగం “%{name}” ఇప్పటికే ఇన్‌స్టాల్ చేయబడింది, మీరు ఖచ్చితంగా మరొక కాపీని ఇన్‌స్టాల్ చేయాలనుకుంటున్నారా?"
           force_install: "Git రిపోజిటరీ యాక్సెస్ చేయలేని కారణంగా థీమ్ ఇన్‌స్టాల్ చేయబడదు. మీరు దీన్ని ఇన్‌స్టాల్ చేయడాన్ని ఖచ్చితంగా కొనసాగించాలనుకుంటున్నారా?"
           create_placeholder: "ప్లేస్‌హోల్డర్‌ని సృష్టించండి"
@@ -5324,8 +5317,7 @@ te:
           overridden: మీ సైట్ యొక్క డిఫాల్ట్ robots.txt ఫైల్ భర్తీ చేయబడింది.
         email_style:
           title: "ఇమెయిల్ శైలి"
-          heading: "ఇమెయిల్ శైలిని అనుకూలీకరించండి"
-          html: "HTML టెంప్లేట్"
+          html: "HTML"
           css: "సీయస్ యస్"
           reset: "రీసెట్ చేయండి"
           reset_confirm: "మీరు ఖచ్చితంగా డిఫాల్ట్ %{fieldName} కి రీసెట్ చేయాలనుకుంటున్నారా మరియు మీ అన్ని మార్పులను కోల్పోవాలనుకుంటున్నారా?"
@@ -5333,17 +5325,11 @@ te:
           instructions: "అన్ని html ఇమెయిల్‌లు రెండర్ చేయబడిన టెంప్లేట్ మరియు CSSని ఉపయోగించి శైలిని అనుకూలీకరించండి."
       email:
         title: "ఇమెయిల్‌లు"
-        settings: "ఇమెయిల్ సెట్టింగ్‌లు"
+        settings: "అమరికలు"
         templates: "టెంప్లేట్లు"
-        templates_title: "ఇమెయిల్ టెంప్లేట్లు"
-        preview_digest: "సారాంశాన్ని ప్రివ్యూ"
         advanced_test:
-          title: "అధునాతన పరీక్ష"
           desc: "డిస్కర్స్ ఇమెయిల్‌లను ఎలా పొందుతుందో చూడండి. ఇమెయిల్‌ను సరిగ్గా ప్రాసెస్ చేయడానికి, దయచేసి మొత్తం అసలు ఇమెయిల్ సందేశాన్ని దిగువన అతికించండి."
           email: "అసలు సందేశం"
-          run: "పరీక్షను అమలు చేయండి"
-          text: "ఎంచుకున్న టెక్స్ట్ బాడీ"
-          elided: "ఎలిడెడ్ టెక్స్ట్"
         sending_test: "పరీక్ష ఇమెయిల్ పంపుతోంది…"
         error: "<b>దోషం</b> - %{server_error}"
         test_error: "టెస్ట్ మెయిల్ పంపడంలో ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
@@ -5352,16 +5338,11 @@ te:
         bounced: "బౌన్స్ అయింది"
         received: "అందినవి"
         rejected: "తిరస్కరించబడినవి"
-        sent_at: "వద్ద పంపారు"
         time: "కాలం"
         user: "సభ్యుడు"
-        email_type: "ఈమెయిల్ టైపు"
         details_title: "ఇమెయిల్ వివరాలను చూపించండి"
-        to_address: "చిరునామాకు"
         test_email_address: "పరీక్షించుటు ఈమెయిల్ "
-        send_test: "పరీక్షా మెయిల్ పంపారు"
         sent_test: "పంపబడింది!"
-        delivery_method: "డెలివరీ పద్దతి"
         preview_digest_desc: "నిష్క్రియ సభ్యులకు పంపిన సారాంశ ఇమెయిల్‌ల కంటెంట్‌ను ప్రివ్యూ చేయండి."
         refresh: "రిఫ్రెష్ చేయండి"
         send_digest_label: "ఈ ఫలితాన్ని వీరికి పంపండి:"
@@ -5371,11 +5352,7 @@ te:
         html: "html"
         text: "వచనం"
         html_preview: "ఇమెయిల్ కంటెంట్ ప్రివ్యూ"
-        last_seen_user: "చివరగా చూసిన సభ్యుడు:"
         no_result: "సారాంశం కోసం ఫలితాలు కనుగొనబడలేదు."
-        reply_key: "ప్రత్యుత్తరం కీ"
-        post_link_with_smtp: "పోస్ట్ & SMTP వివరాలు"
-        skipped_reason: "వదిలిన కారణం"
         incoming_emails:
           from_address: "నుండి"
           to_addresses: "కు"
@@ -5384,12 +5361,10 @@ te:
           error: "లోపం"
           none: "ఇన్‌కమింగ్ ఇమెయిల్‌లు ఏవీ కనుగొనబడలేదు."
           modal:
-            title: "ఇన్‌కమింగ్ ఇమెయిల్ వివరాలు"
             error: "లోపం"
             headers: "శీర్షికలు"
             subject: "విషయం"
             body: "బాడీ"
-            rejection_message: "తిరస్కరణ మెయిల్"
           filters:
             from_placeholder: "ramana@rao.com"
             to_placeholder: "to@example.com"
@@ -5419,7 +5394,7 @@ te:
           delete_topic: "విషయం తొలగించబడింది"
           post_approved: "పోస్ట్ ఆమోదించబడింది"
       logs:
-        title: "లాగులు"
+        nav_title: "లాగులు"
         action: "చర్య"
         created_at: "సృష్టించినది"
         last_match_at: "చివరగా జతైనది"
@@ -5437,8 +5412,6 @@ te:
         staff_actions:
           all: "అన్నీ"
           filter: "ఫిల్టర్:"
-          title: "సిబ్బింది చర్యలు"
-          clear_filters: "ప్రతిదీ చూపండి"
           staff_user: "సభ్యుడు"
           target_user: "లక్షిత సభ్యుడు"
           subject: "విషయం"
@@ -5550,9 +5523,7 @@ te:
             destroy_public_sidebar_section: "పబ్లిక్ సైడ్‌బార్ విభాగాన్ని నాశనం చేయండి"
             reset_bounce_score: "బౌన్స్ స్కోర్‌ని రీసెట్ చేయండి"
         screened_emails:
-          title: "స్క్రీన్ చేసిన ఈమెయిల్లు"
           description: "ఎవరైనా కొత్త ఖాతాను సృష్టించడానికి ప్రయత్నించినప్పుడు, కింది ఇమెయిల్ చిరునామాలు తనిఖీ చేయబడతాయి మరియు రిజిస్ట్రేషన్ బ్లాక్ చేయబడుతుంది లేదా ఏదైనా ఇతర చర్య చేయబడుతుంది."
-          email: "ఈమెయిల్ చిరునామా"
           actions:
             allow: "అనుమతించండి"
         screened_urls:
@@ -5567,7 +5538,6 @@ te:
           actions:
             block: "బ్లాక్"
             do_nothing: "అనుమతించండి"
-            allow_admin: "నిర్వాహకుడిని అనుమతించండి"
           form:
             label: "కొత్త:"
             ip_address: "ఐపీ చిరునామా"
@@ -5577,18 +5547,13 @@ te:
             text: "రోల్ అప్"
             title: "కనీస ప్రవేశాలు ఉంటే కొత్త సబ్‌నెట్ నిషేధిత ప్రవేశాలు 'min_ban_entries_for_roll_up' సృష్టిస్తుంది."
         search_logs:
-          title: "లాగ్‌లను శోధించండి"
           term: "పదం"
           searches: "శోధనలు"
           click_through_rate: "CTR"
           types:
             all_search_types: "అన్ని శోధన రకాలు"
             header: "హెడర్"
-            full_page: "పూర్తి పేజీ"
             click_through_only: "అన్నీ (క్లిక్ ద్వారా మాత్రమే)"
-          header_search_results: "హెడర్ శోధన ఫలితాలు"
-        logster:
-          title: "దోష లాగులు"
       watched_words:
         search: "శోధించండి"
         clear_filter: "క్లియర్"
@@ -5597,7 +5562,6 @@ te:
           other: "%{count} పదాలను చూపించండి"
         case_sensitive: "(కేస్-సెన్సిటివ్)"
         download: దిగుమతి
-        clear_all: అన్నీ క్లియర్ చేయండి
         clear_all_confirm: "మీరు ఖచ్చితంగా %{action} చర్య కోసం అనుసరించిన అన్ని పదాలను క్లియర్ చేయాలనుకుంటున్నారా?"
         invalid_regex: 'అనుసరించిన పదం "%{word}" చెల్లని రెగ్యులర్ ఎక్స్ప్రెషన్.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">వీక్షించిన పదాలు సాధారణ వ్యక్తీకరణలు</a> మరియు అవి స్వయంచాలకంగా పద సరిహద్దులను కలిగి ఉండవు. సాధారణ వ్యక్తీకరణ మొత్తం పదాలకు సరిపోలాలని మీరు కోరుకుంటే, మీ సాధారణ వ్యక్తీకరణ ప్రారంభంలో మరియు ముగింపులో <code>\b</code> ని చేర్చండి.'
@@ -5735,9 +5699,6 @@ te:
         id_not_found: "క్షమించాలి, ఆ సభ్య ఐడీ మా వ్యవస్థలో లేదు"
         active: "యాక్టివేట్ చేయబడిన వారు"
         status: "స్థితి"
-        show_emails: "ఇమెయిల్‌లను చూపండి"
-        hide_emails: "ఇమెయిల్‌లను దాచండి"
-        silence_reason: "నిశ్శబ్దం కారణం"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -5753,7 +5714,6 @@ te:
         approved: "అంగీకరించు"
         titles:
           active: "క్రియాశీల సభ్యులు"
-          new: "కొత్త సభ్యులు"
           pending: "రివ్యూ పెండింగులో ఉన్న సభ్యులు"
           newuser: "నమ్మకం స్థాయి 0 సభ్యులు (కొత్త సభ్యుడు)"
           basic: "నమ్మకపు స్థాయి 1 వినియోగదారులు (ప్రాధమిక వినియోగదారు)"
@@ -5761,11 +5721,7 @@ te:
           regular: "నమ్మకపు స్థాయి 3 వినియోగదారులు (నిత్యం)"
           leader: "నమ్మకపు స్థాయి 4 వినియోగదారులు (నాయకుడు)"
           staff: "సిబ్బంది"
-          admins: "నిర్వాహక సభ్యులు"
           moderators: "నిర్వాహకులు"
-          silenced: "నిశ్శబ్దం చేసిన సభ్యులు"
-          suspended: "సస్పెండయిన సభ్యులు"
-          staged: "తాత్కాలిక సభ్యులు"
         not_verified: "ద్రువీకరించలేదు"
         check_email:
           title: "ఈ సభ్యుని ఈమెయిల్ చూపండి"
@@ -6083,7 +6039,7 @@ te:
           invalid_input: "ఎమోజి జాబితాలో చెల్లుబాటు అయ్యే ఎమోజి పేర్లు మాత్రమే ఉండాలి, ఉదా: hugs"
           add_emoji_button:
             label: "ఎమోజీని జోడించండి"
-        title: "అమరికలు"
+        nav_title: "అమరికలు"
         no_results: "ఏ ఫలితాలూ కనిపించలేదు."
         more_site_setting_results:
           one: "%{count} కంటే ఎక్కువ ఫలితం ఉంది. దయచేసి మీ శోధనను మెరుగుపరచండి లేదా వర్గాన్ని ఎంచుకోండి."
@@ -6221,7 +6177,6 @@ te:
             with_post_time: <span class="username">%{username}</span> %{link} లో <span class="time">%{time}</span> లో పోస్ట్ కోసం
             with_time: <span class="username">%{username}</span> వద్ద <span class="time">%{time}</span>
         mass_award:
-          title: బల్క్ అవార్డు
           description: ఒకేసారి చాలా మంది విషయాలకు ఒకే బ్యాడ్జ్‌ని అందించండి.
           no_badge_selected: దయచేసి ప్రారంభించడానికి బ్యాడ్జ్‌ని ఎంచుకోండి.
           perform: "సభ్యులకు బ్యాడ్జ్ అందించండి"
@@ -6324,6 +6279,22 @@ te:
           admin: "నిర్వాహకుడు"
           moderator: "నిర్వాహకుడు"
           regular: "సాధారణ సభ్యుడు"
+      homepage_choices:
+        custom:
+          label: "అనురూప"
+        style_type:
+          categories: "వర్గం"
+          topics: "విషయం"
+      top_menu_items:
+        new: "కొత్త "
+        unread: "చదవని"
+        top: "అగ్ర"
+        latest: "తాజా"
+        hot: "హాట్"
+        categories: "వర్గాలు"
+        unseen: "చూడనవి"
+        read: "చదివిన"
+        bookmarks: "బుక్‌మార్క్‌లు"
       previews:
         share_button: "షేర్ చేయండి"
         reply_button: "ప్రత్యుత్తరం ఇవ్వండి"
@@ -6332,12 +6303,6 @@ te:
       homepage_preview:
         nav_buttons:
           all_categories: "అన్ని వర్గాలు"
-          new: "కొత్త "
-          unread: "చదవని"
-          top: "అగ్ర"
-          latest: "తాజా"
-          hot: "హాట్"
-          categories: "వర్గాలు"
         category_names:
           site_feedback: "సైట్ పై అభిప్రాయం"
         table_headers:

@@ -45,6 +45,9 @@ ro:
         few: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
         other: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
       too_many_members: "%{first_identifier} are prea mulți membri. Nimeni nu a fost anunțat."
+    onebox:
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Discuție în #%{chat_channel}"
     transcript:
       default_thread_title: "Fir"
       split_thread_range: "mesaje de la %{start} la %{end} din %{total}"
