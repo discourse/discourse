@@ -182,6 +182,7 @@ schema:
         - "tag_users"
         - "tags"
         - "tags_web_hooks"
+        - "theme_color_schemes"
         - "theme_fields"
         - "theme_modifier_sets"
         - "theme_settings"
