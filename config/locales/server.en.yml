@@ -1985,7 +1985,7 @@ en:
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
     auth_skip_create_confirm: When signing up via external auth, skip the create account popup. Best used alongside auth_overrides_email, auth_overrides_username and auth_overrides_name.
-    auth_immediately: "Automatically redirect to the external login system without user interaction. This only takes effect when login_required is true, and there is only one external authentication method"
+    auth_immediately: "Automatically redirect to the external login system without user interaction. This only takes effect when there is only one external authentication method. For DiscourseConnect, login_required must also be enabled."
 
     enable_discourse_connect: "Enable sign on via DiscourseConnect (formerly 'Discourse SSO') (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_discourse_connect_logging: "Log verbose DiscourseConnect related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
