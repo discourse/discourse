@@ -260,7 +260,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
-      it "does not redirects when login is required" do
+      it "does not redirect when login is required" do
         SiteSetting.login_required = true
         mock_google_auth
 
