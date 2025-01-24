@@ -205,7 +205,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
     // triggerArrowKey isn't triggering the event the autocomplete listens to
     assert.dom("#ac-testing").doesNotExist();
 
-    await triggerArrowKey(element, "ArrowRight");
+    await triggerArrowKey("ArrowRight");
     await simulateKey(element, "\b");
 
     assert.dom(element).hasValue(":smile ");
