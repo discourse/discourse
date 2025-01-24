@@ -264,9 +264,34 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         SiteSetting.login_required = true
         mock_google_auth
 
-        visit("/login")
+        visit("/")
         expect(page).to have_css(".login-welcome")
         expect(page).to have_css(".site-logo")
+
+        find(".login-welcome .login-button").click
+        expect(signup_form).to be_open
+
+        visit("/login")
+        find(".login-welcome .sign-up-button").click
+        expect(signup_form).to be_open
+
+        expect(signup_form).to be_open
+        expect(signup_form).to have_no_password_input
+        expect(signup_form).to have_valid_username
+        expect(signup_form).to have_valid_email
+      end
+
+      it "redirects to the external auth provider when going to /signup" do
+        SiteSetting.login_required = true
+        mock_google_auth
+        visit("/signup")
+
+        expect(signup_form).to be_open
+        expect(signup_form).to have_no_password_input
+        expect(signup_form).to have_valid_username
+        expect(signup_form).to have_valid_email
+        signup_form.click_create_account
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
   end
