@@ -11,7 +11,6 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
-import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import { userPath } from "discourse/lib/url";
@@ -361,7 +360,7 @@ export default class SignupPageController extends Controller.extend(
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd party auth,
       // then look for a registered username that matches the email.
-      discourseDebounce(this, this.fetchExistingUsername, 500);
+      this.usernameValidationHelper.fetchExistingUsername.perform();
     }
   }
 

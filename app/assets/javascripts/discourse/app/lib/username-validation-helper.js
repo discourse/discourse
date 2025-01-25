@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { task, timeout } from "ember-concurrency";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -23,7 +22,7 @@ function validResult(attrs) {
 }
 
 export default class UsernameValidationHelper {
-  @tracked usernameValidationResult = new TrackedObject();
+  @tracked usernameValidationResult;
   checkedUsername = null;
 
   constructor(owner) {
@@ -31,10 +30,10 @@ export default class UsernameValidationHelper {
   }
 
   @task({ restartable: true })
-  async fetchExistingUsername() {
-    await timeout(DEBOUNCE_MS);
+  *fetchExistingUsername() {
+    yield timeout(DEBOUNCE_MS);
 
-    const result = await User.checkUsername(null, this.owner.accountEmail);
+    const result = yield User.checkUsername(null, this.owner.accountEmail);
 
     if (
       result.suggestion &&
@@ -47,10 +46,10 @@ export default class UsernameValidationHelper {
   }
 
   @task({ restartable: true })
-  async _checkUsernameAvailability() {
-    await timeout(DEBOUNCE_MS);
+  *_checkUsernameAvailability() {
+    yield timeout(DEBOUNCE_MS);
 
-    const result = await User.checkUsername(
+    const result = yield User.checkUsername(
       this.owner.accountUsername,
       this.owner.accountEmail
     );
@@ -64,7 +63,7 @@ export default class UsernameValidationHelper {
       });
     } else if (result.suggestion) {
       this.usernameValidationResult = failedResult({
-        reason: i18n("user.username.not_available"),
+        reason: i18n("user.username.not_available", result),
       });
     } else {
       this.usernameValidationResult = failedResult({
