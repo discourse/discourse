@@ -92,6 +92,7 @@
     "ember-cli-progress-ci": "workspace:1.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
+    "ember-concurrency": "^4.0.1",
     "ember-decorators": "^6.1.1",
     "ember-exam": "^9.0.0",
     "ember-load-initializers": "^3.0.1",
