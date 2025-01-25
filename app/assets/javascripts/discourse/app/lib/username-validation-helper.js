@@ -1,10 +1,12 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject, { action } from "@ember/object";
+import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import discourseDebounce from "discourse/lib/debounce";
+import { task, timeout } from "ember-concurrency";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+
+const DEBOUNCE_MS = 500;
 
 function failedResult(attrs) {
   return EmberObject.create({
@@ -28,7 +30,10 @@ export default class UsernameValidationHelper {
     this.owner = owner;
   }
 
+  @task({ restartable: true })
   async fetchExistingUsername() {
+    await timeout(DEBOUNCE_MS);
+
     const result = await User.checkUsername(null, this.owner.accountEmail);
 
     if (
@@ -38,6 +43,35 @@ export default class UsernameValidationHelper {
     ) {
       this.owner.accountUsername = result.suggestion;
       this.owner.prefilledUsername = result.suggestion;
+    }
+  }
+
+  @task({ restartable: true })
+  async _checkUsernameAvailability() {
+    await timeout(DEBOUNCE_MS);
+
+    const result = await User.checkUsername(
+      this.owner.accountUsername,
+      this.owner.accountEmail
+    );
+
+    this.checkedUsername = this.owner.accountUsername;
+    this.owner.isDeveloper = !!result.is_developer;
+
+    if (result.available) {
+      this.usernameValidationResult = validResult({
+        reason: i18n("user.username.available"),
+      });
+    } else if (result.suggestion) {
+      this.usernameValidationResult = failedResult({
+        reason: i18n("user.username.not_available"),
+      });
+    } else {
+      this.usernameValidationResult = failedResult({
+        reason: result.errors
+          ? result.errors.join(" ")
+          : i18n("user.username.not_available_no_suggestion"),
+      });
     }
   }
 
@@ -52,7 +86,7 @@ export default class UsernameValidationHelper {
     const result = this.basicUsernameValidation(this.owner.accountUsername);
 
     if (result.shouldCheck) {
-      discourseDebounce(this, this.checkUsernameAvailability, 500);
+      this._checkUsernameAvailability.perform();
     }
 
     return result;
@@ -84,36 +118,5 @@ export default class UsernameValidationHelper {
       shouldCheck: true,
       reason: i18n("user.username.checking"),
     });
-  }
-
-  @action
-  async checkUsernameAvailability() {
-    const result = await User.checkUsername(
-      this.owner.accountUsername,
-      this.owner.accountEmail
-    );
-
-    if (this.owner.isDestroying || this.owner.isDestroyed) {
-      return;
-    }
-
-    this.checkedUsername = this.owner.accountUsername;
-    this.owner.isDeveloper = !!result.is_developer;
-
-    if (result.available) {
-      this.usernameValidationResult = validResult({
-        reason: i18n("user.username.available"),
-      });
-    } else if (result.suggestion) {
-      this.usernameValidationResult = failedResult({
-        reason: i18n("user.username.not_available"),
-      });
-    } else {
-      this.usernameValidationResult = failedResult({
-        reason: result.errors
-          ? result.errors.join(" ")
-          : i18n("user.username.not_available_no_suggestion"),
-      });
-    }
   }
 }
