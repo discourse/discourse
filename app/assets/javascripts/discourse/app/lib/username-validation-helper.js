@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject, { action } from "@ember/object";
+import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import discourseDebounce from "discourse/lib/debounce";
@@ -86,7 +86,6 @@ export default class UsernameValidationHelper {
     });
   }
 
-  @action
   async checkUsernameAvailability() {
     const result = await User.checkUsername(
       this.owner.accountUsername,
@@ -106,7 +105,7 @@ export default class UsernameValidationHelper {
       });
     } else if (result.suggestion) {
       this.usernameValidationResult = failedResult({
-        reason: i18n("user.username.not_available"),
+        reason: i18n("user.username.not_available", result),
       });
     } else {
       this.usernameValidationResult = failedResult({
