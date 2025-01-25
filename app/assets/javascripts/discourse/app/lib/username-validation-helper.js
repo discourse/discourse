@@ -106,7 +106,7 @@ export default class UsernameValidationHelper {
       });
     } else if (result.suggestion) {
       this.usernameValidationResult = failedResult({
-        reason: i18n("user.username.not_available"),
+        reason: i18n("user.username.not_available", result),
       });
     } else {
       this.usernameValidationResult = failedResult({

@@ -59,11 +59,6 @@ export default class SignupPageController extends Controller.extend(
     this.fetchConfirmationValue();
   }
 
-  @action
-  setAccountUsername(event) {
-    this.accountUsername = event.target.value;
-  }
-
   @dependentKeyCompat
   get usernameValidation() {
     return this.usernameValidationHelper.usernameValidation;
@@ -366,7 +361,11 @@ export default class SignupPageController extends Controller.extend(
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd party auth,
       // then look for a registered username that matches the email.
-      discourseDebounce(this, this.fetchExistingUsername, 500);
+      discourseDebounce(
+        this,
+        this.usernameValidationHelper.fetchExistingUsername,
+        500
+      );
     }
   }
 
