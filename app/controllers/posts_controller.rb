@@ -107,7 +107,7 @@ class PostsController < ApplicationController
       @use_canonical = true
     end
 
-    posts = posts.where("posts.id <= ?", last_post_id) if last_post_id
+    posts = posts.where("posts.id < ?", last_post_id) if last_post_id
 
     posts = posts.to_a
 

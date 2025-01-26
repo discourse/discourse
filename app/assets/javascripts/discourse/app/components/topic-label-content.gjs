@@ -42,7 +42,7 @@ const TopicLabelButton = <template>
         </span>
       </div>
       <div class="topic-title__bottom-line">
-        {{categoryLinkHTML @topic (hash link=false)}}
+        {{categoryLinkHTML @topic.category (hash link=false)}}
         {{discourseTags @topic}}
       </div>
     </div>

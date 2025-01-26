@@ -2,7 +2,7 @@ import DButton from "discourse/components/d-button";
 
 const BulkSelectToggle = <template>
   <DButton
-    class="bulk-select"
+    class="btn-default bulk-select"
     @action={{@bulkSelectHelper.toggleBulkSelect}}
     @icon="list"
   />

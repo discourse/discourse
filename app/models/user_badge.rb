@@ -72,12 +72,13 @@ class UserBadge < ActiveRecord::Base
     DiscourseEvent.trigger(:user_badge_revoked, user_badge: self)
   end
 
-  def self.ensure_consistency!(user_ids = nil)
+  def self.ensure_consistency!(user_ids = [])
     self.update_featured_ranks!(user_ids)
   end
 
-  def self.update_featured_ranks!(user_ids = nil)
-    user_ids = user_ids.join(", ") if user_ids
+  def self.update_featured_ranks!(user_ids = [])
+    user_ids = user_ids.join(", ")
+    has_user_ids = !user_ids.empty?
 
     query = <<~SQL
       WITH featured_tl_badge AS -- Find the best trust level badge for each user
@@ -85,7 +86,7 @@ class UserBadge < ActiveRecord::Base
         SELECT user_id, max(badge_id) as badge_id
         FROM user_badges
         WHERE badge_id IN (1,2,3,4)
-        #{"AND user_id IN (#{user_ids})" if user_ids}
+        #{"AND user_id IN (#{user_ids})" if has_user_ids}
         GROUP BY user_id
       ),
       ranks AS ( -- Take all user badges, group by user_id and badge_id, and calculate a rank for each one
@@ -105,7 +106,7 @@ class UserBadge < ActiveRecord::Base
         FROM user_badges
         INNER JOIN badges ON badges.id = user_badges.badge_id
         LEFT JOIN featured_tl_badge ON featured_tl_badge.user_id = user_badges.user_id AND featured_tl_badge.badge_id = user_badges.badge_id
-        #{"WHERE user_badges.user_id IN (#{user_ids})" if user_ids}
+        #{"WHERE user_badges.user_id IN (#{user_ids})" if has_user_ids}
         GROUP BY user_badges.user_id, user_badges.badge_id
       )
       -- Now use that data to update the featured_rank column
