@@ -44,8 +44,8 @@ importers:
         specifier: 6.7.2
         version: 6.7.2
       '@glint/core':
-        specifier: ^1.5.1
-        version: 1.5.1(typescript@5.7.3)
+        specifier: ^1.5.2
+        version: 1.5.2(typescript@5.7.3)
       '@glint/environment-ember-loose':
         specifier: ^1.5.1
         version: 1.5.1(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.26.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.1)(rsvp@4.8.5)))
@@ -2176,8 +2176,8 @@ packages:
   '@glimmer/wire-format@0.93.1':
     resolution: {integrity: sha512-EHtdlZAZsOMBP6b9YC03OyduswqiT6Ei/mR/N1oR/4LZZ8lOyVgp6Q4H0TQW6jprWEiTMdHaO8/SEGTCrrhtUw==}
 
-  '@glint/core@1.5.1':
-    resolution: {integrity: sha512-5VDL/7z9CrirHyx4XyCARDOjujl2Z92hftp19ChXWEPLypukoXW+uDG/awgYCh2T1eNtxufX4j2Liqw0m1eAEw==}
+  '@glint/core@1.5.2':
+    resolution: {integrity: sha512-kbEt8jBEkH65yDB20tBq/rnZl+iigmAenKQcgu1cqex6/eT6LrQ5E9QxyKtqe9S18qZv0c/LNa0qE7jwbAEKMA==}
     hasBin: true
     peerDependencies:
       typescript: '>=4.8.0'
@@ -5999,6 +5999,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.isarguments@3.1.0:
     resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
@@ -6014,6 +6015,7 @@ packages:
 
   lodash.omit@4.5.0:
     resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
+    deprecated: This package is deprecated. Use destructuring assignment syntax instead.
 
   lodash.truncate@4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
@@ -10021,7 +10023,7 @@ snapshots:
       '@glimmer/interfaces': 0.93.0
       '@glimmer/util': 0.93.1
 
-  '@glint/core@1.5.1(typescript@5.7.3)':
+  '@glint/core@1.5.2(typescript@5.7.3)':
     dependencies:
       '@glimmer/syntax': 0.84.3
       escape-string-regexp: 4.0.0
