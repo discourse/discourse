@@ -31,7 +31,7 @@ html.discourse-no-touch {
 
   .btn-icon.ok,
   .btn-icon.cancel,
-  .btn-danger:not(.btn-flat, .btn-transparent) {
+  .btn-danger:not(.btn-flat, .btn-transparent, .popup-menu-btn-danger) {
     .d-icon {
       color: var(--secondary);
     }
