@@ -3619,4 +3619,23 @@ RSpec.describe User do
       )
     end
   end
+
+  describe "#similar_users" do
+    fab!(:user2) { Fabricate(:user, ip_address: "1.2.3.4") }
+    fab!(:user3) { Fabricate(:user, ip_address: "1.2.3.4") }
+    fab!(:admin) { Fabricate(:admin, ip_address: "1.2.3.4") }
+    fab!(:moderator) { Fabricate(:moderator, ip_address: "1.2.3.4") }
+
+    before { user.update(ip_address: "1.2.3.4") }
+
+    it "gets users that are not admin, moderator, or current user with the same IP" do
+      expect(user.similar_users).to contain_exactly(user2, user3)
+    end
+
+    it "does not get other users with a null IP if this user has a null IP" do
+      user.update!(ip_address: nil)
+      user2.update!(ip_address: nil)
+      expect(user.similar_users).to eq([])
+    end
+  end
 end

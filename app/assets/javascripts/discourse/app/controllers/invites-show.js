@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -21,9 +22,12 @@ export default class InvitesShowController extends Controller.extend(
   UsernameValidation,
   UserFieldsValidation
 ) {
+  @tracked accountUsername;
+  @tracked isDeveloper;
   queryParams = ["t"];
   nameValidationHelper = new NameValidationHelper(this);
-
+  successMessage = null;
+  @readOnly("model.is_invite_link") isInviteLink;
   @readOnly("model.invited_by") invitedBy;
   @alias("model.email") email;
   @alias("email") accountEmail;
@@ -34,16 +38,17 @@ export default class InvitesShowController extends Controller.extend(
   @alias("model.hidden_email") hiddenEmail;
   @alias("model.email_verified_by_link") emailVerifiedByLink;
   @alias("model.different_external_email") differentExternalEmail;
-  @alias("model.username") accountUsername;
   @not("externalAuthsOnly") passwordRequired;
-  @readOnly("model.is_invite_link") isInviteLink;
-
-  successMessage = null;
   errorMessage = null;
   userFields = null;
   authOptions = null;
   rejectedEmails = [];
   maskPassword = true;
+
+  @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
+  }
 
   get nameTitle() {
     return this.nameValidationHelper.nameTitle;

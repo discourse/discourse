@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 
 export default class Bool extends Component {
-  @tracked
-  enabled = isEmpty(this.args.value)
-    ? false
-    : this.args.value.toString() === "true";
+  get enabled() {
+    return isEmpty(this.args.value)
+      ? false
+      : this.args.value.toString() === "true";
+  }
 
   @action
   onToggle(event) {

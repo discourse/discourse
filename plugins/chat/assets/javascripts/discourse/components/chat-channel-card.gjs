@@ -74,7 +74,6 @@ export default class ChatChannelCard extends Component {
             @route="chat.channel.info.members"
             @models={{@channel.routeModels}}
             class="chat-channel-card__members"
-            tabindex="-1"
           >
             {{i18n
               "chat.channel.memberships_count"

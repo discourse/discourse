@@ -139,6 +139,24 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
+  context "when opening channel settings from thread" do
+    fab!(:thread) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
+
+    before do
+      category_channel.update!(threading_enabled: true)
+      Fabricate(:chat_message, thread: thread, use_service: true)
+      thread.add(current_user)
+    end
+
+    it "correctly closes the side panel" do
+      chat_page.visit_thread(thread)
+
+      find(".c-navbar__channel-title").click
+
+      expect(page).to have_no_selector(".main-chat-outlet.has-side-panel-expanded")
+    end
+  end
+
   context "when collapsing full page with no previous state" do
     it "redirects to home page" do
       chat_page.open

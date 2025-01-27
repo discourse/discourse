@@ -1215,13 +1215,11 @@ module Discourse
   end
 
   def self.anonymous_locale(request)
-    locale =
-      HttpLanguageParser.parse(request.cookies["locale"]) if SiteSetting.set_locale_from_cookie
+    locale = request.params["lang"] if SiteSetting.set_locale_from_param
+    locale ||= request.cookies["locale"] if SiteSetting.set_locale_from_cookie
     locale ||=
-      HttpLanguageParser.parse(
-        request.env["HTTP_ACCEPT_LANGUAGE"],
-      ) if SiteSetting.set_locale_from_accept_language_header
-    locale
+      request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
+    HttpLanguageParser.parse(locale)
   end
 
   # For test environment only

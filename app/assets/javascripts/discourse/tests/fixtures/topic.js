@@ -4005,7 +4005,7 @@ export default {
     chunk_size: 20,
     bookmarked: null,
     bookmarks: [],
-    tags: null,
+    tags: ["foo"],
   },
   "/t/9/1.json": {
     post_stream: {

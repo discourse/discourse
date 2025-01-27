@@ -186,6 +186,10 @@
       }
     }
   }
+
+  .d-page-subheader__title a {
+    color: var(--primary);
+  }
 }
 
 .rtl .admin-report {

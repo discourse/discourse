@@ -397,16 +397,28 @@ acceptance("Composer", function (needs) {
       ".d-editor-input",
       "this is the content for a different topic"
     );
-
     await visit("/t/1-3-0beta9-no-rate-limit-popups/28830");
+
     assert.strictEqual(
       currentURL(),
       "/t/1-3-0beta9-no-rate-limit-popups/28830"
     );
+
     await click("#reply-control button.create");
+
     assert.dom(".reply-where-modal").exists("pops up a modal");
+    assert
+      .dom(".topic-title")
+      .exists({ count: 2 }, "it renders the two topics");
+    assert
+      .dom(".btn-reply-where:nth-of-type(1) .badge-category__name")
+      .hasText("test too", "it renders the category name");
+    assert
+      .dom(".btn-reply-where:nth-of-type(2) .discourse-tags")
+      .hasText("foo", "it renders the tags");
 
     await click(".btn-reply-here");
+
     assert
       .dom(".topic-post:last-of-type .cooked p")
       .hasText(

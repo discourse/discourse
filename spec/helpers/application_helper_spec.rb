@@ -877,12 +877,20 @@ RSpec.describe ApplicationHelper do
   describe "#discourse_theme_color_meta_tags" do
     before do
       light = Fabricate(:color_scheme)
-      light.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "abcdef")
+      light.color_scheme_colors << ColorSchemeColor.new(
+        name: "header_background",
+        hex: "abcdef",
+        dark_hex: "fedcba",
+      )
       light.save!
       helper.request.cookies["color_scheme_id"] = light.id
 
       dark = Fabricate(:color_scheme)
-      dark.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "defabc")
+      dark.color_scheme_colors << ColorSchemeColor.new(
+        name: "header_background",
+        hex: "defabc",
+        dark_hex: "cbafed",
+      )
       dark.save!
       helper.request.cookies["dark_scheme_id"] = dark.id
     end
@@ -901,6 +909,17 @@ RSpec.describe ApplicationHelper do
       expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
         <meta name="theme-color" media="all" content="#abcdef">
       HTML
+    end
+
+    context "when use_overhauled_theme_color_palette setting is true" do
+      before { SiteSetting.use_overhauled_theme_color_palette = true }
+
+      it "renders a light and dark theme-color meta tag using the light and dark palettes of the same color scheme record" do
+        expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
+          <meta name="theme-color" media="(prefers-color-scheme: light)" content="#abcdef">
+          <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#fedcba">
+        HTML
+      end
     end
   end
 
@@ -942,6 +961,29 @@ RSpec.describe ApplicationHelper do
       expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
         <meta name="color-scheme" content="light dark">
       HTML
+    end
+  end
+
+  describe "#dark_scheme_id" do
+    fab!(:dark_scheme) { Fabricate(:color_scheme) }
+    fab!(:light_scheme) { Fabricate(:color_scheme) }
+
+    before do
+      helper.request.cookies["color_scheme_id"] = light_scheme.id
+      helper.request.cookies["dark_scheme_id"] = dark_scheme.id
+    end
+
+    it "returns the value set in the dark_scheme_id cookie" do
+      expect(helper.dark_scheme_id).to eq(dark_scheme.id)
+    end
+
+    context "when use_overhauled_theme_color_palette is true" do
+      before { SiteSetting.use_overhauled_theme_color_palette = true }
+
+      it "returns the same value as #scheme_id" do
+        expect(helper.dark_scheme_id).to eq(helper.scheme_id)
+        expect(helper.scheme_id).to eq(light_scheme.id)
+      end
     end
   end
 end

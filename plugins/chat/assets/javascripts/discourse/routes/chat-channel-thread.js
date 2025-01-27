@@ -6,7 +6,6 @@ export default class ChatChannelThread extends DiscourseRoute {
   @service router;
   @service chatStateManager;
   @service chat;
-  @service chatThreadPane;
 
   redirectToChannel(channel, transition) {
     transition.abort();
@@ -36,15 +35,14 @@ export default class ChatChannelThread extends DiscourseRoute {
   }
 
   @action
-  willTransition(transition) {
-    if (
-      transition.targetName === "chat.channel.index" ||
-      transition.targetName === "chat.channel.near-message" ||
-      transition.targetName === "chat.index" ||
-      !transition.targetName.startsWith("chat")
-    ) {
-      this.chatStateManager.closeSidePanel();
-    }
+  activate() {
+    this.chat.activeMessage = null;
+    this.chatStateManager.openSidePanel();
+  }
+
+  @action
+  deactivate() {
+    this.chatStateManager.closeSidePanel();
   }
 
   beforeModel() {
@@ -55,7 +53,5 @@ export default class ChatChannelThread extends DiscourseRoute {
     ) {
       this.controllerFor("chat-channel-thread").set("targetMessageId", null);
     }
-
-    this.chatStateManager.openSidePanel();
   }
 }

@@ -142,6 +142,15 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
     end
 
+    it "should properly redirect admins when enforce_second_factor is 'all' in subfolder" do
+      set_subfolder "/forum"
+      SiteSetting.enforce_second_factor = "all"
+      sign_in(admin)
+
+      get "/"
+      expect(response).to redirect_to("/forum/u/#{admin.username}/preferences/second-factor")
+    end
+
     it "should redirect users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
@@ -1121,6 +1130,44 @@ RSpec.describe ApplicationController do
           SiteSetting.default_locale = "en"
 
           get "/latest", headers: { Cookie: "" }
+          expect(response.status).to eq(200)
+          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+        end
+      end
+    end
+
+    context "with set_locale_from_param enabled" do
+      context "when param locale differs from default locale" do
+        before do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_param = true
+          SiteSetting.default_locale = "en"
+        end
+
+        context "with an anonymous user" do
+          it "uses the locale from the param" do
+            get "/latest?lang=es"
+            expect(response.status).to eq(200)
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/es.js")
+            expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
+          end
+        end
+
+        context "when the preferred locale includes a region" do
+          it "returns the locale and region separated by an underscore" do
+            get "/latest?lang=zh-CN"
+            expect(response.status).to eq(200)
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+          end
+        end
+      end
+
+      context "when locale param is not set" do
+        it "uses the site default locale" do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.default_locale = "en"
+
+          get "/latest"
           expect(response.status).to eq(200)
           expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
         end

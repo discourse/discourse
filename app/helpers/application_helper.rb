@@ -555,8 +555,12 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
-    cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
-      SiteSetting.default_dark_mode_color_scheme_id
+    if SiteSetting.use_overhauled_theme_color_palette
+      scheme_id
+    else
+      cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
+        SiteSetting.default_dark_mode_color_scheme_id
+    end
   end
 
   def current_homepage
@@ -638,6 +642,7 @@ module ApplicationHelper
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
         "(prefers-color-scheme: dark)",
+        dark: SiteSetting.use_overhauled_theme_color_palette,
       )
     end
 
@@ -657,6 +662,7 @@ module ApplicationHelper
         dark_scheme_id,
         "(prefers-color-scheme: dark)",
         self.method(:add_resource_preload_list),
+        dark: SiteSetting.use_overhauled_theme_color_palette,
       )
     end
 
@@ -668,7 +674,7 @@ module ApplicationHelper
     if dark_scheme_id != -1
       result << <<~HTML
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="##{ColorScheme.hex_for_name("header_background", scheme_id)}">
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="##{ColorScheme.hex_for_name("header_background", dark_scheme_id)}">
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="##{ColorScheme.hex_for_name("header_background", dark_scheme_id, dark: SiteSetting.use_overhauled_theme_color_palette)}">
       HTML
     else
       result << <<~HTML
