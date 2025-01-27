@@ -86,7 +86,8 @@
       background-color: var(--primary-very-low);
       color: var(--primary-high);
 
-      &:hover {
+      &:hover,
+      &:focus-visible {
         background: var(--primary-low);
         color: var(--primary);
       }
@@ -704,7 +705,7 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--d-backdrop-bg);
   top: 0;
   left: 0;
   display: none;
