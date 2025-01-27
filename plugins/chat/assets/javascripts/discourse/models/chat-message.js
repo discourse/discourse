@@ -45,7 +45,6 @@ export default class ChatMessage {
   @tracked chatWebhookEvent;
   @tracked mentionWarning;
   @tracked availableFlags;
-  @tracked newest;
   @tracked highlighted;
   @tracked firstOfResults;
   @tracked message;
@@ -62,7 +61,6 @@ export default class ChatMessage {
     this.channel = channel;
     this.streaming = args.streaming;
     this.manager = args.manager;
-    this.newest = args.newest ?? false;
     this.draftSaved = args.draftSaved ?? args.draft_saved ?? false;
     this.firstOfResults = args.firstOfResults ?? args.first_of_results ?? false;
     this.staged = args.staged ?? false;

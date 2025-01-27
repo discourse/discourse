@@ -72,6 +72,7 @@ export default class ChatChannel {
   @tracked tracking;
   @tracked threadingEnabled;
   @tracked draft;
+  @tracked newestMessage;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
