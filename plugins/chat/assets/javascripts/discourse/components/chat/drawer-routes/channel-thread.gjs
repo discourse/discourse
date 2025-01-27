@@ -37,11 +37,6 @@ export default class ChatDrawerRoutesChannelThread extends Component {
     );
   }
 
-  @action
-  setFullTitle(value) {
-    this.showThreadFullTitle = value;
-  }
-
   <template>
     <div class="c-drawer-routes --channel-thread">
       {{#if @model.channel}}
