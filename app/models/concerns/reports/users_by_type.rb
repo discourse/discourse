@@ -7,7 +7,7 @@ module Reports::UsersByType
     def report_users_by_type(report)
       report.data = []
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.dates_filtering = false
 

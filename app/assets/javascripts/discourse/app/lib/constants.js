@@ -106,3 +106,14 @@ export const USER_FIELD_FLAGS = [
   "show_on_user_card",
   "searchable",
 ];
+
+export const REPORT_MODES = {
+  table: "table",
+  chart: "chart",
+  stacked_chart: "stacked_chart",
+  stacked_line_chart: "stacked_line_chart",
+  radar: "radar",
+  counters: "counters",
+  inline_table: "inline_table",
+  storage_stats: "storage_stats",
+};
