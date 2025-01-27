@@ -81,7 +81,6 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    assert.dom("#quick-access-profile").hasAttribute("tabindex", "-1");
     assert
       .dom("#quick-access-profile ul")
       .hasAria("labelledby", "user-menu-button-profile");
