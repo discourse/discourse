@@ -751,7 +751,7 @@ export default class TextareaTextManipulation {
   }
 
   async inCodeBlock() {
-    return this.autocompleteHandler.inCodeBlock();
+    return await this.autocompleteHandler.inCodeBlock();
   }
 
   @bind
@@ -890,9 +890,9 @@ export class TextareaAutocompleteHandler {
   }
 
   async inCodeBlock() {
-    return inCodeBlock(
+    return await inCodeBlock(
       this.textarea.value ?? this.$textarea.val(),
-      caretPosition(this.$textarea)
+      caretPosition(this.textarea)
     );
   }
 }

@@ -215,7 +215,7 @@ RSpec.describe UserStat do
     end
   end
 
-  describe "update_distinct_badge_count" do
+  describe ".update_distinct_badge_count" do
     fab!(:user)
     let(:stat) { user.user_stat }
     fab!(:badge1) { Fabricate(:badge) }

@@ -34,6 +34,13 @@
       }
     }
 
+    .expand-item,
+    .collapse-item {
+      padding: 0;
+      margin-right: 0.75rem;
+      margin-top: 0.15rem;
+    }
+
     .stream-topic-title {
       overflow-wrap: anywhere;
     }

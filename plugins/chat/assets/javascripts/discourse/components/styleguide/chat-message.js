@@ -47,11 +47,6 @@ export default class ChatStyleguideChatMessage extends Component {
   }
 
   @action
-  toggleLastVisit() {
-    this.message.newest = !this.message.newest;
-  }
-
-  @action
   toggleThread() {
     if (this.message.thread) {
       this.message.channel.threadingEnabled = false;

@@ -101,6 +101,7 @@ export default class NotificationsTracking extends Component {
       @identifier="notifications-tracking"
       @modalForMobile={{true}}
       @triggerClass={{concatClass
+        "btn-default"
         "notifications-tracking-trigger-btn"
         @triggerClass
       }}

@@ -20,10 +20,14 @@ module Jobs
       )
 
       affected_user_ids = (revoked_user_ids | granted_user_ids).to_a
+      revoked_user_ids = revoked_user_ids.to_a
 
-      BadgeGranter.revoke_ungranted_titles!(revoked_user_ids.to_a)
-      UserBadge.ensure_consistency!(affected_user_ids)
-      UserStat.update_distinct_badge_count(affected_user_ids)
+      BadgeGranter.revoke_ungranted_titles!(revoked_user_ids) if revoked_user_ids.present?
+
+      if affected_user_ids.present?
+        UserBadge.ensure_consistency!(affected_user_ids)
+        UserStat.update_distinct_badge_count(affected_user_ids)
+      end
     end
   end
 end

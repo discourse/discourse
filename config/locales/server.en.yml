@@ -1737,6 +1737,7 @@ en:
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
     set_locale_from_cookie: "Allows setting an anonymous user's locale via the 'locale' browser cookie"
+    set_locale_from_param: "Allows setting an anonymous user's locale via the 'lang' URL param, e.g. ?lang=es"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
     min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
     min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
@@ -5427,6 +5428,8 @@ en:
             label: "Color palette"
           body_font:
             label: "Body font"
+          site_font:
+            label: "Font"
           heading_font:
             label: "Heading font"
           styling_preview:

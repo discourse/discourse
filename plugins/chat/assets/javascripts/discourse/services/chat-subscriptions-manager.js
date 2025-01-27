@@ -140,7 +140,7 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _onKickFromChannel(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
-      if (this.chat.activeChannel.id === channel.id) {
+      if (this.chat.activeChannel?.id === channel.id) {
         this.dialog.alert({
           message: i18n("chat.kicked_from_channel"),
           didConfirm: () => {
