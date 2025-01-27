@@ -172,7 +172,7 @@
 // styles for user cards only
 .user-card {
   &:focus-visible {
-    // we move focus to the card, but the outline isn't neccessary until keyboard nav starts within
+    // we move focus to the card, but the outline isn't necessary until keyboard nav starts within
     outline: none;
   }
 
