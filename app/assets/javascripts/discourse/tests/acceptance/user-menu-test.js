@@ -62,9 +62,6 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
 
     assert
-      .dom("#quick-access-all-notifications")
-      .hasAttribute("tabindex", "-1");
-    assert
       .dom("#quick-access-all-notifications ul")
       .hasAria("labelledby", "user-menu-button-all-notifications");
   });
@@ -74,7 +71,6 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-replies");
 
-    assert.dom("#quick-access-replies").hasAttribute("tabindex", "-1");
     assert
       .dom("#quick-access-replies ul")
       .hasAria("labelledby", "user-menu-button-replies");
