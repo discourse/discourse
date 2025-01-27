@@ -5,9 +5,9 @@ RSpec.describe "Navigation", type: :system do
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user) { Fabricate(:admin) }
-  fab!(:category_channel)
-  fab!(:category_channel_2) { Fabricate(:category_channel) }
-  fab!(:message) { Fabricate(:chat_message, chat_channel: category_channel) }
+  fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
+  fab!(:channel_2) { Fabricate(:chat_channel) }
+  fab!(:message) { Fabricate(:chat_message) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
@@ -18,8 +18,8 @@ RSpec.describe "Navigation", type: :system do
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
-    current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => category_channel.id)
-    chat_system_bootstrap(current_user, [category_channel, category_channel_2])
+    current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_1.id)
+    chat_system_bootstrap(current_user, [channel_1, channel_2])
     current_user.user_option.update(
       chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:never],
     )
@@ -31,7 +31,7 @@ RSpec.describe "Navigation", type: :system do
       visit("/")
 
       chat_page.open_from_header
-      chat_drawer_page.open_channel(category_channel_2)
+      chat_drawer_page.open_channel(channel_2)
       chat_page.open_from_header
 
       expect(page).to have_content(I18n.t("js.chat.direct_messages.title"))
@@ -40,7 +40,7 @@ RSpec.describe "Navigation", type: :system do
 
   context "when clicking chat icon on mobile and is viewing channel" do
     it "navigates to channels tab", mobile: true do
-      chat_page.visit_channel(category_channel_2)
+      chat_page.visit_channel(channel_2)
       chat_page.open_from_header
 
       expect(page).to have_current_path("/chat/channels")
@@ -81,9 +81,7 @@ RSpec.describe "Navigation", type: :system do
     it "opens full page" do
       chat_page.open
 
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel.slug, category_channel.id),
-      )
+      expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
     end
   end
 
@@ -91,9 +89,7 @@ RSpec.describe "Navigation", type: :system do
     it "redirects /chat/channels to browse" do
       visit("/chat/channels")
 
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel.slug, category_channel.id),
-      )
+      expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
     end
   end
 
@@ -112,16 +108,12 @@ RSpec.describe "Navigation", type: :system do
       chat_page.open_from_header
       chat_drawer_page.maximize
 
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel.slug, category_channel.id),
-      )
+      expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
 
       visit("/")
       chat_page.open_from_header
 
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel.slug, category_channel.id),
-      )
+      expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
     end
   end
 
@@ -148,6 +140,23 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
+  context "when opening channel settings from thread" do
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, use_service: true) }
+
+    before do
+      Fabricate(:chat_message, thread: thread, use_service: true)
+      thread.add(current_user)
+    end
+
+    it "correctly closes the side panel" do
+      chat_page.visit_thread(thread)
+
+      find(".c-navbar__channel-title").click
+
+      expect(page).to have_no_selector(".main-chat-outlet.has-side-panel-expanded")
+    end
+  end
+
   context "when collapsing full page with previous state" do
     it "redirects to previous state" do
       visit("/t/-/#{topic.id}")
@@ -161,10 +170,9 @@ RSpec.describe "Navigation", type: :system do
   end
 
   context "when opening a thread" do
-    fab!(:thread) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, use_service: true) }
 
     before do
-      category_channel.update!(threading_enabled: true)
       Fabricate(:chat_message, thread: thread, use_service: true)
       thread.add(current_user)
     end
@@ -174,14 +182,14 @@ RSpec.describe "Navigation", type: :system do
         skip_on_ci!
 
         visit("/chat")
-        chat_page.visit_channel(category_channel)
+        chat_page.visit_channel(channel_1)
         channel_page.open_thread_list
         expect(thread_list_page).to have_loaded
         thread_list_page.open_thread(thread)
         expect(side_panel_page).to have_open_thread(thread)
-        expect(thread_page).to have_back_link_to_thread_list(category_channel)
+        expect(thread_page).to have_back_link_to_thread_list(channel_1)
         thread_page.back
-        expect(page).to have_current_path("#{category_channel.relative_url}/t")
+        expect(page).to have_current_path("#{channel_1.relative_url}/t")
         expect(thread_list_page).to have_loaded
       end
 
@@ -190,26 +198,26 @@ RSpec.describe "Navigation", type: :system do
           skip_on_ci!
 
           visit("/chat")
-          chat_page.visit_channel(category_channel)
+          chat_page.visit_channel(channel_1)
           channel_page.open_thread_list
           expect(thread_list_page).to have_loaded
           thread_list_page.open_thread(thread)
           expect(side_panel_page).to have_open_thread(thread)
-          expect(thread_page).to have_back_link_to_thread_list(category_channel)
+          expect(thread_page).to have_back_link_to_thread_list(channel_1)
           thread_page.back
-          expect(page).to have_current_path("#{category_channel.relative_url}/t")
+          expect(page).to have_current_path("#{channel_1.relative_url}/t")
           expect(thread_list_page).to have_loaded
         end
 
         context "when there are unread threads" do
-          fab!(:thread_2) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
+          fab!(:thread_2) { Fabricate(:chat_thread, channel: channel_1, use_service: true) }
 
           before { Fabricate(:chat_message, thread: thread_2, use_service: true) }
 
           it "goes back to the thread list when clicking the back button", mobile: true do
             skip_on_ci!
 
-            chat_page.visit_channel(category_channel)
+            chat_page.visit_channel(channel_1)
             channel_page.message_thread_indicator(thread.original_message).click
             thread_page.send_message
             thread_page.back
@@ -217,9 +225,9 @@ RSpec.describe "Navigation", type: :system do
             Fabricate(:chat_message, thread: thread, use_service: true)
 
             expect(thread_page).to have_unread_list_indicator(count: 1)
-            expect(thread_page).to have_back_link_to_thread_list(category_channel)
+            expect(thread_page).to have_back_link_to_thread_list(channel_1)
             thread_page.back
-            expect(page).to have_current_path("#{category_channel.relative_url}/t")
+            expect(page).to have_current_path("#{channel_1.relative_url}/t")
           end
         end
       end
@@ -230,12 +238,12 @@ RSpec.describe "Navigation", type: :system do
         skip_on_ci!
 
         visit("/chat")
-        chat_page.visit_channel(category_channel)
+        chat_page.visit_channel(channel_1)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel_page).to have_open_thread(thread)
-        expect(thread_page).to have_back_link_to_thread_list(category_channel)
+        expect(thread_page).to have_back_link_to_thread_list(channel_1)
         thread_page.back
-        expect(page).to have_current_path("#{category_channel.relative_url}/t")
+        expect(page).to have_current_path("#{channel_1.relative_url}/t")
         expect(thread_list_page).to have_loaded
       end
 
@@ -245,12 +253,12 @@ RSpec.describe "Navigation", type: :system do
           skip_on_ci!
 
           visit("/chat")
-          chat_page.visit_channel(category_channel)
+          chat_page.visit_channel(channel_1)
           channel_page.message_thread_indicator(thread.original_message).click
           expect(side_panel_page).to have_open_thread(thread)
-          expect(thread_page).to have_back_link_to_channel(category_channel)
+          expect(thread_page).to have_back_link_to_channel(channel_1)
           thread_page.back
-          expect(page).to have_current_path("#{category_channel.relative_url}")
+          expect(page).to have_current_path("#{channel_1.relative_url}")
           expect(side_panel_page).to be_closed
         end
       end
@@ -286,7 +294,7 @@ RSpec.describe "Navigation", type: :system do
         visit("/t/-/#{topic.id}")
         chat_page.open_from_header
         chat_drawer_page.close
-        sidebar_component.click_link(category_channel.name)
+        sidebar_component.click_link(channel_1.name)
 
         expect(page).to have_css(".chat-message-container[data-id='#{message.id}']")
       end
@@ -298,11 +306,9 @@ RSpec.describe "Navigation", type: :system do
         chat_page.open_from_header
         chat_drawer_page.maximize
         visit("/")
-        sidebar_component.click_link(category_channel.name)
+        sidebar_component.click_link(channel_1.name)
 
-        expect(page).to have_current_path(
-          chat.channel_path(category_channel.slug, category_channel.id),
-        )
+        expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
       end
     end
 
@@ -324,7 +330,7 @@ RSpec.describe "Navigation", type: :system do
         chat_page.open_from_header
         sidebar_page.open_browse
 
-        expect(chat_drawer_page.browse).to have_channel(name: category_channel.name)
+        expect(chat_drawer_page.browse).to have_channel(name: channel_1.name)
       end
     end
 
@@ -332,25 +338,25 @@ RSpec.describe "Navigation", type: :system do
       it "opens drawer on correct channel" do
         visit("/")
         chat_page.open_from_header
-        chat_drawer_page.open_channel(category_channel_2)
+        chat_drawer_page.open_channel(channel_2)
         chat_drawer_page.back
         chat_drawer_page.close
         chat_page.open_from_header
 
         expect(page).to have_current_path("/")
         expect(page).to have_css(".chat-drawer.is-expanded")
-        expect(page).to have_content(category_channel_2.title)
+        expect(page).to have_content(channel_2.title)
       end
     end
 
     context "when re-opening full page chat after navigating to a channel" do
       it "opens full page chat on correct channel" do
-        chat_channel_path = chat.channel_path(category_channel_2.slug, category_channel_2.id)
+        chat_channel_path = chat.channel_path(channel_2.slug, channel_2.id)
 
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.maximize
-        sidebar_page.open_channel(category_channel_2)
+        sidebar_page.open_channel(channel_2)
         click_logo
 
         expect(chat_page).to have_header_href(chat_channel_path)
@@ -358,7 +364,7 @@ RSpec.describe "Navigation", type: :system do
         chat_page.open_from_header
 
         expect(page).to have_current_path(chat_channel_path)
-        expect(page).to have_content(category_channel_2.title)
+        expect(page).to have_content(channel_2.title)
       end
     end
 
@@ -367,9 +373,9 @@ RSpec.describe "Navigation", type: :system do
       fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
       it "activates the channel in the sidebar" do
-        visit("/chat/c/#{category_channel.slug}/#{category_channel.id}")
+        visit("/chat/c/#{channel_1.slug}/#{channel_1.id}")
 
-        expect(sidebar_component).to have_section_link(category_channel.name, active: true)
+        expect(sidebar_component).to have_section_link(channel_1.name, active: true)
       end
 
       it "does not have multiple channels marked active in the sidebar" do
@@ -377,16 +383,16 @@ RSpec.describe "Navigation", type: :system do
 
         expect(sidebar_component).to have_section_link(other_user.username, active: true)
 
-        sidebar_component.click_section_link(category_channel.name)
+        sidebar_component.click_section_link(channel_1.name)
 
-        expect(sidebar_component).to have_section_link(category_channel.name, active: true)
+        expect(sidebar_component).to have_section_link(channel_1.name, active: true)
         expect(sidebar_component).to have_one_active_section_link
       end
     end
 
     context "when going back to channel from channel settings in full page" do
       it "activates the channel in the sidebar" do
-        visit("/chat/c/#{category_channel.slug}/#{category_channel.id}/info/settings")
+        visit("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
         find(".c-navbar__back-button").click
         expect(page).to have_content(message.message)
       end
@@ -394,10 +400,10 @@ RSpec.describe "Navigation", type: :system do
 
     context "when clicking logo from a channel in full page" do
       it "deactivates the channel in the sidebar" do
-        visit("/chat/c/#{category_channel.slug}/#{category_channel.id}")
+        visit("/chat/c/#{channel_1.slug}/#{channel_1.id}")
         click_logo
 
-        expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
+        expect(sidebar_component).to have_no_section_link(channel_1.name, active: true)
       end
     end
 
@@ -405,9 +411,9 @@ RSpec.describe "Navigation", type: :system do
       it "activates the channel in the sidebar" do
         visit("/")
         chat_page.open_from_header
-        sidebar_component.click_section_link(category_channel.name)
+        sidebar_component.click_section_link(channel_1.name)
 
-        expect(sidebar_component).to have_section_link(category_channel.name, active: true)
+        expect(sidebar_component).to have_section_link(channel_1.name, active: true)
       end
     end
 
@@ -416,22 +422,22 @@ RSpec.describe "Navigation", type: :system do
         visit("/")
         chat_page.open_from_header
 
-        sidebar_component.click_section_link(category_channel.name)
+        sidebar_component.click_section_link(channel_1.name)
         chat_drawer_page.close
 
-        expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
+        expect(sidebar_component).to have_no_section_link(channel_1.name, active: true)
       end
     end
 
     context "when exiting a thread for homepage" do
-      fab!(:thread) { Fabricate(:chat_thread, channel: category_channel) }
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel_1) }
 
       before do
         current_user.user_option.update(
           chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:always],
         )
         chat_page.prefers_full_page
-        category_channel.update!(threading_enabled: true)
+        channel_1.update!(threading_enabled: true)
         thread.add(current_user)
       end
 
