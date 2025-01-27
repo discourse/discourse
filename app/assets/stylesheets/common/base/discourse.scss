@@ -208,8 +208,7 @@ input {
   &[type="email"],
   &[type="url"],
   &[type="search"],
-  &[type="tel"],
-  &[type="color"] {
+  &[type="tel"] {
     @include appearance-none;
     @include form-item-sizing;
     display: inline-block;
@@ -222,6 +221,22 @@ input {
 
     &:focus {
       @include default-focus;
+    }
+  }
+
+  &[type="color"] {
+    border: var(--d-input-border);
+    border-radius: var(--d-input-border-radius);
+    cursor: pointer;
+    padding: 0;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: 0;
     }
   }
 

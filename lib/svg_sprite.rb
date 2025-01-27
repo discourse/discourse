@@ -159,6 +159,7 @@ module SvgSprite
         grip-lines
         hand-point-right
         handshake-angle
+        hashtag
         heart
         hourglass-start
         house
@@ -219,6 +220,7 @@ module SvgSprite
         square-full
         square-plus
         star
+        sun
         table
         table-cells
         table-columns
