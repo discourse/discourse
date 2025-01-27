@@ -122,7 +122,7 @@ class Plugin::Instance
     route = self.admin_route
 
     if route.blank?
-      return if !settings?
+      return if !any_settings?
 
       route = default_admin_route
     end
@@ -135,7 +135,7 @@ class Plugin::Instance
       end
   end
 
-  def settings?
+  def any_settings?
     return false if !configurable?
 
     SiteSetting

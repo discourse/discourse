@@ -12,6 +12,7 @@ import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-side
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
+import AdminPlugin from "admin/models/admin-plugin";
 
 let additionalAdminSidebarSectionLinks = {};
 
@@ -60,7 +61,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
   get text() {
     return this.adminSidebarNavLink.label
-      ? i18n(this.adminSidebarNavLink.label)
+      ? i18n(this.adminSidebarNavLink.label, {
+          translatedFallback: this.adminSidebarNavLink.text,
+        })
       : this.adminSidebarNavLink.text;
   }
 
@@ -307,6 +310,7 @@ function pluginAdminRouteLinks(router) {
       }
     })
     .map((plugin) => {
+      const model = AdminPlugin.create(plugin);
       return {
         name: `admin_plugin_${plugin.admin_route.location}`,
         route: plugin.admin_route.use_new_show_route
@@ -316,6 +320,7 @@ function pluginAdminRouteLinks(router) {
           ? [plugin.admin_route.location]
           : [],
         label: plugin.admin_route.label,
+        text: model.nameTitleized,
         icon: "gear",
       };
     });
