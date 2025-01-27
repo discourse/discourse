@@ -41,5 +41,5 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
           git add pnpm-lock.yaml
-          git commit -m "pnpm dedupe [dependabot skip]"
-          git push origin "HEAD:${GITHUB_HEAD_REF}"
+          git status
+          git commit -m "pnpm dedupe [dependabot skip]" && git push origin "HEAD:${GITHUB_HEAD_REF}"
