@@ -11,18 +11,6 @@ export default class AdminPluginConfigPage extends Component {
   @service currentUser;
   @service adminPluginNavManager;
 
-  get mainAreaClasses() {
-    let classes = ["admin-plugin-config-page__main-area"];
-
-    if (this.adminPluginNavManager.isSidebarMode) {
-      classes.push("-with-inner-sidebar");
-    } else {
-      classes.push("-without-inner-sidebar");
-    }
-
-    return classes.join(" ");
-  }
-
   get actionsOutletName() {
     return `admin-plugin-config-page-actions-${this.args.plugin.dasherizedName}`;
   }
@@ -59,26 +47,24 @@ export default class AdminPluginConfigPage extends Component {
           />
         </:breadcrumbs>
         <:tabs>
-          {{#if this.adminPluginNavManager.isTopMode}}
-            {{#each
-              this.adminPluginNavManager.currentConfigNav.links
-              as |navLink|
-            }}
-              <NavItem
-                @route={{navLink.route}}
-                @i18nLabel={{this.linkText navLink}}
-                title={{this.linkText navLink}}
-                class="admin-plugin-config-page__top-nav-item"
-              >
-                {{this.linkText navLink}}
-              </NavItem>
-            {{/each}}
-          {{/if}}
+          {{#each
+            this.adminPluginNavManager.currentConfigNav.links
+            as |navLink|
+          }}
+            <NavItem
+              @route={{navLink.route}}
+              @i18nLabel={{this.linkText navLink}}
+              title={{this.linkText navLink}}
+              class="admin-plugin-config-page__top-nav-item"
+            >
+              {{this.linkText navLink}}
+            </NavItem>
+          {{/each}}
         </:tabs>
       </DPageHeader>
 
       <div class="admin-plugin-config-page__content">
-        <div class={{this.mainAreaClasses}}>
+        <div class="admin-plugin-config-page__main-area -without-inner-sidebar">
           <AdminPluginConfigArea>
             {{yield}}
           </AdminPluginConfigArea>

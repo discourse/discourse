@@ -1,10 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import {
-  configNavForPlugin,
-  PLUGIN_NAV_MODE_SIDEBAR,
-  PLUGIN_NAV_MODE_TOP,
-} from "discourse/lib/admin-plugin-config-nav";
+import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 
 export default class AdminPluginNavManager extends Service {
   @service currentUser;
@@ -22,7 +18,6 @@ export default class AdminPluginNavManager extends Service {
   get currentConfigNav() {
     const configNav = configNavForPlugin(this.currentPlugin.id);
     const settingsNav = {
-      mode: PLUGIN_NAV_MODE_TOP,
       links: [
         {
           label: "admin.plugins.change_settings_short",
@@ -58,13 +53,5 @@ export default class AdminPluginNavManager extends Service {
     }
 
     return linksExceptSettings[0].route;
-  }
-
-  get isSidebarMode() {
-    return this.currentConfigNav.mode === PLUGIN_NAV_MODE_SIDEBAR;
-  }
-
-  get isTopMode() {
-    return this.currentConfigNav.mode === PLUGIN_NAV_MODE_TOP;
   }
 }

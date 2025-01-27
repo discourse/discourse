@@ -31,8 +31,7 @@ export default class AdminPluginsController extends Controller {
   get showTopNav() {
     return (
       !this.adminPluginNavManager.viewingPluginsList &&
-      (!this.adminPluginNavManager.currentPlugin ||
-        this.adminPluginNavManager.isSidebarMode)
+      !this.adminPluginNavManager.currentPlugin
     );
   }
 }
