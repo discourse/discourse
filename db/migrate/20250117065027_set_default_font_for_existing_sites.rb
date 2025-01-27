@@ -2,6 +2,8 @@
 
 class SetDefaultFontForExistingSites < ActiveRecord::Migration[7.2]
   def up
+    return if !Migration::Helpers.existing_site?
+
     base_font_changed_from_default =
       DB.query_single("SELECT 1 FROM site_settings WHERE name = 'base_font'").first == 1
     heading_font_changed_from_default =
