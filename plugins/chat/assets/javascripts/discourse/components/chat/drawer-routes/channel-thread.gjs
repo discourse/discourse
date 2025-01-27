@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
