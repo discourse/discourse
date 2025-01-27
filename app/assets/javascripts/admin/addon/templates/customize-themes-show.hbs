@@ -42,6 +42,11 @@
       <div class="alert alert-error">{{error}}</div>
     {{/each}}
 
+    <AdminConfigAreaCard>
+      <:content>
+        <ColorPaletteEditor @colors={{this.model.color_scheme.colors}} />
+      </:content>
+    </AdminConfigAreaCard>
     {{#if this.finishInstall}}
       <div class="control-unit">
         {{#if this.sourceIsHttp}}
