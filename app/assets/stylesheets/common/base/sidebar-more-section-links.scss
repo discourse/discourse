@@ -8,4 +8,8 @@
 
 .sidebar-more-section-trigger {
   justify-content: flex-start;
+
+  .d-icon {
+    color: var(--d-sidebar-link-icon-color);
+  }
 }
