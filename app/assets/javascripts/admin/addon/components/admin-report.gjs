@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -15,6 +16,7 @@ import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
 import { REPORT_MODES } from "discourse/lib/constants";
+import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
@@ -71,11 +73,7 @@ export default class AdminReport extends Component {
       this.currentMode = this.args.filters?.mode;
     }
 
-    if (this.model) {
-      this._renderReport(this.model, this.args.forcedModes, this.currentMode);
-    } else if (this.args.dataSourceName) {
-      this._fetchReport();
-    }
+    this.fetchOrRender();
   }
 
   get startDate() {
@@ -167,7 +165,7 @@ export default class AdminReport extends Component {
   }
 
   get disabledLabel() {
-    return i18n("admin.dashboard.disabled");
+    return this.args.disabledLabel || i18n("admin.dashboard.disabled");
   }
 
   get isHidden() {
@@ -199,9 +197,7 @@ export default class AdminReport extends Component {
 
   @action
   changeGrouping(grouping) {
-    this.send("refreshReport", {
-      chartGrouping: grouping,
-    });
+    this.refreshReport({ chartGrouping: grouping });
   }
 
   get displayedModes() {
@@ -319,18 +315,16 @@ export default class AdminReport extends Component {
       customFilters[id] = value;
     }
 
-    this.send("refreshReport", {
-      filters: customFilters,
-    });
+    this.refreshReport({ filters: customFilters });
   }
 
   @action
   refreshReport(options = {}) {
-    if (!this.onRefresh) {
+    if (!this.args.onRefresh) {
       return;
     }
 
-    this.onRefresh({
+    this.args.onRefresh({
       type: this.model.type,
       mode: this.currentMode,
       chartGrouping: options.chartGrouping,
@@ -366,12 +360,19 @@ export default class AdminReport extends Component {
   @action
   onChangeMode(mode) {
     this.currentMode = mode;
-
-    this.send("refreshReport", {
-      chartGrouping: null,
-    });
+    this.refreshReport({ chartGrouping: null });
   }
 
+  @bind
+  fetchOrRender() {
+    if (this.report) {
+      this._renderReport(this.report, this.forcedModes, this.currentMode);
+    } else if (this.args.dataSourceName) {
+      this._fetchReport();
+    }
+  }
+
+  @bind
   _computeReport() {
     if (this.isDestroying || this.isDestroyed) {
       return;
@@ -418,6 +419,7 @@ export default class AdminReport extends Component {
     this._renderReport(foundReport, this.args.forcedModes, this.currentMode);
   }
 
+  @bind
   _renderReport(report, forcedModes, currentMode) {
     const modes = forcedModes ? forcedModes.split(",") : report.modes;
     currentMode = currentMode || (modes ? modes[0] : null);
@@ -427,6 +429,7 @@ export default class AdminReport extends Component {
     this.options = this._buildOptions(currentMode, report);
   }
 
+  @bind
   _fetchReport() {
     this.isLoading = true;
     this.rateLimitationString = null;
@@ -444,7 +447,7 @@ export default class AdminReport extends Component {
         if (response === 429) {
           this.rateLimitationString = i18n("admin.dashboard.too_many_requests");
         } else if (response === 500) {
-          this.set("model.error", "exception");
+          this.model?.set("error", "exception");
         } else if (response) {
           this._reports.push(this._loadReport(response));
           this._computeReport();
@@ -535,7 +538,10 @@ export default class AdminReport extends Component {
   }
 
   <template>
-    <div class={{concatClass "admin-report" this.reportClasses}}>
+    <div
+      class={{concatClass "admin-report" this.reportClasses}}
+      {{didUpdate this.fetchOrRender @filters.startDate @filters.endDate}}
+    >
       {{#unless this.isHidden}}
         {{#if this.isEnabled}}
           <ConditionalLoadingSection @isLoading={{this.isLoading}}>
