@@ -552,8 +552,8 @@ export default class AdminReport extends Component {
                     <DPageSubheader
                       @titleLabel={{this.model.title}}
                       @titleUrl={{this.model.reportUrl}}
-                      @descriptionLabel={{if
-                        (not this.showDescriptionInTooltip)
+                      @descriptionLabel={{unless
+                        this.showDescriptionInTooltip
                         this.model.description
                       }}
                       @learnMoreUrl={{this.model.description_link}}
