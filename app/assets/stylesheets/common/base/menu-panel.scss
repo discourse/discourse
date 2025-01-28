@@ -86,7 +86,8 @@
       background-color: var(--primary-very-low);
       color: var(--primary-high);
 
-      &:hover {
+      &:hover,
+      &:focus-visible {
         background: var(--primary-low);
         color: var(--primary);
       }

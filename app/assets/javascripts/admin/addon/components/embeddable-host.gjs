@@ -61,7 +61,7 @@ export default class EmbeddableHost extends Component {
       <td class="d-admin-row__controls">
         <div class="d-admin-row__controls-options">
           <DButton
-            class="btn-small admin-embeddable-host-item__edit"
+            class="btn-default btn-small admin-embeddable-host-item__edit"
             @route="adminEmbedding.edit"
             @routeModels={{this.host}}
             @label="admin.embedding.edit"

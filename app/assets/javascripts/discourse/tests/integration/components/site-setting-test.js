@@ -250,6 +250,33 @@ module(
         .exists("the cancel button is shown");
     });
 
+    test("resetting to the default value changes the content of checkbox field", async function (assert) {
+      this.set("setting", {
+        setting: "test_setting",
+        value: "true",
+        default: "false",
+        type: "bool",
+      });
+
+      await render(hbs`<SiteSetting @setting={{this.setting}} />`);
+      assert
+        .dom("input[type=checkbox]")
+        .isChecked("the checkbox contains the custom value");
+
+      await click(".setting-controls__undo");
+      assert
+        .dom("input[type=checkbox]")
+        .isNotChecked("the checkbox now contains the default value");
+
+      assert
+        .dom(".setting-controls__undo")
+        .doesNotExist("the reset button is not shown");
+      assert.dom(".setting-controls__ok").exists("the save button is shown");
+      assert
+        .dom(".setting-controls__cancel")
+        .exists("the cancel button is shown");
+    });
+
     test("clearing the input field keeps the cancel button and the validation error shown", async function (assert) {
       this.set("setting", {
         setting: "max_image_size_kb",

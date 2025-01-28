@@ -171,6 +171,11 @@
 
 // styles for user cards only
 .user-card {
+  &:focus-visible {
+    // we move focus to the card, but the outline isn't necessary until keyboard nav starts within
+    outline: none;
+  }
+
   // avatar - names - controls
   .first-row {
     display: flex;

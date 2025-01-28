@@ -1,4 +1,3 @@
-import { PLUGIN_NAV_MODE_TOP } from "discourse/lib/admin-plugin-config-nav";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import ChatAdminPluginActions from "discourse/plugins/chat/admin/components/chat-admin-plugin-actions";
 
@@ -12,7 +11,7 @@ export default {
     }
 
     withPluginApi("1.1.0", (api) => {
-      api.addAdminPluginConfigurationNav("chat", PLUGIN_NAV_MODE_TOP, [
+      api.addAdminPluginConfigurationNav("chat", [
         {
           label: "chat.incoming_webhooks.title",
           route: "adminPlugins.show.discourse-chat-incoming-webhooks",
