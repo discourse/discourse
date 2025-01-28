@@ -79,7 +79,8 @@
  *   Additional keymap definitions
  */
 
-const EXTENSIONS = [];
+/** @type {RichEditorExtension[]} */
+const registeredExtensions = [];
 
 /**
  * Registers an extension for the rich editor
@@ -89,11 +90,11 @@ const EXTENSIONS = [];
  * @param {RichEditorExtension} extension
  */
 export function registerRichEditorExtension(extension) {
-  EXTENSIONS.push(extension);
+  registeredExtensions.push(extension);
 }
 
 export function resetRichEditorExtensions() {
-  EXTENSIONS.length = 0;
+  registeredExtensions.length = 0;
 }
 
 /**
@@ -102,5 +103,5 @@ export function resetRichEditorExtensions() {
  * @returns {RichEditorExtension[]}
  */
 export function getExtensions() {
-  return EXTENSIONS;
+  return registeredExtensions;
 }
