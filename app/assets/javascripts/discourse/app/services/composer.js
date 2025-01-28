@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import { cancel, scheduleOnce } from "@ember/runloop";
@@ -104,6 +105,8 @@ export default class ComposerService extends Service {
   @service siteSettings;
   @service store;
 
+  @tracked showPreview = true;
+  @tracked allowPreview = true;
   checkedMessages = false;
   messageCount = null;
   showEditReason = false;
@@ -117,8 +120,7 @@ export default class ComposerService extends Service {
   uploadProgress;
   topic = null;
   linkLookup = null;
-  showPreview = true;
-  allowPreview = true;
+
   composerHeight = null;
 
   @and("site.mobileView", "showPreview") forcePreview;
@@ -135,7 +137,7 @@ export default class ComposerService extends Service {
   }
 
   get isPreviewVisible() {
-    return this.get("showPreview") && this.get("allowPreview");
+    return this.showPreview && this.allowPreview;
   }
 
   get isOpen() {

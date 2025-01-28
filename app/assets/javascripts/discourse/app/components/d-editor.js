@@ -83,7 +83,7 @@ export default class DEditor extends Component {
     this.register = getRegister(this);
 
     if (
-      this.siteSettings.experimental_rich_editor &&
+      this.siteSettings.rich_editor &&
       this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
     ) {
       this.editorComponent = await loadRichEditor();

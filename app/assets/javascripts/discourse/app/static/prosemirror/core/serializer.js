@@ -23,7 +23,7 @@ export default class Serializer {
   }
 
   #extractNodeSerializers(extensions) {
-    for (const { serializeNode } of extensions){
+    for (const { serializeNode } of extensions) {
       Object.assign(this.nodes, serializeNode);
     }
   }

@@ -3549,7 +3549,7 @@ experimental:
   use_overhauled_theme_color_palette:
     default: false
     hidden: true
-  experimental_rich_editor:
+  rich_editor:
     client: true
     default: false
     hidden: true

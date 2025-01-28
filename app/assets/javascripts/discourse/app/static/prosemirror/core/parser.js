@@ -37,33 +37,31 @@ export default class Parser {
     const parser = new MarkdownParser(schema, { parse }, this.parseTokens);
 
     // Adding function parse handlers directly
-    for (const [key, callback] of Object.entries(this.postParseTokens)) {
-      parser.tokenHandlers[key] = callback;
-    }
+    Object.assign(parser.tokenHandlers, this.postParseTokens);
 
     return parser.parse(text);
   }
 
   #extractParsers(extensions) {
-    return extensions.reduce((acc, { parse: parseObj }) => {
-      if (parseObj) {
-        Object.entries(parseObj).forEach(([token, parseSpec]) => {
-          if (acc[token] !== undefined) {
-            if (this.#multipleParseSpecs[token] === undefined) {
-              // switch to use multipleParseSpecs
-              this.#multipleParseSpecs[token] = [acc[token]];
-              acc[token] = this.#multipleParser(token);
-            }
-
-            this.#multipleParseSpecs[token].push(parseSpec);
-            return;
-          }
-          acc[token] = parseSpec;
-        });
+    const parsers = {};
+    for (const { parse: parseObj } of extensions) {
+      if (!parseObj) {
+        continue;
       }
-
-      return acc;
-    }, {});
+      for (const [token, parseSpec] of Object.entries(parseObj)) {
+        if (parsers[token] !== undefined) {
+          if (this.#multipleParseSpecs[token] === undefined) {
+            // switch to use multipleParseSpecs
+            this.#multipleParseSpecs[token] = [parsers[token]];
+            parsers[token] = this.#multipleParser(token);
+          }
+          this.#multipleParseSpecs[token].push(parseSpec);
+          continue;
+        }
+        parsers[token] = parseSpec;
+      }
+    }
+    return parsers;
   }
 
   #multipleParser(tokenName) {

@@ -2,10 +2,11 @@ import { Plugin } from "prosemirror-state";
 
 export function extractNodeViews(extensions) {
   const allNodeViews = {};
-  for (const { nodeViews } of extensions){
+  for (const { nodeViews } of extensions) {
     if (nodeViews) {
-      for(const [name, NodeViewClass] of Object.entries(nodeViews)){
-        allNodeViews[name] = (node, view, getPos) => new NodeViewClass(node, view, getPos);
+      for (const [name, NodeViewClass] of Object.entries(nodeViews)) {
+        allNodeViews[name] = (node, view, getPos) =>
+          new NodeViewClass(node, view, getPos);
       }
     }
   }

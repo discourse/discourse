@@ -8,7 +8,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
   before do
     sign_in(user)
-    SiteSetting.experimental_rich_editor = true
+    SiteSetting.rich_editor = true
   end
 
   it "hides the Composer container's preview button" do

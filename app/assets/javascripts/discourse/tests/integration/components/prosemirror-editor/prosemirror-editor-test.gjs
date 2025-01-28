@@ -34,7 +34,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   });
 
   test("supports registered nodeSpec/parser/serializer", async function (assert) {
-    this.siteSettings.experimental_rich_editor = true;
+    this.siteSettings.rich_editor = true;
 
     withPluginApi("2.1.0", (api) => {
       // Multiple parsers can be registered for the same node type
@@ -88,7 +88,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   });
 
   test("supports registered markSpec/parser/serializer", async function (assert) {
-    this.siteSettings.experimental_rich_editor = true;
+    this.siteSettings.rich_editor = true;
 
     withPluginApi("2.1.0", (api) => {
       api.registerRichEditorExtension({
@@ -125,7 +125,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   });
 
   test("supports registered nodeViews", async function (assert) {
-    this.siteSettings.experimental_rich_editor = true;
+    this.siteSettings.rich_editor = true;
 
     const state = {};
 
@@ -155,7 +155,7 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   });
 
   test("supports registered plugins with array, object or function", async function (assert) {
-    this.siteSettings.experimental_rich_editor = true;
+    this.siteSettings.rich_editor = true;
 
     const state = {};
 

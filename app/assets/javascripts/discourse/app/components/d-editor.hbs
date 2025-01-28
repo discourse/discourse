@@ -8,7 +8,7 @@
         {{if this.isEditorFocused 'in-focus'}}"
     >
       <div class="d-editor-button-bar" role="toolbar">
-        {{#if this.siteSettings.experimental_rich_editor}}
+        {{#if this.siteSettings.rich_editor}}
           <Composer::ToggleSwitch
             @preventFocus={{true}}
             @state={{this.isRichEditorEnabled}}

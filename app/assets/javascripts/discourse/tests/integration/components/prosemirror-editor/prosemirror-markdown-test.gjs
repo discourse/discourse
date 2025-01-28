@@ -142,7 +142,7 @@ module(
     Object.entries(testCases).forEach(([name, tests]) => {
       tests.forEach(([markdown, expectedHtml, expectedMarkdown]) => {
         test(name, async function (assert) {
-          this.siteSettings.experimental_rich_editor = true;
+          this.siteSettings.rich_editor = true;
 
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });
