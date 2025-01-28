@@ -23,10 +23,9 @@ export default class Serializer {
   }
 
   #extractNodeSerializers(extensions) {
-    return extensions.reduce((acc, { serializeNode }) => {
-      Object.assign(acc, serializeNode);
-      return acc;
-    }, this.nodes);
+    for (const { serializeNode } of extensions){
+      Object.assign(this.nodes, serializeNode);
+    }
   }
 
   #extractMarkSerializers(extensions) {
