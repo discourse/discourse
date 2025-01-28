@@ -5,6 +5,8 @@ class SearchController < ApplicationController
   skip_before_action :check_xhr, only: :show
   after_action :add_noindex_header
 
+  PAGE_LIMIT = 10
+
   def self.valid_context_types
     %w[user topic category private_messages tag]
   end
@@ -28,6 +30,9 @@ class SearchController < ApplicationController
     page = permitted_params[:page]
     # check for a malformed page parameter
     raise Discourse::InvalidParameters if page && (!page.is_a?(String) || page.to_i.to_s != page)
+    if page && page.to_i > PAGE_LIMIT
+      raise Discourse::InvalidParameters.new("page parameter must not be greater than 10")
+    end
 
     discourse_expires_in 1.minute
 
@@ -35,7 +40,7 @@ class SearchController < ApplicationController
       type_filter: "topic",
       guardian: guardian,
       blurb_length: 300,
-      page: ([page.to_i, 1].max if page.to_i <= 10),
+      page: [page.to_i, 1].max,
     }
 
     context, type = lookup_search_context
