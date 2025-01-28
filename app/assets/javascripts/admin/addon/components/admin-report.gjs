@@ -14,6 +14,7 @@ import DateTimeInputRange from "discourse/components/date-time-input-range";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
+import { reportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import { REPORT_MODES } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -160,7 +161,7 @@ export default class AdminReport extends Component {
   }
 
   get hasData() {
-    return this.model?.data.length > 0;
+    return this.model?.data?.length > 0;
   }
 
   get disabledLabel() {
@@ -249,6 +250,10 @@ export default class AdminReport extends Component {
       case REPORT_MODES.storage_stats:
         return AdminReportStorageStats;
       default:
+        if (reportModeComponent(reportMode)) {
+          return reportModeComponent(reportMode);
+        }
+
         return null;
     }
   }
@@ -632,7 +637,6 @@ export default class AdminReport extends Component {
                     </div>
                   {{/if}}
                 {{else}}
-                  {{#if this.hasData}}
                     {{#if this.currentMode}}
                       {{component
                         this.modeComponent
