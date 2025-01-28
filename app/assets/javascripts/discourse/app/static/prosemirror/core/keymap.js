@@ -69,8 +69,9 @@ export function buildKeymap(
 }
 
 function extractKeymap(extensions, params) {
-  return extensions.reduce((acc, { keymap }) => {
-    Object.assign(acc, keymap instanceof Function ? keymap(params) : keymap);
-    return acc;
-  }, {});
+  return {
+    ...extensions.map(({ keymap }) => {
+      return keymap instanceof Function ? keymap(params) : keymap;
+    }),
+  };
 }
