@@ -22,6 +22,16 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.d-button-action-string",
   "discourse.post-menu-widget-overrides",
   "discourse.fontawesome-6-upgrade",
+  "discourse.add-flag-property",
+  "discourse.breadcrumbs.childCategories",
+  "discourse.breadcrumbs.firstCategory",
+  "discourse.breadcrumbs.parentCategories",
+  "discourse.breadcrumbs.parentCategoriesSorted",
+  "discourse.breadcrumbs.parentCategory",
+  "discourse.breadcrumbs.secondCategory",
+  "discourse.qunit.acceptance-function",
+  "discourse.qunit.global-exists",
+  "discourse.post-stream.trigger-new-post",
 ];
 
 if (DEBUG) {
