@@ -1,6 +1,7 @@
 import { Plugin } from "prosemirror-state";
 
 export function extractNodeViews(extensions) {
+  /** @type {Record<string, import('prosemirror-view').NodeViewConstructor>} */
   const allNodeViews = {};
   for (const { nodeViews } of extensions) {
     if (nodeViews) {
