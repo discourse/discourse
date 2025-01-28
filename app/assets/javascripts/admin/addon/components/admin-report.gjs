@@ -637,6 +637,7 @@ export default class AdminReport extends Component {
                     </div>
                   {{/if}}
                 {{else}}
+                  {{#if this.hasData}}
                     {{#if this.currentMode}}
                       {{component
                         this.modeComponent
