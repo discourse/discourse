@@ -101,17 +101,15 @@ export default class ProsemirrorEditor extends Component {
 
   get keymapFromArgs() {
     const replacements = { tab: "Tab" };
-    return Object.entries(this.args.keymap ?? {}).reduce(
-      (acc, [key, value]) => {
-        const pmKey = key
-          .split("+")
-          .map((word) => replacements[word] ?? word)
-          .join("-");
-        acc[pmKey] = value;
-        return acc;
-      },
-      {}
-    );
+    const result = {};
+    for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
+      const pmKey = key
+        .split("+")
+        .map((word) => replacements[word] ?? word)
+        .join("-");
+      result[pmKey] = value;
+    }
+    return result;
   }
 
   @action
