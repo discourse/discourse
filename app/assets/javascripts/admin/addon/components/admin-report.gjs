@@ -7,7 +7,6 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
-import { not } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -203,7 +202,7 @@ export default class AdminReport extends Component {
   get displayedModes() {
     const modes = this.args.forcedModes
       ? this.args.forcedModes.split(",")
-      : this.model?.reportModes;
+      : this.model?.modes;
 
     return makeArray(modes).map((mode) => {
       const base = `btn-default mode-btn ${mode}`;

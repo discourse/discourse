@@ -8,7 +8,9 @@ module("Integration | Component | admin-report", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    await render(hbs`<AdminReport @dataSourceName="signups" />`);
+    await render(
+      hbs`<AdminReport @dataSourceName="signups" @showDescriptionInTooltip={{false}} />`
+    );
 
     assert.dom(".admin-report.signups").exists();
     assert.dom(".admin-report-table").exists("defaults to table mode");
