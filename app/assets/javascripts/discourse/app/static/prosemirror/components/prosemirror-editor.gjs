@@ -198,14 +198,12 @@ export default class ProsemirrorEditor extends Component {
 
   @bind
   convertFromMarkdown(markdown) {
-    let doc;
     try {
-      doc = this.parser.convert(this.schema, markdown);
+      return this.parser.convert(this.schema, markdown);
     } catch (e) {
       next(() => this.dialog.alert(e.message));
       throw e;
     }
-    return doc;
   }
 
   @bind

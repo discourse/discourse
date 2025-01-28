@@ -6,6 +6,8 @@ import { parse } from "../lib/markdown-it";
 //   a solution may be a markStack in the state ignoring nested marks
 
 export default class Parser {
+  #multipleParseSpecs = {};
+
   constructor(extensions, includeDefault = true) {
     this.parseTokens = includeDefault
       ? {
@@ -19,7 +21,9 @@ export default class Parser {
       ? { softbreak: (state) => state.addNode(state.schema.nodes.hard_break) }
       : {};
 
-    for (const [key, value] of Object.entries(extractParsers(extensions))) {
+    for (const [key, value] of Object.entries(
+      this.#extractParsers(extensions)
+    )) {
       // Not a ParseSpec
       if (typeof value === "function") {
         this.postParseTokens[key] = value;
@@ -39,46 +43,44 @@ export default class Parser {
 
     return parser.parse(text);
   }
-}
 
-const multipleParseSpecs = {};
+  #extractParsers(extensions) {
+    return extensions.reduce((acc, { parse: parseObj }) => {
+      if (parseObj) {
+        Object.entries(parseObj).forEach(([token, parseSpec]) => {
+          if (acc[token] !== undefined) {
+            if (this.#multipleParseSpecs[token] === undefined) {
+              // switch to use multipleParseSpecs
+              this.#multipleParseSpecs[token] = [acc[token]];
+              acc[token] = this.#multipleParser(token);
+            }
 
-function extractParsers(extensions) {
-  return extensions.reduce((acc, { parse: parseObj }) => {
-    if (parseObj) {
-      Object.entries(parseObj).forEach(([token, parseSpec]) => {
-        if (acc[token] !== undefined) {
-          if (multipleParseSpecs[token] === undefined) {
-            // switch to use multipleParseSpecs
-            multipleParseSpecs[token] = [acc[token]];
-            acc[token] = multipleParser(token);
+            this.#multipleParseSpecs[token].push(parseSpec);
+            return;
           }
+          acc[token] = parseSpec;
+        });
+      }
 
-          multipleParseSpecs[token].push(parseSpec);
+      return acc;
+    }, {});
+  }
+
+  #multipleParser(tokenName) {
+    return (state, token, tokens, i) => {
+      const parseSpecs = this.#multipleParseSpecs[tokenName];
+
+      for (const parseSpec of parseSpecs) {
+        if (parseSpec(state, token, tokens, i)) {
           return;
         }
-        acc[token] = parseSpec;
-      });
-    }
-
-    return acc;
-  }, {});
-}
-
-function multipleParser(tokenName) {
-  return (state, token, tokens, i) => {
-    const parseSpecs = multipleParseSpecs[tokenName];
-
-    for (const parseSpec of parseSpecs) {
-      if (parseSpec(state, token, tokens, i)) {
-        return;
       }
-    }
 
-    throw new Error(
-      `No parser processed ${tokenName} token for tag: ${
-        token.tag
-      }, attrs: ${JSON.stringify(token.attrs)}`
-    );
-  };
+      throw new Error(
+        `No parser processed ${tokenName} token for tag: ${
+          token.tag
+        }, attrs: ${JSON.stringify(token.attrs)}`
+      );
+    };
+  }
 }
