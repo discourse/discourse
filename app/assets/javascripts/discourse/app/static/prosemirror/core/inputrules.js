@@ -39,14 +39,9 @@ export function buildInputRules(extensions, schema, includeDefault = true) {
 }
 
 function extractInputRules(extensions, schema) {
-  return extensions
-    .reduce((acc, extension) => {
-      if (extension.inputRules) {
-        acc.push(extension.inputRules);
-      }
-      return acc;
-    }, [])
-    .flatMap((inputRule) => processInputRule(inputRule, schema));
+  return extensions.flatMap(({ inputRules: extensionRules }) =>
+    extensionRules ? processInputRule(extensionRules, schema) : []
+  );
 }
 
 function processInputRule(inputRule, schema) {
