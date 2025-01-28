@@ -97,13 +97,14 @@ export default class ApiKeysList extends Component {
             @action={{this.edit}}
             @label="admin.api_keys.edit"
             @title="admin.api.show_details"
-            class="btn-small"
+            class="btn-default btn-small"
           />
           <DMenu
             @identifier="api_key-menu"
             @title={{i18n "admin.config_areas.user_fields.more_options.title"}}
             @icon="ellipsis-vertical"
             @onRegisterApi={{this.onRegisterApi}}
+            @class="btn-default"
           >
             <:content>
               <DropdownMenu as |dropdown|>

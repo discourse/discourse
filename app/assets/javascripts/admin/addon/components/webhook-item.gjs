@@ -55,7 +55,7 @@ export default class WebhookItem extends Component {
             @action={{this.edit}}
             @label="admin.web_hooks.edit"
             @title="admin.web_hooks.edit"
-            class="btn-small"
+            class="btn-default btn-small"
           />
           <DMenu
             @identifier="webhook-menu"

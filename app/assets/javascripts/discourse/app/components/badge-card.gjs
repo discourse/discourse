@@ -108,7 +108,7 @@ export default class BadgeCard extends Component {
           <DButton
             @icon="star"
             @action={{@onFavoriteClick}}
-            class="favorite-btn"
+            class="btn-default favorite-btn"
           />
         {{else}}
           <DButton
@@ -120,7 +120,7 @@ export default class BadgeCard extends Component {
               "badges.favorite_max_reached"
             }}
             @disabled={{not @canFavoriteMoreBadges}}
-            class="favorite-btn"
+            class="btn-default favorite-btn"
           />
         {{/if}}
       {{/if}}
