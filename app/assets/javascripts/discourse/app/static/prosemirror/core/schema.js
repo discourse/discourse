@@ -30,8 +30,9 @@ function extractNodes(extensions) {
 }
 
 function extractMarks(extensions) {
-  return extensions.reduce((acc, { markSpec }) => {
-    Object.assign(acc, markSpec);
-    return acc;
-  }, {});
+  const marks = {};
+  for (const extension of extensions) {
+    Object.assign(marks, extension.markSpec);
+  }
+  return marks;
 }
