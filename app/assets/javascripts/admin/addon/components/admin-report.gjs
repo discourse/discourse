@@ -56,8 +56,8 @@ export default class AdminReport extends Component {
   @tracked showTitle = true;
   @tracked currentMode = null;
   @tracked options = null;
-  @tracked endDate = null;
-  @tracked startDate = null;
+  @tracked dateRangeFrom = null;
+  @tracked dateRangeTo = null;
 
   showHeader = this.args.showHeader ?? true;
   showFilteringUI = this.args.showFilteringUI ?? false;
@@ -66,18 +66,6 @@ export default class AdminReport extends Component {
 
   constructor() {
     super(...arguments);
-
-    let startDate = moment();
-    if (this.args.filters && isPresent(this.args.filters?.startDate)) {
-      startDate = moment(this.args.filters?.startDate, "YYYY-MM-DD");
-    }
-    this.startDate = startDate;
-
-    let endDate = moment();
-    if (this.args.filters && isPresent(this.args.filters?.endDate)) {
-      endDate = moment(this.args.filters?.endDate, "YYYY-MM-DD");
-    }
-    this.endDate = endDate;
 
     if (this.args.filters) {
       this.currentMode = this.args.filters?.mode;
@@ -88,6 +76,32 @@ export default class AdminReport extends Component {
     } else if (this.args.dataSourceName) {
       this._fetchReport();
     }
+  }
+
+  get startDate() {
+    if (this.dateRangeFrom) {
+      return moment(this.dateRangeFrom);
+    }
+
+    let startDate = moment();
+    if (this.args.filters && isPresent(this.args.filters.startDate)) {
+      startDate = moment(this.args.filters.startDate, "YYYY-MM-DD");
+    }
+
+    return startDate;
+  }
+
+  get endDate() {
+    if (this.dateRangeTo) {
+      return moment(this.dateRangeTo);
+    }
+
+    let endDate = moment();
+    if (this.args.filters && isPresent(this.args.filters.endDate)) {
+      endDate = moment(this.args.filters.endDate, "YYYY-MM-DD");
+    }
+
+    return endDate;
   }
 
   get reportClasses() {
@@ -291,8 +305,8 @@ export default class AdminReport extends Component {
 
   @action
   onChangeDateRange(range) {
-    this.startDate = range.from;
-    this.endDate = range.to;
+    this.dateRangeFrom = range.from;
+    this.dateRangeTo = range.to;
   }
 
   @action

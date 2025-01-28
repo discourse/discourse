@@ -58,7 +58,7 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   @computed("hiddenReports")
   get isSearchReportsVisible() {
     return ["top_referred_topics", "trending_search"].some(
-      (x) => !this.hiddenReports.includes(x)
+      (report) => !this.hiddenReports.includes(report)
     );
   }
 
@@ -73,17 +73,12 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
       "dau_by_mau",
       "daily_engaged_users",
       "new_contributors",
-    ].some((x) => !this.hiddenReports.includes(x));
+    ].some((report) => !this.hiddenReports.includes(report));
   }
 
   @discourseComputed
   today() {
     return moment().locale("en").utc().endOf("day");
-  }
-
-  @computed("startDate", "endDate")
-  get filters() {
-    return { startDate: this.startDate, endDate: this.endDate };
   }
 
   @discourseComputed
