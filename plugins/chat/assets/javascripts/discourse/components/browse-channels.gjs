@@ -117,7 +117,7 @@ export default class BrowseChannels extends Component {
                 <DButton
                   @action={{this.showChatNewMessageModal}}
                   @label="chat.empty_state.direct_message_cta"
-                  @class="btn-default"
+                  class="btn-default"
                 />
               </div>
             </list.EmptyState>
