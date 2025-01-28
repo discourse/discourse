@@ -56,14 +56,9 @@
       grid-template-areas:
         "name metadata"
         "msg msg";
+      grid-template-columns: auto 1fr;
       width: 100%;
       align-items: center;
-
-      &:has(.chat-channel-unread-indicator) {
-        grid-template-areas:
-          "name metadata"
-          "msg metadata";
-      }
     }
   }
 
