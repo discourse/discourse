@@ -22,7 +22,6 @@ export default class ProsemirrorTextManipulation {
   schema;
   /** @type {import("prosemirror-view").EditorView} */
   view;
-  $editorElement;
   /** @type {PlaceholderHandler} */
   placeholder;
   /** @type {AutocompleteHandler} */
@@ -36,7 +35,6 @@ export default class ProsemirrorTextManipulation {
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
-    this.$editorElement = $(view.dom);
 
     this.placeholder = new ProsemirrorPlaceholderHandler({
       schema,
@@ -78,7 +76,7 @@ export default class ProsemirrorTextManipulation {
 
   autocomplete(options) {
     // @ts-ignore
-    this.$editorElement.autocomplete(
+    $(this.view.dom).autocomplete(
       options instanceof Object
         ? { textHandler: this.autocompleteHandler, ...options }
         : options
