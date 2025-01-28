@@ -41,8 +41,6 @@ If you're looking for official hosting, see [discourse.org/pricing](https://www.
 
 ## Requirements
 
-Discourse is built for the *next* 10 years of the Internet, so our requirements are high.
-
 Discourse supports the **latest, stable releases** of all major browsers and platforms:
 
 | Browsers              | Tablets      | Phones       |
