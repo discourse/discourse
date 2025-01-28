@@ -15,14 +15,7 @@ export function extractNodeViews(extensions) {
 export function extractPlugins(extensions, params, view) {
   return (
     extensions
-      .reduce((acc, extension) => {
-        if (extension.plugins instanceof Array) {
-          acc.push(...extension.plugins);
-        } else if (extension.plugins) {
-          acc.push(extension.plugins);
-        }
-        return acc;
-      }, [])
+      .flatMap((extension) => extension.plugins || [])
       .flatMap((plugin) => processPlugin(plugin, params, view))
       // filter async plugins from initial load
       .filter(Boolean)
