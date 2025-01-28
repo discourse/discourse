@@ -1,13 +1,14 @@
 ---
-title: Install Discourse on Windows 10 for development
-short_title: Windows 10 setup
+title: Install Discourse on Windows for development
+short_title: Windows setup
 id: windows-10-setup
 
 ---
 <div data-theme-toc="true"> </div>
 
 :information_source: This tutorial has been tested on Windows 10 and 11.
-So you want to set up a development environment for Discourse on Windows 10 (or windows 11)? You can do it easily using [Windows Subsystem for Linux](https://msdn.microsoft.com/en-us/commandline/wsl/install-win10) feature. **It is faster too :star_struck:**.
+
+To set up a development environment for Discourse on Windows, you can do it using [Windows Subsystem for Linux](https://msdn.microsoft.com/en-us/commandline/wsl/install-win10) feature.
 
 _This setup requires the WSL 2 installation. It is only available in Windows 10 builds 18917 or higher._ We’ll assume that you already installed [Windows Subsystem for Linux 2 (Ubuntu)](https://docs.microsoft.com/en-us/windows/wsl/install) on your Windows 10 system. **WARNING:** Install Ubuntu 18.04, and not 20.04 since some installations will fail on 20.04. For more information see June 30th, 2020 notes at the bottom of this post.
 
