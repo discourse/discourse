@@ -574,23 +574,29 @@ task "uploads:disable_secure_uploads" => :environment do
         .joins(:upload_references)
         .where(upload_references: { target_type: "Post" })
         .where(secure: true)
+
     secure_upload_count = secure_uploads.count
-    secure_upload_ids = secure_uploads.pluck(:id)
 
     puts "", "Marking #{secure_upload_count} uploads as not secure.", ""
-    secure_uploads.update_all(
-      secure: false,
-      security_last_changed_at: Time.zone.now,
-      security_last_changed_reason: "marked as not secure by disable_secure_uploads task",
-    )
 
-    post_ids_to_rebake =
-      DB.query_single(
-        "SELECT DISTINCT target_id FROM upload_references WHERE upload_id IN (?) AND target_type = 'Post'",
-        secure_upload_ids,
+    secure_uploads.in_batches do |relation|
+      secure_upload_ids = relation.pluck(:id)
+
+      relation.update_all(
+        secure: false,
+        security_last_changed_at: Time.zone.now,
+        security_last_changed_reason: "marked as not secure by disable_secure_uploads task",
       )
-    adjust_acls(secure_upload_ids)
-    mark_upload_posts_for_rebake(post_ids_to_rebake)
+
+      post_ids_to_rebake =
+        DB.query_single(
+          "SELECT DISTINCT target_id FROM upload_references WHERE upload_id IN (?) AND target_type = 'Post'",
+          secure_upload_ids,
+        )
+
+      adjust_acls(secure_upload_ids)
+      mark_upload_posts_for_rebake(post_ids_to_rebake)
+    end
 
     puts "", "Rebaking and uploading complete!", ""
   end

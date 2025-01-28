@@ -914,10 +914,12 @@ class TopicsController < ApplicationController
       end
     end
 
-    destination_topic = move_posts_to_destination(topic)
-    render_topic_changes(destination_topic)
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
-    render_json_error(ex)
+    hijack do
+      destination_topic = move_posts_to_destination(topic)
+      render_topic_changes(destination_topic)
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
+      render_json_error(ex)
+    end
   end
 
   def change_post_owners

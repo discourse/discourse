@@ -45,6 +45,7 @@ module SiteSettings::DeprecatedSettings
       false,
       "3.3",
     ],
+    ["min_first_post_typing_time", "fast_typing_threshold", false, "3.4"],
   ]
 
   OVERRIDE_TL_GROUP_SETTINGS = %w[

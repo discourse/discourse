@@ -5,7 +5,7 @@ RSpec.describe PostsController do
   let!(:title) { "Testing Poll Plugin" }
 
   before do
-    SiteSetting.min_first_post_typing_time = 0
+    SiteSetting.fast_typing_threshold = "disabled"
     log_in_user(user)
   end
 

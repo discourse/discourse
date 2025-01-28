@@ -211,7 +211,7 @@ GEM
     jwt (2.10.1)
       base64
     kgio (2.11.4)
-    language_server-protocol (3.17.0.3)
+    language_server-protocol (3.17.0.4)
     libv8-node (22.7.0.4-aarch64-linux)
     libv8-node (22.7.0.4-arm64-darwin)
     libv8-node (22.7.0.4-x86_64-darwin)
@@ -468,7 +468,7 @@ GEM
       rubocop-ast (>= 1.36.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.37.0)
+    rubocop-ast (1.38.0)
       parser (>= 3.3.1.0)
     rubocop-capybara (2.21.0)
       rubocop (~> 1.41)
