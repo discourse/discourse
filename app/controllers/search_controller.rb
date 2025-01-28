@@ -36,7 +36,12 @@ class SearchController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    search_args = { type_filter: "topic", guardian: guardian, blurb_length: 300, page: page.to_i }
+    search_args = {
+      type_filter: "topic",
+      guardian: guardian,
+      blurb_length: 300,
+      page: [page.to_i, 1].max,
+    }
 
     context, type = lookup_search_context
     if context
