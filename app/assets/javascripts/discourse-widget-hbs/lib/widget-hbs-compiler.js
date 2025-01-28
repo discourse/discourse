@@ -1,3 +1,5 @@
+import { preprocess } from "@glimmer/syntax";
+
 function resolve(path) {
   if (path.startsWith("settings") || path.startsWith("transformed")) {
     return `this.${path}`;
@@ -277,13 +279,8 @@ class Compiler {
   }
 }
 
-const defaultGlimmer = require("@glimmer/syntax");
-
-function compile(template, glimmer) {
-  if (!glimmer) {
-    glimmer = defaultGlimmer;
-  }
-  const compiled = glimmer.preprocess(template);
+export function compile(template, glimmer) {
+  const compiled = (glimmer?.preprocess || preprocess)(template);
   const compiler = new Compiler(compiled);
 
   let code = compiler.compile();
@@ -298,8 +295,6 @@ function compile(template, glimmer) {
   return `function(attrs, state) { ${imports}var _r = [];\n${code}\nreturn _r; }`;
 }
 
-exports.compile = compile;
-
 function error(path, state, msg) {
   const filename = state.file.opts.filename;
   return path.replaceWithSourceString(
@@ -307,7 +302,7 @@ function error(path, state, msg) {
   );
 }
 
-const WidgetHbsCompiler = function (babel) {
+export const WidgetHbsCompiler = function (babel) {
   let t = babel.types;
   return {
     visitor: {
@@ -369,5 +364,3 @@ const WidgetHbsCompiler = function (babel) {
 };
 
 WidgetHbsCompiler.cacheKey = () => "discourse-widget-hbs";
-
-exports.WidgetHbsCompiler = WidgetHbsCompiler;
