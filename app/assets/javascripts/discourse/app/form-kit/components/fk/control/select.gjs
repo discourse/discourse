@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { isBlank } from "@ember/utils";
 import DSelect, { DSelectOption } from "discourse/components/d-select";
 
 const SelectOption = <template>
@@ -16,7 +17,11 @@ export default class FKControlSelect extends Component {
   static controlType = "select";
 
   get includeNone() {
-    return this.args.field.validation !== "required";
+    if (isBlank(this.args.field.value)) {
+      return true;
+    }
+
+    return !this.args.field.validation?.includes("required");
   }
 
   <template>
