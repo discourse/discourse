@@ -56,7 +56,7 @@ export default class AdminReport extends Component {
   @tracked report = null;
   @tracked model = null;
   @tracked showTitle = true;
-  @tracked currentMode = null;
+  @tracked currentMode = this.args.filters?.mode;
   @tracked options = null;
   @tracked dateRangeFrom = null;
   @tracked dateRangeTo = null;
@@ -68,11 +68,6 @@ export default class AdminReport extends Component {
 
   constructor() {
     super(...arguments);
-
-    if (this.args.filters) {
-      this.currentMode = this.args.filters?.mode;
-    }
-
     this.fetchOrRender();
   }
 
@@ -370,7 +365,7 @@ export default class AdminReport extends Component {
   @bind
   fetchOrRender() {
     if (this.report) {
-      this._renderReport(this.report, this.forcedModes, this.currentMode);
+      this._renderReport(this.report);
     } else if (this.args.dataSourceName) {
       this._fetchReport();
     }
@@ -378,10 +373,6 @@ export default class AdminReport extends Component {
 
   @bind
   _computeReport() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
     if (!this._reports || !this._reports.length) {
       return;
     }
@@ -420,13 +411,13 @@ export default class AdminReport extends Component {
       this.showFilteringUI = false;
     }
 
-    this._renderReport(foundReport, this.args.forcedModes, this.currentMode);
+    this._renderReport(foundReport);
   }
 
   @bind
-  _renderReport(report, forcedModes, currentMode) {
-    const modes = forcedModes ? forcedModes.split(",") : report.modes;
-    currentMode = currentMode || (modes ? modes[0] : null);
+  _renderReport(report) {
+    const modes = this.args.forcedModes?.split(",") || report.modes;
+    const currentMode = this.currentMode || modes?.[0];
 
     this.model = report;
     this.currentMode = currentMode;

@@ -7,7 +7,7 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2025-01-07
+## [2.0.1] - 2025-01-29
 
 - Added `registerReportModeComponent`. This allows plugins to register different report display modes in addition to the built-in core ones like `chart`, `table`, and so on defined in `Report::MODES`.
 

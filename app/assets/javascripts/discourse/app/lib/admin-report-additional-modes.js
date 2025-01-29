@@ -1,10 +1,10 @@
-let additionalReportModes = {};
+let additionalReportModes = new Map();
 export function registerReportModeComponent(mode, componentClass) {
-  additionalReportModes[mode] = componentClass;
+  additionalReportModes.set(mode, componentClass);
 }
 export function resetAdditionalReportModes() {
-  additionalReportModes = {};
+  additionalReportModes.clear();
 }
 export function reportModeComponent(mode) {
-  return additionalReportModes[mode];
+  return additionalReportModes.get(mode);
 }
