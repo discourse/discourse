@@ -7,7 +7,7 @@ module Reports::TopTrafficSources
     def report_top_traffic_sources(report)
       category_id, include_subcategories = report.add_category_filter
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.labels = [
         { property: :domain, title: I18n.t("reports.top_traffic_sources.labels.domain") },

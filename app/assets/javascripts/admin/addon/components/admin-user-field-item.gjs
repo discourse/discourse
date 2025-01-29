@@ -82,7 +82,7 @@ export default class AdminUserFieldItem extends Component {
       <td class="d-admin-row__controls">
         <div class="d-admin-row__controls-options">
           <DButton
-            class="btn-small admin-user_field-item__edit"
+            class="btn-default btn-small admin-user_field-item__edit"
             @action={{this.edit}}
             @label="admin.user_fields.edit"
           />

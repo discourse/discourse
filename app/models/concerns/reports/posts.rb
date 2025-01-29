@@ -5,8 +5,6 @@ module Reports::Posts
 
   class_methods do
     def report_posts(report)
-      report.modes = %i[table chart]
-
       category_id, include_subcategories = report.add_category_filter
 
       basic_report_about report,

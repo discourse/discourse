@@ -146,6 +146,42 @@ RSpec.describe ProblemCheckTracker do
       end
     end
 
+    context "when the details of the problem change but the problem remains" do
+      let(:blips) { 1 }
+
+      it "updates the notice" do
+        original_details = {
+          themes_list:
+            "<ul><li><a href=\"/admin/customize/themes/13\">discourse-blank-theme</a></li> <li><a href=\"/admin/customize/themes/31\">Simple Theme</a></li></ul>",
+          base_path: "",
+        }
+
+        expect do problem_tracker.problem!(details: original_details) end.to change {
+          AdminNotice.problem.count
+        }.by(1)
+
+        admin_notice = AdminNotice.problem.find_by(identifier: "twitter_login")
+
+        expect(
+          admin_notice.details.merge(target: problem_tracker.target).with_indifferent_access,
+        ).to eq(original_details.merge(target: problem_tracker.target).with_indifferent_access)
+
+        new_details = {
+          themes_list: "<ul><li><a href=\"/admin/customize/themes/31\">Simple Theme</a></li></ul>",
+          base_path: "",
+        }
+        expect do problem_tracker.problem!(details: new_details) end.not_to change {
+          AdminNotice.problem.count
+        }
+
+        admin_notice.reload
+
+        expect(
+          admin_notice.details.merge(target: problem_tracker.target).with_indifferent_access,
+        ).to eq(new_details.merge(target: problem_tracker.target).with_indifferent_access)
+      end
+    end
+
     context "when there's an alarm sounding for multi-target trackers" do
       let(:blips) { 1 }
 

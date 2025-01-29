@@ -149,7 +149,7 @@ export default class UsernamePreference extends Component {
             @action={{this.toggleEditing}}
             @icon="pencil"
             @title="user.username.edit"
-            class="btn-small username-preference__edit-username"
+            class="btn-default btn-small username-preference__edit-username"
           />
         {{/if}}
       </div>

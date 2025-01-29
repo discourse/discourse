@@ -348,6 +348,11 @@ RSpec.describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "returns a 400 error if the page parameter is above the limit" do
+      get "/search.json", params: { q: "kittens", page: 11 }
+      expect(response.status).to eq(400)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: "bantha" }

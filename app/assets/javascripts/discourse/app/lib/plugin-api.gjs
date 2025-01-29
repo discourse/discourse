@@ -61,6 +61,7 @@ import {
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
+import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -3374,6 +3375,19 @@ class PluginApi {
    */
   registerMoreTopicsTab(tab) {
     registeredTabs.push(tab);
+  }
+
+  /**
+   * Registers a report mode and an associated component, which will be rendered
+   * by the AdminReport component. A mode is a different way of displaying the
+   * report data, core modes are things like "table" and "chart". For all core modes
+   * see Admin::Report::MODES.
+   *
+   * @param {String} mode - The identifier of the mode to register
+   * @param {Class} componentClass - The class of the component to render
+   */
+  registerReportModeComponent(mode, componentClass) {
+    registerReportModeComponent(mode, componentClass);
   }
 
   /**

@@ -5,7 +5,7 @@ module Reports::SuspiciousLogins
 
   class_methods do
     def report_suspicious_logins(report)
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.labels = [
         {
