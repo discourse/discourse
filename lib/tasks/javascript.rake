@@ -167,6 +167,8 @@ task "javascript:update_constants" => :environment do
     export const MAX_UNOPTIMIZED_CATEGORIES = #{CategoryList::MAX_UNOPTIMIZED_CATEGORIES};
 
     export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
+
+    export const REPORT_MODES = #{Report::MODES.to_json};
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

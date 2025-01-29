@@ -36,6 +36,7 @@ import { resetUsernameDecorators } from "discourse/helpers/decorate-username-sel
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
+import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
@@ -201,6 +202,7 @@ export function testCleanup(container, app) {
 
   User.resetCurrent();
   resetMobile();
+  resetAdditionalReportModes();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();

@@ -7,7 +7,7 @@ module Reports::TopReferredTopics
     def report_top_referred_topics(report)
       category_id, include_subcategories = report.add_category_filter
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.labels = [
         {

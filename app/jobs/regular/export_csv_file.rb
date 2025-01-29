@@ -227,7 +227,7 @@ module Jobs
         end
       end
 
-      if report.modes == [:stacked_chart]
+      if report.modes == [Report::MODES[:stacked_chart]]
         header = [:x]
         data = {}
 

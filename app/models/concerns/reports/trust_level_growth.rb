@@ -5,7 +5,7 @@ module Reports::TrustLevelGrowth
 
   class_methods do
     def report_trust_level_growth(report)
-      report.modes = [:stacked_chart]
+      report.modes = [Report::MODES[:stacked_chart]]
 
       filters = %w[tl1_reached tl2_reached tl3_reached tl4_reached]
 

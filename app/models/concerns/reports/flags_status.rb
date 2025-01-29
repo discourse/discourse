@@ -5,7 +5,7 @@ module Reports::FlagsStatus
 
   class_methods do
     def report_flags_status(report)
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.labels = [
         {

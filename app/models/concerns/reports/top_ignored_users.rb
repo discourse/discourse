@@ -5,7 +5,7 @@ module Reports::TopIgnoredUsers
 
   class_methods do
     def report_top_ignored_users(report)
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.labels = [
         {

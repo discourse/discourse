@@ -7,7 +7,7 @@ module Reports::UserFlaggingRatio
     def report_user_flagging_ratio(report)
       report.data = []
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.dates_filtering = true
 

@@ -137,6 +137,19 @@
     margin-bottom: 1em;
   }
 
+  .admin-report.description-in-tooltip .header {
+    .d-page-subheader {
+      .d-page-subheader__title-row {
+        margin-bottom: 0;
+      }
+    }
+
+    .fk-d-tooltip__trigger {
+      margin-left: 0.5em;
+      max-width: 20px;
+    }
+  }
+
   .charts {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -153,7 +166,7 @@
 
       .header {
         display: grid;
-        grid-template-areas: "title trend" "description description";
+        grid-template-areas: "title tooltip trend" "description description description";
         grid-template-columns: auto 1fr;
 
         .d-page-subheader {
