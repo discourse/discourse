@@ -636,12 +636,13 @@ module ApplicationHelper
 
   def discourse_preload_color_scheme_stylesheets
     result = +""
+
     result << stylesheet_manager.color_scheme_stylesheet_preload_tag(scheme_id, "all")
 
     if dark_scheme_id != -1
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
-        "(prefers-color-scheme: dark)",
+        dark_elements_media_query,
         dark: SiteSetting.use_overhauled_theme_color_palette,
       )
     end
@@ -655,14 +656,16 @@ module ApplicationHelper
       scheme_id,
       "all",
       self.method(:add_resource_preload_list),
+      css_class: "light-scheme",
     )
 
     if dark_scheme_id != -1
       result << stylesheet_manager.color_scheme_stylesheet_link_tag(
         dark_scheme_id,
-        "(prefers-color-scheme: dark)",
+        dark_elements_media_query,
         self.method(:add_resource_preload_list),
         dark: SiteSetting.use_overhauled_theme_color_palette,
+        css_class: "dark-scheme",
       )
     end
 
@@ -672,13 +675,21 @@ module ApplicationHelper
   def discourse_theme_color_meta_tags
     result = +""
     if dark_scheme_id != -1
+      light_media =
+        if forced_dark_mode?
+          "none"
+        elsif forced_light_mode?
+          "all"
+        else
+          "(prefers-color-scheme: light)"
+        end
       result << <<~HTML
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="##{ColorScheme.hex_for_name("header_background", scheme_id)}">
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="##{ColorScheme.hex_for_name("header_background", dark_scheme_id, dark: SiteSetting.use_overhauled_theme_color_palette)}">
+        <meta name="theme-color" media="#{light_media}" content="##{light_color_hex_for_name("header_background")}">
+        <meta name="theme-color" media="#{dark_elements_media_query}" content="##{dark_color_hex_for_name("header_background")}">
       HTML
     else
       result << <<~HTML
-        <meta name="theme-color" media="all" content="##{ColorScheme.hex_for_name("header_background", scheme_id)}">
+        <meta name="theme-color" media="all" content="##{light_color_hex_for_name("header_background")}">
       HTML
     end
     result.html_safe
@@ -701,6 +712,36 @@ module ApplicationHelper
   def dark_color_scheme?
     return false if scheme_id.blank?
     ColorScheme.find_by_id(scheme_id)&.is_dark?
+  end
+
+  def forced_light_mode?
+    cookies[:forced_color_mode] == "light" && !dark_color_scheme?
+  end
+
+  def forced_dark_mode?
+    cookies[:forced_color_mode] == "dark" && dark_scheme_id != -1
+  end
+
+  def light_color_hex_for_name(name)
+    ColorScheme.hex_for_name(name, scheme_id)
+  end
+
+  def dark_color_hex_for_name(name)
+    ColorScheme.hex_for_name(
+      name,
+      dark_scheme_id,
+      dark: SiteSetting.use_overhauled_theme_color_palette,
+    )
+  end
+
+  def dark_elements_media_query
+    if forced_light_mode?
+      "none"
+    elsif forced_dark_mode?
+      "all"
+    else
+      "(prefers-color-scheme: dark)"
+    end
   end
 
   def preloaded_json

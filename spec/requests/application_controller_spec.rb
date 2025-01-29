@@ -672,6 +672,101 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
       expect(response.body).not_to include("d-splash")
     end
+
+    context "with color schemes" do
+      let!(:light_scheme) { ColorScheme.base }
+      let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+
+      before { SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id }
+
+      context "when light mode is forced" do
+        before { cookies[:forced_color_mode] = "light" }
+
+        it "uses the light scheme colors and doesn't include the prefers-color-scheme media query" do
+          get "/"
+
+          style = css_select("#d-splash style").to_s
+          expect(style).not_to include("prefers-color-scheme")
+
+          secondary = light_scheme.colors.find { |color| color.name == "secondary" }.hex
+          tertiary = light_scheme.colors.find { |color| color.name == "tertiary" }.hex
+          expect(style).to include(<<~CSS.indent(6))
+            html {
+              background-color: ##{secondary};
+            }
+          CSS
+          expect(style).to include(<<~CSS.indent(6))
+            #d-splash {
+              --dot-color: ##{tertiary};
+            }
+          CSS
+        end
+      end
+
+      context "when dark mode is forced" do
+        before { cookies[:forced_color_mode] = "dark" }
+
+        it "uses the dark scheme colors and doesn't include the prefers-color-scheme media query" do
+          get "/"
+
+          style = css_select("#d-splash style").to_s
+          expect(style).not_to include("prefers-color-scheme")
+
+          secondary = dark_scheme.colors.find { |color| color.name == "secondary" }.hex
+          tertiary = dark_scheme.colors.find { |color| color.name == "tertiary" }.hex
+          expect(style).to include(<<~CSS.indent(6))
+            html {
+              background-color: ##{secondary};
+            }
+          CSS
+          expect(style).to include(<<~CSS.indent(6))
+            #d-splash {
+              --dot-color: ##{tertiary};
+            }
+          CSS
+        end
+      end
+
+      context "when no color mode is forced" do
+        before { cookies[:forced_color_mode] = nil }
+
+        it "includes both dark and light colors inside prefers-color-scheme media queries" do
+          get "/"
+
+          style = css_select("#d-splash style").to_s
+
+          light_secondary = light_scheme.colors.find { |color| color.name == "secondary" }.hex
+          light_tertiary = light_scheme.colors.find { |color| color.name == "tertiary" }.hex
+
+          dark_secondary = dark_scheme.colors.find { |color| color.name == "secondary" }.hex
+          dark_tertiary = dark_scheme.colors.find { |color| color.name == "tertiary" }.hex
+
+          expect(style).to include(<<~CSS.indent(6))
+            @media (prefers-color-scheme: light) {
+              html {
+                background-color: ##{light_secondary};
+              }
+
+              #d-splash {
+                --dot-color: ##{light_tertiary};
+              }
+            }
+          CSS
+
+          expect(style).to include(<<~CSS.indent(6))
+            @media (prefers-color-scheme: dark) {
+              html {
+                background-color: ##{dark_secondary};
+              }
+
+              #d-splash {
+                --dot-color: ##{dark_tertiary};
+              }
+            }
+          CSS
+        end
+      end
+    end
   end
 
   describe "Delegated auth" do

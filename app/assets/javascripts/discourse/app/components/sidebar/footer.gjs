@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import InterfaceColorSwitcher from "discourse/components/interface-color-switcher";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -15,6 +16,7 @@ export default class SidebarFooter extends Component {
   @service site;
   @service siteSettings;
   @service sidebarState;
+  @service interfaceColor;
 
   get showManageSectionsButton() {
     return this.currentUser && this.sidebarState.isCurrentPanel(MAIN_PANEL);
@@ -47,6 +49,10 @@ export default class SidebarFooter extends Component {
       <div class="sidebar-footer-container">
         <div class="sidebar-footer-actions">
           <PluginOutlet @name="sidebar-footer-actions" />
+
+          {{#if this.interfaceColor.switcherAvailableInSidebar}}
+            <InterfaceColorSwitcher />
+          {{/if}}
 
           {{#if this.showManageSectionsButton}}
             <DButton

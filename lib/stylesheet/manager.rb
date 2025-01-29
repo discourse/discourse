@@ -395,7 +395,8 @@ class Stylesheet::Manager
     color_scheme_id = nil,
     media = "all",
     preload_callback = nil,
-    dark: false
+    dark: false,
+    css_class: nil
   )
     stylesheet = color_scheme_stylesheet_details(color_scheme_id, media, dark:)
 
@@ -404,7 +405,7 @@ class Stylesheet::Manager
     href = stylesheet[:new_href]
     preload_callback.call(href, "style") if preload_callback
 
-    css_class = media == "all" ? "light-scheme" : "dark-scheme"
+    css_class ||= media == "all" ? "light-scheme" : "dark-scheme"
 
     %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
   end

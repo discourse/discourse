@@ -2554,6 +2554,10 @@ en:
       required_at_signup: "Required"
       optional_at_signup: "Optional"
       hidden_at_signup: "Optional, hidden at signup"
+    interface_color_switcher:
+      "off": "Off"
+      sidebar_footer: "Sidebar footer"
+      header: "Header"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -5021,6 +5025,11 @@ en:
       no_results:
         title: "No results"
         description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
+      footer:
+        interface_color_switcher:
+          light: "Light"
+          dark: "Dark"
+          auto: "Auto"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"

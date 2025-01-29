@@ -77,8 +77,9 @@ export default {
     }
 
     session.darkModeAvailable =
-      document.querySelectorAll('link[media="(prefers-color-scheme: dark)"]')
-        .length > 0;
+      document.querySelectorAll("link.dark-scheme").length > 0;
+    session.lightModeAvailable =
+      document.querySelectorAll("link.light-scheme").length > 0;
 
     session.defaultColorSchemeIsDark = setupData.colorSchemeIsDark === "true";
 
