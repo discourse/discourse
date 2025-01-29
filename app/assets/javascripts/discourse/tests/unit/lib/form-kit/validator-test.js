@@ -17,15 +17,15 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
   });
 
   test("length", async function (assert) {
-    let errors = await new Validator("", {
-      length: { min: 1, max: 5 },
+    let errors = await new Validator("a", {
+      length: { min: 2, max: 5 },
     }).validate();
 
     assert.deepEqual(
       errors,
       [
         i18n("form_kit.errors.too_short", {
-          count: 1,
+          count: 2,
         }),
       ],
       "it returns an error when the value is too short"
@@ -51,6 +51,15 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       errors,
       [],
       "it returns no errors when the value is valid"
+    );
+
+    errors = await new Validator("", {
+      length: { min: 1, max: 5 },
+    }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the value is blank"
     );
   });
 
