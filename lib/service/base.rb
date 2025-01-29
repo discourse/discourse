@@ -275,13 +275,17 @@ module Service
 
       def run_step
         success =
-          DistributedMutex.synchronize(lock_name) do
-            steps.each { |step| step.call(instance, context) }
-            :success
+          begin
+            DistributedMutex.synchronize(lock_name) do
+              steps.each { |step| step.call(instance, context) }
+              :success
+            end
+          rescue Discourse::ReadOnly
+            :read_only
           end
 
         if success != :success
-          context[result_key].fail(locked: true)
+          context[result_key].fail(lock_not_aquired: true)
           context.fail!
         end
       end
@@ -289,7 +293,7 @@ module Service
       def lock_name
         [
           context.__service_class__.to_s.underscore,
-          *@keys.map { |key| context[:params].send(key) }.filter(&:presence),
+          *@keys.flat_map { |key| [key, context[:params].send(key)] },
         ].join(":")
       end
     end

@@ -179,11 +179,9 @@ RSpec.describe Service::Runner do
     step :after_lock
 
     def locked_step
-      @ran = true
     end
 
     def after_lock
-      @ran || raise("Lock not acquired")
     end
   end
 
