@@ -35,6 +35,10 @@ export default class Validator {
   }
 
   lengthValidator(value, rule) {
+    if (isBlank(value)) {
+      return;
+    }
+
     if (rule.max) {
       if (value?.length > rule.max) {
         return i18n("form_kit.errors.too_long", {
