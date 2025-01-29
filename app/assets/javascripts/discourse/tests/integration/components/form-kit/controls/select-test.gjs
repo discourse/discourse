@@ -108,6 +108,22 @@ module(
           NO_VALUE_OPTION,
           "it has the none when value is present and field is not required"
         );
+
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Select />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert
+        .form()
+        .field("foo")
+        .hasValue(
+          NO_VALUE_OPTION,
+          "it has the none when no value is present and field is not required"
+        );
     });
   }
 );
