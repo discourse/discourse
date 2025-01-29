@@ -176,12 +176,8 @@ RSpec.describe Service::Runner do
     end
 
     lock(:post_id, :user_id) { step :locked_step }
-    step :after_lock
 
     def locked_step
-    end
-
-    def after_lock
     end
   end
 
