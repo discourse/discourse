@@ -142,7 +142,7 @@ export default class AdminPluginsListItem extends Component {
           {{#if this.showPluginSettingsButton}}
             {{#if @plugin.useNewShowRoute}}
               <LinkTo
-                class="btn btn-text btn-small"
+                class="btn btn-default btn-text btn-small"
                 @route="adminPlugins.show"
                 @model={{@plugin}}
                 @disabled={{this.disablePluginSettingsButton}}
@@ -153,7 +153,7 @@ export default class AdminPluginsListItem extends Component {
               </LinkTo>
             {{else}}
               <LinkTo
-                class="btn btn-text btn-small"
+                class="btn btn-default btn-text btn-small"
                 @route="adminSiteSettingsCategory"
                 @model={{@plugin.settingCategoryName}}
                 @query={{hash filter=(concat "plugin:" @plugin.name)}}

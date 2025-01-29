@@ -1,7 +1,7 @@
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 async function openFlagModal() {
@@ -13,16 +13,14 @@ async function openFlagModal() {
   await click(".topic-post:first-child button.create-flag");
 }
 
-async function pressEnter(element, modifier) {
-  const event = new KeyboardEvent("keydown", {
+async function pressEnter(selector, modifier) {
+  await triggerEvent(selector, "keydown", {
     bubbles: true,
     cancelable: true,
     key: "Enter",
     keyCode: 13,
     [modifier]: true,
   });
-  element.dispatchEvent(event);
-  await settled();
 }
 
 acceptance("flagging", function (needs) {
@@ -187,14 +185,13 @@ acceptance("flagging", function (needs) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
-    const modal = query(".d-modal");
-    await pressEnter(modal, "ctrlKey");
+    await pressEnter(".d-modal", "ctrlKey");
     assert
       .dom(".d-modal")
       .exists("The modal wasn't closed because the accept button was disabled");
 
     await click("#radio_inappropriate"); // this enables the accept button
-    await pressEnter(modal, "ctrlKey");
+    await pressEnter(".d-modal", "ctrlKey");
     assert.dom(".d-modal").doesNotExist("The modal was closed");
   });
 
@@ -202,14 +199,13 @@ acceptance("flagging", function (needs) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
-    const modal = query(".d-modal");
-    await pressEnter(modal, "metaKey");
+    await pressEnter(".d-modal", "metaKey");
     assert
       .dom(".d-modal")
       .exists("The modal wasn't closed because the accept button was disabled");
 
     await click("#radio_inappropriate"); // this enables the accept button
-    await pressEnter(modal, "ctrlKey");
+    await pressEnter(".d-modal", "ctrlKey");
     assert.dom(".d-modal").doesNotExist("The modal was closed");
   });
 });

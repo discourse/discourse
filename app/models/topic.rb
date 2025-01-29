@@ -286,6 +286,7 @@ class Topic < ActiveRecord::Base
            dependent: :destroy
 
   has_one :top_topic
+  has_one :topic_hot_score
   has_one :shared_draft, dependent: :destroy
   has_one :published_page
 
@@ -1169,6 +1170,7 @@ class Topic < ActiveRecord::Base
         end
 
         topic_user.destroy
+        MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
         return true
       end
     end

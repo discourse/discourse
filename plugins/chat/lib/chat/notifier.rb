@@ -287,7 +287,8 @@ module Chat
       Chat::Publisher.publish_notice(
         user_id: @user.id,
         channel_id: @chat_channel.id,
-        text_content: I18n.t("chat.mention_warning.global_mentions_disallowed"),
+        text_content:
+          I18n.t("chat.mention_warning.global_mentions_disallowed", locale: @user.effective_locale),
       )
     end
 
@@ -321,7 +322,12 @@ module Chat
 
     def mention_warning_text(single:, multiple:, first_identifier:, count:)
       translation_key = count == 1 ? single : multiple
-      I18n.t(translation_key, first_identifier: first_identifier, count: count - 1)
+      I18n.t(
+        translation_key,
+        first_identifier: first_identifier,
+        count: count - 1,
+        locale: @user.effective_locale,
+      )
     end
 
     def global_mentions_disabled

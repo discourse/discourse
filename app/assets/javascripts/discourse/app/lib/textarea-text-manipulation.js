@@ -1,5 +1,5 @@
 import { setOwner } from "@ember/owner";
-import { next, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
@@ -127,20 +127,16 @@ export default class TextareaTextManipulation {
   }
 
   selectText(from, length, opts = { scroll: true }) {
-    next(() => {
-      this.textarea.selectionStart = from;
-      this.textarea.selectionEnd = from + length;
-      if (opts.scroll === true || typeof opts.scroll === "number") {
-        const oldScrollPos =
-          typeof opts.scroll === "number"
-            ? opts.scroll
-            : this.textarea.scrollTop;
-        if (!this.capabilities.isIOS) {
-          this.textarea.focus();
-        }
-        this.textarea.scrollTop = oldScrollPos;
+    this.textarea.selectionStart = from;
+    this.textarea.selectionEnd = from + length;
+    if (opts.scroll === true || typeof opts.scroll === "number") {
+      const oldScrollPos =
+        typeof opts.scroll === "number" ? opts.scroll : this.textarea.scrollTop;
+      if (!this.capabilities.isIOS) {
+        this.textarea.focus();
       }
-    });
+      this.textarea.scrollTop = oldScrollPos;
+    }
   }
 
   replaceText(oldVal, newVal, opts = {}) {
@@ -741,10 +737,7 @@ export default class TextareaTextManipulation {
   }
 
   async inCodeBlock() {
-    return inCodeBlock(
-      this.$textarea.value ?? this.$textarea.val(),
-      caretPosition(this.$textarea)
-    );
+    return await this.autocompleteHandler.inCodeBlock();
   }
 
   @bind
@@ -873,9 +866,9 @@ export class TextareaAutocompleteHandler {
   }
 
   async inCodeBlock() {
-    return inCodeBlock(
-      this.$textarea.value ?? this.$textarea.val(),
-      caretPosition(this.$textarea)
+    return await inCodeBlock(
+      this.textarea.value ?? this.$textarea.val(),
+      caretPosition(this.textarea)
     );
   }
 }

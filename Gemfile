@@ -99,7 +99,7 @@ gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer"
+gem "mini_racer", "0.17.pre12"
 
 gem "highline", require: false
 
@@ -284,6 +284,9 @@ group :migrations, optional: true do
 
   # CLI
   gem "ruby-progressbar"
+
+  # non-cryptographic hashing algorithm for generating placeholder IDs
+  gem "digest-xxhash"
 end
 
 gem "dry-initializer", "~> 3.1"

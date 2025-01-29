@@ -57,6 +57,7 @@ export default class PreviewBase extends Component {
       this.step.findField("color_scheme")?.addListener(this.themeChanged);
       this.step.findField("homepage_style")?.addListener(this.themeChanged);
       this.step.findField("body_font")?.addListener(this.themeBodyFontChanged);
+      this.step.findField("site_font")?.addListener(this.themeFontChanged);
       this.step
         .findField("heading_font")
         ?.addListener(this.themeHeadingFontChanged);
@@ -74,6 +75,7 @@ export default class PreviewBase extends Component {
       this.step
         .findField("body_font")
         ?.removeListener(this.themeBodyFontChanged);
+      this.step.findField("site_font")?.removeListener(this.themeFontChanged);
       this.step
         .findField("heading_font")
         ?.removeListener(this.themeHeadingFontChanged);
@@ -99,7 +101,18 @@ export default class PreviewBase extends Component {
     }
   }
 
+  @action
+  themeFontChanged() {
+    if (!this.loadingFontVariants) {
+      this.loadFontVariants(this.wizard.font);
+    }
+  }
+
   loadFontVariants(font) {
+    if (!font) {
+      return Promise.resolve();
+    }
+
     const fontVariantData = this.fontMap[font.id];
 
     // System font for example does not need to load from a remote source.
@@ -206,8 +219,8 @@ export default class PreviewBase extends Component {
     const options = {
       ctx,
       colors,
-      font: font?.label,
-      headingFont: headingFont?.label,
+      font,
+      headingFont,
       width: this.width,
       height: this.height,
     };
@@ -337,7 +350,7 @@ export default class PreviewBase extends Component {
     const badgeHeight = headerHeight * 2 * 0.25;
     const headerMargin = headerHeight * 0.2;
     const fontSize = Math.round(badgeHeight * 0.5);
-    ctx.font = `${fontSize}px '${font}'`;
+    ctx.font = `${fontSize}px '${font.label}'`;
 
     const allCategoriesText = i18n(
       "wizard.homepage_preview.nav_buttons.all_categories"
@@ -406,7 +419,7 @@ export default class PreviewBase extends Component {
     );
     ctx.fill();
 
-    ctx.font = `${fontSize}px '${font}'`;
+    ctx.font = `${fontSize}px '${font.label}'`;
     ctx.fillStyle = colors.secondary;
     const pillButtonTextY = headerHeight + headerMargin * 1.4 + fontSize;
     const firstTopMenuItemX = headerMargin * 3.0 + categoriesBoxWidth;

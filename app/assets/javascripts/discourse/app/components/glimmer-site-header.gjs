@@ -90,16 +90,45 @@ export default class GlimmerSiteHeader extends Component {
       return;
     }
 
-    // clamping to 0 to prevent negative values (hello, Safari)
-    const headerWrapBottom = Math.max(
+    // We expect this to be zero, but when overscrolling in Safari it can have a non-zero value:
+    const overscrollPx = Math.max(
       0,
-      Math.floor(this._headerWrap.getBoundingClientRect().bottom)
+      document.documentElement.getBoundingClientRect().top
     );
+
+    // Tends to be zero, but is set higher when on iPad PWA with the 'footer-navigation' at top of screen
+    const headerCssTop = parseInt(
+      window.getComputedStyle(this._headerWrap).getPropertyValue("top"),
+      10
+    );
+
+    let headerWrapBottom =
+      this._headerWrap.getBoundingClientRect().bottom - overscrollPx;
+
+    // iOS Safari bug: when overscrolling at the bottom of the page on iOS, fixed/sticky elements report their position incorrectly.
+    // Clamp the headerWrapBottom to the minimum possible value (top + height) to avoid this.
+    const minimumPossibleHeaderWrapBottom =
+      headerCssTop + this._headerWrap.getBoundingClientRect().height;
+    headerWrapBottom = Math.max(
+      headerWrapBottom,
+      minimumPossibleHeaderWrapBottom
+    );
+
+    // Safari bug: while scrolling on iOS, fixed elements can have a viewport position which fluctuates by sub-pixel amounts.
+    // To avoid that fluctuation affecting the header offset, we subtract that tiny fluctuation from the header-offset.
+    const headerWrapTopDiff =
+      this._headerWrap.getBoundingClientRect().top -
+      overscrollPx -
+      headerCssTop;
+    if (Math.abs(headerWrapTopDiff) < 1) {
+      headerWrapBottom -= headerWrapTopDiff;
+    }
 
     let mainOutletOffsetTop = Math.max(
       0,
-      Math.floor(this._mainOutletWrapper.getBoundingClientRect().top) -
-        headerWrapBottom
+      this._mainOutletWrapper.getBoundingClientRect().top -
+        headerWrapBottom -
+        overscrollPx
     );
 
     if (DEBUG && isTesting()) {
@@ -111,16 +140,19 @@ export default class GlimmerSiteHeader extends Component {
     }
 
     const docStyle = document.documentElement.style;
+
     const currentHeaderOffset =
       parseInt(docStyle.getPropertyValue("--header-offset"), 10) || 0;
-    const newHeaderOffset = headerWrapBottom;
+    const newHeaderOffset = Math.floor(headerWrapBottom);
     if (currentHeaderOffset !== newHeaderOffset) {
       docStyle.setProperty("--header-offset", `${newHeaderOffset}px`);
     }
 
     const currentMainOutletOffset =
       parseInt(docStyle.getPropertyValue("--main-outlet-offset"), 10) || 0;
-    const newMainOutletOffset = headerWrapBottom + mainOutletOffsetTop;
+    const newMainOutletOffset = Math.floor(
+      headerWrapBottom + mainOutletOffsetTop
+    );
     if (currentMainOutletOffset !== newMainOutletOffset) {
       docStyle.setProperty("--main-outlet-offset", `${newMainOutletOffset}px`);
     }

@@ -11,7 +11,8 @@
     position: relative;
     padding: 0.5em 0.8em;
     padding-bottom: max(env(safe-area-inset-bottom), 0.5em);
-    &:before {
+
+    &::before {
       // fade to make scroll more apparent
       position: absolute;
       content: "";
@@ -37,6 +38,7 @@
     font-size: var(--font-down-1);
     color: var(--d-sidebar-link-color);
     padding: 0 0.5em;
+
     &:hover,
     &:focus {
       background: var(--d-sidebar-highlight-background);
@@ -60,6 +62,7 @@
     &:focus,
     &:hover {
       background: var(--d-sidebar-highlight-background);
+
       .d-icon {
         color: var(--d-sidebar-highlight-color);
       }

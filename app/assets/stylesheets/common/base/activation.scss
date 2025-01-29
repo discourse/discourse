@@ -1,6 +1,5 @@
 // Styles used before the user is logged into discourse. For example, activating their
 // account or changing their email.
-
 .account-created-page,
 .activate-account-page {
   background: var(--secondary);
@@ -9,6 +8,7 @@
     padding: 0;
     height: 100%;
   }
+
   .above-main-container-outlet {
     display: none;
   }
@@ -34,6 +34,7 @@
     font-size: var(--font-up-1);
     line-height: var(--line-height-large);
   }
+
   .activation-controls {
     display: flex;
     flex-wrap: wrap;

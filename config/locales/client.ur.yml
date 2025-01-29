@@ -1433,7 +1433,8 @@ ur:
         after_4_minutes: "4 منٹ کے بعد"
         after_5_minutes: "5 منٹ کے بعد"
         after_10_minutes: "10 منٹ کے بعد"
-      notification_level_when_replying: "جب میں ایک ٹاپک میں پوسٹ کروں، اُس ٹاپک کو مقرر کریں"
+      notification_level_when_replying:
+        do_nothing: "کچھ نہ کریں"
       invited:
         title: "دعوتیں"
         pending_tab: "زیرِاِلتوَاء"
@@ -3912,26 +3913,22 @@ ur:
               revoke_badge_from_user: کسی صارف سے بیج منسوخ کریں۔
       web_hooks:
         title: "وَیب ھُوک٘س٘"
-        none: "اِس وقت کوئی وَیب ھُوک٘س٘ نہیں ہیں۔"
         instruction: "جب آپ کی ویب سائٹ میں مخصوص واقعات پیش آتے ہیں تو وَیب ھُوک٘س٘ ڈِسکورس کو بیرونی سروسوں کو مطلع کرنے کے قابل بناتے ہیں۔ جب وَیب ھُوک٘ کو متحرک کیا جائے گا، فراہم کیے گئے یو.آر.ایلز. کو ایک POST ریکویسٹ بھیج دی جائے گی۔"
         detailed_instruction: "جب منتخب کیا گیا واقعہ پیش آئے گا تو فراہم کیے گئے یو.آر.ایل. کو ایک POST ریکویسٹ بھیج دی جائے گی۔"
-        new: "نیا وَیب ھُوک٘"
         create: "بنائیں"
         edit: "ترمیم کریں"
         save: "محفوظ کریں"
+        delete: "مٹائیں"
+        cancel: "منسوخ"
         controls: "کنٹرولز"
-        go_back: "واپس فہرست پر"
         payload_url: "پَیلوڈ یو.آر.ایل."
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "سیکرٹ میں کوئی بھی خالی حروف نہ ہونا ضروری ہے۔"
         secret_too_short: "سیکرٹس کا کم از کم 12 حروف پر مشتمل ہونا ضروری ہے۔"
-        secret_placeholder: "ایک اختیاری سٹرنگ، سِگنَیچر تخلیق کرنے کیلئے استعمال کیا جاتا ہے"
         event_type_missing: "آپ کو کم از کم ایک واقعہ کی قسم قائم کرنا ضروری ہے۔"
         content_type: "کونٹنٹ کی قسم"
         secret: "سیکرٹ"
         event_chooser: "کونسے واقعات اِس وَیب ھُوک٘ کو متحرک کریں؟"
-        wildcard_event: "مجھے سب کچھ بھیجیں۔"
-        individual_event: "انفرادی واقعات کو منتخب کریں۔"
         verify_certificate: "پَیلوڈ یو.آر.ایل. کا TLS سرٹیفکیٹ چیک کریں"
         active: "فعال"
         active_notice: "جب واقعہ پیش آئے گا تو ہم اُس کی تفصیلات پہنچا دیں گے۔"
@@ -4127,9 +4124,6 @@ ur:
           screened_url: "مکمل اسکریننگ کیے گئے URL کی فہرست CSV فارمیٹ میں ایکسپورٹ کریں۔"
       export_json:
         button_text: "ایکسپورٹ"
-      invite:
-        button_text: "دعوت بھیجیں"
-        button_title: "دعوت بھیجیں"
       customize:
         title: "مرضی کے مطابق بنائیں"
         preview: "پیشگی دیکھیں"
@@ -4388,8 +4382,7 @@ ur:
           overridden: آپ کی سائٹ کی ڈیفالٹ robots.txt فائل کی جگہ لی جا چکی ہے۔
         email_style:
           title: "اِیمیل کا انداز"
-          heading: "اِیمیل کے انداز کو اپنی مرضی کے مطابق بنائیں"
-          html: "HTML ٹَیمپلَیٹ"
+          html: "HTML"
           css: "CSS"
           reset: "دوبارہ پہلے جیسا کر دیں"
           reset_confirm: "کیا آپ واقعی میں ڈیفالٹ %{fieldName} پر دوبارہ ترتیب اور اپنی ساری تبدیلیاں ضائع کرنا چاہتے ہیں؟"
@@ -4397,15 +4390,11 @@ ur:
           instructions: "اس ٹَیمپلَیٹ کو حسب ضرورت بنائیں جس میں تمام HTML ایمیلز پیش کی جاتی ہیں، اور CSS کا استعمال کرتے ہوئے سٹائیل کریں۔"
       email:
         title: "اِیمیل"
+        settings: "ترتیبات"
         templates: "ٹَیمپلیٹ"
-        preview_digest: "ڈائجسٹ کا مشاہدہ کریں"
         advanced_test:
-          title: "اَیڈوانسڈ ٹیسٹ"
           desc: "ملاحظہ کریں کہ کس طرح ڈِسکورس موصول ای میلز کو پراسس کرتا ہے۔ ایمیل کو صحیح پراسس کرنے کے قابل ہونے کیلئے، براہ مہربانی پورے اصل ایمیل پیغام کو نیچے پیسٹ کریں۔"
           email: "اصل پیغام"
-          run: "ٹیسٹ چلائیں"
-          text: "منتخب متن کا جسم"
-          elided: "کاٹا گیا متن"
         error: "<b>خرابی</b> - %{server_error}"
         test_error: "ٹیسٹ اِیمیل بھیجنے میں ایک مسئلہ پیش آیا۔ اپنی میل سیٹِنگ دوبارہ چیک کریں، تصدیق کر لیں کہ آپ کا ہَوسٹ میل کنکشنوں کو بلاک تو نہیں کر رہا، اور دوبارہ کوشش کریں۔"
         sent: "بھیج دی گئی"
@@ -4413,15 +4402,10 @@ ur:
         bounced: "لوٹا دی گئی"
         received: "موصول ہو گئی"
         rejected: "مسترد کر دی گئی"
-        sent_at: "بھیجی گئی"
         time: "وقت"
         user: "صارف"
-        email_type: "اِیمیل کی قسم"
-        to_address: "ایڈریس پر"
         test_email_address: "ٹیسٹ کرنے کے لیے اِیمیل ایڈریس"
-        send_test: "ٹیسٹ اِیمیل بھیجییں"
         sent_test: "بھیج دی گئی!"
-        delivery_method: "ترسیل کا طریقہ"
         preview_digest_desc: "غیر فعال صارفین کو بھیجے گئے ڈائجسٹ اِیمیلز کے متن کا مشاہدہ کریں۔"
         refresh: "رِیفریش"
         send_digest_label: "اس رِزَلٹ کو بھیجیں:"
@@ -4430,10 +4414,7 @@ ur:
         html: "html"
         text: "ٹَیکسٹ"
         html_preview: "ای میل مواد کا پیش نظارہ"
-        last_seen_user: "صارف کو آخری دفعہ دیکھا:"
         no_result: "ڈائجسٹ کیلئے کوئی نتائج نہیں پائے گئے۔"
-        reply_key: "جواب کِی"
-        skipped_reason: "وجہ چھوڑیں"
         incoming_emails:
           from_address: "سے"
           to_addresses: "کے لئے"
@@ -4442,12 +4423,10 @@ ur:
           error: "خرابی"
           none: "کوئی آنے والی اِیمیلز نہیں ملیں۔"
           modal:
-            title: "آنے والی اِیمیلز کی تفصیلات"
             error: "خرابی"
             headers: "ہیڈرز"
             subject: "موضوع"
             body: "متن"
-            rejection_message: "نامنظوری کی میل"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -4471,7 +4450,7 @@ ur:
           delete_topic: "موضوع مٹادیا گیا۔"
           post_approved: "منظورشدہ پوسٹ"
       logs:
-        title: "لاگز"
+        nav_title: "لاگز"
         action: "عمل"
         created_at: "بنائے گئی"
         last_match_at: "آخری دَفعہ میچ کیا گیا"
@@ -4489,8 +4468,6 @@ ur:
         staff_actions:
           all: "تمام"
           filter: "فِلٹر:"
-          title: "سٹاف عوامل"
-          clear_filters: "سب کچھ دکھائیں"
           staff_user: "صارف"
           target_user: "ہدف صارف"
           subject: "موضوع"
@@ -4596,9 +4573,7 @@ ur:
             watched_word_create: "دیکھا ہوا لفظ شامل کریں"
             watched_word_destroy: "دیکھا ہوا لفظ مٹائیں"
         screened_emails:
-          title: "سکرین کی گئی اِیمیلز"
           description: "جب کوئی نیا اکاؤنٹ بنانے کی کوشش کرے گا، تو مندرجہ ذیل اِیمیل ایڈریسوں کو چیک کیا جائے گا اور رجسٹریشن بلاک، یا کوئی اور کارروائی کی جائے گی۔"
-          email: "اِیمیل ایڈریس"
           actions:
             allow: "اجازت دیں"
         screened_urls:
@@ -4613,7 +4588,6 @@ ur:
           actions:
             block: "بلاک کریں"
             do_nothing: "اجازت دیں"
-            allow_admin: "اجازت دینے والا ایڈمِن"
           form:
             label: "نیا:"
             ip_address: "IP ایڈریس"
@@ -4623,18 +4597,13 @@ ur:
             text: "رول اَپ"
             title: "نئے subnet بین اندراجات بناتا ہے اگر کم از کم 'min_ban_entries_for_roll_up' اندراجات موجود ہوں۔"
         search_logs:
-          title: "لاگز سرچ کریں"
           term: "اصطلاح"
           searches: "سرچز"
           click_through_rate: "CTR"
           types:
             all_search_types: "تمام سرچ ٹاپکس"
             header: "ہَیڈر"
-            full_page: "مکمل پیج"
             click_through_only: "تمام (صرف کلِک تھرُو)"
-          header_search_results: "ہیڈر کے سرچ نتائج"
-        logster:
-          title: "خرابیوں کے لاگز"
       watched_words:
         search: "سرچ"
         clear_filter: "صاف کریں"
@@ -4642,7 +4611,6 @@ ur:
           one: "%{count} لفظ دکھائیں۔"
           other: "%{count} الفاظ دکھائیں"
         download: ڈاؤن لوڈ
-        clear_all: تمام کو صاف کریں
         clear_all_confirm: "کیا آپ واقعی %{action} ایکشن کے لیے دیکھے گئے تمام الفاظ کو صاف کرنا چاہتے ہیں؟"
         invalid_regex: 'دیکھا ہوا لفظ "%{word}" ایک غلط ریگولر ایکسپریشن ہے۔'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">دیکھے گئے الفاظ ریگولر ایکسپریشنز ہیں</a> اور وہ خود بخود الفاظ کی حدود کو شامل نہیں کرتے ہیں۔ اگر آپ چاہتے ہیں کہ ریگولر ایکسپریشن پورے الفاظ سے مماثل ہو، تو اپنے ریگولر ایکسپریشن کے شروع اور آخر میں <code>\b</code> شامل کریں۔'
@@ -4720,9 +4688,6 @@ ur:
         id_not_found: "معذرت، وہ صارف ID ہمارے سِسٹم میں موجود نہیں ہے۔"
         active: "فعال کردہ"
         status: "سٹیٹس"
-        show_emails: "اِیمیل دکھائیں"
-        hide_emails: "ای میلز چھپائیں"
-        silence_reason: "خاموش کردینے کی وجہ"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4737,8 +4702,6 @@ ur:
           staged: "سٹَیجڈ"
         approved: "منظورشدہ؟"
         titles:
-          active: "متحرک صارفین"
-          new: "نئے صارفین"
           pending: "صارفین زیرِ ریویو"
           newuser: "ٹرسٹ لَیول 0 پہ صارفین (نیو یوزر)"
           basic: "ٹرسٹ لَیول 1 پہ صارفین (بَیسِک یوزر)"
@@ -4746,11 +4709,7 @@ ur:
           regular: "ٹرسٹ لَیول 3 پہ صارفین (رَیگولَر)"
           leader: "ٹرسٹ لَیول 4 پہ صارفین (لیڈر)"
           staff: "سٹاف"
-          admins: "ایڈمِن صارفین"
           moderators: "ماڈریٹرز"
-          silenced: "خاموش کردہ صارفین"
-          suspended: "معطل کردہ صارفین"
-          staged: "سٹَیجڈ صارفین"
         not_verified: "غیر تصدیق شدہ"
         check_email:
           title: "اِس صارف کا اِیمیل ایڈریس ظاہر کریں"
@@ -5027,7 +4986,7 @@ ur:
           invalid_input: "ایموجی لسٹ میں صرف درست ایموجی نام ہونے چاہئیں، جیسے: گلے ملنا"
           add_emoji_button:
             label: "ایموجی شامل کریں"
-        title: "سیٹِنگ"
+        nav_title: "ترتیبات"
         no_results: "کوئی نتائج نہیں پائے گئے۔"
         clear_filter: "صاف کریں"
         add_url: "URL شامل کریں"
@@ -5154,7 +5113,6 @@ ur:
             with_post_time: <span class="username">%{username}</span> <span class="time">%{time}</span> پر اِس %{link} میں پوسٹ کیلئے
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> پر
         mass_award:
-          title: اجتمائی ایوارڈ
           description: ایک ہی وقت میں بہت سے صارفین کو ایک ہی بیج سے نوازیں۔
           no_badge_selected: شروع کرنے کے لیے براہ کرم ایک بیج منتخب کریں۔
           perform: "صارفین کو ایک ہی بیج سے نوازیں"
@@ -5244,6 +5202,21 @@ ur:
           admin: "ایڈمن"
           moderator: "ماڈریٹر"
           regular: "رَیگولر صارف"
+      homepage_choices:
+        custom:
+          label: "اپنی مرضی کا"
+        style_type:
+          categories: "زمرہ"
+          topics: "ٹاپک"
+      top_menu_items:
+        new: "نئی"
+        unread: "بغیر پڑھے"
+        top: "سب سے اوپر"
+        latest: "تازہ ترین"
+        categories: "اقسام"
+        unseen: "ان دیکھا"
+        read: "پڑھیں"
+        bookmarks: "بُک مارکس"
       previews:
         share_button: "شیئر"
         reply_button: "جواب"
@@ -5252,11 +5225,6 @@ ur:
       homepage_preview:
         nav_buttons:
           all_categories: "تمام زُمرَہ جات"
-          new: "نئی"
-          unread: "بغیر پڑھے"
-          top: "سب سے اوپر"
-          latest: "تازہ ترین"
-          categories: "اقسام"
         category_names:
           site_feedback: "سائٹ کیلئے رائے"
         table_headers:

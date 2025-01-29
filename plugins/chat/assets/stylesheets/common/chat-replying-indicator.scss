@@ -8,7 +8,7 @@
     height: 16px;
   }
 
-  &:before {
+  &::before {
     // unicode zero width space character
     // Ensures the span height is consistent even when empty
     content: "\200b";
@@ -27,9 +27,11 @@
       @media (prefers-reduced-motion: no-preference) {
         animation: chat-replying-indicator__wave 1.8s linear infinite;
       }
+
       &:nth-child(2) {
         animation-delay: -1.6s;
       }
+
       &:nth-child(3) {
         animation-delay: -1.4s;
       }
@@ -41,6 +43,7 @@
       100% {
         transform: initial;
       }
+
       30% {
         transform: translateY(-0.2em);
       }

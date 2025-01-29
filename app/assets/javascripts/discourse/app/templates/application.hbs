@@ -2,7 +2,9 @@
 <DVirtualHeight />
 
 <DiscourseRoot {{did-insert this.trackDiscoursePainted}}>
-  <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
+  {{#if this.showSkipToContent}}
+    <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
+  {{/if}}
   <DDocument />
   <PageLoadingSlider />
   <PluginOutlet
@@ -99,7 +101,6 @@
     @outletArgs={{hash showFooter=this.showFooter}}
   />
 
-  <DLightbox />
   <ModalContainer />
   <DialogHolder />
   <TopicEntrance />

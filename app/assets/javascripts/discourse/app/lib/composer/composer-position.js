@@ -1,4 +1,5 @@
 import { later } from "@ember/runloop";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 
 export function setupComposerPosition(editor) {
   // This component contains two composer positioning adjustments
@@ -10,11 +11,15 @@ export function setupComposerPosition(editor) {
     // This is an alternative to locking up the body
     // It stops scrolling in the given element from bubbling up to the body
     // when the editor does not have any content to scroll
-    const notScrollable = editor.scrollHeight <= editor.clientHeight;
-    if (notScrollable) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    applyBehaviorTransformer("composer-position:editor-touch-move", () => {
+      const notScrollable = editor.scrollHeight <= editor.clientHeight;
+      const selection = window.getSelection();
+
+      if (notScrollable && selection.rangeCount === 0) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    });
   }
 
   if (

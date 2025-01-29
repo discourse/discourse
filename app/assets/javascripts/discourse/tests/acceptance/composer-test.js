@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  find,
   focus,
   settled,
   triggerEvent,
@@ -23,7 +24,6 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -125,9 +125,9 @@ acceptance("Composer", function (needs) {
   test("Composer height adjustment", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    await triggerEvent(document.querySelector(".grippie"), "mousedown");
-    await triggerEvent(document.querySelector(".grippie"), "mousemove");
-    await triggerEvent(document.querySelector(".grippie"), "mouseup");
+    await triggerEvent(".grippie", "mousedown");
+    await triggerEvent(".grippie", "mousemove");
+    await triggerEvent(".grippie", "mouseup");
     await visit("/"); // reload page
     await click("#create-topic");
 
@@ -201,17 +201,16 @@ acceptance("Composer", function (needs) {
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("the body is now good");
 
-    const textarea = query("#reply-control .d-editor-input");
+    const textarea = find("#reply-control .d-editor-input");
     textarea.selectionStart = textarea.value.length;
     textarea.selectionEnd = textarea.value.length;
 
     await triggerKeyEvent(textarea, "keydown", "B", metaModifier);
 
-    const example = i18n(`composer.bold_text`);
     assert
       .dom("#reply-control .d-editor-input")
       .hasValue(
-        `this is the *content* of a post**${example}**`,
+        `this is the *content* of a post**${i18n("composer.bold_text")}**`,
         "supports keyboard shortcuts"
       );
 
@@ -361,7 +360,7 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        query(".topic-post:nth-of-type(1) .cooked > p").innerText,
+        find(".topic-post:nth-of-type(1) .cooked > p").innerText,
         "composer has contents of post to be edited"
       );
   });
@@ -394,16 +393,28 @@ acceptance("Composer", function (needs) {
       ".d-editor-input",
       "this is the content for a different topic"
     );
-
     await visit("/t/1-3-0beta9-no-rate-limit-popups/28830");
+
     assert.strictEqual(
       currentURL(),
       "/t/1-3-0beta9-no-rate-limit-popups/28830"
     );
+
     await click("#reply-control button.create");
+
     assert.dom(".reply-where-modal").exists("pops up a modal");
+    assert
+      .dom(".topic-title")
+      .exists({ count: 2 }, "it renders the two topics");
+    assert
+      .dom(".btn-reply-where:nth-of-type(1) .badge-category__name")
+      .hasText("test too", "it renders the category name");
+    assert
+      .dom(".btn-reply-where:nth-of-type(2) .discourse-tags")
+      .hasText("foo", "it renders the tags");
 
     await click(".btn-reply-here");
+
     assert
       .dom(".topic-post:last-of-type .cooked p")
       .hasText(
@@ -610,10 +621,12 @@ acceptance("Composer", function (needs) {
     assert.dom(".d-editor-input").hasNoValue("clears the composer input");
 
     await click(".topic-post:nth-of-type(2) button.edit");
-    assert.true(
-      query(".d-editor-input").value.startsWith("This is the second post."),
-      "populates the input with the post text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^This is the second post\./,
+        "populates the input with the post text"
+      );
   });
 
   test("Composer can toggle whispers when whisperer user", async function (assert) {
@@ -1319,7 +1332,7 @@ acceptance("composer buttons API", function (needs) {
     await click(".post-controls button.reply");
     await fillIn(".d-editor-input", "hello the world");
 
-    const editor = document.querySelector(".d-editor-input");
+    const editor = find(".d-editor-input");
     editor.setSelectionRange(6, 9); // select the text input in the composer
 
     await triggerKeyEvent(".d-editor-input", "keydown", "B", {
@@ -1373,7 +1386,7 @@ acceptance("composer buttons API", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".post-controls button.reply");
 
-    const editor = document.querySelector(".d-editor-input");
+    const editor = find(".d-editor-input");
     await triggerKeyEvent(".d-editor-input", "keydown", "S", {
       altKey: true,
       ...metaModifier,

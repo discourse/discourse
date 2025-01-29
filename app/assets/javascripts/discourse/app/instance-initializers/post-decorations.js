@@ -9,7 +9,6 @@ import highlightSyntax from "discourse/lib/highlight-syntax";
 import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
-import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
@@ -25,33 +24,13 @@ export default {
       const capabilities = owner.lookup("service:capabilities");
       const modal = owner.lookup("service:modal");
       // will eventually just be called lightbox
-      const lightboxService = owner.lookup("service:lightbox");
       api.decorateCookedElement((elem) => {
         return highlightSyntax(elem, siteSettings, session);
       });
 
-      if (siteSettings.enable_experimental_lightbox) {
-        api.decorateCookedElement(
-          (element, helper) => {
-            return helper &&
-              element.querySelector(SELECTORS.DEFAULT_ITEM_SELECTOR)
-              ? lightboxService.setupLightboxes({
-                  container: element,
-                  selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
-                })
-              : null;
-          },
-          {
-            onlyStream: true,
-          }
-        );
-
-        api.cleanupStream(lightboxService.cleanupLightboxes);
-      } else {
-        api.decorateCookedElement((elem) => {
-          return lightbox(elem, siteSettings);
-        });
-      }
+      api.decorateCookedElement((elem) => {
+        return lightbox(elem, siteSettings);
+      });
 
       api.decorateCookedElement((elem) => {
         const grids = elem.querySelectorAll(".d-image-grid");

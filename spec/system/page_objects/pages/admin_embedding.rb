@@ -2,18 +2,10 @@
 
 module PageObjects
   module Pages
-    class AdminEmbedding < PageObjects::Pages::Base
+    class AdminEmbedding < AdminBase
       def visit
         page.visit("/admin/customize/embedding")
         self
-      end
-
-      def click_posts_and_topics_tab
-        find(".admin-embedding-tabs__posts-and-topics").click
-      end
-
-      def click_hosts_tab
-        find(".admin-embedding-tabs__hosts").click
       end
 
       def click_add_host

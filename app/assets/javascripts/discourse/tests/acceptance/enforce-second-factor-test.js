@@ -66,7 +66,7 @@ acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
     );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     await click(

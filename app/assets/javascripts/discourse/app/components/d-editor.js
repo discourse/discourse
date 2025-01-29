@@ -371,18 +371,9 @@ export default class DEditor extends Component {
             virtualElement = virtualElementFromTextRange();
           } else {
             // when user selects more by clicking on it
-            virtualElement = {
-              getBoundingClientRect: () => ({
-                x: event.pageX,
-                y: event.pageY,
-                top: event.pageY,
-                left: event.pageX,
-                bottom: 0,
-                right: 0,
-                width: 0,
-                height: 0,
-              }),
-            };
+            // using textarea as a fallback as it's hard to have a good position
+            // given the autocomplete menu will be gone by the time we are here
+            virtualElement = this.textManipulation.textarea;
           }
 
           this.menuInstance = this.menu.show(virtualElement, menuOptions);

@@ -4,6 +4,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
+import { isHTMLSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -643,6 +644,9 @@ export default class Composer extends RestModel {
   @discourseComputed("title")
   titleLength(title) {
     title = title || "";
+    if (isHTMLSafe(title)) {
+      return title.toString().length;
+    }
     return title.replace(/\s+/gim, " ").trim().length;
   }
 

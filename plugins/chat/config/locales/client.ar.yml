@@ -759,6 +759,11 @@ ar:
           other_html: "أشار <span>%{username}</span> <span>إلى %{identifier} في دردشة شخصية</span>"
         chat_message: "رسالة دردشة جديدة"
         chat_quoted: "اقتبس %{username} رسالة الدردشة الخاصة بك"
+      titles:
+        chat_mention: "مذكور في الدردشة"
+        chat_invitation: "تمت دعوته إلى قناة الدردشة"
+        chat_quoted: "تم اقتباس رسالة الدردشة"
+        chat_watched_thread: "سلسلة رسائل دردشة مُراقَبة"
     action_codes:
       chat:
         enabled: 'فعَّل %{who} <button class="btn-link open-chat">الدردشة</button> في %{when}'

@@ -192,11 +192,14 @@ class TopicCreator
 
   def setup_tags(topic)
     if @opts[:tags].present?
-      if @opts[:skip_validations]
-        DiscourseTagging.add_or_create_tags_by_name(topic, @opts[:tags])
-      else
-        valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
-        unless valid_tags
+      # We can try the full tagging workflow which does validations and other
+      # things like replacing synonyms first, but if this fails then we can try
+      # the simple workflow if validations are skipped.
+      valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
+      if !valid_tags
+        if @opts[:skip_validations]
+          DiscourseTagging.add_or_create_tags_by_name(topic, @opts[:tags])
+        else
           topic.errors.add(:base, :unable_to_tag)
           rollback_from_errors!(topic)
         end

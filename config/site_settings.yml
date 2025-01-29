@@ -21,6 +21,12 @@
 #                               defined in the choices option. A type:list setting with the word 'colors' in
 #                               its name will make color values have a bold line of the corresponding color
 #
+# list_type: simple           - Allow multiple values to be selected for the list, and new values can be defined if
+#                               allow_any is true. This list displays like a list of items with add/remove buttons,
+#                               and the ability to reorder items.
+# list_type: compact          - Allow multiple values to be selected for the list, and new values can be defined if
+#                               allow_any is true. This list displays like the tag selector.
+#
 # type: enum                  - A single value, chosen from a set of valid values in the choices option.
 # type: json_schema           - The setting value is stored as JSON in the database. Used
 #                               in the format `json_schema: ClassName` where the class implements
@@ -54,6 +60,7 @@ required:
     default: ""
     type: email
     area: "about|notifications|legal"
+    client: true
   contact_url:
     default: ""
     area: "about|legal"
@@ -151,7 +158,10 @@ basic:
     validator: "AllowUserLocaleEnabledValidator"
   set_locale_from_cookie:
     default: false
-    hidden: true
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+  set_locale_from_param:
+    default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
   support_mixed_text_direction:
@@ -408,7 +418,7 @@ basic:
     default: ""
     hidden: true
   base_font:
-    default: "arial"
+    default: "inter"
     choices: "BaseFontSetting.values"
     refresh: true
     type: list
@@ -416,7 +426,7 @@ basic:
     area: "fonts"
     allow_any: false
   heading_font:
-    default: "arial"
+    default: "inter"
     choices: "BaseFontSetting.values"
     refresh: true
     type: list
@@ -759,6 +769,10 @@ users:
   prioritize_username_in_ux:
     client: true
     default: true
+  prioritize_full_name_in_ux:
+    client: true
+    default: false
+    hidden: true
   email_token_valid_hours:
     default: 48
     min: 1
@@ -1938,6 +1952,14 @@ trust:
     allow_any: false
     refresh: true
     area: "group_permissions"
+  allow_tl0_and_anonymous_users_to_flag_illegal_content:
+    default: false
+    area: "flags"
+    client: true
+  email_address_to_report_illegal_content:
+    default: ""
+    area: "flags"
+    client: true
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
@@ -2361,7 +2383,17 @@ spam:
   auto_respond_to_flag_actions:
     default: true
     area: "flags"
-  min_first_post_typing_time: 3000
+  min_first_post_typing_time:
+    default: 3000
+    hidden: true
+  fast_typing_threshold:
+    type: enum
+    default: standard
+    choices:
+      - disabled
+      - low
+      - standard
+      - high
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level:
     default: 0
@@ -3499,10 +3531,6 @@ experimental:
       - auto
       - enabled
     default: auto
-  enable_experimental_lightbox:
-    default: false
-    client: true
-    hidden: true
   enable_rich_text_paste:
     client: true
     default: true
@@ -3514,3 +3542,6 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions"
+  use_overhauled_theme_color_palette:
+    default: false
+    hidden: true

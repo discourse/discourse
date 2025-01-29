@@ -428,7 +428,7 @@ export default class TopicMapSummary extends Component {
               @translatedTitle={{this.topRepliesTitle}}
               @translatedLabel={{this.topRepliesLabel}}
               @icon={{this.topRepliesIcon}}
-              class="top-replies"
+              class="btn-default top-replies"
             />
           </div>
         {{/if}}

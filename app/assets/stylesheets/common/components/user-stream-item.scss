@@ -34,6 +34,7 @@
   .user-stream-item__details {
     flex-grow: 1;
     min-width: 0;
+
     .badge-category__wrapper {
       width: 100%;
     }
@@ -61,7 +62,8 @@
     line-height: var(--line-height-small);
     color: var(--primary-medium);
     font-size: var(--font-down-2);
-    padding-top: 5px;
+    padding-top: 6px;
+    margin-right: 0.5rem;
   }
 
   .delete-info {
@@ -88,15 +90,18 @@
       a {
         align-items: center;
       }
+
       .d-icon {
         color: var(--primary-medium);
       }
+
       .relative-date {
         margin-left: auto;
         padding-top: 0;
         float: none;
       }
     }
+
     &:not(.show-avatars) {
       li.notification {
         padding: 0.75em 0;
@@ -142,12 +147,15 @@
     font-size: var(--font-0);
     word-wrap: break-word;
     color: var(--primary);
+
     &:empty {
       display: none;
     }
+
     details.disabled {
       color: var(--primary-medium);
     }
+
     .emoji.only-emoji {
       // oversized emoji break excerpt layout
       // so we match inline emoji size
@@ -176,9 +184,11 @@
     width: 15px;
     display: inline-block;
     color: var(--primary);
+
     &.d-icon-heart {
       color: var(--love);
     }
+
     &.d-icon-trash-can {
       color: var(--secondary);
     }

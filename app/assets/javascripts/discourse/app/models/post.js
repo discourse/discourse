@@ -232,7 +232,10 @@ export default class Post extends RestModel {
     data[field] = value;
 
     return ajax(`/posts/${this.id}/${field}`, { type: "PUT", data })
-      .then(() => this.set(field, value))
+      .then((response) => {
+        this.set(field, value);
+        return response;
+      })
       .catch(popupAjaxError);
   }
 

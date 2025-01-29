@@ -1,4 +1,5 @@
 import { service } from "@ember/service";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import discourseComputed from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
@@ -11,6 +12,10 @@ import { i18n } from "discourse-i18n";
 
 export default class UserDraft extends RestModel {
   @service currentUser;
+
+  get titleHtml() {
+    return replaceEmoji(this.get("title"));
+  }
 
   @discourseComputed("draft_username")
   editableDraft(draftUsername) {

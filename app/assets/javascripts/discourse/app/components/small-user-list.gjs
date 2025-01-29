@@ -1,11 +1,25 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import avatar from "discourse/helpers/bound-avatar-template";
 import getURL from "discourse/lib/get-url";
-import { smallUserAttrs } from "discourse/lib/user-list-attrs";
+import { applyValueTransformer } from "discourse/lib/transformer";
+import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+
+export function smallUserAttrs(user) {
+  const defaultAttrs = {
+    template: user.avatar_template,
+    username: user.username,
+    post_url: user.post_url,
+    url: userPath(user.username_lower),
+    unknown: user.unknown,
+  };
+
+  return applyValueTransformer("small-user-attrs", defaultAttrs, {
+    user,
+  });
+}
 
 export default class SmallUserList extends Component {
   @service currentUser;
@@ -30,10 +44,7 @@ export default class SmallUserList extends Component {
 
   <template>
     {{#if this.users}}
-      <PluginOutlet
-        @name="small-user-list-internal"
-        @outletArgs={{hash data=@data}}
-      >
+      <PluginOutlet @name="small-user-list-internal" @outletArgs={{this.args}}>
         <div class="clearfix small-user-list" ...attributes>
           <span
             class="small-user-list-content"

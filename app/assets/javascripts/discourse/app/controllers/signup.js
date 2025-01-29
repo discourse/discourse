@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
@@ -31,13 +32,14 @@ export default class SignupPageController extends Controller.extend(
   @service siteSettings;
   @service login;
 
+  @tracked accountUsername;
+  @tracked isDeveloper = false;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
   rejectedEmails = A();
   prefilledUsername = null;
   userFields = null;
-  isDeveloper = false;
   maskPassword = true;
   passwordValidationVisible = false;
   emailValidationVisible = false;
@@ -257,6 +259,11 @@ export default class SignupPageController extends Controller.extend(
   }
 
   @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
+  }
+
+  @action
   togglePasswordValidation() {
     if (this.passwordValidation.reason) {
       this.set("passwordValidationVisible", true);
@@ -338,7 +345,7 @@ export default class SignupPageController extends Controller.extend(
       // If username field has been filled automatically, and email field just changed,
       // then remove the username.
       if (this.accountUsername === this.prefilledUsername) {
-        this.set("accountUsername", "");
+        this.accountUsername = "";
       }
       this.set("prefilledUsername", null);
     }
@@ -438,7 +445,7 @@ export default class SignupPageController extends Controller.extend(
           return;
         }
 
-        this.set("isDeveloper", false);
+        this.isDeveloper = false;
         if (result.success) {
           // invalidate honeypot
           this._challengeExpiry = 1;
@@ -458,7 +465,7 @@ export default class SignupPageController extends Controller.extend(
         } else {
           this.set("flash", result.message || i18n("create_account.failed"));
           if (result.is_developer) {
-            this.set("isDeveloper", true);
+            this.isDeveloper = true;
           }
           if (
             result.errors &&

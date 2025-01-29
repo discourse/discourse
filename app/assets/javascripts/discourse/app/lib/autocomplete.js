@@ -555,7 +555,7 @@ export default function (options) {
       if (options.onKeyUp && key !== options.key) {
         let match = options.onKeyUp(options.textHandler.value, cp);
 
-        if (match) {
+        if (match && (await checkTriggerRule())) {
           completeStart = cp - match[0].length;
           let term = match[0].substring(1, match[0].length);
           updateAutoComplete(dataSource(term, options));
@@ -567,8 +567,8 @@ export default function (options) {
       if (key === options.key) {
         let prevChar = options.textHandler.value.charAt(cp - 2);
         if (
-          (await checkTriggerRule()) &&
-          (!prevChar || ALLOWED_LETTERS_REGEXP.test(prevChar))
+          (!prevChar || ALLOWED_LETTERS_REGEXP.test(prevChar)) &&
+          (await checkTriggerRule())
         ) {
           completeStart = cp - 1;
           updateAutoComplete(dataSource("", options));

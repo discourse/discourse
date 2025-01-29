@@ -130,6 +130,7 @@ export default function () {
         "adminWebHooks",
         { path: "/web_hooks", resetNamespace: true },
         function () {
+          this.route("new");
           this.route("show", { path: "/:web_hook_id" });
           this.route("edit", { path: "/:web_hook_id/edit" });
         }

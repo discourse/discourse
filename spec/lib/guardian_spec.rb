@@ -163,6 +163,16 @@ RSpec.describe Guardian do
       Flag.reset_flag_settings!
     end
 
+    it "return true for illegal if tl0 and allow_tl0_and_anonymous_users_to_flag_illegal_content" do
+      SiteSetting.flag_post_allowed_groups = ""
+      user.trust_level = TrustLevel[0]
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be false
+
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_tl0_and_anonymous_users_to_flag_illegal_content = true
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be true
+    end
+
     it "works as expected for silenced users" do
       UserSilencer.silence(user, admin)
 
@@ -3521,6 +3531,12 @@ RSpec.describe Guardian do
 
     it "does not allow anonymous to export" do
       expect(anonymous_guardian.can_export_entity?("user_archive")).to be_falsey
+    end
+
+    it "only allows admins to export user_archive of other users" do
+      expect(user_guardian.can_export_entity?("user_archive", another_user.id)).to be_falsey
+      expect(moderator_guardian.can_export_entity?("user_archive", another_user.id)).to be_falsey
+      expect(admin_guardian.can_export_entity?("user_archive", another_user.id)).to be_truthy
     end
   end
 

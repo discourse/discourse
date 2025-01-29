@@ -2,7 +2,6 @@ import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
@@ -10,7 +9,7 @@ import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import TopicLabelContent from "discourse/components/topic-label-content";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -26,11 +25,9 @@ import prepareFormTemplateData, {
 import { shortDate } from "discourse/lib/formatter";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
-import { iconHTML } from "discourse/lib/icon-library";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
-import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   authorizesOneOrMoreExtensions,
@@ -1101,58 +1098,27 @@ export default class ComposerService extends Service {
         return;
       }
 
-      const topicLabelContent = function (topicOption) {
-        const topicClosed = topicOption.closed
-          ? `<span class="topic-status">${iconHTML("lock")}</span>`
-          : "";
-        const topicPinned = topicOption.pinned
-          ? `<span class="topic-status">${iconHTML("thumbtack")}</span>`
-          : "";
-        const topicBookmarked = topicOption.bookmarked
-          ? `<span class="topic-status">${iconHTML("bookmark")}</span>`
-          : "";
-        const topicPM =
-          topicOption.archetype === "private_message"
-            ? `<span class="topic-status">${iconHTML("envelope")}</span>`
-            : "";
-
-        return `<div class="topic-title">
-                  <div class="topic-title__top-line">
-                    <span class="topic-statuses">
-                      ${topicPM}${topicBookmarked}${topicClosed}${topicPinned}
-                    </span>
-                    <span class="fancy-title">
-                      ${topicOption.fancyTitle}
-                    </span>
-                  </div>
-                  <div class="topic-title__bottom-line">
-                    ${categoryBadgeHTML(topicOption.category, {
-                      link: false,
-                    })}${htmlSafe(renderTags(topicOption))}
-                  </div>
-                </div>`;
-      };
-
       if (
         currentTopic.id !== composer.get("topic.id") &&
         (this.isStaffUser || !currentTopic.closed)
       ) {
         this.dialog.alert({
           title: i18n("composer.posting_not_on_topic"),
+          bodyComponent: TopicLabelContent,
+          bodyComponentModel: {
+            originalTopic,
+            replyOnOriginal: () => {
+              this.save(true);
+              this.dialog.didConfirmWrapped();
+            },
+            currentTopic,
+            replyOnCurrent: () => {
+              composer.setProperties({ topic: currentTopic, post: null });
+              this.save(true);
+              this.dialog.didConfirmWrapped();
+            },
+          },
           buttons: [
-            {
-              label: topicLabelContent(originalTopic),
-              class: "btn-primary btn-reply-where btn-reply-on-original",
-              action: () => this.save(true),
-            },
-            {
-              label: topicLabelContent(currentTopic),
-              class: "btn-reply-where btn-reply-here",
-              action: () => {
-                composer.setProperties({ topic: currentTopic, post: null });
-                this.save(true);
-              },
-            },
             {
               label: i18n("composer.cancel"),
               class: "btn-flat btn-text btn-reply-where__cancel",

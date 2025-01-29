@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.0.0";
+export const PLUGIN_API_VERSION = "2.0.1";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -61,6 +61,7 @@ import {
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
+import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -3258,24 +3259,20 @@ class PluginApi {
    * And the mode must be one of "sidebar" or "top", which controls
    * where in the admin plugin show UI the links will be displayed.
    */
-  addAdminPluginConfigurationNav(pluginId, mode, links) {
+  addAdminPluginConfigurationNav(pluginId, ...links) {
     if (!pluginId) {
       // eslint-disable-next-line no-console
       console.warn(consolePrefix(), "A pluginId must be provided!");
       return;
     }
 
+    // TODO (Ted - 2024-01-27): Remove once usage discontinued in plugins.
     const validModes = [PLUGIN_NAV_MODE_SIDEBAR, PLUGIN_NAV_MODE_TOP];
-    if (!validModes.includes(mode)) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        consolePrefix(),
-        `${mode} is an invalid mode for admin plugin config pages, only ${validModes} are usable.`
-      );
-      return;
+    if (validModes.includes(links[0])) {
+      links.shift();
     }
 
-    registerAdminPluginConfigNav(pluginId, mode, links);
+    registerAdminPluginConfigNav(pluginId, links.flat());
   }
 
   /**
@@ -3377,6 +3374,19 @@ class PluginApi {
    */
   registerMoreTopicsTab(tab) {
     registeredTabs.push(tab);
+  }
+
+  /**
+   * Registers a report mode and an associated component, which will be rendered
+   * by the AdminReport component. A mode is a different way of displaying the
+   * report data, core modes are things like "table" and "chart". For all core modes
+   * see Admin::Report::MODES.
+   *
+   * @param {String} mode - The identifier of the mode to register
+   * @param {Class} componentClass - The class of the component to render
+   */
+  registerReportModeComponent(mode, componentClass) {
+    registerReportModeComponent(mode, componentClass);
   }
 
   #deprecatedWidgetOverride(widgetName, override) {

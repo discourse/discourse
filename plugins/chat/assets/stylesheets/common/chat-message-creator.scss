@@ -33,6 +33,7 @@
     .-group & {
       width: 26px;
       height: 26px;
+
       .d-icon-user-group {
         padding: 5px 5px;
         box-sizing: border-box;
@@ -225,6 +226,7 @@
     .user-status {
       display: flex;
       align-items: center;
+
       .fk-d-tooltip__trigger-container {
         display: flex;
         align-items: center;
@@ -234,6 +236,7 @@
           width: var(--font-down-2-rem);
           height: var(--font-down-2-rem);
         }
+
         .user-status-message-description {
           @include ellipsis;
           font-size: var(--font-down-2-rem);
@@ -290,7 +293,7 @@
 
     &:focus,
     &:focus-within {
-      @include default-focus();
+      @include default-focus;
     }
 
     &-container {

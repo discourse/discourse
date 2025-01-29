@@ -5,7 +5,7 @@ module Reports::TopicViewStats
 
   class_methods do
     def report_topic_view_stats(report)
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       category_id, include_subcategories = report.add_category_filter
 

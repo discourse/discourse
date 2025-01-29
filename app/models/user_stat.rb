@@ -192,7 +192,9 @@ class UserStat < ActiveRecord::Base
     SQL
   end
 
-  def self.update_distinct_badge_count(user_id = nil)
+  def self.update_distinct_badge_count(user_ids = [])
+    user_ids = user_ids.join(", ")
+
     sql = <<~SQL
       UPDATE user_stats
       SET distinct_badge_count = x.distinct_badge_count
@@ -204,15 +206,14 @@ class UserStat < ActiveRecord::Base
         GROUP BY users.id
       ) x
       WHERE user_stats.user_id = x.user_id AND user_stats.distinct_badge_count <> x.distinct_badge_count
+      #{"AND user_stats.user_id IN (#{user_ids})" if !user_ids.empty?}
     SQL
-
-    sql = sql + " AND user_stats.user_id = #{user_id.to_i}" if user_id
 
     DB.exec sql
   end
 
   def update_distinct_badge_count
-    self.class.update_distinct_badge_count(self.user_id)
+    self.class.update_distinct_badge_count([self.user_id])
   end
 
   def self.update_draft_count(user_id = nil)

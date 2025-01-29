@@ -169,6 +169,7 @@ export default function transformPost(
 
   if (post.notice) {
     postAtts.notice = post.notice;
+    postAtts.noticeCreatedByUser = post.notice_created_by_user;
     if (postAtts.notice.type === "returning_user") {
       postAtts.notice.lastPostedAt = new Date(post.notice.last_posted_at);
     }

@@ -364,6 +364,8 @@ en:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
       twitter_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
+      tl0_and_anonymous_flag: "Either 'site contact email' or 'email address to report illegal content' must be provided for anonymous users."
+
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
@@ -1722,7 +1724,7 @@ en:
       google_analytics_version: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
-      admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
+      admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -1734,6 +1736,8 @@ en:
     default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text</a>."
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
+    set_locale_from_cookie: "Allows setting an anonymous user's locale via the 'locale' browser cookie"
+    set_locale_from_param: "Allows setting an anonymous user's locale via the 'lang' URL param, e.g. ?lang=es"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
     min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
     min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
@@ -2299,7 +2303,8 @@ en:
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
-    auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet min_first_post_typing_time"
+    fast_typing_threshold: "Minimum amount of time in milliseconds a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
+    auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
     reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
@@ -2307,6 +2312,8 @@ en:
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
     reviewable_low_priority_threshold: "The priority filter hides reviewable items that don't meet this score unless the '(any)' filter is used."
     high_trust_flaggers_auto_hide_posts: "New user posts are automatically hidden after being flagged as spam by a TL3+ user"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonymous users will see information that they have to e-mail administrators to report illegal content."
+    email_address_to_report_illegal_content: "If left blank the default site admin email will be used."
     cooldown_hours_until_reflag: "How much time users will have to wait until they are able to reflag a post"
     slow_mode_prevents_editing: "Does 'Slow Mode' prevent editing, after editing_grace_period?"
 
@@ -2428,7 +2435,7 @@ en:
     enable_group_directory: "Provide a directory of groups for browsing"
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
-    allow_anonymous_posting: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow_anonymous_likes`."
+    allow_anonymous_posting: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
     allow_anonymous_likes: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
@@ -2725,7 +2732,7 @@ en:
     create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
 
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
-    use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Note that this makes it easier for the public to guess full user email addresses (because a large proportion of people share common services like `gmail.com`)."
+    use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover your members' full email address (because a large proportion of people share common serves like `gmail.com`)."
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames."
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
@@ -2736,7 +2743,6 @@ en:
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    enable_experimental_lightbox: "Replace the default image lightbox with the revamped design."
     glimmer_topic_list_mode: "Control whether the new 'glimmer' topic-list implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. See <a href='https://meta.discourse.org/t/343404'>the Meta topic</a> for more information."
     glimmer_post_menu_mode: "Control whether the new 'glimmer' post menu implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     glimmer_post_menu_groups: "Enable the new 'glimmer' post menu implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
@@ -5422,6 +5428,8 @@ en:
             label: "Color palette"
           body_font:
             label: "Body font"
+          site_font:
+            label: "Font"
           heading_font:
             label: "Heading font"
           styling_preview:

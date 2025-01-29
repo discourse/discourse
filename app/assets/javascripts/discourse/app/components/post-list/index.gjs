@@ -8,14 +8,21 @@
  * @args {String} emptyText (optional) - Custom text to display when there are no posts
  * @args {String|Array} additionalItemClasses (optional) - Additional classes to add to each post list item
  * @args {String} titleAriaLabel (optional) - Custom Aria label for the post title
+ * @args {String} showUserInfo (optional) - Whether to show user info in the post list items
+ * @args {String} idPath (optional) - The path to the key in the post object that contains the post ID
+ * @args {String} urlPath (optional) - The path to the key in the post object that contains the post URL
+ * @args {String} titlePath (optional) - The path to the key in the post object that contains the post title
+ * @args {String} usernamePath (optional) - The path to the key in the post object that contains the post author's username
  *
  * @template Usage Example:
  * ```
  * <PostList
  *    @posts={{this.posts}}
+ *    @titlePath="topic_html_title"
  *    @fetchMorePosts={{this.loadMorePosts}}
  *    @emptyText={{i18n "custom_identifier.empty"}}
  *    @additionalItemClasses="custom-class"
+ *
  * />
  * ```
  */
@@ -68,13 +75,31 @@ export default class PostList extends Component {
     {{/if}}
 
     <LoadMore @selector=".post-list-item" @action={{this.loadMore}}>
-      <div class="post-list">
+      <div class="post-list" ...attributes>
         {{#each @posts as |post|}}
           <PostListItem
             @post={{post}}
+            @idPath={{@idPath}}
+            @urlPath={{@urlPath}}
+            @titlePath={{@titlePath}}
+            @usernamePath={{@usernamePath}}
             @additionalItemClasses={{@additionalItemClasses}}
             @titleAriaLabel={{@titleAriaLabel}}
-          />
+            @showUserInfo={{@showUserInfo}}
+          >
+            <:abovePostItemHeader>
+              {{yield post to="abovePostItemHeader"}}
+            </:abovePostItemHeader>
+            <:belowPostItemMetaData>
+              {{yield post to="belowPostItemMetaData"}}
+            </:belowPostItemMetaData>
+            <:abovePostItemExcerpt>
+              {{yield post to="abovePostItemExcerpt"}}
+            </:abovePostItemExcerpt>
+            <:belowPostItem>
+              {{yield post to="belowPostItem"}}
+            </:belowPostItem>
+          </PostListItem>
         {{else}}
           <div class="post-list__empty-text">{{this.emptyText}}</div>
         {{/each}}

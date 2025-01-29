@@ -4,7 +4,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -40,7 +39,7 @@ module("Integration | Component | site-setting", function (hooks) {
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
 
-    assert.strictEqual(query(".validation-error h1").outerHTML, message);
+    assert.dom(".validation-error").includesHtml(message);
   });
 
   test("Error response without html_message is not rendered as HTML", async function (assert) {
@@ -241,6 +240,33 @@ module(
       assert
         .dom(".file-size-input")
         .hasValue("1024", "the input field now contains the default value");
+
+      assert
+        .dom(".setting-controls__undo")
+        .doesNotExist("the reset button is not shown");
+      assert.dom(".setting-controls__ok").exists("the save button is shown");
+      assert
+        .dom(".setting-controls__cancel")
+        .exists("the cancel button is shown");
+    });
+
+    test("resetting to the default value changes the content of checkbox field", async function (assert) {
+      this.set("setting", {
+        setting: "test_setting",
+        value: "true",
+        default: "false",
+        type: "bool",
+      });
+
+      await render(hbs`<SiteSetting @setting={{this.setting}} />`);
+      assert
+        .dom("input[type=checkbox]")
+        .isChecked("the checkbox contains the custom value");
+
+      await click(".setting-controls__undo");
+      assert
+        .dom("input[type=checkbox]")
+        .isNotChecked("the checkbox now contains the default value");
 
       assert
         .dom(".setting-controls__undo")

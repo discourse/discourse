@@ -193,7 +193,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_logs_staff_action_logs",
-        route: "adminLogs.staffActionLogs",
+        route: "adminLogs",
         label: "admin.security.sidebar_link.staff_action_logs.title",
         keywords: "admin.security.sidebar_link.staff_action_logs.keywords",
         icon: "user-shield",

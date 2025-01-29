@@ -61,6 +61,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
+  UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
   register_reviewable_type Chat::ReviewableMessage
 
@@ -89,34 +90,7 @@ after_initialize do
 
   if InlineOneboxer.respond_to?(:register_local_handler)
     InlineOneboxer.register_local_handler("chat/chat") do |url, route|
-      if route[:message_id].present?
-        message = Chat::Message.find_by(id: route[:message_id])
-        next if !message
-
-        chat_channel = message.chat_channel
-        user = message.user
-        next if !chat_channel || !user
-
-        title =
-          I18n.t(
-            "chat.onebox.inline_to_message",
-            message_id: message.id,
-            chat_channel: chat_channel.name,
-            username: user.username,
-          )
-      else
-        chat_channel = Chat::Channel.find_by(id: route[:channel_id])
-        next if !chat_channel
-
-        title =
-          if chat_channel.name.present?
-            I18n.t("chat.onebox.inline_to_channel", chat_channel: chat_channel.name)
-          end
-      end
-
-      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
-
-      { url: url, title: title }
+      Chat::InlineOneboxHandler.handle(url, route)
     end
   end
 
@@ -272,6 +246,10 @@ after_initialize do
   add_to_serializer(:current_user_option, :chat_separate_sidebar_mode) do
     object.chat_separate_sidebar_mode
   end
+
+  add_to_serializer(:user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+
+  add_to_serializer(:current_user_option, :chat_send_shortcut) { object.chat_send_shortcut }
 
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]

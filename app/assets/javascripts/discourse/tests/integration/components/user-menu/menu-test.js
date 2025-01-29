@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | user-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,8 +13,11 @@ module("Integration | Component | user-menu", function (hooks) {
 
   test("default tab is all notifications", async function (assert) {
     await render(template);
-    const activeTab = query(".top-tabs.tabs-list .btn.active");
-    assert.strictEqual(activeTab.id, "user-menu-button-all-notifications");
+
+    assert
+      .dom(".top-tabs.tabs-list .btn.active")
+      .hasAttribute("id", "user-menu-button-all-notifications");
+
     const notifications = queryAll("#quick-access-all-notifications ul li");
     assert.dom(notifications[0]).hasClass("edited");
     assert.dom(notifications[1]).hasClass("replied");
@@ -83,8 +86,10 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("reviewable_count", 1);
     this.currentUser.set("can_send_private_messages", true);
     await render(template);
-    const tab = query("#user-menu-button-review-queue");
-    assert.strictEqual(tab.dataset.tabNumber, "5");
+
+    assert
+      .dom("#user-menu-button-review-queue")
+      .hasAttribute("data-tab-number", "5");
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
     assert.strictEqual(tabs.length, 8);

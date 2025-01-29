@@ -292,7 +292,7 @@ de:
 
           Nur zu: **Melde diesen Beitrag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> und wähle **Unangemessen** als Grund aus!
         reply: |-
-          [Unser Team](%{group_url}) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
+          [Unser Team](%{group_url}) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch ausgeblendet. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
         not_found: |-
           Oh nein, mein anstößiger Beitrag wurde noch nicht gemeldet. :worried: Kannst du ihn als unangemessen **melden** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergiss nicht, die „Mehr anzeigen“-Schaltfläche <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zu verwenden, um weitere Aktionen für den jeweiligen Beitrag einzublenden.
       search:

@@ -46,7 +46,7 @@ module("Integration | Component | DStatTiles", function (hooks) {
     </template>);
 
     assert.dom(".d-stat-tile__tooltip").exists();
-    await triggerEvent(".fk-d-tooltip__trigger", "mousemove");
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".fk-d-tooltip__content").hasText(i18n("bootstrap_mode"));
   });
 

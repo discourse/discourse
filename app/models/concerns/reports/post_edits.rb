@@ -8,7 +8,7 @@ module Reports::PostEdits
       category_id, include_subcategories = report.add_category_filter
       editor_username = report.filters["editor"]
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.labels = [
         {

@@ -2,15 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-
-function containsExactly(assert, expectation, actual, message) {
-  assert.deepEqual(
-    Array.from(expectation).sort(),
-    Array.from(actual).sort(),
-    message
-  );
-}
 
 module("Integration | Component | sidebar | section-link", function (hooks) {
   setupRenderingTest(hooks);
@@ -20,12 +11,13 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
 
     await render(template);
 
-    containsExactly(
-      assert,
-      query("a").classList,
-      ["ember-view", "sidebar-row", "sidebar-section-link"],
-      "has the right class attribute for the link"
-    );
+    assert
+      .dom("a")
+      .hasAttribute(
+        "class",
+        "ember-view sidebar-section-link sidebar-row",
+        "has the right class attribute for the link"
+      );
   });
 
   test("custom class attribute for link", async function (assert) {
@@ -33,12 +25,13 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
 
     await render(template);
 
-    containsExactly(
-      assert,
-      query("a").classList,
-      ["123", "abc", "ember-view", "sidebar-row", "sidebar-section-link"],
-      "has the right class attribute for the link"
-    );
+    assert
+      .dom("a")
+      .hasAttribute(
+        "class",
+        "ember-view sidebar-section-link sidebar-row 123 abc",
+        "has the right class attribute for the link"
+      );
   });
 
   test("target attribute for link", async function (assert) {

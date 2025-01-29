@@ -11,16 +11,11 @@ import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
-import {
-  acceptance,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
-const clickOutside = () =>
-  triggerEvent(document.querySelector("header.d-header"), "pointerdown");
+const clickOutside = () => triggerEvent("header.d-header", "pointerdown");
 
 acceptance("Search - Anonymous", function (needs) {
   needs.pretender((server, helper) => {
@@ -349,7 +344,7 @@ acceptance("Search - Anonymous", function (needs) {
       .doesNotExist("search context indicator is no longer visible");
 
     await fillIn("#search-term", "dev");
-    await query("#search-term").focus();
+    await focus("#search-term");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
@@ -359,7 +354,7 @@ acceptance("Search - Anonymous", function (needs) {
       .exists("search context indicator is visible");
 
     await fillIn("#search-term", "");
-    await query("#search-term").focus();
+    await focus("#search-term");
     await triggerKeyEvent("#search-term", "keyup", "Backspace");
 
     assert
@@ -548,9 +543,7 @@ acceptance("Search - Authenticated", function (needs) {
     assert.dom(`${container} ul li`).exists("has a list of items");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
-    assert
-      .dom(query(`${container} .search-result-topic`))
-      .exists("has topic results");
+    assert.dom(`${container} .search-result-topic`).exists("has topic results");
 
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
     assert
@@ -576,11 +569,9 @@ acceptance("Search - Authenticated", function (needs) {
       );
 
     await triggerKeyEvent("#search-term", "keydown", "Escape");
-    assert.strictEqual(
-      document.activeElement,
-      query("#search-button"),
-      "Escaping search returns focus to search button"
-    );
+    assert
+      .dom("#search-button")
+      .isFocused("Escaping search returns focus to search button");
     assert.dom(".search-menu").doesNotExist("Esc removes search dropdown");
 
     await click("#search-button");
@@ -593,16 +584,14 @@ acceptance("Search - Authenticated", function (needs) {
     );
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
-    assert
-      .dom(query(`${container} .search-result-topic`))
-      .exists("has topic results");
+    assert.dom(`${container} .search-result-topic`).exists("has topic results");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
     assert
-      .dom(query(`.search-container`))
+      .dom(".search-container")
       .exists("second Enter hit goes to full page search");
     assert
-      .dom(query(`.search-menu`))
+      .dom(".search-menu")
       .doesNotExist("search dropdown is collapsed after second Enter hit");
 
     // new search launched, Enter key should be reset
@@ -1164,7 +1153,7 @@ acceptance("Search - assistant", function (needs) {
     assert.dom(".btn.search-context").exists("shows the button");
 
     await fillIn("#search-term", "");
-    await query("input#search-term").focus();
+    await focus("input#search-term");
     await triggerKeyEvent("input#search-term", "keyup", "Backspace");
 
     assert.dom(".btn.search-context").doesNotExist("removes the button");
@@ -1176,7 +1165,7 @@ acceptance("Search - assistant", function (needs) {
       .exists("shows the button when reinvoking search");
 
     await fillIn("#search-term", "emoji");
-    await query("input#search-term").focus();
+    await focus("input#search-term");
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
     assert

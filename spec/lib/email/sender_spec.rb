@@ -599,7 +599,7 @@ RSpec.describe Email::Sender do
     context "when secure uploads enabled" do
       before do
         setup_s3
-        store = stub_s3_store
+        stub_s3_store
 
         SiteSetting.secure_uploads = true
         SiteSetting.login_required = true
@@ -654,9 +654,11 @@ RSpec.describe Email::Sender do
           expect(message.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
         end
 
-        it "attaches allowed images from multiple posts in the activity summary" do
+        it "attaches only allowed images from multiple posts in the activity summary" do
           digest_post = Fabricate(:post)
           other_digest_post = Fabricate(:post)
+
+          SiteSetting.authorized_extensions = "*"
 
           Topic.stubs(:for_digest).returns(
             Topic.where(id: [digest_post.topic_id, other_digest_post.topic_id]),
@@ -680,15 +682,52 @@ RSpec.describe Email::Sender do
           @secure_image_3.update_secure_status(override: true)
           @secure_image_3.update(access_control_post_id: other_digest_post.id)
 
+          @secure_attachment =
+            UploadCreator.new(
+              file_from_fixtures("small.pdf", "pdf"),
+              "cool-attachment.pdf",
+            ).create_for(Discourse.system_user.id)
+          @secure_attachment.update_secure_status(override: true)
+          @secure_attachment.update(access_control_post_id: other_digest_post.id)
+
+          @secure_video =
+            UploadCreator.new(
+              file_from_fixtures("small.mp4", "media"),
+              "cool-video.mp4",
+            ).create_for(Discourse.system_user.id)
+          @secure_video.update_secure_status(override: true)
+          @secure_video.update(access_control_post_id: other_digest_post.id)
+
           Jobs::PullHotlinkedImages.any_instance.expects(:execute)
-          digest_post.update(
-            raw:
-              "#{UploadMarkdown.new(@secure_image).image_markdown}\n#{UploadMarkdown.new(@secure_image_2).image_markdown}",
-          )
+
+          raw = <<~MD
+            IMAGE #1
+            #{UploadMarkdown.new(@secure_image).image_markdown}
+            
+            IMAGE #2
+            #{UploadMarkdown.new(@secure_image_2).image_markdown}
+          MD
+
+          digest_post.update(raw:)
           digest_post.rebake!
 
-          other_digest_post.update(raw: "#{UploadMarkdown.new(@secure_image_3).image_markdown}")
+          expect(digest_post.upload_references.size).to eq(2)
+
+          raw = <<~MD
+            IMAGE #3
+            #{UploadMarkdown.new(@secure_image_3).image_markdown}
+            
+            ATTACHMENT
+            #{UploadMarkdown.new(@secure_attachment).attachment_markdown}
+
+            VIDEO
+            #{UploadMarkdown.new(@secure_video).playable_media_markdown}
+          MD
+
+          other_digest_post.update(raw:)
           other_digest_post.rebake!
+
+          expect(other_digest_post.upload_references.size).to eq(3)
 
           summary.header["X-Discourse-Post-Id"] = nil
           summary.header["X-Discourse-Post-Ids"] = "#{digest_post.id},#{other_digest_post.id}"
@@ -698,7 +737,7 @@ RSpec.describe Email::Sender do
           expect(summary.content_type).to eq(
             "multipart/mixed; boundary=\"#{summary.body.boundary}\"",
           )
-          expect(summary.attachments.map(&:filename)).to include(
+          expect(summary.attachments.map(&:filename)).to contain_exactly(
             *[@secure_image, @secure_image_2, @secure_image_3].map(&:original_filename),
           )
           expect(summary.attachments.size).to eq(3)

@@ -1555,7 +1555,8 @@ el:
         after_4_minutes: "μετά από 4 λεπτά"
         after_5_minutes: "μετά από 5 λεπτά"
         after_10_minutes: "μετά από 10 λεπτά"
-      notification_level_when_replying: "Όταν αναρτώ σε ένα θέμα, τοποθέτησε αυτό το θέμα σε"
+      notification_level_when_replying:
+        do_nothing: "Μην κάνετε τίποτα"
       topics_unread_when_closed: "Θεώρησε τα θέματα αδιάβαστα όταν είναι κλειστά"
       invited:
         title: "Προσκλήσεις"
@@ -4183,26 +4184,24 @@ el:
               check_emails: Λίστα emails χρήστη.
       web_hooks:
         title: "Webhooks"
-        none: "Δεν υπάρχουν Webhooks αυτή τη στιγμή."
         instruction: "Τα \"Webhooks\" επιτρέπουν στην ιστοσελίδα να ειδοποιεί εξωτερικές υπηρεσίες όταν ένα γεγονός συμβεί στον ιστότοπό σας. Όταν το \"webhook\" τεθεί σε λειτουργία θα στείλει ένα αίτημα τύπου POST στα URLs τα οποία δόθηκαν. "
         detailed_instruction: "Ένα POST request θα σταλεί στο παρεχόμενο URL όταν συμβεί το γεγονός που έχει επιλεγεί."
-        new: "Νέο Webhook"
         create: "Δημιουργία"
         edit: "Επεξεργασία"
         save: "Αποθήκευση"
+        delete: "Σβήσιμο"
+        cancel: "Ακύρωση"
         controls: "Έλεγχοι"
-        go_back: "Πίσω στη λίστα"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Ο μυστικός κωδικός δεν πρέπει να έχει κενούς χαρακτήρες."
         secret_too_short: "Ο μυστικός κωδικός πρέπει να έχει τουλάχιστον 12 χαρακτήρες."
-        secret_placeholder: "Χρήση ενός προαιρετικού string, για τη δημιουργία υπογραφής. "
         event_type_missing: "Πρέπει να ρυθμίσεις τουλάχιστον ένα είδος γεγονότος."
         content_type: "Είδος περιεχομένου"
         secret: "Μυστικός κωδικός"
         event_chooser: "Ποια γεγονότα θα ενεργοποιήσουν αυτό το webhook?"
-        wildcard_event: "Στείλε μου τα πάντα."
-        individual_event: "Επίλεξε μεμονομένα γεγονότα."
+        wildcard_event: "Στείλε μου τα πάντα"
+        individual_event: "Επίλεξε μεμονομένα γεγονότα"
         verify_certificate: "Έλεγχος TLS certificate για το payload url"
         active: "Ενεργός"
         active_notice: "Θα στείλουμε λεπτομέρεις για το γεγονός όταν αυτό συμβεί"
@@ -4409,9 +4408,6 @@ el:
           screened_url: "Εξαγωγή όλων των ελεγμένων URL σε αρχείο CSV."
       export_json:
         button_text: "Εξαγωγή"
-      invite:
-        button_text: "Αποστολή Προσκλήσεων"
-        button_title: "Αποστολή Προσκλήσεων"
       customize:
         title: "Προσαρμογή"
         preview: "προεπισκόπηση "
@@ -4658,8 +4654,7 @@ el:
           overridden: Το προεπιλεγμένο αρχείο robots.txt του ιστότοπού σας έχει παρακαμφθεί.
         email_style:
           title: "Στυλ email"
-          heading: "Προσαρμογή στυλ email"
-          html: "Πρότυπο HTML"
+          html: "HTML"
           css: "CSS"
           reset: "Επαναφορά στο προεπιλεγμένο"
           reset_confirm: "Είστε βέβαιοι ότι θέλετε να επαναφέρετε την προεπιλεγμένη τιμή %{fieldName} και να χάσετε όλες τις αλλαγές σας;"
@@ -4667,15 +4662,11 @@ el:
           instructions: "Προσαρμόστε το πρότυπο στο οποίο αποδίδονται όλα τα HTML emails και ορίστε στυλ χρησιμοποιώντας CSS."
       email:
         title: "Emails"
+        settings: "Ρυθμίσεις"
         templates: "Πρότυπα"
-        preview_digest: "Προεπισκόπηση Σύνοψης"
         advanced_test:
-          title: "Προηγμένη δοκιμή"
           desc: "Δείτε πώς το Discourse επεξεργάζεται τα emails. Για να μπορείτε να επεξεργαστείτε σωστά το email, παρακαλώ επικολλήστε παρακάτω ολόκληρο το αρχικό μήνυμα email."
           email: "Αρχικό μήνυμα"
-          run: "Εκτέλεση δοκιμής"
-          text: "Επιλεγμένο σώμα κειμένου"
-          elided: "Παραλειπόμενο κείμενο"
         error: "<b>ΣΦΑΛΜΑ</b> - %{server_error}"
         test_error: "Υπήρξε πρόβλημα με την αποστολή του δοκιμαστικού μηνύματος email. Έλεγξε τις ρυθμίσεις email, βεβαιώσου πως ο πάροχός σου δεν μπλοκάρει τις συνδέσεις email και δοκίμασε πάλι."
         sent: "Στάλθηκε"
@@ -4683,15 +4674,10 @@ el:
         bounced: "Επιστρεφόμενα μηνύματα"
         received: "Ελήφθη"
         rejected: "Απορρίφθηκε"
-        sent_at: "Στάλθηκε στις"
         time: "Ώρα"
         user: "Χρήστης"
-        email_type: "Τύπος Email"
-        to_address: "Παραλήπτης"
         test_email_address: "διεύθυνση email για δοκιμή"
-        send_test: "Στείλε δοκιμαστικό email"
         sent_test: "στάλθηκε!"
-        delivery_method: "Τρόπος αποστολής"
         preview_digest_desc: "Προεπισκόπηση του περιεχομένου των συνοπτικών email που στάλθηκαν στους χρήστες που δεν ήταν ενεργοί."
         refresh: "Ανανέωση"
         send_digest_label: "Στείλε αυτό το αποτέλεσμα στον/στην:"
@@ -4700,10 +4686,7 @@ el:
         html: "html"
         text: "text"
         html_preview: "Προεπισκόπηση περιεχομένου email"
-        last_seen_user: "Τελευταίος χρήστης:"
         no_result: "Δεν βρέθηκαν αποτελέσματα για περίληψη."
-        reply_key: "Κλειδί απάντησης"
-        skipped_reason: "Λόγος παράβλεψης"
         incoming_emails:
           from_address: "Από"
           to_addresses: "Προς"
@@ -4712,12 +4695,10 @@ el:
           error: "Σφάλμα"
           none: "Δε βρέθηκε κανένα εισερχόμενο email."
           modal:
-            title: "Λεπτομέρειες εισερχόμενων email"
             error: "Σφάλμα"
             headers: "Headers"
             subject: "Θέμα"
             body: "Σώμα"
-            rejection_message: "Μήνυμα απόρριψης"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -4741,7 +4722,7 @@ el:
           delete_topic: "Το θέμα διαγράφηκε"
           post_approved: "Η ανάρτηση εγκρίθηκε"
       logs:
-        title: "Αρχεία καταγραφής"
+        nav_title: "Αρχεία καταγραφής"
         action: "Ενέργεια"
         created_at: "Δημιουργήθηκε"
         last_match_at: "Τελευταία Αντιστοίχιση"
@@ -4759,10 +4740,8 @@ el:
         staff_actions:
           all: "όλα"
           filter: "Φίλτρο:"
-          title: "Ενέργειες Συνεργατών"
-          clear_filters: "Δείξτα όλα"
           staff_user: "Χρήστης"
-          target_user: "Χρήστη που αφορά"
+          target_user: "Αποδέκτης"
           subject: "Αντικείμενο"
           when: "Πότε"
           context: "Πλαίσιο αναφοράς"
@@ -4862,9 +4841,7 @@ el:
             post_staff_note_create: "προσθήκη σημείωσης προσωπικού"
             post_staff_note_destroy: "καταστροφή σημείωσης προσωπικού"
         screened_emails:
-          title: "Ελεγχόμενα Emails"
           description: "Όταν κάποιος φτιάξει έναν λογαριασμό, οι παρακάτω διευθύνσεις email θα ελεγχθούν και η εγγραφή θα αποκλειστεί ή θα συμβεί κάποια άλλη ενέργεια."
-          email: "Διεύθυνση Email"
           actions:
             allow: "Επίτρεψε"
         screened_urls:
@@ -4879,7 +4856,6 @@ el:
           actions:
             block: "Αποκλεισμός"
             do_nothing: "Επιτρέπεται"
-            allow_admin: "Να επιτρέπεται στο διαχειριστή"
           form:
             label: "Νέο:"
             ip_address: "IP διεύθυνση"
@@ -4889,23 +4865,17 @@ el:
             text: "Σύνοψη"
             title: "Δημιουργεί νέες εγγραφές για τον αποκλεισμό υποδικτύων αν υπάρχουν τουλάχιστον 'min_ban_entries_for_roll_up' εγγραφές."
         search_logs:
-          title: "Αναζήτηση καταγραφών"
           term: "Όρος"
           searches: "Αναζητήσεις"
           click_through_rate: "CTR"
           types:
             all_search_types: "Όλοι οι τύποι αναζήτησης"
             header: "Header"
-            full_page: "Πλήρης σελίδα"
             click_through_only: "Όλα (μόνο για κλικ)"
-          header_search_results: "Αποτελέσματα αναζήτησης κεφαλίδας"
-        logster:
-          title: "Error Logs"
       watched_words:
         search: "αναζήτηση"
         clear_filter: "Καθαρισμός"
         download: Κατέβασμα
-        clear_all: Καθαρισμός Όλων
         actions:
           block: "Αποκλεισμός"
           censor: "Λογοκρισία"
@@ -4972,9 +4942,6 @@ el:
         id_not_found: "Λυπούμαστε αλλά αυτή η ταυτότητα χρήστη δεν υπάρχει στο σύστημα."
         active: "Ενεργοποιήθηκε"
         status: "Κατάσταση"
-        show_emails: "Προβολή Emails"
-        hide_emails: "Απόκρυψη emails"
-        silence_reason: "Αιτία σιώπησης"
         bulk_actions:
           delete:
             confirmation_modal:
@@ -4989,8 +4956,7 @@ el:
           staged: "Υπό μετάβαση"
         approved: "Εγκεκριμένο;"
         titles:
-          active: "Ενεργοί Χρήστες"
-          new: "Νέοι Χρήστες"
+          active: "Ενεργοί χρήστες"
           pending: "Χρήστες σε αναμονή για έλεγχο"
           newuser: "Χρήστες με Επίπεδο Εμπιστοσύνης 0 (Νέος χρήστης)"
           basic: "Χρήστες με Επίπεδο Εμπιστοσύνης 1 (Αρχάριος)"
@@ -4998,11 +4964,7 @@ el:
           regular: "Χρήστες με Επίπεδο Εμπιστοσύνης 3 (Τακτικός)"
           leader: "Χρήστες με Επίπεδο Εμπιστοσύνης 4 (Αρχηγός)"
           staff: "Συνεργάτες"
-          admins: "Διαχειριστές"
           moderators: "Συντονιστές"
-          silenced: "Σιγημένοι Χρήστες"
-          suspended: "Αποβλημένοι Χρήστες"
-          staged: "Χρήστες υπό μετάβαση"
         not_verified: "Μη επαληθευμένος"
         check_email:
           title: "Εμφάνισε το email αυτού του χρήστη"
@@ -5245,7 +5207,7 @@ el:
         save: "αποθήκευση"
         cancel: "ακύρωση"
       site_settings:
-        title: "Ρυθμίσεις"
+        nav_title: "Ρυθμίσεις"
         no_results: "Δεν βρέθηκαν αποτελέσματα."
         clear_filter: "Καθάρισμα φίλτρου"
         add_url: "προσθήκη URL"
@@ -5309,7 +5271,6 @@ el:
         badge: Παράσημο
         display_name: Όνομα που θα φαίνεται
         description: Περιγραφή
-        group_settings: Ρυθμίσεις ομάδας
         badge_grouping: Ομάδα
         badge_groupings:
           modal_title: Ομαδοποίηση Παράσημων
@@ -5373,7 +5334,6 @@ el:
             with_post_time: <span class="username">%{username}</span> για την ανάρτηση στο %{link} στις <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> στις <span class="time">%{time}</span>
         mass_award:
-          title: Μαζικό βραβείο
           description: Απονείμετε το ίδιο σήμα σε πολλούς χρήστες ταυτόχρονα.
           no_badge_selected: Παρακαλώ επιλέξτε ένα σήμα για να ξεκινήσετε.
           perform: "Απονομή σήματος στους χρήστες"
@@ -5461,6 +5421,21 @@ el:
           admin: "Διαχειριστής"
           moderator: "Συντονιστής"
           regular: "Τακτικός χρήστης"
+      homepage_choices:
+        custom:
+          label: "Προσαρμοσμένο"
+        style_type:
+          categories: "κατηγορία"
+          topics: "θέμα"
+      top_menu_items:
+        new: "Νέο"
+        unread: "Αδιάβαστα"
+        top: "Κορυφαία"
+        latest: "Πρόσφατα"
+        hot: "Δημοφιλή"
+        categories: "Κατηγορίες"
+        read: "Διαβασμένα"
+        bookmarks: "Σελιδοδείκτες"
       previews:
         share_button: "Κοινοποίηση"
         reply_button: "Απάντηση"
@@ -5468,12 +5443,6 @@ el:
       homepage_preview:
         nav_buttons:
           all_categories: "όλες οι κατηγορίες"
-          new: "Νέο"
-          unread: "Αδιάβαστα"
-          top: "Κορυφαία"
-          latest: "Πρόσφατα"
-          hot: "Δημοφιλή"
-          categories: "Κατηγορίες"
         category_names:
           site_feedback: "Σχολιασμός Ιστοσελίδας"
         table_headers:

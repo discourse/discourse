@@ -5,7 +5,7 @@ module Reports::StaffLogins
 
   class_methods do
     def report_staff_logins(report)
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.data = []
 

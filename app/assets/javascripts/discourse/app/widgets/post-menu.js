@@ -4,10 +4,10 @@ import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
+import { smallUserAttrs } from "discourse/components/small-user-list";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import discourseLater from "discourse/lib/later";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
-import { smallUserAttrs } from "discourse/lib/user-list-attrs";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
@@ -211,20 +211,30 @@ registerButton("flag-count", (attrs) => {
   };
 });
 
-registerButton("flag", (attrs) => {
-  if (attrs.reviewableId || (attrs.canFlag && !attrs.hidden)) {
-    let button = {
-      action: "showFlags",
-      title: "post.controls.flag",
-      icon: "flag",
-      className: "create-flag",
-    };
-    if (attrs.reviewableId) {
-      button.before = "flag-count";
+registerButton(
+  "flag",
+  (attrs, _state, siteSettings, _postMenuSettings, currentUser) => {
+    if (
+      attrs.reviewableId ||
+      (attrs.canFlag && !attrs.hidden) ||
+      (siteSettings.allow_tl0_and_anonymous_users_to_flag_illegal_content &&
+        !currentUser)
+    ) {
+      const button = {
+        action: "showFlags",
+        title: currentUser
+          ? "post.controls.flag"
+          : "post.controls.anonymous_flag",
+        icon: "flag",
+        className: "create-flag",
+      };
+      if (attrs.reviewableId) {
+        button.before = "flag-count";
+      }
+      return button;
     }
-    return button;
   }
-});
+);
 
 registerButton("edit", (attrs) => {
   if (attrs.canEdit) {

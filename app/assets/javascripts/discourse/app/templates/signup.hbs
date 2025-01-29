@@ -66,9 +66,11 @@
           </div>
 
           <div class="input-group create-account__username">
-            <Input
+            <input
               {{on "focusin" this.scrollInputIntoView}}
-              @value={{this.accountUsername}}
+              {{on "input" this.setAccountUsername}}
+              type="text"
+              value={{this.accountUsername}}
               disabled={{this.usernameDisabled}}
               maxlength={{this.maxUsernameLength}}
               aria-describedby="username-validation username-validation-more-info"

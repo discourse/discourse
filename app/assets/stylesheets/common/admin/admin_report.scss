@@ -61,6 +61,7 @@
 
     &.no-change {
       color: var(--primary-medium);
+
       .d-icon {
         display: none;
       }
@@ -79,7 +80,6 @@
   .body {
     display: flex;
     flex-direction: row;
-    margin-top: var(--space-3);
   }
 
   .main {
@@ -97,7 +97,7 @@
     }
 
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
       font-size: var(--font-up-5);
       display: block;
       margin: 0.25em auto;
@@ -185,6 +185,10 @@
       }
     }
   }
+
+  .d-page-subheader__title a {
+    color: var(--primary);
+  }
 }
 
 .rtl .admin-report {
@@ -227,7 +231,6 @@
 
 .admin-reports-list {
   --d-border-radius: var(--space-0);
-
   display: flex;
   flex-wrap: wrap;
   list-style-type: none;
@@ -237,7 +240,6 @@
     padding-top: 0;
 
     .admin-section-landing-item {
-      margin-bottom: 0;
       padding: var(--space-4);
       border-radius: var(--d-border-radius);
       outline: 1px solid var(--primary-low);

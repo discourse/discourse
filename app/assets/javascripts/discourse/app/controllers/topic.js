@@ -1842,6 +1842,10 @@ export default class TopicController extends Controller.extend(
         }
         break;
       }
+      case "remove_allowed_user": {
+        this.router.transitionTo("userPrivateMessages", this.currentUser);
+        break;
+      }
       default: {
         let callback = customPostMessageCallbacks[data.type];
         if (callback) {

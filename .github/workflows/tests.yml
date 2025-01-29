@@ -34,7 +34,6 @@ jobs:
     timeout-minutes: 20
 
     env:
-      DISCOURSE_HOSTNAME: www.example.com
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
@@ -101,13 +100,6 @@ jobs:
           chown -R postgres /var/run/postgresql
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
-
-      - name: Container envs
-        id: container-envs
-        run: |
-          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
-          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
-        shell: bash
 
       - name: Symlink vendor/bundle from image
         run: |
