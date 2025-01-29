@@ -42,6 +42,9 @@ export default class AdminSiteSettingsFilterControls extends Component {
 
   @action
   runInitialFilter() {
+    document
+      .querySelector(".admin-site-settings-filter-controls__input")
+      .focus();
     if (this.args.initialFilter !== this.filter) {
       this.filter = this.args.initialFilter;
     }
