@@ -67,6 +67,7 @@ module Chat
         usernames: params.usernames,
         groups: params.groups,
         excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
+        dm_channel: channel.direct_message_channel?,
       )
     end
 
