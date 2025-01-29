@@ -372,15 +372,21 @@ RSpec.describe PostCreator do
       end
 
       it "clears the draft if advanced_draft is true" do
-        creator = PostCreator.new(user, basic_topic_params.merge(advance_draft: true))
-        Draft.set(user, Draft::NEW_TOPIC, 0, "test")
+        draft_key = Draft::NEW_TOPIC + "_#{Time.now.to_i}"
+        creator = PostCreator.new(user, basic_topic_params.merge(draft_key: draft_key))
+        Draft.set(user, draft_key, 0, "test")
         expect(Draft.where(user: user).size).to eq(1)
         expect { creator.create }.to change { Draft.count }.by(-1)
       end
 
       it "does not clear the draft if advanced_draft is false" do
-        creator = PostCreator.new(user, basic_topic_params.merge(advance_draft: false))
-        Draft.set(user, Draft::NEW_TOPIC, 0, "test")
+        draft_key = Draft::NEW_TOPIC + "_#{Time.now.to_i}"
+        creator =
+          PostCreator.new(
+            user,
+            basic_topic_params.merge(advance_draft: false, draft_key: draft_key),
+          )
+        Draft.set(user, draft_key, 0, "test")
         expect(Draft.where(user: user).size).to eq(1)
         expect { creator.create }.not_to change { Draft.count }
       end

@@ -63,7 +63,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :ignored_users,
              :featured_topic,
              :do_not_disturb_until,
-             :has_topic_draft,
              :can_review,
              :draft_count,
              :pending_posts_count,
@@ -304,14 +303,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def featured_topic
     BasicTopicSerializer.new(object.user_profile.featured_topic, scope: scope, root: false).as_json
-  end
-
-  def has_topic_draft
-    true
-  end
-
-  def include_has_topic_draft?
-    Draft.has_topic_draft(object)
   end
 
   def unseen_reviewable_count

@@ -1310,7 +1310,7 @@ export default class Composer extends RestModel {
     return true;
   }
 
-  saveDraft(user) {
+  saveDraft() {
     if (!this.canSaveDraft) {
       return Promise.resolve();
     }
@@ -1339,10 +1339,6 @@ export default class Composer extends RestModel {
             draftConflictUser: result.conflict_user,
           });
         } else {
-          if (this.draftKey === NEW_TOPIC_KEY && user) {
-            user.set("has_topic_draft", true);
-          }
-
           this.setProperties({
             draftStatus: null,
             draftConflictUser: null,
