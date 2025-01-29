@@ -279,26 +279,4 @@ RSpec.describe UserSearch do
       expect(results[2]).to eq("mrorange")
     end
   end
-
-  context "when using the skip_limit option" do
-    it "does not limit results if skip_limit is true" do
-      results = search_for("mr", searching_user: admin, skip_limit: true, limit: 2)
-
-      expect(results).to eq(
-        [
-          mr_white.username,
-          mr_brown.username,
-          mr_pink.username,
-          mr_orange.username,
-          mr_blue.username,
-          mr_b.username,
-        ],
-      )
-    end
-
-    it "limits results if skip_limit is false" do
-      results = search_for("mr", searching_user: admin, skip_limit: false, limit: 2)
-      expect(results).to eq([mr_white.username, mr_brown.username])
-    end
-  end
 end

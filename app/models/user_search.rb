@@ -12,8 +12,7 @@ class UserSearch
     @searching_user = opts[:searching_user]
     @include_staged_users = opts[:include_staged_users] || false
     @last_seen_users = opts[:last_seen_users] || false
-    @skip_limit = opts[:skip_limit] || false
-    @limit = @skip_limit ? nil : (opts[:limit] || 20)
+    @limit = opts[:limit] || 20
     @groups = opts[:groups]
 
     @topic = Topic.find(@topic_id) if @topic_id
@@ -76,7 +75,7 @@ class UserSearch
       exact_matches.limit(@limit).pluck(:id).each { |id| users << id }
     end
 
-    return users.to_a if !@skip_limit && users.size >= @limit.to_i
+    return users.to_a if users.size >= @limit
 
     # 2. in topic
     if @topic_id
@@ -89,12 +88,14 @@ class UserSearch
 
       in_topic = in_topic.where("users.id <> ?", @searching_user.id) if @searching_user.present?
 
-      in_topic = in_topic.limit(@limit - users.size) unless @skip_limit
-
-      in_topic.order("last_seen_at DESC NULLS LAST").pluck(:id).each { |id| users << id }
+      in_topic
+        .order("last_seen_at DESC NULLS LAST")
+        .limit(@limit - users.size)
+        .pluck(:id)
+        .each { |id| users << id }
     end
 
-    return users.to_a if !@skip_limit && users.size >= @limit.to_i
+    return users.to_a if users.size >= @limit
 
     # 3. in category
     secure_category_id =
@@ -142,27 +143,33 @@ class UserSearch
         in_category = in_category.where("users.id <> ?", @searching_user.id)
       end
 
-      in_category = in_category.limit(@limit - users.size) unless @skip_limit
-
-      in_category.order("last_seen_at DESC NULLS LAST").pluck(:id).each { |id| users << id }
+      in_category
+        .order("last_seen_at DESC NULLS LAST")
+        .limit(@limit - users.size)
+        .pluck(:id)
+        .each { |id| users << id }
     end
 
-    return users.to_a if !@skip_limit && users.size >= @limit.to_i
+    return users.to_a if users.size >= @limit
 
     # 4. global matches
     if @term.present?
-      query = filtered_by_term_users.order("last_seen_at DESC NULLS LAST")
-      query = query.limit(@limit - users.size) unless @skip_limit
-      query.pluck(:id).each { |id| users << id }
+      filtered_by_term_users
+        .order("last_seen_at DESC NULLS LAST")
+        .limit(@limit - users.size)
+        .pluck(:id)
+        .each { |id| users << id }
     end
 
-    return users.to_a if !@skip_limit && users.size >= @limit.to_i
+    return users.to_a if users.size >= @limit
 
     # 5. last seen users (for search auto-suggestions)
     if @last_seen_users
-      query = scoped_users.order("last_seen_at DESC NULLS LAST")
-      query = query.limit(@limit - users.size) unless @skip_limit
-      query.pluck(:id).each { |id| users << id }
+      scoped_users
+        .order("last_seen_at DESC NULLS LAST")
+        .limit(@limit - users.size)
+        .pluck(:id)
+        .each { |id| users << id }
     end
 
     users.to_a
