@@ -32,8 +32,7 @@
         @icon="discourse-expand"
         @title="expand"
         @disabled={{this.loadingLightbox}}
-        @action={{unless this.experimentalLightboxEnabled this.toggleLightbox}}
-        data-lightbox-trigger={{if this.experimentalLightboxEnabled "true"}}
+        @action={{this.toggleLightbox}}
         class="btn-default image-uploader-lightbox-btn no-text"
       />
     {{/if}}

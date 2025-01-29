@@ -14,7 +14,6 @@ export default {
 
   initializeWithPluginApi(api, container) {
     const siteSettings = container.lookup("service:site-settings");
-    const lightboxService = container.lookup("service:lightbox");
     const site = container.lookup("service:site");
 
     api.decorateChatMessage((element) => decorateGithubOneboxBody(element), {
@@ -67,28 +66,13 @@ export default {
     api.decorateChatMessage(this.forceLinksToOpenNewTab, {
       id: "linksNewTab",
     });
-
-    if (siteSettings.enable_experimental_lightbox) {
-      api.decorateChatMessage(
-        (element) => {
-          lightboxService.setupLightboxes({
-            container: element,
-            selector: "img:not(.emoji, .avatar, .site-icon)",
-          });
-        },
-        {
-          id: "experimental-chat-lightbox",
-        }
-      );
-    } else {
-      api.decorateChatMessage(
-        (element) =>
-          this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
-        {
-          id: "lightbox",
-        }
-      );
-    }
+    api.decorateChatMessage(
+      (element) =>
+        this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
+      {
+        id: "lightbox",
+      }
+    );
     api.decorateChatMessage((element) => decorateHashtags(element, site), {
       id: "hashtagIcons",
     });

@@ -3531,10 +3531,6 @@ experimental:
       - auto
       - enabled
     default: auto
-  enable_experimental_lightbox:
-    default: false
-    client: true
-    hidden: true
   enable_rich_text_paste:
     client: true
     default: true
