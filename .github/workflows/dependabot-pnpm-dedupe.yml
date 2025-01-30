@@ -7,6 +7,9 @@ on:
     paths:
       - "pnpm-lock.yaml"
 
+permissions:
+  contents: write
+
 jobs:
   deduplicate:
     name: Deduplicate
@@ -14,9 +17,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set working directory owner
-        run: chown root:root .
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
