@@ -97,6 +97,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Tooltip component of the field.
+   * @type {string|Component}
+   */
+  get tooltip() {
+    return this.args.tooltip;
+  }
+
+  /**
    * Indicates whether the field is disabled.
    * Defaults to `false`.
    * @type {boolean}

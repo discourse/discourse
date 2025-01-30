@@ -46,6 +46,7 @@ export default class FKField extends Component {
       @data={{@data}}
       @triggerRevalidationFor={{@triggerRevalidationFor}}
       @title={{@title}}
+      @tooltip={{@tooltip}}
       @description={{@description}}
       @showTitle={{@showTitle}}
       @collectionIndex={{@collectionIndex}}
