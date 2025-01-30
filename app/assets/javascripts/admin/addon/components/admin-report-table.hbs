@@ -50,9 +50,9 @@
       </tr>
       <tr class="admin-report-table-row">
         <td class="admin-report-table-cell date x">—</td>
-        <td class="admin-report-table-cell number y">{{number
-            this.model.total
-          }}</td>
+        <td
+          class="admin-report-table-cell number y"
+        >{{this.formattedTotal}}</td>
       </tr>
     {{/if}}
 
@@ -64,9 +64,9 @@
       </tr>
       <tr class="admin-report-table-row">
         <td class="admin-report-table-cell date x">—</td>
-        <td class="admin-report-table-cell number y">{{number
-            this.averageForSample
-          }}</td>
+        <td
+          class="admin-report-table-cell number y"
+        >{{this.averageForSample}}</td>
       </tr>
     {{/if}}
   </tbody>
