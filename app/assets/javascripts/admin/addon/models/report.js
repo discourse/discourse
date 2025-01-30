@@ -631,7 +631,8 @@ export default class Report extends EmberObject {
       ? true
       : options.formatNumbers;
 
-    const formattedValue = () => (formatNumbers ? number(value) : value);
+    const formattedValue = () =>
+      formatNumbers ? I18n.toNumber(value, { precision: 0 }) : value;
 
     return {
       value: toNumber(value),
