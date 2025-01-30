@@ -54,6 +54,17 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
   });
 
+  test("@insideComposer", async function (assert) {
+    await render(
+      hbs`<DMenu @identifier="foo" @inline={{true}} @insideComposer={{true}} @content="content" />`
+    );
+    await open();
+
+    assert
+      .dom(".fk-d-menu[data-identifier='foo']")
+      .hasClass("-inside-composer");
+  });
+
   test("@onRegisterApi", async function (assert) {
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
