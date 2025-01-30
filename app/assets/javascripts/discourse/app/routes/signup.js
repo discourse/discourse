@@ -15,10 +15,10 @@ export default class SignupRoute extends DiscourseRoute {
       "data-authentication"
     )?.dataset.authenticationData;
 
-    if (this.authComplete) {
-      this.showCreateAccount();
-    } else if (this.login.isOnlyOneExternalLoginMethod) {
+    if (this.login.isOnlyOneExternalLoginMethod && !this.authComplete) {
       this.login.singleExternalLogin({ signup: true });
+    } else {
+      this.showCreateAccount();
     }
   }
 
