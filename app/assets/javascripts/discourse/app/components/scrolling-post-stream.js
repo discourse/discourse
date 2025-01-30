@@ -67,16 +67,6 @@ export default class ScrollingPostStream extends MountWidget {
       return;
     }
 
-    // We use this because watching videos fullscreen in Chrome was super buggy
-    // otherwise. Thanks to arrendek from q23 for the technique.
-    const topLeftCornerElement = document.elementFromPoint(0, 0);
-    if (
-      topLeftCornerElement &&
-      topLeftCornerElement.tagName.toUpperCase() === "IFRAME"
-    ) {
-      return;
-    }
-
     const windowHeight = window.innerHeight;
     const slack = Math.round(windowHeight * 5);
     const onscreen = [];
