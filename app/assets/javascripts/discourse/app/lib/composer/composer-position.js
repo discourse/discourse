@@ -14,8 +14,7 @@ export function setupComposerPosition(editor) {
     applyBehaviorTransformer("composer-position:editor-touch-move", () => {
       const notScrollable = editor.scrollHeight <= editor.clientHeight;
       const selection = window.getSelection();
-
-      if (notScrollable && selection.rangeCount === 0) {
+      if (notScrollable && selection.toString() === "") {
         event.preventDefault();
         event.stopPropagation();
       }
