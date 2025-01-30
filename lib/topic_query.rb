@@ -359,9 +359,7 @@ class TopicQuery
 
   def list_hot
     create_list(:hot, unordered: true, prioritize_pinned: true) do |topics|
-      topics = remove_muted_topics(topics, user)
-      topics = remove_muted_categories(topics, user, exclude: options[:category])
-      TopicQuery.remove_muted_tags(topics, user, options)
+      topics = remove_muted(topics, user, options)
       topics.joins("JOIN topic_hot_scores on topics.id = topic_hot_scores.topic_id").order(
         "topic_hot_scores.score DESC",
       )
@@ -371,9 +369,9 @@ class TopicQuery
   def list_top_for(period)
     score_column = TopTopic.score_column_for_period(period)
     create_list(:top, unordered: true) do |topics|
-      topics = remove_muted_categories(topics, @user)
+      topics = remove_muted(topics, user, options)
       topics = topics.joins(:top_topic).where("top_topics.#{score_column} > 0")
-      if period == :yearly && @user.try(:trust_level) == TrustLevel[0]
+      if period == :yearly && user&.new_user?
         topics.order(<<~SQL)
           CASE WHEN (
              COALESCE(topics.pinned_at, '1900-01-01') > COALESCE(tu.cleared_pinned_at, '1900-01-01')
@@ -1215,8 +1213,7 @@ class TopicQuery
     result =
       result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
-    result = remove_muted_categories(result, @user)
-    result = remove_muted_topics(result, @user)
+    result = remove_muted(result, @user, @options)
 
     # If we are in a category, prefer it for the random results
     if topic.category_id

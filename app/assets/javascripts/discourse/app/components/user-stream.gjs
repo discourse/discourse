@@ -17,7 +17,6 @@ import dIcon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
-import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
 import { i18n } from "discourse-i18n";
@@ -127,10 +126,6 @@ export default class UserStreamComponent extends Component {
         try {
           await Draft.clear(draft.draft_key, draft.sequence);
           this.args.stream.remove(draft);
-
-          if (draft.draft_key === NEW_TOPIC_KEY) {
-            this.currentUser.has_topic_draft = false;
-          }
         } catch (error) {
           popupAjaxError(error);
         }
