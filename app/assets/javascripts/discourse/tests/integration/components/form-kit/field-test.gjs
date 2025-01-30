@@ -12,6 +12,7 @@ import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import DTooltip from "float-kit/components/d-tooltip";
 
 module("Integration | Component | FormKit | Field", function (hooks) {
   setupRenderingTest(hooks);
@@ -214,5 +215,36 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     </template>);
 
     await fillIn("input", "bar");
+  });
+
+  test("@tooltip", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @title="Foo" @tooltip="text" as |field|>
+          <field.Input />
+        </form.Field>
+      </Form>
+    </template>);
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".fk-d-tooltip__inner-content").hasText("text");
+
+    await render(<template>
+      <Form as |form|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @tooltip={{component DTooltip content="component"}}
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+      </Form>
+    </template>);
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".fk-d-tooltip__inner-content").hasText("component");
   });
 });
