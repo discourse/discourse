@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
@@ -89,22 +90,37 @@ class FKForm extends Component {
     return validateOn;
   }
 
-  get baseArguments() {
-    return {
-      errors: this.formData.errors,
-      addError: this.addError,
-      data: this.formData,
-      set: this.set,
-      registerField: this.registerField,
-      unregisterField: this.unregisterField,
-      triggerRevalidationFor: this.triggerRevalidationFor,
-      remove: this.remove,
-    };
-  }
-
   @action
   componentFor(klass) {
-    return curryComponent(klass, { ...this.baseArguments });
+    const instance = this;
+    const baseArguments = {
+      get errors() {
+        return instance.formData.errors;
+      },
+      get addError() {
+        return instance.addError;
+      },
+      get data() {
+        return instance.formData;
+      },
+      get set() {
+        return instance.set;
+      },
+      get registerField() {
+        return instance.registerField;
+      },
+      get unregisterField() {
+        return instance.unregisterField;
+      },
+      get triggerRevalidationFor() {
+        return instance.triggerRevalidationFor;
+      },
+      get remove() {
+        return instance.remove;
+      },
+    };
+
+    return curryComponent(klass, baseArguments, getOwner(this));
   }
 
   @action
