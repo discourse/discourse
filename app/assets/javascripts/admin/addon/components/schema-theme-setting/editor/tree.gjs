@@ -31,7 +31,6 @@ import TreeNode from "admin/components/schema-theme-setting/editor/tree-node";
         @addChildItem={{@addChildItem}}
         @generateSchemaTitle={{@generateSchemaTitle}}
         @registerInputFieldObserver={{@registerInputFieldObserver}}
-        @unregisterInputFieldObserver={{@unregisterInputFieldObserver}}
       />
     {{/each}}
 
