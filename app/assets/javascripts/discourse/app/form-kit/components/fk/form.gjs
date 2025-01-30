@@ -4,6 +4,7 @@ import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
 import FKCheckboxGroup from "discourse/form-kit/components/fk/checkbox-group";
@@ -86,6 +87,24 @@ class FKForm extends Component {
     }
 
     return validateOn;
+  }
+
+  get baseArguments() {
+    return {
+      errors: this.formData.errors,
+      addError: this.addError,
+      data: this.formData,
+      set: this.set,
+      registerField: this.registerField,
+      unregisterField: this.unregisterField,
+      triggerRevalidationFor: this.triggerRevalidationFor,
+      remove: this.remove,
+    };
+  }
+
+  @action
+  componentFor(klass) {
+    return curryComponent(klass, { ...this.baseArguments });
   }
 
   @action
@@ -269,60 +288,11 @@ class FKForm extends Component {
             class="form-kit__button"
             label="form_kit.reset"
           )
-          Field=(component
-            FKField
-            errors=this.formData.errors
-            addError=this.addError
-            data=this.formData
-            set=this.set
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-          )
-          Collection=(component
-            FKCollection
-            errors=this.formData.errors
-            addError=this.addError
-            data=this.formData
-            set=this.set
-            remove=this.remove
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-          )
-          Object=(component
-            FKObject
-            errors=this.formData.errors
-            addError=this.addError
-            data=this.formData
-            set=this.set
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-            remove=this.remove
-          )
-          InputGroup=(component
-            FKInputGroup
-            errors=this.formData.errors
-            addError=this.addError
-            data=this.formData
-            set=this.set
-            remove=this.remove
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-          )
-          CheckboxGroup=(component
-            FKCheckboxGroup
-            errors=this.formData.errors
-            addError=this.addError
-            data=this.formData
-            set=this.set
-            remove=this.remove
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-          )
+          Field=(this.componentFor FKField)
+          Collection=(this.componentFor FKCollection)
+          Object=(this.componentFor FKObject)
+          InputGroup=(this.componentFor FKInputGroup)
+          CheckboxGroup=(this.componentFor FKCheckboxGroup)
           set=this.set
           setProperties=this.setProperties
           addItemToCollection=this.addItemToCollection
