@@ -5,8 +5,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import Field from "../../../../../admin/models/discourse-automation-field";
 
 export default class AutomationEdit extends DiscourseRoute {
-  controllerName = "admin-plugins-show-automation-edit";
-
   model(params) {
     return hash({
       scriptables: this.store

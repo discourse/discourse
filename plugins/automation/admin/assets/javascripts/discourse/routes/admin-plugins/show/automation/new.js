@@ -2,8 +2,6 @@ import { hash } from "rsvp";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AutomationNew extends DiscourseRoute {
-  controllerName = "admin-plugins-show-automation-new";
-
   model() {
     return hash({
       scripts: this.store.findAll("discourse-automation-automation"),
