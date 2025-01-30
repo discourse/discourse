@@ -63,7 +63,7 @@ export default class ComposerPresenceDisplay extends Component {
     on.cleanup(() => editChannel.unsubscribe());
   });
 
-  notifyState = helperFn((_, on) => {
+  notifyState = () => {
     const { topic, post, replyDirty } = this.args.model;
     const entity = this.isEdit ? post : topic;
 
@@ -71,9 +71,7 @@ export default class ComposerPresenceDisplay extends Component {
       const name = `/discourse-presence/${this.state}/${entity.id}`;
       this.composerPresenceManager.notifyState(name, replyDirty);
     }
-
-    on.cleanup(() => this.composerPresenceManager.leave());
-  });
+  };
 
   get isReply() {
     return this.state === "reply" || this.state === "whisper";
