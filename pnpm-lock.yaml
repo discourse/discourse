@@ -303,8 +303,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs
       ember-curry-component:
-        specifier: ^0.1.0
-        version: 0.1.0(@babel/core@7.26.7)
+        specifier: ^0.3.0
+        version: 0.3.0(@babel/core@7.26.7)
       ember-resolver:
         specifier: ^13.1.0
         version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.7))(@glint/template@1.5.2)(rsvp@4.8.5)(webpack@5.97.1(@swc/core@1.10.12)(esbuild@0.24.2)))
@@ -4283,8 +4283,8 @@ packages:
     resolution: {integrity: sha512-2UBUa5SAuPg8/kRVaiOfTwlXdeVweal1zdNPibwItrhR0IvPrXpaqwJDlEZnWKEoB+h33V0JIfiWleSG6hGkkA==}
     engines: {node: 10.* || >= 12.*}
 
-  ember-curry-component@0.1.0:
-    resolution: {integrity: sha512-gHvhO1NlH8ypOGcGfiignkIV4PHSuP5yKlBz1pkf7TjVHsdBBmHOJrvakFXqbXJjM+68DMYSobNg1/Vq0GIt+w==}
+  ember-curry-component@0.3.0:
+    resolution: {integrity: sha512-rNgroW+Uwz1htijUFYnyNEyPeWh/MtyAUcoPJGNjBj5juUxUJiLR5X9PrahQV0yNeGLyMdr3Nap7C5QqEt8NlQ==}
 
   ember-decorators@6.1.1:
     resolution: {integrity: sha512-63vZPntPn1aqMyeNRLoYjJD+8A8obd+c2iZkJflswpDRNVIsp2m7aQdSCtPt4G0U/TEq2251g+N10maHX3rnJQ==}
@@ -12715,7 +12715,7 @@ snapshots:
       - '@babel/core'
       - supports-color
 
-  ember-curry-component@0.1.0(@babel/core@7.26.7):
+  ember-curry-component@0.3.0(@babel/core@7.26.7):
     dependencies:
       '@embroider/addon-shim': 1.9.0
       decorator-transforms: 2.3.0(@babel/core@7.26.7)
