@@ -12,15 +12,17 @@ export default class InterfaceColor extends Service {
   @tracked forcedColorMode;
 
   get lightModeForced() {
-    return this.forcedColorMode === LIGHT;
+    return this.switcherAvailable && this.forcedColorMode === LIGHT;
   }
 
   get darkModeForced() {
-    return this.forcedColorMode === DARK;
+    return this.switcherAvailable && this.forcedColorMode === DARK;
   }
 
   get switcherAvailable() {
-    return this.session.darkModeAvailable && this.session.lightModeAvailable;
+    return (
+      this.session.darkModeAvailable && !this.session.defaultColorSchemeIsDark
+    );
   }
 
   get switcherAvailableInSidebar() {
@@ -38,6 +40,10 @@ export default class InterfaceColor extends Service {
   }
 
   ensureCorrectMode() {
+    if (!this.switcherAvailable) {
+      return;
+    }
+
     const forcedColorMode = cookie(COOKIE_NAME);
 
     if (forcedColorMode === LIGHT) {
@@ -87,7 +93,7 @@ export default class InterfaceColor extends Service {
 
     const lightStylesheet = this.#lightColorsStylesheet();
     if (lightStylesheet) {
-      lightStylesheet.media = "all";
+      lightStylesheet.media = "(prefers-color-scheme: light)";
     }
 
     const darkStylesheet = this.#darkColorsStylesheet();

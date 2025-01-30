@@ -43,12 +43,13 @@ export default class InterfaceColorSwitcher extends Component {
       @icon={{this.interfaceColorSwitcherIcon}}
       @triggerClass="btn-flat sidebar-footer-actions-button"
       @identifier="sidebar-footer-interface-color-switcher"
+      class="interface-color-selector"
     >
       <:content as |dMenu|>
         <DropdownMenu as |dropdown|>
           <dropdown.item>
             <DButton
-              class="btn-default"
+              class="btn-default interface-color-selector__light-option"
               @icon="sun"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_switcher.light"
@@ -58,7 +59,7 @@ export default class InterfaceColorSwitcher extends Component {
           </dropdown.item>
           <dropdown.item>
             <DButton
-              class="btn-default"
+              class="btn-default interface-color-selector__dark-option"
               @icon="moon"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_switcher.dark"
@@ -68,7 +69,7 @@ export default class InterfaceColorSwitcher extends Component {
           </dropdown.item>
           <dropdown.item>
             <DButton
-              class="btn-default"
+              class="btn-default interface-color-selector__auto-option"
               @icon="circle-half-stroke"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_switcher.auto"
