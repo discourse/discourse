@@ -850,12 +850,12 @@ class ApplicationController < ActionController::Base
     else
       # save original URL in a cookie (javascript redirects after login in this case)
       cookies[:destination_url] = destination_url
-      redirect_to path("/login")
+      redirect_to path("/")
     end
   end
 
   def redirect_to_login_if_required
-    return if request.format.json? && is_api?
+    return if (request.format.json? && is_api?) || request.path == "/"
 
     # Used by clients authenticated via user API.
     # Redirects to provided URL scheme if
