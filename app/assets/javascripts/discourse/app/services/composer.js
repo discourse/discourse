@@ -163,13 +163,11 @@ export default class ComposerService extends Service {
     "_disableSubmit"
   )
   get disableSubmit() {
-    return applyValueTransformer(
-      "composer-disable-submit",
+    return (
       this.model?.loading ||
-        this.isUploading ||
-        this.isProcessingUpload ||
-        this._disableSubmit,
-      { model: this.model }
+      this.isUploading ||
+      this.isProcessingUpload ||
+      this._disableSubmit
     );
   }
 
@@ -1044,13 +1042,21 @@ export default class ComposerService extends Service {
     }
 
     const composer = this.model;
+    const cantSubmitPost = applyValueTransformer(
+      "composer-service-cant-submit-post",
+      composer?.cantSubmitPost,
+      { model: composer }
+    );
 
-    if (composer?.cantSubmitPost) {
+    if (cantSubmitPost) {
       if (composer?.viewFullscreen) {
         this.toggleFullscreen();
       }
 
       this.set("lastValidatedAt", Date.now());
+      this.appEvents.trigger("composer-service:last-valdated-at-updated", {
+        model: composer,
+      });
       return;
     }
 
@@ -1788,6 +1794,7 @@ export default class ComposerService extends Service {
 
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
+    this.appEvents.trigger("composer-service:clear-last-validated-at");
   }
 }
 
