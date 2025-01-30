@@ -78,6 +78,7 @@ export default class Item extends Component {
     return this.site.desktopView && this.args.focusLastVisitedTopic;
   }
 
+  @action
   navigateToTopic(topic, href) {
     this.historyStore.set("lastTopicIdViewed", topic.id);
     DiscourseURL.routeTo(href || topic.url);
@@ -232,6 +233,7 @@ export default class Item extends Component {
           hideCategory=@hideCategory
           tagsForUser=@tagsForUser
           showTopicPostBadges=@showTopicPostBadges
+          navigateToTopic=this.navigateToTopic
         }}
       >
         {{#if this.useMobileLayout}}
