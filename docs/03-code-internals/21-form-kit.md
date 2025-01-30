@@ -370,19 +370,19 @@ Form Kit sets defaults for each control, but you can override them using `@forma
 - large: `400px`
 - full: `100%`
 
-**Example**
-
-```hbs
-<form.Field @name="bar" @title="Bar" @format="small" as |field|>
-  <field.Input />
-</form.Field>
-```
-
 Additionally, the following CSS variables are provided to customize these defaults:
 
 - small: `--form-kit-small-input`
 - medium: `--form-kit-medium-input`
 - large: `--form-kit-large-input`
+
+## @titleFormat
+
+Allows to override `@format` for the title. See `@format` for details.
+
+## @descriptionFormat
+
+Allows to override `@format` for the description. See `@format` for details.
 
 ## Checkbox
 
