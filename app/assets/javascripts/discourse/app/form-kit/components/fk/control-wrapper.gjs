@@ -7,6 +7,7 @@ import FKMeta from "discourse/form-kit/components/fk/meta";
 import FKText from "discourse/form-kit/components/fk/text";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
+import DTooltip from "float-kit/components/d-tooltip";
 
 export default class FKControlWrapper extends Component {
   get controlType() {
@@ -19,6 +20,18 @@ export default class FKControlWrapper extends Component {
 
   get error() {
     return (this.args.errors ?? {})[this.args.field.name];
+  }
+
+  get isComponentTooltip() {
+    return typeof this.args.field.tooltip === "object";
+  }
+
+  get titleFormat() {
+    return this.args.field.titleFormat || this.args.field.format;
+  }
+
+  get descriptionFormat() {
+    return this.args.field.descriptionFormat || this.args.field.format;
   }
 
   normalizeName(name) {
@@ -42,20 +55,37 @@ export default class FKControlWrapper extends Component {
       {{willDestroy (fn @unregisterField @field.name)}}
     >
       {{#if @field.showTitle}}
-        <FKLabel class="form-kit__container-title" @fieldId={{@field.id}}>
-          {{@field.title}}
+        <FKLabel
+          class={{concatClass
+            "form-kit__container-title"
+            (if this.titleFormat (concat "--" this.titleFormat))
+          }}
+          @fieldId={{@field.id}}
+        >
+          <span>{{@field.title}}</span>
 
           {{#unless @field.required}}
             <span class="form-kit__container-optional">({{i18n
                 "form_kit.optional"
               }})</span>
           {{/unless}}
+
+          {{#if @field.tooltip}}
+            {{#if this.isComponentTooltip}}
+              <@field.tooltip />
+            {{else}}
+              <DTooltip @icon="circle-question" @content={{@field.tooltip}} />
+            {{/if}}
+          {{/if}}
         </FKLabel>
       {{/if}}
 
       {{#if @field.description}}
         <FKText
-          class="form-kit__container-description"
+          class={{concatClass
+            "form-kit__container-description"
+            (if this.descriptionFormat (concat "--" this.descriptionFormat))
+          }}
         >{{@field.description}}</FKText>
       {{/if}}
 

@@ -46,6 +46,7 @@ export default class FKField extends Component {
       @data={{@data}}
       @triggerRevalidationFor={{@triggerRevalidationFor}}
       @title={{@title}}
+      @tooltip={{@tooltip}}
       @description={{@description}}
       @showTitle={{@showTitle}}
       @collectionIndex={{@collectionIndex}}
@@ -56,6 +57,8 @@ export default class FKField extends Component {
       @onSet={{@onSet}}
       @registerField={{@registerField}}
       @format={{@format}}
+      @titleFormat={{@titleFormat}}
+      @descriptionFormat={{@descriptionFormat}}
       @disabled={{@disabled}}
       @parentName={{@parentName}}
       as |field|

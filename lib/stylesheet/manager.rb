@@ -172,6 +172,7 @@ class Stylesheet::Manager
     globs = [
       "#{Rails.root}/app/assets/stylesheets/**/*.*css",
       "#{Rails.root}/app/assets/images/**/*.*",
+      "#{Rails.root}/lib/stylesheet/*.rb",
     ]
 
     Discourse.plugins.each do |plugin|

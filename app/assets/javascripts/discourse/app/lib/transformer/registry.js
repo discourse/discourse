@@ -31,4 +31,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-class",
   "topic-list-item-expand-pinned",
   "topic-list-item-mobile-layout",
+  "topic-list-item-style",
 ]);
