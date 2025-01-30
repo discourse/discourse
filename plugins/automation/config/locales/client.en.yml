@@ -9,6 +9,7 @@ en:
       title: Automation
       create: Create
       update: Update
+      back: Back
       select_script: Select a script
       select_trigger: Select a trigger
       confirm_automation_reset: This action will reset script and trigger options, new state will be saved, do you want to proceed?

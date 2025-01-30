@@ -2,10 +2,10 @@ import { action } from "@ember/object";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import Field from "../models/discourse-automation-field";
+import Field from "../../../../../admin/models/discourse-automation-field";
 
 export default class AutomationEdit extends DiscourseRoute {
-  controllerName = "admin-plugins-discourse-automation-edit";
+  controllerName = "admin-plugins-show-automation-edit";
 
   model(params) {
     return hash({
@@ -13,7 +13,7 @@ export default class AutomationEdit extends DiscourseRoute {
         .findAll("discourse-automation-scriptable")
         .then((result) => result.content),
       triggerables: ajax(
-        `/admin/plugins/discourse-automation/triggerables.json?automation_id=${params.id}`
+        `/admin/plugins/automation/triggerables.json?automation_id=${params.id}`
       ).then((result) => (result ? result.triggerables : [])),
       automation: this.store.find("discourse-automation-automation", params.id),
     });

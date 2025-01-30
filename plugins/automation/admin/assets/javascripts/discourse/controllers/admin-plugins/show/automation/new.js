@@ -38,7 +38,7 @@ export default class AutomationNew extends Controller {
   selectScriptToEdit(newScript) {
     this.model.automation.save({ script: newScript.id }).then(() => {
       this.router.transitionTo(
-        "adminPlugins.discourse-automation.edit",
+        "adminPlugins.show.automation.edit",
         this.model.automation.id
       );
     });
