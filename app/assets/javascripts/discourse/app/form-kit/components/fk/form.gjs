@@ -97,27 +97,15 @@ class FKForm extends Component {
       get errors() {
         return instance.formData.errors;
       },
-      get addError() {
-        return instance.addError;
-      },
       get data() {
         return instance.formData;
       },
-      get set() {
-        return instance.set;
-      },
-      get registerField() {
-        return instance.registerField;
-      },
-      get unregisterField() {
-        return instance.unregisterField;
-      },
-      get triggerRevalidationFor() {
-        return instance.triggerRevalidationFor;
-      },
-      get remove() {
-        return instance.remove;
-      },
+      addError: instance.addError,
+      set: instance.set,
+      registerField: instance.registerField,
+      unregisterField: instance.unregisterField,
+      triggerRevalidationFor: instance.triggerRevalidationFor,
+      remove: instance.remove,
     };
 
     return curryComponent(klass, baseArguments, getOwner(this));
