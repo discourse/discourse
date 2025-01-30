@@ -27,7 +27,6 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   authorizesOneOrMoreExtensions,
@@ -391,69 +390,40 @@ export default class ComposerService extends Service {
     if (composeState === "open" || composeState === "fullscreen") {
       const options = [];
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-invisible",
-          action: "toggleInvisible",
-          icon: "far-eye-slash",
-          label: "composer.toggle_unlisted",
-          condition: "canUnlistTopic",
-        })
-      );
+      options.push({
+        name: "toggle-invisible",
+        action: "toggleInvisible",
+        icon: "far-eye-slash",
+        label: "composer.toggle_unlisted",
+        condition: "canUnlistTopic",
+      });
 
-      if (this.capabilities.touch) {
-        options.push(
-          this._setupPopupMenuOption({
-            name: "format-code",
-            action: "applyFormatCode",
-            icon: "code",
-            label: "composer.code_title",
-          })
-        );
+      options.push({
+        name: "format-code",
+        action: "applyFormatCode",
+        icon: "code",
+        label: "composer.code_title",
+      });
 
-        options.push(
-          this._setupPopupMenuOption({
-            name: "apply-unordered-list",
-            action: "applyUnorderedList",
-            icon: "list-ul",
-            label: "composer.ulist_title",
-          })
-        );
+      options.push({
+        name: "toggle-whisper",
+        action: "toggleWhisper",
+        icon: "far-eye-slash",
+        label: "composer.toggle_whisper",
+        condition: "showWhisperToggle",
+      });
 
-        options.push(
-          this._setupPopupMenuOption({
-            name: "apply-ordered-list",
-            action: "applyOrderedList",
-            icon: "list-ol",
-            label: "composer.olist_title",
-          })
-        );
-      }
+      options.push({
+        name: "toggle-spreadsheet",
+        action: "toggleSpreadsheet",
+        icon: "table",
+        label: "composer.insert_table",
+      });
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-whisper",
-          action: "toggleWhisper",
-          icon: "far-eye-slash",
-          label: "composer.toggle_whisper",
-          condition: "showWhisperToggle",
-        })
-      );
-
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-spreadsheet",
-          action: "toggleSpreadsheet",
-          icon: "table",
-          label: "composer.insert_table",
-        })
-      );
-
-      return options.concat(
-        customPopupMenuOptions
-          .map((option) => this._setupPopupMenuOption({ ...option }))
-          .filter((o) => o)
-      );
+      return options
+        .concat(customPopupMenuOptions)
+        .map((option) => this._setupPopupMenuOption({ ...option }))
+        .filter(Boolean);
     }
   }
 
@@ -682,7 +652,7 @@ export default class ComposerService extends Service {
       // event
       // Long term we want to avoid needing this awkwardness and pass
       // the event explicitly
-      return menuItem.action(this.toolbarEvent || toolbarEvent);
+      return menuItem.action(toolbarEvent ?? this.toolbarEvent);
     } else {
       return (
         this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins
@@ -839,45 +809,6 @@ export default class ComposerService extends Service {
   fullscreenComposer() {
     this.toggleFullscreen();
     return false;
-  }
-
-  // Import a quote from the post
-  @action
-  async importQuote(toolbarEvent) {
-    const postStream = this.get("topic.postStream");
-    let postId = this.get("model.post.id");
-
-    // If there is no current post, use the first post id from the stream
-    if (!postId && postStream) {
-      postId = postStream.get("stream.firstObject");
-    }
-
-    // If we're editing a post, fetch the reply when importing a quote
-    if (this.get("model.editingPost")) {
-      const replyToPostNumber = this.get("model.post.reply_to_post_number");
-      if (replyToPostNumber) {
-        const replyPost = postStream.posts.findBy(
-          "post_number",
-          replyToPostNumber
-        );
-
-        if (replyPost) {
-          postId = replyPost.id;
-        }
-      }
-    }
-
-    if (!postId) {
-      return;
-    }
-
-    this.set("model.loading", true);
-
-    const post = await this.store.find("post", postId);
-    const quote = buildQuote(post, post.raw, { full: true });
-
-    toolbarEvent.addText(quote);
-    this.set("model.loading", false);
   }
 
   @action

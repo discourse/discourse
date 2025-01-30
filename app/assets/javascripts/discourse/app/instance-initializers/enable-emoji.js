@@ -15,7 +15,7 @@ export default {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "emoji",
-          group: "extras",
+          group: "insertions",
           icon: "face-smile",
           sendAction: () => {
             const menu = api.container.lookup("service:menu");
@@ -33,6 +33,7 @@ export default {
           },
           title: "composer.emoji",
           className: "emoji insert-composer-emoji",
+          unshift: true,
         });
       });
     });

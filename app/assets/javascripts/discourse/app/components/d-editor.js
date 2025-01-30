@@ -128,18 +128,22 @@ export default class DEditor extends Component {
       };
     });
 
-    if (this.popupMenuOptions && this.onPopupMenuAction) {
-      this.popupMenuOptions.forEach((popupButton) => {
-        if (popupButton.shortcut && popupButton.condition) {
-          const shortcut =
-            `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
-          keymap[shortcut] = () => {
-            this.onPopupMenuAction(popupButton, this.newToolbarEvent());
-            return false;
-          };
-        }
-      });
-    }
+    this.popupMenuOptions?.forEach((popupButton) => {
+      if (popupButton.shortcut && popupButton.condition) {
+        const shortcut =
+          `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
+        keymap[shortcut] = () => {
+          this.onPopupMenuAction(
+            {
+              ...popupButton,
+              action: popupButton.shortcutAction ?? popupButton.action,
+            },
+            this.newToolbarEvent()
+          );
+          return false;
+        };
+      }
+    });
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
@@ -188,16 +192,12 @@ export default class DEditor extends Component {
 
   @discourseComputed()
   toolbar() {
-    const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink", "capabilities")
-    );
+    const toolbar = new Toolbar(this.getProperties("siteSettings", "showLink"));
     toolbar.context = this;
 
     _createCallbacks.forEach((cb) => cb(toolbar));
 
-    if (this.extraButtons) {
-      this.extraButtons(toolbar);
-    }
+    this.extraButtons?.(toolbar);
 
     const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
     if (firstButton) {
@@ -728,5 +728,16 @@ export default class DEditor extends Component {
     });
 
     return observer;
+  }
+
+  @action
+  _onPopupMenuAction(option) {
+    const toolbarEvent = this.newToolbarEvent();
+
+    if (this.onPopupMenuAction) {
+      this.onPopupMenuAction(option, toolbarEvent);
+    } else {
+      option.action(toolbarEvent);
+    }
   }
 }

@@ -328,7 +328,16 @@
   .btn {
     margin: 0;
     background-color: transparent;
-    color: var(--primary-medium);
+    color: var(--primary-high);
+
+    // higher specificity
+    & {
+      border: 0;
+    }
+
+    &:focus {
+      outline: none;
+    }
 
     .d-icon {
       color: currentcolor;
@@ -336,7 +345,12 @@
 
     .discourse-no-touch & {
       &:hover {
-        color: var(--primary-low);
+        color: var(--primary-high);
+        background-color: var(--primary-low);
+
+        .d-icon {
+          color: currentcolor;
+        }
       }
     }
   }

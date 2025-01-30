@@ -11,15 +11,15 @@
         {{#each this.toolbar.groups as |group|}}
           {{#each group.buttons as |b|}}
             {{#if (b.condition this)}}
-              {{#if b.popupMenu}}
+              {{#if (or b.popupMenu b.options)}}
                 <ToolbarPopupMenuOptions
-                  @content={{this.popupMenuOptions}}
-                  @onChange={{this.onPopupMenuAction}}
+                  @id={{b.id}}
+                  @content={{or b.options this.popupMenuOptions}}
+                  @onChange={{this._onPopupMenuAction}}
                   @onOpen={{action b.action b}}
-                  @tabindex={{-1}}
                   @onKeydown={{this.rovingButtonBar}}
-                  @options={{hash icon=b.icon focusAfterOnChange=false}}
-                  class={{b.className}}
+                  @icon={{b.icon}}
+                  @className={{b.className}}
                 />
               {{else}}
                 <DButton
