@@ -1,5 +1,5 @@
 <section class="discourse-automations-table">
-  <DPageSubheader>
+  <DPageSubheader @titleLabel={{i18n "discourse_automation.table_title"}}>
     <:actions as |actions|>
       <actions.Primary
         @label="discourse_automation.create"
@@ -132,5 +132,12 @@
         {{/each}}
       </tbody>
     </table>
+  {{else}}
+    <AdminConfigAreaEmptyList
+      @ctaLabel="discourse_automation.create"
+      @ctaRoute="adminPlugins.show.automation.new"
+      @ctaClass="discourse-automation__create-btn"
+      @emptyLabel="discourse_automation.no_automation_yet"
+    />
   {{/if}}
 </section>

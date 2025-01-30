@@ -1,4 +1,4 @@
-<div class="admin-detail discourse-automation-new">
+<div class="admin-detail discourse-automation-new discourse-automation-form">
   <BackButton
     @label="discourse_automation.back"
     @route="adminPlugins.show.automation.index"
@@ -12,12 +12,6 @@
         {{on "input" this.updateFilterText}}
         class="admin-section-landing__header-filter"
       />
-
-      {{#unless this.model.scripts.length}}
-        <div class="alert alert-info">
-          <p>{{i18n "discourse_automation.no_automation_yet"}}</p>
-        </div>
-      {{/unless}}
 
       <div class="admin-section-landing__wrapper">
         {{#each this.scriptableContent as |script|}}

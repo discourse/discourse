@@ -9,12 +9,6 @@ export default class AutomationIndex extends DiscourseRoute {
     return this.store.findAll("discourse-automation-automation");
   }
 
-  afterModel(model) {
-    if (!model.length) {
-      this.router.transitionTo("adminPlugins.show.automation.new");
-    }
-  }
-
   @action
   triggerRefresh() {
     this.refresh();
