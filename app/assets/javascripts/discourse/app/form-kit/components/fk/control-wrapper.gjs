@@ -26,6 +26,14 @@ export default class FKControlWrapper extends Component {
     return typeof this.args.field.tooltip === "object";
   }
 
+  get titleFormat() {
+    return this.args.field.titleFormat || this.args.field.format;
+  }
+
+  get descriptionFormat() {
+    return this.args.field.descriptionFormat || this.args.field.format;
+  }
+
   normalizeName(name) {
     return name.replace(/\./g, "-");
   }
@@ -47,8 +55,14 @@ export default class FKControlWrapper extends Component {
       {{willDestroy (fn @unregisterField @field.name)}}
     >
       {{#if @field.showTitle}}
-        <FKLabel class="form-kit__container-title" @fieldId={{@field.id}}>
-          {{@field.title}}
+        <FKLabel
+          class={{concatClass
+            "form-kit__container-title"
+            (if this.titleFormat (concat "--" this.titleFormat))
+          }}
+          @fieldId={{@field.id}}
+        >
+          <span>{{@field.title}}</span>
 
           {{#unless @field.required}}
             <span class="form-kit__container-optional">({{i18n
@@ -68,7 +82,10 @@ export default class FKControlWrapper extends Component {
 
       {{#if @field.description}}
         <FKText
-          class="form-kit__container-description"
+          class={{concatClass
+            "form-kit__container-description"
+            (if this.descriptionFormat (concat "--" this.descriptionFormat))
+          }}
         >{{@field.description}}</FKText>
       {{/if}}
 

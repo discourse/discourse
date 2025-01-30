@@ -57,6 +57,8 @@ export default class FKField extends Component {
       @onSet={{@onSet}}
       @registerField={{@registerField}}
       @format={{@format}}
+      @titleFormat={{@titleFormat}}
+      @descriptionFormat={{@descriptionFormat}}
       @disabled={{@disabled}}
       @parentName={{@parentName}}
       as |field|

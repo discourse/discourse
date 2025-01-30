@@ -250,6 +250,7 @@
         @title={{i18n "admin.badges.allow_title"}}
         @showTitle={{false}}
         @name="allow_title"
+        @format="full"
         as |field|
       >
         <field.Checkbox />
@@ -260,6 +261,7 @@
         @showTitle={{false}}
         @name="multiple_grant"
         @disabled={{this.readOnly}}
+        @format="full"
         as |field|
       >
         <field.Checkbox />
@@ -275,6 +277,7 @@
         @showTitle={{false}}
         @name="listable"
         @disabled={{this.readOnly}}
+        @format="full"
         as |field|
       >
         <field.Checkbox />
@@ -285,6 +288,7 @@
         @showTitle={{false}}
         @name="show_posts"
         @disabled={{this.readOnly}}
+        @format="full"
         as |field|
       >
         <field.Checkbox />
@@ -295,6 +299,7 @@
         @showTitle={{false}}
         @name="show_in_post_header"
         @disabled={{this.disableBadgeOnPosts data}}
+        @format="full"
         as |field|
       >
         <field.Checkbox>
