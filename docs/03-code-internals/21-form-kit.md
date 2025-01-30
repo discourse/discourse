@@ -263,6 +263,34 @@ A field can be disabled to prevent any changes to it.
 <form.Field @disabled={{true}} />
 ```
 
+## @tooltip
+
+Allows to display a tooltip next to the field’s title. Won't display if title is not shown.
+You can pass a string or a `<DTooltip />` component.
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="foo" @title="Foo" @tooltip="a nice input" as |field|>
+    <field.Input />
+  </form.Field>
+</Form>
+```
+
+```hbs
+<Form as |form|>
+  <form.Field
+    @name="foo"
+    @title="Foo"
+    @tooltip={{component DTooltip content="a nice input"}}
+    as |field|
+  >
+    <field.Input />
+  </form.Field>
+</Form>
+```
+
 ## @validation
 
 Read the dedicated validation section.
