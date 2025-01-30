@@ -58,8 +58,7 @@ export default class AdminReportTable extends Component {
 
   @discourseComputed("totalsForSample.1.value", "model.data.length")
   averageForSample(totals, count) {
-    const averageLabel =
-      this.model.computedLabels[this.model.computedLabels.length - 1];
+    const averageLabel = this.model.computedLabels.at(-1);
     return averageLabel.compute({ y: (totals / count).toFixed(0) })
       .formattedValue;
   }
@@ -81,7 +80,7 @@ export default class AdminReportTable extends Component {
 
   @discourseComputed("model.total", "model.computedLabels")
   formattedTotal(total, labels) {
-    const totalLabel = labels[labels.length - 1];
+    const totalLabel = labels.at(-1);
     return totalLabel.compute({ y: total }).formattedValue;
   }
 
