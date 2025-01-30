@@ -220,7 +220,10 @@ export default class LoginPageController extends Controller {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
+      if (
+        this.isOnlyOneExternalLoginMethod &&
+        this.siteSettings.auth_immediately
+      ) {
         // we will automatically redirect to the external auth service
         this.login.externalLogin(this.externalLoginMethods[0], {
           signup: true,
