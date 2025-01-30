@@ -60,6 +60,10 @@ module PageObjects
         def toggle_all_sections
           find(".sidebar-toggle-all-sections").click
         end
+
+        def toggle_section(name)
+          find("[data-section-name='admin-#{name.to_s.downcase}']").click
+        end
       end
     end
   end

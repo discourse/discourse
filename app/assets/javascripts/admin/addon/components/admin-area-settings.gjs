@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -26,6 +27,11 @@ export default class AdminAreaSettings extends Component {
 
   get showSettings() {
     return !this.loading && this.settings.length > 0;
+  }
+
+  @action
+  async reloadSettings() {
+    await this.#loadSettings();
   }
 
   @bind
@@ -69,6 +75,7 @@ export default class AdminAreaSettings extends Component {
 
     <div
       class="content-body admin-config-area__settings admin-detail pull-left"
+      {{didUpdate this.reloadSettings @plugin}}
     >
       {{#if this.showSettings}}
         <AdminFilteredSiteSettings
