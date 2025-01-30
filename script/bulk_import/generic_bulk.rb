@@ -2999,9 +2999,12 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing reactions..."
 
     reactions = query(<<~SQL)
-      SELECT *
-      FROM discourse_reactions_reactions
-      ORDER BY post_id, reaction_value
+      SELECT r.*, 
+            COALESCE((SELECT COUNT(*) 
+                      FROM discourse_reactions_reaction_users ru 
+                      WHERE ru.reaction_id = r.id), 0) as count
+      FROM discourse_reactions_reactions r
+      ORDER BY r.post_id, r.reaction_value
     SQL
 
     reaction_type_id = DiscourseReactions::Reaction.reaction_types["emoji"]
@@ -3020,7 +3023,7 @@ class BulkImport::Generic < BulkImport::Base
         post_id: post_id,
         reaction_type: reaction_type_id,
         reaction_value: row["reaction_value"],
-        reaction_users_count: row["reaction_users_count"],
+        reaction_users_count: row["count"],
         created_at: to_datetime(row["created_at"]),
         updated_at: to_datetime(row["updated_at"]),
       }
