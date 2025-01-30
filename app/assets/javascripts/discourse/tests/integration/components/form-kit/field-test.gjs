@@ -176,12 +176,13 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__container-title").doesNotExist();
   });
 
-  test("@format full", async function (assert) {
+  test("@format", async function (assert) {
     await render(<template>
       <Form as |form|>
         <form.Field
           @name="foo"
           @title="Foo"
+          @description="foo description"
           @format="full"
           as |field|
         ><field.Input /></form.Field>
@@ -191,6 +192,55 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert
       .dom(".form-kit__field.--full")
       .exists("it applies the --full class to the field");
+    assert
+      .dom(".form-kit__container-description.--full")
+      .exists("it applies the --full class to the description");
+    assert
+      .dom(".form-kit__container-title.--full")
+      .exists("it applies the --full class to the title");
+  });
+
+  test("@descriptionFormat", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @description="foo description"
+          @format="full"
+          @descriptionFormat="large"
+          as |field|
+        ><field.Input /></form.Field>
+      </Form>
+    </template>);
+
+    assert
+      .dom(".form-kit__field.--full")
+      .exists("it applies the --full class to the field");
+    assert
+      .dom(".form-kit__container-description.--large")
+      .exists("it applies the --large class to the description");
+  });
+
+  test("@titleFormat", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @format="full"
+          @titleFormat="large"
+          as |field|
+        ><field.Input /></form.Field>
+      </Form>
+    </template>);
+
+    assert
+      .dom(".form-kit__field.--full")
+      .exists("it applies the --full class to the field");
+    assert
+      .dom(".form-kit__container-title.--large")
+      .exists("it applies the --large class to the title");
   });
 
   test("@onSet", async function (assert) {

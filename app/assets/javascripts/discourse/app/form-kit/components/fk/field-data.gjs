@@ -97,6 +97,22 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Format of the title.
+   * @type {string}
+   */
+  get titleFormat() {
+    return this.args.titleFormat;
+  }
+
+  /**
+   * Format of the description.
+   * @type {string}
+   */
+  get descriptionFormat() {
+    return this.args.descriptionFormat;
+  }
+
+  /**
    * Tooltip component of the field.
    * @type {string|Component}
    */
