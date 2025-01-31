@@ -1669,6 +1669,17 @@ RSpec.describe ApplicationController do
       SiteSetting.interface_color_selector = "sidebar_footer"
     end
 
+    context "with early hints" do
+      before { global_setting :early_hint_header_mode, "preload" }
+
+      it "includes stylesheet links in the header" do
+        get "/"
+
+        expect(response.headers["Link"]).to include("color_definitions_base")
+        expect(response.headers["Link"]).to include("color_definitions_dark")
+      end
+    end
+
     context "when the default theme's scheme is the same as the site's default dark scheme" do
       before { Theme.find(SiteSetting.default_theme_id).update!(color_scheme_id: dark_scheme.id) }
 
