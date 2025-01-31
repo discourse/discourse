@@ -179,8 +179,8 @@ cs:
           many: "o %{count} dní později"
           other: "o %{count} dní později"
         x_months:
-          one: "za %{count} měsíc"
-          few: "za %{count} měsíce"
+          one: "o %{count} měsíc později"
+          few: "o %{count} měsíce později"
           many: "o %{count} měsíců později"
           other: "o %{count} měsíců později"
         x_years:
@@ -3632,10 +3632,10 @@ cs:
       login_reply: "Přihlaste se, chcete-li odpovědět"
       filters:
         n_posts:
-          one: "Je zobrazen pouze %{count} příspěvek"
-          few: "Jsou zobrazeny pouze %{count} příspěvky"
-          many: "Je zobrazeno pouze %{count} příspěvků"
-          other: "Je zobrazeno pouze %{count} příspěvků"
+          one: "%{count} příspěvek"
+          few: "%{count} příspěvky"
+          many: "%{count} příspěvků"
+          other: "%{count} příspěvků"
         cancel: "Zrušit filtr"
       move_to:
         title: "Přesunout do"
@@ -4280,7 +4280,7 @@ cs:
       views: "Zobrazení"
       predicted_views: "Předpokládaná zobrazení"
       so_far: (zatím)
-      read: přečtené
+      read: čtení
       minutes: min
     post_links:
       about: "expandovat více odkazů v tomto příspěvku"
@@ -4515,7 +4515,7 @@ cs:
         title: "Přejít na"
         home: "%{shortcut} Domů"
         latest: "%{shortcut} Nejnovější"
-        new: "%{shortcut} Nový"
+        new: "%{shortcut} Nové"
         unread: "%{shortcut} Nepřečtěné"
         categories: "%{shortcut} Kategorie"
         top: "%{shortcut} Nahoru"
@@ -4527,9 +4527,9 @@ cs:
         previous: "%{shortcut} Předchozí téma"
       navigation:
         title: "Navigace"
-        jump: "%{shortcut} Přejdi na příspěvek #"
+        jump: "%{shortcut} Přejít na příspěvek #"
         back: "%{shortcut} Zpět"
-        up_down: "%{shortcut} Posunout označení &uarr; &darr;"
+        up_down: "%{shortcut} Posunout výběr &uarr; &darr;"
         open: "%{shortcut} Otevři vybrané téma"
         next_prev: "%{shortcut} Následující/předchozí výběr"
         go_to_unread_post: "%{shortcut} Přejít na první nepřečtený příspěvek"
@@ -4537,12 +4537,12 @@ cs:
         title: "Aplikace"
         create: "%{shortcut} Vytvořit nové téma"
         notifications: "%{shortcut} Otevře upozornění"
-        hamburger_menu: "%{shortcut} Otevře hamburgerové menu"
-        user_profile_menu: "%{shortcut} Otevře uživatelské menu"
-        show_incoming_updated_topics: "%{shortcut} Ukáže aktualizovaná témata"
+        hamburger_menu: "%{shortcut} Schovat/zobrazit postranní panel"
+        user_profile_menu: "%{shortcut} Otevřít nabídku pro uživatele"
+        show_incoming_updated_topics: "%{shortcut} Zobrazit aktualizovaná témata"
         search: "%{shortcut}Vyhledávání"
         filter_sidebar: "%{shortcut} Filtr postranního panelu"
-        help: "%{shortcut} Otevře seznam klávesových zkratek"
+        help: "%{shortcut} Otevřít nápovědu pro klávesnici"
         toggle_bulk_select: "%{shortcut} Přepnout hromadný výběr"
         dismiss: "%{shortcut} Odmítnout vybraná témata"
         x: "%{shortcut} Přepnout výběr (v režimu hromadného výběru)"
@@ -4568,7 +4568,7 @@ cs:
       actions:
         title: "Akce"
         bookmark_topic: "%{shortcut} Přidat/odebrat záložku na téma"
-        pin_unpin_topic: "%{shortcut} Připnout/Odepnout téma"
+        pin_unpin_topic: "%{shortcut} Připnout/odepnout téma"
         share_topic: "%{shortcut} Sdílet téma"
         share_post: "%{shortcut} Sdílet příspěvek"
         reply_as_new_topic: "%{shortcut} Odpovědět v propojeném tématu"
@@ -4584,13 +4584,13 @@ cs:
         mark_regular: "%{shortcut} Normální (výchozí) téma"
         mark_tracking: "%{shortcut} Sledovat téma"
         mark_watching: "%{shortcut} Hlídat téma"
-        print: "%{shortcut} Vytiskni téma"
+        print: "%{shortcut} Vytisknout téma"
         defer: "%{shortcut} Označit téma jako nepřečtené"
         topic_admin_actions: "%{shortcut} Otevřít akce správce tématu"
         archive_private_message: "%{shortcut} Přepnout archivaci soukromé zprávy"
       search_menu:
         title: "Nabídka vyhledávání"
-        prev_next: "%{shortcut} posunout výběr nahoru a dolů"
+        prev_next: "%{shortcut} Posunout výběr nahoru a dolů"
         insert_url: "%{shortcut} Vložit výběr do otevřeného editoru"
         full_page_search: "%{shortcut} Spustí celostránkové vyhledávání"
     badges:
@@ -4619,10 +4619,10 @@ cs:
         many: "+%{count} dalších"
         other: "+%{count} dalších"
       awarded:
-        one: "%{number} udělen"
-        few: "%{number} uděleny"
-        many: "%{number} uděleno"
-        other: "%{number} uděleno"
+        one: "udělen %{number}"
+        few: "uděleny %{number}"
+        many: "uděleno %{number}"
+        other: "uděleno %{number}"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
       none: "(žádný)"
       successfully_granted: "Úspěšně přidělený %{badge}uživateli%{username}"
@@ -5605,7 +5605,7 @@ cs:
           backups: "Zálohy"
           whats_new:
             title: "Co je nového"
-            keywords: "změna|funkce|vydání"
+            keywords: "changelog|feature|release|změna|funkce|vydání"
       community:
         title: "Komunita"
         sidebar_link:
@@ -5631,7 +5631,7 @@ cs:
           themes: "Motivy"
           components:
             title: "Komponenty"
-            keywords: "motiv|rozšíření|"
+            keywords: "theme|extension|motiv|rozšíření|"
           site_texts: "Texty"
       email_settings:
         title: "Nastavení e-mailu"
@@ -6226,7 +6226,7 @@ cs:
         send_test: "Odešli testovací email"
         sent_test: "odesláno!"
         delivery_method: "Způsob doručení"
-        preview_digest_desc: "Zobrazte si náhled obsahu souhrnných e-mailů zasílaných neaktivním uživatelům."
+        preview_digest_desc: "Zobrazte si náhled obsahu e-mailového souhrnu, zasílaného neaktivním uživatelům."
         refresh: "Aktualizovat"
         send_digest_label: "Odeslat výsledek na:"
         send_digest: "Poslat"

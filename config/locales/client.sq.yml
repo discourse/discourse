@@ -3341,6 +3341,9 @@ sq:
         rebake: "Rindërtoni HTML"
         unhide: "Çfshi"
         delete_topic: "fshi temën"
+        add_post_notice: "Shto njoftimin e stafit…"
+        change_post_notice: "Ndrysho njoftimin e stafit…"
+        delete_post_notice: "Fshi njoftimin e stafit"
       actions:
         people:
           like:
@@ -3627,6 +3630,18 @@ sq:
     lightbox:
       download: "shkarko"
       counter: "%curr% nga %total%"
+    experimental_lightbox:
+      screen_reader_image_title: "Imazhi %{current} nga %{total}: %{title}"
+      buttons:
+        next: "Tjetra (tasti i shigjetës djathtas ose poshtë)"
+        previous: "E mëparshme (tasti i shigjetës majtas ose lart)"
+        download: "Shkarko imazhin"
+        newtab: "Hapni imazhin në një faqe të re"
+        zoom: "Zmadhoni/zvogëloni imazhin (tasti Z)"
+        rotate: "Rrotulloni imazhin (tasti R)"
+        fullscreen: "Ndrysho modalitetin e ekranit të plotë të shfletuesit (tasti M)"
+        carousel: "Shfaq të gjitha imazhet në formë rrethore (Çelës A)"
+        retry: "Riprovoni të ngarkoni imazhin"
     keyboard_shortcuts_help:
       title: "Shkurtimet e tastierës "
       jump_to:
@@ -3828,6 +3843,7 @@ sq:
             my_posts:
               content: "Postimet e mia"
               content_drafts: "Draftet e mia"
+              title: "Aktiviteti im i fundit për temën"
               title_drafts: "Draftet e mia të papostuara"
     form_templates:
       upload_field:
@@ -4122,6 +4138,7 @@ sq:
             confirm: "Do you want to start a new backup?"
           download:
             label: "Shkarko"
+            alert: "Një lidhje për të shkarkuar këtë kopje rezervë ju është dërguar me email."
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
@@ -4134,6 +4151,8 @@ sq:
             label: "Rikthe mbrapa"
             title: "Rollback the database to previous working state"
             confirm: "Are you sure you want to rollback the database to the previous working state?"
+        location:
+          local: "Memoria lokale"
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "Eksporti dështoi. Kontrolloni log-et. "
@@ -4178,10 +4197,12 @@ sq:
           mobile: "Mobile"
           settings: "Rregullimet"
           preview: "Parashikimi"
+          color_scheme_user_selectable: "Skema e ngjyrave mund të zgjidhet nga përdoruesit"
           cancel: "Anulo"
           upload: "Ngarko"
           installed: "Instaluar"
           install_popular: "Popullore"
+          installing_message: "Instalimi i temës, mund të zgjasë disa minuta..."
           about_theme: "Rreth"
           version: "Versioni:"
           enable: "Aktivizo"
@@ -4207,6 +4228,9 @@ sq:
                 too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
+          edit: "Ndrysho paletat e ngjyrave"
+          long_title: "Paleta e ngjyrave"
+          new_name: "Paleta e re e ngjyrave"
           copy_name_prefix: "Kopje e"
           undo: "Çbëj"
           undo_title: "Anullo ndryshimet e bëra në këtë skemë, rikthe versionin e ruajtur herën e fundit. "
@@ -4244,8 +4268,14 @@ sq:
           css: "CSS"
       email:
         title: "Emailat"
+        settings: "Cilësimet e emailit"
         templates: "Shabllonet"
+        templates_title: "Modelet e emalit"
         preview_digest: "Parashiko emailin përmbledhës"
+        advanced_test:
+          title: "Testim i avancuar"
+          run: "Zbatoni testimin"
+          text: "Paragrafi i zgjedhur i tekstit"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Pati një problem gjatë dërgimit të emailit test. Verifiko parametrat e dërgimit dhe provo përsëri. "
         sent: "Dërguar"
@@ -4267,6 +4297,7 @@ sq:
         text: "tekst"
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
+        post_link_with_smtp: "Detajet e postimit dhe SMTP"
         skipped_reason: "Skip Reason"
         incoming_emails:
           from_address: "Nga"
@@ -4385,11 +4416,15 @@ sq:
             text: "Roll up"
             title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
         search_logs:
+          title: "Hapësirat e kërkimit"
           types:
             header: "Ballina"
+            full_page: "Faqe e Plotë"
+          header_search_results: "Rezultatet e kërkimit të titullit"
         logster:
           title: "Ditar Gabimesh"
       watched_words:
+        title: "Fjalët e shikuara"
         search: "kërko"
         clear_filter: "Pastro"
         download: Shkarko
@@ -4438,6 +4473,7 @@ sq:
         not_found: "Na vjen keq, por ky emër nuk u gjet në sistem."
         id_not_found: "Na vjen keq, por ky emër nuk ekziston në sistem."
         show_emails: "Trego adresat email"
+        hide_emails: "Fshih emailet"
         nav:
           new: "E Re"
           active: "Aktiv"

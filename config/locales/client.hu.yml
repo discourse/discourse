@@ -5526,7 +5526,7 @@ hu:
             one: "%{count} verzióval régebbi!"
             other: "A téma %{count} verzióval le van maradva!"
           compare_commits: "(Változások megtekintése)"
-          remote_theme_edits: "Ha szerkeszteni szeretnéd ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójában</a>"
+          remote_theme_edits: "Ha szerkeszteni szeretné ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójába</a>"
           repo_unreachable: "Nem sikerült kapcsolatba lépni a téma Git tárolójával. Hiba üzenet:"
           imported_from_archive: "Ez a téma egy .zip fájlból lett importálva"
           scss:

@@ -45,6 +45,7 @@ sq:
               label: Kategori
             restricted_group:
               label: Grupi
+              description: Opsionale, do të aktivizohet vetëm nëse tema e postimit është një mesazh privat në hapësirën hyrëse të këtij grupi
           created: Krijuar
         category_created_edited:
           fields:

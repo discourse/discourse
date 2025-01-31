@@ -5639,7 +5639,7 @@ zh_CN:
           domain: "网域"
         screened_ips:
           title: "已屏蔽的 IP"
-          description: '正在监视的 IP 地址。使用 “允许”以将 IP 地址列入许可名单。'
+          description: '正在监视的 IP 地址。使用“允许”以将 IP 地址列入许可名单。'
           delete_confirm: "确定要移除对 %{ip_address} 的规则吗？"
           actions:
             block: "禁止"
