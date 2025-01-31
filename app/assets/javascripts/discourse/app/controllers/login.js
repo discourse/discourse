@@ -331,10 +331,7 @@ export default class LoginPageController extends Controller {
         } else if (destinationUrl) {
           // redirect client to the original URL
           removeCookie("destination_url");
-
           applyHiddenFormInputValue(destinationUrl, "redirect");
-        } else {
-          applyHiddenFormInputValue(window.location.href, "redirect");
         }
 
         if (hiddenLoginForm) {
