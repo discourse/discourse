@@ -33,7 +33,7 @@ describe "Interface color selector", type: :system do
   end
 
   before do
-    SiteSetting.interface_color_switcher = "sidebar_footer"
+    SiteSetting.interface_color_selector = "sidebar_footer"
     SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
 
     SiteSetting.logo = light_mode_image
@@ -166,7 +166,7 @@ describe "Interface color selector", type: :system do
   end
 
   it "can be configured to appear in the header instead of the sidebar footer" do
-    SiteSetting.interface_color_switcher = "header"
+    SiteSetting.interface_color_selector = "header"
 
     visit("/")
 

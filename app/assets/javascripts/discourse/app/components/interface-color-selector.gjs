@@ -7,10 +7,10 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
-export default class InterfaceColorSwitcher extends Component {
+export default class InterfaceColorSelector extends Component {
   @service interfaceColor;
 
-  get interfaceColorSwitcherIcon() {
+  get selectorIcon() {
     if (this.interfaceColor.lightModeForced) {
       return "sun";
     } else if (this.interfaceColor.darkModeForced) {
@@ -40,9 +40,9 @@ export default class InterfaceColorSwitcher extends Component {
 
   <template>
     <DMenu
-      @icon={{this.interfaceColorSwitcherIcon}}
+      @icon={{this.selectorIcon}}
       @triggerClass="btn-flat sidebar-footer-actions-button"
-      @identifier="sidebar-footer-interface-color-switcher"
+      @identifier="sidebar-footer-interface-color-selector"
       class="interface-color-selector"
     >
       <:content as |dMenu|>
@@ -52,7 +52,7 @@ export default class InterfaceColorSwitcher extends Component {
               class="btn-default interface-color-selector__light-option"
               @icon="sun"
               @translatedLabel={{i18n
-                "sidebar.footer.interface_color_switcher.light"
+                "sidebar.footer.interface_color_selector.light"
               }}
               @action={{fn this.switchToLight dMenu}}
             />
@@ -62,7 +62,7 @@ export default class InterfaceColorSwitcher extends Component {
               class="btn-default interface-color-selector__dark-option"
               @icon="moon"
               @translatedLabel={{i18n
-                "sidebar.footer.interface_color_switcher.dark"
+                "sidebar.footer.interface_color_selector.dark"
               }}
               @action={{fn this.switchToDark dMenu}}
             />
@@ -72,7 +72,7 @@ export default class InterfaceColorSwitcher extends Component {
               class="btn-default interface-color-selector__auto-option"
               @icon="circle-half-stroke"
               @translatedLabel={{i18n
-                "sidebar.footer.interface_color_switcher.auto"
+                "sidebar.footer.interface_color_selector.auto"
               }}
               @action={{fn this.switchToAuto dMenu}}
             />

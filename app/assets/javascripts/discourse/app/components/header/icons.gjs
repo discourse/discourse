@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
-import InterfaceColorSwitcher from "discourse/components/interface-color-switcher";
+import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
 import Dropdown from "./dropdown";
@@ -16,7 +16,7 @@ function resetHeaderIcons() {
   headerIcons.add("search");
   headerIcons.add("hamburger", undefined, { after: "search" });
   headerIcons.add("user-menu", undefined, { after: "hamburger" });
-  headerIcons.add("interface-color-switcher", undefined, { before: "search" });
+  headerIcons.add("interface-color-selector", undefined, { before: "search" });
 }
 
 export function headerIconsDAG() {
@@ -101,11 +101,11 @@ export default class Icons extends Component {
               @toggleUserMenu={{@toggleUserMenu}}
             />
           {{/if}}
-        {{else if (eq entry.key "interface-color-switcher")}}
-          {{#if this.interfaceColor.switcherAvailableInHeader}}
+        {{else if (eq entry.key "interface-color-selector")}}
+          {{#if this.interfaceColor.selectorAvailableInHeader}}
             <li class="header-toggle-button header-dropdown-toggle">
               <span class="header-color-scheme-toggle icon">
-                <InterfaceColorSwitcher />
+                <InterfaceColorSelector />
               </span>
             </li>
           {{/if}}

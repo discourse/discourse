@@ -2529,7 +2529,7 @@ en:
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable printing)"
 
     full_name_requirement: "Make the full name field a required, optional, or optional but hidden field in the signup form."
-    interface_color_switcher: "Configure where the light/dark mode switcher for the interface color is available."
+    interface_color_selector: "Configure where the light/dark mode selector for the interface color is available."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."

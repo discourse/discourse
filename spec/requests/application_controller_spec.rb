@@ -679,7 +679,7 @@ RSpec.describe ApplicationController do
 
       before do
         SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
-        SiteSetting.interface_color_switcher = "sidebar_footer"
+        SiteSetting.interface_color_selector = "sidebar_footer"
         Theme.find_by(id: SiteSetting.default_theme_id).update!(color_scheme_id: light_scheme.id)
       end
 
@@ -1666,7 +1666,7 @@ RSpec.describe ApplicationController do
 
     before do
       SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
-      SiteSetting.interface_color_switcher = "sidebar_footer"
+      SiteSetting.interface_color_selector = "sidebar_footer"
     end
 
     context "when the default theme's scheme is the same as the site's default dark scheme" do

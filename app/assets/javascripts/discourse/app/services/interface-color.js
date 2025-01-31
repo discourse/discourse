@@ -12,35 +12,35 @@ export default class InterfaceColor extends Service {
   @tracked forcedColorMode;
 
   get lightModeForced() {
-    return this.switcherAvailable && this.forcedColorMode === LIGHT;
+    return this.selectorAvailable && this.forcedColorMode === LIGHT;
   }
 
   get darkModeForced() {
-    return this.switcherAvailable && this.forcedColorMode === DARK;
+    return this.selectorAvailable && this.forcedColorMode === DARK;
   }
 
-  get switcherAvailable() {
+  get selectorAvailable() {
     return (
       this.session.darkModeAvailable && !this.session.defaultColorSchemeIsDark
     );
   }
 
-  get switcherAvailableInSidebar() {
+  get selectorAvailableInSidebar() {
     return (
-      this.switcherAvailable &&
-      this.siteSettings.interface_color_switcher === "sidebar_footer"
+      this.selectorAvailable &&
+      this.siteSettings.interface_color_selector === "sidebar_footer"
     );
   }
 
-  get switcherAvailableInHeader() {
+  get selectorAvailableInHeader() {
     return (
-      this.switcherAvailable &&
-      this.siteSettings.interface_color_switcher === "header"
+      this.selectorAvailable &&
+      this.siteSettings.interface_color_selector === "header"
     );
   }
 
   ensureCorrectMode() {
-    if (!this.switcherAvailable) {
+    if (!this.selectorAvailable) {
       return;
     }
 
