@@ -123,6 +123,17 @@ class Service::StepsInspector
     end
   end
 
+  # @!visibility private
+  class Lock < Transaction
+    def inspect
+      "#{"  " * nesting_level}[#{inspect_type}] #{name}#{runtime} #{emoji}".rstrip
+    end
+
+    def error
+      "Lock '#{name}' was not acquired."
+    end
+  end
+
   attr_reader :steps, :result
 
   def initialize(result)
