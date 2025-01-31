@@ -33,6 +33,7 @@ export default class ProfileController extends Controller {
     "date_of_birth",
     "timezone",
     "default_calendar",
+    "hide_profile",
   ];
 
   calendarOptions = [
