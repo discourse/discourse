@@ -27,7 +27,7 @@ export default class MyDraftsSectionLink extends BaseSectionLink {
   }
 
   get badgeText() {
-    if (!this.showCount || !this.hasDraft) {
+    if (!this.showCount || this.draftCount === 0) {
       return;
     }
 
@@ -42,10 +42,6 @@ export default class MyDraftsSectionLink extends BaseSectionLink {
 
   get draftCount() {
     return this.currentUser?.get("draft_count");
-  }
-
-  get hasDraft() {
-    return this.draftCount > 0;
   }
 
   get suffixCSSClass() {
@@ -63,7 +59,7 @@ export default class MyDraftsSectionLink extends BaseSectionLink {
   }
 
   get shouldDisplay() {
-    return this.currentUser && this.hasDraft;
+    return this.currentUser;
   }
 
   get prefixValue() {

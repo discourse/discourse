@@ -27,20 +27,23 @@ class AddMyDraftsLinkToSidebar < ActiveRecord::Migration[7.2]
          AND su.segment = 1
     SQL
 
-    updated_rows = DB.query_hash(<<~SQL, position: min_position, section_id: community_section_id)
-      DELETE FROM sidebar_section_links
+    # bump position by 1,000 to prevent unique constraint violation while updating
+    DB.exec(<<~SQL, position: min_position, section_id: community_section_id)
+      UPDATE sidebar_section_links
+       SET position = position + 1000
        WHERE position > :position
-         AND sidebar_section_id = :section_id
-         AND linkable_type = 'SidebarUrl'
-      RETURNING user_id, linkable_id, linkable_type, sidebar_section_id, position + 1 AS position, created_at, updated_at
+       AND sidebar_section_id = :section_id
+       AND linkable_type = 'SidebarUrl'
     SQL
 
-    updated_rows.each { |row| DB.exec(<<~SQL, **row.symbolize_keys) }
-        INSERT INTO sidebar_section_links
-        (user_id, linkable_id, linkable_type, sidebar_section_id, position, created_at, updated_at)
-        VALUES
-        (:user_id, :linkable_id, :linkable_type, :sidebar_section_id, :position, :created_at, :updated_at)
-      SQL
+    # set to correct position while accounting for new drafts link
+    DB.exec(<<~SQL, position: min_position, section_id: community_section_id)
+      UPDATE sidebar_section_links
+        SET position = position - 999
+      WHERE position > :position
+        AND sidebar_section_id = :section_id
+        AND linkable_type = 'SidebarUrl'
+    SQL
 
     link_id = DB.query_single(<<~SQL).first
       INSERT INTO sidebar_urls
