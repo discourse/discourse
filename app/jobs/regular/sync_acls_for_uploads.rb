@@ -19,7 +19,7 @@ module Jobs
             .find_in_batches do |uploads|
               uploads.each do |upload|
                 begin
-                  Discourse.store.update_upload_ACL(upload, optimized_images_preloaded: true)
+                  Discourse.store.update_upload_ACL(upload)
                 rescue => err
                   Discourse.warn_exception(
                     err,
