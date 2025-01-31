@@ -1,4 +1,4 @@
-.discourse-automation {
+.admin-plugins.automation {
   .automations {
     .relative-date {
       font-size: $font-down-1;
@@ -11,6 +11,10 @@
     &__name {
       word-break: break-word;
     }
+  }
+
+  .discourse-automations-table {
+    margin-top: 1em;
   }
 
   .d-admin-table.automations {

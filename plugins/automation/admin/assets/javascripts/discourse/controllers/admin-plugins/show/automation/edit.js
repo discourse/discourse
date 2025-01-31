@@ -31,7 +31,7 @@ export default class AutomationEdit extends Controller {
     this.setProperties({ error: null, isUpdatingAutomation: true });
 
     return ajax(
-      `/admin/plugins/discourse-automation/automations/${this.model.automation.id}.json`,
+      `/admin/plugins/automation/automations/${this.model.automation.id}.json`,
       {
         type: "PUT",
         data: JSON.stringify({ automation: this.automationForm }),
@@ -42,7 +42,7 @@ export default class AutomationEdit extends Controller {
       .then(() => {
         this.send("refreshRoute");
         if (routeToIndex) {
-          this.router.transitionTo("adminPlugins.discourse-automation.index");
+          this.router.transitionTo("adminPlugins.show.automation.index");
         }
       })
       .catch((e) => this._showError(e))

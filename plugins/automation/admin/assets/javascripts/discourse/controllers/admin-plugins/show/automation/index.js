@@ -12,14 +12,14 @@ export default class AutomationIndex extends Controller {
   @action
   editAutomation(automation) {
     this.router.transitionTo(
-      "adminPlugins.discourse-automation.edit",
+      "adminPlugins.show.automation.edit",
       automation.id
     );
   }
 
   @action
   newAutomation() {
-    this.router.transitionTo("adminPlugins.discourse-automation.new");
+    this.router.transitionTo("adminPlugins.show.automation.new");
   }
 
   @action
