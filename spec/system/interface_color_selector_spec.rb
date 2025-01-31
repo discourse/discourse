@@ -7,6 +7,9 @@ describe "Interface color selector", type: :system do
   let(:selector_in_sidebar) do
     PageObjects::Components::InterfaceColorSelector.new(find(".sidebar-footer-actions"))
   end
+  let(:selector_in_header) do
+    PageObjects::Components::InterfaceColorSelector.new(find(".d-header-icons"))
+  end
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   fab!(:user)
@@ -34,9 +37,7 @@ describe "Interface color selector", type: :system do
     SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
 
     SiteSetting.logo = light_mode_image
-    SiteSetting.logo_small = small_light_mode_image
     SiteSetting.logo_dark = dark_mode_image
-    SiteSetting.logo_small_dark = small_dark_mode_image
   end
 
   it "is not available when there's no default dark scheme" do
@@ -106,7 +107,70 @@ describe "Interface color selector", type: :system do
 
     sidebar.click_section_link(category.name)
 
-    sleep 2
-    raise "wut"
+    expect(page).to have_css('.category-logo picture source[media="all"]', visible: false)
+
+    styles = find("#d-styles", visible: false)["innerHTML"]
+    expect(styles).to include(
+      "body.category-#{category.slug} { background-image: url(#{dark_mode_image.url}); }",
+    )
+
+    selector_in_sidebar.expand
+    selector_in_sidebar.light_option.click
+
+    expect(page).to have_css('.category-logo picture source[media="none"]', visible: false)
+
+    styles = find("#d-styles", visible: false)["innerHTML"]
+    expect(styles).to include(
+      "body.category-#{category.slug} { background-image: url(#{light_mode_image.url}); }",
+    )
+
+    selector_in_sidebar.expand
+    selector_in_sidebar.auto_option.click
+
+    expect(page).to have_css(
+      '.category-logo picture source[media="(prefers-color-scheme: dark)"]',
+      visible: false,
+    )
+
+    styles = find("#d-styles", visible: false)["innerHTML"]
+    expect(styles).to include(
+      "body.category-#{category.slug} { background-image: url(#{light_mode_image.url}); }",
+    )
+    expect(styles).to include(<<~CSS)
+      @media (prefers-color-scheme: dark) {
+      body.category-#{category.slug} { background-image: url(#{dark_mode_image.url}); }
+      }
+    CSS
+  end
+
+  it "maintains the user's preference across page refreshes" do
+    visit("/")
+
+    selector_in_sidebar.expand
+    selector_in_sidebar.dark_option.click
+
+    expect(page).to have_css('link.light-scheme[media="none"]', visible: false)
+    expect(page).to have_css('link.dark-scheme[media="all"]', visible: false)
+
+    visit(category.url)
+
+    expect(page).to have_css('link.light-scheme[media="none"]', visible: false)
+    expect(page).to have_css('link.dark-scheme[media="all"]', visible: false)
+
+    expect(page).to have_css('.category-logo picture source[media="all"]', visible: false)
+
+    styles = find("#d-styles", visible: false)["innerHTML"]
+    expect(styles).to include(
+      "body.category-#{category.slug} { background-image: url(#{dark_mode_image.url}); }",
+    )
+  end
+
+  it "can be configured to appear in the header instead of the sidebar footer" do
+    SiteSetting.interface_color_switcher = "header"
+
+    visit("/")
+
+    expect(selector_in_sidebar).to be_not_available
+    expect(selector_in_header).to be_available
   end
 end
