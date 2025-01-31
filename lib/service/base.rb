@@ -265,10 +265,11 @@ module Service
     class LockStep < Step
       include StepsHelpers
 
-      attr_reader :steps
+      attr_reader :steps, :keys
 
       def initialize(*keys, &block)
         @keys = keys
+        @name = keys.join(":")
         @steps = []
         instance_exec(&block)
       end
@@ -290,10 +291,12 @@ module Service
         end
       end
 
+      private
+
       def lock_name
         [
           context.__service_class__.to_s.underscore,
-          *@keys.flat_map { |key| [key, context[:params].send(key)] },
+          *keys.flat_map { |key| [key, context[:params].public_send(key)] },
         ].join(":")
       end
     end
