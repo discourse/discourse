@@ -22,8 +22,11 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
 
     visit("/latest")
 
+    modal = sidebar.click_community_section_more_button.click_customize_community_section_button
+    modal.reset
+
     expect(sidebar.primary_section_icons("community")).to eq(
-      %w[layer-group user flag wrench paper-plane ellipsis-vertical],
+      %w[layer-group far-pen-to-square flag wrench paper-plane ellipsis-vertical],
     )
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
@@ -33,11 +36,11 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
     modal.confirm_update
 
     expect(sidebar.primary_section_links("community")).to eq(
-      ["My Posts", "Topics", "Review", "Admin", "Invite", "More"],
+      ["My Drafts", "Topics", "Review", "Admin", "Invite", "More"],
     )
 
     expect(sidebar.primary_section_icons("community")).to eq(
-      %w[user paper-plane flag wrench paper-plane ellipsis-vertical],
+      %w[far-pen-to-square paper-plane flag wrench paper-plane ellipsis-vertical],
     )
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button
