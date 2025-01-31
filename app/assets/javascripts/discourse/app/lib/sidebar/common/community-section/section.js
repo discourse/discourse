@@ -22,7 +22,7 @@ const SPECIAL_LINKS_MAP = {
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
-  "/my/activity": MyDraftsSectionLink,
+  "/my/activity/drafts": MyDraftsSectionLink,
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,

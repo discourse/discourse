@@ -14,9 +14,9 @@ describe "Drafts dropdown", type: :system do
       expect(drafts_dropdown).to be_hidden
     end
 
-    it "does not have a my drafts link in sidebar" do
+    it "has a my drafts link in sidebar" do
       page.visit "/"
-      expect(page).to have_no_css(".sidebar-section-link[data-link-name='my-drafts']")
+      expect(page).to have_css(".sidebar-section-link[data-link-name='my-drafts']")
     end
 
     it "adds a draft dropdown menu when a draft is available" do
