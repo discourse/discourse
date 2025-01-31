@@ -9,10 +9,10 @@ acceptance("composer-service-cant-submit-post transformer", function (needs) {
     allow_uncategorized_topics: true,
   });
 
-  test("applying a value transformation - ", async function (assert) {
+  test("applying a value transformation - disable submit", async function (assert) {
     withPluginApi("1.34.0", (api) => {
       api.registerValueTransformer("composer-service-cant-submit-post", () => {
-        // Return true -- explcitly block submission!
+        // Return true -- explicitly block submission!
         return true;
       });
     });
@@ -24,7 +24,7 @@ acceptance("composer-service-cant-submit-post transformer", function (needs) {
     assert.dom(".d-editor-input").exists("composer is still open");
   });
 
-  test("applying a value transformation - enabled submit", async function (assert) {
+  test("applying a value transformation - allow submission", async function (assert) {
     withPluginApi("1.34.0", (api) => {
       api.registerValueTransformer(
         "composer-service-cant-submit-post",
