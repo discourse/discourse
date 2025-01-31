@@ -7,6 +7,9 @@
 cs:
   discourse_automation:
     triggerables:
+      user_added_to_group:
+        title: Uživatel přidán do skupiny
+        description: Automatizace se spustí po přidání uživatele do zadané skupiny
       user_promoted:
         description: Když je uživatel povýšen z jedné úrovně důvěry na jinou
         transition_placeholder: "z %{from_level_name} na %{to_level_name}"

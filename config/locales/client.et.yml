@@ -2008,6 +2008,8 @@ et:
         description:
           one: Oled valinud <b>%{count}</b> postituse.
           other: "Oled valinud <b>%{count}</b> postitust."
+    post_list:
+      title: "Viimased postitused"
     post:
       quote_reply: "Tsitaat"
       quote_edit: "Muuda"
@@ -2469,7 +2471,6 @@ et:
         title: "Rakendus"
         create: "%{shortcut} Loo uus teema"
         notifications: "%{shortcut} Ava teavitused"
-        hamburger_menu: "%{shortcut} Ava rippmenüü"
         user_profile_menu: "%{shortcut} Ava kasutajamenüü"
         show_incoming_updated_topics: "%{shortcut} Näita uuendatud teemasid"
         help: "%{shortcut} Ava klaviatuuri abimenüü"

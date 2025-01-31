@@ -466,10 +466,10 @@ cs:
   rss_posts_in_topic: "RSS feed tématu '%{topic}'"
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
   rss_num_posts:
-    one: "Je zobrazen pouze %{count} příspěvek"
-    few: "Jsou zobrazeny pouze %{count} příspěvky"
-    many: "Je zobrazeno pouze %{count} příspěvků"
-    other: "Je zobrazeno pouze %{count} příspěvků"
+    one: "%{count} příspěvek"
+    few: "%{count} příspěvky"
+    many: "%{count} příspěvků"
+    other: "%{count} příspěvků"
   rss_num_participants:
     one: "%{count} účastník"
     few: "%{count} účastníci"
@@ -1545,17 +1545,21 @@ cs:
       maxmind_db_configuration: 'Server byl nakonfigurován tak, aby používal databáze MaxMind pro reverzní vyhledávání IP, ale nebylo nakonfigurováno platné ID účtu MaxMind, což může vést k tomu, že se databáze MaxMind v budoucnu nepodaří stáhnout. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Více informací naleznete v této příručce</a>.'
     back_from_logster_text: "Zpět na web"
   site_settings:
+    allow_bulk_invite: "Povolit hromadné pozvánky nahráním CSV souboru"
     disabled: "vypnuto"
     censored_words: "Slova, která budou automaticky nahrazena &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automaticky smazat všechny skryté příspěvky, které jsou skryté déle než 30 dní."
     default_locale: "Výchozí jazyk této instance Discourse. Text kategorií a témat generovaných systémem můžete nahradit v nabídce <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Přizpůsobit / Text</a>."
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
-    set_locale_from_accept_language_header: "nastavit jazyk rozhraní pro anonymní uživatele z nastavení jejich webového prohlížeče"
-    support_mixed_text_direction: "Podpora smíšených směrů textu zleva doprava a zprava doleva."
+    support_mixed_text_direction: "Podpora smíšených směrů textu zleva doprava a zprava doleva"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     educate_until_posts: "Když uživatel začne psát svých prvních (n) nových příspěvků, zobrazit v editoru vyskakovací panel pro vzdělávání nových uživatelů."
+    download_remote_images_to_local: "Převést vzdálené (hotlinkované) obrázky na místní obrázky jejich stažením; Tím se zachová obsah, i když budou obrázky v budoucnu ze vzdáleného webu odstraněny."
+    download_remote_images_threshold: "Minimální místo na disku potřebné pro lokální stahování vzdálených obrázků (v procentech)"
+    disabled_image_download_domains: "Vzdálené obrázky nebudou nikdy staženy z těchto domén. Seznam oddělený svislou čarou."
+    block_hotlinked_media: "Zabránit uživatelům v zavádění vzdálených (hotlinkovaných) médií ve svých příspěvcích. Vzdálené médium, které není staženo pomocí 'download_remote_images_to_local', bude nahrazeno zástupným odkazem."
     manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
@@ -1596,12 +1600,12 @@ cs:
     faq_url: "Pokud máte dokument FAQ hostovaný samostatně, napište sem jeho plnou URL."
     tos_url: "Pokud máte dokument 'Podmínky služby' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
-    auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
+    delete_rejected_email_after_days: "Smazat odmítnuté e-maily starší než (n) dnů."
     pop3_polling_openssl_verify: "Ověřit certifikát serveru TLS (výchozí: povoleno)"
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
@@ -1613,6 +1617,7 @@ cs:
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zrušte, pokud chcete používat vlastní plně responzivní kaskádový styl."
     pm_warn_user_last_seen_months_ago: "Při vytváření nové SZ upozornit uživatele, když adresát nebyl viděn více než n měsíců."
     permalink_normalizations: "Před přiřazením trvalých odkazů použijte následující regulární výraz, např.: /(topic.*)\\?.*/\\1 pomůže odstranit query string z route témat. Formát je regex+řetězec. Použijte \\1 atd. pro přístup k captures."
+    disable_system_edit_notifications: "Zakáže upozornění na úpravy od systémového uživatele, když je aktivní 'download_remote_images_to_local'."
     penalty_step_hours: "Výchozí sankce pro ztišení nebo pozastavení uživatelů v hodinách. První přestupek se rovná první hodnotě, druhý přestupek druhé hodnotě, atd."
     penalty_include_post_message: "Automatické zahrnutí zprávy s urážlivým příspěvkem do šablony e-mailové zprávy při ztišení nebo pozastavení uživatele."
     full_name_requirement: "Nastavení celého jména jako povinného, nepovinného nebo nepovinného, ale skrytého v registračním formuláři."
@@ -1635,7 +1640,6 @@ cs:
     dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
     dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
-    use_email_for_username_and_name_suggestions: "Pro návrhy uživatelského jména a jména použijte první část e-mailové adresy. Vemte na vědomí, že to veřejnosti usnadní odhadnout celé e-mailové adresy uživatelů (protože velká část lidí sdílí společné služby, jako je `gmail.com`)."
     experimental_form_templates: "Povolit funkci šablon formulářů. Spravujte šablony v <a href='%{base_path}/admin/customize/form-templates'>Přizpůsobit/Šablony</a>."
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -1650,6 +1654,7 @@ cs:
       staged_users_disabled: "Než toto nastavení povolíte, musíte nejprve povolit „předběžně založené uživatele“."
       min_username_length_range: "Nemůžete nastavit minimum nad maximum."
       max_username_length_range: "Nemůžete nastavit maximum pod minimum."
+      delete_rejected_email_after_days: "Toto nastavení nemůže být nižší než nastavení delete_email_logs_after_days nebo vyšší než %{max}."
     keywords:
       navigation_menu: "postranní panel|rozbalovací nabídka v záhlaví"
   search:
@@ -2298,7 +2303,8 @@ cs:
 
         Zveme vás, abyste se i nadále zapojovali – těší nás, že jste mezi námi.
     backup_succeeded:
-      subject_template: "Zálohování bylo úspěšně dokončeno."
+      title: "Zálohování proběhlo úspěšně"
+      subject_template: "Zálohování bylo úspěšně dokončeno"
       text_body_template: |
         Zálohování proběhlo úspěšně.
 
@@ -2308,14 +2314,63 @@ cs:
 
         %{logs}
     backup_failed:
-      subject_template: "Zálohování selhalo."
+      title: "Zálohování selhalo"
+      subject_template: "Zálohování selhalo"
+      text_body_template: |
+        Záloha se nezdařila.
+
+        Zde je protokol:
+
+        %{logs}
     restore_failed:
       title: "Obnova Neúspěšná"
       subject_template: "Obnova neúspěšná"
+    bulk_invite_succeeded:
+      title: "Hromadné pozvání bylo úspěšné"
+      subject_template: "Hromadné pozvání uživatelů bylo úspěšně zpracováno"
+      text_body_template: |
+        Soubor s hromadnou pozvánkou uživatelů byl zpracován, %{sent} pozvánek bylo odesláno, %{skipped} přeskočeno a %{warnings} varování.
+
+        Přeskočené pozvánky na tyto e-maily:
+
+        ```text
+        %{skipped_emails}
+        ``
+
+        `` text
+        %{logs}
+        ```
+    bulk_invite_failed:
+      title: "Hromadné pozvání selhalo"
+      subject_template: "Hromadné pozvání uživatelů zpracováno s chybami"
+      text_body_template: |
+        Soubor s hromadnou pozvánkou uživatelů byl zpracován, %{sent} pozvánek odesláno, %{skipped} přeskočeno, %{warnings} varování a %{failed} chyb.
+
+        Přeskočené pozvánky na e-maily:
+
+        ```text
+        %{skipped_emails}
+        ```
+
+        Neúspěšné pozvánky na e-maily:
+
+        ```text
+        %{failed_emails}
+        ```
+
+        Zde je protokol:
+
+        ``text
+        %{logs}
+        ```
     user_added_to_group_as_owner:
+      title: "Přidán/a do skupiny jako vlastník"
+      subject_template: "Byli jste přidáni jako vlastník skupiny %{group_name}"
       text_body_template: |
         Byli jste přidáni jako vlastník skupiny [%{group_name}](%{base_url}%{group_path}).
     user_added_to_group_as_member:
+      title: "Přidán/a do skupiny jako člen"
+      subject_template: "Byli jste přidáni do skupiny %{group_name}"
       text_body_template: |
         Byli jste přidáni do skupiny [%{group_name}](%{base_url}%{group_path}).
     csv_export_succeeded:
@@ -2468,16 +2523,22 @@ cs:
 
         Téma, na které odpovídáte, je v současné době uzavřeno a již nepřijímá odpovědi. Pokud se domníváte, že se jedná o chybu, [kontaktujte redakci](%{base_url}/about).
     email_reject_auto_generated:
+      title: "E-mail odmítnutí – automaticky generované"
+      subject_template: "[%{email_prefix}] Problém s e-mailem – automaticky generovaná odpověď"
       text_body_template: |
         Je nám líto, ale vaše e-mailová zpráva na adresu %{destination} (s názvem %{former_title}) nefungovala.
 
         Váš e-mail byl označen jako "automaticky generovaný", což znamená, že byl automaticky vytvořen počítačem, místo aby jej napsal člověk; takové e-maily nemůžeme přijímat. Pokud se domníváte, že se jedná o chybu, [kontaktujte redakci](%{base_url}/about).
     email_reject_unrecognized_error:
+      title: "E-mail odmítnutí – Nerozpoznaná chyba"
+      subject_template: "[%{email_prefix}] Problém s e-mailem -- Nerozpoznaná chyba"
       text_body_template: |
         Je nám líto, ale vaše e-mailová zpráva na adresu %{destination} (s názvem %{former_title}) nefungovala.
 
         Při zpracování vašeho e-mailu došlo k nerozpoznané chybě a odpověď nebyl zapsána. Měli byste to zkusit znovu, nebo [kontaktovat redakci](%{base_url}/about).
     email_reject_attachment:
+      title: "E-mail příloha zamítnuta"
+      subject_template: "[%{email_prefix}] Problém s e-mailem -- Příloha zamítnuta"
       text_body_template: |
         Bohužel některé přílohy ve vaší e-mailové zprávě na adresu %{destination} (s názvem %{former_title}) byly odmítnuty.
 
@@ -2505,6 +2566,8 @@ cs:
 
         Pokud se domníváte, že se jedná o chybu, [kontaktujte redakci](%{base_url}/about).
     email_error_notification:
+      title: "E-mail upozornění na chybu"
+      subject_template: "[%{email_prefix}] Problém s e-mailem -- chyba ověření POP"
       text_body_template: |
         Při stahování na e-mailů ze serveru POP bohužel došlo k chybě ověřování.
 
@@ -2597,6 +2660,10 @@ cs:
         Jsou zde nové uživatelské registrace, které čekají na schválení (nebo zamítnutí), než budou mít přístup k tomuto fóru.
 
         [Prosím zkontrolujte je](%{base_url}/review).
+    download_remote_images_disabled:
+      title: "Stahování vzdálených obrázků je zakázáno"
+      subject_template: "Stahování vzdálených obrázků je zakázáno"
+      text_body_template: "Nastavení `download_remote_images_to_local` bylo zakázáno, protože bylo dosaženo limitu místa na disku `download_remote_images_threshold`."
     new_user_of_the_month:
       text_body_template: |
         Gratulujeme, získali jste ocenění **Nový uživatel měsíce za %{month_year}**. :trophy:
@@ -2911,6 +2978,8 @@ cs:
     account_created:
       title: "Účet vytvořen"
     confirm_new_email:
+      title: "Potvrzení nového e-mailu"
+      subject_template: "[%{email_prefix}] Potvrďte svou novou e-mailovou adresu"
       text_body_template: |
         Potvrďte svou novou e-mailovou adresu pro %{site_name} kliknutím na následující odkaz:
 
@@ -2918,12 +2987,54 @@ cs:
 
         Pokud jste o tuto změnu nežádali, kontaktujte prosím [správce stránek](%{base_url}/about).
     confirm_new_email_via_admin:
+      title: "Potvrďte nový e-mail"
+      subject_template: "[%{email_prefix}] Potvrďte svou novou e-mailovou adresu"
       text_body_template: |
         Potvrďte svou novou e-mailovou adresu pro %{site_name} kliknutím na následující odkaz:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
         Tato změna e-mailu byla vyžádána správcem webu. Pokud jste o tuto změnu nepožádali, obraťte se prosím na [správce webu](%{base_url}/about).
+    confirm_old_email:
+      title: "Potvrďte starý e-mail"
+      subject_template: "[%{email_prefix}] Potvrďte svou aktuální e-mailovou adresu"
+      text_body_template: |
+        Než budeme moci změnit vaši e-mailovou adresu, potřebujeme, abyste potvrdili, že ovládáte
+        aktuální e-mailový účet. Po dokončení tohoto kroku vás požádáme, abyste potvrdili
+        novou e-mailovou adresu.
+
+        Potvrďte svou aktuální e-mailovou adresu pro %{site_name} kliknutím na následující odkaz:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      title: "Potvrzení starého e-mailu (přidání)"
+      subject_template: "[%{email_prefix}] Potvrďte svou aktuální e-mailovou adresu"
+      text_body_template: |
+        Než budeme moci přidat novou e-mailovou adresu, potřebujeme, abyste potvrdili, že ovládáte
+        aktuální e-mailový účet. Po dokončení tohoto kroku vás požádáme, abyste potvrdili
+        novou e-mailovou adresu.
+
+        Potvrďte svou aktuální e-mailovou adresu pro %{site_name} kliknutím na následující odkaz:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    notify_old_email:
+      text_body_template: |
+        Toto je automatická zpráva, která vás informuje, že vaše e-mailová adresa pro
+        %{site_name} byla změněna. Pokud k tomu došlo omylem, kontaktujte prosím
+        správce webu.
+
+        Vaše e-mailová adresa byla změněna na:
+
+        %{new_email}
+    notify_old_email_add:
+      text_body_template: |
+        Toto je automatická zpráva, která vás informuje, že byla přidána e-mailová adresa pro
+        %{site_name} . Pokud k tomu došlo omylem, kontaktujte prosím
+        správce webu.
+
+        Vaše přidaná e-mailová adresa je:
+
+        %{new_email}
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
       text_body_template: |
@@ -3543,6 +3654,7 @@ cs:
       no_emails: "Bohužel během nastavení nebyly definovány žádné e-maily správce, takže dokončení konfigurace může být obtížné. Přidejte prosím do konfiguračního souboru e-mail vývojáře nebo <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>vytvořte účet správce z konzole</a>."
     confirm_email:
       title: "Potvrďte svůj e-mail"
+      message: "<p>Odeslali jsme aktivační e-mail na adresu <b>%{email}</b>. Při aktivaci účtu postupujte podle pokynů v e-mailu.</p><p>Pokud nedorazí, zkontrolujte složku s nevyžádanou poštou a <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ujistěte se, že jste e-mail nastavili správně</a>.</p>"
     resend_email:
       title: "Znovu odeslat aktivační email"
   safe_mode:
@@ -3682,6 +3794,7 @@ cs:
     api_key:
       revoked: Zrušeno
   reviewables:
+    already_handled: "Děkujeme, ale tento příspěvek jsme již zkontrolovali a rozhodli jsme se, že jej není třeba znovu nahlašovat."
     priorities:
       low: "Nízká"
       medium: "Střední"

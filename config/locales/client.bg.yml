@@ -2752,6 +2752,7 @@ bg:
           other: "Вие избрахте <b>%{count}</b> публикации. "
       deleted_by_author_simple: "(темата е изтрита от автора)"
     post_list:
+      title: "Последни публикации"
       aria_post_number: "%{title} - публикация #%{postNumber}"
     post:
       quote_reply: "Цитат"
@@ -3211,7 +3212,6 @@ bg:
         title: "Приложение"
         create: "%{shortcut} Създайте нова тема"
         notifications: "%{shortcut} Отворяне на известията"
-        hamburger_menu: "%{shortcut} Отворяне на хамбургерното менюто"
         user_profile_menu: "%{shortcut} Отваряне на потребителското меню"
         show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"
         search: "%{shortcut} Отписване"
@@ -4129,6 +4129,9 @@ bg:
         approve_success: "Потребителят е одобрен и е изпратен имейл с инструкции за активиране. "
         approve_bulk_success: "Готово! Всички избрани потребители бяха одобрени и информирани. "
         time_read: "Време за прочитане "
+        exports:
+          download:
+            button: Заявяване за архив
         anonymize: "Анинимизирай потребител"
         anonymize_yes: "Да, анонимизирай този профил"
         anonymize_failed: "Възникна грешка по време на анонимизирането на профила."

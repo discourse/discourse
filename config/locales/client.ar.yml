@@ -4256,6 +4256,7 @@ ar:
           other: "لقد حدَّدت <b>%{count}</b> منشور."
       deleted_by_author_simple: "(تم حذف الموضوع بواسطة الكاتب)"
     post_list:
+      title: "آخر المنشورات"
       empty: "لا توجد منشورات"
       aria_post_number: "%{title} - المنشور #%{postNumber}"
     post:
@@ -4314,6 +4315,7 @@ ar:
       notice:
         new_user: "هذه أول مرة ينشر فيها %{user} شيئًا؛ فلنرحِّب به في مجتمعنا!"
         returning_user: "مرَّ وقت طويل منذ أن قرأنا شيئًا من %{user}؛ إذ كان آخر منشور له في %{time}."
+        custom_created_by: "(تمت الإضافة من قِبل %{userLinkHTML})"
       unread: "المنشور غير مقروء"
       has_replies:
         zero: "%{count} رد"
@@ -4474,9 +4476,9 @@ ar:
         delete_topic_confirm_modal_no: "لا، الاحتفاظ بهذا الموضوع"
         delete_topic_error: "حدث خطأ في أثناء حذف هذا الموضوع"
         delete_topic: "حذف الموضوع"
-        add_post_notice: "إضافة إشعار فريق العمل…"
-        change_post_notice: "تغيير إشعار فريق العمل…"
-        delete_post_notice: "حذف إشعار فريق العمل"
+        add_post_notice: "إضافة إخطار رسمي…"
+        change_post_notice: "تغيير الإخطار الرسمي…"
+        delete_post_notice: "حذف الإخطار الرسمي"
         remove_timer: "إزالة المؤقِّت"
         edit_timer: "تعديل المؤقِّت"
       actions:
@@ -5079,20 +5081,6 @@ ar:
       close: "إغلاق (Esc)"
       content_load_error: 'تعذَّر تحميل <a href="%url%">المحتوى</a>.'
       image_load_error: 'تعذَّر تحميل <a href="%url%">الصورة</a>.'
-    experimental_lightbox:
-      image_load_error: "تعذَّر تحميل الصورة."
-      screen_reader_image_title: "الصورة %{current} من إجمالي %{total}: %{title}"
-      buttons:
-        next: "التالي (مفتاح السهم لليمين أو السهم لأسفل)"
-        previous: "السابق (مفتاح السهم لليسار أو السهم لأعلى)"
-        close: "إغلاق (Esc)"
-        download: "تنزيل الصورة"
-        newtab: "فتح الصورة في علامة تبويب جديدة"
-        zoom: "تكبير/تصغير الصورة (المفتاح Z)"
-        rotate: "تدوير الصورة (المفتاح R)"
-        fullscreen: "تشغيل وضع ملء الشاشة للمتصفح (المفتاح M)"
-        carousel: "عرض كل الصور في دائرة دوَّارة (المفتاح A)"
-        retry: "إعادة تحميل الصورة"
     cannot_render_video: لا يمكن عرض هذا الفيديو لأن متصفحك لا يدعم برنامج الترميز.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -5129,7 +5117,7 @@ ar:
         title: "التطبيق"
         create: "%{shortcut} إنشاء موضوع جديد"
         notifications: "%{shortcut} فتح الإخطارات"
-        hamburger_menu: "%{shortcut} فتح قائمة الخطوط الثلاثة"
+        hamburger_menu: "%{shortcut} فتح قائمة التنقل"
         user_profile_menu: "%{shortcut} فتح قائمة المستخدم"
         show_incoming_updated_topics: "%{shortcut} عرض الموضوعات المحدَّثة"
         search: "%{shortcut} البحث"
@@ -7651,6 +7639,23 @@ ar:
         approve_bulk_success: "تم بنجاح! لقد تمت الموافقة على جميع الأعضاء المحدَّدين وإرسال إشعارات إليهم."
         time_read: "وقت القراءة"
         post_edits_count: "تعديلات المنشور"
+        exports:
+          title: عمليات تصدير المستخدم
+          download:
+            description: تنزيل آخر تصدير
+            expires_in:
+              zero: تنتهي المهلة بعد %{count} ساعة
+              one: تنتهي المهلة بعد ساعة واحدة (%{count})
+              two: تنتهي المهلة بعد ساعتَين (%{count})
+              few: تنتهي المهلة بعد %{count} ساعات
+              many: تنتهي المهلة بعد %{count} ساعة
+              other: تنتهي المهلة بعد %{count} ساعة
+            not_available: لا يتوفَّر تصدير
+            button: طلب أرشيف
+            confirm: هل تريد حقًا إنشاء أرشيف لنشاط هذا المستخدم وتفضيلاته؟
+            started: لقد بدأنا في تجميع الأرشيف، وسيتم تحديث رابط التنزيل عند اكتمال العملية.
+            success: الأرشيف جاهز للتنزيل.
+            export_failed: عذرًا، لكن عملية التصدير فشلت. يُرجى التحقق من السجلات للمزيد من المعلومات.
         anonymize: "إخفاء هوية المستخدم"
         anonymize_confirm: "هل تريد بالتأكيد إخفاء هوية هذا الحساب؟ سيؤدي ذلك إلى تغيير اسم المستخدم والبريد الإلكتروني، وإعادة تعيين جميع معلومات الملف الشخصي."
         delete_associated_accounts_confirm: "هل تريد بالتأكيد حذف جميع الحسابات المرتبطة بهذا الحساب؟ قد لا يتمكن المستخدم من تسجيل الدخول إذا تم تغيير بريده الإلكتروني."

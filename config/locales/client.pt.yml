@@ -2752,6 +2752,8 @@ pt:
           one: Selecionou <b>%{count}</b> publicação.
           other: "Selecionou <b>%{count}</b> publicações."
       deleted_by_author_simple: "(tópico excluído pelo autor)"
+    post_list:
+      title: "Últimas mensagens"
     post:
       quote_reply: "Citar"
       quote_edit: "Editar"
@@ -2868,7 +2870,6 @@ pt:
         delete_topic_confirm_modal_no: "Não, mantenha este tópico"
         delete_topic_error: "Ocorreu um erro ao excluir este tópico"
         delete_topic: "eliminar tópico"
-        delete_post_notice: "Apagar Aviso da Equipa"
         remove_timer: "remover timer"
         edit_timer: "editar temporizador"
       actions:
@@ -3265,9 +3266,6 @@ pt:
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'
       image_load_error: '<a href="%url%">A imagem</a> não pôde ser carregada.'
-    experimental_lightbox:
-      buttons:
-        close: "Fechar (Esc)"
     cannot_render_video: Este vídeo não pode ser renderizado porque seu navegador não suporta o codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3299,7 +3297,6 @@ pt:
         title: "Aplicação"
         create: "%{shortcut} Criar um novo tópico"
         notifications: "%{shortcut} Abrir notificações"
-        hamburger_menu: "%{shortcut} Abrir menu hamburger"
         user_profile_menu: "%{shortcut} Abrir menu de utilizador"
         show_incoming_updated_topics: "%{shortcut} Mostrar tópicos atualizados"
         search: "%{shortcut} Pesquisar"
@@ -4565,6 +4562,9 @@ pt:
         approve_success: "Utilizador aprovado e email enviado com instruções de ativação."
         approve_bulk_success: "Sucesso! Todos os utilizadores selecionados foram aprovados e notificados."
         time_read: "Tempo de leitura"
+        exports:
+          download:
+            button: Solicitar arquivo
         anonymize: "Tornar utilizador anónimo"
         anonymize_yes: "Sim, tornar esta conta anónima"
         anonymize_failed: "Ocorreu um problema ao tornar esta conta anónima."

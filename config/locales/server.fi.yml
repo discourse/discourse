@@ -339,6 +339,7 @@ fi:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Et voi lisätä asetukseen mitään seuraavista arvoista: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Et voi poistaa kuvan metatietojen poistoa käytöstä, jos 'composer media optimization image enabled' on käytössä. Poista 'composer media optimization image enabled' käytöstä ennen kuvien metatietojen poiston poistamista käytöstä."
       twitter_summary_large_image_no_svg: "Twitterin yhteenvetokuvat, joita käytetään twitter:image-metatiedoissa, eivät voi olla .svg-kuvia."
+      tl0_and_anonymous_flag: "Joko \"site contact email\" tai \"email address to report illegal content\" täytyy antaa anonyymeille käyttäjille."
     conflicting_google_user_id: 'Tämän tilin Google-tilitunnus on muuttunut. Henkilökunnan toimenpiteet ovat tarpeen tietoturvasyistä. Ota yhteyttä henkilökuntaan ja ohjaa heidät osoitteeseen<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Valitettavasti emme voineet luoda esikatselua tälle verkkosivulle, koska palvelinta '%{hostname}' ei löydy. Esikatselun sijaan viestissä näkyy vain linkki. :cry:"
@@ -1620,7 +1621,7 @@ fi:
       google_analytics_version: "Discoursesi käyttää tällä hetkellä Google Analytics 3:a, jota ei enää tueta heinäkuun 2023 jälkeen. <a href='https://meta.discourse.org/t/260498'>Päivitä Google Analytics 4:ään</a> nyt, jotta saat jatkossakin arvokkaita tietoja ja analytiikkaa verkkosivustosi suoriutumisesta."
       category_style_deprecated: "Discourse käyttää tällä hetkellä vanhentunutta kategoriatyyliä, joka poistuu ennen Discourse 3.2:n lopullista beetajulkaisua. Löydät <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> -artikkelista tietoja siitä, miten voit säilyttää valitsemasi kategoriatyylin."
       maxmind_db_configuration: 'Palvelin on määritetty käyttämään MaxMind-tietokantoja käänteisissä IP-hauissa, mutta kelvollista MaxMind-tilin tunnusta ei ole määritetty, mikä saattaa johtaa siihen, että MaxMind-tietokantoja ei voi ladata jatkossa. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Katso tästä oppaasta lisätietoja</a>.'
-      admin_sidebar_deprecation: "Vanha ylläpitäjien asettelu on vanhentunut ja korvataan uudella <a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>sivupalkkiasettelulla</a>. Se poistetaan seuraavassa julkaisuversiossa. Voit <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>määrittää</a> uuden sivupalkkiasettelun nyt ottaaksesi sen käyttöön ennen sitä."
+      admin_sidebar_deprecation: "Vanha ylläpitäjien asettelu on vanhentunut ja korvataan uudella <a href='https://meta.discourse.org/t/-/289281'>sivupalkkiasettelulla</a>. Se poistetaan seuraavassa julkaisuversiossa. Voit <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>määrittää</a> uuden sivupalkkiasettelun nyt ottaaksesi sen käyttöön ennen sitä."
     back_from_logster_text: "Takaisin sivustolle"
   site_settings:
     allow_bulk_invite: "Salli joukkokutsut lataamalla CSV-tiedosto"
@@ -1630,8 +1631,9 @@ fi:
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Tämän Discourse-ympäristön oletuskieli. Voit korvata järjestelmän luomien alueiden ja ketjujen tekstejä kohteessa <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Mukauta / Tekstit</a>."
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
-    set_locale_from_accept_language_header: "aseta käyttöliittymän kieli anonyymeille käyttäjille verkkoselaimen kieliotsikkotiedoista"
-    support_mixed_text_direction: "Salli vasemmalta-oikealle- ja oikealta-vasemmalle-kirjoitusta käytettävän sekaisin."
+    set_locale_from_cookie: "Mahdollistaa anonyymin käyttäjän kielialueen asettamisen locale-selainevästeen kautta"
+    set_locale_from_param: "Mahdollistaa anonyymin käyttäjän kielialueen asettamisen lang-URL-parametrilla, esim. ?lang=fi"
+    support_mixed_text_direction: "Salli vasemmalta-oikealle- ja oikealta-vasemmalle-kirjoitusta käytettävän sekaisin"
     min_post_length: "Pienin sallittu viestin pituus merkkeinä (pois lukien henkilökohtaiset viestit)"
     min_first_post_length: "Pienin sallittu ensimmäisen viestin (aiheen leipäteksti) pituus merkkeinä (pois lukien henkilökohtaiset viestit)"
     min_personal_message_post_length: "Pienin sallittu viestin pituus merkkeinä (sekä ensimmäinen viesti että vastaukset)"
@@ -1700,7 +1702,7 @@ fi:
     block_onebox_on_redirect: "Estä onebox-esikatselu URL-osoitteissa, jotka johtavat uudelleenohjaussivulle. Tämä määritys estää visuaalisen kortin (onebox) luomisen mille tahansa URL-osoitteelle, joka uudelleenohjaa toiseen kohteeseen, ja varmistaa, että suorat URL-osoitteet, jotka eivät uudelleenohjaa, priorisoidaan onebox-esikatseluissa."
     allowed_inline_onebox_domains: "Verkko-osoitteet, joista luodaan minimoitu Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
     enable_inline_onebox_on_all_domains: "Ohita allowed_inline_onebox_domains-sivustoasetus ja salli tekstiin sidotut onebox-esikatselut kaikista verkkotunnuksista."
-    onebox_locale: "Kielialue lähetettiin onebox-palveluntarjoajille. Jos se jätetään tyhjäksi, oletuskielialuetta käytetään."
+    onebox_locale: "Kielialue lähetettiin onebox-palveluntarjoajille. Jos se jätetään tyhjäksi, oletuskielialuetta käytetään"
     force_custom_user_agent_hosts: "Isännät, joille käytetään mukautettua onebox-käyttäjäagenttia kaikissa pyynnöissä. (Erityisen hyödyllinen isännille, jotka rajoittavat käyttäjäagentin pääsyä)."
     max_oneboxes_per_post: "Aseta yhteen viestiin sisällytettävien onebox-esikatseluiden enimmäismäärä. Oneboxit tarjoavat esikatselun viestin linkitetystä sisällöstä."
     facebook_app_access_token: "Tunnus, joka on luotu Facebook-sovellustunnuksestasi ja salausavaimesta. Käytetään Instagram-oneboxien luomiseen."
@@ -1849,8 +1851,8 @@ fi:
     login_required: "Vaadi kirjautumista sivuston lukemiseen, estä kirjautumattomilta pääsy."
     min_username_length: "Käyttäjätunnuksen vähimmäispituus merkeissä. VAROITUS: jos olemassa olevalla käyttäjällä tai ryhmällä on tätä lyhyempi nimi, sivustosi hajoaa!"
     max_username_length: "Käyttäjätunnuksen enimmäispituus merkeissä. VAROITUS: jos olemassa olevalla käyttäjällä tai ryhmällä on tätä pidempi nimi, sivustosi hajoaa!"
-    unicode_usernames: "Salli käyttäjätunnusten ja ryhmien nimien sisältää Unicode-kirjaimia ja -numeroita."
-    allowed_unicode_username_characters: "Säännöllinen lauseke, jolla sallitaan vain tietyt Unicode-merkit käyttäjätunnuksissa. ASCII-kirjaimet ja numerot ovat aina sallittuja, eikä niitä tarvitse sisällyttää."
+    unicode_usernames: "Salli käyttäjätunnusten ja ryhmien nimien sisältää Unicode-kirjaimia ja -numeroita"
+    allowed_unicode_username_characters: "Säännöllinen lauseke, jolla sallitaan vain tietyt Unicode-merkit käyttäjätunnuksissa. ASCII-kirjaimet ja numerot ovat aina sallittuja, eikä niitä tarvitse sisällyttää"
     reserved_usernames: "Käyttäjätunnukset, joita ei voi rekisteröidä. Jokerimerkkiä * voi käyttää korvaamaan merkin nolla kertaa tai useammin."
     min_password_length: "Määrittää sivuston käyttäjien salasanoihin vaadittavan merkkien vähimmäismäärän. Liian pieni arvo saattaa vaarantaa turvallisuuden helpottamalla salasanojen arvaamista, kun taas liian korkea arvo saattaa vaikeuttaa käyttäjien salasanojen muistamista."
     min_admin_password_length: "Määritä salasanan vähimmäispituus ylläpitäjäkäyttäjille. Se varmistaa, että kaikki ylläpitäjien salasanat täyttävät tietyn pituusvaatimuksen turvallisuuden parantamiseksi. Tämä asetus on välttämätön ylläpitäjän tilin suojaamiseksi mahdolliselta luvattomalta käytöltä."
@@ -2116,7 +2118,8 @@ fi:
     num_hours_to_close_topic: "Kuinka moneksi tunniksi ketju menee tauolle puuttumistoimia odottamaan."
     auto_respond_to_flag_actions: "Ota käyttöön automaattinen vastaus merkintää poistettaessa."
     min_first_post_typing_time: "Minimimäärä aikaa millisekunneissa, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti lisätään automaattisesti hyväksyttävien jonoon. Aseta 0 poistaaksesi käytöstä (ei suositella)."
-    auto_silence_fast_typers_on_first_post: "Hiljennä automaattisesti käyttäjät, joiden ensimmäisen viestin kirjoittamiseen ei kulu min_first_post_typing_time"
+    fast_typing_threshold: "Vähimmäisaika millisekunteina, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti siirtyy automaattisesti tarkastusjonoon. Matala on 1 sekunti, normaali on 3 sekuntia, korkea on 5 sekuntia."
+    auto_silence_fast_typers_on_first_post: "Hiljennä automaattisesti käyttäjät, jotka eivät täytä \"fast typing threshold\" -rajaa"
     auto_silence_fast_typers_max_trust_level: "Enimmäisluottamustaso, jolla nopea kirjoittaja voidaan hiljentää automaattisesti"
     auto_silence_first_post_regex: "Isoista ja pienistä kirjaimista riippumaton säännöllinen lauseke, joka osuessaan aiheuttaa käyttäjän ensimmäisen viestin hiljennyksen ja viestin lähettämiseen hyväksyntäjonoon. Esimerkki: hemmetti|a[bc]a aiheuttaa hiljennyksen, jos viesti sisältää sanan \"hemmetti\", \"aba\" tai \"aca\". Koskee vain käyttäjän ensimmäistä viestiä. VANHENTUNUT: käytä tämän sijaan tarkkailtujen sanojen hiljennystä."
     reviewable_claiming: "Tarvitseeko arvioitava sisältö omia ennen kuin sen voi käsitellä?"
@@ -2124,6 +2127,8 @@ fi:
     reviewable_default_visibility: "Älä näytä arvioitavia asioita jollei niiden prioriteetti ole vähintään tämän verran"
     reviewable_low_priority_threshold: "Prioriteettisuodatin piilottaa käsiteltävät kohteet, jotka eivät täytä tätä pistemäärää, ellei \"(mikä tahansa)\" -suodatin ole käytössä."
     high_trust_flaggers_auto_hide_posts: "Uusien käyttäjien viestit piilotetaan automaattisesti, kun vähintään TL3-tason käyttäjä on liputtaneet ne roskapostiksi"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Anonyymit käyttäjät näkevät tiedon siitä, että heidän täytyy lähetettää sähköpostiviesti ylläpitäjille laittomasta sisällöstä ilmoittamiseksi."
+    email_address_to_report_illegal_content: "Jos tämä jätetään tyhjäksi, käytetään oletusarvoista sivuston ylläpitäjän sähköpostiosoitetta."
     cooldown_hours_until_reflag: "Kuinka kauan käyttäjien on odotettava, kunnes he voivat liputtaa viestin uudelleen"
     slow_mode_prevents_editing: "Estääkö hidas tila muokkauksen editing_grace_periodin jälkeen?"
     reply_by_email_enabled: "Aktivoi ominaisuus, joka antaa käyttäjien vastata ketjuihin suoraan sähköpostitse sen sijaan, että heidän täytyisi kirjautua verkkosivustolle. Katso lisätietoja <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Metan oppaasta</a>."
@@ -2227,7 +2232,7 @@ fi:
     enable_group_directory: "Näytä hakemisto ryhmistä selattavaksi"
     enable_category_group_moderation: "Salli ryhmien valvoa sisältöä tietyillä alueilla"
     group_in_subject: "Aseta %%{optional_pm} sähköpostin aiheessa ensimmäisen ryhmän nimeksi yksityisviestissä, katso: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
-    allow_anonymous_posting: "Ota käyttöön valinta, jolla käyttäjät voivat vaihtaa anonyymiin tilaan viestin julkaisua varten. Kun tämä aktivoidaan, käyttäjät voivat halutessaan piilottaa henkilöllisyytensä luodessaan viestejä tai ketjuja sivustolla. Katso myös \"allow_anonymous_likes\"."
+    allow_anonymous_posting: "Ota käyttöön valinta, jolla käyttäjät voivat vaihtaa anonyymiin tilaan viestin julkaisua varten. Kun tämä aktivoidaan, käyttäjät voivat halutessaan piilottaa henkilöllisyytensä luodessaan viestejä tai ketjuja sivustolla. Katso myös \"allow anonymous likes\"."
     allow_anonymous_likes: "Kun otat tämän asetuksen käyttöön, käyttäjät, jotka selaavat sivustoasi anonyymisti, voivat tykätä viesteistä. Kun tämä aktivoidaan, käyttäjät voivat halutessaan piilottaa henkilöllisyytensä tykätessään viesteistä tai ketjuista sivustolla. Katso myös \"allow_anonymous_posting\"."
     anonymous_posting_min_trust_level: "Anonyymien viestien lähettämiseen vaadittava luottamustila"
     anonymous_posting_allowed_groups: "Ryhmät, jotka voivat ottaa käyttöön anonyymin viestien lähettämisen"
@@ -2447,7 +2452,6 @@ fi:
     share_quote_visibility: "Milloin lainauksen jakamispainikkeet näytetään: ei koskaan, vain anonyymeille käyttäjille tai kaikille käyttäjille. "
     create_revision_on_bulk_topic_moves: "Luo revisio ensimmäisille viesteille, kun ketjut siirretään uuteen alueeseen joukkona."
     allow_changing_staged_user_tracking: "Salli ylläpitäjäkäyttäjän muuttaa esikäyttäjän alue- ja tunnisteilmoitusasetuksia."
-    use_email_for_username_and_name_suggestions: "Käytä sähköpostiosoitteiden ensimmäistä osaa käyttäjätunnus- ja -nimiehdotuksiin. Huomioi, että tämän avulla ihmisten on helpompi arvata käyttäjän sähköpostiosoite (koska suuri osa ihmisistä käyttää yleisesti käytettyjä palveluita, kuten Gmailia)."
     use_name_for_username_suggestions: "Käytä käyttäjän koko nimeä käyttäjätunnusten ehdottamiseen."
     suggest_weekends_in_date_pickers: "Sisällytä viikonloput (lauantai ja sunnuntai) päivämäärävalitsimen ehdotuksiin (poista tämä käytöstä, jos käytät Discoursea vain arkipäivisin maanantaista perjantaihin)."
     show_bottom_topic_map: "Näyttää ketjukartan ketjun alaosassa, kun siinä on vähintään 10 vastausta."
@@ -2457,7 +2461,6 @@ fi:
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
-    enable_experimental_lightbox: "Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     glimmer_topic_list_mode: "Hallitse, käytetäänkö uutta glimmer-ketjuluettelouudistusta. Arvo \"auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Katso lisätietoja <a href='https://meta.discourse.org/t/343404'>Meta-ketjusta</a>."
     glimmer_post_menu_mode: "Hallitse, käytetäänkö uutta glimmer-viestivalikkouudistusta. \"Auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     glimmer_post_menu_groups: "Ota käyttöön uusi glimmer-viestivalikkouudistus \"auto\"-tilassa määritetyille käyttäjäryhmille. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
@@ -4847,6 +4850,8 @@ fi:
             label: "Väripaletti"
           body_font:
             label: "Leipätekstin fontti"
+          site_font:
+            label: "Fontti"
           heading_font:
             label: "Otsikon fontti"
           styling_preview:

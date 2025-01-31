@@ -1700,6 +1700,9 @@ ja:
         after_5_minutes: "5 分後"
         after_10_minutes: "10 分後"
       notification_level_when_replying:
+        label: "投稿時"
+        watch_topic: "トピックをウォッチ"
+        track_topic: "トピックを追跡"
         do_nothing: "何もしない"
       topics_unread_when_closed: "トピックが閉じられている場合は未読と見なす"
       invited:
@@ -3301,6 +3304,7 @@ ja:
           other: "<b>%{count}</b> 件の投稿を選択しました。"
       deleted_by_author_simple: "(作成者が削除したトピック)"
     post_list:
+      title: "最新の投稿"
       empty: "投稿はありません"
       aria_post_number: "%{title} - 投稿 #%{postNumber}"
     post:
@@ -3344,6 +3348,7 @@ ja:
       notice:
         new_user: "%{user} が投稿するのはこれが初めてです。コミュニティーで歓迎しましょう！"
         returning_user: "%{user} を見かけてからしばらく経ちました。最後の投稿は %{time} でした。"
+        custom_created_by: "(%{userLinkHTML} によって追加されました)"
       unread: "投稿は未読です"
       has_replies:
         other: "%{count} 件の返信"
@@ -3406,6 +3411,7 @@ ja:
         edit_anonymous: "この投稿を編集するには、ログインする必要があります。"
         flag_action: "通報"
         flag: "この投稿に注意を引くために非公開に通報するか、個人メッセージを送信する"
+        anonymous_flag: "この投稿をメールでスタッフに通報する"
         delete_action: "投稿を削除"
         delete: "この投稿を削除する"
         undelete_action: "投稿の削除を取り消す"
@@ -3448,9 +3454,9 @@ ja:
         delete_topic_confirm_modal_no: "いいえ。このトピックを維持する"
         delete_topic_error: "このトピックを削除中にエラーが発生しました"
         delete_topic: "トピックを削除"
-        add_post_notice: "スタッフ通知を追加…"
-        change_post_notice: "スタッフ通知を変更…"
-        delete_post_notice: "スタッフ通知を削除"
+        add_post_notice: "公式通知を追加…"
+        change_post_notice: "公式通知を変更…"
+        delete_post_notice: "公式通知を削除"
         remove_timer: "タイマーを削除"
         edit_timer: "タイマーを編集"
       actions:
@@ -3704,6 +3710,9 @@ ja:
         all: "すべてのトピック"
         none: "サブカテゴリなし"
       colors_disabled: "category style が none であるため色を選択できません。"
+    anonymous_flagging:
+      title: "違法コンテンツの報告"
+      description: "違法コンテンツを報告するには、<a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a> まで連絡してください。"
     flagging:
       title: "ご報告ありがとうございます！"
       action: "投稿を通報"
@@ -3941,20 +3950,6 @@ ja:
       close: "閉じる (Esc)"
       content_load_error: '<a href="%url%">コンテンツ</a>を読み込めませんでした。'
       image_load_error: '<a href="%url%">画像</a>を読み込めませんでした。'
-    experimental_lightbox:
-      image_load_error: "画像を読み込めませんでした。"
-      screen_reader_image_title: "画像 %{current}/%{total}: %{title}"
-      buttons:
-        next: "次へ (右または下矢印キー)"
-        previous: "前へ (左または上矢印キー)"
-        close: "閉じる (Esc)"
-        download: "画像をダウンロード"
-        newtab: "新しいタブで画像を開く"
-        zoom: "画像の拡大/縮小 (Z キー)"
-        rotate: "画像の回転 (R キー)"
-        fullscreen: "ブラウザの全画面表示モードの切り替え (M キー)"
-        carousel: "すべての画像をカルーセルで表示 (A キー)"
-        retry: "画像の再読み込みを再試行"
     cannot_render_video: ブラウザがコーデックをサポートしていないため、この動画をレンダリングできません。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "、"
@@ -3991,7 +3986,7 @@ ja:
         title: "アプリケーション"
         create: "%{shortcut} 新しいトピックを作成"
         notifications: "%{shortcut} 通知を開く"
-        hamburger_menu: "%{shortcut} ハンバーガーメニューを開く"
+        hamburger_menu: "%{shortcut} ナビゲーションメニューを開く"
         user_profile_menu: "%{shortcut} ユーザーメニューを開く"
         show_incoming_updated_topics: "%{shortcut} 更新されたトピックを表示する"
         search: "%{shortcut} 検索"
@@ -6273,6 +6268,18 @@ ja:
         approve_bulk_success: "成功！選択したすべてのユーザーは承認され、通知が送信されました。"
         time_read: "閲覧時間"
         post_edits_count: "投稿の編集"
+        exports:
+          title: ユーザーのエクスポート
+          download:
+            description: 最新のエクスポートをダウンロードします
+            expires_in:
+              other: '%{count} 時間後に期限切れになります'
+            not_available: エクスポートできません
+            button: アーカイブをリクエスト
+            confirm: このユーザーのアクティビティと設定のアーカイブを作成してもよろしいですか？
+            started: アーカイブの収集を開始しました。処理が完了するとダウンロードリンクが更新されます。
+            success: アーカイブをダウンロードする準備ができました。
+            export_failed: エクスポートに失敗しました。詳細はログを確認してください。
         anonymize: "ユーザーを匿名化"
         anonymize_confirm: "このアカウントを匿名化してよろしいですか？ユーザー名とメールアドレスが変更され、すべてのプロファイル情報がリセットされます。"
         delete_associated_accounts_confirm: "このアカウントからすべての関連アカウントを削除してもよろしいですか？ユーザーのメールアドレスが変更されると、ユーザーはログインできなくなる可能性があります。"

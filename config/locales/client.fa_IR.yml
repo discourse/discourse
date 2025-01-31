@@ -3484,6 +3484,7 @@ fa_IR:
           other: "شما <b>%{count}</b> نوشته انتخاب کرده اید"
       deleted_by_author_simple: "(موضوع توسط نویسنده حذف شد)"
     post_list:
+      title: "آخرین فرسته‌ها"
       empty: "هیچ پستی وجود ندارد"
       aria_post_number: "%{title} - نوشته #%{postNumber}"
     post:
@@ -3645,9 +3646,6 @@ fa_IR:
         delete_topic_confirm_modal_no: "خیر، این موضوع را نگه دار"
         delete_topic_error: "خطایی در هنگام حذف این موضوع رخ داده است."
         delete_topic: "حذف موضوع"
-        add_post_notice: "افزودن اطلاعیه کارکنان…"
-        change_post_notice: "تغییر اطلاعیه کارکنان…"
-        delete_post_notice: "حذف اطلاعیه همکاران"
         remove_timer: "حذف زمان‌سنج"
         edit_timer: "ویرایش تایمر"
       actions:
@@ -4164,20 +4162,6 @@ fa_IR:
       close: "بستن (خروج)"
       content_load_error: '<a href="%url%">محتوا</a> بارگیری نشد.'
       image_load_error: '<a href="%url%">تصویر</a> بارگیری نشد.'
-    experimental_lightbox:
-      image_load_error: "تصویر بارگیری نشد."
-      screen_reader_image_title: "تصویر %{current} از %{total}: %{title}"
-      buttons:
-        next: "بعدی (کلید جهت‌نمای راست یا پایین)"
-        previous: "قبلی (کلید جهت‌نمای چپ یا بالا)"
-        close: "بستن (خروج)"
-        download: "دانلود تصویر"
-        newtab: "باز کردن تصویر در یک برگه جدید"
-        zoom: "بزرگنمایی/کوچک کردن تصویر (کلید Z)"
-        rotate: "چرخش تصویر (کلید R)"
-        fullscreen: "تغییر حالت تمام صفحه مرورگر (کلید M)"
-        carousel: "نمایش تمام تصاویر در چرخ فلک (کلید A)"
-        retry: "دوباره سعی کنید تصویر را بارگیری کنید"
     cannot_render_video: این ویدیو قابل ارائه نیست، چون مرورگر شما از کدک پشتیبانی نمی‌کند.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4214,7 +4198,6 @@ fa_IR:
         title: "برنامه"
         create: "ایجاد موضوع جدید"
         notifications: "%{shortcut} باز کردن آگاه‌سازی‌ها"
-        hamburger_menu: "%{shortcut} باز کردن منو همبرگری"
         user_profile_menu: "%{shortcut} نمایش منو کاربری"
         show_incoming_updated_topics: "%{shortcut} نمایش موضوعات به‌روز شده"
         search: "جستجو %{shortcut}"
@@ -5485,6 +5468,9 @@ fa_IR:
         approve_success: "کاربر تایید شده و ایمیل با دستورالعمل فعال سازی ارسال شد."
         approve_bulk_success: "موفقیت! همه کاربران انتخابی تایید و اطلاعیه ارسال شد."
         time_read: "زمان خواندن"
+        exports:
+          download:
+            button: درخواست بایگانی
         anonymize: "کاربر بینام"
         anonymize_yes: "بله، حساب‌کاربری را بینام کن"
         anonymize_failed: "یک مشکل با حساب‌کاربری بینام وجود دارد"

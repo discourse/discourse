@@ -154,6 +154,13 @@ ar:
         never: "أبدًا"
       separate_sidebar_mode:
         title: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة"
+      send_shortcut:
+        enter:
+          label: "الإرسال بواسطة مفتاح Enter"
+          description: "سطر جديد بواسطة مفتاحَي Shift + Enter"
+        meta_enter:
+          label: "الإرسال بواسطة مفتاحَي %{meta_key} + Enter"
+          description: "سطر جديد بواسطة مفتاح Enter"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"

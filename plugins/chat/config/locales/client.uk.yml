@@ -146,6 +146,13 @@ uk:
         never: "Ніколи"
       separate_sidebar_mode:
         title: "Показувати окремі режими бічної панелі для форуму і чату"
+      send_shortcut:
+        enter:
+          label: "Надіслати за допомогою Enter"
+          description: "Новий рядок за допомогою Shift + Enter"
+        meta_enter:
+          label: "Надіслати %{meta_key} + Enter"
+          description: "Новий рядок за допомогою Enter"
       enable: "Увімкнути чат"
       flag: "Поскаржитися"
       emoji: "Вставити емодзі"

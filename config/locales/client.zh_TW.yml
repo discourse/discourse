@@ -2302,6 +2302,8 @@ zh_TW:
         deselect_all: 取消選取
         description:
           other: "你已選擇了 <b>%{count}</b> 篇貼文。"
+    post_list:
+      title: " 最近貼文"
     post:
       quote_reply: "引用"
       quote_edit: "編輯"
@@ -2754,9 +2756,6 @@ zh_TW:
       close: "關閉（Esc）"
       content_load_error: '無法加載<a href="%url%">內容</a>。'
       image_load_error: '無法加載<a href="%url%">圖片</a>。'
-    experimental_lightbox:
-      buttons:
-        close: "關閉（Esc）"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "、"
       shortcut_key_delimiter_plus: "+"
@@ -2784,7 +2783,6 @@ zh_TW:
         title: "應用"
         create: "%{shortcut} 開啟新話題"
         notifications: "%{shortcut} Open notifications"
-        hamburger_menu: "%{shortcut} 打開漢堡菜單"
         user_profile_menu: "%{shortcut} 打開使用者菜單"
         show_incoming_updated_topics: "%{shortcut} 顯示更新話題"
         search: "%{shortcut} 搜尋"

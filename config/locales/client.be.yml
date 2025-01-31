@@ -1131,6 +1131,8 @@ be:
         public: "грамадскага"
       change_timestamp:
         action: "змяніць метку часу"
+    post_list:
+      title: "Апошнія паведамленні"
     post:
       quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"

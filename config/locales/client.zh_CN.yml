@@ -1700,6 +1700,9 @@ zh_CN:
         after_5_minutes: "5 分钟后"
         after_10_minutes: "10 分钟后"
       notification_level_when_replying:
+        label: "发帖时"
+        watch_topic: "关注话题"
+        track_topic: "跟踪话题"
         do_nothing: "不进行操作"
       topics_unread_when_closed: "话题关闭时视为未读"
       invited:
@@ -3287,6 +3290,7 @@ zh_CN:
           other: "您已选择 <b>%{count}</b> 个帖子。"
       deleted_by_author_simple: "（话题已被作者删除）"
     post_list:
+      title: "最新帖子"
       empty: "没有帖子"
       aria_post_number: "%{title} - 帖子 #%{postNumber}"
     post:
@@ -3330,6 +3334,7 @@ zh_CN:
       notice:
         new_user: "这是 %{user} 首次发帖 - 让我们欢迎他/她加入社区吧！"
         returning_user: "我们已经有一段时间没有看到 %{user} 了 — 他/她上次发帖是 %{time}。"
+        custom_created_by: "（由 %{userLinkHTML} 添加）"
       unread: "帖子未读"
       has_replies:
         other: "%{count} 个回复"
@@ -3392,6 +3397,7 @@ zh_CN:
         edit_anonymous: "抱歉，您需要登录才能编辑此帖子。"
         flag_action: "举报"
         flag: "以私密方式举报此帖子以引起注意，或发送一个关于它的个人消息"
+        anonymous_flag: "向管理人员发送电子邮件以举报此帖子"
         delete_action: "删除帖子"
         delete: "删除此帖子"
         undelete_action: "取消删除帖子"
@@ -3434,9 +3440,9 @@ zh_CN:
         delete_topic_confirm_modal_no: "否，保留此话题"
         delete_topic_error: "删除此话题时出错"
         delete_topic: "删除话题"
-        add_post_notice: "添加管理人员通知…"
-        change_post_notice: "更改管理人员通知…"
-        delete_post_notice: "删除管理人员通知"
+        add_post_notice: "添加官方通知…"
+        change_post_notice: "更改官方通知…"
+        delete_post_notice: "删除官方通知"
         remove_timer: "移除计时器"
         edit_timer: "编辑计时器"
       actions:
@@ -3690,6 +3696,9 @@ zh_CN:
         all: "所有话题"
         none: "无子类别"
       colors_disabled: "您无法选择颜色，因为您的“category style”为“none”。"
+    anonymous_flagging:
+      title: "举报非法内容"
+      description: "要举报非法内容，请联系 <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "感谢您维护社区的文明！"
       action: "举报帖子"
@@ -3927,20 +3936,6 @@ zh_CN:
       close: "关闭 (Esc)"
       content_load_error: '<a href="%url%">内容</a>无法加载。'
       image_load_error: '<a href="%url%">图片</a>无法加载。'
-    experimental_lightbox:
-      image_load_error: "图片无法加载。"
-      screen_reader_image_title: "第 %{current} 张图片，共 %{total} 张：%{title}"
-      buttons:
-        next: "下一个（向右或向下箭头键）"
-        previous: "上一个（向左或向上箭头键）"
-        close: "关闭 (Esc)"
-        download: "下载图片"
-        newtab: "在新标签页中打开图片"
-        zoom: "放大/缩小图片（Z 键）"
-        rotate: "旋转图片（R 键）"
-        fullscreen: "切换浏览器全屏模式（M 键）"
-        carousel: "显示轮播中的所有图片（A 键）"
-        retry: "重试加载图片"
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "，"
@@ -3977,7 +3972,7 @@ zh_CN:
         title: "应用程序"
         create: "%{shortcut} 创建新话题"
         notifications: "%{shortcut} 打开通知"
-        hamburger_menu: "%{shortcut} 打开汉堡菜单"
+        hamburger_menu: "%{shortcut} 打开导航菜单"
         user_profile_menu: "%{shortcut} 打开用户菜单"
         show_incoming_updated_topics: "%{shortcut} 显示更新的话题"
         search: "%{shortcut} 搜索"
@@ -5926,7 +5921,7 @@ zh_CN:
           domain: "网域"
         screened_ips:
           title: "已屏蔽的 IP"
-          description: '正在监视的 IP 地址。使用 “允许”以将 IP 地址列入许可名单。'
+          description: '正在监视的 IP 地址。使用“允许”以将 IP 地址列入许可名单。'
           delete_confirm: "确定要移除对 %{ip_address} 的规则吗？"
           actions:
             block: "禁止"
@@ -6259,6 +6254,18 @@ zh_CN:
         approve_bulk_success: "成功！所有选定用户已被批准并通知。"
         time_read: "阅读时间"
         post_edits_count: "帖子编辑"
+        exports:
+          title: 用户导出
+          download:
+            description: 下载最新导出
+            expires_in:
+              other: '%{count} 小时后到期'
+            not_available: 没有可用导出
+            button: 请求归档
+            confirm: 确实要创建此用户活动和偏好设置的归档吗？
+            started: 我们已经开始收集归档，下载链接将在该过程完成后更新。
+            success: 归档已准备就绪，可供下载。
+            export_failed: 抱歉，导出失败。请检查日志以获取更多信息。
         anonymize: "对用户进行匿名化处理"
         anonymize_confirm: "确定要匿名化此帐户吗？这将更改用户名和电子邮件地址，并重置所有个人资料信息。"
         delete_associated_accounts_confirm: "确定要删除此帐户的所有关联帐户吗？如果用户的电子邮件地址发生变化，则可能无法登录。"
