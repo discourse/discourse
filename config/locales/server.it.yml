@@ -339,6 +339,7 @@ it:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Non puoi aggiungere nessuno dei seguenti valori all'impostazione: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Non è possibile disabilitare i metadati delle immagini eliminate se è abilitata l'opzione \"Ottimizzazione multimediale del compositore abilitata\". Disattiva questa opzione prima di disabilitare i metadati delle immagini eliminate."
       twitter_summary_large_image_no_svg: "Le immagini di riepilogo di Twitter utilizzate per i metadati di twitter:image non possono essere immagini .svg."
+      tl0_and_anonymous_flag: "Per gli utenti anonimi è necessario fornire 'site contact email' o 'email address to report illegal content'."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Purtroppo è stato impossibile creare un'anteprima per questa pagina, perché non è stato trovato il server '%{hostname}'. Nel tuo post apparirà solo un link senza anteprima. :cry:"
@@ -1620,7 +1621,7 @@ it:
       google_analytics_version: "Il tuo Discourse utilizza attualmente Google Analytics 3, che non sarà più supportato dopo luglio 2023. <a href='https://meta.discourse.org/t/260498'>Passa a Google Analytics 4</a> ora per continuare a ricevere preziose informazioni e analisi per le prestazioni del tuo sito web."
       category_style_deprecated: "La tua istanza di Discourse utilizza attualmente uno stile di categoria deprecato che verrà rimosso prima del rilascio della versione beta finale Discourse 3.2. Consulta <a href='https://meta.discourse.org/t/282441'>Passaggio a un'impostazione del sito con stile di categoria singola</a> per istruzioni su come mantenere lo stile di categoria selezionato."
       maxmind_db_configuration: 'Il server è stato configurato in modo da usare i database MaxMind per la ricerca inversa dell''indirizzo IP, ma non è stato ancora configurato un ID account MaxMind. Di conseguenza, in futuro potrebbe non essere possibile scaricare i database MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consulta questa guida per approfondimenti</a>.'
-      admin_sidebar_deprecation: "Il vecchio layout di amministrazione è deprecato in favore del nuovo layout della <a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>barra laterale</a> e verrà rimosso nella prossima versione. Puoi <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurare</a> il nuovo layout della barra laterale ora per aderire prima di allora."
+      admin_sidebar_deprecation: "Il vecchio layout di amministrazione è deprecato in favore del nuovo layout della <a href='https://meta.discourse.org/t/-/289281'>barra laterale</a> e verrà rimosso nella prossima versione. Puoi <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurare</a> il nuovo layout della barra laterale ora per aderire prima di allora."
     back_from_logster_text: "Torna al sito"
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
@@ -1630,8 +1631,9 @@ it:
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
     default_locale: "La lingua di default di questa istanza di Discourse. Puoi rimpiazzare il testo delle categorie e argomenti generati dal sistema in <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizza / Testo </a>."
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
-    set_locale_from_accept_language_header: "imposta la lingua dell'interfaccia per gli utenti anonimi dalla intestazione lingue del loro browser web"
-    support_mixed_text_direction: "Supporto misto di direzioni del testo da sinistra a destra e da destra a sinistra."
+    set_locale_from_cookie: "Consente di impostare le impostazioni locali di un utente anonimo tramite il cookie del browser 'locale'"
+    set_locale_from_param: "Consente di impostare le impostazioni locali di un utente anonimo tramite il parametro URL 'lang', ad esempio ?lang=es"
+    support_mixed_text_direction: "Supporto misto di direzioni del testo da sinistra a destra e da destra a sinistra"
     min_post_length: "Lunghezza minima consentita del messaggio in caratteri (esclusi i messaggi personali)"
     min_first_post_length: "Lunghezza minima consentita del primo messaggio (corpo dell'argomento) (esclusi i messaggi personali)"
     min_personal_message_post_length: "Lunghezza minima consentita in caratteri per i messaggi (sia il primo messaggio che per le risposte)"
@@ -1700,7 +1702,7 @@ it:
     block_onebox_on_redirect: "Previene l'oneboxing per gli URL che conducono a una pagina di reindirizzamento. Questa configurazione blocca la generazione di un riquadro (onebox) per tutti quegli URL che reindirizzano a una diversa destinazione. In questo modo, i link diretti senza reindirizzamenteto assumono la priorità nell'oneboxing."
     allowed_inline_onebox_domains: "Un elenco di domini che saranno trasformati in onebox in forma di miniatura se collegati senza un titolo"
     enable_inline_onebox_on_all_domains: "Ignora l'impostazione del sito inline_onebox_domain_allowlist e consenti onebox in linea per tutti i domini."
-    onebox_locale: "Impostazioni locali inviate ai provider onebox. Se lasciato vuoto, verranno utilizzate le impostazioni locali predefinite."
+    onebox_locale: "Impostazioni locali inviate ai provider onebox. Se lasciato vuoto, verranno utilizzate le impostazioni locali predefinite"
     force_custom_user_agent_hosts: "Host per i quali utilizzare l'user agent onebox personalizzato su tutte le richieste. (Particolarmente utile per gli host che limitano l'accesso con user agent)."
     max_oneboxes_per_post: "Imposta il numero massimo di onebox da includere in un singolo messaggio. Le onebox mostrano un'anteprima dei contenuti dei collegamenti presenti nel messaggio."
     facebook_app_access_token: "Un token generato dall' ID e dal segreto della tua app Facebook. Utilizzato per generare onebox di Instagram."
@@ -1849,8 +1851,8 @@ it:
     login_required: "Autenticazione richiesta per leggere contenuti su questo sito, disabilita l'accesso anonimo."
     min_username_length: "Lunghezza minima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più brevi di questo, il tuo sito potrebbe avere malfunzionamenti!"
     max_username_length: "Lunghezza massima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più lunghi di questo, il tuo sito non funzionerà!"
-    unicode_usernames: "Consenti ai nomi utente e nomi di gruppo di contenere lettere e numeri Unicode."
-    allowed_unicode_username_characters: "Espressione regolare per consentire solo alcuni caratteri Unicode all'interno dei nomi utente. Lettere e numeri ASCII saranno sempre consentiti e non è necessario includerli nell'elenco consentito."
+    unicode_usernames: "Consenti ai nomi utente e nomi di gruppo di contenere lettere e numeri Unicode"
+    allowed_unicode_username_characters: "Espressione regolare per consentire solo alcuni caratteri Unicode all'interno dei nomi utente. Lettere e numeri ASCII saranno sempre consentiti e non è necessario includerli nell'elenco consentito"
     reserved_usernames: "Nomi utenti per i quali l'iscrizione non è consentita. Il simbolo del carattere jolly * può essere utilizzato per abbinare qualsiasi carattere zero o più volte."
     min_password_length: "Definisce il numero minimo di caratteri richiesti per le password utente del sito web. Un valore troppo basso potrebbe compromettere la sicurezza della password, rendendola più semplice da indovinare per terze parti non autorizzate. Un valore troppo alto potrebbe rendere la password più difficile da memorizzare per l'utente."
     min_admin_password_length: "Definisce la lunghezza minima della password per utenti amministratori. Tutte le password amministratore dovranno conformarsi alla lunghezza specificata per una maggiore sicurezza. È un'impostazione essenziale per proteggere l'account amministratore da eventuali accessi non autorizzati."
@@ -2116,7 +2118,8 @@ it:
     num_hours_to_close_topic: "Numero di ore per mettere in pausa un argomento in attesa dell'intervento di un moderatore."
     auto_respond_to_flag_actions: "Attiva risposta automatica quando viene fatta una segnalazione."
     min_first_post_typing_time: "Quantità minima di tempo in millisecondi che un utente deve impiegare per la digitazione del primo messaggio. Se la soglia non viene raggiunta o superata, il messaggio verrà automaticamente inserito nella coda dei messaggi da approvare. Impostare su 0 per disabilitare (non consigliato)"
-    auto_silence_fast_typers_on_first_post: "Silenzia automaticamente gli utenti che non soddisfano min_first_post_typing_time"
+    fast_typing_threshold: "Quantità minima di tempo in millisecondi che un utente deve digitare per il suo primo messaggio. Se la soglia non viene raggiunta, il messaggio entrerà automaticamente nella coda di revisione. Il valore minimo è 1 secondo, quello standard è 3 secondi, quello massimo è 5 secondi."
+    auto_silence_fast_typers_on_first_post: "Silenzia automaticamente gli utenti che non raggiungono la `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Livello di attendibilità massimo per silenziare automaticamente chi scrive troppo spesso o troppo velocemente."
     auto_silence_first_post_regex: "Espressione regolare senza distinzione tra maiuscole e minuscole che, se soddisfatta, farà in modo che il primo messaggio dell'utente sia silenziato e inviato nella coda dei messaggi da approvare. Esempio: rabbia|a[bc]a, fa in modo che tutti i messaggi contenenti le parole rabbia o aba o aca siano silenziati in un primo momento. Si applica solo al primo messaggio. Impostazione DEPRECATA: usare Silence Watched Words al suo posto."
     reviewable_claiming: "È necessario rivendicare il contenuto revisionabile prima che possa essere manipolato?"
@@ -2124,6 +2127,8 @@ it:
     reviewable_default_visibility: "Non mostrare elementi revisionabili a meno che non soddisfino questa priorità"
     reviewable_low_priority_threshold: "Il filtro di priorità nasconde gli elementi sottoposti a revisione che non raggiungono questo punteggio a meno che non venga utilizzato il filtro '(tutti)'."
     high_trust_flaggers_auto_hide_posts: "I messaggi di nuovi utenti vengono automaticamente nascosti dopo essere stati contrassegnati come spam da un utente TL3 +"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Gli utenti anonimi visualizzeranno le informazioni che dovranno inviare via e-mail agli amministratori per segnalare contenuti illegali."
+    email_address_to_report_illegal_content: "Se il campo viene lasciato vuoto, verrà utilizzato l'indirizzo email predefinito dell'amministratore del sito."
     cooldown_hours_until_reflag: "Quanto tempo gli utenti dovranno aspettare prima di poter segnalare nuovamente un messaggio"
     slow_mode_prevents_editing: "Stabilisce se la \"Modalità lenta\" impedisce la modifica, dopo il periodo indicato da editing_grace_period."
     reply_by_email_enabled: "Attiva la funzionalità che consente all'utente di rispondere agli argomenti direttamente via email, invece di doversi prima autenticare sul sito web. Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>la guida su Meta</a>."
@@ -2227,7 +2232,7 @@ it:
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
     enable_category_group_moderation: "Consenti ai gruppi di moderare i contenuti in categorie specifiche"
     group_in_subject: "Imposta %%{optional_pm} nell'oggetto dell'email con il nome del primo gruppo in Messaggio Privato, vedi: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizza il formato oggetto per le e-mail standard</a>"
-    allow_anonymous_posting: "Abilita l'opzione che consente all'utente di passare alla modalità anonima per pubblicare. Se attiva, l'utente può scegliere di mantenere privata la propria identità quando pubblica messaggi o argomenti sul sito. Vedi anche `allow_anonymous_likes`."
+    allow_anonymous_posting: "Abilita l'opzione che consente all'utente di passare alla modalità anonima per pubblicare. Se attiva, l'utente può scegliere di mantenere privata la propria identità quando pubblica messaggi o argomenti sul sito. Vedi anche `allow anonymous likes`."
     allow_anonymous_likes: "Abilita l'opzione che consente all'utente che naviga sul tuo sito di mettere \"mi piace\" anonimi. Se attiva, l'utente può scegliere di mantenere privata la propria identità quando mette \"mi piace\" a messaggi o argomenti sul sito. Vedi anche `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Livello di attendibilità minimo richiesto per abilitare la pubblicazione in modalità anonima"
     anonymous_posting_allowed_groups: "Gruppi a cui è consentito abilitare la pubblicazione anonima"
@@ -2448,7 +2453,6 @@ it:
     share_quote_visibility: "Determina quando mostrare i pulsanti di condivisione delle citazioni: mai, solo agli utenti anonimi o a tutti gli utenti. "
     create_revision_on_bulk_topic_moves: "Crea una revisione per i primi messaggi quando gli argomenti vengono spostati in blocco in una nuova categoria."
     allow_changing_staged_user_tracking: "Consenti a un utente amministratore di modificare le preferenze di notifica di etichette e categorie di utenti provvisori."
-    use_email_for_username_and_name_suggestions: "Utilizza la prima parte degli indirizzi e-mail per suggerimenti di nomi e nomi utente. Nota che questo aiuta il pubblico a individuare gli indirizzi e-mail completi degli utenti (perché la maggior parte delle persone utilizza servizi comuni come `gmail.com`)."
     use_name_for_username_suggestions: "Usa il nome completo dell'utente durante il suggerimento di nomi utente."
     suggest_weekends_in_date_pickers: "Includi i fine settimana (sabato e domenica) nei suggerimenti del selettore di date (disabilita questa opzione se usi Discourse solo nei giorni feriali, dal lunedì al venerdì)."
     show_bottom_topic_map: "Mostra la mappa degli argomenti in fondo all'argomento quando ha 10 o più risposte."
@@ -2458,7 +2462,6 @@ it:
     default_navigation_menu_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie del menu di navigazione."
     default_navigation_menu_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette del menu di navigazione."
     experimental_new_new_view_groups: 'Abilita un nuovo elenco di argomenti che combini argomenti non letti e nuovi e crea il link "Tutto" nella barra laterale a esso.'
-    enable_experimental_lightbox: "Sostituisci la lightbox dell'immagine predefinita con il design rinnovato."
     glimmer_topic_list_mode: "Controlla se è in uso la nuova implementazione della topic-list \"glimmer\". \"auto\" verrà abilitata automaticamente una volta che tutti i tuoi temi e plugin saranno pronti. Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/343404'>l'argomento su Meta</a>."
     glimmer_post_menu_mode: "Controlla se viene utilizzata la nuova implementazione del menu dei messaggi \"glimmer\". \"automatica\" verrà abilitato automaticamente una volta che tutti i tuoi temi e plugin saranno pronti. Questa implementazione è in fase di sviluppo attivo e non è pensata per l'uso in produzione. Non sviluppare temi/plugin con essa finché l'implementazione non sarà finalizzata e annunciata."
     glimmer_post_menu_groups: "Abilita la nuova implementazione del menu dei messaggi \"glimmer\" in modalità \"automatica\" per i gruppi di utenti specificati. Questa implementazione è in fase di sviluppo attivo e non è destinata all'uso in produzione. Non sviluppare temi/plugin con essa finché l'implementazione non sarà finalizzata e annunciata."
@@ -4544,6 +4547,8 @@ it:
             label: "Schema di colori"
           body_font:
             label: "Carattere del corpo"
+          site_font:
+            label: "Carattere"
           heading_font:
             label: "Carattere dell'intestazione"
           styling_preview:

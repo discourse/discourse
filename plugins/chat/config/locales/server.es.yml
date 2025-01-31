@@ -185,6 +185,8 @@ es:
       inline_to_message: "Mensaje #%{message_id} de %{username} - #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat para el tema %{topic_title}"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Hilo en #%{chat_channel}"
       thread_title_connector: "en"
       x_members:
         one: "%{count} miembro"

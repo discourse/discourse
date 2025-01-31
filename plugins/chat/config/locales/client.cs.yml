@@ -146,6 +146,13 @@ cs:
         never: "Nikdy"
       separate_sidebar_mode:
         title: "Zobrazit samostatné režimy postranního panelu pro fórum a chat"
+      send_shortcut:
+        enter:
+          label: "Odeslat pomocí Enter"
+          description: "Nový řádek pomocí Shift + Enter"
+        meta_enter:
+          label: "Odeslat pomocí %{meta_key} + Enter"
+          description: "Nový řádek pomocí Enter"
       enable: "Povolit chat"
       flag: "Nahlášení"
       emoji: "Vložit emoji"

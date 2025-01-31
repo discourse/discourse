@@ -3501,6 +3501,7 @@ hu:
           other: "Kiválasztott <b>%{count}</b> bejegyzést."
       deleted_by_author_simple: "(a szerző törölte a témát)"
     post_list:
+      title: "Legújabb bejegyzések"
       empty: "Nincsenek bejegyzések"
       aria_post_number: "%{title} - %{postNumber} bejegyzés"
     post:
@@ -3547,6 +3548,7 @@ hu:
       notice:
         new_user: "Ez az első alkalom, hogy %{user} bejegyzést tett közzé – üdvözöljük a közösségünkben!"
         returning_user: "Már egy ideje nem láttuk a %{user} felhasználót - az utolsó bejegyzési ideje: %{time}"
+        custom_created_by: "(hozzáadta: %{userLinkHTML})"
       unread: "A bejegyzés olvasatlan"
       has_replies:
         one: "%{count} válasz"
@@ -3663,9 +3665,9 @@ hu:
         delete_topic_confirm_modal_no: "Nem, a téma megtartása"
         delete_topic_error: "Hiba történt a téma törlése közben"
         delete_topic: "téma törlése"
-        add_post_notice: "Stábnak szóló megjegyzés hozzáadása…"
-        change_post_notice: "Stábnak szóló megjegyzés módosítása…"
-        delete_post_notice: "Stábnak szóló megjegyzés törlése"
+        add_post_notice: "Hivatalos közlemény hozzáadása..."
+        change_post_notice: "Hivatalos közlemény módosítása…"
+        delete_post_notice: "Hivatalos közlemény törlése"
         remove_timer: "időzítő eltávolítása"
         edit_timer: "időzítő szerkesztése"
       actions:
@@ -4187,20 +4189,6 @@ hu:
       close: "Bezárás (Esc)"
       content_load_error: 'A <a href="%url%">tartalom</a> nem tölthető be.'
       image_load_error: '<a href="%url%">A képet</a> nem lehetett betölteni.'
-    experimental_lightbox:
-      image_load_error: "A képet nem lehetett betölteni."
-      screen_reader_image_title: "A %{current} kép %{total}: %{title}"
-      buttons:
-        next: "Következő (jobbra vagy lefelé mutató nyílbillentyű)"
-        previous: "Előző (Balra vagy felfelé mutató nyílbillentyű)"
-        close: "Bezárás (Esc)"
-        download: "Kép letöltése"
-        newtab: "Kép megnyitása új lapon"
-        zoom: "Kép nagyítása / kicsinyítése (Z billentyű)"
-        rotate: "Kép elforgatása (R billentyű)"
-        fullscreen: "A böngésző teljes képernyős módjának váltása (M billentyű)"
-        carousel: "Az összes kép megjelenítése egy körhintában (A billentyű)"
-        retry: "Próbálja újra betölteni a képet"
     cannot_render_video: A videó nem jeleníthető meg, mert a böngésző nem támogatja ezt a kodeket.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4237,7 +4225,7 @@ hu:
         title: "Alkalmazás"
         create: "%{shortcut} Új téma létrehozása"
         notifications: "%{shortcut}Értesítés megnyitása"
-        hamburger_menu: "%{shortcut} Hamburger menű megnyítása"
+        hamburger_menu: "%{shortcut} Navigációs menü megnyitása"
         user_profile_menu: "%{shortcut} Felhasználói menü megnyitása"
         show_incoming_updated_topics: "%{shortcut}Frissített téma mutatása"
         search: "%{shortcut} Keresés"
@@ -5830,7 +5818,7 @@ hu:
             one: "%{count} verzióval régebbi!"
             other: "A téma %{count} verzióval le van maradva!"
           compare_commits: "(Változások megtekintése)"
-          remote_theme_edits: "Ha szerkeszteni szeretnéd ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójában</a>"
+          remote_theme_edits: "Ha szerkeszteni szeretné ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójába</a>"
           repo_unreachable: "Nem sikerült kapcsolatba lépni a téma Git tárolójával. Hiba üzenet:"
           imported_from_archive: "Ez a téma egy .zip fájlból lett importálva"
           scss:
@@ -6573,6 +6561,19 @@ hu:
         approve_bulk_success: "Siker! Az összes kiválasztott felhasználót jóváhagyták és értesítették."
         time_read: "Olvasási idő"
         post_edits_count: "Bejegyzés szerkesztések"
+        exports:
+          title: Felhasználói exportálások
+          download:
+            description: Legújabb exportálás letöltése
+            expires_in:
+              one: '%{count} óra múlva lejár'
+              other: '%{count} óra múlva lejár'
+            not_available: Nincs elérhető export
+            button: Archívum letöltése
+            confirm: Biztosan létrehoz egy archívumot a felhasználó tevékenységeiről és beállításairól?
+            started: Elkezdtük gyűjteni az archívumot, a letöltési link frissül, ha a folyamat befejeződik.
+            success: Az archívum készen áll a letöltésre.
+            export_failed: Sajnáljuk, de az exportálás nem sikerült. Kérjük, ellenőrizze a naplókat további információkért.
         anonymize: "Felhasználó névtelenítése"
         anonymize_confirm: "Biztos, hogy anonimizálni szeretné ezt a fiókot? Ez megváltoztatja a felhasználónevet és az e-mail címet, és visszaállítja az összes profilinformációt."
         delete_associated_accounts_confirm: "BIZTOS, hogy törölni szeretné az összes társított fiókot ebből a fiókból? Előfordulhat, hogy a felhasználó nem tud bejelentkezni, ha az e-mail címe megváltozott."

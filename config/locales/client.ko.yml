@@ -2691,6 +2691,8 @@ ko:
         description:
           other: "<b>%{count}</b>개의 개시물을 선택했습니다."
       deleted_by_author_simple: "(작성자가 삭제한 주제)"
+    post_list:
+      title: "최근 글"
     post:
       confirm_delete: "정말 이 게시물을 삭제하시겠습니까?"
       quote_reply: "인용하기"
@@ -2803,7 +2805,6 @@ ko:
         delete_topic_confirm_modal_no: "아니요, 이 주제를 유지합니다"
         delete_topic_error: "이 주제를 삭제하는 중에 오류가 발생했습니다."
         delete_topic: "주제 삭제"
-        delete_post_notice: "운영진 공지 삭제"
         remove_timer: "타이머 제거"
         edit_timer: "타이머 편집"
       actions:
@@ -3222,9 +3223,6 @@ ko:
       close: "닫기(Esc)"
       content_load_error: '<a href="%url%">콘텐츠</a>를 로드할 수 없습니다.'
       image_load_error: '<a href="%url%">이미지</a>를 로드할 수 없습니다.'
-    experimental_lightbox:
-      buttons:
-        close: "닫기 (Esc)"
     cannot_render_video: 브라우저가 코덱을 지원하지 않기 때문에 이 비디오를 렌더링할 수 없습니다.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
@@ -3260,7 +3258,6 @@ ko:
         title: "애플리케이션"
         create: "%{shortcut} 새 주제 생성"
         notifications: "%{shortcut} 알림 열기"
-        hamburger_menu: "%{shortcut} 버거 메뉴 열기"
         user_profile_menu: "%{shortcut} 사용자 메뉴 열기"
         show_incoming_updated_topics: "%{shortcut} 업데이트된 주제 보기"
         search: "%{shortcut} 검색"

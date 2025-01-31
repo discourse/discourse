@@ -2249,6 +2249,8 @@ ca:
         description:
           one: Heu seleccionat <b>%{count}</b> publicació
           other: "Heu seleccionat <b>%{count}</b> publicacions."
+    post_list:
+      title: "Publicacions més recents"
     post:
       quote_reply: "Cita"
       quote_edit: "Edita"
@@ -2706,9 +2708,6 @@ ca:
       close: "Tanca (Esc)"
       content_load_error: 'No s''ha pogut carregar <a href="%url%">el contingut</a>. '
       image_load_error: 'No s''ha pogut carregar la <a href="%url%">imatge</a>.'
-    experimental_lightbox:
-      buttons:
-        close: "Tanca (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -2740,7 +2739,6 @@ ca:
         title: "Aplicació"
         create: "%{shortcut} Crea un tema nou"
         notifications: "%{shortcut} Obre notificacions"
-        hamburger_menu: "%{shortcut} Obre menú hamburguesa"
         user_profile_menu: "%{shortcut} Obre el menú usuari"
         show_incoming_updated_topics: "%{shortcut} Mostra temes actualitzats"
         search: "%{shortcut} Cerca"

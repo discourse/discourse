@@ -138,6 +138,13 @@ hu:
         never: "Soha"
       separate_sidebar_mode:
         title: "Külön oldalsávos módok megjelenítése a fórum és a chat számára"
+      send_shortcut:
+        enter:
+          label: "Küldés Enterrel"
+          description: "Új sor a Shift+Enter segítségével"
+        meta_enter:
+          label: "Küldés: %{meta_key} + Enter"
+          description: "Új sor Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
       emoji: "Hangulatjel beszúrása"

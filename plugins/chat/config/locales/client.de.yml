@@ -138,6 +138,13 @@ de:
         never: "niemals"
       separate_sidebar_mode:
         title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
+      send_shortcut:
+        enter:
+          label: "Senden mit Enter"
+          description: "Neue Zeile mit Umschalt + Enter"
+        meta_enter:
+          label: "Senden mit %{meta_key} + Enter"
+          description: "Neue Zeile mit Enter"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"

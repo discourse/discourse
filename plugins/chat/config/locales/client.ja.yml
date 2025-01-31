@@ -134,6 +134,13 @@ ja:
         never: "なし"
       separate_sidebar_mode:
         title: "フォーラムとチャットに個別のサイドバーモードを表示する"
+      send_shortcut:
+        enter:
+          label: "Enter で送信"
+          description: "Shift + Enter で改行"
+        meta_enter:
+          label: "%{meta_key} + Enter で送信"
+          description: "Enter で改行"
       enable: "チャットを有効にする"
       flag: "通報する"
       emoji: "絵文字を挿入する"

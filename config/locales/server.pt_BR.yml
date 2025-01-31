@@ -339,6 +339,7 @@ pt_BR:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Não é possível adicionar nenhum dos valores a seguir à configuração: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Você não pode desativar a remoção de metadados de imagem se 'a imagem de otimização de mídia do compositor habilitada' estiver ativada. Desative a 'imagem de otimização de mídia do compositor ativada' antes de desativar a remoção dos metadados da imagem."
       twitter_summary_large_image_no_svg: "Imagens de resumo do Twitter usadas para metadados twitter:image não podem ser uma imagem .svg."
+      tl0_and_anonymous_flag: "O e-mail de contato do site ou o endereço de e-mail para denúncia de conteúdo ilegal devem ser fornecidos para usuários(as) anônimos(as)."
     conflicting_google_user_id: 'A ID da conta Google para esta conta foi alterada. A intervenção da equipe é necessária por razões de segurança. Entre em contato com a equipe e direcione para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Desculpe, não foi possível gerar uma pré-visualização desta página, porque o servidor \"%{hostname}\" não pôde ser encontrado. Em vez da pré-visualização, apenas um link aparecerá na sua postagem. :cry:"
@@ -1620,7 +1621,7 @@ pt_BR:
       google_analytics_version: "Atualmente, seu Discourse está usando o Google Analytics 3, que não será mais compatível depois de julho de 2023. <a href='https://meta.discourse.org/t/260498'>Atualize para o Google Analytics 4</a> agora para continuar recebendo informações e análises valiosas para o desempenho do seu site."
       category_style_deprecated: "Atualmente seu Discourse está usando um estilo de categoria obsoleto que será removido antes da versão beta final do Discourse 3.2. Consulte <a href='https://meta.discourse.org/t/282441'>Movendo para uma configuraçao de site de estilo de categoria único</a> para obter instruções de como manter o estilo de categoria selecionado."
       maxmind_db_configuration: 'O servidor foi configurado para usar os bancos de dados MaxMind para consultas reversas de IP. Entretanto, não foi configurado um ID de conta MaxMind, o que pode causar falhas no download dos bancos de dados MaxMind futuramente. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Leia este guia para saber mais</a>.'
-      admin_sidebar_deprecation: "O layout antigo da administração foi preterido em benefício do novo <a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>layout de barra de ferramentas</a> e será removido na próxima versão. Você pode <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> o layout da nova barra lateral antes disso."
+      admin_sidebar_deprecation: "O layout antigo da administração foi preterido em benefício do novo <a href='https://meta.discourse.org/t/-/289281'>layout de barra de ferramentas</a> e será removido na próxima versão. Você pode <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> o layout da nova barra lateral antes disso."
     back_from_logster_text: "Voltar para o site"
   site_settings:
     allow_bulk_invite: "Permitir convites em massa com o uso de um arquivo CSV"
@@ -1630,8 +1631,9 @@ pt_BR:
     delete_old_hidden_posts: "Exclua automaticamente todas as postagens ocultas que permanecerem ocultas por mais de 30 dias."
     default_locale: "O idioma padrão desta instância do Discourse. Você pode substituir o texto das categorias e tópicos gerados pelo sistema em <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar/texto</a>."
     allow_user_locale: "Permitir que os(as) usuários(as) escolham suas próprias preferências de idioma da interface"
-    set_locale_from_accept_language_header: "definir idioma de interface para usuários(as) anônimos(as) no cabeçalhos de idioma do seu navegador"
-    support_mixed_text_direction: "É compatível com direções de texto mescladas da esquerda para a direita e da direita para a esquerda."
+    set_locale_from_cookie: "Permite a definição da localização do(a) usuário(a) anônimo(a) através do cookie \"locale\" do navegador"
+    set_locale_from_param: "Permite a definição da localização do(a) usuário(a) anônimo(a) através do parâmetro da URL \"lang\", por exemplo: ?lang=es"
+    support_mixed_text_direction: "É compatível com direções de texto mescladas da esquerda para a direita e da direita para a esquerda"
     min_post_length: "Tamanho mínimo permitido de postagem, em caracteres, (exceto mensagens pessoais)"
     min_first_post_length: "Tamanho mínimo permitido de primeira postagem (corpo do tópico) (exceto mensagens pessoais)"
     min_personal_message_post_length: "O tamanho mínimo de postagem permitido para mensagens, em caracteres, (respostas e primeira postagem)"
@@ -1700,7 +1702,7 @@ pt_BR:
     block_onebox_on_redirect: "Evite Onebox para URLs que levam a uma página de redirecionamento. Essa configuração impede a criácão de um cartão visual (Onebox) para qualquer URL que redireciona para um destino diferente, assegurando a prioridade de URLs diretas e sem redirecionamento para o Onebox."
     allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura no Onebox se forem vinculados sem um título"
     enable_inline_onebox_on_all_domains: "Ignore a configuração do site allowed_inline_onebox_domains site e permita inclusões de Onebox em todos os domínios."
-    onebox_locale: "O local enviado para provedores do Onebox. Se deixado em branco, será usado o local padrão."
+    onebox_locale: "O local enviado para provedores do Onebox. Se deixado em branco, será usado o local padrão"
     force_custom_user_agent_hosts: "Hosts para os quais usar um agente do(a) usuário(a) do Onebox em todos os pedidos. (Especialmente útil para hosts que limitam acesso do agente do(a) usuário(a).)"
     max_oneboxes_per_post: "Defina a quantidade máxima de Oneboxes que podem ser inclusos em uma única postagem. Oneboxes oferecem uma pré-visualização do conteúdo vinculado nela."
     facebook_app_access_token: "Um token gerado do seu segredo e ID do app Facebook. Usado para gerar Oneboxes do Instagram."
@@ -1849,8 +1851,8 @@ pt_BR:
     login_required: "Exija autenticação para ler o conteúdo deste site, desative o acesso anônimo."
     min_username_length: "Tamanho mínimo do nome do(a) usuário(a) em caracteres. AVISO: se algum usuário(a) ou grupo existente tiver nomes menores do que esse, seu site irá apresentar falhas!"
     max_username_length: "Tamanho máximo de nome do(a) usuário(a) em caracteres. VISO: se algum usuário(a) ou grupo existente tiver nomes maiores do que esse, seu site irá apresentar falhas!"
-    unicode_usernames: "Permita nomes de usuários(a) e grupos contenham letras e números Unicode."
-    allowed_unicode_username_characters: "Expressão regular para permitir apenas alguns caracteres Unicode dentro de nomes de usuários(as). As letras e os números ASCII sempre serão permitidos e não precisam ser incluídos na lista de permissões."
+    unicode_usernames: "Permita nomes de usuários(a) e grupos contenham letras e números Unicode"
+    allowed_unicode_username_characters: "Expressão regular para permitir apenas alguns caracteres Unicode dentro de nomes de usuários(as). As letras e os números ASCII sempre serão permitidos e não precisam ser incluídos na lista de permissões"
     reserved_usernames: "Nomes de usuário(a) para os quais o cadastro não é permitido. O símbolo curinga * pode ser usado para corresponder a qualquer caractere zero ou mais vezes."
     min_password_length: "Define o menor número de caracteres necessários para senhas de usuário(a) no site. Um valor muito baixo pode comprometer a segurança, facilitando para pessoas ou serviços não autorizados as adivinharem. Já um valor muito alto pode tornar mais difícil para os(as) usuários(as) as lembrarem."
     min_admin_password_length: "Especifique o tamanho mínimo da senha para usuários(as) Administradores(as). Assim, todas as senhas de administrador(a) terão um tamanho mínimo, aumentando a segurança. Esta configuração é fundamental para proteger as contas de Administrador(a) de acessos não autorizados."
@@ -2116,7 +2118,8 @@ pt_BR:
     num_hours_to_close_topic: "Quantidade de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ative resposta automática ao remover sinalizador."
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que o(a) usuário(a) deve passar digitando durante a primeira postagem. Se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação necessária. Defina como 0 para desativar (não recomendado)"
-    auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atendem a min_first_post_typing_time"
+    fast_typing_threshold: "Tempo mínimo, em milissegundos, que o(a) usuário(a) tem para escrever sua primeira postagem. Se o limite não for cumprido, a postagem entrará automaticamente na fila de revisão. Baixo é 1 segundo, o padrão são 3 segundos e alto são 5 segundos."
+    auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atenderem a \"fast typing threshold\""
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente usuários(as) que digitam rápido"
     auto_silence_first_post_regex: "Regex sem diferenciação de maiúsculas ou minúsculas que, caso em caso de aprovação, farão que a primeira postagem de um(a) usuário(a) seja silenciada e enviada para a fila de aprovação. Por exemplo: raging|a[bc]a silenciará todas as postagens contendo raging ou aba, ou aca, imediatamente. Isso se aplica apenas à primeira postagem. PRETERIDO: use Silenciar palavras acompanhadas."
     reviewable_claiming: "O conteúdo revisável precisa ser reivindicado antes que possa ser aplicado?"
@@ -2124,6 +2127,8 @@ pt_BR:
     reviewable_default_visibility: "Não mostrar itens revisáveis, a menos que atendam a esta prioridade"
     reviewable_low_priority_threshold: "O filtro de prioridade oculta itens revisáveis que não atendem a esta pontuação a menos que o filtro \"(qualquer)\" seja usado."
     high_trust_flaggers_auto_hide_posts: "Novas postagens de usuários(as) são ocultas automaticamente após serem sinalizadas como spam por um(a) usuário(a) TL3+"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Usuários(as) anônimos(as) verão as informações que eles precisam enviar por e-mail para denunciar conteúdo ilegal."
+    email_address_to_report_illegal_content: "Se ficar em branco, será usado o e-mail padrão da administração do site."
     cooldown_hours_until_reflag: "Quantidade de tempo que os(as) usuários(as) terão que aguardar até poderem sinalizar postagem outra vez"
     slow_mode_prevents_editing: "O \"modo lento\" evita a edição após editing_grace_period?"
     reply_by_email_enabled: "Ative o recurso que permite aos(às) usuários(as) responderem a tópicos direto por e-mail, em vez de exigir que acessem o site com a conta. Confira <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>o guia no Meta</a> para obter mais informações."
@@ -2227,7 +2232,7 @@ pt_BR:
     enable_group_directory: "Fornecer um diretório de grupos para navegação"
     enable_category_group_moderation: "Permitir que grupos moderem conteúdo em categorias específicas"
     group_in_subject: "Definir %%{optional_pm} no assunto do e-mail como o nome do primeiro grupo em PM, consulte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar formato de assunto para e-mails padrão</a>"
-    allow_anonymous_posting: "Ative a opção para os(as) usuários(as) trocarem para o modo anônimo para postagem. Após a ativação, eles(as) podem escolher ocultar suas identidades ao criar postagens ou tópicos através do site. Consulte também \"allow_anonymous_likes\"."
+    allow_anonymous_posting: "Ative esta opção para os(as) usuários(as) trocarem para o modo anônimo para postagem. Após a ativação, eles(as) podem escolher ocultar suas identidades ao criar postagens ou tópicos através do site. Consulte também \"allow anonymous likes\"."
     allow_anonymous_likes: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem navegando no seu site anonimamente curtam as postagens. Após a ativação, os(as) usuários(as) podem escolher ocultar suas identidades ao curtir postagens ou tópicos através do site. Consulte também \"allow_anonymous_posting\"."
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar mensagens anônimas"
     anonymous_posting_allowed_groups: "Grupos com permissão para ativar postagens anônimas"
@@ -2448,7 +2453,6 @@ pt_BR:
     share_quote_visibility: "Determine quando exibir botões de compartilhamento de citações: nunca, apenas para usuários(as) anônimos(as) ou todos(as) os(as) usuários(as). "
     create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
-    use_email_for_username_and_name_suggestions: "Use a primeira parte dos endereços de e-mail para sugestões de nome de usuário e nome. Observe que isso facilita que o público adivinhe os endereços de e-mail completos dos usuários (porque uma grande proporção de pessoas compartilha serviços comuns como `gmail.com`)."
     use_name_for_username_suggestions: "Use o nome completo de um usuário ao sugerir nomes de usuário."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
     show_bottom_topic_map: "Mostra o mapa de tópico na parte inferior do tópico quando tiver pelo menos dez respostas."
@@ -2458,7 +2462,6 @@ pt_BR:
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
     experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
-    enable_experimental_lightbox: "Substitua a lightbox da imagem padrão pelo design renovado."
     glimmer_topic_list_mode: "Controle se a nova implementação da lista de tópicos \"glimmer\" será usada. \"auto\" será ativado automaticamente quando seus plugins e temas estiverem prontos. Consulte o <a href='https://meta.discourse.org/t/343404'>tópico da Meta</a> para obter mais informações."
     glimmer_post_menu_mode: "Controle se a implementação do novo menu de postagem \"glimmer\" é usada. O modo \"automático\" será ativado automaticamente quando os temas e plugins estiverem prontos. Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
     glimmer_post_menu_groups: "Ative a implementação do novo menu de postagem \"glimmer\" no modo \"automático\" para grupos de usuários(as) específicos. Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
@@ -4932,6 +4935,8 @@ pt_BR:
             label: "Paleta de cores"
           body_font:
             label: "Fonte do corpo"
+          site_font:
+            label: "Fonte"
           heading_font:
             label: "Fonte do cabeçalho"
           styling_preview:

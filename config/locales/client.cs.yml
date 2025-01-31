@@ -180,8 +180,8 @@ cs:
           many: "o %{count} dní později"
           other: "o %{count} dní později"
         x_months:
-          one: "za %{count} měsíc"
-          few: "za %{count} měsíce"
+          one: "o %{count} měsíc později"
+          few: "o %{count} měsíce později"
           many: "o %{count} měsíců později"
           other: "o %{count} měsíců později"
         x_years:
@@ -405,7 +405,7 @@ cs:
           many: "%{formatted_number} témat"
           other: "%{formatted_number} témat"
         posts:
-          one: "Je zobrazen pouze %{formatted_number} příspěvek"
+          one: "%{formatted_number} příspěvek"
           few: "%{formatted_number} příspěvky"
           many: "%{formatted_number} příspěvků"
           other: "%{formatted_number} příspěvků"
@@ -3781,10 +3781,10 @@ cs:
       login_reply: "Přihlaste se, chcete-li odpovědět"
       filters:
         n_posts:
-          one: "Je zobrazen pouze %{count} příspěvek"
-          few: "Jsou zobrazeny pouze %{count} příspěvky"
-          many: "Je zobrazeno pouze %{count} příspěvků"
-          other: "Je zobrazeno pouze %{count} příspěvků"
+          one: "%{count} příspěvek"
+          few: "%{count} příspěvky"
+          many: "%{count} příspěvků"
+          other: "%{count} příspěvků"
         cancel: "Zrušit filtr"
       move_to:
         title: "Přesunout do"
@@ -3898,6 +3898,7 @@ cs:
           other: "Máte označeno <b>%{count}</b> příspěvků."
       deleted_by_author_simple: "(téma smazáno autorem)"
     post_list:
+      title: "Nejnovější příspěvky"
       empty: "Nejsou zde žádné příspěvky"
       aria_post_number: "%{title} - příspěvek #%{postNumber}"
     post:
@@ -3950,6 +3951,7 @@ cs:
       notice:
         new_user: "Toto je poprvé, co %{user} zveřejnil/a příspěvek — přivítejme jej/ji v naší komunitě!"
         returning_user: "Už je to nějaký čas, co jsme viděli uživatele %{user} — naposledy přispěl/a %{time}."
+        custom_created_by: "(přidal/a %{userLinkHTML})"
       unread: "Příspěvek je nepřečtený."
       has_replies:
         one: "%{count} odpověď"
@@ -4088,9 +4090,9 @@ cs:
         delete_topic_confirm_modal_no: "Ne, ponechat toto téma"
         delete_topic_error: "Při mazání tohoto tématu došlo k chybě"
         delete_topic: "smazat téma"
-        add_post_notice: "Přidat upozornění redakce…"
-        change_post_notice: "Změnit upozornění redakce…"
-        delete_post_notice: "Odstranit upozornění redakce"
+        add_post_notice: "Přidat oficiální upozornění…"
+        change_post_notice: "Změnit oficiální upozornění…"
+        delete_post_notice: "Smazat oficiální upozornění"
         remove_timer: "odebrat časovač"
         edit_timer: "upravit časovač"
       actions:
@@ -4452,7 +4454,7 @@ cs:
       views: "Zobrazení"
       predicted_views: "Předpokládaná zobrazení"
       so_far: (zatím)
-      read: přečtené
+      read: čtení
       minutes: min
     post_links:
       about: "expandovat více odkazů v tomto příspěvku"
@@ -4660,20 +4662,6 @@ cs:
       close: "Zavřít (Esc)"
       content_load_error: '<a href="%url%">Obsah</a> se nepodařilo načíst.'
       image_load_error: '<a href="%url%">Obrázek</a> se nepodařilo načíst.'
-    experimental_lightbox:
-      image_load_error: "Obrázek nelze načíst."
-      screen_reader_image_title: "Obrázek %{current} z %{total}: %{title}"
-      buttons:
-        next: "Další (šipka vpravo nebo dolů)"
-        previous: "Předchozí (šipka doleva nebo nahoru)"
-        close: "Zavřít (Esc)"
-        download: "Stáhnout obrázek"
-        newtab: "Otevřít obrázek v nové kartě"
-        zoom: "Zvětšení/zmenšení obrazu (klávesa Z)"
-        rotate: "Otočení obrazu (klávesa R)"
-        fullscreen: "Přepnout režim celé obrazovky prohlížeče (klávesa M)"
-        carousel: "Zobrazit všechny obrázky ve smyčce (klávesa A)"
-        retry: "Opakovat načítání obrázku"
     cannot_render_video: Toto video nelze zobrazit, protože váš prohlížeč nepodporuje daný kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4688,7 +4676,7 @@ cs:
         title: "Přejít na"
         home: "%{shortcut} Domů"
         latest: "%{shortcut} Nejnovější"
-        new: "%{shortcut} Nový"
+        new: "%{shortcut} Nové"
         unread: "%{shortcut} Nepřečtěné"
         categories: "%{shortcut} Kategorie"
         top: "%{shortcut} Nahoru"
@@ -4700,9 +4688,9 @@ cs:
         previous: "%{shortcut} Předchozí téma"
       navigation:
         title: "Navigace"
-        jump: "%{shortcut} Přejdi na příspěvek #"
+        jump: "%{shortcut} Přejít na příspěvek #"
         back: "%{shortcut} Zpět"
-        up_down: "%{shortcut} Posunout označení &uarr; &darr;"
+        up_down: "%{shortcut} Posunout výběr &uarr; &darr;"
         open: "%{shortcut} Otevři vybrané téma"
         next_prev: "%{shortcut} Následující/předchozí výběr"
         go_to_unread_post: "%{shortcut} Přejít na první nepřečtený příspěvek"
@@ -4710,12 +4698,12 @@ cs:
         title: "Aplikace"
         create: "%{shortcut} Vytvořit nové téma"
         notifications: "%{shortcut} Otevře upozornění"
-        hamburger_menu: "%{shortcut} Otevře hamburgerové menu"
-        user_profile_menu: "%{shortcut} Otevře uživatelské menu"
-        show_incoming_updated_topics: "%{shortcut} Ukáže aktualizovaná témata"
+        hamburger_menu: "%{shortcut} Schovat/zobrazit navigační nabídku"
+        user_profile_menu: "%{shortcut} Otevřít nabídku pro uživatele"
+        show_incoming_updated_topics: "%{shortcut} Zobrazit aktualizovaná témata"
         search: "%{shortcut}Vyhledávání"
         filter_sidebar: "%{shortcut} Filtr postranního panelu"
-        help: "%{shortcut} Otevře seznam klávesových zkratek"
+        help: "%{shortcut} Otevřít nápovědu pro klávesnici"
         toggle_bulk_select: "%{shortcut} Přepnout hromadný výběr"
         dismiss: "%{shortcut} Odmítnout vybraná témata"
         x: "%{shortcut} Přepnout výběr (v režimu hromadného výběru)"
@@ -4741,7 +4729,7 @@ cs:
       actions:
         title: "Akce"
         bookmark_topic: "%{shortcut} Přidat/odebrat záložku na téma"
-        pin_unpin_topic: "%{shortcut} Připnout/Odepnout téma"
+        pin_unpin_topic: "%{shortcut} Připnout/odepnout téma"
         share_topic: "%{shortcut} Sdílet téma"
         share_post: "%{shortcut} Sdílet příspěvek"
         reply_as_new_topic: "%{shortcut} Odpovědět v propojeném tématu"
@@ -4757,13 +4745,13 @@ cs:
         mark_regular: "%{shortcut} Normální (výchozí) téma"
         mark_tracking: "%{shortcut} Sledovat téma"
         mark_watching: "%{shortcut} Hlídat téma"
-        print: "%{shortcut} Vytiskni téma"
+        print: "%{shortcut} Vytisknout téma"
         defer: "%{shortcut} Označit téma jako nepřečtené"
         topic_admin_actions: "%{shortcut} Otevřít akce správce tématu"
         archive_private_message: "%{shortcut} Přepnout archivaci soukromé zprávy"
       search_menu:
         title: "Nabídka vyhledávání"
-        prev_next: "%{shortcut} posunout výběr nahoru a dolů"
+        prev_next: "%{shortcut} Posunout výběr nahoru a dolů"
         insert_url: "%{shortcut} Vložit výběr do otevřeného editoru"
         full_page_search: "%{shortcut} Spustí celostránkové vyhledávání"
     badges:
@@ -4792,10 +4780,10 @@ cs:
         many: "+%{count} dalších"
         other: "+%{count} dalších"
       awarded:
-        one: "%{number} udělen"
-        few: "%{number} uděleny"
-        many: "%{number} uděleno"
-        other: "%{number} uděleno"
+        one: "udělen %{number}"
+        few: "uděleny %{number}"
+        many: "uděleno %{number}"
+        other: "uděleno %{number}"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
       none: "(žádný)"
       successfully_granted: "Úspěšně přidělený %{badge}uživateli%{username}"
@@ -5351,6 +5339,9 @@ cs:
         legal:
           title: "Právní záležitosti"
           header_description: "Nakonfigurujte právní nastavení, jako jsou smluvní podmínky, zásady ochrany osobních údajů, kontaktní údaje a aspekty specifické pro EU"
+        localization:
+          title: "Lokalizace"
+          header_description: "Nastavte uživatelské rozhraní vaší komunity z pohledu jazyka a dalších možností lokalizace"
         login_and_authentication:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
@@ -5888,7 +5879,7 @@ cs:
           backups: "Zálohy"
           whats_new:
             title: "Co je nového?"
-            keywords: "změna|funkce|vydání"
+            keywords: "changelog|feature|release|změna|funkce|vydání"
       community:
         title: "Komunita"
         sidebar_link:
@@ -5901,12 +5892,15 @@ cs:
           group_permissions: "Skupinová oprávnění"
           users: "Uživatelé"
           groups: "Skupiny"
+          localization:
+            title: "Lokalizace"
+            keywords: "locale|language|timezone|unicode|ltr|jazyk|časová|zóna"
           user_fields: "Uživatelská pole"
           watched_words: "Sledovaná slova"
           legal: "Právní záležitosti"
           moderation_flags:
             title: "Moderování"
-            keywords: "příznak|revize"
+            keywords: "flag|review|nahlášení|revize"
       appearance:
         title: "Vzhled"
         sidebar_link:
@@ -5918,15 +5912,15 @@ cs:
           themes: "Motivy"
           components:
             title: "Komponenty"
-            keywords: "motiv|rozšíření|"
+            keywords: "theme|extension|motiv|rozšíření|"
           site_texts: "Texty"
       email_settings:
         title: "Nastavení e-mailu"
         sidebar_link:
           appearance: "Vzhled"
           server_setup:
-            title: "Nastavení serveru a protokoly"
-            keywords: "email|smtp|mailgun|sendgrid|odeslané|přeskočeno|vráceno|přijato|odmítnuto|protokoly e-mailů|náhled shrnutí"
+            title: "Nastavení a protokoly"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary|odeslané|přeskočeno|vráceno|přijato|odmítnuto|protokoly e-mailů|náhled souhrnu"
       security:
         title: "Zabezpečení"
         sidebar_link:
@@ -5934,7 +5928,7 @@ cs:
           spam: "Spam"
           staff_action_logs:
             title: "Protokoly a filtrování"
-            keywords: "protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
       section_landing_pages:
         account:
           title: "Účet"
@@ -6542,7 +6536,7 @@ cs:
         settings: "Nastavení"
         templates: "Šablony"
         templates_title: "Šablony e-mailů"
-        preview_digest: "Náhled shrnutí"
+        preview_digest: "Náhled souhrnu"
         advanced_test:
           title: "Pokročilý test"
           desc: "Podívejte se, jak Discourse zpracovává přijaté e-maily. Aby bylo možné e-mail správně zpracovat, vložte níže celou původní e-mailovou zprávu."
@@ -6568,7 +6562,7 @@ cs:
         send_test: "Odeslat zkušební e-mail"
         sent_test: "odesláno!"
         delivery_method: "Způsob doručení"
-        preview_digest_desc: "Zobrazte si náhled obsahu souhrnných e-mailů zasílaných neaktivním uživatelům."
+        preview_digest_desc: "Zobrazte si náhled obsahu e-mailového souhrnu, zasílaného neaktivním uživatelům."
         refresh: "Aktualizovat"
         send_digest_label: "Odeslat výsledek na:"
         send_digest: "Poslat"
@@ -7146,6 +7140,21 @@ cs:
         approve_bulk_success: "Povedlo se! Všichni uživatelé byli schváleni a byla jim rozeslána upozornění."
         time_read: "Čas čtení"
         post_edits_count: "Úpravy příspěvků"
+        exports:
+          title: Export uživatelů
+          download:
+            description: Stáhnout nejnovější export
+            expires_in:
+              one: Vyprší za %{count} hodinu
+              few: Vyprší za %{count} hodiny
+              many: Vyprší za %{count} hodin
+              other: Vyprší za %{count} hodin
+            not_available: K dispozici není žádný export
+            button: Žádost o archiv
+            confirm: Opravdu chcete vytvořit archiv aktivity a nastavení tohoto uživatele?
+            started: Začali jsme shromažďovat archiv, odkaz ke stažení se aktualizuje, až bude proces dokončen.
+            success: Archiv je připraven ke stažení.
+            export_failed: Je nám líto, ale export se nezdařil. Další informace naleznete v protokolech.
         anonymize: "Anonymizovat uživatele"
         anonymize_confirm: "Opravdu chcete tento účet anonymizovat? Tím se změní uživatelské jméno a e-mail a resetují se všechny informace o profilu."
         delete_associated_accounts_confirm: "Opravdu chcete z tohoto účtu odstranit všechny přidružené účty? Uživatel se možná nebude moci přihlásit, pokud se změnil jeho e-mail."

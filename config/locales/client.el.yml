@@ -2984,6 +2984,7 @@ el:
           one: Έχεις επιλέξει <b>%{count}</b> ανάρτηση.
           other: "Έχεις επιλέξει <b>%{count}</b> αναρτήσεις."
     post_list:
+      title: "Τελευταίες αναρτήσεις"
       aria_post_number: "%{title} - δημοσίευση #%{postNumber}"
     post:
       confirm_delete: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την ανάρτηση;"
@@ -3091,9 +3092,6 @@ el:
         delete_topic_confirm_modal_no: "Όχι, κρατήστε αυτό το θέμα"
         delete_topic_error: "Παρουσιάστηκε σφάλμα κατά τη διαγραφή αυτού του θέματος"
         delete_topic: "διαγραφή θέματος"
-        add_post_notice: "Προσθήκη σημείωσης προσωπικού…"
-        change_post_notice: "Αλλαγή σημείωσης προσωπικού…"
-        delete_post_notice: "Διαγραφή σημείωσης προσωπικού…"
         remove_timer: "αφαίρεση χρονοδιακόπτη"
       actions:
         people:
@@ -3506,10 +3504,6 @@ el:
       close: "Κλείσιμο (Esc)"
       content_load_error: 'Δεν ήταν δυνατή η φόρτωση <a href="%url%">του περιεχομένου</a>.'
       image_load_error: 'Δεν ήταν δυνατή η φόρτωση <a href="%url%">της εικόνας</a>.'
-    experimental_lightbox:
-      buttons:
-        close: "Κλείσιμο (Esc)"
-        retry: "Δοκιμάστε ξανά να φορτώσετε την εικόνα"
     cannot_render_video: Αυτό το βίντεο δεν μπορεί να αποδοθεί επειδή το πρόγραμμα περιήγησής σας δεν υποστηρίζει τον κωδικοποιητή.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3545,7 +3539,6 @@ el:
         title: "Εφαρμογή"
         create: "%{shortcut} Δημιουργία νέου θέματος"
         notifications: "%{shortcut} Άνοιγμα ειδοποιήσεων"
-        hamburger_menu: "%{shortcut}'Ανοιξε μενού χάμπουρκερ"
         user_profile_menu: "%{shortcut} Άνοιγμα μενού χρήστη"
         show_incoming_updated_topics: "%{shortcut} Εμφάνιση ενημερωμένων νημάτων"
         search: "%{shortcut} Αναζήτηση"
@@ -5044,6 +5037,9 @@ el:
         approve_success: "Ο χρήστης εγκρίθηκε και του αποστάλθηκε ένα email με οδηγίες για την ενεργοποίηση του λογαριασμού του."
         approve_bulk_success: "Επιτυχία! Όλοι οι επιλεγμένοι χρήστες εγκρίθηκαν και ειδοποιήθηκαν."
         time_read: "Χρόνος Ανάγνωσης"
+        exports:
+          download:
+            button: Αίτημα λήψης αρχείου
         anonymize: "Ανωνυμοποίηση Χρήστη"
         anonymize_yes: "Ναι, ανωνυμοποίησε αυτόν τον λογαριασμό"
         anonymize_failed: "Παρουσιάστηκε ένα σφάλμα κατά την ανωνυμοποίηση του λογαριασμού."

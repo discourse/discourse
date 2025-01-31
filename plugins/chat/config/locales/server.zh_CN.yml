@@ -175,7 +175,7 @@ zh_CN:
       inline_to_channel: "聊天 #%{chat_channel}"
       inline_to_topic_channel: "话题%{topic_title}的聊天"
       inline_to_thread: "%{thread_title} - #%{chat_channel}"
-      inline_to_thread_no_title: "#%{chat_channel} 中的话题"
+      inline_to_thread_no_title: "#%{chat_channel} 中的消息串"
       thread_title_connector: "位置："
       x_members:
         other: "%{count} 个成员"

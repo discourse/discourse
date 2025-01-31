@@ -937,12 +937,17 @@ ro:
         other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
       poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
       poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
+      admin_sidebar_deprecation: "Vechiul aspect de administrare este depreciat în favoarea noului <a href='https://meta.discourse.org/t/-/289281'>aspect cu bară laterală</a> și va fi eliminat în următoarea versiune. Poți <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configura</a> acum noul aspect cu bară laterală pentru a-l alege înainte de această schimbare."
     back_from_logster_text: "Înapoi la site"
   site_settings:
     disabled: "dezactivat"
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "șterge automat toate postările ascunse care stau ascunse mai mult de 30 de zile."
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"
+    set_locale_from_accept_language_header: "Setează limba interfeței pentru utilizatorii anonimi din anteturile de limbă ale navigatorului lor web"
+    set_locale_from_cookie: "Permite setarea localei unui utilizator anonim prin intermediul localei din cookie-ului navigatorului"
+    set_locale_from_param: "Permite setarea localei unui utilizator anonim prin intermediul parametrului URL „lang”, de exemplu ?lang=es"
+    support_mixed_text_direction: "Acceptă indicații de text mixte de la stânga la dreapta și de la dreapta la stânga"
     max_post_length: "Lungimea maximă permisă a postării, în caractere"
     show_topic_featured_link_in_digest: "Arată link-ul promovat al subiectului în rezumatul pe email."
     min_topic_title_length: "Minimul de caractere permis în titlul unui subiect"
@@ -969,7 +974,7 @@ ro:
     show_pinned_excerpt_mobile: "Arată fragmente din subiectele fixate în vizualizarea de mobil."
     show_pinned_excerpt_desktop: "Arată fragmente din subiectele fixate în vizualizarea de desktop."
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
-    onebox_locale: "Locala trimisă furnizorilor onebox. Dacă este lăsată necompletat, se va folosi locala implicită."
+    onebox_locale: "Locala trimisă furnizorilor onebox. Dacă este lăsată necompletat, se va folosi locala implicită"
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
@@ -1016,6 +1021,8 @@ ro:
     include_in_discourse_discover: "Permite CDCK, Inc. („Discourse”) să prezinte această comunitate pe <a href='https://discover.discourse.org' target='_blank'>pagina Discover</a> și în materialele de marketing Discourse. Procedând astfel, vei partaja datele necesare pentru ca site-ul tău să fie inclus în serviciu. Te rugăm să reții că promovarea comunităților este la discreția Discourse."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
+    unicode_usernames: "Permite numelor de utilizator și numelor de grup să conțină litere și numere Unicode"
+    allowed_unicode_username_characters: "Expresie regulată pentru a permite numai unele caractere Unicode în numele de utilizator. Literele și numerele ASCII vor fi întotdeauna permise și nu trebuie să fie incluse în lista permisă"
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
     discourse_connect_overrides_bio: "Suprascrie biografia utilizatorului în profil utilizator și nu-i permite acestuia să o modifice"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
@@ -1261,6 +1268,7 @@ ro:
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
     enable_user_status: "Permite utilizatorilor să seteze un mesaj de stare personalizat (emoji + descriere)."
+    use_email_for_username_and_name_suggestions: "Folosește prima parte a adreselor de email pentru nume de utilizator și sugestii de nume. Avertisment: acest lucru poate face mai ușor pentru actorii rău intenționat să descopere adresa de email a membrilor tăi (deoarece mulți oameni folosesc furnizori de email obișnuiți precum `gmail.com`)."
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
@@ -2090,6 +2098,8 @@ ro:
         fields:
           color_scheme:
             label: "Paletă de culori"
+          site_font:
+            label: "Font"
           styling_preview:
             label: "Previzualizează"
           homepage_style:

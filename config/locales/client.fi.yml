@@ -3500,6 +3500,7 @@ fi:
           other: "Olet valinnut <b>%{count}</b> viestiä."
       deleted_by_author_simple: "(kirjoittajan poistama ketju)"
     post_list:
+      title: "Uusimmat viestit"
       empty: "Viestejä ei ole"
       aria_post_number: "%{title} – viesti %{postNumber}"
     post:
@@ -3546,6 +3547,7 @@ fi:
       notice:
         new_user: "Tämä on ensimmäinen kerta kun %{user} kirjoittaa — toivotetaan hänet tervetulleeksi yhteisöömme!"
         returning_user: "Siitä on aikaa kun %{user} on viimeksi nähty — hän oli viimeksi kirjoittanut %{time}."
+        custom_created_by: "(lisännyt: %{userLinkHTML})"
       unread: "Viesti on lukematta"
       has_replies:
         one: "%{count} vastaus"
@@ -3616,6 +3618,7 @@ fi:
         edit_anonymous: "Sinun täytyy ensin kirjautua sisään, jotta voit muokata tätä viestiä."
         flag_action: "Liputa"
         flag: "liputa tämä viesti yksityisesti tai lähetä siitä henkilökohtainen viesti"
+        anonymous_flag: "lähetä sähköposti henkilökunnalle tämän viestin liputtamiseksi"
         delete_action: "Poista viesti"
         delete: "poista tämä viesti"
         undelete_action: "Kumoa viestin poisto"
@@ -3661,9 +3664,9 @@ fi:
         delete_topic_confirm_modal_no: "Ei, säilytä ketju"
         delete_topic_error: "Ketjua poistettaessa tapahtui virhe"
         delete_topic: "poista ketju"
-        add_post_notice: "Lisää ilmoitus henkilökunnalle…"
-        change_post_notice: "Muuta ilmoitusta henkilökunnalle…"
-        delete_post_notice: "Poista ilmoitus henkilökunnalle"
+        add_post_notice: "Lisää virallinen ilmoitus…"
+        change_post_notice: "Muuta virallista ilmoitusta…"
+        delete_post_notice: "Poista virallinen ilmoitus"
         remove_timer: "poista ajastin"
         edit_timer: "muokkaa ajastusta"
       actions:
@@ -3923,6 +3926,9 @@ fi:
         all: "kaikki ketjut"
         none: "ei ala-alueita"
       colors_disabled: "Et voi valita värejä, koska alueen tyyliksi on asetettu 'ei mikään'"
+    anonymous_flagging:
+      title: "Ilmoita laittomasta sisällöstä"
+      description: "Ilmoita laittomasta sisällöstä ottamalla yhteyttä osoitteeseen <a href='mailto:%{email}?subject=Laitonta sisältöä: %{topic_title}&body=Tämä viesti %{url} sisältää laitonta sisältöä.'>%{email}</a>"
     flagging:
       title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa viesti"
@@ -4176,20 +4182,6 @@ fi:
       close: "Sulje (Esc)"
       content_load_error: '<a href="%url%">Sisällön</a> lataaminen ei onnistunut.'
       image_load_error: '<a href="%url%">Kuvan</a> lataaminen ei onnistunut.'
-    experimental_lightbox:
-      image_load_error: "Kuvaa ei voitu ladata."
-      screen_reader_image_title: "Kuva %{current}/%{total}: %{title}"
-      buttons:
-        next: "Seuraava (oikealle- tai alas-nuolinäppäin)"
-        previous: "Edellinen (vasemmalle- tai ylös-nuolinäppäin)"
-        close: "Sulje (Esc)"
-        download: "Lataa kuva"
-        newtab: "Avaa kuva uuteen välilehteen"
-        zoom: "Lähennä/loitonna kuvaa (Z-näppäin)"
-        rotate: "Kierrä kuvaa (R-näppäin)"
-        fullscreen: "Kytke selaimen koko näytön tila (M-näppäin)"
-        carousel: "Näytä kaikki kuvat karusellissa (A-näppäin)"
-        retry: "Yritä ladata kuva uudelleen"
     cannot_render_video: Tätä videota ei voida toistaa, koska selaimesi ei tue tarvittavaa koodekkia.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4226,7 +4218,7 @@ fi:
         title: "Sovellus"
         create: "%{shortcut} Aloita uusi ketju"
         notifications: "%{shortcut} Avaa ilmoitukset"
-        hamburger_menu: "%{shortcut} Avaa hampurilaisvalikko"
+        hamburger_menu: "%{shortcut} Avaa navigointivalikko"
         user_profile_menu: "%{shortcut} Avaa käyttäjävalikko"
         show_incoming_updated_topics: "%{shortcut} Näytä päivitetyt ketjut"
         search: "%{shortcut} Haku"
@@ -6555,6 +6547,19 @@ fi:
         approve_bulk_success: "Kaikki valitut käyttäjät on hyväksytty, ja heille on lähetetty ilmoitus."
         time_read: "Lukuaika"
         post_edits_count: "Viestimuokkaukset"
+        exports:
+          title: Käyttäjien viennit
+          download:
+            description: Lataa uusin vienti
+            expires_in:
+              one: Vanhenee %{count} tunnin kuluttua
+              other: Vanhenee %{count} tunnin kuluttua
+            not_available: Vientiä ei ole saatavilla
+            button: Pyydä arkistoa
+            confirm: Haluatko varmasti luoda arkiston tämän käyttäjän toiminnasta ja asetuksista?
+            started: Olemme aloittaneet arkiston keräämisen. Latauslinkki päivitetään, kun prosessi on valmis.
+            success: Arkisto on valmis ladattavaksi.
+            export_failed: Vienti epäonnistui. Katso lisätietoja lokeista.
         anonymize: "Anonymisoi käyttäjä"
         anonymize_confirm: "Oletko varma, että haluat anonymisoida tämän käyttäjätilin? Tämä muuttaa käyttäjätunnuksen ja sähköpostiosoitteen sekä nollaa kaikki profiilitiedot."
         delete_associated_accounts_confirm: "Oletko varma, että haluat poistaa kaikki tämän tilin liittyvät tilit? Käyttäjä ei välttämättä pysty kirjautumaan sisään, jos hänen sähköpostiosoitteensa on muuttunut."
