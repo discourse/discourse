@@ -311,22 +311,12 @@ module FileStore
       end
     end
 
-    def update_upload_ACL(upload, optimized_images_preloaded: false)
+    def update_upload_ACL(upload)
       key = get_upload_key(upload)
       update_ACL(key, upload.secure?)
 
-      # If we do find_each when the images have already been preloaded with
-      # includes(:optimized_images), then the optimized_images are fetched
-      # from the database again, negating the preloading if this operation
-      # is done on a large amount of uploads at once (see Jobs::SyncAclsForUploads)
-      if optimized_images_preloaded
-        upload.optimized_images.each do |optimized_image|
-          update_optimized_image_acl(optimized_image, secure: upload.secure)
-        end
-      else
-        upload.optimized_images.find_each do |optimized_image|
-          update_optimized_image_acl(optimized_image, secure: upload.secure)
-        end
+      upload.optimized_images.each do |optimized_image|
+        update_optimized_image_acl(optimized_image, secure: upload.secure)
       end
 
       true
