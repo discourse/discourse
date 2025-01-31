@@ -7,7 +7,7 @@ import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
@@ -81,7 +81,7 @@ export default class ChannelsListDirect extends Component {
             }}
             data-toggleable="direct-message-channels"
           >
-            {{dIcon "angle-up"}}
+            {{icon "angle-up"}}
           </span>
         {{/if}}
 

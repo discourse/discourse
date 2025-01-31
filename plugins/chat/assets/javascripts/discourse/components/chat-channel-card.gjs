@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import borderColor from "discourse/helpers/border-color";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
@@ -34,14 +34,14 @@ export default class ChatChannelCard extends Component {
               {{replaceEmoji @channel.title}}
             </span>
             {{#if @channel.chatable.read_restricted}}
-              {{dIcon "lock" class="chat-channel-card__read-restricted"}}
+              {{icon "lock" class="chat-channel-card__read-restricted"}}
             {{/if}}
             {{#if @channel.currentUserMembership.muted}}
               <span
                 class="chat-channel-card__muted"
                 aria-label={{i18n "chat.muted"}}
                 title={{i18n "chat.muted"}}
-              >{{dIcon "d-muted"}}</span>
+              >{{icon "d-muted"}}</span>
             {{/if}}
           </LinkTo>
 

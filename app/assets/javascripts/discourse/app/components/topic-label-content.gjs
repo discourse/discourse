@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 
 const TopicLabelButton = <template>
@@ -14,25 +14,25 @@ const TopicLabelButton = <template>
         <span class="topic-statuses">
           {{#if (eq @topic.archetype "private_message")}}
             <span class="topic-status">
-              {{dIcon "envelope"}}
+              {{icon "envelope"}}
             </span>
           {{/if}}
 
           {{#if @topic.bookmarked}}
             <span class="topic-status">
-              {{dIcon "bookmark"}}
+              {{icon "bookmark"}}
             </span>
           {{/if}}
 
           {{#if @topic.closed}}
             <span class="topic-status">
-              {{dIcon "lock"}}
+              {{icon "lock"}}
             </span>
           {{/if}}
 
           {{#if @topic.pinned}}
             <span class="topic-status">
-              {{dIcon "thumbtack"}}
+              {{icon "thumbtack"}}
             </span>
           {{/if}}
 

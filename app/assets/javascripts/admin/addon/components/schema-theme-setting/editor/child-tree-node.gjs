@@ -1,5 +1,5 @@
 import { on } from "@ember/modifier";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 <template>
   <li
@@ -10,7 +10,7 @@ import dIcon from "discourse/helpers/d-icon";
   >
     <div class="schema-theme-setting-editor__tree-node-text">
       <span>{{@generateSchemaTitle @object @schema @index}}</span>
-      {{dIcon "chevron-right"}}
+      {{icon "chevron-right"}}
     </div>
   </li>
 </template>

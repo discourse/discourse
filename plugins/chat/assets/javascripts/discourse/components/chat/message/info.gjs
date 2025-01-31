@@ -8,7 +8,7 @@ import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
@@ -156,10 +156,10 @@ export default class ChatMessageInfo extends Component {
           <span class="chat-message-info__flag">
             {{#if @message.reviewableId}}
               <LinkTo @route="review.show" @model={{@message.reviewableId}}>
-                {{dIcon "flag" title="chat.flagged"}}
+                {{icon "flag" title="chat.flagged"}}
               </LinkTo>
             {{else}}
-              {{dIcon "flag" title="chat.you_flagged"}}
+              {{icon "flag" title="chat.you_flagged"}}
             {{/if}}
           </span>
         {{/if}}
