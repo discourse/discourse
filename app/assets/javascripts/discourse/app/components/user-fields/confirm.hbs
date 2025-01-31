@@ -1,36 +1,41 @@
-<PluginOutlet
-  @name="confirm-title-wrapper"
-  @outletArgs={{hash field=this.field}}
->
+{{#if this.field.name}}
 
-  {{#if this.field.name}}
-    <label class="control-label">
+  <label class="control-label">
+    <PluginOutlet
+      @name="confirm-title-wrapper"
+      @outletArgs={{hash field=this.field}}
+    >
       {{this.field.name}}
       {{~#unless this.field.required}}
         {{i18n "user_fields.optional"}}{{/unless~}}
-    </label>
-  {{/if}}
+    </PluginOutlet>
 
-</PluginOutlet>
+  </label>
+{{/if}}
 
-<PluginOutlet
-  @name="confirm-checkbox-label-wrapper"
-  @connectorTagName="div"
-  @outletArgs={{hash elementId=this.elementId}}
->
-  <div class="controls">
-    <label class="control-label checkbox-label">
-      <Input
-        id={{concat "user-" this.elementId}}
-        @checked={{this.value}}
-        @type="checkbox"
-      />
+<div class="controls">
+  <label class="control-label checkbox-label">
+    <Input
+      id={{concat "user-" this.elementId}}
+      @checked={{this.value}}
+      @type="checkbox"
+    />
+
+    <PluginOutlet
+      @name="confirm-checkbox-label-wrapper"
+      @outletArgs={{hash field=this.field}}
+    >
       <span>
         {{html-safe this.field.description}}
         {{#unless this.field.name}}{{#if this.field.required}}<span
               class="required"
             >*</span>{{/if}}{{/unless}}
       </span>
-    </label>
-  </div>
-</PluginOutlet>
+    </PluginOutlet>
+
+  </label>
+  <InputTip
+    @validation={{@validation}}
+    class={{unless @validation.reason "hidden"}}
+  />
+</div>

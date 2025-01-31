@@ -6,7 +6,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default class UserFieldBase extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
-
     let element = this.element.querySelector(
       ".user-field.dropdown .select-kit-header"
     );
@@ -28,5 +27,9 @@ export default class UserFieldBase extends Component {
         .toLowerCase();
       return fieldName && `user-field-${fieldName}`;
     }
+  }
+
+  get fullElementId() {
+    return "user-".concat(this.elementId);
   }
 }
