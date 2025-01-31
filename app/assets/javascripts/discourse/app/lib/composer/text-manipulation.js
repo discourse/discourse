@@ -1,8 +1,11 @@
+// @ts-check
+
 /**
  * Interface for text manipulation with an underlying editor implementation.
  *
  * @interface TextManipulation
  */
+export const TextManipulation = {};
 
 /**
  * Whether the editor allows a preview being shown
@@ -187,18 +190,21 @@
  * @readonly
  */
 
+/** @typedef {import("@uppy/utils/lib/UppyFile").MinimalRequiredUppyFile<any,any>} UppyFile */
+
 /**
  * Interface for handling placeholders on upload events
  *
  * @interface PlaceholderHandler
  */
+export const PlaceholderHandler = {};
 
 /**
  * Inserts a file
  *
  * @method
  * @name PlaceholderHandler#insert
- * @param {import("@uppy/utils/lib/UppyFile").MinimalRequiredUppyFile} file The uploaded file
+ * @param {UppyFile} file The uploaded file
  * @returns {void}
  */
 
@@ -207,7 +213,7 @@
  *
  * @method
  * @name PlaceholderHandler#success
- * @param {import("@uppy/utils/lib/UppyFile").MinimalRequiredUppyFile} file The uploaded file
+ * @param {UppyFile} file The uploaded file
  * @param {string} markdown The markdown for the uploaded file
  * @returns {void}
  */
@@ -225,7 +231,7 @@
  *
  * @method
  * @name PlaceholderHandler#cancel
- * @param {import("@uppy/utils/lib/UppyFile").MinimalRequiredUppyFile} file The uploaded file
+ * @param {UppyFile} file The uploaded file
  * @returns {void}
  */
 
@@ -234,7 +240,7 @@
  *
  * @method
  * @name PlaceholderHandler#progress
- * @param {import("@uppy/utils/lib/UppyFile").MinimalRequiredUppyFile} file The uploaded file
+ * @param {UppyFile} file The uploaded file
  * @returns {void}
  */
 
@@ -243,7 +249,7 @@
  *
  * @method
  * @name PlaceholderHandler#progressComplete
- * @param {import("@uppy/utils/lib/UppyFile").MinimalRequiredUppyFile} file The uploaded file
+ * @param {UppyFile} file The uploaded file
  * @returns {void}
  */
 
@@ -252,6 +258,7 @@
  *
  * @interface AutocompleteHandler
  */
+export const AutocompleteHandler = {};
 
 /**
  * Replaces the range with the given text

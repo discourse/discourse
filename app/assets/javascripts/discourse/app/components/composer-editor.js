@@ -212,7 +212,7 @@ export default class ComposerEditor extends Component {
     this.composer.set("allowPreview", this.textManipulation.allowPreview);
 
     if (
-      // Focus on the body unless we have a title
+      // Focus on the editor unless we have a title
       !this.get("composer.model.canEditTitle") ||
       // Or focus is in the body (e.g. when the editor is destroyed)
       document.activeElement.tagName === "BODY"
@@ -871,16 +871,6 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
-    // TODO remove this and all "importQuote" refs
-    // toolbar.addButton({
-    //   id: "quote",
-    //   group: "fontStyles",
-    //   icon: "far-comment",
-    //   sendAction: this.composer.importQuote,
-    //   title: "composer.quote_post_title",
-    //   unshift: true,
-    // });
-
     if (
       this.composer.allowUpload &&
       this.composer.uploadIcon &&

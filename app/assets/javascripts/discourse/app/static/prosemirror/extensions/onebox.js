@@ -91,32 +91,32 @@ const extension = {
     },
   },
 
-  plugins({ pmState: { Plugin }, pmTransform: { ReplaceStep } }) {
+  plugins({ pmState: { Plugin }, getContext }) {
     const plugin = new Plugin({
-      appendTransaction(transactions, prevState, state) {
-        const tr = state.tr;
-
-        for (const transaction of transactions) {
-          const replaceSteps = transaction.steps.filter(
-            (step) => step instanceof ReplaceStep
-          );
-
-          for (const [index, step] of replaceSteps.entries()) {
-            const map = transaction.mapping.maps[index];
-            const [start, oldSize, newSize] = map.ranges;
-
-            // if any onebox_inline moved position to be close to a text node
-          }
-        }
-
-        // Return the transaction if any changes were made
-        return tr.docChanged ? tr : null;
-      },
+      // appendTransaction(transactions, prevState, state) {
+      //   const tr = state.tr;
+      //
+      //   for (const transaction of transactions) {
+      //     const replaceSteps = transaction.steps.filter(
+      //       (step) => step instanceof ReplaceStep
+      //     );
+      //
+      //     for (const [index, step] of replaceSteps.entries()) {
+      //       const map = transaction.mapping.maps[index];
+      //       const [start, oldSize, newSize] = map.ranges;
+      //
+      //       // if any onebox_inline moved position to be close to a text node
+      //     }
+      //   }
+      //
+      //   // Return the transaction if any changes were made
+      //   return tr.docChanged ? tr : null;
+      // },
       state: {
         init() {
           return { full: {}, inline: {} };
         },
-        apply(tr, value) {
+        apply(tr) {
           const updated = { full: [], inline: [] };
 
           // we shouldn't check all descendants, but only the ones that have changed
@@ -169,7 +169,7 @@ const extension = {
             const { full, inline } = plugin.getState(view.state);
 
             for (const [url, list] of Object.entries(full)) {
-              const html = await loadFullOnebox(url, view.props.getContext());
+              const html = await loadFullOnebox(url, getContext());
 
               // naive check that this is not a <a href="url">url</a> onebox response
               if (
@@ -200,7 +200,7 @@ const extension = {
 
             const inlineOneboxes = await loadInlineOneboxes(
               Object.keys(inline),
-              view.props.getContext()
+              getContext()
             );
 
             const tr = view.state.tr;

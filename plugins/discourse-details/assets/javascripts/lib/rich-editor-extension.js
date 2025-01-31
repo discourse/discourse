@@ -20,7 +20,7 @@ const extension = {
     },
   },
   parse: {
-    bbcode(state, token) {
+    bbcode_open(state, token) {
       if (token.tag === "details") {
         state.openNode(state.schema.nodes.details, {
           open: token.attrGet("open") !== null,
@@ -30,6 +30,12 @@ const extension = {
 
       if (token.tag === "summary") {
         state.openNode(state.schema.nodes.summary);
+        return true;
+      }
+    },
+    bbcode_close(state, token) {
+      if (token.tag === "details" || token.tag === "summary") {
+        state.closeNode();
         return true;
       }
     },

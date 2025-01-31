@@ -1,3 +1,4 @@
+// @ts-check
 import { setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import $ from "jquery";
@@ -7,6 +8,12 @@ import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
+ * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
+ * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
+ */
+
 /** @implements {TextManipulation} */
 export default class ProsemirrorTextManipulation {
   allowPreview = false;
@@ -15,20 +22,29 @@ export default class ProsemirrorTextManipulation {
   schema;
   /** @type {import("prosemirror-view").EditorView} */
   view;
-  $editorElement;
+  /** @type {PlaceholderHandler} */
   placeholder;
+  /** @type {AutocompleteHandler} */
   autocompleteHandler;
+  convertFromMarkdown;
+  convertToMarkdown;
 
-  constructor(owner, { schema, view }) {
+  constructor(owner, { schema, view, convertFromMarkdown, convertToMarkdown }) {
     setOwner(this, owner);
     this.schema = schema;
     this.view = view;
-    this.$editorElement = $(view.dom);
+    this.convertFromMarkdown = convertFromMarkdown;
+    this.convertToMarkdown = convertToMarkdown;
 
-    this.placeholder = new ProsemirrorPlaceholderHandler({ schema, view });
+    this.placeholder = new ProsemirrorPlaceholderHandler({
+      schema,
+      view,
+      convertFromMarkdown,
+    });
     this.autocompleteHandler = new ProsemirrorAutocompleteHandler({
       schema,
       view,
+      convertFromMarkdown,
     });
   }
 
@@ -59,15 +75,16 @@ export default class ProsemirrorTextManipulation {
   }
 
   autocomplete(options) {
-    this.$editorElement.autocomplete(
+    // @ts-ignore
+    $(this.view.dom).autocomplete(
       options instanceof Object
         ? { textHandler: this.autocompleteHandler, ...options }
         : options
     );
   }
 
-  applySurroundSelection(head, tail, exampleKey, opts) {
-    this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
+  applySurroundSelection(head, tail, exampleKey) {
+    this.applySurround(this.getSelected(), head, tail, exampleKey);
   }
 
   applySurround(sel, head, tail, exampleKey) {
@@ -87,7 +104,7 @@ export default class ProsemirrorTextManipulation {
     }
 
     const text = head + i18n(`composer.${exampleKey}`) + tail;
-    const doc = this.view.props.convertFromMarkdown(text);
+    const doc = this.convertFromMarkdown(text);
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
@@ -95,7 +112,7 @@ export default class ProsemirrorTextManipulation {
   }
 
   addText(sel, text) {
-    const doc = this.view.props.convertFromMarkdown(text);
+    const doc = this.convertFromMarkdown(text);
 
     // assumes it returns a single block node
     const content =
@@ -111,7 +128,7 @@ export default class ProsemirrorTextManipulation {
   }
 
   insertBlock(block) {
-    const doc = this.view.props.convertFromMarkdown(block);
+    const doc = this.convertFromMarkdown(block);
     const node = doc.content.firstChild;
 
     const tr = this.view.state.tr.replaceSelectionWith(node);
@@ -192,7 +209,7 @@ export default class ProsemirrorTextManipulation {
 
   selectText(from, length, opts) {
     const tr = this.view.state.tr.setSelection(
-      new this.view.state.selection.constructor(
+      new TextSelection(
         this.view.state.doc.resolve(from),
         this.view.state.doc.resolve(from + length)
       )
@@ -228,7 +245,7 @@ export default class ProsemirrorTextManipulation {
   }
 
   insertText(text) {
-    const doc = this.view.props.convertFromMarkdown(text);
+    const doc = this.convertFromMarkdown(text);
 
     this.view.dispatch(
       this.view.state.tr
@@ -240,7 +257,9 @@ export default class ProsemirrorTextManipulation {
   }
 
   replaceText(oldValue, newValue, opts = {}) {
-    const markdown = this.view.props.convertToMarkdown(this.view.state.doc);
+    // Replacing Markdown text is not reliable and should eventually be deprecated
+
+    const markdown = this.convertToMarkdown(this.view.state.doc);
 
     const regex = opts.regex || new RegExp(oldValue, "g");
     const index = opts.index || 0;
@@ -257,7 +276,7 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
-    const newDoc = this.view.props.convertFromMarkdown(newMarkdown);
+    const newDoc = this.convertFromMarkdown(newMarkdown);
     if (!newDoc) {
       return;
     }
@@ -296,10 +315,12 @@ class ProsemirrorAutocompleteHandler {
   view;
   /** @type {import("prosemirror-model").Schema} */
   schema;
+  convertFromMarkdown;
 
-  constructor({ schema, view }) {
+  constructor({ schema, view, convertFromMarkdown }) {
     this.schema = schema;
     this.view = view;
+    this.convertFromMarkdown = convertFromMarkdown;
   }
 
   /**
@@ -327,7 +348,7 @@ class ProsemirrorAutocompleteHandler {
     const from = this.view.state.selection.from - node.nodeSize + start;
     const to = this.view.state.selection.from - node.nodeSize + end + 1;
 
-    const doc = this.view.props.convertFromMarkdown(term);
+    const doc = this.convertFromMarkdown(term);
 
     const tr = this.view.state.tr.replaceWith(
       from,
@@ -379,10 +400,12 @@ class ProsemirrorAutocompleteHandler {
 class ProsemirrorPlaceholderHandler {
   view;
   schema;
+  convertFromMarkdown;
 
-  constructor({ schema, view }) {
+  constructor({ schema, view, convertFromMarkdown }) {
     this.schema = schema;
     this.view = view;
+    this.convertFromMarkdown = convertFromMarkdown;
   }
 
   insert(file) {
@@ -435,6 +458,7 @@ class ProsemirrorPlaceholderHandler {
   }
 
   success(file, markdown) {
+    /** @type {null | { node: import("prosemirror-model").Node, pos: number }} */
     let nodeToReplace = null;
     this.view.state.doc.descendants((node, pos) => {
       if (
@@ -448,8 +472,12 @@ class ProsemirrorPlaceholderHandler {
       return true;
     });
 
+    if (!nodeToReplace) {
+      return;
+    }
+
     // keeping compatibility with plugins that change the upload markdown
-    const doc = this.view.props.convertFromMarkdown(markdown);
+    const doc = this.convertFromMarkdown(markdown);
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(

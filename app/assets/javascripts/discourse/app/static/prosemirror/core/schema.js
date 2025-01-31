@@ -23,15 +23,17 @@ export function createSchema(extensions, includeDefault = true) {
 }
 
 function extractNodes(extensions) {
-  return extensions.reduce((acc, { nodeSpec }) => {
-    Object.assign(acc, nodeSpec);
-    return acc;
-  }, {});
+  const nodes = {};
+  for (const extension of extensions) {
+    Object.assign(nodes, extension.nodeSpec);
+  }
+  return nodes;
 }
 
 function extractMarks(extensions) {
-  return extensions.reduce((acc, { markSpec }) => {
-    Object.assign(acc, markSpec);
-    return acc;
-  }, {});
+  const marks = {};
+  for (const extension of extensions) {
+    Object.assign(marks, extension.markSpec);
+  }
+  return marks;
 }

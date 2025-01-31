@@ -3390,6 +3390,13 @@ class PluginApi {
     registerReportModeComponent(mode, componentClass);
   }
 
+  /**
+   * Registers an extension for the rich editor
+   *
+   * EXPERIMENTAL: This API will change without warning
+   *
+   * @param {RichEditorExtension} extension
+   */
   registerRichEditorExtension(extension) {
     registerRichEditorExtension(extension);
   }

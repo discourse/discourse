@@ -15,13 +15,14 @@ export default class ComposerToggleSwitch extends Component {
   <template>
     {{! template-lint-disable no-redundant-role }}
     <button
-      class="{{concatClass
-          'composer-toggle-switch'
-          (if @state '--rte' '--markdown')
-        }}"
+      class={{concatClass
+        "composer-toggle-switch"
+        (if @state "--rte" "--markdown")
+      }}
       type="button"
       role="switch"
-      aria-pressed={{if @state "true" "false"}}
+      aria-checked={{if @state "true" "false"}}
+      {{! template-lint-disable no-pointer-down-event-binding }}
       {{on "mousedown" this.mouseDown}}
       ...attributes
     >

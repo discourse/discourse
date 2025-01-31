@@ -1,3 +1,4 @@
+// @ts-check
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -19,6 +20,12 @@ import {
 } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
+ * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
+ * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
+ */
+
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
 
@@ -33,8 +40,12 @@ const OP = {
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
-// Our head can be a static string or a function that returns a string
-// based on input (like for numbered lists).
+/**
+ * Our head can be a static string or a function that returns a string
+ * based on input (like for numbered lists).
+ *
+ * @returns {[string, number]}
+ */
 function getHead(head, prev) {
   if (typeof head === "string") {
     return [head, head.length];
@@ -829,6 +840,7 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
+    // @ts-ignore
     this.$textarea.autocomplete(
       options instanceof Object
         ? { textHandler: this.autocompleteHandler, ...options }
@@ -873,6 +885,7 @@ export class TextareaAutocompleteHandler {
   }
 
   getCaretCoords(start) {
+    // @ts-ignore
     return this.$textarea.caretPosition({ pos: start + 1 });
   }
 

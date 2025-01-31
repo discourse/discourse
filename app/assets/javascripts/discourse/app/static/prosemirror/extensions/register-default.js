@@ -17,6 +17,12 @@ import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
 
+/**
+ * List of default extensions
+ * ProsemirrorEditor autoloads them when includeDefault=true (the default)
+ *
+ * @type {RichEditorExtension[]}
+ */
 const defaultExtensions = [
   emoji,
   image,

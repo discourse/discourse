@@ -44,11 +44,17 @@ const extension = {
   ],
 
   parse: {
-    span(state, token, tokens, i) {
+    span_open(state, token, tokens, i) {
       if (token.attrGet("class") === "hashtag-raw") {
         state.openNode(state.schema.nodes.hashtag, {
           name: tokens[i + 1].content.slice(1),
         });
+        return true;
+      }
+    },
+    span_close(state) {
+      if (state.top().type.name === "hashtag") {
+        state.closeNode();
         return true;
       }
     },

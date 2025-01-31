@@ -83,7 +83,7 @@ export default class DEditor extends Component {
     this.register = getRegister(this);
 
     if (
-      this.siteSettings.experimental_rich_editor &&
+      this.siteSettings.rich_editor &&
       this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
     ) {
       this.editorComponent = await loadRichEditor();
@@ -201,12 +201,7 @@ export default class DEditor extends Component {
   @discourseComputed()
   toolbar() {
     const toolbar = new Toolbar(
-      this.getProperties(
-        "appEvents",
-        "siteSettings",
-        "showLink",
-        "capabilities"
-      )
+      this.getProperties("site", "siteSettings", "showLink", "capabilities")
     );
     toolbar.context = this;
 
@@ -690,10 +685,6 @@ export default class DEditor extends Component {
       key: "d-editor-prefers-rich-editor",
       value: this.isRichEditorEnabled,
     });
-  }
-
-  focus() {
-    this.textManipulation.focus();
   }
 
   @action

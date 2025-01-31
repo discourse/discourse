@@ -1,3 +1,4 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -20,8 +21,8 @@ import { EditorState } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
 import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
-import { bind } from "discourse/lib/decorators";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import { bind } from "discourse/lib/decorators";
 import { buildInputRules } from "../core/inputrules";
 import { buildKeymap } from "../core/keymap";
 import Parser from "../core/parser";
@@ -35,41 +36,20 @@ import TextManipulation from "../lib/text-manipulation";
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
 
 /**
- * @typedef PluginContext
- * @property {string} placeholder
- * @property {number} topicId
- * @property {number} categoryId
- * @property {import("discourse/models/session").default} session
- */
-
-/**
- * @typedef PluginParams
- * @property {typeof import("../lib/plugin-utils")} utils
- * @property {typeof import('prosemirror-model')} pmModel
- * @property {typeof import('prosemirror-view')} pmView
- * @property {typeof import('prosemirror-state')} pmState
- * @property {typeof import('prosemirror-history')} pmHistory
- * @property {typeof import('prosemirror-transform')} pmTransform
- * @property {typeof import('prosemirror-commands')} pmCommands
- * @property {() => PluginContext} getContext
- */
-
-/**
  * @typedef ProsemirrorEditorArgs
  * @property {string} [value] The markdown content to be rendered in the editor
  * @property {string} [placeholder] The placeholder text to be displayed when the editor is empty
  * @property {boolean} [disabled] Whether the editor should be disabled
  * @property {Record<string, () => void>} [keymap] A mapping of keybindings to commands
- * @property {Record<string, import('prosemirror-view').NodeViewConstructor>} [nodeViews] A mapping of node names to node view components (it will override any node views from extensions)
- * @property {import('prosemirror-state').Schema} [schema] The schema to be used in the editor (it will override the default schema)
- * @property {(value: string) => void} [change] A callback called when the editor content changes
+ * @property {(value: { target: { value: string } }) => void} [change] A callback called when the editor content changes
  * @property {() => void} [focusIn] A callback called when the editor gains focus
  * @property {() => void} [focusOut] A callback called when the editor loses focus
- * @property {(textManipulation: TextManipulation) => void} [onSetup] A callback called when the editor is set up
+ * @property {(textManipulation: TextManipulation) => undefined | (() => void)} [onSetup] A callback called when the editor is set up, may return a destructor
  * @property {number} [topicId] The ID of the topic being edited, if any
  * @property {number} [categoryId] The ID of the category of the topic being edited, if any
  * @property {string} [class] The class to be added to the ProseMirror contentEditable editor
  * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
+ * @property {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]} [extensions] A list of extensions to be used with the editor INSTEAD of the ones registered through the API
  */
 
 /**
@@ -78,7 +58,7 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  */
 
 /**
- * @extends Component<ProsemirrorEditorSignature>
+ * @extends {Component<ProsemirrorEditorSignature>}
  */
 export default class ProsemirrorEditor extends Component {
   @service session;
@@ -88,10 +68,12 @@ export default class ProsemirrorEditor extends Component {
   view;
 
   #lastSerialized;
+  /** @type {undefined | (() => void)} */
+  #destructor;
 
   get pluginParams() {
     return {
-      utils,
+      utils: { ...utils, convertFromMarkdown: this.convertFromMarkdown },
       schema: this.schema,
       pmState: ProsemirrorState,
       pmModel: ProsemirrorModel,
@@ -118,17 +100,16 @@ export default class ProsemirrorEditor extends Component {
   }
 
   get keymapFromArgs() {
-    return Object.entries(this.args.keymap ?? {}).reduce(
-      (acc, [key, value]) => {
-        const pmKey = key
-          .split("+")
-          .map((word) => (word === "tab" ? "Tab" : word))
-          .join("-");
-        acc[pmKey] = value;
-        return acc;
-      },
-      {}
-    );
+    const replacements = { tab: "Tab" };
+    const result = {};
+    for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
+      const pmKey = key
+        .split("+")
+        .map((word) => replacements[word] ?? word)
+        .join("-");
+      result[pmKey] = value;
+    }
+    return result;
   }
 
   @action
@@ -168,11 +149,8 @@ export default class ProsemirrorEditor extends Component {
     const state = EditorState.create({ schema: this.schema, plugins });
 
     this.view = new EditorView(container, {
-      convertFromMarkdown: this.convertFromMarkdown,
-      convertToMarkdown: this.serializer.convert.bind(this.serializer),
-      getContext: params.getContext,
-      nodeViews: extractNodeViews(this.extensions),
       state,
+      nodeViews: extractNodeViews(this.extensions),
       attributes: { class: this.args.class },
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {
@@ -190,7 +168,7 @@ export default class ProsemirrorEditor extends Component {
           this.args.focusIn?.();
           return false;
         },
-        blur: (view, event) => {
+        blur: () => {
           next(() => this.args.focusOut?.());
           return false;
         },
@@ -207,23 +185,23 @@ export default class ProsemirrorEditor extends Component {
     this.textManipulation = new TextManipulation(getOwner(this), {
       schema: this.schema,
       view: this.view,
+      convertFromMarkdown: this.convertFromMarkdown,
+      convertToMarkdown: this.serializer.convert.bind(this.serializer),
     });
 
-    this.destructor = this.args.onSetup?.(this.textManipulation);
+    this.#destructor = this.args.onSetup?.(this.textManipulation);
 
     this.convertFromValue();
   }
 
   @bind
   convertFromMarkdown(markdown) {
-    let doc;
     try {
-      doc = this.parser.convert(this.schema, markdown);
+      return this.parser.convert(this.schema, markdown);
     } catch (e) {
       next(() => this.dialog.alert(e.message));
       throw e;
     }
-    return doc;
   }
 
   @bind
@@ -245,7 +223,7 @@ export default class ProsemirrorEditor extends Component {
 
   @action
   teardown() {
-    this.destructor?.();
+    this.#destructor?.();
     this.view.destroy();
   }
 

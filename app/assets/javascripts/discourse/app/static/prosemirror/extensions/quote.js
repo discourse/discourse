@@ -58,7 +58,7 @@ const extension = {
     },
     quote_header_close() {},
     quote_controls: { ignore: true },
-    bbcode(state, token) {
+    bbcode_open(state, token) {
       if (token.tag === "aside") {
         state.openNode(state.schema.nodes.quote, {
           username: token.attrGet("data-username"),
@@ -66,6 +66,22 @@ const extension = {
           topicId: token.attrGet("data-topic"),
           full: token.attrGet("data-full"),
         });
+        return true;
+      }
+
+      // ignore the token (no-op), return as handled
+      if (token.tag === "blockquote") {
+        return true;
+      }
+    },
+    bbcode_close(state, token) {
+      if (token.tag === "aside") {
+        state.closeNode();
+        return true;
+      }
+
+      // ignore the token (no-op), return as handled
+      if (token.tag === "blockquote") {
         return true;
       }
     },

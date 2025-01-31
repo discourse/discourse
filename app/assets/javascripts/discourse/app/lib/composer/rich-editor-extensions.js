@@ -1,3 +1,26 @@
+// @ts-check
+
+/**
+ * @typedef PluginContext
+ * @property {string} placeholder
+ * @property {number} topicId
+ * @property {number} categoryId
+ * @property {import("discourse/models/session").default} session
+ */
+
+/**
+ * @typedef PluginParams
+ * @property {typeof import("discourse/static/prosemirror/lib/plugin-utils")} utils
+ * @property {typeof import('prosemirror-model')} pmModel
+ * @property {typeof import('prosemirror-view')} pmView
+ * @property {typeof import('prosemirror-state')} pmState
+ * @property {typeof import('prosemirror-history')} pmHistory
+ * @property {typeof import('prosemirror-transform')} pmTransform
+ * @property {typeof import('prosemirror-commands')} pmCommands
+ * @property {import('prosemirror-model').Schema} schema
+ * @property {() => PluginContext} getContext
+ */
+
 /** @typedef {import('prosemirror-state').PluginSpec} PluginSpec */
 /** @typedef {((params: PluginParams) => PluginSpec)} RichPluginFn */
 /** @typedef {PluginSpec | RichPluginFn} RichPlugin */
@@ -17,6 +40,7 @@
 
 /** @typedef {((params: InputRuleParams) => InputRuleObject) | InputRuleObject} RichInputRule */
 
+// @ts-ignore we don't have type definitions for markdown-it
 /** @typedef {import("markdown-it").Token} MarkdownItToken */
 /** @typedef {(state: unknown, token: MarkdownItToken, tokenStream: MarkdownItToken[], index: number) => boolean | void} ParseFunction */
 /** @typedef {import("prosemirror-markdown").ParseSpec | ParseFunction} RichParseSpec */
@@ -25,7 +49,7 @@
  * @typedef {(state: import("prosemirror-markdown").MarkdownSerializerState, node: import("prosemirror-model").Node, parent: import("prosemirror-model").Node, index: number) => void} SerializeNodeFn
  */
 
-/** @typedef {Record<string, import('prosemirror-commands').Command>} KeymapSpec */
+/** @typedef {Record<string, import('prosemirror-state').Command>} KeymapSpec */
 /** @typedef {((params: PluginParams) => KeymapSpec)} RichKeymapFn */
 /** @typedef {KeymapSpec | RichKeymapFn} RichKeymap */
 
@@ -37,16 +61,17 @@
  * @property {Record<string, import('prosemirror-model').MarkSpec>} [markSpec]
  *   Map containing Prosemirror mark spec definitions, each key being the mark name
  *   See https://prosemirror.net/docs/ref/#model.MarkSpec
- * @property {RichInputRule | Array<RichInputRule>} [inputRules]
- *   Prosemirror input rules. See https://prosemirror.net/docs/ref/#inputrules.InputRule
+ * @property {RichInputRule | RichInputRule[]} [inputRules]
+ *   ProseMirror input rules. See https://prosemirror.net/docs/ref/#inputrules.InputRule
  *   can be a function returning an array or an array of input rules
  * @property {Record<string, SerializeNodeFn>} [serializeNode]
  *   Node serialization definition
+ * @ts-ignore MarkSerializerSpec not currently exported
  * @property {Record<string, import('prosemirror-markdown').MarkSerializerSpec>} [serializeMark]
  *   Mark serialization definition
  * @property {Record<string, RichParseSpec>} [parse]
  *   Markdown-it token parse definition
- * @property {RichPlugin | Array<RichPlugin>} [plugins]
+ * @property {RichPlugin | RichPlugin[]} [plugins]
  *    ProseMirror plugins
  * @property {Record<string, import('prosemirror-view').NodeViewConstructor>} [nodeViews]
  *    ProseMirror node views
@@ -54,15 +79,22 @@
  *   Additional keymap definitions
  */
 
-const EXTENSIONS = [];
+/** @type {RichEditorExtension[]} */
+const registeredExtensions = [];
 
 /**
- * Register an extension for the rich editor
+ * Registers an extension for the rich editor
+ *
+ * EXPERIMENTAL: This API will change without warning
  *
  * @param {RichEditorExtension} extension
  */
 export function registerRichEditorExtension(extension) {
-  EXTENSIONS.push(extension);
+  registeredExtensions.push(extension);
+}
+
+export function resetRichEditorExtensions() {
+  registeredExtensions.length = 0;
 }
 
 /**
@@ -71,5 +103,5 @@ export function registerRichEditorExtension(extension) {
  * @returns {RichEditorExtension[]}
  */
 export function getExtensions() {
-  return EXTENSIONS;
+  return registeredExtensions;
 }

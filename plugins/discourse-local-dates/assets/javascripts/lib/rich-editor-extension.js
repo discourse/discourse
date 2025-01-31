@@ -82,7 +82,7 @@ const extension = {
     },
   },
   parse: {
-    span: (state, token) => {
+    span_open(state, token) {
       if (token.attrGet("class") !== "discourse-local-date") {
         return;
       }
@@ -93,12 +93,15 @@ const extension = {
           to: token.attrGet("data-date"),
           timezone: token.attrGet("data-timezone"),
         });
-        return;
+        state.__localDateRange = true;
+        return true;
       }
 
       if (token.attrGet("data-range") === "to") {
-        // we're not supposed to mutate attrs, but we're still building the doc
+        // In our markdown-it tokens, a range is a series of span_open/span_close/span_open/span_close
+        // We skip opening a node for `to` and set it on the top node
         state.top().attrs.to = token.attrGet("data-date");
+        delete state.__localDateRange;
         return true;
       }
 
@@ -109,9 +112,17 @@ const extension = {
       });
       return true;
     },
+    span_close(state) {
+      if (["local_date", "local_date_range"].includes(state.top().type.name)) {
+        if (!state.__localDateRange) {
+          state.closeNode();
+        }
+        return true;
+      }
+    },
   },
   serializeNode: {
-    local_date(state, node, parent, index) {
+    local_date(state, node) {
       // TODO isBoundary
       // if (!isBoundary(state.out, state.out.length - 1)) {
       //   state.write(" ");
@@ -133,7 +144,7 @@ const extension = {
       //   state.write(" ");
       // }
     },
-    local_date_range(state, node, parent, index) {
+    local_date_range(state, node) {
       const optionalTimezone = node.attrs.timezone
         ? ` timezone="${node.attrs.timezone}"`
         : "";

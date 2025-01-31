@@ -1,29 +1,23 @@
 import { Plugin } from "prosemirror-state";
 
 export function extractNodeViews(extensions) {
-  return extensions.reduce((acc, { nodeViews }) => {
+  /** @type {Record<string, import('prosemirror-view').NodeViewConstructor>} */
+  const allNodeViews = {};
+  for (const { nodeViews } of extensions) {
     if (nodeViews) {
-      Object.entries(nodeViews).forEach(([name, NodeViewClass]) => {
-        acc[name] = (node, view, getPos) =>
+      for (const [name, NodeViewClass] of Object.entries(nodeViews)) {
+        allNodeViews[name] = (node, view, getPos) =>
           new NodeViewClass(node, view, getPos);
-      });
+      }
     }
-
-    return acc;
-  }, {});
+  }
+  return allNodeViews;
 }
 
 export function extractPlugins(extensions, params, view) {
   return (
     extensions
-      .reduce((acc, extension) => {
-        if (extension.plugins instanceof Array) {
-          acc.push(...extension.plugins);
-        } else if (extension.plugins) {
-          acc.push(extension.plugins);
-        }
-        return acc;
-      }, [])
+      .flatMap((extension) => extension.plugins || [])
       .flatMap((plugin) => processPlugin(plugin, params, view))
       // filter async plugins from initial load
       .filter(Boolean)

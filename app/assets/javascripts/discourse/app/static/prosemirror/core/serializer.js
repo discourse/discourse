@@ -12,8 +12,8 @@ export default class Serializer {
 
     this.marks = includeDefault ? { ...defaultMarkdownSerializer.marks } : {};
 
-    extractNodeSerializers(extensions, this.nodes);
-    extractMarkSerializers(extensions, this.marks);
+    this.#extractNodeSerializers(extensions);
+    this.#extractMarkSerializers(extensions);
 
     this.#pmSerializer = new MarkdownSerializer(this.nodes, this.marks);
   }
@@ -21,18 +21,16 @@ export default class Serializer {
   convert(doc) {
     return this.#pmSerializer.serialize(doc);
   }
-}
 
-function extractNodeSerializers(extensions, nodes) {
-  return extensions.reduce((acc, { serializeNode }) => {
-    Object.assign(acc, serializeNode);
-    return acc;
-  }, nodes);
-}
+  #extractNodeSerializers(extensions) {
+    for (const { serializeNode } of extensions) {
+      Object.assign(this.nodes, serializeNode);
+    }
+  }
 
-function extractMarkSerializers(extensions, marks) {
-  return extensions.reduce((acc, { serializeMark }) => {
-    Object.assign(acc, serializeMark);
-    return acc;
-  }, marks);
+  #extractMarkSerializers(extensions) {
+    for (const { serializeMark } of extensions) {
+      Object.assign(this.marks, serializeMark);
+    }
+  }
 }
