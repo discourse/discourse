@@ -63,6 +63,7 @@ module SvgSprite
         circle-plus
         circle-question
         circle-xmark
+        clock
         clock-rotate-left
         cloud-arrow-up
         code
