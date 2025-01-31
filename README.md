@@ -4,11 +4,12 @@
 
 The online home for your community. 
 
-![github](https://github.com/user-attachments/assets/8cc36ed2-d6ed-4463-85f3-a27b437d607b)
+![readme](https://github.com/user-attachments/assets/db764ef2-5cc2-4873-b11d-4a2052e1993d)
 
-You can self-host Discourse on your own infrastructure. But if you'd rather skip the setup, maintenance, and server management, we offer official Discourse hosting.
 
-👉 Learn more about [Discourse hosting](https://discourse.org/pricing)
+> You can self-host Discourse on your own infrastructure. But if you'd rather skip the setup, maintenance, and server management, we offer official Discourse hosting.
+>
+> 👉 Learn more about [Discourse hosting](https://discourse.org/pricing)
 
 Discourse is a 100% open-source community platform for those who want complete control over how and where their site is run.
 
@@ -130,7 +131,7 @@ To guide our ongoing effort to build accessible software we follow the [W3C’s 
 
 Discourse is built with [love, Internet style.](https://www.youtube.com/watch?v=Xe1TZaElTAs)
 
-For over a decade, our [incredible community](https://meta.discourse.org/) has helped shape Discourse into what it is today. Your support, feedback, and contributions have been invaluable in making Discourse a powerful and versatile platform.
+For over a decade, our [amazing community](https://meta.discourse.org/) has helped shape Discourse into what it is today. Your support, feedback, and contributions have been invaluable in making Discourse a powerful and versatile platform.
 
 We’re deeply grateful for every feature request, bug report, and discussion that has driven Discourse forward. Thank you for being a part of this journey—we couldn’t have done it without you!
 
