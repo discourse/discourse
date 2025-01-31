@@ -69,16 +69,16 @@ RSpec.describe UserSilencer do
     end
 
     context "with a plugin hook" do
-      before do
-        @override_silence_message = ->(opts) do
+      let(:override_silence_message) do
+        ->(opts) do
           opts[:silence_message_params][:message_title] = "override title"
           opts[:silence_message_params][:message_raw] = "override raw"
         end
-
-        DiscourseEvent.on(:user_silenced, &@override_silence_message)
       end
 
-      after { DiscourseEvent.off(:user_silenced, &@override_silence_message) }
+      before { DiscourseEvent.on(:user_silenced, &override_silence_message) }
+
+      after { DiscourseEvent.off(:user_silenced, &override_silence_message) }
 
       it "allows the message to be overridden" do
         UserSilencer.silence(user, admin)

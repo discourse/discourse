@@ -15,6 +15,7 @@ RSpec.describe ExternalUploadManager do
   let(:external_upload_stub_metadata) { {} }
   let!(:external_upload_stub) { Fabricate(:image_external_upload_stub, created_by: user) }
   let(:s3_bucket_name) { SiteSetting.s3_upload_bucket }
+  let(:fake_s3) { FakeS3.create }
 
   before do
     SiteSetting.authorized_extensions += "|pdf"
@@ -25,7 +26,12 @@ RSpec.describe ExternalUploadManager do
     SiteSetting.s3_backup_bucket = "s3-backup-bucket"
     SiteSetting.backup_location = BackupLocationSiteSetting::S3
 
-    prepare_fake_s3
+    fake_s3.bucket(s3_bucket_name).put_object(
+      key: external_upload_stub.key,
+      size: object_size,
+      last_modified: Time.zone.now,
+      metadata: external_upload_stub_metadata,
+    )
     stub_download_object_filehelper
   end
 
@@ -73,8 +79,8 @@ RSpec.describe ExternalUploadManager do
         it "copies the stubbed upload on S3 to its new destination and deletes it" do
           upload = manager.transform!
 
-          bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
-          expect(@fake_s3.operation_called?(:copy_object)).to eq(true)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          expect(fake_s3.operation_called?(:copy_object)).to eq(true)
           expect(bucket.find_object(Discourse.store.get_path_for_upload(upload))).to be_present
           expect(bucket.find_object(external_upload_stub.key)).to be_nil
         end
@@ -117,8 +123,8 @@ RSpec.describe ExternalUploadManager do
         it "creates a new upload in s3 (not copy) and deletes the original stubbed upload" do
           upload = manager.transform!
 
-          bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
-          expect(@fake_s3.operation_called?(:copy_object)).to eq(false)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          expect(fake_s3.operation_called?(:copy_object)).to eq(false)
           expect(bucket.find_object(Discourse.store.get_path_for_upload(upload))).to be_present
           expect(bucket.find_object(external_upload_stub.key)).to be_nil
         end
@@ -136,7 +142,7 @@ RSpec.describe ExternalUploadManager do
             )
             expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
 
-            bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+            bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
             expect(bucket.find_object(external_upload_stub.key)).to be_nil
           end
 
@@ -148,7 +154,7 @@ RSpec.describe ExternalUploadManager do
             external_stub = ExternalUploadStub.find(external_upload_stub.id)
             expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
 
-            bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+            bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
             expect(bucket.find_object(external_upload_stub.key)).to be_present
           end
         end
@@ -168,7 +174,7 @@ RSpec.describe ExternalUploadManager do
             ),
           ).to eq("1")
 
-          bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
           expect(bucket.find_object(external_upload_stub.key)).to be_nil
         end
 
@@ -178,7 +184,7 @@ RSpec.describe ExternalUploadManager do
           external_stub = ExternalUploadStub.find(external_upload_stub.id)
           expect(external_stub.status).to eq(ExternalUploadStub.statuses[:failed])
 
-          bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+          bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
           expect(bucket.find_object(external_upload_stub.key)).to be_present
         end
       end
@@ -218,7 +224,7 @@ RSpec.describe ExternalUploadManager do
       it "copies the stubbed upload on S3 to its new destination and deletes it" do
         upload = manager.transform!
 
-        bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)
+        bucket = fake_s3.bucket(SiteSetting.s3_upload_bucket)
         expect(bucket.find_object(Discourse.store.get_path_for_upload(upload))).to be_present
         expect(bucket.find_object(external_upload_stub.key)).to be_nil
       end
@@ -259,7 +265,7 @@ RSpec.describe ExternalUploadManager do
       end
 
       it "copies the stubbed upload on S3 to its new destination and deletes it" do
-        bucket = @fake_s3.bucket(SiteSetting.s3_backup_bucket)
+        bucket = fake_s3.bucket(SiteSetting.s3_backup_bucket)
         expect(bucket.find_object(external_upload_stub.key)).to be_present
 
         manager.transform!
@@ -281,17 +287,6 @@ RSpec.describe ExternalUploadManager do
     stub_request(:get, signed_url).with(query: hash_including({})).to_return(
       status: 200,
       body: object_file.read,
-    )
-  end
-
-  def prepare_fake_s3
-    @fake_s3 = FakeS3.create
-
-    @fake_s3.bucket(s3_bucket_name).put_object(
-      key: external_upload_stub.key,
-      size: object_size,
-      last_modified: Time.zone.now,
-      metadata: external_upload_stub_metadata,
     )
   end
 end
