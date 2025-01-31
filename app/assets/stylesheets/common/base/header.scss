@@ -184,7 +184,8 @@
   }
 
   .drop-down-mode & {
-    .active .icon {
+    .active .icon,
+    .header-color-scheme-toggle .-expanded {
       position: relative;
       background-color: var(--secondary);
       cursor: default;
@@ -263,6 +264,16 @@
   .unread-high-priority-notifications {
     left: auto;
     right: 25px;
+  }
+}
+
+.fk-d-menu.sidebar-footer-interface-color-selector-content.-expanded {
+  margin-top: -0.75em;
+  z-index: z("header");
+  box-shadow: var(--shadow-dropdown);
+
+  .fk-d-menu__inner-content {
+    border-color: transparent;
   }
 }
 

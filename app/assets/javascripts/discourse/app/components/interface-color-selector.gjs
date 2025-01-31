@@ -43,7 +43,7 @@ export default class InterfaceColorSelector extends Component {
       @icon={{this.selectorIcon}}
       @triggerClass="btn-flat sidebar-footer-actions-button"
       @identifier="sidebar-footer-interface-color-selector"
-      class="interface-color-selector"
+      class="interface-color-selector icon"
     >
       <:content as |dMenu|>
         <DropdownMenu as |dropdown|>

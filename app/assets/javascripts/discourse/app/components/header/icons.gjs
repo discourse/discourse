@@ -103,10 +103,8 @@ export default class Icons extends Component {
           {{/if}}
         {{else if (eq entry.key "interface-color-selector")}}
           {{#if this.interfaceColor.selectorAvailableInHeader}}
-            <li class="header-toggle-button header-dropdown-toggle">
-              <span class="header-color-scheme-toggle icon">
-                <InterfaceColorSelector />
-              </span>
+            <li class="header-dropdown-toggle header-color-scheme-toggle">
+              <InterfaceColorSelector />
             </li>
           {{/if}}
         {{else if entry.value}}
