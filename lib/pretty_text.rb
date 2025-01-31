@@ -460,6 +460,9 @@ module PrettyText
           video["data-thumbnail-src"] = UrlHelper.absolute(
             GlobalPath.upload_cdn_path(thumbnail.url),
           )
+          video[
+            "data-video-base62-sha1"
+          ] = "#{Upload.base62_sha1(video_sha1)}#{File.extname(video_src)}"
         end
       end
   end

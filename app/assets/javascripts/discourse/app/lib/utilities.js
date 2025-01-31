@@ -169,7 +169,13 @@ export function selectedText() {
   div
     .querySelectorAll("div.video-placeholder-container[data-video-src]")
     .forEach((element) => {
-      element.replaceWith(`![|video](${element.dataset.videoSrc})`);
+      const videoBase62Sha1 = element.dataset.videoBase62Sha1;
+      if (videoBase62Sha1) {
+        element.replaceWith(`![|video](upload://${videoBase62Sha1})`);
+      } else {
+        // Fallback for old posts that don't contain data-video-base62-sha1
+        element.replaceWith(`![|video](${element.dataset.videoSrc})`);
+      }
     });
 
   return toMarkdown(div.outerHTML);
