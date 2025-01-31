@@ -15,6 +15,7 @@ module.exports = function generateCommonBabelConfig() {
             runEarly: true,
           },
         ],
+        require.resolve("ember-concurrency/async-arrow-task-transform"),
       ],
     },
   };
