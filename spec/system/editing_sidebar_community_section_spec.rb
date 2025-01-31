@@ -45,10 +45,12 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
 
     expect(sidebar).to have_section("Community")
 
-    expect(sidebar.primary_section_links("community")).to eq(%w[Topics Review Admin Invite More])
+    expect(sidebar.primary_section_links("community")).to eq(
+      ["Topics", "My Drafts", "Review", "Admin", "Invite", "More"],
+    )
 
     expect(sidebar.primary_section_icons("community")).to eq(
-      %w[layer-group flag wrench paper-plane ellipsis-vertical],
+      %w[layer-group far-pen-to-square flag wrench paper-plane ellipsis-vertical],
     )
   end
 
