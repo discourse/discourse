@@ -46,6 +46,7 @@ sq:
       deleted_chat_username: deleted
       dates:
         yesterday: "Dje"
+        time_tiny: "h:mm"
       all_loaded: "Shfaq mesazhet"
       already_enabled: "Biseda është aktivizuar tashmë për këtë temë. Rifreskoni faqen."
       disabled_for_topic: "Biseda është çaktivizuar për këtë temë."
@@ -63,6 +64,7 @@ sq:
       email_frequency:
         never: "Asnjëherë"
       header_indicator_preference:
+        dm_and_mentions: "Mesazhe të drejtpërdrejta dhe përmendje"
         never: "Asnjëherë"
       flag: "Sinjalizoni"
       last_visit: "vizita e fundit"
@@ -108,6 +110,7 @@ sq:
       notification_levels:
         never: "Asnjëherë"
       settings:
+        desktop_notification_level: "Njoftimet e desktopit"
         followed: "Anëtarësuar"
         threading_enabled: "Aktivizuar"
         notifications: "Njoftimet"
@@ -153,11 +156,18 @@ sq:
         notifications:
           regular:
             title: "Normal"
+            description: "Do të njoftoheni nëse dikush përmend emrin tuaj @ në këtë temë."
           tracking:
             title: "Në gjurmim"
+            description: "Një numër i përgjigjeve të reja për këtë temë do të shfaqet në listën e temave dhe në kanal. Do të njoftoheni nëse dikush përmend emrin tuaj @ në këtë temë."
       draft_channel_screen:
         header: "Mesazh i ri"
         cancel: "Anulo"
+    notifications:
+      titles:
+        chat_mention: "Përmendja në bisedë"
+        chat_invitation: "Ftesë për bisedë"
+        chat_quoted: "Biseda e cituar"
     discourse_automation:
       scriptables:
         send_chat_message:

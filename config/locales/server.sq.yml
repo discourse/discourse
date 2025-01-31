@@ -41,12 +41,14 @@ sq:
   posts: "postime"
   views: "shikime"
   loading: "Loading"
+  powered_by_html: 'Mundësuar nga <a href="https://www.discourse.org">Discourse</a>, shikohet më së miri me JavaScript të aktivizuar'
   sign_up: "Regjistrohu"
   log_in: "Identifikohu"
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Fshirë nga autori"
+  redirect_warning: "Ne nuk ishim në gjendje të verifikonim që linku që zgjodhët ishte postuar në të vërtetë në forum. Nëse dëshironi të vazhdoni gjithsesi, zgjidhni linkun më poshtë."
   topic_category_changed: "Nga %{from} në %{to}"
   topic_tag_changed:
     added_and_removed: "U shtua %{added} dhe u hoq %{removed}"
@@ -55,6 +57,13 @@ sq:
   components:
     enabled_filter: "Aktivizuar"
   themes:
+    bad_color_scheme: "Tema nuk mund të përditësohet, paleta e pavlefshme e ngjyrave"
+    other_error: "Ndodhi një gabim me përditësimin e temës"
+    ember_selector_error: "Ndodhi një gabim – përdorimi i përzgjedhësve CSS #ember ose .ember-view nuk lejohet, sepse këta emra gjenerohen në mënyrë të shpejtë në kohën e zbatimti dhe do të ndryshojnë me kalimin e kohës, duke rezultuar në CSS të anulluar. Provoni një përzgjedhës tjetër."
+    import_error:
+      generic: Ndodhi një gabim gjatë përcjelljes të kësaj teme
+      upload: "Gabim në ngarkim e sipër: %{name}. %{errors}"
+      about_json: "Gabim transferimi: about.json nuk ekziston, ose është i pavlefshëm. Jeni i sigurt se kjo është një temë diskutimi?"
     settings_errors:
       number_value_not_valid_min_max: "Value must be between %{min} and %{max}."
       objects:
@@ -446,6 +455,7 @@ sq:
       yaxis: "Dit"
     consolidated_page_views_browser_detection:
       yaxis: "Dit"
+      description: "Shikimet e faqeve për përdoruesit e regjistruar, përdoruesit anonim, përdoruesit e njohur dhe të tjerë. Ky raport eksperimental siguron që kërkesat e regjistruara/anonim të vijnë nga përdoruesit ekzistues para se t'i shfaqen ato."
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:
@@ -508,10 +518,12 @@ sq:
       title: "Notify Moderators"
       xaxis: "Ditë"
       yaxis: "Numri i mesazheve"
+      description: "Moderatorët janë njoftuar disa herë privatisht nga një sinjalizues."
     notify_user_private_messages:
       title: "Notify User"
       xaxis: "Ditë"
       yaxis: "Numri i mesazheve"
+      description: "Përdoruesit janë njoftuar disa herë privatisht nga një sinjalizues."
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
@@ -654,6 +666,8 @@ sq:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
+    summarization_strategy: "Mënyra të tjera për të përmbledhur përmbajtjen e regjistruar nga shtojcat"
+    custom_summarization_allowed_groups: "Grupet lejohen të përmbledhin përmbajtjen duke përdorur `mënyrën e_përmbledhjes`."
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
@@ -678,7 +692,9 @@ sq:
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
+    enable_rich_text_paste: "Aktivizo konvertimin automatik të HTML në Markdown kur ngjit tekstin në kordinues. (Eksperimentale)"
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
+    allow_index_in_robots_txt: "Specifikoni në robots.txt që kjo faqe lejohet të indeksohet nga kontrolluesit e kërkimit në ueb. Në raste të veçanta ju mund të <a href='%{base_path}/admin/customize/robots'>të anashkaloni përgjithmonë robots.txt</a>."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
@@ -686,6 +702,7 @@ sq:
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_secret: "Client secret of your Google application."
+    google_oauth2_hd_groups: "(eksperimentale) Merr grupet e Google të përdoruesve në domenin e pritur gjatë vërtetimit. Grupet e marra të Google mund të përdoren për të dhënë anëtarësim automatik në grupin e Diskursit (shih cilësimet e grupit). Për më shumë informacion, shihni https://meta.discourse.org/t/226850"
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
@@ -786,6 +803,7 @@ sq:
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     enable_user_directory: "Provide a directory of users for browsing"
+    allow_anonymous_posting: "Aktivizo opsionin që përdoruesit të kalojnë në modalitetin anonim për postim. Kur aktivizohet, përdoruesit mund të zgjedhin që identitetet e tyre të fshihen kur krijojnë postime ose tema në të gjithë faqen. Shihni gjithashtu \"lejo_pëlqimet_anonime\"."
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
@@ -802,10 +820,25 @@ sq:
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     embed_post_limit: "Maximum number of posts to embed."
+    delete_merged_stub_topics_after_days: "Numri i ditëve për të pritur përpara se të fshihen automatikisht temat e shkurtra të lidhura plotësisht. Vendos 0 për të mos fshirë kurrë temat e shkurtra."
+    bootstrap_mode_min_users: "Numri minimal i përdoruesve që kërkohet për të çaktivizuar modalitetin e nisjes dhe për të hequr butonin \"Aktivizo\" (caktohet në 0 për ta çaktivizuar, mund të zgjasë deri në 24 orë)"
+    secure_uploads: 'Kufizimi i aksesit në TË GJITHA ngarkimet (imazhe, video, audio, tekst, pdf, materiale të vogla dhe të tjera). Nëse “kërkohet hyrja” është aktivizuar, vetëm përdoruesit e regjistruar mund të hyjnë në ngarkime. Përndryshe, qasja do të jetë e kufizuar vetëm për ngarkimet e mediave në mesazhe private dhe kategori private. KUJDES: Ky cilësim është kompleks dhe kërkon kuptim të specifik administrative. Shihni <a target="_blank" href="https://meta.discourse.org/t/-/140017">temën e ngarkimeve të sigurta në Meta</a> për detaje.'
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
     auto_close_topics_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një temë përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
+    default_hide_profile_and_presence: "Fshih profilin publik të përdoruesit dhe veçoritë e pranisë si parazgjedhje."
     default_topics_automatic_unpin: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes, e paracaktuar."
+    create_post_for_category_and_tag_changes: "Krijoni një postim të vogël veprimi kur kategoria ose idenfikimet e një teme ndryshojnë"
+    enable_user_status: "(eksperimentale) Lejo përdoruesit të vendosin mesazhin e statusit të personalizuar (emoji + përshkrim)."
+    use_email_for_username_and_name_suggestions: "Përdorni pjesën e parë të adresave të emailit për sugjerime për emrin e përdoruesit dhe emrin. Vini re se kjo e bën më të lehtë për publikun të hamendësojë adresat e plota të emailit të përdoruesve (sepse një pjesë e madhe e njerëzve ndajnë shërbime të përbashkëta si 'gmail.com')."
+    experimental_topics_filter: "EKSPERIMENTALE: Mundëson rrugën e filtrimit të temave eksperimentale në /filter"
+    enable_experimental_lightbox: "EKSPERIMENTAL: Zëvendësoni dritën e parazgjedhur të imazhit me dizajnin e rinovuar."
+    enable_experimental_bookmark_redesign_groups: "EKSPERIMENTALE: Shfaq një menu hyrjeje të shpejtë për faqeshënuesit në postime dhe një modalitet të ri të ridizajnuar"
+    glimmer_header_mode: "Kontrolloni nëse përdoret zbatimi i ri në pjesën e sipërme të faqes 'Glimmer'. Parazgjedhja është \"auto\", e cila do të aktivizohet automatikisht pasi të gjitha temat dhe shtojcat tuaja të jenë gati. https://meta.discourse.org/t/296544"
+    experimental_glimmer_topic_list_groups: "EKSPERIMENTALE: Aktivizo zbatimin e ri të listës së temave 'Glimmer'. Ky zbatim është në proces aktiv dhe nuk është i destinuar për përdorim. Mos zhvilloni tema/shtojca kundër tij derisa zbatimi të finalizohet dhe të shfaqet."
+    experimental_form_templates: "EKSPERIMENTALE: Aktivizoni veçorinë e modeleve të formularit. <b>Pas aktivizimit,</b> kontrolloni modelet në <a href='%{base_path}/admin/customize/form-templates'>Customize/Templates</a>."
+    lazy_load_categories_groups: "EKSPERIMENTALE: Informacioni i kategorisë së ikonës \"lazy\" vetëm për përdoruesit e këtyre grupeve. Kjo përmirëson performancën në faqet me shumë kategori."
+    experimental_flags_admin_page_enabled_groups: "EKSPERIMENTALE: Hiqni lidhjen e Sinjalisuesve të Moderimit nga shenuësi anësor operues."
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -818,6 +851,8 @@ sq:
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
+    keywords:
+      skip_review_media_groups: "review_media_unless_trust_level"
   search:
     within_post: "#%{post_number} nga %{username}"
     types:
@@ -1392,6 +1427,10 @@ sq:
                 label: "Kategoritë dhe temat më të fundit (rendit sipas datës së krijimit të temës)"
               categories_and_top_topics:
                 label: "Kategoritë dhe Temat kryesore"
+              categories_boxes:
+                label: "Kategoritë e hapësirave"
+              categories_boxes_with_topics:
+                label: "Kategoritë e hapësirave me tema"
               subcategories_with_featured_topics:
                 label: "Nënkategoritë me tema të veçuara"
   discourse_push_notifications:
@@ -1401,6 +1440,7 @@ sq:
       quoted: '%{username} ju ka cituar në "%{topic}" - %{site_title}'
       replied: '%{username} ju u përgjigj në "%{topic}" - %{site_title}'
       posted: '%{username} postoi në "%{topic}" - %{site_title}'
+      private_message: '%{username} ju dërgoi një mesazh personal në "%{topic}" - %{site_title}'
       linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
   staff_action_logs:
     unknown: "i panjohur"

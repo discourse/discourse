@@ -40,7 +40,7 @@ sv:
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "MMM D, ÅÅÅÅ"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, ÅÅÅÅ <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM, YYYY <br/>LT"
       wrap_ago: "%{date} sedan"
       wrap_on: "den %{date}"
       tiny:

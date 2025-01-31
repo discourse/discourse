@@ -9,3 +9,24 @@ sq:
     magic_8_ball:
       answers:
         "9": "Po"
+    new_user_narrative:
+      bookmark:
+        reply: |-
+          E shkëlqyer! Tani mund ta gjesh lehtësisht rrugën për t'u kthyer në bisedën tonë private në çdo kohë, direkt nga [skeda e faqeshënuesve në profilin tënd] (%{bookmark_url}). Thjesht zgjidhni foton e profilit në pjesën e sipërme djathtas &#8599;
+      flag:
+        instructions: |-
+          Na pëlqejnë diskutimet tona të frytshme dhe kemi nevojë për ndihmën tuaj për t'i [mbajtur marrëdhëniet e civilizuara] (%{guidelines_url}). Nëse keni një problem, ju lutemi raportoni për të njoftuar privatisht autorin ose [stafi tonë asistent] (%{about_url}) për të. Ka shumë arsye që mund të dëshironi të raportoni një postim, duke filluar nga një sugjerim i padëmshëm për ndarjen e temave deri te një shkelje e qartë e standardeve të komunitetit. Nëse zgjidhni **Diçka tjetër**, do të filloni një diskutim me mesazhe private me moderatorët ku mund të bëni pyetje të mëtejshme.
+
+          > :imp: Kam shkruar diçka të papërshtatshme këtu
+
+          Vazhdo dhe **tregoje këtë postim** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> dhe zgjidh **Është e papërshtatshme** si arsye!
+        reply: |-
+          [Stafi ynë](%{base_uri}/grupet/stafi) do të njoftohet privatisht për sinjalizuesin tuaj. Nëse mjaft anëtarë të komunitetit shënojnë një postim, gjithashtu do të fshihet automatikisht si masë paraprake. (Meqenëse në fakt nuk kam shkruar një postim të papërshtatshëm :angel:, kam shkuar përpara dhe kam hequr sinjalizuesin për momentin.)
+    advanced_user_narrative:
+      change_topic_notification_level:
+        instructions: |-
+          Çdo temë ka një nivel njoftimi. Fillon në 'normale', që do të thotë se normalisht do të njoftoheni vetëm kur dikush po ju flet drejtpërdrejt.
+
+          Si parazgjedhje, niveli i njoftimit për një mesazh privat është vendosur në nivelin më të lartë të 'shikimit', që do të thotë se do të njoftoheni për çdo përgjigje të re. Por ju mund të anuloni nivelin e njoftimit për _ndonjë_ temë për të 'shikuar', 'ndjekur' ose 'ndaluar'.
+
+          Le të përpiqemi të ndryshojmë nivelin e njoftimit për këtë temë. Në fund të temës, do të gjeni një buton që tregon se jeni duke e **shikuar** këtë temë. A mund ta ndryshoni nivelin e njoftimit në **ndjekje**?
