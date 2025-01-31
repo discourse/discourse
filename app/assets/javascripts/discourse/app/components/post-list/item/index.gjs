@@ -5,7 +5,7 @@ import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { userPath } from "discourse/lib/url";
 
@@ -103,7 +103,7 @@ export default class PostListItem extends Component {
 
           {{#if @post.deleted_by}}
             <span class="delete-info">
-              {{dIcon "trash-can"}}
+              {{icon "trash-can"}}
               {{avatar
                 @post.deleted_by
                 imageSize="tiny"

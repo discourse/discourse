@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
 import I18n, { i18n } from "discourse-i18n";
@@ -230,7 +230,7 @@ export default class AboutPage extends Component {
     {{#if this.currentUser.admin}}
       <p>
         <LinkTo class="edit-about-page" @route="adminConfig.about">
-          {{dIcon "pencil"}}
+          {{icon "pencil"}}
           <span>{{i18n "about.edit"}}</span>
         </LinkTo>
       </p>
@@ -254,7 +254,7 @@ export default class AboutPage extends Component {
         <div class="about__stats">
           {{#each this.stats as |stat|}}
             <span class="about__stats-item {{stat.class}}">
-              {{dIcon stat.icon}}
+              {{icon stat.icon}}
               <span>{{stat.text}}</span>
             </span>
           {{/each}}
@@ -300,7 +300,7 @@ export default class AboutPage extends Component {
         <div class="about__activities">
           {{#each this.siteActivities as |activity|}}
             <div class="about__activities-item {{activity.class}}">
-              <span class="about__activities-item-icon">{{dIcon
+              <span class="about__activities-item-icon">{{icon
                   activity.icon
                 }}</span>
               <span class="about__activities-item-type">

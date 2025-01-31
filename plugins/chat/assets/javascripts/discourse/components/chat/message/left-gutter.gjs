@@ -4,7 +4,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import formatChatDate from "../../../helpers/format-chat-date";
 
 export default class ChatMessageLeftGutter extends Component {
@@ -18,11 +18,11 @@ export default class ChatMessageLeftGutter extends Component {
           @model={{@message.reviewableId}}
           class="chat-message-left-gutter__flag"
         >
-          {{dIcon "flag" title="chat.flagged"}}
+          {{icon "flag" title="chat.flagged"}}
         </LinkTo>
       {{else if (eq @message.userFlagStatus 0)}}
         <div class="chat-message-left-gutter__flag">
-          {{dIcon "flag" title="chat.you_flagged"}}
+          {{icon "flag" title="chat.you_flagged"}}
         </div>
       {{else if this.site.desktopView}}
         <span class="chat-message-left-gutter__date">

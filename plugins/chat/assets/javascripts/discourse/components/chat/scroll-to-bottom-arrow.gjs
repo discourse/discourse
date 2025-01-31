@@ -1,6 +1,6 @@
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 const ScrollToBottomArrow = <template>
   <div class="chat-scroll-to-bottom">
@@ -13,7 +13,7 @@ const ScrollToBottomArrow = <template>
       @action={{@onScrollToBottom}}
     >
       <span class="chat-scroll-to-bottom__arrow">
-        {{dIcon "arrow-down"}}
+        {{icon "arrow-down"}}
       </span>
     </DButton>
   </div>

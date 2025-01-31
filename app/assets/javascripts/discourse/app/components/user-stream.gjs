@@ -13,7 +13,7 @@ import PostActionDescription from "discourse/components/post-action-description"
 import PostList from "discourse/components/post-list";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
@@ -192,7 +192,7 @@ export default class UserStreamComponent extends Component {
 
         {{#each post.children as |child|}}
           <div class="user-stream-item-actions">
-            {{dIcon child.icon class="icon"}}
+            {{icon child.icon class="icon"}}
             {{#each child.items as |grandChild|}}
               <a
                 href={{grandChild.userUrl}}

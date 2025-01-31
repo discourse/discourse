@@ -12,7 +12,7 @@ import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DateTimeInputRange from "discourse/components/date-time-input-range";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
 import { reportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import { REPORT_MODES } from "discourse/lib/constants";
@@ -560,7 +560,7 @@ export default class AdminReport extends Component {
                           @interactive={{this.model.description_link.length}}
                         >
                           <:trigger>
-                            {{dIcon "circle-question"}}
+                            {{icon "circle-question"}}
                           </:trigger>
                           <:content>
                             {{#if this.model.description_link}}
@@ -595,8 +595,8 @@ export default class AdminReport extends Component {
                         }}%{{/if}}
                       {{/if}}
 
-                      {{#if this.model.trendIcon}}
-                        {{dIcon this.model.trendIcon class="icon"}}
+                      {{#if this.model.trenicon}}
+                        {{icon this.model.trenicon class="icon"}}
                       {{/if}}
                     </span>
                   </div>
@@ -609,21 +609,21 @@ export default class AdminReport extends Component {
                 {{#if this.showError}}
                   {{#if this.showTimeoutError}}
                     <div class="alert alert-error report-alert timeout">
-                      {{dIcon "triangle-exclamation"}}
+                      {{icon "triangle-exclamation"}}
                       <span>{{i18n "admin.dashboard.timeout_error"}}</span>
                     </div>
                   {{/if}}
 
                   {{#if this.showExceptionError}}
                     <div class="alert alert-error report-alert exception">
-                      {{dIcon "triangle-exclamation"}}
+                      {{icon "triangle-exclamation"}}
                       <span>{{i18n "admin.dashboard.exception_error"}}</span>
                     </div>
                   {{/if}}
 
                   {{#if this.showNotFoundError}}
                     <div class="alert alert-error report-alert not-found">
-                      {{dIcon "triangle-exclamation"}}
+                      {{icon "triangle-exclamation"}}
                       <span>{{i18n "admin.dashboard.not_found_error"}}</span>
                     </div>
                   {{/if}}
@@ -646,12 +646,12 @@ export default class AdminReport extends Component {
                   {{else}}
                     {{#if this.rateLimitationString}}
                       <div class="alert alert-error report-alert rate-limited">
-                        {{dIcon "temperature-three-quarters"}}
+                        {{icon "temperature-three-quarters"}}
                         <span>{{this.rateLimitationString}}</span>
                       </div>
                     {{else}}
                       <div class="alert alert-info report-alert no-data">
-                        {{dIcon "chart-pie"}}
+                        {{icon "chart-pie"}}
                         {{#if this.model.reportUrl}}
                           <a href={{this.model.reportUrl}} class="report-url">
                             <span>

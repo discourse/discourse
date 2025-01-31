@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import ChatEmojiAvatar from "./chat-emoji-avatar";
 import ChatUserAvatar from "./chat-user-avatar";
@@ -46,7 +46,7 @@ export default class ChatMessageInReplyToIndicator extends Component {
         @models={{this.model}}
         class="chat-reply is-direct-reply"
       >
-        {{dIcon "share" title="chat.in_reply_to"}}
+        {{icon "share" title="chat.in_reply_to"}}
 
         {{#if @message.inReplyTo.chatWebhookEvent.emoji}}
           <ChatEmojiAvatar
