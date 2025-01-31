@@ -149,24 +149,30 @@ basic:
   display_local_time_in_user_card:
     client: true
     default: false
+    area: "localization"
   allow_user_locale:
     client: true
     default: false
+    area: "localization"
   set_locale_from_accept_language_header:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
   set_locale_from_cookie:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
   set_locale_from_param:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
   support_mixed_text_direction:
     client: true
     default: false
+    area: "localization"
   categories_topics:
     default: 20
     validator: "CategoriesTopicsValidator"
@@ -697,6 +703,7 @@ users:
     default: false
     client: true
     validator: "UnicodeUsernameValidator"
+    area: "localization"
   allowed_unicode_username_characters:
     validator: "UnicodeUsernameAllowlistValidator"
     default: ""
@@ -708,6 +715,7 @@ users:
       ko: '\p{Hangul}'
       zh_CN: '\p{Han}'
       zh_TW: '\p{Han}'
+    area: "localization"
   reserved_usernames:
     type: list
     list_type: compact
@@ -2312,6 +2320,7 @@ onebox:
     default: ""
     type: enum
     enum: "OneboxLocaleSiteSetting"
+    area: "localization"
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list

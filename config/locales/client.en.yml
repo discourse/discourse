@@ -5154,6 +5154,9 @@ en:
         legal:
           title: "Legal"
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations"
+        localization:
+          title: "Localization"
+          header_description: "Configure your community’s interface language and other localization options for your members"
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
@@ -5692,6 +5695,9 @@ en:
           group_permissions: "Group permissions"
           users: "Users"
           groups: "Groups"
+          localization:
+            title: "Localization"
+            keywords: "locale|language|timezone|unicode|ltr"
           user_fields: "User fields"
           watched_words: "Watched words"
           legal: "Legal"
