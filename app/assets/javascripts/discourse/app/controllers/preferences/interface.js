@@ -72,7 +72,6 @@ export default class InterfaceController extends Controller {
       "allow_private_messages",
       "enable_allowed_pm_users",
       "homepage_id",
-      "hide_profile",
       "hide_presence",
       "text_size",
       "title_count_mode",

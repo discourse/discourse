@@ -197,14 +197,6 @@
       class="pref-auto-unpin"
     />
   {{/if}}
-  {{#if this.siteSettings.allow_users_to_hide_profile}}
-    <PreferenceCheckbox
-      @labelKey="user.hide_profile"
-      @checked={{this.model.user_option.hide_profile}}
-      data-setting-name="user-hide-profile"
-      class="pref-hide-profile"
-    />
-  {{/if}}
   <PreferenceCheckbox
     @labelKey="user.dynamic_favicon"
     @checked={{this.model.user_option.dynamic_favicon}}
