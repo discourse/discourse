@@ -423,7 +423,10 @@ Discourse::Application.routes.draw do
                   path: "look-and-feel",
                   constraints: AdminConstraint.new,
                   only: %i[index] do
-          collection { get "/themes" => "look_and_feel#themes" }
+          collection do
+            get "/themes" => "look_and_feel#themes"
+            get "/components" => "look_and_feel#components"
+          end
         end
       end
 

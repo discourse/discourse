@@ -3,4 +3,7 @@
 class Admin::Config::LookAndFeelController < Admin::AdminController
   def themes
   end
+
+  def components
+  end
 end

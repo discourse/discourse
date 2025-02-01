@@ -27,6 +27,28 @@ module PageObjects
         has_css?("#{setting_selector(setting_name)} .desc", exact_text: description)
       end
 
+      def has_no_themes_list?
+        has_no_css?(".themes-list-header")
+      end
+
+      def has_back_button_to_themes_page?
+        has_css?(
+          '.back-to-look-and-feel a[href="/admin/config/look-and-feel/themes"]',
+          text: I18n.t("admin_js.admin.config_areas.look_and_feel.themes.back"),
+        )
+      end
+
+      def has_back_button_to_components_page?
+        has_css?(
+          '.back-to-look-and-feel a[href="/admin/config/look-and-feel/components"]',
+          text: I18n.t("admin_js.admin.config_areas.look_and_feel.components.back"),
+        )
+      end
+
+      def has_no_page_header?
+        has_no_css?(".d-page-header")
+      end
+
       def reset_overridden_setting(setting_name)
         setting_section = find("section.theme.settings .setting[data-setting=\"#{setting_name}\"]")
         setting_section.click_button(I18n.t("admin_js.admin.settings.reset"))

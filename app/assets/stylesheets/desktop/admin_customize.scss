@@ -3,6 +3,10 @@
     padding-left: 2%;
     width: 68%;
 
+    &--with-sidebar {
+      padding-left: 0;
+    }
+
     .title {
       input {
         width: 80%;
@@ -12,5 +16,9 @@
 
   .themes-list {
     width: 28%;
+  }
+
+  .back-to-look-and-feel {
+    margin-bottom: 1em;
   }
 }
