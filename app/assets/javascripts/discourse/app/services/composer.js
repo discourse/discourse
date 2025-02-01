@@ -29,6 +29,7 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
 import { emojiUnescape } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
@@ -1041,13 +1042,21 @@ export default class ComposerService extends Service {
     }
 
     const composer = this.model;
+    const cantSubmitPost = applyValueTransformer(
+      "composer-service-cant-submit-post",
+      composer?.cantSubmitPost,
+      { model: composer }
+    );
 
-    if (composer?.cantSubmitPost) {
+    if (cantSubmitPost) {
       if (composer?.viewFullscreen) {
         this.toggleFullscreen();
       }
 
       this.set("lastValidatedAt", Date.now());
+      this.appEvents.trigger("composer-service:last-valdated-at-updated", {
+        model: composer,
+      });
       return;
     }
 
@@ -1785,6 +1794,7 @@ export default class ComposerService extends Service {
 
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
+    this.appEvents.trigger("composer-service:clear-last-validated-at");
   }
 }
 
