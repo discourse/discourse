@@ -2,23 +2,38 @@
   <img src="images/discourse-readme-logo.png" width="300px">
 </a>
 
-Discourse is the online home for your community. We offer a 100% open source community platform to those who want complete control over how and where their site is run.
+The online home for your community. 
 
-Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform. Discourse allows you to create discussion topics and connect using real-time chat, as well as access an ever-growing number of official and community themes. In addition, we offer a wide variety of plugins for features ranging from chatbots powered by [Discourse AI](https://meta.discourse.org/t/discourse-ai/259214) to functionalities like SQL analysis using the [Data Explorer](https://meta.discourse.org/t/discourse-data-explorer/32566) plugin.
+![readme](https://github.com/user-attachments/assets/db764ef2-5cc2-4873-b11d-4a2052e1993d)
 
-To learn more, visit [**discourse.org**](https://www.discourse.org) and join our support community at [meta.discourse.org](https://meta.discourse.org).
 
-## Screenshots
+> You can self-host Discourse on your own infrastructure. But if you'd rather skip the setup, maintenance, and server management, we offer official Discourse hosting.
+>
+> 👉 Learn more about [Discourse hosting](https://discourse.org/pricing)
 
-<a href="https://blog.discourse.org/2023/08/discourse-3-1-is-here/"><img alt="Discourse 3.1" src="https://github-production-user-asset-6210df.s3.amazonaws.com/5862206/261215898-ae95f963-5ab4-4509-b87a-f9f6e9a109bf.png" width="720px"></a>
+Discourse is a 100% open-source community platform for those who want complete control over how and where their site is run.
 
-<a href="https://forum.homeexchange.com"><img alt="HomeExchange" src="https://github.com/user-attachments/assets/42fbbd25-502f-4047-a348-c93fb99d7986" width="720px"></a>
+Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform. 
 
-<a href="https://twittercommunity.com/"><img alt="X Community" src="https://github.com/discourse/discourse/assets/2790986/ebb63eee-1927-4060-ada1-cf1bc774084c.png" width="720px"></a>
+**With Discourse, you can:**
 
-<img width="414" alt="Mobile Preview" src="https://github.com/user-attachments/assets/6e209258-258a-48f9-8a31-1b7d9eee4b77">
+* 💬 **Create discussion topics** to foster meaningful conversations.
 
-Browse [lots more notable Discourse instances](https://www.discourse.org/customers).
+* ⚡️ **Connect in real-time** with built-in chat.
+  
+* 🎨 **Customize your experience** with an ever-growing selection of official and community themes.
+
+* 🤖 **Enhance your community** with plugins, from chatbots powered by [Discourse AI](https://meta.discourse.org/t/discourse-ai/259214) to advanced tools like SQL analysis with the [Data Explorer](https://meta.discourse.org/t/discourse-data-explorer/32566) plugin.
+
+To learn more, visit [discourse.org](https://www.discourse.org/) and join our support community at [meta.discourse.org](https://meta.discourse.org/).
+
+
+Here are just a few of the incredible communities using Discourse: 
+
+![discourse-communities](https://github.com/user-attachments/assets/a79b5d56-7748-4f6d-8a2d-daa950366fcc)
+
+👉 [Discover more communities using Discourse](https://discover.discourse.org/)
+
 
 ## Development
 
@@ -115,3 +130,8 @@ To guide our ongoing effort to build accessible software we follow the [W3C’s 
 ## Dedication
 
 Discourse is built with [love, Internet style.](https://www.youtube.com/watch?v=Xe1TZaElTAs)
+
+For over a decade, our [amazing community](https://meta.discourse.org/) has helped shape Discourse into what it is today. Your support, feedback, and contributions have been invaluable in making Discourse a powerful and versatile platform.
+
+We’re deeply grateful for every feature request, bug report, and discussion that has driven Discourse forward. Thank you for being a part of this journey—we couldn’t have done it without you!
+
