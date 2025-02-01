@@ -1,7 +1,15 @@
 {{#if this.field.name}}
+
   <label class="control-label">
-    {{this.field.name}}
-    {{~#unless this.field.required}} {{i18n "user_fields.optional"}}{{/unless~}}
+    <PluginOutlet
+      @name="confirm-title-wrapper"
+      @outletArgs={{hash field=this.field}}
+    >
+      {{this.field.name}}
+      {{~#unless this.field.required}}
+        {{i18n "user_fields.optional"}}{{/unless~}}
+    </PluginOutlet>
+
   </label>
 {{/if}}
 
@@ -12,12 +20,19 @@
       @checked={{this.value}}
       @type="checkbox"
     />
-    <span>
-      {{html-safe this.field.description}}
-      {{#unless this.field.name}}{{#if this.field.required}}<span
-            class="required"
-          >*</span>{{/if}}{{/unless}}
-    </span>
+
+    <PluginOutlet
+      @name="confirm-checkbox-label-wrapper"
+      @outletArgs={{hash field=this.field}}
+    >
+      <span>
+        {{html-safe this.field.description}}
+        {{#unless this.field.name}}{{#if this.field.required}}<span
+              class="required"
+            >*</span>{{/if}}{{/unless}}
+      </span>
+    </PluginOutlet>
+
   </label>
   <InputTip
     @validation={{@validation}}

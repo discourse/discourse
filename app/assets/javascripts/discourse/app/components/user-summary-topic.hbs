@@ -1,9 +1,22 @@
 <span class="topic-info">
-  {{format-date @createdAt format="tiny" noTitle="true"}}
-  {{#if @likes}}
-    &middot;
-    {{d-icon "heart"}}&nbsp;<span class="like-count">{{number @likes}}</span>
-  {{/if}}
+  <PluginOutlet
+    @name="user-summary-topic-info-wrapper"
+    @outletArgs={{hash createdAt=@createdAt}}
+  >
+    {{format-date @createdAt format="tiny" noTitle="true"}}
+
+    {{#if @likes}}
+      &middot;
+      {{d-icon "heart"}}&nbsp;<span class="like-count">{{number @likes}}</span>
+    {{/if}}
+  </PluginOutlet>
 </span>
-<br />
-<a href={{@url}}>{{html-safe @topic.fancyTitle}}</a>
+
+<PluginOutlet
+  @name="user-summary-topic-title-wrapper"
+  @outletArgs={{hash topic=@topic likes=@likes url=@url}}
+>
+
+  <br />
+  <a href={{@url}}>{{html-safe @topic.fancyTitle}}</a>
+</PluginOutlet>

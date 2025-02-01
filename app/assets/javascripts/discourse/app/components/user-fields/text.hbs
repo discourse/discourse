@@ -1,21 +1,52 @@
-<div class="controls">
-  <Input
-    id={{concat "user-" this.elementId}}
-    @value={{this.value}}
-    maxlength={{this.site.user_field_max_length}}
-  />
-  <label
-    class="control-label alt-placeholder"
-    for={{concat "user-" this.elementId}}
-  >
-    {{this.field.name}}
-    {{~#unless this.field.required}} {{i18n "user_fields.optional"}}{{/unless~}}
-  </label>
-  <InputTip
-    @validation={{this.validation}}
-    class={{unless this.validation "hidden"}}
-  />
-  {{#unless this.validation}}
-    <div class="instructions">{{html-safe this.field.description}}</div>
-  {{/unless}}
-</div>
+<PluginOutlet @name="text-wrapper" @outletArgs={{hash field=this.field}}>
+
+  <div class="controls">
+    <Input
+      id={{concat "user-" this.elementId}}
+      @value={{this.value}}
+      maxlength={{this.site.user_field_max_length}}
+    />
+
+    <PluginOutlet
+      @name="text-control-label-wrapper"
+      @outletArgs={{hash
+        field=this.field
+        fullElementId=this.fullElementId
+        value=this.value
+      }}
+    >
+
+      <label
+        class="control-label alt-placeholder"
+        for={{concat "user-" this.elementId}}
+      >
+
+        {{this.field.name}}
+        {{~#unless this.field.required}}
+          {{i18n "user_fields.optional"}}{{/unless~}}
+
+      </label>
+    </PluginOutlet>
+
+    <InputTip
+      @validation={{this.validation}}
+      class={{unless this.validation "hidden"}}
+    />
+
+    <PluginOutlet
+      @name="text-validation-wrapper"
+      @outletArgs={{hash
+        field=this.field
+        validation=this.validation
+        fullElementId=this.fullElementId
+        value=this.value
+      }}
+    >
+
+      {{#unless this.validation}}
+        <div class="instructions">{{html-safe this.field.description}}</div>
+      {{/unless}}
+
+    </PluginOutlet>
+  </div>
+</PluginOutlet>
