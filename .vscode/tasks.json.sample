@@ -36,7 +36,7 @@
     {
       "label": "dev/migrate",
       "type": "shell",
-      "command": "bin/rake db:create db:migrate",
+      "command": "bin/rake db:create && bin/rake db:migrate",
       "options": {
         "env":{
           "SKIP_MULTISITE": "1",
@@ -74,7 +74,10 @@
     {
       "label": "spec/migrate",
       "type": "shell",
-      "command": "RAILS_ENV=test bin/rake db:create db:migrate parallel:create parallel:migrate",
+      "command": "bin/rake db:create && bin/rake db:migrate && bin/rake parallel:create parallel:migrate",
+      "env": {
+        "RAILS_ENV": "test"
+      },
       "problemMatcher": [],
     },
     {

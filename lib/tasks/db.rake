@@ -128,6 +128,10 @@ task "multisite:migrate" => %w[
      ] do |_, args|
   raise "Multisite migrate is only supported in production" if ENV["RAILS_ENV"] != "production"
 
+  if GlobalSetting.skip_db?
+    raise "Migrate cannot be run when skip_db=true. (running `rake db:create db:migrate` in a single command is not supported)"
+  end
+
   DistributedMutex.synchronize(
     "db_migration",
     redis: Discourse.redis.without_namespace,
@@ -231,6 +235,10 @@ task "db:migrate" => %w[
        set_locale
        assets:precompile:theme_transpiler
      ] do |_, args|
+  if GlobalSetting.skip_db?
+    raise "Migrate cannot be run when skip_db=true. (running `rake db:create db:migrate` in a single command is not supported)"
+  end
+
   DistributedMutex.synchronize(
     "db_migration",
     redis: Discourse.redis.without_namespace,
