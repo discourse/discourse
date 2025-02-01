@@ -357,23 +357,27 @@
 
     &[disabled] {
       &,
-      &:hover,
-      &.btn-hover,
-      &:focus-visible {
-        color: var(--primary);
-      }
-    }
-
-    &:not([disabled]) {
-      &:hover,
-      &.btn-hover,
-      &:focus-visible {
-        color: var(--tertiary-hover);
+      .discourse-no-touch & {
+        &:hover,
+        &.btn-hover,
+        &:focus-visible {
+          color: var(--primary);
+        }
       }
 
-      &:active,
-      &.btn-active {
-        @include darken-background(transparent, 0.2);
+      .discourse-no-touch & {
+        &:not([disabled]) {
+          &:hover,
+          &.btn-hover,
+          &:focus-visible {
+            color: var(--tertiary-hover);
+          }
+        }
+
+        &:active,
+        &.btn-active {
+          @include darken-background(transparent, 0.2);
+        }
       }
     }
   }

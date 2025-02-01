@@ -70,12 +70,6 @@ nav.post-controls {
       &.expand-post {
         margin: var(--control-space) 0 var(--control-space) 0;
       }
-
-      &.has-like {
-        .d-icon {
-          color: var(--love);
-        }
-      }
     }
   }
 
@@ -99,12 +93,6 @@ nav.post-controls {
 
       .d-icon {
         color: var(--primary-high);
-      }
-
-      &:hover,
-      &:focus {
-        color: var(--primary);
-        background: var(--primary-300);
       }
     }
   }
