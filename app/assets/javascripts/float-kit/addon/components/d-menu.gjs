@@ -151,6 +151,7 @@ export default class DMenu extends Component {
           @mainClass={{concatClass
             "fk-d-menu"
             (concat this.options.identifier "-content")
+            (if this.options.insideComposer "-inside-composer")
             @class
             @contentClass
           }}
