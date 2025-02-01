@@ -857,12 +857,23 @@ aside.onebox.xkcd .onebox-body img {
     padding-left: calc(1em - 5px);
     margin-left: 5px;
   }
+
+  .badge-category-bg {
+    display: inline-block;
+    width: 0.625rem;
+    height: 0.625rem;
+  }
 }
 
 .onebox.discoursetopic {
   h3 {
     width: 100%;
     margin-bottom: 0.2rem !important;
+  }
+
+  .topic-category {
+    color: var(--primary-high);
+    line-height: var(--line-height-medium);
   }
 
   .discourse-tags {
