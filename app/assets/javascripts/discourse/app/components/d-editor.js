@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -26,6 +27,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import loadRichEditor from "discourse/lib/load-rich-editor";
 import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
@@ -59,8 +61,9 @@ export default class DEditor extends Component {
   @service modal;
   @service menu;
 
-  editorComponent = TextareaEditor;
-  textManipulation;
+  @tracked editorComponent;
+  /** @type {TextManipulation} */
+  @tracked textManipulation;
 
   ready = false;
   lastSel = null;
@@ -74,10 +77,19 @@ export default class DEditor extends Component {
     },
   };
 
-  init() {
+  async init() {
     super.init(...arguments);
 
     this.register = getRegister(this);
+
+    if (
+      this.siteSettings.rich_editor &&
+      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
+    ) {
+      this.editorComponent = await loadRichEditor();
+    } else {
+      this.editorComponent = TextareaEditor;
+    }
   }
 
   @discourseComputed("placeholder")
@@ -630,9 +642,15 @@ export default class DEditor extends Component {
     this.set("isEditorFocused", false);
   }
 
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
   @action
   setupEditor(textManipulation) {
-    this.set("textManipulation", textManipulation);
+    this.textManipulation = textManipulation;
 
     const destroyEvents = this.setupEvents();
 
@@ -655,6 +673,28 @@ export default class DEditor extends Component {
 
       destroyEditor?.();
     };
+  }
+
+  @action
+  async toggleRichEditor() {
+    this.editorComponent = this.isRichEditorEnabled
+      ? TextareaEditor
+      : await loadRichEditor();
+
+    this.keyValueStore.set({
+      key: "d-editor-prefers-rich-editor",
+      value: this.isRichEditorEnabled,
+    });
+  }
+
+  @action
+  onChange(event) {
+    this.set("value", event?.target?.value);
+    this.change?.(event);
+  }
+
+  get isRichEditorEnabled() {
+    return this.editorComponent !== TextareaEditor;
   }
 
   setupEvents() {

@@ -31,6 +31,7 @@ def write_config(package_dir, extras: {})
       "module" => "esnext",
       "moduleResolution" => "bundler",
       "experimentalDecorators" => true,
+      "allowJs" => true,
       "paths" => {
         **namespaces
           .map { |ns, paths| [ns, paths.map { |p| "#{relative(package_dir, p)}/*" }] }

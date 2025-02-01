@@ -5,6 +5,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
+    "allowJs": true,
     "paths": {
       "discourse/*": [
         "./app/assets/javascripts/discourse/app/*"

@@ -194,17 +194,29 @@ export default class ComposerEditor extends Component {
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
   }
 
+  /**
+   * Sets up the editor with the given text manipulation instance
+   *
+   * @param {TextManipulation} textManipulation The text manipulation instance
+   * @returns {(() => void)} destructor function
+   */
   @bind
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;
-    this.uppyComposerUpload.textManipulation = textManipulation;
+    this.uppyComposerUpload.placeholderHandler = textManipulation.placeholder;
 
     const input = this.element.querySelector(".d-editor-input");
 
     input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
 
-    // Focus on the body unless we have a title
-    if (!this.get("composer.model.canEditTitle")) {
+    this.composer.set("allowPreview", this.textManipulation.allowPreview);
+
+    if (
+      // Focus on the editor unless we have a title
+      !this.get("composer.model.canEditTitle") ||
+      // Or focus is in the body (e.g. when the editor is destroyed)
+      document.activeElement.tagName === "BODY"
+    ) {
       this.textManipulation.putCursorAtEnd();
     }
 
@@ -859,15 +871,6 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
-    toolbar.addButton({
-      id: "quote",
-      group: "fontStyles",
-      icon: "far-comment",
-      sendAction: this.composer.importQuote,
-      title: "composer.quote_post_title",
-      unshift: true,
-    });
-
     if (
       this.composer.allowUpload &&
       this.composer.uploadIcon &&

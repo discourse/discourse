@@ -8,6 +8,14 @@
         {{if this.isEditorFocused 'in-focus'}}"
     >
       <div class="d-editor-button-bar" role="toolbar">
+        {{#if this.siteSettings.rich_editor}}
+          <Composer::ToggleSwitch
+            @preventFocus={{true}}
+            @state={{this.isRichEditorEnabled}}
+            {{on "click" this.toggleRichEditor}}
+          />
+        {{/if}}
+
         {{#each this.toolbar.groups as |group|}}
           {{#each group.buttons as |b|}}
             {{#if (b.condition this)}}
@@ -40,15 +48,18 @@
 
       <ConditionalLoadingSpinner @condition={{this.loading}} />
       <this.editorComponent
+        @class="d-editor-input"
         @onSetup={{this.setupEditor}}
         @markdownOptions={{this.markdownOptions}}
         @keymap={{this.keymap}}
         @value={{this.value}}
         @placeholder={{this.placeholderTranslated}}
         @disabled={{this.disabled}}
-        @change={{this.change}}
+        @change={{this.onChange}}
         @focusIn={{this.handleFocusIn}}
         @focusOut={{this.handleFocusOut}}
+        @categoryId={{@categoryId}}
+        @topicId={{@topicId}}
         @id={{this.textAreaId}}
       />
       <PopupInputTip @validation={{this.validation}} />

@@ -114,6 +114,7 @@ export default function (options) {
   const isInput = me[0].tagName === "INPUT" && !options.treatAsTextarea;
   let inputSelectedItems = [];
 
+  /** @type {AutocompleteHandler} */
   options.textHandler ??= new TextareaAutocompleteHandler(me[0]);
 
   function handlePaste() {
@@ -249,14 +250,14 @@ export default function (options) {
               options.textHandler.getCaretPosition();
           }
 
-          options.textHandler.replaceTerm({
-            start: completeStart,
-            end: completeEnd,
-            term: (options.preserveKey ? options.key || "" : "") + term,
-          });
+          options.textHandler.replaceTerm(
+            completeStart,
+            completeEnd,
+            (options.preserveKey ? options.key || "" : "") + term
+          );
 
           if (options && options.afterComplete) {
-            options.afterComplete(options.textHandler.value, event);
+            options.afterComplete(options.textHandler.getValue(), event);
           }
         }
       }
@@ -481,7 +482,9 @@ export default function (options) {
     if (
       (term.length !== 0 && term.trim().length === 0) ||
       // close unless the caret is at the end of a word, like #line|<-
-      options.textHandler.value[options.textHandler.getCaretPosition()]?.trim()
+      options.textHandler
+        .getValue()
+        [options.textHandler.getCaretPosition()]?.trim()
     ) {
       closeAutocomplete();
       return null;
@@ -549,11 +552,11 @@ export default function (options) {
     }
 
     let cp = options.textHandler.getCaretPosition();
-    const key = options.textHandler.value[cp - 1];
+    const key = options.textHandler.getValue()[cp - 1];
 
     if (options.key) {
       if (options.onKeyUp && key !== options.key) {
-        let match = options.onKeyUp(options.textHandler.value, cp);
+        let match = options.onKeyUp(options.textHandler.getValue(), cp);
 
         if (match && (await checkTriggerRule())) {
           completeStart = cp - match[0].length;
@@ -565,7 +568,7 @@ export default function (options) {
 
     if (completeStart === null && cp > 0) {
       if (key === options.key) {
-        let prevChar = options.textHandler.value.charAt(cp - 2);
+        let prevChar = options.textHandler.getValue().charAt(cp - 2);
         if (
           (!prevChar || ALLOWED_LETTERS_REGEXP.test(prevChar)) &&
           (await checkTriggerRule())
@@ -575,11 +578,17 @@ export default function (options) {
         }
       }
     } else if (completeStart !== null) {
-      let term = options.textHandler.value.substring(
-        completeStart + (options.key ? 1 : 0),
-        cp
-      );
-      updateAutoComplete(dataSource(term, options));
+      let term = options.textHandler
+        .getValue()
+        .substring(completeStart + (options.key ? 1 : 0), cp);
+      if (
+        !options.key ||
+        options.textHandler.getValue()[completeStart] === options.key
+      ) {
+        updateAutoComplete(dataSource(term, options));
+      } else {
+        closeAutocomplete();
+      }
     }
   }
 
@@ -601,12 +610,12 @@ export default function (options) {
 
     while (prevIsGood && caretPos >= 0) {
       caretPos -= 1;
-      prev = options.textHandler.value[caretPos];
+      prev = options.textHandler.getValue()[caretPos];
 
       stopFound = prev === options.key;
 
       if (stopFound) {
-        prev = options.textHandler.value[caretPos - 1];
+        prev = options.textHandler.getValue()[caretPos - 1];
         const shouldTrigger = await checkTriggerRule({ backSpace });
 
         if (
@@ -614,10 +623,9 @@ export default function (options) {
           (prev === undefined || ALLOWED_LETTERS_REGEXP.test(prev))
         ) {
           start = caretPos;
-          term = options.textHandler.value.substring(
-            caretPos + 1,
-            initialCaretPos
-          );
+          term = options.textHandler
+            .getValue()
+            .substring(caretPos + 1, initialCaretPos);
           end = caretPos + term.length;
           break;
         }
@@ -648,7 +656,7 @@ export default function (options) {
           inputSelectedItems.push("");
         }
 
-        const value = options.textHandler.value;
+        const value = options.textHandler.getValue();
         if (typeof inputSelectedItems[0] === "string" && value.length > 0) {
           inputSelectedItems.pop();
           inputSelectedItems.push(value);
@@ -694,7 +702,7 @@ export default function (options) {
       // allow people to right arrow out of completion
       if (
         e.which === keys.rightArrow &&
-        options.textHandler.value[cp] === " "
+        options.textHandler.getValue()[cp] === " "
       ) {
         closeAutocomplete();
         return true;
@@ -770,10 +778,9 @@ export default function (options) {
             return true;
           }
 
-          term = options.textHandler.value.substring(
-            completeStart + (options.key ? 1 : 0),
-            cp
-          );
+          term = options.textHandler
+            .getValue()
+            .substring(completeStart + (options.key ? 1 : 0), cp);
 
           if (completeStart === cp && term === options.key) {
             closeAutocomplete();
