@@ -25,7 +25,7 @@ class StylesheetsController < ApplicationController
     params.permit("theme_id")
 
     manager = Stylesheet::Manager.new(theme_id: params[:theme_id])
-    stylesheet = manager.color_scheme_stylesheet_details(params[:id], "all")
+    stylesheet = manager.color_scheme_stylesheet_details(params[:id], fallback_to_base: true)
     render json: stylesheet
   end
 
