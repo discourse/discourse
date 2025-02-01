@@ -1,3 +1,8 @@
+> To install and self-host Discourse, follow the steps below. But if you'd rather skip the setup, maintenance, and server management, our official Discourse hosting takes care of everything for you.
+>
+> 👉 [Learn more about Discourse hosting](https://discourse.org/pricing)
+
+
 **Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. One example
 is [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server. This
 walkthrough will go through these in detail:
