@@ -53,6 +53,10 @@ export default class DMenuInstance extends FloatKitInstance {
     this.setupListeners();
   }
 
+  get shouldTrapPointerDown() {
+    return this.expanded;
+  }
+
   @action
   async close(options = { focusTrigger: true }) {
     if (getOwner(this).isDestroying) {
