@@ -983,8 +983,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       content-tag:
-        specifier: ^3.1.0
-        version: 3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+        specifier: ^3.1.1
+        version: 3.1.1
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.26.7)
@@ -3853,6 +3853,9 @@ packages:
 
   content-tag@3.1.0:
     resolution: {integrity: sha512-gSESx+fia81/vKjorui0V6wY7IBpuitd84LcQnaPVF9Xe9ctLAf4saHwbUi3SAhYfi9kxs5ODfAVnm5MmjojCQ==}
+
+  content-tag@3.1.1:
+    resolution: {integrity: sha512-94puwVk6X8oJcbRIEY03UM80zWzA3dYgGkOiRJzeY1vXgwrFUh3OolDDi/D7YBa6Vsx+CgAvuk4uXlB8loZ1FA==}
 
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
@@ -11976,6 +11979,8 @@ snapshots:
 
   content-tag@3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m): {}
 
+  content-tag@3.1.1: {}
+
   content-type@1.0.5: {}
 
   continuable-cache@0.3.1: {}
@@ -14840,7 +14845,7 @@ snapshots:
 
   lint-to-the-future-ember-template@3.0.0(ember-template-lint@6.1.0):
     dependencies:
-      content-tag: 3.1.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.1
       ember-template-lint: 6.1.0
       walk-sync: 2.2.0
 
