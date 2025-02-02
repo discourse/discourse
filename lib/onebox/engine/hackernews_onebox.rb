@@ -29,7 +29,7 @@ module Onebox
         data = {
           link: @url,
           title: Onebox::Helpers.truncate(raw["title"], 80),
-          favicon: "https://news.ycombinator.com/y18.gif",
+          favicon: "https://news.ycombinator.com/y18.svg",
           timestamp: Time.at(raw["time"]).strftime("%-l:%M %p - %-d %b %Y"),
           author: raw["by"],
         }
