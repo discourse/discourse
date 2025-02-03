@@ -550,7 +550,7 @@ class Reviewable < ActiveRecord::Base
           "LEFT JOIN reviewable_claimed_topics rct ON reviewables.topic_id = rct.topic_id",
         ).where("rct.user_id IS NULL OR rct.user_id = ?", user.id)
     end
-    result = result.where(type: Reviewable.types.map(&:to_s))
+    result = result.where(type: Reviewable.types.map { |reviewable| reviewable.new.type })
     result = result.limit(limit) if limit
     result = result.offset(offset) if offset
     result
