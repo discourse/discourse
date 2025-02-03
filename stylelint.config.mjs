@@ -1,15 +1,8 @@
 export default {
   extends: ["stylelint-config-standard-scss"],
   rules: {
-    "no-duplicate-at-import-rules": true,
-    "font-family-no-duplicate-names": true,
-    "keyframe-block-no-duplicate-selectors": true,
-    "declaration-block-no-duplicate-custom-properties": null,
-    "declaration-block-no-duplicate-properties": true,
-    "block-no-empty": null,
-    "comment-no-empty": true,
-    "no-invalid-double-slash-comments": true,
-    "no-empty-source": true,
+    "color-no-invalid-hex": true,
+    "unit-no-unknown": true,
     "at-rule-empty-line-before": null,
     "rule-empty-line-before": [
       "always",
