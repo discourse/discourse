@@ -101,7 +101,8 @@ export default class TopicList extends Component {
     return applyValueTransformer(
       "topic-list-columns",
       defaultColumns,
-      context
+      context,
+      { mutable: true }
     ).resolve();
   }
 
