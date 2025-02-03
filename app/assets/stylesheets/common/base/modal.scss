@@ -29,7 +29,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0.5rem 0.5rem 1.5rem; //offset for close button padding
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
     border-bottom: 1px solid var(--primary-low);
 
     .modal-close {
@@ -143,7 +143,7 @@
   }
 }
 
-//legacy
+// legacy
 .input-hint-text {
   margin-left: 0.5em;
   color: var(--secondary-high);

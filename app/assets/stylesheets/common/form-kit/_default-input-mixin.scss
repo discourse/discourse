@@ -18,7 +18,7 @@
   &:focus-visible,
   &:focus:focus-visible,
   &:active {
-    //these importants are another great case for having a button element without that pesky default styling
+    // these `!important` flags are another great case for having a button element without that pesky default styling
     &:not(:disabled) {
       background-color: var(--secondary) !important;
       color: var(--primary) !important;

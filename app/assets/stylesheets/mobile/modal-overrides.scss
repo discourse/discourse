@@ -10,7 +10,7 @@
   }
 
   .picker-panel {
-    //mysteriously needed to prevent it from overlapping the timezone-input
+    // mysteriously needed to prevent it from overlapping the timezone-input
     position: relative;
     z-index: 0;
   }
