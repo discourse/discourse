@@ -54,7 +54,14 @@ end
 begin
   reqs = Rake::Task["db:create"].prerequisites.map(&:to_sym)
   Rake::Task["db:create"].clear_prerequisites
-  Rake::Task["db:create"].enhance(["db:force_skip_persist"] + reqs)
+  Rake::Task["db:create"].enhance(["db:force_skip_persist"] + reqs) do
+    # after creating the db, we need to fully reboot the Rails app to make sure
+    # things like SiteSetting work correctly for future rake tasks.
+    db_create_index = ARGV.find_index("db:create")
+    if db_create_index < ARGV.length - 1
+      exec "#{Rails.root}/bin/rake", *ARGV[db_create_index + 1..-1]
+    end
+  end
 end
 
 task "db:drop" => [:load_config] do |_, args|
