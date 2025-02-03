@@ -241,7 +241,7 @@
             {{#if this.site.mobileView}}
               <DButton
                 @action={{this.composer.cancel}}
-                class="cancel"
+                class="cancel btn-transparent"
                 @icon={{if this.composer.canEdit "xmark" "trash-can"}}
                 @preventFocus={{true}}
                 @title="close"
@@ -249,7 +249,7 @@
             {{else}}
               <DButton
                 @action={{this.composer.cancel}}
-                class="cancel"
+                class="cancel btn-transparent"
                 @preventFocus={{true}}
                 @title="close"
                 @label="close"
