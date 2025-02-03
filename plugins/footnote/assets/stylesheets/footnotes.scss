@@ -1,6 +1,6 @@
 .inline-footnotes {
   a.expand-footnote {
-    user-select: none;
+    @include user-select(none);
     padding: 0 0.5em;
     margin: 0 0 0 0.25em;
     color: var(--primary-low-mid-or-secondary-high);

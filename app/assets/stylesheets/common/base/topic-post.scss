@@ -1285,7 +1285,7 @@ a.mention-group {
   @include mention;
 
   .user-status-message {
-    user-select: none;
+    @include user-select(none);
   }
 }
 
