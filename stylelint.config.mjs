@@ -26,10 +26,8 @@ export default {
     "scss/no-global-function-names": null,
     "selector-id-pattern": null,
     "no-invalid-position-at-import-rule": null,
-    "font-family-no-missing-generic-family-keyword": null,
     "scss/at-function-pattern": null,
     "scss/comment-no-empty": null,
-    "function-linear-gradient-no-nonstandard-direction": null,
     "scss/at-mixin-pattern": null,
     "media-feature-range-notation": "prefix",
     "property-no-vendor-prefix": [
