@@ -103,10 +103,8 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
   top: 0;
   padding: 0 $popup-padding-left;
   box-sizing: border-box;
-}
 
-// Vertical centerer helper
-.mfp-container {
+  // Vertical centerer helper
   &::before {
     content: "";
     display: inline-block;

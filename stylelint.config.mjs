@@ -23,7 +23,6 @@ export default {
     "shorthand-property-no-redundant-values": null,
     "declaration-block-no-redundant-longhand-properties": null,
     "no-descending-specificity": null,
-    "no-duplicate-selectors": null,
     "keyframes-name-pattern": null,
     "selector-type-no-unknown": null,
     "scss/dollar-variable-pattern": null,

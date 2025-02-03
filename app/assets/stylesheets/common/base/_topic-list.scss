@@ -200,6 +200,15 @@
   width: 100%;
   border-collapse: collapse;
 
+  .alert {
+    margin-bottom: 0;
+    font-size: var(--font-0);
+  }
+
+  .spinner {
+    margin-top: 40px;
+  }
+
   > .topic-list-body > .topic-list-item {
     &.has-excerpt .star {
       vertical-align: top;
@@ -419,17 +428,6 @@
     color: var(--danger-medium);
     font-size: var(--font-0);
     cursor: default;
-  }
-}
-
-.topic-list {
-  .alert {
-    margin-bottom: 0;
-    font-size: var(--font-0);
-  }
-
-  .spinner {
-    margin-top: 40px;
   }
 }
 

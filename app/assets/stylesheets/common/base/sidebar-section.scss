@@ -28,6 +28,14 @@
         transition: all 0.25s;
         opacity: 0;
 
+        &:hover {
+          background: var(--d-sidebar-highlight-hover-background);
+
+          .d-icon {
+            color: var(--d-sidebar-highlight-hover-icon);
+          }
+        }
+
         &:focus {
           opacity: 1;
         }
@@ -50,16 +58,6 @@
 
         .d-icon {
           color: var(--d-sidebar-highlight-hover-icon);
-        }
-      }
-
-      .discourse-no-touch & {
-        &:hover {
-          background: var(--d-sidebar-highlight-hover-background);
-
-          .d-icon {
-            color: var(--d-sidebar-highlight-hover-icon);
-          }
         }
       }
     }

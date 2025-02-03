@@ -194,6 +194,10 @@ body.wizard {
 
   &__step-form {
     display: flex;
+    flex: 1 0 50%;
+    @media only screen and (max-width: 568px) {
+      width: 100%;
+    }
   }
 
   &__sidebar {
@@ -306,13 +310,6 @@ body.wizard {
 
     @include breakpoint("mobile-extra-large") {
       min-height: 30em;
-    }
-  }
-
-  &__step-form {
-    flex: 1 0 50%;
-    @media only screen and (max-width: 568px) {
-      width: 100%;
     }
   }
 

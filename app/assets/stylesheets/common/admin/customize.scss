@@ -609,6 +609,21 @@
     padding: 0;
     margin: 0;
 
+    .admin-container {
+      position: absolute;
+      bottom: 50px;
+      top: 80px;
+      width: 100%;
+    }
+
+    .admin-footer {
+      margin-top: 10px;
+    }
+
+    .ace-wrapper {
+      height: calc(100vh - 200px);
+    }
+
     .wrapper {
       position: absolute;
       top: 20px;
@@ -680,23 +695,6 @@
       height: calc(100vh - 450px);
       min-height: 200px;
       width: 100%;
-    }
-
-    &.maximized {
-      .admin-container {
-        position: absolute;
-        bottom: 50px;
-        top: 80px;
-        width: 100%;
-      }
-
-      .admin-footer {
-        margin-top: 10px;
-      }
-
-      .ace-wrapper {
-        height: calc(100vh - 200px);
-      }
     }
 
     .ace_editor {

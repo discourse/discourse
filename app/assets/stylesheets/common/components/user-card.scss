@@ -10,13 +10,6 @@
   }
 }
 
-.user-card,
-.group-card {
-  --card-width: 39em;
-  --avatar-width: 8em;
-  --avatar-margin: -3.3em; // extends the avatar above the card
-}
-
 .animated-placeholder {
   height: 20px;
   position: relative;
@@ -50,6 +43,9 @@
 // shared styles for user and group cards
 .user-card,
 .group-card {
+  --card-width: 39em;
+  --avatar-width: 8em;
+  --avatar-margin: -3.3em; // extends the avatar above the card
   min-width: 0;
   width: var(--card-width);
   color: var(--primary);

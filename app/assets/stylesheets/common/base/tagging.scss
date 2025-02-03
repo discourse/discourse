@@ -61,9 +61,6 @@
   display: inline-block;
   @include ellipsis;
   vertical-align: middle;
-}
-
-.discourse-tag {
   margin: 0;
   color: var(--primary-medium);
 

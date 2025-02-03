@@ -743,6 +743,7 @@
 
 .admin-new-feature-item__screenshot {
   margin-bottom: 1em;
+  width: 100%;
 }
 
 .admin-new-feature-item__tooltip-header {
@@ -781,10 +782,6 @@
     align-items: baseline;
     font-weight: bold;
     margin-bottom: 0.5em;
-  }
-
-  &__screenshot {
-    width: 100%;
   }
 
   &__new-feature-version {

@@ -651,9 +651,6 @@ $mobile-breakpoint: 700px;
   nav {
     background-color: var(--primary-low);
     width: 100%;
-  }
-
-  nav {
     display: inline-flex;
     position: relative;
     flex: 1 0 0px;
@@ -1133,6 +1130,7 @@ table#user-badges {
 
     .new-value-input {
       flex: 1 0 0px;
+      margin-left: 0.25em;
     }
 
     .value-input,
@@ -1153,10 +1151,6 @@ table#user-badges {
       @include value-btn;
       margin-left: 0.25em;
       margin-top: 0.125em;
-    }
-
-    .new-value-input {
-      margin-left: 0.25em;
     }
   }
 }
