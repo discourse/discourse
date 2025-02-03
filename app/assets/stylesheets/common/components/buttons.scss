@@ -435,8 +435,8 @@
 }
 
 .btn-transparent {
-  &.btn-default,
-  &.btn-text {
+  &,
+  &.btn-default {
     background: transparent;
     border: 0;
     color: var(--primary);
