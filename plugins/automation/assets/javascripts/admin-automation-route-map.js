@@ -4,9 +4,13 @@ export default {
   path: "/plugins",
 
   map() {
-    this.route("automation", function () {
-      this.route("new");
-      this.route("edit", { path: "/:id" });
-    });
+    this.route(
+      "automation",
+
+      function () {
+        this.route("new");
+        this.route("edit", { path: "/:id" });
+      }
+    );
   },
 };

@@ -14,9 +14,9 @@ DiscourseAutomation::Engine.routes.draw do
         as: "admin_discourse_automation",
         constraints: AdminConstraint.new do
     scope format: false do
-      get "/" => "admin#index"
-      get "/new" => "admin#new"
-      get "/:id" => "admin#edit"
+      get "/automation" => "admin#index"
+      get "/automation/new" => "admin#new"
+      get "/automation/:id" => "admin#edit"
     end
 
     scope format: :json do
