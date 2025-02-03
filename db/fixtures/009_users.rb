@@ -66,4 +66,10 @@ if ENV["SMOKE"] == "1"
   )
 
   EmailToken.where(user_id: smoke_user.id).update_all(confirmed: true)
+
+  ApiKey.seed { |api_key| api_key.user_id = smoke_user.id }
+
+  ApiKey.where(user_id: smoke_user.id).update_all(
+    key_hash: ApiKey.hash_key("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"),
+  )
 end
