@@ -59,13 +59,6 @@
     border: 0;
   }
 
-  &:not(.docked) {
-    @media screen and (min-width: $reply-area-max-width) {
-      right: calc(50%); // right side of composer
-      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
-    }
-  }
-
   #topic-progress {
     position: relative;
     background-color: var(--secondary);
