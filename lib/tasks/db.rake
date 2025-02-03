@@ -57,9 +57,10 @@ begin
   Rake::Task["db:create"].enhance(["db:force_skip_persist"] + reqs) do
     # after creating the db, we need to fully reboot the Rails app to make sure
     # things like SiteSetting work correctly for future rake tasks.
-    db_create_index = ARGV.find_index("db:create")
-    if db_create_index < ARGV.length - 1
-      exec "#{Rails.root}/bin/rake", *ARGV[db_create_index + 1..-1]
+    top_level_tasks = Rake.application.top_level_tasks
+    db_create_index = top_level_tasks.index("db:create")
+    if db_create_index < top_level_tasks.length - 1
+      exec "#{Rails.root}/bin/rake", *top_level_tasks[db_create_index + 1..-1]
     end
   end
 end
