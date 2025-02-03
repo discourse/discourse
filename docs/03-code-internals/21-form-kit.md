@@ -1699,13 +1699,15 @@ The FormKit helper allows you to manipulate a form and its fields through a clea
 import formKit from "discourse/tests/helpers/form-kit";
 
 test("fill in input", async function (assert) {
-  await render(<template>
-    <Form class="my-form" as |form data|>
-      <form.Field @name="foo" as |field|>
-        <field.Input />
-      </form.Field>
-    </Form>
-  </template>);
+  await render(
+    <template>
+      <Form class="my-form" as |form data|>
+        <form.Field @name="foo" as |field|>
+          <field.Input />
+        </form.Field>
+      </Form>
+    </template>
+  );
 
   const myForm = formKit(".my-form");
 });

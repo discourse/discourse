@@ -56,9 +56,7 @@ In Javascript, or in `.gjs` files, you can use the themePrefix function. This is
 ```gjs
 const result = I18n.t(themePrefix("my_translation_key"));
 
-<template>
-  {{i18n (themePrefix "blah")}}
-</template>
+<template>{{i18n (themePrefix "blah")}}</template>
 ```
 
 For a complete example of using translations in a theme, check out @awesomerobot's Fakebook theme: https://github.com/awesomerobot/Fakebook

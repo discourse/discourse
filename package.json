@@ -1,0 +1,12 @@
+{
+  "name": "discourse-developer-docs",
+  "private": true,
+  "scripts": {
+    "lint": "prettier --check '**/*.{md,json,mjs,yml}'",
+    "lint:fix": "prettier --write '**/*.{md,json,mjs,yml}'"
+  },
+  "dependencies": {
+    "prettier": "^3.4.2",
+    "prettier-plugin-ember-template-tag": "^2.0.4"
+  }
+}
