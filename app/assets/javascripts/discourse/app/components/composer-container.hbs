@@ -244,14 +244,15 @@
                 class="cancel"
                 @icon={{if this.composer.canEdit "xmark" "trash-can"}}
                 @preventFocus={{true}}
+                @title="close"
               />
             {{else}}
               <DButton
                 @action={{this.composer.cancel}}
                 class="cancel"
-                @translatedLabel={{i18n "close"}}
-                @icon=""
                 @preventFocus={{true}}
+                @title="close"
+                @label="close"
               />
             {{/if}}
 

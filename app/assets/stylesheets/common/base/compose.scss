@@ -391,7 +391,7 @@ html.composer-open {
       line-height: normal;
       color: var(--primary-high);
       transition: color 250ms;
-      background-color: transparent;
+      padding: 0;
 
       &:hover,
       &:focus {
