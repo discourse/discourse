@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import discourseDebounce from "discourse/lib/debounce";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -21,7 +20,7 @@ function validResult(attrs) {
 }
 
 export default class UsernameValidationHelper {
-  @tracked usernameValidationResult = new TrackedObject();
+  @tracked usernameValidationResult;
   checkedUsername = null;
 
   constructor(owner) {
