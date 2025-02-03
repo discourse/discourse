@@ -8,7 +8,7 @@ RSpec.describe Admin::UnknownReviewablesController do
   fab!(:reviewable)
   fab!(:unknown_reviewable) { Fabricate(:reviewable, type: "ReviewablePost") }
 
-  describe "DELETE #destroy" do
+  describe "#destroy" do
     context "when user is an admin" do
       before do
         sign_in admin
