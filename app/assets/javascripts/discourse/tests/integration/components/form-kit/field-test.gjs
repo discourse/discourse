@@ -83,8 +83,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
 
     await render(<template>
       <Form as |form|>
-        <form.Field @name="foo.bar" @title="Foo" @size={{8}}>
-          Test
+        <form.Field @name="foo.bar" @title="Foo" @size={{8}} as |field|>
+          <field.Input />
         </form.Field>
       </Form>
     </template>);
@@ -102,8 +102,8 @@ module("Integration | Component | FormKit | Field", function (hooks) {
 
     await render(<template>
       <Form as |form|>
-        <form.Field @name="foo" @size={{8}}>
-          Test
+        <form.Field @name="foo" @size={{8}} as |field|>
+          <field.Input />
         </form.Field>
       </Form>
     </template>);
