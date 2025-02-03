@@ -1,22 +1,21 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import discourseDebounce from "discourse/lib/debounce";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 function failedResult(attrs) {
-  return EmberObject.create({
+  return {
     shouldCheck: false,
     failed: true,
     ok: false,
     element: document.querySelector("#new-account-username"),
     ...attrs,
-  });
+  };
 }
 
 function validResult(attrs) {
-  return EmberObject.create({ ok: true, ...attrs });
+  return { ok: true, ...attrs };
 }
 
 export default class UsernameValidationHelper {
