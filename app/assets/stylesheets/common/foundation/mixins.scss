@@ -19,7 +19,7 @@ $breakpoints: (
 );
 
 @mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: false) {
-  $bp-value: map-get($breakpoints, $bp);
+  $bp-value: map.get($breakpoints, $bp);
 
   @if $rule == min-width {
     $bp-value: calc(#{$bp-value} + 1px);
@@ -34,7 +34,7 @@ $breakpoints: (
   // note that your breakpoint will need to be at the root level
   @if $sidebar {
     // when the sidebar is shown, we want to increase the breakpoints by the width of the sidebar
-    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$d-sidebar-width})) {
+    @media #{$type} and (#{$rule}: calc(#{map.get($breakpoints, $bp)} + #{$d-sidebar-width})) {
       .has-sidebar-page {
         @content;
       }
@@ -170,10 +170,10 @@ $hpad: 0.65em;
   $encoded: "";
   $slice: 2000;
   $index: 0;
-  $loops: ceil(math.div(str-length($svg), $slice));
+  $loops: math.ceil(math.div(string.length($svg), $slice));
 
   @for $i from 1 through $loops {
-    $chunk: str-slice($svg, $index, $index + $slice - 1);
+    $chunk: string.slice($svg, $index, $index + $slice - 1);
     $chunk: str-replace($chunk, '"', "'");
     $chunk: str-replace($chunk, "<", "%3C");
     $chunk: str-replace($chunk, ">", "%3E");
@@ -194,12 +194,12 @@ $hpad: 0.65em;
 /// @param {String} $replace ('') - New value
 /// @return {String} - Updated string
 @function str-replace($string, $search, $replace: "") {
-  $index: str-index($string, $search);
+  $index: string.index($string, $search);
 
   @if $index {
-    @return str-slice($string, 1, $index - 1) + $replace +
+    @return string.slice($string, 1, $index - 1) + $replace +
       str-replace(
-        str-slice($string, $index + str-length($search)),
+        string.slice($string, $index + string.length($search)),
         $search,
         $replace
       );
@@ -217,7 +217,7 @@ $hpad: 0.65em;
 // rgba(var(--primary-low-rgb), 0.5)
 
 @function hexToRGB($hex) {
-  @return red($hex), green($hex), blue($hex);
+  @return color.red($hex), color.green($hex), color.blue($hex);
 }
 
 @function schemeType() {
@@ -232,8 +232,8 @@ $hpad: 0.65em;
   // public_image_path is added by the stylesheet importer
   // it returns a CDN or subfolder path (if applicable).
   // SCSS will compile (and return the relative path) if public_image_path is missing.
-  @if variable-exists(public_image_path) {
-    @if str-index("#{$path}", "/plugins") == 1 {
+  @if meta.variable-exists(public_image_path) {
+    @if string.index("#{$path}", "/plugins") == 1 {
       $plugin_asset_path: str-replace($public_image_path, "/images", "");
       @return url("#{$plugin_asset_path}#{$path}");
     } @else {
