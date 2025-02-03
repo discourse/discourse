@@ -253,7 +253,7 @@ body.wizard {
     background: var(--secondary);
     border-radius: 10px;
     cursor: grab;
-    user-select: none;
+    @include user-select(none);
 
     &.dragging {
       cursor: grabbing;
