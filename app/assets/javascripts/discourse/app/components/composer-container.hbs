@@ -239,25 +239,21 @@
             />
 
             {{#if this.site.mobileView}}
-              <a
-                href
-                {{on "click" this.composer.cancel}}
-                title={{i18n "cancel"}}
-                class="cancel"
-              >
-                {{#if this.composer.canEdit}}
-                  {{d-icon "xmark"}}
-                {{else}}
-                  {{d-icon "trash-can"}}
-                {{/if}}
-              </a>
+              <DButton
+                @action={{this.composer.cancel}}
+                class="cancel btn-transparent"
+                @icon={{if this.composer.canEdit "xmark" "trash-can"}}
+                @preventFocus={{true}}
+                @title="close"
+              />
             {{else}}
-              <a
-                href
-                {{on "click" this.composer.cancel}}
-                class="cancel"
-                role="button"
-              >{{i18n "close"}}</a>
+              <DButton
+                @action={{this.composer.cancel}}
+                class="cancel btn-transparent"
+                @preventFocus={{true}}
+                @title="close"
+                @label="close"
+              />
             {{/if}}
 
             {{#if this.site.mobileView}}
