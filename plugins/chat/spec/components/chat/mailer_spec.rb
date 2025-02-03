@@ -53,6 +53,14 @@ describe Chat::Mailer do
   describe "in a followed channel" do
     before { followed_channel.add(user) }
 
+    describe "there is a new message" do
+      let!(:chat_message) { create_message(followed_channel, "hello y'all :wave:") }
+
+      it "does not queue a chat summary" do
+        expect_not_enqueued
+      end
+    end
+
     describe "user is @direct mentioned" do
       let!(:chat_message) do
         create_message(followed_channel, "hello @#{user.username}", Chat::UserMention)
@@ -193,6 +201,14 @@ describe Chat::Mailer do
   describe "in a non-followed channel" do
     before { non_followed_channel.add(user).update!(following: false) }
 
+    describe "there is a new message" do
+      let!(:chat_message) { create_message(non_followed_channel, "hello y'all :wave:") }
+
+      it "does not queue a chat summary" do
+        expect_not_enqueued
+      end
+    end
+
     describe "user is @direct mentioned" do
       before { create_message(non_followed_channel, "hello @#{user.username}", Chat::UserMention) }
 
@@ -221,6 +237,14 @@ describe Chat::Mailer do
   describe "in a muted channel" do
     before { muted_channel.add(user).update!(muted: true) }
 
+    describe "there is a new message" do
+      let!(:chat_message) { create_message(muted_channel, "hello y'all :wave:") }
+
+      it "does not queue a chat summary" do
+        expect_not_enqueued
+      end
+    end
+
     describe "user is @direct mentioned" do
       before { create_message(muted_channel, "hello @#{user.username}", Chat::UserMention) }
 
@@ -247,6 +271,14 @@ describe Chat::Mailer do
   end
 
   describe "in an unseen channel" do
+    describe "there is a new message" do
+      let!(:chat_message) { create_message(unseen_channel, "hello y'all :wave:") }
+
+      it "does not queue a chat summary" do
+        expect_not_enqueued
+      end
+    end
+
     describe "user is @direct mentioned" do
       before { create_message(unseen_channel, "hello @#{user.username}") }
 
@@ -262,6 +294,14 @@ describe Chat::Mailer do
         expect_not_enqueued
       end
     end
+
+    describe "there is an @all mention" do
+      before { create_message(unseen_channel, "hello @all", Chat::AllMention) }
+
+      it "does not queue a chat summary email" do
+        expect_not_enqueued
+      end
+    end
   end
 
   describe "in a direct message" do
@@ -271,7 +311,7 @@ describe Chat::Mailer do
       expect_enqueued
     end
 
-    it "queues a chat summary email when user isn't following the direct message anymore" do
+    it "queues a chat summary email even when user isn't following the direct message anymore" do
       direct_message.membership_for(user).update!(following: false)
       expect_enqueued
     end
