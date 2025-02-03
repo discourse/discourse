@@ -4924,10 +4924,10 @@ it:
           percent_change_tooltip_previous_value:
             yesterday:
               one: "Era %{count} due giorni fa."
-              other: "Era %{count} due giorni fa."
+              other: "Erano %{count} due giorni fa."
             two_weeks_ago:
               one: "Era %{count} due settimane fa."
-              other: "Era %{count} due settimane fa."
+              other: "Erano %{count} due settimane fa."
             thirty_days_ago:
               one: "Era %{count} nel periodo di 30 giorni precedente."
               other: "Era %{count} nel periodo di 30 giorni precedente."
@@ -6225,7 +6225,7 @@ it:
             text: "Roll up"
             title: "Crea nuovi elenchi di indirizzi IP interdetti se ci sono almeno 'min_ban_entries_for_roll_up' elementi."
         search_logs:
-          title: "Cerca nei log"
+          title: "Log di ricerca"
           term: "Termine"
           searches: "Ricerche"
           click_through_rate: "CTR"

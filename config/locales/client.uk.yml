@@ -5323,6 +5323,9 @@ uk:
         legal:
           title: "Legal"
           header_description: "Налаштуйте юридичні параметри, такі як умови обслуговування, політика конфіденційності, контактні дані та особливості ЄС"
+        localization:
+          title: "Локалізація"
+          header_description: "Налаштуйте мову інтерфейсу вашої спільноти та інші параметри локалізації для ваших учасників"
         login_and_authentication:
           title: "Вхід та автентифікація"
           header_description: "Налаштуйте спосіб входу та автентифікації користувачів, секрети та ключі, постачальники OAuth2 тощо"
@@ -5873,6 +5876,9 @@ uk:
           group_permissions: "Групові дозволи"
           users: "Користувачі"
           groups: "Групи"
+          localization:
+            title: "Локалізація"
+            keywords: "locale|language|timezone|unicode|ltr"
           user_fields: "Поля користувача"
           watched_words: "Слова які відстежуються"
           legal: "Legal"

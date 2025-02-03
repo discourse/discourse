@@ -5342,7 +5342,7 @@ de:
           groups: "Gruppen"
           localization:
             title: "Lokalisierung"
-            keywords: "locale|language|timezone|unicode|ltr|Gebietsschema|Sprache|Zeitzone|Umlaute"
+            keywords: "Gebietsschema|Sprache|Zeitzone|unicode|ltr"
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
@@ -6009,7 +6009,7 @@ de:
         no_result: "Für diese Zusammenfassung wurden keine Ergebnisse gefunden."
         reply_key: "Antwort-Schlüssel"
         post_link_with_smtp: "Beitrag und SMTP-Details"
-        skipped_reason: "Grund des Überspringens"
+        skipped_reason: "Grund überspringen"
         incoming_emails:
           from_address: "Von"
           to_addresses: "An"

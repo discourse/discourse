@@ -1998,8 +1998,8 @@ ru:
         after_10_minutes: "Более 10 минут"
       notification_level_when_replying:
         label: "При публикации"
-        watch_topic: "Наблюдаемая тема"
-        track_topic: "Отслеживаемая тема"
+        watch_topic: "Наблюдать за темой"
+        track_topic: "Отслеживать тему"
         do_nothing: "Ничего не делать"
       topics_unread_when_closed: "Считать темы непрочитанными, если они закрыты"
       invited:
@@ -5878,7 +5878,7 @@ ru:
           legal: "Юридическое"
           moderation_flags:
             title: "Модерация"
-            keywords: "flag|review"
+            keywords: "пометить|проверить"
       appearance:
         title: "Внешний вид"
         sidebar_link:
