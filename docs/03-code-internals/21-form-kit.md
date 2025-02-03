@@ -441,6 +441,20 @@ Sets the height of the composer.
 </Form>
 ```
 
+### @preview
+
+Controls the display the composer preview. Defaults to `false`.
+
+**Example**
+
+```hbs
+<Form as |form|>
+  <form.Field @name="message" @title="Message" as |field|>
+    <field.Composer @preview={{true}} />
+  </form.Field>
+</Form>
+```
+
 ## Icon
 
 Renders an `<IconPicker />` component.
