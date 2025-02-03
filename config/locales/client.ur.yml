@@ -2706,6 +2706,8 @@ ur:
           one: آپ نے <b>%{count}</b> پوسٹ منتخب کی ہے۔
           other: "آپ نے <b>%{count}</b> پوسٹس منتخب کی ہیں۔"
       deleted_by_author_simple: "(مضمون مصنف نے مٹایا ہے)"
+    post_list:
+      title: "تازہ ترین پوسٹس"
     post:
       quote_reply: "اقتباس کریں"
       quote_edit: "ترمیم"
@@ -2827,7 +2829,6 @@ ur:
         delete_topic_confirm_modal_no: "نہیں، اس موضوع کو رکھیں"
         delete_topic_error: "اس موضوع کو مٹاتے وقت ایک خرابی پیش آگئی"
         delete_topic: "ٹاپک مٹائیں"
-        delete_post_notice: "عملے کی آگاہی کو مٹائیں"
         remove_timer: "ٹائمر ہٹائیں"
         edit_timer: "ٹائمر میں ترمیم کریں"
       actions:
@@ -3261,9 +3262,6 @@ ur:
       close: "بند (Esc)"
       content_load_error: '<a href="%url%">مواد</a> لوڈ نہیں کیا جا سکا۔'
       image_load_error: '<a href="%url%">تصویر</a> لوڈ نہیں کی جا سکی۔'
-    experimental_lightbox:
-      buttons:
-        close: "بند (Esc)"
     cannot_render_video: اس ویڈیو کو رینڈر نہیں کیا جا سکتا کیونکہ آپ کا براؤزر کوڈیک کو سپورٹ نہیں کرتا ہے۔
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "، "
@@ -3298,7 +3296,6 @@ ur:
         title: "ایپلیکیشن"
         create: "%{shortcut} نیا ٹاپک بنائیں"
         notifications: "%{shortcut} اطلاعات کھولیں"
-        hamburger_menu: "%{shortcut} ہیمبرگر مینو کھولیں"
         user_profile_menu: "%{shortcut} صارف مینو کھولیں"
         show_incoming_updated_topics: "%{shortcut} اپ ڈیٹ کردہ عنوانات دکھائیں"
         search: "%{shortcut} سرچ"

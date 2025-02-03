@@ -378,7 +378,7 @@ module("Unit | Model | report", function (hooks) {
     assert.strictEqual(flagCountLabel.title, "Flag count");
     assert.strictEqual(flagCountLabel.type, "number");
     let computedFlagCountLabel = flagCountLabel.compute(row);
-    assert.strictEqual(computedFlagCountLabel.formattedValue, "1.9k");
+    assert.strictEqual(computedFlagCountLabel.formattedValue, "1,876");
     assert.strictEqual(computedFlagCountLabel.value, 1876);
     computedFlagCountLabel = flagCountLabel.compute(row, {
       formatNumbers: false,

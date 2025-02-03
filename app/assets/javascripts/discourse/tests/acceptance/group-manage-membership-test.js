@@ -187,6 +187,11 @@ acceptance(
         .dom(".group-automatic-tooltip")
         .exists("displays automatic tooltip");
     });
+
+    test("the current user cannot invite users to automatic group", async function (assert) {
+      await visit("/g/moderators");
+      assert.dom(".group-members-add").doesNotExist();
+    });
   }
 );
 

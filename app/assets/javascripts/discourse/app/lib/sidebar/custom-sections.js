@@ -21,7 +21,7 @@ class MainSidebarPanel {
   }
 
   get switchButtonDefaultUrl() {
-    return "/";
+    return this?.lastKnownURL || "/";
   }
 }
 

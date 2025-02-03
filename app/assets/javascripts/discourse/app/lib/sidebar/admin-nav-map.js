@@ -53,6 +53,12 @@ export const ADMIN_NAV_MAP = [
         icon: "bell",
       },
       {
+        name: "admin_localization",
+        route: "adminConfig.localization.settings",
+        label: "admin.community.sidebar_link.localization.title",
+        icon: "globe",
+      },
+      {
         name: "admin_permalinks",
         route: "adminPermalinks",
         label: "admin.community.sidebar_link.permalinks",

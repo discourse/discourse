@@ -21,6 +21,10 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
       expect(html).to include("discourse")
     end
 
+    it "includes branch names" do
+      expect(html).to include("<code>main</code> ← <code>jamesaanderson:add-audio-onebox</code>")
+    end
+
     it "includes commit author gravatar" do
       expect(html).to include("b3e9977094ce189bbb493cf7f9adea21")
     end

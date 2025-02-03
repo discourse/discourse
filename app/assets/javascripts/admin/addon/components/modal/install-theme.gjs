@@ -10,7 +10,7 @@ import ConditionalLoadingSection from "discourse/components/conditional-loading-
 import CopyButton from "discourse/components/copy-button";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -317,7 +317,7 @@ export default class InstallThemeModal extends Component {
                         target="_blank"
                       >
                         {{#if theme.component}}
-                          {{dIcon
+                          {{icon
                             "puzzle-piece"
                             title="admin.customize.theme.component"
                           }}
@@ -347,7 +347,7 @@ export default class InstallThemeModal extends Component {
                             rel="noopener noreferrer"
                             target="_blank"
                           >
-                            {{dIcon "desktop"}}
+                            {{icon "desktop"}}
                             {{i18n "admin.customize.theme.preview"}}
                           </a>
                         {{/if}}

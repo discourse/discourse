@@ -221,7 +221,7 @@ RSpec.describe "Separate sidebar mode", type: :system do
         expect(channel_browse_page.component).to be_present
 
         sidebar_component.switch_to_main
-        expect(page).to have_current_path("/discuss/")
+        expect(page).to have_current_path("/discuss/about")
       end
     end
   end

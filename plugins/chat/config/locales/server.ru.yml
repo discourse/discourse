@@ -207,6 +207,8 @@ ru:
       inline_to_message: "Сообщение №%{message_id} от пользователя %{username} — №%{chat_channel}"
       inline_to_channel: "Чат №%{chat_channel}"
       inline_to_topic_channel: "Чат по теме %{topic_title}"
+      inline_to_thread: "%{thread_title} — #%{chat_channel}"
+      inline_to_thread_no_title: "Цепочка сообщений в #%{chat_channel}"
       thread_title_connector: "в"
       x_members:
         one: "%{count} участник"

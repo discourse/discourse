@@ -40,6 +40,7 @@ export default class TopicProgress extends Component {
 
     const stream = this.get("postStream.stream");
     const readPos = stream.indexOf(lastReadId) || 0;
+
     return readPos < stream.length - 1 && readPos > position;
   }
 

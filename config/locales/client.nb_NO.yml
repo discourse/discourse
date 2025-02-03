@@ -3399,6 +3399,7 @@ nb_NO:
           other: "Du har valgt <b>%{count}</b> innlegg."
       deleted_by_author_simple: "(emne slettet av forfatter)"
     post_list:
+      title: "Siste innlegg"
       aria_post_number: "%{title} - innlegg #%{postNumber}"
     post:
       confirm_delete: "Er du sikker på at du vil slette dette innlegget?"
@@ -3549,9 +3550,6 @@ nb_NO:
         delete_topic_confirm_modal_no: "Nei, behold dette emnet"
         delete_topic_error: "Det oppstod en feil under sletting av emnet"
         delete_topic: "slett emne"
-        add_post_notice: "Legg til stabsmerknad…"
-        change_post_notice: "Rediger stabsmerknad…"
-        delete_post_notice: "Slett stabsmerknad"
         remove_timer: "fjern tidsbestemt handling"
         edit_timer: "rediger tidsbestemt handling"
       actions:
@@ -4025,9 +4023,6 @@ nb_NO:
       close: "Lukk (Esc)"
       content_load_error: '<a href="%url%">Innholdet</a> kunne ikke lastes.'
       image_load_error: '<a href="%url%">Bildet</a> kunne ikke lastes.'
-    experimental_lightbox:
-      buttons:
-        close: "Lukk (Esc)"
     cannot_render_video: Denne videoen kan ikke lages fordi nettleseren din ikke støtter koden.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4062,7 +4057,6 @@ nb_NO:
         title: "Applikasjon"
         create: "%{shortcut} Opprett nytt emne"
         notifications: "%{shortcut} Åpne varsler"
-        hamburger_menu: "%{shortcut} Åpne hamburgermeny"
         user_profile_menu: "%{shortcut} Åpne brukermenyen"
         show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
         search: "%{shortcut} Søk"
@@ -5370,6 +5364,9 @@ nb_NO:
         approve_success: "Brukeren er godkjent og e-post med aktiveringsinstruksjoner er sendt."
         approve_bulk_success: "Suksess! Alle valgte brukere har blitt godkjent og varslet."
         time_read: "Lesetid"
+        exports:
+          download:
+            button: Be om arkiv
         anonymize: "Anonymiser Bruker"
         anonymize_yes: "Ja, anonymiser denne kontoen"
         anonymize_failed: "Det oppstod en feil ved anonymisering av denne kontoen."

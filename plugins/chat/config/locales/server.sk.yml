@@ -207,6 +207,8 @@ sk:
       inline_to_message: "Správa #%{message_id} od %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat pre tému %{topic_title}"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Vlákno v #%{chat_channel}"
       thread_title_connector: "v"
       x_members:
         one: "%{count}/ člen"

@@ -2532,6 +2532,8 @@ gl:
         description:
           one: Seleccionou <b>%{count}</b> publicación.
           other: "Seleccionou <b>%{count}</b> publicacións."
+    post_list:
+      title: "Últimas publicacións"
     post:
       quote_reply: "Cita"
       quote_edit: "Editar"
@@ -2649,7 +2651,6 @@ gl:
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
         delete_topic: "eliminar tema"
-        delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
         edit_timer: "editar temporizador"
       actions:
@@ -3064,9 +3065,6 @@ gl:
       close: "Pechar (Esc)"
       content_load_error: '<a href="%url%">O contido</a> non puido cargarse.'
       image_load_error: '<a href="%url%">A imaxe</a> non puido cargarse.'
-    experimental_lightbox:
-      buttons:
-        close: "Pechar (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3100,7 +3098,6 @@ gl:
         title: "Aplicativo"
         create: "%{shortcut} Crear un novo tema"
         notifications: "%{shortcut} Abrir notificacións"
-        hamburger_menu: "%{shortcut} Abrir o menú hamburguesa"
         user_profile_menu: "%{shortcut} Abrir o menú do usuario"
         show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
         search: "%{shortcut} Buscar"

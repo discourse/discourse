@@ -31,12 +31,14 @@
     {{/each}}
   </ul>
 
-  <DButton
-    @action={{this.newColorScheme}}
-    @icon="plus"
-    @label="admin.customize.new"
-    class="btn-default"
-  />
+  <PluginOutlet @name="admin-customize-colors-new-button">
+    <DButton
+      @action={{this.newColorScheme}}
+      @icon="plus"
+      @label="admin.customize.new"
+      class="btn-default"
+    />
+  </PluginOutlet>
 </div>
 
 {{outlet}}

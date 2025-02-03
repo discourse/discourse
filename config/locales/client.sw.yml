@@ -1766,6 +1766,8 @@ sw:
         description:
           one: Umechagua chapisho <b>%{count}</b>
           other: "Umechagua machapisho<b>%{count}</b>."
+    post_list:
+      title: "Machapisho Mapya"
     post:
       quote_reply: "Nukulu"
       quote_edit: "Hariri"
@@ -2153,7 +2155,6 @@ sw:
         title: "Programu-tumizi"
         create: "%{shortcut} Tengeneza mada mpya"
         notifications: "%{shortcut} Fungua taarifa"
-        hamburger_menu: "%{shortcut} Fungua menyu ya hamburger - ina mistari mitatu iliyolala"
         user_profile_menu: "%{shortcut} Fungua menyu ya mtumiaji"
         show_incoming_updated_topics: "%{shortcut} Onyesha mada zilizosasishwa"
         search: "%{shortcut} Tafuta"

@@ -312,6 +312,7 @@ ja:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "設定に次の値を追加することはできません: %{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "'composer media optimization image enabled' が有効である場合、画像メタデータの削除を無効にすることはできません。画像メタデータの削除を無効にする前に、'composer media optimization image enabled' を無効にしてください。"
       twitter_summary_large_image_no_svg: "twitter:image メタデータに使用される Twitter の要約画像に .svg 画像を使用できません。"
+      tl0_and_anonymous_flag: "匿名ユーザーの場合は、「サイトの連絡先メールアドレス」または「違法コンテンツを報告するためのメールアドレス」のいずれかが指定されている必要があります。"
     conflicting_google_user_id: 'このアカウントの Google アカウント ID が変更されました。セキュリティの理由により、スタッフによる介入が必要です。スタッフに連絡し、<br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a> を示してください。'
     onebox:
       invalid_address: "サーバー '%{hostname}' が見つからなかったため、プレビューを生成できませんでした。投稿には、プレビューの代わりにリンクのみが表示されます。:cry:"
@@ -1545,7 +1546,7 @@ ja:
       google_analytics_version: "あなたの Discourse は現在 Google Analytics 3 を使用していますが、2023 年 7 月以降はサポートされなくなります。今すぐ <a href='https://meta.discourse.org/t/260498'>Google Analytics 4 にアップグレード</a>して、ウェブサイトのパフォーマンスに関する貴重なインサイトと分析を引き続き受け取りましょう。"
       category_style_deprecated: "あなたの Discourse は現在、Discourse 3.2 の最終ベータリリース前に削除が予定されている非推奨のカテゴリスタイルを使用しています。選択したカテゴリスタイルを維持する方法については、<a href='https://meta.discourse.org/t/282441'>単一カテゴリスタイルのサイト設定</a>をご覧ください。"
       maxmind_db_configuration: 'サーバーは逆 IP ルックアップに MaxMind データベースを使用するように構成されていますが、有効な MaxMind アカウント ID が構成されていないため、今後、MaxMind データベースのダウンロードに失敗する可能性があります。<a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-      admin_sidebar_deprecation: "古い管理者レイアウトは使用できなくなり、新しい<a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>サイドバーレイアウト</a>に代わります。古いレイアウトは次のリリースで削除されます。その前に新しいサイドバーレイアウトを使用し始める場合は、今すぐ<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>構成</a>してください。"
+      admin_sidebar_deprecation: "古い管理者レイアウトは使用できなくなり、新しい<a href='https://meta.discourse.org/t/-/289281'>サイドバーレイアウト</a>に代わります。古いレイアウトは次のリリースで削除されます。その前に新しいサイドバーレイアウトを使用し始める場合は、今すぐ<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>構成</a>してください。"
     back_from_logster_text: "サイトに戻る"
   site_settings:
     allow_bulk_invite: "CSV ファイルのアップロードによる一括招待を許可する"
@@ -1555,8 +1556,8 @@ ja:
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動的に削除します。"
     default_locale: "この Discourse インスタンスのデフォルトの言語。システム生成カテゴリとトピックのテキストは、<a href='%{base_path}/admin/customize/site_texts' target='_blank'>カスタマイズ/テキスト</a>で置き換えることができます。"
     allow_user_locale: "ユーザーが独自の言語インターフェース設定を選択することを許可する"
-    set_locale_from_accept_language_header: "ウェブブラウザの言語ヘッダーから匿名ユーザーのインターフェース言語を設定します"
-    support_mixed_text_direction: "左から右および右から左の混在するテキスト方向をサポートします。"
+    set_locale_from_cookie: "ブラウザの「locale」Cookieを通じて匿名ユーザーのロケールを設定できるようにします"
+    set_locale_from_param: "「lang」URL パラメーターを通じて匿名ユーザーのロケールを設定できるようにします (例: ?lang=es)"
     min_post_length: "投稿の最低許容文字数 (個人メッセージを除く)"
     min_first_post_length: "最初の投稿 (トピック本文) の最低許容長さ (個人メッセージを除く)"
     min_personal_message_post_length: "メッセージの投稿に許可される最低文字数 (最初の投稿と返信の両方)"
@@ -1625,7 +1626,6 @@ ja:
     block_onebox_on_redirect: "リダイレクトページにつながる URL のワンボックス化を防止します。この構成により、別の宛先にリダイレクトする URL のビジュアルカード (ワンボックス) を作成できなくなるため、リダイレクトされないダイレクト URL がワンボックスに優先されます。"
     allowed_inline_onebox_domains: "タイトルなしでリンクされた場合、ミニチュア形式でワンボックス化されるドメインのリスト"
     enable_inline_onebox_on_all_domains: "allowed_inline_onebox_domains サイト設定を無視し、すべてのドメインでインワインのワンボックスを許可します。"
-    onebox_locale: "ワンボックスプロバイダーに送信されるロケール。空白のままにすると、デフォルトのロケールが使用されます。"
     force_custom_user_agent_hosts: "すべてのリクエストでカスタムワンボックスユーザーエージェントを使用するホスト (特にユーザーエージェントごとにアクセスを制限するホストで役立ちます)。"
     max_oneboxes_per_post: "1 つの投稿に含められるワンボックスの最大数を設定します。ワンボックスは投稿内でリンクされたコンテンツのプレビューを表示します。"
     facebook_app_access_token: "Facebook アプリ ID とシークレットから生成されるトークン。Instagram ワンボックスを生成するために使用されます。"
@@ -1774,8 +1774,6 @@ ja:
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_username_length: "ユーザー名の最低文字数。警告: 既存のユーザーまたはグループがこれより短い名前を使用している場合は、サイトが機能しなくなります！"
     max_username_length: "ユーザー名の最大文字数。警告: 既存のユーザーまたはグループがこれより長い名前を使用している場合は、サイトが機能しなくなります！"
-    unicode_usernames: "ユーザー名とグループ名に Unicode 文字と数字を使用することを許可する。"
-    allowed_unicode_username_characters: "ユーザー名に一部の Unicode 文字のみを許可する正規表現。ASCII 文字と数字は常に許可されているため、ホワイトリストに含める必要はありません。"
     reserved_usernames: "登録が許可されていないユーザー名。ワイルドカード記号 * は任意の文字に 0 回以上一致させるために使用できます。"
     min_password_length: "サイトのユーザーパスワードに必要な最低文字数を定義します。値が小さすぎると、未承認の第三者にパスワードを推測されやすくなり、セキュリティが損なわれる可能性があります。値が大きすぎると、ユーザーがパスワードを思い出しにくくなる可能性があります。"
     min_admin_password_length: "管理者ユーザーのパスワードの最低の長さを指定します。すべての管理者パスワードが特定の長さ要件を満たすことでセキュリティを強化できます。この設定は、管理者アカウントを潜在的な不正アクセスから保護するために不可欠です。"
@@ -2041,7 +2039,8 @@ ja:
     num_hours_to_close_topic: "介入目的でトピックを一時呈する時間数。"
     auto_respond_to_flag_actions: "通報を解除したときの自動返信を有効にします。"
     min_first_post_typing_time: "最初の投稿時にユーザーが入力する必要のある最低時間 (ミリ秒)。しきい値を満たさない場合、投稿は自動的に承認待ちキューに追加されます。無効にするには 0 を設定します (非推奨)"
-    auto_silence_fast_typers_on_first_post: "min_first_post_typing_time を満たさないユーザーを自動的に投稿禁止にする"
+    fast_typing_threshold: "ユーザーが最初の投稿を入力するのに必要な最低時間 (ミリ秒)。しきい値を満たさない場合、投稿は自動的にレビューキューに入ります。低い値は 1 秒、標準の値は 3 秒、高い値は 5 秒です。"
+    auto_silence_fast_typers_on_first_post: "`fast typing threshold` を満たさないユーザーを自動的に投稿禁止にする"
     auto_silence_fast_typers_max_trust_level: "高速タイパーを自動的に投稿禁止する最高信頼レベル"
     auto_silence_first_post_regex: "大文字と小文字を区別しない正規表現。合格すると、ユーザーの最初の投稿は投稿禁止になり、承認キューに送られます。例: aging|a[bc]a はまず、「raging」または「aba」または「aca」を含むすべての投稿を投稿禁止にします。最初の投稿のみに適用されます。使用廃止: 代わりに「ウォッチ語の投稿禁止」を使用してください"
     reviewable_claiming: "レビュー待ちコンテンツは、対応前に割り当てられる必要があるかどうか"
@@ -2049,6 +2048,8 @@ ja:
     reviewable_default_visibility: "レビュー待ち項目がこの優先度を満たさない場合、それを表示しない"
     reviewable_low_priority_threshold: "優先度フィルターは、'(すべて)' フィルターが使用されていない限り、このスコアを満たさないレビュー待ち項目を非表示にする。"
     high_trust_flaggers_auto_hide_posts: "新しいユーザーの投稿は、TL3 以上のユーザーが迷惑として通報した後、自動的に非表示になる"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "匿名ユーザーには、違法コンテンツを報告するには管理者にメールを送信する必要があるという情報が表示されます。"
+    email_address_to_report_illegal_content: "空白のままにすると、デフォルトのサイト管理者のメールアドレスが使用されます。"
     cooldown_hours_until_reflag: "ユーザーが投稿をもう一度通報できるまでの時間"
     slow_mode_prevents_editing: "editing_grace_period の後、'低速モード' で編集を防止するかどうか"
     reply_by_email_enabled: "ユーザーがウェブサイトにログインせずに、直接メールでトピックに返信できるようにする機能を有効にします。詳細については、<a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Meta のガイド</a>をご覧ください。"
@@ -2152,7 +2153,7 @@ ja:
     enable_group_directory: "閲覧用のグループディレクトリを提供"
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
     group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
-    allow_anonymous_posting: "ユーザーが匿名モードに切り替えて投稿するオプションを有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックを作成する際に自分の ID を非表示することを選択できます。`allow_anonymous_likes` も参照してください。"
+    allow_anonymous_posting: "ユーザーが匿名モードに切り替えて投稿するオプションを有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックを作成する際に自分の ID を非表示することを選択できます。`allow anonymous likes` も参照してください。"
     allow_anonymous_likes: "サイトを匿名で閲覧しているユーザーが投稿に「いいね！」できるようにするには、この設定を有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックに「いいね！」する際に、自分の ID を非表示することを選択できます。`allow_anonymous_posting` も参照してください。"
     anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
     anonymous_posting_allowed_groups: "匿名投稿を有効にできるグループ"
@@ -2373,7 +2374,6 @@ ja:
     share_quote_visibility: "引用の共有ボタンをいつ表示するかを決定する: 表示しない、匿名ユーザーのみ、またはすべてのユーザー。 "
     create_revision_on_bulk_topic_moves: "トピックが新しいカテゴリに一括して移動されたときに、最初の投稿のリビジョンを作成する。"
     allow_changing_staged_user_tracking: "ステージングユーザーのカテゴリとタグの通知設定を管理者ユーザーが変更することを許可する。"
-    use_email_for_username_and_name_suggestions: "メールアドレスの最初の部分をユーザー名と名前の提案に使用します。これにより、完全なメールアドレスが簡単に推測できるようになることに注意してください (大半の人が `gmail.com` などの一般的なサービスを使用しているため)。"
     use_name_for_username_suggestions: "ユーザー名を提案する際に、ユーザーの氏名を使用します。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
     show_bottom_topic_map: "トピックに 10 件以上の返信がある場合、トピックの下にトピックマップを表示します。"
@@ -2383,7 +2383,6 @@ ja:
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
-    enable_experimental_lightbox: "デフォルトの画像ライトボックスを改良されたデザインに置き換える。"
     glimmer_topic_list_mode: "新しい 'glimmer' トピックリストの実装が使用されるかどうかを制御します。'auto' の場合、すべてのテーマとプラグインの準備が整うと自動的に有効になります。詳細は、<a href='https://meta.discourse.org/t/343404'>メタトピック</a>をご覧ください。"
     glimmer_post_menu_mode: "新しい 'glimmer' 投稿メニューの実装が使用されるかどうかを制御する。'auto' はすべてのテーマとプラグインの準備ができると自動的に有効化します。この実装は活動的に開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     glimmer_post_menu_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
@@ -4811,6 +4810,8 @@ ja:
             label: "色パレット"
           body_font:
             label: "本文のフォント"
+          site_font:
+            label: "フォント"
           heading_font:
             label: "見出しのフォント"
           styling_preview:

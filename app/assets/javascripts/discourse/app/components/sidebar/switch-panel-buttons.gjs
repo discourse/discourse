@@ -16,7 +16,7 @@ export default class SwitchPanelButtons extends Component {
     this.isSwitching = true;
     this.sidebarState.currentPanel.lastKnownURL = this.router.currentURL;
 
-    const destination = panel?.switchButtonDefaultUrl || panel?.lastKnownURL;
+    const destination = panel?.switchButtonDefaultUrl;
     if (!destination) {
       return;
     }

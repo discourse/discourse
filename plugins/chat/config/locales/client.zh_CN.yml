@@ -134,6 +134,13 @@ zh_CN:
         never: "永不"
       separate_sidebar_mode:
         title: "为论坛和聊天显示单独的边栏模式"
+      send_shortcut:
+        enter:
+          label: "按 Enter 发送"
+          description: "按 Shift + Enter 换行"
+        meta_enter:
+          label: "按 %{meta_key} + Enter 发送"
+          description: "按 Enter 换行"
       enable: "启用聊天"
       flag: "举报"
       emoji: "插入表情符号"

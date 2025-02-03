@@ -40,7 +40,7 @@ sv:
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "MMM D, ÅÅÅÅ"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, ÅÅÅÅ <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM, YYYY <br/>LT"
       wrap_ago: "%{date} sedan"
       wrap_on: "den %{date}"
       tiny:
@@ -3190,6 +3190,7 @@ sv:
           other: "Du har markerat <b>%{count}</b> inlägg."
       deleted_by_author_simple: "(ämne raderat av författaren)"
     post_list:
+      title: "Senaste inläggen"
       aria_post_number: "%{title} - inlägg #%{postNumber}"
     post:
       confirm_delete: "Är du säker på att du vill radera det här inlägget?"
@@ -3341,9 +3342,6 @@ sv:
         delete_topic_confirm_modal_no: "Nej, behåll detta ämne"
         delete_topic_error: "Ett fel inträffade när det här ämnet togs bort"
         delete_topic: "ta bort ämne"
-        add_post_notice: "Lägg till personalnotering…"
-        change_post_notice: "Ändra personalnotering…"
-        delete_post_notice: "Radera personalnotering"
         remove_timer: "Ta bort tidtagning"
         edit_timer: "redigera timer"
       actions:
@@ -3819,20 +3817,6 @@ sv:
       close: "Stäng (Esc)"
       content_load_error: '<a href="%url%">Innehållet</a> kunde inte laddas.'
       image_load_error: '<a href="%url%">Bilden</a> kunde inte laddas.'
-    experimental_lightbox:
-      image_load_error: "Bilden kunde inte laddas."
-      screen_reader_image_title: "Bild %{current} av %{total}: %{title}"
-      buttons:
-        next: "Nästa (höger- eller ner-piltangent)"
-        previous: "Föregående (vänster- eller upp-piltangent)"
-        close: "Stäng (Esc)"
-        download: "Ladda ner bild"
-        newtab: "Öppna bilden i en ny flik"
-        zoom: "Zooma in/ut bilden (Z-tangent)"
-        rotate: "Rotera bilden (R-tangent)"
-        fullscreen: "Växla webbläsarens helskärmsläge (M-tangent)"
-        carousel: "Visa alla bilder i en karusell (A-nyckel)"
-        retry: "Försök att ladda bilden igen"
     cannot_render_video: Den här videon kan inte renderas eftersom din webbläsare inte stöder denna kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3868,7 +3852,6 @@ sv:
         title: "Applikation"
         create: "%{shortcut} Skapa ett nytt ämne"
         notifications: "%{shortcut} Öppna aviseringar"
-        hamburger_menu: "%{shortcut} Öppna hamburgarmenyn"
         user_profile_menu: "%{shortcut} Öppna användarmeny"
         show_incoming_updated_topics: "%{shortcut} Visa uppdaterade ämnen"
         search: "%{shortcut} Sök"
@@ -5811,6 +5794,9 @@ sv:
         approve_bulk_success: "OK! Alla valda användare har godkänts och aviserats."
         time_read: "Lästid"
         post_edits_count: "Publicera redigeringar"
+        exports:
+          download:
+            button: Begär arkiv
         anonymize: "Anonymisera användare"
         anonymize_yes: "Ja, anonymisera detta konto"
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"

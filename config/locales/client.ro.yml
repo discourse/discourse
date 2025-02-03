@@ -2569,6 +2569,8 @@ ro:
           one: Ai selectat <b>un</b> mesaj.
           few: "Ai selectat <b>%{count}</b> mesaje."
           other: "Ai selectat <b>%{count}</b> de mesaje."
+    post_list:
+      title: "Ultimele postări"
     post:
       quote_reply: "Citează"
       quote_reply_shortcut: "Citează (sau apasă q)"
@@ -2596,6 +2598,7 @@ ro:
         other: "legătură accesată de %{count} de ori"
       notice:
         new_user: "Este prima dată când %{user} a adăugat un comentariu. Să-i spunem bun venit în comunitate!"
+        custom_created_by: "(adăugată de %{userLinkHTML})"
       unread: "postarea nu a fost citită"
       has_replies:
         one: "Un răspuns"
@@ -2672,6 +2675,9 @@ ro:
         delete_topic_disallowed_modal: "Nu ai permisiuni suficiente pentru a șterge acest subiect. Dacă vrei ca el să fie șters, semnalează-l trimițând un mesaj explicativ moderatorului."
         delete_topic_disallowed: "nu ai permisiuni suficiente pentru a șterge această discuție"
         delete_topic: "șterge subiectul"
+        add_post_notice: "Adaugă notificare oficială…"
+        change_post_notice: "Modifică notificarea oficială…"
+        delete_post_notice: "Șterge notificare oficială"
       actions:
         people:
           like:
@@ -3080,7 +3086,7 @@ ro:
         title: "Aplicație"
         create: "Creează subiect nou"
         notifications: "%{shortcut} Deschide notificări"
-        hamburger_menu: "%{shortcut} Deschide meniu hamburger"
+        hamburger_menu: "%{shortcut} Deschide meniul de navigare"
         user_profile_menu: "%{shortcut} Deschide meniu utilizator"
         show_incoming_updated_topics: "%{shortcut} Arată subiectele actualizate"
         filter_sidebar: "%{shortcut} Filtru bară laterală"
@@ -3435,6 +3441,9 @@ ro:
         legal:
           title: "Legal"
           header_description: "Configurează setările legale, cum ar fi termenele și condițiile, politica de confidențialitate, detaliile de contact și considerațiile specifice UE"
+        localization:
+          title: "Localizare"
+          header_description: "Configurează limba interfeței comunității tale și alte opțiuni de localizare pentru membrii tăi"
         login_and_authentication:
           header_description: "Configurează modul în care utilizatorii se conectează și se autentifică, secretele și cheile, furnizorii OAuth2 și multe altele"
         logo:
@@ -3727,6 +3736,9 @@ ro:
           group_permissions: "Permisiuni grup"
           users: "Utilizatori"
           groups: "Grupuri"
+          localization:
+            title: "Localizare"
+            keywords: "locale|language|timezone|unicode|ltr"
           legal: "Legal"
       appearance:
         title: "Aspect"
@@ -4443,6 +4455,20 @@ ro:
         approve_success: "Utilizator aprobat, email trimis cu instrucțiuni de activare."
         approve_bulk_success: "Succes! Toți utilizatorii selectați au fost aprobați și anunțați."
         time_read: "Timp de citire"
+        exports:
+          title: Exporturi utilizatori
+          download:
+            description: Descarcă cel mai recent export
+            expires_in:
+              one: Expiră într-o oră
+              few: Expiră în %{count} ore
+              other: Expiră în %{count} de ore
+            not_available: Niciun export disponibil
+            button: Solicită arhivă
+            confirm: Sigur vrei să creezi o arhivă a activității și preferințelor acestui utilizator?
+            started: Am început să colectăm arhiva, legătura de descărcare se va actualiza când procesul este finalizat.
+            success: Arhiva este gata pentru descărcare.
+            export_failed: Ne pare rău, dar exportul a eșuat. Te rugăm să verifici jurnalele pentru mai multe informații.
         anonymize: "Transformă în utilizator anonim"
         anonymize_confirm: "Sigur vrei să anonimizezi acest cont? Aceasta va schimba numele de utilizator și emailul și va reseta toate informațiile de profil."
         delete_associated_accounts_confirm: "Sigur vrei să ștergi toate conturile asociate acestui cont? Este posibil ca utilizatorul să nu se poată conecta dacă și-a schimbat adresa de email."
