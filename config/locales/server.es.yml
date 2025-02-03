@@ -2073,7 +2073,7 @@ es:
     title_fancy_entities: "Convertir caracteres ASCII comunes en entidades HTML de adorno en el título de los temas, como SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "La extensión mínima que un título debe tener antes de que se revise la existencia de temas similares."
     desktop_category_page_style: "Este ajuste determina la disposición visual de la página /categorías en el escritorio. Incluye opciones como mostrar subcategorías con temas destacados, mostrar los temas más recientes o presentar los temas principales. El estilo elegido influirá en la forma en que los usuarios interactúan y navegan por las categorías del sitio."
-    mobile_category_page_style: "Este ajuste determina el diseño visual de la página /categorías en móviles."
+    mobile_category_page_style: "Este ajuste determina el diseño visual de la página /categories en móviles."
     category_colors: "Una lista de valores en hexadecimal de los colores para las categorías."
     default_dark_mode_color_scheme_id: "La paleta de colores utilizada en modo oscuro."
     dark_mode_none: "Ninguno"

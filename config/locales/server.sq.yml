@@ -66,11 +66,13 @@ sq:
       screenshot_invalid_size: "Kopjet e temës duhet të jenë më pak se %{max_size}. Kopja %{file_name} është shumë e madhe."
       screenshot_invalid_dimensions: "Kopjet e temës duhet të jenë maksimale %{max_width}x%{max_height}. Kopja %{file_name} e tejkalon këtë. Dimensionet janë %{width}x%{height}."
       about_json: "Gabim transferimi: about.json nuk ekziston, ose është i pavlefshëm. Jeni i sigurt se kjo është një temë diskutimi?"
+      unpack_failed: "Hapja e dosjes dështoi"
     settings_errors:
       number_value_not_valid_min_max: "Value must be between %{min} and %{max}."
       objects:
         required: "must be present"
         not_valid_integer_value: "must be an integer"
+        humanize_not_valid_categories_value: "Veçoria në JSON Pointer '%{property_json_pointer}' duhet të jetë një grup id i kategorive të vlefshme."
   emails:
     incoming:
       default_subject: "Duhet të shkruani titullin"
