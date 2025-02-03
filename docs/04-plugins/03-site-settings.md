@@ -2,9 +2,9 @@
 title: Developing Discourse Plugins - Part 3 - Add custom site settings
 short_title: Site settings
 id: site-settings
-
 ---
-Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-2-connect-to-a-plugin-outlet/31001 
+
+Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-2-connect-to-a-plugin-outlet/31001
 
 ---
 
@@ -40,11 +40,11 @@ In our example case, we want both of those settings to be accessible in the Java
 
 ### An important second step
 
-Before you can use your newly added site settings, you need to add translations for them. Since Discourse supports many languages, any text you add will have to support being translated into other languages. 
+Before you can use your newly added site settings, you need to add translations for them. Since Discourse supports many languages, any text you add will have to support being translated into other languages.
 
 Let's create the translations for our settings in English:
 
-**`config/locales/server.en.yml`** 
+**`config/locales/server.en.yml`**
 
 ```yaml
 en:
@@ -56,12 +56,13 @@ en:
 The labels we added in that file will be displayed in the admin section. It's a good idea to be clear as possible as to what the setting accomplishes.
 
 ### Declaring the setting as the 'enabled setting'
+
 Now that we have our site setting, we should tell Discourse that it's the one that turns our features on and off.
 
 Open your `plugin.rb` file and add the following line below the metadata comments:
 
-```ruby
-   enabled_site_setting :awesomeness_enabled
+```rb
+enabled_site_setting :awesomeness_enabled
 ```
 
 Make sure to start all of your other settings with "`awesomeness_`" in order for the settings button at `/admin/plugins` to work correctly.
@@ -77,6 +78,7 @@ We haven't covered much Ruby stuff in this series yet, but if you want to access
 Now go forth and add custom settings to your plugins!
 
 ---
+
 ### More in the series
 
 Part 1: [Plugin Basics](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-1/30515)

@@ -1,9 +1,10 @@
 ---
-title: Using Transformers to customize client-side values and behaviour
+title: Using Transformers to customize client-side values and behavior
 short_title: Transformers
 id: client-side-transformers
 ---
- Discourse core includes a number of "transformer" hooks which can be used to customize client behaviour. These fall into two categories:
+
+Discourse core includes a number of "transformer" hooks which can be used to customize client behavior. These fall into two categories:
 
 - **Value Transformers** take an output from Discourse core, and optionally modify it, or replace it with something else
 
@@ -13,14 +14,14 @@ Each transformer hook is referenced by a name, and multiple plugins/themes can r
 
 ## Value Transformers
 
-Value transformers can be registered using  `api.registerValueTransformer`:
+Value transformers can be registered using `api.registerValueTransformer`:
 
 > ### `registerValueTransformer` => `boolean`
-> 
-> | Param | Type | Description |
-> |--|--|--|
-> | `transformerName` | `string` | the name of the transformer |
-> | `valueCallback` | `function({value, context})` | callback to be used to transform the value |
+>
+> | Param             | Type                         | Description                                |
+> | ----------------- | ---------------------------- | ------------------------------------------ |
+> | `transformerName` | `string`                     | the name of the transformer                |
+> | `valueCallback`   | `function({value, context})` | callback to be used to transform the value |
 
 The `valueCallback` will be passed two named arguments: the original value, and a context object. It should return the transformed value. Or, if no transformation is required, it should return the original value.
 
@@ -41,13 +42,13 @@ api.registerValueTransformer("home-logo-href", ({ value, context }) => {
 
 ## Behavior Transformers
 
-Behavior transformers are similar, but instead of receiving and returning a value, they wrap some original behaviour, and can optionally call the original implementation.
+Behavior transformers are similar, but instead of receiving and returning a value, they wrap some original behavior, and can optionally call the original implementation.
 
 > ### `registerBehaviorTransformer` => `boolean`
-> 
-> | Param | Type | Description |
-> |--|--|--|
-> | `transformerName` | `string` | the name of the transformer |
+>
+> | Param              | Type                        | Description                                               |
+> | ------------------ | --------------------------- | --------------------------------------------------------- |
+> | `transformerName`  | `string`                    | the name of the transformer                               |
 > | `behaviorCallback` | `function({next, context})` | callback to be used to transform or override the behavior |
 
 The `behaviorCallback` is passed two named arguments. `next` is a function which can optionally be called to run the original behavior. `context` contains extra information which may be useful.
@@ -59,18 +60,19 @@ api.registerBehaviorTransformer(
   "discovery-topic-list-load-more",
   ({ next, context }) => {
     const topicList = context.model;
-    if (topicList.topics.length > 100){
+    if (topicList.topics.length > 100) {
       alert("Not loading any more");
     } else {
       next();
     }
   }
-)
+);
 ```
 
 ## Multiple registered transformers
 
 If multiple transformers are registered against a single name, then they will be run in order of registration. The input to valueTransformers will be the value returned by the previous transformer. The `next()` function passed to behaviorTransformers will call the remaining transformers in the chain.
+
 ## Finding Transformers
 
 At the moment there is no centralized documentation for transformers. However, a list of all core transformers can be found in the code [here](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/transformer/registry.js). You can then search for those names in the core codebase to find where they're called, the context/value, and the expected return type.
@@ -90,23 +92,34 @@ export default {
       api.addValueTransformerName("my-value-transform");
       api.addBehaviorTransformerName("my-behavior-transform");
     });
-  }
-}
+  },
+};
 ```
 
 To apply the transformer to some value or behavior, import the associated `apply` function and use it anywhere in your code:
 
 ```js
-import { applyValueTransformer, applyBehaviorTransformer } from "discourse/lib/transformer";
+import {
+  applyValueTransformer,
+  applyBehaviorTransformer,
+} from "discourse/lib/transformer";
 
 const context = { bestForumSoftware: "Discourse" };
 
 // Value Transformer
 const originalValue = "Hello";
-const transformedValue = applyValueTransformer("my-value-transform", originalValue, context);
+const transformedValue = applyValueTransformer(
+  "my-value-transform",
+  originalValue,
+  context
+);
 
 // Behavior Transformer
-applyBehaviorTransformer("my-behavior-transformer", () => {
-  alert("This is the core implementation");
-}, context);
+applyBehaviorTransformer(
+  "my-behavior-transformer",
+  () => {
+    alert("This is the core implementation");
+  },
+  context
+);
 ```

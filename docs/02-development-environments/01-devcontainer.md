@@ -15,15 +15,16 @@ Dev Containers can be used in a number of different IDEs, or directly using thei
 1. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VSCode
 
 1. Clone the Discourse repository onto your machine
-   ```
+
+   ```sh
    git clone https://github.com/discourse/discourse
    ```
 
 1. In VSCode, use `File` -> `Open Folder`, then choose the Discourse directory
 
-1. Open the folder in its Dev Container. This can be done via the popup prompt, or by opening the command palette (<kbd>Cmd/Ctrl + Shift + P</kbd>) and searching for "Open folder in container..."
+1. Open the folder in its Dev Container. This can be done via the popup prompt, or by opening the command palette (<kbd>Cmd/Ctrl + Shift + P</kbd>) and searching for "Open folder in container…"
 
-1. If this is your first time launching a container, you will be prompted to install and start Docker Desktop. Once complete, go back to VSCode re-run "Open folder in container..."
+1. If this is your first time launching a container, you will be prompted to install and start Docker Desktop. Once complete, go back to VSCode re-run "Open folder in container…"
 
 1. Wait for the container to download and start. When it's done, the README will appear, and you'll see the Discourse filesystem in the sidebar.
 

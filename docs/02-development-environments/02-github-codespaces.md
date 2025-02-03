@@ -2,7 +2,6 @@
 title: Developing Discourse on GitHub Codespaces
 short_title: GitHub Codespaces
 id: github-codespaces
-
 ---
 
 [GitHub Codespaces](https://github.com/features/codespaces) is a very fast way to get started with Discourse development. Their free tier is good for 30 hours per month of a 4-core machine.
@@ -37,7 +36,7 @@ id: github-codespaces
 
 The VSCode environment will automatically be configured with our recommended settings and extensions, including automatic linting and formatting.
 
-To minimize usage, make sure to run "Codespaces: Stop Current Codespace" from the command palette (<kbd>Ctrl + Shift + P</kbd>  or <kbd>Cmd + Shift + P</kbd>) when you're finished. If you forget to do this, the Codespace *should* be shut down automatically after your account's configured idle time (default 30 mins). But, there are some situations where the codepace will not be detected as idle, so it's best to stop it deliberately.
+To minimize usage, make sure to run "Codespaces: Stop Current Codespace" from the command palette (<kbd>Ctrl + Shift + P</kbd> or <kbd>Cmd + Shift + P</kbd>) when you're finished. If you forget to do this, the Codespace _should_ be shut down automatically after your account's configured idle time (default 30 mins). But, there are some situations where the codespace will not be detected as idle, so it's best to stop it deliberately.
 
 # Tips
 

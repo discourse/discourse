@@ -2,8 +2,8 @@
 title: Use the `navigation_menu` query parameter to preview the sidebar or other options
 short_title: Navigation menu
 id: navigation-menu
-
 ---
+
 If you are working on a theme for an existing site and want to preview how it will look with the sidebar or other options for the `navigation menu` site setting, you can use the `?navigation_menu` query parameter.
 
 This feature is designed to help theme developers who want their theme to support all modes equally well, or for those who are working on their own site's theme to prepare for migration from one configuration to another.

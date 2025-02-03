@@ -2,8 +2,8 @@
 title: Add Ember Components to Discourse
 short_title: Ember components
 id: ember-components
-
 ---
+
 In the [previous tutorial](https://meta.discourse.org/t/creating-routes-in-discourse-and-showing-data/48827) I showed how to configure both the server and the client side parts of Discourse to respond to a request.
 
 We now recommend you to read the Ember component documentation: https://guides.emberjs.com/v5.8.0/components/introducing-components/
@@ -22,12 +22,13 @@ Components are Ember’s solution to this problem. Let’s create a component th
 Components need to have a dash in their name. I’m going to choose `fancy-snack` as the name for this one. Let’s create our template:
 
 **app/assets/javascripts/admin/templates/components/fancy-snack.hbs**
-```handlebars
-<div class='fancy-snack-title'>
+
+```hbs
+<div class="fancy-snack-title">
   <h1>{{snack.name}}</h1>
 </div>
 
-<div class='fancy-snack-description'>
+<div class="fancy-snack-description">
   <p>{{snack.description}}</p>
 </div>
 ```
@@ -35,7 +36,8 @@ Components need to have a dash in their name. I’m going to choose `fancy-snack
 Now, to use our component, we will **replace** our existing `admin/snack` template with this:
 
 **app/assets/javascripts/admin/templates/snack.hbs**
-```handlebars
+
+```hbs
 {{fancy-snack snack=model}}
 ```
 
@@ -45,8 +47,9 @@ We can now re-use our `fancy-snack` component in any other template, just passin
 
 Besides re-usability, Components in Ember are great for safely adding custom Javascript, jQuery and other external code. It gives you control of when the component is inserted into the page, and when it is removed. To do this, we define an [Ember.Component](http://emberjs.com/api/classes/Ember.Component.html) with some code:
 
-**app/assets/javascripts/admin/components/fancy-snack.js.es6**
-```javascript
+**app/assets/javascripts/admin/components/fancy-snack.js**
+
+```js
 export default Ember.Component.extend({
   didInsertElement() {
     this._super();
@@ -56,7 +59,7 @@ export default Ember.Component.extend({
   willDestroyElement() {
     this._super();
     this.$().stop();
-  }
+  },
 });
 ```
 
@@ -69,13 +72,12 @@ Let’s explain what’s going on here:
 2. The first line of `didInsertElement` (and `willDestroyElement`) is `this._super()` which is necessary because we’re [subclassing Ember.Component](https://guides.emberjs.com/v1.10.0/object-model/classes-and-instances/).
 
 3. The animation is done using [jQuery’s animate](http://api.jquery.com/animate/) function.
+
 4. Finally, the animation is cancelled in the `willDestroyElement` hook, which is called when the component is removed from the page.
 
 You might wonder why we care about `willDestroyElement` at all; the reason is in a long lived Javascript application like Discourse it’s important to clean up after ourselves, lest we leak memory or leave things running. In this case we stop the animation, which tells any jQuery timers that they needn’t fire any more as the component is no longer visible on the page.
 
 [/details]
-
-
 
 ### Where to go from here
 

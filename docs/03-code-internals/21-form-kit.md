@@ -98,7 +98,7 @@ Initial state of the data you give to the form.
 
 When working with an object object we recommend to setup your form data object like this:
 
-```
+```js
 @cached
 get formData() {
   return getProperties(this.model, "foo", "bar", "baz");
@@ -131,11 +131,11 @@ Callback called when the form is inserted. It allows the developer to interact w
   - `callback.reset` (Function): Function to reset the form.
   - `callback.set` (Function): Function to set a key/value on the form data object.
   - `callback.setProperties` (Function): Function to set an object on the form data object.
-  - `callback.isDirty` (boolean): Tracked property return the state of the form. It will be true once changes have been done on the form. Reseting the changes will bring it back to false.
+  - `callback.isDirty` (boolean): Tracked property return the state of the form. It will be true once changes have been done on the form. Resetting the changes will bring it back to false.
 
 **Example**
 
-```javascript
+```js
 registerAPI({ submit, reset, set }) {
   // Interact with the form API
   submit();
@@ -158,7 +158,7 @@ Callback called when the form is submitted **and valid**.
 
 **Example**
 
-```javascript
+```js
 handleSubmit({ username, age }) {
   console.log(username, age);
 }
@@ -182,7 +182,7 @@ A custom validation callback added directly to the form.
 
 **Example**
 
-```javascript
+```js
 @action
 myValidation(data, { addError }) {
   if (data.foo !== data.bar) {
@@ -197,7 +197,7 @@ myValidation(data, { addError }) {
 
 An asynchronous example:
 
-```javascript
+```js
 @action
 async myValidation(data, { addError }) {
   try {
@@ -305,7 +305,7 @@ By default, when changing the value of a field, this value will be set on the fo
 
 **Example**
 
-```javascript
+```js
 @action
 handleFooChange(value, { set }) {
   set("foo", value + "-bar");
@@ -322,7 +322,7 @@ handleFooChange(value, { set }) {
 
 **Example**
 
-```javascript
+```js
 @action
 handleFooChange(value, { set }) {
   set("foo", value + "-bar");
@@ -599,7 +599,7 @@ Renders a selectable row. Accepts `@value`, `@icon` and `@action` props.
 - @icon: shows an icon at the start of the row.
 - @action: override the default action which would set the value of the field with the value of this row.
 
-The content will be yieled.
+The content will be yielded.
 
 #### Divider
 
@@ -1254,7 +1254,7 @@ Field accepts a `@validate` property which allows you to define a callback funct
 
 **Example**
 
-```javascript
+```js
 validateUsername(name, value, data, { addError }) {
   if (data.bar / 2 === value) {
     addError(name, { title: I18n.t(`foo.bar.${name}`), message: "That's not how maths work." });
@@ -1278,7 +1278,7 @@ Form accepts a `@validate` property which allows you to define a callback functi
 
 **Example**
 
-```javascript
+```js
 validateForm(data, { addError }) {
   if (data.bar / 2 === data.baz) {
     addError(name, { title: I18n.t(`foo.bar.${name}`), message: "That's not how maths work." });
@@ -1305,7 +1305,7 @@ Helpers are yielded by some blocks, like Form, or provided as parameters to call
 
 **Example**
 
-```javascript
+```js
 set("foo", 1);
 ```
 
@@ -1327,7 +1327,7 @@ Using the `set` helper yielded by the form:
 
 **Example**
 
-```javascript
+```js
 setProperties({ foo: 1, bar: 2 });
 ```
 
@@ -1355,7 +1355,7 @@ Using the `setProperties` helper yielded by the form:
 
 **Example**
 
-```javascript
+```js
 addError("foo", { title: "Foo", message: "This should be another thing." });
 ```
 
@@ -1435,7 +1435,7 @@ The Field component accepts a `@validate` property, allowing you to define a cal
 
 **Example**
 
-```javascript
+```js
 validateUsername(name, value, data, { addError }) {
   if (data.bar / 2 === value) {
     addError(name, { title: I18n.t(`foo.bar.${name}`), message: "That's not how maths work." });
@@ -1459,7 +1459,7 @@ The Form component accepts a `@validate` property, allowing you to define a call
 
 **Example**
 
-```javascript
+```js
 validateForm(data, { addError }) {
   if (data.bar / 2 === data.baz) {
     addError(name, { title: I18n.t(`foo.bar.${name}`), message: "That's not how maths work." });
@@ -1491,7 +1491,7 @@ Asserts that the form has errors.
 
 **Example**
 
-```javascript
+```js
 assert.form().hasErrors("the form shows errors");
 ```
 
@@ -1505,7 +1505,7 @@ The field element assertions are available at `assert.form(...).field(...).*`.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo");
 ```
 
@@ -1520,7 +1520,7 @@ Asserts that the `value` of the field matches the `expected` text.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo").hasValue("bar", "user has set the value");
 ```
 
@@ -1534,7 +1534,7 @@ Asserts that the `field` is disabled.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo").isDisabled("the field is disabled");
 ```
 
@@ -1548,7 +1548,7 @@ Asserts that the `field` is enabled.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo").isEnabled("the field is enabled");
 ```
 
@@ -1563,7 +1563,7 @@ Asserts that the `field` has a specific error.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo").hasError("Required", "it is required");
 ```
 
@@ -1577,7 +1577,7 @@ Asserts that the `field` has no error.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo").hasNoErrors("it is valid");
 ```
 
@@ -1591,7 +1591,7 @@ Asserts that the `field` is present.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo").exists("it has the food field");
 ```
 
@@ -1605,7 +1605,7 @@ Asserts that the `field` is not present.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo").doesNotExist("it has no food field");
 ```
 
@@ -1621,7 +1621,7 @@ Asserts that the `field` has a char counter.
 
 **Example**
 
-```javascript
+```js
 assert.form().field("foo").hasCharCounter(2, 5, "it has updated the counter");
 ```
 
@@ -1635,7 +1635,7 @@ The field element assertions are available at `assert.form(...).fieldset(...).*`
 
 **Example**
 
-```javascript
+```js
 assert.form().fieldset("foo");
 ```
 
@@ -1650,7 +1650,7 @@ Asserts that the `title` of the fieldset matches the `expected` value.
 
 **Example**
 
-```javascript
+```js
 assert.form().fieldset("foo").hasTitle("bar", "it has the correct title");
 ```
 
@@ -1665,7 +1665,7 @@ Asserts that the `description` of the fieldset matches the `expected` value.
 
 **Example**
 
-```javascript
+```js
 assert
   .form()
   .fieldset("foo")
@@ -1683,7 +1683,7 @@ Asserts that the fieldset has yielded the `expected` value.
 
 **Example**
 
-```javascript
+```js
 assert.form().fieldset("foo").includesText("bar", "it has the correct text");
 ```
 
@@ -1695,7 +1695,7 @@ The FormKit helper allows you to manipulate a form and its fields through a clea
 
 **Example**
 
-```javascript
+```gjs
 import formKit from "discourse/tests/helpers/form-kit";
 
 test("fill in input", async function (assert) {
@@ -1717,7 +1717,7 @@ Submits the associated form.
 
 **Example**
 
-```javascript
+```js
 formKit().submit();
 ```
 
@@ -1727,7 +1727,7 @@ Resets the associated form.
 
 **Example**
 
-```javascript
+```js
 formKit().reset();
 ```
 
@@ -1747,7 +1747,7 @@ Can be used on [`<field.Input @type="text" />`](/docs/guides/frontend/form-kit/c
 
 **Example**
 
-```javascript
+```js
 await formKit().field("foo").fillIn("bar");
 ```
 
@@ -1759,7 +1759,7 @@ Will toggle the state of the control. In the case of the password control it wil
 
 **Example**
 
-```javascript
+```js
 await formKit().field("foo").toggle();
 ```
 
@@ -1769,7 +1769,7 @@ Can be used on [`<field.Checkbox />`](/docs/guides/frontend/form-kit/controls/qu
 
 **Example**
 
-```javascript
+```js
 await formKit().field("foo").accept();
 ```
 
@@ -1779,7 +1779,7 @@ Can be used on [`<field.Checkbox />`](/docs/guides/frontend/form-kit/controls/qu
 
 **Example**
 
-```javascript
+```js
 await formKit().field("foo").refuse();
 ```
 
@@ -1795,7 +1795,7 @@ Will select the given value.
 
 **Example**
 
-```javascript
+```js
 await formKit().field("foo").select("bar");
 ```
 
@@ -1811,11 +1811,11 @@ The FormKit page object component is available to help you write system specs fo
 
 **Example**
 
-```ruby
+```rb
 form = PageObjects::Components::FormKit.new(".my-form")
 ```
 
-```ruby
+```rb
 form = PageObjects::Components::FormKit.new(find(".my-form"))
 ```
 
@@ -1825,7 +1825,7 @@ Submits the form
 
 **Example**
 
-```ruby
+```rb
 form.submit
 ```
 
@@ -1835,7 +1835,7 @@ Reset the form
 
 **Example**
 
-```ruby
+```rb
 form.reset
 ```
 
@@ -1845,11 +1845,11 @@ Returns if the field is enabled or not.
 
 **Example**
 
-```ruby
+```rb
 form.has_an_alert?("message")
 ```
 
-```ruby
+```rb
 expect(form).to have_an_alert("message")
 ```
 
@@ -1863,7 +1863,7 @@ The `field` helper allows you to interact with a specific field of a form.
 
 **Example**
 
-```ruby
+```rb
 field = form.field("foo")
 ```
 
@@ -1873,11 +1873,11 @@ Returns the value of the field.
 
 **Example**
 
-```ruby
+```rb
 field.value
 ```
 
-```ruby
+```rb
 expect(field).to have_value("bar")
 ```
 
@@ -1887,11 +1887,11 @@ Returns if the control of a checkbox is checked or not.
 
 **Example**
 
-```ruby
+```rb
 field.checked?
 ```
 
-```ruby
+```rb
 expect(field).to be_checked
 ```
 
@@ -1901,11 +1901,11 @@ Returns if the control of a checkbox is unchecked or not.
 
 **Example**
 
-```ruby
+```rb
 field.unchecked?
 ```
 
-```ruby
+```rb
 expect(field).to be_unchecked
 ```
 
@@ -1915,11 +1915,11 @@ Returns if the field is disabled or not.
 
 **Example**
 
-```ruby
+```rb
 field.disabled?
 ```
 
-```ruby
+```rb
 expect(field).to be_disabled
 ```
 
@@ -1929,11 +1929,11 @@ Returns if the field is enabled or not.
 
 **Example**
 
-```ruby
+```rb
 field.enabled?
 ```
 
-```ruby
+```rb
 expect(field).to be_enabled
 ```
 
@@ -1943,7 +1943,7 @@ Allows toggling a field. Only available for: [checkbox](/docs/guides/frontend/fo
 
 **Example**
 
-```ruby
+```rb
 field.toggle
 ```
 
@@ -1953,7 +1953,7 @@ Allows filling a field with a given value. Only available for: [input](/docs/gui
 
 **Example**
 
-```ruby
+```rb
 field.fill_in("bar")
 ```
 
@@ -1963,7 +1963,7 @@ Allows selecting a specified value in a field. Only available for: [select](/doc
 
 **Example**
 
-```ruby
+```rb
 field.select("bar")
 ```
 
@@ -1973,7 +1973,7 @@ Allows accepting a field. Only available for: [question](/docs/guides/frontend/f
 
 **Example**
 
-```ruby
+```rb
 field.accept
 ```
 
@@ -1983,7 +1983,7 @@ Allows refusing a field. Only available for: [question](/docs/guides/frontend/fo
 
 **Example**
 
-```ruby
+```rb
 field.refuse
 ```
 
@@ -1993,6 +1993,6 @@ Takes an image path on the filesystem and uploads it for the field. Only availab
 
 **Example**
 
-```ruby
+```rb
 field.upload_image(image_file_path)
 ```

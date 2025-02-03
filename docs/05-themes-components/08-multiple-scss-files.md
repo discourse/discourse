@@ -2,9 +2,9 @@
 title: Split up theme SCSS into multiple files
 short_title: Multiple SCSS files
 id: multiple-scss-files
-
 ---
-Themes and theme components are becoming steadily more powerful, and developers are getting more and more ambitious. To make things easier for developers, themes can now split their SCSS into multiple files. 
+
+Themes and theme components are becoming steadily more powerful, and developers are getting more and more ambitious. To make things easier for developers, themes can now split their SCSS into multiple files.
 
 https://github.com/discourse/discourse/commit/268d4d4c828a0d9e3ca6b0b5b623db85eb32b9f3
 
@@ -12,22 +12,25 @@ When creating a new theme with the [theme CLI](https://meta.discourse.org/t/begi
 
 For example, if you want to have a common variable available to both mobile and desktop SCSS, you could do something like this:
 
-**scss/myfolder/variables.scss**
-```
+**scss/my-folder/variables.scss**
+
+```scss
 $favourite-color = red;
 ```
 
 **desktop/desktop.scss**
+
 ```scss
-@import "myfolder/variables";
+@import "my-folder/variables";
 body {
   background-color: $favourite-color;
 }
 ```
 
 **mobile/mobile.scss**
+
 ```scss
-@import "myfolder/variables";
+@import "my-folder/variables";
 body {
   color: $favourite-color;
 }

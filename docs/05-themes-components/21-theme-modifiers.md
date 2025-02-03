@@ -1,18 +1,18 @@
 ---
-title: 'Theme modifiers: A brief introduction'
+title: "Theme modifiers: A brief introduction"
 short_title: Theme modifiers
 id: theme-modifiers
-
 ---
-As themes become more ambitious, we've been looking for ways to allow them to manipulate core **server-side** behaviour. While they will never be given the same level as control as plugins, we can provide some predefined hooks for themes to manipulate.
 
-Introducing: theme modifiers :partying_face: 
+As themes become more ambitious, we've been looking for ways to allow them to manipulate core **server-side** behavior. While they will never be given the same level as control as plugins, we can provide some predefined hooks for themes to manipulate.
+
+Introducing: theme modifiers :partying_face:
 
 They are specified using the `modifiers` key in your theme's `about.json` file.
 
-For a 100% up-to-date list of modifiers, check the database schema at the bottom of [`theme_modifier_set.rb`](https://github.com/discourse/discourse/blob/master/app/models/theme_modifier_set.rb), but here's a quick summary of what we have so far: 
+For a 100% up-to-date list of modifiers, check the database schema at the bottom of [`theme_modifier_set.rb`](https://github.com/discourse/discourse/blob/master/app/models/theme_modifier_set.rb), but here's a quick summary of what we have so far:
 
-- `serialize_topic_excerpts` **boolean** (default false) - always include excerpts when serializing  topic lists
+- `serialize_topic_excerpts` **boolean** (default false) - always include excerpts when serializing topic lists
 
 - `csp_extensions` **string array** - add directives to the CSP. Works the same as the old "extend_content_security_policy" theme-setting method. But remember, [simple `<script> src="">` tags are allowed automatically](https://meta.discourse.org/t/automatically-adding-theme-scripts-to-csp/149028?u=david).
 

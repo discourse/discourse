@@ -3,6 +3,7 @@ title: Using service objects in Discourse
 short_title: Service objects
 id: service-objects
 ---
+
 # Overview
 
 A service is a small object that encompasses business logic for a given action.
@@ -30,7 +31,8 @@ It’s also quite easy to understand what’s happening in a service at a glance
 ## Getting started
 
 Here’s a simplified service to update a user’s username which demonstrates most available steps:
-```ruby
+
+```rb
 class User::UpdateUsername
   include Service::Base
 
@@ -73,8 +75,10 @@ class User::UpdateUsername
   end
 end
 ```
+
 And here is an example on how you could call such a service:
-```ruby
+
+```rb
 User::UpdateUsername.call(params: {id: 1, username: "username"}, guardian: Discourse.system_user.guardian)
 ```
 
@@ -86,7 +90,7 @@ Without knowing how services work, you can probably guess what’s happening her
 
 This is the basic unit of a service. There is a generic one (`step`) and specialized ones (`params`, `model`, etc.), and they’re all steps.
 
-Steps are defined *in the order they will be called*. Each step will call a corresponding method and, depending on its return value, will continue or halt the execution of the service. Most steps rely on returning a value, and *not raising an exception* (otherwise, you’ll break the execution flow).
+Steps are defined _in the order they will be called_. Each step will call a corresponding method and, depending on its return value, will continue or halt the execution of the service. Most steps rely on returning a value, and _not raising an exception_ (otherwise, you’ll break the execution flow).
 
 The immediate benefit is that error handling is done for you, and you don’t have to implement any specific logic in the service itself. We’ll see later how to handle errors.
 
@@ -141,7 +145,8 @@ Each step is called with the service context. To access a value in it, just prov
 ## The context object
 
 The only state a service maintains is its context object. This is where each step can put data to be used by other steps. Most of the time, you don’t need to access the context directly, as specialized steps (such as `params`, `model` or `options`) will store the proper data for you. But sometimes it’s necessary (even if uncommon). In those cases, it’s just a matter of using the context like you would with a hash:
-```ruby
+
+```rb
 def first_step
   context[:my_special_key] = "My special value"
 end
@@ -161,7 +166,8 @@ Once a service has been called, it will return a result object, to know whether 
 Each step will store its outcome in the result object, accessible through special keys (like `result.model.user` for example). While this is nice, this would be tedious to manually check the result object. That’s why there’s a built-in feature allowing to run the service, match step outcomes and act upon results using a custom DSL.
 
 This feature makes the use of a service a breeze. Continuing with our `User::UpdateUsername` service, this is how we could use it inside a controller (but it can work anywhere, not just in controllers):
-```ruby
+
+```rb
 def update
   User::UpdateUsername.call(service_params) do |result|
     on_success { |user:| render(json: success_json.merge(new_username: user.username)) }
@@ -182,7 +188,8 @@ This declarative way helps decoupling what is handled by the caller (here a cont
 # Testing
 
 To simplify testing, custom RSpec matchers have been added. It’s also considered a best practice to always follow the same structure. Remember to test the caller class too. If your service is called from a controller, for example, that controller should be tested with a request spec. Following the various outcome blocks will help to know what to test. Here is how we could test our `User::UpdateUsername` service:
-```ruby
+
+```rb
 RSpec.describe User::UpdateUsername do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:id) }
@@ -235,6 +242,7 @@ RSpec.describe User::UpdateUsername do
   end
 end
 ```
+
 First, and because a contract is present, we test it using a dedicated `describe` block. Since a contract uses `ActiveModel` under the hood, the simplest way to test it is to use [Shoulda Matchers](https://github.com/thoughtbot/shoulda-matchers).
 
 Then, we use a `describe` block for the `.call` method, which is how the service is run. We’re using a `context` for each possible branching. It’s quite easy as we just have to follow the steps we defined in the service. You can see we’re not testing all the possible values to have the contract fail: that’s because it’s tested extensively above, so here we’re just ensuring the `params` step is properly called and if a bad value is provided, then it will stop the execution of the service.
@@ -243,6 +251,7 @@ For the other steps, if they can fail, then they should have a context using a d
 The `run_successfully` matcher ensures the service succeeded (`result.success?` is `true`) and will provide some debugging information if that’s not the case.
 
 In the event of a matcher failing, it will output details about the result object to help debugging things:
+
 ```
 Failures:
 
@@ -301,22 +310,25 @@ This matcher expects the service to succeed.
 ### `params(name = :default, default_values_from: nil, &block)`
 
 **Arguments**
-- *name*: the name of the contract, in the case there is more than one. Defaults to `default`.
-- *default_values_from*: name of a model to use to pre-fill the contract values. This is useful when you want some values of a model to be updated through a contract while applying other default values. A real-world example is available in the [`Chat::UpdateChannel`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/update_channel.rb#L39) service.
-- *block*: the block containing all the validations, attribute definitions, etc.
+
+- _name_: the name of the contract, in the case there is more than one. Defaults to `default`.
+- _default_values_from_: name of a model to use to pre-fill the contract values. This is useful when you want some values of a model to be updated through a contract while applying other default values. A real-world example is available in the [`Chat::UpdateChannel`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/update_channel.rb#L39) service.
+- _block_: the block containing all the validations, attribute definitions, etc.
 
 This step declares the use of a contract to validate input parameters. Parameters provided to the service will be passed to the contract if their name matches the attributes defined in the contract.
 
 Under the hood, a class for the contract will be automatically created, allowing easy testing. The default contract will result in `Contract`, otherwise it will prepend the name used for the contract (for `params(:user_avatar)`, this will give `UserAvatarContract`).
 
 If the contract is invalid, it will stop the execution of the service. Its result object can be inspected by accessing the `result.contract.<name>` key of the main result object. The contract result object exposes two keys:
-- *errors*: the errors returned by the contract.
-- *parameters*: the raw parameters provided to the contract before any coercion happens.
+
+- _errors_: the errors returned by the contract.
+- _parameters_: the raw parameters provided to the contract before any coercion happens.
 
 ### `options(&block)`
 
 **Arguments**
-- *block*: the block containing the option definitions.
+
+- _block_: the block containing the option definitions.
 
 This steps is used to define options that can be provided to the service to change its behavior. The syntax to define an option is the same as the one used for contracts, but it has no validations. A good example can be found in the [Chat::CreateMessage](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/create_message.rb#L27) service.
 
@@ -325,28 +337,32 @@ This step cannot fail.
 ### `model(name = :model, step_name = :"fetch_#{name}", optional: false)`
 
 **Arguments**
-- *name*: the name of the model. Defaults to `model`.
-- *step_name*: the name of the method to call for this step. For example, when instantiating a new model, we could use `instantiate_model`. Defaults to `fetch_<model_name>`.
-- *optional*: if the model is marked as optional, the step won’t fail if the model isn’t found. Defaults to `false`.
+
+- _name_: the name of the model. Defaults to `model`.
+- _step_name_: the name of the method to call for this step. For example, when instantiating a new model, we could use `instantiate_model`. Defaults to `fetch_<model_name>`.
+- _optional_: if the model is marked as optional, the step won’t fail if the model isn’t found. Defaults to `false`.
 
 This step helps to remove some boilerplate when fetching/instantiating models or a collection of models. A model can be pretty much anything (not only `ActiveRecord` models), being a single object or a collection. The result of the step will be stored in the context as `name` (so, by default, it would be `context[:model]`).
 
 The step will fail if the model is `nil`, empty or invalid (in the case of an `ActiveRecord` object). Its result object can be inspected by accessing the `result.model.<name>` key of the main result object. The model result object exposes one or two keys:
-- *invalid*: will be `true` if the model has been found but is invalid.
-- *not_found*: will be `true` if the model was not found.
-- *exception*: the exception that made the model not found.
+
+- _invalid_: will be `true` if the model has been found but is invalid.
+- _not_found_: will be `true` if the model was not found.
+- _exception_: the exception that made the model not found.
 
 ### `policy(name = :default, class_name: nil)`
 
 **Arguments**
-- *name*: the name of the policy. Defaults to `default`.
-- *class_name*: a policy class to implement the logic instead of defining the step in the service. Defaults to `nil`.
+
+- _name_: the name of the policy. Defaults to `default`.
+- _class_name_: a policy class to implement the logic instead of defining the step in the service. Defaults to `nil`.
 
 This step declares the use of a policy. A policy is just arbitrary code, and the step will fail if the policy result is falsy.
 If you have a rather complex policy, it’s better to use a policy class. It needs to inherit from `Service::PolicyBase` and implement `#call` and `#reason` as using a policy class allows explaining in more details why the policy failed through the use of the `#reason` method. A complete example can be found in the [`Chat::DirectMessageChannel::Policy::MaxUsersExcess`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/direct_message_channel/policy/max_users_excess.rb#L3) class used by the [`Chat::CreateDirectMessageChannel`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/create_direct_message_channel.rb#L42) service.
 
 The step will fail if the policy returns a falsy value. Its result object can be inspected by accessing the `result.policy.<name>` key of the main result object. The policy result object exposes one key:
-- *reason*: the reason why the policy failed if a policy class was used.
+
+- _reason_: the reason why the policy failed if a policy class was used.
 
 ### `transaction(&block)`
 
@@ -355,15 +371,17 @@ This step is a bit special as its only purpose is to wrap other steps inside a S
 ### `try(*exceptions, &block)`
 
 **Arguments**
-- *exceptions*: one or more exception classes to catch. Not providing any class is equivalent to provide `StandardError`.
-- *block*: a block containing other steps.
+
+- _exceptions_: one or more exception classes to catch. Not providing any class is equivalent to provide `StandardError`.
+- _block_: a block containing other steps.
 
 This step wraps other steps. If any of the wrapped steps raises an exception, the `try` step will catch it and fail, which will halt the execution flow.
 
 ### `step(name)`
 
 **Arguments**
-- *name*: the name of the step.
+
+- _name_: the name of the step.
 
 This is a generic step, to execute arbitrary code. A generic step won’t ever fail by itself, no matter what its return value is. If you need to mark a step as failed, you should use the `#fail!` method.
 
@@ -374,7 +392,8 @@ A generic step has a result object, even if by default it exposes nothing. It ca
 ### `fail!(message)`
 
 **Arguments**
-- *message*: the error message to set on the result object.
+
+- _message_: the error message to set on the result object.
 
 This method can be used to mark a generic step as failed. The result object is accessible at `result.step.<step_name>` and exposes an `error` key.
 
@@ -393,14 +412,16 @@ Returns `true` if the context is set as failed.
 ### `fail!(context = {})`
 
 **Arguments**
-- *context*: the context to merge into the current one.
+
+- _context_: the context to merge into the current one.
 
 Marks the context as failed and raises a `Service::Base::Failure` exception.
 
 ### `fail(context = {})`
 
 **Arguments**
-- *context*: the context to merge into the current one.
+
+- _context_: the context to merge into the current one.
 
 Marks the context as failed without raising an exception.
 
@@ -411,11 +432,13 @@ The block form of `.call` can be used anywhere (a controller action, a job, anot
 ### `.call(context = {}, &actions)`
 
 **Arguments**
-- *context*: the initial context to provide to the service. If the service is called from a controller, you can use the `service_params` helper which will return `params` and the `guardian` object.
-- *actions*: the block containing the steps to match on.
 
-*Example*
-```ruby
+- _context_: the initial context to provide to the service. If the service is called from a controller, you can use the `service_params` helper which will return `params` and the `guardian` object.
+- _actions_: the block containing the steps to match on.
+
+_Example_
+
+```rb
 MyService.call(**service_params, extra_dependency: my_dependency) do |result|
   on_success { |my_model:| do_something(my_model) }
   on_failure { handle_generic_failure }
@@ -424,9 +447,11 @@ end
 
 If you need to access the result object, it’s available as the first object passed to the main block (see example above). Each outcome block can match keys from the context (exactly as you do when writing step definitions) independently from what object is passed to the block.
 For example, it means that with the `on_failed_contract` matcher, you could access a previously fetched model while using the provided contract as the first argument. It would be done like this:
-```ruby
+
+```rb
 on_failed_contract { |contract, my_model:| do_something(contract, my_model) }
 ```
+
 You could do all this by only using the result object, but it’s a bit nicer this way (and will ensure the key you’re trying to access actually exists).
 
 ### `on_success`
@@ -440,42 +465,48 @@ Will execute the provided block if the service fails.
 ### `on_failed_step(name)`
 
 **Arguments**
-- *name*: the name of the step to match.
+
+- _name_: the name of the step to match.
 
 Will execute the provided block if the step named `name` fails. It also provides the step result object as the first argument of the block.
 
 ### `on_failed_policy(name = "default")`
 
 **Arguments**
-- *name*: the name of the policy to match. Defaults to `default`.
+
+- _name_: the name of the policy to match. Defaults to `default`.
 
 Will execute the provided block if the policy named `name` fails. It also provides the policy result object as the first argument of the block.
 
 ### `on_failed_contract(name = "default")`
 
 **Arguments**
-- *name*: the name of the contract to match. Defaults to `default`.
+
+- _name_: the name of the contract to match. Defaults to `default`.
 
 Will execute the provided block if the contract named `name` is invalid. It also provides the contract result object as the first argument of the block.
 
 ### `on_model_not_found(name = "model")`
 
 **Arguments**
-- *name*: the name of the model to match. Defaults to `model`.
+
+- _name_: the name of the model to match. Defaults to `model`.
 
 Will execute the provided block if the model named `name` is not present. It also provides the model result object as the first argument of the block.
 
 ### `on_model_errors(name = "model")`
 
 **Arguments**
-- *name*: the name of the model to match. Defaults to `model`.
+
+- _name_: the name of the model to match. Defaults to `model`.
 
 Will execute the provided block if the model named `name` contains validation errors. It also provides the actual model as the first argument of the block.
 
 ### `on_exceptions(*exceptions)`
 
 **Arguments**
-- *exceptions*: zero or more exception classes that can be caught by a `try` step.
+
+- _exceptions_: zero or more exception classes that can be caught by a `try` step.
 
 Will execute the provided block if a `try` step failed by catching one of the provided exception classes. If no class is provided, then the block will be executed if a `try` step caught any exception. It also provides the actual exception as the first argument of the block.
 
@@ -486,7 +517,8 @@ The main purpose of a contract is to validate the incoming data before feeding i
 A contract is actually an `ActiveModel` object, so all the [API of the latter](https://api.rubyonrails.org/classes/ActiveModel/Attributes.html) is available. Anyway, let’s see how to define and use a contract inside a service.
 
 To define a service contract, just call `params` and open a block:
-```ruby
+
+```rb
 params do
   attribute :id, :integer
   attribute :username, :string
@@ -495,6 +527,7 @@ params do
   validates :username, presence: true, format: { with: /\A[a-zA-Z0-9]+\z/ }
 end
 ```
+
 Here, all the API from `ActiveModel` is available. In this example, we define we want to validate two attributes, `id` and `username` with their respective cast type (`integer` and `string`).
 
 > 💡 Use cast types extensively as they’ll provide you with proper objects before any validation happens.
@@ -511,6 +544,7 @@ Another thing that is available in a contract, since it’s an `ActiveModel` obj
 > ⚠️ Once run by the service, a contract is frozen and you can’t modify its attributes. If you need to do some processing on its values, you can do it directly inside the contract itself.
 
 Some methods have been added to the contract object to make your life a bit easier when dealing with model updates and things like that:
+
 - `#slice` and `#merge` are available.
 - `#to_hash` has been implemented, so the contract object will be automatically cast as a hash by Ruby depending on the context. For example, with an ActiveRecord model, you can do this: `user.update(**params)`.
 
@@ -523,7 +557,8 @@ Parameters provided to the service through the `params` key are accessible like 
 When a policy starts becoming complex or when you’d like to provide more context on why it can fail, then it’s time to use a policy object instead of a simple policy.
 
 It’s quite easy to create a new policy object, let’s take the `can_update_username` policy we have in the `User::UpdateUsername` service and convert it:
-```ruby
+
+```rb
 class User::Policy::CanUpdateUsername < Service::PolicyBase
   delegate :user, to: :context, private: true
 
@@ -539,6 +574,7 @@ end
 ```
 
 There are some rules to keep in mind when writing a policy object:
+
 - It must inherit from `Service::PolicyBase`.
 - It must define two methods: `#call` and `#reason`.
 - The context object is automatically injected in the policy, and is available by calling `#context` (like in a service).
@@ -548,7 +584,8 @@ There are some rules to keep in mind when writing a policy object:
 > 💡 To keep things short and clear, feel free to use [`delegate`](https://api.rubyonrails.org/classes/Module.html#method-i-delegate) extensively.
 
 Then, when you want to use it in a service, just write your step like this:
-```ruby
+
+```rb
 policy :can_update_username, class_name: User::Policy::CanUpdateUsername
 ```
 
@@ -559,7 +596,8 @@ When a step starts becoming too complex, like it has too many branching statemen
 An action is just a small class that responds to a `.call` method by convention. What happens inside is up to you. The idea, however, is to execute an action (hence the name) with minimal overhead. It means an action should not validate data, for example. It should be called with valid objects only, thus being able to work with them right away. It also means that an action should not fail. You can think of an action as a bare-bones service without all the bells and whistles. Also, an action can be reused by different services.
 
 Here again, it’s relatively simple to create a new action. Let’s take as an example our `log` step:
-```ruby
+
+```rb
 class User::Action::LogUsernameChange < Service::ActionBase
   option :actor
   option :user
@@ -573,14 +611,17 @@ class User::Action::LogUsernameChange < Service::ActionBase
   end
 end
 ```
+
 Of course, this is a very basic example, you can do more complex things in an action. A real-world example can be found in [`User::Action::TriggerPostAction`](https://github.com/discourse/discourse/blob/main/app/services/user/action/trigger_post_action.rb).
 `Service::ActionBase` comes with [`Dry::Initializer`](https://dry-rb.org/gems/dry-initializer) which provides a nice mini-DSL:
+
 - Use `option :my_arg` to declare a required keyword argument named `my_arg`.
 - Use `optional: true` to declare the argument optional (for instance, `option :my_arg, optional: true`).
 
 You should not need anything more than that to work with an action, but if you want to use some advanced features of `dry-initializer` (like coercion), just [take a look at their docs](https://dry-rb.org/gems/dry-initializer).
 
 Some rules to keep in mind when writing an action:
+
 - It must inherit from `Service::ActionBase`.
 - It must define one method: `#call`.
 - You should prefer `option` over `param` to define arguments, as it’s a bit more self-documenting on the caller side. It also allows you to use the [hash shorthand syntax](https://bugs.ruby-lang.org/issues/17292).
@@ -589,7 +630,8 @@ Some rules to keep in mind when writing an action:
 > 💡 To keep things short and clear, feel free to use [`delegate`](https://api.rubyonrails.org/classes/Module.html#method-i-delegate) extensively.
 
 Then, when you want to use it in a service, just write your step like this:
-```ruby
+
+```rb
 def log(guardian:, user:)
   User::Action::LogUsernameChange.call(actor: guardian.user, user:)
 end
@@ -618,6 +660,7 @@ The main tool to help debugging a service is the steps inspector. However, it’
 
 This small tool is very useful to debug the outcome of a service. The `Service::StepsInspector` class is not meant to be used directly, as there’s a shortcut available directly on any result object.
 Call `#inspect_steps` on a result object, and it will output all the steps of the service with their current state. This is how it looks like for the `User::UpdateUsername` service we’re using in our examples:
+
 ```
 Inspecting User::UpdateUsername result object:
 
@@ -627,11 +670,13 @@ Inspecting User::UpdateUsername result object:
 
 (3 more steps not shown as the execution flow was stopped before reaching them)
 ```
+
 Here we can see each step is numbered to track the execution order easily. Then the type of the step is outputted, followed by its name and how much time the step took to run. Finally, there’s either a checkmark or a cross, depending on the step outcome.
 
 So, we can see the `can_update_username` policy failed, and since it’s a simple policy it’s easy to see that the problem lies with the user not having enough permissions (through `guardian`).
 The policy is defined as:
-```ruby
+
+```rb
 def can_update_username(guardian:, user:)
   guardian.can_edit_username?(user)
 end
@@ -640,6 +685,7 @@ end
 In the case of a more complex result object, like with a contract, the steps inspector provides the error from the failing step.
 Let’s say we call our `User::UpdateUsername` service without providing any parameters. It would then fail at the `params` step.
 The inspector now outputs this:
+
 ```
 Inspecting User::UpdateUsername result object:
 
@@ -653,14 +699,16 @@ Why it failed:
 
 Provided parameters: {"id"=>nil, "username"=>nil}
 ```
+
 Here we can see `ActiveModel` errors, telling us `id` and `username` were blank. The provided parameters are also outputted to help debugging.
 
 Here’s a recap of what errors will be outputted for the different steps:
-- *model*: when the model is an `ActiveRecord` one, it outputs its validation errors. Otherwise, it outputs the reason why it failed, probably a `Model not found` error.
-- *params*: outputs the validation errors followed by the provided parameters.
-- *policy*: doesn’t output anything for a simple policy. When a policy object is used, then it outputs its `reason`.
-- *try*: outputs the exception caught by `try`.
-- *step*: outputs the message provided to `fail!`.
+
+- _model_: when the model is an `ActiveRecord` one, it outputs its validation errors. Otherwise, it outputs the reason why it failed, probably a `Model not found` error.
+- _params_: outputs the validation errors followed by the provided parameters.
+- _policy_: doesn’t output anything for a simple policy. When a policy object is used, then it outputs its `reason`.
+- _try_: outputs the exception caught by `try`.
+- _step_: outputs the message provided to `fail!`.
 
 ## Live debugging
 

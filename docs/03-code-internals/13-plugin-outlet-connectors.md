@@ -2,24 +2,24 @@
 title: Using Plugin Outlet Connectors from a Theme or Plugin
 short_title: Plugin outlet connectors
 id: plugin-outlet-connectors
-
 ---
+
 Discourse includes hundreds of Plugin Outlets which can be used to inject new content or replace existing contend in the Discourse UI. 'Outlet arguments' are made available so that content can be customized based on the context.
 
 # Choosing an outlet
 
-To find the name of a plugin outlet, search Discourse core for "`<PluginOutlet`", or use the [plugin outlet locations ](https://meta.discourse.org/t/plugin-outlet-locations-theme-component/100673) theme component. (e.g. `topic-above-posts`).
-
+To find the name of a plugin outlet, search Discourse core for "`<PluginOutlet`", or use the [plugin outlet locations](https://meta.discourse.org/t/plugin-outlet-locations-theme-component/100673) theme component. (e.g. `topic-above-posts`).
 
 # Wrapper outlets
 
 Some outlets in core look like `<PluginOutlet @name="foo" />`. These allow you to inject new content. Other outlets will 'wrap' an existing core implementation like this
 
-```
+```hbs
 <PluginOutlet @name="foo">
   core implementation
 </PluginOutlet>
 ```
+
 Defining a connector for this kind of 'wrapper' outlet will replace the core implementation. Only one active theme/plugin can contribute a connector for a wrapper plugin outlet.
 
 For wrapper plugin outlets, you can render the original core implementation using the `{{yield}}` keyword. This can be helpful if you only want to replace the core implementation under certain conditions, or if you would like to wrap it in something.
@@ -31,16 +31,17 @@ Once you've chosen an outlet, decide on a name for your connector. This needs to
 In your theme / plugin, define a new handlebars template with a path formatted like this:
 
 > :art: `{theme}/javascripts/discourse/connectors/{outlet-name}/{connector-name}.hbs`
-> 
+>
 > :electric_plug: `{plugin}/assets/javascripts/discourse/connectors/{outlet-name}/{connector-name}.hbs`
 
 The content of these files will be rendered as an Ember Component. For general information on Ember / Handlebars, check out [the Ember guides](https://guides.emberjs.com/release/components/).
 
 For our hypothetical "brand official topics" connector, the template might look like
 
-```handlebars
+```hbs
 <div class="alert alert-info">
-  This topic was created by a member of the <a href="https://discourse.org/team">Discourse Team</a>
+  This topic was created by a member of the
+  <a href="https://discourse.org/team">Discourse Team</a>
 </div>
 ```
 
@@ -48,11 +49,11 @@ Some plugin outlets will automatically wrap your content in an HTML element. The
 
 [quote]
 [details=ℹ️ Removing the automatic wrapper element]
-Modern plugin outlets (with `defaultGlimmer=true`) render connectors as 'template only glimmer components', which are significantly faster to render and have no wrapper element. Eventually, this will be used everywhere. 
+Modern plugin outlets (with `defaultGlimmer=true`) render connectors as 'template only glimmer components', which are significantly faster to render and have no wrapper element. Eventually, this will be used everywhere.
 
 To use this new rendering technique on existing plugin outlets, create an adjacent JS file with this content:
 
-```javascript
+```js
 import templateOnly from "@ember/component/template-only";
 export default templateOnly();
 ```
@@ -63,31 +64,38 @@ If you need custom logic as well, see the other ℹ️ sections below.
 
 [quote]
 [details=ℹ️ Defining template via theme </head>]
-We recommend using a dedicated file for your connector template. However, Discourse does still support defining a template via a `<script>` tag in your theme's `</head>` section. In that case, a definition would look like 
+We recommend using a dedicated file for your connector template. However, Discourse does still support defining a template via a `<script>` tag in your theme's `</head>` section. In that case, a definition would look like
 
 ```html
-<script type='text/x-handlebars' data-template-name='/connectors/{outlet-name}/{connector-name}'>
+<script
+  type="text/x-handlebars"
+  data-template-name="/connectors/{outlet-name}/{connector-name}"
+>
   Template content here
 </script>
 ```
+
 [/details]
 [/quote]
 
-
-
 # Using outlet arguments
+
 Plugin Outlets provide information about the surrounding context via `@outletArgs`. The arguments passed to each outlet vary. An easy way to view the arguments is to add this to your template:
 
-```handlebars
+```hbs
 {{log @outletArgs}}
 ```
+
 This will log the arguments to your browser's developer console. They will appear as a `Proxy` object - to explore the list of arguments, expand the `[[Target]]` of the proxy.
 
 In our `topic-above-posts` example, the rendered topic is available under `@outletArgs.model`. So we can add the username of the team member like this:
 
-```handlebars
+```hbs
 <div class="alert alert-info">
-  This topic was created by {{@outletArgs.model.details.created_by.username}} (a member of the <a href="https://discourse.org/team">Discourse Team</a>)
+  This topic was created by
+  {{@outletArgs.model.details.created_by.username}}
+  (a member of the
+  <a href="https://discourse.org/team">Discourse Team</a>)
 </div>
 ```
 
@@ -105,12 +113,13 @@ Sometimes, a simple handlebars template is not enough. To add Javascript logic t
 
 Defining a component like this will remove the automatic `connectorTagName` wrapper element, so you may want to re-introduce an element of the same type in your hbs file.
 
-In our `topic-above-posts` example, we may want to render the user differently based on the 'prioritize username in ux' site setting. A component definition for that might look something like this: 
+In our `topic-above-posts` example, we may want to render the user differently based on the 'prioritize username in ux' site setting. A component definition for that might look something like this:
 
 `.../connectors/topic-above-posts/brand-official-topic.js`:
-```javascript
+
+```js
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default class BrandOfficialTopics extends Component {
   @service siteSettings;
@@ -128,9 +137,12 @@ export default class BrandOfficialTopics extends Component {
 
 We can then update the template to reference the new getter:
 
-```handlebars
+```hbs
 <div class="alert alert-info">
-  This topic was created by {{this.displayName}} (a member of the <a href="https://discourse.org/team">Discourse Team</a>)
+  This topic was created by
+  {{this.displayName}}
+  (a member of the
+  <a href="https://discourse.org/team">Discourse Team</a>)
 </div>
 ```
 
@@ -146,18 +158,19 @@ If you only want your content to be rendered under certain conditions, it's ofte
 
 Firstly, ensure you have a `.js` connector definition as described above. Then, add a `static shouldRender()` function. Extending our example:
 
-```javascript
+```js
 import Component from "@glimmer/component";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default class BrandOfficialTopics extends Component {
-  static shouldRender(outletArgs, helper){
+  static shouldRender(outletArgs, helper) {
     const firstPost = outletArgs.model.postStream.posts[0];
     return firstPost.primary_group_name === "team";
   }
   // ... (any other logic)
 }
 ```
+
 Now the connector will only be rendered when the first post of the topic was created by a team member.
 
 `shouldRender` is evaluated in a Glimmer autotracking context. Future changes to any referenced properties (e.g. `outletArgs`) will cause the function to be re-evaluated.
@@ -166,14 +179,16 @@ Now the connector will only be rendered when the first post of the topic was cre
 [details=ℹ️ shouldRender for templateOnly connectors]
 If you'd like to define a `shouldRender` function without the overhead of a full component, you can do something like this:
 
-```javascript
+```js
 import templateOnly from "@ember/component/template-only";
 
 export default Object.assign(templateOnly(), {
-  shouldRender(outletArgs, helper){
+  shouldRender(outletArgs, helper) {
     // Logic here
-  }
+  },
 });
+```
+
 [/details]
 [/quote]
 

@@ -2,9 +2,9 @@
 title: Developing Discourse Plugins - Part 2 - Connect to a plugin outlet
 short_title: Plugin outlet
 id: plugin-outlet
-
 ---
-Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-1-create-a-basic-plugin/30515 
+
+Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-1-create-a-basic-plugin/30515
 
 ---
 
@@ -18,7 +18,7 @@ Many plugins need to add and extend the Discourse web interface. We provide a me
 
 If you browse the discourse handlebars templates, you'll often see the following markup:
 
-```handlebars
+```hbs
 <PluginOutlet @name="edit-topic" />
 ```
 
@@ -26,21 +26,21 @@ This is declaring a plugin outlet called "edit-topic". It's an extension point i
 
 When authoring your plugin, look in the discourse handlebars templates (in `.hbs` files) you want to change for a `<PluginOutlet />`. If there isn't one, just ask us to extend it! We'll happily add them if you have a good use case. If you want to make it easier and faster for us to do that, please submit a pull request on github!
 
-> :exclamation:  If you want to see some of the places where plugin outlets exist, you can run the following command if you're on OSX or Linux:
-> 
-> ```bash
-> $ git grep "<PluginOutlet" -- "*.hbs"
+> :exclamation: If you want to see some of the places where plugin outlets exist, you can run the following command if you're on OSX or Linux:
+>
+> ```sh
+> git grep "<PluginOutlet" -- "*.hbs"
 > ```
 
 @RGJ has also written [a theme component](https://meta.discourse.org/t/plugin-outlet-locations-theme-component/100673) to show their locations.
 
 ### Connecting to a Plugin Outlet
 
-Once you've found the plugin outlet you want to add to, you have to write a `connector` for it.  A connector is really just a handlebars template whose filename includes `connectors/<outlet name>` in it.
+Once you've found the plugin outlet you want to add to, you have to write a `connector` for it. A connector is really just a handlebars template whose filename includes `connectors/<outlet name>` in it.
 
 For example, if the Discourse handlebars template has:
 
-```handlebars
+```hbs
 <PluginOutlet @name="evil-trout" />
 ```
 
@@ -51,7 +51,7 @@ will automatically be appended. So if you created the file:
 
 With the contents:
 
-```handlebars
+```hbs
 <b>Hello World</b>
 ```
 
@@ -61,13 +61,14 @@ Note that we called the file `hello.hbs` -- The final part of the filename does 
 
 ### Troubleshooting
 
-- Double check the name of the connector and make sure it matches the plugin name perfectly. 
+- Double check the name of the connector and make sure it matches the plugin name perfectly.
 
 ### More information
 
 https://meta.discourse.org/t/using-plugin-outlet-connectors-from-a-theme-or-plugin/32727
 
 ---
+
 ### More in the series
 
 Part 1: [Plugin Basics](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-1/30515)

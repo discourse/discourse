@@ -2,9 +2,9 @@
 title: Adding Metadata to a Theme
 short_title: Theme metadata
 id: theme-metadata
-
 ---
-You can add various pieces of metadata to a theme. Some are stored in the `about.json` file, and some are stored in the locale files. 
+
+You can add various pieces of metadata to a theme. Some are stored in the `about.json` file, and some are stored in the locale files.
 
 ## `about.json` <small>[:link: file format info](https://meta.discourse.org/t/structure-of-themes-and-theme-components/60848)</small>
 
@@ -25,6 +25,7 @@ You can add various pieces of metadata to a theme. Some are stored in the `about
 **`maximum_discourse_version`** (string, optional): the latest discourse version which this theme is compatible with. If it does not match, the theme will be auto-disabled. Should be in the format `2.4.0.beta1`
 
 ## locale files (e.g. `en.yml`) <small>[:link: file format info](https://meta.discourse.org/t/adding-localizable-strings-to-themes-and-theme-components/109867?u=david)</small>
+
 **`theme_metadata.description`**: A localised description of the theme. Displayed in the admin panel
 
 **`theme_metadata.settings.setting_name`**: A localised description of `setting_name`, displayed below the theme setting in the admin panel

@@ -2,66 +2,73 @@
 title: Change icons globally
 short_title: Global icon changes
 id: global-icon-changes
-
 ---
+
 This is an easy way to change a Discourse icon globally.
 
 1. Right click on the icon you want to change and select "Inspect element" or "Inspect" (depends on the browser)
 
 2. Find the icon name
-    ![image|690x211,70%](/assets/global-icon-changes-1.png) 
+   ![image|690x211,70%](/assets/global-icon-changes-1.png)
 3. Search a new icon here https://fontawesome.com/icons?d=gallery, e.g. [external-link-alt](https://fontawesome.com/icons/external-link-alt?style=solid)
 
 4. Customize and add the code in your `admin > customize > themes > Header` tab
-```javascript
-    <script type="text/discourse-plugin" version="0.11">
-        api.replaceIcon('link', 'external-link-tab');
-    </script>
-```
-5. Icons that are not used by default from Discourse must be added in the site setting `svg icon subset`  then force refresh your browser to see the changes applied. 
-**Result:**
-![image|277x64,60%](/assets/global-icon-changes-2.png)
-All the "link" icons will be replaced by "external-link-tab".
-If an icon is used for multiple elements in other pages, such as badges, the icon will also be replaced there.
 
-----------
+```js
+<script type="text/discourse-plugin" version="0.11">
+  api.replaceIcon('link', 'external-link-tab');
+</script>
+```
+
+5. Icons that are not used by default from Discourse must be added in the site setting `svg icon subset` then force refresh your browser to see the changes applied.
+   **Result:**
+   ![image|277x64,60%](/assets/global-icon-changes-2.png)
+   All the "link" icons will be replaced by "external-link-tab".
+   If an icon is used for multiple elements in other pages, such as badges, the icon will also be replaced there.
+
+---
 
 ## Exceptions
 
 _Note that there is already a theme component that allow you to [change the Like icon](https://meta.discourse.org/t/change-the-like-icon/87748/1). I'm using this case as example_
 
-The "heart" icon, used to give Like, is hardcoded with other names (`'d-liked'` and `'d-unliked'`) and should be treated differently than other icons, so to change the :heart:  icon with :+1:  icon:
-```javascript
-    <script type="text/discourse-plugin" version="0.11">
-        api.replaceIcon('d-liked', 'thumbs-up');
-        api.replaceIcon('d-unliked', 'thumbs-o-up');
-    </script>
+The "heart" icon, used to give Like, is hardcoded with other names (`'d-liked'` and `'d-unliked'`) and should be treated differently than other icons, so to change the :heart: icon with :+1: icon:
+
+```js
+<script type="text/discourse-plugin" version="0.11">
+  api.replaceIcon('d-liked', 'thumbs-up'); api.replaceIcon('d-unliked',
+  'thumbs-o-up');
+</script>
 ```
+
 ![like|267x73,60%](/assets/global-icon-changes-3.png)
 ![firefox_2018-04-24_18-37-02|328x78,60%](/assets/global-icon-changes-4.png)
 but on the badge page the icon is still "heart":
 ![firefox_2018-04-24_18-38-15|466x182,60%](/assets/global-icon-changes-5.png)
 so to change it on that page we add:
-```javascript
-    <script type="text/discourse-plugin" version="0.11">
-        api.replaceIcon('d-liked', 'thumbs-up');
-        api.replaceIcon('d-unliked', 'thumbs-up');
-        api.replaceIcon('heart', 'thumbs-up');
-    </script>
+
+```js
+<script type="text/discourse-plugin" version="0.11">
+  api.replaceIcon('d-liked', 'thumbs-up'); api.replaceIcon('d-unliked',
+  'thumbs-up'); api.replaceIcon('heart', 'thumbs-up');
+</script>
 ```
+
 ![firefox_2018-04-24_18-47-50|457x172,60%](/assets/global-icon-changes-6.png)
 
 Another example:
-```javascript    
-    <script type="text/discourse-plugin" version="0.11">
-        api.replaceIcon('d-watching', 'eye');
-    </script>
+
+```js
+<script type="text/discourse-plugin" version="0.11">
+  api.replaceIcon('d-watching', 'eye');
+</script>
 ```
+
 changes the watching icon:
-![watching-original|166x356,60%](/assets/global-icon-changes-7.png) ![watching|189x365,60%](/assets/global-icon-changes-8.png)   
+![watching-original|166x356,60%](/assets/global-icon-changes-7.png) ![watching|189x365,60%](/assets/global-icon-changes-8.png)
 [details="See here other exceptions that cover the tracking status, expand/collapse, notifications and likes of course."]
 
-```yaml
+```js
 const REPLACEMENTS = {
   "d-tracking": "bell",
   "d-muted": "discourse-bell-slash",
@@ -103,9 +110,10 @@ const REPLACEMENTS = {
   "notification.chat_quoted": "quote-right",
 };
 ```
+
 Ref: [discourse/icon-library.js at main · discourse/discourse (github.com)](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse-common/addon/lib/icon-library.js)
 [/details]
 
-----------------------
+---
 
-Feel free to create other themes component  and share it in our #theme-component  category!
+Feel free to create other themes component and share it in our #theme-component category!

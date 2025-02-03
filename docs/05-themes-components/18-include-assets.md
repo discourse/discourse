@@ -2,8 +2,8 @@
 title: Include assets (e.g. images, fonts) in themes and components
 short_title: Include assets
 id: include-assets
-
 ---
+
 Themes and theme components allow you to handle uploaded assets such as images and fonts. You can control what assets your theme accepts using the site setting: `theme authorized extensions`
 
 ## Including assets in themes and components
@@ -29,58 +29,64 @@ To upload assets to a local theme or theme component, navigate to your theme or 
 
 ![uploads|690x143,50%](/assets/include-assets-1.png)
 
-In the Add Upload modal, choose a file and enter a SCSS variable name to use with with your CSS, javascript, and/or handlbars customizations
+In the Add Upload modal, choose a file and enter a SCSS variable name to use with with your CSS, javascript, and/or handlebars customizations
 
-![upload-modal|683x500,40%](/assets/include-assets-2.png) 
+![upload-modal|683x500,40%](/assets/include-assets-2.png)
 
 Once uploaded, the asset will pop up in the Uploads list:
 
-![uploaded-font|556x230,50%](/assets/include-assets-3.png) 
+![uploaded-font|556x230,50%](/assets/include-assets-3.png)
 
-> :warning: **Important Note**: *Do not add uploads to themes and components through the admin interface if the component was installed remotely from a git repository. Updates to the component will clear out any uploads that were not included in the git repository.*
+> :warning: **Important Note**: _Do not add uploads to themes and components through the admin interface if the component was installed remotely from a git repository. Updates to the component will clear out any uploads that were not included in the git repository._
 
 ## How to make use of the assets
 
 ### SCSS
 
-```css
+```scss
 @font-face {
   font-family: Amazing;
-  src: url($Comic-Sans) format('woff2')
+  src: url($Comic-Sans) format("woff2");
 }
 
 body {
-    font-family: Amazing;
-    font-size: 15px;
-} 
+  font-family: Amazing;
+  font-size: 15px;
+}
 
 .d-header {
-    background-image: url($texture);
+  background-image: url($texture);
 }
 ```
 
-> :information_source: *When using `ttf` or `otf` fonts, be sure to use a format of `opentype`.*
+> :information*source: \_When using `ttf` or `otf` fonts, be sure to use a format of `opentype`.*
 
 ### Javascript
-```
+
+```html
 <script type="text/discourse-plugin" version="0.8">
-   console.log(settings.theme_uploads.balloons)
+  console.log(settings.theme_uploads.balloons)
 </script>
 ```
 
 ### Handlebars
-```
-<script type="text/x-handlebars" data-template-name="/connectors/topic-above-post-stream/foobar">
+
+```html
+<script
+  type="text/x-handlebars"
+  data-template-name="/connectors/topic-above-post-stream/foobar"
+>
   <img src="{{theme-setting "theme_uploads.balloons"}}">
 </script>
 ```
 
 ### HTML
-You can't directly add a theme asset to vanilla HTML (like in the header or after header sections of the customize admin panel). You have to use a handlebars template or the plugin API (more about those in https://meta.discourse.org/t/developer-s-guide-to-discourse-themes/93648). 
+
+You can't directly add a theme asset to vanilla HTML (like in the header or after header sections of the customize admin panel). You have to use a handlebars template or the plugin API (more about those in https://meta.discourse.org/t/developer-s-guide-to-discourse-themes/93648).
 
 One workaround is to load your asset as a background image using SCSS (like the example above). So in the header section of your theme you might add:
 
-```xml
+```html
 <div class="my-custom-div">
   <a href="/"></a>
 </div>
@@ -88,11 +94,11 @@ One workaround is to load your asset as a background image using SCSS (like the 
 
 and then in your CSS:
 
-```css
+```scss
 .my-custom-div a {
-    height: 50px;
-    width: 100px; 
-    background-image: url($asset-name);
+  height: 50px;
+  width: 100px;
+  background-image: url($asset-name);
 }
 ```
 
@@ -116,10 +122,10 @@ handlebars: {{theme-setting "theme_uploads.balloons"}}
 javascript: settings.theme_uploads.balloons
 ```
 
-
-## Additional Information 
+## Additional Information
 
 - https://meta.discourse.org/t/create-and-share-a-font-theme-component/62462
 
 ---
-*Last Reviewed by @SaraDev on [date=2022-06-10 time=13:00:00 timezone="America/Los_Angeles"]*
+
+_Last Reviewed by @SaraDev on [date=2022-06-10 time=13:00:00 timezone="America/Los_Angeles"]_

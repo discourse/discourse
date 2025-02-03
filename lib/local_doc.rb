@@ -61,7 +61,7 @@ class LocalDoc
 
     result = <<~MD
       #{result}
-      
+
       ---
 
       <small>This document is version controlled - suggest changes [on github](https://github.com/discourse/discourse-developer-docs/blob/main/docs/#{path}).</small>

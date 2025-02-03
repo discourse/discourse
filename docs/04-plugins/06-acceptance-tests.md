@@ -2,9 +2,9 @@
 title: Developing Discourse Plugins - Part 6 - Add acceptance tests
 short_title: Acceptance tests
 id: acceptance-tests-plugins
-
 ---
-Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-5-add-an-admin-interface/31761 
+
+Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-5-add-an-admin-interface/31761
 
 ---
 
@@ -18,17 +18,17 @@ The Discourse application is built with **a lot** of tests that will begin runni
 
 ![filter plugin|690x92](/assets/acceptance-tests-1.png)
 
-
 ### Adding an Acceptance Test in your Plugin
 
 First, **make sure you have the latest version of Discourse checked out**. Being able to run Acceptance tests from plugins is a relatively new feature, and if you don't check out the latest version your tests won't show up.
- 
+
 For this article I am going to write an acceptance test for the [purple-tentacle](https://github.com/eviltrout/purple-tentacle) plugin that we authored in [part 5](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-5-admin-interfaces/31761) of this series.
 
 Adding an acceptance test is as easy as adding one file to your plugin. Create the following:
 
 **`test/javascripts/acceptance/purple-tentacle-test.js`**
-```javascript
+
+```js
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -58,12 +58,13 @@ Our first action of importance is: `await visit("/admin/plugins/purple-tentacle"
 After visiting the page where the purple tentacle button appears, we want to check if we can see the button on the page exists and that the tentacle image doesn't exist yet.
 
 That is done by the following assertions:
-```javascript
+
+```js
 assert.ok(exists("#show-tentacle"), "it shows the purple tentacle button");
 assert.ok(!exists(".tentacle"), "the tentacle is not shown yet");
 ```
-<small>**P.S.** the previous version of the purple-tentacle plugin didn't have the `#show-tentacle` element id in the handlebars template. Check out the latest version to follow along!</small>
 
+<small>**P.S.** the previous version of the purple-tentacle plugin didn't have the `#show-tentacle` element id in the handlebars template. Check out the latest version to follow along!</small>
 
 Once those tests pass it's time to test the interaction.
 
@@ -71,7 +72,7 @@ The next command is `await click('#show-tentacle');` which tells our testing fra
 
 After we simulate a click on the button, we can check whether the tentacle appears by asserting:
 
-```javascript
+```js
 assert.ok(exists(".tentacle"), "the tentacle wants to rule the world!");
 ```
 
@@ -82,9 +83,11 @@ If you want to run the plugin qunit tests on the command line using PhantomJS, y
 ```
 rake plugin:qunit['purple-tentacle']
 ```
+
 (where `purple-tentacle` is the folder name of your plugin)
 
 ### Debugging your tests
+
 As you write your plugins, your tests can help you identify issues in your plugin. When you're developing your tests or if you make changes to your plugin's code, the tests may fail. To help understand why, Ember has some nice helpers: `pauseTest()` and `resumeTest()`.
 
 To make use of them, add `await pauseTest()` within your test code where you would like the test to pause. Now, when you run your test in the browser, the test will automatically pause at the point you added `pauseTest(). This will give you a chance to inspect the page or view any errors to help debug for issues.
@@ -96,6 +99,7 @@ I hate to sound like a broken record but the [Ember documentation](https://guide
 Happy testing!
 
 ---
+
 ### More in the series
 
 Part 1: [Plugin Basics](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-1/30515)

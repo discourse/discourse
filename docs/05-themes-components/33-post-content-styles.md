@@ -2,8 +2,8 @@
 title: Customize posts' contents with your own styles
 short_title: Post content styles
 id: post-content-styles
-
 ---
+
 <div data-theme-toc="true"> </div>
 
 ## Requirements
@@ -32,20 +32,21 @@ I'll call them **`data-` attributes** in this tutorial :)
 
 One way to create elements with these attributes is a BBcode-like tag: `[wrap]`, to which we'll add a value of our choice. Here we choose "button" (that could be anything else, even the name of your dog :dog:):
 
-```
+```md
 [wrap=button]some text[/wrap]
 ```
+
 This will output an HTML element having the following attribute: `data-wrap="button"`.
 
 ## First example: a pink background
 
 Let's start with a practical example. We'll create text with a pink background.
 
-### As a *block* element
+### As a _block_ element
 
 In your post, on an empty line, write:
 
-```
+```md
 [wrap=pink]pink text[/wrap]
 ```
 
@@ -57,11 +58,13 @@ Then, add the following CSS to your theme.
 Go to Admin panel -> Customize -> Themes -> your theme -> Edit CSS/HTML -> CSS.
 
 Put the following CSS code inside:
+
 ```css
 [data-wrap="pink"] {
-    background: pink;
+  background: pink;
 }
 ```
+
 Then click the Save button.
 
 ![wrap css|355x214](/assets/post-content-styles-3.png)
@@ -76,7 +79,7 @@ You can learn more about the difference between **blocks** and **inline** HTML e
 
 If you want your pink background on multiple lines (still as a **block**), you'll need both your `[wrap]` tags having no other content or text on the same line:
 
-```
+```md
 [wrap=pink]
 pink text
 pink text
@@ -84,11 +87,12 @@ pink text
 pink text
 [/wrap]
 ```
+
 This will look like this:
 
 ![image|690x286](/assets/post-content-styles-5.png)
 
-### As an *inline* element
+### As an _inline_ element
 
 Now, let's add some text before the `[wrap]`, or after, or both :smile:. For example:
 
@@ -109,22 +113,24 @@ So, we'll describe two different methods that achieve the same result, but you'l
 The syntax to create a link using markdown is: `[some text](https://some-link.etc)`.
 To customize the text and make it appear like a button, we'll insert the wrap inside the square brackets. Here's an example:
 
-```
+```md
 This [[wrap=button]nice link[/wrap]](https://discourse.org/) is a blue button 🐳 !
 ```
+
 We won't comment on what this code outputs. You know that because you wrote `[wrap=button]`, you'll have to target `[data-wrap="button"]` in your CSS.
 
 So, let's go, let's add some fancy CSS to make it pretty! :sparkles:
 
 ```css
 [data-wrap="button"] {
-    display: inline-block;
-    padding: 0.5em 1em;
-    background: DodgerBlue;
-    color: White;
+  display: inline-block;
+  padding: 0.5em 1em;
+  background: DodgerBlue;
+  color: White;
 }
 ```
-We won't detail the CSS rules here. There are many CSS resources on the Internet, so if you want to do more specific modifications, you'll have to learn about it first. :slight_smile: 
+
+We won't detail the CSS rules here. There are many CSS resources on the Internet, so if you want to do more specific modifications, you'll have to learn about it first. :slight_smile:
 
 The result :magic_wand: :
 ![Blue button|690x279](/assets/post-content-styles-7.png)
@@ -137,19 +143,21 @@ Since Discourse accepts HTML code, we can decide not to use the `[wrap]` tags an
 :information_source: We can't directly use a link `<a>` tag because it's an exception and won't allow any `data-` attribute.
 
 Write:
-```
+
+```md
 This <span data-button>[link](https://discourse.org/)</span> is a green button 🐸 !
 ```
+
 It will output a link **inside** a `<span>` tag having a `data-button` attribute, which means the CSS will be a bit more complicated. We will have to target both `data-button` and the link:
 
-```scss
+```css
 [data-button] {
-    display: inline-block;
-    padding: .5em 1em;
-    background: ForestGreen;
-    a {
-        color: White;
-    }
+  display: inline-block;
+  padding: 0.5em 1em;
+  background: ForestGreen;
+  a {
+    color: White;
+  }
 }
 ```
 
@@ -165,22 +173,25 @@ And here's the result!
 I'll give a single example without explanation by customizing a list in which each element will be prepended with a cat emoji:
 
 Text:
-```
+
+```md
 [wrap=cat]
-* Felix
-* Garfield
-* Nat's cat
-[/wrap]
+
+- Felix
+- Garfield
+- Nat's cat
+  [/wrap]
 ```
 
 CSS:
-```scss
+
+```css
 [data-wrap="cat"] ul {
-    list-style: none;
-    li:before {
-        content: "🐈";
-        margin-right: 0.25em;
-    }
+  list-style: none;
+  li:before {
+    content: "🐈";
+    margin-right: 0.25em;
+  }
 }
 ```
 
@@ -197,18 +208,19 @@ A good practice is using Discourse's color variables instead of "hardcoded" colo
 Here's an example in which the button's background color will use the primary color of the current palette, and the text will use the secondary color:
 
 Text:
-```
+
+```md
 This [[wrap=button]nice link[/wrap]](https://discourse.org/) is a button 🌈 !
-``` 
+```
 
 CSS:
 
-```scss
+```css
 [data-wrap="button"] {
-    display: inline-block;
-    padding: 0.5em 1em;
-    background: var(--primary);
-    color: var(--secondary);
+  display: inline-block;
+  padding: 0.5em 1em;
+  background: var(--primary);
+  color: var(--secondary);
 }
 ```
 
@@ -229,7 +241,6 @@ To make more advanced customizations, learning CSS is primordial. You'll find ma
 The following Discourse's guide can also be of some help: https://meta.discourse.org/t/make-css-changes-on-your-site/168101?u=canapin.
 Using the developer's tools of your Internet Browser will also easily show you the list of your Discourse's color variables and what each looks like:
 ![image|244x500](/assets/post-content-styles-12.png)
-
 
 ---
 

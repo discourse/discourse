@@ -2,9 +2,9 @@
 title: Developing Discourse Plugins - Part 7 - Publish your plugin
 short_title: Publish your plugin
 id: publish-your-plugin
-
 ---
-Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-6-add-acceptance-tests/32619 
+
+Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-6-add-acceptance-tests/32619
 
 ---
 
@@ -15,7 +15,7 @@ You've [created your plugin](https://meta.discourse.org/t/beginners-guide-to-cre
 All plugins require good documentation. Users need to know what the plugin does, how to install it, important settings/configuration changes needed, and how to use it. Plugins should be documented in two different locations: the `README.md` file within your git repo, and a dedicated topic in the #plugin category.
 
 #### GitHub Documentation
- 
+
 The `README.md` file on GitHub is important as it's shown be default when a user visits your repo. At minimum, your readme should include the plugin's title and a short description. A more complete readme will also include installation instructions, a more detailed description, basic usage instructions, license, and (if applicable) screenshots. If additional instructions are included in your plugin's Meta topic, be sure to include a link to the topic.
 
 Example of a minimally documented plugin: [Discourse Data Explorer](https://github.com/discourse/discourse-data-explorer)
@@ -23,7 +23,8 @@ Examples of plugins with more complete documentation: [Discourse Solved](https:/
 
 [details="Sample plugin README template"]
 _Be sure to update text surrounded by `<>` with your plugin specifics._
-```text
+
+```md
 ## <Plugin Title>
 
 <Plugin Description>
@@ -48,6 +49,7 @@ Follow the [plugin installation guide](https://meta.discourse.org/t/install-a-pl
 
 <Note your code license, most Discourse plugins use MIT>
 ```
+
 [/details]
 
 #### Meta Documentation
@@ -71,6 +73,7 @@ After you publish your plugin and it's documentation, site admins who find it us
 Lastly, Discourse itself is under constant development. While your plugin may work perfectly today, tomorrow something might change that breaks it. Be sure to stay up to date on Discourse development so that you can update your plugin to support the latest version of Discourse when a change affects your plugin.
 
 ---
+
 ### More in the series
 
 Part 1: [Plugin Basics](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-1/30515)

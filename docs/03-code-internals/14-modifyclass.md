@@ -23,7 +23,7 @@ Core's code can change at any time. And therefore, customizations made via `modi
 - `callback` (function) - a function which receives the existing class definition, and then returns an extended version.
 
 For example, to modify the `click()` action on d-button:
-   
+
 ```js
 api.modifyClass(
   "component:d-button",
@@ -45,20 +45,28 @@ However, there are some limitations. The `modifyClass` system only detects chang
 - introducing or modifying a `constructor()` is not supported
 
   ```js
-  api.modifyClass("component:foo", (Superclass) => class extends Superclass {
-    constructor() {
-      // This is not supported. The constructor will be ignored
-    }
-  });
+  api.modifyClass(
+    "component:foo",
+    (Superclass) =>
+      class extends Superclass {
+        constructor() {
+          // This is not supported. The constructor will be ignored
+        }
+      }
+  );
   ```
 
 - introducing or modifying class fields is not supported (although some decorated class fields, like `@tracked` can be used)
 
   ```js
-  api.modifyClass("component:foo", (Superclass) => class extends Superclass {
-    someField = "foo"; // NOT SUPPORTED - do not copy
-    @tracked someOtherField = "foo"; // This is ok
-  });
+  api.modifyClass(
+    "component:foo",
+    (Superclass) =>
+      class extends Superclass {
+        someField = "foo"; // NOT SUPPORTED - do not copy
+        @tracked someOtherField = "foo"; // This is ok
+      }
+  );
   ```
 
 - simple class fields on the original implementation cannot be overridden in any way (although, as above, `@tracked` fields can be overridden by another `@tracked` field)
@@ -67,10 +75,10 @@ However, there are some limitations. The `modifyClass` system only detects chang
   // Core code:
   class Foo extends Component {
     // This core field cannot be overridden
-    someField = "original"; 
+    someField = "original";
 
     // This core tracked field can be overridden by including
-    // `@tracked someTrackedField = ` in the modifyClass call
+    // `@tracked someTrackedField =` in the modifyClass call
     @tracked someTrackedField = "original";
   }
   ```
@@ -109,7 +117,7 @@ When using modifyClass in an initializer, you may see this warning in the consol
 In theme/plugin development, there are two ways this error is normally introduced:
 
 - **Adding a `lookup()` caused the error**
-  
+
   If you `lookup()` a singleton too early in the boot process, it will cause any later `modifyClass` calls to fail. In this situation, you should try to move the lookup to happen later. For example, you would change something like this:
 
   ```js
@@ -121,7 +129,6 @@ In theme/plugin development, there are two ways this error is normally introduce
     });
   });
   ```
-
 
   To this:
 
@@ -156,7 +163,7 @@ In theme/plugin development, there are two ways this error is normally introduce
       api.modifyClass("model:user", {
         myNewUserFunction() {
           return "hello world";
-        }
+        },
       });
     },
 

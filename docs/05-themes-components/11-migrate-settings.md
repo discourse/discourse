@@ -2,18 +2,19 @@
 title: Migrate Discourse theme settings
 short_title: Migrate settings
 id: migrate-settings
-
 ---
+
 ### Introduction
 
 As of Discourse version 3.2.0.beta3, Discourse themes/components can leverage a migrations feature to evolve and alter their settings seamlessly. This feature ensures that updates to themes do not disrupt existing installations by handling changes to settings in a controlled manner.
 
 ### When to Use Migrations
+
 Common scenarios where migrations are particularly useful:
 
-* Changing the type of a setting (e.g., from a comma-separated string to a list).
-* Renaming a setting.
-* Modifying the structure or format of the data stored in a setting.
+- Changing the type of a setting (e.g., from a comma-separated string to a list).
+- Renaming a setting.
+- Modifying the structure or format of the data stored in a setting.
 
 In these scenarios, if the setting type or name is changed in the `settings.yml` file without an accompanying migration, existing installations where the setting has been changed from the default value, they will lose the change they've made to the setting and potentially break when the theme is updated.
 
@@ -46,6 +47,7 @@ export default function migrate(settings) {
   return settings;
 }
 ```
+
 This migration should be accompanied with the setting rename in the `settings.yml` file.
 
 ---
@@ -63,6 +65,7 @@ export default function migrate(settings) {
   return settings;
 }
 ```
+
 Similar to the previous example, this migration should be accompanied with changing the setting type from `string` to `list` in the `settings.yml` file.
 
 ---

@@ -2,8 +2,8 @@
 title: Using the DModal API to render Modal windows (aka popups/dialogs) in Discourse
 short_title: DModal API
 id: dmodal-api
-
 ---
+
 Discourse 3.1.0.beta6 ships with a brand new `<DModal>` component-based API.
 
 > :information_source: This supersedes the old controller-based API, which is now deprecated. If you have existing modals using the old APIs, check out the migration guide [here](https://meta.discourse.org/t/converting-modals-from-legacy-controllers-to-new-dmodal-component-api/268057).
@@ -26,7 +26,8 @@ A simple modal would look something like this:
   </DModal>
 {{/if}}
 ```
-> :information_source: The [`mut` helper](https://api.emberjs.com/ember/release/classes/Ember.Templates.helpers/methods/mut)  is used here as a hbs-only way to set a value. You could also set `modalIsVisible` using any other standard Ember method.
+
+> :information_source: The [`mut` helper](https://api.emberjs.com/ember/release/classes/Ember.Templates.helpers/methods/mut) is used here as a hbs-only way to set a value. You could also set `modalIsVisible` using any other standard Ember method.
 
 This example will create a simple Modal like this:
 
@@ -93,7 +94,9 @@ this.modal.show(MyModal);
 
 // Optionally, pass a '`model`' parameter. Passed as `@model` to your component.
 // This can include data, and also actions/callbacks for your Modal to use.
-this.modal.show(MyModal, { model: { topic: this.topic, someAction: this.someAction } });
+this.modal.show(MyModal, {
+  model: { topic: this.topic, someAction: this.someAction },
+});
 
 // `modal.show()` returns a promise, so you can wait for it to be closed
 // It will resolve with the data passed to the `@closeModal` action
@@ -102,4 +105,4 @@ const result = await this.modal.show(MyModal);
 
 ## More customizability!
 
-`<DModal>` has a number of named blocks and arguments. Check out [the interactive styleguide](https://meta.discourse.org/styleguide/organisms/modal) for arguments, and [the d-modal template implemetation](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/components/d-modal.hbs) for named blocks.
+`<DModal>` has a number of named blocks and arguments. Check out [the interactive styleguide](https://meta.discourse.org/styleguide/organisms/modal) for arguments, and [the d-modal template implementation](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/components/d-modal.hbs) for named blocks.

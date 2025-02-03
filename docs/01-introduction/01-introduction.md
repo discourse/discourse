@@ -3,6 +3,7 @@ title: Introduction to Discourse Development
 short_title: Introduction
 id: introduction
 ---
+
 Discourse is a modern and highly-customizable platform for building communities. This documentation is intended for anyone who wants to build a customization for Discourse, or work on Discourse itself.
 
 ## Architecture
@@ -24,4 +25,3 @@ To develop Themes or Theme Components, you can use the discourse_theme CLI again
 To develop plugins or core, you'll need to set up a dedicated development environment. Once that's set up, check out the [Plugin Beginners Guide](https://meta.discourse.org/t/30515).
 
 For general information about developing Discourse core, Themes and Plugins, check out the [Code Internals](https://meta.discourse.org/t/48891) section.
-

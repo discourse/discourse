@@ -2,33 +2,34 @@
 title: Developing Discourse Plugins - Part 4 - Setup git
 short_title: Git setup
 id: git-setup
-
 ---
+
 Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-part-3-add-custom-site-settings/31115
 
 ---
 
 Now that your plugin is getting more sophisticated, it's time to get more sophisticated about how you develop it.
 
-We suggest that you use [git](https://git-scm.com/) as version control for your plugin. We also recommend that you use [github](https://github.com) to share your plugin code with others. 
+We suggest that you use [git](https://git-scm.com/) as version control for your plugin. We also recommend that you use [github](https://github.com) to share your plugin code with others.
 
 ### Creating your Git Repo
 
 Once you've created your Github account, visit [this url](https://github.com/new) to create a new repository. You can call it anything you want, but generally something that starts with `discourse-` is good. Make sure the repository is **public**. Here's how my screen looked:
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/3/8/38c2d794af363a8a9840cddc5ac8d92a24374b12.png" width="690" height="390"> 
+<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/3/8/38c2d794af363a8a9840cddc5ac8d92a24374b12.png" width="690" height="390">
 
 ### Creating your local working folder
 
 At this point I create a local directory on my computer to hold the plugin. I usually put mine in `~/code` but you can put it anywhere you like on your computer:
 
-```bash
+```sh
 mkdir -p ~/code/discourse-plugin-test
 cd ~/code/discourse-plugin-test
 ```
+
 Now let's follow the instructions from github to initialize the repo with a README:
 
-```bash
+```sh
 echo "# discourse-plugin-test" >> README.md
 git init
 git add README.md
@@ -40,7 +41,8 @@ git push -u origin master
 Finally, create a `plugin.rb` file for your plugin as explained in [part 1](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins/30515). For this example I just created a dummy one:
 
 **plugin.rb**
-```ruby
+
+```rb
 # name: discourse-plugin-test
 # about: Shows how to set up Git
 # version: 0.0.1
@@ -63,6 +65,7 @@ The beauty of this setup is you can just check your plugin into github and not w
 I recommend using one editor window for your plugin codebase and one for Discourse itself. It is easier when you think of them as two different things.
 
 ---
+
 ### More in the series
 
 Part 1: [Plugin Basics](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-1/30515)

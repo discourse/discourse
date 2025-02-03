@@ -2,8 +2,8 @@
 title: Using Google's 'tachometer' to measure JS performance changes in Discourse
 short_title: JS performance
 id: js-performance
-
 ---
+
 When working on client-side work in Discourse core/plugins/themes, it's important to consider the performance impact. Google's 'Tachometer' project provides a statistically rigorous benchmarking tool which we can use to definitively measure the effect of changes.
 
 https://github.com/google/tachometer
@@ -11,7 +11,6 @@ https://github.com/google/tachometer
 Essentially, this tool takes a list of URLs and loads them in a 'round-robin' fashion. For each page load, it takes some performance measurement. After hundreds/thousands of iterations, it produces a comparison table.
 
 The beauty of this 'round-robin' approach is that it helps to reduce the impact of external factors on measurements.
-
 
 ## Step 1: Add `performance.measure()`
 
@@ -26,7 +25,7 @@ You can check it's working using the performance tab in your browser dev tools:
 If you're trying to measure an activity which requires user interaction (e.g. opening a menu), you could achieve this by adding something like this in an initializer to click the button 1 second after the page is loaded:
 
 ```js
-setTimeout(() => document.querySelector(".my-button").click(), 1000)
+setTimeout(() => document.querySelector(".my-button").click(), 1000);
 ```
 
 ## Step 2: Identify URLs for testing
@@ -44,11 +43,11 @@ http://localhost:4200?flag=after
 
 If the change is too large for that, then you could clone Discourse into a second directory and launch a **second copy of ember-cli**. It can be proxied to the same Rails server using a command like
 
-```bash
+```sh
 EMBER_ENV=production pnpm ember serve --port 4201 --proxy http://localhost:3000
 ```
 
-And then your two URLs would be 
+And then your two URLs would be
 
 ```
 http://localhost:4200
@@ -63,34 +62,34 @@ This is my `bench.json` file, which will take 300 samples of each target:
 
 ```json
 {
-   "timeout": 5,
-   "sampleSize": 300,
-   "benchmarks": [
-     {
-       "measurement": {
-         "mode": "performance",
-         "entryName": "discourse-init-to-paint"
-       },
-       "expand": [
-         {
-           "url": "http://localhost:4200",
-           "name": "before"
-         },
-         {
-           "url": "http://localhost:4201",
-           "name": "after"
-         }
-       ]
-     }
-   ]
- }
+  "timeout": 5,
+  "sampleSize": 300,
+  "benchmarks": [
+    {
+      "measurement": {
+        "mode": "performance",
+        "entryName": "discourse-init-to-paint"
+      },
+      "expand": [
+        {
+          "url": "http://localhost:4200",
+          "name": "before"
+        },
+        {
+          "url": "http://localhost:4201",
+          "name": "after"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ## Step 4: Run benchmark
 
 To reduce noise, stop any unrelated activities on your workstation, and then start the benchmark with a command like:
 
-```
+```sh
 npx tachometer@latest --config ./bench.json
 ```
 

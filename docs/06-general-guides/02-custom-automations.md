@@ -2,9 +2,9 @@
 title: Create custom Automations
 short_title: Custom automations
 id: custom-automations
-
 ---
-:information_source: This is a draft, and may need some extra work. 
+
+:information_source: This is a draft, and may need some extra work.
 
 ### Vocabulary
 
@@ -13,10 +13,9 @@ id: custom-automations
 - **script**: represents the name of the script, eg: `send_pms`
 - **scriptable**: represents the code logic associated to a script, eg: `scripts/send_pms.rb`
 
-
 #### Plugin API
 
-```ruby
+```rb
 add_automation_scriptable(name, &block)
 add_automation_triggerable(name, &block)
 ```
@@ -29,7 +28,7 @@ add_automation_triggerable(name, &block)
 
 List of valid components:
 
-```ruby
+```rb
 # foo must be unique and represents the name of your field.
 
 field :foo, component: :text # generates a text input
@@ -50,7 +49,7 @@ field :foo, component: :trustlevel  # allows to select one or more trust levels
 
 ##### triggerables and triggerable!
 
-```ruby
+```rb
 # Lets you define the list of triggerables allowed for a script
 triggerables %i[recurring]
 
@@ -61,7 +60,7 @@ triggerable! :recurring, state: { foo: false }
 
 ##### placeholders
 
-```ruby
+```rb
 # Lets you mark a key as replaceable in texts using the placeholder syntax `%%sender%%`
 placeholder :sender
 ```
@@ -72,7 +71,7 @@ Note that it's the responsibility of the script to provide values for placeholde
 
 This is the heart of an automation and where all the logic happens.
 
-```ruby
+```rb
 # context is sent when the automation is triggered, and can differ a lot between triggers
 script do |context, fields, automation|
 end
@@ -84,9 +83,9 @@ Each field you will use will depend on i18n keys and will be namespaced to their
 
 For example a scriptable with this content:
 
-```ruby
+```rb
 field :post_created_edited, component: :category
-````
+```
 
 Will require the following keys in client.en.yml:
 
