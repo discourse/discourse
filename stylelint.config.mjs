@@ -46,7 +46,11 @@ export default {
     "property-no-vendor-prefix": [
       true,
       {
-        ignoreProperties: ["user-select"],
+        ignoreProperties: [
+          "backdrop-filter",
+          "text-size-adjust",
+          "user-select",
+        ],
       },
     ],
   },

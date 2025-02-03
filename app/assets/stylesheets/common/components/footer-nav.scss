@@ -74,7 +74,6 @@ html.footer-nav-visible {
     background-color: rgba(var(--header_background-rgb), 0.7);
 
     /* prefix needed for iOS < 18 */
-    /* stylelint-disable-next-line property-no-vendor-prefix */
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
   }
