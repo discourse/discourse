@@ -16,7 +16,9 @@ export function createSchema(extensions, includeDefault = true) {
   }
 
   for (const [type, spec] of Object.entries(extractMarks(extensions))) {
-    marks = marks.update(type, spec);
+    marks = spec.before
+      ? marks.addBefore(spec.before, type, spec)
+      : marks.update(type, spec);
   }
 
   return new Schema({ nodes, marks });
