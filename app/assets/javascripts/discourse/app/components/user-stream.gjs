@@ -164,6 +164,7 @@ export default class UserStreamComponent extends Component {
       @additionalItemClasses="user-stream-item"
       @showUserInfo={{false}}
       @resumeDraft={{this.resumeDraft}}
+      @removeDraft={{this.removeDraft}}
       class={{concatClass "user-stream" this.filterClassName}}
       {{this.eventListeners @stream}}
     >
