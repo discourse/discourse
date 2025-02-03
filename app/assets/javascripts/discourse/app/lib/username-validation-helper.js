@@ -1,6 +1,7 @@
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { isEmpty } from "@ember/utils";
-import discourseDebounce from "discourse/lib/debounce";
+import { TrackedAsyncData } from "ember-async-data";
+import { debouncePromise } from "discourse/lib/debounce";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
@@ -19,8 +20,7 @@ function validResult(attrs) {
 }
 
 export default class UsernameValidationHelper {
-  @tracked usernameValidationResult;
-  checkedUsername = null;
+  #debounceKey = Symbol();
 
   constructor(owner) {
     this.owner = owner;
@@ -40,20 +40,16 @@ export default class UsernameValidationHelper {
   }
 
   get usernameValidation() {
-    if (
-      this.usernameValidationResult &&
-      this.checkedUsername === this.owner.accountUsername
-    ) {
-      return this.usernameValidationResult;
+    const basicCheck = this.basicUsernameValidation(this.owner.accountUsername);
+
+    if (basicCheck.shouldCheck) {
+      const remoteCheck = this.checkUsernameAvailabilityPromise;
+      if (remoteCheck.isResolved) {
+        return remoteCheck.value;
+      }
     }
 
-    const result = this.basicUsernameValidation(this.owner.accountUsername);
-
-    if (result.shouldCheck) {
-      discourseDebounce(this, this.checkUsernameAvailability, 500);
-    }
-
-    return result;
+    return basicCheck;
   }
 
   basicUsernameValidation(username) {
@@ -85,32 +81,39 @@ export default class UsernameValidationHelper {
   }
 
   async checkUsernameAvailability() {
-    const result = await User.checkUsername(
-      this.owner.accountUsername,
-      this.owner.accountEmail
-    );
+    // Accessing these before the debounce, so that they entangle with the tracked state
+    const username = this.owner.accountUsername;
+    const email = this.owner.accountEmail;
+
+    await debouncePromise(this.#debounceKey, 500);
+
+    const result = await User.checkUsername(username, email);
 
     if (this.owner.isDestroying || this.owner.isDestroyed) {
       return;
     }
 
-    this.checkedUsername = this.owner.accountUsername;
     this.owner.isDeveloper = !!result.is_developer;
 
     if (result.available) {
-      this.usernameValidationResult = validResult({
+      return validResult({
         reason: i18n("user.username.available"),
       });
     } else if (result.suggestion) {
-      this.usernameValidationResult = failedResult({
+      return failedResult({
         reason: i18n("user.username.not_available", result),
       });
     } else {
-      this.usernameValidationResult = failedResult({
+      return failedResult({
         reason: result.errors
           ? result.errors.join(" ")
           : i18n("user.username.not_available_no_suggestion"),
       });
     }
+  }
+
+  @cached
+  get checkUsernameAvailabilityPromise() {
+    return new TrackedAsyncData(this.checkUsernameAvailability());
   }
 }

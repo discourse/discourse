@@ -7,7 +7,7 @@ import { isTesting } from "discourse/lib/environment";
   Original function will be called with the context and arguments from the last call made.
 **/
 
-export default function () {
+export default function discourseDebounce() {
   if (isTesting()) {
     const lastArgument = arguments[arguments.length - 1];
     const hasImmediateArgument = typeof lastArgument === "boolean";
@@ -25,4 +25,27 @@ export default function () {
   } else {
     return debounce(...arguments);
   }
+}
+
+const promiseInfos = new WeakMap();
+
+/**
+ * Create a promise whos resolution will be debounced.
+ * Only the last promise will be resolved - others will
+ * be discarded without resolution or rejection.
+ */
+export function debouncePromise(identifier, timeout) {
+  let info = promiseInfos.get(identifier);
+  if (!info) {
+    info = {
+      debounceFn: () => {
+        promiseInfos.get(identifier).resolve();
+        promiseInfos.delete(identifier);
+      },
+    };
+    promiseInfos.set(identifier, info);
+  }
+  const promise = new Promise((resolve) => (info.resolve = resolve));
+  discourseDebounce(info.debounceFn, timeout);
+  return promise;
 }
