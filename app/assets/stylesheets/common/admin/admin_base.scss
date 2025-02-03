@@ -811,14 +811,6 @@ $mobile-breakpoint: 700px;
   }
 }
 
-.badges,
-.web-hook-container {
-  input[type="text"],
-  textarea {
-    min-width: 350px;
-  }
-}
-
 .text-successful {
   color: var(--success);
 }
