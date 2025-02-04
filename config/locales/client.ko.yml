@@ -3565,7 +3565,8 @@ ko:
               content: "그룹"
             users:
               content: "사용자들"
-            my_drafts:
+            my_posts:
+              content: "내 글"
               draft_count:
                 other: "초안 %{count}"
             review:

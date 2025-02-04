@@ -3567,6 +3567,8 @@ pt:
               content: "Grupos"
             users:
               content: "Utilizadores"
+            my_posts:
+              content: "As Minhas publicações"
             review:
               content: "Revisão"
             invite:

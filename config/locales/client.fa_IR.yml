@@ -4538,7 +4538,8 @@ fa_IR:
             users:
               content: "کاربران"
               title: "فهرست همه‌ی کاربران"
-            my_drafts:
+            my_posts:
+              content: "نوشته‌های من"
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"

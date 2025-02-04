@@ -3635,6 +3635,8 @@ sl:
               content: "Skupine"
             users:
               content: "Uporabniki"
+            my_posts:
+              content: "Moji prispevki"
             review:
               content: "Pregled"
             invite:
