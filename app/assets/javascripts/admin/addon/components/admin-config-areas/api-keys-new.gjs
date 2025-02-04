@@ -13,7 +13,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "admin/components/modal/api-key-urls";
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class AdminConfigAreasApiKeysNew extends Component {
   @service router;
@@ -240,7 +239,6 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     <thead>
                       <tr>
                         <td></td>
-                        <td></td>
                         <td>{{i18n "admin.api.scopes.allowed_urls"}}</td>
                         <td>{{i18n
                             "admin.api.scopes.optional_allowed_parameters"
@@ -265,28 +263,18 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                             <topicsCollection.Field
                               @name="enabled"
                               @title={{collectionData.key}}
-                              @showTitle={{false}}
-                              as |field|
-                            >
-                              <field.Checkbox />
-                            </topicsCollection.Field>
-                          </td>
-                          <td>
-                            <div
-                              class="scope-name"
-                            >{{collectionData.name}}</div>
-                            <DTooltip
-                              @icon="circle-question"
-                              @content={{i18n
+                              @tooltip={{i18n
                                 (concat
                                   "admin.api.scopes.descriptions."
                                   scopeName
                                   "."
                                   collectionData.key
                                 )
-                                class="scope-tooltip"
                               }}
-                            />
+                              as |field|
+                            >
+                              <field.Checkbox />
+                            </topicsCollection.Field>
                           </td>
                           <td>
                             <DButton

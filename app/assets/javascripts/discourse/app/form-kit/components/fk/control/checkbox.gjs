@@ -3,6 +3,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
+import FKOptional from "discourse/form-kit/components/fk/optional";
+import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 
 export default class FKControlCheckbox extends Component {
   static controlType = "checkbox";
@@ -24,7 +26,9 @@ export default class FKControlCheckbox extends Component {
       />
       <span class="form-kit__control-checkbox-content">
         <span class="form-kit__control-checkbox-title">
-          {{@field.title}}
+          <span>{{@field.title}}</span>
+          <FKOptional @field={{@field}} />
+          <FKTooltip @field={{@field}} />
         </span>
         {{#if (has-block)}}
           <span class="form-kit__control-checkbox-description">{{yield}}</span>
