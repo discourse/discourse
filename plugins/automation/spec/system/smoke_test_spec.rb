@@ -22,6 +22,9 @@ describe "DiscourseAutomation | smoke test", type: :system do
 
     it "populate correctly" do
       visit("/admin/plugins/automation")
+
+      find(".admin-config-area-empty-list__cta-button").click
+
       find(".admin-section-landing__header-filter").set("test")
       find(".admin-section-landing-item__content", match: :first).click
       fill_in("automation-name", with: "aaaaa")
@@ -35,6 +38,8 @@ describe "DiscourseAutomation | smoke test", type: :system do
 
   it "works" do
     visit("/admin/plugins/automation")
+
+    find(".admin-config-area-empty-list__cta-button").click
 
     find(".admin-section-landing__header-filter").set("user group membership through badge")
     find(".admin-section-landing-item__content", match: :first).click
