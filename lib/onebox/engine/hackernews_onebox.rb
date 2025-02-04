@@ -10,6 +10,7 @@ module Onebox
       REGEX = %r{^https?://news\.ycombinator\.com/item\?id=(?<item_id>\d+)}
 
       matches_regexp(REGEX)
+      always_https
 
       # This is their official API: https://blog.ycombinator.com/hacker-news-api/
       def url
@@ -29,7 +30,7 @@ module Onebox
         data = {
           link: @url,
           title: Onebox::Helpers.truncate(raw["title"], 80),
-          favicon: "https://news.ycombinator.com/y18.gif",
+          favicon: "https://news.ycombinator.com/y18.svg",
           timestamp: Time.at(raw["time"]).strftime("%-l:%M %p - %-d %b %Y"),
           author: raw["by"],
         }

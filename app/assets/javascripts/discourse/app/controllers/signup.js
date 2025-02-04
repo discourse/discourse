@@ -15,17 +15,16 @@ import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import { userPath } from "discourse/lib/url";
+import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class SignupPageController extends Controller.extend(
   PasswordValidation,
-  UsernameValidation,
   UserFieldsValidation
 ) {
   @service site;
@@ -44,6 +43,7 @@ export default class SignupPageController extends Controller.extend(
   passwordValidationVisible = false;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper(this);
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -57,6 +57,11 @@ export default class SignupPageController extends Controller.extend(
     }
 
     this.fetchConfirmationValue();
+  }
+
+  @dependentKeyCompat
+  get usernameValidation() {
+    return this.usernameValidationHelper.usernameValidation;
   }
 
   get nameTitle() {
@@ -356,7 +361,11 @@ export default class SignupPageController extends Controller.extend(
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd party auth,
       // then look for a registered username that matches the email.
-      discourseDebounce(this, this.fetchExistingUsername, 500);
+      discourseDebounce(
+        this,
+        this.usernameValidationHelper.fetchExistingUsername,
+        500
+      );
     }
   }
 

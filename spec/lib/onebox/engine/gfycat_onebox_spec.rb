@@ -32,4 +32,16 @@ RSpec.describe Onebox::Engine::GfycatOnebox do
   it "has keywords" do
     expect(html).to include("<a href='https://gfycat.com/gifs/search/lego'>#lego</a>")
   end
+
+  describe ".===" do
+    it "matches valid Gfycat URL" do
+      valid_url = URI("https://gfycat.com/some-gif")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "does not match URL with valid domain as part of another domain" do
+      malicious_url = URI("https://gfycat.com.malicious.com/some-gif")
+      expect(described_class === malicious_url).to eq(false)
+    end
+  end
 end

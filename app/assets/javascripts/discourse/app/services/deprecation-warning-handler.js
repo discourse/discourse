@@ -32,6 +32,7 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.qunit.acceptance-function",
   "discourse.qunit.global-exists",
   "discourse.post-stream.trigger-new-post",
+  "discourse.hbr-topic-list-overrides",
 ];
 
 if (DEBUG) {
