@@ -3883,9 +3883,11 @@ el:
             users:
               content: "Χρήστες"
               title: "Λίστα όλων των χρηστών"
-            my_drafts:
-              content: "Τα προσχέδιά μου"
-              title: "Τα μη δημοσιευμένα προσχέδια μου"
+            my_posts:
+              content: "Οι αναρτήσεις μου"
+              content_drafts: "Τα προσχέδιά μου"
+              title: "Η πρόσφατη θεματική μου δραστηριότητα"
+              title_drafts: "Τα μη δημοσιευμένα προσχέδια μου"
               draft_count:
                 one: "%{count} προσχέδιο"
                 other: "%{count} προσχέδια"

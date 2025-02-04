@@ -6,8 +6,7 @@ export function extractNodeViews(extensions) {
   for (const { nodeViews } of extensions) {
     if (nodeViews) {
       for (const [name, NodeViewClass] of Object.entries(nodeViews)) {
-        allNodeViews[name] = (node, view, getPos) =>
-          new NodeViewClass(node, view, getPos);
+        allNodeViews[name] = (...args) => new NodeViewClass(...args);
       }
     }
   }

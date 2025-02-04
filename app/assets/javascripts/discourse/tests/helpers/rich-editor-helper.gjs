@@ -30,17 +30,20 @@ export async function testMarkdown(
   const editor = document.querySelector(".ProseMirror");
 
   // typeIn for contentEditable isn't reliable, and is slower
-  // insert a paragraph with "X" to enforce serialization
-  self.view.dispatch(
-    self.view.state.tr.insert(
-      self.view.state.doc.content.size,
-      self.view.state.schema.node(
-        "paragraph",
-        null,
-        self.view.state.schema.text("X")
-      )
+  const tr = self.view.state.tr;
+  // insert a paragraph to enforce serialization
+  tr.insert(
+    tr.doc.content.size,
+    self.view.state.schema.node(
+      "paragraph",
+      null,
+      self.view.state.schema.text("X")
     )
   );
+  // then delete it
+  tr.delete(tr.doc.content.size - 3, tr.doc.content.size);
+
+  self.view.dispatch(tr);
 
   await settled();
 
@@ -52,14 +55,10 @@ export async function testMarkdown(
     // or artifacts
     .replace('class=""', "");
 
-  assert.strictEqual(
-    html,
-    `${expectedHtml}<p>X</p>`,
-    `HTML should match for "${markdown}"`
-  );
+  assert.strictEqual(html, expectedHtml, `HTML should match for "${markdown}"`);
   assert.strictEqual(
     self.value,
-    `${expectedMarkdown}\n\nX`,
+    expectedMarkdown,
     `Markdown should match for "${markdown}"`
   );
 }

@@ -61,7 +61,7 @@
  * @property {Record<string, import('prosemirror-model').MarkSpec>} [markSpec]
  *   Map containing Prosemirror mark spec definitions, each key being the mark name
  *   See https://prosemirror.net/docs/ref/#model.MarkSpec
- * @property {RichInputRule | RichInputRule[]} [inputRules]
+ * @property {RichInputRule | Array<RichInputRule>} [inputRules]
  *   ProseMirror input rules. See https://prosemirror.net/docs/ref/#inputrules.InputRule
  *   can be a function returning an array or an array of input rules
  * @property {Record<string, SerializeNodeFn>} [serializeNode]
@@ -71,7 +71,7 @@
  *   Mark serialization definition
  * @property {Record<string, RichParseSpec>} [parse]
  *   Markdown-it token parse definition
- * @property {RichPlugin | RichPlugin[]} [plugins]
+ * @property {RichPlugin | Array<RichPlugin>} [plugins]
  *    ProseMirror plugins
  * @property {Record<string, import('prosemirror-view').NodeViewConstructor>} [nodeViews]
  *    ProseMirror node views

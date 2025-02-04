@@ -67,4 +67,26 @@ RSpec.describe Onebox::Engine::GithubFolderOnebox do
       )
     end
   end
+
+  describe ".===" do
+    it "matches valid GitHub tree URL" do
+      valid_url = URI("https://github.com/username/repository/tree/main")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "matches valid GitHub tree URL with www" do
+      valid_url_with_www = URI("https://www.github.com/username/repository/tree/main")
+      expect(described_class === valid_url_with_www).to eq(true)
+    end
+
+    it "does not match URL with valid domain as part of another domain" do
+      malicious_url = URI("https://github.com.malicious.com/username/repository/tree/main")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match invalid path" do
+      invalid_path_url = URI("https://github.com/username/repository/invalid/main")
+      expect(described_class === invalid_path_url).to eq(false)
+    end
+  end
 end

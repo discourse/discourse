@@ -49,4 +49,26 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
       expect(html).to include("Le terme est repris par")
     end
   end
+
+  describe ".===" do
+    it "matches valid Wikipedia URL with .org" do
+      valid_url_org = URI("https://en.wikipedia.org/wiki/Ruby_(programming_language)")
+      expect(described_class === valid_url_org).to eq(true)
+    end
+
+    it "matches valid Wikipedia URL with .com" do
+      valid_url_com = URI("https://en.wikipedia.com/wiki/Ruby_(programming_language)")
+      expect(described_class === valid_url_com).to eq(true)
+    end
+
+    it "does not match URL with extra domain" do
+      malicious_url = URI("https://en.wikipedia.org.malicious.com/wiki/Ruby_(programming_language)")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match unrelated URL" do
+      unrelated_url = URI("https://example.com/wiki/wikipedia.org")
+      expect(described_class === unrelated_url).to eq(false)
+    end
+  end
 end

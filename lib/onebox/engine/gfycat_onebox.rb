@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include JSON
 
-      matches_regexp(%r{^https?://gfycat\.com/})
+      matches_domain("gfycat.com")
       always_https
 
       # This engine should have priority over AllowlistedGenericOnebox.

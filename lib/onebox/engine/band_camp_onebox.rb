@@ -6,9 +6,13 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://.*\.bandcamp\.com/(album|track)/})
+      matches_domain("bandcamp.com", allow_subdomains: true)
       always_https
       requires_iframe_origins "https://bandcamp.com"
+
+      def self.matches_path(path)
+        path.match?(%r{^/(album|track)/})
+      end
 
       def placeholder_html
         og = get_opengraph

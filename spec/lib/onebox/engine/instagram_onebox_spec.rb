@@ -76,4 +76,46 @@ RSpec.describe Onebox::Engine::InstagramOnebox do
       expect(html).to include("<iframe")
     end
   end
+
+  describe ".===" do
+    it "matches valid Instagram post URL" do
+      valid_url = URI("https://www.instagram.com/p/abc123xyz/")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "matches valid Instagram TV URL" do
+      valid_url_tv = URI("https://instagram.com/tv/abc123xyz")
+      expect(described_class === valid_url_tv).to eq(true)
+    end
+
+    it "matches valid short URL from instagr.am" do
+      valid_short_url = URI("https://instagr.am/p/abc123xyz/")
+      expect(described_class === valid_short_url).to eq(true)
+    end
+
+    it "does not match URL with extra domain" do
+      malicious_url = URI("https://instagram.com.malicious.com/p/abc123xyz")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match short URL with extra domain" do
+      malicious_url = URI("https://instagr.am.malicious.com/p/abc123xyz")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match URL with subdomain" do
+      subdomain_url = URI("https://sub.instagram.com/p/abc123xyz")
+      expect(described_class === subdomain_url).to eq(false)
+    end
+
+    it "does not match URL with invalid path" do
+      invalid_path_url = URI("https://instagram.com/invalid/abc123xyz")
+      expect(described_class === invalid_path_url).to eq(false)
+    end
+
+    it "does not match unrelated URL" do
+      unrelated_url = URI("https://example.com/p/abc123xyz")
+      expect(described_class === unrelated_url).to eq(false)
+    end
+  end
 end

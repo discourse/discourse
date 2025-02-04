@@ -4644,9 +4644,11 @@ nl:
             users:
               content: "Gebruikers"
               title: "Lijst van alle gebruikers"
-            my_drafts:
-              content: "Mijn concepten"
-              title: "Mijn ongeplaatste concepten"
+            my_posts:
+              content: "Mijn berichten"
+              content_drafts: "Mijn concepten"
+              title: "Mijn recente topicactiviteit"
+              title_drafts: "Mijn ongeplaatste concepten"
               draft_count:
                 one: "%{count} concept"
                 other: "%{count} concepten"

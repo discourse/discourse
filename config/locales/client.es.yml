@@ -4644,9 +4644,11 @@ es:
             users:
               content: "Usuarios"
               title: "Lista de todos los usuarios"
-            my_drafts:
-              content: "Mis borradores"
-              title: "Mis borradores no publicados"
+            my_posts:
+              content: "Mis publicaciones"
+              content_drafts: "Mis borradores"
+              title: "Mi actividad de tema reciente"
+              title_drafts: "Mis borradores no publicados"
               draft_count:
                 one: "%{count} borrador"
                 other: "%{count} borradores"
