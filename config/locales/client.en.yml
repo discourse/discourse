@@ -586,7 +586,7 @@ en:
       filtered_flagged_by: "Flagged by"
       unknown:
         title: "You have pending plugin reviews of type:"
-        instruction: "They cannot be properly displayed until you enable the relevant plugin. Please enable the plugin and refresh the page. Alternatively, you can ignore them. <a href='%{url}' target='_blank'>More info</a>"
+        instruction: "They cannot be properly displayed until you enable the relevant plugin. Please enable the plugin and refresh the page. Alternatively, you can ignore them. <a href='%{url}' target='_blank'>Learn more...</a>"
         ignore_all: "Ignore all"
         delete_confirm: "Are you sure you want to delete all reviews created by disabled plugins?"
       explain:
