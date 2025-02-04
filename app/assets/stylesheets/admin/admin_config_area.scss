@@ -122,3 +122,30 @@
     margin-top: 1em;
   }
 }
+
+.admin-config-area-card-section {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-4);
+  flex-direction: column;
+  width: 100%;
+
+  @media (max-width: $mobile-breakpoint) {
+    flex-direction: column;
+  }
+
+  &__header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    margin-bottom: 0;
+  }
+
+  &__content {
+    margin-top: 0.5rem;
+    padding-right: 15px;
+  }
+}

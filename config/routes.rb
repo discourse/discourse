@@ -411,6 +411,8 @@ Discourse::Application.routes.draw do
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
+        get "branding" => "branding#index"
+        put "branding/logo" => "branding#logo"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
