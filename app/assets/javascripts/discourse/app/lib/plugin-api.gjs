@@ -3466,7 +3466,14 @@ function getPluginApi(version) {
  * @param {object} [opts] - Optional additional options to pass to the callback function.
  * @returns {*} The result of the `callback` function, if executed
  */
-export function withPluginApi(version, apiCodeCallback, opts) {
+export function withPluginApi(...args) {
+  let version, apiCodeCallback, opts;
+  if (typeof args[0] === "function") {
+    [version, apiCodeCallback, opts] = ["0", ...args];
+  } else {
+    [version, apiCodeCallback, opts] = args;
+  }
+
   opts = opts || {};
 
   const api = getPluginApi(version);
