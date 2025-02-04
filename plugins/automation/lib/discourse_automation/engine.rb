@@ -6,8 +6,10 @@ module ::DiscourseAutomation
     isolate_namespace DiscourseAutomation
     config.autoload_paths << File.join(config.root, "lib")
     scheduled_job_dir = "#{config.root}/app/jobs/scheduled"
+    automation_dir = "#{config.root}/lib/discourse_automation"
     config.to_prepare do
       Rails.autoloaders.main.eager_load_dir(scheduled_job_dir) if Dir.exist?(scheduled_job_dir)
+      Rails.autoloaders.main.eager_load_dir(automation_dir)
     end
   end
 
