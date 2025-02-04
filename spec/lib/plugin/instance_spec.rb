@@ -33,7 +33,7 @@ TEXT
     end
 
     it "defaults to using the plugin name with the discourse- prefix removed" do
-      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+      expect(plugin_instance.humanized_name).to eq("Sample plugin")
     end
 
     it "uses the plugin setting category name if it exists" do
@@ -43,7 +43,7 @@ TEXT
 
     it "the plugin name the plugin site settings are still under the generic plugins: category" do
       plugin_instance.stubs(:setting_category).returns("plugins")
-      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+      expect(plugin_instance.humanized_name).to eq("Sample plugin")
     end
 
     it "removes any Discourse prefix from the setting category name" do

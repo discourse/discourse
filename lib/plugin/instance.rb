@@ -120,7 +120,12 @@ class Plugin::Instance
 
   def full_admin_route
     route = self.admin_route
-    return unless route
+
+    if route.blank?
+      return if !any_settings?
+
+      route = default_admin_route
+    end
 
     route
       .slice(:location, :label, :use_new_show_route)
@@ -128,6 +133,14 @@ class Plugin::Instance
         path = admin_route[:use_new_show_route] ? "show" : admin_route[:location]
         admin_route[:full_location] = "adminPlugins.#{path}"
       end
+  end
+
+  def any_settings?
+    return false if !configurable?
+
+    SiteSetting
+      .all_settings(filter_plugin: self.name)
+      .any? { |s| s[:setting] != @enabled_site_setting }
   end
 
   def configurable?
@@ -146,7 +159,11 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def humanized_name
-    (setting_category_name || name).delete_prefix("Discourse ").delete_prefix("discourse-")
+    (setting_category_name || name)
+      .delete_prefix("Discourse ")
+      .delete_prefix("discourse-")
+      .gsub("-", " ")
+      .upcase_first
   end
 
   def add_to_serializer(
@@ -1475,5 +1492,9 @@ class Plugin::Instance
 
   def register_permitted_bulk_action_parameter(name)
     DiscoursePluginRegistry.register_permitted_bulk_action_parameter(name, self)
+  end
+
+  def default_admin_route
+    { label: "#{name.underscore}.title", location: name, use_new_show_route: true }
   end
 end

@@ -6,9 +6,13 @@ module Onebox
       include Engine
       include StandardEmbed
 
+      matches_domain("kaltura.com", allow_subdomains: true)
       always_https
-      matches_regexp(%r{^https?://[a-z0-9]+\.kaltura\.com/id/[a-zA-Z0-9]+})
       requires_iframe_origins "https://*.kaltura.com"
+
+      def self.matches_path(path)
+        path.match?(%r{^/id/[a-zA-Z0-9]+$})
+      end
 
       def preview_html
         og = get_opengraph

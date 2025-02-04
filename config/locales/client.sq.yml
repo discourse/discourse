@@ -3949,6 +3949,11 @@ sq:
               content: "Grupet"
             users:
               content: "Users"
+            my_posts:
+              content: "Postimet e mia"
+              content_drafts: "Draftet e mia"
+              title: "Aktiviteti im i fundit për temën"
+              title_drafts: "Draftet e mia të papostuara"
             invite:
               content: "Fto"
     form_templates:

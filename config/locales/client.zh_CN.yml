@@ -4378,9 +4378,11 @@ zh_CN:
             users:
               content: "用户"
               title: "所有用户列表"
-            my_drafts:
-              content: "我的草稿"
-              title: "我的未发布草稿"
+            my_posts:
+              content: "我的帖子"
+              content_drafts: "我的草稿"
+              title: "我最近的话题活动"
+              title_drafts: "我的未发布草稿"
               draft_count:
                 other: "%{count} 个草稿"
             review:
@@ -4535,6 +4537,9 @@ zh_CN:
         legal:
           title: "法律信息"
           header_description: "配置法律设置，如服务条款、隐私政策、详细联系信息和欧盟特定注意事项"
+        localization:
+          title: "本地化"
+          header_description: "为你的成员配置社区的界面语言和其他本地化选项"
         login_and_authentication:
           title: "登录与身份验证"
           header_description: "配置用户登录与身份验证方式、秘密与密钥、OAuth2 提供商等。"
@@ -5055,6 +5060,8 @@ zh_CN:
           group_permissions: "群组权限"
           users: "用户"
           groups: "群组"
+          localization:
+            title: "本地化"
           user_fields: "用户字段"
           watched_words: "关注词"
           legal: "法律信息"
@@ -5710,7 +5717,7 @@ zh_CN:
         html: "html"
         text: "文本"
         html_preview: "电子邮件内容预览"
-        last_seen_user: "最后上线的用户："
+        last_seen_user: "用户最后上线时间："
         no_result: "没有找到总结的结果。"
         reply_key: "回复键"
         post_link_with_smtp: "POST 和 SMTP 详细信息"
@@ -6857,7 +6864,7 @@ zh_CN:
           news: "讨论近期的新闻和事件。"
           site_feedback: "分享您对社区的想法并提出改进建议。"
         category_names:
-          icebreakers: "破冰活动"
+          icebreakers: "破冰问题"
           news: "新闻"
           site_feedback: "网站反馈"
         table_headers:

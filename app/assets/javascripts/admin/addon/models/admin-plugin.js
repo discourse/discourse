@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import { capitalize, dasherize } from "@ember/string";
+import { dasherize } from "@ember/string";
 import { snakeCaseToCamelCase } from "discourse/lib/case-converter";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -50,29 +50,7 @@ export default class AdminPlugin {
 
   @cached
   get nameTitleized() {
-    // The category name is better in a lot of cases, as it's a human-inputted
-    // translation, and we can handle things like SAML instead of showing them
-    // as Saml from discourse-saml. We can fall back to the programmatic version
-    // though if needed.
-    let name;
-    if (this.translatedCategoryName) {
-      name = this.translatedCategoryName;
-    } else {
-      name = this.name
-        .split(/[-_]/)
-        .map((word) => {
-          return capitalize(word);
-        })
-        .join(" ");
-    }
-
-    // Cuts down on repetition.
-    const discoursePrefix = "Discourse ";
-    if (name.startsWith(discoursePrefix)) {
-      name = name.slice(discoursePrefix.length);
-    }
-
-    return name;
+    return this.translatedCategoryName || this.humanizedName;
   }
 
   @cached

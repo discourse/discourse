@@ -339,7 +339,7 @@ fr:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Vous ne pouvez ajouter aucune des valeurs suivantes au paramètre : %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Vous ne pouvez pas désactiver le retrait des métadonnées de l'image si l'option « Image d'optimisation des contenus multimédias du compositeur activée » est activée. Désactivez cette option avant de désactiver les métadonnées de l'image."
       twitter_summary_large_image_no_svg: "Les images de résumé Twitter utilisées pour les métadonnées twitter:image ne peuvent pas être des images .svg."
-      tl0_and_anonymous_flag: "Pour les utilisateurs anonymes, une « adresse e-mail de contact du site » ou une « adresse e-mail pour signaler un contenu illégal » doit être fournie."
+      tl0_and_anonymous_flag: "Pour les utilisateurs anonymes, une « site contact email » ou une « email address to report illegal content » doit être fournie."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Nous sommes désolés, nous n'avons pas pu générer d'aperçu pour cette page Web car le serveur « %{hostname} » n'a pas pu être trouvé. Au lieu d'un aperçu, seul un lien apparaîtra dans votre message. :cry:"

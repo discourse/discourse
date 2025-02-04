@@ -3399,6 +3399,8 @@ bg:
               content: "Групи"
             users:
               content: "Потребители"
+            my_posts:
+              content: "Моите публикации"
             review:
               content: "Преглед"
             invite:

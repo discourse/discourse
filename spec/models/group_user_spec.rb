@@ -298,15 +298,21 @@ RSpec.describe GroupUser do
 
       group_user = Fabricate(:group_user, group: group, user: user)
       expect(user.reload.trust_level).to eq(4)
-      expect(user.groups.where(automatic: true).map(&:name)).to eq(
-        %w[trust_level_0 trust_level_1 trust_level_2 trust_level_3 trust_level_4],
+      expect(user.groups.where(automatic: true).map(&:name)).to contain_exactly(
+        "trust_level_0",
+        "trust_level_1",
+        "trust_level_2",
+        "trust_level_3",
+        "trust_level_4",
       )
 
       group_user.destroy!
       # keep in mind that we do not restore tl3, cause reqs can be lost
       expect(user.reload.trust_level).to eq(2)
-      expect(user.groups.where(automatic: true).map(&:name)).to eq(
-        %w[trust_level_0 trust_level_1 trust_level_2],
+      expect(user.groups.where(automatic: true).map(&:name)).to contain_exactly(
+        "trust_level_0",
+        "trust_level_1",
+        "trust_level_2",
       )
     end
 

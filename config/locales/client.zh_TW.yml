@@ -110,6 +110,7 @@ zh_TW:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "由@%{username}發布#%{postNumber}"
       close: "關閉"
+      twitter: "分享至 X"
       facebook: "分享到 Facebook"
       email: "透過電子郵件傳送"
       url: "複製並分享網址"
@@ -937,6 +938,8 @@ zh_TW:
       no_messages_title: "您沒有任何訊息"
       no_bookmarks_title: "您尚未添加任何書籤"
       no_notifications_title: "您尚未收到任何通知"
+      no_notifications_body: >
+        您將在這個面板上收到與您直接相關的活動通知，包括對您的主題和貼文的回覆，當有人<b>@提及您</b> 或引用您，以及對您關注的主題的回覆。如果您長時間未登入，系統也會將通知發送到您的電子郵件。<br><br> 尋找 %{icon} 來決定您想要收到通知的特定主題、類別和標籤。如需了解更多，請參閱您的 <a href="%{preferencesUrl}">通知偏好</a>。
       no_notifications_page_title: "您尚未收到任何通知"
       dynamic_favicon: "在瀏覽器小圖示上顯示計數\\bIcon"
       skip_new_user_tips:
@@ -3024,7 +3027,8 @@ zh_TW:
               content: "群組"
             users:
               content: "使用者"
-            my_drafts:
+            my_posts:
+              content: "我的貼文"
               draft_count:
                 other: "%{count} 草稿"
             review:

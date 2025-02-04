@@ -5154,13 +5154,15 @@ sk:
             users:
               content: "Používatelia"
               title: "Zoznam všetkých používateľov"
-            my_drafts:
-              content: "Moje koncepty"
-              title: "Moje nezverejnené koncepty"
+            my_posts:
+              content: "Moje príspevky"
+              content_drafts: "Moje koncepty"
+              title: "Moja nedávna aktivita na túto tému"
+              title_drafts: "Moje nezverejnené koncepty"
               draft_count:
                 one: "%{count} koncept"
                 few: "%{count} konceptov"
-                many: "%{count} koncepty"
+                many: "%{count} konceptov"
                 other: "%{count} koncepty"
             review:
               content: "Recenzia"
@@ -5329,6 +5331,9 @@ sk:
         legal:
           title: "Právne záležitosti"
           header_description: "Konfigurácia právnych nastavení, ako sú podmienky poskytovania služieb, zásady ochrany osobných údajov, kontaktné údaje a aspekty špecifické pre EÚ."
+        localization:
+          title: "Lokalizácia"
+          header_description: "Konfigurácia jazyka rozhrania vašej komunity a ďalších možností lokalizácie pre vašich členov"
         login_and_authentication:
           title: "Prihlásenie a overovanie"
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
@@ -5879,6 +5884,9 @@ sk:
           group_permissions: "Oprávnenia skupiny"
           users: "Používatelia"
           groups: "Skupiny"
+          localization:
+            title: "Lokalizácia"
+            keywords: "locale|language|timezone|unicode|ltr"
           user_fields: "Používateľské polia"
           watched_words: "Sledované slová"
           legal: "Právne záležitosti"

@@ -4644,9 +4644,11 @@ fr:
             users:
               content: "Utilisateurs"
               title: "Liste de tous les utilisateurs"
-            my_drafts:
-              content: "Mes brouillons"
-              title: "Mes brouillons non publiés"
+            my_posts:
+              content: "Mes messages"
+              content_drafts: "Mes brouillons"
+              title: "Mon activité récente sur le sujet"
+              title_drafts: "Mes brouillons non publiés"
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"
@@ -5362,7 +5364,7 @@ fr:
           appearance: "Apparence"
           server_setup:
             title: "Configuration du serveur et journaux"
-            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+            keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
       security:
         title: "Sécurité"
         sidebar_link:
@@ -5370,7 +5372,7 @@ fr:
           spam: "Paramètres anti-spam"
           staff_action_logs:
             title: "Journaux et filtrage"
-            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+            keywords: "journaux d'erreurs|action du personnel|e-mails filtrés|ip filtrés|url filtrées|journaux de recherche"
       section_landing_pages:
         account:
           title: "Compte"
@@ -5964,7 +5966,7 @@ fr:
         settings: "Paramètres"
         templates: "Modèles"
         templates_title: "Modèles d'e-mails"
-        preview_digest: "Aperçu du résumé"
+        preview_digest: "Prévisualiser le résumé"
         advanced_test:
           title: "Test avancé"
           desc: "Vérifiez comment Discourse gère les e-mails reçus. Pour que l'e-mail soit géré correctement, veuillez coller ci-dessous la totalité de l'e-mail original."
@@ -5999,7 +6001,7 @@ fr:
         html: "html"
         text: "texte"
         html_preview: "Aperçu du contenu de l'e-mail"
-        last_seen_user: "Dernier utilisateur vu :"
+        last_seen_user: "Dernière visite de l'utilisateur :"
         no_result: "Aucun résultat trouvé pour le résumé."
         reply_key: "Clé de réponse"
         post_link_with_smtp: "Détails de la publication et SMTP"
@@ -6999,7 +7001,7 @@ fr:
         add: "Ajouter un émoji"
         delete: "Supprimer"
         back: "Retour aux émojis"
-        choose_files: "Choisissez des fichiers"
+        choose_files: "Choisir des fichiers"
         uploading: "Téléversement…"
         name: "Nom"
         group: "Groupe"

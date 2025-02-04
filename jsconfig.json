@@ -5,6 +5,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "experimentalDecorators": true,
+    "allowJs": true,
     "paths": {
       "discourse/*": [
         "./app/assets/javascripts/discourse/app/*"
@@ -116,7 +117,8 @@
   ],
   "exclude": [
     "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js",
-    "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs"
+    "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs",
+    "**/*.hbs"
   ],
   "glint": {
     "environment": [

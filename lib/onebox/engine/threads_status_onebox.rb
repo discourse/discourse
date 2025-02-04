@@ -7,8 +7,12 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches_regexp(%r{^https?://www\.threads\.net/t/(?<id>[\d\w_-]+)/?.*?$})
+      matches_domain("threads.net", "www.threads.net")
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{^/t/[\d\w_-]+/?})
+      end
 
       def self.priority
         1

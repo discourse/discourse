@@ -43,6 +43,11 @@
   position: sticky;
   bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
   z-index: z("timeline");
+  pointer-events: none; // the wrapper can block mobile controls
+
+  #topic-progress-wrapper {
+    pointer-events: auto; // this unsets the above rule so the element is interactive
+  }
 }
 
 #topic-progress-wrapper {
@@ -57,13 +62,6 @@
 
   .btn {
     border: 0;
-  }
-
-  &:not(.docked) {
-    @media screen and (min-width: $reply-area-max-width) {
-      right: calc(50%); // right side of composer
-      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
-    }
   }
 
   #topic-progress {

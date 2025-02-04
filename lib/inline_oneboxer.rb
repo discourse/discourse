@@ -89,6 +89,18 @@ class InlineOneboxer
     nil
   end
 
+  def self.is_previewing?(user_id)
+    Discourse.redis.get(preview_key(user_id)) == "1"
+  end
+
+  def self.preview!(user_id)
+    Discourse.redis.setex(preview_key(user_id), 1.minute, "1")
+  end
+
+  def self.finish_preview!(user_id)
+    Discourse.redis.del(preview_key(user_id))
+  end
+
   private
 
   def self.onebox_for(url, title, opts)
@@ -128,5 +140,9 @@ class InlineOneboxer
     if author && guardian.can_see_post?(post) && post.post_type == Post.types[:regular]
       author.username
     end
+  end
+
+  def self.preview_key(user_id)
+    "inline-onebox:preview:#{user_id}"
   end
 end
