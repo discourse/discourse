@@ -2073,7 +2073,7 @@ nl:
     title_fancy_entities: "Algemene ASCII-tekens naar decoratieve HTML-entiteiten converteren in topictitels, zoals SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "De minimale lengte van een titel voordat er op vergelijkbare topics wordt gecontroleerd."
     desktop_category_page_style: "Deze instelling bepaalt de visuele indeling van de pagina /categories op de desktop. Deze omvat opties zoals het weergeven van subcategorieën met uitgelichte topics, het weergeven van de nieuwste topics of het weergeven van toptopics. De gekozen stijl beïnvloedt de manier waarop gebruikers omgaan met en navigeren door categorieën op de site."
-    mobile_category_page_style: "Deze instelling bepaalt de visuele lay-out van de pagina /categorieën op mobiele apparaten."
+    mobile_category_page_style: "Deze instelling bepaalt de visuele lay-out van de pagina /categories op mobiele apparaten."
     category_colors: "Een lijst van hexadecimale kleurwaarden die voor categorieën zijn toegestaan."
     default_dark_mode_color_scheme_id: "Het kleurenpalet dat wordt gebruikt in donkere modus."
     dark_mode_none: "Geen"

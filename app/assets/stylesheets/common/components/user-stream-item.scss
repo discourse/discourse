@@ -24,31 +24,64 @@
       display: block;
       opacity: 0.4;
     }
-  }
 
-  .user-stream-item__header {
-    display: flex;
-    align-items: flex-start;
-  }
-
-  .user-stream-item__details {
-    flex-grow: 1;
-    min-width: 0;
-
-    .badge-category__wrapper {
-      width: 100%;
+    .post-list-item__header {
+      display: flex;
+      align-items: flex-start;
     }
+
+    .post-list-item__details {
+      flex-grow: 1;
+      min-width: 0;
+
+      .badge-category__wrapper {
+        width: auto;
+      }
+    }
+
+    .post-list-item__metadata {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5em;
+
+      span + span {
+        &::before {
+          content: "•";
+          margin-right: 0.25em;
+          vertical-align: middle;
+          color: var(--primary-medium);
+        }
+      }
+    }
+  }
+
+  .draft-icon {
+    color: var(--primary-high);
+    font-size: var(--font-up-4);
+    margin-right: 0.5rem;
+    text-align: center;
   }
 
   .stream-topic-title {
     overflow-wrap: anywhere;
   }
 
-  .user-stream-item__metadata {
-    align-items: end;
-    display: flex;
-    flex-direction: column;
-    margin-left: 0.25em;
+  .draft-title {
+    color: var(--tertiary);
+    padding: 0;
+  }
+
+  .user-stream-item__metadata ul {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    color: var(--primary-medium);
+
+    li {
+      display: inline-flex;
+      margin-left: 0.5em;
+    }
   }
 
   .type,
@@ -62,7 +95,7 @@
     line-height: var(--line-height-small);
     color: var(--primary-medium);
     font-size: var(--font-down-2);
-    padding-top: 6px;
+    padding-top: unset !important;
     margin-right: 0.5rem;
   }
 
@@ -138,10 +171,6 @@
     padding: 3px 5px 5px 5px;
   }
 
-  .remove-draft {
-    float: right;
-  }
-
   .excerpt {
     margin: 1em 0 0 0;
     font-size: var(--font-0);
@@ -167,6 +196,13 @@
 
   .group-member-info {
     display: flex;
+  }
+
+  .user-stream-item .user-stream-item-draft-actions {
+    display: flex;
+    align-items: end;
+    flex-direction: row;
+    gap: 0.75em;
   }
 }
 

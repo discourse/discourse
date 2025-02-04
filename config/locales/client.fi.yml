@@ -1800,8 +1800,8 @@ fi:
         after_10_minutes: "10 minuutin jälkeen"
       notification_level_when_replying:
         label: "Lähetettäessä viesti"
-        watch_topic: "Tarkkailtu ketju"
-        track_topic: "Seurattu ketju"
+        watch_topic: "Tarkkaile ketjua"
+        track_topic: "Seuraa ketjua"
         do_nothing: "Älä tee mitään"
       topics_unread_when_closed: "Pidä aiheita lukemattomina, kun ne suljetaan"
       invited:
@@ -4644,9 +4644,11 @@ fi:
             users:
               content: "Käyttäjät"
               title: "Luettelo kaikista käyttäjistä"
-            my_drafts:
-              content: "Omat luonnokset"
-              title: "Julkaisemattomat luonnokseni"
+            my_posts:
+              content: "Viestini"
+              content_drafts: "Omat luonnokset"
+              title: "Viimeaikainen ketjutoimintani"
+              title_drafts: "Julkaisemattomat luonnokseni"
               draft_count:
                 one: "%{count} luonnos"
                 other: "%{count} luonnosta"

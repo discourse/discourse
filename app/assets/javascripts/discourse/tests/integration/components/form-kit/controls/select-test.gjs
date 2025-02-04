@@ -124,6 +124,22 @@ module(
           NO_VALUE_OPTION,
           "it has the none when no value is present and field is not required"
         );
+
+      await render(<template>
+        <Form @data={{hash foo="1"}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Select @includeNone={{false}} />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert
+        .form()
+        .field("foo")
+        .hasNoValue(
+          NO_VALUE_OPTION,
+          "it doesn’t have the none for an optional field when value is present and includeNone is false"
+        );
     });
   }
 );

@@ -4644,9 +4644,11 @@ de:
             users:
               content: "Benutzer"
               title: "Liste aller Benutzer"
-            my_drafts:
-              content: "Meine Entwürfe"
-              title: "Meine nicht geposteten Entwürfe"
+            my_posts:
+              content: "Meine Beiträge"
+              content_drafts: "Meine Entwürfe"
+              title: "Meine aktuelle Themenaktivität"
+              title_drafts: "Meine nicht geposteten Entwürfe"
               draft_count:
                 one: "%{count} Entwurf"
                 other: "%{count} Entwürfe"
@@ -5342,7 +5344,7 @@ de:
           groups: "Gruppen"
           localization:
             title: "Lokalisierung"
-            keywords: "locale|language|timezone|unicode|ltr|Gebietsschema|Sprache|Zeitzone|Umlaute"
+            keywords: "Gebietsschema|Sprache|Zeitzone|unicode|ltr"
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
@@ -6009,7 +6011,7 @@ de:
         no_result: "Für diese Zusammenfassung wurden keine Ergebnisse gefunden."
         reply_key: "Antwort-Schlüssel"
         post_link_with_smtp: "Beitrag und SMTP-Details"
-        skipped_reason: "Grund des Überspringens"
+        skipped_reason: "Grund überspringen"
         incoming_emails:
           from_address: "Von"
           to_addresses: "An"
@@ -6817,6 +6819,9 @@ de:
         more_site_setting_results:
           one: "Es gibt mehr als %{count} Ergebnis. Bitte verfeinere deine Suche oder wähle eine Kategorie."
           other: "Es gibt mehr als %{count} Ergebnisse. Bitte verfeinere deine Suche oder wähle eine Kategorie."
+        more_site_setting_results_no_category_sidebar:
+          one: "Es gibt mehr als %{count} Ergebnis. Bitte grenze deine Suche weiter ein."
+          other: "Es gibt mehr als %{count} Ergebnisse. Bitte grenze deine Suche weiter ein."
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
         add_host: "Host hinzufügen"

@@ -52,7 +52,8 @@ export default class UppyComposerUpload {
   uploadPreProcessors;
   uploadHandlers;
 
-  textManipulation;
+  /** @type {PlaceholderHandler} */
+  placeholderHandler;
 
   #inProgressUploads = [];
   #bufferedUploadErrors = [];
@@ -334,7 +335,7 @@ export default class UppyComposerUpload {
             })
           );
 
-          this.textManipulation.placeholder.insert(file);
+          this.placeholderHandler.insert(file);
 
           this.appEvents.trigger(
             `${this.composerEventPrefix}:upload-started`,
@@ -369,7 +370,7 @@ export default class UppyComposerUpload {
           file,
           upload.url,
           () => {
-            this.textManipulation.placeholder.success(file, markdown);
+            this.placeholderHandler.success(file, markdown);
 
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
@@ -395,7 +396,7 @@ export default class UppyComposerUpload {
     this.uppyWrapper.uppyInstance.on("cancel-all", () => {
       // Do the manual cancelling work only if the user clicked cancel
       if (this.#userCancelled) {
-        this.textManipulation.placeholder.cancelAll();
+        this.placeholderHandler.cancelAll();
         this.#userCancelled = false;
         this.#reset();
 
@@ -480,13 +481,13 @@ export default class UppyComposerUpload {
       });
 
     this.uppyWrapper.onPreProcessProgress((file) => {
-      this.textManipulation.placeholder.progress(file);
+      this.placeholderHandler.progress(file);
     });
 
     this.uppyWrapper.onPreProcessComplete(
       (file) => {
         run(() => {
-          this.textManipulation.placeholder.progressComplete(file);
+          this.placeholderHandler.progressComplete(file);
         });
       },
       () => {
@@ -529,13 +530,13 @@ export default class UppyComposerUpload {
   }
 
   #resetUpload(file) {
-    this.textManipulation.placeholder.cancel(file);
+    this.placeholderHandler.cancel(file);
   }
 
   @bind
   _pasteEventListener(event) {
     if (
-      document.activeElement !== document.querySelector(this.editorInputClass)
+      !document.querySelector(this.editorInputClass)?.contains(event.target)
     ) {
       return;
     }
@@ -550,6 +551,7 @@ export default class UppyComposerUpload {
     }
 
     if (event && event.clipboardData && event.clipboardData.files) {
+      event.preventDefault();
       this._addFiles([...event.clipboardData.files], { pasted: true });
     }
   }

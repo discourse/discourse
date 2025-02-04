@@ -47,7 +47,7 @@ acceptance("User Drafts", function (needs) {
       );
 
     assert
-      .dom(".user-stream-item:nth-child(2) a.avatar-link")
-      .hasAttribute("href", "/u/eviltrout", "has correct avatar link");
+      .dom(".user-stream-item:nth-child(2) .draft-icon .d-icon")
+      .hasClass("d-icon-reply", "has correct icon");
   });
 });

@@ -3616,6 +3616,8 @@ lt:
               content: "Grupės"
             users:
               content: "Vartotojai"
+            my_posts:
+              content: "Mano Įrašai"
             review:
               content: "Peržiūra"
             invite:

@@ -5,9 +5,13 @@ module Onebox
     class TypeformOnebox
       include Engine
 
-      matches_regexp(%r{^https?://[a-z0-9\-_]+\.typeform\.com/to/[a-zA-Z0-9]+})
+      matches_domain("typeform.com", allow_subdomains: true)
       requires_iframe_origins "https://*.typeform.com"
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{^/to/[a-zA-Z0-9]+$})
+      end
 
       def to_html
         typeform_src = build_typeform_src

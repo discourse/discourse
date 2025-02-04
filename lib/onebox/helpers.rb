@@ -28,7 +28,7 @@ module Onebox
         )
 
       doc = Nokogiri.HTML(response)
-      uri = Addressable::URI.parse(url)
+      uri = Addressable::URI.parse(url).normalize!
 
       ignore_canonical_tag = doc.at('meta[property="og:ignore_canonical"]')
       should_ignore_canonical =
@@ -38,13 +38,13 @@ module Onebox
            !should_ignore_canonical
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
-        canonical_uri = Addressable::URI.parse(canonical_link)
+        canonical_uri = Addressable::URI.parse(canonical_link)&.normalize!
         if canonical_link && canonical_uri &&
              "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
           uri =
             FinalDestination.new(
-              canonical_link,
-              Oneboxer.get_final_destination_options(canonical_link),
+              canonical_uri,
+              Oneboxer.get_final_destination_options(canonical_uri),
             ).resolve
           if uri.present?
             response =

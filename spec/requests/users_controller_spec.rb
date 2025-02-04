@@ -60,10 +60,17 @@ RSpec.describe UsersController do
 
     before { UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false) }
 
-    context "with invalid token" do
-      it "return success" do
-        put "/u/activate-account/invalid-token"
+    context "with inexistent token" do
+      it "return 404" do
+        put "/u/activate-account/123abc"
         expect(response.status).to eq(422)
+      end
+    end
+
+    context "with invalid token" do
+      it "return 404" do
+        put "/u/activate-account/123%2f%252e"
+        expect(response.status).to eq(404)
       end
     end
 
@@ -156,6 +163,16 @@ RSpec.describe UsersController do
           }
 
           expect(response.status).to eq(200)
+        end
+      end
+
+      context "when user is already logged in" do
+        it "returns 404" do
+          sign_in(user1)
+
+          get "/u/activate-account/some-token"
+
+          expect(response.status).to eq(404)
         end
       end
     end

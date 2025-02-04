@@ -3335,7 +3335,7 @@ pt_BR:
         help: "Abrir uma versão imprimível deste tópico"
       flag_topic:
         title: "Sinalizar"
-        help: "sinalize este tópico de forma privada para destacá-lo ou enviar mensagem privada a respeito dele"
+        help: "sinalizar este tópico de forma privada para destacá-lo ou enviar mensagem privada a respeito dele"
         success_message: "Você sinalizou com êxito este tópico."
       make_public:
         title: "Converter para o tópico público"
@@ -4644,9 +4644,11 @@ pt_BR:
             users:
               content: "Usuários(as)"
               title: "Lista de todos(as) os(as) usuários(as)"
-            my_drafts:
-              content: "Meus Rascunhos"
-              title: "Meus rascunhos não publicados"
+            my_posts:
+              content: "Minhas postagens"
+              content_drafts: "Meus Rascunhos"
+              title: "Minha atividade de tópico recente"
+              title_drafts: "Meus rascunhos não publicados"
               draft_count:
                 one: "%{count} rascunho"
                 other: "%{count} rascunhos"
@@ -4823,7 +4825,7 @@ pt_BR:
           title: "Onebox"
           header_description: "Configure a pré-visualização, geração e exibição do Onebox para seu site"
         other:
-          title: "Outros(as)"
+          title: "Outras"
           header_description: "Configurações que não pertencem a outras categorias"
         rate_limits:
           title: "Limites de frequência"
@@ -4833,7 +4835,7 @@ pt_BR:
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
         security:
           title: "Segurança"
-          header_description: "Configure definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
+          header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
         spam:
           title: "Spam"
           header_description: "Configure como o sistema analisa o comportamento de postagem e registro de usuários(as) para identificar e bloquear spam rapidamente"
@@ -4876,7 +4878,7 @@ pt_BR:
           experiment_toggled_too_fast: "Você alternou o recurso experimental rápido demais. Aguarde um pouco e tente novamente."
           experiment_tooltip:
             title_disabled: "Teste nosso recurso experimental"
-            title_enabled: "Desative este recurso experimental"
+            title_enabled: "Desativar este recurso experimental"
             content_disabled: "Dê uma chance para o nosso recurso mais recente que ainda está em desenvolvimento! Por estar em fase experimental, ele poderá ser removido a qualquer momento. Você pode decidir que não quando quiser.<br/><br/>Altere esta opção para ativar este recurso para todos(as) os(as) usuários(as)."
             content_enabled: "Altere esta opção para desativar este recurso para todos(as) os(as) usuários(as)."
         last_checked: "Última verificação"
@@ -4920,7 +4922,7 @@ pt_BR:
         custom_date_range: Intervalo de datas personalizado
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
-          percent_change_tooltip: "%{percent} de alteração"
+          percent_change_tooltip: "%{percent} de alteração."
           percent_change_tooltip_previous_value:
             yesterday:
               one: "Era %{count} há dois dias."
@@ -5342,7 +5344,7 @@ pt_BR:
           legal: "Jurídico"
           moderation_flags:
             title: "Moderação"
-            keywords: "flag|review"
+            keywords: "sinalizar|revisar"
       appearance:
         title: "Aparência"
         sidebar_link:
@@ -5362,7 +5364,7 @@ pt_BR:
           appearance: "Aparência"
           server_setup:
             title: "Registros e configurações do servidor"
-            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+            keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
       security:
         title: "Segurança"
         sidebar_link:
@@ -5370,7 +5372,7 @@ pt_BR:
           spam: "Configurações de spam"
           staff_action_logs:
             title: "Filtros e registros"
-            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+            keywords: "registros de erros|ação da equipe|e-mails filtrados|ips filtrados|urls filtradas|registros de pesquisa"
       section_landing_pages:
         account:
           title: "Conta"
@@ -6003,7 +6005,7 @@ pt_BR:
         no_result: "Nenhum resultado encontrado para o resumo."
         reply_key: "Tecla de resposta"
         post_link_with_smtp: "Detalhes de postagem e SMTP"
-        skipped_reason: "Ignorar motivo"
+        skipped_reason: "Motivo da omissão"
         incoming_emails:
           from_address: "De"
           to_addresses: "Para"
@@ -7023,7 +7025,7 @@ pt_BR:
         host: "Hosts permitidos"
         allowed_paths: "Lista permitida de caminhos"
         edit: "Editar"
-        category: "Postagem para categoria"
+        category: "Postar em categoria"
         tags: "Etiquetas de tópico"
         post_author: "Autor(a) da postagem"
         post_author_with_default: "Autor(a) da postagem (padrão para %{author})"

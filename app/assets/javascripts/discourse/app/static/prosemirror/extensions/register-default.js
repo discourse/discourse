@@ -3,7 +3,7 @@ import table from "./table";
 
 /**
  * List of default extensions
-
+ * ProsemirrorEditor autoloads them when includeDefault=true (the default)
  *
  * @type {RichEditorExtension[]}
  */

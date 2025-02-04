@@ -47,4 +47,30 @@ acceptance("Video Placeholder Test", function () {
       .hasStyle({ display: "block" }, "The video is no longer hidden");
     assert.dom(".video-placeholder-wrapper").doesNotExist();
   });
+
+  test("displays an error for invalid video URL and allows retry", async function (assert) {
+    await visit("/t/54081");
+
+    const placeholder = document.querySelector(".video-placeholder-container");
+    placeholder.setAttribute(
+      "data-video-src",
+      'http://example.com/video.mp4"><script>alert(1)</script>'
+    );
+
+    await click(".video-placeholder-overlay");
+
+    assert
+      .dom(".video-placeholder-wrapper .notice.error")
+      .exists("An error message is displayed for an invalid URL");
+    assert
+      .dom(".video-placeholder-wrapper .notice.error")
+      .hasText(
+        "This video cannot be played because the URL is invalid or unavailable.",
+        "Error message is correct"
+      );
+
+    assert
+      .dom("video")
+      .doesNotExist("No video element is created for invalid URL");
+  });
 });

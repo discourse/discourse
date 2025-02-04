@@ -8,7 +8,8 @@ module Onebox
 
       MAX_LINES = 10
 
-      matches_regexp(%r{^http?://pastebin\.com})
+      matches_domain("pastebin.com")
+      always_https
 
       private
 

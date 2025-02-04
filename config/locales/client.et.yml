@@ -2652,6 +2652,8 @@ et:
               content: "Grupid"
             users:
               content: "Kasutajad"
+            my_posts:
+              content: "Minu"
             review:
               content: "Vaata üle"
             invite:

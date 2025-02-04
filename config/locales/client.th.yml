@@ -2492,7 +2492,8 @@ th:
               content: "กลุ่ม"
             users:
               content: "ผู้ใช้"
-            my_drafts:
+            my_posts:
+              content: "โพสต์ของฉัน"
               draft_count:
                 other: "%{count}แบบร่าง"
             review:

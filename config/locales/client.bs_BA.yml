@@ -3096,6 +3096,8 @@ bs_BA:
               content: "Grupe"
             users:
               content: "Users"
+            my_posts:
+              content: "Moje objave"
             review:
               content: "Pregled"
             invite:
