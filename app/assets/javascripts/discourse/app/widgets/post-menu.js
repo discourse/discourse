@@ -166,9 +166,7 @@ registerButton(
       return likeCount(attrs);
     }
 
-    const className = attrs.liked
-      ? "toggle-like has-like fade-out"
-      : "toggle-like like";
+    const className = attrs.liked ? "toggle-like has-like" : "toggle-like like";
 
     const button = {
       action: "like",

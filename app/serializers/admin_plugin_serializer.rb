@@ -11,6 +11,7 @@ class AdminPluginSerializer < ApplicationSerializer
              :enabled_setting,
              :has_settings,
              :has_only_enabled_setting,
+             :humanized_name,
              :is_official,
              :is_discourse_owned,
              :label,
@@ -25,6 +26,10 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def name
     object.metadata.name
+  end
+
+  def humanized_name
+    object.humanized_name
   end
 
   def about

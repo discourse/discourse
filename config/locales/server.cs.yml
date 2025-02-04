@@ -1632,10 +1632,13 @@ cs:
     enable_quote_copy: "Přidá do nabídky výběru příspěvku tlačítko pro zkopírování výběru do schránky jako markdown citaci."
     default_include_tl0_in_digests: "Ve výchozím nastavení zahrnout příspěvky od nových uživatelů do souhrnných e-mailů. Uživatelé si to mohou změnit ve svých osobních nastaveních."
     default_other_skip_new_user_tips: "Přeskočit tipy po registraci nového uživatele."
+    default_text_size: "Určuje výchozí velikost písma pro všechny textové prvky na webu. Tuto velikost si může každý uživatel následně upravit podle svých preferencí."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     force_lowercase_tags: "Vynutit, aby všechny nové štítky byly psány výhradně malými písmeny."
     watched_precedence_over_muted: "Informujte mě o tématech v kategoriích nebo štítcích, které sleduji a které také patří do těch, které jsem ztlumil."
     shared_drafts_allowed_groups: "Povolte uživatelům v těchto skupinách zobrazovat a upravovat sdílené návrhy."
+    base_font: "Základní písmo použité pro většinu textu na webu. Motivy mohou toto přepsat pomocí vlastní vlastnosti CSS `--font-family`."
+    heading_font: "Písmo, které se má použít pro nadpisy na webu. Motivy toto mohou přepsat pomocí vlastní vlastnosti CSS `--heading-font-family`."
     dashboard_hidden_reports: "Povolit skrytí zadaných sestav z nástěnky"
     dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
     dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
@@ -2666,11 +2669,11 @@ cs:
       text_body_template: "Nastavení `download_remote_images_to_local` bylo zakázáno, protože bylo dosaženo limitu místa na disku `download_remote_images_threshold`."
     new_user_of_the_month:
       text_body_template: |
-        Gratulujeme, získali jste ocenění **Nový uživatel měsíce za %{month_year}**. :trophy:
+        Gratulujeme, získali jste ocenění **Objev měsíce za %{month_year}**. :trophy:
 
-        Toto ocenění se uděluje pouze dvěma novým uživatelům měsíčně a bude trvale viditelné na [stránce s odznaky](%{url}).
+        Toto ocenění se uděluje pouze dvěma novým členům měsíčně a bude trvale viditelné na [stránce s odznaky](%{url}).
 
-        Rychle jste se stali cenným členem naší komunity. Děkujeme, že jste se připojili, a pokračujte ve skvělé práci!
+        Rychle jste se stali cennou součástí naší komunity. Děkujeme, že jste s námi – jen tak dál!
     queued_posts_reminder:
       subject_template:
         one: "%{count} příspěvek čeká na přezkoumání"
@@ -3396,8 +3399,8 @@ cs:
       long_description: |
         Tento odznak se uděluje, když u příspěvku dostanete svoje první Líbí se. Gratulujeme, zveřejnili jste něco, co členové vaší komunity považovali za zajímavé, skvělé nebo užitečné!
     autobiographer:
-      name: Autor vlastního životopisu
-      description: Vyplněné <a href="%{base_uri}/my/preferences/profile">informace v profilu</a>
+      name: Autor/ka vlastního životopisu
+      description: Vyplnil/a <a href="%{base_uri}/my/preferences/profile">informace v profilu</a>
       long_description: |
         Tento odznak se uděluje za vyplnění <a href="%{base_uri}/my/preferences/profile">vašeho uživatelského profilu</a> a výběr profilového obrázku. Když dáte komunitě vědět trochu víc o tom, kdo jste a co vás zajímá, vytvoříte lepší a propojenější komunitu. Přidejte se k nám!
     anniversary:
@@ -3496,7 +3499,7 @@ cs:
       long_description: |
         Tento odznak se uděluje za <a href="%{base_uri}/guidelines">přečtení pokynů pro komunitu</a>. Dodržování a sdílení těchto jednoduchých pokynů pomáhá budovat bezpečnou, zábavnou a udržitelnou komunitu pro všechny. Vždy mějte na paměti, že na druhé straně obrazovky je další lidská bytost, která je vám velmi podobná. Buďte milí!
     reader:
-      name: Čtenář
+      name: Čtenář/ka
       description: Přečetl/a každou odpověď v tématu s více než 100 odpověďmi
       long_description: |
         Tento odznak se uděluje při prvním přečtení dlouhého tématu s více než 100 odpověďmi. Pečlivé čtení konverzace vám pomůže sledovat diskusi, pochopit různé úhly pohledu a vede k zajímavějším rozhovorům. Čím více čtete, tím lepší je konverzace. Jak rádi říkáme: Čtení je základ! :slight_smile:
@@ -3581,7 +3584,7 @@ cs:
       long_description: |
         Tento odznak se uděluje při první odpovědi na příspěvek prostřednictvím e-mailu :e-mail:.
     new_user_of_the_month:
-      name: "Nový uživatel měsíce"
+      name: "Objev měsíce"
       description: Vynikající příspěvky v prvním měsíci
       long_description: |
         Tento odznak se uděluje každý měsíc dvěma novým uživatelům za jejich vynikající celkové příspěvky. Měřeno tím, jak často a kým byly jejich příspěvky lajkovány.

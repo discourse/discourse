@@ -565,14 +565,24 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "preloaded_json" do
-    it "returns empty JSON if preloaded is empty" do
-      @preloaded = nil
+    fab!(:user)
+
+    it "returns empty JSON if preloader is not initialized" do
+      @application_layout_preloader = nil
       expect(helper.preloaded_json).to eq("{}")
     end
 
     it "escapes and strips invalid unicode and strips in json body" do
-      @preloaded = { test: %{["< \x80"]} }
-      expect(helper.preloaded_json).to eq(%{{"test":"[\\"\\u003c \uFFFD\\"]"}})
+      @application_layout_preloader =
+        ApplicationLayoutPreloader.new(
+          guardian: Guardian.new(user),
+          theme_id: nil,
+          theme_target: nil,
+          login_method: nil,
+        )
+
+      @application_layout_preloader.store_preloaded("test", %{["< \x80"]})
+      expect(helper.preloaded_json).to include(%{"test":"[\\"\\u003c \uFFFD\\"]"})
     end
   end
 

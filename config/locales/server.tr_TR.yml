@@ -339,7 +339,7 @@ tr_TR:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara şu değerlerden herhangi birini ekleyemezsiniz: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "\"Besteci medya optimizasyonu görüntüsü etkin\" etkinleştirilmişse şerit görüntü meta verilerini devre dışı bırakamazsınız. Şerit görüntü meta verilerini devre dışı bırakmadan önce \"besteci medya optimizasyonu görüntüsü etkin\" seçeneğini devre dışı bırakın."
       twitter_summary_large_image_no_svg: "twitter:image meta verileri için kullanılan Twitter özet görüntüleri .svg görüntüsü olamaz."
-      tl0_and_anonymous_flag: "Anonim kullanıcılar için ya \"site iletişim e-postası\" ya da \"yasa dışı içeriği bildirmek için e-posta adresi\" sağlanmalıdır."
+      tl0_and_anonymous_flag: "Anonim kullanıcılar için ya \"site contact email\" ya da \"email address to report illegal content\" sağlanmalıdır."
     conflicting_google_user_id: 'Bu hesabın Google Hesap Kimliği değişti; güvenlik nedeniyle personelin müdahalesi gerekiyor. Lütfen personelle iletişime geçin ve onları <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>adresine yönlendirin.'
     onebox:
       invalid_address: "Üzgünüz, \"%{hostname}\" sunucusu bulunamadığı için bu web sayfası için ön izleme oluşturamadık. Gönderinizde ön izleme yerine yalnızca bir bağlantı görünür. :cry:"
@@ -2112,7 +2112,7 @@ tr_TR:
     auto_respond_to_flag_actions: "Bir bayrağı kaldırırken otomatik yanıtı etkinleştirin."
     min_first_post_typing_time: "Bir kullanıcının ilk gönderi sırasında yazması gereken milisaniye cinsinden minimum süre, eşik karşılanmazsa gönderi otomatik olarak onay gerekiyor kuyruğuna girer. Devre dışı bırakmak için 0 olarak ayarlayın (önerilmez)"
     fast_typing_threshold: "Bir kullanıcının ilk gönderisi için yazması gereken milisaniye cinsinden minimum süre. Eşik karşılanmazsa gönderi otomatik olarak değerlendirme kuyruğuna girer. Düşük 1 saniye, standart 3 saniye, yüksek 5 saniyedir."
-    auto_silence_fast_typers_on_first_post: "\"Hızlı yazma eşiğini\" karşılamayan kullanıcıları otomatik olarak susturun"
+    auto_silence_fast_typers_on_first_post: "`fast typing threshold`u karşılamayan kullanıcıları otomatik olarak susturun"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazanları otomatik olarak susturmak için maksimum güven seviyesi"
     auto_silence_first_post_regex: "Büyük/küçük harfe duyarlı olmayan regex, geçilirse kullanıcının ilk gönderisinin susturulmasına ve onay kuyruğuna gönderilmesine neden olur. Örnek: raging|a[bc]a , raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Sadece ilk gönderi için geçerlidir. DEVRE DIŞI BIRAKILDI: Bunun yerine İzlenen Kelimeleri Sessize Al'ı kullanın."
     reviewable_claiming: "İncelenebilir içeriğin üzerinde işlem yapılabilmesi için talep edilmesi gerekir mi?"
@@ -2446,6 +2446,7 @@ tr_TR:
     share_quote_visibility: "Alıntı paylaşma düğmelerinin ne zaman gösterileceğini belirleyin: Asla, yalnızca anonim kullanıcılara veya tüm kullanıcılara. "
     create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluşturun."
     allow_changing_staged_user_tracking: "Aşamalı bir kullanıcının kategori ve etiket bildirim tercihlerinin bir yönetici kullanıcı tarafından değiştirilmesine izin verin."
+    use_email_for_username_and_name_suggestions: "Kullanıcı ismi ve isim önerileri için e-posta adreslerinin ilk kısmını kullanın. Uyarı: Bu ayar, kötü niyetli kişilerin üyelerinizin e-posta adresini keşfetmesini kolaylaştırabilir (çünkü birçok kişi `gmail.com` gibi yaygın e-posta sağlayıcılarını kullanır)."
     use_name_for_username_suggestions: "Kullanıcı adı önerirken kullanıcının tam adını kullanın."
     suggest_weekends_in_date_pickers: "Tarih seçici önerilerine hafta sonlarını (cumartesi ve pazar) dahil edin (Discourse'u yalnızca hafta içi, pazartesiden cumaya kadar kullanıyorsanız bunu devre dışı bırakın)."
     show_bottom_topic_map: "Konuya 10 veya daha fazla yanıt geldiğinde konu haritasını konunun altında gösterir."

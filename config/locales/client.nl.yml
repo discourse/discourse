@@ -4644,9 +4644,11 @@ nl:
             users:
               content: "Gebruikers"
               title: "Lijst van alle gebruikers"
-            my_drafts:
-              content: "Mijn concepten"
-              title: "Mijn ongeplaatste concepten"
+            my_posts:
+              content: "Mijn berichten"
+              content_drafts: "Mijn concepten"
+              title: "Mijn recente topicactiviteit"
+              title_drafts: "Mijn ongeplaatste concepten"
               draft_count:
                 one: "%{count} concept"
                 other: "%{count} concepten"
@@ -4876,7 +4878,7 @@ nl:
           experiment_toggled_too_fast: "Je hebt de experimentele functie te snel geschakeld. Wacht een paar seconden voordat je het opnieuw probeert."
           experiment_tooltip:
             title_disabled: "Probeer onze experimentele functie"
-            title_enabled: "Schakel experimentele functies uit"
+            title_enabled: "Schakel de experimentele functie uit"
             content_disabled: "Probeer onze nieuwste in ontwikkeling zijnde functie eens! Hij is nog in de experimentele fase, dus we kunnen hem op elk moment verwijderen. Je kunt je afmelden wanneer je maar wilt.<br/><br/>Wijziging hiervan schakelt de functie in voor alle gebruikers."
             content_enabled: "Wijziging hiervan schakelt de functie uit voor alle gebruikers."
         last_checked: "Laatst gecontroleerd"
@@ -5999,7 +6001,7 @@ nl:
         html: "html"
         text: "tekst"
         html_preview: "Voorbeeld van e-mailinhoud"
-        last_seen_user: "Laatst geziene gebruiker:"
+        last_seen_user: "Gebruiker laatst gezien:"
         no_result: "Geen resultaten gevonden voor samenvatting."
         reply_key: "Antwoordsleutel"
         post_link_with_smtp: "Plaatsings- en SMTP-gegevens"
@@ -7023,7 +7025,7 @@ nl:
         host: "Toegestane hosts"
         allowed_paths: "Padtoelatingslijst"
         edit: "Bewerken"
-        category: "Bericht naar categorie"
+        category: "Plaatsen in categorie"
         tags: "Topictags"
         post_author: "Berichtauteur"
         post_author_with_default: "Berichtauteur (standaard %{author})"
