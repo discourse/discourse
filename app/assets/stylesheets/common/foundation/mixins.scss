@@ -124,6 +124,7 @@ $hpad: 0.65em;
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 
 @mixin user-select($mode) {
+  -webkit-user-select: $mode;
   user-select: $mode;
 }
 

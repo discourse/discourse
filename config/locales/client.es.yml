@@ -5998,11 +5998,11 @@ es:
         html: "html"
         text: "texto"
         html_preview: "Vista previa de contenido de correo electrónico"
-        last_seen_user: "Último usuario visto:"
+        last_seen_user: "Última vez que se vio al usuario:"
         no_result: "No se han encontrado resultados para el resumen."
         reply_key: "Clave de respuesta"
         post_link_with_smtp: "Detalles de publicación y SMTP"
-        skipped_reason: "Omitir motivo"
+        skipped_reason: "Motivo de la omisión"
         incoming_emails:
           from_address: "De"
           to_addresses: "Para"
