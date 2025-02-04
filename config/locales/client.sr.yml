@@ -2089,6 +2089,8 @@ sr:
               content: "Grupe"
             users:
               content: "Korisnici"
+            my_posts:
+              content: "Moje poruke"
             invite:
               content: "Pozovite"
               title: "Pozovi nove članove"

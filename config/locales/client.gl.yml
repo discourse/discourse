@@ -3362,6 +3362,8 @@ gl:
               content: "Grupos"
             users:
               content: "Usuarios"
+            my_posts:
+              content: "As miñas publicacións"
             review:
               content: "Revisar"
             invite:

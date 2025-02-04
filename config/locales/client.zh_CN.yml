@@ -4378,9 +4378,11 @@ zh_CN:
             users:
               content: "用户"
               title: "所有用户列表"
-            my_drafts:
-              content: "我的草稿"
-              title: "我的未发布草稿"
+            my_posts:
+              content: "我的帖子"
+              content_drafts: "我的草稿"
+              title: "我最近的话题活动"
+              title_drafts: "我的未发布草稿"
               draft_count:
                 other: "%{count} 个草稿"
             review:

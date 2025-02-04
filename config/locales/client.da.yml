@@ -3772,9 +3772,10 @@ da:
               content: "Grupper"
             users:
               content: "Brugere"
-            my_drafts:
-              content: "Mine Kladder"
-              title: "Mine uopslåede kladder"
+            my_posts:
+              content: "Mine indlæg"
+              content_drafts: "Mine Kladder"
+              title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
             invite:

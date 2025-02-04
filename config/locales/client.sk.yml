@@ -5154,13 +5154,15 @@ sk:
             users:
               content: "Používatelia"
               title: "Zoznam všetkých používateľov"
-            my_drafts:
-              content: "Moje koncepty"
-              title: "Moje nezverejnené koncepty"
+            my_posts:
+              content: "Moje príspevky"
+              content_drafts: "Moje koncepty"
+              title: "Moja nedávna aktivita na túto tému"
+              title_drafts: "Moje nezverejnené koncepty"
               draft_count:
                 one: "%{count} koncept"
                 few: "%{count} konceptov"
-                many: "%{count} koncepty"
+                many: "%{count} konceptov"
                 other: "%{count} koncepty"
             review:
               content: "Recenzia"
