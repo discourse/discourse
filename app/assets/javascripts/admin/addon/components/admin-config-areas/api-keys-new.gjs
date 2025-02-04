@@ -13,7 +13,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "admin/components/modal/api-key-urls";
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class AdminConfigAreasApiKeysNew extends Component {
   @service router;
