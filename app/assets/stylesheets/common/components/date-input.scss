@@ -16,7 +16,6 @@ $calendar-icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16
     position: relative;
 
     &::input-placeholder,
-    &::input-placeholder,
     &::placeholder {
       font-size: var(--font-0);
       color: var(--primary-medium);

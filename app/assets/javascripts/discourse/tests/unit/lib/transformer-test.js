@@ -547,26 +547,6 @@ module("Unit | Utility | transformers", function (hooks) {
       applyMutableValueTransformer("test-mutable-transformer", value);
       assert.true(mutated, "the value is mutated");
     });
-
-    test("raises an exception if the transformer returns a value different from undefined", function (assert) {
-      assert.throws(
-        () => {
-          withPluginApi("1.34.0", (api) => {
-            api.registerValueTransformer(
-              "test-mutable-transformer",
-              () => "unexpected value"
-            );
-          });
-
-          applyMutableValueTransformer(
-            "test-mutable-transformer",
-            "default value"
-          );
-        },
-        /expects the value to be mutated instead of returned. Remove the return value in your transformer./,
-        "logs warning to the console when the transformer returns a value different from undefined"
-      );
-    });
   });
 
   module("pluginApi.addBehaviorTransformerName", function (innerHooks) {

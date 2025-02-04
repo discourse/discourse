@@ -4337,6 +4337,8 @@ nb_NO:
               content: "Grupper"
             users:
               content: "Brukere"
+            my_posts:
+              content: "Mine innlegg"
             review:
               content: "Gjennomgang"
             invite:

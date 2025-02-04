@@ -35,14 +35,14 @@ RSpec.describe SvgSpriteController do
 
   describe "#search" do
     it "should not work for anons" do
-      get "/svg-sprite/search/fa-bolt"
+      get "/svg-sprite/search/bolt"
       expect(response.status).to eq(404)
     end
 
     it "should return symbol for FA icon search" do
       sign_in(user)
 
-      get "/svg-sprite/search/fa-bolt"
+      get "/svg-sprite/search/bolt"
       expect(response.status).to eq(200)
       expect(response.body).to include("bolt")
     end
@@ -50,7 +50,7 @@ RSpec.describe SvgSpriteController do
     it "should return 404 when looking for non-existent FA icon" do
       sign_in(user)
 
-      get "/svg-sprite/search/fa-not-a-valid-icon"
+      get "/svg-sprite/search/not-a-valid-icon"
       expect(response.status).to eq(404)
     end
 
@@ -72,7 +72,7 @@ RSpec.describe SvgSpriteController do
 
       sign_in(user)
 
-      get "/svg-sprite/search/fa-my-custom-theme-icon"
+      get "/svg-sprite/search/my-custom-theme-icon"
       expect(response.status).to eq(200)
       expect(response.body).to include("my-custom-theme-icon")
     end

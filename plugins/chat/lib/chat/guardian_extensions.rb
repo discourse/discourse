@@ -28,6 +28,35 @@ module Chat
       is_staff? || can_direct_message?
     end
 
+    def can_send_direct_message?(channel)
+      return true if is_staff? || @user.bot?
+
+      can_chat? && channel.chatable.user_can_access?(@user) && !@user.suspended?
+    end
+
+    def allowing_direct_messages?
+      @user.user_option.allow_private_messages
+    end
+
+    def recipient_can_chat?(target)
+      target.guardian.can_chat? && target.user_option.chat_enabled
+    end
+
+    def recipient_not_muted?(target)
+      !is_muting_user?(target)
+    end
+
+    def recipient_not_ignored?(target)
+      !is_ignoring_user?(target)
+    end
+
+    def recipient_allows_direct_messages?(target)
+      return true if is_staff?
+      return false if !target.user_option.allow_private_messages
+
+      !is_ignored_by_user?(target) && !is_muted_by_user?(target) && !target.suspended?
+    end
+
     def hidden_tag_names
       @hidden_tag_names ||= DiscourseTagging.hidden_tag_names(self)
     end

@@ -25,7 +25,7 @@
     "node": ">= 18",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": ">= 9"
+    "pnpm": "^9"
   },
   "ember": {
     "edition": "octane"

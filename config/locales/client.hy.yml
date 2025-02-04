@@ -3775,6 +3775,8 @@ hy:
               content: "Խմբեր"
             users:
               content: "Օգտատերեր"
+            my_posts:
+              content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
             invite:

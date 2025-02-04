@@ -76,8 +76,9 @@ RSpec.describe Onebox::Helpers do
     end
 
     context "with canonical link" do
+      let(:uri) { "https://www.example.com" }
+
       it "follows canonical link" do
-        uri = "https://www.example.com"
         stub_request(:get, uri).to_return(
           status: 200,
           body: "<!DOCTYPE html><link rel='canonical' href='http://foobar.com/'/><p>invalid</p>",
@@ -92,7 +93,6 @@ RSpec.describe Onebox::Helpers do
       end
 
       it "does not follow canonical link pointing at localhost" do
-        uri = "https://www.example.com"
         FinalDestination::SSRFDetector
           .stubs(:lookup_ips)
           .with { |h| h == "localhost" }
@@ -103,6 +103,25 @@ RSpec.describe Onebox::Helpers do
         )
 
         expect(described_class.fetch_html_doc(uri).to_s).to match("success")
+      end
+
+      context "when canonical link contains non-ASCII characters" do
+        before do
+          stub_request(:get, uri).to_return(
+            status: 200,
+            body:
+              "<!DOCTYPE html><link rel='canonical' href='http://foobar.com/héhé'/><p>invalid</p>",
+          )
+          stub_request(:get, "http://foobar.com/héhé").to_return(
+            status: 200,
+            body: "<!DOCTYPE html><p>success</p>",
+          )
+          stub_request(:head, "http://foobar.com/héhé").to_return(status: 200, body: "")
+        end
+
+        it "does not break" do
+          expect(described_class.fetch_html_doc(uri).to_s).to match("success")
+        end
       end
     end
   end

@@ -181,7 +181,7 @@ hr:
       public_topic: "Je učinio ovu temu javnom %{when}"
       open_topic: "Pretvorio ovo u temu %{when}"
       private_topic: "Je učinio ovu temu privatnom porukom %{when}"
-      split_topic: "Je podiJelio ovu temu %{when}"
+      split_topic: "Je podijelio ovu temu %{when}"
       invited_user: "Je pozvao %{who} %{when}"
       invited_group: "Je pozvao %{who} %{when}"
       user_left: "%{who} se uklonio iz ove poruke %{when}"
@@ -4385,8 +4385,10 @@ hr:
             users:
               content: "Korisnici"
               title: "Popis svih korisnika"
-            my_drafts:
-              title: "Moje neobjavljene skice"
+            my_posts:
+              content: "Moje objave"
+              title: "Moja nedavna aktivnost vezana uz temu"
+              title_drafts: "Moje neobjavljene skice"
               draft_count:
                 one: "%{count} nacrt"
                 few: "%{count} nacrti"
