@@ -1367,6 +1367,7 @@ class BulkImport::Base
     hide_presence: SiteSetting.default_hide_presence,
     sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
     sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
+    password_disabled: SiteSetting.default_password_disabled,
   }
 
   def process_user_option(user_option)

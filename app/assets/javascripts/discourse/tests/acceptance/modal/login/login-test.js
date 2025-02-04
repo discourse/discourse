@@ -8,9 +8,7 @@ acceptance("Modal - Login", function () {
   chromeTest("You can tab to the login button", async function (assert) {
     await visit("/");
     await click("header .login-button");
-    // you have to press the tab key thrice to get to the login button
-    await tab({ unRestrainTabIndex: true });
-    await tab({ unRestrainTabIndex: true });
+    // you have to press the tab key once to get to the login button
     await tab({ unRestrainTabIndex: true });
     assert.dom(".d-modal__footer #login-button").isFocused();
   });
@@ -36,13 +34,15 @@ acceptance("Modal - Login - With 2FA", function (needs) {
     await visit("/");
     await click("header .login-button");
 
-    await fillIn("#login-account-name", "isaac@discourse.org");
+    await fillIn("#login-account-name", "eviltrout");
+    await click(".d-modal__footer #login-button");
+
     await fillIn("#login-account-password", "password");
-    await click("#login-button");
+    await click(".d-modal__footer #login-button");
 
     assert.dom("#login-second-factor").isFocused();
     await tab();
-    assert.dom("#login-button").isFocused();
+    assert.dom(".d-modal__footer #login-button").isFocused();
   });
 });
 

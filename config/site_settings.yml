@@ -3298,6 +3298,9 @@ user_preferences:
     default: false
     area: "navigation"
 
+  default_password_disabled: 
+    default: false
+
 api:
   retain_web_hook_events_period_days:
     default: 30

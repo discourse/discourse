@@ -1916,9 +1916,7 @@ RSpec.describe SessionController do
           post "/session.json", params: { login: user.username, password: "sssss" }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).to eq(
-            I18n.t("login.incorrect_username_email_or_password"),
-          )
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.incorrect_password"))
         end
 
         it "should return an error with an invalid password if too long" do
@@ -1930,9 +1928,7 @@ RSpec.describe SessionController do
                }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).to eq(
-            I18n.t("login.incorrect_username_email_or_password"),
-          )
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.incorrect_password"))
         end
       end
 

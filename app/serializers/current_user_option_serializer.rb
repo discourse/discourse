@@ -22,7 +22,8 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :redirected_to_top,
              :treat_as_new_topic_start_date,
              :sidebar_link_to_filtered_list,
-             :sidebar_show_count_of_new_items
+             :sidebar_show_count_of_new_items,
+             :password_disabled
 
   def likes_notifications_disabled
     object.likes_notifications_disabled?

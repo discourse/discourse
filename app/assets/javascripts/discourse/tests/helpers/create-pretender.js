@@ -670,6 +670,22 @@ export function applyDefaultHandlers(pretender) {
     return response(400, { error: "invalid login" });
   });
 
+  pretender.get("/session/user_exists", function (request) {
+    if (request.queryParams.login === "eviltrout") {
+      return response({
+        login_found: true,
+        username: "eviltrout",
+        password_disabled: false,
+      });
+    } else {
+      return response({
+        login_found: false,
+        username: "",
+        password_disabled: false,
+      });
+    }
+  });
+
   pretender.post("/u/action/send_activation_email", success);
   pretender.put("/u/update-activation-email", success);
 

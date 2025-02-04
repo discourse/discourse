@@ -21,11 +21,20 @@ acceptance("Forgot password", function (needs) {
   test("requesting password reset", async function (assert) {
     await visit("/");
     await click("header .login-button");
+    await fillIn("#login-account-name", "eviltrout");
+    await click(".d-modal__footer #login-button");
     await click("#forgot-password-link");
 
     assert
       .dom(".forgot-password-reset")
-      .isDisabled("disables the button until the field is filled");
+      .isNotDisabled(
+        "button enabled because username is passed from previous screen"
+      );
+
+    await fillIn("#username-or-email", "");
+    assert
+      .dom(".forgot-password-reset")
+      .isDisabled("button disabled if username/email is empty");
 
     await fillIn("#username-or-email", "someuser");
     await click(".forgot-password-reset");
@@ -66,6 +75,8 @@ acceptance("Forgot password", function (needs) {
 
     await visit("/");
     await click("header .login-button");
+    await fillIn("#login-account-name", "eviltrout");
+    await click(".d-modal__footer #login-button");
     await click("#forgot-password-link");
     await fillIn("#username-or-email", "someuser@gmail.com");
     await click(".forgot-password-reset");
@@ -95,8 +106,9 @@ acceptance(
     test("requesting password reset", async function (assert) {
       await visit("/");
       await click("header .login-button");
+      await fillIn("#login-account-name", "eviltrout");
+      await click(".d-modal__footer #login-button");
       await click("#forgot-password-link");
-
       assert
         .dom(".forgot-password-reset")
         .isDisabled("disables the button until the field is filled");

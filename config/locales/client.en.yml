@@ -1462,6 +1462,7 @@ en:
       save_to_change_theme: 'Theme will be updated after you click "%{save_text}"'
       home: "Default Home Page"
       staged: "Staged"
+      disable_password: "Disable password requirement for authentication."
 
       staff_counters:
         flags_given:
@@ -2437,6 +2438,7 @@ en:
 
     login:
       header_title: "Welcome back"
+      header_title_username: "Welcome back, %{username}"
       title: "Log In"
       username: "User"
       password: "Password"
@@ -2477,6 +2479,7 @@ en:
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>%{sentTo}</b>. Please follow the instructions in that email to activate your account."
       not_allowed_from_ip_address: "You can't log in from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
+      account_not_found: "No account registered for that username/email."
       resend_activation_email: "Click here to send the activation email again."
       omniauth_disallow_totp: "Your account has two-factor authentication enabled. Please log in with your password."
 

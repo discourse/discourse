@@ -323,10 +323,6 @@ class SessionController < ApplicationController
 
   def create
     params.require(:login)
-    params.require(:password)
-
-    return invalid_credentials if params[:password].length > User.max_password_length
-
     user = User.find_by_username_or_email(normalized_login_param)
 
     raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
@@ -334,12 +330,23 @@ class SessionController < ApplicationController
     rate_limit_second_factor!(user)
 
     if user.present?
-      password = params[:password]
+      unless user.user_option.password_disabled
+        params.require(:password)
+        return invalid_password if params[:password].length > User.max_password_length
 
-      # If their password is incorrect
-      if !user.confirm_password?(password)
-        invalid_credentials
-        return
+        password = params[:password]
+
+        # If their password is incorrect
+        if !user.confirm_password?(password)
+          invalid_password
+          return
+        end
+
+        # User's password has expired so they need to reset it
+        if user.password_expired?(password)
+          render json: { error: "expired", reason: "expired" }
+          return
+        end
       end
 
       # If the site requires user approval and the user is not approved yet
@@ -351,14 +358,8 @@ class SessionController < ApplicationController
       # User signed on with username and password, so let's prevent the invite link
       # from being used to log in (if one exists).
       Invite.invalidate_for_email(user.email)
-
-      # User's password has expired so they need to reset it
-      if user.password_expired?(password)
-        render json: { error: "expired", reason: "expired" }
-        return
-      end
     else
-      invalid_credentials
+      account_not_found
       return
     end
 
@@ -612,6 +613,16 @@ class SessionController < ApplicationController
            status: 200
   end
 
+  def user_exists
+    params.require(:login)
+    user = User.real.where(staged: false).find_by_username_or_email(normalized_login_param)
+    json = success_json
+    json[:login_found] = user.present?
+    json[:username] = user.present? ? user.display_name : nil
+    json[:password_disabled] = user.present? ? user.user_option.password_disabled : nil
+    render json: json
+  end
+
   def forgot_password
     params.require(:login)
 
@@ -769,8 +780,16 @@ class SessionController < ApplicationController
     SiteSetting.must_approve_users? && !user.approved? && !user.admin?
   end
 
+  def invalid_password
+    render json: { error: I18n.t("login.incorrect_password") }
+  end
+
   def invalid_credentials
     render json: { error: I18n.t("login.incorrect_username_email_or_password") }
+  end
+
+  def account_not_found
+    render json: { error: I18n.t("login.account_not_found") }
   end
 
   def login_not_approved
@@ -913,6 +932,8 @@ class SessionController < ApplicationController
 
     email_token =
       user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+
+    Rails.logger.error("!!!! Email Token: #{email_token.token}")
 
     Jobs.enqueue(
       :critical_user_email,

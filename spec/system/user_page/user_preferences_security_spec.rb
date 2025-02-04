@@ -39,6 +39,7 @@ describe "User preferences | Security", type: :system do
       # login flow
       find(".d-header .login-button").click
       find("input#login-account-name").fill_in(with: user.username)
+      find(".d-modal__footer .btn-primary").click
       find("input#login-account-password").fill_in(with: password)
 
       find(".d-modal__footer .btn-primary").click
@@ -132,6 +133,23 @@ describe "User preferences | Security", type: :system do
       find(".confirm-session .btn-primary").click
 
       expect(page).to have_css(".qr-code")
+    end
+  end
+
+  shared_examples "disable password" do
+    it "disables password and logs in without it" do
+      user_preferences_security_page.visit(user)
+
+      find(".pref-password #password_disabled_checkbox").click
+      find(".save-button .btn-primary").click
+      expect(find(".pref-password #password_disabled_checkbox")).to be_checked
+
+      user_menu.sign_out
+      find(".d-header .login-button").click
+      find("input#login-account-name").fill_in(with: user.username)
+      find(".d-modal__footer .btn-primary").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 

@@ -45,7 +45,13 @@
       {{#if this.canLoginLocal}}
         <div class={{if this.site.desktopView "login-left-side"}}>
           {{#if this.site.desktopView}}
-            <WelcomeHeader @header={{i18n "login.header_title"}}>
+            <WelcomeHeader
+              @header={{unless
+                this.usernameValidated
+                (i18n "login.header_title")
+                (i18n "login.header_title_username" username=this.loginName)
+              }}
+            >
               <PluginOutlet
                 @name="login-header-bottom"
                 @outletArgs={{hash createAccount=this.createAccount}}
@@ -73,6 +79,8 @@
             @flashChanged={{this.flashChanged}}
             @flashTypeChanged={{this.flashTypeChanged}}
             @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
+            @usernameValidated={{this.usernameValidated}}
+            @invalidateUsername={{this.invalidateUsername}}
           />
           {{#if this.site.desktopView}}
             <div class="d-modal__footer">

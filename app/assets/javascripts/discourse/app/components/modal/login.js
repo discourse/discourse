@@ -20,6 +20,7 @@ import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 import ForgotPassword from "./forgot-password";
+import NotActivatedModal from "./not-activated";
 
 export default class Login extends Component {
   @service capabilities;
@@ -50,6 +51,7 @@ export default class Login extends Component {
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
   @tracked secondFactorToken;
+  @tracked usernameValidated = false;
 
   get awaitingApproval() {
     return (
@@ -185,17 +187,67 @@ export default class Login extends Component {
   }
 
   @action
+  invalidateUsername() {
+    this.usernameValidated = false;
+  }
+
+  @action
+  showNotActivated(props) {
+    this.modal.show(NotActivatedModal, { model: props });
+  }
+
+  @action
   async triggerLogin() {
+    this.flash = this.flashType = null;
     if (this.loginDisabled) {
       return;
     }
 
-    if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
-      this.flash = i18n("login.blank_username_or_password");
+    if (!this.usernameValidated) {
+      this.validateUsername();
+    } else {
+      this.authenticateUser();
+    }
+  }
+
+  async validateUsername() {
+    if (this.usernameValidated) {
+      return;
+    }
+
+    if (isEmpty(this.loginName)) {
+      this.flash = i18n("login.blank_username");
       this.flashType = "error";
       return;
     }
 
+    try {
+      const result = await ajax("/session/user_exists", {
+        type: "GET",
+        data: {
+          login: this.loginName,
+        },
+      });
+
+      const { login_found, username, password_disabled } = result;
+      if (login_found) {
+        this.loginName = username;
+        if (password_disabled) {
+          this.authenticateUser();
+        } else {
+          this.usernameValidated = true;
+        }
+      } else {
+        this.flash = i18n("login.account_not_found");
+        this.flashType = "error";
+      }
+    } catch {
+      this.flash = i18n("login.error");
+      this.flashType = "error";
+    }
+  }
+
+  async authenticateUser() {
     try {
       this.loggingIn = true;
       const result = await ajax("/session", {
@@ -242,7 +294,7 @@ export default class Login extends Component {
 
           return;
         } else if (result.reason === "not_activated") {
-          this.args.model.showNotActivated({
+          this.showNotActivated({
             username: this.loginName,
             sentTo: escape(result.sent_to_email),
             currentEmail: escape(result.current_email),
