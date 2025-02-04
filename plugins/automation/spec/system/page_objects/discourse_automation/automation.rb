@@ -34,7 +34,7 @@ module PageObjects
       end
 
       def form
-        @form ||= find(".discourse-automation-form.edit")
+        @form ||= find(".discourse-automation-edit")
       end
     end
   end

@@ -56,6 +56,6 @@ describe "DiscourseAutomation | smoke test", type: :system do
     find(".automation-enabled input").click
     find(".update-automation").click
 
-    expect(page).to have_css('[role="button"]', text: "aaaaa")
+    expect(page).to have_css(".automations__name", text: "aaaaa")
   end
 end
