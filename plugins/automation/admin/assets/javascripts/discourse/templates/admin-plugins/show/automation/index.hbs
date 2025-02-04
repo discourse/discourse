@@ -54,11 +54,7 @@
                 }}
               </td>
             {{else}}
-              <td
-                class="d-admin-row__detail automations__status"
-                role="button"
-                {{on "click" (fn this.editAutomation automation)}}
-              >
+              <td class="d-admin-row__detail automations__status">
                 <div class="d-admin-row__mobile-label">
                   {{i18n "discourse_automation.models.automation.status.label"}}
                 </div>
@@ -67,24 +63,14 @@
                   automation.trigger
                 }}
               </td>
-              <td
-                class="d-admin-row__overview automations__name"
-                tabindex="0"
-                role="button"
-                {{on "keypress" (fn this.editAutomation automation)}}
-                {{on "click" (fn this.editAutomation automation)}}
-              >
+              <td class="d-admin-row__overview automations__name">
                 {{if
                   automation.name
                   automation.name
                   (i18n "discourse_automation.unnamed_automation")
                 }}
               </td>
-              <td
-                class="d-admin-row__detail automations__script"
-                role="button"
-                {{on "click" (fn this.editAutomation automation)}}
-              >
+              <td class="d-admin-row__detail automations__script">
                 <div class="d-admin-row__mobile-label">
                   {{i18n
                     "discourse_automation.models.automation.trigger.label"
@@ -92,11 +78,7 @@
                 </div>
                 {{if automation.trigger.id automation.trigger.name "-"}}
               </td>
-              <td
-                class="d-admin-row__detail automations__version"
-                role="button"
-                {{on "click" (fn this.editAutomation automation)}}
-              >
+              <td class="d-admin-row__detail automations__version">
                 <div class="d-admin-row__mobile-label">
                   {{i18n "discourse_automation.models.automation.script.label"}}
                 </div>
@@ -121,11 +103,17 @@
               </td>
             {{/if}}
 
-            <td class="d-admin-row__controls automations__delete">
+            <td class="d-admin-row__controls automations__controls">
+              <DButton
+                @label="discourse_automation.edit"
+                class="btn-small"
+                @action={{action "editAutomation" automation}}
+              />
+
               <DButton
                 @icon="trash-can"
                 @action={{action "destroyAutomation" automation}}
-                class="btn-danger"
+                class="btn-small btn-danger"
               />
             </td>
           </tr>

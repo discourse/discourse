@@ -55,6 +55,18 @@
         order: 5;
       }
     }
+
+    .d-admin-row__controls.automations__controls {
+      text-align: right;
+      display: flex;
+      flex-direction: row;
+      gap: 0.5em;
+      justify-content: flex-end;
+
+      @include breakpoint("tablet") {
+        order: 6;
+      }
+    }
   }
 
   .admin-section-landing__header {
