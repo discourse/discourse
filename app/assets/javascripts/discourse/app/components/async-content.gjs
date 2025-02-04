@@ -1,115 +1,78 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { cached } from "@glimmer/tracking";
+import { TrackedAsyncData } from "ember-async-data";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 
 export default class AsyncContent extends Component {
-  @tracked promise;
-  @tracked fullfilled;
-  @tracked rejected;
+  #skipResolvingData = !this.args.loadOnInit;
 
-  @tracked error;
-  @tracked data;
+  @cached
+  get data() {
+    const asyncData = this.args.asyncData;
+    const context = this.args.context;
 
-  promiseId = 0;
+    let value;
 
-  constructor() {
-    super(...arguments);
-
-    if (this.args.loadOnInit ?? true) {
-      this.reload(this.args.context);
-    }
-  }
-
-  @action
-  reload(context, opts) {
-    this.fullfilled = false;
-    this.rejected = false;
-
-    const currentPromiseId = ++this.promiseId;
-
-    if (typeof this.args.asyncData === "function") {
-      this.promise = this.args.asyncData(context, opts);
-    } else if (this.args.asyncData instanceof Promise) {
-      this.promise = this.args.asyncData;
+    if (typeof asyncData === "function") {
+      value =
+        this.args.debounce && !this.#skipResolvingData
+          ? new Promise((resolve, reject) => {
+              discourseDebounce(
+                this,
+                this.#resolveAsyncData,
+                asyncData,
+                context,
+                resolve,
+                reject,
+                this.args.debounce
+              );
+            })
+          : this.#resolveAsyncData(asyncData, context);
+    } else if (asyncData instanceof Promise) {
+      value = asyncData;
     }
 
-    if (!(this.promise instanceof Promise)) {
+    if (!(value instanceof Promise)) {
       throw new Error(
         `\`<AsyncContent />\` expects @asyncData to be an async function or a promise`
       );
     }
 
-    this.promise
-      ?.then((data) => {
-        if (this.promiseId === currentPromiseId) {
-          this.fullfilled = true;
-          this.data = data;
-        }
-      })
-      ?.catch((error) => {
-        if (this.promiseId === currentPromiseId) {
-          this.rejected = true;
-          this.error = error;
-        }
-      });
+    return new TrackedAsyncData(value);
   }
 
-  @action
-  reset() {
-    if (this.args.debounce) {
-      return discourseDebounce(
-        this,
-        this.reload,
-        this.args.context,
-        this.args.debounce
-      );
+  // a stable reference to a function to use the `debounce` method
+  // this function simply calls the asyncData function and resolves the promise if a resolve function is provided
+  #resolveAsyncData(asyncData, context, resolve, reject) {
+    if (this.#skipResolvingData) {
+      this.#skipResolvingData = false;
+      return Promise.resolve(null);
     }
 
-    return this.reload(this.args.context);
-  }
-
-  get pending() {
-    return this.promise && !this.fullfilled && !this.rejected;
+    return resolve
+      ? asyncData(context).then(resolve).catch(reject)
+      : asyncData(context);
   }
 
   <template>
-    <div
-      class="async-content-container"
-      ...attributes
-      {{didUpdate this.reset @asyncData @context}}
-    >
+    {{#if this.data.isPending}}
       {{#if (has-block "loading")}}
-        {{#if this.pending}}
-          {{yield to="loading"}}
-        {{/if}}
-        {{#if this.fullfilled}}
-          {{yield this.data to="content"}}
-        {{/if}}
-        {{#if this.rejected}}
-          {{#if (has-block "error")}}
-            {{yield this.error to="error"}}
-          {{else}}
-            {{popupAjaxError this.error}}
-          {{/if}}
-        {{/if}}
+        {{yield to="loading"}}
       {{else}}
-        <ConditionalLoadingSpinner ...attributes @condition={{this.pending}}>
-          {{#if this.fullfilled}}
-            {{yield this.data to="content"}}
-          {{/if}}
-          {{#if this.rejected}}
-            {{#if (has-block "error")}}
-              {{yield this.error to="error"}}
-            {{else}}
-              {{popupAjaxError this.error}}
-            {{/if}}
-          {{/if}}
-        </ConditionalLoadingSpinner>
+        <ConditionalLoadingSpinner @condition={{this.data.isPending}} />
       {{/if}}
-    </div>
+    {{/if}}
+    {{#if this.data.isResolved}}
+      {{yield this.data.value to="content"}}
+    {{/if}}
+    {{#if this.data.isRejected}}
+      {{#if (has-block "error")}}
+        {{yield this.data.error to="error"}}
+      {{else}}
+        {{popupAjaxError this.data.error}}
+      {{/if}}
+    {{/if}}
   </template>
 }
