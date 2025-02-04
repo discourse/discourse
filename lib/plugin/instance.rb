@@ -159,7 +159,11 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def humanized_name
-    (setting_category_name || name).delete_prefix("Discourse ").delete_prefix("discourse-")
+    (setting_category_name || name)
+      .delete_prefix("Discourse ")
+      .delete_prefix("discourse-")
+      .gsub("-", " ")
+      .upcase_first
   end
 
   def add_to_serializer(
