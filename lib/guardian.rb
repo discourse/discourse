@@ -570,6 +570,22 @@ class Guardian
     @user.staff? || @user.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
   end
 
+  def is_muting_user?(target_user)
+    @user.muted_user_ids.include?(target_user.id)
+  end
+
+  def is_ignoring_user?(target_user)
+    @user.ignored_user_ids.include?(target_user.id)
+  end
+
+  def is_muted_by_user?(target_user)
+    target_user.muted_user_ids.include?(@user.id)
+  end
+
+  def is_ignored_by_user?(target_user)
+    target_user.ignored_user_ids.include?(@user.id)
+  end
+
   def allowed_theme_repo_import?(repo)
     return false if !@user.admin?
 

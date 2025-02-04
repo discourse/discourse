@@ -339,7 +339,7 @@ tr_TR:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara şu değerlerden herhangi birini ekleyemezsiniz: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "\"Besteci medya optimizasyonu görüntüsü etkin\" etkinleştirilmişse şerit görüntü meta verilerini devre dışı bırakamazsınız. Şerit görüntü meta verilerini devre dışı bırakmadan önce \"besteci medya optimizasyonu görüntüsü etkin\" seçeneğini devre dışı bırakın."
       twitter_summary_large_image_no_svg: "twitter:image meta verileri için kullanılan Twitter özet görüntüleri .svg görüntüsü olamaz."
-      tl0_and_anonymous_flag: "Anonim kullanıcılar için ya \"site iletişim e-postası\" ya da \"yasa dışı içeriği bildirmek için e-posta adresi\" sağlanmalıdır."
+      tl0_and_anonymous_flag: "Anonim kullanıcılar için ya \"site contact email\" ya da \"email address to report illegal content\" sağlanmalıdır."
     conflicting_google_user_id: 'Bu hesabın Google Hesap Kimliği değişti; güvenlik nedeniyle personelin müdahalesi gerekiyor. Lütfen personelle iletişime geçin ve onları <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>adresine yönlendirin.'
     onebox:
       invalid_address: "Üzgünüz, \"%{hostname}\" sunucusu bulunamadığı için bu web sayfası için ön izleme oluşturamadık. Gönderinizde ön izleme yerine yalnızca bir bağlantı görünür. :cry:"

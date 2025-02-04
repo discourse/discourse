@@ -2085,7 +2085,7 @@ cs:
           add_to_groups: "Přidat do skupin"
           invite_to_topic: "Navigovat do tématu"
           expires_at: "Vyprší v"
-          expires_after: "Nastavit vypršení po"
+          expires_after: "Vyprší za"
           custom_message: "Vlastní zpráva"
           custom_message_placeholder: "Přidejte k pozvánce osobní zprávu"
           send_invite_email: "Uložit a odeslat e-mail"
@@ -5164,14 +5164,16 @@ cs:
             users:
               content: "Uživatelé"
               title: "Seznam všech uživatelů"
-            my_drafts:
-              content: "Moje koncepty"
-              title: "Moje nezveřejněné koncepty"
+            my_posts:
+              content: "Mé příspěvky"
+              content_drafts: "Moje koncepty"
+              title: "Moje nedávná aktivita k tématům"
+              title_drafts: "Moje nezveřejněné koncepty"
               draft_count:
                 one: "%{count} koncept"
                 few: "%{count} koncepty"
                 many: "%{count} konceptů"
-                other: "%{count} koncepty"
+                other: "%{count} konceptů"
             review:
               content: "Revize"
               title: "Označené příspěvky a další položky ve frontě"

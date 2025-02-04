@@ -6,7 +6,7 @@ module Onebox
   module Engine
     class GitlabBlobOnebox
       def self.git_regexp
-        %r{^https?://(www\.)?gitlab\.com.*/blob/}
+        %r{^https?://(?:www\.)?gitlab\.com/.*/blob/.*}
       end
 
       def self.onebox_name

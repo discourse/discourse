@@ -4644,9 +4644,11 @@ fr:
             users:
               content: "Utilisateurs"
               title: "Liste de tous les utilisateurs"
-            my_drafts:
-              content: "Mes brouillons"
-              title: "Mes brouillons non publiés"
+            my_posts:
+              content: "Mes messages"
+              content_drafts: "Mes brouillons"
+              title: "Mon activité récente sur le sujet"
+              title_drafts: "Mes brouillons non publiés"
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"

@@ -4392,9 +4392,11 @@ ja:
             users:
               content: "ユーザー"
               title: "すべてのユーザーのリスト"
-            my_drafts:
-              content: "下書き"
-              title: "未投稿の下書き"
+            my_posts:
+              content: "自分の投稿"
+              content_drafts: "下書き"
+              title: "最近のトピックアクティビティ"
+              title_drafts: "未投稿の下書き"
               draft_count:
                 other: "%{count} 下書き"
             review:

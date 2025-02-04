@@ -12,8 +12,12 @@ module Onebox
       include Onebox::Mixins::GithubBody
       include Onebox::Mixins::GithubAuthHeader
 
-      matches_regexp(%r{^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/pull})
+      matches_domain("github.com", "www.github.com")
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{.*/pull})
+      end
 
       def url
         "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/pulls/#{match[:number]}"

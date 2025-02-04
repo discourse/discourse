@@ -3027,7 +3027,8 @@ zh_TW:
               content: "群組"
             users:
               content: "使用者"
-            my_drafts:
+            my_posts:
+              content: "我的貼文"
               draft_count:
                 other: "%{count} 草稿"
             review:

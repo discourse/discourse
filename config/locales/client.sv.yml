@@ -4249,9 +4249,11 @@ sv:
             users:
               content: "Användare"
               title: "Lista över alla användare"
-            my_drafts:
-              content: "Mina utkast"
-              title: "Mina utkast som inte har publicerats"
+            my_posts:
+              content: "Mina inlägg"
+              content_drafts: "Mina utkast"
+              title: "Min senaste ämnesaktivitet"
+              title_drafts: "Mina utkast som inte har publicerats"
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"

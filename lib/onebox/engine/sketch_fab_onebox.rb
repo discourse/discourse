@@ -6,11 +6,13 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(
-        /^https?:\/\/sketchfab\.com\/(?:models\/|3d-models\/(?:[^\/\s]+-)?)([a-z0-9]{32})/,
-      )
+      matches_domain("sketchfab.com")
       always_https
       requires_iframe_origins("https://sketchfab.com")
+
+      def self.matches_path(path)
+        path.match?(%r{^/(models/|3d-models/[^/\s]+-)?[a-z0-9]{32}})
+      end
 
       def to_html
         og = get_opengraph
