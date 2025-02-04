@@ -5623,9 +5623,11 @@ ar:
             users:
               content: "المستخدمون"
               title: "قائمة بكل المستخدمين"
-            my_drafts:
-              content: "مسوداتي"
-              title: "مسوداتي غير المنشورة"
+            my_posts:
+              content: "منشوراتي"
+              content_drafts: "مسوداتي"
+              title: "نشاطي الأخير في الموضوع"
+              title_drafts: "مسوداتي غير المنشورة"
               draft_count:
                 zero: "%{count} مسودة"
                 one: "مسودة واحدة (%{count})"
@@ -7035,7 +7037,7 @@ ar:
         settings: "الإعدادات"
         templates: "القوالب"
         templates_title: "قوالب البريد الإلكتروني"
-        preview_digest: "ملخص المعاينة"
+        preview_digest: "معاينة الملخص"
         advanced_test:
           title: "الاختبار المتقدم"
           desc: "استعرض كيف استقبلت عمليات Discourse الرسائل الإلكترونية. لتتمكن من معالجة الرسالة الإلكترونية بشكلٍٍ صحيح، يُرجى لصق الرسالة الإلكترونية الأصلية بالكامل أدناه."
@@ -7074,7 +7076,7 @@ ar:
         no_result: "لم يتم العثور على نتائج للملخص."
         reply_key: "مفتاح الرد"
         post_link_with_smtp: "تفاصيل المنشورات وSMTP"
-        skipped_reason: "سبب التخطي"
+        skipped_reason: "تخطي السبب"
         incoming_emails:
           from_address: "من"
           to_addresses: "إلى"

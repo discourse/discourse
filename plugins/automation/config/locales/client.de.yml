@@ -161,7 +161,7 @@ de:
               description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird. Standardmäßig eine beliebige Vertrauensstufe
             restricted_tags:
               label: Schlagwörter
-              description: Optional. Wird nur ausgelöst, wenn der Beitrag eines dieser Schlagwörter enthält
+              description: Optional. Wird nur bei Beiträgen mit einem dieser Schlagwörter ausgelöst
             restricted_category:
               label: Kategorie
               description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist

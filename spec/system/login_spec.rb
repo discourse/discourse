@@ -67,7 +67,7 @@ shared_examples "login scenarios" do |login_page_object|
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
       expect(page).to have_css(".not-activated-modal")
 
-      visit "/u/activate-account/invalid"
+      visit "/u/activate-account/123abc"
 
       activate_account.click_activate_account
       expect(activate_account).to have_error

@@ -24,6 +24,10 @@
 
 // Api keys
 .admin-api-keys {
+  .form-kit__container-optional {
+    display: none;
+  }
+
   .api-key-show {
     .form-element,
     .form-element-desc {
@@ -134,16 +138,6 @@
 .web-hook-container {
   .tip.good:empty {
     display: none;
-  }
-
-  input {
-    max-width: calc(100% - 10px);
-  }
-
-  .select-kit,
-  .select-kit.multi-select {
-    width: 100%;
-    max-width: 360px;
   }
 
   .event-selector {

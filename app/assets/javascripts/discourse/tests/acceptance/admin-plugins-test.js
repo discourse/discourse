@@ -12,6 +12,7 @@ acceptance("Admin - Plugins", function (needs) {
           {
             id: "some-test-plugin",
             name: "some-test-plugin",
+            humanized_name: "Some test plugin",
             about: "Plugin description",
             version: "0.1",
             url: "https://example.com",
@@ -44,7 +45,7 @@ acceptance("Admin - Plugins", function (needs) {
       .dom(
         "table.admin-plugins-list .admin-plugins-list__row .admin-plugins-list__name-details .admin-plugins-list__name-with-badges .admin-plugins-list__name"
       )
-      .hasText("Some Test Plugin", "displays the plugin in the table");
+      .hasText("Some test plugin", "displays the plugin in the table");
 
     assert
       .dom(".admin-plugins .admin-config-page .alert-error")

@@ -63,8 +63,8 @@
     "repo": null
   },
   "base": {
-    "label": "discourse:master",
-    "ref": "master",
+    "label": "discourse:main",
+    "ref": "main",
     "sha": "cc79d22f82ede170dd86a05274eb3c2c5eb02912",
     "user": {
       "login": "discourse",
@@ -165,8 +165,8 @@
       "forks": 1876,
       "open_issues": 38,
       "watchers": 7857,
-      "master_branch": "master",
-      "default_branch": "master"
+      "main_branch": "main",
+      "default_branch": "main"
     }
   },
   "_links": {

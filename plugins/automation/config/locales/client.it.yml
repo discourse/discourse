@@ -240,7 +240,7 @@ it:
               label: Etichette osservate
               description: Verrà attivato solo se l'argomento ha una di queste etichette
             trigger_on:
-              label: Attivazione
+              label: 'Attivazione:'
             trigger_with_pms:
               label: Attiva con messaggi privati
               description: L'attivazione avverrà anche se le etichette sono state modificate in un messaggio privato

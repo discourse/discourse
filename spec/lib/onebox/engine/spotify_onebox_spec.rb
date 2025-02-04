@@ -36,4 +36,36 @@ RSpec.describe Onebox::Engine::SpotifyOnebox do
       expect(html).to include('height="152"')
     end
   end
+
+  describe ".===" do
+    it "matches valid Spotify URL" do
+      valid_url = URI("https://open.spotify.com/playlist/12345")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "matches valid Spotify track URL" do
+      valid_url = URI("https://open.spotify.com/track/5Hpwb8l7NHJkiCZOPRmfIK?si=24c8d91a5d114c62")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "matches valid Spotify root URL" do
+      valid_root_url = URI("https://open.spotify.com/")
+      expect(described_class === valid_root_url).to eq(true)
+    end
+
+    it "does not match URL with extra domain" do
+      malicious_url = URI("https://open.spotify.com.malicious.com/playlist/12345")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match URL with subdomain" do
+      subdomain_url = URI("https://sub.open.spotify.com/playlist/12345")
+      expect(described_class === subdomain_url).to eq(false)
+    end
+
+    it "does not match unrelated URL" do
+      unrelated_url = URI("https://example.com/open.spotify.com/playlist/12345")
+      expect(described_class === unrelated_url).to eq(false)
+    end
+  end
 end

@@ -481,13 +481,50 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       .doesNotExist();
   });
 
-  test("clicking on my drafts link", async function (assert) {
-    updateCurrentUser({ draft_count: 1 });
+  test("clicking on my posts link", async function (assert) {
+    await visit("/t/280");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts']"
+    );
 
+    assert.strictEqual(
+      currentURL(),
+      `/u/${loggedInUser().username}/activity`,
+      "should transition to the user's activity url"
+    );
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
+      )
+      .exists("the my posts link is marked as active");
+
+    await visit(`/u/${loggedInUser().username}/activity/drafts`);
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
+      )
+      .doesNotExist(
+        "the my posts link is not marked as active when user has no drafts and visiting the user activity drafts URL"
+      );
+  });
+
+  test("clicking on my posts link when user has a draft", async function (assert) {
     await visit("/t/280");
 
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+      draft_count: 1,
+    });
+
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-drafts']"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts']"
     );
 
     assert.strictEqual(
@@ -504,24 +541,45 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-drafts'].active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
       )
-      .exists("the my drafts link is marked as active");
+      .exists("the my posts link is marked as active");
+
+    await visit(`/u/${loggedInUser().username}/activity`);
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
+      )
+      .exists("the my posts link is marked as active");
   });
 
-  test("my drafts link is visible when user has drafts", async function (assert) {
-    updateCurrentUser({ draft_count: 1 });
-
+  test("my posts title changes when drafts are present", async function (assert) {
     await visit("/");
 
     assert
-      .dom(".sidebar-section-link[data-link-name='my-drafts']")
-      .exists("my drafts link is displayed when drafts are present");
+      .dom(".sidebar-section-link[data-link-name='my-posts']")
+      .hasAttribute(
+        "title",
+        i18n("sidebar.sections.community.links.my_posts.title"),
+        "displays the default title when no drafts are present"
+      );
+
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+      draft_count: 1,
+    });
+
+    assert
+      .dom(".sidebar-section-link[data-link-name='my-posts']")
+      .hasAttribute(
+        "title",
+        i18n("sidebar.sections.community.links.my_posts.title_drafts"),
+        "displays the draft title when drafts are present"
+      );
   });
 
   test("my posts changes its text when drafts are present and new new view experiment is enabled", async function (assert) {
     updateCurrentUser({
-      draft_count: 1,
       user_option: {
         sidebar_show_count_of_new_items: true,
       },
@@ -530,16 +588,27 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await visit("/");
 
     assert
+      .dom(".sidebar-section-link[data-link-name='my-posts']")
+      .hasText(
+        i18n("sidebar.sections.community.links.my_posts.content"),
+        "displays the default text when no drafts are present"
+      );
+
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+      draft_count: 1,
+    });
+
+    assert
       .dom(
-        ".sidebar-section-link[data-link-name='my-drafts'] .sidebar-section-link-content-text"
+        ".sidebar-section-link[data-link-name='my-posts'] .sidebar-section-link-content-text"
       )
       .hasText(
-        i18n("sidebar.sections.community.links.my_drafts.content"),
+        i18n("sidebar.sections.community.links.my_posts.content_drafts"),
         "displays the text that's appropriate for when drafts are present"
       );
     assert
       .dom(
-        ".sidebar-section-link[data-link-name='my-drafts'] .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='my-posts'] .sidebar-section-link-content-badge"
       )
       .hasText("1", "displays the draft count with no text");
   });

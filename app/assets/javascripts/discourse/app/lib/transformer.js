@@ -345,11 +345,6 @@ export function applyValueTransformer(
 
     try {
       const value = valueCallback({ value: newValue, context });
-      if (mutable && typeof value !== "undefined") {
-        throw new Error(
-          `${prefix}: transformer "${transformerName}" expects the value to be mutated instead of returned. Remove the return value in your transformer.`
-        );
-      }
 
       if (!mutable) {
         newValue = value;
