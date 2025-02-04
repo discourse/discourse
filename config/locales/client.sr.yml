@@ -603,6 +603,8 @@ sr:
           smtp_title: "SMTP"
           smtp_instructions: "Kada omogućite SMTP za grupu, sve odlazne e-pošte poslate iz ulazne pošte grupe poslat će se putem SMTP parametara navedenih ovde umesto servera e-pošte konfigurisanog za druge poruke e-pošte koje šalje vaš forum."
           imap_title: "IMAP"
+          smtp_disable_confirm: "Ukoliko isključite SMTP, sva SMTP i IMAP podešavanja će biti resetovana i povezana funkcionalnost će biti ugašena. Želite li da nastavite?"
+          imap_mailbox_not_selected: "Morate odabrati Mailbox za ovu IMAP konfiguraciju inače ni jedna odlazna pošta se neće sinhronizovati."
           ssl_modes:
             none: "Ništa"
           credentials:
@@ -733,6 +735,7 @@ sr:
           read: "Pročitano"
           unread: "Nepročitano"
         ignore_duration_username: "Korisničko ime"
+        ignore_duration_save: "Ignoriši"
         mute_option: "Utišano"
         normal_option: "Normalno"
       notification_schedule:

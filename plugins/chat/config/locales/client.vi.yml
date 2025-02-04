@@ -15,6 +15,7 @@ vi:
       deleted_chat_username: đã bị xóa
       dates:
         yesterday: "Hôm qua"
+        time_tiny: "h:mm"
       create: "Tạo"
       cancel: "Huỷ"
       channel_settings:
@@ -31,6 +32,7 @@ vi:
       email_frequency:
         never: "Không bao giờ"
       header_indicator_preference:
+        dm_and_mentions: "Tin nhắn Trực tiếp và Nhắc đến"
         never: "Không bao giờ"
       flag: "Gắn cờ"
       join: "Tham gia"
