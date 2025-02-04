@@ -391,6 +391,7 @@ sr:
     digest_other_topics: "Maksimalan broj tema za prikazivanje u sekciji \"Novo u temama i kategorijama koje pratite\" rezimea email poruke."
     digest_min_excerpt_length: "Minimalna dužina isečka poruke u email rezimeu, u karakterima."
     email_link_color: "Boja linkova u HTML email porukama. Unesite ime boje ('blue') ili heksadecimalnu vrednost ('#0000FF'). "
+    allow_anonymous_posting: "Omogućite opciju za korisnike da odu u anonimni mod za postavljanje. Kada je aktivirana, korisnici mogu odarati da su njihovi idenentiteti sakriveni tokom kreiranja posta ili teme kroz ceo sajt. Pogledajte takođe allow_anonymous_likes`"
     hide_user_profiles_from_public: "Onemogući korisničke kartice, profile i direktorijume za anonimne korisnike."
     sequential_replies_threshold: "Broj poruka koje korisnik može zaredom da pošalje pre upozoravanja o prevelikom broju uzastopnih odgovora."
     disable_avatar_education_message: "Onemogući edukativne poruke za izmenu avatara."

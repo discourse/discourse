@@ -5891,7 +5891,7 @@ tr_TR:
             create_flag: "bayrak oluştur"
             update_flag: "bayrağı güncelle"
             delete_flag: "bayrağı sil"
-            topic_slow_mode_set: "konu yavaş modunu ayarla"
+            topic_slow_mode_set: "konuyu yavaş moda ayarla"
             topic_slow_mode_removed: "konu yavaş modunu kaldır"
             custom_emoji_create: "özel emoji oluştur"
             custom_emoji_destroy: "özel emoji'yi sil"
