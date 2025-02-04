@@ -15,6 +15,7 @@
     "@glint/template": "^1.5.2",
     "@mixer/parallel-prettier": "^2.0.3",
     "@swc/core": "^1.10.12",
+    "@tsconfig/ember": "^3.0.9",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "chrome-launcher": "^1.1.2",

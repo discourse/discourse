@@ -26,11 +26,8 @@ def write_config(package_dir, extras: {})
   package_dir = Pathname.new(package_dir)
   namespaces = { **CORE_NAMESPACES, **extras }
   config = {
+    "extends" => "@tsconfig/ember",
     "compilerOptions" => {
-      "target" => "es2021",
-      "module" => "esnext",
-      "moduleResolution" => "bundler",
-      "experimentalDecorators" => true,
       "paths" => {
         **namespaces
           .map { |ns, paths| [ns, paths.map { |p| "#{relative(package_dir, p)}/*" }] }
