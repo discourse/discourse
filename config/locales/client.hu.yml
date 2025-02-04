@@ -4651,9 +4651,11 @@ hu:
             users:
               content: "Felhasználók"
               title: "Az összes felhasználó listája"
-            my_drafts:
-              content: "Vázlataim"
-              title: "Nem közzétett piszkozataim"
+            my_posts:
+              content: "Bejegyzéseim"
+              content_drafts: "Vázlataim"
+              title: "Legutóbbi téma tevékenységem"
+              title_drafts: "Nem közzétett piszkozataim"
               draft_count:
                 one: "%{count} vázlat"
                 other: "%{count} vázlat"

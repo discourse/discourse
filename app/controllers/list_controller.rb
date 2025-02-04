@@ -201,6 +201,7 @@ class ListController < ApplicationController
          :private_messages_group_unread
       raise Discourse::NotFound if target_user.id != current_user.id
     when :private_messages_tag
+      raise Discourse::NotFound if target_user.id != current_user.id
       raise Discourse::NotFound if !guardian.can_tag_pms?
     when :private_messages_warnings
       guardian.ensure_can_see_warnings!(target_user)

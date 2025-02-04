@@ -1477,8 +1477,9 @@ be:
               content: "Групы"
             users:
               content: "карыстальнікаў"
-            my_drafts:
-              content: "Мае чарнавікі"
+            my_posts:
+              content: "мае паведамленні"
+              content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
       filter: "Filter..."

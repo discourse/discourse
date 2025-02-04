@@ -387,15 +387,21 @@ html.composer-open {
     .cancel {
       align-items: center;
       display: flex;
-      margin-left: 1.25em;
+      margin-left: 1em;
       line-height: normal;
       color: var(--primary-high);
       transition: color 250ms;
+      padding: 0;
 
       &:hover,
       &:focus {
         outline: none;
         color: var(--danger);
+      }
+
+      &:active {
+        background-color: transparent;
+        background-image: none;
       }
     }
 

@@ -4644,9 +4644,11 @@ it:
             users:
               content: "Utenti"
               title: "Elenco di tutti gli utenti"
-            my_drafts:
-              content: "Le mie bozze"
-              title: "Le mie bozze non pubblicate"
+            my_posts:
+              content: "I miei Messaggi"
+              content_drafts: "Le mie bozze"
+              title: "La mia recente attività sull'argomento"
+              title_drafts: "Le mie bozze non pubblicate"
               draft_count:
                 one: "%{count} bozza"
                 other: "%{count} bozze"
@@ -4807,6 +4809,8 @@ it:
         legal:
           title: "Informazioni legali"
           header_description: "Configura le impostazioni legali, come i termini di servizio, l'informativa sulla privacy, i dettagli di contatto e le considerazioni specifiche dell'UE"
+        localization:
+          header_description: "Configura la lingua dell'interfaccia della tua community e altre opzioni di localizzazione per i tuoi membri"
         login_and_authentication:
           title: "Accesso e autenticazione"
           header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
@@ -4924,10 +4928,10 @@ it:
           percent_change_tooltip_previous_value:
             yesterday:
               one: "Era %{count} due giorni fa."
-              other: "Era %{count} due giorni fa."
+              other: "Erano %{count} due giorni fa."
             two_weeks_ago:
               one: "Era %{count} due settimane fa."
-              other: "Era %{count} due settimane fa."
+              other: "Erano %{count} due settimane fa."
             thirty_days_ago:
               one: "Era %{count} nel periodo di 30 giorni precedente."
               other: "Era %{count} nel periodo di 30 giorni precedente."
@@ -6225,7 +6229,7 @@ it:
             text: "Roll up"
             title: "Crea nuovi elenchi di indirizzi IP interdetti se ci sono almeno 'min_ban_entries_for_roll_up' elementi."
         search_logs:
-          title: "Cerca nei log"
+          title: "Log di ricerca"
           term: "Termine"
           searches: "Ricerche"
           click_through_rate: "CTR"

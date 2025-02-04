@@ -87,6 +87,8 @@ RSpec.describe Chat::GuardianExtensions do
         end
 
         context "when not group" do
+          before { dm_channel.add(user) }
+
           it "allows to edit the channel" do
             Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
             expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(true)
@@ -631,13 +633,198 @@ RSpec.describe Chat::GuardianExtensions do
         channel.update!(status: :archived)
         expect(guardian.can_create_channel_message?(channel)).to eq(false)
       end
+    end
+  end
 
-      context "for direct message channels" do
-        it "it still allows the user to message even if they are not in direct_message_enabled_groups because they are not creating the channel" do
-          SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
-          dm_channel.update!(status: :open)
-          expect(guardian.can_create_channel_message?(dm_channel)).to eq(true)
-        end
+  describe "#can_send_direct_message?" do
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+    alias_matcher :be_able_to_send_direct_message, :be_can_send_direct_message
+
+    context "when sender is chatting to self" do
+      let(:dm_channel_solo) { Fabricate(:direct_message_channel, users: [user]) }
+
+      it "returns true" do
+        expect(guardian).to be_able_to_send_direct_message(dm_channel_solo)
+      end
+    end
+
+    context "when sender is not in chat enabled groups" do
+      before { SiteSetting.chat_allowed_groups = "" }
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_send_direct_message(dm_channel)
+      end
+    end
+
+    context "when sender is suspended" do
+      before do
+        UserSuspender.new(
+          user,
+          suspended_till: 1.day.from_now,
+          by_user: Discourse.system_user,
+          reason: "spam",
+        ).suspend
+      end
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_send_direct_message(dm_channel)
+      end
+    end
+
+    context "when sender is a bot" do
+      before { user.id = -1 }
+
+      it "returns true" do
+        expect(guardian).to be_able_to_send_direct_message(dm_channel)
+      end
+    end
+  end
+
+  describe "#allowing_direct_messages?" do
+    context "when user has disabled private messages" do
+      before { user.user_option.update!(allow_private_messages: false) }
+
+      it "returns false" do
+        expect(guardian.allowing_direct_messages?).to eq(false)
+      end
+    end
+
+    context "when user has enabled private messages" do
+      it "returns true" do
+        expect(guardian.allowing_direct_messages?).to eq(true)
+      end
+    end
+  end
+
+  describe "#recipient_can_chat?" do
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+    alias_matcher :be_able_to_chat, :be_recipient_can_chat
+
+    context "when target user is not in chat enabled groups" do
+      before { SiteSetting.chat_allowed_groups = "" }
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_chat(other_user)
+      end
+    end
+
+    context "when target user is not in direct message enabled groups" do
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:admins] }
+
+      it "returns true" do
+        expect(guardian).to be_able_to_chat(other_user)
+      end
+    end
+
+    context "when target user has disabled chat" do
+      before { other_user.user_option.update!(chat_enabled: false) }
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_chat(other_user)
+      end
+    end
+  end
+
+  describe "#recipient_not_muted?" do
+    fab!(:other_user) { Fabricate(:user) }
+
+    context "when target user is not muted" do
+      it "returns true" do
+        expect(guardian.recipient_not_muted?(other_user)).to eq(true)
+      end
+    end
+
+    context "when target user is muted" do
+      before { MutedUser.create!(user: user, muted_user: other_user) }
+
+      it "returns false" do
+        expect(guardian.recipient_not_muted?(other_user)).to eq(false)
+      end
+    end
+  end
+
+  describe "#recipient_not_ignored?" do
+    fab!(:other_user) { Fabricate(:user) }
+
+    context "when target user is not ignored" do
+      it "returns true" do
+        expect(guardian.recipient_not_ignored?(other_user)).to eq(true)
+      end
+    end
+
+    context "when target user is ignored" do
+      before do
+        IgnoredUser.create!(user: user, ignored_user: other_user, expiring_at: 1.day.from_now)
+      end
+
+      it "returns false" do
+        expect(guardian.recipient_not_ignored?(other_user)).to eq(false)
+      end
+    end
+  end
+
+  describe "#recipient_allows_direct_messages?" do
+    fab!(:other_user) { Fabricate(:user) }
+    alias_matcher :be_able_to_receive_direct_message, :be_recipient_allows_direct_messages
+
+    context "when target user has disabled private messages" do
+      before { other_user.user_option.update(allow_private_messages: false) }
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_receive_direct_message(other_user)
+      end
+    end
+
+    context "when target user is suspended" do
+      before do
+        UserSuspender.new(
+          other_user,
+          suspended_till: 1.day.from_now,
+          by_user: Discourse.system_user,
+          reason: "spam",
+        ).suspend
+      end
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_receive_direct_message(other_user)
+      end
+    end
+
+    context "when sender is ignored by target user" do
+      before do
+        IgnoredUser.create!(user: other_user, ignored_user: user, expiring_at: 1.day.from_now)
+      end
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_receive_direct_message(other_user)
+      end
+    end
+
+    context "when sender is muted by target user" do
+      before { MutedUser.create!(user: other_user, muted_user: user) }
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_receive_direct_message(other_user)
+      end
+    end
+
+    context "when staff is muted by target user" do
+      before { MutedUser.create!(user: other_user, muted_user: staff) }
+
+      it "returns true" do
+        expect(staff_guardian).to be_able_to_receive_direct_message(other_user)
+      end
+    end
+
+    context "when staff is ignored by target user" do
+      before do
+        IgnoredUser.create!(user: other_user, ignored_user: staff, expiring_at: 1.day.from_now)
+      end
+
+      it "returns true" do
+        expect(staff_guardian).to be_able_to_receive_direct_message(other_user)
       end
     end
   end

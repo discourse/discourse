@@ -6,9 +6,13 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{https?://(.+)?simplecast.com/(episodes|s)/.*})
+      matches_domain("simplecast.com", allow_subdomains: true)
       always_https
       requires_iframe_origins("https://player.simplecast.com")
+
+      def self.matches_path(path)
+        path.match?(%r{^/(episodes|s)/.+})
+      end
 
       def to_html
         get_oembed.html

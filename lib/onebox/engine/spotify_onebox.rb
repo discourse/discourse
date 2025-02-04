@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://open\.spotify/\.com})
+      matches_domain("open.spotify.com")
       requires_iframe_origins "https://open.spotify.com"
       always_https
 
