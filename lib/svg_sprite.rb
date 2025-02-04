@@ -539,7 +539,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.cache
-    @cache = DistributedCache.new("svg_sprite")
+    @cache ||= DistributedCache.new("svg_sprite")
   end
 
   def self.remap_from_fa5(icon_name)
