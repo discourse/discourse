@@ -23,4 +23,31 @@ RSpec.describe Onebox::Engine::GitlabBlobOnebox do
       expect(html).to include("module Onebox")
     end
   end
+
+  describe ".===" do
+    it "matches valid GitLab blob URL" do
+      valid_url = URI("https://gitlab.com/group/project/-/blob/main/file.txt")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "matches valid GitLab blob URL with www" do
+      valid_url_with_www = URI("https://www.gitlab.com/group/project/-/blob/main/file.txt")
+      expect(described_class === valid_url_with_www).to eq(true)
+    end
+
+    it "does not match URL with extra domain" do
+      malicious_url = URI("https://gitlab.com.malicious.com/group/project/-/blob/main/file.txt")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match URL with subdomain" do
+      subdomain_url = URI("https://sub.gitlab.com/group/project/-/blob/main/file.txt")
+      expect(described_class === subdomain_url).to eq(false)
+    end
+
+    it "does not match URL with invalid path" do
+      invalid_path_url = URI("https://gitlab.com/group/project/-/tree/main")
+      expect(described_class === invalid_path_url).to eq(false)
+    end
+  end
 end

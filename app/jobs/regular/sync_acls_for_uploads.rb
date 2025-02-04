@@ -11,27 +11,24 @@ module Jobs
       return if !Discourse.store.external?
       return if !args.key?(:upload_ids)
 
-      time =
-        Benchmark.measure do
-          Upload
-            .includes(:optimized_images)
-            .where(id: args[:upload_ids])
-            .find_in_batches do |uploads|
-              uploads.each do |upload|
-                begin
-                  Discourse.store.update_upload_ACL(upload)
-                rescue => err
-                  Discourse.warn_exception(
-                    err,
-                    message: "Failed to update upload ACL",
-                    env: {
-                      upload_id: upload.id,
-                      filename: upload.original_filename,
-                    },
-                  )
-                end
-              end
+      Upload
+        .includes(:optimized_images)
+        .where(id: args[:upload_ids])
+        .find_in_batches do |uploads|
+          uploads.each do |upload|
+            begin
+              Discourse.store.update_upload_ACL(upload)
+            rescue => err
+              Discourse.warn_exception(
+                err,
+                message: "Failed to update upload ACL",
+                env: {
+                  upload_id: upload.id,
+                  filename: upload.original_filename,
+                },
+              )
             end
+          end
         end
     end
   end

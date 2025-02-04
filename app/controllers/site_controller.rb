@@ -16,15 +16,15 @@ class SiteController < ApplicationController
   end
 
   def custom_html
-    render json: custom_html_json
+    render json: @application_layout_preloader.custom_html_json
   end
 
   def banner
-    render json: banner_json
+    render json: @application_layout_preloader.banner_json
   end
 
   def emoji
-    render json: custom_emoji
+    render json: @application_layout_preloader.custom_emoji
   end
 
   def basic_info

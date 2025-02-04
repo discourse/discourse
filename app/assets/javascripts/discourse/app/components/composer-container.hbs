@@ -1,6 +1,6 @@
 <ComposerBody
   @composer={{this.composer.model}}
-  @showPreview={{this.composer.showPreview}}
+  @showPreview={{this.composer.isPreviewVisible}}
   @openIfDraft={{this.composer.openIfDraft}}
   @typed={{this.composer.typed}}
   @cancelled={{this.composer.cancelled}}
@@ -8,7 +8,7 @@
 >
   <div class="grippie"></div>
   {{#if this.composer.visible}}
-    {{html-class (if this.composer.showPreview "composer-has-preview")}}
+    {{html-class (if this.composer.isPreviewVisible "composer-has-preview")}}
     <ComposerMessages
       @composer={{this.composer.model}}
       @messageCount={{this.composer.messageCount}}
@@ -137,7 +137,7 @@
 
                 <div
                   class="title-and-category
-                    {{if this.composer.showPreview 'with-preview'}}"
+                    {{if this.composer.isPreviewVisible 'with-preview'}}"
                 >
                   <ComposerTitle
                     @composer={{this.composer.model}}
@@ -205,7 +205,7 @@
                   @connectorTagName="div"
                   @outletArgs={{hash
                     model=this.composer.model
-                    showPreview=this.composer.showPreview
+                    showPreview=this.composer.isPreviewVisible
                   }}
                 />
               </span>
@@ -239,25 +239,21 @@
             />
 
             {{#if this.site.mobileView}}
-              <a
-                href
-                {{on "click" this.composer.cancel}}
-                title={{i18n "cancel"}}
-                class="cancel"
-              >
-                {{#if this.composer.canEdit}}
-                  {{d-icon "xmark"}}
-                {{else}}
-                  {{d-icon "trash-can"}}
-                {{/if}}
-              </a>
+              <DButton
+                @action={{this.composer.cancel}}
+                class="cancel btn-transparent"
+                @icon={{if this.composer.canEdit "xmark" "trash-can"}}
+                @preventFocus={{true}}
+                @title="close"
+              />
             {{else}}
-              <a
-                href
-                {{on "click" this.composer.cancel}}
-                class="cancel"
-                role="button"
-              >{{i18n "close"}}</a>
+              <DButton
+                @action={{this.composer.cancel}}
+                class="cancel btn-transparent"
+                @preventFocus={{true}}
+                @title="close"
+                @label="close"
+              />
             {{/if}}
 
             {{#if this.site.mobileView}}
@@ -299,17 +295,19 @@
               </a>
             {{/if}}
 
-            <a
-              href
-              class="btn btn-default no-text mobile-preview"
-              title={{i18n "composer.show_preview"}}
-              {{on "click" this.composer.togglePreview}}
-              aria-label={{i18n "composer.show_preview"}}
-            >
-              {{d-icon "desktop"}}
-            </a>
+            {{#if this.composer.allowPreview}}
+              <a
+                href
+                class="btn btn-default no-text mobile-preview"
+                title={{i18n "composer.show_preview"}}
+                {{on "click" this.composer.togglePreview}}
+                aria-label={{i18n "composer.show_preview"}}
+              >
+                {{d-icon "desktop"}}
+              </a>
+            {{/if}}
 
-            {{#if this.composer.showPreview}}
+            {{#if this.composer.isPreviewVisible}}
               <DButton
                 @action={{this.composer.togglePreview}}
                 @title="composer.hide_preview"
@@ -370,14 +368,14 @@
             {{/if}}
           </div>
 
-          {{#if this.site.desktopView}}
+          {{#if (and this.composer.allowPreview this.site.desktopView)}}
             <DButton
               @action={{this.composer.togglePreview}}
               @translatedTitle={{this.composer.toggleText}}
               @icon="angles-left"
               class={{concat-class
                 "btn-transparent btn-mini-toggle toggle-preview"
-                (unless this.composer.showPreview "active")
+                (unless this.composer.isPreviewVisible "active")
               }}
             />
           {{/if}}

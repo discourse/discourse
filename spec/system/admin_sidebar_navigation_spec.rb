@@ -337,4 +337,19 @@ describe "Admin | Sidebar Navigation", type: :system do
       ],
     )
   end
+
+  it "adds auto-generated plugin links for plugins with settings" do
+    skip if Discourse.plugins.empty?
+
+    SiteSetting.enable_markdown_footnotes = true
+
+    visit("/admin")
+
+    sidebar.toggle_section(:plugins)
+
+    expect(page).to have_css(
+      ".sidebar-section-link-content-text",
+      text: I18n.t("js.footnote.title"),
+    )
+  end
 end

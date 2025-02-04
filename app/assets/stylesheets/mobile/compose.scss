@@ -11,6 +11,7 @@
     padding: 6px;
     padding-bottom: unquote("max(env(safe-area-inset-bottom), 6px)");
     flex-grow: 1;
+    min-height: 0;
   }
 
   &.open {
@@ -94,10 +95,9 @@
         margin-left: 6px;
       }
 
-      .cancel {
+      .cancel .d-icon {
         font-size: 1.4em;
         color: var(--primary-low-mid);
-        margin-left: 0.6em;
         padding: 3px 6px;
       }
     }

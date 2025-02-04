@@ -1998,8 +1998,8 @@ ru:
         after_10_minutes: "Более 10 минут"
       notification_level_when_replying:
         label: "При публикации"
-        watch_topic: "Наблюдаемая тема"
-        track_topic: "Отслеживаемая тема"
+        watch_topic: "Наблюдать за темой"
+        track_topic: "Отслеживать тему"
         do_nothing: "Ничего не делать"
       topics_unread_when_closed: "Считать темы непрочитанными, если они закрыты"
       invited:
@@ -5148,9 +5148,11 @@ ru:
             users:
               content: "Пользователи"
               title: "Список пользователей"
-            my_drafts:
-              content: "Мои черновики"
-              title: "Мои неопубликованные черновики"
+            my_posts:
+              content: "Мои сообщения"
+              content_drafts: "Мои черновики"
+              title: "Мои недавняя активность в темах"
+              title_drafts: "Мои неопубликованные черновики"
               draft_count:
                 one: "%{count} черновик"
                 few: "%{count} черновика"
@@ -5878,7 +5880,7 @@ ru:
           legal: "Юридическое"
           moderation_flags:
             title: "Модерация"
-            keywords: "flag|review"
+            keywords: "пометить|проверить"
       appearance:
         title: "Внешний вид"
         sidebar_link:
@@ -5898,7 +5900,7 @@ ru:
           appearance: "Внешний вид"
           server_setup:
             title: "Настройка сервера и журналы"
-            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+            keywords: "email|smtp|mailgun|sendgrid|отправлено|пропущено|возвращено|получено|отклонено|журналы эл. почты|предпросмотр сводки"
       security:
         title: "Безопасность"
         sidebar_link:
@@ -5906,7 +5908,7 @@ ru:
           spam: "Настройки спама"
           staff_action_logs:
             title: "Журналы и модерация"
-            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+            keywords: "журнал ошибок|действия персонала|проверяемые адреса эл. почты|проверяемые IP-адреса|проверяемые ссылки|журналы поиска"
       section_landing_pages:
         account:
           title: "Аккаунт"

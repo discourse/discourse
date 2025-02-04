@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import $ from "jquery";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
 import PostList from "discourse/components/post-list";
@@ -164,6 +163,8 @@ export default class UserStreamComponent extends Component {
       @titlePath="titleHtml"
       @additionalItemClasses="user-stream-item"
       @showUserInfo={{false}}
+      @resumeDraft={{this.resumeDraft}}
+      @removeDraft={{this.removeDraft}}
       class={{concatClass "user-stream" this.filterClassName}}
       {{this.eventListeners @stream}}
     >
@@ -216,23 +217,6 @@ export default class UserStreamComponent extends Component {
             {{/each}}
           </div>
         {{/each}}
-
-        {{#if post.editableDraft}}
-          <div class="user-stream-item-draft-actions">
-            <DButton
-              @action={{fn this.resumeDraft post}}
-              @icon="pencil"
-              @label="drafts.resume"
-              class="btn-default resume-draft"
-            />
-            <DButton
-              @action={{fn this.removeDraft post}}
-              @icon="trash-can"
-              @title="drafts.remove"
-              class="btn-danger remove-draft"
-            />
-          </div>
-        {{/if}}
       </:abovePostItemExcerpt>
 
       <:belowPostItem as |post|>

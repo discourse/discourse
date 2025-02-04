@@ -452,7 +452,12 @@ fa_IR:
         yes_value: "حذف"
         no_value: "ادامه"
       dropdown:
+        title: "آخرین منوی پیش‌نویس‌ها را باز کن"
+        untitled: "پیش نویس بی عنوان"
         view_all: "مشاهده همه"
+        other_drafts:
+          one: "+%{count} پیش نویس دیگر"
+          other: "+%{count} پیش نویس دیگر"
     topic_count_all:
       one: "مشاهده %{count} موضوع جدید"
       other: "مشاهده %{count} موضوع جدید"
@@ -1784,6 +1789,11 @@ fa_IR:
         after_4_minutes: "پس از ۴ دقیقه"
         after_5_minutes: "پس از ۵ دقیقه"
         after_10_minutes: "پس از ۱۰ دقیقه"
+      notification_level_when_replying:
+        label: "هنگام ارسال"
+        watch_topic: "موضوع را دنبال کنید"
+        track_topic: "موضوع را پیگیری کنید"
+        do_nothing: "هیچ کاری نکن"
       topics_unread_when_closed: "موضوعات خوانده نشده را در صورت بسته شدن در نظر بگیر"
       invited:
         title: "دعوت‌ها"
@@ -2351,6 +2361,7 @@ fa_IR:
     full_name_requirement:
       required_at_signup: "مورد نیاز"
       optional_at_signup: "اختیاری"
+      hidden_at_signup: "اختیاری، پنهان در هنگام ثبت نام"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3531,6 +3542,7 @@ fa_IR:
       notice:
         new_user: "اولین بار است که %{user} پست ارسال می کند - بیایید ورودش به انجمن را خوشامد بگوییم!"
         returning_user: "مدتی است که کاربر %{user} را نمی‌بینیم — آخرین پست او %{time}بود."
+        custom_created_by: "(افزوده شده توسط %{userLinkHTML})"
       unread: "نوشته‌ی خوانده نشده"
       has_replies:
         one: "%{count} پاسخ"
@@ -3601,6 +3613,7 @@ fa_IR:
         edit_anonymous: "با عرض پوزش، اما شما برای ویرایش این نوشته باید وارد سیستم شوید."
         flag_action: "پرچم"
         flag: "به صورت خصوصی این پست را برای توجه کردن یا ارسال پیام شخصی در مورد آن، پرچم گذاری کنید"
+        anonymous_flag: "ارسال ایمیل به کارکنان برای پرچم گذاری این پست"
         delete_action: "حذف نوشته"
         delete: "حذف این نوشته"
         undelete_action: "لغو حذف پست"
@@ -3646,6 +3659,9 @@ fa_IR:
         delete_topic_confirm_modal_no: "خیر، این موضوع را نگه دار"
         delete_topic_error: "خطایی در هنگام حذف این موضوع رخ داده است."
         delete_topic: "حذف موضوع"
+        add_post_notice: "افزودن اطلاعیه رسمی…"
+        change_post_notice: "تغییر اعلامیه رسمی…"
+        delete_post_notice: "حذف اعلامیه رسمی"
         remove_timer: "حذف زمان‌سنج"
         edit_timer: "ویرایش تایمر"
       actions:
@@ -3903,6 +3919,9 @@ fa_IR:
         all: "همه موضوعات"
         none: "بدون زیر دسته"
       colors_disabled: "شما نمی توانید رنگ ها را انتخاب کنید زیرا سبک دسته‌بندی را انتخاب نکرده‌اید."
+    anonymous_flagging:
+      title: "گزارش محتوای ناقض قانون"
+      description: "برای گزارش محتوای ناقض قانون لطفا با <a href='mailto:%{email}?subject=محتوای ناقض قانون: %{topic_title}&body=این پست %{url} حاوی محتوای ناقض قانون است.'>%{email}</a> تماس بگیرید"
     flagging:
       title: "از اینکه جامعه ما را مدنی نگه می دارید متشکریم!"
       action: "پرچم‌گذاری نوشته"
@@ -4198,6 +4217,7 @@ fa_IR:
         title: "برنامه"
         create: "ایجاد موضوع جدید"
         notifications: "%{shortcut} باز کردن آگاه‌سازی‌ها"
+        hamburger_menu: "%{shortcut} باز کردن منوی ناوبری"
         user_profile_menu: "%{shortcut} نمایش منو کاربری"
         show_incoming_updated_topics: "%{shortcut} نمایش موضوعات به‌روز شده"
         search: "جستجو %{shortcut}"
@@ -4258,6 +4278,9 @@ fa_IR:
         one: "این مدال را %{count} بار به دست آورده"
         other: "این مدال را %{count} بار به دست آورده"
       granted_on: "اعطا شده %{date}"
+      others_count:
+        one: "%{count} بار به دیگران اعطا شده است"
+        other: "%{count} بار به دیگران اعطا شده است"
       title: نشان‌ها
       allow_title: "می‌توانید از این نشان برای عنوان کاربری استفاده کنید"
       multiple_grant: "می‌توانید این را چند بار به‌دست آورید"
@@ -4267,6 +4290,9 @@ fa_IR:
       more_badges:
         one: "+%{count} بیشتر"
         other: "+%{count} بیشتر"
+      awarded:
+        one: "%{number} نشان اهدا شد"
+        other: "%{number} نشان اهدا شد"
       select_badge_for_title: انتخاب یک نشان برای استفاده در عنوان خود
       none: "(هیچی)"
       successfully_granted: "%{badge} به %{username} با موفقیت اعطا شد"
@@ -4281,8 +4307,21 @@ fa_IR:
           name: دیگر
         posting:
           name: در حال نوشتن
+      favorite_max_reached: "شما نمی توانید نشان‌های مورد علاقه بیشتری داشته باشید."
+      favorite_max_not_reached: "این نشان را به عنوان مورد علاقه علامت گذاری کنید"
+      favorite_count: "%{count}/%{max} نشان به عنوان مورد علاقه مشخص شده اند"
     download_calendar:
+      title: "دانلود تقویم"
+      save_ics: "دانلود فایل ics"
+      save_google: "اضافه کردن به تقویم گوگل"
+      remember: "دوباره از من نپرس"
+      remember_explanation: "(شما می توانید این تنظیم را در تنظیمات کاربری خود تغییر دهید)"
       download: "دانلود"
+      default_calendar: "تقویم پیش فرض"
+      default_calendar_instruction: "تعیین کنید که هنگام ذخیره تاریخ باید از کدام تقویم استفاده شود"
+      add_to_calendar: "افزودن به تقویم"
+      google: "تقویم گوگل"
+      ics: "ICS"
     tagging:
       all_tags: "تمام برچسب‌ها"
       other_tags: "برچسب‌های دیگر"
@@ -4291,11 +4330,25 @@ fa_IR:
       selector_remove_filter: "حذف فیلتر"
       tags: "برچسب‌ها"
       choose_for_topic: "برچسب‌های اختیاری"
+      choose_for_topic_required:
+        one: "برچسب انتخاب کنید... %{count} حداقل"
+        other: "برچسب انتخاب کنید... %{count} حداقل"
+      choose_for_topic_required_group:
+        one: "برچسب از '%{name}' انتخاب کنید... %{count}"
+        other: "برچسب از '%{name}' انتخاب کنید... %{count}"
       info: "اطلاعات"
+      default_info: "این برچسب به هیچ دسته ای محدود نمی شود و مترادف ندارد."
+      staff_info: "برای افزودن محدودیت، این برچسب را در یک <a href=%{basePath}/tag_groups>گروه برچسب</a> قرار دهید."
+      category_restricted: "این برچسب محدود به دسته‌هایی است که اجازه دسترسی به آن‌ها را ندارید."
+      synonyms: "مترادف‌ها"
+      synonyms_description: "هنگامی که از برچسب‌های زیر استفاده می‌شود، آنها با <b>%{base_tag_name}</b>جایگزین می‌شوند."
       save: "ذخیره نام و توضیحات برچسب"
       tag_groups_info:
         one: 'این برچسب متعلق به گروه "%{tag_groups}" است.'
         other: "این برچسب متعلق به این گروه ها است:%{tag_groups}."
+      category_restrictions:
+        one: "فقط در این دسته قابل استفاده است:"
+        other: "فقط در این دسته‌ها قابل استفاده است:"
       edit_synonyms: "ویرایش مترادف ها"
       add_synonyms: "افزودن"
       delete_tag: "حذف برچسب"
@@ -4485,7 +4538,8 @@ fa_IR:
             users:
               content: "کاربران"
               title: "فهرست همه‌ی کاربران"
-            my_drafts:
+            my_posts:
+              content: "نوشته‌های من"
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"

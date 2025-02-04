@@ -6,8 +6,12 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://(photos)\.(app\.goo\.gl|google\.com)})
+      matches_domain("photos.google.com", "photos.app.goo.gl")
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{^/.*$})
+      end
 
       def to_html
         og = get_opengraph

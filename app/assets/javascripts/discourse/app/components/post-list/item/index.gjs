@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import DButton from "discourse/components/d-button";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import { userPath } from "discourse/lib/url";
 
 export default class PostListItem extends Component {
@@ -53,6 +54,22 @@ export default class PostListItem extends Component {
       : this.args.post.id;
   }
 
+  get isDraft() {
+    return this.args.post.constructor.name === "UserDraft";
+  }
+
+  get draftIcon() {
+    const key = this.args.post.draft_key;
+
+    if (key.startsWith("new_private_message")) {
+      return "envelope";
+    } else if (key.startsWith("new_topic")) {
+      return "layer-group";
+    } else {
+      return "reply";
+    }
+  }
+
   <template>
     <div
       class="post-list-item
@@ -66,20 +83,26 @@ export default class PostListItem extends Component {
       {{yield to="abovePostItemHeader"}}
 
       <div class="post-list-item__header info">
-        <a
-          href={{userPath this.user.username}}
-          data-user-card={{this.user.username}}
-          class="avatar-link"
-        >
-          <div class="avatar-wrapper">
-            {{avatar
-              this.user
-              imageSize="large"
-              extraClasses="actor"
-              ignoreTitle="true"
-            }}
+        {{#if this.isDraft}}
+          <div class="draft-icon">
+            {{icon this.draftIcon class="icon"}}
           </div>
-        </a>
+        {{else}}
+          <a
+            href={{userPath this.user.username}}
+            data-user-card={{this.user.username}}
+            class="avatar-link"
+          >
+            <div class="avatar-wrapper">
+              {{avatar
+                this.user
+                imageSize="large"
+                extraClasses="actor"
+                ignoreTitle="true"
+              }}
+            </div>
+          </a>
+        {{/if}}
 
         <PostListItemDetails
           @post={{@post}}
@@ -88,32 +111,30 @@ export default class PostListItem extends Component {
           @urlPath={{@urlPath}}
           @user={{this.user}}
           @showUserInfo={{@showUserInfo}}
+          @isDraft={{this.isDraft}}
+          @resumeDraft={{@resumeDraft}}
         />
 
-        {{#if @post.draftType}}
-          <span class="draft-type">{{@post.draftType}}</span>
-        {{else}}
+        {{#unless @post.draftType}}
           <ExpandPost @item={{@post}} />
+        {{/unless}}
+
+        {{#if @post.editableDraft}}
+          <div class="user-stream-item-draft-actions">
+            <DButton
+              @action={{fn @resumeDraft @post}}
+              @icon="pencil"
+              @title="drafts.resume"
+              class="btn-default resume-draft"
+            />
+            <DButton
+              @action={{fn @removeDraft @post}}
+              @icon="trash-can"
+              @title="drafts.remove"
+              class="btn-danger remove-draft"
+            />
+          </div>
         {{/if}}
-
-        <div class="post-list-item__metadata">
-          <span class="time">
-            {{formatDate @post.created_at leaveAgo="true"}}
-          </span>
-
-          {{#if @post.deleted_by}}
-            <span class="delete-info">
-              {{icon "trash-can"}}
-              {{avatar
-                @post.deleted_by
-                imageSize="tiny"
-                extraClasses="actor"
-                ignoreTitle="true"
-              }}
-              {{formatDate @item.deleted_at leaveAgo="true"}}
-            </span>
-          {{/if}}
-        </div>
 
         {{yield to="belowPostItemMetadata"}}
       </div>

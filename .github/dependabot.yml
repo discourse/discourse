@@ -68,6 +68,8 @@ updates:
       - dependency-name: "moment-timezone"
       - dependency-name: "@discourse/moment-timezone-names-translations"
       - dependency-name: "squoosh"
+      - dependency-name: "@glint/*" # Using unstable version - don't auto-upgrade to stable
+      - dependency-name: "typescript" # Very sensitive to glint/volar version
     groups:
       babel:
         patterns:

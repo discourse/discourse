@@ -58,10 +58,10 @@ export default {
       const inputs = ["input", "textarea", "select", "button"];
       const elementTagName = el?.tagName.toLowerCase();
 
-      if (inputs.includes(elementTagName)) {
-        return false;
-      }
-      return true;
+      return (
+        inputs.includes(elementTagName) ||
+        !!el?.closest('[contenteditable="true"]')
+      );
     };
     const modifyComposerSelection = (event, type) => {
       if (!isChatComposer(event.target)) {
@@ -87,7 +87,7 @@ export default {
     };
 
     const openChatDrawer = (event) => {
-      if (!isInputSelection(event.target)) {
+      if (isInputSelection(event.target)) {
         return;
       }
       event.preventDefault();

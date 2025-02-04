@@ -2808,6 +2808,8 @@ lv:
               content: "Grupas"
             users:
               content: "Lietotāji"
+            my_posts:
+              content: "Mani ieraksti"
             review:
               content: "Pārskats"
             invite:

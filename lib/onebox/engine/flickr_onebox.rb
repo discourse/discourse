@@ -8,8 +8,12 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://www\.flickr\.com/photos/})
+      matches_domain("www.flickr.com")
       always_https
+
+      def self.matches_path(path)
+        path.start_with?("/photos/")
+      end
 
       def to_html
         og = get_opengraph
