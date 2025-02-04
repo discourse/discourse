@@ -59,7 +59,8 @@
   .draft-icon {
     color: var(--primary-high);
     font-size: var(--font-up-4);
-    margin-right: 0.75rem;
+    margin-right: 0.5rem;
+    text-align: center;
   }
 
   .stream-topic-title {
@@ -208,7 +209,7 @@
 .user-stream .child-actions, /* DEPRECATED: '.user-stream .child-actions' selector*/
 .user-stream-item-actions,
 .user-stream-item-draft-actions {
-  margin-top: 0;
+  margin-top: 8px;
 
   .avatar-link {
     float: none;
