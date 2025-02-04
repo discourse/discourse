@@ -3,6 +3,7 @@
 RSpec.describe "Styleguide assets" do
   before do
     SiteSetting.styleguide_enabled = true
+    SvgSprite.clear_plugin_svg_sprite_cache!
     sign_in(Fabricate(:admin))
   end
 
