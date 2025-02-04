@@ -110,7 +110,7 @@ export default class TextareaEditor extends Component {
       @input={{@change}}
       @focusIn={{@focusIn}}
       @focusOut={{@focusOut}}
-      class="d-editor-input"
+      class={{@class}}
       @id={{@id}}
       {{this.registerTextarea}}
     />

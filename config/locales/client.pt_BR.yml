@@ -4644,9 +4644,11 @@ pt_BR:
             users:
               content: "Usuários(as)"
               title: "Lista de todos(as) os(as) usuários(as)"
-            my_drafts:
-              content: "Meus Rascunhos"
-              title: "Meus rascunhos não publicados"
+            my_posts:
+              content: "Minhas postagens"
+              content_drafts: "Meus Rascunhos"
+              title: "Minha atividade de tópico recente"
+              title_drafts: "Meus rascunhos não publicados"
               draft_count:
                 one: "%{count} rascunho"
                 other: "%{count} rascunhos"

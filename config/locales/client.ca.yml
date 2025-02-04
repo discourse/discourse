@@ -2947,6 +2947,8 @@ ca:
               content: "Grups"
             users:
               content: "Usuaris"
+            my_posts:
+              content: "Les meves publicacions"
             review:
               content: "Revisa"
             invite:

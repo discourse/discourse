@@ -4644,9 +4644,11 @@ tr_TR:
             users:
               content: "Kullanıcılar"
               title: "Tüm kullanıcıların listesi"
-            my_drafts:
-              content: "Taslaklarım"
-              title: "Paylaşılmamış taslaklarım"
+            my_posts:
+              content: "Gönderilerim"
+              content_drafts: "Taslaklarım"
+              title: "Son konu etkinliğim"
+              title_drafts: "Gönderilmemiş taslaklarım"
               draft_count:
                 one: "%{count} taslak"
                 other: "%{count} taslak"

@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://(www\.)?imgur\.com})
+      matches_domain("imgur.com", "www.imgur.com")
       always_https
 
       def to_html
