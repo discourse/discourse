@@ -1,8 +1,13 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
+import { or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
+import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
+import icon from "discourse/helpers/d-icon";
+import formatDate from "discourse/helpers/format-date";
 import getURL from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
@@ -26,6 +31,10 @@ export default class PostListItemDetails extends Component {
     return this.args.titlePath
       ? this.args.post[this.args.titlePath]
       : this.args.post.title;
+  }
+
+  get draftTitle() {
+    return this.args.post.title ?? this.args.post.data.title;
   }
 
   get titleAriaLabel() {
@@ -58,14 +67,42 @@ export default class PostListItemDetails extends Component {
               href={{getURL this.url}}
               aria-label={{this.titleAriaLabel}}
             >{{this.topicTitle}}</a>
+          {{else if @isDraft}}
+            <DButton
+              @action={{fn @resumeDraft @post}}
+              class="btn-transparent draft-title"
+            >
+              {{or this.draftTitle (i18n "drafts.dropdown.untitled")}}
+            </DButton>
           {{else}}
             {{this.topicTitle}}
           {{/if}}
         </span>
       </div>
 
-      <div class="category stream-post-category">
-        {{categoryLink @post.category}}
+      <div class="post-list-item__metadata">
+        {{#if @post.category}}
+          <span class="category stream-post-category">
+            {{categoryLink @post.category}}
+          </span>
+        {{/if}}
+
+        <span class="time">
+          {{formatDate @post.created_at leaveAgo="true"}}
+        </span>
+
+        {{#if @post.deleted_by}}
+          <span class="delete-info">
+            {{icon "trash-can"}}
+            {{avatar
+              @post.deleted_by
+              imageSize="tiny"
+              extraClasses="actor"
+              ignoreTitle="true"
+            }}
+            {{formatDate @item.deleted_at leaveAgo="true"}}
+          </span>
+        {{/if}}
       </div>
 
       {{#if this.showUserInfo}}

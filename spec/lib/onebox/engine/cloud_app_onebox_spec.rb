@@ -35,4 +35,16 @@ RSpec.describe Onebox::Engine::CloudAppOnebox do
   it "links to other formats" do
     expect(Onebox.preview("https://cl.ly/1x1f2g253l03").to_s).to match(/<a/)
   end
+
+  describe ".===" do
+    it "matches valid cl.ly URL" do
+      valid_url = URI("https://cl.ly/path/to/resource")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "does not match URL with valid domain as part of another domain" do
+      malicious_url = URI("https://cl.ly.malicious.com/path")
+      expect(described_class === malicious_url).to eq(false)
+    end
+  end
 end

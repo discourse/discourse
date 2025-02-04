@@ -133,4 +133,39 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
       end
     end
   end
+
+  describe ".===" do
+    it "matches valid GitHub commit URL" do
+      valid_url =
+        URI("https://github.com/owner/repo/commit/9a9b9c9d9e9f9a9b9c9d9e9f9a9b9c9d9e9f9a9b")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "does not match URL with subdomain" do
+      subdomain_url =
+        URI(
+          "https://subdomain.github.com/owner/repo/commit/9a9b9c9d9e9f9g9h9i9j9k9l9m9n9o9p9q9r9s9t",
+        )
+      expect(described_class === subdomain_url).to eq(false)
+    end
+
+    it "does not match URL with additional domain" do
+      malicious_url =
+        URI(
+          "https://github.com.malicious.com/owner/repo/commit/9a9b9c9d9e9f9g9h9i9j9k9l9m9n9o9p9q9r9s9t",
+        )
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match URL with invalid path" do
+      invalid_path_url =
+        URI("https://github.com/owner/repo/invalid/9a9b9c9d9e9f9g9h9i9j9k9l9m9n9o9p9q9r9s9t")
+      expect(described_class === invalid_path_url).to eq(false)
+    end
+
+    it "does not match URL with invalid commit hash" do
+      invalid_hash_url = URI("https://github.com/owner/repo/commit/invalidhash")
+      expect(described_class === invalid_hash_url).to eq(false)
+    end
+  end
 end

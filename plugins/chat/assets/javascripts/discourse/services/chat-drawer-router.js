@@ -93,6 +93,7 @@ const ROUTES = {
 
     afterModel(model) {
       this.chat.activeChannel = model.channel;
+      this.chat.activeChannel.activeThread = model.thread;
     },
 
     deactivate() {
@@ -123,6 +124,7 @@ const ROUTES = {
 
     afterModel(model) {
       this.chat.activeChannel = model.channel;
+      this.chat.activeChannel.activeThread = model.thread;
     },
 
     deactivate() {

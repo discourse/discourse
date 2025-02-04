@@ -6,9 +6,13 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://(www\.)?loom\.com/share/\w+(/\w+)?/?})
-      requires_iframe_origins "https://www.loom.com"
+      matches_domain("loom.com", "www.loom.com")
       always_https
+      requires_iframe_origins "https://www.loom.com"
+
+      def self.matches_path(path)
+        path.match?(%r{^/share/\w+(/\w+)?/?$})
+      end
 
       def placeholder_html
         ::Onebox::Helpers.video_placeholder_html

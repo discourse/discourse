@@ -1105,6 +1105,8 @@ class UsersController < ApplicationController
   def activate_account
     expires_now
 
+    raise Discourse::NotFound if current_user.present?
+
     respond_to do |format|
       format.html { render "default/empty" }
       format.json { render json: success_json }
@@ -1113,6 +1115,7 @@ class UsersController < ApplicationController
 
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
+    raise Discourse::NotFound if current_user.present?
 
     if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
       # Log in the user unless they need to be approved

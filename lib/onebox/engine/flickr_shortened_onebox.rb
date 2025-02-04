@@ -9,8 +9,12 @@ module Onebox
       include StandardEmbed
       include OpengraphImage
 
-      matches_regexp(%r{^https?://flic\.kr/p/})
+      matches_domain("flic.kr")
       always_https
+
+      def self.matches_path(path)
+        path.start_with?("/p/")
+      end
     end
   end
 end

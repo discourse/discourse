@@ -11,7 +11,10 @@ export default {
     "no-invalid-double-slash-comments": true,
     "no-empty-source": true,
     "at-rule-empty-line-before": null,
-    "rule-empty-line-before": ["always", {except: ["after-single-line-comment", "first-nested"]}],
+    "rule-empty-line-before": [
+      "always",
+      { except: ["after-single-line-comment", "first-nested"] },
+    ],
     "selector-class-pattern": null,
     "custom-property-pattern": null,
     "declaration-empty-line-before": "never",
@@ -40,5 +43,15 @@ export default {
     "function-linear-gradient-no-nonstandard-direction": null,
     "scss/at-mixin-pattern": null,
     "media-feature-range-notation": "prefix",
+    "property-no-vendor-prefix": [
+      true,
+      {
+        ignoreProperties: [
+          "backdrop-filter",
+          "text-size-adjust",
+          "user-select",
+        ],
+      },
+    ],
   },
 };
