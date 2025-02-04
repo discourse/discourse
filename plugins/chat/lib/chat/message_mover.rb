@@ -94,8 +94,8 @@ module Chat
 
       DB.exec <<~SQL
       CREATE TEMPORARY TABLE moved_chat_messages (
-        old_chat_message_id INTEGER,
-        new_chat_message_id INTEGER
+        old_chat_message_id BIGINT,
+        new_chat_message_id BIGINT
       ) ON COMMIT DROP;
 
       CREATE INDEX moved_chat_messages_old_chat_message_id ON moved_chat_messages(old_chat_message_id);
@@ -236,16 +236,18 @@ module Chat
     def add_moved_placeholder(destination_channel, first_moved_message)
       @source_channel.add(Discourse.system_user)
       Chat::CreateMessage.call(
-        chat_channel_id: @source_channel.id,
         guardian: Discourse.system_user.guardian,
-        message:
-          I18n.t(
-            "chat.channel.messages_moved",
-            count: @source_message_ids.length,
-            acting_username: @acting_user.username,
-            channel_name: destination_channel.title(@acting_user),
-            first_moved_message_url: first_moved_message.url,
-          ),
+        params: {
+          chat_channel_id: @source_channel.id,
+          message:
+            I18n.t(
+              "chat.channel.messages_moved",
+              count: @source_message_ids.length,
+              acting_username: @acting_user.username,
+              channel_name: destination_channel.title(@acting_user),
+              first_moved_message_url: first_moved_message.url,
+            ),
+        },
       )
     end
 

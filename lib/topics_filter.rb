@@ -549,14 +549,21 @@ class TopicsFilter
 
   def order_by(values:)
     values.each do |value|
+      # If the order by value is not recognized, check if it is a custom filter.
       match_data = value.match(ORDER_BY_REGEXP)
-
       if match_data && column_name = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :column)
         if scope = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :scope)
           @scope = instance_exec(&scope)
         end
 
         @scope = @scope.order("#{column_name} #{match_data[:asc] ? "ASC" : "DESC"}")
+      else
+        match_data = value.match /^(?<column>.*?)(?:-(?<asc>asc))?$/
+        key = "order:#{match_data[:column]}"
+        if custom_match =
+             DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(key) }
+          @scope = custom_match[key].call(@scope, match_data[:asc].nil? ? "DESC" : "ASC")
+        end
       end
     end
   end

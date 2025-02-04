@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { setPrefix } from "discourse/lib/get-url";
 import DiscourseURL, {
   getCanonicalUrl,
   getCategoryAndTagUrl,
@@ -8,7 +9,6 @@ import DiscourseURL, {
   userPath,
 } from "discourse/lib/url";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
-import { setPrefix } from "discourse-common/lib/get-url";
 
 module("Unit | Utility | url", function (hooks) {
   setupTest(hooks);
@@ -108,22 +108,62 @@ module("Unit | Utility | url", function (hooks) {
     });
     sinon.stub(DiscourseURL, "handleURL");
     DiscourseURL.routeTo("/my/messages");
-    assert.ok(
+    assert.true(
       DiscourseURL.handleURL.calledWith(`/my/messages`),
-      "it should navigate to the messages page"
+      "navigates to the messages page"
+    );
+  });
+
+  test("routeTo protocol/domain stripping", async function (assert) {
+    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
+    sinon.stub(DiscourseURL, "handleURL");
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return {
+        currentURL: "/bar",
+      };
+    });
+
+    DiscourseURL.routeTo("http://example.com/foo1");
+    assert.true(
+      DiscourseURL.handleURL.calledWith(`/foo1`),
+      "strips the protocol and domain when http"
+    );
+
+    DiscourseURL.routeTo("https://example.com/foo2");
+    assert.true(
+      DiscourseURL.handleURL.calledWith(`/foo2`),
+      "strips the protocol and domain when https"
+    );
+
+    DiscourseURL.routeTo("//example.com/foo3");
+    assert.true(
+      DiscourseURL.handleURL.calledWith(`/foo3`),
+      "strips the protocol and domain when protocol-less"
+    );
+
+    DiscourseURL.routeTo("https://example.com/t//1");
+    assert.true(
+      DiscourseURL.handleURL.calledWith(`/t//1`),
+      "does not strip double-slash in the middle of urls"
+    );
+
+    DiscourseURL.routeTo("/t//2");
+    assert.true(
+      DiscourseURL.handleURL.calledWith(`/t//2`),
+      "does not strip double-slash in the middle of urls, even without a domain"
     );
   });
 
   test("routeTo does not rewrite routes started with /my", async function (assert) {
-    logIn();
+    logIn(this.owner);
     sinon.stub(DiscourseURL, "router").get(() => {
       return { currentURL: "/" };
     });
     sinon.stub(DiscourseURL, "handleURL");
     DiscourseURL.routeTo("/myfeed");
-    assert.ok(
+    assert.true(
       DiscourseURL.handleURL.calledWith(`/myfeed`),
-      "it should navigate to the unmodified route"
+      "navigates to the unmodified route"
     );
   });
 
@@ -144,6 +184,15 @@ module("Unit | Utility | url", function (hooks) {
       prefixProtocol("www.discourse.org/mailto:foo"),
       "https://www.discourse.org/mailto:foo"
     );
+    assert.strictEqual(
+      prefixProtocol("http://www.discourse.org"),
+      "http://www.discourse.org"
+    );
+    assert.strictEqual(
+      prefixProtocol("ftp://www.discourse.org"),
+      "ftp://www.discourse.org"
+    );
+    assert.strictEqual(prefixProtocol("/my/preferences"), "/my/preferences");
   });
 
   test("getCategoryAndTagUrl", function (assert) {
@@ -184,7 +233,7 @@ module("Unit | Utility | url", function (hooks) {
     sinon.stub(DiscourseURL, "redirectTo");
     sinon.stub(DiscourseURL, "handleURL");
     DiscourseURL.routeTo("/secure-uploads/original/1X/test.pdf");
-    assert.ok(
+    assert.true(
       DiscourseURL.redirectTo.calledWith("/secure-uploads/original/1X/test.pdf")
     );
   });
@@ -193,11 +242,11 @@ module("Unit | Utility | url", function (hooks) {
     sinon.stub(DiscourseURL, "jumpToElement");
     sinon.stub(DiscourseURL, "replaceState");
     DiscourseURL.routeTo("#heading1");
-    assert.ok(
+    assert.true(
       DiscourseURL.jumpToElement.calledWith("heading1"),
       "in-page anchors call jumpToElement"
     );
-    assert.ok(
+    assert.true(
       DiscourseURL.replaceState.calledWith("#heading1"),
       "in-page anchors call replaceState with the url fragment"
     );

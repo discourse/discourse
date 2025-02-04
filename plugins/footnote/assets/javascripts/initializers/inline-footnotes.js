@@ -1,6 +1,6 @@
 import { createPopper } from "@popperjs/core";
+import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { iconHTML } from "discourse-common/lib/icon-library";
 
 let inlineFootnotePopper;
 
@@ -15,7 +15,7 @@ function applyInlineFootnotes(elem) {
 
     const expandableFootnote = document.createElement("a");
     expandableFootnote.classList.add("expand-footnote");
-    expandableFootnote.innerHTML = iconHTML("ellipsis-h");
+    expandableFootnote.innerHTML = iconHTML("ellipsis");
     expandableFootnote.href = "";
     expandableFootnote.role = "button";
     expandableFootnote.dataset.footnoteId = refLink.getAttribute("href");

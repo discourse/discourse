@@ -57,10 +57,14 @@ bg:
               label: Тема ID
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Тагове
             restricted_category:
               label: Категория
             restricted_group:
               label: Група
+            restricted_groups:
+              label: Групи
           created: Създадени
         category_created_edited:
           fields:
@@ -131,6 +135,8 @@ bg:
             label: Тригер
           version:
             label: Версия
+          status:
+            label: Статус
           enabled:
             label: Да е включен
           disabled:

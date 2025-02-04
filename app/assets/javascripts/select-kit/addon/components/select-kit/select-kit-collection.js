@@ -1,31 +1,34 @@
-import { cached } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
+import { modifier } from "ember-modifier";
 import {
   disableBodyScroll,
   enableBodyScroll,
+  locks,
 } from "discourse/lib/body-scroll-lock";
 
-export default Component.extend({
-  tagName: "",
+@tagName("")
+export default class SelectKitCollection extends Component {
+  @service site;
 
-  @cached
-  get inModal() {
-    const element = this.selectKit.mainElement();
-    return element.closest(".d-modal");
-  },
-
-  @action
-  lock(element) {
-    if (!this.inModal) {
+  bodyScrollLock = modifier((element) => {
+    if (!this.site.mobileView) {
       return;
     }
 
-    disableBodyScroll(element);
-  },
+    const isChildOfLock = locks.some((lock) =>
+      lock.targetElement.contains(element)
+    );
 
-  @action
-  unlock(element) {
-    enableBodyScroll(element);
-  },
-});
+    if (isChildOfLock) {
+      disableBodyScroll(element);
+    }
+
+    return () => {
+      if (isChildOfLock) {
+        enableBodyScroll(element);
+      }
+    };
+  });
+}

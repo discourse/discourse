@@ -13,11 +13,11 @@ task "assets:precompile:build" do
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
     # If `JOBS` env is not set, `thread-loader` defaults to the number of CPUs - 1 on the machine but we want to cap it
-    # at 4 because benchmarking has shown that anything beyond 4 does not improve build times or the increase is marginal.
+    # at 2 because benchmarking has shown that anything beyond 2 does not improve build times or the increase is marginal.
     # Therefore, we cap it so that we don't spawn more processes than necessary.
-    jobs_env_count = (4 if !ENV["JOBS"].present? && Etc.nprocessors > 4)
+    jobs_env_count = (2 if !ENV["JOBS"].present? && Etc.nprocessors > 2)
 
-    compile_command = "CI=1 yarn --cwd app/assets/javascripts/discourse run ember build"
+    compile_command = "CI=1 pnpm --dir=app/assets/javascripts/discourse ember build"
 
     heap_size_limit = check_node_heap_size_limit
 
@@ -61,11 +61,7 @@ task "assets:precompile:before": %w[
   STDERR.puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
-  # Ensure we clear emoji cache before pretty-text/emoji/data.js.es6.erb
-  # is recompiled
-  Emoji.clear_cache
-
-  $node_compress = `which terser`.present? && !ENV["SKIP_NODE_UGLIFY"]
+  $node_compress = !ENV["SKIP_NODE_UGLIFY"]
 
   unless ENV["USE_SPROCKETS_UGLIFY"]
     $bypass_sprockets_uglify = true
@@ -96,7 +92,7 @@ task "assets:precompile:css" => "environment" do
   # cause CSS uses asset_path
   Rails.application.assets_manifest.reload
 
-  if ENV["DONT_PRECOMPILE_CSS"] == "1"
+  if ENV["DONT_PRECOMPILE_CSS"] == "1" || ENV["SKIP_DB_AND_REDIS"] == "1"
     STDERR.puts "Skipping CSS precompilation, ensure CSS lives in a shared directory across hosts"
   else
     STDERR.puts "Start compiling CSS: #{Time.zone.now}"
@@ -166,7 +162,7 @@ def compress_node(from, to)
   base_source_map = assets_path + assets_additional_path
 
   cmd = <<~SH
-    terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
+    pnpm terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
   SH
 
   STDERR.puts cmd
@@ -205,15 +201,14 @@ def gzip(path)
 end
 
 # different brotli versions use different parameters
-def brotli_command(path, max_compress)
-  compression_quality =
-    max_compress ? "11" : (ENV["DISCOURSE_ASSETS_PRECOMPILE_DEFAULT_BROTLI_QUALITY"] || "6")
+def brotli_command(path)
+  compression_quality = ENV["DISCOURSE_ASSETS_PRECOMPILE_DEFAULT_BROTLI_QUALITY"] || "6"
   "brotli -f --quality=#{compression_quality} #{path} --output=#{path}.br"
 end
 
-def brotli(path, max_compress)
-  STDERR.puts brotli_command(path, max_compress)
-  STDERR.puts `#{brotli_command(path, max_compress)}`
+def brotli(path)
+  STDERR.puts brotli_command(path)
+  STDERR.puts `#{brotli_command(path)}`
   raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
   STDERR.puts `chmod +r #{path}.br`.strip
   raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
@@ -307,7 +302,7 @@ task "assets:precompile:compress_js": "environment" do
                   info["size"] = File.size(path)
                   info["mtime"] = File.mtime(path).iso8601
                   gzip(path)
-                  brotli(path, max_compress)
+                  brotli(path)
                 end
               end
             end
@@ -331,18 +326,15 @@ task "assets:precompile:compress_js": "environment" do
 end
 
 task "assets:precompile:theme_transpiler": "environment" do
-  DiscourseJsProcessor::Transpiler.build_theme_transpiler
+  DiscourseJsProcessor::Transpiler.build_production_theme_transpiler
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task
-task "assets:precompile": %w[
-       assets:precompile:before
-       maxminddb:refresh
-       assets:precompile:theme_transpiler
-     ]
+task "assets:precompile": %w[assets:precompile:before assets:precompile:theme_transpiler]
 
 # Run these tasks **after** Rails' "assets:precompile" task
 Rake::Task["assets:precompile"].enhance do
   Rake::Task["assets:precompile:compress_js"].invoke
   Rake::Task["assets:precompile:css"].invoke
+  Rake::Task["maxminddb:refresh"].invoke
 end

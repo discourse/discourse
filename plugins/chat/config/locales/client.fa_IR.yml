@@ -26,7 +26,6 @@ fa_IR:
       deleted_chat_username: حذف شد
       dates:
         yesterday: "دیروز"
-        time_tiny: "HH:mm"
       all_loaded: "نمایش همه پیام‌ها"
       already_enabled: "گفتگو در حال حاضر در این موضوع فعال شده است. لطفا صفحه جاری را تازه‌سازی کنید."
       disabled_for_topic: "گفتگو در این موضوع غیرفعال است."
@@ -83,7 +82,6 @@ fa_IR:
         title: "آگاه‌سازی‌های ایمیل"
       header_indicator_preference:
         all_new: "همه پیام‌های جدید"
-        dm_and_mentions: "پیام‌های خصوصی و اشاره شده"
         never: "هرگز"
       enable: "فعال کردن گفتگو"
       flag: "پرچم"
@@ -220,7 +218,6 @@ fa_IR:
         channel_wide_mentions_label: "اجازه داده به استفاده از اشاره @all و @here"
         channel_wide_mentions_description: "به کاربران اجازه دهید به همه اعضای #%{channel} با @all یا فقط افرادی که در حال حاضر فعال هستند با @here، آگاه‌سازی کنند."
         auto_join_users_label: "افزودن خودکار کاربران"
-        desktop_notification_level: "آگاه‌سازی‌های دسکتاپ"
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
@@ -305,6 +302,8 @@ fa_IR:
             title: "معمولی"
           tracking:
             title: "پیگیری"
+          watching:
+            title: "مشاهده"
       draft_channel_screen:
         header: "پیام جدید"
         cancel: "انصراف"
@@ -313,9 +312,6 @@ fa_IR:
       popup:
         chat_message: "پیام گفتگو جدید"
         chat_quoted: "%{username} پیام گفتگو شما را نقل کرد"
-      titles:
-        chat_mention: "اشاره گفتگو"
-        chat_invitation: "دعوت‌نامه گفتگو"
     action_codes:
       chat:
         enabled: '%{who} فعال شد <button class="btn-link open-chat">گفتگو</button> %{when}'

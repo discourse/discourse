@@ -17,12 +17,12 @@ export FLUXBB_PREFIX=""
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/fluxbb.rb
 class ImportScripts::FluxBB < ImportScripts::Base
-  FLUXBB_HOST ||= ENV["FLUXBB_HOST"] || "localhost"
-  FLUXBB_DB ||= ENV["FLUXBB_DB"] || "fluxbb"
-  BATCH_SIZE ||= 1000
-  FLUXBB_USER ||= ENV["FLUXBB_USER"] || "root"
-  FLUXBB_PW ||= ENV["FLUXBB_PW"] || ""
-  FLUXBB_PREFIX ||= ENV["FLUXBB_PREFIX"] || ""
+  FLUXBB_HOST = ENV["FLUXBB_HOST"] || "localhost"
+  FLUXBB_DB = ENV["FLUXBB_DB"] || "fluxbb"
+  BATCH_SIZE = 1000
+  FLUXBB_USER = ENV["FLUXBB_USER"] || "root"
+  FLUXBB_PW = ENV["FLUXBB_PW"] || ""
+  FLUXBB_PREFIX = ENV["FLUXBB_PREFIX"] || ""
 
   def initialize
     super

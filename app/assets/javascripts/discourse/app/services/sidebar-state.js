@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import escapeRegExp from "discourse/lib/escape-regexp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
@@ -13,7 +14,6 @@ import {
   MAIN_PANEL,
   SEPARATED_MODE,
 } from "discourse/lib/sidebar/panels";
-import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
@@ -28,6 +28,7 @@ export default class SidebarState extends Service {
   @tracked isForcingAdminSidebar = false;
 
   panels = panels;
+  activeExpandedSections = new TrackedSet();
   collapsedSections = new TrackedSet();
   previousState = {};
   #hiders = new TrackedSet();
@@ -87,6 +88,8 @@ export default class SidebarState extends Service {
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
     this.collapsedSections.add(collapsedSidebarSectionKey);
+    // remove the section from the active expanded list if collapsed later
+    this.activeExpandedSections.delete(sectionKey);
   }
 
   expandSection(sectionKey) {
@@ -94,6 +97,8 @@ export default class SidebarState extends Service {
       getCollapsedSidebarSectionKey(sectionKey);
     this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
     this.collapsedSections.delete(collapsedSidebarSectionKey);
+    // remove the section from the active expanded list if expanded later
+    this.activeExpandedSections.delete(sectionKey);
   }
 
   isCurrentPanel(panel) {

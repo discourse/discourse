@@ -2,15 +2,11 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
-  exists,
-  invisible,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Tags", function (needs) {
   needs.user();
@@ -108,23 +104,20 @@ acceptance("Tags", function (needs) {
   test("list the tags", async function (assert) {
     await visit("/tags");
 
-    assert.ok(
-      document.body.classList.contains("tags-page"),
-      "has the body class"
-    );
-    assert.ok(exists(`[data-tag-name="eviltrout"]`), "shows the eviltrout tag");
+    assert.dom(document.body).hasClass("tags-page", "has the body class");
+    assert.dom(`[data-tag-name="eviltrout"]`).exists("shows the eviltrout tag");
   });
 
   test("dismiss notifications", async function (assert) {
     await visit("/tag/test/l/unread");
     await click("button.dismiss-read");
     await click(".dismiss-read-modal button.btn-primary");
-    assert.ok(invisible(".dismiss-read-modal"));
+    assert.dom(".dismiss-read-modal").doesNotExist();
   });
 
   test("hide tag notifications menu", async function (assert) {
     await visit("/tags/c/faq/4/test");
-    assert.ok(invisible(".tag-notifications-button"));
+    assert.dom(".tag-notifications-tracking").doesNotExist();
   });
 });
 
@@ -195,11 +188,12 @@ acceptance("Tags listed by group", function (needs) {
   test("list the tags in groups", async function (assert) {
     await visit("/tags");
 
-    assert.strictEqual(
-      count(".tag-list"),
-      4,
-      "shows separate lists for the 3 groups and the ungrouped tags"
-    );
+    assert
+      .dom(".tag-list")
+      .exists(
+        { count: 4 },
+        "shows separate lists for the 3 groups and the ungrouped tags"
+      );
     assert.deepEqual(
       [...queryAll(".tag-list h3")].map((el) => el.innerText),
       ["Ford Cars", "Honda Cars", "Makes", "Other Tags"],
@@ -212,36 +206,43 @@ acceptance("Tags listed by group", function (needs) {
       ["focus", "Escort"],
       "shows the tags in default sort (by count)"
     );
-    assert.deepEqual(
-      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map((el) =>
-        el.getAttribute("href")
-      ),
-      ["/tag/focus", "/tag/escort"],
-      "always uses lowercase URLs for mixed case tags"
-    );
-    assert.strictEqual(
-      query(`a[data-tag-name="private"]`).getAttribute("href"),
-      "/u/eviltrout/messages/tags/private",
-      "links to private messages"
-    );
+
+    assert
+      .dom(".tag-list .tag-box:nth-of-type(1) .discourse-tag")
+      .hasAttribute("href", "/tag/focus");
+    assert
+      .dom(".tag-list .tag-box:nth-of-type(2) .discourse-tag")
+      .hasAttribute(
+        "href",
+        "/tag/escort",
+        "uses a lowercase URL for a mixed case tag"
+      );
+
+    assert
+      .dom(`a[data-tag-name="private"]`)
+      .hasAttribute(
+        "href",
+        "/u/eviltrout/messages/tags/private",
+        "links to private messages"
+      );
   });
 
   test("new topic button is not available for staff-only tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic").isEnabled();
 
     await visit("/tag/staff-only-tag");
-    assert.strictEqual(count("#create-topic:disabled"), 1);
+    assert.dom("#create-topic").isDisabled();
 
     updateCurrentUser({ moderator: true });
 
     await visit("/tag/regular-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic").isEnabled();
 
     await visit("/tag/staff-only-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic").isEnabled();
   });
 });
 
@@ -285,7 +286,7 @@ acceptance("Tag info", function (needs) {
     [
       "/tags/c/faq/4/planters/l/latest.json",
       "/tags/c/feature/2/planters/l/latest.json",
-      "/tags/c/feature/2/planters/l/top.json",
+      "/tags/c/feature/2/planters/l/hot.json",
       "/tags/c/feature/2/none/planters/l/latest.json",
     ].forEach((url) => {
       server.get(url, () => {
@@ -388,6 +389,23 @@ acceptance("Tag info", function (needs) {
       });
     });
 
+    server.get("/tag/happy-monkey2/info", () => {
+      return helper.response({
+        __rest_serializer: "1",
+        tag_info: {
+          id: 13,
+          name: "happy-monkey2",
+          description: "happy monkey description",
+          topic_count: 1,
+          staff: false,
+          synonyms: [],
+          tag_group_names: [],
+          category_ids: [],
+        },
+        categories: [],
+      });
+    });
+
     server.delete("/tag/planters/synonyms/containers", () =>
       helper.response({ success: true })
     );
@@ -407,37 +425,30 @@ acceptance("Tag info", function (needs) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/planters");
-    assert.strictEqual(count("#show-tag-info"), 1);
+    assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
-    assert.ok(exists(".tag-info .tag-name"), "show tag");
-    assert.ok(
-      query(".tag-info .tag-associations").innerText.includes("Gardening"),
-      "show tag group names"
-    );
-    assert.strictEqual(
-      count(".tag-info .synonyms-list .tag-box"),
-      2,
-      "shows the synonyms"
-    );
-    assert.strictEqual(
-      count(".tag-info .badge-category"),
-      1,
-      "show the category"
-    );
-    assert.ok(!exists("#rename-tag"), "can't rename tag");
-    assert.ok(!exists("#edit-synonyms"), "can't edit synonyms");
-    assert.ok(!exists("#delete-tag"), "can't delete tag");
+    assert.dom(".tag-info .tag-name").exists("show tag");
+    assert
+      .dom(".tag-info .tag-associations")
+      .includesText("Gardening", "show tag group names");
+    assert
+      .dom(".tag-info .synonyms-list .tag-box")
+      .exists({ count: 2 }, "shows the synonyms");
+    assert.dom(".tag-info .badge-category").exists("show the category");
+    assert.dom("#rename-tag").doesNotExist("can't rename tag");
+    assert.dom("#edit-synonyms").doesNotExist("can't edit synonyms");
+    assert.dom("#delete-tag").doesNotExist("can't delete tag");
   });
 
   test("tag info hides only current tag in synonyms dropdown", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/happy-monkey");
-    assert.strictEqual(count("#show-tag-info"), 1);
+    assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
-    assert.ok(exists(".tag-info .tag-name"), "show tag");
+    assert.dom(".tag-info .tag-name").exists("show tag");
 
     await click("#edit-synonyms");
 
@@ -456,30 +467,25 @@ acceptance("Tag info", function (needs) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/happy-monkey");
-    assert.strictEqual(count("#show-tag-info"), 1);
+    assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
-    assert.ok(exists(".tag-info .tag-name"), "show tag");
+    assert.dom(".tag-info .tag-name").exists("show tag");
 
     await click(".edit-tag");
-    assert.strictEqual(
-      query("#edit-name").value,
-      "happy-monkey",
-      "it displays original tag name"
-    );
-    assert.strictEqual(
-      query("#edit-description").value,
-      "happy monkey description",
-      "it displays original tag description"
-    );
+    assert
+      .dom("#edit-name")
+      .hasValue("happy-monkey", "displays original tag name");
+    assert
+      .dom("#edit-description")
+      .hasValue(
+        "happy monkey description",
+        "displays original tag description"
+      );
 
     await fillIn("#edit-description", "new description");
     await click(".submit-edit");
-    assert.strictEqual(
-      currentURL(),
-      "/tag/happy-monkey",
-      "it doesn't change URL"
-    );
+    assert.strictEqual(currentURL(), "/tag/happy-monkey", "doesn't change URL");
 
     await click(".edit-tag");
     await fillIn("#edit-name", "happy-monkey2");
@@ -487,7 +493,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/tag/happy-monkey2",
-      "it changes URL to new tag path"
+      "changes URL to new tag path"
     );
   });
 
@@ -529,7 +535,7 @@ acceptance("Tag info", function (needs) {
     await visit("/tag/planters");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.without_category", {
+      i18n("tagging.filters.without_category", {
         filter: "Latest",
         tag: "planters",
       }) + ` - ${this.siteSettings.title}`
@@ -540,7 +546,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(currentURL(), "/tags/c/feature/2/planters");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.with_category", {
+      i18n("tagging.filters.with_category", {
         filter: "Latest",
         tag: "planters",
         category: "feature",
@@ -552,7 +558,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(currentURL(), "/tags/c/feature/2/none");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.untagged_with_category", {
+      i18n("tagging.filters.untagged_with_category", {
         filter: "Latest",
         category: "feature",
       }) + ` - ${this.siteSettings.title}`
@@ -565,39 +571,33 @@ acceptance("Tag info", function (needs) {
     await click(".nav-item_latest a[href]");
     assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/latest");
 
-    await click(".nav-item_top a[href]");
-    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/top");
+    await click(".nav-item_hot a[href]");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/hot");
   });
 
   test("admin can manage tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/planters");
-    assert.strictEqual(count("#show-tag-info"), 1);
+    assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
-    assert.ok(exists(".edit-tag"), "can rename tag");
-    assert.ok(exists("#edit-synonyms"), "can edit synonyms");
-    assert.ok(exists("#delete-tag"), "can delete tag");
+    assert.dom(".edit-tag").exists("can rename tag");
+    assert.dom("#edit-synonyms").exists("can edit synonyms");
+    assert.dom("#delete-tag").exists("can delete tag");
 
     await click("#edit-synonyms");
-    assert.strictEqual(
-      count(".unlink-synonym:visible"),
-      2,
-      "unlink UI is visible"
-    );
-    assert.strictEqual(
-      count(".delete-synonym:visible"),
-      2,
-      "delete UI is visible"
-    );
+    assert
+      .dom(".unlink-synonym")
+      .isVisible({ count: 2 }, "unlink UI is visible");
+    assert
+      .dom(".delete-synonym")
+      .isVisible({ count: 2 }, "delete UI is visible");
 
     await click(".unlink-synonym:nth-of-type(1)");
-    assert.strictEqual(
-      count(".tag-info .synonyms-list .tag-box"),
-      1,
-      "removed a synonym"
-    );
+    assert
+      .dom(".tag-info .synonyms-list .tag-box")
+      .exists({ count: 1 }, "removed a synonym");
   });
 
   test("composer will not set tags if user cannot create them", async function (assert) {
@@ -627,7 +627,7 @@ acceptance(
 
     test("load more footer message is present", async function (assert) {
       await visit("/tag/planters");
-      assert.notOk(exists(".topic-list-bottom .footer-message"));
+      assert.dom(".topic-list-bottom .footer-message").doesNotExist();
     });
   }
 );
@@ -707,6 +707,6 @@ acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
   });
   test("load more footer message is not present", async function (assert) {
     await visit("/tag/planters");
-    assert.ok(exists(".topic-list-bottom .footer-message"));
+    assert.dom(".topic-list-bottom .footer-message").exists();
   });
 });

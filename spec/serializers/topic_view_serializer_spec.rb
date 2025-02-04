@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicViewSerializer do
-  def serialize_topic(topic, user_arg)
-    topic_view = TopicView.new(topic.id, user_arg)
+  def serialize_topic(topic, user_arg, opts = {})
+    topic_view = TopicView.new(topic.id, user_arg, opts)
+
     serializer =
       TopicViewSerializer.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
+
     JSON.parse(MultiJson.dump(serializer)).deep_symbolize_keys!
   end
-
-  # Ensure no suggested ids are cached cause that can muck up suggested
-  use_redis_snapshotting
 
   fab!(:topic)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
@@ -99,27 +98,19 @@ RSpec.describe TopicViewSerializer do
 
     before { TopicUser.update_last_read(user, topic2.id, 0, 0, 0) }
 
-    describe "when loading last chunk" do
-      it "should include suggested topics" do
-        json = serialize_topic(topic, user)
+    it "should include suggested topics if `TopicView#include_suggested` is set to `true`" do
+      json = serialize_topic(topic, user, include_suggested: true)
 
-        expect(json[:suggested_topics].first[:id]).to eq(topic2.id)
-      end
+      expect(json[:suggested_topics].first[:id]).to eq(topic2.id)
     end
 
-    describe "when not loading last chunk" do
-      fab!(:post) { Fabricate(:post, topic: topic) }
-      fab!(:post2) { Fabricate(:post, topic: topic) }
+    it "should not include suggested topics if `TopicView#include_suggested` is set to `false`" do
+      post = Fabricate(:post, topic:)
+      post2 = Fabricate(:post, topic:)
 
-      it "should not include suggested topics" do
-        post
-        post2
-        topic_view = TopicView.new(topic.id, user, post_ids: [post.id])
-        topic_view.next_page
-        json = described_class.new(topic_view, scope: Guardian.new(user), root: false).as_json
+      json = serialize_topic(topic, user, include_suggested: false)
 
-        expect(json[:suggested_topics]).to eq(nil)
-      end
+      expect(json[:suggested_topics]).to eq(nil)
     end
 
     describe "with private messages" do
@@ -460,7 +451,10 @@ RSpec.describe TopicViewSerializer do
 
     context "with can_edit" do
       fab!(:group_user)
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       let(:user) { group_user.user }
 

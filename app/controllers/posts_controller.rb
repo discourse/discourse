@@ -25,9 +25,10 @@ class PostsController < ApplicationController
 
   skip_before_action :preload_json,
                      :check_xhr,
-                     only: %i[markdown_id markdown_num short_link latest user_posts_feed]
+                     only: %i[markdown_id markdown_num short_link user_posts_feed]
+  skip_before_action :preload_json, :check_xhr, if: -> { request.format.rss? }
 
-  MARKDOWN_TOPIC_PAGE_SIZE ||= 100
+  MARKDOWN_TOPIC_PAGE_SIZE = 100
 
   def markdown_id
     markdown Post.find_by(id: params[:id].to_i)
@@ -106,7 +107,7 @@ class PostsController < ApplicationController
       @use_canonical = true
     end
 
-    posts = posts.where("posts.id <= ?", last_post_id) if last_post_id
+    posts = posts.where("posts.id < ?", last_post_id) if last_post_id
 
     posts = posts.to_a
 
@@ -128,6 +129,7 @@ class PostsController < ApplicationController
             scope: guardian,
             root: params[:id],
             add_raw: true,
+            add_excerpt: true,
             add_title: true,
             all_post_actions: counts,
           ),
@@ -240,8 +242,9 @@ class PostsController < ApplicationController
 
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
-    raw_old = params[:post][:raw_old]
-    if raw_old.present? && raw_old != post.raw
+    # keep `raw_old` for backwards compatibility
+    original_text = params[:post][:original_text] || params[:post][:raw_old]
+    if original_text.present? && original_text != post.raw
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
@@ -429,7 +432,7 @@ class PostsController < ApplicationController
     render_json_error(e.message)
   end
 
-  MAX_POST_REPLIES ||= 20
+  MAX_POST_REPLIES = 20
 
   def replies
     params.permit(:after)
@@ -493,6 +496,8 @@ class PostsController < ApplicationController
     post.public_version -= 1
     post.save
 
+    post.publish_change_to_clients!(:revised)
+
     render body: nil
   end
 
@@ -532,6 +537,8 @@ class PostsController < ApplicationController
     post = find_post_from_params
     post.public_version += 1
     post.save
+
+    post.publish_change_to_clients!(:revised)
 
     render body: nil
   end
@@ -618,10 +625,12 @@ class PostsController < ApplicationController
     old_notice = post.custom_fields[Post::NOTICE]
 
     if params[:notice].present?
+      cooked_notice = PrettyText.cook(params[:notice], features: { onebox: false })
       post.custom_fields[Post::NOTICE] = {
         type: Post.notices[:custom],
         raw: params[:notice],
-        cooked: PrettyText.cook(params[:notice], features: { onebox: false }),
+        cooked: cooked_notice,
+        created_by_user_id: current_user.id,
       }
     else
       post.custom_fields.delete(Post::NOTICE)
@@ -635,7 +644,7 @@ class PostsController < ApplicationController
       new_value: params[:notice],
     )
 
-    render body: nil
+    render json: success_json.merge(cooked_notice:)
   end
 
   def destroy_bookmark
@@ -809,7 +818,7 @@ class PostsController < ApplicationController
           .order(created_at: :desc)
       end
 
-    if guardian.user.moderator?
+    if guardian.user.moderator? && !guardian.user.admin?
       # Awful hack, but you can't seem to remove the `default_scope` when joining
       # So instead I grab the topics separately
       topic_ids = posts.dup.pluck(:topic_id)

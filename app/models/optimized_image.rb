@@ -6,7 +6,7 @@ class OptimizedImage < ActiveRecord::Base
 
   # BUMP UP if optimized image algorithm changes
   VERSION = 2
-  URL_REGEX ||= %r{(/optimized/\dX[/\.\w]*/([a-zA-Z0-9]+)[\.\w]*)}
+  URL_REGEX = %r{(/optimized/\dX[/\.\w]*/([a-zA-Z0-9]+)[\.\w]*)}
 
   def self.lock(upload_id, width, height)
     @hostname ||= Discourse.os_hostname
@@ -185,7 +185,7 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS ||= /\A(jpe?g|png|ico|gif|webp|avif)\z/i
+  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}

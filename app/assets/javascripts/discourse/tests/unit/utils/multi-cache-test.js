@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import { MultiCache } from "discourse-common/utils/multi-cache";
+import { MultiCache } from "discourse/lib/multi-cache";
 
 module("Unit | Utils | multi-cache", function (hooks) {
   let requests, cache;
@@ -61,7 +61,7 @@ module("Unit | Utils | multi-cache", function (hooks) {
 
     try {
       await response1;
-    } catch (e) {}
+    } catch {}
 
     const response2 = cache.fetch([10]);
     assert.strictEqual(requests.length, 1);

@@ -48,7 +48,7 @@ export default class ReviewableClaimedTopic extends Component {
             <span class="claimed-username">{{@claimedBy.username}}</span>
           </div>
           <DButton
-            @icon="times"
+            @icon="xmark"
             @action={{this.unclaim}}
             @title="review.unclaim.help"
             class="btn-small unclaim"

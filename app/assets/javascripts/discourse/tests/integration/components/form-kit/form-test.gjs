@@ -83,7 +83,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await formKit().field("foo").fillIn("");
 
-    assert.form().field("foo").hasNoError();
+    assert.form().field("foo").hasNoErrors();
 
     await formKit().submit();
 
@@ -96,7 +96,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await formKit().field("foo").fillIn("t");
 
-    assert.form().field("foo").hasNoError();
+    assert.form().field("foo").hasNoErrors();
     assert.form().field("bar").hasError("Required");
     assert.form().hasErrors({
       bar: "Required",
@@ -137,6 +137,12 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await formApi.submit();
 
     assert.dom(".bar").hasText("2");
+
+    formApi.addError("bar", { title: "Bar", message: "error_foo" });
+    // assert on the next tick
+    setTimeout(() => {
+      assert.form().hasErrors({ bar: "error_foo" });
+    }, 0);
   });
 
   test("@data", async function (assert) {
@@ -181,7 +187,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await formKit().reset();
 
-    assert.form().field("foo").hasNoError("it resets the errors");
+    assert.form().field("foo").hasNoErrors("it resets the errors");
   });
 
   test("immutable by default", async function (assert) {
@@ -230,5 +236,62 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     assert.dom(".foo").hasText("2");
     assert.dom(".bar").hasText("2");
+  });
+
+  test("reset virtual errors", async function (assert) {
+    let validatedOnce = false;
+    const validate = async (data, { removeError, addError }) => {
+      if (!validatedOnce) {
+        addError("foo", { title: "Foo", message: "error" });
+
+        validatedOnce = true;
+      } else {
+        removeError("foo");
+      }
+    };
+
+    await render(<template>
+      <Form @validate={{validate}} as |form|>
+        <form.Submit />
+      </Form>
+    </template>);
+
+    await formKit().submit();
+
+    assert.form().hasErrors({ foo: "error" });
+
+    await formKit().submit();
+
+    assert.form().hasNoErrors();
+  });
+
+  test("destroying field", async function (assert) {
+    await render(<template>
+      <Form @data={{hash visible=true}} as |form data|>
+        {{#if data.visible}}
+          <form.Field
+            @title="Foo"
+            @name="foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+        {{/if}}
+
+        <form.Button
+          class="test"
+          @action={{fn form.setProperties (hash visible=false)}}
+        />
+      </Form>
+    </template>);
+
+    await formKit().submit();
+
+    assert.form().hasErrors({ foo: "Required" });
+
+    await click(".test");
+
+    assert.form().hasNoErrors("remove the errors associated with this field");
   });
 });

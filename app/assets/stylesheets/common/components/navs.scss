@@ -8,6 +8,7 @@
 %nav {
   margin-left: 0;
   list-style: none;
+
   li a {
     display: block;
     text-decoration: none;
@@ -16,10 +17,8 @@
 
 // Pill nav
 // --------------------------------------------------
-
 .nav-pills {
   @extend %nav;
-
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -51,6 +50,7 @@
       &:hover {
         color: var(--d-nav-color--hover);
         background: var(--d-nav-bg-color--hover);
+
         .d-icon {
           color: var(--d-nav-color--hover);
         }
@@ -59,14 +59,13 @@
 
     a.active,
     button.active {
-      @include nav-active();
+      @include nav-active;
     }
   }
 }
 
 // Stacked nav
 // --------------------------------------------------
-
 .nav-stacked {
   @extend %nav;
   padding: 0;
@@ -92,19 +91,15 @@
     color: var(--primary);
     @include ellipsis;
 
+    &:hover {
+      background: var(--d-sidebar-highlight-background);
+    }
+
     &.active {
       position: relative;
-
-      --arrow-thickness: 8px;
-
-      &::after {
-        position: absolute;
-        right: 0;
-        top: calc(50% - var(--arrow-thickness));
-        content: " ";
-        border: var(--arrow-thickness) solid transparent;
-        border-left-color: var(--secondary);
-      }
+      color: var(--primary);
+      background-color: var(--d-selected);
+      font-weight: bold;
     }
   }
 
@@ -124,6 +119,6 @@
 .user-navigation .nav-pills > li {
   a,
   button {
-    border-radius: 0px;
+    border-radius: 0;
   }
 }

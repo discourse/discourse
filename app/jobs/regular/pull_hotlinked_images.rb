@@ -4,10 +4,6 @@ module Jobs
   class PullHotlinkedImages < ::Jobs::Base
     sidekiq_options queue: "low"
 
-    def initialize
-      @max_size = SiteSetting.max_image_size_kb.kilobytes
-    end
-
     def execute(args)
       disable_if_low_on_disk_space
 
@@ -101,7 +97,7 @@ module Jobs
         downloaded =
           FileHelper.download(
             src,
-            max_file_size: @max_size,
+            max_file_size: SiteSetting.max_image_size_kb.kilobytes,
             retain_on_max_file_size_exceeded: true,
             tmp_file_name: "discourse-hotlinked",
             follow_redirect: true,
@@ -137,7 +133,9 @@ module Jobs
 
       hotlinked = download(src)
       raise ImageBrokenError if !hotlinked
-      raise ImageTooLargeError if File.size(hotlinked.path) > @max_size
+      if File.size(hotlinked.path) > SiteSetting.max_image_size_kb.kilobytes
+        raise ImageTooLargeError
+      end
 
       filename = File.basename(URI.parse(src).path)
       filename << File.extname(hotlinked.path) unless filename["."]

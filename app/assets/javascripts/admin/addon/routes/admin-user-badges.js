@@ -8,7 +8,9 @@ export default class AdminUserBadgesRoute extends DiscourseRoute {
     return UserBadge.findByUsername(username);
   }
 
-  setupController(controller, model) {
+  setupController(controller) {
+    super.setupController(...arguments);
+
     // Find all badges.
     controller.set("loading", true);
     Badge.findAll().then(function (badges) {
@@ -21,7 +23,5 @@ export default class AdminUserBadgesRoute extends DiscourseRoute {
       }
       controller.set("loading", false);
     });
-    // Set the model.
-    controller.set("model", model);
   }
 }

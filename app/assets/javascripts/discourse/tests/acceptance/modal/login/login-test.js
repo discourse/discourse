@@ -2,13 +2,14 @@ import { click, fillIn, tab, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Modal - Login", function () {
   chromeTest("You can tab to the login button", async function (assert) {
     await visit("/");
     await click("header .login-button");
-    // you have to press the tab key twice to get to the login button
+    // you have to press the tab key thrice to get to the login button
+    await tab({ unRestrainTabIndex: true });
     await tab({ unRestrainTabIndex: true });
     await tab({ unRestrainTabIndex: true });
     assert.dom(".d-modal__footer #login-button").isFocused();
@@ -23,7 +24,7 @@ acceptance("Modal - Login - With 2FA", function (needs) {
   needs.pretender((server, helper) => {
     server.post(`/session`, () =>
       helper.response({
-        error: I18n.t("login.invalid_second_factor_code"),
+        error: i18n("login.invalid_second_factor_code"),
         multiple_second_factor_methods: false,
         security_key_enabled: false,
         totp_enabled: true,
@@ -109,5 +110,28 @@ acceptance("Modal - Login - With no way to login", function (needs) {
     assert.dom("#login-account-name").doesNotExist();
     assert.dom("#login-button").doesNotExist();
     assert.dom(".no-login-methods-configured").exists();
+  });
+});
+
+acceptance("Login button", function () {
+  test("with custom event on webview", async function (assert) {
+    const capabilities = this.container.lookup("service:capabilities");
+    sinon.stub(capabilities, "isAppWebview").value(true);
+
+    window.ReactNativeWebView = {
+      postMessage: () => {},
+    };
+
+    const webviewSpy = sinon.spy(window.ReactNativeWebView, "postMessage");
+
+    await visit("/");
+    await click("header .login-button");
+
+    assert.true(
+      webviewSpy.withArgs('{"showLogin":true}').calledOnce,
+      "triggers postmessage event"
+    );
+
+    delete window.ReactNativeWebView;
   });
 });

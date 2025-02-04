@@ -1,6 +1,9 @@
 import { getOwner, setOwner } from "@ember/owner";
 import { run, throttle } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import domUtils from "discourse/lib/dom-utils";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import discourseLater from "discourse/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import {
   nextTopicUrl,
@@ -9,9 +12,15 @@ import {
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseLater from "discourse-common/lib/later";
-import domUtils from "discourse-common/utils/dom-utils";
+
+let disabledBindings = [];
+export function disableDefaultKeyboardShortcuts(bindings) {
+  disabledBindings = disabledBindings.concat(bindings);
+}
+
+export function clearDisabledDefaultKeyboardBindings() {
+  disabledBindings = [];
+}
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {
@@ -157,6 +166,10 @@ export default {
     if (!this.currentUser?.can_send_private_messages) {
       delete DEFAULT_BINDINGS["g m"];
     }
+
+    if (disabledBindings.length) {
+      disabledBindings.forEach((binding) => delete DEFAULT_BINDINGS[binding]);
+    }
   },
 
   bindEvents() {
@@ -262,9 +275,7 @@ export default {
   addShortcut(shortcut, callback, opts = {}) {
     // we trim but leave whitespace between characters, as shortcuts
     // like `z z` are valid for ItsATrap
-    shortcut = shortcut.trim();
-    let newBinding = Object.assign({ handler: callback }, opts);
-    this.bindKey(shortcut, newBinding);
+    this.bindKey(shortcut.trim(), { handler: callback, ...opts });
     if (opts.help) {
       addExtraKeyboardShortcutHelp(opts.help);
     }
@@ -762,6 +773,11 @@ export default {
 
       // Element is visible
       if (article.getBoundingClientRect().height > 0) {
+        break;
+      }
+
+      // Safeguard against infinite loops
+      if (direction === 0) {
         break;
       }
     }

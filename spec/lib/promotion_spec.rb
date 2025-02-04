@@ -16,6 +16,11 @@ RSpec.describe Promotion do
   describe "newuser" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0], created_at: 2.days.ago) }
     let(:promotion) { Promotion.new(user) }
+    let!(:plugin) { Plugin::Instance.new }
+    let!(:review_modifier) { :review_trust_level }
+    let!(:recalculate_modifier) { :recalculate_trust_level }
+    let!(:deny_block) { Proc.new { false } }
+    let!(:allow_block) { Proc.new { true } }
 
     it "doesn't raise an error with a nil user" do
       expect { Promotion.new(nil).review }.not_to raise_error
@@ -48,6 +53,33 @@ RSpec.describe Promotion do
 
       it "has upgraded the user to basic" do
         expect(user.trust_level).to eq(TrustLevel[1])
+      end
+
+      it "allows plugins to control promotion #review" do
+        DiscoursePluginRegistry.register_modifier(plugin, :review_trust_level, &deny_block)
+        action = Promotion.new(user).review
+        expect(action).to eq(false)
+
+        DiscoursePluginRegistry.register_modifier(plugin, review_modifier, &allow_block)
+        action = Promotion.new(user).review
+        expect(action).to eq(true)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, review_modifier, &deny_block)
+        DiscoursePluginRegistry.unregister_modifier(plugin, review_modifier, &allow_block)
+      end
+
+      it "allows plugins to control promotion #recalculate" do
+        DiscoursePluginRegistry.register_modifier(plugin, recalculate_modifier, &deny_block)
+        action = Promotion.recalculate(user)
+        expect(action).to eq(nil)
+
+        DiscoursePluginRegistry.register_modifier(plugin, recalculate_modifier, &allow_block)
+        action = Promotion.recalculate(user)
+
+        expect(action).to eq(true)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, recalculate_modifier, &deny_block)
+        DiscoursePluginRegistry.unregister_modifier(plugin, recalculate_modifier, &allow_block)
       end
     end
 

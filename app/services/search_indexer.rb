@@ -365,7 +365,7 @@ class SearchIndexer
       return +"" if html.blank?
 
       begin
-        document = Nokogiri.HTML5("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
+        document = Nokogiri.HTML5("<div>#{html}</div>", encoding: Encoding::UTF_8)
       rescue ArgumentError
         return +""
       end
@@ -401,12 +401,12 @@ class SearchIndexer
         end
 
       html_scrubber = new
-      Nokogiri::HTML::SAX::Parser.new(html_scrubber).parse(document.to_html)
+      Nokogiri::HTML4::SAX::Parser.new(html_scrubber, Encoding::UTF_8).parse(document.to_html)
       html_scrubber.scrubbed.squish
     end
 
-    MENTION_CLASSES ||= %w[mention mention-group]
-    ATTRIBUTES ||= %w[alt title href data-video-title]
+    MENTION_CLASSES = %w[mention mention-group]
+    ATTRIBUTES = %w[alt title href data-video-title]
 
     def start_element(_name, attributes = [])
       attributes = Hash[*attributes.flatten]

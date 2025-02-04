@@ -2,6 +2,12 @@
   <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
 </span>
 
+<DPageHeader @hideTabs={{true}}>
+  <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin.dashboard.title"}} />
+  </:breadcrumbs>
+</DPageHeader>
+
 {{#if this.showVersionChecks}}
   <div class="section-top">
     <div class="version-checks">
@@ -12,9 +18,7 @@
 
 <DashboardProblems
   @loadingProblems={{this.loadingProblems}}
-  @foundProblems={{this.foundProblems}}
-  @lowPriorityProblems={{this.lowPriorityProblems}}
-  @highPriorityProblems={{this.highPriorityProblems}}
+  @problems={{this.problems}}
   @problemsTimestamp={{this.problemsTimestamp}}
   @refreshProblems={{action "refreshProblems"}}
 />
@@ -46,17 +50,6 @@
       <li class="navigation-item reports">
         <LinkTo @route="admin.dashboardReports" class="navigation-link">
           {{i18n "admin.dashboard.reports_tab"}}
-        </LinkTo>
-      </li>
-    {{/if}}
-
-    {{#if this.isNewFeaturesTabVisible}}
-      <li class="navigation-item new-features">
-        <LinkTo @route="admin.dashboardNewFeatures" class="navigation-link">
-          {{#if this.hasUnseenFeatures}}
-            {{replace-emoji ":gift:"}}
-          {{/if}}
-          {{i18n "admin.dashboard.new_features.title"}}
         </LinkTo>
       </li>
     {{/if}}

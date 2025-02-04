@@ -1,6 +1,6 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
 import { groupPath } from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get linkHref() {
@@ -8,7 +8,7 @@ export default class extends NotificationTypeBase {
   }
 
   get description() {
-    return I18n.t("notifications.membership_request_accepted", {
+    return i18n("notifications.membership_request_accepted", {
       group_name: this.notification.data.group_name,
     });
   }

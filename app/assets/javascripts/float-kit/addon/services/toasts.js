@@ -74,7 +74,7 @@ export default class Toasts extends Service {
   @action
   error(options = {}) {
     options.data.theme = "error";
-    options.data.icon ??= "exclamation-triangle";
+    options.data.icon ??= "triangle-exclamation";
 
     return this.show(options);
   }
@@ -89,7 +89,7 @@ export default class Toasts extends Service {
   @action
   warning(options = {}) {
     options.data.theme = "warning";
-    options.data.icon ??= "exclamation-circle";
+    options.data.icon ??= "circle-exclamation";
 
     return this.show(options);
   }
@@ -104,7 +104,7 @@ export default class Toasts extends Service {
   @action
   info(options = {}) {
     options.data.theme = "info";
-    options.data.icon ??= "info-circle";
+    options.data.icon ??= "circle-info";
 
     return this.show(options);
   }

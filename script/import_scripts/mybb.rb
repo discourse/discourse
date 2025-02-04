@@ -18,12 +18,12 @@ export BASE="" #
 # Call it like this:
 #   RAILS_ENV=production ruby script/import_scripts/mybb.rb
 class ImportScripts::MyBB < ImportScripts::Base
-  DB_HOST ||= ENV["DB_HOST"] || "localhost"
-  DB_NAME ||= ENV["DB_NAME"] || "mybb"
-  DB_PW ||= ENV["DB_PW"] || ""
-  DB_USER ||= ENV["DB_USER"] || "root"
-  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "mybb_"
-  UPLOADS_DIR ||= ENV["UPLOADS"] || "/data/limelightgaming/uploads"
+  DB_HOST = ENV["DB_HOST"] || "localhost"
+  DB_NAME = ENV["DB_NAME"] || "mybb"
+  DB_PW = ENV["DB_PW"] || ""
+  DB_USER = ENV["DB_USER"] || "root"
+  TABLE_PREFIX = ENV["TABLE_PREFIX"] || "mybb_"
+  UPLOADS_DIR = ENV["UPLOADS"] || "/data/limelightgaming/uploads"
   BATCH_SIZE = 1000
   BASE = ""
   QUIET = true

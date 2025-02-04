@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { emojiUnescape } from "discourse/lib/text";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { createRenderDirector } from "discourse/tests/helpers/reviewable-types-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getReviewable(overrides = {}) {
   return UserMenuReviewable.create(
@@ -36,7 +36,7 @@ module("Unit | Reviewable Items | queued-post", function (hooks) {
     assert.deepEqual(
       director.description,
       htmlSafe(
-        I18n.t("user_menu.reviewable.new_post_in_topic", {
+        i18n("user_menu.reviewable.new_post_in_topic", {
           title: `This is safe title &lt;a&gt; ${emojiUnescape(":heart:")}`,
         })
       ),
@@ -48,7 +48,7 @@ module("Unit | Reviewable Items | queued-post", function (hooks) {
     assert.deepEqual(
       director.description,
       htmlSafe(
-        I18n.t("user_menu.reviewable.new_post_in_topic", {
+        i18n("user_menu.reviewable.new_post_in_topic", {
           title: `This is unsafe title &lt;a&gt; ${emojiUnescape(":heart:")}`,
         })
       ),

@@ -99,7 +99,7 @@ RSpec.describe PostAction do
       before do
         SiteSetting.enable_category_group_moderation = true
         group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
-        post.topic.category.update!(reviewable_by_group_id: group.id)
+        Fabricate(:category_moderation_group, category: post.topic.category, group:)
       end
 
       it "notifies via pm" do
@@ -432,14 +432,13 @@ RSpec.describe PostAction do
     end
 
     it "shouldn't change given_likes unless likes are given or removed" do
-      freeze_time(Time.zone.now)
+      freeze_time
 
       PostActionCreator.like(codinghorror, post)
       expect(value_for(codinghorror.id, Date.today)).to eq(1)
 
       PostActionType.types.each do |type_name, type_id|
         post = Fabricate(:post)
-
         PostActionCreator.create(codinghorror, post, type_name)
         actual_count = value_for(codinghorror.id, Date.today)
         expected_count = type_name == :like ? 2 : 1
@@ -791,14 +790,14 @@ RSpec.describe PostAction do
         PostActionCreator.new(
           Discourse.system_user,
           post,
-          PostActionType.types[:flag_without_message],
+          PostActionType.types[:custom_flag_without_message],
           message: "WAT",
         ).perform
 
       expect(result).to be_success
       expect(result.post_action.related_post_id).to be_nil
       expect(result.reviewable_score.meta_topic_id).to be_nil
-
+    ensure
       flag_without_message.destroy!
     end
 
@@ -824,7 +823,7 @@ RSpec.describe PostAction do
         PostActionCreator.new(
           Discourse.system_user,
           post,
-          PostActionType.types[:flag_with_message],
+          PostActionType.types[:custom_flag_with_message],
           message: "WAT",
         ).perform
 

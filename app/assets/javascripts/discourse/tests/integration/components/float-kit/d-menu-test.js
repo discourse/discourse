@@ -1,7 +1,6 @@
 import { getOwner } from "@ember/owner";
 import {
   click,
-  find,
   render,
   triggerEvent,
   triggerKeyEvent,
@@ -48,11 +47,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     this.site.mobileView = true;
 
     await render(
-      hbs`<DMenu @inline={{true}} @modalForMobile={{true}} @content="content" />`
+      hbs`<DMenu @identifier="foo" @inline={{true}} @modalForMobile={{true}} @content="content" />`
     );
     await open();
 
-    assert.dom(".fk-d-menu-modal").hasText("content");
+    assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
   });
 
   test("@onRegisterApi", async function (assert) {
@@ -63,7 +62,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
       hbs`<DMenu @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
     );
 
-    assert.ok(this.api instanceof DMenuInstance);
+    assert.true(this.api instanceof DMenuInstance);
   });
 
   test("@onShow", async function (assert) {
@@ -73,7 +72,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await render(hbs`<DMenu @inline={{true}} @onShow={{this.onShow}} />`);
     await open();
 
-    assert.strictEqual(this.test, true);
+    assert.true(this.test);
   });
 
   test("@onClose", async function (assert) {
@@ -84,7 +83,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
     await close();
 
-    assert.strictEqual(this.test, true);
+    assert.true(this.test);
   });
 
   test("-expanded class", async function (assert) {
@@ -220,26 +219,24 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     );
     await open();
 
-    assert.ok(
-      find(".fk-d-menu").getAttribute("style").includes("max-width: 20px;")
-    );
+    assert.dom(".fk-d-menu").hasStyle({ maxWidth: "20px" });
   });
 
   test("applies position", async function (assert) {
     await render(hbs`<DMenu @inline={{true}} @label="label" />`);
     await open();
 
-    assert.dom(".fk-d-menu").hasAttribute("style", /left: /);
-    assert.ok(find(".fk-d-menu").getAttribute("style").includes("top: "));
+    assert.dom(".fk-d-menu").hasAttribute("style", /top: [\d.]+?px/);
+    assert.dom(".fk-d-menu").hasAttribute("style", /left: [\d.]+?px/);
   });
 
   test("content close argument", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="times" @action={{args.close}} /></:content></DMenu>`
+      hbs`<DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="xmark" @action={{args.close}} /></:content></DMenu>`
     );
     await open();
 
-    await click(".d-icon-times");
+    await click(".d-icon-xmark");
 
     assert.dom(".fk-d-menu").doesNotExist();
   });
@@ -263,7 +260,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await getOwner(this).lookup("service:menu").close("test");
 
-    assert.dom(".fk-d-menu__content.test-content").doesNotExist();
+    assert.dom(".fk-d-menu.test-content").doesNotExist();
   });
 
   test("get a menu by identifier", async function (assert) {
@@ -276,7 +273,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await activeMenu.close();
 
-    assert.dom(".fk-d-menu__content.test-content").doesNotExist();
+    assert.dom(".fk-d-menu.test-content").doesNotExist();
   });
 
   test("opening a menu with the same identifier", async function (assert) {
@@ -302,13 +299,13 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await click(".first.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu__content.first").exists();
-    assert.dom(".fk-d-menu__content.second").doesNotExist();
+    assert.dom(".fk-d-menu.first").exists();
+    assert.dom(".fk-d-menu.second").doesNotExist();
 
     await click(".second.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu__content.first").doesNotExist();
-    assert.dom(".fk-d-menu__content.second").exists();
+    assert.dom(".fk-d-menu.first").doesNotExist();
+    assert.dom(".fk-d-menu.second").exists();
   });
 
   test("empty @identifier/@groupIdentifier", async function (assert) {
@@ -318,13 +315,13 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await click(".first.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu__content.first").exists();
-    assert.dom(".fk-d-menu__content.second").doesNotExist();
+    assert.dom(".fk-d-menu.first").exists();
+    assert.dom(".fk-d-menu.second").doesNotExist();
 
     await click(".second.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu__content.first").exists("it doesn’t autoclose");
-    assert.dom(".fk-d-menu__content.second").exists();
+    assert.dom(".fk-d-menu.first").exists("doesn’t autoclose");
+    assert.dom(".fk-d-menu.second").exists();
   });
 
   test("@class", async function (assert) {
@@ -333,7 +330,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu__trigger.first").exists();
-    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu.first").exists();
   });
 
   test("@triggerClass", async function (assert) {
@@ -342,7 +339,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu__trigger.first").exists();
-    assert.dom(".fk-d-menu__content.first").doesNotExist();
+    assert.dom(".fk-d-menu.first").doesNotExist();
   });
 
   test("@contentClass", async function (assert) {
@@ -351,6 +348,42 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu__trigger.first").doesNotExist();
-    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu.first").exists();
+  });
+
+  test("focusTrigger on close", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+    this.close = async () => await this.api.close();
+
+    await render(
+      hbs`<DMenu @onRegisterApi={{this.onRegisterApi}} @inline={{true}} @icon="xmark">
+        <DButton @icon="xmark" class="close" @action={{this.close}} />
+      </DMenu>`
+    );
+
+    await click(".fk-d-menu__trigger");
+    await triggerKeyEvent(document.activeElement, "keydown", "Tab");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+    assert.dom(".fk-d-menu__trigger").isFocused();
+  });
+
+  test("focusTrigger=false on close", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+    this.close = async () => await this.api.close({ focusTrigger: false });
+
+    await render(
+      hbs`<DMenu @onRegisterApi={{this.onRegisterApi}} @inline={{true}} @icon="xmark">
+        <DButton @icon="xmark" class="close" @action={{this.close}} />
+      </DMenu>`
+    );
+
+    await click(".fk-d-menu__trigger");
+    await triggerKeyEvent(document.activeElement, "keydown", "Tab");
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+
+    assert.dom(document.body).isFocused();
   });
 });

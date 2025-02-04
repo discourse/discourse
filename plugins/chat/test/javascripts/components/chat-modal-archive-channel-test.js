@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -20,11 +19,9 @@ module(
         hbs`<Chat::Modal::ArchiveChannel @inline={{true}} @model={{hash channel=this.channel}} />`
       );
 
-      assert.true(
-        query(".chat-modal-archive-channel").innerHTML.includes(
-          "&lt;script&gt;someeviltitle&lt;/script&gt;"
-        )
-      );
+      assert
+        .dom(".chat-modal-archive-channel")
+        .includesHtml("&lt;script&gt;someeviltitle&lt;/script&gt;");
     });
   }
 );

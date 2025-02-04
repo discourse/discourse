@@ -1,7 +1,8 @@
 import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import discourseDebounce from "discourse/lib/debounce";
+import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { isTesting } from "discourse-common/config/environment";
 
 @disableImplicitInjections
 export default class UserTips extends Service {
@@ -13,6 +14,10 @@ export default class UserTips extends Service {
   #shouldRenderSet = new TrackedSet();
 
   #updateRenderedId() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     const tipsArray = [...this.#availableTips];
     if (tipsArray.find((tip) => tip.id === this.#renderedId)) {
       return;
@@ -21,11 +26,7 @@ export default class UserTips extends Service {
     const newId = tipsArray
       .sortBy("priority")
       .reverse()
-      .find((tip) => {
-        if (this.canSeeUserTip(tip.id)) {
-          return tip.id;
-        }
-      })?.id;
+      .find((tip) => this.canSeeUserTip(tip.id))?.id;
 
     if (this.#renderedId !== newId) {
       this.#shouldRenderSet.delete(this.#renderedId);
@@ -41,7 +42,7 @@ export default class UserTips extends Service {
   addAvailableTip(tip) {
     if (this.canSeeUserTip(tip.id) && !this._findAvailableTipById(tip.id)) {
       this.#availableTips.add(tip);
-      this.#updateRenderedId();
+      discourseDebounce(this, this.#updateRenderedId, 0);
     }
   }
 

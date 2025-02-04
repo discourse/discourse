@@ -1,5 +1,5 @@
+import { helperContext } from "discourse/lib/helpers";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { helperContext } from "discourse-common/lib/helpers";
 
 export const QUOTE_REGEXP =
   /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im;

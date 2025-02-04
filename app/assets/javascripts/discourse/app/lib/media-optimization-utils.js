@@ -1,35 +1,5 @@
-import { Promise } from "rsvp";
-import { helperContext } from "discourse-common/lib/helpers";
-
-// Chrome and Firefox use a native method to do Image -> Bitmap Array (it happens of the main thread!)
-// Safari < 15 uses the `<img async>` element due to https://bugs.webkit.org/show_bug.cgi?id=182424
-// Safari > 15 still uses `<img async>` due to their buggy createImageBitmap not handling EXIF rotation
 async function fileToDrawable(file) {
-  const caps = helperContext().capabilities;
-
-  if ("createImageBitmap" in self && !caps.isApple) {
-    return await createImageBitmap(file);
-  } else {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.decoding = "async";
-    img.src = url;
-    const loaded = new Promise((resolve, reject) => {
-      img.onload = () => resolve();
-      img.onerror = () => reject(Error("Image loading error"));
-    });
-
-    if (img.decode) {
-      // Nice off-thread way supported in Safari/Chrome.
-      // Safari throws on decode if the source is SVG.
-      // https://bugs.webkit.org/show_bug.cgi?id=188347
-      await img.decode().catch(() => null);
-    }
-
-    // Always await loaded, as we may have bailed due to the Safari bug above.
-    await loaded;
-    return img;
-  }
+  return await createImageBitmap(file);
 }
 
 function drawableToImageData(drawable) {
@@ -40,17 +10,7 @@ function drawableToImageData(drawable) {
     sw = width,
     sh = height;
 
-  const offscreenCanvasSupported = typeof OffscreenCanvas !== "undefined";
-
-  // Make canvas same size as image
-  let canvas;
-  if (offscreenCanvasSupported) {
-    canvas = new OffscreenCanvas(width, height);
-  } else {
-    canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-  }
+  let canvas = new OffscreenCanvas(width, height);
 
   // Draw image onto canvas
   const ctx = canvas.getContext("2d");
@@ -59,10 +19,6 @@ function drawableToImageData(drawable) {
   }
   ctx.drawImage(drawable, sx, sy, sw, sh, 0, 0, width, height);
   const imageData = ctx.getImageData(0, 0, width, height);
-
-  if (!offscreenCanvasSupported) {
-    canvas.remove();
-  }
 
   return imageData;
 }

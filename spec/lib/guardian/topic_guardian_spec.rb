@@ -83,7 +83,7 @@ RSpec.describe TopicGuardian do
     it "returns true for group moderator" do
       SiteSetting.enable_category_group_moderation = true
       expect(Guardian.new(user).can_see_deleted_topics?(topic.category)).to eq(false)
-      category.update!(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category:, group:)
       group.add(user)
       topic.update!(category: category)
       expect(Guardian.new(user).can_see_deleted_topics?(topic.category)).to eq(true)
@@ -110,7 +110,7 @@ RSpec.describe TopicGuardian do
     it "returns true for group moderator" do
       SiteSetting.enable_category_group_moderation = true
       expect(Guardian.new(user).can_recover_topic?(Topic.with_deleted.last)).to eq(false)
-      category.update!(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category:, group:)
       group.add(user)
       topic.update!(category: category)
       expect(Guardian.new(user).can_recover_topic?(Topic.with_deleted.last)).to eq(true)
@@ -255,7 +255,7 @@ RSpec.describe TopicGuardian do
     it "returns the topic ids for topics which are deleted but user is a category moderator of" do
       SiteSetting.enable_category_group_moderation = true
 
-      category.update!(reviewable_by_group_id: group.id)
+      Fabricate(:category_moderation_group, category:, group:)
       group.add(user)
       topic.update!(category: category)
       topic.trash!(admin)
@@ -291,6 +291,8 @@ RSpec.describe TopicGuardian do
         list = guardian.filter_allowed_categories(list)
 
         expect(list.count).to eq(0)
+
+        expect(guardian.can_see?(private_topic)).to eq(false)
       end
     end
   end

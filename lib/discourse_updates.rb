@@ -132,7 +132,8 @@ module DiscourseUpdates
     end
 
     def new_features_payload
-      response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
+      response =
+        Excon.new(new_features_endpoint).request(expects: [200], method: :Get, read_timeout: 5)
       response.body
     end
 
@@ -141,7 +142,9 @@ module DiscourseUpdates
       Discourse.redis.set(new_features_key, payload)
     end
 
-    def new_features
+    def new_features(force_refresh: false)
+      update_new_features if force_refresh
+
       entries =
         begin
           JSON.parse(Discourse.redis.get(new_features_key))
@@ -150,10 +153,30 @@ module DiscourseUpdates
         end
       return nil if entries.nil?
 
+      entries.map! do |item|
+        next item if !item["experiment_setting"]
+
+        if !SiteSetting.respond_to?(item["experiment_setting"]) ||
+             SiteSetting.type_supervisor.get_type(item["experiment_setting"].to_sym) != :bool
+          item["experiment_setting"] = nil
+          item["experiment_enabled"] = false
+        else
+          item["experiment_enabled"] = SiteSetting.send(item["experiment_setting"].to_sym) if item
+        end
+
+        item
+      end
+
       entries.select! do |item|
         begin
-          item["discourse_version"].nil? ||
-            Discourse.has_needed_version?(current_version, item["discourse_version"])
+          valid_version =
+            item["discourse_version"].nil? ||
+              Discourse.has_needed_version?(current_version, item["discourse_version"])
+
+          valid_plugin_name =
+            item["plugin_name"].blank? || Discourse.plugins_by_name[item["plugin_name"]].present?
+
+          valid_version && valid_plugin_name
         rescue StandardError
           nil
         end

@@ -1,0 +1,13 @@
+diff --git a/index.js b/index.js
+index d90f15316465ae517b5db02e9e52f49c7582a035..c216c8ca812204f22248522e0249e0fc79a531c4 100644
+--- a/index.js
++++ b/index.js
+@@ -38,7 +38,7 @@ function licensee (configuration, path, callback) {
+       .then(function (tree) {
+         var dependencies = Array.from(tree.inventory.values())
+           .filter(function (dependency) {
+-            return !dependency.isProjectRoot
++            return !dependency.isProjectRoot && dependency.package.name
+           })
+         if (configuration.filterPackages) {
+           dependencies = configuration.filterPackages(dependencies)

@@ -86,7 +86,7 @@ module Chat
     end
 
     def chat_users
-      User.distinct.joins(:user_option).real.where(user_options: { chat_enabled: true })
+      User.distinct.joins(:user_option).where(user_options: { chat_enabled: true })
     end
 
     def mentionable_groups

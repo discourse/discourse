@@ -12,6 +12,6 @@ module("Unit | Controller | preferences/second-factor", function (hooks) {
       "controller:preferences/second-factor"
     );
 
-    assert.strictEqual(controller.displayOAuthWarning, true);
+    assert.true(controller.displayOAuthWarning);
   });
 });

@@ -1,4 +1,5 @@
 import Component from "@ember/component";
-export default Component.extend({
-  tagName: "li",
-});
+import { tagName } from "@ember-decorators/component";
+
+@tagName("li")
+export default class UserSummaryTopic extends Component {}

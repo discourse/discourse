@@ -1,7 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import I18n from "discourse-i18n";
-import { acceptance, query } from "../helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
+import { acceptance } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Replies - empty state", function (needs) {
   const currentUser = "eviltrout";
@@ -19,17 +19,17 @@ acceptance("User Activity / Replies - empty state", function (needs) {
 
   test("When looking at own replies page", async function (assert) {
     await visit(`/u/${currentUser}/activity/replies`);
-    assert.equal(
-      query("div.empty-state span.empty-state-title").innerText,
-      I18n.t("user_activity.no_replies_title")
-    );
+    assert
+      .dom("div.empty-state span.empty-state-title")
+      .hasText(i18n("user_activity.no_replies_title"));
   });
 
   test("When looking at another user's replies page", async function (assert) {
     await visit(`/u/${anotherUser}/activity/replies`);
-    assert.equal(
-      query("div.empty-state span.empty-state-title").innerText,
-      I18n.t("user_activity.no_replies_title_others", { username: anotherUser })
-    );
+    assert
+      .dom("div.empty-state span.empty-state-title")
+      .hasText(
+        i18n("user_activity.no_replies_title_others", { username: anotherUser })
+      );
   });
 });

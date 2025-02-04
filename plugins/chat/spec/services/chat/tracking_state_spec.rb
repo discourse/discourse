@@ -2,7 +2,7 @@
 
 RSpec.describe ::Chat::TrackingState do
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -17,12 +17,8 @@ RSpec.describe ::Chat::TrackingState do
     let(:include_threads) { true }
     let(:include_missing_memberships) { nil }
 
-    let(:params) do
-      id_params.merge(guardian: guardian).merge(
-        include_threads: include_threads,
-        include_missing_memberships: include_missing_memberships,
-      )
-    end
+    let(:params) { id_params.merge(include_threads:, include_missing_memberships:) }
+    let(:dependencies) { { guardian: } }
 
     fab!(:channel_1_membership) do
       Fabricate(:user_chat_channel_membership, chat_channel: channel_1, user: current_user)
@@ -44,6 +40,7 @@ RSpec.describe ::Chat::TrackingState do
             channel_1.id => {
               unread_count: 4, # 2 messages + 2 thread original messages
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           )
         end
@@ -55,11 +52,13 @@ RSpec.describe ::Chat::TrackingState do
               channel_id: channel_1.id,
               unread_count: 1,
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
             thread_2.id => {
               channel_id: channel_1.id,
               unread_count: 2,
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           )
         end
@@ -74,6 +73,7 @@ RSpec.describe ::Chat::TrackingState do
               channel_1.id => {
                 unread_count: 4, # 2 messages + 2 thread original messages
                 mention_count: 0,
+                watched_threads_unread_count: 0,
               },
             )
           end
@@ -89,6 +89,7 @@ RSpec.describe ::Chat::TrackingState do
             channel_1.id => {
               unread_count: 4, # 2 messages + 2 thread original messages
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           )
         end
@@ -100,6 +101,7 @@ RSpec.describe ::Chat::TrackingState do
               channel_id: channel_1.id,
               unread_count: 2,
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           )
         end
@@ -117,10 +119,12 @@ RSpec.describe ::Chat::TrackingState do
           channel_1.id => {
             unread_count: 4, # 2 messages + 2 thread original messages
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           channel_2.id => {
             unread_count: 0,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
         )
       end
@@ -132,21 +136,25 @@ RSpec.describe ::Chat::TrackingState do
             channel_id: channel_1.id,
             unread_count: 1,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           thread_2.id => {
             channel_id: channel_1.id,
             unread_count: 2,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           thread_3.id => {
             channel_id: channel_2.id,
             unread_count: 0,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           thread_4.id => {
             channel_id: channel_2.id,
             unread_count: 0,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
         )
       end

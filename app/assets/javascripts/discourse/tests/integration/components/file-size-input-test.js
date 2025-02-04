@@ -8,39 +8,88 @@ module("Integration | Component | file-size-input", function (hooks) {
   setupRenderingTest(hooks);
 
   test("file size unit selector kb", async function (assert) {
-    this.set("value", 1024);
+    this.set("value", 1023);
     this.set("max", 4096);
     this.set("onChangeSize", () => {});
-    this.set("updateValidationMessage", () => {});
+    this.set("setValidationMessage", () => {});
 
     await render(hbs`
       <FileSizeInput
         @sizeValueKB={{readonly this.value}}
         class="file-size-input-test"
         @onChangeSize={{this.onChangeSize}}
-        @updateValidationMessage={{this.updateValidationMessage}}
+        @setValidationMessage={{this.setValidationMessage}}
         @max=4096
-        @message=""
       />
     `);
 
-    assert.dom(".file-size-input").hasValue("1024", "value is present");
+    assert.dom(".file-size-input").hasValue("1023", "value is present");
+    assert.strictEqual(
+      selectKit(".file-size-unit-selector").header().value(),
+      "kb",
+      "the default unit is kb"
+    );
+  });
+
+  test("file size unit is mb when the starting value is 1mb or more", async function (assert) {
+    this.set("value", 1024);
+    this.set("onChangeSize", () => {});
+    this.set("setValidationMessage", () => {});
+
+    await render(hbs`
+      <FileSizeInput
+        @sizeValueKB={{readonly this.value}}
+        class="file-size-input-test"
+        @onChangeSize={{this.onChangeSize}}
+        @setValidationMessage={{this.setValidationMessage}}
+        @max=4096
+      />
+    `);
+
+    assert.dom(".file-size-input").hasValue("1", "value is present");
+    assert.strictEqual(
+      selectKit(".file-size-unit-selector").header().value(),
+      "mb",
+      "the default unit is mb"
+    );
+  });
+
+  test("file size unit is gb when the starting value is 1gb or more", async function (assert) {
+    this.set("value", 1024 * 1024);
+    this.set("onChangeSize", () => {});
+    this.set("setValidationMessage", () => {});
+
+    await render(hbs`
+      <FileSizeInput
+        @sizeValueKB={{readonly this.value}}
+        class="file-size-input-test"
+        @onChangeSize={{this.onChangeSize}}
+        @setValidationMessage={{this.setValidationMessage}}
+        @max=4096
+      />
+    `);
+
+    assert.dom(".file-size-input").hasValue("1", "value is present");
+    assert.strictEqual(
+      selectKit(".file-size-unit-selector").header().value(),
+      "gb",
+      "the default unit is gb"
+    );
   });
 
   test("file size unit selector", async function (assert) {
     this.set("value", 4096);
     this.set("max", 8192);
     this.set("onChangeSize", () => {});
-    this.set("updateValidationMessage", () => {});
+    this.set("setValidationMessage", () => {});
 
     await render(hbs`
       <FileSizeInput
         @sizeValueKB={{readonly this.value}}
         class="file-size-input-test"
         @onChangeSize={{this.onChangeSize}}
-        @updateValidationMessage={{this.updateValidationMessage}}
+        @setValidationMessage={{this.setValidationMessage}}
         @max=4096
-        @message=""
       />
     `);
 
@@ -91,21 +140,22 @@ module("Integration | Component | file-size-input", function (hooks) {
   test("file size input error message", async function (assert) {
     this.set("value", 4096);
     this.set("max", 8192);
+    this.set("min", 2048);
     this.set("onChangeSize", () => {});
 
-    let updateValidationMessage = (message) => {
+    let setValidationMessage = (message) => {
       this.set("message", message);
     };
-    this.set("updateValidationMessage", updateValidationMessage);
+    this.set("setValidationMessage", setValidationMessage);
 
     await render(hbs`
       <FileSizeInput
         @sizeValueKB={{readonly this.value}}
         class="file-size-input-test"
         @onChangeSize={{this.onChangeSize}}
-        @updateValidationMessage={{this.updateValidationMessage}}
+        @setValidationMessage={{this.setValidationMessage}}
         @max={{this.max}}
-        @message={{this.message}}
+        @min={{this.min}}
       />
     `);
 
@@ -123,6 +173,14 @@ module("Integration | Component | file-size-input", function (hooks) {
       this.message,
       null,
       "The message is cleared when the input is less than the max"
+    );
+
+    await fillIn(".file-size-input", 1);
+
+    assert.strictEqual(
+      this.message,
+      "1 MB is smaller than the min allowed 2 MB",
+      "A message is showed when the input is smaller than the min"
     );
   });
 });

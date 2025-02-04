@@ -201,6 +201,8 @@ sl:
             title: "Običajna"
           tracking:
             title: "Sledim"
+          watching:
+            title: "Opazujem"
         participants_other_count:
           one: "+%{count}"
           two: "+%{count}"

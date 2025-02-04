@@ -1,5 +1,26 @@
-<div class="admin-config-area">
-  <h2>{{i18n "admin.dashboard.new_features.title"}}</h2>
-  <p>{{html-safe (i18n "admin.dashboard.new_features.subtitle")}}</p>
-  <DashboardNewFeatures />
+<DPageHeader
+  @titleLabel={{i18n "admin.dashboard.new_features.title"}}
+  @descriptionLabel={{i18n "admin.dashboard.new_features.subtitle"}}
+  @learnMoreUrl="https://meta.discourse.org/tags/c/announcements/67/release-notes"
+  @hideTabs={{true}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+    <DBreadcrumbsItem
+      @path="/admin/whats-new"
+      @label={{i18n "admin.dashboard.new_features.title"}}
+    />
+  </:breadcrumbs>
+  <:actions as |actions|>
+    <actions.Primary
+      @label="admin.new_features.check_for_updates"
+      @action={{this.checkForUpdates}}
+    />
+  </:actions>
+</DPageHeader>
+
+<div class="admin-container admin-config-page__main-area">
+  <div class="admin-config-area">
+    <DashboardNewFeatures @onCheckForFeatures={{this.bindCheckFeatures}} />
+  </div>
 </div>

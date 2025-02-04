@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
-import getURL from "discourse-common/lib/get-url";
-import { debounce } from "discourse-common/utils/decorators";
+import { debounce } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 
 const _itemSelectCallbacks = [];
 export function addItemSelectCallback(fn) {
@@ -18,7 +18,7 @@ export default class AssistantItem extends Component {
   @service search;
   @service appEvents;
 
-  icon = this.args.icon || "search";
+  icon = this.args.icon || "magnifying-glass";
 
   get href() {
     let href = "#";
@@ -70,19 +70,13 @@ export default class AssistantItem extends Component {
       return;
     }
 
-    if (e.key === "Escape") {
-      this.args.closeSearchMenu();
-      e.preventDefault();
-      return false;
-    }
-
     if (e.key === "Enter") {
       this.itemSelected();
     }
 
-    this.search.handleArrowUpOrDown(e);
-    e.stopPropagation();
-    e.preventDefault();
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      this.search.handleArrowUpOrDown(e);
+    }
   }
 
   @action

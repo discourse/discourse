@@ -11,6 +11,8 @@ ko:
         other: "투표자"
       total_votes:
         other: "전체 투표"
+      votes:
+        other: "%{count} 투표"
       average_rating: "평균: <strong>%{average}</strong>."
       public:
         title: "투표는 <strong>공개</strong> 입니다."

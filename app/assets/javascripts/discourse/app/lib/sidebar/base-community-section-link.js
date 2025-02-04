@@ -1,22 +1,18 @@
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
+
 /**
  * Base class representing a sidebar communtiy section link interface.
  */
 export default class BaseCommunitySectionLink {
-  constructor({
-    topicTrackingState,
-    currentUser,
-    appEvents,
-    router,
-    siteSettings,
-    inMoreDrawer,
-    overridenName,
-    overridenIcon,
-  } = {}) {
-    this.router = router;
-    this.topicTrackingState = topicTrackingState;
-    this.currentUser = currentUser;
-    this.appEvents = appEvents;
-    this.siteSettings = siteSettings;
+  @service currentUser;
+  @service appEvents;
+  @service router;
+  @service siteSettings;
+  @service topicTrackingState;
+
+  constructor(owner, { inMoreDrawer, overridenName, overridenIcon } = {}) {
+    setOwner(this, owner);
     this.inMoreDrawer = inMoreDrawer;
     this.overridenName = overridenName;
     this.overridenIcon = overridenIcon;

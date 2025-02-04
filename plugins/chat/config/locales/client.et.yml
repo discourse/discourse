@@ -160,6 +160,8 @@ et:
             title: "Normaalne"
           tracking:
             title: "Jälgimine"
+          watching:
+            title: "Vaatlemine"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

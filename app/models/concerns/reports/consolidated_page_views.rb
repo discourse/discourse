@@ -4,10 +4,14 @@ module Reports::ConsolidatedPageViews
   extend ActiveSupport::Concern
 
   class_methods do
+    # NOTE: This report is superseded by "SiteTraffic". Eventually once
+    # use_legacy_pageviews is always false or no longer needed, and users
+    # no longer rely on the data in this old report in the transition period,
+    # we can delete this.
     def report_consolidated_page_views(report)
       filters = %w[page_view_logged_in page_view_anon page_view_crawler]
 
-      report.modes = [:stacked_chart]
+      report.modes = [Report::MODES[:stacked_chart]]
 
       requests =
         filters.map do |filter|

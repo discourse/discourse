@@ -3,7 +3,6 @@
     display: flex;
     flex-direction: column;
     z-index: 3;
-    background-color: var(--primary-very-low);
     padding: 0.5rem 0 env(safe-area-inset-bottom) 0;
 
     .keyboard-visible & {
@@ -49,13 +48,12 @@
     flex-direction: row;
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius-large);
-    background-color: var(--secondary);
+    background: rgba(var(--primary-very-low-rgb), 0.5);
     min-height: 50px;
     overflow: hidden;
 
     .chat-composer.is-focused & {
-      border-color: var(--primary-low-mid);
-      box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 1px 0 var(--tertiary);
     }
 
     .chat-composer.is-disabled & {
@@ -87,18 +85,15 @@
     outline: none;
     border: 0;
     resize: none;
-    max-height: calc(
-      (
-          var(--100dvh) - var(--header-offset, 0px) -
-            var(--chat-header-offset, 0px)
-        ) / 100 * 25
-    );
+    max-height: calc(var(--100dvh) / 4);
     background: none;
     padding: 0;
     margin: 5px 0;
     text-overflow: ellipsis;
     cursor: inherit;
-    @include chat-scrollbar();
+    @include chat-scrollbar;
+    white-space: pre-wrap !important;
+    min-width: 20px;
 
     &[disabled] {
       background: none;

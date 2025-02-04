@@ -233,7 +233,10 @@ RSpec.describe PostRevisor do
       fab!(:tag1) { Fabricate(:tag, name: "First tag") }
       fab!(:tag2) { Fabricate(:tag, name: "Second tag") }
 
-      before { SiteSetting.create_post_for_category_and_tag_changes = true }
+      before do
+        SiteSetting.create_post_for_category_and_tag_changes = true
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
+      end
 
       it "Creates a small_action post with correct translation when both adding and removing tags" do
         post.topic.update!(tags: [tag1])
@@ -292,6 +295,16 @@ RSpec.describe PostRevisor do
         )
       end
 
+      it "Creates a small_action as a whisper when category is changed" do
+        category = Fabricate(:category)
+
+        expect { post_revisor.revise!(admin, category_id: category.id) }.to change {
+          Post.where(topic_id: post.topic_id, action_code: "category_changed").count
+        }.by(1)
+
+        expect(post.topic.ordered_posts.last.post_type).to eq(Post.types[:whisper])
+      end
+
       describe "with PMs" do
         fab!(:pm) { Fabricate(:private_message_topic) }
         let(:first_post) { create_post(user: admin, topic: pm, allow_uncategorized_topics: false) }
@@ -306,10 +319,6 @@ RSpec.describe PostRevisor do
   end
 
   describe "revise wiki" do
-    # There used to be a bug where wiki changes were considered posting "too similar"
-    # so this is enabled and checked
-    use_redis_snapshotting
-
     before { SiteSetting.unique_posts_mins = 10 }
 
     it "allows the user to change it to a wiki" do
@@ -803,8 +812,6 @@ RSpec.describe PostRevisor do
         SiteSetting.editing_grace_period = 0
       end
 
-      use_redis_snapshotting
-
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
         post_revisor.revise!(changed_by, raw: "updated body")
@@ -1091,8 +1098,9 @@ RSpec.describe PostRevisor do
 
     context "when logging group moderator edits" do
       fab!(:group_user)
-      fab!(:category) do
-        Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic)
+      fab!(:category) { Fabricate(:category, topic: topic) }
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
       end
 
       before do

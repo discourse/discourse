@@ -3,18 +3,24 @@ import { action } from "@ember/object";
 import { alias, equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { i18n, setting } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { computedI18n, setting } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
+import { i18n } from "discourse-i18n";
 
 export default class AdminBackupsIndexController extends Controller {
   @service dialog;
   @controller adminBackups;
 
   @alias("adminBackups.model") status;
-  @i18n("admin.backups.upload.label") uploadLabel;
+  @computedI18n("admin.backups.upload.label") uploadLabel;
   @setting("backup_location") backupLocation;
   @equal("backupLocation", "local") localBackupStorage;
+
+  get restoreSettingsUrl() {
+    return getURL("/admin/backups/settings?filter=allow_restore");
+  }
 
   @discourseComputed("status.allowRestore", "status.isOperationRunning")
   restoreTitle(allowRestore, isOperationRunning) {
@@ -28,32 +34,21 @@ export default class AdminBackupsIndexController extends Controller {
   }
 
   @action
-  toggleReadOnlyMode() {
-    if (!this.site.get("isReadOnly")) {
-      this.dialog.yesNoConfirm({
-        message: I18n.t("admin.backups.read_only.enable.confirm"),
-        didConfirm: () => {
-          this.set("currentUser.hideReadOnlyAlert", true);
-          this._toggleReadOnlyMode(true);
-        },
-      });
-    } else {
-      this._toggleReadOnlyMode(false);
+  async download(backup) {
+    try {
+      await ajax(`/admin/backups/${backup.filename}`, { type: "PUT" });
+      this.dialog.alert(i18n("admin.backups.operations.download.alert"));
+    } catch (err) {
+      popupAjaxError(err);
     }
   }
 
-  @action
-  download(backup) {
-    const link = backup.get("filename");
-    ajax(`/admin/backups/${link}`, { type: "PUT" }).then(() =>
-      this.dialog.alert(I18n.t("admin.backups.operations.download.alert"))
-    );
-  }
+  @discourseComputed("status.isOperationRunning")
+  deleteTitle() {
+    if (this.status.isOperationRunning) {
+      return "admin.backups.operations.is_running";
+    }
 
-  _toggleReadOnlyMode(enable) {
-    ajax("/admin/backups/readonly", {
-      type: "PUT",
-      data: { enable },
-    }).then(() => this.site.set("isReadOnly", enable));
+    return "admin.backups.operations.destroy.title";
   }
 }

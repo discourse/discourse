@@ -5,10 +5,132 @@ describe Chat::Message do
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
 
+  it "supports custom fields" do
+    message.custom_fields["test"] = "test"
+    message.save_custom_fields
+    loaded_message = Chat::Message.find(message.id)
+    expect(loaded_message.custom_fields["test"]).to eq("test")
+    expect(Chat::MessageCustomField.first.message.id).to eq(message.id)
+  end
+
+  describe "normalization" do
+    context "when normalizing blocks" do
+      it "adds a schema version to the blocks" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["schema_version"]).to eq(1)
+      end
+
+      it "adds a schema version to the elements" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["elements"][0]["schema_version"]).to eq(1)
+      end
+
+      it "adds a block_id if not present" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["block_id"]).to be_present
+      end
+
+      it "adds an action_id if not present" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["elements"][0]["action_id"]).to be_present
+      end
+    end
+  end
+
   describe "validations" do
     subject(:message) { described_class.new(message: "") }
 
+    let(:blocks) { nil }
+
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+
+    context "when blocks format is invalid" do
+      let(:blocks) { [{ type: "actions", elements: [{ type: "buttoxn" }] }] }
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          [
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+          ],
+        )
+      end
+    end
+
+    context "when action_id is duplicated" do
+      let(:blocks) do
+        [
+          {
+            type: "actions",
+            elements: [
+              { type: "button", text: { text: "Foo", type: "plain_text" }, action_id: "foo" },
+              { type: "button", text: { text: "Foo", type: "plain_text" }, action_id: "foo" },
+            ],
+          },
+        ]
+      end
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          "have duplicated action_id: foo",
+        )
+      end
+    end
+
+    context "when block_id is duplicated" do
+      let(:blocks) do
+        [
+          {
+            type: "actions",
+            block_id: "foo",
+            elements: [{ type: "button", text: { text: "Foo", type: "plain_text" } }],
+          },
+          {
+            type: "actions",
+            block_id: "foo",
+            elements: [{ type: "button", text: { text: "Foo", type: "plain_text" } }],
+          },
+        ]
+      end
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          "have duplicated block_id: foo",
+        )
+      end
+    end
   end
 
   describe ".in_thread?" do
@@ -61,16 +183,74 @@ describe Chat::Message do
       )
     end
 
-    it "does not support headings" do
-      cooked = described_class.cook("## heading 2")
+    it "supports kbd" do
+      cooked = described_class.cook <<~MD
+      <kbd>Esc</kbd> is pressed
+      MD
 
-      expect(cooked).to eq("<p>## heading 2</p>")
+      expect(cooked).to match_html <<~HTML
+      <p><kbd>Esc</kbd> is pressed</p>
+      HTML
+    end
+
+    context "when message is made by a bot user" do
+      it "supports headings" do
+        cooked = described_class.cook(<<~MD, user_id: -1)
+        # h1
+        ## h2
+        ### h3
+        #### h4
+        ##### h5
+        ###### h6
+        MD
+
+        expect(cooked).to match_html <<~HTML
+        <h1><a name="h1-1" class="anchor" href="#h1-1"></a>h1</h1>
+        <h2><a name="h2-2" class="anchor" href="#h2-2"></a>h2</h2>
+        <h3><a name="h3-3" class="anchor" href="#h3-3"></a>h3</h3>
+        <h4><a name="h4-4" class="anchor" href="#h4-4"></a>h4</h4>
+        <h5><a name="h5-5" class="anchor" href="#h5-5"></a>h5</h5>
+        <h6><a name="h6-6" class="anchor" href="#h6-6"></a>h6</h6>
+        HTML
+      end
+
+      it "cooks the grid bbcode" do
+        cooked = described_class.cook("[grid]\ntest\n[/grid]", user_id: -1)
+
+        expect(cooked).to match_html <<~HTML
+        <div class="d-image-grid">
+        <p>test</p>
+        </div>
+        HTML
+      end
+    end
+
+    it "doesn't support headings" do
+      cooked = described_class.cook("# test")
+
+      expect(cooked).to match_html <<~HTML
+      <p># test</p>
+      HTML
+    end
+
+    it "doesn't support grid" do
+      cooked = described_class.cook("[grid]\ntest\n[/grid]")
+
+      expect(cooked).to match_html <<~HTML
+      <p>[grid]<br>test<br>[/grid]</p>
+      HTML
     end
 
     it "supports horizontal replacement" do
       cooked = described_class.cook("---")
 
       expect(cooked).to eq("<p>—</p>")
+    end
+
+    it "supports escape sequence" do
+      cooked = described_class.cook('\*test\*')
+
+      expect(cooked).to eq("<p>*test*</p>")
     end
 
     it "supports backticks rule" do
@@ -134,7 +314,7 @@ describe Chat::Message do
       <aside class="quote no-group" data-username="#{post.user.username}" data-post="#{post.post_number}" data-topic="#{topic.id}">
       <div class="title">
       <div class="quote-controls"></div>
-      <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a></div>
+      <img alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a></div>
       <blockquote>
       <p>Mark me…this will go down in history.</p>
       </blockquote>
@@ -180,7 +360,7 @@ describe Chat::Message do
         Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a></div>
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"></div>
+        <img alt="" width="24" height="24" src="#{avatar_src}" class="avatar"></div>
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
         <div class="chat-transcript-datetime">
@@ -192,7 +372,7 @@ describe Chat::Message do
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
+        <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
         <div class="chat-transcript-datetime">
@@ -436,18 +616,15 @@ describe Chat::Message do
   end
 
   describe "blocking duplicate messages" do
-    fab!(:channel) { Fabricate(:chat_channel, user_count: 10) }
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    let(:message) { "this is duplicate" }
+    fab!(:chat_channel)
+    fab!(:user)
 
-    before { SiteSetting.chat_duplicate_message_sensitivity = 1 }
-
-    it "blocks duplicate messages for the message, channel user, and message age requirements" do
-      Fabricate(:chat_message, message: "this is duplicate", chat_channel: channel, user: user1)
-      message =
-        described_class.new(message: "this is duplicate", chat_channel: channel, user: user2)
-      message.valid?
-      expect(message.errors.full_messages).to include(I18n.t("chat.errors.duplicate_message"))
+    it "blocks duplicate messages" do
+      Fabricate(:chat_message, message:, chat_channel:, user:)
+      msg = described_class.new(message:, chat_channel:, user:)
+      msg.valid?
+      expect(msg.errors.full_messages).to include(I18n.t("chat.errors.duplicate_message"))
     end
   end
 
@@ -509,7 +686,7 @@ describe Chat::Message do
     it "destroys upload_references" do
       message_1 = Fabricate(:chat_message)
       upload_reference_1 = Fabricate(:upload_reference, target: message_1)
-      upload_1 = Fabricate(:upload)
+      _upload_1 = Fabricate(:upload)
 
       message_1.destroy!
 
@@ -606,6 +783,22 @@ describe Chat::Message do
 
         expect(message.user_mentions.pluck(:target_id)).to match_array(already_mentioned)
         expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      end
+
+      it "creates thread memberships for mentioned users when replying to a thread" do
+        thread = Fabricate(:chat_thread)
+        thread_message =
+          Fabricate(
+            :chat_message,
+            chat_channel: thread.channel,
+            thread: thread,
+            message: "cc @#{user3.username} and @#{user4.username}",
+          )
+
+        thread_message.cook
+        thread_message.upsert_mentions
+
+        expect(thread.user_chat_thread_memberships.pluck(:user_id)).to include(user3.id, user4.id)
       end
     end
 

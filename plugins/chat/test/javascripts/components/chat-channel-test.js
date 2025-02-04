@@ -159,22 +159,20 @@ module(
 
     test("it shows status tooltip", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} /><DTooltips />`);
-      await triggerEvent(statusSelector(mentionedUser.username), "mousemove");
+      await triggerEvent(statusSelector(mentionedUser.username), "pointermove");
 
-      assert.equal(
-        document
-          .querySelector(".user-status-tooltip-description")
-          .textContent.trim(),
-        mentionedUser.status.description,
-        "status description is correct"
-      );
+      assert
+        .dom(".user-status-tooltip-description")
+        .hasText(
+          mentionedUser.status.description,
+          "status description is correct"
+        );
 
-      assert.ok(
-        document.querySelector(
+      assert
+        .dom(
           `.user-status-message-tooltip img[alt='${mentionedUser.status.emoji}']`
-        ),
-        "status emoji is correct"
-      );
+        )
+        .exists("status emoji is correct");
     });
 
     function assertStatusIsRendered(assert, selector, status) {

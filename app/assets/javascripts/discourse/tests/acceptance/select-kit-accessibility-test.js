@@ -1,6 +1,6 @@
 import { click, tab, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Select-kit - Composer - Accessibility", function (needs) {
@@ -57,11 +57,10 @@ acceptance("Select-kit - Composer - Accessibility", function (needs) {
       "Escape"
     );
 
-    assert.notOk(
-      exists(".mini-tag-chooser .select-kit-body .select-kit-row"),
-      "Hitting Escape dismisses the tag chooser"
-    );
+    assert
+      .dom(".mini-tag-chooser .select-kit-body .select-kit-row")
+      .doesNotExist("Hitting Escape dismisses the tag chooser");
 
-    assert.ok(exists(".composer-fields"), "Escape does not dismiss composer");
+    assert.dom(".composer-fields").exists("Escape does not dismiss composer");
   });
 });

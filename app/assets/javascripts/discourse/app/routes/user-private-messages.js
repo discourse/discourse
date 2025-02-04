@@ -11,10 +11,6 @@ export default class UserPrivateMessages extends DiscourseRoute {
     this.pmTopicTrackingState.startTracking();
   }
 
-  setupController() {
-    super.setupController(...arguments);
-  }
-
   @action
   triggerRefresh() {
     this.refresh();

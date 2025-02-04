@@ -1,18 +1,15 @@
 import {
   click,
   fillIn,
+  triggerEvent,
   triggerKeyEvent,
   visit,
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import pretender, { response } from "../helpers/create-pretender";
 
 acceptance("Composer - Messages", function (needs) {
@@ -40,22 +37,19 @@ acceptance("Composer - Messages", function (needs) {
     await visit("/u/charlie");
     await click("button.compose-pm");
 
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown by default"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist("composer warning is not shown by default");
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
-    assert.true(exists(".composer-popup"), "shows composer warning message");
+    assert.dom(".composer-popup").exists("shows composer warning message");
 
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.user_not_seen_in_a_while.single", {
-          usernames: ['<a class="mention" href="/u/charlie">@charlie</a>'],
-          time_ago: "1 year ago",
-        })
-      ),
+    assert.dom(".composer-popup").includesHtml(
+      i18n("composer.user_not_seen_in_a_while.single", {
+        usernames: ['<a class="mention" href="/u/charlie">@charlie</a>'],
+        time_ago: "1 year ago",
+      }),
       "warning message has correct body"
     );
 
@@ -95,19 +89,16 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
   test("Shows warning in composer if group hasn't been invited", async function (assert) {
     await visit("/t/130");
     await click("button.create");
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown by default"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist("composer warning is not shown by default");
 
     await fillIn(".d-editor-input", "Mention @staff");
-    assert.true(exists(".composer-popup"), "shows composer warning message");
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.cannot_see_group_mention.not_allowed", {
-          group: "staff",
-        })
-      ),
+    assert.dom(".composer-popup").exists("shows composer warning message");
+    assert.dom(".composer-popup").includesHtml(
+      i18n("composer.cannot_see_group_mention.not_allowed", {
+        group: "staff",
+      }),
       "warning message has correct body"
     );
   });
@@ -115,20 +106,17 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
   test("Shows warning in composer if group hasn't been invited, but some members have access already", async function (assert) {
     await visit("/t/130");
     await click("button.create");
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown by default"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist("composer warning is not shown by default");
 
     await fillIn(".d-editor-input", "Mention @staff2");
-    assert.true(exists(".composer-popup"), "shows composer warning message");
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.cannot_see_group_mention.some_not_allowed", {
-          group: "staff2",
-          count: 10,
-        })
-      ),
+    assert.dom(".composer-popup").exists("shows composer warning message");
+    assert.dom(".composer-popup").includesHtml(
+      i18n("composer.cannot_see_group_mention.some_not_allowed", {
+        group: "staff2",
+        count: 10,
+      }),
       "warning message has correct body"
     );
   });
@@ -166,9 +154,9 @@ acceptance("Composer - Messages - Duplicate links", function (needs) {
     await click("button.create");
 
     // Work around the lack of CSS transitions in the test env
-    const event = new Event("transitionend");
-    event.propertyName = "height";
-    query("#reply-control").dispatchEvent(event);
+    await triggerEvent("#reply-control", "transitionend", {
+      propertyName: "height",
+    });
 
     assert
       .dom(".composer-popup")
@@ -229,10 +217,11 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await fillIn("#reply-title", "Private message test title");
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown if the target recipients are empty"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist(
+        "composer warning is not shown if the target recipients are empty"
+      );
 
     // filling the input with the username of the current user
     await privateMessageUsers.expand();
@@ -242,19 +231,19 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
-    assert.true(exists(".composer-popup"), "shows composer warning message");
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.yourself_confirm.title")
-      ),
-      "warning message has correct title"
-    );
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.yourself_confirm.body")
-      ),
-      "warning message has correct body"
-    );
+    assert.dom(".composer-popup").exists("shows composer warning message");
+    assert
+      .dom(".composer-popup")
+      .includesHtml(
+        i18n("composer.yourself_confirm.title"),
+        "warning message has correct title"
+      );
+    assert
+      .dom(".composer-popup")
+      .includesHtml(
+        i18n("composer.yourself_confirm.body"),
+        "warning message has correct body"
+      );
   });
 
   test("Does not show a warning in the composer if the message is sent to other users", async function (assert) {
@@ -274,10 +263,11 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await fillIn("#reply-title", "Private message test title");
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown if the target recipients are empty"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist(
+        "composer warning is not shown if the target recipients are empty"
+      );
 
     // filling the input with the username of another user
     await privateMessageUsers.expand();
@@ -286,7 +276,7 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await privateMessageUsers.collapse();
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
-    assert.false(exists(".composer-popup"), "do not show it for other user");
+    assert.dom(".composer-popup").doesNotExist("do not show it for other user");
 
     // filling the input with the username of the current user
     await privateMessageUsers.expand();
@@ -295,9 +285,10 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await privateMessageUsers.collapse();
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
-    assert.false(
-      exists(".composer-popup"),
-      "do not show it when the current user is just one of the target recipients"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist(
+        "do not show it when the current user is just one of the target recipients"
+      );
   });
 });

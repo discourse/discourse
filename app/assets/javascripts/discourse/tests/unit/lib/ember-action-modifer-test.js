@@ -1,3 +1,4 @@
+import { setComponentTemplate } from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import { click, doubleClick, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
@@ -76,30 +77,6 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
   });
 
   module("used on a classic component", function (innerHooks) {
-    const ExampleClassicButton = ClassicComponent.extend({
-      tagName: "",
-      onDoSomething: null,
-
-      doSomething() {
-        this.onDoSomething?.("doSomething");
-      },
-    });
-
-    const ExampleClassicButtonWithActions = ClassicComponent.extend({
-      tagName: "",
-      onDoSomething: null,
-
-      doSomething() {
-        this.onDoSomething?.("doSomething");
-      },
-
-      actions: {
-        doSomething() {
-          this.onDoSomething?.("actions.doSomething");
-        },
-      },
-    });
-
     const exampleClassicButtonTemplate = hbs`
       <a
         href
@@ -111,22 +88,45 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       </a>
     `;
 
+    const ExampleClassicButton = setComponentTemplate(
+      exampleClassicButtonTemplate,
+      class extends ClassicComponent {
+        tagName = "";
+        onDoSomething = null;
+
+        doSomething() {
+          this.onDoSomething?.("doSomething");
+        }
+      }
+    );
+
+    const ExampleClassicButtonWithActions = setComponentTemplate(
+      exampleClassicButtonTemplate,
+      // eslint-disable-next-line ember/no-classic-classes
+      ClassicComponent.extend({
+        tagName: "",
+        onDoSomething: null,
+
+        doSomething() {
+          this.onDoSomething?.("doSomething");
+        },
+
+        actions: {
+          doSomething() {
+            this.onDoSomething?.("actions.doSomething");
+          },
+        },
+      })
+    );
+
     innerHooks.beforeEach(function () {
       this.owner.register(
         "component:example-classic-button",
         ExampleClassicButton
       );
       this.owner.register(
-        "template:components/example-classic-button",
-        exampleClassicButtonTemplate
-      );
-      this.owner.register(
         "component:example-classic-button-with-actions",
         ExampleClassicButtonWithActions
-      );
-      this.owner.register(
-        "template:components/example-classic-button-with-actions",
-        exampleClassicButtonTemplate
       );
     });
 

@@ -12,11 +12,8 @@ export default {
    * with the hashtag type via api.registerHashtagType. The default
    * ones in core are CategoryHashtagType and TagHashtagType.
    */
-  initialize(owner) {
-    this.site = owner.lookup("service:site");
-
+  initialize() {
     const cssTag = document.createElement("style");
-    cssTag.type = "text/css";
     cssTag.id = "hashtag-css-generator";
     cssTag.innerHTML = Object.values(getHashtagTypeClasses())
       .map((hashtagType) => hashtagType.generatePreloadedCssClasses())

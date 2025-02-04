@@ -54,8 +54,8 @@ RSpec.describe SidebarSectionsController do
                  value: "http://#{Discourse.current_hostname}/categories",
                },
                { icon: "address-book", name: "tags", value: "/tags" },
-               { icon: "external-link-alt", name: "Discourse", value: "https://discourse.org" },
-               { icon: "external-link-alt", name: "My preferences", value: "/my/preferences" },
+               { icon: "up-right-from-square", name: "Discourse", value: "https://discourse.org" },
+               { icon: "up-right-from-square", name: "My preferences", value: "/my/preferences" },
              ],
            }
 
@@ -77,11 +77,11 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_section.sidebar_urls.second.name).to eq("tags")
       expect(sidebar_section.sidebar_urls.second.value).to eq("/tags")
       expect(sidebar_section.sidebar_urls.second.external).to be false
-      expect(sidebar_section.sidebar_urls.third.icon).to eq("external-link-alt")
+      expect(sidebar_section.sidebar_urls.third.icon).to eq("up-right-from-square")
       expect(sidebar_section.sidebar_urls.third.name).to eq("Discourse")
       expect(sidebar_section.sidebar_urls.third.value).to eq("https://discourse.org")
       expect(sidebar_section.sidebar_urls.third.external).to be true
-      expect(sidebar_section.sidebar_urls.fourth.icon).to eq("external-link-alt")
+      expect(sidebar_section.sidebar_urls.fourth.icon).to eq("up-right-from-square")
       expect(sidebar_section.sidebar_urls.fourth.name).to eq("My preferences")
       expect(sidebar_section.sidebar_urls.fourth.value).to eq("/my/preferences")
       expect(sidebar_section.sidebar_urls.fourth.external).to be false
@@ -94,7 +94,7 @@ RSpec.describe SidebarSectionsController do
 
       links =
         6.times.map do
-          { icon: "external-link-alt", name: "My preferences", value: "/my/preferences" }
+          { icon: "up-right-from-square", name: "My preferences", value: "/my/preferences" }
         end
 
       post "/sidebar_sections.json", params: { title: "custom section", links: links }
@@ -261,7 +261,7 @@ RSpec.describe SidebarSectionsController do
 
       links =
         6.times.map do
-          { icon: "external-link-alt", name: "My preferences", value: "/my/preferences" }
+          { icon: "up-right-from-square", name: "My preferences", value: "/my/preferences" }
         end
 
       put "/sidebar_sections/#{sidebar_section.id}.json",

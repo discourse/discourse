@@ -17,7 +17,7 @@ class Reviewable < ActiveRecord::Base
       {
         approve: Action.new(:approve, "thumbs-up", "reviewables.actions.approve.title"),
         reject: Action.new(:reject, "thumbs-down", "reviewables.actions.reject.title"),
-        delete: Action.new(:delete, "trash-alt", "reviewables.actions.delete_single.title"),
+        delete: Action.new(:delete, "trash-can", "reviewables.actions.delete_single.title"),
       }
     end
 
@@ -29,6 +29,10 @@ class Reviewable < ActiveRecord::Base
         @icon = icon
         @label = label
         @actions = []
+      end
+
+      def empty?
+        @actions.empty?
       end
     end
 

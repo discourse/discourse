@@ -4,7 +4,7 @@ require "migration/column_dropper"
 require "badge_posts_view_manager"
 
 class RemoveSuperfluousColumns < ActiveRecord::Migration[5.2]
-  DROPPED_COLUMNS ||= {
+  DROPPED_COLUMNS = {
     user_profiles: %i[card_image_badge_id],
     categories: %i[logo_url background_url suppress_from_homepage],
     groups: %i[visible public alias_level],

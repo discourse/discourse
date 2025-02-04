@@ -4,7 +4,7 @@ import { action, get } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import DMenu from "float-kit/components/d-menu";
 
 const buttonOptionsMap = {
@@ -25,7 +25,7 @@ const buttonOptionsMap = {
     className: "btn-default toggle-status",
     label: "poll.open.label",
     title: "poll.open.title",
-    icon: "unlock-alt",
+    icon: "unlock-keyhole",
     action: "toggleStatus",
   },
   closePoll: {
@@ -34,6 +34,20 @@ const buttonOptionsMap = {
     title: "poll.close.title",
     icon: "lock",
     action: "toggleStatus",
+  },
+  showTally: {
+    className: "btn-default show-tally",
+    label: "poll.show-tally.label",
+    title: "poll.show-tally.title",
+    icon: "info",
+    action: "toggleDisplayMode",
+  },
+  showPercentage: {
+    className: "btn-default show-percentage",
+    label: "poll.show-percentage.label",
+    title: "poll.show-percentage.title",
+    icon: "info",
+    action: "toggleDisplayMode",
   },
 };
 
@@ -68,7 +82,14 @@ export default class PollButtonsDropdownComponent extends Component {
       topicArchived,
       groupableUserFields,
       isAutomaticallyClosed,
+      availableDisplayMode,
     } = this.args;
+
+    if (availableDisplayMode) {
+      const option = { ...buttonOptionsMap[availableDisplayMode] };
+      option.id = option.action;
+      contents.push(option);
+    }
 
     if (groupableUserFields.length && voters > 0) {
       const option = { ...buttonOptionsMap.showBreakdown };
@@ -112,7 +133,7 @@ export default class PollButtonsDropdownComponent extends Component {
       {{#if this.showDropdown}}
         <DMenu class="widget-dropdown-header">
           <:trigger>
-            {{icon "cog"}}
+            {{icon "gear"}}
           </:trigger>
           <:content>
             <DropdownMenu as |dropdown|>

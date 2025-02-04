@@ -1,0 +1,87 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "deps/pnpm",
+      "type": "shell",
+      "command": "pnpm install",
+      "presentation": {
+        "reveal": "always",
+        "group": "deps",
+        "close": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "deps/bundle",
+      "type": "shell",
+      "command": "bundle install",
+      "presentation": {
+        "reveal": "always",
+        "group": "deps",
+        "close": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "deps/all",
+      "dependsOn": [
+        "deps/pnpm",
+        "deps/bundle"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "dev/migrate",
+      "type": "shell",
+      "command": "bin/rake db:create db:migrate",
+      "options": {
+        "env":{
+          "SKIP_MULTISITE": "1",
+          "SKIP_TEST_DATABASE": "1"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev/server",
+      "type": "shell",
+      "command": "bin/ember-cli -u",
+      "options": {
+        "env":{
+          "DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE": "1"
+        }
+      },
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
+      "label": "shortcuts/boot-dev",
+      "dependsOn": [
+        "deps/all",
+        "dev/migrate",
+        "dev/server"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "spec/migrate",
+      "type": "shell",
+      "command": "RAILS_ENV=test bin/rake db:create db:migrate parallel:create parallel:migrate",
+      "problemMatcher": [],
+    },
+    {
+      "label": "spec/run-all",
+      "type": "shell",
+      "command": "bin/turbo_rspec",
+      "problemMatcher": [],
+    },
+  ], 
+}

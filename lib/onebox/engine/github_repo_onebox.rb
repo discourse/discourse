@@ -11,10 +11,14 @@ module Onebox
       include JSON
       include Onebox::Mixins::GithubAuthHeader
 
-      GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
+      GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/m
 
-      matches_regexp(%r{^https?:\/\/(?:www\.)?(?!gist\.)[^\/]*github\.com\/[^\/]+\/[^\/]+\/?$})
+      matches_domain("github.com", "www.github.com")
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{^/[^/]+/[^/]+/?$})
+      end
 
       def url
         "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}"

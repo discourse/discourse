@@ -7,18 +7,15 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
-  exists,
   publishToMessageBus,
-  query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 /**
  * Workaround for https://github.com/tildeio/router.js/pull/335
@@ -64,72 +61,65 @@ acceptance("User Routes", function (needs) {
 
   test("Invites", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    assert.ok(
-      document.body.classList.contains("user-invites-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-invites-page", "has the body class");
   });
 
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
 
-    assert.ok(
-      document.body.classList.contains("user-notifications-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-notifications-page", "has the body class");
 
-    const $links = queryAll(".notification a");
+    const links = [...document.querySelectorAll(".notification a")];
 
-    assert.ok(
-      $links[2].href.includes("/u/eviltrout/notifications/likes-received")
-    );
+    assert
+      .dom(links[2])
+      .hasAttribute("href", /^\/u\/eviltrout\/notifications\/likes-received/);
 
     updateCurrentUser({ moderator: true, admin: false });
 
     await visit("/u/charlie/summary");
 
-    assert.notOk(
-      exists(".user-nav > .user-nav__notifications"),
-      "does not have the notifications tab"
-    );
+    assert
+      .dom(".user-nav > .user-nav__notifications")
+      .doesNotExist("does not have the notifications tab");
 
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/u/charlie/summary");
 
-    assert.ok(
-      exists(".user-nav > .user-nav__notifications"),
-      "has the notifications tab"
-    );
+    assert
+      .dom(".user-nav > .user-nav__notifications")
+      .exists("has the notifications tab");
   });
 
   test("Root URL - Viewing Self", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok(
-      document.body.classList.contains("user-activity-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-activity-page", "has the body class");
     assert.strictEqual(
       currentRouteName(),
       "userActivity.index",
       "it defaults to activity"
     );
-    assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
+    assert.dom(".container.viewing-self").exists("has the viewing-self class");
   });
 
   test("Viewing Drafts", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(exists(".user-stream"), "has drafts stream");
-    assert.ok(
-      exists(".user-stream .user-stream-item-draft-actions"),
-      "has draft action buttons"
-    );
+    assert.dom(".user-stream").exists("has drafts stream");
+    assert
+      .dom(".user-stream .user-stream-item-draft-actions")
+      .exists("has draft action buttons");
 
     await click(".user-stream button.resume-draft:nth-of-type(1)");
-    assert.ok(
-      exists(".d-editor-input"),
-      "composer is visible after resuming a draft"
-    );
+    assert
+      .dom(".d-editor-input")
+      .exists("composer is visible after resuming a draft");
   });
 });
 
@@ -140,16 +130,14 @@ acceptance(
 
     test("Periods in current user's username don't act like wildcards", async function (assert) {
       await visit("/u/eviltrout");
-      assert.strictEqual(
-        query(".user-profile-names .username").textContent.trim(),
+      assert.dom(".user-profile-names .username").hasText(
         `eviltrout
                 Robin Ward is an admin`,
         "eviltrout profile is shown"
       );
 
       await visit("/u/e.il.rout");
-      assert.strictEqual(
-        query(".user-profile-names .username").textContent.trim(),
+      assert.dom(".user-profile-names .username").hasText(
         `e.il.rout
                 Robin Ward is an admin`,
         "e.il.rout profile is shown"
@@ -168,11 +156,10 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
 
   test("Messages - Warnings", async function (assert) {
     await visit("/u/eviltrout/messages/warnings");
-    assert.ok(
-      document.body.classList.contains("user-messages-page"),
-      "has the body class"
-    );
-    assert.ok(exists("div.alert-info"), "has the permissions alert");
+    assert
+      .dom(document.body)
+      .hasClass("user-messages-page", "has the body class");
+    assert.dom("div.alert-info").exists("has the permissions alert");
   });
 });
 
@@ -251,7 +238,7 @@ acceptance("User - Notification level dropdown visibility", function (needs) {
 
   test("Notification level button is not rendered for user who cannot mute or ignore another user", async function (assert) {
     await visit("/u/charlie");
-    assert.notOk(exists(".user-notifications-dropdown"));
+    assert.dom(".user-notifications-dropdown").doesNotExist();
   });
 });
 
@@ -280,10 +267,9 @@ acceptance(
 
     test("Notification level is set to normal and can be changed to muted", async function (assert) {
       await visit("/u/charlie");
-      assert.ok(
-        exists(".user-notifications-dropdown"),
-        "Notification level dropdown is present"
-      );
+      assert
+        .dom(".user-notifications-dropdown")
+        .exists("notification level dropdown is present");
 
       const dropdown = selectKit(".user-notifications-dropdown");
       await dropdown.expand();
@@ -320,10 +306,9 @@ acceptance(
     });
     test("Notification level can be changed to ignored", async function (assert) {
       await visit("/u/charlie");
-      assert.ok(
-        exists(".user-notifications-dropdown"),
-        "Notification level dropdown is present"
-      );
+      assert
+        .dom(".user-notifications-dropdown")
+        .exists("notification level dropdown is present");
 
       const notificationLevelDropdown = selectKit(
         ".user-notifications-dropdown"
@@ -335,7 +320,7 @@ acceptance(
       );
 
       await notificationLevelDropdown.selectRowByValue("changeToIgnored");
-      assert.ok(exists(".ignore-duration-with-username-modal"));
+      assert.dom(".ignore-duration-with-username-modal").exists();
 
       const durationDropdown = selectKit(
         ".ignore-duration-with-username-modal .future-date-input-selector"
@@ -391,16 +376,13 @@ acceptance("User - Logout", function (needs) {
     await visit("/u/eviltrout");
     await publishToMessageBus("/logout/19");
 
-    assert.ok(exists(".dialog-body"));
-    assert.ok(
-      !exists(".dialog-footer .btn-default"),
-      "no cancel button present"
-    );
-    assert.strictEqual(
-      query(".dialog-footer .btn-primary").innerText,
-      I18n.t("home"),
-      "primary dialog button is present"
-    );
+    assert.dom(".dialog-body").exists();
+    assert
+      .dom(".dialog-footer .btn-default")
+      .doesNotExist("no cancel button present");
+    assert
+      .dom(".dialog-footer .btn-primary")
+      .hasText(i18n("home"), "primary dialog button is present");
 
     await click(".dialog-overlay");
   });

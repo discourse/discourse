@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { escapeExpression } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class BadgePreview extends Component {
   get processedSample() {
@@ -18,11 +18,11 @@ export default class BadgePreview extends Component {
       if (grant.granted_at) {
         i18nKey += "_time";
         i18nParams.time = escapeExpression(
-          moment(grant.granted_at).format(I18n.t("dates.long_with_year"))
+          moment(grant.granted_at).format(i18n("dates.long_with_year"))
         );
       }
 
-      return I18n.t(i18nKey, i18nParams);
+      return i18n(i18nKey, i18nParams);
     });
   }
 

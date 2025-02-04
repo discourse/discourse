@@ -4,25 +4,10 @@
   background: var(--secondary);
   box-sizing: border-box;
   display: flex;
-  z-index: z("composer", "content") - 1;
-  padding: 0 1rem;
+  padding: 0 0.67em;
 
   &.-clickable {
     cursor: pointer;
-  }
-
-  &.-full-title {
-    .c-navbar__title {
-      min-height: var(--chat-header-offset);
-    }
-
-    .c-navbar__title,
-    .c-navbar__title-text {
-      height: auto;
-      overflow: visible;
-      white-space: normal;
-      text-overflow: unset;
-    }
   }
 }
 
@@ -32,22 +17,46 @@
   width: 100%;
   gap: 0.25rem;
   position: relative;
+  container-type: inline-size;
+
+  .is-collapsed & {
+    &__title {
+      margin-left: 0 !important;
+    }
+
+    &__toggle-drawer-button {
+      &::after {
+        @container (inline-size) {
+          content: "";
+          position: absolute;
+          height: 100%;
+          left: -1rem;
+          width: calc(100cqw - 2.3em + 1rem);
+        }
+
+        &:hover {
+          color: var(--tertiary-hover);
+
+          .d-icon {
+            color: inherit;
+          }
+        }
+      }
+    }
+  }
 
   .single-select-header {
     padding: 0.3675rem 0.584rem;
-  }
-
-  > .c-navbar__title:first-child {
-    margin-left: 1rem;
   }
 }
 
 .c-navbar__back-button {
   height: var(--chat-header-offset);
+  padding: 0.5rem 0.8rem 0.5rem 0.25rem;
 }
 
 .c-navbar__channel-title {
-  @include ellipsis();
+  @include ellipsis;
   font-weight: 700;
   height: var(--chat-header-offset);
   display: flex;
@@ -57,11 +66,11 @@
 .c-navbar__title {
   display: flex;
   align-items: center;
-  @include ellipsis();
+  @include ellipsis;
   height: var(--chat-header-offset);
 
   &-text {
-    @include ellipsis();
+    @include ellipsis;
     font-weight: 700;
     max-width: 100%;
     vertical-align: middle;
@@ -99,6 +108,7 @@
   display: flex;
   align-items: center;
   height: var(--chat-header-offset);
+
   .d-icon {
     color: var(--primary-low-mid);
   }

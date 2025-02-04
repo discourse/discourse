@@ -17,6 +17,11 @@ uk:
         few: "голосів"
         many: "голоси"
         other: "голоси"
+      votes:
+        one: "%{count} голос"
+        few: "%{count} голоси"
+        many: "%{count} голосів"
+        other: "%{count} голосів"
       average_rating: "Середній рейтинг: <strong>%{average}</strong>."
       public:
         title: "Голоси <strong>публічні</strong> ."
@@ -56,6 +61,12 @@ uk:
       show-results:
         title: "Показати результати опитування"
         label: "Результати"
+      show-tally:
+        title: "Показати результати голосування за кількістю голосів"
+        label: "Показати підрахунок"
+      show-percentage:
+        title: "Показати результати голосування у відсотках"
+        label: "Показувати у відсотках"
       remove-vote:
         title: "Видалити свій голос"
         label: "Скасувати голосування"
@@ -107,6 +118,8 @@ uk:
         label: "Параметри"
         ranked_choice:
           abstain: "Утриматись"
+          highest_priority: "(найвищий пріоритет)"
+          lowest_priority: "(найнижчий пріоритет)"
           login: "Увійдіть, щоб проголосувати!"
       error_while_toggling_status: "На жаль, виникла помилка зміни статусу цього опитування."
       error_while_casting_votes: "На жаль, сталася помилка під час голосування."

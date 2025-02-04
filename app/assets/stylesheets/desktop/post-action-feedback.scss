@@ -1,24 +1,36 @@
 .post-action-feedback-alert {
   position: absolute;
   top: -1.5rem;
-  left: 50%;
+  left: 60%;
   transform: translateX(-50%);
   color: var(--success);
   padding: 0.25rem 0.5rem;
   white-space: nowrap;
   font-size: var(--font-down-2);
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out;
-  z-index: z("modal", "popover");
-  &.-success {
-    color: var(--success);
+  opacity: 0;
+  z-index: calc(z("timeline") + 1);
+}
+
+.--transition {
+  .post-action-feedback-alert,
+  .post-action-feedback-svg {
+    transition: opacity 0.25s, color 0.25s;
+  }
+}
+
+.--activated {
+  .post-action-feedback-alert,
+  .post-action-feedback-svg {
+    opacity: 1;
   }
 
-  &.-fail {
-    color: var(--danger);
-  }
+  .post-action-feedback-alert {
+    &.-success {
+      color: var(--success);
+    }
 
-  &.slide-out {
-    animation: slide 1s cubic-bezier(0, 0, 0, 2) forwards;
+    &.-fail {
+      color: var(--danger);
+    }
   }
 }

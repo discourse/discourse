@@ -93,8 +93,7 @@ module Jobs
       @skip_context = { type: type, user_id: user_id, to_address: to_address, post_id: post_id }
     end
 
-    NOTIFICATIONS_SENT_BY_MAILING_LIST ||=
-      Set.new %w[posted replied mentioned group_mentioned quoted]
+    NOTIFICATIONS_SENT_BY_MAILING_LIST = Set.new %w[posted replied mentioned group_mentioned quoted]
 
     def message_for_email(user, post, type, notification, args = nil)
       args ||= {}

@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | chat-emoji-avatar", function (hooks) {
   setupRenderingTest(hooks);
@@ -12,10 +11,10 @@ module("Discourse Chat | Component | chat-emoji-avatar", function (hooks) {
 
     await render(hbs`<ChatEmojiAvatar @emoji={{this.emoji}} />`);
 
-    assert.true(
-      exists(
-        `.chat-emoji-avatar .chat-emoji-avatar-container .emoji[title=otter]`
+    assert
+      .dom(
+        ".chat-emoji-avatar .chat-emoji-avatar-container .emoji[title=otter]"
       )
-    );
+      .exists();
   });
 });

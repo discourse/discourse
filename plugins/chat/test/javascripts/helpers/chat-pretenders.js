@@ -1,5 +1,5 @@
+import { cloneJSON } from "discourse/lib/object";
 import User from "discourse/models/user";
-import { cloneJSON } from "discourse-common/lib/object";
 import {
   chatChannels,
   directMessageChannels,

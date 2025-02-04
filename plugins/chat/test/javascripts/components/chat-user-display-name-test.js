@@ -2,11 +2,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-
-function displayName() {
-  return query(".chat-user-display-name").innerText.trim();
-}
 
 module(
   "Discourse Chat | Component | chat-user-display-name | prioritize username in UX",
@@ -19,7 +14,7 @@ module(
 
       await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      assert.strictEqual(displayName(), "bob");
+      assert.dom(".chat-user-display-name").hasText("bob");
     });
 
     test("username and name", async function (assert) {
@@ -28,7 +23,7 @@ module(
 
       await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      assert.strictEqual(displayName(), "bob Bobcat");
+      assert.dom(".chat-user-display-name").hasText("bob Bobcat");
     });
   }
 );
@@ -44,7 +39,7 @@ module(
 
       await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      assert.strictEqual(displayName(), "bob");
+      assert.dom(".chat-user-display-name").hasText("bob");
     });
 
     test("name and username", async function (assert) {
@@ -53,7 +48,7 @@ module(
 
       await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      assert.strictEqual(displayName(), "Bobcat bob");
+      assert.dom(".chat-user-display-name").hasText("Bobcat bob");
     });
   }
 );

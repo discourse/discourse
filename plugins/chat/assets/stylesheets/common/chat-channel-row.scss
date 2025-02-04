@@ -90,22 +90,6 @@
       align-items: flex-end;
       flex-direction: column;
       margin-left: 0.5em;
-
-      .chat-channel-unread-indicator {
-        @include chat-unread-indicator;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 8px;
-        height: 8px;
-
-        &.-urgent {
-          width: auto;
-          height: auto;
-          min-width: 0.6em;
-          padding: 0.3em 0.5em;
-        }
-      }
     }
 
     &__metadata-date {

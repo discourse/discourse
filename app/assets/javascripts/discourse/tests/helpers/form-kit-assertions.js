@@ -1,6 +1,39 @@
 import { capitalize } from "@ember/string";
+import { isBlank } from "@ember/utils";
 import QUnit from "qunit";
 import { query } from "discourse/tests/helpers/qunit-helpers";
+
+class FieldsetHelper {
+  constructor(element, context, name) {
+    this.element = element;
+    this.name = name;
+    this.context = context;
+  }
+
+  hasTitle(title, message) {
+    this.context
+      .dom(this.element.querySelector(".form-kit__fieldset-title"))
+      .hasText(title, message);
+  }
+
+  hasDescription(description, message) {
+    this.context
+      .dom(this.element.querySelector(".form-kit__fieldset-description"))
+      .hasText(description, message);
+  }
+
+  includesText(content, message) {
+    this.context.dom(this.element).includesText(content, message);
+  }
+
+  doesNotExist(message) {
+    this.context.dom(this.element).doesNotExist(message);
+  }
+
+  exists(message) {
+    this.context.dom(this.element).exists(message);
+  }
+}
 
 class FieldHelper {
   constructor(element, context, name) {
@@ -18,7 +51,7 @@ class FieldHelper {
       case "image": {
         return this.element
           .querySelector(".form-kit__control-image a.lightbox")
-          .getAttribute("href");
+          ?.getAttribute("href");
       }
       case "radio-group": {
         return this.element.querySelector(".form-kit__control-radio:checked")
@@ -64,8 +97,8 @@ class FieldHelper {
         return this.element.querySelector(".form-kit__control-select").value;
       }
       case "menu": {
-        return this.element.querySelector(".form-kit__control-menu").dataset
-          .value;
+        return this.element.querySelector(".form-kit__control-menu-trigger")
+          .dataset.value;
       }
       case "checkbox": {
         return this.element.querySelector(".form-kit__control-checkbox")
@@ -74,24 +107,61 @@ class FieldHelper {
     }
   }
 
-  get isDisabled() {
-    this.context
-      .dom(this.element)
-      .exists(`Could not find field (name: ${this.name}).`);
+  isEnabled(message) {
+    this.context.notOk(this.disabled, message);
+  }
 
+  hasValue(value, message) {
+    this.context.deepEqual(this.value, value, message);
+  }
+
+  hasNoValue(message) {
+    this.context.true(isBlank(this.value), message);
+  }
+
+  isDisabled(message) {
+    this.context.ok(this.disabled, message);
+  }
+
+  get disabled() {
+    this.context.dom(this.element).exists();
     return this.element.dataset.disabled === "";
   }
 
-  hasSubtitle(subtitle, message) {
-    this.context
-      .dom(this.element.querySelector(".form-kit__container-subtitle"))
-      .hasText(subtitle, message);
+  hasTitle(title, message) {
+    switch (this.element.dataset.controlType) {
+      case "checkbox": {
+        this.context
+          .dom(this.element.querySelector(".form-kit__control-checkbox-title"))
+          .hasText(title, message);
+        break;
+      }
+      default: {
+        this.context
+          .dom(this.element.querySelector(".form-kit__container-title"))
+          .hasText(title, message);
+      }
+    }
   }
 
   hasDescription(description, message) {
-    this.context
-      .dom(this.element.querySelector(".form-kit__meta-description"))
-      .hasText(description, message);
+    switch (this.element.dataset.controlType) {
+      case "checkbox": {
+        this.context
+          .dom(
+            this.element.querySelector(
+              ".form-kit__control-checkbox-description"
+            )
+          )
+          .hasText(description, message);
+        break;
+      }
+      default: {
+        this.context
+          .dom(this.element.querySelector(".form-kit__container-description"))
+          .hasText(description, message);
+      }
+    }
   }
 
   hasCharCounter(current, max, message) {
@@ -106,7 +176,7 @@ class FieldHelper {
       .includesText(error, message);
   }
 
-  hasNoError(message) {
+  hasNoErrors(message) {
     this.context
       .dom(this.element.querySelector(".form-kit__errors"))
       .doesNotExist(message);
@@ -154,54 +224,18 @@ class FormHelper {
       name
     );
   }
+
+  fieldset(name) {
+    return new FieldsetHelper(
+      query(`.form-kit__fieldset[name="${name}"]`, this.element),
+      this.context,
+      name
+    );
+  }
 }
 
 export function setupFormKitAssertions() {
   QUnit.assert.form = function (selector = "form") {
-    const form = new FormHelper(selector, this);
-    return {
-      hasErrors: (fields, message) => {
-        form.hasErrors(fields, message);
-      },
-      hasNoErrors: (fields, message) => {
-        form.hasNoErrors(fields, message);
-      },
-      field: (name) => {
-        const field = form.field(name);
-
-        return {
-          doesNotExist: (message) => {
-            field.doesNotExist(message);
-          },
-          hasSubtitle: (value, message) => {
-            field.hasSubtitle(value, message);
-          },
-          hasDescription: (value, message) => {
-            field.hasDescription(value, message);
-          },
-          exists: (message) => {
-            field.exists(message);
-          },
-          isDisabled: (message) => {
-            this.ok(field.disabled, message);
-          },
-          isEnabled: (message) => {
-            this.notOk(field.disabled, message);
-          },
-          hasError: (message) => {
-            field.hasError(message);
-          },
-          hasCharCounter: (current, max, message) => {
-            field.hasCharCounter(current, max, message);
-          },
-          hasNoError: (message) => {
-            field.hasNoError(message);
-          },
-          hasValue: (value, message) => {
-            this.deepEqual(field.value, value, message);
-          },
-        };
-      },
-    };
+    return new FormHelper(selector, this);
   };
 }

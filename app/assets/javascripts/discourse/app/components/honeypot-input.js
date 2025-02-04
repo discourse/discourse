@@ -1,7 +1,7 @@
+import { on } from "@ember-decorators/object";
 import TextField from "discourse/components/text-field";
-import { on } from "discourse-common/utils/decorators";
 
-export default TextField.extend({
+export default class HoneypotInput extends TextField {
   @on("init")
   _init() {
     // Chrome autocomplete is buggy per:
@@ -13,5 +13,5 @@ export default TextField.extend({
     } else {
       this.set("type", "password");
     }
-  },
-});
+  }
+}

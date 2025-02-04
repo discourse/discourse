@@ -1,9 +1,10 @@
 .dropdown-menu {
   padding: 0;
   margin: 0;
-  list-style: none;
 
   &__item {
+    list-style: none;
+
     .btn {
       padding: 0.65rem 1rem;
       width: 100%;
@@ -12,6 +13,7 @@
   }
 
   &__divider {
-    margin: 0rem;
+    margin: 0;
+    height: 0;
   }
 }

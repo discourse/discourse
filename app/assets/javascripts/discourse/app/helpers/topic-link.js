@@ -1,5 +1,5 @@
 import { htmlSafe } from "@ember/template";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 registerRawHelper("topic-link", topicLink);
 export default function topicLink(topic, args = {}) {

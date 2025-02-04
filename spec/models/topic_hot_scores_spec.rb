@@ -111,5 +111,33 @@ RSpec.describe TopicHotScore do
       expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.0001).of(0.0005)
       expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(0.001)
     end
+
+    it "ignores topics in the future" do
+      freeze_time
+
+      topic1 = Fabricate(:topic, like_count: 3, created_at: 2.days.from_now)
+      post1 = Fabricate(:post, topic: topic1, created_at: 1.minute.ago)
+      PostActionCreator.like(user, post1)
+      TopicHotScore.create!(topic_id: topic1.id, score: 0.0, recent_likes: 0, recent_posters: 0)
+
+      expect { TopicHotScore.update_scores }.not_to change {
+        TopicHotScore.where(topic_id: topic1.id).pluck(:recent_likes)
+      }
+    end
+
+    it "triggers an event after updating" do
+      triggered = false
+      blk = Proc.new { triggered = true }
+
+      begin
+        DiscourseEvent.on(:topic_hot_scores_updated, &blk)
+
+        TopicHotScore.update_scores
+
+        expect(triggered).to eq(true)
+      ensure
+        DiscourseEvent.off(:topic_hot_scores_updated, &blk)
+      end
+    end
   end
 end

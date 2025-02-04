@@ -7,6 +7,8 @@
 # We aren't manipulating the middleware stack directly because of
 # https://github.com/rails/rails/pull/27936
 
+require "middleware/processing_request"
+Rails.configuration.middleware.unshift(Middleware::ProcessingRequest)
 Rails.configuration.middleware.unshift(MessageBus::Rack::Middleware)
 
 # no reason to track this in development, that is 300+ redis calls saved per

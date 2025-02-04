@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import { computed, defineProperty } from "@ember/object";
+import { afterRender } from "discourse/lib/decorators";
 import {
   buildArgsWithDeprecations,
   deprecatedArgumentValue,
 } from "discourse/lib/plugin-connectors";
-import { afterRender } from "discourse-common/utils/decorators";
 
 let _decorators = {};
 
@@ -18,20 +18,22 @@ export function resetDecorators() {
   _decorators = {};
 }
 
-export default Component.extend({
+export default class PluginConnector extends Component {
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
-    const args = this.args || {};
-    Object.keys(args).forEach((key) => {
-      defineProperty(
-        this,
-        key,
-        computed("args", () => (this.args || {})[key])
-      );
-    });
+    if (this.args) {
+      Object.keys(this.args).forEach((key) => {
+        defineProperty(
+          this,
+          key,
+          computed("args", function () {
+            return this.args[key];
+          })
+        );
+      });
+    }
 
-    const deprecatedArgs = this.deprecatedArgs || {};
     const connectorInfo = {
       outletName: this.connector?.outletName,
       connectorName: this.connector?.connectorName,
@@ -40,18 +42,20 @@ export default Component.extend({
       layoutName: this.layoutName,
     };
 
-    Object.keys(deprecatedArgs).forEach((key) => {
-      defineProperty(
-        this,
-        key,
-        computed("deprecatedArgs", () => {
-          return deprecatedArgumentValue(deprecatedArgs[key], {
-            ...connectorInfo,
-            argumentName: key,
-          });
-        })
-      );
-    });
+    if (this.deprecatedArgs) {
+      Object.keys(this.deprecatedArgs).forEach((key) => {
+        defineProperty(
+          this,
+          key,
+          computed("deprecatedArgs", function () {
+            return deprecatedArgumentValue(this.deprecatedArgs[key], {
+              ...connectorInfo,
+              argumentName: key,
+            });
+          })
+        );
+      });
+    }
 
     const connectorClass = this.connector.connectorClass;
     this.set("actions", connectorClass?.actions);
@@ -63,36 +67,36 @@ export default Component.extend({
     }
 
     const merged = buildArgsWithDeprecations(
-      args,
-      deprecatedArgs,
+      this.args,
+      this.deprecatedArgs,
       connectorInfo
     );
     connectorClass?.setupComponent?.call(this, merged, this);
-  },
+  }
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     this._decoratePluginOutlets();
-  },
+  }
 
   @afterRender
   _decoratePluginOutlets() {
     (_decorators[this.connector.outletName] || []).forEach((dec) =>
       dec(this.element, this.args)
     );
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     const connectorClass = this.connector.connectorClass;
     connectorClass?.teardownComponent?.call(this, this);
-  },
+  }
 
   send(name, ...args) {
     const connectorClass = this.connector.connectorClass;
     const action = connectorClass?.actions?.[name];
-    return action ? action.call(this, ...args) : this._super(name, ...args);
-  },
-});
+    return action ? action.call(this, ...args) : super.send(name, ...args);
+  }
+}

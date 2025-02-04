@@ -6,13 +6,68 @@ describe ChatSDK::Message do
 
     let(:guardian) { Discourse.system_user.guardian }
     let(:params) do
-      { enforce_membership: false, raw: "something", channel_id: channel_1.id, guardian: guardian }
+      {
+        blocks: nil,
+        enforce_membership: false,
+        raw: "something",
+        channel_id: channel_1.id,
+        guardian: guardian,
+      }
     end
 
     it "creates the message" do
       message = described_class.create(**params)
 
       expect(message.message).to eq("something")
+    end
+
+    context "when providing blocks" do
+      before do
+        params[:blocks] = [
+          {
+            type: "actions",
+            elements: [{ type: "button", value: "foo", text: { type: "plain_text", text: "Foo" } }],
+          },
+        ]
+      end
+
+      context "when user is a bot" do
+        it "saves the blocks" do
+          message = described_class.create(**params)
+
+          expect(message.blocks[0]).to include(
+            "type" => "actions",
+            "schema_version" => 1,
+            "block_id" => an_instance_of(String),
+            "elements" => [
+              {
+                "schema_version" => 1,
+                "type" => "button",
+                "value" => "foo",
+                "action_id" => an_instance_of(String),
+                "text" => {
+                  "type" => "plain_text",
+                  "text" => "Foo",
+                },
+              },
+            ],
+          )
+        end
+      end
+
+      context "when user is not a bot" do
+        fab!(:user)
+
+        let(:guardian) { user.guardian }
+
+        before { channel_1.add(user) }
+
+        it "fails" do
+          expect { described_class.create(**params) }.to raise_error(
+            "Only bots can create messages with blocks",
+          )
+        end
+      end
     end
 
     it "sets created_by_sdk to true" do
@@ -60,7 +115,7 @@ describe ChatSDK::Message do
 
     context "when membership is enforced" do
       it "works" do
-        SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
         params[:enforce_membership] = true
         params[:guardian] = Fabricate(:user).guardian
 
@@ -115,7 +170,7 @@ describe ChatSDK::Message do
     fab!(:message_1) { Fabricate(:chat_message, message: "first") }
 
     before do
-      SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
       message_1.chat_channel.add(message_1.user)
       message_1.update!(streaming: true)
     end

@@ -131,7 +131,9 @@ RSpec.describe Reviewable, type: :model do
       it "works with the reviewable by group" do
         SiteSetting.enable_category_group_moderation = true
         group = Fabricate(:group)
-        reviewable.reviewable_by_group_id = group.id
+        category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category:, group:)
+        reviewable.category_id = category.id
         reviewable.save!
 
         expect(Reviewable.list_for(user, status: :pending)).to be_empty
@@ -147,7 +149,9 @@ RSpec.describe Reviewable, type: :model do
       it "doesn't allow review by group when disabled" do
         SiteSetting.enable_category_group_moderation = false
         group = Fabricate(:group)
-        reviewable.reviewable_by_group_id = group.id
+        category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category:, group:)
+        reviewable.category_id = category.id
         reviewable.save!
 
         GroupUser.create!(group_id: group.id, user_id: user.id)
@@ -266,12 +270,12 @@ RSpec.describe Reviewable, type: :model do
     fab!(:admin)
     fab!(:moderator)
     fab!(:group)
+    fab!(:category)
     fab!(:user) { Fabricate(:user, groups: [group]) }
     fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
     fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
-    fab!(:group_reviewable) do
-      Fabricate(:reviewable, reviewable_by_group: group, reviewable_by_moderator: false)
-    end
+    fab!(:category_moderation_group) { Fabricate(:category_moderation_group, category:, group:) }
+    fab!(:group_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false, category:) }
 
     context "for admins" do
       it "returns a list of pending reviewables that haven't been seen by the user" do
@@ -617,6 +621,45 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "#actions_for" do
+    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:user)
+
+    it "gets the bundles and actions for a reviewable" do
+      actions = reviewable.actions_for(user.guardian)
+      expect(actions.bundles.map(&:id)).to eq(%w[approve_post reject_post revise_and_reject_post])
+      expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
+        ["approve_post"],
+      )
+      expect(actions.bundles.find { |b| b.id == "reject_post" }.actions.map(&:id)).to eq(
+        ["reject_post"],
+      )
+      expect(actions.bundles.find { |b| b.id == "revise_and_reject_post" }.actions.map(&:id)).to eq(
+        ["revise_and_reject_post"],
+      )
+    end
+
+    describe "handling empty bundles" do
+      class ReviewableTestRecord < Reviewable
+        def build_actions(actions, guardian, args)
+          actions.add(:approve_post) do |action|
+            action.icon = "check"
+            action.label = "reviewables.actions.approve_post.title"
+          end
+          actions.add_bundle("empty_bundle", icon: "xmark", label: "Empty Bundle")
+        end
+      end
+
+      it "does not return empty bundles with no actions" do
+        actions = ReviewableTestRecord.new.actions_for(user.guardian)
+        expect(actions.bundles.map(&:id)).to eq(%w[approve_post])
+        expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
+          ["approve_post"],
+        )
+      end
+    end
+  end
+
   describe "default actions" do
     let(:reviewable) { Reviewable.new }
     let(:actions) { Reviewable::Actions.new(reviewable, Guardian.new) }
@@ -638,12 +681,12 @@ RSpec.describe Reviewable, type: :model do
 
   describe ".unseen_reviewable_count" do
     fab!(:group)
+    fab!(:category)
     fab!(:user)
     fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
     fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
-    fab!(:group_reviewable) do
-      Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group)
-    end
+    fab!(:category_moderation_group) { Fabricate(:category_moderation_group, category:, group:) }
+    fab!(:group_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false, category:) }
 
     it "doesn't include reviewables that can't be seen by the user" do
       SiteSetting.enable_category_group_moderation = true

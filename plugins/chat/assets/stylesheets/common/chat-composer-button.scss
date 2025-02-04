@@ -21,10 +21,10 @@
   }
 
   .d-icon {
-    color: var(--primary-low-mid);
+    color: var(--primary-medium);
 
     &:hover {
-      color: var(--primary-low-mid);
+      color: var(--primary-medium);
     }
 
     .is-focused & {
@@ -32,6 +32,7 @@
     }
 
     .is-disabled & {
+      color: var(--primary-low-mid);
       cursor: not-allowed;
     }
   }
@@ -43,9 +44,11 @@
       0% {
         transform: scale(0.9);
       }
+
       50% {
         transform: scale(1.2);
       }
+
       100% {
         transform: scale(0.9);
       }
@@ -82,6 +85,7 @@
     &:hover {
       transform: scale(1.1);
     }
+
     .d-icon {
       .is-focused & {
         color: var(--tertiary);

@@ -298,11 +298,8 @@ sv:
     max_redemptions_limit: "bör vara mellan 2 och %{max_limit}."
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
-    not_pm: "Du kan bara bjuda in till privata meddelanden."
     user_exists: "Tyvärr har den användaren redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
     muted_topic: "Tyvärr tystade den användaren detta ämne."
-    receiver_does_not_allow_pm: "Tyvärr tillåter inte den användaren att du skickar privata meddelanden till dem."
-    sender_does_not_allow_pm: "Tyvärr tillåter du inte den användaren att skicka privata meddelanden till dig."
     user_cannot_see_topic: "%{username} kan inte se ämnet."
   backup:
     operation_already_running: "En operation är redan igång och därför kan inte ett nytt jobb snartas just nu."
@@ -564,6 +561,8 @@ sv:
         bio_raw: "Om mig"
       user:
         password: "Lösenord"
+      user_password:
+        password: "Lösenord"
     errors:
       models:
         topic:
@@ -597,6 +596,15 @@ sv:
             ip_address:
               blocked: "Nya registreringar är inte tillåtna från din IP-adress."
               max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
+        user_password:
+          attributes:
+            password:
+              common: "är ett av de 10 000 vanligaste lösenorden. Använd ett säkrare lösenord."
+              same_as_username: "är samma som ditt användarnamn. Använd ett säkrare lösenord."
+              same_as_email: "är samma som din e-postadress. Använd ett säkrare lösenord."
+              same_as_current: "är samma som ert nuvarande lösenord"
+              same_as_name: "är samma som ditt namn."
+              unique_characters: "har för många upprepade tecken. Använd ett säkrare lösenord."
         user_profile:
           attributes:
             featured_topic_id:
@@ -846,11 +854,7 @@ sv:
     revoke_failed: "Misslyckades att återkalla ditt konto hos %{provider_name}."
     connected: "(kopplad)"
   activation:
-    action: "Klicka här för att aktivera ditt konto"
     already_done: "Tyvärr är denna kontoaktiveringslänk inte längre giltig. Kanske har ditt konto redan aktiverats?"
-    please_continue: "Ditt nya konto har bekräftats; du kommer att skickas till startsidan."
-    continue_button: "Fortsätt till %{site_name}"
-    welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få e-post när ditt konto har godkänts!"
     missing_session: "Vi kan inte se om ditt konto har skapats, se till att du har aktiverat cookies."
     activated: "Detta konto har redan aktiverats."
@@ -1113,13 +1117,13 @@ sv:
       yaxis: "Dag"
       description: "Antalet användare som ökade sin förtroendenivå under denna period."
     consolidated_page_views:
-      title: "Konsoliderade sidvisningar"
+      title_legacy: "Konsoliderade sidvisningar"
       xaxis:
         page_view_crawler: "Sökrobotar"
         page_view_anon: "Anonyma användare"
         page_view_logged_in: "Inloggade användare"
       yaxis: "Dag"
-      description: "Sidvisningar för inloggade användare, anonyma användare och sökrobotar."
+      description_legacy: "Sidvisningar för inloggade användare, anonyma användare och sökrobotar."
       labels:
         post: Inlägg
         editor: Redigerare
@@ -1134,6 +1138,9 @@ sv:
       description: "API-förfrågningar för vanliga API-nycklar och användar-API-nycklar."
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
+    site_traffic:
+      yaxis: "Dag"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAA/MAA"
       xaxis: "Dag"
@@ -1230,12 +1237,10 @@ sv:
       title: "Avisera moderatorer"
       xaxis: "Dag"
       yaxis: "Antal meddelanden"
-      description: "Antal gånger moderatorer har aviserats privat med en flagga."
     notify_user_private_messages:
       title: "Avisera användare"
       xaxis: "Dag"
       yaxis: "Antal meddelanden"
-      description: "Antal gånger användare har aviserats privat med en flagga."
     top_referrers:
       title: "Toppreferenter"
       xaxis: "Användare"
@@ -1283,6 +1288,9 @@ sv:
       xaxis: "Dag"
       yaxis: "Totalt antal sidvisningar"
       description: "Antal nya sidvisningar från alla besökare."
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antal sidvisningar"
     page_view_logged_in_mobile_reqs:
       title: "Inloggade sidvisningar"
       xaxis: "Dag"
@@ -1439,8 +1447,7 @@ sv:
     delete_old_hidden_posts: "Auto-radera alla dolda inlägg som varit dolda i mer än 30 dagar."
     default_locale: "Standardspråket för denna Discource-instans. Du kan ersätta texten för systemgenererade kategorier och ämnen via <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Anpassa / Text</a>."
     allow_user_locale: "Tillåt användare att själva välja gränssnittsspråk"
-    set_locale_from_accept_language_header: "basera anonyma användares gränssnittsspråk på deras webbläsares språkinställning"
-    support_mixed_text_direction: "Stöd blandade vänster till höger- och höger till vänster-textriktningar."
+    support_mixed_text_direction: "Stöd blandade vänster till höger- och höger till vänster-textriktningar"
     min_post_length: "Minsta tillåtna inläggslängd i tecken (exklusive personliga meddelanden)"
     min_first_post_length: "Minsta tillåtna längd för första inlägget (ämnestext) (exklusive personliga meddelanden)"
     min_personal_message_post_length: "Minsta tillåtna inläggslängd i tecken för meddelanden (både första inlägget och svar)"
@@ -1532,8 +1539,6 @@ sv:
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
-    summarization_strategy: "Ytterligare sätt att sammanfatta innehåll som registrerats av plugins"
-    custom_summarization_allowed_groups: "Grupper som tillåts att sammanfatta innehåll med hjälp av `summarization_strategy`."
     enable_personal_messages: "UTFASAT, använd inställningen \"personal message enabled groups\" istället. Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
@@ -1566,7 +1571,6 @@ sv:
     markdown_linkify_tlds: "Lista över toppdomäner som automatiskt behandlas som länkar"
     markdown_typographer_quotation_marks: "Lista med ersättningspar för dubbla och enkla citat"
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva åtgärder på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
-    must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen."
     invite_code: "Användare måste ange denna kod för att ha tillåtelse att registrera ett konto, ignoreras om det lämnas tomt (ej skiftlägeskänslig)"
     approve_suspect_users: "Lägg till misstänkta användare i kön för granskning. Misstänkta användare har angett en bio/webbsida men har ingen läsaktivitet."
     review_every_post: "Skicka varje nytt inlägg till granskningskön för moderering. Inlägg publiceras fortfarande omedelbart och är synliga för alla användare. VARNING! Rekommenderas inte för webbplatser med hög trafik på grund av den potentiella mängden inlägg som behöver granskas."
@@ -1586,7 +1590,6 @@ sv:
     blocked_ip_blocks: "En lista över privata IP-block som aldrig bör genomsökas av Discourse"
     allowed_internal_hosts: "En lista över interna värdar som discourse säkert kan söka igenom för oneboxar och andra syften"
     allowed_onebox_iframes: "En lista över källdomäner för iframe som är tillåtna via Onebox-inbäddningar. `*` kommer tillåta alla standardmotorer för Onebox."
-    allowed_iframes: "En lista med iframekällors domänprefix som Discourse säkert kan tillåta i inlägg"
     allowed_crawler_user_agents: "Användaragenter för sökrobotar som ska få åtkomst till webbplatsen. VARNING! INSTÄLLNING AV DETTA FÖRBJUDER ALLA SÖKMOTORER SOM INTE LISTAS HÄR!"
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista har definierats."
     slow_down_crawler_user_agents: 'Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen "sakta ned sökrobots hastighet". Varje värde måste vara minst 3 tecken långt.'
@@ -1598,12 +1601,9 @@ sv:
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
     top_menu: "Bestäm vilka objekt som visas på startsidans navigering och i vilken ordning."
-    post_menu: "Bestäm vilka objekt som visas på inläggsmenyn och i vilken ordning."
-    post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     allow_username_in_share_links: "Tillåt att användarnamn omfattas i delningslänkar. Detta är användbart för att tilldela utmärkelser baserat på unika besökare."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om det lämnas tomt används standard-System-kontot."
-    site_contact_group_name: "Ett giltigt gruppnamn som ska bjudas in för alla automatiserade meddelanden."
     send_welcome_message: "Skicka ett välkomstmeddelande till alla nya användare tillsammans med en snabbstartsguide."
     send_tl1_welcome_message: "Skicka nya användare på förtroendenivå 1 ett välkomstmeddelande."
     send_tl2_promotion_message: "Skicka ett meddelande om uppgradering till nya Förtroendenivå 2-användare."
@@ -1614,16 +1614,13 @@ sv:
     max_reply_history: "Högsta antal svar för att utvidga vid utvidgning av som-svar-till"
     topics_per_period_in_top_summary: "Standardinställning för antal toppämnen som visas i toppämnessammanfattningen."
     topics_per_period_in_top_page: "Antal toppämnen som visas i den utvidgade 'Visa mer'-toppämnen."
-    redirect_users_to_top_page: "Omdirigera automatiskt nya och långtidsfrånvarande användare till början av sidan."
     top_page_default_timeframe: "Standardtidsperiod i början av sidan för anonyma användare (justeras automatiskt för inloggade användare baserat på deras senaste besök)."
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (om detta inaktiverats så visas namnet först)"
-    enable_rich_text_paste: "Aktivera automatisk HTML vid Markdown-konvertering när du klistrar in text i redigeraren. (Experimentell)"
     send_old_credential_reminder_days: "Påminn om gamla behörigheter efter dag"
     email_token_valid_hours: "Länkarna Glömt lösenord/aktivera konto är giltiga i (n) timmar."
     max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
     whispers_allowed_groups: "Tillåt privat kommunikation inom ämnen för medlemmar i specificerade grupper."
     hidden_post_visible_groups: "Tillåt medlemmar i dessa grupper att se dolda inlägg. Personalanvändare kan alltid se dolda inlägg."
-    allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     blocked_email_domains: "En lista över e-postdomäner, avgränsade med vertikalstreck, som användare inte får registrera konton med. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte. Exempel: mailinator.com|trashmail.net"
     allowed_email_domains: "En lista över e-postdomäner, avgränsade med vertikalstreck, som användare MÅSTE registrera konton med. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
     normalize_emails: "Kontrollera om normaliserad e-post är unik. Normaliserad e-post tar bort alla punkter från användarnamnet och allt mellan symbolerna + och @."
@@ -1637,8 +1634,8 @@ sv:
     login_required: "Kräv autentisering för att läsa innehåll på den här webbplatsen, avvisa anonym tillgång."
     min_username_length: "Minsta längd på användarnamnet. Varning: om någon befintlig användare eller grupp har namn kortare än detta, er sida kommer att gå sönder!"
     max_username_length: "Längsta användarnamn. Varning: om någon befintlig användare eller grupp har ett namn som är längre än detta kommer er sida att gå sönder."
-    unicode_usernames: "Låt användarnamn och gruppnamn innehålla Unicode-bokstäver eller siffror."
-    allowed_unicode_username_characters: "Reguljärt uttryck för att endast tillåta några Unicode-tecken i användarnamn. ASCII-bokstäver och siffror kommer alltid att tillåtas och behöver inte inkluderas i den tillåtna listan."
+    unicode_usernames: "Låt användarnamn och gruppnamn innehålla Unicode-bokstäver eller siffror"
+    allowed_unicode_username_characters: "Reguljärt uttryck för att endast tillåta några Unicode-tecken i användarnamn. ASCII-bokstäver och siffror kommer alltid att tillåtas och behöver inte inkluderas i den tillåtna listan"
     reserved_usernames: "Användarnamn för vilka registrering inte är tillåten. Jokersymbol * kan användas för att matcha valfritt tecken, noll eller flera gånger."
     password_unique_characters: "Minsta antalet unika tecken som ett lösenord måste ha."
     block_common_passwords: "Tillåt inte lösenord som är bland de 10 000 vanligaste lösenorden."
@@ -1670,7 +1667,6 @@ sv:
     google_oauth2_client_secret: "Klienthemlighet för din Google-applikation."
     google_oauth2_prompt: "En valfri mellanrumsavgränsad lista över strängvärden som anger huruvida auktoriseringsservern ber användaren om omautentisering och samtycke. Se möjliga värden i <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>."
     google_oauth2_hd: "En valfri Google Apps Hosted-domän som inloggningen kommer att begränsas till. Se mer information på <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "(experimentell) Hämta användarnas Google-grupper på värddomänen vid autentisering. Hämtade Google-grupper kan användas för att bevilja automatiskt medlemskap i grupper inom Discourse (se gruppinställningar). Mer information finns på https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "En e-postadress som tillhör ett Google Workspace-administratörskonto. Kommer att användas med tjänstkontouppgifterna för att hämta gruppinformation."
     google_oauth2_hd_groups_service_account_json: "JSON-formaterad nyckelinformation för tjänstkontot. Kommer att användas för att hämta gruppinformation."
     enable_twitter_logins: "Aktivera Twitter-autentisering, kräver twitter_consumer_key och twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurera Twitter-inloggning (och formaterade inbäddningar) för Discourse</a>."
@@ -1832,7 +1828,6 @@ sv:
     title_fancy_entities: "Konvertera vanliga ASCII-tecken till häftiga HTML-enheter i ämnesrubriker, à la SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>http://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
-    default_dark_mode_color_scheme_id: "Färgschemat som används i mörkt läge."
     dark_mode_none: "Inga"
     max_image_size_kb: "Högsta bilduppladdningsstorlek. Konfiguration krävs också i nginx (client_max_body_size) / apache eller proxy. Bilder större än detta eller mindre än client_max_body_size kommer vid uppladdning att ändras i storlek för att passa."
     max_attachment_size_kb: "Högsta storlek på uppladdad bilaga. Konfigurering krävs i nginx (client_max_body_size) / apache eller proxy också."
@@ -1874,7 +1869,6 @@ sv:
     num_hours_to_close_topic: "Antal timmar ett ämne ska pausas för ingripande."
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
     min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid redigeringen av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
-    auto_silence_fast_typers_on_first_post: "Tysta automatiskt användare som inte når upp till min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Högsta förtroendenivå för att automatiskt tysta snabba författare"
     auto_silence_first_post_regex: "Skiftlägesokänsligt reguljärt uttryck som, om det godkänns, leder till att användarens första inlägg tystas och skickas till godkännandekön. Till exempel kommer rasande|a[bc]a att tysta alla inlägg som innehåller rasande eller aba eller aca i första inlägget. Gäller bara första inlägget. UTFASAT: Använd Tystnad bevakade ord istället."
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
@@ -1914,7 +1908,6 @@ sv:
     reset_bounce_score_after_days: "Nollställ studspoäng automatiskt efter X dagar."
     blocked_attachment_content_types: "Lista med nyckelord som används för att blockera bilagor baserat på innehållstyp."
     blocked_attachment_filenames: "Lista med nyckelord som används för att blockera bilagor baserat på filnamn."
-    forwarded_emails_behaviour: "Hur man behandlar ett vidarebefordrat e-postmeddelande till Discourse"
     always_show_trimmed_content: "Visa alltid trimmade delar av inkommande e-post. VARNING: kan avslöja e-postadresser."
     trim_incoming_emails: "Trimma en del av de inkommande e-postmeddelandena som inte är relevant."
     private_email: "Inkludera inte innehåll från inlägg eller ämnen i e-posttitel eller e-postinnehåll. NOTERA: inaktiverar även sammanfogade e-postmeddelanden."
@@ -2019,9 +2012,7 @@ sv:
     app_association_ios: "Innehållet i slutpunkten <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, används för att skapa universella länkar mellan denna webbplats och iOS-appar."
     auto_handle_queued_age: "Hantera automatiskt inlägg som väntar på att granskas efter detta antal dagar. Flaggor ignoreras. Inlägg och användare i kö avvisas. Ställ in till 0 för att inaktivera den här funktionen."
     penalty_step_hours: "Standardtid, uttryckt i timmar, under vilken användare bestraffas genom att tystas eller stängas av. Det första värdet är standard för deras första överträdelse, det andra värdet är standard för deras andra överträdelse etc."
-    svg_icon_subset: "Lägg till ytterligare FontAwesome 5-ikoner som du vill inkludera i dina tillgångar. Använd prefixet 'fa-' för solida ikoner, 'far-' för vanliga ikoner och 'fab-' för märkesikoner."
     max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera utskrifter)"
-    full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
@@ -2029,7 +2020,6 @@ sv:
     default_code_lang: "Standardprogrammeringsspråkets syntaxmarkering tillämpas på markdown-kodblock (auto, text, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tillämpa syntaxmarkering på HTML-författade &lt;code&gt; block, även om de inte angav något språk. För att konfigurera markdown-författade kodblock, använd inställningen 'default code lang'."
-    highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
     show_copy_button_on_codeblocks: "Lägg till en knapp till kodblock för att kopiera blockinnehållet till användarens urklipp."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
     embed_set_canonical_url: "Ställ in den kanoniska URL:n för inbäddade ämnen till det inbäddade innehållets URL."
@@ -2040,9 +2030,7 @@ sv:
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     notify_about_reviewable_item_after: "Om det finns granskningsbara objekt som inte har hanterats efter så många timmar, skicka ett personligt meddelande till moderatorer. Ställ in på 0 för att inaktivera."
-    delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
-    secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
     secure_uploads_max_email_embed_image_size_kb: "Storleksbegränsningen för säkra bilder som kommer att bäddas in i e-postmeddelanden om inställningen för att tillåta inbäddningar för säkra uppladdningar i e-post är aktiverad, 'secure uploads allow embed in emails' . Om inställningen inte är aktiverad har den här inställningen ingen effekt."
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
@@ -2082,7 +2070,6 @@ sv:
     disable_mailing_list_mode: "Tillåt inte att användare aktiverar utskicksläget för e-postlistor (förhindrar att meddelanden till e-postlistan skickas.)"
     default_email_previous_replies: "Som standard omfattas tidigare svar i e-postmeddelanden."
     default_email_in_reply_to: "Omfatta ett utdrag av svar på inlägg i e-post som standard."
-    default_hide_profile_and_presence: "Dölj användarens offentliga profil och närvarofunktioner som standard."
     default_other_new_topic_duration_minutes: "Generellt standardvillkor för när ett ämne anses nytt."
     default_other_auto_track_topics_after_msecs: "Generell standardtid innan ett ämne följs automatiskt."
     default_other_notification_level_when_replying: "Generell standardiserad bevakningssnivå när en användare svarar i ett ämne."
@@ -2130,8 +2117,6 @@ sv:
     suppress_overlapping_tags_in_list: "Om taggen matchar orden i ämnets titel exakt visas inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
-    create_post_for_category_and_tag_changes: "Skapa ett litet åtgärdsinlägg när ett ämnes kategori eller taggar ändras"
-    automatically_clean_unused_tags: "Ta dagligen och automatiskt bort taggar som inte används i några ämnen eller privata meddelanden."
     watched_precedence_over_muted: "Avisera mig om ämnen i kategorier eller taggar som jag bevakar och också tillhör ett som jag har tystat"
     company_name: "Namn på ditt företag eller organisation. Om det lämnas tomt tillhandahålls inte användarvillkor eller integritetsmeddelande."
     shared_drafts_category: "Aktivera funktionen Delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin undantas från ämneslistor för personalanvändare."
@@ -2143,7 +2128,6 @@ sv:
     heading_font: "Typsnitt som används för rubriker på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--heading-font-family`."
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
-    enable_user_status: "(experimentell) Tillåt användare att ställa in anpassat statusmeddelande (emoji + beskrivning)."
     enable_user_tips: "Aktivera tips för nya användare som beskriver viktiga funktioner för användare"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
@@ -2153,18 +2137,11 @@ sv:
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
     create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     allow_changing_staged_user_tracking: "Tillåt att aviseringsinställningar för en arrangerad användares kategori och tagg kan ändras av en administratörsanvändare."
-    use_email_for_username_and_name_suggestions: "Använd den första delen av e-postadresser för användarnamn och namnförslag. Observera att detta gör det lättare för allmänheten att gissa användares fullständiga e-postadresser (eftersom en stor del av människor delar gemensamma tjänster som `gmail.com`)."
     use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
     default_navigation_menu_tags: "Valda taggar visas som standard under navigeringsmenyns sektion Taggar."
-    experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
-    enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
-    experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
-    enable_experimental_lightbox: "EXPERIMENTELLT: Byt ut standardbild-lightboxen mot den nya designen."
-    experimental_form_templates: "EXPERIMENTELLT: Aktivera funktionen för formulärmallar. <b>Efter att den har aktiverats</b> hanterar du mallarna på <a href='%{base_path}/admin/customize/form-templates'>Anpassa / Mallar</a>."
-    lazy_load_categories_groups: "EXPERIMENTELLT: Information om kategorier av uppskjuten inläsning endast för användare av dessa grupper. Detta förbättrar prestandan på webbplatser med många kategorier."
     page_loading_indicator: "Konfigurera laddningsindikatorn som visas under sidnavigeringar i Discourse. 'Spinnare' är en indikator som tar upp hela sidan. 'Skjutreglage' visar ett smalt fält högst upp på skärmen."
     show_user_menu_avatars: "Visa användaravatarer i användarmenyn"
     errors:
@@ -2221,42 +2198,6 @@ sv:
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
       invalid_uncategorized_category_setting: 'Kategorin "Okategoriserade" kan inte väljas om inte "tillåt okategoriserade ämnen" har aktiverats.'
       invalid_search_ranking_weights: "Värdet är ogiltigt för webbplatsinställningen search_ranking_weights. Exempel: '{0.1,0.2,0.3,1.0}'. Observera att maximalt värde för varje vikt är 1,0."
-    keywords:
-      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
-      here_mention_allowed_groups: "min_trust_level_for_here_mention"
-      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
-      approve_unless_allowed_groups: "approve_unless_trust_level"
-      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
-      email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
-      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
-      create_topic_allowed_groups: "min_trust_to_create_topic"
-      edit_post_allowed_groups: "min_trust_to_edit_post"
-      flag_post_allowed_groups: "min_trust_to_flag_posts"
-      delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
-      user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
-      invite_allowed_groups: "min_trust_level_to_allow_invite"
-      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
-      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
-      create_tag_allowed_groups: "min_trust_to_create_tag"
-      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
-      skip_review_media_groups: "review_media_unless_trust_level"
-      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
-      post_links_allowed_groups: "min_trust_to_post_links"
-      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
-      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
-      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inaktiv"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inaktiv"
-      - ""
-      navigation_menu:
-      - "sidofält"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"
@@ -3977,8 +3918,6 @@ sv:
     regular:
       name: Regelbunden
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Beviljad</a> möjligheten att omkategorisera, döpa om, följda länkar, wiki, samt fler gillningar
-      long_description: |
-        Den här utmärkelsen beviljas när du når förtroendenivå 3. Tack för att du regelbundet har varit en del av forumet de senaste månaderna. Du är nu en av våra mest aktiva läsare och en tillförlitlig bidragsgivare som gör vårt forum fantastiskt. Du kan nu omkategorisera och döpa om ämnen, dra fördel av kraftfullare flaggningar av skräppost, få tillgång till ett privat delforum och du får också massor av fler gillningar att dela ut varje dag.
     leader:
       name: Ledare
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Beviljad</a> möjligheten att utföra globala redigeringar, klistra, stänga, arkivera, dela eller sammanfoga, samt fler gillningar
@@ -4297,8 +4236,6 @@ sv:
       styling:
         title: "Utseende och känsla"
         fields:
-          color_scheme:
-            label: "Färgschema"
           body_font:
             label: "Typsnitt för brödtext"
           heading_font:
@@ -4309,23 +4246,9 @@ sv:
             label: "Hemsidans stil"
             choices:
               latest:
-                label: "Senaste ämnen"
-              categories_only:
-                label: "Endast kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med utvalda ämnen"
-              categories_and_latest_topics:
-                label: "Kategorier med senaste ämnen"
-              categories_and_latest_topics_created_date:
-                label: "Kategorier och senaste ämnen (sorteras efter datumet då ämnet skapades)"
-              categories_and_top_topics:
-                label: "Kategorier och toppämnen"
-              categories_boxes:
-                label: "Kategoriboxar"
-              categories_boxes_with_topics:
-                label: "Kategoriboxar med ämnen"
-              subcategories_with_featured_topics:
-                label: "Underkategorier med utvalda ämnen"
+                label: "Senaste"
+              hot:
+                label: "Hett"
       branding:
         title: "Webbplatsens logotyp"
         fields:

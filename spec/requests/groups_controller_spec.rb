@@ -996,7 +996,7 @@ RSpec.describe GroupsController do
                   incoming_email: "test@mail.org",
                   flair_bg_color: "FFF",
                   flair_color: "BBB",
-                  flair_icon: "fa-adjust",
+                  flair_icon: "fa-circle-half-stroke",
                   bio_raw: "testing",
                   full_name: "awesome team",
                   public_admission: true,
@@ -1018,7 +1018,7 @@ RSpec.describe GroupsController do
 
         expect(group.flair_bg_color).to eq("FFF")
         expect(group.flair_color).to eq("BBB")
-        expect(group.flair_url).to eq("fa-adjust")
+        expect(group.flair_url).to eq("fa-circle-half-stroke")
         expect(group.bio_raw).to eq("testing")
         expect(group.full_name).to eq("awesome team")
         expect(group.public_admission).to eq(true)
@@ -1104,7 +1104,7 @@ RSpec.describe GroupsController do
               group: {
                 flair_bg_color: "FFF",
                 flair_color: "BBB",
-                flair_icon: "fa-adjust",
+                flair_icon: "fa-circle-half-stroke",
                 name: "testing",
                 visibility_level: 1,
                 mentionable_level: 1,
@@ -1122,8 +1122,8 @@ RSpec.describe GroupsController do
         group.reload
         expect(group.flair_bg_color).to eq("FFF")
         expect(group.flair_color).to eq("BBB")
-        expect(group.flair_icon).to eq("fa-adjust")
-        expect(group.flair_url).to eq("fa-adjust")
+        expect(group.flair_icon).to eq("fa-circle-half-stroke")
+        expect(group.flair_url).to eq("fa-circle-half-stroke")
         expect(group.name).to eq("admins")
         expect(group.visibility_level).to eq(1)
         expect(group.mentionable_level).to eq(1)
@@ -1349,7 +1349,7 @@ RSpec.describe GroupsController do
               group: {
                 flair_bg_color: "FFF",
                 flair_color: "BBB",
-                flair_icon: "fa-adjust",
+                flair_icon: "fa-circle-half-stroke",
                 mentionable_level: 1,
                 messageable_level: 1,
                 default_notification_level: 1,
@@ -1361,8 +1361,8 @@ RSpec.describe GroupsController do
         group.reload
         expect(group.flair_bg_color).to eq("FFF")
         expect(group.flair_color).to eq("BBB")
-        expect(group.flair_icon).to eq("fa-adjust")
-        expect(group.flair_url).to eq("fa-adjust")
+        expect(group.flair_icon).to eq("fa-circle-half-stroke")
+        expect(group.flair_url).to eq("fa-circle-half-stroke")
         expect(group.name).to eq("trust_level_4")
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
@@ -1704,6 +1704,23 @@ RSpec.describe GroupsController do
           emails.each do |email|
             invite = Invite.find_by(email: email)
             expect(invite.groups).to eq([group])
+          end
+        end
+
+        it "sends emails with invitations when `skip_emails` param isn't present" do
+          expect_enqueued_with(job: :invite_email) do
+            put "/groups/#{group.id}/members.json", params: { emails: "something@gmail.com" }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it "sends emails with invitations when `skip_emails` is present" do
+          expect_not_enqueued_with(job: :invite_email) do
+            put "/groups/#{group.id}/members.json?skip_email=true",
+                params: {
+                  emails: "something@gmail.com",
+                }
+            expect(response.status).to eq(200)
           end
         end
 
@@ -2870,8 +2887,6 @@ RSpec.describe GroupsController do
       end
 
       context "when rate limited" do
-        use_redis_snapshotting
-
         it "rate limits anon searches per user" do
           RateLimiter.enable
 

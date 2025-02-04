@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatChannelIcon extends Component {
@@ -26,7 +26,11 @@ export default class ChatChannelIcon extends Component {
   <template>
     {{#if @channel.isDirectMessageChannel}}
       <div class="chat-channel-icon">
-        {{#if this.groupDirectMessage}}
+        {{#if @channel.iconUploadUrl}}
+          <span class="chat-channel-icon --avatar --custom-icon">
+            <img src={{@channel.iconUploadUrl}} />
+          </span>
+        {{else if this.groupDirectMessage}}
           <span class="chat-channel-icon --users-count">
             {{@channel.membershipsCount}}
           </span>

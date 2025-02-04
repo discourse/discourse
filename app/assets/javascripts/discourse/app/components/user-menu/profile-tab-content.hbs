@@ -14,7 +14,7 @@
             {{/if}}
           </span>
         {{else}}
-          {{d-icon "plus-circle"}}
+          {{d-icon "circle-plus"}}
           <span class="item-label">
             {{i18n "user_status.set_custom_status"}}
           </span>
@@ -22,6 +22,48 @@
       </DButton>
     </li>
   {{/if}}
+
+  <li
+    class={{concat-class
+      "presence-toggle"
+      (unless this.isPresenceHidden "enabled")
+    }}
+    title={{i18n "presence_toggle.title"}}
+  >
+    <DButton @action={{this.togglePresence}} class="btn-flat profile-tab-btn">
+      {{d-icon (if this.isPresenceHidden "toggle-off" "toggle-on")}}
+      <span class="item-label">
+        {{#if this.isPresenceHidden}}
+          {{i18n "presence_toggle.offline"}}
+        {{else}}
+          {{i18n "presence_toggle.online"}}
+        {{/if}}
+      </span>
+    </DButton>
+  </li>
+
+  <li
+    class={{concat-class "do-not-disturb" (if this.isInDoNotDisturb "enabled")}}
+  >
+    <DButton
+      @action={{this.doNotDisturbClick}}
+      class="btn-flat profile-tab-btn"
+    >
+      {{d-icon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
+      <span class="item-label">
+        {{#if this.isInDoNotDisturb}}
+          <span>{{i18n "pause_notifications.label"}}</span>
+          {{#if this.showDoNotDisturbEndDate}}
+            {{format-age this.doNotDisturbDateTime}}
+          {{/if}}
+        {{else}}
+          {{i18n "pause_notifications.label"}}
+        {{/if}}
+      </span>
+    </DButton>
+  </li>
+
+  <hr />
 
   <li class="summary">
     <LinkTo @route="user.summary" @model={{this.currentUser}}>
@@ -34,7 +76,7 @@
 
   <li class="activity">
     <LinkTo @route="userActivity" @model={{this.currentUser}}>
-      {{d-icon "stream"}}
+      {{d-icon "bars-staggered"}}
       <span class="item-label">
         {{i18n "user.activity_stream"}}
       </span>
@@ -67,30 +109,11 @@
 
   <li class="preferences">
     <LinkTo @route="preferences" @model={{this.currentUser}}>
-      {{d-icon "cog"}}
+      {{d-icon "gear"}}
       <span class="item-label">
         {{i18n "user.preferences.title"}}
       </span>
     </LinkTo>
-  </li>
-
-  <li class="do-not-disturb">
-    <DButton
-      @action={{this.doNotDisturbClick}}
-      class="btn-flat profile-tab-btn"
-    >
-      {{d-icon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
-      <span class="item-label">
-        {{#if this.isInDoNotDisturb}}
-          <span>{{i18n "pause_notifications.label"}}</span>
-          {{#if this.showDoNotDisturbEndDate}}
-            {{format-age this.doNotDisturbDateTime}}
-          {{/if}}
-        {{else}}
-          {{i18n "pause_notifications.label"}}
-        {{/if}}
-      </span>
-    </DButton>
   </li>
 
   {{#if this.showToggleAnonymousButton}}
@@ -135,7 +158,7 @@
 
   <li class="logout">
     <DButton @action={{route-action "logout"}} class="btn-flat profile-tab-btn">
-      {{d-icon "sign-out-alt"}}
+      {{d-icon "right-from-bracket"}}
       <span class="item-label">
         {{i18n "user.log_out"}}
       </span>

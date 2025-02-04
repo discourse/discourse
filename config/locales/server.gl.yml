@@ -222,8 +222,6 @@ gl:
     failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
     user_exists: "Este usuario xa foi invitado. Só se pode invitar a un usuario a un tema unha única vez."
     muted_topic: "Sentímolo, ese usuario silenciou este tema."
-    receiver_does_not_allow_pm: "Sentímolo, ese usuario non lle permite enviarlles mensaxes privadas."
-    sender_does_not_allow_pm: "Sentímolo, vostede non permite que ese usuario lle envíe mensaxes privadas."
   backup:
     operation_already_running: "Estase a executar unha operación. Nestes intres non se pode comezar un novo traballo."
     backup_file_should_be_tar_gz: "O ficheiro da copia de seguranza debe ter formato .tar.gz."
@@ -468,6 +466,8 @@ gl:
         bio_raw: "Acerca de min"
       user:
         password: "Contrasinal"
+      user_password:
+        password: "Contrasinal"
     errors:
       models:
         topic:
@@ -500,6 +500,15 @@ gl:
             ip_address:
               blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
               max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
+        user_password:
+          attributes:
+            password:
+              common: "é un dos 10000 contrasinais máis habituais. Utilice un máis seguro."
+              same_as_username: "é igual ca o seu nome de usuario. Utilice un contrasinal máis seguro."
+              same_as_email: "é igual ca o seu correo electrónico. Utilice un contrasinal máis seguro."
+              same_as_current: "é igual ca o seu contrasinal actual."
+              same_as_name: "é igual ca o seu nome."
+              unique_characters: "ten demasiados caracteres repetidos. Utilice un contrasinal máis seguro."
         user_profile:
           attributes:
             featured_topic_id:
@@ -705,11 +714,7 @@ gl:
     revoke_failed: "Erro ao revogar a súa conta con %{provider_name}."
     connected: "(conectadas)"
   activation:
-    action: "Prema aquí para activar a súa conta"
     already_done: "Sentímolo, esta ligazón de confirmación da conta xa non está dispoñible. Estará xa a súa conta activada?"
-    please_continue: "A súa nova conta está confirmada; redirixirémolo á páxina de inicio."
-    continue_button: "Continuar a %{site_name}"
-    welcome_to: "Dámoslle a benvida a %{site_name}!"
     approval_required: "Un moderador debe aprobar manualmente a súa nova conta antes de que poida acceder a este foro. Recibirá un correo electrónico cando a súa conta sexa aprobada!"
     missing_session: "Non podemos detectar se se creou a súa conta; asegúrese de ter os rastros activados."
     activated: "Sentímolo, esta conta xa foi activada."
@@ -943,13 +948,13 @@ gl:
       yaxis: "Día"
       description: "Número de usuarios que incrementaron o seu nivel de confianza durante este período."
     consolidated_page_views:
-      title: "Visualizacións de páxinas consolidadas"
+      title_legacy: "Visualizacións de páxinas consolidadas"
       xaxis:
         page_view_crawler: "Rastrexadores"
         page_view_anon: "Usuarios anónimos"
         page_view_logged_in: "Usuarios con sesión iniciada"
       yaxis: "Día"
-      description: "Visualizacións de páxinas para usuarios con sesión iniciada, anónimos e rastrexadores."
+      description_legacy: "Visualizacións de páxinas para usuarios con sesión iniciada, anónimos e rastrexadores."
       labels:
         post: Publicación
         editor: Editor
@@ -962,6 +967,9 @@ gl:
       yaxis: "Día"
     consolidated_page_views_browser_detection:
       yaxis: "Día"
+    site_traffic:
+      yaxis: "Día"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1058,12 +1066,10 @@ gl:
       title: "Notificar aos moderadores"
       xaxis: "Día"
       yaxis: "Número de mensaxes"
-      description: "Número de veces que os moderadores foron notificados por privado dunha alerta."
     notify_user_private_messages:
       title: "Notificar aos usuarios"
       xaxis: "Día"
       yaxis: "Número de mensaxes"
-      description: "Número de veces que os usuarios foron notificados por privado dunha alerta."
     top_referrers:
       title: "Referenciadores populares"
       xaxis: "Usuario"
@@ -1111,6 +1117,9 @@ gl:
       xaxis: "Día"
       yaxis: "Total de visualizacións de páxina"
       description: "Número de novas visualizacións de páxina de todos os visitantes."
+    page_view_legacy_total_reqs:
+      xaxis: "Día"
+      yaxis: "Total de visualizacións de páxina"
     page_view_logged_in_mobile_reqs:
       title: "Visualizacións de páxina coa sesión iniciada"
       xaxis: "Día"
@@ -1253,8 +1262,7 @@ gl:
     delete_old_hidden_posts: "Eliminar automaticamente as publicacións ocultas máis de 30 días."
     default_locale: "O idioma predefinido desta instancia de Discourse. Pode substituír o texto das categorías e dos temas xerados en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar / Texto</a>."
     allow_user_locale: "Permite que os usuarios escollan o idioma de interface que prefiran"
-    set_locale_from_accept_language_header: "definir o idioma da interface para usuarios anónimos a partir das cabeceiras de idioma do seu navegador"
-    support_mixed_text_direction: "Admite direccións mixtas de texto de esquerda a dereita e de dereita a esquerda."
+    support_mixed_text_direction: "Admite direccións mixtas de texto de esquerda a dereita e de dereita a esquerda"
     max_post_length: "Extensión máxima das publicacións en número de caracteres"
     show_topic_featured_link_in_digest: "Mostrar a ligazón salientada do tema no correo electrónico de resumo."
     min_topic_views_for_delete_confirm: "Cantidade mínima de vistas que debe ter un tema para que apareza unha xanela emerxente de confirmación cando se elimina"
@@ -1343,7 +1351,6 @@ gl:
     markdown_linkify_tlds: "Listaxe de dominios de nivel superior que se tratan automaticamente como ligazóns"
     markdown_typographer_quotation_marks: "Listaxe de pares de substitución de comiñas dobres e simples"
     post_undo_action_window_mins: "Número de minutos que os usuarios teñen para desfacer accións recentes nunha publicación (gústame, denuncias etc)."
-    must_approve_users: "O equipo debe aprobar todas as novas contas antes de que teñan permiso para acceder ao sitio."
     invite_code: "O usuario debe inserir este código para que se lle permita rexistrar a conta, ignórase cando está baleiro (non distingue entre maiúsculas e minúsculas)"
     approve_suspect_users: "Engadir usuarios sospeitosos á cola de revisión. Os usuarios sospeitosos inseriron unha biografía ou sitio web, pero non teñen actividade de lectura."
     persistent_sessions: "Os usuarios conservarán a sesión iniciada cando o navegador estea pechado"
@@ -1358,17 +1365,14 @@ gl:
     blocked_ip_blocks: "Unha listaxe de bloques IP privados que Discourse nunca debería rastrexar"
     allowed_internal_hosts: "Unha listaxe de servidores internos que Discourse pode rastrexar de forma segura para as oneboxing e outros fins"
     allowed_onebox_iframes: "Unha listase de dominios iframe src que se permiten a través de incorporación Onebox. \"*\" permitirá todos os motores Onebox predeterminados."
-    allowed_iframes: "Unha listaxe de prefixos de dominios para iframe src que Discourse pode permitir de forma segura en publicacións"
     allowed_crawler_user_agents: "Axentes de usuario de rastreadores web aos que se lles debería permitir o acceso ao sitio. AVISO! AO CONFIGURAR ISTO, VETARÁ TODOS OS RASTREXADORES NON LISTADOS AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensíbel a maiúsculas e minúsculas na cadea de axente de usuario que identifica rastrexadores web que non deberían ter permitido o acceso ao sitio. Non se lle aplica se está definida a listaxe de permitidos."
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents está especificado, este valor aplicarase a todos os rastrexadores (número de segundos de demora entre respostas)"
     content_security_policy_collect_reports: "Activar a recolección de informes de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restrinxir quen pode incorporar este sitio en iframes mediante CSP. O control de servidores permitidos en <a href='%{base_path}/admin/customize/embedding'>Incorporación</a>"
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Estabelecer en 0 para desactivalo."
-    post_menu_hidden_items: "Os elementos do menú que se ocultan por defecto no menú de publicación salvo que se prema no botón para expandir as opcións."
     share_links: "Determinar que elementos aparecen no cadro de compartir e en que orde."
     site_contact_username: "Nome de usuario do membro do equipo desde onde se enviarán todas as mensaxes automáticas. Se se deixa en branco, utilizarase a conta predeterminada do sistema."
-    site_contact_group_name: "Un nome de grupo válido para ser convidado a todas as mensaxes automatizadas."
     send_welcome_message: "Enviarlles aos usuarios novos unha mensaxe de benvida cunha guía de comezo rápido."
     send_tl1_welcome_message: "Enviarlles aos usuarios novos con nivel de confianza 1 unha mensaxe de benvida."
     send_tl2_promotion_message: "Envíe unha nova mensaxe aos usuarios de nivel 2 de confianza sobre a promoción."
@@ -1378,12 +1382,9 @@ gl:
     max_reply_history: "Número máximo de respostas que se mostran ao expandir en-resposta-a"
     topics_per_period_in_top_summary: "Número de temas destacados que se mostran no resumo de temas destacados."
     topics_per_period_in_top_page: "Número de temas destacados que se mostran na vista expandida ao premer en «Mostrar máis»."
-    redirect_users_to_top_page: "Redirixir automaticamente á páxina de destacados aos usuarios novos e aos que estiveron ausentes durante moito tempo."
     prioritize_username_in_ux: "Mostrar o nome de usuario primeiro na páxina de usuario, a tarxeta de usuario e nas publicacións (cando está desactivado, o nome móstrase primeiro)"
-    enable_rich_text_paste: "Activar conversión automática de HTML a Markdown ao pegar texto no editor. (Experimental)"
     send_old_credential_reminder_days: "Lembrar as credenciais antigas despois de días"
     email_token_valid_hours: "Os tokens para restabelecer o contrasinal ou activar a conta son válidos durante (n) horas."
-    allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sexa indexado polos motores de busca en internet. En casos excepcionais, pode <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a>permanentemente."
     log_out_strict: "Ao pechar a sesión, pechar TODAS as sesións en todos os dispositivos do usuario"
     version_checks: "Faga ping ao Discourse Hub para obter actualizacións de versións e amose mensaxes de nova versión no panel de control do<a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Enviar un correo electrónico a contact_email address cando haxa dispoñible unha nova versión de Discourse."
@@ -1392,8 +1393,8 @@ gl:
     login_required: "Requírese autenticación para ler contido neste sitio; deshabilitar o acceso anónimo."
     min_username_length: "Lonxitude mínima do nome de usuario en caracteres. AVISO: se hai usuarios ou grupos cunha extensión menor, o seu sitio quebrará!"
     max_username_length: "Lonxitude máxima do nome de usuario en caracteres. AVISO: se hai usuarios ou grupos cunha extensión maior, o teu sitio quebrará!"
-    unicode_usernames: "Permitir que os nomes de usuario conteñan algunhas letras e números Unicode."
-    allowed_unicode_username_characters: "Expresión regular para permitir só algúns caracteres Unicode dentro dos nomes de usuario. Sempre se permitirán letras e números ASCII e non precisarán ser incluídos na listaxe de permitidos."
+    unicode_usernames: "Permitir que os nomes de usuario conteñan algunhas letras e números Unicode"
+    allowed_unicode_username_characters: "Expresión regular para permitir só algúns caracteres Unicode dentro dos nomes de usuario. Sempre se permitirán letras e números ASCII e non precisarán ser incluídos na listaxe de permitidos"
     reserved_usernames: "Nomes de usuario que non están permitidos para rexistrarse. O asterisco * pódese utilizar para coincidir con calquera carácter cero ou máis veces."
     password_unique_characters: "Número mínimo de caracteres únicos que debe ter un contrasinal."
     block_common_passwords: "Non permitir contrasinais que estean entre os 10.000 contrasinais máis comúns."
@@ -1553,7 +1554,6 @@ gl:
     title_fancy_entities: "Converter caracteres ASCII en entidades HTML elegantes no título dos temas, como SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
-    default_dark_mode_color_scheme_id: "O esquema de cores empregado no modo escuro."
     dark_mode_none: "Ningún"
     max_similar_results: "Número de temas similares que se mostran na parte superior do editor cando se está a redactar un novo tema. A comparación baséase no título e mais no corpo da mensaxe."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para unha imaxe. Aquelas cun número superior serán rexeitadas."
@@ -1588,7 +1588,6 @@ gl:
     num_hours_to_close_topic: "Número de horas que se pausa un tema co fin de intervilo."
     auto_respond_to_flag_actions: "Activar a resposta automática ao desfacer unha denuncia."
     min_first_post_typing_time: "Período mínimo en milisegundos durante o cal un usuario debe escribir na súa primeira publicación; se non chega a este limiar, a publicación pasará automaticamente á cola de moderación. Estabelecer en 0 para desactivar (non recomendado)."
-    auto_silence_fast_typers_on_first_post: "Silenciar automaticamente a aqueles usuarios que non cumpran o limiar estabelecido en min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza para silenciar automaticamente a quen escribe moi rápido"
     reviewable_claiming: "É necesario reclamar o contido revisable antes de poder actuar sobre el?"
     reviewable_default_topics: "Mostrar por defecto o contido revisable agrupado por tema"
@@ -1619,7 +1618,6 @@ gl:
     reset_bounce_score_after_days: "Restabelece automaticamente a puntuación de devolución despois de X días."
     blocked_attachment_content_types: "Listaxe de palabras clave empregadas para bloquear anexos en función do tipo de contido."
     blocked_attachment_filenames: "Listaxe de palabras clave usadas para bloquear anexos en función do nome do ficheiro."
-    forwarded_emails_behaviour: "Como tratar o correo electrónico reenviado en Discourse"
     always_show_trimmed_content: "Mostrar sempre a parte recortada dos correos electrónicos entrantes. AVISO: podería supor ofrecer enderezos de correo."
     private_email: "Non incluír contido de publicacións ou temas no título ou o corpo do correo electrónico. NOTA: tamén desactiva os boletíns por correo electrónico."
     email_total_attachment_size_limit_kb: "Tamaño máximo total dos ficheiros anexos a correos electrónicos saíntes. Estabelecer en 0 para desactivar o envío de ficheiros anexos."
@@ -1710,14 +1708,11 @@ gl:
     app_association_android: "Contido do <a href='%{base_path}/.well-known/assetlinks.json'>punto de chegada .well-known/assetlinks.json</a>, utilizado para a API Google's Digital Asset Links."
     app_association_ios: "Contido de <a href='%{base_path}/apple-app-site-association'>punto de chegada de apple-app-site-association</a> , utilizado para crear ligazóns universais entre este sitio e as aplicacións de iOS."
     auto_handle_queued_age: "Xestione automaticamente rexistros que levan moitos días en espera de seren revisados. As alertas ignoraranse. Rexeitaranse as publicacións e os usuarios en cola. Estabelecer en 0 para desactivar esta funcionalidade."
-    svg_icon_subset: "Engada 5 iconas FontAwesome adicionais que lle gustaría incluír nos seus recursos. Use o prefixo «fa-» para iconas sólidas, «far-» para iconas normais e «fab-» para iconas de marca."
-    full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     enable_names: "Mostrar o nome completo do usuario no seu perfil, tarxeta de usuario e correos electrónicos. Desactivar para agochar o nome completo en todas as partes."
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
     short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
     warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase estabelecendo en 0."
-    highlighted_languages: "Regras de realzado de sintaxe incluídas. (Aviso: incluír demasiadas linguaxes pode afectar o rendemento) véxase: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para unha demostración"
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
     embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."
@@ -1842,15 +1837,6 @@ gl:
         regex_invalid: "A expresión regular non é válida: %{error}"
         leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
       unicode_usernames_avatars: "O sistema interno de avatares non admite nomes de usuario Unicode."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inactivo"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inactivo"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3259,8 +3245,6 @@ gl:
     regular:
       name: Normal
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> recategorizar, renomear, seguimento de ligazóns, wiki, máis gústame
-      long_description: |
-        Esta insignia concédese cando alcanza o nivel de confianza 3. Grazas por ser parte habitual da nosa comunidade ao longo destes meses. Vostede é agora un dos lectores máis activos e un colaborador fiable que mellora a comunidade. Agora pode recategorizar e renomear temas, as súas denuncias teñen máis peso, pode acceder á área privada da sala VIP, alén de poder dar moitos máis gústame por día.
     leader:
       name: Líder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedida</a> a edición global, fixar, pechar, arquivar, dividir e combinar, máis gústame
@@ -3555,15 +3539,7 @@ gl:
           homepage_style:
             choices:
               latest:
-                label: "Últimos temas"
-              categories_only:
-                label: "Só categorías"
-              categories_with_featured_topics:
-                label: "Categorías con temas de actualidade"
-              categories_and_latest_topics:
-                label: "Categorías e últimos temas"
-              categories_and_top_topics:
-                label: "Categorías e temas destacados"
+                label: "Últimos"
       corporate:
         fields:
           governing_law:
@@ -3596,7 +3572,7 @@ gl:
       quoted: '%{username} citouno en "%{topic}" - %{site_title}'
       replied: '%{username} respondeulle en "%{topic}" - %{site_title}'
       posted: '%{username} publicou en "%{topic}" - %{site_title}'
-      private_message: '%{username} envioulle unha mensaxe privada en "%{topic}" - %{site_title}'
+      private_message: '%{username} envioulle unha mensaxe privada sobre «%{topic}» - %{site_title}'
       linked: '%{username} ligou á súa publicación desde "%{topic}" - %{site_title}'
       watching_first_post: '%{username} creou un tema novo "%{topic}" - %{site_title}'
       confirm_title: "Notificacións activadas - %{site_title}"

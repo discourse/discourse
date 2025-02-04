@@ -33,7 +33,9 @@ describe "Bookmarking posts and topics", type: :system do
     expect(bookmark_menu).to be_open
     expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
     expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
-    expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
+    try_until_success(frequency: 0.5) do
+      expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
+    end
   end
 
   it "updates the created bookmark with a selected reminder option from the bookmark menu" do
@@ -46,7 +48,9 @@ describe "Bookmarking posts and topics", type: :system do
 
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
     expect(page).to have_no_css(".bookmark-menu-content.-expanded")
-    expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
+    try_until_success(frequency: 0.5) do
+      expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
+    end
   end
 
   it "can set a reminder from the bookmark modal using the custom bookmark menu option" do
@@ -54,7 +58,9 @@ describe "Bookmarking posts and topics", type: :system do
     bookmark_menu.click_menu_option("custom")
     bookmark_modal.select_preset_reminder(:tomorrow)
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
-    expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
+    try_until_success(frequency: 0.5) do
+      expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
+    end
   end
 
   it "allows choosing a different auto_delete_preference to the user preference and remembers it when reopening the modal" do

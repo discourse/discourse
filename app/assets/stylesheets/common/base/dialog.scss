@@ -16,6 +16,7 @@
  * Ensures the dialog container and all its descendants are not
  * visible and not focusable when it is hidden.
  */
+
 .dialog-container[aria-hidden="true"] {
   display: none;
 }
@@ -69,6 +70,7 @@
     margin-left: auto;
     flex-basis: content;
     padding-left: 15px;
+
     .d-icon {
       color: var(--primary-high);
     }
@@ -81,7 +83,9 @@
   align-items: center;
   padding: 14px 15px 10px;
   border-top: 1px solid var(--primary-low);
+
   --btn-bottom-margin: 0.3em;
+
   .btn {
     margin: 0 0.75em var(--btn-bottom-margin) 0;
   }

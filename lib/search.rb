@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Search
-  DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
+  DIACRITICS = /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
   HIGHLIGHT_CSS_CLASS = "search-highlight"
 
   cattr_accessor :preloaded_topic_custom_fields
@@ -117,7 +117,7 @@ class Search
     data.force_encoding("UTF-8")
     data = clean_term(data)
 
-    if purpose != :topic
+    if purpose != :topic && need_segmenting?(data)
       if segment_chinese?
         require "cppjieba_rb" unless defined?(CppjiebaRb)
 
@@ -224,6 +224,13 @@ class Search
       .fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.week) do
         min_post_id_no_cache
       end
+  end
+
+  def self.need_segmenting?(data)
+    return false if data.match?(/\A\d+\z/)
+    !URI.parse(data).path.to_s.start_with?("/")
+  rescue URI::InvalidURIError
+    true
   end
 
   attr_accessor :term
@@ -896,8 +903,11 @@ class Search
         found = false
 
         Search.advanced_filters.each do |matcher, block|
+          case_insensitive_matcher =
+            Regexp.new(matcher.source, matcher.options | Regexp::IGNORECASE)
+
           cleaned = word.gsub(/["']/, "")
-          if cleaned =~ matcher
+          if cleaned =~ case_insensitive_matcher
             (@filters ||= []) << [block, $1]
             found = true
           end

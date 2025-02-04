@@ -15,7 +15,6 @@ vi:
       deleted_chat_username: đã bị xóa
       dates:
         yesterday: "Hôm qua"
-        time_tiny: "h:mm"
       create: "Tạo"
       cancel: "Huỷ"
       channel_settings:
@@ -32,7 +31,6 @@ vi:
       email_frequency:
         never: "Không bao giờ"
       header_indicator_preference:
-        dm_and_mentions: "Tin nhắn Trực tiếp và Nhắc đến"
         never: "Không bao giờ"
       flag: "Gắn cờ"
       join: "Tham gia"
@@ -146,6 +144,8 @@ vi:
             title: "Bình thường"
           tracking:
             title: "Đang theo dõi"
+          watching:
+            title: "Theo dõi"
         participants_other_count:
           other: "+%{count}"
       draft_channel_screen:
@@ -153,6 +153,8 @@ vi:
         cancel: "Huỷ"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        other: "%{username} và %{count} người khác"
     discourse_automation:
       scriptables:
         send_chat_message:

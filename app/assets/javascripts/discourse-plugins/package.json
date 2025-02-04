@@ -8,22 +8,24 @@
     "ember-addon"
   ],
   "dependencies": {
-    "@babel/core": "^7.24.9",
-    "deprecation-silencer": "1.0.0",
-    "discourse-widget-hbs": "1.0.0",
+    "@babel/core": "^7.26.7",
+    "deprecation-silencer": "workspace:1.0.0",
+    "discourse-hbr": "workspace:1.0.0",
+    "discourse-widget-hbs": "workspace:1.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.1.1",
+    "ember-template-imports": "^4.3.0",
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
-    "ember-cli": "~5.10.0",
-    "webpack": "^5.93.0"
+    "ember-cli": "~6.1.0",
+    "webpack": "^5.97.1"
   },
   "engines": {
     "node": ">= 18",
-    "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "^9"
   },
   "ember": {
     "edition": "default"

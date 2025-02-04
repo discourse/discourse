@@ -21,4 +21,8 @@ class MigrateAutoClosePosts < ActiveRecord::Migration[4.2]
       SQL
     end
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

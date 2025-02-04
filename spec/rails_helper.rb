@@ -82,6 +82,7 @@ Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
@@ -186,7 +187,18 @@ end
 PER_SPEC_TIMEOUT_SECONDS = 45
 BROWSER_READ_TIMEOUT = 30
 
+# To avoid erasing `any_instance` from Mocha
+require "rspec/mocks/syntax"
+RSpec::Mocks::Syntax.singleton_class.define_method(:enable_should) { |*| nil }
+RSpec::Mocks::Syntax.singleton_class.define_method(:disable_should) { |*| nil }
+
+RSpec::Mocks::ArgumentMatchers.remove_method(:hash_including) # We’re currently relying on the version from Webmock
+
 RSpec.configure do |config|
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
   config.extend RedisSnapshotHelper
@@ -203,13 +215,20 @@ RSpec.configure do |config|
   config.include BackupsHelpers
   config.include OneboxHelpers
   config.include FastImageHelpers
-  config.include WithServiceHelper
   config.include ServiceMatchers
   config.include I18nHelpers
 
-  config.mock_framework = :mocha
   config.order = "random"
   config.infer_spec_type_from_file_location!
+
+  config.mock_with :rspec do |mocks|
+    mocks.verify_partial_doubles = true
+    mocks.verify_doubled_constant_names = true
+    mocks.syntax = :expect
+  end
+  config.mock_with MultiMock::Adapter.for(:mocha, :rspec)
+
+  config.include Mocha::API
 
   if ENV["GITHUB_ACTIONS"]
     # Enable color output in GitHub Actions
@@ -240,7 +259,25 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
-  config.full_cause_backtrace = true
+  # Shows more than one line of backtrace in case of an error or spec failure.
+  config.full_cause_backtrace = false
+
+  # Sometimes the backtrace is quite big for failing specs, this will
+  # remove rspec/gem paths from the backtrace so it's easier to see the
+  # actual application code that caused the failure.
+  #
+  # This behaviour is enabled by default, to include gems in
+  # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
+  if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
+    config.backtrace_exclusion_patterns = [
+      %r{/lib\d*/ruby/},
+      %r{bin/},
+      /gems/,
+      %r{spec/spec_helper\.rb},
+      %r{spec/rails_helper\.rb},
+      %r{lib/rspec/(core|expectations|matchers|mocks)},
+    ]
+  end
 
   config.before(:suite) do
     CachedCounting.disable
@@ -258,6 +295,7 @@ RSpec.configure do |config|
 
     DiscoursePluginRegistry.reset! if ENV["LOAD_PLUGINS"] != "1"
     Discourse.current_user_provider = TestCurrentUserProvider
+    Discourse::Application.load_tasks
 
     SiteSetting.refresh!
 
@@ -292,6 +330,16 @@ RSpec.configure do |config|
             ["discoursetest"]
           end
         )
+
+      test_i = ENV["TEST_ENV_NUMBER"].to_i
+
+      data_dir = "#{Rails.root}/tmp/test_data_#{test_i}/minio"
+      FileUtils.rm_rf(data_dir)
+      FileUtils.mkdir_p(data_dir)
+      minio_runner_config.minio_data_directory = data_dir
+
+      minio_runner_config.minio_port = 9_000 + 2 * test_i
+      minio_runner_config.minio_console_port = 9_001 + 2 * test_i
     end
 
     WebMock.disable_net_connect!(
@@ -387,6 +435,7 @@ RSpec.configure do |config|
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
           apply_base_chrome_options(options)
+          options.add_argument("--disable-search-engine-choice-screen")
           options.add_argument("--window-size=1400,1400")
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
@@ -413,6 +462,7 @@ RSpec.configure do |config|
       Selenium::WebDriver::Chrome::Options
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
+          options.add_argument("--disable-search-engine-choice-screen")
           options.add_emulation(device_name: "iPhone 12 Pro")
           options.add_argument(
             '--user-agent="--user-agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/36.0  Mobile/15E148 Safari/605.1.15"',
@@ -431,11 +481,27 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    if ENV["ELEVATED_UPLOADS_ID"]
-      DB.exec "SELECT setval('uploads_id_seq', 10000)"
-    else
-      DB.exec "SELECT setval('uploads_id_seq', 1)"
+    [
+      [PostAction, :post_action_type_id],
+      [Reviewable, :target_id],
+      [ReviewableHistory, :reviewable_id],
+      [ReviewableScore, :reviewable_id],
+      [ReviewableScore, :reviewable_score_type],
+      [SidebarSectionLink, :linkable_id],
+      [SidebarSectionLink, :sidebar_section_id],
+      [User, :last_seen_reviewable_id],
+      [User, :required_fields_version],
+    ].each do |model, column|
+      DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
+      model.reset_column_information
     end
+
+    # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
+    # type mistmatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
+    # instead of 2**31-1 so that the values are easier to read.
+    DB
+      .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
+      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', '10000000000')" }
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
@@ -623,6 +689,49 @@ RSpec.configure do |config|
     BlockRequestsMiddleware.current_example_location = example.location
   end
 
+  config.after :each do |example|
+    if example.exception && RspecErrorTracker.exceptions.present?
+      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
+
+      lines << "\n"
+      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
+
+      RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
+        lines << "\n"
+        lines << "Error encountered while processing #{path}.\n"
+        lines << "  #{ex.class}: #{ex.message}\n"
+        framework_lines_excluded = 0
+
+        ex.backtrace.each_with_index do |line, backtrace_index|
+          # This behaviour is enabled by default, to include gems in
+          # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
+          if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
+            if line.match?(%r{/gems/})
+              framework_lines_excluded += 1
+              next
+            else
+              if framework_lines_excluded.positive?
+                lines << "    ...(#{framework_lines_excluded} framework line(s) excluded)\n"
+                framework_lines_excluded = 0
+              end
+            end
+          end
+          lines << "    #{line}\n"
+        end
+      end
+
+      lines << "\n"
+      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
+    end
+
+    unfreeze_time
+    ActionMailer::Base.deliveries.clear
+    Discourse.redis.flushdb
+    Scheduler::Defer.do_all_work
+  end
+
   config.after(:each, type: :system) do |example|
     lines = RSpec.current_example.metadata[:extra_failure_lines]
 
@@ -681,33 +790,6 @@ RSpec.configure do |config|
 
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
-    Discourse.redis.flushdb
-  end
-
-  config.after :each do |example|
-    if example.exception && RspecErrorTracker.exceptions.present?
-      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
-
-      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
-
-      RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
-        lines << "\n"
-        lines << "Error encountered while proccessing #{path}"
-        lines << "  #{ex.class}: #{ex.message}"
-        ex.backtrace.each_with_index do |line, backtrace_index|
-          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
-            next if line.match?(%r{/gems/})
-          end
-          lines << "    #{line}\n"
-        end
-      end
-
-      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
-      lines << "\n"
-    end
-
-    unfreeze_time
-    ActionMailer::Base.deliveries.clear
   end
 
   config.before(:each, type: :multisite) do
@@ -894,6 +976,23 @@ def has_trigger?(trigger_name)
   SQL
 end
 
+def stub_deprecated_settings!(override:)
+  SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
+
+  stub_const(
+    SiteSettings::DeprecatedSettings,
+    "SETTINGS",
+    [["old_one", "new_one", override, "0.0.1"]],
+  ) do
+    SiteSetting.setup_deprecated_methods
+    yield
+  end
+
+  defaults = SiteSetting.defaults.instance_variable_get(:@defaults)
+  defaults.each { |_, hash| hash.delete(:old_one) }
+  defaults.each { |_, hash| hash.delete(:new_one) }
+end
+
 def silence_stdout
   STDOUT.stubs(:write)
   yield
@@ -902,12 +1001,12 @@ ensure
 end
 
 def track_log_messages
-  old_logger = Rails.logger
-  logger = Rails.logger = FakeLogger.new
+  logger = FakeLogger.new
+  Rails.logger.broadcast_to(logger)
   yield logger
   logger
 ensure
-  Rails.logger = old_logger
+  Rails.logger.stop_broadcasting_to(logger)
 end
 
 # this takes a string and returns a copy where 2 different
@@ -965,6 +1064,7 @@ def apply_base_chrome_options(options)
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
+  options.add_argument("--remote-allow-origins=*")
 
   # A file that contains just a list of paths like so:
   #

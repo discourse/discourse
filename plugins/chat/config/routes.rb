@@ -11,6 +11,8 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/read" => "channels_read#update"
     post "/channels/:channel_id/messages/:message_id/flags" => "channels_messages_flags#create"
     post "/channels/:channel_id/drafts" => "channels_drafts#create"
+    post "/channels/:channel_id/messages/:message_id/interactions" =>
+           "channels_messages_interactions#create"
     delete "/channels/:channel_id" => "channels#destroy"
     put "/channels/:channel_id" => "channels#update"
     get "/channels/:channel_id" => "channels#show"
@@ -88,8 +90,6 @@ Chat::Engine.routes.draw do
   post "/:chat_channel_id/quote" => "chat#quote_messages"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   post "/:chat_channel_id" => "api/channel_messages#create"
-
-  get "/emojis" => "emojis#index"
 
   base_c_route = "/c/:channel_title/:channel_id"
   get base_c_route => "chat#respond", :as => "channel"

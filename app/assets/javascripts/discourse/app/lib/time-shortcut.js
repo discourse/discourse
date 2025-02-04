@@ -24,7 +24,7 @@ import {
   twoMonths,
   twoWeeks,
 } from "discourse/lib/time-utils";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const TIME_SHORTCUT_TYPES = {
   ONE_HOUR: "one_hour",
@@ -139,7 +139,7 @@ export function timeShortcuts(timezone) {
     laterThisWeek() {
       return {
         id: TIME_SHORTCUT_TYPES.LATER_THIS_WEEK,
-        icon: "angle-double-right",
+        icon: "angles-right",
         label: "time_shortcut.later_this_week",
         time: laterThisWeek(timezone),
         timeFormatKey: "dates.time_short_day",
@@ -241,7 +241,7 @@ export function timeShortcuts(timezone) {
     },
     custom() {
       return {
-        icon: "calendar-alt",
+        icon: "calendar-days",
         id: TIME_SHORTCUT_TYPES.CUSTOM,
         label: "time_shortcut.custom",
         time: null,
@@ -250,7 +250,7 @@ export function timeShortcuts(timezone) {
     },
     lastCustom() {
       return {
-        icon: "undo",
+        icon: "arrow-rotate-left",
         id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
         label: "time_shortcut.last_custom",
         time: null,
@@ -268,7 +268,7 @@ export function timeShortcuts(timezone) {
     now() {
       return {
         id: TIME_SHORTCUT_TYPES.NOW,
-        icon: "magic",
+        icon: "wand-magic",
         label: "time_shortcut.now",
         time: now(timezone),
       };
@@ -308,5 +308,5 @@ export function formatTime(shortcut) {
     return null;
   }
 
-  return shortcut.time.format(I18n.t(shortcut.timeFormatKey));
+  return shortcut.time.format(i18n(shortcut.timeFormatKey));
 }

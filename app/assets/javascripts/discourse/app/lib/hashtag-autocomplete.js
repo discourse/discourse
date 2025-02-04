@@ -2,17 +2,13 @@ import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib/hashtag-type-registry";
+import discourseLater from "discourse/lib/later";
+import { findRawTemplate } from "discourse/lib/raw-templates";
 import { emojiUnescape } from "discourse/lib/text";
-import {
-  caretPosition,
-  escapeExpression,
-  inCodeBlock,
-} from "discourse/lib/utilities";
-import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseLater from "discourse-common/lib/later";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import { escapeExpression } from "discourse/lib/utilities";
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
@@ -37,33 +33,31 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
  **/
 export function setupHashtagAutocomplete(
   contextualHashtagConfiguration,
-  $textArea,
+  $textarea,
   siteSettings,
   autocompleteOptions = {}
 ) {
-  _setup(
-    contextualHashtagConfiguration,
-    $textArea,
-    siteSettings,
-    autocompleteOptions
+  $textarea.autocomplete(
+    hashtagAutocompleteOptions(
+      contextualHashtagConfiguration,
+      siteSettings,
+      autocompleteOptions
+    )
   );
 }
 
-export async function hashtagTriggerRule(textarea) {
-  return !(await inCodeBlock(textarea.value, caretPosition(textarea)));
+export async function hashtagTriggerRule(textarea, { inCodeBlock }) {
+  return !(await inCodeBlock());
 }
 
-function _setup(
+export function hashtagAutocompleteOptions(
   contextualHashtagConfiguration,
-  $textArea,
   siteSettings,
   autocompleteOptions
 ) {
-  $textArea.autocomplete({
+  return {
     template: findRawTemplate("hashtag-autocomplete"),
     key: "#",
-    afterComplete: autocompleteOptions.afterComplete,
-    treatAsTextarea: autocompleteOptions.treatAsTextarea,
     scrollElementSelector: ".hashtag-autocomplete__fadeout",
     autoSelectFirstSuggestion: true,
     transformComplete: (obj) => obj.ref,
@@ -75,7 +69,8 @@ function _setup(
     },
     triggerRule: async (textarea, opts) =>
       await hashtagTriggerRule(textarea, opts),
-  });
+    ...autocompleteOptions,
+  };
 }
 
 let searchCache = {};

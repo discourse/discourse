@@ -1,9 +1,9 @@
 import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
-import { isTesting } from "discourse-common/config/environment";
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
-
-const COLOCATED_TEMPLATE_OVERRIDES = new Map();
+import deprecated from "discourse/lib/deprecated";
+import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
+import { isTesting } from "discourse/lib/environment";
+import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 
 let THROW_GJS_ERROR = isTesting();
 
@@ -12,16 +12,11 @@ export function overrideThrowGjsError(value) {
   THROW_GJS_ERROR = value;
 }
 
+// We're using a patched version of Ember with a modified GlimmerManager to make the code below work.
 // This patch is not ideal, but Ember does not allow us to change a component template after initial association
 // https://github.com/glimmerjs/glimmer-vm/blob/03a4b55c03/packages/%40glimmer/manager/lib/public/template.ts#L14-L20
-const originalGetTemplate = GlimmerManager.getComponentTemplate;
-// eslint-disable-next-line no-import-assign
-GlimmerManager.getComponentTemplate = (component) => {
-  return (
-    COLOCATED_TEMPLATE_OVERRIDES.get(component) ??
-    originalGetTemplate(component)
-  );
-};
+
+const LEGACY_TOPIC_LIST_OVERRIDES = ["topic-list", "topic-list-item"];
 
 export default {
   after: ["populate-template-map", "mobile"],
@@ -37,8 +32,17 @@ export default {
 
       let componentName = templateKey;
       if (mobile) {
-        componentName = componentName.slice("mobile/".length);
+        deprecated(
+          `Mobile-specific hbs templates are deprecated. Use responsive CSS or {{#if this.site.mobileView}} instead. [${templateKey}]`,
+          {
+            id: "discourse.mobile-templates",
+          }
+        );
+        if (this.site.mobileView) {
+          componentName = componentName.slice("mobile/".length);
+        }
       }
+
       componentName = componentName.slice("components/".length);
 
       const component = owner.resolveRegistration(`component:${componentName}`);
@@ -50,7 +54,9 @@ export default {
         return;
       }
 
-      const originalTemplate = originalGetTemplate(component);
+      // patched function: Ember's OG won't return overridden templates. This version will.
+      // it's safe to call it original template here because the override wasn't set yet.
+      const originalTemplate = GlimmerManager.getComponentTemplate(component);
       const isStrictMode = originalTemplate?.()?.parsedLayout?.isStrictMode;
       const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
 
@@ -65,9 +71,26 @@ export default {
           console.error(message);
         }
       } else if (originalTemplate) {
+        if (LEGACY_TOPIC_LIST_OVERRIDES.includes(componentName)) {
+          // Special handling for these, with a different deprecation id, so the auto-feature-flag works correctly
+          deprecated(
+            `Overriding '${componentName}' template is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
+            RAW_TOPIC_LIST_DEPRECATION_OPTIONS
+          );
+        } else {
+          deprecated(
+            `[${finalOverrideModuleName}] Overriding component templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead.`,
+            {
+              id: "discourse.component-template-overrides",
+              url: "https://meta.discourse.org/t/247487",
+            }
+          );
+        }
+
         const overrideTemplate = require(finalOverrideModuleName).default;
 
-        COLOCATED_TEMPLATE_OVERRIDES.set(component, overrideTemplate);
+        // patched function: Ember's OG does not allow overriding a component template
+        GlimmerManager.setComponentTemplate(overrideTemplate, component);
       }
     });
   },
@@ -79,15 +102,10 @@ export default {
     const orderedOverrides = [
       [pluginTemplates, "components/", false],
       [themeTemplates, "components/", false],
+      [coreTemplates, "mobile/components/", true],
+      [pluginTemplates, "mobile/components/", true],
+      [themeTemplates, "mobile/components/", true],
     ];
-
-    if (this.site.mobileView) {
-      orderedOverrides.push(
-        [coreTemplates, "mobile/components/", true],
-        [pluginTemplates, "mobile/components/", true],
-        [themeTemplates, "mobile/components/", true]
-      );
-    }
 
     for (const [map, prefix, mobile] of orderedOverrides) {
       for (const [key, value] of map) {
@@ -99,6 +117,7 @@ export default {
   },
 
   teardown() {
-    COLOCATED_TEMPLATE_OVERRIDES.clear();
+    // patched function: doesn't exist on og GlimmerManager
+    GlimmerManager.clearTemplateOverrides();
   },
 };

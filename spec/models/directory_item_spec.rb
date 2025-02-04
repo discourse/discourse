@@ -182,5 +182,22 @@ RSpec.describe DirectoryItem do
         expect(DirectoryItem.where(user_id: user.id).count).to eq(0)
       end
     end
+
+    context "with anonymous posting" do
+      fab!(:user)
+      fab!(:group) { Fabricate(:group, users: [user]) }
+
+      before do
+        SiteSetting.allow_anonymous_posting = true
+        SiteSetting.anonymous_posting_allowed_groups = group.id.to_s
+      end
+
+      it "doesn't create records for anonymous users" do
+        anon = AnonymousShadowCreator.get(user)
+        DirectoryItem.refresh!
+        expect(DirectoryItem.where(user_id: anon.id)).to be_blank
+        expect(DirectoryItem.where(user_id: user.id)).to be_present
+      end
+    end
   end
 end

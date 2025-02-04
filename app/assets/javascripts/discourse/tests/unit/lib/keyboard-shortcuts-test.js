@@ -18,20 +18,20 @@ module("Unit | Utility | keyboard-shortcuts", function (hooks) {
     });
 
     KeyboardShortcuts.goBack();
-    assert.ok(called, "history.back is called");
+    assert.true(called, "history.back is called");
   });
 
   test("nextSection calls _changeSection with 1", function (assert) {
     let spy = sinon.spy(KeyboardShortcuts, "_changeSection");
 
     KeyboardShortcuts.nextSection();
-    assert.ok(spy.calledWith(1), "_changeSection is called with 1");
+    assert.true(spy.calledWith(1), "_changeSection is called with 1");
   });
 
   test("prevSection calls _changeSection with -1", function (assert) {
     let spy = sinon.spy(KeyboardShortcuts, "_changeSection");
 
     KeyboardShortcuts.prevSection();
-    assert.ok(spy.calledWith(-1), "_changeSection is called with -1");
+    assert.true(spy.calledWith(-1), "_changeSection is called with -1");
   });
 });

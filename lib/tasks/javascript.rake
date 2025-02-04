@@ -46,7 +46,7 @@ def write_template(path, task_name, template)
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
-  system("yarn run prettier --write #{output_path}", exception: true)
+  system("pnpm prettier --write #{output_path}", exception: true)
   puts "#{basename} prettified"
 end
 
@@ -59,7 +59,7 @@ def write_hbs_template(path, task_name, template)
   basename = File.basename(path)
   output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
   File.write(output_path, "#{header}\n#{template}")
-  system("yarn run prettier --write #{output_path}", exception: true)
+  system("pnpm prettier --write #{output_path}", exception: true)
   puts "#{basename} created"
 end
 
@@ -160,9 +160,15 @@ task "javascript:update_constants" => :environment do
 
     export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};
 
-    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json}
+    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
 
-    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json}
+    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};
+
+    export const MAX_UNOPTIMIZED_CATEGORIES = #{CategoryList::MAX_UNOPTIMIZED_CATEGORIES};
+
+    export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
+
+    export const REPORT_MODES = #{Report::MODES.to_json};
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
@@ -185,26 +191,12 @@ task "javascript:update_constants" => :environment do
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS
-
-  groups_json = JSON.parse(File.read("lib/emoji/groups.json"))
-
-  emoji_buttons = groups_json.map { |group| <<~HTML }
-			<button type="button" data-section="#{group["name"]}" {{on "click" (fn this.onCategorySelection "#{group["name"]}")}} class="btn btn-default category-button emoji">
-				 {{replace-emoji ":#{group["tabicon"]}:"}}
-			</button>
-    HTML
-
-  emoji_sections = groups_json.map { |group| html_for_section(group) }
-
-  components_dir = "discourse/app/components"
-  write_hbs_template("#{components_dir}/emoji-group-buttons.hbs", task_name, emoji_buttons.join)
-  write_hbs_template("#{components_dir}/emoji-group-sections.hbs", task_name, emoji_sections.join)
 end
 
 task "javascript:update" => "clean_up" do
   require "uglifier"
 
-  system("yarn install", exception: true)
+  system("pnpm install", exception: true)
 
   versions = {}
   start = Time.now

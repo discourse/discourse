@@ -108,9 +108,18 @@ describe Chat::ChannelSerializer do
 
       it "does not get the kick_message_bus_last_id" do
         MessageBus.expects(:last_id).at_least_once
-        MessageBus.expects(:last_id).never
+        MessageBus
+          .expects(:last_id)
+          .with(Chat::Publisher.kick_users_message_bus_channel(chat_channel.id))
+          .never
         expect(serializer.as_json[:meta][:message_bus_last_ids].key?(:kick)).to eq(false)
       end
     end
+  end
+
+  it "has a unicode_title" do
+    chat_channel.update!(name: ":cat: Cats")
+
+    expect(serializer.as_json[:unicode_title]).to eq("🐱 Cats")
   end
 end

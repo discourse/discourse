@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class WordWatcher
-  REPLACEMENT_LETTER ||= CGI.unescape_html("&#9632;")
-  CACHE_VERSION ||= 3
+  REPLACEMENT_LETTER = CGI.unescape_html("&#9632;")
+  CACHE_VERSION = 3
 
   def initialize(raw)
     @raw = raw

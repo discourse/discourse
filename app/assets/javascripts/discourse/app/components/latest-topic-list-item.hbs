@@ -4,7 +4,13 @@
   @outletArgs={{hash topic=this.topic}}
 />
 <div class="topic-poster">
-  <UserLink @user={{this.topic.lastPosterUser}}>
+  <UserLink
+    @user={{this.topic.lastPosterUser}}
+    aria-label={{if
+      this.topic.lastPosterUser.username
+      (i18n "latest_poster_link" username=this.topic.lastPosterUser.username)
+    }}
+  >
     {{avatar this.topic.lastPosterUser imageSize="large"}}
   </UserLink>
   <UserAvatarFlair @user={{this.topic.lastPosterUser}} />
@@ -15,7 +21,7 @@
     {{topic-link this.topic}}
     {{~#if this.topic.featured_link}}
       &nbsp;{{topic-featured-link this.topic}}
-    {{/if}}{{! intentionally inline 
+    {{/if}}{{! intentionally inline
     to avoid whitespace}}<TopicPostBadges
       @unreadPosts={{this.topic.unread_posts}}
       @unseen={{this.topic.unseen}}
@@ -27,6 +33,11 @@
       this.topic
       mode="list"
     }}{{! intentionally inline to avoid whitespace}}
+    <PluginOutlet
+      @name="below-latest-topic-list-item-bottom-row"
+      @connectorTagName="span"
+      @outletArgs={{hash topic=this.topic}}
+    />
   </div>
 </div>
 <div class="topic-stats">

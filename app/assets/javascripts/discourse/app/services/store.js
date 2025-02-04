@@ -4,10 +4,10 @@ import Service from "@ember/service";
 import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { getRegister } from "discourse/lib/get-owner";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
-import { getRegister } from "discourse-common/lib/get-owner";
 
 let _identityMap;
 

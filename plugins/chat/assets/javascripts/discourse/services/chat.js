@@ -5,13 +5,13 @@ import { cancel, next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import discourseLater from "discourse/lib/later";
 import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
@@ -35,13 +35,35 @@ export default class Chat extends Service {
 
   cook = null;
   presenceChannel = null;
-  sidebarActive = false;
   isNetworkUnreliable = false;
 
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
 
   @tracked _activeMessage = null;
   @tracked _activeChannel = null;
+
+  init() {
+    super.init(...arguments);
+
+    if (this.userCanChat) {
+      this.presenceChannel = this.presence.getChannel("/chat/online");
+
+      onPresenceChange({
+        callback: this.onPresenceChangeCallback,
+        browserHiddenTime: 150000,
+        userUnseenTime: 150000,
+      });
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (this.userCanChat) {
+      this.chatSubscriptionsManager.stopChannelsSubscriptions();
+      removeOnPresenceChange(this.onPresenceChangeCallback);
+    }
+  }
 
   get activeChannel() {
     return this._activeChannel;
@@ -94,20 +116,6 @@ export default class Chat extends Service {
     }
   }
 
-  init() {
-    super.init(...arguments);
-
-    if (this.userCanChat) {
-      this.presenceChannel = this.presence.getChannel("/chat/online");
-
-      onPresenceChange({
-        callback: this.onPresenceChangeCallback,
-        browserHiddenTime: 150000,
-        userUnseenTime: 150000,
-      });
-    }
-  }
-
   @bind
   onPresenceChangeCallback(present) {
     if (present) {
@@ -144,6 +152,8 @@ export default class Chat extends Service {
               const state = channelsView.tracking.channel_tracking[channel.id];
               channel.tracking.unreadCount = state.unread_count;
               channel.tracking.mentionCount = state.mention_count;
+              channel.tracking.watchedThreadsUnreadCount =
+                state.watched_threads_unread_count;
 
               channel.currentUserMembership =
                 channelObject.current_user_membership;
@@ -243,22 +253,13 @@ export default class Chat extends Service {
     );
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    if (this.userCanChat) {
-      this.chatSubscriptionsManager.stopChannelsSubscriptions();
-      removeOnPresenceChange(this.onPresenceChangeCallback);
-    }
-  }
-
   updatePresence() {
     next(() => {
       if (this.isDestroyed || this.isDestroying) {
         return;
       }
 
-      if (this.currentUser.user_option?.hide_profile_and_presence) {
+      if (this.currentUser.user_option?.hide_presence) {
         return;
       }
 
@@ -271,24 +272,73 @@ export default class Chat extends Service {
   }
 
   getDocumentTitleCount() {
-    return this.chatNotificationManager.shouldCountChatInDocTitle()
-      ? this.chatTrackingStateManager.allChannelUrgentCount
-      : 0;
+    return this.chatTrackingStateManager.allChannelUrgentCount;
   }
 
-  switchChannelUpOrDown(direction) {
+  switchChannelUpOrDown(direction, unreadOnly = false) {
     const { activeChannel } = this;
     if (!activeChannel) {
       return; // Chat isn't open. Return and do nothing!
     }
 
+    let publicChannels, directChannels;
+
+    if (unreadOnly) {
+      publicChannels =
+        this.chatChannelsManager.publicMessageChannelsWithActivity;
+      directChannels =
+        this.chatChannelsManager.directMessageChannelsWithActivity;
+
+      // If the active channel has no unread messages, we need to manually insert it into
+      // the list, so we can find the next/previous unread channel.
+      if (!activeChannel.hasUnread) {
+        const allChannels = activeChannel.isDirectMessageChannel
+          ? this.chatChannelsManager.directMessageChannels
+          : this.chatChannelsManager.publicMessageChannels;
+
+        // Find the ID of the channel before the active channel, which is unread
+        let checkChannelIndex =
+          allChannels.findIndex((c) => c.id === activeChannel.id) - 1;
+
+        // If we get back to the start of the list, we can stop
+        while (checkChannelIndex >= 0) {
+          if (allChannels[checkChannelIndex].hasUnread) {
+            break;
+          }
+          checkChannelIndex--;
+        }
+
+        // Insert the active channel after unread channel we found (or at the start of the list)
+        if (activeChannel.isDirectMessageChannel) {
+          const unreadChannelIndex =
+            checkChannelIndex < 0
+              ? 0
+              : directChannels.findIndex(
+                  (c) => c.id === allChannels[checkChannelIndex].id
+                );
+          directChannels.splice(unreadChannelIndex + 1, 0, activeChannel);
+        } else {
+          const unreadChannelIndex =
+            checkChannelIndex < 0
+              ? -1
+              : publicChannels.findIndex(
+                  (c) => c.id === allChannels[checkChannelIndex].id
+                );
+          publicChannels.splice(unreadChannelIndex + 1, 0, activeChannel);
+        }
+      }
+    } else {
+      publicChannels = this.chatChannelsManager.publicMessageChannels;
+      directChannels = this.chatChannelsManager.directMessageChannels;
+    }
+
     let currentList, otherList;
     if (activeChannel.isDirectMessageChannel) {
-      currentList = this.chatChannelsManager.truncatedDirectMessageChannels;
-      otherList = this.chatChannelsManager.publicMessageChannels;
+      currentList = directChannels;
+      otherList = publicChannels;
     } else {
-      currentList = this.chatChannelsManager.publicMessageChannels;
-      otherList = this.chatChannelsManager.truncatedDirectMessageChannels;
+      currentList = publicChannels;
+      otherList = directChannels;
     }
 
     const directionUp = direction === "up";

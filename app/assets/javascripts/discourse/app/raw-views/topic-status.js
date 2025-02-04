@@ -1,14 +1,34 @@
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
+import { i18n } from "discourse-i18n";
 
-export default EmberObject.extend({
-  showDefault: null,
+export default class TopicStatus extends EmberObject {
+  static reopen() {
+    deprecated(
+      "Modifying raw-view:topic-status with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      RAW_TOPIC_LIST_DEPRECATION_OPTIONS
+    );
+
+    return super.reopen(...arguments);
+  }
+
+  static reopenClass() {
+    deprecated(
+      "Modifying raw-view:topic-status with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      RAW_TOPIC_LIST_DEPRECATION_OPTIONS
+    );
+
+    return super.reopenClass(...arguments);
+  }
+
+  showDefault = null;
 
   @discourseComputed("defaultIcon")
   renderDiv(defaultIcon) {
     return (defaultIcon || this.statuses.length > 0) && !this.noDiv;
-  },
+  }
 
   @discourseComputed
   statuses() {
@@ -73,7 +93,7 @@ export default EmberObject.extend({
         translationParams.unlistedReason = topic.visibilityReasonTranslated;
       }
 
-      result.title = I18n.t(
+      result.title = i18n(
         `topic_statuses.${result.key}.help`,
         translationParams
       );
@@ -95,5 +115,5 @@ export default EmberObject.extend({
       this.set("showDefault", defaultIcon);
     }
     return results;
-  },
-});
+  }
+}

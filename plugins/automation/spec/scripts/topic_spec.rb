@@ -3,7 +3,7 @@
 describe "Topic" do
   let!(:raw) { "this is me testing a new topic by automation" }
   let!(:title) { "This is a new topic created by automation" }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:category)
   fab!(:tag1) { Fabricate(:tag) }
   fab!(:tag2) { Fabricate(:tag) }
 
@@ -163,6 +163,25 @@ describe "Topic" do
         expect { UserUpdater.new(user, user).update(location: "Japan") }.to change {
           Topic.where(user_id: user.id).count
         }.by(1)
+      end
+    end
+
+    context "when creating the post fails" do
+      let(:fake_logger) { FakeLogger.new }
+
+      before { Rails.logger.broadcast_to(fake_logger) }
+
+      after { Rails.logger.stop_broadcasting_to(fake_logger) }
+
+      it "logs a warning" do
+        expect { UserUpdater.new(user, user).update(location: "Japan") }.to change {
+          Topic.count
+        }.by(1)
+        expect { UserUpdater.new(user, user).update(location: "Japan") }.not_to change {
+          Topic.count
+        }
+
+        expect(Rails.logger.warnings.first).to match(/Title has already been used/)
       end
     end
   end

@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | badge-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -12,7 +11,7 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists(".user-badge.disabled"));
+    assert.dom(".user-badge.disabled").exists();
   });
 
   test("enabled badge", async function (assert) {
@@ -20,7 +19,7 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.notOk(exists(".user-badge.disabled"));
+    assert.dom(".user-badge.disabled").doesNotExist();
   });
 
   test("data-badge-name", async function (assert) {
@@ -28,7 +27,7 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists('.user-badge[data-badge-name="foo"]'));
+    assert.dom('.user-badge[data-badge-name="foo"]').exists();
   });
 
   test("title", async function (assert) {
@@ -36,27 +35,27 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.strictEqual(
-      query(".user-badge").title,
-      "a good run",
-      "it strips html"
-    );
+    assert
+      .dom(".user-badge")
+      .hasAttribute("title", "a good run", "strips html");
 
     this.set("badge", { description: "a bad run" });
 
-    assert.strictEqual(
-      query(".user-badge").title,
-      "a bad run",
-      "it updates title when changing description"
-    );
+    assert
+      .dom(".user-badge")
+      .hasAttribute(
+        "title",
+        "a bad run",
+        "updates title when changing description"
+      );
   });
 
   test("icon", async function (assert) {
-    this.set("badge", { icon: "times" });
+    this.set("badge", { icon: "xmark" });
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists(".d-icon.d-icon-times"));
+    assert.dom(".d-icon.d-icon-xmark").exists();
   });
 
   test("accepts block", async function (assert) {
@@ -68,7 +67,7 @@ module("Integration | Component | badge-button", function (hooks) {
       </BadgeButton>
     `);
 
-    assert.ok(exists(".test"));
+    assert.dom(".test").exists();
   });
 
   test("badgeTypeClassName", async function (assert) {
@@ -76,6 +75,24 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists(".user-badge.foo"));
+    assert.dom(".user-badge.foo").exists();
+  });
+
+  test("setting showName to false hides the name", async function (assert) {
+    this.set("badge", { name: "foo" });
+
+    await render(
+      hbs`<BadgeButton @badge={{this.badge}} @showName={{false}} />`
+    );
+
+    assert.dom(".badge-display-name").doesNotExist();
+  });
+
+  test("showName defaults to true", async function (assert) {
+    this.set("badge", { name: "foo" });
+
+    await render(hbs`<BadgeButton @badge={{this.badge}} />`);
+
+    assert.dom(".badge-display-name").exists();
   });
 });

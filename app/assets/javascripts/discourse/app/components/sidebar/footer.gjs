@@ -2,9 +2,10 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import routeAction from "discourse/helpers/route-action";
+import mobile from "discourse/lib/mobile";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 
 export default class SidebarFooter extends Component {
@@ -26,13 +27,19 @@ export default class SidebarFooter extends Component {
     );
   }
 
-  get showKeyboardShortcutsButton() {
-    return this.site.desktopView;
-  }
-
   @action
   manageSections() {
     this.modal.show(SidebarSectionForm);
+  }
+
+  @action
+  showKeyboardShortcuts() {
+    this.modal.show(KeyboardShortcutsHelp);
+  }
+
+  @action
+  toggleMobileView() {
+    mobile.toggleMobileView();
   }
 
   <template>
@@ -46,23 +53,30 @@ export default class SidebarFooter extends Component {
               @icon="plus"
               @action={{this.manageSections}}
               @title="sidebar.sections.custom.add"
+              @ariaLabel="sidebar.sections.custom.add"
               class="btn-flat sidebar-footer-actions-button add-section"
             />
           {{/if}}
 
           {{#if this.showToggleMobileButton}}
             <DButton
-              @action={{routeAction "toggleMobileView"}}
+              @action={{this.toggleMobileView}}
               @title={{if this.site.mobileView "desktop_view" "mobile_view"}}
-              @icon={{if this.site.mobileView "desktop" "mobile-alt"}}
+              @ariaLabel={{if
+                this.site.mobileView
+                "desktop_view"
+                "mobile_view"
+              }}
+              @icon={{if this.site.mobileView "desktop" "mobile-screen-button"}}
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view"
             />
           {{/if}}
 
-          {{#if this.showKeyboardShortcutsButton}}
+          {{#if this.site.desktopView}}
             <DButton
-              @action={{routeAction "showKeyboardShortcutsHelp"}}
+              @action={{this.showKeyboardShortcuts}}
               @title="keyboard_shortcuts_help.title"
+              @ariaLabel="keyboard_shortcuts_help.title"
               @icon="keyboard"
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
             />

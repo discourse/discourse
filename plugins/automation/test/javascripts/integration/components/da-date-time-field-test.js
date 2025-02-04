@@ -22,6 +22,6 @@ module("Integration | Component | da-date-time-field", function (hooks) {
     );
     await fillIn("input", "2023-10-03T12:34");
 
-    assert.ok(this.field.metadata.value !== null);
+    assert.notStrictEqual(this.field.metadata.value, null);
   });
 });

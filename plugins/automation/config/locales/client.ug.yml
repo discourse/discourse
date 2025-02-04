@@ -6,6 +6,11 @@
 
 ug:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: ئاپتوماتلاشتۇرۇشنى ئۆچۈر
     discourse_automation:
       title: ئاپتوماتلاشتۇرۇش
       create: قۇر
@@ -14,7 +19,8 @@ ug:
       select_trigger: قوزغاتقۇچ تاللاڭ
       confirm_automation_reset: بۇ مەشغۇلات قوليازما ۋە قوزغاتقۇچ تاللانمىسىنى ئەسلىگە قايتۇرىدۇ، يېڭى ھالەت ساقلىنىدۇ، داۋاملاشتۇرامسىز؟
       confirm_automation_trigger: بۇ مەشغۇلات ئاپتوماتلاشتۇرۇشنى قوزغىتىدۇ، داۋاملاشتۇرامسىز؟
-      no_automation_yet: تېخى ھېچقانداق ئاپتوماتلاشتۇرۇشنى قۇرمىدىڭىز.
+      no_automation_yet: سىز تېخى ھېچقانداق ئاپتوماتلاشتۇرۇشنى قۇرمىدىڭىز. باشلاش ئۈچۈن تۆۋەندىكى تاللانمىنى تاللاڭ.
+      filter_placeholder: ئات ياكى چۈشەندۈرۈش بويىچە سۈزىدۇ…
       edit_automation:
         trigger_section:
           forced: بۇ قوزغاتقۇچنى قوليازما مەجبۇرىي ئىجرا قىلىدۇ.
@@ -144,18 +150,27 @@ ug:
               label: تېما كىملىكى
         post_created_edited:
           fields:
+            original_post_only:
+              label: ئەسلى يازمىلا
+              description: بۇ تېما ئەسلىدىكى يازما بولغاندىلا قوزغىلىدۇ
             action_type:
               label: مەشغۇلات تىپى
               description: "تاللاشچان، پەقەت پائالىيەت قوزغاتقۇچ قۇرۇش بىلەنلا چەكلىنىدۇ"
             valid_trust_levels:
               label: ئىناۋەتلىك ئىشەنچ دەرىجىسى
               description: يازمىنى بۇ ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى قۇرغاندىلا ئاندىن قوزغىتىلىدۇ، كۆڭۈلدىكى ئەھۋالدا خالىغان ئىشەنچ دەرىجىسى
+            restricted_tags:
+              label: بەلگە
+              description: تاللاشچان، يازمىدا بۇ خەتكۈچلەر بولغاندىلا ئاندىن قوزغىلىدۇ
             restricted_category:
               label: سەھىپە
               description: تاللاشچان، يازما تېمىسى بۇ سەھىپىدە بولغاندىلا ئاندىن قوزغىلىدۇ
             restricted_group:
               label: گۇرۇپپا
-              description: تاللاشچان، يازما تېمىسى بۇ گۇرۇپپىنىڭ شەخسىي ئۇچۇرىغا تەۋە بولغاندىلا ئاندىن قوزغىلىدۇ
+              description: تاللاشچان، يازما تېمىسى بۇ گۇرۇپپىنىڭ قوبۇللاش ساندۇقىدىكى شەخسىي ئۇچۇرىغا تەۋە بولغاندىلا ئاندىن قوزغىلىدۇ
+            restricted_groups:
+              label: گۇرۇپپا
+              description: تاللاشچان، يازما تېمىسى گۇرۇپپا قوبۇللاش ساندۇقىدىكى بىر شەخسىي ئۇچۇرىغا تەۋە بولغاندىلا ئاندىن قوزغىلىدۇ
             ignore_group_members:
               label: گۇرۇپپا ئەزاسىغا پەرۋا قىلما
               description: ئەگەر يوللىغۇچى يۇقىرىدا كۆرسىتىلگەن گۇرۇپپىنىڭ ئەزاسى بولسا قوزغاتقۇچتىن ئاتلايدۇ
@@ -168,6 +183,9 @@ ug:
             first_topic_only:
               label: تۇنجى تېمىغىلا
               description: ئەگەر تېما ئىشلەتكۈچى قۇرغان تۇنجى تېما بولغاندىلا قوزغىتىلىدۇ
+            skip_via_email:
+              label: "ئېلخەت ئارقىلىق ئاتلايدۇ"
+              description: "ئەگەر يازما ئېلخەت ئارقىلىق قۇرۇلغان بولسا قوزغاتقۇچتىن ئاتلايدۇ"
           created: قۇرغان ۋاقتى
           edited: تەھرىرلەندى
         user_updated:
@@ -209,6 +227,22 @@ ug:
             valid_trust_levels:
               label: ئىناۋەتلىك ئىشەنچ دەرىجىسى
               description: يازمىنى بۇ ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى قۇرغاندىلا ئاندىن قوزغىتىلىدۇ، كۆڭۈلدىكى ئەھۋالدا خالىغان ئىشەنچ دەرىجىسى
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added: بەلگە قوشۇلدى
+            tags_removed: بەلگە چىقىرىۋېتىلدى
+          fields:
+            watching_categories:
+              label: كۆزەتتىكى سەھىپە
+              description: ئەگەر تېما مۇشۇ تۈرلەرنىڭ بىرى بولغاندىلا قوزغىتىلىدۇ
+            watching_tags:
+              label: كۆزەتتىكى بەلگە
+              description: ئەگەر تېمىدا مۇشۇبەلگىنىڭ بىرى بولغاندىلا قوزغىتىلىدۇ
+            trigger_on:
+              label: قوزغاتقۇچ ئوچۇق
+            trigger_with_pms:
+              label: شەخسىي ئۇچۇردا قوزغىتىدۇ
+              description: شەخسىي ئۇچۇردىكى بەلگە ئۆزگەرگەن تەقدىردىمۇ قوزغايدۇ
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -367,6 +401,7 @@ ug:
           fields:
             custom_field_name:
               label: "ئىشلەتكۈچى ئىختىيارى بۆلەك ئىسمى"
+      unnamed_automation: "ئاتسىز ئاپتوماتلاشتۇرۇش"
       models:
         script:
           name:
@@ -383,6 +418,8 @@ ug:
             label: قوليازما
           version:
             label: نەشرى
+          status:
+            label: ھالەت
           enabled:
             label: قوزغىتىلدى
           disabled:

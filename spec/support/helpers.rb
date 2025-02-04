@@ -209,7 +209,9 @@ module Helpers
       queries << payload.fetch(:sql) if %w[CACHE SCHEMA].exclude?(payload.fetch(:name))
     end
 
-    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { yield }
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      ActiveSupport::Notifications.subscribed(callback, "sql.mini_sql") { yield }
+    end
 
     queries
   end
@@ -247,6 +249,13 @@ module Helpers
 
     theme.set_default! if set_theme_as_default
     theme
+  end
+
+  # Invokes a Rake task in a way that is safe for the test environment
+  def invoke_rake_task(task_name, *args)
+    Rake::Task[task_name].invoke(*args)
+  ensure
+    Rake::Task[task_name].reenable
   end
 
   # Uploads a theme component from a directory.

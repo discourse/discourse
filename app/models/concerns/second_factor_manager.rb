@@ -38,7 +38,7 @@ module SecondFactorManager
   end
 
   def authenticate_totp(token)
-    totps = self&.user_second_factors&.totps
+    totps = self.user_second_factors&.totps
     authenticated = false
     totps.each do |totp|
       last_used = 0
@@ -64,18 +64,18 @@ module SecondFactorManager
 
   def totp_enabled?
     !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      self&.user_second_factors&.totps&.exists?
+      self.user_second_factors&.totps&.exists?
   end
 
   def backup_codes_enabled?
     !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      self&.user_second_factors&.backup_codes&.exists?
+      self.user_second_factors&.backup_codes&.exists?
   end
 
   def security_keys_enabled?
     !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
       self
-        &.security_keys
+        .security_keys
         &.where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true)
         &.exists?
   end
@@ -101,7 +101,7 @@ module SecondFactorManager
   end
 
   def remaining_backup_codes
-    self&.user_second_factors&.backup_codes&.count
+    self.user_second_factors&.backup_codes&.count
   end
 
   def authenticate_second_factor(params, secure_session)
@@ -244,7 +244,7 @@ module SecondFactorManager
 
   def authenticate_backup_code(backup_code)
     if !backup_code.blank?
-      codes = self&.user_second_factors&.backup_codes
+      codes = self.user_second_factors&.backup_codes
 
       codes.each do |code|
         parsed_data = JSON.parse(code.data)

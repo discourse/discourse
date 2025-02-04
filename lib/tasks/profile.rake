@@ -13,15 +13,15 @@ task "user_api_key:create", [:username] => :environment do |task, args|
 
   application_name = "perf test application"
 
-  user_api_key = UserApiKey.where(application_name: application_name).destroy_all
+  UserApiKeyClient.where(application_name: application_name).destroy_all
 
-  user_api_key =
-    UserApiKey.create!(
-      application_name: application_name,
-      client_id: "1234",
-      scopes: ["read"].map { |name| UserApiKeyScope.new(name: name) },
-      user_id: user.id,
-    )
-
-  puts user_api_key.key
+  UserApiKeyClient
+    .create!(client_id: "1234", application_name:)
+    .then do |client|
+      client.keys.create!(
+        scopes: ["read"].map { |name| UserApiKeyScope.new(name:) },
+        user_id: user.id,
+      )
+    end
+    .then { |user_api_key| puts user_api_key.key }
 end

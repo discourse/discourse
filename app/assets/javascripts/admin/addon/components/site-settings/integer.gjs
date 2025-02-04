@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import SettingValidationMessage from "admin/components/setting-validation-message";
-import SiteSettingDescription from "admin/components/site-settings/description";
 
 export default class SiteSettingsInteger extends Component {
   @action
@@ -37,8 +35,5 @@ export default class SiteSettingsInteger extends Component {
       class="input-setting-integer"
       step="1"
     />
-
-    <SettingValidationMessage @message={{@validationMessage}} />
-    <SiteSettingDescription @description={{@setting.description}} />
   </template>
 }

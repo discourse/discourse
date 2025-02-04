@@ -36,7 +36,7 @@ export default class ChatNotices extends Component {
       {{/if}}
 
       <DButton
-        @icon="times"
+        @icon="xmark"
         @action={{this.clearNotice}}
         class="btn-transparent chat-notices__notice__clear"
       />

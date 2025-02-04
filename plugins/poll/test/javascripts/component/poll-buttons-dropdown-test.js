@@ -2,8 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Poll | Component | poll-buttons-dropdown", function (hooks) {
   setupRenderingTest(hooks);
@@ -37,13 +36,49 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
 
     await click(".widget-dropdown-header");
 
-    assert.strictEqual(count("li.dropdown-menu__item"), 2);
+    assert.dom("li.dropdown-menu__item").exists({ count: 2 });
+    assert
+      .dom("li.dropdown-menu__item span")
+      .hasText(
+        i18n("poll.export-results.label"),
+        "displays the poll Export action"
+      );
+  });
 
-    assert.strictEqual(
-      query("li.dropdown-menu__item span").textContent.trim(),
-      I18n.t("poll.export-results.label"),
-      "displays the poll Export action"
-    );
+  test("Renders a show-tally button when poll is a bar chart", async function (assert) {
+    this.setProperties({
+      closed: false,
+      voters: 2,
+      isStaff: false,
+      isMe: false,
+      topicArchived: false,
+      groupableUserFields: ["stuff"],
+      isAutomaticallyClosed: false,
+      dropDownClick: () => {},
+      availableDisplayMode: "showTally",
+    });
+
+    await render(hbs`<PollButtonsDropdown
+      @closed={{this.closed}}
+      @voters={{this.voters}}
+      @isStaff={{this.isStaff}}
+      @isMe={{this.isMe}}
+      @topicArchived={{this.topicArchived}}
+      @groupableUserFields={{this.groupableUserFields}}
+      @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
+      @dropDownClick={{this.dropDownClick}}
+      @availableDisplayMode={{this.availableDisplayMode}}
+    />`);
+
+    await click(".widget-dropdown-header");
+
+    assert.dom("li.dropdown-menu__item").exists({ count: 2 });
+    assert
+      .dom("li.dropdown-menu__item span")
+      .hasText(
+        i18n("poll.show-tally.label"),
+        "displays the show absolute button"
+      );
   });
 
   test("Renders a single button when there is only one authorised action", async function (assert) {
@@ -69,15 +104,14 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       @dropDownClick={{this.dropDownClick}}
     />`);
 
-    assert.strictEqual(count(".widget-dropdown-header"), 0);
-
-    assert.strictEqual(count("button.widget-button"), 1);
-
-    assert.strictEqual(
-      query("button.widget-button span.d-button-label").textContent.trim(),
-      I18n.t("poll.breakdown.breakdown"),
-      "displays the poll Close action"
-    );
+    assert.dom(".widget-dropdown-header").doesNotExist();
+    assert.dom("button.widget-button").exists({ count: 1 });
+    assert
+      .dom("button.widget-button span.d-button-label")
+      .hasText(
+        i18n("poll.breakdown.breakdown"),
+        "displays the poll Close action"
+      );
   });
 
   test("Doesn't render a button when user has no authorised actions", async function (assert) {
@@ -103,8 +137,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       @dropDownClick={{this.dropDownClick}}
     />`);
 
-    assert.strictEqual(count(".widget-dropdown-header"), 0);
-
-    assert.strictEqual(count("button.widget-button"), 0);
+    assert.dom(".widget-dropdown-header").doesNotExist();
+    assert.dom("button.widget-button").doesNotExist();
   });
 });

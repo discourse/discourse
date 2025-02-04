@@ -1,6 +1,10 @@
 <span class="topic">
   <span class="first-line">
-    <TopicStatus @topic={{@result.topic}} @disableActions={{true}} />
+    <TopicStatus
+      @topic={{@result.topic}}
+      @disableActions={{true}}
+      @context="topic-view-title"
+    />
     <span class="topic-title" data-topic-id={{@result.topic.id}}>
       {{#if
         (and

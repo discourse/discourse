@@ -113,6 +113,7 @@ class SiteSettingUpdateExistingUsers
       default_email_previous_replies: "email_previous_replies",
       default_email_in_reply_to: "email_in_reply_to",
       default_other_enable_quoting: "enable_quoting",
+      default_other_enable_smart_lists: "enable_smart_lists",
       default_other_enable_defer: "enable_defer",
       default_other_external_links_in_new_tab: "external_links_in_new_tab",
       default_other_dynamic_favicon: "dynamic_favicon",
@@ -125,7 +126,8 @@ class SiteSettingUpdateExistingUsers
       default_include_tl0_in_digests: "include_tl0_in_digests",
       default_text_size: "text_size_key",
       default_title_count_mode: "title_count_mode_key",
-      default_hide_profile_and_presence: "hide_profile_and_presence",
+      default_hide_profile: "hide_profile",
+      default_hide_presence: "hide_presence",
       default_sidebar_link_to_filtered_list: "sidebar_link_to_filtered_list",
       default_sidebar_show_count_of_new_items: "sidebar_show_count_of_new_items",
     }

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class ChatPreferences extends Component {
   static shouldRender({ model }, { siteSettings, currentUser }) {
@@ -11,7 +11,7 @@ export default class ChatPreferences extends Component {
   <template>
     <li class="user-nav__preferences-chat">
       <LinkTo @route="preferences.chat">
-        {{dIcon "d-chat"}}
+        {{icon "d-chat"}}
         <span>{{i18n "chat.title_capitalized"}}</span>
       </LinkTo>
     </li>

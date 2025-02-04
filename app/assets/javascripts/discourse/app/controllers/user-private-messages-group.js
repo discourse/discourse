@@ -1,28 +1,20 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action, computed } from "@ember/object";
-import I18n from "discourse-i18n";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { i18n } from "discourse-i18n";
 
 export default class extends Controller {
+  @service pmTopicTrackingState;
   @controller user;
 
   get viewingSelf() {
-    return this.user.viewingSelf;
+    return this.user.get("viewingSelf");
   }
 
-  @computed(
-    "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter",
-    "pmTopicTrackingState.isTracking"
-  )
   get newLinkText() {
     return this.#linkText("new");
   }
 
-  @computed(
-    "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter",
-    "pmTopicTrackingState.isTracking"
-  )
   get unreadLinkText() {
     return this.#linkText("unread");
   }
@@ -38,9 +30,9 @@ export default class extends Controller {
     });
 
     if (count === 0) {
-      return I18n.t(`user.messages.${type}`);
+      return i18n(`user.messages.${type}`);
     } else {
-      return I18n.t(`user.messages.${type}_with_count`, { count });
+      return i18n(`user.messages.${type}_with_count`, { count });
     }
   }
 

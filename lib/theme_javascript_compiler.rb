@@ -209,24 +209,35 @@ class ThemeJavascriptCompiler
   end
 
   def raw_template_name(name)
-    name = name.sub(/\.(raw|hbr)\z/, "")
-    name.inspect
+    name.sub(/\.(raw|hbr)\z/, "")
   end
 
   def append_raw_template(name, hbs_template)
     compiled =
       DiscourseJsProcessor::Transpiler.new.compile_raw_template(hbs_template, theme_id: @theme_id)
     source_for_comment = hbs_template.gsub("*/", '*\/').indent(4, " ")
-    @output_tree << ["#{name}.js", <<~JS]
-      (function() {
-        /*
+    modern_replacement_marker = hbs_template.include?("{{!-- has-modern-replacement --}}")
+
+    source = <<~JS
+      /*
       #{source_for_comment}
-        */
-        const addRawTemplate = requirejs('discourse-common/lib/raw-templates').addRawTemplate;
-        const template = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
-        addRawTemplate(#{raw_template_name(name)}, template);
-      })();
+      */
+
+      import { template as compiler } from "discourse/lib/raw-handlebars";
+      import { addRawTemplate } from "discourse/lib/raw-templates";
+
+      let template = compiler(#{compiled});
+
+      addRawTemplate(#{raw_template_name(name).to_json}, template, {
+        themeId: #{@theme_id},
+        themeName: #{@theme_name.to_json},
+        hasModernReplacement: #{modern_replacement_marker}
+      });
+
+      export default template;
     JS
+
+    append_module source, "raw-templates/#{raw_template_name(name)}", "js", include_variables: false
   rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
     raise CompileError.new ex.message
   end

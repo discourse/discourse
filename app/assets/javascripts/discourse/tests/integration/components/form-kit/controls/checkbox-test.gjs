@@ -32,5 +32,43 @@ module(
 
       assert.deepEqual(data, { foo: true });
     });
+
+    test("when disabled", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.Checkbox />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-checkbox").hasAttribute("disabled");
+    });
+
+    test("@tooltip", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @tooltip="test" @name="foo" @title="Foo" as |field|>
+            <field.Checkbox />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert
+        .dom(".form-kit__control-checkbox-content .form-kit__tooltip")
+        .exists();
+    });
+
+    test("optional", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Checkbox />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.form().field("foo").hasTitle("Foo (optional)");
+    });
   }
 );

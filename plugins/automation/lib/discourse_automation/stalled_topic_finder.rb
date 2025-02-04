@@ -7,7 +7,7 @@ class DiscourseAutomation::StalledTopicFinder
       FROM topics t
     SQL
 
-    sql += <<~SQL if tags
+    sql += <<~SQL if tags.present?
         JOIN topic_tags ON topic_tags.topic_id = t.id
         JOIN tags
           ON tags.name IN (:tags)
@@ -31,7 +31,7 @@ class DiscourseAutomation::StalledTopicFinder
       )
     SQL
 
-    sql += <<~SQL if categories
+    sql += <<~SQL if categories.present?
         AND t.category_id IN (:categories)
       SQL
 

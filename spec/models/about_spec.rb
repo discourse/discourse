@@ -7,7 +7,7 @@ RSpec.describe About do
 
   def register_stat(name, stats_block)
     DiscoursePluginRegistry.register_stat(
-      Stat.new(name, show_in_ui: true, expose_via_api: true, &stats_block),
+      Stat.new(name, expose_via_api: true, &stats_block),
       stub(enabled?: true),
     )
   end
@@ -26,6 +26,13 @@ RSpec.describe About do
           some_group_count: 1000,
         ),
       )
+    end
+
+    it "uses the cache" do
+      cold_cache_count = track_sql_queries { described_class.new.stats }.count
+      hot_cache_count = track_sql_queries { described_class.new.stats }.count
+
+      expect(cold_cache_count + hot_cache_count).to eq(cold_cache_count)
     end
 
     it "does not add plugin stats to the output if they are missing one of the required keys" do
@@ -58,31 +65,28 @@ RSpec.describe About do
   end
 
   describe "#category_moderators" do
-    let(:user) { Fabricate(:user) }
-    let(:public_cat_moderator) { Fabricate(:user, last_seen_at: 1.month.ago) }
-    let(:private_cat_moderator) { Fabricate(:user, last_seen_at: 2.month.ago) }
-    let(:common_moderator) { Fabricate(:user, last_seen_at: 3.month.ago) }
-    let(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.month.ago) }
+    fab!(:user)
+    fab!(:public_cat_moderator) { Fabricate(:user, last_seen_at: 1.month.ago) }
+    fab!(:private_cat_moderator) { Fabricate(:user, last_seen_at: 2.month.ago) }
+    fab!(:common_moderator) { Fabricate(:user, last_seen_at: 3.month.ago) }
+    fab!(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.month.ago) }
 
-    let(:public_group) do
-      group = Fabricate(:public_group)
-      group.add(public_cat_moderator)
-      group.add(common_moderator)
-      group.add(common_moderator_2)
-      group
+    fab!(:public_group) do
+      Fabricate(:public_group, users: [public_cat_moderator, common_moderator, common_moderator_2])
     end
 
-    let(:private_group) do
-      group = Fabricate(:group)
-      group.add(private_cat_moderator)
-      group.add(common_moderator)
-      group.add(common_moderator_2)
-      group
+    fab!(:private_group) do
+      Fabricate(:group, users: [private_cat_moderator, common_moderator, common_moderator_2])
     end
 
-    let!(:public_cat) { Fabricate(:category, reviewable_by_group: public_group) }
-    let!(:private_cat) do
-      Fabricate(:private_category, group: private_group, reviewable_by_group: private_group)
+    fab!(:public_cat) { Fabricate(:category) }
+    fab!(:public_category_moderation_group) do
+      Fabricate(:category_moderation_group, category: public_cat, group: public_group)
+    end
+
+    fab!(:private_cat) { Fabricate(:private_category, group: private_group) }
+    fab!(:private_category_moderation_group) do
+      Fabricate(:category_moderation_group, category: private_cat, group: private_group)
     end
 
     it "lists moderators of the category that the current user can see" do
@@ -111,6 +115,42 @@ RSpec.describe About do
       expect(results.size).to eq(2)
       results.each { |res| expect(res.moderators.size).to eq(2) }
     end
+
+    it "doesn't list the same user twice as a category mod if the user is member of multiple groups" do
+      Fabricate(:category_moderation_group, category: public_cat, group: private_group)
+
+      results = About.new(nil).category_moderators
+      mods = results.find { |r| r.category.id == public_cat.id }.moderators
+      expect(mods.map(&:id)).to contain_exactly(
+        public_cat_moderator.id,
+        common_moderator.id,
+        common_moderator_2.id,
+        private_cat_moderator.id,
+      )
+    end
+  end
+
+  describe "#moderators" do
+    fab!(:mod_1) { Fabricate(:moderator) }
+    fab!(:mod_2) { Fabricate(:moderator) }
+    fab!(:mod_3) { Fabricate(:moderator) }
+
+    context "with the about_page_hidden_groups setting" do
+      fab!(:group_1) { Fabricate(:group, users: [mod_1, mod_3]) }
+      fab!(:group_2) { Fabricate(:group, users: [mod_3]) }
+      fab!(:group_3) { Fabricate(:group) }
+
+      before { SiteSetting.about_page_hidden_groups = [group_1.id, group_2.id].join("|") }
+
+      it "hides moderators that are in any of the specified groups" do
+        expect(About.new.moderators).to contain_exactly(mod_2)
+      end
+
+      it "doesn't hide any moderators if the setting is empty" do
+        SiteSetting.about_page_hidden_groups = ""
+        expect(About.new.moderators).to contain_exactly(mod_1, mod_2, mod_3)
+      end
+    end
   end
 
   describe "#admins" do
@@ -127,6 +167,23 @@ RSpec.describe About do
         expect(About.new(Fabricate(:user)).admins).to match_array([admin_matt, admin_kate])
       ensure
         DiscoursePluginRegistry.unregister_modifier(plugin_instance, :about_admins, &modifier_block)
+      end
+    end
+
+    context "with the about_page_hidden_groups setting" do
+      fab!(:group_1) { Fabricate(:group, users: [admin_mark, admin_matt]) }
+      fab!(:group_2) { Fabricate(:group, users: [admin_mark]) }
+      fab!(:group_3) { Fabricate(:group, users: [admin_kate]) }
+
+      before { SiteSetting.about_page_hidden_groups = [group_1.id, group_2.id].join("|") }
+
+      it "hides admins that are in any of the specified groups" do
+        expect(About.new.admins).to contain_exactly(admin_kate)
+      end
+
+      it "doesn't hide any admins if the setting is empty" do
+        SiteSetting.about_page_hidden_groups = ""
+        expect(About.new.admins).to contain_exactly(admin_kate, admin_mark, admin_matt)
       end
     end
   end

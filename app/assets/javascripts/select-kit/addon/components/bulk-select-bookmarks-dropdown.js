@@ -1,9 +1,11 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Bookmark from "discourse/models/bookmark";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "./select-kit";
 
 const _customButtons = [];
 const _customActions = {};
@@ -12,19 +14,18 @@ export function addBulkDropdownAction(name, customAction) {
   _customActions[name] = customAction;
 }
 
-export default DropdownSelectBoxComponent.extend({
-  classNames: ["bulk-select-bookmarks-dropdown"],
-  headerIcon: null,
+@classNames("bulk-select-bookmarks-dropdown")
+@selectKitOptions({
+  showCaret: true,
   showFullTitle: true,
-  selectKitOptions: {
-    showCaret: true,
-    showFullTitle: true,
-    none: "select_kit.components.bulk_select_bookmarks_dropdown.title",
-  },
+  none: "select_kit.components.bulk_select_bookmarks_dropdown.title",
+})
+export default class BulkSelectBookmarksDropdown extends DropdownSelectBoxComponent {
+  @service router;
+  @service toasts;
+  @service dialog;
 
-  router: service(),
-  toasts: service(),
-  dialog: service(),
+  headerIcon = null;
 
   get content() {
     let options = [];
@@ -36,17 +37,17 @@ export default DropdownSelectBoxComponent.extend({
       },
       {
         id: "delete-bookmarks",
-        icon: "trash-alt",
+        icon: "trash-can",
         name: i18n("bookmark_bulk_actions.delete_bookmarks.name"),
       },
     ]);
 
     return [...options, ..._customButtons];
-  },
+  }
 
   getSelectedBookmarks() {
     return this.bulkSelectHelper.selected;
-  },
+  }
 
   @action
   onSelect(id) {
@@ -99,5 +100,5 @@ export default DropdownSelectBoxComponent.extend({
           },
         });
     }
-  },
-});
+  }
+}

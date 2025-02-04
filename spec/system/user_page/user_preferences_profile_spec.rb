@@ -19,6 +19,19 @@ describe "User preferences | Profile", type: :system do
     end
   end
 
+  describe "hiding profile" do
+    it "allows user to hide their profile" do
+      SiteSetting.allow_users_to_hide_profile = true
+
+      user_preferences_profile_page.visit(user)
+      user_preferences_profile_page.hide_profile
+      user_preferences_profile_page.save
+      page.refresh
+
+      expect(user_preferences_profile_page).to have_hidden_profile
+    end
+  end
+
   describe "enforcing required fields" do
     before do
       UserRequiredFieldsVersion.create!
@@ -47,7 +60,7 @@ describe "User preferences | Profile", type: :system do
 
       expect(page).to have_current_path("/faq")
 
-      find("#site-logo").click
+      click_logo
 
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
 
@@ -60,7 +73,7 @@ describe "User preferences | Profile", type: :system do
     it "disables client-side routing while missing required fields" do
       user_preferences_profile_page.visit(user)
 
-      find("#site-logo").click
+      click_logo
 
       expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
     end
@@ -71,9 +84,21 @@ describe "User preferences | Profile", type: :system do
       find(".user-field-favourite-pokemon input").fill_in(with: "Mudkip")
       find(".save-button .btn-primary").click
 
+      expect(page).to have_selector(".pref-bio")
+
       visit("/")
 
       expect(page).to have_current_path("/")
+    end
+
+    it "allows enabling safe-mode" do
+      visit("/safe-mode")
+
+      expect(page).to have_current_path("/safe-mode")
+
+      page.find("#btn-enter-safe-mode").click
+
+      expect(page).to have_current_path("/u/#{user.username}/preferences/profile")
     end
   end
 end

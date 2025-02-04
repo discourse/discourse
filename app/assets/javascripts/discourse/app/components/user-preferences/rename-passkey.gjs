@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class RenamePasskey extends Component {
   @service router;
@@ -15,7 +15,7 @@ export default class RenamePasskey extends Component {
   @tracked passkeyName;
   @tracked errorMessage;
 
-  instructions = I18n.t("user.passkeys.rename_passkey_instructions");
+  instructions = i18n("user.passkeys.rename_passkey_instructions");
 
   constructor() {
     super(...arguments);

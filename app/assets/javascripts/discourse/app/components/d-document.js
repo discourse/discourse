@@ -1,24 +1,26 @@
 import Component from "@ember/component";
 import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 import { setLogoffCallback } from "discourse/lib/ajax";
 import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
+import { bind } from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let pluginCounterFunctions = [];
 export function addPluginDocumentTitleCounter(counterFunction) {
   pluginCounterFunctions.push(counterFunction);
 }
 
-export default Component.extend({
-  tagName: "",
-  documentTitle: service(),
-  dialog: service(),
-  _showingLogout: false,
+@tagName("")
+export default class DDocument extends Component {
+  @service documentTitle;
+  @service dialog;
+
+  _showingLogout = false;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this.documentTitle.setTitle(document.title);
     document.addEventListener("visibilitychange", this._focusChanged);
@@ -28,10 +30,10 @@ export default Component.extend({
 
     this.appEvents.on("notifications:changed", this, this._updateNotifications);
     setLogoffCallback(() => this.displayLogoff());
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     setLogoffCallback(null);
     document.removeEventListener("visibilitychange", this._focusChanged);
@@ -43,7 +45,7 @@ export default Component.extend({
       this,
       this._updateNotifications
     );
-  },
+  }
 
   _updateNotifications(opts) {
     if (!this.currentUser) {
@@ -56,7 +58,7 @@ export default Component.extend({
       count += this.currentUser.unseen_reviewable_count;
     }
     this.documentTitle.updateNotificationCount(count, { forced: opts?.forced });
-  },
+  }
 
   @bind
   _focusChanged() {
@@ -70,7 +72,7 @@ export default Component.extend({
     } else if (!this.hasFocus) {
       this.documentTitle.setFocus(true);
     }
-  },
+  }
 
   displayLogoff() {
     if (this._showingLogout) {
@@ -81,10 +83,10 @@ export default Component.extend({
     this.messageBus.stop();
 
     this.dialog.alert({
-      message: I18n.t("logout"),
+      message: i18n("logout"),
       confirmButtonLabel: "refresh",
       didConfirm: () => logout(),
       didCancel: () => logout(),
     });
-  },
-});
+  }
+}

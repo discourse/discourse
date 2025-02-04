@@ -1,26 +1,11 @@
-{{body-class "account-activation-page"}}
-<div class="container invites-show">
-  <div class="login-welcome-header">
-    <h1 class="login-title">{{this.welcomeTitle}}</h1>
-    <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
-  </div>
-
-  <div class="ac-page">
-    <div class="two-col">
-      <div class="col-image">
-        <img src={{this.envelopeImageUrl}} alt="" />
-      </div>
-      <div class="col-form">
-        <div class="success-info">
-          {{html-safe this.accountCreated.message}}
-        </div>
-        {{#if this.accountCreated.show_controls}}
-          <ActivationControls
-            @sendActivationEmail={{action "sendActivationEmail"}}
-            @editActivationEmail={{action "editActivationEmail"}}
-          />
-        {{/if}}
-      </div>
-    </div>
-  </div>
+<SignupProgressBar @step="activate" />
+<WelcomeHeader @header={{this.welcomeTitle}} />
+<div class="success-info">
+  {{html-safe this.accountCreated.message}}
 </div>
+{{#if this.accountCreated.show_controls}}
+  <ActivationControls
+    @sendActivationEmail={{action "sendActivationEmail"}}
+    @editActivationEmail={{action "editActivationEmail"}}
+  />
+{{/if}}

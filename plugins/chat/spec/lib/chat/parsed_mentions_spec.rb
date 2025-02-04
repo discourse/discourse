@@ -145,6 +145,15 @@ RSpec.describe Chat::ParsedMentions do
       expect(result).to contain_exactly(channel_member_1.username, channel_member_2.username)
     end
 
+    it "returns bots who were mentioned directly" do
+      message = create_message("mentioning @system")
+
+      mentions = described_class.new(message)
+      result = mentions.direct_mentions.pluck(:username)
+
+      expect(result).to contain_exactly(Discourse.system_user.username)
+    end
+
     it "returns a user when self-mentioning" do
       message = create_message("Hey @#{channel_member_1.username}", user: channel_member_1)
 

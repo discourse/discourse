@@ -77,7 +77,7 @@ RSpec.describe Onebox::Engine::InstagramOnebox do
     end
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid Instagram post URL" do
       valid_url = URI("https://www.instagram.com/p/abc123xyz/")
       expect(described_class === valid_url).to eq(true)

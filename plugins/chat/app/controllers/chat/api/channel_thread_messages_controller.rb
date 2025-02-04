@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelThreadMessagesController < Chat::ApiController
   def index
-    with_service(::Chat::ListChannelThreadMessages) do
+    ::Chat::ListChannelThreadMessages.call(service_params) do |result|
       on_success do
         render_serialized(
           result,

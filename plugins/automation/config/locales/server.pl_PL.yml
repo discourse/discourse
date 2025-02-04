@@ -45,6 +45,8 @@ pl_PL:
         title: Post utworzony/edytowany
       pm_created:
         title: Utworzono osobistą wiadomość
+      topic_tags_changed:
+        title: Zmieniono tagi tematu
       topic:
         title: Temat
       user_updated:
@@ -100,3 +102,6 @@ pl_PL:
         button_text: Zrobione
       group_category_notification_default:
         description: "Ustaw domyślny poziom powiadomień kategorii dla członków grupy."
+      random_assign:
+        title: "Przypisanie losowe"
+        description: "Losowo przypisuje tematy do grupy"

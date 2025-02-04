@@ -29,7 +29,7 @@ describe "Homepage", type: :system do
 
     homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
     homepage_picker.expand
-    homepage_picker.select_row_by_name("Top")
+    homepage_picker.select_row_by_name("Hot")
     page.find(".btn-primary.save-changes").click
 
     # Wait for the save to complete
@@ -37,8 +37,7 @@ describe "Homepage", type: :system do
 
     visit "/"
 
-    expect(page).to have_css(".navigation-container .top.active", text: "Top")
-    expect(page).to have_css(".top-lists")
+    expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
   end
 
   it "defaults to first top_menu item as anonymous homepage" do
@@ -63,7 +62,7 @@ describe "Homepage", type: :system do
       find("#sidebar-section-content-community li:first-child").click
       expect(page).to have_css(".list-container")
 
-      find("#site-logo").click
+      click_logo
 
       expect(page).to have_no_css(".list-container")
       # ensure clicking on logo brings user back to the custom homepage
@@ -86,16 +85,15 @@ describe "Homepage", type: :system do
       homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
       homepage_picker.expand
       # user overrides theme custom homepage
-      homepage_picker.select_row_by_name("Top")
+      homepage_picker.select_row_by_name("Hot")
       page.find(".btn-primary.save-changes").click
 
       # Wait for the save to complete
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.user_option.homepage_id).to eq(UserOption::HOMEPAGES.key("top"))
+      expect(user.user_option.homepage_id).to eq(UserOption::HOMEPAGES.key("hot"))
 
-      find("#site-logo").click
-      expect(page).to have_css(".navigation-container .top.active", text: "Top")
-      expect(page).to have_css(".top-lists")
+      click_logo
+      expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
 
       visit "/u/#{user.username}/preferences/interface"
 
@@ -107,9 +105,9 @@ describe "Homepage", type: :system do
 
       # Wait for the save to complete
       find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("top"))
+      expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("hot"))
 
-      find("#site-logo").click
+      click_logo
 
       expect(page).to have_current_path("/")
       expect(page).to have_css(".new-home", text: "Hi friends!")

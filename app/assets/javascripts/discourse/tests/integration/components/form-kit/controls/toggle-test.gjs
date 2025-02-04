@@ -31,6 +31,26 @@ module(
       await formKit().submit();
 
       assert.deepEqual(data, { foo: true });
+
+      await formKit().field("foo").toggle();
+
+      assert.form().field("foo").hasValue(false);
+
+      await formKit().submit();
+
+      assert.deepEqual(data, { foo: false });
+    });
+
+    test("when disabled", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.Toggle />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-toggle").hasAttribute("disabled");
     });
   }
 );

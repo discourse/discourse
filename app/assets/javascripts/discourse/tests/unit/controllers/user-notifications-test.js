@@ -18,10 +18,7 @@ module("Unit | Controller | user-notifications", function (hooks) {
 
     await controller.markRead();
 
-    assert.strictEqual(
-      model.every(({ read }) => read === true),
-      true
-    );
+    assert.true(model.every(({ read }) => read === true));
   });
 
   test("Mark read does not mark models read when response is not successful", async function (assert) {
@@ -56,6 +53,6 @@ module("Unit | Controller | user-notifications", function (hooks) {
 
     controller.send("resetNew");
 
-    assert.strictEqual(markRead, true);
+    assert.true(markRead);
   });
 });

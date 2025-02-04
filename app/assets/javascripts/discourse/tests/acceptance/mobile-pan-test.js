@@ -65,9 +65,6 @@ async function triggerSwipeEnd({ x, y, touchTarget }) {
 acceptance("Mobile - menu swipes", function (needs) {
   needs.mobileView();
   needs.user();
-  needs.settings({
-    glimmer_header_mode: "enabled",
-  });
 
   chromeTest("swipe to close hamburger", async function (assert) {
     await visit("/");

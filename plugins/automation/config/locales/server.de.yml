@@ -56,6 +56,9 @@ de:
       pm_created:
         title: Persönliche Nachricht erstellt
         description: Wenn eine gültige PN erstellt wird, wird die Automatisierung ausgelöst
+      topic_tags_changed:
+        title: Schlagwörter eines Themas geändert
+        description: Wenn die Schlagwörter eines Themas geändert werden, wird die Automatisierung ausgelöst
       topic:
         title: Thema
         description: Das zugehörige Skript wird nur für das angegebene Thema verwendet. Dies ist beispielsweise für Skripts nützlich, die eine Validierung durchführen
@@ -102,6 +105,7 @@ de:
         doc: Ermöglicht es, mehrere PN an einen Benutzer zu senden. Jede PN akzeptiert eine Verzögerung.
       suspend_user_by_email:
         title: Benutzer nach E-Mail-Adresse sperren
+        description: Automatisches Sperren eines Kontos anhand der E-Mail-Adresse
       user_global_notice:
         title: Globaler Hinweis für Benutzer
         description: Ermöglicht die Anzeige eines globalen Hinweises für einen Benutzer
@@ -138,6 +142,13 @@ de:
         button_text: Erledigt
       add_user_to_group_through_custom_field:
         title: "Benutzer über benutzerdefiniertes Benutzerfeld zur Gruppe hinzufügen"
+        description: "Füge Benutzer automatisch zu Gruppen hinzu – entweder bei ihrer Anmeldung oder durch regelmäßige Überprüfung"
       group_category_notification_default:
         title: "Gruppenkategorie-Benachrichtigungsstandard"
         description: "Die Standardbenachrichtigungsstufe einer Kategorie für Mitglieder einer Gruppe festlegen"
+      send_chat_message:
+        title: "Chat-Nachricht senden"
+        description: "Eine benutzerdefinierte Chat-Nachricht an einen Kanal senden"
+      random_assign:
+        title: "Zufällige Zuweisung"
+        description: "Themen nach dem Zufallsprinzip einer Gruppe zuweisen"

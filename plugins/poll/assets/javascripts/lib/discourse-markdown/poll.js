@@ -1,5 +1,5 @@
 /*eslint no-bitwise:0 */
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL = { name: "poll", status: "open" };
@@ -97,7 +97,7 @@ function addPollInfo(state) {
   token.block = false;
 
   token = state.push("text", "", 0);
-  token.content = I18n.t("poll.voters", { count: 0 });
+  token.content = i18n("poll.voters", { count: 0 });
 
   state.push("poll_info_label_close", "span", -1);
   state.push("poll_info_counts_count_close", "div", -1);

@@ -136,6 +136,8 @@ lv:
             title: "Normāls"
           tracking:
             title: "Sekot"
+          watching:
+            title: "Novērošana"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"

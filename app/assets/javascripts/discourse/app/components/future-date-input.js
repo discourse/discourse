@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
+import discourseComputed from "discourse/lib/decorators";
 import {
   extendedDefaultTimeShortcuts,
   formatTime,
@@ -8,40 +9,40 @@ import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 
-export default Component.extend({
-  selection: null,
-  includeDateTime: true,
-  isCustom: equal("selection", "custom"),
-  displayDateAndTimePicker: and("includeDateTime", "isCustom"),
-  displayLabel: null,
-  labelClasses: null,
-  timeInputDisabled: empty("_date"),
-  userTimezone: null,
-  onChangeInput: null,
+export default class FutureDateInput extends Component {
+  selection = null;
+  includeDateTime = true;
 
-  _date: null,
-  _time: null,
+  @equal("selection", "custom") isCustom;
+  @and("includeDateTime", "isCustom") displayDateAndTimePicker;
+  @empty("_date") timeInputDisabled;
+
+  displayLabel = null;
+  labelClasses = null;
+  userTimezone = null;
+  onChangeInput = null;
+  _date = null;
+  _time = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.userTimezone = this.currentUser.user_option.timezone;
-  },
+  }
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     if (this.label) {
-      this.set("displayLabel", I18n.t(this.label));
+      this.set("displayLabel", i18n(this.label));
     }
 
     if (this.input) {
       const dateTime = moment(this.input);
       const closestShortcut = this._findClosestShortcut(dateTime);
-      if (closestShortcut) {
+      if (!this.noRelativeOptions && closestShortcut) {
         this.set("selection", closestShortcut.id);
       } else {
         this.setProperties({
@@ -51,7 +52,7 @@ export default Component.extend({
         });
       }
     }
-  },
+  }
 
   @discourseComputed("customShortcuts")
   shortcuts(customShortcuts) {
@@ -79,13 +80,13 @@ export default Component.extend({
     return shortcuts.map((s) => {
       return {
         id: s.id,
-        name: I18n.t(s.label),
+        name: i18n(s.label),
         time: s.time,
         timeFormatted: formatTime(s),
         icon: s.icon,
       };
     });
-  },
+  }
 
   @action
   onChangeDate(date) {
@@ -94,14 +95,14 @@ export default Component.extend({
     }
 
     this._dateTimeChanged(date, this._time);
-  },
+  }
 
   @action
   onChangeTime(time) {
     if (this._date) {
       this._dateTimeChanged(this._date, time);
     }
-  },
+  }
 
   _dateTimeChanged(date, time) {
     time = time ? ` ${time}` : "";
@@ -112,7 +113,7 @@ export default Component.extend({
     } else {
       this.onChangeInput?.(null);
     }
-  },
+  }
 
   _findClosestShortcut(dateTime) {
     return this.shortcuts.find((tf) => {
@@ -121,5 +122,5 @@ export default Component.extend({
         return 0 <= diff && diff < 60 * 1000;
       }
     });
-  },
-});
+  }
+}

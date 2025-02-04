@@ -1,21 +1,14 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
-import { TextArea } from "@ember/legacy-built-in-components";
-import { on } from "@ember/modifier";
+import { cached } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { isEmpty } from "@ember/utils";
-import { not } from "truth-helpers";
-import DButton from "discourse/components/d-button";
-import withEventValue from "discourse/helpers/with-event-value";
+import BackButton from "discourse/components/back-button";
+import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import MultiSelect from "select-kit/components/multi-select";
 
@@ -23,33 +16,28 @@ export default class AdminFlagsForm extends Component {
   @service router;
   @service site;
 
-  @tracked enabled = true;
-  @tracked requireMessage = false;
-  @tracked name;
-  @tracked description;
-  @tracked appliesTo;
-
-  constructor() {
-    super(...arguments);
-    if (this.isUpdate) {
-      this.name = this.args.flag.name;
-      this.description = this.args.flag.description;
-      this.appliesTo = this.args.flag.applies_to;
-      this.requireMessage = this.args.flag.require_message;
-      this.enabled = this.args.flag.enabled;
-    }
-  }
-
   get isUpdate() {
     return this.args.flag;
   }
 
-  get isValid() {
-    return (
-      !isEmpty(this.name) &&
-      !isEmpty(this.description) &&
-      !isEmpty(this.appliesTo)
-    );
+  @cached
+  get formData() {
+    if (this.isUpdate) {
+      return {
+        name: this.args.flag.name,
+        description: this.args.flag.description,
+        appliesTo: this.args.flag.applies_to,
+        requireMessage: this.args.flag.require_message,
+        enabled: this.args.flag.enabled,
+        autoActionType: this.args.flag.auto_action_type,
+      };
+    } else {
+      return {
+        enabled: true,
+        requireMessage: false,
+        autoActionType: false,
+      };
+    }
   }
 
   get header() {
@@ -61,7 +49,7 @@ export default class AdminFlagsForm extends Component {
   get appliesToValues() {
     return this.site.valid_flag_applies_to_types.map((type) => {
       return {
-        name: I18n.t(
+        name: i18n(
           `admin.config_areas.flags.form.${type
             .toLowerCase()
             .replace("::", "_")}`
@@ -71,156 +59,164 @@ export default class AdminFlagsForm extends Component {
     });
   }
 
-  @action
-  save() {
-    this.isUpdate ? this.update() : this.create();
-  }
-
-  @action
-  onToggleRequireMessage(e) {
-    this.requireMessage = e.target.checked;
-  }
-
-  @action
-  onToggleEnabled(e) {
-    this.enabled = e.target.checked;
-  }
-
-  @bind
-  create() {
-    return ajax(`/admin/config/flags`, {
-      type: "POST",
-      data: this.#formData,
-    })
-      .then((response) => {
-        this.site.flagTypes.push(response.flag);
-        this.router.transitionTo("adminConfig.flags");
-      })
-      .catch((error) => {
-        return popupAjaxError(error);
+  validateAppliesTo(name, value, { addError }) {
+    if (value && value.length === 0) {
+      addError("appliesTo", {
+        title: i18n("admin.config_areas.flags.form.applies_to"),
+        message: i18n("admin.config_areas.flags.form.invalid_applies_to"),
       });
+    }
   }
 
-  @bind
-  update() {
-    return ajax(`/admin/config/flags/${this.args.flag.id}`, {
-      type: "PUT",
-      data: this.#formData,
-    })
-      .then((response) => {
-        this.args.flag.name = response.flag.name;
-        this.args.flag.description = response.flag.description;
-        this.args.flag.applies_to = response.flag.applies_to;
-        this.args.flag.require_message = response.flag.require_message;
-        this.args.flag.enabled = response.flag.enabled;
-        this.router.transitionTo("adminConfig.flags");
-      })
-      .catch((error) => {
-        return popupAjaxError(error);
-      });
-  }
-
-  @bind
-  get #formData() {
-    return {
-      name: this.name,
-      description: this.description,
-      applies_to: this.appliesTo,
-      require_message: this.requireMessage,
-      enabled: this.enabled,
+  @action
+  save({
+    name,
+    description,
+    appliesTo,
+    requireMessage,
+    enabled,
+    autoActionType,
+  }) {
+    const createOrUpdate = this.isUpdate ? this.update : this.create;
+    const data = {
+      name,
+      description,
+      enabled,
+      applies_to: appliesTo,
+      require_message: requireMessage,
+      auto_action_type: autoActionType,
     };
+    createOrUpdate(data);
+  }
+
+  @bind
+  async create(data) {
+    try {
+      const response = await ajax("/admin/config/flags", {
+        type: "POST",
+        data,
+      });
+      this.site.flagTypes.push(response.flag);
+      this.router.transitionTo("adminConfig.flags");
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @bind
+  async update(data) {
+    try {
+      const response = await ajax(`/admin/config/flags/${this.args.flag.id}`, {
+        type: "PUT",
+        data,
+      });
+
+      this.args.flag.name = response.flag.name;
+      this.args.flag.description = response.flag.description;
+      this.args.flag.applies_to = response.flag.applies_to;
+      this.args.flag.require_message = response.flag.require_message;
+      this.args.flag.enabled = response.flag.enabled;
+      this.args.flag.auto_action_type = response.flag.auto_action_type;
+      this.router.transitionTo("adminConfig.flags");
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>
+    <BackButton
+      @route="adminConfig.flags"
+      @label="admin.config_areas.flags.back"
+    />
     <div class="admin-config-area">
-      <h2>{{i18n "admin.config_areas.flags.header"}}</h2>
-      <LinkTo
-        @route="adminConfig.flags"
-        class="btn-default btn btn-icon-text btn-back"
-      >
-        {{dIcon "chevron-left"}}
-        {{i18n "admin.config_areas.flags.back"}}
-      </LinkTo>
       <div class="admin-config-area__primary-content admin-flag-form">
         <AdminConfigAreaCard @heading={{this.header}}>
-          <div class="control-group">
-            <label for="name">
-              {{i18n "admin.config_areas.flags.form.name"}}
-            </label>
-            <input
-              name="name"
-              type="text"
-              value={{this.name}}
-              maxlength="200"
-              class="admin-flag-form__name"
-              {{on "input" (withEventValue (fn (mut this.name)))}}
-            />
-          </div>
+          <:content>
+            <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
+              <form.Field
+                @name="name"
+                @title={{i18n "admin.config_areas.flags.form.name"}}
+                @validation="required|length:3,200"
+                @format="large"
+                as |field|
+              >
+                <field.Input />
+              </form.Field>
 
-          <div class="control-group">
-            <label for="description">
-              {{i18n "admin.config_areas.flags.form.description"}}
-            </label>
-            <TextArea
-              @value={{this.description}}
-              maxlength="1000"
-              class="admin-flag-form__description"
-            />
-          </div>
+              <form.Field
+                @name="description"
+                @title={{i18n "admin.config_areas.flags.form.description"}}
+                @validation="required|length:3,1000"
+                @format="large"
+                as |field|
+              >
+                <field.Textarea @height={{60}} />
+              </form.Field>
 
-          <div class="control-group">
-            <label for="applies-to">
-              {{i18n "admin.config_areas.flags.form.applies_to"}}
-            </label>
-            <MultiSelect
-              @value={{this.appliesTo}}
-              @content={{this.appliesToValues}}
-              @options={{hash allowAny=false}}
-              class="admin-flag-form__applies-to"
-            />
-          </div>
+              <form.Field
+                @name="appliesTo"
+                @title={{i18n "admin.config_areas.flags.form.applies_to"}}
+                @validation="required"
+                @validate={{this.validateAppliesTo}}
+                @format="large"
+                as |field|
+              >
+                <field.Custom>
+                  <MultiSelect
+                    @id={{field.id}}
+                    @value={{field.value}}
+                    @onChange={{field.set}}
+                    @content={{this.appliesToValues}}
+                    @options={{hash allowAny=false}}
+                    class="admin-flag-form__applies-to"
+                  />
+                </field.Custom>
+              </form.Field>
 
-          <div class="control-group">
-            <label class="checkbox-label admin-flag-form__require-reason">
-              <input
-                {{on "input" this.onToggleRequireMessage}}
-                type="checkbox"
-                checked={{this.requireMessage}}
-              />
-              <div>
-                {{i18n "admin.config_areas.flags.form.require_message"}}
-                <div class="admin-flag-form__require-message-description">
-                  {{i18n
-                    "admin.config_areas.flags.form.require_message_description"
+              <form.CheckboxGroup as |checkboxGroup|>
+                <checkboxGroup.Field
+                  @name="requireMessage"
+                  @title={{i18n
+                    "admin.config_areas.flags.form.require_message"
                   }}
-                </div>
-              </div>
-            </label>
-          </div>
+                  @format="full"
+                  as |field|
+                >
+                  <field.Checkbox>
+                    {{i18n
+                      "admin.config_areas.flags.form.require_message_description"
+                    }}
+                  </field.Checkbox>
+                </checkboxGroup.Field>
 
-          <div class="control-group">
-            <label class="checkbox-label admin-flag-form__enabled">
-              <input
-                {{on "input" this.onToggleEnabled}}
-                type="checkbox"
-                checked={{this.enabled}}
-              />
-              {{i18n "admin.config_areas.flags.form.enabled"}}
-            </label>
-          </div>
+                <checkboxGroup.Field
+                  @name="enabled"
+                  @title={{i18n "admin.config_areas.flags.form.enabled"}}
+                  @format="full"
+                  as |field|
+                >
+                  <field.Checkbox />
+                </checkboxGroup.Field>
 
-          <div class="alert alert-info admin_flag_form__info">
-            {{dIcon "info-circle"}}
-            {{i18n "admin.config_areas.flags.form.alert"}}
-          </div>
+                <checkboxGroup.Field
+                  @name="autoActionType"
+                  @title={{i18n
+                    "admin.config_areas.flags.form.auto_action_type"
+                  }}
+                  @format="full"
+                  as |field|
+                >
+                  <field.Checkbox />
+                </checkboxGroup.Field>
+              </form.CheckboxGroup>
 
-          <DButton
-            @action={{this.save}}
-            @label="admin.config_areas.flags.form.save"
-            @ariaLabel="admin.config_areas.flags.form.save"
-            @disabled={{not this.isValid}}
-            class="btn-primary admin-flag-form__save"
-          />
+              <form.Alert @icon="circle-info">
+                {{i18n "admin.config_areas.flags.form.alert"}}
+              </form.Alert>
+
+              <form.Submit @label="admin.config_areas.flags.form.save" />
+            </Form>
+          </:content>
         </AdminConfigAreaCard>
       </div>
     </div>

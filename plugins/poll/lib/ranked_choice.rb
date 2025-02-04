@@ -44,7 +44,7 @@ class DiscoursePoll::RankedChoice
       potential_winners = find_potential_winners(tally, max_votes)
 
       # Check for a majority and return if found
-      if majority_check(tally, potential_winners, max_votes)
+      if majority_check(tally, max_votes)
         majority_candidate = enrich(potential_winners.keys.first, options)
 
         round_activity << { round: round, majority: majority_candidate, eliminated: nil }
@@ -112,10 +112,10 @@ class DiscoursePoll::RankedChoice
     tally.select { |k, v| v == max_votes }
   end
 
-  def self.majority_check(tally, potential_winners, max_votes)
+  def self.majority_check(tally, max_votes)
     total_votes = tally.values.sum
 
-    max_votes > total_votes / 2 || potential_winners.count == 1
+    max_votes && max_votes > total_votes / 2
   end
 
   def self.identify_losers(tally)

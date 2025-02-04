@@ -9,8 +9,12 @@ module Onebox
 
       MAX_FILES = 3
 
-      matches_regexp(%r{^https?://gist\.github\.com/[\w\-]+/[a-f0-9]+(/|$)})
+      matches_domain("gist.github.com")
       always_https
+
+      def self.matches_path(path)
+        path.match?(%r{^/[\w\-]+/[a-f0-9]+(/|$)})
+      end
 
       def url
         "https://api.github.com/gists/#{match[:sha]}"

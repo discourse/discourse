@@ -22,7 +22,7 @@
               <%- if can_sign_up? %>
                 <a href="<%= path "/signup"%>" class='btn btn-primary btn-small sign-up-button'><%= I18n.t('sign_up') %></a>
               <%- end %>
-              <a href="<%= path "/login"%>" class='btn btn-primary btn-small login-button btn-icon-text'><%= SvgSprite.raw_svg('fa-user') %><%= I18n.t('log_in') %></a>
+              <a href="<%= path "/login"%>" class='btn btn-primary btn-small login-button btn-icon-text'><%= SvgSprite.raw_svg('user') %><%= I18n.t('log_in') %></a>
             </span>
           <%- end %>
         </div>

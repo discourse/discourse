@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PushNotificationPusher
-  TOKEN_VALID_FOR_SECONDS ||= 5 * 60
+  TOKEN_VALID_FOR_SECONDS = 5 * 60
   CONNECTION_TIMEOUT_SECONDS = 5
 
   def self.push(user, payload)
@@ -27,7 +27,6 @@ class PushNotificationPusher
         tag: payload[:tag] || "#{Discourse.current_hostname}-#{payload[:topic_id]}",
         base_url: Discourse.base_url,
         url: payload[:post_url],
-        hide_when_active: true,
       }
 
       subscriptions(user).each { |subscription| send_notification(user, subscription, message) }
@@ -109,8 +108,8 @@ class PushNotificationPusher
     end
   end
 
-  MAX_ERRORS ||= 3
-  MIN_ERROR_DURATION ||= 86_400 # 1 day
+  MAX_ERRORS = 3
+  MIN_ERROR_DURATION = 86_400 # 1 day
 
   def self.handle_generic_error(subscription, error, user, endpoint, message)
     subscription.error_count += 1

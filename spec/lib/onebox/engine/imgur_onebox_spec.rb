@@ -12,7 +12,7 @@ RSpec.describe Onebox::Engine::ImgurOnebox do
     expect(html).to include("<span class='album-title'>[Album] Did you miss me?</span>")
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid Imgur URL" do
       valid_url = URI("https://imgur.com/gallery/abcd1234")
       expect(described_class === valid_url).to eq(true)

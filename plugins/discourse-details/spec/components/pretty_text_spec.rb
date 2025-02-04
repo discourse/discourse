@@ -20,10 +20,25 @@ RSpec.describe PrettyText do
     HTML
   end
 
+  it "supports open attribute" do
+    cooked_html = PrettyText.cook <<~MARKDOWN
+      [details open]
+      bar
+      [/details]
+    MARKDOWN
+
+    expect(cooked_html).to match_html <<~HTML
+      <details open="">
+      <summary></summary>
+        <p>bar</p>
+      </details>
+    HTML
+  end
+
   it "deletes elided content" do
     cooked_html = PrettyText.cook <<~MARKDOWN
       Hello World
-      
+
       <details class='elided'>42</details>
     MARKDOWN
 

@@ -43,6 +43,7 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
   end
   status { :open }
   name nil
+  threading_enabled true
   after_create do |channel, attrs|
     if attrs[:with_membership]
       channel.chatable.users.each do |user|
@@ -51,6 +52,10 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
       end
     end
   end
+end
+
+def fake_chat_message
+  Faker::Alphanumeric.alpha(number: [15, SiteSetting.chat_minimum_message_length].max)
 end
 
 Fabricator(:chat_message, class_name: "Chat::Message") do
@@ -67,7 +72,7 @@ end
 Fabricator(:chat_message_without_service, class_name: "Chat::Message") do
   user
   chat_channel
-  message { Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length) }
+  message { fake_chat_message }
 
   after_build { |message, attrs| message.cook }
   after_create { |message, attrs| message.upsert_mentions }
@@ -80,7 +85,8 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
             :in_reply_to,
             :thread,
             :upload_ids,
-            :incoming_chat_webhook
+            :incoming_chat_webhook,
+            :blocks
 
   initialize_with do |transients|
     channel =
@@ -96,22 +102,25 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
 
     result =
       resolved_class.call(
-        chat_channel_id: channel.id,
+        params: {
+          chat_channel_id: channel.id,
+          message: transients[:message].presence || fake_chat_message,
+          thread_id: transients[:thread]&.id,
+          in_reply_to_id: transients[:in_reply_to]&.id,
+          upload_ids: transients[:upload_ids],
+          blocks: transients[:blocks],
+        },
+        options: {
+          process_inline: true,
+        },
         guardian: user.guardian,
-        message:
-          transients[:message] ||
-            Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
-        thread_id: transients[:thread]&.id,
-        in_reply_to_id: transients[:in_reply_to]&.id,
-        upload_ids: transients[:upload_ids],
         incoming_chat_webhook: transients[:incoming_chat_webhook],
-        process_inline: true,
       )
 
     if result.failure?
       raise RSpec::Expectations::ExpectationNotMetError.new(
               "Service `#{resolved_class}` failed, see below for step details:\n\n" +
-                result.inspect_steps.inspect,
+                result.inspect_steps,
             )
     end
 
@@ -170,6 +179,11 @@ Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end
 
+Fabricator(:chat_message_interaction, class_name: "Chat::MessageInteraction") do
+  message { Fabricate(:chat_message) }
+  user { Fabricate(:user) }
+end
+
 Fabricator(:direct_message, class_name: "Chat::DirectMessage") do
   users { [Fabricate(:user), Fabricate(:user)] }
 end
@@ -182,8 +196,8 @@ Fabricator(:chat_webhook_event, class_name: "Chat::WebhookEvent") do
 end
 
 Fabricator(:incoming_chat_webhook, class_name: "Chat::IncomingWebhook") do
-  name { sequence(:name) { |i| "#{i + 1}" } }
-  key { sequence(:key) { |i| "#{i + 1}" } }
+  name { sequence(:name) { |i| "Test webhook #{i + 1}" } }
+  emoji { %w[:joy: :rocket: :handshake:].sample }
   chat_channel { Fabricate(:chat_channel, chatable: Fabricate(:category)) }
 end
 
@@ -197,8 +211,7 @@ Fabricator(:user_chat_channel_membership_for_dm, from: :user_chat_channel_member
   user
   chat_channel
   following true
-  desktop_notification_level 2
-  mobile_notification_level 2
+  notification_level 2
 end
 
 Fabricator(:chat_draft, class_name: "Chat::Draft") do
@@ -220,7 +233,12 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.channel = original_message.chat_channel
   end
 
-  transient :with_replies, :channel, :original_message_user, :old_om, use_service: false
+  transient :with_replies,
+            :channel,
+            :original_message_user,
+            :old_om,
+            use_service: false,
+            notification_level: :tracking
 
   original_message do |attrs|
     Fabricate(
@@ -239,7 +257,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     attrs[:created_at] = 1.week.ago if transients[:old_om]
 
     thread.original_message.update!(**attrs)
-    thread.add(thread.original_message_user)
+    thread.add(thread.original_message_user, notification_level: transients[:notification_level])
 
     if transients[:with_replies]
       Fabricate

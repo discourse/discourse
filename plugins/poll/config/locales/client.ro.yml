@@ -72,6 +72,9 @@ ro:
         none: "Nimeni"
       options:
         label: "Opțiuni"
+        ranked_choice:
+          highest_priority: "(cel mai mare prioritate)"
+          lowest_priority: "(cea mai mică prioritate)"
       error_while_toggling_status: "Ne pare rău, a apărut o eroare la schimbarea stării acestui sondaj."
       error_while_casting_votes: "Ne pare rău, a apărut o eroare la exercitarea voturilor tale."
       error_while_fetching_voters: "Ne pare rău, a apărut o eroare la afișarea votanților."

@@ -41,5 +41,21 @@ module(
         .dom(".form-kit__control-radio-description")
         .hasText("One description");
     });
+
+    test("when disabled", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.RadioGroup as |RadioGroup|>
+              <RadioGroup.Radio @value="one" as |radio|>
+                <radio.Title>One title</radio.Title>
+              </RadioGroup.Radio>
+            </field.RadioGroup>
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-radio").hasAttribute("disabled");
+    });
   }
 );

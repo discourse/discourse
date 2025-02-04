@@ -12,8 +12,8 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
     chat_system_bootstrap
   end
 
-  def create_message(channel, text: "this is fine", user: Fabricate(:user))
-    Fabricate(:chat_message_with_service, chat_channel: channel, message: text, user: user)
+  def create_message(chat_channel, message: nil, user: Fabricate(:user))
+    Fabricate(:chat_message_with_service, chat_channel:, message:, user:)
   end
 
   context "as a user" do
@@ -98,7 +98,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               create_message(
                 channel_1,
                 user: user_1,
-                text: "hello @#{current_user.username} what's up?",
+                message: "hello @#{current_user.username} what's up?",
               )
 
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator")
@@ -113,7 +113,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               create_message(
                 channel_1,
                 user: user_1,
-                text: "Are you busy @#{current_user.username}?",
+                message: "Are you busy @#{current_user.username}?",
               )
 
               3.times { create_message(channel_1, user: user_1) }
@@ -176,6 +176,35 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
             expect(page).to have_css(
               ".chat-channel-row:nth-child(2)[data-chat-channel-id=\"#{dm_channel_1.id}\"]",
             )
+          end
+
+          context "with threads" do
+            fab!(:message) do
+              Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user)
+            end
+            fab!(:thread) do
+              Fabricate(:chat_thread, channel: dm_channel_1, original_message: message)
+            end
+
+            before { dm_channel_1.membership_for(current_user).mark_read!(message.id) }
+
+            it "shows urgent badge for mentions" do
+              Jobs.run_immediately!
+
+              visit("/chat/direct-messages")
+
+              expect(channels_index_page).to have_no_unread_channel(dm_channel_1)
+
+              Fabricate(
+                :chat_message_with_service,
+                chat_channel: dm_channel_1,
+                thread: thread,
+                message: "hello @#{current_user.username}",
+                user: user_1,
+              )
+
+              expect(channels_index_page).to have_unread_channel(dm_channel_1, urgent: true)
+            end
           end
         end
       end

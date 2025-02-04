@@ -2,7 +2,9 @@
 <DVirtualHeight />
 
 <DiscourseRoot {{did-insert this.trackDiscoursePainted}}>
-  <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
+  {{#if this.showSkipToContent}}
+    <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
+  {{/if}}
   <DDocument />
   <PageLoadingSlider />
   <PluginOutlet
@@ -12,32 +14,17 @@
   />
 
   {{#if this.showSiteHeader}}
-    {{#if this.header.useGlimmerHeader}}
-      <GlimmerSiteHeader
-        @canSignUp={{this.canSignUp}}
-        @showCreateAccount={{route-action "showCreateAccount"}}
-        @showLogin={{route-action "showLogin"}}
-        @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
-        @toggleMobileView={{route-action "toggleMobileView"}}
-        @logout={{route-action "logout"}}
-        @sidebarEnabled={{this.sidebarEnabled}}
-        @showSidebar={{this.showSidebar}}
-        @toggleSidebar={{this.toggleSidebar}}
-      />
-    {{else}}
-      <SiteHeader
-        @canSignUp={{this.canSignUp}}
-        @showCreateAccount={{route-action "showCreateAccount"}}
-        @showLogin={{route-action "showLogin"}}
-        @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
-        @toggleMobileView={{route-action "toggleMobileView"}}
-        @logout={{route-action "logout"}}
-        @sidebarEnabled={{this.sidebarEnabled}}
-        @navigationMenuQueryParamOverride={{this.navigationMenuQueryParamOverride}}
-        @showSidebar={{this.showSidebar}}
-        @toggleSidebar={{action "toggleSidebar"}}
-      />
-    {{/if}}
+    <GlimmerSiteHeader
+      @canSignUp={{this.canSignUp}}
+      @showCreateAccount={{route-action "showCreateAccount"}}
+      @showLogin={{route-action "showLogin"}}
+      @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
+      @toggleMobileView={{route-action "toggleMobileView"}}
+      @logout={{route-action "logout"}}
+      @sidebarEnabled={{this.sidebarEnabled}}
+      @showSidebar={{this.showSidebar}}
+      @toggleSidebar={{this.toggleSidebar}}
+    />
   {{/if}}
 
   <SoftwareUpdatePrompt />
@@ -114,7 +101,6 @@
     @outletArgs={{hash showFooter=this.showFooter}}
   />
 
-  <DLightbox />
   <ModalContainer />
   <DialogHolder />
   <TopicEntrance />
@@ -122,7 +108,9 @@
   <RenderGlimmerContainer />
 
   {{#if this.showFooterNav}}
-    <FooterNav />
+    <PluginOutlet @name="footer-nav">
+      <FooterNav />
+    </PluginOutlet>
   {{/if}}
 </DiscourseRoot>
 

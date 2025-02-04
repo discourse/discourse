@@ -12,6 +12,7 @@ chat:
     mandatory_values: "1|2" # @admins, @moderators
     allow_any: false
     refresh: true
+    area: "group_permissions"
   chat_threads_enabled:
     client: true
     default: false
@@ -53,6 +54,7 @@ chat:
   chat_auto_silence_from_flags_duration:
     default: 60
     min: 0
+    area: "flags"
   chat_allow_archiving_channels:
     default: false
     client: true
@@ -63,19 +65,11 @@ chat:
       - archived
       - open
       - closed
-  chat_default_channel_id:
-    default: ""
-    client: true
-    validator: "Chat::DefaultChannelValidator"
   chat_duplicate_message_sensitivity:
     type: float
     default: 0.5
     min: 0
     max: 1
-  default_emoji_reactions:
-    type: emoji_list
-    default: +1|heart|tada
-    client: true
   chat_minimum_message_length:
     type: integer
     default: 1
@@ -104,18 +98,21 @@ chat:
     allow_any: false
     refresh: true
     validator: "Chat::DirectMessageEnabledGroupsValidator"
+    area: "group_permissions"
   chat_message_flag_allowed_groups:
     default: "1|2|11" # @admins, @moderators, @trust_level_1
     mandatory_values: "1|2" # @admins, @moderators
     type: group_list
     allow_any: false
     refresh: true
+    area: "flags|group_permissions"
   max_mentions_per_chat_message:
     client: true
     type: integer
     default: 5
     max: 10
     min: 0
+    area: "notifications"
   max_chat_draft_length:
     default: 50_000
     hidden: true
@@ -124,6 +121,7 @@ chat:
     default: "never"
     type: enum
     enum: "Chat::SeparateSidebarModeSiteSetting"
+    area: "navigation"
   chat_editing_grace_period:
     client: true
     type: integer
@@ -139,7 +137,7 @@ chat:
     type: integer
     default: 40
     min: 0
-  chat_preferred_mobile_index:
+  chat_preferred_index:
     client: true
     type: enum
     default: channels

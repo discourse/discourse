@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::MarkThreadTitlePromptSeen do
-  describe Chat::MarkThreadTitlePromptSeen::Contract, type: :model do
+  describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :thread_id }
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -18,14 +18,13 @@ RSpec.describe Chat::MarkThreadTitlePromptSeen do
     fab!(:last_reply) { Fabricate(:chat_message, thread: thread, chat_channel: channel) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
+    let(:params) { { thread_id: thread.id, channel_id: thread.channel_id } }
+    let(:dependencies) { { guardian: } }
 
     before { thread.update!(last_message: last_reply) }
 
     context "when all steps pass" do
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       context "when the user is a member of the thread" do
         fab!(:membership) { thread.add(current_user) }

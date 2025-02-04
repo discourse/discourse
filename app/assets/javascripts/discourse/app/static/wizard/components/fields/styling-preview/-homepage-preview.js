@@ -1,53 +1,64 @@
-import { darkLightDiff, LOREM } from "../../../lib/preview";
+import { i18n } from "discourse-i18n";
+import { darkLightDiff } from "../../../lib/preview";
 import PreviewBaseComponent from "./-preview-base";
 
-export default PreviewBaseComponent.extend({
-  width: 628,
-  height: 322,
-  logo: null,
-  avatar: null,
+export default class HomepagePreview extends PreviewBaseComponent {
+  width = 628;
+  height = 322;
+  logo = null;
+  avatar = null;
 
   didUpdateAttrs() {
-    this._super(...arguments);
+    super.didUpdateAttrs(...arguments);
 
     this.triggerRepaint();
-  },
+  }
 
   images() {
     return {
       logo: this.wizard.logoUrl,
       avatar: "/images/wizard/trout.png",
     };
-  },
+  }
 
   paint({ ctx, colors, font, width, height }) {
     this.drawFullHeader(colors, font, this.logo);
 
     const homepageStyle = this.getHomepageStyle();
 
-    if (homepageStyle === "latest") {
-      this.drawPills(colors, font, height * 0.15);
-      this.renderLatest(ctx, colors, font, width, height);
+    if (
+      !homepageStyle.startsWith("categories") &&
+      !homepageStyle.startsWith("category")
+    ) {
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
+      this.renderNonCategoryHomepage(
+        ctx,
+        colors,
+        font,
+        width,
+        height,
+        homepageStyle
+      );
     } else if (
       ["categories_only", "categories_with_featured_topics"].includes(
         homepageStyle
       )
     ) {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       this.renderCategories(ctx, colors, font, width, height);
     } else if (
       ["categories_boxes", "categories_boxes_with_topics"].includes(
         homepageStyle
       )
     ) {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       const topics = homepageStyle === "categories_boxes_with_topics";
       this.renderCategoriesBoxes(ctx, colors, font, width, height, { topics });
     } else {
-      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { homepageStyle });
       this.renderCategoriesWithTopics(ctx, colors, font, width, height);
     }
-  },
+  }
 
   renderCategoriesBoxes(ctx, colors, font, width, height, opts) {
     opts = opts || {};
@@ -82,7 +93,7 @@ export default PreviewBaseComponent.extend({
         ]
       );
 
-      ctx.font = `Bold ${bodyFontSize * 1.3}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.3}em '${font.label}'`;
       ctx.fillStyle = colors.primary;
       ctx.textAlign = "center";
       ctx.fillText(category.name, boxStartX + boxWidth / 2, boxStartY + 25);
@@ -91,7 +102,7 @@ export default PreviewBaseComponent.extend({
       if (opts.topics) {
         let startY = boxStartY + 60;
         this.getTitles().forEach((title) => {
-          ctx.font = `${bodyFontSize * 1}em '${font}'`;
+          ctx.font = `${bodyFontSize * 1}em '${font.label}'`;
           ctx.fillStyle = colors.tertiary;
           startY +=
             this.fillTextMultiLine(
@@ -104,7 +115,7 @@ export default PreviewBaseComponent.extend({
             ) + 8;
         });
       } else {
-        ctx.font = `${bodyFontSize * 1}em '${font}'`;
+        ctx.font = `${bodyFontSize * 1}em '${font.label}'`;
         ctx.fillStyle = textColor;
         ctx.textAlign = "center";
         this.fillTextMultiLine(
@@ -118,7 +129,7 @@ export default PreviewBaseComponent.extend({
         ctx.textAlign = "left";
       }
     });
-  },
+  }
 
   renderCategories(ctx, colors, font, width, height) {
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
@@ -143,7 +154,7 @@ export default PreviewBaseComponent.extend({
     const cols = [0.025, 0.45, 0.53, 0.58, 0.94, 0.96].map((c) => c * width);
 
     const headingY = height * 0.33;
-    ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
+    ctx.font = `${bodyFontSize * 0.9}em '${font.label}'`;
     ctx.fillStyle = textColor;
     ctx.fillText("Category", cols[0], headingY);
 
@@ -163,17 +174,17 @@ export default PreviewBaseComponent.extend({
     drawLine(width / 2, y);
 
     // Categories
-    this.categories().forEach((category) => {
+    this.categories().forEach((category, idx) => {
       const textPos = y + categoryHeight * 0.35;
-      ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.1}em '${font.label}'`;
       ctx.fillStyle = colors.primary;
       ctx.fillText(category.name, cols[0], textPos);
 
-      ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
+      ctx.font = `${bodyFontSize * 0.8}em '${font.label}'`;
       ctx.fillStyle = textColor;
       ctx.fillText(
-        titles[0],
-        cols[0] - margin * 0.25,
+        titles[idx],
+        cols[0] - margin * 0.1,
         textPos + categoryHeight * 0.36
       );
 
@@ -185,14 +196,14 @@ export default PreviewBaseComponent.extend({
       ctx.stroke();
 
       if (homepageStyle === "categories_with_featured_topics") {
-        ctx.font = `${bodyFontSize}em '${font}'`;
+        ctx.font = `${bodyFontSize}em '${font.label}'`;
         ctx.fillText(
           Math.floor(Math.random() * 90) + 10,
           cols[1] + 15,
           textPos
         );
       } else {
-        ctx.font = `${bodyFontSize}em '${font}'`;
+        ctx.font = `${bodyFontSize}em '${font.label}'`;
         ctx.fillText(Math.floor(Math.random() * 90) + 10, cols[5], textPos);
       }
 
@@ -210,14 +221,14 @@ export default PreviewBaseComponent.extend({
       ctx.fillStyle = colors.tertiary;
 
       titles.forEach((title) => {
-        ctx.font = `${bodyFontSize}em '${font}'`;
+        ctx.font = `${bodyFontSize}em '${font.label}'`;
         const textPos = y + topicHeight * 0.35;
         ctx.fillStyle = colors.tertiary;
         ctx.fillText(`${title}`, cols[2], textPos);
         y += topicHeight;
       });
     }
-  },
+  }
 
   renderCategoriesWithTopics(ctx, colors, font, width, height) {
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
@@ -240,7 +251,7 @@ export default PreviewBaseComponent.extend({
     const cols = [0.025, 0.42, 0.53, 0.58, 0.94].map((c) => c * width);
 
     const headingY = height * 0.33;
-    ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
+    ctx.font = `${bodyFontSize * 0.9}em '${font.label}'`;
     ctx.fillStyle = textColor;
     ctx.fillText("Category", cols[0], headingY);
     ctx.fillText("Topics", cols[1], headingY);
@@ -259,16 +270,16 @@ export default PreviewBaseComponent.extend({
     const titles = this.getTitles();
 
     // Categories
-    this.categories().forEach((category) => {
+    this.categories().forEach((category, idx) => {
       const textPos = y + categoryHeight * 0.35;
-      ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 1.1}em '${font.label}'`;
       ctx.fillStyle = colors.primary;
       ctx.fillText(category.name, cols[0], textPos);
 
-      ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
+      ctx.font = `${bodyFontSize * 0.8}em '${font.label}'`;
       ctx.fillStyle = textColor;
       ctx.fillText(
-        titles[0],
+        titles[idx],
         cols[0] - margin * 0.25,
         textPos + categoryHeight * 0.36
       );
@@ -280,7 +291,7 @@ export default PreviewBaseComponent.extend({
       ctx.lineTo(margin, y + categoryHeight);
       ctx.stroke();
 
-      ctx.font = `${bodyFontSize}em '${font}'`;
+      ctx.font = `${bodyFontSize}em '${font.label}'`;
       ctx.fillText(Math.floor(Math.random() * 90) + 10, cols[1] + 15, textPos);
 
       y += categoryHeight;
@@ -297,9 +308,9 @@ export default PreviewBaseComponent.extend({
 
     titles.forEach((title) => {
       const category = this.categories()[0];
-      ctx.font = `${bodyFontSize}em '${font}'`;
+      ctx.font = `${bodyFontSize}em '${font.label}'`;
       const textPos = y + topicHeight * 0.45;
-      ctx.fillStyle = textColor;
+      ctx.fillStyle = colors.primary;
       this.scaleImage(
         this.avatar,
         cols[2],
@@ -309,17 +320,17 @@ export default PreviewBaseComponent.extend({
       );
       ctx.fillText(title, cols[3], textPos);
 
-      ctx.font = `Bold ${bodyFontSize}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize}em '${font.label}'`;
       ctx.fillText(Math.floor(Math.random() * 90) + 10, cols[4], textPos);
-      ctx.font = `${bodyFontSize}em '${font}'`;
+      ctx.font = `${bodyFontSize}em '${font.label}'`;
       ctx.fillText(`1h`, cols[4], textPos + topicHeight * 0.4);
 
       ctx.beginPath();
       ctx.fillStyle = category.color;
       const badgeSize = topicHeight * 0.1;
-      ctx.font = `Bold ${bodyFontSize * 0.5}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 0.5}em '${font.label}'`;
       ctx.rect(
-        cols[3] + margin * 0.5,
+        cols[3] + margin * 0.25,
         y + topicHeight * 0.65,
         badgeSize,
         badgeSize
@@ -329,30 +340,46 @@ export default PreviewBaseComponent.extend({
       ctx.fillStyle = colors.primary;
       ctx.fillText(
         category.name,
-        cols[3] + badgeSize * 3,
+        cols[3] + badgeSize * 2,
         y + topicHeight * 0.76
       );
       y += topicHeight;
 
       drawLine(width / 2, y);
     });
-  },
+  }
 
   getHomepageStyle() {
     return this.step.valueFor("homepage_style");
-  },
+  }
 
   getTitles() {
-    return LOREM.split(".")
-      .slice(0, 8)
-      .map((t) => t.substring(0, 40));
-  },
+    return [
+      i18n("wizard.homepage_preview.topic_titles.what_books"),
+      i18n("wizard.homepage_preview.topic_titles.what_movies"),
+      i18n("wizard.homepage_preview.topic_titles.random_fact"),
+      i18n("wizard.homepage_preview.topic_titles.tv_show"),
+    ];
+  }
+
+  getHotTitles() {
+    return [
+      i18n("wizard.homepage_preview.topic_titles.what_hobbies"),
+      i18n("wizard.homepage_preview.topic_titles.what_music"),
+      i18n("wizard.homepage_preview.topic_titles.funniest_thing"),
+      i18n("wizard.homepage_preview.topic_titles.share_art"),
+    ];
+  }
 
   getDescriptions() {
-    return LOREM.split(".");
-  },
+    return [
+      i18n("wizard.homepage_preview.category_descriptions.icebreakers"),
+      i18n("wizard.homepage_preview.category_descriptions.news"),
+      i18n("wizard.homepage_preview.category_descriptions.site_feedback"),
+    ];
+  }
 
-  renderLatest(ctx, colors, font, width, height) {
+  renderNonCategoryHomepage(ctx, colors, font, width, height, homepageStyle) {
     const rowHeight = height / 6.6;
     // accounts for hard-set color variables in solarized themes
     const textColor =
@@ -360,7 +387,7 @@ export default PreviewBaseComponent.extend({
       darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const bodyFontSize = height / 440.0;
 
-    ctx.font = `${bodyFontSize}em '${font}'`;
+    ctx.font = `${bodyFontSize}em '${font.label}'`;
 
     const margin = height * 0.03;
 
@@ -375,35 +402,55 @@ export default PreviewBaseComponent.extend({
       ctx.stroke();
     };
 
-    const cols = [0.02, 0.66, 0.8, 0.87, 0.93].map((c) => c * width);
+    const cols = [0.02, 0.66, 0.75, 0.83, 0.9].map((c) => c * width);
 
     // Headings
     const headingY = height * 0.33;
 
     ctx.fillStyle = textColor;
-    ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
-    ctx.fillText("Topic", cols[0], headingY);
-    ctx.fillText("Replies", cols[2], headingY);
-    ctx.fillText("Views", cols[3], headingY);
-    ctx.fillText("Activity", cols[4], headingY);
+    ctx.font = `${bodyFontSize * 0.9}em '${font.label}'`;
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.topic"),
+      cols[0],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.replies"),
+      cols[2],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.views"),
+      cols[3],
+      headingY
+    );
+    ctx.fillText(
+      i18n("wizard.homepage_preview.table_headers.activity"),
+      cols[4],
+      headingY
+    );
 
     // Topics
     let y = headingY + rowHeight / 2.6;
     ctx.lineWidth = 2;
     drawLine(y);
 
-    ctx.font = `${bodyFontSize}em '${font}'`;
+    ctx.font = `${bodyFontSize}em '${font.label}'`;
     ctx.lineWidth = 1;
-    this.getTitles().forEach((title) => {
+
+    const titles =
+      homepageStyle === "hot" ? this.getHotTitles() : this.getTitles();
+    titles.forEach((title) => {
       const textPos = y + rowHeight * 0.4;
-      ctx.fillStyle = textColor;
+      ctx.fillStyle = colors.primary;
       ctx.fillText(title, cols[0], textPos);
 
+      // Category badge
       const category = this.categories()[0];
       ctx.beginPath();
       ctx.fillStyle = category.color;
       const badgeSize = rowHeight * 0.15;
-      ctx.font = `Bold ${bodyFontSize * 0.75}em '${font}'`;
+      ctx.font = `700 ${bodyFontSize * 0.75}em '${font.label}'`;
       ctx.rect(cols[0] + 4, y + rowHeight * 0.6, badgeSize, badgeSize);
       ctx.fill();
 
@@ -422,18 +469,26 @@ export default PreviewBaseComponent.extend({
       );
 
       ctx.fillStyle = textColor;
-      ctx.font = `${bodyFontSize}em '${font}'`;
-      for (let j = 2; j <= 4; j++) {
+      ctx.font = `${bodyFontSize}em '${font.label}'`;
+      for (let colIndex = 2; colIndex <= 4; colIndex++) {
+        // Give Hot a higher range of random values to make it look like
+        // more activity is happening.
+        const randomValue =
+          homepageStyle === "hot"
+            ? Math.floor(Math.random() * (660 - 220) + 220) + 10
+            : Math.floor(Math.random() * 90) + 10;
+
         ctx.fillText(
-          j === 4 ? "1h" : Math.floor(Math.random() * 90) + 10,
-          cols[j] + margin,
+          // Last column is relative activity time, others are random numbers.
+          colIndex === 4 ? "1h" : randomValue,
+          cols[colIndex] + margin,
           y + rowHeight * 0.6
         );
       }
       drawLine(y + rowHeight * 1);
       y += rowHeight;
     });
-  },
+  }
 
   fillTextMultiLine(ctx, text, x, y, lineHeight, maxWidth) {
     const words = text.split(" ").filter((f) => f);
@@ -454,7 +509,7 @@ export default PreviewBaseComponent.extend({
     totalHeight += lineHeight;
 
     return totalHeight;
-  },
+  }
 
   // Edges expected in this order: NW to NE -> NE to SE -> SE to SW -> SW to NW
   drawSquare(ctx, from, to, edges = []) {
@@ -481,5 +536,5 @@ export default PreviewBaseComponent.extend({
       ctx.lineTo(path.to.x, path.to.y);
       ctx.stroke();
     });
-  },
-});
+  }
+}

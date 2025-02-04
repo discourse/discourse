@@ -1,10 +1,10 @@
-import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { sanitize } from "discourse/lib/text";
+import DiscourseRoute from "discourse/routes/discourse";
 import AdminPlugin from "admin/models/admin-plugin";
 
-export default class AdminPluginsShowRoute extends Route {
+export default class AdminPluginsShowRoute extends DiscourseRoute {
   @service router;
   @service adminPluginNavManager;
 
@@ -20,5 +20,9 @@ export default class AdminPluginsShowRoute extends Route {
 
   deactivate() {
     this.adminPluginNavManager.currentPlugin = null;
+  }
+
+  titleToken() {
+    return this.adminPluginNavManager.currentPlugin.nameTitleized;
   }
 }

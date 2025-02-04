@@ -1,19 +1,19 @@
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
+import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
 import highlightSearch from "discourse/lib/highlight-search";
+import { iconHTML } from "discourse/lib/icon-library";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   destroyUserStatusOnMentions,
   updateUserStatusOnMention,
 } from "discourse/lib/update-user-status-on-mention";
-import domFromString from "discourse-common/lib/dom-from-string";
-import escape from "discourse-common/lib/escape";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -52,6 +52,22 @@ export default class PostCooked {
       : null;
   }
 
+  init() {
+    this.originalQuoteContents = null;
+    // todo should be a better way of detecting if it is composer preview
+    this._isInComposerPreview = !this.decoratorHelper;
+
+    this.cookedDiv = this._computeCooked();
+
+    this._insertQuoteControls(this.cookedDiv);
+    this._showLinkCounts(this.cookedDiv);
+    this._applySearchHighlight(this.cookedDiv);
+    this._decorateMentions();
+    this._decorateAndAdopt(this.cookedDiv);
+
+    return this.cookedDiv;
+  }
+
   update(prev) {
     if (
       prev.attrs.cooked !== this.attrs.cooked ||
@@ -59,23 +75,6 @@ export default class PostCooked {
     ) {
       return this.init();
     }
-  }
-
-  init() {
-    this.originalQuoteContents = null;
-    // todo should be a better way of detecting if it is composer preview
-    this._isInComposerPreview = !this.decoratorHelper;
-
-    const cookedDiv = this._computeCooked();
-    this.cookedDiv = cookedDiv;
-
-    this._insertQuoteControls(cookedDiv);
-    this._showLinkCounts(cookedDiv);
-    this._applySearchHighlight(cookedDiv);
-    this._initUserStatusOnMentions();
-    this._decorateAndAdopt(cookedDiv);
-
-    return cookedDiv;
   }
 
   destroy() {
@@ -162,16 +161,14 @@ export default class PostCooked {
             !bestElements.has(onebox) ||
             bestElements.get(onebox) === link
           ) {
-            const title = I18n.t("topic_map.clicks", { count: lc.clicks });
-
-            link.appendChild(document.createTextNode(" "));
-            link.appendChild(
-              domFromString(
-                `<span class='badge badge-notification clicks' title='${title}'>${number(
-                  lc.clicks
-                )}</span>`
-              )[0]
-            );
+            link.setAttribute("data-clicks", number(lc.clicks));
+            const ariaLabel = `${link.textContent.trim()} ${i18n(
+              "post.link_clicked",
+              {
+                count: lc.clicks,
+              }
+            )}`;
+            link.setAttribute("aria-label", ariaLabel);
           }
         }
       });
@@ -236,7 +233,7 @@ export default class PostCooked {
         blockQuote.appendChild(div);
       } catch (e) {
         if ([403, 404].includes(e.jqXHR.status)) {
-          const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
+          const icon = e.jqXHR.status === 403 ? "lock" : "trash-can";
           blockQuote.innerHTML = `<div class='expanded-quote icon-only'>${iconHTML(
             icon
           )}</div>`;
@@ -258,7 +255,7 @@ export default class PostCooked {
   }
 
   _updateQuoteElements(aside, desc) {
-    const quoteTitle = I18n.t("post.follow_quote");
+    const quoteTitle = i18n("post.follow_quote");
     const postNumber = aside.dataset.post;
     const topicNumber = aside.dataset.topic;
 
@@ -365,57 +362,89 @@ export default class PostCooked {
 
     if (
       (this.attrs.firstPost || this.attrs.embeddedPost) &&
-      this.ignoredUsers &&
-      this.ignoredUsers.length > 0 &&
-      this.ignoredUsers.includes(this.attrs.username)
+      this.ignoredUsers?.includes?.(this.attrs.username)
     ) {
       cookedDiv.classList.add("post-ignored");
-      cookedDiv.innerHTML = I18n.t("post.ignored");
+      cookedDiv.innerHTML = i18n("post.ignored");
     } else {
       cookedDiv.innerHTML = this.attrs.cooked;
     }
 
+    // On WebKit-based browsers, triple clicking on the last paragraph of a post won't stop at the end of the paragraph.
+    // It looks like the browser is selecting EOL characters, and that causes the selection to leak into the following
+    // nodes until it finds a non-empty node. This is a workaround to prevent that from happening.
+    // We insert a div after the last paragraph at the end of the cooked content, containing a <br> element.
+    // The line break works as a barrier, causing the selection to stop at the correct place.
+    // To prevent layout shifts this div is styled to be invisible with height 0 and overflow hidden and set aria-hidden
+    // to true to prevent screen readers from reading it.
+    const selectionBarrier = document.createElement("div");
+    selectionBarrier.classList.add("cooked-selection-barrier");
+    selectionBarrier.ariaHidden = "true";
+    selectionBarrier.appendChild(document.createElement("br"));
+    cookedDiv.appendChild(selectionBarrier);
+
     return cookedDiv;
   }
 
-  _initUserStatusOnMentions() {
+  _decorateMentions() {
     if (!this._isInComposerPreview) {
-      this._trackMentionedUsersStatus();
-      this._rerenderUserStatusOnMentions();
+      destroyUserStatusOnMentions();
     }
+
+    this._extractMentions().forEach(({ mentions, user }) => {
+      if (!this._isInComposerPreview) {
+        this._trackMentionedUserStatus(user);
+        this._rerenderUserStatusOnMentions(mentions, user);
+      }
+
+      const classes = applyValueTransformer("mentions-class", [], {
+        user,
+      });
+
+      mentions.forEach((mention) => {
+        mention.classList.add(...classes);
+      });
+    });
   }
 
-  _rerenderUserStatusOnMentions() {
-    destroyUserStatusOnMentions();
-    this._post()?.mentioned_users?.forEach((user) =>
-      this._rerenderUserStatusOnMention(this.cookedDiv, user)
-    );
-  }
-
-  _rerenderUserStatusOnMention(postElement, user) {
-    const href = getURL(`/u/${user.username.toLowerCase()}`);
-    const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
-
+  _rerenderUserStatusOnMentions(mentions, user) {
     mentions.forEach((mention) => {
       updateUserStatusOnMention(
-        getOwnerWithFallback(this._post()),
+        getOwnerWithFallback(this),
         mention,
         user.status
       );
     });
   }
 
-  _trackMentionedUsersStatus() {
-    this._post()?.mentioned_users?.forEach((user) => {
-      user.statusManager?.trackStatus?.();
-      user.on?.("status-changed", this, "_rerenderUserStatusOnMentions");
+  _rerenderUsersStatusOnMentions() {
+    this._extractMentions().forEach(({ mentions, user }) => {
+      this._rerenderUserStatusOnMentions(mentions, user);
     });
+  }
+
+  _extractMentions() {
+    return (
+      this._post()?.mentioned_users?.map((user) => {
+        const href = getURL(`/u/${user.username.toLowerCase()}`);
+        const mentions = this.cookedDiv.querySelectorAll(
+          `a.mention[href="${href}"]`
+        );
+
+        return { user, mentions };
+      }) || []
+    );
+  }
+
+  _trackMentionedUserStatus(user) {
+    user.statusManager?.trackStatus?.();
+    user.on?.("status-changed", this, "_rerenderUsersStatusOnMentions");
   }
 
   _stopTrackingMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
       user.statusManager?.stopTrackingStatus?.();
-      user.off?.("status-changed", this, "_rerenderUserStatusOnMentions");
+      user.off?.("status-changed", this, "_rerenderUsersStatusOnMentions");
     });
   }
 

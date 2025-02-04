@@ -8,7 +8,7 @@ require "file_helper"
 
 module FileStore
   class S3Store < BaseStore
-    TOMBSTONE_PREFIX ||= "tombstone/"
+    TOMBSTONE_PREFIX = "tombstone/"
 
     delegate :abort_multipart,
              :presign_multipart_part,
@@ -94,17 +94,13 @@ module FileStore
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
       }
 
-      # add a "content disposition: attachment" header with the original
-      # filename for everything but safe images (not SVG). audio and video will
-      # still stream correctly in HTML players, and when a direct link is
-      # provided to any file but an image it will download correctly in the
-      # browser.
-      if !FileHelper.is_inline_image?(filename)
-        options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
-          disposition: "attachment",
-          filename: filename,
-        )
-      end
+      # Only add a "content disposition: attachment" header for svgs
+      # see https://github.com/discourse/discourse/commit/31e31ef44973dc4daaee2f010d71588ea5873b53.
+      # Adding this header for all files would break the ability to view attachments in the browser
+      options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+        disposition: FileHelper.is_svg?(filename) ? "attachment" : "inline",
+        filename: filename,
+      )
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
 
@@ -315,22 +311,12 @@ module FileStore
       end
     end
 
-    def update_upload_ACL(upload, optimized_images_preloaded: false)
+    def update_upload_ACL(upload)
       key = get_upload_key(upload)
       update_ACL(key, upload.secure?)
 
-      # If we do find_each when the images have already been preloaded with
-      # includes(:optimized_images), then the optimized_images are fetched
-      # from the database again, negating the preloading if this operation
-      # is done on a large amount of uploads at once (see Jobs::SyncAclsForUploads)
-      if optimized_images_preloaded
-        upload.optimized_images.each do |optimized_image|
-          update_optimized_image_acl(optimized_image, secure: upload.secure)
-        end
-      else
-        upload.optimized_images.find_each do |optimized_image|
-          update_optimized_image_acl(optimized_image, secure: upload.secure)
-        end
+      upload.optimized_images.each do |optimized_image|
+        update_optimized_image_acl(optimized_image, secure: upload.secure)
       end
 
       true

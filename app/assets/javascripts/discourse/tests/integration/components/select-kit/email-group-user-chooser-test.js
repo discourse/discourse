@@ -2,7 +2,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, paste, query } from "discourse/tests/helpers/qunit-helpers";
+import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import pretender, { response } from "../../../helpers/create-pretender";
 
@@ -19,26 +19,26 @@ module(
       await render(hbs`<EmailGroupUserChooser/>`);
 
       await this.subject.expand();
-      await paste(query(".filter-input"), "foo,bar");
+      await paste(".filter-input", "foo,bar");
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
 
-      await paste(query(".filter-input"), "evil,trout");
+      await paste(".filter-input", "evil,trout");
       assert.strictEqual(this.subject.header().value(), "foo,bar,evil,trout");
 
-      await paste(query(".filter-input"), "names with spaces");
+      await paste(".filter-input", "names with spaces");
       assert.strictEqual(
         this.subject.header().value(),
         "foo,bar,evil,trout,names,with,spaces"
       );
 
-      await paste(query(".filter-input"), "@osama,@sam");
+      await paste(".filter-input", "@osama,@sam");
       assert.strictEqual(
         this.subject.header().value(),
         "foo,bar,evil,trout,names,with,spaces,osama,sam"
       );
 
-      await paste(query(".filter-input"), "new\nlines");
+      await paste(".filter-input", "new\nlines");
       assert.strictEqual(
         this.subject.header().value(),
         "foo,bar,evil,trout,names,with,spaces,osama,sam,new,lines"
@@ -109,7 +109,7 @@ module(
       await this.subject.expand();
       await fillIn(".filter-input", "test-user");
 
-      assert.notOk(exists(".user-status-message"));
+      assert.dom(".user-status-message").doesNotExist();
     });
 
     test("shows user status if enabled", async function (assert) {
@@ -132,19 +132,13 @@ module(
       await this.subject.expand();
       await fillIn(".filter-input", "test-user");
 
-      assert.ok(exists(".user-status-message"), "user status is rendered");
-      assert.equal(
-        query(".user-status-message .emoji").alt,
-        status.emoji,
-        "status emoji is correct"
-      );
-      assert.equal(
-        query(
-          ".user-status-message .user-status-message-description"
-        ).innerText.trim(),
-        status.description,
-        "status description is correct"
-      );
+      assert.dom(".user-status-message").exists("user status is rendered");
+      assert
+        .dom(".user-status-message .emoji")
+        .hasAttribute("alt", status.emoji, "status emoji is correct");
+      assert
+        .dom(".user-status-message .user-status-message-description")
+        .hasText(status.description, "status description is correct");
     });
   }
 );

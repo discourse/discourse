@@ -21,10 +21,13 @@ export default class FooterNav extends Component {
   }
 
   _modalOff() {
-    postRNWebviewMessage(
-      "headerBg",
-      document.documentElement.style.getPropertyValue("--header_background")
-    );
+    const header = document.querySelector(".d-header-wrap .d-header");
+    if (header) {
+      postRNWebviewMessage(
+        "headerBg",
+        window.getComputedStyle(header).backgroundColor
+      );
+    }
   }
 
   @action

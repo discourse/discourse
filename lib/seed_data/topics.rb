@@ -263,7 +263,9 @@ module SeedData
         quick_start_filename = File.join(Rails.root, "docs", "ADMIN-QUICK-START-GUIDE.md")
       end
 
-      File.read(quick_start_filename)
+      content = File.read(quick_start_filename)
+      content.gsub!("%{base_url}", Discourse.base_url)
+      content
     end
   end
 end

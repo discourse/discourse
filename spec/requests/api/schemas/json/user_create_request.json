@@ -20,8 +20,14 @@
     "approved": {
       "type": "boolean"
     },
-    "user_fields[1]": {
-      "type": "boolean"
+    "user_fields": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "1": {
+          "type": "boolean"
+        }
+      }
     },
     "external_ids": {
       "type": "object"

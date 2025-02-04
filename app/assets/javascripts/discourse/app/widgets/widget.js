@@ -3,6 +3,8 @@ import { getOwner, setOwner } from "@ember/owner";
 import { camelize } from "@ember/string";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import { isProduction } from "discourse/lib/environment";
+import { deepMerge } from "discourse/lib/object";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import {
@@ -24,9 +26,7 @@ import {
   WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
-import { isProduction } from "discourse-common/config/environment";
-import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const _registry = {};
 
@@ -183,6 +183,7 @@ export default class Widget {
     }
   }
 
+  init() {}
   transform() {
     return {};
   }
@@ -190,8 +191,6 @@ export default class Widget {
   defaultState() {
     return {};
   }
-
-  init() {}
 
   destroy() {}
 
@@ -508,7 +507,7 @@ export default class Widget {
       if (typeof this.title === "function") {
         attributes.title = this.title(attrs, state);
       } else {
-        attributes.title = I18n.t(this.title);
+        attributes.title = i18n(this.title);
       }
     }
 

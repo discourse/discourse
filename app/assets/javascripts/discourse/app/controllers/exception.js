@@ -3,9 +3,9 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, equal, gte, none } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 /**
  * You can throw an instance of this error during a route's beforeModel/model/afterModel hooks.
@@ -24,9 +24,26 @@ export class RouteException {
 }
 
 // The controller for the nice error page
-export default Controller.extend({
-  thrown: null,
-  lastTransition: null,
+export default class ExceptionController extends Controller {
+  thrown;
+  lastTransition;
+
+  @equal("thrown.status", 404) isNotFound;
+  @equal("thrown.status", 403) isForbidden;
+  @gte("thrown.status", 500) isServer;
+  @none("isNetwork", "isServer") isUnknown;
+
+  // Handling for the detailed_404 setting (which actually creates 403s)
+  @alias("thrown.responseJSON.extras.html") errorHtml;
+
+  // TODO
+  // make ajax requests to /srv/status with exponential backoff
+  // if one succeeds, set networkFixed to true, which puts a "Fixed!" message on the page
+  networkFixed = false;
+
+  loading = false;
+
+  @alias("thrown.requestedUrl") requestUrl;
 
   @discourseComputed("thrown")
   isNetwork(thrown) {
@@ -41,48 +58,27 @@ export default Controller.extend({
     }
 
     return false;
-  },
-
-  isNotFound: equal("thrown.status", 404),
-  isForbidden: equal("thrown.status", 403),
-  isServer: gte("thrown.status", 500),
-  isUnknown: none("isNetwork", "isServer"),
-
-  // Handling for the detailed_404 setting (which actually creates 403s)
-  errorHtml: alias("thrown.responseJSON.extras.html"),
-
-  // TODO
-  // make ajax requests to /srv/status with exponential backoff
-  // if one succeeds, set networkFixed to true, which puts a "Fixed!" message on the page
-  networkFixed: false,
-  loading: false,
-
-  @on("init")
-  _init() {
-    this.set("loading", false);
-  },
+  }
 
   @discourseComputed("isNetwork", "thrown.status", "thrown")
   reason(isNetwork, thrownStatus, thrown) {
     if (thrown.reason) {
       return thrown.reason;
     } else if (isNetwork) {
-      return I18n.t("errors.reasons.network");
+      return i18n("errors.reasons.network");
     } else if (thrownStatus >= 500) {
-      return I18n.t("errors.reasons.server");
+      return i18n("errors.reasons.server");
     } else if (thrownStatus === 404) {
-      return I18n.t("errors.reasons.not_found");
+      return i18n("errors.reasons.not_found");
     } else if (thrownStatus === 403) {
-      return I18n.t("errors.reasons.forbidden");
+      return i18n("errors.reasons.forbidden");
     } else if (thrown === null) {
-      return I18n.t("errors.reasons.unknown");
+      return i18n("errors.reasons.unknown");
     } else {
       // TODO
-      return I18n.t("errors.reasons.unknown");
+      return i18n("errors.reasons.unknown");
     }
-  },
-
-  requestUrl: alias("thrown.requestedUrl"),
+  }
 
   @discourseComputed(
     "networkFixed",
@@ -95,24 +91,24 @@ export default Controller.extend({
     if (thrown.desc) {
       return thrown.desc;
     } else if (networkFixed) {
-      return I18n.t("errors.desc.network_fixed");
+      return i18n("errors.desc.network_fixed");
     } else if (isNetwork) {
-      return I18n.t("errors.desc.network");
+      return i18n("errors.desc.network");
     } else if (thrownStatus === 404) {
-      return I18n.t("errors.desc.not_found");
+      return i18n("errors.desc.not_found");
     } else if (thrownStatus === 403) {
-      return I18n.t("errors.desc.forbidden");
+      return i18n("errors.desc.forbidden");
     } else if (thrownStatus >= 500) {
-      return I18n.t("errors.desc.server", {
+      return i18n("errors.desc.server", {
         status: thrownStatus + " " + thrownStatusText,
       });
     } else if (thrown === null) {
-      return I18n.t("errors.desc.unknown");
+      return i18n("errors.desc.unknown");
     } else {
       // TODO
-      return I18n.t("errors.desc.unknown");
+      return i18n("errors.desc.unknown");
     }
-  },
+  }
 
   @cached
   get buttons() {
@@ -131,7 +127,7 @@ export default Controller.extend({
         classes: "btn-primary",
         action: this.tryLoading,
         key: "errors.buttons.again",
-        icon: "sync",
+        icon: "arrows-rotate",
       },
       ButtonLoadPage: {
         classes: "btn-primary",
@@ -139,7 +135,7 @@ export default Controller.extend({
         key: "errors.buttons.fixed",
       },
     };
-  },
+  }
 
   @discourseComputed("networkFixed", "isNetwork", "lastTransition")
   enabledButtons(networkFixed, isNetwork, lastTransition) {
@@ -152,7 +148,7 @@ export default Controller.extend({
     } else {
       return [this.buttons.ButtonBackBright, this.buttons.ButtonTryAgain];
     }
-  },
+  }
 
   @action
   back() {
@@ -165,7 +161,7 @@ export default Controller.extend({
     } else {
       window.history.back();
     }
-  },
+  }
 
   @action
   tryLoading() {
@@ -177,5 +173,5 @@ export default Controller.extend({
       transition.retry();
       this.set("loading", false);
     });
-  },
-});
+  }
+}

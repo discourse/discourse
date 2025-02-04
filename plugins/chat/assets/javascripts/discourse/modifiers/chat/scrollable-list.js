@@ -1,8 +1,8 @@
 import { registerDestructor } from "@ember/destroyable";
 import { cancel, throttle } from "@ember/runloop";
 import Modifier from "ember-modifier";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 
 const UP = "up";

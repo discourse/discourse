@@ -54,7 +54,6 @@
       @value="public"
       @id="public-permission"
       @selection={{this.buffered.permissionName}}
-      @onChange={{action "setPermissionsType"}}
       class="tag-permissions-choice"
     />
 
@@ -68,7 +67,6 @@
       @value="visible"
       @id="visible-permission"
       @selection={{this.buffered.permissionName}}
-      @onChange={{action "setPermissionsType"}}
       class="tag-permissions-choice"
     />
 
@@ -94,7 +92,6 @@
       @value="private"
       @id="private-permission"
       @selection={{this.buffered.permissionName}}
-      @onChange={{action "setPermissionsType"}}
       class="tag-permissions-choice"
     />
 
@@ -125,9 +122,9 @@
   />
 
   <DButton
-    @action={{action "destroy"}}
+    @action={{this.destroyTagGroup}}
     @disabled={{this.buffered.isNew}}
-    @icon="far-trash-alt"
+    @icon="trash-can"
     @label="tagging.groups.delete"
     class="btn-danger"
   />

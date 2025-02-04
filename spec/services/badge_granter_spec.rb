@@ -115,7 +115,7 @@ RSpec.describe BadgeGranter do
     end
   end
 
-  describe "backfill" do
+  describe ".backfill" do
     it "has no broken badge queries" do
       Badge.all.each { |b| BadgeGranter.backfill(b) }
     end
@@ -210,6 +210,46 @@ RSpec.describe BadgeGranter do
       BadgeGranter.backfill(first_share)
 
       expect(UserBadge.where(user_id: user_id).count).to eq(0)
+    end
+
+    it "auto revokes badges from users when badge is set to auto revoke and user no longer satisfy the badge's query" do
+      user.update!(username: "cool_username")
+
+      badge_for_having_cool_username =
+        Fabricate(
+          :badge,
+          query:
+            "SELECT users.id user_id, CURRENT_TIMESTAMP granted_at FROM users WHERE users.username = 'cool_username'",
+          auto_revoke: true,
+        )
+
+      granted_user_ids = []
+
+      BadgeGranter.backfill(
+        badge_for_having_cool_username,
+        granted_callback: ->(user_ids) { granted_user_ids.concat(user_ids) },
+      )
+
+      expect(granted_user_ids).to eq([user.id])
+
+      expect(
+        UserBadge.exists?(user_id: user.id, badge_id: badge_for_having_cool_username.id),
+      ).to eq(true)
+
+      user.update!(username: "not_cool_username")
+
+      revoked_user_ids = []
+
+      BadgeGranter.backfill(
+        badge_for_having_cool_username,
+        revoked_callback: ->(user_ids) { revoked_user_ids.concat(user_ids) },
+      )
+
+      expect(revoked_user_ids).to eq([user.id])
+
+      expect(
+        UserBadge.exists?(user_id: user.id, badge_id: badge_for_having_cool_username.id),
+      ).to eq(false)
     end
   end
 

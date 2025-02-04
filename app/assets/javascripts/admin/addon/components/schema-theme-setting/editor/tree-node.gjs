@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, get } from "@ember/helper";
+import { get } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { gt } from "truth-helpers";
-import dIcon from "discourse-common/helpers/d-icon";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import ChildTree from "admin/components/schema-theme-setting/editor/child-tree";
 
 export default class SchemaThemeSettingNewEditorTreeNode extends Component {
@@ -17,18 +17,12 @@ export default class SchemaThemeSettingNewEditorTreeNode extends Component {
 
   constructor() {
     super(...arguments);
-    this.#setText();
+    this.setText();
+    this.args.registerInputFieldObserver(this.args.index, this.setText);
   }
 
-  @action
-  registerInputFieldObserver() {
-    this.args.registerInputFieldObserver(
-      this.args.index,
-      this.#setText.bind(this)
-    );
-  }
-
-  #setText() {
+  @bind
+  setText() {
     this.text = this.args.generateSchemaTitle(
       this.args.object,
       this.args.schema,
@@ -55,19 +49,20 @@ export default class SchemaThemeSettingNewEditorTreeNode extends Component {
 
   <template>
     <li
+      {{on "click" @onClick}}
       role="link"
-      class="schema-theme-setting-editor__tree-node --parent
-        {{if @active ' --active'}}"
-      {{on "click" (fn @onClick @index)}}
+      class={{concatClass
+        "schema-theme-setting-editor__tree-node --parent"
+        (if @active "--active")
+      }}
     >
       <div class="schema-theme-setting-editor__tree-node-text">
-        <span {{didInsert this.registerInputFieldObserver}}>{{this.text}}</span>
+        <span>{{this.text}}</span>
 
         {{#if (gt this.childObjectsProperties.length 0)}}
-
-          {{dIcon (if @active "chevron-down" "chevron-right")}}
+          {{icon (if @active "chevron-down" "chevron-right")}}
         {{else}}
-          {{dIcon "chevron-right"}}
+          {{icon "chevron-right"}}
         {{/if}}
       </div>
 

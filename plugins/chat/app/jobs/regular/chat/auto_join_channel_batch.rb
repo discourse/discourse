@@ -1,18 +1,12 @@
 # frozen_string_literal: true
 
+# TODO: delete this unused job after 2025-01-01
+
 module Jobs
   module Chat
-    class AutoJoinChannelBatch < ServiceJob
+    class AutoJoinChannelBatch < ::Jobs::Base
       def execute(args)
-        with_service(::Chat::AutoJoinChannelBatch, **args) do
-          on_failure { Rails.logger.error("Failed with unexpected error") }
-          on_failed_contract do |contract|
-            Rails.logger.error(contract.errors.full_messages.join(", "))
-          end
-          on_model_not_found(:channel) do
-            Rails.logger.error("Channel not found (id=#{result.contract.channel_id})")
-          end
-        end
+        # no-op
       end
     end
   end

@@ -6,6 +6,21 @@ RSpec.describe FlagGuardian do
   fab!(:moderator)
 
   after(:each) { Flag.reset_flag_settings! }
+  describe "#can_create_flag?" do
+    it "returns true for admin and when custom flags limit is not reached" do
+      SiteSetting.custom_flags_limit = 1
+
+      expect(Guardian.new(admin).can_create_flag?).to eq(true)
+      expect(Guardian.new(user).can_create_flag?).to eq(false)
+
+      flag = Fabricate(:flag)
+
+      expect(Guardian.new(admin).can_create_flag?).to eq(false)
+      expect(Guardian.new(user).can_create_flag?).to eq(false)
+
+      flag.destroy!
+    end
+  end
 
   describe "#can_edit_flag?" do
     it "returns true for admin and false for moderator and regular user" do

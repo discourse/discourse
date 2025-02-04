@@ -1,29 +1,31 @@
 import { computed } from "@ember/object";
-import I18n from "discourse-i18n";
+import { classNames } from "@ember-decorators/component";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  classNames: ["notifications-filter"],
-  nameProperty: "label",
+@classNames("notifications-filter")
+@selectKitOptions({
+  headerComponent: "notifications-filter/notifications-filter-header",
+})
+export default class NotificationsFilter extends DropdownSelectBoxComponent {
+  nameProperty = "label";
 
-  content: computed(function () {
+  @computed
+  get content() {
     return [
       {
         id: "all",
-        label: I18n.t("user.user_notifications.filters.all"),
+        label: i18n("user.user_notifications.filters.all"),
       },
       {
         id: "read",
-        label: I18n.t("user.user_notifications.filters.read"),
+        label: i18n("user.user_notifications.filters.read"),
       },
       {
         id: "unread",
-        label: I18n.t("user.user_notifications.filters.unread"),
+        label: i18n("user.user_notifications.filters.unread"),
       },
     ];
-  }),
-
-  selectKitOptions: {
-    headerComponent: "notifications-filter/notifications-filter-header",
-  },
-});
+  }
+}

@@ -14,7 +14,6 @@ import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
 import emptyState from "../components/sections/molecules/empty-state";
 import footerMessage from "../components/sections/molecules/footer-message";
-import headerIcons from "../components/sections/molecules/header-icons";
 import menus from "../components/sections/molecules/menus";
 import navigationBar from "../components/sections/molecules/navigation-bar";
 import navigationStacked from "../components/sections/molecules/navigation-stacked";
@@ -26,7 +25,8 @@ import topicListItem from "../components/sections/molecules/topic-list-item";
 import topicNotifications from "../components/sections/molecules/topic-notifications";
 import topicTimerInfo from "../components/sections/molecules/topic-timer-info";
 import post from "../components/sections/organisms/00-post";
-import topicMap from "../components/sections/organisms/01-topic-map";
+import postList from "../components/sections/organisms/01-post-list";
+import topicMap from "../components/sections/organisms/02-topic-map";
 import topicFooterButtons from "../components/sections/organisms/03-topic-footer-buttons";
 import topicList from "../components/sections/organisms/04-topic-list";
 import basicTopicList from "../components/sections/organisms/basic-topic-list";
@@ -66,7 +66,6 @@ const SECTIONS = [
   { component: charCounter, category: "molecules", id: "char-counter" },
   { component: emptyState, category: "molecules", id: "empty-state" },
   { component: footerMessage, category: "molecules", id: "footer-message" },
-  { component: headerIcons, category: "molecules", id: "header-icons" },
   { component: navigationBar, category: "molecules", id: "navigation-bar" },
   {
     component: navigationStacked,
@@ -86,7 +85,8 @@ const SECTIONS = [
   },
   { component: topicTimerInfo, category: "molecules", id: "topic-timer-info" },
   { component: post, category: "organisms", id: "post", priority: 0 },
-  { component: topicMap, category: "organisms", id: "topic-map", priority: 1 },
+  { component: postList, category: "organisms", id: "post-list", priority: 1 },
+  { component: topicMap, category: "organisms", id: "topic-map", priority: 2 },
   {
     component: topicFooterButtons,
     category: "organisms",

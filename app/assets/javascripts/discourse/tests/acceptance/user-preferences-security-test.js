@@ -2,13 +2,10 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
-  exists,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Security", function (needs) {
   needs.user();
@@ -30,38 +27,31 @@ acceptance("User Preferences - Security", function (needs) {
   test("recently connected devices", async function (assert) {
     await visit("/u/eviltrout/preferences/security");
 
-    assert.strictEqual(
-      query(
-        ".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device"
-      ).innerText.trim(),
-      "Linux Computer",
-      "it should display active token first"
-    );
+    assert
+      .dom(".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device")
+      .hasText("Linux Computer", "displays active token first");
 
-    assert.strictEqual(
-      query(".pref-auth-tokens > a:nth-of-type(1)").innerText.trim(),
-      I18n.t("user.auth_tokens.show_all", { count: 3 }),
-      "it should display two tokens"
-    );
-    assert.strictEqual(
-      count(".pref-auth-tokens .auth-token"),
-      2,
-      "it should display two tokens"
-    );
+    assert
+      .dom(".pref-auth-tokens > a:nth-of-type(1)")
+      .hasText(
+        i18n("user.auth_tokens.show_all", { count: 3 }),
+        "it should display two tokens"
+      );
+    assert
+      .dom(".pref-auth-tokens .auth-token")
+      .exists({ count: 2 }, "displays two tokens");
 
     await click(".pref-auth-tokens > a:nth-of-type(1)");
 
-    assert.strictEqual(
-      count(".pref-auth-tokens .auth-token"),
-      3,
-      "it should display three tokens"
-    );
+    assert
+      .dom(".pref-auth-tokens .auth-token")
+      .exists({ count: 3 }, "displays three tokens");
 
     const authTokenDropdown = selectKit(".auth-token-dropdown");
     await authTokenDropdown.expand();
     await authTokenDropdown.selectRowByValue("notYou");
 
-    assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
+    assert.dom(".d-modal").exists("modal appears");
   });
 
   test("Viewing user api keys", async function (assert) {
@@ -79,27 +69,27 @@ acceptance("User Preferences - Security", function (needs) {
 
     await visit("/u/eviltrout/preferences/security");
 
-    assert.strictEqual(
-      query(".pref-user-api-keys__application-name").innerText.trim(),
-      "Discourse Hub",
-      "displays the application name for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__application-name")
+      .hasText(
+        "Discourse Hub",
+        "displays the application name for the API key"
+      );
 
-    assert.strictEqual(
-      query(".pref-user-api-keys__scopes-list-item").innerText.trim(),
-      "Read and clear notifications",
-      "displays the scope for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__scopes-list-item")
+      .hasText(
+        "Read and clear notifications",
+        "displays the scope for the API key"
+      );
 
-    assert.ok(
-      exists(".pref-user-api-keys__created-at"),
-      "displays the created at date for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__created-at")
+      .exists("displays the created at date for the API key");
 
-    assert.ok(
-      exists(".pref-user-api-keys__last-used-at"),
-      "displays the last used at date for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__last-used-at")
+      .exists("displays the last used at date for the API key");
   });
 
   test("Viewing Passkeys - user has a key", async function (assert) {
@@ -118,11 +108,9 @@ acceptance("User Preferences - Security", function (needs) {
 
     await visit("/u/eviltrout/preferences/security");
 
-    assert.strictEqual(
-      query(".pref-passkeys__rows .row-passkey__name").innerText.trim(),
-      "Password Manager",
-      "displays the passkey name"
-    );
+    assert
+      .dom(".pref-passkeys__rows .row-passkey__name")
+      .hasText("Password Manager", "displays the passkey name");
 
     assert
       .dom(".row-passkey__created-date")
@@ -212,11 +200,9 @@ acceptance("User Preferences - Security", function (needs) {
     // user charlie has passkeys in fixtures
     await visit("/u/charlie/preferences/security");
 
-    assert.strictEqual(
-      query(".pref-passkeys__rows .row-passkey__name").innerText.trim(),
-      "iCloud Keychain",
-      "displays the passkey name"
-    );
+    assert
+      .dom(".pref-passkeys__rows .row-passkey__name")
+      .hasText("iCloud Keychain", "displays the passkey name");
 
     assert
       .dom(".row-passkey__created-date")

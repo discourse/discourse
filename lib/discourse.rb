@@ -7,15 +7,15 @@ require "version"
 require "git_utils"
 
 module Discourse
-  DB_POST_MIGRATE_PATH ||= "db/post_migrate"
-  REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
+  DB_POST_MIGRATE_PATH = "db/post_migrate"
+  REQUESTED_HOSTNAME = "REQUESTED_HOSTNAME"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
 
   class Utils
-    URI_REGEXP ||= URI.regexp(%w[http https])
+    URI_REGEXP = URI.regexp(%w[http https])
 
     # TODO: Remove this once we drop support for Ruby 2.
-    EMPTY_KEYWORDS ||= {}
+    EMPTY_KEYWORDS = {}
 
     # Usage:
     #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
@@ -330,7 +330,7 @@ module Discourse
   end
 
   # list of pixel ratios Discourse tries to optimize for
-  PIXEL_RATIOS ||= [1, 1.5, 2, 3]
+  PIXEL_RATIOS = [1, 1.5, 2, 3]
 
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
@@ -477,7 +477,7 @@ module Discourse
       end
   end
 
-  BUILTIN_AUTH ||= [
+  BUILTIN_AUTH = [
     Auth::AuthProvider.new(
       authenticator: Auth::FacebookAuthenticator.new,
       frame_width: 580,
@@ -658,33 +658,37 @@ module Discourse
 
   LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
 
-  READONLY_MODE_KEY_TTL ||= 60
-  READONLY_MODE_KEY ||= "readonly_mode"
-  PG_READONLY_MODE_KEY ||= "readonly_mode:postgres"
-  PG_READONLY_MODE_KEY_TTL ||= 300
-  USER_READONLY_MODE_KEY ||= "readonly_mode:user"
-  PG_FORCE_READONLY_MODE_KEY ||= "readonly_mode:postgres_force"
+  READONLY_MODE_KEY_TTL = 60
+  READONLY_MODE_KEY = "readonly_mode"
+  PG_READONLY_MODE_KEY = "readonly_mode:postgres"
+  PG_READONLY_MODE_KEY_TTL = 300
+  USER_READONLY_MODE_KEY = "readonly_mode:user"
+  PG_FORCE_READONLY_MODE_KEY = "readonly_mode:postgres_force"
 
   # Pseudo readonly mode, where staff can still write
-  STAFF_WRITES_ONLY_MODE_KEY ||= "readonly_mode:staff_writes_only"
+  STAFF_WRITES_ONLY_MODE_KEY = "readonly_mode:staff_writes_only"
 
-  READONLY_KEYS ||= [
+  READONLY_KEYS = [
     READONLY_MODE_KEY,
     PG_READONLY_MODE_KEY,
     USER_READONLY_MODE_KEY,
     PG_FORCE_READONLY_MODE_KEY,
   ]
 
-  def self.enable_readonly_mode(key = READONLY_MODE_KEY)
+  def self.enable_readonly_mode(key = READONLY_MODE_KEY, expires: nil)
     if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
       Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
 
-    if [USER_READONLY_MODE_KEY, PG_FORCE_READONLY_MODE_KEY, STAFF_WRITES_ONLY_MODE_KEY].include?(
-         key,
-       )
-      Discourse.redis.set(key, 1)
-    else
+    if expires.nil?
+      expires = [
+        USER_READONLY_MODE_KEY,
+        PG_FORCE_READONLY_MODE_KEY,
+        STAFF_WRITES_ONLY_MODE_KEY,
+      ].exclude?(key)
+    end
+
+    if expires
       ttl =
         case key
         when PG_READONLY_MODE_KEY
@@ -695,6 +699,8 @@ module Discourse
 
       Discourse.redis.setex(key, ttl, 1)
       keep_readonly_mode(key, ttl: ttl) if !Rails.env.test?
+    else
+      Discourse.redis.set(key, 1)
     end
 
     MessageBus.publish(readonly_channel, true)
@@ -858,7 +864,7 @@ module Discourse
     user ||= (system_user || User.admins.real.order(:id).first)
   end
 
-  SYSTEM_USER_ID ||= -1
+  SYSTEM_USER_ID = -1
 
   def self.system_user
     @system_users ||= {}
@@ -894,6 +900,20 @@ module Discourse
 
   def self.readonly_channel
     "/site/read-only"
+  end
+
+  # all forking servers must call this
+  # before forking, otherwise the forked process might
+  # be in a bad state
+  def self.before_fork
+    # V8 does not support forking, make sure all contexts are disposed
+    ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
+
+    # get rid of rubbish so we don't share it
+    # longer term we will use compact! here
+    GC.start
+    GC.start
+    GC.start
   end
 
   # all forking servers must call this
@@ -1022,7 +1042,7 @@ module Discourse
     warning
   end
 
-  SIDEKIQ_NAMESPACE ||= "sidekiq"
+  SIDEKIQ_NAMESPACE = "sidekiq"
 
   def self.sidekiq_redis_config
     conf = GlobalSetting.redis_config.dup
@@ -1032,6 +1052,24 @@ module Discourse
 
   def self.static_doc_topic_ids
     [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
+  end
+
+  def self.site_creation_date
+    @creation_dates ||= {}
+    current_db = RailsMultisite::ConnectionManagement.current_db
+    @creation_dates[current_db] ||= begin
+      result = DB.query_single <<~SQL
+          SELECT created_at
+          FROM schema_migration_details
+          ORDER BY created_at
+          LIMIT 1
+        SQL
+      result.first
+    end
+  end
+
+  def self.clear_site_creation_date_cache
+    @creation_dates = {}
   end
 
   cattr_accessor :last_ar_cache_reset
@@ -1144,7 +1182,7 @@ module Discourse
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
   end
 
-  CDN_REQUEST_METHODS ||= %w[GET HEAD OPTIONS]
+  CDN_REQUEST_METHODS = %w[GET HEAD OPTIONS]
 
   def self.is_cdn_request?(env, request_method)
     return if CDN_REQUEST_METHODS.exclude?(request_method)
@@ -1177,12 +1215,25 @@ module Discourse
   end
 
   def self.anonymous_locale(request)
-    locale =
-      HttpLanguageParser.parse(request.cookies["locale"]) if SiteSetting.set_locale_from_cookie
+    locale = request.params["lang"] if SiteSetting.set_locale_from_param
+    locale ||= request.cookies["locale"] if SiteSetting.set_locale_from_cookie
     locale ||=
-      HttpLanguageParser.parse(
-        request.env["HTTP_ACCEPT_LANGUAGE"],
-      ) if SiteSetting.set_locale_from_accept_language_header
-    locale
+      request.env["HTTP_ACCEPT_LANGUAGE"] if SiteSetting.set_locale_from_accept_language_header
+    HttpLanguageParser.parse(locale)
+  end
+
+  # For test environment only
+  def self.enable_sidekiq_logging
+    @@sidekiq_logging_enabled = true
+  end
+
+  # For test environment only
+  def self.disable_sidekiq_logging
+    @@sidekiq_logging_enabled = false
+  end
+
+  def self.enable_sidekiq_logging?
+    ENV["DISCOURSE_LOG_SIDEKIQ"] == "1" ||
+      (defined?(@@sidekiq_logging_enabled) && @@sidekiq_logging_enabled)
   end
 end

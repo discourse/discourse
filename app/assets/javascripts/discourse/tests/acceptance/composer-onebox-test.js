@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  query,
-  visible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Onebox", function (needs) {
   needs.user();
@@ -32,18 +28,14 @@ http://www.example.com/has-title.html
         `
     );
 
-    assert.ok(visible(".d-editor-preview"));
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      `
+    assert.dom(".d-editor-preview").exists();
+    assert.dom(".d-editor-preview").hasHtml(`
 <p><aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside><br>
 This is another test <a href=\"http://www.example.com/has-title.html\" class=\"inline-onebox\" tabindex=\"-1\">This is a great title</a></p>
 <p><a href=\"http://www.example.com/no-title.html\" class=\"onebox\" target=\"_blank\" tabindex=\"-1\">http://www.example.com/no-title.html</a></p>
 <p>This is another test <a href=\"http://www.example.com/no-title.html\" class=\"\" tabindex=\"-1\">http://www.example.com/no-title.html</a><br>
 This is another test <a href=\"http://www.example.com/has-title.html\" class=\"inline-onebox\" tabindex=\"-1\">This is a great title</a></p>
-<p><aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside></p>
-        `.trim()
-    );
+<p><aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside></p>`);
   });
 });
 
@@ -72,16 +64,18 @@ acceptance("Composer - Inline Onebox", function (needs) {
 
     await fillIn(".d-editor-input", `Test www.example.com/page`);
     assert.strictEqual(requestsCount, 1);
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      '<p>Test <a href="http://www.example.com/page" class="inline-onebox-loading" tabindex="-1">www.example.com/page</a></p>'
-    );
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml(
+        '<p>Test <a href="http://www.example.com/page" class="inline-onebox-loading" tabindex="-1">www.example.com/page</a></p>'
+      );
 
     await fillIn(".d-editor-input", `Test www.example.com/page Test`);
     assert.strictEqual(requestsCount, 1);
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      '<p>Test <a href="http://www.example.com/page" tabindex="-1">www.example.com/page</a> Test</p>'
-    );
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml(
+        '<p>Test <a href="http://www.example.com/page" tabindex="-1">www.example.com/page</a> Test</p>'
+      );
   });
 });

@@ -2,8 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
   setupRenderingTest(hooks);
@@ -17,11 +16,8 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
 
     await render(hbs`<ChatComposerUpload @upload={{this.upload}} />`);
 
-    assert.true(exists(".upload-progress[value=50]"));
-    assert.strictEqual(
-      query(".uploading").innerText.trim(),
-      I18n.t("uploading")
-    );
+    assert.dom(".upload-progress[value='50']").exists();
+    assert.dom(".uploading").hasText(i18n("uploading"));
   });
 
   test("image - uploading in progress", async function (assert) {
@@ -33,12 +29,9 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
 
     await render(hbs`<ChatComposerUpload @upload={{this.upload}} />`);
 
-    assert.true(exists(".d-icon-far-image"));
-    assert.true(exists(".upload-progress[value=78]"));
-    assert.strictEqual(
-      query(".uploading").innerText.trim(),
-      I18n.t("uploading")
-    );
+    assert.dom(".d-icon-far-image").exists();
+    assert.dom(".upload-progress[value='78']").exists();
+    assert.dom(".uploading").hasText(i18n("uploading"));
   });
 
   test("image - preprocessing upload in progress", async function (assert) {
@@ -51,10 +44,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
 
     await render(hbs`<ChatComposerUpload @upload={{this.upload}} />`);
 
-    assert.strictEqual(
-      query(".processing").innerText.trim(),
-      I18n.t("processing")
-    );
+    assert.dom(".processing").hasText(i18n("processing"));
   });
 
   test("file - upload complete", async function (assert) {
@@ -68,9 +58,9 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       hbs`<ChatComposerUpload @isDone={{true}} @upload={{this.upload}} />`
     );
 
-    assert.true(exists(".d-icon-file-alt"));
-    assert.strictEqual(query(".file-name").innerText.trim(), "some file.pdf");
-    assert.strictEqual(query(".extension-pill").innerText.trim(), "pdf");
+    assert.dom(".d-icon-file-lines").exists();
+    assert.dom(".file-name").hasText("some file.pdf");
+    assert.dom(".extension-pill").hasText("pdf");
   });
 
   test("image - upload complete", async function (assert) {
@@ -85,7 +75,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       hbs`<ChatComposerUpload @isDone={{true}} @upload={{this.upload}} />`
     );
 
-    assert.true(exists("img.preview-img[src='/images/avatar.png']"));
+    assert.dom("img.preview-img[src='/images/avatar.png']").exists();
   });
 
   test("removing completed upload", async function (assert) {
@@ -105,7 +95,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     );
 
     await click(".chat-composer-upload__remove-btn");
-    assert.strictEqual(this.uploadRemoved, true);
+    assert.true(this.uploadRemoved);
   });
 
   test("cancelling in progress upload", async function (assert) {
@@ -125,6 +115,6 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     );
 
     await click(".chat-composer-upload__remove-btn");
-    assert.strictEqual(this.uploadRemoved, true);
+    assert.true(this.uploadRemoved);
   });
 });

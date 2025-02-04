@@ -1,8 +1,8 @@
 import { setTransientHeader } from "discourse/lib/ajax";
 import cookie from "discourse/lib/cookie";
+import getURL from "discourse/lib/get-url";
 import { getRenderDirector } from "discourse/lib/notification-types-manager";
 import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
-import getURL from "discourse-common/lib/get-url";
 
 export default class UserMenuNotificationItem extends UserMenuBaseItem {
   constructor({

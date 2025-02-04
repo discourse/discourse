@@ -1,3 +1,4 @@
+import { and, eq } from "truth-helpers";
 import Section from "./section";
 import SectionLink from "./section-link";
 
@@ -14,6 +15,9 @@ const SidebarApiSection = <template>
       @displaySection={{@section.displaySection}}
       @hideSectionHeader={{@section.hideSectionHeader}}
       @collapsedByDefault={{@section.collapsedByDefault}}
+      @activeLink={{@section.activeLink}}
+      @expandWhenActive={{@expandWhenActive}}
+      @scrollActiveLinkIntoView={{@scrollActiveLinkIntoView}}
     >
       {{#each @section.filteredLinks key="name" as |link|}}
         <SectionLink
@@ -23,6 +27,7 @@ const SidebarApiSection = <template>
           @model={{link.model}}
           @query={{link.query}}
           @models={{link.models}}
+          @currentWhen={{link.currentWhen}}
           @href={{link.href}}
           @title={{link.title}}
           @contentCSSClass={{link.contentCSSClass}}
@@ -38,13 +43,16 @@ const SidebarApiSection = <template>
           @hoverValue={{link.hoverValue}}
           @hoverAction={{link.hoverAction}}
           @hoverTitle={{link.hoverTitle}}
-          @currentWhen={{link.currentWhen}}
           @didInsert={{link.didInsert}}
           @willDestroy={{link.willDestroy}}
           @content={{link.text}}
           @contentComponent={{component
             link.contentComponent
             status=link.contentComponentArgs
+          }}
+          @scrollIntoView={{and
+            @scrollActiveLinkIntoView
+            (eq link.name @section.activeLink.name)
           }}
         />
       {{/each}}

@@ -1,6 +1,6 @@
 import Service from "@ember/service";
-import { isTesting } from "discourse-common/config/environment";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { isTesting } from "discourse/lib/environment";
+import { getURLWithCDN } from "discourse/lib/get-url";
 
 export const CHAT_SOUNDS = {
   bell: [{ src: "/plugins/chat/audio/bell.mp3", type: "audio/mpeg" }],
@@ -31,7 +31,7 @@ export default class ChatAudioManager extends Service {
     const audio = new Audio(src);
     try {
       await audio.play();
-    } catch (e) {
+    } catch {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
         console.info(

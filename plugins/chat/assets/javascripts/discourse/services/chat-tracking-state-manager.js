@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 
 /**
@@ -23,6 +23,11 @@ export default class ChatTrackingStateManager extends Service {
 
   // NOTE: In future, we may want to preload some thread tracking state
   // as well, but for now we do that on demand when the user opens a channel,
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this._onTriggerNotificationDebounceHandler);
+  }
+
   // to avoid having to load all the threads across all channels into memory at once.
   setupWithPreloadedState({ channel_tracking = {} }) {
     this.chatChannelsManager.channels.forEach((channel) => {
@@ -70,18 +75,21 @@ export default class ChatTrackingStateManager extends Service {
   }
 
   get allChannelUrgentCount() {
-    return this.publicChannelMentionCount + this.directMessageUnreadCount;
-  }
-
-  get hasUnreadThreads() {
-    return this.#publicChannels.some(
-      (channel) => channel.unreadThreadsCount > 0
+    return (
+      this.allChannelMentionCount +
+      this.directMessageUnreadCount +
+      this.watchedThreadsUnreadCount
     );
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    cancel(this._onTriggerNotificationDebounceHandler);
+  get hasUnreadThreads() {
+    return this.#allChannels.some((channel) => channel.unreadThreadsCount > 0);
+  }
+
+  get watchedThreadsUnreadCount() {
+    return this.#allChannels.reduce((unreadCount, channel) => {
+      return unreadCount + channel.tracking.watchedThreadsUnreadCount;
+    }, 0);
   }
 
   /**
@@ -108,6 +116,8 @@ export default class ChatTrackingStateManager extends Service {
     }
     model.tracking.unreadCount = state.unread_count;
     model.tracking.mentionCount = state.mention_count;
+    model.tracking.watchedThreadsUnreadCount =
+      state.watched_threads_unread_count;
   }
 
   get #publicChannels() {
@@ -116,5 +126,9 @@ export default class ChatTrackingStateManager extends Service {
 
   get #directMessageChannels() {
     return this.chatChannelsManager.directMessageChannels;
+  }
+
+  get #allChannels() {
+    return this.chatChannelsManager.allChannels;
   }
 }

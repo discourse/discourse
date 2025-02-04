@@ -13,6 +13,9 @@ fr:
       total_votes:
         one: "vote au total"
         other: "votes au total"
+      votes:
+        one: "%{count} vote"
+        other: "%{count} votes"
       average_rating: "Notation moyenne : <strong>%{average}</strong>"
       public:
         title: "Les votes sont <strong>publics</strong>."
@@ -46,6 +49,12 @@ fr:
       show-results:
         title: "Afficher les résultats du sondage"
         label: "Résultats"
+      show-tally:
+        title: "Afficher les résultats du vote par nombre de votes"
+        label: "Afficher le décompte"
+      show-percentage:
+        title: "Afficher les résultats du vote sous forme de pourcentage"
+        label: "Afficher en pourcentage"
       remove-vote:
         title: "Supprimer votre vote"
         label: "Annuler le vote"
@@ -93,6 +102,8 @@ fr:
         label: "Options"
         ranked_choice:
           abstain: "Abstention"
+          highest_priority: "(priorité la plus élevée)"
+          lowest_priority: "(priorité la plus faible)"
           login: "Connectez-vous pour voter !"
       error_while_toggling_status: "Nous sommes désolés, une erreur s'est produite lors du changement de statut de ce sondage."
       error_while_casting_votes: "Nous sommes désolés, une erreur s'est produite lors de l'envoi de vos votes."

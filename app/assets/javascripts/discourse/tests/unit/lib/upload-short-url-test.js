@@ -155,17 +155,15 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     let video = fixture().querySelector("video");
     let link = fixture().querySelector("a");
 
-    assert.strictEqual(image1.getAttribute("src"), "/images/avatar.png?a");
-    assert.strictEqual(image2.getAttribute("src"), "/images/avatar.png?b");
-    assert.strictEqual(link.getAttribute("href"), "/uploads/short-url/c.pdf");
-    assert.strictEqual(
-      video.querySelector("source").getAttribute("src"),
-      "/uploads/default/original/3X/c/b/4.mp4"
-    );
-    assert.strictEqual(
-      audio.querySelector("source").getAttribute("src"),
-      "/uploads/default/original/3X/c/b/5.mp3"
-    );
+    assert.dom(image1).hasAttribute("src", "/images/avatar.png?a");
+    assert.dom(image2).hasAttribute("src", "/images/avatar.png?b");
+    assert.dom(link).hasAttribute("href", "/uploads/short-url/c.pdf");
+    assert
+      .dom("source", video)
+      .hasAttribute("src", "/uploads/default/original/3X/c/b/4.mp4");
+    assert
+      .dom("source", audio)
+      .hasAttribute("src", "/uploads/default/original/3X/c/b/5.mp3");
   });
 
   test("resolveAllShortUrls - url with full origin replaced correctly", async function (assert) {
@@ -174,10 +172,12 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     await settled();
     let video = fixture().querySelectorAll("video")[1];
 
-    assert.strictEqual(
-      video.querySelector("source").getAttribute("src"),
-      "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4"
-    );
+    assert
+      .dom("source", video)
+      .hasAttribute(
+        "src",
+        "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4"
+      );
   });
 
   test("resolveAllShortUrls - when secure uploads is enabled use the attachment full URL", async function (assert) {
@@ -196,10 +196,9 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     await settled();
 
     let link = fixture().querySelector("a");
-    assert.strictEqual(
-      link.getAttribute("href"),
-      "/secure-uploads/default/original/3X/c/b/3.pdf"
-    );
+    assert
+      .dom(link)
+      .hasAttribute("href", "/secure-uploads/default/original/3X/c/b/3.pdf");
   });
 
   test("resolveAllShortUrls - scoped", async function (assert) {

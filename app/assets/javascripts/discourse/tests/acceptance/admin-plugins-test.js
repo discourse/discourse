@@ -12,6 +12,7 @@ acceptance("Admin - Plugins", function (needs) {
           {
             id: "some-test-plugin",
             name: "some-test-plugin",
+            humanized_name: "Some test plugin",
             about: "Plugin description",
             version: "0.1",
             url: "https://example.com",
@@ -44,10 +45,10 @@ acceptance("Admin - Plugins", function (needs) {
       .dom(
         "table.admin-plugins-list .admin-plugins-list__row .admin-plugins-list__name-details .admin-plugins-list__name-with-badges .admin-plugins-list__name"
       )
-      .hasText("Some Test Plugin", "displays the plugin in the table");
+      .hasText("Some test plugin", "displays the plugin in the table");
 
     assert
-      .dom(".admin-plugins .admin-container .alert-error")
+      .dom(".admin-plugins .admin-config-page .alert-error")
       .exists("shows an error for unknown routes");
 
     assert
@@ -64,11 +65,11 @@ acceptance("Admin - Plugins", function (needs) {
       "table.admin-plugins-list tr .admin-plugins-list__enabled button";
     assert
       .dom(toggleSelector)
-      .hasAttribute("aria-checked", "true", "displays the plugin as enabled");
+      .hasAria("checked", "true", "displays the plugin as enabled");
 
     await click(toggleSelector);
     assert
       .dom(toggleSelector)
-      .hasAttribute("aria-checked", "false", "displays the plugin as enabled");
+      .hasAria("checked", "false", "displays the plugin as enabled");
   });
 });

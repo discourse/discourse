@@ -26,8 +26,8 @@ RSpec.describe SiteController do
       expect(json["apple_touch_icon_url"]).to eq(expected_url)
       expect(json["logo_small_url"]).to eq(expected_url)
       expect(json["mobile_logo_url"]).to eq(expected_url)
-      expect(json["header_primary_color"]).to eq("333333")
-      expect(json["header_background_color"]).to eq("ffffff")
+      expect(json["header_primary_color"]).to eq("333")
+      expect(json["header_background_color"]).to eq("fff")
       expect(json["login_required"]).to eq(true)
       expect(json["locale"]).to eq("en")
       expect(json["include_in_discourse_discover"]).to eq(true)
@@ -46,6 +46,8 @@ RSpec.describe SiteController do
   end
 
   describe "#statistics" do
+    after { DiscoursePluginRegistry.reset! }
+
     it "is visible for sites requiring login" do
       SiteSetting.login_required = true
       SiteSetting.share_anonymized_statistics = true
@@ -68,6 +70,8 @@ RSpec.describe SiteController do
       expect(json["likes_count"]).to be_present
       expect(json["likes_7_days"]).to be_present
       expect(json["likes_30_days"]).to be_present
+      expect(json["participating_users_7_days"]).to be_present
+      expect(json["participating_users_30_days"]).to be_present
     end
 
     it "is not visible if site setting share_anonymized_statistics is disabled" do

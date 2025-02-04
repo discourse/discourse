@@ -2,7 +2,7 @@ import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 import StaticPage from "discourse/models/static-page";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class FaqRoute extends DiscourseRoute {
   @service siteSettings;
@@ -27,6 +27,6 @@ export default class FaqRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t(this.pageId);
+    return i18n(this.pageId);
   }
 }

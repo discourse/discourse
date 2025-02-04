@@ -1,35 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::CreateCategoryChannel do
-  describe Chat::CreateCategoryChannel::Contract, type: :model do
+  describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of :category_id }
     it { is_expected.to validate_length_of(:name).is_at_most(SiteSetting.max_topic_title_length) }
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:admin) }
     fab!(:category)
     let(:category_id) { category.id }
 
+    let(:name) { "cool channel" }
+    let(:icon_upload_id) { 2 }
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { guardian: guardian, category_id: category_id, name: "cool channel" } }
-
-    it "can create several channels with empty slugs" do
-      SiteSetting.slug_generation_method = "none"
-      expect do
-        described_class.call(params.merge(name: "channel 1", slug: nil))
-      end.not_to raise_error
-      expect do
-        described_class.call(params.merge(name: "channel 2", slug: nil))
-      end.not_to raise_error
-    end
-
-    it "can create several channels with unicode names" do
-      expect do described_class.call(params.merge(name: "マイキ")) end.not_to raise_error
-      expect do described_class.call(params.merge(name: "境界")) end.not_to raise_error
-    end
+    let(:params) { { category_id:, name: name, icon_upload_id: icon_upload_id } }
+    let(:dependencies) { { guardian: } }
 
     context "when public channels are disabled" do
       fab!(:current_user) { Fabricate(:user) }
@@ -60,12 +48,15 @@ RSpec.describe Chat::CreateCategoryChannel do
       end
 
       context "when all steps pass" do
+        it { is_expected.to run_successfully }
+
         it "creates the channel" do
           expect { result }.to change { Chat::Channel.count }.by(1)
           expect(result.channel).to have_attributes(
             chatable: category,
-            name: "cool channel",
+            name: name,
             slug: "cool-channel",
+            icon_upload_id: icon_upload_id,
           )
         end
 
@@ -79,10 +70,7 @@ RSpec.describe Chat::CreateCategoryChannel do
         end
 
         it "does not enforce automatic memberships" do
-          Chat::ChannelMembershipManager
-            .any_instance
-            .expects(:enforce_automatic_channel_memberships)
-            .never
+          Chat::AutoJoinChannels.expects(:call).never
           result
         end
 
@@ -97,10 +85,7 @@ RSpec.describe Chat::CreateCategoryChannel do
           let(:params) { { guardian: guardian, category_id: category_id, auto_join_users: "" } }
 
           it "defaults to false" do
-            Chat::ChannelMembershipManager
-              .any_instance
-              .expects(:enforce_automatic_channel_memberships)
-              .never
+            Chat::AutoJoinChannels.expects(:call).never
             result
           end
         end
@@ -109,10 +94,7 @@ RSpec.describe Chat::CreateCategoryChannel do
           let(:params) { { guardian: guardian, category_id: category_id, auto_join_users: "true" } }
 
           it "enforces automatic memberships" do
-            Chat::ChannelMembershipManager
-              .any_instance
-              .expects(:enforce_automatic_channel_memberships)
-              .once
+            Chat::AutoJoinChannels.expects(:call).once
             result
           end
         end

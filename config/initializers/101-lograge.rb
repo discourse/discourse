@@ -109,25 +109,26 @@ if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
             }
 
             if data = (Thread.current[:_method_profiler] || event.payload[:timings])
-              sql = data[:sql]
-
-              if sql
+              if sql = data[:sql]
                 output[:db] = sql[:duration] * 1000
                 output[:db_calls] = sql[:calls]
               end
 
-              redis = data[:redis]
-
-              if redis
+              if redis = data[:redis]
                 output[:redis] = redis[:duration] * 1000
                 output[:redis_calls] = redis[:calls]
               end
 
-              net = data[:net]
-
-              if net
+              if net = data[:net]
                 output[:net] = net[:duration] * 1000
                 output[:net_calls] = net[:calls]
+              end
+
+              # MethodProfiler.stop is called after this lambda, so the delta
+              # must be computed here.
+              if data[:__start_gc_heap_live_slots]
+                output[:heap_live_slots] = GC.stat[:heap_live_slots] -
+                  data[:__start_gc_heap_live_slots]
               end
             end
 

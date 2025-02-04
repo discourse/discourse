@@ -1,0 +1,45 @@
+{
+  // Enable gjs support for eslint
+  "eslint.validate": [
+    "glimmer-js",
+  ],
+
+  // Formatter configuration:
+  "[scss]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[glimmer-js]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[ruby]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Shopify.ruby-lsp"
+  },
+  "[handlebars]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // eslint fix on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+
+  "task.autoDetect": "off",
+  "eslint.debug": false,
+  "rubyLsp.formatter": "syntax_tree",
+
+  // stylelint scss support
+  "stylelint.validate": ["css", "postcss", "scss"],
+
+  // disable other stylesheet linters
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false
+}

@@ -1,5 +1,5 @@
 import { htmlSafe } from "@ember/template";
-import { registerRawHelper } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse/lib/helpers";
 
 let usernameDecorators = [];
 export function addUsernameSelectorDecorator(decorator) {

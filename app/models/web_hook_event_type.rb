@@ -18,7 +18,8 @@ class WebHookEventType < ActiveRecord::Base
   TOPIC_VOTING = 17
   CHAT_MESSAGE = 18
 
-  enum group: {
+  enum :group,
+       {
          topic: 0,
          post: 1,
          user: 2,
@@ -35,8 +36,9 @@ class WebHookEventType < ActiveRecord::Base
          user_promoted: 13,
          voting: 14,
          chat: 15,
+         custom: 16,
        },
-       _scopes: false
+       scopes: false
 
   TYPES = {
     topic_created: 101,

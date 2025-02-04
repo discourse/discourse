@@ -17,27 +17,33 @@ class BookmarksBulkAction
     if BookmarksBulkAction.operations.exclude?(@operation[:type])
       raise Discourse::InvalidParameters.new(:operation)
     end
-    # careful these are private methods, we need send
-    send(@operation[:type])
+
+    case @operation[:type]
+    when "clear_reminder"
+      clear_reminder
+    when "delete"
+      delete
+    end
+
     @changed_ids.sort
   end
 
   private
 
   def delete
-    @bookmark_ids.each do |b_id|
-      if guardian.can_delete?(b_id)
-        BookmarkManager.new(@user).destroy(b_id)
-        @changed_ids << b_id
+    @bookmark_ids.each do |bookmark_id|
+      if guardian.can_delete?(bookmark_id)
+        BookmarkManager.new(@user).destroy(bookmark_id)
+        @changed_ids << bookmark_id
       end
     end
   end
 
   def clear_reminder
-    bookmarks.each do |b|
-      if guardian.can_edit?(b)
-        BookmarkReminderNotificationHandler.new(b).clear_reminder
-        @changed_ids << b.id
+    bookmarks.each do |bookmark|
+      if guardian.can_edit?(bookmark)
+        bookmark.clear_reminder!(force_clear_reminder_at: true)
+        @changed_ids << bookmark.id
       else
         raise Discourse::InvalidAccess.new
       end

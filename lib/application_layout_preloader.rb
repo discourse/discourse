@@ -98,7 +98,8 @@ class ApplicationLayoutPreloader
           .map do |plugin|
             {
               name: plugin.name.downcase,
-              admin_route: plugin.admin_route,
+              humanized_name: plugin.humanized_name,
+              admin_route: plugin.full_admin_route,
               enabled: plugin.enabled?,
             }
           end,

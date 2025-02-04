@@ -5,20 +5,16 @@ RSpec.describe Jobs::RefreshUsersReviewableCounts do
   fab!(:moderator)
   fab!(:user)
 
-  fab!(:group)
-  fab!(:topic)
-  fab!(:reviewable1) do
-    Fabricate(:reviewable, reviewable_by_group: group, reviewable_by_moderator: true, topic: topic)
-  end
+  fab!(:group) { Fabricate(:group, users: [user]) }
+  fab!(:category)
+  fab!(:topic) { Fabricate(:topic, category:) }
+  fab!(:category_moderation_group) { Fabricate(:category_moderation_group, category:, group:) }
+  fab!(:reviewable1) { Fabricate(:reviewable, reviewable_by_moderator: true, topic:, category:) }
 
   fab!(:reviewable2) { Fabricate(:reviewable, reviewable_by_moderator: false) }
   fab!(:reviewable3) { Fabricate(:reviewable, reviewable_by_moderator: true) }
 
-  before do
-    SiteSetting.enable_category_group_moderation = true
-    group.add(user)
-    topic.category.update!(reviewable_by_group: group)
-  end
+  before { SiteSetting.enable_category_group_moderation = true }
 
   describe "#execute" do
     it "publishes reviewable counts for the members of the specified groups" do

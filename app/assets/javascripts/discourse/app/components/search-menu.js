@@ -7,6 +7,9 @@ import { Promise } from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import {
   isValidSearchTerm,
   searchForTerm,
@@ -14,9 +17,6 @@ import {
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import userSearch from "discourse/lib/user-search";
-import discourseDebounce from "discourse-common/lib/debounce";
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
@@ -47,6 +47,14 @@ export default class SearchMenu extends Component {
   _debouncer = null;
   _activeSearch = null;
 
+  willDestroy() {
+    if (!this.args.inlineResults) {
+      document.removeEventListener("mousedown", this.onDocumentPress);
+      document.removeEventListener("touchend", this.onDocumentPress);
+    }
+    super.willDestroy(...arguments);
+  }
+
   @bind
   setupEventListeners() {
     // We only need to register click events when the search menu is rendered outside of the header.
@@ -55,14 +63,6 @@ export default class SearchMenu extends Component {
       document.addEventListener("mousedown", this.onDocumentPress);
       document.addEventListener("touchend", this.onDocumentPress);
     }
-  }
-
-  willDestroy() {
-    if (!this.args.inlineResults) {
-      document.removeEventListener("mousedown", this.onDocumentPress);
-      document.removeEventListener("touchend", this.onDocumentPress);
-    }
-    super.willDestroy(...arguments);
   }
 
   @bind
@@ -103,6 +103,13 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  @action
+  onKeydown(event) {
+    if (event.key === "Escape") {
+      this.close();
+    }
   }
 
   @action

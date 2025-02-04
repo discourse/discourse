@@ -29,21 +29,21 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
     timeout-minutes: 20
 
     env:
-      DISCOURSE_HOSTNAME: www.example.com
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
-      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/main/head' }}
+      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       TESTEM_DEFAULT_BROWSER: Chrome
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
 
     strategy:
       fail-fast: false
@@ -68,10 +68,19 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - name: Remove Chromium
-        continue-on-error: true
+      - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
-        run: apt remove -y chromium-driver chromium
+        run: |
+          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
+
+      - name: Set QUNIT_PARALLEL for QUnit tests
+        if: matrix.build_type == 'frontend'
+        run: |
+          if [ "${{ matrix.target }}" = "themes" ]; then
+            echo "QUNIT_PARALLEL=2" >> $GITHUB_ENV
+          else
+            echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
+          fi
 
       - uses: actions/checkout@v4
         with:
@@ -92,18 +101,9 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
-      - name: Container envs
-        id: container-envs
+      - name: Symlink vendor/bundle from image
         run: |
-          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
-          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
         run: |
@@ -114,33 +114,31 @@ jobs:
           bundle install --jobs $(($(nproc) - 1))
           bundle clean
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Yarn cache
-        uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
-
-      - name: Yarn install
-        run: yarn install --frozen-lockfile
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:install_all_official
 
-      - name: Pull compatible versions of plugins
+      - name: Symlinking plugin gems from image
         if: matrix.target == 'plugins'
-        run: bin/rake plugin:pull_compatible_all
+        run: |
+          for dir in /var/www/discourse/plugins/*/gems; do
+            plugin_name=$(basename "$(dirname "$dir")")
+            dest="plugins/$plugin_name/gems"
 
-      - name: Plugin gems cache
-        uses: actions/cache@v4
-        with:
-          path: plugins/*/gems
-          key: ${{ runner.os }}-plugin-gems-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-${{ hashFiles('plugins/*/plugin.rb') }}
+            if [ -d "$dest" ]; then
+              echo "Skipping $plugin_name: Source gems directory exists"
+            else
+              echo "Symlinking $dir to $dest"
+              ln -s "$dir" "$dest"
+            fi
+          done
+
+      - name: Pull compatible versions of plugins
+        if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
+        run: bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
         if: matrix.target == 'themes'
@@ -152,6 +150,10 @@ jobs:
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
+      - name: Get CPU cores
+        id: cpu-info
+        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+
       - name: Fetch app state cache
         uses: actions/cache@v4
         id: app-cache
@@ -159,10 +161,12 @@ jobs:
           path: tmp/app-cache
           key: >-
             ${{ runner.os }}-
+            ${{ steps.cpu-info.outputs.cpu-cores }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
             ${{ hashFiles('config/environments/test.rb') }}-
-            ${{ env.USES_PARALLEL_DATABASES }}
+            ${{ env.USES_PARALLEL_DATABASES }}-
+            ${{ env.PARALLEL_TEST_PROCESSORS }}-
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -220,15 +224,15 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose --format documentation
+        run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format documentation --use-runtime-info']
+        run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
         timeout-minutes: 30
 
       - name: Theme QUnit
@@ -254,7 +258,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
@@ -262,7 +266,7 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: |
           GLOBIGNORE="plugins/chat/*";
-          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
         timeout-minutes: 30
 
@@ -270,7 +274,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
         timeout-minutes: 30
 
       - name: Theme System Tests
@@ -278,7 +282,7 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
         shell: bash
         timeout-minutes: 30
 
@@ -294,15 +298,15 @@ jobs:
         shell: bash
 
       - name: Upload failed system test screenshots
-        uses: actions/upload-artifact@v3 # TODO (tgxworld): V4 doesn't allow us to upload multiple uploads to the same artifact name so keep at V3 for now.
+        uses: actions/upload-artifact@v4
         if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
         with:
-          name: failed-system-test-screenshots
+          name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/capybara/*.png
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
-        if: always() && github.repository == 'discourse/discourse'
+        if: github.repository == 'discourse/discourse' && github.ref_name == 'main' && env.DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS == '1'
         run: |
           if [ -f tmp/turbo_rspec_flaky_tests.json ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
@@ -313,20 +317,20 @@ jobs:
 
       - name: Fetch Job ID
         id: fetch-job-id
-        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        if: steps.check-flaky-spec-report.outputs.exists == 'true'
         run: |
           job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}')
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
 
       - name: Create flaky tests report artifact
-        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        if: steps.check-flaky-spec-report.outputs.exists == 'true'
         run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Upload flaky tests report
-        uses: actions/upload-artifact@v3 # TODO (tgxworld): V4 doesn't allow us to upload multiple uploads to the same artifact name so keep at V3 for now
-        if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
+        uses: actions/upload-artifact@v4
+        if: steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
-          name: flaky-test-reports
+          name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Check Annotations
@@ -349,9 +353,9 @@ jobs:
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})
-    runs-on: ubuntu-20.04-8core
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
     container:
-      image: discourse/discourse_test:slim-browsers
+      image: discourse/discourse_test:release
       options: --user discourse
 
     timeout-minutes: 35
@@ -376,29 +380,19 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Yarn cache
-        uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
-
-      - name: Yarn install
-        run: yarn install --frozen-lockfile
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
         run: |
           mkdir /tmp/emberbuild
-          yarn ember build --environment=test -o /tmp/emberbuild
+          pnpm ember build --environment=test -o /tmp/emberbuild
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: |
+          pnpm ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v4
@@ -406,3 +400,28 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.browser }}-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
+
+  merge:
+    if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: failed-system-test-screenshots
+          pattern: failed-system-test-screenshots-*
+          delete-merged: true
+          separate-directories: false
+        # Don't fail the job if there aren't any artifacts to merge.
+        continue-on-error: true
+
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: flaky-test-reports
+          pattern: flaky-test-reports-*
+          delete-merged: true
+          separate-directories: false
+        # Don't fail the job if there aren't any artifacts to merge.
+        continue-on-error: true

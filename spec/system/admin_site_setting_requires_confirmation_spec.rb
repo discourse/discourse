@@ -26,8 +26,7 @@ describe "Admin Site Setting Requires Confirmation", type: :system do
     )
     dialog.click_yes
     expect(dialog).to be_closed
-    expect(settings_page).to have_overridden_setting("min_password_length")
-    expect(SiteSetting.min_password_length).to eq(12)
+    expect(settings_page).to have_overridden_setting("min_password_length", value: 12)
   end
 
   it "does not save the new setting value if the admin cancels confirmation" do
@@ -36,6 +35,6 @@ describe "Admin Site Setting Requires Confirmation", type: :system do
     expect(dialog).to be_open
     dialog.click_no
     expect(dialog).to be_closed
-    expect(SiteSetting.min_password_length).to eq(10)
+    expect(settings_page).to have_no_overridden_setting("min_password_length")
   end
 end

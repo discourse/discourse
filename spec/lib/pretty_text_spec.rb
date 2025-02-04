@@ -269,7 +269,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -291,7 +291,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -312,7 +312,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -338,7 +338,7 @@ RSpec.describe PrettyText do
           <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a></div>
+          <img alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a></div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -923,16 +923,10 @@ RSpec.describe PrettyText do
         ).to eq("![car](http://cnn.com/a.gif)")
       end
 
-      it "should keep details if too long" do
+      it "replaces details / summary with the summary" do
         expect(
           PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 6),
-        ).to match_html "<details class='disabled'><summary>expand</summary></details>"
-      end
-
-      it "doesn't disable details if short enough" do
-        expect(
-          PrettyText.excerpt("<details><summary>expand</summary><p>hello</p></details>", 60),
-        ).to match_html "<details><summary>expand</summary>hello</details>"
+        ).to match_html "▶ expand"
       end
 
       it "should remove meta information" do
@@ -2791,7 +2785,47 @@ HTML
       .with("[PrettyText] Deprecation notice: Some deprecation message")
 
     PrettyText.v8.eval <<~JS
-      require("discourse-common/lib/deprecated").default("Some deprecation message");
+      require("discourse/lib/deprecated").default("Some deprecation message");
     JS
+  end
+
+  describe "video thumbnails" do
+    before do
+      SiteSetting.authorized_extensions = "mp4|png"
+      @video_upload = Fabricate(:upload, original_filename: "video.mp4", extension: "mp4")
+    end
+
+    after { Upload.where(original_filename: ["404.png", "#{@video_upload.sha1}.png"]).destroy_all }
+
+    it "does not link to a thumbnail image if the video source is missing" do
+      Fabricate(:upload, original_filename: "404.png", extension: "png")
+
+      html = <<~HTML
+          <p></p><div class="video-placeholder-container" data-video-src="/404"></div><p></p>
+        HTML
+      doc = Nokogiri::HTML5.fragment(html)
+      described_class.add_video_placeholder_image(doc)
+
+      expect(doc.to_html).to eq(html)
+    end
+
+    it "links to a thumbnail image if the video source is valid" do
+      thumbnail =
+        Fabricate(:upload, original_filename: "#{@video_upload.sha1}.png", extension: "png")
+
+      html = <<~HTML
+        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}"></div><p></p>
+      HTML
+      doc = Nokogiri::HTML5.fragment(html)
+      described_class.add_video_placeholder_image(doc)
+
+      video_base62_sha1 = "#{Upload.base62_sha1(@video_upload.sha1)}.#{@video_upload.extension}"
+
+      html_with_thumbnail = <<~HTML
+        <p></p><div class="video-placeholder-container" data-video-src="#{@video_upload.url}" data-thumbnail-src="http://test.localhost#{thumbnail.url}" data-video-base62-sha1="#{video_base62_sha1}"></div><p></p>
+      HTML
+
+      expect(doc.to_html).to eq(html_with_thumbnail)
+    end
   end
 end

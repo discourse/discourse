@@ -21,7 +21,7 @@ RSpec.describe Onebox::Engine::AudioComOnebox do
     ).to match(%r{<iframe src="https://audio\.com/embed/collection/1773124246389900})
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid URL" do
       valid_url = URI("https://audio.com/path/to/resource")
       expect(described_class === valid_url).to eq(true)

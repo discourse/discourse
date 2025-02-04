@@ -117,6 +117,8 @@ RSpec.describe Invite do
     end
 
     it "escapes the email_address when raising an existing user error" do
+      SiteSetting.hide_email_address_taken = false
+
       user.email = xss_email
       user.save(validate: false)
 
@@ -220,8 +222,6 @@ RSpec.describe Invite do
           RateLimiter.enable
           3.times { Invite.generate(user, email: "test@example.com") }
         end
-
-        use_redis_snapshotting
 
         it "raises an error" do
           expect { Invite.generate(user, email: "test@example.com") }.to raise_error(

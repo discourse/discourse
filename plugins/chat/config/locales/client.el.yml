@@ -28,6 +28,10 @@ el:
       chat_messages_count: "Μηνύματα συνομιλίας"
       chat_channels_count: "Κανάλια συνομιλίας"
       chat_users_count: "Χρήστες συνομιλίας"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} μήνυμα συνομιλίας"
+          other: "%{formatted_number} μηνύματα συνομιλίας"
     chat:
       back_to_forum: "Φόρουμ"
       deleted_chat_username: διεγράφη
@@ -77,6 +81,7 @@ el:
       flag: "Επισήμανση"
       join: "Γίνετε μέλος"
       last_visit: "τελευταία επίσκεψη"
+      placeholder_group: "Συνομιλία στην ομάδα"
       reply: "Απάντηση"
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"
@@ -146,6 +151,7 @@ el:
         members_label: "Μέλη"
       incoming_webhooks:
         back: "Πίσω"
+        channel: "Κανάλι"
         description: "Περιγραφή"
         delete: "Σβήσιμο"
         emoji: "Emoji"
@@ -186,11 +192,16 @@ el:
             title: "Φυσιολογικό"
           tracking:
             title: "Παρακολουθείται"
+          watching:
+            title: "Επιτηρείται"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} και %{username2}"
+        other: "%{username} και %{count} ακόμη"
     discourse_automation:
       scriptables:
         send_chat_message:

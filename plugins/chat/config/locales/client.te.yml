@@ -139,6 +139,8 @@ te:
             title: "సాధారణ పరిమాణం"
           tracking:
             title: "గమనిస్తున్నారు"
+          watching:
+            title: "అనుసరిస్తున్నారు"
       draft_channel_screen:
         header: "కొత్త సందేశం"
         cancel: "రద్దుచేయి"

@@ -39,6 +39,10 @@ module PageObjects
       def has_name_prefilled?(name)
         has_field?("name", with: name)
       end
+
+      def closed?
+        has_no_selector?(".chat-modal-create-channel")
+      end
     end
   end
 end

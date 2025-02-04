@@ -74,14 +74,14 @@
     {{#if this.showUnpublish}}
       <DButton
         @label="topic.publish_page.unpublish"
-        @icon="trash-alt"
+        @icon="trash-can"
         @isLoading={{this.unpublishing}}
         @action={{this.unpublish}}
         class="btn-danger"
       />
 
       <DButton
-        @icon="times"
+        @icon="xmark"
         @label="close"
         @action={{@closeModal}}
         class="close-publish-page"

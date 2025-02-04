@@ -17,6 +17,11 @@ he:
         two: "מספר הצבעות כולל"
         many: "מספר הצבעות כולל"
         other: "מספר הצבעות"
+      votes:
+        one: "הצבעה"
+        two: "שתי הצבעות"
+        many: "%{count} הצבעות"
+        other: "%{count} הצבעות"
       average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
       public:
         title: "ההצבעות הן <strong>ציבוריות</strong>."
@@ -56,6 +61,12 @@ he:
       show-results:
         title: "הצגת תוצאות הסקר"
         label: "תוצאות"
+      show-tally:
+        title: "הצגת תוצאות ההצבעה לפני מספר הקולות"
+        label: "הצגת מניין"
+      show-percentage:
+        title: "הצגת תוצאות ההצבעה כאחוזים"
+        label: "הצגה כאחוזים"
       remove-vote:
         title: "הסרת הצבעתך"
         label: "ביטול הצבעה"
@@ -107,6 +118,8 @@ he:
         label: "אפשרויות"
         ranked_choice:
           abstain: "הימנעות"
+          highest_priority: "(העדיפות הגבוהה ביותר)"
+          lowest_priority: "(העדיפות הנמוכה ביותר)"
           login: "יש להיכנס כדי להצביע!"
       error_while_toggling_status: "חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
       error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."

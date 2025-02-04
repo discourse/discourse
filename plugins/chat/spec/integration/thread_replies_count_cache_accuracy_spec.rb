@@ -24,10 +24,12 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
     # Create 5 replies
     5.times do |i|
       Chat::CreateMessage.call(
-        chat_channel_id: thread.channel_id,
         guardian: guardian,
-        thread_id: thread.id,
-        message: "Hello world #{i}",
+        params: {
+          chat_channel_id: thread.channel_id,
+          thread_id: thread.id,
+          message: "Hello world #{i}",
+        },
       )
     end
 
@@ -39,10 +41,12 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
     # Travel to the future so the cache expires.
     travel_to 6.minutes.from_now
     Chat::CreateMessage.call(
-      chat_channel_id: thread.channel_id,
       guardian: guardian,
-      thread_id: thread.id,
-      message: "Hello world now that time has passed",
+      params: {
+        chat_channel_id: thread.channel_id,
+        thread_id: thread.id,
+        message: "Hello world now that time has passed",
+      },
     )
     expect(thread.replies_count_cache).to eq(6)
     expect(thread.reload.replies_count).to eq(6)

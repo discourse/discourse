@@ -8,7 +8,6 @@ da:
   site_settings:
     chat_separate_sidebar_mode: "Vis separate sidebjælke-tilstande for forum og chat."
     chat_enabled: "Aktiver chat."
-    default_emoji_reactions: "Standard emoji-reaktioner for chatbeskeder. Tilføj op til 5 emojis for hurtig reaktion."
   chat:
     deleted_chat_username: slettet
     errors:

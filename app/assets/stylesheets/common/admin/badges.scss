@@ -1,14 +1,16 @@
 // Styles for admin/badges
 .admin-badges {
   // flex page layout
-
   .badges {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
+
     .badges-header {
       display: flex;
       align-items: center;
       flex: 1 0 100%;
+
       .create-new-badge {
         margin-left: auto;
         display: flex;
@@ -16,24 +18,12 @@
         gap: 0.5em;
       }
     }
+
     .content-list {
       flex: 0 0 27%;
     }
-    .current-badges {
-      display: flex;
-      justify-content: center;
-      flex: 1 1 72%;
-    }
   }
-  .badges-header {
-    padding: 10px 0;
-    border-top: 1px solid var(--primary-low);
-    border-bottom: 1px solid var(--primary-low);
-    .badges-heading {
-      margin: 0;
-      padding: 0 10px;
-    }
-  }
+
   .content-list {
     .admin-badge-list {
       height: 70vh;
@@ -41,14 +31,17 @@
       border-right: 1px solid var(--primary-low);
       border-left: 1px solid var(--primary-low);
       border-bottom: 1px solid var(--primary-low);
+
       .admin-badge-list-item {
         &:first-child {
           border-top: none;
         }
+
         &:last-child {
           border-top: none;
         }
       }
+
       .list-badge {
         float: right;
         font-size: var(--font-down-1);
@@ -59,6 +52,7 @@
         border-radius: 3px;
       }
     }
+
     .user-badge {
       border: none;
       background-color: unset;
@@ -67,7 +61,7 @@
 
   .current-badge-header {
     display: flex;
-    gap: 1em;
+    gap: 0.5em;
     align-items: center;
     font-size: var(--font-up-2-rem);
 
@@ -77,7 +71,7 @@
     }
 
     .d-icon {
-      font-size: 36px;
+      font-size: var(--font-up-2-rem);
     }
 
     .badge-display-name {
@@ -99,6 +93,30 @@
     .readonly-field {
       color: var(--primary-high);
     }
+
+    .badge-preview {
+      min-height: 110px;
+      max-width: 300px;
+      display: flex;
+      align-items: center;
+      background-color: var(--primary-very-low);
+      border: 1px solid var(--primary-low);
+      padding: 0 10px 0 10px;
+
+      img,
+      svg {
+        width: 60px;
+        height: 60px;
+      }
+
+      .badge-display-name {
+        margin-left: 5px;
+      }
+    }
+
+    .badge-required {
+      font-weight: bold;
+    }
   }
 
   .current-badge-actions {
@@ -109,9 +127,16 @@
 }
 
 .award-badge {
-  margin: 15px 0 0 15px;
   float: left;
   max-width: 70%;
+
+  &.d-page-action-button {
+    margin-top: 0;
+
+    @media (max-width: $mobile-breakpoint) {
+      max-width: 100%;
+    }
+  }
 
   .bulk-award-status-icon {
     margin-right: 3px;
@@ -119,32 +144,10 @@
     &.success {
       color: var(--success);
     }
+
     &.failure {
       color: var(--danger);
     }
-  }
-
-  .badge-preview {
-    min-height: 110px;
-    max-width: 300px;
-    display: flex;
-    align-items: center;
-    background-color: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    padding: 0 10px 0 10px;
-
-    img,
-    svg {
-      width: 60px;
-      height: 60px;
-    }
-
-    .badge-display-name {
-      margin-left: 5px;
-    }
-  }
-  .badge-required {
-    font-weight: bold;
   }
 }
 
@@ -153,9 +156,11 @@
   .badge-groupings {
     margin-bottom: 10px;
   }
+
   .badge-groupings-list {
     list-style: none;
     margin: 0;
+
     .badge-grouping-item {
       border-bottom: 1px solid var(--primary-low);
       display: flex;
@@ -163,6 +168,7 @@
       align-items: center;
       padding: 5px 0;
     }
+
     .badge-grouping {
       .badge-grouping-name-input {
         margin: 0;
@@ -183,13 +189,16 @@
     background-color: var(--primary-low);
     white-space: pre-wrap;
   }
+
   .count-warning {
     background-color: var(--danger-low);
     margin-bottom: 5px;
     padding: 10px;
+
     p {
       margin: 0;
     }
+
     .heading {
       color: var(--danger);
       font-weight: bold;

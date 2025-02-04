@@ -1,19 +1,21 @@
 <h4><a href="{{link}}" target="_blank" rel="noopener">{{title}}</a></h4>
 
+<div class="git-blob-info">
+  <a href="{{link}}" rel="noopener"><code>{{sha1}}</code></a>
+</div>
+
 {{^has_lines}}
   <pre><code class="{{lang}}">{{content}}</code></pre>
 {{/has_lines}}
 
 {{#has_lines}}
-  <pre class="onebox">
-    <code class="{{lang}}">
-      <ol class="start lines" start="{{cr_results.from}}" style="counter-reset: li-counter {{cr_results.from_minus_one}} ;">
-        {{#lines}}
-          <li{{#selected}} class="selected"{{/selected}}>{{data}}</li>
-        {{/lines}}
-      </ol>
-    </code>
-  </pre>
+  <pre class="onebox"><code class="{{lang}}">
+    <ol class="start lines" start="{{cr_results.from}}" style="counter-reset: li-counter {{cr_results.from_minus_one}} ;">
+      {{#lines}}
+        <li{{#selected}} class="selected"{{/selected}}>{{data}}</li>
+      {{/lines}}
+    </ol>
+    </code></pre>
 {{/has_lines}}
 
 {{#truncated}}

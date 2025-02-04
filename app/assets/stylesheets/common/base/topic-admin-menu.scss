@@ -1,5 +1,4 @@
 // Styles for the topic admin menu
-
 .topic-admin-popup-menu {
   ul {
     margin: 0;
@@ -7,13 +6,16 @@
 
     li {
       border: none;
+
       &:not(:last-of-type) {
         // so buttons don't appear "stuck" together when multiple are highlighted
         margin-bottom: 2px;
       }
     }
+
     ul {
       padding: 0.5em;
+
       &:not(:last-of-type) {
         border-bottom: 1px solid var(--primary-low);
       }
@@ -35,30 +37,35 @@
 }
 
 // Styles for select posts mini menu
-
 .selected-posts {
   border: 1px solid var(--tertiary-medium);
   background-color: var(--tertiary-low);
+
   .btn {
     border: none;
     color: var(--secondary);
     font-weight: normal;
     margin-bottom: 10px;
+
     &:not(.btn-danger) {
       background: var(--tertiary);
       border-color: var(--tertiary);
+
       &[href] {
         color: var(--secondary);
       }
+
       &:hover {
         color: var(--secondary);
         background: var(--tertiary-high);
       }
+
       &:active {
         @include linear-gradient(var(--tertiary-hover), var(--tertiary));
         color: var(--secondary);
       }
     }
+
     &[disabled] {
       text-shadow: 0 1px 0 rgba(var(--primary-rgb), 0.2);
       @include linear-gradient(var(--tertiary), var(--tertiary-hover));

@@ -7,15 +7,11 @@ RSpec.describe "Post rake tasks" do
   fab!(:post) { Fabricate(:post, raw: "The quick brown fox jumps over the lazy dog") }
   fab!(:tricky_post) { Fabricate(:post, raw: "Today ^Today") }
 
-  before do
-    Rake::Task.clear
-    Discourse::Application.load_tasks
-    STDOUT.stubs(:write)
-  end
+  before { STDOUT.stubs(:write) }
 
   describe "remap" do
     it "should remap posts" do
-      HighLine::Simulate.with("y") { Rake::Task["posts:remap"].invoke("brown", "red") }
+      HighLine::Simulate.with("y") { invoke_rake_task("posts:remap", "brown", "red") }
 
       post.reload
       expect(post.raw).to eq("The quick red fox jumps over the lazy dog")
@@ -24,7 +20,7 @@ RSpec.describe "Post rake tasks" do
     context "when type == string" do
       it "remaps input as string" do
         HighLine::Simulate.with("y") do
-          Rake::Task["posts:remap"].invoke("^Today", "Yesterday", "string")
+          invoke_rake_task("posts:remap", "^Today", "Yesterday", "string")
         end
 
         expect(tricky_post.reload.raw).to eq("Today Yesterday")
@@ -34,7 +30,7 @@ RSpec.describe "Post rake tasks" do
     context "when type == regex" do
       it "remaps input as regex" do
         HighLine::Simulate.with("y") do
-          Rake::Task["posts:remap"].invoke("^Today", "Yesterday", "regex")
+          invoke_rake_task("posts:remap", "^Today", "Yesterday", "regex")
         end
 
         expect(tricky_post.reload.raw).to eq("Yesterday ^Today")
@@ -46,7 +42,7 @@ RSpec.describe "Post rake tasks" do
     it "rebakes matched posts" do
       post.update(cooked: "")
 
-      HighLine::Simulate.with("y") { Rake::Task["posts:rebake_match"].invoke("brown") }
+      HighLine::Simulate.with("y") { invoke_rake_task("posts:rebake_match", "brown") }
 
       expect(post.reload.cooked).to eq("<p>The quick brown fox jumps over the lazy dog</p>")
     end
@@ -62,7 +58,7 @@ RSpec.describe "Post rake tasks" do
       post = Fabricate(:post, raw: "A sample post <img src='#{url}'>")
       upload.destroy!
 
-      Rake::Task["posts:missing_uploads"].invoke
+      invoke_rake_task("posts:missing_uploads")
 
       post.reload
       expect(post.custom_fields[Post::MISSING_UPLOADS]).to eq([url])
@@ -74,7 +70,7 @@ RSpec.describe "Post rake tasks" do
       post.save_custom_fields
       upload.destroy!
 
-      Rake::Task["posts:missing_uploads"].invoke
+      invoke_rake_task("posts:missing_uploads")
 
       post.reload
       expect(post.custom_fields[Post::MISSING_UPLOADS]).to be_nil

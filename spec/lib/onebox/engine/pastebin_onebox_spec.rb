@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::PastebinOnebox do
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid Pastebin URL" do
       valid_url = URI("http://pastebin.com/abc123")
       expect(described_class === valid_url).to eq(true)

@@ -3,8 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { waitForPromise } from "@ember/test-waiters";
 import { create } from "virtual-dom";
-import { isTesting } from "discourse-common/config/environment";
-import { iconNode } from "discourse-common/lib/icon-library";
+import { iconNode } from "discourse/lib/icon-library";
 
 export default class JsonSchemaEditorModal extends Component {
   @tracked editor = null;
@@ -38,9 +37,7 @@ export default class JsonSchemaEditorModal extends Component {
   @action
   async buildJsonEditor(element) {
     const promise = import("@json-editor/json-editor");
-    if (isTesting()) {
-      waitForPromise(promise);
-    }
+    waitForPromise(promise);
     const { JSONEditor } = await promise;
 
     JSONEditor.defaults.options.theme = "barebones";
@@ -68,7 +65,7 @@ export default class JsonSchemaEditorModal extends Component {
 class DiscourseJsonSchemaEditorIconlib {
   constructor() {
     this.mapping = {
-      delete: "trash-alt",
+      delete: "trash-can",
       add: "plus",
       moveup: "arrow-up",
       movedown: "arrow-down",

@@ -5,18 +5,16 @@
     width: var(--form-kit-medium-input);
   }
 
+  &.--full {
+    width: 100%;
+  }
+
   &-textarea,
   &-composer,
   &-code,
   &-image {
     .form-kit__container-content {
       width: var(--form-kit-large-input) !important;
-    }
-  }
-
-  &-checkbox {
-    .form-kit__container-content {
-      width: 100% !important;
     }
   }
 
@@ -35,6 +33,13 @@
     }
   }
 
+  .form-kit__container-description {
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+  }
+
+  .form-kit__container-title,
+  .form-kit__container-description,
   .form-kit__container-content {
     &.--small {
       width: var(--form-kit-small-input) !important;

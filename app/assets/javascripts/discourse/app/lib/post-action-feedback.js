@@ -1,5 +1,9 @@
-import { SVG_NAMESPACE } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { next } from "@ember/runloop";
+import { SVG_NAMESPACE } from "discourse/lib/icon-library";
+import { i18n } from "discourse-i18n";
+
+const TIMEOUT = 2500;
+const TRANSITION_BUFFER = 250;
 
 export default function postActionFeedback({
   postId,
@@ -35,13 +39,18 @@ export function recentlyCopied(postId, actionClass) {
   );
 }
 
-export function showAlert(postId, actionClass, messageKey) {
+export function showAlert(postId, actionClass, messageKey, opts = {}) {
   const postSelector = `article[data-post-id='${postId}']`;
-  const actionBtn = document.querySelector(`${postSelector} .${actionClass}`);
+  const actionBtn =
+    opts.actionBtn || document.querySelector(`${postSelector} .${actionClass}`);
 
-  actionBtn?.classList.add("post-action-feedback-button");
+  // using `next` here is a workaround for a behavior observed in Safari for iOS / iPadOS
+  // that somehow trigger Ember to restore the button's original classes
+  next(() => {
+    actionBtn?.classList.add("post-action-feedback-button");
+  });
 
-  createAlert(I18n.t(messageKey), postId, actionBtn);
+  createAlert(i18n(messageKey), postId, actionBtn);
   createCheckmark(actionBtn, actionClass, postId);
   styleBtn(actionBtn);
 }
@@ -57,8 +66,7 @@ function createAlert(message, postId, actionBtn) {
 
   actionBtn.appendChild(alertDiv);
 
-  setTimeout(() => alertDiv.classList.add("slide-out"), 1000);
-  setTimeout(() => removeElement(alertDiv), 2500);
+  setTimeout(() => removeElement(alertDiv), TIMEOUT);
 }
 
 function createCheckmark(btn, actionClass, postId) {
@@ -66,13 +74,21 @@ function createCheckmark(btn, actionClass, postId) {
   const checkmark = makeCheckmarkSvg(postId, actionClass, svgId);
   btn.appendChild(checkmark.content);
 
-  setTimeout(() => checkmark.classList.remove("is-visible"), 3000);
-  setTimeout(() => removeElement(document.getElementById(svgId)), 3500);
+  setTimeout(() => removeElement(document.getElementById(svgId)), TIMEOUT);
 }
 
 function styleBtn(btn) {
-  btn.classList.add("is-copied");
-  setTimeout(() => btn.classList.remove("is-copied"), 3200);
+  // using `next` here is a workaround for a behavior observed in Safari for iOS / iPadOS
+  // that somehow trigger Ember to restore the button's original classes preventing the message/checkmark from being
+  // displayed
+  next(() => {
+    btn.classList.add("--activated", "--transition");
+  });
+  setTimeout(
+    () => btn.classList.remove("--activated"),
+    TIMEOUT - TRANSITION_BUFFER
+  );
+  setTimeout(() => btn.classList.remove("--transition"), TIMEOUT);
 }
 
 function makeCheckmarkSvg(postId, actionClass, svgId) {

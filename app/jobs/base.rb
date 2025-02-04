@@ -44,6 +44,7 @@ module Jobs
     class JobInstrumenter
       def initialize(job_class:, opts:, db:, jid:)
         return unless enabled?
+
         self.class.mutex.synchronize do
           @data = {}
 
@@ -69,11 +70,13 @@ module Jobs
 
           MethodProfiler.ensure_discourse_instrumentation!
           MethodProfiler.start
+          @data["live_slots_start"] = GC.stat[:heap_live_slots]
         end
       end
 
       def stop(exception:)
         return unless enabled?
+
         self.class.mutex.synchronize do
           profile = MethodProfiler.stop
 
@@ -86,6 +89,8 @@ module Jobs
           @data["redis_calls"] = profile.dig(:redis, :calls) || 0 # Redis commands
           @data["net_duration"] = profile.dig(:net, :duration) || 0 # Redis Duration (s)
           @data["net_calls"] = profile.dig(:net, :calls) || 0 # Redis commands
+          @data["live_slots_finish"] = GC.stat[:heap_live_slots]
+          @data["live_slots"] = @data["live_slots_finish"] - @data["live_slots_start"]
 
           if exception.present?
             @data["exception"] = exception # Exception - if job fails a json encoded exception
@@ -99,30 +104,35 @@ module Jobs
       end
 
       def self.raw_log(message)
+        begin
+          logger << message
+        rescue => e
+          Discourse.warn_exception(e, message: "Exception encountered while logging Sidekiq job")
+        end
+      end
+
+      # For test environment only
+      def self.set_log_path(path)
+        @@log_path = path
+        @@logger = nil
+      end
+
+      # For test environment only
+      def self.reset_log_path
+        @@log_path = nil
+        @@logger = nil
+      end
+
+      def self.log_path
+        @@log_path ||= "#{Rails.root}/log/sidekiq.log"
+      end
+
+      def self.logger
         @@logger ||=
           begin
-            f = File.open "#{Rails.root}/log/sidekiq.log", "a"
-            f.sync = true
-            Logger.new f
+            FileUtils.touch(log_path) if !File.exist?(log_path)
+            Logger.new(log_path)
           end
-
-        @@log_queue ||= Queue.new
-
-        if !defined?(@@log_thread) || !@@log_thread.alive?
-          @@log_thread =
-            Thread.new do
-              loop do
-                @@logger << @@log_queue.pop
-              rescue Exception => e
-                Discourse.warn_exception(
-                  e,
-                  message: "Exception encountered while logging Sidekiq job",
-                )
-              end
-            end
-        end
-
-        @@log_queue.push(message)
       end
 
       def current_duration
@@ -137,7 +147,7 @@ module Jobs
       end
 
       def enabled?
-        ENV["DISCOURSE_LOG_SIDEKIQ"] == "1"
+        Discourse.enable_sidekiq_logging?
       end
 
       def self.mutex
@@ -256,6 +266,7 @@ module Jobs
           requeued = true
           return
         end
+
         parent_thread = Thread.current
         cluster_concurrency_redis_key = self.class.cluster_concurrency_redis_key
 
@@ -340,6 +351,7 @@ module Jobs
         keepalive_thread.join
         self.class.clear_cluster_concurrency_lock!
       end
+
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
   end
@@ -355,8 +367,16 @@ module Jobs
   class Scheduled < Base
     extend MiniScheduler::Schedule
 
+    def self.perform_when_readonly
+      @perform_when_readonly = true
+    end
+
+    def self.perform_when_readonly?
+      @perform_when_readonly || false
+    end
+
     def perform(*args)
-      super if (::Jobs::Heartbeat === self) || !Discourse.readonly_mode?
+      super if self.class.perform_when_readonly? || !Discourse.readonly_mode?
     end
   end
 
@@ -381,11 +401,13 @@ module Jobs
 
     # Simulate the args being dumped/parsed through JSON
     parsed_opts = JSON.parse(JSON.dump(opts))
-    Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0") if opts != parsed_opts
+    if opts != parsed_opts
+      Discourse.deprecate(<<~TEXT.squish, since: "2.9", drop_from: "3.0", output_in_test: true)
         #{klass.name} was enqueued with argument values which do not cleanly serialize to/from JSON.
         This means that the job will be run with slightly different values than the ones supplied to `enqueue`.
         Argument values should be strings, booleans, numbers, or nil (or arrays/hashes of those value types).
       TEXT
+    end
     opts = parsed_opts
 
     if ::Jobs.run_later?

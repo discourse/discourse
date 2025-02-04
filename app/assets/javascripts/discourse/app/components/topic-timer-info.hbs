@@ -8,7 +8,7 @@
       {{#if this.showEdit}}
         <DButton
           @title="post.controls.edit_timer"
-          @icon="pencil-alt"
+          @icon="pencil"
           @action={{this.showTopicTimerModal}}
           class="topic-timer-edit no-text"
         />
@@ -16,7 +16,7 @@
       {{#if this.showTrashCan}}
         <DButton
           @title="post.controls.remove_timer"
-          @icon="trash-alt"
+          @icon="trash-can"
           @action={{this.removeTopicTimer}}
           class="topic-timer-remove no-text"
         />

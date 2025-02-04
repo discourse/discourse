@@ -5,7 +5,7 @@ import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Modal related to changing the timestamp of posts
 export default class ChangeTimestamp extends Component {
@@ -37,7 +37,7 @@ export default class ChangeTimestamp extends Component {
       this.args.closeModal();
       next(() => DiscourseURL.routeTo(this.args.model.topic.url));
     } catch {
-      this.flash = I18n.t("topic.change_timestamp.error");
+      this.flash = i18n("topic.change_timestamp.error");
     } finally {
       this.saving = false;
     }

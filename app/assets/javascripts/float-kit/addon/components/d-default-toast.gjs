@@ -3,7 +3,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 const DDefaultToast = <template>
   <div
@@ -55,7 +55,7 @@ const DDefaultToast = <template>
       {{/if}}
     </div>
     <div class="fk-d-default-toast__close-container">
-      <DButton class="btn-transparent" @icon="times" @action={{@close}} />
+      <DButton class="btn-transparent" @icon="xmark" @action={{@close}} />
     </div>
   </div>
 </template>;

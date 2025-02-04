@@ -5,7 +5,6 @@ RSpec.describe "Glimmer Header", type: :system do
   let(:search) { PageObjects::Pages::Search.new }
   fab!(:current_user) { Fabricate(:user) }
   fab!(:topic)
-  before { SiteSetting.glimmer_header_mode = "enabled" }
 
   it "renders basics" do
     visit "/"
@@ -109,18 +108,6 @@ RSpec.describe "Glimmer Header", type: :system do
       header.get_computed_style_value(".d-header", "--header-offset") == "60px"
     end
     expect(header.get_computed_style_value(".d-header", "--header-offset")).to eq("60px")
-  end
-
-  it "body document is permanently docked regardless of scroll positioning" do
-    Fabricate.times(20, :topic)
-    sign_in(current_user)
-    visit "/"
-
-    expect(page).to have_selector("body.docked")
-    page.execute_script("window.scrollBy(0, 1000)")
-    expect(page).to have_selector("body.docked")
-    page.execute_script("window.scrollTo(0, 0)")
-    expect(page).to have_selector("body.docked")
   end
 
   it "moves focus between tabs using arrow keys" do
@@ -299,6 +286,21 @@ RSpec.describe "Glimmer Header", type: :system do
 
       expect(page).not_to have_css("header.d-header .auth-buttons .login-button") # No header buttons
       expect(page).to have_css("header.d-header .title-wrapper .topic-link") # Title is shown in header
+    end
+
+    it "shows and hides do-not-disturb icon" do
+      sign_in current_user
+      visit "/"
+
+      header = find(".d-header")
+      expect(header).not_to have_css(".do-not-disturb-background")
+
+      current_user.publish_do_not_disturb(ends_at: 1.hour.from_now)
+      expect(header).to have_css(".d-header .do-not-disturb-background")
+
+      current_user.publish_do_not_disturb(ends_at: 1.second.from_now)
+
+      expect(header).not_to have_css(".d-header .do-not-disturb-background")
     end
   end
 end

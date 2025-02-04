@@ -4,14 +4,23 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
-import { bind } from "discourse-common/utils/decorators";
-import AdminConfigHeader from "admin/components/admin-config-header";
+import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
+import { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 import AdminFlagItem from "admin/components/admin-flag-item";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
+  @service siteSettings;
   @tracked flags = this.site.flagTypes;
+
+  get addFlagButtonDisabled() {
+    return (
+      this.flags.filter(
+        (flag) => !Object.values(SYSTEM_FLAG_IDS).includes(flag.id)
+      ).length >= this.siteSettings.custom_flags_limit
+    );
+  }
 
   @bind
   isFirstFlag(flag) {
@@ -60,16 +69,7 @@ export default class AdminConfigAreasFlags extends Component {
 
   <template>
     <div class="container admin-flags">
-      <AdminConfigHeader
-        @name="flags"
-        @heading="admin.config_areas.flags.header"
-        @subheading="admin.config_areas.flags.subheader"
-        @primaryActionRoute="adminConfig.flags.new"
-        @primaryActionCssClass="admin-flags__header-add-flag"
-        @primaryActionIcon="plus"
-        @primaryActionLabel="admin.config_areas.flags.add"
-      />
-      <table class="admin-flags__items grid">
+      <table class="d-admin-table admin-flags__items">
         <thead>
           <th>{{i18n "admin.config_areas.flags.description"}}</th>
           <th>{{i18n "admin.config_areas.flags.enabled"}}</th>

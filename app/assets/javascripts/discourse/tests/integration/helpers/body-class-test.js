@@ -9,15 +9,15 @@ module("Integration | Helper | body-class", function (hooks) {
   test("A single class", async function (assert) {
     await render(hbs`{{body-class "foo"}}`);
 
-    assert.true(document.body.classList.contains("foo"));
+    assert.dom(document.body).hasClass("foo");
   });
 
   test("Multiple classes", async function (assert) {
     this.set("bar", "bar");
     await render(hbs`{{body-class "baz" this.bar}}`);
 
-    assert.true(document.body.classList.contains("baz"));
-    assert.true(document.body.classList.contains("bar"));
+    assert.dom(document.body).hasClass("baz");
+    assert.dom(document.body).hasClass("bar");
   });
 
   test("Empty classes", async function (assert) {
@@ -29,14 +29,13 @@ module("Integration | Helper | body-class", function (hooks) {
   test("Dynamic classes", async function (assert) {
     this.set("dynamic", "bar");
     await render(hbs`{{body-class this.dynamic}}`);
-    assert.true(document.body.classList.contains("bar"), "has .bar");
+    assert.dom(document.body).hasClass("bar");
 
     this.set("dynamic", "baz");
     await settled();
-    assert.true(document.body.classList.contains("baz"), "has .baz");
-    assert.false(
-      document.body.classList.contains("bar"),
-      "does not have .bar anymore"
-    );
+    assert.dom(document.body).hasClass("baz");
+    assert
+      .dom(document.body)
+      .doesNotHaveClass("bar", "does not have .bar anymore");
   });
 });

@@ -1,6 +1,35 @@
 # frozen_string_literal: true
 
 RSpec.describe "Keyboard shortcuts", type: :system do
+  it "can have default keyboard shortcuts disabled by the Plugin API" do
+    sign_in Fabricate(:admin)
+
+    t = Fabricate(:theme, name: "Theme With Tests")
+    t.set_field(
+      target: :extra_js,
+      type: :js,
+      name: "discourse/lib/pre-initializers/testing.js",
+      value: <<~JS,
+        import { withPluginApi } from "discourse/lib/plugin-api";
+        export default {
+          name: "disable-default-keyboard-shortcuts",
+          initialize() {
+            withPluginApi("1.6.0", (api) => {
+              // disable open shortcut modal
+              api.disableDefaultKeyboardShortcuts(["?"])
+            })
+          },
+        };
+      JS
+    )
+    t.save!
+    SiteSetting.default_theme_id = t.id
+
+    visit "/"
+    page.send_keys("?")
+    expect(page).to have_no_css(".keyboard-shortcuts-modal")
+  end
+
   describe "<a>" do
     let(:current_user) { topic.user }
     let(:topic_page) { PageObjects::Pages::Topic.new }

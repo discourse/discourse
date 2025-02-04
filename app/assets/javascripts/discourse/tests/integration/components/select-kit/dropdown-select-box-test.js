@@ -46,12 +46,12 @@ module(
       `);
 
       await this.subject.expand();
-      assert.ok(this.subject.isExpanded());
+      assert.true(this.subject.isExpanded());
 
       await this.subject.selectRowByValue(DEFAULT_VALUE);
-      assert.notOk(
+      assert.false(
         this.subject.isExpanded(),
-        "it collapses the dropdown on select"
+        "collapses the dropdown on select"
       );
     });
 
@@ -67,23 +67,24 @@ module(
           @value={{this.value}}
           @content={{this.content}}
           @options={{hash
-            icon="times"
+            icon="xmark"
             showFullTitle=this.showFullTitle
             none=this.none
           }}
         />
       `);
 
-      assert.notOk(
-        this.subject.header().el().querySelector(".selected-name"),
-        "it hides the text of the selected item"
-      );
+      assert
+        .dom(".selected-name", this.subject.header().el())
+        .doesNotExist("hides the text of the selected item");
 
-      assert.strictEqual(
-        this.subject.header().el().getAttribute("title"),
-        "[en.test_none]",
-        "it adds a title attribute to the button"
-      );
+      assert
+        .dom(this.subject.header().el())
+        .hasAttribute(
+          "title",
+          "[en.test_none]",
+          "adds a title attribute to the button"
+        );
     });
 
     test("options.showFullTitle=true", async function (assert) {
@@ -99,10 +100,9 @@ module(
         />
       `);
 
-      assert.ok(
-        this.subject.header().el().querySelector(".selected-name"),
-        "it shows the text of the selected item"
-      );
+      assert
+        .dom(".selected-name", this.subject.header().el())
+        .exists("shows the text of the selected item");
     });
   }
 );

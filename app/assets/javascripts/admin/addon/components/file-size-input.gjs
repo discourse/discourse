@@ -2,11 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import TextField from "discourse/components/text-field";
 import { allowOnlyNumericInput } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 const UNIT_KB = "kb";
@@ -14,30 +11,34 @@ const UNIT_MB = "mb";
 const UNIT_GB = "gb";
 
 export default class FileSizeInput extends Component {
-  @tracked fileSizeUnit;
-  @tracked sizeValue;
-  @tracked pendingSizeValue;
-  @tracked pendingFileSizeUnit;
+  @tracked unit;
 
-  constructor(owner, args) {
-    super(owner, args);
-    this.originalSizeKB = this.args.sizeValueKB;
-    this.sizeValue = this.args.sizeValueKB;
+  constructor() {
+    super(...arguments);
 
-    this._defaultUnit();
+    const sizeInKB = this.args.sizeValueKB;
+    if (sizeInKB >= 1024 * 1024) {
+      this.unit = UNIT_GB;
+    } else if (sizeInKB >= 1024) {
+      this.unit = UNIT_MB;
+    } else {
+      this.unit = UNIT_KB;
+    }
   }
 
-  _defaultUnit() {
-    this.fileSizeUnit = UNIT_KB;
-    if (this.originalSizeKB <= 1024) {
-      this.onFileSizeUnitChange(UNIT_KB);
-    } else if (
-      this.originalSizeKB > 1024 &&
-      this.originalSizeKB <= 1024 * 1024
-    ) {
-      this.onFileSizeUnitChange(UNIT_MB);
-    } else if (this.originalSizeKB > 1024 * 1024) {
-      this.onFileSizeUnitChange(UNIT_GB);
+  get number() {
+    const sizeInKB = this.args.sizeValueKB;
+    if (!sizeInKB) {
+      return;
+    }
+    if (this.unit === UNIT_KB) {
+      return sizeInKB;
+    }
+    if (this.unit === UNIT_MB) {
+      return sizeInKB / 1024;
+    }
+    if (this.unit === UNIT_GB) {
+      return sizeInKB / 1024 / 1024;
     }
   }
 
@@ -48,102 +49,76 @@ export default class FileSizeInput extends Component {
 
   get dropdownOptions() {
     return [
-      { label: I18n.t("number.human.storage_units.units.kb"), value: UNIT_KB },
-      { label: I18n.t("number.human.storage_units.units.mb"), value: UNIT_MB },
-      { label: I18n.t("number.human.storage_units.units.gb"), value: UNIT_GB },
+      { label: i18n("number.human.storage_units.units.kb"), value: UNIT_KB },
+      { label: i18n("number.human.storage_units.units.mb"), value: UNIT_MB },
+      { label: i18n("number.human.storage_units.units.gb"), value: UNIT_GB },
     ];
   }
 
   @action
-  handleFileSizeChange(value) {
-    if (value !== "") {
-      this.pendingSizeValue = value;
-      this._onFileSizeChange(value);
-    }
-  }
+  handleFileSizeChange(event) {
+    const value = parseFloat(event.target.value);
 
-  _onFileSizeChange(newSize) {
-    let fileSizeKB;
-    switch (this.fileSizeUnit) {
+    if (isNaN(value)) {
+      this.args.onChangeSize();
+      return;
+    }
+
+    let sizeInKB;
+    switch (this.unit) {
       case "kb":
-        fileSizeKB = newSize;
+        sizeInKB = value;
         break;
       case "mb":
-        fileSizeKB = newSize * 1024;
+        sizeInKB = value * 1024;
         break;
       case "gb":
-        fileSizeKB = newSize * 1024 * 1024;
+        sizeInKB = value * 1024 * 1024;
         break;
     }
-    if (fileSizeKB > this.args.max) {
-      this.args.updateValidationMessage(
-        I18n.t("file_size_input.error.size_too_large", {
-          provided_file_size: I18n.toHumanSize(fileSizeKB * 1024),
+
+    this.args.onChangeSize(sizeInKB);
+
+    if (sizeInKB > this.args.max) {
+      this.args.setValidationMessage(
+        i18n("file_size_input.error.size_too_large", {
+          provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
           max_file_size: I18n.toHumanSize(this.args.max * 1024),
         })
       );
-      // Removes the green save checkmark button
-      this.args.onChangeSize(this.originalSizeKB);
+    } else if (sizeInKB < this.args.min) {
+      this.args.setValidationMessage(
+        i18n("file_size_input.error.size_too_small", {
+          provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
+          min_file_size: I18n.toHumanSize(this.args.min * 1024),
+        })
+      );
     } else {
-      this.args.onChangeSize(fileSizeKB);
-      this.args.updateValidationMessage(null);
+      this.args.setValidationMessage(null);
     }
   }
 
   @action
   onFileSizeUnitChange(newUnit) {
-    if (this.fileSizeUnit === "kb" && newUnit === "kb") {
-      this.pendingSizeValue = this.sizeValue;
-    }
-    if (this.fileSizeUnit === "kb" && newUnit === "mb") {
-      this.pendingSizeValue = this.sizeValue / 1024;
-    }
-    if (this.fileSizeUnit === "kb" && newUnit === "gb") {
-      this.pendingSizeValue = this.sizeValue / 1024 / 1024;
-    }
-    if (this.fileSizeUnit === "mb" && newUnit === "kb") {
-      this.pendingSizeValue = this.sizeValue * 1024;
-    }
-    if (this.fileSizeUnit === "mb" && newUnit === "gb") {
-      this.pendingSizeValue = this.sizeValue / 1024;
-    }
-    if (this.fileSizeUnit === "gb" && newUnit === "mb") {
-      this.pendingSizeValue = this.sizeValue * 1024;
-    }
-    if (this.fileSizeUnit === "gb" && newUnit === "kb") {
-      this.pendingSizeValue = this.sizeValue * 1024 * 1024;
-    }
-    this.pendingFileSizeUnit = newUnit;
-  }
-
-  @action
-  applySizeValueChanges() {
-    this.sizeValue = this.pendingSizeValue;
-  }
-
-  @action
-  applyUnitChanges() {
-    this.fileSizeUnit = this.pendingFileSizeUnit;
+    this.unit = newUnit;
   }
 
   <template>
     <div class="file-size-picker">
-      <TextField
+      <input
         class="file-size-input"
-        @value={{this.sizeValue}}
-        @onChange={{this.handleFileSizeChange}}
+        value={{this.number}}
+        type="number"
+        step="any"
+        {{on "input" this.handleFileSizeChange}}
         {{on "keydown" this.keyDown}}
-        {{didInsert this.applySizeValueChanges}}
-        {{didUpdate this.applySizeValueChanges this.pendingSizeValue}}
       />
       <ComboBox
         class="file-size-unit-selector"
         @valueProperty="value"
         @content={{this.dropdownOptions}}
-        @value={{this.fileSizeUnit}}
+        @value={{this.unit}}
         @onChange={{this.onFileSizeUnitChange}}
-        {{didInsert this.applyUnitChanges}}
-        {{didUpdate this.applyUnitChanges this.pendingFileSizeUnit}}
       />
     </div>
   </template>

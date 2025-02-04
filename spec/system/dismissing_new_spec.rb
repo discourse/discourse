@@ -53,6 +53,29 @@ RSpec.describe "Dismissing New", type: :system do
 
       using_session(:tab_1) { expect(topic_view).to have_tracking_status("regular") }
     end
+
+    context "when dismissing new on a category's topic list" do
+      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
+      fab!(:category_topic) { Fabricate(:topic, category: category, user: user) }
+      fab!(:category_post1) { create_post(user: user, topic: category_topic) }
+      fab!(:category_post2) { create_post(topic: category_topic) }
+      fab!(:subcategory_topic) { Fabricate(:topic, category: subcategory, user: user) }
+      fab!(:subcategory_post1) { create_post(user: user, topic: subcategory_topic) }
+      fab!(:subcategory_post2) { create_post(topic: subcategory_topic) }
+
+      it "should dismiss unread posts for the category and its subcategories" do
+        sign_in(user)
+
+        visit("/c/#{category.id}/l/unread")
+
+        expect(topic_list_controls).to have_unread(count: 2)
+
+        topic_list_controls.dismiss_unread
+
+        expect(topic_list_controls).to have_unread(count: 0)
+      end
+    end
   end
 
   describe "when a user has a new topic" do

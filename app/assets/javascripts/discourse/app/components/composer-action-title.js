@@ -1,6 +1,10 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
+import escape from "discourse/lib/escape";
+import { iconHTML } from "discourse/lib/icon-library";
 import {
   CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
@@ -9,10 +13,7 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import escape from "discourse-common/lib/escape";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
@@ -21,10 +22,10 @@ const TITLES = {
   [EDIT_SHARED_DRAFT]: "composer.edit_shared_draft",
 };
 
-export default Component.extend({
-  classNames: ["composer-action-title"],
-  options: alias("model.replyOptions"),
-  action: alias("model.action"),
+@classNames("composer-action-title")
+export default class ComposerActionTitle extends Component {
+  @alias("model.replyOptions") options;
+  @alias("model.action") action;
 
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
@@ -36,7 +37,7 @@ export default Component.extend({
     }
 
     if (TITLES[action]) {
-      return I18n.t(TITLES[action]);
+      return i18n(TITLES[action]);
     }
 
     if (action === REPLY) {
@@ -57,7 +58,7 @@ export default Component.extend({
         );
       }
     }
-  },
+  }
 
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
     let editTitle = `
@@ -75,7 +76,7 @@ export default Component.extend({
     }
 
     return htmlSafe(editTitle);
-  },
+  }
 
   _formatReplyToTopic(link) {
     return htmlSafe(
@@ -83,12 +84,12 @@ export default Component.extend({
         "model.topic.id"
       )}">${link.anchor}</a>`
     );
-  },
+  }
 
   _formatReplyToUserPost(avatar, link) {
     const htmlLink = `<a class="user-link" href="${link.href}">${escape(
       link.anchor
     )}</a>`;
     return htmlSafe(`${avatar}${htmlLink}`);
-  },
-});
+  }
+}

@@ -34,7 +34,7 @@ RSpec.describe ::DiscoursePoll::Poll do
 
       expect(poll.can_see_results?(user)).to eq(false)
       poll.poll_votes.create!(poll_option_id: option.id, user_id: user.id)
-      expect(poll.can_see_results?(user)).to eq(true)
+      expect(poll.reload.can_see_results?(user)).to eq(true)
     end
 
     it "author can see results when results setting is on_vote" do

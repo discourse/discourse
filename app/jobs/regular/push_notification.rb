@@ -3,6 +3,10 @@
 module Jobs
   class PushNotification < ::Jobs::Base
     def execute(args)
+      user = User.find_by(id: args["user_id"])
+      push_window = SiteSetting.push_notification_time_window_mins
+      return if !user || (push_window > 0 && user.seen_since?(push_window.minutes.ago))
+
       notification = args["payload"]
       notification["url"] = UrlHelper.absolute_without_cdn(
         Discourse.base_path + notification["post_url"],
@@ -24,21 +28,28 @@ module Jobs
 
           next if push_url.blank?
 
-          result =
-            Excon.post(
-              push_url,
-              body: payload.merge(notifications: notifications).to_json,
-              headers: {
-                "Content-Type" => "application/json",
-                "Accept" => "application/json",
-              },
-            )
+          uri = URI.parse(push_url)
 
-          if result.status != 200
-            # we failed to push a notification ... log it
-            Rails.logger.warn(
-              "Failed to push a notification to #{push_url} Status: #{result.status}: #{result.status_line}",
+          http = FinalDestination::HTTP.new(uri.host, uri.port)
+          http.use_ssl = uri.scheme == "https"
+
+          request =
+            FinalDestination::HTTP::Post.new(
+              uri.request_uri,
+              { "Content-Type" => "application/json" },
             )
+          request.body = payload.merge(notifications: notifications).to_json
+
+          begin
+            response = http.request(request)
+
+            if response.code.to_i != 200
+              Rails.logger.warn(
+                "Failed to push a notification to #{push_url} Status: #{response.code}: #{response.body}",
+              )
+            end
+          rescue => e
+            Rails.logger.error("An error occurred while pushing a notification: #{e.message}")
           end
         end
     end

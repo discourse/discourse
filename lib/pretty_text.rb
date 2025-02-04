@@ -66,12 +66,12 @@ module PrettyText
     end
 
     root_path = "#{Rails.root}/app/assets/javascripts"
-    node_modules = "#{Rails.root}/node_modules"
+    d_node_modules = "#{Rails.root}/app/assets/javascripts/discourse/node_modules"
     md_node_modules = "#{Rails.root}/app/assets/javascripts/discourse-markdown-it/node_modules"
-    ctx.load("#{node_modules}/loader.js/dist/loader/loader.js")
+    ctx.load("#{d_node_modules}/loader.js/dist/loader/loader.js")
     ctx.load("#{md_node_modules}/markdown-it/dist/markdown-it.js")
     ctx.load("#{root_path}/handlebars-shim.js")
-    ctx.load("#{node_modules}/xss/dist/xss.js")
+    ctx.load("#{md_node_modules}/xss/dist/xss.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
 
     ctx_load_directory(
@@ -86,12 +86,13 @@ module PrettyText
     )
 
     %w[
-      discourse-common/addon/lib/get-url
-      discourse-common/addon/lib/object
-      discourse-common/addon/lib/deprecated
-      discourse-common/addon/lib/escape
-      discourse-common/addon/lib/avatar-utils
-      discourse-common/addon/lib/case-converter
+      discourse/app/deprecation-workflow
+      discourse/app/lib/get-url
+      discourse/app/lib/object
+      discourse/app/lib/deprecated
+      discourse/app/lib/escape
+      discourse/app/lib/avatar-utils
+      discourse/app/lib/case-converter
       discourse/app/lib/to-markdown
       discourse/app/static/markdown-it/features
     ].each do |f|
@@ -258,7 +259,7 @@ module PrettyText
         __optInput = {};
         __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
         __paths = #{paths_json};
-        require("discourse-common/lib/avatar-utils").avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
+        require("discourse/lib/avatar-utils").avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
       JS
   end
 
@@ -452,12 +453,16 @@ module PrettyText
       .css(".video-placeholder-container")
       .each do |video|
         video_src = video["data-video-src"]
+        next if video_src == "/404" || video_src.nil?
         video_sha1 = File.basename(video_src, File.extname(video_src))
         thumbnail = Upload.where("original_filename LIKE ?", "#{video_sha1}.%").last
         if thumbnail
           video["data-thumbnail-src"] = UrlHelper.absolute(
             GlobalPath.upload_cdn_path(thumbnail.url),
           )
+          video[
+            "data-video-base62-sha1"
+          ] = "#{Upload.base62_sha1(video_sha1)}#{File.extname(video_src)}"
         end
       end
   end
@@ -481,6 +486,8 @@ module PrettyText
   end
 
   def self.excerpt(html, max_length, options = {})
+    return "" if html.blank?
+
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
@@ -687,9 +694,9 @@ module PrettyText
 
   private
 
-  USER_TYPE ||= "user"
-  GROUP_TYPE ||= "group"
-  GROUP_MENTIONABLE_TYPE ||= "group-mentionable"
+  USER_TYPE = "user"
+  GROUP_TYPE = "group"
+  GROUP_MENTIONABLE_TYPE = "group-mentionable"
 
   def self.add_mentions(doc, user_id: nil)
     elements = doc.css("span.mention")

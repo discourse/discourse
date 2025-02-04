@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 export default class FKErrors extends Component {
   concatErrors(errors) {
@@ -9,7 +9,7 @@ export default class FKErrors extends Component {
   <template>
     <p class="form-kit__errors" id={{@id}} aria-live="assertive" ...attributes>
       <span>
-        {{icon "exclamation-triangle"}}
+        {{icon "triangle-exclamation"}}
         {{this.concatErrors @error.messages}}
       </span>
     </p>

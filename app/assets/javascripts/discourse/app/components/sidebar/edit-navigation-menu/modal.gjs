@@ -5,10 +5,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 export default class SidebarEditNavigationMenuModal extends Component {
@@ -17,17 +16,15 @@ export default class SidebarEditNavigationMenuModal extends Component {
   filterDropdownContent = [
     {
       id: "all",
-      name: I18n.t("sidebar.edit_navigation_modal_form.filter_dropdown.all"),
+      name: i18n("sidebar.edit_navigation_modal_form.filter_dropdown.all"),
     },
     {
       id: "selected",
-      name: I18n.t(
-        "sidebar.edit_navigation_modal_form.filter_dropdown.selected"
-      ),
+      name: i18n("sidebar.edit_navigation_modal_form.filter_dropdown.selected"),
     },
     {
       id: "unselected",
-      name: I18n.t(
+      name: i18n(
         "sidebar.edit_navigation_modal_form.filter_dropdown.unselected"
       ),
     },
@@ -74,7 +71,7 @@ export default class SidebarEditNavigationMenuModal extends Component {
         <div class="sidebar__edit-navigation-menu__filter">
           <div class="sidebar__edit-navigation-menu__filter-input">
             {{icon
-              "search"
+              "magnifying-glass"
               class="sidebar__edit-navigation-menu__filter-input-icon"
             }}
 
@@ -118,7 +115,7 @@ export default class SidebarEditNavigationMenuModal extends Component {
             <DButton
               @action={{@resetToDefaults}}
               @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
-              @icon="undo"
+              @icon="arrow-rotate-left"
               @disabled={{@saving}}
               class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
             />

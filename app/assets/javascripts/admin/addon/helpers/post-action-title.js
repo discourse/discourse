@@ -1,14 +1,14 @@
 import Helper from "@ember/component/helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function postActionTitle([id, nameKey]) {
-  let title = I18n.t(`admin.flags.short_names.${nameKey}`, {
+  let title = i18n(`admin.flags.short_names.${nameKey}`, {
     defaultValue: null,
   });
 
   // TODO: We can remove this once other translations have been updated
   if (!title) {
-    return I18n.t(`admin.flags.summary.action_type_${id}`, { count: 1 });
+    return i18n(`admin.flags.summary.action_type_${id}`, { count: 1 });
   }
 
   return title;

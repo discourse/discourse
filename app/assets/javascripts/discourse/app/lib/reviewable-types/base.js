@@ -1,4 +1,4 @@
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ReviewableTypeBase {
   constructor({ reviewable, currentUser, siteSettings, site }) {
@@ -13,12 +13,12 @@ export default class ReviewableTypeBase {
     if (flagger) {
       return flagger;
     } else {
-      return I18n.t("user_menu.reviewable.deleted_user");
+      return i18n("user_menu.reviewable.deleted_user");
     }
   }
 
   get description() {
-    return I18n.t("user_menu.reviewable.default_item", {
+    return i18n("user_menu.reviewable.default_item", {
       reviewable_id: this.reviewable.id,
     });
   }

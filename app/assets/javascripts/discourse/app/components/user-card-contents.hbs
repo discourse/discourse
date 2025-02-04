@@ -36,7 +36,7 @@
             handleShowUser=this.handleShowUser
           }}
         >
-          <div class="user-card-avatar">
+          <div class="user-card-avatar" aria-hidden="true">
             {{#if this.contentHidden}}
               <span class="card-huge-avatar">{{bound-avatar
                   this.user
@@ -69,10 +69,7 @@
                 {{if this.nameFirst 'full-name' 'username'}}"
             >
               {{#if this.contentHidden}}
-                <span
-                  id="discourse-user-card-title"
-                  class="name-username-wrapper"
-                >
+                <span class="name-username-wrapper">
                   {{if
                     this.nameFirst
                     this.user.name
@@ -89,10 +86,7 @@
                     username=this.user.username
                   }}
                 >
-                  <span
-                    id="discourse-user-card-title"
-                    class="name-username-wrapper"
-                  >
+                  <span class="name-username-wrapper">
                     {{if
                       this.nameFirst
                       this.user.name
@@ -160,7 +154,7 @@
           {{#if this.showFilter}}
             <li>
               <DButton
-                @action={{fn (action "filterPosts") this.user}}
+                @action={{fn this.handleFilterPosts this.user}}
                 @icon="filter"
                 @translatedLabel={{this.filterPostsLabel}}
                 class="btn-default"
@@ -171,7 +165,7 @@
             <li>
               <DButton
                 @action={{action "cancelFilter"}}
-                @icon="times"
+                @icon="xmark"
                 @label="topic.filters.cancel"
               />
             </li>
@@ -180,7 +174,7 @@
             <li>
               <DButton
                 @action={{fn (action "deleteUser") this.user}}
-                @icon="exclamation-triangle"
+                @icon="triangle-exclamation"
                 @label="admin.user.delete"
                 class="btn-danger"
               />
@@ -202,13 +196,13 @@
       {{#if this.user.profile_hidden}}
         <div class="card-row second-row">
           <div class="profile-hidden">
-            <span>{{i18n "user.profile_hidden"}}</span>
+            <span role="alert">{{i18n "user.profile_hidden"}}</span>
           </div>
         </div>
       {{else if this.user.inactive}}
         <div class="card-row second-row">
           <div class="inactive-user">
-            <span>{{i18n "user.inactive_user"}}</span>
+            <span role="alert">{{i18n "user.inactive_user"}}</span>
           </div>
         </div>
       {{/if}}
@@ -289,7 +283,7 @@
             {{/if}}
             {{#if this.user.location}}
               <span class="location">
-                {{d-icon "map-marker-alt"}}
+                {{d-icon "location-dot"}}
                 <span>{{this.user.location}}</span>
               </span>
             {{/if}}
@@ -376,7 +370,17 @@
                   <span class="user-field-value">
                     {{#each uf.value as |v|}}
                       {{! some values are arrays }}
-                      <span class="user-field-value-list-item">{{v}}</span>
+                      <span class="user-field-value-list-item">
+                        {{#if uf.field.searchable}}
+                          <LinkTo
+                            @route="users"
+                            @query={{hash name=v}}
+                            {{on "click" (fn this.refreshRoute v)}}
+                          >{{v}}</LinkTo>
+                        {{else}}
+                          {{v}}
+                        {{/if}}
+                      </span>
                     {{else}}
                       {{uf.value}}
                     {{/each}}

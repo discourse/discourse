@@ -13,7 +13,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class AdminFlagItem extends Component {
@@ -21,7 +21,7 @@ export default class AdminFlagItem extends Component {
   @service router;
 
   @tracked enabled = this.args.flag.enabled;
-  @tracked isSaving = false;
+  @tracked isSaved = true;
 
   get canMove() {
     return this.args.flag.id !== SYSTEM_FLAG_IDS.notify_user;
@@ -49,7 +49,7 @@ export default class AdminFlagItem extends Component {
   @action
   toggleFlagEnabled(flag) {
     this.enabled = !this.enabled;
-    this.isSaving = true;
+    this.isSaved = false;
 
     return ajax(`/admin/config/flags/${flag.id}/toggle`, {
       type: "PUT",
@@ -62,7 +62,7 @@ export default class AdminFlagItem extends Component {
         return popupAjaxError(error);
       })
       .finally(() => {
-        this.isSaving = false;
+        this.isSaved = true;
       });
   }
 
@@ -73,21 +73,22 @@ export default class AdminFlagItem extends Component {
 
   @action
   moveUp() {
-    this.isSaving = true;
-    this.dMenu.close();
+    this.isSaved = false;
     this.args.moveFlagCallback(this.args.flag, "up").finally(() => {
-      this.isSaving = false;
+      this.isSaved = true;
+      this.dMenu.close();
     });
   }
 
   @action
   moveDown() {
-    this.isSaving = true;
-    this.dMenu.close();
+    this.isSaved = false;
     this.args.moveFlagCallback(this.args.flag, "down").finally(() => {
-      this.isSaving = false;
+      this.isSaved = true;
+      this.dMenu.close();
     });
   }
+
   @action
   edit() {
     this.router.transitionTo("adminConfig.flags.edit", this.args.flag);
@@ -95,47 +96,58 @@ export default class AdminFlagItem extends Component {
 
   @action
   delete() {
-    this.isSaving = true;
+    this.isSaved = false;
     this.dialog.yesNoConfirm({
       message: i18n("admin.config_areas.flags.delete_confirm", {
         name: this.args.flag.name,
       }),
-      didConfirm: () => {
-        this.args.deleteFlagCallback(this.args.flag).finally(() => {
-          this.isSaving = false;
-        });
+      didConfirm: async () => {
+        try {
+          await this.args.deleteFlagCallback(this.args.flag);
+          this.isSaved = true;
+          this.dMenu.close();
+        } catch (error) {
+          popupAjaxError(error);
+        }
       },
       didCancel: () => {
-        this.isSaving = false;
+        this.isSaved = true;
+        this.dMenu.close();
       },
     });
-    this.dMenu.close();
   }
 
   <template>
     <tr
       class={{concatClass
-        "admin-flag-item"
+        "d-admin-row__content admin-flag-item"
         @flag.name_key
-        (if this.isSaving "saving")
+        (if this.isSaved "saved")
       }}
     >
-      <td>
-        <p class="admin-flag-item__name">{{@flag.name}}</p>
-        <p class="admin-flag-item__description">{{htmlSafe
+      <td class="d-admin-row__overview">
+        <div
+          class="d-admin-row__overview-name admin-flag-item__name"
+        >{{@flag.name}}</div>
+        <div class="d-admin-row__overview-about">{{htmlSafe
             @flag.description
-          }}</p>
+          }}</div>
       </td>
-      <td>
-        <div class="admin-flag-item__options">
-          <DToggleSwitch
-            @state={{this.enabled}}
-            class="admin-flag-item__toggle {{@flag.name_key}}"
-            {{on "click" (fn this.toggleFlagEnabled @flag)}}
-          />
+      <td class="d-admin-row__detail">
+        <div class="d-admin-row__mobile-label">
+          {{i18n "admin.config_areas.flags.enabled"}}
+        </div>
+        <DToggleSwitch
+          @state={{this.enabled}}
+          class="admin-flag-item__toggle {{@flag.name_key}}"
+          {{on "click" (fn this.toggleFlagEnabled @flag)}}
+        />
+      </td>
+      <td class="d-admin-row__controls">
+        <div class="d-admin-row__controls-options">
 
           <DButton
-            class="btn btn-secondary admin-flag-item__edit"
+            class="btn-default btn-small admin-flag-item__edit"
             @action={{this.edit}}
             @label="admin.config_areas.flags.edit"
             @disabled={{not this.canEdit}}
@@ -146,8 +158,9 @@ export default class AdminFlagItem extends Component {
             <DMenu
               @identifier="flag-menu"
               @title={{i18n "admin.config_areas.flags.more_options.title"}}
-              @icon="ellipsis-v"
+              @icon="ellipsis-vertical"
               @onRegisterApi={{this.onRegisterApi}}
+              @class="btn-default"
             >
               <:content>
                 <DropdownMenu as |dropdown|>
@@ -156,7 +169,7 @@ export default class AdminFlagItem extends Component {
                       <DButton
                         @label="admin.config_areas.flags.more_options.move_up"
                         @icon="arrow-up"
-                        @class="btn-transparent admin-flag-item__move-up"
+                        class="btn-transparent admin-flag-item__move-up"
                         @action={{this.moveUp}}
                       />
                     </dropdown.item>
@@ -166,7 +179,7 @@ export default class AdminFlagItem extends Component {
                       <DButton
                         @label="admin.config_areas.flags.more_options.move_down"
                         @icon="arrow-down"
-                        @class="btn-transparent admin-flag-item__move-down"
+                        class="btn-transparent admin-flag-item__move-down"
                         @action={{this.moveDown}}
                       />
                     </dropdown.item>
@@ -175,8 +188,8 @@ export default class AdminFlagItem extends Component {
                   <dropdown.item>
                     <DButton
                       @label="admin.config_areas.flags.delete"
-                      @icon="trash-alt"
-                      class="btn-transparent admin-flag-item__delete"
+                      @icon="trash-can"
+                      class="btn-transparent btn-danger admin-flag-item__delete"
                       @action={{this.delete}}
                       @disabled={{not this.canEdit}}
                       @title={{this.deleteTitle}}

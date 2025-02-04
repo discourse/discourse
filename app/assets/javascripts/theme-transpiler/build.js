@@ -3,7 +3,6 @@
 const esbuild = require("esbuild");
 const path = require("node:path");
 const fs = require("node:fs");
-const { argv } = require("node:process");
 
 let wasmPlugin = {
   name: "wasm",
@@ -53,11 +52,10 @@ esbuild
       util: "./node_modules/@zxing/text-encoding",
     },
     define: {
-      process: `{ "env": {} }`,
+      process: `{ "env": { "EMBER_ENV": "production" } }`,
     },
     external: ["fs", "path"],
-    entryPoints: ["./app/assets/javascripts/theme-transpiler/transpiler.js"],
-    outfile: argv[2],
+    entryPoints: ["./transpiler.js"],
     plugins: [wasmPlugin],
   })
   .then(() => {});

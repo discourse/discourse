@@ -5,14 +5,11 @@ module Jobs
     class AutoJoinUsers < ::Jobs::Scheduled
       every 1.hour
 
-      def execute(_args)
+      def execute(args = {})
         return if !SiteSetting.chat_enabled
 
-        ::Chat::Channel
-          .where(auto_join_users: true)
-          .each do |channel|
-            ::Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
-          end
+        ::Chat::AutoJoinChannels.call(params: {})
+        ::Chat::AutoLeaveChannels.call(params: { event: args[:event]&.to_sym || :hourly_job })
       end
     end
   end

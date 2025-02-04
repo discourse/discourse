@@ -4,6 +4,9 @@ module Chat
   class ChannelFetcher
     MAX_PUBLIC_CHANNEL_RESULTS = 50
 
+    # NOTE: this should always be > than `DIRECT_MESSAGE_CHANNELS_LIMIT` in `chat-channel-manager.js`
+    MAX_DM_CHANNEL_RESULTS = 75
+
     def self.structured(guardian, include_threads: false)
       memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
       public_channels = secured_public_channels(guardian, status: :open, following: true)
@@ -198,6 +201,7 @@ module Chat
           .strict_loading
           .where(id: scoped_channels)
           .includes(
+            :icon_upload,
             last_message: [:uploads],
             chatable: [{ direct_message_users: [user: %i[user_option group_users]] }, :users],
           )
@@ -231,25 +235,30 @@ module Chat
       end
 
       query =
-        query.order("last_message.created_at DESC NULLS LAST").group(
-          "chat_channels.id",
-          "last_message.id",
-        )
+        query
+          .limit(MAX_DM_CHANNEL_RESULTS)
+          .order("last_message.created_at DESC NULLS LAST")
+          .group("chat_channels.id", "last_message.id")
 
       channels = query.to_a
+
       preload_fields =
         User.allowed_user_custom_fields(guardian) +
           UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
-      User.preload_custom_fields(channels.map { |c| c.chatable.users }.flatten, preload_fields)
+
+      User.preload_custom_fields(channels.flat_map { _1.chatable.users }, preload_fields)
+
       channels
     end
 
     def self.tracking_state(channel_ids, guardian, include_threads: false)
       Chat::TrackingState.call(
-        channel_ids: channel_ids,
-        guardian: guardian,
-        include_missing_memberships: true,
-        include_threads: include_threads,
+        guardian:,
+        params: {
+          include_missing_memberships: true,
+          channel_ids:,
+          include_threads:,
+        },
       ).report
     end
 

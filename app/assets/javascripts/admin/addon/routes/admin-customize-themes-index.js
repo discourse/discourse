@@ -15,7 +15,7 @@ const externalResources = [
   {
     key: "admin.customize.theme.browse_themes",
     link: "https://meta.discourse.org/c/theme",
-    icon: "paint-brush",
+    icon: "paintbrush",
   },
 ];
 

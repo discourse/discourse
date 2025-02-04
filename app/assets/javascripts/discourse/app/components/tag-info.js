@@ -4,39 +4,42 @@ import { and, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
-export default Component.extend({
-  dialog: service(),
-  tagName: "",
-  loading: false,
-  tagInfo: null,
-  newSynonyms: null,
-  showEditControls: false,
-  canAdminTag: reads("currentUser.staff"),
-  editSynonymsMode: and("canAdminTag", "showEditControls"),
-  editing: false,
-  newTagName: null,
-  newTagDescription: null,
-  router: service(),
+@tagName("")
+export default class TagInfo extends Component {
+  @service dialog;
+  @service router;
+
+  loading = false;
+  tagInfo = null;
+  newSynonyms = null;
+  showEditControls = false;
+  editing = false;
+  newTagName = null;
+  newTagDescription = null;
+
+  @reads("currentUser.staff") canAdminTag;
+  @and("canAdminTag", "showEditControls") editSynonymsMode;
 
   @discourseComputed("tagInfo.tag_group_names")
   tagGroupsInfo(tagGroupNames) {
-    return I18n.t("tagging.tag_groups_info", {
+    return i18n("tagging.tag_groups_info", {
       count: tagGroupNames.length,
       tag_groups: tagGroupNames.join(", "),
     });
-  },
+  }
 
   @discourseComputed("tagInfo.categories")
   categoriesInfo(categories) {
-    return I18n.t("tagging.category_restrictions", {
+    return i18n("tagging.category_restrictions", {
       count: categories.length,
     });
-  },
+  }
 
   @discourseComputed(
     "tagInfo.tag_group_names",
@@ -45,19 +48,25 @@ export default Component.extend({
   )
   nothingToShow(tagGroupNames, categories, synonyms) {
     return isEmpty(tagGroupNames) && isEmpty(categories) && isEmpty(synonyms);
-  },
+  }
 
   @discourseComputed("newTagName")
   updateDisabled(newTagName) {
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
     newTagName = newTagName ? newTagName.replace(filterRegexp, "").trim() : "";
     return newTagName.length === 0;
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.loadTagInfo();
-  },
+  }
+
+  didUpdateAttrs() {
+    super.didUpdateAttrs(...arguments);
+    this.set("tagInfo", null);
+    this.loadTagInfo();
+  }
 
   loadTagInfo() {
     if (this.loading) {
@@ -75,7 +84,7 @@ export default Component.extend({
       })
       .finally(() => this.set("loading", false))
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   edit(event) {
@@ -89,7 +98,7 @@ export default Component.extend({
       newTagName: this.tag.id,
       newTagDescription: this.tagInfo.description,
     });
-  },
+  }
 
   @action
   unlinkSynonym(tag, event) {
@@ -99,14 +108,14 @@ export default Component.extend({
     })
       .then(() => this.tagInfo.synonyms.removeObject(tag))
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   deleteSynonym(tag, event) {
     event?.preventDefault();
 
     this.dialog.yesNoConfirm({
-      message: I18n.t("tagging.delete_synonym_confirm", {
+      message: i18n("tagging.delete_synonym_confirm", {
         tag_name: tag.text,
       }),
       didConfirm: () => {
@@ -116,17 +125,17 @@ export default Component.extend({
           .catch(popupAjaxError);
       },
     });
-  },
+  }
 
   @action
   toggleEditControls() {
     this.toggleProperty("showEditControls");
-  },
+  }
 
   @action
   cancelEditing() {
     this.set("editing", false);
-  },
+  }
 
   @action
   finishedEditing() {
@@ -145,7 +154,7 @@ export default Component.extend({
         }
       })
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   deleteTag() {
@@ -154,13 +163,13 @@ export default Component.extend({
 
     let confirmText =
       numTopics === 0
-        ? I18n.t("tagging.delete_confirm_no_topics")
-        : I18n.t("tagging.delete_confirm", { count: numTopics });
+        ? i18n("tagging.delete_confirm_no_topics")
+        : i18n("tagging.delete_confirm", { count: numTopics });
 
     if (this.tagInfo.synonyms.length > 0) {
       confirmText +=
         " " +
-        I18n.t("tagging.delete_confirm_synonyms", {
+        i18n("tagging.delete_confirm_synonyms", {
           count: this.tagInfo.synonyms.length,
         });
     }
@@ -172,17 +181,17 @@ export default Component.extend({
           await this.tag.destroyRecord();
           this.router.transitionTo("tags.index");
         } catch {
-          this.dialog.alert(I18n.t("generic_error"));
+          this.dialog.alert(i18n("generic_error"));
         }
       },
     });
-  },
+  }
 
   @action
   addSynonyms() {
     this.dialog.confirm({
       message: htmlSafe(
-        I18n.t("tagging.add_synonyms_explanation", {
+        i18n("tagging.add_synonyms_explanation", {
           count: this.newSynonyms.length,
           tag_name: this.tagInfo.name,
         })
@@ -200,16 +209,16 @@ export default Component.extend({
               this.loadTagInfo();
             } else if (response.failed_tags) {
               this.dialog.alert(
-                I18n.t("tagging.add_synonyms_failed", {
+                i18n("tagging.add_synonyms_failed", {
                   tag_names: Object.keys(response.failed_tags).join(", "),
                 })
               );
             } else {
-              this.dialog.alert(I18n.t("generic_error"));
+              this.dialog.alert(i18n("generic_error"));
             }
           })
           .catch(popupAjaxError);
       },
     });
-  },
-});
+  }
+}

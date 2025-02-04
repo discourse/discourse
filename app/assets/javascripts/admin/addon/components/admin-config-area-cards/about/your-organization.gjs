@@ -5,8 +5,7 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasAboutYourOrganization extends Component {
   @service toasts;
@@ -41,7 +40,7 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       this.toasts.success({
         duration: 30000,
         data: {
-          message: I18n.t(
+          message: i18n(
             "admin.config_areas.about.toasts.your_organization_saved"
           ),
         },
@@ -58,7 +57,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       <form.Field
         @name="companyName"
         @title={{i18n "admin.config_areas.about.company_name"}}
-        @subtitle={{i18n "admin.config_areas.about.company_name_help"}}
         @format="large"
         as |field|
       >
@@ -68,14 +66,14 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
           }}
         />
       </form.Field>
-      <form.Alert @type="error">
+      <form.Alert @type="info">
         {{i18n "admin.config_areas.about.company_name_warning"}}
       </form.Alert>
 
       <form.Field
         @name="governingLaw"
         @title={{i18n "admin.config_areas.about.governing_law"}}
-        @subtitle={{i18n "admin.config_areas.about.governing_law_help"}}
+        @description={{i18n "admin.config_areas.about.governing_law_help"}}
         @format="large"
         as |field|
       >
@@ -89,7 +87,7 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       <form.Field
         @name="cityForDisputes"
         @title={{i18n "admin.config_areas.about.city_for_disputes"}}
-        @subtitle={{i18n "admin.config_areas.about.city_for_disputes_help"}}
+        @description={{i18n "admin.config_areas.about.city_for_disputes_help"}}
         @format="large"
         as |field|
       >

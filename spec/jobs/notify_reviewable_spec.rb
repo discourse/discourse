@@ -54,8 +54,9 @@ RSpec.describe Jobs::NotifyReviewable do
       moderator.update!(last_seen_reviewable_id: moderator_reviewable.id)
 
       # Content for a group
-      group_reviewable =
-        Fabricate(:reviewable, reviewable_by_moderator: true, reviewable_by_group: group)
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
+      group_reviewable = Fabricate(:reviewable, reviewable_by_moderator: true, category:)
 
       messages =
         MessageBus.track_publish { described_class.new.execute(reviewable_id: group_reviewable.id) }
@@ -85,7 +86,9 @@ RSpec.describe Jobs::NotifyReviewable do
       SiteSetting.enable_category_group_moderation = false
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)
-      reviewable = Fabricate(:reviewable, reviewable_by_moderator: true, reviewable_by_group: group)
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
+      reviewable = Fabricate(:reviewable, reviewable_by_moderator: true, category:)
 
       messages =
         MessageBus.track_publish("/reviewable_counts") do

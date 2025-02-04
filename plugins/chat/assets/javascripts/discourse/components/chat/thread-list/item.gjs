@@ -7,7 +7,7 @@ import { gt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import formatDate from "discourse/helpers/format-date";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import ThreadUnreadIndicator from "discourse/plugins/chat/discourse/components/thread-unread-indicator";
 import ChatThreadParticipants from "../../chat-thread-participants";
 import ChatUserAvatar from "../../chat-user-avatar";
@@ -25,6 +25,7 @@ export default class ChatThreadListItem extends Component {
       class={{concatClass
         "chat-thread-list-item"
         (if (gt @thread.tracking.unreadCount 0) "-is-unread")
+        (if (gt @thread.tracking.watchedThreadsUnreadCount 0) "-is-urgent")
       }}
       data-thread-id={{@thread.id}}
       ...attributes

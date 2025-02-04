@@ -272,6 +272,21 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Creates a message interaction.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} messageId - The ID of the message.
+   * @param {object} data - Params of the intereaction.
+   * @param {string} data.action_id - The ID of the action.
+   * @returns {Promise}
+   */
+  createInteraction(channelId, messageId, data = {}) {
+    return this.#postRequest(
+      `/channels/${channelId}/messages/${messageId}/interactions`,
+      data
+    );
+  }
+
+  /**
    * Updates the status of a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {string} status - The new status, can be "open" or "closed".
@@ -358,8 +373,7 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The settings to modify.
    * @param {boolean} [data.muted] - Mutes the channel.
-   * @param {string} [data.desktop_notification_level] - Notifications level on desktop: never, mention or always.
-   * @param {string} [data.mobile_notification_level] - Notifications level on mobile: never, mention or always.
+   * @param {string} [data.notification_level] - Notifications level: never, mention or always.
    * @returns {Promise}
    */
   updateCurrentUserChannelNotificationsSettings(channelId, data = {}) {

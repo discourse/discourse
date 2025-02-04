@@ -1,5 +1,5 @@
 import { performEmojiUnescape } from "pretty-text/emoji";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let customMarkdownCookFn;
 
@@ -47,7 +47,7 @@ const chatTranscriptRule = {
         lazy: true,
       });
 
-      channelToken.content = I18n.t("chat.quote.original_channel", {
+      channelToken.content = i18n("chat.quote.original_channel", {
         channel: unescapedChannelName,
         channelLink,
       });
@@ -97,7 +97,7 @@ const chatTranscriptRule = {
       });
       threadTitleToken.content = unescapedThreadTitle
         ? unescapedThreadTitle
-        : I18n.t("chat.quote.default_thread_title");
+        : i18n("chat.quote.default_thread_title");
 
       state.push("span_thread_title_close", "span", -1);
 

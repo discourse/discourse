@@ -143,6 +143,8 @@ nb_NO:
             title: "Normal"
           tracking:
             title: "Overvåkning"
+          watching:
+            title: "Følger"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

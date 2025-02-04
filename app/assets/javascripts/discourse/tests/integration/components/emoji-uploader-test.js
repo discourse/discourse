@@ -17,13 +17,14 @@ module("Integration | Component | emoji-uploader", function (hooks) {
       emojiGroups: ["default", "cool-emojis"],
     });
 
-    pretender.post("/admin/customize/emojis.json", () => {
+    pretender.post("/admin/config/emoji.json", () => {
       requestNumber++;
 
       if (requestNumber === 1) {
         return response({
           group: "cool-emojis",
           name: "okay",
+          created_by: "benji",
           url: "//upload.s3.dualstack.us-east-2.amazonaws.com/original/1X/123.png",
         });
       } else if (requestNumber === 2) {
@@ -124,5 +125,28 @@ module("Integration | Component | emoji-uploader", function (hooks) {
     await this.container
       .lookup("service:app-events")
       .trigger("upload-mixin:emoji-uploader:add-files", [image, image2]);
+  });
+
+  test("sets the created_by field with username", async function (assert) {
+    await render(hbs`
+      <EmojiUploader
+        @id="emoji-uploader"
+        @emojiGroups={{this.emojiGroups}}
+        @createdBy={{this.createdBy}}
+        @done={{this.doneUpload}}
+      />
+    `);
+
+    const done = assert.async();
+
+    this.set("doneUpload", (upload) => {
+      assert.strictEqual(upload.created_by, "benji");
+      done();
+    });
+
+    const image = createFile("avatar.png");
+    await this.container
+      .lookup("service:app-events")
+      .trigger("upload-mixin:emoji-uploader:add-files", [image]);
   });
 });

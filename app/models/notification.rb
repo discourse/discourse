@@ -2,7 +2,7 @@
 
 class Notification < ActiveRecord::Base
   self.ignored_columns = [
-    :old_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been writted.
+    :old_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
   ]
 
   attr_accessor :acting_user
@@ -164,6 +164,7 @@ class Notification < ActiveRecord::Base
         new_features: 37,
         admin_problems: 38,
         linked_consolidated: 39,
+        chat_watched_thread: 40,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
@@ -364,19 +365,26 @@ class Notification < ActiveRecord::Base
   end
 
   def self.populate_acting_user(notifications)
+    if !(SiteSetting.show_user_menu_avatars || SiteSetting.prioritize_full_name_in_ux)
+      return notifications
+    end
     usernames =
       notifications.map do |notification|
         notification.acting_username =
           (
             notification.data_hash[:username] || notification.data_hash[:display_username] ||
               notification.data_hash[:mentioned_by_username] ||
-              notification.data_hash[:invited_by_username]
+              notification.data_hash[:invited_by_username] ||
+              notification.data_hash[:original_username]
           )&.downcase
       end
 
     users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
     notifications.each do |notification|
       notification.acting_user = users[notification.acting_username]
+      notification.data_hash[
+        :original_name
+      ] = notification.acting_user&.name if SiteSetting.enable_names
     end
 
     notifications

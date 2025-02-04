@@ -2,7 +2,7 @@
 // note that allow lister will run on top of it, so if a tag is allowed here but not on
 // the allow list, then it won't show up
 
-const inline_names = ["kbd"];
+const inline_names = ["kbd", "mark"];
 
 const patterns = inline_names.join("|");
 const attr_name = "[a-zA-Z_:][a-zA-Z0-9:._-]*";

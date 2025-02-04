@@ -15,7 +15,7 @@
     <% @about.admins.each do |user| %>
       <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
         <meta itemprop='url' content='<%= user_path(user.encoded_username(lower: true)) %>'>
-        <a href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
+        <a rel='nofollow' href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
           <span itemprop='image'>
             <img width="45" height="45" class="avatar" src="<%= user.small_avatar_url %>">
           </span>
@@ -36,7 +36,7 @@
       <% @about.moderators.each do |user| %>
         <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
           <meta itemprop='url' content='<%= user_path(user.encoded_username(lower: true)) %>'>
-          <a href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
+          <a rel='nofollow' href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
             <span itemprop='image'>
               <img width="45" height="45" class="avatar" src="<%= user.small_avatar_url %>">
             </span>
@@ -100,15 +100,6 @@
         <td><%= stats["likes_7_days"] %></td>
         <td><%= stats["likes_30_days"] %></td>
       </tr>
-      <% About.displayed_plugin_stat_groups.each do |stat_group_name| %>
-      <tr>
-        <td><%=t "js.about.#{stat_group_name}_count" %></td>
-        <td><%= stats["#{stat_group_name}_count"] %></td>
-        <td><%= stats["#{stat_group_name}_last_day"] %></td>
-        <td><%= stats["#{stat_group_name}_7_days"] %></td>
-        <td><%= stats["#{stat_group_name}_30_days"] %></td>
-      </tr>
-      <% end %>
     </table>
   </section>
 

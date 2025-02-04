@@ -20,4 +20,9 @@ class AuthProviderSerializer < ApplicationSerializer
     return SiteSetting.get(object.pretty_name_setting) if object.pretty_name_setting
     object.pretty_name
   end
+
+  def custom_url
+    # ensures that the "/custom" route doesn't trigger the magic custom_url helper in ActionDispatch
+    object.custom_url
+  end
 end

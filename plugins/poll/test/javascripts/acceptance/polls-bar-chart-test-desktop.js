@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Rendering polls with bar charts - desktop", function (needs) {
   needs.user();
@@ -41,71 +41,55 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
   test("Polls", async function (assert) {
     await visit("/t/-/15");
 
-    const polls = queryAll(".poll");
+    assert.dom(".poll").exists({ count: 2 }, "renders the polls correctly");
 
-    assert.strictEqual(polls.length, 2, "it should render the polls correctly");
+    const polls = document.querySelectorAll(".poll");
+    assert
+      .dom(".info-number", polls[0])
+      .hasText("2", "displays the right number of votes");
 
-    assert.strictEqual(
-      queryAll(".info-number", polls[0]).text(),
-      "2",
-      "it should display the right number of votes"
-    );
-
-    assert.strictEqual(
-      queryAll(".info-number", polls[1]).text(),
-      "3",
-      "it should display the right number of votes"
-    );
+    assert
+      .dom(".info-number", polls[1])
+      .hasText("3", "displays the right number of votes");
   });
 
   test("Public poll", async function (assert) {
     await visit("/t/-/14");
 
-    const polls = queryAll(".poll");
-    assert.strictEqual(polls.length, 1, "it should render the poll correctly");
+    assert.dom(".poll").exists({ count: 1 }, "renders the poll correctly");
 
     await click("button.toggle-results");
 
-    assert.strictEqual(
-      queryAll(".poll-voters:nth-of-type(1) li").length,
-      25,
-      "it should display the right number of voters"
-    );
+    assert
+      .dom(".poll-voters:nth-of-type(1) li")
+      .exists({ count: 25 }, "displays the right number of voters");
 
     await click(".poll-voters-toggle-expand:nth-of-type(1) a");
 
-    assert.strictEqual(
-      queryAll(".poll-voters:nth-of-type(1) li").length,
-      26,
-      "it should display the right number of voters"
-    );
+    assert
+      .dom(".poll-voters:nth-of-type(1) li")
+      .exists({ count: 26 }, "displays the right number of voters");
   });
 
   test("Public number poll", async function (assert) {
     await visit("/t/-/13");
 
-    const polls = queryAll(".poll");
-    assert.strictEqual(polls.length, 1, "it should render the poll correctly");
+    assert.dom(".poll").exists({ count: 1 }, "renders the poll correctly");
 
     await click("button.toggle-results");
 
-    assert.strictEqual(
-      queryAll(".poll-voters:nth-of-type(1) li").length,
-      25,
-      "it should display the right number of voters"
-    );
+    assert
+      .dom(".poll-voters:nth-of-type(1) li")
+      .exists({ count: 25 }, "displays the right number of voters");
 
-    assert.notOk(
-      queryAll(".poll-voters:nth-of-type(1) li:nth-of-type(1) a").attr("href"),
-      "user URL does not exist"
-    );
+    assert
+      .dom(".poll-voters:nth-of-type(1) li:nth-of-type(1) a")
+      .doesNotHaveAttribute("href", "user URL does not exist");
 
     await click(".poll-voters-toggle-expand:nth-of-type(1) a");
 
-    assert.strictEqual(
-      queryAll(".poll-voters:nth-of-type(1) li").length,
-      30,
-      "it should display the right number of voters"
-    );
+    assert
+      .dom(".poll-voters:nth-of-type(1) li")
+      .exists({ count: 30 }, "displays the right number of voters");
   });
 });

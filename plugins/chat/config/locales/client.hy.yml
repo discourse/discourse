@@ -140,6 +140,8 @@ hy:
             title: "Նորմալ"
           tracking:
             title: "Հետևում Եմ"
+          watching:
+            title: "Դիտում Եմ"
       draft_channel_screen:
         header: "Նոր Հաղորդագրություն"
         cancel: "Չեղարկել"

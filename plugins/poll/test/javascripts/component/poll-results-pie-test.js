@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count } from "discourse/tests/helpers/qunit-helpers";
 
 const OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 3, rank: 0 },
@@ -25,8 +24,7 @@ module("Poll | Component | poll-results-pie", function (hooks) {
       hbs`<PollResultsPie @id={{this.id}} @options={{this.options}} />`
     );
 
-    assert.strictEqual(count("li.legend"), 3);
-
-    assert.strictEqual(count("canvas.poll-results-canvas"), 1);
+    assert.dom("li.legend").exists({ count: 3 });
+    assert.dom("canvas.poll-results-canvas").exists({ count: 1 });
   });
 });

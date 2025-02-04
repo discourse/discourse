@@ -386,7 +386,8 @@ RSpec.describe PostValidator do
       SiteSetting.enable_category_group_moderation = true
       group = Fabricate(:group)
       GroupUser.create(group: group, user: user)
-      category = Fabricate(:category, reviewable_by_group_id: group.id)
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
       topic.update!(category: category)
 
       Post.create!(user: other_user, topic: topic, raw: "post number 1", post_number: 1)

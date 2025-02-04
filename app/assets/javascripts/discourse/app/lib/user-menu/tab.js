@@ -1,4 +1,4 @@
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 /**
  * abstract class representing a tab in the user menu
@@ -37,7 +37,7 @@ export default class UserMenuTab {
       key = `user_menu.tabs.${id}`;
     }
 
-    return I18n.t(key, { count });
+    return i18n(key, { count });
   }
 
   /**

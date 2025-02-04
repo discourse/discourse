@@ -20,14 +20,14 @@
         />
         <DButton
           @action={{this.cancelEditingName}}
-          @icon="times"
+          @icon="xmark"
           class="btn-small cancel-edit"
         />
       {{else}}
         <span>{{this.model.name}}</span>
         <DButton
           @action={{this.startEditingName}}
-          @icon="pencil-alt"
+          @icon="pencil"
           class="btn-small"
         />
       {{/if}}
@@ -59,7 +59,7 @@
 
         {{#if this.showRemoteError}}
           <div class="error-message">
-            {{d-icon "exclamation-triangle"}}
+            {{d-icon "triangle-exclamation"}}
             {{i18n "admin.customize.theme.repo_unreachable"}}
           </div>
           <div class="raw-error">
@@ -76,7 +76,7 @@
         <DButton
           @action={{this.destroyTheme}}
           @label="admin.customize.delete"
-          @icon="trash-alt"
+          @icon="trash-can"
           class="btn-danger"
         />
 
@@ -185,7 +185,7 @@
 
               {{#if this.showRemoteError}}
                 <div class="error-message">
-                  {{d-icon "exclamation-triangle"}}
+                  {{d-icon "triangle-exclamation"}}
                   {{i18n "admin.customize.theme.repo_unreachable"}}
                 </div>
                 <div class="raw-error">
@@ -203,7 +203,7 @@
               {{else}}
                 <DButton
                   @action={{this.checkForThemeUpdates}}
-                  @icon="sync"
+                  @icon="arrows-rotate"
                   @label="admin.customize.theme.check_for_updates"
                   class="btn-default"
                 />
@@ -240,7 +240,7 @@
               </span>
             {{else}}
               <span class="status-message">
-                {{d-icon "info-circle"}}
+                {{d-icon "circle-info"}}
                 {{i18n "admin.customize.theme.imported_from_archive"}}
               </span>
             {{/if}}
@@ -296,12 +296,12 @@
                 <ColorPalettes
                   @content={{this.colorSchemes}}
                   @value={{this.colorSchemeId}}
-                  @icon="paint-brush"
+                  @icon="paintbrush"
                   @options={{hash filterable=true}}
                 />
                 {{#if this.colorSchemeId}}
                   <DButton
-                    @icon="pen"
+                    @icon="pencil"
                     @action={{this.editColorScheme}}
                     @title="admin.customize.theme.edit_color_scheme"
                   />
@@ -322,7 +322,7 @@
                 />
                 <DButton
                   @action={{this.cancelChangeScheme}}
-                  @icon="times"
+                  @icon="xmark"
                   class="cancel cancel-edit"
                 />
               {{/if}}
@@ -395,7 +395,7 @@
                   <span class="col">
                     <DButton
                       @action={{fn this.removeUpload upload}}
-                      @icon="times"
+                      @icon="xmark"
                       class="second btn-default btn-default cancel-edit"
                     />
                   </span>
@@ -538,7 +538,7 @@
           <DButton
             @action={{this.showThemeSettingsEditor}}
             @label="admin.customize.theme.settings_editor"
-            @icon="pen"
+            @icon="pencil"
             @title="admin.customize.theme.settings_editor"
             class="btn-default btn-normal"
           />
@@ -546,7 +546,7 @@
         <DButton
           @action={{this.destroyTheme}}
           @label="admin.customize.delete"
-          @icon="trash-alt"
+          @icon="trash-can"
           class="btn-danger"
         />
       </div>

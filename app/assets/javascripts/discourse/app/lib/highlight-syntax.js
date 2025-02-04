@@ -1,8 +1,8 @@
-import DEBUG from "@glimmer/env";
+import { DEBUG } from "@glimmer/env";
 import { waitForPromise } from "@ember/test-waiters";
+import { isTesting } from "discourse/lib/environment";
+import { getURLWithCDN } from "discourse/lib/get-url";
 import mergeHTMLPlugin from "discourse/lib/highlight-syntax-merge-html-plugin";
-import { isTesting } from "discourse-common/config/environment";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
 
 let _moreLanguages = [];
 let _plugins = [];
@@ -40,6 +40,10 @@ export default async function highlightSyntax(elem, siteSettings, session) {
         lang = m[1];
         break;
       }
+    }
+
+    if (lang === "auto" && e.innerHTML.length > 1000) {
+      return;
     }
 
     const canHighlight = lang && (lang === "auto" || hljs.getLanguage(lang));

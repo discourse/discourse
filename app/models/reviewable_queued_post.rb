@@ -56,14 +56,14 @@ class ReviewableQueuedPost < Reviewable
           actions.add_bundle("#{id}-reject", label: "reviewables.actions.reject_post.title")
 
         actions.add(:reject_post, bundle: reject_bundle) do |a|
-          a.icon = "times"
+          a.icon = "xmark"
           a.label = "reviewables.actions.discard_post.title"
           a.button_class = "reject-post"
         end
         delete_user_actions(actions, reject_bundle)
       else
         actions.add(:reject_post) do |a|
-          a.icon = "times"
+          a.icon = "xmark"
           a.label = "reviewables.actions.reject_post.title"
         end
       end
@@ -73,7 +73,9 @@ class ReviewableQueuedPost < Reviewable
       end
     end
 
-    actions.add(:delete) if guardian.can_delete?(self)
+    actions.add(:delete) do |a|
+      a.label = "reviewables.actions.delete_single.title"
+    end if guardian.can_delete?(self)
   end
 
   def build_editable_fields(fields, guardian, args)
@@ -108,6 +110,7 @@ class ReviewableQueuedPost < Reviewable
         skip_jobs: true,
         skip_events: true,
         skip_guardian: true,
+        reviewed_queued_post: true,
       )
     opts.merge!(guardian: Guardian.new(performed_by)) if performed_by.staff?
 
@@ -170,7 +173,7 @@ class ReviewableQueuedPost < Reviewable
       original_post: self.payload["raw"],
       site_name: SiteSetting.title,
     }
-    SystemMessage.create_from_system_user(
+    SystemMessage.create(
       self.target_created_by,
       (
         if self.topic.blank?
@@ -240,7 +243,6 @@ end
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
-#  reviewable_by_group_id  :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null
@@ -255,6 +257,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #

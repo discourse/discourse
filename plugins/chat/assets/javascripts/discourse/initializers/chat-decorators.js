@@ -1,20 +1,19 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
+import { samePrefix } from "discourse/lib/get-url";
 import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import loadScript from "discourse/lib/load-script";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
-import { samePrefix } from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default {
   name: "chat-decorators",
 
   initializeWithPluginApi(api, container) {
     const siteSettings = container.lookup("service:site-settings");
-    const lightboxService = container.lookup("service:lightbox");
     const site = container.lookup("service:site");
 
     api.decorateChatMessage((element) => decorateGithubOneboxBody(element), {
@@ -67,28 +66,13 @@ export default {
     api.decorateChatMessage(this.forceLinksToOpenNewTab, {
       id: "linksNewTab",
     });
-
-    if (siteSettings.enable_experimental_lightbox) {
-      api.decorateChatMessage(
-        (element) => {
-          lightboxService.setupLightboxes({
-            container: element,
-            selector: "img:not(.emoji, .avatar, .site-icon)",
-          });
-        },
-        {
-          id: "experimental-chat-lightbox",
-        }
-      );
-    } else {
-      api.decorateChatMessage(
-        (element) =>
-          this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
-        {
-          id: "lightbox",
-        }
-      );
-    }
+    api.decorateChatMessage(
+      (element) =>
+        this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
+      {
+        id: "lightbox",
+      }
+    );
     api.decorateChatMessage((element) => decorateHashtags(element, site), {
       id: "hashtagIcons",
     });
@@ -127,10 +111,10 @@ export default {
       if (this.currentUserTimezone) {
         dateTimeLinkEl.innerText = moment
           .tz(dateTimeRaw, this.currentUserTimezone)
-          .format(I18n.t("dates.long_no_year"));
+          .format(i18n("dates.long_no_year"));
       } else {
         dateTimeLinkEl.innerText = moment(dateTimeRaw).format(
-          I18n.t("dates.long_no_year")
+          i18n("dates.long_no_year")
         );
       }
     });
@@ -154,7 +138,7 @@ export default {
         type: "image",
         closeOnContentClick: false,
         mainClass: "mfp-zoom-in",
-        tClose: I18n.t("lightbox.close"),
+        tClose: i18n("lightbox.close"),
         tLoading: spinnerHTML,
         image: {
           verticalFit: true,

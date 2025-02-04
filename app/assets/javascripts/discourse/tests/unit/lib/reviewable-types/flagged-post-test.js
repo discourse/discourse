@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { emojiUnescape } from "discourse/lib/text";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { createRenderDirector } from "discourse/tests/helpers/reviewable-types-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getReviewable(overrides = {}) {
   return UserMenuReviewable.create(
@@ -37,7 +37,7 @@ module("Unit | Reviewable Items | flagged-post", function (hooks) {
     assert.deepEqual(
       director.description,
       htmlSafe(
-        I18n.t("user_menu.reviewable.post_number_with_topic_title", {
+        i18n("user_menu.reviewable.post_number_with_topic_title", {
           title: `This is safe title &lt;a&gt; ${emojiUnescape(":heart:")}`,
           post_number: 1,
         })
@@ -49,7 +49,7 @@ module("Unit | Reviewable Items | flagged-post", function (hooks) {
     delete reviewable.post_number;
     assert.deepEqual(
       director.description,
-      I18n.t("user_menu.reviewable.deleted_post"),
+      i18n("user_menu.reviewable.deleted_post"),
       "falls back to generic string when the post/topic is deleted"
     );
   });

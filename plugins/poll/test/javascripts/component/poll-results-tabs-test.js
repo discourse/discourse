@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count } from "discourse/tests/helpers/qunit-helpers";
 
 const TWO_OPTIONS = [
   {
@@ -86,7 +85,7 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       @fetchVoters={{this.fetchVoters}}
     />`);
 
-    assert.strictEqual(count("li.tab"), 1);
+    assert.dom("li.tab").exists({ count: 1 });
   });
 
   test("Renders two tabs for public ranked choice poll", async function (assert) {
@@ -118,7 +117,7 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       @fetchVoters={{this.fetchVoters}}
     />`);
 
-    assert.strictEqual(count("li.tab"), 2);
+    assert.dom("li.tab").exists({ count: 2 });
   });
 
   test("Renders one tab for private ranked choice poll", async function (assert) {
@@ -150,6 +149,6 @@ module("Poll | Component | poll-results-tabs", function (hooks) {
       @fetchVoters={{this.fetchVoters}}
     />`);
 
-    assert.strictEqual(count("li.tab"), 1);
+    assert.dom("li.tab").exists({ count: 1 });
   });
 });

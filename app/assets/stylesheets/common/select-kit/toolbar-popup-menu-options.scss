@@ -7,16 +7,32 @@
 
       .select-kit-body {
         box-shadow: none;
-        width: 230px;
         border-radius: 0;
       }
 
       .select-kit-row {
-        padding: 0.75em 0.5em;
+        padding: 0.65em 0.5em;
         border-bottom: 1px solid rgba(var(--primary-low-rgb), 0.5);
+        display: flex;
+        align-items: center;
+
+        // popup-menu doesnt use description text atm
+        // it's just easier to align the icon with text then
+        .icons {
+          align-self: center;
+        }
+
+        .shortcut {
+          margin-left: 1em;
+        }
 
         &:last-child {
           border: none;
+        }
+
+        .texts .name {
+          display: flex;
+          align-items: center;
         }
 
         .texts .name,
@@ -27,6 +43,14 @@
 
         .d-icon {
           color: var(--primary-medium);
+        }
+
+        .shortcut {
+          border: none;
+          background: var(--primary-200);
+          font-size: var(--font-down-2);
+          color: var(--primary-high);
+          margin-left: 1.8rem;
         }
 
         &.is-highlighted,

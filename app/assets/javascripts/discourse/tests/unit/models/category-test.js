@@ -28,8 +28,8 @@ module("Unit | Model | category", function (hooks) {
     });
 
     assert.deepEqual(foo.subcategories, [bar, baz]);
-    assert.equal(bar.parentCategory, foo);
-    assert.equal(baz.parentCategory, foo);
+    assert.strictEqual(bar.parentCategory, foo);
+    assert.strictEqual(baz.parentCategory, foo);
   });
 
   test("slugFor", function (assert) {

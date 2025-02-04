@@ -7,6 +7,7 @@ Flag.seed do |s|
   s.auto_action_type = false
   s.require_message = true
   s.applies_to = %w[Post Chat::Message]
+  s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
   s.id = 3
@@ -15,6 +16,7 @@ Flag.seed do |s|
   s.auto_action_type = true
   s.require_message = false
   s.applies_to = %w[Post Chat::Message]
+  s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
   s.id = 4
@@ -23,6 +25,7 @@ Flag.seed do |s|
   s.auto_action_type = true
   s.require_message = false
   s.applies_to = %w[Post Topic Chat::Message]
+  s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
   s.id = 8
@@ -31,6 +34,7 @@ Flag.seed do |s|
   s.auto_action_type = true
   s.require_message = false
   s.applies_to = %w[Post Topic Chat::Message]
+  s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
   s.id = 10
@@ -39,6 +43,7 @@ Flag.seed do |s|
   s.auto_action_type = false
   s.require_message = true
   s.applies_to = %w[Post Topic Chat::Message]
+  s.skip_reset_flag_callback = true
 end
 Flag.seed do |s|
   s.id = 7
@@ -47,6 +52,7 @@ Flag.seed do |s|
   s.auto_action_type = false
   s.require_message = true
   s.applies_to = %w[Post Topic Chat::Message]
+  s.skip_reset_flag_callback = true
 end
 Flag.unscoped.seed do |s|
   s.id = 9
@@ -56,4 +62,15 @@ Flag.unscoped.seed do |s|
   s.require_message = false
   s.score_type = true
   s.applies_to = %w[]
+  s.skip_reset_flag_callback = true
+end
+Flag.unscoped.seed do |s|
+  s.id = 2
+  s.name = "like"
+  s.notify_type = false
+  s.auto_action_type = false
+  s.require_message = false
+  s.score_type = false
+  s.applies_to = %w[Post]
+  s.skip_reset_flag_callback = true
 end

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";

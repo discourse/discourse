@@ -3,13 +3,14 @@ import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class ChatComposerDropdown extends Component {
   @action
-  onButtonClick(button, closeFn) {
-    closeFn();
+  async onButtonClick(button, closeFn) {
+    await closeFn();
+
     button.action();
   }
 
@@ -27,6 +28,7 @@ export default class ChatComposerDropdown extends Component {
         @arrow={{true}}
         @placements={{array "top" "bottom"}}
         @identifier="chat-composer-dropdown__menu"
+        @modalForMobile={{true}}
         ...attributes
         as |menu|
       >
@@ -39,6 +41,7 @@ export default class ChatComposerDropdown extends Component {
                 @label={{button.label}}
                 class={{concatClass
                   "chat-composer-dropdown__action-btn"
+                  "btn-transparent"
                   button.id
                 }}
               />

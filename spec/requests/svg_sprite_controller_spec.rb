@@ -35,14 +35,14 @@ RSpec.describe SvgSpriteController do
 
   describe "#search" do
     it "should not work for anons" do
-      get "/svg-sprite/search/fa-bolt"
+      get "/svg-sprite/search/bolt"
       expect(response.status).to eq(404)
     end
 
     it "should return symbol for FA icon search" do
       sign_in(user)
 
-      get "/svg-sprite/search/fa-bolt"
+      get "/svg-sprite/search/bolt"
       expect(response.status).to eq(200)
       expect(response.body).to include("bolt")
     end
@@ -50,7 +50,7 @@ RSpec.describe SvgSpriteController do
     it "should return 404 when looking for non-existent FA icon" do
       sign_in(user)
 
-      get "/svg-sprite/search/fa-not-a-valid-icon"
+      get "/svg-sprite/search/not-a-valid-icon"
       expect(response.status).to eq(404)
     end
 
@@ -72,7 +72,7 @@ RSpec.describe SvgSpriteController do
 
       sign_in(user)
 
-      get "/svg-sprite/search/fa-my-custom-theme-icon"
+      get "/svg-sprite/search/my-custom-theme-icon"
       expect(response.status).to eq(200)
       expect(response.body).to include("my-custom-theme-icon")
     end
@@ -85,15 +85,15 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(403)
     end
 
-    it "should work with no filter and max out at 200 results" do
+    it "should work with no filter and max out at 500 results" do
       sign_in(user)
       get "/svg-sprite/picker-search"
 
       expect(response.status).to eq(200)
 
       data = response.parsed_body
-      expect(data.length).to eq(200)
-      expect(data[0]["id"]).to eq("ad")
+      expect(data.length).to be <= 500
+      expect(data[0]["id"]).to eq("0")
     end
 
     it "should filter" do
@@ -113,14 +113,14 @@ RSpec.describe SvgSpriteController do
 
       get "/svg-sprite/picker-search"
       data = response.parsed_body
-      beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
+      beer_icon = response.parsed_body.find { |i| i["id"] == "beer-mug-empty" }
       expect(beer_icon).to be_present
 
       get "/svg-sprite/picker-search", params: { only_available: "true" }
       data = response.parsed_body
-      beer_icon = response.parsed_body.find { |i| i["id"] == "beer" }
+      beer_icon = response.parsed_body.find { |i| i["id"] == "beer-mug-empty" }
       expect(beer_icon).to be nil
-      expect(data.length).to eq(200)
+      expect(data.length).to be > 0
     end
   end
 

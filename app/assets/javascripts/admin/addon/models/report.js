@@ -2,7 +2,10 @@ import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import { durationTiny, number } from "discourse/lib/formatter";
+import getURL from "discourse/lib/get-url";
+import { makeArray } from "discourse/lib/helpers";
 import round from "discourse/lib/round";
 import {
   escapeExpression,
@@ -10,10 +13,7 @@ import {
   formatUsername,
   toNumber,
 } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
-import { makeArray } from "discourse-common/lib/helpers";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
@@ -141,7 +141,10 @@ export default class Report extends EmberObject {
         .locale("en")
         .format("YYYY-MM-DD");
 
-      if (report.modes[0] === "stacked_chart") {
+      if (
+        report.modes[0] === "stacked_chart" ||
+        report.modes[0] === "stacked_line_chart"
+      ) {
         report[filledField] = report[dataField].map((rep) => {
           return {
             req: rep.req,
@@ -373,9 +376,9 @@ export default class Report extends EmberObject {
     if (isNaN(change) || !isFinite(change)) {
       return null;
     } else if (change > 0) {
-      return "+" + change.toFixed(0) + "%";
+      return `+${i18n("js.number.percent", { count: change.toFixed(0) })}`;
     } else {
-      return change.toFixed(0) + "%";
+      return `${i18n("js.number.percent", { count: change.toFixed(0) })}`;
     }
   }
 
@@ -395,7 +398,7 @@ export default class Report extends EmberObject {
       current = number(current);
     }
 
-    return I18n.t("admin.dashboard.reports.trend_title", {
+    return i18n("admin.dashboard.reports.trend_title", {
       percent,
       prev,
       current,
@@ -404,17 +407,29 @@ export default class Report extends EmberObject {
 
   changeTitle(valAtT1, valAtT2, prevPeriodString) {
     const change = this.percentChangeString(valAtT1, valAtT2);
-    let title = "";
+    const title = [];
     if (change) {
-      title += `${change} change. `;
+      title.push(
+        i18n("admin.dashboard.reports.percent_change_tooltip", {
+          percent: change,
+        })
+      );
     }
-    title += `Was ${number(valAtT1)} ${prevPeriodString}.`;
-    return title;
+    title.push(
+      i18n(
+        `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
+        {
+          count: valAtT1,
+          previousValue: number(valAtT1),
+        }
+      )
+    );
+    return title.join(" ");
   }
 
   @discourseComputed("yesterdayCount")
   yesterdayCountTitle(yesterdayCount) {
-    return this.changeTitle(this.valueAt(2), yesterdayCount, "two days ago");
+    return this.changeTitle(this.valueAt(2), yesterdayCount, "yesterday");
   }
 
   @discourseComputed("lastSevenDaysCount")
@@ -422,7 +437,7 @@ export default class Report extends EmberObject {
     return this.changeTitle(
       this.valueFor(8, 14),
       lastSevenDaysCount,
-      "two weeks ago"
+      "two_weeks_ago"
     );
   }
 
@@ -436,7 +451,7 @@ export default class Report extends EmberObject {
     return this.changeTitle(
       prev30Days ?? prev_period,
       lastThirtyDaysCount,
-      "in the previous 30 day period"
+      "thirty_days_ago"
     );
   }
 
@@ -616,7 +631,8 @@ export default class Report extends EmberObject {
       ? true
       : options.formatNumbers;
 
-    const formattedValue = () => (formatNumbers ? number(value) : value);
+    const formattedValue = () =>
+      formatNumbers ? I18n.toNumber(value, { precision: 0 }) : value;
 
     return {
       value: toNumber(value),
@@ -689,9 +705,9 @@ export default class Report extends EmberObject {
       case "trending-down":
         return higherIsBetter ? "angle-down" : "angle-up";
       case "high-trending-up":
-        return higherIsBetter ? "angle-double-up" : "angle-double-down";
+        return higherIsBetter ? "angles-up" : "angles-down";
       case "high-trending-down":
-        return higherIsBetter ? "angle-double-down" : "angle-double-up";
+        return higherIsBetter ? "angles-down" : "angles-up";
       default:
         return "minus";
     }

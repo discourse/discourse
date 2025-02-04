@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import laterFn from "../../../modifiers/chat/later-fn";
 
 export default class MentionWithoutMembership extends Component {
@@ -40,7 +40,7 @@ export default class MentionWithoutMembership extends Component {
           class="mention-without-membership-notice__invitation-sent"
           {{laterFn @clearNotice 3000}}
         >
-          {{dIcon "check"}}
+          {{icon "check"}}
           <span>
             {{i18n
               "chat.mention_warning.invitations_sent"

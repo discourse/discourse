@@ -121,5 +121,17 @@ RSpec.describe Cache do
         expect(cache.read("my_key")).to eq("bob")
       end
     end
+
+    context "when there is a race condition due to key expiring between GET calls" do
+      before do
+        allow(Discourse.redis).to receive(:get).and_wrap_original do |original_method, *args|
+          original_method.call(*args).tap { Discourse.redis.del(*args) }
+        end
+      end
+
+      it "isn't prone to that race condition" do
+        expect(fetch_value).to eq("bob")
+      end
+    end
   end
 end

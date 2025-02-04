@@ -1,4 +1,5 @@
 import Component from "@ember/component";
-export default Component.extend({
-  classNames: ["categories-and-latest"],
-});
+import { classNames } from "@ember-decorators/component";
+
+@classNames("categories-and-latest")
+export default class CategoriesAndLatestTopics extends Component {}

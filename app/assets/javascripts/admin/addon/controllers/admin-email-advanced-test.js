@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
+// eslint-disable-next-line ember/no-test-import-export
 export default class AdminEmailAdvancedTestController extends Controller {
   email = null;
   text = null;

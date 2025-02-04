@@ -24,6 +24,26 @@ module PageObjects
         find(".dialog-footer .btn-primary")
       end
 
+      def open_edit_tag
+        find(".tag-name-wrapper .edit-tag").click
+      end
+
+      def fill_tag_name(new_name)
+        find("#edit-name").fill_in(with: new_name)
+      end
+
+      def fill_tag_description(new_description)
+        find("#edit-description").fill_in(with: new_description)
+      end
+
+      def save_edit
+        find(".edit-controls .submit-edit").click
+      end
+
+      def cancel_edit
+        find(".edit-controls .cancel-edit").click
+      end
+
       def add_synonyms_dropdown
         PageObjects::Components::SelectKit.new("#add-synonyms")
       end
@@ -44,6 +64,22 @@ module PageObjects
 
       def tag_box(tag)
         find(".tag-box div[data-tag-name='#{tag}']")
+      end
+
+      def tag_info
+        find(".tag-info")
+      end
+
+      def tag_name_within_tag_info
+        tag_info.find(".tag-name-wrapper .discourse-tag").text
+      end
+
+      def tag_description_within_tag_info
+        tag_info.find(".tag-description-wrapper").text
+      end
+
+      def tags_dropdown
+        PageObjects::Components::SelectKit.new(".select-kit.tag-drop")
       end
     end
   end

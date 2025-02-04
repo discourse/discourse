@@ -61,12 +61,13 @@ RSpec.describe PostAlerter do
 
   def setup_push_notification_subscription_for(user:)
     2.times do |i|
-      UserApiKey.create!(
-        user_id: user.id,
-        client_id: "xxx#{i}",
-        application_name: "iPhone#{i}",
+      client = Fabricate(:user_api_key_client, client_id: "xxx#{i}", application_name: "iPhone#{i}")
+      Fabricate(
+        :user_api_key,
+        user: user,
         scopes: ["notifications"].map { |name| UserApiKeyScope.new(name: name) },
         push_url: "https://site2.com/push",
+        user_api_key_client_id: client.id,
       )
     end
   end
@@ -1359,6 +1360,16 @@ RSpec.describe PostAlerter do
       )
     end
 
+    it "delays push notification for active online user" do
+      SiteSetting.push_notification_time_window_mins = 10
+      evil_trout.update!(last_seen_at: 5.minutes.ago)
+
+      expect { mention_post }.to change { Jobs::PushNotification.jobs.count }
+      expect(Jobs::PushNotification.jobs[0]["at"]).to be_within(30.second).of(
+        5.minutes.from_now.to_f,
+      )
+    end
+
     context "with push subscriptions" do
       before do
         Fabricate(:push_subscription, user: evil_trout)
@@ -1474,10 +1485,9 @@ RSpec.describe PostAlerter do
       evil_trout.update_columns(last_seen_at: 31.days.ago)
 
       SiteSetting.allowed_user_api_push_urls = "https://site2.com/push"
-      UserApiKey.create!(
-        user_id: evil_trout.id,
-        client_id: "xxx#1",
-        application_name: "iPhone1",
+      Fabricate(
+        :user_api_key,
+        user: evil_trout,
         scopes: ["notifications"].map { |name| UserApiKeyScope.new(name: name) },
         push_url: "https://site2.com/push",
       )

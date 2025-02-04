@@ -8,6 +8,8 @@ class CookedPostProcessor
 
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   GIF_SOURCES_REGEXP = %r{(giphy|tenor)\.com/}
+  MIN_LIGHTBOX_WIDTH = 100
+  MIN_LIGHTBOX_HEIGHT = 100
 
   attr_reader :cooking_options, :doc
 
@@ -181,10 +183,8 @@ class CookedPostProcessor
       img.add_class("animated")
     end
 
-    if original_width <= SiteSetting.max_image_width &&
-         original_height <= SiteSetting.max_image_height
-      return
-    end
+    generate_thumbnail =
+      original_width > SiteSetting.max_image_width || original_height > SiteSetting.max_image_height
 
     user_width, user_height = [original_width, original_height] if user_width.to_i <= 0 &&
       user_height.to_i <= 0
@@ -201,24 +201,26 @@ class CookedPostProcessor
     end
 
     if upload.present?
-      upload.create_thumbnail!(width, height, crop: crop)
+      if generate_thumbnail
+        upload.create_thumbnail!(width, height, crop: crop)
 
-      each_responsive_ratio do |ratio|
-        resized_w = (width * ratio).to_i
-        resized_h = (height * ratio).to_i
+        each_responsive_ratio do |ratio|
+          resized_w = (width * ratio).to_i
+          resized_h = (height * ratio).to_i
 
-        if upload.width && resized_w <= upload.width
-          upload.create_thumbnail!(resized_w, resized_h, crop: crop)
+          if upload.width && resized_w <= upload.width
+            upload.create_thumbnail!(resized_w, resized_h, crop: crop)
+          end
         end
       end
 
       return if upload.animated?
 
       if img.ancestors(".onebox, .onebox-body").blank? && !img.classes.include?("onebox")
-        add_lightbox!(img, original_width, original_height, upload, cropped: crop)
+        add_lightbox!(img, original_width, original_height, upload)
       end
 
-      optimize_image!(img, upload, cropped: crop)
+      optimize_image!(img, upload, cropped: crop) if generate_thumbnail
     end
   end
 
@@ -265,15 +267,18 @@ class CookedPostProcessor
     end
   end
 
-  def add_lightbox!(img, original_width, original_height, upload, cropped: false)
+  def add_lightbox!(img, original_width, original_height, upload)
+    return if original_width < MIN_LIGHTBOX_WIDTH || original_height < MIN_LIGHTBOX_HEIGHT
+
     # first, create a div to hold our lightbox
     lightbox = create_node("div", LIGHTBOX_WRAPPER_CSS_CLASS)
     img.add_next_sibling(lightbox)
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    src_url = Upload.secure_uploads_url?(img["src"]) ? upload&.url : img["src"]
-    src = UrlHelper.cook_url(src_url || img["src"], secure: @should_secure_uploads)
+    src_url = Upload.secure_uploads_url?(img["src"]) ? upload&.url || img["src"] : img["src"]
+    src = UrlHelper.cook_url(src_url, secure: @should_secure_uploads)
+
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 

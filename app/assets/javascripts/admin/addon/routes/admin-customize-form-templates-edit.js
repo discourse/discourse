@@ -5,8 +5,4 @@ export default class AdminCustomizeFormTemplatesEdit extends DiscourseRoute {
   model(params) {
     return FormTemplate.findById(params.id);
   }
-
-  setupController(controller, model) {
-    controller.set("model", model);
-  }
 }

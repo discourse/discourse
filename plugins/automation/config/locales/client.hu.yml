@@ -6,6 +6,11 @@
 
 hu:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás
       create: Létrehozás
@@ -14,7 +19,8 @@ hu:
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
       confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
-      no_automation_yet: Még nem hozott létre automatizálást.
+      no_automation_yet: Még nem hozott létre automatizálást. A kezdéshez válasszon az alábbi lehetőségek közül.
+      filter_placeholder: Szűrés név vagy leírás alapján...
       edit_automation:
         trigger_section:
           forced: Ez az aktiválót a parancsfájl kényszeríti ki.
@@ -144,18 +150,27 @@ hu:
               label: Témaazonosító
         post_created_edited:
           fields:
+            original_post_only:
+              label: Csak az eredeti bejegyzés
+              description: Csak akkor aktiválódik, ha a bejegyzés az eredeti bejegyzés a témában
             action_type:
               label: Művelet típusa
               description: "Opcionális, korlátozza az aktiválást csak a létrehozott vagy szerkesztett eseményekre"
             valid_trust_levels:
               label: Érvényes bizalmi szintek
               description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+            restricted_tags:
+              label: Címkék
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
             restricted_category:
               label: Kategória
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
             restricted_group:
               label: Csoport
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoport postafiókjában
+              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoport postafiókjában
+            restricted_groups:
+              label: Csoportok
+              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
             ignore_group_members:
               label: Csoporttagok figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
@@ -168,6 +183,9 @@ hu:
             first_topic_only:
               label: Csak az első téma
               description: Csak akkor aktiválódik, ha a téma az első téma, amelyet a felhasználó hozott létre
+            skip_via_email:
+              label: "Kihagyás e-mailben"
+              description: "Hagyja ki az eseményindítót, ha a bejegyzés e-mailben jött létre"
           created: Létrehozott
           edited: Szerkesztve
         user_updated:
@@ -209,6 +227,23 @@ hu:
             valid_trust_levels:
               label: Érvényes bizalmi szintek
               description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Címkék hozzáadva vagy eltávolítva
+            tags_added: Címkék hozzáadva
+            tags_removed: Címkék eltávolítva
+          fields:
+            watching_categories:
+              label: Figyelt kategóriák
+              description: Csak akkor aktiválódik, ha a téma e kategóriák egyikébe tartozik
+            watching_tags:
+              label: Figyelt címkék
+              description: Csak akkor aktiválódik, ha a témakör rendelkezik ezen címkék bármelyikével
+            trigger_on:
+              label: Trigger bekapcsolva
+            trigger_with_pms:
+              label: Aktiválás PÜ-el
+              description: Akkor is aktiválódik, ha a címkéket PÜ-ben módosították
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -367,6 +402,7 @@ hu:
           fields:
             custom_field_name:
               label: "Felhasználó egyéni mező neve"
+      unnamed_automation: "Névtelen automatizálás"
       models:
         script:
           name:
@@ -383,6 +419,8 @@ hu:
             label: Szkript
           version:
             label: Verzió
+          status:
+            label: Állapot
           enabled:
             label: Engedélyezed
           disabled:

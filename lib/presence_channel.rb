@@ -42,7 +42,7 @@ class PresenceChannel
   #   allowed_group_ids: array of group_ids that can view, and become present in, the channel (default [])
   #   count_only: boolean. If true, user identities are never revealed to clients. (default [])
   class Config
-    NOT_FOUND ||= "notfound"
+    NOT_FOUND = "notfound"
 
     attr_accessor :public, :allowed_user_ids, :allowed_group_ids, :count_only, :timeout
 
@@ -76,11 +76,11 @@ class PresenceChannel
     end
   end
 
-  DEFAULT_TIMEOUT ||= 60
-  CONFIG_CACHE_SECONDS ||= 10
-  GC_SECONDS ||= 24.hours.to_i
-  MUTEX_TIMEOUT_SECONDS ||= 10
-  MUTEX_LOCKED_ERROR ||= "PresenceChannel mutex is locked"
+  DEFAULT_TIMEOUT = 60
+  CONFIG_CACHE_SECONDS = 10
+  GC_SECONDS = 24.hours.to_i
+  MUTEX_TIMEOUT_SECONDS = 10
+  MUTEX_LOCKED_ERROR = "PresenceChannel mutex is locked"
 
   @@configuration_blocks ||= {}
 
@@ -469,7 +469,7 @@ class PresenceChannel
     end
   LUA
 
-  LUA_SCRIPTS ||= {}
+  LUA_SCRIPTS = {}
 
   LUA_SCRIPTS[:present] = DiscourseRedis::EvalHelper.new <<~LUA
     #{COMMON_PRESENT_LEAVE_LUA}

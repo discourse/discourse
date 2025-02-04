@@ -15,6 +15,7 @@ module Jobs
 
         @creator = @chat_message.user
         @chat_channel = @chat_message.chat_channel
+        @is_direct_message_channel = @chat_channel.direct_message_channel?
         @already_notified_user_ids = args[:already_notified_user_ids] || []
         user_ids_to_notify = args[:to_notify_ids_map] || {}
         user_ids_to_notify.each { |mention_type, ids| process_mentions(ids, mention_type.to_sym) }
@@ -37,7 +38,7 @@ module Jobs
           chat_message_id: @chat_message.id,
           chat_channel_id: @chat_channel.id,
           mentioned_by_username: @creator.username,
-          is_direct_message_channel: @chat_channel.direct_message_channel?,
+          is_direct_message_channel: @is_direct_message_channel,
         }
 
         data[:chat_thread_id] = @chat_message.thread_id if @chat_message.in_thread?
@@ -76,6 +77,8 @@ module Jobs
           tag: ::Chat::Notifier.push_notification_tag(:mention, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
           post_url: post_url,
+          channel_id: @chat_channel.id,
+          is_direct_message_channel: @is_direct_message_channel,
         }
 
         translation_prefix =
@@ -128,15 +131,12 @@ module Jobs
       def send_notifications(membership, mention_type)
         payload = build_payload_for(membership, identifier_type: mention_type)
 
-        if !membership.desktop_notifications_never? && !membership.muted?
+        if !membership.notifications_never? && !membership.muted?
           ::MessageBus.publish(
             "/chat/notification-alert/#{membership.user_id}",
             payload,
             user_ids: [membership.user_id],
           )
-        end
-
-        if !membership.mobile_notifications_never? && !membership.muted?
           ::PostAlerter.push_notification(membership.user, payload)
         end
       end

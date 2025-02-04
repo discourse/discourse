@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const Error = <template>
   {{#if @message.error}}
@@ -10,7 +10,7 @@ const Error = <template>
         <DButton
           class="chat-message-error__retry-btn"
           @action={{fn @onRetry @message}}
-          @icon="exclamation-circle"
+          @icon="circle-exclamation"
         >
           <span class="chat-message-error__retry-btn-title">
             {{i18n "chat.retry_staged_message.title"}}

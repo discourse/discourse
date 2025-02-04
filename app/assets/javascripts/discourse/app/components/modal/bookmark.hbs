@@ -28,7 +28,7 @@
         aria-label={{i18n "post.bookmarks.name_input_label"}}
       />
       <DButton
-        @icon="cog"
+        @icon="gear"
         @action={{this.toggleShowOptions}}
         @ariaLabel="post.bookmarks.options"
         @title="post.bookmarks.options"
@@ -94,7 +94,7 @@
     <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
     {{#if this.showDelete}}
       <DButton
-        @icon="trash-alt"
+        @icon="trash-can"
         @action={{this.delete}}
         @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
         @title="post.bookmarks.actions.delete_bookmark.name"

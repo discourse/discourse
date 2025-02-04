@@ -1,7 +1,8 @@
 import { readOnly } from "@ember/object/computed";
+import { classNames } from "@ember-decorators/component";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 
-export default SelectKitRowComponent.extend({
-  classNames: ["dropdown-select-box-row"],
-  description: readOnly("item.description"),
-});
+@classNames("dropdown-select-box-row")
+export default class DropdownSelectBoxRow extends SelectKitRowComponent {
+  @readOnly("item.description") description;
+}

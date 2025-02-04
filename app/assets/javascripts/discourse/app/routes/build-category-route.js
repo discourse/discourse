@@ -12,7 +12,7 @@ import {
   findTopicList,
 } from "discourse/routes/build-topic-route";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @disableImplicitInjections
 class AbstractCategoryRoute extends DiscourseRoute {
@@ -113,18 +113,18 @@ class AbstractCategoryRoute extends DiscourseRoute {
   titleToken() {
     const category = this.currentModel.category;
 
-    const filterText = I18n.t(
+    const filterText = i18n(
       "filters." + this.filter(category).replace("/", ".") + ".title"
     );
 
-    let categoryName = category.name;
+    let categoryName = category.displayName;
     if (category.parent_category_id) {
       const list = Category.list();
       const parentCategory = list.findBy("id", category.parent_category_id);
-      categoryName = `${parentCategory.name}/${categoryName}`;
+      categoryName = `${parentCategory.displayName}/${categoryName}`;
     }
 
-    return I18n.t("filters.with_category", {
+    return i18n("filters.with_category", {
       filter: filterText,
       category: categoryName,
     });

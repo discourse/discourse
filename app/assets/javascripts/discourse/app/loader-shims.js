@@ -1,5 +1,5 @@
 import { importSync } from "@embroider/macros";
-import loaderShim from "discourse-common/lib/loader-shim";
+import loaderShim from "discourse/lib/loader-shim";
 
 // AMD shims for the app bundle, see the comment in loader-shim.js
 // These effectively become public APIs for plugins, so add/remove them carefully
@@ -73,3 +73,4 @@ loaderShim("@messageformat/runtime", () =>
 loaderShim("@messageformat/runtime/lib/cardinals", () =>
   importSync("@messageformat/runtime/lib/cardinals")
 );
+loaderShim("@ember/string", () => importSync("@ember/string"));

@@ -9,19 +9,26 @@ class Poll < ActiveRecord::Base
   has_many :poll_options, -> { order(:id) }, dependent: :destroy
   has_many :poll_votes
 
-  enum type: { regular: 0, multiple: 1, number: 2, ranked_choice: 3 }, _scopes: false
-
-  enum status: { open: 0, closed: 1 }, _scopes: false
-
-  enum results: { always: 0, on_vote: 1, on_close: 2, staff_only: 3 }, _scopes: false
-
-  enum visibility: { secret: 0, everyone: 1 }, _scopes: false
-
-  enum chart_type: { bar: 0, pie: 1 }, _scopes: false
+  enum :type, { regular: 0, multiple: 1, number: 2, ranked_choice: 3 }, scopes: false
+  enum :status, { open: 0, closed: 1 }, scopes: false
+  enum :results, { always: 0, on_vote: 1, on_close: 2, staff_only: 3 }, scopes: false
+  enum :visibility, { secret: 0, everyone: 1 }, scopes: false
+  enum :chart_type, { bar: 0, pie: 1 }, scopes: false
 
   validates :min, numericality: { allow_nil: true, only_integer: true, greater_than_or_equal_to: 0 }
   validates :max, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
   validates :step, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
+
+  attr_writer :voters_count
+  attr_accessor :has_voted
+  attr_accessor :serialized_voters_cache
+
+  after_initialize { @has_voted = {} }
+
+  def reload
+    @has_voted = {}
+    super
+  end
 
   def is_closed?
     closed? || (close_at && close_at <= Time.zone.now)
@@ -37,7 +44,17 @@ class Poll < ActiveRecord::Base
   end
 
   def has_voted?(user)
-    user&.id && poll_votes.where(user_id: user.id).exists?
+    if user&.id
+      return @has_voted[user.id] if @has_voted.key?(user.id)
+
+      @has_voted[user.id] = poll_votes.where(user_id: user.id).exists?
+    end
+  end
+
+  def voters_count
+    return @voters_count if defined?(@voters_count)
+
+    @voters_count = poll_votes.count("DISTINCT user_id")
   end
 
   def can_see_voters?(user)
@@ -46,6 +63,36 @@ class Poll < ActiveRecord::Base
 
   def ranked_choice?
     type == "ranked_choice"
+  end
+
+  def self.preload!(polls, user_id: nil)
+    poll_ids = polls.map(&:id)
+
+    voters_count =
+      PollVote
+        .where(poll_id: poll_ids)
+        .group(:poll_id)
+        .pluck(:poll_id, "COUNT(DISTINCT user_id)")
+        .to_h
+
+    option_voters_count =
+      PollVote
+        .where(poll_option_id: PollOption.where(poll_id: poll_ids).select(:id))
+        .group(:poll_option_id)
+        .pluck(:poll_option_id, "COUNT(*)")
+        .to_h
+
+    polls.each do |poll|
+      poll.voters_count = voters_count[poll.id] || 0
+      poll.poll_options.each do |poll_option|
+        poll_option.voters_count = option_voters_count[poll_option.id] || 0
+      end
+    end
+
+    if user_id
+      has_voted = PollVote.where(poll_id: poll_ids, user_id: user_id).pluck(:poll_id).to_set
+      polls.each { |poll| poll.has_voted[user_id] = has_voted.include?(poll.id) }
+    end
   end
 end
 

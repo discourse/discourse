@@ -5,8 +5,8 @@
 
   <div class="controls">
     <Input
-      @value={{metadata.topic_id}}
-      {{on "input" (action (mut metadata.topic_id) value="target.value")}}
+      @value={{this.metadata.topic_id}}
+      {{on "input" (action (mut this.metadata.topic_id) value="target.value")}}
     />
   </div>
 </div>

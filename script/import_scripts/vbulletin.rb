@@ -23,13 +23,13 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
-  DB_HOST ||= ENV["DB_HOST"] || "localhost"
-  DB_NAME ||= ENV["DB_NAME"] || "vbulletin"
-  DB_PW ||= ENV["DB_PW"] || ""
-  DB_USER ||= ENV["DB_USER"] || "root"
-  TIMEZONE ||= ENV["TIMEZONE"] || "America/Los_Angeles"
-  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "vb_"
-  ATTACHMENT_DIR ||= ENV["ATTACHMENT_DIR"] || "/path/to/your/attachment/folder"
+  DB_HOST = ENV["DB_HOST"] || "localhost"
+  DB_NAME = ENV["DB_NAME"] || "vbulletin"
+  DB_PW = ENV["DB_PW"] || ""
+  DB_USER = ENV["DB_USER"] || "root"
+  TIMEZONE = ENV["TIMEZONE"] || "America/Los_Angeles"
+  TABLE_PREFIX = ENV["TABLE_PREFIX"] || "vb_"
+  ATTACHMENT_DIR = ENV["ATTACHMENT_DIR"] || "/path/to/your/attachment/folder"
 
   puts "#{DB_USER}:#{DB_PW}@#{DB_HOST} wants #{DB_NAME}"
 

@@ -2,11 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  query,
-  queryAll,
-  visible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 const youtubeCooked =
   "<p>written text</p>" +
@@ -17,23 +13,23 @@ const youtubeCooked =
 
 const animatedImageCooked =
   "<p>written text</p>" +
-  '<p><img src="/images/avatar.png" class="animated onebox"></img></p>' +
+  '<p><img src="/images/avatar.png" width="8" height="8" class="animated onebox"></img></p>' +
   "<p>more written text</p>" +
-  '<p><img src="/images/d-logo-sketch-small.png" class="animated onebox"></img></p>' +
+  '<p><img src="/images/d-logo-sketch-small.png" width="8" height="8" class="animated onebox"></img></p>' +
   "<p>and even more</p>";
 
 const externalImageCooked =
   "<p>written text</p>" +
-  '<p><a href="http://cat1.com" class="onebox"><img src=""></img></a></p>' +
+  '<p><a href="http://cat1.com" class="onebox"><img src="/images/d-logo-sketch-small.png" width=8" height="8"></img></a></p>' +
   "<p>more written text</p>" +
-  '<p><a href="http://cat2.com" class="onebox"><img src=""></img></a></p>' +
+  '<p><a href="http://cat2.com" class="onebox"><img src="/images/d-logo-sketch-small.png" width=8" height="8"></img></a></p>' +
   "<p>and even more</p>";
 
 const imageCooked =
   "<p>written text</p>" +
-  '<p><img src="/images/avatar.png" alt="shows alt"></p>' +
+  '<p><img src="/images/avatar.png" alt="shows alt" width="8" height="8"></p>' +
   "<p>more written text</p>" +
-  '<p><img src="/images/d-logo-sketch-small.png" alt=""></p>' +
+  '<p><img src="/images/d-logo-sketch-small.png" alt="" width="8" height="8"></p>' +
   "<p>and even more</p>" +
   '<p><img src="/images/d-logo-sketch.png" class="emoji"></p>';
 
@@ -57,11 +53,9 @@ module("Discourse Chat | Component | chat message collapser", function (hooks) {
     this.set("uploads", [{ original_filename: evilString }]);
     await render(hbs`<ChatMessageCollapser @uploads={{this.uploads}} />`);
 
-    assert.true(
-      query(".chat-message-collapser-link-small").innerHTML.includes(
-        evilStringEscaped
-      )
-    );
+    assert
+      .dom(".chat-message-collapser-link-small")
+      .includesHtml(evilStringEscaped);
   });
 });
 
@@ -80,11 +74,12 @@ module(
       );
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(
-        query(".chat-message-collapser-link").href.includes(
-          "%3Cscript%3Esomeeviltitle%3C/script%3E"
-        )
-      );
+      assert
+        .dom(".chat-message-collapser-link")
+        .hasProperty(
+          "href",
+          "https://www.youtube.com/watch?v=%3Cscript%3Esomeeviltitle%3C/script%3E"
+        );
     });
 
     test("shows youtube link in header", async function (assert) {
@@ -95,8 +90,12 @@ module(
       const link = queryAll(".chat-message-collapser-link");
 
       assert.strictEqual(link.length, 2, "two youtube links rendered");
-      assert.strictEqual(link[0].href, "https://www.youtube.com/watch?v=ytId1");
-      assert.strictEqual(link[1].href, "https://www.youtube.com/watch?v=ytId2");
+      assert
+        .dom(link[0])
+        .hasAttribute("href", "https://www.youtube.com/watch?v=ytId1");
+      assert
+        .dom(link[1])
+        .hasAttribute("href", "https://www.youtube.com/watch?v=ytId2");
     });
 
     test("shows all user written text", async function (assert) {
@@ -108,21 +107,13 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 3, "shows all written text");
-      assert.strictEqual(
-        text[0].innerText,
-        "written text",
-        "first line of written text"
-      );
-      assert.strictEqual(
-        text[1].innerText,
-        "more written text",
-        "third line of written text"
-      );
-      assert.strictEqual(
-        text[2].innerText,
-        "and even more",
-        "fifth line of written text"
-      );
+      assert.dom(text[0]).hasText("written text", "first line of written text");
+      assert
+        .dom(text[1])
+        .hasText("more written text", "third line of written text");
+      assert
+        .dom(text[2])
+        .hasText("and even more", "fifth line of written text");
     });
 
     test("collapses and expands cooked youtube", async function (assert) {
@@ -138,19 +129,14 @@ module(
         "two youtube previews rendered"
       );
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[0],
-        "close first preview"
-      );
+      await click(".chat-message-collapser-opened");
 
-      assert.false(
-        visible(".youtube-onebox[data-video-id='ytId1']"),
-        "first youtube preview hidden"
-      );
-      assert.true(
-        visible(".youtube-onebox[data-video-id='ytId2']"),
-        "second youtube preview still visible"
-      );
+      assert
+        .dom(".youtube-onebox[data-video-id='ytId1']")
+        .isNotVisible("first youtube preview hidden");
+      assert
+        .dom(".youtube-onebox[data-video-id='ytId2']")
+        .isVisible("second youtube preview still visible");
 
       await click(".chat-message-collapser-closed");
 
@@ -160,19 +146,14 @@ module(
         "two youtube previews rendered"
       );
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[1],
-        "close second preview"
-      );
+      await click(queryAll(".chat-message-collapser-opened")[1]);
 
-      assert.true(
-        visible(".youtube-onebox[data-video-id='ytId1']"),
-        "first youtube preview still visible"
-      );
-      assert.false(
-        visible(".youtube-onebox[data-video-id='ytId2']"),
-        "second youtube preview hidden"
-      );
+      assert
+        .dom(".youtube-onebox[data-video-id='ytId1']")
+        .isVisible("first youtube preview still visible");
+      assert
+        .dom(".youtube-onebox[data-video-id='ytId2']")
+        .isNotVisible("second youtube preview hidden");
 
       await click(".chat-message-collapser-closed");
 
@@ -199,11 +180,9 @@ module(
         hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
       );
 
-      assert.true(
-        query(".chat-message-collapser-link-small").innerText.includes(
-          "tomtom.jpeg"
-        )
-      );
+      assert
+        .dom(".chat-message-collapser-link-small")
+        .includesText("tomtom.jpeg");
     });
 
     test("shows number of files for multiple images", async function (assert) {
@@ -214,34 +193,34 @@ module(
         hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
       );
 
-      assert.true(
-        query(".chat-message-collapser-link-small").innerText.includes(
-          "2 files"
-        )
-      );
+      assert.dom(".chat-message-collapser-link-small").includesText("2 files");
     });
 
     test("collapses and expands images", async function (assert) {
       this.set("cooked", imageTextCooked);
-      this.set("uploads", [{ original_filename: "tomtom.png" }]);
+      this.set("uploads", [
+        {
+          original_filename: "tomtom.png",
+          url: "images/d-logo-sketch-small.png",
+          width: 16,
+          height: 16,
+        },
+      ]);
 
       await render(
         hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
       );
 
-      const uploads = ".chat-uploads";
-      const chatImageUpload = ".chat-img-upload";
-
-      assert.true(visible(uploads));
-      assert.true(visible(chatImageUpload));
+      assert.dom(".chat-uploads").isVisible();
+      assert.dom(".chat-img-upload").isVisible();
 
       await click(".chat-message-collapser-opened");
-      assert.false(visible(uploads));
-      assert.false(visible(chatImageUpload));
+      assert.dom(".chat-uploads").isNotVisible();
+      assert.dom(".chat-img-upload").isNotVisible();
 
       await click(".chat-message-collapser-closed");
-      assert.true(visible(uploads));
-      assert.true(visible(chatImageUpload));
+      assert.dom(".chat-uploads").isVisible();
+      assert.dom(".chat-img-upload").isVisible();
     });
   }
 );
@@ -258,13 +237,13 @@ module(
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
-      assert.true(links[0].innerText.trim().includes("avatar.png"));
-      assert.true(links[0].href.includes("avatar.png"));
+      assert.dom(links[0]).includesText("avatar.png");
+      assert.dom(links[0]).hasAttribute("href", "/images/avatar.png");
 
-      assert.true(
-        links[1].innerText.trim().includes("d-logo-sketch-small.png")
-      );
-      assert.true(links[1].href.includes("d-logo-sketch-small.png"));
+      assert.dom(links[1]).includesText("d-logo-sketch-small.png");
+      assert
+        .dom(links[1])
+        .hasAttribute("href", "/images/d-logo-sketch-small.png");
     });
 
     test("shows all user written text", async function (assert) {
@@ -275,9 +254,9 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 5, "shows all written text");
-      assert.strictEqual(text[0].innerText, "written text");
-      assert.strictEqual(text[2].innerText, "more written text");
-      assert.strictEqual(text[4].innerText, "and even more");
+      assert.dom(text[0]).hasText("written text");
+      assert.dom(text[2]).hasText("more written text");
+      assert.dom(text[4]).hasText("and even more");
     });
 
     test("collapses and expands animated image onebox", async function (assert) {
@@ -289,37 +268,27 @@ module(
 
       assert.strictEqual(animatedOneboxes.length, 2, "two oneboxes rendered");
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[0],
-        "close first preview"
-      );
+      await click(".chat-message-collapser-opened");
 
-      assert.false(
-        visible(".onebox[src='/images/avatar.png']"),
-        "first onebox hidden"
-      );
-      assert.true(
-        visible(".onebox[src='/images/d-logo-sketch-small.png']"),
-        "second onebox still visible"
-      );
+      assert
+        .dom(".onebox[src='/images/avatar.png']")
+        .isNotVisible("first onebox hidden");
+      assert
+        .dom(".onebox[src='/images/d-logo-sketch-small.png']")
+        .isVisible("second onebox still visible");
 
       await click(".chat-message-collapser-closed");
 
       assert.strictEqual(animatedOneboxes.length, 2, "two oneboxes rendered");
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[1],
-        "close second preview"
-      );
+      await click(queryAll(".chat-message-collapser-opened")[1]);
 
-      assert.true(
-        visible(".onebox[src='/images/avatar.png']"),
-        "first onebox still visible"
-      );
-      assert.false(
-        visible(".onebox[src='/images/d-logo-sketch-small.png']"),
-        "second onebox hidden"
-      );
+      assert
+        .dom(".onebox[src='/images/avatar.png']")
+        .isVisible("first onebox still visible");
+      assert
+        .dom(".onebox[src='/images/d-logo-sketch-small.png']")
+        .isNotVisible("second onebox hidden");
 
       await click(".chat-message-collapser-closed");
 
@@ -340,11 +309,11 @@ module(
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
-      assert.true(links[0].innerText.trim().includes("http://cat1.com"));
-      assert.true(links[0].href.includes("http://cat1.com"));
+      assert.dom(links[0]).includesText("http://cat1.com");
+      assert.dom(links[0]).hasAttribute("href", "http://cat1.com/");
 
-      assert.true(links[1].innerText.trim().includes("http://cat2.com"));
-      assert.true(links[1].href.includes("http://cat2.com"));
+      assert.dom(links[1]).includesText("http://cat2.com");
+      assert.dom(links[1]).hasAttribute("href", "http://cat2.com/");
     });
 
     test("shows all user written text", async function (assert) {
@@ -355,9 +324,9 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 5, "shows all written text");
-      assert.strictEqual(text[0].innerText, "written text");
-      assert.strictEqual(text[2].innerText, "more written text");
-      assert.strictEqual(text[4].innerText, "and even more");
+      assert.dom(text[0]).hasText("written text");
+      assert.dom(text[2]).hasText("more written text");
+      assert.dom(text[4]).hasText("and even more");
     });
 
     test("collapses and expands image oneboxes", async function (assert) {
@@ -369,37 +338,27 @@ module(
 
       assert.strictEqual(imageOneboxes.length, 2, "two oneboxes rendered");
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[0],
-        "close first preview"
-      );
+      await click(".chat-message-collapser-opened");
 
-      assert.false(
-        visible(".onebox[href='http://cat1.com']"),
-        "first onebox hidden"
-      );
-      assert.true(
-        visible(".onebox[href='http://cat2.com']"),
-        "second onebox still visible"
-      );
+      assert
+        .dom(".onebox[href='http://cat1.com']")
+        .isNotVisible("first onebox hidden");
+      assert
+        .dom(".onebox[href='http://cat2.com']")
+        .isVisible("second onebox still visible");
 
       await click(".chat-message-collapser-closed");
 
       assert.strictEqual(imageOneboxes.length, 2, "two oneboxes rendered");
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[1],
-        "close second preview"
-      );
+      await click(queryAll(".chat-message-collapser-opened")[1]);
 
-      assert.true(
-        visible(".onebox[href='http://cat1.com']"),
-        "first onebox still visible"
-      );
-      assert.false(
-        visible(".onebox[href='http://cat2.com']"),
-        "second onebox hidden"
-      );
+      assert
+        .dom(".onebox[href='http://cat1.com']")
+        .isVisible("first onebox still visible");
+      assert
+        .dom(".onebox[href='http://cat2.com']")
+        .isNotVisible("second onebox hidden");
 
       await click(".chat-message-collapser-closed");
 
@@ -422,16 +381,14 @@ module(
       );
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(
-        queryAll(".chat-message-collapser-link-small")[0].innerHTML.includes(
-          evilStringEscaped
-        )
-      );
-      assert.true(
-        queryAll(".chat-message-collapser-link-small")[1].innerHTML.includes(
-          "&lt;script&gt;someeviltitle&lt;/script&gt;"
-        )
-      );
+      const links = [
+        ...document.querySelectorAll(".chat-message-collapser-link-small"),
+      ];
+
+      assert.dom(links[0]).includesHtml(evilStringEscaped);
+      assert
+        .dom(links[1])
+        .includesHtml("&lt;script&gt;someeviltitle&lt;/script&gt;");
     });
 
     test("shows alt or links (if no alt) for linked image", async function (assert) {
@@ -441,13 +398,13 @@ module(
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
-      assert.true(links[0].innerText.trim().includes("shows alt"));
-      assert.true(links[0].href.includes("/images/avatar.png"));
+      assert.dom(links[0]).includesText("shows alt");
+      assert.dom(links[0]).hasAttribute("href", "/images/avatar.png");
 
-      assert.true(
-        links[1].innerText.trim().includes("/images/d-logo-sketch-small.png")
-      );
-      assert.true(links[1].href.includes("/images/d-logo-sketch-small.png"));
+      assert.dom(links[1]).includesText("/images/d-logo-sketch-small.png");
+      assert
+        .dom(links[1])
+        .hasAttribute("href", "/images/d-logo-sketch-small.png");
     });
 
     test("shows all user written text", async function (assert) {
@@ -458,9 +415,9 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 6, "shows all written text");
-      assert.strictEqual(text[0].innerText, "written text");
-      assert.strictEqual(text[2].innerText, "more written text");
-      assert.strictEqual(text[4].innerText, "and even more");
+      assert.dom(text[0]).hasText("written text");
+      assert.dom(text[2]).hasText("more written text");
+      assert.dom(text[4]).hasText("and even more");
     });
 
     test("collapses and expands images", async function (assert) {
@@ -472,37 +429,27 @@ module(
 
       assert.strictEqual(images.length, 3);
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[0],
-        "close first preview"
-      );
+      await click(".chat-message-collapser-opened");
 
-      assert.false(
-        visible("img[src='/images/avatar.png']"),
-        "first image hidden"
-      );
-      assert.true(
-        visible("img[src='/images/d-logo-sketch-small.png']"),
-        "second image still visible"
-      );
+      assert
+        .dom("img[src='/images/avatar.png']")
+        .isNotVisible("first image hidden");
+      assert
+        .dom("img[src='/images/d-logo-sketch-small.png']")
+        .isVisible("second image still visible");
 
       await click(".chat-message-collapser-closed");
 
       assert.strictEqual(images.length, 3);
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[1],
-        "close second preview"
-      );
+      await click(queryAll(".chat-message-collapser-opened")[1]);
 
-      assert.true(
-        visible("img[src='/images/avatar.png']"),
-        "first image still visible"
-      );
-      assert.false(
-        visible("img[src='/images/d-logo-sketch-small.png']"),
-        "second image hidden"
-      );
+      assert
+        .dom("img[src='/images/avatar.png']")
+        .isVisible("first image still visible");
+      assert
+        .dom("img[src='/images/d-logo-sketch-small.png']")
+        .isNotVisible("second image hidden");
 
       await click(".chat-message-collapser-closed");
 
@@ -539,15 +486,10 @@ module(
       );
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(
-        query(".chat-message-collapser-link-small").href.includes(
-          "%3Cscript%3Esomeeviltitle%3C/script%3E"
-        )
-      );
-      assert.strictEqual(
-        query(".chat-message-collapser-link-small").innerHTML.trim(),
-        "someeviltitle"
-      );
+      assert
+        .dom(".chat-message-collapser-link-small")
+        .hasProperty("href", /%3Cscript%3Esomeeviltitle%3C\/script%3E$/);
+      assert.dom(".chat-message-collapser-link-small").hasHtml("someeviltitle");
     });
 
     test("removes album title overlay", async function (assert) {
@@ -555,7 +497,7 @@ module(
 
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.false(visible(".album-title"), "album title removed");
+      assert.dom(".album-title").doesNotExist("album title removed");
     });
 
     test("shows gallery link", async function (assert) {
@@ -563,11 +505,9 @@ module(
 
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(
-        query(".chat-message-collapser-link-small").innerText.includes(
-          "Le tomtom album"
-        )
-      );
+      assert
+        .dom(".chat-message-collapser-link-small")
+        .includesText("Le tomtom album");
     });
 
     test("shows all user written text", async function (assert) {
@@ -578,8 +518,8 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 2, "shows all written text");
-      assert.strictEqual(text[0].innerText, "written text");
-      assert.strictEqual(text[1].innerText, "more written text");
+      assert.dom(text[0]).hasText("written text");
+      assert.dom(text[1]).hasText("more written text");
     });
 
     test("collapses and expands images", async function (assert) {
@@ -587,16 +527,13 @@ module(
 
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(visible("img"), "image visible initially");
+      assert.dom("img").isVisible("image visible initially");
 
-      await click(
-        queryAll(".chat-message-collapser-opened")[0],
-        "close preview"
-      );
-      assert.false(visible("img"), "image hidden");
+      await click(".chat-message-collapser-opened");
+      assert.dom("img").isNotVisible("image hidden");
 
       await click(".chat-message-collapser-closed");
-      assert.true(visible("img"), "image visible initially");
+      assert.dom("img").isVisible("image visible initially");
     });
   }
 );

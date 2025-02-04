@@ -15,8 +15,7 @@ import {
   stringToBuffer,
   WebauthnAbortHandler,
 } from "discourse/lib/webauthn";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserPasskeys extends Component {
   @service dialog;
@@ -80,7 +79,7 @@ export default class UserPasskeys extends Component {
         type: credential.type,
         attestation: bufferToBase64(credential.response.attestationObject),
         clientData: bufferToBase64(credential.response.clientDataJSON),
-        name: I18n.t("user.passkeys.name.default"),
+        name: i18n("user.passkeys.name.default"),
       };
 
       const registrationResponse = await this.args.model.registerPasskey(
@@ -96,7 +95,7 @@ export default class UserPasskeys extends Component {
 
       // Prompt to rename key after creating
       this.dialog.dialog({
-        title: I18n.t("user.passkeys.passkey_successfully_created"),
+        title: i18n("user.passkeys.passkey_successfully_created"),
         type: "notice",
         bodyComponent: RenamePasskey,
         bodyComponentModel: registrationResponse,
@@ -106,8 +105,8 @@ export default class UserPasskeys extends Component {
       console.error(error);
       this.errorMessage =
         error.name === "InvalidStateError"
-          ? I18n.t("user.passkeys.already_added_error")
-          : I18n.t("user.passkeys.not_allowed_error");
+          ? i18n("user.passkeys.already_added_error")
+          : i18n("user.passkeys.not_allowed_error");
       this.dialog.alert(this.errorMessage);
     }
   }
@@ -115,7 +114,7 @@ export default class UserPasskeys extends Component {
   confirmDelete(id) {
     schedule("afterRender", () => {
       this.dialog.deleteConfirm({
-        title: I18n.t("user.passkeys.confirm_delete_passkey"),
+        title: i18n("user.passkeys.confirm_delete_passkey"),
         didConfirm: () => {
           this.args.model.deletePasskey(id).then(() => {
             this.router.refresh();
@@ -132,7 +131,7 @@ export default class UserPasskeys extends Component {
 
       if (!trustedSession.success) {
         this.dialog.dialog({
-          title: I18n.t("user.confirm_access.title"),
+          title: i18n("user.confirm_access.title"),
           type: "notice",
           bodyComponent: ConfirmSession,
           didConfirm: () => this.createPasskey(),
@@ -152,7 +151,7 @@ export default class UserPasskeys extends Component {
 
       if (!trustedSession.success) {
         this.dialog.dialog({
-          title: I18n.t("user.confirm_access.title"),
+          title: i18n("user.confirm_access.title"),
           type: "notice",
           bodyComponent: ConfirmSession,
           didConfirm: () => this.confirmDelete(id),
@@ -168,7 +167,7 @@ export default class UserPasskeys extends Component {
   @action
   renamePasskey(id, name) {
     this.dialog.dialog({
-      title: I18n.t("user.passkeys.rename_passkey"),
+      title: i18n("user.passkeys.rename_passkey"),
       type: "notice",
       bodyComponent: RenamePasskey,
       bodyComponentModel: { id, name },

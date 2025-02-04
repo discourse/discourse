@@ -31,7 +31,7 @@
             {{/unless}}
             <DButton
               @action={{action "cancelEditing"}}
-              @icon="times"
+              @icon="xmark"
               @ariaLabel="cancel"
               class="btn-default cancel-edit"
             />
@@ -46,7 +46,7 @@
               {{on "click" this.edit}}
               class="edit-tag"
               title={{i18n "tagging.edit_tag"}}
-            >{{d-icon "pencil-alt"}}</a>
+            >{{d-icon "pencil"}}</a>
           {{/if}}
         </div>
         {{#if this.tagInfo.description}}
@@ -96,14 +96,14 @@
                   {{on "click" (fn this.unlinkSynonym tag)}}
                   class="unlink-synonym"
                 >
-                  {{d-icon "unlink" title="tagging.remove_synonym"}}
+                  {{d-icon "link-slash" title="tagging.remove_synonym"}}
                 </a>
                 <a
                   href
                   {{on "click" (fn this.deleteSynonym tag)}}
                   class="delete-synonym"
                 >
-                  {{d-icon "far-trash-alt" title="tagging.delete_tag"}}
+                  {{d-icon "trash-can" title="tagging.delete_tag"}}
                 </a>
               {{/if}}
             </div>
@@ -146,7 +146,7 @@
       <div class="tag-actions">
         <DButton
           @action={{action "toggleEditControls"}}
-          @icon="cog"
+          @icon="gear"
           @label="tagging.edit_synonyms"
           id="edit-synonyms"
           class="btn-default"
@@ -154,7 +154,7 @@
         {{#if this.canAdminTag}}
           <DButton
             @action={{action "deleteTag"}}
-            @icon="far-trash-alt"
+            @icon="trash-can"
             @label="tagging.delete_tag"
             id="delete-tag"
             class="btn-danger delete-tag"

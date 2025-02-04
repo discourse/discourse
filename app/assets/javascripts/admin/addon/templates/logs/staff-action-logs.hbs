@@ -18,7 +18,7 @@
         >
           <span class="label">{{i18n "admin.logs.action"}}</span>:
           {{this.actionFilter}}
-          {{d-icon "times-circle"}}
+          {{d-icon "circle-xmark"}}
         </a>
       {{/if}}
       {{#if this.filters.acting_user}}
@@ -31,7 +31,7 @@
               "admin.logs.staff_actions.staff_user"
             }}</span>:
           {{this.filters.acting_user}}
-          {{d-icon "times-circle"}}
+          {{d-icon "circle-xmark"}}
         </a>
       {{/if}}
       {{#if this.filters.target_user}}
@@ -44,7 +44,7 @@
               "admin.logs.staff_actions.target_user"
             }}</span>:
           {{this.filters.target_user}}
-          {{d-icon "times-circle"}}
+          {{d-icon "circle-xmark"}}
         </a>
       {{/if}}
       {{#if this.filters.subject}}
@@ -57,7 +57,7 @@
               "admin.logs.staff_actions.subject"
             }}</span>:
           {{this.filters.subject}}
-          {{d-icon "times-circle"}}
+          {{d-icon "circle-xmark"}}
         </a>
       {{/if}}
     </div>
@@ -109,7 +109,7 @@
                       class="deleted-user"
                       title={{i18n "admin.user.deleted"}}
                     >
-                      {{d-icon "far-trash-alt"}}
+                      {{d-icon "trash-can"}}
                     </span>
                   {{/if}}
                 </div>
@@ -154,14 +154,14 @@
                     <a
                       href
                       {{on "click" (fn this.showCustomDetailsModal item)}}
-                    >{{d-icon "info-circle"}}
+                    >{{d-icon "circle-info"}}
                       {{i18n "admin.logs.staff_actions.show"}}</a>
                   {{/if}}
                   {{#if item.useModalForDetails}}
                     <a
                       href
                       {{on "click" (fn this.showDetailsModal item)}}
-                    >{{d-icon "info-circle"}}
+                    >{{d-icon "circle-info"}}
                       {{i18n "admin.logs.staff_actions.show"}}</a>
                   {{/if}}
                 </div>

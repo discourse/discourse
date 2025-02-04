@@ -6,7 +6,7 @@ import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item"
 import { mergeSortedLists } from "discourse/lib/utilities";
 import Notification from "discourse/models/notification";
 import Topic from "discourse/models/topic";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   @service store;
@@ -20,7 +20,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get showAllTitle() {
-    return I18n.t("user_menu.view_all_messages");
+    return i18n("user_menu.view_all_messages");
   }
 
   get showDismiss() {
@@ -28,7 +28,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get dismissTitle() {
-    return I18n.t("user.dismiss_messages_tooltip");
+    return i18n("user.dismiss_messages_tooltip");
   }
 
   get itemsCacheKey() {
@@ -49,7 +49,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get dismissConfirmationText() {
-    return I18n.t("notifications.dismiss_confirmation.body.messages", {
+    return i18n("notifications.dismiss_confirmation.body.messages", {
       count: this.#unreadMessagesNotifications,
     });
   }
@@ -77,13 +77,16 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     const topics = data.topics.map((t) => this.store.createRecord("topic", t));
     await Topic.applyTransformations(topics);
 
-    if (this.siteSettings.show_user_menu_avatars) {
+    if (
+      this.siteSettings.show_user_menu_avatars ||
+      this.siteSettings.prioritize_full_name_in_ux
+    ) {
       // Populate avatar_template for lastPoster
       const usersById = new Map(data.users.map((u) => [u.id, u]));
       topics.forEach((t) => {
-        t.last_poster_avatar_template = usersById.get(
-          t.lastPoster.user_id
-        )?.avatar_template;
+        const lastPoster = usersById.get(t.lastPoster.user_id);
+        t.last_poster_avatar_template = lastPoster?.avatar_template;
+        t.last_poster_name = lastPoster?.name;
       });
     }
 

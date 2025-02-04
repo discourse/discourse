@@ -1,32 +1,43 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import deprecated from "discourse/lib/deprecated";
+import { i18n } from "discourse-i18n";
 
 export default Mixin.create({
-  @discourseComputed()
-  nameInstructions() {
-    return I18n.t(
-      this.siteSettings.full_name_required
-        ? "user.name.instructions_required"
-        : "user.name.instructions"
+  init() {
+    this._super(...arguments);
+
+    deprecated(
+      "NameValidation mixin is deprecated. Use the helper class from discourse/lib/name-validation-helper instead.",
+      {
+        id: "discourse.name-validation-mixin",
+        since: "v3.4.0.beta4-dev",
+      }
+    );
+  },
+
+  get nameTitle() {
+    return i18n(
+      this.site.full_name_required_for_signup
+        ? "user.name.title"
+        : "user.name.title_optional"
     );
   },
 
   // Validate the name.
-  @discourseComputed("accountName", "forceValidationReason")
-  nameValidation(accountName, forceValidationReason) {
-    if (this.siteSettings.full_name_required && isEmpty(accountName)) {
+  nameValidation: computed("accountName", "forceValidationReason", function () {
+    const { accountName, forceValidationReason } = this;
+    if (this.site.full_name_required_for_signup && isEmpty(accountName)) {
       return EmberObject.create({
         failed: true,
         ok: false,
-        message: I18n.t("user.name.required"),
-        reason: forceValidationReason ? I18n.t("user.name.required") : null,
+        message: i18n("user.name.required"),
+        reason: forceValidationReason ? i18n("user.name.required") : null,
         element: document.querySelector("#new-account-name"),
       });
     }
 
     return EmberObject.create({ ok: true });
-  },
+  }),
 });

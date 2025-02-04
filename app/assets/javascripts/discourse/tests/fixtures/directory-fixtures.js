@@ -14,7 +14,10 @@ export default {
         post_count: 12263,
         user: {
           user_fields: {
-            3: "Blue",
+            3: {
+              value: ["Blue"],
+              searchable: true
+            },
           },
         },
       },

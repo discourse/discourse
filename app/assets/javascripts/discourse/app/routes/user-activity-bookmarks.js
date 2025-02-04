@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
 import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserActivityBookmarks extends DiscourseRoute {
   @service historyStore;
@@ -60,7 +60,7 @@ export default class UserActivityBookmarks extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("user_action_groups.3");
+    return i18n("user_action_groups.3");
   }
 
   @action

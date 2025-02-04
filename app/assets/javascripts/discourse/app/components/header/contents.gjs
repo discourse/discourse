@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
 import HomeLogo from "./home-logo";
@@ -24,13 +25,25 @@ export default class Contents extends Component {
     return "bars";
   }
 
+  get minimized() {
+    return applyValueTransformer(
+      "home-logo-minimized",
+      this.args.topicInfoVisible,
+      {
+        topicInfo: this.args.topicInfo,
+        sidebarEnabled: this.args.sidebarEnabled,
+        showSidebar: this.args.showSidebar,
+      }
+    );
+  }
+
   <template>
     <div class="contents">
       <PluginOutlet
         @name="header-contents__before"
         @outletArgs={{hash
-          topicInfo=this.header.topicInfo
-          topicInfoVisible=this.header.topicInfoVisible
+          topicInfo=@topicInfo
+          topicInfoVisible=@topicInfoVisible
         }}
         @deprecatedArgs={{hash
           topic=(deprecatedOutletArgument
@@ -55,12 +68,12 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <HomeLogo @minimized={{this.header.topicInfoVisible}} />
+          <HomeLogo @minimized={{this.minimized}} />
         </PluginOutlet>
       </div>
 
-      {{#if this.header.topicInfoVisible}}
-        <TopicInfo @topic={{this.header.topicInfo}} />
+      {{#if @topicInfoVisible}}
+        <TopicInfo @topicInfo={{@topicInfo}} />
       {{else if
         (and
           this.siteSettings.bootstrap_mode_enabled
@@ -77,8 +90,8 @@ export default class Contents extends Component {
         <PluginOutlet
           @name="before-header-panel"
           @outletArgs={{hash
-            topicInfo=this.header.topicInfo
-            topicInfoVisible=this.header.topicInfoVisible
+            topicInfo=@topicInfo
+            topicInfoVisible=@topicInfoVisible
           }}
           @deprecatedArgs={{hash
             topic=(deprecatedOutletArgument
@@ -97,8 +110,8 @@ export default class Contents extends Component {
         <PluginOutlet
           @name="after-header-panel"
           @outletArgs={{hash
-            topicInfo=this.header.topicInfo
-            topicInfoVisible=this.header.topicInfoVisible
+            topicInfo=@topicInfo
+            topicInfoVisible=@topicInfoVisible
           }}
           @deprecatedArgs={{hash
             topic=(deprecatedOutletArgument
@@ -115,8 +128,8 @@ export default class Contents extends Component {
       <PluginOutlet
         @name="header-contents__after"
         @outletArgs={{hash
-          topicInfo=this.header.topicInfo
-          topicInfoVisible=this.header.topicInfoVisible
+          topicInfo=@topicInfo
+          topicInfoVisible=@topicInfoVisible
         }}
         @deprecatedArgs={{hash
           topic=(deprecatedOutletArgument

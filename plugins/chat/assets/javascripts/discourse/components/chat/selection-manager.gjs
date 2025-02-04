@@ -5,14 +5,14 @@ import { service } from "@ember/service";
 import { not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import { clipboardCopyAsync } from "discourse/lib/utilities";
-import { isTesting } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DeleteMessagesConfirm from "discourse/plugins/chat/discourse/components/chat/modal/delete-messages-confirm";
 import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
 
-const DELETE_COUNT_LIMIT = 50;
+const DELETE_COUNT_LIMIT = 200;
 
 export default class ChatSelectionManager extends Component {
   @service("composer") topicComposer;
@@ -59,7 +59,7 @@ export default class ChatSelectionManager extends Component {
   }
 
   get deleteButtonTitle() {
-    return I18n.t("chat.selection.delete", {
+    return i18n("chat.selection.delete", {
       selectionCount: this.args.pane.selectedMessageIds.length,
       totalCount: DELETE_COUNT_LIMIT,
     });
@@ -147,7 +147,7 @@ export default class ChatSelectionManager extends Component {
         this.toasts.success({
           duration: 3000,
           data: {
-            message: I18n.t("chat.quote.copy_success"),
+            message: i18n("chat.quote.copy_success"),
           },
         });
       }
@@ -180,7 +180,7 @@ export default class ChatSelectionManager extends Component {
 
         {{#if this.enableMove}}
           <DButton
-            @icon="sign-out-alt"
+            @icon="right-from-bracket"
             @label="chat.selection.move_selection_to_channel"
             @disabled={{not this.anyMessagesSelected}}
             @action={{this.openMoveMessageModal}}
@@ -189,7 +189,7 @@ export default class ChatSelectionManager extends Component {
         {{/if}}
 
         <DButton
-          @icon="trash-alt"
+          @icon="trash-can"
           @translatedLabel={{this.deleteButtonTitle}}
           @disabled={{or
             (not this.anyMessagesSelected)
@@ -201,7 +201,7 @@ export default class ChatSelectionManager extends Component {
         />
 
         <DButton
-          @icon="times"
+          @icon="xmark"
           @label="chat.selection.cancel"
           @action={{@pane.cancelSelecting}}
           id="chat-cancel-selection-btn"

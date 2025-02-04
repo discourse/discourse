@@ -43,7 +43,8 @@
 .shortcut-category {
   border: 1px solid var(--primary-low);
 
-  h4 {
+  h2 {
+    font-size: var(--font-0);
     background-color: var(--primary-very-low);
     padding: 0.5rem 1rem;
   }
@@ -54,6 +55,7 @@
 
   .keyboard-shortcuts-help__container {
     columns: 2 20em; // Set maximum of 2 columns
+
     section {
       display: inline-block;
       margin-bottom: 1.5em;
@@ -102,6 +104,11 @@
 
     span:last-child {
       margin-left: auto;
+    }
+
+    .delimiter-newline {
+      display: revert;
+      text-align: right;
     }
 
     kbd {

@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import { ajax } from "discourse/lib/ajax";
@@ -10,24 +11,24 @@ import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-export default Component.extend({
-  dialog: service(),
-  modal: service(),
-  classNames: ["bookmark-list-wrapper"],
+@classNames("bookmark-list-wrapper")
+export default class BookmarkList extends Component {
+  @service dialog;
+  @service modal;
 
   get canDoBulkActions() {
     return this.bulkSelectHelper?.selected.length;
-  },
+  }
 
   get selected() {
     return this.bulkSelectHelper?.selected;
-  },
+  }
 
   get selectedCount() {
     return this.selected?.length || 0;
-  },
+  }
 
   @action
   removeBookmark(bookmark) {
@@ -52,12 +53,12 @@ export default Component.extend({
         return deleteBookmark();
       }
       this.dialog.deleteConfirm({
-        message: I18n.t("bookmarks.confirm_delete"),
+        message: i18n("bookmarks.confirm_delete"),
         didConfirm: () => deleteBookmark(),
         didCancel: () => resolve(false),
       });
     });
-  },
+  }
 
   @action
   screenExcerptForExternalLink(event) {
@@ -66,7 +67,7 @@ export default Component.extend({
         openLinkInNewTab(event, event.target);
       }
     }
-  },
+  }
 
   @action
   editBookmark(bookmark) {
@@ -86,7 +87,7 @@ export default Component.extend({
         },
       },
     });
-  },
+  }
 
   @action
   clearBookmarkReminder(bookmark) {
@@ -96,18 +97,18 @@ export default Component.extend({
     }).then(() => {
       bookmark.set("reminder_at", null);
     });
-  },
+  }
 
   @action
   togglePinBookmark(bookmark) {
     bookmark.togglePin().then(this.reload);
-  },
+  }
 
   @action
   toggleBulkSelect() {
     this.bulkSelectHelper?.toggleBulkSelect();
     this.rerender();
-  },
+  }
 
   @action
   selectAll() {
@@ -115,7 +116,7 @@ export default Component.extend({
     document
       .querySelectorAll("input.bulk-select:not(:checked)")
       .forEach((el) => el.click());
-  },
+  }
 
   @action
   clearAll() {
@@ -123,16 +124,16 @@ export default Component.extend({
     document
       .querySelectorAll("input.bulk-select:checked")
       .forEach((el) => el.click());
-  },
+  }
 
   @dependentKeyCompat // for the classNameBindings
   get bulkSelectEnabled() {
     return this.bulkSelectHelper?.bulkSelectEnabled;
-  },
+  }
 
   _removeBookmarkFromList(bookmark) {
     this.content.removeObject(bookmark);
-  },
+  }
 
   _toggleSelection(target, bookmark, isSelectingRange) {
     const selected = this.selected;
@@ -161,7 +162,7 @@ export default Component.extend({
       selected.removeObject(bookmark);
       this.set("lastChecked", null);
     }
-  },
+  }
 
   click(e) {
     const onClick = (sel, callback) => {
@@ -180,5 +181,5 @@ export default Component.extend({
       );
       this._toggleSelection(target, bookmark, this.lastChecked && e.shiftKey);
     });
-  },
-});
+  }
+}

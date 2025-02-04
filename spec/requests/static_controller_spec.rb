@@ -321,6 +321,12 @@ RSpec.describe StaticController do
       end
     end
 
+    context "when the redirect path contains the '/login' string" do
+      it "redirects to the requested path" do
+        post "/login.json", params: { redirect: "/page/login/1" }
+        expect(response).to redirect_to("/page/login/1")
+      end
+    end
     context "when the redirect path is invalid" do
       it "redirects to the root URL" do
         post "/login.json", params: { redirect: "test" }

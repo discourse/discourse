@@ -1,6 +1,6 @@
 import { click, fillIn, focus, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance(
@@ -12,49 +12,42 @@ acceptance(
     test("Disable body until category is selected", async function (assert) {
       await visit("/");
       await click("#create-topic");
-      assert.ok(exists(".d-editor-input"), "the composer input is visible");
+      assert.dom(".d-editor-input").exists("the composer input is visible");
       await focus(".title-input input");
-      assert.ok(
-        exists(".title-input .popup-tip.good.hide"),
-        "title errors are hidden by default"
-      );
-      assert.ok(
-        exists(".d-editor-textarea-wrapper .popup-tip.bad.hide"),
-        "body errors are hidden by default"
-      );
-      assert.ok(
-        exists(".d-editor-textarea-wrapper.disabled"),
-        "textarea is disabled"
-      );
+      assert
+        .dom(".title-input .popup-tip.good.hide")
+        .exists("title errors are hidden by default");
+      assert
+        .dom(".d-editor-textarea-wrapper .popup-tip.bad.hide")
+        .exists("body errors are hidden by default");
+      assert
+        .dom(".d-editor-textarea-wrapper.disabled")
+        .exists("textarea is disabled");
 
-      assert.ok(
-        !exists("button.toggle-fullscreen"),
-        "fullscreen button is not present"
-      );
+      assert
+        .dom("button.toggle-fullscreen")
+        .doesNotExist("fullscreen button is not present");
 
       const categoryChooser = selectKit(".category-chooser");
 
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(2);
 
-      assert.ok(
-        !exists(".d-editor-textarea-wrapper.disabled"),
-        "textarea is enabled"
-      );
+      assert
+        .dom(".d-editor-textarea-wrapper.disabled")
+        .doesNotExist("textarea is enabled");
 
       await fillIn(".d-editor-input", "Now I can type stuff");
       await categoryChooser.expand();
       await categoryChooser.selectRowByIndex(0);
 
-      assert.ok(
-        !exists(".d-editor-textarea-wrapper.disabled"),
-        "textarea is still enabled"
-      );
+      assert
+        .dom(".d-editor-textarea-wrapper.disabled")
+        .doesNotExist("textarea is still enabled");
 
-      assert.ok(
-        exists("button.toggle-fullscreen"),
-        "fullscreen button is present"
-      );
+      assert
+        .dom("button.toggle-fullscreen")
+        .exists("fullscreen button is present");
     });
   }
 );
@@ -89,38 +82,34 @@ acceptance(
         },
       ],
     });
+
     test("Enable composer/body if no topic templates present", async function (assert) {
       await visit("/");
       await click("#create-topic");
-      assert.ok(exists(".d-editor-input"), "the composer input is visible");
-      assert.ok(
-        exists(".category-input .popup-tip.bad.hide"),
-        "category errors are hidden by default"
-      );
-      assert.ok(
-        !exists(".d-editor-textarea-wrapper.disabled"),
-        "textarea is enabled"
-      );
+      assert.dom(".d-editor-input").exists("the composer input is visible");
+      assert
+        .dom(".category-input .popup-tip.bad.hide")
+        .exists("category errors are hidden by default");
+      assert
+        .dom(".d-editor-textarea-wrapper.disabled")
+        .doesNotExist("textarea is enabled");
 
-      assert.ok(
-        exists("button.toggle-fullscreen"),
-        "fullscreen button is present"
-      );
+      assert
+        .dom("button.toggle-fullscreen")
+        .exists("fullscreen button is present");
 
       await click("#reply-control button.create");
-      assert.ok(
-        exists(".category-input .popup-tip.bad"),
-        "it shows the choose a category error"
-      );
+      assert
+        .dom(".category-input .popup-tip.bad")
+        .exists("it shows the choose a category error");
 
       const categoryChooser = selectKit(".category-chooser");
       await categoryChooser.expand();
       await categoryChooser.selectRowByValue(1);
 
-      assert.ok(
-        !exists(".category-input .popup-tip.bad"),
-        "category error removed after selecting category"
-      );
+      assert
+        .dom(".category-input .popup-tip.bad")
+        .doesNotExist("category error removed after selecting category");
     });
   }
 );

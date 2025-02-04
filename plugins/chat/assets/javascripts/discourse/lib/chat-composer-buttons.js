@@ -1,4 +1,4 @@
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _chatComposerButtons = {};
 
@@ -89,7 +89,7 @@ export function chatComposerButtons(composer, position, context) {
 
       const ariaLabel = computeButton(composer, button, "ariaLabel");
       if (ariaLabel) {
-        result.ariaLabel = I18n.t(ariaLabel);
+        result.ariaLabel = i18n(ariaLabel);
       } else {
         const translatedAriaLabel = computeButton(
           composer,
@@ -101,7 +101,7 @@ export function chatComposerButtons(composer, position, context) {
 
       const title = computeButton(composer, button, "title");
       result.title = title
-        ? I18n.t(title)
+        ? i18n(title)
         : computeButton(composer, button, "translatedTitle");
 
       result.classNames = (

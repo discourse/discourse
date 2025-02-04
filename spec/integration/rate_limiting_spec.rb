@@ -4,8 +4,6 @@
 RSpec.describe "rate limiter integration" do
   before { RateLimiter.enable }
 
-  use_redis_snapshotting
-
   it "will rate limit message bus requests once queueing" do
     freeze_time
 

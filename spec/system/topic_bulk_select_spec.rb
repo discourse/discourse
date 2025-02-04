@@ -9,6 +9,7 @@ describe "Topic bulk select", type: :system do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_bulk_actions_modal) { PageObjects::Modals::TopicBulkActions.new }
+  let(:topic_view) { PageObjects::Components::TopicView.new }
 
   def open_bulk_actions_modal(topics_to_select = nil, action)
     topic_list_header.click_bulk_select_button
@@ -22,6 +23,51 @@ describe "Topic bulk select", type: :system do
     topic_list_header.click_bulk_select_topics_dropdown
     topic_list_header.click_bulk_button(action)
     expect(topic_bulk_actions_modal).to be_open
+  end
+
+  context "when dismissing unread topics" do
+    fab!(:topic) { Fabricate(:topic, user: admin) }
+    fab!(:post1) { create_post(user: admin, topic: topic) }
+    fab!(:post2) { create_post(topic: topic) }
+
+    it "removes the topics from the list" do
+      sign_in(admin)
+      visit("/unread")
+
+      topic_list_header.click_bulk_select_button
+      expect(topic_list).to have_topic_checkbox(topic)
+
+      topic_list.click_topic_checkbox(topic)
+
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("dismiss-unread")
+
+      topic_bulk_actions_modal.click_dismiss_confirm
+
+      expect(page).to have_text(I18n.t("js.topics.none.unread"))
+    end
+  end
+
+  context "when dismissing new topics" do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post1) { create_post(user: user, topic: topic) }
+
+    it "removes the topics from the list" do
+      sign_in(admin)
+      visit("/new")
+
+      topic_list_header.click_bulk_select_button
+      expect(topic_list).to have_topic_checkbox(topic)
+
+      topic_list.click_topic_checkbox(topic)
+
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("dismiss-new")
+
+      topic_bulk_actions_modal.click_dismiss_confirm
+
+      expect(page).to have_text(I18n.t("js.topics.none.new"))
+    end
   end
 
   context "when appending tags" do
@@ -174,7 +220,7 @@ describe "Topic bulk select", type: :system do
       sign_in(user)
       topic = topics.first
       visit("/t/#{topic.slug}/#{topic.id}")
-      expect(topic_page).to have_read_post(1)
+      expect(topic_view).to have_read_post(topic.posts.first)
       topic_page.watch_topic
 
       # Bulk close the topic as an admin

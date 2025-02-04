@@ -1,0 +1,19 @@
+<label
+  class="btn"
+  disabled={{this.uploadingOrProcessing}}
+  title={{i18n "admin.site_settings.uploaded_image_list.upload.title"}}
+>
+  {{d-icon "far-image"}}&nbsp;{{this.uploadButtonText}}
+  <input
+    {{did-insert this.uppyUpload.setup}}
+    class="hidden-upload-field"
+    disabled={{this.uppyUpload.uploading}}
+    type="file"
+    accept="image/*"
+    multiple
+  />
+</label>
+{{#if this.uploadingOrProcessing}}
+  <span>{{i18n "upload_selector.uploading"}}
+    {{this.uppyUpload.uploadProgress}}%</span>
+{{/if}}

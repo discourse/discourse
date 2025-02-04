@@ -5,11 +5,13 @@ module Onebox
     class GoogleCalendarOnebox
       include Engine
 
-      matches_regexp(
-        %r{^https?://(?:www\.|calendar\.)google\.com/calendar/.+$|^https?://goo\.gl/calendar/[\w\-]+$},
-      )
+      matches_domain("www.google.com", "google.com", "calendar.google.com", "goo.gl")
       always_https
       requires_iframe_origins "https://calendar.google.com"
+
+      def self.matches_path(path)
+        path.match?(%r{^/calendar/.*$})
+      end
 
       def to_html
         url = @url.split("&").first

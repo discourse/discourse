@@ -7,8 +7,8 @@ import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
 import ChatChannelRow from "./chat-channel-row";
 
@@ -25,38 +25,16 @@ export default class ChannelsListPublic extends Component {
     return this.args.inSidebar ?? false;
   }
 
-  get publicMessageChannelsEmpty() {
-    return (
-      this.chatChannelsManager.publicMessageChannels?.length === 0 &&
-      this.chatStateManager.hasPreloadedChannels
-    );
-  }
-
-  get displayPublicChannels() {
-    if (!this.siteSettings.enable_public_channels) {
-      return false;
-    }
-
-    if (!this.chatStateManager.hasPreloadedChannels) {
-      return false;
-    }
-
-    if (this.publicMessageChannelsEmpty) {
-      return (
-        this.currentUser?.staff ||
-        this.currentUser?.has_joinable_public_channels
-      );
-    }
-
-    return true;
-  }
-
   get hasUnreadThreads() {
     return this.chatTrackingStateManager.hasUnreadThreads;
   }
 
   get hasThreadedChannels() {
     return this.chatChannelsManager.hasThreadedChannels;
+  }
+
+  get channelList() {
+    return this.chatChannelsManager.publicMessageChannelsByActivity;
   }
 
   @action
@@ -73,7 +51,7 @@ export default class ChannelsListPublic extends Component {
     {{#if (and this.site.desktopView this.inSidebar this.hasThreadedChannels)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
-          {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
+          {{icon "discourse-threads" class="chat-user-threads__icon"}}
           {{i18n "chat.my_threads.title"}}
         </span>
         {{#if this.hasUnreadThreads}}
@@ -84,7 +62,9 @@ export default class ChannelsListPublic extends Component {
       </LinkTo>
     {{/if}}
 
-    {{#if (and this.displayPublicChannels this.site.desktopView)}}
+    {{#if
+      (and this.chatChannelsManager.displayPublicChannels this.site.desktopView)
+    }}
       <div class="chat-channel-divider public-channels-section">
         {{#if this.inSidebar}}
           <span
@@ -95,7 +75,7 @@ export default class ChannelsListPublic extends Component {
             {{on "click" (fn this.toggleChannelSection "public-channels")}}
             data-toggleable="public-channels"
           >
-            {{dIcon "angle-up"}}
+            {{icon "angle-up"}}
           </span>
         {{/if}}
 
@@ -106,7 +86,7 @@ export default class ChannelsListPublic extends Component {
           class="btn no-text btn-flat open-browse-page-btn title-action"
           title={{i18n "chat.channels_list_popup.browse"}}
         >
-          {{dIcon "pencil-alt"}}
+          {{icon "pencil"}}
         </LinkTo>
       </div>
     {{/if}}
@@ -119,15 +99,15 @@ export default class ChannelsListPublic extends Component {
         (if this.inSidebar "collapsible-sidebar-section")
       }}
     >
-      {{#if this.publicMessageChannelsEmpty}}
+      {{#if this.chatChannelsManager.publicMessageChannelsEmpty}}
         <EmptyChannelsList
           @title={{i18n "chat.no_public_channels"}}
           @ctaTitle={{i18n "chat.no_public_channels_cta"}}
           @ctaAction={{this.openBrowseChannels}}
-          @showCTA={{this.displayPublicChannels}}
+          @showCTA={{this.chatChannelsManager.displayPublicChannels}}
         />
       {{else}}
-        {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}
+        {{#each this.channelList as |channel|}}
           <ChatChannelRow
             @channel={{channel}}
             @options={{hash settingsButton=true}}

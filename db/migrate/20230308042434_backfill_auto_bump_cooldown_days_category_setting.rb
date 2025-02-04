@@ -23,4 +23,8 @@ class BackfillAutoBumpCooldownDaysCategorySetting < ActiveRecord::Migration[7.0]
           updated_at = NOW();
     SQL
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

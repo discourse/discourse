@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Login with email - hide email address taken", function (needs) {
   needs.settings({
@@ -21,12 +21,11 @@ acceptance("Login with email - hide email address taken", function (needs) {
     await fillIn("#login-account-name", "someuser@example.com");
     await click("#email-login-link");
 
-    assert.strictEqual(
-      query(".alert-success").innerHTML.trim(),
-      I18n.t("email_login.complete_email_found", {
+    assert.dom(".alert-success").hasHtml(
+      i18n("email_login.complete_email_found", {
         email: "someuser@example.com",
       }),
-      "it should display the success message for any email address"
+      "displays the success message for any email address"
     );
   });
 });

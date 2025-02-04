@@ -105,7 +105,7 @@ describe "Request tracking", type: :system do
         )
       end
 
-      find("#site-logo").click
+      click_logo
 
       try_until_success do
         CachedCounting.flush
@@ -153,7 +153,7 @@ describe "Request tracking", type: :system do
         )
       end
 
-      find("#site-logo").click
+      click_logo
 
       try_until_success do
         CachedCounting.flush

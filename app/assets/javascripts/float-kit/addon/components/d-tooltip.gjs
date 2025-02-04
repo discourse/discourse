@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import DFloatBody from "float-kit/components/d-float-body";
 import { TOOLTIP } from "float-kit/lib/constants";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
@@ -23,6 +23,10 @@ export default class DTooltip extends Component {
   registerTrigger = modifier((element) => {
     this.tooltipInstance.trigger = element;
     this.options.onRegisterApi?.(this.tooltipInstance);
+
+    return () => {
+      this.tooltipInstance.destroy();
+    };
   });
 
   get options() {

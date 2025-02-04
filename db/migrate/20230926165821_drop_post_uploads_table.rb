@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DropPostUploadsTable < ActiveRecord::Migration[7.0]
-  DROPPED_TABLES ||= %i[post_uploads]
+  DROPPED_TABLES = %i[post_uploads]
 
   def up
     DROPPED_TABLES.each { |table| Migration::TableDropper.execute_drop(table) }

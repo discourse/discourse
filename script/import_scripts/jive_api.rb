@@ -7,11 +7,11 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # https://developers.jivesoftware.com/api/v3/cloud/rest/index.html
 
 class ImportScripts::JiveApi < ImportScripts::Base
-  USER_COUNT ||= 1000
-  POST_COUNT ||= 100
-  STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
+  USER_COUNT = 1000
+  POST_COUNT = 100
+  STAFF_GUARDIAN = Guardian.new(Discourse.system_user)
 
-  TO_IMPORT ||= [
+  TO_IMPORT = [
     #############################
     # WHOLE CATEGORY OF CONTENT #
     #############################
@@ -282,7 +282,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
         post_id = post_id_from_imported_post_id(topic[:id])
         parent_post = post_id ? Post.unscoped.find_by(id: post_id) : create_post(topic, topic[:id])
 
-        if parent_post&.id && parent_post&.topic_id
+        if parent_post&.id && parent_post.topic_id
           resources = content["resources"]
           if content["likeCount"].to_i > 0 && resources.dig("likes", "ref").present?
             import_likes(resources["likes"]["ref"], parent_post.id)

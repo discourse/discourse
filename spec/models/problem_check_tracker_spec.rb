@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ProblemCheckTracker do
-  before { described_class.any_instance.stubs(:check).returns(stub(max_blips: 1, priority: "low")) }
-
   describe "validations" do
     let(:record) { described_class.new(identifier: "twitter_login") }
 
@@ -21,6 +19,23 @@ RSpec.describe ProblemCheckTracker do
 
     context "when the problem check tracker doesn't exist yet" do
       it { expect(described_class[:facebook_login]).to be_previously_new_record }
+    end
+  end
+
+  describe "#check" do
+    before do
+      Fabricate(:problem_check_tracker, identifier: "twitter_login")
+      Fabricate(:problem_check_tracker, identifier: "missing_check")
+    end
+
+    context "when the tracker has a corresponding check" do
+      it { expect(described_class[:twitter_login].check.new).to be_a(ProblemCheck) }
+    end
+
+    context "when the checking logic of the tracker has been removed or renamed" do
+      it do
+        expect { described_class[:missing_check].check }.to change { described_class.count }.by(-1)
+      end
     end
   end
 
@@ -131,6 +146,42 @@ RSpec.describe ProblemCheckTracker do
       end
     end
 
+    context "when the details of the problem change but the problem remains" do
+      let(:blips) { 1 }
+
+      it "updates the notice" do
+        original_details = {
+          themes_list:
+            "<ul><li><a href=\"/admin/customize/themes/13\">discourse-blank-theme</a></li> <li><a href=\"/admin/customize/themes/31\">Simple Theme</a></li></ul>",
+          base_path: "",
+        }
+
+        expect do problem_tracker.problem!(details: original_details) end.to change {
+          AdminNotice.problem.count
+        }.by(1)
+
+        admin_notice = AdminNotice.problem.find_by(identifier: "twitter_login")
+
+        expect(
+          admin_notice.details.merge(target: problem_tracker.target).with_indifferent_access,
+        ).to eq(original_details.merge(target: problem_tracker.target).with_indifferent_access)
+
+        new_details = {
+          themes_list: "<ul><li><a href=\"/admin/customize/themes/31\">Simple Theme</a></li></ul>",
+          base_path: "",
+        }
+        expect do problem_tracker.problem!(details: new_details) end.not_to change {
+          AdminNotice.problem.count
+        }
+
+        admin_notice.reload
+
+        expect(
+          admin_notice.details.merge(target: problem_tracker.target).with_indifferent_access,
+        ).to eq(new_details.merge(target: problem_tracker.target).with_indifferent_access)
+      end
+    end
+
     context "when there's an alarm sounding for multi-target trackers" do
       let(:blips) { 1 }
 
@@ -169,6 +220,8 @@ RSpec.describe ProblemCheckTracker do
     context "when there are still blips to go" do
       let(:blips) { 0 }
 
+      before { ProblemCheck::TwitterLogin.stubs(:max_blips).returns(1) }
+
       it "does not sound the alarm" do
         expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.not_to change {
           AdminNotice.problem.count
@@ -203,13 +256,39 @@ RSpec.describe ProblemCheckTracker do
     end
 
     context "when there's an alarm sounding" do
-      before { Fabricate(:admin_notice, subject: "problem", identifier: "twitter_login") }
+      before { problem_tracker.problem! }
 
       it "silences the alarm" do
         expect { problem_tracker.no_problem!(next_run_at: 24.hours.from_now) }.to change {
           AdminNotice.problem.count
         }.by(-1)
       end
+    end
+  end
+
+  describe "#reset" do
+    let(:problem_tracker) do
+      Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
+    end
+
+    let(:original_attributes) do
+      {
+        blips: 0,
+        last_problem_at: 1.week.ago,
+        last_success_at: Time.current,
+        last_run_at: 24.hours.ago,
+        next_run_at: nil,
+      }
+    end
+
+    let(:updated_attributes) { { blips: 0 } }
+
+    it do
+      freeze_time
+
+      expect { problem_tracker.reset(next_run_at: 24.hours.from_now) }.to change {
+        problem_tracker.attributes
+      }.to(hash_including(updated_attributes))
     end
   end
 end

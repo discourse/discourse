@@ -1,5 +1,5 @@
 import { htmlSafe } from "@ember/template";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const TITLE_SUBS = {
   all: "all_time",
@@ -10,7 +10,7 @@ const TITLE_SUBS = {
 };
 
 export default function periodTitle(period, { showDateRange, fullDay } = {}) {
-  const title = I18n.t("filters.top." + (TITLE_SUBS[period] || "this_week"));
+  const title = i18n("filters.top." + (TITLE_SUBS[period] || "this_week"));
 
   if (!showDateRange) {
     return htmlSafe(title);
@@ -31,18 +31,18 @@ export default function periodTitle(period, { showDateRange, fullDay } = {}) {
         finish
           .clone()
           .subtract(1, "year")
-          .format(I18n.t("dates.long_with_year_no_time")) +
+          .format(i18n("dates.long_with_year_no_time")) +
         " – " +
-        finish.format(I18n.t("dates.long_with_year_no_time"));
+        finish.format(i18n("dates.long_with_year_no_time"));
       break;
     case "quarterly":
       dateString =
         finish
           .clone()
           .subtract(3, "month")
-          .format(I18n.t("dates.long_no_year_no_time")) +
+          .format(i18n("dates.long_no_year_no_time")) +
         " – " +
-        finish.format(I18n.t("dates.long_no_year_no_time"));
+        finish.format(i18n("dates.long_no_year_no_time"));
       break;
     case "weekly":
       let start;
@@ -53,21 +53,21 @@ export default function periodTitle(period, { showDateRange, fullDay } = {}) {
       }
 
       dateString =
-        start.format(I18n.t("dates.long_no_year_no_time")) +
+        start.format(i18n("dates.long_no_year_no_time")) +
         " – " +
-        finish.format(I18n.t("dates.long_no_year_no_time"));
+        finish.format(i18n("dates.long_no_year_no_time"));
       break;
     case "monthly":
       dateString =
         finish
           .clone()
           .subtract(1, "month")
-          .format(I18n.t("dates.long_no_year_no_time")) +
+          .format(i18n("dates.long_no_year_no_time")) +
         " – " +
-        finish.format(I18n.t("dates.long_no_year_no_time"));
+        finish.format(i18n("dates.long_no_year_no_time"));
       break;
     case "daily":
-      dateString = finish.clone().format(I18n.t("dates.full_no_year_no_time"));
+      dateString = finish.clone().format(i18n("dates.full_no_year_no_time"));
       break;
   }
 

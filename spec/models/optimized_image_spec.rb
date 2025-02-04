@@ -334,7 +334,7 @@ RSpec.describe OptimizedImage do
             )
             stub_request(
               :put,
-              %r{https://#{SiteSetting.s3_upload_bucket}\.s3\.#{SiteSetting.s3_region}\.amazonaws.com#{optimized_path}},
+              %r{https://#{SiteSetting.s3_upload_bucket}\.s3\.dualstack\.#{SiteSetting.s3_region}\.amazonaws.com#{optimized_path}},
             ).to_return(status: 200, headers: { "ETag" => "someetag" })
           end
 

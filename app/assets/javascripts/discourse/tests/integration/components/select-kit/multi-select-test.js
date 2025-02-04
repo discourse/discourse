@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, paste, query } from "discourse/tests/helpers/qunit-helpers";
+import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const DEFAULT_CONTENT = [
@@ -42,21 +42,21 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.expand();
 
     const content = this.subject.displayedContent();
-    assert.strictEqual(content.length, 3, "it shows rows");
+    assert.strictEqual(content.length, 3, "shows rows");
     assert.strictEqual(
       content[0].name,
       this.content.firstObject.name,
-      "it has the correct name"
+      "has the correct name"
     );
     assert.strictEqual(
       content[0].id,
       this.content.firstObject.id.toString(),
-      "it has the correct value"
+      "has the correct value"
     );
     assert.strictEqual(
       this.subject.header().value(),
       null,
-      "it doesn't set a value from the content"
+      "doesn't set a value from the content"
     );
   });
 
@@ -74,14 +74,14 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
-    assert.notOk(this.subject.isExpanded(), "it closes the dropdown");
+    assert.false(this.subject.isExpanded(), "closes the dropdown");
 
     await this.subject.expand();
     await this.subject.deselectItemByValue(1);
 
-    assert.ok(
+    assert.true(
       this.subject.isExpanded(),
-      "it doesn’t close the dropdown when no selection has been made"
+      "doesn’t close the dropdown when no selection has been made"
     );
   });
 
@@ -99,7 +99,7 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
-    assert.ok(this.subject.isExpanded(), "it doesn’t close the dropdown");
+    assert.true(this.subject.isExpanded(), "doesn’t close the dropdown");
   });
 
   test("pasting", async function (assert) {
@@ -114,9 +114,9 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     `);
 
     await this.subject.expand();
-    await paste(query(".filter-input"), "foo|bar");
+    await paste(".filter-input", "foo|bar");
 
-    assert.equal(this.subject.header().value(), "1,2");
+    assert.strictEqual(this.subject.header().value(), "1,2");
   });
 
   test("no value property with no content", async function (assert) {
@@ -127,9 +127,8 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     `);
     await this.subject.expand();
 
-    assert.notOk(
-      exists(".selected-content"),
-      "it doesn’t render an empty content div"
-    );
+    assert
+      .dom(".selected-content")
+      .doesNotExist("doesn’t render an empty content div");
   });
 });

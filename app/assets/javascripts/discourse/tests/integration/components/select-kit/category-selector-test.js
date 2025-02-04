@@ -43,15 +43,13 @@ module(
       await this.subject.expand();
       await this.subject.fillInFilter("Parent Category");
 
-      assert.equal(this.subject.rows().length, 2);
-      assert.equal(
-        this.subject.rowByIndex(0).el().innerText.replace("\n", " "),
-        "Parent Category × 95"
-      );
-      assert.equal(
-        this.subject.rowByIndex(1).el().innerText.replaceAll("\n", " "),
-        "Parent Category × 95 +2 subcategories"
-      );
+      assert.strictEqual(this.subject.rows().length, 2);
+      assert
+        .dom(this.subject.rowByIndex(0).el())
+        .hasText("Parent Category× 95");
+      assert
+        .dom(this.subject.rowByIndex(1).el())
+        .hasText("Parent Category× 95+2 subcategories");
     });
   }
 );

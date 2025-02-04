@@ -3,6 +3,8 @@
 RSpec.describe UserSerializer do
   fab!(:user) { Fabricate(:user, trust_level: 0) }
 
+  before { user.user_stat.update!(post_count: 1) }
+
   context "with a TL0 user seen as anonymous" do
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
@@ -471,7 +473,14 @@ RSpec.describe UserSerializer do
       expect(json[:user_passkeys]).to eq(nil)
     end
 
-    it "includes passkeys if feature is enabled" do
+    it "does not include them if requesting user isn't current user" do
+      SiteSetting.enable_passkeys = true
+      json = UserSerializer.new(user, scope: Guardian.new(), root: false).as_json
+
+      expect(json[:user_passkeys]).to eq(nil)
+    end
+
+    it "includes passkeys if feature is enabled for current user" do
       SiteSetting.enable_passkeys = true
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
@@ -504,17 +513,29 @@ RSpec.describe UserSerializer do
         members_visibility_level: Group.visibility_levels[:owners],
       )
     end
-    let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
+    let(:serializer) { UserSerializer.new(user, scope: guardian, root: false) }
 
     before do
       group.add(user)
       group.save!
     end
 
-    it "should show group even when members list is not visible" do
-      json = serializer.as_json
-      expect(json[:groups].length).to eq(1)
-      expect(json[:groups].first[:id]).to eq(group.id)
+    context "when serializing user's own groups" do
+      let(:guardian) { Guardian.new(user) }
+
+      it "includes secret membership group" do
+        json = serializer.as_json
+        expect(json[:groups].map { |g| g[:id] }).to include(group.id)
+      end
+    end
+
+    context "when serializing other users' groups" do
+      let(:guardian) { Guardian.new }
+
+      it "does not include secret membership group" do
+        json = serializer.as_json
+        expect(json[:groups]).to be_empty
+      end
     end
   end
 end

@@ -44,6 +44,10 @@ module PageObjects
           component.find("select").value
         when "composer"
           component.find("textarea").value
+        when "image"
+          url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
+          sha1 = url.match(/(\h{40})/).captures.first
+          Upload.find_by(sha1:)
         end
       end
 
@@ -67,6 +71,16 @@ module PageObjects
         expect(self.value).to eq(expected_value)
       end
 
+      def has_errors?(*messages)
+        within component do
+          messages.all? { |m| find(".form-kit__errors", text: m) }
+        end
+      end
+
+      def has_no_errors?
+        !has_css?(".form-kit__errors")
+      end
+
       def control_type
         component["data-control-type"]
       end
@@ -84,7 +98,7 @@ module PageObjects
 
       def fill_in(value)
         case control_type
-        when "input-text", "password"
+        when "input-text", "password", "input-date", "input-number"
           component.find("input").fill_in(with: value)
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)
@@ -104,9 +118,14 @@ module PageObjects
           picker.search(value)
           picker.select_row_by_value(value)
         when "select"
-          component.find(".form-kit__control-option[value='#{value}']").click
+          selector = component.find(".form-kit__control-select")
+          selector.find(".form-kit__control-option[value='#{value}']").select_option
+          selector.execute_script(<<~JS, selector)
+            var selector = arguments[0];
+            selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
+          JS
         when "menu"
-          trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu")
+          trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu-trigger")
           trigger.click
           menu = find("[aria-labelledby='#{trigger["id"]}']")
           item = menu.find(".form-kit__control-menu-item[data-value='#{value}'] .btn")
@@ -137,7 +156,17 @@ module PageObjects
         if control_type == "question"
           component.find(".form-kit__control-radio[value='false']").click
         else
-          raise "'accept' is not supported for control type: #{control_type}"
+          raise "'refuse' is not supported for control type: #{control_type}"
+        end
+      end
+
+      def upload_image(image_path)
+        if control_type == "image"
+          attach_file(image_path) do
+            component.find(".image-upload-controls .btn.btn-default").click
+          end
+        else
+          raise "'upload_image' is not supported for control type: #{control_type}"
         end
       end
 
@@ -181,6 +210,14 @@ module PageObjects
         within component do
           FormKitField.new(find(".form-kit__field[data-name='#{name}']"))
         end
+      end
+
+      def has_field_with_name?(name)
+        has_css?(".form-kit__field[data-name='#{name}']")
+      end
+
+      def has_no_field_with_name?(name)
+        has_no_css?(".form-kit__field[data-name='#{name}']")
       end
 
       def container(name)

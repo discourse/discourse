@@ -1,16 +1,16 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { setPrefix } from "discourse-common/lib/get-url";
+import { setPrefix } from "discourse/lib/get-url";
 
 module("Unit | Model | email-log", function (hooks) {
   setupTest(hooks);
 
   test("create", function (assert) {
     const store = getOwner(this).lookup("service:store");
-    assert.ok(
-      store.createRecord("email-log"),
-      "it can be created without arguments"
+    assert.true(
+      !!store.createRecord("email-log"),
+      "can be created without arguments"
     );
   });
 

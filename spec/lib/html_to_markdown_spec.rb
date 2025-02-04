@@ -174,8 +174,8 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown(%Q{<a href="foo.bar">Discourse</a>})).to eq("Discourse")
   end
 
-  HTML_WITH_IMG ||= %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
-  HTML_WITH_CID_IMG ||= %Q{<img src="cid:ii_1525434659ddb4cb" title="Discourse Logo">}
+  HTML_WITH_IMG = %Q{<img src="https://www.discourse.org/logo.svg" alt="Discourse Logo">}
+  HTML_WITH_CID_IMG = %Q{<img src="cid:ii_1525434659ddb4cb" title="Discourse Logo">}
 
   it "converts <img>" do
     expect(html_to_markdown(HTML_WITH_IMG)).to eq(

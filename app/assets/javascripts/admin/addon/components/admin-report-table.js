@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import { makeArray } from "discourse-common/lib/helpers";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
+import { makeArray } from "discourse/lib/helpers";
 
 const PAGES_LIMIT = 8;
 
@@ -58,7 +58,9 @@ export default class AdminReportTable extends Component {
 
   @discourseComputed("totalsForSample.1.value", "model.data.length")
   averageForSample(totals, count) {
-    return (totals / count).toFixed(0);
+    const averageLabel = this.model.computedLabels.at(-1);
+    return averageLabel.compute({ y: (totals / count).toFixed(0) })
+      .formattedValue;
   }
 
   @discourseComputed("model.data.length")
@@ -74,6 +76,12 @@ export default class AdminReportTable extends Component {
       computedLabel.property = label.mainProperty;
       return computedLabel;
     });
+  }
+
+  @discourseComputed("model.total", "model.computedLabels")
+  formattedTotal(total, labels) {
+    const totalLabel = labels.at(-1);
+    return totalLabel.compute({ y: total }).formattedValue;
   }
 
   @discourseComputed("model.data", "model.computedLabels")

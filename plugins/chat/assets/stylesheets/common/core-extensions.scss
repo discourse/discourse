@@ -13,7 +13,6 @@
 
 .user-summary-page .details .controls ul,
 .user-main .details .controls ul {
-  display: flex;
   flex-direction: column;
 
   li:first-child {
@@ -22,21 +21,13 @@
 
   li.user-profile-controls-outlet.chat-button {
     order: -1;
+
+    &:empty {
+      display: none;
+    }
   }
 }
 
 .user-main .collapsed-info .details .controls ul {
   flex-direction: row;
-}
-
-// TODO (davidb): remove once consolidated chat notifications is complete
-.user-stream .large-notifications .item {
-  &:has(.chat-message) {
-    display: none;
-  }
-}
-
-// TODO (davidb): remove once consolidated chat notifications is complete
-.user-menu .quick-access-panel .chat-message {
-  display: none;
 }

@@ -1,25 +1,23 @@
 import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
+import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { findRawTemplate } from "discourse/lib/raw-templates";
+import { i18n } from "discourse-i18n";
 
-export default Component.extend({
+export default class GroupSelector extends Component {
   @discourseComputed("placeholderKey")
   placeholder(placeholderKey) {
-    return placeholderKey ? I18n.t(placeholderKey) : "";
-  },
+    return placeholderKey ? i18n(placeholderKey) : "";
+  }
 
   @observes("groupNames")
   _update() {
     if (this.canReceiveUpdates === "true") {
       this._initializeAutocomplete({ updateData: true });
     }
-  },
+  }
 
   @on("didInsertElement")
   _initializeAutocomplete(opts) {
@@ -40,7 +38,9 @@ export default Component.extend({
       onChangeItems: (items) => {
         selectedGroups = items;
 
-        if (this.onChangeCallback) {
+        if (this.onChange) {
+          this.onChange(items.join(","));
+        } else if (this.onChangeCallback) {
           this.onChangeCallback(this.groupNames, selectedGroups);
         } else {
           this.set("groupNames", items.join(","));
@@ -62,5 +62,5 @@ export default Component.extend({
       },
       template: findRawTemplate("group-selector-autocomplete"),
     });
-  },
-});
+  }
+}

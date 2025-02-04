@@ -1,9 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { module, test } from "qunit";
-import classPrepend, {
-  rollbackAllModifications,
-} from "discourse/lib/class-prepend";
+import classPrepend, { rollbackAllPrepends } from "discourse/lib/class-prepend";
 
 module("Unit | class-prepend", function () {
   test("can override function, with super support", function (assert) {
@@ -273,8 +271,30 @@ module("Unit | class-prepend", function () {
 
     assert.strictEqual(new Topic().someFunction(), 2, "change is applied");
 
-    rollbackAllModifications();
+    rollbackAllPrepends();
 
     assert.strictEqual(new Topic().someFunction(), 1, "change is rolled back");
+  });
+
+  test("can override method from parent, with super support", function (assert) {
+    class Parent {
+      someFunction() {
+        return 1;
+      }
+    }
+
+    class Child extends Parent {}
+
+    classPrepend(
+      Child,
+      (Superclass) =>
+        class extends Superclass {
+          someFunction() {
+            return super.someFunction() + 1;
+          }
+        }
+    );
+
+    assert.strictEqual(new Child().someFunction(), 2, "it works");
   });
 });

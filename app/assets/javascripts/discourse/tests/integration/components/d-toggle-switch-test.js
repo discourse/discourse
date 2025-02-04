@@ -2,8 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("Integration | Component | d-toggle-switch", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,11 +12,8 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
 
-    assert.ok(exists(".d-toggle-switch"), "it renders a toggle switch");
-    assert.strictEqual(
-      query(".d-toggle-switch__checkbox").getAttribute("aria-checked"),
-      "false"
-    );
+    assert.dom(".d-toggle-switch").exists("renders a toggle switch");
+    assert.dom(".d-toggle-switch__checkbox").hasAria("checked", "false");
   });
 
   test("it renders a toggle button in a enabled state", async function (assert) {
@@ -25,18 +21,15 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
 
-    assert.ok(exists(".d-toggle-switch"), "it renders a toggle switch");
-    assert.strictEqual(
-      query(".d-toggle-switch__checkbox").getAttribute("aria-checked"),
-      "true"
-    );
+    assert.dom(".d-toggle-switch").exists("renders a toggle switch");
+    assert.dom(".d-toggle-switch__checkbox").hasAria("checked", "true");
   });
 
   test("it renders a checkmark icon when enabled", async function (assert) {
     this.set("state", true);
 
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
-    assert.ok(exists(".d-toggle-switch__checkbox-slider .d-icon-check"));
+    assert.dom(".d-toggle-switch__checkbox-slider .d-icon-check").exists();
   });
 
   test("it renders a label for the button", async function (assert) {
@@ -48,19 +41,15 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     this.set("label", "test.fooLabel");
 
-    assert.strictEqual(
-      query(".d-toggle-switch__checkbox-label").innerText,
-      I18n.t("test.fooLabel")
-    );
+    assert
+      .dom(".d-toggle-switch__checkbox-label")
+      .hasText(i18n("test.fooLabel"));
 
     this.setProperties({
       label: null,
       translatedLabel: "bar",
     });
 
-    assert.strictEqual(
-      query(".d-toggle-switch__checkbox-label").innerText,
-      "bar"
-    );
+    assert.dom(".d-toggle-switch__checkbox-label").hasText("bar");
   });
 });

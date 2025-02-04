@@ -55,7 +55,7 @@ module("Unit | Controller | admin-user-badges", function (hooks) {
     const sortedNames = [badgeFirst.name, badgeMiddle.name, badgeLast.name];
     const badgeNames = controller.availableBadges.map((badge) => badge.name);
 
-    assert.notOk(
+    assert.false(
       badgeNames.includes(badgeDisabled),
       "excludes disabled badges"
     );
@@ -103,13 +103,13 @@ module("Unit | Controller | admin-user-badges", function (hooks) {
     controller.performGrantBadge();
     await settled();
 
-    assert.ok(
+    assert.true(
       GrantBadgeStub.calledWith(badgeToGrant.id, user.username, badgeReason)
     );
 
-    assert.equal(controller.badgeReason, "");
-    assert.equal(controller.userBadges.length, 1);
-    assert.equal(controller.userBadges[0].id, newUserBadge.id);
-    assert.equal(controller.selectedBadgeId, otherBadge.id);
+    assert.strictEqual(controller.badgeReason, "");
+    assert.strictEqual(controller.userBadges.length, 1);
+    assert.strictEqual(controller.userBadges[0].id, newUserBadge.id);
+    assert.strictEqual(controller.selectedBadgeId, otherBadge.id);
   });
 });

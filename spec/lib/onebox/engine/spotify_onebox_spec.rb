@@ -37,7 +37,7 @@ RSpec.describe Onebox::Engine::SpotifyOnebox do
     end
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid Spotify URL" do
       valid_url = URI("https://open.spotify.com/playlist/12345")
       expect(described_class === valid_url).to eq(true)

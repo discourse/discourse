@@ -294,6 +294,47 @@ RSpec.describe UserApiKeysController do
       uri = URI.parse(response.redirect_url)
       expect(uri.to_s).to include(query_str)
     end
+
+    context "with a registered client" do
+      let!(:fixed_args) { args }
+      let!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
+      let!(:client) do
+        Fabricate(
+          :user_api_key_client,
+          client_id: fixed_args[:client_id],
+          application_name: fixed_args[:application_name],
+          public_key: public_key,
+          auth_redirect: fixed_args[:auth_redirect],
+          scopes: "read",
+        )
+      end
+
+      before { sign_in(user) }
+
+      context "with allowed scopes" do
+        it "does not require allowed_user_api_auth_redirects to contain registered auth_redirect" do
+          post "/user-api-key.json", params: fixed_args
+          expect(response.status).to eq(302)
+        end
+
+        it "does not require application_name or public_key params" do
+          post "/user-api-key.json", params: fixed_args.except(:application_name, :public_key)
+          expect(response.status).to eq(302)
+        end
+      end
+
+      context "without allowed scopes" do
+        let!(:invalid_scope_args) do
+          fixed_args[:scopes] = "write"
+          fixed_args
+        end
+
+        it "returns a 403" do
+          post "/user-api-key.json", params: invalid_scope_args
+          expect(response.status).to eq(403)
+        end
+      end
+    end
   end
 
   describe "#create-one-time-password" do

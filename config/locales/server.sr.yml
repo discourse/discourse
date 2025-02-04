@@ -133,6 +133,15 @@ sr:
       admins: "admini"
       moderators: "moderatori"
       staff: "osoblje"
+    default_descriptions:
+      staff: "Automatska grupa koja uključuje administratore i moderatore"
+      admins: "Odgovoran je za konfigurisanje i održavanje ovog sajta, sa pristupom svim podacima o članovima i aktivnostima"
+      moderators: "Odgovoran je za odgovaranje na zastavice, moderiranje diskusija i pomaganje članovima sa njihovim nalozima"
+      trust_level_0: "Novi članovi sa ograničenim sposobnostima, koji uče norme i funkcionalnost zajednice"
+      trust_level_1: "Članovi sa više poverenja, koji su pokazali početni angažman čitanjem i sada mogu da pristupe većem broju funkcija. Svi članovi ove grupe su takođe članovi grupe trust_level_0."
+      trust_level_2: "Aktivni članovi koji su dosledno doprinosili prekovremeno i stekli pune privilegije državljanstva. Svi članovi ove grupe su takođe članovi trust_level_1 i trust_level_0 grupa."
+      trust_level_3: "Veoma angažovani, dugoročni saradnici, koji čine okosnicu zajednice i stekli su ograničene privilegije umerenosti. Svi članovi ove grupe su takođe članovi trust_level_2, trust_level_1 i trust_level_0 grupa."
+      trust_level_4: "Ručno unapređeni članovi, prepoznati po svojim primernim doprinosima i poverene im dodatne privilegije moderiranja. Svi članovi ove grupe su takođe članovi trust_level_3, trust_level_2, trust_level_1 i trust_level_0 grupa."
   education:
     until_posts:
       one: "%{count} poruka"
@@ -149,9 +158,16 @@ sr:
         bio_raw: "O meni"
       user:
         password: "Šifra"
+      user_password:
+        password: "Šifra"
     errors:
       models:
         user:
+          attributes:
+            password:
+              common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
+              same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
+        user_password:
           attributes:
             password:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
@@ -235,7 +251,6 @@ sr:
   change_email:
     max_secondary_emails_error: "Dosegli ste maksimalni dozvoljeni broj sekundarne e-pošte."
   activation:
-    welcome_to: "Добро дошли на пројекат %{site_name}!"
     activated: "Žao nam je, ovaj korisnički račun je već aktiviran."
   reviewable_score_types:
     needs_approval:
@@ -391,17 +406,15 @@ sr:
     digest_other_topics: "Maksimalan broj tema za prikazivanje u sekciji \"Novo u temama i kategorijama koje pratite\" rezimea email poruke."
     digest_min_excerpt_length: "Minimalna dužina isečka poruke u email rezimeu, u karakterima."
     email_link_color: "Boja linkova u HTML email porukama. Unesite ime boje ('blue') ili heksadecimalnu vrednost ('#0000FF'). "
-    allow_anonymous_posting: "Omogućite opciju za korisnike da odu u anonimni mod za postavljanje. Kada je aktivirana, korisnici mogu odarati da su njihovi idenentiteti sakriveni tokom kreiranja posta ili teme kroz ceo sajt. Pogledajte takođe allow_anonymous_likes`"
     hide_user_profiles_from_public: "Onemogući korisničke kartice, profile i direktorijume za anonimne korisnike."
     sequential_replies_threshold: "Broj poruka koje korisnik može zaredom da pošalje pre upozoravanja o prevelikom broju uzastopnih odgovora."
     disable_avatar_education_message: "Onemogući edukativne poruke za izmenu avatara."
     read_time_word_count: "Broj reči po minutu za računanje procenjenog vremena čitanja"
-    full_name_required: "Puno ime je obavezno polje profila korisnika."
     display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
     warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
-    bootstrap_mode_min_users: "Minimalni broj korisnika koji je potreban za onemogućavanje režima pokretanja i uklanjanje dugmeta Početak rada (podesite na 0 da biste onemogućili, može potrajati do 24 sata)"
+    bootstrap_mode_min_users: 'Minimalni broj korisnika potreban za onemogućavanje režima pokretanja i uklanjanje dugmeta Početak rada (podesite na 0 da biste onemogućili, može potrajati do 24 sata). Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/322876">temu o režimu pokretanja na Meta-u</a> za detalje.'
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"
     auto_close_topics_create_linked_topic: "Kreirajte novu povezanu temu kada je tema automatski zatvorena na temelju postavke 'automatsko zatvaranje tema za postove'"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
@@ -524,14 +537,8 @@ sr:
         fields:
           homepage_style:
             choices:
-              categories_with_featured_topics:
-                label: "Kategorije sa istaknutim temama"
-              categories_and_latest_topics:
-                label: "Kategorije i najnovije teme"
-              categories_and_latest_topics_created_date:
-                label: "Kategorije i najnovije teme (poredjaj po datumu kreiranja teme)"
-              categories_and_top_topics:
-                label: "Kategorije i glavne teme"
+              latest:
+                label: "Poslednje"
       finished:
         title: "Vaš Discource je spreman!"
   staff_action_logs:

@@ -48,7 +48,6 @@ en_GB:
     email_subject: "Customisable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal colour values to be used for letter avatar background."
     category_colors: "A list of hexadecimal colour values allowed for categories."
-    default_dark_mode_color_scheme_id: "The colour scheme used when in dark mode."
     pop3_polling_ssl: "Use SSL when connecting to the POP3 server. (Recommended)"
     email_accent_bg_color: "The accent colour to be used as the background of some elements in HTML emails. Enter a colour name ('red') or hex value ('#FF0000')."
     email_accent_fg_color: "The colour of text rendered on the email bg colour in HTML emails. Enter a colour name ('white') or hex value ('#FFFFFF')."

@@ -3,35 +3,34 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { resetFlair } from "discourse/lib/avatar-flair";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 function setupSiteGroups(that) {
   that.site.groups = [
     {
       id: 1,
       name: "admins",
-      flair_url: "fa-bars",
+      flair_url: "bars",
       flair_bg_color: "CC000A",
       flair_color: "FFFFFA",
     },
     {
       id: 2,
       name: "staff",
-      flair_url: "fa-bars",
+      flair_url: "bars",
       flair_bg_color: "CC0005",
       flair_color: "FFFFF5",
     },
     {
       id: 3,
       name: "trust_level_1",
-      flair_url: "fa-dice-one",
+      flair_url: "dice-one",
       flair_bg_color: "CC0001",
       flair_color: "FFFFF1",
     },
     {
       id: 4,
       name: "trust_level_2",
-      flair_url: "fa-dice-two",
+      flair_url: "dice-two",
       flair_bg_color: "CC0002",
       flair_color: "FFFFF2",
     },
@@ -60,13 +59,12 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
-    assert.ok(exists(".avatar-flair"), "it has the tag");
-    assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC000A; color: #FFFFFA; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").exists("has the tag");
+    assert.dom("svg.d-icon-bars").exists("has the svg icon");
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "rgb(204, 0, 10)",
+      color: "rgb(255, 255, 250)",
+    });
   });
 
   test("avatar flair for moderator user with fallback to staff", async function (assert) {
@@ -80,13 +78,12 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
-    assert.ok(exists(".avatar-flair"), "it has the tag");
-    assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC0005; color: #FFFFF5; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").exists("has the tag");
+    assert.dom("svg.d-icon-bars").exists("has the svg icon");
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "rgb(204, 0, 5)",
+      color: "rgb(255, 255, 245)",
+    });
   });
 
   test("avatar flair for trust level", async function (assert) {
@@ -100,13 +97,12 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
-    assert.ok(exists(".avatar-flair"), "it has the tag");
-    assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC0002; color: #FFFFF2; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").exists("has the tag");
+    assert.dom("svg.d-icon-dice-two").exists("has the svg icon");
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "rgb(204, 0, 2)",
+      color: "rgb(255, 255, 242)",
+    });
   });
 
   test("avatar flair for trust level when set to none", async function (assert) {
@@ -120,7 +116,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
-    assert.ok(!exists(".avatar-flair"), "it does not render a flair");
+    assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
 
   test("avatar flair for trust level with fallback", async function (assert) {
@@ -134,13 +130,12 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
-    assert.ok(exists(".avatar-flair"), "it has the tag");
-    assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC0002; color: #FFFFF2; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").exists("has the tag");
+    assert.dom("svg.d-icon-dice-two").exists("has the svg icon");
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "rgb(204, 0, 2)",
+      color: "rgb(255, 255, 242)",
+    });
   });
 
   test("avatar flair for login-required site, before login", async function (assert) {
@@ -155,7 +150,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
-    assert.ok(!exists(".avatar-flair"), "it does not render a flair");
+    assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
 
   test("avatar flair for primary group flair", async function (assert) {
@@ -164,7 +159,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       moderator: false,
       trust_level: 3,
       flair_name: "Band Geeks",
-      flair_url: "fa-times",
+      flair_url: "xmark",
       flair_bg_color: "123456",
       flair_color: "B0B0B0",
       flair_group_id: 41,
@@ -174,13 +169,12 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
-    assert.ok(exists(".avatar-flair"), "it has the tag");
-    assert.ok(exists("svg.d-icon-times"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #123456; color: #B0B0B0; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").exists("has the tag");
+    assert.dom("svg.d-icon-xmark").exists("has the svg icon");
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "rgb(18, 52, 86)",
+      color: "rgb(176, 176, 176)",
+    });
   });
 
   test("user-avatar-flair for user with no flairs", async function (assert) {
@@ -193,6 +187,6 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
-    assert.ok(!exists(".avatar-flair"), "it does not render a flair");
+    assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
 });

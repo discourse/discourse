@@ -1,15 +1,15 @@
-import ClassicComponent from "@ember/component";
+import ClassicComponent, { setComponentTemplate } from "@ember/component";
+import templateOnly from "@ember/component/template-only";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import { bind } from "discourse/lib/decorators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import RenderGlimmer, {
   registerWidgetShim,
 } from "discourse/widgets/render-glimmer";
 import Widget, { deleteFromRegistry } from "discourse/widgets/widget";
-import { bind } from "discourse-common/utils/decorators";
 
 class DemoWidget extends Widget {
   static actionTriggered = false;
@@ -47,6 +47,7 @@ class DemoWidget extends Widget {
       ),
     ];
   }
+
   dummyAction() {}
 
   @bind
@@ -67,6 +68,11 @@ class DemoComponent extends ClassicComponent {
     super.init(...arguments);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    DemoComponent.eventLog.push("willDestroy");
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
     DemoComponent.eventLog.push("didInsertElement");
@@ -80,11 +86,6 @@ class DemoComponent extends ClassicComponent {
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     DemoComponent.eventLog.push("didReceiveAttrs");
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    DemoComponent.eventLog.push("willDestroy");
   }
 }
 
@@ -123,6 +124,9 @@ class ToggleDemoWidget extends Widget {
   }
 }
 
+const SimpleComponent = templateOnly();
+setComponentTemplate(hbs`<div class="component-shim"></div>`, SimpleComponent);
+
 module("Integration | Component | Widget | render-glimmer", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -142,6 +146,11 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
       "div.initial-wrapper-class",
       hbs`{{@setWrapperElementAttrs class=(concat-class "static-extra-class" @data.extraClass) data-some-attr=@data.dataAttrValue}}`
     );
+    registerWidgetShim(
+      "render-glimmer-test-component-shim",
+      "div.initial-wrapper-class",
+      SimpleComponent
+    );
   });
 
   hooks.afterEach(function () {
@@ -150,6 +159,7 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     this.registry.unregister("component:demo-component");
     deleteFromRegistry("render-glimmer-test-shim");
     deleteFromRegistry("render-glimmer-test-wrapper-attrs");
+    deleteFromRegistry("render-glimmer-test-component-shim");
   });
 
   test("argument handling", async function (assert) {
@@ -159,21 +169,20 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
         <MountWidget @widget="demo-widget" @args={{hash arg1="val1" dynamicArg=this.dynamicValue}} />`
     );
 
-    assert.true(exists("div.my-widget"), "widget is rendered");
-    assert.true(exists("div.glimmer-content"), "glimmer content is rendered");
-    assert.strictEqual(
-      query("div.glimmer-content").innerText,
-      "arg1=val1 dynamicArg=",
-      "arguments are passed through"
-    );
+    assert.dom("div.my-widget").exists("widget is rendered");
+    assert.dom("div.glimmer-content").exists("glimmer content is rendered");
+    assert
+      .dom("div.glimmer-content")
+      .hasText("arg1=val1 dynamicArg=", "arguments are passed through");
 
     await fillIn("input.dynamic-value-input", "somedynamicvalue");
     await click(".my-widget button");
-    assert.strictEqual(
-      query("div.glimmer-content").innerText,
-      "arg1=val1 dynamicArg=somedynamicvalue",
-      "changed arguments are applied after rerender"
-    );
+    assert
+      .dom("div.glimmer-content")
+      .hasText(
+        "arg1=val1 dynamicArg=somedynamicvalue",
+        "changed arguments are applied after rerender"
+      );
   });
 
   test("child component lifecycle", async function (assert) {
@@ -191,9 +200,9 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
         {{/unless}}`
     );
 
-    assert.true(exists("div.my-widget"), "widget is rendered");
-    assert.true(exists("div.glimmer-content"), "glimmer content is rendered");
-    assert.true(exists("div.demo-component"), "demo component is rendered");
+    assert.dom("div.my-widget").exists("widget is rendered");
+    assert.dom("div.glimmer-content").exists("glimmer content is rendered");
+    assert.dom("div.demo-component").exists("demo component is rendered");
 
     assert.deepEqual(
       DemoComponent.eventLog,
@@ -230,6 +239,14 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     );
   });
 
+  test("rendering component directly", async function (assert) {
+    await render(hbs`
+      <MountWidget @widget="render-glimmer-test-component-shim" />
+    `);
+
+    assert.dom("div.component-shim").exists();
+  });
+
   test("trigger widget actions from component", async function (assert) {
     assert.false(
       DemoWidget.actionTriggered,
@@ -244,10 +261,9 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
         {{/unless}}`
     );
 
-    assert.true(
-      exists("div.demo-component button"),
-      "component button is rendered"
-    );
+    assert
+      .dom("div.demo-component button")
+      .exists("component button is rendered");
 
     await click("div.demo-component button");
     assert.true(DemoWidget.actionTriggered, "widget event is triggered");
@@ -263,25 +279,20 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
       "widget event has not been triggered yet"
     );
 
-    assert.strictEqual(
-      query(".action-state").innerText,
-      "false",
-      "eventTriggered is false in nested component"
-    );
+    assert
+      .dom(".action-state")
+      .hasText("false", "eventTriggered is false in nested component");
 
-    assert.true(
-      exists("div.demo-component button"),
-      "component button is rendered"
-    );
+    assert
+      .dom("div.demo-component button")
+      .exists("component button is rendered");
 
     await click("div.demo-component button");
     assert.true(DemoWidget.actionTriggered, "widget event is triggered");
 
-    assert.strictEqual(
-      query(".action-state").innerText,
-      "true",
-      "eventTriggered is true in nested component"
-    );
+    assert
+      .dom(".action-state")
+      .hasText("true", "eventTriggered is true in nested component");
   });
 
   test("developer ergonomics", function (assert) {
@@ -310,11 +321,11 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
   test("multiple adjacent components", async function (assert) {
     await render(hbs`<MountWidget @widget="toggle-demo-widget" />`);
-    assert.strictEqual(query("div.glimmer-wrapper").innerText, "One");
+    assert.dom("div.glimmer-wrapper").hasText("One");
     await click(".toggleButton");
-    assert.strictEqual(query("div.glimmer-wrapper").innerText, "Two");
+    assert.dom("div.glimmer-wrapper").hasText("Two");
     await click(".toggleButton");
-    assert.strictEqual(query("div.glimmer-wrapper").innerText, "One");
+    assert.dom("div.glimmer-wrapper").hasText("One");
   });
 
   test("registerWidgetShim can register a fake widget", async function (assert) {

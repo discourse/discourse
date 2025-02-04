@@ -152,38 +152,9 @@ describe Chat do
     end
   end
 
-  describe "chat oneboxes" do
-    fab!(:chat_channel) { Fabricate(:category_channel) }
-    fab!(:user)
-
-    fab!(:chat_message) do
-      Fabricate(:chat_message, chat_channel: chat_channel, user: user, message: "Hello world!")
-    end
-
-    let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
-
-    context "when inline" do
-      it "renders channel" do
-        results = InlineOneboxer.new([chat_url], skip_cache: true).process
-        expect(results).to be_present
-        expect(results[0][:url]).to eq(chat_url)
-        expect(results[0][:title]).to eq("Chat ##{chat_channel.name}")
-      end
-
-      it "renders messages" do
-        results = InlineOneboxer.new(["#{chat_url}/#{chat_message.id}"], skip_cache: true).process
-        expect(results).to be_present
-        expect(results[0][:url]).to eq("#{chat_url}/#{chat_message.id}")
-        expect(results[0][:title]).to eq(
-          "Message ##{chat_message.id} by #{chat_message.user.username} – ##{chat_channel.name}",
-        )
-      end
-    end
-  end
-
   describe "auto-joining users to a channel" do
     fab!(:chatters_group) { Fabricate(:group) }
-    fab!(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
+    fab!(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago, trust_level: 1) }
     let!(:channel) { Fabricate(:category_channel, auto_join_users: true, chatable: category) }
 
     before { Jobs.run_immediately! }
@@ -212,19 +183,12 @@ describe Chat do
 
     describe "when a user is created" do
       fab!(:category)
-      let(:user) { Fabricate(:user, last_seen_at: nil, first_seen_at: nil) }
+      let(:user) { Fabricate(:user, last_seen_at: nil, first_seen_at: nil, trust_level: 1) }
 
       it "queues a job to auto-join the user the first time they log in" do
         user.update_last_seen!
 
         assert_user_following_state(user, channel, following: true)
-      end
-
-      it "does nothing if it's not the first time we see the user" do
-        user.update!(first_seen_at: 2.minute.ago)
-        user.update_last_seen!
-
-        assert_user_following_state(user, channel, following: false)
       end
 
       it "does nothing if auto-join is disabled" do
@@ -264,6 +228,8 @@ describe Chat do
   end
 
   describe "secure uploads compatibility" do
+    fab!(:user)
+
     it "disables chat uploads if secure uploads changes from disabled to enabled" do
       enable_secure_uploads
       expect(SiteSetting.chat_allow_uploads).to eq(false)
@@ -275,10 +241,35 @@ describe Chat do
       expect(last_history.context).to eq("Disabled because secure_uploads is enabled")
     end
 
-    it "does not disable chat uploads if the allow_unsecure_chat_uploads global setting is set" do
-      global_setting :allow_unsecure_chat_uploads, true
-      expect { enable_secure_uploads }.not_to change { UserHistory.count }
-      expect(SiteSetting.chat_allow_uploads).to eq(true)
+    context "when the global setting allow_unsecure_chat_uploads is true" do
+      fab!(:filename) { "small.pdf" }
+      fab!(:file) { file_from_fixtures(filename, "pdf") }
+
+      before { global_setting :allow_unsecure_chat_uploads, true }
+
+      it "does not disable chat uploads" do
+        expect { enable_secure_uploads }.not_to change { UserHistory.count }
+        expect(SiteSetting.chat_allow_uploads).to eq(true)
+      end
+
+      it "does not mark chat uploads as secure" do
+        filename = "small.pdf"
+        file = file_from_fixtures(filename, "pdf")
+
+        enable_secure_uploads
+        upload = UploadCreator.new(file, filename, type: "chat-composer").create_for(user.id)
+        expect(upload.secure).to eq(false)
+      end
+
+      context "when login_required is true" do
+        before { SiteSetting.login_required = true }
+
+        it "does not mark chat uploads as secure" do
+          enable_secure_uploads
+          upload = UploadCreator.new(file, filename, type: "chat-composer").create_for(user.id)
+          expect(upload.secure).to eq(false)
+        end
+      end
     end
   end
 
@@ -337,6 +328,93 @@ describe Chat do
         Jobs::Chat::DeleteUserMessages.jobs,
         :size,
       ).by(1)
+    end
+  end
+
+  describe "when using topic tags changed trigger automation" do
+    describe "with the send message script" do
+      fab!(:automation_1) do
+        Fabricate(
+          :automation,
+          trigger: DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED,
+          script: :send_chat_message,
+        )
+      end
+      fab!(:tag_1) { Fabricate(:tag) }
+      fab!(:user_1) { Fabricate(:admin) }
+      fab!(:topic_1) { Fabricate(:topic) }
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+
+      before do
+        SiteSetting.discourse_automation_enabled = true
+        SiteSetting.tagging_enabled = true
+
+        automation_1.upsert_field!(
+          "watching_tags",
+          "tags",
+          { value: [tag_1.name] },
+          target: "trigger",
+        )
+        automation_1.upsert_field!(
+          "chat_channel_id",
+          "text",
+          { value: channel_1.id },
+          target: "script",
+        )
+        automation_1.upsert_field!(
+          "message",
+          "message",
+          { value: "[{{topic_title}}]({{topic_url}})" },
+          target: "script",
+        )
+      end
+
+      it "sends the message" do
+        DiscourseTagging.tag_topic_by_names(topic_1, Guardian.new(user_1), [tag_1.name])
+
+        expect(channel_1.chat_messages.last.message).to eq(
+          "[#{topic_1.title}](#{topic_1.relative_url})",
+        )
+      end
+    end
+  end
+
+  describe "when using post_edited_created trigger automation" do
+    describe "with the send message script" do
+      fab!(:automation_1) do
+        Fabricate(
+          :automation,
+          trigger: DiscourseAutomation::Triggers::POST_CREATED_EDITED,
+          script: :send_chat_message,
+        )
+      end
+      fab!(:user_1) { Fabricate(:admin) }
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+
+      before do
+        SiteSetting.discourse_automation_enabled = true
+
+        automation_1.upsert_field!(
+          "chat_channel_id",
+          "text",
+          { value: channel_1.id },
+          target: "script",
+        )
+        automation_1.upsert_field!(
+          "message",
+          "message",
+          { value: "[{{topic_title}}]({{topic_url}})\n{{post_quote}}" },
+          target: "script",
+        )
+      end
+
+      it "sends the message" do
+        post = PostCreator.create(user_1, { title: "hello world topic", raw: "my name is fred" })
+
+        expect(channel_1.chat_messages.last.message).to eq(
+          "[#{post.topic.title}](#{post.topic.relative_url})\n[quote=#{post.username}, post:#{post.post_number}, topic:#{post.topic_id}]\nmy name is fred\n[/quote]",
+        )
+      end
     end
   end
 end

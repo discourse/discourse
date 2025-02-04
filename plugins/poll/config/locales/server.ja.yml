@@ -35,6 +35,7 @@ ja:
     default_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ投票に無効なパラメーターがあります。"
     named_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ <strong>%{name}</strong> という名前の投票に無効なパラメーターがあります。"
     requires_at_least_1_valid_option: "少なくとも 1 つの有効なオプションを選択する必要があります。"
+    requires_that_at_least_one_option_is_ranked: "ランク付け選択式投票では、少なくとも 1 つのオプションをランク付けする必要があります。"
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "%{minutes} 分を過ぎると、投票を変更できません。"
       cannot_edit_named_poll_with_votes: "%{minutes} 分を過ぎると、<strong>${name}</strong> という名前の投票を変更することはできません。"

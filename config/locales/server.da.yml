@@ -234,8 +234,6 @@ da:
     failed_to_invite: "Brugeren kan ikke inviteres til dette emne uden et gruppemedlemskab i en af følgende grupper: %{group_names}."
     user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
     muted_topic: "Beklager, denne bruger ønsker tavshed i dette emne."
-    receiver_does_not_allow_pm: "Beklager, denne bruger tillader dig ikke at sende private beskeder til sig."
-    sender_does_not_allow_pm: "Beklager, du tillader ikke denne bruger sender dig private beskeder."
     user_cannot_see_topic: "%{username} kan ikke se emnet."
   backup:
     operation_already_running: "En handling kører i øjeblikket. Kan ikke starte et nyt job lige nu."
@@ -479,6 +477,8 @@ da:
         bio_raw: "Om mig"
       user:
         password: "Adgangskode"
+      user_password:
+        password: "Adgangskode"
     errors:
       models:
         topic:
@@ -511,6 +511,15 @@ da:
             ip_address:
               blocked: "Nye registreringer er ikke tilladt fra din IP adresse."
               max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
+        user_password:
+          attributes:
+            password:
+              common: "er én af de 10000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
+              same_as_username: "er det samme som dit brugernavn. Brug venligst en mere sikker adgangskode."
+              same_as_email: "er det samme som din email. Brug venligst en mere sikker adgangskode."
+              same_as_current: "er det samme som din nuværende adgangskode."
+              same_as_name: "er det samme som dit navn."
+              unique_characters: "har for mange af de samme tegn. Brug venligst en mere sikker adgangskode."
         user_profile:
           attributes:
             featured_topic_id:
@@ -719,11 +728,7 @@ da:
     revoke_failed: "Det lykkedes ikke at tilbagekalde din konto med %{provider_name}."
     connected: "(tilsluttet)"
   activation:
-    action: "Klik her for at aktivere din konto"
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
-    please_continue: "Din nye konto er bekræftet; du bliver nu omdirigeret til forsiden."
-    continue_button: "Fortsæt til %{site_name}"
-    welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator skal manuelt godkende din nye konto før du kan tilgå forummet. Du får en e-mail, når din konto er godkendt!"
     missing_session: "Vi kan ikke se om din konto blev oprettet, venligst tjek at cookies er accepteret."
     activated: "Beklager, denne konto er allerede blevet aktiveret."
@@ -960,7 +965,7 @@ da:
         tl4_reached: "Nået TL4"
       yaxis: "Dag"
     consolidated_page_views:
-      title: "Konsoliderede Sidevisninger"
+      title_legacy: "Konsoliderede Sidevisninger"
       xaxis:
         page_view_crawler: "Crawlere"
         page_view_anon: "Anonyme brugere"
@@ -978,6 +983,9 @@ da:
       yaxis: "Dag"
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
+    site_traffic:
+      yaxis: "Dag"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dag"
@@ -1070,12 +1078,10 @@ da:
       title: "Underret moderatorer"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange moderatorer er blevet underrettet privat af en anmeldelse."
     notify_user_private_messages:
       title: "Giv brugeren besked"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange, brugere har fået privat besked af en anmeldelse."
     top_referrers:
       title: "Top henvisere"
       xaxis: "Bruger"
@@ -1120,6 +1126,9 @@ da:
       xaxis: "Dag"
       yaxis: "Totalt antal Sidevisninger"
       description: "Antal nye sidevisninger fra alle besøgende."
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antal Sidevisninger"
     page_view_logged_in_mobile_reqs:
       title: "Logged in Sidevisninger"
       xaxis: "Dag"
@@ -1263,8 +1272,7 @@ da:
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
     default_locale: "Standardsproget for denne Discourse instans. Du kan erstatte teksten for systemgenererede kategorier og emner på <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Tilpas / Tekst</a>."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
-    set_locale_from_accept_language_header: "indstil grænsefladesprog for anonyme brugere ud fra deres webbrowsers sprog headere"
-    support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre."
+    support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre"
     max_post_length: "Maksimal længde af indlæg i tegn"
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
     min_topic_views_for_delete_confirm: "Minimum antal visninger et emne skal have før en bekræftelse popup vises, når det bliver slettet"
@@ -1331,7 +1339,6 @@ da:
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
     markdown_linkify_tlds: "Liste over top-level domæner, der automatisk behandles som links"
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg ('Synes godt om', anmeldelser, osv.)."
-    must_approve_users: "Personalet skal godkende alle nye brugerkonti, før de får adgang til webstedet."
     invite_code: "Brugeren skal skrive denne kode for at kunne registrere en konto, ignoreret når den er tom (ingen forskel på store og små bogstaver)"
     approve_suspect_users: "Føj mistænkelige brugere til gennemgangskøen. Mistænkelige brugere har indtastet en bio/et websted, men har ingen læseaktivitet."
     persistent_sessions: "Brugere vil forblive logget ind, når webbrowseren er lukket"
@@ -1343,13 +1350,11 @@ da:
     blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
     allowed_internal_hosts: "En liste over interne værter, som discourse sikkert kan gennemsøge til brug for oneboxing og andre formål"
     allowed_onebox_iframes: "En liste over iframe src-domæner som er tilladt via Onebox-integrering. `*` tillader alle standard Onebox moduler."
-    allowed_iframes: "En liste over iframe src-domænepræfikser, som discourse på sikker vis kan tillade i indlæg"
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
     content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
-    post_menu_hidden_items: "Menuen vil automatisk gemme disse elementer i indlægs menuen, med mindre en udvidelse er tilvalgt."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     site_contact_username: "Et gyldigt personale-brugernavn, som alle automatiske meddelelser skal sendes fra. Hvis den er tom, bruges standard systemkontoen."
     send_welcome_message: "Send alle nye brugere en velkomstbesked, med en hurtig start guide."
@@ -1357,12 +1362,9 @@ da:
     send_tl2_promotion_message: "Send nye brugere af tillidsniveau 2 en besked om forfremmelse."
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
-    redirect_users_to_top_page: "Automatisk omdirigere af nye og længere tids fraværende brugere til top siden."
     prioritize_username_in_ux: "Vis brugernavn først på brugersiden, brugerkort og indlæg (når deaktiveret vises navnet først)"
-    enable_rich_text_paste: "Aktivér automatisk HTML til Markdown-konvertering, når du indsætter tekst i editoren. (Eksperimentel)"
     send_old_credential_reminder_days: "Påmind om gamle legitimationsoplysninger efter dage"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
-    allow_index_in_robots_txt: "Angiv i robots.txt, at dette websted må indekseres af websøgemaskiner. I undtagelsestilfælde kan du permanent <a href='%{base_path}/admin/customize/robots'>tilsidesætte robots.txt</a>."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     version_checks: "Ping Discourse Hub for versionopdateringer, og vis meddelelser om ny version på instrumentbrættet <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
@@ -1371,8 +1373,8 @@ da:
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
     min_username_length: "Minimumslængde på brugernavne i tegn. ADVARSEL: Hvis eksisterende brugere eller grupper har kortere navne end dette, vil dit websted gå i stykker!"
     max_username_length: "Maksimallængden på brugernavne i tegn. ADVARSEL: Hvis eksisterende brugere eller grupper har længere navne end dette, vil dit websted gå i stykker!"
-    unicode_usernames: "Tillad, at brugernavne og gruppenavne indeholder Unicode bogstaver og tal."
-    allowed_unicode_username_characters: "Regulært udtryk, der kun tillader nogle Unicode-tegn i brugernavne. ASCII-bogstaver og tal vil altid være tilladt og behøver ikke at blive inkluderet i tilladelseslisten."
+    unicode_usernames: "Tillad, at brugernavne og gruppenavne indeholder Unicode bogstaver og tal"
+    allowed_unicode_username_characters: "Regulært udtryk, der kun tillader nogle Unicode-tegn i brugernavne. ASCII-bogstaver og tal vil altid være tilladt og behøver ikke at blive inkluderet i tilladelseslisten"
     reserved_usernames: "Brugernavne, hvor tilmelding ikke er tilladt. Jokertegn * kan bruges til at matche ethvert tegn nul eller flere gange."
     password_unique_characters: "Minimum antal unikke tegn, som en adgangskode skal have."
     block_common_passwords: "Tillad ikke adgangskoder som findes i de 10.000 mest benyttede adgangskoder."
@@ -1475,7 +1477,6 @@ da:
     title_fancy_entities: "Konverter almindelige ASCII-tegn til smarte HTML-entiteter i emnetitler, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimumslængden af en titel før den vil blive kontrolleret for lignende emner."
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
-    default_dark_mode_color_scheme_id: "Farveskemaet der bruges ved mørk tilstand."
     dark_mode_none: "Ingen"
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."
@@ -1504,7 +1505,6 @@ da:
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     reset_bounce_score_after_days: "Nulstil automatisk bounce score efter X dage."
     blocked_attachment_filenames: "Liste over nøgleord, der bruges til at blokere vedhæftede filer baseret på filavnet."
-    forwarded_emails_behaviour: "Sådan behandles en videresendt e-mail til Discourse"
     always_show_trimmed_content: "Vis altid beskåret del af indgående e-mails. ADVARSEL: afslører muligvis e-mail-adresser."
     trim_incoming_emails: "Beskær en del af de indgående e-mails, der ikke er relevante."
     delete_rejected_email_after_days: "Slet afviste e-mails, der er ældre end (n) dage."
@@ -1545,13 +1545,11 @@ da:
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
-    full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
     embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
-    delete_merged_stub_topics_after_days: "Antal dage, der skal ventes, før automatisk sletning af fuldt sammenflettede stub emner. Sæt til 0 for aldrig at slette stub emner."
     enable_emoji_shortcuts: "Almindelig smiley-tekst såsom :) :p :( vil blive konverteret til humørikoner"
     emoji_autocomplete_min_chars: "Minimum antal tegn krævet for at aktivere autofuldførelses humørikoner-popup"
     enable_inline_emoji_translation: "Aktiverer oversættelse for inline humørikoner (uden mellemrum eller tegnsætning før)"
@@ -1615,18 +1613,6 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       invalid_hex_value: "Farveværdier skal være 6-cifrede hexadecimale koder."
       empty_selectable_avatars: "Du skal først overføre mindst to valgbare avatarer før du aktiverer denne indstilling."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inaktiv"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inaktiv"
-      - ""
-      navigation_menu:
-      - "sidebjælke"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.eksempel.dk"
@@ -2891,8 +2877,6 @@ da:
     regular:
       name: Regulær
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> omklassificering, omdøbning, fulgte links, wiki, flere 'Synes godt om'
-      long_description: |
-        Dette emblem tildeles, når du når tillidsniveau 3. Tak, fordi du er en fast del af vores fællesskab over en periode på flere måneder. Du er nu en af de mest aktive læsere og en pålidelig bidragyder, der gør vores samfund godt. Du kan nu omklassificere og omdøbe emner, drage fordel af mere kraftfulde anmeldelser, få adgang til et privat loungeområde, og du får også mange flere 'Synes godt om' om dagen.
     leader:
       name: Leder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> global redigering, pin, luk, arkiv, split og flet, flere 'Synes godt om'
@@ -3187,15 +3171,7 @@ da:
           homepage_style:
             choices:
               latest:
-                label: "Seneste emner"
-              categories_only:
-                label: "Kun Kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med Fremhævede Emner"
-              categories_and_latest_topics:
-                label: "Kategorier og Seneste Emner"
-              categories_and_top_topics:
-                label: "Kategorier og top emner"
+                label: "Seneste"
       corporate:
         fields:
           governing_law:

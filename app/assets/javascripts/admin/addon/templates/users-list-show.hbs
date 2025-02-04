@@ -1,40 +1,73 @@
+<DPageSubheader @titleLabel={{this.title}}>
+  <:actions as |actions|>
+    {{#if this.canCheckEmails}}
+      {{#if this.showEmails}}
+        <actions.Default
+          @action={{this.toggleEmailVisibility}}
+          @label="admin.users.hide_emails"
+          class="admin-users__subheader-hide-emails"
+        />
+      {{else}}
+        <actions.Default
+          @action={{this.toggleEmailVisibility}}
+          @label="admin.users.show_emails"
+          class="admin-users__subheader-show-emails"
+        />
+      {{/if}}
+    {{/if}}
+  </:actions>
+</DPageSubheader>
+
 <PluginOutlet @name="admin-users-list-show-before" />
 
-<div class="admin-title">
-  <h2>{{this.title}}</h2>
-  {{#if this.canCheckEmails}}
-    {{#if this.showEmails}}
-      <DButton
-        @action={{this.toggleEmailVisibility}}
-        @label="admin.users.hide_emails"
-        class="hide-emails btn-default"
-      />
-    {{else}}
-      <DButton
-        @action={{this.toggleEmailVisibility}}
-        @label="admin.users.show_emails"
-        class="show-emails btn-default"
-      />
-    {{/if}}
-  {{/if}}
-</div>
+<div class="d-admin-filter admin-users-list__controls">
+  <div class="admin-filter__input-container admin-users-list__search">
+    <input
+      class="admin-filter__input"
+      type="text"
+      dir="auto"
+      placeholder={{this.searchHint}}
+      title={{this.searchHint}}
+      {{on "input" this.onListFilterChange}}
+    />
+  </div>
+  {{#if this.displayBulkActions}}
+    <div class="bulk-actions-dropdown">
+      <DMenu @autofocus={{true}} @identifier="bulk-select-admin-users-dropdown">
+        <:trigger>
+          <span class="d-button-label">
+            {{i18n "admin.users.bulk_actions.title"}}
+          </span>
+          {{dIcon "angle-down"}}
+        </:trigger>
 
-<div class="username controls">
-  <TextField
-    @value={{this.listFilter}}
-    @placeholder={{this.searchHint}}
-    @title={{this.searchHint}}
-  />
+        <:content>
+          <DropdownMenu as |dropdown|>
+            <dropdown.item>
+              <DButton
+                @translatedLabel={{i18n
+                  "admin.users.bulk_actions.delete.label"
+                }}
+                @icon="trash-can"
+                @action={{this.openBulkDeleteConfirmation}}
+                class="bulk-delete btn-danger"
+              />
+            </dropdown.item>
+          </DropdownMenu>
+        </:content>
+      </DMenu>
+    </div>
+  {{/if}}
 </div>
 <LoadMore
   @selector=".directory-table .directory-table__cell"
   @action={{action "loadMore"}}
   class="users-list-container"
 >
-  {{#if this.model}}
+  {{#if this.users}}
     <ResponsiveTable
-      @className="users-list"
-      @aria-label={{this.title}}
+      @className={{concat-class "users-list" this.query}}
+      @ariaLabel={{this.title}}
       @style={{html-safe
         (concat
           "grid-template-columns: minmax(min-content, 2fr) repeat("
@@ -42,18 +75,26 @@
           ", minmax(min-content, 1fr))"
         )
       }}
-      @updates={{this.model.email}}
     >
       <:header>
+        <div class="directory-table__column-header-wrapper">
+          <DButton
+            class="btn-flat bulk-select"
+            @icon="list-check"
+            @action={{this.toggleBulkSelect}}
+          />
+          <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
+            @field="username"
+            @labelKey="username"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @automatic={{true}}
+            class="directory-table__column-header--username"
+          />
+        </div>
         <TableHeaderToggle
-          @field="username"
-          @labelKey="username"
-          @order={{this.order}}
-          @asc={{this.asc}}
-          @automatic={{true}}
-          class="directory-table__column-header--username"
-        />
-        <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="email"
           @labelKey="email"
           @order={{this.order}}
@@ -66,6 +107,7 @@
           }}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="last_emailed"
           @labelKey="admin.users.last_emailed"
           @order={{this.order}}
@@ -73,20 +115,25 @@
           @automatic={{true}}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="seen"
           @labelKey="last_seen"
           @order={{this.order}}
           @asc={{this.asc}}
           @automatic={{true}}
         />
+        {{#unless this.showSilenceReason}}
+          <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
+            @field="topics_viewed"
+            @labelKey="admin.user.topics_entered"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @automatic={{true}}
+          />
+        {{/unless}}
         <TableHeaderToggle
-          @field="topics_viewed"
-          @labelKey="admin.user.topics_entered"
-          @order={{this.order}}
-          @asc={{this.asc}}
-          @automatic={{true}}
-        />
-        <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="posts_read"
           @labelKey="admin.user.posts_read_count"
           @order={{this.order}}
@@ -94,6 +141,7 @@
           @automatic={{true}}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="read_time"
           @labelKey="admin.user.time_read"
           @order={{this.order}}
@@ -101,12 +149,24 @@
           @automatic={{true}}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="created"
           @labelKey="created"
           @order={{this.order}}
           @asc={{this.asc}}
           @automatic={{true}}
         />
+        {{#if this.showSilenceReason}}
+          <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
+            @field="silence_reason"
+            @labelKey="admin.users.silence_reason"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @automatic={{true}}
+            class="directory-table__column-header--silence-reason"
+          />
+        {{/if}}
         <PluginOutlet
           @name="admin-users-list-thead-after"
           @outletArgs={{hash order=this.order asc=this.asc}}
@@ -122,14 +182,50 @@
       </:header>
 
       <:body>
-        {{#each this.model as |user|}}
+        {{#each this.users as |user|}}
           <div
             class="user
               {{user.selected}}
               {{unless user.active 'not-activated'}}
               directory-table__row"
+            data-user-id={{user.id}}
           >
             <div class="directory-table__cell username">
+              {{#if this.bulkSelect}}
+                {{#if user.can_be_deleted}}
+                  <input
+                    type="checkbox"
+                    class="directory-table__cell-bulk-select"
+                    checked={{eq (get this.bulkSelectedUsersMap user.id) 1}}
+                    data-user-id={{user.id}}
+                    {{on "click" (fn this.bulkSelectItemToggle user.id)}}
+                  />
+                {{else}}
+                  <DTooltip
+                    @identifier="bulk-delete-unavailable-reason"
+                    @placement="bottom-start"
+                  >
+                    <:trigger>
+                      <input
+                        type="checkbox"
+                        class="directory-table__cell-bulk-select"
+                        disabled={{true}}
+                      />
+                    </:trigger>
+                    <:content>
+                      {{#if user.admin}}
+                        {{i18n
+                          "admin.users.bulk_actions.admin_cant_be_deleted"
+                        }}
+                      {{else}}
+                        {{i18n
+                          "admin.users.bulk_actions.too_many_or_old_posts"
+                        }}
+                      {{/if}}
+                    </:content>
+                  </DTooltip>
+                {{/if}}
+              {{/if}}
               <a
                 class="avatar"
                 href={{user.path}}
@@ -187,14 +283,17 @@
                 {{format-duration user.last_seen_age}}
               </span>
             </div>
-            <div class="directory-table__cell topics-entered">
-              <span class="directory-table__label">
-                <span>{{i18n "admin.user.topics_entered"}}</span>
-              </span>
-              <span class="directory-table__value">
-                {{number user.topics_entered}}
-              </span>
-            </div>
+
+            {{#unless this.showSilenceReason}}
+              <div class="directory-table__cell topics-entered">
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.user.topics_entered"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{number user.topics_entered}}
+                </span>
+              </div>
+            {{/unless}}
             <div class="directory-table__cell posts-read">
               <span class="directory-table__label">
                 <span>{{i18n "admin.user.posts_read_count"}}</span>
@@ -222,6 +321,20 @@
                 {{format-duration user.created_at_age}}
               </span>
             </div>
+
+            {{#if this.showSilenceReason}}
+              <div
+                class="directory-table__cell silence_reason"
+                title={{user.silence_reason}}
+              >
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.users.silence_reason"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{user.silence_reason}}
+                </span>
+              </div>
+            {{/if}}
 
             <PluginOutlet
               @name="admin-users-list-td-after"
@@ -256,10 +369,10 @@
               </span>
               <span class="directory-table__value">
                 {{#if user.admin}}
-                  {{d-icon "shield-alt" title="admin.title"}}
+                  {{d-icon "shield-halved" title="admin.title"}}
                 {{/if}}
                 {{#if user.moderator}}
-                  {{d-icon "shield-alt" title="admin.moderator"}}
+                  {{d-icon "shield-halved" title="admin.moderator"}}
                 {{/if}}
                 {{#if user.second_factor_enabled}}
                   {{d-icon "lock" title="admin.user.second_factor_enabled"}}
@@ -275,9 +388,8 @@
         {{/each}}
       </:body>
     </ResponsiveTable>
-
-    <ConditionalLoadingSpinner @condition={{this.refreshing}} />
-  {{else}}
+  {{else if (not this.refreshing)}}
     <p>{{i18n "search.no_results"}}</p>
   {{/if}}
+  <ConditionalLoadingSpinner @condition={{this.refreshing}} />
 </LoadMore>

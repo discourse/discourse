@@ -1,9 +1,9 @@
-/* eslint-disable simple-import-sort/imports */
+import "./setup-deprecation-workflow";
 import "decorator-transforms/globals";
 import "./loader-shims";
+import "./discourse-common-loader-shims";
 import "./global-compat";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
-/* eslint-enable simple-import-sort/imports */
 
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
@@ -12,9 +12,9 @@ import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
+import { isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { isTesting } from "discourse-common/config/environment";
-import { buildResolver } from "discourse-common/resolver";
+import { buildResolver } from "discourse/resolver";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -57,8 +57,7 @@ class Discourse extends Application {
 
   ready() {
     performance.mark("discourse-ready");
-    const event = new CustomEvent("discourse-ready");
-    document.dispatchEvent(event);
+    document.querySelector("#d-splash")?.remove();
   }
 }
 

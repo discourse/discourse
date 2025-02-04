@@ -236,7 +236,7 @@ RSpec.describe TopicUser do
 
       it "should update the record for repeat visit" do
         today = Time.zone.now
-        freeze_time Time.zone.now
+        freeze_time today
 
         # ensure data model is correct for the test
         # logging an update to a row that does not exist

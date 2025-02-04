@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "category_list"
-
 RSpec.describe CategoryList do
   before do
     # we need automatic updating here cause we are testing this

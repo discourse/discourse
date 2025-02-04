@@ -1,3 +1,4 @@
+import { hasInternalComponentManager } from "@glimmer/manager";
 import { tracked } from "@glimmer/tracking";
 import { setComponentTemplate } from "@ember/component";
 import templateOnly from "@ember/component/template-only";
@@ -94,8 +95,8 @@ export default class RenderGlimmer {
    */
   constructor(widget, renderInto, template, data) {
     assert(
-      "`template` should be a template compiled via `ember-cli-htmlbars`",
-      template.name === "factory"
+      "`template` should be a template compiled via `ember-cli-htmlbars`, or a component",
+      template.name === "factory" || hasInternalComponentManager(template)
     );
     this.renderInto = renderInto;
     if (widget) {
@@ -148,9 +149,14 @@ export default class RenderGlimmer {
   connectComponent() {
     const { element, template } = this;
 
-    const component = templateOnly();
-    component.name = "Widgets/RenderGlimmer";
-    setComponentTemplate(template, component);
+    let component;
+    if (hasInternalComponentManager(template)) {
+      component = template;
+    } else {
+      component = templateOnly();
+      component.name = "Widgets/RenderGlimmer";
+      setComponentTemplate(template, component);
+    }
 
     this._componentInfo = new ComponentInfo({
       element,

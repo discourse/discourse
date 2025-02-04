@@ -1,0 +1,24 @@
+diff --git a/pkg/standalone/content_tag.js b/pkg/standalone/content_tag.js
+index ffac649b59d3c00ee025807971082cfea4e1cb2c..511c7ccf57b16e2d95dcd94da737d79ef170387f 100644
+--- a/pkg/standalone/content_tag.js
++++ b/pkg/standalone/content_tag.js
+@@ -1,5 +1,6 @@
+ let wasm;
+ 
++const { TextDecoder, TextEncoder } = require('util');
+ const cachedTextDecoder = (typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8', { ignoreBOM: true, fatal: true }) : { decode: () => { throw Error('TextDecoder not available') } } );
+ 
+ if (typeof TextDecoder !== 'undefined') { cachedTextDecoder.decode(); };
+diff --git a/pkg/standalone.js b/pkg/standalone.js
+index cb50046539df05b41dcc842ffb98e354236f8d26..10eea2962ffd804905d85057bb25d5b30b4d2e11 100644
+--- a/pkg/standalone.js
++++ b/pkg/standalone.js
+@@ -1,5 +1,6 @@
+-import init from "./standalone/content_tag.js";
++import { initSync } from "./standalone/content_tag.js";
++import module from "./standalone/content_tag_bg.wasm";
+ export { Preprocessor  } from "./standalone/content_tag.js";
+ 
+-await init();
++initSync(module);
+ 

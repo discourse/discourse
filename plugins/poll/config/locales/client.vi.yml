@@ -11,6 +11,8 @@ vi:
         other: "người bình chọn"
       total_votes:
         other: "tổng số bình chọn"
+      votes:
+        other: "%{count} phiếu bầu"
       average_rating: "Trung bình: <strong>%{average}</strong>."
       public:
         title: "Bình chọn <strong>công khai</strong>"

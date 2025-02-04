@@ -24,7 +24,7 @@
 {{#if this.canDeleteSelected}}
   <DButton
     @action={{this.deleteSelected}}
-    @icon="far-trash-alt"
+    @icon="trash-can"
     @label="topic.multi_select.delete"
     class="btn-danger"
   />
@@ -33,7 +33,7 @@
 {{#if this.canMergeTopic}}
   <DButton
     @action={{route-action "moveToTopic"}}
-    @icon="sign-out-alt"
+    @icon="right-from-bracket"
     @label="topic.move_to.action"
     class="btn-primary move-to-topic"
   />
@@ -51,7 +51,7 @@
 {{#if this.canMergePosts}}
   <DButton
     @action={{this.mergePosts}}
-    @icon="arrows-alt-v"
+    @icon="up-down"
     @label="topic.merge_posts.action"
     class="btn-primary"
   />

@@ -1,10 +1,7 @@
-import ViewingActionType from "discourse/mixins/viewing-action-type";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-export default class UserActivityStream extends DiscourseRoute.extend(
-  ViewingActionType
-) {
+export default class UserActivityStream extends DiscourseRoute {
   templateName = "user/stream";
 
   queryParams = {
@@ -30,11 +27,11 @@ export default class UserActivityStream extends DiscourseRoute.extend(
 
   setupController() {
     super.setupController(...arguments);
-    this.viewingActionType(this.userActionType);
+    this.controllerFor("user-activity").userActionType = this.userActionType;
   }
 
   emptyState() {
-    const title = I18n.t("user_activity.no_activity_title");
+    const title = i18n("user_activity.no_activity_title");
     const body = "";
     return { title, body };
   }

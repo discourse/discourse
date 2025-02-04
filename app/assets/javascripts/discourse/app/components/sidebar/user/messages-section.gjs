@@ -4,10 +4,10 @@ import { array, fn, hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import routeAction from "discourse/helpers/route-action";
+import { bind } from "discourse/lib/decorators";
 import GroupMessageSectionLink from "discourse/lib/sidebar/user/messages-section/group-message-section-link";
 import PersonalMessageSectionLink from "discourse/lib/sidebar/user/messages-section/personal-message-section-link";
-import i18n from "discourse-common/helpers/i18n";
-import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 import Section from "../section";
 import SectionLink from "../section-link";
 

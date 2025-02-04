@@ -1,6 +1,5 @@
-import Mixin from "@ember/object/mixin";
 import { isNone } from "@ember/utils";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 
 let _appendContentCallbacks = {};
 function appendContent(pluginApiIdentifiers, contentFunction) {
@@ -97,9 +96,3 @@ export function clearCallbacks() {
   _onChangeCallbacks = {};
   _replaceContentCallbacks = {};
 }
-
-const EMPTY_ARRAY = Object.freeze([]);
-export default Mixin.create({
-  concatenatedProperties: ["pluginApiIdentifiers"],
-  pluginApiIdentifiers: EMPTY_ARRAY,
-});

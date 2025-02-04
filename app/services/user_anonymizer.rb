@@ -29,7 +29,7 @@ class UserAnonymizer
 
       @user.reload
       @user.password = SecureRandom.hex
-      @user.name = SiteSetting.full_name_required ? @user.username : nil
+      @user.name = SiteSetting.full_name_requirement == "required_at_signup" ? @user.username : nil
       @user.date_of_birth = nil
       @user.title = nil
       @user.uploaded_avatar_id = nil

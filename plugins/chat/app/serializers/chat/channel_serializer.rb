@@ -11,6 +11,7 @@ module Chat
                :chatable_url,
                :description,
                :title,
+               :unicode_title,
                :slug,
                :status,
                :archive_failed,
@@ -21,7 +22,8 @@ module Chat
                :memberships_count,
                :current_user_membership,
                :meta,
-               :threading_enabled
+               :threading_enabled,
+               :icon_upload_url
 
     has_one :last_message, serializer: Chat::LastMessageSerializer, embed: :objects
 
@@ -30,6 +32,10 @@ module Chat
 
       @opts = opts
       @current_user_membership = opts[:membership]
+    end
+
+    def icon_upload_url
+      object.icon_upload&.url
     end
 
     def include_description?
@@ -46,6 +52,10 @@ module Chat
 
     def title
       object.name || object.title(scope.user)
+    end
+
+    def unicode_title
+      Emoji.gsub_emoji_to_unicode(title)
     end
 
     def chatable

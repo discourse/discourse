@@ -51,6 +51,10 @@ class TopicsController < ApplicationController
   end
 
   def show
+    if params[:id].is_a?(Array) || params[:id].is_a?(ActionController::Parameters)
+      raise Discourse::InvalidParameters.new("Show only accepts a single ID")
+    end
+
     flash["referer"] ||= request.referer[0..255] if request.referer
 
     # TODO: We'd like to migrate the wordpress feed to another url. This keeps up backwards
@@ -121,7 +125,7 @@ class TopicsController < ApplicationController
 
       deleted =
         guardian.can_see_topic?(ex.obj, false) ||
-          (!guardian.can_see_topic?(ex.obj) && ex.obj&.access_topic_via_group && ex.obj&.deleted_at)
+          (!guardian.can_see_topic?(ex.obj) && ex.obj&.access_topic_via_group && ex.obj.deleted_at)
 
       if SiteSetting.detailed_404
         if deleted
@@ -355,7 +359,18 @@ class TopicsController < ApplicationController
 
   def update
     topic = Topic.find_by(id: params[:topic_id])
+
     guardian.ensure_can_edit!(topic)
+
+    original_title = params[:original_title]
+    if original_title.present? && original_title != topic.title
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
+
+    original_tags = params[:original_tags]
+    if original_tags.present? && original_tags.sort != topic.tags.pluck(:name).sort
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
 
     if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
       if topic.shared_draft
@@ -753,7 +768,13 @@ class TopicsController < ApplicationController
 
     if topic.private_message?
       guardian.ensure_can_invite_group_to_private_message!(group, topic)
-      topic.invite_group(current_user, group)
+      should_notify =
+        if params[:should_notify].blank?
+          true
+        else
+          params[:should_notify].to_s == "true"
+        end
+      topic.invite_group(current_user, group, should_notify: should_notify)
       render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: "group")
     else
       render json: failed_json, status: 422
@@ -836,6 +857,7 @@ class TopicsController < ApplicationController
     params.permit(:participants)
     params.permit(:chronological_order)
     params.permit(:archetype)
+    params.permit(:freeze_original)
 
     raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
 
@@ -848,6 +870,7 @@ class TopicsController < ApplicationController
     args = {}
     args[:destination_topic_id] = destination_topic_id.to_i
     args[:chronological_order] = params[:chronological_order] == "true"
+    args[:freeze_original] = params[:freeze_original] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]
@@ -855,8 +878,11 @@ class TopicsController < ApplicationController
         params[:archetype] == "private_message"
     end
 
-    destination_topic = topic.move_posts(current_user, topic.posts.pluck(:id), args)
-    render_topic_changes(destination_topic)
+    acting_user = current_user
+    hijack(info: "merging topic #{topic_id.inspect} into #{destination_topic_id.inspect}") do
+      destination_topic = topic.move_posts(acting_user, topic.posts.pluck(:id), args)
+      render_topic_changes(destination_topic)
+    end
   end
 
   def move_posts
@@ -867,8 +893,7 @@ class TopicsController < ApplicationController
     params.permit(:participants)
     params.permit(:chronological_order)
     params.permit(:archetype)
-
-    raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
+    params.permit(:freeze_original)
 
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
@@ -889,10 +914,12 @@ class TopicsController < ApplicationController
       end
     end
 
-    destination_topic = move_posts_to_destination(topic)
-    render_topic_changes(destination_topic)
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
-    render_json_error(ex)
+    hijack do
+      destination_topic = move_posts_to_destination(topic)
+      render_topic_changes(destination_topic)
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
+      render_json_error(ex)
+    end
   end
 
   def change_post_owners
@@ -985,7 +1012,7 @@ class TopicsController < ApplicationController
     rescue Discourse::InvalidAccess => ex
       deleted =
         guardian.can_see_topic?(ex.obj, false) ||
-          (!guardian.can_see_topic?(ex.obj) && ex.obj&.access_topic_via_group && ex.obj&.deleted_at)
+          (!guardian.can_see_topic?(ex.obj) && ex.obj&.access_topic_via_group && ex.obj.deleted_at)
 
       raise Discourse::NotFound.new(
               nil,
@@ -1305,6 +1332,7 @@ class TopicsController < ApplicationController
     Scheduler::Defer.later "Topic View" do
       topic = Topic.find_by(id: topic_id)
       next if topic.blank?
+      next if topic.shared_draft?
 
       # We need to make sure that we aren't allowing recording
       # random topic views against topics the user cannot see.
@@ -1332,15 +1360,18 @@ class TopicsController < ApplicationController
       return
     end
 
+    if params[:replies_to_post_number] || params[:filter_upwards_post_id] ||
+         params[:filter_top_level_replies] || @topic_view.next_page.present?
+      @topic_view.include_suggested = false
+      @topic_view.include_related = false
+    end
+
     topic_view_serializer =
       TopicViewSerializer.new(
         @topic_view,
         scope: guardian,
         root: false,
         include_raw: !!params[:include_raw],
-        exclude_suggested_and_related:
-          !!params[:replies_to_post_number] || !!params[:filter_upwards_post_id] ||
-            !!params[:filter_top_level_replies],
       )
 
     respond_to do |format|
@@ -1373,6 +1404,7 @@ class TopicsController < ApplicationController
     ].present?
     args[:tags] = params[:tags] if params[:tags].present?
     args[:chronological_order] = params[:chronological_order] == "true"
+    args[:freeze_original] = true if params[:freeze_original] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]

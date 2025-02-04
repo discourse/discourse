@@ -7,11 +7,10 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import categoryBadge from "discourse/helpers/category-badge";
+import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
 import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
@@ -23,9 +22,9 @@ import ChatRetentionReminderText from "discourse/plugins/chat/discourse/componen
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
 
 const NOTIFICATION_LEVELS = [
-  { name: I18n.t("chat.notification_levels.never"), value: "never" },
-  { name: I18n.t("chat.notification_levels.mention"), value: "mention" },
-  { name: I18n.t("chat.notification_levels.always"), value: "always" },
+  { name: i18n("chat.notification_levels.never"), value: "never" },
+  { name: i18n("chat.notification_levels.mention"), value: "mention" },
+  { name: i18n("chat.notification_levels.always"), value: "always" },
 ];
 
 export default class ChatRouteChannelInfoSettings extends Component {
@@ -42,32 +41,25 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
   notificationLevels = NOTIFICATION_LEVELS;
 
-  settingsSectionTitle = I18n.t("chat.settings.settings_title");
-  channelInfoSectionTitle = I18n.t("chat.settings.info_title");
-  categoryLabel = I18n.t("chat.settings.category_label");
-  historyLabel = I18n.t("chat.settings.history_label");
-  adminSectionTitle = I18n.t("chat.settings.admin_title");
-  membersLabel = I18n.t("chat.channel_info.tabs.members");
-  descriptionSectionTitle = I18n.t("chat.about_view.description");
-  titleSectionTitle = I18n.t("chat.about_view.title");
-  descriptionPlaceholder = I18n.t(
+  settingsSectionTitle = i18n("chat.settings.settings_title");
+  channelInfoSectionTitle = i18n("chat.settings.info_title");
+  categoryLabel = i18n("chat.settings.category_label");
+  historyLabel = i18n("chat.settings.history_label");
+  adminSectionTitle = i18n("chat.settings.admin_title");
+  membersLabel = i18n("chat.channel_info.tabs.members");
+  descriptionSectionTitle = i18n("chat.about_view.description");
+  titleSectionTitle = i18n("chat.about_view.title");
+  descriptionPlaceholder = i18n(
     "chat.channel_edit_description_modal.description"
   );
-  toggleThreadingLabel = I18n.t("chat.settings.channel_threading_label");
-  toggleThreadingDescription = I18n.t(
+  toggleThreadingLabel = i18n("chat.settings.channel_threading_label");
+  toggleThreadingDescription = i18n(
     "chat.settings.channel_threading_description"
   );
-  muteSectionLabel = I18n.t("chat.settings.mute");
-  channelWideMentionsLabel = I18n.t(
-    "chat.settings.channel_wide_mentions_label"
-  );
-  autoJoinLabel = I18n.t("chat.settings.auto_join_users_label");
-  desktopNotificationsLevelLabel = I18n.t(
-    "chat.settings.desktop_notification_level"
-  );
-  mobileNotificationsLevelLabel = I18n.t(
-    "chat.settings.mobile_notification_level"
-  );
+  muteSectionLabel = i18n("chat.settings.mute");
+  channelWideMentionsLabel = i18n("chat.settings.channel_wide_mentions_label");
+  autoJoinLabel = i18n("chat.settings.auto_join_users_label");
+  notificationsLevelLabel = i18n("chat.settings.notification_level");
 
   get canEditChannel() {
     if (
@@ -103,12 +95,16 @@ export default class ChatRouteChannelInfoSettings extends Component {
     return this.args.channel.isCategoryChannel && this.args.channel.isOpen;
   }
 
-  get toggleThreadingAvailable() {
+  get toggleThreadingCategoryChannel() {
     return this.args.channel.isCategoryChannel && this.args.channel.isOpen;
   }
 
+  get toggleThreadingDirectMessage() {
+    return this.args.channel.isDirectMessageChannel && this.args.channel.isOpen;
+  }
+
   get channelWideMentionsDescription() {
-    return I18n.t("chat.settings.channel_wide_mentions_description", {
+    return i18n("chat.settings.channel_wide_mentions_description", {
       channel: this.args.channel.title,
     });
   }
@@ -121,11 +117,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
     return this.args.channel.isCategoryChannel;
   }
 
-  get shouldRenderDesktopNotificationsLevelSection() {
-    return !this.isChannelMuted;
-  }
-
-  get shouldRenderMobileNotificationsLevelSection() {
+  get shouldRenderNotificationsLevelSection() {
     return !this.isChannelMuted;
   }
 
@@ -206,7 +198,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
     }
 
     return this.dialog.confirm({
-      message: I18n.t("chat.settings.auto_join_users_warning", {
+      message: i18n("chat.settings.auto_join_users_warning", {
         category: this.args.channel.chatable.name,
       }),
       didConfirm: async () => {
@@ -251,7 +243,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
       this.args.channel.currentUserMembership[frontendKey] =
         result.membership[backendKey];
-      this.toasts.success({ data: { message: I18n.t("saved") } });
+      this.toasts.success({ data: { message: i18n("saved") } });
     } catch (error) {
       popupAjaxError(error);
     }
@@ -263,7 +255,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
       const result = await this.chatApi.updateChannel(channel.id, {
         [property]: value,
       });
-      this.toasts.success({ data: { message: I18n.t("saved") } });
+      this.toasts.success({ data: { message: i18n("saved") } });
       return result;
     } catch (error) {
       popupAjaxError(error);
@@ -412,39 +404,43 @@ export default class ChatRouteChannelInfoSettings extends Component {
                 </:action>
               </section.row>
 
-              {{#if this.shouldRenderDesktopNotificationsLevelSection}}
-                <section.row @label={{this.desktopNotificationsLevelLabel}}>
+              {{#if this.shouldRenderNotificationsLevelSection}}
+                <section.row @label={{this.notificationsLevelLabel}}>
                   <:action>
                     <ComboBox
                       @content={{this.notificationLevels}}
-                      @value={{@channel.currentUserMembership.desktopNotificationLevel}}
+                      @value={{@channel.currentUserMembership.notificationLevel}}
                       @valueProperty="value"
                       @onChange={{fn
                         this.saveNotificationSettings
-                        "desktopNotificationLevel"
-                        "desktop_notification_level"
+                        "notificationLevel"
+                        "notification_level"
                       }}
-                      class="c-channel-settings__selector c-channel-settings__desktop-notifications-selector"
+                      class="c-channel-settings__selector c-channel-settings__notifications-selector"
                     />
                   </:action>
                 </section.row>
               {{/if}}
 
-              {{#if this.shouldRenderMobileNotificationsLevelSection}}
-                <section.row @label={{this.mobileNotificationsLevelLabel}}>
+              {{#if this.toggleThreadingDirectMessage}}
+                <section.row @label={{this.toggleThreadingLabel}}>
                   <:action>
-                    <ComboBox
-                      @content={{this.notificationLevels}}
-                      @value={{@channel.currentUserMembership.mobileNotificationLevel}}
-                      @valueProperty="value"
-                      @onChange={{fn
-                        this.saveNotificationSettings
-                        "mobileNotificationLevel"
-                        "mobile_notification_level"
+                    <DToggleSwitch
+                      @state={{@channel.threadingEnabled}}
+                      class="c-channel-settings__threading-switch"
+                      {{on
+                        "click"
+                        (fn
+                          this.onToggleThreadingEnabled
+                          @channel.threadingEnabled
+                        )
                       }}
-                      class="c-channel-settings__selector c-channel-settings__mobile-notifications-selector"
                     />
                   </:action>
+
+                  <:description>
+                    {{this.toggleThreadingDescription}}
+                  </:description>
                 </section.row>
               {{/if}}
             </form.section>
@@ -509,7 +505,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                 </section.row>
               {{/if}}
 
-              {{#if this.toggleThreadingAvailable}}
+              {{#if this.toggleThreadingCategoryChannel}}
                 <section.row @label={{this.toggleThreadingLabel}}>
                   <:action>
                     <DToggleSwitch
@@ -538,7 +534,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                       <DButton
                         @action={{this.onArchiveChannel}}
                         @label="chat.channel_settings.archive_channel"
-                        @icon="archive"
+                        @icon="box-archive"
                         class="archive-btn chat-form__btn btn-transparent"
                       />
                     </:action>
@@ -570,7 +566,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                     <DButton
                       @action={{this.onDeleteChannel}}
                       @label="chat.channel_settings.delete_channel"
-                      @icon="trash-alt"
+                      @icon="trash-can"
                       class="delete-btn chat-form__btn btn-transparent"
                     />
                   </:action>
@@ -583,7 +579,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
           <form.section class="--leave-channel" as |section|>
             {{#if @channel.chatable.group}}
               <div class="c-channel-settings__leave-info">
-                {{icon "exclamation-triangle"}}
+                {{icon "triangle-exclamation"}}
                 {{i18n "chat.channel_settings.leave_groupchat_info"}}
               </div>
             {{/if}}
@@ -595,8 +591,8 @@ export default class ChatRouteChannelInfoSettings extends Component {
                   @options={{hash
                     joinClass="btn-primary"
                     leaveClass="btn-danger"
-                    joinIcon="sign-in-alt"
-                    leaveIcon="sign-out-alt"
+                    joinIcon="right-to-bracket"
+                    leaveIcon="right-from-bracket"
                   }}
                 />
               </:action>

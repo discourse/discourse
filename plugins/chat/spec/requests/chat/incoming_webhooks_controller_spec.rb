@@ -72,8 +72,6 @@ RSpec.describe Chat::IncomingWebhooksController do
     end
 
     describe "rate limiting" do
-      use_redis_snapshotting
-
       it "rate limits" do
         RateLimiter.enable
         10.times { post "/chat/hooks/#{webhook.key}.json", params: valid_payload }

@@ -1,5 +1,10 @@
 en:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: delete automation
     discourse_automation:
       title: Automation
       create: Create
@@ -8,7 +13,8 @@ en:
       select_trigger: Select a trigger
       confirm_automation_reset: This action will reset script and trigger options, new state will be saved, do you want to proceed?
       confirm_automation_trigger: This action will trigger the automation, do you want to proceed?
-      no_automation_yet: You haven’t created any automation yet.
+      no_automation_yet: You haven’t created any automations yet. Choose an option below to get started.
+      filter_placeholder: Filter by name or description...
       edit_automation:
         trigger_section:
           forced: This trigger is forced by script.
@@ -138,18 +144,27 @@ en:
               label: Topic ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: Original post only
+              description: Will trigger only if the post is the original post in the topic
             action_type:
               label: Action type
               description: "Optional, limit triggering to only created or edited events"
             valid_trust_levels:
               label: Valid trust levels
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
+            restricted_tags:
+              label: Tags
+              description: Optional, will trigger only if the post has any of these tags
             restricted_category:
               label: Category
               description: Optional, will trigger only if the post's topic is in this category
             restricted_group:
               label: Group
-              description: Optional, will trigger only if the post's topic is a private message in this group's inbox
+              description: Optional, will trigger only if the post's topic is a personal message in this group's inbox
+            restricted_groups:
+              label: Groups
+              description: Optional, will trigger only if the post's topic is a personal message in one of the group inboxes
             ignore_group_members:
               label: Ignore group members
               description: Skip the trigger if sender is a member of the Group specified above
@@ -162,6 +177,9 @@ en:
             first_topic_only:
               label: First topic only
               description: Will trigger only if the topic is the first topic a user created
+            skip_via_email:
+              label: "Skip via email"
+              description: "Skip the trigger if the post was created via email"
           created: Created
           edited: Edited
         user_updated:
@@ -203,6 +221,23 @@ en:
             valid_trust_levels:
               label: Valid trust levels
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tags added or removed
+            tags_added: Tags added
+            tags_removed: Tags removed
+          fields:
+            watching_categories:
+              label: Watching categories
+              description: Will trigger only if the topic is in one of these categories
+            watching_tags:
+              label: Watching tags
+              description: Will trigger only if the topic has any of these tags
+            trigger_on:
+              label: Trigger on
+            trigger_with_pms:
+              label: Trigger with PMs
+              description: Will trigger even if the tags were changed in a PM
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -361,6 +396,7 @@ en:
           fields:
             custom_field_name:
               label: "User Custom Field name"
+      unnamed_automation: "Unnamed automation"
 
       models:
         script:
@@ -378,6 +414,8 @@ en:
             label: Script
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Enabled
           disabled:

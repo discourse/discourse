@@ -8,16 +8,40 @@ RSpec.describe HomepageHelper do
       expect(HomepageHelper.resolve).to eq("latest")
     end
 
-    it "returns custom when theme has a custom homepage" do
-      ThemeModifierHelper.any_instance.expects(:custom_homepage).returns(true)
+    context "when theme has a custom homepage" do
+      before { ThemeModifierHelper.any_instance.expects(:custom_homepage).returns(true) }
+
+      it "returns custom" do
+        expect(HomepageHelper.resolve).to eq("custom")
+      end
+    end
+
+    context "when a plugin modifies the custom_homepage_enabled to true" do
+      before do
+        DiscoursePluginRegistry
+          .expects(:apply_modifier)
+          .with(:custom_homepage_enabled, false, request: nil, current_user: nil)
+          .returns(true)
+      end
+
+      it "returns custom" do
+        expect(HomepageHelper.resolve).to eq("custom")
+      end
+    end
+
+    it "returns custom when a plugin modifies the custom_homepage_enabled to true" do
+      DiscoursePluginRegistry
+        .expects(:apply_modifier)
+        .with(:custom_homepage_enabled, false, request: nil, current_user: nil)
+        .returns(true)
 
       expect(HomepageHelper.resolve).to eq("custom")
     end
 
     context "when first item in top menu is not valid for anons" do
-      it "distinguishes between auth homepage and anon homepage" do
-        SiteSetting.top_menu = "new|top|latest|unread"
+      before { SiteSetting.top_menu = "new|top|latest|unread" }
 
+      it "distinguishes between auth homepage and anon homepage" do
         expect(HomepageHelper.resolve(nil, user)).to eq("new")
         # new is not a valid route for anon users, anon homepage is next item, top
         expect(HomepageHelper.resolve).to eq(SiteSetting.anonymous_homepage)

@@ -13,7 +13,7 @@ module PageObjects
         end
 
         def blank?
-          input.value.blank?
+          has_value?("")
         end
 
         def enabled?
@@ -42,6 +42,7 @@ module PageObjects
 
         def fill_in(**args)
           input.fill_in(**args)
+          self
         end
 
         def value
@@ -49,7 +50,7 @@ module PageObjects
         end
 
         def has_value?(expected)
-          value == expected
+          has_field?(input[:id], with: expected)
         end
 
         def reply_to_last_message_shortcut
@@ -91,11 +92,11 @@ module PageObjects
         end
 
         def editing_message?(message)
-          value == message.message && message_details.editing?(message)
+          has_value?(message.message) && message_details.editing?(message)
         end
 
         def editing_no_message?
-          value == "" && message_details.has_no_message?
+          blank? && message_details.has_no_message?
         end
 
         def focus
@@ -104,6 +105,18 @@ module PageObjects
 
         def focused?
           component.has_css?(".chat-composer.is-focused")
+        end
+
+        def enter_shortcut
+          input.send_keys(:enter)
+        end
+
+        def shift_enter_shortcut
+          input.send_keys(%i[shift enter])
+        end
+
+        def meta_enter_shortcut
+          input.send_keys([PLATFORM_KEY_MODIFIER, :enter])
         end
       end
     end

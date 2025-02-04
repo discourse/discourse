@@ -27,7 +27,7 @@ export default class ChatSidePanel extends Component {
     }
 
     const validWidth = Math.min(
-      this.store.getObject("width"),
+      this.store.getObject("width") ?? MIN_PANEL_WIDTH,
       this.mainContainerWidth - MIN_PANEL_WIDTH
     );
 

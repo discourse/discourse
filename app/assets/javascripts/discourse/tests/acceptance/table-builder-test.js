@@ -1,8 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
 
 acceptance("Table Builder", function (needs) {
   needs.user();
@@ -14,7 +13,7 @@ acceptance("Table Builder", function (needs) {
     await selectKit(".toolbar-popup-menu-options").expand();
 
     assert
-      .dom(`.select-kit-row[data-name='${I18n.t("composer.insert_table")}']`)
+      .dom(`.select-kit-row[data-name='toggle-spreadsheet']`)
       .exists("it shows the builder button");
   });
 
@@ -22,12 +21,12 @@ acceptance("Table Builder", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#post_1 .show-more-actions");
     await click("#post_1 .edit");
-    assert.ok(exists("#reply-control"));
+    assert.dom("#reply-control").exists();
     await click(".d-editor-button-bar .options");
     await selectKit(".toolbar-popup-menu-options").expand();
 
     assert
-      .dom(`.select-kit-row[data-name='${I18n.t("composer.insert_table")}']`)
+      .dom(`.select-kit-row[data-name='toggle-spreadsheet']`)
       .exists("it shows the builder button");
   });
 });

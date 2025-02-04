@@ -6,10 +6,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DToast from "float-kit/components/d-toast";
 import DToastInstance from "float-kit/lib/d-toast-instance";
 
-const TOAST_SELECTOR = ".fk-d-toast";
-
 function createCustomToastInstance(owner, options, newClose) {
-  const custom = class CustomToastInstance extends DToastInstance {
+  class CustomToastInstance extends DToastInstance {
     constructor() {
       super(owner, options);
     }
@@ -18,9 +16,9 @@ function createCustomToastInstance(owner, options, newClose) {
     close() {
       newClose.apply(this);
     }
-  };
+  }
 
-  return new custom(owner, options);
+  return new CustomToastInstance(owner, options);
 }
 
 module("Integration | Component | FloatKit | d-toast", function (hooks) {
@@ -35,23 +33,23 @@ module("Integration | Component | FloatKit | d-toast", function (hooks) {
 
     await render(<template><DToast @toast={{toast}} /></template>);
 
-    assert.dom(TOAST_SELECTOR).exists();
+    assert.dom(".fk-d-toast").exists();
 
-    await triggerEvent(TOAST_SELECTOR, "touchstart", {
+    await triggerEvent(".fk-d-toast", "touchstart", {
       touches: [{ clientX: 0, clientY: 0 }],
       changedTouches: [{ clientX: 0, clientY: 0 }],
     });
 
-    await triggerEvent(TOAST_SELECTOR, "touchmove", {
+    await triggerEvent(".fk-d-toast", "touchmove", {
       touches: [{ clientX: 0, clientY: -100 }],
       changedTouches: [{ clientX: 0, clientY: -100 }],
     });
 
-    await triggerEvent(TOAST_SELECTOR, "touchend", {
+    await triggerEvent(".fk-d-toast", "touchend", {
       touches: [{ clientX: 0, clientY: -100 }],
       changedTouches: [{ clientX: 0, clientY: -100 }],
     });
 
-    assert.ok(closing);
+    assert.true(closing);
   });
 });

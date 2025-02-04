@@ -9,8 +9,6 @@ RSpec.describe PostActionCreator do
   describe "rate limits" do
     before { RateLimiter.enable }
 
-    use_redis_snapshotting
-
     it "limits redo/undo" do
       PostActionCreator.like(user, post)
       PostActionDestroyer.destroy(user, post, :like)

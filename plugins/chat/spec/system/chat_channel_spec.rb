@@ -176,7 +176,8 @@ RSpec.describe "Chat channel", type: :system do
       Fabricate(
         :chat_message,
         chat_channel: channel_1,
-        message: "hello @here @all @#{current_user.username} @#{other_user.username} @unexisting",
+        message:
+          "hello @here @all @#{current_user.username} @#{other_user.username} @unexisting @system",
         user: other_user,
       )
     end
@@ -191,14 +192,12 @@ RSpec.describe "Chat channel", type: :system do
     it "highlights the mentions" do
       chat_page.visit_channel(channel_1)
 
-      expect(page).to have_selector(".mention.highlighted.valid-mention", text: "@here")
-      expect(page).to have_selector(".mention.highlighted.valid-mention", text: "@all")
-      expect(page).to have_selector(
-        ".mention.highlighted.valid-mention",
-        text: "@#{current_user.username}",
-      )
+      expect(page).to have_selector(".mention.--wide", text: "@here")
+      expect(page).to have_selector(".mention.--wide", text: "@all")
+      expect(page).to have_selector(".mention.--current", text: "@#{current_user.username}")
       expect(page).to have_selector(".mention", text: "@#{other_user.username}")
       expect(page).to have_selector(".mention", text: "@unexisting")
+      expect(page).to have_selector(".mention.--bot", text: "@system")
     end
 
     it "renders user status on mentions" do
@@ -279,7 +278,7 @@ RSpec.describe "Chat channel", type: :system do
         user: other_user,
         chat_channel: channel_1,
         use_service: true,
-        message: "<mark>not marked</mark>",
+        message: "<abbr>not abbr</abbr>",
       )
     end
 
@@ -287,13 +286,27 @@ RSpec.describe "Chat channel", type: :system do
       Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
       Fabricate(:chat_message, in_reply_to: message_2, user: current_user, chat_channel: channel_1)
       channel_1.add(other_user)
+
+      stub_request(:get, "https://foo.com/").with(headers: { "Accept" => "*/*" }).to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
+
+      stub_request(:head, "https://foo.com/").with(headers: { "Host" => "foo.com" }).to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
     end
 
     it "renders text in the reply-to" do
       chat_page.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "&lt;mark&gt;not marked&lt;/mark&gt;",
+        "&lt;abbr&gt;not abbr&lt;/abbr&gt;",
       )
     end
 
@@ -306,16 +319,30 @@ RSpec.describe "Chat channel", type: :system do
       )
     end
 
+    it "limits excerpt length" do
+      update_message!(message_2, user: other_user, text: ("a" * 160))
+      chat_page.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("a" * 150 + "…")
+    end
+
+    it "renders urls correclty in excerpts" do
+      update_message!(message_2, user: other_user, text: "https://foo.com")
+      chat_page.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("https://foo.com")
+    end
+
     it "renders safe HTML like mentions (which are just links) in the reply-to" do
       update_message!(
         message_2,
         user: other_user,
-        text: "@#{other_user.username} <mark>not marked</mark>",
+        text: "@#{other_user.username} <abbr>not abbr</abbr>",
       )
       chat_page.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;abbr&gt;not abbr&lt;/abbr&gt;",
       )
     end
   end
@@ -381,7 +408,7 @@ RSpec.describe "Chat channel", type: :system do
         ".chat-message-actions-container .secondary-actions .select-kit-body",
       )
 
-      find("#site-logo").hover
+      PageObjects::Components::Logo.hover
       expect(page).to have_css(
         ".chat-message-actions-container .secondary-actions .select-kit-body",
       )
@@ -391,5 +418,12 @@ RSpec.describe "Chat channel", type: :system do
         ".chat-message-actions-container .secondary-actions .select-kit-body",
       )
     end
+  end
+
+  it "renders emojis in page title" do
+    channel_1.update!(name: ":dog: Dogs")
+    chat_page.visit_channel(channel_1)
+
+    expect(page).to have_title("#🐶 Dogs - Chat - Discourse")
   end
 end

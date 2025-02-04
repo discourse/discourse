@@ -1,8 +1,8 @@
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import AdminPluginsListItem from "./admin-plugins-list-item";
 
 const AdminPluginsList = <template>
-  <table class="admin-plugins-list grid">
+  <table class="d-admin-table admin-plugins-list">
     <thead>
       <tr>
         <th>{{i18n "admin.plugins.name"}}</th>

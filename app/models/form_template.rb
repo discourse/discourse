@@ -5,14 +5,14 @@ class FormTemplate < ActiveRecord::Base
             presence: true,
             uniqueness: true,
             length: {
-              maximum: SiteSetting.max_form_template_title_length,
+              maximum: -> { SiteSetting.max_form_template_title_length },
             }
   validates :template,
             presence: true,
             length: {
-              maximum: SiteSetting.max_form_template_content_length,
+              maximum: -> { SiteSetting.max_form_template_content_length },
             }
-  validates_with FormTemplateYamlValidator
+  validates_with FormTemplateYamlValidator, if: ->(ft) { ft.template }
 
   has_many :category_form_templates, dependent: :destroy
   has_many :categories, through: :category_form_templates
@@ -26,7 +26,7 @@ end
 # Table name: form_templates
 #
 #  id         :bigint           not null, primary key
-#  name       :string(100)      not null
+#  name       :string           not null
 #  template   :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -11,20 +11,23 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { eq, not } from "truth-helpers";
+import { eq, lt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
-import optionalService from "discourse/lib/optional-service";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
 import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
+import ChatMessageBlocks from "discourse/plugins/chat/discourse/components/chat-message/blocks";
 import ChatMessageActionsMobileModal from "discourse/plugins/chat/discourse/components/chat-message-actions-mobile";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
@@ -55,15 +58,13 @@ export default class ChatMessage extends Component {
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
   @service chatChannelPane;
   @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
   @service toasts;
   @service modal;
-  @optionalService adminTools;
+  @service interactedChatMessage;
 
   @tracked isActive = false;
 
@@ -94,11 +95,6 @@ export default class ChatMessage extends Component {
       }
     };
   });
-
-  constructor() {
-    super(...arguments);
-    this.initMentionedUsers();
-  }
 
   get pane() {
     return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
@@ -137,7 +133,7 @@ export default class ChatMessage extends Component {
 
     recursiveCount(this.args.message);
 
-    return I18n.t("chat.deleted", { count });
+    return i18n("chat.deleted", { count });
   }
 
   get shouldRender() {
@@ -214,6 +210,8 @@ export default class ChatMessage extends Component {
   @action
   didInsertMessage(element) {
     this.messageContainer = element;
+    this.initMentionedUsers();
+    this.decorateMentions(element);
     this.debounceDecorateCookedMessage();
     this.refreshStatusOnMentions();
   }
@@ -239,24 +237,52 @@ export default class ChatMessage extends Component {
     );
   }
 
+  initMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      if (!user.statusManager.isTrackingStatus()) {
+        user.statusManager.trackStatus();
+        user.on("status-changed", this, "refreshStatusOnMentions");
+      }
+    });
+  }
+
+  decorateMentions(cooked) {
+    if (this.args.message.channel.allowChannelWideMentions) {
+      const wideMentions = [...cooked.querySelectorAll("span.mention")];
+      MENTION_KEYWORDS.forEach((keyword) => {
+        const mentions = wideMentions.filter((node) => {
+          return node.textContent.trim() === `@${keyword}`;
+        });
+
+        const classes = applyValueTransformer("mentions-class", [], {
+          user: { username: keyword },
+        });
+
+        mentions.forEach((mention) => {
+          mention.classList.add(...classes);
+        });
+      });
+    }
+
+    this.args.message.mentionedUsers.forEach((user) => {
+      const href = getURL(`/u/${user.username.toLowerCase()}`);
+      const mentions = cooked.querySelectorAll(`a.mention[href="${href}"]`);
+      const classes = applyValueTransformer("mentions-class", [], {
+        user,
+      });
+
+      mentions.forEach((mention) => {
+        mention.classList.add(...classes);
+      });
+    });
+  }
+
   @action
   decorateCookedMessage(message) {
     schedule("afterRender", () => {
       _chatMessageDecorators.forEach((decorator) => {
         decorator.call(this, this.messageContainer, message.channel);
       });
-    });
-  }
-
-  @action
-  initMentionedUsers() {
-    this.args.message.mentionedUsers.forEach((user) => {
-      if (user.statusManager.isTrackingStatus()) {
-        return;
-      }
-
-      user.statusManager.trackStatus();
-      user.on("status-changed", this, "refreshStatusOnMentions");
     });
   }
 
@@ -279,6 +305,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
+    if (this.interactedChatMessage.emojiPickerOpen) {
+      return;
+    }
+
     if (!this.secondaryActionsIsExpanded) {
       this._onMouseEnterMessageDebouncedHandler = discourseDebounce(
         this,
@@ -298,9 +328,15 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (!this.secondaryActionsIsExpanded) {
-      this._setActiveMessage();
+    if (this.secondaryActionsIsExpanded) {
+      return;
     }
+
+    if (this.interactedChatMessage.emojiPickerOpen) {
+      return;
+    }
+
+    this._setActiveMessage();
   }
 
   @action
@@ -318,9 +354,16 @@ export default class ChatMessage extends Component {
     ) {
       return;
     }
-    if (!this.secondaryActionsIsExpanded) {
-      this.chat.activeMessage = null;
+
+    if (this.interactedChatMessage.emojiPickerOpen) {
+      return;
     }
+
+    if (this.secondaryActionsIsExpanded) {
+      return;
+    }
+
+    this.chat.activeMessage = null;
   }
 
   @bind
@@ -497,6 +540,16 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  onEmojiPickerClose() {
+    this.interactedChatMessage.emojiPickerOpen = false;
+  }
+
+  @action
+  onEmojiPickerShow() {
+    this.interactedChatMessage.emojiPickerOpen = true;
+  }
+
+  @action
   stopMessageStreaming(message) {
     this.chatApi.stopMessageStreaming(message.channel.id, message.id);
   }
@@ -522,6 +575,7 @@ export default class ChatMessage extends Component {
           (if this.pane.selectingMessages "-selectable")
           (if @message.highlighted "-highlighted")
           (if @message.streaming "-streaming")
+          (if (lt @message.user.id 0) "is-bot")
           (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
           (if (eq @message.id this.currentUser.id) "is-by-current-user")
           (if
@@ -624,12 +678,13 @@ export default class ChatMessage extends Component {
                       {{/each}}
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
-                        <DButton
-                          @action={{this.messageInteractor.openEmojiPicker}}
-                          @icon="discourse-emojis"
-                          @title="chat.react"
-                          @forwardEvent={{true}}
-                          class="chat-message-react-btn"
+                        <EmojiPicker
+                          @context={{concat "channel_" @message.channel.id}}
+                          @didSelectEmoji={{this.messageInteractor.selectReaction}}
+                          @btnClass="btn-flat react-btn chat-message-react-btn"
+                          @onClose={{this.onEmojiPickerClose}}
+                          @onShow={{this.onEmojiPickerShow}}
+                          class="chat-message-reaction"
                         />
                       {{/if}}
                     </div>
@@ -639,14 +694,16 @@ export default class ChatMessage extends Component {
                 {{#if this.shouldRenderStopMessageStreamingButton}}
                   <div class="stop-streaming-btn-container">
                     <DButton
-                      @class="stop-streaming-btn"
-                      @icon="stop-circle"
+                      class="stop-streaming-btn"
+                      @icon="circle-stop"
                       @label="cancel"
                       @action={{fn this.stopMessageStreaming @message}}
                     />
 
                   </div>
                 {{/if}}
+
+                <ChatMessageBlocks @message={{@message}} />
 
                 <ChatMessageError
                   @message={{@message}}

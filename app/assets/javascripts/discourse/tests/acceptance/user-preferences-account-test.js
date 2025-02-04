@@ -1,18 +1,14 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import pretender, {
   fixturesByUrl,
   response,
 } from "discourse/tests/helpers/create-pretender";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Account", function (needs) {
   needs.user({ can_upload_avatar: true });
@@ -77,18 +73,15 @@ acceptance("User Preferences - Account", function (needs) {
 
     await visit("/u/eviltrout/preferences/account");
 
-    assert.strictEqual(
-      query(".username-preference__current-username").innerText,
-      "eviltrout"
-    );
+    assert.dom(".username-preference__current-username").hasText("eviltrout");
 
     await click(".username-preference__edit-username");
 
-    assert.strictEqual(query(".username-preference__input").value, "eviltrout");
-    assert.true(query(".username-preference__submit").disabled);
+    assert.dom(".username-preference__input").hasValue("eviltrout");
+    assert.dom(".username-preference__submit").isDisabled();
 
-    await fillIn(query(".username-preference__input"), "good_trout");
-    assert.false(query(".username-preference__submit").disabled);
+    await fillIn(".username-preference__input", "good_trout");
+    assert.dom(".username-preference__submit").isEnabled();
 
     await click(".username-preference__submit");
     await click(".dialog-container .btn-primary");
@@ -107,15 +100,13 @@ acceptance("User Preferences - Account", function (needs) {
     await click(".delete-account .btn-danger");
     await click(".dialog-footer .btn-danger");
 
-    assert.strictEqual(
-      query(".dialog-body").textContent.trim(),
-      I18n.t("user.deleted_yourself"),
-      "confirmation dialog is shown"
-    );
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("user.deleted_yourself"), "confirmation dialog is shown");
 
     await click(".dialog-footer .btn-primary");
 
-    assert.ok(
+    assert.true(
       DiscourseURL.redirectAbsolute.calledWith("/"),
       "redirects to home after deleting"
     );
@@ -124,27 +115,23 @@ acceptance("User Preferences - Account", function (needs) {
   test("connected accounts", async function (assert) {
     await visit("/u/eviltrout/preferences/account");
 
-    assert.ok(
-      exists(".pref-associated-accounts"),
-      "it has the connected accounts section"
-    );
+    assert
+      .dom(".pref-associated-accounts")
+      .exists("has the connected accounts section");
 
-    assert.ok(
-      query(
+    assert
+      .dom(
         ".pref-associated-accounts table tr:nth-of-type(1) td:nth-of-type(1)"
-      ).innerHTML.includes("Facebook"),
-      "it lists facebook"
-    );
+      )
+      .includesHtml("Facebook", "lists facebook");
 
     await click(
       ".pref-associated-accounts table tr:nth-of-type(1) td:last-child button"
     );
 
-    assert.ok(
-      query(
-        ".pref-associated-accounts table tr:nth-of-type(1) td:last-of-type"
-      ).innerHTML.includes("Connect")
-    );
+    assert
+      .dom(".pref-associated-accounts table tr:nth-of-type(1) td:last-of-type")
+      .includesHtml("Connect");
   });
 
   test("avatars are selectable for staff user when `selectable_avatars_mode` site setting is set to `staff`", async function (assert) {
@@ -158,15 +145,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.ok(
-      exists("#uploaded-avatar"),
-      "avatar selection modal includes option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .exists("avatar selection modal includes option to upload");
   });
 
   test("avatars are not selectable for non-staff user when `selectable_avatars_mode` site setting is set to `staff`", async function (assert) {
@@ -180,15 +165,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.notOk(
-      exists("#uploaded-avatar"),
-      "avatar selection modal does not include option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .doesNotExist("avatar selection modal does not include option to upload");
   });
 
   test("avatars not selectable when `selectable_avatars_mode` site setting is set to `no_one`", async function (assert) {
@@ -201,15 +184,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.notOk(
-      exists("#uploaded-avatar"),
-      "avatar selection modal does not include option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .doesNotExist("avatar selection modal does not include option to upload");
   });
 
   test("avatars are selectable for user with required trust level when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
@@ -224,15 +205,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.ok(
-      exists("#uploaded-avatar"),
-      "avatar selection modal includes option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .exists("avatar selection modal includes option to upload");
   });
 
   test("avatars are not selectable for user without required trust level when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
@@ -247,15 +226,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.notOk(
-      exists("#uploaded-avatar"),
-      "avatar selection modal does not include option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .doesNotExist("avatar selection modal does not include option to upload");
   });
 
   test("avatars are selectable for staff user when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
@@ -270,29 +247,26 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.ok(
-      exists("#uploaded-avatar"),
-      "avatar selection modal includes option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .exists("avatar selection modal includes option to upload");
   });
 
   test("default avatar selector", async function (assert) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(exists(".avatar-choice"), "opens the avatar selection modal");
+    assert.dom(".avatar-choice").exists("opens the avatar selection modal");
 
     await click(".avatar-selector-refresh-gravatar");
 
-    assert.ok(
-      exists(".avatar[src='/images/gravatar_is_not_avatar.png']"),
-      "displays the new gravatar image"
-    );
+    assert
+      .dom(".avatar[src='/images/gravatar_is_not_avatar.png']")
+      .exists("displays the new gravatar image");
 
     await click("#gravatar");
     await click(".d-modal__footer .btn");
@@ -320,15 +294,12 @@ acceptance("User Preferences — Account - Download Archive", function (needs) {
   test("Can see and trigger download for account data", async function (assert) {
     await visit(`/u/${currentUser}/preferences/account`);
 
-    assert.ok(query(".btn-request-archive"), "button exists");
+    assert.dom(".btn-request-archive").exists("button exists");
 
     await click(".btn-request-archive");
     await click("#dialog-holder .btn-primary");
 
-    assert.equal(
-      query(".dialog-body").innerText.trim(),
-      I18n.t("user.download_archive.success")
-    );
+    assert.dom(".dialog-body").hasText(i18n("user.download_archive.success"));
 
     await click("#dialog-holder .btn-primary");
   });

@@ -71,7 +71,7 @@ class StylesheetsController < ApplicationController
     unless File.exist?(location)
       if current = query.pick(source_map ? :source_map : :content)
         FileUtils.mkdir_p(cache_path)
-        File.write(location, current)
+        Discourse::Utils.atomic_write_file(location, current)
       else
         raise Discourse::NotFound
       end

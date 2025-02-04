@@ -2,39 +2,51 @@ import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import { i18n } from "discourse/lib/computed";
+import { computedI18n } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-export default Component.extend({
-  tagName: null,
-  groupIds: null,
-  allGroups: null,
+export default class InvitePanel extends Component {
+  @readOnly("currentUser.staff") isStaff;
+  @readOnly("currentUser.admin") isAdmin;
+  @alias("inviteModel.id") topicId;
+  @equal("inviteModel.archetype", "private_message") isPM;
+  @and("isStaff", "siteSettings.must_approve_users") showApprovalMessage;
 
-  isStaff: readOnly("currentUser.staff"),
-  isAdmin: readOnly("currentUser.admin"),
+  // eg: visible only to specific group members
+  @and("invitingToTopic", "inviteModel.category.read_restricted")
+  isPrivateTopic;
+
+  // scope to allowed usernames
+  @alias("invitingToTopic") allowExistingMembers;
+
+  @computedI18n("invite.custom_message_placeholder") customMessagePlaceholder;
+
+  groupIds = null;
+  allGroups = null;
 
   // invitee is either a user, group or email
-  invitee: null,
-  isInviteeGroup: false,
-  hasCustomMessage: false,
-  customMessage: null,
-  inviteIcon: "envelope",
-  invitingExistingUserToTopic: false,
+  invitee = null;
+
+  isInviteeGroup = false;
+  hasCustomMessage = false;
+  customMessage = null;
+  inviteIcon = "envelope";
+  invitingExistingUserToTopic = false;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.setDefaultSelectedGroups();
     this.setGroupOptions();
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     this.reset();
-  },
+  }
 
   @discourseComputed(
     "isAdmin",
@@ -81,7 +93,7 @@ export default Component.extend({
     }
 
     return false;
-  },
+  }
 
   @discourseComputed(
     "isAdmin",
@@ -125,49 +137,36 @@ export default Component.extend({
     }
 
     return false;
-  },
+  }
 
   @discourseComputed("inviteModel.saving")
   buttonTitle(saving) {
     return saving ? "topic.inviting" : "topic.invite_reply.action";
-  },
+  }
 
   // We are inviting to a topic if the topic isn't the current user.
   // The current user would mean we are inviting to the forum in general.
   @discourseComputed("inviteModel")
   invitingToTopic(inviteModel) {
     return inviteModel !== this.currentUser;
-  },
+  }
 
   @discourseComputed("inviteModel", "inviteModel.details.can_invite_via_email")
   canInviteViaEmail(inviteModel, canInviteViaEmail) {
     return inviteModel === this.currentUser ? true : canInviteViaEmail;
-  },
+  }
 
   @discourseComputed("isPM", "canInviteViaEmail")
   showCopyInviteButton(isPM, canInviteViaEmail) {
     return canInviteViaEmail && !isPM;
-  },
-
-  topicId: alias("inviteModel.id"),
-
-  // eg: visible only to specific group members
-  isPrivateTopic: and(
-    "invitingToTopic",
-    "inviteModel.category.read_restricted"
-  ),
-
-  isPM: equal("inviteModel.archetype", "private_message"),
-
-  // scope to allowed usernames
-  allowExistingMembers: alias("invitingToTopic"),
+  }
 
   @discourseComputed("isAdmin", "inviteModel.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {
     return (
       isAdmin || (groupUsers && groupUsers.some((groupUser) => groupUser.owner))
     );
-  },
+  }
 
   // Show Groups? (add invited user to private group)
   @discourseComputed(
@@ -192,12 +191,12 @@ export default Component.extend({
       !isPM &&
       (emailValid(invitee) || isPrivateTopic || !invitingToTopic)
     );
-  },
+  }
 
   @discourseComputed("invitee")
   showCustomMessage(invitee) {
     return this.inviteModel === this.currentUser || emailValid(invitee);
-  },
+  }
 
   // Instructional text for the modal.
   @discourseComputed(
@@ -218,54 +217,54 @@ export default Component.extend({
   ) {
     if (!canInviteViaEmail) {
       // can't invite via email, only existing users
-      return I18n.t("topic.invite_reply.discourse_connect_enabled");
+      return i18n("topic.invite_reply.discourse_connect_enabled");
     } else if (isPM) {
       // inviting to a message
-      return I18n.t("topic.invite_private.email_or_username");
+      return i18n("topic.invite_private.email_or_username");
     } else if (invitingToTopic) {
       // inviting to a private/public topic
       if (isPrivateTopic && !isAdmin) {
         // inviting to a private topic and is not admin
-        return I18n.t("topic.invite_reply.to_username");
+        return i18n("topic.invite_reply.to_username");
       } else {
         // when inviting to a topic, display instructions based on provided entity
         if (isEmpty(invitee)) {
-          return I18n.t("topic.invite_reply.to_topic_blank");
+          return i18n("topic.invite_reply.to_topic_blank");
         } else if (emailValid(invitee)) {
           this.set("inviteIcon", "envelope");
-          return I18n.t("topic.invite_reply.to_topic_email");
+          return i18n("topic.invite_reply.to_topic_email");
         } else {
           this.set("inviteIcon", "hand-point-right");
-          return I18n.t("topic.invite_reply.to_topic_username");
+          return i18n("topic.invite_reply.to_topic_username");
         }
       }
     } else {
       // inviting to forum
-      return I18n.t("topic.invite_reply.to_forum");
+      return i18n("topic.invite_reply.to_forum");
     }
-  },
+  }
 
   @discourseComputed("isPrivateTopic")
   showGroupsClass(isPrivateTopic) {
     return isPrivateTopic ? "required" : "optional";
-  },
+  }
 
   @discourseComputed("isPM", "invitee", "invitingExistingUserToTopic")
   successMessage(isPM, invitee, invitingExistingUserToTopic) {
     if (this.isInviteeGroup) {
-      return I18n.t("topic.invite_private.success_group");
+      return i18n("topic.invite_private.success_group");
     } else if (isPM) {
-      return I18n.t("topic.invite_private.success");
+      return i18n("topic.invite_private.success");
     } else if (invitingExistingUserToTopic) {
-      return I18n.t("topic.invite_reply.success_existing_email", {
+      return i18n("topic.invite_reply.success_existing_email", {
         invitee,
       });
     } else if (emailValid(invitee)) {
-      return I18n.t("topic.invite_reply.success_email", { invitee });
+      return i18n("topic.invite_reply.success_email", { invitee });
     } else {
-      return I18n.t("topic.invite_reply.success_username");
+      return i18n("topic.invite_reply.success_username");
     }
-  },
+  }
 
   @discourseComputed("isPM", "ajaxError")
   errorMessage(isPM, ajaxError) {
@@ -273,20 +272,16 @@ export default Component.extend({
       return ajaxError;
     }
     return isPM
-      ? I18n.t("topic.invite_private.error")
-      : I18n.t("topic.invite_reply.error");
-  },
+      ? i18n("topic.invite_private.error")
+      : i18n("topic.invite_reply.error");
+  }
 
   @discourseComputed("canInviteViaEmail")
   placeholderKey(canInviteViaEmail) {
     return canInviteViaEmail
       ? "topic.invite_private.email_or_username_placeholder"
       : "topic.invite_reply.username_placeholder";
-  },
-
-  showApprovalMessage: and("isStaff", "siteSettings.must_approve_users"),
-
-  customMessagePlaceholder: i18n("invite.custom_message_placeholder"),
+  }
 
   // Reset the modal to allow a new user to be invited.
   reset() {
@@ -305,17 +300,17 @@ export default Component.extend({
       finished: false,
       inviteLink: null,
     });
-  },
+  }
 
   setDefaultSelectedGroups() {
     this.set("groupIds", []);
-  },
+  }
 
   setGroupOptions() {
     Group.findAll().then((groups) => {
       this.set("allGroups", groups.filterBy("automatic", false));
     });
-  },
+  }
 
   @action
   createInvite() {
@@ -367,7 +362,7 @@ export default Component.extend({
         })
         .catch(onerror);
     }
-  },
+  }
 
   @action
   generateInviteLink() {
@@ -401,34 +396,28 @@ export default Component.extend({
         }
         model.setProperties({ saving: false, error: true });
       });
-  },
+  }
 
   @action
   showCustomMessageBox() {
     this.toggleProperty("hasCustomMessage");
     if (this.hasCustomMessage) {
       if (this.inviteModel === this.currentUser) {
-        this.set(
-          "customMessage",
-          I18n.t("invite.custom_message_template_forum")
-        );
+        this.set("customMessage", i18n("invite.custom_message_template_forum"));
       } else {
-        this.set(
-          "customMessage",
-          I18n.t("invite.custom_message_template_topic")
-        );
+        this.set("customMessage", i18n("invite.custom_message_template_topic"));
       }
     } else {
       this.set("customMessage", null);
     }
-  },
+  }
 
   @action
   searchContact() {
     getNativeContact(this.capabilities, ["email"], false).then((result) => {
       this.set("invitee", result[0].email[0]);
     });
-  },
+  }
 
   @action
   updateInvitee(selected, content) {
@@ -448,5 +437,5 @@ export default Component.extend({
         isInviteeGroup: false,
       });
     }
-  },
-});
+  }
+}

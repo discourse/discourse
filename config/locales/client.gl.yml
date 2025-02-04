@@ -116,7 +116,6 @@ gl:
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "pechar"
-      twitter: "Compartir no Twitter"
       facebook: "Compartir no Facebook"
       email: "Enviar por correo"
       url: "Copiar e compartir o URL"
@@ -241,6 +240,7 @@ gl:
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
     about:
+      edit: "Editar esta páxina"
       simple_title: "Verbo de"
       title: "Verbo de %{title}"
       stats: "Estatísticas do sitio"
@@ -252,7 +252,19 @@ gl:
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
-      contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacte connosco en %{contact_info}."
+      activities:
+        topics:
+          one: "%{formatted_number} tema"
+          other: "%{formatted_number} temas"
+        posts:
+          one: "%{formatted_number} publicación"
+          other: "%{formatted_number} publicacións"
+        likes:
+          one: "%{formatted_number} gústame"
+          other: "%{formatted_number} gústame"
+        periods:
+          last_7_days: "nos últimos 7 días"
+          today: "hoxe"
     bookmarked:
       title: "Marcador"
       clear_bookmarks: "Limpar marcadores"
@@ -299,6 +311,8 @@ gl:
       abandon:
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
+      dropdown:
+        view_all: "ver todos"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -329,6 +343,7 @@ gl:
     continue: "Continuar"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
+    none_placeholder: "Ningunha"
     banner:
       close: "Desbotar este báner"
       edit: "Editar"
@@ -450,6 +465,8 @@ gl:
         refresh: "Actualizar"
         status: "Estado"
         category: "Categoría"
+        score_type:
+          title: "Motivo"
         orders:
           score: "Puntuación"
           score_asc: "Puntuación (inversa)"
@@ -550,7 +567,6 @@ gl:
       none: "Non se necesita"
       never: "Nunca"
       custom: "Personalizar data e hora"
-      custom_short: "Personalizar..."
       select_timeframe: "Seleccione un marco temporal"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tema</a>"
@@ -689,13 +705,13 @@ gl:
       public_admission: "Permitir que os usuarios se unan ao grupo libremente (require un grupo visíbel ao público)"
       public_exit: "Permitir que os usuarios abandonen o grupo libremente"
       empty:
-        posts: "Non hai publicacións de membros deste grupo."
-        members: "Non hai membros neste grupo."
-        requests: "Non hai petición de incorporación a este grupo."
-        mentions: "Non hai mencións neste grupo."
-        messages: "Non hai mensaxes para este grupo."
-        topics: "Non hai temas de membros deste grupo."
-        logs: "Non hai rexistros deste grupo."
+        posts: "Non hai publicacións de membros deste grupo"
+        members: "Non hai membros neste grupo"
+        requests: "Non hai petición de incorporación a este grupo"
+        mentions: "Non hai mencións neste grupo"
+        messages: "Non hai mensaxes para este grupo"
+        topics: "Non hai temas de membros deste grupo"
+        logs: "Non hai rexistros deste grupo"
       add: "Engadir"
       join: "Participar"
       leave: "Abandonar"
@@ -875,10 +891,10 @@ gl:
         one: "Eliminar %{count}"
         other: "Eliminar %{count}"
       username: "nome de usuario"
-      trust_level: "NdeC"
+      trust_level: "nivel de fiabilidade"
       read_time: "tempo de lectura"
       topics_entered: "temas introducidos"
-      post_count: "# publicacións"
+      post_count: "publicacións"
       confirm_delete_other_accounts: "Confirma que quere eliminar estas contas?"
       powered_by: "utitlízase <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiado"
@@ -965,17 +981,15 @@ gl:
       skip_new_user_tips:
         description: "Saltar consellos e insignias na entrada dos novos usuarios"
       theme_default_on_all_devices: "Facer que este sexa o tema predeterminado en todos os meus dispositivos"
-      color_scheme: "Esquema de cor"
+      color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Predeterminado"
         disable_dark_scheme: "O mesmo que o normal"
-        dark_instructions: "Pode visualizar o esquema do modo escuro trocando no seu dispositivo a modo escuro."
         undo: "Restabelecer"
         regular: "Normal"
         dark: "Modo escuro"
         default_dark_scheme: "(predeterminado do sitio)"
       dark_mode: "Modo escuro"
-      dark_mode_enable: "Activar o esquema de cores automático en modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
       external_links_in_new_tab: "Abrir todas as ligazóns externas nunha nova lapela"
@@ -1042,7 +1056,7 @@ gl:
       ignored_users: "Ignorado"
       ignored_users_instructions: "Suprimir todas as publicacións, notificacións e mensaxes privadas destes usuarios."
       tracked_topics_link: "Amosar"
-      automatically_unpin_topics: "Desprender os temas automaticamente cando acade o fondo."
+      automatically_unpin_topics: "Desprender os temas automaticamente cando acade o fondo"
       apps: "Apps"
       revoke_access: "Revogar acceso"
       undo_revoke_access: "Desfacer a revogación de acceso"
@@ -1210,7 +1224,7 @@ gl:
         add_email: "Engadir correo electrónico alternativo"
         auth_override_instructions: "O enderezo decorreo pode actualizarse desde un fornecedor de autenticación."
         no_secondary: "Sen correos electrónicos secundarios"
-        instructions: "Non se verá nunca en público."
+        instructions: "Non se verá nunca en público"
         admin_note: "Nota: un usuario administrador que cambia o correo electrónico doutro usuario que non é administrador indica que o usuario perdeu o acceso á súa conta de correo orixinal, polo que se lle enviará un correo electrónico de restabelecemento do contrasinal ao seu novo enderezo. O correo electrónico do usuario non cambiará ata completar o proceso de restabelecemento do contrasinal."
         ok: "Enviarémoslle un correo electrónico para confirmar"
         required: "Escriba un enderezo de correo electrónico"
@@ -1230,10 +1244,17 @@ gl:
         confirm_description:
           account_specific: "Usarase a súa conta «%{account_description}» de %{provider} para a autenticación."
           generic: "Usarase a súa conta de %{provider} para a autenticación."
+      activate_account:
+        action: "Prema aquí para activar a súa conta"
+        already_done: "Sentímolo, esta ligazón de confirmación da conta xa non está dispoñible. Estará xa a súa conta activada?"
+        please_continue: "A súa nova conta está confirmada; redirixirémolo á páxina de inicio."
+        continue_button: "Finalizar!"
+        welcome_to: "Dámoslle a benvida a %{site_name}!"
+        approval_required: "Un moderador debe aprobar manualmente a súa nova conta antes de que poida acceder a este foro. Recibirá un correo electrónico cando a súa conta sexa aprobada!"
       name:
         title: "Nome"
-        instructions: "O seu nOme cOmpletO (OpciOnal)."
-        instructions_required: "Nome completo."
+        instructions: "O seu nOme cOmpletO (OpciOnal)"
+        instructions_required: "Nome completo"
         required: "Escriba un nome"
         too_short: "O nome é curto de mais"
         ok: "O nome parece correcto"
@@ -1282,7 +1303,6 @@ gl:
       location: "Localización"
       website: "Sitio web"
       email_settings: "Correo electrónico"
-      hide_profile_and_presence: "Agochar o meu perfil público e as funcionalidades de presenza"
       enable_physical_keyboard: "Activar a compatibilidade do teclado físico no iPad"
       text_size:
         title: "Tamaño do texto"
@@ -1342,7 +1362,8 @@ gl:
         after_4_minutes: "despois de 4 minutos"
         after_5_minutes: "despois de 5 minutos"
         after_10_minutes: "despois de 10 minutos"
-      notification_level_when_replying: "Cando publico un tema, definilo como"
+      notification_level_when_replying:
+        do_nothing: "Non facer nada"
       invited:
         title: "Convites"
         pending_tab: "Pendente"
@@ -1394,18 +1415,14 @@ gl:
           success: "A ligazón do convite xerouse correctamente!"
           error: "Produciuse un erro ao xerar esta ligazón de convite"
         invite:
-          new_title: "Crear convite"
-          edit_title: "Editar convite"
-          instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
-          copy_link: "copiar a ligazón"
           expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
           add_to_groups: "Engadir aos grupos"
-          expires_at: "Caduca tras"
-          custom_message: "Mensaxe persoal opcional"
+          expires_after: "Caduca tras"
           send_invite_email: "Gardar e enviar mensaxe de correo"
-          save_invite: "Gardar convite"
+          update_invite: "Actualizar"
+          cancel: "Cancelar"
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"
@@ -1578,10 +1595,13 @@ gl:
     search_hint: "nome de usuario, enderezo de  correo ou enderezo IP"
     create_account:
       header_title: "Dámoslle a benvida!"
-      subheader_title: "Déixenos crear a súa conta"
       disclaimer: "Ao rexistrarse, acepta a <a href='%{privacy_link}' target='blank'>norma de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de servizo</a>."
       title: "Crear conta"
       failed: "Algo foi mal, quizais este correo electrónico xa está rexistrado, ténteo coa ligazón de «Esqueceume o contrasinal»"
+      progress_bar:
+        signup: "Crear conta"
+        approve: "Aprobar"
+        login: "Acceder"
     forgot_password:
       title: "Contrasinal restabelecido"
       action: "Esquecín o meu contrasinal"
@@ -1610,7 +1630,7 @@ gl:
       logging_in_as: Iniciar sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
-      subheader_title: "Iniciar sesión na súa conta"
+      title: "Acceder"
       username: "Usuario"
       password: "Contrasinal"
       show_password: "Amosar"
@@ -1642,6 +1662,7 @@ gl:
       admin_not_allowed_from_ip_address: "Non pode acceder como administrador desde ese enderezo IP."
       resend_activation_email: "Prema aquí para enviar outro correo de activación."
       omniauth_disallow_totp: "A súa conta ten activada a autenticación de dobre paso. Inicie sesión co seu contrasinal."
+      activate_account: "Activar conta"
       resend_title: "Reenviar correo electrónico de activación"
       change_email: "Cambiar enderezo de correo"
       provide_new_email: "Escriba un enderezo novo e reenviarémoslle o correo de confirmación."
@@ -1692,6 +1713,9 @@ gl:
       categories_and_top_topics: "Categorías e temas destacados"
       categories_boxes: "Caixas con subcategorías"
       categories_boxes_with_topics: "Caixas con temas destacados"
+    full_name_requirement:
+      required_at_signup: "Obrigatorio"
+      optional_at_signup: "Opcional"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -1947,8 +1971,6 @@ gl:
         quoted: "citado"
         edited: "editado"
         liked: "novo gústame"
-        private_message: "nova mensaxe privada"
-        invited_to_private_message: "convidado a unha mensaxe privada"
         invitee_accepted: "convite aceptado"
         posted: "nova publicación"
         watching_category_or_tag: "nova publicación"
@@ -2132,6 +2154,8 @@ gl:
         top: "Non hai máis temas destacados."
         bookmarks: "Non hai máis temas marcados."
     topic_bulk_actions:
+      dismiss:
+        name: "Desbotar"
       close_topics:
         name: "Pechar"
         optional: (opcional)
@@ -2349,7 +2373,6 @@ gl:
         help: "Abrir unha versión imprimíbel deste tema"
       flag_topic:
         title: "Sinalar"
-        help: "sinalar privadamente este tema para revisalo ou enviar unha notificación privada sobre el"
         success_message: "Sinalou o tema correctamente."
       make_public:
         title: "Converter en tema público"
@@ -2509,6 +2532,8 @@ gl:
         description:
           one: Seleccionou <b>%{count}</b> publicación.
           other: "Seleccionou <b>%{count}</b> publicacións."
+    post_list:
+      title: "Últimas publicacións"
     post:
       quote_reply: "Cita"
       quote_edit: "Editar"
@@ -2579,16 +2604,19 @@ gl:
       few_likes_left: "Grazas por repartir cariño! Só lle quedan algúns gústame por hoxe."
       controls:
         reply: "escribir unha resposta a esta publicación"
+        like_action: "Gústame"
         like: "gústame esta publicación"
         has_liked: "gustoulle esta publicación"
         read_indicator: "membros que leron esta publicación"
+        undo_like_action: "Desfacer o gústame"
         undo_like: "desfacer o gústame"
         edit: "editar a publicación"
         edit_action: "Editar"
         edit_anonymous: "Sentímolo pero debe iniciar sesión para editar esta publicación."
-        flag: "sinalar privadamente esta publicación ou enviar unha notificación privada sobre ela"
+        flag_action: "Sinalar"
         delete: "eliminar esta publicación"
         undelete: "recuperar esta publicación"
+        share_action: "Compartir"
         share: "compartir ligazón a esta publicación"
         more: "Máis"
         delete_replies:
@@ -2601,6 +2629,7 @@ gl:
             other: "Si, e as %{count} respostas"
           just_the_post: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
+        admin_action: "Administrador"
         permanently_delete: "Eliminar definitivamente"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
@@ -2622,7 +2651,6 @@ gl:
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
         delete_topic: "eliminar tema"
-        delete_post_notice: "Eliminar o aviso do equipo"
         remove_timer: "retirar o temporizador"
         edit_timer: "editar temporizador"
       actions:
@@ -2846,7 +2874,6 @@ gl:
         none: "sen subcategorías"
       colors_disabled: "Non pode seleccionar cores porque ten un estilo de categoría con ningún."
     flagging:
-      title: "Grazas por axudar a manter cívica a nosa comunidade!"
       action: "Sinalar a publicación"
       take_action_options:
         default:
@@ -2883,7 +2910,6 @@ gl:
           one: "Queda %{count}"
           other: "Quedan %{count}"
     flagging_topic:
-      title: "Grazas por axudar a manter cívica a nosa comunidade!"
       action: "Sinalar o tema"
       notify_action: "Mensaxe"
     topic_map:
@@ -2956,7 +2982,6 @@ gl:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       filter:
-        title: "Filtro"
         button:
           label: "Filtro"
       latest:
@@ -3040,9 +3065,6 @@ gl:
       close: "Pechar (Esc)"
       content_load_error: '<a href="%url%">O contido</a> non puido cargarse.'
       image_load_error: '<a href="%url%">A imaxe</a> non puido cargarse.'
-    experimental_lightbox:
-      buttons:
-        close: "Pechar (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3076,7 +3098,6 @@ gl:
         title: "Aplicativo"
         create: "%{shortcut} Crear un novo tema"
         notifications: "%{shortcut} Abrir notificacións"
-        hamburger_menu: "%{shortcut} Abrir o menú hamburguesa"
         user_profile_menu: "%{shortcut} Abrir o menú do usuario"
         show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
         search: "%{shortcut} Buscar"
@@ -3345,6 +3366,8 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
+            invite:
+              content: "Convidar"
       filter: "Filtrar..."
     until: "Ata:"
     form_templates:
@@ -3368,6 +3391,7 @@ gl:
         show: "Amosar"
         about: "Verbo de"
   admin_js:
+    settings: "Configuración"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
@@ -3381,7 +3405,30 @@ gl:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
         sidebar_link:
-          all: "Todas"
+          all: "Todos os informes"
+      config:
+        developer:
+          title: "Desenvolvedor"
+        files:
+          title: "Ficheiros"
+        legal:
+          title: "Legal"
+        navigation:
+          title: "Navegación"
+        notifications:
+          title: "Notificacións"
+        onebox:
+          title: "Onebox"
+        other:
+          title: "Outro"
+        search:
+          title: "Buscar"
+        security:
+          title: "Seguranza"
+        spam:
+          title: "Lixo"
+        user_api:
+          title: "API de usuario"
       dashboard:
         title: "Panel"
         last_updated: "Actualización do panel:"
@@ -3395,6 +3442,7 @@ gl:
         installed_version: "Instalado"
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
+        dismiss_notice: "Desbotar"
         new_features:
           learn_more: "Saber máis..."
         last_checked: "Última comprobación"
@@ -3471,6 +3519,7 @@ gl:
             include_subcategories:
               label: "Incluír subcategorías"
       flags:
+        title: "Moderación"
         description: "Descrición"
         enabled: "Activado?"
       groups:
@@ -3531,35 +3580,36 @@ gl:
         add_owners: Engadir propietarios
         none_selected: "Selecciona un grupo para comezar"
         no_custom_groups: "Crear un novo grupo personalizado"
+      api_keys:
+        edit: "Editar"
+        save: "Gardar"
+        cancel: "Cancelar"
+        continue: "Continuar"
+        revoke: "Revogar"
+        revoked: "Revogada"
       api:
         generate_master: "Xerar unha chave maestra da API"
         none: "Non hai chaves activas da API agora mesmo."
         user: "Usuario"
         title: "API"
         key: "Chave"
-        created: Creado
+        created: Creado por
         updated: Actualizado
-        last_used: Último utilizado
-        never_used: (nunca)
+        never_used: Nunca
         generate: "Xerar"
-        undo_revoke: "Desfacer revogar"
         revoke: "Revogar"
-        all_users: "Todos os usuarios"
         active_keys: "Claves activas da API"
         manage_keys: Xestionar chaves
         show_details: Detalles
         description: Descrición
         no_description: (sen descrición)
         all_api_keys: Todas as claves da API
-        user_mode: Nivel de usuario
         impersonate_all_users: Suplantar calquera usuario
-        single_user: "Usuario único"
         user_placeholder: Escribe un nome de usuario
         description_placeholder: Para que se usa esta chave?
         save: Gardar
         new_key: Nova clave API
         revoked: Revogada
-        delete: Eliminar definitivamente
         not_shown_again: Esta clave non se amosará de novo. Asegúrese de ter unha copia antes de continuar.
         continue: Continuar
         scopes:
@@ -3569,8 +3619,6 @@ gl:
           title: Ámbitos
           resource: Recurso
           action: Acción
-          allowed_parameters: Parámetros permitidos
-          optional_allowed_parameters: Parámetros permitidos (opcional)
           any_parameter: (calquera parámetro)
           allowed_urls: URL permitidos
           descriptions:
@@ -3590,26 +3638,24 @@ gl:
               receive_emails: Combinar este ámbito co receptor de correo para procesar as mensaxes de correos entrantes.
       web_hooks:
         title: "Enganches de web (webhooks)"
-        none: "Non hai enganches de web neste momento."
         instruction: "Os enganches de web permiten que Discourse notifique a servizos externos se sucede certo evento no seu sitio. Cando se dispara o enganche de web, enviarase unha petición POST ao URL fornecido."
         detailed_instruction: "Enviarase unha petición POST ao URL proporcionado se sucede o evento escollido."
-        new: "Novo enganche de web"
         create: "Crear"
         edit: "Editar"
         save: "Gardar"
+        delete: "Eliminar"
+        cancel: "Cancelar"
         controls: "Controis"
-        go_back: "Volver á lista"
         payload_url: "URL que carga"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "A clave secreta non pode conter caracteres en branco."
         secret_too_short: "A clave secreta debe conter como mínimo 12 caracteres."
-        secret_placeholder: "Unha cadea opcional, utilizada para xerar sinatura"
         event_type_missing: "Debe estabelecer polo menos un tipo de evento."
         content_type: "Tipo de contido"
         secret: "Clave secreta"
         event_chooser: "Que eventos deben disparar este enganche de web?"
-        wildcard_event: "Envíemo todo."
-        individual_event: "Seleccione eventos individuais."
+        wildcard_event: "Envíemo todo"
+        individual_event: "Seleccione eventos individuais"
         verify_certificate: "Comprobe o certificado TLS do enderezo que carga"
         active: "Activo"
         active_notice: "Entregaremos os detalles do evento cando suceda."
@@ -3661,11 +3707,11 @@ gl:
           badges: "Insignias"
           notifications: "Notificacións"
           permalinks: "Ligazóns permanentes"
-          trust_levels: "Niveis de confianza"
           users: "Usuarios"
-          user_fields: "Campos do usuario"
-          watched_words: "Palabras observadas"
+          groups: "Grupos"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderación"
       appearance:
         title: "Aparencia"
         sidebar_link:
@@ -3677,45 +3723,49 @@ gl:
       email_settings:
         sidebar_link:
           appearance: "Aparencia"
-          preview_summary: "Visualización do compendio"
-      email_logs:
-        sidebar_link:
-          sent: "Enviada"
-          skipped: "Saltada"
-          bounced: "Rebotada"
-          received: "Recibidas"
-          rejected: "Rexeitada"
       security:
         title: "Seguranza"
-        sidebar_link:
-          error_logs: "Rexistros de erros"
-          screened_emails: "Correos controlados"
-          screened_ips: "IP controlados"
-          screened_urls: "URL controlados"
-          search_logs: "Buscar rexistros"
-          security: "Seguranza"
-          spam: "Lixo"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Copias de seguranza"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nome"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
         flags:
+          header: "Moderación"
           description: "Descrición"
           enabled: "Activado?"
           edit: "Editar"
           delete: "Eliminar"
           delete_confirm: 'Confirma a eliminación de «%{name}»?'
+          flags_tab: "Alertas"
           form:
             save: "Gardar"
             name: "Nome"
             description: "Descrición"
+            invalid_applies_to: "Obrigatorio"
             topic: "temas"
             post: "publicacións"
+        permalinks:
+          edit: "Editar"
+          delete: "Eliminar"
+        embeddable_host:
+          edit: "Editar"
+          delete: "Eliminar"
+        look_and_feel:
+          themes:
+            title: "Temas"
+        user_fields:
+          type: "Tipo"
+          delete: "Eliminar"
       plugins:
         title: "Complementos"
-        installed: "Complementos instalados"
         name: "Nome"
         none_installed: "Non ten ningún complemento instalado."
         version: "Versión"
@@ -3730,11 +3780,10 @@ gl:
           installed: "Instalado"
       advanced:
         sidebar_link:
+          webhooks: "Enganches de web (webhooks)"
           developer: "Desenvolvedor"
           embedding: "Incorporando"
-          rate_limits: "Límites de frecuencia"
           user_api: "API de usuario"
-          web_hooks: "Enganches de web (webhooks)"
           onebox: "Onebox"
           files: "Ficheiros"
           other_options: "Outro"
@@ -3744,7 +3793,7 @@ gl:
         menu:
           backups: "Copias de seguranza"
           logs: "Rexistros"
-        none: "Non hai copia de seguranza dispoñíbel."
+        none: "Non hai copia de seguranza dispoñíbel"
         read_only:
           enable:
             title: "Activar modo que só permite lectura"
@@ -3775,12 +3824,11 @@ gl:
           download:
             label: "Descargar"
             title: "Enviar correo electrónico coa ligazón de descarga"
-            alert: "Recibiu un correo electrónico coa ligazón para descargar esta copia de seguranza."
+            alert: "Recibiu un correo electrónico coa ligazón para descargar esta copia de seguranza"
           destroy:
-            title: "Eliminar a copia de seguranza"
+            title: "Eliminar"
             confirm: "Confirma a destrución desta copia de seguranza?"
           restore:
-            is_disabled: "«Restabelecer» está desactivado na configuración do sitio."
             label: "Restabelecer"
             title: "Restabelecer a copia de seguranza"
             confirm: "Confirma a restauración desta copia de seguranza?"
@@ -3789,7 +3837,6 @@ gl:
             title: "Reverter a base de datos ao estado de funcionamento anterior"
             confirm: "Confirma a reversión da base de datos ao estado de funcionamento anterior?"
         location:
-          local: "Almacén local"
           s3: "S3"
         backup_storage_error: "Erro ao acceder ao almacenamento da copia de seguranza: %{error_message}"
       export_csv:
@@ -3804,9 +3851,6 @@ gl:
           screened_url: "Exportar a lista de URL controlados en formato CSV."
       export_json:
         button_text: "Exportar"
-      invite:
-        button_text: "Enviar convites"
-        button_title: "Enviar convites"
       customize:
         title: "Personalizar"
         preview: "visualizar"
@@ -3870,7 +3914,6 @@ gl:
           hide_unused_fields: "Agochar campos non usados"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
-          color_scheme_user_selectable: "O esquema de cor pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
           color_scheme: "Paleta de cores"
           default_light_scheme: "Claro (predeterminado)"
@@ -4008,10 +4051,7 @@ gl:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
           title: "Cores"
-          edit: "Editar paletas de cores"
-          long_title: "Paletas de cores"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
-          new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
           delete_confirm: "Eliminar esta paleta de cores?"
           undo: "Desfacer"
@@ -4065,8 +4105,7 @@ gl:
           overridden: O ficheiro predeterminado robots.txt do sitio foi sobrescrito.
         email_style:
           title: "Estilo de correo electrónico"
-          heading: "Personalizar estilo de correo electrónico"
-          html: "Modelo HTML"
+          html: "HTML"
           css: "CSS"
           reset: "Restabelecer cos valores predeterminados"
           reset_confirm: "Confirma o restabelecemento de %{fieldName} cos valores predeterminados? Perderá todos os cambios."
@@ -4074,15 +4113,11 @@ gl:
           instructions: "Personalizar o modelo co que se renderizan todos os correos html e o estilo, utilizando CSS."
       email:
         title: "Mensaxes de correo"
+        settings: "Configuración"
         templates: "Modelos"
-        preview_digest: "Visualización do compendio"
         advanced_test:
-          title: "Test avanzado"
           desc: "Coñece como Discourse procesa as mensaxes de correo recibidas. Para poder procesar correctamente o correo electrónico, pega a continuación a mensaxe orixinal."
           email: "Mensaxe orixinal"
-          run: "Executar proba"
-          text: "Corpo de texto seleccionado"
-          elided: "Texto elidido"
         error: "<b>ERRO</b> - %{server_error}"
         test_error: "Produciuse un problema enviando a mensaxe de proba. Revise os seus axustes de correo, comprobe que o seu servidor non está bloqueando as conexións de correo e ténteo de novo."
         sent: "Enviada"
@@ -4090,15 +4125,10 @@ gl:
         bounced: "Rebotada"
         received: "Recibidas"
         rejected: "Rexeitada"
-        sent_at: "Enviada ás"
         time: "Hora"
         user: "Usuario"
-        email_type: "Tipo de correo"
-        to_address: "Ao enderezo"
         test_email_address: "enderezo de mensaxe de correo de proba"
-        send_test: "Enviar mensaxe de correo de proba"
         sent_test: "enviada!"
-        delivery_method: "Método de entrega"
         preview_digest_desc: "Visualiza o contido das mensaxes de correo e o compendio enviado a usuarios inactivos."
         refresh: "Actualizar"
         send_digest_label: "Enviar este resultado a:"
@@ -4107,10 +4137,7 @@ gl:
         html: "html"
         text: "texto"
         html_preview: "Visualización do contido do correo electrónico"
-        last_seen_user: "Último usuario visto:"
         no_result: "Non se atoparon resultados para o resumo."
-        reply_key: "Tecla para responder"
-        skipped_reason: "Saltar razón"
         incoming_emails:
           from_address: "De"
           to_addresses: "A"
@@ -4119,12 +4146,10 @@ gl:
           error: "Erro"
           none: "Non se atoparon mensaxes entrantes."
           modal:
-            title: "Detalles das mensaxes entrantes"
             error: "Erro"
             headers: "Cabeceiras"
             subject: "Asunto"
             body: "Corpo"
-            rejection_message: "Mensaxe de correo de rexeitamento"
           filters:
             from_placeholder: "de@exemplo.com"
             to_placeholder: "a@exemplo.com"
@@ -4148,7 +4173,7 @@ gl:
           delete_topic: "Tema eliminado"
           post_approved: "Publicación aprobada"
       logs:
-        title: "Rexistros"
+        nav_title: "Rexistros"
         action: "Acción"
         created_at: "Creado"
         last_match_at: "Último resultado"
@@ -4166,8 +4191,6 @@ gl:
         staff_actions:
           all: "todo"
           filter: "Filtrar:"
-          title: "Accións do equipo"
-          clear_filters: "Amosar todo"
           staff_user: "Usuario"
           target_user: "Usuario obxectivo"
           subject: "Asunto"
@@ -4271,9 +4294,7 @@ gl:
             post_staff_note_destroy: "destruír nota do equipo"
             delete_group: "eliminar grupo"
         screened_emails:
-          title: "Correos controlados"
           description: "Cando alguén tente crear unha nova conta, comprobaranse os seguintes enderezos de correo e bloquearase o rexistro ou se tomará outra medida."
-          email: "Enderezo de correo"
           actions:
             allow: "Permitir"
         screened_urls:
@@ -4288,7 +4309,6 @@ gl:
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
-            allow_admin: "Permitir administrador"
           form:
             label: "Novo:"
             ip_address: "Enderezo IP"
@@ -4298,27 +4318,20 @@ gl:
             text: "Agrupar"
             title: "Crea unha nova subrede de entradas para bloquear se hai cando menos «min_ban_entries_for_roll_up» entradas."
         search_logs:
-          title: "Buscar rexistros"
           term: "Termo"
           searches: "Buscas"
           click_through_rate: "CTR"
           types:
             all_search_types: "Todos os tipos de busca"
             header: "Cabeceira"
-            full_page: "Páxina completa"
             click_through_only: "Todas (só prema)"
-          header_search_results: "Resultados da busca de cabeceiras"
-        logster:
-          title: "Rexistros de erros"
       watched_words:
-        title: "Palabras observadas"
         search: "buscar"
         clear_filter: "Borrar"
         show_words:
           one: "Amosar %{count} palabra"
           other: "amosar %{count} palabras"
         download: Descargar
-        clear_all: Borrar todo
         clear_all_confirm: "Confirma que quere limpar todas as palabras observadas na acción %{action}?"
         actions:
           block: "Bloquear"
@@ -4389,8 +4402,11 @@ gl:
         id_not_found: "Sentímolo pero o usuario non existe no sistema."
         active: "Activado"
         status: "Estado"
-        show_emails: "Amosar correos"
-        hide_emails: "Agochar correos"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Pechar"
+              confirm: "Eliminar"
         nav:
           new: "Novo"
           active: "Activo"
@@ -4400,8 +4416,6 @@ gl:
           staged: "Transitorio"
         approved: "Aprobado?"
         titles:
-          active: "Usuarios activos"
-          new: "Novos usuarios"
           pending: "Usuarios pendentes de revisión"
           newuser: "Usuarios cun nivel de confianza 0 (novo usuario)"
           basic: "Usuarios cun nivel de confianza 1 (usuario básico)"
@@ -4409,11 +4423,7 @@ gl:
           regular: "Usuarios cun nivel de confianza 3 (normal)"
           leader: "Usuarios cun nivel de confianza 4 (líder)"
           staff: "Equipo"
-          admins: "Usuarios administradores"
           moderators: "Moderadores"
-          silenced: "Usuarios silenciados"
-          suspended: "Usuarios suspendidos"
-          staged: "Usuarios transitorios"
         not_verified: "Sen comprobar"
         check_email:
           title: "Amosar o enderezo de correo deste usuario"
@@ -4503,7 +4513,6 @@ gl:
         time_read: "Tempo de lectura"
         post_edits_count: "Edicións publicadas"
         anonymize: "Facer o usuario anónimo"
-        anonymize_confirm: "Confirma que desexa converter esta conta en anónima? Cambiaranse o nome do usuario e o correo electrónico e reiniciarase toda a información do perfil."
         anonymize_yes: "Si, converter a conta en anónima"
         anonymize_failed: "Produciuse un problema convertendo a conta en anónima."
         delete: "Eliminar usuario"
@@ -4631,9 +4640,6 @@ gl:
           delete_sso_record: "Eliminar o rexistro de SSO"
           confirm_delete: "Confirma que quere eliminar este rexistro do DiscourseConnect?"
       user_fields:
-        title: "Campos do usuario"
-        help: "Engade campos que os usuarios poidan encher."
-        create: "Crear un campo de usuario"
         untitled: "Sen título"
         name: "Nome do campo"
         type: "TIpo de campo"
@@ -4654,25 +4660,17 @@ gl:
             title: "Opcional"
         editable:
           title: "Editábel despois do rexistro"
-          enabled: "editábel"
-          disabled: "non editábel"
         show_on_profile:
           title: "Amosar no perfil público"
-          enabled: "amosado no perfil"
-          disabled: "non amosado no perfil"
         show_on_user_card:
           title: "Amosar na tarxeta de usuario"
-          enabled: "amosado na tarxeta de usuario"
-          disabled: "non amosado na tarxeta de usuario"
         field_types:
-          text: "Campo de texto"
+          text: "Texto"
           confirm: "Confirmación"
           dropdown: "Despregábel"
       site_text:
-        description: "Pode personalizar calquera texto do seu foro. Comece por buscar a seguir:"
         search: "Busque o texto que quere editar"
-        title: "Texto"
-        edit: "editar"
+        edit: "Editar"
         revert: "Reverter os cambios"
         revert_confirm: "Confirma a reversión dos cambios?"
         go_back: "Volver á busca"
@@ -4687,8 +4685,10 @@ gl:
         history: "Ver o historial de cambios"
         reset: "restabelecer"
         none: "ningunha"
+        save: "gardar"
+        cancel: "cancelar"
       site_settings:
-        title: "Axustes"
+        nav_title: "Configuración"
         no_results: "Non se atoparon resultados."
         clear_filter: "Borrar"
         add_url: "engadir URL"
@@ -4701,6 +4701,8 @@ gl:
             label: "Cargar"
         selectable_avatars:
           title: "Listaxe de avatares que os usuarios poden elixir"
+        table_column_heading:
+          status: "Estado"
         categories:
           all_results: "Todo"
           required: "Obrigatorio"
@@ -4773,6 +4775,7 @@ gl:
         none_selected: "Seleccione unha insignia para comezar"
         allow_title: Permitir que se use a insignia como un título
         multiple_grant: Pode concederse múltiples veces
+        visibility_heading: Visibilidade
         listable: Amosar a insignia na páxina de insignias públicas
         enabled: activado
         disabled: desactivado
@@ -4813,12 +4816,7 @@ gl:
             with_post: <span class="username">%{username}</span> por publicación en %{link}
             with_post_time: <span class="username">%{username}</span> por publicación en %{link} o <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
-        badge_intro:
-          title: "Seleccione unha insignia existente ou cree unha nova para comezar"
-          what_are_badges_title: "Que son as insignias?"
-          badge_query_examples_title: "Exemplos de consulta de insignias"
         mass_award:
-          title: Recoñemento en lote
           description: Concede a mesma insignia a varios usuarios á vez.
           no_badge_selected: Selecciona unha insignia para comezar.
           perform: "Conceder insignia a usuarios"
@@ -4827,7 +4825,7 @@ gl:
           replace_owners: Retirar a insignia dos propietarios anteriores
       emoji:
         title: "Emoji"
-        add: "Engadir novo emoji"
+        delete: "Eliminar"
         name: "Nome"
         group: "Grupo"
         image: "Imaxe"
@@ -4836,16 +4834,11 @@ gl:
         settings: "Configuración"
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
+        delete: "Eliminar"
         confirm_delete: "Confirma a eliminación deste servidor?"
         title: "Incorporando"
-        host: "Servidores permitidos"
-        allowed_paths: "Lista de camiños admitidos"
-        edit: "editar"
-        category: "Publicación na categoría"
-        add_host: "Engadir servidor"
-        settings: "Configuración da incorporación"
-        crawling_settings: "Configuración do extractor"
-        crawling_description: "Cando o Discourse crea temas para as súas publicacións, se non existe unha fonte RSS/ATOM, tentará procesar o contido do seu HTML. Ás veces pode ser difícil extraer o contido, por iso dámoslle a posibilidade de especificar as regras do CSS para facilitar a extracción."
+        edit: "Editar"
+        crawlers_description: "Cando o Discourse crea temas para as súas publicacións, se non existe unha fonte RSS/ATOM, tentará procesar o contido do seu HTML. Ás veces pode ser difícil extraer o contido, por iso dámoslle a posibilidade de especificar as regras do CSS para facilitar a extracción."
         embed_by_username: "Nome do usuario para crear o tema"
         embed_post_limit: "Número máximo de publicacións que incorporar"
         embed_title_scrubber: "Expresión regular empregada para limpar o título das publicacións"
@@ -4854,7 +4847,12 @@ gl:
         allowed_embed_selectors: "Selector CSS para elementos permitidos nas incorporacións"
         blocked_embed_selectors: "Selector CSS para elementos retirados das incorporacións"
         allowed_embed_classnames: "Nomes permitidos de clases CSS"
-        save: "Gardar a configuración da incorporación"
+        save: "Gardar"
+        host_form:
+          save: "Gardar"
+        nav:
+          settings: "Configuración"
+          crawlers: "Rastrexadores"
       permalink:
         title: "Ligazóns permanentes"
         description: "Redireccións que se lle aplicarán a URL non coñecidos polo foro."
@@ -4866,18 +4864,22 @@ gl:
         category_id: "ID da categoría"
         category_title: "Categoría"
         tag_name: "Nome da etiqueta"
+        tag_title: "Etiqueta"
         external_url: "URL externo ou relativo"
+        user_title: "Usuario"
         username: "Nome de usuario"
         destination: "Destino"
         copy_to_clipboard: "Copiar a ligazón permanente ao portapapeis"
         delete_confirm: Confirma a eliminación desta ligazón permanente?
+        nav:
+          settings: "Configuración"
+          permalinks: "Ligazóns permanentes"
         form:
           label: "Novo:"
-          add: "Engadir"
-          filter: "Buscar (URL ou URL externa)"
+          url: "URL"
+          save: "Gardar"
       reseed:
         action:
-          label: "Substituír texto…"
           title: "Substituír o texto das categorías e temas coas traducións"
         modal:
           title: "Substituír texto"
@@ -4902,6 +4904,30 @@ gl:
           admin: "Administración"
           moderator: "Moderador"
           regular: "Usuario normal"
+      homepage_choices:
+        custom:
+          label: "Personalizado"
+        style_type:
+          categories: "categoría"
+          topics: "tema"
+      top_menu_items:
+        new: "Novo"
+        unread: "Pendentes de lectura"
+        top: "Destacados"
+        latest: "Últimos"
+        categories: "Categorías"
+        read: "Lidas"
+        bookmarks: "Marcadores"
       previews:
         share_button: "Compartir"
         reply_button: "Responder"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "todas as categorías"
+        category_names:
+          site_feedback: "Opinións sobre o sitio"
+        table_headers:
+          topic: "Tema"
+          replies: "Réplicas"
+          views: "Visualizacións"
+          activity: "Actividade"

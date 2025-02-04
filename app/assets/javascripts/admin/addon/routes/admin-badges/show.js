@@ -1,8 +1,8 @@
-import { action, get } from "@ember/object";
+import { get } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import Badge from "discourse/models/badge";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesShowRoute extends Route {
   @service dialog;
@@ -14,7 +14,7 @@ export default class AdminBadgesShowRoute extends Route {
   model(params) {
     if (params.badge_id === "new") {
       return Badge.create({
-        name: I18n.t("admin.badges.new_badge"),
+        name: i18n("admin.badges.new_badge"),
       });
     }
     return this.modelFor("adminBadges").findBy(
@@ -27,10 +27,5 @@ export default class AdminBadgesShowRoute extends Route {
     super.setupController(...arguments);
 
     controller.setup();
-  }
-
-  @action
-  updateGroupings(groupings) {
-    this.controllerFor("admin-badges").set("badgeGroupings", groupings);
   }
 }

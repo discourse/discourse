@@ -48,12 +48,30 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def has_channel?(channel)
+        channels_index.has_channel?(channel)
+      end
+
+      def has_no_channel?(channel)
+        channels_index.has_no_channel?(channel)
+      end
+
+      def has_channel_at_position?(channel, position)
+        find(
+          "#{VISIBLE_DRAWER} .chat-channel-row:nth-child(#{position})[data-chat-channel-id='#{channel.id}']",
+        )
+      end
+
       def has_unread_channel?(channel)
         channels_index.has_unread_channel?(channel)
       end
 
       def has_no_unread_channel?(channel)
         channels_index.has_no_unread_channel?(channel)
+      end
+
+      def has_urgent_channel?(channel)
+        channels_index.has_unread_channel?(channel, urgent: true)
       end
 
       def has_user_threads_section?
@@ -145,6 +163,10 @@ module PageObjects
         has_no_css?("#{thread_list_button_selector}.has-unreads")
       end
 
+      def has_direct_message_channels_section?
+        has_css?(".direct-message-channels-section")
+      end
+
       private
 
       def mouseout
@@ -152,7 +174,7 @@ module PageObjects
         # and that the message actions menu is closed.
         # This check is essential because the message actions menu might partially
         # overlap with the header, making certain buttons inaccessible.
-        find("#site-logo").hover
+        PageObjects::Components::Logo.hover
       end
     end
   end

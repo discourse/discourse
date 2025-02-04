@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DAG from "discourse/lib/dag";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import Dropdown from "./dropdown";
 import UserDropdown from "./user-dropdown";
 
@@ -37,6 +37,10 @@ export default class Icons extends Component {
     // NOTE: In this scenario, we are forcing the sidebar on admin users,
     // so we need to still show the hamburger menu to be able to
     // access the legacy hamburger forum menu.
+    if (this.header.headerButtonsHidden.includes("menu")) {
+      return false;
+    }
+
     if (
       this.args.sidebarEnabled &&
       this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
@@ -67,7 +71,7 @@ export default class Icons extends Component {
           {{#unless this.hideSearchButton}}
             <Dropdown
               @title="search.title"
-              @icon="search"
+              @icon="magnifying-glass"
               @iconId={{@searchButtonId}}
               @onClick={{@toggleSearchMenu}}
               @active={{this.search.visible}}

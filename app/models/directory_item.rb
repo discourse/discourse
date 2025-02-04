@@ -64,23 +64,7 @@ class DirectoryItem < ActiveRecord::Base
         period_type: period_types[period_type],
       )
 
-      # Create new records for users who don't have one yet
-
-      column_names =
-        DirectoryColumn.automatic_column_names + DirectoryColumn.plugin_directory_columns
-      DB.exec(
-        "INSERT INTO directory_items(period_type, user_id, #{column_names.map(&:to_s).join(", ")})
-                SELECT
-                    :period_type,
-                    u.id,
-                    #{Array.new(column_names.count) { |_| 0 }.join(", ")}
-                FROM users u
-                LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
-                WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL AND u.active
-                #{SiteSetting.must_approve_users ? "AND u.approved" : ""}
-              ",
-        period_type: period_types[period_type],
-      )
+      add_missing_users(period_type)
 
       # Calculate new values and update records
       #
@@ -162,6 +146,31 @@ class DirectoryItem < ActiveRecord::Base
             )
         SQL
     end
+  end
+
+  def self.add_missing_users_all_periods
+    period_types.each_key { |p| add_missing_users(p) }
+  end
+
+  def self.add_missing_users(period_type)
+    column_names = DirectoryColumn.automatic_column_names + DirectoryColumn.plugin_directory_columns
+    DB.exec(
+      "INSERT INTO directory_items(period_type, user_id, #{column_names.map(&:to_s).join(", ")})
+              SELECT
+                  :period_type,
+                  u.id,
+                  #{Array.new(column_names.count, 0).join(", ")}
+              FROM users u
+              LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
+              WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL AND u.active AND NOT EXISTS(
+                SELECT 1
+                FROM anonymous_users
+                WHERE anonymous_users.user_id = u.id
+              )
+              #{SiteSetting.must_approve_users ? "AND u.approved" : ""}
+            ",
+      period_type: period_types[period_type],
+    )
   end
 end
 

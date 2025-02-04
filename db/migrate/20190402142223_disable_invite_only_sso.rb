@@ -8,4 +8,8 @@ class DisableInviteOnlySso < ActiveRecord::Migration[5.2]
         AND EXISTS(SELECT 1 FROM site_settings WHERE name = 'enable_sso' AND value = 't')
     SQL
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

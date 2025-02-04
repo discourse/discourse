@@ -39,6 +39,12 @@ ru:
       chat_messages_count: "Сообщения чата"
       chat_channels_count: "Каналы чата"
       chat_users_count: "Пользователи чата"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} сообщение чата"
+          few: "%{formatted_number} сообщения чата"
+          many: "%{formatted_number} сообщений чата"
+          other: "%{formatted_number} сообщения чата"
     chat:
       text_copied: Текст скопирован в буфер обмена
       link_copied: Ссылка скопирована в буфер обмена
@@ -46,7 +52,6 @@ ru:
       deleted_chat_username: удалён
       dates:
         yesterday: "Вчера"
-        time_tiny: "h:mm"
       all_loaded: "Показать все сообщения"
       already_enabled: "Чат в этой теме уже включён . Обновите страницу."
       disabled_for_topic: "Чат в этой теме отключён."
@@ -136,11 +141,18 @@ ru:
       header_indicator_preference:
         title: "Показать индикатор активности в заголовке"
         all_new: "Все новые сообщения"
-        dm_and_mentions: "Прямые сообщения и упоминания"
+        dm_and_mentions: "Прямые сообщения, упоминания и наблюдаемые цепочки сообщений"
         only_mentions: "Только упоминания"
         never: "Никогда"
       separate_sidebar_mode:
         title: "Показывать отдельные режимы боковой панели для форума и чата"
+      send_shortcut:
+        enter:
+          label: "Отправить с помощью Enter"
+          description: "Новая строка с помощью Shift + Enter"
+        meta_enter:
+          label: "Отправить с помощью %{meta_key} + Enter"
+          description: "Новая строка с помощью Enter"
       enable: "Включить чат"
       flag: "Пожаловаться"
       emoji: "Вставить эмодзи"
@@ -272,6 +284,7 @@ ru:
       placeholder_channel: "Чат в канале «%{channelName}»"
       placeholder_thread: "Чат в цепочке сообщений"
       placeholder_users: "Чат с %{commaSeparatedNames}"
+      placeholder_group: "Чат в группе"
       placeholder_new_message_disallowed:
         archived: "Канал архивирован, вы не можете отправлять новые сообщения."
         closed: "Канал закрыт, вы не можете отправлять новые сообщения."
@@ -520,10 +533,9 @@ ru:
         auto_join_users_info: "Каждый час проверять, какие пользователи были активны за последние три месяца. Добавлять их в этот канал, если у них есть доступ к категории «%{category}»."
         auto_join_users_info_no_category: "Каждый час проверять, какие пользователи были активны за последние три месяца. Добавлять их в этот канал, если у них есть доступ к выбранной категории."
         auto_join_users_warning: "Любой пользователь, не являющийся участником этого канала, но имеющий доступ к разделу %{category}, будет автоматически подключён. Продолжить?"
-        desktop_notification_level: "Уведомления на рабочем столе"
+        notification_level: "Отправлять push-уведомления"
         follow: "Подписаться"
         followed: "Подписан"
-        mobile_notification_level: "Мобильные push-уведомления"
         mute: "Отключить канал"
         threading_enabled: "Включено"
         threading_disabled: "Отключено"
@@ -546,6 +558,7 @@ ru:
           title: "Экспорт сообщений чата"
           description: "Экспортируются все сообщения со всех каналов."
           create_export: "Создать экспорт"
+          confirm_export: "Экспортируются все сообщения со всех каналов и отправляются вам в личном сообщении. Действительно экспортировать?"
           export_has_started: "Экспорт начался. Когда он завершится, вы получите личное сообщение."
       my_threads:
         title: Мои цепочки сообщений
@@ -564,6 +577,7 @@ ru:
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Выберите канал"
+        channel: "Канал"
         confirm_destroy: "Действительно удалить этот входящий вебхук? Это действие не может быть отменено."
         current_emoji: "Текущие эмодзи"
         description: "Описание"
@@ -587,6 +601,8 @@ ru:
         username: "Имя пользователя"
         username_instructions: "Имя бота, отправляющего сообщения на канал. Если оставить поле пустым, по умолчанию используется «Системный»."
         instructions: "Входящие вебхуки могут использоваться внешними системами для отправки сообщений в назначенный канал чата в качестве пользователя-бота через конечную точку <code>/hooks/:key</code>. Полезная нагрузка состоит из одного параметра <code>text</code>, который ограничен 2000 символами.<br><br>Мы также поддерживаем ограниченные Slack-форматированные <code>текстовые</code> параметры, извлекая ссылки и упоминания на основе формата <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, но для этого необходимо использовать конечную точку <code>/hooks/:key/slack</code>."
+        saved: "Изменения вебхука сохранены"
+        created: "Вебхук создан"
       selection:
         cancel: "Отмена"
         quote_selection: "Цитировать в теме"
@@ -678,10 +694,13 @@ ru:
         notifications:
           regular:
             title: "Обычный"
-            description: "Вам придет уведомление, если кто-нибудь упомянет ваше @имя в этой цепочке."
+            description: "Получайте уведомления, когда кто-то упоминает вас в этой теме."
           tracking:
             title: "В отслеживаемых"
-            description: "В списке тем и на канале будет отображаться количество новых ответов в этой цепочке. Вам придет уведомление, если кто-нибудь упомянет ваше @имя в ней."
+            description: "Получайте уведомления, когда кто-то упоминает вас в этой теме, и просматривайте количество новых ответов в списке тем."
+          watching:
+            title: "В наблюдаемых"
+            description: "Получайте уведомления обо всех ответах в этой теме и просматривайте количество новых ответов в списке тем."
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"
@@ -709,6 +728,11 @@ ru:
       chat_invitation: "пригласил вас присоединиться к каналу чата"
       chat_invitation_html: "<span>Пользователь %{username}</span> <span> пригласил вас присоединиться к каналу</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} и %{username2}"
+        few: "%{username} и ещё %{count}"
+        many: "%{username} и ещё %{count}"
+        other: "%{username} и ещё %{count}"
       popup:
         chat_mention:
           direct: 'упомянул вас в «%{channel}»'
@@ -723,9 +747,10 @@ ru:
         chat_message: "Новое сообщение в чате"
         chat_quoted: "Пользователь %{username} процитировал ваше сообщение в чате"
       titles:
-        chat_mention: "Упоминание в чате"
-        chat_invitation: "Приглашение в чат"
-        chat_quoted: "Цитирование чата"
+        chat_mention: "Упоминается в чате"
+        chat_invitation: "Приглашается в канал чата"
+        chat_quoted: "Процитировано сообщение чата"
+        chat_watched_thread: "Наблюдаемые цепочки сообщений в чате"
     action_codes:
       chat:
         enabled: '%{who} включил <button class="btn-link open-chat">чат</button> %{when}'
@@ -756,6 +781,7 @@ ru:
         title: "Чат"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Переключить канал"
+          switch__unread_channel_arrows: "%{shortcut} Переключить непрочитанный канал"
           open_quick_channel_selector: "%{shortcut} Открыть переключатель каналов"
           open_insert_link_modal: "%{shortcut} Вставить гиперссылку (только в редакторе)"
           composer_bold: "%{shortcut} Жирный (только в редакторе)"

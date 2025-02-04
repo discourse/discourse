@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | email-group-user-field", function (hooks) {
   setupRenderingTest(hooks);
@@ -12,12 +11,11 @@ module("Integration | Component | email-group-user-field", function (hooks) {
 
     await render(template);
 
-    assert.equal(query(".control-label").innerText, "a label");
-    assert.ok(
-      exists(
+    assert.dom(".control-label").hasText("a label");
+    assert
+      .dom(
         ".controls details.select-kit.multi-select.user-chooser.email-group-user-chooser"
-      ),
-      "has email-group-user-chooser"
-    );
+      )
+      .exists("has email-group-user-chooser");
   });
 });

@@ -8,3 +8,9 @@ export const FOOTER_NAV_ROUTES = [
   "chat.channels",
   "chat.threads",
 ];
+export const INDICATOR_PREFERENCES = {
+  all_new: "all_new",
+  dm_and_mentions: "dm_and_mentions",
+  only_mentions: "only_mentions",
+  never: "never",
+};

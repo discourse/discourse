@@ -39,6 +39,10 @@ hu:
       chat_messages_count: "Chat üzenetek"
       chat_channels_count: "Chat csatornák"
       chat_users_count: "Chat felhasználói"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} chat üzenet"
+          other: "%{formatted_number} chat üzenet"
     chat:
       text_copied: Szöveg vágólapra másolva
       link_copied: Link vágólapra másolva
@@ -46,7 +50,6 @@ hu:
       deleted_chat_username: törölt
       dates:
         yesterday: "Tegnap"
-        time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
       already_enabled: "A csevegés már engedélyezve van ebben a témában. Frissítsen."
       disabled_for_topic: "A csevegés le van tiltva ebben a témában."
@@ -130,11 +133,18 @@ hu:
       header_indicator_preference:
         title: "Aktivitásjelző megjelenítése a fejlécben"
         all_new: "Minden új üzenet"
-        dm_and_mentions: "Közvetlen üzenetek és említések"
+        dm_and_mentions: "Közvetlen üzenetek, említések és figyelt témák"
         only_mentions: "Csak említések"
         never: "Soha"
       separate_sidebar_mode:
         title: "Külön oldalsávos módok megjelenítése a fórum és a chat számára"
+      send_shortcut:
+        enter:
+          label: "Küldés Enterrel"
+          description: "Új sor a Shift+Enter segítségével"
+        meta_enter:
+          label: "Küldés: %{meta_key} + Enter"
+          description: "Új sor Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
       emoji: "Hangulatjel beszúrása"
@@ -193,6 +203,7 @@ hu:
       placeholder_channel: "Csevegés %{channelName}"
       placeholder_thread: "Csevegés a témában"
       placeholder_users: "Csevegés: %{commaSeparatedNames}"
+      placeholder_group: "Csevegés a csoportban"
       placeholder_new_message_disallowed:
         archived: "A csatorna archiválva van, nem küldhet új üzenetet."
         closed: "A csatorna zárva van, nem küldhet új üzenetet."
@@ -403,10 +414,9 @@ hu:
         auto_join_users_info: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Add hozzá őket ehhez a csatornához, ha hozzáférnek a %{category} kategóriához."
         auto_join_users_info_no_category: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Adja hozzá őket ehhez a csatornához, ha hozzáfér a kiválasztott kategóriához."
         auto_join_users_warning: "Minden olyan felhasználó, aki nem tagja ennek a csatornának, de hozzáféréssel rendelkezik a %{category} kategóriához, csatlakozni fog. Biztos benne?"
-        desktop_notification_level: "Asztali értesítések"
+        notification_level: "Push értesítések küldése"
         follow: "Belépés"
         followed: "Csatlakozott"
-        mobile_notification_level: "Mobilos leküldéses értesítések"
         mute: "Csatorna némítása"
         threading_enabled: "Engedélyezed"
         threading_disabled: "Kikapcsolt"
@@ -429,6 +439,7 @@ hu:
           title: "Chat üzenetek exportálása"
           description: "Minden csatorna minden üzenetét exportálja."
           create_export: "Export létrehozása"
+          confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
           export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-et, ha elkészült."
       my_threads:
         title: Témáim
@@ -447,6 +458,7 @@ hu:
       incoming_webhooks:
         back: "Vissza"
         channel_placeholder: "Válasszon csatornát"
+        channel: "Csatorna"
         confirm_destroy: "Biztos, hogy törli ezt a bejövő webhookot? Ezt nem lehet visszavonni."
         current_emoji: "Aktuális hangulatjel"
         description: "Leírás"
@@ -470,6 +482,8 @@ hu:
         username: "Felhasználónév"
         username_instructions: "A csatornán közzétevő bot felhasználóneve. Ha üresen marad, akkor alapértelmezés szerint „rendszer”."
         instructions: "A bejövő webhookokat külső rendszerek használhatják arra, hogy üzeneteket küldjenek el egy kijelölt csevegőcsatornára bot-felhasználóként a <code>/hooks/:key</code> végponton keresztül. A hasznos adat egyetlen <code>szöveges</code> paraméterből áll, amely 2000 karakterre korlátozódik.<br><br>Támogatjuk a korlátozott Slack formátumú <code>szöveg</code> paramétereit is, a hivatkozások és említések kinyerése a <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api formátuma alapján. slack.com/reference/surfaces/formatting</a>, de ehhez a <code>/hooks/:key/slack</code> végpontot kell használni."
+        saved: "Webhook módosítások mentése"
+        created: "Webhook létrehozva"
       selection:
         cancel: "Visszavon"
         quote_selection: "Idézet a témában"
@@ -547,10 +561,13 @@ hu:
         notifications:
           regular:
             title: "Normális"
-            description: "Értesítést kap, ha valaki megemlíti a @nevét ebben a témában."
+            description: "Kapjon értesítést, ha valaki megemlíti Önt ebben a témában."
           tracking:
             title: "Követés"
-            description: "A téma új válaszainak száma megjelenik a téma listájában és a csatornán. Értesítést kapsz, ha valaki megemlíti a @nevedet ebben a témában."
+            description: "Értesítést kap, ha valaki megemlíti Önt ebben a témában, és láthatja az új válaszok számát a téma listájában."
+          watching:
+            title: "Figyelés"
+            description: "Értesítést kaphat a téma összes válaszáról, és láthatja az új válaszok számát a téma listájában."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -576,6 +593,9 @@ hu:
       chat_invitation: "meghívta Önt, hogy csatlakozzon egy csevegőcsatornához"
       chat_invitation_html: "<span>%{username}</span> <span>meghvta Önt, hogy csatlakozzon egy csevegőcsatornához</span>"
       chat_quoted: "<span>%{username}</span>%{description}"
+      chat_watched_thread_label:
+        one: "%{username} és %{username2}"
+        other: "%{username} és még %{count} további"
       popup:
         chat_mention:
           direct: 'megemlítette Önt a következő csatornán: „%{channel}”'
@@ -590,9 +610,10 @@ hu:
         chat_message: "Új csevegőüzenet"
         chat_quoted: "%{username} idézte a csevegési üzenetet"
       titles:
-        chat_mention: "Csevegési megemlítés"
-        chat_invitation: "Csevegési meghívó"
-        chat_quoted: "Csevegés idézve"
+        chat_mention: "A chatben megemlítve"
+        chat_invitation: "Meghívás a chat-csatornára"
+        chat_quoted: "Idézett csevegőüzenet"
+        chat_watched_thread: "Látott csevegés"
     action_codes:
       chat:
         enabled: '%{who} engedélyezte a <button class="btn-link open-chat">csevegést</button> %{when}'
@@ -623,6 +644,7 @@ hu:
         title: "Csevegés"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Csatorna váltása"
+          switch__unread_channel_arrows: "%{shortcut} Olvasatlan csatornára váltás"
           open_quick_channel_selector: "%{shortcut} Gyors csatornaválasztó megnyitása"
           open_insert_link_modal: "%{shortcut} Hiperhivatkozás beillesztése (csak a szerkesztőben)"
           composer_bold: "%{shortcut} Félkövér (csak a szerkesztőben)"

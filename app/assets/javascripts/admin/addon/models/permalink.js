@@ -1,26 +1,21 @@
-import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
-import discourseComputed from "discourse-common/utils/decorators";
+import RestModel from "discourse/models/rest";
 
-export default class Permalink extends EmberObject {
+export default class Permalink extends RestModel {
   static findAll(filter) {
-    return ajax("/admin/permalinks.json", { data: { filter } }).then(function (
-      permalinks
-    ) {
-      return permalinks.map((p) => Permalink.create(p));
-    });
-  }
+    return ajax("/admin/permalinks.json").then(function (permalinks) {
+      let allLinks = permalinks.map((p) => Permalink.create(p));
 
-  save() {
-    return ajax("/admin/permalinks.json", {
-      type: "POST",
-      data: {
-        url: this.url,
-        permalink_type: this.permalink_type,
-        permalink_type_value: this.permalink_type_value,
-      },
+      let filteredLinks = filter
+        ? allLinks.filter(
+            (p) => p.url.includes(filter) || p.external_url?.includes(filter)
+          )
+        : allLinks;
+
+      return { allLinks, filteredLinks };
     });
   }
 
@@ -34,9 +29,8 @@ export default class Permalink extends EmberObject {
     return !DiscourseURL.isInternal(external_url);
   }
 
-  destroy() {
-    return ajax("/admin/permalinks/" + this.id + ".json", {
-      type: "DELETE",
-    });
+  @discourseComputed("url")
+  key(url) {
+    return url.replace("/", "_");
   }
 }

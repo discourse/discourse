@@ -2,7 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import AdminDashboard from "admin/models/admin-dashboard";
 import VersionCheck from "admin/models/version-check";
 
@@ -17,16 +17,6 @@ export default class AdminDashboardController extends Controller {
   dashboardFetchedAt = null;
 
   @setting("version_checks") showVersionChecks;
-
-  @discourseComputed(
-    "lowPriorityProblems.length",
-    "highPriorityProblems.length"
-  )
-  foundProblems(lowPriorityProblemsLength, highPriorityProblemsLength) {
-    const problemsLength =
-      lowPriorityProblemsLength + highPriorityProblemsLength;
-    return this.currentUser.admin && problemsLength > 0;
-  }
 
   @computed("siteSettings.dashboard_visible_tabs")
   get visibleTabs() {
@@ -48,11 +38,6 @@ export default class AdminDashboardController extends Controller {
   @computed("visibleTabs")
   get isReportsTabVisible() {
     return this.visibleTabs.includes("reports");
-  }
-
-  @computed("visibleTabs")
-  get isNewFeaturesTabVisible() {
-    return this.visibleTabs.includes("features");
   }
 
   fetchProblems() {
@@ -91,7 +76,6 @@ export default class AdminDashboardController extends Controller {
           if (versionChecks) {
             properties.versionCheck = VersionCheck.create(model.version_check);
           }
-          properties.hasUnseenFeatures = model.hasUnseenFeatures;
 
           this.setProperties(properties);
         })
@@ -112,22 +96,13 @@ export default class AdminDashboardController extends Controller {
     });
 
     AdminDashboard.fetchProblems()
-      .then((model) => {
-        this.set(
-          "highPriorityProblems",
-          model.problems.filterBy("priority", "high")
-        );
-        this.set(
-          "lowPriorityProblems",
-          model.problems.filterBy("priority", "low")
-        );
-      })
+      .then((model) => this.set("problems", model.problems))
       .finally(() => this.set("loadingProblems", false));
   }
 
   @discourseComputed("problemsFetchedAt")
   problemsTimestamp(problemsFetchedAt) {
-    return moment(problemsFetchedAt).locale("en").format("LLL");
+    return moment(problemsFetchedAt).format("LLL");
   }
 
   @action

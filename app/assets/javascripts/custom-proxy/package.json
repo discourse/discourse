@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "clean-base-url": "^1.0.0",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "glob": "^10.4.3",
     "html-entities": "^2.5.2",
     "html-rewriter-wasm": "^0.4.1",
@@ -26,7 +26,8 @@
   },
   "engines": {
     "node": ">= 18",
-    "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "^9"
   }
 }

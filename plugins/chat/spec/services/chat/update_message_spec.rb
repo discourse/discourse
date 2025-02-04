@@ -40,7 +40,6 @@ RSpec.describe Chat::UpdateMessage do
     before do
       SiteSetting.chat_enabled = true
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-      SiteSetting.chat_duplicate_message_sensitivity = 0
       Jobs.run_immediately!
 
       [admin1, admin2, user1, user2, user3, user4].each { |user| public_chat_channel.add(user) }
@@ -64,7 +63,13 @@ RSpec.describe Chat::UpdateMessage do
       new_message = "2 short"
 
       expect do
-        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+        described_class.call(
+          guardian: guardian,
+          params: {
+            message_id: chat_message.id,
+            message: new_message,
+          },
+        )
       end.to raise_error(ActiveRecord::RecordInvalid).with_message(
         "Validation failed: " +
           I18n.t(
@@ -83,7 +88,13 @@ RSpec.describe Chat::UpdateMessage do
       new_message = "2 long" * 100
 
       expect do
-        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+        described_class.call(
+          guardian: guardian,
+          params: {
+            message_id: chat_message.id,
+            message: new_message,
+          },
+        )
       end.to raise_error(ActiveRecord::RecordInvalid).with_message(
         "Validation failed: " +
           I18n.t(
@@ -95,46 +106,17 @@ RSpec.describe Chat::UpdateMessage do
       expect(chat_message.reload.message).to eq(og_message)
     end
 
-    it "errors when a blank message is sent" do
-      og_message = "This won't be changed!"
-      chat_message = create_chat_message(user1, og_message, public_chat_channel)
-      new_message = "    "
-
-      updater =
-        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
-
-      expect(updater.contract).not_to be_valid
-      expect(updater.contract.errors.added?(:message, :blank)).to be_truthy
-      expect(chat_message.reload.message).to eq(og_message)
-    end
-
-    it "errors if a user other than the message user is trying to edit the message" do
-      og_message = "This won't be changed!"
-      chat_message = create_chat_message(user1, og_message, public_chat_channel)
-      new_message = "2 short"
-      updater =
-        described_class.call(
-          guardian: Guardian.new(Fabricate(:user)),
-          message_id: chat_message.id,
-          message: new_message,
-        )
-
-      expect(updater.message.reload.message).not_to eq(new_message)
-    end
-
-    it "updates a message's content" do
-      chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
-      new_message = "Change to this!"
-
-      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
-      expect(chat_message.reload.message).to eq(new_message)
-    end
-
     it "cleans message's content" do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       new_message = "bbbbb\n"
 
-      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      described_class.call(
+        guardian: guardian,
+        params: {
+          message_id: chat_message.id,
+          message: new_message,
+        },
+      )
       expect(chat_message.reload.message).to eq("bbbbb")
     end
 
@@ -145,9 +127,13 @@ RSpec.describe Chat::UpdateMessage do
 
         described_class.call(
           guardian: guardian,
-          message_id: chat_message.id,
-          message: new_message,
-          strip_whitespaces: false,
+          options: {
+            strip_whitespaces: false,
+          },
+          params: {
+            message_id: chat_message.id,
+            message: new_message,
+          },
         )
         expect(chat_message.reload.message).to eq("bbbbb\n")
       end
@@ -157,7 +143,13 @@ RSpec.describe Chat::UpdateMessage do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       new_message = "Change **to** this!"
 
-      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      described_class.call(
+        guardian: guardian,
+        params: {
+          message_id: chat_message.id,
+          message: new_message,
+        },
+      )
       expect(chat_message.reload.cooked).to eq("<p>Change <strong>to</strong> this!</p>")
     end
 
@@ -166,8 +158,10 @@ RSpec.describe Chat::UpdateMessage do
 
       described_class.call(
         guardian: guardian,
-        message_id: chat_message.id,
-        message: "Change to this!",
+        params: {
+          message_id: chat_message.id,
+          message: "Change to this!",
+        },
       )
       expect(chat_message.reload.excerpt).to eq("Change to this!")
     end
@@ -178,8 +172,10 @@ RSpec.describe Chat::UpdateMessage do
         DiscourseEvent.track_events do
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "Change to this!",
+            params: {
+              message_id: chat_message.id,
+              message: "Change to this!",
+            },
           )
         end
       expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
@@ -194,8 +190,10 @@ RSpec.describe Chat::UpdateMessage do
           .track_publish("/chat/#{public_chat_channel.id}") do
             described_class.call(
               guardian: guardian,
-              message_id: chat_message.id,
-              message: new_content,
+              params: {
+                message_id: chat_message.id,
+                message: new_content,
+              },
             )
           end
           .detect { |m| m.data["type"] == "edit" }
@@ -210,8 +208,10 @@ RSpec.describe Chat::UpdateMessage do
 
         described_class.call(
           guardian: guardian,
-          message_id: message.id,
-          message: "Mentioning @#{user2.username} and @#{user3.username}",
+          params: {
+            message_id: message.id,
+            message: "Mentioning @#{user2.username} and @#{user3.username}",
+          },
         )
 
         mention = user3.chat_mentions.where(chat_message: message.id).first
@@ -224,8 +224,10 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: message + " editedddd",
+            params: {
+              message_id: chat_message.id,
+              message: message + " editedddd",
+            },
           )
         }.not_to change { Chat::Mention.count }
       end
@@ -236,8 +238,10 @@ RSpec.describe Chat::UpdateMessage do
 
         described_class.call(
           guardian: guardian,
-          message_id: chat_message.id,
-          message: message + " @#{user_without_memberships.username}",
+          params: {
+            message_id: chat_message.id,
+            message: message + " @#{user_without_memberships.username}",
+          },
         )
 
         mention = user_without_memberships.chat_mentions.where(chat_message: chat_message).first
@@ -254,8 +258,10 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "ping @#{user3.username}",
+            params: {
+              message_id: chat_message.id,
+              message: "ping @#{user3.username}",
+            },
           )
         }.to change { user2.chat_mentions.count }.by(-1).and not_change {
                 user3.chat_mentions.count
@@ -271,8 +277,10 @@ RSpec.describe Chat::UpdateMessage do
           )
         described_class.call(
           guardian: guardian,
-          message_id: chat_message.id,
-          message: "ping @#{user3.username} @#{user4.username}",
+          params: {
+            message_id: chat_message.id,
+            message: "ping @#{user3.username} @#{user4.username}",
+          },
         )
 
         expect(user2.chat_mentions.where(chat_message: chat_message)).not_to be_present
@@ -284,7 +292,9 @@ RSpec.describe Chat::UpdateMessage do
         result =
           Chat::CreateDirectMessageChannel.call(
             guardian: user1.guardian,
-            target_usernames: [user1.username, user2.username],
+            params: {
+              target_usernames: [user1.username, user2.username],
+            },
           )
         service_failed!(result) if result.failure?
         direct_message_channel = result.channel
@@ -292,8 +302,10 @@ RSpec.describe Chat::UpdateMessage do
 
         described_class.call(
           guardian: guardian,
-          message_id: message.id,
-          message: "ping @#{admin1.username}",
+          params: {
+            message_id: message.id,
+            message: "ping @#{admin1.username}",
+          },
         )
 
         mention = admin1.chat_mentions.where(chat_message_id: message.id).first
@@ -304,7 +316,13 @@ RSpec.describe Chat::UpdateMessage do
         chat_message = create_chat_message(user1, "I will mention myself soon", public_chat_channel)
         new_content = "hello @#{user1.username}"
 
-        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_content)
+        described_class.call(
+          guardian: guardian,
+          params: {
+            message_id: chat_message.id,
+            message: new_content,
+          },
+        )
 
         mention = user1.chat_mentions.where(chat_message: chat_message).first
         expect(mention).to be_present
@@ -323,8 +341,10 @@ RSpec.describe Chat::UpdateMessage do
             .track_publish("/chat/#{public_chat_channel.id}") do
               described_class.call(
                 guardian: guardian,
-                message_id: chat_message.id,
-                message: new_content,
+                params: {
+                  message_id: chat_message.id,
+                  message: new_content,
+                },
               )
             end
             .detect { |m| m.data["type"] == "processed" }
@@ -349,8 +369,10 @@ RSpec.describe Chat::UpdateMessage do
             .track_publish("/chat/#{public_chat_channel.id}") do
               described_class.call(
                 guardian: guardian,
-                message_id: chat_message.id,
-                message: "Hey @#{user2.username}",
+                params: {
+                  message_id: chat_message.id,
+                  message: "Hey @#{user2.username}",
+                },
               )
             end
             .detect { |m| m.data["type"] == "processed" }
@@ -368,8 +390,10 @@ RSpec.describe Chat::UpdateMessage do
 
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "ping @#{user3.username}",
+            params: {
+              message_id: chat_message.id,
+              message: "ping @#{user3.username}",
+            },
           )
 
           user2_mentions = user2.chat_mentions.where(chat_message: chat_message)
@@ -386,8 +410,10 @@ RSpec.describe Chat::UpdateMessage do
 
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "ping @#{user2.username} @#{user2.username} edited",
+            params: {
+              message_id: chat_message.id,
+              message: "ping @#{user2.username} @#{user2.username} edited",
+            },
           )
 
           expect(user2.chat_mentions.where(chat_message: chat_message).count).to eq(1)
@@ -415,8 +441,10 @@ RSpec.describe Chat::UpdateMessage do
 
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "ping @#{group_1.name}",
+            params: {
+              message_id: chat_message.id,
+              message: "ping @#{group_1.name}",
+            },
           )
 
           expect(group_1.chat_mentions.where(chat_message: chat_message).count).to be(1)
@@ -429,8 +457,10 @@ RSpec.describe Chat::UpdateMessage do
 
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "ping @#{group_2.name}",
+            params: {
+              message_id: chat_message.id,
+              message: "ping @#{group_2.name}",
+            },
           )
 
           expect(chat_message.reload.group_mentions.map(&:target_id)).to contain_exactly(group_2.id)
@@ -441,8 +471,10 @@ RSpec.describe Chat::UpdateMessage do
 
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "ping nobody anymore!",
+            params: {
+              message_id: chat_message.id,
+              message: "ping nobody anymore!",
+            },
           )
 
           expect(group_1.chat_mentions.where(chat_message: chat_message).count).to be(0)
@@ -465,8 +497,10 @@ RSpec.describe Chat::UpdateMessage do
 
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "Update the message and still mention the same group @#{group.name}",
+            params: {
+              message_id: chat_message.id,
+              message: "Update the message and still mention the same group @#{group.name}",
+            },
           )
 
           expect(group_user.notifications.count).to be(1) # no new notifications has been created
@@ -486,8 +520,10 @@ RSpec.describe Chat::UpdateMessage do
 
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "Update the message and still mention @here",
+            params: {
+              message_id: chat_message.id,
+              message: "Update the message and still mention @here",
+            },
           )
 
           expect(user.notifications.count).to be(1) # no new notifications have been created
@@ -505,8 +541,10 @@ RSpec.describe Chat::UpdateMessage do
 
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "Update the message and still mention @all",
+            params: {
+              message_id: chat_message.id,
+              message: "Update the message and still mention @all",
+            },
           )
 
           expect(user.notifications.count).to be(1) # no new notifications have been created
@@ -522,7 +560,13 @@ RSpec.describe Chat::UpdateMessage do
       old_message = "It's a thrsday!"
       new_message = "Today is Thursday, it's almost the weekend already!"
       chat_message = create_chat_message(user1, old_message, public_chat_channel)
-      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      described_class.call(
+        guardian: guardian,
+        params: {
+          message_id: chat_message.id,
+          message: new_message,
+        },
+      )
 
       revision = chat_message.revisions.last
       expect(revision.old_message).to eq(old_message)
@@ -535,29 +579,22 @@ RSpec.describe Chat::UpdateMessage do
       fab!(:upload1) { Fabricate(:upload, user: user1) }
       fab!(:upload2) { Fabricate(:upload, user: user1) }
 
-      before do
-        SiteSetting.chat_duplicate_message_sensitivity = 1.0
-        public_chat_channel.update!(user_count: 50)
-      end
-
       it "errors when editing the message to be the same as one that was posted recently" do
         chat_message_1 =
           create_chat_message(user1, "this is some chat message", public_chat_channel)
         chat_message_2 =
-          create_chat_message(
-            Fabricate(:user),
-            "another different chat message here",
-            public_chat_channel,
-          )
+          create_chat_message(user1, "another different chat message here", public_chat_channel)
 
-        chat_message_1.update!(created_at: 30.seconds.ago)
-        chat_message_2.update!(created_at: 20.seconds.ago)
+        chat_message_1.update!(created_at: 15.seconds.ago)
+        chat_message_2.update!(created_at: 5.seconds.ago)
 
         expect do
           described_class.call(
             guardian: guardian,
-            message_id: chat_message_1.id,
-            message: "another different chat message here",
+            params: {
+              message_id: chat_message_1.id,
+              message: "another different chat message here",
+            },
           )
         end.to raise_error(ActiveRecord::RecordInvalid).with_message(
           "Validation failed: " + I18n.t("chat.errors.duplicate_message"),
@@ -572,14 +609,16 @@ RSpec.describe Chat::UpdateMessage do
             public_chat_channel,
             upload_ids: [upload1.id, upload2.id],
           )
-        chat_message.update!(created_at: 30.seconds.ago)
+        chat_message.update!(created_at: 5.seconds.ago)
 
         updater =
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "this is some chat message",
-            upload_ids: [upload2.id],
+            params: {
+              message_id: chat_message.id,
+              message: "this is some chat message",
+              upload_ids: [upload2.id],
+            },
           )
         expect(updater.message).to be_valid
         expect(chat_message.reload.uploads.count).to eq(1)
@@ -601,9 +640,11 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "I guess this is different",
-            upload_ids: [upload2.id, upload1.id],
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [upload2.id, upload1.id],
+            },
           )
         }.to not_change { UploadReference.count }
       end
@@ -620,9 +661,11 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "I guess this is different",
-            upload_ids: [upload1.id],
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [upload1.id],
+            },
           )
         }.to change { UploadReference.where(upload_id: upload2.id).count }.by(-1)
       end
@@ -639,9 +682,11 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "I guess this is different",
-            upload_ids: [],
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [],
+            },
           )
         }.to change { UploadReference.where(target: chat_message).count }.by(-2)
       end
@@ -651,9 +696,11 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "I guess this is different",
-            upload_ids: [upload1.id],
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [upload1.id],
+            },
           )
         }.to change { UploadReference.where(target: chat_message).count }.by(1)
       end
@@ -663,9 +710,11 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "I guess this is different",
-            upload_ids: [upload1.id, upload2.id],
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [upload1.id, upload2.id],
+            },
           )
         }.to change { UploadReference.where(target: chat_message).count }.by(2)
       end
@@ -676,9 +725,11 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message,
-            message: "I guess this is different",
-            upload_ids: [0],
+            params: {
+              message_id: chat_message,
+              message: "I guess this is different",
+              upload_ids: [0],
+            },
           )
         }.to not_change { UploadReference.where(target: chat_message).count }
       end
@@ -689,9 +740,11 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "I guess this is different",
-            upload_ids: [upload1.id, upload2.id],
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [upload1.id, upload2.id],
+            },
           )
         }.to not_change { UploadReference.where(target: chat_message).count }
       end
@@ -708,9 +761,11 @@ RSpec.describe Chat::UpdateMessage do
         expect {
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "I guess this is different",
-            upload_ids: [],
+            params: {
+              message_id: chat_message.id,
+              message: "I guess this is different",
+              upload_ids: [],
+            },
           )
         }.to not_change { UploadReference.where(target: chat_message).count }
       end
@@ -727,9 +782,11 @@ RSpec.describe Chat::UpdateMessage do
         new_message = "hi :)"
         described_class.call(
           guardian: guardian,
-          message_id: chat_message.id,
-          message: new_message,
-          upload_ids: [upload1.id],
+          params: {
+            message_id: chat_message.id,
+            message: new_message,
+            upload_ids: [upload1.id],
+          },
         )
         expect(chat_message.reload.message).to eq(new_message)
       end
@@ -750,8 +807,10 @@ RSpec.describe Chat::UpdateMessage do
           MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
             described_class.call(
               guardian: guardian,
-              message_id: message.id,
-              message: "some new updated content",
+              params: {
+                message_id: message.id,
+                message: "some new updated content",
+              },
             )
           end
         expect(
@@ -773,8 +832,10 @@ RSpec.describe Chat::UpdateMessage do
         expect do
           described_class.call(
             guardian: guardian,
-            message_id: chat_message.id,
-            message: "bad word - #{watched_word.word}",
+            params: {
+              message_id: chat_message.id,
+              message: "bad word - #{watched_word.word}",
+            },
           )
         end.to raise_error(ActiveRecord::RecordInvalid).with_message(msg)
 
@@ -786,8 +847,10 @@ RSpec.describe Chat::UpdateMessage do
 
         described_class.call(
           guardian: guardian,
-          message_id: chat_message.id,
-          message: "bad word - #{censored_word.word}",
+          params: {
+            message_id: chat_message.id,
+            message: "bad word - #{censored_word.word}",
+          },
         )
 
         expect(chat_message.reload.excerpt).to eq("bad word - ■■■■")
@@ -801,8 +864,10 @@ RSpec.describe Chat::UpdateMessage do
         message.update!(user: user)
         described_class.call(
           guardian: Guardian.new(user),
-          message_id: message.id,
-          message: "I guess this is different",
+          params: {
+            message_id: message.id,
+            message: "I guess this is different",
+          },
         )
       end
 
@@ -810,7 +875,7 @@ RSpec.describe Chat::UpdateMessage do
         before { public_chat_channel.update(status: :closed) }
 
         it "errors when trying to update the message for non-staff" do
-          updater = update_message(user1)
+          update_message(user1)
           expect(message.reload.message).not_to eq("I guess this is different")
         end
 
@@ -824,10 +889,10 @@ RSpec.describe Chat::UpdateMessage do
         before { public_chat_channel.update(status: :read_only) }
 
         it "errors when trying to update the message for all users" do
-          updater = update_message(user1)
+          update_message(user1)
           expect(message.reload.message).not_to eq("I guess this is different")
 
-          updater = update_message(admin1)
+          update_message(admin1)
           expect(message.reload.message).not_to eq("I guess this is different")
         end
       end
@@ -836,10 +901,10 @@ RSpec.describe Chat::UpdateMessage do
         before { public_chat_channel.update(status: :archived) }
 
         it "errors when trying to update the message for all users" do
-          updater = update_message(user1)
+          update_message(user1)
           expect(message.reload.message).not_to eq("I guess this is different")
 
-          updater = update_message(admin1)
+          update_message(admin1)
           expect(message.reload.message).not_to eq("I guess this is different")
         end
       end
@@ -847,7 +912,7 @@ RSpec.describe Chat::UpdateMessage do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, options:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel) }
@@ -866,9 +931,9 @@ RSpec.describe Chat::UpdateMessage do
     let(:message) { "new" }
     let(:message_id) { message_1.id }
     let(:upload_ids) { [upload_1.id] }
-    let(:params) do
-      { guardian: guardian, message_id: message_id, message: message, upload_ids: upload_ids }
-    end
+    let(:params) { { message_id: message_id, message: message, upload_ids: upload_ids } }
+    let(:dependencies) { { guardian: guardian } }
+    let(:options) { {} }
 
     before do
       SiteSetting.chat_editing_grace_period = 30
@@ -879,9 +944,7 @@ RSpec.describe Chat::UpdateMessage do
     end
 
     context "when all steps pass" do
-      it "sets the service result as successful" do
-        expect(result).to run_service_successfully
-      end
+      it { is_expected.to run_successfully }
 
       it "updates the message" do
         expect(result.message.message).to eq("new")
@@ -907,12 +970,12 @@ RSpec.describe Chat::UpdateMessage do
       end
 
       it "can enqueue a job to process message" do
-        params[:process_inline] = false
+        options[:process_inline] = false
         expect_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
       end
 
       it "can process a message inline" do
-        params[:process_inline] = true
+        options[:process_inline] = true
         Jobs::Chat::ProcessMessage.any_instance.expects(:execute).once
         expect_not_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
       end

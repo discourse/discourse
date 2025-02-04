@@ -52,6 +52,16 @@ module PageObjects
         find(message_by_id_selector(id))
       end
 
+      def has_last_visit_line_at_id?(id)
+        find(".chat-message-separator[data-id=\"#{id}\"]").has_content?(
+          I18n.t("js.chat.last_visit"),
+        )
+      end
+
+      def has_no_last_visit_line?
+        has_no_content?(I18n.t("js.chat.last_visit"))
+      end
+
       def has_no_loading_skeleton?
         has_no_css?(".chat-skeleton")
       end
@@ -83,6 +93,17 @@ module PageObjects
         # Scroll to top of message so that the actions are not hidden
         page.scroll_to(message, align: :top)
         message.hover
+        message
+      end
+
+      def react_to_message(message, emoji_name = nil)
+        message = hover_message(message)
+
+        if emoji_name
+          message.find(".chat-message-actions [data-emoji-name=\"#{emoji_name}\"]").click
+        else
+          message.find(".react-btn").click
+        end
       end
 
       def bookmark_message(message)
@@ -105,7 +126,7 @@ module PageObjects
       end
 
       def send_message(text = nil)
-        text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
+        text ||= fake_chat_message
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message

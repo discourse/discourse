@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelsDraftsController < Chat::ApiController
   def create
-    with_service(Chat::UpsertDraft) do
+    Chat::UpsertDraft.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:channel) { raise Discourse::NotFound }

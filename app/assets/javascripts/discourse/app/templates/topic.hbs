@@ -52,42 +52,61 @@
           <div class="edit-topic-title">
             <PrivateMessageGlyph @shouldShow={{this.model.isPrivateMessage}} />
 
-            <TextField
-              @id="edit-title"
-              @value={{this.buffered.title}}
-              @maxlength={{this.siteSettings.max_topic_title_length}}
-              @autofocus="true"
-            />
+            <div class="edit-title__wrapper">
+              <PluginOutlet
+                @name="edit-topic-title"
+                @outletArgs={{hash model=this.model buffered=this.buffered}}
+              >
+                <TextField
+                  @id="edit-title"
+                  @value={{this.buffered.title}}
+                  @maxlength={{this.siteSettings.max_topic_title_length}}
+                  @autofocus="true"
+                />
+              </PluginOutlet>
+            </div>
 
             {{#if this.showCategoryChooser}}
-              <CategoryChooser
-                @value={{this.buffered.category_id}}
-                @onChange={{action "topicCategoryChanged"}}
-                class="small"
-              />
+              <div class="edit-category__wrapper">
+                <PluginOutlet
+                  @name="edit-topic-category"
+                  @outletArgs={{hash model=this.model buffered=this.buffered}}
+                >
+                  <CategoryChooser
+                    @value={{this.buffered.category_id}}
+                    @onChange={{action "topicCategoryChanged"}}
+                    class="small"
+                  />
+                </PluginOutlet>
+              </div>
             {{/if}}
 
             {{#if this.canEditTags}}
-              <MiniTagChooser
-                @value={{this.buffered.tags}}
-                @onChange={{action "topicTagsChanged"}}
-                @options={{hash
-                  filterable=true
-                  categoryId=this.buffered.category_id
-                  minimum=this.minimumRequiredTags
-                  filterPlaceholder="tagging.choose_for_topic"
-                  useHeaderFilter=true
-                }}
-              />
+              <div class="edit-tags__wrapper">
+                <PluginOutlet
+                  @name="edit-topic-tags"
+                  @outletArgs={{hash model=this.model buffered=this.buffered}}
+                >
+                  <MiniTagChooser
+                    @value={{this.buffered.tags}}
+                    @onChange={{action "topicTagsChanged"}}
+                    @options={{hash
+                      filterable=true
+                      categoryId=this.buffered.category_id
+                      minimum=this.minimumRequiredTags
+                      filterPlaceholder="tagging.choose_for_topic"
+                      useHeaderFilter=true
+                    }}
+                  />
+                </PluginOutlet>
+              </div>
             {{/if}}
 
-            <span>
-              <PluginOutlet
-                @name="edit-topic"
-                @connectorTagName="div"
-                @outletArgs={{hash model=this.model buffered=this.buffered}}
-              />
-            </span>
+            <PluginOutlet
+              @name="edit-topic"
+              @connectorTagName="div"
+              @outletArgs={{hash model=this.model buffered=this.buffered}}
+            />
 
             <div class="edit-controls">
               <DButton
@@ -98,7 +117,7 @@
               />
               <DButton
                 @action={{action "cancelEditingTopic"}}
-                @icon="times"
+                @icon="xmark"
                 @ariaLabel="composer.cancel"
                 class="btn-default cancel-edit"
               />
@@ -110,7 +129,7 @@
                   class="remove-featured-link"
                   title={{i18n "composer.remove_featured_link"}}
                 >
-                  {{d-icon "times-circle"}}
+                  {{d-icon "circle-xmark"}}
                   {{this.featuredLinkDomain}}
                 </a>
               {{/if}}
@@ -151,7 +170,7 @@
                 {{on "click" this.editTopic}}
                 class="edit-topic"
                 title={{i18n "edit_topic"}}
-              >{{d-icon "pencil-alt"}}</a>
+              >{{d-icon "pencil"}}</a>
             {{/if}}
 
             <PluginOutlet
@@ -160,7 +179,13 @@
             />
           </h1>
 
-          <TopicCategory @topic={{this.model}} class="topic-category" />
+          <PluginOutlet
+            @name="topic-category-wrapper"
+            @outletArgs={{hash topic=this.model}}
+          >
+            <TopicCategory @topic={{this.model}} class="topic-category" />
+          </PluginOutlet>
+
         {{/if}}
       </TopicTitle>
 
@@ -270,7 +295,6 @@
             @convertToPublicTopic={{action "convertToPublicTopic"}}
             @convertToPrivateMessage={{action "convertToPrivateMessage"}}
             @fullscreen={{info.topicProgressExpanded}}
-            @mobileView={{this.site.mobileView}}
           />
         {{else}}
           <TopicProgress
@@ -291,8 +315,6 @@
             </span>
             <TopicAdminMenu
               @topic={{this.model}}
-              @openUpwards="true"
-              @rightSide="true"
               @toggleMultiSelect={{action "toggleMultiSelect"}}
               @showTopicSlowModeUpdate={{route-action
                 "showTopicSlowModeUpdate"
@@ -428,7 +450,7 @@
                         />
                         <DButton
                           @label="review.delete"
-                          @icon="trash-alt"
+                          @icon="trash-can"
                           @action={{fn (action "deletePending") pending}}
                           class="btn-danger"
                         />
@@ -556,9 +578,7 @@
             @replyToPost={{action "replyToPost"}}
           />
         {{else}}
-          <div id="topic-footer-buttons">
-            <AnonymousTopicFooterButtons @topic={{this.model}} />
-          </div>
+          <AnonymousTopicFooterButtons @topic={{this.model}} />
         {{/if}}
       {{/if}}
 
@@ -598,7 +618,7 @@
             {{else}}
               <DButton
                 @action={{action "retryLoading"}}
-                @icon="sync"
+                @icon="arrows-rotate"
                 @label="errors.buttons.again"
                 class="btn-primary topic-retry"
               />

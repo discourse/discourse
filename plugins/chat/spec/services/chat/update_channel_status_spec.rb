@@ -1,54 +1,58 @@
 # frozen_string_literal: true
 
 RSpec.describe(Chat::UpdateChannelStatus) do
-  subject(:result) do
-    described_class.call(guardian: guardian, channel_id: channel.id, status: status)
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:channel_id) }
+    it do
+      is_expected.to validate_inclusion_of(:status).in_array(Chat::Channel.editable_statuses.keys)
+    end
   end
 
-  fab!(:channel) { Fabricate(:chat_channel) }
-  fab!(:current_user) { Fabricate(:admin) }
+  describe ".call" do
+    subject(:result) { described_class.call(params:, **dependencies) }
 
-  let(:guardian) { Guardian.new(current_user) }
-  let(:status) { "open" }
+    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:current_user) { Fabricate(:admin) }
 
-  context "when no channel_id is given" do
-    subject(:result) { described_class.call(guardian: guardian, status: status) }
+    let(:params) { { channel_id:, status: } }
+    let(:dependencies) { { guardian: } }
+    let(:guardian) { Guardian.new(current_user) }
+    let(:status) { "open" }
+    let(:channel_id) { channel.id }
 
-    it { is_expected.to fail_to_find_a_model(:channel) }
-  end
+    context "when model is not found" do
+      let(:channel_id) { 0 }
 
-  context "when user is not allowed to change channel status" do
-    fab!(:current_user) { Fabricate(:user) }
+      it { is_expected.to fail_to_find_a_model(:channel) }
+    end
 
-    it { is_expected.to fail_a_policy(:check_channel_permission) }
-  end
+    context "when user is not allowed to change channel status" do
+      let!(:current_user) { Fabricate(:user) }
 
-  context "when status is not allowed" do
-    (Chat::Channel.statuses.keys - Chat::Channel.editable_statuses.keys).each do |na_status|
-      context "when status is '#{na_status}'" do
-        let(:status) { na_status }
+      it { is_expected.to fail_a_policy(:check_channel_permission) }
+    end
 
-        it { is_expected.to fail_a_contract }
+    context "when contract is invalid" do
+      let(:status) { :invalid_status }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when new status is the same than the existing one" do
+      let(:status) { channel.status }
+
+      it { is_expected.to fail_a_policy(:check_channel_permission) }
+    end
+
+    context "when everything's ok" do
+      let(:status) { "closed" }
+
+      it { is_expected.to run_successfully }
+
+      it "changes the status" do
+        result
+        expect(channel.reload).to be_closed
       end
-    end
-  end
-
-  context "when new status is the same than the existing one" do
-    let(:status) { channel.status }
-
-    it { is_expected.to fail_a_policy(:check_channel_permission) }
-  end
-
-  context "when status is allowed" do
-    let(:status) { "closed" }
-
-    it "sets the service result as successful" do
-      expect(result).to be_a_success
-    end
-
-    it "changes the status" do
-      result
-      expect(channel.reload).to be_closed
     end
   end
 end

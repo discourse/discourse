@@ -26,7 +26,6 @@ ko:
       deleted_chat_username: 삭제되었습니다
       dates:
         yesterday: "어제"
-        time_tiny: "h:mm"
       all_loaded: "모든 메시지 보기"
       bot: "봇"
       create: "글"
@@ -75,7 +74,6 @@ ko:
       header_indicator_preference:
         title: "헤더에 활동 표시"
         all_new: "모든 새 메시지"
-        dm_and_mentions: "DM과 맨션"
         never: "알림 받지 않기"
       enable: "채팅 활성화"
       flag: "신고"
@@ -226,7 +224,6 @@ ko:
       settings:
         channel_threading_label: "스레딩"
         auto_join_users_label: "자동으로 사용자 추가"
-        desktop_notification_level: "데스크톱 알림"
         follow: "가입"
         followed: "가입"
         threading_enabled: "활성화"
@@ -317,6 +314,8 @@ ko:
             title: "일반"
           tracking:
             title: "알림"
+          watching:
+            title: "모든 알림"
         participants_other_count:
           other: "+%{count}"
       draft_channel_screen:
@@ -326,10 +325,6 @@ ko:
       chat_quoted: "<span>%{username}</span> %{description} "
       popup:
         chat_message: "새 채팅 메시지"
-      titles:
-        chat_mention: "채팅 멘션"
-        chat_invitation: "채팅 초대"
-        chat_quoted: "인용된 채팅"
     discourse_automation:
       scriptables:
         send_chat_message:

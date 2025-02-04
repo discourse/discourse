@@ -1,33 +1,29 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
+import discourseComputed from "discourse/lib/decorators";
 import { resendActivationEmail } from "discourse/lib/user-activation";
-import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import getUrl from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-export default Controller.extend({
-  router: service(),
-  envelopeImageUrl: getUrl("/images/envelope.svg"),
+export default class AccountCreatedIndexController extends Controller {
+  @service router;
 
   @discourseComputed
   welcomeTitle() {
-    return I18n.t("invites.welcome_to", {
+    return i18n("invites.welcome_to", {
       site_name: this.siteSettings.title,
     });
-  },
+  }
 
-  @discourseComputed
-  wavingHandURL: () => wavingHandURL(),
+  @action
+  sendActivationEmail() {
+    resendActivationEmail(this.get("accountCreated.username")).then(() => {
+      this.router.transitionTo("account-created.resent");
+    });
+  }
 
-  actions: {
-    sendActivationEmail() {
-      resendActivationEmail(this.get("accountCreated.username")).then(() => {
-        this.router.transitionTo("account-created.resent");
-      });
-    },
-    editActivationEmail() {
-      this.router.transitionTo("account-created.edit-email");
-    },
-  },
-});
+  @action
+  editActivationEmail() {
+    this.router.transitionTo("account-created.edit-email");
+  }
+}

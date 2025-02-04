@@ -1,5 +1,7 @@
 .full-page-chat {
   #main-chat-outlet.chat-view {
+    display: grid;
+    grid-template-rows: 1fr auto;
     grid-template-areas:
       "list"
       "footer";
@@ -27,8 +29,4 @@
       }
     }
   }
-}
-
-.has-full-page-chat div#reply-control {
-  display: none;
 }

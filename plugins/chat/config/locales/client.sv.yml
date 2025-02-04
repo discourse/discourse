@@ -46,7 +46,6 @@ sv:
       deleted_chat_username: raderat
       dates:
         yesterday: "Igår"
-        time_tiny: "h:mm"
       all_loaded: "Visar alla meddelanden"
       already_enabled: "Chatt är redan aktiverat för detta ämne. Vänligen uppdatera."
       disabled_for_topic: "Chatt är inaktiverat för detta ämne."
@@ -126,7 +125,6 @@ sv:
       header_indicator_preference:
         title: "Visa aktivitetsindikator i sidhuvudet"
         all_new: "Alla nya meddelanden"
-        dm_and_mentions: "Direktmeddelanden och omnämnanden"
         only_mentions: "Bara omnämnanden"
         never: "Aldrig"
       separate_sidebar_mode:
@@ -445,10 +443,8 @@ sv:
         auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till kategorin %{category}."
         auto_join_users_info_no_category: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till vald kategori."
         auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
-        desktop_notification_level: "Skrivbordsaviseringar"
         follow: "Gå med"
         followed: "Gick med"
-        mobile_notification_level: "Mobila push-meddelanden"
         mute: "Tysta kanal"
         threading_enabled: "Aktiverad"
         threading_disabled: "Inaktiverad"
@@ -588,10 +584,10 @@ sv:
         notifications:
           regular:
             title: "Normal"
-            description: "Du aviseras om någon nämner ditt @namn i den här tråden."
           tracking:
             title: "Följer"
-            description: "Ett antal nya svar för denna tråd kommer att visas i trådlistan och kanalen. Du aviseras om någon nämner ditt @namn i denna tråd."
+          watching:
+            title: "Bevakar"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -619,10 +615,6 @@ sv:
           other_html: "<span>%{username}</span> <span>nämnde %{identifier} i personlig chatt</span>"
         chat_message: "Nytt chattmeddelande"
         chat_quoted: "%{username} citerade ditt chattmeddelande"
-      titles:
-        chat_mention: "Chatt omnämnande"
-        chat_invitation: "Chattinbjudan"
-        chat_quoted: "Chatt citerad"
     action_codes:
       chat:
         enabled: '%{who} aktiverade <button class="btn-link open-chat">chatt</button> %{when}'

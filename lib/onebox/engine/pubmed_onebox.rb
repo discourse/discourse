@@ -6,7 +6,11 @@ module Onebox
       include Engine
       include LayoutSupport
 
-      matches_regexp(%r{^https?://(?:(?:\w)+\.)?(www.ncbi.nlm.nih)\.gov(?:/)?/pubmed/\d+})
+      matches_domain("ncbi.nlm.nih.gov", allow_subdomains: true)
+
+      def self.matches_path(path)
+        path.match?(%r{^/pubmed/\d+$})
+      end
 
       private
 

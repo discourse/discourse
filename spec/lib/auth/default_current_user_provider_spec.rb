@@ -199,8 +199,6 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     context "with rate limiting" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       it "rate limits admin api requests" do
         global_setting :max_admin_api_reqs_per_minute, 3
 
@@ -604,32 +602,22 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     fab!(:user)
 
     let(:api_key) do
-      UserApiKey.create!(
-        application_name: "my app",
-        client_id: "1234",
+      Fabricate(
+        :user_api_key,
         scopes: ["read"].map { |name| UserApiKeyScope.new(name: name) },
-        user_id: user.id,
+        user: user,
       )
     end
 
-    it "can clear old duplicate keys correctly" do
-      dupe =
-        UserApiKey.create!(
-          application_name: "my app",
-          client_id: "12345",
-          scopes: ["read"].map { |name| UserApiKeyScope.new(name: name) },
-          user_id: user.id,
-        )
-
+    it "creates a new client if the client id changes" do
       params = {
         "REQUEST_METHOD" => "GET",
         "HTTP_USER_API_KEY" => api_key.key,
-        "HTTP_USER_API_CLIENT_ID" => dupe.client_id,
+        "HTTP_USER_API_CLIENT_ID" => api_key.client.client_id + "1",
       }
-
       good_provider = provider("/", params)
       expect(good_provider.current_user.id).to eq(user.id)
-      expect(UserApiKey.find_by(id: dupe.id)).to eq(nil)
+      expect(UserApiKeyClient.exists?(client_id: api_key.client.client_id + "1")).to eq(true)
     end
 
     it "allows user API access correctly" do
@@ -736,13 +724,14 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "#log_off_user" do
-    it "should work when the current user was cached by a different provider instance" do
+    let(:env) do
       user_provider = provider("/")
       user_provider.log_on_user(user, {}, user_provider.cookie_jar)
       cookie = CGI.escape(user_provider.cookie_jar["_t"])
-      env =
-        create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+      create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
+    end
 
+    it "should work when the current user was cached by a different provider instance" do
       user_provider = TestProvider.new(env)
       expect(user_provider.current_user).to eq(user)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_present
@@ -750,6 +739,18 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       user_provider = TestProvider.new(env)
       user_provider.log_off_user({}, user_provider.cookie_jar)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
+    end
+
+    it "should trigger user_logged_out event" do
+      event_triggered_user = nil
+      event_handler = Proc.new { |user| event_triggered_user = user.id }
+      DiscourseEvent.on(:user_logged_out, &event_handler)
+
+      user_provider = TestProvider.new(env)
+      user_provider.log_off_user({}, user_provider.cookie_jar)
+      expect(event_triggered_user).to eq(user.id)
+
+      DiscourseEvent.off(:user_logged_out, &event_handler)
     end
   end
 

@@ -39,8 +39,6 @@ RSpec.describe "rate limits" do
   let(:api_key) { @key }
   let!(:api_username) { "system" }
 
-  use_redis_snapshotting
-
   around(:each) { |example| stub_const(Object, :RateLimiter, MockRateLimiter) { example.run } }
 
   it "doesn't rate limit authenticated admin api requests" do
@@ -48,7 +46,7 @@ RSpec.describe "rate limits" do
       .expects(:performed!)
       .with(
         nil,
-        "global_limit_60_192.0.2.1",
+        "global_limit_60_ip/192.0.2.1",
         200,
         60,
         global: true,
@@ -60,7 +58,7 @@ RSpec.describe "rate limits" do
       .expects(:performed!)
       .with(
         nil,
-        "global_limit_10_192.0.2.1",
+        "global_limit_10_ip/192.0.2.1",
         50,
         10,
         global: true,
@@ -78,7 +76,7 @@ RSpec.describe "rate limits" do
       .expects(:rollback!)
       .with(
         nil,
-        "global_limit_60_192.0.2.1",
+        "global_limit_60_ip/192.0.2.1",
         200,
         60,
         global: true,
@@ -90,7 +88,7 @@ RSpec.describe "rate limits" do
       .expects(:rollback!)
       .with(
         nil,
-        "global_limit_10_192.0.2.1",
+        "global_limit_10_ip/192.0.2.1",
         50,
         10,
         global: true,
@@ -118,7 +116,7 @@ RSpec.describe "rate limits" do
       .expects(:performed!)
       .with(
         nil,
-        "global_limit_60_192.0.2.1",
+        "global_limit_60_ip/192.0.2.1",
         200,
         60,
         global: true,
@@ -130,7 +128,7 @@ RSpec.describe "rate limits" do
       .expects(:performed!)
       .with(
         nil,
-        "global_limit_10_192.0.2.1",
+        "global_limit_10_ip/192.0.2.1",
         50,
         10,
         global: true,

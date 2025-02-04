@@ -9,7 +9,7 @@ module PageObjects
         end
 
         def has_open_forum_button?
-          has_css?(".d-header .chat-header-icon .d-icon-random")
+          has_css?(".d-header .chat-header-icon .d-icon-shuffle")
         end
 
         def has_no_chat_button?

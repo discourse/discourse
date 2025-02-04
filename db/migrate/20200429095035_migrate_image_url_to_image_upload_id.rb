@@ -98,6 +98,10 @@ class MigrateImageUrlToImageUploadId < ActiveRecord::Migration[6.0]
     drop_temporary_table!
   end
 
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
+
   def drop_temporary_table!
     Migration::SafeMigrate.disable!
     execute <<~SQL

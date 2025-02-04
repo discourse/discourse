@@ -1,63 +1,34 @@
-<div class="admin-emojis">
-  <div class="admin-emojis__header">
-    <h1>{{i18n "admin.emoji.title"}}</h1>
-    <LinkTo
-      @route="adminSiteSettingsCategory"
-      @model="all_results"
-      @query={{hash filter="emoji"}}
-    >
-      {{i18n "admin.emoji.settings"}}
-    </LinkTo>
+<div class="admin-emoji admin-config-page">
+  <DPageHeader
+    @titleLabel={{i18n "admin.emoji.title"}}
+    @descriptionLabel={{i18n "admin.emoji.description"}}
+    @hideTabs={{this.hideTabs}}
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path="/admin/config/emoji"
+        @label={{i18n "admin.emoji.title"}}
+      />
+    </:breadcrumbs>
+    <:actions as |actions|>
+      <actions.Primary @route="adminEmojis.new" @label="admin.emoji.add" />
+    </:actions>
+    <:tabs>
+      <NavItem
+        @route="adminEmojis.settings"
+        @label="settings"
+        class="admin-emoji-tabs__settings"
+      />
+      <NavItem
+        @route="adminEmojis.index"
+        @label="admin.emoji.title"
+        class="admin-emoji-tabs__emoji"
+      />
+    </:tabs>
+  </DPageHeader>
+
+  <div class="admin-container admin-config-page__main-area">
+    {{outlet}}
   </div>
-
-  <p class="desc">{{i18n "admin.emoji.help"}}</p>
-
-  <EmojiUploader
-    @emojiGroups={{this.emojiGroups}}
-    @done={{action "emojiUploaded"}}
-    @id="emoji-uploader"
-  />
-
-  <hr />
-
-  {{#if this.sortedEmojis}}
-    <table id="custom_emoji">
-      <thead>
-        <tr>
-          <th>{{i18n "admin.emoji.image"}}</th>
-          <th>{{i18n "admin.emoji.name"}}</th>
-          <th colspan="2">
-            <ComboBox
-              @value={{this.filter}}
-              @content={{this.sortingGroups}}
-              @nameProperty={{null}}
-              @valueProperty={{null}}
-              @onChange={{action "filterGroups"}}
-            />
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each this.sortedEmojis as |e|}}
-          <tr>
-            <td><img
-                class="emoji emoji-custom"
-                src={{e.url}}
-                title={{e.name}}
-                alt={{i18n "admin.emoji.alt"}}
-              /></td>
-            <td>:{{e.name}}:</td>
-            <td>{{e.group}}</td>
-            <td class="action">
-              <DButton
-                @action={{fn this.destroyEmoji e}}
-                @icon="far-trash-alt"
-                class="btn-danger"
-              />
-            </td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  {{/if}}
 </div>

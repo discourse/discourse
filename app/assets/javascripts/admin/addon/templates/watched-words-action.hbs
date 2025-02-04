@@ -11,22 +11,21 @@
   />
 
   <WatchedWordUploader
-    @id="watched-word-uploader"
     @uploading={{this.uploading}}
     @actionKey={{this.actionNameKey}}
-    @done={{action "uploadComplete"}}
+    @done={{this.uploadComplete}}
   />
 
   <DButton
     @label="admin.watched_words.test.button_label"
     @icon="far-eye"
     @action={{this.test}}
-    class="watched-word-test"
+    class="btn-default watched-word-test"
   />
 
   <DButton
     @label="admin.watched_words.clear_all"
-    @icon="trash-alt"
+    @icon="trash-can"
     @action={{this.clearAll}}
     class="btn-danger clear-all"
   />
@@ -35,14 +34,16 @@
 <p class="about">{{this.actionDescription}}</p>
 
 {{#if this.siteSettings.watched_words_regular_expressions}}
-  <p>{{html-safe
+  <p>
+    {{html-safe
       (i18n "admin.watched_words.regex_warning" basePath=(base-path))
-    }}</p>
+    }}
+  </p>
 {{/if}}
 
 <WatchedWordForm
   @actionKey={{this.actionNameKey}}
-  @action={{action "recordAdded"}}
+  @action={{this.recordAdded}}
   @filteredContent={{this.currentAction.words}}
 />
 
@@ -63,11 +64,13 @@
 {{#if this.showWordsList}}
   <div class="watched-words-list watched-words-{{this.actionNameKey}}">
     {{#each this.currentAction.words as |word|}}
-      <div class="watched-word-box"><AdminWatchedWord
+      <div class="watched-word-box">
+        <AdminWatchedWord
           @actionKey={{this.actionNameKey}}
           @word={{word}}
-          @action={{action "recordRemoved"}}
-        /></div>
+          @action={{this.recordRemoved}}
+        />
+      </div>
     {{/each}}
   </div>
 {{/if}}

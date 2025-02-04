@@ -2,9 +2,9 @@
 
 module Onebox
   module SanitizeConfig
-    HTTP_PROTOCOLS ||= ["http", "https", :relative].freeze
+    HTTP_PROTOCOLS = ["http", "https", :relative].freeze
 
-    ONEBOX ||=
+    ONEBOX =
       Sanitize::Config.freeze_config(
         Sanitize::Config.merge(
           Sanitize::Config::RELAXED,
@@ -107,7 +107,7 @@ module Onebox
         ),
       )
 
-    DISCOURSE_ONEBOX ||=
+    DISCOURSE_ONEBOX =
       Sanitize::Config.freeze_config(
         Sanitize::Config.merge(
           ONEBOX,

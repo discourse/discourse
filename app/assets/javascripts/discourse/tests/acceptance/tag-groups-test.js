@@ -1,12 +1,8 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { setPrefix } from "discourse/lib/get-url";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { setPrefix } from "discourse-common/lib/get-url";
 
 acceptance("Tag Groups", function (needs) {
   needs.user();
@@ -19,16 +15,12 @@ acceptance("Tag Groups", function (needs) {
         tag_names: ["monkey"],
         parent_tag_name: [],
         one_per_topic: false,
-        permissions: { everyone: 1 },
+        permissions: { 0: 1 },
       },
     };
-    server.post("/tag_groups", () => {
-      return helper.response(tagGroups);
-    });
-    server.get("/forum/tag_groups", () => {
-      return helper.response(tagGroups);
-    });
 
+    server.post("/tag_groups", () => helper.response(tagGroups));
+    server.get("/forum/tag_groups", () => helper.response(tagGroups));
     server.get("/groups/search.json", () => {
       return helper.response([
         {
@@ -58,7 +50,7 @@ acceptance("Tag Groups", function (needs) {
 
     await tags.expand();
     await tags.deselectItemByValue("monkey");
-    assert.ok(!query(".tag-group-content .btn.btn-danger").disabled);
+    assert.dom(".tag-group-content .btn.btn-danger").isEnabled();
   });
 
   test("tag groups can have multiple groups added to them", async function (assert) {
@@ -77,15 +69,14 @@ acceptance("Tag Groups", function (needs) {
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);
 
-    assert.ok(!query(".tag-group-content .btn.btn-primary").disabled);
+    assert.dom(".tag-group-content .btn.btn-primary").isEnabled();
 
     await click(".tag-group-content .btn.btn-primary");
     await click(".tag-groups-sidebar li:first-child a");
 
-    assert.ok(
-      exists("#visible-permission:checked"),
-      "selected permission does not change after saving"
-    );
+    assert
+      .dom(".tag-groups-sidebar")
+      .exists("tag group is saved and displayed in the sidebar");
   });
 
   test("going back to tags supports subfolder", async function (assert) {

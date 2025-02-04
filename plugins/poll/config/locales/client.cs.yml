@@ -17,6 +17,11 @@ cs:
         few: "hlasy celkem"
         many: "hlasů celkem"
         other: "hlasů celkem"
+      votes:
+        one: "%{count} hlas"
+        few: "%{count} hlasy"
+        many: "%{count} hlasů"
+        other: "%{count} hlasů"
       average_rating: "Průměrné hodnocení: <strong>%{average}</strong>."
       public:
         title: "Hlasy jsou <strong>veřejné</strong>."
@@ -56,6 +61,12 @@ cs:
       show-results:
         title: "Zobrazit výsledky hlasování"
         label: "Výsledky"
+      show-tally:
+        title: "Zobrazit výsledky hlasování jako počet hlasů"
+        label: "Zobrazit počty"
+      show-percentage:
+        title: "Zobrazit výsledky hlasování v procentech"
+        label: "Zobrazit procenta"
       remove-vote:
         title: "Odeberte svůj hlas"
         label: "Zrušit hlasování"
@@ -107,6 +118,8 @@ cs:
         label: "Možnosti"
         ranked_choice:
           abstain: "Zdržet se hlasování"
+          highest_priority: "(nejvyšší priorita)"
+          lowest_priority: "(nejnižší priorita)"
           login: "Pro hlasování se přihlaste!"
       error_while_toggling_status: "Došlo k chybě při změně statusu hlasování"
       error_while_casting_votes: "Došlo k chybě při odesílání vašeho hlasu."

@@ -726,6 +726,21 @@ RSpec.describe ListController do
       get "/top?period=decadely"
       expect(response.status).to eq(400)
     end
+
+    describe "per page" do
+      it "uses value from params when present" do
+        get "/top.json?per_page=5"
+
+        expect(response.parsed_body["topic_list"]["per_page"]).to eq(5)
+      end
+
+      it "uses SiteSetting.topics_per_period_in_top_page when per_page param isn't present" do
+        SiteSetting.topics_per_period_in_top_page = 32
+        get "/top.json"
+
+        expect(response.parsed_body["topic_list"]["per_page"]).to eq(32)
+      end
+    end
   end
 
   describe "category" do
@@ -905,7 +920,10 @@ RSpec.describe ListController do
     fab!(:topic2) { Fabricate(:topic, user: user) }
     fab!(:user2) { Fabricate(:user) }
 
-    before { sign_in(user2) }
+    before do
+      user.user_stat.update!(post_count: 1)
+      sign_in(user2)
+    end
 
     it "should respond with a list" do
       get "/topics/created-by/#{user.username}.json"
@@ -942,8 +960,8 @@ RSpec.describe ListController do
       end
     end
 
-    context "when `hide_profile_and_presence` is true" do
-      before { user.user_option.update_columns(hide_profile_and_presence: true) }
+    context "when `hide_profile` is true" do
+      before { user.user_option.update_columns(hide_profile: true) }
 
       it "returns 404" do
         get "/topics/created-by/#{user.username}.json"
@@ -1149,8 +1167,8 @@ RSpec.describe ListController do
   end
 
   describe "user_topics_feed" do
-    it "returns 404 if `hide_profile_and_presence` user option is checked" do
-      user.user_option.update_columns(hide_profile_and_presence: true)
+    it "returns 404 if `hide_profile` user option is checked" do
+      user.user_option.update_columns(hide_profile: true)
       get "/u/#{user.username}/activity/topics.rss"
       expect(response.status).to eq(404)
     end
@@ -1227,16 +1245,34 @@ RSpec.describe ListController do
     end
 
     context "when redirect raises an unsafe redirect error" do
+      let(:fake_logger) { FakeLogger.new }
+
       before do
         ListController
           .any_instance
           .stubs(:redirect_to)
           .raises(ActionController::Redirecting::UnsafeRedirectError)
+        Rails.logger.broadcast_to(fake_logger)
       end
+
+      after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
       it "renders a 404" do
         get "/c/hello/world/bye/#{subsubcategory.id}"
         expect(response).to have_http_status :not_found
+      end
+
+      it "doesn’t log an error" do
+        get "/c/hello/world/bye/#{subsubcategory.id}"
+        expect(fake_logger.fatals).to be_empty
+      end
+    end
+
+    context "when provided slug is gibberish" do
+      it "redirects to the proper category" do
+        get "/c/summit'%22()&%25%3Czzz%3E%3CScRiPt%20%3EqlJ2(9585)%3C%2FScRiPt%3E/#{category.id}"
+        expect(response).to have_http_status :moved_permanently
+        expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
       end
     end
   end
@@ -1303,8 +1339,6 @@ RSpec.describe ListController do
     fab!(:private_message_topic)
     fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
-    before { SiteSetting.experimental_topics_filter = true }
-
     it "should not return topics that the user is not allowed to view" do
       sign_in(user)
 
@@ -1325,16 +1359,6 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
-    end
-
-    it "should respond with 404 response code when `experimental_topics_filter` site setting has not been enabled" do
-      SiteSetting.experimental_topics_filter = false
-
-      sign_in(user)
-
-      get "/filter.json"
-
-      expect(response.status).to eq(404)
     end
 
     it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do

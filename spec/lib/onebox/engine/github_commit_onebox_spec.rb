@@ -134,7 +134,7 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
     end
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid GitHub commit URL" do
       valid_url =
         URI("https://github.com/owner/repo/commit/9a9b9c9d9e9f9a9b9c9d9e9f9a9b9c9d9e9f9a9b")
@@ -159,7 +159,7 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
 
     it "does not match URL with invalid path" do
       invalid_path_url =
-        URI("https://github.com/owner/repo/branches/9a9b9c9d9e9f9g9h9i9j9k9l9m9n9o9p9q9r9s9t")
+        URI("https://github.com/owner/repo/invalid/9a9b9c9d9e9f9g9h9i9j9k9l9m9n9o9p9q9r9s9t")
       expect(described_class === invalid_path_url).to eq(false)
     end
 

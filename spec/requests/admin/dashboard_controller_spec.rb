@@ -164,7 +164,7 @@ RSpec.describe Admin::DashboardController do
       before { sign_in(admin) }
 
       it "is empty by default" do
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["new_features"]).to eq(nil)
@@ -172,7 +172,7 @@ RSpec.describe Admin::DashboardController do
 
       it "fails gracefully for invalid JSON" do
         Discourse.redis.set("new_features", "INVALID JSON")
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["new_features"]).to eq(nil)
@@ -181,7 +181,7 @@ RSpec.describe Admin::DashboardController do
       it "includes new features when available" do
         populate_new_features
 
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
 
@@ -191,11 +191,43 @@ RSpec.describe Admin::DashboardController do
         expect(json["has_unseen_features"]).to eq(true)
       end
 
+      it "allows for forcing a refresh of new features, busting the cache" do
+        populate_new_features
+
+        get "/admin/whats-new.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["new_features"].length).to eq(2)
+
+        get "/admin/whats-new.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["new_features"].length).to eq(2)
+
+        DiscourseUpdates.stubs(:new_features_payload).returns(
+          [
+            {
+              "id" => "3",
+              "emoji" => "🚀",
+              "title" => "Space platform launched!",
+              "description" => "Now to make it to the next planet unscathed...",
+              "created_at" => 1.minute.ago,
+            },
+          ].to_json,
+        )
+
+        get "/admin/whats-new.json?force_refresh=true"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["new_features"].length).to eq(1)
+        expect(json["new_features"][0]["id"]).to eq("3")
+      end
+
       it "passes unseen feature state" do
         populate_new_features
         DiscourseUpdates.mark_new_features_as_seen(admin.id)
 
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
 
@@ -209,7 +241,7 @@ RSpec.describe Admin::DashboardController do
 
         expect(DiscourseUpdates.get_last_viewed_feature_date(admin.id)).to eq(nil)
 
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         expect(DiscourseUpdates.get_last_viewed_feature_date(admin.id)).to be_within_one_second_of(
           date2,
@@ -218,7 +250,7 @@ RSpec.describe Admin::DashboardController do
         date2 = 10.minutes.ago
         populate_new_features(date1, date2)
 
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         expect(DiscourseUpdates.get_last_viewed_feature_date(admin.id)).to be_within_one_second_of(
           date2,
@@ -233,7 +265,7 @@ RSpec.describe Admin::DashboardController do
         expect(DiscourseUpdates.new_features_last_seen(admin.id)).to eq(nil)
         expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(true)
 
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
 
         expect(DiscourseUpdates.new_features_last_seen(admin.id)).not_to eq(nil)
@@ -244,7 +276,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       it "doesn't error when there are no new features" do
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
       end
     end
@@ -255,7 +287,7 @@ RSpec.describe Admin::DashboardController do
       it "includes new features when available" do
         populate_new_features
 
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
 
         json = response.parsed_body
 
@@ -270,7 +302,7 @@ RSpec.describe Admin::DashboardController do
 
         expect(DiscourseUpdates.get_last_viewed_feature_date(moderator.id)).to eq(nil)
 
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
         expect(response.status).to eq(200)
         expect(DiscourseUpdates.get_last_viewed_feature_date(moderator.id)).to eq(nil)
       end
@@ -280,7 +312,7 @@ RSpec.describe Admin::DashboardController do
       before { sign_in(user) }
 
       it "denies access with a 404 response" do
-        get "/admin/dashboard/whats-new.json"
+        get "/admin/whats-new.json"
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))

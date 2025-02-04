@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll in a post reply history", function (needs) {
   needs.user();
@@ -439,7 +439,7 @@ acceptance("Poll in a post reply history", function (needs) {
   test("renders and extends", async function (assert) {
     await visit("/t/-/topic_with_poll_in_post_reply_history");
     await click(".reply-to-tab");
-    assert.ok(exists(".poll"), "poll is rendered");
-    assert.ok(exists(".poll-buttons"), "poll is extended");
+    assert.dom(".poll").exists("poll is rendered");
+    assert.dom(".poll-buttons").exists("poll is extended");
   });
 });

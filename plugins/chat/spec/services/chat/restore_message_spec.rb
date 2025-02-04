@@ -13,18 +13,18 @@ RSpec.describe Chat::RestoreMessage do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
+
+    let(:dependencies) { { guardian: } }
 
     context "when params are not valid" do
-      let(:params) { { guardian: guardian } }
+      let(:params) { {} }
 
       it { is_expected.to fail_a_contract }
     end
 
     context "when params are valid" do
-      let(:params) do
-        { guardian: guardian, message_id: message.id, channel_id: message.chat_channel_id }
-      end
+      let(:params) { { message_id: message.id, channel_id: message.chat_channel_id } }
 
       context "when the user does not have permission to restore" do
         before { message.update!(user: Fabricate(:admin)) }
@@ -33,17 +33,13 @@ RSpec.describe Chat::RestoreMessage do
       end
 
       context "when the channel does not match the message" do
-        let(:params) do
-          { guardian: guardian, message_id: message.id, channel_id: Fabricate(:chat_channel).id }
-        end
+        let(:params) { { message_id: message.id, channel_id: Fabricate(:chat_channel).id } }
 
         it { is_expected.to fail_to_find_a_model(:message) }
       end
 
       context "when the user has permission to restore" do
-        it "sets the service result as successful" do
-          expect(result).to be_a_success
-        end
+        it { is_expected.to run_successfully }
 
         it "restores the message" do
           result

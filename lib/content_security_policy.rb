@@ -21,7 +21,6 @@ class ContentSecurityPolicy
     Extension.theme_extensions(theme_id).each { |extension| builder << extension }
     Extension.plugin_extensions.each { |extension| builder << extension }
     builder << Extension.site_setting_extension
-    builder << Extension.path_specific_extension(path_info)
 
     builder.build
   end

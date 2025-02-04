@@ -6,12 +6,16 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(%r{^https?://(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)/.+$})
+      matches_domain("youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be")
       requires_iframe_origins "https://www.youtube.com"
       always_https
 
-      WIDTH ||= 480
-      HEIGHT ||= 360
+      def self.matches_path(path)
+        path.match?(%r{^/.+$})
+      end
+
+      WIDTH = 480
+      HEIGHT = 360
 
       def parse_embed_response
         return unless video_id

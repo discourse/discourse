@@ -9,8 +9,7 @@
         "muted": { "type": "boolean" },
         "unread_count": { "type": "number" },
         "unread_mentions": { "type": "number" },
-        "desktop_notification_level": { "type": "string" },
-        "mobile_notification_level": { "type": "string" },
+        "notification_level": { "type": "string" },
         "following": { "type": "boolean" }
       }
     }

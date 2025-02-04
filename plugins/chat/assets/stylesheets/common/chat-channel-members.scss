@@ -43,6 +43,10 @@
           }
         }
 
+        .fk-d-tooltip__trigger-container {
+          gap: 0.5rem;
+        }
+
         .user-status-message {
           color: var(--primary-medium);
           font-size: var(--font-down-2);

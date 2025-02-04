@@ -115,6 +115,8 @@ th:
         category_id: "หมวดหมู่"
       user:
         password: "รหัสผ่าน"
+      user_password:
+        password: "รหัสผ่าน"
     errors:
       <<: *errors
   general_category_name: "ทั่วไป"
@@ -163,9 +165,6 @@ th:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
-  activation:
-    continue_button: "ดำเนินการต่อไปยัง %{site_name}"
-    welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
   reviewable_score_types:
     needs_approval:
       title: "ต้องการอนุมัติ"
@@ -300,15 +299,6 @@ th:
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "ไม่ใช้งาน"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "ไม่ใช้งาน"
-      - ""
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:
@@ -518,14 +508,8 @@ th:
             label: "แสดงตัวอย่าง"
           homepage_style:
             choices:
-              categories_only:
-                label: "หมวดหมู่เท่านั้น"
-              categories_with_featured_topics:
-                label: "หมวดหมู่พร้อมด้วยกระทู้เด่น"
-              categories_and_latest_topics:
-                label: "หมวดหมู่และกระทู้ล่าสุด"
-              categories_and_top_topics:
-                label: "หมวดหมู่และกระทู้ยอดนิยม"
+              latest:
+                label: "ล่าสุด"
   onebox:
     github:
       closed: "ปิด"
@@ -536,6 +520,7 @@ th:
       quoted: '%{username} อ้างอิงถึงคุณใน "%{topic}" - %{site_title}'
       replied: '%{username} ตอบคุณใน "%{topic}" - %{site_title}'
       posted: '%{username} โพสท์ใน "%{topic}" - %{site_title}'
+      private_message: '%{username}ได้ส่งข้อความส่วนตัวไปหาคุณใน "%{topic}"-%{site_title}'
       linked: '%{username} ลิงค์โพสของคุณจาก "%{topic}" - %{site_title}'
       watching_first_post: '%{username}ได้สร้างกระทู้ใหม่ "%{topic}"-%{site_title}'
       confirm_title: "เปิดการแจ้งเตือนแล้ว - %{site_title}"

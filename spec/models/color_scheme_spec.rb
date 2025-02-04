@@ -146,7 +146,7 @@ RSpec.describe ColorScheme do
 
     it "falls back to default scheme if base scheme does not have color" do
       custom_scheme_id = "BaseSchemeWithNoHighlightColor"
-      ColorScheme::CUSTOM_SCHEMES[custom_scheme_id.to_sym] = { "secondary" => "123123" }
+      ColorScheme::BUILT_IN_SCHEMES[custom_scheme_id.to_sym] = { "secondary" => "123123" }
 
       color_scheme = ColorScheme.new(base_scheme_id: custom_scheme_id)
       color_scheme.color_scheme_colors << ColorSchemeColor.new(name: "primary", hex: "121212")
@@ -154,9 +154,9 @@ RSpec.describe ColorScheme do
       resolved = color_scheme.resolved_colors
       expect(resolved["primary"]).to eq("121212") # From db
       expect(resolved["secondary"]).to eq("123123") # From custom scheme
-      expect(resolved["tertiary"]).to eq("0088cc") # From `foundation/colors.scss`
+      expect(resolved["tertiary"]).to eq("08c") # From `foundation/colors.scss`
     ensure
-      ColorScheme::CUSTOM_SCHEMES.delete(custom_scheme_id.to_sym)
+      ColorScheme::BUILT_IN_SCHEMES.delete(custom_scheme_id.to_sym)
     end
 
     it "calculates 'hover' and 'selected' from existing db colors in dark mode" do

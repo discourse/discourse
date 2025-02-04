@@ -24,7 +24,7 @@ RSpec.describe Onebox::Engine::GitlabBlobOnebox do
     end
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid GitLab blob URL" do
       valid_url = URI("https://gitlab.com/group/project/-/blob/main/file.txt")
       expect(described_class === valid_url).to eq(true)

@@ -2,7 +2,6 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 const DEFAULT_CONTENT = {
@@ -10,36 +9,12 @@ const DEFAULT_CONTENT = {
     { id: 1, label: "foo" },
     { id: 2, translatedLabel: "FooBar" },
     "separator",
-    { id: 3, translatedLabel: "With icon", icon: "times" },
+    { id: 3, translatedLabel: "With icon", icon: "xmark" },
     { id: 4, html: "<b>baz</b>" },
     { id: 5, translatedLabel: "Disabled", disabled: true },
   ],
   label: "foo",
 };
-
-async function clickRowById(id) {
-  await click(`#my-dropdown .widget-dropdown-item.item-${id}`);
-}
-
-function rowById(id) {
-  return query(`#my-dropdown .widget-dropdown-item.item-${id}`);
-}
-
-async function toggle() {
-  await click("#my-dropdown .widget-dropdown-header");
-}
-
-function headerLabel() {
-  return query("#my-dropdown .widget-dropdown-header .label").innerText.trim();
-}
-
-function header() {
-  return query("#my-dropdown .widget-dropdown-header");
-}
-
-function body() {
-  return query("#my-dropdown .widget-dropdown-body");
-}
 
 const TEMPLATE = hbs`
   <MountWidget
@@ -70,7 +45,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists("#my-dropdown"));
+    assert.dom("#my-dropdown").exists();
   });
 
   test("label", async function (assert) {
@@ -79,7 +54,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.strictEqual(headerLabel(), "FooBaz");
+    assert.dom("#my-dropdown .widget-dropdown-header .label").hasText("FooBaz");
   });
 
   test("translatedLabel", async function (assert) {
@@ -89,7 +64,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.strictEqual(headerLabel(), this.translatedLabel);
+    assert.dom("#my-dropdown .widget-dropdown-header .label").hasText("BazFoo");
   });
 
   test("content", async function (assert) {
@@ -97,19 +72,23 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    await toggle();
-    assert.strictEqual(rowById(1).dataset.id, "1", "it creates rows");
-    assert.strictEqual(rowById(2).dataset.id, "2", "it creates rows");
-    assert.strictEqual(rowById(3).dataset.id, "3", "it creates rows");
+    await click("#my-dropdown .widget-dropdown-header");
+    assert
+      .dom("#my-dropdown .widget-dropdown-item.item-1")
+      .hasAttribute("data-id", "1", "creates rows");
+    assert
+      .dom("#my-dropdown .widget-dropdown-item.item-2")
+      .hasAttribute("data-id", "2", "creates rows");
+    assert
+      .dom("#my-dropdown .widget-dropdown-item.item-3")
+      .hasAttribute("data-id", "3", "creates rows");
   });
 
   test("onChange action", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
-    this.set("onChange", (item) => (query("#test").innerText = item.id));
+    this.set("onChange", (item) => assert.step(`${item.id}`));
 
     await render(hbs`
-      <div id="test"></div>
-
       <MountWidget
         @widget="widget-dropdown"
         @args={{hash
@@ -121,13 +100,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
       />
     `);
 
-    await toggle();
-    await clickRowById(2);
-    assert.strictEqual(
-      query("#test").innerText,
-      "2",
-      "it calls the onChange actions"
-    );
+    await click("#my-dropdown .widget-dropdown-header");
+    await click("#my-dropdown .widget-dropdown-item.item-2");
+    assert.verifySteps(["2"], "calls the onChange actions");
   });
 
   test("can be opened and closed", async function (assert) {
@@ -135,24 +110,24 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists("#my-dropdown.closed"));
-    assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
-    await toggle();
-    assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
-    assert.ok(exists("#my-dropdown.opened"));
-    assert.ok(exists("#my-dropdown .widget-dropdown-body"));
-    await toggle();
-    assert.ok(exists("#my-dropdown.closed"));
-    assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
+    assert.dom("#my-dropdown.closed").exists();
+    assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
+    await click("#my-dropdown .widget-dropdown-header");
+    assert.dom("#my-dropdown .widget-dropdown-item.item-2").hasText("FooBar");
+    assert.dom("#my-dropdown.opened").exists();
+    assert.dom("#my-dropdown .widget-dropdown-body").exists();
+    await click("#my-dropdown .widget-dropdown-header");
+    assert.dom("#my-dropdown.closed").exists();
+    assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
   });
 
   test("icon", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
-    this.set("icon", "times");
+    this.set("icon", "xmark");
 
     await render(TEMPLATE);
 
-    assert.ok(exists(header().querySelector(".d-icon-times")));
+    assert.dom("#my-dropdown .widget-dropdown-header .d-icon-xmark").exists();
   });
 
   test("class", async function (assert) {
@@ -161,7 +136,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists("#my-dropdown.activated"));
+    assert.dom("#my-dropdown.activated").exists();
   });
 
   test("content with translatedLabel", async function (assert) {
@@ -169,8 +144,8 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    await toggle();
-    assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
+    await click("#my-dropdown .widget-dropdown-header");
+    assert.dom("#my-dropdown .widget-dropdown-item.item-2").hasText("FooBar");
   });
 
   test("content with label", async function (assert) {
@@ -179,8 +154,8 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    await toggle();
-    assert.strictEqual(rowById(1).innerText.trim(), "FooBaz");
+    await click("#my-dropdown .widget-dropdown-header");
+    assert.dom("#my-dropdown .widget-dropdown-item.item-1").hasText("FooBaz");
   });
 
   test("content with icon", async function (assert) {
@@ -188,17 +163,21 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    await toggle();
-    assert.ok(exists(rowById(3).querySelector(".d-icon-times")));
+    await click("#my-dropdown .widget-dropdown-header");
+    assert
+      .dom("#my-dropdown .widget-dropdown-item.item-3 .d-icon-xmark")
+      .exists();
   });
 
   test("content with html", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
 
     await render(TEMPLATE);
+    await click("#my-dropdown .widget-dropdown-header");
 
-    await toggle();
-    assert.strictEqual(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
+    assert
+      .dom("#my-dropdown .widget-dropdown-item.item-4")
+      .hasHtml("<span><b>baz</b></span>");
   });
 
   test("separator", async function (assert) {
@@ -206,12 +185,10 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    await toggle();
-    assert.ok(
-      query(
-        "#my-dropdown .widget-dropdown-item:nth-child(3)"
-      ).classList.contains("separator")
-    );
+    await click("#my-dropdown .widget-dropdown-header");
+    assert
+      .dom("#my-dropdown .widget-dropdown-item:nth-child(3)")
+      .hasClass("separator");
   });
 
   test("hides widget if no content", async function (assert) {
@@ -219,8 +196,8 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.notOk(exists("#my-dropdown .widget-dropdown-header"));
-    assert.notOk(exists("#my-dropdown .widget-dropdown-body"));
+    assert.dom("#my-dropdown .widget-dropdown-header").doesNotExist();
+    assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
   });
 
   test("headerClass option", async function (assert) {
@@ -229,9 +206,8 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(header().classList.contains("widget-dropdown-header"));
-    assert.ok(header().classList.contains("btn-small"));
-    assert.ok(header().classList.contains("and-text"));
+    assert.dom("#my-dropdown .widget-dropdown-header").hasClass("btn-small");
+    assert.dom("#my-dropdown .widget-dropdown-header").hasClass("and-text");
   });
 
   test("bodyClass option", async function (assert) {
@@ -240,10 +216,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    await toggle();
-    assert.ok(body().classList.contains("widget-dropdown-body"));
-    assert.ok(body().classList.contains("gigantic"));
-    assert.ok(body().classList.contains("and-yet-small"));
+    await click("#my-dropdown .widget-dropdown-header");
+    assert.dom("#my-dropdown .widget-dropdown-body").hasClass("gigantic");
+    assert.dom("#my-dropdown .widget-dropdown-body").hasClass("and-yet-small");
   });
 
   test("caret option", async function (assert) {
@@ -252,9 +227,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(
-      exists("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
-    );
+    assert
+      .dom("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
+      .exists();
   });
 
   test("disabled widget", async function (assert) {
@@ -263,10 +238,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists("#my-dropdown.disabled"));
+    assert.dom("#my-dropdown.disabled").exists();
 
-    await toggle();
-    assert.strictEqual(rowById(1), null, "it does not display options");
+    await click("#my-dropdown .widget-dropdown-header");
+    assert
+      .dom("#my-dropdown .widget-dropdown-item.item-1")
+      .doesNotExist("does not display options");
   });
 
   test("disabled item", async function (assert) {
@@ -274,7 +251,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    await toggle();
-    assert.ok(exists(".widget-dropdown-item.item-5.disabled"));
+    await click("#my-dropdown .widget-dropdown-header");
+    assert.dom(".widget-dropdown-item.item-5.disabled").exists();
   });
 });

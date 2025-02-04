@@ -21,6 +21,133 @@ describe "Recurring" do
     expect(triggerable.settings[DiscourseAutomation::Triggerable::MANUAL_TRIGGER_KEY]).to eq(true)
   end
 
+  describe "scheduling next pending automations" do
+    context "with daily frequency" do
+      it "doesn't fail to schedule if the current time is within subsecond of the time component of start_date" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2022-11-01 07:30:00 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "day" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2023-09-13 07:30:00.141775363 UTC")) { automation.trigger! }
+
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.count).to eq(1)
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2023-09-14 07:30:00 UTC"),
+        )
+      end
+    end
+
+    context "with weekday frequency" do
+      it "doesn't fail to schedule if the current time is within subsecond of the time component of start_date" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2024-10-01 23:59:59 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "weekday" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2024-10-01 23:59:59.141775363 UTC")) { automation.trigger! }
+
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.count).to eq(1)
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2024-10-02 23:59:59 UTC"),
+        )
+      end
+    end
+
+    context "with weekly frequency" do
+      it "doesn't fail to schedule if the current time is within subsecond of the time component of start_date" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2024-09-15 23:59:59 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "week" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2024-09-15 23:59:59.141775363 UTC")) { automation.trigger! }
+
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.count).to eq(1)
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2024-09-22 23:59:59 UTC"),
+        )
+      end
+    end
+
+    context "with monthly frequency" do
+      it "doesn't fail to schedule if the current time is within subsecond of the time component of start_date" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2023-10-01 07:30:00 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "month" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2023-10-01 07:30:00.141775363 UTC")) { automation.trigger! }
+
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.count).to eq(1)
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2023-11-05 07:30:00 UTC"),
+        )
+      end
+    end
+
+    context "with yearly frequency" do
+      it "doesn't fail to schedule if the current time is within subsecond of the time component of start_date" do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: Time.parse("2023-01-01 07:30:00 UTC") },
+          target: "trigger",
+        )
+        automation.upsert_field!(
+          "recurrence",
+          "period",
+          { value: { interval: 1, frequency: "year" } },
+          target: "trigger",
+        )
+
+        freeze_time(Time.parse("2023-01-01 07:30:00.141775363 UTC")) { automation.trigger! }
+
+        pending_automations = automation.reload.pending_automations
+        expect(pending_automations.count).to eq(1)
+        expect(pending_automations.first.execute_at).to eq_time(
+          Time.parse("2024-01-01 07:30:00 UTC"),
+        )
+      end
+    end
+  end
+
   describe "updating trigger" do
     context "when date is in future" do
       before { freeze_time Time.parse("2021-06-04 10:00 UTC") }

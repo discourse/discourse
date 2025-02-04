@@ -7,8 +7,12 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      matches_regexp(%r{^https?://(?:[a-z]{2}\.)?wikipedia\.(com|org)(/|$)})
+      matches_domain("wikipedia.com", "wikipedia.org", allow_subdomains: true)
       always_https
+
+      def self.matches_path(path)
+        true # Matches any path under the specified domains
+      end
 
       private
 

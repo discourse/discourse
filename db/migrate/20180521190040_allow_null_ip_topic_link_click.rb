@@ -9,4 +9,8 @@ class AllowNullIpTopicLinkClick < ActiveRecord::Migration[5.1]
       Migration::SafeMigrate.enable!
     end
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

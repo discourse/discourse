@@ -54,7 +54,15 @@ end
 begin
   reqs = Rake::Task["db:create"].prerequisites.map(&:to_sym)
   Rake::Task["db:create"].clear_prerequisites
-  Rake::Task["db:create"].enhance(["db:force_skip_persist"] + reqs)
+  Rake::Task["db:create"].enhance(["db:force_skip_persist"] + reqs) do
+    # after creating the db, we need to fully reboot the Rails app to make sure
+    # things like SiteSetting work correctly for future rake tasks.
+    top_level_tasks = Rake.application.top_level_tasks
+    db_create_index = top_level_tasks.index("db:create")
+    if db_create_index < top_level_tasks.length - 1
+      exec "#{Rails.root}/bin/rake", *top_level_tasks[db_create_index + 1..-1]
+    end
+  end
 end
 
 task "db:drop" => [:load_config] do |_, args|
@@ -70,7 +78,7 @@ end
 
 task "db:rollback" => %w[environment set_locale] do |_, args|
   step = ENV["STEP"] ? ENV["STEP"].to_i : 1
-  ActiveRecord::Base.connection.migration_context.rollback(step)
+  ActiveRecord::Base.connection_pool.migration_context.rollback(step)
   Rake::Task["db:_dump"].invoke
 end
 
@@ -236,7 +244,7 @@ task "db:migrate" => %w[
     redis: Discourse.redis.without_namespace,
     validity: 300,
   ) do
-    migrations = ActiveRecord::Base.connection.migration_context.migrations
+    migrations = ActiveRecord::Base.connection_pool.migration_context.migrations
     now_timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
     epoch_timestamp = Time.at(0).utc.strftime("%Y%m%d%H%M%S").to_i
 

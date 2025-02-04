@@ -1,9 +1,9 @@
 import $ from "jquery";
 import { handleLogoff } from "discourse/lib/ajax";
-import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
-import { isProduction, isTesting } from "discourse-common/config/environment";
+import { isProduction, isTesting } from "discourse/lib/environment";
 // Initialize the message bus to receive messages.
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
+import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 

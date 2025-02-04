@@ -1,12 +1,12 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import { setCaretPosition } from "discourse/lib/utilities";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  exists,
   fakeTime,
   loggedInUser,
-  query,
   queryAll,
   simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -25,6 +25,11 @@ acceptance("Composer - editor mentions", function (needs) {
   needs.hooks.afterEach(() => clock?.restore());
 
   needs.pretender((server, helper) => {
+    server.get("/t/11557.json", () => {
+      const topicFixture = cloneJSON(topicFixtures["/t/130.json"]);
+      topicFixture.id = 11557;
+      return helper.response(topicFixture);
+    });
     server.get("/u/search/users", () => {
       return helper.response({
         users: [
@@ -61,47 +66,35 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(".d-editor-input", "abc @u\r");
 
-    await simulateKeys(editor, "abc @u\r");
-
-    assert.strictEqual(
-      editor.value,
-      "abc @user ",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user ", "replaces mention correctly");
   });
 
   test("selecting user mentions after deleting characters", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(".d-editor-input", "abc @user a\b\b\r");
 
-    await simulateKeys(editor, "abc @user a\b\b\r");
-
-    assert.strictEqual(
-      editor.value,
-      "abc @user ",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user ", "replaces mention correctly");
   });
 
   test("selecting user mentions after deleting characters mid sentence", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(".d-editor-input", "abc @user 123");
+    await setCaretPosition(".d-editor-input", 9);
+    await simulateKeys(".d-editor-input", "\b\b\r");
 
-    await simulateKeys(editor, "abc @user 123");
-    await setCaretPosition(editor, 9);
-    await simulateKeys(editor, "\b\b\r");
-
-    assert.strictEqual(
-      editor.value,
-      "abc @user 123",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user 123", "replaces mention correctly");
   });
 
   test("shows status on search results when mentioning a user", async function (assert) {
@@ -112,42 +105,48 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(".d-editor-input", "@u");
 
-    await simulateKeys(editor, "@u");
+    assert
+      .dom(`.autocomplete .emoji[alt='${status.emoji}']`)
+      .exists("status emoji is shown");
 
-    assert.ok(
-      exists(`.autocomplete .emoji[alt='${status.emoji}']`),
-      "status emoji is shown"
-    );
-
-    assert.equal(
-      query(
-        ".autocomplete .user-status-message-description"
-      ).textContent.trim(),
-      status.description,
-      "status description is shown"
-    );
+    assert
+      .dom(".autocomplete .user-status-message-description")
+      .hasText(status.description, "status description is shown");
   });
 
   test("metadata matches are moved to the end", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, "abc @u");
+    await simulateKeys(".d-editor-input", "abc @u");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
       ["user", "user2", "user_group", "foo"]
     );
 
-    await simulateKeys(editor, "\bf");
+    await simulateKeys(".d-editor-input", "\bf");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
       ["foo", "user_group", "user", "user2"]
+    );
+  });
+
+  test("shows users immediately when @ is typed in a reply", async function (assert) {
+    await visit("/");
+    await click(".topic-list-item .title");
+    await click(".btn-primary.create");
+
+    await simulateKeys(".d-editor-input", "abc @");
+
+    assert.deepEqual(
+      [...document.querySelectorAll(".ac-user .username")].map(
+        (e) => e.innerText
+      ),
+      ["user_group", "user", "user2", "foo"]
     );
   });
 });

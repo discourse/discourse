@@ -14,8 +14,8 @@ RSpec.describe "invalid requests", type: :request do
            "content-type" => "application/json",
          }
     expect(response.status).to eq(404)
-    expect(fake_logger.warnings.length).to eq(0)
-    expect(fake_logger.errors.length).to eq(0)
+    expect(fake_logger.warnings).to be_empty
+    expect(fake_logger.errors).to have_attributes(size: 1)
   end
 
   it "handles EOFError when multipart request is malformed" do
@@ -26,14 +26,14 @@ RSpec.describe "invalid requests", type: :request do
            "content-length" => "1",
          }
     expect(response.status).to eq(400)
-    expect(fake_logger.warnings.length).to eq(0)
-    expect(fake_logger.errors.length).to eq(0)
+    expect(fake_logger.warnings).to be_empty
+    expect(fake_logger.errors).to have_attributes(size: 1)
   end
 
   it "handles invalid parameters" do
     post "/latest.json", params: { "foo" => "\255bar" }
     expect(response.status).to eq(404)
-    expect(fake_logger.warnings.length).to eq(0)
-    expect(fake_logger.errors.length).to eq(0)
+    expect(fake_logger.warnings).to be_empty
+    expect(fake_logger.errors).to have_attributes(size: 1)
   end
 end

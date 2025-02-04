@@ -39,6 +39,12 @@ cs:
       chat_messages_count: "Zprávy v chatu"
       chat_channels_count: "Kanály chatu"
       chat_users_count: "Uživatelé chatu"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} zpráva chatu"
+          few: "%{formatted_number} zprávy chatu"
+          many: "%{formatted_number} zpráv chatu"
+          other: "%{formatted_number} zpráv chatu"
     chat:
       text_copied: Zkopírováno do schránky
       link_copied: Odkaz zkopírován do schránky
@@ -46,7 +52,6 @@ cs:
       deleted_chat_username: smazáno
       dates:
         yesterday: "Včera"
-        time_tiny: "h:mm"
       all_loaded: "Zobrazení všech zpráv"
       already_enabled: "Chat je v tomto tématu již povolen. Obnovte prosím stránku."
       disabled_for_topic: "Chat je v tomto tématu zakázán."
@@ -136,11 +141,18 @@ cs:
       header_indicator_preference:
         title: "Zobrazit indikátor aktivity v záhlaví"
         all_new: "Všechny nové zprávy"
-        dm_and_mentions: "Přímé zprávy a zmínky"
+        dm_and_mentions: "Přímé zprávy, zmínky a sledovaná vlákna"
         only_mentions: "Pouze zmínky"
         never: "Nikdy"
       separate_sidebar_mode:
         title: "Zobrazit samostatné režimy postranního panelu pro fórum a chat"
+      send_shortcut:
+        enter:
+          label: "Odeslat pomocí Enter"
+          description: "Nový řádek pomocí Shift + Enter"
+        meta_enter:
+          label: "Odeslat pomocí %{meta_key} + Enter"
+          description: "Nový řádek pomocí Enter"
       enable: "Povolit chat"
       flag: "Nahlášení"
       emoji: "Vložit emoji"
@@ -260,6 +272,7 @@ cs:
       placeholder_channel: "Pište v %{channelName}"
       placeholder_thread: "Odpovězte do vlákna"
       placeholder_users: "Pište si s %{commaSeparatedNames}"
+      placeholder_group: "Napište do skupiny"
       placeholder_new_message_disallowed:
         archived: "Kanál je archivován, nové zprávy momentálně nelze odeslat."
         closed: "Kanál je uzavřen, nové zprávy momentálně nelze odeslat."
@@ -508,10 +521,9 @@ cs:
         auto_join_users_info: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup do kategorie %{category}."
         auto_join_users_info_no_category: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup ke zvolené kategorii."
         auto_join_users_warning: "Každý uživatel, který není členem tohoto kanálu a má přístup do kategorie %{category}, se k němu připojí. Jste si jisti?"
-        desktop_notification_level: "Oznámení na desktopu"
+        notification_level: "Odesílat push notifikace"
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
-        mobile_notification_level: "Mobilní push notifikace"
         mute: "Ztlumit kanál"
         threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
@@ -534,6 +546,7 @@ cs:
           title: "Export zpráv chatu"
           description: "Tímto se exportují všechny zprávy ze všech kanálů."
           create_export: "Vytvořit export"
+          confirm_export: "Toto exportuje všechny zprávy ze všech kanálů a odešle vám výsledek v soukromé zprávě. Opravdu chcete exportovat?"
           export_has_started: "Export byl zahájen. Až bude hotový, obdržíte SZ."
       my_threads:
         title: Moje vlákna
@@ -552,6 +565,7 @@ cs:
       incoming_webhooks:
         back: "Zpět"
         channel_placeholder: "Vyberte kanál"
+        channel: "Kanál"
         confirm_destroy: "Jste si jisti, že chcete odstranit tento příchozí webhook? Toto nelze zrušit."
         current_emoji: "Aktuální emoji"
         description: "Popis"
@@ -575,6 +589,8 @@ cs:
         username: "Uživatelské jméno"
         username_instructions: "Uživatelské jméno bota, který přispívá do kanálu. Pokud je ponecháno prázdné, je výchozí hodnota \"system\"."
         instructions: "Příchozí webhooky mohou být použity externími systémy k odesílání zpráv do určeného kanálu chatu jako uživatel bota prostřednictvím endpointu <code>/hooks/:key</code>. Payload se skládá z jednoho <code>textového</code> parametru, který je omezen na 2000 znaků.<br><br>Podporujeme také omezené množství parametrů <code>text</code> ve formátu Slack, extrahování odkazů a zmínek na základě formátu na <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api. slack.com/reference/surfaces/formatting</a>, ale tomu je třeba použít endpoint <code>/hooks/:key/slack</code>."
+        saved: "Změny webhooku uloženy"
+        created: "Webhook vytvořen"
       selection:
         cancel: "Zrušit"
         quote_selection: "Citovat v tématu"
@@ -666,10 +682,13 @@ cs:
         notifications:
           regular:
             title: "Normální"
-            description: "Budete upozorněni, pokud někdo zmíní vaše @jméno v tomto vlákně."
+            description: "Dostávejte upozornění, když vás někdo v tomto vlákně zmíní."
           tracking:
             title: "Sledované"
-            description: "Počet nových odpovědí na toto vlákno se zobrazí v seznamu vláken a v kanálu. Budete upozorněni, pokud někdo v tomto vlákně zmíní vaše @jméno."
+            description: "Dostávejte upozornění, když vás někdo v tomto vlákně zmíní a zobrazit počet nových odpovědí v seznamu vláken."
+          watching:
+            title: "Hlídání"
+            description: "Dostávejte upozornění na všechny odpovědi v tomto vlákně a zobrazit počet nových odpovědí v seznamu vláken."
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"
@@ -697,6 +716,11 @@ cs:
       chat_invitation: "vás pozval/a, abyste se připojili ke kanálu chatu"
       chat_invitation_html: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} a %{username2}"
+        few: "%{username} a %{count} další"
+        many: "%{username} a %{count} další"
+        other: "%{username} a %{count} dalších"
       popup:
         chat_mention:
           direct: 'vás zmínil v "%{channel}"'
@@ -711,9 +735,10 @@ cs:
         chat_message: "Nová zpráva chatu"
         chat_quoted: "%{username} citoval vaši zprávu v chatu"
       titles:
-        chat_mention: "Zmínka v chatu"
-        chat_invitation: "Pozvánka do chatu"
-        chat_quoted: "Citovaný chat"
+        chat_mention: "Zmínky v chatu"
+        chat_invitation: "Pozván/a do kanálu chatu"
+        chat_quoted: "Citovaná zpráva v chatu"
+        chat_watched_thread: "Sledované vlákno chatu"
     action_codes:
       chat:
         enabled: '%{who} povolil/a <button class="btn-link open-chat">chat</button> %{when}'
@@ -744,6 +769,7 @@ cs:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Přepnout kanál"
+          switch__unread_channel_arrows: "%{shortcut} Přepnout nepřečtený kanál"
           open_quick_channel_selector: "%{shortcut} Otevřít rychlý výběr kanálů"
           open_insert_link_modal: "%{shortcut} Vložit hypertextový odkaz (pouze editor)"
           composer_bold: "%{shortcut} Tučné (pouze editor)"

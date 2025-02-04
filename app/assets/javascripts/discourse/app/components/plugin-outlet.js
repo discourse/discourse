@@ -1,16 +1,17 @@
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { get } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
+import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { helperContext } from "discourse/lib/helpers";
 import {
   buildArgsWithDeprecations,
   connectorsExist,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
-import deprecated from "discourse-common/lib/deprecated";
-import { helperContext } from "discourse-common/lib/helpers";
-import { bind } from "discourse-common/utils/decorators";
 
 const PARENT_VIEW_DEPRECATION_MSG =
   "parentView should not be used within plugin outlets. Use the available outlet arguments, or inject a service which can provide the context you need.";
@@ -88,7 +89,8 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     const connectors = renderedConnectorsFor(
       this.args.name,
       this.outletArgsWithDeprecations,
-      this.context
+      this.context,
+      getOwner(this)
     );
     if (connectors.length > 1 && hasBlock) {
       const message = `Multiple connectors were registered for the ${this.args.name} outlet. Using the first.`;
@@ -139,9 +141,11 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     });
     return this.#parentView;
   }
+
   set parentView(value) {
     this.#parentView = value;
   }
+
   get _parentView() {
     return this.parentView;
   }
@@ -164,9 +168,11 @@ class PluginOutletWithTagNameWrapper extends ClassicComponent {
       return this.#parentView.parentView;
     }
   }
+
   set parentView(value) {
     this.#parentView = value;
   }
+
   get _parentView() {
     return this.parentView;
   }

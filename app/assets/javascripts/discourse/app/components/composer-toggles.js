@@ -1,20 +1,20 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import { tagName } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
 
-export default Component.extend({
-  tagName: "",
-
+@tagName("")
+export default class ComposerToggles extends Component {
   @discourseComputed("composeState")
   toggleTitle(composeState) {
     return composeState === "draft" || composeState === "saving"
       ? "composer.abandon"
       : "composer.collapse";
-  },
+  }
 
   @discourseComputed("showToolbar")
   toggleToolbarTitle(showToolbar) {
     return showToolbar ? "composer.hide_toolbar" : "composer.show_toolbar";
-  },
+  }
 
   @discourseComputed("composeState")
   fullscreenTitle(composeState) {
@@ -23,23 +23,23 @@ export default Component.extend({
       : composeState === "fullscreen"
       ? "composer.exit_fullscreen"
       : "composer.enter_fullscreen";
-  },
+  }
 
   @discourseComputed("composeState")
   toggleIcon(composeState) {
     return composeState === "draft" || composeState === "saving"
-      ? "times"
-      : "chevron-down";
-  },
+      ? "xmark"
+      : "angles-down";
+  }
 
   @discourseComputed("composeState")
   fullscreenIcon(composeState) {
     return composeState === "draft"
-      ? "chevron-up"
+      ? "angles-up"
       : composeState === "fullscreen"
       ? "discourse-compress"
       : "discourse-expand";
-  },
+  }
 
   @discourseComputed("disableTextarea")
   showFullScreenButton(disableTextarea) {
@@ -47,5 +47,5 @@ export default Component.extend({
       return false;
     }
     return !disableTextarea;
-  },
-});
+  }
+}

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::CreateDirectMessageChannel do
-  describe Chat::CreateDirectMessageChannel::Contract, type: :model do
+  describe described_class::Contract, type: :model do
     subject(:contract) { described_class.new(params) }
 
     let(:params) { { target_usernames: %w[lechuck elaine] } }
@@ -17,6 +17,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         expect(contract.target_usernames).to eq(%w[lechuck elaine])
       end
     end
+
     context "when the target_groups argument is a string" do
       let(:params) { { target_groups: "admins,moderators" } }
 
@@ -28,7 +29,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user, username: "guybrush", refresh_auto_groups: true) }
     fab!(:user_1) { Fabricate(:user, username: "lechuck") }
@@ -39,12 +40,12 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     let(:guardian) { Guardian.new(current_user) }
     let(:target_usernames) { [user_1.username, user_2.username] }
     let(:name) { "" }
-    let(:params) { { guardian: guardian, target_usernames: target_usernames, name: name } }
+    let(:icon_upload_id) { nil }
+    let(:params) { { target_usernames:, name:, icon_upload_id: } }
+    let(:dependencies) { { guardian: } }
 
     context "when all steps pass" do
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "updates user count" do
         expect(result.channel.user_count).to eq(3) # current user + user_1 + user_2
@@ -66,8 +67,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           expect(membership).to have_attributes(
             following: false,
             muted: false,
-            desktop_notification_level: "always",
-            mobile_notification_level: "always",
+            notification_level: "always",
           )
         end
       end
@@ -119,7 +119,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           let(:name) { "Monkey Island" }
 
           it "creates a second channel" do
-            described_class.call(params)
+            described_class.call(params:, **dependencies)
 
             expect { result }.to change { Chat::Channel.count }.and change {
                     Chat::DirectMessage.count
@@ -131,7 +131,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           let(:target_usernames) { [user_1.username, user_2.username] }
 
           it "creates a second channel" do
-            described_class.call(params)
+            described_class.call(params:, **dependencies)
 
             expect { result }.to change { Chat::Channel.count }.and change {
                     Chat::DirectMessage.count
@@ -143,7 +143,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           let(:target_usernames) { [user_1.username] }
 
           it "reuses the existing channel" do
-            existing_channel = described_class.call(params).channel
+            existing_channel = described_class.call(params:, **dependencies).channel
 
             expect(result.channel.id).to eq(existing_channel.id)
           end
@@ -153,8 +153,9 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           let(:target_usernames) { [user_1.username] }
 
           it "returns the non group existing channel" do
-            group_channel = described_class.call(params.merge(name: "cats")).channel
-            channel = described_class.call(params).channel
+            group_channel =
+              described_class.call(params: params.merge(name: "cats"), **dependencies).channel
+            channel = described_class.call(params:, **dependencies).channel
 
             expect(result.channel.id).to_not eq(group_channel.id)
             expect(result.channel.id).to eq(channel.id)
@@ -167,6 +168,14 @@ RSpec.describe Chat::CreateDirectMessageChannel do
 
         it "sets it as the channel name" do
           expect(result.channel.name).to eq(name)
+        end
+      end
+
+      context "when an icon_upload_id is given" do
+        let(:icon_upload_id) { 2 }
+
+        it "sets it as the channel icon_upload_id" do
+          expect(result.channel.icon_upload_id).to eq(icon_upload_id)
         end
       end
     end

@@ -7,16 +7,19 @@ export default class ChatTrackingState {
 
   @tracked _unreadCount;
   @tracked _mentionCount;
+  @tracked _watchedThreadsUnreadCount;
 
   constructor(owner, params = {}) {
     setOwner(this, owner);
     this._unreadCount = params.unreadCount ?? 0;
     this._mentionCount = params.mentionCount ?? 0;
+    this._watchedThreadsUnreadCount = params.watchedThreadsUnreadCount ?? 0;
   }
 
   reset() {
     this._unreadCount = 0;
     this._mentionCount = 0;
+    this._watchedThreadsUnreadCount = 0;
   }
 
   get unreadCount() {
@@ -39,6 +42,18 @@ export default class ChatTrackingState {
     const valueChanged = this._mentionCount !== value;
     if (valueChanged) {
       this._mentionCount = value;
+      this.chatTrackingStateManager.triggerNotificationsChanged();
+    }
+  }
+
+  get watchedThreadsUnreadCount() {
+    return this._watchedThreadsUnreadCount;
+  }
+
+  set watchedThreadsUnreadCount(value) {
+    const valueChanged = this._watchedThreadsUnreadCount !== value;
+    if (valueChanged) {
+      this._watchedThreadsUnreadCount = value;
       this.chatTrackingStateManager.triggerNotificationsChanged();
     }
   }

@@ -78,13 +78,17 @@ module Middleware
         @request = request || Rack::Request.new(@env)
       end
 
+      def crawler_identifier
+        @user_agent
+      end
+
       def blocked_crawler?
         @request.get? && !@request.xhr? && !@request.path.ends_with?("robots.txt") &&
           !@request.path.ends_with?("srv/status") &&
           @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
-          CrawlerDetection.is_blocked_crawler?(@user_agent)
+          CrawlerDetection.is_blocked_crawler?(crawler_identifier)
       end
 
       # rubocop:disable Lint/BooleanSymbol

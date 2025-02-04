@@ -21,14 +21,15 @@ module DiscourseAutomation
     end
 
     def create
-      automation_params = params.require(:automation).permit(:name, :script, :trigger)
+      automation_params = params.require(:automation).permit(:script, :trigger)
 
       automation =
         DiscourseAutomation::Automation.new(
           automation_params.merge(last_updated_by_id: current_user.id),
         )
-      if automation.scriptable.forced_triggerable
-        automation.trigger = scriptable.forced_triggerable[:triggerable].to_s
+
+      if automation.scriptable&.forced_triggerable
+        automation.trigger = automation.scriptable.forced_triggerable[:triggerable].to_s
       end
 
       automation.save!
@@ -80,9 +81,11 @@ module DiscourseAutomation
     end
 
     def destroy
-      automation = DiscourseAutomation::Automation.find(params[:id])
-      automation.destroy!
-      render json: success_json
+      DiscourseAutomation::Destroy.call(service_params) do
+        on_success { render(json: success_json) }
+        on_model_not_found(:automation) { raise Discourse::NotFound }
+        on_failed_policy(:can_destroy_automation) { raise Discourse::InvalidAccess }
+      end
     end
 
     private

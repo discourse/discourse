@@ -50,7 +50,7 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
     end
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid Wikipedia URL with .org" do
       valid_url_org = URI("https://en.wikipedia.org/wiki/Ruby_(programming_language)")
       expect(described_class === valid_url_org).to eq(true)
@@ -64,11 +64,6 @@ RSpec.describe Onebox::Engine::WikipediaOnebox do
     it "does not match URL with extra domain" do
       malicious_url = URI("https://en.wikipedia.org.malicious.com/wiki/Ruby_(programming_language)")
       expect(described_class === malicious_url).to eq(false)
-    end
-
-    it "does not match URL with subdomain" do
-      subdomain_url = URI("https://sub.en.wikipedia.org/wiki/Ruby_(programming_language)")
-      expect(described_class === subdomain_url).to eq(false)
     end
 
     it "does not match unrelated URL" do

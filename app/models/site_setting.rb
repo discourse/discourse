@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 class SiteSetting < ActiveRecord::Base
+  VALID_AREAS = %w[
+    about
+    embedding
+    emojis
+    flags
+    fonts
+    group_permissions
+    legal
+    localization
+    navigation
+    notifications
+    permalinks
+    trust_levels
+  ]
+
   extend GlobalPath
   extend SiteSettingExtension
 
@@ -70,7 +85,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.top_menu_items
-    top_menu.split("|").map { |menu_item| TopMenuItem.new(menu_item) }
+    top_menu_map.map { |menu_item| TopMenuItem.new(menu_item) }
   end
 
   def self.homepage
@@ -166,6 +181,12 @@ class SiteSetting < ActiveRecord::Base
       end
     end
 
+    def self.use_dualstack_endpoint
+      return false if !SiteSetting.Upload.enable_s3_uploads
+      return false if SiteSetting.Upload.s3_endpoint.present?
+      !SiteSetting.Upload.s3_region.start_with?("cn-")
+    end
+
     def self.enable_s3_uploads
       SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
     end
@@ -188,10 +209,10 @@ class SiteSetting < ActiveRecord::Base
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
       if SiteSetting.s3_endpoint.blank? || SiteSetting.s3_endpoint.end_with?("amazonaws.com")
-        if SiteSetting.Upload.s3_region.start_with?("cn-")
-          "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
-        else
+        if SiteSetting.Upload.use_dualstack_endpoint
           "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
+        else
+          "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
         end
       else
         "//#{bucket}.#{url_basename}"

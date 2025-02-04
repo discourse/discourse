@@ -61,10 +61,16 @@ acceptance("DStyles - category backgrounds", function (needs) {
   test("CSS classes are generated", async function (assert) {
     await visit("/");
 
-    const css =
-      "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }\n" +
-      "body.category-foo-baz { background-image: url(/uploads/default/original/1X/684c104edc18a7e9cef1fa31f41215f3eec5d92b.png); }";
-    assert.ok(document.querySelector("#d-styles").innerHTML.includes(css));
+    assert
+      .dom("#d-styles")
+      .includesHtml(
+        "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }"
+      );
+    assert
+      .dom("#d-styles")
+      .includesHtml(
+        "body.category-foo-baz { background-image: url(/uploads/default/original/1X/684c104edc18a7e9cef1fa31f41215f3eec5d92b.png); }"
+      );
   });
 });
 
@@ -87,14 +93,15 @@ acceptance("DStyles - category backgrounds (dark)", function (needs) {
   test("CSS classes are generated", async function (assert) {
     await visit("/");
 
-    const css =
-      "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }\n" +
-      "body.category-foo-baz { background-image: url(/uploads/default/original/1X/684c104edc18a7e9cef1fa31f41215f3eec5d92b.png); }\n" +
-      "@media (prefers-color-scheme: dark) {\n" +
-      "body.category-bar { background-image: url(/uploads/default/original/1X/f9fdb0ad108f2aed178c40f351bbb2c7cb2571e3.png); }\n" +
-      "body.category-foo-baz { background-image: url(/uploads/default/original/1X/89b1a2641e91604c32b21db496be11dba7a253e6.png); }\n" +
-      "}";
-    assert.ok(document.querySelector("#d-styles").innerHTML.includes(css));
+    const css = [
+      "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }",
+      "body.category-foo-baz { background-image: url(/uploads/default/original/1X/684c104edc18a7e9cef1fa31f41215f3eec5d92b.png); }",
+      "@media (prefers-color-scheme: dark) {",
+      "body.category-bar { background-image: url(/uploads/default/original/1X/f9fdb0ad108f2aed178c40f351bbb2c7cb2571e3.png); }",
+      "body.category-foo-baz { background-image: url(/uploads/default/original/1X/89b1a2641e91604c32b21db496be11dba7a253e6.png); }",
+      "}",
+    ].join(" ");
+    assert.dom("#d-styles").includesHtml(css);
   });
 });
 
@@ -119,11 +126,12 @@ acceptance(
     test("CSS classes are generated", async function (assert) {
       await visit("/");
 
-      const css =
-        "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }\n" +
-        "body.category-bar { background-image: url(/uploads/default/original/1X/f9fdb0ad108f2aed178c40f351bbb2c7cb2571e3.png); }\n" +
-        "body.category-foo-baz { background-image: url(/uploads/default/original/1X/89b1a2641e91604c32b21db496be11dba7a253e6.png); }";
-      assert.ok(document.querySelector("#d-styles").innerHTML.includes(css));
+      const css = [
+        "body.category-foo { background-image: url(/uploads/default/original/1X/c5c84b16ebf745ab848d1498267c541facbf1ff0.png); }",
+        "body.category-bar { background-image: url(/uploads/default/original/1X/f9fdb0ad108f2aed178c40f351bbb2c7cb2571e3.png); }",
+        "body.category-foo-baz { background-image: url(/uploads/default/original/1X/89b1a2641e91604c32b21db496be11dba7a253e6.png); }",
+      ].join(" ");
+      assert.dom("#d-styles").includesHtml(css);
     });
   }
 );
@@ -148,23 +156,25 @@ acceptance("DStyles - category badges", function (needs) {
   test("category CSS variables are generated", async function (assert) {
     await visit("/");
 
-    const css =
-      ":root {\n" +
-      "--category-1-color: #ff0000;\n" +
-      "--category-2-color: #333;\n" +
-      "--category-4-color: #2B81AF;\n" +
-      "}";
-    assert.ok(document.querySelector("style#d-styles").innerHTML.includes(css));
+    const css = [
+      ":root {",
+      "--category-1-color: #ff0000;",
+      "--category-2-color: #333;",
+      "--category-4-color: #2B81AF;",
+      "}",
+    ].join(" ");
+    assert.dom("style#d-styles").includesHtml(css);
   });
 
   test("category badge CSS variables are generated", async function (assert) {
     await visit("/");
 
-    const css =
-      '.badge-category[data-category-id="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }\n' +
-      '.badge-category[data-parent-category-id="1"] { --parent-category-badge-color: var(--category-1-color); }\n' +
-      '.badge-category[data-category-id="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }\n' +
-      '.badge-category[data-category-id="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }';
-    assert.ok(document.querySelector("style#d-styles").innerHTML.includes(css));
+    const css = [
+      '.badge-category[data-category-id="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }',
+      '.badge-category[data-parent-category-id="1"] { --parent-category-badge-color: var(--category-1-color); }',
+      '.badge-category[data-category-id="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }',
+      '.badge-category[data-category-id="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }',
+    ].join(" ");
+    assert.dom("style#d-styles").includesHtml(css);
   });
 });

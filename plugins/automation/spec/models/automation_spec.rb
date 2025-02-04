@@ -180,4 +180,15 @@ describe DiscourseAutomation::Automation do
       expect(user.custom_fields).to eq({ automation2.new_user_custom_field_name => "1" })
     end
   end
+
+  context "when creating a new automation" do
+    it "validates the name length" do
+      automation = Fabricate.build(:automation, name: "a" * 101)
+      expect(automation).not_to be_valid
+      expect(automation.errors[:name]).to eq(["is too long (maximum is 100 characters)"])
+
+      automation = Fabricate.build(:automation, name: "c" * 50)
+      expect(automation).to be_valid
+    end
+  end
 end

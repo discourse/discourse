@@ -10,7 +10,7 @@ RSpec.describe Chat::GuardianExtensions do
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
 
-  before { SiteSetting.chat_allowed_groups = [chatters] }
+  before { SiteSetting.chat_allowed_groups = chatters }
 
   describe "#can_chat?" do
     context "when the user is not in allowed to chat" do
@@ -87,9 +87,11 @@ RSpec.describe Chat::GuardianExtensions do
         end
 
         context "when not group" do
-          it "doesn’t allow  to edit the channel" do
+          before { dm_channel.add(user) }
+
+          it "allows to edit the channel" do
             Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
-            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(false)
+            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(true)
           end
         end
       end
@@ -354,11 +356,11 @@ RSpec.describe Chat::GuardianExtensions do
         context "when enable_category_group_moderation is true" do
           before { SiteSetting.enable_category_group_moderation = true }
 
-          it "returns true if the regular user is part of the reviewable_by_group for the category" do
+          it "returns true if the regular user is part of the reviewable groups for the category" do
             moderator = Fabricate(:user)
             mods = Fabricate(:group)
             mods.add(moderator)
-            category.update!(reviewable_by_group: mods)
+            Fabricate(:category_moderation_group, category:, group: mods)
             expect(Guardian.new(Fabricate(:admin)).can_moderate_chat?(channel.chatable)).to eq(true)
             expect(Guardian.new(moderator).can_moderate_chat?(channel.chatable)).to eq(true)
           end
@@ -443,7 +445,7 @@ RSpec.describe Chat::GuardianExtensions do
                 moderator = Fabricate(:user)
                 mods = Fabricate(:group)
                 mods.add(moderator)
-                chatable.update!(reviewable_by_group: mods)
+                Fabricate(:category_moderation_group, category: chatable, group: mods)
                 expect(Guardian.new(moderator).can_restore_chat?(message, chatable)).to eq(true)
               end
             end

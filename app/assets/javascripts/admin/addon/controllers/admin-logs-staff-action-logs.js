@@ -2,12 +2,12 @@ import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
+import discourseComputed from "discourse/lib/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
+import AdminStaffActionLogComponent from "../components/modal/staff-action-log-change";
 import StaffActionLogDetailsModal from "../components/modal/staff-action-log-details";
-import ThemeChangeModal from "../components/modal/theme-change";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
   @service modal;
@@ -20,7 +20,7 @@ export default class AdminLogsStaffActionLogsController extends Controller {
 
   @discourseComputed("filters.action_name")
   actionFilter(name) {
-    return name ? I18n.t("admin.logs.staff_actions.actions." + name) : null;
+    return name ? i18n("admin.logs.staff_actions.actions." + name) : null;
   }
 
   @discourseComputed("filters")
@@ -39,7 +39,7 @@ export default class AdminLogsStaffActionLogsController extends Controller {
             .map((historyAction) => ({
               id: historyAction.id,
               action_id: historyAction.action_id,
-              name: I18n.t(
+              name: i18n(
                 "admin.logs.staff_actions.actions." + historyAction.id
               ),
               name_raw: historyAction.id,
@@ -164,6 +164,8 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   showCustomDetailsModal(model, event) {
     event?.preventDefault();
-    this.modal.show(ThemeChangeModal, { model: { staffActionLog: model } });
+    this.modal.show(AdminStaffActionLogComponent, {
+      model: { staffActionLog: model },
+    });
   }
 }

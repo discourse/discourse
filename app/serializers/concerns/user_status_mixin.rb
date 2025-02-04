@@ -7,7 +7,7 @@ module UserStatusMixin
 
   def include_status?
     @options[:include_status] && SiteSetting.enable_user_status &&
-      !object.user_option&.hide_profile_and_presence && object.has_status?
+      !object.user_option&.hide_profile && object.has_status?
   end
 
   def status

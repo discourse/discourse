@@ -33,7 +33,7 @@ task "import:ensure_consistency" => :environment do
   log "Done!"
 end
 
-MS_SPEND_CREATING_POST ||= 5000
+MS_SPEND_CREATING_POST = 5000
 
 # -- TODO: We need to check the queries are actually adding/updating the necessary
 # data, post migration. The ON CONFLICT DO NOTHING may cause the clauses to be ignored
@@ -164,6 +164,7 @@ def insert_user_options
                   include_tl0_in_digests,
                   automatically_unpin_topics,
                   enable_quoting,
+                  enable_smart_lists,
                   external_links_in_new_tab,
                   dynamic_favicon,
                   new_topic_duration_minutes,
@@ -172,6 +173,8 @@ def insert_user_options
                   like_notification_frequency,
                   skip_new_user_tips,
                   hide_profile_and_presence,
+                  hide_profile,
+                  hide_presence,
                   sidebar_link_to_filtered_list,
                   sidebar_show_count_of_new_items
                 )
@@ -187,6 +190,7 @@ def insert_user_options
                   , #{SiteSetting.default_include_tl0_in_digests}
                   , #{SiteSetting.default_topics_automatic_unpin}
                   , #{SiteSetting.default_other_enable_quoting}
+                  , #{SiteSetting.default_other_enable_smart_lists}
                   , #{SiteSetting.default_other_external_links_in_new_tab}
                   , #{SiteSetting.default_other_dynamic_favicon}
                   , #{SiteSetting.default_other_new_topic_duration_minutes}
@@ -194,7 +198,9 @@ def insert_user_options
                   , #{SiteSetting.default_other_notification_level_when_replying}
                   , #{SiteSetting.default_other_like_notification_frequency}
                   , #{SiteSetting.default_other_skip_new_user_tips}
-                  , #{SiteSetting.default_hide_profile_and_presence}
+                  , #{SiteSetting.default_hide_profile || SiteSetting.default_hide_presence}
+                  , #{SiteSetting.default_hide_profile}
+                  , #{SiteSetting.default_hide_presence}
                   , #{SiteSetting.default_sidebar_link_to_filtered_list}
                   , #{SiteSetting.default_sidebar_show_count_of_new_items}
                FROM users u
@@ -293,13 +299,11 @@ end
 def update_user_stats
   log "Updating user stats..."
 
-  # TODO: topic_count is counting all topics you replied in as if you started the topic.
-  # TODO: post_count is counting first posts.
   DB.exec <<-SQL
     WITH X AS (
       SELECT p.user_id
-           , COUNT(p.id) posts
-           , COUNT(DISTINCT p.topic_id) topics
+           , COUNT(CASE WHEN p.post_number > 1 THEN p.id END) AS posts
+           , COUNT(CASE WHEN p.post_number = 1 THEN t.id END) AS topics
            , MIN(p.created_at) min_created_at
            , COALESCE(COUNT(DISTINCT DATE(p.created_at)), 0) days
         FROM posts p

@@ -1,8 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { getURLWithCDN } from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
@@ -35,7 +36,7 @@ export function channelStatusIcon(channelStatus) {
     case CHANNEL_STATUSES.readOnly:
       return "comment-slash";
     case CHANNEL_STATUSES.archived:
-      return "archive";
+      return "box-archive";
   }
 }
 
@@ -71,6 +72,7 @@ export default class ChatChannel {
   @tracked tracking;
   @tracked threadingEnabled;
   @tracked draft;
+  @tracked newestMessage;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
@@ -86,6 +88,7 @@ export default class ChatChannel {
     this.membershipsCount = args.memberships_count;
     this.slug = args.slug;
     this.title = args.title;
+    this.unicodeTitle = args.unicode_title;
     this.status = args.status;
     this.description = args.description;
     this.threadingEnabled = args.threading_enabled;
@@ -94,6 +97,9 @@ export default class ChatChannel {
     this.currentUserMembership = args.current_user_membership;
     this.lastMessage = args.last_message;
     this.meta = args.meta;
+    this.iconUploadUrl = args.icon_upload_url
+      ? getURLWithCDN(args.icon_upload_url)
+      : null;
 
     this.chatable = this.#initChatable(args.chatable ?? []);
     this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
@@ -111,7 +117,23 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCount() {
-    return Array.from(this.threadsManager.unreadThreadOverview.values()).length;
+    return this.threadsManager.unreadThreadCount;
+  }
+
+  get lastUnreadThreadDate() {
+    if (this.unreadThreadsCount === 0) {
+      return this.lastMessage.createdAt;
+    }
+
+    return Array.from(this.threadsManager.unreadThreadOverview.values())
+      .sort((a, b) => b - a)
+      .pop();
+  }
+
+  get watchedThreadsUnreadCount() {
+    return this.threadsManager.threads.reduce((unreadCount, thread) => {
+      return unreadCount + thread.tracking.watchedThreadsUnreadCount;
+    }, 0);
   }
 
   updateLastViewedAt() {
@@ -188,6 +210,16 @@ export default class ChatChannel {
 
   get canJoin() {
     return this.meta.can_join_chat_channel;
+  }
+
+  get hasUnread() {
+    return (
+      this.tracking.unreadCount +
+        this.tracking.mentionCount +
+        this.tracking.watchedThreadsUnreadCount +
+        this.threadsManager.unreadThreadCount >
+      0
+    );
   }
 
   async stageMessage(message) {

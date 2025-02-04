@@ -44,6 +44,7 @@ PreloadStore.store("site", {
     "read",
     "posted",
     "bookmarks",
+    "unseen",
   ],
   periods: ["all", "yearly", "monthly", "weekly", "daily"],
   top_menu_items: [
@@ -54,9 +55,10 @@ PreloadStore.store("site", {
     "read",
     "posted",
     "categories",
-    "top",
+    "hot",
+    "unseen",
   ],
-  anonymous_top_menu_items: ["latest", "categories", "top"],
+  anonymous_top_menu_items: ["latest", "categories", "hot"],
   uncategorized_category_id: 17,
   categories: [
     {

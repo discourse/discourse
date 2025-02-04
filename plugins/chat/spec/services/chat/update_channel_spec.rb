@@ -1,21 +1,25 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::UpdateChannel do
-  subject(:result) { described_class.call(guardian: guardian, channel_id: channel.id, **params) }
+  subject(:result) { described_class.call(params:, **dependencies) }
 
   fab!(:channel) { Fabricate(:chat_channel) }
   fab!(:current_user) { Fabricate(:admin) }
+  fab!(:upload)
 
   let(:guardian) { Guardian.new(current_user) }
   let(:params) do
     {
+      channel_id: channel.id,
       name: "cool channel",
       description: "a channel description",
       slug: "snail",
       allow_channel_wide_mentions: true,
       auto_join_users: false,
+      icon_upload_id: upload.id,
     }
   end
+  let(:dependencies) { { guardian: } }
 
   context "when the user cannot edit the channel" do
     fab!(:current_user) { Fabricate(:user) }
@@ -31,9 +35,7 @@ RSpec.describe Chat::UpdateChannel do
           .first
       end
 
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "updates the channel accordingly" do
         result
@@ -43,6 +45,7 @@ RSpec.describe Chat::UpdateChannel do
           description: "a channel description",
           allow_channel_wide_mentions: true,
           auto_join_users: false,
+          icon_upload_id: upload.id,
         )
       end
 
@@ -95,12 +98,8 @@ RSpec.describe Chat::UpdateChannel do
           end
 
           it "auto joins users" do
-            expect_enqueued_with(
-              job: Jobs::Chat::AutoJoinChannelMemberships,
-              args: {
-                chat_channel_id: channel.id,
-              },
-            ) { result }
+            ::Chat::AutoJoinChannels.expects(:call).with(params: { channel_id: channel.id })
+            result
           end
         end
       end

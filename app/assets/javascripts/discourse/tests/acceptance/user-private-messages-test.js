@@ -2,6 +2,7 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   resetHighestReadCache,
@@ -10,14 +11,10 @@ import {
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
-  count,
-  exists,
   publishToMessageBus,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import selectKit from "../helpers/select-kit-helper";
 
 acceptance(
@@ -32,16 +29,11 @@ acceptance(
     test("viewing messages", async function (assert) {
       await visit("/u/eviltrout/messages");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        1,
-        "displays the topic list"
-      );
+      assert.dom(".topic-list-item").exists("displays the topic list");
 
-      assert.ok(
-        !exists(".group-notifications-button"),
-        "displays the group notifications button"
-      );
+      assert
+        .dom(".group-notifications-button")
+        .doesNotExist("displays the group notifications button");
     });
 
     test("viewing messages of another user", async function (assert) {
@@ -49,15 +41,13 @@ acceptance(
 
       await visit("/u/eviltrout/messages");
 
-      assert.ok(
-        !exists(".messages-nav li a.new"),
-        "it does not display new filter"
-      );
+      assert
+        .dom(".messages-nav li a.new")
+        .doesNotExist("it does not display new filter");
 
-      assert.ok(
-        !exists(".messages-nav li a.unread"),
-        "it does not display unread filter"
-      );
+      assert
+        .dom(".messages-nav li a.unread")
+        .doesNotExist("it does not display unread filter");
     });
   }
 );
@@ -304,11 +294,11 @@ acceptance("User Private Messages - sorting", function (needs) {
   test("order by posts_count", async function (assert) {
     await visit("/u/eviltrout/messages");
 
-    assert.ok(exists(".topic-list-header th.posts.sortable"), "is sortable");
+    assert.dom(".topic-list-header th.posts.sortable").exists("is sortable");
 
     await click(".topic-list-header th.posts.sortable");
 
-    assert.ok(exists(".topic-list-header th.posts.sortable.sorting"), "sorted");
+    assert.dom(".topic-list-header th.posts.sortable.sorting").exists("sorted");
   });
 });
 
@@ -326,10 +316,9 @@ acceptance(
         actingUserId: 5,
       });
 
-      assert.ok(
-        !exists(".show-mores"),
-        `does not display the topic incoming info`
-      );
+      assert
+        .dom(".show-mores")
+        .doesNotExist(`does not display the topic incoming info`);
     });
 
     test("incoming group archive message on inbox and archive filter", async function (assert) {
@@ -341,10 +330,9 @@ acceptance(
 
         await publishGroupArchiveToMessageBus({ groupIds: [14], topicId: 1 });
 
-        assert.ok(
-          exists(".show-mores"),
-          `${url} displays the topic incoming info`
-        );
+        assert
+          .dom(".show-mores")
+          .exists(`${url} displays the topic incoming info`);
       }
 
       for (const url of [
@@ -355,10 +343,9 @@ acceptance(
 
         await publishGroupArchiveToMessageBus({ groupIds: [14], topicId: 1 });
 
-        assert.ok(
-          !exists(".show-mores"),
-          `${url} does not display the topic incoming info`
-        );
+        assert
+          .dom(".show-mores")
+          .doesNotExist(`${url} does not display the topic incoming info`);
       }
     });
 
@@ -368,17 +355,19 @@ acceptance(
       await publishUnreadToMessageBus({ topicId: 1 });
       await publishNewToMessageBus({ topicId: 2 });
 
-      assert.strictEqual(
-        query(".user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".user-nav__messages-new")
+        .hasText(
+          i18n("user.messages.new_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
-      assert.strictEqual(
-        query(".user-nav__messages-unread").innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".user-nav__messages-unread")
+        .hasText(
+          i18n("user.messages.unread_with_count", { count: 1 }),
+          "displays the right count"
+        );
     });
 
     test("incoming new messages while viewing new", async function (assert) {
@@ -386,13 +375,25 @@ acceptance(
 
       await publishNewToMessageBus({ topicId: 1 });
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-new")
+        .hasText(
+          i18n("user.messages.new_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
-      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+      assert.dom(".show-mores").exists("displays the topic incoming info");
+
+      await publishNewToMessageBus({ topicId: 2 });
+
+      assert
+        .dom(".messages-nav .user-nav__messages-new")
+        .hasText(
+          i18n("user.messages.new_with_count", { count: 2 }),
+          "displays the right count"
+        );
+
+      assert.dom(".show-mores").exists("displays the topic incoming info");
     });
 
     test("incoming unread messages while viewing unread", async function (assert) {
@@ -400,13 +401,14 @@ acceptance(
 
       await publishUnreadToMessageBus();
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-unread").innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-unread")
+        .hasText(
+          i18n("user.messages.unread_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
-      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+      assert.dom(".show-mores").exists("displays the topic incoming info");
     });
 
     test("incoming unread and new messages while viewing group unread", async function (assert) {
@@ -415,35 +417,31 @@ acceptance(
       await publishUnreadToMessageBus({ groupIds: [14], topicId: 1 });
       await publishNewToMessageBus({ groupIds: [14], topicId: 2 });
 
-      assert.strictEqual(
-        query(
-          ".messages-nav .user-nav__messages-group-unread"
-        ).innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-group-unread")
+        .hasText(
+          i18n("user.messages.unread_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-group-new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-group-new")
+        .hasText(
+          i18n("user.messages.new_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
-      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+      assert.dom(".show-mores").exists("displays the topic incoming info");
 
       await visit("/u/charlie/messages/unread");
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-unread").innerText.trim(),
-        I18n.t("user.messages.unread"),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-unread")
+        .hasText(i18n("user.messages.unread"), "displays the right count");
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new"),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-new")
+        .hasText(i18n("user.messages.new"), "displays the right count");
     });
 
     test("incoming messages is not tracked on non user messages route", async function (assert) {
@@ -454,10 +452,9 @@ acceptance(
 
       await visit("/u/charlie/messages");
 
-      assert.ok(
-        !exists(".show-mores"),
-        "does not display the topic incoming info"
-      );
+      assert
+        .dom(".show-mores")
+        .doesNotExist("does not display the topic incoming info");
     });
 
     test("dismissing all unread messages", async function (assert) {
@@ -467,64 +464,50 @@ acceptance(
       await publishUnreadToMessageBus({ topicId: 2, userId: 5 });
       await publishUnreadToMessageBus({ topicId: 3, userId: 5 });
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.strictEqual(
-        query(".user-nav__messages-unread").innerText.trim(),
-        I18n.t("user.messages.unread"),
-        "displays the right count"
-      );
+      assert
+        .dom(".user-nav__messages-unread")
+        .hasText(i18n("user.messages.unread"), "displays the right count");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing personal unread messages", async function (assert) {
       await visit("/u/charlie/messages/unread");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing group unread messages", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/unread");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing new messages", async function (assert) {
@@ -534,61 +517,47 @@ acceptance(
       await publishNewToMessageBus({ topicId: 2, userId: 5 });
       await publishNewToMessageBus({ topicId: 3, userId: 5 });
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new"),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-new")
+        .hasText(i18n("user.messages.new"), "displays the right count");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing personal new messages", async function (assert) {
       await visit("/u/charlie/messages/new");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing new group messages", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/new");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("viewing messages when highest read cache has been set for a topic", async function (assert) {
@@ -597,11 +566,9 @@ acceptance(
 
         await visit("/u/charlie/messages");
 
-        assert.strictEqual(
-          query(".topic-post-badges").textContent.trim(),
-          "",
-          "does not display unread posts count badge"
-        );
+        assert
+          .dom(".topic-post-badges")
+          .hasText("", "does not display unread posts count badge");
       } finally {
         resetHighestReadCache();
       }
@@ -610,30 +577,23 @@ acceptance(
     test("viewing messages", async function (assert) {
       await visit("/u/charlie/messages");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
-      assert.strictEqual(
-        query(`tr[data-topic-id="1"] .topic-post-badges`).textContent.trim(),
-        "1",
-        "displays the right unread posts count badge"
-      );
+      assert
+        .dom(`tr[data-topic-id="1"] .topic-post-badges`)
+        .hasText(/1/, "displays the right unread posts count badge");
 
       await visit("/u/charlie/messages/group/awesome_group");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        2,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 2 }, "displays the right topic list");
 
-      assert.ok(
-        exists(".group-notifications-button"),
-        "displays the group notifications button"
-      );
+      assert
+        .dom(".group-notifications-tracking")
+        .exists("displays the group notifications button");
     });
 
     test("navigating between user messages route with dropdown", async function (assert) {
@@ -643,7 +603,7 @@ acceptance(
 
       assert.strictEqual(
         messagesDropdown.header().name(),
-        I18n.t("user.messages.inbox"),
+        i18n("user.messages.inbox"),
         "User personal inbox is selected in dropdown"
       );
 
@@ -651,7 +611,7 @@ acceptance(
 
       assert.strictEqual(
         messagesDropdown.header().name(),
-        I18n.t("user.messages.inbox"),
+        i18n("user.messages.inbox"),
         "User personal inbox is still selected when viewing sent messages"
       );
 
@@ -679,7 +639,7 @@ acceptance(
       );
 
       await messagesDropdown.expand();
-      await messagesDropdown.selectRowByName(I18n.t("user.messages.tags"));
+      await messagesDropdown.selectRowByName(i18n("user.messages.tags"));
 
       assert.strictEqual(
         currentURL(),
@@ -689,7 +649,7 @@ acceptance(
 
       assert.strictEqual(
         messagesDropdown.header().name(),
-        I18n.t("user.messages.tags"),
+        i18n("user.messages.tags"),
         "All tags is selected in dropdown"
       );
 
@@ -697,7 +657,7 @@ acceptance(
 
       assert.strictEqual(
         messagesDropdown.header().name(),
-        I18n.t("user.messages.tags"),
+        i18n("user.messages.tags"),
         "All tags is still selected in dropdown"
       );
     });
@@ -720,7 +680,7 @@ acceptance(
         const row = messagesDropdown.rowByName("test nav");
 
         assert.strictEqual(row.value(), "/u/eviltrout/preferences");
-        assert.ok(row.icon().classList.contains("d-icon-arrow-left"));
+        assert.dom(row.icon()).hasClass("d-icon-arrow-left");
       } finally {
         resetCustomUserNavMessagesDropdownRows();
       }
@@ -736,11 +696,12 @@ acceptance(
     test("suggested messages without new or unread", async function (assert) {
       await visit("/t/12");
 
-      assert.strictEqual(
-        query(".more-topics__browse-more").innerText.trim(),
-        "Want to read more? Browse other messages in personal messages.",
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          "Want to read more? Browse other messages in personal messages.",
+          "displays the right browse more message"
+        );
     });
 
     test("suggested messages with new and unread", async function (assert) {
@@ -748,40 +709,41 @@ acceptance(
 
       await publishNewToMessageBus({ userId: 5, topicId: 1 });
 
-      assert.strictEqual(
-        query(".more-topics__browse-more").innerText.trim(),
-        "There is 1 new message remaining, or browse other personal messages",
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          "There is 1 new message remaining, or browse other personal messages",
+          "displays the right browse more message"
+        );
 
       await publishUnreadToMessageBus({ userId: 5, topicId: 2 });
 
-      assert.strictEqual(
-        query(".more-topics__browse-more").innerText.trim(),
-        "There is 1 unread and 1 new message remaining, or browse other personal messages",
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          "There is 1 unread and 1 new message remaining, or browse other personal messages",
+          "displays the right browse more message"
+        );
 
       await publishReadToMessageBus({ userId: 5, topicId: 2 });
 
-      assert.strictEqual(
-        query(".more-topics__browse-more").innerText.trim(),
-        "There is 1 new message remaining, or browse other personal messages",
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          "There is 1 new message remaining, or browse other personal messages",
+          "displays the right browse more message"
+        );
     });
 
     test("suggested messages for group messages without new or unread", async function (assert) {
       await visit("/t/13");
 
-      assert.ok(
-        query(".more-topics__browse-more")
-          .innerText.trim()
-          .match(
-            /Want to read more\? Browse other messages in\s+awesome_group\./
-          ),
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          /Want to read more\? Browse other messages in\s+awesome_group\./,
+          "displays the right browse more message"
+        );
     });
 
     test("suggested messages for group messages with new and unread", async function (assert) {
@@ -789,25 +751,21 @@ acceptance(
 
       await publishGroupNewToMessageBus({ groupIds: [14], topicId: 1 });
 
-      assert.ok(
-        query(".more-topics__browse-more")
-          .innerText.trim()
-          .match(
-            /There is 1 new message remaining, or browse other messages in\s+awesome_group/
-          ),
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          /There is 1 new message remaining, or browse other messages in\s+awesome_group/,
+          "displays the right browse more message"
+        );
 
       await publishGroupUnreadToMessageBus({ groupIds: [14], topicId: 2 });
 
-      assert.ok(
-        query(".more-topics__browse-more")
-          .innerText.trim()
-          .match(
-            /There is 1 unread and 1 new message remaining, or browse other messages in\s+awesome_group/
-          ),
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          /There is 1 unread\s+and 1 new message remaining, or browse other messages in\s+awesome_group/,
+          "displays the right browse more message"
+        );
     });
   }
 );
@@ -839,19 +797,19 @@ acceptance("User Private Messages - user with no messages", function (needs) {
 
   test("It renders the empty state panel", async function (assert) {
     await visit("/u/charlie/messages");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
 
     await visit("/u/charlie/messages/sent");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
 
     await visit("/u/charlie/messages/new");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
 
     await visit("/u/charlie/messages/unread");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
 
     await visit("/u/charlie/messages/archive");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
   });
 });
 
@@ -917,7 +875,7 @@ acceptance(
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
 
-      assert.ok(exists("#reply-control .mini-tag-chooser"));
+      assert.dom("#reply-control .mini-tag-chooser").exists();
 
       await fillIn("#reply-title", "Sending a message with tags");
       await fillIn(
@@ -970,7 +928,7 @@ acceptance(
     test("tags are present on private messages - Mobile mode", async function (assert) {
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
-      assert.ok(exists("#reply-control .mini-tag-chooser"));
+      assert.dom("#reply-control .mini-tag-chooser").exists();
     });
   }
 );

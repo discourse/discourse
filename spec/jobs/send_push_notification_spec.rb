@@ -10,23 +10,29 @@ RSpec.describe Jobs::SendPushNotification do
     SiteSetting.push_notification_time_window_mins = 10
   end
 
-  context "with active online user" do
-    it "does not send push notification" do
-      user.update!(last_seen_at: 5.minutes.ago)
+  context "with valid user" do
+    it "does not send push notification when user is online" do
+      user.update!(last_seen_at: 2.minutes.ago)
 
       PushNotificationPusher.expects(:push).with(user, payload).never
 
       Jobs::SendPushNotification.new.execute(user_id: user, payload: payload)
     end
-  end
 
-  context "with inactive offline user" do
-    it "sends push notification" do
-      user.update!(last_seen_at: 40.minutes.ago)
+    it "sends push notification when user is offline" do
+      user.update!(last_seen_at: 20.minutes.ago)
 
       PushNotificationPusher.expects(:push).with(user, payload)
 
       Jobs::SendPushNotification.new.execute(user_id: user, payload: payload)
+    end
+  end
+
+  context "with invalid user" do
+    it "does not send push notification" do
+      PushNotificationPusher.expects(:push).with(user, payload).never
+
+      Jobs::SendPushNotification.new.execute(user_id: -999, payload: payload)
     end
   end
 end

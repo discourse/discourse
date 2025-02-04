@@ -1,12 +1,12 @@
+import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import { dialog } from "discourse/lib/uploads";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | watched-word-uploader", function (hooks) {
   setupRenderingTest(hooks);
@@ -18,19 +18,21 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
   });
 
   test("sets the proper action key on uploads", async function (assert) {
+    const dialog = getOwner(this).lookup("service:dialog");
     sinon.stub(dialog, "alert");
 
     const done = assert.async();
     this.set("actionNameKey", "flag");
     this.set("doneUpload", function () {
       assert.strictEqual(
-        Object.entries(this._uppyInstance.getState().files)[0][1].meta
-          .action_key,
+        Object.entries(
+          this.uppyUpload.uppyWrapper.uppyInstance.getState().files
+        )[0][1].meta.action_key,
         "flag"
       );
-      assert.ok(
+      assert.true(
         dialog.alert.calledWith(
-          I18n.t("admin.watched_words.form.upload_successful")
+          i18n("admin.watched_words.form.upload_successful")
         ),
         "alert shown"
       );
@@ -39,7 +41,6 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
 
     await render(hbs`
       <WatchedWordUploader
-        @id="watched-word-uploader"
         @actionKey={{this.actionNameKey}}
         @done={{this.doneUpload}}
       />

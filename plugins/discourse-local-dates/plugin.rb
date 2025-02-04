@@ -15,8 +15,8 @@ enabled_site_setting :discourse_local_dates_enabled
 
 after_initialize do
   module ::DiscourseLocalDates
-    PLUGIN_NAME ||= "discourse-local-dates".freeze
-    POST_CUSTOM_FIELD ||= "local_dates".freeze
+    PLUGIN_NAME = "discourse-local-dates".freeze
+    POST_CUSTOM_FIELD = "local_dates".freeze
   end
 
   require_relative "lib/discourse_local_dates/engine"

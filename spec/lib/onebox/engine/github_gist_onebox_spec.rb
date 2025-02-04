@@ -71,7 +71,7 @@ RSpec.describe Onebox::Engine::GithubGistOnebox do
     end
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid Gist URL" do
       valid_url = URI("https://gist.github.com/username/123456")
       expect(described_class === valid_url).to eq(true)

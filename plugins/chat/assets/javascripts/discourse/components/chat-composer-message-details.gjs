@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import dIcon from "discourse-common/helpers/d-icon";
 import ChatUserAvatar from "./chat-user-avatar";
 
 const ChatComposerMessageDetails = <template>
@@ -11,7 +11,7 @@ const ChatComposerMessageDetails = <template>
     data-action={{if @message.editing "edit" "reply"}}
   >
     <div class="chat-reply">
-      {{dIcon (if @message.editing "pencil-alt" "reply")}}
+      {{icon (if @message.editing "pencil" "reply")}}
       <ChatUserAvatar @user={{@message.user}} />
       <span class="chat-reply__username">{{@message.user.username}}</span>
       <span class="chat-reply__excerpt">
@@ -21,7 +21,7 @@ const ChatComposerMessageDetails = <template>
 
     <DButton
       @action={{@cancelAction}}
-      @icon="times-circle"
+      @icon="circle-xmark"
       @title="cancel"
       class="btn-flat cancel-message-action"
     />

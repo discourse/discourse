@@ -13,6 +13,9 @@ hu:
       total_votes:
         one: "összes szavazat"
         other: "összes szavazat"
+      votes:
+        one: "%{count} szavazat"
+        other: "%{count} szavazat"
       average_rating: "Átlagos értékelés: <strong>%{average}</strong>."
       public:
         title: "A szavazatok <strong>nyilvánosak</strong>."
@@ -46,6 +49,12 @@ hu:
       show-results:
         title: "Eredmények megjelenítése"
         label: "Eredmények"
+      show-tally:
+        title: "Szavazási eredmények megjelenítése a szavazatok száma szerint"
+        label: "Összesítés megjelenítése"
+      show-percentage:
+        title: "Szavazási eredmények százalékos megjelenítése"
+        label: "Megjelenítés százalékban"
       remove-vote:
         title: "Saját szavazat eltávolítása"
         label: "Szavazás visszavonása"
@@ -93,6 +102,8 @@ hu:
         label: "Beállítások"
         ranked_choice:
           abstain: "Tartózkodás"
+          highest_priority: "(legmagasabb prioritás)"
+          lowest_priority: "(legalacsonyabb prioritás)"
           login: "Jelentkezzen be a szavazáshoz!"
       error_while_toggling_status: "Sajnáljuk, hiba történt a szavazás állapotának átváltásakor."
       error_while_casting_votes: "Sajnáljuk, hiba történt a szavazata leadásakor."

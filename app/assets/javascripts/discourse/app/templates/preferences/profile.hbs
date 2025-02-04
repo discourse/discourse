@@ -5,6 +5,20 @@
 {{/if}}
 
 {{#unless this.showEnforcedRequiredFieldsNotice}}
+  {{#if this.siteSettings.allow_users_to_hide_profile}}
+    <div
+      class="control-group user-hide-profile"
+      data-setting-name="user-hide-profile"
+    >
+      <PreferenceCheckbox
+        @labelKey="user.hide_profile"
+        @checked={{this.model.user_option.hide_profile}}
+        data-setting-name="user-hide-profile"
+        class="pref-hide-profile"
+      />
+    </div>
+  {{/if}}
+
   {{#if this.canChangeBio}}
     <div class="control-group pref-bio" data-setting-name="user-bio">
       <label class="control-label">{{i18n "user.bio"}}</label>

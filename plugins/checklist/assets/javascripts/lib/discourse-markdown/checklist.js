@@ -3,9 +3,9 @@ const REGEX = /\[( |x)?\]/gi;
 function getClasses(str) {
   switch (str) {
     case "x":
-      return "checked fa fa-check-square-o fa-fw";
+      return "checked fa fa-square-check-o fa-fw";
     case "X":
-      return "checked permanent fa fa-check-square fa-fw";
+      return "checked permanent fa fa-square-check fa-fw";
     default:
       return "fa fa-square-o fa-fw";
   }
@@ -94,8 +94,8 @@ export function setup(helper) {
   helper.allowList([
     "span.chcklst-stroked",
     "span.chcklst-box fa fa-square-o fa-fw",
-    "span.chcklst-box checked fa fa-check-square-o fa-fw",
-    "span.chcklst-box checked permanent fa fa-check-square fa-fw",
+    "span.chcklst-box checked fa fa-square-check-o fa-fw",
+    "span.chcklst-box checked permanent fa fa-square-check fa-fw",
   ]);
 
   helper.registerPlugin((md) =>

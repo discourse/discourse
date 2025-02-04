@@ -4,8 +4,7 @@
     "chat_channel_id",
     "last_read_message_id",
     "muted",
-    "desktop_notification_level",
-    "mobile_notification_level",
+    "notification_level",
     "following",
     "last_viewed_at"
   ],
@@ -13,8 +12,7 @@
     "chat_channel_id": { "type": "number" },
     "last_read_message_id": { "type": ["number", "null"] },
     "muted": { "type": "boolean" },
-    "desktop_notification_level": { "type": "string" },
-    "mobile_notification_level": { "type": "string" },
+    "notification_level": { "type": "string" },
     "following": { "type": "boolean" },
     "user": {
       "type": ["object", "null"],

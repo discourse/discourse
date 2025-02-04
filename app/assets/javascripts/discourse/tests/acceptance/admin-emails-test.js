@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const EMAIL = `
 From: "somebody" <somebody@example.com>
@@ -31,11 +31,8 @@ acceptance("Admin - Emails", function (needs) {
     await fillIn("textarea.email-body", EMAIL.trim());
     await click(".email-advanced-test button");
 
-    assert.strictEqual(query(".text pre").innerText, "Hello, this is a test!");
-    assert.strictEqual(
-      query(".elided pre").innerText,
-      "---\n\nThis part should be elided."
-    );
+    assert.dom(".text pre").hasText("Hello, this is a test!");
+    assert.dom(".elided pre").hasText("---\n\nThis part should be elided.");
   });
 
   test("displays received errors when testing emails", async function (assert) {
@@ -51,11 +48,10 @@ acceptance("Admin - Emails", function (needs) {
     await fillIn(".admin-controls input", "test@example.com");
     await click(".btn-primary");
 
-    assert.ok(query("#dialog-holder").innerText.includes("some error"));
-    assert.ok(
-      query("#dialog-holder .dialog-body b"),
-      "Error message can contain html"
-    );
+    assert.dom("#dialog-holder").includesText("some error");
+    assert
+      .dom("#dialog-holder .dialog-body b")
+      .exists("Error message can contain html");
     await click(".dialog-overlay");
   });
 });

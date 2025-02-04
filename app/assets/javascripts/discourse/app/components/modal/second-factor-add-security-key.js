@@ -8,7 +8,7 @@ import {
   stringToBuffer,
 } from "discourse/lib/webauthn";
 import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SecondFactorAddSecurityKey extends Component {
   @service capabilities;
@@ -33,7 +33,7 @@ export default class SecondFactorAddSecurityKey extends Component {
     } else {
       key = "user.second_factor.security_key.default_name";
     }
-    this.securityKeyName = I18n.t(key);
+    this.securityKeyName = i18n(key);
 
     this.loading = true;
     this.args.model.secondFactor
@@ -46,7 +46,7 @@ export default class SecondFactorAddSecurityKey extends Component {
 
         this.errorMessage = isWebauthnSupported()
           ? null
-          : I18n.t("login.security_key_support_missing_error");
+          : i18n("login.security_key_support_missing_error");
         this.loading = false;
         this.challenge = response.challenge;
         this.relayingParty = {
@@ -68,7 +68,7 @@ export default class SecondFactorAddSecurityKey extends Component {
   @action
   registerSecurityKey() {
     if (!this.securityKeyName) {
-      this.errorMessage = I18n.t(
+      this.errorMessage = i18n(
         "user.second_factor.security_key.name_required_error"
       );
       return;
@@ -139,13 +139,13 @@ export default class SecondFactorAddSecurityKey extends Component {
         },
         (err) => {
           if (err.name === "InvalidStateError") {
-            this.errorMessage = I18n.t(
+            this.errorMessage = i18n(
               "user.second_factor.security_key.already_added_error"
             );
             return;
           }
           if (err.name === "NotAllowedError") {
-            this.errorMessage = I18n.t(
+            this.errorMessage = i18n(
               "user.second_factor.security_key.not_allowed_error"
             );
             return;

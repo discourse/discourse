@@ -8,10 +8,25 @@ class DirectoryItemSerializer < ApplicationSerializer
 
     def user_fields
       fields = {}
+      user_custom_field_map = @options[:user_custom_field_map] || {}
+      searchable_fields = @options[:searchable_fields] || []
 
-      object.user_custom_fields.each do |cuf|
-        user_field_id = @options[:user_custom_field_map][cuf.name]
-        fields[user_field_id] = cuf.value if user_field_id
+      object.user_custom_fields.each do |custom_field|
+        user_field_id = user_custom_field_map[custom_field.name]
+        next unless user_field_id
+
+        current_value = fields.dig(user_field_id, :value)
+
+        current_value = Array(current_value) if current_value
+
+        new_value = current_value ? current_value << custom_field.value : custom_field.value
+
+        is_searchable = searchable_fields.any? { |field| field.id == user_field_id }
+
+        fields[user_field_id] = {
+          value: new_value.is_a?(Array) ? new_value : [new_value],
+          searchable: is_searchable,
+        }
       end
 
       fields

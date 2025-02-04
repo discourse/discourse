@@ -150,7 +150,7 @@ RSpec.describe InviteRedeemer do
         error = e
       end
       expect(error).to be_present
-      expect(error.record.errors[:password]).to be_present
+      expect(error.record.errors.errors[0].attribute).to eq :"user_password.password"
     end
 
     it "should unstage user" do

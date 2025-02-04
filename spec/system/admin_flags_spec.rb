@@ -2,163 +2,239 @@
 
 describe "Admin Flags Page", type: :system do
   fab!(:admin)
-  fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic) }
+  fab!(:post)
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:admin_flags_page) { PageObjects::Pages::AdminFlags.new }
   let(:admin_flag_form_page) { PageObjects::Pages::AdminFlagForm.new }
+  let(:flag_modal) { PageObjects::Modals::Flag.new }
+  let(:d_page_header) { PageObjects::Components::DPageHeader.new }
 
-  before { sign_in(admin) }
+  before do
+    sign_in(admin)
+    SiteSetting.custom_flags_limit = 1
+  end
 
   it "allows admin to disable, change order, create, update and delete flags" do
     # disable
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
+
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
     )
 
-    visit "/admin/config/flags"
+    admin_flags_page.visit
+    expect(d_page_header).to be_visible
+
     admin_flags_page.toggle("spam")
-    expect(page).not_to have_css(".admin-flag-item.spam.saving")
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
 
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Illegal", "Something Else"],
-    )
+    expect(flag_modal).to have_choices("It's Inappropriate", "It's Illegal", "Something Else")
 
     Flag.system.where(name: "spam").update!(enabled: true)
 
     # change order
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
+
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
     )
 
-    visit "/admin/config/flags"
-    admin_flags_page.move_down("spam")
-    expect(page).not_to have_css(".admin-flag-item.spam.saving")
+    admin_flags_page.visit.move_down("spam")
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
 
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Illegal", "It's Spam", "Something Else"],
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Illegal",
+      "It's Spam",
+      "Something Else",
     )
 
-    visit "/admin/config/flags"
-    admin_flags_page.move_up("spam")
-    expect(page).not_to have_css(".admin-flag-item.spam.saving")
+    admin_flags_page.visit.move_up("spam")
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
 
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
     )
 
     # create
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
+
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
     )
 
-    visit "/admin/config/flags"
+    admin_flags_page.visit
+
+    expect(admin_flags_page).to have_add_flag_button_enabled
 
     admin_flags_page.click_add_flag
+    expect(d_page_header).to be_hidden
 
-    expect(admin_flag_form_page).to have_disabled_save_button
+    admin_flag_form_page
+      .fill_in_name("Vulgar")
+      .fill_in_description("New flag description")
+      .select_applies_to("Topic")
+      .select_applies_to("Post")
+      .click_save
 
-    admin_flag_form_page.fill_in_name("Vulgar")
-    admin_flag_form_page.fill_in_description("New flag description")
-    admin_flag_form_page.fill_in_applies_to("Topic")
-    admin_flag_form_page.fill_in_applies_to("Post")
-    admin_flag_form_page.click_save
-
-    expect(all(".admin-flag-item__name").map(&:text)).to eq(
-      [
-        "Send @%{username} a message",
-        "Off-Topic",
-        "Inappropriate",
-        "Spam",
-        "Illegal",
-        "Something Else",
-        "Vulgar",
-      ],
+    expect(admin_flags_page).to have_flags(
+      "Send @%{username} a message",
+      "Off-Topic",
+      "Inappropriate",
+      "Spam",
+      "Illegal",
+      "Something Else",
+      "Vulgar",
     )
 
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else", "Vulgar"],
+    expect(admin_flags_page).to have_add_flag_button_disabled
+
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
+
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
+      "Vulgar",
     )
 
     # update
-    visit "/admin/config/flags"
+    admin_flags_page.visit.click_edit_flag("custom_vulgar")
+    expect(d_page_header).to be_hidden
+    admin_flag_form_page.fill_in_name("Tasteless").click_save
 
-    admin_flags_page.click_edit_flag("vulgar")
-
-    admin_flag_form_page.fill_in_name("Tasteless")
-    admin_flag_form_page.click_save
-
-    expect(all(".admin-flag-item__name").map(&:text)).to eq(
-      [
-        "Send @%{username} a message",
-        "Off-Topic",
-        "Inappropriate",
-        "Spam",
-        "Illegal",
-        "Something Else",
-        "Tasteless",
-      ],
+    expect(admin_flags_page).to have_flags(
+      "Send @%{username} a message",
+      "Off-Topic",
+      "Inappropriate",
+      "Spam",
+      "Illegal",
+      "Something Else",
+      "Tasteless",
     )
 
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else", "Tasteless"],
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
+
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
+      "Tasteless",
     )
 
     # delete
-    visit "/admin/config/flags"
-    admin_flags_page.click_delete_flag("tasteless")
-    admin_flags_page.confirm_delete
-    expect(page).not_to have_css(".admin-flag-item.tasteless.saving")
+    admin_flags_page.visit.click_delete_flag("custom_tasteless").confirm_delete
 
-    topic_page.visit_topic(post.topic)
-    topic_page.open_flag_topic_modal
-    expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
+    expect(admin_flags_page).to have_no_flag("custom_tasteless")
+
+    expect(admin_flags_page).to have_add_flag_button_enabled
+
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
+
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
     )
   end
 
+  it "has settings tab" do
+    admin_flags_page.visit
+
+    expect(admin_flags_page).to have_tabs(
+      [I18n.t("admin_js.settings"), I18n.t("admin_js.admin.config_areas.flags.flags_tab")],
+    )
+
+    admin_flags_page.click_tab("settings")
+    expect(page.all(".setting-label h3").map(&:text).map(&:downcase)).to eq(
+      [
+        "allow tl0 and anonymous users to flag illegal content",
+        "email address to report illegal content",
+        "silence new user sensitivity",
+        "num users to silence new user",
+        "flag sockpuppets",
+        "num flaggers to close topic",
+        "auto respond to flag actions",
+        "high trust flaggers auto hide posts",
+        "max flags per day",
+        "tl2 additional flags per day multiplier",
+        "tl3 additional flags per day multiplier",
+        "tl4 additional flags per day multiplier",
+      ],
+    )
+  end
+
+  it "allows to create custom flag with same name as system flag" do
+    admin_flags_page.visit
+    admin_flags_page.click_add_flag
+    admin_flag_form_page
+      .fill_in_name("Inappropriate")
+      .fill_in_description("New flag description")
+      .select_applies_to("Topic")
+      .select_applies_to("Post")
+      .click_save
+
+    expect(admin_flags_page).to have_flags(
+      "Send @%{username} a message",
+      "Off-Topic",
+      "Inappropriate",
+      "Spam",
+      "Illegal",
+      "Something Else",
+      "Inappropriate",
+    )
+
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
+
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
+      "Inappropriate",
+    )
+
+    admin_flags_page.visit.click_delete_flag("custom_inappropriate").confirm_delete
+  end
+
   it "does not allow to move notify user flag" do
-    visit "/admin/config/flags"
-    expect(page).not_to have_css(".notify_user .flag-menu-trigger")
+    admin_flags_page.visit
+    expect(admin_flags_page).to have_no_action_for_flag("notify_user")
   end
 
   it "does not allow bottom flag to move down" do
-    visit "/admin/config/flags"
-    admin_flags_page.open_flag_menu("notify_moderators")
-    expect(page).not_to have_css(".dropdown-menu__item .move-down")
+    admin_flags_page.visit.open_flag_menu("notify_moderators")
+    expect(admin_flags_page).to have_no_item_action("move-down")
   end
 
   it "does not allow to system flag to be edited" do
-    visit "/admin/config/flags"
-    expect(page).to have_css(".off_topic .admin-flag-item__edit[disabled]")
+    admin_flags_page.visit
+    expect(admin_flags_page).to have_disabled_edit_for_flag("off_topic")
   end
 
   it "does not allow to system flag to be deleted" do
-    visit "/admin/config/flags"
-    admin_flags_page.open_flag_menu("notify_moderators")
-    expect(page).to have_css(".admin-flag-item__delete[disabled]")
+    admin_flags_page.visit.open_flag_menu("notify_moderators")
+    expect(admin_flags_page).to have_disabled_item_action("delete")
   end
 
   it "does not allow top flag to move up" do
-    visit "/admin/config/flags"
-    admin_flags_page.open_flag_menu("off_topic")
-    expect(page).not_to have_css(".dropdown-menu__item .move-up")
+    admin_flags_page.visit.open_flag_menu("off_topic")
+    expect(admin_flags_page).to have_no_item_action("move-up")
   end
 end

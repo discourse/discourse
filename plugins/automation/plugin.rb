@@ -72,6 +72,7 @@ after_initialize do
     lib/discourse_automation/triggers/recurring
     lib/discourse_automation/triggers/stalled_topic
     lib/discourse_automation/triggers/stalled_wiki
+    lib/discourse_automation/triggers/topic_tags_changed
     lib/discourse_automation/triggers/topic
     lib/discourse_automation/triggers/user_added_to_group
     lib/discourse_automation/triggers/user_badge_granted
@@ -179,6 +180,17 @@ after_initialize do
 
   on(:topic_created) do |topic|
     DiscourseAutomation::EventHandlers.handle_pm_created(topic) if topic.private_message?
+  end
+
+  on(:topic_tags_changed) do |topic, payload|
+    old_tag_names, new_tag_names, user = payload.values_at(:old_tag_names, :new_tag_names, :user)
+
+    DiscourseAutomation::EventHandlers.handle_topic_tags_changed(
+      topic,
+      old_tag_names,
+      new_tag_names,
+      user,
+    )
   end
 
   on(:post_created) do |post|

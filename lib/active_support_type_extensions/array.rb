@@ -9,20 +9,12 @@ module ActiveSupportTypeExtensions
     def cast_value(value)
       case value
       when String
-        value.split(",")
+        cast_value(value.split(/,(?!.*\|)|\|(?!.*,)/))
       when ::Array
-        value.map { |item| convert_to_integer(item) }
+        value.map { |item| Integer(item, exception: false) || item }
       else
         ::Array.wrap(value)
       end
-    end
-
-    private
-
-    def convert_to_integer(item)
-      Integer(item)
-    rescue ArgumentError
-      item
     end
   end
 end

@@ -128,12 +128,24 @@ module UserGuardian
 
   def can_see_profile?(user)
     return false if user.blank?
-    return true if !SiteSetting.allow_users_to_hide_profile?
+    return true if is_me?(user) || is_staff?
 
-    # If a user has hidden their profile, restrict it to them and staff
-    return is_me?(user) || is_staff? if user.user_option.try(:hide_profile_and_presence?)
+    profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
 
-    true
+    return true if user.staff? && !profile_hidden
+
+    if SiteSetting.hide_new_user_profiles && !SiteSetting.invite_only &&
+         !SiteSetting.must_approve_users
+      if user.user_stat.blank? || user.user_stat.post_count == 0
+        return false if anonymous? || !@user.has_trust_level?(TrustLevel[2])
+      end
+
+      if anonymous? || !@user.has_trust_level?(TrustLevel[1])
+        return user.has_trust_level?(TrustLevel[1]) && !profile_hidden
+      end
+    end
+
+    !profile_hidden
   end
 
   def can_see_user_actions?(user, action_types)
@@ -171,8 +183,13 @@ module UserGuardian
       (
         SiteSetting.enable_category_group_moderation &&
           Reviewable
-            .where(reviewable_by_group_id: @user.group_users.pluck(:group_id))
-            .where("category_id IS NULL or category_id IN (?)", allowed_category_ids)
+            .joins(
+              "INNER JOIN category_moderation_groups ON category_moderation_groups.category_id = reviewables.category_id",
+            )
+            .where(
+              category_id: allowed_category_ids,
+              "category_moderation_groups.group_id": @user.group_users.pluck(:group_id),
+            )
             .exists?
       )
   end
@@ -197,6 +214,10 @@ module UserGuardian
 
   def can_delete_sso_record?(user)
     SiteSetting.enable_discourse_connect && user && is_admin?
+  end
+
+  def can_delete_user_associated_accounts?(user)
+    user && is_admin?
   end
 
   def can_change_tracking_preferences?(user)

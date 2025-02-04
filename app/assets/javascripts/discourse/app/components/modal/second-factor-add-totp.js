@@ -5,7 +5,7 @@ import {
   MAX_SECOND_FACTOR_NAME_LENGTH,
   SECOND_FACTOR_METHODS,
 } from "discourse/models/user";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SecondFactorAddTotp extends Component {
   @tracked loading = false;
@@ -49,7 +49,7 @@ export default class SecondFactorAddTotp extends Component {
   @action
   enableSecondFactor() {
     if (!this.secondFactorToken || !this.secondFactorName) {
-      this.errorMessage = I18n.t(
+      this.errorMessage = i18n(
         "user.second_factor.totp.name_and_code_required_error"
       );
       return;

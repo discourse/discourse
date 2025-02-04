@@ -6,13 +6,13 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "~> 7.1.0"
-gem "actionpack", "~> 7.1.0"
-gem "actionview", "~> 7.1.0"
-gem "activemodel", "~> 7.1.0"
-gem "activerecord", "~> 7.1.0"
-gem "activesupport", "~> 7.1.0"
-gem "railties", "~> 7.1.0"
+gem "actionmailer", "~> 7.2.0"
+gem "actionpack", "~> 7.2.0"
+gem "actionview", "~> 7.2.0"
+gem "activemodel", "~> 7.2.0"
+gem "activerecord", "~> 7.2.0"
+gem "activesupport", "~> 7.2.0"
+gem "railties", "~> 7.2.0"
 gem "sprockets-rails"
 
 gem "json"
@@ -99,7 +99,7 @@ gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer"
+gem "mini_racer", "0.17.pre13"
 
 gem "highline", require: false
 
@@ -158,6 +158,8 @@ group :test, :development do
 
   gem "syntax_tree"
   gem "syntax_tree-disable_ternary"
+
+  gem "rspec-multi-mock"
 end
 
 group :development do
@@ -241,8 +243,6 @@ if ENV["IMPORT"] == "1"
   gem "reverse_markdown"
   gem "tiny_tds"
   gem "csv"
-
-  gem "parallel", require: false
 end
 
 group :generic_import, optional: true do
@@ -269,12 +269,26 @@ gem "cgi", ">= 0.3.6", require: false
 gem "tzinfo-data"
 gem "csv", require: false
 
-# TODO: Can be removed once we upgrade to Rails 7.1
-gem "mutex_m"
-gem "drb"
-
 # dependencies for the automation plugin
 gem "iso8601"
 gem "rrule"
 
+group :migrations, optional: true do
+  gem "extralite-bundle", require: "extralite"
+
+  # auto-loading
+  gem "zeitwerk"
+
+  # databases
+  gem "trilogy"
+
+  # CLI
+  gem "ruby-progressbar"
+
+  # non-cryptographic hashing algorithm for generating placeholder IDs
+  gem "digest-xxhash"
+end
+
 gem "dry-initializer", "~> 3.1"
+
+gem "parallel"

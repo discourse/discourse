@@ -6,20 +6,29 @@ module Chat
   # updated.
   #
   # @example
-  #  Chat::TrashMessage.call(message_id: 2, channel_id: 1, guardian: guardian)
+  #  Chat::TrashMessage.call(params: { message_id: 2, channel_id: 1 }, guardian: guardian)
   #
   class TrashMessage
     include Service::Base
 
-    # @!method call(message_id:, channel_id:, guardian:)
-    #   @param [Integer] message_id
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :message_id
+    #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract
+    params do
+      attribute :message_id, :integer
+      attribute :channel_id, :integer
+
+      validates :message_id, presence: true
+      validates :channel_id, presence: true
+    end
+
     model :message
     policy :invalid_access
+
     transaction do
       step :trash_message
       step :destroy_notifications
@@ -27,22 +36,15 @@ module Chat
       step :update_tracking_state
       step :update_thread_reply_cache
     end
-    step :publish_events
 
-    # @!visibility private
-    class Contract
-      attribute :message_id, :integer
-      attribute :channel_id, :integer
-      validates :message_id, presence: true
-      validates :channel_id, presence: true
-    end
+    step :publish_events
 
     private
 
-    def fetch_message(contract:)
+    def fetch_message(params:)
       Chat::Message.includes(chat_channel: :chatable).find_by(
-        id: contract.message_id,
-        chat_channel_id: contract.channel_id,
+        id: params.message_id,
+        chat_channel_id: params.channel_id,
       )
     end
 
@@ -80,7 +82,7 @@ module Chat
       message.chat_channel.update_last_message_id!
     end
 
-    def publish_events(contract:, guardian:, message:)
+    def publish_events(guardian:, message:)
       DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
       Chat::Publisher.publish_delete!(message.chat_channel, message)
 

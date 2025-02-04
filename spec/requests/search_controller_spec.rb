@@ -230,8 +230,6 @@ RSpec.describe SearchController do
     context "when rate limited" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search/query.json", params: { term: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
@@ -350,6 +348,11 @@ RSpec.describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "returns a 400 error if the page parameter is above the limit" do
+      get "/search.json", params: { q: "kittens", page: 11 }
+      expect(response.status).to eq(400)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: "bantha" }
@@ -421,8 +424,6 @@ RSpec.describe SearchController do
 
     context "when rate limited" do
       before { RateLimiter.enable }
-
-      use_redis_snapshotting
 
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search.json", params: { q: "wookie" }, env: { REMOTE_ADDR: ip_address }

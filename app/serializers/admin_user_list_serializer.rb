@@ -24,7 +24,9 @@ class AdminUserListSerializer < BasicUserSerializer
              :silenced_till,
              :time_read,
              :staged,
-             :second_factor_enabled
+             :second_factor_enabled,
+             :can_be_deleted,
+             :silence_reason
 
   %i[days_visited posts_read_count topics_entered post_count].each do |sym|
     attributes sym
@@ -110,5 +112,17 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def second_factor_enabled
     true
+  end
+
+  def can_be_deleted
+    scope.can_delete_user?(object)
+  end
+
+  def include_can_be_deleted?
+    @options[:include_can_be_deleted]
+  end
+
+  def include_silence_reason?
+    @options[:include_silence_reason]
   end
 end

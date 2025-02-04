@@ -13,6 +13,7 @@ module Jobs
           include_tag_watchers: false,
         )
         post_alerter.notify_first_post_watchers(post, post_alerter.category_watchers(post.topic))
+        ::Jobs.enqueue(:notify_mailing_list_subscribers, post_id: post.id)
       end
     end
   end

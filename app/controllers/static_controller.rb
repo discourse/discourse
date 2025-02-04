@@ -128,24 +128,25 @@ class StaticController < ApplicationController
     redirect_location = params[:redirect]
     if redirect_location.present? && !redirect_location.is_a?(String)
       raise Discourse::InvalidParameters.new(:redirect)
-    elsif redirect_location.present? && !redirect_location.match(login_path)
-      begin
-        forum_uri = URI(Discourse.base_url)
-        uri = URI(redirect_location)
+    elsif redirect_location.present? &&
+          begin
+            forum_uri = URI(Discourse.base_url)
+            uri = URI(redirect_location)
 
-        if uri.path.present? && (uri.host.blank? || uri.host == forum_uri.host) &&
-             uri.path =~ %r{\A\/{1}[^\.\s]*\z}
-          destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
-        end
-      rescue URI::Error
-        # Do nothing if the URI is invalid
-      end
+            if uri.path.present? && !uri.path.starts_with?(login_path) &&
+                 (uri.host.blank? || uri.host == forum_uri.host) &&
+                 uri.path =~ %r{\A\/{1}[^\.\s]*\z}
+              destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
+            end
+          rescue URI::Error
+            # Do nothing if the URI is invalid
+          end
     end
 
     redirect_to(destination, allow_other_host: false)
   end
 
-  FAVICON ||= -"favicon"
+  FAVICON = -"favicon"
 
   # We need to be able to draw our favicon on a canvas, this happens when you enable the feature
   # that draws the notification count on top of favicon (per user default off)

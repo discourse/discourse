@@ -3,10 +3,12 @@
   @maxlength={{this.maxlength}}
   @input={{this.onHexInput}}
   class="hex-input"
+  aria-labelledby={{this.ariaLabelledby}}
 />
 <input
   class="picker"
   type="color"
   value={{this.normalizedHexValue}}
   {{on "input" this.onPickerInput}}
+  aria-labelledby={{this.ariaLabelledby}}
 />

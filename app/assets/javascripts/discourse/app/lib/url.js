@@ -4,13 +4,13 @@ import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import { isTesting } from "discourse/lib/environment";
+import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
-import { isTesting } from "discourse-common/config/environment";
-import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
@@ -214,7 +214,7 @@ class DiscourseURL extends EmberObject {
       return this.redirectTo(path);
     }
 
-    const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
+    const pathname = path.replace(/^(https?\:)?\/\/[^\/]+/, "");
 
     if (!this.isInternal(path)) {
       return this.redirectTo(path);
@@ -235,7 +235,7 @@ class DiscourseURL extends EmberObject {
 
     const oldPath = this.routerService.currentURL;
 
-    path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
+    path = path.replace(/^(https?\:)?\/\/[^\/]+/, "");
 
     // handle prefixes
     if (path.startsWith("/")) {
@@ -437,6 +437,10 @@ class DiscourseURL extends EmberObject {
       elementId = split[1];
     }
 
+    // Remove multiple consecutive slashes from path. Same as Ember does on initial page load:
+    // https://github.com/emberjs/ember.js/blob/8abcd000ee/packages/%40ember/routing/history-location.ts#L146
+    path = path.replaceAll(/\/\/+/g, "/");
+
     const transition = this.routerService.transitionTo(path);
 
     transition._discourse_intercepted = true;
@@ -479,9 +483,21 @@ export function setURLContainer(container) {
 }
 
 export function prefixProtocol(url) {
-  return !url.includes("://") && !url.startsWith("mailto:")
-    ? "https://" + url
-    : url;
+  if (!url || typeof url !== "string") {
+    return url;
+  }
+
+  url = url.trim();
+
+  if (url.startsWith("//")) {
+    return `https:${url}`;
+  }
+
+  if (url.startsWith("/") || url.includes("://") || url.startsWith("mailto:")) {
+    return url;
+  }
+
+  return `https://${url}`;
 }
 
 export function getCategoryAndTagUrl(category, subcategories, tag) {

@@ -15,7 +15,6 @@ module.exports = function generateCommonBabelConfig() {
             runEarly: true,
           },
         ],
-        require.resolve("./babel-plugin-safari-class-fields-bugfix"),
       ],
     },
   };

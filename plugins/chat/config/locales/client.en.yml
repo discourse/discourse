@@ -33,6 +33,10 @@ en:
       chat_messages_count: "Chat messages"
       chat_channels_count: "Chat channels"
       chat_users_count: "Chat users"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} chat message"
+          other: "%{formatted_number} chat messages"
 
     chat:
       text_copied: Text copied to clipboard
@@ -41,7 +45,6 @@ en:
       deleted_chat_username: deleted
       dates:
         yesterday: "Yesterday"
-        time_tiny: "h:mm"
       all_loaded: "Showing all messages"
       already_enabled: "Chat is already enabled on this topic. Please refresh."
       disabled_for_topic: "Chat is disabled on this topic."
@@ -128,11 +131,18 @@ en:
       header_indicator_preference:
         title: "Show activity indicator in header"
         all_new: "All New Messages"
-        dm_and_mentions: "Direct Messages and Mentions"
+        dm_and_mentions: "Direct Messages, Mentions and Watched Threads"
         only_mentions: "Only Mentions"
         never: "Never"
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
+      send_shortcut:
+        enter:
+          label: "Send by Enter"
+          description: "New line by Shift + Enter"
+        meta_enter:
+          label: "Send by %{meta_key} + Enter"
+          description: "New line by Enter"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"
@@ -247,6 +257,7 @@ en:
       placeholder_channel: "Chat in %{channelName}"
       placeholder_thread: "Chat in thread"
       placeholder_users: "Chat with %{commaSeparatedNames}"
+      placeholder_group: "Chat in group"
       placeholder_new_message_disallowed:
         archived: "Channel is archived, you cannot send new messages right now."
         closed: "Channel is closed, you cannot send new messages right now."
@@ -474,10 +485,9 @@ en:
         auto_join_users_info: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the %{category} category."
         auto_join_users_info_no_category: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the selected category."
         auto_join_users_warning: "Every user who isn't a member of this channel and has access to the %{category} category will join. Are you sure?"
-        desktop_notification_level: "Desktop notifications"
+        notification_level: "Send push notifications"
         follow: "Join"
         followed: "Joined"
-        mobile_notification_level: "Mobile push notifications"
         mute: "Mute channel"
         threading_enabled: "Enabled"
         threading_disabled: "Disabled"
@@ -501,6 +511,7 @@ en:
           title: "Export chat messages"
           description: "This exports all messages from all channels."
           create_export: "Create export"
+          confirm_export: "This exports all messages from all channels and sends the result to you in a personal message. Are you sure you want to export?"
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       my_threads:
@@ -523,6 +534,7 @@ en:
       incoming_webhooks:
         back: "Back"
         channel_placeholder: "Select a channel"
+        channel: "Channel"
         confirm_destroy: "Are you sure you want to delete this incoming webhook? This cannot be un-done."
         current_emoji: "Current Emoji"
         description: "Description"
@@ -546,6 +558,8 @@ en:
         username: "Username"
         username_instructions: "Username of bot that posts to channel. Defaults to 'system' when left blank."
         instructions: "Incoming webhooks can be used by external systems to post messages into a designated chat channel as a bot user via the <code>/hooks/:key</code> endpoint. The payload consists of a single <code>text</code> parameter, which is limited to 2000 characters.<br><br>We also support limited Slack-formatted <code>text</code> parameters, extracting links and mentions based on the format at <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, but the <code>/hooks/:key/slack</code> endpoint must be used for this."
+        saved: "Webhook changes saved"
+        created: "Webhook created"
 
       selection:
         cancel: "Cancel"
@@ -630,10 +644,13 @@ en:
         notifications:
           regular:
             title: "Normal"
-            description: "You will be notified if someone mentions your @name in this thread."
+            description: "Get notified when someone mentions you in this thread."
           tracking:
             title: "Tracking"
-            description: "A count of new replies for this thread will be shown in the thread list and the channel. You will be notified if someone mentions your @name in this thread."
+            description: "Get notified when someone mentions you in this thread and see a count of new replies in the thread list."
+          watching:
+            title: "Watching"
+            description: "Get notified about all replies in this thread and see a count of new replies in the thread list."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -660,6 +677,9 @@ en:
       chat_invitation: "invited you to join a chat channel"
       chat_invitation_html: "<span>%{username}</span> <span>invited you to join a chat channel</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} and %{username2}"
+        other: "%{username} and %{count} others"
 
       popup:
         chat_mention:
@@ -678,9 +698,10 @@ en:
         chat_quoted: "%{username} quoted your chat message"
 
       titles:
-        chat_mention: "Chat mention"
-        chat_invitation: "Chat invitation"
-        chat_quoted: "Chat quoted"
+        chat_mention: "Mentioned in chat"
+        chat_invitation: "Invited to chat channel"
+        chat_quoted: "Chat message quoted"
+        chat_watched_thread: "Watched chat thread"
     action_codes:
       chat:
         enabled: '%{who} enabled <button class="btn-link open-chat">chat</button> %{when}'
@@ -711,6 +732,7 @@ en:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Switch channel"
+          switch__unread_channel_arrows: "%{shortcut} Switch unread channel"
           open_quick_channel_selector: "%{shortcut} Open quick channel selector"
           open_insert_link_modal: "%{shortcut} Insert hyperlink (composer only)"
           composer_bold: "%{shortcut} Bold (composer only)"

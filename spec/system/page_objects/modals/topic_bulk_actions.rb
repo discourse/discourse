@@ -12,6 +12,10 @@ module PageObjects
         find("#bulk-topics-confirm").click
       end
 
+      def click_dismiss_confirm
+        find("#dismiss-read-confirm").click
+      end
+
       def click_silent
         find("#topic-bulk-action-options__silent").click
       end

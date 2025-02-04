@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
+import { classNames } from "@ember-decorators/component";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
@@ -32,17 +33,14 @@ function convertMinutesToDurationString(n) {
   return output;
 }
 
-export default Component.extend({
-  classNames: ["d-time-input"],
-
-  hours: null,
-
-  minutes: null,
-
-  relativeDate: null,
+@classNames("d-time-input")
+export default class TimeInput extends Component {
+  hours = null;
+  minutes = null;
+  relativeDate = null;
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     if (isPresent(this.date)) {
       this.setProperties({
@@ -61,9 +59,10 @@ export default Component.extend({
         minutes: null,
       });
     }
-  },
+  }
 
-  minimumTime: computed("relativeDate", "date", function () {
+  @computed("relativeDate", "date")
+  get minimumTime() {
     if (this.relativeDate) {
       if (this.date) {
         if (!this.date.isSame(this.relativeDate, "day")) {
@@ -75,9 +74,10 @@ export default Component.extend({
         return this.relativeDate.hours() * 60 + this.relativeDate.minutes();
       }
     }
-  }),
+  }
 
-  timeOptions: computed("minimumTime", "hours", "minutes", function () {
+  @computed("minimumTime", "hours", "minutes")
+  get timeOptions() {
     let options = [];
 
     const start = this.minimumTime
@@ -136,20 +136,21 @@ export default Component.extend({
         title: name,
       };
     });
-  }),
+  }
 
-  time: computed("minimumTime", "hours", "minutes", function () {
+  @computed("minimumTime", "hours", "minutes")
+  get time() {
     if (isPresent(this.hours) && isPresent(this.minutes)) {
       return parseInt(this.hours, 10) * 60 + parseInt(this.minutes, 10);
     }
-  }),
+  }
 
   @action
   onFocusIn(value, event) {
     if (value && event.target) {
       event.target.select();
     }
-  },
+  }
 
   @action
   onChangeTime(time) {
@@ -182,5 +183,5 @@ export default Component.extend({
         });
       }
     }
-  },
-});
+  }
+}

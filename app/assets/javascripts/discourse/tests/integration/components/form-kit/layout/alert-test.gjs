@@ -19,11 +19,11 @@ module("Integration | Component | FormKit | Layout | Alert", function (hooks) {
   test("@icon", async function (assert) {
     await render(<template>
       <Form as |form|>
-        <form.Alert @icon="pencil-alt">Test</form.Alert>
+        <form.Alert @icon="pencil">Test</form.Alert>
       </Form>
     </template>);
 
-    assert.dom(".form-kit__alert .d-icon-pencil-alt").exists();
+    assert.dom(".form-kit__alert .d-icon-pencil").exists();
   });
 
   test("@type", async function (assert) {

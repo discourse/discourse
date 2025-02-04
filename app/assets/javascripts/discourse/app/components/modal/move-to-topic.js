@@ -3,9 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class MoveToTopic extends Component {
   @service currentUser;
@@ -18,7 +19,7 @@ export default class MoveToTopic extends Component {
   @tracked participants = [];
   @tracked chronologicalOrder = false;
   @tracked selection = "new_topic";
-  @tracked selectedTopicId;
+  @tracked selectedTopic;
   @tracked flash;
 
   constructor() {
@@ -48,7 +49,7 @@ export default class MoveToTopic extends Component {
 
   get buttonDisabled() {
     return (
-      this.saving || (isEmpty(this.selectedTopicId) && isEmpty(this.topicName))
+      this.saving || (isEmpty(this.selectedTopic) && isEmpty(this.topicName))
     );
   }
 
@@ -109,7 +110,7 @@ export default class MoveToTopic extends Component {
 
     if (type === "existingTopic") {
       mergeOptions = {
-        destination_topic_id: this.selectedTopicId,
+        destination_topic_id: this.selectedTopic.id,
         chronological_order: this.chronologicalOrder,
       };
       moveOptions = {
@@ -118,7 +119,7 @@ export default class MoveToTopic extends Component {
       };
     } else if (type === "existingMessage") {
       mergeOptions = {
-        destination_topic_id: this.selectedTopicId,
+        destination_topic_id: this.selectedTopic.id,
         participants: this.participants.join(","),
         archetype: "private_message",
         chronological_order: this.chronologicalOrder,
@@ -145,6 +146,15 @@ export default class MoveToTopic extends Component {
       };
     }
 
+    mergeOptions = applyValueTransformer(
+      "move-to-topic-merge-options",
+      mergeOptions
+    );
+    moveOptions = applyValueTransformer(
+      "move-to-topic-move-options",
+      moveOptions
+    );
+
     try {
       let result;
       if (this.args.model.selectedAllPosts) {
@@ -157,7 +167,7 @@ export default class MoveToTopic extends Component {
       this.args.model.toggleMultiSelect();
       DiscourseURL.routeTo(result.url);
     } catch {
-      this.flash = I18n.t("topic.move_to.error");
+      this.flash = i18n("topic.move_to.error");
     } finally {
       this.saving = false;
     }
@@ -180,6 +190,6 @@ export default class MoveToTopic extends Component {
 
   @action
   newTopicSelected(topic) {
-    this.selectedTopicId = topic.id;
+    this.selectedTopic = topic;
   }
 }

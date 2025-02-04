@@ -18,13 +18,14 @@
     "src"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.8.9",
-    "ember-auto-import": "^2.7.4"
+    "@embroider/addon-shim": "^1.9.0",
+    "ember-auto-import": "^2.10.0"
   },
   "engines": {
     "node": ">= 18",
-    "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "^9"
   },
   "ember": {
     "edition": "octane"

@@ -26,7 +26,7 @@ class Admin::EmbeddableHostsController < Admin::AdminController
     host.host = params[:embeddable_host][:host]
     host.allowed_paths = params[:embeddable_host][:allowed_paths]
     host.category_id = params[:embeddable_host][:category_id]
-    host.category_id = SiteSetting.uncategorized_category_id if host.category_id.blank?
+    host.category_id = SiteSetting.uncategorized_category_id if host.category.blank?
 
     username = params[:embeddable_host][:user]
 

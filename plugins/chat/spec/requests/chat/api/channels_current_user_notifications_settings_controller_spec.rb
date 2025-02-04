@@ -54,8 +54,7 @@ RSpec.describe Chat::Api::ChannelsCurrentUserNotificationsSettingsController do
             params: {
               notifications_settings: {
                 muted: true,
-                desktop_notification_level: "always",
-                mobile_notification_level: "never",
+                notification_level: "always",
               },
             }
 
@@ -67,8 +66,7 @@ RSpec.describe Chat::Api::ChannelsCurrentUserNotificationsSettingsController do
         membership = channel_1.membership_for(current_user)
 
         expect(membership.muted).to eq(true)
-        expect(membership.desktop_notification_level).to eq("always")
-        expect(membership.mobile_notification_level).to eq("never")
+        expect(membership.notification_level).to eq("always")
       end
     end
 
@@ -123,8 +121,7 @@ RSpec.describe Chat::Api::ChannelsCurrentUserNotificationsSettingsController do
             params: {
               notifications_settings: {
                 muted: true,
-                desktop_notification_level: "always",
-                mobile_notification_level: "never",
+                notification_level: "always",
               },
             }
 
@@ -136,8 +133,7 @@ RSpec.describe Chat::Api::ChannelsCurrentUserNotificationsSettingsController do
         membership = dm_channel_1.membership_for(current_user)
 
         expect(membership.muted).to eq(true)
-        expect(membership.desktop_notification_level).to eq("always")
-        expect(membership.mobile_notification_level).to eq("never")
+        expect(membership.notification_level).to eq("always")
       end
     end
   end

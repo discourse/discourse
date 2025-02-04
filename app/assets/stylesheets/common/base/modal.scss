@@ -1,8 +1,6 @@
 // Modal wrappers
-
 .d-modal {
   pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
-
   display: flex;
   align-items: center;
   width: 100%;
@@ -16,19 +14,15 @@
     position: relative;
   }
 
-  html.keyboard-visible body.ios-safari-composer-hacks & {
-    height: calc(var(--composer-vh, 1vh) * 100);
-  }
-
   &__container {
     display: flex;
     flex-direction: column;
     pointer-events: auto;
     box-sizing: border-box;
     margin: 0 auto;
-    max-height: 80vh;
     background-color: var(--secondary);
     box-shadow: var(--shadow-modal);
+    max-height: var(--modal-max-height, 80vh); // unset, optional theme utility
   }
 
   &__header {
@@ -40,9 +34,17 @@
 
     .modal-close {
       margin-left: auto;
+      align-self: start;
+
       .d-icon {
         font-size: var(--font-up-2);
         color: var(--primary-high);
+      }
+
+      &:focus-visible {
+        .d-icon {
+          color: var(--primary);
+        }
       }
     }
   }
@@ -52,6 +54,11 @@
     .btn {
       text-transform: capitalize;
     }
+  }
+
+  &__title-text {
+    font-size: var(--font-up-3);
+    line-height: var(--line-height-medium);
   }
 
   &__title-text,
@@ -64,6 +71,10 @@
     padding: 1rem 1.5rem;
     box-sizing: border-box;
 
+    &.empty {
+      display: none;
+    }
+
     input {
       width: auto;
 
@@ -71,6 +82,7 @@
         width: 100%;
       }
     }
+
     textarea {
       width: 100%;
       height: 80px;
@@ -83,10 +95,12 @@
     section.field {
       padding: 0.25em 0;
       margin-bottom: 5px;
+
       &.with-items {
         display: flex;
         align-items: flex-start;
       }
+
       .field-item {
         display: inline-block;
         margin-right: 10px;
@@ -98,6 +112,7 @@
       max-width: 100%;
     }
   }
+
   &__footer {
     display: flex;
     flex-wrap: wrap;
@@ -106,8 +121,9 @@
     border-top: 1px solid var(--primary-low);
     gap: 0.5rem;
   }
+
   &__backdrop {
-    user-select: none;
+    @include user-select(none);
     position: fixed;
     top: 0;
     right: 0;
@@ -121,17 +137,20 @@
       animation-duration: 0s;
     }
   }
+
+  #modal-alert {
+    padding-left: 1.5rem;
+  }
 }
 
 //legacy
-
 .input-hint-text {
   margin-left: 0.5em;
   color: var(--secondary-high);
 }
 
 .modal-backdrop {
-  user-select: none;
+  @include user-select(none);
   position: fixed;
   top: 0;
   right: 0;
@@ -139,6 +158,7 @@
   left: 0;
   z-index: z("modal", "overlay");
   background-color: #111;
+
   &.fade {
     opacity: 0;
   }
@@ -159,6 +179,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 0.6;
   }
@@ -172,6 +193,7 @@
   .nav {
     padding: 10px 30px 10px 15px;
     background-color: var(--secondary);
+
     li > a {
       font-size: var(--font-0);
     }
@@ -222,6 +244,7 @@
 
     &.btn-reply-here {
       --text-color: var(--primary);
+
       .discourse-no-touch & {
         &:hover {
           --text-color: var(--secondary);
@@ -245,6 +268,7 @@
       align-items: baseline;
       color: var(--text-color);
       font-size: var(--font-up-1);
+
       .d-icon {
         color: var(--text-color);
         margin: 0;
@@ -261,9 +285,11 @@
       display: flex;
       align-items: baseline;
       gap: 0.5em;
+
       .discourse-tags {
         font-size: var(--font-down-1);
       }
+
       .badge-category__name,
       .discourse-tag {
         color: var(--text-color);
@@ -280,6 +306,7 @@
     border-radius: 25px;
     overflow: hidden;
     margin: 30px 0 20px;
+
     span {
       display: block;
       width: 0%;
@@ -297,24 +324,30 @@
   .btn {
     background-color: transparent;
     margin-right: 5px;
+
     &:hover,
     &.active {
       color: var(--primary);
     }
+
     &.active {
       font-weight: bold;
     }
+
     &:focus {
       outline: 2px solid var(--primary-low);
     }
   }
+
   .incoming-email-tabs {
     margin-bottom: 15px;
   }
+
   .incoming-email-content {
     height: 300px;
     max-width: 100%;
     width: 90vw; // forcing textarea wider
+
     textarea,
     .incoming-email-html-part {
       height: 95%;
@@ -323,12 +356,14 @@
       padding-top: 10px;
       width: 100%;
     }
+
     textarea {
       font-family: var(--d-font-family--monospace);
       resize: none;
       border-radius: 0;
       box-shadow: none;
     }
+
     .incoming-email-html-part {
       width: calc(100% - 36px);
       padding: 10px 4px 4px 4px;
@@ -373,14 +408,22 @@
   form {
     margin: 0;
   }
+
   .flag-action-type .controls .checkbox-label {
     margin-bottom: 0.25em;
   }
+
   .flag-action-type-details {
     width: 100%;
+
     // max-width: 500px;
     line-height: var(--line-height-large);
+
+    a {
+      margin: 0;
+    }
   }
+
   .flag-confirmation {
     margin-top: 0.5em;
     padding-left: 1.125em;
@@ -448,6 +491,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   margin-bottom: 0.5em;
+
   .description {
     width: 100%;
     margin-top: 0.25em;

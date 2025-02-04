@@ -95,12 +95,12 @@
               {{else}}
                 <DButton
                   @action={{fn this.destroyRecord item}}
-                  @icon="far-trash-alt"
+                  @icon="trash-can"
                   class="btn-default btn-danger"
                 />
                 <DButton
                   @action={{fn this.edit item}}
-                  @icon="pencil-alt"
+                  @icon="pencil"
                   class="btn-default"
                 />
                 {{#if item.isBlocked}}

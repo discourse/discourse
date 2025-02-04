@@ -73,6 +73,25 @@ describe Chat::Notifier do
         )
       end
 
+      it "will respect user's locale on mention warning" do
+        SiteSetting.allow_user_locale = true
+        user_1.update!(locale: "pt_BR")
+        channel.update!(allow_channel_wide_mentions: false)
+        msg = build_cooked_msg(mention, user_1)
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            to_notify = described_class.new(msg, msg.created_at).notify_new
+          end
+
+        global_mentions_disabled_message = messages.first
+
+        expect(global_mentions_disabled_message.data[:type].to_sym).to eq(:notice)
+        expect(global_mentions_disabled_message.data[:text_content]).to eq(
+          I18n.t("chat.mention_warning.global_mentions_disallowed", locale: "pt_BR"),
+        )
+      end
+
       it "includes all members of a channel except the sender" do
         msg = build_cooked_msg(mention, user_1)
 
@@ -145,8 +164,10 @@ describe Chat::Notifier do
 
           Chat::UpdateMessage.call(
             guardian: user_1.guardian,
-            message_id: msg.id,
-            message: "hello @all",
+            params: {
+              message_id: msg.id,
+              message: "hello @all",
+            },
           )
 
           described_class.new(msg, msg.created_at).notify_edit
@@ -402,7 +423,7 @@ describe Chat::Notifier do
     describe "unreachable users" do
       fab!(:user_3) { Fabricate(:user) }
 
-      it "notify poster of users who are not allowed to use chat" do
+      it "notifies poster of users who are not allowed to use chat" do
         msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
 
         messages =
@@ -420,12 +441,38 @@ describe Chat::Notifier do
         )
       end
 
+      it "respects user locale on notice about users who are not allowed to use chat" do
+        SiteSetting.allow_user_locale = true
+        user_1.update!(locale: "pt_BR")
+        msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            to_notify = described_class.new(msg, msg.created_at).notify_new
+
+            expect(to_notify[:direct_mentions]).to be_empty
+          end
+
+        unreachable_msg = messages.first
+
+        expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
+        expect(unreachable_msg[:data][:text_content]).to eq(
+          I18n.t(
+            "chat.mention_warning.cannot_see",
+            first_identifier: user_3.username,
+            locale: "pt_BR",
+          ),
+        )
+      end
+
       context "when in a personal message" do
         let(:personal_chat_channel) do
           result =
             Chat::CreateDirectMessageChannel.call(
               guardian: user_1.guardian,
-              target_usernames: [user_1.username, user_2.username],
+              params: {
+                target_usernames: [user_1.username, user_2.username],
+              },
             )
           service_failed!(result) if result.failure?
           result.channel
@@ -683,6 +730,31 @@ describe Chat::Notifier do
         expect(mentions_disabled_msg[:data][:type].to_sym).to eq(:notice)
         expect(mentions_disabled_msg[:data][:text_content]).to eq(
           I18n.t("chat.mention_warning.group_mentions_disabled", first_identifier: group.name),
+        )
+      end
+
+      it "respects user locale on notice about group disallowing mentions" do
+        SiteSetting.allow_user_locale = true
+        user_1.update!(locale: "pt_BR")
+        group.update!(mentionable_level: Group::ALIAS_LEVELS[:only_admins])
+        msg = build_cooked_msg("Hello @#{group.name}", user_1)
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            to_notify = described_class.new(msg, msg.created_at).notify_new
+
+            expect(to_notify[group.name]).to be_nil
+          end
+
+        mentions_disabled_msg = messages.first
+
+        expect(mentions_disabled_msg[:data][:type].to_sym).to eq(:notice)
+        expect(mentions_disabled_msg[:data][:text_content]).to eq(
+          I18n.t(
+            "chat.mention_warning.group_mentions_disabled",
+            first_identifier: group.name,
+            locale: "pt_BR",
+          ),
         )
       end
     end

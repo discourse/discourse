@@ -1,8 +1,8 @@
 import { reads } from "@ember/object/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { cook } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
 import Category from "./category";
 
 export default class PendingPost extends RestModel {

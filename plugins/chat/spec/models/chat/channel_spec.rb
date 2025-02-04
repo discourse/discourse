@@ -11,6 +11,14 @@ RSpec.describe Chat::Channel do
   it { is_expected.to validate_length_of(:chatable_type).is_at_most(100) }
   it { is_expected.to validate_length_of(:type).is_at_most(100) }
 
+  it "supports custom fields" do
+    channel.custom_fields["test"] = "test"
+    channel.save_custom_fields
+    loaded_channel = Chat::Channel.find(channel.id)
+    expect(loaded_channel.custom_fields["test"]).to eq("test")
+    expect(Chat::ChannelCustomField.first.channel.id).to eq(channel.id)
+  end
+
   describe ".last_message" do
     context "when there are no last message" do
       it "returns an instance of NullMessage" do

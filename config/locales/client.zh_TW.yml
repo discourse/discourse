@@ -26,6 +26,7 @@ zh_TW:
         millions: "%{number} 百萬"
     dates:
       time: "h:mm a"
+      time_short: "h:mm"
       time_with_zone: "hh:mm a (z)"
       time_short_day: "ddd, h:mm a"
       timeline_date: "YYYY年 M月"
@@ -109,7 +110,7 @@ zh_TW:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "由@%{username}發布#%{postNumber}"
       close: "關閉"
-      twitter: "分享到 Twitter"
+      twitter: "分享至 X"
       facebook: "分享到 Facebook"
       email: "透過電子郵件傳送"
       url: "複製並分享網址"
@@ -241,6 +242,7 @@ zh_TW:
     suggested_topics:
       pm_title: "推薦訊息"
     about:
+      edit: "編輯此頁"
       simple_title: "關於"
       title: "關於 %{title}"
       stats: "網站統計數據"
@@ -252,7 +254,16 @@ zh_TW:
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
-      contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
+      activities:
+        topics:
+          other: "%{formatted_number} 話題"
+        posts:
+          other: "%{formatted_number} 篇貼文"
+        likes:
+          other: "%{formatted_number}個讚"
+        periods:
+          last_7_days: "在過去 7 天內"
+          today: "今天"
       member_count:
         other: "%{formatted_number} 位成員"
     bookmarked:
@@ -312,6 +323,8 @@ zh_TW:
       abandon:
         yes_value: "捨棄"
         no_value: "繼續編輯"
+      dropdown:
+        view_all: "查看全部"
     topic_count_all:
       other: "檢視 %{count} 則新話題"
     topic_count_categories:
@@ -336,6 +349,8 @@ zh_TW:
     continue: "繼續"
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
+    select_placeholder: "選取…"
+    none_placeholder: "無"
     banner:
       close: "關閉此橫幅"
       edit: "編輯"
@@ -446,6 +461,8 @@ zh_TW:
         refresh: "重新整理"
         status: "狀態"
         category: "分類"
+        score_type:
+          title: "原因"
         orders:
           score: "分數"
           score_asc: "分數 (反向)"
@@ -541,7 +558,6 @@ zh_TW:
       never: "永不"
       last_custom: "上次自訂日期時間"
       custom: "自定義日期和時間"
-      custom_short: "自訂..."
       select_timeframe: "選擇有效時間範圍"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 張貼了 <a href='%{topicUrl}'>此主題</a>"
@@ -672,14 +688,6 @@ zh_TW:
         title: "權限"
       public_admission: "允許使用者自由加入群組（需要將群組設為公開瀏覽）"
       public_exit: "允許使用者自由離開群組"
-      empty:
-        posts: "沒有來自該群組成員的貼文。"
-        members: "群組內無成員。"
-        requests: "群組內無任何成員發出請求"
-        mentions: "群組未曾被提及"
-        messages: "無該群組的訊息。"
-        topics: "沒有來自該群組成員的話題。"
-        logs: "無該群組的日誌。"
       add: "新增"
       join: "加入"
       leave: "離開"
@@ -836,10 +844,10 @@ zh_TW:
       delete_other_accounts:
         other: "刪除 %{count} 個"
       username: "使用者名稱"
-      trust_level: "TL"
+      trust_level: "信任等級"
       read_time: "閱讀時間"
       topics_entered: "已閱讀的話題"
-      post_count: "# 貼文"
+      post_count: "貼文"
       confirm_delete_other_accounts: "你確定要刪除這些帳號？"
       powered_by: "使用 <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "已複製"
@@ -937,16 +945,14 @@ zh_TW:
       skip_new_user_tips:
         description: "跳過新使用者登入時的提示和徽章"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
-      color_scheme: "色彩配置"
+      color_scheme: "調色盤"
       color_schemes:
         default_description: "預設佈景主題"
-        dark_instructions: "您可以透過切換您設備的深色模式來預覽深色模式的配色方案。"
         undo: "重置"
         regular: "普通"
         dark: "夜間模式"
         default_dark_scheme: "(網站預設值)"
       dark_mode: "夜間模式"
-      dark_mode_enable: "啟用自動深色模式色彩配置"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
@@ -1009,7 +1015,6 @@ zh_TW:
       allow_private_messages_from_specific_users: "只允許指定的使用者寄送個人訊息給我"
       ignored_users: "忽略"
       tracked_topics_link: "顯示"
-      automatically_unpin_topics: "當我完整閲讀了話題時自動解除置頂。"
       apps: "應用"
       revoke_access: "撤銷許可"
       undo_revoke_access: "解除撤銷許可"
@@ -1137,7 +1142,6 @@ zh_TW:
         destroy: "移除電子信箱"
         add_email: "新增備用電子郵件"
         no_secondary: "無次要電子郵件"
-        instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
         required: "請輸入電子郵件地址"
         invalid: "請輸入有效的電子郵件地址。"
@@ -1150,10 +1154,17 @@ zh_TW:
         revoke: "撤銷"
         cancel: "取消"
         not_connected: "（無任何連結）"
+      activate_account:
+        action: "點擊此處啟用你的帳戶"
+        already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
+        please_continue: "你的新帳號已啟用；即將轉到主頁。"
+        continue_button: "結束!"
+        welcome_to: "歡迎來到 %{site_name}！"
+        approval_required: "你的論壇帳號需要由板主手動審核後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
       name:
         title: "名稱"
-        instructions: "您的全名 (選填)."
-        instructions_required: "您的暱稱."
+        instructions: "您的全名 (選填)"
+        instructions_required: "您的暱稱"
         required: "請輸入名稱"
         too_short: "你的暱稱太短。"
         ok: "你的暱稱符合要求。"
@@ -1198,7 +1209,6 @@ zh_TW:
       location: "位置"
       website: "網站"
       email_settings: "電子郵件"
-      hide_profile_and_presence: "隱藏我的公開檔案"
       enable_physical_keyboard: "支援iPad外接鍵盤"
       text_size:
         title: "文字大小"
@@ -1260,7 +1270,8 @@ zh_TW:
         after_4_minutes: "四分鐘後"
         after_5_minutes: "五分鐘後"
         after_10_minutes: "十分鐘後"
-      notification_level_when_replying: "當我在話題中回覆後，將話題設置至"
+      notification_level_when_replying:
+        do_nothing: "不做任何動作"
       invited:
         title: "邀請"
         pending_tab: "等待中"
@@ -1299,10 +1310,11 @@ zh_TW:
         invite_link:
           success: "邀請連結生成成功！"
         invite:
-          new_title: "建立邀請"
           copy_link: "複製連結"
           show_advanced: "顯示進階選項"
           hide_advanced: "隱藏進階選項"
+          update_invite: "更新"
+          cancel: "取消"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
           error: "上傳的檔案必須是 csv 格式。"
@@ -1313,7 +1325,7 @@ zh_TW:
         same_as_email: "你的密碼與電郵相同。"
         ok: "你的密碼符合要求。"
         instructions:
-          other: "至少 %{count} 個字元."
+          other: "至少 %{count} 個字元"
       summary:
         title: "摘要"
         stats: "統計"
@@ -1468,6 +1480,10 @@ zh_TW:
       disclaimer: "註冊即表示您同意 <a href='%{privacy_link}' target='blank'>隱私政策</a> 和 <a href='%{tos_link}' target='blank'>服務條款</a>。"
       title: "註冊"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
+      progress_bar:
+        signup: "註冊"
+        approve: "批准"
+        login: "登入"
     forgot_password:
       title: "寄出密碼"
       action: "我忘了我的密碼"
@@ -1514,6 +1530,7 @@ zh_TW:
       not_activated: "你還無法登入，我們之前曾將啟用帳號的電子郵件寄至 <b>%{sentTo}</b>，請從該電子郵件啟用你的帳號。"
       admin_not_allowed_from_ip_address: "你無法透過此 IP 登入成為管理員。"
       resend_activation_email: "按這裡重新寄出啟用帳號的電子郵件。"
+      activate_account: "啟用帳號"
       resend_title: "重新寄出認證信"
       change_email: "更換電子郵件"
       provide_new_email: "提供新的電子郵件，我們將把認證信重新寄給您。"
@@ -1560,7 +1577,6 @@ zh_TW:
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
       password_label: "密碼"
-      existing_user_can_redeem: "兌換您對某個主題或群組的邀請。"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -1577,6 +1593,9 @@ zh_TW:
       categories_and_top_topics: "分類與熱門話題"
       categories_boxes: "子分類欄"
       categories_boxes_with_topics: "精選話題欄"
+    full_name_requirement:
+      required_at_signup: "必要設定"
+      optional_at_signup: "選擇性"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1950,6 +1969,8 @@ zh_TW:
         top: "沒有更多精選話題。"
         bookmarks: "書籤裡沒有更多的話題了。"
     topic_bulk_actions:
+      dismiss:
+        name: "忽略"
       close_topics:
         name: "關閉"
         optional: (選擇性)
@@ -2154,7 +2175,6 @@ zh_TW:
         help: "打開此討論話題列印友善的版本"
       flag_topic:
         title: "檢舉"
-        help: "檢舉此話題，或以私訊通知管理員"
         success_message: "已檢舉此話題。"
       feature_topic:
         title: "擁有這個話題"
@@ -2285,6 +2305,8 @@ zh_TW:
         deselect_all: 取消選取
         description:
           other: "你已選擇了 <b>%{count}</b> 篇貼文。"
+    post_list:
+      title: " 最近貼文"
     post:
       quote_reply: "引用"
       quote_edit: "編輯"
@@ -2337,16 +2359,20 @@ zh_TW:
       few_likes_left: "謝謝你的熱情！你今天的讚快用完了。"
       controls:
         reply: "開始編寫對此貼文的回覆"
+        like_action: "讚"
         like: "給此貼文按讚"
         has_liked: "你已對此貼文按讚"
+        undo_like_action: "撤回讚"
         undo_like: "撤回讚"
         edit: "編輯此貼文"
         edit_action: "編輯"
         edit_anonymous: "抱歉，您必須登入以修改貼文。"
-        flag: "檢舉此貼文或傳送私人通知"
+        flag_action: "檢舉"
         delete: "刪除此貼文"
         undelete: "復原此貼文"
+        share_action: "分享"
         share: "分享此貼文的連結"
+        copy_action: "複製連結"
         more: "更多"
         delete_replies:
           confirm: "您是否也要刪除所有此貼文底下的回應？"
@@ -2356,6 +2382,7 @@ zh_TW:
             other: "是，包含所有%{count}條回覆"
           just_the_post: "否，僅刪除此貼文。"
         admin: "貼文管理動作"
+        admin_action: "管理員"
         wiki: "做為共筆"
         unwiki: "取消共筆"
         convert_to_moderator: "增加工作人員顏色"
@@ -2556,7 +2583,6 @@ zh_TW:
       list_filters:
         all: "所有話題"
     flagging:
-      title: "感謝幫助社群遠離邪惡！"
       action: "檢舉貼文"
       take_action_options:
         default:
@@ -2586,7 +2612,6 @@ zh_TW:
         left:
           other: "剩餘 %{count}"
     flagging_topic:
-      title: "感謝幫助社群遠離邪惡！"
       action: "檢舉話題"
       notify_action: "訊息"
     topic_map:
@@ -2651,7 +2676,6 @@ zh_TW:
       with_topics: "%{filter} 話題"
       with_category: "%{filter} %{category} 話題"
       filter:
-        title: "過濾"
         button:
           label: "過濾"
       latest:
@@ -2735,9 +2759,6 @@ zh_TW:
       close: "關閉（Esc）"
       content_load_error: '無法加載<a href="%url%">內容</a>。'
       image_load_error: '無法加載<a href="%url%">圖片</a>。'
-    experimental_lightbox:
-      buttons:
-        close: "關閉（Esc）"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "、"
       shortcut_key_delimiter_plus: "+"
@@ -2765,7 +2786,6 @@ zh_TW:
         title: "應用"
         create: "%{shortcut} 開啟新話題"
         notifications: "%{shortcut} Open notifications"
-        hamburger_menu: "%{shortcut} 打開漢堡菜單"
         user_profile_menu: "%{shortcut} 打開使用者菜單"
         show_incoming_updated_topics: "%{shortcut} 顯示更新話題"
         search: "%{shortcut} 搜尋"
@@ -3015,6 +3035,8 @@ zh_TW:
               content: "審核"
               pending_count:
                 other: "剩餘 %{count}"
+            invite:
+              content: "邀請"
       panels:
         forum:
           label: 論壇
@@ -3046,6 +3068,7 @@ zh_TW:
           copy: "複製..."
           paste: "貼上..."
   admin_js:
+    settings: "設定"
     admin:
       title: "論壇管理員"
       moderator: "板主"
@@ -3058,7 +3081,30 @@ zh_TW:
         title: "可見報告列表"
         sidebar_title: "報告"
         sidebar_link:
-          all: "全部"
+          all: "所有報告"
+      config:
+        developer:
+          title: "開發人員"
+        files:
+          title: "檔案"
+        legal:
+          title: "法律"
+        navigation:
+          title: "導覽"
+        notifications:
+          title: "通知"
+        onebox:
+          title: "單一框"
+        other:
+          title: "其他"
+        search:
+          title: "搜索"
+        security:
+          title: "安全性"
+        spam:
+          title: "垃圾內容"
+        user_api:
+          title: "使用者 API"
       dashboard:
         title: "控制台"
         version: "版本"
@@ -3070,6 +3116,7 @@ zh_TW:
         installed_version: "已安裝"
         latest_version: "最新版本"
         problems_found: "根據您現在網站設定的建議"
+        dismiss_notice: "忽略"
         new_features:
           learn_more: "了解更多..."
         last_checked: "上次檢查的時間"
@@ -3141,6 +3188,7 @@ zh_TW:
             category:
               label: 分類
       flags:
+        title: "管理"
         description: "簡述"
         enabled: "啟用?"
       groups:
@@ -3189,15 +3237,20 @@ zh_TW:
         add_owners: 添加所有者
         none_selected: "選擇一個群組以開始"
         no_custom_groups: "建立一個新的自訂群組"
+      api_keys:
+        edit: "編輯"
+        save: "保存"
+        cancel: "取消"
+        continue: "繼續"
+        revoke: "撤回"
       api:
         generate_master: "產生主 API 金鑰"
         none: "目前沒有啟用中的 API 金鑰。"
         user: "使用者"
         title: "API"
         key: "金鑰"
-        created: 已建立
         updated: 更新時間
-        never_used: (永不)
+        never_used: 永不
         generate: "產生"
         revoke: "撤銷"
         all_users: "所有使用者"
@@ -3213,26 +3266,22 @@ zh_TW:
           action: 動作
       web_hooks:
         title: "Webhooks"
-        none: "當前沒有 Webhooks。"
         instruction: "Webhooks 讓 Discourse 可以在特定事件發生時通知外部服務。當 webhook 事件觸發時，一個 POST 請求將發向指定地址。"
         detailed_instruction: "一個 POST 請求將在選定事件發生時發至指定 URL。"
-        new: "新建 Webhook"
         create: "建立"
         edit: "編輯"
         save: "保存"
+        delete: "刪除"
+        cancel: "取消"
         controls: "控制"
-        go_back: "返回列表"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "密鑰不能包含空白字元。"
         secret_too_short: "密鑰必須至少有 12 個字元。"
-        secret_placeholder: "選填的字串，用來產生簽章"
         event_type_missing: "你必須設置一個事件類型。"
         content_type: "內容格式"
         secret: "密鑰"
         event_chooser: "哪些事件可以觸發到 Webhook？"
-        wildcard_event: "發送任何事件。"
-        individual_event: "選擇各個事件。"
         verify_certificate: "檢查 Payload URL 的 TLS 證書"
         active: "啟用"
         active_notice: "我們將在事件發生時分發事件詳情。"
@@ -3282,11 +3331,11 @@ zh_TW:
           badges: "徽章"
           notifications: "通知"
           permalinks: "固定連結"
-          trust_levels: "信任等級"
           users: "使用者"
-          user_fields: "使用者欄位"
-          watched_words: "已關注的文字"
+          groups: "群組"
           legal: "法律"
+          moderation_flags:
+            title: "管理"
       appearance:
         title: "外觀"
         sidebar_link:
@@ -3298,46 +3347,50 @@ zh_TW:
       email_settings:
         sidebar_link:
           appearance: "外觀"
-          preview_summary: "預覽文摘"
-      email_logs:
-        sidebar_link:
-          sent: "送出"
-          skipped: "跳過"
-          bounced: "退回"
-          received: "收到"
-          rejected: "拒絶"
       security:
         title: "安全性"
-        sidebar_link:
-          error_logs: "錯誤紀錄"
-          screened_emails: "過濾的電子郵件地址"
-          screened_ips: "過濾的 IP 位址"
-          screened_urls: "過濾的網址"
-          search_logs: "搜尋紀錄"
-          security: "安全性"
-          spam: "垃圾內容"
+      section_landing_pages:
+        account:
+          title: "帳號"
+          backups:
+            title: "備份"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "名字"
           optional: "(選擇性)"
           update: "更新"
           saved: "儲存完畢!"
         flags:
+          header: "管理"
           description: "簡述"
           enabled: "啟用?"
           edit: "編輯"
           delete: "刪除"
           delete_confirm: '你確定要刪除%{name}嗎？'
+          flags_tab: "投訴"
           form:
             save: "保存"
             name: "名字"
             description: "簡述"
+            invalid_applies_to: "必要設定"
             topic: "話題"
             post: "貼文"
             chat_message: "聊天訊息"
+        permalinks:
+          edit: "編輯"
+          delete: "刪除"
+        embeddable_host:
+          edit: "編輯"
+          delete: "刪除"
+        look_and_feel:
+          themes:
+            title: "佈景主題"
+        user_fields:
+          type: "類型"
+          delete: "刪除"
       plugins:
         title: "外掛"
-        installed: "已安裝外掛"
         name: "名稱"
         none_installed: "尚未安裝任何外掛"
         version: "版本"
@@ -3352,11 +3405,10 @@ zh_TW:
           installed: "已安裝"
       advanced:
         sidebar_link:
+          webhooks: "Webhooks"
           developer: "開發人員"
           embedding: "嵌入"
-          rate_limits: "評等限制"
           user_api: "使用者 API"
-          web_hooks: "Webhooks"
           onebox: "單一框"
           files: "檔案"
           other_options: "其他"
@@ -3369,7 +3421,6 @@ zh_TW:
         menu:
           backups: "備份"
           logs: "紀錄"
-        none: "沒有可用的備份。"
         read_only:
           enable:
             title: "開啟只讀模式"
@@ -3400,12 +3451,10 @@ zh_TW:
           download:
             label: "下載"
             title: "傳送含有下載連結的 email"
-            alert: "含有下載備份連結的 email 已被傳送到您的信箱"
           destroy:
-            title: "刪除備份"
+            title: "刪除"
             confirm: "你確定要刪除備份嗎?"
           restore:
-            is_disabled: "此站設定已關閉復原"
             label: "還原"
             title: "復原備份"
             confirm: "你確定要從該備份中恢復嗎？"
@@ -3414,7 +3463,6 @@ zh_TW:
             title: "回溯資料庫到以前的工作階段"
             confirm: "你確定要將資料庫回滾到之前的工作狀態嗎？"
         location:
-          local: "暫存空間"
           s3: "S3"
         backup_storage_error: "無法進入備份空間：%{error_message}"
       export_csv:
@@ -3429,9 +3477,6 @@ zh_TW:
           screened_url: "以 CSV 格式匯出所有已顯示的 URL 列表"
       export_json:
         button_text: "匯出"
-      invite:
-        button_text: "送出邀請"
-        button_title: "送出邀請"
       customize:
         title: "客製化"
         preview: "預覽"
@@ -3598,10 +3643,7 @@ zh_TW:
             title: "選擇調色盤"
             description: "基本顏色："
           title: "顏色"
-          edit: "編輯調色盤"
-          long_title: "調色盤"
           about: "修改您的佈景主題所使用的顏色，建立一個新調色盤以開始。"
-          new_name: "新調色盤"
           copy_name_prefix: "複製於"
           delete_confirm: "刪除此調色盤？"
           undo: "復原"
@@ -3640,20 +3682,16 @@ zh_TW:
           selected:
             name: "已選取"
         email_style:
-          heading: "自訂電子郵件風格"
+          html: "HTML"
           css: "CSS"
           reset: "重設為預設值"
       email:
         title: "電子郵件"
+        settings: "設定"
         templates: "模板"
-        preview_digest: "預覽文摘"
         advanced_test:
-          title: "進階測試"
           desc: "瀏覽 Discourse 如何處理收到的 email。為了能正確的處理 email，請在下方貼上完整的 email 內容。"
           email: "原始訊息"
-          run: "執行測試"
-          text: "已選擇的測試文字"
-          elided: "省略文字"
         error: "<b>錯誤</b> - %{server_error}"
         test_error: "發送測試電子郵件時遇到錯誤。請檢查你輸入的電子郵件地址，並確認網路提供者沒有封鎖郵件的發送，然後再試一次。"
         sent: "送出"
@@ -3661,15 +3699,10 @@ zh_TW:
         bounced: "退回"
         received: "收到"
         rejected: "拒絶"
-        sent_at: "送出時間"
         time: "時間"
         user: "使用者"
-        email_type: "電子郵件類型"
-        to_address: "目的地址"
         test_email_address: "要測試的電子郵件地址"
-        send_test: "送出測試Email"
         sent_test: "已送出!"
-        delivery_method: "傳送方式"
         preview_digest_desc: "預覽發送給不活躍使用者的摘要郵件內容。"
         refresh: "重新整理"
         send_digest_label: "發送結果至："
@@ -3677,10 +3710,7 @@ zh_TW:
         format: "格式"
         html: "html"
         text: "純文字"
-        last_seen_user: "最近出現的使用者:"
         no_result: "沒有找到摘要信息。"
-        reply_key: "回覆金鑰"
-        skipped_reason: "跳過原因"
         incoming_emails:
           from_address: "來自"
           to_addresses: "發至"
@@ -3689,12 +3719,10 @@ zh_TW:
           error: "錯誤"
           none: "沒有找到進站郵件。"
           modal:
-            title: "進站郵件詳情"
             error: "錯誤"
             headers: "頭部"
             subject: "主題"
             body: "內容"
-            rejection_message: "拒絶郵件"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
@@ -3718,7 +3746,7 @@ zh_TW:
           delete_topic: "話題已被刪除"
           post_approved: "貼文已通過審核"
       logs:
-        title: "紀錄"
+        nav_title: "紀錄"
         action: "動作"
         created_at: "已建立"
         last_match_at: "最近出現時間"
@@ -3736,8 +3764,6 @@ zh_TW:
         staff_actions:
           all: "全部"
           filter: "篩選"
-          title: "工作人員動作"
-          clear_filters: "全部顯示"
           staff_user: "使用者"
           target_user: "目標使用者"
           subject: "主旨"
@@ -3820,9 +3846,7 @@ zh_TW:
             embeddable_host_update: "可嵌入主機更新"
             embeddable_host_destroy: "嵌入式主機破壞"
         screened_emails:
-          title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新使用者。"
-          email: "電子郵件地址"
           actions:
             allow: "允許"
         screened_urls:
@@ -3836,7 +3860,6 @@ zh_TW:
           actions:
             block: "封鎖"
             do_nothing: "允許"
-            allow_admin: "允許管理"
           form:
             label: "新增:"
             ip_address: "IP 位址"
@@ -3846,24 +3869,17 @@ zh_TW:
             text: "Roll up"
             title: "如果有至少 'min_ban_entries_for_roll_up' 個記錄，建立一個子網域封鎖記錄"
         search_logs:
-          title: "搜尋紀錄"
           term: "條款"
           searches: "搜尋結果"
           click_through_rate: "CTR"
           types:
             all_search_types: "所有搜尋類型"
             header: "頁首"
-            full_page: "全螢幕"
             click_through_only: "全部（僅點擊）"
-          header_search_results: "頁首搜尋結果"
-        logster:
-          title: "錯誤紀錄"
       watched_words:
-        title: "已關注的文字"
         search: "搜尋"
         clear_filter: "清除"
         download: 下載
-        clear_all: 清除全部
         actions:
           block: "封鎖"
           censor: "審核"
@@ -3939,8 +3955,11 @@ zh_TW:
         id_not_found: "抱歉，系統裡無此使用者名稱。"
         active: "已啟動"
         status: "狀態"
-        show_emails: "顯示電子郵件"
-        hide_emails: "隱藏 email"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "關閉"
+              confirm: "刪除"
         nav:
           new: "新使用者"
           active: "啟用的"
@@ -3950,8 +3969,6 @@ zh_TW:
           staged: "暫存"
         approved: "已批准？"
         titles:
-          active: "活躍的使用者"
-          new: "新使用者"
           pending: "等待審核的使用者"
           newuser: "信任等級 0 的使用者 ( 新使用者 )"
           basic: "信任等級 1 的使用者 ( 初級使用者 )"
@@ -3959,11 +3976,7 @@ zh_TW:
           regular: "信任等級為3的使用者（活躍）"
           leader: "信任等級為4的使用者（資深）"
           staff: "管理員"
-          admins: "管理員"
           moderators: "板主"
-          silenced: "被靜音的使用者"
-          suspended: "已停權的使用者"
-          staged: "暫存使用者"
         not_verified: "未確認"
         check_email:
           title: "顯示使用者 Email"
@@ -4043,7 +4056,6 @@ zh_TW:
         time_read: "閱讀時間"
         post_edits_count: "編輯貼文"
         anonymize: "匿名使用者"
-        anonymize_confirm: "你確定要將這個帳戶變成匿名？這將改變使用者名和電子郵件，並重置所有個人資料信息。"
         anonymize_yes: "是，將這個帳戶變成匿名"
         anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除使用者"
@@ -4138,9 +4150,6 @@ zh_TW:
           external_email: "電子信箱"
           external_avatar_url: "個人資料圖片 URL"
       user_fields:
-        title: "使用者欄位"
-        help: "增加欄位讓你的使用者可以填寫"
-        create: "建立使用者欄位"
         untitled: "未命名"
         name: "欄位名稱"
         type: "欄位類別"
@@ -4161,27 +4170,19 @@ zh_TW:
             title: "選擇性"
         editable:
           title: "註冊後可以修改"
-          enabled: "可編輯"
-          disabled: "不可編輯"
         show_on_profile:
           title: "顯示在公開的基本資料裡"
-          enabled: "在基本資料裡顯示"
-          disabled: "不在基本資料裡顯示"
         show_on_user_card:
           title: "在使用者卡片上顯示"
-          enabled: "在使用者卡片上顯示"
-          disabled: "在使用者卡片上隱藏"
         searchable:
           title: "可搜尋"
           enabled: "可搜尋"
         field_types:
-          text: "文字區域"
+          text: "文字"
           confirm: "確認"
           dropdown: "下拉"
       site_text:
-        description: "你可以自定義論壇的任意文本。請按以下搜尋："
         search: "搜尋你想要編輯的文本"
-        title: "文字"
         edit: "編輯"
         revert: "恢復變更"
         revert_confirm: "你確定要撤回這個改動?"
@@ -4196,8 +4197,10 @@ zh_TW:
         show_overriden: "只顯示被覆寫的內容"
         reset: "重置"
         none: "無"
+        save: "保存"
+        cancel: "取消"
       site_settings:
-        title: "設定"
+        nav_title: "設定"
         no_results: "未找到任何結果。"
         clear_filter: "清除"
         add_url: "加入網址"
@@ -4210,6 +4213,8 @@ zh_TW:
             label: "上傳"
         selectable_avatars:
           title: "使用者可選擇的頭像列表"
+        table_column_heading:
+          status: "狀態"
         categories:
           all_results: "全部"
           required: "必要設定"
@@ -4277,6 +4282,7 @@ zh_TW:
         none_selected: "選擇一個徽章開始"
         allow_title: 允許使用徽章作為稱號
         multiple_grant: 可多次授予
+        visibility_heading: 能見度
         listable: 在徽章頁面上顯示徽章
         enabled: 啟用
         disabled: 停用
@@ -4314,13 +4320,9 @@ zh_TW:
             with_post: <span class="username">%{username}</span> 的貼文 %{link}
             with_post_time: <span class="username">%{username}</span> 的貼文 %{link} 在 <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
-        badge_intro:
-          title: "選擇一個現存的徽章或建立全新的徽章以開始"
-          what_are_badges_title: "什麼是徽章？"
-          badge_query_examples_title: "查詢徽章範例"
       emoji:
         title: "Emoji"
-        add: "新增emoji"
+        delete: "刪除"
         name: "名稱"
         group: "群組"
         image: "圖片"
@@ -4328,15 +4330,11 @@ zh_TW:
         settings: "設定"
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
+        delete: "刪除"
         confirm_delete: "你確定要刪除此主機？"
         title: "嵌入"
-        host: "允許的主機"
         edit: "編輯"
-        category: "張貼到分類"
-        add_host: "新增主機"
-        settings: "嵌入設定"
-        crawling_settings: "爬蟲設定"
-        crawling_description: "當 Discourse 為你的貼文開啟了話題時，如果沒有 RSS/ATOM 流存在，它將嘗試從 HTML 中解析內容。有時分離其中的內容時可能是很有挑戰性的，所以我們提供了指定 CSS 規則的能力來幫助分離過程。"
+        crawlers_description: "當 Discourse 為你的貼文開啟了話題時，如果沒有 RSS/ATOM 流存在，它將嘗試從 HTML 中解析內容。有時分離其中的內容時可能是很有挑戰性的，所以我們提供了指定 CSS 規則的能力來幫助分離過程。"
         embed_by_username: "話題開啟者的使用者名稱"
         embed_post_limit: "嵌入的最大貼文數量。"
         embed_title_scrubber: "從貼文中提取標題的正則表達式 \"regular expression\""
@@ -4344,7 +4342,12 @@ zh_TW:
         allowed_embed_selectors: "使用 CSS 選擇器選擇允許的嵌入元素"
         blocked_embed_selectors: "使用 CSS 選擇器移除嵌入元素"
         allowed_embed_classnames: "允許 CSS class 名稱"
-        save: "儲存嵌入設定"
+        save: "保存"
+        host_form:
+          save: "保存"
+        nav:
+          settings: "設定"
+          crawlers: "爬蟲"
       permalink:
         title: "固定連結"
         url: "網址"
@@ -4355,15 +4358,19 @@ zh_TW:
         category_id: "分類 ID"
         category_title: "分類"
         tag_name: "標記名稱"
+        tag_title: "標記"
+        user_title: "使用者"
         username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
+        nav:
+          settings: "設定"
+          permalinks: "固定連結"
         form:
           label: "新增："
-          add: "新增"
-          filter: "搜尋 (網址或外部網址)"
+          url: "網址"
+          save: "保存"
       reseed:
         action:
-          label: "取代文字⋯⋯"
           title: "將分類與話題的文字以翻譯文字取代。"
         modal:
           title: "取代文字"
@@ -4388,6 +4395,32 @@ zh_TW:
           admin: "管理員"
           moderator: "版主"
           regular: "普通使用者"
+      homepage_choices:
+        custom:
+          label: "客製"
+        style_type:
+          categories: "分類"
+          topics: "話題"
+      top_menu_items:
+        new: "新使用者"
+        unread: "未讀"
+        top: "精選"
+        latest: "最新版本"
+        hot: "熱門"
+        categories: "分類"
+        unseen: "未讀"
+        read: "已讀"
+        bookmarks: "書籤"
       previews:
         share_button: "分享"
         reply_button: "回覆"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "所有分類"
+        category_names:
+          site_feedback: "站點回饋"
+        table_headers:
+          topic: "話題"
+          replies: "回覆"
+          views: "觀看"
+          activity: "活動"

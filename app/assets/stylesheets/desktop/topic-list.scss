@@ -4,17 +4,19 @@
 
 // Base list
 // --------------------------------------------------
-
 .topic-list-icons {
   .d-icon-thumbtack {
     color: var(--primary-med-or-secondary-med);
   }
+
   .d-icon-thumbtack.unpinned {
     color: var(--primary-med-or-secondary-med);
   }
+
   a.title {
     color: var(--primary);
   }
+
   .d-icon-bookmark {
     color: var(--primary-med-or-secondary-med);
   }
@@ -22,16 +24,19 @@
 
 .topic-list {
   @extend .topic-list-icons;
-
   margin: 0 0 10px;
+
   .topic-list-data {
     padding: 0.8em 0.33em;
+
     &:first-of-type {
       padding-left: 0.67em;
     }
+
     &:last-of-type {
       padding-right: 0.67em;
     }
+
     th & {
       border-bottom: 3px solid var(--primary-low);
     }
@@ -46,11 +51,13 @@
   .topic-list-data.bulk-select {
     padding: 0;
     width: 30px;
+
     label {
-      margin: 0px;
+      margin: 0;
       padding: 0.8em 0.67em 1.1em 0.67em;
       cursor: pointer;
     }
+
     + .main-link {
       padding-left: 0;
     }
@@ -63,8 +70,9 @@
     padding-left: 0.5em;
     padding-right: 0.5em;
     position: relative;
+
     &.active {
-      @include nav-active();
+      @include nav-active;
     }
   }
 
@@ -75,9 +83,11 @@
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
     width: 146px;
+
     > a {
       float: left;
       margin-right: 4px;
+
       &:last-of-type {
         margin-right: 0;
       }
@@ -90,9 +100,11 @@
       }
     }
   }
+
   .topic-list-data.posters {
     height: $td-posters-height;
   }
+
   .posters a:first-child .avatar.latest:not(.single) {
     box-shadow: 0 0 3px 1px rgba(var(--tertiary-rgb), 0.35);
     border: 1px solid rgba(var(--tertiary-rgb), 0.5);
@@ -103,9 +115,11 @@
   .likes {
     width: 4.3em;
   }
+
   .views {
     width: 4.3em;
   }
+
   .posts {
     width: 4.3em;
   }
@@ -117,24 +131,30 @@
     text-align: left;
     font-size: var(--font-down-1);
     margin-top: 5px;
+
     .fa {
       margin-right: 2px;
     }
+
     a {
       color: var(--primary-med-or-secondary-med);
       margin-right: 3px;
       line-height: var(--line-height-large);
     }
   }
+
   .activity {
     width: 4em;
+
     &:lang(zh_CN) {
       width: 5.3em;
     }
   }
+
   .age {
     width: 4em;
   }
+
   .with-year {
     white-space: nowrap;
   }
@@ -142,11 +162,14 @@
 
 .topic-list-bottom {
   margin: 1.25em 0;
+
   .dismiss-container-bottom {
     float: right;
   }
+
   .--no-topics-education + & {
     margin: 0;
+
     .footer-message {
       padding-top: 4em;
     }
@@ -155,7 +178,6 @@
 
 // Misc. stuff
 // --------------------------------------------------
-
 #list-area .top-lists {
   h2 {
     cursor: pointer;
@@ -195,6 +217,7 @@
 .bulk-select-topics {
   display: inline-flex;
   margin-left: -5px;
+
   .btn {
     margin-right: 0.5em;
   }
@@ -228,25 +251,31 @@
     .views {
       display: none;
     }
+
     // reduce width for more title space
     .posts {
       width: 3em;
     }
+
     .posters {
       width: 2em;
       text-align: center;
     }
+
     // show only the first poster
     .topic-list-data.posters {
       a:first-child .avatar.latest:not(.single) {
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
       }
+
       a:not(.latest) {
         display: none;
       }
+
       a.latest {
         width: 100%;
+
         img {
           margin: 0 auto;
         }

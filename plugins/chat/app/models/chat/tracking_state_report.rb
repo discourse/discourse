@@ -8,11 +8,15 @@ module Chat
     attr_accessor :channel_tracking, :thread_tracking
 
     class TrackingStateInfo
-      attr_accessor :unread_count, :mention_count, :last_reply_created_at
+      attr_accessor :unread_count,
+                    :mention_count,
+                    :watched_threads_unread_count,
+                    :last_reply_created_at
 
       def initialize(info)
         @unread_count = info.present? ? info[:unread_count] : 0
         @mention_count = info.present? ? info[:mention_count] : 0
+        @watched_threads_unread_count = info.present? ? info[:watched_threads_unread_count] : 0
         @last_reply_created_at = info.present? ? info[:last_reply_created_at] : nil
       end
 
@@ -24,6 +28,7 @@ module Chat
         {
           unread_count: unread_count,
           mention_count: mention_count,
+          watched_threads_unread_count: watched_threads_unread_count,
           last_reply_created_at: last_reply_created_at,
         }
       end

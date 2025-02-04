@@ -13,7 +13,7 @@ register_asset "vendor/javascripts/markdown-it-footnote.js", :vendored_pretty_te
 
 register_asset "stylesheets/footnotes.scss"
 
-register_svg_icon "ellipsis-h" if respond_to?(:register_svg_icon)
+register_svg_icon "ellipsis" if respond_to?(:register_svg_icon)
 
 on(:before_post_process_cooked) do |doc, post|
   doc

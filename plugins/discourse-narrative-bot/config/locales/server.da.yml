@@ -249,8 +249,6 @@ da:
       bookmark:
         instructions: |-
           Hvis du vil vide mere, skal du vælge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> nedenfor og <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bogmærke denne personlige besked**. Hvis du gør det, kan der være en :gift: i din fremtid!
-        reply: |-
-          Fremragende! Nu kan du nemt finde din vej tilbage til vores private samtale når som helst, lige fra [fanen bogmærker på din profil](%{bookmark_url}). Vælg blot dit profilbillede øverst til højre &#8599;
         not_found: |-
           Åh åh, jeg kan ikke se nogen bogmærker i dette emne. Har du fundet bogmærket under hvert indlæg? Brug vis mere <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for at afsløre yderligere handlinger, hvis nødvendigt.
       emoji:
@@ -284,14 +282,6 @@ da:
 
           (Og ja, mit brugernavn er stavet _disco_, som i 1970'erne dans dille. Jeg gør [love the nightlife!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Vi kan lide vores diskussioner venlige, og vi har brug for din hjælp til at [holde tingene civiliserede](%{guidelines_url}). Hvis du ser et problem, bedes du anmelde det for privat at fortælle forfatteren eller [vores hjælpsomme personale](%{about_url}) om det. Der er mange grunde til, at du måske vil anmelde et opslag, lige fra et harmløst forslag om emneopdeling til en klar overtrædelse af reglerne. Hvis du vælger **Noget andet**, vil du starte et privat beskedemne med moderatorerne, hvor du kan stille yderligere spørgsmål.
-
-          > :imp: Jeg skrev noget grimt her
-
-          Gå videre og **anmeld dette indlæg** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> og vælg **Det er upassende** som årsag!
-        reply: |-
-          [Vores personale](%{base_uri}/groups/staff) vil blive underrettet privat om din rapportering. Hvis nok fællesskabsmedlemmer rapporterer et indlæg, skjules det også automatisk som en forholdsregel. (Da jeg faktisk ikke skrev et grimt indlæg :angel:, er jeg gået videre og fjernet rapporteringen for nu.)
         not_found: |-
           Å nej, mit grimme indlæg er endnu ikke markeret som upassende. :worried: Kan du markere det som upassende ved hjælp af **flaget** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Glem ikke at bruge knappen Vis mere <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for at afsløre flere handlinger for hvert indlæg.
       search:
@@ -369,12 +359,6 @@ da:
         reply: |-
           Fremragende! Husk, at dette fungerer for både kategorier _og_ mærker, hvis mærker er aktiveret.
       change_topic_notification_level:
-        instructions: |-
-          Hvert emne har et meddelelsesniveau. Det starter ved 'Normal', hvilket betyder, at du normalt kun får besked, når nogen taler direkte til dig.
-
-          Som standard er notifikationsniveauet for en privat besked indstillet til det højeste niveau af 'overvågning', hvilket betyder, at du får besked om alle nye svar. Men du kan ændre meddelelsesniveauet for _ethvert_ emne til 'Overvåger', 'Følger' eller 'Stille!'.
-
-          Lad os prøve at ændre meddelelsesniveauet for dette emne. Nederst i emnet finder du en knap, der viser, **Normal** for dette emne. Kan du ændre underretningsniveauet til **Følger**?
         not_found: |-
           Det ser ud til, at du stadig Overvåger :eyes: dette emne! Hvis du har problemer med at finde det, er knappen til meddelelsesniveau placeret i bunden af emnet.
         reply: |-

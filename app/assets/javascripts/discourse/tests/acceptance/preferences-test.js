@@ -3,12 +3,12 @@ import {
   currentRouteName,
   currentURL,
   fillIn,
+  find,
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -55,7 +55,7 @@ acceptance("User Preferences", function (needs) {
       assert.dom(".saved").doesNotExist("it hasn't been saved yet");
       await click(".save-changes");
       assert.dom(".saved").exists("it displays the saved message");
-      query(".saved").remove();
+      find(".saved").remove();
     };
 
     await fillIn(".pref-name input[type=text]", "Jon Snow");

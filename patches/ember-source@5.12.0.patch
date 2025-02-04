@@ -1,0 +1,97 @@
+diff --git a/dist/ember-template-compiler.js b/dist/ember-template-compiler.js
+index 01999af0c4c125af3c713318db7eb85fa492f72d..edadab049d4e5959b4d33ddcbe59bcaec9641e61 100644
+--- a/dist/ember-template-compiler.js
++++ b/dist/ember-template-compiler.js
+@@ -9485,10 +9485,20 @@ var define, require;
+                   return Object.defineProperty(node, "escaped", {
+                     enumerable: !1,
+                     get() {
+-                      return deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), !this.trusting;
++                      // when upgrading Ember check if this patch is still necessary
++                      // Ember 5.12 still shipped with the template-compiler generating a ton of warnings but the fix is already commited
++                      // to glimmervm/syntax
++                      // See https://github.com/glimmerjs/glimmer-vm/commit/02313376f21a606841b00a7789fd6128a1b292af
++                      // return deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), !this.trusting;
++                      return !this.trusting;
+                     },
+                     set(value) {
+-                      deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), this.trusting = !value;
++                      // when upgrading Ember check if this patch is still necessary
++                      // Ember 5.12 still shipped with the template-compiler generating a ton of warnings but the fix is already commited
++                      // to glimmervm/syntax
++                      // See https://github.com/glimmerjs/glimmer-vm/commit/02313376f21a606841b00a7789fd6128a1b292af
++                      // deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), this.trusting = !value;
++                      this.trusting = !value;
+                     }
+                   }), node;
+                 }({
+diff --git a/dist/packages/@ember/-internals/deprecations/index.js b/dist/packages/@ember/-internals/deprecations/index.js
+index a6390a7c14f78c4876f97695e057231c1c7ecef0..f62f2d4efbdbf3fb01cd9d1235ac5dc0967a8756 100644
+--- a/dist/packages/@ember/-internals/deprecations/index.js
++++ b/dist/packages/@ember/-internals/deprecations/index.js
+@@ -142,7 +142,7 @@ function deprecateUntil(message, deprecation) {
+   if (deprecation.isRemoved) {
+     throw new Error(`The API deprecated by ${options.id} was removed in ember-source ${options.until}. The message was: ${message}. Please see ${options.url} for more details.`);
+   }
+-  (isDevelopingApp() && !(deprecation.test) && deprecate(message, deprecation.test, options));
++  (true && !(deprecation.test) && deprecate(message, deprecation.test, options));
+ }
+ const {
+   EXTEND_PROTOTYPES
+diff --git a/dist/packages/@ember/debug/lib/deprecate.js b/dist/packages/@ember/debug/lib/deprecate.js
+index bd48673cc5a4416b492daded7e1ca4ff5b1a8d8d..9cf7b80e7308dd4b34b5d6a980294de43ce21bd5 100644
+--- a/dist/packages/@ember/debug/lib/deprecate.js
++++ b/dist/packages/@ember/debug/lib/deprecate.js
+@@ -50,7 +50,7 @@ let missingOptionsDeprecation;
+ let missingOptionsIdDeprecation;
+ let missingOptionDeprecation = () => '';
+ let deprecate = () => {};
+-if (isDevelopingApp()) {
++if (true) {
+   registerHandler = function registerHandler(handler) {
+     registerHandler$1('deprecate', handler);
+   };
+diff --git a/dist/packages/@ember/debug/lib/handlers.js b/dist/packages/@ember/debug/lib/handlers.js
+index cd68afe479229ed77b4e4c93759aa90913cdc49c..6e7d71bbeb28f18259fa8afb48ef78279f25c531 100644
+--- a/dist/packages/@ember/debug/lib/handlers.js
++++ b/dist/packages/@ember/debug/lib/handlers.js
+@@ -3,7 +3,7 @@ import { isDevelopingApp } from '@embroider/macros';
+ let HANDLERS = {};
+ let registerHandler = function registerHandler(_type, _callback) {};
+ let invoke = () => {};
+-if (isDevelopingApp()) {
++if (true) {
+   registerHandler = function registerHandler(type, callback) {
+     let nextHandler = HANDLERS[type] || (() => {});
+     HANDLERS[type] = (message, options) => {
+diff --git a/dist/packages/@glimmer/manager/index.js b/dist/packages/@glimmer/manager/index.js
+index ca6ac88fe0fcc7ad335b19fafa039fb6c5ebd14a..462672f9c1cdcca76e9e6713606c1b8d8797eff3 100644
+--- a/dist/packages/@glimmer/manager/index.js
++++ b/dist/packages/@glimmer/manager/index.js
+@@ -546,20 +546,23 @@ function setModifierManager(factory, obj) {
+ function setHelperManager(factory, obj) {
+   return setInternalHelperManager(new CustomHelperManager(factory), obj);
+ }
++let TEMPLATE_OVERRIDES = new WeakMap();
+ const TEMPLATES = new WeakMap(),
+   getPrototypeOf = Object.getPrototypeOf;
+ function setComponentTemplate(factory, obj) {
+   if (isDevelopingApp() && (null === obj || "object" != typeof obj && "function" != typeof obj)) throw new Error(`Cannot call \`setComponentTemplate\` on \`${debugToString$1(obj)}\``);
+-  if (isDevelopingApp() && TEMPLATES.has(obj)) throw new Error(`Cannot call \`setComponentTemplate\` multiple times on the same class (\`${debugToString$1(obj)}\`)`);
++  // if (isDevelopingApp() && TEMPLATES.has(obj)) throw new Error(`Cannot call \`setComponentTemplate\` multiple times on the same class (\`${debugToString$1(obj)}\`)`);
++  if (TEMPLATES.has(obj)) return TEMPLATE_OVERRIDES.set(obj, factory), obj;
+   return TEMPLATES.set(obj, factory), obj;
+ }
+ function getComponentTemplate(obj) {
+   let pointer = obj;
+   for (; null !== pointer;) {
+-    let template = TEMPLATES.get(pointer);
++    let template = TEMPLATE_OVERRIDES.get(pointer) ?? TEMPLATES.get(pointer);
+     if (void 0 !== template) return template;
+     pointer = getPrototypeOf(pointer);
+   }
+ }
++function clearTemplateOverrides() { TEMPLATE_OVERRIDES = new WeakMap() };
+ 
+-export { CustomComponentManager, CustomHelperManager, CustomModifierManager, capabilityFlagsFrom, componentCapabilities, getComponentTemplate, getCustomTagFor, getInternalComponentManager, getInternalHelperManager, getInternalModifierManager, hasCapability, hasDestroyable, hasInternalComponentManager, hasInternalHelperManager, hasInternalModifierManager, hasValue, helperCapabilities, managerHasCapability, modifierCapabilities, setComponentManager, setComponentTemplate, setCustomTagFor, setHelperManager, setInternalComponentManager, setInternalHelperManager, setInternalModifierManager, setModifierManager };
++export { CustomComponentManager, CustomHelperManager, CustomModifierManager, capabilityFlagsFrom, componentCapabilities, getComponentTemplate, clearTemplateOverrides, getCustomTagFor, getInternalComponentManager, getInternalHelperManager, getInternalModifierManager, hasCapability, hasDestroyable, hasInternalComponentManager, hasInternalHelperManager, hasInternalModifierManager, hasValue, helperCapabilities, managerHasCapability, modifierCapabilities, setComponentManager, setComponentTemplate, setCustomTagFor, setHelperManager, setInternalComponentManager, setInternalHelperManager, setInternalModifierManager, setModifierManager };

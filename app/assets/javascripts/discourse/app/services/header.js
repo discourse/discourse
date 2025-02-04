@@ -3,11 +3,11 @@ import { registerDestructor } from "@ember/destroyable";
 import { dependentKeyCompat } from "@ember/object/compat";
 import Service, { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import deprecated from "discourse/lib/deprecated";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import deprecated from "discourse-common/lib/deprecated";
 import { SCROLLED_UP } from "./scroll-direction";
 
-const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup"];
+const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 
 @disableImplicitInjections
 export default class Header extends Service {
@@ -28,7 +28,6 @@ export default class Header extends Service {
 
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
-  @tracked anyWidgetHeaderOverrides = false;
 
   #hiders = new TrackedMap();
 
@@ -70,25 +69,6 @@ export default class Header extends Service {
     }
 
     return true;
-  }
-
-  get useGlimmerHeader() {
-    if (this.siteSettings.glimmer_header_mode === "disabled") {
-      return false;
-    } else if (this.siteSettings.glimmer_header_mode === "enabled") {
-      return true;
-    } else {
-      // Auto
-      if (this.anyWidgetHeaderOverrides) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          "Using legacy 'widget' header because themes and/or plugins are using deprecated APIs. https://meta.discourse.org/t/296544"
-        );
-        return false;
-      } else {
-        return true;
-      }
-    }
   }
 
   registerHider(ref, buttons) {

@@ -50,7 +50,7 @@ class ListController < ApplicationController
                 ].flatten
 
   rescue_from ActionController::Redirecting::UnsafeRedirectError do
-    raise Discourse::NotFound
+    rescue_discourse_actions(:not_found, 404)
   end
 
   # Create our filters
@@ -126,8 +126,6 @@ class ListController < ApplicationController
   end
 
   def filter
-    raise Discourse::NotFound if !SiteSetting.experimental_topics_filter
-
     topic_query_opts = { no_definitions: !SiteSetting.show_category_definitions_in_topic_lists }
 
     %i[page q].each do |key|
@@ -325,7 +323,8 @@ class ListController < ApplicationController
     define_method("top_#{period}") do |options = nil|
       top_options = build_topic_list_options
       top_options.merge!(options) if options
-      top_options[:per_page] = SiteSetting.topics_per_period_in_top_page
+      top_options[:per_page] = top_options[:per_page].presence ||
+        SiteSetting.topics_per_period_in_top_page
 
       user = list_target_user
       list = TopicQuery.new(user, top_options).list_top_for(period)
@@ -422,7 +421,7 @@ class ListController < ApplicationController
     end
     real_slug = @category.full_slug("/")
     if CGI.unescape(current_slug) != CGI.unescape(real_slug)
-      url = request.fullpath.gsub(current_slug, real_slug)
+      url = CGI.unescape(request.fullpath).gsub(current_slug, real_slug)
       if ActionController::Base.config.relative_url_root
         url = url.sub(ActionController::Base.config.relative_url_root, "")
       end

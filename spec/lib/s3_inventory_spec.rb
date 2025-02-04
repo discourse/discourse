@@ -39,10 +39,15 @@ RSpec.describe S3Inventory do
 
       CSV.foreach(csv_filename, headers: false) do |row|
         next if row[S3Inventory::CSV_KEY_INDEX].exclude?("default")
+
         Fabricate(
           :upload,
           etag: row[S3Inventory::CSV_ETAG_INDEX],
-          url: File.join(Discourse.store.absolute_base_url, row[S3Inventory::CSV_KEY_INDEX]),
+          url:
+            File.join(
+              Discourse.store.absolute_base_url,
+              CGI.unescape(row[S3Inventory::CSV_KEY_INDEX]),
+            ),
           updated_at: 2.days.ago,
         )
       end
@@ -66,37 +71,44 @@ RSpec.describe S3Inventory do
     it "should display missing uploads correctly" do
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
-      expect(output).to eq("#{@upload_1.url}\n#{@no_etag.url}\n2 of 5 uploads are missing\n")
+      expect(output).to eq("#{@upload_1.url}\n#{@no_etag.url}\n2 of 6 uploads are missing\n")
       expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
     end
 
     it "should detect when a url match exists with a different etag" do
-      differing_etag = Upload.find_by(etag: "defcaac0b4aca535c284e95f30d608d0")
-      differing_etag.update_columns(etag: "somethingelse")
+      upload_with_differing_tag_1 = Upload.find_by(etag: "defcaac0b4aca535c284e95f30d608d0")
+      upload_with_differing_tag_1.update_columns(etag: "somethingelse")
+
+      upload_with_differing_tag_2 = Upload.find_by(etag: "25c02eaceef4cb779fc17030d33f7f51")
+      upload_with_differing_tag_2.update_columns(etag: "somethingelse")
 
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
       expect(output).to eq(<<~TEXT)
-        #{differing_etag.url} has different etag
+        #{upload_with_differing_tag_1.url} has different etag
+        #{upload_with_differing_tag_2.url} has different etag
         #{@upload_1.url}
         #{@no_etag.url}
-        3 of 5 uploads are missing
-        1 of these are caused by differing etags
+        4 of 6 uploads are missing
+        2 of these are caused by differing etags
         Null the etag column and re-run for automatic backfill
       TEXT
-      expect(Discourse.stats.get("missing_s3_uploads")).to eq(3)
+
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(4)
     end
 
     it "marks missing uploads as not verified and found uploads as verified. uploads not checked will be verified nil" do
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:unchecked]).count,
-      ).to eq(12)
+      ).to eq(13)
+
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
       verification_status = Upload.pluck(:verification_status)
+
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:verified]).count,
-      ).to eq(3)
+      ).to eq(4)
 
       expect(Upload.with_invalid_etag_verification_status.count).to eq(2)
 
@@ -128,8 +140,13 @@ RSpec.describe S3Inventory do
         "#{Discourse.store.absolute_base_url}/uploads/default/original/1X/0789fbf5490babc68326b9cec90eeb0d6590db05.png",
         "25c02eaceef4cb779fc17030d33f7f06",
       ],
+      [
+        "#{Discourse.store.absolute_base_url}/uploads/default/original/1X/583bd7617044b269ae87a98684365d794e17b493.png(test",
+        "25c02eaceef4cb779fc17030d33f7f51",
+      ],
     ]
-    files.each { |file| Fabricate(:upload, url: file[0]) }
+
+    files.each { |file| Fabricate(:upload, url: file[0], etag: nil) }
 
     inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
 
@@ -137,7 +154,7 @@ RSpec.describe S3Inventory do
       capture_stdout do
         expect { inventory.backfill_etags_and_list_missing }.to change {
           Upload.where(etag: nil).count
-        }.by(-2)
+        }.by(-3)
       end
 
     expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
@@ -220,7 +237,7 @@ RSpec.describe S3Inventory do
         end
       end
 
-    expect(output).to eq("#{upload.url}\n#{no_etag.url}\n2 of 5 uploads are missing\n")
+    expect(output).to eq("#{upload.url}\n#{no_etag.url}\n2 of 6 uploads are missing\n")
     expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
   end
 end

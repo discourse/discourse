@@ -10,7 +10,7 @@ _The pricing information is included as a courtesy, and may be out of date. Disc
 
 Enter these values when prompted by `./discourse-setup` per the [install guide](https://github.com/discourse/discourse/blob/main/docs/INSTALL-cloud.md#edit-discourse-configuration). To change the current email service, run `./discourse-setup` as well (this will bring the forum offline for a few minutes while it gets rebuilt).
 
-#### [Brevo, previously SendInBlue, GDPR][sb] &mdash; 9,000 email per month free
+#### [Brevo, previously SendInBlue, GDPR][sb] &mdash; 300 email per day free
 
     SMTP server address? smtp-relay.brevo.com
     SMTP user name?      [SMTP credentials for your domain under [SMTP-Key tab](https://app.brevo.com/settings/keys/smtp)]

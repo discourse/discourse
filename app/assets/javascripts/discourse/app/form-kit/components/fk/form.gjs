@@ -3,21 +3,26 @@ import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
+import FKCheckboxGroup from "discourse/form-kit/components/fk/checkbox-group";
 import FKCollection from "discourse/form-kit/components/fk/collection";
 import FKContainer from "discourse/form-kit/components/fk/container";
 import FKControlConditionalContent from "discourse/form-kit/components/fk/control/conditional-content";
-import FKControlInputGroup from "discourse/form-kit/components/fk/control/input-group";
 import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
 import FKField from "discourse/form-kit/components/fk/field";
+import FKFieldset from "discourse/form-kit/components/fk/fieldset";
+import FKInputGroup from "discourse/form-kit/components/fk/input-group";
+import FKObject from "discourse/form-kit/components/fk/object";
 import Row from "discourse/form-kit/components/fk/row";
 import FKSection from "discourse/form-kit/components/fk/section";
+import FKSubmit from "discourse/form-kit/components/fk/submit";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
-import FKFieldData from "discourse/form-kit/lib/fk-field-data";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 class FKForm extends Component {
   @service dialog;
@@ -39,6 +44,8 @@ class FKForm extends Component {
       setProperties: this.setProperties,
       submit: this.onSubmit,
       reset: this.onReset,
+      addError: this.addError,
+      removeError: this.removeError,
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
@@ -60,7 +67,7 @@ class FKForm extends Component {
       transition.abort();
 
       this.dialog.yesNoConfirm({
-        message: I18n.t("form_kit.dirty_form"),
+        message: i18n("form_kit.dirty_form"),
         didConfirm: async () => {
           await this.onReset();
           transition.retry();
@@ -84,11 +91,37 @@ class FKForm extends Component {
   }
 
   @action
+  componentFor(klass) {
+    const instance = this;
+    const baseArguments = {
+      get errors() {
+        return instance.formData.errors;
+      },
+      get data() {
+        return instance.formData;
+      },
+      addError: instance.addError,
+      set: instance.set,
+      registerField: instance.registerField,
+      unregisterField: instance.unregisterField,
+      triggerRevalidationFor: instance.triggerRevalidationFor,
+      remove: instance.remove,
+    };
+
+    return curryComponent(klass, baseArguments, getOwner(this));
+  }
+
+  @action
   addError(name, { title, message }) {
     this.formData.addError(name, {
       title,
       message,
     });
+  }
+
+  @action
+  removeError(name) {
+    this.formData.removeError(name);
   }
 
   @action
@@ -141,15 +174,15 @@ class FKForm extends Component {
       );
     }
 
-    const fieldModel = new FKFieldData(name, field);
-    this.fields.set(name, fieldModel);
+    this.fields.set(name, field);
 
-    return fieldModel;
+    return field;
   }
 
   @action
   unregisterField(name) {
     this.fields.delete(name);
+    this.removeError(name);
   }
 
   @action
@@ -217,6 +250,7 @@ class FKForm extends Component {
 
       await this.args.validate?.(this.formData.draftData, {
         addError: this.addError,
+        removeError: this.removeError,
       });
     } finally {
       this.isValidating = false;
@@ -237,17 +271,17 @@ class FKForm extends Component {
         (hash
           Row=Row
           Section=FKSection
+          Fieldset=FKFieldset
           ConditionalContent=(component FKControlConditionalContent)
           Container=FKContainer
           Actions=(component FKSection class="form-kit__actions")
           Button=(component DButton class="form-kit__button")
           Alert=FKAlert
           Submit=(component
-            DButton
+            FKSubmit
             action=this.onSubmit
             forwardEvent=true
             class="btn-primary form-kit__button"
-            label="submit"
             type="submit"
             isLoading=this.isSubmitting
           )
@@ -258,38 +292,11 @@ class FKForm extends Component {
             class="form-kit__button"
             label="form_kit.reset"
           )
-          Field=(component
-            FKField
-            errors=this.formData.errors
-            addError=this.addError
-            data=this.formData
-            set=this.set
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-          )
-          Collection=(component
-            FKCollection
-            errors=this.formData.errors
-            addError=this.addError
-            data=this.formData
-            set=this.set
-            remove=this.remove
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-          )
-          InputGroup=(component
-            FKControlInputGroup
-            errors=this.formData.errors
-            addError=this.addError
-            data=this.formData
-            set=this.set
-            remove=this.remove
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            triggerRevalidationFor=this.triggerRevalidationFor
-          )
+          Field=(this.componentFor FKField)
+          Collection=(this.componentFor FKCollection)
+          Object=(this.componentFor FKObject)
+          InputGroup=(this.componentFor FKInputGroup)
+          CheckboxGroup=(this.componentFor FKCheckboxGroup)
           set=this.set
           setProperties=this.setProperties
           addItemToCollection=this.addItemToCollection

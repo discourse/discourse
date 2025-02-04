@@ -168,7 +168,7 @@ puts `bundle exec rake db:create`
 `bundle exec rake db:migrate`
 
 puts "Timing loading Rails"
-measure("load_rails") { `bundle exec rake middleware` }
+measure("load_rails") { `bundle exec rails middleware` }
 
 puts "Populating Profile DB"
 run("bundle exec ruby script/profile_db_generator.rb")
@@ -320,6 +320,7 @@ begin
     results.merge(
       "timings" => @timings,
       "ruby-version" => "#{RUBY_DESCRIPTION}",
+      "yjit" => RubyVM::YJIT.enabled?,
       "rss_kb" => mem["rss_kb"],
       "pss_kb" => mem["pss_kb"],
     ).merge(facts)

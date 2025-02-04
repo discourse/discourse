@@ -1,11 +1,13 @@
+import { DEBUG } from "@glimmer/env";
 import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
+import DEPRECATION_WORKFLOW from "discourse/deprecation-workflow";
+import { bind } from "discourse/lib/decorators";
+import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
-import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Deprecations matching patterns on this list will trigger warnings for admins.
 // To avoid 'crying wolf', we should only add values here when we're sure they're
@@ -18,8 +20,25 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.plugin-outlet-tag-name",
   "discourse.plugin-outlet-parent-view",
   "discourse.d-button-action-string",
-  /^(?!discourse\.)/, // All unsilenced ember deprecations
+  "discourse.post-menu-widget-overrides",
+  "discourse.fontawesome-6-upgrade",
+  "discourse.add-flag-property",
+  "discourse.breadcrumbs.childCategories",
+  "discourse.breadcrumbs.firstCategory",
+  "discourse.breadcrumbs.parentCategories",
+  "discourse.breadcrumbs.parentCategoriesSorted",
+  "discourse.breadcrumbs.parentCategory",
+  "discourse.breadcrumbs.secondCategory",
+  "discourse.qunit.acceptance-function",
+  "discourse.qunit.global-exists",
+  "discourse.post-stream.trigger-new-post",
+  "discourse.hbr-topic-list-overrides",
 ];
+
+if (DEBUG) {
+  // used in system specs
+  CRITICAL_DEPRECATIONS.push("fake-deprecation");
+}
 
 // Deprecation handling APIs don't have any way to unregister handlers, so we set up permanent
 // handlers and link them up to the application lifecycle using module-local state.
@@ -49,12 +68,11 @@ export default class DeprecationWarningHandler extends Service {
 
   @bind
   handle(message, opts) {
-    const workflowConfigs = window.deprecationWorkflow?.config?.workflow;
-    const matchingConfig = workflowConfigs.find(
+    const matchingConfig = DEPRECATION_WORKFLOW.find(
       (config) => config.matchId === opts.id
     );
 
-    if (matchingConfig && matchingConfig.handler === "silence") {
+    if (matchingConfig?.handler === "silence") {
       return;
     }
 
@@ -95,15 +113,15 @@ export default class DeprecationWarningHandler extends Service {
   notifyAdmin({ id, url }, source) {
     this.#adminWarned = true;
 
-    let notice = I18n.t("critical_deprecation.notice") + " ";
+    let notice = i18n("critical_deprecation.notice") + " ";
 
     if (url) {
-      notice += I18n.t("critical_deprecation.linked_id", {
+      notice += i18n("critical_deprecation.linked_id", {
         id: escapeExpression(id),
         url: escapeExpression(url),
       });
     } else {
-      notice += I18n.t("critical_deprecation.id", {
+      notice += i18n("critical_deprecation.id", {
         id: escapeExpression(id),
       });
     }
@@ -115,14 +133,14 @@ export default class DeprecationWarningHandler extends Service {
     if (source?.type === "theme") {
       notice +=
         " " +
-        I18n.t("critical_deprecation.theme_source", {
+        i18n("critical_deprecation.theme_source", {
           name: escapeExpression(source.name),
           path: source.path,
         });
     } else if (source?.type === "plugin") {
       notice +=
         " " +
-        I18n.t("critical_deprecation.plugin_source", {
+        i18n("critical_deprecation.plugin_source", {
           name: escapeExpression(source.name),
         });
     }

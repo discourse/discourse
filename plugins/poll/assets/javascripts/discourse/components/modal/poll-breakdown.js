@@ -5,12 +5,13 @@ import { classify } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import loadScript from "discourse/lib/load-script";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PollBreakdownModal extends Component {
   @service dialog;
+  @service siteSettings;
 
   model = null;
   charts = null;
@@ -19,7 +20,7 @@ export default class PollBreakdownModal extends Component {
   displayMode = "percentage";
 
   init() {
-    this.set("groupedBy", this.model.groupableUserFields[0]);
+    this.set("groupedBy", this.groupableUserFields[0]?.id);
     loadScript("/javascripts/Chart.min.js")
       .then(() => loadScript("/javascripts/chartjs-plugin-datalabels.min.js"))
       .then(() => {
@@ -33,17 +34,19 @@ export default class PollBreakdownModal extends Component {
     return pollTitle ? htmlSafe(pollTitle) : topicTitle;
   }
 
-  @discourseComputed("model.groupableUserFields")
-  groupableUserFields(fields) {
-    return fields.map((field) => {
-      const transformed = field.split("_").filter(Boolean);
+  get groupableUserFields() {
+    return this.siteSettings.poll_groupable_user_fields
+      .split("|")
+      .filter(Boolean)
+      .map((field) => {
+        const transformed = field.split("_").filter(Boolean);
 
-      if (transformed.length > 1) {
-        transformed[0] = classify(transformed[0]);
-      }
+        if (transformed.length > 1) {
+          transformed[0] = classify(transformed[0]);
+        }
 
-      return { id: field, label: transformed.join(" ") };
-    });
+        return { id: field, label: transformed.join(" ") };
+      });
   }
 
   @discourseComputed("model.poll.options")
@@ -63,7 +66,7 @@ export default class PollBreakdownModal extends Component {
         if (error) {
           popupAjaxError(error);
         } else {
-          this.dialog.alert(I18n.t("poll.error_while_fetching_voters"));
+          this.dialog.alert(i18n("poll.error_while_fetching_voters"));
         }
       })
       .then((result) => {

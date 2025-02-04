@@ -181,24 +181,12 @@ describe "Thread list in side panel | full page", type: :system do
       end
 
       it "shows the thread in the list when another user restores the original message" do
-        # This is necessary because normal users can't see deleted messages
-        other_user.update!(admin: true)
-        current_user.update!(admin: true)
-
-        thread_1.original_message.trash!
+        trash_message!(thread_1.original_message)
         chat_page.visit_threads_list(channel)
 
         expect(thread_list_page).to have_no_thread(thread_1)
 
-        using_session(:tab_2) do
-          sign_in(other_user)
-          chat_page.visit_channel(channel)
-          expect(channel_page).to have_no_loading_skeleton
-          channel_page.expand_deleted_message(thread_1.original_message)
-          channel_page.message_thread_indicator(thread_1.original_message).click
-          expect(side_panel_page).to have_open_thread(thread_1)
-          thread_page.messages.restore(thread_1.original_message)
-        end
+        restore_message!(thread_1.original_message, user: other_user)
 
         expect(thread_list_page).to have_thread(thread_1)
       end

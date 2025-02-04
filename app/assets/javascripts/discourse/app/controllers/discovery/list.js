@@ -170,7 +170,6 @@ export default class DiscoveryListController extends Controller {
         .filter(Boolean)
         .reject((t) => ["none", "all"].includes(t))
         .join(","),
-      preferDraft: true,
     });
   }
 
@@ -207,7 +206,7 @@ export default class DiscoveryListController extends Controller {
     this.bulkSelectHelper.dismissRead(operationType, {
       categoryId: this.model.category?.id,
       tagName: this.model.tag?.id,
-      includeSubcategories: this.model.noSubcategories,
+      includeSubcategories: !this.model.noSubcategories,
     });
   }
 }

@@ -57,8 +57,8 @@ class ApplicationController < ActionController::Base
   after_action :clean_xml, if: :is_feed_response?
   after_action :add_early_hint_header, if: -> { spa_boot_request? }
 
-  HONEYPOT_KEY ||= "HONEYPOT_KEY"
-  CHALLENGE_KEY ||= "CHALLENGE_KEY"
+  HONEYPOT_KEY = "HONEYPOT_KEY"
+  CHALLENGE_KEY = "CHALLENGE_KEY"
 
   layout :set_layout
 
@@ -368,7 +368,7 @@ class ApplicationController < ActionController::Base
       Logster.add_to_env(request.env, "username", current_user.username)
       response.headers["X-Discourse-Username"] = current_user.username
     end
-    response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
+    response.headers["X-Discourse-Route"] = "#{controller_path}/#{action_name}"
   end
 
   def set_mp_snapshot_fields
@@ -773,7 +773,7 @@ class ApplicationController < ActionController::Base
         return render plain: I18n.t("user_api_key.invalid_public_key")
       end
 
-      if UserApiKey.invalid_auth_redirect?(params[:auth_redirect])
+      if UserApiKeyClient.invalid_auth_redirect?(params[:auth_redirect])
         return render plain: I18n.t("user_api_key.invalid_auth_redirect")
       end
 
@@ -833,7 +833,7 @@ class ApplicationController < ActionController::Base
 
     redirect_path = path("/u/#{current_user.encoded_username}/preferences/profile")
     second_factor_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
-    allowed_paths = [redirect_path, second_factor_path, path("/admin")]
+    allowed_paths = [redirect_path, second_factor_path, path("/admin"), path("/safe-mode")]
     if allowed_paths.none? { |p| request.fullpath.start_with?(p) }
       rate_limiter = RateLimiter.new(current_user, "redirect_to_required_fields_log", 1, 24.hours)
 
@@ -1045,5 +1045,9 @@ class ApplicationController < ActionController::Base
 
   def clean_xml
     response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
+  end
+
+  def service_params
+    { params: params.to_unsafe_h, guardian: }
   end
 end

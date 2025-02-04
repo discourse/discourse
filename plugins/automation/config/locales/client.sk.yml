@@ -6,6 +6,11 @@
 
 sk:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: vymazať automatizáciu
     discourse_automation:
       title: Automatizácia
       create: Vytvoriť
@@ -14,7 +19,8 @@ sk:
       select_trigger: Vyberte spúšťač
       confirm_automation_reset: Táto akcia resetuje možnosti skriptu a spúšťača, nový stav sa uloží, chcete pokračovať?
       confirm_automation_trigger: Táto akcia spustí automatizáciu, chcete pokračovať?
-      no_automation_yet: Zatiaľ ste nevytvorili žiadnu automatizáciu.
+      no_automation_yet: Zatiaľ ste nevytvorili žiadne automatizácie. Vyberte si niektorú z možností nižšie a začnite.
+      filter_placeholder: Filtrovanie podľa názvu alebo popisu...
       edit_automation:
         trigger_section:
           forced: Tento spúšťač je vynútený skriptom.
@@ -146,18 +152,27 @@ sk:
               label: ID témy
         post_created_edited:
           fields:
+            original_post_only:
+              label: Len pôvodný príspevok
+              description: Spustí sa len vtedy, ak je príspevok pôvodným príspevkom v téme
             action_type:
               label: Typ akcie
               description: "Voliteľné, obmedzte spúšťanie iba na vytvorené alebo upravené udalosti"
             valid_trust_levels:
               label: Platné úrovne dôvery
               description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolene na ľubovoľnú úroveň dôveryhodnosti
+            restricted_tags:
+              label: Značky
+              description: Voliteľné, spustí sa iba vtedy, ak má príspevok niektorú z týchto značiek
             restricted_category:
               label: Kategória
               description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v tejto kategórii
             restricted_group:
               label: Skupina
-              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku súkromnou správou v doručenej pošte tejto skupiny
+              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku osobnou správou v doručenej pošte tejto skupiny
+            restricted_groups:
+              label: Skupiny
+              description: Voliteľné, spustí sa iba vtedy, ak je témou príspevku osobná správa v jednej zo skupinových doručených schránok
             ignore_group_members:
               label: Ignorovať členov skupiny
               description: Preskočte spúšťač, ak je odosielateľ členom vyššie uvedenej skupiny
@@ -170,6 +185,9 @@ sk:
             first_topic_only:
               label: Len prvá téma
               description: Spustí sa iba vtedy, ak je téma prvou témou, ktorú používateľ vytvoril
+            skip_via_email:
+              label: "Preskočiť cez e-mail"
+              description: "Vynechať spúšťač, ak bol príspevok vytvorený prostredníctvom e-mailu"
           created: Vytvorené
           edited: Upravené
         user_updated:
@@ -211,6 +229,23 @@ sk:
             valid_trust_levels:
               label: Platné úrovne dôvery
               description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolene na ľubovoľnú úroveň dôveryhodnosti
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Pridané alebo odstránené značky
+            tags_added: Pridané značky
+            tags_removed: Odstránené značky
+          fields:
+            watching_categories:
+              label: Sledovanie kategórií
+              description: Spustí sa iba vtedy, ak je téma v jednej z týchto kategórií
+            watching_tags:
+              label: Sledovanie značiek
+              description: Spustí sa iba vtedy, ak téma obsahuje niektorú z týchto značiek
+            trigger_on:
+              label: Spúšťač na
+            trigger_with_pms:
+              label: Spúšťanie pomocou PM
+              description: Spustí sa, aj keď boli značky zmenené v PM
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -369,6 +404,7 @@ sk:
           fields:
             custom_field_name:
               label: "Názov vlastného poľa používateľa"
+      unnamed_automation: "Nemenovaná automatizácia"
       models:
         script:
           name:
@@ -385,6 +421,8 @@ sk:
             label: Skript
           version:
             label: Verzia
+          status:
+            label: Stav
           enabled:
             label: Povolené
           disabled:

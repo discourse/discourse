@@ -249,8 +249,6 @@ id:
       bookmark:
         instructions: |-
           Jika Anda ingin mempelajari lebih lanjut, pilih <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> di bawah dan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **tandai pesan pribadi ini**. Jika Anda melakukannya, mungkin ada :gift: di masa depan Anda!
-        reply: |-
-          Bagus sekali! Sekarang Anda dapat dengan mudah menemukan jalan kembali ke percakapan pribadi kita kapan saja, langsung dari [tab bookmark di profil Anda](%{bookmark_url}). Cukup pilih gambar profil Anda di kanan atas &#8599;
         not_found: |-
           Uh oh, saya tidak melihat bookmark apa pun di topik ini. Apakah Anda menemukan bookmark di bawah setiap posting? Gunakan tampilkan lebih lanjut <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> untuk menampilkan tindakan tambahan jika diperlukan.
       emoji:
@@ -284,14 +282,6 @@ id:
 
           (Akhirnya, nama saya disebut _disco_, seperti tarian tahun 1970-an. Beneran [love the nightlife!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        instructions: |-
-          Kami menyukai diskusi kita yang ramah, dan kami membutuhkan bantuan Anda untuk [menjaga hal-hal beradab](%{guidelines_url}). Jika Anda melihat masalah, harap tandai secara pribadi agar penulis atau [staf kami yang membantu](%{about_url}) mengetahuinya. Ada banyak alasan mengapa Anda ingin menandai suatu kiriman, mulai dari saran pemisahan topik yang tidak berbahaya hingga pelanggaran standar komunitas yang jelas. Jika Anda memilih **Sesuatu Lainnya**, Anda akan memulai diskusi pesan pribadi dengan moderator tempat Anda dapat mengajukan pertanyaan lebih lanjut.
-
-          > :imp: Saya menulis sesuatu yang buruk di sini
-
-          Lanjutkan dan **tandai kiriman ini** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> dan pilih **Tidak Pantas** sebagai alasannya!
-        reply: |-
-          [Staf kami](%{base_uri}/groups/staff) akan diberitahukan secara pribadi tentang penanda Anda. Jika cukup banyak anggota komunitas yang menandai sebuah post, post tersebut juga akan disembunyikan secara otomatis sebagai tindakan pencegahan. (Karena saya tidak benar-benar menulis post yang buruk :angel:, saya telah melanjutkan dan menghapus penandanya untuk saat ini.)
         not_found: |-
           Oh tidak, postingan buruk saya belum ditandai sebagai tidak pantas. :worried: Bisakah Anda menandainya sebagai tidak pantas menggunakan **penanda** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Jangan lupa untuk menggunakan tombol lihat lebih lanjut <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> untuk menampilkan lebih banyak tindakan untuk setiap post.
       search:
@@ -381,12 +371,6 @@ id:
         reply: |-
           Hebat! Cara ini bisa digunakan pada categories _and_ tags, jika pelabelan diaktifkan.
       change_topic_notification_level:
-        instructions: |-
-          Setiap topik memiliki tingkat notifikasi. Ini dimulai dari 'normal', yang berarti Anda biasanya hanya diberi tahu saat seseorang berbicara langsung kepada Anda.
-
-          Secara default, tingkat notifikasi untuk pesan pribadi diatur ke tingkat 'watching' tertinggi, yang berarti Anda akan diberi tahu setiap balasan baru. Namun Anda dapat mengganti tingkat notifikasi untuk _semua_ topik menjadi 'watch', 'tracking', atau 'muted'.
-
-          Ayo coba ubah level notifikasi untuk topik ini. Di bagian bawah topik, Anda akan menemukan tombol yang menunjukkan bahwa Anda **menonton** topik ini. Bisakah Anda mengubah tingkat notifikasi ke **pelacakan**?
         not_found: |-
           Sepertinya Anda masih menyimak :eyes: topik ini! Jika kesulitan mencari tombolnya, tombol tingkat pengaturan ada di bawah topik.
         reply: |-

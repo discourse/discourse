@@ -3,7 +3,7 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class Users extends DiscourseRoute {
   @service router;
@@ -21,7 +21,7 @@ export default class Users extends DiscourseRoute {
   };
 
   titleToken() {
-    return I18n.t("directory.title");
+    return i18n("directory.title");
   }
 
   resetController(controller, isExiting) {

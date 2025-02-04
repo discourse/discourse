@@ -4,16 +4,16 @@ import { clearRender, render, settled } from "@ember/test-helpers";
 import { observes as nativeClassObserves } from "@ember-decorators/object";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import discourseComputed, {
   afterRender,
   debounce,
   observes,
   on,
-} from "discourse-common/utils/decorators";
+} from "discourse/lib/decorators";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
+// eslint-disable-next-line ember/no-classic-classes
 const fooComponent = Component.extend({
   classNames: ["foo-component"],
 
@@ -37,6 +37,7 @@ const fooComponent = Component.extend({
   },
 });
 
+// eslint-disable-next-line ember/no-classic-classes
 const EmberObjectComponent = Component.extend({
   name: "",
   layout: hbs`<span class="ember-object-component">{{this.text}}</span>`,
@@ -57,6 +58,7 @@ class NativeComponent extends Component {
   }
 }
 
+// eslint-disable-next-line ember/no-classic-classes
 const TestStub = EmberObject.extend({
   counter: 0,
   otherCounter: 0,
@@ -118,12 +120,12 @@ module("Unit | Utils | decorators", function (hooks) {
 
     await render(hbs`<FooComponent @baz={{this.baz}} />`);
 
-    assert.ok(exists(document.querySelector(".foo-component")));
+    assert.dom(".foo-component").exists();
     assert.strictEqual(this.baz, 1);
 
     await clearRender();
 
-    assert.ok(!exists(document.querySelector(".foo-component")));
+    assert.dom(".foo-component").doesNotExist();
     assert.strictEqual(this.baz, 1);
   });
 
@@ -136,17 +138,15 @@ module("Unit | Utils | decorators", function (hooks) {
     this.set("name", "Jarek");
     await render(hbs`<EmberObjectComponent @name={{this.name}} />`);
 
-    assert.strictEqual(
-      document.querySelector(".ember-object-component").textContent,
-      "hello, Jarek"
-    );
+    assert.dom(".ember-object-component").hasText("hello, Jarek");
 
     this.set("name", "Joffrey");
-    assert.strictEqual(
-      document.querySelector(".ember-object-component").textContent,
-      "hello, Joffrey",
-      "rerenders the component when arguments change"
-    );
+    assert
+      .dom(".ember-object-component")
+      .hasText(
+        "hello, Joffrey",
+        "rerenders the component when arguments change"
+      );
   });
 
   test("discourseComputed works in native classes", async function (assert) {
@@ -155,17 +155,15 @@ module("Unit | Utils | decorators", function (hooks) {
     this.set("name", "Jarek");
     await render(hbs`<NativeComponent @name={{this.name}} />`);
 
-    assert.strictEqual(
-      document.querySelector(".native-component").textContent,
-      "hello, Jarek"
-    );
+    assert.dom(".native-component").hasText("hello, Jarek");
 
     this.set("name", "Joffrey");
-    assert.strictEqual(
-      document.querySelector(".native-component").textContent,
-      "hello, Joffrey",
-      "rerenders the component when arguments change"
-    );
+    assert
+      .dom(".native-component")
+      .hasText(
+        "hello, Joffrey",
+        "rerenders the component when arguments change"
+      );
   });
 
   test("debounce", async function (assert) {
@@ -226,6 +224,7 @@ module("Unit | Utils | decorators", function (hooks) {
       };
     });
 
+    // eslint-disable-next-line ember/no-classic-classes
     const ExtendWithObserver = EmberObject.extend({
       counter: 0,
       @observes("value")
@@ -265,6 +264,7 @@ module("Unit | Utils | decorators", function (hooks) {
       };
     });
 
+    // eslint-disable-next-line ember/no-classic-classes
     const ExtendWithOn = EmberObject.extend({
       counter: 0,
       @on("init")

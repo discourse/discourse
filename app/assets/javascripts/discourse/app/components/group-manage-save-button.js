@@ -5,20 +5,22 @@ import { service } from "@ember/service";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
-export default Component.extend({
-  modal: service(),
-  saving: null,
-  disabled: false,
-  updateExistingUsers: null,
-  hasFlair: or("model.flair_icon", "model.flair_upload_id"),
+export default class GroupManageSaveButton extends Component {
+  @service modal;
+
+  saving = null;
+  disabled = false;
+  updateExistingUsers = null;
+
+  @or("model.flair_icon", "model.flair_upload_id") hasFlair;
 
   @discourseComputed("saving")
   savingText(saving) {
-    return saving ? I18n.t("saving") : I18n.t("save");
-  },
+    return saving ? i18n("saving") : i18n("save");
+  }
 
   @discourseComputed(
     "model.visibility_level",
@@ -31,20 +33,20 @@ export default Component.extend({
     }
 
     if (isPrimaryGroup) {
-      return I18n.t("admin.groups.manage.alert.primary_group", {
+      return i18n("admin.groups.manage.alert.primary_group", {
         group_name: this.model.name,
       });
     } else if (hasFlair) {
-      return I18n.t("admin.groups.manage.alert.flair_group", {
+      return i18n("admin.groups.manage.alert.flair_group", {
         group_name: this.model.name,
       });
     }
-  },
+  }
 
   @action
   setUpdateExistingUsers(value) {
     this.updateExistingUsers = value;
-  },
+  }
 
   @action
   save() {
@@ -86,7 +88,7 @@ export default Component.extend({
         }
       })
       .finally(() => this.set("saving", false));
-  },
+  }
 
   @action
   async editGroupNotifications(json) {
@@ -97,5 +99,5 @@ export default Component.extend({
       },
     });
     this.save();
-  },
-});
+  }
+}

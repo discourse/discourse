@@ -17,6 +17,10 @@ class BackfillPostUploadReverseIndex < ActiveRecord::Migration[4.2]
       end
   end
 
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
+
   def add_to_reverse_index(url, post_id)
     # make sure we have a url to insert
     return if url.blank?

@@ -74,6 +74,18 @@ describe "Thread tracking state | full page", type: :system do
       expect(thread_list_page).to have_no_unread_item(thread.id)
     end
 
+    it "shows and urgent for the header of the list when a new watched unread arrives" do
+      thread.membership_for(current_user).update!(last_read_message_id: message_2.id)
+      thread.membership_for(current_user).update!(notification_level: :watching)
+
+      chat_page.visit_channel(channel)
+      channel_page.open_thread_list
+
+      expect(thread_list_page).to have_no_unread_item(thread.id, urgent: true)
+      Fabricate(:chat_message, thread: thread, use_service: true)
+      expect(thread_list_page).to have_unread_item(thread.id, urgent: true)
+    end
+
     it "allows the user to change their tracking level for an existing thread" do
       chat_page.visit_thread(thread)
       thread_page.notification_level = :normal

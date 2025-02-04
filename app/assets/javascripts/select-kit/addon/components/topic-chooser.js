@@ -1,25 +1,28 @@
 import { isEmpty } from "@ember/utils";
+import { classNames } from "@ember-decorators/component";
 import { searchForTerm } from "discourse/lib/search";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
-export default ComboBoxComponent.extend({
-  pluginApiIdentifiers: ["topic-chooser"],
-  classNames: ["topic-chooser"],
-
-  nameProperty: "fancy_title",
-  labelProperty: "title",
-  titleProperty: "title",
-
-  selectKitOptions: {
-    clearable: true,
-    filterable: true,
-    filterPlaceholder: "choose_topic.title.placeholder",
-    additionalFilters: "",
-  },
+@classNames("topic-chooser")
+@selectKitOptions({
+  clearable: true,
+  filterable: true,
+  filterPlaceholder: "choose_topic.title.placeholder",
+  additionalFilters: "",
+})
+@pluginApiIdentifiers("topic-chooser")
+export default class TopicChooser extends ComboBoxComponent {
+  nameProperty = "fancy_title";
+  labelProperty = "title";
+  titleProperty = "title";
 
   modifyComponentForRow() {
     return "topic-row";
-  },
+  }
 
   search(filter) {
     if (isEmpty(filter) && isEmpty(this.selectKit.options.additionalFilters)) {
@@ -41,5 +44,5 @@ export default ComboBoxComponent.extend({
         return results.posts.mapBy("topic");
       }
     });
-  },
-});
+  }
+}

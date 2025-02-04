@@ -5,15 +5,14 @@ import {
 } from "@glimmer/manager";
 import templateOnly from "@ember/component/template-only";
 import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
-import deprecated, {
-  withSilencedDeprecations,
-} from "discourse-common/lib/deprecated";
-import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
+import { buildRawConnectorCache } from "discourse/lib/raw-templates";
 
 let _connectorCache;
 let _rawConnectorCache;
 let _extraConnectorClasses = {};
 let _extraConnectorComponents = {};
+let debugOutletCallback;
 
 export function resetExtraClasses() {
   _extraConnectorClasses = {};
@@ -214,20 +213,25 @@ export function connectorsExist(outletName) {
   if (!_connectorCache) {
     buildConnectorCache();
   }
-  return Boolean(_connectorCache[outletName]);
+  return Boolean(_connectorCache[outletName] || debugOutletCallback);
 }
 
 export function connectorsFor(outletName) {
   if (!_connectorCache) {
     buildConnectorCache();
   }
+  if (debugOutletCallback) {
+    return debugOutletCallback(outletName, _connectorCache[outletName]);
+  }
   return _connectorCache[outletName] || [];
 }
 
-export function renderedConnectorsFor(outletName, args, context) {
+export function renderedConnectorsFor(outletName, args, context, owner) {
   return connectorsFor(outletName).filter((con) => {
-    const shouldRender = con.connectorClass?.shouldRender;
-    return !shouldRender || shouldRender(args, context);
+    return (
+      !con.connectorClass?.shouldRender ||
+      con.connectorClass?.shouldRender(args, context, owner)
+    );
   });
 }
 
@@ -241,22 +245,26 @@ export function rawConnectorsFor(outletName) {
 export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
   const output = {};
 
-  Object.keys(args).forEach((key) => {
-    Object.defineProperty(output, key, { value: args[key] });
-  });
-
-  Object.keys(deprecatedArgs).forEach((argumentName) => {
-    Object.defineProperty(output, argumentName, {
-      get() {
-        const deprecatedArg = deprecatedArgs[argumentName];
-
-        return deprecatedArgumentValue(deprecatedArg, {
-          ...opts,
-          argumentName,
-        });
-      },
+  if (args) {
+    Object.keys(args).forEach((key) => {
+      Object.defineProperty(output, key, { value: args[key] });
     });
-  });
+  }
+
+  if (deprecatedArgs) {
+    Object.keys(deprecatedArgs).forEach((argumentName) => {
+      Object.defineProperty(output, argumentName, {
+        get() {
+          const deprecatedArg = deprecatedArgs[argumentName];
+
+          return deprecatedArgumentValue(deprecatedArg, {
+            ...opts,
+            argumentName,
+          });
+        },
+      });
+    });
+  }
 
   return output;
 }
@@ -295,4 +303,8 @@ export function deprecatedArgumentValue(deprecatedArg, options) {
     deprecated(message, deprecatedArg.options);
     return deprecatedArg.value;
   });
+}
+
+export function _setOutletDebugCallback(callback) {
+  debugOutletCallback = callback;
 }

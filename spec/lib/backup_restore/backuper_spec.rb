@@ -9,6 +9,13 @@ RSpec.describe BackupRestore::Backuper do
       expect(backuper.send(:get_parameterized_title)).to eq("discourse")
     end
 
+    it "truncates the title to 64 chars" do
+      SiteSetting.title = "This is th title of a very long site that is going to be truncated"
+      backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+
+      expect(backuper.send(:get_parameterized_title).length).to eq(64)
+    end
+
     it "returns a valid parameterized site title" do
       SiteSetting.title = "Coding Horror"
       backuper = BackupRestore::Backuper.new(Discourse.system_user.id)

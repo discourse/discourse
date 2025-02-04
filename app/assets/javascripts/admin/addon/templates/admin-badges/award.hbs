@@ -1,5 +1,5 @@
-<section class="award-badge">
-  <h1>{{i18n "admin.badges.mass_award.title"}}</h1>
+<section class="current-badge content-body">
+  <h2>{{i18n "admin.badges.mass_award.title"}}</h2>
   <p>{{i18n "admin.badges.mass_award.description"}}</p>
 
   {{#if this.model}}
@@ -48,7 +48,7 @@
         class="btn-primary"
       />
       <LinkTo @route="adminBadges.index" class="btn btn-normal">
-        {{d-icon "times"}}
+        {{d-icon "xmark"}}
         <span>{{i18n "cancel"}}</span>
       </LinkTo>
     </form>
@@ -60,14 +60,14 @@
         {{#if this.success}}
           {{d-icon "check" class="bulk-award-status-icon success"}}
         {{else}}
-          {{d-icon "times" class="bulk-award-status-icon failure"}}
+          {{d-icon "xmark" class="bulk-award-status-icon failure"}}
         {{/if}}
         {{this.resultsMessage}}
       </p>
       {{#if this.unmatchedEntries.length}}
         <p>
           {{d-icon
-            "exclamation-triangle"
+            "triangle-exclamation"
             class="bulk-award-status-icon failure"
           }}
           <span>

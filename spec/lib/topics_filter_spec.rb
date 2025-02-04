@@ -1349,6 +1349,13 @@ RSpec.describe TopicsFilter do
     end
 
     describe "ordering topics filter" do
+      before do
+        Plugin::Instance.new.add_filter_custom_filter(
+          "order:wrongly",
+          &->(scope) { scope.order("wrongly") }
+        )
+      end
+
       # Requires the fabrication of `topic`, `topic2` and `topic3` such that the order of the topics is `topic2`, `topic1`, `topic3`
       # when ordered by the given filter in descending order.
       shared_examples "ordering topics filters" do |order, order_description|
@@ -1497,6 +1504,38 @@ RSpec.describe TopicsFilter do
                 .filter_from_query_string("order:created order:views")
                 .pluck(:id),
             ).to eq([topic2.id, topic3.id, topic.id])
+          end
+        end
+      end
+
+      context "for DiscoursePluginRegistry.custom_filter_mappings" do
+        describe "when extending order:{col}" do
+          fab!(:earlier_topic) { Fabricate(:topic, bumped_at: 2.hours.ago) }
+          fab!(:now_topic) { Fabricate(:topic, bumped_at: Time.now) }
+
+          before_all do
+            Plugin::Instance.new.add_filter_custom_filter(
+              "order:bumped",
+              &->(scope, value) { scope.order("bumped_at #{value}") }
+            )
+          end
+
+          it "applies ASC order correctly" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:bumped-asc")
+                .pluck(:id),
+            ).to eq([earlier_topic.id, now_topic.id])
+          end
+
+          it "applies default order correctly" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:bumped")
+                .pluck(:id),
+            ).to eq([now_topic.id, earlier_topic.id])
           end
         end
       end

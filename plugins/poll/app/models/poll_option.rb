@@ -3,6 +3,14 @@
 class PollOption < ActiveRecord::Base
   belongs_to :poll
   has_many :poll_votes, dependent: :delete_all
+
+  attr_writer :voters_count
+
+  def voters_count
+    return @voters_count if defined?(@voters_count)
+
+    @voters_count = poll_votes.count
+  end
 end
 
 # == Schema Information

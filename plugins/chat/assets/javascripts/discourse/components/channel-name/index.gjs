@@ -5,31 +5,37 @@ import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStatusMessage from "discourse/components/user-status-message";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
 
 export default class ChatChannelName extends Component {
   @service currentUser;
+  @service siteSettings;
 
-  get firstUser() {
-    return this.args.channel.chatable.users[0];
+  get unreadIndicator() {
+    return this.args.unreadIndicator ?? false;
   }
 
   get users() {
     return this.args.channel.chatable.users;
   }
 
-  get groupDirectMessage() {
+  get prefersName() {
     return (
-      this.args.channel.isDirectMessageChannel &&
-      this.args.channel.chatable.group
+      this.siteSettings.enable_names &&
+      this.siteSettings.display_name_on_posts &&
+      !this.siteSettings.prioritize_username_in_ux
     );
   }
 
-  get groupsDirectMessageTitle() {
-    return this.args.channel.title || this.usernames;
-  }
-
-  get usernames() {
-    return this.users.mapBy("username").join(", ");
+  get directMessageTitle() {
+    if (this.users.length === 0) {
+      return this.prefersName
+        ? this.currentUser.name || this.currentUser.username
+        : this.currentUser.username;
+    }
+    return this.prefersName
+      ? this.users.map((user) => user.name || user.username).join(", ")
+      : this.users.mapBy("username").join(", ");
   }
 
   get channelColorStyle() {
@@ -37,27 +43,41 @@ export default class ChatChannelName extends Component {
   }
 
   get showUserStatus() {
+    if (!this.args.channel.isDirectMessageChannel) {
+      return false;
+    }
     return !!(this.users.length === 1 && this.users[0].status);
+  }
+
+  get channelTitle() {
+    if (this.args.channel.isDirectMessageChannel) {
+      return this.args.channel.title ?? this.directMessageTitle;
+    }
+
+    return this.args.channel.title;
+  }
+
+  get showPluginOutlet() {
+    return (
+      this.args.channel.isDirectMessageChannel &&
+      !this.args.channel.chatable.group
+    );
   }
 
   <template>
     <div class="chat-channel-name">
-      {{#if @channel.isDirectMessageChannel}}
-        {{#if this.groupDirectMessage}}
-          <span class="chat-channel-name__label">
-            {{this.groupsDirectMessageTitle}}
-          </span>
-        {{else}}
-          <span class="chat-channel-name__label">
-            {{this.firstUser.username}}
-          </span>
-          {{#if this.showUserStatus}}
-            <UserStatusMessage
-              @status={{get this.users "0.status"}}
-              @showDescription={{if this.site.mobileView "true"}}
-              class="chat-channel__user-status-message"
-            />
-          {{/if}}
+      <div class="chat-channel-name__label">
+        {{replaceEmoji this.channelTitle}}
+
+        {{#if this.showUserStatus}}
+          <UserStatusMessage
+            @status={{get this.users "0.status"}}
+            @showDescription={{if this.site.mobileView "true"}}
+            class="chat-channel__user-status-message"
+          />
+        {{/if}}
+
+        {{#if this.showPluginOutlet}}
           <PluginOutlet
             @name="after-chat-channel-username"
             @outletArgs={{hash user=@user}}
@@ -65,14 +85,14 @@ export default class ChatChannelName extends Component {
             @connectorTagName=""
           />
         {{/if}}
-      {{else if @channel.isCategoryChannel}}
-        <span class="chat-channel-name__label">
-          {{replaceEmoji @channel.title}}
-        </span>
 
         {{#if (has-block)}}
           {{yield}}
         {{/if}}
+      </div>
+
+      {{#if this.unreadIndicator}}
+        <ChatChannelUnreadIndicator @channel={{@channel}} />
       {{/if}}
     </div>
   </template>

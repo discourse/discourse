@@ -9,6 +9,7 @@ export default function () {
   this.route("about", { resetNamespace: true });
 
   this.route("post", { path: "/p/:id" });
+  this.route("posts");
 
   // Topic routes
   this.route(
@@ -16,7 +17,6 @@ export default function () {
     { path: "/t/:slug/:id", resetNamespace: true },
     function () {
       this.route("fromParams", { path: "/" });
-      // eslint-disable-next-line ember/routes-segments-snake-case
       this.route("fromParamsNear", { path: "/:nearPost" });
     }
   );
@@ -110,6 +110,7 @@ export default function () {
     this.route("resent");
     this.route("edit-email");
   });
+  this.route("activate-account", { path: "/u/activate-account/:token" });
   this.route("confirm-new-email", { path: "/u/confirm-new-email/:token" });
   this.route("confirm-old-email", { path: "/u/confirm-old-email/:token" });
   this.route(
@@ -224,6 +225,7 @@ export default function () {
 
   this.route("new-topic");
   this.route("new-message");
+  this.route("new-invite");
 
   this.route("badges", { resetNamespace: true }, function () {
     this.route("show", { path: "/:id/:slug" });

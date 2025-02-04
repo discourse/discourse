@@ -4,28 +4,29 @@ import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
+import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Category from "discourse/models/category";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import discourseComputed, {
-  afterRender,
-} from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
-  topic: readOnly("model.topic"),
-  post: readOnly("model.post"),
-  category: readOnly("model.category"),
-  allowInvites: readOnly("model.allowInvites"),
-  modal: service(),
+export default class ShareTopicModal extends Component.extend(
+  bufferedProperty("invite")
+) {
+  @service modal;
+
+  @readOnly("model.topic") topic;
+  @readOnly("model.post") post;
+  @readOnly("model.category") category;
+  @readOnly("model.allowInvites") allowInvites;
 
   didInsertElement() {
     this._showRestrictedGroupWarning();
     this._selectUrl();
-    this._super();
-  },
+    super.didInsertElement();
+  }
 
   @afterRender
   _showRestrictedGroupWarning() {
@@ -36,7 +37,7 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
     Category.fetchVisibleGroups(this.category.id).then((result) => {
       if (result.groups.length > 0) {
         this.setProperties({
-          flash: I18n.t("topic.share.restricted_groups", {
+          flash: i18n("topic.share.restricted_groups", {
             count: result.groups.length,
             groupNames: result.groups.join(", "),
           }),
@@ -44,7 +45,7 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
         });
       }
     });
-  },
+  }
 
   @afterRender
   _selectUrl() {
@@ -54,7 +55,7 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
       input.setSelectionRange(0, this.url.length);
       input.focus();
     }
-  },
+  }
 
   @discourseComputed("post.shareUrl", "topic.shareUrl")
   url(postUrl, topicUrl) {
@@ -63,13 +64,13 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
     } else if (topicUrl) {
       return getAbsoluteURL(topicUrl);
     }
-  },
+  }
 
   @discourseComputed("post.created_at", "post.wiki", "post.last_wiki_edit")
   displayDate(createdAt, wiki, lastWikiEdit) {
     const date = wiki && lastWikiEdit ? lastWikiEdit : createdAt;
     return longDateNoYear(new Date(date));
-  },
+  }
 
   @discourseComputed(
     "topic.{isPrivateMessage,invisible,category.read_restricted}"
@@ -82,7 +83,7 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
       topic?.category?.read_restricted;
 
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
-  },
+  }
 
   @action
   share(source) {
@@ -90,7 +91,7 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
       title: this.topic.title,
       url: this.url,
     });
-  },
+  }
 
   @action
   inviteUsers() {
@@ -102,7 +103,7 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
         topicTitle: this.topic.title,
       },
     });
-  },
+  }
 
   @action
   replyAsNewTopic() {
@@ -112,11 +113,5 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
     const topicController = getOwner(this).lookup("controller:topic");
     topicController.actions.replyAsNewTopic.call(topicController, post);
     this.closeModal();
-  },
-});
-
-ShareTopicModal.reopenClass({
-  modalClass: "share-topic-modal",
-});
-
-export default ShareTopicModal;
+  }
+}

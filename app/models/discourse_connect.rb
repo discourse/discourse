@@ -252,7 +252,10 @@ class DiscourseConnect < DiscourseConnectBase
 
       if !user
         user_params = {
-          primary_email: UserEmail.new(email: email, primary: true),
+          primary_email:
+            UserEmail.new(email: email, primary: true) do |user_email|
+              user_email.skip_normalize_email = true
+            end,
           name: resolve_name,
           username: resolve_username,
           ip_address: ip_address,

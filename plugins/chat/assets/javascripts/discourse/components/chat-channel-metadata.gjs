@@ -1,19 +1,25 @@
 import Component from "@glimmer/component";
-import I18n from "discourse-i18n";
-import ChatChannelUnreadIndicator from "./chat-channel-unread-indicator";
+import { i18n } from "discourse-i18n";
 
 export default class ChatChannelMetadata extends Component {
-  get unreadIndicator() {
-    return this.args.unreadIndicator ?? false;
-  }
-
   get lastMessageFormattedDate() {
-    return moment(this.args.channel.lastMessage.createdAt).calendar(null, {
+    const lastMessageDate = this.showThreadUnreadDate
+      ? this.args.channel.lastUnreadThreadDate
+      : this.args.channel.lastMessage.createdAt;
+
+    return moment(lastMessageDate).calendar(null, {
       sameDay: "LT",
-      lastDay: `[${I18n.t("chat.dates.yesterday")}]`,
+      lastDay: `[${i18n("chat.dates.yesterday")}]`,
       lastWeek: "dddd",
       sameElse: "l",
     });
+  }
+
+  get showThreadUnreadDate() {
+    return (
+      this.args.channel.lastUnreadThreadDate >
+      this.args.channel.lastMessage.createdAt
+    );
   }
 
   <template>
@@ -22,10 +28,6 @@ export default class ChatChannelMetadata extends Component {
         <div class="chat-channel__metadata-date">
           {{this.lastMessageFormattedDate}}
         </div>
-      {{/if}}
-
-      {{#if this.unreadIndicator}}
-        <ChatChannelUnreadIndicator @channel={{@channel}} />
       {{/if}}
     </div>
   </template>

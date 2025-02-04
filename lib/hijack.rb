@@ -13,6 +13,10 @@ module Hijack
       request.env["discourse.request_tracker.skip"] = true
       request_tracker = request.env["discourse.request_tracker"]
 
+      # need this because we can't call with_resolved_locale with around_action
+      # when we are evaluating the block
+      resolved_locale = I18n.locale
+
       # in the past unicorn would recycle env, this is not longer the case
       env = request.env
 
@@ -61,7 +65,7 @@ module Hijack
 
           view_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
           begin
-            instance.instance_eval(&blk)
+            I18n.with_locale(resolved_locale) { instance.instance_eval(&blk) }
           rescue => e
             # TODO we need to reuse our exception handling in ApplicationController
             Discourse.warn_exception(

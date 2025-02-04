@@ -336,6 +336,8 @@ nb_NO:
         bio_raw: "Om meg"
       user:
         password: "Passord"
+      user_password:
+        password: "Passord"
     errors:
       models:
         topic:
@@ -360,6 +362,14 @@ nb_NO:
             ip_address:
               blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
               max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
+        user_password:
+          attributes:
+            password:
+              common: "er ett av de 10000 mest vanlige passordene. Benytt et sikrere passord."
+              same_as_username: "er det somme som brukernavnet ditt. Benytt et sikrere passord."
+              same_as_email: "er det samme som din e-mail. Benytt et sikrere passord."
+              same_as_current: "er det samme som nåværende passord."
+              unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
         user_email:
           attributes:
             user_id:
@@ -524,11 +534,7 @@ nb_NO:
   associated_accounts:
     revoke_failed: "Klarte ikke å oppheve kontotilknytningen til %{provider_name}."
   activation:
-    action: "Klikk her for å aktivere din konto"
     already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
-    please_continue: "Din nye konto er registrert; du vil bli videresendt til hjemmesiden. "
-    continue_button: "Fortsett til %{site_name}"
-    welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en e-post når kontoen din er godkjent!"
     missing_session: "Vi klarer ikke å se om kontoen din ble laget, vennligst sjekk om cookies/kapsler er aktivert i nettleseren."
     activated: "Beklager, denne kontoen er allerede aktivert."
@@ -709,6 +715,8 @@ nb_NO:
       yaxis: "Dag"
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
+    site_traffic:
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAB/MAB"
       xaxis: "Dag"
@@ -833,6 +841,9 @@ nb_NO:
       title: "Sidevisninger"
       xaxis: "Dag"
       yaxis: "Totalt antall sidevisninger"
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antall sidevisninger"
     page_view_logged_in_mobile_reqs:
       title: "Sidevisninger av innloggede"
       xaxis: "Dag"
@@ -935,7 +946,7 @@ nb_NO:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
     allow_user_locale: "Tillat brukere å velge eget språk"
-    support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
+    support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre"
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
     show_topic_featured_link_in_digest: "Vis den fremhevede lenken fra et emne i e-postsammendrag."
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
@@ -977,7 +988,6 @@ nb_NO:
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
-    must_approve_users: "Stab må godkjenne alle nye brukere før de får lov til å ta i bruk siden."
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall emner som vises i standard oppsummering av mest populære emner."
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."
@@ -995,7 +1005,6 @@ nb_NO:
     faq_url: "Hvis du har O-S-S på et annet nettsted du gjerne vil bruke, skriv inn nettadressen her."
     tos_url: "Dersom du har et bruksvilkår-dokument et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."
     privacy_policy_url: "Dersom du har en personvernerklæring et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."
-    auto_silence_fast_typers_on_first_post: "Demp brukere automatisk hvis de skriver innlegg raskere enn min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Maksimalt tillitsnivå for automatisk demping av raske innlegg"
     delete_user_max_post_age: "Ikke tillatt å slette brukere hvor deres første innlegg er mer enn (x) dager gamle."
     email_editable: "Tillat brukere å endre e-postadressen sin etter registrering."
@@ -1030,15 +1039,6 @@ nb_NO:
       invalid_string: "Ugyldig verdi"
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inaktiv"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inaktiv"
-      - ""
   search:
     within_post: "#%{post_number} av %{username}"
     types:
@@ -1333,19 +1333,7 @@ nb_NO:
           homepage_style:
             choices:
               latest:
-                label: "Siste emner"
-              categories_only:
-                label: "Kun kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med fremhevede emner"
-              categories_and_latest_topics:
-                label: "Kategorier og siste emner"
-              categories_and_latest_topics_created_date:
-                label: "Kategorier og nyeste emner (sorter etter emne opprettet dato)"
-              categories_and_top_topics:
-                label: "Kategorier og toppemner"
-              subcategories_with_featured_topics:
-                label: "Underkategorier med utvalgte emner"
+                label: "Siste"
   onebox:
     github:
       closed: "lukket"
@@ -1356,6 +1344,7 @@ nb_NO:
       quoted: '%{username} siterte deg i "%{topic}" - %{site_title}'
       replied: '%{username} svarte deg i "%{topic}" - %{site_title}'
       posted: '%{username} skrev noe i "%{topic}" - %{site_title}'
+      private_message: '%{username} sendte deg en personlig melding i "%{topic}" - %{site_title}'
       linked: '%{username} lenket til innlegget ditt i "%{topic}" - %{site_title}'
       watching_first_post: '%{username} opprettet et nytt emne "%{topic}" - %{site_title}'
       confirm_title: "Varslinger aktivert - %{site_title}"

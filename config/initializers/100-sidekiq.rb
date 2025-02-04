@@ -3,6 +3,7 @@
 require "sidekiq/pausable"
 require "sidekiq_logster_reporter"
 require "sidekiq_long_running_job_logger"
+require "mini_scheduler_long_running_job_logger"
 
 Sidekiq.configure_client { |config| config.redis = Discourse.sidekiq_redis_config }
 
@@ -47,6 +48,11 @@ if Sidekiq.server?
     if !scheduler_hostname || scheduler_hostname.split(",").include?(Discourse.os_hostname)
       begin
         MiniScheduler.start(workers: GlobalSetting.mini_scheduler_workers)
+
+        MiniSchedulerLongRunningJobLogger.new(
+          poll_interval_seconds:
+            ENV["DISCOURSE_MINI_SCHEDULER_LONG_RUNNING_JOB_LOGGER_POLL_INTERVAL_SECONDS"],
+        ).start
       rescue MiniScheduler::DistributedMutex::Timeout
         sleep 5
         retry

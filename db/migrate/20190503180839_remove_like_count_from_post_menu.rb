@@ -8,4 +8,8 @@ class RemoveLikeCountFromPostMenu < ActiveRecord::Migration[5.2]
       WHERE name = 'post_menu'
     SQL
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

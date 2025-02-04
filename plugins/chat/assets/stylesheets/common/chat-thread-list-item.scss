@@ -73,12 +73,14 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
     .chat-user-avatar {
       cursor: pointer;
 
       &__container {
         padding: 0;
       }
+
       .avatar {
         border: 2px solid var(--primary-very-low);
         padding: 0;
@@ -92,6 +94,7 @@
         margin-right: -6px;
       }
     }
+
     .chat-thread-participants__avatar-group {
       overflow: hidden;
       justify-content: flex-start;

@@ -2,7 +2,6 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | sidebar | section", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,10 +18,9 @@ module("Integration | Component | sidebar | section", function (hooks) {
     this.headerActions = [];
     await render(template);
 
-    assert.ok(
-      exists(".sidebar-section-wrapper"),
-      "section is displayed by default if no display arg is provided"
-    );
+    assert
+      .dom(".sidebar-section-wrapper")
+      .exists("section is displayed by default if no display arg is provided");
   });
 
   test("displaySection is dynamic based on argument", async function (assert) {
@@ -39,13 +37,12 @@ module("Integration | Component | sidebar | section", function (hooks) {
     this.headerActions = [];
     await render(template);
 
-    assert.notOk(
-      exists(".sidebar-section-wrapper"),
-      "section is not displayed"
-    );
+    assert
+      .dom(".sidebar-section-wrapper")
+      .doesNotExist("section is not displayed");
 
     this.set("displaySection", true);
-    assert.ok(exists(".sidebar-section-wrapper"), "section is displayed");
+    assert.dom(".sidebar-section-wrapper").exists("section is displayed");
   });
 
   test("can expand and collapse content when section is collapsible", async function (assert) {
@@ -61,13 +58,12 @@ module("Integration | Component | sidebar | section", function (hooks) {
     this.headerActions = [];
     await render(template);
 
-    assert.ok(exists(".sidebar-section-content"), "shows content by default");
+    assert.dom(".sidebar-section-content").exists("shows content by default");
 
     await click(".sidebar-section-header-caret");
 
-    assert.notOk(
-      exists(".sidebar-section-content"),
-      "does not show content after collapsing"
-    );
+    assert
+      .dom(".sidebar-section-content")
+      .doesNotExist("does not show content after collapsing");
   });
 });

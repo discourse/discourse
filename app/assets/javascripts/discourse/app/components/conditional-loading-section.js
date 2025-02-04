@@ -1,11 +1,10 @@
 import Component from "@ember/component";
-import I18n from "discourse-i18n";
-export default Component.extend({
-  classNames: ["conditional-loading-section"],
+import { classNameBindings, classNames } from "@ember-decorators/component";
+import { i18n } from "discourse-i18n";
 
-  classNameBindings: ["isLoading"],
-
-  isLoading: false,
-
-  title: I18n.t("conditional_loading_section.loading"),
-});
+@classNames("conditional-loading-section")
+@classNameBindings("isLoading")
+export default class ConditionalLoadingSection extends Component {
+  isLoading = false;
+  title = i18n("conditional_loading_section.loading");
+}

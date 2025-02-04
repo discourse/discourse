@@ -64,7 +64,7 @@ RSpec.describe "Chat composer", type: :system do
 
       click_link(I18n.t("js.composer.more_emoji"))
 
-      expect(find(".chat-emoji-picker .dc-filter-input").value).to eq("gri")
+      expect(find(".emoji-picker .filter-input").value).to eq("gri")
     end
 
     xit "filters with the prefilled input" do
@@ -73,8 +73,18 @@ RSpec.describe "Chat composer", type: :system do
 
       click_link(I18n.t("js.composer.more_emoji"))
 
-      expect(page).to have_selector(".chat-emoji-picker [data-emoji='fr']")
-      expect(page).to have_no_selector(".chat-emoji-picker [data-emoji='grinning']")
+      expect(page).to have_selector(".emoji-picker [data-emoji='fr']")
+      expect(page).to have_no_selector(".emoji-picker [data-emoji='grinning']")
+    end
+
+    xit "replaces the partially typed emoji with the selected" do
+      chat_page.visit_channel(channel_1)
+      find(".chat-composer__input").fill_in(with: "hey :gri")
+
+      click_link(I18n.t("js.composer.more_emoji"))
+      find("[data-emoji='grimacing']").click(wait: 0.5)
+
+      expect(channel_page.composer.value).to eq("hey :grimacing:")
     end
   end
 
@@ -93,6 +103,74 @@ RSpec.describe "Chat composer", type: :system do
       find("body").send_keys(:enter) # special case
 
       expect(channel_page.composer.value).to eq("bb")
+    end
+
+    context "when user preference is set to send on enter" do
+      before { current_user.user_option.update!(chat_send_shortcut: 0) }
+
+      context "when pressing enter" do
+        it "sends the message" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.fill_in(with: "testenter").enter_shortcut
+
+          expect(channel_page.messages).to have_message(text: "testenter")
+        end
+      end
+
+      context "when pressing shift + enter" do
+        it "adds a linebreak" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.fill_in(with: "testenter").shift_enter_shortcut
+
+          expect(channel_page.composer.value).to eq("testenter\n")
+        end
+      end
+
+      context "when pressing meta + enter" do
+        it "sends the message" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.fill_in(with: "testenter").meta_enter_shortcut
+
+          expect(channel_page.messages).to have_message(text: "testenter")
+        end
+      end
+    end
+
+    context "when user preference is set to send on meta + enter" do
+      before { current_user.user_option.update!(chat_send_shortcut: 1) }
+
+      context "when pressing enter" do
+        it "adds a linebreak" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.fill_in(with: "testenter").enter_shortcut
+
+          expect(channel_page.composer.value).to eq("testenter\n")
+        end
+      end
+
+      context "when pressing shift + enter" do
+        it "adds a linebreak" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.fill_in(with: "testenter").shift_enter_shortcut
+
+          expect(channel_page.composer.value).to eq("testenter\n")
+        end
+      end
+
+      context "when pressing meta + enter" do
+        it "sends the message" do
+          chat_page.visit_channel(channel_1)
+
+          channel_page.composer.fill_in(with: "testenter").meta_enter_shortcut
+
+          expect(channel_page.messages).to have_message(text: "testenter")
+        end
+      end
     end
   end
 

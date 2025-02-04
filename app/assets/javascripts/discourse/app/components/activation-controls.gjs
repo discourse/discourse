@@ -26,7 +26,7 @@ export default class ActivationControls extends Component {
         <DButton
           @action={{@editActivationEmail}}
           @label="login.change_email"
-          @icon="pencil-alt"
+          @icon="pencil"
           class="edit-email"
         />
       {{/if}}

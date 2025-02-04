@@ -2,28 +2,39 @@ import Component from "@ember/component";
 import { warn } from "@ember/debug";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
+import { classNames } from "@ember-decorators/component";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
-import getUrl from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
+import { i18n } from "discourse-i18n";
 import imagePreviews from "./image-previews";
 
-export default Component.extend({
-  classNames: ["wizard-container__image-upload"],
-  dialog: service(),
-  uploading: false,
+@classNames("wizard-container__image-upload")
+export default class Image extends Component {
+  @service dialog;
+
+  uploading = false;
 
   @discourseComputed("field.id")
   previewComponent(id) {
     return imagePreviews[dasherize(id)] ?? imagePreviews.generic;
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.setupUploads();
-  },
+  }
+
+  @discourseComputed("uploading", "field.value")
+  hasUpload() {
+    return (
+      !this.uploading &&
+      this.field.value &&
+      !this.field.value.includes("discourse-logo-sketch-small.png")
+    );
+  }
 
   setupUploads() {
     const id = this.field.id;
@@ -52,7 +63,7 @@ export default Component.extend({
     });
 
     this._uppyInstance.on("upload-error", (file, error, response) => {
-      let message = I18n.t("wizard.upload_error");
+      let message = i18n("wizard.upload_error");
       if (response.body.errors) {
         message = response.body.errors.join("\n");
       }
@@ -80,5 +91,5 @@ export default Component.extend({
           }
         });
       });
-  },
-});
+  }
+}

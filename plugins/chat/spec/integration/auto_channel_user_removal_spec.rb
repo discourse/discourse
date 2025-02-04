@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 describe "Automatic user removal from channels" do
-  fab!(:user_1) { Fabricate(:user, trust_level: TrustLevel[1]) }
-  let(:user_1_guardian) { Guardian.new(user_1) }
-  fab!(:user_2) { Fabricate(:user, trust_level: TrustLevel[1]) }
+  fab!(:user_1) { Fabricate(:user, trust_level: 1) }
+  fab!(:user_2) { Fabricate(:user, trust_level: 3) }
+
+  fab!(:user_1_guardian) { Guardian.new(user_1) }
 
   fab!(:secret_group) { Fabricate(:group) }
   fab!(:private_category) { Fabricate(:private_category, group: secret_group) }
@@ -13,7 +14,6 @@ describe "Automatic user removal from channels" do
   fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
 
   before do
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
     SiteSetting.chat_enabled = true
     Jobs.run_immediately!
 
@@ -47,35 +47,45 @@ describe "Automatic user removal from channels" do
     end
 
     it "does not remove the user who is in one of the chat_allowed_groups" do
-      user_2.change_trust_level!(TrustLevel[4])
+      user_2.change_trust_level!(4)
+
       expect { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_3] }.to change {
         Chat::UserChatChannelMembership.count
-      }.by(-2)
+      }.by(-3)
       expect(
         Chat::UserChatChannelMembership.exists?(user: user_2, chat_channel: public_channel),
       ).to eq(true)
     end
 
-    it "does not remove users from their DM channels" do
+    it "removes users from their DM channels" do
       expect { SiteSetting.chat_allowed_groups = "" }.to change {
         Chat::UserChatChannelMembership.count
-      }.by(-3)
+      }.by(-5)
 
       expect(Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: dm_channel)).to eq(
-        true,
+        false,
       )
       expect(Chat::UserChatChannelMembership.exists?(user: user_2, chat_channel: dm_channel)).to eq(
-        true,
+        false,
       )
     end
 
     context "for staff users" do
       fab!(:staff_user) { Fabricate(:admin) }
 
-      it "does not remove them from public channels" do
+      it "does not remove them from chat channels" do
         public_channel.add(staff_user)
         private_channel.add(staff_user)
+
+        expect(
+          Chat::UserChatChannelMembership.where(
+            user: staff_user,
+            chat_channel: [public_channel, private_channel],
+          ).count,
+        ).to eq(2)
+
         SiteSetting.chat_allowed_groups = ""
+
         expect(
           Chat::UserChatChannelMembership.where(
             user: staff_user,
@@ -86,6 +96,7 @@ describe "Automatic user removal from channels" do
 
       it "does not remove them from DM channels" do
         staff_dm_channel = Fabricate(:direct_message_channel, users: [user_1, staff_user])
+
         expect(
           Chat::UserChatChannelMembership.where(
             user: staff_user,
@@ -105,21 +116,12 @@ describe "Automatic user removal from channels" do
         SiteSetting.chat_allowed_groups = group.id
       end
 
-      it "removes the user from the category channels" do
-        group.remove(user_1)
-        expect(
-          Chat::UserChatChannelMembership.where(
-            user: user_1,
-            chat_channel: [public_channel, private_channel],
-          ).count,
-        ).to eq(0)
-      end
+      it "removes the user from all channels" do
+        expect(Chat::UserChatChannelMembership.where(user: user_1).count).to eq(3)
 
-      it "does not remove the user from DM channels" do
         group.remove(user_1)
-        expect(
-          Chat::UserChatChannelMembership.where(user: user_1, chat_channel: dm_channel).count,
-        ).to eq(1)
+
+        expect(Chat::UserChatChannelMembership.where(user: user_1).count).to eq(0)
       end
 
       context "for staff users" do
@@ -144,6 +146,7 @@ describe "Automatic user removal from channels" do
     context "when a user is removed from a private category group" do
       context "when the user is in another group that can interact with the channel" do
         fab!(:stealth_group) { Fabricate(:group) }
+
         before do
           CategoryGroup.create!(
             category: private_category,
@@ -155,6 +158,7 @@ describe "Automatic user removal from channels" do
 
         it "does not remove them from the corresponding channel" do
           secret_group.remove(user_1)
+
           expect(
             Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
           ).to eq(true)
@@ -167,6 +171,7 @@ describe "Automatic user removal from channels" do
       context "when the user is in no other groups that can interact with the channel" do
         it "removes them from the corresponding channel" do
           secret_group.remove(user_1)
+
           expect(
             Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
           ).to eq(false)
@@ -182,6 +187,7 @@ describe "Automatic user removal from channels" do
     context "when the group's permission changes from reply+see to just see for the category" do
       it "removes the user from the corresponding category channel" do
         private_category.update!(permissions: { secret_group.id => :readonly })
+
         expect(
           Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
         ).to eq(false)
@@ -197,6 +203,7 @@ describe "Automatic user removal from channels" do
           secret_group.add(staff_user)
           private_channel.add(staff_user)
           private_category.update!(permissions: { secret_group.id => :readonly })
+
           expect(
             Chat::UserChatChannelMembership.exists?(
               user: staff_user,
@@ -210,6 +217,7 @@ describe "Automatic user removal from channels" do
     context "when the secret_group is no longer allowed to access the private category" do
       it "removes the user from the corresponding category channel" do
         private_category.update!(permissions: { Group::AUTO_GROUPS[:staff] => :full })
+
         expect(
           Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
         ).to eq(false)
@@ -225,6 +233,7 @@ describe "Automatic user removal from channels" do
           secret_group.add(staff_user)
           private_channel.add(staff_user)
           private_category.update!(permissions: {})
+
           expect(
             Chat::UserChatChannelMembership.exists?(
               user: staff_user,
@@ -238,13 +247,13 @@ describe "Automatic user removal from channels" do
 
   context "when a group is destroyed" do
     context "when it was the last group on the private category" do
-      it "no users are removed because the category defaults to Everyone having full access" do
+      it "remove users because the category defaults to staff having full access" do
         secret_group.destroy!
 
         expect(
           Chat::UserChatChannelMembership.exists?(user: user_1, chat_channel: private_channel),
-        ).to eq(true)
-        expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).to include(
+        ).to eq(false)
+        expect(Chat::ChannelFetcher.all_secured_channel_ids(user_1_guardian)).to_not include(
           private_channel.id,
         )
 

@@ -1,6 +1,7 @@
 /*
 * shared styles
 */
+
 .d-modal.login-modal,
 .d-modal.create-account {
   &.awaiting-approval {
@@ -10,8 +11,9 @@
   .d-modal {
     &__container {
       position: relative;
-      width: max-content;
+      width: 100%;
     }
+
     &__header {
       border-bottom: none;
       padding: 0;
@@ -20,11 +22,13 @@
       right: 0.75em;
       z-index: z("max");
     }
+
     &__body {
       display: flex;
       gap: 2rem;
       padding: 0;
     }
+
     &__footer {
       flex-wrap: nowrap;
       padding: 0;
@@ -36,35 +40,11 @@
     }
   }
 
-  .login-subheader {
-    font-size: var(--font-up-1);
-    margin: 0;
-  }
-
   .login-left-side {
     box-sizing: border-box;
     width: 100%;
     padding: 3rem;
     overflow: auto;
-  }
-
-  .login-welcome-header {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  .login-title {
-    font-size: var(--font-up-6);
-    margin: 0;
-    line-height: var(--line-height-medium);
-  }
-
-  .waving-hand {
-    width: 35px;
-    height: 35px;
-    margin-left: 0.5em;
-    align-self: center;
   }
 
   .login-right-side {
@@ -87,30 +67,33 @@
   }
 
   #login-form {
-    margin: 3em 0 1.2em 0;
+    margin: 2em 0 1em 0;
     display: flex;
     flex-direction: column;
 
-    .input-group {
-      &.create-account-email,
-      &.create-account__username,
-      &.create-account__fullname.required {
-        order: -1;
-      }
+    .create-account-associate-link {
+      order: 1;
     }
   }
 
   .tip {
+    font-size: var(--font-down-1);
+    min-height: 1.4em;
+    display: block;
+
     &.bad {
       color: var(--danger);
-      display: block;
     }
+  }
+
+  .toggle-password-mask span {
+    font-size: var(--font-down-1-rem);
   }
 
   .more-info,
   .instructions {
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
-    min-height: 1.4em;
     overflow-wrap: anywhere;
   }
 
@@ -124,6 +107,7 @@
   #modal-alert {
     box-sizing: border-box;
     display: inline-block;
+
     // if you want to use flexbox here make sure child elements like <b> don't cause line breaks
     padding: 1em 3.5em 1em 1em; // large right padding to make sure long text isn't under the close button
     width: 100%;
@@ -132,10 +116,52 @@
     min-height: 35px;
 
     &:empty {
-      min-height: 0px;
-      padding: 0px;
+      min-height: 0;
+      padding: 0;
       overflow: hidden;
       display: inline;
+    }
+  }
+
+  .login-page-cta,
+  .signup-page-cta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__disclaimer {
+      color: var(--primary-medium);
+      margin-bottom: 1rem;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+
+      button {
+        font-size: var(--font-0) !important;
+        width: 100%;
+      }
+    }
+
+    &__existing-account,
+    &__no-account-yet {
+      color: var(--primary-medium);
+      font-size: var(--font-down);
+      margin-bottom: 0.5rem;
+      text-align: center;
+      width: 100%;
+
+      &::before {
+        content: " ";
+        display: block;
+        height: 1px;
+        width: 100%;
+        background-color: var(--primary-low);
+        margin-block: 1rem;
+      }
     }
   }
 
@@ -147,42 +173,70 @@
         right: 0;
         top: 0;
       }
+
       .has-alt-auth {
         flex-direction: column;
         overflow: auto;
-        gap: 1em;
-        .login-welcome-header,
-        .d-modal__footer {
+        gap: 0;
+
+        .d-modal__footer,
+        .btn-social {
           font-size: var(--font-down-1);
         }
+
         .login-left-side {
           overflow: unset;
-          padding: 1em 2.75em 1em 1em;
+          padding: 1em;
         }
+
         .login-right-side {
           padding: 1em;
           max-width: unset;
         }
+
         #login-form {
           margin: 1.5em 0;
+        }
+
+        .signup-progress-bar {
+          display: none;
         }
       }
     }
   }
 }
+
+.invites-show {
+  #account-email-validation:not(:has(*)) {
+    display: none;
+  }
+}
+
 /* end shared styles */
+.d-modal.create-account,
+.d-modal.login-modal {
+  &:not(:has(.login-right-side)) .d-modal__container {
+    max-width: 500px;
+  }
+}
 
 .d-modal.create-account {
   .d-modal {
+    &__container {
+      width: 100%;
+    }
+
     &__footer {
       flex-direction: column;
       align-items: flex-start;
     }
+
     &__footer-buttons {
       display: flex;
       flex-direction: column;
       width: 100%;
       align-items: center;
+
       .already-have-account {
         color: var(--primary-medium);
         margin-bottom: 0.5em;
@@ -203,6 +257,10 @@
   .create-account__password-info {
     display: flex;
     justify-content: space-between;
+
+    .create-account__password-tip-validation {
+      display: flex;
+    }
   }
 }
 
@@ -217,7 +275,8 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      margin-bottom: 0.8em;
+      margin-bottom: 1em;
+
       input,
       .select-kit-header {
         padding: 0.75em 0.77em;
@@ -225,19 +284,23 @@
         margin-bottom: 0.25em;
         width: 100%;
       }
+
       input:focus {
         outline: none;
         border: 1px solid var(--tertiary);
         box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
       }
+
       input:disabled {
         background-color: var(--primary-low);
       }
+
       span.more-info {
         color: var(--primary-medium);
         min-height: 1.4em; // prevents height increase due to tips
         overflow-wrap: anywhere;
       }
+
       label.alt-placeholder,
       .user-field.text label.control-label,
       .user-field.dropdown label.control-label,
@@ -248,10 +311,11 @@
         position: absolute;
         pointer-events: none;
         left: 1em;
-        top: 10px;
-        box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
+        top: 13px;
+        box-shadow: 0 0 0 0 rgba(var(--tertiary-rgb), 0);
         transition: 0.2s ease all;
       }
+
       .user-field.text label.control-label,
       .user-field.dropdown label.control-label,
       .user-field.multiselect label.control-label {
@@ -262,11 +326,17 @@
         padding: 0 0.25em 0 0.25em;
         font-size: $font-down-1;
       }
+
+      .user-field.text label.control-label {
+        top: 13px;
+      }
+
       .user-field.text:focus-within,
       .user-field.dropdown:focus-within,
       .user-field.multiselect:focus-within {
         z-index: 1000; // ensures the active input is always on top of sibling input labels
       }
+
       input:focus + label.alt-placeholder,
       input.value-entered + label.alt-placeholder {
         top: -8px;
@@ -275,8 +345,17 @@
         padding: 0 0.25em 0 0.25em;
         font-size: var(--font-down-1);
       }
+
       input.alt-placeholder:invalid {
         color: var(--primary);
+      }
+
+      .user-field.dropdown,
+      .user-field.multiselect {
+        .more-info,
+        .instructions {
+          opacity: 1;
+        }
       }
 
       #email-login-link {
@@ -307,6 +386,7 @@
         min-width: 250px;
         box-shadow: none;
       }
+
       input:focus {
         outline: none;
         border: 1px solid var(--tertiary);
@@ -328,12 +408,12 @@
             font-size: 14px;
             color: var(--primary-medium);
           }
+
           label.alt-placeholder.control-label {
             color: var(--primary-medium);
             font-size: 16px;
             position: absolute;
             pointer-events: none;
-            top: 12px;
             transition: 0.2s ease all;
             max-width: calc(100% - 2em);
             white-space: nowrap;
@@ -342,22 +422,30 @@
             text-overflow: ellipsis;
           }
         }
+
         details:not(.has-selection) span.name,
         details:not(.has-selection) span.formatted-selection {
           color: var(--primary-medium);
         }
+
         .select-kit-row span.name {
           color: var(--primary);
         }
+
         .select-kit.combo-box.is-expanded summary {
           outline: none;
           border: 1px solid var(--tertiary);
           box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
         }
+
         .controls .checkbox-label {
+          display: flex;
+          align-items: center;
+
           input[type="checkbox"].ember-checkbox {
             width: 1em !important;
             min-width: unset;
+            margin-block: 0;
           }
         }
       }

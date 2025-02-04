@@ -32,7 +32,6 @@ da:
       deleted_chat_username: slettet
       dates:
         yesterday: "I går"
-        time_tiny: "tt:mm"
       all_loaded: "Viser alle beskeder"
       already_enabled: "Chat er allerede aktiveret på dette emne. Opdater venligst."
       disabled_for_topic: "Chat er deaktiveret på dette emne."
@@ -261,6 +260,8 @@ da:
             title: "Normal"
           tracking:
             title: "Følger"
+          watching:
+            title: "Overvåger"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -279,10 +280,6 @@ da:
           other_html: "<span>%{username}</span> <span>nævnte %{identifier} i personlig chat</span>"
         chat_message: "Ny chatbesked"
         chat_quoted: "%{username} citerede din chatbesked"
-      titles:
-        chat_mention: "Chatomtale"
-        chat_invitation: "Chatinvitation"
-        chat_quoted: "Chat citeret"
     action_codes:
       chat:
         enabled: '%{who} aktiverede <button class="btn-link open-chat">chat</button> %{when}'

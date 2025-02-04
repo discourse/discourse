@@ -1,6 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Hyperlink", function (needs) {
   needs.user();
@@ -50,7 +50,7 @@ acceptance("Composer - Hyperlink", function (needs) {
       .dom(".insert-link.d-modal__body")
       .doesNotExist("modal dismissed after cancelling");
 
-    const textarea = query("#reply-control .d-editor-input");
+    const textarea = document.querySelector("#reply-control .d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = 6;
     await click(".d-editor button.link");

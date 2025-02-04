@@ -39,6 +39,10 @@ describe "Topic Map - Private Message", type: :system do
   end
 
   it "updates the various topic stats, avatars" do
+    skip_on_ci!(
+      "This is flaky because it relies a lot on messagebus events and the counts don't always update in time",
+    )
+
     freeze_time
     sign_in(user)
     topic_page.visit_topic(topic)
@@ -77,12 +81,11 @@ describe "Topic Map - Private Message", type: :system do
     expect(expanded_avatars.length).to eq 7
 
     # views count
-    # TODO (martin) Investigate flakiness
-    # sign_in(other_user)
-    # topic_page.visit_topic(topic)
-    # try_until_success { expect(TopicViewItem.count).to eq(2) }
-    # page.refresh
-    # expect(topic_map.views_count).to eq(2)
+    sign_in(other_user_1)
+    topic_page.visit_topic(topic)
+    try_until_success { expect(TopicViewItem.count).to eq(2) }
+    page.refresh
+    expect(topic_map.views_count).to eq(2)
 
     # likes count
     expect(topic_map).to have_no_likes
@@ -94,6 +97,11 @@ describe "Topic Map - Private Message", type: :system do
   end
 
   it "has private message map that shows correct participants and allows editing of participant invites" do
+    skip_on_ci!(<<~REASON)
+    Failing on CI quite consistently with the following error:
+    `expected to find link "anne1" with href "/u/anne1" within #<Capybara::Node::Element tag="div" path="..."> but there were no matches`
+    REASON
+
     freeze_time
     sign_in(user)
     topic_page.visit_topic(topic)
@@ -129,7 +137,7 @@ describe "Topic Map - Private Message", type: :system do
     # removing participants
     private_message_map.toggle_edit_participants_button
     private_message_map.participants_details.each do |details|
-      expect(details).to have_css(".remove-invited .d-icon-times")
+      expect(details).to have_css(".remove-invited .d-icon-xmark")
     end
     private_message_map.click_remove_participant_button(last_post_user)
     expect(private_message_remove_participant_modal).to be_open

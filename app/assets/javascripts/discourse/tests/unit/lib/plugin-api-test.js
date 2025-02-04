@@ -1,19 +1,20 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { rollbackAllPrepends } from "discourse/lib/class-prepend";
+import discourseComputed from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import discourseComputed from "discourse-common/utils/decorators";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
 
   test("modifyClass works with classic Ember objects", function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
     const TestThingy = EmberObject.extend({
-      @discourseComputed
-      prop() {
+      prop: computed(function () {
         return "hello";
-      },
+      }),
     });
 
     getOwner(this).register("test-thingy:main", TestThingy);
@@ -22,10 +23,9 @@ module("Unit | Utility | plugin-api", function (hooks) {
       api.modifyClass("test-thingy:main", {
         pluginId: "plugin-api-test",
 
-        @discourseComputed
-        prop() {
+        prop: computed(function () {
           return `${this._super(...arguments)} there`;
-        },
+        }),
       });
     });
 
@@ -47,10 +47,9 @@ module("Unit | Utility | plugin-api", function (hooks) {
       api.modifyClass("native-test-thingy:main", {
         pluginId: "plugin-api-test",
 
-        @discourseComputed
-        prop() {
+        prop: computed(function () {
           return `${this._super(...arguments)} partner`;
-        },
+        }),
       });
     });
 
@@ -89,11 +88,11 @@ module("Unit | Utility | plugin-api", function (hooks) {
   });
 
   test("modifyClass works with getters", function (assert) {
-    let Base = EmberObject.extend({
+    let Base = class extends EmberObject {
       get foo() {
         throw new Error("base getter called");
-      },
-    });
+      }
+    };
 
     getOwner(this).register("test-class:main", Base, {
       instantiate: false,
@@ -124,9 +123,11 @@ module("Unit | Utility | plugin-api", function (hooks) {
       static someStaticMethod() {
         return "original static method";
       }
+
       someFunction() {
         return "original function";
       }
+
       get someGetter() {
         return "original getter";
       }
@@ -153,15 +154,85 @@ module("Unit | Utility | plugin-api", function (hooks) {
           }
       );
 
+      api.modifyClass(
+        "test-thingy:main",
+        (Superclass) =>
+          class extends Superclass {
+            someFunction() {
+              return `${super.someFunction()} twice`;
+            }
+          }
+      );
+
       const thingyKlass =
         getOwner(this).resolveRegistration("test-thingy:main");
       const thingy = new thingyKlass();
-      assert.strictEqual(thingy.someFunction(), "original function modified");
+      assert.strictEqual(
+        thingy.someFunction(),
+        "original function modified twice"
+      );
       assert.strictEqual(thingy.someGetter, "original getter modified");
       assert.strictEqual(
         TestThingy.someStaticMethod(),
         "original static method modified"
       );
     });
+  });
+
+  test("modifyClass works with a combination of callback and legacy syntax", function (assert) {
+    class TestThingy extends EmberObject {
+      someMethod() {
+        return "original";
+      }
+    }
+
+    getOwner(this).register("test-thingy:main", TestThingy);
+
+    const fakeInit = () => {
+      withPluginApi("1.1.0", (api) => {
+        api.modifyClass("test-thingy:main", {
+          someMethod() {
+            return `${this._super()} reopened`;
+          },
+          pluginId: "one",
+        });
+
+        api.modifyClass(
+          "test-thingy:main",
+          (Superclass) =>
+            class extends Superclass {
+              someMethod() {
+                return `${super.someMethod()}, prepended`;
+              }
+            }
+        );
+
+        api.modifyClass("test-thingy:main", {
+          someMethod() {
+            return `${this._super()}, reopened2`;
+          },
+          pluginId: "two",
+        });
+      });
+    };
+
+    fakeInit();
+
+    assert.strictEqual(
+      new TestThingy().someMethod(),
+      "original reopened, reopened2, prepended",
+      "it works after first application"
+    );
+
+    for (let i = 0; i < 3; i++) {
+      rollbackAllPrepends();
+      fakeInit();
+    }
+
+    assert.strictEqual(
+      new TestThingy().someMethod(),
+      "original reopened, reopened2, prepended",
+      "it works when rolled back and re-applied multiple times"
+    );
   });
 });

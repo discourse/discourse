@@ -1,34 +1,42 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { tagName } from "@ember-decorators/component";
 import UtilsMixin from "select-kit/mixins/utils";
 
-export default Component.extend(UtilsMixin, {
-  tagName: "",
-  item: null,
-  selectKit: null,
-  extraClass: null,
-  id: null,
+@tagName("")
+export default class SelectedChoice extends Component.extend(UtilsMixin) {
+  item = null;
+  selectKit = null;
+  extraClass = null;
+  id = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.set("id", guidFor(this));
-  },
+  }
 
-  itemValue: computed("item", function () {
+  @computed("item")
+  get itemValue() {
     return this.getValue(this.item);
-  }),
+  }
 
-  itemName: computed("item", function () {
+  @computed("item")
+  get itemName() {
     return this.getName(this.item);
-  }),
+  }
 
-  mandatoryValuesArray: computed("item", function () {
+  @computed("item")
+  get mandatoryValuesArray() {
     return this.get("mandatoryValues")?.split("|") || [];
-  }),
+  }
 
-  readOnly: computed("item", function () {
+  @computed("item")
+  get readOnly() {
+    if (typeof this.item === "string") {
+      return this.mandatoryValuesArray.includes(this.item);
+    }
     return this.mandatoryValuesArray.includes(this.item.id);
-  }),
-});
+  }
+}

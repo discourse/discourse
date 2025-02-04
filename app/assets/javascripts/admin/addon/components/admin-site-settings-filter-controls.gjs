@@ -6,7 +6,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse-common/helpers/i18n";
+import autoFocus from "discourse/modifiers/auto-focus";
+import { i18n } from "discourse-i18n";
 
 export default class AdminSiteSettingsFilterControls extends Component {
   @tracked filter = this.args.initialFilter || "";
@@ -65,12 +66,13 @@ export default class AdminSiteSettingsFilterControls extends Component {
           {{#if @showMenu}}
             <DButton
               @action={{this.toggleMenu}}
-              @icon={{if this.isMenuOpen "times" "bars"}}
+              @icon={{if this.isMenuOpen "xmark" "bars"}}
               class="menu-toggle"
             />
           {{/if}}
           <input
             {{on "input" this.onChangeFilterInput}}
+            {{autoFocus}}
             id="setting-filter"
             class="no-blur admin-site-settings-filter-controls__input"
             placeholder={{i18n "type_to_filter"}}

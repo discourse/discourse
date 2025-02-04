@@ -3,17 +3,18 @@ import { action, set } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
+import { tagName } from "@ember-decorators/component";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import optionalService from "discourse/lib/optional-service";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _components = {};
 
@@ -41,25 +42,33 @@ export function registerReviewableActionModal(actionName, modalClass) {
   actionModalClassMap[actionName] = modalClass;
 }
 
-export default Component.extend({
-  adminTools: optionalService(),
-  dialog: service(),
-  modal: service(),
-  siteSettings: service(),
-  currentUser: service(),
-  composer: service(),
-  tagName: "",
-  updating: null,
-  editing: false,
-  _updates: null,
+@tagName("")
+export default class ReviewableItem extends Component {
+  @service dialog;
+  @service modal;
+  @service siteSettings;
+  @service currentUser;
+  @service composer;
+  @optionalService adminTools;
+
+  updating = null;
+  editing = false;
+  _updates = null;
 
   @discourseComputed(
     "reviewable.type",
     "reviewable.last_performing_username",
     "siteSettings.blur_tl0_flagged_posts_media",
-    "reviewable.target_created_by_trust_level"
+    "reviewable.target_created_by_trust_level",
+    "reviewable.deleted_at"
   )
-  customClasses(type, lastPerformingUsername, blurEnabled, trustLevel) {
+  customClasses(
+    type,
+    lastPerformingUsername,
+    blurEnabled,
+    trustLevel,
+    deletedAt
+  ) {
     let classes = dasherize(type);
 
     if (lastPerformingUsername) {
@@ -70,13 +79,33 @@ export default Component.extend({
       classes = `${classes} blur-images`;
     }
 
-    return classes;
-  },
+    if (deletedAt) {
+      classes = `${classes} reviewable-deleted`;
+    }
 
-  @discourseComputed("reviewable.created_from_flag", "reviewable.status")
-  displayContextQuestion(createdFromFlag, status) {
-    return createdFromFlag && status === 0;
-  },
+    return classes;
+  }
+
+  @discourseComputed(
+    "reviewable.created_from_flag",
+    "reviewable.status",
+    "claimOptional",
+    "claimRequired",
+    "reviewable.claimed_by"
+  )
+  displayContextQuestion(
+    createdFromFlag,
+    status,
+    claimOptional,
+    claimRequired,
+    claimedBy
+  ) {
+    return (
+      createdFromFlag &&
+      status === 0 &&
+      (claimOptional || (claimRequired && claimedBy !== null))
+    );
+  }
 
   @discourseComputed(
     "reviewable.topic",
@@ -85,12 +114,22 @@ export default Component.extend({
   )
   topicId(topic, topicId, removedTopicId) {
     return (topic && topic.id) || topicId || removedTopicId;
-  },
+  }
 
   @discourseComputed("siteSettings.reviewable_claiming", "topicId")
   claimEnabled(claimMode, topicId) {
     return claimMode !== "disabled" && !!topicId;
-  },
+  }
+
+  @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
+  claimOptional(claimMode, claimEnabled) {
+    return !claimEnabled || claimMode === "optional";
+  }
+
+  @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
+  claimRequired(claimMode, claimEnabled) {
+    return claimEnabled && claimMode === "required";
+  }
 
   @discourseComputed(
     "claimEnabled",
@@ -107,7 +146,7 @@ export default Component.extend({
     }
 
     return claimMode !== "required";
-  },
+  }
 
   @discourseComputed(
     "siteSettings.reviewable_claiming",
@@ -116,16 +155,16 @@ export default Component.extend({
   claimHelp(claimMode, claimedBy) {
     if (claimedBy) {
       return claimedBy.id === this.currentUser.id
-        ? I18n.t("review.claim_help.claimed_by_you")
-        : I18n.t("review.claim_help.claimed_by_other", {
+        ? i18n("review.claim_help.claimed_by_you")
+        : i18n("review.claim_help.claimed_by_other", {
             username: claimedBy.username,
           });
     }
 
     return claimMode === "optional"
-      ? I18n.t("review.claim_help.optional")
-      : I18n.t("review.claim_help.required");
-  },
+      ? i18n("review.claim_help.optional")
+      : i18n("review.claim_help.required");
+  }
 
   // Find a component to render, if one exists. For example:
   // `ReviewableUser` will return `reviewable-user`
@@ -142,12 +181,21 @@ export default Component.extend({
       owner.hasRegistration(`template:components/${dasherized}`);
     _components[type] = componentExists ? dasherized : null;
     return _components[type];
-  },
+  }
 
   @discourseComputed("_updates.category_id", "reviewable.category.id")
   tagCategoryId(updatedCategoryId, categoryId) {
     return updatedCategoryId || categoryId;
-  },
+  }
+
+  @discourseComputed("reviewable.type", "reviewable.target_created_by")
+  showIpLookup(reviewableType) {
+    return (
+      reviewableType !== "ReviewableUser" &&
+      this.currentUser.staff &&
+      this.reviewable.target_created_by
+    );
+  }
 
   @bind
   _performConfirmed(performableAction, additionalData = {}) {
@@ -219,19 +267,19 @@ export default Component.extend({
     } else {
       return performAction();
     }
-  },
+  }
 
   clientSuspend(reviewable, performAction) {
     this._penalize("showSuspendModal", reviewable, performAction);
-  },
+  }
 
   clientSilence(reviewable, performAction) {
     this._penalize("showSilenceModal", reviewable, performAction);
-  },
+  }
 
   async clientEdit(reviewable, performAction) {
     if (!this.currentUser) {
-      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     }
     const post = await this.store.find("post", reviewable.post_id);
     const topic_json = await Topic.find(post.topic_id, {});
@@ -248,14 +296,13 @@ export default Component.extend({
       action: Composer.EDIT,
       draftKey: post.get("topic.draft_key"),
       draftSequence: post.get("topic.draft_sequence"),
-      skipDraftCheck: true,
       skipJumpOnSave: true,
     };
 
     this.composer.open(opts);
 
     return performAction();
-  },
+  }
 
   _penalize(adminToolMethod, reviewable, performAction) {
     let adminTools = this.adminTools;
@@ -269,7 +316,7 @@ export default Component.extend({
         before: performAction,
       });
     }
-  },
+  }
 
   @action
   explainReviewable(reviewable, event) {
@@ -277,80 +324,82 @@ export default Component.extend({
     this.modal.show(ExplainReviewableModal, {
       model: { reviewable },
     });
-  },
+  }
 
-  actions: {
-    edit() {
-      this.set("editing", true);
-      this.set("_updates", { payload: {} });
-    },
+  @action
+  edit() {
+    this.set("editing", true);
+    this.set("_updates", { payload: {} });
+  }
 
-    cancelEdit() {
-      this.set("editing", false);
-    },
+  @action
+  cancelEdit() {
+    this.set("editing", false);
+  }
 
-    saveEdit() {
-      let updates = this._updates;
+  @action
+  saveEdit() {
+    let updates = this._updates;
 
-      // Remove empty objects
-      Object.keys(updates).forEach((name) => {
-        let attr = updates[name];
-        if (typeof attr === "object" && Object.keys(attr).length === 0) {
-          delete updates[name];
-        }
+    // Remove empty objects
+    Object.keys(updates).forEach((name) => {
+      let attr = updates[name];
+      if (typeof attr === "object" && Object.keys(attr).length === 0) {
+        delete updates[name];
+      }
+    });
+
+    this.set("updating", true);
+    return this.reviewable
+      .update(updates)
+      .then(() => this.set("editing", false))
+      .catch(popupAjaxError)
+      .finally(() => this.set("updating", false));
+  }
+
+  @action
+  categoryChanged(categoryId) {
+    let category = Category.findById(categoryId);
+
+    if (!category) {
+      category = Category.findUncategorized();
+    }
+
+    set(this._updates, "category_id", category.id);
+  }
+
+  @action
+  valueChanged(fieldId, event) {
+    set(this._updates, fieldId, event.target.value);
+  }
+
+  @action
+  perform(performableAction) {
+    if (this.updating) {
+      return;
+    }
+
+    const message = performableAction.get("confirm_message");
+    const requireRejectReason = performableAction.get("require_reject_reason");
+    const actionModalClass = requireRejectReason
+      ? RejectReasonReviewableModal
+      : actionModalClassMap[performableAction.server_action];
+
+    if (message) {
+      this.dialog.confirm({
+        message,
+        didConfirm: () => this._performConfirmed(performableAction),
       });
-
-      this.set("updating", true);
-      return this.reviewable
-        .update(updates)
-        .then(() => this.set("editing", false))
-        .catch(popupAjaxError)
-        .finally(() => this.set("updating", false));
-    },
-
-    categoryChanged(categoryId) {
-      let category = Category.findById(categoryId);
-
-      if (!category) {
-        category = Category.findUncategorized();
-      }
-
-      set(this._updates, "category_id", category.id);
-    },
-
-    valueChanged(fieldId, event) {
-      set(this._updates, fieldId, event.target.value);
-    },
-
-    perform(performableAction) {
-      if (this.updating) {
-        return;
-      }
-
-      const message = performableAction.get("confirm_message");
-      const requireRejectReason = performableAction.get(
-        "require_reject_reason"
-      );
-      const actionModalClass = requireRejectReason
-        ? RejectReasonReviewableModal
-        : actionModalClassMap[performableAction.server_action];
-
-      if (message) {
-        this.dialog.confirm({
-          message,
-          didConfirm: () => this._performConfirmed(performableAction),
-        });
-      } else if (actionModalClass) {
-        this.modal.show(actionModalClass, {
-          model: {
-            reviewable: this.reviewable,
-            performConfirmed: this._performConfirmed,
-            action: performableAction,
-          },
-        });
-      } else {
-        return this._performConfirmed(performableAction);
-      }
-    },
-  },
-});
+    } else if (actionModalClass) {
+      this.modal.show(actionModalClass, {
+        model: {
+          reviewable: this.reviewable,
+          performConfirmed: this._performConfirmed,
+          action: performableAction,
+        },
+      });
+    } else {
+      return this._performConfirmed(performableAction);
+    }
+  }
+}

@@ -83,10 +83,13 @@ class PostAlerter
       return
     end
 
+    push_window = SiteSetting.push_notification_time_window_mins
+    if push_window > 0 && user.seen_since?(push_window.minutes.ago)
+      delay = (push_window - (Time.now - user.last_seen_at) / 60)
+    end
+
     if user.push_subscriptions.exists?
-      if user.seen_since?(SiteSetting.push_notification_time_window_mins.minutes.ago)
-        delay =
-          (SiteSetting.push_notification_time_window_mins - (Time.now - user.last_seen_at) / 60)
+      if delay.present?
         Jobs.enqueue_in(delay.minutes, :send_push_notification, user_id: user.id, payload: payload)
       else
         Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
@@ -98,15 +101,25 @@ class PostAlerter
       clients =
         user
           .user_api_keys
-          .joins(:scopes)
+          .joins(:scopes, :client)
           .where("user_api_key_scopes.name IN ('push', 'notifications')")
           .where("push_url IS NOT NULL AND push_url <> ''")
           .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
           .where("revoked_at IS NULL")
-          .order(client_id: :asc)
-          .pluck(:client_id, :push_url)
+          .order("user_api_key_clients.client_id ASC")
+          .pluck("user_api_key_clients.client_id, user_api_keys.push_url")
 
-      if clients.length > 0
+      return if clients.length == 0
+
+      if delay.present?
+        Jobs.enqueue_in(
+          delay.minutes,
+          :push_notification,
+          clients: clients,
+          payload: payload,
+          user_id: user.id,
+        )
+      else
         Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
       end
     end
@@ -504,7 +517,7 @@ class PostAlerter
     end
   end
 
-  COLLAPSED_NOTIFICATION_TYPES ||= [
+  COLLAPSED_NOTIFICATION_TYPES = [
     Notification.types[:replied],
     Notification.types[:posted],
     Notification.types[:private_message],

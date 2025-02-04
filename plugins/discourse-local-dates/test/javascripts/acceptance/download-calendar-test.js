@@ -1,10 +1,10 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance(
   "Local Dates - Download calendar without default calendar option set",
@@ -30,9 +30,43 @@ acceptance(
       assert
         .dom("#discourse-modal-title")
         .hasText(
-          I18n.t("download_calendar.title"),
+          i18n("download_calendar.title"),
           "it should display modal to select calendar"
         );
+
+      assert.dom(".control-group.remember").exists();
+    });
+  }
+);
+
+acceptance(
+  "Local Dates - Download calendar as an anonymous user",
+  function (needs) {
+    needs.settings({ discourse_local_dates_enabled: true });
+    needs.pretender((server, helper) => {
+      const response = cloneJSON(fixturesByUrl["/t/281.json"]);
+      const startDate = moment
+        .tz("America/Lima")
+        .add(1, "days")
+        .format("YYYY-MM-DD");
+      response.post_stream.posts[0].cooked = `<p><span data-date=\"${startDate}\" data-time=\"13:00:00\" class=\"discourse-local-date\" data-timezone=\"America/Lima\" data-email-preview=\"${startDate}T18:00:00Z UTC\">${startDate}T18:00:00Z</span></p>`;
+
+      server.get("/t/281.json", () => helper.response(response));
+    });
+
+    test("Display pick calendar modal", async function (assert) {
+      await visit("/t/local-dates/281");
+      await click(".discourse-local-date");
+      await click(".download-calendar");
+
+      assert
+        .dom("#discourse-modal-title")
+        .hasText(
+          i18n("download_calendar.title"),
+          "it should display modal to select calendar"
+        );
+
+      assert.dom(".control-group.remember").doesNotExist();
     });
   }
 );

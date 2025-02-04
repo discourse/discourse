@@ -2,31 +2,31 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
-const Tab = EmberObject.extend({
+class Tab extends EmberObject {
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.setProperties({
       route: this.route || `group.${this.name}`,
-      message: I18n.t(`groups.${this.i18nKey || this.name}`),
+      message: i18n(`groups.${this.i18nKey || this.name}`),
     });
-  },
-});
+  }
+}
 
-export default Controller.extend({
-  application: controller(),
-  dialog: service(),
-  currentUser: service(),
-  router: service(),
-  composer: service(),
+export default class GroupController extends Controller {
+  @service dialog;
+  @service currentUser;
+  @service router;
+  @service composer;
+  @controller application;
 
-  counts: null,
-  showing: "members",
-  destroying: null,
-  showTooltip: false,
+  counts = null;
+  showing = "members";
+  destroying = null;
+  showTooltip = false;
 
   @discourseComputed(
     "showMessages",
@@ -90,7 +90,7 @@ export default Controller.extend({
     );
 
     return defaultTabs;
-  },
+  }
 
   @discourseComputed(
     "model.has_messages",
@@ -107,21 +107,17 @@ export default Controller.extend({
     }
 
     return isGroupUser || (this.currentUser && this.currentUser.admin);
-  },
+  }
 
   @discourseComputed("model.messageable")
   displayGroupMessageButton(messageable) {
     return this.currentUser && messageable;
-  },
+  }
 
   @discourseComputed("model", "model.automatic")
-  canManageGroup(model, automatic) {
-    return (
-      this.currentUser &&
-      (this.currentUser.canManageGroup(model) ||
-        (model.can_admin_group && automatic))
-    );
-  },
+  canManageGroup(model) {
+    return this.currentUser?.canManageGroup(model);
+  }
 
   @action
   messageGroup() {
@@ -129,7 +125,7 @@ export default Controller.extend({
       recipients: this.get("model.name"),
       hasGroups: true,
     });
-  },
+  }
 
   @action
   destroyGroup() {
@@ -138,7 +134,7 @@ export default Controller.extend({
     const model = this.model;
 
     this.dialog.deleteConfirm({
-      title: I18n.t("admin.groups.delete_confirm", { group: model.name }),
+      title: i18n("admin.groups.delete_confirm", { group: model.name }),
       bodyComponent: GroupDeleteDialog,
       bodyComponentModel: model,
       didConfirm: () => {
@@ -147,7 +143,7 @@ export default Controller.extend({
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);
-            this.dialog.alert(I18n.t("admin.groups.delete_failed"));
+            this.dialog.alert(i18n("admin.groups.delete_failed"));
           })
           .then(() => {
             this.router.transitionTo("groups.index");
@@ -158,10 +154,10 @@ export default Controller.extend({
       },
       didCancel: () => this.set("destroying", false),
     });
-  },
+  }
 
   @action
   toggleDeleteTooltip() {
     this.toggleProperty("showTooltip");
-  },
-});
+  }
+}

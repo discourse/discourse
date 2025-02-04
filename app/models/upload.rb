@@ -8,7 +8,7 @@ class Upload < ActiveRecord::Base
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
-  URL_REGEX ||= %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
+  URL_REGEX = %r{(/original/\dX[/\.\w]*/(\h+)[\.\w]*)}
   MAX_IDENTIFY_SECONDS = 5
   DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
 

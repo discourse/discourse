@@ -18,7 +18,6 @@
     </form.Field>
     <form.Field
       @title="Secret"
-      @subtitle="Another secret"
       @name="secret"
       @description="An important password"
       as |field|
@@ -79,18 +78,32 @@
   </Form>
 </StyleguideExample>
 
-<StyleguideExample @title="Checkbox">
+<StyleguideExample @title="CheckboxGroup">
   <Form as |form|>
-    <form.Field @title="Contract" @name="contract" as |field|>
-      <field.Checkbox>Accept the contract</field.Checkbox>
-    </form.Field>
+    <form.CheckboxGroup @title="I give explicit permission" as |checkboxGroup|>
+      <checkboxGroup.Field
+        @title="Use my email for any purpose."
+        @name="contract"
+        as |field|
+      >
+        <field.Checkbox>Including signing up for services I can't unsubscribe
+          to.</field.Checkbox>
+      </checkboxGroup.Field>
+      <checkboxGroup.Field
+        @title="Sign my soul away."
+        @name="contract2"
+        as |field|
+      >
+        <field.Checkbox>Will severly impact the afterlife experience.</field.Checkbox>
+      </checkboxGroup.Field>
+    </form.CheckboxGroup>
   </Form>
 </StyleguideExample>
 
 <StyleguideExample @title="Image">
   <Form as |form|>
     <form.Field @title="Image" @name="image" as |field|>
-      <field.Image />
+      <field.Image @type="avatar" />
     </form.Field>
   </Form>
 </StyleguideExample>
@@ -143,7 +156,7 @@
 
 <StyleguideExample @title="Alert">
   <Form as |form|>
-    <form.Alert @icon="pencil-alt">
+    <form.Alert @icon="pencil">
       You can edit this form.
     </form.Alert>
   </Form>

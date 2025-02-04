@@ -39,19 +39,19 @@ require "tiny_tds"
 # }
 
 class ImportScripts::Telligent < ImportScripts::Base
-  BATCH_SIZE ||= 1000
-  LOCAL_AVATAR_REGEX ||=
+  BATCH_SIZE = 1000
+  LOCAL_AVATAR_REGEX =
     %r{\A~/.*(?<directory>communityserver-components-(?:selectable)?avatars)/(?<path>[^/]+)/(?<filename>.+)}i
-  REMOTE_AVATAR_REGEX ||= %r{\Ahttps?://}i
-  ATTACHMENT_REGEXES ||= [
+  REMOTE_AVATAR_REGEX = %r{\Ahttps?://}i
+  ATTACHMENT_REGEXES = [
     %r{<a[^>]*\shref="[^"]*?/cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)".*?>.*?</a>}i,
     %r{<img[^>]*\ssrc="[^"]*?/cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)".*?>}i,
     %r{\[View:[^\]]*?/cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)(?:\:[:\d\s]*?)?\]}i,
     %r{\[(?<tag>img|url)\][^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)\[/\k<tag>\]}i,
     %r{\[(?<tag>img|url)=[^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)\][^\[]*?\[/\k<tag>\]}i,
   ]
-  PROPERTY_NAMES_REGEX ||= /(?<name>\w+):S:(?<start>\d+):(?<length>\d+):/
-  INTERNAL_LINK_REGEX ||=
+  PROPERTY_NAMES_REGEX = /(?<name>\w+):S:(?<start>\d+):(?<length>\d+):/
+  INTERNAL_LINK_REGEX =
     %r{\shref=".*?/f/\d+(?:(/t/(?<topic_id>\d+))|(?:/p/\d+/(?<post_id>\d+))|(?:/p/(?<post_id>\d+)/reply))\.aspx[^"]*?"}i
 
   CATEGORY_LINK_NORMALIZATION = '/.*?(f\/\d+)$/\1'

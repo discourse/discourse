@@ -137,6 +137,8 @@ ca:
             title: "Normal"
           tracking:
             title: "Seguint"
+          watching:
+            title: "Vigilant"
       draft_channel_screen:
         header: "Missatge nou"
         cancel: "Cancel·la"

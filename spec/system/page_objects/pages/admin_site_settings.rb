@@ -22,9 +22,17 @@ module PageObjects
         self
       end
 
+      def setting_row_selector(setting_name)
+        ".row.setting[data-setting='#{setting_name}']"
+      end
+
+      def has_setting?(setting_name)
+        has_css?(".row.setting[data-setting=\"#{setting_name}\"]")
+      end
+
       def find_setting(setting_name, overridden: false)
         find(
-          ".admin-detail .row.setting[data-setting='#{setting_name}']#{overridden ? ".overridden" : ""}",
+          ".admin-detail #{setting_row_selector(setting_name)}#{overridden ? ".overridden" : ""}",
         )
       end
 
@@ -51,8 +59,14 @@ module PageObjects
         setting_element.find(".setting-controls button.ok").click
       end
 
-      def has_overridden_setting?(setting_name)
-        find_setting(setting_name, overridden: true)
+      def has_overridden_setting?(setting_name, value: nil)
+        setting_field = find_setting(setting_name, overridden: true)
+        return setting_field.find(".setting-value input").value == value.to_s if value
+        true
+      end
+
+      def has_no_overridden_setting?(setting_name)
+        find_setting(setting_name, overridden: false)
       end
 
       def values_in_list(setting_name)

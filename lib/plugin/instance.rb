@@ -6,7 +6,8 @@ require "plugin/metadata"
 require "auth"
 
 class Plugin::CustomEmoji
-  CACHE_KEY ||= "plugin-emoji"
+  CACHE_KEY = "plugin-emoji"
+
   def self.cache_key
     @@cache_key ||= CACHE_KEY
   end
@@ -49,7 +50,6 @@ class Plugin::Instance
   # Memoized array readers
   %i[
     assets
-    color_schemes
     initializers
     javascripts
     locales
@@ -118,6 +118,31 @@ class Plugin::Instance
     }
   end
 
+  def full_admin_route
+    route = self.admin_route
+
+    if route.blank?
+      return if !any_settings?
+
+      route = default_admin_route
+    end
+
+    route
+      .slice(:location, :label, :use_new_show_route)
+      .tap do |admin_route|
+        path = admin_route[:use_new_show_route] ? "show" : admin_route[:location]
+        admin_route[:full_location] = "adminPlugins.#{path}"
+      end
+  end
+
+  def any_settings?
+    return false if !configurable?
+
+    SiteSetting
+      .all_settings(filter_plugin: self.name)
+      .any? { |s| s[:setting] != @enabled_site_setting }
+  end
+
   def configurable?
     true
   end
@@ -134,7 +159,11 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def humanized_name
-    (setting_category_name || name).delete_prefix("Discourse ").delete_prefix("discourse-")
+    (setting_category_name || name)
+      .delete_prefix("Discourse ")
+      .delete_prefix("discourse-")
+      .gsub("-", " ")
+      .upcase_first
   end
 
   def add_to_serializer(
@@ -576,13 +605,23 @@ class Plugin::Instance
     DiscourseEvent.on(event_name) { |*args, **kwargs| block.call(*args, **kwargs) if enabled? }
   end
 
-  def notify_after_initialize
-    color_schemes.each do |c|
-      unless ColorScheme.where(name: c[:name]).exists?
-        ColorScheme.create_from_base(name: c[:name], colors: c[:colors])
+  # A proxy to `DiscourseEvent.on(:site_setting_changed)` triggered when the plugin enabled setting specified by
+  # `enabled_site_setting` value is changed, including when the plugin is turned off.
+  #
+  # It is useful when the plugin needs to perform tasks like properly clearing caches when enabled/disabled
+  # note it will not be triggered when a plugin is installed/uninstalled by adding/removing its code
+  def on_enabled_change(&block)
+    event_proc =
+      Proc.new do |setting_name, old_value, new_value|
+        block.call(old_value, new_value) if setting_name == @enabled_site_setting
       end
-    end
+    DiscourseEvent.on(:site_setting_changed, &event_proc)
 
+    # returns the block to be used for DiscourseEvent.off(:site_setting_changed, &block) for testing purposes
+    event_proc
+  end
+
+  def notify_after_initialize
     initializers.each do |callback|
       begin
         callback.call(self)
@@ -716,10 +755,6 @@ class Plugin::Instance
     service_workers << [File.join(File.dirname(path), "assets", file), opts]
   end
 
-  def register_color_scheme(name, colors)
-    color_schemes << { name: name, colors: colors }
-  end
-
   def register_seed_data(key, value)
     seed_data[key] = value
   end
@@ -829,6 +864,14 @@ class Plugin::Instance
     else
       @enabled_site_setting
     end
+  end
+
+  # Site setting areas are a way to group site settings below
+  # the setting category level. This is useful for creating focused
+  # config areas that update a small selection of settings, and otherwise
+  # grouping related settings in the UI.
+  def register_site_setting_area(area)
+    DiscoursePluginRegistry.site_setting_areas << area
   end
 
   def javascript_includes
@@ -1100,16 +1143,11 @@ class Plugin::Instance
   #   "chat_messages_30_days": 100,
   #   "chat_messages_count": 1000,
   # }
-  #
-  # The show_in_ui option (default false) is used to determine whether the
-  # group of stats is shown on the site About page in the Site Statistics
-  # table. Some stats may be needed purely for reporting purposes and thus
-  # do not need to be shown in the UI to admins/users.
-  def register_stat(name, show_in_ui: false, expose_via_api: false, &block)
+  def register_stat(name, expose_via_api: false, &block)
     # We do not want to register and display the same group multiple times.
     return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
 
-    stat = Stat.new(name, show_in_ui: show_in_ui, expose_via_api: expose_via_api, &block)
+    stat = Stat.new(name, expose_via_api: expose_via_api, &block)
     DiscoursePluginRegistry.register_stat(stat, self)
   end
 
@@ -1234,6 +1272,72 @@ class Plugin::Instance
 
   def register_search_group_query_callback(callback)
     DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  end
+
+  # This is an experimental API and may be changed or removed in the future without deprecation.
+  #
+  # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
+  # first rate limiter in the stack that is active is used. By default the rate limiters stack contains the following
+  # rate limiters:
+  #
+  #   `RequestTracker::RateLimiters::User` - Rate limits authenticated requests based on the user's id
+  #   `RequestTracker::RateLimiters::IP` - Rate limits requests based on the IP address
+  #
+  # @param identifier [Symbol] A unique identifier for the rate limiter.
+  #
+  # @param key [Proc] A lambda/proc that defines the `rate_limit_key`.
+  #   - Receives `request` (An instance of `Rack::Request`) as argument.
+  #   - Should return a string representing the rate limit key.
+  #
+  # @param activate_when [Proc] A lambda/proc that defines when the rate limiter should be used for a request.
+  #   - Receives `request` (An instance of `Rack::Request`) as argument.
+  #   - Should return `true` if the rate limiter is active, otherwise `false`.
+  #
+  # @param global [Boolean] Whether the rate limiter applies globally across all sites. Defaults to `false`.
+  #   - Ignored if `klass` is provided.
+  #
+  # @param after [Class, nil] The rate limiter class after which the new rate limiter should be added.
+  #
+  # @param before [Class, nil] The rate limiter class before which the new rate limiter should be added.
+  #
+  # @example Adding a rate limiter that rate limits all requests based on the country of the IP address
+  #
+  #   add_request_rate_limiter(
+  #     identifier: :country,
+  #     key: ->(request) { "country/#{DiscourseIpInfo.get(request.ip)[:country]}" },
+  #     activate_when: ->(request) { DiscourseIpInfo.get(request.ip)[:country].present? },
+  #   )
+  def add_request_rate_limiter(
+    identifier:,
+    key:,
+    activate_when:,
+    global: false,
+    after: nil,
+    before: nil
+  )
+    raise ArgumentError, "only one of `after` or `before` can be provided" if after && before
+
+    stack = Middleware::RequestTracker.rate_limiters_stack
+
+    if (reference_klass = after || before) && !stack.include?(reference_klass)
+      raise ArgumentError, "#{reference_klass} is not a valid value. Must be one of #{stack}"
+    end
+
+    klass =
+      Class.new(RequestTracker::RateLimiters::Base) do
+        define_method(:rate_limit_key) { key.call(@request) }
+        define_method(:rate_limit_globally?) { global }
+        define_method(:active?) { activate_when.call(@request) }
+        define_method(:error_code_identifier) { identifier }
+      end
+
+    if after
+      stack.insert_after(after, klass)
+    elsif before
+      stack.insert_before(before, klass)
+    else
+      stack.prepend(klass)
+    end
   end
 
   protected
@@ -1388,5 +1492,9 @@ class Plugin::Instance
 
   def register_permitted_bulk_action_parameter(name)
     DiscoursePluginRegistry.register_permitted_bulk_action_parameter(name, self)
+  end
+
+  def default_admin_route
+    { label: "#{name.underscore}.title", location: name, use_new_show_route: true }
   end
 end

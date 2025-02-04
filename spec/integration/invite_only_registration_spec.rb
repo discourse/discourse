@@ -5,6 +5,7 @@ RSpec.describe "invite only" do
   describe "#create invite only" do
     it "can create user via API" do
       SiteSetting.invite_only = true
+      SiteSetting.hide_email_address_taken = false
       Jobs.run_immediately!
 
       admin = Fabricate(:admin)

@@ -372,15 +372,21 @@ RSpec.describe PostCreator do
       end
 
       it "clears the draft if advanced_draft is true" do
-        creator = PostCreator.new(user, basic_topic_params.merge(advance_draft: true))
-        Draft.set(user, Draft::NEW_TOPIC, 0, "test")
+        draft_key = Draft::NEW_TOPIC + "_#{Time.now.to_i}"
+        creator = PostCreator.new(user, basic_topic_params.merge(draft_key: draft_key))
+        Draft.set(user, draft_key, 0, "test")
         expect(Draft.where(user: user).size).to eq(1)
         expect { creator.create }.to change { Draft.count }.by(-1)
       end
 
       it "does not clear the draft if advanced_draft is false" do
-        creator = PostCreator.new(user, basic_topic_params.merge(advance_draft: false))
-        Draft.set(user, Draft::NEW_TOPIC, 0, "test")
+        draft_key = Draft::NEW_TOPIC + "_#{Time.now.to_i}"
+        creator =
+          PostCreator.new(
+            user,
+            basic_topic_params.merge(advance_draft: false, draft_key: draft_key),
+          )
+        Draft.set(user, draft_key, 0, "test")
         expect(Draft.where(user: user).size).to eq(1)
         expect { creator.create }.not_to change { Draft.count }
       end
@@ -1512,6 +1518,20 @@ RSpec.describe PostCreator do
         expect(post.topic).not_to be_visible
       end
     end
+
+    it "normalizes the embed url" do
+      embed_url = "http://eviltrout.com/stupid-url/"
+      creator =
+        PostCreator.new(
+          user,
+          embed_url: embed_url,
+          title: "Reviews of Science Ovens",
+          raw: "Did you know that you can use microwaves to cook your dinner? Science!",
+        )
+      creator.create
+      expect(creator.errors).to be_blank
+      expect(TopicEmbed.where(embed_url: "http://eviltrout.com/stupid-url").exists?).to eq(true)
+    end
   end
 
   describe "read credit for creator" do
@@ -2165,6 +2185,30 @@ RSpec.describe PostCreator do
       post_creator = PostCreator.new(user, title: "", raw: "")
 
       expect { post_creator.create }.not_to change(ReviewablePost, :count)
+    end
+  end
+
+  context "when the review_every_post setting is enabled and category requires topic approval" do
+    fab!(:category)
+
+    before do
+      category.require_topic_approval = true
+      category.save!
+    end
+
+    before { SiteSetting.review_every_post = true }
+
+    it "creates single reviewable item" do
+      manager =
+        NewPostManager.new(
+          user,
+          title: "this is a new title",
+          raw: "this is a new post",
+          category: category.id,
+        )
+      reviewable = manager.perform.reviewable
+
+      expect { reviewable.perform(admin, :approve_post) }.not_to change(ReviewablePost, :count)
     end
   end
 end

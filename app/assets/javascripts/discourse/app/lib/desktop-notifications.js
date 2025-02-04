@@ -1,11 +1,11 @@
 import { Promise } from "rsvp";
 import KeyValueStore from "discourse/lib/key-value-store";
+import discourseLater from "discourse/lib/later";
 import DiscourseURL from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -35,7 +35,7 @@ function init(messageBus) {
 
   try {
     keyValueStore.getItem(focusTrackerKey);
-  } catch (e) {
+  } catch {
     // eslint-disable-next-line no-console
     console.info(
       "Discourse desktop notifications are disabled - localStorage denied."
@@ -61,8 +61,7 @@ function init(messageBus) {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn(
-      "Unexpected error, Notification is defined on window but not a responding correctly " +
-        e
+      "Notification is defined on window but is not responding correctly " + e
     );
   }
 
@@ -78,11 +77,11 @@ function init(messageBus) {
 
 function confirmNotification(siteSettings) {
   const notification = new Notification(
-    I18n.t("notifications.popup.confirm_title", {
+    i18n("notifications.popup.confirm_title", {
       site_title: siteSettings.title,
     }),
     {
-      body: I18n.t("notifications.popup.confirm_body"),
+      body: i18n("notifications.popup.confirm_body"),
       icon: siteSettings.site_logo_small_url || siteSettings.site_logo_url,
       tag: "confirm-subscription",
     }
@@ -136,7 +135,7 @@ function canUserReceiveNotifications(user) {
     return false;
   }
 
-  if (keyValueStore.getItem("notifications-disabled")) {
+  if (keyValueStore.getItem("notifications-disabled") === "disabled") {
     return false;
   }
 
@@ -145,44 +144,46 @@ function canUserReceiveNotifications(user) {
 
 // Call-in point from message bus
 async function onNotification(data, siteSettings, user, appEvents) {
-  if (!canUserReceiveNotifications(user)) {
-    return false;
-  }
+  const showNotifications = canUserReceiveNotifications(user) && liveEnabled;
 
-  if (!liveEnabled) {
-    return false;
-  }
+  if (showNotifications) {
+    const notificationTitle =
+      data.translated_title ||
+      i18n(i18nKey(data.notification_type), {
+        site_title: siteSettings.title,
+        topic: data.topic_title,
+        username: formatUsername(data.username),
+        group_name: data.group_name,
+      });
 
-  const notificationTitle =
-    data.translated_title ||
-    I18n.t(i18nKey(data.notification_type), {
-      site_title: siteSettings.title,
-      topic: data.topic_title,
-      username: formatUsername(data.username),
-      group_name: data.group_name,
+    const notificationIcon =
+      siteSettings.site_logo_small_url || siteSettings.site_logo_url;
+    const notificationTag =
+      "discourse-notification-" +
+      siteSettings.title +
+      "-" +
+      (data.topic_id || 0);
+
+    await requestPermission();
+
+    const notification = new Notification(notificationTitle, {
+      body: data.excerpt,
+      icon: notificationIcon,
+      tag: notificationTag,
     });
 
-  const notificationBody = data.excerpt;
-
-  const notificationIcon =
-    siteSettings.site_logo_small_url || siteSettings.site_logo_url;
-
-  const notificationTag =
-    "discourse-notification-" + siteSettings.title + "-" + data.topic_id;
-
-  await requestPermission();
-
-  // This shows the notification!
-  const notification = new Notification(notificationTitle, {
-    body: notificationBody,
-    icon: notificationIcon,
-    tag: notificationTag,
-  });
-  notification.onclick = () => {
-    DiscourseURL.routeTo(data.post_url);
-    appEvents.trigger("desktop-notification-opened", { url: data.post_url });
-    notification.close();
-  };
+    notification.addEventListener(
+      "click",
+      () => {
+        DiscourseURL.routeTo(data.post_url);
+        appEvents.trigger("desktop-notification-opened", {
+          url: data.post_url,
+        });
+        notification.close();
+      },
+      { once: true }
+    );
+  }
 
   desktopNotificationHandlers.forEach((handler) =>
     handler(data, siteSettings, user)

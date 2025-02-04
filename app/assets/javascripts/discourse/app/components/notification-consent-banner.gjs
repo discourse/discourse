@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { keyValueStore as pushNotificationKeyValueStore } from "discourse/lib/push-notifications";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const userDismissedPromptKey = "dismissed-prompt";
 
@@ -67,7 +67,7 @@ export default class NotificationConsentBanner extends Component {
             />
           </span>
           <DButton
-            @icon="times"
+            @icon="xmark"
             @action={{this.dismiss}}
             @title="banner.close"
             class="btn-transparent close"

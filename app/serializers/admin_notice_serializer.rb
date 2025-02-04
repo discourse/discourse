@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class AdminNoticeSerializer < ApplicationSerializer
-  attributes :priority, :message, :identifier
+  attributes :id, :priority, :message, :identifier
 end

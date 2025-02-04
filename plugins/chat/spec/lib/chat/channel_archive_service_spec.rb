@@ -413,7 +413,6 @@ describe Chat::ChannelArchiveService do
       end
 
       it "handles errors gracefully, sends a private message to the archiving user, and is idempotent on retry" do
-        Rails.logger = @fake_logger = FakeLogger.new
         create_messages(35) && start_archive
 
         Chat::ChannelArchiveService

@@ -1,16 +1,16 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import { classNameBindings, classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 
-export default Component.extend({
-  classNames: ["google-search-form"],
-  classNameBindings: ["hidden:hidden"],
-
-  hidden: alias("siteSettings.login_required"),
+@classNames("google-search-form")
+@classNameBindings("hidden:hidden")
+export default class GoogleSearch extends Component {
+  @alias("siteSettings.login_required") hidden;
 
   @discourseComputed
   siteUrl() {
     return `${location.protocol}//${location.host}${getURL("/")}`;
-  },
-});
+  }
+}

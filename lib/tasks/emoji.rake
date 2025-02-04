@@ -7,18 +7,18 @@ require "nokogiri"
 require "open-uri"
 require "file_helper"
 
-EMOJI_GROUPS_PATH ||= "lib/emoji/groups.json"
+EMOJI_GROUPS_PATH = "lib/emoji/groups.json"
 
-EMOJI_DB_PATH ||= "lib/emoji/db.json"
+EMOJI_DB_PATH = "lib/emoji/db.json"
 
-EMOJI_IMAGES_PATH ||= "public/images/emoji"
+EMOJI_IMAGES_PATH = "public/images/emoji"
 
-EMOJI_ORDERING_URL ||= "http://www.unicode.org/emoji/charts/emoji-ordering.html"
+EMOJI_ORDERING_URL = "http://www.unicode.org/emoji/charts/emoji-ordering.html"
 
 # emoji aliases are actually created as images
 # eg: "right_anger_bubble" => [ "anger_right" ]
 # your app will physically have right_anger_bubble.png and anger_right.png
-EMOJI_ALIASES ||= {
+EMOJI_ALIASES = {
   "right_anger_bubble" => ["anger_right"],
   "ballot_box" => ["ballot_box_with_ballot"],
   "basketball_man" => %w[basketball_player person_with_ball],
@@ -210,7 +210,7 @@ EMOJI_ALIASES ||= {
   "frowning_with_open_mouth" => ["frowning_face_with_open_mouth"],
 }
 
-EMOJI_GROUPS ||= [
+EMOJI_GROUPS = [
   { "name" => "smileys_&_emotion", "tabicon" => "grinning" },
   { "name" => "people_&_body", "tabicon" => "wave" },
   { "name" => "animals_&_nature", "tabicon" => "evergreen_tree" },
@@ -222,12 +222,12 @@ EMOJI_GROUPS ||= [
   { "name" => "flags", "tabicon" => "checkered_flag" },
 ]
 
-FITZPATRICK_SCALE ||= %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
+FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
-DEFAULT_SET ||= "twitter"
+DEFAULT_SET = "twitter"
 
 # Replace the platform by another when downloading the image (accepts names or categories)
-EMOJI_IMAGES_PATCH ||= {
+EMOJI_IMAGES_PATCH = {
   "apple" => {
     "snowboarder" => "twitter",
   },
@@ -236,7 +236,7 @@ EMOJI_IMAGES_PATCH ||= {
   },
 }
 
-EMOJI_SETS ||= {
+EMOJI_SETS = {
   "apple" => "apple",
   "google" => "google",
   "google_blob" => "google_classic",
@@ -245,11 +245,11 @@ EMOJI_SETS ||= {
   "windows" => "win10",
 }
 
-EMOJI_DB_REPO ||= "git@github.com:xfalcox/emoji-db.git"
+EMOJI_DB_REPO = "git@github.com:xfalcox/emoji-db.git"
 
-EMOJI_DB_REPO_PATH ||= File.join("tmp", "emoji-db")
+EMOJI_DB_REPO_PATH = File.join("tmp", "emoji-db")
 
-GENERATED_PATH ||= File.join(EMOJI_DB_REPO_PATH, "generated")
+GENERATED_PATH = File.join(EMOJI_DB_REPO_PATH, "generated")
 
 def search_aliases(emojis)
   # Format is search pattern => associated emojis

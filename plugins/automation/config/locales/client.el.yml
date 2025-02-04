@@ -6,6 +6,11 @@
 
 el:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: διαγραφή αυτοματισμού
     discourse_automation:
       title: Αυτοματισμός
       create: Δημιουργία
@@ -66,10 +71,16 @@ el:
               label: ID Θέματος
         post_created_edited:
           fields:
+            original_post_only:
+              label: Μόνο η αρχική ανάρτηση
+            restricted_tags:
+              label: Ετικέτες
             restricted_category:
               label: Κατηγορία
             restricted_group:
               label: Ομάδα
+            restricted_groups:
+              label: Ομάδες
           created: Δημιουργήθηκε
         category_created_edited:
           fields:
@@ -170,6 +181,8 @@ el:
             label: Έναυσμα
           version:
             label: Έκδοση
+          status:
+            label: Κατάσταση
           enabled:
             label: Ενεργοποιημένο
           disabled:

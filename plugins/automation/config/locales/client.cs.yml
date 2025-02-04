@@ -9,7 +9,6 @@ cs:
     discourse_automation:
       create: Vytvoř
       update: Aktualizovat
-      no_automation_yet: Ještě jste nevytvořili žádnou automatizaci.
       destroy_automation:
         confirm: "Jste si jisti, že chcete odstranit `%{name}`?"
       fields:
@@ -67,11 +66,14 @@ cs:
               label: ID tématu
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Štítky
             restricted_category:
               label: Kategorie
             restricted_group:
               label: Skupina
-              description: Nepovinné, spustí se pouze v případě, že téma příspěvku je soukromá zpráva ve schránce této skupiny.
+            restricted_groups:
+              label: Skupiny
           created: Vytvořený
         category_created_edited:
           fields:
@@ -153,6 +155,8 @@ cs:
             label: Spouštěč
           version:
             label: Verze
+          status:
+            label: Stav
           enabled:
             label: Zapnuto
           disabled:

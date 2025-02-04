@@ -3,8 +3,7 @@
     class="select-kit-collection"
     aria-live="polite"
     role="menu"
-    {{did-insert this.lock}}
-    {{will-destroy this.unlock}}
+    {{this.bodyScrollLock}}
   >
     {{#each this.collection.content as |item index|}}
       {{component

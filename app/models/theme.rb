@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 84
+  BASE_COMPILER_VERSION = 87
 
   class SettingsMigrationError < StandardError
   end
@@ -46,6 +46,12 @@ class Theme < ActiveRecord::Base
           -> { where(target_id: Theme.targets[:settings], name: "yaml") },
           class_name: "ThemeField"
   has_one :javascript_cache, dependent: :destroy
+  has_one :theme_color_scheme, dependent: :destroy
+  has_one :owned_color_scheme,
+          class_name: "ColorScheme",
+          through: :theme_color_scheme,
+          source: :color_scheme
+
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
            class_name: "ThemeField"
@@ -370,6 +376,10 @@ class Theme < ActiveRecord::Base
       ChildTheme.where("child_theme_id = ?", id).destroy_all
       self.save!
     end
+  end
+
+  def self.find_default
+    find_by(id: SiteSetting.default_theme_id)
   end
 
   def self.lookup_field(theme_id, target, field, skip_transformation: false, csp_nonce: nil)
@@ -756,9 +766,7 @@ class Theme < ActiveRecord::Base
   def update_setting(setting_name, new_value)
     target_setting = settings[setting_name.to_sym]
     raise Discourse::NotFound unless target_setting
-
     target_setting.value = new_value
-
     self.theme_setting_requests_refresh = true if target_setting.requests_refresh?
   end
 
@@ -865,7 +873,7 @@ class Theme < ActiveRecord::Base
   end
 
   def migrate_settings(start_transaction: true, fields: nil, allow_out_of_sequence_migration: false)
-    block = -> do
+    block = ->(*) do
       runner = ThemeSettingsMigrationsRunner.new(self)
       results =
         runner.run(fields:, raise_error_on_out_of_sequence: !allow_out_of_sequence_migration)

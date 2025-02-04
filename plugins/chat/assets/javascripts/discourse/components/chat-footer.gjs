@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import {
   UnreadChannelsIndicator,
   UnreadDirectMessagesIndicator,
@@ -15,6 +15,7 @@ export default class ChatFooter extends Component {
   @service chat;
   @service chatHistory;
   @service siteSettings;
+  @service site;
   @service currentUser;
   @service chatChannelsManager;
   @service chatStateManager;
@@ -35,10 +36,19 @@ export default class ChatFooter extends Component {
     return routeName === "chat" ? "chat.channels" : routeName;
   }
 
+  get enabledRouteCount() {
+    return [
+      this.includeThreads,
+      this.directMessagesEnabled,
+      this.siteSettings.enable_public_channels,
+    ].filter(Boolean).length;
+  }
+
   get shouldRenderFooter() {
     return (
+      (this.site.mobileView || this.chatStateManager.isDrawerExpanded) &&
       this.chatStateManager.hasPreloadedChannels &&
-      (this.includeThreads || this.directMessagesEnabled)
+      this.enabledRouteCount > 1
     );
   }
 

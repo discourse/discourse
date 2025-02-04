@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 desc "Runs the qunit test suite"
-task "qunit:test", %i[timeout qunit_path filter] do |_, args|
+task "qunit:test", %i[qunit_path filter] do |_, args|
   require "socket"
   require "chrome_installed_checker"
 
@@ -11,13 +11,13 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
     abort err.message
   end
 
-  unless system("command -v yarn >/dev/null;")
-    abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
+  unless system("command -v pnpm >/dev/null;")
+    abort "pnpm is not installed. See https://pnpm.io/installation"
   end
 
   report_requests = ENV["REPORT_REQUESTS"] == "1"
 
-  system("yarn install", exception: true)
+  system("pnpm install", exception: true)
 
   # ensure we have this port available
   def port_available?(port)
@@ -108,7 +108,7 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
       # Bypass `ember test` - it only works properly for the `/tests` path.
       # We have to trigger a `build` manually so that JS is available for rails to serve.
       system(
-        "yarn",
+        "pnpm",
         "ember",
         "build",
         chdir: "#{Rails.root}/app/assets/javascripts/discourse",
@@ -119,15 +119,16 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
         ENV["THEME_IDS"]
           .split("|")
           .map { |theme_id| "#{qunit_path}?#{query}&testem=1&id=#{theme_id}" }
+          .shuffle
           .join(",")
       else
         "#{qunit_path}?#{query}&testem=1"
       end
 
-      cmd += %w[yarn testem ci -f testem.js]
+      cmd += %w[pnpm testem ci -f testem.js]
       cmd += ["--parallel", parallel] if parallel
     else
-      cmd += ["yarn", "ember", "exam", "--query", query]
+      cmd += ["pnpm", "ember", "exam", "--query", query]
       cmd += ["--load-balance", "--parallel", parallel] if parallel
       cmd += ["--filter", filter] if filter
       cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]

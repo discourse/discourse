@@ -39,4 +39,8 @@ class AdminUserSerializer < AdminUserListSerializer
   def registration_ip_address
     object.registration_ip_address.try(:to_s)
   end
+
+  def include_can_be_deleted?
+    true
+  end
 end

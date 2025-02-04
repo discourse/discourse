@@ -27,6 +27,6 @@ module("Integration | Component | load-more", function (hooks) {
       </LoadMore>
     `);
 
-    assert.ok(this.loadedMore);
+    assert.true(this.loadedMore);
   });
 });

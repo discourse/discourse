@@ -14,7 +14,8 @@ pl_PL:
       select_trigger: Wybierz wyzwalacz
       confirm_automation_reset: Ta czynność spowoduje zresetowanie opcji skryptu i wyzwalacza, nowy stan zostanie zapisany, czy chcesz kontynuować?
       confirm_automation_trigger: Ta czynność uruchomi automatyzację, czy chcesz kontynuować?
-      no_automation_yet: Nie utworzyłeś jeszcze żadnej automatyzacji.
+      no_automation_yet: Nie utworzyłeś jeszcze żadnej automatyzacji. Wybierz opcję poniżej, aby rozpocząć.
+      filter_placeholder: Filtruj według nazwy lub opisu...
       edit_automation:
         trigger_section:
           forced: Ten wyzwalacz jest wymuszany przez skrypt.
@@ -144,18 +145,25 @@ pl_PL:
               label: ID tematu
         post_created_edited:
           fields:
+            original_post_only:
+              label: Tylko oryginalny post
+              description: Uruchomi się tylko wtedy, gdy post jest oryginalnym postem w temacie.
             action_type:
               label: Typ akcji
               description: "Opcjonalnie, ogranicz wyzwalanie tylko do utworzonych lub edytowanych zdarzeń."
             valid_trust_levels:
               label: Prawidłowe poziomy zaufania
               description: Uruchomi się tylko wtedy, gdy post zostanie utworzony przez użytkownika na tych poziomach zaufania, domyślnie na dowolnym poziomie zaufania.
+            restricted_tags:
+              label: Tagi
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy post ma którykolwiek z tych tagów
             restricted_category:
               label: Kategoria
               description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tej kategorii.
             restricted_group:
               label: Grupa
-              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat postu jest prywatną wiadomością w skrzynce odbiorczej tej grupy.
+            restricted_groups:
+              label: Grupy
             ignore_group_members:
               label: Ignoruj członków grupy
               description: Pomiń wyzwalacz, jeśli nadawca jest członkiem grupy określonej powyżej.
@@ -165,6 +173,8 @@ pl_PL:
               label: Tylko pierwszy post
             first_topic_only:
               label: Tylko pierwszy temat
+            skip_via_email:
+              label: "Pomiń przez e-mail"
           created: Utworzono
           edited: Edytowany
         user_updated:
@@ -197,6 +207,16 @@ pl_PL:
               description: Pomiń wyzwalacz, jeśli nadawca ma adres e-mail bez odpowiedzi lub pochodzi z automatycznego źródła. Dotyczy tylko prywatnych wiadomości utworzonych za pośrednictwem poczty e-mail
             valid_trust_levels:
               label: Prawidłowe poziomy zaufania
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tagi dodane lub usunięte
+            tags_added: Dodano tagi
+            tags_removed: Tagi usunięte
+          fields:
+            watching_categories:
+              label: Obserwuje kategorie
+            watching_tags:
+              label: Obserwuje tagi
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -338,6 +358,7 @@ pl_PL:
           fields:
             custom_field_name:
               label: "Nazwa niestandardowego pola użytkownika"
+      unnamed_automation: "Automatyzacja bez nazwy"
       models:
         script:
           name:
@@ -354,6 +375,8 @@ pl_PL:
             label: Skrypt
           version:
             label: Wersja
+          status:
+            label: Status
           enabled:
             label: Włączona
           disabled:

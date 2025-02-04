@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class FormTemplateRowItem extends Component {
   @service router;
@@ -27,7 +27,7 @@ export default class FormTemplateRowItem extends Component {
   @action
   deleteTemplate() {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.form_templates.delete_confirm", {
+      message: i18n("admin.form_templates.delete_confirm", {
         template_name: this.args.template.name,
       }),
       didConfirm: () => {

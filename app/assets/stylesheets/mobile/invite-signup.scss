@@ -2,6 +2,10 @@
   box-sizing: border-box;
   padding: 1em;
 
+  .signup-progress-bar {
+    margin: 0;
+  }
+
   .invitation-cta {
     display: flex;
     flex-direction: column;

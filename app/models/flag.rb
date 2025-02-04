@@ -10,12 +10,17 @@ class Flag < ActiveRecord::Base
   MAX_DESCRIPTION_LENGTH = 1000
   scope :enabled, -> { where(enabled: true) }
   scope :system, -> { where("id < 1000") }
+  scope :custom, -> { where("id >= 1000") }
 
   before_save :set_position
   before_save :set_name_key
-  after_commit :reset_flag_settings!
+  after_commit { reset_flag_settings! if !skip_reset_flag_callback }
 
-  default_scope { order(:position).where(score_type: false) }
+  attr_accessor :skip_reset_flag_callback
+
+  default_scope do
+    order(:position).where(score_type: false).where.not(id: PostActionType::LIKE_POST_ACTION_ID)
+  end
 
   def used?
     PostAction.exists?(post_action_type_id: self.id) ||
@@ -27,13 +32,18 @@ class Flag < ActiveRecord::Base
   end
 
   def self.reset_flag_settings!
-    # Flags are memoized for better performance. After the update, we need to reload them in all processes.
+    # Flags are cached in Redis for better performance. After the update,
+    # we need to reload them in all processes.
     PostActionType.reload_types
-    MessageBus.publish("/reload_post_action_types", {})
+  end
+
+  def self.used_flag_ids
+    PostAction.distinct(:post_action_type_id).pluck(:post_action_type_id) |
+      ReviewableScore.distinct(:reviewable_score_type).pluck(:reviewable_score_type)
   end
 
   def system?
-    self.id < MAX_SYSTEM_FLAG_ID
+    self.id.present? && self.id < MAX_SYSTEM_FLAG_ID
   end
 
   def applies_to?(type)
@@ -51,7 +61,8 @@ class Flag < ActiveRecord::Base
   end
 
   def set_name_key
-    self.name_key = self.name.squeeze(" ").gsub(" ", "_").gsub(/[^\w]/, "").downcase
+    prefix = self.system? ? "" : "custom_"
+    self.name_key = "#{prefix}#{self.name.squeeze(" ").gsub(" ", "_").gsub(/[^\w]/, "").downcase}"
   end
 end
 

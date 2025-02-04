@@ -7,10 +7,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import discourseLater from "discourse-common/lib/later";
+import discourseLater from "discourse/lib/later";
+import { i18n } from "discourse-i18n";
 import IconPicker from "select-kit/components/icon-picker";
 
 export default class SectionFormLink extends Component {
@@ -44,6 +44,7 @@ export default class SectionFormLink extends Component {
       }
     }
   }
+
   @action
   dragEnter() {
     this.dragCount++;
@@ -130,6 +131,7 @@ export default class SectionFormLink extends Component {
           name="link-name"
           aria-label={{i18n "sidebar.sections.custom.links.name.label"}}
           class={{@link.nameCssClass}}
+          data-1p-ignore
         />
 
         {{#if @link.invalidNameMessage}}
@@ -157,7 +159,7 @@ export default class SectionFormLink extends Component {
       </div>
 
       <DButton
-        @icon="trash-alt"
+        @icon="trash-can"
         @action={{fn @deleteLink @link}}
         @title="sidebar.sections.custom.links.delete"
         role="cell"

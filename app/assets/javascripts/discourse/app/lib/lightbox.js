@@ -1,5 +1,9 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { helperContext } from "discourse/lib/helpers";
+import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import loadScript from "discourse/lib/load-script";
 import {
@@ -7,12 +11,7 @@ import {
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import User from "discourse/models/user";
-import { isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { helperContext } from "discourse-common/lib/helpers";
-import { renderIcon } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export async function setupLightboxes({ container, selector }) {
   const lightboxService = getOwnerWithFallback(this).lookup("service:lightbox");
@@ -25,22 +24,6 @@ export function cleanupLightboxes() {
 }
 
 export default function lightbox(elem, siteSettings) {
-  if (siteSettings.enable_experimental_lightbox) {
-    deprecated(
-      "Accessing the default `lightbox` export is deprecated. Import setupLightboxes and cleanupLightboxes from `discourse/lib/lightbox` instead.",
-      {
-        since: "3.0.0.beta16",
-        dropFrom: "3.2.0",
-        id: "discourse.lightbox.default-export",
-      }
-    );
-
-    return setupLightboxes({
-      container: elem,
-      selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
-    });
-  }
-
   if (!elem) {
     return;
   }
@@ -60,20 +43,20 @@ export default function lightbox(elem, siteSettings) {
       closeOnContentClick: false,
       removalDelay: isTesting() ? 0 : 300,
       mainClass: "mfp-zoom-in",
-      tClose: I18n.t("lightbox.close"),
+      tClose: i18n("lightbox.close"),
       tLoading: spinnerHTML,
       prependTo: isTesting() && document.getElementById("ember-testing"),
 
       gallery: {
         enabled: true,
-        tPrev: I18n.t("lightbox.previous"),
-        tNext: I18n.t("lightbox.next"),
-        tCounter: I18n.t("lightbox.counter"),
+        tPrev: i18n("lightbox.previous"),
+        tNext: i18n("lightbox.next"),
+        tCounter: i18n("lightbox.counter"),
         navigateByImgClick: imageClickNavigation,
       },
 
       ajax: {
-        tError: I18n.t("lightbox.content_load_error"),
+        tError: i18n("lightbox.content_load_error"),
       },
 
       callbacks: {
@@ -115,7 +98,7 @@ export default function lightbox(elem, siteSettings) {
       },
 
       image: {
-        tError: I18n.t("lightbox.image_load_error"),
+        tError: i18n("lightbox.image_load_error"),
         titleSrc(item) {
           const href = item.el.data("download-href") || item.src;
           let src = [
@@ -131,7 +114,7 @@ export default function lightbox(elem, siteSettings) {
                 href +
                 '">' +
                 renderIcon("string", "download") +
-                I18n.t("lightbox.download") +
+                i18n("lightbox.download") +
                 "</a>"
             );
           }
@@ -140,7 +123,7 @@ export default function lightbox(elem, siteSettings) {
               item.src +
               '">' +
               renderIcon("string", "image") +
-              I18n.t("lightbox.open") +
+              i18n("lightbox.open") +
               "</a>"
           );
           return src.join(" &middot; ");

@@ -26,7 +26,7 @@ RSpec.describe Onebox::Engine::GooglePhotosOnebox do
     )
   end
 
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid Google Photos URL with google.com domain" do
       valid_url = URI("https://photos.google.com/share/abcd1234")
       expect(described_class === valid_url).to eq(true)

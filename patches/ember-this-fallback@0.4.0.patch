@@ -1,0 +1,246 @@
+diff --git a/index.js b/index.js
+index afa73eb078e35af27adee52a6784f405d94a7de8..21e941140ef8ed04e5e8a21e555fb2c7bf478658 100644
+--- a/index.js
++++ b/index.js
+@@ -8,7 +8,7 @@ module.exports = {
+ 
+   setupPreprocessorRegistry(type, registry) {
+     if (type === 'parent') {
+-      const options = getOptions(findHost(this));
++      const options = getOptions(this.parent); // findHost doesn't work for us - not sure why
+       registry.add('htmlbars-ast-plugin', this._buildPlugin(options));
+     }
+   },
+@@ -17,15 +17,20 @@ module.exports = {
+     ThisFallbackPlugin.baseDir = () => __dirname;
+     ThisFallbackPlugin.cacheKey = () => 'ember-this-fallback';
+ 
+-    return {
++    let plugin = {
+       name: 'ember-this-fallback',
+-      parallelBabel: {
++      plugin: ThisFallbackPlugin(options),
++    };
++
++    if (!options.isTheme) {
++      plugin.parallelBabel = {
+         requireFile: __filename,
+         buildUsing: '_buildPlugin',
+         params: options,
+-      },
+-      plugin: ThisFallbackPlugin(options),
+-    };
++      };
++    }
++
++    return plugin;
+   },
+ };
+ 
+diff --git a/lib/helpers/deprecations.js b/lib/helpers/deprecations.js
+index 5a00c44dc77ee3a4083e51f13e5d28dc07c343f9..7fc09ada1d6eb8376519cbc88cfc838dab64b4b0 100644
+--- a/lib/helpers/deprecations.js
++++ b/lib/helpers/deprecations.js
+@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.deprecationOptionsFor = void 0;
+ const assert_1 = __importDefault(require("../types/assert"));
+ const CURRENT_DEPRECATIONS = [
++    [
++    'this-property-fallback',
+     {
+-        id: 'this-property-fallback',
++        id: 'ember-this-fallback.this-property-fallback', // Updating deprecation id so we can distinguish it from Ember's
+         until: 'n/a',
+         for: 'ember-this-fallback',
+         url: 'https://deprecations.emberjs.com/v3.x#toc_this-property-fallback',
+@@ -15,8 +17,9 @@ const CURRENT_DEPRECATIONS = [
+             available: '0.2.0',
+         },
+     },
++    ]
+ ];
+-const DEPRECATION_OPTIONS_MAP = new Map(CURRENT_DEPRECATIONS.map((options) => [options.id, options]));
++const DEPRECATION_OPTIONS_MAP = new Map(CURRENT_DEPRECATIONS);
+ function deprecationOptionsFor(id) {
+     const options = DEPRECATION_OPTIONS_MAP.get(id);
+     (0, assert_1.default)(`expected to find DeprecationOptions for id=${id}`, options);
+diff --git a/lib/helpers/logger.js b/lib/helpers/logger.js
+index b856edc0327902bbae4eb9875ed9034a50d2b3a2..afb059ac4925711ba1b70079f4f45c4c4f8fe027 100644
+--- a/lib/helpers/logger.js
++++ b/lib/helpers/logger.js
+@@ -1,12 +1,6 @@
+ "use strict";
+-var __importDefault = (this && this.__importDefault) || function (mod) {
+-    return (mod && mod.__esModule) ? mod : { "default": mod };
+-};
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.noopLogger = void 0;
+-const debug_1 = __importDefault(require("debug"));
+-const winston_1 = require("winston");
+-const winston_transport_1 = __importDefault(require("winston-transport"));
+ function noopLogger() {
+     return {
+         debug: noop,
+@@ -15,53 +9,4 @@ function noopLogger() {
+     };
+ }
+ exports.noopLogger = noopLogger;
+-function createLogger(namespace, label) {
+-    const debug = (0, debug_1.default)(namespace);
+-    class DebugTransport extends winston_transport_1.default {
+-        log(info, next) {
+-            debug(info[Symbol.for('message')]);
+-            next();
+-        }
+-    }
+-    return (0, winston_1.createLogger)({
+-        level: 'debug',
+-        transports: [
+-            new winston_1.transports.File({
+-                level: 'info',
+-                filename: `${namespace}.log`,
+-                format: winston_1.format.combine(joinLines(), winston_1.format.label({ label }), winston_1.format.timestamp(), winston_1.format.splat(), logFormatter),
+-            }),
+-            new DebugTransport({
+-                level: 'debug',
+-                format: winston_1.format.combine(joinLines(), winston_1.format.label({ label }), winston_1.format.timestamp(), winston_1.format.splat(), debugFormatter),
+-            }),
+-        ],
+-    });
+-}
+-exports.default = createLogger;
+-const joinLines = (0, winston_1.format)((info) => {
+-    if (Array.isArray(info.message) &&
+-        info.message.every((m) => typeof m === 'string')) {
+-        info.message = joinLogLines(info.message);
+-    }
+-    return info;
+-});
+-const logFormatter = winston_1.format.printf((info) => {
+-    const { level, label, timestamp, message, loc } = info;
+-    return `${timestamp} [${level}] ${concatMessage(label, message, loc)}`;
+-});
+-const debugFormatter = winston_1.format.printf((info) => {
+-    const { label, message } = info;
+-    return concatMessage(label, message);
+-});
+-function concatMessage(label, message, loc) {
+-    if (loc) {
+-        const start = loc.startPosition;
+-        label += `:${start.line}:${start.column + 1}`;
+-    }
+-    return joinLogLines([label, message]);
+-}
+-function joinLogLines(lines) {
+-    return lines.join('\n\t');
+-}
+ function noop() { }
+diff --git a/lib/this-fallback-plugin.js b/lib/this-fallback-plugin.js
+index be4a78543644b3810520773aa7b996a2f631888d..9b144de8f22935dd6440a0db6b52a52535064212 100644
+--- a/lib/this-fallback-plugin.js
++++ b/lib/this-fallback-plugin.js
+@@ -29,7 +29,7 @@ const syntax_1 = require("@glimmer/syntax");
+ const ast_1 = require("./helpers/ast");
+ const deprecations_1 = require("./helpers/deprecations");
+ const fallback_1 = require("./helpers/fallback");
+-const logger_1 = __importStar(require("./helpers/logger"));
++const logger_1 = require("./helpers/logger");
+ const scope_stack_1 = __importStar(require("./helpers/scope-stack"));
+ const string_1 = require("./helpers/string");
+ const assert_1 = __importDefault(require("./types/assert"));
+@@ -60,9 +60,15 @@ class ThisFallbackPlugin {
+     handleBlock() {
+         return {
+             enter: (node) => {
++                if (this.env.strictMode) {
++                  return;
++                }
+                 this.scopeStack.push(node.blockParams);
+             },
+             exit: () => {
++                if (this.env.strictMode) {
++                  return;
++                }
+                 this.scopeStack.pop();
+             },
+         };
+@@ -70,6 +76,9 @@ class ThisFallbackPlugin {
+     handleAttrNodes() {
+         return {
+             enter: (elementNode, elementPath) => {
++                if (this.env.strictMode) {
++                  return;
++                }
+                 const ambiguousHeads = new Map();
+                 const blockParamName = (0, scope_stack_1.unusedNameLike)('maybeHelpers', this.scopeStack);
+                 for (const attrNode of elementNode.attributes) {
+@@ -119,6 +128,9 @@ class ThisFallbackPlugin {
+         return {
+             keys: {
+                 params: (node) => {
++                    if (this.env.strictMode) {
++                      return;
++                    }
+                     const { scopeStack } = this;
+                     node.params = node.params.map((expr) => {
+                         if ((0, fallback_1.needsFallback)(expr, scopeStack)) {
+@@ -131,6 +143,9 @@ class ThisFallbackPlugin {
+                     });
+                 },
+                 hash: (node) => {
++                    if (this.env.strictMode) {
++                      return;
++                    }
+                     const { scopeStack } = this;
+                     node.hash.pairs = node.hash.pairs.map((pair) => {
+                         const { key, value: expr, loc } = pair;
+@@ -149,6 +164,9 @@ class ThisFallbackPlugin {
+     handleMustache() {
+         return {
+             enter: (node, path) => {
++                if (this.env.strictMode) {
++                  return;
++                }
+                 // Alias node to n so that the type of `node` doesn't get narrowed,
+                 // which prevents mutation
+                 const n = node;
+@@ -174,9 +192,15 @@ class ThisFallbackPlugin {
+     handleTemplate() {
+         return {
+             enter: (node) => {
++                if (this.env.strictMode) {
++                  return;
++                }
+                 this.logger.debug("before: '%s'", (0, string_1.squish)((0, syntax_1.print)(node)));
+             },
+             exit: (node, path) => {
++                if (this.env.strictMode) {
++                  return;
++                }
+                 this.logger.debug("after_: '%s'", (0, string_1.squish)((0, syntax_1.print)(node)));
+                 if (this.scopeStack.size !== 1) {
+                     throw new Error(`unbalanced ScopeStack push and pop, ScopeStack size is ${this.scopeStack.size}`);
+@@ -214,9 +238,7 @@ class NoopPlugin {
+ function buildThisFallbackPlugin({ enableLogging, }) {
+     return (env) => {
+         const name = 'ember-this-fallback';
+-        const logger = enableLogging
+-            ? (0, logger_1.default)(`${name}-plugin`, env.moduleName)
+-            : (0, logger_1.noopLogger)();
++        const logger = (0, logger_1.noopLogger)();
+         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+         if (env.meta.jsutils) {
+             return new ThisFallbackPlugin(name, env, logger);
+diff --git a/package.json b/package.json
+index ef220e46d232cc90d6b90607e4e99f32d5679cf4..8c140dabda2cb2ef25b22a86bffb640df9124ec8 100644
+--- a/package.json
++++ b/package.json
+@@ -108,7 +108,7 @@
+   },
+   "peerDependencies": {
+     "ember-cli-htmlbars": "^6.2.0",
+-    "ember-source": "^3.28.11 || ^4.0.0"
++    "ember-source": "^3.28.11 || ^4.0.0 || ^5.0.0"
+   },
+   "engines": {
+     "node": "16.* || >= 18"

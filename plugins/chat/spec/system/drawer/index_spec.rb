@@ -51,4 +51,11 @@ RSpec.describe "Drawer - index", type: :system do
 
     expect(drawer_page.browse).to have_channel(name: channel.name)
   end
+
+  it "shows empty state when no dms" do
+    drawer_page.visit_index
+    drawer_page.click_direct_messages
+    expect(page).to have_css("#c-footer-direct-messages.--active")
+    expect(page).to have_selector(".channel-list-empty-message")
+  end
 end

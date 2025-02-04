@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import uniqueId from "discourse/helpers/unique-id";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class FKControlQuestion extends Component {
   static controlType = "question";
@@ -22,7 +22,7 @@ export default class FKControlQuestion extends Component {
             name={{@field.name}}
             type="radio"
             value="true"
-            checked={{eq @value true}}
+            checked={{eq @field.value true}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
             ...attributes
@@ -44,7 +44,7 @@ export default class FKControlQuestion extends Component {
             name={{@field.name}}
             type="radio"
             value="false"
-            checked={{eq @value false}}
+            checked={{eq @field.value false}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
             ...attributes

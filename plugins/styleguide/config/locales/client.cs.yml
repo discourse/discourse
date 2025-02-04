@@ -74,6 +74,10 @@ cs:
           title: "Upozornění na téma"
         post:
           title: "Příspěvek"
+        post_list:
+          title: "Seznam příspěvků"
+          empty_example: "<PostList /> prázdný stav"
+          populated_example: "<PostList /> zaplněný stav"
         topic_map:
           title: "Mapa tématu"
         site_header:

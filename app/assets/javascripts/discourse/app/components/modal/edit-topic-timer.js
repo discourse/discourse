@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
@@ -49,51 +49,51 @@ export default class EditTopicTimer extends Component {
     if (!closed) {
       types.push({
         id: CLOSE_STATUS_TYPE,
-        name: I18n.t("topic.auto_close.title"),
+        name: i18n("topic.auto_close.title"),
       });
       types.push({
         id: CLOSE_AFTER_LAST_POST_STATUS_TYPE,
-        name: I18n.t("topic.auto_close_after_last_post.title"),
+        name: i18n("topic.auto_close_after_last_post.title"),
       });
     }
 
     if (closed) {
       types.push({
         id: OPEN_STATUS_TYPE,
-        name: I18n.t("topic.auto_reopen.title"),
+        name: i18n("topic.auto_reopen.title"),
       });
     }
 
     if (this.args.model.topic.details.can_delete) {
       types.push({
         id: DELETE_STATUS_TYPE,
-        name: I18n.t("topic.auto_delete.title"),
+        name: i18n("topic.auto_delete.title"),
       });
     }
 
     types.push({
       id: BUMP_TYPE,
-      name: I18n.t("topic.auto_bump.title"),
+      name: i18n("topic.auto_bump.title"),
     });
 
     if (this.args.model.topic.details.can_delete) {
       types.push({
         id: DELETE_REPLIES_TYPE,
-        name: I18n.t("topic.auto_delete_replies.title"),
+        name: i18n("topic.auto_delete_replies.title"),
       });
     }
 
     if (closed) {
       types.push({
         id: CLOSE_STATUS_TYPE,
-        name: I18n.t("topic.temp_open.title"),
+        name: i18n("topic.temp_open.title"),
       });
     }
 
     if (!closed) {
       types.push({
         id: OPEN_STATUS_TYPE,
-        name: I18n.t("topic.temp_close.title"),
+        name: i18n("topic.temp_close.title"),
       });
     }
 
@@ -104,7 +104,7 @@ export default class EditTopicTimer extends Component {
     ) {
       types.push({
         id: PUBLISH_TO_CATEGORY_STATUS_TYPE,
-        name: I18n.t("topic.publish_to_category.title"),
+        name: i18n("topic.publish_to_category.title"),
       });
     }
 
@@ -184,19 +184,19 @@ export default class EditTopicTimer extends Component {
     this.flash = null;
 
     if (!this.topicTimer.updateTime && !this.topicTimer.duration_minutes) {
-      this.flash = I18n.t("topic.topic_status_update.time_frame_required");
+      this.flash = i18n("topic.topic_status_update.time_frame_required");
       return;
     }
 
     if (this.topicTimer.duration_minutes && !this.topicTimer.updateTime) {
       if (this.topicTimer.duration_minutes <= 0) {
-        this.flash = I18n.t("topic.topic_status_update.min_duration");
+        this.flash = i18n("topic.topic_status_update.min_duration");
         return;
       }
 
       // cannot be more than 20 years
       if (this.topicTimer.duration_minutes > 20 * 365 * 1440) {
-        this.flash = I18n.t("topic.topic_status_update.max_duration");
+        this.flash = i18n("topic.topic_status_update.max_duration");
         return;
       }
     }

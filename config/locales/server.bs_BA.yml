@@ -116,7 +116,6 @@ bs_BA:
     confirm_email: "<p>Skoro ste gotovi! Na vašu e-adresu poslali smo aktivacijski mail. Slijedite upute u pošti da biste aktivirali svoj račun.</p><p>Ako ne stigne, provjerite svoju mapu neželjene pošte.</p>"
   topic_invite:
     muted_topic: "Žao nam je, navedeni korisnik je utišao ovu temu."
-    receiver_does_not_allow_pm: "Žao nam je, navedeni korisnik vam ne dozvoljava da mu šaljete privatne poruke."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -205,6 +204,8 @@ bs_BA:
         bio_raw: "O Meni"
       user:
         password: "Lozinka"
+      user_password:
+        password: "Lozinka"
     errors:
       models:
         topic:
@@ -212,6 +213,10 @@ bs_BA:
             base:
               too_many_users: "You can only send warnings to one user at a time."
         user:
+          attributes:
+            password:
+              common: "is one of the 10000 most common passwords. Please use a more secure password."
+        user_password:
           attributes:
             password:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
@@ -311,11 +316,7 @@ bs_BA:
   change_email:
     error: "There was an error changing your email address. Perhaps the address is already in use?"
   activation:
-    action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"
     already_done: "Link za konfirmaciju nije validan. Možda ste već aktivirani?"
-    please_continue: "Vaš novi nalog je verifikovan, i možete se ulogovati."
-    continue_button: "Nastavi na %{site_name}"
-    welcome_to: "Dobrodošli na %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   reviewable_score_types:
     needs_approval:
@@ -432,6 +433,8 @@ bs_BA:
       yaxis: "Day"
     consolidated_page_views_browser_detection:
       yaxis: "Day"
+    site_traffic:
+      yaxis: "Day"
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:
@@ -541,6 +544,8 @@ bs_BA:
     page_view_total_reqs:
       title: "Pagevieovi"
       xaxis: "Day"
+    page_view_legacy_total_reqs:
+      xaxis: "Day"
     page_view_logged_in_mobile_reqs:
       xaxis: "Day"
     page_view_anon_mobile_reqs:
@@ -642,7 +647,6 @@ bs_BA:
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     site_contact_username: "All automated private messages will be from this user; if left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome private message with a quick start guide."
@@ -651,7 +655,6 @@ bs_BA:
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
     topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
-    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
@@ -763,15 +766,6 @@ bs_BA:
       regex_mismatch: "Value doesn't match the required format."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "neaktivan"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "neaktivan"
-      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1038,14 +1032,8 @@ bs_BA:
             label: "Pregled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije s istaknutim temama"
-              categories_and_latest_topics:
-                label: "Kategorije i zadnje teme"
-              categories_and_top_topics:
-                label: "Kategorije i top teme"
+              latest:
+                label: "Zadnje"
       corporate:
         fields:
           contact_url:
@@ -1060,6 +1048,7 @@ bs_BA:
       quoted: '%{username} vas je citirao/la u "%{topic}" - %{site_title}'
       replied: '%{username} vam je odgovorio/la u "%{topic}" - %{site_title}'
       posted: '%{username} je objavio/la "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslao/la poruku u "%{topic}" - %{site_title}'
       linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
       watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti uključene - %{site_title}"

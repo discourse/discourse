@@ -7,9 +7,13 @@ const SidebarSections = <template>
       @collapsableSections={{@collapsableSections}}
       @panel={{@panel}}
       @hideApiSections={{@hideApiSections}}
+      @toggleNavigationMenu={{@toggleNavigationMenu}}
     />
   {{else}}
-    <AnonymousSections @collapsableSections={{@collapsableSections}} />
+    <AnonymousSections
+      @collapsableSections={{@collapsableSections}}
+      @toggleNavigationMenu={{@toggleNavigationMenu}}
+    />
   {{/if}}
 </template>;
 

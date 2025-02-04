@@ -2,9 +2,10 @@
 
 RSpec.describe Chat::MarkAllUserChannelsRead do
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
-    let(:params) { { guardian: guardian } }
+    let(:params) { {} }
+    let(:dependencies) { { guardian: } }
     let(:guardian) { Guardian.new(current_user) }
 
     fab!(:current_user) { Fabricate(:user) }
@@ -56,12 +57,10 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
     context "when the user has no memberships" do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "returns the updated_memberships in context" do
-        expect(result.updated_memberships).to eq([])
+        expect(result.updated_memberships).to be_empty
       end
     end
 
@@ -96,9 +95,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
         )
       end
 
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "updates the last_read_message_ids" do
         result
@@ -147,6 +144,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
             "membership_id" => membership_1.id,
             "mention_count" => 0,
             "unread_count" => 0,
+            "watched_threads_unread_count" => 0,
           },
           channel_2.id.to_s => {
             "last_read_message_id" => message_4.id,
@@ -154,6 +152,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
             "membership_id" => membership_2.id,
             "mention_count" => 0,
             "unread_count" => 0,
+            "watched_threads_unread_count" => 0,
           },
           channel_3.id.to_s => {
             "last_read_message_id" => message_6.id,
@@ -161,6 +160,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
             "membership_id" => membership_3.id,
             "mention_count" => 0,
             "unread_count" => 0,
+            "watched_threads_unread_count" => 0,
           },
         )
       end

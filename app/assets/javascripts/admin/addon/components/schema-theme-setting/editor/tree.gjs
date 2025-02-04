@@ -2,7 +2,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import TreeNode from "admin/components/schema-theme-setting/editor/tree-node";
 
 <template>
@@ -14,7 +14,7 @@ import TreeNode from "admin/components/schema-theme-setting/editor/tree-node";
         {{on "click" @clickBack}}
       >
         <div class="schema-theme-setting-editor__tree-node-text">
-          {{dIcon "arrow-left"}}
+          {{icon "arrow-left"}}
           {{@backButtonText}}
         </div>
       </li>
@@ -31,7 +31,6 @@ import TreeNode from "admin/components/schema-theme-setting/editor/tree-node";
         @addChildItem={{@addChildItem}}
         @generateSchemaTitle={{@generateSchemaTitle}}
         @registerInputFieldObserver={{@registerInputFieldObserver}}
-        @unregisterInputFieldObserver={{@unregisterInputFieldObserver}}
       />
     {{/each}}
 

@@ -12,13 +12,19 @@ class Admin::Config::SiteSettingsController < Admin::AdminController
   # UI itself uses the Admin::SiteSettingsController#index endpoint,
   # which also supports a `category` and `plugin` filter.
   def index
-    params.require(:filter_names)
+    if params[:plugin].blank? && params[:categories].blank? && params[:filter_names].blank? &&
+         SiteSetting.valid_areas.exclude?(params[:filter_area])
+      raise Discourse::InvalidParameters
+    end
 
     render_json_dump(
       site_settings:
         SiteSetting.all_settings(
           filter_names: params[:filter_names],
-          include_locale_setting: false,
+          filter_area: params[:filter_area],
+          filter_plugin: params[:plugin],
+          filter_categories: Array.wrap(params[:categories]),
+          include_locale_setting: params[:filter_area] == "localization",
           include_hidden: true,
           filter_allowed_hidden: ADMIN_CONFIG_AREA_ALLOWLISTED_HIDDEN_SETTINGS,
         ),

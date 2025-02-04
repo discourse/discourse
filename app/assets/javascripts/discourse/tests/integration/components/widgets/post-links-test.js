@@ -2,7 +2,6 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | post-links", function (hooks) {
   setupRenderingTest(hooks);
@@ -26,11 +25,9 @@ module("Integration | Component | Widget | post-links", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post-links" @args={{this.args}} />`);
 
-    assert.strictEqual(
-      count(".post-links a.track-link"),
-      1,
-      "it hides the dupe link"
-    );
+    assert
+      .dom(".post-links a.track-link")
+      .exists({ count: 1 }, "hides the dupe link");
   });
 
   test("collapsed links", async function (assert) {
@@ -77,9 +74,9 @@ module("Integration | Component | Widget | post-links", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post-links" @args={{this.args}} />`);
 
-    assert.strictEqual(count(".expand-links"), 1, "collapsed by default");
+    assert.dom(".expand-links").exists({ count: 1 }, "collapsed by default");
 
     await click("a.expand-links");
-    assert.strictEqual(count(".post-links a.track-link"), 7);
+    assert.dom(".post-links a.track-link").exists({ count: 7 });
   });
 });

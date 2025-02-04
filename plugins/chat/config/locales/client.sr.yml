@@ -18,7 +18,6 @@ sr:
     chat:
       dates:
         yesterday: "Juče"
-        time_tiny: "h:mm"
       all_loaded: "Prikaz svih poruka"
       cancel: "Odustani"
       channel_settings:
@@ -124,6 +123,8 @@ sr:
             title: "Normalno"
           tracking:
             title: "Praćeno"
+          watching:
+            title: "Posmatram"
       draft_channel_screen:
         header: "Nova privatna poruka"
         cancel: "Odustani"

@@ -7,6 +7,8 @@ class Reviewable < ActiveRecord::Base
     ReviewableUser: BasicReviewableUserSerializer,
   }
 
+  self.ignored_columns = [:reviewable_by_group_id]
+
   class UpdateConflict < StandardError
   end
 
@@ -17,13 +19,11 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  before_save :apply_review_group
   attr_accessor :created_new
   validates_presence_of :type, :status, :created_by_id
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: "User"
   belongs_to :target_created_by, class_name: "User"
-  belongs_to :reviewable_by_group, class_name: "Group"
 
   # Optional, for filtering
   belongs_to :topic
@@ -103,6 +103,7 @@ class Reviewable < ActiveRecord::Base
     payload: nil,
     reviewable_by_moderator: false,
     potential_spam: true,
+    potentially_illegal: false,
     target_created_by: nil
   )
     reviewable =
@@ -113,6 +114,7 @@ class Reviewable < ActiveRecord::Base
         reviewable_by_moderator: reviewable_by_moderator,
         payload: payload,
         potential_spam: potential_spam,
+        potentially_illegal: potentially_illegal,
         target_created_by: target_created_by,
       )
     reviewable.created_new!
@@ -136,12 +138,14 @@ class Reviewable < ActiveRecord::Base
         id: target.id,
         type: target.class.polymorphic_name,
         potential_spam: potential_spam == true ? true : nil,
+        potentially_illegal: potentially_illegal == true ? true : nil,
       }
 
       row = DB.query_single(<<~SQL, update_args)
         UPDATE reviewables
         SET status = :status,
-          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam)
+          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam),
+          potentially_illegal = COALESCE(:potentially_illegal, reviewables.potentially_illegal)
         FROM reviewables AS old_reviewables
         WHERE reviewables.target_id = :id
           AND reviewables.target_type = :type
@@ -264,19 +268,17 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
-  def apply_review_group
-    unless SiteSetting.enable_category_group_moderation? && category.present? &&
-             category.reviewable_by_group_id
-      return
-    end
-
-    self.reviewable_by_group_id = category.reviewable_by_group_id
-  end
-
   def actions_for(guardian, args = nil)
     args ||= {}
+    built_actions =
+      Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
 
-    Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
+    # Empty bundles can cause big issues on the client side, so we remove them
+    # here. It's not valid anyway to have a bundle with no actions, but you can
+    # add a bundle via actions.add_bundle and then not add any actions to it.
+    built_actions.bundles.reject!(&:empty?)
+
+    built_actions
   end
 
   def editable_for(guardian, args = nil)
@@ -408,14 +410,17 @@ class Reviewable < ActiveRecord::Base
     group_ids =
       SiteSetting.enable_category_group_moderation? ? user.group_users.pluck(:group_id) : []
 
-    result.where(
-      "(reviewables.reviewable_by_moderator AND :staff) OR (reviewables.reviewable_by_group_id IN (:group_ids))",
-      staff: user.staff?,
-      group_ids: group_ids,
-    ).where(
-      "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
-      Guardian.new(user).allowed_category_ids,
-    )
+    result
+      .left_joins(category: :category_moderation_groups)
+      .where(
+        "(reviewables.reviewable_by_moderator AND :moderator) OR (category_moderation_groups.group_id IN (:group_ids))",
+        moderator: user.moderator?,
+        group_ids: group_ids,
+      )
+      .where(
+        "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
+        Guardian.new(user).allowed_category_ids,
+      )
   end
 
   def self.pending_count(user)
@@ -443,7 +448,9 @@ class Reviewable < ActiveRecord::Base
     to_date: nil,
     additional_filters: {},
     preload: true,
-    include_claimed_by_others: true
+    include_claimed_by_others: true,
+    flagged_by: nil,
+    score_type: nil
   )
     order =
       case sort_order
@@ -461,18 +468,37 @@ class Reviewable < ActiveRecord::Base
       user_id = User.find_by_username(username)&.id
       return none if user_id.blank?
     end
-
     return none if user.blank?
-    result = viewable_by(user, order: order, preload: preload)
 
+    result = viewable_by(user, order: order, preload: preload)
     result = by_status(result, status)
     result = result.where(id: ids) if ids
-
     result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name) if type
     result = result.where("reviewables.category_id = ?", category_id) if category_id
     result = result.where("reviewables.topic_id = ?", topic_id) if topic_id
     result = result.where("reviewables.created_at >= ?", from_date) if from_date
     result = result.where("reviewables.created_at <= ?", to_date) if to_date
+
+    if flagged_by
+      flagged_by_id = User.find_by_username(flagged_by)&.id
+      return none if flagged_by_id.nil?
+      result = result.where(<<~SQL, flagged_by_id: flagged_by_id)
+        EXISTS(
+          SELECT 1 FROM reviewable_scores
+          WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.user_id = :flagged_by_id
+        )
+      SQL
+    end
+
+    if score_type
+      score_type = score_type.to_i
+      result = result.where(<<~SQL, score_type: score_type)
+      EXISTS(
+        SELECT 1 FROM reviewable_scores
+        WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewable_score_type = :score_type
+      )
+      SQL
+    end
 
     if reviewed_by
       reviewed_by_id = User.find_by_username(reviewed_by)&.id
@@ -670,12 +696,12 @@ class Reviewable < ActiveRecord::Base
     bundle ||=
       actions.add_bundle(
         "reject_user",
-        icon: "user-times",
+        icon: "user-xmark",
         label: "reviewables.actions.reject_user.title",
       )
 
     actions.add(:delete_user, bundle: bundle) do |a|
-      a.icon = "user-times"
+      a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.require_reject_reason = require_reject_reason
     end
@@ -768,7 +794,6 @@ end
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
-#  reviewable_by_group_id  :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null
@@ -783,6 +808,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #

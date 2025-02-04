@@ -6,34 +6,6 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 // TODO: Consolidate these tests into a single acceptance test once the Glimmer
 // header is the default.
-acceptance("Header API - authenticated", function (needs) {
-  needs.user();
-  needs.settings({
-    glimmer_header_mode: "disabled",
-  });
-
-  test("can add buttons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test", <template>
-        <button class="test-button">Test</button>
-      </template>);
-    });
-
-    await visit("/");
-    assert.dom("button.test-button").exists("button is displayed");
-  });
-
-  test("can add icons to the header", async function (assert) {
-    withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test", <template>
-        <span class="test-icon">Test</span>
-      </template>);
-    });
-
-    await visit("/");
-    assert.dom(".test-icon").exists("icon is displayed");
-  });
-});
 
 acceptance("Header API - anonymous", function () {
   test("can add buttons to the header", async function (assert) {
@@ -57,7 +29,7 @@ acceptance("Header API - anonymous", function () {
     await visit("/");
     const testButton = document.querySelector(".test-button");
     const authButtons = document.querySelector(".auth-buttons");
-    assert.equal(
+    assert.strictEqual(
       testButton.compareDocumentPosition(authButtons),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test button is positioned before auth-buttons"
@@ -85,7 +57,7 @@ acceptance("Header API - anonymous", function () {
     await visit("/");
     const testIcon = document.querySelector(".test-icon");
     const search = document.querySelector(".search-dropdown");
-    assert.equal(
+    assert.strictEqual(
       testIcon.compareDocumentPosition(search),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test icon is positioned before search icon"
@@ -95,9 +67,6 @@ acceptance("Header API - anonymous", function () {
 
 acceptance("Glimmer Header API - authenticated", function (needs) {
   needs.user({ groups: AUTO_GROUPS.everyone });
-  needs.settings({
-    glimmer_header_mode: "enabled",
-  });
 
   test("can add buttons to the header", async function (assert) {
     withPluginApi("1.29.0", (api) => {
@@ -126,7 +95,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
     await visit("/");
     const test1 = document.querySelector(".test1-button");
     const test2 = document.querySelector(".test2-button");
-    assert.equal(
+    assert.strictEqual(
       test2.compareDocumentPosition(test1),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test2 button is positioned before Test1 button"
@@ -160,7 +129,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
     await visit("/");
     const test1 = document.querySelector(".test1-icon");
     const test2 = document.querySelector(".test2-icon");
-    assert.equal(
+    assert.strictEqual(
       test2.compareDocumentPosition(test1),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test2 icon is positioned before Test1 icon"

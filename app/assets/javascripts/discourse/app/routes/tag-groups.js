@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TagGroups extends DiscourseRoute {
   model() {
@@ -7,6 +7,6 @@ export default class TagGroups extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("tagging.groups.title");
+    return i18n("tagging.groups.title");
   }
 }

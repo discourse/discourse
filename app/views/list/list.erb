@@ -87,7 +87,7 @@
           </td>
           <td class='posters'>
             <% t.posters.each do |poster| %>
-              <a href="<%= Discourse.base_url %>/u/<%= poster.user.username %>" class="<%= poster.extras %>">
+              <a rel='nofollow' href="<%= Discourse.base_url %>/u/<%= poster.user.username %>" class="<%= poster.extras %>">
                 <%- poster_name_and_description = h(poster.name_and_description) %>
                 <img width="25" height="25" src="<%= poster.user.avatar_template.gsub('{size}', '25') %>" class="avatar" title='<%= poster_name_and_description %>' aria-label='<%= poster_name_and_description %>'>
               </a>

@@ -136,6 +136,8 @@ ur:
             title: "عمومی"
           tracking:
             title: "ٹریک کیا جا رہا"
+          watching:
+            title: "نظر رکھی ہوئی ہے"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

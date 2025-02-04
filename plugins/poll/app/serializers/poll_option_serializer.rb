@@ -8,8 +8,7 @@ class PollOptionSerializer < ApplicationSerializer
   end
 
   def votes
-    # `size` instead of `count` to prevent N+1
-    object.poll_votes.size + object.anonymous_votes.to_i
+    object.voters_count + object.anonymous_votes.to_i
   end
 
   def include_votes?

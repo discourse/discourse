@@ -73,7 +73,7 @@
         <DButton
           @action={{action "undoColorSchemePreview"}}
           @label="user.color_schemes.undo"
-          @icon="undo"
+          @icon="arrow-rotate-left"
           class="btn-default btn-small undo-preview"
         />
       {{/if}}
@@ -178,6 +178,12 @@
     class="pref-enable-quoting"
   />
   <PreferenceCheckbox
+    @labelKey="user.enable_smart_lists"
+    @checked={{this.model.user_option.enable_smart_lists}}
+    data-setting-name="user-enable-smart-lists"
+    class="pref-enable-smart-lists"
+  />
+  <PreferenceCheckbox
     @labelKey="user.enable_defer"
     @checked={{this.model.user_option.enable_defer}}
     data-setting-name="user-enable-defer"
@@ -189,14 +195,6 @@
       @checked={{this.model.user_option.automatically_unpin_topics}}
       data-setting-name="user-auto-unpin"
       class="pref-auto-unpin"
-    />
-  {{/if}}
-  {{#if this.siteSettings.allow_users_to_hide_profile}}
-    <PreferenceCheckbox
-      @labelKey="user.hide_profile_and_presence"
-      @checked={{this.model.user_option.hide_profile_and_presence}}
-      data-setting-name="user-hide-profile"
-      class="pref-hide-profile"
     />
   {{/if}}
   <PreferenceCheckbox

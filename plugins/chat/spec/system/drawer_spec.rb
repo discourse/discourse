@@ -112,11 +112,14 @@ RSpec.describe "Drawer", type: :system do
     it "collapses the drawer" do
       visit("/")
       chat_page.open_from_header
+
       expect(page).to have_selector(".chat-drawer.is-expanded")
+      expect(page).to have_selector("body.chat-drawer-expanded")
 
       page.find(".c-navbar").click
 
       expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
+      expect(page).to have_selector("body:not(.chat-drawer-expanded)")
     end
   end
 

@@ -20,10 +20,6 @@ module MobileDetection
     end
   end
 
-  def self.ios_device?(user_agent)
-    user_agent =~ /iPad|iPhone|iPod/
-  end
-
   MODERN_MOBILE_REGEX =
     %r{
     \(.*iPhone\ OS\ 1[5-9].*\)|

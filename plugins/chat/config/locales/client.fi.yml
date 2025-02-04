@@ -39,6 +39,10 @@ fi:
       chat_messages_count: "Chat-viestit"
       chat_channels_count: "Chat-kanavat"
       chat_users_count: "Chat-käyttäjät"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} chat-viesti"
+          other: "%{formatted_number} chat-viestuä"
     chat:
       text_copied: Teksti kopioitiin leikepöydälle
       link_copied: Linkki kopioitiin leikepöydälle
@@ -46,7 +50,6 @@ fi:
       deleted_chat_username: poistettu
       dates:
         yesterday: "Eilen"
-        time_tiny: "t:mm"
       all_loaded: "Näytetään kaikki viestit"
       already_enabled: "Chat on jo käytössä tässä ketjussa. Päivitä."
       disabled_for_topic: "Chat on poistettu käytöstä tässä ketjussa."
@@ -130,11 +133,18 @@ fi:
       header_indicator_preference:
         title: "Näytä aktiivisuusilmaisin yläpalkissa"
         all_new: "Kaikki uudet viestit"
-        dm_and_mentions: "Yksityisviestit ja maininnat"
+        dm_and_mentions: "Yksityisviestit, maininnat ja tarkkailussa olevat viestiketjut"
         only_mentions: "Vain maininnat"
         never: "Ei koskaan"
       separate_sidebar_mode:
         title: "Näytä erilliset sivupalkkitilat foorumille ja chatille"
+      send_shortcut:
+        enter:
+          label: "Lähetä painamalla Enter-näppäintä"
+          description: "Uusi rivi painamalla Vaihto + Enter"
+        meta_enter:
+          label: "Lähetä painamalla %{meta_key} + Enter"
+          description: "Uusi rivi painamalla Enter-näppäintä"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
       emoji: "Lisää emoji"
@@ -193,6 +203,7 @@ fi:
       placeholder_channel: "Keskustelu kanavalla %{channelName}"
       placeholder_thread: "Keskustelu ketjussa"
       placeholder_users: "Chat-keskustelu käyttäjän %{commaSeparatedNames} kanssa"
+      placeholder_group: "Keskustele ryhmässä"
       placeholder_new_message_disallowed:
         archived: "Kanava on arkistoitu, et voi lähettää uusia viestejä juuri nyt."
         closed: "Kanava on suljettu, et voi lähettää uusia viestejä juuri nyt."
@@ -403,10 +414,9 @@ fi:
         auto_join_users_info: "Tarkista tunnin välein, ketkä käyttäjät ovat olleet aktiivisia viimeisten kolmen kuukauden aikana. Lisää heidät tälle kanavalle, jos heillä on pääsy alueelle %{category}."
         auto_join_users_info_no_category: "Tarkista tunnin välein, ketkä käyttäjät ovat olleet aktiivisia viimeisten kolmen kuukauden aikana. Lisää heidät tälle kanavalle, jos heillä on pääsy valitulle alueelle."
         auto_join_users_warning: "Jokainen käyttäjä, joka ei ole tämän kanavan jäsen ja jolla on pääsy alueelle %{category}, liittyy. Oletko varma?"
-        desktop_notification_level: "Työpöytäilmoitukset"
+        notification_level: "Lähetä push-ilmoituksia"
         follow: "Liity"
         followed: "Liittyi"
-        mobile_notification_level: "Mobiili-push-ilmoitukset"
         mute: "Vaimenna kanava"
         threading_enabled: "Käytössä"
         threading_disabled: "Pois käytöstä"
@@ -429,6 +439,7 @@ fi:
           title: "Vie chat-viestit"
           description: "Tämä vie kaikki viestit kaikilta kanavilta."
           create_export: "Luo vienti"
+          confirm_export: "Tämä vie kaikki viestit kaikilta kanavilta ja lähettää tuloksen sinulle henkilökohtaisena viestinä. Haluatko varmasti viedä?"
           export_has_started: "Vienti on alkanut. Saat yksityisviestin, kun se on valmis."
       my_threads:
         title: Omat ketjut
@@ -447,6 +458,7 @@ fi:
       incoming_webhooks:
         back: "Takaisin"
         channel_placeholder: "Valitse kanava"
+        channel: "Kanava"
         confirm_destroy: "Haluatko varmasti poistaa tämän saapuvan webhookin? Tätä ei voi peruuttaa."
         current_emoji: "Nykyinen emoji"
         description: "Kuvaus"
@@ -470,6 +482,8 @@ fi:
         username: "Käyttäjätunnus"
         username_instructions: "Kanavalle lähettävän botin käyttäjätunnus. Oletus on \"järjestelmä\", kun tämä jätetään tyhjäksi."
         instructions: "Ulkoiset järjestelmät voivat käyttää saapuvia webhookeja viestien lähettämiseen määrätylle chat-kanavalle bot-käyttäjänä <code>/hooks/:key</code>-päätepisteen kautta. Hyötykuorma koostuu yhdestä <code>text</code>-parametrista, joka on rajoitettu 2 000 merkkiin.<br><br>Tuemme myös rajoitettuja Slack-muotoiltuja <code>text</code>-parametreja, linkkien ja mainintojen poimimista osoitteessa <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> kuvatun muodon perusteella, mutta tähän täytyy käyttää <code>/hooks/:key/slack</code>-päätepistettä."
+        saved: "Webhook-muutokset tallennettu"
+        created: "Webhook luotu"
       selection:
         cancel: "Peruuta"
         quote_selection: "Lainaus ketjussa"
@@ -547,10 +561,13 @@ fi:
         notifications:
           regular:
             title: "Normaali"
-            description: "Saat ilmoituksen, jos joku mainitsee @nimesi tässä ketjussa."
+            description: "Vastaanota ilmoitus, kun joku mainitsee sinut tässä ketjussa."
           tracking:
             title: "Seuranta"
-            description: "Tämän ketjun uusien vastausten määrä näkyy ketjuluettelossa ja kanavassa. Saat ilmoituksen, jos joku mainitsee @nimesi tässä ketjussa."
+            description: "Vastaanota ilmoitus, kun joku mainitsee sinut tässä ketjussa, ja näe uusien vastausten määrä ketjuluettelossa."
+          watching:
+            title: "Tarkkailu"
+            description: "Vastaanota ilmoitus kaikista vastauksista tässä ketjussa ja näe uusien vastausten määrä ketjuluettelossa."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -576,6 +593,9 @@ fi:
       chat_invitation: "kutsui sinut liittymään chat-kanavalle"
       chat_invitation_html: "<span>%{username}</span> <span>kutsui sinut liittymään chat-kanavalle</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} ja %{username2}"
+        other: "%{username} ja %{count} muuta"
       popup:
         chat_mention:
           direct: 'mainitsi sinut kanavalla "%{channel}"'
@@ -590,9 +610,10 @@ fi:
         chat_message: "Uusi chat-viesti"
         chat_quoted: "%{username} lainasi chat-viestiäsi"
       titles:
-        chat_mention: "Chat-maininta"
-        chat_invitation: "Chat-kutsu"
-        chat_quoted: "Chat-keskustelua lainattu"
+        chat_mention: "Mainittu chatissa"
+        chat_invitation: "Kutsuttu chat-kanavalle"
+        chat_quoted: "Chat-viestiä lainattu"
+        chat_watched_thread: "Tarkkailtu chat-ketju"
     action_codes:
       chat:
         enabled: '%{who} otti <button class="btn-link open-chat">chatin</button> käyttöön %{when}'
@@ -623,6 +644,7 @@ fi:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Vaihda kanavaa"
+          switch__unread_channel_arrows: "%{shortcut} Vaihda lukematonta kanavaa"
           open_quick_channel_selector: "%{shortcut} Avaa kanavan pikavalitsin"
           open_insert_link_modal: "%{shortcut} Lisää hyperlinkki (vain tekstieditori)"
           composer_bold: "%{shortcut} Lihavointi (vain tekstieditori)"

@@ -8,7 +8,7 @@ module Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
       report.icon = "heart"
       report.data = []
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.dates_filtering = true
 

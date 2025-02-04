@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic list focus", type: :system do
+describe "Discovery list", type: :system do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   fab!(:reply) { Fabricate(:post, topic: topics.first) }
 
@@ -37,5 +37,28 @@ describe "Topic list focus", type: :system do
     find("th[data-sort-order='posts']").click
     expect(page).to have_css("th[data-sort-order='posts'][aria-sort=ascending]")
     expect(nth_topic_id(10)).to eq(reply.topic_id.to_s)
+  end
+
+  describe "bulk topic options" do
+    fab!(:user)
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post1) { create_post(user: user, topic: topic) }
+    fab!(:post2) { create_post(topic: topic) }
+
+    it "should correctly show/hide the bulk select toggle for regular users" do
+      sign_in(user)
+      visit("/unread")
+
+      # The bulk select toggle should be visible, the user has an unread post
+      find("button.bulk-select").click
+      expect(page).to have_css(".topic-list-body .bulk-select")
+
+      find("#navigation-bar .latest > a").click
+
+      # No bulk select toggle or checkboxes
+      # this action is not available for this user in /latest
+      expect(page).to have_no_css(".topic-list-body .bulk-select")
+      expect(page).to have_no_css("button.bulk-select")
+    end
   end
 end

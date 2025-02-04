@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::UsersController < Admin::StaffController
-  MAX_SIMILAR_USERS = 10
-
   before_action :fetch_user,
                 only: %i[
                   suspend
@@ -28,12 +26,13 @@ class Admin::UsersController < Admin::StaffController
                   disable_second_factor
                   delete_posts_batch
                   sso_record
+                  delete_associated_accounts
                 ]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
 
-    opts = {}
+    opts = { include_can_be_deleted: true, include_silence_reason: true }
     if params[:show_emails] == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
@@ -46,18 +45,28 @@ class Admin::UsersController < Admin::StaffController
     @user = User.find_by(id: params[:id])
     raise Discourse::NotFound unless @user
 
-    similar_users =
-      User
-        .real
-        .where.not(id: @user.id)
-        .where(ip_address: @user.ip_address, admin: false, moderator: false)
-
     render_serialized(
       @user,
       AdminDetailedUserSerializer,
       root: false,
-      similar_users: similar_users.limit(MAX_SIMILAR_USERS),
-      similar_users_count: similar_users.count,
+      similar_users_count: @user.similar_users.count,
+    )
+  end
+
+  def similar_users
+    @user = User.find_by(id: params[:user_id])
+    raise Discourse::NotFound if !@user
+
+    render_json_dump(
+      {
+        users:
+          ActiveModel::ArraySerializer.new(
+            @user.similar_users.limit(User::MAX_SIMILAR_USERS),
+            each_serializer: SimilarAdminUserSerializer,
+            scope: guardian,
+            root: false,
+          ),
+      },
     )
   end
 
@@ -111,70 +120,27 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def suspend
-    guardian.ensure_can_suspend!(@user)
-    reason = params[:reason]
-
-    if reason && (!reason.is_a?(String) || reason.size > 300)
-      raise Discourse::InvalidParameters.new(:reason)
-    end
-
-    if @user.suspended?
-      suspend_record = @user.suspend_record
-      message =
-        I18n.t(
-          "user.already_suspended",
-          staff: suspend_record.acting_user.username,
-          time_ago:
-            AgeWords.time_ago_in_words(
-              suspend_record.created_at,
-              true,
-              scope: :"datetime.distance_in_words_verbose",
-            ),
+    User::Suspend.call(service_params) do
+      on_success do |params:, user:, full_reason:|
+        render_json_dump(
+          suspension: {
+            suspend_reason: params.reason,
+            full_suspend_reason: full_reason,
+            suspended_till: user.suspended_till,
+            suspended_at: user.suspended_at,
+            suspended_by: BasicUserSerializer.new(current_user, root: false).as_json,
+          },
         )
-      return render json: failed_json.merge(message: message), status: 409
-    end
-
-    params.require(%i[suspend_until reason])
-
-    all_users = [@user]
-    if Array === params[:other_user_ids]
-      if params[:other_user_ids].size > MAX_SIMILAR_USERS
-        raise Discourse::InvalidParameters.new(:other_user_ids)
       end
-
-      all_users.concat(User.where(id: params[:other_user_ids]).to_a)
-      all_users.uniq!
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+      end
+      on_model_not_found(:user) { raise Discourse::NotFound }
+      on_failed_policy(:not_suspended_already) do |policy|
+        render json: failed_json.merge(message: policy.reason), status: 409
+      end
+      on_failed_policy(:can_suspend_all_users) { raise Discourse::InvalidAccess.new }
     end
-
-    user_history = nil
-
-    all_users.each { |user| raise Discourse::InvalidAccess.new if !guardian.can_suspend?(user) }
-
-    all_users.each do |user|
-      suspender =
-        UserSuspender.new(
-          user,
-          suspended_till: params[:suspend_until],
-          reason: params[:reason],
-          by_user: current_user,
-          message: params[:message],
-          post_id: params[:post_id],
-        )
-      suspender.suspend
-      user_history = suspender.user_history
-    end
-
-    perform_post_action
-
-    render_json_dump(
-      suspension: {
-        suspend_reason: params[:reason],
-        full_suspend_reason: user_history&.details,
-        suspended_till: @user.suspended_till,
-        suspended_at: @user.suspended_at,
-        suspended_by: BasicUserSerializer.new(current_user, root: false).as_json,
-      },
-    )
   end
 
   def unsuspend
@@ -349,78 +315,27 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def silence
-    reason = params[:reason]
-
-    if reason && (!reason.is_a?(String) || reason.size > 300)
-      raise Discourse::InvalidParameters.new(:reason)
-    end
-
-    if @user.silenced?
-      silenced_record = @user.silenced_record
-      message =
-        I18n.t(
-          "user.already_silenced",
-          staff: silenced_record.acting_user.username,
-          time_ago:
-            AgeWords.time_ago_in_words(
-              silenced_record.created_at,
-              true,
-              scope: :"datetime.distance_in_words_verbose",
-            ),
-        )
-      return render json: failed_json.merge(message: message), status: 409
-    end
-
-    all_users = [@user]
-    if Array === params[:other_user_ids]
-      if params[:other_user_ids].size > MAX_SIMILAR_USERS
-        raise Discourse::InvalidParameters.new(:other_user_ids)
-      end
-
-      all_users.concat(User.where(id: params[:other_user_ids]).to_a)
-      all_users.uniq!
-    end
-
-    user_history = nil
-
-    all_users.each do |user|
-      raise Discourse::InvalidAccess.new if !guardian.can_silence_user?(user)
-    end
-
-    all_users.each do |user|
-      silencer =
-        UserSilencer.new(
-          user,
-          current_user,
-          silenced_till: params[:silenced_till],
-          reason: params[:reason],
-          message_body: params[:message],
-          keep_posts: true,
-          post_id: params[:post_id],
-        )
-
-      if silencer.silence
-        user_history = silencer.user_history
-        Jobs.enqueue(
-          :critical_user_email,
-          type: "account_silenced",
-          user_id: user.id,
-          user_history_id: user_history.id,
+    User::Silence.call(service_params) do
+      on_success do |full_reason:, user:|
+        render_json_dump(
+          silence: {
+            silenced: true,
+            silence_reason: full_reason,
+            silenced_till: user.silenced_till,
+            silenced_at: user.silenced_at,
+            silenced_by: BasicUserSerializer.new(current_user, root: false).as_json,
+          },
         )
       end
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+      end
+      on_model_not_found(:user) { raise Discourse::NotFound }
+      on_failed_policy(:not_silenced_already) do |policy|
+        render json: failed_json.merge(message: policy.reason), status: 409
+      end
+      on_failed_policy(:can_silence_all_users) { raise Discourse::InvalidAccess.new }
     end
-
-    perform_post_action
-
-    render_json_dump(
-      silence: {
-        silenced: true,
-        silence_reason: user_history.try(:details),
-        silenced_till: @user.silenced_till,
-        silenced_at: @user.silenced_at,
-        silenced_by: BasicUserSerializer.new(current_user, root: false).as_json,
-      },
-    )
   end
 
   def unsilence
@@ -483,6 +398,28 @@ class Admin::UsersController < Admin::StaffController
                    ),
                },
                status: 403
+      end
+    end
+  end
+
+  def destroy_bulk
+    # capture service_params outside the hijack block to avoid thread safety
+    # issues
+    service_arg = service_params
+
+    hijack do
+      User::BulkDestroy.call(service_arg) do
+        on_success { render json: { deleted: true } }
+
+        on_failed_contract do |contract|
+          render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+        end
+
+        on_failed_policy(:can_delete_users) do
+          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]), status: 403
+        end
+
+        on_model_not_found(:users) { render json: failed_json, status: 404 }
       end
     end
   end
@@ -600,32 +537,30 @@ class Admin::UsersController < Admin::StaffController
     render json: success_json
   end
 
-  private
-
-  def perform_post_action
-    return if params[:post_id].blank? || params[:post_action].blank?
-
-    if post = Post.where(id: params[:post_id]).first
-      case params[:post_action]
-      when "delete"
-        PostDestroyer.new(current_user, post).destroy if guardian.can_delete_post_or_topic?(post)
-      when "delete_replies"
-        if guardian.can_delete_post_or_topic?(post)
-          PostDestroyer.delete_with_replies(current_user, post)
+  def delete_associated_accounts
+    guardian.ensure_can_delete_user_associated_accounts!(@user)
+    previous_value =
+      @user
+        .user_associated_accounts
+        .select(:provider_name, :provider_uid, :info)
+        .map do |associated_account|
+          {
+            provider: associated_account.provider_name,
+            uid: associated_account.provider_uid,
+            info: associated_account.info,
+          }.to_s
         end
-      when "edit"
-        revisor = PostRevisor.new(post)
-
-        # Take what the moderator edited in as gospel
-        revisor.revise!(
-          current_user,
-          { raw: params[:post_edit] },
-          skip_validations: true,
-          skip_revision: true,
-        )
-      end
-    end
+        .join(",")
+    StaffActionLogger.new(current_user).log_delete_associated_accounts(
+      @user,
+      previous_value:,
+      context: params[:context],
+    )
+    @user.user_associated_accounts.delete_all
+    render json: success_json
   end
+
+  private
 
   def fetch_user
     @user = User.find_by(id: params[:user_id])

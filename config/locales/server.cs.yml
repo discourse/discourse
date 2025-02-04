@@ -74,6 +74,10 @@ cs:
     import_error:
       generic: Při importu tohoto motivu došlo k chybě
       upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
+      screenshot: "Chyba při importu snímků obrazovky motivu. %{errors}"
+      screenshot_invalid_type: "Snímky obrazovky motivu musí být v jednom z následujících formátů: %{accepted_formats}. Snímek obrazovky %{file_name} má neplatný formát."
+      screenshot_invalid_size: "Snímky obrazovky motivu musí být menší než %{max_size}. Snímek obrazovky %{file_name} je příliš velký."
+      screenshot_invalid_dimensions: "Snímky obrazovky motivu musí být maximálně %{max_width}x%{max_height}. Snímek obrazovky %{file_name} tuto hodnotu přesahuje. Jeho rozměry jsou %{width}x%{height}."
       about_json: "Chyba importu: about.json neexistuje nebo je neplatný. Jste si jisti, že se jedná o Discourse motiv?"
       about_json_too_big: "Chyba importu: about.json je větší než %{limit} limit."
       about_json_values: "about.json obsahuje neplatné hodnoty: %{errors}"
@@ -288,6 +292,7 @@ cs:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "'User agents' musí mít alespoň 3 znaky, aby nedošlo k náhodnému omezení rychlosti legitimních uživatelů."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "K nastavení nemůžete přidat žádnou z následujících hodnot: %{values}."
       twitter_summary_large_image_no_svg: "Obrázky na Twitter shrnutí používané pro twitter:image metadata nemohou být obrázky .svg."
+      tl0_and_anonymous_flag: "Pro anonymní uživatele musí být nastaven buď 'site contact email' nebo 'email address to report illegal content'."
   custom_fields:
     validations:
       max_items: "Bylo dosaženo maximálního počtu uživatelských polí pro tuto entitu (%{max_items_number})"
@@ -337,9 +342,11 @@ cs:
     max_redemptions_limit: "mělo by být mezi 2 a %{max_limit}."
   topic_invite:
     failed_to_invite: "Uživatele nelze pozvat do tohoto tématu, aniž by byl členem jedné z následujících skupin: %{group_names}."
-    not_pm: "Můžete zvát pouze do soukromých zpráv."
+    not_pm: "Pozvat můžete pouze do soukromých zpráv."
     user_exists: "Omlouváme se, uživatel byl již pozván. K tématu můžete pozvat uživatele jen jednou."
     muted_topic: "Omlouváme se, ale tento uživatel toto téma ztlumil."
+    receiver_does_not_allow_pm: "Litujeme, tento uživatel vám neumožňuje posílat mu soukromé zprávy."
+    sender_does_not_allow_pm: "Je nám líto, ale tomuto uživateli nedovolujete posílat vám soukromé zprávy."
     user_cannot_see_topic: "%{username} toto téma nevidí."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
@@ -521,6 +528,11 @@ cs:
         many: "Do skupiny bylo přidáno %{count} uživatelů."
         other: "Do skupiny bylo přidáno %{count} uživatelů."
     errors:
+      default_notification_level_users_limit:
+        one: "Výchozí úroveň oznámení nelze nastavit pro skupiny větší než %{count} uživatel. Nesprávná skupina: %{group_name}"
+        few: "Výchozí úroveň oznámení nelze nastavit pro skupiny větší než %{count} uživatelé. Nesprávná skupina: %{group_name}"
+        many: "Výchozí úroveň oznámení nelze nastavit pro skupiny větší než %{count} uživatelů. Nesprávná skupina: %{group_name}"
+        other: "Výchozí úroveň oznámení nelze nastavit pro skupiny větší než %{count} uživatelů. Nesprávná skupina: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' není platná úroveň důvěry."
       can_not_modify_automatic: "Nelze měnit automatické skupiny"
       member_already_exist:
@@ -552,6 +564,16 @@ cs:
       trust_level_2: "uroven_duvery_2"
       trust_level_3: "uroven_duvery_3"
       trust_level_4: "uroven_duvery_4"
+    default_descriptions:
+      everyone: "Automatická skupina zahrnující všechny členy"
+      staff: "Automatická skupina včetně administrátorů a moderátorů"
+      admins: "Odpovědni za konfiguraci a údržbu této stránky s přístupem ke všem údajům o členech a aktivitách."
+      moderators: "Odpovědni za reakci na nahlášení, moderování diskusí a pomoc členům s jejich účty"
+      trust_level_0: "Noví členové s omezenými schopnostmi, kteří se učí komunitním normám a funkcím"
+      trust_level_1: "Členové s větší důvěrou, kteří prokázali počáteční zapojení čtením, mají nyní přístup k více funkcím. Všichni členové této skupiny jsou zároveň členy skupiny uroven_duvery_0."
+      trust_level_2: "Aktivní členové, kteří dlouhodobě důsledně přispívali a získali plná občanská privilegia. Všichni členové této skupiny jsou také členy skupin uroven_duvery_1 a uroven_duvery_0."
+      trust_level_3: "Vysoce angažovaní, dlouhodobí přispěvatelé, kteří tvoří páteř komunity a získali omezená moderátorská práva. Všichni členové této skupiny jsou zároveň členy skupin uroven_duvery_2, uroven_duvery_1 a uroven_duvery_0."
+      trust_level_4: "Ručně povýšení členové, kteří byli oceněni za své příkladné příspěvky a kterým byla svěřena další moderátorská práva. Všichni členové této skupiny jsou zároveň členy skupin uroven_duvery_3, uroven_duvery_2, uroven_duvery_1 a uroven_duvery_0."
     request_membership_pm:
       title: "Žádost o členství pro @%{group_name}"
     request_accepted_pm:
@@ -631,6 +653,8 @@ cs:
         bio_raw: "O mně"
       user:
         password: "Heslo"
+      user_password:
+        password: "Heslo"
     errors:
       models:
         topic:
@@ -643,6 +667,7 @@ cs:
               reply_by_email_disabled: "Odpověď přes email byla vypnuta."
               send_to_email_disabled: "Litujeme, ale na e-mail nelze posílat soukromé zprávy."
               target_user_not_found: "Jeden z uživatelů, kterým posíláte tuto zprávu, nebyl nalezen."
+              too_large_group: "Skupina: %{group_name}, má příliš mnoho uživatelů na to, aby obdržela zprávu. Limit je %{limit}."
               unable_to_update: "Při aktualizaci tohoto tématu došlo k chybě."
               unable_to_tag: "Při nastavování štítku tohoto tématu došlo k chybě."
               unable_to_unlist: "Je nám líto, ale nemůžete vytvořit skryté téma."
@@ -655,7 +680,6 @@ cs:
               same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
               same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
               same_as_current: "je stejné jako vaše současné heslo."
-              same_as_previous: "je stejné jako vaše předchozí heslo."
               same_as_name: "je stejné jako vaše jméno."
               unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
             username:
@@ -665,6 +689,15 @@ cs:
             ip_address:
               blocked: "Nové registrace z vaší IP adresy nejsou povoleny."
               max_new_accounts_per_registration_ip: "Nové registrace z vaší IP adresy nejsou povoleny (dosaženo maximálního limitu). Kontaktujte člena redakce."
+        user_password:
+          attributes:
+            password:
+              common: "je jedno z 10 000 nejčastějších hesel. Použijte prosím bezpečnější heslo."
+              same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
+              same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
+              same_as_current: "je stejné jako vaše současné heslo."
+              same_as_name: "je stejné jako vaše jméno."
+              unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
         user_profile:
           attributes:
             featured_topic_id:
@@ -962,11 +995,7 @@ cs:
     revoke_failed: "Nepodařilo se zrušit váš účet pomocí %{provider_name}."
     connected: "(připojeno)"
   activation:
-    action: "Klikni sem pro aktivaci svého účtu"
     already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
-    please_continue: "Váš účet je aktivovaný; budete přesměrování na výchozí stránku."
-    continue_button: "Pokračovat na %{site_name}"
-    welcome_to: "Vítejte v %{site_name}!"
     approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
     missing_session: "Nemůžeme zjistit, zda byl váš účet vytvořen, ujistěte se, že máte povoleny soubory cookie."
     activated: "Litujeme, tento účet byl již aktivován."
@@ -1112,6 +1141,7 @@ cs:
       wrong_move: "Nahlášení nelze přesunout"
       system: "Systémový příznak nelze aktualizovat ani odstranit."
       used: "Příznak nelze aktualizovat ani odstranit, protože již byl použit."
+      unique_name: "Název příznaku musí být jedinečný"
   reports:
     default:
       labels:
@@ -1186,13 +1216,14 @@ cs:
       yaxis: "Den"
       description: "Počet uživatelů, kteří během tohoto období zvýšili svou úroveň důvěry."
     consolidated_page_views:
-      title: "Konsolidovaná zobrazení stránek"
+      title_legacy: "Konsolidovaná zobrazení stránek"
       xaxis:
         page_view_crawler: "Vyhledávače"
         page_view_anon: "Anonymní uživatelé"
         page_view_logged_in: "Přihlášení uživatelé"
       yaxis: "Den"
-      description: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele a vyhledávače."
+      description: "Starší sestava zobrazující zobrazení stránek přihlášených uživatelů, anonymních uživatelů a crawlerů. Tato sestava byla nahrazena sestavou \"Návštěvnost stránek\"."
+      description_legacy: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele a vyhledávače."
       labels:
         post: Příspěvek
         editor: Uživatel
@@ -1212,6 +1243,16 @@ cs:
         page_view_crawler: "Známý prohledávač"
         page_view_other: "Ostatní zobrazení"
       yaxis: "Den"
+    site_traffic:
+      title: "Návštěvnost stránek"
+      xaxis:
+        page_view_anon_browser: "Zobrazení (anonymní)"
+        page_view_logged_in_browser: "Zobrazení (přihlášení)"
+        page_view_crawler: "Známé prohledávače"
+        page_view_other: "Ostatní provoz"
+      yaxis: "Den"
+      description: "Počty zobrazených stránek pro přihlášené uživatele, anonymní uživatele, známé prohledávače a další provoz."
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Den"
@@ -1355,6 +1396,11 @@ cs:
       xaxis: "Den"
       yaxis: "Celkové pageviews"
       description: "Počet nových zobrazení stránek od všech návštěvníků."
+    page_view_legacy_total_reqs:
+      title: "Počty zobrazení stránek (zastaralé)"
+      xaxis: "Den"
+      yaxis: "Celkové pageviews"
+      description: "Starší sestava zobrazující počet nových zobrazení stránek od všech návštěvníků."
     page_view_logged_in_mobile_reqs:
       title: "Přihlášená zobrazení stránek"
       xaxis: "Den"
@@ -1505,8 +1551,7 @@ cs:
     delete_old_hidden_posts: "Automaticky smazat všechny skryté příspěvky, které jsou skryté déle než 30 dní."
     default_locale: "Výchozí jazyk této instance Discourse. Text kategorií a témat generovaných systémem můžete nahradit v nabídce <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Přizpůsobit / Text</a>."
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
-    set_locale_from_accept_language_header: "nastavit jazyk rozhraní pro anonymní uživatele z nastavení jejich webového prohlížeče"
-    support_mixed_text_direction: "Podpora smíšených směrů textu zleva doprava a zprava doleva."
+    support_mixed_text_direction: "Podpora smíšených směrů textu zleva doprava a zprava doleva"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
@@ -1555,10 +1600,10 @@ cs:
     faq_url: "Pokud máte dokument FAQ hostovaný samostatně, napište sem jeho plnou URL."
     tos_url: "Pokud máte dokument 'Podmínky služby' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
-    auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
+    forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
     delete_rejected_email_after_days: "Smazat odmítnuté e-maily starší než (n) dnů."
     pop3_polling_openssl_verify: "Ověřit certifikát serveru TLS (výchozí: povoleno)"
@@ -1575,6 +1620,7 @@ cs:
     disable_system_edit_notifications: "Zakáže upozornění na úpravy od systémového uživatele, když je aktivní 'download_remote_images_to_local'."
     penalty_step_hours: "Výchozí sankce pro ztišení nebo pozastavení uživatelů v hodinách. První přestupek se rovná první hodnotě, druhý přestupek druhé hodnotě, atd."
     penalty_include_post_message: "Automatické zahrnutí zprávy s urážlivým příspěvkem do šablony e-mailové zprávy při ztišení nebo pozastavení uživatele."
+    full_name_requirement: "Nastavení celého jména jako povinného, nepovinného nebo nepovinného, ale skrytého v registračním formuláři."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata budou skryta, dokud uživatel neodpoví."
     import_embed_unlisted: "Importovaná vložená témata budou skryta, dokud uživatel neodpoví (i když není zaškrtnuto nastavení webu `embed unlisted`)."
@@ -1597,8 +1643,7 @@ cs:
     dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
     dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
-    use_email_for_username_and_name_suggestions: "Pro návrhy uživatelského jména a jména použijte první část e-mailové adresy. Vemte na vědomí, že to veřejnosti usnadní odhadnout celé e-mailové adresy uživatelů (protože velká část lidí sdílí společné služby, jako je `gmail.com`)."
-    experimental_form_templates: "EXPERIMENTÁLNÍ: Povolte funkci šablon formulářů. <b>Po povolení můžete</b> spravovat šablony v <a href='%{base_path}/admin/customize/form-templates'>Přizpůsobit/Šablony</a>."
+    experimental_form_templates: "Povolit funkci šablon formulářů. Spravujte šablony v <a href='%{base_path}/admin/customize/form-templates'>Přizpůsobit/Šablony</a>."
     errors:
       invalid_email: "Neplatná emailová adresa."
       invalid_integer_min_max: "Hodnota musí být mezi %{min} a %{max}."
@@ -1614,36 +1659,7 @@ cs:
       max_username_length_range: "Nemůžete nastavit maximum pod minimum."
       delete_rejected_email_after_days: "Toto nastavení nemůže být nižší než nastavení delete_email_logs_after_days nebo vyšší než %{max}."
     keywords:
-      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
-      here_mention_allowed_groups: "min_trust_level_for_here_mention"
-      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
-      approve_unless_allowed_groups: "approve_unless_trust_level"
-      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
-      email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
-      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
-      create_topic_allowed_groups: "min_trust_to_create_topic"
-      edit_post_allowed_groups: "min_trust_to_edit_post"
-      flag_post_allowed_groups: "min_trust_to_flag_posts"
-      delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
-      user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
-      invite_allowed_groups: "min_trust_level_to_allow_invite"
-      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
-      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
-      create_tag_allowed_groups: "min_trust_to_create_tag"
-      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
-      skip_review_media_groups: "review_media_unless_trust_level"
-      clean_up_inactive_users_after_days:
-      - ""
-      - "neaktivní"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "neaktivní"
-      - ""
-      navigation_menu:
-      - "postranní panel"
-      - ""
+      navigation_menu: "postranní panel|rozbalovací nabídka v záhlaví"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1777,6 +1793,7 @@ cs:
     autoclosed_disabled: "Toto téma je nyní otevřeno. Nové odpovědi jsou povoleny."
     autoclosed_disabled_lastpost: "Toto téma je nyní otevřeno. Nové odpovědi jsou povoleny."
     auto_deleted_by_timer: "Automaticky smazáno časovačem."
+    auto_deleted_by_merge: "Automaticky odstraněno sloučením."
   login:
     invalid_second_factor_method: "Zvolená dvoufaktorová metoda je neplatná."
     not_enabled_second_factor_method: "Zvolená dvoufaktorová metoda není pro váš účet povolena."
@@ -1907,6 +1924,7 @@ cs:
       few: "Uživatel %{username} má %{count} příspěvky ve veřejném tématu nebo v soukromých zprávách, takže je nelze smazat."
       many: "Uživatel %{username} má %{count} příspěvků ve veřejném tématu nebo v soukromých zprávách, takže je nelze smazat."
       other: "Uživatel %{username} má %{count} příspěvků ve veřejném tématu nebo v soukromých zprávách, takže je nelze smazat."
+    cannot_bulk_delete: "Jednoho nebo více uživatelů nelze smazat, protože jsou to administrátoři, mají příliš mnoho příspěvků nebo mají velmi staré příspěvky."
   unsubscribe_mailer:
     title: "Odhlášení odběru"
     subject_template: "Potvrďte, že již nechcete dostávat e-mailové aktualizace z %{site_title}."
@@ -3369,7 +3387,7 @@ cs:
       name: Stálý
       description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> překategorizovat, přejmenovat, sledovat odkazy, wiki, více lajků
       long_description: |
-        Tento odznak je udělen, když dosáhnete 3. úrovně důvěry. Díky za to, že jste byli po dobu několika měsíců součástí naší komunity. Nyní jste jedním z nejaktivnějších čtenářů a spolehlivým přispěvatelem, který dělá naši komunitu skvělou. Nyní můžete kategorizovat a přejmenovávat témata, využít výkonnějších indikátorů nevyžádané pošty, přistupovat do soukromé sekce, a také dostanete denně mnohem více lajků.
+        Tento odznak je udělen, když dosáhnete 3. úrovně důvěry. Díky za to, že jste byli po dobu několika měsíců součástí naší komunity. Nyní jste jedním z nejaktivnějších čtenářů a spolehlivým přispěvatelem, který dělá naši komunitu skvělou. Nyní můžete přejmenovávat témata a měnit jejich kategorie, využít výkonnějších indikátorů nevyžádané pošty, a také dostanete denně mnohem více lajků.
     leader:
       name: Leader
       description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> globální upravit, připnout, zavřít, archivovat, rozdělit a sloučit, více lajků
@@ -3694,6 +3712,8 @@ cs:
       styling:
         title: "Vzhled"
         fields:
+          color_scheme:
+            label: "Barevná paleta"
           body_font:
             label: "Písmo obsahu"
           heading_font:
@@ -3704,23 +3724,9 @@ cs:
             label: "Styl domovské stránky"
             choices:
               latest:
-                label: "Nejnovější témata"
-              categories_only:
-                label: "Pouze kategorie"
-              categories_with_featured_topics:
-                label: "Kategorie a vybrané příspěvky"
-              categories_and_latest_topics:
-                label: "Kategorie a nejnovější témata"
-              categories_and_latest_topics_created_date:
-                label: "Kategorie a nejnovější témata (seřadit podle data vytvoření tématu)"
-              categories_and_top_topics:
-                label: "Kategorie a populární témata"
-              categories_boxes:
-                label: "Kategorie (boxy)"
-              categories_boxes_with_topics:
-                label: "Kategorie (boxy) s tématy"
-              subcategories_with_featured_topics:
-                label: "Podkategorie s vybranými tématy"
+                label: "Nejnovější"
+              hot:
+                label: "Žhavé"
       branding:
         title: "Logo webu"
         fields:
@@ -3780,6 +3786,7 @@ cs:
       quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
       replied: '%{username} vám odpověděl v "%{topic}" - %{site_title}'
       posted: '%{username} přispěl/a do "%{topic}" - %{site_title}'
+      private_message: '%{username} vám poslal soukromou zprávu v "%{topic}" - %{site_title}'
       linked: '%{username} odkázal na vás příspěvek v "%{topic}" - %{site_title}'
       watching_first_post: '%{username} vytvořil nové téma "%{topic}" - %{site_title}'
       confirm_title: "Upozornění zapnuta - %{site_title}"

@@ -4,11 +4,14 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
+import { isHTMLSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
-import { propertyNotEqual } from "discourse/lib/computed";
+import { tinyAvatar } from "discourse/lib/avatar-utils";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
@@ -18,12 +21,10 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { tinyAvatar } from "discourse-common/lib/avatar-utils";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _customizations = [];
+
 export function registerCustomizationCallback(cb) {
   _customizations.push(cb);
 }
@@ -73,13 +74,15 @@ const CLOSED = "closed",
   _update_serializer = {
     raw: "reply",
     topic_id: "topic.id",
-    raw_old: "rawOld",
+    original_text: "originalText",
   },
   _edit_topic_serializer = {
     title: "topic.title",
     categoryId: "topic.category.id",
     tags: "topic.tags",
     featuredLink: "topic.featured_link",
+    original_title: "originalTitle",
+    original_tags: "originalTags",
   },
   _draft_serializer = {
     reply: "reply",
@@ -94,6 +97,9 @@ const CLOSED = "closed",
     typingTime: "typingTime",
     postId: "post.id",
     recipients: "targetRecipients",
+    original_text: "originalText",
+    original_title: "originalTitle",
+    original_tags: "originalTags",
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -108,7 +114,7 @@ export const SAVE_LABELS = {
 };
 
 export const SAVE_ICONS = {
-  [EDIT]: "pencil-alt",
+  [EDIT]: "pencil",
   [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
   [CREATE_TOPIC]: "plus",
@@ -187,6 +193,11 @@ export default class Composer extends RestModel {
 
   @service dialog;
 
+  @tracked topic;
+  @tracked post;
+  @tracked reply;
+  @tracked whisper;
+
   unlistTopic = false;
   noBump = false;
   draftSaving = false;
@@ -200,14 +211,11 @@ export default class Composer extends RestModel {
   @not("creatingPrivateMessage") notCreatingPrivateMessage;
   @not("privateMessage") notPrivateMessage;
   @or("creatingTopic", "editingFirstPost") topicFirstPost;
-  @equal("action", REPLY) replyingToTopic;
   @equal("composeState", OPEN) viewOpen;
   @equal("composeState", DRAFT) viewDraft;
   @equal("composeState", FULLSCREEN) viewFullscreen;
   @or("viewOpen", "viewFullscreen") viewOpenOrFullscreen;
   @and("editingPost", "post.firstPost") editingFirstPost;
-  @propertyNotEqual("reply", "originalText") replyDirty;
-  @propertyNotEqual("title", "originalTitle") titleDirty;
 
   @or(
     "creatingTopic",
@@ -221,6 +229,16 @@ export default class Composer extends RestModel {
   canCategorize;
 
   @tracked _categoryId = null;
+
+  @discourseComputed("reply", "originalText")
+  replyDirty(reply, original) {
+    return (reply || "").trim() !== (original || "").trim();
+  }
+
+  @discourseComputed("title", "originalTitle")
+  titleDirty(title, original) {
+    return (title || "").trim() !== (original || "").trim();
+  }
 
   @dependentKeyCompat
   get categoryId() {
@@ -263,6 +281,16 @@ export default class Composer extends RestModel {
     return categoryId ? Category.findById(categoryId) : null;
   }
 
+  @dependentKeyCompat
+  get replyingToTopic() {
+    return this.get("action") === REPLY;
+  }
+
+  @dependentKeyCompat
+  get editingPost() {
+    return isEdit(this.get("action"));
+  }
+
   @discourseComputed("category.minimumRequiredTags")
   minimumRequiredTags(minimumRequiredTags) {
     return minimumRequiredTags || 0;
@@ -286,15 +314,10 @@ export default class Composer extends RestModel {
     );
   }
 
-  @discourseComputed("action")
-  editingPost(action) {
-    return isEdit(action);
-  }
-
   @observes("composeState")
   composeStateChanged() {
     const oldOpen = this.composerOpened;
-    const elem = document.querySelector("html");
+    const elem = document.documentElement;
 
     if (this.composeState === FULLSCREEN) {
       elem.classList.add("fullscreen-composer");
@@ -414,7 +437,7 @@ export default class Composer extends RestModel {
     }
 
     if (post) {
-      options.label = I18n.t(`post.${action}`);
+      options.label = i18n(`post.${action}`);
       options.userAvatar = tinyAvatar(post.avatar_template);
 
       if (this.site.desktopView) {
@@ -434,7 +457,7 @@ export default class Composer extends RestModel {
 
       options.postLink = {
         href: `${topic.url}/${postNumber}`,
-        anchor: I18n.t("post.post_number", { number: postNumber }),
+        anchor: i18n("post.post_number", { number: postNumber }),
       };
 
       const name = prioritizeNameFallback(post.name, post.username);
@@ -526,9 +549,7 @@ export default class Composer extends RestModel {
       const category = this.category;
       if (category && category.topic_template) {
         if (this.reply.trim() === category.topic_template.trim()) {
-          this.dialog.alert(
-            I18n.t("composer.error.topic_template_not_modified")
-          );
+          this.dialog.alert(i18n("composer.error.topic_template_not_modified"));
           return true;
         }
       }
@@ -623,6 +644,9 @@ export default class Composer extends RestModel {
   @discourseComputed("title")
   titleLength(title) {
     title = title || "";
+    if (isHTMLSafe(title)) {
+      return title.toString().length;
+    }
     return title.replace(/\s+/gim, " ").trim().length;
   }
 
@@ -780,33 +804,34 @@ export default class Composer extends RestModel {
     const category = Category.findById(categoryId);
     if (category) {
       this.set("reply", category.topic_template || "");
+      this.set("originalText", category.topic_template || "");
     }
   }
 
   /**
-    Open a composer
+   Open a composer
 
-    @method open
-    @param {Object} opts
-      @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
-      @param {String} opts.draftKey
-      @param {String} opts.draftSequence
-      @param {Post} [opts.post] The post we're replying to, if present
-      @param {Topic} [opts.topic] The topic we're replying to, if present
-      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-      @param {String} [opts.reply]
-      @param {String} [opts.recipients]
-      @param {Number} [opts.composerTime]
-      @param {Number} [opts.typingTime]
-      @param {Boolean} [opts.whisper]
-      @param {Boolean} [opts.noBump]
-      @param {String} [opts.archetypeId] One of `site.archetypes` e.g. `regular` or `private_message`
-      @param {Object} [opts.metaData]
-      @param {Number} [opts.categoryId]
-      @param {Number} [opts.postId]
-      @param {Number} [opts.destinationCategoryId]
-      @param {String} [opts.title]
-  **/
+   @method open
+   @param {Object} opts
+   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+   @param {String} opts.draftKey
+   @param {String} opts.draftSequence
+   @param {Post} [opts.post] The post we're replying to, if present
+   @param {Topic} [opts.topic] The topic we're replying to, if present
+   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+   @param {String} [opts.reply]
+   @param {String} [opts.recipients]
+   @param {Number} [opts.composerTime]
+   @param {Number} [opts.typingTime]
+   @param {Boolean} [opts.whisper]
+   @param {Boolean} [opts.noBump]
+   @param {String} [opts.archetypeId] One of `site.archetypes` e.g. `regular` or `private_message`
+   @param {Object} [opts.metaData]
+   @param {Number} [opts.categoryId]
+   @param {Number} [opts.postId]
+   @param {Number} [opts.destinationCategoryId]
+   @param {String} [opts.title]
+   **/
   open(opts) {
     let promise = Promise.resolve();
 
@@ -854,6 +879,9 @@ export default class Composer extends RestModel {
       whisper: opts.whisper,
       tags: opts.tags || [],
       noBump: opts.noBump,
+      originalText: opts.originalText,
+      originalTitle: opts.originalTitle,
+      originalTags: opts.originalTags,
     });
 
     if (opts.post) {
@@ -863,7 +891,18 @@ export default class Composer extends RestModel {
       });
 
       if (!this.topic) {
-        this.set("topic", opts.post.topic);
+        if (opts.post.topic) {
+          this.set("topic", opts.post.topic);
+        } else {
+          // handles the edge cases where the topic model is not loaded in the post model and the store does not have a
+          // topic for the post, e.g., make a post then edit right away, edit a post outside the post stream, etc.
+          promise = promise.then(async () => {
+            const data = await Topic.find(opts.post.topic_id, {});
+            const topic = this.store.createRecord("topic", data);
+            this.post.set("topic", topic);
+            this.set("topic", topic);
+          });
+        }
       }
     } else if (opts.postId) {
       promise = promise.then(() =>
@@ -912,50 +951,36 @@ export default class Composer extends RestModel {
       }
       this.setProperties(topicProps);
 
-      promise = promise.then(() => {
-        let rawPromise = this.store.find("post", opts.post.id).then((post) => {
-          this.setProperties({
-            post,
-            reply: post.raw,
-            originalText: post.raw,
-          });
+      promise = promise.then(async () => {
+        const post = await this.store.find("post", opts.post.id);
+        this.setProperties({
+          post,
+          reply: post.raw,
+          originalText: post.raw,
         });
 
-        // edge case ... make a post then edit right away
-        // store does not have topic for the post
-        if (this.topic && this.topic.id === this.post.topic_id) {
-          // nothing to do ... we have the right topic
-        } else {
-          rawPromise = this.store
-            .find("topic", this.post.topic_id)
-            .then((topic) => {
-              this.set("topic", topic);
-            });
+        if (post.post_number === 1 && this.canEditTitle) {
+          this.setProperties({
+            originalTitle: this.topic.title,
+            originalTags: this.topic.tags,
+          });
         }
 
-        return rawPromise.then(() => {
-          this.appEvents.trigger("composer:reply-reloaded", this);
-        });
+        this.appEvents.trigger("composer:reply-reloaded", this);
       });
     } else if (opts.action === REPLY && opts.quote) {
-      this.setProperties({
-        reply: opts.quote,
-        originalText: opts.quote,
-      });
+      this.set("reply", opts.quote);
+      this.set("originalText", opts.quote);
     }
 
     if (opts.title) {
       this.set("title", opts.title);
     }
 
-    const isDraft = opts.draft || opts.skipDraftCheck;
-    this.set("originalText", isDraft ? "" : this.reply);
-
     if (this.canEditTitle) {
       if (isEmpty(this.title) && this.title !== "") {
         this.set("title", "");
       }
-      this.set("originalTitle", this.title);
     }
 
     if (!isEdit(opts.action) || !opts.post) {
@@ -994,6 +1019,8 @@ export default class Composer extends RestModel {
   clearState() {
     this.setProperties({
       originalText: null,
+      originalTitle: null,
+      originalTags: null,
       reply: null,
       post: null,
       title: null,
@@ -1009,12 +1036,9 @@ export default class Composer extends RestModel {
     });
   }
 
-  @discourseComputed("editConflict", "originalText")
-  rawOld(editConflict, originalText) {
-    return editConflict ? null : originalText;
-  }
-
   editPost(opts) {
+    this.set("composeState", SAVING);
+
     const post = this.post;
     const oldCooked = post.cooked;
     let promise = Promise.resolve();
@@ -1047,14 +1071,19 @@ export default class Composer extends RestModel {
       }
     }
 
-    const props = {
+    let props = {
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
-      cooked: this.getCookedHtml(),
     };
 
     this.serialize(_update_serializer, props);
-    this.set("composeState", SAVING);
+
+    // user clicked "overwrite edits" button
+    if (this.editConflict) {
+      delete props.original_text;
+      delete props.original_title;
+      delete props.original_tags;
+    }
 
     const rollback = throwAjaxError((error) => {
       post.setProperties("cooked", oldCooked);
@@ -1064,7 +1093,8 @@ export default class Composer extends RestModel {
       }
     });
 
-    post.setProperties({ cooked: props.cooked, staged: true });
+    const cooked = this.getCookedHtml();
+    post.setProperties({ cooked, staged: true });
     this.appEvents.trigger("post-stream:refresh", { id: post.id });
 
     return promise
@@ -1280,21 +1310,14 @@ export default class Composer extends RestModel {
     return true;
   }
 
-  saveDraft(user) {
+  saveDraft() {
     if (!this.canSaveDraft) {
       return Promise.resolve();
     }
 
-    this.setProperties({
-      draftSaving: true,
-      draftConflictUser: null,
-    });
+    this.set("draftSaving", true);
 
-    let data = this.serialize(_draft_serializer);
-
-    if (data.postId && !isEmpty(this.originalText)) {
-      data.originalText = this.originalText;
-    }
+    const data = this.serialize(_draft_serializer);
 
     const draftSequence = this.draftSequence;
     this.set("draftSequence", this.draftSequence + 1);
@@ -1312,14 +1335,10 @@ export default class Composer extends RestModel {
         }
         if (result.conflict_user) {
           this.setProperties({
-            draftStatus: I18n.t("composer.edit_conflict"),
+            draftStatus: i18n("composer.edit_conflict"),
             draftConflictUser: result.conflict_user,
           });
         } else {
-          if (this.draftKey === NEW_TOPIC_KEY && user) {
-            user.set("has_topic_draft", true);
-          }
-
           this.setProperties({
             draftStatus: null,
             draftConflictUser: null,
@@ -1346,12 +1365,12 @@ export default class Composer extends RestModel {
               message: json.extras.description,
               buttons: [
                 {
-                  label: I18n.t("composer.reload"),
+                  label: i18n("composer.reload"),
                   class: "btn-primary",
                   action: () => window.location.reload(),
                 },
                 {
-                  label: I18n.t("composer.ignore"),
+                  label: i18n("composer.ignore"),
                   class: "btn",
                   action: () => this.set("draftForceSave", true),
                 },
@@ -1360,7 +1379,7 @@ export default class Composer extends RestModel {
           }
         }
         this.setProperties({
-          draftStatus: draftStatus || I18n.t("composer.drafts_offline"),
+          draftStatus: draftStatus || i18n("composer.drafts_offline"),
           draftConflictUser: null,
         });
       })

@@ -5,12 +5,11 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
 import raw from "discourse/helpers/raw";
+import { compile } from "discourse/lib/raw-handlebars";
+import { RUNTIME_OPTIONS } from "discourse/lib/raw-handlebars-helpers";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
+import { addRawTemplate, removeRawTemplate } from "discourse/lib/raw-templates";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  addRawTemplate,
-  removeRawTemplate,
-} from "discourse-common/lib/raw-templates";
 
 // We don't have any way to actually compile raw hbs inside tests, so this is only testing
 // the helper itself, not the actual rendering of templates.
@@ -103,5 +102,43 @@ module("Integration | Helper | raw", function (hooks) {
     </template>);
 
     assert.dom("span.bar").hasText(/^baz$/);
+  });
+
+  test("#each helper preserves the outer context", async function (assert) {
+    const template = `
+      {{#each items as |item|}}
+        {{string}} {{item}}
+      {{/each}}
+    `;
+    addRawTemplate("raw-test", compile(template));
+
+    const items = [1, 2];
+    await render(<template>
+      <span>{{raw "raw-test" string="foo" items=items}}</span>
+    </template>);
+
+    assert.dom("span").hasText("foo 1 foo 2");
+  });
+
+  test("#each helper handles getters", async function (assert) {
+    const template = `
+      {{#each items as |item|}}
+        {{string}} {{item}}
+      {{/each}}
+    `;
+    const compiledTemplate = compile(template);
+
+    class Test {
+      items = [1, 2];
+
+      get string() {
+        return "foo";
+      }
+    }
+
+    const object = new Test();
+
+    const output = compiledTemplate(object, RUNTIME_OPTIONS);
+    assert.true(/\s*foo 1\s*foo 2\s*/.test(output));
   });
 });

@@ -1,9 +1,9 @@
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { sanitize } from "discourse/lib/text";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default {
   initialize(owner) {
@@ -30,9 +30,7 @@ export default {
           const notice = document.createElement("div");
           notice.className = "notice error";
           notice.innerHTML =
-            iconHTML("triangle-exclamation") +
-            " " +
-            I18n.t("invalid_video_url");
+            iconHTML("triangle-exclamation") + " " + i18n("invalid_video_url");
           wrapper.appendChild(notice);
           overlay.innerHTML = iconHTML("play");
 
@@ -74,9 +72,9 @@ export default {
               const notice = document.createElement("div");
               notice.className = "notice";
               notice.innerHTML =
-                iconHTML("exclamation-triangle") +
+                iconHTML("triangle-exclamation") +
                 " " +
-                I18n.t("cannot_render_video");
+                i18n("cannot_render_video");
 
               parentDiv.appendChild(notice);
             }

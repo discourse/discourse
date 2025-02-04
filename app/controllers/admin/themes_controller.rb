@@ -40,7 +40,7 @@ class Admin::ThemesController < Admin::AdminController
     render json: { public_key: k.ssh_public_key }
   end
 
-  THEME_CONTENT_TYPES ||= %w[
+  THEME_CONTENT_TYPES = %w[
     application/gzip
     application/x-gzip
     application/x-zip-compressed

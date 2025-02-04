@@ -43,6 +43,19 @@ describe "Thread tracking state | drawer", type: :system do
       expect(thread_list_page).to have_unread_item(thread.id)
     end
 
+    it "shows an urgent indicator on the watched thread in the list" do
+      thread.membership_for(current_user).update!(
+        notification_level: ::Chat::NotificationLevels.all[:watching],
+      )
+
+      visit("/")
+      chat_page.open_from_header
+      drawer_page.open_channel(channel)
+      drawer_page.open_thread_list
+      expect(drawer_page).to have_open_thread_list
+      expect(thread_list_page).to have_unread_item(thread.id, urgent: true)
+    end
+
     it "marks the thread as read and removes both indicators when the user opens it" do
       skip("Flaky on CI") if ENV["CI"]
 

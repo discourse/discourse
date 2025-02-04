@@ -9,4 +9,8 @@ WHERE name = 'post_menu'
 AND value NOT LIKE '%like-count%'
 SQL
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

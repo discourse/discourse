@@ -3,11 +3,8 @@ import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
-import {
-  acceptance,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Admin Sidebar - Sections", function (needs) {
@@ -28,86 +25,74 @@ acceptance("Admin Sidebar - Sections", function (needs) {
         },
       },
     ]);
+
+    pretender.get("/admin/config/site_settings.json", () =>
+      response({
+        site_settings: [],
+      })
+    );
   });
 
   test("default sections are loaded", async function (assert) {
     await visit("/admin");
 
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-root']"),
-      "root section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-account']"),
-      "account section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-reports']"),
-      "reports section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-community']"),
-      "community section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-appearance']"),
-      "appearance section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-email_settings']"),
-      "email settings section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-email_logs']"),
-      "email logs settings section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-security']"),
-      "security settings section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-plugins']"),
-      "plugins section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-advanced']"),
-      "advanced section is displayed"
-    );
+    assert
+      .dom(".sidebar-section[data-section-name='admin-root']")
+      .exists("root section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-account']")
+      .exists("account section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-reports']")
+      .exists("reports section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-community']")
+      .exists("community section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-appearance']")
+      .exists("appearance section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-email_settings']")
+      .exists("email settings section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-security']")
+      .exists("security settings section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-plugins']")
+      .exists("plugins section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-advanced']")
+      .exists("advanced section is displayed");
   });
 
   test("filter sections and clear filter with ESC", async function (assert) {
     await visit("/admin");
     await fillIn(".sidebar-filter__input", "advanced");
-    assert.notOk(
-      exists(".sidebar-section[data-section-name='admin-plugins']"),
-      "plugins section is hidden"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-advanced']"),
-      "advanced section is displayed"
-    );
+    assert
+      .dom(".sidebar-section[data-section-name='admin-plugins']")
+      .doesNotExist("plugins section is hidden");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-advanced']")
+      .exists("advanced section is displayed");
 
     await triggerKeyEvent(".sidebar-filter__input", "keydown", "Escape");
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-plugins']"),
-      "plugins section is displayed"
-    );
-    assert.ok(
-      exists(".sidebar-section[data-section-name='admin-advanced']"),
-      "advanced section is displayed"
-    );
+    assert
+      .dom(".sidebar-section[data-section-name='admin-plugins']")
+      .exists("plugins section is displayed");
+    assert
+      .dom(".sidebar-section[data-section-name='admin-advanced']")
+      .exists("advanced section is displayed");
   });
 
   test("enabled plugin admin routes have links added", async function (assert) {
     await visit("/admin");
     await click(".sidebar-toggle-all-sections");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='admin-plugins'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_installed_plugins\"]"
-      ),
-      "the admin plugin route is added to the plugins section"
-    );
+      )
+      .exists("the admin plugin route is added to the plugins section");
   });
 
   test("Visit reports page", async function (assert) {
@@ -115,30 +100,30 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     await click(".sidebar-toggle-all-sections");
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
-    assert.strictEqual(count(".admin-reports-list__report"), 1);
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .exists({ count: 1 });
 
     await fillIn(".admin-reports-header__filter", "flags");
 
-    assert.strictEqual(count(".admin-reports-list__report"), 0);
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .doesNotExist();
 
     await click(
-      ".sidebar-section-link[data-link-name='admin_about_your_site']"
+      ".sidebar-section-link[data-link-name='admin_login_and_authentication']"
     );
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
-    assert.strictEqual(
-      count(".admin-reports-list__report"),
-      1,
-      "navigating back and forth resets filter"
-    );
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .exists({ count: 1 }, "navigating back and forth resets filter");
 
     await fillIn(".admin-reports-header__filter", "activities");
 
-    assert.strictEqual(
-      count(".admin-reports-list__report"),
-      1,
-      "filter is case insensitive"
-    );
+    assert
+      .dom(".admin-reports-list .admin-section-landing-item__content")
+      .exists({ count: 1 }, "filter is case insensitive");
   });
 });
 
@@ -155,26 +140,26 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
         name: "test_section_link",
         label: "admin.plugins.title",
         route: "adminPlugins.index",
-        icon: "cog",
+        icon: "gear",
       });
 
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link_no_route_or_href",
         label: "admin.plugins.title",
-        icon: "cog",
+        icon: "gear",
       });
 
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link_no_label_or_text",
         route: "adminPlugins.index",
-        icon: "cog",
+        icon: "gear",
       });
 
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link_invalid_label",
         label: "blahblah.i18n",
         route: "adminPlugins.index",
-        icon: "cog",
+        icon: "gear",
       });
 
       api.addCommunitySectionLink(
@@ -202,62 +187,63 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   test("additional valid links can be added to a section with the plugin API", async function (assert) {
     await visit("/admin");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link\"]"
-      ),
-      "link is appended to the root section"
-    );
+      )
+      .exists("link is appended to the root section");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link_no_route_or_href\"]"
-      ),
-      "invalid link that has no route or href is not appended to the root section"
-    );
+      )
+      .doesNotExist(
+        "invalid link that has no route or href is not appended to the root section"
+      );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link_no_label_or_text\"]"
-      ),
-      "invalid link that has no label or text is not appended to the root section"
-    );
+      )
+      .doesNotExist(
+        "invalid link that has no label or text is not appended to the root section"
+      );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link_invalid_label\"]"
-      ),
-      "invalid link with an invalid I18n key is not appended to the root section"
-    );
+      )
+      .doesNotExist(
+        "invalid link with an invalid I18n key is not appended to the root section"
+      );
   });
 
   test("community section links are added to primary and secondary sections with the plugin API", async function (assert) {
     await visit("/");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         "#sidebar-section-content-community .sidebar-section-link[data-link-name='primary']"
       )
-    );
-    assert.notOk(
-      exists(
+      .exists();
+    assert
+      .dom(
         "#sidebar-section-content-community .sidebar-section-link[data-link-name='secondary']"
       )
-    );
+      .doesNotExist();
 
-    await click(".sidebar-more-section-links-details-summary");
+    await click(".sidebar-more-section-trigger");
 
-    assert.notOk(
-      exists(
-        ".sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='primary']"
+    assert
+      .dom(
+        "sidebar-more-section-content .sidebar-section-link[data-link-name='primary']"
       )
-    );
-    assert.ok(
-      exists(
-        ".sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='secondary']"
+      .doesNotExist();
+    assert
+      .dom(
+        ".sidebar-more-section-content .sidebar-section-link[data-link-name='secondary']"
       )
-    );
-    assert.ok(true);
+      .exists();
   });
 });
 
@@ -280,7 +266,7 @@ acceptance(
           name: "test_section_link",
           label: "admin.plugins.title",
           route: "adminPlugins.index",
-          icon: "cog",
+          icon: "gear",
         });
       });
     });
@@ -292,12 +278,11 @@ acceptance(
     test("valid links that are yet to be translated can be added to a section with the plugin API because of I18n fallback", async function (assert) {
       await visit("/admin");
 
-      assert.ok(
-        exists(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link\"]"
-        ),
-        "link is appended to the root section"
-      );
+        )
+        .exists("link is appended to the root section");
     });
   }
 );

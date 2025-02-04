@@ -2,7 +2,7 @@
 
 module Migration
   class BaseDropper
-    FUNCTION_SCHEMA_NAME ||= "discourse_functions"
+    FUNCTION_SCHEMA_NAME = "discourse_functions"
 
     def self.create_readonly_function(table_name, column_name = nil)
       DB.exec <<~SQL

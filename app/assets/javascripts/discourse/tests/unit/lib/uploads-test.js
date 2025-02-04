@@ -12,7 +12,7 @@ import {
   isImage,
   validateUploadedFiles,
 } from "discourse/lib/uploads";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("Unit | Utility | uploads", function (hooks) {
   setupTest(hooks);
@@ -23,15 +23,15 @@ module("Unit | Utility | uploads", function (hooks) {
   });
 
   test("validateUploadedFiles", function (assert) {
-    assert.notOk(
+    assert.false(
       validateUploadedFiles(null, { siteSettings: this.siteSettings }),
       "no files are invalid"
     );
-    assert.notOk(
+    assert.false(
       validateUploadedFiles(undefined, { siteSettings: this.siteSettings }),
       "undefined files are invalid"
     );
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([], { siteSettings: this.siteSettings }),
       "empty array of files is invalid"
     );
@@ -40,26 +40,26 @@ module("Unit | Utility | uploads", function (hooks) {
   test("uploading one file", function (assert) {
     sinon.stub(dialog, "alert");
 
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([1, 2], { siteSettings: this.siteSettings })
     );
-    assert.ok(dialog.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
+    assert.true(dialog.alert.calledWith(i18n("post.errors.too_many_uploads")));
   });
 
   test("new user cannot upload images", function (assert) {
     this.siteSettings.newuser_max_embedded_media = 0;
     sinon.stub(dialog, "alert");
 
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "image.png" }], {
         user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       }),
       "the upload is not valid"
     );
-    assert.ok(
+    assert.true(
       dialog.alert.calledWith(
-        I18n.t("post.errors.image_upload_not_allowed_for_new_user")
+        i18n("post.errors.image_upload_not_allowed_for_new_user")
       ),
       "the alert is called"
     );
@@ -70,7 +70,7 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.default_trust_level = 0;
     sinon.stub(dialog, "alert");
 
-    assert.ok(
+    assert.true(
       validateUploadedFiles([{ name: "image.png" }], {
         user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
@@ -82,7 +82,7 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.newuser_max_embedded_media = 0;
     sinon.stub(dialog, "alert");
 
-    assert.ok(
+    assert.true(
       validateUploadedFiles([{ name: "image.png" }], {
         user: this.store.createRecord("user", { trust_level: 1 }),
         siteSettings: this.siteSettings,
@@ -94,29 +94,29 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.newuser_max_attachments = 0;
     sinon.stub(dialog, "alert");
 
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "roman.txt" }], {
         user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       })
     );
-    assert.ok(
+    assert.true(
       dialog.alert.calledWith(
-        I18n.t("post.errors.attachment_upload_not_allowed_for_new_user")
+        i18n("post.errors.attachment_upload_not_allowed_for_new_user")
       )
     );
   });
 
   test("ensures an authorized upload", function (assert) {
     sinon.stub(dialog, "alert");
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "unauthorized.html" }], {
         siteSettings: this.siteSettings,
       })
     );
-    assert.ok(
+    assert.true(
       dialog.alert.calledWith(
-        I18n.t("post.errors.upload_not_authorized", {
+        i18n("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             false,
             this.siteSettings
@@ -130,13 +130,13 @@ module("Unit | Utility | uploads", function (hooks) {
     const files = [{ name: "backup.tar.gz" }];
     sinon.stub(dialog, "alert");
 
-    assert.notOk(
+    assert.false(
       validateUploadedFiles(files, {
         skipValidation: false,
         siteSettings: this.siteSettings,
       })
     );
-    assert.ok(
+    assert.true(
       validateUploadedFiles(files, {
         skipValidation: true,
         siteSettings: this.siteSettings,
@@ -149,14 +149,14 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.authorized_extensions_for_staff = "";
 
     sinon.stub(dialog, "alert");
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "test.jpg" }], {
         user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       })
     );
-    assert.ok(
-      dialog.alert.calledWith(I18n.t("post.errors.no_uploads_authorized"))
+    assert.true(
+      dialog.alert.calledWith(i18n("post.errors.no_uploads_authorized"))
     );
   });
 
@@ -165,14 +165,14 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.authorized_extensions_for_staff = "";
 
     sinon.stub(dialog, "alert");
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "test.jpg" }], {
         user: this.store.createRecord("user", { staff: true }),
         siteSettings: this.siteSettings,
       })
     );
-    assert.ok(
-      dialog.alert.calledWith(I18n.t("post.errors.no_uploads_authorized"))
+    assert.true(
+      dialog.alert.calledWith(i18n("post.errors.no_uploads_authorized"))
     );
   });
 
@@ -182,10 +182,10 @@ module("Unit | Utility | uploads", function (hooks) {
     sinon.stub(dialog, "alert");
 
     let user = this.store.createRecord("user", { moderator: true });
-    assert.notOk(
+    assert.false(
       validateUploadedFiles(files, { user, siteSettings: this.siteSettings })
     );
-    assert.ok(
+    assert.true(
       validateUploadedFiles(files, {
         isPrivateMessage: true,
         allowStaffToUploadAnyFileInPm: true,
@@ -219,55 +219,55 @@ module("Unit | Utility | uploads", function (hooks) {
 
     // image
     let image = { name: "image.png", size: imageSize };
-    assert.ok(
+    assert.true(
       validateUploadedFiles([image], { user, siteSettings: this.siteSettings })
     );
     // pasted image
     let pastedImage = dummyBlob();
-    assert.ok(
+    assert.true(
       validateUploadedFiles([pastedImage], {
         user,
         siteSettings: this.siteSettings,
       })
     );
 
-    assert.notOk(dialog.alert.calledOnce);
+    assert.false(dialog.alert.calledOnce);
   });
 
   test("isImage", function (assert) {
     ["png", "webp", "jpg", "jpeg", "gif", "ico", "avif"].forEach(
       (extension) => {
         let image = "image." + extension;
-        assert.ok(isImage(image), image + " is recognized as an image");
-        assert.ok(
+        assert.true(isImage(image), image + " is recognized as an image");
+        assert.true(
           isImage("http://foo.bar/path/to/" + image),
           image + " is recognized as an image"
         );
       }
     );
-    assert.notOk(isImage("file.txt"));
-    assert.notOk(isImage("http://foo.bar/path/to/file.txt"));
-    assert.notOk(isImage(""));
+    assert.false(isImage("file.txt"));
+    assert.false(isImage("http://foo.bar/path/to/file.txt"));
+    assert.false(isImage(""));
   });
 
   test("allowsImages", function (assert) {
     this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
-    assert.ok(allowsImages(false, this.siteSettings), "works");
+    assert.true(allowsImages(false, this.siteSettings), "works");
 
     this.siteSettings.authorized_extensions = ".jpg|.jpeg|.gif";
-    assert.ok(
+    assert.true(
       allowsImages(false, this.siteSettings),
       "works with old extensions syntax"
     );
 
     this.siteSettings.authorized_extensions = "txt|pdf|*";
-    assert.ok(
+    assert.true(
       allowsImages(false, this.siteSettings),
       "images are allowed when all extensions are allowed"
     );
 
     this.siteSettings.authorized_extensions = "json|jpg|pdf|txt";
-    assert.ok(
+    assert.true(
       allowsImages(false, this.siteSettings),
       "images are allowed when at least one extension is an image extension"
     );
@@ -275,25 +275,25 @@ module("Unit | Utility | uploads", function (hooks) {
 
   test("allowsAttachments", function (assert) {
     this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
-    assert.notOk(
+    assert.false(
       allowsAttachments(false, this.siteSettings),
       "no attachments allowed by default"
     );
 
     this.siteSettings.authorized_extensions = "jpg|jpeg|gif|*";
-    assert.ok(
+    assert.true(
       allowsAttachments(false, this.siteSettings),
       "attachments are allowed when all extensions are allowed"
     );
 
     this.siteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
-    assert.ok(
+    assert.true(
       allowsAttachments(false, this.siteSettings),
       "attachments are allowed when at least one extension is not an image extension"
     );
 
     this.siteSettings.authorized_extensions = ".jpg|.jpeg|.gif|.pdf";
-    assert.ok(
+    assert.true(
       allowsAttachments(false, this.siteSettings),
       "works with old extensions syntax"
     );
@@ -362,16 +362,16 @@ module("Unit | Utility | uploads", function (hooks) {
         jqXHR: {
           status: 413,
           responseJSON: {
-            message: I18n.t("post.errors.file_too_large_humanized"),
+            message: i18n("post.errors.file_too_large_humanized"),
           },
         },
       },
       { max_attachment_size_kb: 4096, max_image_size_kb: 4096 },
       "non-backup-tar-gz-file.tar.gz"
     );
-    assert.ok(
+    assert.true(
       dialog.alert.calledWith(
-        I18n.t("post.errors.file_too_large_humanized", {
+        i18n("post.errors.file_too_large_humanized", {
           max_size: I18n.toHumanSize(4096 * 1024),
         })
       ),
@@ -385,14 +385,14 @@ module("Unit | Utility | uploads", function (hooks) {
       {
         jqXHR: {
           status: 413,
-          responseJSON: { message: I18n.t("post.errors.backup_too_large") },
+          responseJSON: { message: i18n("post.errors.backup_too_large") },
         },
       },
       { max_attachment_size_kb: 4096, max_image_size_kb: 4096 },
       "backup-2023-09-07-092329-v20230728055813.tar.gz"
     );
-    assert.ok(
-      dialog.alert.calledWith(I18n.t("post.errors.backup_too_large")),
+    assert.true(
+      dialog.alert.calledWith(i18n("post.errors.backup_too_large")),
       "the alert is called"
     );
   });
@@ -406,7 +406,10 @@ module("Unit | Utility | uploads", function (hooks) {
       { max_attachment_size_kb: 1024, max_image_size_kb: 1024 },
       "test.png"
     );
-    assert.ok(dialog.alert.calledWith("upload failed"), "the alert is called");
+    assert.true(
+      dialog.alert.calledWith("upload failed"),
+      "the alert is called"
+    );
   });
 
   test("displayErrorForUpload - jquery file upload - jqXHR missing, errors present", function (assert) {
@@ -418,7 +421,10 @@ module("Unit | Utility | uploads", function (hooks) {
       { max_attachment_size_kb: 1024, max_image_size_kb: 1024 },
       "test.png"
     );
-    assert.ok(dialog.alert.calledWith("upload failed"), "the alert is called");
+    assert.true(
+      dialog.alert.calledWith("upload failed"),
+      "the alert is called"
+    );
   });
 
   test("displayErrorForUpload - jquery file upload - no errors", function (assert) {
@@ -431,9 +437,9 @@ module("Unit | Utility | uploads", function (hooks) {
       },
       "test.png"
     );
-    assert.ok(
+    assert.true(
       dialog.alert.calledWith(
-        I18n.t("post.errors.upload", { file_name: "test.png" })
+        i18n("post.errors.upload", { file_name: "test.png" })
       ),
       "the alert is called"
     );
@@ -444,11 +450,14 @@ module("Unit | Utility | uploads", function (hooks) {
     displayErrorForUpload(
       {
         status: 422,
-        body: { message: "upload failed" },
+        responseText: JSON.stringify({ message: "upload failed" }),
       },
       "test.png",
       { max_attachment_size_kb: 1024, max_image_size_kb: 1024 }
     );
-    assert.ok(dialog.alert.calledWith("upload failed"), "the alert is called");
+    assert.true(
+      dialog.alert.calledWith("upload failed"),
+      "the alert is called"
+    );
   });
 });

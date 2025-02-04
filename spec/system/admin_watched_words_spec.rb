@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Watched Words", type: :system, js: true do
+describe "Admin Watched Words", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
 
   before { sign_in(current_user) }

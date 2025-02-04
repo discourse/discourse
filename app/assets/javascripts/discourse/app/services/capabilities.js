@@ -9,7 +9,6 @@ class Capabilities {
   isAndroid = ua.includes("Android");
   isWinphone = ua.includes("Windows Phone");
   isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
-
   isIOS = (/iPhone|iPod/.test(ua) || this.isIpadOS) && !window.MSStream;
   isApple =
     APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
@@ -41,6 +40,16 @@ class Capabilities {
   get userHasBeenActive() {
     return (
       !("userActivation" in navigator) || navigator.userActivation.hasBeenActive
+    );
+  }
+
+  get supportsServiceWorker() {
+    return (
+      "serviceWorker" in navigator &&
+      typeof ServiceWorkerRegistration !== "undefined" &&
+      !this.isAppWebview &&
+      navigator.serviceWorker.controller &&
+      navigator.serviceWorker.controller.state === "activated"
     );
   }
 }

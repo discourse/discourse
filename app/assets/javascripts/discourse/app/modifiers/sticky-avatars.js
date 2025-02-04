@@ -6,8 +6,8 @@ import {
   addWidgetCleanCallback,
   removeWidgetCleanCallback,
 } from "discourse/components/mount-widget";
+import { bind } from "discourse/lib/decorators";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { bind } from "discourse-common/utils/decorators";
 
 const STICKY_CLASS = "sticky-avatar";
 const TOPIC_POST_SELECTOR = ".post-stream .topic-post";
@@ -83,18 +83,6 @@ export default class StickyAvatars extends Modifier {
     schedule("afterRender", () => {
       this.element.querySelectorAll(TOPIC_POST_SELECTOR).forEach((postNode) => {
         this.intersectionObserver.observe(postNode);
-
-        const topicAvatarNode = postNode.querySelector(".topic-avatar");
-        if (!topicAvatarNode || !postNode.querySelector("#post_1")) {
-          return;
-        }
-
-        const topicMapNode = postNode.querySelector(".topic-map");
-        if (!topicMapNode) {
-          return;
-        }
-
-        topicAvatarNode.style.marginBottom = `${topicMapNode.clientHeight}px`;
       });
     });
   }

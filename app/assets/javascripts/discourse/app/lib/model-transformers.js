@@ -23,7 +23,7 @@ export async function applyModelTransformations(modelName, models) {
         transformer.prefix,
         `transformer for the \`${modelName}\` model failed with:`,
         err,
-        err.stack
+        err?.stack
       );
     }
   }

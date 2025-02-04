@@ -1,28 +1,49 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
+import { setting } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
-export default Controller.extend(CanCheckEmails, {
-  modal: service(),
-  dialog: service(),
-  router: service(),
-  passwordProgress: null,
-  subpageTitle: I18n.t("user.preferences_nav.security"),
-  showAllAuthTokens: false,
+export default class SecurityController extends Controller {
+  @service modal;
+  @service dialog;
+  @service router;
+  @service currentUser;
+
+  @setting("moderators_view_emails") canModeratorsViewEmails;
+
+  passwordProgress = null;
+  subpageTitle = i18n("user.preferences_nav.security");
+  showAllAuthTokens = false;
+
+  @gt("model.user_auth_tokens.length", DEFAULT_AUTH_TOKENS_COUNT)
+  canShowAllAuthTokens;
+
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
+  }
+
+  get isCurrentUser() {
+    return this.currentUser?.id === this.model.id;
+  }
 
   get canUsePasskeys() {
     return (
@@ -31,7 +52,7 @@ export default Controller.extend(CanCheckEmails, {
       this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
-  },
+  }
 
   @discourseComputed("model.is_anonymous")
   canChangePassword(isAnonymous) {
@@ -43,7 +64,7 @@ export default Controller.extend(CanCheckEmails, {
         this.siteSettings.enable_local_logins
       );
     }
-  },
+  }
 
   @discourseComputed("showAllAuthTokens", "model.user_auth_tokens")
   authTokens(showAllAuthTokens, tokens) {
@@ -60,42 +81,37 @@ export default Controller.extend(CanCheckEmails, {
     return showAllAuthTokens
       ? tokens
       : tokens.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
-  },
-
-  canShowAllAuthTokens: gt(
-    "model.user_auth_tokens.length",
-    DEFAULT_AUTH_TOKENS_COUNT
-  ),
+  }
 
   @action
   changePassword(event) {
     event?.preventDefault();
     if (!this.passwordProgress) {
-      this.set("passwordProgress", I18n.t("user.change_password.in_progress"));
+      this.set("passwordProgress", i18n("user.change_password.in_progress"));
       return this.model
         .changePassword()
         .then(() => {
           // password changed
           this.setProperties({
             changePasswordProgress: false,
-            passwordProgress: I18n.t("user.change_password.success"),
+            passwordProgress: i18n("user.change_password.success"),
           });
         })
         .catch(() => {
           // password failed to change
           this.setProperties({
             changePasswordProgress: false,
-            passwordProgress: I18n.t("user.change_password.error"),
+            passwordProgress: i18n("user.change_password.error"),
           });
         });
     }
-  },
+  }
 
   @action
   toggleShowAllAuthTokens(event) {
     event?.preventDefault();
     this.toggleProperty("showAllAuthTokens");
-  },
+  }
 
   @action
   revokeAuthToken(token, event) {
@@ -115,7 +131,7 @@ export default Controller.extend(CanCheckEmails, {
         } // All sessions revoked
       })
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   async manage2FA() {
@@ -124,7 +140,7 @@ export default Controller.extend(CanCheckEmails, {
 
       if (!trustedSession.success) {
         this.dialog.dialog({
-          title: I18n.t("user.confirm_access.title"),
+          title: i18n("user.confirm_access.title"),
           type: "notice",
           bodyComponent: ConfirmSession,
           didConfirm: () =>
@@ -136,19 +152,17 @@ export default Controller.extend(CanCheckEmails, {
     } catch (error) {
       popupAjaxError(error);
     }
-  },
+  }
 
-  actions: {
-    save() {
-      this.set("saved", false);
+  @action
+  save() {
+    this.set("saved", false);
 
-      return this.model
-        .then(() => this.set("saved", true))
-        .catch(popupAjaxError);
-    },
+    return this.model.then(() => this.set("saved", true)).catch(popupAjaxError);
+  }
 
-    showToken(token) {
-      this.modal.show(AuthTokenModal, { model: token });
-    },
-  },
-});
+  @action
+  showToken(token) {
+    this.modal.show(AuthTokenModal, { model: token });
+  }
+}

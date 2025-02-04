@@ -1,6 +1,4 @@
 <div class="search-area">
-  <p>{{i18n "admin.site_text.description"}}</p>
-
   <TextField
     @value={{this.q}}
     @placeholderKey="admin.site_text.search"
@@ -14,7 +12,7 @@
       @action={{this.showReseedModal}}
       @label="admin.reseed.action.label"
       @title="admin.reseed.action.title"
-      @icon="sync"
+      @icon="arrows-rotate"
       class="btn-default"
     />
   </div>
@@ -25,7 +23,7 @@
       <ComboBox
         @valueProperty="value"
         @content={{this.availableLocales}}
-        @value={{this.locale}}
+        @value={{this.resolvedLocale}}
         @onChange={{this.updateLocale}}
         @options={{hash filterable=true}}
         class="locale-search"
@@ -50,6 +48,16 @@
         {{on "click" this.toggleOutdated}}
       />
       {{i18n "admin.site_text.show_outdated"}}
+    </label>
+
+    <label class="checkbox-label">
+      <input
+        id="toggle-only-locale"
+        type="checkbox"
+        checked={{this.resolvedOnlySelectedLocale}}
+        {{on "click" this.toggleOnlySelectedLocale}}
+      />
+      {{i18n "admin.site_text.only_show_selected_locale"}}
     </label>
 
     {{#if this.showUntranslated}}

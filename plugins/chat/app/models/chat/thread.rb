@@ -5,6 +5,7 @@ module Chat
     MAX_TITLE_LENGTH = 100
 
     include Chat::ThreadCache
+    include HasCustomFields
 
     self.table_name = "chat_threads"
 
@@ -43,7 +44,10 @@ module Chat
     before_create { self.last_message_id = self.original_message_id }
 
     def add(user, notification_level: Chat::NotificationLevels.all[:tracking])
-      Chat::UserChatThreadMembership.find_or_create_by!(
+      membership = Chat::UserChatThreadMembership.find_by(user: user, thread: self)
+      return membership if membership
+
+      Chat::UserChatThreadMembership.create!(
         user: user,
         thread: self,
         notification_level: notification_level,

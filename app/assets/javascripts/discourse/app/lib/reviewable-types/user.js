@@ -1,9 +1,9 @@
 import ReviewableTypeBase from "discourse/lib/reviewable-types/base";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends ReviewableTypeBase {
   get description() {
-    return I18n.t("user_menu.reviewable.user_requires_approval", {
+    return i18n("user_menu.reviewable.user_requires_approval", {
       username: this.reviewable.username,
     });
   }

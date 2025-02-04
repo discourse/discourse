@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class FKErrorsSummary extends Component {
   concatErrors(errors) {
@@ -20,7 +20,7 @@ export default class FKErrorsSummary extends Component {
     {{#if this.hasErrors}}
       <div class="form-kit__errors-summary" aria-live="assertive" ...attributes>
         <h2 class="form-kit__errors-summary-title">
-          {{icon "exclamation-triangle"}}
+          {{icon "triangle-exclamation"}}
           {{i18n "form_kit.errors_summary_title"}}
         </h2>
 

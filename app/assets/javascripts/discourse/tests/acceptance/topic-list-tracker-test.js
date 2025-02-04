@@ -1,6 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import {
   nextTopicUrl,
   previousTopicUrl,
@@ -8,8 +9,7 @@ import {
 } from "discourse/lib/topic-list-tracker";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Topic list tracking", function (needs) {
   let notificationLevel;
@@ -65,10 +65,9 @@ acceptance("Topic list tracking", function (needs) {
 
     await visit("/");
 
-    assert.ok(
-      exists("tr[data-topic-id='11557'] .unread-posts"),
-      "unread count for topic is shown"
-    );
+    assert
+      .dom("tr[data-topic-id='11557'] .unread-posts")
+      .exists("unread count for topic is shown");
   });
 
   test("unread count is not set on topic that user is not tracking", async function (assert) {
@@ -80,9 +79,8 @@ acceptance("Topic list tracking", function (needs) {
 
     await visit("/");
 
-    assert.notOk(
-      exists("tr[data-topic-id='11557'] .unread-posts"),
-      "unread count for topic is not shown"
-    );
+    assert
+      .dom("tr[data-topic-id='11557'] .unread-posts")
+      .doesNotExist("unread count for topic is not shown");
   });
 });

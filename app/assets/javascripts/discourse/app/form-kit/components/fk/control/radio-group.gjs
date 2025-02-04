@@ -1,31 +1,23 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import FKText from "discourse/form-kit/components/fk/text";
+import FKFieldset from "discourse/form-kit/components/fk/fieldset";
 import FKControlRadioGroupRadio from "./radio-group/radio";
 
-// eslint-disable-next-line ember/no-empty-glimmer-component-classes
 export default class FKControlRadioGroup extends Component {
   static controlType = "radio-group";
 
   <template>
-    <fieldset class="form-kit__radio-group" ...attributes>
-      {{#if @title}}
-        <legend class="form-kit__radio-group-title">{{@title}}</legend>
-      {{/if}}
-
-      {{#if @subtitle}}
-        <FKText class="form-kit__radio-group-subtitle">
-          {{@subtitle}}
-        </FKText>
-      {{/if}}
-
+    <FKFieldset
+      class="form-kit__control-radio-group"
+      @title={{@title}}
+      @subtitle={{@subtitle}}
+      ...attributes
+    >
       {{yield
         (hash
-          Radio=(component
-            FKControlRadioGroupRadio groupValue=@value field=@field
-          )
+          Radio=(component FKControlRadioGroupRadio value=@value field=@field)
         )
       }}
-    </fieldset>
+    </FKFieldset>
   </template>
 }

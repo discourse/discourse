@@ -1,12 +1,13 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
+import getURL from "discourse/lib/get-url";
+import { helperContext, registerRawHelper } from "discourse/lib/helpers";
+import { iconHTML } from "discourse/lib/icon-library";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import getURL from "discourse-common/lib/get-url";
-import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _renderer = defaultCategoryLinkRenderer;
 
@@ -105,14 +106,20 @@ export default categoryLinkHTML;
 registerRawHelper("category-link", categoryLinkHTML);
 
 function buildTopicCount(count) {
-  return `<span class="topic-count" aria-label="${I18n.t(
+  return `<span class="topic-count" aria-label="${i18n(
     "category_row.topic_count",
     { count }
   )}">&times; ${count}</span>`;
 }
 
 export function defaultCategoryLinkRenderer(category, opts) {
-  let descriptionText = escapeExpression(get(category, "description_text"));
+  // not ideal as we have to call it manually and we pass a fake category object
+  // but there's not way around it for now
+  let descriptionText = applyValueTransformer(
+    "category-description-text",
+    escapeExpression(get(category, "description_text")),
+    { category }
+  );
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
@@ -156,7 +163,13 @@ export function defaultCategoryLinkRenderer(category, opts) {
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 
-  let categoryName = escapeExpression(get(category, "name"));
+  // not ideal as we have to call it manually and we pass a fake category object
+  // but there's not way around it for now
+  let categoryName = applyValueTransformer(
+    "category-display-name",
+    escapeExpression(get(category, "name")),
+    { category }
+  );
 
   if (siteSettings.support_mixed_text_direction) {
     categoryDir = 'dir="auto"';
@@ -179,7 +192,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (opts.subcategoryCount) {
-    html += `<span class="plus-subcategories">${I18n.t(
+    html += `<span class="plus-subcategories">${i18n(
       "category_row.subcategory_count",
       { count: opts.subcategoryCount }
     )}</span>`;

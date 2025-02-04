@@ -10,7 +10,7 @@ module Chat
   class MarkAllUserChannelsRead
     include ::Service::Base
 
-    # @!method call(guardian:)
+    # @!method self.call(guardian:)
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 

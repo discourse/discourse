@@ -9,7 +9,7 @@
         @icon="list"
         @action={{this.toggleBulkSelect}}
         @title="topics.bulk.toggle"
-        class="bulk-select"
+        class="btn-default bulk-select"
       />
     {{/if}}
 
@@ -44,7 +44,7 @@
           <DButton
             @action={{this.bulkSelectAll}}
             @label="topics.bulk.select_all"
-            @icon="check-square"
+            @icon="square-check"
             class="bulk-select-all"
           />
         </span>
@@ -82,6 +82,7 @@
       >
         <:header>
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="username_lower"
@@ -103,6 +104,7 @@
           />
 
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="added_at"
@@ -111,6 +113,7 @@
             class="directory-table__column-header--added"
           />
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="last_posted_at"
@@ -119,6 +122,7 @@
             class="directory-table__column-header--last-posted"
           />
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="last_seen_at"
@@ -169,7 +173,7 @@
                   {{/if}}
                   <span class="directory-table__value">
                     {{#if m.owner}}
-                      {{d-icon "shield-alt"}}
+                      {{d-icon "shield-halved"}}
                       {{i18n "groups.members.owner"}}<br />
                     {{/if}}
                     {{#if m.primary}}

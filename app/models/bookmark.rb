@@ -119,8 +119,14 @@ class Bookmark < ActiveRecord::Base
     (reminder_at + offset).strftime(I18n.t("datetime_formats.formats.calendar_ics"))
   end
 
-  def clear_reminder!
-    update!(reminder_last_sent_at: Time.zone.now, reminder_set_at: nil, reminder_at: nil)
+  def clear_reminder!(force_clear_reminder_at: false)
+    reminder_update_attrs = { reminder_last_sent_at: Time.zone.now, reminder_set_at: nil }
+
+    if self.auto_clear_reminder_when_reminder_sent? || force_clear_reminder_at
+      reminder_update_attrs[:reminder_at] = nil
+    end
+
+    update!(reminder_update_attrs)
   end
 
   def reminder_at_in_zone(timezone)
@@ -200,7 +206,7 @@ end
 #  reminder_set_at        :datetime
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
-#  bookmarkable_id        :integer
+#  bookmarkable_id        :bigint
 #  bookmarkable_type      :string
 #
 # Indexes

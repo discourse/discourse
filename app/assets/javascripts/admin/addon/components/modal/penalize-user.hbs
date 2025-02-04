@@ -46,11 +46,12 @@
           @postEdit={{this.postEdit}}
         />
       {{/if}}
-      {{#if this.user.similar_users}}
+      {{#if @model.user.similar_users_count}}
         <AdminPenaltySimilarUsers
           @penaltyType={{@model.penaltyType}}
-          @user={{this.user}}
+          @user={{@model.user}}
           @selectedUserIds={{this.otherUserIds}}
+          @onUsersChanged={{this.similarUsersChanged}}
         />
       {{/if}}
     {{else}}
@@ -60,9 +61,9 @@
         <div class="cant-silence">{{i18n "admin.user.cant_silence"}}</div>
       {{/if}}
     {{/if}}
-    <div class="penalty-history">{{html-safe this.penaltyHistory}}</div>
   </:body>
   <:footer>
+    <div class="penalty-history">{{html-safe this.penaltyHistory}}</div>
     <DButton
       class="btn-danger perform-penalize"
       @action={{this.penalizeUser}}

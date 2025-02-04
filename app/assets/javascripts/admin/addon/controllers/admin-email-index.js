@@ -6,7 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminEmailIndexController extends Controller {
   @service dialog;
@@ -51,13 +51,13 @@ export default class AdminEmailIndexController extends Controller {
         if (e.jqXHR.responseJSON?.errors) {
           this.dialog.alert({
             message: htmlSafe(
-              I18n.t("admin.email.error", {
+              i18n("admin.email.error", {
                 server_error: escapeExpression(e.jqXHR.responseJSON.errors[0]),
               })
             ),
           });
         } else {
-          this.dialog.alert({ message: I18n.t("admin.email.test_error") });
+          this.dialog.alert({ message: i18n("admin.email.test_error") });
         }
       })
       .finally(() => this.set("sendingEmail", false));

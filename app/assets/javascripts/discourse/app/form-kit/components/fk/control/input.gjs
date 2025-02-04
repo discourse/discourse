@@ -66,7 +66,7 @@ export default class FKControlInput extends Component {
 
       <input
         type={{this.type}}
-        value={{@value}}
+        value={{@field.value}}
         class={{concatClass
           "form-kit__control-input"
           (if @before "has-prefix")

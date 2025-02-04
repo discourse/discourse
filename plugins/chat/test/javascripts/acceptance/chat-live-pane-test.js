@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { skip } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance(
   "Discourse Chat - Chat live pane - handling 429 errors",
@@ -57,7 +57,7 @@ acceptance(
     skip("Handles 429 errors by displaying an alert", async function (assert) {
       await visit("/chat/c/cat/1");
 
-      assert.ok(exists(".dialog-content"), "We displayed a 429 error");
+      assert.dom(".dialog-content").exists("displays the 429 error");
       await click(".dialog-footer .btn-primary");
     });
   }

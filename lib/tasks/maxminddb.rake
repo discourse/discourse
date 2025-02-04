@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-GEOLITE_DBS ||= %w[GeoLite2-City GeoLite2-ASN]
+GEOLITE_DBS = %w[GeoLite2-City GeoLite2-ASN]
 
 desc "downloads MaxMind's GeoLite2-City databases"
 task "maxminddb:get" => "environment" do
@@ -64,25 +64,21 @@ task "maxminddb:refresh": "environment" do
 
   puts "Downloading MaxMindDB..."
 
-  maxmind_thread =
-    Thread.new do
-      name = "unknown"
-      begin
-        GEOLITE_DBS.each do |db|
-          name = db
-          DiscourseIpInfo.mmdb_download(db)
-        end
+  name = "unknown"
 
-        if GlobalSetting.maxmind_backup_path.present?
-          copy_maxmind(DiscourseIpInfo.path, GlobalSetting.maxmind_backup_path)
-        end
-      rescue OpenURI::HTTPError => e
-        STDERR.puts("*" * 100)
-        STDERR.puts("MaxMindDB (#{name}) could not be downloaded: #{e}")
-        STDERR.puts("*" * 100)
-        Rails.logger.warn("MaxMindDB (#{name}) could not be downloaded: #{e}")
-      end
+  begin
+    GEOLITE_DBS.each do |db|
+      name = db
+      DiscourseIpInfo.mmdb_download(db)
     end
 
-  at_exit { maxmind_thread.join }
+    if GlobalSetting.maxmind_backup_path.present?
+      copy_maxmind(DiscourseIpInfo.path, GlobalSetting.maxmind_backup_path)
+    end
+  rescue OpenURI::HTTPError => e
+    STDERR.puts("*" * 100)
+    STDERR.puts("MaxMindDB (#{name}) could not be downloaded: #{e}")
+    STDERR.puts("*" * 100)
+    Rails.logger.warn("MaxMindDB (#{name}) could not be downloaded: #{e}")
+  end
 end

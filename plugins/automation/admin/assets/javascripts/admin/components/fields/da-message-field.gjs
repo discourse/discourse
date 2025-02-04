@@ -24,8 +24,8 @@ export default class MessageField extends BaseField {
             {{#if this.displayPlaceholders}}
               <PlaceholdersList
                 @currentValue={{@field.metadata.value}}
-                @placeholders={{@placeholder}}
-                @onCopy={{this.test}}
+                @placeholders={{@placeholders}}
+                @onCopy={{this.mutValue}}
               />
             {{/if}}
           </div>

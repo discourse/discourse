@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::SoundCloudOnebox do
-  describe ".matches_regexp" do
+  describe ".===" do
     it "matches valid SoundCloud URL" do
       valid_url = URI("https://soundcloud.com/artist/track")
       expect(described_class === valid_url).to eq(true)

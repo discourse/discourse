@@ -5,7 +5,7 @@ require_relative "base"
 
 class ImportScripts::JForum < ImportScripts::Base
   BATCH_SIZE = 1000
-  REMOTE_AVATAR_REGEX ||= %r{\Ahttps?://}i
+  REMOTE_AVATAR_REGEX = %r{\Ahttps?://}i
 
   def initialize
     super

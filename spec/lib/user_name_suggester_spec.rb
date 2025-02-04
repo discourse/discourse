@@ -10,6 +10,8 @@ RSpec.describe UserNameSuggester do
       SiteSetting.reserved_usernames = ""
     end
 
+    let(:fallback_username) { I18n.t("fallback_username") + "1" }
+
     it "keeps adding numbers to the username" do
       Fabricate(:user, username: "sam")
       Fabricate(:user, username: "sAm1")
@@ -20,7 +22,7 @@ RSpec.describe UserNameSuggester do
     end
 
     it "doesn't raise an error on nil username and suggest the fallback username" do
-      expect(UserNameSuggester.suggest(nil)).to eq(I18n.t("fallback_username"))
+      expect(UserNameSuggester.suggest(nil)).to eq(fallback_username)
     end
 
     it "doesn't raise an error on integer username" do
@@ -40,13 +42,21 @@ RSpec.describe UserNameSuggester do
       expect(UserNameSuggester.suggest("a")).to eq("a11")
     end
 
-    it "is able to guess a decent username from an email" do
-      expect(UserNameSuggester.suggest("bob@example.com")).to eq("bob")
+    it "doesn't suggest anything based on usernames by default" do
+      expect(UserNameSuggester.suggest("bob@example.com")).to eq("user1")
     end
 
-    it "has a special case for me and i emails" do
-      expect(UserNameSuggester.suggest("me@eviltrout.com")).to eq("eviltrout")
-      expect(UserNameSuggester.suggest("i@eviltrout.com")).to eq("eviltrout")
+    context "with use_email_for_username_and_name_suggestions enabled" do
+      before { SiteSetting.use_email_for_username_and_name_suggestions = true }
+
+      it "is able to guess a decent username from an email" do
+        expect(UserNameSuggester.suggest("bob@example.com")).to eq("bob")
+      end
+
+      it "has a special case for me and i emails" do
+        expect(UserNameSuggester.suggest("me@eviltrout.com")).to eq("eviltrout")
+        expect(UserNameSuggester.suggest("i@eviltrout.com")).to eq("eviltrout")
+      end
     end
 
     it "shortens very long suggestions" do
@@ -61,12 +71,14 @@ RSpec.describe UserNameSuggester do
     end
 
     it "doesn't suggest reserved usernames" do
+      SiteSetting.use_email_for_username_and_name_suggestions = true
       SiteSetting.reserved_usernames = "myadmin|steve|steve1"
       expect(UserNameSuggester.suggest("myadmin@hissite.com")).to eq("myadmin1")
       expect(UserNameSuggester.suggest("steve")).to eq("steve2")
     end
 
     it "doesn't suggest generic usernames" do
+      SiteSetting.use_email_for_username_and_name_suggestions = true
       UserNameSuggester::GENERIC_NAMES.each do |name|
         expect(UserNameSuggester.suggest("#{name}@apple.org")).to eq("apple")
       end
@@ -86,7 +98,7 @@ RSpec.describe UserNameSuggester do
 
     it "suggest a fallback username if name contains only invalid characters" do
       suggestion = UserNameSuggester.suggest("---")
-      expect(suggestion).to eq(I18n.t("fallback_username"))
+      expect(suggestion).to eq(fallback_username)
     end
 
     it "allows dots in the middle" do
@@ -164,7 +176,6 @@ RSpec.describe UserNameSuggester do
       end
 
       it "uses fallback username if there are Unicode characters only" do
-        fallback_username = I18n.t("fallback_username")
         expect(UserNameSuggester.suggest("طائر")).to eq(fallback_username)
         expect(UserNameSuggester.suggest("πουλί")).to eq(fallback_username)
       end
@@ -218,7 +229,7 @@ RSpec.describe UserNameSuggester do
       it "uses allowlist" do
         SiteSetting.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]"
 
-        expect(UserNameSuggester.suggest("πουλί")).to eq(I18n.t("fallback_username"))
+        expect(UserNameSuggester.suggest("πουλί")).to eq(fallback_username)
         expect(UserNameSuggester.suggest("a鳥b")).to eq("a_b")
         expect(UserNameSuggester.suggest("Löwe")).to eq("Löwe")
 

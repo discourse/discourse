@@ -13,6 +13,9 @@ nl:
       total_votes:
         one: "totale stem"
         other: "totale stemmen"
+      votes:
+        one: "%{count} stem"
+        other: "%{count} stemmen"
       average_rating: "Gemiddelde beoordeling: <strong>%{average}</strong>."
       public:
         title: "Stemmen zijn <strong>openbaar</strong>."
@@ -46,6 +49,12 @@ nl:
       show-results:
         title: "De pollresultaten weergeven"
         label: "Resultaten"
+      show-tally:
+        title: "Stemresultaten weergeven op basis van het aantal stemmen"
+        label: "Telling weergeven"
+      show-percentage:
+        title: "Stemresultaten weergeven als percentage"
+        label: "Weergeven als percentage"
       remove-vote:
         title: "Verwijder je stem"
         label: "Stem ongedaan maken"
@@ -93,6 +102,8 @@ nl:
         label: "Opties"
         ranked_choice:
           abstain: "Onthouden"
+          highest_priority: "(hoogste prioriteit)"
+          lowest_priority: "(laagste prioriteit)"
           login: "Meld je aan om te stemmen!"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
       error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van je stemmen."

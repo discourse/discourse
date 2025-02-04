@@ -11,7 +11,7 @@ export default {
 
     try {
       return sessionStorage && sessionStorage.getItem("verbose_localization");
-    } catch (e) {
+    } catch {
       return false;
     }
   },
@@ -38,6 +38,8 @@ export default {
           node[segs[segs.length - 1]] = value;
         }
       }
+
+      delete I18n._overrides;
     }
   },
 };

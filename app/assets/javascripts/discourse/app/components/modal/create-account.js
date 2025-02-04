@@ -1,6 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, notEmpty } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -9,48 +11,48 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import NameValidationHelper from "discourse/lib/name-validation-helper";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class CreateAccount extends Component.extend(
   PasswordValidation,
   UsernameValidation,
-  NameValidation,
   UserFieldsValidation
 ) {
   @service site;
   @service siteSettings;
   @service login;
 
+  @tracked isDeveloper = false;
+  @tracked accountUsername = this.model.accountUsername;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
   rejectedEmails = A();
   prefilledUsername = null;
   userFields = null;
-  isDeveloper = false;
   maskPassword = true;
+  passwordValidationVisible = false;
+  emailValidationVisible = false;
+  nameValidationHelper = new NameValidationHelper(this);
 
   @notEmpty("model.authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
-
+  // For NameValidation mixin
+  @alias("model.accountName") accountName;
   // For UsernameValidation mixin
   @alias("model.authOptions") authOptions;
   @alias("model.accountEmail") accountEmail;
-  @alias("model.accountUsername") accountUsername;
-  // For NameValidation mixin
-  @alias("model.accountName") accountName;
 
   init() {
     super.init(...arguments);
@@ -66,6 +68,24 @@ export default class CreateAccount extends Component.extend(
         this.set("model.skipConfirmation", false)
       );
     }
+  }
+
+  @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
+  }
+
+  get nameTitle() {
+    return this.nameValidationHelper.nameTitle;
+  }
+
+  get nameValidation() {
+    return this.nameValidationHelper.nameValidation;
+  }
+
+  @dependentKeyCompat
+  get forceValidationReason() {
+    return this.nameValidationHelper.forceValidationReason;
   }
 
   @bind
@@ -106,11 +126,6 @@ export default class CreateAccount extends Component.extend(
     return this.formSubmitted;
   }
 
-  @discourseComputed()
-  wavingHandURL() {
-    return wavingHandURL();
-  }
-
   @discourseComputed("userFields", "hasAtLeastOneLoginButton", "hasAuthOptions")
   modalBodyClasses(userFields, hasAtLeastOneLoginButton, hasAuthOptions) {
     const classes = [];
@@ -137,9 +152,51 @@ export default class CreateAccount extends Component.extend(
   }
 
   @discourseComputed
+  showFullname() {
+    return this.site.full_name_visible_in_signup;
+  }
+
+  @discourseComputed
   fullnameRequired() {
+    return this.site.full_name_required_for_signup;
+  }
+
+  @discourseComputed(
+    "emailValidation.ok",
+    "emailValidation.reason",
+    "emailValidationVisible"
+  )
+  showEmailValidation(
+    emailValidationOk,
+    emailValidationReason,
+    emailValidationVisible
+  ) {
     return (
-      this.siteSettings.full_name_required || this.siteSettings.enable_names
+      emailValidationOk || (emailValidationReason && emailValidationVisible)
+    );
+  }
+
+  @discourseComputed(
+    "passwordValidation.ok",
+    "passwordValidation.reason",
+    "passwordValidationVisible"
+  )
+  showPasswordValidation(
+    passwordValidationOk,
+    passwordValidationReason,
+    passwordValidationVisible
+  ) {
+    return (
+      passwordValidationOk ||
+      (passwordValidationReason && passwordValidationVisible)
+    );
+  }
+
+  @discourseComputed("usernameValidation.reason")
+  showUsernameInstructions(usernameValidationReason) {
+    return (
+      this.siteSettings.show_signup_form_username_instructions &&
+      !usernameValidationReason
     );
   }
 
@@ -151,7 +208,7 @@ export default class CreateAccount extends Component.extend(
   @discourseComputed
   disclaimerHtml() {
     if (this.site.tos_url && this.site.privacy_policy_url) {
-      return I18n.t("create_account.disclaimer", {
+      return i18n("create_account.disclaimer", {
         tos_link: this.site.tos_url,
         privacy_link: this.site.privacy_policy_url,
       });
@@ -187,8 +244,8 @@ export default class CreateAccount extends Component.extend(
     if (isEmpty(email)) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
-          message: I18n.t("user.email.required"),
-          reason: forceValidationReason ? I18n.t("user.email.required") : null,
+          message: i18n("user.email.required"),
+          reason: forceValidationReason ? i18n("user.email.required") : null,
         })
       );
     }
@@ -196,7 +253,7 @@ export default class CreateAccount extends Component.extend(
     if (rejectedEmails.includes(email) || !emailValid(email)) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
-          reason: I18n.t("user.email.invalid"),
+          reason: i18n("user.email.invalid"),
         })
       );
     }
@@ -207,7 +264,7 @@ export default class CreateAccount extends Component.extend(
     ) {
       return EmberObject.create({
         ok: true,
-        reason: I18n.t("user.email.authenticated", {
+        reason: i18n("user.email.authenticated", {
           provider: this.authProviderDisplayName(
             this.get("model.authOptions.auth_provider")
           ),
@@ -217,12 +274,22 @@ export default class CreateAccount extends Component.extend(
 
     return EmberObject.create({
       ok: true,
-      reason: I18n.t("user.email.ok"),
+      reason: i18n("user.email.ok"),
     });
   }
 
   @action
+  togglePasswordValidation() {
+    this.set(
+      "passwordValidationVisible",
+      Boolean(this.passwordValidation.reason)
+    );
+  }
+
+  @action
   checkEmailAvailability() {
+    this.set("emailValidationVisible", Boolean(this.emailValidation.reason));
+
     if (
       !this.emailValidation.ok ||
       this.serverAccountEmail === this.model.accountEmail
@@ -250,7 +317,7 @@ export default class CreateAccount extends Component.extend(
             serverAccountEmail: this.model.accountEmail,
             serverEmailValidation: EmberObject.create({
               ok: true,
-              reason: I18n.t("user.email.ok"),
+              reason: i18n("user.email.ok"),
             }),
           });
         }
@@ -287,15 +354,14 @@ export default class CreateAccount extends Component.extend(
     if (this.prefilledUsername) {
       // If username field has been filled automatically, and email field just changed,
       // then remove the username.
-      if (this.model.accountUsername === this.prefilledUsername) {
-        this.set("model.accountUsername", "");
+      if (this.accountUsername === this.prefilledUsername) {
+        this.accountUsername = "";
       }
       this.set("prefilledUsername", null);
     }
     if (
       this.get("emailValidation.ok") &&
-      (isEmpty(this.model.accountUsername) ||
-        this.get("model.authOptions.email"))
+      (isEmpty(this.accountUsername) || this.get("model.authOptions.email"))
     ) {
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd party auth,
@@ -354,7 +420,7 @@ export default class CreateAccount extends Component.extend(
       accountName: this.model.accountName,
       accountEmail: this.model.accountEmail,
       accountPassword: this.accountPassword,
-      accountUsername: this.model.accountUsername,
+      accountUsername: this.accountUsername,
       accountChallenge: this.accountChallenge,
       inviteCode: this.inviteCode,
       accountPasswordConfirm: this.accountHoneypot,
@@ -381,7 +447,7 @@ export default class CreateAccount extends Component.extend(
           return;
         }
 
-        this.set("isDeveloper", false);
+        this.isDeveloper = false;
         if (result.success) {
           // invalidate honeypot
           this._challengeExpiry = 1;
@@ -399,9 +465,9 @@ export default class CreateAccount extends Component.extend(
           }
           return new Promise(() => {}); // This will never resolve, the page will reload instead
         } else {
-          this.set("flash", result.message || I18n.t("create_account.failed"));
+          this.set("flash", result.message || i18n("create_account.failed"));
           if (result.is_developer) {
-            this.set("isDeveloper", true);
+            this.isDeveloper = true;
           }
           if (
             result.errors &&
@@ -411,11 +477,7 @@ export default class CreateAccount extends Component.extend(
           ) {
             this.rejectedEmails.pushObject(result.values.email);
           }
-          if (
-            result.errors &&
-            result.errors.password &&
-            result.errors.password.length > 0
-          ) {
+          if (result.errors?.["user_password.password"]?.length > 0) {
             this.rejectedPasswords.pushObject(attrs.accountPassword);
           }
           this.set("formSubmitted", false);
@@ -425,7 +487,7 @@ export default class CreateAccount extends Component.extend(
       () => {
         this.set("formSubmitted", false);
         removeCookie("destination_url");
-        return this.set("flash", I18n.t("create_account.failed"));
+        return this.set("flash", i18n("create_account.failed"));
       }
     );
   }
@@ -438,9 +500,17 @@ export default class CreateAccount extends Component.extend(
     if (!url) {
       return;
     }
-    return I18n.t("create_account.associate", {
+    return i18n("create_account.associate", {
       associate_link: url,
-      provider: I18n.t(`login.${provider}.name`),
+      provider: i18n(`login.${provider}.name`),
+    });
+  }
+
+  @action
+  scrollInputIntoView(event) {
+    event.target.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
     });
   }
 
@@ -458,7 +528,9 @@ export default class CreateAccount extends Component.extend(
   @action
   createAccount() {
     this.set("flash", "");
-    this.set("forceValidationReason", true);
+    this.nameValidationHelper.forceValidationReason = true;
+    this.set("emailValidationVisible", true);
+    this.set("passwordValidationVisible", true);
 
     const validation = [
       this.emailValidation,
@@ -484,7 +556,7 @@ export default class CreateAccount extends Component.extend(
       return;
     }
 
-    this.set("forceValidationReason", false);
+    this.nameValidationHelper.forceValidationReason = false;
     this.performAccountCreation();
   }
 }

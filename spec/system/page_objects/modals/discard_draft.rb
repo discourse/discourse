@@ -11,6 +11,14 @@ module PageObjects
       def closed?
         has_no_css?(".modal.d-modal#{MODAL_SELECTOR}")
       end
+
+      def click_save
+        footer.find("button.save-draft").click
+      end
+
+      def click_discard
+        footer.find("button.discard-draft").click
+      end
     end
   end
 end

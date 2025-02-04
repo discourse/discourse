@@ -19,7 +19,7 @@ module FreedomPatches
       buf << source
     end
 
-    if Rails.env.development? || Rails.env.test?
+    if Rails.env.local?
       Sprockets.register_bundle_metadata_reducer "application/javascript",
                                                  :data,
                                                  proc { +"" },
@@ -28,7 +28,7 @@ module FreedomPatches
   end
 end
 
-if Rails.env.development? || Rails.env.test?
+if Rails.env.local?
   ActiveSupport.on_load(:action_view) do
     def compute_asset_path(source, _options = {})
       "/assets/#{source}"

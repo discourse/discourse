@@ -13,7 +13,9 @@ export default class Group extends DiscourseRoute {
     return { name: model.get("name").toLowerCase() };
   }
 
-  setupController(controller, model) {
-    controller.set("model", model);
+  setupController(controller) {
+    super.setupController(...arguments);
+
+    controller.set("showTooltip", false);
   }
 }

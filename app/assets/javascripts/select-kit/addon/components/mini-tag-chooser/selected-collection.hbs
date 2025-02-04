@@ -3,7 +3,7 @@
     {{#each this.tags as |tag|}}
       <DButton
         @translatedTitle={{tag.value}}
-        @icon="times"
+        @icon="xmark"
         @action={{fn (action this.selectKit.deselect) tag.value}}
         tabindex="0"
         class={{tag.classNames}}

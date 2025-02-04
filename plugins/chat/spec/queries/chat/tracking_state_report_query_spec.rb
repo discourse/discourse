@@ -62,10 +62,12 @@ RSpec.describe Chat::TrackingStateReportQuery do
           channel_1.id => {
             unread_count: 1,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
           channel_2.id => {
             unread_count: 1,
             mention_count: 0,
+            watched_threads_unread_count: 0,
           },
         },
       )
@@ -113,10 +115,12 @@ RSpec.describe Chat::TrackingStateReportQuery do
             channel_1.id => {
               unread_count: 1,
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
             channel_2.id => {
               unread_count: 1,
               mention_count: 0,
+              watched_threads_unread_count: 0,
             },
           },
         )
@@ -125,11 +129,13 @@ RSpec.describe Chat::TrackingStateReportQuery do
             thread_1.id => {
               unread_count: 1,
               mention_count: 0,
+              watched_threads_unread_count: 0,
               channel_id: channel_1.id,
             },
             thread_2.id => {
               unread_count: 1,
               mention_count: 0,
+              watched_threads_unread_count: 0,
               channel_id: channel_2.id,
             },
           },
@@ -152,12 +158,14 @@ RSpec.describe Chat::TrackingStateReportQuery do
               thread_1.id => {
                 unread_count: 1,
                 mention_count: 0,
+                watched_threads_unread_count: 0,
                 channel_id: channel_1.id,
                 last_reply_created_at: thread_1.reload.last_message.created_at,
               },
               thread_2.id => {
                 unread_count: 1,
                 mention_count: 0,
+                watched_threads_unread_count: 0,
                 channel_id: channel_2.id,
                 last_reply_created_at: thread_2.reload.last_message.created_at,
               },
@@ -172,12 +180,14 @@ RSpec.describe Chat::TrackingStateReportQuery do
               thread_1.id => {
                 unread_count: 0,
                 mention_count: 0,
+                watched_threads_unread_count: 0,
                 channel_id: channel_1.id,
                 last_reply_created_at: nil,
               },
               thread_2.id => {
                 unread_count: 1,
                 mention_count: 0,
+                watched_threads_unread_count: 0,
                 channel_id: channel_2.id,
                 last_reply_created_at: thread_2.reload.last_message.created_at,
               },

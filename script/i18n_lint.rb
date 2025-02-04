@@ -26,6 +26,9 @@ class I18nLinter
 end
 
 class LocaleFileValidator
+  # Format: "banned phrase" => "recommendation"
+  BANNED_PHRASES = { "color scheme" => "color palette", "private message" => "personal message" }
+
   ERROR_MESSAGES = {
     invalid_relative_links:
       "The following keys have relative links, but do not start with %{base_url} or %{base_path}:",
@@ -37,7 +40,16 @@ class LocaleFileValidator
       "Pluralized strings must have only the sub-keys 'one' and 'other'.\nThe following keys have missing or additional keys:",
     invalid_one_keys:
       "The following keys contain the number 1 instead of the interpolation key %{count}:",
-  }
+  }.merge(
+    BANNED_PHRASES
+      .map do |banned, recommendation|
+        [
+          "banned_phrase_#{banned}",
+          "The following keys contain the banned phrase '#{banned}' (use '#{recommendation}' instead)",
+        ]
+      end
+      .to_h,
+  )
 
   PLURALIZATION_KEYS = %w[zero one two few many other]
   ENGLISH_KEYS = %w[one other]
@@ -49,6 +61,7 @@ class LocaleFileValidator
   def initialize(filename)
     @filename = filename
     @errors = {}
+    ERROR_MESSAGES.keys.each { |type| @errors[type] = [] }
   end
 
   def has_errors?
@@ -87,10 +100,6 @@ class LocaleFileValidator
   end
 
   def validate_content(yaml)
-    @errors[:invalid_relative_links] = []
-    @errors[:invalid_relative_image_sources] = []
-    @errors[:invalid_interpolation_key_format] = []
-
     each_translation(yaml) do |key, value|
       @errors[:invalid_relative_links] << key if value.match?(%r{href\s*=\s*["']/[^/]|\]\(/[^/]}i)
 
@@ -99,6 +108,10 @@ class LocaleFileValidator
       if value.match?(/{{.+?}}/) && !key.end_with?("_MF") &&
            !EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS.include?(key)
         @errors[:invalid_interpolation_key_format] << key
+      end
+
+      BANNED_PHRASES.keys.each do |banned|
+        @errors["banned_phrase_#{banned}"] << key if value.downcase.include?(banned.downcase)
       end
     end
   end
@@ -115,9 +128,6 @@ class LocaleFileValidator
   end
 
   def validate_pluralizations(yaml)
-    @errors[:wrong_pluralization_keys] = []
-    @errors[:invalid_one_keys] = []
-
     each_pluralization(yaml) do |key, hash|
       # ignore errors from some ActiveRecord messages
       next if key.include?("messages.restrict_dependent_destroy")

@@ -37,6 +37,7 @@ sq:
     default_poll_with_multiple_choices_has_invalid_parameters: "Sondazhi me zgjedhje ka disa parametra të pavlefshme."
     named_poll_with_multiple_choices_has_invalid_parameters: "Poll named <strong>%{name}</strong> with multiple choice has invalid parameters."
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
+    requires_that_at_least_one_option_is_ranked: "Në sondazhet me zgjedhje të renditur, ju duhet të renditni të paktën një opsion."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Nuk mund të ndryshoni një sondazh pas %{minutes} minutave të para."
       cannot_edit_named_poll_with_votes: "Nuk mund ta ndryshoni sondazhin me emrin <strong>${name}</strong> pas %{minutes} minutave të para."

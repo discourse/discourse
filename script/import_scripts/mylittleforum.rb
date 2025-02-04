@@ -18,14 +18,14 @@ export BASE="forum"
 =end
 
 class ImportScripts::MylittleforumSQL < ImportScripts::Base
-  DB_HOST ||= ENV["DB_HOST"] || "localhost"
-  DB_NAME ||= ENV["DB_NAME"] || "mylittleforum"
-  DB_PW ||= ENV["DB_PW"] || ""
-  DB_USER ||= ENV["DB_USER"] || "root"
-  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "forum_"
-  IMPORT_AFTER ||= ENV["IMPORT_AFTER"] || "1970-01-01"
-  IMAGE_BASE ||= ENV["IMAGE_BASE"] || ""
-  BASE ||= ENV["BASE"] || "forum/"
+  DB_HOST = ENV["DB_HOST"] || "localhost"
+  DB_NAME = ENV["DB_NAME"] || "mylittleforum"
+  DB_PW = ENV["DB_PW"] || ""
+  DB_USER = ENV["DB_USER"] || "root"
+  TABLE_PREFIX = ENV["TABLE_PREFIX"] || "forum_"
+  IMPORT_AFTER = ENV["IMPORT_AFTER"] || "1970-01-01"
+  IMAGE_BASE = ENV["IMAGE_BASE"] || ""
+  BASE = ENV["BASE"] || "forum/"
   BATCH_SIZE = 1000
   CONVERT_HTML = true
   QUIET = nil || ENV["VERBOSE"] == "TRUE"

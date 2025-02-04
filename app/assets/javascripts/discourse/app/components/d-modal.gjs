@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -10,16 +9,18 @@ import { modifier as modifierFn } from "ember-modifier";
 import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
+import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
+import htmlClass from "discourse/helpers/html-class";
 import {
   disableBodyScroll,
   enableBodyScroll,
 } from "discourse/lib/body-scroll-lock";
+import { bind } from "discourse/lib/decorators";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
-import { bind } from "discourse-common/utils/decorators";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
@@ -27,14 +28,13 @@ export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
 export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 
-const FLASH_TYPES = ["success", "error", "warning", "info"];
-
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
 export default class DModal extends Component {
   @service modal;
   @service site;
   @service appEvents;
+  @service capabilities;
 
   @tracked wrapperElement;
   @tracked animating = false;
@@ -108,6 +108,10 @@ export default class DModal extends Component {
     }
   }
 
+  get autofocus() {
+    return this.args.autofocus ?? true;
+  }
+
   shouldTriggerClickOnEnter(event) {
     if (this.args.submitOnEnter === false) {
       return false;
@@ -152,6 +156,12 @@ export default class DModal extends Component {
 
     this.modalContainer.style.transform = `translateY(${swipeEvent.deltaY}px)`;
     this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN);
+  }
+
+  @action
+  handleWrapperPointerDown(e) {
+    // prevents hamburger menu to close on modal backdrop click
+    e.stopPropagation();
   }
 
   @action
@@ -210,13 +220,6 @@ export default class DModal extends Component {
     this.closeModal(CLOSE_INITIATED_BY_BUTTON);
   }
 
-  @action
-  validateFlashType(type) {
-    if (type && !FLASH_TYPES.includes(type)) {
-      throw `@flashType must be one of ${FLASH_TYPES.join(", ")}`;
-    }
-  }
-
   // Could be optimised to remove classic component once RFC389 is implemented
   // https://rfcs.emberjs.com/id/0389-dynamic-tag-names
   @cached
@@ -231,7 +234,7 @@ export default class DModal extends Component {
 
   @bind
   handleKeyboardVisibilityChange(visible) {
-    if (visible) {
+    if (visible && this.capabilities.isIOS && !this.capabilities.isIpadOS) {
       window.scrollTo(0, 0);
     }
   }
@@ -269,6 +272,7 @@ export default class DModal extends Component {
       @inline={{@inline}}
       @append={{true}}
     >
+      {{htmlClass "modal-open"}}
       <this.dynamicElement
         class={{concatClass
           "modal"
@@ -283,7 +287,7 @@ export default class DModal extends Component {
         ...attributes
         {{didInsert this.setupModal}}
         {{willDestroy this.cleanupModal}}
-        {{trapTab preventScroll=false}}
+        {{trapTab preventScroll=false autofocus=this.autofocus}}
       >
         <div class="d-modal__container" {{this.registerModalContainer}}>
           {{yield to="aboveHeader"}}
@@ -350,7 +354,7 @@ export default class DModal extends Component {
                 </div>
               {{else if this.dismissable}}
                 <DButton
-                  @icon="times"
+                  @icon="xmark"
                   @action={{this.handleCloseButton}}
                   @title="modal.close"
                   class="btn-transparent modal-close"
@@ -361,19 +365,12 @@ export default class DModal extends Component {
 
           {{yield to="belowHeader"}}
 
-          {{this.validateFlashType @flashType}}
-          {{#if @flash}}
-            <div
-              id="modal-alert"
-              role="alert"
-              class={{concatClass
-                "alert"
-                (if @flashType (concat "alert-" @flashType))
-              }}
-            >
-              {{~@flash~}}
-            </div>
-          {{/if}}
+          <FlashMessage
+            id="modal-alert"
+            role="alert"
+            @flash={{@flash}}
+            @type={{@flashType}}
+          />
 
           <div
             class={{concatClass "d-modal__body" @bodyClass}}
@@ -387,7 +384,7 @@ export default class DModal extends Component {
             {{/if}}
           </div>
 
-          {{#if (has-block "footer")}}
+          {{#if (and (has-block "footer") (not @hideFooter))}}
             <div class="d-modal__footer">
               {{yield to="footer"}}
             </div>
@@ -405,6 +402,8 @@ export default class DModal extends Component {
             enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}
+          {{! template-lint-disable no-pointer-down-event-binding }}
+          {{on "pointerdown" this.handleWrapperPointerDown}}
         ></div>
       {{/unless}}
     </ConditionalInElement>

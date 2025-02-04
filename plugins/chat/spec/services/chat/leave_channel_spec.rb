@@ -2,23 +2,21 @@
 
 RSpec.describe Chat::LeaveChannel do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new }
-
     it { is_expected.to validate_presence_of(:channel_id) }
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:current_user) { Fabricate(:user) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:channel_id) { channel_1.id }
+    let(:params) { { channel_id: } }
+    let(:dependencies) { { guardian: } }
 
     before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
-
-    let(:params) { { guardian: guardian, channel_id: channel_id } }
 
     context "when all steps pass" do
       context "when category channel" do
@@ -27,6 +25,8 @@ RSpec.describe Chat::LeaveChannel do
             channel_1.add(current_user)
             Chat::Channel.ensure_consistency!
           end
+
+          it { is_expected.to run_successfully }
 
           it "unfollows the channel" do
             membership = channel_1.membership_for(current_user)
@@ -40,6 +40,8 @@ RSpec.describe Chat::LeaveChannel do
         end
 
         context "with no existing membership" do
+          it { is_expected.to run_successfully }
+
           it "does nothing" do
             expect { result }.to_not change { Chat::UserChatChannelMembership }
           end
@@ -53,6 +55,8 @@ RSpec.describe Chat::LeaveChannel do
           end
 
           before { Chat::Channel.ensure_consistency! }
+
+          it { is_expected.to run_successfully }
 
           it "leaves the channel" do
             membership = channel_1.membership_for(current_user)
@@ -71,6 +75,8 @@ RSpec.describe Chat::LeaveChannel do
         end
 
         context "with no existing membership" do
+          it { is_expected.to run_successfully }
+
           it "does nothing" do
             expect { result }.to_not change { Chat::UserChatChannelMembership }
           end
@@ -84,6 +90,8 @@ RSpec.describe Chat::LeaveChannel do
           end
 
           before { Chat::Channel.ensure_consistency! }
+
+          it { is_expected.to run_successfully }
 
           it "unfollows the channel" do
             membership = channel_1.membership_for(current_user)
@@ -100,6 +108,8 @@ RSpec.describe Chat::LeaveChannel do
         end
 
         context "with no existing membership" do
+          it { is_expected.to run_successfully }
+
           it "does nothing" do
             expect { result }.to_not change { Chat::UserChatChannelMembership }
           end

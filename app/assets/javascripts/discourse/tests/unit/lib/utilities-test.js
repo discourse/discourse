@@ -53,11 +53,11 @@ module("Unit | Utilities", function (hooks) {
   });
 
   test("emailValid", function (assert) {
-    assert.ok(
+    assert.true(
       emailValid("Bob@example.com"),
       "allows upper case in the first part of emails"
     );
-    assert.ok(
+    assert.true(
       emailValid("bob@EXAMPLE.com"),
       "allows upper case in the email domain"
     );
@@ -323,10 +323,9 @@ module("Unit | Utilities | clipboard", function (hooks) {
     }
 
     await clipboardCopyAsync(asyncFunction);
-    assert.strictEqual(
+    assert.true(
       this.mockClipboard.writeText.calledWith("some text to copy"),
-      true,
-      "it writes to the clipboard using writeText instead of write"
+      "writes to the clipboard using writeText instead of write"
     );
   });
 

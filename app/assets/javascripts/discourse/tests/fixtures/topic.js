@@ -667,6 +667,7 @@ export default {
           avatar_template: "/images/avatar.png",
           uploaded_avatar_id: 5253,
           created_at: "2013-02-07T14:02:07.869Z",
+          mentioned_users: [{id: 19, username: "eviltrout"}],
           cooked:
             '<p><aside class="quote" data-post="3" data-topic="280"><div class="title">\n<div class="quote-controls"></div>\n<img width="20" height="20" src="/user_avatar/meta.discourse.org/codinghorror/40/5297.png" class="avatar">codinghorror said:</div>\n<blockquote><p>So you could replace that lookup table with the "de" one to get German.</p></blockquote></aside></p>\n\n<p>The problem I see here is that  this file is likely two grow and change massively over the next couple months, and tracking these changes in order to keep a localized file up to date is going to be a <em>bitch</em>. </p>\n\n<p>I wonder where there is a tool that can compare two yml structures and point out which nodes are missing? That would help keep track of new strings.</p>\n\n<p>Re keeping track of <em>changed</em> strings, <a class="mention" href="/u/eviltrout">@eviltrout</a> I found this very interesting: <a href="http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders" rel="nofollow">http://stackoverflow.com/questions/4232922/why-do-people-use-plain-english-as-translation-placeholders</a> if plain English placeholders were used, any change in strings would lead to a <em>new</em> node in the yml file, making keeping the translation up to date easier. Maybe worth thinking about in the future.</p>',
           post_number: 5,
@@ -4004,7 +4005,7 @@ export default {
     chunk_size: 20,
     bookmarked: null,
     bookmarks: [],
-    tags: null,
+    tags: ["foo"],
   },
   "/t/9/1.json": {
     post_stream: {
@@ -6554,7 +6555,6 @@ export default {
           avatar_template: "/letter_avatar_proxy/v4/letter/t/3be4f8/{size}.png",
           uploaded_avatar_id: 40181,
           created_at: "2013-02-05T21:32:47.649Z",
-          cooked: "<p>Yeah it is a short one</p>",
           cooked:
             '<aside class="quote no-group" data-username="james_john" data-post="2" data-topic="54079"><div class="title" style="cursor: pointer;"><div class="quote-controls"><span class="svg-icon-title" title="expand/collapse"><svg class="fa d-icon d-icon-chevron-down svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#chevron-down"></use></svg></span><a href="/t/hello-world-i-am-posting-an-image/158/1" title="go to the quoted post" class="back"><svg class="fa d-icon d-icon-arrow-up svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#arrow-up"></use></svg></a></div> <img alt="" width="20" height="20" src="/letter_avatar_proxy/v4/letter/j/3be4f8/90.png" class="avatar"> james_john:</div><blockquote><p>This is a short topic.</p></blockquote></aside><p>there is a quote above</p>',
           post_number: 4,

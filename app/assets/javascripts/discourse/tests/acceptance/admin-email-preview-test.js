@@ -1,6 +1,6 @@
 import { click, visit, waitUntil } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - email-preview", function (needs) {
   needs.user();
@@ -15,18 +15,18 @@ acceptance("Admin - email-preview", function (needs) {
 
   test("preview rendering", async function (assert) {
     await visit("/admin/email/preview-digest");
-    const iframe = query(".preview-output iframe");
+    const iframe = document.querySelector(".preview-output iframe");
 
     // Rendered as a separate document, so Ember's built-in waiters don't work properly
-    await waitUntil(() => iframe.contentWindow.document.body);
+    await waitUntil(() =>
+      iframe.contentWindow.document.body?.querySelector("span")
+    );
 
     const iframeBody = iframe.contentWindow.document.body;
 
-    assert.strictEqual(
-      iframeBody.querySelector("span").innerText,
-      "Hello world",
-      "html content is rendered inside iframe"
-    );
+    assert
+      .dom("span", iframeBody)
+      .hasText("Hello world", "html content is rendered inside iframe");
 
     await click("a.show-text-link");
     assert

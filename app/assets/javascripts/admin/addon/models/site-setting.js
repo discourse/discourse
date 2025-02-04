@@ -1,10 +1,11 @@
 import EmberObject from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
-import Setting from "admin/mixins/setting-object";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
+import SettingObjectHelper from "admin/lib/setting-object-helper";
 
-export default class SiteSetting extends EmberObject.extend(Setting) {
+export default class SiteSetting extends EmberObject {
   static findAll(params = {}) {
     return ajax("/admin/site_settings", { data: params }).then(function (
       settings
@@ -21,7 +22,7 @@ export default class SiteSetting extends EmberObject.extend(Setting) {
       return Object.keys(categories).map(function (n) {
         return {
           nameKey: n,
-          name: I18n.t("admin.site_settings.categories." + n),
+          name: i18n("admin.site_settings.categories." + n),
           siteSettings: categories[n],
         };
       });
@@ -38,6 +39,15 @@ export default class SiteSetting extends EmberObject.extend(Setting) {
 
     return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });
   }
+
+  settingObjectHelper = new SettingObjectHelper(this);
+
+  @alias("settingObjectHelper.overridden") overridden;
+  @alias("settingObjectHelper.computedValueProperty") computedValueProperty;
+  @alias("settingObjectHelper.computedNameProperty") computedNameProperty;
+  @alias("settingObjectHelper.validValues") validValues;
+  @alias("settingObjectHelper.allowsNone") allowsNone;
+  @alias("settingObjectHelper.anyValue") anyValue;
 
   @discourseComputed("setting")
   staffLogFilter(setting) {

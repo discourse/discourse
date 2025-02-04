@@ -1,13 +1,13 @@
 import { cancel } from "@ember/runloop";
 import { createPopper } from "@popperjs/core";
 import $ from "jquery";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import { caretPosition, setCaretPosition } from "discourse/lib/utilities";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import Site from "discourse/models/site";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
 
 /**
   This is a jQuery plugin to support autocompleting values in our text fields.
@@ -114,6 +114,8 @@ export default function (options) {
   const isInput = me[0].tagName === "INPUT" && !options.treatAsTextarea;
   let inputSelectedItems = [];
 
+  options.textHandler ??= new TextareaAutocompleteHandler(me[0]);
+
   function handlePaste() {
     discourseLater(() => me.trigger("keydown"), 50);
   }
@@ -176,7 +178,7 @@ export default function (options) {
     const divs = transformed.map((itm) => {
       let d = $(
         `<div class='item'><span>${itm}<a class='remove' href>${iconHTML(
-          "times"
+          "xmark"
         )}</a></span></div>`
       );
       const $parent = me.parent();
@@ -216,8 +218,6 @@ export default function (options) {
   }
 
   let completeTerm = async function (term, event) {
-    let completeEnd = null;
-
     if (term) {
       if (isInput) {
         me.val("");
@@ -231,15 +231,13 @@ export default function (options) {
         }
 
         if (term) {
-          let text = me.val();
-
           // After completion is done our position for completeStart may have
           // drifted. This can happen if the TEXTAREA changed out-of-band between
           // the time autocomplete was first displayed and the time of completion
           // Specifically this may happen due to uploads which inject a placeholder
           // which is later replaced with a different length string.
           let pos = await guessCompletePosition({ completeTerm: true });
-
+          let completeEnd = null;
           if (
             pos.completeStart !== undefined &&
             pos.completeEnd !== undefined
@@ -247,31 +245,18 @@ export default function (options) {
             completeStart = pos.completeStart;
             completeEnd = pos.completeEnd;
           } else {
-            completeStart = completeEnd = caretPosition(me[0]);
+            completeStart = completeEnd =
+              options.textHandler.getCaretPosition();
           }
 
-          let space =
-            text.substring(completeEnd + 1, completeEnd + 2) === " " ? "" : " ";
-
-          text =
-            text.substring(0, completeStart) +
-            (options.preserveKey ? options.key || "" : "") +
-            term +
-            space +
-            text.substring(completeEnd + 1, text.length);
-
-          me.val(text);
-
-          let newCaretPos = completeStart + 1 + term.length;
-
-          if (options.key) {
-            newCaretPos++;
-          }
-
-          setCaretPosition(me[0], newCaretPos);
+          options.textHandler.replaceTerm({
+            start: completeStart,
+            end: completeEnd,
+            term: (options.preserveKey ? options.key || "" : "") + term,
+          });
 
           if (options && options.afterComplete) {
-            options.afterComplete(text, event);
+            options.afterComplete(options.textHandler.value, event);
           }
         }
       }
@@ -429,9 +414,7 @@ export default function (options) {
     }
 
     let vOffset = 0;
-    let pos = me.caretPosition({
-      pos: completeStart + 1,
-    });
+    let pos = options.textHandler.getCaretCoords(completeStart);
 
     if (options.treatAsTextarea) {
       vOffset = -32;
@@ -495,7 +478,11 @@ export default function (options) {
     }
 
     prevTerm = term;
-    if (term.length !== 0 && term.trim().length === 0) {
+    if (
+      (term.length !== 0 && term.trim().length === 0) ||
+      // close unless the caret is at the end of a word, like #line|<-
+      options.textHandler.value[options.textHandler.getCaretPosition()]?.trim()
+    ) {
       closeAutocomplete();
       return null;
     } else {
@@ -539,7 +526,11 @@ export default function (options) {
     closeAutocomplete();
   });
 
-  async function checkTriggerRule(opts) {
+  async function checkTriggerRule(_opts) {
+    const opts = {
+      ..._opts,
+      inCodeBlock: () => options.textHandler.inCodeBlock(),
+    };
     const shouldTrigger = await options.triggerRule?.(me[0], opts);
     return shouldTrigger ?? true;
   }
@@ -557,14 +548,14 @@ export default function (options) {
       return true;
     }
 
-    let cp = caretPosition(me[0]);
-    const key = me[0].value[cp - 1];
+    let cp = options.textHandler.getCaretPosition();
+    const key = options.textHandler.value[cp - 1];
 
     if (options.key) {
       if (options.onKeyUp && key !== options.key) {
-        let match = options.onKeyUp(me.val(), cp);
+        let match = options.onKeyUp(options.textHandler.value, cp);
 
-        if (match) {
+        if (match && (await checkTriggerRule())) {
           completeStart = cp - match[0].length;
           let term = match[0].substring(1, match[0].length);
           updateAutoComplete(dataSource(term, options));
@@ -574,18 +565,20 @@ export default function (options) {
 
     if (completeStart === null && cp > 0) {
       if (key === options.key) {
-        let prevChar = me.val().charAt(cp - 2);
-        const shouldTrigger = await checkTriggerRule();
+        let prevChar = options.textHandler.value.charAt(cp - 2);
         if (
-          shouldTrigger &&
-          (!prevChar || ALLOWED_LETTERS_REGEXP.test(prevChar))
+          (!prevChar || ALLOWED_LETTERS_REGEXP.test(prevChar)) &&
+          (await checkTriggerRule())
         ) {
           completeStart = cp - 1;
           updateAutoComplete(dataSource("", options));
         }
       }
     } else if (completeStart !== null) {
-      let term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
+      let term = options.textHandler.value.substring(
+        completeStart + (options.key ? 1 : 0),
+        cp
+      );
       updateAutoComplete(dataSource(term, options));
     }
   }
@@ -593,10 +586,9 @@ export default function (options) {
   async function guessCompletePosition(opts) {
     let prev, stopFound, term;
     let prevIsGood = true;
-    let element = me[0];
     let backSpace = opts?.backSpace;
     let completeTermOption = opts?.completeTerm;
-    let caretPos = caretPosition(element);
+    let caretPos = options.textHandler.getCaretPosition();
 
     if (backSpace) {
       caretPos -= 1;
@@ -609,12 +601,12 @@ export default function (options) {
 
     while (prevIsGood && caretPos >= 0) {
       caretPos -= 1;
-      prev = element.value[caretPos];
+      prev = options.textHandler.value[caretPos];
 
       stopFound = prev === options.key;
 
       if (stopFound) {
-        prev = element.value[caretPos - 1];
+        prev = options.textHandler.value[caretPos - 1];
         const shouldTrigger = await checkTriggerRule({ backSpace });
 
         if (
@@ -622,7 +614,10 @@ export default function (options) {
           (prev === undefined || ALLOWED_LETTERS_REGEXP.test(prev))
         ) {
           start = caretPos;
-          term = element.value.substring(caretPos + 1, initialCaretPos);
+          term = options.textHandler.value.substring(
+            caretPos + 1,
+            initialCaretPos
+          );
           end = caretPos + term.length;
           break;
         }
@@ -653,9 +648,10 @@ export default function (options) {
           inputSelectedItems.push("");
         }
 
-        if (typeof inputSelectedItems[0] === "string" && me.val().length > 0) {
+        const value = options.textHandler.value;
+        if (typeof inputSelectedItems[0] === "string" && value.length > 0) {
           inputSelectedItems.pop();
-          inputSelectedItems.push(me.val());
+          inputSelectedItems.push(value);
           if (options.onChangeItems) {
             options.onChangeItems(inputSelectedItems);
           }
@@ -693,10 +689,13 @@ export default function (options) {
     }
 
     if (completeStart !== null) {
-      cp = caretPosition(me[0]);
+      cp = options.textHandler.getCaretPosition();
 
       // allow people to right arrow out of completion
-      if (e.which === keys.rightArrow && me[0].value[cp] === " ") {
+      if (
+        e.which === keys.rightArrow &&
+        options.textHandler.value[cp] === " "
+      ) {
         closeAutocomplete();
         return true;
       }
@@ -771,7 +770,10 @@ export default function (options) {
             return true;
           }
 
-          term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
+          term = options.textHandler.value.substring(
+            completeStart + (options.key ? 1 : 0),
+            cp
+          );
 
           if (completeStart === cp && term === options.key) {
             closeAutocomplete();

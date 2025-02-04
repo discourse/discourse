@@ -6,42 +6,44 @@ module Chat
   # updated.
   #
   # @example
-  #  Chat::RestoreMessage.call(message_id: 2, channel_id: 1, guardian: guardian)
+  #  Chat::RestoreMessage.call(params: { message_id: 2, channel_id: 1 }, guardian: guardian)
   #
   class RestoreMessage
     include Service::Base
 
-    # @!method call(message_id:, channel_id:, guardian:)
-    #   @param [Integer] message_id
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :message_id
+    #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract
+    params do
+      attribute :message_id, :integer
+      attribute :channel_id, :integer
+
+      validates :message_id, presence: true
+      validates :channel_id, presence: true
+    end
+
     model :message
     policy :invalid_access
+
     transaction do
       step :restore_message
       step :update_last_message_ids
       step :update_thread_reply_cache
     end
-    step :publish_events
 
-    # @!visibility private
-    class Contract
-      attribute :message_id, :integer
-      attribute :channel_id, :integer
-      validates :message_id, presence: true
-      validates :channel_id, presence: true
-    end
+    step :publish_events
 
     private
 
-    def fetch_message(contract:)
+    def fetch_message(params:)
       Chat::Message
         .with_deleted
         .includes(chat_channel: :chatable)
-        .find_by(id: contract.message_id, chat_channel_id: contract.channel_id)
+        .find_by(id: params.message_id, chat_channel_id: params.channel_id)
     end
 
     def invalid_access(guardian:, message:)

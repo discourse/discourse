@@ -19,7 +19,10 @@ RSpec.describe UserActionsController do
       let(:actions) { response.parsed_body["user_actions"] }
       let(:post) { create_post }
 
-      before { UserActionManager.enable }
+      before do
+        UserActionManager.enable
+        post.user.user_stat.update!(post_count: 1)
+      end
 
       it "renders list correctly" do
         user_actions
@@ -55,7 +58,7 @@ RSpec.describe UserActionsController do
       context "when user's profile is hidden" do
         fab!(:post)
 
-        before { post.user.user_option.update_column(:hide_profile_and_presence, true) }
+        before { post.user.user_option.update_column(:hide_profile, true) }
 
         context "when `allow_users_to_hide_profile` is disabled" do
           before { SiteSetting.allow_users_to_hide_profile = false }

@@ -69,7 +69,7 @@ describe "Admin Customize Form Templates", type: :system do
     it "should prefill form data" do
       visit("/admin/customize/form-templates/#{form_template.id}")
       expect(form_template_page).to have_name_value(form_template.name)
-      # TODO(@keegan) difficult to test the ace editor content, todo later
+      expect(ace_editor).to have_content(form_template.template)
     end
   end
 

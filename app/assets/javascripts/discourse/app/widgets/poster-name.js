@@ -1,10 +1,12 @@
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
+import getURL from "discourse/lib/get-url";
+import { iconNode } from "discourse/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import getURL from "discourse-common/lib/get-url";
-import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let sanitizeName = function (name) {
   return name.toLowerCase().replace(/[\s\._-]/g, "");
@@ -76,8 +78,8 @@ export default createWidget("poster-name", {
   // TODO: Allow extensibility
   posterGlyph(attrs) {
     if (attrs.moderator || attrs.groupModerator) {
-      return iconNode("shield-alt", {
-        title: I18n.t("user.moderator_tooltip"),
+      return iconNode("shield-halved", {
+        title: i18n("user.moderator_tooltip"),
       });
     }
   },
@@ -148,29 +150,52 @@ export default createWidget("poster-name", {
       h("span", { className: classNames.join(" ") }, nameContents),
     ];
 
-    if (!this.settings.showNameAndGroup) {
-      return contents;
-    }
-
-    if (
-      name &&
-      this.siteSettings.display_name_on_posts &&
-      sanitizeName(name) !== sanitizeName(username)
-    ) {
-      contents.push(
-        h(
-          "span.second." + (nameFirst ? "username" : "full-name"),
-          [this.userLink(attrs, nameFirst ? username : name)].concat(
-            afterNameContents
+    if (this.settings.showNameAndGroup) {
+      if (
+        name &&
+        this.siteSettings.display_name_on_posts &&
+        sanitizeName(name) !== sanitizeName(username)
+      ) {
+        contents.push(
+          h(
+            "span.second." + (nameFirst ? "username" : "full-name"),
+            [this.userLink(attrs, nameFirst ? username : name)].concat(
+              afterNameContents
+            )
           )
-        )
-      );
+        );
+      }
+
+      this.buildTitleObject(attrs, contents);
+
+      if (this.siteSettings.enable_user_status) {
+        this.addUserStatus(contents, attrs);
+      }
     }
 
-    this.buildTitleObject(attrs, contents);
+    if (attrs.badgesGranted?.length) {
+      const badges = [];
 
-    if (this.siteSettings.enable_user_status) {
-      this.addUserStatus(contents, attrs);
+      attrs.badgesGranted.forEach((badge) => {
+        // Alter the badge description to show that the badge was granted for this post.
+        badge.description = i18n("post.badge_granted_tooltip", {
+          username: attrs.username,
+          badge_name: badge.name,
+        });
+
+        const badgeIcon = new RenderGlimmer(
+          this,
+          `span.user-badge-button-${badge.slug}`,
+          hbs`<UserBadge @badge={{@data.badge}} @user={{@data.user}} @showName={{false}} />`,
+          {
+            badge,
+            user: attrs.user,
+          }
+        );
+        badges.push(badgeIcon);
+      });
+
+      contents.push(h("span.user-badge-buttons", badges));
     }
 
     return contents;

@@ -133,6 +133,8 @@ bs_BA:
             title: "Normalno"
           tracking:
             title: "Praćenje"
+          watching:
+            title: "Motrenje"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"

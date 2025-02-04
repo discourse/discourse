@@ -1,13 +1,13 @@
 import { guidFor } from "@ember/object/internals";
 import { cancel } from "@ember/runloop";
 import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
+import { bind } from "discourse/lib/decorators";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import { iconHTML } from "discourse/lib/icon-library";
+import discourseLater from "discourse/lib/later";
 import Mobile from "discourse/lib/mobile";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Use to attach copy/fullscreen buttons to a block of code, either
 // within the post stream or for a regular element that contains
@@ -110,8 +110,8 @@ export default class CodeblockButtons {
 
       if (this.showCopy) {
         const copyButton = document.createElement("button");
-        copyButton.classList.add("btn", "nohighlight", "copy-cmd");
-        copyButton.ariaLabel = I18n.t("copy_codeblock.copy");
+        copyButton.classList.add("btn", "nohighlight", "copy-cmd", "btn-flat");
+        copyButton.ariaLabel = i18n("copy_codeblock.copy");
         copyButton.innerHTML = iconHTML("copy");
         wrapperEl.appendChild(copyButton);
         wrapperEl.style.right = `${
@@ -121,8 +121,13 @@ export default class CodeblockButtons {
 
       if (this.showFullscreen && !Mobile.isMobileDevice) {
         const fullscreenButton = document.createElement("button");
-        fullscreenButton.classList.add("btn", "nohighlight", "fullscreen-cmd");
-        fullscreenButton.ariaLabel = I18n.t("copy_codeblock.fullscreen");
+        fullscreenButton.classList.add(
+          "btn",
+          "nohighlight",
+          "fullscreen-cmd",
+          "btn-flat"
+        );
+        fullscreenButton.ariaLabel = i18n("copy_codeblock.fullscreen");
         fullscreenButton.innerHTML = iconHTML("discourse-expand");
         wrapperEl.appendChild(fullscreenButton);
       }
@@ -183,7 +188,7 @@ export default class CodeblockButtons {
   _copyComplete(button) {
     button.classList.add("action-complete");
     const state = button.innerHTML;
-    button.innerHTML = I18n.t("copy_codeblock.copied");
+    button.innerHTML = i18n("copy_codeblock.copied");
 
     const commandId = guidFor(button);
 

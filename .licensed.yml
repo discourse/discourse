@@ -19,6 +19,7 @@ ignored:
     - cgi # Ruby (default gem)
     - date # Ruby (default gem)
     - digest # Ruby (default gem)
+    - io-console # Ruby (default gem)
     - io-wait # Ruby (default gem)
     - irb # Ruby (default gem)
     - json # Ruby (default gem)
@@ -27,6 +28,9 @@ ignored:
     - net-http # Ruby (default gem)
     - net-protocol # Ruby (default gem)
     - openssl # Ruby (default gem)
+    - ostruct # Ruby (default gem)
+    - pp # Ruby (default gem)
+    - prettyprint # Ruby (default gem)
     - racc # Ruby (default gem)
     - rchardet # LGPL
     - rdoc # Ruby (default gem)
@@ -40,6 +44,7 @@ ignored:
 reviewed:
   bundler:
     - activerecord # MIT
+    - benchmark # Ruby
     - coderay # MIT
     - concurrent-ruby # MIT
     - css_parser # MIT
@@ -68,6 +73,7 @@ reviewed:
     - r2 # Apache-2.0 (Twitter)
     - raindrops # LGPL-2.1+
     - rubyzip # Ruby
+    - securerandom # Ruby
     - sidekiq # LGPL (Sidekiq)
     - tilt # MIT
     - unf # BSD-2-Clause

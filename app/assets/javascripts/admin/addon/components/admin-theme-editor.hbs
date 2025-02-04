@@ -10,7 +10,7 @@
             title={{this.field.title}}
             class={{if target.edited "edited" "blank"}}
           >
-            {{#if target.error}}{{d-icon "exclamation-triangle"}}{{/if}}
+            {{#if target.error}}{{d-icon "triangle-exclamation"}}{{/if}}
             {{#if target.icon}}{{d-icon target.icon}}{{/if}}
             {{i18n (concat "admin.customize.theme." target.name)}}
           </LinkTo>
@@ -30,9 +30,7 @@
             }}
             class="no-text"
           >
-            {{d-icon
-              (if this.showAdvanced "angle-double-left" "angle-double-right")
-            }}
+            {{d-icon (if this.showAdvanced "angles-left" "angles-right")}}
           </a>
         </li>
       {{/if}}
@@ -66,7 +64,7 @@
             title={{field.title}}
             class={{if field.edited "edited" "blank"}}
           >
-            {{#if field.error}}{{d-icon "exclamation-triangle"}}{{/if}}
+            {{#if field.error}}{{d-icon "triangle-exclamation"}}{{/if}}
             {{#if field.icon}}{{d-icon field.icon}}{{/if}}
             {{field.translatedName}}
           </LinkTo>
@@ -89,7 +87,7 @@
             />
             <DButton
               @action={{this.cancelAddField}}
-              @icon="times"
+              @icon="xmark"
               class="cancel"
             />
           {{else}}
@@ -120,6 +118,7 @@
 
 <AceEditor
   @content={{this.activeSection}}
+  @onChange={{fn (mut this.activeSection)}}
   @editorId={{this.editorId}}
   @mode={{this.activeSectionMode}}
   @autofocus="true"

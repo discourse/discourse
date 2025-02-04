@@ -1,7 +1,12 @@
 import Component from "@glimmer/component";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default class SecondFactorInput extends Component {
+  _focusInput(input) {
+    input.focus();
+  }
+
   get isTotp() {
     return this.args.secondFactorMethod === SECOND_FACTOR_METHODS.TOTP;
   }
@@ -45,6 +50,7 @@ export default class SecondFactorInput extends Component {
       autofocus="autofocus"
       class="second-factor-token-input"
       ...attributes
+      {{didInsert this._focusInput}}
     />
   </template>
 }

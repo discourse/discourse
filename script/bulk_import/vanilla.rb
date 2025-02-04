@@ -14,7 +14,7 @@ class BulkImport::Vanilla < BulkImport::Base
   BATCH_SIZE = 1000
   CONVERT_HTML = true
 
-  SUSPENDED_TILL ||= Date.new(3000, 1, 1)
+  SUSPENDED_TILL = Date.new(3000, 1, 1)
 
   def initialize
     super

@@ -22,6 +22,7 @@ plugins:
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
+    area: "group_permissions"
   poll_groupable_user_fields:
     default: ""
     type: list

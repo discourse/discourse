@@ -9,5 +9,7 @@
 
 <div class="texts">
   <span class="name">{{html-safe this.label}}</span>
-  <span class="desc">{{html-safe this.description}}</span>
+  {{#if this.description}}
+    <span class="desc">{{html-safe this.description}}</span>
+  {{/if}}
 </div>

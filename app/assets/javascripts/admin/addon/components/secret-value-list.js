@@ -2,14 +2,13 @@ import Component from "@ember/component";
 import { action, set } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNameBindings(":value-list", ":secret-value-list")
 export default class SecretValueList extends Component {
   inputDelimiter = null;
   collection = null;
   values = null;
-  validationMessage = null;
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
@@ -57,16 +56,15 @@ export default class SecretValueList extends Component {
   }
 
   _checkInvalidInput(inputs) {
-    this.set("validationMessage", null);
     for (let input of inputs) {
       if (isEmpty(input) || input.includes("|")) {
-        this.set(
-          "validationMessage",
-          I18n.t("admin.site_settings.secret_list.invalid_input")
+        this.setValidationMessage(
+          i18n("admin.site_settings.secret_list.invalid_input")
         );
         return true;
       }
     }
+    this.setValidationMessage(null);
   }
 
   _addValue(value, secret) {

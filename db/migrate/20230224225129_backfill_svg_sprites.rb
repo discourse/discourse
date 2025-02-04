@@ -6,4 +6,8 @@ class BackfillSvgSprites < ActiveRecord::Migration[7.0]
   def up
     ThemeSvgSprite.refetch!
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

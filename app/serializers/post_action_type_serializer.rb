@@ -16,12 +16,16 @@ class PostActionTypeSerializer < ApplicationSerializer
 
   include ConfigurableUrls
 
+  def post_action_type_view
+    @post_action_type_view ||= PostActionTypeView.new
+  end
+
   def require_message
-    !!PostActionType.additional_message_types[object.id]
+    !!post_action_type_view.additional_message_types[object.id]
   end
 
   def is_flag
-    !!PostActionType.flag_types[object.id]
+    !!post_action_type_view.flag_types[object.id]
   end
 
   def name
@@ -31,28 +35,27 @@ class PostActionTypeSerializer < ApplicationSerializer
   def description
     i18n(
       "description",
-      vars: {
-        tos_url:,
-        base_path: Discourse.base_path,
-      },
+      tos_url:,
+      base_path: Discourse.base_path,
       default: object.class.descriptions[object.id],
     )
   end
 
   def short_description
-    i18n("short_description", vars: { tos_url: tos_url, base_path: Discourse.base_path })
+    i18n("short_description", tos_url:, base_path: Discourse.base_path, default: "")
   end
 
   def name_key
-    PostActionType.types[object.id].to_s
+    post_action_type_view.types[object.id].to_s
   end
 
   def enabled
-    !!PostActionType.enabled_flag_types[object.id]
+    # flags added by API are always enabled
+    true
   end
 
   def applies_to
-    Array.wrap(PostActionType.applies_to[object.id])
+    Flag.valid_applies_to_types
   end
 
   def is_used
@@ -60,10 +63,14 @@ class PostActionTypeSerializer < ApplicationSerializer
       ReviewableScore.exists?(reviewable_score_type: object.id)
   end
 
-  protected
+  private
 
-  def i18n(field, default: nil, vars: nil)
-    key = "post_action_types.#{name_key}.#{field}"
-    vars ? I18n.t(key, vars, default: default) : I18n.t(key, default: default)
+  def i18n(field, **args)
+    key = "#{i18n_prefix}.#{name_key}.#{field}"
+    I18n.t(key, **args)
+  end
+
+  def i18n_prefix
+    "post_action_types"
   end
 end

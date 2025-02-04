@@ -15,6 +15,10 @@ module PageObjects
         form.field("extendedDescription")
       end
 
+      def community_title_input
+        form.field("communityTitle")
+      end
+
       def banner_image_uploader
         PageObjects::Components::UppyImageUploader.new(card.find(".image-uploader"))
       end

@@ -2,7 +2,7 @@ import { fn } from "@ember/helper";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 const Member = <template>
@@ -24,14 +24,14 @@ const Member = <template>
       </span>
     {{else if (eq @member.type "group")}}
       <div class="chat-message-creator__group-icon">
-        {{icon "user-friends"}}
+        {{icon "user-group"}}
       </div>
       <span class="chat-message-creator__member-group">
         {{@member.model.name}}
       </span>
     {{/if}}
 
-    {{icon "times"}}
+    {{icon "xmark"}}
   </DButton>
 </template>;
 

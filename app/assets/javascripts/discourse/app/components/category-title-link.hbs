@@ -4,7 +4,7 @@
     {{#if this.category.read_restricted}}
       {{d-icon this.lockIcon}}
     {{/if}}
-    <span class="category-name">{{dir-span this.category.name}}</span>
+    <span class="category-name">{{dir-span this.category.displayName}}</span>
   </div>
   {{#if this.category.uploaded_logo.url}}
     <CategoryLogo @category={{this.category}} />

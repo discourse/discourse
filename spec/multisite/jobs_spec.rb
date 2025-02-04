@@ -9,7 +9,7 @@ RSpec.describe "Running Sidekiq Jobs in Multisite", type: :multisite do
 
   it "CheckNewFeatures should only hit the payload once" do
     # otherwise it will get rate-limited by meta
-    DiscourseUpdates.expects(:new_features_payload).returns("{}").once
+    DiscourseUpdates.expects(:new_features_payload).returns([]).once
     Jobs::CheckNewFeatures.new.perform({})
   end
 end

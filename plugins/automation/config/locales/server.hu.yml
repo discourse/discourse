@@ -56,6 +56,9 @@ hu:
       pm_created:
         title: Személyes üzenet létrehozva
         description: Amikor egy érvényes PÜ jön létre, az automatizálás aktiválódik
+      topic_tags_changed:
+        title: A téma címkéi megváltoztak
+        description: Amikor egy téma címkéit megváltoztatják, az automatizálás aktiválódik
       topic:
         title: Téma
         description: A társított szkript csak a megadott témában lesz használva, ez például az érvényesítést végző szkripteknél hasznos
@@ -102,6 +105,7 @@ hu:
         doc: Lehetővé teszi több pü küldését egy felhasználónak. Minden PÜ elfogad egy késleltetést.
       suspend_user_by_email:
         title: Felhasználó felfüggesztése e-mailben
+        description: Fiók automatikus felfüggesztése e-mail cím alapján
       user_global_notice:
         title: Felhasználói globális értesítés
         description: Lehetővé teszi globális értesítés megjelenítését a felhasználó számára
@@ -138,6 +142,13 @@ hu:
         button_text: Kész
       add_user_to_group_through_custom_field:
         title: "Felhasználó hozzáadása csoporthoz a Felhasználó egyéni mezőn keresztül"
+        description: "Felhasználók automatikus hozzáadása a csoportokhoz bejelentkezéskor vagy ismétlődő ellenőrzéssel"
       group_category_notification_default:
         title: "Alapértelmezett csoportkategória értesítés"
         description: "Állítsa be egy kategória alapértelmezett értesítési szintjét egy csoport tagjai számára"
+      send_chat_message:
+        title: "Chat üzenet küldése"
+        description: "Egyéni chat üzenet küldése egy csatornának"
+      random_assign:
+        title: "Véletlenszerű hozzárendelés"
+        description: "Véletlenszerűen rendeljen témákat egy csoporthoz"

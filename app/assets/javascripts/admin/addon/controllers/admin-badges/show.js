@@ -2,10 +2,11 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { service } from "@ember/service";
+import { isNone } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import getURL from "discourse/lib/get-url";
+import { i18n } from "discourse-i18n";
 import BadgePreviewModal from "../../components/modal/badge-preview";
 
 const FORM_FIELDS = [
@@ -26,6 +27,7 @@ const FORM_FIELDS = [
   "badge_grouping_id",
   "trigger",
   "badge_type_id",
+  "show_in_post_header",
 ];
 
 export default class AdminBadgesShowController extends Controller {
@@ -39,8 +41,6 @@ export default class AdminBadgesShowController extends Controller {
   @tracked model;
   @tracked previewLoading = false;
   @tracked selectedGraphicType = null;
-  @tracked userBadges;
-  @tracked userBadgesAll;
 
   @cached
   get formData() {
@@ -79,19 +79,30 @@ export default class AdminBadgesShowController extends Controller {
     return this.model.system;
   }
 
+  @action
+  postHeaderDescription(data) {
+    return this.disableBadgeOnPosts(data) && !data.system;
+  }
+
+  @action
+  disableBadgeOnPosts(data) {
+    const { listable, show_posts } = data;
+    return !listable || !show_posts;
+  }
+
   setup() {
     // this is needed because the model doesnt have default values
     // Using `set` here isn't ideal, but we don't know that tracking is set up on the model yet.
     if (this.model) {
-      if (!this.model.badge_type_id) {
+      if (isNone(this.model.badge_type_id)) {
         this.model.set("badge_type_id", this.badgeTypes?.[0]?.id);
       }
 
-      if (!this.model.badge_grouping_id) {
+      if (isNone(this.model.badge_grouping_id)) {
         this.model.set("badge_grouping_id", this.badgeGroupings?.[0]?.id);
       }
 
-      if (!this.model.trigger) {
+      if (isNone(this.model.trigger)) {
         this.model.set("trigger", this.badgeTriggers?.[0]?.id);
       }
     }
@@ -131,16 +142,19 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   @action
-  validateForm(data, { addError }) {
+  validateForm(data, { addError, removeError }) {
     if (!data.icon && !data.image_url) {
       addError("icon", {
         title: "Icon",
-        message: I18n.t("admin.badges.icon_or_image"),
+        message: i18n("admin.badges.icon_or_image"),
       });
       addError("image_url", {
         title: "Image",
-        message: I18n.t("admin.badges.icon_or_image"),
+        message: i18n("admin.badges.icon_or_image"),
       });
+    } else {
+      removeError("image_url");
+      removeError("icon");
     }
   }
 
@@ -187,7 +201,7 @@ export default class AdminBadgesShowController extends Controller {
     try {
       this.model = await this.model.save(data);
 
-      this.toasts.success({ data: { message: I18n.t("saved") } });
+      this.toasts.success({ data: { message: i18n("saved") } });
 
       if (newBadge) {
         const adminBadges = this.get("adminBadges.model");
@@ -202,21 +216,26 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   @action
+  registerApi(api) {
+    this.formApi = api;
+  }
+
+  @action
   async handleDelete() {
     if (!this.model?.id) {
       return this.router.transitionTo("adminBadges.index");
     }
 
-    const adminBadges = this.adminBadges.model;
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.badges.delete_confirm"),
+      message: i18n("admin.badges.delete_confirm"),
       didConfirm: async () => {
         try {
+          await this.formApi.reset();
           await this.model.destroy();
-          adminBadges.removeObject(this.model);
+          this.adminBadges.model.removeObject(this.model);
           this.router.transitionTo("adminBadges.index");
         } catch {
-          this.dialog.alert(I18n.t("generic_error"));
+          this.dialog.alert(i18n("generic_error"));
         }
       },
     });

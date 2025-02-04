@@ -38,7 +38,7 @@ describe "Ember route-scroll-manager service", type: :system do
     try_until_success { expect(current_scroll_y).to eq(topic_list_scroll_y) }
 
     # Clicking site logo triggers refresh and scrolls to top
-    find("#site-logo").click
+    click_logo
     try_until_success { expect(current_scroll_y).to eq(0) }
   end
 end

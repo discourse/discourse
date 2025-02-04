@@ -5,7 +5,7 @@ class PresenceController < ApplicationController
   before_action :ensure_logged_in, only: [:update]
   before_action :skip_persist_session
 
-  MAX_CHANNELS_PER_REQUEST ||= 50
+  MAX_CHANNELS_PER_REQUEST = 50
 
   def get
     names = params.require(:channels)

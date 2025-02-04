@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
+import { helperContext } from "discourse/lib/helpers";
 import KeyValueStore from "discourse/lib/key-value-store";
-import { helperContext } from "discourse-common/lib/helpers";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 
@@ -88,7 +88,7 @@ export function subscribe(callback, applicationServerKey) {
     return serviceWorkerRegistration.pushManager
       .subscribe({
         userVisibleOnly: true,
-        applicationServerKey: new Uint8Array(applicationServerKey.split("|")), // eslint-disable-line no-undef
+        applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
       })
       .then((subscription) => {
         sendSubscriptionToServer(subscription, true);

@@ -115,20 +115,21 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
     addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(uri.host)
 
-    unless addresses.empty?
-      env = { "GIT_TERMINAL_PROMPT" => "0" }
+    raise_import_error! if addresses.empty?
 
-      args =
-        clone_args(
-          uri.to_s,
-          "http.followRedirects" => "false",
-          "http.curloptResolve" => "#{uri.host}:#{uri.port}:#{addresses.join(",")}",
-        )
+    env = { "GIT_TERMINAL_PROMPT" => "0" }
 
-      begin
-        Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
-      rescue RuntimeError
-      end
+    args =
+      clone_args(
+        uri.to_s,
+        "http.followRedirects" => "false",
+        "http.curloptResolve" => "#{uri.host}:#{uri.port}:#{addresses.join(",")}",
+      )
+
+    begin
+      Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
+    rescue RuntimeError
+      raise_import_error!
     end
   end
 

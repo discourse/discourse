@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RemoveSuppressFromLatestFromCategory < ActiveRecord::Migration[6.0]
-  DROPPED_COLUMNS ||= { categories: %i[suppress_from_latest] }
+  DROPPED_COLUMNS = { categories: %i[suppress_from_latest] }
 
   def up
     ids = DB.query_single("SELECT id::text FROM categories WHERE suppress_from_latest = TRUE")

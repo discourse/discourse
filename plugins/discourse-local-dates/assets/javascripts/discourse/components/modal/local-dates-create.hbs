@@ -27,7 +27,7 @@
               {{if this.fromSelected 'is-selected'}}
               {{if this.fromFilled 'is-filled'}}"
           >
-            {{d-icon "calendar-alt"}}
+            {{d-icon "calendar-days"}}
             <DButton
               @action={{this.focusFrom}}
               @translatedLabel={{this.formattedFrom}}
@@ -42,7 +42,7 @@
               {{if this.toSelected 'is-selected'}}
               {{if this.toFilled 'is-filled'}}"
           >
-            {{d-icon "calendar-alt"}}
+            {{d-icon "calendar-days"}}
             <DButton
               @action={{this.focusTo}}
               @translatedLabel={{this.formattedTo}}
@@ -51,7 +51,7 @@
             {{#if this.toFilled}}
               <DButton
                 @action={{this.eraseToDateTime}}
-                @icon="times"
+                @icon="xmark"
                 class="delete-to-date"
               />
             {{/if}}
@@ -144,7 +144,7 @@
                 href="https://momentjs.com/docs/#/parsing/string-format/"
                 rel="noopener noreferrer"
               >
-                {{d-icon "question-circle"}}
+                {{d-icon "circle-question"}}
               </a>
             </p>
             <div class="controls">
@@ -192,7 +192,7 @@
 
     <DButton
       @action={{this.toggleAdvancedMode}}
-      @icon="cog"
+      @icon="gear"
       @label={{this.toggleModeBtnLabel}}
       class="btn-default advanced-mode-btn"
     />

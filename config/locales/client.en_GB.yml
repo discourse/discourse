@@ -11,6 +11,7 @@ en_GB:
         separator: "."
     dates:
       time: "HH:mm"
+      time_short: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -53,10 +54,7 @@ en_GB:
     ip_lookup:
       organisation: Organisation
     user:
-      color_scheme: "Colour Scheme"
-      color_schemes:
-        dark_instructions: "You can preview the dark mode colour scheme by toggling your device's dark mode."
-      dark_mode_enable: "Enable automatic dark mode colour scheme"
+      color_scheme: "Colour Palette"
       experimental_sidebar:
         navigation_section: "Navigation"
       preferences_nav:
@@ -117,6 +115,9 @@ en_GB:
             header_dropdown: "Customise"
   admin_js:
     admin:
+      config:
+        navigation:
+          title: "Navigation"
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
       flags:
@@ -138,16 +139,12 @@ en_GB:
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"
-      invite:
-        button_text: "Send invitations"
-        button_title: "Send invitations"
       customize:
         title: "Customise"
         color: "Colour"
         theme:
           customize_desc: "Customise:"
           long_title: "Amend colours, CSS and HTML contents of your site"
-          color_scheme_user_selectable: "Colour scheme can be selected by users"
           color_scheme: "Colour Palette"
           color_scheme_select: "Select colours to be used by theme"
           header:
@@ -168,10 +165,7 @@ en_GB:
           select_base:
             title: "Select base colour palette"
           title: "Colours"
-          edit: "Edit colour palettes"
-          long_title: "Colour palettes"
           about: "Modify the colours used by your themes. Create a new colour palette to start."
-          new_name: "New colour palette"
           delete_confirm: "Delete this colour palette?"
           undo_title: "Undo your changes to this colour since the last time it was saved."
           revert_title: "Reset this colour to Discourse's default colour palette."
@@ -188,7 +182,6 @@ en_GB:
           love:
             description: "The like button's colour."
         email_style:
-          heading: "Customise Email Style"
           instructions: "Customise the template in which all html emails are rendered, and style using CSS."
       logs:
         staff_actions:
@@ -203,13 +196,10 @@ en_GB:
             description: "Description"
       user:
         anonymize: "Anonymise User"
-        anonymize_confirm: "Are you SURE you want to anonymise this account? This will change the username and email, and reset all profile information."
         anonymize_yes: "Yes, anonymise this account"
         anonymize_failed: "There was a problem anonymising the account."
         merge_failed: "There was an error whilst merging the users."
         delete_confirm: "It is generally preferable to anonymise users rather than deleting them, to avoid removing content from existing discussions."
-      site_text:
-        description: "You can customise any of the text on your forum. Please start by searching below:"
       site_settings:
         categories:
           navigation: "Navigation"
@@ -221,3 +211,7 @@ en_GB:
       reseed:
         modal:
           categories: "Categories"
+  wizard_js:
+    wizard:
+      top_menu_items:
+        categories: "Categories"

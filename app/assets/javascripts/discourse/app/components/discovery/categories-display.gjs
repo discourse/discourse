@@ -11,11 +11,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
-
-const mobileCompatibleViews = [
-  "categories_with_featured_topics",
-  "subcategories_with_featured_topics",
-];
+import { MAX_UNOPTIMIZED_CATEGORIES } from "discourse/lib/constants";
 
 const subcategoryComponents = {
   boxes_with_featured_topics: CategoriesBoxesWithTopics,
@@ -36,6 +32,7 @@ const globalComponents = {
 };
 
 export default class CategoriesDisplay extends Component {
+  @service router;
   @service siteSettings;
   @service site;
 
@@ -53,15 +50,22 @@ export default class CategoriesDisplay extends Component {
     return component;
   }
 
-  get #globalComponent() {
+  get style() {
     let style = this.siteSettings.desktop_category_page_style;
-    if (this.site.mobileView && !mobileCompatibleViews.includes(style)) {
-      style = mobileCompatibleViews[0];
+    if (this.site.mobileView) {
+      style = this.siteSettings.mobile_category_page_style;
     }
-    const component = globalComponents[style];
+    if (this.site.categories.length > MAX_UNOPTIMIZED_CATEGORIES) {
+      style = "categories_only";
+    }
+    return style;
+  }
+
+  get #globalComponent() {
+    const component = globalComponents[this.style];
     if (!component) {
       // eslint-disable-next-line no-console
-      console.error("Unknown category list style: " + style);
+      console.error("Unknown category list style: " + this.style);
       return CategoriesOnly;
     }
 
@@ -69,7 +73,10 @@ export default class CategoriesDisplay extends Component {
   }
 
   get categoriesComponent() {
-    if (this.args.parentCategory) {
+    if (
+      this.args.parentCategory &&
+      this.router.currentRouteName !== "discovery.subcategories"
+    ) {
       return this.#componentForSubcategories;
     } else {
       return this.#globalComponent;
@@ -77,7 +84,11 @@ export default class CategoriesDisplay extends Component {
   }
 
   get canLoadMore() {
-    return this.site.lazy_load_categories && this.args.loadMore;
+    return (
+      this.args.loadMore &&
+      (this.site.lazy_load_categories ||
+        this.site.categories.length > MAX_UNOPTIMIZED_CATEGORIES)
+    );
   }
 
   <template>

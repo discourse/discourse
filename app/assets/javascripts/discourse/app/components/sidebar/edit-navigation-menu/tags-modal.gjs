@@ -10,9 +10,9 @@ import { gt, has, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import i18n from "discourse-common/helpers/i18n";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import { i18n } from "discourse-i18n";
 import EditNavigationMenuModal from "./modal";
 
 export default class SidebarEditNavigationMenuTagsModal extends Component {

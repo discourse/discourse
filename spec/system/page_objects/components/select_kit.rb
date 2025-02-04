@@ -70,6 +70,10 @@ module PageObjects
         component.find(".select-kit-collection li[data-value='#{value}']")
       end
 
+      def has_no_option_value?(value)
+        component.has_no_css?(".select-kit-collection li[data-value='#{value}']")
+      end
+
       def expand
         collapsed_component.find(":not(.is-expanded) .select-kit-header", visible: :all).click
         expanded_component

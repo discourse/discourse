@@ -1,14 +1,15 @@
+import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import { iconHTML, renderIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   addTagDecorateCallback,
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
-import { renderIcon } from "discourse-common/lib/icon-library";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import LocalDateBuilder from "../lib/local-date-builder";
@@ -40,9 +41,7 @@ export function applyLocalDates(dates, siteSettings) {
     element.innerText = "";
     element.insertAdjacentHTML(
       "beforeend",
-      `<svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
-          <use href="#globe-americas"></use>
-        </svg>
+      `${iconHTML("earth-americas")}
         <span class="relative-time">${localDateBuilder.formatted}</span>`
     );
     element.setAttribute("aria-label", localDateBuilder.textPreview);
@@ -143,8 +142,9 @@ function _partitionedRanges(element) {
 }
 
 function initializeDiscourseLocalDates(api) {
+  const modal = api.container.lookup("service:modal");
   const siteSettings = api.container.lookup("service:site-settings");
-  const defaultTitle = I18n.t("discourse_local_dates.default_title", {
+  const defaultTitle = i18n("discourse_local_dates.default_title", {
     site_name: siteSettings.title,
   });
 
@@ -164,26 +164,20 @@ function initializeDiscourseLocalDates(api) {
       title: "discourse_local_dates.title",
       id: "local-dates",
       group: "extras",
-      icon: "calendar-alt",
-      sendAction: (event) =>
-        toolbar.context.send("insertDiscourseLocalDate", event),
-    });
-  });
+      icon: "calendar-days",
+      perform: (event) =>
+        modal.show(LocalDatesCreateModal, {
+          model: { insertDate: (markup) => event.addText(markup) },
+        }),
+      shortcut: "Shift+.",
+      shortcutAction: (event) => {
+        const timezone = api.getCurrentUser().user_option.timezone;
+        const time = moment().format("HH:mm:ss");
+        const date = moment().format("YYYY-MM-DD");
 
-  api.modifyClass("component:d-editor", {
-    modal: service(),
-    pluginId: "discourse-local-dates",
-    actions: {
-      insertDiscourseLocalDate(toolbarEvent) {
-        this.modal.show(LocalDatesCreateModal, {
-          model: {
-            insertDate: (markup) => {
-              toolbarEvent.addText(markup);
-            },
-          },
-        });
+        event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
       },
-    },
+    });
   });
 
   addTextDecorateCallback(function (
@@ -313,7 +307,7 @@ function _downloadCalendarNode(element) {
 
   const node = document.createElement("div");
   node.classList.add("download-calendar");
-  node.innerHTML = `${renderIcon("string", "file")} ${I18n.t(
+  node.innerHTML = `${renderIcon("string", "file")} ${i18n(
     "download_calendar.add_to_calendar"
   )}`;
   node.setAttribute("data-starts-at", startDate.toISOString());
@@ -343,13 +337,22 @@ function _calculateDuration(element) {
   return element.dataset === startDataset ? duration : -duration;
 }
 
-export default {
-  name: "discourse-local-dates",
+class LocalDatesInit {
+  @service siteSettings;
+  @service tooltip;
+
+  constructor(owner) {
+    setOwner(this, owner);
+
+    window.addEventListener("click", this.showDatePopover, { passive: true });
+
+    if (this.siteSettings.discourse_local_dates_enabled) {
+      withPluginApi("0.8.8", initializeDiscourseLocalDates);
+    }
+  }
 
   @bind
   showDatePopover(event) {
-    const tooltip = this.container.lookup("service:tooltip");
-
     if (event?.target?.classList?.contains("download-calendar")) {
       const dataset = event.target.dataset;
       downloadCalendar(dataset.title, [
@@ -359,31 +362,30 @@ export default {
         },
       ]);
 
-      return tooltip.close("local-date");
+      return this.tooltip.close("local-date");
     }
 
     if (!event?.target?.classList?.contains("discourse-local-date")) {
       return;
     }
 
-    const siteSettings = this.container.lookup("service:site-settings");
-    return tooltip.show(event.target, {
+    return this.tooltip.show(event.target, {
       identifier: "local-date",
-      content: htmlSafe(buildHtmlPreview(event.target, siteSettings)),
+      content: htmlSafe(buildHtmlPreview(event.target, this.siteSettings)),
     });
-  },
-
-  initialize(container) {
-    this.container = container;
-    window.addEventListener("click", this.showDatePopover, { passive: true });
-
-    const siteSettings = container.lookup("service:site-settings");
-    if (siteSettings.discourse_local_dates_enabled) {
-      withPluginApi("0.8.8", initializeDiscourseLocalDates);
-    }
-  },
+  }
 
   teardown() {
     window.removeEventListener("click", this.showDatePopover);
+  }
+}
+
+export default {
+  initialize(owner) {
+    this.instance = new LocalDatesInit(owner);
+  },
+  teardown() {
+    this.instance.teardown();
+    this.instance = null;
   },
 };

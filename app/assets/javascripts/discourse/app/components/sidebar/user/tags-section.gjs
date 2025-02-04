@@ -7,7 +7,7 @@ import SidebarEditNavigationMenuTagsModal from "discourse/components/sidebar/edi
 import { hasDefaultSidebarTags } from "discourse/lib/sidebar/helpers";
 import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import AllTagsSectionLink from "../common/all-tags-section-link";
 import Section from "../section";
 import SectionLink from "../section-link";
@@ -94,7 +94,7 @@ export default class SidebarUserTagsSection extends Component {
           title=(i18n "sidebar.sections.tags.header_action_title")
         )
       }}
-      @headerActionsIcon="pencil-alt"
+      @headerActionsIcon="pencil"
       @collapsable={{@collapsable}}
     >
       {{#each this.sectionLinks as |sectionLink|}}

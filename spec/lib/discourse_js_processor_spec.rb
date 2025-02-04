@@ -128,7 +128,7 @@ RSpec.describe DiscourseJsProcessor do
         */
         {
           "id": null,
-          "block": "[[[1,[34,0]]],[],false,[\\"somevalue\\"]]",
+          "block": "[[[1,[35,0]]],[],false,[\\"somevalue\\"]]",
           "moduleName": "/blah/mymodule",
           "isStrictMode": false
         });
@@ -159,7 +159,11 @@ RSpec.describe DiscourseJsProcessor do
 
     let(:mini_racer) do
       ctx = MiniRacer::Context.new
-      ctx.eval(File.open("#{Rails.root}/node_modules/handlebars/dist/handlebars.js").read)
+      ctx.eval(
+        File.open(
+          "#{Rails.root}/app/assets/javascripts/discourse/node_modules/handlebars/dist/handlebars.js",
+        ).read,
+      )
       ctx.eval(helpers)
       ctx
     end

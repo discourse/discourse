@@ -1,11 +1,15 @@
-import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 
-//  Use the message bus for live reloading of components for faster development.
-export default {
-  initialize(owner) {
-    this.messageBus = owner.lookup("service:message-bus");
-    this.session = owner.lookup("service:session");
+// Use the message bus for live reloading of components for faster development.
+class LiveDevelopmentInit {
+  @service messageBus;
+  @service session;
+
+  constructor(owner) {
+    setOwner(this, owner);
 
     const PRESERVED_QUERY_PARAMS = ["preview_theme_id", "pp", "safe_mode"];
     const params = new URLSearchParams(window.location.search);
@@ -34,11 +38,11 @@ export default {
       this.onFileChange,
       this.session.mbLastFileChangeId
     );
-  },
+  }
 
   teardown() {
     this.messageBus.unsubscribe("/file-change", this.onFileChange);
-  },
+  }
 
   @bind
   onFileChange(data) {
@@ -47,8 +51,11 @@ export default {
         // Refresh if necessary
         document.location.reload(true);
       } else if (me === "development-mode-theme-changed") {
-        if (window.location.pathname.startsWith("/admin/customize/themes")) {
-          // don't refresh users on routes which make theme changes - would be very inconvenient.
+        if (
+          window.location.pathname.startsWith("/admin/customize/themes") ||
+          window.location.pathname.startsWith("/admin/config/look-and-feel")
+        ) {
+          // Don't refresh users on routes which make theme changes - would be very inconvenient.
           // Instead, refresh on their next route navigation.
           this.session.requiresRefresh = true;
         } else {
@@ -75,12 +82,22 @@ export default {
         }
       }
     });
-  },
+  }
 
   refreshCSS(node, newHref) {
     const reloaded = node.cloneNode(true);
     reloaded.href = newHref;
     node.insertAdjacentElement("afterend", reloaded);
     discourseLater(() => node?.parentNode?.removeChild(node), 500);
+  }
+}
+
+export default {
+  initialize(owner) {
+    this.instance = new LiveDevelopmentInit(owner);
+  },
+  teardown() {
+    this.instance.teardown();
+    this.instance = null;
   },
 };

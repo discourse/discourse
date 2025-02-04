@@ -40,7 +40,7 @@ module(
 
       await this.subject.expand();
 
-      assert.notOk(this.subject.rowByValue(2).exists());
+      assert.false(this.subject.rowByValue(2).exists());
     });
 
     test("with scopedCategoryId", async function (assert) {
@@ -303,11 +303,9 @@ module(
 
       await this.subject.expand();
 
-      assert.strictEqual(
-        this.subject.rowByIndex(0).el().querySelector(".category-desc")
-          .innerText,
-        'baz "bar ‘foo’'
-      );
+      assert
+        .dom(".category-desc", this.subject.rowByIndex(0).el())
+        .hasText('baz "bar ‘foo’');
     });
   }
 );

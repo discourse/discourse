@@ -64,19 +64,12 @@ initialized = false
 before_fork do |server, worker|
   unless initialized
     Discourse.preload_rails!
-
-    # V8 does not support forking, make sure all contexts are disposed
-    ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
-
-    # get rid of rubbish so we don't share it
-    # longer term we will use compact! here
-    GC.start
-    GC.start
-    GC.start
+    Discourse.before_fork
 
     initialized = true
 
     supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
+
     if supervisor > 0
       Thread.new do
         while true
@@ -90,6 +83,7 @@ before_fork do |server, worker|
     end
 
     sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
+
     if sidekiqs > 0
       server.logger.info "starting #{sidekiqs} supervised sidekiqs"
 
@@ -97,16 +91,27 @@ before_fork do |server, worker|
       Demon::Sidekiq.after_fork { DiscourseEvent.trigger(:sidekiq_fork_started) }
       Demon::Sidekiq.start(sidekiqs, logger: server.logger)
 
-      # Trap USR1, so we can re-issue to sidekiq workers
-      # but chain the default unicorn implementation as well
-      old_handler =
-        Signal.trap("USR1") do
-          Demon::Sidekiq.kill("USR1")
-          old_handler.call
-        end
+      if Discourse.enable_sidekiq_logging?
+        # Trap USR1, so we can re-issue to sidekiq workers
+        # but chain the default unicorn implementation as well
+        old_handler =
+          Signal.trap("USR1") do
+            old_handler.call
+
+            # We have seen Sidekiq processes getting stuck in production sporadically when log rotation happens.
+            # The cause is currently unknown but we suspect that it is related to the Unicorn master process and
+            # Sidekiq demon processes reopening logs at the same time as we noticed that Unicorn worker processes only
+            # reopen logs after the Unicorn master process is done. To workaround the problem, we are adding an arbitrary
+            # delay of 1 second to Sidekiq's log reopeing procedure. The 1 second delay should be
+            # more than enough for the Unicorn master process to finish reopening logs.
+            Demon::Sidekiq.kill("USR2")
+          end
+      end
     end
 
-    if ENV["DISCOURSE_ENABLE_EMAIL_SYNC_DEMON"] == "true"
+    enable_email_sync_demon = ENV["DISCOURSE_ENABLE_EMAIL_SYNC_DEMON"] == "true"
+
+    if enable_email_sync_demon
       server.logger.info "starting up EmailSync demon"
       Demon::EmailSync.start(1, logger: server.logger)
     end
@@ -116,9 +121,32 @@ before_fork do |server, worker|
       demon_class.start(1, logger: server.logger)
     end
 
-    class ::Unicorn::HttpServer
-      alias master_sleep_orig master_sleep
+    Thread.new do
+      while true
+        begin
+          sleep 60
 
+          if sidekiqs > 0
+            Demon::Sidekiq.ensure_running
+            Demon::Sidekiq.heartbeat_check
+            Demon::Sidekiq.rss_memory_check
+          end
+
+          if enable_email_sync_demon
+            Demon::EmailSync.ensure_running
+            Demon::EmailSync.check_email_sync_heartbeat
+          end
+
+          DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
+        rescue => e
+          Rails.logger.warn(
+            "Error in demon processes heartbeat check: #{e}\n#{e.backtrace.join("\n")}",
+          )
+        end
+      end
+    end
+
+    class ::Unicorn::HttpServer
       # Original source: https://github.com/defunkt/unicorn/blob/6c9c442fb6aa12fd871237bc2bb5aec56c5b3538/lib/unicorn/http_server.rb#L477-L496
       def murder_lazy_workers
         next_sleep = @timeout - 1
@@ -130,9 +158,12 @@ before_fork do |server, worker|
           tmp = @timeout - diff
 
           # START MONKEY PATCH
-          if tmp < 2
-            logger.error "worker=#{worker.nr} PID:#{wpid} running too long " \
-                           "(#{diff}s), sending USR2 to dump thread backtraces"
+          if tmp < 2 && !worker.instance_variable_get(:@timing_out_logged)
+            logger.error do
+              "worker=#{worker.nr} PID:#{wpid} running too long (#{diff}s), sending USR2 to dump thread backtraces"
+            end
+
+            worker.instance_variable_set(:@timing_out_logged, true)
             kill_worker(:USR2, wpid)
           end
           # END MONKEY PATCH
@@ -148,143 +179,6 @@ before_fork do |server, worker|
           kill_worker(:KILL, wpid) # take no prisoners for timeout violations
         end
         next_sleep <= 0 ? 1 : next_sleep
-      end
-
-      def max_sidekiq_rss
-        rss =
-          `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`.split("\n")
-            .map(&:to_i)
-            .max
-
-        rss ||= 0
-
-        rss * 1024
-      end
-
-      def max_allowed_sidekiq_rss
-        [ENV["UNICORN_SIDEKIQ_MAX_RSS"].to_i, 500].max.megabytes
-      end
-
-      def force_kill_rogue_sidekiq
-        info = `ps -eo pid,rss,args | grep sidekiq | grep -v grep | awk '{print $1,$2}'`
-        info
-          .split("\n")
-          .each do |row|
-            pid, mem = row.split(" ").map(&:to_i)
-            if pid > 0 && (mem * 1024) > max_allowed_sidekiq_rss
-              Rails.logger.warn "Detected rogue Sidekiq pid #{pid} mem #{mem * 1024}, killing"
-              begin
-                Process.kill("KILL", pid)
-              rescue StandardError
-                nil
-              end
-            end
-          end
-      end
-
-      def check_sidekiq_heartbeat
-        @sidekiq_heartbeat_interval ||= 30.minutes
-        @sidekiq_next_heartbeat_check ||= Time.now.to_i + @sidekiq_heartbeat_interval
-
-        if @sidekiq_next_heartbeat_check < Time.now.to_i
-          last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
-          restart = false
-
-          sidekiq_rss = max_sidekiq_rss
-          if sidekiq_rss > max_allowed_sidekiq_rss
-            Rails.logger.warn(
-              "Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" %
-                [(sidekiq_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]],
-            )
-
-            restart = true
-          end
-
-          if last_heartbeat < Time.now.to_i - @sidekiq_heartbeat_interval
-            Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
-
-            restart = true
-          end
-          @sidekiq_next_heartbeat_check = Time.now.to_i + @sidekiq_heartbeat_interval
-
-          if restart
-            Demon::Sidekiq.restart
-            sleep 10
-            force_kill_rogue_sidekiq
-          end
-          Discourse.redis.close
-        end
-      end
-
-      def max_email_sync_rss
-        return 0 if Demon::EmailSync.demons.empty?
-
-        email_sync_pids = Demon::EmailSync.demons.map { |uid, demon| demon.pid }
-        return 0 if email_sync_pids.empty?
-
-        rss =
-          `ps -eo pid,rss,args | grep '#{email_sync_pids.join("|")}' | grep -v grep | awk '{print $2}'`.split(
-            "\n",
-          )
-            .map(&:to_i)
-            .max
-
-        (rss || 0) * 1024
-      end
-
-      def max_allowed_email_sync_rss
-        [ENV["UNICORN_EMAIL_SYNC_MAX_RSS"].to_i, 500].max.megabytes
-      end
-
-      def check_email_sync_heartbeat
-        # Skip first check to let process warm up
-        @email_sync_next_heartbeat_check ||= (Time.now + Demon::EmailSync::HEARTBEAT_INTERVAL).to_i
-
-        return if @email_sync_next_heartbeat_check > Time.now.to_i
-        @email_sync_next_heartbeat_check = (Time.now + Demon::EmailSync::HEARTBEAT_INTERVAL).to_i
-
-        restart = false
-
-        # Restart process if it does not respond anymore
-        last_heartbeat_ago =
-          Time.now.to_i - Discourse.redis.get(Demon::EmailSync::HEARTBEAT_KEY).to_i
-        if last_heartbeat_ago > Demon::EmailSync::HEARTBEAT_INTERVAL.to_i
-          Rails.logger.warn(
-            "EmailSync heartbeat test failed (last heartbeat was #{last_heartbeat_ago}s ago), restarting",
-          )
-
-          restart = true
-        end
-
-        # Restart process if memory usage is too high
-        email_sync_rss = max_email_sync_rss
-        if email_sync_rss > max_allowed_email_sync_rss
-          Rails.logger.warn(
-            "EmailSync is consuming too much memory (using: %0.2fM) for '%s', restarting" %
-              [(email_sync_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]],
-          )
-
-          restart = true
-        end
-
-        Demon::EmailSync.restart if restart
-      end
-
-      def master_sleep(sec)
-        sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
-        if sidekiqs > 0
-          Demon::Sidekiq.ensure_running
-          check_sidekiq_heartbeat
-        end
-
-        if ENV["DISCOURSE_ENABLE_EMAIL_SYNC_DEMON"] == "true"
-          Demon::EmailSync.ensure_running
-          check_email_sync_heartbeat
-        end
-
-        DiscoursePluginRegistry.demon_processes.each { |demon_class| demon_class.ensure_running }
-
-        master_sleep_orig(sec)
       end
     end
   end

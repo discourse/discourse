@@ -222,8 +222,6 @@ pt:
     failed_to_invite: "O usuário não pode ser convidado para este tópico sem uma associação de grupo em um dos seguintes grupos: %{group_names}."
     user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
     muted_topic: "Desculpe, esse usuário silenciou este tópico."
-    receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você lhe envie mensagens privadas."
-    sender_does_not_allow_pm: "Desculpe, você não permite que esse usuário lhe envie mensagens privadas."
     user_cannot_see_topic: "%{username} não pode ver o tópico."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
@@ -406,6 +404,8 @@ pt:
         bio_raw: "Sobre Mim"
       user:
         password: "Palavra-passe"
+      user_password:
+        password: "Palavra-passe"
     errors:
       models:
         topic:
@@ -426,6 +426,14 @@ pt:
             ip_address:
               blocked: "Novos registos não são permitidos a partir do seu endereço IP."
               max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
+        user_password:
+          attributes:
+            password:
+              common: "é uma das 10000 palavras-passe mais comuns. Por favor use uma palavra-passe mais segura."
+              same_as_username: "é a mesma que o seu nome de utilizador. Por favor utilize uma palavra-passe mais segura."
+              same_as_email: "é a mesma que o seu email. Por favor utilize uma palavra-passe mais segura."
+              same_as_current: "é a mesma que a sua palavra-passe atual."
+              unique_characters: "tem demasiados carateres repetidos. Por favor, utilize uma palavra-passe mais segura."
         color_scheme_color:
           attributes:
             hex:
@@ -592,11 +600,7 @@ pt:
     error_staged: "Ocorreu um erro ao alterar o seu endereço de email. O endereço de email já está a ser utilizado por um utilizador temporário."
     already_done: "Pedimos desculpa, mas esta hiperligação de confirmação já não é valida. Talvez o seu email já tenha sido alterado?"
   activation:
-    action: "Clique aqui para ativar a sua conta"
     already_done: "Pedimos desculpa, esta hiperligação de confirmação já não está válida. Talvez a sua conta já esteja ativa?"
-    please_continue: "A sua nova conta foi confirmada; será redirecionado para a página principal."
-    continue_button: "Continuar para %{site_name}"
-    welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
     missing_session: "Não conseguimos detectar se a sua conta foi criada, pelo que pedimos que confirme que tem os cookies permitidos."
     activated: "Desculpe, esta conta já foi ativada."
@@ -757,6 +761,8 @@ pt:
       yaxis: "Dia"
     consolidated_page_views_browser_detection:
       yaxis: "Dia"
+    site_traffic:
+      yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
     daily_engaged_users:
@@ -868,6 +874,9 @@ pt:
       yaxis: "Vistas de Página de Web Crawler"
     page_view_total_reqs:
       title: "Exibições de Página"
+      xaxis: "Dia"
+      yaxis: "Total de Vistas de Página"
+    page_view_legacy_total_reqs:
       xaxis: "Dia"
       yaxis: "Total de Vistas de Página"
     page_view_logged_in_mobile_reqs:
@@ -1013,12 +1022,10 @@ pt:
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
-    must_approve_users: "O pessoal deverá aprovar todas as contas dos novos utilizadores antes destes terem permissão para aceder ao sítio."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
     use_admin_ip_allowlist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     include_secure_categories_in_tag_counts: "Quando ativada, a contagem de tópicos para uma tag incluirá tópicos que estão em categorias restritas de leitura para todos os utilizadores. Quando desabilitada, os utilizadores normais visualizam apenas uma contagem de tópicos para uma tag em que todos os tópicos estão em categorias públicas."
-    post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
     site_contact_username: "Um nome de utilizador válido de um membro do pessoal de onde enviar todas as mensagens automatizadas. Quando deixado em branco, a conta padrão do Sistema será usada."
     send_welcome_message: "Enviar a todos os novos utilizadores uma mensagem de boas-vindas com um guia de início rápido."
@@ -1028,7 +1035,6 @@ pt:
     max_reply_history: "Número máximo de respostas a serem expandidas quando se expande em-resposta-a"
     topics_per_period_in_top_summary: "Número de tópicos principais mostrados no resumo padrão de tópicos principais."
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em 'Mostrar Mais' tópicos principais expandido."
-    redirect_users_to_top_page: "Redirecionar automaticamente os utilizadores novos e ausentes por períodos longos para o topo da página."
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     blocked_email_domains: "Uma lista delimitada de domínios de correio electrónico com os quais os utilizadores não estão autorizados a registar contas. Os subdomínios são automaticamente tratados para os domínios especificados. Os símbolos wildcard * e ? não são suportados. Exemplo: mailinator.com|trashmail.net"
@@ -1210,7 +1216,6 @@ pt:
     disable_system_edit_notifications: "Desativa as notificações de edição pelo utilizador do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
-    full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
@@ -1277,18 +1282,6 @@ pt:
       invalid_regex: "A expressão regular não é válida ou permitida."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inativo"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inativo"
-      - ""
-      navigation_menu:
-      - "barra Lateral"
-      - ""
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -2070,15 +2063,7 @@ pt:
           homepage_style:
             choices:
               latest:
-                label: "Tópicos recentes"
-              categories_only:
-                label: "Apenas Categorias"
-              categories_with_featured_topics:
-                label: "Categorias com Tópicos Destacados"
-              categories_and_latest_topics:
-                label: "Categorias e Tópicos Recentes"
-              categories_and_top_topics:
-                label: "Categorias e Melhores Tópicos"
+                label: "Recente"
       corporate:
         fields:
           contact_url:
@@ -2097,6 +2082,7 @@ pt:
       quoted: '%{username} citou-o em "%{topic}" - %{site_title}'
       replied: '%{username} respondeu-lhe em "%{topic}" - %{site_title}'
       posted: '%{username} publicou em "%{topic}" - %{site_title}'
+      private_message: '%{username} enviou-lhe uma mensagem privada em "%{topic}" - %{site_title}'
       linked: '%{username} ligou à sua publicação de "%{topic}" - %{site_title}'
       watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
       confirm_title: "Notificações ativas - %{site_title}"

@@ -59,10 +59,14 @@ hy:
               label: Թեմայի ID
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Թեգեր
             restricted_category:
               label: Կատեգորիա
             restricted_group:
               label: Խմբավորել
+            restricted_groups:
+              label: Խմբեր
           created: Ստեղծված
         category_created_edited:
           fields:
@@ -138,5 +142,7 @@ hy:
             label: Գործարկել
           version:
             label: Տարբերակ
+          status:
+            label: Ստատուս
           disabled:
             label: Անջատված

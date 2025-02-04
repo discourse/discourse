@@ -23,7 +23,7 @@ export default class DateTimeField extends BaseField {
 
             {{#if @field.metadata.value}}
               <DButton
-                @icon="trash-alt"
+                @icon="trash-can"
                 @action={{this.reset}}
                 @disabled={{@field.isDisabled}}
               />

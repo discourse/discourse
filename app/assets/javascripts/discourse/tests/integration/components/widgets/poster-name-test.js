@@ -1,8 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import Badge from "discourse/models/badge";
+import User from "discourse/models/user";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | poster-name", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,11 +20,11 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".names"));
-    assert.ok(exists("span.username"));
-    assert.ok(exists('a[data-user-card="eviltrout"]'));
-    assert.strictEqual(query(".username a").innerText, "eviltrout");
-    assert.strictEqual(query(".user-title").innerText, "Trout Master");
+    assert.dom(".names").exists();
+    assert.dom("span.username").exists();
+    assert.dom('a[data-user-card="eviltrout"]').exists();
+    assert.dom(".username a").hasText("eviltrout");
+    assert.dom(".user-title").hasText("Trout Master");
   });
 
   test("extra classes and glyphs", async function (assert) {
@@ -41,12 +42,12 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.ok(exists("span.staff"));
-    assert.ok(exists("span.admin"));
-    assert.ok(exists("span.moderator"));
-    assert.ok(exists(".d-icon-shield-alt"));
-    assert.ok(exists("span.new-user"));
-    assert.ok(exists("span.group--fish"));
+    assert.dom("span.staff").exists();
+    assert.dom("span.admin").exists();
+    assert.dom("span.moderator").exists();
+    assert.dom(".d-icon-shield-halved").exists();
+    assert.dom("span.new-user").exists();
+    assert.dom("span.group--fish").exists();
   });
 
   test("disable display name on posts", async function (assert) {
@@ -57,7 +58,7 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.ok(!exists(".full-name"));
+    assert.dom(".full-name").doesNotExist();
   });
 
   test("doesn't render a name if it's similar to the username", async function (assert) {
@@ -69,6 +70,40 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.ok(!exists(".second"));
+    assert.dom(".second").doesNotExist();
+  });
+
+  test("renders badges that are passed in", async function (assert) {
+    this.set("args", {
+      username: "eviltrout",
+      usernameUrl: "/u/eviltrout",
+      user: User.create({
+        username: "eviltrout",
+      }),
+      badgesGranted: [
+        { id: 1, icon: "heart", slug: "badge1", name: "Badge One" },
+        { id: 2, icon: "target", slug: "badge2", name: "Badge Two" },
+      ].map((badge) => Badge.createFromJson({ badges: [badge] })[0]),
+    });
+
+    await render(
+      hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
+    );
+
+    // Check that the custom CSS classes are set
+    assert.dom("span.user-badge-button-badge1").exists();
+    assert.dom("span.user-badge-button-badge2").exists();
+
+    // Check that the custom titles are set
+    assert.dom("span.user-badge[title*='Badge One']").exists();
+    assert.dom("span.user-badge[title*='Badge Two']").exists();
+
+    // Check that the badges link to the correct badge page
+    assert
+      .dom("a.user-card-badge-link[href='/badges/1/badge1?username=eviltrout']")
+      .exists();
+    assert
+      .dom("a.user-card-badge-link[href='/badges/2/badge2?username=eviltrout']")
+      .exists();
   });
 });

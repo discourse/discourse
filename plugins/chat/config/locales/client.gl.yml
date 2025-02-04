@@ -136,6 +136,8 @@ gl:
             title: "Normal"
           tracking:
             title: "Seguimento"
+          watching:
+            title: "Observando"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

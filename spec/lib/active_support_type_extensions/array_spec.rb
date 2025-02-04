@@ -14,6 +14,30 @@ RSpec.describe ActiveSupportTypeExtensions::Array do
       end
     end
 
+    context "when 'value' is a string of numbers" do
+      let(:value) { "1,2,3" }
+
+      it "splits it with strings casted as integers" do
+        expect(casted_value).to eq([1, 2, 3])
+      end
+    end
+
+    context "when 'value' is a string of numbers separated by '|'" do
+      let(:value) { "1|2|3" }
+
+      it "splits it with strings casted as integers" do
+        expect(casted_value).to eq([1, 2, 3])
+      end
+    end
+
+    context "when 'value' has mixed separators" do
+      let(:value) { "1,2,3|4" }
+
+      it "splits only on one of the separators" do
+        expect(casted_value).to eq(["1,2,3", 4])
+      end
+    end
+
     context "when 'value' is an array" do
       let(:value) { %w[existing array] }
 

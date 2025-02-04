@@ -254,6 +254,8 @@ et:
         bio_raw: "Minust"
       user:
         password: "Parool"
+      user_password:
+        password: "Parool"
     errors:
       models:
         topic:
@@ -264,6 +266,14 @@ et:
             featured_link:
               invalid: "on vigane. URL peab sisaldama http:// või https://."
         user:
+          attributes:
+            password:
+              common: "on üks 10000 enim kasutatud salasõnast. Palun kasuta turvalisemat parooli."
+              same_as_username: "on sama mis su kasutajanimi. Palun kasuta turvalisemat parooli."
+              same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
+              same_as_current: "ühtib sinu hetkel kehtiva parooliga."
+              unique_characters: "sisaldab liiga palju korduvaid tähemärke. Palun kasuta turvalisemat parooli."
+        user_password:
           attributes:
             password:
               common: "on üks 10000 enim kasutatud salasõnast. Palun kasuta turvalisemat parooli."
@@ -424,11 +434,7 @@ et:
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
     already_done: "Vabandust, see kinnitamise link ei kehti enam. Äkki on teie meiliaadress juba muudetud?"
   activation:
-    action: "Oma konto aktiveerimiseks kliki siia"
     already_done: "Vabandust, see konto kinnitamise link ei kehti enam. Äkki on Teie konto juba aktiveeritud?"
-    please_continue: "Teie uus konto on kinnitatud; Teid suunatakse nüüd avalehele."
-    continue_button: "Edasi saidile %{site_name}"
-    welcome_to: "Tere tulemast %{site_name}!"
     approval_required: "Enne, kui saate foorumit kasutada, peab moderaator Teie uue konto käsitsi kinnitama. Konto kinnitamise kohta tuleb teade meilile."
     missing_session: "Me ei saa kontrollida kas Teie konto on loodud, palun kontrolli et brauseris oleks küpsised lubatud."
   reviewable_score_types:
@@ -562,6 +568,8 @@ et:
       yaxis: "Päev"
     consolidated_page_views_browser_detection:
       yaxis: "Päev"
+    site_traffic:
+      yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
     daily_engaged_users:
@@ -673,6 +681,8 @@ et:
     page_view_total_reqs:
       title: "Lehekülje vaatamisi"
       xaxis: "Päev"
+    page_view_legacy_total_reqs:
+      xaxis: "Päev"
     page_view_logged_in_mobile_reqs:
       xaxis: "Päev"
     page_view_anon_mobile_reqs:
@@ -767,15 +777,6 @@ et:
       invalid_integer: "Väärtuseks peab olema täisarv."
       min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
       max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "mitteaktiivne"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "mitteaktiivne"
-      - ""
   search:
     within_post: "postituse nr%{post_number} tegi %{username}"
     types:
@@ -1049,13 +1050,7 @@ et:
           homepage_style:
             choices:
               latest:
-                label: "Viimased teemad"
-              categories_only:
-                label: "Ainult foorumid"
-              categories_with_featured_topics:
-                label: "Foorumid esiletõstetud teemadega"
-              categories_and_latest_topics:
-                label: "Foorumid ja viimased teemad"
+                label: "Värskeimad"
       corporate:
         fields:
           contact_url:

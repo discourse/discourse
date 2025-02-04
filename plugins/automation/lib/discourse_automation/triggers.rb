@@ -6,6 +6,7 @@ module DiscourseAutomation
     API_CALL = "api_call"
     CATEGORY_CREATED_EDITED = "category_created_edited"
     PM_CREATED = "pm_created"
+    TOPIC_TAGS_CHANGED = "topic_tags_changed"
     POINT_IN_TIME = "point_in_time"
     POST_CREATED_EDITED = "post_created_edited"
     RECURRING = "recurring"

@@ -10,7 +10,7 @@ module("Discourse Chat | Unit | chat-composer-buttons", function (hooks) {
   hooks.beforeEach(function () {
     registerChatComposerButton({
       id: "foo",
-      icon: "times",
+      icon: "xmark",
       dependentKeys: ["test"],
     });
 
@@ -28,8 +28,8 @@ module("Discourse Chat | Unit | chat-composer-buttons", function (hooks) {
 
   test("chatComposerButtons", function (assert) {
     const button = chatComposerButtons({ baz: "fooz" }, "inline")[1];
-    assert.equal(button.id, "bar");
-    assert.equal(button.label, "fooz");
+    assert.strictEqual(button.id, "bar");
+    assert.strictEqual(button.label, "fooz");
   });
 
   test("chatComposerButtonsDependentKeys", function (assert) {

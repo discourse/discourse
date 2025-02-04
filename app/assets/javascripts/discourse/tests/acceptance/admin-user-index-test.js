@@ -1,16 +1,12 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
-let deleteAndBlock = null;
+let deleteAndBlock;
 
 acceptance("Admin - User Index", function (needs) {
   needs.user();
@@ -85,6 +81,24 @@ acceptance("Admin - User Index", function (needs) {
       });
     });
 
+    server.get("/admin/users/7.json", () => {
+      return helper.response({
+        id: 7,
+        username: "jimmy",
+        name: "Jimmy Johnson",
+        avatar_template: "/letter_avatar_proxy/v4/letter/b/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_grant_admin: true,
+        can_revoke_admin: false,
+        can_grant_moderation: true,
+        can_revoke_moderation: false,
+        second_factor_enabled: true,
+        can_disable_second_factor: true,
+      });
+    });
+
     server.put("/admin/users/4/grant_admin", () => {
       return helper.response(403, {
         second_factor_challenge_nonce: "some-nonce",
@@ -115,11 +129,7 @@ acceptance("Admin - User Index", function (needs) {
     server.delete("/admin/users/5.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
 
-      if (data.block_email || data.block_ip || data.block_urls) {
-        deleteAndBlock = true;
-      } else {
-        deleteAndBlock = false;
-      }
+      deleteAndBlock = !!(data.block_email || data.block_ip || data.block_urls);
 
       return helper.response({});
     });
@@ -144,6 +154,10 @@ acceptance("Admin - User Index", function (needs) {
         html_message: true,
       });
     });
+
+    server.put("/admin/users/7/disable_second_factor", () => {
+      return helper.response({ success: "OK" });
+    });
   });
 
   needs.hooks.beforeEach(() => {
@@ -153,39 +167,29 @@ acceptance("Admin - User Index", function (needs) {
   test("can edit username", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam"
-    );
+    assert.dom(".display-row.username .value").hasText("sam");
 
     // Trying cancel.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username a");
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam"
-    );
+    assert.dom(".display-row.username .value").hasText("sam");
 
     // Doing edit.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username button");
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "new-sam"
-    );
+    assert.dom(".display-row.username .value").hasText("new-sam");
   });
 
   test("shows the number of post edits", async function (assert) {
     await visit("/admin/users/1/eviltrout");
 
-    assert.strictEqual(query(".post-edits-count .value").innerText.trim(), "6");
+    assert.dom(".post-edits-count .value").hasText("6");
 
-    assert.ok(
-      exists(".post-edits-count .controls .btn.btn-icon"),
-      "View edits button exists"
-    );
+    assert
+      .dom(".post-edits-count .controls .btn.btn-icon")
+      .exists("View edits button exists");
   });
 
   test("a link to view post edits report exists", async function (assert) {
@@ -205,20 +209,17 @@ acceptance("Admin - User Index", function (needs) {
   test("hides the 'view Edits' button if the count is zero", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.ok(
-      !exists(".post-edits-count .controls .btn.btn-icon"),
-      "View Edits button not present"
-    );
+    assert
+      .dom(".post-edits-count .controls .btn.btn-icon")
+      .doesNotExist("View Edits button not present");
   });
 
   test("will clear unsaved groups when switching user", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam",
-      "the name should be correct"
-    );
+    assert
+      .dom(".display-row.username .value")
+      .hasText("sam", "the name should be correct");
 
     const groupChooser = selectKit(".group-chooser");
     await groupChooser.expand();
@@ -231,26 +232,20 @@ acceptance("Admin - User Index", function (needs) {
 
     await visit("/admin/users/1/eviltrout");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "eviltrout",
-      "the name should be correct"
-    );
+    assert
+      .dom(".display-row.username .value")
+      .hasText("eviltrout", "the name should be correct");
 
-    assert.ok(
-      !exists('.group-chooser span[title="Macdonald"]'),
-      "group should not be set"
-    );
+    assert
+      .dom('.group-chooser span[title="Macdonald"]')
+      .doesNotExist("group should not be set");
   });
 
   test("grant admin - shows the confirmation dialog", async function (assert) {
     await visit("/admin/users/3/user1");
     await click(".grant-admin");
-    assert.ok(exists(".dialog-content"));
-    assert.strictEqual(
-      I18n.t("admin.user.grant_admin_confirm"),
-      query(".dialog-body").textContent.trim()
-    );
+    assert.dom(".dialog-content").exists();
+    assert.dom(".dialog-body").hasText(i18n("admin.user.grant_admin_confirm"));
 
     await click(".dialog-footer .btn-primary");
   });
@@ -258,37 +253,45 @@ acceptance("Admin - User Index", function (needs) {
   test("grant admin - optionally allows HTML to be shown in the confirmation dialog", async function (assert) {
     await visit("/admin/users/6/user6");
     await click(".grant-admin");
-    assert.ok(exists(".dialog-content"));
+    assert.dom(".dialog-content").exists();
 
-    assert.ok(
-      exists(".dialog-content .dialog-body strong"),
-      "HTML is rendered in the dialog"
-    );
+    assert
+      .dom(".dialog-content .dialog-body strong")
+      .exists("HTML is rendered in the dialog");
   });
 
   test("grant admin - redirects to the 2fa page", async function (assert) {
     await visit("/admin/users/4/user2");
     await click(".grant-admin");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/session/2fa?nonce=some-nonce",
       "user is redirected to the 2FA page"
     );
   });
 
+  test("disable 2fa - shows the confirmation dialog", async function (assert) {
+    await visit("/admin/users/7/jimmy");
+    await click(".disable-second-factor");
+    assert.dom(".dialog-content").exists();
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("admin.user.disable_second_factor_confirm"));
+
+    await click(".dialog-footer .btn-primary");
+  });
+
   test("delete user - delete without blocking works as expected", async function (assert) {
     await visit("/admin/users/5/user5");
     await click(".btn-user-delete");
 
-    assert.equal(
-      query("#dialog-title").textContent,
-      I18n.t("admin.user.delete_confirm_title"),
-      "dialog has a title"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
     await click(".dialog-footer .btn-primary");
 
-    assert.notOk(deleteAndBlock, "user does not get blocked");
+    assert.false(deleteAndBlock, "user does not get blocked");
   });
 
   test("delete user - delete and block works as expected", async function (assert) {
@@ -296,6 +299,6 @@ acceptance("Admin - User Index", function (needs) {
     await click(".btn-user-delete");
     await click(".dialog-footer .btn-danger");
 
-    assert.ok(deleteAndBlock, "user does not get blocked");
+    assert.true(deleteAndBlock, "user does not get blocked");
   });
 });

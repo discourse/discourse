@@ -1,71 +1,49 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import { renderAvatar } from "discourse/helpers/user-avatar";
-import { prioritizeNameInUx } from "discourse/lib/settings";
-import { userPath } from "discourse/lib/url";
-import i18n from "discourse-common/helpers/i18n";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import AboutPageUser from "discourse/components/about-page-user";
+import DButton from "discourse/components/d-button";
+import { i18n } from "discourse-i18n";
 
 export default class AboutPageUsers extends Component {
-  @service siteSettings;
+  @tracked expanded = false;
 
-  get usersTemplates() {
-    return (this.args.users || []).map((user) => ({
-      name: user.name,
-      username: user.username,
-      userPath: userPath(user.username),
-      avatar: renderAvatar(user, {
-        imageSize: "large",
-        siteSettings: this.siteSettings,
-      }),
-      title: user.title || "",
-      prioritizeName: prioritizeNameInUx(user.name),
-    }));
+  get users() {
+    let users = this.args.users;
+    if (this.showViewMoreButton && !this.expanded) {
+      users = users.slice(0, this.args.truncateAt);
+    }
+    return users;
+  }
+
+  get showViewMoreButton() {
+    return (
+      this.args.truncateAt > 0 && this.args.users.length > this.args.truncateAt
+    );
+  }
+
+  @action
+  toggleExpanded() {
+    this.expanded = !this.expanded;
   }
 
   <template>
-    {{#each this.usersTemplates as |template|}}
-      <div data-username={{template.username}} class="user-info small">
-        <div class="user-image">
-          <div class="user-image-inner">
-            <a
-              href={{template.userPath}}
-              data-user-card={{template.username}}
-              aria-hidden="true"
-            >
-              {{htmlSafe template.avatar}}
-            </a>
-          </div>
-        </div>
-        <div class="user-detail">
-          <div class="name-line">
-            <a
-              href={{template.userPath}}
-              data-user-card={{template.username}}
-              aria-label={{i18n
-                "user.profile_possessive"
-                username=template.username
-              }}
-            >
-              <span class="username">
-                {{#if template.prioritizeName}}
-                  {{template.name}}
-                {{else}}
-                  {{template.username}}
-                {{/if}}
-              </span>
-              <span class="name">
-                {{#if template.prioritizeName}}
-                  {{template.username}}
-                {{else}}
-                  {{template.name}}
-                {{/if}}
-              </span>
-            </a>
-          </div>
-          <div class="title">{{template.title}}</div>
-        </div>
-      </div>
-    {{/each}}
+    <div class="about-page-users-list">
+      {{#each this.users as |user|}}
+        <AboutPageUser @user={{user}} />
+      {{/each}}
+    </div>
+    {{#if this.showViewMoreButton}}
+      <DButton
+        class="btn-flat about-page-users-list__expand-button"
+        @action={{this.toggleExpanded}}
+        @icon={{if this.expanded "chevron-up" "chevron-down"}}
+        @translatedLabel={{if
+          this.expanded
+          (i18n "about.view_less")
+          (i18n "about.view_more")
+        }}
+      />
+    {{/if}}
   </template>
 }

@@ -6,8 +6,15 @@
 
 ro:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: șterge automatizarea
     discourse_automation:
       create: Creează
+      no_automation_yet: Încă nu ai creat nicio automatizare. Alege o opțiune de mai jos pentru a începe.
+      filter_placeholder: Filtrează după nume sau descriere...
       fields:
         user:
           label: Utilizator
@@ -59,10 +66,21 @@ ro:
               label: ID subiect
         post_created_edited:
           fields:
+            original_post_only:
+              label: Doar articolul original
+              description: Se va declanșa doar dacă articolul este articolul original în subiect
+            restricted_tags:
+              label: Etichete
+              description: Opțional, se va declanșa doar dacă articolul are oricare dintre aceste etichete
             restricted_category:
               label: Categorie
             restricted_group:
               label: Grup
+            restricted_groups:
+              label: Grupuri
+            skip_via_email:
+              label: "Omite prin email"
+              description: "Omite declanșatorul dacă articolul a fost creat prin email"
           created: Creat
         user_updated:
           fields:
@@ -79,6 +97,14 @@ ro:
               label: Utilizatori
             restricted_group:
               label: Grup
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Etichete adăugate sau eliminate
+            tags_added: Etichete adăugate
+            tags_removed: Etichete eliminate
+          fields:
+            trigger_on:
+              label: Declanșator pornit
         after_post_cook:
           fields:
             restricted_category:
@@ -144,6 +170,7 @@ ro:
               label: ID subiect
             user:
               label: Utilizator
+      unnamed_automation: "Automatizare fără nume"
       models:
         trigger:
           name:
@@ -155,6 +182,8 @@ ro:
             label: Declanșator
           version:
             label: Versiune
+          status:
+            label: Stare
           enabled:
             label: Activat
           disabled:

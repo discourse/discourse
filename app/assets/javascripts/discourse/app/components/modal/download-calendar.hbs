@@ -31,13 +31,15 @@
       </div>
     </div>
 
-    <div class="control-group remember">
-      <label class="checkbox-label">
-        <Input @type="checkbox" @checked={{this.remember}} />
-        <span>{{i18n "download_calendar.remember"}}</span>
-      </label>
-      <span>{{i18n "download_calendar.remember_explanation"}}</span>
-    </div>
+    {{#if this.currentUser}}
+      <div class="control-group remember">
+        <label class="checkbox-label">
+          <Input @type="checkbox" @checked={{this.remember}} />
+          <span>{{i18n "download_calendar.remember"}}</span>
+        </label>
+        <span>{{i18n "download_calendar.remember_explanation"}}</span>
+      </div>
+    {{/if}}
   </:body>
   <:footer>
     <DButton

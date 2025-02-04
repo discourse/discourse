@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Middleware::DiscoursePublicExceptions do
-  before do
-    @orig_logger = Rails.logger
-    Rails.logger = @fake_logger = FakeLogger.new
-  end
+  let(:fake_logger) { FakeLogger.new }
 
-  after { Rails.logger = @orig_logger }
+  before { Rails.logger.broadcast_to(fake_logger) }
+
+  after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
   def env(opts = {})
     {
@@ -27,6 +26,6 @@ RSpec.describe Middleware::DiscoursePublicExceptions do
       ),
     )
 
-    expect(@fake_logger.warnings.length).to eq(0)
+    expect(fake_logger.warnings.length).to eq(0)
   end
 end

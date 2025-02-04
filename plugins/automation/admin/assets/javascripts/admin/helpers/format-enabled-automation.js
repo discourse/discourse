@@ -1,5 +1,5 @@
 import { htmlSafe } from "@ember/template";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import { iconHTML } from "discourse/lib/icon-library";
 
 export default function formatEnabledAutomation(enabled, trigger) {
   if (enabled && trigger.id) {
@@ -11,7 +11,7 @@ export default function formatEnabledAutomation(enabled, trigger) {
     );
   } else {
     return htmlSafe(
-      iconHTML("times", {
+      iconHTML("xmark", {
         class: "disabled-automation",
         title: "discourse_automation.models.automation.disabled.label",
       })

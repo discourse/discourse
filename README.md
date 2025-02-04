@@ -2,36 +2,51 @@
   <img src="images/discourse-readme-logo.png" width="300px">
 </a>
 
-Discourse is the online home for your community. We offer a 100% open source community platform to those who want complete control over how and where their site is run.
+The online home for your community. 
 
-Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform. Discourse allows you to create discussion topics and connect using real-time chat, as well as access an ever-growing number of official and community themes. In addition, we offer a wide variety of plugins for features ranging from chatbots powered by [Discourse AI](https://meta.discourse.org/t/discourse-ai/259214) to functionalities like SQL analysis using the [Data Explorer](https://meta.discourse.org/t/discourse-data-explorer/32566) plugin.
+![readme](https://github.com/user-attachments/assets/db764ef2-5cc2-4873-b11d-4a2052e1993d)
 
-To learn more, visit [**discourse.org**](https://www.discourse.org) and join our support community at [meta.discourse.org](https://meta.discourse.org).
 
-## Screenshots
+> You can self-host Discourse on your own infrastructure. But if you'd rather skip the setup, maintenance, and server management, we offer official Discourse hosting.
+>
+> 👉 Learn more about [Discourse hosting](https://discourse.org/pricing)
 
-<a href="https://blog.discourse.org/2023/08/discourse-3-1-is-here/"><img alt="Discourse 3.1" src="https://github-production-user-asset-6210df.s3.amazonaws.com/5862206/261215898-ae95f963-5ab4-4509-b87a-f9f6e9a109bf.png" width="720px"></a>
+Discourse is a 100% open-source community platform for those who want complete control over how and where their site is run.
 
-<a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://github-production-user-asset-6210df.s3.amazonaws.com/5862206/261580781-1413ac96-5d08-40b2-bc8e-27c3f2d3bfe6.png" width="720px"></a>
+Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform. 
 
-<a href="https://twittercommunity.com/"><img alt="X Community" src="https://github.com/discourse/discourse/assets/2790986/ebb63eee-1927-4060-ada1-cf1bc774084c.png" width="720px"></a>
+**With Discourse, you can:**
 
-<img src="https://user-images.githubusercontent.com/1681963/52239118-b304f800-289b-11e9-9904-16450680d9ec.jpg" alt="Mobile" width="414">
+* 💬 **Create discussion topics** to foster meaningful conversations.
 
-Browse [lots more notable Discourse instances](https://www.discourse.org/customers).
+* ⚡️ **Connect in real-time** with built-in chat.
+  
+* 🎨 **Customize your experience** with an ever-growing selection of official and community themes.
+
+* 🤖 **Enhance your community** with plugins, from chatbots powered by [Discourse AI](https://meta.discourse.org/t/discourse-ai/259214) to advanced tools like SQL analysis with the [Data Explorer](https://meta.discourse.org/t/discourse-data-explorer/32566) plugin.
+
+To learn more, visit [discourse.org](https://www.discourse.org/) and join our support community at [meta.discourse.org](https://meta.discourse.org/).
+
+
+Here are just a few of the incredible communities using Discourse: 
+
+![discourse-communities](https://github.com/user-attachments/assets/a79b5d56-7748-4f6d-8a2d-daa950366fcc)
+
+👉 [Discover more communities using Discourse](https://discover.discourse.org/)
+
 
 ## Development
 
-To get your environment set up, follow the community setup guide for your operating system.
+To get your environment set up, follow one of the setup guides:
 
-1. If you're on macOS, try the [macOS development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-macos-for-development/15772).
-1. If you're on Ubuntu, try the [Ubuntu development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-ubuntu-for-development/14727).
-1. If you're on Windows, try the [Windows 10 development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-windows-10-for-development/75149).
-1. If you're looking to use a simpler Docker-based install, try the [Docker development guide](https://meta.discourse.org/t/install-discourse-for-development-using-docker/102009).
+- [Docker / Dev Container](https://meta.discourse.org/t/336366)
+- [macOS](https://meta.discourse.org/t/15772)
+- [Ubuntu/Debian](https://meta.discourse.org/t/14727)
+- [Windows](https://meta.discourse.org/t/75149)
 
-If you're familiar with how Rails works and are comfortable setting up your own environment, you can also try out the [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md), which is aimed primarily at Ubuntu and macOS environments.
+Before you get started, ensure you have the following minimum versions: [Ruby 3.2+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 13](https://www.postgresql.org/download/), [Redis 7](https://redis.io/download).
 
-Before you get started, ensure you have the following minimum versions: [Ruby 3.2+](https://www.ruby-lang.org/en/downloads/), [PostgreSQL 13](https://www.postgresql.org/download/), [Redis 7](https://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
+For more information, check out [the Developer Documentation](https://meta.discourse.org/c/documentation/developer-guides/56).
 
 ## Setting up Discourse
 
@@ -40,8 +55,6 @@ If you want to set up a Discourse forum for production use, see our [**Discourse
 If you're looking for official hosting, see [discourse.org/pricing](https://www.discourse.org/pricing/).
 
 ## Requirements
-
-Discourse is built for the *next* 10 years of the Internet, so our requirements are high.
 
 Discourse supports the **latest, stable releases** of all major browsers and platforms:
 
@@ -86,13 +99,15 @@ We look forward to seeing your pull requests!
 
 We take security very seriously at Discourse; all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/main/docs/SECURITY.md) for an overview of security measures in Discourse, or if you wish to report a security issue.
 
+Security fixes are listed in the [release notes](https://meta.discourse.org/tags/c/announcements/67/release-notes) for each version.
+
 ## The Discourse Team
 
 The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/AUTHORS.md). For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to [the official Discourse blog](https://blog.discourse.org/2013/02/the-discourse-team/) and [GitHub's list of contributors](https://github.com/discourse/discourse/contributors).
 
 ## Copyright / License
 
-Copyright 2014 - 2023 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 - 2025 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.
@@ -115,3 +130,8 @@ To guide our ongoing effort to build accessible software we follow the [W3C’s 
 ## Dedication
 
 Discourse is built with [love, Internet style.](https://www.youtube.com/watch?v=Xe1TZaElTAs)
+
+For over a decade, our [amazing community](https://meta.discourse.org/) has helped shape Discourse into what it is today. Your support, feedback, and contributions have been invaluable in making Discourse a powerful and versatile platform.
+
+We’re deeply grateful for every feature request, bug report, and discussion that has driven Discourse forward. Thank you for being a part of this journey—we couldn’t have done it without you!
+

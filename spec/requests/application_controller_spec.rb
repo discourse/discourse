@@ -435,12 +435,11 @@ RSpec.describe ApplicationController do
       end
 
       describe "no logspam" do
-        before do
-          @orig_logger = Rails.logger
-          Rails.logger = @fake_logger = FakeLogger.new
-        end
+        let(:fake_logger) { FakeLogger.new }
 
-        after { Rails.logger = @orig_logger }
+        before { Rails.logger.broadcast_to(fake_logger) }
+
+        after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
         it "should handle 404 to a css file" do
           Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
@@ -462,9 +461,9 @@ RSpec.describe ApplicationController do
           expect(response.body).to include(topic1.title)
           expect(response.body).to_not include(topic2.title)
 
-          expect(@fake_logger.fatals.length).to eq(0)
-          expect(@fake_logger.errors.length).to eq(0)
-          expect(@fake_logger.warnings.length).to eq(0)
+          expect(fake_logger.fatals.length).to eq(0)
+          expect(fake_logger.errors.length).to eq(0)
+          expect(fake_logger.warnings.length).to eq(0)
         end
       end
 
@@ -941,8 +940,6 @@ RSpec.describe ApplicationController do
     context "with rate limits" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       it "serves a LimitExceeded error in the preferred locale" do
         SiteSetting.max_likes_per_day = 1
         post1 = Fabricate(:post)
@@ -1138,6 +1135,44 @@ RSpec.describe ApplicationController do
         end
       end
     end
+
+    context "with set_locale_from_param enabled" do
+      context "when param locale differs from default locale" do
+        before do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_param = true
+          SiteSetting.default_locale = "en"
+        end
+
+        context "with an anonymous user" do
+          it "uses the locale from the param" do
+            get "/latest?lang=es"
+            expect(response.status).to eq(200)
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/es.js")
+            expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
+          end
+        end
+
+        context "when the preferred locale includes a region" do
+          it "returns the locale and region separated by an underscore" do
+            get "/latest?lang=zh-CN"
+            expect(response.status).to eq(200)
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+          end
+        end
+      end
+
+      context "when locale param is not set" do
+        it "uses the site default locale" do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.default_locale = "en"
+
+          get "/latest"
+          expect(response.status).to eq(200)
+          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+        end
+      end
+    end
   end
 
   describe "vary header" do
@@ -1165,8 +1200,6 @@ RSpec.describe ApplicationController do
 
     before { RateLimiter.enable }
 
-    use_redis_snapshotting
-
     it "is included when API key is rate limited" do
       global_setting :max_admin_api_reqs_per_minute, 1
       api_key = ApiKey.create!(user_id: admin.id).key
@@ -1180,8 +1213,7 @@ RSpec.describe ApplicationController do
 
     it "is included when user API key is rate limited" do
       global_setting :max_user_api_reqs_per_minute, 1
-      user_api_key =
-        UserApiKey.create!(user_id: admin.id, client_id: "", application_name: "discourseapp")
+      user_api_key = UserApiKey.create!(user_id: admin.id)
       user_api_key.scopes =
         UserApiKeyScope.all_scopes.keys.map do |name|
           UserApiKeyScope.create!(name: name, user_api_key_id: user_api_key.id)
@@ -1216,8 +1248,6 @@ RSpec.describe ApplicationController do
       SiteSetting.slow_down_crawler_rate = 128
       SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
     end
-
-    use_redis_snapshotting
 
     it "are rate limited" do
       now = Time.zone.now
@@ -1478,6 +1508,22 @@ RSpec.describe ApplicationController do
       ensure
         Discourse.disable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
       end
+    end
+  end
+
+  describe "#set_current_user_for_logs" do
+    fab!(:admin)
+
+    it "sets the X-Discourse-Route header to the controller name and action including namespace" do
+      sign_in(admin)
+
+      get "/admin/users/#{admin.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Route"]).to eq("admin/users/show")
+
+      get "/u/#{admin.username}.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Route"]).to eq("users/show")
     end
   end
 end

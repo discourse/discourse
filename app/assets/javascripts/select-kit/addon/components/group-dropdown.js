@@ -1,42 +1,47 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { gte, reads } from "@ember/object/computed";
+import { classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
-export default ComboBoxComponent.extend({
-  pluginApiIdentifiers: ["group-dropdown"],
-  classNames: ["group-dropdown"],
-  content: reads("groupsWithShortcut"),
-  valueProperty: null,
-  nameProperty: null,
-  hasManyGroups: gte("content.length", 10),
-  enableGroupDirectory: setting("enable_group_directory"),
+@classNames("group-dropdown")
+@selectKitOptions({
+  caretDownIcon: "caret-right",
+  caretUpIcon: "caret-down",
+  filterable: "hasManyGroups",
+})
+@pluginApiIdentifiers("group-dropdown")
+export default class GroupDropdown extends ComboBoxComponent {
+  @reads("groupsWithShortcut") content;
+  @gte("content.length", 10) hasManyGroups;
+  @setting("enable_group_directory") enableGroupDirectory;
 
-  selectKitOptions: {
-    caretDownIcon: "caret-right",
-    caretUpIcon: "caret-down",
-    filterable: "hasManyGroups",
-  },
+  valueProperty = null;
+  nameProperty = null;
 
-  groupsWithShortcut: computed("groups.[]", function () {
+  @computed("groups.[]")
+  get groupsWithShortcut() {
     const shortcuts = [];
 
     if (this.enableGroupDirectory || this.get("currentUser.staff")) {
-      shortcuts.push(I18n.t("groups.index.all"));
+      shortcuts.push(i18n("groups.index.all"));
     }
 
     return shortcuts.concat(this.groups);
-  }),
+  }
 
-  actions: {
-    onChange(groupName) {
-      if ((this.groups || []).includes(groupName)) {
-        DiscourseURL.routeToUrl(`/g/${groupName}`);
-      } else {
-        DiscourseURL.routeToUrl(`/g`);
-      }
-    },
-  },
-});
+  @action
+  onChange(groupName) {
+    if ((this.groups || []).includes(groupName)) {
+      DiscourseURL.routeToUrl(`/g/${groupName}`);
+    } else {
+      DiscourseURL.routeToUrl(`/g`);
+    }
+  }
+}

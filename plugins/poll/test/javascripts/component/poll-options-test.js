@@ -1,8 +1,8 @@
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 const OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 0, rank: 0 },
@@ -46,7 +46,7 @@ module("Poll | Component | poll-options", function (hooks) {
       @sendRadioClick={{this.toggleOption}}
     />`);
 
-    assert.strictEqual(count("li .d-icon-far-circle:nth-of-type(1)"), 3);
+    assert.dom("li .d-icon-far-circle:nth-of-type(1)").exists({ count: 3 });
   });
 
   test("single, selected", async function (assert) {
@@ -67,7 +67,7 @@ module("Poll | Component | poll-options", function (hooks) {
         @sendRadioClick={{this.toggleOption}}
       />`);
 
-    assert.strictEqual(count("li .d-icon-circle:nth-of-type(1)"), 1);
+    assert.dom("li .d-icon-circle:nth-of-type(1)").exists({ count: 1 });
   });
 
   test("multi, not selected", async function (assert) {
@@ -88,7 +88,7 @@ module("Poll | Component | poll-options", function (hooks) {
         @sendRadioClick={{this.toggleOption}}
       />`);
 
-    assert.strictEqual(count("li .d-icon-far-square:nth-of-type(1)"), 3);
+    assert.dom("li .d-icon-far-square:nth-of-type(1)").exists({ count: 3 });
   });
 
   test("multi, selected", async function (assert) {
@@ -109,7 +109,9 @@ module("Poll | Component | poll-options", function (hooks) {
       @sendRadioClick={{this.toggleOption}}
     />`);
 
-    assert.strictEqual(count("li .d-icon-far-check-square:nth-of-type(1)"), 1);
+    assert
+      .dom("li .d-icon-far-square-check:nth-of-type(1)")
+      .exists({ count: 1 });
   });
 
   test("single with images", async function (assert) {
@@ -126,6 +128,37 @@ module("Poll | Component | poll-options", function (hooks) {
       @sendRadioClick={{this.toggleOption}}
     />`);
 
-    assert.strictEqual(count("li img"), 2);
+    assert.dom("li img").exists({ count: 2 });
+  });
+
+  test("ranked choice - priorities", async function (assert) {
+    this.setProperties({
+      isCheckbox: false,
+      isRankedChoice: true,
+      rankedChoiceDropdownContent: [],
+      options: OPTIONS,
+      votes: [],
+    });
+
+    await render(hbs`<PollOptions
+      @isCheckbox={{this.isCheckbox}}
+      @isRankedChoice={{this.isRankedChoice}}
+      @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
+      @options={{this.options}}
+      @votes={{this.votes}}
+      @sendRadioClick={{this.toggleOption}}
+    />`);
+
+    await click(
+      `.ranked-choice-poll-option[data-poll-option-id='${OPTIONS[0].id}'] button`
+    );
+
+    assert
+      .dom(".dropdown-menu__item:nth-child(2)")
+      .hasText(`1 ${i18n("poll.options.ranked_choice.highest_priority")}`);
+
+    assert
+      .dom(".dropdown-menu__item:nth-child(4)")
+      .hasText(`3 ${i18n("poll.options.ranked_choice.lowest_priority")}`);
   });
 });

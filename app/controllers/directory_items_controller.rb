@@ -62,7 +62,8 @@ class DirectoryItemsController < ApplicationController
 
     user_ids = nil
     if params[:name].present?
-      user_ids = UserSearch.new(params[:name], include_staged_users: true).search.pluck(:id)
+      user_ids =
+        UserSearch.new(params[:name], { include_staged_users: true, limit: 200 }).search.pluck(:id)
       if user_ids.present?
         # Add the current user if we have at least one other match
         user_ids << current_user.id if current_user && result.dup.where(user_id: user_ids).exists?
@@ -86,7 +87,7 @@ class DirectoryItemsController < ApplicationController
     result_count = result.count
     result = result.limit(limit).offset(limit * page).to_a
 
-    more_params = params.slice(:period, :order, :asc, :group, :user_field_ids).permit!
+    more_params = params.slice(:period, :order, :asc, :group, :user_field_ids, :name).permit!
     more_params[:page] = page + 1
     load_more_uri = URI.parse(directory_items_path(more_params))
     load_more_directory_items_json = "#{load_more_uri.path}.json?#{load_more_uri.query}"
@@ -123,6 +124,9 @@ class DirectoryItemsController < ApplicationController
     end
 
     serializer_opts[:attributes] = active_directory_column_names
+    serializer_opts[:searchable_fields] = UserField.where(searchable: true) if serializer_opts[
+      :user_custom_field_map
+    ].present?
 
     serialized = serialize_data(result, DirectoryItemSerializer, serializer_opts)
     render_json_dump(

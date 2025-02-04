@@ -6,25 +6,32 @@ class ReviewableScore < ActiveRecord::Base
   belongs_to :reviewed_by, class_name: "User"
   belongs_to :meta_topic, class_name: "Topic"
 
-  enum status: { pending: 0, agreed: 1, disagreed: 2, ignored: 3 }
+  enum :status, { pending: 0, agreed: 1, disagreed: 2, ignored: 3 }
 
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.
   def self.types
-    @types ||= PostActionType.flag_types.merge(PostActionType.score_types)
+    PostActionType.flag_types.merge(PostActionType.score_types).merge(@api_types || {})
+  end
+
+  def self.type_title(type)
+    I18n.t("post_action_types.#{type}.title", default: nil) ||
+      I18n.t("reviewable_score_types.#{type}.title", default: nil) ||
+      PostActionType.names[types[type]]
   end
 
   # When extending post action flags, we need to call this method in order to
   # get the latests flags.
   def self.reload_types
-    @types = nil
+    @api_types = nil
     types
   end
 
   def self.add_new_types(type_names)
+    @api_types ||= {}
     next_id = types.values.max + 1
 
-    type_names.each_with_index { |name, idx| @types[name] = next_id + idx }
+    type_names.each_with_index { |name, idx| @api_types[name] = next_id + idx }
   end
 
   def self.score_transitions

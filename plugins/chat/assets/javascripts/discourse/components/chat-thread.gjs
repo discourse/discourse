@@ -8,10 +8,10 @@ import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
@@ -38,6 +38,7 @@ import Message from "./chat-message";
 import ChatMessagesContainer from "./chat-messages-container";
 import ChatMessagesScroller from "./chat-messages-scroller";
 import ChatSkeleton from "./chat-skeleton";
+import ChatThreadHeading from "./chat-thread-heading";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatThread extends Component {
@@ -45,7 +46,6 @@ export default class ChatThread extends Component {
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatComposerPresenceManager;
   @service chatHistory;
   @service chatDraftsManager;
   @service chatThreadComposer;
@@ -143,7 +143,6 @@ export default class ChatThread extends Component {
       (state.distanceToBottom.pixels > 250 && !state.atBottom);
     this.isScrolling = false;
     this.atBottom = state.atBottom;
-    this.args.setFullTitle?.(state.atTop);
 
     if (state.atBottom) {
       this.fetchMoreMessages({ direction: FUTURE });
@@ -365,7 +364,7 @@ export default class ChatThread extends Component {
       message.message.length > this.siteSettings.chat_maximum_message_length
     ) {
       this.dialog.alert(
-        I18n.t("chat.message_too_long", {
+        i18n("chat.message_too_long", {
           count: this.siteSettings.chat_maximum_message_length,
         })
       );
@@ -443,17 +442,16 @@ export default class ChatThread extends Component {
     }
 
     try {
-      const params = {
-        message: message.message,
-        in_reply_to_id: null,
-        staged_id: message.id,
-        upload_ids: message.uploads.map((upload) => upload.id),
-        thread_id: message.thread.id,
-      };
-
       const response = await this.chatApi.sendMessage(
         this.args.thread.channel.id,
-        Object.assign({}, params, extractCurrentTopicInfo(this))
+        {
+          message: message.message,
+          in_reply_to_id: null,
+          staged_id: message.id,
+          upload_ids: message.uploads.map((upload) => upload.id),
+          thread_id: message.thread.id,
+          ...extractCurrentTopicInfo(this),
+        }
       );
 
       this.args.thread.currentUserMembership ??=
@@ -569,6 +567,8 @@ export default class ChatThread extends Component {
             {{/if}}
           {{/unless}}
         </ChatMessagesContainer>
+
+        <ChatThreadHeading @thread={{@thread}} />
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow

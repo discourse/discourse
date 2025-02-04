@@ -1,15 +1,17 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import { tagName } from "@ember-decorators/component";
+import discourseComputed from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 const LIST_TYPE = {
   NORMAL: "normal",
   MUTED: "muted",
 };
 
-export default Component.extend({
-  tagName: "",
-  category: null,
-  listType: LIST_TYPE.NORMAL,
+@tagName("")
+export default class CategoryListItem extends Component {
+  category = null;
+  listType = LIST_TYPE.NORMAL;
 
   @discourseComputed("category.isHidden", "category.hasMuted", "listType")
   isHidden(isHiddenCategory, hasMuted, listType) {
@@ -17,7 +19,7 @@ export default Component.extend({
       (isHiddenCategory && listType === LIST_TYPE.NORMAL) ||
       (!hasMuted && listType === LIST_TYPE.MUTED)
     );
-  },
+  }
 
   @discourseComputed("category.isMuted", "listType")
   isMuted(isMutedCategory, listType) {
@@ -25,20 +27,22 @@ export default Component.extend({
       (isMutedCategory && listType === LIST_TYPE.NORMAL) ||
       (!isMutedCategory && listType === LIST_TYPE.MUTED)
     );
-  },
+  }
 
-  @discourseComputed("topicTrackingState.messageCount")
-  unreadTopicsCount() {
+  get unreadTopicsCount() {
     return this.category.unreadTopicsCount;
-  },
+  }
 
-  @discourseComputed("topicTrackingState.messageCount")
-  newTopicsCount() {
+  get newTopicsCount() {
     return this.category.newTopicsCount;
-  },
+  }
 
   @discourseComputed("category.path")
   slugPath(categoryPath) {
     return categoryPath.substring("/c/".length);
-  },
-});
+  }
+
+  applyValueTransformer(name, value, context) {
+    return applyValueTransformer(name, value, context);
+  }
+}
