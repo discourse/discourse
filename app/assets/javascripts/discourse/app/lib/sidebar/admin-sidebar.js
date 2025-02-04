@@ -60,7 +60,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
   get text() {
     return this.adminSidebarNavLink.label
-      ? i18n(this.adminSidebarNavLink.label)
+      ? i18n(this.adminSidebarNavLink.label, {
+          translatedFallback: this.adminSidebarNavLink.text,
+        })
       : this.adminSidebarNavLink.text;
   }
 
@@ -316,6 +318,7 @@ function pluginAdminRouteLinks(router) {
           ? [plugin.admin_route.location]
           : [],
         label: plugin.admin_route.label,
+        text: plugin.humanized_name,
         icon: "gear",
       };
     });
