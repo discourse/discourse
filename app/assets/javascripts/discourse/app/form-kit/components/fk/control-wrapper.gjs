@@ -96,6 +96,7 @@ export default class FKControlWrapper extends Component {
           @height={{@height}}
           @preview={{@preview}}
           @selection={{@selection}}
+          @includeNone={{@includeNone}}
           id={{@field.id}}
           name={{@field.name}}
           aria-invalid={{if this.error "true"}}
