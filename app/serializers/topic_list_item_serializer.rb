@@ -11,6 +11,7 @@ class TopicListItemSerializer < ListableTopicSerializer
              :category_id,
              :op_like_count,
              :op_can_like,
+             :op_liked,
              :pinned_globally,
              :liked_post_numbers,
              :featured_link,
@@ -35,19 +36,23 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def op_can_like
     return false if !scope.user || !object.first_post
+    return false if op_liked
 
     first_post = object.first_post
-    begin
-      scope.ensure_post_can_act!(first_post, PostActionType.types[:like])
+    return false if first_post.user_id == scope.user.id
+    return false unless scope.post_can_act?(first_post, :like)
 
-      !PostAction.find_by(
-        user_id: scope.user.id,
-        post_id: first_post.id,
-        post_action_type_id: PostActionType.types[:like],
-      ).present?
-    rescue Discourse::InvalidAccess
-      false
-    end
+    true
+  end
+
+  def op_liked
+    return false if !scope.user || !object.first_post
+
+    PostAction.where(
+      user_id: scope.user.id,
+      post_id: object.first_post.id,
+      post_action_type_id: PostActionType.types[:like],
+    ).exists?
   end
 
   def last_poster_username
