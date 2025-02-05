@@ -2,7 +2,7 @@
 
 require "enum_site_setting"
 
-class InterfaceColorSelector < EnumSiteSetting
+class InterfaceColorSelectorSetting < EnumSiteSetting
   def self.valid_value?(val)
     values.any? { |v| v[:value].to_s == val.to_s }
   end
