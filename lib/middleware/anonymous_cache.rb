@@ -18,6 +18,7 @@ module Middleware
         t: "key_cache_theme_ids",
         ca: "key_compress_anon",
         l: "key_locale",
+        cm: "key_forced_color_mode",
       }
     end
 
@@ -174,6 +175,11 @@ module Middleware
 
       def key_cache_theme_ids
         theme_ids.join(",")
+      end
+
+      def key_forced_color_mode
+        val = @request.cookies["forced_color_mode"]
+        %w[light dark].include?(val) ? val : ""
       end
 
       def key_compress_anon
