@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 export default class ReviewIndexController extends Controller {
   @service currentUser;
   @service dialog;
+  @service toasts;
   queryParams = [
     "priority",
     "type",
@@ -149,6 +150,9 @@ export default class ReviewIndexController extends Controller {
             type: "delete",
           });
           this.set("unknownReviewableTypes", []);
+          this.toasts.success({
+            data: { message: i18n("review.unknown.ignore_success") },
+          });
         } catch (e) {
           popupAjaxError(e);
         }

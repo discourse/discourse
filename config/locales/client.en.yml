@@ -585,10 +585,14 @@ en:
       in_reply_to: "in reply to"
       filtered_flagged_by: "Flagged by"
       unknown:
-        title: "You have pending reviewables from disabled plugins:"
+        title:
+          one: "You have pending reviewables from disabled plugin:"
+          other: "You have pending reviewables from disabled plugins:"
         instruction: "They cannot be properly displayed until you enable the relevant plugin. Please enable the plugin and refresh the page. Alternatively, you can ignore them. <a href='%{url}' target='_blank'>Learn more...</a>"
         ignore_all: "Ignore all"
+        enable_plugins: "Enable plugins"
         delete_confirm: "Are you sure you want to delete all reviews created by disabled plugins?"
+        ignore_success: "All reviews created by disabled plugins have been deleted."
       explain:
         why: "explain why this item ended up in the queue"
         title: "Reviewable Scoring"

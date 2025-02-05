@@ -766,6 +766,14 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  def self.unknown_types
+    Reviewable.pending.distinct.pluck(:type) - Reviewable.sti_names
+  end
+
+  def self.destroy_unknown_types!
+    Reviewable.pending.where.not(type: Reviewable.sti_names).delete_all
+  end
+
   private
 
   def update_flag_stats(status:, user_ids:)
