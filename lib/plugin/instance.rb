@@ -115,6 +115,7 @@ class Plugin::Instance
       label: label,
       location: location,
       use_new_show_route: opts.fetch(:use_new_show_route, false),
+      auto_generated: false,
     }
   end
 
@@ -128,7 +129,7 @@ class Plugin::Instance
     end
 
     route
-      .slice(:location, :label, :use_new_show_route)
+      .slice(:location, :label, :use_new_show_route, :auto_generated)
       .tap do |admin_route|
         path = admin_route[:use_new_show_route] ? "show" : admin_route[:location]
         admin_route[:full_location] = "adminPlugins.#{path}"
@@ -1495,6 +1496,11 @@ class Plugin::Instance
   end
 
   def default_admin_route
-    { label: "#{name.underscore}.title", location: name, use_new_show_route: true }
+    {
+      label: "#{name.underscore}.title",
+      location: name,
+      use_new_show_route: true,
+      auto_generated: true,
+    }
   end
 end
