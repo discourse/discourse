@@ -500,7 +500,7 @@ en:
       dropdown:
         title: "Open the latest drafts menu"
         untitled: "Untitled draft"
-        view_all: "view all"
+        view_all: "view all drafts"
         other_drafts:
           one: "+%{count} other draft"
           other: "+%{count} other drafts"
