@@ -65,14 +65,15 @@ describe "Drafts dropdown", type: :system do
       expect(drafts_dropdown.other_drafts_count).to eq(1)
     end
 
-    it "shows the view all drafts when draft count exceeds the draft menu limit" do
+    it "shows the view all drafts when there are other drafts to display" do
       page.visit "/"
       drafts_dropdown.open
 
       expect(drafts_dropdown).to be_open
-      expect(drafts_dropdown).not_to have_view_all_link
+      expect(drafts_dropdown).to have_view_all_link
+    end
 
-      # remove the last 2 drafts
+    it "does not show the view all drafts link when all drafts are displayed" do
       Draft.where(user_id: user.id).order("created_at DESC").limit(2).destroy_all
 
       page.visit "/"
@@ -84,10 +85,35 @@ describe "Drafts dropdown", type: :system do
   end
 
   describe "with private category" do
-    fab!(:category) { Fabricate(:private_category) }
+    fab!(:group)
+    fab!(:group_user) { Fabricate(:group_user, user: user, group: group) }
+    fab!(:category) { Fabricate(:private_category, group: group, permission_type: 3) }
+    fab!(:subcategory) do
+      Fabricate(
+        :private_category,
+        parent_category_id: category.id,
+        group: group,
+        permission_type: 1,
+      )
+    end
 
-    it "disabled the drafts dropdown menu" do
-      page.visit "/c/#{category.slug}"
+    let(:category_page) { PageObjects::Pages::Category.new }
+
+    before do
+      SiteSetting.default_subcategory_on_read_only_category = false
+
+      Draft.set(
+        user,
+        Draft::NEW_TOPIC,
+        0,
+        { title: "This is a test topic", reply: "Lorem ipsum dolor sit amet" }.to_json,
+      )
+    end
+
+    it "disables the drafts dropdown menu when new topic button is disabled" do
+      category_page.visit(category)
+
+      expect(category_page).to have_button("New Topic", disabled: true)
       expect(drafts_dropdown).to be_disabled
     end
   end
