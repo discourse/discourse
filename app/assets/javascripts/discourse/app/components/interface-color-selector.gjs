@@ -42,7 +42,7 @@ export default class InterfaceColorSelector extends Component {
     <DMenu
       @icon={{this.selectorIcon}}
       @triggerClass="btn-flat sidebar-footer-actions-button"
-      @identifier="sidebar-footer-interface-color-selector"
+      @identifier="interface-color-selector"
       @animated={{false}}
       class="interface-color-selector icon"
     >
