@@ -148,7 +148,7 @@ class DiscoursePluginRegistry
   end
 
   def self.register_svg_icon(icon)
-    icon = ::SvgSprite.process(icon) if Rails.env.test?
+    ::SvgSprite.process(icon) if Rails.env.test?
     self.svg_icons << icon
   end
 
