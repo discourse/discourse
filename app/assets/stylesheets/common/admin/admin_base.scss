@@ -307,6 +307,13 @@ $mobile-breakpoint: 700px;
       max-height: $maxHeight;
       overflow: hidden;
       position: relative;
+      color: var(--primary-medium);
+
+      @include breakpoint(mobile-extra-large) {
+        word-wrap: break-word;
+        max-width: 80vw;
+        margin-right: 3em;
+      }
 
       &::after {
         content: " ";
@@ -321,12 +328,6 @@ $mobile-breakpoint: 700px;
           rgba(var(--secondary-rgb), 0.15)
         );
       }
-      @include breakpoint(mobile-extra-large) {
-        word-wrap: break-word;
-        max-width: 80vw;
-        margin-right: 3em;
-      }
-      color: var(--primary-medium);
     }
   }
 

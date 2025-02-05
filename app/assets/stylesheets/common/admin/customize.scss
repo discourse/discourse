@@ -386,16 +386,17 @@
     max-height: 60vh;
     border-bottom-right-radius: var(--d-border-radius);
     border-bottom-left-radius: var(--d-border-radius);
+    border-right: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--primary-low);
+    border-left: 1px solid var(--primary-low);
+    width: 100%;
+
     @media screen and (max-height: 1000px) {
       max-height: 50vh;
     }
     @media screen and (max-height: 800px) {
       max-height: 40vh;
     }
-    border-right: 1px solid var(--primary-low);
-    border-bottom: 1px solid var(--primary-low);
-    border-left: 1px solid var(--primary-low);
-    width: 100%;
 
     &__item:last-child {
       border-bottom: none;
@@ -557,10 +558,11 @@
     }
 
     .setting-label {
+      word-wrap: break-word;
+
       @include breakpoint(tablet, min-width) {
         width: 25%;
       }
-      word-wrap: break-word;
 
       h3 {
         margin-top: 0;
