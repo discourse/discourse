@@ -257,7 +257,7 @@ export default class UserController extends Controller {
       buttons: [
         {
           label: i18n("admin.user.delete_dont_block"),
-          class: "btn-primary",
+          class: "btn-danger",
           action: () => {
             return performDestroy(false);
           },
