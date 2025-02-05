@@ -21,6 +21,14 @@ module PageObjects
         has_no_css?(MENU_SELECTOR + "-content")
       end
 
+      def has_view_all_link?
+        has_css?(MENU_SELECTOR + "-content .view-all-drafts")
+      end
+
+      def has_no_view_all_link?
+        has_no_css?(MENU_SELECTOR + "-content .view-all-drafts")
+      end
+
       def open
         find(MENU_SELECTOR + "-trigger").click
       end
