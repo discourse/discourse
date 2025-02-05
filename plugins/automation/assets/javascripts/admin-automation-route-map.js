@@ -1,11 +1,11 @@
 export default {
-  resource: "admin.adminPlugins",
+  resource: "admin.adminPlugins.show",
 
   path: "/plugins",
 
   map() {
     this.route(
-      "discourse-automation",
+      "automation",
 
       function () {
         this.route("new");
