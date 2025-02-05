@@ -15,7 +15,10 @@ import SmallUserList, {
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
-import { applyMutableValueTransformer } from "discourse/lib/transformer";
+import {
+  applyMutableValueTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -81,7 +84,11 @@ export default class PostMenu extends Component {
   @service siteSettings;
   @service store;
 
-  @tracked collapsed = true; // TODO (glimmer-post-menu): Some plugins will need a value transformer
+  @tracked collapsed = applyValueTransformer(
+    "post-menu-buttons-collapsed",
+    true,
+    { post: this.args.post }
+  );
   @tracked isWhoLikedVisible = false;
   @tracked likedUsers = [];
   @tracked totalLikedUsers;
@@ -572,7 +579,7 @@ export default class PostMenu extends Component {
   }
 
   <template>
-    {{! The section tag can't be include while we're still using the widget shim }}
+    {{! TODO (glimmer-post) The section tag can't be include while we're still using the widget shim }}
     {{! <section class="post-menu-area clearfix"> }}
     <PluginOutlet
       @name="post-menu"
@@ -582,7 +589,6 @@ export default class PostMenu extends Component {
         {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}
         class={{concatClass
           "post-controls"
-          "glimmer-post-menu"
           (if
             (and
               (this.showMoreButton.shouldRender

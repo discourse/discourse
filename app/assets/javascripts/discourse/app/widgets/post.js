@@ -6,7 +6,6 @@ import ShareTopicModal from "discourse/components/modal/share-topic";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
-import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import getURL, { getAbsoluteURL, getURLWithCDN } from "discourse/lib/get-url";
@@ -17,7 +16,6 @@ import {
   prioritizeNameFallback,
   prioritizeNameInUx,
 } from "discourse/lib/settings";
-import { consolePrefix } from "discourse/lib/source-identifier";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import {
@@ -43,19 +41,6 @@ function transformWithCallbacks(post, topicUrl, store) {
 
   return transformed;
 }
-
-let postMenuWidgetExtensionsAdded = null;
-let postMenuConsoleWarningLogged = false;
-
-registerDeprecationHandler((_, opts) => {
-  if (opts?.id === "discourse.post-menu-widget-overrides") {
-    if (!postMenuWidgetExtensionsAdded) {
-      postMenuWidgetExtensionsAdded = new Set();
-    }
-
-    postMenuWidgetExtensionsAdded.add(consolePrefix().slice(1, -1));
-  }
-});
 
 export function avatarImg(wanted, attrs) {
   const size = translateSize(wanted);
@@ -549,36 +534,45 @@ createWidget("post-contents", {
       },
     };
 
-    if (
-      this.siteSettings.glimmer_post_menu_mode === "enabled" ||
-      (this.siteSettings.glimmer_post_menu_mode === "auto" &&
-        !postMenuWidgetExtensionsAdded)
-    ) {
-      if (!postMenuConsoleWarningLogged) {
-        postMenuConsoleWarningLogged = true;
-
-        if (!isTesting()) {
-          // eslint-disable-next-line no-console
-          console.log("✅  Using the new 'glimmer' post menu!");
-        }
-
-        if (postMenuWidgetExtensionsAdded) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            [
-              "Using the new 'glimmer' post menu, even though there are themes and/or plugins using deprecated APIs (glimmer_post_menu_mode = enabled).\n" +
-                "The following plugins and/or themes are using deprecated APIs, their post menu customizations are broken and may cause your site to not work properly:",
-              ...Array.from(postMenuWidgetExtensionsAdded).sort(),
-              // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
-            ].join("\n- ")
-          );
-        }
-      }
-
-      const filteredRepliesView =
-        this.siteSettings.enable_filtered_replies_view;
-      result.push(
-        this.attach("glimmer-post-menu", {
+    const filteredRepliesView = this.siteSettings.enable_filtered_replies_view;
+    result.push(
+      // TODO (glimmer-post):
+      //  Once this widget shim is removed the `<section>...</section>` tag needs to be added to the PostMenu component
+      new RenderGlimmer(
+        this,
+        "section.post-menu-area.clearfix",
+        hbs`
+          <Post::Menu
+            @canCreatePost={{@data.canCreatePost}}
+            @filteredRepliesView={{@data.filteredRepliesView}}
+            @nextPost={{@data.nextPost}}
+            @post={{@data.post}}
+            @prevPost={{@data.prevPost}}
+            @repliesShown={{@data.repliesShown}}
+            @showReadIndicator={{@data.showReadIndicator}}
+            @changeNotice={{@data.changeNotice}}
+            @changePostOwner={{@data.changePostOwner}}
+            @copyLink={{@data.copyLink}}
+            @deletePost={{@data.deletePost}}
+            @editPost={{@data.editPost}}
+            @grantBadge={{@data.grantBadge}}
+            @lockPost={{@data.lockPost}}
+            @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+            @rebakePost={{@data.rebakePost}}
+            @recoverPost={{@data.recoverPost}}
+            @replyToPost={{@data.replyToPost}}
+            @share={{@data.share}}
+            @showFlags={{@data.showFlags}}
+            @showLogin={{@data.showLogin}}
+            @showPagePublish={{@data.showPagePublish}}
+            @toggleLike={{@data.toggleLike}}
+            @togglePostType={{@data.togglePostType}}
+            @toggleReplies={{@data.toggleReplies}}
+            @toggleWiki={{@data.toggleWiki}}
+            @unhidePost={{@data.unhidePost}}
+            @unlockPost={{@data.unlockPost}}
+          />`,
+        {
           canCreatePost: attrs.canCreatePost,
           filteredRepliesView,
           nextPost: attrs.nextPost,
@@ -612,27 +606,9 @@ createWidget("post-contents", {
           toggleWiki: () => this.sendWidgetAction("toggleWiki"), // this action comes from the post stream
           unhidePost: () => this.sendWidgetAction("unhidePost"), // this action comes from the post stream
           unlockPost: () => this.sendWidgetAction("unlockPost"), // this action comes from the post stream
-        })
-      );
-    } else {
-      if (
-        this.siteSettings.glimmer_post_menu_mode !== "disabled" &&
-        postMenuWidgetExtensionsAdded &&
-        !postMenuConsoleWarningLogged
-      ) {
-        postMenuConsoleWarningLogged = true;
-        // eslint-disable-next-line no-console
-        console.warn(
-          [
-            "Using the legacy 'widget' post menu because the following plugins and/or themes are using deprecated APIs:",
-            ...Array.from(postMenuWidgetExtensionsAdded).sort(),
-            // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
-          ].join("\n- ")
-        );
-      }
-
-      result.push(this.attach("post-menu", attrs, extraState));
-    }
+        }
+      )
+    );
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {

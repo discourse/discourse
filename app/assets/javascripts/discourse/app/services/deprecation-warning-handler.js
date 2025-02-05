@@ -20,7 +20,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.plugin-outlet-tag-name",
   "discourse.plugin-outlet-parent-view",
   "discourse.d-button-action-string",
-  "discourse.post-menu-widget-overrides",
   "discourse.fontawesome-6-upgrade",
   "discourse.add-flag-property",
   "discourse.breadcrumbs.childCategories",
