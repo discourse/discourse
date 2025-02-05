@@ -386,4 +386,46 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     assert.dom(document.body).isFocused();
   });
+
+  test("traps pointerdown events only when expanded ", async function (assert) {
+    let propagated = false;
+
+    const listener = () => {
+      propagated = true;
+    };
+
+    this.didInsert = (element) => {
+      element.addEventListener("pointerdown", listener);
+    };
+    this.willDestroy = (element) => {
+      element.removeEventListener("pointerdown", listener);
+    };
+
+    await render(hbs`
+      <div {{didInsert this.didInsert}} {{will-destroy this.willDestroy}}>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @identifier="d-menu-pointerdown-trap-test"
+        />
+      </div>
+    `);
+
+    await triggerEvent(".d-menu-pointerdown-trap-test-trigger", "pointerdown");
+
+    assert.true(
+      propagated,
+      "the pointerdown event is propagated to the parent element when the menu isn't expanded"
+    );
+
+    propagated = false;
+
+    await open();
+    await triggerEvent(".d-menu-pointerdown-trap-test-trigger", "pointerdown");
+
+    assert.false(
+      propagated,
+      "the pointerdown event isn't propagated to the parent element when the menu is expanded"
+    );
+  });
 });
