@@ -97,6 +97,29 @@
   word-wrap: break-word;
   line-height: 1.5;
 
+  video {
+    max-width: 100%;
+  }
+
+  sup sup {
+    top: 0;
+  }
+
+  img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+    max-width: 100%;
+    height: auto;
+    display: inline-block; // Ensure dimensions are maintained even after load error
+
+    @supports not (aspect-ratio: 1) {
+      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
+      height: var(--calculated-height);
+    }
+  }
+
+  svg {
+    max-height: 2000px;
+  }
+
   > *:first-child {
     margin-top: 0;
   }
@@ -176,6 +199,7 @@
 
   mark {
     text-decoration: none;
+    background-color: var(--highlight);
   }
 
   ins {
@@ -186,10 +210,6 @@
   del {
     background-color: var(--danger-low);
     text-decoration: line-through;
-  }
-
-  mark {
-    background-color: var(--highlight);
   }
 
   // Prevents users from breaking posts with tag nesting
@@ -215,32 +235,6 @@
 
   sup sup sup {
     top: 0;
-  }
-}
-
-.cooked,
-.d-editor-preview {
-  video {
-    max-width: 100%;
-  }
-
-  sup sup {
-    top: 0;
-  }
-
-  img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
-    max-width: 100%;
-    height: auto;
-    display: inline-block; // Ensure dimensions are maintained even after load error
-
-    @supports not (aspect-ratio: 1) {
-      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
-      height: var(--calculated-height);
-    }
-  }
-
-  svg {
-    max-height: 2000px;
   }
 }
 
@@ -406,20 +400,28 @@ nav.post-controls {
 
         &.button-count {
           // Like count button
-          .discourse-no-touch & {
-            &.d-hover,
-            &:hover {
-              color: var(--primary);
-            }
+          &:not(.my-likes) {
+            padding-right: 0;
           }
 
           + .toggle-like {
+            // Like button when like count is present
+            padding-left: 0.45em;
+
             // Like button when like count is present
             .discourse-no-touch & {
               &.d-hover,
               &:hover {
                 background: var(--primary-low);
               }
+            }
+          }
+
+          // Like count button
+          .discourse-no-touch & {
+            &.d-hover,
+            &:hover {
+              color: var(--primary);
             }
           }
         }
@@ -438,18 +440,6 @@ nav.post-controls {
           // Disabled like button
           cursor: not-allowed;
           opacity: 1;
-        }
-
-        &.button-count {
-          // Like count button
-          &:not(.my-likes) {
-            padding-right: 0;
-          }
-
-          + .toggle-like {
-            // Like button when like count is present
-            padding-left: 0.45em;
-          }
         }
       }
     }
@@ -484,18 +474,8 @@ nav.post-controls {
           background: var(--d-post-control-background--hover);
           color: var(--d-post-control-text-color--hover);
         }
-      }
 
-      &.hidden {
-        display: none;
-      }
-
-      &.admin {
-        position: relative;
-      }
-
-      // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
-      .discourse-no-touch & {
+        // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
         &.delete.d-hover,
         &.delete:hover,
         &.delete:active,
@@ -507,6 +487,14 @@ nav.post-controls {
             color: var(--secondary);
           }
         }
+      }
+
+      &.hidden {
+        display: none;
+      }
+
+      &.admin {
+        position: relative;
       }
 
       &.bookmarked .d-icon {
@@ -690,6 +678,14 @@ aside.quote {
 }
 
 .quote-controls {
+  float: right;
+  display: flex;
+  align-items: center;
+
+  a {
+    margin-left: 0.3em;
+  }
+
   .quote-toggle {
     padding: 0;
   }
@@ -744,16 +740,6 @@ aside.quote {
 
 .topic-post.staged {
   opacity: 0.4;
-}
-
-.quote-controls {
-  float: right;
-  display: flex;
-  align-items: center;
-
-  a {
-    margin-left: 0.3em;
-  }
 }
 
 .quote-button {

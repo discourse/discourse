@@ -595,6 +595,8 @@
   }
 
   .tracking-controls {
+    margin-top: 24px;
+
     label {
       align-items: center;
       display: inline-block;
@@ -624,6 +626,8 @@
     color: var(--primary-medium);
     font-size: var(--font-down-1);
     line-height: var(--line-height-large);
+    display: block;
+    margin-top: 0.25em;
 
     a[href] {
       color: var(--tertiary);
@@ -644,10 +648,6 @@
   .warning-wrap {
     height: 30px;
     margin-bottom: 10px;
-  }
-
-  .tracking-controls {
-    margin-top: 24px;
   }
 
   &.second-factor-backup-preferences {
@@ -686,11 +686,6 @@
 
   .light-color-scheme {
     margin-right: 1em;
-  }
-
-  .instructions {
-    display: block;
-    margin-top: 0.25em;
   }
 
   .success-back {

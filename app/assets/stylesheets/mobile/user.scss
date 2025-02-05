@@ -367,6 +367,7 @@
       order: 2;
       align-self: center;
       text-align: right;
+      display: flex;
 
       button {
         margin: 0.25em;
@@ -383,10 +384,6 @@
       grid-column-start: 3;
       grid-column-end: -1;
       order: 4;
-    }
-
-    td.invite-actions {
-      display: flex;
     }
   }
 

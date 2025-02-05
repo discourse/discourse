@@ -195,19 +195,16 @@ $search-pad-horizontal: 0.5em;
         align-items: center;
         background: var(--primary-200);
         color: var(--primary-medium);
-
-        .d-icon {
-          font-size: var(--font-down-2);
-          color: currentcolor;
-        }
-      }
-
-      .avatar-flair {
         border-radius: 50%;
 
         &.avatar-flair-image {
           background-repeat: no-repeat;
           background-size: 100% 100%;
+        }
+
+        .d-icon {
+          font-size: var(--font-down-2);
+          color: currentcolor;
         }
       }
 

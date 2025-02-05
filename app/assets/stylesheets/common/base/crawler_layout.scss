@@ -69,12 +69,18 @@ body > noscript {
     padding: 10px;
 
     div.post {
+      overflow: auto;
+      max-width: 100%;
       word-break: break-word;
 
       img {
         max-width: 100%;
         height: auto;
       }
+    }
+
+    .topic-body {
+      float: unset;
     }
   }
 
@@ -203,24 +209,6 @@ body > noscript {
 
   .topic-list .link-bottom-line {
     margin-top: 0.25em;
-  }
-
-  // topics
-  div#main-outlet {
-    div.post {
-      word-break: break-word;
-      overflow: auto;
-      max-width: 100%;
-
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-    }
-
-    .topic-body {
-      float: unset;
-    }
   }
 
   .crawler-post {

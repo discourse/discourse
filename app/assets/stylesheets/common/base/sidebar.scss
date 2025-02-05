@@ -395,16 +395,13 @@
 }
 
 .sidebar-no-results {
+  display: block;
   margin: 0.5em var(--d-sidebar-row-horizontal-padding) 0
     var(--d-sidebar-row-horizontal-padding);
 
   &__title {
     font-weight: bold;
   }
-}
-
-.sidebar-no-results {
-  display: block;
 }
 
 .sidebar-panel-header__row {
