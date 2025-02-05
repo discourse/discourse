@@ -1,4 +1,3 @@
-import { PLUGIN_NAV_MODE_TOP } from "discourse/lib/admin-plugin-config-nav";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
@@ -11,7 +10,7 @@ export default {
     }
 
     withPluginApi("1.1.0", (api) => {
-      api.addAdminPluginConfigurationNav("automation", PLUGIN_NAV_MODE_TOP, [
+      api.addAdminPluginConfigurationNav("automation", [
         {
           label: "discourse_automation.title",
           route: "adminPlugins.show.automation",
