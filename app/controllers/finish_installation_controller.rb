@@ -71,7 +71,6 @@ class FinishInstallationController < ApplicationController
   end
 
   def ensure_no_admins
-    preload_anonymous_data
     raise Discourse::InvalidAccess.new unless SiteSetting.has_login_hint?
   end
 end

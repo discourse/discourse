@@ -28,6 +28,7 @@ RSpec.describe ApplicationController do
             "location" => "chat",
             "full_location" => "adminPlugins.show",
             "use_new_show_route" => true,
+            "auto_generated" => false,
           },
           "enabled" => true,
         },

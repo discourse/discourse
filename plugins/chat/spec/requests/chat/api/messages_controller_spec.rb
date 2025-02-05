@@ -361,8 +361,8 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     end
 
     describe "for direct message" do
-      fab!(:user1) { Fabricate(:user) }
-      fab!(:user2) { Fabricate(:user) }
+      fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:user2) { Fabricate(:user, refresh_auto_groups: true) }
       fab!(:chatable) { Fabricate(:direct_message, users: [user1, user2]) }
       fab!(:direct_message_channel) { Fabricate(:direct_message_channel, chatable: chatable) }
 

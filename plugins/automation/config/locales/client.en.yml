@@ -7,13 +7,16 @@ en:
             delete_automation: delete automation
     discourse_automation:
       title: Automation
-      create: Create
-      update: Update
+      table_title: Automations
+      create: Add automation
+      update: Update automation
+      back: Back
+      edit: Edit
       select_script: Select a script
       select_trigger: Select a trigger
       confirm_automation_reset: This action will reset script and trigger options, new state will be saved, do you want to proceed?
       confirm_automation_trigger: This action will trigger the automation, do you want to proceed?
-      no_automation_yet: You haven’t created any automations yet. Choose an option below to get started.
+      no_automation_yet: There are currently no automations configured.
       filter_placeholder: Filter by name or description...
       edit_automation:
         trigger_section:

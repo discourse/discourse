@@ -74,6 +74,7 @@ class ReviewablesController < ApplicationController
           total_rows_reviewables: total_rows,
           types: meta_types,
           reviewable_types: Reviewable.types,
+          unknown_reviewable_types: Reviewable.unknown_types,
           score_types:
             ReviewableScore
               .types

@@ -212,8 +212,8 @@ RSpec.describe HashtagAutocompleteService do
 
       expect(service.search("book", %w[category tag]).map(&:ref)).to eq(
         [
-          "book-reviews:book", # category exact match on slug, name sorted
           "book-library:book",
+          "book-reviews:book", # category exact match on slug, name sorted
           "book-library", # category starts with match on slug, name sorted
           "book-reviews",
           "bookmania", # tag starts with match on slug, name sorted
@@ -226,8 +226,8 @@ RSpec.describe HashtagAutocompleteService do
       )
       expect(service.search("book", %w[category tag]).map(&:text)).to eq(
         [
-          "Good Books",
-          "Horror",
+          "Book Library > Horror",
+          "Book Reviews > Good Books",
           "Book Library",
           "Book Reviews",
           "bookmania",

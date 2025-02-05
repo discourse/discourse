@@ -311,7 +311,6 @@ $mobile-breakpoint: 700px;
       &::after {
         content: " ";
         position: absolute;
-        background-color: red;
         left: 0;
         right: 0;
         top: $maxHeight - $gradientHeight;

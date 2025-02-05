@@ -17,11 +17,15 @@ import { i18n } from "discourse-i18n";
 export default RouteTemplate(
   class extends Component {
     @service siteSettings;
+    @service currentUser;
 
     @tracked accountActivated = false;
     @tracked isLoading = false;
     @tracked needsApproval = false;
-    @tracked errorMessage = null;
+    @tracked
+    errorMessage = this.currentUser
+      ? i18n("user.activate_account.already_done")
+      : null;
 
     get signupStep() {
       if (this.needsApproval) {

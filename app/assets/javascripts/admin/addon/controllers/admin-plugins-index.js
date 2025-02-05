@@ -35,7 +35,12 @@ export default class AdminPluginsIndexController extends Controller {
 
   get allAdminRoutes() {
     return this.model
-      .filter((plugin) => plugin?.enabled && plugin?.adminRoute)
+      .filter(
+        (plugin) =>
+          plugin?.enabled &&
+          plugin?.adminRoute &&
+          !plugin?.adminRoute?.auto_generated
+      )
       .map((plugin) => {
         return Object.assign(plugin.adminRoute, { plugin_id: plugin.id });
       });

@@ -447,7 +447,7 @@ ar:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "لا يمكنك إضافة أيٍّ من القيم التالية إلى الإعداد: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "لا يمكنك إيقاف إزالة البيانات الوصفية للصورة إذا كان 'composer media optimization image enabled' مفعلًا. أوقف 'composer media optimization image enabled' قبل إيقاف إزالة البيانات الوصفية للصورة."
       twitter_summary_large_image_no_svg: "لا يمكن أن تكون صور ملخص Twitter المُستخدَمة في البيانات الوصفية لـ twitter:image بتنسيق svg."
-      tl0_and_anonymous_flag: "يجب إدخال \"عنوان بريد إلكتروني للاتصال بالموقع\" أو \"عنوان البريد الإلكتروني للإبلاغ عن المحتوى غير القانوني\" للمستخدمين المجهولين."
+      tl0_and_anonymous_flag: "يجب إدخال 'site contact email' أو 'email address to report illegal content' للمستخدمين المجهولين."
     conflicting_google_user_id: 'تم تغيير معرِّف حساب Google لهذا الحساب؛ مطلوب تدخُّل فريق العمل لأسباب أمنية. يُرجى التواصل مع فريق العمل وتوجيهه إلى <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "عذرًا، لم نتمكن من إنشاء معاينة لصفحة الويب هذه لتعذُّر العثور على الخادم \"%{hostname}\". بدلًا من المعاينة، سيظهر رابط فقط في منشورك. :cry:"

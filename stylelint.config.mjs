@@ -28,7 +28,6 @@ export default {
     "scss/dollar-variable-pattern": null,
     "number-max-precision": null,
     "selector-pseudo-element-no-unknown": null,
-    "declaration-block-no-shorthand-property-overrides": null,
     "scss/at-extend-no-missing-placeholder": null,
     "scss/load-no-partial-leading-underscore": null,
     "scss/operator-no-newline-after": null,

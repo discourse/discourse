@@ -449,6 +449,8 @@ Discourse::Application.routes.draw do
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
+
+      delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace
 
     get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"
@@ -597,11 +599,17 @@ Discourse::Application.routes.draw do
             format: "json",
           }
       put "#{root_path}/password-reset/:token" => "users#password_reset_update"
-      get "#{root_path}/activate-account/:token" => "users#activate_account"
+      get "#{root_path}/activate-account/:token" => "users#activate_account",
+          :constraints => {
+            token: /[0-9a-f]+/,
+          }
       put(
-        { "#{root_path}/activate-account/:token" => "users#perform_account_activation" }.merge(
-          index == 1 ? { as: "perform_activate_account" } : {},
-        ),
+        {
+          "#{root_path}/activate-account/:token" => "users#perform_account_activation",
+          :constraints => {
+            token: /[0-9a-f]+/,
+          },
+        }.merge(index == 1 ? { as: "perform_activate_account" } : {}),
       )
 
       get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
