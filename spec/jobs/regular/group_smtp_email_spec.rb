@@ -191,12 +191,6 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect { Jobs.enqueue(:group_smtp_email, **args) }.not_to raise_error
   end
 
-  it "does not retry the job on SMTP read timeouts, because we can't be sure if the send actually failed or if ENTER . ENTER just timed out" do
-    Jobs.run_immediately!
-    Email::Sender.any_instance.expects(:send).raises(Net::ReadTimeout)
-    expect { Jobs.enqueue(:group_smtp_email, **args) }.not_to raise_error
-  end
-
   context "when there are cc_addresses" do
     it "has the cc_addresses and cc_user_ids filled in correctly" do
       job.execute(args)
@@ -328,5 +322,32 @@ RSpec.describe Jobs::GroupSmtpEmail do
       Net::ReadTimeout.new("timeout"),
     )
     expect { job.execute(args) }.to raise_error(Net::ReadTimeout)
+  end
+
+  it "does not send email if an EmailLog with the same message_id already exists" do
+    message = Mail::Message.new(body: "hello", to: "myemail@example.invalid")
+    message.message_id = "unique_message_id"
+    GroupSmtpMailer
+      .expects(:send_mail)
+      .with(
+        group,
+        "test@test.com",
+        post,
+        cc_addresses: %w[otherguy@test.com cormac@lit.com],
+        bcc_addresses: [],
+      )
+      .returns(message)
+    EmailLog.expects(:exists?).with(message_id: message.message_id).returns(true)
+    Email::Sender.any_instance.expects(:send).never
+
+    job.execute(args)
+    expect(ActionMailer::Base.deliveries.count).to eq(0)
+  end
+
+  it "retries the job on SMTP read timeouts when there are no duplicates" do
+    Jobs.run_immediately!
+    EmailLog.stubs(:exists?).with(message_id: anything).returns(false)
+    Email::Sender.any_instance.expects(:send).raises(Net::ReadTimeout)
+    expect { Jobs.enqueue(:group_smtp_email, **args) }.to raise_error(Net::ReadTimeout)
   end
 end

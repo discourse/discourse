@@ -84,6 +84,9 @@ module Jobs
           bcc_addresses: bcc_addresses,
         )
 
+      # Idempotency check – if the EmailLog already exists, do not send again.
+      return if EmailLog.exists?(message_id: message.message_id)
+
       begin
         Email::Sender.new(message, :group_smtp, recipient_user).send
       rescue Net::ReadTimeout => err
