@@ -1323,7 +1323,6 @@ span.mention {
   &:not(a) {
     color: var(--primary-low-mid-or-secondary-high);
   }
-
   display: inline-flex;
   flex-direction: column;
   border: 1px solid var(--primary-low);

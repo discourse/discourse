@@ -3296,6 +3296,7 @@ class PluginApi {
     registerRichEditorExtension(extension);
   }
 
+  // eslint-disable-next-line no-unused-vars
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
