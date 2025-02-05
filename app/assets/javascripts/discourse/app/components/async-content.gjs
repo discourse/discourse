@@ -30,6 +30,12 @@ export default class AsyncContent extends Component {
               );
             })
           : this.#resolveAsyncData(asyncData, context);
+
+      // value is null if we skipped loading the data on init
+      // in this case, we don't want to return a TrackedAsyncData instance
+      if (!value) {
+        return;
+      }
     } else if (asyncData instanceof Promise) {
       value = asyncData;
     }
@@ -44,13 +50,14 @@ export default class AsyncContent extends Component {
   }
 
   // a stable reference to a function to use the `debounce` method
-  // this function simply calls the asyncData function and resolves the promise if a resolve function is provided
   #resolveAsyncData(asyncData, context, resolve, reject) {
     if (this.#skipResolvingData) {
       this.#skipResolvingData = false;
-      return Promise.resolve(null);
+      return;
     }
 
+    // when a resolve function is provided, we need to resolve the promise, once asyncData is done
+    // otherwise, we just call asyncData
     return resolve
       ? asyncData(context).then(resolve).catch(reject)
       : asyncData(context);
@@ -63,16 +70,16 @@ export default class AsyncContent extends Component {
       {{else}}
         <ConditionalLoadingSpinner @condition={{this.data.isPending}} />
       {{/if}}
-    {{/if}}
-    {{#if this.data.isResolved}}
+    {{else if this.data.isResolved}}
       {{yield this.data.value to="content"}}
-    {{/if}}
-    {{#if this.data.isRejected}}
+    {{else if this.data.isRejected}}
       {{#if (has-block "error")}}
         {{yield this.data.error to="error"}}
       {{else}}
         {{popupAjaxError this.data.error}}
       {{/if}}
+    {{else}}
+      {{yield to="without-content"}}
     {{/if}}
   </template>
 }

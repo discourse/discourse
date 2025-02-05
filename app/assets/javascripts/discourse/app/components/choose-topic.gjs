@@ -130,7 +130,7 @@ export default class ChooseTopic extends Component {
           <p>{{i18n "loading"}}</p>
         </:loading>
         <:content as |topics|>
-          {{#if (not topics.length)}}
+          {{#unless topics.length}}
             <p>{{i18n "choose_topic.none_found"}}</p>
           {{else}}
             <div class="choose-topic-list" role="radiogroup">
@@ -160,7 +160,7 @@ export default class ChooseTopic extends Component {
                 </div>
               {{/each}}
             </div>
-          {{/if}}
+          {{/unless}}
         </:content>
       </AsyncContent>
     </div>
