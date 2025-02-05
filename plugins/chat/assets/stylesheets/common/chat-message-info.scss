@@ -26,10 +26,14 @@
 
 .chat-message-info__bot-indicator {
   text-transform: uppercase;
-  padding: 0.25rem;
+  padding: 0.2rem 0.3rem;
   background: var(--primary-low);
+  color: var(--primary-900);
   border-radius: var(--d-border-radius);
-  font-size: var(--font-down-2);
+  font-size: var(--font-down-3);
+  line-height: var(--line-height-medium);
+  font-weight: 700;
+  letter-spacing: 0.1ch;
 }
 
 .chat-message-info__date {
