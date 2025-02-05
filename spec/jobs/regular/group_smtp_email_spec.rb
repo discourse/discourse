@@ -322,4 +322,11 @@ RSpec.describe Jobs::GroupSmtpEmail do
       ).to eq(true)
     end
   end
+
+  it "re-raises Net::ReadTimeout to trigger Sidekiq retries" do
+    allow_any_instance_of(Email::Sender).to receive(:send).and_raise(
+      Net::ReadTimeout.new("timeout"),
+    )
+    expect { job.execute(args) }.to raise_error(Net::ReadTimeout)
+  end
 end

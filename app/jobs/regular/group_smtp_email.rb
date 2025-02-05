@@ -95,6 +95,7 @@ module Jobs
           message: "Got SMTP read timeout when sending group SMTP email",
           env: args,
         )
+        raise err # Re-raise the error so Sidekiq's retry mechanism kicks in.
       end
 
       # Create an incoming email record to avoid importing again from IMAP
