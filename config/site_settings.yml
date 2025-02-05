@@ -916,6 +916,9 @@ posting:
       ja: 8
       zh_CN: 8
       zh_TW: 8
+  prevent_uploads_only_posts:
+    client: true
+    default: false
   min_personal_message_post_length:
     client: true
     min: 1
