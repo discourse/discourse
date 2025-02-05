@@ -279,7 +279,7 @@ body:not(.archetype-private_message) {
 // DMenu popups
 .fk-d-menu,
 .fk-d-menu-modal {
-  //shared
+  // shared
   &__inner-content {
     .topic-map__likes-content &,
     .topic-map__links-content &,
@@ -316,7 +316,7 @@ body:not(.archetype-private_message) {
     }
   }
 
-  //per type
+  // per type
   &.topic-map__likes-content {
     li > a {
       display: grid;

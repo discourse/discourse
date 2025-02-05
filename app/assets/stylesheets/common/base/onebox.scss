@@ -432,7 +432,7 @@ pre.onebox code ol.lines li {
   padding-left: 0.5em;
   margin-left: 0;
   border-left: 1px solid var(--primary-300);
-  min-height: 1.5em; //show empty li lines
+  min-height: 1.5em; // show empty li lines
   white-space: pre;
   width: max-content;
 }
@@ -635,7 +635,7 @@ pre.onebox code ol.lines li.selected {
   }
 }
 
-//Onebox - Github - Pull request
+// Onebox - Github - Pull request
 .onebox-body .github-commit-status {
   background: #f5f5f5;
   border-radius: 5px;
@@ -670,7 +670,7 @@ pre.onebox code ol.lines li.selected {
   background-color: #bd2c00;
 }
 
-//Onebox - Twitter - Status
+// Onebox - Twitter - Status
 aside.onebox.twitterstatus .onebox-body {
   h4 {
     margin-bottom: 0;
