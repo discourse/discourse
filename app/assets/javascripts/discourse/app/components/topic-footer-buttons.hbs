@@ -16,6 +16,7 @@
       @resetBumpDate={{this.resetBumpDate}}
       @convertToPublicTopic={{this.convertToPublicTopic}}
       @convertToPrivateMessage={{this.convertToPrivateMessage}}
+      @buttonClasses="topic-footer-button"
     />
 
     {{#each this.inlineActionables as |actionable|}}
@@ -24,7 +25,7 @@
           <BookmarkMenu
             @showLabel={{this.showBookmarkLabel}}
             @bookmarkManager={{this.topicBookmarkManager}}
-            @buttonClasses="btn-default"
+            @buttonClasses="btn-default topic-footer-button"
           />
         {{else}}
           <DButton
@@ -134,7 +135,7 @@
       @action={{this.replyToPost}}
       @label="topic.reply.title"
       @title="topic.reply.help"
-      class="btn-primary create"
+      class="btn-primary create topic-footer-button"
     />
   {{/if}}
 
