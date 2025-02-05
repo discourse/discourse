@@ -10,6 +10,11 @@ describe "Interface color selector", type: :system do
   let(:selector_in_header) do
     PageObjects::Components::InterfaceColorSelector.new(".d-header-icons")
   end
+
+  let(:interface_color_mode) { PageObjects::Components::InterfaceColorMode.new }
+
+  let(:home_logo) { PageObjects::Components::HomeLogo.new }
+
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   fab!(:user)
@@ -71,32 +76,20 @@ describe "Interface color selector", type: :system do
     selector_in_sidebar.expand
     selector_in_sidebar.light_option.click
 
-    expect(page).to have_css('link.light-scheme[media="all"]', visible: false)
-    expect(page).to have_css('link.dark-scheme[media="none"]', visible: false)
-    expect(page).to have_css('.title picture source[media="none"]', visible: false)
+    expect(interface_color_mode).to have_light_mode_forced
+    expect(home_logo).to have_light_logo_forced
 
     selector_in_sidebar.expand
     selector_in_sidebar.dark_option.click
 
-    expect(page).to have_css('link.light-scheme[media="none"]', visible: false)
-    expect(page).to have_css('link.dark-scheme[media="all"]', visible: false)
-    expect(page).to have_css('.title picture source[media="all"]', visible: false)
+    expect(interface_color_mode).to have_dark_mode_forced
+    expect(home_logo).to have_dark_logo_forced
 
     selector_in_sidebar.expand
     selector_in_sidebar.auto_option.click
 
-    expect(page).to have_css(
-      'link.light-scheme[media="(prefers-color-scheme: light)"]',
-      visible: false,
-    )
-    expect(page).to have_css(
-      'link.dark-scheme[media="(prefers-color-scheme: dark)"]',
-      visible: false,
-    )
-    expect(page).to have_css(
-      '.title picture source[media="(prefers-color-scheme: dark)"]',
-      visible: false,
-    )
+    expect(interface_color_mode).to have_auto_color_mode
+    expect(home_logo).to have_auto_color_mode
   end
 
   it "uses the right category logos when switching color modes" do
@@ -149,13 +142,11 @@ describe "Interface color selector", type: :system do
     selector_in_sidebar.expand
     selector_in_sidebar.dark_option.click
 
-    expect(page).to have_css('link.light-scheme[media="none"]', visible: false)
-    expect(page).to have_css('link.dark-scheme[media="all"]', visible: false)
+    expect(interface_color_mode).to have_dark_mode_forced
 
     visit(category.url)
 
-    expect(page).to have_css('link.light-scheme[media="none"]', visible: false)
-    expect(page).to have_css('link.dark-scheme[media="all"]', visible: false)
+    expect(interface_color_mode).to have_dark_mode_forced
 
     expect(page).to have_css('.category-logo picture source[media="all"]', visible: false)
 
