@@ -449,6 +449,8 @@ Discourse::Application.routes.draw do
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
+
+      delete "unknown_reviewables/destroy" => "unknown_reviewables#destroy"
     end # admin namespace
 
     get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"

@@ -73,6 +73,10 @@ class Reviewable < ActiveRecord::Base
     [ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost]
   end
 
+  def self.sti_names
+    self.types.map(&:sti_name)
+  end
+
   def self.custom_filters
     @reviewable_filters ||= []
   end
@@ -550,6 +554,7 @@ class Reviewable < ActiveRecord::Base
           "LEFT JOIN reviewable_claimed_topics rct ON reviewables.topic_id = rct.topic_id",
         ).where("rct.user_id IS NULL OR rct.user_id = ?", user.id)
     end
+    result = result.where(type: Reviewable.sti_names)
     result = result.limit(limit) if limit
     result = result.offset(offset) if offset
     result
@@ -759,6 +764,14 @@ class Reviewable < ActiveRecord::Base
       id: id,
       user_id: user_id,
     )
+  end
+
+  def self.unknown_types
+    Reviewable.pending.distinct.pluck(:type) - Reviewable.sti_names
+  end
+
+  def self.destroy_unknown_types!
+    Reviewable.pending.where.not(type: Reviewable.sti_names).delete_all
   end
 
   private

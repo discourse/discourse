@@ -188,11 +188,18 @@ RSpec.describe Reviewable, type: :model do
           expect(reviewables).to contain_exactly(reviewable)
         end
 
-        it "Does not filter by status when status parameter is set to all" do
+        it "does not filter by status when status parameter is set to all" do
           rejected_reviewable =
             Fabricate(:reviewable, target: post, status: Reviewable.statuses[:rejected])
           reviewables = Reviewable.list_for(user, status: :all)
           expect(reviewables).to match_array [reviewable, rejected_reviewable]
+        end
+
+        it "does not include reviewables of unknown type" do
+          unknown_reviewable = Fabricate(:reviewable, target: post)
+          unknown_reviewable.update_column(:type, "UnknownPlugin")
+          reviewables = Reviewable.list_for(user, status: :all)
+          expect(reviewables).to match_array [reviewable]
         end
 
         it "supports sorting" do
