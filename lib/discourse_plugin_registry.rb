@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_relative "svg_sprite" if Rails.env.test?
 
 #
 #  A class that handles interaction between a plugin and the Discourse App.
