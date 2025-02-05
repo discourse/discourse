@@ -45,8 +45,8 @@
   z-index: z("timeline");
   pointer-events: none; // the wrapper can block mobile controls
 
-  #topic-progress-wrapper {
-    pointer-events: auto; // this unsets the above rule so the element is interactive
+  > * {
+    pointer-events: auto; // this unsets the above rule so the child elements are interactive
   }
 }
 
