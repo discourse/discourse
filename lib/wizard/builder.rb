@@ -273,9 +273,13 @@ class Wizard
           scheme ||=
             ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: scheme_name)
 
+          theme_changed = false
           if default_theme
-            default_theme.color_scheme_id = scheme.id
-            default_theme.save!
+            if default_theme.color_scheme_id != scheme.id
+              default_theme.color_scheme_id = scheme.id
+              default_theme.save!
+              theme_changed = true
+            end
           else
             theme =
               Theme.create!(
@@ -285,10 +289,15 @@ class Wizard
               )
 
             theme.set_default!
+            theme_changed = true
           end
 
           updater.update_setting(:default_dark_mode_color_scheme_id, -1) if scheme.is_dark?
-          updater.refresh_required = true
+
+          if updater.setting_changed?(:base_font) || updater.setting_changed?(:heading_font) ||
+               updater.setting_changed?(:default_dark_mode_color_scheme_id) || theme_changed
+            updater.refresh_required = true
+          end
         end
       end
     end
