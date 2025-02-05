@@ -3,24 +3,24 @@
 module PageObjects
   module Components
     class InterfaceColorSelector < PageObjects::Components::Base
-      attr_reader :container
+      attr_reader :container_selector
 
       SELECTOR = ".interface-color-selector"
 
-      def initialize(container)
-        @container = container
+      def initialize(container_selector)
+        @container_selector = container_selector
       end
 
       def available?
-        within(container) { has_css?(SELECTOR) }
+        find(container_selector).has_css?(SELECTOR)
       end
 
       def not_available?
-        within(container) { has_no_css?(SELECTOR) }
+        find(container_selector).has_no_css?(SELECTOR)
       end
 
       def expand
-        within(container) { find(SELECTOR).click }
+        find(container_selector).find(SELECTOR).click
       end
 
       def light_option

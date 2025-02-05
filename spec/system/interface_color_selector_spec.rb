@@ -5,10 +5,10 @@ describe "Interface color selector", type: :system do
   let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
 
   let(:selector_in_sidebar) do
-    PageObjects::Components::InterfaceColorSelector.new(find(".sidebar-footer-actions"))
+    PageObjects::Components::InterfaceColorSelector.new(".sidebar-footer-actions")
   end
   let(:selector_in_header) do
-    PageObjects::Components::InterfaceColorSelector.new(find(".d-header-icons"))
+    PageObjects::Components::InterfaceColorSelector.new(".d-header-icons")
   end
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
