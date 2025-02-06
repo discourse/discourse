@@ -11,7 +11,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.glimmer_post_menu_mode = "enabled";
     this.siteSettings.post_menu_hidden_items = "";
 
     const store = getOwner(this).lookup("service:store");

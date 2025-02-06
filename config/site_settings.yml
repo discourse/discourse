@@ -3532,14 +3532,6 @@ experimental:
       - auto
       - enabled
     default: auto
-  glimmer_post_menu_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: auto
   enable_rich_text_paste:
     client: true
     default: true
