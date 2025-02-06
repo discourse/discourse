@@ -16,3 +16,13 @@ en:
     default_step_title: "Converting %{type}"
     max_progress_calculation: "Calculating items took %{duration}"
 
+  schema:
+    validator:
+      schema_file_directory_not_found: "Directory of `schema_file` does not exist"
+      models_directory_not_found: "`models_directory` does not exist"
+      models_namespace_undefined: "`models_namespace` is not defined"
+      excluded_table_missing: "Excluded table does not exist in database: %{table_name}"
+      excluded_table_used: "Excluded table can't be configured in `schema/tables` section: %{table_name}"
+      table_not_configured: "Table needs to be configured in `schema/tables` section or excluded in `global/tables`: %{table_name}"
+      plugins_not_installed: "Configured plugins not installed: %{plugin_names}"
+      additional_plugins_installed: "Additional plugins installed. Uninstall them or add to configuration: %{plugin_names}"
