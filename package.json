@@ -39,7 +39,7 @@
     "stylelint": "^16.14.1",
     "stylelint-config-standard": "^37.0.0",
     "stylelint-config-standard-scss": "^14.0.0",
-    "terser": "^5.37.0",
+    "terser": "^5.38.1",
     "typescript": "5.6.x"
   },
   "scripts": {
