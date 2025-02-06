@@ -27,7 +27,9 @@
     .admin-plugins-list__row-admin-search-filtered {
       background-color: var(--primary-low);
     }
+  }
 
+  .admin-plugins-list {
     &__name-with-badges {
       display: flex;
       flex-wrap: wrap;
@@ -38,11 +40,13 @@
     }
 
     &__badge {
+      --d-border-radius: var(--space-4);
       font-weight: 400;
       font-size: var(--font-down-2);
       background-color: var(--primary-low);
-      color: var(--primary-medium);
-      padding: 4px 8px;
+      color: var(--primary-high);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--d-border-radius);
 
       & + .admin-plugins-list__badge {
         margin-left: var(--space-1);
