@@ -88,21 +88,27 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
       config = minimal_config
       config[:output][:schema_file] = "foo/bar/100-base-schema.sql"
       expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly("Directory of `schema_file` does not exist")
+      expect(validator.errors).to contain_exactly(
+        I18n.t("schema.validator.schema_file_directory_not_found"),
+      )
     end
 
     it "checks if `models_directory` exists" do
       config = minimal_config
       config[:output][:models_directory] = "foo/bar"
       expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly("`models_directory` does not exist")
+      expect(validator.errors).to contain_exactly(
+        I18n.t("schema.validator.models_directory_not_found"),
+      )
     end
 
     it "checks if `models_namespace` is an existing namespace" do
       config = minimal_config
       config[:output][:models_namespace] = "Foo::Bar::IntermediateDB"
       expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly("`models_namespace` is not defined")
+      expect(validator.errors).to contain_exactly(
+        I18n.t("schema.validator.models_namespace_undefined"),
+      )
     end
   end
 
@@ -114,8 +120,8 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
 
       expect(validator.validate(config)).to have_errors
       expect(validator.errors).to contain_exactly(
-        "Excluded table does not exist: bar",
-        "Excluded table does not exist: foo",
+        I18n.t("schema.validator.excluded_table_missing", table_name: "bar"),
+        I18n.t("schema.validator.excluded_table_missing", table_name: "foo"),
       )
     end
 
@@ -128,8 +134,24 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
 
       expect(validator.validate(config)).to have_errors
       expect(validator.errors).to contain_exactly(
-        "Excluded table can't be configured in `schema/tables` section: categories",
-        "Excluded table can't be configured in `schema/tables` section: users",
+        I18n.t("schema.validator.excluded_table_used", table_name: "categories"),
+        I18n.t("schema.validator.excluded_table_used", table_name: "users"),
+      )
+    end
+
+    it "detects tables that are missing from configuration file" do
+      allow(ActiveRecord::Base.connection).to receive(:tables).and_return(
+        %w[categories topics posts users tags],
+      )
+
+      config = minimal_config
+      config[:schema][:global][:tables][:exclude] = %w[categories]
+      config[:schema][:tables] = { topics: {}, users: {} }
+
+      expect(validator.validate(config)).to have_errors
+      expect(validator.errors).to contain_exactly(
+        I18n.t("schema.validator.table_not_configured", table_name: "posts"),
+        I18n.t("schema.validator.table_not_configured", table_name: "tags"),
       )
     end
   end
@@ -150,7 +172,9 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
       config[:plugins] = %w[foo poll bar chat footnote]
 
       expect(validator.validate(config)).to have_errors
-      expect(validator.errors).to contain_exactly("Configured plugins not installed: bar, foo")
+      expect(validator.errors).to contain_exactly(
+        I18n.t("schema.validator.plugins_not_installed", plugin_names: "bar, foo"),
+      )
     end
 
     it "detects if an active plugin isn't configured" do
@@ -159,7 +183,7 @@ RSpec.describe ::Migrations::Database::Schema::ConfigValidator do
 
       expect(validator.validate(config)).to have_errors
       expect(validator.errors).to contain_exactly(
-        "Additional plugins installed. Uninstall them or add to configuration: chat, footnote",
+        I18n.t("schema.validator.additional_plugins_installed", plugin_names: "chat, footnote"),
       )
     end
   end

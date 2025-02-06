@@ -49,10 +49,14 @@ module Migrations::Database::Schema
 
       schema_file_path = File.dirname(output_config[:schema_file])
       schema_file_path = File.expand_path(schema_file_path, ::Migrations.root_path)
-      @errors << "Directory of `schema_file` does not exist" if !Dir.exist?(schema_file_path)
+      if !Dir.exist?(schema_file_path)
+        @errors << I18n.t("schema.validator.schema_file_directory_not_found")
+      end
 
       models_directory = File.expand_path(output_config[:models_directory], ::Migrations.root_path)
-      @errors << "`models_directory` does not exist" if !Dir.exist?(models_directory)
+      if !Dir.exist?(models_directory)
+        @errors << I18n.t("schema.validator.models_directory_not_found")
+      end
 
       existing_namespace =
         begin
@@ -60,7 +64,7 @@ module Migrations::Database::Schema
         rescue NameError
           false
         end
-      @errors << "`models_namespace` is not defined" if !existing_namespace
+      @errors << I18n.t("schema.validator.models_namespace_undefined") if !existing_namespace
     end
 
     def validate_schema_config(config)
@@ -77,7 +81,7 @@ module Migrations::Database::Schema
 
       excluded_table_names.sort.each do |table_name|
         if !existing_table_names.delete?(table_name)
-          @errors << "Excluded table does not exist: #{table_name}"
+          @errors << I18n.t("schema.validator.excluded_table_missing", table_name:)
         end
       end
     end
@@ -89,14 +93,14 @@ module Migrations::Database::Schema
 
       excluded_table_names.sort.each do |table_name|
         if configured_table_names.include?(table_name)
-          @errors << "Excluded table can't be configured in `schema/tables` section: #{table_name}"
+          @errors << I18n.t("schema.validator.excluded_table_used", table_name:)
         end
       end
 
       existing_table_names.sort.each do |table_name|
         if !configured_table_names.include?(table_name) &&
              !excluded_table_names.include?(table_name)
-          @errors << "Table missing from configuration file: #{table_name}"
+          @errors << I18n.t("schema.validator.table_not_configured", table_name:)
         end
       end
     end
@@ -106,11 +110,17 @@ module Migrations::Database::Schema
       all_plugin_names = Discourse.plugins.map(&:name)
 
       if (additional_plugins = all_plugin_names.difference(plugin_names)).any?
-        @errors << "Additional plugins installed. Uninstall them or add to configuration: #{additional_plugins.sort.join(", ")}"
+        @errors << I18n.t(
+          "schema.validator.additional_plugins_installed",
+          plugin_names: additional_plugins.sort.join(", "),
+        )
       end
 
       if (missing_plugins = plugin_names.difference(all_plugin_names)).any?
-        @errors << "Configured plugins not installed: #{missing_plugins.sort.join(", ")}"
+        @errors << I18n.t(
+          "schema.validator.plugins_not_installed",
+          plugin_names: missing_plugins.sort.join(", "),
+        )
       end
     end
   end
