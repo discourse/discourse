@@ -265,6 +265,10 @@ class Wizard
 
           scheme_name = ((updater.fields[:color_scheme] || "") || ColorScheme::LIGHT_THEME_ID)
 
+          if updater.setting_changed?(:base_font) || updater.setting_changed?(:heading_font)
+            updater.refresh_required = true
+          end
+
           next unless scheme_name.present? && ColorScheme.is_base?(scheme_name)
 
           name = I18n.t("color_schemes.#{scheme_name.downcase.gsub(" ", "_")}_theme_name")
@@ -294,8 +298,7 @@ class Wizard
 
           updater.update_setting(:default_dark_mode_color_scheme_id, -1) if scheme.is_dark?
 
-          if updater.setting_changed?(:base_font) || updater.setting_changed?(:heading_font) ||
-               updater.setting_changed?(:default_dark_mode_color_scheme_id) || theme_changed
+          if updater.setting_changed?(:default_dark_mode_color_scheme_id) || theme_changed
             updater.refresh_required = true
           end
         end
