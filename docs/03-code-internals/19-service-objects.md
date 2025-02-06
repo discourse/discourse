@@ -134,6 +134,10 @@ This step is a bit special, as it will wrap any other steps defined in its block
 
 This step will catch exceptions raised by the steps defined in its block. Specific exception classes can be provided if you don’t want to automatically catch all exceptions.
 
+### `lock`
+
+This step uses `DistributedMutex` under the hood to create a lock around the steps defined in its block. This is useful when race conditions can happen.
+
 ### `options`
 
 This step is another special one, as it’s similar to a contract (without the validations part), but for options your service can take. This is useful if you need to change your service behavior depending on certain conditions. Also, that step can’t fail.
@@ -377,6 +381,17 @@ This step is a bit special as its only purpose is to wrap other steps inside a S
 
 This step wraps other steps. If any of the wrapped steps raises an exception, the `try` step will catch it and fail, which will halt the execution flow.
 
+### `lock(*keys, &block)`
+
+**Arguments**
+
+- _keys_: one or more keys to provide the lock with an unique ID.
+- _block_: a block containing other steps.
+
+This step wraps other steps. If the lock can't be acquired for any reason, the execution flow will be halted.
+
+The `keys` provided are matched against the `params` object of the service. The corresponding values are used to provide the underlying lock with a unique name. For example, if the provided key is `user_id` and its value is `1`, then the resulting lock name will be `user_id:1`, so if the same service is called with `2` as the `user_id` value, it will not wait on the first lock.
+
 ### `step(name)`
 
 **Arguments**
@@ -509,6 +524,14 @@ Will execute the provided block if the model named `name` contains validation er
 - _exceptions_: zero or more exception classes that can be caught by a `try` step.
 
 Will execute the provided block if a `try` step failed by catching one of the provided exception classes. If no class is provided, then the block will be executed if a `try` step caught any exception. It also provides the actual exception as the first argument of the block.
+
+### `on_lock_not_acquired(*keys)`
+
+**Arguments**
+
+- _keys_: the keys used by the lock to match.
+
+Will execute the provided block if the `lock` step failed.
 
 ## Contracts
 
@@ -708,6 +731,7 @@ Here’s a recap of what errors will be outputted for the different steps:
 - _params_: outputs the validation errors followed by the provided parameters.
 - _policy_: doesn’t output anything for a simple policy. When a policy object is used, then it outputs its `reason`.
 - _try_: outputs the exception caught by `try`.
+- _lock_: outputs the lock wasn’t acquired and provides the lock name.
 - _step_: outputs the message provided to `fail!`.
 
 ## Live debugging
