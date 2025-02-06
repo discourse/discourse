@@ -1743,6 +1743,7 @@ en:
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions"
     min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
     min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
+    prevent_uploads_only_posts: "Don't count upload markdown code when checking for min post length"
     min_personal_message_post_length: "Minimum allowed post length in characters for messages (both first post and replies)"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Allows users to associate a feature link with their topics. When turned on, topics can have a highlighted link attached, which is publicly visible and can be edited if the user has sufficient permissions. The feature link can enhance a topic's comprehensibility by providing related additional content."

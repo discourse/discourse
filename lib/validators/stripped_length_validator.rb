@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StrippedLengthValidator < ActiveModel::EachValidator
-  def self.validate(record, attribute, value, range)
+  def self.validate(record, attribute, value, range, strip_uploads: false)
     if value.blank?
       record.errors.add attribute, I18n.t("errors.messages.blank")
     elsif value.length > range.end
@@ -12,7 +12,7 @@ class StrippedLengthValidator < ActiveModel::EachValidator
                           length: value.length,
                         )
     else
-      value = get_sanitized_value(value)
+      value = get_sanitized_value(value, strip_uploads:)
 
       if value.length < range.begin
         record.errors.add attribute, I18n.t("errors.messages.too_short", count: range.begin)
@@ -26,12 +26,14 @@ class StrippedLengthValidator < ActiveModel::EachValidator
     self.class.validate(record, attribute, value, range)
   end
 
-  def self.get_sanitized_value(value)
+  def self.get_sanitized_value(value, strip_uploads: false)
     value = value.dup
     value.gsub!(/<!--(.*?)-->/, "") # strip HTML comments
     value.gsub!(/:\w+(:\w+)?:/, "X") # replace emojis with a single character
     value.gsub!(/\.{2,}/, "…") # replace multiple ... with …
     value.gsub!(/\,{2,}/, ",") # replace multiple ,,, with ,
+    value.gsub!(/!\[.*\]\(.+\)/, "") if strip_uploads
+
     value.strip
   end
 end
