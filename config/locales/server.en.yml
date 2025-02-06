@@ -2592,8 +2592,6 @@ en:
 
     enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
     enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
-    enable_quote_copy: "Adds a button to post selection menu to copy the selection to clipboard as a markdown quote."
-
     old_post_notice_days: "The number of days after which a post notice is considered old. This visually differentiates it from newer notices on the site."
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
