@@ -24,19 +24,28 @@
 }
 
 table.jexcel > thead > tr > td {
-  border-top: 1px solid transparent;
   border-left: 1px solid transparent;
-  border-right: 1px solid transparent;
-  border-bottom: 1px solid #000;
-  background-color: #fff;
   padding: 10px;
   font-weight: bold;
+  border-top: 1px solid var(--jexcel_border_color);
+  border-right: 1px solid var(--jexcel_border_color);
+  border-bottom: 1px solid var(--jexcel_border_color);
+  background-color: var(--jexcel_header_background);
+
+  &:first-child {
+    border-left: 1px solid var(--jexcel_border_color);
+  }
 }
 
 table.jexcel > tbody > tr > td {
   padding: 8px;
-  border-right: 1px solid transparent;
   border-left: 1px solid transparent;
+  border-right: 1px solid var(--jexcel_border_color);
+
+  &:first-child {
+    border-left: 1px solid var(--jexcel_border_color);
+    background-color: var(--jexcel_header_background);
+  }
 }
 
 table.jexcel {
@@ -73,10 +82,6 @@ table.jexcel {
 .jexcel > tbody > tr.selected > td:first-child {
   background-color: var(--jexcel_header_background_highlighted);
   color: var(--jexcel_header_color_highlighted);
-}
-
-table.jexcel > tbody > tr > td:first-child {
-  background-color: var(--jexcel_header_background);
 }
 
 table.jexcel > tbody > tr.selected > td:first-child {
@@ -230,28 +235,9 @@ table.jexcel > tbody > tr.selected > td:first-child {
   box-shadow: unset;
 }
 
-table.jexcel > thead > tr > td {
-  border-top: 1px solid var(--jexcel_border_color);
-  border-right: 1px solid var(--jexcel_border_color);
-  border-bottom: 1px solid var(--jexcel_border_color);
-  background-color: var(--jexcel_header_background);
-
-  &:first-child {
-    border-left: 1px solid var(--jexcel_border_color);
-  }
-}
-
 table.jexcel > thead > tr > td.selected {
   background-color: var(--jexcel_header_background_highlighted);
   color: var(--jexcel_header_color_highlighted);
-}
-
-table.jexcel > tbody > tr > td {
-  border-right: 1px solid var(--jexcel_border_color);
-
-  &:first-child {
-    border-left: 1px solid var(--jexcel_border_color);
-  }
 }
 
 // Hides about item in context menu
@@ -260,8 +246,8 @@ table.jexcel > tbody > tr > td {
 }
 
 .jexcel_container {
-  padding: 0.5em;
   min-width: 100%;
+  padding: 0;
 
   .jexcel_content {
     min-width: 100%;
@@ -271,8 +257,4 @@ table.jexcel > tbody > tr > td {
       min-width: 100%;
     }
   }
-}
-
-.jexcel_container {
-  padding: 0;
 }

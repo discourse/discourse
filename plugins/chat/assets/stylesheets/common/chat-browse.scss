@@ -65,7 +65,7 @@
     margin: 0;
 
     &::before {
-      content: none; //there is a strange thing applied on nav-pills and this resets it
+      content: none; // there is a strange thing applied on nav-pills and this resets it
     }
   }
 

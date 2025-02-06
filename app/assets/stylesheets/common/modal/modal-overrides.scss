@@ -117,7 +117,7 @@
 .d-modal.choose-topic-modal {
   .d-modal {
     &__container {
-      width: 40em; //fixed width to avoid jumps when switching to different views
+      width: 40em; // fixed width to avoid jumps when switching to different views
     }
   }
 
@@ -209,15 +209,24 @@
 }
 
 .d-modal.topic-bulk-actions-modal {
+  p {
+    margin-top: 0;
+  }
+
+  #bulk-topics-cancel {
+    margin-left: auto;
+  }
+
+  .bulk-close-note-section {
+    margin-top: 1em;
+  }
+
   .d-modal {
     &__container {
       min-width: 0;
       width: 100%;
+      display: flex;
     }
-  }
-
-  p {
-    margin-top: 0;
   }
 
   .bulk-buttons {
@@ -236,26 +245,6 @@
 .topic-bulk-actions-modal {
   &__selection-info {
     margin-bottom: 0.5em;
-  }
-}
-
-.d-modal.topic-bulk-actions-modal {
-  .d-modal {
-    &__container {
-      display: flex;
-    }
-  }
-
-  p {
-    margin-top: 0;
-  }
-
-  #bulk-topics-cancel {
-    margin-left: auto;
-  }
-
-  .bulk-close-note-section {
-    margin-top: 1em;
   }
 }
 

@@ -11,7 +11,31 @@
 }
 
 .topic-body {
-  padding: 0;
+  width: calc(var(--topic-body-width) + (var(--topic-body-width-padding) * 2));
+  float: left;
+  min-width: 0; // prevents some elements, like <pre>, from blowing out the width
+  position: relative;
+  border-top: 1px solid var(--primary-low);
+  padding: 0.8em 0 0 0;
+
+  .topic-meta-data {
+    padding: 0 var(--topic-body-width-padding) 0.25em
+      var(--topic-body-width-padding);
+  }
+
+  .cooked {
+    padding: 1em var(--topic-body-width-padding) 0.25em
+      var(--topic-body-width-padding);
+  }
+
+  .group-request {
+    padding: 0.5em var(--topic-body-width-padding) 0
+      var(--topic-body-width-padding);
+  }
+
+  a.expand-hidden {
+    padding-left: var(--topic-body-width-padding);
+  }
 
   &:first-of-type {
     border-top: none;
@@ -500,35 +524,6 @@ blockquote {
   }
 }
 
-// variables are used to calculate the width of .gap
-.topic-body {
-  width: calc(var(--topic-body-width) + (var(--topic-body-width-padding) * 2));
-  float: left;
-  min-width: 0; // prevents some elements, like <pre>, from blowing out the width
-  position: relative;
-  border-top: 1px solid var(--primary-low);
-  padding: 0.8em 0 0 0;
-
-  .topic-meta-data {
-    padding: 0 var(--topic-body-width-padding) 0.25em
-      var(--topic-body-width-padding);
-  }
-
-  .cooked {
-    padding: 1em var(--topic-body-width-padding) 0.25em
-      var(--topic-body-width-padding);
-  }
-
-  .group-request {
-    padding: 0.5em var(--topic-body-width-padding) 0
-      var(--topic-body-width-padding);
-  }
-
-  a.expand-hidden {
-    padding-left: var(--topic-body-width-padding);
-  }
-}
-
 .topic-avatar {
   border-top: 1px solid var(--primary-low);
   padding-top: 15px;
@@ -709,7 +704,7 @@ span.highlighted {
 
   .topic-body {
     box-sizing: border-box;
-    width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
+    width: calc(100% - 47px); // 100% - [width of .topic-avatar + 2px]
   }
 
   .embedded-posts {

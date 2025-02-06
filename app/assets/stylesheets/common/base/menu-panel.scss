@@ -1,7 +1,18 @@
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
-  box-shadow: var(--shadow-header);
+  top: 0;
+  box-sizing: border-box;
+
+  // ensure there's always space to click outside on tiny devices
+  max-width: 90vw;
+
+  --100dvh: 100%;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
+  box-shadow: 0 0 30px -2px rgba(0, 0, 0, 0.5);
+  height: var(--100dvh);
 
   .panel-body {
     width: 100%;
@@ -9,7 +20,14 @@
 }
 
 .header-cloak {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.3);
+  top: 0;
+  left: 0;
   display: none;
+  touch-action: pan-y pinch-zoom;
 }
 
 .menu-panel.drop-down {
@@ -33,6 +51,125 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+
+  // remove once glimmer search menu in place
+  .widget-link,
+  .categories-link {
+    padding: 0.25em 0.5em;
+    display: block;
+    color: var(--primary);
+
+    &:hover,
+    &:focus {
+      background-color: var(--d-hover);
+      outline: none;
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    .new {
+      font-size: var(--font-down-1);
+      margin-left: 0.5em;
+      color: var(--primary-med-or-secondary-med);
+    }
+
+    &.show-help,
+    &.filter {
+      color: var(--tertiary);
+    }
+  }
+
+  .search-link,
+  .categories-link {
+    padding: 0.25em 0.5em;
+    display: block;
+    color: var(--primary);
+
+    &:hover,
+    &:focus {
+      background-color: var(--d-hover);
+      outline: none;
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    .new {
+      font-size: var(--font-down-1);
+      margin-left: 0.5em;
+      color: var(--primary-med-or-secondary-med);
+    }
+
+    &.show-help,
+    &.filter {
+      color: var(--tertiary);
+    }
+  }
+
+  li.category-link {
+    float: left;
+    background-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25em 0.5em;
+    width: 50%;
+    box-sizing: border-box;
+
+    a {
+      display: inline-flex;
+
+      &:hover,
+      &:focus {
+        background: transparent;
+
+        .category-name {
+          color: var(--primary);
+        }
+      }
+    }
+
+    .badge-notification {
+      color: var(--primary-med-or-secondary-med);
+      background-color: transparent;
+      display: inline;
+      padding: 0;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-large);
+    }
+  }
+
+  // note these topic counts only appear for anons in the category hamburger drop down
+  b.topics-count {
+    color: var(--primary-med-or-secondary-med);
+    font-weight: normal;
+    font-size: var(--font-down-1);
+  }
+
+  div.discourse-tags {
+    font-size: var(--font-down-1);
+  }
+
+  .sidebar-panel-header__row {
+    width: 100%;
+  }
+
+  .sidebar-sections {
+    &__back-to-forum {
+      color: var(--d-sidebar-link-color);
+      display: flex;
+      align-items: center;
+
+      svg {
+        margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+        height: 0.75em;
+        width: 0.75em;
+        color: var(--d-sidebar-link-icon-color);
+      }
+    }
+  }
 
   hr {
     margin: 3px 0;
@@ -271,127 +408,6 @@
   }
 }
 
-.menu-panel {
-  // remove once glimmer search menu in place
-  .widget-link,
-  .categories-link {
-    padding: 0.25em 0.5em;
-    display: block;
-    color: var(--primary);
-
-    &:hover,
-    &:focus {
-      background-color: var(--d-hover);
-      outline: none;
-    }
-
-    .d-icon {
-      color: var(--primary-medium);
-    }
-
-    .new {
-      font-size: var(--font-down-1);
-      margin-left: 0.5em;
-      color: var(--primary-med-or-secondary-med);
-    }
-
-    &.show-help,
-    &.filter {
-      color: var(--tertiary);
-    }
-  }
-
-  .search-link,
-  .categories-link {
-    padding: 0.25em 0.5em;
-    display: block;
-    color: var(--primary);
-
-    &:hover,
-    &:focus {
-      background-color: var(--d-hover);
-      outline: none;
-    }
-
-    .d-icon {
-      color: var(--primary-medium);
-    }
-
-    .new {
-      font-size: var(--font-down-1);
-      margin-left: 0.5em;
-      color: var(--primary-med-or-secondary-med);
-    }
-
-    &.show-help,
-    &.filter {
-      color: var(--tertiary);
-    }
-  }
-
-  li.category-link {
-    float: left;
-    background-color: transparent;
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25em 0.5em;
-    width: 50%;
-    box-sizing: border-box;
-
-    a {
-      display: inline-flex;
-
-      &:hover,
-      &:focus {
-        background: transparent;
-
-        .category-name {
-          color: var(--primary);
-        }
-      }
-    }
-
-    .badge-notification {
-      color: var(--primary-med-or-secondary-med);
-      background-color: transparent;
-      display: inline;
-      padding: 0;
-      font-size: var(--font-down-1);
-      line-height: var(--line-height-large);
-    }
-  }
-
-  // note these topic counts only appear for anons in the category hamburger drop down
-  b.topics-count {
-    color: var(--primary-med-or-secondary-med);
-    font-weight: normal;
-    font-size: var(--font-down-1);
-  }
-
-  div.discourse-tags {
-    font-size: var(--font-down-1);
-  }
-
-  .sidebar-panel-header__row {
-    width: 100%;
-  }
-
-  .sidebar-sections {
-    &__back-to-forum {
-      color: var(--d-sidebar-link-color);
-      display: flex;
-      align-items: center;
-
-      svg {
-        margin-right: var(--d-sidebar-section-link-prefix-margin-right);
-        height: 0.75em;
-        width: 0.75em;
-        color: var(--d-sidebar-link-icon-color);
-      }
-    }
-  }
-}
-
 // Panel / user-notification-list styles. **not** menu panel sizing styles
 .user-menu .quick-access-panel,
 .user-notifications-list {
@@ -470,6 +486,11 @@
         // we don't need the link focus because we're styling the parent
         outline: 0;
       }
+
+      .btn-flat:focus {
+        // undo default btn-flat style
+        background: transparent;
+      }
     }
 
     // This is until other languages remove the HTML from within
@@ -508,25 +529,6 @@
       &:nth-of-type(2) {
         // margin for comma between username and username2
         margin-left: 0.25em;
-      }
-    }
-
-    &:hover {
-      background-color: var(--d-hover);
-      outline: none;
-    }
-
-    &:focus-within {
-      background: var(--d-hover);
-
-      a {
-        // we don't need the link focus because we're styling the parent
-        outline: 0;
-      }
-
-      .btn-flat:focus {
-        // undo default btn-flat style
-        background: transparent;
       }
     }
 
@@ -640,7 +642,6 @@
         display: flex;
         position: relative;
         overflow: visible;
-        margin-right: 0.5em;
         flex-shrink: 0;
         width: 2em;
         height: 2em;
@@ -699,30 +700,4 @@
     max-height: unset;
     min-height: 100%;
   }
-}
-
-.header-cloak {
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.3);
-  top: 0;
-  left: 0;
-  display: none;
-  touch-action: pan-y pinch-zoom;
-}
-
-.menu-panel.slide-in {
-  top: 0;
-  box-sizing: border-box;
-
-  // ensure there's always space to click outside on tiny devices
-  max-width: 90vw;
-
-  --100dvh: 100%;
-  @supports (height: 100dvh) {
-    --100dvh: 100dvh;
-  }
-  box-shadow: 0 0 30px -2px rgba(0, 0, 0, 0.5);
-  height: var(--100dvh);
 }

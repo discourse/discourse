@@ -20,29 +20,6 @@ a.loading-onebox {
   padding: 12px;
   font-size: var(--font-0);
 
-  > .source {
-    margin-bottom: 12px;
-    margin-right: 10px;
-    display: block;
-    color: var(--primary);
-    position: relative;
-    height: 20px;
-
-    .info {
-      a {
-        color: black;
-        text-decoration: none;
-        padding-right: 10px;
-      }
-      position: absolute;
-      font-size: var(--font-0);
-
-      img.favicon {
-        margin-right: 3px;
-      }
-    }
-  }
-
   .onebox-result-body {
     padding-top: 5px;
 
@@ -72,21 +49,41 @@ a.loading-onebox {
         float: left;
       }
     }
-  }
-}
 
-// RottenTomatoes Onebox
-.onebox-result {
-  .onebox-result-body {
+    // RottenTomatoes Onebox
     img.verdict {
       float: none;
       margin-right: 7px;
     }
 
+    // RottenTomatoes Onebox
     img.popcorn {
       float: none;
       margin-left: 20px;
       margin-right: 5px;
+    }
+  }
+
+  > .source {
+    margin-bottom: 12px;
+    margin-right: 10px;
+    display: block;
+    color: var(--primary);
+    position: relative;
+    height: 20px;
+
+    .info {
+      a {
+        color: black;
+        text-decoration: none;
+        padding-right: 10px;
+      }
+      position: absolute;
+      font-size: var(--font-0);
+
+      img.favicon {
+        margin-right: 3px;
+      }
     }
   }
 }
@@ -417,6 +414,7 @@ pre.onebox code ol {
 
 pre.onebox code {
   background-color: var(--primary-very-low);
+  white-space: normal;
 }
 
 pre.onebox code li {
@@ -434,7 +432,7 @@ pre.onebox code ol.lines li {
   padding-left: 0.5em;
   margin-left: 0;
   border-left: 1px solid var(--primary-300);
-  min-height: 1.5em; //show empty li lines
+  min-height: 1.5em; // show empty li lines
   white-space: pre;
   width: max-content;
 }
@@ -442,10 +440,6 @@ pre.onebox code ol.lines li {
 pre.onebox code ol.lines li.selected {
   background-color: var(--highlight-bg);
   border-left-color: rgba(var(--primary-rgb), 0.2);
-}
-
-pre.onebox code {
-  white-space: normal;
 }
 
 .onebox-warning-message {
@@ -641,7 +635,7 @@ pre.onebox code {
   }
 }
 
-//Onebox - Github - Pull request
+// Onebox - Github - Pull request
 .onebox-body .github-commit-status {
   background: #f5f5f5;
   border-radius: 5px;
@@ -676,7 +670,7 @@ pre.onebox code {
   background-color: #bd2c00;
 }
 
-//Onebox - Twitter - Status
+// Onebox - Twitter - Status
 aside.onebox.twitterstatus .onebox-body {
   h4 {
     margin-bottom: 0;
