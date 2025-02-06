@@ -13,7 +13,7 @@ permissions:
 jobs:
   deduplicate:
     name: Deduplicate
-    if: github.actor == 'dependabot[bot]'
+    # if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
 
     steps:
