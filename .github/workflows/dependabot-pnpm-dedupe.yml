@@ -2,10 +2,10 @@ name: Pnpm dedupe on Dependabot PRs
 
 on:
   push:
-    branches:
-      - "dependabot/npm_and_yarn/*"
-    paths:
-      - "pnpm-lock.yaml"
+    # branches:
+    #   # - "dependabot/npm_and_yarn/*"
+    # paths:
+    #   - "pnpm-lock.yaml"
 
 permissions:
   contents: write
@@ -23,8 +23,6 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
