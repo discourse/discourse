@@ -140,15 +140,16 @@ end
 #
 # Table name: theme_modifier_sets
 #
-#  id                         :bigint           not null, primary key
-#  theme_id                   :bigint           not null
-#  serialize_topic_excerpts   :boolean
-#  csp_extensions             :string           is an Array
-#  svg_icons                  :string           is an Array
-#  topic_thumbnail_sizes      :string           is an Array
-#  custom_homepage            :boolean
-#  serialize_post_user_badges :string           is an Array
-#  theme_setting_modifiers    :jsonb
+#  id                            :bigint           not null, primary key
+#  theme_id                      :bigint           not null
+#  serialize_topic_excerpts      :boolean
+#  csp_extensions                :string           is an Array
+#  svg_icons                     :string           is an Array
+#  topic_thumbnail_sizes         :string           is an Array
+#  custom_homepage               :boolean
+#  serialize_post_user_badges    :string           is an Array
+#  theme_setting_modifiers       :jsonb
+#  serialize_topic_op_likes_data :boolean
 #
 # Indexes
 #

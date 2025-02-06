@@ -96,4 +96,58 @@ RSpec.describe TopicListItemSerializer do
       expect(json[:posters].length).to eq(1)
     end
   end
+
+  describe "correctly serializes op_likes data" do
+    let(:user) { Fabricate(:user) }
+    let(:moderator) { Fabricate(:moderator) }
+    let(:first_post) { Fabricate(:post, topic: topic, user: user) }
+
+    before { topic.update!(first_post: first_post) }
+
+    it "serializes op_can_like" do
+      allow_any_instance_of(ThemeModifierHelper).to receive(
+        :serialize_topic_op_likes_data,
+      ).and_return(true)
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+
+      expect(json[:op_can_like]).to eq(true)
+    end
+
+    it "does not include op_can_like when theme modifier disallows" do
+      allow_any_instance_of(ThemeModifierHelper).to receive(
+        :serialize_topic_op_likes_data,
+      ).and_return(false)
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+
+      expect(json.key?(:op_can_like)).to eq(false)
+    end
+
+    it "serializes op_liked" do
+      allow_any_instance_of(ThemeModifierHelper).to receive(
+        :serialize_topic_op_likes_data,
+      ).and_return(true)
+      PostAction.create!(
+        user: user,
+        post: first_post,
+        post_action_type_id: PostActionType.types[:like],
+      )
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:op_liked]).to eq(true)
+    end
+
+    it "does not include op_liked when theme modifier disallows" do
+      allow_any_instance_of(ThemeModifierHelper).to receive(
+        :serialize_topic_op_likes_data,
+      ).and_return(false)
+      PostAction.create!(
+        user: user,
+        post: first_post,
+        post_action_type_id: PostActionType.types[:like],
+      )
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+
+      expect(json.key?(:op_liked)).to eq(false)
+    end
+  end
 end

@@ -10,6 +10,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :last_poster_username,
              :category_id,
              :op_like_count,
+             :op_can_like,
+             :op_liked,
              :pinned_globally,
              :liked_post_numbers,
              :featured_link,
@@ -30,6 +32,42 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def op_like_count
     object.first_post && object.first_post.like_count
+  end
+
+  def include_op_can_like?
+    theme_modifier_helper.serialize_topic_op_likes_data
+  end
+
+  def op_can_like
+    return false if !scope.user || !object.first_post
+
+    first_post = object.first_post
+    return false if first_post.user_id == scope.user.id
+    return false unless scope.post_can_act?(first_post, :like)
+
+    first_post_liked =
+      PostAction.where(
+        user_id: scope.user.id,
+        post_id: first_post.id,
+        post_action_type_id: PostActionType.types[:like],
+      ).first
+    return scope.can_delete?(first_post_liked) if first_post_liked
+
+    true
+  end
+
+  def include_op_liked?
+    theme_modifier_helper.serialize_topic_op_likes_data
+  end
+
+  def op_liked
+    return false if !scope.user || !object.first_post
+
+    PostAction.where(
+      user_id: scope.user.id,
+      post_id: object.first_post.id,
+      post_action_type_id: PostActionType.types[:like],
+    ).exists?
   end
 
   def last_poster_username
@@ -92,5 +130,11 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def include_allowed_user_count?
     object.private_message?
+  end
+
+  private
+
+  def theme_modifier_helper
+    @theme_modifier_helper ||= ThemeModifierHelper.new(request: scope.request)
   end
 end
