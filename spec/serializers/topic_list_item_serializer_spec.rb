@@ -147,7 +147,7 @@ RSpec.describe TopicListItemSerializer do
       )
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
 
-      expect(json[:op_liked]).to eq(false)
+      expect(json.key?(:op_liked)).to eq(false)
     end
   end
 end
