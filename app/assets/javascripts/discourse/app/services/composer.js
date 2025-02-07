@@ -1043,7 +1043,7 @@ export default class ComposerService extends Service {
 
     const composer = this.model;
     const cantSubmitPost = applyValueTransformer(
-      "composer-service-cant-submit-post",
+      "composer-service-cannot-submit-post",
       composer?.cantSubmitPost,
       { model: composer }
     );
@@ -1054,7 +1054,7 @@ export default class ComposerService extends Service {
       }
 
       this.set("lastValidatedAt", Date.now());
-      this.appEvents.trigger("composer-service:last-valdated-at-updated", {
+      this.appEvents.trigger("composer-service:last-validated-at-updated", {
         model: composer,
       });
       return;
@@ -1794,7 +1794,7 @@ export default class ComposerService extends Service {
 
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
-    this.appEvents.trigger("composer-service:clear-last-validated-at");
+    this.appEvents.trigger("composer-service:last-validated-at-cleared");
   }
 }
 
