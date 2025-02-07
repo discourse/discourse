@@ -64,6 +64,8 @@ class TranslationOverride < ActiveRecord::Base
             .where.not("translation_key LIKE '%_MF'")
         end
 
+  before_update :refresh_status
+
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
 
@@ -208,6 +210,21 @@ class TranslationOverride < ActiveRecord::Base
     MessageFormat.compile(locale, { key: value }, strict: true)
   rescue MessageFormat::Compiler::CompileError => e
     errors.add(:base, e.cause.message)
+  end
+
+  def refresh_status
+    self.original_translation = current_default
+
+    self.status =
+      if original_translation_deleted?
+        "deprecated"
+      elsif invalid_interpolation_keys.present?
+        "invalid_interpolation_keys"
+      elsif original_translation_updated?
+        "outdated"
+      else
+        "up_to_date"
+      end
   end
 end
 
