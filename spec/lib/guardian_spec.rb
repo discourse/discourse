@@ -927,6 +927,20 @@ RSpec.describe Guardian do
 
       expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
     end
+
+    it "disallows private messages with no access" do
+      post = Fabricate(:private_message_post, user: moderator)
+
+      expect(Guardian.new(trust_level_0).can_receive_post_notifications?(post)).to be_falsey
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+
+      SiteSetting.suppress_secured_categories_from_admin = true
+
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_falsey
+
+      post.topic.allowed_users << admin
+      expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+    end
   end
 
   describe "can_see?" do
