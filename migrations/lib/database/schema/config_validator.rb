@@ -71,6 +71,7 @@ module Migrations::Database::Schema
       schema_config = config[:schema]
       validate_excluded_tables(schema_config)
       validate_tables(schema_config)
+      validate_columns(schema_config)
     end
 
     def validate_excluded_tables(schema_config)
@@ -102,6 +103,18 @@ module Migrations::Database::Schema
              !excluded_table_names.include?(table_name)
           @errors << I18n.t("schema.validator.table_not_configured", table_name:)
         end
+      end
+    end
+
+    def validate_columns(schema_config)
+      schema_config[:tables].each_pair do |table_name, columns|
+        existing_columns = @db.columns(table_name)
+
+        if (added_columns = columns["add"])
+        end
+
+        modified_columns = columns["modify"] || []
+        excluded_columns = columns["exclude"] || []
       end
     end
 
