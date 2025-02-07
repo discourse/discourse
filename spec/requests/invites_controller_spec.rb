@@ -33,6 +33,19 @@ RSpec.describe InvitesController do
       end
     end
 
+    it "includes unobfuscated email when email_token present" do
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+      expect(response.status).to eq(200)
+      expect(response.body).to include(invite.email)
+
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["username"]).to eq("") # Default is that we don't use emails to suggest usernames
+        expect(invite_info["email"]).to eq(invite.email)
+      end
+    end
+
     context "when email data is present in authentication data" do
       let(:store) { ActionDispatch::Session::CookieStore.new({}) }
       let(:session_stub) do
