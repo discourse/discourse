@@ -109,6 +109,7 @@ export default class LocalLoginForm extends Component {
   @action
   loginOnEnter(event) {
     if (event.key === "Enter") {
+      event?.preventDefault();
       this.args.login();
     }
   }

@@ -507,6 +507,7 @@ Discourse::Application.routes.draw do
     get "session/passkey/challenge" => "session#passkey_challenge"
     post "session/passkey/auth" => "session#passkey_login"
     get "session/scopes" => "session#scopes"
+    get "session/user_exists" => "session#user_exists"
     get "composer/mentions" => "composer#mentions"
     get "composer_messages" => "composer_messages#index"
     get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"

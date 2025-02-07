@@ -171,6 +171,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
         visit "/"
         login_form.open
         login_form.fill_username("john")
+        login_form.click_login
         login_form.fill_password("supersecurepassword")
         login_form.click_login
         expect(login_form).to have_content(I18n.t("login.not_approved"))
@@ -199,6 +200,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
         visit "/"
         login_form.open
         login_form.fill_username("john")
+        login_form.click_login
         login_form.fill_password("supersecurepassword")
         login_form.click_login
         expect(page).to have_css(".header-dropdown-toggle.current-user")

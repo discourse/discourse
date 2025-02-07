@@ -24,8 +24,7 @@ module PageObjects
       end
 
       def has_valid_fields?
-        has_valid_username?
-        has_valid_password?
+        has_valid_username? && has_valid_password?
       end
 
       def click_create_account

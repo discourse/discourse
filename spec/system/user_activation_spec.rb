@@ -10,6 +10,7 @@ describe "Account activation", type: :system do
     visit "/"
     find(".login-button").click
     find("#login-account-name").fill_in with: user.email
+    find("#login-button").click
     find("#login-account-password").fill_in with: password
     find("#login-button").click
 

@@ -25,6 +25,8 @@ export default class SecurityController extends Controller {
 
   @setting("moderators_view_emails") canModeratorsViewEmails;
 
+  saveAttrNames = ["password_disabled"];
+
   passwordProgress = null;
   subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;
@@ -158,7 +160,10 @@ export default class SecurityController extends Controller {
   save() {
     this.set("saved", false);
 
-    return this.model.then(() => this.set("saved", true)).catch(popupAjaxError);
+    return this.model
+      .save(this.saveAttrNames)
+      .then(() => this.set("saved", true))
+      .catch(popupAjaxError);
   }
 
   @action

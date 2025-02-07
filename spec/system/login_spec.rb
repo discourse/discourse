@@ -32,12 +32,22 @@ shared_examples "login scenarios" do |login_page_object|
     it "can login" do
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
-      login_form.open.fill(username: "john", password: "supersecurepassword").click_login
+      login_form
+        .open
+        .fill_username("john")
+        .click_login
+        .fill_password("supersecurepassword")
+        .click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
     it "can login and activate account" do
-      login_form.open.fill(username: "john", password: "supersecurepassword").click_login
+      login_form
+        .open
+        .fill_username("john")
+        .click_login
+        .fill_password("supersecurepassword")
+        .click_login
       expect(page).to have_css(".not-activated-modal")
       login_form.click(".activation-controls button.resend")
 
@@ -52,7 +62,12 @@ shared_examples "login scenarios" do |login_page_object|
     end
 
     it "redirects to the wizard after activating account" do
-      login_form.open.fill(username: "admin", password: "supersecurepassword").click_login
+      login_form
+        .open
+        .fill_username("admin")
+        .click_login
+        .fill_password("supersecurepassword")
+        .click_login
       expect(page).to have_css(".not-activated-modal")
       login_form.click(".activation-controls button.resend")
 
@@ -64,7 +79,12 @@ shared_examples "login scenarios" do |login_page_object|
     end
 
     it "shows error when when activation link is invalid" do
-      login_form.open.fill(username: "john", password: "supersecurepassword").click_login
+      login_form
+        .open
+        .fill_username("john")
+        .click_login
+        .fill_password("supersecurepassword")
+        .click_login
       expect(page).to have_css(".not-activated-modal")
 
       visit "/u/activate-account/123abc"
@@ -78,7 +98,11 @@ shared_examples "login scenarios" do |login_page_object|
       user.update!(password:)
       UserPasswordExpirer.expire_user_password(user)
 
-      login_form.open.fill(username: user.username, password:).click_login
+      login_form.open.fill_username(user.username).click_login
+
+      expect(page).to have_css("#login-account-password")
+
+      login_form.fill_password(password).click_login
 
       expect(find(".alert-error")).to have_content(
         I18n.t("js.login.password_expired", reset_url: "/password-reset").gsub(/<.*?>/, ""),
@@ -123,7 +147,7 @@ shared_examples "login scenarios" do |login_page_object|
       find(".login-welcome .login-button").click
 
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
-      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      login_form.fill_username("john").click_login.fill_password("supersecurepassword").click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
@@ -142,7 +166,12 @@ shared_examples "login scenarios" do |login_page_object|
       before { SiteSetting.enforce_second_factor = "all" }
 
       it "requires to set 2FA after login" do
-        login_form.open.fill(username: "jane", password: "supersecurepassword").click_login
+        login_form
+          .open
+          .fill_username("jane")
+          .click_login
+          .fill_password("supersecurepassword")
+          .click_login
 
         expect(page).to have_css(".header-dropdown-toggle.current-user")
         expect(page).to have_content(I18n.t("js.user.second_factor.enforced_notice"))
@@ -150,7 +179,11 @@ shared_examples "login scenarios" do |login_page_object|
     end
 
     it "can login with totp" do
-      login_form.open.fill(username: "john", password: "supersecurepassword").click_login
+      login_form.open.fill_username("john").click_login
+
+      expect(page).to have_css("#login-account-password")
+
+      login_form.fill_password("supersecurepassword").click_login
 
       expect(page).to have_css(".second-factor")
 
@@ -162,7 +195,12 @@ shared_examples "login scenarios" do |login_page_object|
     end
 
     it "can login with backup code" do
-      login_form.open.fill(username: "john", password: "supersecurepassword").click_login
+      login_form
+        .open
+        .fill_username("john")
+        .click_login
+        .fill_password("supersecurepassword")
+        .click_login
 
       expect(page).to have_css(".second-factor")
 
@@ -198,7 +236,9 @@ shared_examples "login scenarios" do |login_page_object|
     end
 
     it "can reset password with TOTP" do
-      login_form.open.fill_username("john").forgot_password
+      login_form.open.fill_username("john").click_login
+      expect(page).to have_css("#login-account-password")
+      login_form.forgot_password
       find("button.forgot-password-reset").click
 
       reset_password_link = wait_for_email_link(user, :reset_password)
@@ -213,7 +253,9 @@ shared_examples "login scenarios" do |login_page_object|
     end
 
     it "shows error correctly when TOTP code is invalid" do
-      login_form.open.fill_username("john").forgot_password
+      login_form.open.fill_username("john").click_login
+      expect(page).to have_css("#login-account-password")
+      login_form.forgot_password
       find("button.forgot-password-reset").click
 
       reset_password_link = wait_for_email_link(user, :reset_password)
@@ -229,7 +271,9 @@ shared_examples "login scenarios" do |login_page_object|
     end
 
     it "can reset password with a backup code" do
-      login_form.open.fill_username("john").forgot_password
+      login_form.open.fill_username("john").click_login
+      expect(page).to have_css("#login-account-password")
+      login_form.forgot_password
       find("button.forgot-password-reset").click
 
       reset_password_link = wait_for_email_link(user, :reset_password)

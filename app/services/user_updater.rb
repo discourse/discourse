@@ -55,6 +55,7 @@ class UserUpdater
     sidebar_show_count_of_new_items
     watched_precedence_over_muted
     topics_unread_when_closed
+    password_disabled
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do

@@ -13,6 +13,12 @@
 
       {{this.passwordProgress}}
     </div>
+    <PreferenceCheckbox
+      id="password_disabled_checkbox"
+      data-setting-name="user-password-disabled"
+      @labelKey="user.disable_password"
+      @checked={{this.model.user_option.password_disabled}}
+    />
   </div>
 
   {{#if this.canUsePasskeys}}
@@ -139,3 +145,9 @@
     @outletArgs={{hash model=this.model}}
   />
 </span>
+
+<SaveControls
+  @model={{this.model}}
+  @action={{action "save"}}
+  @saved={{this.saved}}
+/>

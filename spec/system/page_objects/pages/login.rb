@@ -33,6 +33,7 @@ module PageObjects
 
       def click_login
         click("#login-button")
+        self
       end
 
       def email_login_link

@@ -52,6 +52,7 @@ export default class LoginPageController extends Controller {
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
   @tracked secondFactorToken;
+  @tracked usernameValidated = false;
   @tracked flash;
   @tracked flashType;
 
@@ -241,17 +242,62 @@ export default class LoginPageController extends Controller {
   }
 
   @action
+  invalidateUsername() {
+    this.usernameValidated = false;
+  }
+
+  @action
   async triggerLogin() {
+    this.flash = this.flashType = null;
     if (this.loginDisabled) {
       return;
     }
 
-    if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
-      this.flash = i18n("login.blank_username_or_password");
+    if (!this.usernameValidated) {
+      this.validateUsername();
+    } else {
+      this.authenticateUser();
+    }
+  }
+
+  async validateUsername() {
+    if (this.usernameValidated) {
+      return;
+    }
+
+    if (isEmpty(this.loginName)) {
+      this.flash = i18n("login.blank_username");
       this.flashType = "error";
       return;
     }
 
+    try {
+      const result = await ajax("/session/user_exists", {
+        type: "GET",
+        data: {
+          login: this.loginName,
+        },
+      });
+
+      const { login_found, username, password_disabled } = result;
+      if (login_found) {
+        this.loginName = username;
+        if (password_disabled) {
+          this.authenticateUser();
+        } else {
+          this.usernameValidated = true;
+        }
+      } else {
+        this.flash = i18n("login.account_not_found");
+        this.flashType = "error";
+      }
+    } catch {
+      this.flash = i18n("login.error");
+      this.flashType = "error";
+    }
+  }
+
+  async authenticateUser() {
     try {
       this.loggingIn = true;
       const result = await ajax("/session", {
