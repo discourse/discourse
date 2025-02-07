@@ -123,7 +123,7 @@ class Plugin::Instance
     route = self.admin_route
 
     if route.blank?
-      return if !configurable? || has_only_enabled_setting?
+      return if !any_settings? || has_only_enabled_setting?
       route = default_admin_route
     end
 
@@ -140,7 +140,7 @@ class Plugin::Instance
   end
 
   def has_only_enabled_setting?
-    plugin_settings.values.one?
+    any_settings? && plugin_settings.values.one?
   end
 
   def plugin_settings
