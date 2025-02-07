@@ -129,16 +129,16 @@ module Service
 
     # @!visibility private
     class Step
-      attr_reader :name, :method_name, :class_name, :instance, :context
+      attr_reader :name, :method_name, :class_name
 
       def initialize(name, method_name = name, class_name: nil)
-        @name = name
-        @method_name = method_name
-        @class_name = class_name
+        @name, @method_name, @class_name = name, method_name, class_name
+        @instance = Concurrent::ThreadLocalVar.new
+        @context = Concurrent::ThreadLocalVar.new
       end
 
       def call(instance, context)
-        @instance, @context = instance, context
+        @instance.value, @context.value = instance, context
         context[result_key] = Context.build
         with_runtime { run_step }
       end
@@ -146,6 +146,10 @@ module Service
       def result_key
         "result.#{type}.#{name}"
       end
+
+      def instance = @instance.value
+
+      def context = @context.value
 
       private
 
@@ -252,6 +256,7 @@ module Service
       attr_reader :steps
 
       def initialize(&block)
+        super("")
         @steps = []
         instance_exec(&block)
       end
@@ -268,8 +273,8 @@ module Service
       attr_reader :steps, :keys
 
       def initialize(*keys, &block)
+        super(keys.join(":"))
         @keys = keys
-        @name = keys.join(":")
         @steps = []
         instance_exec(&block)
       end
@@ -308,7 +313,7 @@ module Service
       attr_reader :steps, :exceptions
 
       def initialize(exceptions, &block)
-        @name = "default"
+        super("default")
         @steps = []
         @exceptions = exceptions.presence || [StandardError]
         instance_exec(&block)
