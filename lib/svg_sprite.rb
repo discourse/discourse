@@ -222,6 +222,7 @@ module SvgSprite
         square-full
         square-plus
         star
+        sun
         table
         table-cells
         table-columns

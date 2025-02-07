@@ -341,20 +341,15 @@ class Stylesheet::Manager
     end
   end
 
-  def color_scheme_stylesheet_details(color_scheme_id = nil, media, dark: false)
+  def color_scheme_stylesheet_details(color_scheme_id = nil, dark: false, fallback_to_base: true)
     theme_id = @theme_id || SiteSetting.default_theme_id
 
-    color_scheme =
-      begin
-        ColorScheme.find(color_scheme_id)
-      rescue StandardError
-        # don't load fallback when requesting dark color scheme
-        return false if media != "all"
+    color_scheme = ColorScheme.find_by(id: color_scheme_id)
 
-        get_theme(theme_id)&.color_scheme || ColorScheme.base
-      end
-
-    return false if !color_scheme
+    if !color_scheme
+      return if !fallback_to_base
+      color_scheme = get_theme(theme_id)&.color_scheme || ColorScheme.base
+    end
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
@@ -382,8 +377,12 @@ class Stylesheet::Manager
     end
   end
 
-  def color_scheme_stylesheet_preload_tag(color_scheme_id = nil, media = "all", dark: false)
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media, dark:)
+  def color_scheme_stylesheet_preload_tag(
+    color_scheme_id = nil,
+    dark: false,
+    fallback_to_base: true
+  )
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, dark:, fallback_to_base:)
 
     return "" if !stylesheet
 
@@ -392,21 +391,15 @@ class Stylesheet::Manager
     %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
 
-  def color_scheme_stylesheet_link_tag(
+  def color_scheme_stylesheet_link_tag_href(
     color_scheme_id = nil,
-    media = "all",
-    preload_callback = nil,
-    dark: false
+    dark: false,
+    fallback_to_base: true
   )
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media, dark:)
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, dark:, fallback_to_base:)
 
-    return "" if !stylesheet
+    return if !stylesheet
 
-    href = stylesheet[:new_href]
-    preload_callback.call(href, "style") if preload_callback
-
-    css_class = media == "all" ? "light-scheme" : "dark-scheme"
-
-    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
+    stylesheet[:new_href]
   end
 end

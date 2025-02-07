@@ -488,6 +488,10 @@ basic:
     default: false
     hidden: true
     client: true
+  interface_color_selector:
+    client: true
+    enum: "InterfaceColorSelectorSetting"
+    default: "disabled"
 
 login:
   invite_only:
