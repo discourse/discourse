@@ -597,13 +597,13 @@ task "uploads:disable_secure_uploads" => :environment do
     puts "Disabling secure upload and resetting uploads to not secure in #{db}...", ""
 
     SiteSetting.secure_uploads = false
+    SiteSetting.secure_uploads_pm_only = false
 
     secure_uploads =
       Upload
-        .joins(:upload_references)
-        .where(upload_references: { target_type: "Post" })
+        .joins("LEFT JOIN upload_references ON uploads.id = upload_references.upload_id")
         .where(secure: true)
-
+        .distinct
     secure_upload_count = secure_uploads.count
 
     puts "", "Marking #{secure_upload_count} uploads as not secure.", ""
