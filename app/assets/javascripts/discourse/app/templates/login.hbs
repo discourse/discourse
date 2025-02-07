@@ -1,3 +1,4 @@
+{{hide-application-header-buttons "search" "login" "signup" "menu"}}
 {{hide-application-sidebar}}
 {{body-class "login-page"}}
 
@@ -13,7 +14,6 @@
     )
   }}
     {{! Show the full page login form }}
-    {{hide-application-header-buttons "search" "login" "signup" "menu"}}
     <div class="login-fullpage">
       <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
 
@@ -171,13 +171,9 @@
 
             <DButton
               @action={{if
-                this.autoRedirect
-                this.singleExternalLogin
-                (if
-                  this.shouldTriggerRouteAction
-                  (route-action "showLogin")
-                  this.showFullPageLogin
-                )
+                this.shouldTriggerRouteAction
+                (route-action "showLogin")
+                this.showFullPageLogin
               }}
               @icon="user"
               @label="log_in"

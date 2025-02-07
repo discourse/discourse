@@ -57,7 +57,6 @@ export default class LoginRoute extends DiscourseRoute {
       if (this.siteSettings.auth_immediately) {
         controller.set("isRedirectingToExternalAuth", true);
       } else {
-        controller.set("autoRedirect", true);
         controller.set("singleExternalLogin", this.login.singleExternalLogin);
       }
     }
