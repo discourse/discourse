@@ -606,6 +606,7 @@ login:
     client: true
   auth_overrides_username: false
   auth_overrides_name: false
+  auth_require_interaction: true
   enable_discourse_connect:
     client: true
     default: false
