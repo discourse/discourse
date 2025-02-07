@@ -123,8 +123,7 @@ class Plugin::Instance
     route = self.admin_route
 
     if route.blank?
-      return if !any_settings?
-
+      return if !any_settings? || has_only_enabled_setting?
       route = default_admin_route
     end
 
@@ -137,11 +136,15 @@ class Plugin::Instance
   end
 
   def any_settings?
-    return false if !configurable?
+    configurable? && plugin_settings.values.length.positive?
+  end
 
-    SiteSetting
-      .all_settings(filter_plugin: self.name)
-      .any? { |s| s[:setting] != @enabled_site_setting }
+  def has_only_enabled_setting?
+    any_settings? && plugin_settings.values.one?
+  end
+
+  def plugin_settings
+    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == self.name }
   end
 
   def configurable?
