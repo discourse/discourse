@@ -596,6 +596,7 @@ login:
     client: true
   auth_immediately:
     default: true
+    client: true
   auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
