@@ -332,6 +332,8 @@ GEM
     parser (3.3.7.0)
       ast (~> 2.4.1)
       racc
+    percy-capybara (5.0.0)
+      capybara (>= 3)
     pg (1.5.9)
     pp (0.6.2)
       prettyprint
@@ -693,6 +695,7 @@ DEPENDENCIES
   omniauth-twitter
   parallel
   parallel_tests
+  percy-capybara (~> 5.0)
   pg
   pry-byebug
   pry-rails

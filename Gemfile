@@ -292,3 +292,5 @@ end
 gem "dry-initializer", "~> 3.1"
 
 gem "parallel"
+
+gem "percy-capybara", "~> 5.0"

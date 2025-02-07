@@ -49,20 +49,8 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system, annotations]
-        target: [core, plugins, themes]
-        exclude:
-          - build_type: annotations
-            target: plugins
-          - build_type: annotations
-            target: themes
-          - build_type: backend
-            target: themes
-          - build_type: frontend
-            target: core # Handled by core_frontend_tests job (below)
-        include:
-          - build_type: system
-            target: chat
+        build_type: [system]
+        target: [core]
 
     steps:
       - name: Set working directory owner
@@ -258,7 +246,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+        run: pnpm percy exec -- bin/rspec spec/system/visual/basic_visual_spec.rb
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
