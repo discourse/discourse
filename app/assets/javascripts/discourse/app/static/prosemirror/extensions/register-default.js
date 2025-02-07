@@ -1,4 +1,5 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import htmlInline from "./html-inline";
 
 /**
  * List of default extensions
@@ -6,6 +7,6 @@ import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-
  *
  * @type {RichEditorExtension[]}
  */
-const defaultExtensions = [];
+const defaultExtensions = [htmlInline];
 
 defaultExtensions.forEach(registerRichEditorExtension);
