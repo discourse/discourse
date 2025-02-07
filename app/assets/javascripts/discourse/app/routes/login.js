@@ -1,5 +1,6 @@
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage } from "discourse/lib/utilities";
 import StaticPage from "discourse/models/static-page";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -8,7 +9,31 @@ export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
   @service router;
 
-  beforeModel() {
+  queryParams = {
+    redirect: { refreshModel: true },
+  };
+
+  beforeModel(transition) {
+    const redirect = transition.to.queryParams.redirect;
+
+    if (redirect) {
+      const normalizedRedirect = redirect.startsWith("/")
+        ? redirect
+        : `/${redirect}`;
+      const rootUrl = this.router.rootURL;
+      const destinationUrl =
+        rootUrl === "/"
+          ? normalizedRedirect
+          : `${rootUrl.replace(/\/$/, "")}${normalizedRedirect}`;
+
+      cookie("destination_url", destinationUrl);
+
+      window.addEventListener("unload", (event) => {
+        event.preventDefault();
+        removeCookie("destination_url");
+      });
+    }
+
     if (
       !this.siteSettings.login_required &&
       (!this.siteSettings.full_page_login ||
