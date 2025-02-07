@@ -186,7 +186,6 @@ export default class UserStreamComponent extends Component {
       <:abovePostItemExcerpt as |post|>
         <PostActionDescription
           @actionCode={{post.action_code}}
-          @createdAt={{post.created_at}}
           @username={{post.action_code_who}}
           @path={{post.action_code_path}}
         />
