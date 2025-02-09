@@ -12,6 +12,7 @@ class TopicListItemSerializer < ListableTopicSerializer
              :op_like_count,
              :op_can_like,
              :op_liked,
+             :first_post_id,
              :pinned_globally,
              :liked_post_numbers,
              :featured_link,
@@ -68,6 +69,15 @@ class TopicListItemSerializer < ListableTopicSerializer
       post_id: object.first_post.id,
       post_action_type_id: PostActionType.types[:like],
     ).exists?
+  end
+
+  def include_first_post_id?
+    theme_modifier_helper.serialize_topic_op_likes_data
+  end
+
+  def first_post_id
+    return false if !object.first_post
+    object.first_post.id
   end
 
   def last_poster_username
