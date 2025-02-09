@@ -3178,7 +3178,7 @@ RSpec.describe PostMover do
       fab!(:destination_topic) { Fabricate(:topic) }
 
       it "calls enqueue jobs for PostCreator when @post_creator is present" do
-        post_mover = PostMover.new(original_topic, admin, [post_1, post_2])
+        post_mover = PostMover.new(original_topic, admin, [post_1, post_2].map(&:id))
 
         PostCreator.any_instance.expects(:enqueue_jobs).once
 
@@ -3193,7 +3193,7 @@ RSpec.describe PostMover do
           plugin_instance = Plugin::Instance.new
           plugin_instance.register_modifier(:post_mover_enqueue_post_creator_jobs, &modifier_block)
 
-          post_mover = PostMover.new(original_topic, admin, [post_1, post_2])
+          post_mover = PostMover.new(original_topic, admin, [post_1, post_2].map(&:id))
 
           PostCreator.any_instance.expects(:enqueue_jobs).never
 
