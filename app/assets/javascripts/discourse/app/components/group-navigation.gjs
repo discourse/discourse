@@ -11,17 +11,20 @@ export default class GroupNavigation extends Component {
   @service site;
 
   <template>
-    {{#if this.site.mobileView}}
-      <LinkTo @route="groups.index">
-        {{i18n "groups.index.all"}}
-      </LinkTo>
-    {{else}}
+    {{#if this.site.desktopView}}
       <GroupDropdown
         @groups={{@group.extras.visible_group_names}}
         @value={{@group.name}}
       />
     {{/if}}
     <HorizontalOverflowNav class="group-nav">
+      {{#if this.site.mobileView}}
+        <li>
+          <LinkTo @route="groups.index">
+            {{i18n "groups.index.all"}}
+          </LinkTo>
+        </li>
+      {{/if}}
       {{#each @tabs as |tab|}}
         <li>
           <LinkTo
