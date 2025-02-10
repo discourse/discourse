@@ -5478,6 +5478,7 @@ en:
             When using scopes, you can restrict an API key to a specific set of endpoints.
             You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
+          one_or_more: At least one scope must be selected.
           granular: Granular
           read_only: Read-only
           global: Global
