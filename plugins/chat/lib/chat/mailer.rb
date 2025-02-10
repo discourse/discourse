@@ -43,8 +43,12 @@ module Chat
           AND uo.chat_enabled 
           AND uo.chat_email_frequency = #{UserOption.chat_email_frequencies[:when_away]}
           AND uo.email_level <> #{UserOption.email_level_types[:never]}
+        ), watched_threads AS (
+          SELECT DISTINCT user_id, thread_id
+          FROM user_chat_thread_memberships
+          WHERE notification_level = #{Chat::NotificationLevels.all[:watching]}
         ), channel_messages AS (
-          SELECT DISTINCT ON (chat_channel_id) chat_channel_id, cm.id AS first_unread_id, user_id AS sender_id
+          SELECT DISTINCT ON (chat_channel_id) chat_channel_id, cm.id AS first_unread_id, user_id AS sender_id, cm.thread_id
           FROM chat_messages cm
           JOIN users sender ON sender.id = cm.user_id
           WHERE cm.created_at > now() - interval '1 week'
@@ -57,9 +61,11 @@ module Chat
           JOIN chat_channels cc ON cc.id = uccm.chat_channel_id AND cc.deleted_at IS NULL AND cc.chatable_type = 'DirectMessage'
           JOIN channel_messages cm ON cm.chat_channel_id = cc.id AND cm.sender_id <> uccm.user_id
           JOIN eligible_users eu ON eu.id = uccm.user_id AND eu.allow_private_messages
+          LEFT JOIN chat_threads om ON om.original_message_id = cm.first_unread_id
           WHERE NOT uccm.muted 
           AND (uccm.last_read_message_id IS NULL OR cm.first_unread_id > uccm.last_read_message_id)
           AND (uccm.last_unread_mention_when_emailed_id IS NULL OR cm.first_unread_id > uccm.last_unread_mention_when_emailed_id)
+          AND (cm.thread_id IS NULL OR om.id IS NOT NULL OR cm.thread_id IN (SELECT thread_id FROM watched_threads WHERE user_id = uccm.user_id))
         ), unread_mentions AS (
           SELECT DISTINCT uccm.user_id
           FROM user_chat_channel_memberships uccm 
