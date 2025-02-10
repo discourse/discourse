@@ -7,6 +7,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "category-available-views",
   "category-description-text",
   "category-display-name",
   "composer-service-cannot-submit-post",

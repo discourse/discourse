@@ -4,6 +4,7 @@ import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
+import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 const categorySortCriteria = [];
@@ -49,12 +50,23 @@ export default class EditCategorySettings extends buildCategoryPanel(
     ];
   }
 
-  @discourseComputed
-  availableViews() {
-    return [
+  @discourseComputed("category.id", "category.custom_fields")
+  availableViews(categoryId, customFields) {
+    const views = [
       { name: i18n("filters.latest.title"), value: "latest" },
       { name: i18n("filters.top.title"), value: "top" },
     ];
+
+    const context = {
+      categoryId,
+      customFields,
+    };
+
+    return applyMutableValueTransformer(
+      "category-available-views",
+      views,
+      context
+    );
   }
 
   @discourseComputed
