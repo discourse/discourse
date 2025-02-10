@@ -847,6 +847,9 @@ en:
           attributes:
             linkable_type:
               invalid: "is not valid"
+        api_key:
+          base:
+            at_least_one_granular_scope: "at least one must be selected"
 
   uncategorized_category_name: "Uncategorized"
 
