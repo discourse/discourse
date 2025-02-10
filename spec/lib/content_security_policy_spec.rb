@@ -98,6 +98,7 @@ RSpec.describe ContentSecurityPolicy do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do
         attr_accessor :enabled
+
         def enabled?
           @enabled
         end
