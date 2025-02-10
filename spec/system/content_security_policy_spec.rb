@@ -20,12 +20,14 @@ describe "Content security policy", type: :system do
     plugin.enabled = true
 
     expect(SiteSetting.content_security_policy).to eq(true)
+    visit "/"
+    expect(page).to have_css("#site-logo")
+
+    get "/"
     expect(response.headers["Content-Security-Policy"]).to include("'strict-dynamic'")
     expect(response.headers["Content-Security-Policy"]).not_to include(
       "'unsafe-eval' https://invalid.example.com'",
     )
-    visit "/"
-    expect(page).to have_css("#site-logo")
 
     Discourse.plugins.delete plugin
     DiscoursePluginRegistry.reset!
