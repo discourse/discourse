@@ -874,6 +874,21 @@ RSpec.describe Topic do
             RateLimiter::LimitExceeded,
           )
         end
+
+        it "does not rate limit if the invites are spread out" do
+          start = Time.now.tomorrow.beginning_of_minute
+          freeze_time(start)
+
+          topic = Fabricate(:private_message_topic, user: trust_level_2)
+
+          topic.invite(topic.user, user.username)
+
+          freeze_time(start + 5.minutes)
+
+          expect { topic.invite(topic.user, user1.username) }.not_to raise_error(
+            RateLimiter::LimitExceeded,
+          )
+        end
       end
     end
 
