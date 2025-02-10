@@ -149,5 +149,23 @@ RSpec.describe TopicListItemSerializer do
 
       expect(json.key?(:op_liked)).to eq(false)
     end
+
+    it "serializes first_post_id" do
+      allow_any_instance_of(ThemeModifierHelper).to receive(
+        :serialize_topic_op_likes_data,
+      ).and_return(true)
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+
+      expect(json[:first_post_id]).to eq(first_post.id)
+    end
+
+    it "does not include op_can_like when theme modifier disallows" do
+      allow_any_instance_of(ThemeModifierHelper).to receive(
+        :serialize_topic_op_likes_data,
+      ).and_return(false)
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+
+      expect(json.key?(:first_post_id)).to eq(false)
+    end
   end
 end
