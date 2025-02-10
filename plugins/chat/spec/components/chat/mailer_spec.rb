@@ -345,7 +345,7 @@ describe Chat::Mailer do
         :user_chat_thread_membership,
         user: user,
         thread: thread,
-        notification_level: :watching,
+        notification_level: Chat::NotificationLevels.all[:watching],
       )
 
       expect_enqueued
