@@ -243,7 +243,7 @@ module Middleware
             nil,
             "logged_in_anon_cache_#{@env["HTTP_HOST"]}/#{@env["REQUEST_URI"]}",
             GlobalSetting.force_anonymous_min_per_10_seconds,
-            10,
+            10.seconds,
           )
       end
 
