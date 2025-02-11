@@ -243,6 +243,16 @@ The description is optional and will be shown under the title when set.
 <form.Field @description="Bar" />
 ```
 
+## @helpText
+
+The help text is optional and will be shown under the field when set.
+
+**Example**
+
+```hbs
+<form.Field @helpText="Baz" />
+```
+
 ## @showTitle
 
 By default, the title will be shown on top of the control. You can choose not to render it by setting this property to `false`.
