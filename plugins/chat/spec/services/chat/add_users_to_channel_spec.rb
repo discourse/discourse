@@ -2,11 +2,32 @@
 
 RSpec.describe Chat::AddUsersToChannel do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(usernames: [], channel_id: nil) }
+    subject(:contract) { described_class.new(usernames:, groups:) }
+
+    let(:usernames) { "user1" }
+    let(:groups) { "group1" }
 
     it { is_expected.to validate_presence_of :channel_id }
-    it { is_expected.to validate_presence_of :usernames if :groups.blank? }
-    it { is_expected.to validate_presence_of :groups if :usernames.blank? }
+    it do
+      is_expected.to validate_length_of(:usernames)
+        .is_at_most(SiteSetting.chat_max_direct_message_users)
+        .as_array
+        .allow_nil
+    end
+
+    context "when 'usernames' is blank" do
+      let(:usernames) { nil }
+
+      it { is_expected.to validate_presence_of :groups }
+      it { is_expected.not_to validate_presence_of :usernames }
+    end
+
+    context "when 'groups' is blank" do
+      let(:groups) { nil }
+
+      it { is_expected.to validate_presence_of :usernames }
+      it { is_expected.not_to validate_presence_of :groups }
+    end
   end
 
   describe ".call" do
@@ -57,14 +78,6 @@ RSpec.describe Chat::AddUsersToChannel do
         end
       end
 
-      it "doesn't include existing direct message users" do
-        Chat::DirectMessageUser.create!(user: users.first, direct_message: direct_message)
-
-        expect(result.target_users.map(&:username)).to contain_exactly(
-          *users[1..-1].map(&:username),
-        )
-      end
-
       it "doesn't include users with dms disabled" do
         users.first.user_option.update!(allow_private_messages: false)
 
@@ -102,12 +115,44 @@ RSpec.describe Chat::AddUsersToChannel do
           expect(message.user).to eq(Discourse.system_user)
         end
       end
+
+      context "when there are already some users in the channel" do
+        before do
+          users
+            .first(3)
+            .map do |user|
+              direct_message.users << user
+              channel.add(user)
+            end
+        end
+
+        it "only notifies the newly added users" do
+          expect(result.added_user_ids).to eq users.last(2).map(&:id)
+        end
+      end
     end
 
-    context "when users exceed max direct message user limit" do
+    context "when provided users exceed max direct message user limit" do
       before { SiteSetting.chat_max_direct_message_users = 4 }
 
       it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
+    end
+
+    context "when channel is already at maximum capacity" do
+      before do
+        SiteSetting.chat_max_direct_message_users = 3
+        users
+          .first(3)
+          .map do |user|
+            direct_message.users << user
+            channel.add(user)
+          end
+        params[:usernames] = users.last(2).map(&:username)
+      end
+
+      context "when trying to add other users" do
+        it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
+      end
     end
 
     context "when channel is not found" do
