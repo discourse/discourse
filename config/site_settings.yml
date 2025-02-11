@@ -2237,14 +2237,17 @@ security:
     type: list
     default: ""
     list_type: compact
+    requires_confirmation: "simple"
   blocked_crawler_user_agents:
     type: list
     default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
+    requires_confirmation: "simple"
   slow_down_crawler_user_agents:
     type: list
     default: "gptbot|claudebot|anthropic-ai|brightbot"
     list_type: compact
+    requires_confirmation: "simple"
   slow_down_crawler_rate: 60
   content_security_policy:
     default: true
