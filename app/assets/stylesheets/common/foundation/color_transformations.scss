@@ -2,6 +2,8 @@
 // any variables defined here can be added in theme color schemes
 // all variables should have the !default flag
 
+@use "sass:string";
+
 // primary
 $primary-very-low: dark-light-diff($primary, $secondary, 97%, -82%) !default;
 $primary-low: dark-light-diff($primary, $secondary, 90%, -78%) !default;

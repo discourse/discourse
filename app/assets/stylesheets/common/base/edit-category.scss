@@ -1,3 +1,5 @@
+@use "sass:string";
+
 $category-settings-width: string.unquote("min(500px, 90%)");
 $number-input-width: 75px;
 

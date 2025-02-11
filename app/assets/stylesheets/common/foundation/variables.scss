@@ -6,7 +6,10 @@
 // Layout dimensions
 // --------------------------------------------------
 
+@use "sass:color";
 @use "sass:math";
+@use "sass:meta";
+@use "math" as discourse-math;
 
 $small-width: 800px !default;
 $medium-width: 995px !default;
@@ -71,8 +74,6 @@ $font-down-6: var(--font-down-6) !default;
 $line-height-small: var(--line-height-small) !default;
 $line-height-medium: var(--line-height-medium) !default;
 $line-height-large: var(--line-height-large) !default;
-
-@import "common/foundation/math";
 
 // Z-index
 // --------------------------------------------------
@@ -155,9 +156,9 @@ $z-layers: (
   $r_r2: $f_r2 * $ratio + $b_r2 * $iratio;
   $r_g2: $f_g2 * $ratio + $b_g2 * $iratio;
   $r_b2: $f_b2 * $ratio + $b_b2 * $iratio;
-  $r_r: sqrt($r_r2);
-  $r_g: sqrt($r_g2);
-  $r_b: sqrt($r_b2);
+  $r_r: discourse-math.sqrt($r_r2);
+  $r_g: discourse-math.sqrt($r_g2);
+  $r_b: discourse-math.sqrt($r_b2);
   @return rgb($r_r, $r_g, $r_b);
 }
 
