@@ -9,14 +9,12 @@ import SiteSettingFilter from "discourse/lib/site-setting-filter";
 
 export default class AdminSiteSettingsController extends Controller {
   @service router;
-  @service currentUser;
 
   @alias("model") allSiteSettings;
 
   filter = "";
   visibleSiteSettings = null;
   siteSettingFilter = null;
-  showSettingCategorySidebar = !this.currentUser.use_admin_sidebar;
 
   filterContentNow(filterData, category) {
     this.siteSettingFilter ??= new SiteSettingFilter(this.allSiteSettings);
@@ -25,16 +23,12 @@ export default class AdminSiteSettingsController extends Controller {
       return;
     }
 
-    // We want to land on All by default if admin sidebar is shown, in this
-    // case we are hiding the inner site setting category sidebar.
-    if (this.showSettingCategorySidebar) {
-      if (isEmpty(filterData.filter) && !filterData.onlyOverridden) {
-        this.set("visibleSiteSettings", this.allSiteSettings);
-        if (this.categoryNameKey === "all_results") {
-          this.router.transitionTo("adminSiteSettings");
-        }
-        return;
+    if (isEmpty(filterData.filter) && !filterData.onlyOverridden) {
+      this.set("visibleSiteSettings", this.allSiteSettings);
+      if (this.categoryNameKey === "all_results") {
+        this.router.transitionTo("adminSiteSettings");
       }
+      return;
     }
 
     this.set("filter", filterData.filter);
