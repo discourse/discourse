@@ -85,11 +85,8 @@ export default class DMenu extends Component {
       get icon() {
         return instance.args.icon;
       },
-      get label() {
-        return instance.args.label;
-      },
       get translatedLabel() {
-        return instance.args.translatedLabel;
+        return instance.args.label;
       },
       get translatedAriaLabel() {
         return instance.args.ariaLabel;
