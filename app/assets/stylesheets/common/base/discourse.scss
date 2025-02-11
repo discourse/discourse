@@ -632,6 +632,11 @@ textarea {
   #main-outlet {
     grid-area: content;
   }
+
+  @include breakpoint("mobile-extra-large") {
+    margin-left: unset;
+    margin-right: unset;
+  }
 }
 
 #main-outlet {
