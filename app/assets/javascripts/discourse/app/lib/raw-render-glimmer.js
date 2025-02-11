@@ -46,6 +46,7 @@ export default function rawRenderGlimmer(owner, renderInto, component, data) {
         element,
         component,
         data,
+        autoTeardown: true,
       };
       renderGlimmerService.add(componentInfo);
     }

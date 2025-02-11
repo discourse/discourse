@@ -23,7 +23,7 @@ export default class RenderGlimmerService extends Service {
    */
   cleanup() {
     this._registrations.forEach((info) => {
-      if (!document.body.contains(info.element)) {
+      if (info.autoTeardown && !document.body.contains(info.element)) {
         this.remove(info);
       }
     });

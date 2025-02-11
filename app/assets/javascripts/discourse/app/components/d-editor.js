@@ -6,6 +6,7 @@ import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import { modifier } from "ember-modifier";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
@@ -17,6 +18,7 @@ import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
 import Toolbar from "discourse/lib/composer/toolbar";
 import discourseDebounce from "discourse/lib/debounce";
+import DecorateCookedHelper from "discourse/lib/decorate-cooked-helper";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
@@ -65,6 +67,8 @@ export default class DEditor extends Component {
   /** @type {TextManipulation} */
   @tracked textManipulation;
 
+  @tracked preview;
+
   ready = false;
   lastSel = null;
   showLink = true;
@@ -76,6 +80,58 @@ export default class DEditor extends Component {
       return !(element.tagName === "DETAILS" && attributeName === "open");
     },
   };
+
+  syncPreview = modifier(async (element) => {
+    let unseenMentions, unseenHashtags, teardown;
+
+    if (this.siteSettings.enable_diffhtml_preview) {
+      const cookedElement = element.cloneNode(false);
+      cookedElement.innerHTML = this.preview;
+
+      unseenMentions = linkSeenMentions(cookedElement, this.siteSettings);
+
+      unseenHashtags = linkSeenHashtagsInContext(
+        this.site.hashtag_configurations["topic-composer"],
+        cookedElement
+      );
+
+      loadOneboxes(
+        cookedElement,
+        ajax,
+        this.topicId,
+        this.categoryId,
+        this.siteSettings.max_oneboxes_per_post,
+        /* refresh */ false,
+        /* offline */ true
+      );
+
+      resolveCachedShortUrls(this.siteSettings, cookedElement);
+
+      // trigger all the "api.decorateCookedElement"
+      const decoratorHelper = new DecorateCookedHelper({
+        owner: getOwner(this),
+        diffHtmlMode: true,
+      });
+      this.appEvents.trigger(
+        "decorate-non-stream-cooked-element",
+        cookedElement,
+        decoratorHelper
+      );
+      teardown = () => decoratorHelper.teardown();
+
+      (await import("morphlex")).morph(
+        element,
+        cookedElement,
+        this.morphingOptions
+      );
+    } else {
+      element.innerHTML = this.preview;
+    }
+
+    this.previewUpdated?.(element, unseenMentions, unseenHashtags);
+
+    return teardown;
+  });
 
   async init() {
     super.init(...arguments);
@@ -240,63 +296,7 @@ export default class DEditor extends Component {
       return;
     }
 
-    this.set("preview", cooked);
-
-    let unseenMentions, unseenHashtags;
-
-    if (this.siteSettings.enable_diffhtml_preview) {
-      const previewElement = this.element.querySelector(".d-editor-preview");
-      const cookedElement = previewElement.cloneNode(false);
-      cookedElement.innerHTML = cooked;
-
-      unseenMentions = linkSeenMentions(cookedElement, this.siteSettings);
-
-      unseenHashtags = linkSeenHashtagsInContext(
-        this.site.hashtag_configurations["topic-composer"],
-        cookedElement
-      );
-
-      loadOneboxes(
-        cookedElement,
-        ajax,
-        this.topicId,
-        this.categoryId,
-        this.siteSettings.max_oneboxes_per_post,
-        /* refresh */ false,
-        /* offline */ true
-      );
-
-      resolveCachedShortUrls(this.siteSettings, cookedElement);
-
-      // trigger all the "api.decorateCookedElement"
-      this.appEvents.trigger(
-        "decorate-non-stream-cooked-element",
-        cookedElement
-      );
-
-      (await import("morphlex")).morph(
-        previewElement,
-        cookedElement,
-        this.morphingOptions
-      );
-    }
-
-    schedule("afterRender", () => {
-      if (
-        this._state !== "inDOM" ||
-        !this.element ||
-        this.isDestroying ||
-        this.isDestroyed
-      ) {
-        return;
-      }
-
-      const previewElement = this.element.querySelector(".d-editor-preview");
-
-      if (previewElement && this.previewUpdated) {
-        this.previewUpdated(previewElement, unseenMentions, unseenHashtags);
-      }
-    });
+    this.preview = cooked;
   }
 
   @observes("ready", "value", "processPreview")

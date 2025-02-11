@@ -11,6 +11,7 @@ import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
+import DecorateCookedHelper from "discourse/lib/decorate-cooked-helper";
 import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
 import {
   fetchUnseenHashtagsInContext,
@@ -92,6 +93,8 @@ export default class ComposerEditor extends Component {
   scrollMap = null;
 
   fileUploadElementId = "file-uploader";
+
+  #decoratorHelper;
 
   init() {
     super.init(...arguments);
@@ -520,7 +523,14 @@ export default class ComposerEditor extends Component {
   }
 
   _decorateCookedElement(preview) {
-    this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
+    this.#decoratorHelper?.teardown();
+    this.#decoratorHelper = new DecorateCookedHelper({ owner: getOwner(this) });
+
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      preview,
+      this.#decoratorHelper
+    );
   }
 
   @debounce(DEBOUNCE_JIT_MS)
@@ -832,6 +842,8 @@ export default class ComposerEditor extends Component {
     apiImageWrapperBtnEvents.forEach((fn) =>
       preview?.removeEventListener("click", fn)
     );
+
+    this.#decoratorHelper?.teardown();
   }
 
   @action

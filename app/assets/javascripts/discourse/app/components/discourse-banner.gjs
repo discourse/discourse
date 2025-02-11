@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
+import DecorateCookedHelper from "discourse/lib/decorate-cooked-helper";
 import { i18n } from "discourse-i18n";
 
 export default class DiscourseBanner extends Component {
@@ -15,6 +18,22 @@ export default class DiscourseBanner extends Component {
   @service site;
 
   @tracked hide = false;
+
+  syncContent = modifier(async (element) => {
+    element.innerHTML = this.content;
+
+    const decorateCookedHelper = new DecorateCookedHelper({
+      owner: getOwner(this),
+    });
+
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      element,
+      decorateCookedHelper
+    );
+
+    return () => decorateCookedHelper.teardown();
+  });
 
   get banner() {
     return this.site.get("banner");
@@ -48,11 +67,6 @@ export default class DiscourseBanner extends Component {
   }
 
   @action
-  decorate(element) {
-    this.appEvents.trigger("decorate-non-stream-cooked-element", element);
-  }
-
-  @action
   dismiss() {
     if (this.currentUser) {
       this.currentUser.dismissBanner(this.banner.key);
@@ -66,7 +80,7 @@ export default class DiscourseBanner extends Component {
   }
 
   <template>
-    <div {{didInsert this.decorate}}>
+    <div>
       {{#if this.visible}}
         <div class="row">
           <div id="banner">
@@ -91,9 +105,7 @@ export default class DiscourseBanner extends Component {
               />
             </div>
 
-            <div id="banner-content">
-              {{htmlSafe this.content}}
-            </div>
+            <div id="banner-content" {{this.syncContent}}></div>
           </div>
         </div>
       {{/if}}
