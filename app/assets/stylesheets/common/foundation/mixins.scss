@@ -5,7 +5,9 @@
 // Media queries
 // --------------------------------------------------
 
+@use "sass:color";
 @use "sass:math";
+@use "sass:string";
 
 $breakpoints: (
   mobile-small: 320px,
@@ -19,7 +21,7 @@ $breakpoints: (
 );
 
 @mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: false) {
-  $bp-value: map.get($breakpoints, $bp);
+  $bp-value: map-get($breakpoints, $bp);
 
   @if $rule == min-width {
     $bp-value: calc(#{$bp-value} + 1px);
@@ -34,7 +36,7 @@ $breakpoints: (
   // note that your breakpoint will need to be at the root level
   @if $sidebar {
     // when the sidebar is shown, we want to increase the breakpoints by the width of the sidebar
-    @media #{$type} and (#{$rule}: calc(#{map.get($breakpoints, $bp)} + #{$d-sidebar-width})) {
+    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$d-sidebar-width})) {
       .has-sidebar-page {
         @content;
       }
@@ -232,7 +234,7 @@ $hpad: 0.65em;
   // public_image_path is added by the stylesheet importer
   // it returns a CDN or subfolder path (if applicable).
   // SCSS will compile (and return the relative path) if public_image_path is missing.
-  @if meta.variable-exists(public_image_path) {
+  @if global-variable-exists(public_image_path) {
     @if string.index("#{$path}", "/plugins") == 1 {
       $plugin_asset_path: str-replace($public_image_path, "/images", "");
       @return url("#{$plugin_asset_path}#{$path}");

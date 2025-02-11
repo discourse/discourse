@@ -109,25 +109,25 @@ $z-layers: (
 
 @function map-has-nested-keys($map, $keys...) {
   @each $key in $keys {
-    @if not map.has-key($map, $key) {
+    @if not map-has-key($map, $key) {
       @return false;
     }
 
-    $map: map.get($map, $key);
+    $map: map-get($map, $key);
   }
   @return true;
 }
 
 @function map-deep-get($map, $keys...) {
   @each $key in $keys {
-    $map: map.get($map, $key);
+    $map: map-get($map, $key);
   }
   @return $map;
 }
 
 @function z($layers...) {
   @if not map-has-nested-keys($z-layers, $layers...) {
-    @warn "No layer defined for `#{meta.inspect($layers...)}` in $z-layers map. Check variables.scss, property omitted.";
+    @warn "No layer defined for `#{meta.inspect($layers...)}` in $z-layers map- Check variables.scss, property omitted.";
   }
   @return map-deep-get($z-layers, $layers...);
 }
