@@ -25,7 +25,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   test("@label", async function (assert) {
     await render(hbs`<DMenu @inline={{true}} @label="label" />`);
 
-    assert.dom(".fk-d-menu__trigger").hasText(/^\s*label\s*$/);
+    assert.dom(".fk-d-menu__trigger .d-button-label").hasText(/^label$/);
   });
 
   test("@icon", async function (assert) {
