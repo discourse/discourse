@@ -21,6 +21,7 @@ $breakpoints: (
 );
 
 @mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: false) {
+  /* stylelint-disable-next-line scss/no-global-function-names */
   $bp-value: map-get($breakpoints, $bp);
 
   @if $rule == min-width {
@@ -36,6 +37,7 @@ $breakpoints: (
   // note that your breakpoint will need to be at the root level
   @if $sidebar {
     // when the sidebar is shown, we want to increase the breakpoints by the width of the sidebar
+    /* stylelint-disable-next-line scss/no-global-function-names */
     @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$d-sidebar-width})) {
       .has-sidebar-page {
         @content;
@@ -234,6 +236,7 @@ $hpad: 0.65em;
   // public_image_path is added by the stylesheet importer
   // it returns a CDN or subfolder path (if applicable).
   // SCSS will compile (and return the relative path) if public_image_path is missing.
+  /* stylelint-disable-next-line scss/no-global-function-names */
   @if global-variable-exists(public_image_path) {
     @if string.index("#{$path}", "/plugins") == 1 {
       $plugin_asset_path: str-replace($public_image_path, "/images", "");

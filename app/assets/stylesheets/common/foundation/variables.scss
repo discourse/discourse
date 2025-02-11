@@ -109,10 +109,12 @@ $z-layers: (
 
 @function map-has-nested-keys($map, $keys...) {
   @each $key in $keys {
+    /* stylelint-disable-next-line scss/no-global-function-names */
     @if not map-has-key($map, $key) {
       @return false;
     }
 
+    /* stylelint-disable-next-line scss/no-global-function-names */
     $map: map-get($map, $key);
   }
   @return true;
@@ -120,6 +122,7 @@ $z-layers: (
 
 @function map-deep-get($map, $keys...) {
   @each $key in $keys {
+    /* stylelint-disable-next-line scss/no-global-function-names */
     $map: map-get($map, $key);
   }
   @return $map;
