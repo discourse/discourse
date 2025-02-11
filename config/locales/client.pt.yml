@@ -4591,8 +4591,6 @@ pt:
         cant_delete_all_too_many_posts:
           one: "Não é possível eliminar todas as mensagens porque o utilizador tem mais de %{count} mensagem. (delete_all_posts_max)"
           other: "Não é possível eliminar todas as mensagens porque o utilizador tem mais de %{count} mensagens. (delete_all_posts_max)"
-        delete_and_block: "Eliminar e <b>bloquear<b> este e-mail e endereço de IP"
-        delete_dont_block: "Apenas eliminar"
         deleted: "O utilizador foi eliminado."
         delete_failed: "Ocorreu um erro ao eliminar o utilizador. Certifique-se de que todas as suas mensagens foram eliminadas antes de tentar eliminar o utilizador."
         send_activation_email: "Enviar Email de Ativação"

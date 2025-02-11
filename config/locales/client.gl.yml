@@ -311,8 +311,6 @@ gl:
       abandon:
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
-      dropdown:
-        view_all: "ver todos"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -3369,6 +3367,10 @@ gl:
             invite:
               content: "Convidar"
       filter: "Filtrar..."
+      footer:
+        interface_color_selector:
+          light: "Claro"
+          dark: "Escuro"
     until: "Ata:"
     form_templates:
       upload_field:
@@ -4558,8 +4560,6 @@ gl:
         cant_delete_all_too_many_posts:
           one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación. (delete_all_posts_max)"
           other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións. (delete_all_posts_max)"
-        delete_and_block: "Eliminar e <b>bloquear</b> este enderezo de correo e de IP"
-        delete_dont_block: "Só eliminar"
         deleted: "Eliminouse o usuario."
         delete_failed: "Produciuse un erro eliminando este usuario. Asegúrese de que se eliminan todas as publicacións antes de tentar eliminar o usuario."
         send_activation_email: "Enviar mensaxe de correo de activación"

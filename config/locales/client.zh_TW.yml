@@ -323,8 +323,6 @@ zh_TW:
       abandon:
         yes_value: "捨棄"
         no_value: "繼續編輯"
-      dropdown:
-        view_all: "查看全部"
     topic_count_all:
       other: "檢視 %{count} 則新話題"
     topic_count_categories:
@@ -935,6 +933,9 @@ zh_TW:
       dismiss: "忽略"
       dismiss_notifications: "忽略全部"
       dismiss_notifications_tooltip: "將所有未讀通知設為已讀"
+      no_likes_title: "您尚未收到任何喜歡"
+      no_likes_body: >
+        當有人喜歡您的某個貼文時，您都會在這裡收到通知，以便您了解其他人認為哪些貼文有價值。當您喜歡他們的貼文時其他人也會看到同樣的內容！<br><br> 您不會收到有關喜歡的電子郵件通知，但您可以在網站的「通知偏好」中調整您接收有關喜歡的通知方式。 <a href="%{preferencesUrl}">通知偏好</a>.
       no_messages_title: "您沒有任何訊息"
       no_bookmarks_title: "您尚未添加任何書籤"
       no_notifications_title: "您尚未收到任何通知"
@@ -1682,6 +1683,7 @@ zh_TW:
       reply: "回覆"
       cancel: "取消"
       create_topic: "開啟話題"
+      create_pm: "送出"
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
@@ -2935,6 +2937,7 @@ zh_TW:
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
     pause_notifications:
+      title: "暫停通知時間為…"
       options:
         half_hour: "30 分鐘"
         one_hour: "1 小時"
@@ -2950,6 +2953,7 @@ zh_TW:
         leader: "資深"
     user_activity:
       no_activity_body: "歡迎來到我們的社群！你是新來的，還沒有參與討論。第一步，訪問 <a href='%{topUrl}'>精選話題</a> 或<a href='%{categoriesUrl}'>類別</a>，然後開始閱讀！在您喜歡或想了解更多資訊的貼文上選擇 %{heartIcon}。當您參與時，您的活動將>列在此處。"
+      no_likes_body: "加入並開始做出貢獻的一個好方法是開始閱讀已經發生的談話，然後選擇您喜歡的貼文 %{heartIcon} ！"
     no_group_messages_title: "找不到群組訊息"
     fullscreen_table:
       expand_btn: "展開表格"
@@ -3042,6 +3046,10 @@ zh_TW:
           label: 論壇
       no_results:
         title: "沒有結果"
+      footer:
+        interface_color_selector:
+          light: "輕亮"
+          dark: "黑暗"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       button_title: "開始編輯"
@@ -4076,8 +4084,6 @@ zh_TW:
           other: "無法刪除所有的貼文。有些貼文時間早於 %{count} 天前。 ( 請見 delete_user_max_post_age 設定 )"
         cant_delete_all_too_many_posts:
           other: "無法刪除所有貼文，因為此使用者擁有超過 %{count} 篇貼文。( delete_all_posts_max )"
-        delete_and_block: "刪除並且<b>封鎖</b>此電子郵件地址與 IP 位址"
-        delete_dont_block: "只刪除"
         deleted: "此使用者已刪除。"
         delete_failed: "刪除此使用者時發生錯誤，請先刪除此使用者的所有貼文後再試一次。"
         send_activation_email: "送出啟用帳號的電子郵件"

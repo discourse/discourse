@@ -4145,8 +4145,6 @@ bs_BA:
           one: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Postovi stariji od %{count} dana stari ne mogu se izbrisati.)"
           few: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Poruke starije od %{count} dana ne mogu se izbrisati.)"
           other: "Korisnici ne mogu biti obrisani ako imaju objava. Obrišite sve njihove objave prije nego pokušate obrisati korisnika. (Objave starije od %{count} dana ne mogu biti obrisane.)"
-        delete_and_block: "Delete and <b>block</b> this email and IP address"
-        delete_dont_block: "Delete only"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"

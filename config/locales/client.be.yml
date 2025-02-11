@@ -1483,6 +1483,10 @@ be:
             review:
               content: "Патрабуе перагляду"
       filter: "Filter..."
+      footer:
+        interface_color_selector:
+          light: "святло"
+          dark: "цёмна"
     form_templates:
       upload_field:
         upload: "Запампаваць"
@@ -2083,7 +2087,6 @@ be:
           confirmation:
             cancel: "адмяніць"
         delete_forbidden_because_staff: "Адмінаў і мадэратараў выдаляць нельга."
-        delete_dont_block: "толькі выдаленне"
         deleted: "Карыстальніка быў выдалены."
         delete_failed: "Пры выдаленні карыстальніка адбылася памылка. Пераканайцеся, што ўсе паведамленні карыстальніка выдалены перад тым, як выдаляць самога карыстальніка."
         send_activation_email: "Адправіць ліст для актывацыі"

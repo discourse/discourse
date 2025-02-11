@@ -3623,6 +3623,10 @@ lt:
             invite:
               content: "Kviesti"
       filter: "Filtruoti..."
+      footer:
+        interface_color_selector:
+          light: "Šviesi"
+          dark: "Tamsi"
     until: "Iki:"
     form_templates:
       upload_field:
@@ -4760,8 +4764,6 @@ lt:
           few: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
           many: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
           other: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus. (delete_all_posts_max)"
-        delete_and_block: "Ištrinti ir <b>užblokuoti</b> šį el. paštą ir IP adresą"
-        delete_dont_block: "Tik Ištrinti"
         deleted: "Šis vartotojas buvo ištrintas."
         delete_failed: "Įvyko klaida ištrinant vartotoją. Įsitikinkite, kad visi pranešimai buvo ištrinti prieš trinant vartotoją."
         send_activation_email: "Siųsti aktyvacijos el. laišką"

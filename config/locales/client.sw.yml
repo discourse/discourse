@@ -2337,6 +2337,10 @@ sw:
             invite:
               content: "Mualiko"
       filter: "Chuja..."
+      footer:
+        interface_color_selector:
+          light: "Hafifu"
+          dark: "Nyeusi"
     form_templates:
       upload_field:
         upload: "Ongeza"
@@ -3168,8 +3172,6 @@ sw:
         cant_delete_all_too_many_posts:
           one: "Hauwezi kufuta taarifa zote kwa sababu mtumiaji ana taarifa zaidi ya %{count}. (delete_all_posts_max)"
           other: "Hauwezi kufuta machapisho yote kwa sababu mtumiaji ana machapisho zaidi ya %{count}. (delete_all_posts_max)"
-        delete_and_block: "Futa na <b>fungia</b>hii barua pepe na anwani ya mtandao"
-        delete_dont_block: "Futa"
         deleted: "Mtumiaji amefutwa."
         delete_failed: "Hitilafu imetokea wakati wa kumfuta mtumiaji. Hakikisha machapisho yake yote yamefutwa kabla ya kujaribu kumfuta mtumiaji."
         send_activation_email: "Tuma Barua Pepe ya Uanzisho"

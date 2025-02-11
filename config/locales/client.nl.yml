@@ -463,7 +463,6 @@ nl:
       dropdown:
         title: "Open het menu met de nieuwste concepten"
         untitled: "Concept zonder titel"
-        view_all: "alles weergeven"
         other_drafts:
           one: "+%{count} ander concept"
           other: "+%{count} andere concepten"
@@ -4673,6 +4672,10 @@ nl:
       no_results:
         title: "Geen resultaten"
         description: 'We konden niets vinden dat overeenkomt met ''%{filter}''.<br><br>Wilde je <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">zoeken in site-instellingen</a> of in de <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">beheerderslijst?</a>'
+      footer:
+        interface_color_selector:
+          light: "Licht"
+          dark: "Donker"
     welcome_topic_banner:
       title: "Maak je welkomsttopic"
       description: "Je welkomsttopic is het eerste dat nieuwe leden lezen. Zie het als je \"elevator pitch\" of \"missiestatement\". Laat iedereen eerst weten voor wie deze community is, wat ze hier kunnen verwachten en wat je wilt dat ze doen."
@@ -5394,8 +5397,6 @@ nl:
           community_title: "Communitytitel"
           community_title_help: "Korte beschrijving, weergegeven in het browsertabblad, voor belangrijke pagina's zoals categorieën en topiclijsten."
           banner_image: "Bannerafbeelding"
-          banner_image_help: |
-            Deze wordt gebruikt op je Over-pagina. Aanbevolen grootte: 1100x300 pixels. Geaccepteerde bestandstypen: JPG, PNG en SVG tot 10 MB.
           contact_information: "Contactgegevens"
           community_owner: "Communityeigenaar"
           community_owner_placeholder: "Piet Jansen"
@@ -6625,8 +6626,6 @@ nl:
           other: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} berichten heeft geplaatst. (delete_all_posts_max)"
         delete_confirm_title: "Weet je zeker dat je deze gebruiker wilt verwijderen? Dit is permanent!"
         delete_confirm: "Het verdient over het algemeen de voorkeur om gebruikers te anonimiseren in plaats van ze te verwijderen, om te voorkomen dat inhoud uit bestaande discussies wordt verwijderd."
-        delete_and_block: "Dit e-mail- en IP-adres verwijderen en <b>blokkeren</b>"
-        delete_dont_block: "Alleen verwijderen"
         deleting_user: "Gebruiker verwijderen…"
         deleted: "De gebruiker is verwijderd."
         delete_failed: "Er is een fout opgetreden bij het verwijderen van de gebruiker. Zorg dat alle berichten zijn verwijderd voordat je de gebruiker probeert te verwijderen."

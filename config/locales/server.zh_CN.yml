@@ -60,6 +60,8 @@ zh_CN:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
+    too_many_urls: "在单个请求中不能输入超过 10 个 Onebox。"
+    concurrency_not_allowed: "不允许并发内嵌请求。请一次发送一个请求。"
   components:
     enabled_filter: "已启用"
     disabled_filter: "已禁用"
@@ -726,6 +728,9 @@ zh_CN:
           attributes:
             linkable_type:
               invalid: "无效"
+        api_key:
+          base:
+            at_least_one_granular_scope: "必须至少选择一个"
       <<: *errors
   uncategorized_category_name: "未分类"
   general_category_name: "常规"
@@ -2264,7 +2269,6 @@ zh_CN:
     watched_words_regular_expressions: "允许使用正则表达式筛选字词。如果启用，它会根据字词的大小写将敏感词分组。然后，它将所有选定字词编译成一个单一的正则表达式，并为常规关注词添加字词边界。因此，这种基于正则表达式的筛选方法通过支持更复杂的字词模式，对内容审核增加了额外一层控制。该设置还允许轻松地使用选择的替换文本替换原始文本。"
     enable_diffhtml_preview: "使用 diffHTML 同步预览而不是完全重新呈现的实验性功能"
     enable_fast_edit: "在帖子选择菜单中添加一个按钮以内联编辑小部分内容。"
-    enable_quote_copy: "在帖子选择菜单中添加一个按钮，以将选择内容作为 Markdown 引用复制到剪贴板。"
     old_post_notice_days: "帖子通知被视为旧通知的天数。这可以直观地将其与网站上较新的通知区分开来。"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"

@@ -474,8 +474,6 @@ hr:
         confirm: "Već imate nacrt u tijeku. Što biste željeli učiniti s njim?"
         yes_value: "Odbaci"
         no_value: "Nastavi uređivati"
-      dropdown:
-        view_all: "pregledaj sve"
     topic_count_all:
       one: "Pregledajte %{count} nepročitanu temu."
       few: "Pregledajte %{count} nove teme."
@@ -5747,8 +5745,6 @@ hr:
           few: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} objava. (briši_sve_objave_max)"
         delete_confirm: "Općenito je bolje anonimizirati korisnike umjesto brisanja, kako bi se izbjeglo uklanjanje sadržaja iz postojećih rasprava."
-        delete_and_block: "Obriši i <b>block</b> ovaj email i IP adresu"
-        delete_dont_block: "Samo obriši"
         deleted: "Korisnik je obrisan."
         delete_failed: "Dogodila se greška pri brisanju korisnika. Provjerite da li ste obrisali sve njegove objave prije nego ga ponovo pokušate brisati."
         send_activation_email: "Pošalji aktivacijski email"

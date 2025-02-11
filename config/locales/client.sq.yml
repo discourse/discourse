@@ -460,7 +460,6 @@ sq:
         no_value: "Vazhdoni zhvillimin"
       dropdown:
         title: "Hapni menunë e drafteve më të fundit"
-        view_all: "shikoni të gjitha"
     topic_count_all:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
@@ -4616,8 +4615,6 @@ sq:
             cancel: "Anulo"
         delete_forbidden_because_staff: "Administratorët dhe moderatorët nuk fshihen dot. "
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
-        delete_and_block: "Fshijeni dhe <b>bllokoni</b> këtë email dhe adresë IP"
-        delete_dont_block: "Vetëm fshijeni"
         deleted: "Anëtari u fshi."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Dërgo Emailin e Aktivizimit"

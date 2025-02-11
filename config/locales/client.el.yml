@@ -428,8 +428,6 @@ el:
       abandon:
         yes_value: "Απόρριψη"
         no_value: "Συνέχιση επεξεργασίας"
-      dropdown:
-        view_all: "προβολή όλων"
     topic_count_all:
       one: "Δείτε %{count} νέο θέμα"
       other: "Δείτε %{count} νέα θέματα"
@@ -3907,6 +3905,10 @@ el:
       filter: "Φίλτρο..."
       no_results:
         title: "Δεν υπάρχουν αποτελέσματα"
+      footer:
+        interface_color_selector:
+          light: "Ανοιχτό"
+          dark: "Σκούρο"
     welcome_topic_banner:
       title: "Δημιουργήστε το θέμα καλωσορίσματος"
       button_title: "Έναρξη Επεξεργασίας"
@@ -5084,8 +5086,6 @@ el:
         cant_delete_all_too_many_posts:
           one: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
           other: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
-        delete_and_block: "Σβήσε και <b>απόκλεισε</b> αυτή την διεύθυνση email και τη διεύθυνση IP "
-        delete_dont_block: "Μόνο διαγραφή"
         deleted: "Ο χρήστης διαγράφτηκε."
         delete_failed: "Παρουσιάστηκε ένα σφάλμα κατά τη διαγραφή αυτού του χρήστη. Βεβαιώσου πρώτα πως έχουν σβηστεί όλες οι αναρτήσεις του."
         send_activation_email: "Αποστολή Email Ενεργοποίησης"

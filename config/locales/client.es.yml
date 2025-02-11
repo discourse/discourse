@@ -463,7 +463,6 @@ es:
       dropdown:
         title: "Abre el menú de últimos borradores"
         untitled: "Borrador sin título"
-        view_all: "ver todo"
         other_drafts:
           one: "+%{count} otro borrador"
           other: "+%{count} otros borradores"
@@ -4673,6 +4672,10 @@ es:
       no_results:
         title: "No hay resultados"
         description: 'No hemos encontrado nada que coincida con «%{filter}».<br><br>¿Quieres <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">buscar en los ajustes del sitio</a> o en la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuarios de administración?</a>'
+      footer:
+        interface_color_selector:
+          light: "Claro"
+          dark: "Oscuro"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: "Tu tema de bienvenida es lo primero que leerán los nuevos miembros. Piensa en él como tu «discurso breve» o una «declaración de misión». Haz que todos sepan para quién es esta comunidad, qué pueden esperar encontrar aquí y qué te gustaría que hicieran primero."
@@ -5393,8 +5396,6 @@ es:
           community_title: "Título de la comunidad"
           community_title_help: "Descripción breve, que se muestra en la pestaña del navegador, para páginas clave como categorías y listas de temas."
           banner_image: "Imagen del banner"
-          banner_image_help: |
-            Se utilizará en tu página Acerca de. Tamaño recomendado: 1100x300px. Tipos aceptados: JPG, PNG y SVG hasta 10 MB.
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
           community_owner_placeholder: "Pepe Luis"
@@ -6624,8 +6625,6 @@ es:
           other: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
         delete_confirm_title: "¿Seguro que quieres eliminar este usuario? ¡Esta acción es permanente!"
         delete_confirm: "Normalmente, es mejor anonimizar usuarios en vez de eliminarlos. Así, evitas eliminar contenido de temas existentes."
-        delete_and_block: "Eliminar y <b>bloquear</b> este correo electrónico y esta dirección IP"
-        delete_dont_block: "Solo eliminar"
         deleting_user: "Eliminando usuario…"
         deleted: "El usuario se eliminó"
         delete_failed: "Se produjo un error al eliminar este usuario. Asegúrate de que todas sus publicaciones fueron eliminadas antes de intentar de eliminar este usuario."
