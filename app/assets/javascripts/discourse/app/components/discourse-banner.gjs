@@ -5,8 +5,9 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import DecoratedCooked from "./decorated-cooked";
+import DecoratedHtml from "./decorated-html";
 
 export default class DiscourseBanner extends Component {
   @service appEvents;
@@ -60,6 +61,15 @@ export default class DiscourseBanner extends Component {
     }
   }
 
+  @bind
+  decorateContent(element, helper) {
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      element,
+      helper
+    );
+  }
+
   <template>
     <div>
       {{#if this.visible}}
@@ -86,7 +96,11 @@ export default class DiscourseBanner extends Component {
               />
             </div>
 
-            <DecoratedCooked @cooked={{this.content}} @id="banner-content" />
+            <DecoratedHtml
+              @html={{this.content}}
+              @decorate={{this.decorateContent}}
+              @id="banner-content"
+            />
           </div>
         </div>
       {{/if}}

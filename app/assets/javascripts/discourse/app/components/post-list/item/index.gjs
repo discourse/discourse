@@ -3,18 +3,20 @@ import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
-import DecoratedCooked from "discourse/components/decorated-cooked";
+import DecoratedHtml from "discourse/components/decorated-html";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { userPath } from "discourse/lib/url";
 
 export default class PostListItem extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service appEvents;
 
   get moderatorActionClass() {
     return this.args.post.post_type === this.site.post_types.moderator_action
@@ -69,6 +71,15 @@ export default class PostListItem extends Component {
     } else {
       return "reply";
     }
+  }
+
+  @bind
+  decoratePostContent(element, helper) {
+    this.appEvents.trigger(
+      "decorate-non-stream-cooked-element",
+      element,
+      helper
+    );
   }
 
   <template>
@@ -149,7 +160,10 @@ export default class PostListItem extends Component {
         class="excerpt"
       >
         {{#if @post.expandedExcerpt}}
-          <DecoratedCooked @cooked={{htmlSafe @post.expandedExcerpt}} />
+          <DecoratedHtml
+            @html={{htmlSafe @post.expandedExcerpt}}
+            @decorate={{this.decoratePostContent}}
+          />
         {{else}}
           {{htmlSafe @post.excerpt}}
         {{/if}}

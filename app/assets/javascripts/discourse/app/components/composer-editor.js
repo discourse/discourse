@@ -11,7 +11,6 @@ import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
-import DecorateCookedHelper from "discourse/lib/decorate-cooked-helper";
 import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
 import {
   fetchUnseenHashtagsInContext,
@@ -93,8 +92,6 @@ export default class ComposerEditor extends Component {
   scrollMap = null;
 
   fileUploadElementId = "file-uploader";
-
-  #decoratorHelper;
 
   init() {
     super.init(...arguments);
@@ -522,14 +519,11 @@ export default class ComposerEditor extends Component {
     resolveAllShortUrls(ajax, this.siteSettings, preview);
   }
 
-  _decorateCookedElement(preview) {
-    this.#decoratorHelper?.teardown();
-    this.#decoratorHelper = new DecorateCookedHelper({ owner: getOwner(this) });
-
+  _decorateCookedElement(preview, helper) {
     this.appEvents.trigger(
       "decorate-non-stream-cooked-element",
       preview,
-      this.#decoratorHelper
+      helper
     );
   }
 
@@ -842,8 +836,6 @@ export default class ComposerEditor extends Component {
     apiImageWrapperBtnEvents.forEach((fn) =>
       preview?.removeEventListener("click", fn)
     );
-
-    this.#decoratorHelper?.teardown();
   }
 
   @action
@@ -908,15 +900,13 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  previewUpdated(preview, unseenMentions, unseenHashtags) {
-    this._renderMentions(preview, unseenMentions);
-    this._renderHashtags(preview, unseenHashtags);
+  previewUpdated(preview, helper) {
+    this._renderMentions(preview);
+    this._renderHashtags(preview);
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
-    if (!this.siteSettings.enable_diffhtml_preview) {
-      this._decorateCookedElement(preview);
-    }
+    this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
   }

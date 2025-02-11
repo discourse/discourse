@@ -186,7 +186,6 @@ export default class ChatMessage extends Component {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
     cancel(this._makeMessageActiveHandler);
-    cancel(this._debounceDecorateCookedMessageHandler);
     this.#teardownMentionedUsers();
     this.chat.activeMessage = null;
   }
@@ -205,36 +204,6 @@ export default class ChatMessage extends Component {
         });
       });
     });
-  }
-
-  @action
-  didInsertMessage(element) {
-    this.messageContainer = element;
-    this.initMentionedUsers();
-    this.decorateMentions(element);
-    this.debounceDecorateCookedMessage();
-    this.refreshStatusOnMentions();
-  }
-
-  @action
-  didUpdateMessageId() {
-    this.debounceDecorateCookedMessage();
-  }
-
-  @action
-  didUpdateMessageVersion() {
-    this.debounceDecorateCookedMessage();
-    this.refreshStatusOnMentions();
-    this.initMentionedUsers();
-  }
-
-  debounceDecorateCookedMessage() {
-    this._debounceDecorateCookedMessageHandler = discourseDebounce(
-      this,
-      this.decorateCookedMessage,
-      this.args.message,
-      100
-    );
   }
 
   initMentionedUsers() {
@@ -273,16 +242,18 @@ export default class ChatMessage extends Component {
 
       mentions.forEach((mention) => {
         mention.classList.add(...classes);
+        updateUserStatusOnMention(getOwner(this), mention, user.status);
       });
     });
   }
 
-  @action
-  decorateCookedMessage(message) {
-    schedule("afterRender", () => {
-      _chatMessageDecorators.forEach((decorator) => {
-        decorator.call(this, this.messageContainer, message.channel);
-      });
+  @bind
+  decorateCookedMessage(element, helper) {
+    this.messageContainer = element;
+    this.initMentionedUsers();
+    this.decorateMentions(element);
+    _chatMessageDecorators.forEach((decorator) => {
+      decorator(element, helper);
     });
   }
 
@@ -598,9 +569,6 @@ export default class ChatMessage extends Component {
         }}
         data-id={{@message.id}}
         data-thread-id={{@message.thread.id}}
-        {{didInsert this.didInsertMessage}}
-        {{didUpdate this.didUpdateMessageId @message.id}}
-        {{didUpdate this.didUpdateMessageVersion @message.version}}
         {{willDestroy this.willDestroyMessage}}
         {{on "mouseenter" this.onMouseEnter passive=true}}
         {{on "mouseleave" this.onMouseLeave passive=true}}
@@ -665,6 +633,7 @@ export default class ChatMessage extends Component {
                   @cooked={{@message.cooked}}
                   @uploads={{@message.uploads}}
                   @edited={{@message.edited}}
+                  @decorate={{this.decorateCookedMessage}}
                 >
                   {{#if @message.reactions.length}}
                     <div class="chat-message-reaction-list">
