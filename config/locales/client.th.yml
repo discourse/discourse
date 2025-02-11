@@ -287,8 +287,6 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
-      dropdown:
-        view_all: "ดูทั้งหมด"
     topic_count_all:
       other: "ดู%{count}กระทู้ใหม่"
     topic_count_categories:
@@ -3125,8 +3123,6 @@ th:
             cancel: "ยกเลิก"
         delete_forbidden_because_staff: "ไม่สามารถลบแอดมินและผู้ดูแลระบบได้"
         delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสต์ทั้งหมดของแอดมินและผู้ดูแลระบบได้"
-        delete_and_block: "ลบและ <b>บล็อก</b> อีเมลและไอพีนี้"
-        delete_dont_block: "ลบเท่านั้น"
         deleted: "ผู้ใช้ถูกลบแล้ว"
         delete_failed: "มีข้อผิดพลาดขณะกำลังลบผู้ใช้นั้น กรุณาตรวจสอบอีกครั้งว่าโพสต์ทั้งหมดถูกลบก่อนลบผู้ใช้นั้น"
         send_activation_email: "ส่งอีเมลยืนยันตัวตน"

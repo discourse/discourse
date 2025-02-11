@@ -463,7 +463,6 @@ fi:
       dropdown:
         title: "Avaa tuoreimpien luonnosten valikko"
         untitled: "Nimetön luonnos"
-        view_all: "katso kaikki"
         other_drafts:
           one: "+%{count} muu luonnos"
           other: "+%{count} muuta luonnosta"
@@ -4673,6 +4672,10 @@ fi:
       no_results:
         title: "Ei tuloksia"
         description: 'Mitään ehtoa %{filter} vastaavaa ei löytynyt.<br><br>Halusitko <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">hakea sivuston asetuksista</a> tai <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">ylläpitäjän käyttäjäluettelosta?</a>'
+      footer:
+        interface_color_selector:
+          light: "Vaalea"
+          dark: "Tumma"
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
@@ -5393,8 +5396,6 @@ fi:
           community_title: "Yhteisön otsikko"
           community_title_help: "Lyhyt kuvaus, joka näkyy selaimen välilehdellä tärkeimmillä sivuilla, kuten alueissa ja ketjuluetteloissa."
           banner_image: "Bannerikuva"
-          banner_image_help: |
-            Tätä käytetään Tietoa-sivullasi. Suositeltu koko: 1 100 x 300 px. Hyväksytyt tyypit: JPG, PNG ja SVG, enintään 10 Mt.
           contact_information: "Yhteystiedot"
           community_owner: "Yhteisön omistaja"
           community_owner_placeholder: "Matti Meikäläinen"
@@ -6624,8 +6625,6 @@ fi:
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
         delete_confirm_title: "Oletko varma, että haluat poistaa tämän käyttäjän? Käyttäjä poistetaan pysyvästi!"
         delete_confirm: "On yleensä parempi anonymisoida käyttäjät poistamisen sijaan; näin vältät sisällön poistamisen olemassa olevista keskusteluista."
-        delete_and_block: "Poista ja <b>estä</b> tämä sähköposti ja IP-osoite"
-        delete_dont_block: "Ainoastaan poista"
         deleting_user: "Poistetaan käyttäjää…"
         deleted: "Käyttäjä poistettiin."
         delete_failed: "Käyttäjän poistanen ei onnistunut. Varmista, että kaikki käyttäjän viestit on poistettu."

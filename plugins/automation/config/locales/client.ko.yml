@@ -7,8 +7,8 @@
 ko:
   js:
     discourse_automation:
-      create: 글
-      update: 업데이트
+      back: 뒤로
+      edit: 편집
       fields:
         user:
           label: 사용자

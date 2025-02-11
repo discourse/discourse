@@ -463,7 +463,6 @@ pt_BR:
       dropdown:
         title: "Abrir menu de rascunhos mais recentes"
         untitled: "Rascunho sem título"
-        view_all: "visualizar tudo"
         other_drafts:
           one: "+%{count} outro rascunho"
           other: "+%{count} outros rascunhos"
@@ -4673,6 +4672,10 @@ pt_BR:
       no_results:
         title: "Nenhum resultado"
         description: 'Não foi possível encontrar nenhum "%{filter}" correspondente.<br><br>Você queria <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">procurar as configurações do site</a> ou a <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuários(as) administradores(as)?</a>'
+      footer:
+        interface_color_selector:
+          light: "Claro"
+          dark: "Escuro"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
@@ -5394,8 +5397,6 @@ pt_BR:
           community_title: "Título da comunidade"
           community_title_help: "Descrição curta mostrada na aba do navegador, para páginas importantes, como categorias e listas de tópicos."
           banner_image: "Imagem do banner"
-          banner_image_help: |
-            Será usado na sua página Sobre. Tamanho recomendado: 1100x300px. Tipos aceitos: JPG, PNG e SVG de até 10 MB.
           contact_information: "Informações de contato"
           community_owner: "Proprietário(a) da Comunidade"
           community_owner_placeholder: "Johnny Smith"
@@ -6625,8 +6626,6 @@ pt_BR:
           other: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagens. (delete_all_posts_max)"
         delete_confirm_title: "Você tem certeza de que deseja excluir este usuário(a)? Essa é uma ação permanente!"
         delete_confirm: "Geralmente, é preferível anonimizar os(as) usuários(as) em vez de excluí-los, evitando assim a remoção de conteúdo das discussões existentes."
-        delete_and_block: "Excluir e <b>bloquear</b> este e-mail e endereço IP"
-        delete_dont_block: "Excluir apenas"
         deleting_user: "Excluindo usuário(a)…"
         deleted: "O(a) usuário(a) foi excluído(a)."
         delete_failed: "Houve um erro ao excluir o(a) usuário(a). Verifique se todas as suas postagens foram excluídas antes de tentar excluí-lo(a)."

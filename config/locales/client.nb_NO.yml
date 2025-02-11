@@ -439,8 +439,6 @@ nb_NO:
         confirm: "Du har allerede et utkast under arbeid. Hva vil du gjøre med det?"
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
-      dropdown:
-        view_all: "vis alle"
     topic_count_all:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
@@ -4344,6 +4342,10 @@ nb_NO:
             invite:
               content: "Inviter"
       filter: "Filtrer..."
+      footer:
+        interface_color_selector:
+          light: "Lys"
+          dark: "Mørk"
     until: "Inntil:"
     form_templates:
       upload_field:
@@ -5393,8 +5395,6 @@ nb_NO:
         cant_delete_all_too_many_posts:
           one: "Kan ikke slette alle innlegg fordi brukeren har mer enn %{count} innlegg. (delete_all_posts_max)"
           other: "Kan ikke slette alle innlegg fordi brukeren har mer enn %{count} innlegg. (delete_all_posts_max)"
-        delete_and_block: "Slett og <b>blokker</b> denne e-post- og IP-adressen"
-        delete_dont_block: "Bare slett"
         deleted: "Brukeren ble slettet."
         delete_failed: "Det oppstod en feil ved slettingen av den brukeren. Sørg for at alle av brukerens innlegg er slettet før du prøver å slette brukeren."
         send_activation_email: "Send e-post for aktivering"

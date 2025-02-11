@@ -414,7 +414,7 @@ zh_CN:
       dropdown:
         title: "打开最新草稿菜单"
         untitled: "无标题草稿"
-        view_all: "查看全部"
+        view_all: "查看所有草稿"
         other_drafts:
           other: "+其他 %{count} 个草稿"
     topic_count_all:
@@ -472,6 +472,14 @@ zh_CN:
       date_filter: "发布时间介于"
       in_reply_to: "回复给"
       filtered_flagged_by: "举报者"
+      unknown:
+        title:
+          other: "你有来自已禁用插件的待审核内容："
+        instruction: "除非你启用相关插件，否则它们无法正确显示。请启用插件并刷新页面。或者，你可以忽略它们。 <a href='%{url}' target='_blank'>了解更多...</a>"
+        ignore_all: "全部忽略"
+        enable_plugins: "启用插件"
+        delete_confirm: "你确定要删除所有由禁用插件创建的评论吗？"
+        ignore_success: "所有由禁用插件创建的评论已被删除。"
       explain:
         why: "解释为什么此条目最终进入队列"
         title: "可审核话题的评分"
@@ -3937,6 +3945,7 @@ zh_CN:
       content_load_error: '<a href="%url%">内容</a>无法加载。'
       image_load_error: '<a href="%url%">图片</a>无法加载。'
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
+    invalid_video_url: 该视频无法播放，因为 URL 无效或不可用。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "，"
       shortcut_key_delimiter_plus: "+"
@@ -4405,6 +4414,10 @@ zh_CN:
       no_results:
         title: "没有结果"
         description: '我们找不到与“%{filter}”匹配的任何内容。<br><br>您是否要<a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">搜索网站设置</a>或<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">管理用户列表</a>？'
+      footer:
+        interface_color_selector:
+          light: "亮"
+          dark: "深色"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -4827,6 +4840,7 @@ zh_CN:
             使用范围时，您可以将一个 API 密钥限制到一组特定的端点。
             您还可以定义允许哪些参数。使用逗号分隔多个值。
           title: 范围
+          one_or_more: 必须至少选择一个范围。
           granular: 精细
           read_only: 只读
           global: 全局
@@ -5117,8 +5131,6 @@ zh_CN:
           community_title: "社区标题"
           community_title_help: "浏览器标签页中显示的类别和话题列表等关键页面的简短描述。"
           banner_image: "横幅图片"
-          banner_image_help: |
-            这将用于您的“关于”页面。推荐大小：1100x300 像素。接受的类型：JPG、PNG 和 SVG，最大为 10MB。
           contact_information: "联系信息"
           community_owner: "社区所有者"
           community_owner_placeholder: "Johnny Smith"
@@ -6332,8 +6344,8 @@ zh_CN:
           other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
         delete_confirm_title: "确定要删除此用户吗？此操作无法撤消！"
         delete_confirm: "通常最好将用户匿名而不是删除他们，以避免从现有讨论中移除内容。"
-        delete_and_block: "删除并<b>禁止</b>该电子邮件和 IP 地址"
-        delete_dont_block: "仅删除"
+        delete_and_block: "删除用户并屏蔽其电子邮件和 IP 地址"
+        delete_dont_block: "删除用户"
         deleting_user: "正在删除用户…"
         deleted: "该用户已被删除。"
         delete_failed: "删除该用户时出错。在尝试删除用户之前，请确保已删除所有帖子。"

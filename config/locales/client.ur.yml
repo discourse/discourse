@@ -334,8 +334,6 @@ ur:
       abandon:
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
-      dropdown:
-        view_all: "سب دیکھیں"
     topic_count_all:
       one: "%{count} نیا ٹاپک دیکھیں۔"
       other: "%{count} نئے ٹاپک دیکھیں۔"
@@ -3616,6 +3614,10 @@ ur:
             invite:
               content: "دعوت دیں"
       filter: "فِلٹر..."
+      footer:
+        interface_color_selector:
+          light: "لائٹ"
+          dark: "ڈارک"
     until: "جب تک:"
     form_templates:
       upload_field:
@@ -4856,8 +4858,6 @@ ur:
         cant_delete_all_too_many_posts:
           one: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی %{count} سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
           other: "تمام پوسٹس کو حذف نہیں کیا جاسکتا کیونکہ صارف کی %{count} سے زیادہ پوسٹس ہیں۔ (delete_all_posts_max)"
-        delete_and_block: "اِس اِیمیل اور IP ایڈریس کو حذف اور <b>بلاک</b> کریں"
-        delete_dont_block: "صرف مٹائیں"
         deleted: "صارف حذف کر دیا گیا تھا۔"
         delete_failed: "اُس صارف کو حذف کرنے میں ایک مسئلہ پیش آیا۔ صارف کو حذف کرنے سے پہلے اس بات کا یقین کرلیں کہ تمام پوسٹس حذف کر دی گئی ہیں۔"
         send_activation_email: "ایکٹیویشن اِیمیل بھیجییں"

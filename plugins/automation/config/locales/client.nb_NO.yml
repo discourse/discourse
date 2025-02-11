@@ -7,8 +7,8 @@
 nb_NO:
   js:
     discourse_automation:
-      create: Opprett
-      update: Oppdater
+      back: Forrige
+      edit: Endre
       fields:
         user:
           label: Bruker

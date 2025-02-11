@@ -415,7 +415,7 @@ ro:
       dropdown:
         title: "Deschide meniul celei mai recente ciorne"
         untitled: "Ciornă fără titlu"
-        view_all: "vezi tot"
+        view_all: "vezi toate ciornele"
         other_drafts:
           one: "încă %{count} ciornă"
           few: "încă %{count} ciorne"
@@ -480,6 +480,12 @@ ro:
       date_filter: "Publicat între"
       in_reply_to: "ca răspuns la"
       filtered_flagged_by: "Semnalat de"
+      unknown:
+        instruction: "Acestea nu pot fi afișate corect până când nu activezi modulul relevant. Activează modulul și reîmprospătează pagina. Alternativ, le poți ignora. <a href='%{url}' target='_blank'>Află mai multe...</a>"
+        ignore_all: "Ignoră tot"
+        enable_plugins: "Activează module"
+        delete_confirm: "Sigur vrei să ștergi toate revizuirile create de modulele dezactivate?"
+        ignore_success: "Toate revizuirile create de modulele dezactivate au fost șterse."
       explain:
         why: "explică de ce acest element a ajuns în coada de așteptare"
         title: "Scor ce poate fi revizuit"
@@ -1875,6 +1881,10 @@ ro:
       required_at_signup: "Obligatoriu"
       optional_at_signup: "Opțional"
       hidden_at_signup: "Opțional, ascuns la înregistrare"
+    interface_color_selector:
+      disabled: "Nu afișa"
+      sidebar_footer: "Afișează în bara laterală din subsol"
+      header: "Afișează în antet"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3061,6 +3071,7 @@ ro:
     lightbox:
       download: "descărcare"
       counter: "%curr% din %total%"
+    invalid_video_url: Acest videoclip nu poate fi redat deoarece adresa URL este nevalidă sau indisponibilă.
     keyboard_shortcuts_help:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Scurtături de tastatură"
@@ -3341,6 +3352,11 @@ ro:
       clear_filter: "Elimină filtrul"
       no_results:
         title: "Fără rezultate"
+      footer:
+        interface_color_selector:
+          light: "Luminos"
+          dark: "Întunecat"
+          auto: "Auto"
     until: "Pana cand:"
     form_templates:
       upload_field:
@@ -3766,7 +3782,7 @@ ro:
           community_title: "Titlu comunitate"
           community_title_help: "Scurtă descriere, afișată în fila navigatorului, pentru pagini cheie cum ar fi categorii și liste de subiecte."
           banner_image_help: |
-            Acesta va fi folosit pe pagina ta Despre. Dimensiune recomandată: 1100x300px. Tipuri acceptate: JPG, PNG și SVG până la 10 MO.
+            Recomandat: 1100x300px. Formate: JPG, PNG, SVG (maxim 10 MO).
           community_owner_help: |
             Nume utilizat pentru notificările critice și, de asemenea, afișat în /despre. Vizibil pentru utilizatorii anonimi de pe site-urile publice.
           contact_email_help: |
@@ -4496,8 +4512,8 @@ ro:
           few: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} postări. (Setarea delete_all_posts_max)"
           other: "Nu pot fi şterse toate postările deoarece utilizatorul are mai mult de %{count} de postări. (Setarea delete_all_posts_max)"
         delete_confirm_title: "Sigur vrei să ștergi acest utilizator? Acest lucru este permanent!"
-        delete_and_block: "<b>Da</b>, și <b>blochează</b> viitoarele autentificări cu acest email și această adresă IP"
-        delete_dont_block: "<b>Da</b>, șterge doar utilizatorul"
+        delete_and_block: "Șterge utilizator și blochează adresa de email și IP"
+        delete_dont_block: "Șterge utilizator"
         deleted: "Utilizatorul a fost șters."
         delete_failed: "A apărut o eroare la ștergerea utilizatorului. Asigură-te că toate postările sunt șterse înainte de a încerca ștergerea utilizatorului."
         send_activation_email: "Trimite email de activare"
@@ -4636,10 +4652,6 @@ ro:
         description: "Configurează setările pentru site-ul tău Discourse pentru a personaliza aspectul, funcționalitatea și experiența utilizatorului."
         nav_title: "Setări"
         no_results: "Nu s-au găsit rezultate."
-        more_site_setting_results_no_category_sidebar:
-          one: "Există mai mult de %{count} rezultat. Te rugăm să-ți restrângi căutarea."
-          few: "Există mai mult de %{count} rezultate. Te rugăm să-ți restrângi căutarea."
-          other: "Există mai mult de %{count} de rezultate. Te rugăm să-ți restrângi căutarea."
         clear_filter: "Șterge"
         add_url: "adaugă URL"
         add_host: "adaugă gazdă"

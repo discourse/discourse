@@ -345,8 +345,6 @@ da:
       abandon:
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
-      dropdown:
-        view_all: "vis alle"
     topic_count_all:
       one: "Se %{count} nyt emne"
       other: "Se %{count} nye emner"
@@ -3786,6 +3784,10 @@ da:
       filter: "Filter..."
       no_results:
         title: "Ingen resultater"
+      footer:
+        interface_color_selector:
+          light: "Lys"
+          dark: "Mørk"
     until: "Indtil:"
     form_templates:
       upload_field:
@@ -5098,8 +5100,6 @@ da:
         cant_delete_all_too_many_posts:
           one: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
           other: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
-        delete_and_block: "Slet og <b>bloker</b> denne email og IP-adresse"
-        delete_dont_block: "Slet kun"
         deleting_user: "Sletter bruger…"
         deleted: "Brugeren blev slettet."
         delete_failed: "Der opstod en fejl ved sletning af brugeren. Kontrollér om alle indlæg er slettet før du prøver at slette brugeren."

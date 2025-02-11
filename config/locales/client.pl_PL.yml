@@ -548,7 +548,6 @@ pl_PL:
       dropdown:
         title: "Otwórz menu najnowszych wersji roboczych"
         untitled: "Wersja robocza bez tytułu"
-        view_all: "pokaż wszystkie"
     topic_count_all:
       one: "Zobacz %{count} nowy temat"
       few: "Zobacz %{count} nowe tematy"
@@ -5010,6 +5009,10 @@ pl_PL:
       no_results:
         title: "Brak wyników"
         description: 'Nie mogliśmy znaleźć niczego pasującego do ‘%{filter}’.<br><br>Czy chcesz <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">przeszukać ustawienia witryny</a> lub <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">listę użytkowników administratora?</a>'
+      footer:
+        interface_color_selector:
+          light: "Jasny"
+          dark: "Ciemny"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -5723,8 +5726,6 @@ pl_PL:
           community_description: "Opis społeczności"
           community_title: "Tytuł społeczności"
           banner_image: "Obraz banera"
-          banner_image_help: |
-            Będzie on używany na Twojej stronie z informacjami. Zalecany rozmiar: 1100x300px. Akceptowane typy: JPG, PNG i SVG do 10MB.
           contact_information: "Informacje kontaktowe"
           community_owner: "Właściciel społeczności"
           community_owner_placeholder: "Jan Kowalski"
@@ -6900,8 +6901,6 @@ pl_PL:
           other: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
         delete_confirm_title: "Czy na pewno chcesz usunąć tego użytkownika? To jest trwałe!"
         delete_confirm: "Zasadniczo lepiej jest anonimizować użytkowników niż ich usuwać, aby uniknąć usuwania treści z istniejących dyskusji."
-        delete_and_block: "Usuń i <b>zablokuj</b> ten email oraz adres IP"
-        delete_dont_block: "Tylko usuń"
         deleting_user: "Usuwanie użytkownika…"
         deleted: "Użytkownik został usunięty."
         delete_failed: "Wystąpił błąd podczas usuwania użytkownika. Upewnij się, że wszystkie wpisy zostały usunięte przed przystąpieniem do usuwania użytkownika."

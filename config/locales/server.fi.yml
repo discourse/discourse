@@ -2338,7 +2338,6 @@ fi:
     watched_words_regular_expressions: "Sallii säännöllisten lausekkeiden käytön sanojen suodattamiseen. Jos tämä on käytössä, tämä ominaisuus ryhmittelee arkaluontoiset sanat kirjainkoon mukaan. Sen jälkeen se kokoaa kaikki valitut sanat yhdeksi säännölliseksi lausekkeeksi ja lisää sanarajat säännöllisesti tarkkailuille sanoille. Näin ollen tämä regex-pohjainen suodatusmenetelmä lisää ylimääräisen valvontatason sisällön moderointiin tukemalla kehittyneempiä sanamalleja. Asetus mahdollistaa myös alkuperäisen tekstin helposti korvaamisen halutulla korvauksella."
     enable_diffhtml_preview: "Kokeellinen ominaisuus, joka käyttää diffHTML-tiedostoa esikatselun synkronointiin täydellisen uudelleenhahmontamisen sijaan"
     enable_fast_edit: "Lisää painikkeen viestin valintavalikkoon, jolla voi muokata pientä valintaa tekstiin sidottuna."
-    enable_quote_copy: "Lisää painikkeen viestin valintavalikkoon, jolla voi kopioida valinnan markdown-lainauksena."
     old_post_notice_days: "Päivien lukumäärä, jonka jälkeen viesti-ilmoitus katsotaan vanhaksi. Tämä erottaa sen visuaalisesti sivuston uudemmista ilmoituksista."
     new_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee uusiin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee palaaviin käyttäjiin liittyvät viesti-ilmoitukset."

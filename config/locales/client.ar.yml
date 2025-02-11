@@ -655,7 +655,6 @@ ar:
       dropdown:
         title: "افتح قائمة أحدث المسودات"
         untitled: "مسودة دون عنوان"
-        view_all: "عرض الكل"
         other_drafts:
           zero: "+%{count} مسودة أخرى"
           one: "+ مسودة واحدة (%{count}) أخرى"
@@ -5660,6 +5659,10 @@ ar:
       no_results:
         title: "لا توجد نتائج"
         description: 'لم نتمكن من العثور على أي شيء يطابق "%{filter}".<br><br>هل تريد <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">البحث في إعدادات الموقع</a> أو <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">قائمة المستخدمين ذوي دور المسؤول؟</a>'
+      footer:
+        interface_color_selector:
+          light: "فاتح"
+          dark: "داكن"
     welcome_topic_banner:
       title: "إنشاء موضوعك الترحيبي"
       description: "إن موضوعك الترحيبي هو أول ما يقرأه الأعضاء الجُدد. انظر إليه على أنه \"عرض ترويجي\" أو \"بيان مهمة\". دَع الجميع يعرفون الجمهور المستهدف بهذا المجتمع، وما يتوقعون العثور عليه هنا، وما تريد منهم أن يفعلوه أولًا."
@@ -6437,8 +6440,6 @@ ar:
           community_title: "لقب المجتمع"
           community_title_help: "وصف قصير، يظهر في علامة تبويب المتصفح، للصفحات الرئيسية مثل الفئات وقوائم الموضوعات."
           banner_image: "صورة البانر"
-          banner_image_help: |
-            سيتم استخدام هذا في صفحة "نبذة". الحجم الموصى به: 1100‏×300 بكسل. الأنواع المقبولة: JPG وPNG وSVG حتى 10 ميغابايت.
           contact_information: "معلومات التواصل"
           community_owner: "مالك المجتمع"
           community_owner_placeholder: "Johnny Smith"
@@ -7732,8 +7733,6 @@ ar:
           other: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشور. (delete_all_posts_max)"
         delete_confirm_title: "هل تريد بالتأكيد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء!"
         delete_confirm: "يُفضَّل عامةً إخفاء هوية المستخدمين بدلًا من حذفهم؛ لتجنُّب إزالة المحتوى من المناقشات الحالية."
-        delete_and_block: "حذف هذا البريد الإلكتروني وعنوان IP و<b>حظرهما</b>"
-        delete_dont_block: "الحذف فقط"
         deleting_user: "جارٍ حذف المستخدم…"
         deleted: "تم حذف المستخدم."
         delete_failed: "حدث خطأ في أثناء حذف المستخدم. تأكَّد من حذف جميع المنشورات قبل حذف المستخدم."

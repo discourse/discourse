@@ -561,7 +561,7 @@ sk:
       dropdown:
         title: "Otvorenie ponuky najnovších návrhov"
         untitled: "Návrh bez názvu"
-        view_all: "zobraziť všetko"
+        view_all: "zobraziť všetky koncepty"
         other_drafts:
           one: "+%{count} ďalší návrh"
           few: "+%{count} ďalších návrhov"
@@ -640,6 +640,17 @@ sk:
       date_filter: "Uverejnené medzi"
       in_reply_to: "v odpovedi na"
       filtered_flagged_by: "Označené používateľom"
+      unknown:
+        title:
+          one: "Máte nespracované kontroly zo zakázaného doplnku:"
+          few: "Máte nespracované kontroly zo zakázaných doplnkov:"
+          many: "Máte nespracované kontroly zo zakázaných doplnkov:"
+          other: "Máte nespracované kontroly zo zakázaných doplnkov:"
+        instruction: "Nie je možné ich správne zobraziť, kým nepovolíte príslušný zásuvný modul. Povoľte zásuvný modul a obnovte stránku. Prípadne ich môžete ignorovať. <a href='%{url}' target='_blank'>Ďalšie informácie...</a>"
+        ignore_all: "Ignorovať všetko"
+        enable_plugins: "Povoliť doplnky"
+        delete_confirm: "Ste si istí, že chcete odstrániť všetky recenzie vytvorené vypnutými zásuvnými modulmi?"
+        ignore_success: "Všetky recenzie vytvorené vypnutými zásuvnými modulmi boli odstránené."
       explain:
         why: "vysvetlite, prečo sa táto položka skončila vo fronte"
         title: "Kontrolovateľné bodovanie"
@@ -2623,6 +2634,10 @@ sk:
       required_at_signup: "Povinné"
       optional_at_signup: "Nepovinné"
       hidden_at_signup: "Voliteľné, skryté pri registrácii"
+    interface_color_selector:
+      disabled: "Nezobrazovať"
+      sidebar_footer: "Zobraziť v päte bočného panela"
+      header: "Zobraziť v hlavičke"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -4653,6 +4668,7 @@ sk:
       content_load_error: '<a href="%url%">Obsah</a> sa nepodarilo načítať.'
       image_load_error: '<a href="%url%">Obrázok</a> sa nepodarilo načítať.'
     cannot_render_video: Toto video nemožno zobraziť, pretože váš prehliadač nepodporuje tento kodek.
+    invalid_video_url: Toto video nemožno prehrať, pretože adresa URL je neplatná alebo nedostupná.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -5187,6 +5203,11 @@ sk:
       no_results:
         title: "Žiadne výsledky"
         description: 'Nenašli sme nič, čo by zodpovedalo ''%{filter}''.<br><br>Chceli ste <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">prehľadávať nastavenia stránky</a> alebo <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">zoznam používateľov administrátora?</a>'
+      footer:
+        interface_color_selector:
+          light: "Svetlá"
+          dark: "Tmavá"
+          auto: "Auto"
     welcome_topic_banner:
       title: "Vytvorenie uvítacej témy"
       description: "Vaša uvítacia téma je prvá vec, ktorú si noví členovia prečítajú. Považujte ju za svoj \"výťah\" alebo \"poslanie\". Dajte všetkým vedieť, pre koho je táto komunita určená, čo tu môžu očakávať a čo by ste chceli, aby urobili ako prvé."
@@ -5942,8 +5963,6 @@ sk:
           community_title: "Názov spoločenstva"
           community_title_help: "Krátky popis kľúčových stránok, ako sú kategórie a zoznamy tém, zobrazený na karte prehliadača."
           banner_image: "Obrázok bannera"
-          banner_image_help: |
-            Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 1100x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
           contact_information: "Kontaktné informácie"
           community_owner: "Vlastník komunity"
           community_owner_placeholder: "Johnny Smith"
@@ -7211,8 +7230,8 @@ sk:
           other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
         delete_confirm_title: "Ste si istí, že chcete odstrániť tohto používateľa? Je to natrvalo!"
         delete_confirm: "Vo všeobecnosti sa uprednostňuje anonymizácia používateľov pred ich vymazaním, aby sa zabránilo odstráneniu obsahu existujúcich diskusií."
-        delete_and_block: "Zazať a <b>zablokovať</b> tento email a IP adresu"
-        delete_dont_block: "Iba vymazať"
+        delete_and_block: "Odstrániť používateľa a zablokovať jeho e-mail a IP adresu"
+        delete_dont_block: "Odstránenie používateľa"
         deleting_user: "Odstránenie používateľa…"
         deleted: "Používateľ bol vymazaný."
         delete_failed: "Počas vymazávania používateľa nastala chyba. Pred vymazaním používateľa sa uistite, že všetky jeho príspevky sú zmazané."
