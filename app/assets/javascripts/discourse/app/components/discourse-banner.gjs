@@ -1,15 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import DecorateCookedHelper from "discourse/lib/decorate-cooked-helper";
 import { i18n } from "discourse-i18n";
+import DecoratedCooked from "./decorated-cooked";
 
 export default class DiscourseBanner extends Component {
   @service appEvents;
@@ -18,22 +15,6 @@ export default class DiscourseBanner extends Component {
   @service site;
 
   @tracked hide = false;
-
-  syncContent = modifier(async (element) => {
-    element.innerHTML = this.content;
-
-    const decorateCookedHelper = new DecorateCookedHelper({
-      owner: getOwner(this),
-    });
-
-    this.appEvents.trigger(
-      "decorate-non-stream-cooked-element",
-      element,
-      decorateCookedHelper
-    );
-
-    return () => decorateCookedHelper.teardown();
-  });
 
   get banner() {
     return this.site.get("banner");
@@ -46,7 +27,7 @@ export default class DiscourseBanner extends Component {
     newDiv.querySelectorAll("[id^='heading--']").forEach((el) => {
       el.removeAttribute("id");
     });
-    return newDiv.innerHTML;
+    return htmlSafe(newDiv.innerHTML);
   }
 
   get visible() {
@@ -105,7 +86,7 @@ export default class DiscourseBanner extends Component {
               />
             </div>
 
-            <div id="banner-content" {{this.syncContent}}></div>
+            <DecoratedCooked @cooked={{this.content}} @id="banner-content" />
           </div>
         </div>
       {{/if}}

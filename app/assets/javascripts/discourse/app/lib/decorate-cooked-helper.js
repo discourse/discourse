@@ -3,8 +3,7 @@ import { getOwner, setOwner } from "@ember/owner";
 export default class DecorateCookedHelper {
   #renderGlimmerInfos = [];
 
-  constructor({ owner, diffHtmlMode }) {
-    this.diffHtmlMode = diffHtmlMode;
+  constructor({ owner }) {
     setOwner(this, owner);
   }
 

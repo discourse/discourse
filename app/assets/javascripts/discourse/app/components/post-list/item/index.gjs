@@ -1,43 +1,20 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
+import DecoratedCooked from "discourse/components/decorated-cooked";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import DecorateCookedHelper from "discourse/lib/decorate-cooked-helper";
 import { userPath } from "discourse/lib/url";
 
 export default class PostListItem extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
-  @service appEvents;
-
-  syncPostContent = modifier((element) => {
-    const post = this.args.post;
-    if (this.args.post.expandedExcerpt) {
-      element.innerHTML = post.expandedExcerpt;
-      const decorateCookedHelper = new DecorateCookedHelper({
-        owner: getOwner(this),
-      });
-
-      this.appEvents.trigger(
-        "decorate-non-stream-cooked-element",
-        element,
-        decorateCookedHelper
-      );
-
-      return () => decorateCookedHelper.teardown();
-    } else {
-      element.innerHTML = post.excerpt;
-    }
-  });
 
   get moderatorActionClass() {
     return this.args.post.post_type === this.site.post_types.moderator_action
@@ -170,8 +147,13 @@ export default class PostListItem extends Component {
         data-post-id={{this.postId}}
         data-user-id={{@post.user_id}}
         class="excerpt"
-        {{this.syncPostContent}}
-      ></div>
+      >
+        {{#if @post.expandedExcerpt}}
+          <DecoratedCooked @cooked={{htmlSafe @post.expandedExcerpt}} />
+        {{else}}
+          {{htmlSafe @post.excerpt}}
+        {{/if}}
+      </div>
 
       {{yield to="belowPostItem"}}
     </div>
