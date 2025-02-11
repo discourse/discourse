@@ -31,9 +31,9 @@ jobs:
           node-version: 22
 
       - name: pnpm install
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --ignore-scripts --frozen-lockfile
 
-      - run: pnpm dedupe
+      - run: pnpm dedupe --ignore-scripts
 
       - name: Git push
         run: |
