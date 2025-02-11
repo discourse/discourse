@@ -428,4 +428,14 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
       "the pointerdown event isn't propagated to the parent element when the menu is expanded"
     );
   });
+
+  test("@triggerComponent", async function (assert) {
+    await render(hbs`
+      <DMenu @inline={{true}} @triggerComponent={{element "span"}}>1</DMenu>
+    `);
+
+    await open();
+
+    assert.dom("span.fk-d-menu__trigger").exists();
+  });
 });
