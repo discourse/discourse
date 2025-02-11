@@ -460,6 +460,9 @@ export default class FullPageSearchController extends Controller {
               searching: false,
               loading: false,
             });
+            this.appEvents.trigger("search:search_result_view", {
+              page: args.page,
+            });
           });
         break;
     }
