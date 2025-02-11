@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import curryComponent from "ember-curry-component";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -24,8 +25,8 @@ export default class DMenu extends Component {
     listeners: true,
   });
 
-  registerTrigger = modifier((element) => {
-    this.menuInstance.trigger = element;
+  registerTrigger = modifier((domElement) => {
+    this.menuInstance.trigger = domElement;
     this.options.onRegisterApi?.(this.menuInstance);
 
     return () => {
@@ -33,8 +34,8 @@ export default class DMenu extends Component {
     };
   });
 
-  registerFloatBody = modifier((element) => {
-    this.body = element;
+  registerFloatBody = modifier((domElement) => {
+    this.body = domElement;
 
     return () => {
       this.body = null;
@@ -78,6 +79,38 @@ export default class DMenu extends Component {
     };
   }
 
+  get triggerComponent() {
+    const instance = this;
+    const baseArguments = {
+      get icon() {
+        return instance.args.icon;
+      },
+      get label() {
+        return instance.args.label;
+      },
+      get translatedLabel() {
+        return instance.args.translatedLabel;
+      },
+      get translatedAriaLabel() {
+        return instance.args.ariaLabel;
+      },
+      get translatedTitle() {
+        return instance.args.title;
+      },
+      get disabled() {
+        return instance.args.disabled;
+      },
+      get isLoading() {
+        return instance.args.isLoading;
+      },
+    };
+
+    return (
+      this.args.triggerComponent ||
+      curryComponent(DButton, baseArguments, getOwner(this))
+    );
+  }
+
   get allowedProperties() {
     const properties = {};
     for (const [key, value] of Object.entries(MENU.options)) {
@@ -87,7 +120,7 @@ export default class DMenu extends Component {
   }
 
   <template>
-    <DButton
+    <this.triggerComponent
       {{this.registerTrigger}}
       class={{concatClass
         "fk-d-menu__trigger"
@@ -99,12 +132,6 @@ export default class DMenu extends Component {
       id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
       data-trigger
-      @icon={{@icon}}
-      @translatedAriaLabel={{@ariaLabel}}
-      @translatedLabel={{@label}}
-      @translatedTitle={{@title}}
-      @disabled={{@disabled}}
-      @isLoading={{@isLoading}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       {{on "keydown" this.forwardTabToContent}}
       ...attributes
@@ -112,7 +139,7 @@ export default class DMenu extends Component {
       {{#if (has-block "trigger")}}
         {{yield this.componentArgs to="trigger"}}
       {{/if}}
-    </DButton>
+    </this.triggerComponent>
 
     {{#if this.menuInstance.expanded}}
       {{#if (and this.site.mobileView this.options.modalForMobile)}}
