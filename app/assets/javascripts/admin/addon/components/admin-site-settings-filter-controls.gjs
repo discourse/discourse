@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import DButton from "discourse/components/d-button";
-import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteSettingsFilterControls extends Component {
@@ -72,7 +71,6 @@ export default class AdminSiteSettingsFilterControls extends Component {
           {{/if}}
           <input
             {{on "input" this.onChangeFilterInput}}
-            {{autoFocus}}
             id="setting-filter"
             class="no-blur admin-site-settings-filter-controls__input"
             placeholder={{i18n "type_to_filter"}}

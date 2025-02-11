@@ -7250,9 +7250,6 @@ en:
         more_site_setting_results:
           one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."
-        more_site_setting_results_no_category_sidebar:
-          one: "There is more than %{count} result. Please refine your search."
-          other: "There are more than %{count} results. Please refine your search."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
