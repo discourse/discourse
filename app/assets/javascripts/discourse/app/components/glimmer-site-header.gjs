@@ -259,8 +259,10 @@ export default class GlimmerSiteHeader extends Component {
 
         waitForPromise(animationFinished);
 
-        cloakElement.animate([{ opacity: 0 }], { fill: "forwards" });
-        cloakElement.style.display = "block";
+        if (cloakElement) {
+          cloakElement.animate([{ opacity: 0 }], { fill: "forwards" });
+          cloakElement.style.display = "block";
+        }
 
         animationFinished.then(() => {
           if (isTesting()) {
