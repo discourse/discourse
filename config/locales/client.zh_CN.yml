@@ -3937,6 +3937,7 @@ zh_CN:
       content_load_error: '<a href="%url%">内容</a>无法加载。'
       image_load_error: '<a href="%url%">图片</a>无法加载。'
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
+    invalid_video_url: 该视频无法播放，因为 URL 无效或不可用。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "，"
       shortcut_key_delimiter_plus: "+"

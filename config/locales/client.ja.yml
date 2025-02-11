@@ -5730,7 +5730,7 @@ ja:
         no_result: "要約の結果は見つかりませんでした。"
         reply_key: "返信キー"
         post_link_with_smtp: "投稿と SMTP の詳細"
-        skipped_reason: "スキップの理由"
+        skipped_reason: "理由をスキップ"
         incoming_emails:
           from_address: "送信者"
           to_addresses: "宛先"

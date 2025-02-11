@@ -3061,6 +3061,7 @@ ro:
     lightbox:
       download: "descărcare"
       counter: "%curr% din %total%"
+    invalid_video_url: Acest videoclip nu poate fi redat deoarece adresa URL este nevalidă sau indisponibilă.
     keyboard_shortcuts_help:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Scurtături de tastatură"
@@ -4636,10 +4637,6 @@ ro:
         description: "Configurează setările pentru site-ul tău Discourse pentru a personaliza aspectul, funcționalitatea și experiența utilizatorului."
         nav_title: "Setări"
         no_results: "Nu s-au găsit rezultate."
-        more_site_setting_results_no_category_sidebar:
-          one: "Există mai mult de %{count} rezultat. Te rugăm să-ți restrângi căutarea."
-          few: "Există mai mult de %{count} rezultate. Te rugăm să-ți restrângi căutarea."
-          other: "Există mai mult de %{count} de rezultate. Te rugăm să-ți restrângi căutarea."
         clear_filter: "Șterge"
         add_url: "adaugă URL"
         add_host: "adaugă gazdă"

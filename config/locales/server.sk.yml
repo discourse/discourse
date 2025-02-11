@@ -60,6 +60,8 @@ sk:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} podľa %{username}"
+    too_many_urls: "V jednej požiadavke nie je možné vložiť do jedného poľa viac ako 10 adries URL."
+    concurrency_not_allowed: "Súbežné požiadavky na inline-oneboxing nie sú povolené. Prosím, pošlite vždy len jednu žiadosť."
   components:
     enabled_filter: "Povolené"
     disabled_filter: "Vypnuté"

@@ -60,6 +60,8 @@ uk:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} від %{username}"
+    too_many_urls: "Неможливо вставити більше 10 URL-адрес в один запит."
+    concurrency_not_allowed: "Одночасні запити inline-oneboxing заборонені. Будь ласка, надсилайте по одному запиту."
   components:
     enabled_filter: "Включено"
     disabled_filter: "Вимкнено"

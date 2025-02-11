@@ -60,6 +60,8 @@ he:
   inline_oneboxer:
     topic_page_title_post_number: "מס׳ %{post_number}"
     topic_page_title_post_number_by_user: "מס׳ %{post_number} מאת %{username}"
+    too_many_urls: "אי אפשר להכניס יותר מ־10 קישורים לתיבה תוחמת בבקשה אחת."
+    concurrency_not_allowed: "אי אפשר לשלוח בקשות להטמעת תיבות תוחמות במקביל. נא לשלוח בקשה אחת כל פעם."
   components:
     enabled_filter: "פעיל"
     disabled_filter: "כבוי"
@@ -393,6 +395,7 @@ he:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "אי אפשר להוסיף אף אחת מהערכים הבאים להגדרה: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "אי אפשר להשבית הפשטת נתוני על מתמונה אם האפשרות ‚תמונת מיטוב מדיה בכתיבת הודעה פעילה’ פעילה. יש להשבית את האפשרות בטרם השבתת הפשטת נתוני על מתמונה."
       twitter_summary_large_image_no_svg: "תמונות התקציר של טוויטר שמשמשות לנתוני העל של twitter:image לא יכולות להיות תמונת ‎.svg"
+      tl0_and_anonymous_flag: "יש לספק ‚דוא״ל קשר עם האתר’ או ‚כתובת דוא״ל לדיווח על תוכן לא חוקי’ למשתמשים אלמוניים."
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה לאתר הזה, כיוון שהשרת ‚%{hostname}’ לא נמצא. במקום תצוגה מקדימה יופיע קישור בלבד בפוסט שלך. :cry:"
@@ -1779,6 +1782,9 @@ he:
     delete_old_hidden_posts: "מחיקה אוטומטית של פוסטים מוסתרים כלשהם שנשארו מוסתרים למעלה מ־30 ימים."
     default_locale: "שפת בררת המחדל של עותק ה־Discourse הזה. ניתן להחליף את השם של קטגוריות ונושאים שנוצרו על ידי המערכת דרך <a href='%{base_path}/admin/customize/site_texts' target='_blank'>התאמה / טקסט</a>."
     allow_user_locale: "לאפשר למשתמשים לבחור את העדפת שפת המנשק לעצמם באופן עצמאי"
+    set_locale_from_accept_language_header: "הגדרת שפת המנשק למשתמשים אלמוניים לפי כותרי השפה בדפדפן שלהם"
+    set_locale_from_cookie: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך עוגיית הדפדפן ‚locale’"
+    set_locale_from_param: "לאפשר להגדיר את השפה של המשתמשים האלמוניים דרך המשתנה ‚lang’ בכתובת, למשל: ‎?lang=he"
     support_mixed_text_direction: "תמיכה בכיווני שמאל לימין וימין לשמאל בצורה מעורבת"
     min_post_length: "אורך פוסט מזערי מותר בתווים (לא כולל הודעות אישיות)"
     min_first_post_length: "אורך מזערי מותר לנושא ראשון (גוף הנושא - לא כולל הודעות אישיות)"
@@ -2263,6 +2269,8 @@ he:
     num_hours_to_close_topic: "מספר שעות לעצירת נושא לצורך התערבות."
     auto_respond_to_flag_actions: "הפעלת תגובה אוטומטית עם הסרת דגל."
     min_first_post_typing_time: "הזמן המזערי במילישניות שעל משתמש להקליד במהלך הפוסט הראשון, אם לא הגיע לסף הפוסט ייכנס אוטומטית לתור ההמתנה לאישור. 0 להשבתה (לא מומלץ)"
+    fast_typing_threshold: "כמות הזמן המזערית במילישניות שעל משתמש להקליד לפני פרסום הפוסט הראשון שלו. אם הסף לא הושג, הפוסט ייכנס אוטומטית לתור לסקירה. נמוך זה שנייה אחת, רגיל זה 3 שניות, גבוה זה 5 שניות."
+    auto_silence_fast_typers_on_first_post: "להשתיק אוטומטית משתמשים שאינם עונים ל־`fast typing threshold` (סף הקלדה מהירה)"
     auto_silence_fast_typers_max_trust_level: "דרגת האמון המרבית להשתקה אוטומטית של קלדנים נמרצים"
     auto_silence_first_post_regex: "ביטוי רגולרי שאינו מתחשב ברשיות (הבדל בין אותיות קטנות לגדולות) יגרום לכך שהפוסט הראשון שמפרסם משתמש יושתק ויועבר לתור לאישור. למשל: raging|a[bc]a, תגרום לכך שכל הפוסטים שמכילים את המילים raging או aba או aca יושתקו תחילה ובעברית: מתקפה|א[במ]א - מכילים את המילים מתקפה, אבא או אמא. תקף על הפוסט הראשון בלבד. השימוש בזה הופסק: נא להשתמש בהשתקת מילים מושגחות במקום."
     reviewable_claiming: "האם צריך לדרוש תוכן שמיועד לסקירה לפני שאפשר לפעול לגביו?"
@@ -2596,6 +2604,7 @@ he:
     share_quote_visibility: "קביעה מתי להציג כפתורי שיתוף ציטוטים: אף פעם למשתמשים אלמוניים בלבד או לכל המשתמשים. "
     create_revision_on_bulk_topic_moves: "יצירת מהדורה לפוסטים הראשונים כאשר הנושאים מועברים לקטגוריה חדשה במרוכז."
     allow_changing_staged_user_tracking: "לאפשר שינוי העדפות של קטגוריית המשתמשים המבוימים ותגיות על ידי ההנהלה."
+    use_email_for_username_and_name_suggestions: "להשתמש בחלק הראשון של כתובות הדוא״ל כהצעות לשמות משתמשים ושמות. אזהרה: זה עלול להקל על גורמים זדוניים לגלות את כתובות הדוא״ל של החברים שלך (כיוון שאנשים רבים משתמשים בספקי דוא״ל נפוצים כגון `gmail.com`)."
     use_name_for_username_suggestions: "להשתמש בשם המלא של המשתמש בעת הצעת שמות משתמשים."
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     show_bottom_topic_map: "הצגת מפת הנושאים בתחתית הנושא כשיש 10 תגובות ומעלה."
@@ -5144,6 +5153,8 @@ he:
             label: "ערכת צבעים"
           body_font:
             label: "גופן גוף"
+          site_font:
+            label: "גופן"
           heading_font:
             label: "גופן כותרת"
           styling_preview:
