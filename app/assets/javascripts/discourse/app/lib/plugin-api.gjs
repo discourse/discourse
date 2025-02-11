@@ -3094,9 +3094,15 @@ class PluginApi {
 
   /**
    * Apply transformation using a callback on a list of model instances of a
-   * specific type. Currently, this API only works on lists rendered in the
-   * user menu such as notifications, bookmarks and topics (i.e. messages), but
-   * it may be extended to other lists in other parts of the app.
+   * specific type.
+   *
+   * Currently, this API only works on
+   * - lists rendered in the user menu such as notifications,
+   * - bookmarks
+   * - topics (i.e. messages)
+   * - posts in the post stream
+   *
+   * but it may be extended to other lists in other parts of the app.
    *
    * You can pass an `async` callback to this API and it'll be `await`ed and
    * block rendering until the callback finishes executing.
@@ -3109,6 +3115,12 @@ class PluginApi {
    *       topic.fancy_title = decryptedTitle;
    *     }
    *   }
+   * });
+   * ```
+   *
+   * ```
+   * api.registerModelTransformer("post", async (post) => {
+   *   post.set("isFancy", true);
    * });
    * ```
    *
