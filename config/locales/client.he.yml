@@ -4076,6 +4076,9 @@ he:
         delete_topic_confirm_modal_no: "לא, להשאיר את הנושא הזה"
         delete_topic_error: "אירעה שגיאה בעת מחיקת הנושא"
         delete_topic: "מחיקת נושא"
+        add_post_notice: "הוספת הודעה רשמית…"
+        change_post_notice: "עריכת הודעה רשמית…"
+        delete_post_notice: "מחיקת הודעה רשמית"
         remove_timer: "הסרת שעון עצר"
         edit_timer: "עריכת מתזמן"
       actions:
@@ -4636,6 +4639,7 @@ he:
       content_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תוכן הזה</a>.'
       image_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תמונה הזו</a>.'
     cannot_render_video: לא ניתן לעבד את הסרטון הזה מכיוון שהדפדפן שלך אינו תומך במקודד.
+    invalid_video_url: אי אפשר לנגן את הסרטון הזה כי הכתובת שגויה או לא זמינה.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -5314,6 +5318,9 @@ he:
         legal:
           title: "משפטי"
           header_description: "הגדרת התצוגה המשפטית, כגון תנאי השירות, מדיניות פרטיות, פרטי יצירת קשר ונושאים נקודתיים לאיחוד האירופי"
+        localization:
+          title: "תרגום"
+          header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
         login_and_authentication:
           title: "כניסה ואימות"
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
@@ -5430,6 +5437,22 @@ he:
         reports:
           trend_title: "%{percent} שינוי. כרגע הערך עומד על %{current}, היה %{prev} בתקופת הבדיקה הקודמת."
           percent_change_tooltip: "%{percent} שינוי."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "היה %{count} לפני יומיים."
+              two: "היה %{count} לפני יומיים."
+              many: "היה %{count} לפני יומיים."
+              other: "היה %{count} לפני יומיים."
+            two_weeks_ago:
+              one: "היה %{count} לפני שבועיים."
+              two: "היה %{count} לפני שבועיים."
+              many: "היה %{count} לפני שבועיים."
+              other: "היה %{count} לפני שבועיים."
+            thirty_days_ago:
+              one: "היה %{count} ב־30 הימים הקודמים."
+              two: "היה %{count} ב־30 הימים הקודמים."
+              many: "היה %{count} ב־30 הימים הקודמים."
+              other: "היה %{count} ב־30 הימים הקודמים."
           today: "היום"
           yesterday: "אתמול"
           last_7_days: "7 הימים האחרונים"
@@ -5848,6 +5871,9 @@ he:
           group_permissions: "הרשאות קבוצתיות"
           users: "משתמשים"
           groups: "קבוצות"
+          localization:
+            title: "תרגום"
+            keywords: "מקום|שפה|אזור זמן|unicode|rtl"
           user_fields: "שדות משתמש"
           watched_words: "מילים במעקב"
           legal: "משפטי"
@@ -6187,6 +6213,7 @@ he:
           customize_desc: "התאמה אישית:"
           title: "ערכות עיצוב"
           description: "ערכות עיצוב הן ערכות מתרחבות שמשנות מגוון פריטי עיצוב לסגנון הפורום שלך ובדרך כלל כוללים גם יכולות מצד מנשק המשתמש."
+          components_description: "רכיבים הם פריטי התאמה קטנים יותר שאפשר להוסיף לערכות עיצוב כדי לשנות קטעים מסוימים של סגנון עיצוב הפורום שלך."
           create: "יצירה"
           create_type: "סוג"
           create_name: "שם"
@@ -6290,6 +6317,7 @@ he:
           install_git_repo: "ממאגר git"
           install_create: "יצירת חדשה"
           installing_message: "ערכת העיצוב החדשה שלך מוגדרת…"
+          installing_message_long_time: "הגדרת ערכת העיצוב החדשה שלך אורכת מעבר למצופה, נא להמתין בסבלנות…"
           duplicate_remote_theme: "רכיב ערכת העיצוב „%{name}” כבר מותקן, להתקין עותק נוסף?"
           force_install: "לא ניתן להתקין את ערכת העיצוב כיוון שמאגר ה־Git אינו נגיש. להמשיך בהתקנתה?"
           create_placeholder: "יצירת ממלא מקום"
@@ -6483,6 +6511,7 @@ he:
           instructions: "התאמת התבנית שמשמשת כתבנית להודעות html, לצד עיצוב עם CSS."
       email:
         title: "הודעות דוא״ל"
+        description: "אפשר להתאים את התבנית שמשמשת ליצירת הודעות דוא״ל, הודעות תקציר בדוא״ל שתישלחנה ולצפות ביומני דוא״ל."
         settings: "הגדרות"
         templates: "תבניות"
         templates_title: "תבניות דוא״ל"
@@ -6502,6 +6531,7 @@ he:
         bounced: "הוחזר"
         received: "התקבל"
         rejected: "נדחה"
+        sent_at: "נשלח ב־"
         time: "זמן"
         user: "משתמש"
         email_type: "סוג דוא״ל"
@@ -6569,6 +6599,7 @@ he:
           post_approved: "פוסט אושר"
       logs:
         title: "יומנים וסינון"
+        description: "יומנים ובחינה מאפשרים לך לעקוב ולנהל את הקהילה שלך כדי לוודא שהיא נשארת בטוחה ומכבדת. אפשר לצפות ביומני כל הפעולות שננקטו על ידי חברי הסגל, לחפש ביומנים ולבחון התנהגות של משתמשים."
         nav_title: "יומנים"
         action: "פעולה"
         created_at: "נוצר"
@@ -7077,10 +7108,18 @@ he:
         time_read: "זמן קריאה"
         post_edits_count: "עריכות של פוסטים"
         exports:
+          title: היטלי ייצוא של משתמשים
           download:
             description: הורדת הייצוא האחרון
+            expires_in:
+              one: יפוג בעוד שעה
+              two: יפוג בעוד שעתיים
+              many: יפוג בעוד %{count} שעות
+              other: יפוג בעוד %{count} שעות
             not_available: אין ייצוא זמין
             button: בקשת ארכיון
+            confirm: ליצור ארכיון של פעילות והעדפות המשתמש הזה?
+            started: התחלנו לאסוף את הארכיון, הקישור להורדה יתעדכן עם סיום התהליך.
             success: הארכיון מוכן להורדה.
             export_failed: הייצוא נכשל, עמך הסליחה. נא לעיין ביומנים לקבלת מידע נוסף.
         anonymize: "הפיכת משתמשים לאלמוניים"
@@ -7665,6 +7704,7 @@ he:
       homepage_choices:
         custom:
           label: "מותאם"
+          description: "להציג עמוד בית מוכוון %{type} עם נחיתת משתמשים ב%{landingPage}"
         style_type:
           categories: "קטגוריה"
           topics: "נושא"

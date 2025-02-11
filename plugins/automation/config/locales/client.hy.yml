@@ -8,6 +8,7 @@ hy:
   js:
     discourse_automation:
       create: Ստեղծել
+      update: Թարմացնել
       fields:
         user:
           label: Օգտատեր

@@ -229,6 +229,7 @@ ug:
               description: يازمىنى بۇ ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى قۇرغاندىلا ئاندىن قوزغىتىلىدۇ، كۆڭۈلدىكى ئەھۋالدا خالىغان ئىشەنچ دەرىجىسى
         topic_tags_changed:
           trigger_on_modes:
+            tags_added_or_removed: بەلگە قوشۇلدى ياكى چىقىرىۋېتىلدى
             tags_added: بەلگە قوشۇلدى
             tags_removed: بەلگە چىقىرىۋېتىلدى
           fields:

@@ -13,6 +13,7 @@ ro:
             delete_automation: șterge automatizarea
     discourse_automation:
       create: Creează
+      update: Actualizează
       no_automation_yet: Încă nu ai creat nicio automatizare. Alege o opțiune de mai jos pentru a începe.
       filter_placeholder: Filtrează după nume sau descriere...
       fields:

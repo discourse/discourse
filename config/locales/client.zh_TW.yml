@@ -935,11 +935,17 @@ zh_TW:
       dismiss: "忽略"
       dismiss_notifications: "忽略全部"
       dismiss_notifications_tooltip: "將所有未讀通知設為已讀"
+      no_likes_title: "您尚未收到任何喜歡"
+      no_likes_body: >
+        當有人喜歡您的某個貼文時，您都會在這裡收到通知，以便您了解其他人認為哪些貼文有價值。當您喜歡他們的貼文時其他人也會看到同樣的內容！<br><br> 您不會收到有關喜歡的電子郵件通知，但您可以在網站的「通知偏好」中調整您接收有關喜歡的通知方式。 <a href="%{preferencesUrl}">通知偏好</a>.
       no_messages_title: "您沒有任何訊息"
       no_bookmarks_title: "您尚未添加任何書籤"
+      no_bookmarks_body: >
+        使用 %{icon} 按鈕開始將貼文加入書籤，這些貼文就會列在這裡，方便參考。您也可以安排提醒！
       no_notifications_title: "您尚未收到任何通知"
       no_notifications_body: >
         您將在這個面板上收到與您直接相關的活動通知，包括對您的主題和貼文的回覆，當有人<b>@提及您</b> 或引用您，以及對您關注的主題的回覆。如果您長時間未登入，系統也會將通知發送到您的電子郵件。<br><br> 尋找 %{icon} 來決定您想要收到通知的特定主題、類別和標籤。如需了解更多，請參閱您的 <a href="%{preferencesUrl}">通知偏好</a>。
+      no_other_notifications_title: "您尚未收到任何其他通知"
       no_notifications_page_title: "您尚未收到任何通知"
       dynamic_favicon: "在瀏覽器小圖示上顯示計數\\bIcon"
       skip_new_user_tips:
@@ -1682,6 +1688,7 @@ zh_TW:
       reply: "回覆"
       cancel: "取消"
       create_topic: "開啟話題"
+      create_pm: "送出"
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
@@ -2935,6 +2942,8 @@ zh_TW:
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
     pause_notifications:
+      title: "暫停通知時間為…"
+      label: "暫停通知"
       options:
         half_hour: "30 分鐘"
         one_hour: "1 小時"
@@ -2950,6 +2959,9 @@ zh_TW:
         leader: "資深"
     user_activity:
       no_activity_body: "歡迎來到我們的社群！你是新來的，還沒有參與討論。第一步，訪問 <a href='%{topUrl}'>精選話題</a> 或<a href='%{categoriesUrl}'>類別</a>，然後開始閱讀！在您喜歡或想了解更多資訊的貼文上選擇 %{heartIcon}。當您參與時，您的活動將>列在此處。"
+      no_likes_title: "您尚未喜歡任何主題"
+      no_likes_title_others: "%{username} 尚未喜歡任何主題"
+      no_likes_body: "加入並開始做出貢獻的一個好方法是開始閱讀已經發生的談話，然後選擇您喜歡的貼文 %{heartIcon} ！"
     no_group_messages_title: "找不到群組訊息"
     fullscreen_table:
       expand_btn: "展開表格"

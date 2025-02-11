@@ -60,6 +60,8 @@ zh_CN:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
+    too_many_urls: "在单个请求中不能输入超过 10 个 Onebox。"
+    concurrency_not_allowed: "不允许并发内嵌请求。请一次发送一个请求。"
   components:
     enabled_filter: "已启用"
     disabled_filter: "已禁用"

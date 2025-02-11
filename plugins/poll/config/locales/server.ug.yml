@@ -37,6 +37,7 @@ ug:
     default_poll_with_multiple_choices_has_invalid_parameters: "كۆپ تاللاشلىق راي سىناشنىڭ ئىناۋەتسىز پارامېتىرى بار."
     named_poll_with_multiple_choices_has_invalid_parameters: "<strong>%{name}</strong> ئاتلىق كۆپ تاللاشلىق راي سىناشنىڭ ئىناۋەتسىز پارامېتىرى بار."
     requires_at_least_1_valid_option: "كەم دېگەندە 1 ئۈنۈملۈك تاللانمىنى تاللىشىڭىز كېرەك."
+    requires_that_at_least_one_option_is_ranked: "رەتكە تىزىدىغان راي سىناشتا چوقۇم كەم دېگەندە بىر تاللاشنى تاللىغان بولۇشىڭىز كېرەك."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "راي سىناش قۇرۇلۇپ %{minutes} مىنۇتتىن كېيىن ئۆزگەرتەلمەيسىز."
       cannot_edit_named_poll_with_votes: "راي سىناش قۇرۇلۇپ %{minutes} مىنۇتتىن كېيىن <strong>${name}</strong> ئاتلىق راي سىناشنى ئۆزگەرتەلمەيسىز."
