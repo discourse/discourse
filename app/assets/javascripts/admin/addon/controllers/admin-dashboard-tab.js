@@ -1,23 +1,25 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 export default class AdminDashboardTabController extends Controller {
   @service modal;
 
+  @tracked endDate = moment().locale("en").utc().endOf("day");
+  @tracked startDate = this.calculateStartDate();
+  @tracked
+  filters = new TrackedObject({
+    startDate: this.startDate,
+    endDate: this.endDate,
+  });
+
   queryParams = ["period"];
   period = "monthly";
 
-  endDate = moment().locale("en").utc().endOf("day");
-  _startDate;
-
-  @computed("_startDate", "period")
-  get startDate() {
-    if (this._startDate) {
-      return this._startDate;
-    }
-
+  calculateStartDate() {
     const fullDay = moment().locale("en").utc().endOf("day");
 
     switch (this.period) {
@@ -35,13 +37,19 @@ export default class AdminDashboardTabController extends Controller {
   }
 
   @action
-  setCustomDateRange(_startDate, endDate) {
-    this.setProperties({ _startDate, endDate });
+  setCustomDateRange(startDate, endDate) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.filters.startDate = this.startDate;
+    this.filters.endDate = this.endDate;
   }
 
   @action
   setPeriod(period) {
-    this.setProperties({ period, _startDate: null });
+    this.set("period", period);
+    this.startDate = this.calculateStartDate();
+    this.filters.startDate = this.startDate;
+    this.filters.endDate = this.endDate;
   }
 
   @action

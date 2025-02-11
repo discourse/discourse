@@ -3892,6 +3892,7 @@ sk:
           other: "Označili ste <b>%{count}</b> príspevkov"
       deleted_by_author_simple: "(téma bola zmazaná autorom)"
     post_list:
+      title: "Najnovšie príspevky"
       empty: "Neexistujú žiadne príspevky"
       aria_post_number: "%{title} – príspevok č.%{postNumber}"
     post:
@@ -3944,6 +3945,7 @@ sk:
       notice:
         new_user: "%{user} prispel(a) po prvýkrát — privítajme ho/ju v našej komunite!"
         returning_user: "Už je to nejaký čas, čo sme videli %{user} - ich posledný príspevok bol %{time}."
+        custom_created_by: "(pridal %{userLinkHTML})"
       unread: "Príspevok je neprečítaný."
       has_replies:
         one: "%{count} Odpoveď"
@@ -4082,9 +4084,9 @@ sk:
         delete_topic_confirm_modal_no: "Nie, ponechať túto tému"
         delete_topic_error: "Pri odstraňovaní tejto témy došlo k chybe"
         delete_topic: "odstrániť tému"
-        add_post_notice: "Pridať oznámenie pre personál…"
-        change_post_notice: "Zmena oznámenia pre personál…"
-        delete_post_notice: "Vymazať oznámenie pre personál"
+        add_post_notice: "Pridať úradné oznámenie…"
+        change_post_notice: "Zmena úradného oznámenia…"
+        delete_post_notice: "Vymazať úradné oznámenie"
         remove_timer: "odstrániť časovač"
         edit_timer: "upraviť časovač"
       actions:
@@ -4650,20 +4652,6 @@ sk:
       close: "Zavrieť (Esc)"
       content_load_error: '<a href="%url%">Obsah</a> sa nepodarilo načítať.'
       image_load_error: '<a href="%url%">Obrázok</a> sa nepodarilo načítať.'
-    experimental_lightbox:
-      image_load_error: "Obrázok sa nepodarilo načítať."
-      screen_reader_image_title: "Obrázok %{current} z %{total}: %{title}"
-      buttons:
-        next: "Ďalej (kláves so šípkou doprava alebo nadol)"
-        previous: "Predchádzajúce (kláves so šípkou doľava alebo nahor)"
-        close: "Zavrieť (Esc)"
-        download: "Stiahnuť obrázok"
-        newtab: "Otvoriť obrázok v novej karte"
-        zoom: "Zväčšenie/zmenšenie obrazu (tlačidlo Z)"
-        rotate: "Otočiť obrázok (kláves R)"
-        fullscreen: "Prepnúť režim prehliadača na celú obrazovku (kláves M)"
-        carousel: "Zobraziť všetky obrázky v karuseli (kláves A)"
-        retry: "Opätovné načítanie obrázka"
     cannot_render_video: Toto video nemožno zobraziť, pretože váš prehliadač nepodporuje tento kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4700,7 +4688,7 @@ sk:
         title: "Aplikácia"
         create: "%{shortcut} Vytvoriť novú tému"
         notifications: "%{shortcut} Otvor upozornenia"
-        hamburger_menu: "%{shortcut} Otvoriť hamburger menu"
+        hamburger_menu: "%{shortcut} Otvorenie navigačného menu"
         user_profile_menu: "%{shortcut} Otvor užívateľské menu"
         show_incoming_updated_topics: "%{shortcut} Zobraz aktualizované témy"
         search: "%{shortcut} Vyhľadávanie"
@@ -5166,13 +5154,15 @@ sk:
             users:
               content: "Používatelia"
               title: "Zoznam všetkých používateľov"
-            my_drafts:
-              content: "Moje koncepty"
-              title: "Moje nezverejnené koncepty"
+            my_posts:
+              content: "Moje príspevky"
+              content_drafts: "Moje koncepty"
+              title: "Moja nedávna aktivita na túto tému"
+              title_drafts: "Moje nezverejnené koncepty"
               draft_count:
                 one: "%{count} koncept"
                 few: "%{count} konceptov"
-                many: "%{count} koncepty"
+                many: "%{count} konceptov"
                 other: "%{count} koncepty"
             review:
               content: "Recenzia"
@@ -5341,6 +5331,9 @@ sk:
         legal:
           title: "Právne záležitosti"
           header_description: "Konfigurácia právnych nastavení, ako sú podmienky poskytovania služieb, zásady ochrany osobných údajov, kontaktné údaje a aspekty špecifické pre EÚ."
+        localization:
+          title: "Lokalizácia"
+          header_description: "Konfigurácia jazyka rozhrania vašej komunity a ďalších možností lokalizácie pre vašich členov"
         login_and_authentication:
           title: "Prihlásenie a overovanie"
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
@@ -5891,6 +5884,9 @@ sk:
           group_permissions: "Oprávnenia skupiny"
           users: "Používatelia"
           groups: "Skupiny"
+          localization:
+            title: "Lokalizácia"
+            keywords: "locale|language|timezone|unicode|ltr"
           user_fields: "Používateľské polia"
           watched_words: "Sledované slová"
           legal: "Právne záležitosti"
@@ -7132,6 +7128,21 @@ sk:
         approve_bulk_success: "Úspech! Všetci vybraní používatelia boli schválení a oboznámení."
         time_read: "Doba Čítania"
         post_edits_count: "Úpravy príspevkov"
+        exports:
+          title: Export používateľa
+          download:
+            description: Stiahnite si najnovší export
+            expires_in:
+              one: Platnosť končí o %{count} hod.
+              few: Platnosť končí o %{count} hod.
+              many: Platnosť končí o %{count} hod.
+              other: Platnosť končí o %{count} hod.
+            not_available: Nie je k dispozícii žiadny export
+            button: Archív žiadostí
+            confirm: Naozaj chcete vytvoriť archív aktivít a preferencií tohto používateľa?
+            started: Začali sme zhromažďovať archív, odkaz na stiahnutie sa aktualizuje po dokončení procesu.
+            success: Archív je pripravený na stiahnutie.
+            export_failed: Je nám ľúto, ale export sa nepodaril. Ďalšie informácie nájdete v záznamoch.
         anonymize: "Anonymizovať používateľa"
         anonymize_confirm: "Ste si istí, že chcete toto konto anonymizovať? Tým sa zmení používateľské meno a e-mail a obnovia sa všetky informácie v profile."
         delete_associated_accounts_confirm: "Ste si istí, že chcete z tohto účtu odstrániť všetky pridružené účty? Používateľ sa možno nebude môcť prihlásiť, ak sa zmenil jeho e-mail."

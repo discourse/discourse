@@ -109,21 +109,21 @@ export default class TopicStatus extends Component {
         >{{icon "far-eye-slash"}}</span>
       {{~/if~}}
 
-      {{~#unless this.site.useGlimmerTopicList~}}
+      {{~#if this.site.useGlimmerTopicList~}}
+        <PluginOutlet
+          @name="after-topic-status"
+          @outletArgs={{hash topic=@topic context=@context}}
+        />
+      {{~else~}}
         {{~#each TopicStatusIcons.entries as |entry|~}}
           {{~#if (get @topic entry.attribute)~}}
             <span
-              title={{i18n (concat "topic_statuses." entry.titleKey "help")}}
+              title={{i18n (concat "topic_statuses." entry.titleKey ".help")}}
               class="topic-status"
             >{{icon entry.iconName}}</span>
           {{~/if~}}
         {{~/each~}}
-      {{~/unless~}}
-
-      <PluginOutlet
-        @name="after-topic-status"
-        @outletArgs={{hash topic=@topic}}
-      />
+      {{~/if~}}
       {{~! no whitespace ~}}
     </this.wrapperElement>
     {{~! no whitespace ~}}

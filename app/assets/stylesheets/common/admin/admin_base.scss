@@ -3,8 +3,8 @@
 $mobile-breakpoint: 700px;
 
 :root {
-  --space-0: 0.125rem; //2px
-  --space-1: 0.25rem; //4px
+  --space-0: 0.125rem; // 2px
+  --space-1: 0.25rem; // 4px
   --space-2: calc(0.25rem * 2);
   --space-3: calc(0.25rem * 3);
   --space-4: calc(0.25rem * 4);
@@ -311,7 +311,6 @@ $mobile-breakpoint: 700px;
       &::after {
         content: " ";
         position: absolute;
-        background-color: red;
         left: 0;
         right: 0;
         top: $maxHeight - $gradientHeight;
@@ -651,9 +650,6 @@ $mobile-breakpoint: 700px;
   nav {
     background-color: var(--primary-low);
     width: 100%;
-  }
-
-  nav {
     display: inline-flex;
     position: relative;
     flex: 1 0 0px;
@@ -808,14 +804,6 @@ $mobile-breakpoint: 700px;
   .horizontal-overflow-nav__scroll-left {
     --fade-color: var(--primary-low-rgb);
     background: var(--primary-low);
-  }
-}
-
-.badges,
-.web-hook-container {
-  input[type="text"],
-  textarea {
-    min-width: 350px;
   }
 }
 
@@ -1141,6 +1129,7 @@ table#user-badges {
 
     .new-value-input {
       flex: 1 0 0px;
+      margin-left: 0.25em;
     }
 
     .value-input,
@@ -1161,10 +1150,6 @@ table#user-badges {
       @include value-btn;
       margin-left: 0.25em;
       margin-top: 0.125em;
-    }
-
-    .new-value-input {
-      margin-left: 0.25em;
     }
   }
 }

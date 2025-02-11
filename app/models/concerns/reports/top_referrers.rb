@@ -5,7 +5,7 @@ module Reports::TopReferrers
 
   class_methods do
     def report_top_referrers(report)
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.labels = [
         {

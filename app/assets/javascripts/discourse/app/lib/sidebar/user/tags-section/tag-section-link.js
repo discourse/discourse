@@ -48,7 +48,7 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get currentWhen() {
-    return "tag.show tag.showNew tag.showUnread tag.showTop";
+    return "tag.show tag.showNew tag.showUnread tag.showTop tag.showHot tag.showLatest";
   }
 
   get badgeText() {

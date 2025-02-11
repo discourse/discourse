@@ -7,7 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { and, not } from "truth-helpers";
 import CookText from "discourse/components/cook-text";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
@@ -72,7 +72,7 @@ export default class DiscourseNewFeatureItem extends Component {
             {{@item.title}}
             {{#if @item.experiment_setting}}
               <span class="admin-new-feature-item__header-experimental">
-                {{dIcon "flask"}}
+                {{icon "flask"}}
                 {{i18n "admin.dashboard.new_features.experimental"}}
               </span>
             {{/if}}

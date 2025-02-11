@@ -1998,8 +1998,8 @@ ru:
         after_10_minutes: "Более 10 минут"
       notification_level_when_replying:
         label: "При публикации"
-        watch_topic: "Наблюдаемая тема"
-        track_topic: "Отслеживаемая тема"
+        watch_topic: "Наблюдать за темой"
+        track_topic: "Отслеживать тему"
         do_nothing: "Ничего не делать"
       topics_unread_when_closed: "Считать темы непрочитанными, если они закрыты"
       invited:
@@ -3892,6 +3892,7 @@ ru:
           other: "Вы выбрали <b>%{count}</b> сообщения."
       deleted_by_author_simple: "(тема удалена автором)"
     post_list:
+      title: "Последние публикации"
       empty: "Публикаций нет"
       aria_post_number: "%{title} — публикация №%{postNumber}"
     post:
@@ -3944,6 +3945,7 @@ ru:
       notice:
         new_user: "Это первое сообщение пользователя %{user} — поприветствуем новичка в нашем сообществе!"
         returning_user: "Пользователя %{user} давно не видели — последнее сообщение было %{time}."
+        custom_created_by: "(добавлено пользователем %{userLinkHTML})"
       unread: "Сообщение не прочитано"
       has_replies:
         one: "%{count} ответ"
@@ -4030,6 +4032,7 @@ ru:
         edit_anonymous: "Войдите, чтобы отредактировать это сообщение."
         flag_action: "Пометить"
         flag: "лично пожаловаться на эту публикацию для привлечения внимания или отправить личное сообщение о ней"
+        anonymous_flag: "отправить эл. письмо персоналу, чтобы пожаловаться на эту публикацию"
         delete_action: "Удалить публикацию"
         delete: "удалить сообщение"
         undelete_action: "Восстановить публикацию"
@@ -4081,9 +4084,9 @@ ru:
         delete_topic_confirm_modal_no: "Нет, оставить эту тему"
         delete_topic_error: "Произошла ошибка при удалении темы"
         delete_topic: "удалить тему"
-        add_post_notice: "Добавить сообщение от модератора…"
-        change_post_notice: "Изменить сообщение модератора…"
-        delete_post_notice: "Удалить сообщение модератора"
+        add_post_notice: "Добавить официальное уведомление…"
+        change_post_notice: "Изменить официальное уведомление…"
+        delete_post_notice: "Удалить официальное уведомление"
         remove_timer: "удалить таймер"
         edit_timer: "Изменить таймер"
       actions:
@@ -4355,6 +4358,9 @@ ru:
         all: "Все непрочитанные темы"
         none: "без подкатегорий"
       colors_disabled: "Вы не можете выбирать цвета, поскольку не указан стиль категории (category style = none)."
+    anonymous_flagging:
+      title: "Сообщите о незаконном контенте"
+      description: "Чтобы сообщить о незаконном контенте, напишите на <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Благодарим за поддержание порядка в нашем сообществе!"
       action: "Пожаловаться на сообщение"
@@ -4640,20 +4646,6 @@ ru:
       close: "Закрыть (Esc)"
       content_load_error: '<a href="%url%">Контент</a> не удалось загрузить.'
       image_load_error: '<a href="%url%">Изображение</a> не удалось загрузить.'
-    experimental_lightbox:
-      image_load_error: "Изображение загрузить не удалось."
-      screen_reader_image_title: "Изображение %{current} из %{total}: %{title}"
-      buttons:
-        next: "Далее (клавиша со стрелкой вправо или вниз)"
-        previous: "Назад (клавиша со стрелкой влево или вверх)"
-        close: "Закрыть (Esc)"
-        download: "Скачать изображение"
-        newtab: "Открыть изображение в новой вкладке"
-        zoom: "Изменить масштаб изображения (клавиша Z)"
-        rotate: "Повернуть изображение (клавиша R)"
-        fullscreen: "Полноэкранный режим браузера (клавиша M)"
-        carousel: "Показать все изображения в карусели (клавиша A)"
-        retry: "Повторить попытку загрузки изображения"
     cannot_render_video: 'Это видео невозможно отобразить: видеокодек не поддерживается браузером.'
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4690,7 +4682,7 @@ ru:
         title: "Форум"
         create: "%{shortcut} Создать тему"
         notifications: "%{shortcut} Открыть уведомления"
-        hamburger_menu: "%{shortcut} Открыть меню"
+        hamburger_menu: "%{shortcut} Открыть меню навигации"
         user_profile_menu: "%{shortcut} Открыть меню профиля"
         show_incoming_updated_topics: "%{shortcut} Показать обновлённые темы"
         search: "%{shortcut} Поиск"
@@ -5156,9 +5148,11 @@ ru:
             users:
               content: "Пользователи"
               title: "Список пользователей"
-            my_drafts:
-              content: "Мои черновики"
-              title: "Мои неопубликованные черновики"
+            my_posts:
+              content: "Мои сообщения"
+              content_drafts: "Мои черновики"
+              title: "Мои недавняя активность в темах"
+              title_drafts: "Мои неопубликованные черновики"
               draft_count:
                 one: "%{count} черновик"
                 few: "%{count} черновика"
@@ -5886,7 +5880,7 @@ ru:
           legal: "Юридическое"
           moderation_flags:
             title: "Модерация"
-            keywords: "flag|review"
+            keywords: "пометить|проверить"
       appearance:
         title: "Внешний вид"
         sidebar_link:
@@ -5906,7 +5900,7 @@ ru:
           appearance: "Внешний вид"
           server_setup:
             title: "Настройка сервера и журналы"
-            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+            keywords: "email|smtp|mailgun|sendgrid|отправлено|пропущено|возвращено|получено|отклонено|журналы эл. почты|предпросмотр сводки"
       security:
         title: "Безопасность"
         sidebar_link:
@@ -5914,7 +5908,7 @@ ru:
           spam: "Настройки спама"
           staff_action_logs:
             title: "Журналы и модерация"
-            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs"
+            keywords: "журнал ошибок|действия персонала|проверяемые адреса эл. почты|проверяемые IP-адреса|проверяемые ссылки|журналы поиска"
       section_landing_pages:
         account:
           title: "Аккаунт"
@@ -7126,6 +7120,21 @@ ru:
         approve_bulk_success: "Готово! Все выбранные пользователи были одобрены и уведомлены."
         time_read: "Время чтения"
         post_edits_count: "Правки сообщений"
+        exports:
+          title: Экспорт пользователей
+          download:
+            description: Скачать последний экспорт
+            expires_in:
+              one: Срок действия истекает через %{count} час
+              few: Срок действия истекает через %{count} часа
+              many: Срок действия истекает через %{count} часов
+              other: Срок действия истекает через %{count} часа
+            not_available: Экспорт недоступен
+            button: Запросить архив
+            confirm: Действительно создать архив с данными о действиях и настройках аккаунта этого пользователя?
+            started: Мы начали сборку архива, ссылка на скачивание обновится по завершении процесса.
+            success: Архив готов к скачиванию.
+            export_failed: Сожалеем, но экспорт не удался. Проверьте журналы для получения дополнительной информации.
         anonymize: "Анонимизировать пользователя"
         anonymize_confirm: "Вы уверены, что хотите анонимизировать этот аккаунт? Это приведет к изменению имени пользователя и адреса электронной почты, а также очистит информацию о профиле пользователя."
         delete_associated_accounts_confirm: "Действительно удалить все связанные аккаунты из этого аккаунта? Возможно, пользователь не сможет войти, если его адрес электронной почты изменился."

@@ -115,19 +115,36 @@ class Plugin::Instance
       label: label,
       location: location,
       use_new_show_route: opts.fetch(:use_new_show_route, false),
+      auto_generated: false,
     }
   end
 
   def full_admin_route
     route = self.admin_route
-    return unless route
+
+    if route.blank?
+      return if !any_settings? || has_only_enabled_setting?
+      route = default_admin_route
+    end
 
     route
-      .slice(:location, :label, :use_new_show_route)
+      .slice(:location, :label, :use_new_show_route, :auto_generated)
       .tap do |admin_route|
         path = admin_route[:use_new_show_route] ? "show" : admin_route[:location]
         admin_route[:full_location] = "adminPlugins.#{path}"
       end
+  end
+
+  def any_settings?
+    configurable? && plugin_settings.values.length.positive?
+  end
+
+  def has_only_enabled_setting?
+    any_settings? && plugin_settings.values.one?
+  end
+
+  def plugin_settings
+    @plugin_settings ||= SiteSetting.plugins.select { |_, plugin_name| plugin_name == self.name }
   end
 
   def configurable?
@@ -146,7 +163,11 @@ class Plugin::Instance
   delegate :name, to: :metadata
 
   def humanized_name
-    (setting_category_name || name).delete_prefix("Discourse ").delete_prefix("discourse-")
+    (setting_category_name || name)
+      .delete_prefix("Discourse ")
+      .delete_prefix("discourse-")
+      .gsub("-", " ")
+      .upcase_first
   end
 
   def add_to_serializer(
@@ -1475,5 +1496,14 @@ class Plugin::Instance
 
   def register_permitted_bulk_action_parameter(name)
     DiscoursePluginRegistry.register_permitted_bulk_action_parameter(name, self)
+  end
+
+  def default_admin_route
+    {
+      label: "#{name.underscore}.title",
+      location: name,
+      use_new_show_route: true,
+      auto_generated: true,
+    }
   end
 end

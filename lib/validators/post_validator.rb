@@ -48,7 +48,13 @@ class PostValidator < ActiveModel::Validator
         SiteSetting.post_length
       end
 
-    StrippedLengthValidator.validate(post, :raw, post.raw, range)
+    StrippedLengthValidator.validate(
+      post,
+      :raw,
+      post.raw,
+      range,
+      strip_uploads: SiteSetting.prevent_uploads_only_posts,
+    )
   end
 
   def max_posts_validator(post)

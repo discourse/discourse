@@ -18,7 +18,7 @@ module Reports::WebCrawlers
         },
       ]
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.data =
         WebCrawlerRequest

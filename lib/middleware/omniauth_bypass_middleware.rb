@@ -31,7 +31,10 @@ class Middleware::OmniauthBypassMiddleware
         # When only one provider is enabled, assume it can be completely trusted, and allow GET requests
         only_one_provider =
           !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
-        OmniAuth.config.allowed_request_methods = only_one_provider ? %i[get post] : [:post]
+
+        allow_get = only_one_provider || !SiteSetting.auth_require_interaction
+
+        OmniAuth.config.allowed_request_methods = allow_get ? %i[get post] : [:post]
 
         omniauth =
           OmniAuth::Builder.new(@app) do

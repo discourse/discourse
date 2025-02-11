@@ -4,6 +4,38 @@ import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
+acceptance(
+  "User - Preferences - Profile - Hide Profile Allowed",
+  function (needs) {
+    needs.user();
+    needs.settings({ allow_users_to_hide_profile: true });
+
+    test("user can hide profile", async function (assert) {
+      await visit("/my/preferences/profile");
+
+      assert
+        .dom(".pref-hide-profile")
+        .exists("checkbox to hide profile is shown");
+    });
+  }
+);
+
+acceptance(
+  "User - Preferences - Profile - Hide Profile Not Allowed",
+  function (needs) {
+    needs.user();
+    needs.settings({ allow_users_to_hide_profile: false });
+
+    test("user can hide profile", async function (assert) {
+      await visit("/my/preferences/profile");
+
+      assert
+        .dom(".pref-hide-profile")
+        .doesNotExist("checkbox to hide profile is hidden");
+    });
+  }
+);
+
 acceptance("User - Preferences - Profile - Featured topic", function (needs) {
   needs.user();
 

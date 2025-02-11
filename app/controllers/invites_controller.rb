@@ -519,7 +519,7 @@ class InvitesController < ApplicationController
 
     hidden_email = email != invite.email
 
-    if hidden_email || invite.email.nil?
+    if hidden_email || invite.email.nil? || !SiteSetting.use_email_for_username_and_name_suggestions
       username = ""
     else
       username = UserNameSuggester.suggest(invite.email)

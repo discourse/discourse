@@ -10,7 +10,7 @@
   }
 
   .picker-panel {
-    //mysteriously needed to prevent it from overlapping the timezone-input
+    // mysteriously needed to prevent it from overlapping the timezone-input
     position: relative;
     z-index: 0;
   }
@@ -20,6 +20,8 @@
   }
 }
 
+.d-modal.change-ownership-modal,
+.d-modal.grant-badge-modal,
 .d-modal.bookmark-reminder-modal {
   .d-modal__container {
     min-height: calc(var(--composer-vh, var(--1dvh)) * 85);

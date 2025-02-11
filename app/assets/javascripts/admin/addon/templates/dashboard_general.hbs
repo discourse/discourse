@@ -17,6 +17,7 @@
             @startDate={{this.startDate}}
             @endDate={{this.endDate}}
             @setCustomDateRange={{this.setCustomDateRange}}
+            @onDateChange={{this.onDateChange}}
           />
         </div>
 
@@ -25,13 +26,13 @@
             {{#if this.siteSettings.use_legacy_pageviews}}
               <AdminReport
                 @dataSourceName="consolidated_page_views"
-                @forcedModes="stacked-chart"
+                @forcedModes={{this.reportModes.stacked_chart}}
                 @filters={{this.filters}}
               />
             {{else}}
               <AdminReport
                 @dataSourceName="site_traffic"
-                @forcedModes="stacked-chart"
+                @forcedModes={{this.reportModes.stacked_chart}}
                 @reportOptions={{this.siteTrafficOptions}}
                 @filters={{this.filters}}
               />
@@ -40,42 +41,42 @@
             <AdminReport
               @dataSourceName="signups"
               @showTrend={{true}}
-              @forcedModes="chart"
+              @forcedModes={{this.reportModes.chart}}
               @filters={{this.filters}}
             />
 
             <AdminReport
               @dataSourceName="topics"
               @showTrend={{true}}
-              @forcedModes="chart"
+              @forcedModes={{this.reportModes.chart}}
               @filters={{this.filters}}
             />
 
             <AdminReport
               @dataSourceName="posts"
               @showTrend={{true}}
-              @forcedModes="chart"
+              @forcedModes={{this.reportModes.chart}}
               @filters={{this.filters}}
             />
 
             <AdminReport
               @dataSourceName="dau_by_mau"
               @showTrend={{true}}
-              @forcedModes="chart"
+              @forcedModes={{this.reportModes.chart}}
               @filters={{this.filters}}
             />
 
             <AdminReport
               @dataSourceName="daily_engaged_users"
               @showTrend={{true}}
-              @forcedModes="chart"
+              @forcedModes={{this.reportModes.chart}}
               @filters={{this.filters}}
             />
 
             <AdminReport
               @dataSourceName="new_contributors"
               @showTrend={{true}}
-              @forcedModes="chart"
+              @forcedModes={{this.reportModes.chart}}
               @filters={{this.filters}}
             />
           </div>
@@ -120,7 +121,7 @@
                   <AdminReport
                     @showHeader={{false}}
                     @filters={{this.activityMetricsFilters}}
-                    @forcedModes="counters"
+                    @forcedModes={{this.reportModes.counters}}
                     @dataSourceName={{metric}}
                   />
                 {{/each}}
@@ -133,12 +134,12 @@
       <div class="user-metrics">
         <ConditionalLoadingSection @isLoading={{this.isLoading}}>
           <AdminReport
-            @forcedModes="inline-table"
+            @forcedModes={{this.reportModes.inline_table}}
             @dataSourceName="users_by_type"
           />
 
           <AdminReport
-            @forcedModes="inline-table"
+            @forcedModes={{this.reportModes.inline_table}}
             @dataSourceName="users_by_trust_level"
           />
         </ConditionalLoadingSection>
@@ -146,7 +147,7 @@
 
       <div class="misc">
         <AdminReport
-          @forcedModes="storage-stats"
+          @forcedModes={{this.reportModes.storage_stats}}
           @dataSourceName="storage_stats"
           @showHeader={{false}}
         />

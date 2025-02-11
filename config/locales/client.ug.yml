@@ -3506,6 +3506,7 @@ ug:
           other: "سىز <b>%{count}</b> يازما تاللىدىڭىز."
       deleted_by_author_simple: "(تېمىنى يازغۇچى ئۆچۈردى)"
     post_list:
+      title: "ئاخىرقى يازما"
       empty: "يازما يوق"
       aria_post_number: "%{title} - يازما #%{postNumber}"
     post:
@@ -3552,6 +3553,7 @@ ug:
       notice:
         new_user: "بۇ %{user} نىڭ تۇنجى يازمىسى - ئۇنىڭ جامائىتىمىزغا قوشۇلغانلىقىنى قارشى ئالايلى!"
         returning_user: "%{user} كۆرۈنمىگىنى خېلى ۋاقىت بولدى - ئۇ ئاخىرقى يازمىنى %{time} دا يوللىغان."
+        custom_created_by: "(%{userLinkHTML} قوشتى)"
       unread: "يازما ئوقۇلمىغان"
       has_replies:
         one: "%{count} جاۋاب"
@@ -3668,9 +3670,9 @@ ug:
         delete_topic_confirm_modal_no: "ياق، بۇ تېمىنى ساقلاپ قال"
         delete_topic_error: "بۇ تېمىنى ئۆچۈرۈۋاتقاندا خاتالىق كۆرۈلدى"
         delete_topic: "تېما ئۆچۈر"
-        add_post_notice: "باشقۇرغۇچى ئۇقتۇرۇشى قوش…"
-        change_post_notice: "باشقۇرغۇچى ئۇقتۇرۇشىنى ئۆزگەرت…"
-        delete_post_notice: "باشقۇرغۇچى ئۇقتۇرۇشىنى ئۆچۈر"
+        add_post_notice: "رەسمىي ئەسكەرتىش قوشىدۇ…"
+        change_post_notice: "رەسمىي ئەسكەرتىشنى ئۆزگەرتىدۇ…"
+        delete_post_notice: "رەسمىي ئەسكەرتىشنى ئۆچۈرىدۇ"
         remove_timer: "ۋاقىت خاتىرىلىگۈچنى چىقىرىۋەت"
         edit_timer: "ۋاقىت خاتىرىلىگۈچ تەھرىر"
       actions:
@@ -4192,20 +4194,6 @@ ug:
       close: "ياپ (Esc)"
       content_load_error: '<a href="%url%">مەزمۇن</a>نى يۈكلىيەلمىدى.'
       image_load_error: '<a href="%url%">سۈرەت</a>نى يۈكلىيەلمىدى.'
-    experimental_lightbox:
-      image_load_error: "سۈرەتنى يۈكلىيەلمىدى."
-      screen_reader_image_title: "سۈرەت %{current} / %{total}: %{title}"
-      buttons:
-        next: "كېيىنكى (ئوڭ ياكى ئاستى يا ئوق كۇنۇپكىسى)"
-        previous: "ئالدىنقى (سول ياكى ئۈستى يا ئوق كۇنۇپكىسى)"
-        close: "ياپ (Esc)"
-        download: "سۈرەتنى چۈشۈر"
-        newtab: "سۈرەتنى يېڭى بەتكۈچتە ئاچ"
-        zoom: "سۈرەتنى يېقىنلات/يىراقلات (Z كۇنۇپكىسى)"
-        rotate: "سۈرەتنى ئايلاندۇر (R كۇنۇپكىسى)"
-        fullscreen: "توركۆرگۈنىڭ پۈتۈن ئېكران ھالىتىگە ئالماشتۇر (M كۇنۇپكىسى)"
-        carousel: "ھەممە سۈرەتنى بىر ئايلانمىدا كۆرسەت (A كۇنۇپكىسى)"
-        retry: "سۈرەتنى قايتا يۈكلە"
     cannot_render_video: بۇ سىننى كۆرسىتەلمەيدۇ چۈنكى توركۆرگۈڭىز كودلىغۇچنى قوللىمايدۇ.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "، "
@@ -4242,7 +4230,7 @@ ug:
         title: "پىروگرامما"
         create: "%{shortcut} يېڭى تېما قۇر"
         notifications: "%{shortcut} ئۇقتۇرۇش ئاچ"
-        hamburger_menu: "%{shortcut} دەستىلىمە تىزىملىكنى ئاچ"
+        hamburger_menu: "%{shortcut} يولباشچى تىزىملىكنى ئاچ"
         user_profile_menu: "%{shortcut} ئىشلەتكۈچى تىزىملىكىنى ئاچ"
         show_incoming_updated_topics: "%{shortcut} يېڭىلانغان تېمىنى كۆرسەت"
         search: "%{shortcut} ئىزدە"
@@ -4668,9 +4656,11 @@ ug:
             users:
               content: "ئىشلەتكۈچى"
               title: "بارلىق ئىشلەتكۈچى تىزىمى"
-            my_drafts:
-              content: "دەسلەپكى نۇسخام"
-              title: "يوللىمىغان دەسلەپكى نۇسخام"
+            my_posts:
+              content: "يازمىلىرىم"
+              content_drafts: "دەسلەپكى نۇسخام"
+              title: "يېقىنقى تېما پائالىيىتىم"
+              title_drafts: "يوللىمىغان دەسلەپكى نۇسخام"
               draft_count:
                 one: "%{count} دەسلەپكى نۇسخا"
                 other: "%{count} دەسلەپكى نۇسخا"
@@ -4831,6 +4821,8 @@ ug:
         legal:
           title: "قانۇنلۇق"
           header_description: "مۇلازىمەت ماددىلىرى، شەخسىيەت تۈزۈمى، ئالاقە تەپسىلاتى ۋە ياۋروپا ئىتتىپاقى بەلگىلىگەن بەلگىلىمىلەرگە ئوخشاش قانۇنىي تەڭشەكنى سەپلەيدۇ"
+        localization:
+          title: "يەرلىكلەشتۈرۈش"
         login_and_authentication:
           title: "تىزىمغا كىرىش ۋە دەلىللەش"
           header_description: "ئىشلەتكۈچىنىڭ تىزىمغا قانداق كىرىدىغانلىقى ۋە دەلىللىنىدىغانلىقى، بىخەتەرلىك ۋە شىفىرلىق ئاچقۇچ، ئىككى ئامىللىق دەلىللەش تەمىنلىگۈچى ۋە باشقىلار سەپلىنىدۇ"
@@ -5361,6 +5353,9 @@ ug:
           group_permissions: "گۇرۇپپا ئىجازىتى"
           users: "ئىشلەتكۈچى"
           groups: "گۇرۇپپا"
+          localization:
+            title: "يەرلىكلەشتۈرۈش"
+            keywords: "يەرلىك|تىل|ۋاقىت رايونى|يۇنىكود|rtl"
           user_fields: "ئىشلەتكۈچى بۆلىكى"
           watched_words: "كۆزەتتىكى سۆز"
           legal: "قانۇنلۇق"
@@ -6578,6 +6573,19 @@ ug:
         approve_bulk_success: "مۇۋەپپەقىيەتلىك! تاللانغان ھەممە ئىشلەتكۈچى تەستىقلىنىپ ئۇقتۇرۇلدى."
         time_read: "ئوقۇش ۋاقتى"
         post_edits_count: "يازما تەھرىر"
+        exports:
+          title: ئىشلەتكۈچى چىقىرىشى
+          download:
+            description: ئاخىرقى چىقىرىشنى چۈشۈرىدۇ
+            expires_in:
+              one: '%{count} سائەتتە ۋاقتى توشىدۇ'
+              other: '%{count} سائەتتە ۋاقتى توشىدۇ'
+            not_available: ھېچقانداق چىقىرىش يوق
+            button: ئارخىپ تەلىپى
+            confirm: بۇ ئىشلەتكۈچىنىڭ پائالىيىتى ۋە مايىللىقىنىڭ ئارخىپىنى راستتىنلا قۇرامسىز؟
+            started: ئارخىپنى يىغىشنى باشلىدۇق، جەريان تاماملانغاندا چۈشۈرۈش ئۇلانمىسى يېڭىلىنىدۇ.
+            success: ئارخىپ چۈشۈرۈشكە تەييار.
+            export_failed: كەچۈرۈڭ، ئەمما چىقىرالمىدى. تېخىمۇ كۆپ ئۇچۇرغا ئېرىشىش ئۈچۈن خاتىرىنى تەكشۈرۈڭ.
         anonymize: "ئىشلەتكۈچىنى نامسىزلاشتۇر"
         anonymize_confirm: "بۇ ھېساباتنى راستتىنلا نامسىزلەشتۈرەمسىز؟ ئىشلەتكۈچى ئىسمى ۋە ئېلخەتنى ئۆزگەرتىپ، بارلىق تەرجىمىھال ئۇچۇرى ئەسلىگە قايتۇرۇلىدۇ."
         delete_associated_accounts_confirm: "بۇ ھېساباتقا مۇناسىۋەتلىك بارلىق ھېساباتلارنى راستتىنلا ئۆچۈرەمسىز؟ ئەگەر ئۇلار ئېلخەتنى ئۆزگەرتكەن بولسا ئىشلەتكۈچى تىزىمغا كىرەلمەسلىكى مۇمكىن."

@@ -52,6 +52,13 @@ ro:
         title: "Afișați indicatorul de activitate în antet"
         all_new: "Toate mesajele noi"
         never: "Niciodată"
+      send_shortcut:
+        enter:
+          label: "Trimite prin Enter"
+          description: "Linie nouă prin Shift + Enter"
+        meta_enter:
+          label: "Trimite prin %{meta_key} + Enter"
+          description: "Linie nouă prin Enter"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
       last_visit: "ultima vizită"

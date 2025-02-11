@@ -6,10 +6,10 @@
   span {
     background-color: var(--danger);
     color: var(--secondary);
-    border-radius: 10px;
-    padding: 0.25em 0.5em;
+    padding: 0.15em 0.3em 0.2em;
     display: inline-block;
-    font-size: 0.8em;
+    font-size: var(--font-down-2);
+    border-radius: var(--d-button-border-radius);
   }
 }
 
@@ -97,6 +97,29 @@
   word-wrap: break-word;
   line-height: 1.5;
 
+  video {
+    max-width: 100%;
+  }
+
+  sup sup {
+    top: 0;
+  }
+
+  img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+    max-width: 100%;
+    height: auto;
+    display: inline-block; // Ensure dimensions are maintained even after load error
+
+    @supports not (aspect-ratio: 1) {
+      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
+      height: var(--calculated-height);
+    }
+  }
+
+  svg {
+    max-height: 2000px;
+  }
+
   > *:first-child {
     margin-top: 0;
   }
@@ -176,6 +199,7 @@
 
   mark {
     text-decoration: none;
+    background-color: var(--highlight);
   }
 
   ins {
@@ -186,10 +210,6 @@
   del {
     background-color: var(--danger-low);
     text-decoration: line-through;
-  }
-
-  mark {
-    background-color: var(--highlight);
   }
 
   // Prevents users from breaking posts with tag nesting
@@ -215,32 +235,6 @@
 
   sup sup sup {
     top: 0;
-  }
-}
-
-.cooked,
-.d-editor-preview {
-  video {
-    max-width: 100%;
-  }
-
-  sup sup {
-    top: 0;
-  }
-
-  img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
-    max-width: 100%;
-    height: auto;
-    display: inline-block; // Ensure dimensions are maintained even after load error
-
-    @supports not (aspect-ratio: 1) {
-      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
-      height: var(--calculated-height);
-    }
-  }
-
-  svg {
-    max-height: 2000px;
   }
 }
 
@@ -315,12 +309,24 @@
   }
 }
 
+:root {
+  --d-post-control-border-radius: var(--d-button-border-radius);
+  --d-post-control-text-color: var(--primary-low-mid);
+  --d-post-control-text-color--hover: var(--primary);
+  --d-post-control-icon-color: var(--primary-low-mid);
+  --d-post-control-icon-color--hover: var(--primary);
+  --d-post-control-background--hover: var(--primary-low);
+  --d-post-control-create-text-color: var(--primary-high);
+  --d-post-control-create-icon-color: var(--primary-high);
+  --d-post-control-sibling-text-color--hover: var(--primary-medium);
+}
+
 nav.post-controls {
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--primary-low-mid);
+  color: var(--d-post-control-text-color);
 
   @include user-select(none);
 
@@ -333,22 +339,44 @@ nav.post-controls {
     .double-button {
       display: inline-flex;
       flex: 0 1 auto;
-      align-items: center;
+      align-items: stretch; // should always be the same height
       white-space: nowrap;
 
+      .discourse-no-touch & {
+        &:hover {
+          button {
+            background: var(--d-post-control-background--hover);
+            color: var(--d-post-control-sibling-text-color--hover);
+          }
+        }
+      }
+
       button {
-        // It looks really confusing when one half a double button has an inner shadow on click.
-        &:active {
-          box-shadow: none;
+        margin-inline: 0;
+
+        &:first-child {
+          border-radius: var(--d-post-control-border-radius) 0 0
+            var(--d-post-control-border-radius);
         }
 
-        &.my-likes,
-        &.read-indicator,
-        &.regular-likes {
-          // Like count on posts
-          .d-icon {
-            color: var(--primary-low-mid);
-            padding-left: 0.45em;
+        &:last-child {
+          border-radius: 0 var(--d-post-control-border-radius)
+            var(--d-post-control-border-radius) 0;
+        }
+
+        &:first-child:last-child {
+          border-radius: var(--d-post-control-border-radius);
+        }
+
+        &.like {
+          // Like button with 0 likes
+          &.d-hover,
+          &:hover {
+            background: var(--love-low);
+
+            .d-icon {
+              color: var(--love);
+            }
           }
         }
 
@@ -357,17 +385,21 @@ nav.post-controls {
           .d-icon {
             color: var(--love);
           }
-        }
 
-        &[disabled] {
-          // Disabled like button
-          cursor: not-allowed;
+          .discourse-no-touch & {
+            &.d-hover,
+            &:hover {
+              background: var(--primary-low);
+
+              .d-icon {
+                color: var(--primary-medium);
+              }
+            }
+          }
         }
 
         &.button-count {
           // Like count button
-          height: 100%; // sometimes the font might be shorter than the icon
-
           &:not(.my-likes) {
             padding-right: 0;
           }
@@ -375,19 +407,47 @@ nav.post-controls {
           + .toggle-like {
             // Like button when like count is present
             padding-left: 0.45em;
+
+            // Like button when like count is present
+            .discourse-no-touch & {
+              &.d-hover,
+              &:hover {
+                background: var(--primary-low);
+              }
+            }
           }
+
+          // Like count button
+          .discourse-no-touch & {
+            &.d-hover,
+            &:hover {
+              color: var(--primary);
+            }
+          }
+        }
+
+        &.my-likes,
+        &.read-indicator,
+        &.regular-likes {
+          // Like count on posts
+          .d-icon {
+            color: var(--d-post-control-icon-color);
+            padding-left: 0.45em;
+          }
+        }
+
+        &[disabled] {
+          // Disabled like button
+          cursor: not-allowed;
+          opacity: 1;
         }
       }
     }
 
     a,
     button {
-      color: var(--primary-low-mid-or-secondary-high);
-
-      .d-icon {
-        opacity: 1;
-      }
       display: inline-flex;
+      color: var(--d-post-control-text-color);
     }
 
     button {
@@ -397,6 +457,7 @@ nav.post-controls {
       vertical-align: top;
       background: transparent;
       border: none;
+      border-radius: var(--d-post-control-border-radius);
 
       .d-icon {
         // this avoids an issue where hovering off the icon
@@ -404,13 +465,28 @@ nav.post-controls {
         pointer-events: none;
       }
 
-      &.d-hover,
-      &:hover,
-      &:focus,
-      &:active {
-        outline: none;
-        background: var(--primary-low);
-        color: var(--primary);
+      .discourse-no-touch & {
+        &.d-hover,
+        &:hover,
+        &:focus-visible,
+        &:active {
+          outline: none;
+          background: var(--d-post-control-background--hover);
+          color: var(--d-post-control-text-color--hover);
+        }
+
+        // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
+        &.delete.d-hover,
+        &.delete:hover,
+        &.delete:active,
+        &.delete:focus {
+          background: var(--danger);
+          color: var(--secondary);
+
+          .d-icon {
+            color: var(--secondary);
+          }
+        }
       }
 
       &.hidden {
@@ -421,44 +497,33 @@ nav.post-controls {
         position: relative;
       }
 
-      // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
-      &.delete.d-hover,
-      &.delete:hover,
-      &.delete:active,
-      &.delete:focus {
-        background: var(--danger);
-        color: var(--secondary);
-
-        .d-icon {
-          color: var(--secondary);
-        }
-      }
-
       &.bookmarked .d-icon {
         color: var(--tertiary);
       }
 
       &.create {
         margin-right: 0;
-        color: var(--primary-high-or-secondary-low);
+        color: var(--d-post-control-create-text-color);
 
         .d-icon {
-          color: var(--primary-high-or-secondary-low);
+          color: var(--d-post-control-create-icon-color);
         }
       }
     }
   }
 
-  .show-replies {
+  .btn.show-replies {
     font-size: inherit;
     padding: 10px;
     color: var(--primary-medium);
 
-    &:hover,
-    &:focus {
-      outline: none;
-      color: var(--primary);
-      background: var(--primary-low);
+    .discourse-no-touch & {
+      &:hover,
+      &:focus-visible {
+        outline: none;
+        color: var(--d-post-control-text-color--hover);
+        background: var(--d-post-control-background--hover);
+      }
     }
 
     .d-icon {
@@ -613,6 +678,14 @@ aside.quote {
 }
 
 .quote-controls {
+  float: right;
+  display: flex;
+  align-items: center;
+
+  a {
+    margin-left: 0.3em;
+  }
+
   .quote-toggle {
     padding: 0;
   }
@@ -667,16 +740,6 @@ aside.quote {
 
 .topic-post.staged {
   opacity: 0.4;
-}
-
-.quote-controls {
-  float: right;
-  display: flex;
-  align-items: center;
-
-  a {
-    margin-left: 0.3em;
-  }
 }
 
 .quote-button {
@@ -1208,7 +1271,7 @@ a.mention-group {
   @include mention;
 
   .user-status-message {
-    user-select: none;
+    @include user-select(none);
   }
 }
 
@@ -1430,6 +1493,10 @@ span.mention {
     .d-icon {
       color: var(--primary-medium);
     }
+  }
+
+  .post-notice-message p {
+    display: inline;
   }
 
   p {

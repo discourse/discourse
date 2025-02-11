@@ -14,7 +14,7 @@ import TopicViews from "discourse/components/topic-map/topic-views";
 import TopicViewsChart from "discourse/components/topic-map/topic-views-chart";
 import avatar from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
@@ -313,7 +313,7 @@ export default class TopicMapSummary extends Component {
                         </span>
                         <span class="like-section__likes">
                           {{post.like_count}}
-                          {{dIcon "heart"}}</span>
+                          {{icon "heart"}}</span>
                         <p>
                           {{htmlSafe (emojiUnescape post.blurb)}}
                         </p>
@@ -428,7 +428,7 @@ export default class TopicMapSummary extends Component {
               @translatedTitle={{this.topRepliesTitle}}
               @translatedLabel={{this.topRepliesLabel}}
               @icon={{this.topRepliesIcon}}
-              class="top-replies"
+              class="btn-default top-replies"
             />
           </div>
         {{/if}}

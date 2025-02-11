@@ -2970,6 +2970,7 @@ hy:
           one: 'Դուք ընտրել եք <b>%{count}</b> հրապարակում:'
           other: "Դուք ընտրել եք <b>%{count}</b> գրառում:"
     post_list:
+      title: "Վերջին գրառումները"
       aria_post_number: "%{title} - գրառում #%{postNumber}"
     post:
       quote_reply: "Մեջբերել"
@@ -3074,7 +3075,6 @@ hy:
         delete_topic_disallowed: "Դուք թույլտվություն չունեք ջնջելու այս թեման"
         delete_topic_error: "Այս թեման ջնջելիս սխալ է տեղի ունեցել"
         delete_topic: "ջնջել թեման"
-        add_post_notice: "Ավելացնել Ծանուցում Անձնակազմի կողմից…"
         remove_timer: "հեռացնել ժամաչափիչը"
       actions:
         people:
@@ -3470,9 +3470,6 @@ hy:
       close: "Փակել (Esc)"
       content_load_error: '<a href="%url%"> Բովանդակությունը </a> հնարավոր չէ բեռնել:'
       image_load_error: '<a href="%url%"> Պատկերը </a> հնարավոր չէ բեռնել:'
-    experimental_lightbox:
-      buttons:
-        close: "Փակել (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -3504,7 +3501,6 @@ hy:
         title: "Հավելված"
         create: "%{shortcut} Ստեղծել նոր թեմա"
         notifications: "%{shortcut} Բացել ծանուցումները"
-        hamburger_menu: "%{shortcut} Բացել համբուրգեր մենյուն"
         user_profile_menu: "%{shortcut} Բացել օգտատիրոջ մենյուն"
         show_incoming_updated_topics: "%{shortcut} Ցուցադրել թարմացված թեմաները"
         search: "%{shortcut} Որոնել"
@@ -3779,6 +3775,8 @@ hy:
               content: "Խմբեր"
             users:
               content: "Օգտատերեր"
+            my_posts:
+              content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
             invite:
@@ -4858,6 +4856,9 @@ hy:
         approve_bulk_success: "Հաջողություն! Բոլոր ընտրված օգտատերերը հաստատված և ծանուցված են:"
         time_read: "Կարդալու Ժամանակը"
         post_edits_count: "Գրառման Խմբագրումներ"
+        exports:
+          download:
+            button: Արխիվի Հարցում
         anonymize: "Անվանազրկել Օգտատիրոջը"
         anonymize_yes: "Այո, անվանազրկել այս հաշիվը"
         anonymize_failed: "Հաշիվը անվանազրկելիս առաջացել է խնդիր:"

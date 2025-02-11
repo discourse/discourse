@@ -84,7 +84,7 @@
     }
 
     // unlinked, invalid mention
-    span.mention:not(--wide) {
+    span.mention:not(.--wide) {
       color: var(--primary-high);
     }
 
@@ -159,19 +159,16 @@
 }
 
 .no-touch .chat-message-container {
-  &:hover,
-  &.-active {
-    background: var(--d-hover);
-  }
-
   &:hover {
     .chat-message-reaction-list .chat-message-react-btn {
       visibility: visible;
     }
   }
 
-  &.-active,
-  &:hover {
+  &:hover,
+  &.-active {
+    background: var(--d-hover);
+
     &.-bookmarked {
       background: var(--highlight-medium);
     }

@@ -29,7 +29,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0.5rem 0.5rem 1.5rem; //offset for close button padding
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
     border-bottom: 1px solid var(--primary-low);
 
     .modal-close {
@@ -123,7 +123,7 @@
   }
 
   &__backdrop {
-    user-select: none;
+    @include user-select(none);
     position: fixed;
     top: 0;
     right: 0;
@@ -143,14 +143,14 @@
   }
 }
 
-//legacy
+// legacy
 .input-hint-text {
   margin-left: 0.5em;
   color: var(--secondary-high);
 }
 
 .modal-backdrop {
-  user-select: none;
+  @include user-select(none);
   position: fixed;
   top: 0;
   right: 0;
@@ -190,6 +190,42 @@
 }
 
 .modal {
+  &.has-tabs {
+    .modal-tabs {
+      display: inline-flex;
+      flex-wrap: wrap;
+      flex: 1 0 auto;
+      margin: 0;
+
+      .modal-tab {
+        list-style: none;
+        padding: 4px 8px;
+        margin-right: 4px;
+        cursor: pointer;
+
+        &.is-active {
+          color: var(--secondary);
+          background: var(--danger);
+
+          &.single-tab {
+            background: none;
+            color: var(--primary);
+            padding: 0;
+            font-size: var(--font-up-3);
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+
+  &:not(.has-tabs) {
+    .modal-tab {
+      position: absolute;
+      width: 95%;
+    }
+  }
+
   .nav {
     padding: 10px 30px 10px 15px;
     background-color: var(--secondary);
@@ -379,9 +415,7 @@
 .change-timestamp {
   width: 28em; // scales with user font-size
   max-width: 90vw; // prevents overflow due to extra large user font-size
-}
 
-.change-timestamp {
   #date-container {
     .pika-single {
       position: relative !important; // overriding another important
@@ -442,44 +476,6 @@
 .ignore-duration-with-username-modal {
   .future-date-input {
     margin-top: 1em;
-  }
-}
-
-.modal:not(.has-tabs) {
-  .modal-tab {
-    position: absolute;
-    width: 95%;
-  }
-}
-
-.modal {
-  &.has-tabs {
-    .modal-tabs {
-      display: inline-flex;
-      flex-wrap: wrap;
-      flex: 1 0 auto;
-      margin: 0;
-
-      .modal-tab {
-        list-style: none;
-        padding: 4px 8px;
-        margin-right: 4px;
-        cursor: pointer;
-
-        &.is-active {
-          color: var(--secondary);
-          background: var(--danger);
-
-          &.single-tab {
-            background: none;
-            color: var(--primary);
-            padding: 0;
-            font-size: var(--font-up-3);
-            font-weight: bold;
-          }
-        }
-      }
-    }
   }
 }
 

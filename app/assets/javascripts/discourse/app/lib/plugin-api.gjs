@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.0.0";
+export const PLUGIN_API_VERSION = "2.1.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -55,16 +55,14 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
-import {
-  PLUGIN_NAV_MODE_SIDEBAR,
-  PLUGIN_NAV_MODE_TOP,
-  registerAdminPluginConfigNav,
-} from "discourse/lib/admin-plugin-config-nav";
+import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
+import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -3254,28 +3252,15 @@ class PluginApi {
    *
    * * route
    * * label OR text
-   *
-   * And the mode must be one of "sidebar" or "top", which controls
-   * where in the admin plugin show UI the links will be displayed.
    */
-  addAdminPluginConfigurationNav(pluginId, mode, links) {
+  addAdminPluginConfigurationNav(pluginId, links) {
     if (!pluginId) {
       // eslint-disable-next-line no-console
       console.warn(consolePrefix(), "A pluginId must be provided!");
       return;
     }
 
-    const validModes = [PLUGIN_NAV_MODE_SIDEBAR, PLUGIN_NAV_MODE_TOP];
-    if (!validModes.includes(mode)) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        consolePrefix(),
-        `${mode} is an invalid mode for admin plugin config pages, only ${validModes} are usable.`
-      );
-      return;
-    }
-
-    registerAdminPluginConfigNav(pluginId, mode, links);
+    registerAdminPluginConfigNav(pluginId, links);
   }
 
   /**
@@ -3379,6 +3364,30 @@ class PluginApi {
     registeredTabs.push(tab);
   }
 
+  /**
+   * Registers a report mode and an associated component, which will be rendered
+   * by the AdminReport component. A mode is a different way of displaying the
+   * report data, core modes are things like "table" and "chart". For all core modes
+   * see Admin::Report::MODES.
+   *
+   * @param {String} mode - The identifier of the mode to register
+   * @param {Class} componentClass - The class of the component to render
+   */
+  registerReportModeComponent(mode, componentClass) {
+    registerReportModeComponent(mode, componentClass);
+  }
+
+  /**
+   * Registers an extension for the rich editor
+   *
+   * EXPERIMENTAL: This API will change without warning
+   *
+   * @param {RichEditorExtension} extension
+   */
+  registerRichEditorExtension(extension) {
+    registerRichEditorExtension(extension);
+  }
+
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
@@ -3456,7 +3465,14 @@ function getPluginApi(version) {
  * @param {object} [opts] - Optional additional options to pass to the callback function.
  * @returns {*} The result of the `callback` function, if executed
  */
-export function withPluginApi(version, apiCodeCallback, opts) {
+export function withPluginApi(...args) {
+  let version, apiCodeCallback, opts;
+  if (typeof args[0] === "function") {
+    [version, apiCodeCallback, opts] = ["0", ...args];
+  } else {
+    [version, apiCodeCallback, opts] = args;
+  }
+
   opts = opts || {};
 
   const api = getPluginApi(version);

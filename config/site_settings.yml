@@ -21,6 +21,12 @@
 #                               defined in the choices option. A type:list setting with the word 'colors' in
 #                               its name will make color values have a bold line of the corresponding color
 #
+# list_type: simple           - Allow multiple values to be selected for the list, and new values can be defined if
+#                               allow_any is true. This list displays like a list of items with add/remove buttons,
+#                               and the ability to reorder items.
+# list_type: compact          - Allow multiple values to be selected for the list, and new values can be defined if
+#                               allow_any is true. This list displays like the tag selector.
+#
 # type: enum                  - A single value, chosen from a set of valid values in the choices option.
 # type: json_schema           - The setting value is stored as JSON in the database. Used
 #                               in the format `json_schema: ClassName` where the class implements
@@ -143,21 +149,30 @@ basic:
   display_local_time_in_user_card:
     client: true
     default: false
+    area: "localization"
   allow_user_locale:
     client: true
     default: false
+    area: "localization"
   set_locale_from_accept_language_header:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
   set_locale_from_cookie:
     default: false
-    hidden: true
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
+  set_locale_from_param:
+    default: false
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
+    area: "localization"
   support_mixed_text_direction:
     client: true
     default: false
+    area: "localization"
   categories_topics:
     default: 20
     validator: "CategoriesTopicsValidator"
@@ -409,7 +424,7 @@ basic:
     default: ""
     hidden: true
   base_font:
-    default: "arial"
+    default: "inter"
     choices: "BaseFontSetting.values"
     refresh: true
     type: list
@@ -417,7 +432,7 @@ basic:
     area: "fonts"
     allow_any: false
   heading_font:
-    default: "arial"
+    default: "inter"
     choices: "BaseFontSetting.values"
     refresh: true
     type: list
@@ -473,6 +488,10 @@ basic:
     default: false
     hidden: true
     client: true
+  interface_color_selector:
+    client: true
+    enum: "InterfaceColorSelectorSetting"
+    default: "disabled"
 
 login:
   invite_only:
@@ -581,12 +600,14 @@ login:
     client: true
   auth_immediately:
     default: true
+    client: true
   auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
     client: true
   auth_overrides_username: false
   auth_overrides_name: false
+  auth_require_interaction: true
   enable_discourse_connect:
     client: true
     default: false
@@ -688,6 +709,7 @@ users:
     default: false
     client: true
     validator: "UnicodeUsernameValidator"
+    area: "localization"
   allowed_unicode_username_characters:
     validator: "UnicodeUsernameAllowlistValidator"
     default: ""
@@ -699,6 +721,7 @@ users:
       ko: '\p{Hangul}'
       zh_CN: '\p{Han}'
       zh_TW: '\p{Han}'
+    area: "localization"
   reserved_usernames:
     type: list
     list_type: compact
@@ -760,6 +783,10 @@ users:
   prioritize_username_in_ux:
     client: true
     default: true
+  prioritize_full_name_in_ux:
+    client: true
+    default: false
+    hidden: true
   email_token_valid_hours:
     default: 48
     min: 1
@@ -895,6 +922,9 @@ posting:
       ja: 8
       zh_CN: 8
       zh_TW: 8
+  prevent_uploads_only_posts:
+    client: true
+    default: false
   min_personal_message_post_length:
     client: true
     min: 1
@@ -1285,9 +1315,6 @@ posting:
     default: false
     client: true
   enable_fast_edit:
-    default: true
-    client: true
-  enable_quote_copy:
     default: true
     client: true
   old_post_notice_days:
@@ -2299,6 +2326,7 @@ onebox:
     default: ""
     type: enum
     enum: "OneboxLocaleSiteSetting"
+    area: "localization"
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
@@ -2370,7 +2398,17 @@ spam:
   auto_respond_to_flag_actions:
     default: true
     area: "flags"
-  min_first_post_typing_time: 3000
+  min_first_post_typing_time:
+    default: 3000
+    hidden: true
+  fast_typing_threshold:
+    type: enum
+    default: standard
+    choices:
+      - disabled
+      - low
+      - standard
+      - high
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level:
     default: 0
@@ -3508,10 +3546,6 @@ experimental:
       - auto
       - enabled
     default: auto
-  enable_experimental_lightbox:
-    default: false
-    client: true
-    hidden: true
   enable_rich_text_paste:
     client: true
     default: true
@@ -3523,3 +3557,10 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions"
+  use_overhauled_theme_color_palette:
+    default: false
+    hidden: true
+  rich_editor:
+    client: true
+    default: false
+    hidden: true

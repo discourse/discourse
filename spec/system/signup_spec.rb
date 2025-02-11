@@ -269,6 +269,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
       find("#new-account-password").fill_in(with: "supersecurepassword")
+      find("#new-account-username").fill_in(with: "johndoe")
       find(".username-input").has_css?("#username-validation.good")
       find(".create-account__password-tip-validation").has_css?("#password-validation.good")
       find(".invitation-cta__accept").click

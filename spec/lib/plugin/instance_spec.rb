@@ -33,7 +33,7 @@ TEXT
     end
 
     it "defaults to using the plugin name with the discourse- prefix removed" do
-      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+      expect(plugin_instance.humanized_name).to eq("Sample plugin")
     end
 
     it "uses the plugin setting category name if it exists" do
@@ -43,7 +43,7 @@ TEXT
 
     it "the plugin name the plugin site settings are still under the generic plugins: category" do
       plugin_instance.stubs(:setting_category).returns("plugins")
-      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+      expect(plugin_instance.humanized_name).to eq("Sample plugin")
     end
 
     it "removes any Discourse prefix from the setting category name" do
@@ -1101,6 +1101,82 @@ TEXT
       expect(Middleware::RequestTracker.rate_limiters_stack[2].superclass).to eq(
         RequestTracker::RateLimiters::Base,
       )
+    end
+  end
+
+  describe "#full_admin_route" do
+    context "when there is no admin route defined for the plugin" do
+      context "if the plugin has more than one setting" do
+        before do
+          plugin_instance.stubs(:plugin_settings).returns(
+            { enabled_setting: plugin_instance.name, other_setting: plugin_instance.name },
+          )
+        end
+
+        it "returns the default settings route" do
+          expect(plugin_instance.full_admin_route).to eq(
+            {
+              auto_generated: true,
+              full_location: "adminPlugins.show",
+              label: "discourse_sample_plugin.title",
+              location: "discourse-sample-plugin",
+              use_new_show_route: true,
+            },
+          )
+        end
+      end
+
+      context "if the plugin has only one setting (which is the enabled setting)" do
+        before do
+          plugin_instance.stubs(:plugin_settings).returns({ enabled_setting: plugin_instance.name })
+        end
+
+        it "returns nothing" do
+          expect(plugin_instance.full_admin_route).to be_nil
+        end
+      end
+
+      context "if the plugin is not configurable" do
+        before { plugin_instance.stubs(:configurable?).returns(false) }
+
+        it "returns nothing" do
+          expect(plugin_instance.full_admin_route).to be_nil
+        end
+      end
+    end
+
+    context "when there is an admin route defined for the plugin" do
+      context "when using the new show route" do
+        before { plugin_instance.add_admin_route("test", "testIndex", use_new_show_route: true) }
+
+        it "returns the correct details" do
+          expect(plugin_instance.full_admin_route).to eq(
+            {
+              auto_generated: false,
+              full_location: "adminPlugins.show",
+              label: "test",
+              location: "testIndex",
+              use_new_show_route: true,
+            },
+          )
+        end
+      end
+
+      context "when not using the new show route" do
+        before { plugin_instance.add_admin_route("test", "testIndex") }
+
+        it "returns the correct details" do
+          expect(plugin_instance.full_admin_route).to eq(
+            {
+              auto_generated: false,
+              full_location: "adminPlugins.testIndex",
+              label: "test",
+              location: "testIndex",
+              use_new_show_route: false,
+            },
+          )
+        end
+      end
     end
   end
 end

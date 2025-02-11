@@ -257,18 +257,17 @@ export default class AdminConfigAreasWebhookForm extends Component {
                   </field.Custom>
                 </form.Field>
 
-                <span>
-                  <PluginOutlet
-                    @name="web-hook-fields"
-                    @connectorTagName="div"
-                    @outletArgs={{hash model=this.webhook}}
-                  />
-                </span>
+                <PluginOutlet
+                  @name="web-hook-fields"
+                  @connectorTagName="div"
+                  @outletArgs={{hash model=this.webhook}}
+                />
 
                 <form.Field
                   @name="verify_certificate"
                   @title={{i18n "admin.web_hooks.verify_certificate"}}
                   @showTitle={{false}}
+                  @format="large"
                   as |field|
                 >
                   <field.Checkbox />
@@ -278,6 +277,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
                   @name="active"
                   @title={{i18n "admin.web_hooks.active"}}
                   @showTitle={{false}}
+                  @format="large"
                   as |field|
                 >
                   <field.Checkbox />

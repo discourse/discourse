@@ -56,32 +56,37 @@ class UserBadge < ActiveRecord::Base
 
   after_create do
     Badge.increment_counter "grant_count", self.badge_id
-    UserStat.update_distinct_badge_count self.user_id
-    UserBadge.update_featured_ranks! self.user_id
+    user_ids = [self.user_id]
+    UserStat.update_distinct_badge_count(user_ids)
+    UserBadge.update_featured_ranks!(user_ids)
     self.trigger_user_badge_granted_event
   end
 
   after_destroy do
     Badge.decrement_counter "grant_count", self.badge_id
-    UserStat.update_distinct_badge_count self.user_id
-    UserBadge.update_featured_ranks! self.user_id
+    user_ids = [self.user_id]
+    UserStat.update_distinct_badge_count(user_ids)
+    UserBadge.update_featured_ranks!(user_ids)
 
     DiscourseEvent.trigger(:user_badge_removed, self.badge_id, self.user_id)
     DiscourseEvent.trigger(:user_badge_revoked, user_badge: self)
   end
 
-  def self.ensure_consistency!
-    self.update_featured_ranks!
+  def self.ensure_consistency!(user_ids = [])
+    self.update_featured_ranks!(user_ids)
   end
 
-  def self.update_featured_ranks!(user_id = nil)
+  def self.update_featured_ranks!(user_ids = [])
+    user_ids = user_ids.join(", ")
+    has_user_ids = !user_ids.empty?
+
     query = <<~SQL
       WITH featured_tl_badge AS -- Find the best trust level badge for each user
       (
         SELECT user_id, max(badge_id) as badge_id
         FROM user_badges
         WHERE badge_id IN (1,2,3,4)
-        #{"AND user_id = #{user_id.to_i}" if user_id}
+        #{"AND user_id IN (#{user_ids})" if has_user_ids}
         GROUP BY user_id
       ),
       ranks AS ( -- Take all user badges, group by user_id and badge_id, and calculate a rank for each one
@@ -101,7 +106,7 @@ class UserBadge < ActiveRecord::Base
         FROM user_badges
         INNER JOIN badges ON badges.id = user_badges.badge_id
         LEFT JOIN featured_tl_badge ON featured_tl_badge.user_id = user_badges.user_id AND featured_tl_badge.badge_id = user_badges.badge_id
-        #{"WHERE user_badges.user_id = #{user_id.to_i}" if user_id}
+        #{"WHERE user_badges.user_id IN (#{user_ids})" if has_user_ids}
         GROUP BY user_badges.user_id, user_badges.badge_id
       )
       -- Now use that data to update the featured_rank column

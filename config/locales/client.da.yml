@@ -2835,6 +2835,7 @@ da:
           other: "Du har valgt <b>%{count}</b> indlæg."
       deleted_by_author_simple: "(emne slettet af forfatteren)"
     post_list:
+      title: "Seneste indlæg"
       aria_post_number: "%{title} - indlæg #%{postNumber}"
     post:
       confirm_delete: "Er du sikker på, at du vil slette dette indlæg?"
@@ -2961,7 +2962,6 @@ da:
         delete_topic_confirm_modal_no: "Nej, behold dette emne"
         delete_topic_error: "Der opstod en fejl under sletning af dette emne"
         delete_topic: "slet emne"
-        delete_post_notice: "Slet Personale Meddelelse"
         remove_timer: "fjern timer"
         edit_timer: "rediger timer"
       actions:
@@ -3406,12 +3406,6 @@ da:
       close: "Luk (Esc)"
       content_load_error: '<a href="%url%">Indholdet</a> kunne ikke indlæses.'
       image_load_error: '<a href="%url%">Billedet</a> kunne ikke indlæses.'
-    experimental_lightbox:
-      buttons:
-        close: "Luk (Esc)"
-        download: "Hent billede"
-        newtab: "Åbn billede i en ny fane"
-        rotate: "Roter billede (R-tast)"
     cannot_render_video: Denne video kan ikke afspilles, fordi din browser ikke understøtter codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3447,7 +3441,6 @@ da:
         title: "Applikation"
         create: "%{shortcut} Opret nyt emne"
         notifications: "%{shortcut} Åben notifikationer"
-        hamburger_menu: "%{shortcut} Åben hamburger menu"
         user_profile_menu: "%{shortcut} Åben bruger menu"
         show_incoming_updated_topics: "%{shortcut} Vis opdaterede emner"
         search: "%{shortcut} Søg"
@@ -3779,9 +3772,10 @@ da:
               content: "Grupper"
             users:
               content: "Brugere"
-            my_drafts:
-              content: "Mine Kladder"
-              title: "Mine uopslåede kladder"
+            my_posts:
+              content: "Mine indlæg"
+              content_drafts: "Mine Kladder"
+              title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
             invite:
@@ -5050,6 +5044,9 @@ da:
         approve_bulk_success: "Succes! Alle valgte brugere er blevet godkendt og underrettet."
         time_read: "Læsetid"
         post_edits_count: "Indlægs Redigeringer"
+        exports:
+          download:
+            button: Anmod om arkiv
         anonymize: "Anonymiser Bruger"
         anonymize_yes: "Ja, anonymiser denne konto"
         anonymize_failed: "Der var problemer med at anonymisere denne konto."

@@ -33,7 +33,7 @@ export default class DashboardPeriodSelector extends Component {
         @icon="gear"
         @action={{this.openCustomDateRangeModal}}
         @title="admin.dashboard.custom_date_range"
-        class="custom-date-range-button"
+        class="btn-default custom-date-range-button"
       />
     </div>
   </template>

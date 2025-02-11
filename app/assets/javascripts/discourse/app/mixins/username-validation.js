@@ -103,7 +103,7 @@ export default Mixin.create({
     }
 
     this.set("checkedUsername", this.accountUsername);
-    this.set("isDeveloper", !!result.is_developer);
+    this.isDeveloper = !!result.is_developer;
 
     if (result.available) {
       this.set(

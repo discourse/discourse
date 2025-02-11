@@ -2884,9 +2884,6 @@ sl:
           few: "Ta tema ima trenutno več kot %{count} oglede in je morda priljubljena tarča iskanja. Ali ste prepričani, da želite to temo v celoti izbrisati, namesto da bi jo z urejanjem poskusili izboljšati?"
           other: "Ta tema ima trenutno več kot %{count} ogledov in je morda priljubljena tarča iskanja. Ali ste prepričani, da želite to temo v celoti izbrisati, namesto da bi jo z urejanjem poskusili izboljšati?"
         delete_topic: "izbriši temo"
-        add_post_notice: "Dodaj obvestilo osebja…"
-        change_post_notice: "Spremeni obvestilo osebja…"
-        delete_post_notice: "Odstrani obvestilo osebja"
         remove_timer: "odstrani opomnik"
         edit_timer: "uredi časovnik"
       actions:
@@ -3312,9 +3309,6 @@ sl:
       close: "Zapri (Esc)"
       content_load_error: '<a href="%url%">Te vsebina</a> ne moremo naložiti.'
       image_load_error: '<a href="%url%">Te slike</a> ne moremo naložiti.'
-    experimental_lightbox:
-      buttons:
-        close: "Zapri (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3348,7 +3342,6 @@ sl:
         title: "Aplikacija"
         create: "%{shortcut} Ustvari novo temo"
         notifications: "%{shortcut} Odpri obvestila"
-        hamburger_menu: "%{shortcut} Odpri meni"
         user_profile_menu: "%{shortcut} Odpri uporabniški meni"
         show_incoming_updated_topics: "%{shortcut} Prikaži osvežene teme"
         search: "%{shortcut} Iskalnik"
@@ -3642,6 +3635,8 @@ sl:
               content: "Skupine"
             users:
               content: "Uporabniki"
+            my_posts:
+              content: "Moji prispevki"
             review:
               content: "Pregled"
             invite:

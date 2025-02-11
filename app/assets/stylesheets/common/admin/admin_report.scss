@@ -80,7 +80,6 @@
   .body {
     display: flex;
     flex-direction: row;
-    margin-top: var(--space-3);
   }
 
   .main {
@@ -185,6 +184,10 @@
         width: 100%;
       }
     }
+  }
+
+  .d-page-subheader__title a {
+    color: var(--primary);
   }
 }
 

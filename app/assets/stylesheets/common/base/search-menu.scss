@@ -24,8 +24,8 @@ $search-pad-horizontal: 0.5em;
     position: relative;
     display: flex;
     align-items: center;
-    background: var(--secondary);
-    border: 1px solid var(--primary-400);
+    background: var(--d-input-bg-color);
+    border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
     margin: 1px;
     padding: 0.25rem;
@@ -36,7 +36,6 @@ $search-pad-horizontal: 0.5em;
       margin-bottom: 0;
       width: auto;
       flex-grow: 1;
-      padding-right: 50px;
 
       &:focus {
         outline: none;
@@ -196,19 +195,16 @@ $search-pad-horizontal: 0.5em;
         align-items: center;
         background: var(--primary-200);
         color: var(--primary-medium);
-
-        .d-icon {
-          font-size: var(--font-down-2);
-          color: currentcolor;
-        }
-      }
-
-      .avatar-flair {
         border-radius: 50%;
 
         &.avatar-flair-image {
           background-repeat: no-repeat;
           background-size: 100% 100%;
+        }
+
+        .d-icon {
+          font-size: var(--font-down-2);
+          color: currentcolor;
         }
       }
 
@@ -378,6 +374,9 @@ $search-pad-horizontal: 0.5em;
   }
 
   .searching {
+    display: flex;
+    align-items: center;
+
     .spinner {
       width: 12px;
       height: 12px;

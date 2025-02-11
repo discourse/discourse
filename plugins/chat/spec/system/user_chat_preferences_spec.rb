@@ -62,6 +62,15 @@ RSpec.describe "User chat preferences", type: :system do
     expect(select_kit).to have_selected_value("fullscreen")
   end
 
+  it "can select send shorcut sidebar mode" do
+    visit("/my/preferences")
+    find(".user-nav__preferences-chat", visible: :all).click
+    find("#chat_send_shortcut_meta_enter").click
+    find(".save-changes").click
+
+    expect(page).to have_checked_field("chat_send_shortcut_meta_enter")
+  end
+
   context "as an admin on another user's preferences" do
     fab!(:current_user) { Fabricate(:admin) }
     fab!(:user_1) { Fabricate(:user) }

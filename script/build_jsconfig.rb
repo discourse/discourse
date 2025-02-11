@@ -31,6 +31,7 @@ def write_config(package_dir, extras: {})
       "module" => "esnext",
       "moduleResolution" => "bundler",
       "experimentalDecorators" => true,
+      "allowJs" => true,
       "paths" => {
         **namespaces
           .map { |ns, paths| [ns, paths.map { |p| "#{relative(package_dir, p)}/*" }] }
@@ -41,6 +42,7 @@ def write_config(package_dir, extras: {})
     "exclude" => [
       "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js", # Native class decorators - unsupported by ts/glint
       "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs", # hbs`` tagged templates - https://github.com/typed-ember/glint/issues/705
+      "**/*.hbs",
     ],
     "glint" => {
       "environment" => %w[ember-loose ember-template-imports],

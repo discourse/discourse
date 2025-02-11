@@ -66,6 +66,7 @@ export default class UserNotificationsDropdown extends DropdownSelectBox {
       model: {
         ignoredUsername: this.user.username,
         enableSelection: false,
+        onUserIgnored: (username) => this.onUserIgnored?.(username),
       },
     });
   }

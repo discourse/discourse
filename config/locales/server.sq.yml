@@ -41,12 +41,14 @@ sq:
   posts: "postime"
   views: "shikime"
   loading: "Loading"
+  powered_by_html: 'Mundësuar nga <a href="https://www.discourse.org">Discourse</a>, shikohet më së miri me JavaScript të aktivizuar'
   sign_up: "Regjistrohu"
   log_in: "Identifikohu"
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Fshirë nga autori"
+  redirect_warning: "Ne nuk ishim në gjendje të verifikonim që linku që zgjodhët ishte postuar në të vërtetë në forum. Nëse dëshironi të vazhdoni gjithsesi, zgjidhni linkun më poshtë."
   topic_category_changed: "Nga %{from} në %{to}"
   topic_tag_changed:
     added_and_removed: "U shtua %{added} dhe u hoq %{removed}"
@@ -55,11 +57,22 @@ sq:
   components:
     enabled_filter: "Aktivizuar"
   themes:
+    bad_color_scheme: "Tema nuk mund të përditësohet, paleta e pavlefshme e ngjyrave"
+    other_error: "Ndodhi një gabim me përditësimin e temës"
+    ember_selector_error: "Ndodhi një gabim – përdorimi i përzgjedhësve CSS #ember ose .ember-view nuk lejohet, sepse këta emra gjenerohen në mënyrë të shpejtë në kohën e zbatimti dhe do të ndryshojnë me kalimin e kohës, duke rezultuar në CSS të anulluar. Provoni një përzgjedhës tjetër."
+    import_error:
+      generic: Ndodhi një gabim gjatë përcjelljes të kësaj teme
+      upload: "Gabim në ngarkim e sipër: %{name}. %{errors}"
+      screenshot_invalid_size: "Kopjet e temës duhet të jenë më pak se %{max_size}. Kopja %{file_name} është shumë e madhe."
+      screenshot_invalid_dimensions: "Kopjet e temës duhet të jenë maksimale %{max_width}x%{max_height}. Kopja %{file_name} e tejkalon këtë. Dimensionet janë %{width}x%{height}."
+      about_json: "Gabim transferimi: about.json nuk ekziston, ose është i pavlefshëm. Jeni i sigurt se kjo është një temë diskutimi?"
+      unpack_failed: "Hapja e dosjes dështoi"
     settings_errors:
       number_value_not_valid_min_max: "Value must be between %{min} and %{max}."
       objects:
         required: "must be present"
         not_valid_integer_value: "must be an integer"
+        humanize_not_valid_categories_value: "Veçoria në JSON Pointer '%{property_json_pointer}' duhet të jetë një grup id i kategorive të vlefshme."
   emails:
     incoming:
       default_subject: "Duhet të shkruani titullin"

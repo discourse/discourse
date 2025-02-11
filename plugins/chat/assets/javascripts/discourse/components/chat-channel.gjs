@@ -322,7 +322,7 @@ export default class ChatChannel extends Component {
   processMessages(channel, result) {
     const messages = [];
     let foundFirstNew = false;
-    const hasNewest = this.messagesManager.messages.some((m) => m.newest);
+    channel.newestMessage = null;
 
     result?.messages?.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
@@ -342,19 +342,22 @@ export default class ChatChannel extends Component {
         messageData.expanded = !(messageData.hidden || messageData.deleted_at);
       }
 
+      const message = ChatMessage.create(channel, messageData);
+      message.manager = channel.messagesManager;
+
       // newest has to be in after fetch callback as we don't want to make it
       // dynamic or it will make the pane jump around, it will disappear on reload
       if (
-        !hasNewest &&
         !foundFirstNew &&
         messageData.id > this.currentUserMembership?.lastReadMessageId
       ) {
         foundFirstNew = true;
-        messageData.newest = true;
+        if (message !== channel.lastMessage) {
+          channel.newestMessage = message;
+        } else {
+          channel.newestMessage = null;
+        }
       }
-
-      const message = ChatMessage.create(channel, messageData);
-      message.manager = channel.messagesManager;
 
       if (message.thread) {
         this.#preloadThreadTrackingState(
@@ -429,6 +432,10 @@ export default class ChatChannel extends Component {
     if (lastReadId >= firstMessage.id) {
       return;
     }
+
+    // optimistic update
+    this.args.channel.currentUserMembership.lastReadMessageId = firstMessage.id;
+    this.args.channel.updateLastViewedAt();
 
     return this.chatApi.markChannelAsRead(
       this.args.channel.id,
@@ -651,7 +658,11 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    if (!target || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) {
+    if (
+      !target ||
+      /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) ||
+      target.closest('[contenteditable="true"]')
+    ) {
       return;
     }
 

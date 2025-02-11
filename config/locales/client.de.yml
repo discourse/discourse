@@ -3500,6 +3500,7 @@ de:
           other: "Du hast <b>%{count}</b> Beiträge ausgewählt."
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
     post_list:
+      title: "Letzte Beiträge"
       empty: "Es gibt keine Beiträge"
       aria_post_number: "%{title} – Beitrag #%{postNumber}"
     post:
@@ -3546,6 +3547,7 @@ de:
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
         returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
+        custom_created_by: "(hinzugefügt von %{userLinkHTML})"
       unread: "Beitrag ist ungelesen"
       has_replies:
         one: "%{count} Antwort"
@@ -3662,9 +3664,9 @@ de:
         delete_topic_confirm_modal_no: "Nein, dieses Thema behalten"
         delete_topic_error: "Beim Löschen dieses Themas ist ein Fehler aufgetreten"
         delete_topic: "Thema löschen"
-        add_post_notice: "Team-Notiz hinzufügen …"
-        change_post_notice: "Team-Notiz ändern …"
-        delete_post_notice: "Team-Notiz löschen"
+        add_post_notice: "Offizielle Mitteilung hinzufügen …"
+        change_post_notice: "Offizielle Mitteilung ändern …"
+        delete_post_notice: "Offizielle Mitteilung löschen"
         remove_timer: "Zeitschaltuhr deaktivieren"
         edit_timer: "Zeitschaltuhr bearbeiten"
       actions:
@@ -4180,20 +4182,6 @@ de:
       close: "Schließen (Esc)"
       content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
       image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden.'
-    experimental_lightbox:
-      image_load_error: "Das Bild konnte nicht geladen werden."
-      screen_reader_image_title: "Bild %{current} von %{total}: %{title}"
-      buttons:
-        next: "Weiter (Pfeiltaste rechts oder unten)"
-        previous: "Zurück (Pfeiltaste links oder oben)"
-        close: "Schließen (Esc)"
-        download: "Bild herunterladen"
-        newtab: "Bild in einer neuen Registerkarte öffnen"
-        zoom: "Bild vergrößern/verkleinern (Taste Z)"
-        rotate: "Bild drehen (Taste R)"
-        fullscreen: "Umschalten des Browser-Vollbildmodus (Taste M)"
-        carousel: "Alle Bilder in einem Karussell anzeigen (Taste A)"
-        retry: "Versuche, das Bild erneut zu laden"
     cannot_render_video: Dieses Video kann nicht gerendert werden, da dein Browser den Codec nicht unterstützt.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4230,7 +4218,7 @@ de:
         title: "Anwendung"
         create: "%{shortcut} Neues Thema erstellen"
         notifications: "%{shortcut} Benachrichtigungen öffnen"
-        hamburger_menu: "%{shortcut} „Hamburger“-Menü öffnen"
+        hamburger_menu: "%{shortcut} Navigationsmenü öffnen"
         user_profile_menu: "%{shortcut} Benutzermenü öffnen"
         show_incoming_updated_topics: "%{shortcut} Aktualisierte Themen anzeigen"
         search: "%{shortcut} Suche"
@@ -4656,9 +4644,11 @@ de:
             users:
               content: "Benutzer"
               title: "Liste aller Benutzer"
-            my_drafts:
-              content: "Meine Entwürfe"
-              title: "Meine nicht geposteten Entwürfe"
+            my_posts:
+              content: "Meine Beiträge"
+              content_drafts: "Meine Entwürfe"
+              title: "Meine aktuelle Themenaktivität"
+              title_drafts: "Meine nicht geposteten Entwürfe"
               draft_count:
                 one: "%{count} Entwurf"
                 other: "%{count} Entwürfe"
@@ -4800,7 +4790,7 @@ de:
         title: "Verfügbare Berichte"
         meta_doc: "Berichte sind ein leistungsfähiges Instrument, das dir hilft zu verstehen, was auf deiner Website passiert. Sie können dir helfen, Trends zu erkennen, Probleme aufzudecken und Entscheidungen auf der Grundlage von Daten zu treffen."
         sidebar_title: "Berichte"
-        back: "Zurück zu allen Berichten"
+        back: "Zurück zu alle Berichte"
         sidebar_link:
           all: "Alle Berichte"
       config:
@@ -4819,8 +4809,11 @@ de:
         legal:
           title: "Rechtliches"
           header_description: "Konfiguriere rechtliche Einstellungen, z. B. Nutzungsbedingungen, die Datenschutzerklärung, Kontaktinformationen und EU-spezifische Überlegungen"
+        localization:
+          title: "Lokalisierung"
+          header_description: "Konfiguriere die Sprache der Benutzeroberfläche deiner Community und andere Lokalisierungsoptionen für deine Mitglieder"
         login_and_authentication:
-          title: "Anmeldung u. Auth."
+          title: "Anmeldung und Authentifizierung"
           header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
         logo:
           title: "Website-Logo"
@@ -5349,6 +5342,9 @@ de:
           group_permissions: "Gruppenberechtigungen"
           users: "Benutzer"
           groups: "Gruppen"
+          localization:
+            title: "Lokalisierung"
+            keywords: "Gebietsschema|Sprache|Zeitzone|unicode|ltr"
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
@@ -5787,8 +5783,8 @@ de:
           install_upload: "Von deinem Gerät"
           install_git_repo: "Aus einem Git-Repository"
           install_create: "Neu erstellen"
-          installing_message: "Dein neues Theme einrichten…"
-          installing_message_long_time: "Die Einrichtung deines neuen Themes dauert etwas länger als erwartet, bitte warte…"
+          installing_message: "Dein neues Theme wird eingerichtet …"
+          installing_message_long_time: "Die Einrichtung deines neuen Themes dauert etwas länger als erwartet, bitte hab etwas Geduld …"
           duplicate_remote_theme: "Die Theme-Komponente „%{name}“ ist bereits installiert. Möchtest du wirklich eine weitere Kopie installieren?"
           force_install: "Das Theme kann nicht installiert werden, weil auf das Git-Repository nicht zugegriffen werden kann. Bist du sicher, dass du die Installation fortsetzen willst?"
           create_placeholder: "Platzhalter erstellen"
@@ -5976,7 +5972,7 @@ de:
         settings: "Einstellungen"
         templates: "Vorlagen"
         templates_title: "E-Mail-Vorlagen"
-        preview_digest: "Vorschau der Zusammenfassung"
+        preview_digest: "Vorschau der Zusammenfassung anzeigen"
         advanced_test:
           title: "Erweiterter Test"
           desc: "Erfahre, wie Discourse erhaltene E-Mails verarbeitet. Um eine E-Mail korrekt zu verarbeiten, kopiere unten bitte die ganze ursprüngliche E-Mail-Nachricht hinein:"
@@ -5997,7 +5993,7 @@ de:
         user: "Benutzer"
         email_type: "E-Mail-Typ"
         details_title: "E-Mail-Details anzeigen"
-        to_address: "Empfänger"
+        to_address: "An Adresse"
         test_email_address: "E-Mail-Adresse für Test"
         send_test: "Test-E-Mail senden"
         sent_test: "Gesendet!"
@@ -6015,7 +6011,7 @@ de:
         no_result: "Für diese Zusammenfassung wurden keine Ergebnisse gefunden."
         reply_key: "Antwort-Schlüssel"
         post_link_with_smtp: "Beitrag und SMTP-Details"
-        skipped_reason: "Grund des Überspringens"
+        skipped_reason: "Grund überspringen"
         incoming_emails:
           from_address: "Von"
           to_addresses: "An"
@@ -6060,7 +6056,7 @@ de:
           post_approved: "Beitrag genehmigt"
       logs:
         title: "Protokolle und Screening"
-        description: "Mithilfe von Protokollen und Screenings kannst du deine Community überwachen, verwalten und sicherstellen, dass sie sicher und respektvoll bleibt. Du kannst Protokolle aller von Mitarbeitern ergriffenen Maßnahmen, Suchprotokolle und die Konfiguration der Benutzerüberprüfung einsehen."
+        description: "Mithilfe von Protokollen und Screenings kannst du deine Community überwachen, verwalten und sicherstellen, dass sie sicher und respektvoll bleibt. Du kannst Protokolle aller von Team-Mitgliedern ergriffenen Maßnahmen, Suchprotokolle und die Konfiguration des Benutzer-Screenings einsehen."
         nav_title: "Protokolle"
         action: "Aktion"
         created_at: "Erstellt"
@@ -6560,6 +6556,19 @@ de:
         approve_bulk_success: "Erfolgreich! Alle ausgewählten Benutzer wurden genehmigt und benachrichtigt."
         time_read: "Lesezeit"
         post_edits_count: "Beitragsbearbeitungen"
+        exports:
+          title: Benutzerexporte
+          download:
+            description: Letzten Export herunterladen
+            expires_in:
+              one: Läuft in %{count} Stunde ab
+              other: Läuft in %{count} Stunden ab
+            not_available: Kein Export verfügbar
+            button: Archiv anfordern
+            confirm: Möchtest du wirklich ein Archiv der Aktivitäten und Einstellungen dieses Benutzers erstellen?
+            started: Wir haben mit dem Sammeln für das Archiv begonnen. Der Download-Link wird aktualisiert, sobald der Prozess abgeschlossen ist.
+            success: Das Archiv steht zum Download bereit.
+            export_failed: Es tut uns leid, aber der Export ist fehlgeschlagen. Bitte überprüfe die Protokolle für weitere Informationen.
         anonymize: "Benutzer anonymisieren"
         anonymize_confirm: "Bist du sicher, dass du dieses Konto anonymisieren willst? Dadurch werden der Benutzername und die E-Mail-Adresse geändert und alle Profilinformationen zurückgesetzt."
         delete_associated_accounts_confirm: "Bist du sicher, dass du alle verknüpften Konten von diesem Konto löschen willst? Der Benutzer kann sich möglicherweise nicht mehr anmelden, wenn sich seine E-Mail-Adresse geändert hat."
@@ -6800,7 +6809,7 @@ de:
         not_found: "Einstellungen konnten nicht gefunden werden"
       site_settings:
         title: "Website-Einstellungen"
-        description: "Konfiguriere die Einstellungen für deine Discourse-Website, um ihr Aussehen, ihre Funktionalität und ihre Benutzerfreundlichkeit anzupassen."
+        description: "Konfiguriere die Einstellungen für deine Discourse-Website, um ihr Aussehen, ihre Funktionalität und ihre Benutzererfahrung anzupassen."
         emoji_list:
           invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
           add_emoji_button:
@@ -6810,6 +6819,9 @@ de:
         more_site_setting_results:
           one: "Es gibt mehr als %{count} Ergebnis. Bitte verfeinere deine Suche oder wähle eine Kategorie."
           other: "Es gibt mehr als %{count} Ergebnisse. Bitte verfeinere deine Suche oder wähle eine Kategorie."
+        more_site_setting_results_no_category_sidebar:
+          one: "Es gibt mehr als %{count} Ergebnis. Bitte grenze deine Suche weiter ein."
+          other: "Es gibt mehr als %{count} Ergebnisse. Bitte grenze deine Suche weiter ein."
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
         add_host: "Host hinzufügen"
@@ -7122,9 +7134,9 @@ de:
       homepage_choices:
         custom:
           label: "Benutzerdefiniert"
-          description: "Zeige eine %{type}-orientierte Homepage, auf der die Benutzer auf %{landingPage}landen."
+          description: "Zeige eine %{type}-orientierte Homepage. Die Benutzer landen auf %{landingPage}."
         style_type:
-          categories: "kategorie"
+          categories: "Kategorie"
           topics: "Thema"
       top_menu_items:
         new: "Neu"

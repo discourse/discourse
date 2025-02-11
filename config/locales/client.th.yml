@@ -2276,9 +2276,6 @@ th:
     lightbox:
       download: "ดาวน์โหลด"
       close: "ปิด (Esc)"
-    experimental_lightbox:
-      buttons:
-        close: "ปิด (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -2495,7 +2492,8 @@ th:
               content: "กลุ่ม"
             users:
               content: "ผู้ใช้"
-            my_drafts:
+            my_posts:
+              content: "โพสต์ของฉัน"
               draft_count:
                 other: "%{count}แบบร่าง"
             review:

@@ -159,6 +159,8 @@ class Promotion
     promotion.review_tl1 if granted_trust_level < TrustLevel[2]
     promotion.review_tl2 if granted_trust_level < TrustLevel[3]
 
+    Group.user_trust_level_change!(user.id, user.trust_level)
+
     if user.trust_level == TrustLevel[3] && Promotion.tl3_lost?(user)
       user.change_trust_level!(TrustLevel[2], log_action_for: performed_by || Discourse.system_user)
     end

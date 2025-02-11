@@ -4,10 +4,10 @@ import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
+import { smallUserAttrs } from "discourse/components/small-user-list";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import discourseLater from "discourse/lib/later";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
-import { smallUserAttrs } from "discourse/lib/user-list-attrs";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
@@ -166,9 +166,7 @@ registerButton(
       return likeCount(attrs);
     }
 
-    const className = attrs.liked
-      ? "toggle-like has-like fade-out"
-      : "toggle-like like";
+    const className = attrs.liked ? "toggle-like has-like" : "toggle-like like";
 
     const button = {
       action: "like",

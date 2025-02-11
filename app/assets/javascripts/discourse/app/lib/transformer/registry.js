@@ -7,8 +7,10 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "category-available-views",
   "category-description-text",
   "category-display-name",
+  "composer-service-cannot-submit-post",
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",
@@ -31,4 +33,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-class",
   "topic-list-item-expand-pinned",
   "topic-list-item-mobile-layout",
+  "topic-list-item-style",
 ]);

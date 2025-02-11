@@ -3195,6 +3195,7 @@ te:
           other: "మీరు <b>%{count}</b> పోస్ట్‌లను ఎంచుకున్నారు."
       deleted_by_author_simple: "(రచయిత తొలగించిన విషయం)"
     post_list:
+      title: "తాజా పోస్ట్‌లు"
       aria_post_number: "%{title} - పోస్ట్ #%{postNumber}"
     post:
       confirm_delete: "మీరు ఖచ్చితంగా ఈ పోస్ట్‌ను తొలగించాలనుకుంటున్నారా?"
@@ -3346,9 +3347,6 @@ te:
         delete_topic_confirm_modal_no: "లేదు, ఈ విషయాన్ని ఉంచండి"
         delete_topic_error: "ఈ విషయాన్ని తొలగిస్తున్నప్పుడు లోపం సంభవించింది"
         delete_topic: "విషయాన్ని తొలగించండి"
-        add_post_notice: "స్టాఫ్ నోటీసు ని జోడించండి…"
-        change_post_notice: "స్టాఫ్ నోటీసుని మార్చండి…"
-        delete_post_notice: "సిబ్బంది నోటీసును తొలగించండి"
         remove_timer: "టైమర్‌ని తీసివేయండి"
         edit_timer: "టైమర్‌ని సవరించండి"
       actions:
@@ -3830,20 +3828,6 @@ te:
       close: "మూసివేయండి (Esc)"
       content_load_error: '<a href="%url%">కంటెంట్</a> లోడ్ చేయబడలేదు.'
       image_load_error: '<a href="%url%">చిత్రం</a> లోడ్ చేయబడలేదు.'
-    experimental_lightbox:
-      image_load_error: "చిత్రాన్ని లోడ్ చేయడం సాధ్యపడలేదు."
-      screen_reader_image_title: "%{total} లో చిత్రం #%{current}: %{title}"
-      buttons:
-        next: "తదుపరి (రైట్ / డౌన్ అర్రౌ కీ)"
-        previous: "మునుపటి (లెఫ్ట్ / అప్ అర్రౌ కీ)"
-        close: "మూసివేయండి (Esc)"
-        download: "చిత్రాన్ని డౌన్‌లోడ్ చేయండి"
-        newtab: "కొత్త ట్యాబ్‌లో చిత్రాన్ని తెరవండి"
-        zoom: "చిత్రాన్ని జూమ్ ఇన్/అవుట్ (Z కీ)"
-        rotate: "చిత్రాన్ని తిప్పండి (R కీ)"
-        fullscreen: "బ్రౌజర్ పూర్తి స్క్రీన్ మోడ్‌ను టోగుల్ చేయండి (M కీ)"
-        carousel: "అన్ని చిత్రాలను రంగులరాట్నంలో ప్రదర్శించు (A కీ)"
-        retry: "చిత్రాన్ని లోడ్ చేయడానికి మళ్లీ ప్రయత్నించండి"
     cannot_render_video: మీ బ్రౌజర్ కోడెక్‌కు మద్దతు ఇవ్వనందున ఈ వీడియో రెండర్ చేయబడదు.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3879,7 +3863,6 @@ te:
         title: "అనువర్తనం"
         create: "%{shortcut} కొత్త విషయాన్ని సృష్టించండి"
         notifications: "%{shortcut} చదవని నోటిఫికేషన్‌లు"
-        hamburger_menu: "%{shortcut} హాంబర్గర్ మెనుని తెరవండి"
         user_profile_menu: "%{shortcut} సభ్యుడు మెనుని తెరవండి"
         show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"
         search: "%{shortcut} శోధన"
@@ -4278,9 +4261,11 @@ te:
             users:
               content: "సభ్యులు"
               title: "సభ్యులందరి జాబితా"
-            my_drafts:
-              content: "నా చిత్తుప్రతులు"
-              title: "నా పోస్ట్ చేయని చిత్తుప్రతులు"
+            my_posts:
+              content: "నా పోస్ట్‌లు"
+              content_drafts: "నా చిత్తుప్రతులు"
+              title: "నా ఇటీవలి విషయం కార్యాచరణ"
+              title_drafts: "నా పోస్ట్ చేయని చిత్తుప్రతులు"
               draft_count:
                 one: "%{count} డ్రాఫ్ట్"
                 other: "%{count} డ్రాఫ్ట్లు"
@@ -5828,6 +5813,9 @@ te:
         approve_bulk_success: "విజయవంతం! ఎంచుకున్న వినియోగదారులందరినీ ఆమోదించారు మరియు ప్రకటన చేశారు."
         time_read: "చదువు సమయం"
         post_edits_count: "పోస్ట్ సవరణలు"
+        exports:
+          download:
+            button: ఆర్కైవ్‌ను అభ్యర్థించండి
         anonymize: "సభ్యుని అజ్ఞాతీకరించండి"
         anonymize_yes: "అవును, ఈ ఖాతాను అజ్ఞాతం చేయండి"
         anonymize_failed: "ఖాతాను అజ్ఞాతం చేయడంలో సమస్య ఉంది."

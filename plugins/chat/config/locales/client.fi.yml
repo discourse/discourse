@@ -138,6 +138,13 @@ fi:
         never: "Ei koskaan"
       separate_sidebar_mode:
         title: "Näytä erilliset sivupalkkitilat foorumille ja chatille"
+      send_shortcut:
+        enter:
+          label: "Lähetä painamalla Enter-näppäintä"
+          description: "Uusi rivi painamalla Vaihto + Enter"
+        meta_enter:
+          label: "Lähetä painamalla %{meta_key} + Enter"
+          description: "Uusi rivi painamalla Enter-näppäintä"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
       emoji: "Lisää emoji"

@@ -146,6 +146,13 @@ ru:
         never: "Никогда"
       separate_sidebar_mode:
         title: "Показывать отдельные режимы боковой панели для форума и чата"
+      send_shortcut:
+        enter:
+          label: "Отправить с помощью Enter"
+          description: "Новая строка с помощью Shift + Enter"
+        meta_enter:
+          label: "Отправить с помощью %{meta_key} + Enter"
+          description: "Новая строка с помощью Enter"
       enable: "Включить чат"
       flag: "Пожаловаться"
       emoji: "Вставить эмодзи"

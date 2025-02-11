@@ -146,6 +146,13 @@ he:
         never: "לעולם לא"
       separate_sidebar_mode:
         title: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט"
+      send_shortcut:
+        enter:
+          label: "שליחה עם Enter"
+          description: "שורה חדשה עם Shift + Enter"
+        meta_enter:
+          label: "שליחה עם %{meta_key} + Enter"
+          description: "שורה חדשה עם Enter"
       enable: "הפעלת צ׳אט"
       flag: "סימון"
       emoji: "הוספת אמוג׳י"

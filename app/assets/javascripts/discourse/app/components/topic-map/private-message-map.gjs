@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { groupPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
@@ -109,7 +109,7 @@ class PmMapUserGroup extends Component {
   <template>
     <div class="user group">
       <a href={{this.groupUrl}} class="group-link">
-        {{dIcon "users"}}
+        {{icon "users"}}
         <span class="group-name">{{@model.name}}</span>
       </a>
       {{#if this.canRemoveLink}}

@@ -25,7 +25,7 @@ class Admin::EmailController < Admin::AdminController
       AND post_reply_keys.user_id = email_logs.user_id
     SQL
 
-    email_logs = filter_logs(email_logs, params, include_ccs: params[:type] == "group_smtp")
+    email_logs = filter_logs(email_logs, params)
 
     if (reply_key = params[:reply_key]).present?
       email_logs =
@@ -223,7 +223,7 @@ class Admin::EmailController < Admin::AdminController
 
   private
 
-  def filter_logs(logs, params, include_ccs: false)
+  def filter_logs(logs, params)
     table_name = logs.table_name
 
     logs =
@@ -238,7 +238,7 @@ class Admin::EmailController < Admin::AdminController
 
     if params[:address].present?
       query = "#{table_name}.to_address ILIKE :address"
-      query += " OR #{table_name}.cc_addresses ILIKE :address" if include_ccs
+      query += " OR #{table_name}.cc_addresses ILIKE :address"
 
       logs = logs.where(query, { address: "%#{params[:address]}%" })
     end

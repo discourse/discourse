@@ -34,7 +34,6 @@ jobs:
     timeout-minutes: 20
 
     env:
-      DISCOURSE_HOSTNAME: www.example.com
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
@@ -127,13 +126,16 @@ jobs:
         run: |
           for dir in /var/www/discourse/plugins/*/gems; do
             plugin_name=$(basename "$(dirname "$dir")")
-            dest="plugins/$plugin_name/gems"
+            plugin_dir="plugins/$plugin_name"
+            gem_dir="$plugin_dir/gems"
 
-            if [ -d "$dest" ]; then
+            if [ ! -d "$plugin_dir" ]; then
+              echo "Skipping $plugin_name: Plugin directory does not exist"
+            elif [ -d "$gem_dir" ]; then
               echo "Skipping $plugin_name: Source gems directory exists"
             else
-              echo "Symlinking $dir to $dest"
-              ln -s "$dir" "$dest"
+              echo "Symlinking $dir to $gem_dir"
+              ln -s "$dir" "$gem_dir"
             fi
           done
 

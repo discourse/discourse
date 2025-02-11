@@ -59,7 +59,6 @@ $breakpoints: (
   }
 }
 
-//noinspection CssOptimizeSimilarProperties
 @mixin linear-gradient($start-color, $end-color) {
   background-color: $start-color;
   background-image: linear-gradient(to bottom, $start-color, $end-color);
@@ -124,6 +123,7 @@ $hpad: 0.65em;
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 
 @mixin user-select($mode) {
+  -webkit-user-select: $mode;
   user-select: $mode;
 }
 

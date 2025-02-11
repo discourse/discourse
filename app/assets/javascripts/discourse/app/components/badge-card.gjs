@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
 import number from "discourse/helpers/number";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
@@ -99,7 +99,7 @@ export default class BadgeCard extends Component {
           class="check-display status-checked"
           aria-label={{i18n "notifications.titles.granted_badge"}}
         >
-          {{dIcon "check"}}
+          {{icon "check"}}
         </div>
       {{/if}}
 
@@ -108,7 +108,7 @@ export default class BadgeCard extends Component {
           <DButton
             @icon="star"
             @action={{@onFavoriteClick}}
-            class="favorite-btn"
+            class="btn-default favorite-btn"
           />
         {{else}}
           <DButton
@@ -120,7 +120,7 @@ export default class BadgeCard extends Component {
               "badges.favorite_max_reached"
             }}
             @disabled={{not @canFavoriteMoreBadges}}
-            class="favorite-btn"
+            class="btn-default favorite-btn"
           />
         {{/if}}
       {{/if}}

@@ -21,7 +21,7 @@ module Reports::TrendingSearch
 
       report.data = []
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       trends =
         SearchLog.trending_from(report.start_date, end_date: report.end_date, limit: report.limit)

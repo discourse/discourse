@@ -230,7 +230,8 @@ export default class CardContentsBase extends Component {
       // may be offscreen and we may scroll all the way to it on focus
 
       discourseLater(() => {
-        this.element.querySelector("a.user-profile-link")?.focus();
+        this.element.setAttribute("tabindex", "-1");
+        this.element.focus();
       }, 350);
     });
   }

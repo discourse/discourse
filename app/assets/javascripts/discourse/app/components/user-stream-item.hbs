@@ -16,9 +16,9 @@
       <TopicStatus @topic={{@item}} @disableActions={{true}} />
       <span class="title">
         {{#if @item.postUrl}}
-          <a href={{@item.postUrl}}>{{html-safe @item.title}}</a>
+          <a href={{@item.postUrl}}>{{replace-emoji @item.title}}</a>
         {{else}}
-          {{html-safe @item.title}}
+          {{replace-emoji @item.title}}
         {{/if}}
       </span>
     </div>

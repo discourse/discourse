@@ -19,17 +19,14 @@ body {
 
 #ember-testing {
   background-color: #fff;
-}
-
-.discourse-root {
-  background: var(--secondary);
-}
-
-#ember-testing {
   width: 200%;
   height: 200%;
   transform: scale(0.5);
   transform-origin: top left;
+}
+
+.discourse-root {
+  background: var(--secondary);
 }
 
 @media (prefers-color-scheme: dark) {

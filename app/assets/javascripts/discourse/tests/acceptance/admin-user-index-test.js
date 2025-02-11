@@ -289,7 +289,7 @@ acceptance("Admin - User Index", function (needs) {
       .dom("#dialog-title")
       .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
-    await click(".dialog-footer .btn-primary");
+    await click(".dialog-footer .delete-dont-block");
 
     assert.false(deleteAndBlock, "user does not get blocked");
   });
@@ -297,8 +297,8 @@ acceptance("Admin - User Index", function (needs) {
   test("delete user - delete and block works as expected", async function (assert) {
     await visit("/admin/users/5/user5");
     await click(".btn-user-delete");
-    await click(".dialog-footer .btn-danger");
+    await click(".dialog-footer .delete-and-block");
 
-    assert.true(deleteAndBlock, "user does not get blocked");
+    assert.true(deleteAndBlock, "user does get blocked");
   });
 });

@@ -1,6 +1,6 @@
 .btn-edit-table {
   -webkit-touch-callout: none;
-  user-select: none;
+  @include user-select(none);
 }
 
 .fullscreen-table-wrapper:hover .fullscreen-table-wrapper__buttons button {

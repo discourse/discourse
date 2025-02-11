@@ -232,6 +232,143 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
+
+    context "when there is only one external login method enabled" do
+      before do
+        SiteSetting.enable_google_oauth2_logins = true
+        SiteSetting.enable_local_logins = false
+      end
+      after { reset_omniauth_config(:google_oauth2) }
+
+      context "when login is required" do
+        before { SiteSetting.login_required = true }
+
+        it "automatically redirects when auth_immediately is enabled" do
+          SiteSetting.auth_immediately = true
+          mock_google_auth
+
+          visit("/login")
+          expect(signup_form).to be_open
+          expect(signup_form).to have_no_password_input
+          expect(signup_form).to have_valid_username
+          expect(signup_form).to have_valid_email
+
+          visit("/signup")
+          expect(signup_form).to be_open
+          expect(signup_form).to have_no_password_input
+          expect(signup_form).to have_valid_username
+          expect(signup_form).to have_valid_email
+
+          visit("/")
+          expect(signup_form).to be_open
+          expect(signup_form).to have_no_password_input
+          expect(signup_form).to have_valid_username
+          expect(signup_form).to have_valid_email
+          signup_form.click_create_account
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
+
+        it "shows the login-required page when auth_immediately is disabled" do
+          SiteSetting.auth_immediately = false
+          mock_google_auth
+
+          visit("/login")
+          expect(page).to have_css(".login-welcome")
+          expect(page).to have_css(".site-logo")
+
+          visit("/")
+          expect(page).to have_css(".login-welcome")
+          expect(page).to have_css(".site-logo")
+
+          find(".login-welcome .login-button").click
+          expect(signup_form).to be_open
+
+          visit("/")
+          find(".login-welcome .sign-up-button").click
+          expect(signup_form).to be_open
+          expect(signup_form).to have_no_password_input
+          expect(signup_form).to have_valid_username
+          expect(signup_form).to have_valid_email
+          signup_form.click_create_account
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
+
+        it "automatically redirects when going to /signup" do
+          SiteSetting.auth_immediately = false
+          mock_google_auth
+
+          visit("/signup")
+          expect(signup_form).to be_open
+          expect(signup_form).to have_no_password_input
+          expect(signup_form).to have_valid_username
+          expect(signup_form).to have_valid_email
+          signup_form.click_create_account
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
+
+        it "automatically redirects when skipping the signup form" do
+          SiteSetting.auth_skip_create_confirm = true
+          SiteSetting.auth_immediately = true
+          mock_google_auth
+
+          visit("/login")
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
+
+        it "works with existing users when auth_immediately is enabled" do
+          SiteSetting.auth_immediately = false
+          SiteSetting.login_required = true
+          mock_google_auth
+
+          visit("/signup")
+          expect(signup_form).to be_open
+          expect(signup_form).to have_no_password_input
+          expect(signup_form).to have_valid_username
+          expect(signup_form).to have_valid_email
+          signup_form.click_create_account
+
+          find(".header-dropdown-toggle.current-user").click
+          find("#user-menu-button-profile").click
+          find("#quick-access-profile .logout").click
+          visit("/")
+          find(".login-welcome .login-button").click
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
+      end
+
+      it "automatically redirects when using the login button" do
+        SiteSetting.auth_immediately = false
+        mock_google_auth
+
+        visit("/")
+        find(".header-buttons .login-button").click
+        expect(signup_form).to be_open
+        expect(signup_form).to have_no_password_input
+        expect(signup_form).to have_valid_username
+        expect(signup_form).to have_valid_email
+        signup_form.click_create_account
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+
+      it "automatically redirects when using the routes" do
+        SiteSetting.auth_immediately = false
+        mock_google_auth
+
+        visit("/login")
+        expect(signup_form).to be_open
+        expect(signup_form).to have_no_password_input
+        expect(signup_form).to have_valid_username
+        expect(signup_form).to have_valid_email
+
+        visit("/signup")
+        expect(signup_form).to be_open
+        expect(signup_form).to have_no_password_input
+        expect(signup_form).to have_valid_username
+        expect(signup_form).to have_valid_email
+        signup_form.click_create_account
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
   end
 
   context "when user exists" do

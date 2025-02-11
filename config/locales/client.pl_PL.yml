@@ -3748,6 +3748,7 @@ pl_PL:
           other: "Wybrano <b>%{count}</b> wpisów."
       deleted_by_author_simple: "(temat usunięty przez autora)"
     post_list:
+      title: "Aktualne wpisy"
       empty: "Brak postów"
       aria_post_number: "%{title} - post #%{postNumber}"
     post:
@@ -3935,9 +3936,6 @@ pl_PL:
         delete_topic_confirm_modal_no: "Nie, zachowaj ten temat"
         delete_topic_error: "Wystąpił błąd podczas usuwania tego wątku"
         delete_topic: "usuń temat"
-        add_post_notice: "Dodaj notatkę personelu…"
-        change_post_notice: "Zmień notatkę personelu…"
-        delete_post_notice: "Usuń wiadomość personelu"
         remove_timer: "usuń minutnik"
         edit_timer: "edytuj licznik czasu"
       actions:
@@ -4484,20 +4482,6 @@ pl_PL:
       close: "Zamknij (Esc)"
       content_load_error: '<a href="%url%">Zawartość</a> nie może zostać wczytana.'
       image_load_error: '<a href="%url%">Obraz</a> nie może zostać wczytany.'
-    experimental_lightbox:
-      image_load_error: "Nie można załadować obrazu."
-      screen_reader_image_title: "Obraz %{current} z %{total}: %{title}"
-      buttons:
-        next: "Następny (klawisz strzałki w prawo lub w dół)"
-        previous: "Poprzedni (klawisz strzałki w lewo lub w górę)"
-        close: "Zamknij (Esc)"
-        download: "Pobierz obraz"
-        newtab: "Otwórz obraz w nowej karcie"
-        zoom: "Powiększ/zmniejsz obraz (klawisz Z)"
-        rotate: "Obróć obraz (klawisz R)"
-        fullscreen: "Przełącz tryb pełnoekranowy przeglądarki (klawisz M)"
-        carousel: "Wyświetl wszystkie obrazy w karuzeli (klawisz A)"
-        retry: "Spróbuj ponownie załadować obraz"
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4533,7 +4517,6 @@ pl_PL:
         title: "Aplikacja"
         create: "%{shortcut} utwórz nowy temat"
         notifications: "%{shortcut} otwarte powiadomienia"
-        hamburger_menu: "%{shortcut} Otwórz menu"
         user_profile_menu: "%{shortcut} Otwórz menu użytkownika"
         show_incoming_updated_topics: "%{shortcut} Pokaż zaktualizowane tematy"
         search: "%{shortcut} Wyszukaj"
@@ -4994,9 +4977,11 @@ pl_PL:
             users:
               content: "Użytkownicy"
               title: "Lista wszystkich użytkowników"
-            my_drafts:
-              content: "Moje szkice"
-              title: "Moje nieopublikowane wersje robocze"
+            my_posts:
+              content: "Wysłane"
+              content_drafts: "Moje szkice"
+              title: "Moja ostatnia aktywność w temacie"
+              title_drafts: "Moje nieopublikowane wersje robocze"
               draft_count:
                 one: "%{count} szkic"
                 few: "%{count} szkice"
@@ -6844,6 +6829,9 @@ pl_PL:
         approve_bulk_success: "Sukces! Wszyscy wybrani użytkownicy zostali zatwierdzeni i powiadomieni."
         time_read: "Czas czytania"
         post_edits_count: "Edycje wpisu"
+        exports:
+          download:
+            button: Poproś o archiwum
         anonymize: "Anonimizuj użytkownika"
         anonymize_confirm: "Czy na pewno chcesz zanonimizować to konto? Spowoduje to zmianę nazwy użytkownika i adresu e-mail oraz zresetowania wszystkich informacji o profilu."
         delete_associated_accounts_confirm: "Czy na pewno chcesz usunąć wszystkie powiązane konta z tego konta? Użytkownik może nie być w stanie zalogować się, jeśli jego adres e-mail uległ zmianie."

@@ -1,6 +1,5 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { helperContext } from "discourse/lib/helpers";
@@ -25,22 +24,6 @@ export function cleanupLightboxes() {
 }
 
 export default function lightbox(elem, siteSettings) {
-  if (siteSettings.enable_experimental_lightbox) {
-    deprecated(
-      "Accessing the default `lightbox` export is deprecated. Import setupLightboxes and cleanupLightboxes from `discourse/lib/lightbox` instead.",
-      {
-        since: "3.0.0.beta16",
-        dropFrom: "3.2.0",
-        id: "discourse.lightbox.default-export",
-      }
-    );
-
-    return setupLightboxes({
-      container: elem,
-      selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
-    });
-  }
-
   if (!elem) {
     return;
   }

@@ -5,7 +5,7 @@ module Reports::TopUploads
 
   class_methods do
     def report_top_uploads(report)
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       extension_filter = report.filters.dig(:file_extension)
       report.add_filter(

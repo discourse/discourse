@@ -114,7 +114,7 @@ export default class FileTypesList extends Component {
         "admin.site_settings.file_types_list.add_types_title"
         types=IMAGE_TYPES_STRING
       }}
-      class="btn file-types-list__button image"
+      class="btn btn-small btn-default file-types-list__button image"
     />
     <DButton
       @action={{fn this.insertDefaultTypes "video"}}
@@ -123,7 +123,7 @@ export default class FileTypesList extends Component {
         "admin.site_settings.file_types_list.add_types_title"
         types=VIDEO_TYPES_STRING
       }}
-      class="btn file-types-list__button video"
+      class="btn btn-small btn-default file-types-list__button video"
     />
     <DButton
       @action={{fn this.insertDefaultTypes "audio"}}
@@ -132,7 +132,7 @@ export default class FileTypesList extends Component {
         "admin.site_settings.file_types_list.add_types_title audio"
         types=AUDIO_TYPES_STRING
       }}
-      class="btn file-types-list__button"
+      class="btn btn-small btn-default file-types-list__button"
     />
     <DButton
       @action={{fn this.insertDefaultTypes "document"}}
@@ -141,7 +141,7 @@ export default class FileTypesList extends Component {
         "admin.site_settings.file_types_list.add_types_title"
         types=DOCUMENT_TYPES_STRING
       }}
-      class="btn file-types-list__button document"
+      class="btn btn-small btn-default file-types-list__button document"
     />
   </template>
 }

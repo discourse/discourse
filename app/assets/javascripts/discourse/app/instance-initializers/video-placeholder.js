@@ -2,6 +2,7 @@ import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { sanitize } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
 export default {
@@ -15,10 +16,37 @@ export default {
         parentDiv.style.cursor = "";
         overlay.innerHTML = spinnerHTML;
 
+        const videoSrc = sanitizeUrl(parentDiv.dataset.videoSrc);
+        const origSrc = sanitizeUrl(parentDiv.dataset.origSrc);
+        const dataOrigSrcAttr =
+          origSrc !== null ? `data-orig-src="${origSrc}"` : "";
+
+        if (videoSrc === null) {
+          const existingNotice = wrapper.querySelector(".notice.error");
+          if (existingNotice) {
+            existingNotice.remove();
+          }
+
+          const notice = document.createElement("div");
+          notice.className = "notice error";
+          notice.innerHTML =
+            iconHTML("triangle-exclamation") + " " + i18n("invalid_video_url");
+          wrapper.appendChild(notice);
+          overlay.innerHTML = iconHTML("play");
+
+          parentDiv.style.cursor = "pointer";
+          parentDiv.addEventListener(
+            "click",
+            (e) => handleVideoPlaceholderClick(helper, e),
+            { once: true }
+          );
+          return;
+        }
+
         const videoHTML = `
         <video width="100%" height="100%" preload="metadata" controls style="display:none">
-          <source src="${parentDiv.dataset.videoSrc}" ${parentDiv.dataset.origSrc}>
-          <a href="${parentDiv.dataset.videoSrc}">${parentDiv.dataset.videoSrc}</a>
+          <source src="${videoSrc}" ${dataOrigSrcAttr}>
+          <a href="${videoSrc}">${videoSrc}</a>
         </video>`;
         parentDiv.insertAdjacentHTML("beforeend", videoHTML);
         parentDiv.classList.add("video-container");
@@ -106,6 +134,33 @@ export default {
           overlay.innerHTML = `${iconHTML("play")}`;
           wrapper.appendChild(overlay);
         });
+      }
+
+      function sanitizeUrl(url) {
+        try {
+          const parsedUrl = new URL(url, window.location.origin);
+
+          if (
+            ["http:", "https:"].includes(parsedUrl.protocol) ||
+            url.startsWith("/")
+          ) {
+            const sanitized = sanitize(url);
+
+            if (
+              sanitized &&
+              sanitized.trim() !== "" &&
+              !sanitized.includes("&gt;") &&
+              !sanitized.includes("&lt;")
+            ) {
+              return sanitized;
+            }
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn("Invalid URL encountered:", url, e.message);
+        }
+
+        return null;
       }
 
       api.decorateCookedElement(applyVideoPlaceholder, {

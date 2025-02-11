@@ -20,7 +20,9 @@ export default class DNavigation extends Component {
 
   @setting("fixed_category_positions") fixedCategoryPositions;
 
-  createTopicLabel = "topic.create";
+  get createTopicLabel() {
+    return this.site.desktopView ? "topic.create" : "";
+  }
 
   @dependentKeyCompat
   get filterType() {
@@ -82,32 +84,28 @@ export default class DNavigation extends Component {
 
   @discourseComputed(
     "createTopicDisabled",
-    "hasDraft",
     "categoryReadOnlyBanner",
     "canCreateTopicOnTag",
     "tag.id"
   )
   createTopicButtonDisabled(
     createTopicDisabled,
-    hasDraft,
     categoryReadOnlyBanner,
     canCreateTopicOnTag,
     tagId
   ) {
     if (tagId && !canCreateTopicOnTag) {
       return true;
-    } else if (categoryReadOnlyBanner && !hasDraft) {
+    } else if (categoryReadOnlyBanner) {
       return false;
     }
     return createTopicDisabled;
   }
 
-  @discourseComputed("categoryReadOnlyBanner", "hasDraft")
-  createTopicClass(categoryReadOnlyBanner, hasDraft) {
+  @discourseComputed("categoryReadOnlyBanner")
+  createTopicClass(categoryReadOnlyBanner) {
     let classNames = ["btn-default"];
-    if (hasDraft) {
-      classNames.push("open-draft");
-    } else if (categoryReadOnlyBanner) {
+    if (categoryReadOnlyBanner) {
       classNames.push("disabled");
     }
     return classNames.join(" ");
@@ -192,7 +190,7 @@ export default class DNavigation extends Component {
 
   @action
   clickCreateTopicButton() {
-    if (this.categoryReadOnlyBanner && !this.hasDraft) {
+    if (this.categoryReadOnlyBanner) {
       this.dialog.alert({ message: htmlSafe(this.categoryReadOnlyBanner) });
     } else {
       this.createTopic();

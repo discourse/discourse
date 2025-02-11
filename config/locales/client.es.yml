@@ -1799,6 +1799,9 @@ es:
         after_5_minutes: "después de 5 minutos"
         after_10_minutes: "después de 10 minutos"
       notification_level_when_replying:
+        label: "Al publicar"
+        watch_topic: "Ver tema"
+        track_topic: "Seguir tema"
         do_nothing: "No hacer nada"
       topics_unread_when_closed: "Considerar temas no leídos cuando se cierran"
       invited:
@@ -2729,7 +2732,7 @@ es:
         membership_request_consolidated: "nuevas solicitudes de membresía"
         reaction: "nueva reacción"
         votes_released: "Voto liberado"
-        new_features: "¡Se han lanzado nuevas funciones de Discourse!"
+        new_features: "¡Se han lanzado nuevas características de Discourse!"
         admin_problems: "nuevos consejos en tu panel de control del sitio"
     upload_selector:
       uploading: "Subiendo"
@@ -3497,6 +3500,7 @@ es:
           other: "Has seleccionado <b>%{count}</b> publicaciones."
       deleted_by_author_simple: "(tema eliminado por su autor/a)"
     post_list:
+      title: "Últimas publicaciones"
       empty: "No hay publicaciones"
       aria_post_number: "%{title}, publicación n.º %{postNumber}"
     post:
@@ -3543,6 +3547,7 @@ es:
       notice:
         new_user: "Esta es la primera vez que %{user} ha publicado — ¡démosle la bienvenida a nuestra comunidad!"
         returning_user: "Hacía tiempo que no veíamos a %{user}, su última publicación fue %{time}."
+        custom_created_by: "(añadido por %{userLinkHTML})"
       unread: "La publicación está sin leer"
       has_replies:
         one: "%{count} Respuesta"
@@ -3613,6 +3618,7 @@ es:
         edit_anonymous: "Lo sentimos, necesitas iniciar sesión para editar esta publicación."
         flag_action: "Denunciar"
         flag: "denuncia en privado esta publicación para llamar la atención o envía un mensaje personal sobre ella"
+        anonymous_flag: "envía un correo electrónico al personal para marcar esta publicación"
         delete_action: "Eliminar publicación"
         delete: "eliminar este publicación"
         undelete_action: "Recuperar publicación eliminada"
@@ -3658,9 +3664,9 @@ es:
         delete_topic_confirm_modal_no: "No, conservar este tema"
         delete_topic_error: "Ha ocurrido un error al eliminar este tema"
         delete_topic: "eliminar tema"
-        add_post_notice: "Añadir aviso del personal…"
-        change_post_notice: "Cambiar aviso oficial…"
-        delete_post_notice: "Eliminar aviso del personal"
+        add_post_notice: "Añadir Aviso oficial…"
+        change_post_notice: "Cambiar Aviso oficial…"
+        delete_post_notice: "Eliminar Aviso oficial"
         remove_timer: "quitar temporizador"
         edit_timer: "editar temporizador"
       actions:
@@ -3920,6 +3926,9 @@ es:
         all: "todos los temas"
         none: "sin subcategoría"
       colors_disabled: "No puedes seleccionar colores porque tienes no tienes activados los estilos de categoría."
+    anonymous_flagging:
+      title: "Denunciar contenido ilegal"
+      description: "Para denunciar contenido ilegal, ponte en contacto con <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "¡Gracias por ayudar a mantener una comunidad civilizada!"
       action: "Denunciar publicación"
@@ -4173,20 +4182,6 @@ es:
       close: "Cerrar (Esc)"
       content_load_error: '<a href="%url%">El contenido</a> no se pudo cargar.'
       image_load_error: '<a href="%url%">La imagen</a> no se pudo cargar.'
-    experimental_lightbox:
-      image_load_error: "No se ha podido cargar la imagen."
-      screen_reader_image_title: "Imagen %{current} de %{total}: %{title}"
-      buttons:
-        next: "Siguiente (tecla de flecha derecha o abajo)"
-        previous: "Anterior (tecla de flecha izquierda o arriba)"
-        close: "Cerrar (Esc)"
-        download: "Descargar imagen"
-        newtab: "Abrir la imagen en una pestaña nueva"
-        zoom: "Acercar/alejar la imagen (tecla Z)"
-        rotate: "Girar la imagen (tecla R)"
-        fullscreen: "Alternar el modo de pantalla completa del navegador (tecla M)"
-        carousel: "Mostrar todas las imágenes en un carrusel (tecla A)"
-        retry: "Reintentar cargar la imagen"
     cannot_render_video: Este vídeo no se puede mostrar porque tu navegador no es compatible con el códec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4223,7 +4218,7 @@ es:
         title: "Aplicación"
         create: "%{shortcut} Crear un nuevo tema"
         notifications: "%{shortcut} Abrir notificaciones"
-        hamburger_menu: "%{shortcut} Abrir menú hamburguesa"
+        hamburger_menu: "%{shortcut} Abrir menú de navegación"
         user_profile_menu: "%{shortcut} Abrir menú de usuario"
         show_incoming_updated_topics: "%{shortcut} Mostrar temas actualizados"
         search: "%{shortcut} Buscar"
@@ -4649,9 +4644,11 @@ es:
             users:
               content: "Usuarios"
               title: "Lista de todos los usuarios"
-            my_drafts:
-              content: "Mis borradores"
-              title: "Mis borradores no publicados"
+            my_posts:
+              content: "Mis publicaciones"
+              content_drafts: "Mis borradores"
+              title: "Mi actividad de tema reciente"
+              title_drafts: "Mis borradores no publicados"
               draft_count:
                 one: "%{count} borrador"
                 other: "%{count} borradores"
@@ -4838,7 +4835,7 @@ es:
           header_description: "Configura los ajustes de búsqueda, incluidos el registro y la tokenización para los idiomas chino y japonés"
         security:
           title: "Seguridad"
-          header_description: "Configura las opciones de seguridad, incluida la autenticación de dos factores, los privilegios de moderador y las políticas de seguridad de contenidos."
+          header_description: "Configura los ajustes de seguridad, incluida la autenticación de dos factores, los privilegios de moderador y las políticas de seguridad de contenidos."
         spam:
           title: "Spam"
           header_description: "Configura cómo analiza el sistema el comportamiento de registro y publicación de los usuarios para identificar y bloquear rápidamente el spam"
@@ -5188,24 +5185,29 @@ es:
               messages: Lista los mensajes de /logs u obtén un mensaje de registro concreto.
       web_hooks:
         title: "Webhooks"
+        none: "Aún no tienes ningún webhook"
         instruction: "Los webhooks permiten a Discourse notificar a servicios externos cuando suceden ciertos eventos en tu sitio. Cuando se dispare el webhook, se enviará una petición POST a las URL proporcionadas."
         detailed_instruction: "Se enviará una petición POST a la URL proporcionada cuando suceda el evento elegido."
+        add: "Añadir webhook"
         create: "Crear"
         edit: "Editar"
         save: "Guardar"
+        show: "Eventos"
         delete: "Eliminar"
         cancel: "Cancelar"
         description_label: "Activadores de eventos"
         controls: "Controles"
+        back: "Volver a los webhooks"
         payload_url: "URL a la que enviar el webhook"
         payload_url_placeholder: "https://ejemplo.com/postreceive"
         secret_invalid: "El secreto no puede tener espacios en blanco."
         secret_too_short: "El secreto debería tener al menos 12 caracteres."
+        secret_placeholder: "Cadena utilizada para generar firmas"
         event_type_missing: "Necesitas establecer al menos un tipo de evento."
         content_type: "Tipo de contenido"
         secret: "Secreto"
         event_chooser: "¿Qué eventos te gustaría que dispararan este webhook?"
-        wildcard_event: "Enviar todos los eventos"
+        wildcard_event: "Envíamelo todo"
         individual_event: "Seleccionar eventos individuales"
         verify_certificate: "Comprobar certificado TLS de la URL destino"
         active: "Activos"
@@ -5616,6 +5618,9 @@ es:
           screened_url: "Exportar la lista completa de URL bloqueadas en formato CSV."
       export_json:
         button_text: "Exportar"
+      invite:
+        button_text: "Enviar invitaciones"
+        button_title: "Enviar invitaciones"
       customize:
         title: "Personalizar"
         preview: "vista previa"
@@ -5771,6 +5776,8 @@ es:
           install_upload: "Desde tu dispositivo"
           install_git_repo: "Desde un repositorio git"
           install_create: "Crear nuevo"
+          installing_message: "Configurando tu nuevo tema…"
+          installing_message_long_time: "La configuración de tu nuevo tema está tardando un poco más de lo esperado, espere…"
           duplicate_remote_theme: "El componente de tema «%{name}» ya está instalado, ¿seguro que quieres instalar otra copia?"
           force_install: "No se ha podido instalar el tema porque su repositorio Git no es accesible. ¿Seguro que quieres continuar con la instalación?"
           create_placeholder: "Crear marcador de posición"
@@ -5945,6 +5952,7 @@ es:
           overridden: El archivo robots.txt predeterminado de tu sitio está sobrescrito.
         email_style:
           title: "Estilo de correo electrónico"
+          heading: "Personalizar estilo de correo electrónico"
           html: "HTML"
           css: "CSS"
           reset: "Restablecer ajustes predeterminados"
@@ -5953,11 +5961,18 @@ es:
           instructions: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS."
       email:
         title: "Correos electrónicos"
+        description: "Personaliza las plantillas utilizadas para crear correos electrónicos, previsualiza los correos electrónicos de resumen que se enviarán y consulta los registros de correo electrónico."
         settings: "Ajustes"
         templates: "Plantillas"
+        templates_title: "Plantillas de correo electrónico"
+        preview_digest: "Previsualizar resumen"
         advanced_test:
+          title: "Prueba avanzada"
           desc: "Observa cómo Discourse procesa los correos electrónicos recibidos. Para poder procesar correctamente el correo electrónico, pega aquí abajo un mensaje de correo electrónico original completo."
           email: "Mensaje original"
+          run: "Ejecutar prueba"
+          text: "Cuerpo de texto seleccionado"
+          elided: "Texto suprimido"
         sending_test: "Enviando correo electrónico de prueba…"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Se produjo un error al enviar el correo electrónico de prueba. Revisa la configuración de correo, verifica que tu servicio de alojamiento no esté bloqueando los puertos de conexión de correo electrónico y prueba de nuevo."
@@ -5966,11 +5981,16 @@ es:
         bounced: "Rebotado"
         received: "Recibidos"
         rejected: "Rechazados"
+        sent_at: "Enviado a las"
         time: "Hora"
         user: "Usuario"
+        email_type: "Tipo de correo electrónico"
         details_title: "Ver detalles del correo electrónico"
+        to_address: "Destino"
         test_email_address: "dirección de correo electrónico de prueba"
+        send_test: "Enviar correo electrónico de prueba"
         sent_test: "enviado!"
+        delivery_method: "Método de entrega"
         preview_digest_desc: "Previsualiza el contenido de los correos electrónicos de resumen enviados a los usuarios inactivos."
         refresh: "Volver a cargar"
         send_digest_label: "Enviar este resultado a:"
@@ -5980,7 +6000,11 @@ es:
         html: "html"
         text: "texto"
         html_preview: "Vista previa de contenido de correo electrónico"
+        last_seen_user: "Última vez que se vio al usuario:"
         no_result: "No se han encontrado resultados para el resumen."
+        reply_key: "Clave de respuesta"
+        post_link_with_smtp: "Detalles de publicación y SMTP"
+        skipped_reason: "Motivo de la omisión"
         incoming_emails:
           from_address: "De"
           to_addresses: "Para"
@@ -5989,10 +6013,12 @@ es:
           error: "Error"
           none: "No se encontraron correos electrónicos entrantes."
           modal:
+            title: "Detalles de correo electrónico entrante"
             error: "Error"
             headers: "Encabezados"
             subject: "Asunto"
             body: "Cuerpo"
+            rejection_message: "Correo de rechazo"
           filters:
             from_placeholder: "de@ejemplo.com"
             to_placeholder: "a@ejemplo.com"
@@ -6023,6 +6049,7 @@ es:
           post_approved: "Publicación aprobada"
       logs:
         title: "Registros y cribado"
+        description: "Los registros y la selección te permiten supervisar y gestionar tu comunidad, garantizando que siga siendo segura y respetuosa. Puedes ver los registros de todas las acciones realizadas por los miembros del personal, buscar registros y configurar la selección de usuarios."
         nav_title: "Registros"
         action: "Acción"
         created_at: "Creado"
@@ -6041,6 +6068,8 @@ es:
         staff_actions:
           all: "todas"
           filter: "Filtrar:"
+          title: "Acciones del personal"
+          clear_filters: "Mostrar todo"
           staff_user: "Usuario"
           target_user: "Usuario objetivo"
           subject: "Asunto"
@@ -6170,7 +6199,9 @@ es:
             tag_group_change: "cambiar grupo de etiquetas"
             delete_associated_accounts: "eliminar cuentas asociadas"
         screened_emails:
+          title: "Correos bloqueados"
           description: "Cuando alguien trate de crear una cuenta nueva, los siguientes correos electrónicos se revisarán y el registro se bloqueará, o se realizará alguna otra acción."
+          email: "Dirección de correo electrónico"
           actions:
             allow: "Permitir"
         screened_urls:
@@ -6185,6 +6216,7 @@ es:
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
+            allow_admin: "Permitir administrador"
           form:
             label: "Nueva:"
             ip_address: "Dirección IP"
@@ -6194,13 +6226,18 @@ es:
             text: "Agrupar"
             title: "Crea un nuevo rango de entradas para bloquear si hay al menos «min_ban_entries_for_roll_up» entradas."
         search_logs:
+          title: "Registros de búsqueda"
           term: "Término"
           searches: "Búsquedas"
           click_through_rate: "CTR"
           types:
             all_search_types: "Todos los tipos de búsqueda"
             header: "Encabezado"
+            full_page: "Página completa"
             click_through_only: "Todo (a través del clic únicamente)"
+          header_search_results: "Resultados de búsqueda de encabezado"
+        logster:
+          title: "Registros de errores"
       watched_words:
         title: "Palabras vigiladas"
         description: "Las palabras vigiladas son herramientas de moderación que pueden realizar varias acciones diferentes, como bloquear, censurar, enlazar o denunciar publicaciones que contengan determinadas palabras"
@@ -6212,6 +6249,7 @@ es:
         case_sensitive: "(distingue entre mayúsculas y minúsculas)"
         html: "(html)"
         download: Descargar
+        clear_all: Limpiar todo
         clear_all_confirm: "¿Quitar todas las palabras vigiladas para la acción %{action}?"
         invalid_regex: 'La palabra vigilada «%{word}» no es una expresión regular válida.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Las palabras vigiladas son expresiones regulares</a> y no incluyen automáticamente los límites de las palabras. Si quieres que la expresión regular coincida con palabras enteras, incluye <code>\b</code> al principio y al final de tu expresión regular.'
@@ -6355,6 +6393,9 @@ es:
         id_not_found: "Lo sentimos, esa ID de usuario no existe en nuestro sistema."
         active: "Activados"
         status: "Estado"
+        show_emails: "Mostrar correos electrónicos"
+        hide_emails: "Ocultar correos electrónicos"
+        silence_reason: "Motivo para silenciar"
         bulk_actions:
           title: "Acciones en bloque"
           admin_cant_be_deleted: "Este usuario no se puede eliminar porque es administrador"
@@ -6392,6 +6433,7 @@ es:
         approved: "¿Aprobado/s?"
         titles:
           active: "Usuarios activos"
+          new: "Nuevos usuarios"
           pending: "Usuarios pendientes de revisión"
           newuser: "Usuarios con nivel de confianza 0 (Usuarios nuevos)"
           basic: "Usuarios con nivel de confianza 1 (Usuarios básicos)"
@@ -6399,7 +6441,11 @@ es:
           regular: "Usuarios con nivel de confianza 3 (Habitual)"
           leader: "Usuarios con nivel de confianza 4 (Líder)"
           staff: "Personal"
+          admins: "Administradores"
           moderators: "Moderadores"
+          silenced: "Usuarios silenciados"
+          suspended: "Usuarios suspendidos"
+          staged: "Usuarios temporales"
         not_verified: "No verificado"
         check_email:
           title: "Revelar la dirección de correo electrónico de este usuario"
@@ -6503,6 +6549,19 @@ es:
         approve_bulk_success: "¡Perfecto! Todos los usuarios seleccionados han sido aprobados y notificados."
         time_read: "Tiempo de lectura"
         post_edits_count: "Ediciones de la publicación"
+        exports:
+          title: Exportaciones de usuario
+          download:
+            description: Descargar la última versión
+            expires_in:
+              one: Caduca en %{count} hora
+              other: Caduca en %{count} horas
+            not_available: No hay exportaciones disponibles
+            button: Solicitar archivo
+            confirm: '¿De verdad quieres crear un archivo de la actividad y preferencias de este usuario?'
+            started: Hemos comenzado a recopilar el archivo, el enlace de descarga se actualizará cuando se complete el proceso.
+            success: El archivo está listo para descargar.
+            export_failed: Lo sentimos, pero la exportación ha fallado. Comprueba los registros para obtener más información.
         anonymize: "Anonimizar usuario"
         anonymize_confirm: "¿Seguro que quieres hacer anónima esta cuenta? Esto cambiará el nombre de usuario y el correo electrónico y restablecerá toda la información del perfil."
         delete_associated_accounts_confirm: "¿Seguro que quieres eliminar todas las cuentas asociadas a esta cuenta? Es posible que el usuario no pueda conectarse si su correo electrónico ha cambiado."
@@ -6742,6 +6801,8 @@ es:
         unmask: "desenmascarar entrada"
         not_found: "No se han encontrado los ajustes"
       site_settings:
+        title: "Ajustes del sitio"
+        description: "Configura los ajustes de tu sitio Discourse para personalizar su apariencia, funcionalidad y experiencia de usuario."
         emoji_list:
           invalid_input: "Las listas de emojis solo pueden contener nombres válidos de emojis. Ej.: abrazos"
           add_emoji_button:
@@ -6845,6 +6906,7 @@ es:
         description: Descripción
         long_description: Descripción larga
         badge_type: Tipo de medalla
+        group_settings: Ajustes de grupo
         badge_grouping: Grupo
         badge_groupings:
           modal_title: Grupos de medallas
@@ -6916,6 +6978,7 @@ es:
           title: "Elige una medalla o crea una nueva"
           description: "Empieza seleccionando una medalla existente para personalizarla, o crea una medalla totalmente nueva"
         mass_award:
+          title: Conceder en masa
           description: Concede la misma medalla a muchos usuarios a la vez.
           no_badge_selected: Selecciona una medalla para empezar.
           perform: "Conceder medalla a los usuarios"
@@ -6966,6 +7029,7 @@ es:
         post_author: "Autor de la publicación"
         post_author_with_default: "Autor de la publicación (el valor predeterminado es %{author})"
         add_host: "Añadir anfitrión"
+        posts_and_topics: "Configuración de publicaciones y temas"
         crawlers: "Configuración de rastreadores"
         crawlers_description: "Cuando Discourse crea temas para tus publicaciones, si no hay un feed RSS/ATOM presente intentará analizar el contenido de tu HTML. A veces puede ser difícil extraer tu contenido, por lo que damos la posibilidad de especificar las reglas CSS para hacer la extracción más fácil."
         embed_by_username: "Usuario para la creación de temas"
@@ -6977,7 +7041,9 @@ es:
         blocked_embed_selectors: "Selector CSS para elementos que deben ser eliminados de los incrustados"
         allowed_embed_classnames: "Clases CSS permitidas"
         save: "Guardar"
+        posts_and_topics_settings_saved: "Ajustes de publicaciones y temas guardados"
         crawler_settings_saved: "Se han guardado los ajustes del rastreador"
+        back: "Volver a la incrustación"
         configuration_snippet: "Fragmento de configuración"
         host_form:
           add_header: "Añadir anfitrión"
@@ -6986,6 +7052,7 @@ es:
         nav:
           hosts: "Anfitriones"
           settings: "Ajustes"
+          posts_and_topics: "Publicaciones y temas"
           crawlers: "Rastreadores"
       permalink:
         title: "Enlaces permanentes"
@@ -7057,6 +7124,7 @@ es:
       homepage_choices:
         custom:
           label: "Personalizado"
+          description: "Muestra una página de inicio centrada en %{type} con los usuarios que llegan a %{landingPage}"
         style_type:
           categories: "categoría"
           topics: "tema"

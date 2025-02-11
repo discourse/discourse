@@ -24,7 +24,7 @@ class Admin::Config::SiteSettingsController < Admin::AdminController
           filter_area: params[:filter_area],
           filter_plugin: params[:plugin],
           filter_categories: Array.wrap(params[:categories]),
-          include_locale_setting: false,
+          include_locale_setting: params[:filter_area] == "localization",
           include_hidden: true,
           filter_allowed_hidden: ADMIN_CONFIG_AREA_ALLOWLISTED_HIDDEN_SETTINGS,
         ),

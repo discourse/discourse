@@ -10,10 +10,10 @@ import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "admin/components/modal/api-key-urls";
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class AdminConfigAreasApiKeysNew extends Component {
   @service router;
@@ -80,7 +80,10 @@ export default class AdminConfigAreasApiKeysNew extends Component {
 
   @action
   async save(data) {
-    const payload = { description: data.description };
+    const payload = {
+      description: data.description,
+      scope_mode: data.scope_mode,
+    };
 
     if (data.user_mode === "single") {
       payload.username = data.user;
@@ -122,6 +125,21 @@ export default class AdminConfigAreasApiKeysNew extends Component {
     }
 
     return enabledScopes.flat();
+  }
+
+  @bind
+  atLeastOneGranularScope(data, { addError, removeError }) {
+    removeError("scopes");
+
+    if (
+      data.scope_mode === "granular" &&
+      this.#selectedScopes(data.scopes).length === 0
+    ) {
+      addError("scopes", {
+        title: i18n("admin.api.scopes.title"),
+        message: i18n("admin.api.scopes.one_or_more"),
+      });
+    }
   }
 
   @action
@@ -166,6 +184,7 @@ export default class AdminConfigAreasApiKeysNew extends Component {
               <Form
                 @onSubmit={{this.save}}
                 @data={{this.formData}}
+                @validate={{this.atLeastOneGranularScope}}
                 as |form transientData|
               >
                 <form.Field
@@ -240,7 +259,6 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                     <thead>
                       <tr>
                         <td></td>
-                        <td></td>
                         <td>{{i18n "admin.api.scopes.allowed_urls"}}</td>
                         <td>{{i18n
                             "admin.api.scopes.optional_allowed_parameters"
@@ -265,28 +283,18 @@ export default class AdminConfigAreasApiKeysNew extends Component {
                             <topicsCollection.Field
                               @name="enabled"
                               @title={{collectionData.key}}
-                              @showTitle={{false}}
-                              as |field|
-                            >
-                              <field.Checkbox />
-                            </topicsCollection.Field>
-                          </td>
-                          <td>
-                            <div
-                              class="scope-name"
-                            >{{collectionData.name}}</div>
-                            <DTooltip
-                              @icon="circle-question"
-                              @content={{i18n
+                              @tooltip={{i18n
                                 (concat
                                   "admin.api.scopes.descriptions."
                                   scopeName
                                   "."
                                   collectionData.key
                                 )
-                                class="scope-tooltip"
                               }}
-                            />
+                              as |field|
+                            >
+                              <field.Checkbox />
+                            </topicsCollection.Field>
                           </td>
                           <td>
                             <DButton

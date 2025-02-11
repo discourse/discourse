@@ -792,7 +792,6 @@ sw:
     censored_words: "Maneno ambayo yatabadilishwa kuwa &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Futa machapisho yote ambayo yatakuwa yamefichwa baada ya siku 30."
     allow_user_locale: "Waruhusu watumiaji wachague lugha ya kutumia au kuwasiliana"
-    support_mixed_text_direction: "ruhusu mchanganyiko wa mwelekeo wa maneno wa kushoto-kwenda-kulia na kulia-kwenda-kushoto"
     max_post_length: "Kiwango cha juu cha herufi za chapisho zinazokubaliwa"
     show_topic_featured_link_in_digest: "Onyesha kiungo cha mada kwenye barua pepe."
     min_topic_title_length: "Kichwa cha mada kinatakiwa kuwa na zaidi ya herufi"

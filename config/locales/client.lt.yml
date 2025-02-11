@@ -2727,6 +2727,8 @@ lt:
           many: "Jūs pasirinkote <b>%{count}</b> įrašus."
           other: "Jūs pasirinkote <b>%{count}</b> įrašus."
       deleted_by_author_simple: "(pašalinta autoriaus)"
+    post_list:
+      title: "Naujausi įrašai"
     post:
       quote_reply: "Citata"
       quote_edit: "Redaguoti"
@@ -2853,7 +2855,6 @@ lt:
         delete_topic_confirm_modal_no: "Ne, palikti šią temą"
         delete_topic_error: "Ištrinant šią temą įvyko klaida"
         delete_topic: "ištrinti temą"
-        delete_post_notice: "Pašalinti darbuotojų pranešimą"
         remove_timer: "pašalinti laikmatį"
         edit_timer: "redaguoti laikmatį"
       actions:
@@ -3290,9 +3291,6 @@ lt:
       counter: "%curr% iš %total%"
       close: "Uždaryti (Esc)"
       content_load_error: '<a href="%url%">Turinio</a> nepavyko įkelti.'
-    experimental_lightbox:
-      buttons:
-        close: "Uždaryti (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3326,7 +3324,6 @@ lt:
         title: "Aplikacija"
         create: "%{shortcut} Sukurti naują temą"
         notifications: "Atidaryti pranešimus"
-        hamburger_menu: "%{shortcut} Atidaryti pagrindinį meniu"
         user_profile_menu: "%{shortcut} Atidaryti vartotojo meniu"
         show_incoming_updated_topics: "%{shortcut} Rodyti atnaujintas temas"
         search: "%{shortcut} Ieškoti"
@@ -3619,6 +3616,8 @@ lt:
               content: "Grupės"
             users:
               content: "Vartotojai"
+            my_posts:
+              content: "Mano Įrašai"
             review:
               content: "Peržiūra"
             invite:

@@ -10,9 +10,35 @@
 
 .group-details-container {
   background: var(--primary-very-low);
-  padding: 20px;
-  margin-bottom: 15px;
+  padding: 0.8em;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-bottom: 1em;
+}
+
+.group-bio {
+  max-width: 80ch;
+
+  p:first-child {
+    margin-top: 0;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.group-info-details {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+}
+
+.group-info-mention-name {
+  margin-bottom: 0.5em;
 }
 
 .group-delete-tooltip {
@@ -30,6 +56,7 @@
   flex-wrap: wrap;
   width: 100%;
   gap: 0.5em 0;
+  margin-bottom: 1em;
 
   .bulk-select + input {
     margin-left: 0.5em;
@@ -98,10 +125,8 @@
   .group-details-button {
     display: flex;
     flex-wrap: wrap;
-
-    button:not(:last-child) {
-      margin-right: 0.5em;
-    }
+    justify-content: end;
+    gap: 0.5em;
   }
 }
 

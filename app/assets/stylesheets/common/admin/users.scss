@@ -1,4 +1,4 @@
-//Styles for /admin/users
+// Styles for /admin/users
 .display-row.associations .value {
   width: 750px;
   @media (max-width: $mobile-breakpoint) {
@@ -57,15 +57,13 @@
     margin-left: 12px;
     word-break: break-word;
 
-    .select-kit {
-      min-width: 100px;
-    }
     @media (max-width: $mobile-breakpoint) {
       text-align: left;
       margin-left: 0;
     }
 
     .select-kit {
+      min-width: 100px;
       width: inherit;
     }
   }
@@ -114,12 +112,24 @@
 
 .admin-users-list {
   .directory-table__cell {
+    padding: 0.5em 0.25em;
+
     &.username {
+      align-items: center;
       justify-content: start;
     }
 
     &.email {
       justify-content: start;
+
+      @include breakpoint("tablet") {
+        grid-column-start: 1;
+        grid-column-end: -1;
+
+        span {
+          max-width: 100%;
+        }
+      }
 
       span {
         display: flex;
@@ -154,21 +164,6 @@
       margin-right: 1em;
     }
 
-    &__cell.username {
-      align-items: center;
-    }
-
-    &__cell.email {
-      @include breakpoint("tablet") {
-        grid-column-start: 1;
-        grid-column-end: -1;
-
-        span {
-          max-width: 100%;
-        }
-      }
-    }
-
     &__cell.silence_reason {
       text-align: left;
       justify-content: start;
@@ -180,10 +175,6 @@
         white-space: nowrap;
       }
     }
-  }
-
-  .directory-table__cell {
-    padding: 0.5em 0.25em;
   }
 
   .user-status span {

@@ -385,12 +385,15 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
   needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
 
   test("shared draft", async function (assert) {
-    updateCurrentUser({ has_topic_draft: true });
+    updateCurrentUser({ draft_count: 1 });
     stubDraftResponse();
     toggleCheckDraftPopup(true);
 
     await visit("/");
-    await click("button.open-draft");
+    await click("button.topic-drafts-menu-trigger");
+    await click(
+      ".topic-drafts-menu-content .topic-drafts-item:first-child button"
+    );
 
     await fillIn(
       "#reply-title",

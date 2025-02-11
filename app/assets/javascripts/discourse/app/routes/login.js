@@ -7,12 +7,26 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
   @service router;
+  @service login;
 
   beforeModel() {
-    if (
-      !this.siteSettings.login_required &&
-      (!this.siteSettings.full_page_login ||
-        this.siteSettings.enable_discourse_connect)
+    if (this.siteSettings.login_required) {
+      if (
+        this.login.isOnlyOneExternalLoginMethod &&
+        this.siteSettings.auth_immediately &&
+        !document.getElementById("data-authentication")?.dataset
+          .authenticationData
+      ) {
+        this.login.singleExternalLogin();
+      }
+    } else if (
+      this.login.isOnlyOneExternalLoginMethod &&
+      this.siteSettings.full_page_login
+    ) {
+      this.login.singleExternalLogin();
+    } else if (
+      !this.siteSettings.full_page_login ||
+      this.siteSettings.enable_discourse_connect
     ) {
       this.router
         .replaceWith(`/${defaultHomepage()}`)
@@ -37,6 +51,14 @@ export default class LoginRoute extends DiscourseRoute {
 
     if (this.siteSettings.login_required) {
       controller.set("showLogin", false);
+    }
+
+    if (this.login.isOnlyOneExternalLoginMethod) {
+      if (this.siteSettings.auth_immediately) {
+        controller.set("isRedirectingToExternalAuth", true);
+      } else {
+        controller.set("singleExternalLogin", this.login.singleExternalLogin);
+      }
     }
   }
 }

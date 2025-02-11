@@ -56,6 +56,10 @@ cs:
             P3M: "Tři měsíce"
             P6M: "Šest měsíců"
             P1Y: "Rok"
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Sledovaná skupina
         topic:
           fields:
             restricted_topic:
@@ -112,6 +116,7 @@ cs:
           fields:
             group:
               label: Skupina
+              description: Cílová skupina. Uživatelé se zadaným odznakem budou přidáni do této skupiny
             badge:
               label: Odznak
         suspend_user_by_email:

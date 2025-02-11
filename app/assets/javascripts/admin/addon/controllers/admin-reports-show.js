@@ -10,7 +10,7 @@ export default class AdminReportsShowController extends Controller {
 
   @discourseComputed("model.type")
   reportOptions(type) {
-    let options = { table: { perPage: 50, limit: 50, formatNumbers: false } };
+    let options = { table: { perPage: 50, limit: 50 } };
 
     if (type === "top_referred_topics") {
       options.table.limit = 10;

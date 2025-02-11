@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
@@ -14,34 +15,35 @@ import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
 import { userPath } from "discourse/lib/url";
+import UsernameValidationHelper from "discourse/lib/username-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class SignupPageController extends Controller.extend(
   PasswordValidation,
-  UsernameValidation,
   UserFieldsValidation
 ) {
   @service site;
   @service siteSettings;
   @service login;
 
+  @tracked accountUsername;
+  @tracked isDeveloper = false;
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
   rejectedEmails = A();
   prefilledUsername = null;
   userFields = null;
-  isDeveloper = false;
   maskPassword = true;
   passwordValidationVisible = false;
   emailValidationVisible = false;
   nameValidationHelper = new NameValidationHelper(this);
+  usernameValidationHelper = new UsernameValidationHelper(this);
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -55,6 +57,11 @@ export default class SignupPageController extends Controller.extend(
     }
 
     this.fetchConfirmationValue();
+  }
+
+  @dependentKeyCompat
+  get usernameValidation() {
+    return this.usernameValidationHelper.usernameValidation;
   }
 
   get nameTitle() {
@@ -257,6 +264,11 @@ export default class SignupPageController extends Controller.extend(
   }
 
   @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
+  }
+
+  @action
   togglePasswordValidation() {
     if (this.passwordValidation.reason) {
       this.set("passwordValidationVisible", true);
@@ -338,7 +350,7 @@ export default class SignupPageController extends Controller.extend(
       // If username field has been filled automatically, and email field just changed,
       // then remove the username.
       if (this.accountUsername === this.prefilledUsername) {
-        this.set("accountUsername", "");
+        this.accountUsername = "";
       }
       this.set("prefilledUsername", null);
     }
@@ -349,7 +361,11 @@ export default class SignupPageController extends Controller.extend(
       // If email is valid and username has not been entered yet,
       // or email and username were filled automatically by 3rd party auth,
       // then look for a registered username that matches the email.
-      discourseDebounce(this, this.fetchExistingUsername, 500);
+      discourseDebounce(
+        this,
+        this.usernameValidationHelper.fetchExistingUsername,
+        500
+      );
     }
   }
 
@@ -438,7 +454,7 @@ export default class SignupPageController extends Controller.extend(
           return;
         }
 
-        this.set("isDeveloper", false);
+        this.isDeveloper = false;
         if (result.success) {
           // invalidate honeypot
           this._challengeExpiry = 1;
@@ -458,7 +474,7 @@ export default class SignupPageController extends Controller.extend(
         } else {
           this.set("flash", result.message || i18n("create_account.failed"));
           if (result.is_developer) {
-            this.set("isDeveloper", true);
+            this.isDeveloper = true;
           }
           if (
             result.errors &&

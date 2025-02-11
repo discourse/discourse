@@ -44,6 +44,7 @@ describe "Flagging post", type: :system do
       topic_page.click_post_action_button(post_to_flag, :flag)
       flag_modal.choose_type(:illegal)
 
+      expect(flag_modal).to have_css(".illegal .description")
       expect(flag_modal).to have_css(".flag-confirmation")
 
       flag_modal.fill_message("This looks totally illegal to me.")

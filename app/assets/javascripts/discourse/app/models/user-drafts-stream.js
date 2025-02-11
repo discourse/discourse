@@ -1,8 +1,7 @@
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
-import { cook, emojiUnescape, excerpt } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import { cook, excerpt } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -77,12 +76,11 @@ export default class UserDraftsStream extends RestModel {
             draft.excerpt = excerpt(cooked.toString(), 300);
             draft.post_number = draft.data.postId || null;
             if (
-              draft.draft_key === NEW_PRIVATE_MESSAGE_KEY ||
-              draft.draft_key === NEW_TOPIC_KEY
+              draft.draft_key.startsWith(NEW_PRIVATE_MESSAGE_KEY) ||
+              draft.draft_key.startsWith(NEW_TOPIC_KEY)
             ) {
               draft.title = draft.data.title;
             }
-            draft.title = emojiUnescape(escapeExpression(draft.title));
             if (draft.data.categoryId) {
               draft.category = Category.findById(draft.data.categoryId) || null;
             }

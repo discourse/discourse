@@ -1799,6 +1799,9 @@ nl:
         after_5_minutes: "na 5 minuten"
         after_10_minutes: "na 10 minuten"
       notification_level_when_replying:
+        label: "Bij het plaatsen"
+        watch_topic: "Topic observeren"
+        track_topic: "Topic volgen"
         do_nothing: "Niets doen"
       topics_unread_when_closed: "Onderwerp als ongelezen beschouwen als ze gesloten zijn"
       invited:
@@ -3497,6 +3500,7 @@ nl:
           other: "Je hebt <b>%{count}</b> berichten geselecteerd."
       deleted_by_author_simple: "(topic verwijderd door auteur)"
     post_list:
+      title: "Nieuwste berichten"
       empty: "Er zijn geen berichten"
       aria_post_number: "%{title} - bericht %{postNumber}"
     post:
@@ -3543,6 +3547,7 @@ nl:
       notice:
         new_user: "Dit is de eerste keer dat %{user} iets heeft geplaatst, laten we hem/haar welkom heten in onze community!"
         returning_user: "Het is al even geleden dat we %{user} hebben gezien, het laatste bericht is van %{time}."
+        custom_created_by: "(toegevoegd door %{userLinkHTML})"
       unread: "Bericht is ongelezen"
       has_replies:
         one: "%{count} antwoord"
@@ -3613,6 +3618,7 @@ nl:
         edit_anonymous: "Sorry, je moet aangemeld zijn om dit bericht te bewerken."
         flag_action: "Markeren"
         flag: "geef dit bericht een privémarkering om de aandacht erop te vestigen of een persoonlijk bericht erover te sturen"
+        anonymous_flag: "stuur een e-mail naar de staf om dit bericht te markeren"
         delete_action: "Bericht verwijderen"
         delete: "dit bericht verwijderen"
         undelete_action: "Verwijderen van bericht ongedaan maken"
@@ -3658,9 +3664,9 @@ nl:
         delete_topic_confirm_modal_no: "Nee, dit topic behouden"
         delete_topic_error: "Er is een fout opgetreden bij het verwijderen van dit topic"
         delete_topic: "topic verwijderen"
-        add_post_notice: "Stafmelding toevoegen…"
-        change_post_notice: "Stafmelding wijzigen…"
-        delete_post_notice: "Medewerkermelding verwijderen"
+        add_post_notice: "Officiële kennisgeving toevoegen…"
+        change_post_notice: "Officiële kennisgeving wijzigen…"
+        delete_post_notice: "Officiële kennisgeving verwijderen"
         remove_timer: "timer verwijderen"
         edit_timer: "timer bewerken"
       actions:
@@ -3920,6 +3926,9 @@ nl:
         all: "alle topics"
         none: "geen subcategorieën"
       colors_disabled: "Je kunt geen kleuren selecteren omdat je categoriestijl 'none' is."
+    anonymous_flagging:
+      title: "Illegale content melden"
+      description: "Om illegale content te melden, kun je contact opnemen met <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Bedankt voor het beschaafd houden van onze community!"
       action: "Bericht markeren"
@@ -4173,20 +4182,6 @@ nl:
       close: "Sluiten (Esc)"
       content_load_error: '<a href="%url%">De inhoud</a> kon niet worden geladen.'
       image_load_error: '<a href="%url%">De afbeelding</a> kon niet worden geladen.'
-    experimental_lightbox:
-      image_load_error: "De afbeelding kon niet worden geladen."
-      screen_reader_image_title: "Afbeelding %{current} van %{total}: %{title}"
-      buttons:
-        next: "Volgende (pijltoets naar rechts of omlaag)"
-        previous: "Vorige (pijltoets naar links of omhoog)"
-        close: "Sluiten (Esc)"
-        download: "Afbeelding downloaden"
-        newtab: "Afbeelding openen in een nieuw tabblad"
-        zoom: "Afbeelding in-/uitzoomen (Z-toets)"
-        rotate: "Afbeelding roteren (R-toets)"
-        fullscreen: "Volledig scherm browser schakelen (M-toets)"
-        carousel: "Alle afbeeldingen weergeven in een carrousel (A-toets)"
-        retry: "Afbeelding opnieuw proberen te laden"
     cannot_render_video: Deze video kan niet worden weergegeven omdat je browser de codec niet ondersteunt.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4223,7 +4218,7 @@ nl:
         title: "Toepassing"
         create: "%{shortcut} Nieuw topic maken"
         notifications: "%{shortcut} Meldingen openen"
-        hamburger_menu: "%{shortcut} Hamburgermenu openen"
+        hamburger_menu: "%{shortcut} Navigatiemenu openen"
         user_profile_menu: "%{shortcut} Gebruikersmenu openen"
         show_incoming_updated_topics: "%{shortcut} Bijgewerkte topics weergeven"
         search: "%{shortcut} Zoeken"
@@ -4649,9 +4644,11 @@ nl:
             users:
               content: "Gebruikers"
               title: "Lijst van alle gebruikers"
-            my_drafts:
-              content: "Mijn concepten"
-              title: "Mijn ongeplaatste concepten"
+            my_posts:
+              content: "Mijn berichten"
+              content_drafts: "Mijn concepten"
+              title: "Mijn recente topicactiviteit"
+              title_drafts: "Mijn ongeplaatste concepten"
               draft_count:
                 one: "%{count} concept"
                 other: "%{count} concepten"
@@ -4881,7 +4878,7 @@ nl:
           experiment_toggled_too_fast: "Je hebt de experimentele functie te snel geschakeld. Wacht een paar seconden voordat je het opnieuw probeert."
           experiment_tooltip:
             title_disabled: "Probeer onze experimentele functie"
-            title_enabled: "Schakel experimentele functies uit"
+            title_enabled: "Schakel de experimentele functie uit"
             content_disabled: "Probeer onze nieuwste in ontwikkeling zijnde functie eens! Hij is nog in de experimentele fase, dus we kunnen hem op elk moment verwijderen. Je kunt je afmelden wanneer je maar wilt.<br/><br/>Wijziging hiervan schakelt de functie in voor alle gebruikers."
             content_enabled: "Wijziging hiervan schakelt de functie uit voor alle gebruikers."
         last_checked: "Laatst gecontroleerd"
@@ -5189,23 +5186,30 @@ nl:
               messages: Geef berichten weer van /logs of haal een specifiek logbericht op.
       web_hooks:
         title: "Webhooks"
+        none: "Je hebt nog geen webhooks"
         instruction: "Via webhooks kan Discourse externe services waarschuwen wanneer bepaalde gebeurtenissen plaatsvinden op je website. Zodra de webhook wordt geactiveerd, wordt een POST-verzoek gestuurd naar opgegeven URL's."
         detailed_instruction: "Zodra de gekozen gebeurtenis plaatsvindt, wordt een POST-verzoek naar de opgegeven URL gestuurd."
+        add: "Webhook toevoegen"
         create: "Maken"
         edit: "Bewerken"
         save: "Opslaan"
+        show: "Gebeurtenissen"
         delete: "Verwijderen"
         cancel: "Annuleren"
         description_label: "Gebeurtenistriggers"
         controls: "Controlepaneel"
+        back: "Terug naar webhooks"
         payload_url: "Payload-URL"
         payload_url_placeholder: "https://voorbeeld.com/postreceive"
         secret_invalid: "Geheim mag geen lege tekens bevatten."
         secret_too_short: "Geheim minimaal 12 tekens lang zijn."
+        secret_placeholder: "Tekenreeks gebruikt voor het genereren van handtekeningen"
         event_type_missing: "Je moet minimaal één gebeurtenistype instellen."
         content_type: "Inhoudstype"
         secret: "Geheim"
         event_chooser: "Welke gebeurtenissen moeten deze webhook activeren?"
+        wildcard_event: "Stuur me alles"
+        individual_event: "Selecteer afzonderlijke gebeurtenissen"
         verify_certificate: "TLS-certificaat van payload-URL controleren"
         active: "Actief"
         active_notice: "We sturen details over de gebeurtenis wanneer deze plaatsvindt."
@@ -5615,6 +5619,9 @@ nl:
           screened_url: "Volledige lijst van gecontroleerde URL's exporteren in CSV-indeling"
       export_json:
         button_text: "Exporteren"
+      invite:
+        button_text: "Uitnodigingen sturen"
+        button_title: "Uitnodigingen sturen"
       customize:
         title: "Aanpassen"
         preview: "voorbeeld"
@@ -5770,6 +5777,8 @@ nl:
           install_upload: "Vanaf je apparaat"
           install_git_repo: "Vanaf een git-repository"
           install_create: "Nieuwe maken"
+          installing_message: "Je nieuwe thema instellen…"
+          installing_message_long_time: "Het instellen van je nieuwe thema duurt iets langer dan verwacht, nog even geduld…"
           duplicate_remote_theme: "Het themaonderdeel “%{name}” is al geïnstalleerd, weet je zeker dat je nog een exemplaar wilt installeren?"
           force_install: "Het thema kan niet worden geïnstalleerd omdat de Git-repository niet toegankelijk is. Weet je zeker dat je door wilt gaan met installeren?"
           create_placeholder: "Tijdelijke aanduiding maken"
@@ -5956,9 +5965,15 @@ nl:
         description: "Pas de sjablonen aan die worden gebruikt om e-mails op te stellen, bekijk een voorbeeld van samenvattings-e-mails die worden verzonden en bekijk de e-maillogs."
         settings: "Instellingen"
         templates: "Sjablonen"
+        templates_title: "E-mailsjablonen"
+        preview_digest: "Voorbeeld van samenvatting"
         advanced_test:
+          title: "Geavanceerde test"
           desc: "Zie hoe Discourse ontvangen e-mails verwerkt. Plak hieronder het volledige oorspronkelijke e-mailbericht zodat de e-mail goed wordt verwerkt."
           email: "Oorspronkelijke bericht"
+          run: "Test uitvoeren"
+          text: "Geselecteerde tekst"
+          elided: "Weggelaten tekst"
         sending_test: "Test-e-mail verzenden…"
         error: "<b>FOUT</b> - %{server_error}"
         test_error: "Er is een probleem opgetreden bij het versturen van de testmail. Controleer je mailinstellingen, controleer of je host geen mailverbindingen blokkeert, en probeer het daarna opnieuw."
@@ -5967,11 +5982,16 @@ nl:
         bounced: "Gebouncet"
         received: "Ontvangen"
         rejected: "Geweigerd"
+        sent_at: "Verzonden op"
         time: "Tijd"
         user: "Gebruiker"
+        email_type: "E-mailtype"
         details_title: "E-mailgegevens weergeven"
+        to_address: "Aan adres"
         test_email_address: "e-mailadres om te testen"
+        send_test: "Test-e-mail verzenden"
         sent_test: "verzonden!"
+        delivery_method: "Verzendmethode"
         preview_digest_desc: "Bekijk een voorbeeld van de e-mailsamenvattingen die naar inactieve leden worden gestuurd."
         refresh: "Vernieuwen"
         send_digest_label: "Dit resultaat verzenden naar:"
@@ -5981,7 +6001,11 @@ nl:
         html: "html"
         text: "tekst"
         html_preview: "Voorbeeld van e-mailinhoud"
+        last_seen_user: "Gebruiker laatst gezien:"
         no_result: "Geen resultaten gevonden voor samenvatting."
+        reply_key: "Antwoordsleutel"
+        post_link_with_smtp: "Plaatsings- en SMTP-gegevens"
+        skipped_reason: "Reden van overslaan"
         incoming_emails:
           from_address: "Van"
           to_addresses: "Aan"
@@ -5990,10 +6014,12 @@ nl:
           error: "Fout"
           none: "Geen inkomende e-mails gevonden."
           modal:
+            title: "Details van inkomende e-mail"
             error: "Fout"
             headers: "Headers"
             subject: "Onderwerp"
             body: "Inhoud"
+            rejection_message: "Afwijzings-e-mail"
           filters:
             from_placeholder: "van@voorbeeld.com"
             to_placeholder: "aan@voorbeeld.com"
@@ -6024,6 +6050,7 @@ nl:
           post_approved: "Bericht goedgekeurd"
       logs:
         title: "Logs en screening"
+        description: "Met logs en screening kun je je community bewaken en beheren, zodat deze veilig en respectvol blijft. Je kunt logs bekijken van alle acties van medewerkers, zoeklogs en de configuratie van gebruikersscreening."
         nav_title: "Logs"
         action: "Actie"
         created_at: "Gemaakt"
@@ -6042,6 +6069,8 @@ nl:
         staff_actions:
           all: "alle"
           filter: "Filter:"
+          title: "Medewerkeracties"
+          clear_filters: "Alles weergeven"
           staff_user: "Gebruiker"
           target_user: "Doelgebruiker"
           subject: "Onderwerp"
@@ -6171,7 +6200,9 @@ nl:
             tag_group_change: "taggroep wijzigen"
             delete_associated_accounts: "gekoppelde accounts verwijderen"
         screened_emails:
+          title: "Gescreende e-mails"
           description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd."
+          email: "E-mailadres"
           actions:
             allow: "Toestaan"
         screened_urls:
@@ -6186,6 +6217,7 @@ nl:
           actions:
             block: "Blokkeren"
             do_nothing: "Toestaan"
+            allow_admin: "Beheerder toestaan"
           form:
             label: "Nieuw:"
             ip_address: "IP-adres"
@@ -6195,13 +6227,18 @@ nl:
             text: "Samenvoegen"
             title: "Maakt nieuwe subnet-banvermeldingen als er minstens 'min_ban_entries_for_roll_up'-vermeldingen zijn."
         search_logs:
+          title: "Zoeklogs"
           term: "Term"
           searches: "Zoekopdrachten"
           click_through_rate: "CTR"
           types:
             all_search_types: "Alle zoektypen"
             header: "Koptekst"
+            full_page: "Volledige pagina"
             click_through_only: "Alle (alleen doorklikken)"
+          header_search_results: "Zoekresultaten voor koptekst"
+        logster:
+          title: "Foutenlogs"
       watched_words:
         title: "Geobserveerde woorden"
         description: "Geobserveerde woorden zijn moderatietools die meerdere verschillende handelingen kunnen uitvoeren, waaronder het blokkeren, censureren, koppelen of markeren van berichten die bepaalde woorden bevatten"
@@ -6213,6 +6250,7 @@ nl:
         case_sensitive: "(hoofdlettergevoelig)"
         html: "(html)"
         download: Downloaden
+        clear_all: Alles wissen
         clear_all_confirm: "Weet je zeker dat je alle geobserveerde woorden wilt verwijderen voor de actie %{action}?"
         invalid_regex: 'Het geobserveerde woord "%{word}" is een ongeldige reguliere expressie.'
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Geobserveerde woorden zijn reguliere expressies</a> en ze bevatten niet automatisch woordgrenzen. Als je wilt dat de reguliere expressie hele woorden matcht, plaats dan <code>\b</code> aan het begin en eind van je reguliere expressie.'
@@ -6356,6 +6394,9 @@ nl:
         id_not_found: "Sorry, die gebruikers-ID bestaat niet in ons systeem."
         active: "Geactiveerd"
         status: "Status"
+        show_emails: "E-mailadressen weergeven"
+        hide_emails: "E-mailadressen verbergen"
+        silence_reason: "Reden van dempen"
         bulk_actions:
           title: "Bulkacties"
           admin_cant_be_deleted: "Deze gebruiker kan niet worden verwijderd omdat deze een beheerder is"
@@ -6393,6 +6434,7 @@ nl:
         approved: "Goedgekeurd?"
         titles:
           active: "Actieve gebruikers"
+          new: "Nieuwe gebruikers"
           pending: "Gebruikers in afwachting van beoordeling"
           newuser: "Gebruikers op vertrouwensniveau 0 (nieuwe gebruiker)"
           basic: "Gebruikers op vertrouwensniveau 1 (basisgebruiker)"
@@ -6400,7 +6442,11 @@ nl:
           regular: "Gebruikers op vertrouwensniveau 3 (regelmatige gebruiker)"
           leader: "Gebruikers op vertrouwensniveau 4 (leider)"
           staff: "Medewerkers"
+          admins: "Beheerders"
           moderators: "Moderators"
+          silenced: "Gedempte gebruikers"
+          suspended: "Geschorste gebruikers"
+          staged: "Gefaseerde gebruikers"
         not_verified: "Niet geverifieerd"
         check_email:
           title: "E-mailadres van deze gebruiker weergeven"
@@ -6504,6 +6550,19 @@ nl:
         approve_bulk_success: "Gelukt! Alle geselecteerde gebruikers zijn goedgekeurd en op de hoogte gebracht."
         time_read: "Leestijd"
         post_edits_count: "Berichtbewerkingen"
+        exports:
+          title: Gebruikersexports
+          download:
+            description: Laatste export downloaden
+            expires_in:
+              one: Verloopt over %{count} uur
+              other: Verloopt over %{count} uur
+            not_available: Geen export beschikbaar
+            button: Archief opvragen
+            confirm: Wil je echt een archief maken van de activiteiten en voorkeuren van deze gebruiker?
+            started: We zijn begonnen met het verzamelen van het archief. De downloadlink wordt bijgewerkt zodra het proces is voltooid.
+            success: Het archief is klaar om te downloaden.
+            export_failed: Het exporteren is mislukt. Zie de logs voor meer informatie.
         anonymize: "Gebruiker anonimiseren"
         anonymize_confirm: "Weet je zeker dat je dit account wilt anonimiseren? Hierdoor worden de gebruikersnaam en het e-mailadres gewijzigd en worden alle profielgegevens gereset."
         delete_associated_accounts_confirm: "Weet je zeker dat je alle gekoppelde accounts van dit account wilt verwijderen? De gebruiker kan zich mogelijk niet aanmelden als het e-mailadres is gewijzigd."
@@ -6743,6 +6802,7 @@ nl:
         unmask: "invoer demaskeren"
         not_found: "Instellingen konden niet worden gevonden"
       site_settings:
+        title: "Site-instellingen"
         description: "Configureer de instellingen voor je Discourse-site om het uiterlijk, de functionaliteit en de gebruikerservaring aan te passen."
         emoji_list:
           invalid_input: "Emojilijst mag alleen geldige emojinamen bevatten, bijvoorbeeld: knuffels"
@@ -6847,6 +6907,7 @@ nl:
         description: Beschrijving
         long_description: Lange beschrijving
         badge_type: Badgetype
+        group_settings: Groepsinstellingen
         badge_grouping: Groep
         badge_groupings:
           modal_title: Badgegroeperingen
@@ -6918,6 +6979,7 @@ nl:
           title: "Kies een badge of maak een nieuwe"
           description: "Begin door een bestaande badge te selecteren om deze aan te passen, of maak een geheel nieuwe badge."
         mass_award:
+          title: Bulktoekenning
           description: Dezelfde badge aan meerdere gebruikers tegelijk toekennen.
           no_badge_selected: Selecteer een badge om te beginnen.
           perform: "Badge aan gebruikers toekennen"
@@ -6963,11 +7025,12 @@ nl:
         host: "Toegestane hosts"
         allowed_paths: "Padtoelatingslijst"
         edit: "Bewerken"
-        category: "Bericht naar categorie"
+        category: "Plaatsen in categorie"
         tags: "Topictags"
         post_author: "Berichtauteur"
         post_author_with_default: "Berichtauteur (standaard %{author})"
         add_host: "Host toevoegen"
+        posts_and_topics: "Configuratie van berichten en topics"
         crawlers: "Configuratie van crawlers"
         crawlers_description: "Als Discourse topics maakt voor je berichten en er geen RSS/ATOM-feed aanwezig is, wordt geprobeerd je content te parsen vanuit HTML. Omdat het soms een uitdaging kan zijn om content te extraheren, bieden we de mogelijkheid voor het opgeven van CSS-regels om de extractie makkelijker te maken."
         embed_by_username: "Gebruikersnaam voor het maken van topics"
@@ -6979,7 +7042,9 @@ nl:
         blocked_embed_selectors: "CSS-kiezer voor elementen die worden verwijderd uit insluitingen"
         allowed_embed_classnames: "Namen toegestane CSS-klassen"
         save: "Opslaan"
+        posts_and_topics_settings_saved: "Bericht- en topicinstelingen opgeslagen"
         crawler_settings_saved: "Crawlerinstellingen opgeslagen"
+        back: "Terug naar insluiten"
         configuration_snippet: "Configuratiefragment"
         host_form:
           add_header: "Host toevoegen"
@@ -6988,6 +7053,7 @@ nl:
         nav:
           hosts: "Hosts"
           settings: "Instellingen"
+          posts_and_topics: "Berichten en topics"
           crawlers: "Crawlers"
       permalink:
         title: "Permalinks"

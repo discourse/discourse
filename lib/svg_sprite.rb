@@ -4,6 +4,7 @@ module SvgSprite
   SVG_ICONS =
     Set.new(
       %w[
+        a
         address-book
         align-left
         anchor
@@ -63,6 +64,7 @@ module SvgSprite
         circle-plus
         circle-question
         circle-xmark
+        clock
         clock-rotate-left
         cloud-arrow-up
         code
@@ -105,6 +107,7 @@ module SvgSprite
         fab-instagram
         fab-linkedin-in
         fab-linux
+        fab-markdown
         fab-threads
         fab-threads-square
         fab-twitter
@@ -219,6 +222,7 @@ module SvgSprite
         square-full
         square-plus
         star
+        sun
         table
         table-cells
         table-columns
@@ -523,7 +527,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     new_name = remap_from_fa5(new_name)
 
     if icon_name != new_name
-      Discourse.deprecate("The icon `#{icon_name}` is deprecated. Use `#{new_name}` instead.")
+      Discourse.deprecate(
+        "The icon `#{icon_name}` is deprecated. Use `#{new_name}` instead.",
+        raise_error: Rails.env.test?,
+      )
       return new_name
     end
 

@@ -118,11 +118,6 @@ export default class SchemaThemeSettingNewEditor extends Component {
     this.inputFieldObserver[index] = callback;
   }
 
-  @action
-  unregisterInputFieldObserver(index) {
-    delete this.inputFieldObserver[index];
-  }
-
   descriptions(fieldName, key) {
     // The `property_descriptions` metadata is an object with keys in the following format as an example:
     //
@@ -279,7 +274,6 @@ export default class SchemaThemeSettingNewEditor extends Component {
             @addChildItem={{this.addChildItem}}
             @generateSchemaTitle={{this.generateSchemaTitle}}
             @registerInputFieldObserver={{this.registerInputFieldObserver}}
-            @unregisterInputFieldObserver={{this.unregisterInputFieldObserver}}
           />
 
           <div class="schema-theme-setting-editor__footer">

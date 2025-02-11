@@ -7,6 +7,12 @@
     display: none;
   }
 
+  &.--preview {
+    .d-editor-preview-wrapper {
+      display: block;
+    }
+  }
+
   .d-editor-button-bar {
     > .btn {
       border-radius: 0;

@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import AboutSectionLink from "discourse/lib/sidebar/common/community-section/about-section-link";
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
@@ -14,7 +14,7 @@ import {
 import SectionLink from "discourse/lib/sidebar/section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import InviteSectionLink from "discourse/lib/sidebar/user/community-section/invite-section-link";
-import MyDraftsSectionLink from "discourse/lib/sidebar/user/community-section/my-drafts-section-link";
+import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
 
 const SPECIAL_LINKS_MAP = {
@@ -22,7 +22,7 @@ const SPECIAL_LINKS_MAP = {
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
-  "/my/activity": MyDraftsSectionLink,
+  "/my/activity": MyPostsSectionLink,
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,
@@ -130,12 +130,7 @@ export default class CommunitySection {
     if (this.router.isDestroying) {
       return;
     }
-    return new sectionLinkClass({
-      topicTrackingState: this.topicTrackingState,
-      currentUser: this.currentUser,
-      appEvents: this.appEvents,
-      router: this.router,
-      siteSettings: this.siteSettings,
+    return new sectionLinkClass(getOwner(this), {
       inMoreDrawer,
       overridenName,
       overridenIcon,

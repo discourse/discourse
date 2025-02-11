@@ -50,11 +50,17 @@ export default class Wizard {
   }
 
   get font() {
-    return this.findStep("styling")?.findField("body_font").chosen;
+    const bodyFont = this.getFont("body");
+    return bodyFont ? bodyFont : this.getFont("site");
   }
 
   get headingFont() {
-    return this.findStep("styling")?.findField("heading_font").chosen;
+    const headingFont = this.getFont("heading");
+    return headingFont ? headingFont : this.getFont("site");
+  }
+
+  getFont(type) {
+    return this.findStep("styling")?.findField(`${type}_font`)?.chosen;
   }
 
   findStep(id) {

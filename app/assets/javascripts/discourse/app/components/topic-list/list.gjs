@@ -8,7 +8,10 @@ import Header from "discourse/components/topic-list/header";
 import Item from "discourse/components/topic-list/item";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyMutableValueTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import HeaderActivityCell from "./header/activity-cell";
 import HeaderBulkSelectCell from "./header/bulk-select-cell";
@@ -98,7 +101,7 @@ export default class TopicList extends Component {
       },
     };
 
-    return applyValueTransformer(
+    return applyMutableValueTransformer(
       "topic-list-columns",
       defaultColumns,
       context

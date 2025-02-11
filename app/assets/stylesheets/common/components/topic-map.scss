@@ -279,7 +279,7 @@ body:not(.archetype-private_message) {
 // DMenu popups
 .fk-d-menu,
 .fk-d-menu-modal {
-  //shared
+  // shared
   &__inner-content {
     .topic-map__likes-content &,
     .topic-map__links-content &,
@@ -312,10 +312,11 @@ body:not(.archetype-private_message) {
       margin: 0;
       padding: 0;
       list-style-type: none;
+      max-height: 80dvh;
     }
   }
 
-  //per type
+  // per type
   &.topic-map__likes-content {
     li > a {
       display: grid;
@@ -379,7 +380,7 @@ body:not(.archetype-private_message) {
       grid-template-columns: auto 1fr;
       grid-template-areas:
         "counter link"
-        ". domain";
+        "counter domain";
       padding: 0.75em 1rem;
       gap: 0.25em;
 
@@ -395,11 +396,18 @@ body:not(.archetype-private_message) {
     }
 
     .topic-link {
-      grid-area: link;
+      display: contents;
+
+      .content {
+        grid-area: link;
+      }
     }
 
     .topic-link[data-clicks]::before {
       @include click-counter-badge;
+      grid-area: counter;
+      align-self: start;
+      margin-top: 0.35em;
     }
 
     .topic-link[data-clicks]::after {

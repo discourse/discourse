@@ -11,10 +11,7 @@ import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import discourseComputed from "discourse/lib/decorators";
 import { getURLWithCDN } from "discourse/lib/get-url";
-import lightbox, {
-  cleanupLightboxes,
-  setupLightboxes,
-} from "discourse/lib/lightbox";
+import lightbox from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
@@ -63,11 +60,6 @@ export default class UppyImageUploader extends Component {
   computedId(id) {
     // without a fallback ID this will not be accessible
     return id ? `${id}__input` : `${guidFor(this)}__input`;
-  }
-
-  @discourseComputed("siteSettings.enable_experimental_lightbox")
-  experimentalLightboxEnabled(experimentalLightboxEnabled) {
-    return experimentalLightboxEnabled;
   }
 
   @discourseComputed("disabled", "notAllowed")
@@ -125,24 +117,13 @@ export default class UppyImageUploader extends Component {
 
   @on("didRender")
   _applyLightbox() {
-    if (this.experimentalLightboxEnabled) {
-      setupLightboxes({
-        container: this.element,
-        selector: ".lightbox",
-      });
-    } else {
-      next(() => lightbox(this.element, this.siteSettings));
-    }
+    next(() => lightbox(this.element, this.siteSettings));
   }
 
   @on("willDestroyElement")
   _closeOnRemoval() {
-    if (this.experimentalLightboxEnabled) {
-      cleanupLightboxes();
-    } else {
-      if ($.magnificPopup?.instance) {
-        $.magnificPopup.instance.close();
-      }
+    if ($.magnificPopup?.instance) {
+      $.magnificPopup.instance.close();
     }
   }
 

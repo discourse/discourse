@@ -22,11 +22,13 @@ RSpec.describe ApplicationController do
       expect(JSON.parse(preloaded_json["visiblePlugins"])).to include(
         {
           "name" => "chat",
+          "humanized_name" => "Chat",
           "admin_route" => {
             "label" => "chat.admin.title",
             "location" => "chat",
             "full_location" => "adminPlugins.show",
             "use_new_show_route" => true,
+            "auto_generated" => false,
           },
           "enabled" => true,
         },

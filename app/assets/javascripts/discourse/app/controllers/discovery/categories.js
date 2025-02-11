@@ -26,9 +26,7 @@ export default class CategoriesController extends Controller {
 
   @action
   createTopic() {
-    this.composer.openNewTopic({
-      preferDraft: true,
-    });
+    this.composer.openNewTopic();
   }
 
   @action

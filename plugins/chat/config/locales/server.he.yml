@@ -207,6 +207,8 @@ he:
       inline_to_message: "הודעה מס׳ %{message_id} מאת ‎%{username}‏ – ‎#%{chat_channel}"
       inline_to_channel: "צ׳אט מס׳ %{chat_channel}"
       inline_to_topic_channel: "צ׳אט לנושא %{topic_title}"
+      inline_to_thread: "%{thread_title} - ‎#%{chat_channel}"
+      inline_to_thread_no_title: "שרשור ב־‎#%{chat_channel}"
       thread_title_connector: "בתוך"
       x_members:
         one: "חבר %{count}"

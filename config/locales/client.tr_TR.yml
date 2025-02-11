@@ -1799,6 +1799,9 @@ tr_TR:
         after_5_minutes: "5 dakika sonra"
         after_10_minutes: "10 dakika sonra"
       notification_level_when_replying:
+        label: "Gönderi paylaşırken"
+        watch_topic: "Konuyu izle"
+        track_topic: "Konuyu takip et"
         do_nothing: "Hiçbir şey yapma"
       topics_unread_when_closed: "Konular kapatıldığında okunmamış olarak kabul edin"
       invited:
@@ -3497,6 +3500,7 @@ tr_TR:
           other: "<b>%{count}</b> gönderi seçtiniz."
       deleted_by_author_simple: "(konu, yazar tarafından silindi)"
     post_list:
+      title: "En son gönderiler"
       empty: "Gönderi yok"
       aria_post_number: "%{title} - gönderi #%{postNumber}"
     post:
@@ -3543,6 +3547,7 @@ tr_TR:
       notice:
         new_user: "%{user} ilk kez gönderi paylaştı. Hadi ona topluluğumuza hoş geldin diyelim!"
         returning_user: "%{user} adlı kullanıcıyı göreli uzun süre oldu. Son gönderisi %{time} tarihindeydi."
+        custom_created_by: "( %{userLinkHTML} tarafından eklendi)"
       unread: "Gönderi okunmamış"
       has_replies:
         one: "%{count} Yanıt"
@@ -3613,6 +3618,7 @@ tr_TR:
         edit_anonymous: "Üzgünüz, ancak bu gönderiyi düzenleyebilmek için giriş yapmalısınız."
         flag_action: "Bayrak ekle"
         flag: "kontrol edilmesi için bu gönderiye özel olarak bayrak ekleyin veya bununla ilgili kişisel bir mesaj gönderin"
+        anonymous_flag: "bu gönderiye bayrak eklemek için personele bir e-posta gönderin"
         delete_action: "Gönderiyi sil"
         delete: "bu gönderiyi sil"
         undelete_action: "Silinen gönderiyi geri al"
@@ -3658,9 +3664,9 @@ tr_TR:
         delete_topic_confirm_modal_no: "Hayır, bu konuyu silme"
         delete_topic_error: "Bu konuyu silerken bir hata oluştu"
         delete_topic: "konuyu sil"
-        add_post_notice: "Personel Bildirimi ekle…"
-        change_post_notice: "Personel Bildirimini değiştir…"
-        delete_post_notice: "Personel Bildirimini Sil"
+        add_post_notice: "Resmî Bildiri Ekle…"
+        change_post_notice: "Resmî Bildiriyi Değiştir…"
+        delete_post_notice: "Resmî Bildiriyi Sil"
         remove_timer: "zamanlayıcıyı kaldır"
         edit_timer: "zamanlayıcıyı düzenle"
       actions:
@@ -3920,6 +3926,9 @@ tr_TR:
         all: "tüm konular"
         none: "alt kategori yok"
       colors_disabled: "Category style olarak none belirlenmiş olduğundan renk seçemezsiniz."
+    anonymous_flagging:
+      title: "Yasa dışı içeriği bildirin"
+      description: "Yasa dışı içeriği bildirmek için lütfen <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a> ile iletişime geçin"
     flagging:
       title: "Topluluğumuzun medeni kalmasını sağladığınız için teşekkürler!"
       action: "Gönderiye Bayrak Ekle"
@@ -4173,20 +4182,6 @@ tr_TR:
       close: "Kapat (Esc)"
       content_load_error: '<a href="%url%">İçerik</a> yüklenemedi.'
       image_load_error: '<a href="%url%">Görüntü</a> yüklenemedi.'
-    experimental_lightbox:
-      image_load_error: "Resim yüklenemedi."
-      screen_reader_image_title: "Resim %{current} / %{total}: %{title}"
-      buttons:
-        next: "Sonraki (Sağ veya aşağı ok tuşu)"
-        previous: "Önceki (Sol veya yukarı ok tuşu)"
-        close: "Kapat (Esc)"
-        download: "Resmi indir"
-        newtab: "Resmi yeni bir sekmede aç"
-        zoom: "Görüntüyü yakınlaştır/uzaklaştır (Z tuşu)"
-        rotate: "Görüntüyü döndür (R tuşu)"
-        fullscreen: "Tarayıcı tam ekran modunda geçiş yap (M tuşu)"
-        carousel: "Tüm resimleri bir karuselde göster (A tuşu)"
-        retry: "Resmi yüklemeyi yeniden dene"
     cannot_render_video: Tarayıcınız codec'i desteklemediği için bu video işlenemiyor.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4223,7 +4218,7 @@ tr_TR:
         title: "Uygulama"
         create: "%{shortcut} Yeni konu oluştur"
         notifications: "%{shortcut} Bildirimleri aç"
-        hamburger_menu: "%{shortcut} Hamburger menüyü aç"
+        hamburger_menu: "%{shortcut} Navigasyon menüsünü aç"
         user_profile_menu: "%{shortcut} Kullanıcı menüsünü aç"
         show_incoming_updated_topics: "%{shortcut} Güncellenen konuları göster"
         search: "%{shortcut} Ara"
@@ -4649,9 +4644,11 @@ tr_TR:
             users:
               content: "Kullanıcılar"
               title: "Tüm kullanıcıların listesi"
-            my_drafts:
-              content: "Taslaklarım"
-              title: "Paylaşılmamış taslaklarım"
+            my_posts:
+              content: "Gönderilerim"
+              content_drafts: "Taslaklarım"
+              title: "Son konu etkinliğim"
+              title_drafts: "Gönderilmemiş taslaklarım"
               draft_count:
                 one: "%{count} taslak"
                 other: "%{count} taslak"
@@ -5367,6 +5364,7 @@ tr_TR:
           appearance: "Görünüm"
           server_setup:
             title: "Sunucu kurulumu ve günlükleri"
+            keywords: "e-posta|smtp|mailgun|sendgrid|gönderildi|atlandı|geri döndü|alındı|reddedildi|e-posta günlükleri|ön izleme özeti"
       security:
         title: "Güvenlik"
         sidebar_link:
@@ -5374,6 +5372,7 @@ tr_TR:
           spam: "Spam ayarları"
           staff_action_logs:
             title: "Günlükler ve tarama"
+            keywords: "hata günlükleri|personel eylemi|taranan e-postalar|taranan ip'ler|taranan url'ler|arama günlükleri"
       section_landing_pages:
         account:
           title: "Hesap"
@@ -6190,7 +6189,7 @@ tr_TR:
             create_flag: "bayrak oluştur"
             update_flag: "bayrağı güncelle"
             delete_flag: "bayrağı sil"
-            topic_slow_mode_set: "konu yavaş modunu ayarla"
+            topic_slow_mode_set: "konuyu yavaş moda ayarla"
             topic_slow_mode_removed: "konu yavaş modunu kaldır"
             custom_emoji_create: "özel emoji oluştur"
             custom_emoji_destroy: "özel emoji'yi sil"
@@ -6551,6 +6550,19 @@ tr_TR:
         approve_bulk_success: "Başarılı! Seçilen tüm kullanıcılar onaylandı ve bilgilendirildi."
         time_read: "Okuma Zamanı"
         post_edits_count: "Gönderi Düzenlemeleri"
+        exports:
+          title: Kullanıcı dışa aktarmaları
+          download:
+            description: En son dışa aktarmayı indirin
+            expires_in:
+              one: '%{count} saat içinde süresi doluyor'
+              other: '%{count} saat içinde süresi doluyor'
+            not_available: Dışa aktarma yok
+            button: Arşiv talep et
+            confirm: Bu kullanıcının aktivite ve tercihlerinin bir arşivini oluşturmayı gerçekten istiyor musunuz?
+            started: Arşivi toplamaya başladık, işlem tamamlandığında indirme bağlantısı güncellenecek.
+            success: Arşiv indirilmeye hazır.
+            export_failed: Üzgünüz, ancak dışa aktarma başarısız oldu. Daha fazla bilgi için lütfen günlükleri kontrol edin.
         anonymize: "Kullanıcıyı Anonimleştir"
         anonymize_confirm: "Bu hesabı anonimleştirmek istediğinizden emin misiniz? Bu işlem, kullanıcı adını ve e-postayı değiştirir ve tüm profil bilgilerini sıfırlar."
         delete_associated_accounts_confirm: "Bu hesaptaki tüm ilişkili hesapları silmek istediğinizden emin misiniz? Kullanıcı, e-postası değiştiyse giriş yapamayabilir."
@@ -7157,7 +7169,7 @@ tr_TR:
           news: "En son haber ve olayları tartışın."
           site_feedback: "Topluluk hakkındaki düşüncelerinizi paylaşın ve iyileştirmeler önerin."
         category_names:
-          icebreakers: "Kaynaştırma aktiviteleri"
+          icebreakers: "Kaynaştırma soruları"
           news: "Haberler"
           site_feedback: "Site Geri Bildirimi"
         table_headers:

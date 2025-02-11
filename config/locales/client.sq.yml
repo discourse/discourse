@@ -3404,6 +3404,8 @@ sq:
         description:
           one: Keni përzgjedhur <b>%{count}</b> postim.
           other: "Keni përzgjedhur <b>%{count}</b> postime."
+    post_list:
+      title: "Postimet e fundit"
     post:
       quote_edit: "Redakto"
       quote_share: "Shpërndaje"
@@ -3776,7 +3778,6 @@ sq:
         title: "Aplikimi"
         create: "%{shortcut} Hap një temë të re"
         notifications: "%{shortcut} Hap njoftimet"
-        hamburger_menu: "%{shortcut} Hap menunë hamburger"
         user_profile_menu: "%{shortcut} Hap menunë e përdoruesit"
         show_incoming_updated_topics: "%{shortcut} Shiko temat e përditësuara"
         help: "%{shortcut} Trego shkurtimet e tastierës"
@@ -3948,6 +3949,11 @@ sq:
               content: "Grupet"
             users:
               content: "Users"
+            my_posts:
+              content: "Postimet e mia"
+              content_drafts: "Draftet e mia"
+              title: "Aktiviteti im i fundit për temën"
+              title_drafts: "Draftet e mia të papostuara"
             invite:
               content: "Fto"
     form_templates:
@@ -4592,6 +4598,9 @@ sq:
         approve_success: "Anëtari u aprovua dhe emaili u dërgua me udhëzimet e aktivizimit."
         approve_bulk_success: "Sukses! Të gjithë anëtarët e zgjedhur janë aprovuar dhe notifikuar."
         time_read: "Koha e Leximit"
+        exports:
+          download:
+            button: Kërkoni arkivin
         anonymize: "Anonimizo përdoruesin"
         anonymize_yes: "Po, anonimizo këtë llogari"
         anonymize_failed: "There was a problem anonymizing the account."

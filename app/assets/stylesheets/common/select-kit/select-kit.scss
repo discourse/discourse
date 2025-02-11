@@ -64,6 +64,17 @@
   }
 
   &.is-loading {
+    .select-kit-filter::after {
+      content: "";
+      position: absolute;
+      background: var(--tertiary);
+      width: 100%;
+      height: 2px;
+      left: 0;
+      bottom: 0;
+      animation: lineDrawToRight 0.5s ease-in;
+    }
+
     .select-kit-collection {
       overflow: hidden;
     }
@@ -360,19 +371,6 @@
 
     100% {
       width: 100%;
-    }
-  }
-
-  &.is-loading {
-    .select-kit-filter::after {
-      content: "";
-      position: absolute;
-      background: var(--tertiary);
-      width: 100%;
-      height: 2px;
-      left: 0;
-      bottom: 0;
-      animation: lineDrawToRight 0.5s ease-in;
     }
   }
 }

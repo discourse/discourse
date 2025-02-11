@@ -339,6 +339,7 @@ es:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "No puedes añadir ninguno de los siguientes valores a este ajuste: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
       twitter_summary_large_image_no_svg: "Las imágenes de resumen de Twitter usadas para los metadatos de twitter:image no pueden ser .svg"
+      tl0_and_anonymous_flag: "Debes proporcionar el «site contact email» (correo electrónico de contacto del sitio) o la «email address to report illegal content» (dirección de correo electrónico para denunciar contenido ilegal) para los usuarios anónimos."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el personal debe intervenir por razones de seguridad. Ponte en contacto con el personal y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Lo sentimos, no hemos podido generar una vista previa para esta página web porque el servidor '%{hostname}' no se ha encontrado. En lugar de una vista previa, solo aparecerá un enlace en tu publicación. :cry:"
@@ -1620,7 +1621,7 @@ es:
       google_analytics_version: "Tu Discourse utiliza actualmente Google Analytics 3, que dejará de ser compatible después de julio de 2023. <a href='https://meta.discourse.org/t/260498'>Actualízate a Google Analytics 4</a> ahora para seguir recibiendo información y análisis valiosos sobre el rendimiento de tu sitio web."
       category_style_deprecated: "Tu discurso utiliza actualmente un estilo de categoría obsoleto que se eliminará antes de la versión beta final de Discourse 3.2. Consulta <a href='https://meta.discourse.org/t/282441'>Cambiar a una configuración de sitio de estilo de categoría única</a> para obtener instrucciones sobre cómo mantener el estilo de categoría seleccionado."
       maxmind_db_configuration: 'El servidor se ha configurado para utilizar bases de datos MaxMind para búsquedas inversas de IP, pero no se ha configurado un ID de cuenta MaxMind válido, lo que puede provocar que las bases de datos MaxMind no se descarguen en el futuro. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Consulta esta guía para obtener más información</a>.'
-      admin_sidebar_deprecation: "El antiguo diseño de administración está obsoleto en favor del nuevo <a href='https://meta.discourse.org/t/introducing-experimental-admin-sidebar-navigation/289281'>diseño de barra lateral</a> y se eliminará en la próxima versión. Puedes <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> el nuevo diseño de la barra lateral ahora para optar antes por él."
+      admin_sidebar_deprecation: "El antiguo diseño de administración está obsoleto en favor del nuevo <a href='https://meta.discourse.org/t/-/289281'>diseño de barra lateral</a> y se eliminará en la próxima versión. Puedes <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configurar</a> el nuevo diseño de la barra lateral ahora para optar antes por él."
     back_from_logster_text: "Volver al sitio"
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
@@ -1630,8 +1631,9 @@ es:
     delete_old_hidden_posts: "Eliminar automaticamente cualquier publicación que se mantenga oculta por mas de 30 días."
     default_locale: "El idioma por defecto de esta instancia de Discourse. Puedes reemplazar el texto de las categorías y temas generados por el sistema en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar / Texto</a>."
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
-    set_locale_from_accept_language_header: "establecer el idioma de la interfaz para usuarios anónimos desde los encabezados de idioma del navegador web"
-    support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda."
+    set_locale_from_cookie: "Permite configurar la configuración regional de un usuario anónimo a través de la cookie de navegador «locale»."
+    set_locale_from_param: "Permite configurar la configuración regional de un usuario anónimo a través del parámetro de URL 'lang', por ejemplo, ?lang=es"
+    support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda"
     min_post_length: "Longitud mínima permitida de la publicación en caracteres (excluyendo mensajes personales)"
     min_first_post_length: "Longitud mínima permitida de la primera publicación (cuerpo del tema) (excluidos los mensajes personales)"
     min_personal_message_post_length: "Longitud mínima permitida en caracteres para las publicaciones (tanto para el primer mensaje como para las respuestas)"
@@ -1700,7 +1702,7 @@ es:
     block_onebox_on_redirect: "Evitar el oneboxing para las URL que llevan a una página que redirige. Esta configuración detiene la creación de una tarjeta visual (onebox) para cualquier URL que redirija a un destino diferente, asegurando que las URL directas, que no redirijan, tengan prioridad para el oneboxing."
     allowed_inline_onebox_domains: "Una lista de dominios que serán oneboxed en forma de miniatura si están vinculados sin título"
     enable_inline_onebox_on_all_domains: "Ignorar la configuración del sitio allowed_inline_onebox_domains y permitir inline onebox en todos los dominios."
-    onebox_locale: "La configuración regional enviada a los proveedores de onebox. Si se deja en blanco, se utilizará la configuración regional por defecto."
+    onebox_locale: "La configuración regional enviada a los proveedores de onebox. Si se deja en blanco, se utilizará la configuración regional por defecto"
     force_custom_user_agent_hosts: "Hosts que se utilizará para el agente usuario personalizado de onebox en todas las solicitudes. (Especialmente útil para hosts que limitan el acceso por usuario agente)."
     max_oneboxes_per_post: "Establece el número máximo de oneboxes que pueden incluirse en una misma publicación. Las oneboxes proporcionan una vista previa del contenido enlazado dentro de la publicación."
     facebook_app_access_token: "Token generado desde app ID y secreto de Facebook. Usado para generar oneboxes de Instagram."
@@ -1849,8 +1851,8 @@ es:
     login_required: "Requerir autenticación para leer el contenido de este sitio, desactivar el acceso anónimo."
     min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: ¡si existen usuarios o grupos con nombres de menor longitud que esta, tu sitio se romperá!"
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: ¡si existen usuarios o grupos con nombres de mayor longitud que esta, tu sitio se romperá!"
-    unicode_usernames: "Permitir que los nombres de usuario contengan algunas letras y números Unicode."
-    allowed_unicode_username_characters: "Expresión regular para permitir únicamente algunos caracteres Unicode dentro de los nombres de usuario. Las letras ASCII y números siempre se permitirán y no es necesario que los incluyas en la lista de permitidos."
+    unicode_usernames: "Permitir que los nombres de usuario contengan algunas letras y números Unicode"
+    allowed_unicode_username_characters: "Expresión regular para permitir únicamente algunos caracteres Unicode dentro de los nombres de usuario. Las letras ASCII y números siempre se permitirán y no es necesario que los incluyas en la lista de permitidos"
     reserved_usernames: "Nombres de usuario que no están permitidos. El símbolo asterisco * se puede usar para coincidir con cualquier carácter cero o más veces."
     min_password_length: "Define el número mínimo de caracteres necesarios para las contraseñas de los usuarios del sitio. Un valor demasiado bajo puede comprometer la seguridad al facilitar que personas no autorizadas adivinen las contraseñas, mientras que un valor demasiado alto puede dificultar que los usuarios recuerden sus contraseñas."
     min_admin_password_length: "Especifica la longitud mínima de la contraseña para los usuarios Administradores. Garantiza que todas las contraseñas de Administrador cumplan un determinado requisito de longitud para mejorar la seguridad. Este ajuste es esencial para proteger la cuenta de Administrador de posibles accesos no autorizados."
@@ -2071,7 +2073,7 @@ es:
     title_fancy_entities: "Convertir caracteres ASCII comunes en entidades HTML de adorno en el título de los temas, como SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "La extensión mínima que un título debe tener antes de que se revise la existencia de temas similares."
     desktop_category_page_style: "Este ajuste determina la disposición visual de la página /categorías en el escritorio. Incluye opciones como mostrar subcategorías con temas destacados, mostrar los temas más recientes o presentar los temas principales. El estilo elegido influirá en la forma en que los usuarios interactúan y navegan por las categorías del sitio."
-    mobile_category_page_style: "Este ajuste determina el diseño visual de la página /categorías en móviles."
+    mobile_category_page_style: "Este ajuste determina el diseño visual de la página /categories en móviles."
     category_colors: "Una lista de valores en hexadecimal de los colores para las categorías."
     default_dark_mode_color_scheme_id: "La paleta de colores utilizada en modo oscuro."
     dark_mode_none: "Ninguno"
@@ -2116,7 +2118,8 @@ es:
     num_hours_to_close_topic: "Número de horas que se pausa un tema para su invervención."
     auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer una denuncia."
     min_first_post_typing_time: "Período mínimo en milisegundos durante el que un usuario debe escribir en su primera publicación, si no se llega a este umbral, la publicación entrará automáticamente a la cola de moderación. Establece esta opción a 0 para desactivar (no recomendado)."
-    auto_silence_fast_typers_on_first_post: "Silenciar automáticamente a usuarios que no cumplan el umbral establecido en min_first_post_typing_time"
+    fast_typing_threshold: "Cantidad mínima de tiempo en milisegundos que un usuario debe escribir para su primera publicación. Si no se alcanza el umbral, la publicación entrará automáticamente en la cola de revisión. El mínimo es de 1 segundo, el estándar es de 3 segundos y el máximo es de 5 segundos."
+    auto_silence_fast_typers_on_first_post: "Silencia automáticamente a los usuarios que no alcancen el umbral de escritura rápida"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza hasta el que se podrán silenciar a usuarios que escriban demasiado rápido en su primera publicación"
     auto_silence_first_post_regex: "Expresión regular (que ignora mayúsculas/minúsculas) que, si coincide con la primera publicación de un usuario, lo silenciará y mandará el mensaje a la cola de aprobación. Por ejemplo: enfadado|a[bc]a hará que todas las primeras publicaciones que contengan enfadado, aba o aca se manden a la cola y se silencie al autor. Solo se ejecutará en el primer mensaje de cada usuario. DEPRECIADO: Utiliza en su lugar Palabras Vigiladas para Silencio."
     reviewable_claiming: "¿Es necesario reclamar el contenido revisable antes de poder actuar sobre el mismo?"
@@ -2124,6 +2127,8 @@ es:
     reviewable_default_visibility: "No muestre elementos revisables a menos que cumplan con esta prioridad"
     reviewable_low_priority_threshold: "El filtro de prioridades oculta elementos a revisar que no lleguen a esta puntuación, salvo que se use el filtro «(cualquiera)»."
     high_trust_flaggers_auto_hide_posts: "Las publicaciones de los usuarios nuevos se esconden automáticamente tras ser marcadas como spam por un usuario con NC3 o superior"
+    allow_tl0_and_anonymous_users_to_flag_illegal_content: "Los usuarios anónimos verán información que tienen que enviar por correo electrónico a los administradores para informar de contenido ilegal."
+    email_address_to_report_illegal_content: "Si se deja en blanco, se utilizará el correo electrónico de administrador del sitio predeterminado."
     cooldown_hours_until_reflag: "Cantidad de tiempo que los usuarios deberán esperar antes de poder denunciar de nuevo una publicación."
     slow_mode_prevents_editing: "¿El «Modo lento» evita la edición después de edit_grace_period?"
     reply_by_email_enabled: "Activa la función que permite a los usuarios responder a los temas directamente a través del correo electrónico, en lugar de tener que iniciar sesión en el sitio web. Consulta <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>la guía sobre Meta</a> para obtener más información."
@@ -2457,7 +2462,6 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    enable_experimental_lightbox: "Sustituye el lightbox de imágenes por defecto por el diseño renovado."
     glimmer_topic_list_mode: "Controla si se utiliza la nueva implementación de la lista de temas 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Consulta <a href='https://meta.discourse.org/t/343404'>el tema de Meta</a> para más información."
     glimmer_post_menu_mode: "Controla si se utiliza la nueva implementación del menú de la publicación 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
     glimmer_post_menu_groups: "Activa la nueva implementación del menú de la publicación «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
@@ -4940,6 +4944,8 @@ es:
             label: "Paleta de colores"
           body_font:
             label: "Tipo de letra para textos"
+          site_font:
+            label: "Tipo de letra"
           heading_font:
             label: "Tipo de letra para encabezados"
           styling_preview:

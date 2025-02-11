@@ -53,4 +53,21 @@ RSpec.describe Onebox::Engine::KalturaOnebox do
       expect(actual_thumbnail).to eq og_video_thumbnail
     end
   end
+
+  describe ".===" do
+    it "matches valid Kaltura URL" do
+      valid_url = URI("https://cdn.kaltura.com/id/abc123")
+      expect(described_class === valid_url).to eq(true)
+    end
+
+    it "does not match URL with valid domain as part of another domain" do
+      malicious_url = URI("https://cdn.kaltura.com.malicious.com/id/abc123")
+      expect(described_class === malicious_url).to eq(false)
+    end
+
+    it "does not match invalid path" do
+      invalid_path_url = URI("https://cdn.kaltura.com/id/abc123/extra")
+      expect(described_class === invalid_path_url).to eq(false)
+    end
+  end
 end

@@ -16,10 +16,7 @@ import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { translateModKey } from "discourse/lib/utilities";
-import Composer, {
-  CREATE_TOPIC,
-  NEW_TOPIC_KEY,
-} from "discourse/models/composer";
+import Composer, { CREATE_TOPIC } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { toggleCheckDraftPopup } from "discourse/services/composer";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -27,7 +24,6 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
-  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -218,7 +214,7 @@ acceptance("Composer", function (needs) {
         "supports keyboard shortcuts"
       );
 
-    await click("#reply-control a.cancel");
+    await click("#reply-control button.cancel");
     assert.dom(".d-modal").exists("pops up a confirmation dialog");
 
     await click(".d-modal__footer .discard-draft");
@@ -397,16 +393,28 @@ acceptance("Composer", function (needs) {
       ".d-editor-input",
       "this is the content for a different topic"
     );
-
     await visit("/t/1-3-0beta9-no-rate-limit-popups/28830");
+
     assert.strictEqual(
       currentURL(),
       "/t/1-3-0beta9-no-rate-limit-popups/28830"
     );
+
     await click("#reply-control button.create");
+
     assert.dom(".reply-where-modal").exists("pops up a modal");
+    assert
+      .dom(".topic-title")
+      .exists({ count: 2 }, "it renders the two topics");
+    assert
+      .dom(".btn-reply-where:nth-of-type(1) .badge-category__name")
+      .hasText("test too", "it renders the category name");
+    assert
+      .dom(".btn-reply-where:nth-of-type(2) .discourse-tags")
+      .hasText("foo", "it renders the tags");
 
     await click(".btn-reply-here");
+
     assert
       .dom(".topic-post:last-of-type .cooked p")
       .hasText(
@@ -768,7 +776,7 @@ acceptance("Composer", function (needs) {
     await visit("/t/topic-with-whisper/960");
 
     await click(".topic-post:nth-of-type(3) button.reply");
-    await click("#reply-control .save-or-cancel a.cancel");
+    await click("#reply-control .save-or-cancel button.cancel");
     await click(".topic-footer-main-buttons button.create");
     await click(".reply-details summary div");
     assert
@@ -896,27 +904,6 @@ acceptance("Composer", function (needs) {
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
-  });
-
-  test("Loads tags and category from draft payload", async function (assert) {
-    updateCurrentUser({ has_topic_draft: true });
-
-    sinon.stub(Draft, "get").resolves({
-      draft:
-        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "xmark"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
-      draft_sequence: 0,
-      draft_key: NEW_TOPIC_KEY,
-    });
-
-    await visit("/latest");
-    assert.dom("#create-topic").hasText(i18n("topic.create"));
-
-    await click("#create-topic");
-    assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
-    assert.strictEqual(
-      selectKit(".mini-tag-chooser").header().value(),
-      "fun,xmark"
-    );
   });
 
   test("Deleting the text content of the first post in a private message", async function (assert) {

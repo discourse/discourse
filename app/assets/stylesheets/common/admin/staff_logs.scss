@@ -394,8 +394,7 @@ table.search-logs-list {
   @media screen and (min-width: 550px) {
     tr {
       td.term {
-        grid-column-start: 1;
-        grid-column: span 3;
+        grid-column-start: span 3;
       }
     }
   }

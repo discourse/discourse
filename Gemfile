@@ -99,7 +99,7 @@ gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer"
+gem "mini_racer", "0.18.pre1"
 
 gem "highline", require: false
 
