@@ -80,21 +80,34 @@ export default class DMenu extends Component {
   }
 
   get triggerComponent() {
+    const instance = this;
+    const baseArguments = {
+      get icon() {
+        return instance.args.icon;
+      },
+      get label() {
+        return instance.args.label;
+      },
+      get translatedLabel() {
+        return instance.args.translatedLabel;
+      },
+      get translatedAriaLabel() {
+        return instance.args.ariaLabel;
+      },
+      get translatedTitle() {
+        return instance.args.title;
+      },
+      get disabled() {
+        return instance.args.disabled;
+      },
+      get isLoading() {
+        return instance.args.isLoading;
+      },
+    };
+
     return (
       this.args.triggerComponent ||
-      curryComponent(
-        DButton,
-        {
-          icon: this.args.icon,
-          label: this.args.label,
-          translatedLabel: this.args.translatedLabel,
-          translatedAriaLabel: this.args.ariaLabel,
-          translatedTitle: this.args.title,
-          disabled: this.args.disabled,
-          isLoading: this.args.isLoading,
-        },
-        getOwner(this)
-      )
+      curryComponent(DButton, baseArguments, getOwner(this))
     );
   }
 
