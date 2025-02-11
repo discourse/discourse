@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
@@ -128,6 +129,7 @@ export default class UserStreamComponent extends Component {
       @resumeDraft={{this.resumeDraft}}
       @removeDraft={{this.removeDraft}}
       class={{concatClass "user-stream" this.filterClassName}}
+      {{on "click" this.handleClick}}
     >
       <:abovePostItemHeader as |post|>
         <PluginOutlet
