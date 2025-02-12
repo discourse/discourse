@@ -10,8 +10,12 @@ function hexColorRule(state, silent) {
     return false;
   }
 
-  const match = /^#[0-9A-Fa-f]{6}/.exec(src.slice(start));
+  // the character before can't be a word character
+  if (start > 0 && /\w/.test(src.charAt(start - 1))) {
+    return false;
+  }
 
+  const match = /^#[0-9A-Fa-f]{6}(?!\w)/.exec(src.slice(start));
   if (!match) {
     return false;
   }
