@@ -185,13 +185,12 @@ class Upload < ActiveRecord::Base
         original_path = external_copy&.path
       end
 
-      image_info =
-        begin
-          FastImage.new(original_path)
-        rescue StandardError
-          nil
-        end
-      new_extension = image_info&.type&.to_s || "unknown"
+      image_info = FastImage.new(original_path)
+      begin
+        image_info.fetch
+      rescue StandardError
+      end
+      new_extension = image_info.type&.to_s || "unknown"
 
       if new_extension != self.extension
         self.update_columns(extension: new_extension)
