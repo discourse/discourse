@@ -8,7 +8,6 @@ function hexColorRule(state, silent) {
 
 export function setup(helper) {
 
-};
 
 export function setup(helper) {
   helper.registerOptions(() => {
