@@ -3,10 +3,17 @@ function hexColorRule(state, silent) {
   const src = state.src;
 
   const match = /^#[0-9A-Fa-f]{6}/.exec(src.slice(start));
-  return match;
+
+  if (!match) {
+    return false;
+  }
+
+  state.pos += match[0].length;
+
+  return true;
 }
 
-export function hexColorRender() {
+function hexColorRender() {
   return `<span>Hex Color</span>`;
 }
 
